@@ -231,6 +231,35 @@ public class WargRageFormationTests
         Assert.IsTrue(rider > reset, "a later warg death would cancel scripted movement on a rider who left long ago");
     }
 
+    // A puppet is neither Agent.Main nor AI controlled, so it takes the fallback. That must close the first rider's rage
+    // before it clears the timer, or no later close sees a rage to end.
+    [TestMethod]
+    public void TheFallbackBranch_ClosesARageOfAnotherRiderBeforeItClearsTheTimer()
+    {
+        var src = Squash("Main/Features/Warg/WargBehaviorTree.cs");
+
+        StringAssert.Contains(src, ".AddSequence(\"another peer's rider\") .AddTask(new CloseRageOnNewRider()) .AddTask(new ResetRageAttackTimer()) .Up()");
+    }
+
+    // The 6 s timeout means six seconds with no attack, so a chase ends. The timer starts once and an attack restarts it.
+    [TestMethod]
+    public void TheRageTimer_StartsOnceAndOnlyAnAttackRestartsIt()
+    {
+        var timer = Squash("Main/Features/Warg/BehaviorTreeElements/SetRageAttackTimer.cs");
+        var attack = Squash("Main/Features/Warg/BehaviorTreeElements/WargAttackTask.cs");
+
+        StringAssert.Contains(timer, "if (RageAttackStartTime.GetValue() == null) RageAttackStartTime.SetValue(DateTime.UtcNow);");
+        StringAssert.Contains(attack, "if (RageAttackStartTime.GetValue() != null) RageAttackStartTime.SetValue(System.DateTime.UtcNow);");
+    }
+
+    [TestMethod]
+    public void ARage_HasTheConfiguredAttacksWithNoRoll()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/WargTryToGoRage.cs");
+
+        StringAssert.Contains(src, "RageAttackAmount.SetValue(WargConfig.rageAttacks);");
+    }
+
     private static string Squash(string path) =>
         System.Text.RegularExpressions.Regex.Replace(RepoPaths.ReadSource(path, stripComments: true), @"\s+", " ");
 }

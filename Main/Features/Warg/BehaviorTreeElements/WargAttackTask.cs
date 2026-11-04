@@ -35,6 +35,8 @@ public class WargAttackTask : BTTask, IBTBannerlordBase, IBTWargBlackboard
     public override BTTaskStatus Execute()
     {
         RageAttackAmount.SetValue(RageAttackAmount.GetValue() - 1);
+        // The rage timeout counts from the last attack. Null outside a rage: an open rage is what this field means.
+        if (RageAttackStartTime.GetValue() != null) RageAttackStartTime.SetValue(System.DateTime.UtcNow);
         Agent warg = Agent.GetValue();
         if (warg != null)
         {

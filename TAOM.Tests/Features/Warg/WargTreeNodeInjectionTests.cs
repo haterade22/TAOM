@@ -27,6 +27,7 @@ public class WargTreeNodeInjectionTests
         {
             Agent = new BTBlackboardValue<Agent>(warg),
             RageAttackAmount = new BTBlackboardValue<int>(rage),
+            RageAttackStartTime = new BTBlackboardValue<System.DateTime?>(null),
         };
 
     [TestCategory("RequiresGame")]

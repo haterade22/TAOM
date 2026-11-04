@@ -28,6 +28,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
     private readonly ConcurrentDictionary<object, (IFormationAdapter Formation, FormationLayoutType Layout)> _layouts =
         new(ReferenceIdentity.Instance);
     private readonly Dictionary<object, SlotAssignment> _assignmentCache = new(ReferenceIdentity.Instance);
+    private readonly ConcurrentDictionary<object, byte> _cavalrySuspendLogged = new(ReferenceIdentity.Instance);
 
     // Patch30 throws counted this mission (D6: the first in full, the rest as a count at mission end).
     private int _fallbacks;
@@ -97,7 +98,12 @@ public sealed class FormationLayoutService : IFormationLayoutService
         // CavalryUnitRatio that UnitPitch reads below refreshes the same sync group, this flag included: the call
         // would return a position the evaluating read refuses, or refuse one it gives. While the group is fresh
         // this read is a clock check.
-        if (formation.RepresentativeIsCavalry) return null;
+        if (formation.RepresentativeIsCavalry)
+        {
+            if (_cavalrySuspendLogged.TryAdd(formation.FormationKey, 0))
+                _logger.LogInfo("[MixedFormations] layout suspended: the formation became cavalry, so SmartCavalryAI owns it.");
+            return null;
+        }
 
         // Apart from the lock-free FindLaidOutFormation lookup above, this method's dictionary work (the layout
         // re-read, the slot cache and the slot assignment) happens under the lock, and the slot is captured there.
@@ -215,6 +221,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
             _layouts.Clear();
             _assignmentCache.Clear();
         }
+        _cavalrySuspendLogged.Clear();
         if (formationCount > 0)
             _logger.LogInfo($"[MixedFormations] mission ended — cleared {formationCount} formation(s)");
         var fallbacks = Interlocked.Exchange(ref _fallbacks, 0);

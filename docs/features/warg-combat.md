@@ -63,19 +63,18 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | `DamageToFall` | 40 | Damage threshold for fall animation |
 | `rageChance` | 0.1 | 10% chance to enter rage on hit |
 | `minDamageReceivedForRage` | 10 | Minimum damage to trigger rage roll |
-| `minRageAttacks` | 2 | Minimum attacks in rage mode |
-| `maxRageAttacks` | 3 | Maximum attacks in rage mode |
+| `rageAttacks` | 2 | Attacks in rage mode |
 | `maxDistanceFromWargToRollForRage` | 20 | Max distance from attacker for rage |
 
 ### Rage Mode Flow
 
 1. Warg takes >10 damage from enemy within 10 units
-2. 10% chance to enter rage, for 2 attacks: `Random.Next`'s upper bound is exclusive, so `maxRageAttacks` 3 is never reached
+2. 10% chance to enter rage, for 2 attacks
 3. Player: loses control, sees "Your warg entered into a rage" message
 4. AI: rider leaves formation, warg navigates to enemy
 5. Warg attacks, decrementing rage counter
-6. On completion, enemy death or the 6 s timeout: control returns (vanilla's controller is turned back on, unless the Seat of Seeing is up: its leave turns it on, see [seat-of-seeing.md](seat-of-seeing.md)). `SetRageAttackTimer` restarts the timer on every pass, so
-   the timeout fires only while the rage selector waits with nothing to do, never during a chase
+6. On completion, enemy death or the 6 s timeout: control returns (vanilla's controller is turned back on, unless the Seat of Seeing is up: its leave turns it on, see [seat-of-seeing.md](seat-of-seeing.md)). The timer starts once per rage and each attack restarts it,
+   so the timeout means 6 s with no attack, and it ends a chase
 
 **How a rage closes.** The rage start stores the rider and his formation on the blackboard. A rage belongs to that rider. Four
 tasks close it, all through `CleanIfEnemyDied`: its own end inside the rage branch, `CloseOpenRage` when no enemy is within 60 m

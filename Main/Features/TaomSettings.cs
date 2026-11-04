@@ -798,7 +798,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Mixed Formations")]
     [SettingPropertyBool("Mixed Formations Debug Mode", Order = 3, RequireRestart = false,
-        HintText = "Show diagnostic [MixedFormations] messages on the in-game HUD. Off = file log only.")]
+        HintText = "Writes two diagnostic lines, the auto-assigned default layout and the cycled layout, to the TAOM log file. Nothing is shown on the HUD.")]
     public bool MixedFormationsDebug { get; set; } = false;
 
     // --- Fief Management ---
