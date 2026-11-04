@@ -84,6 +84,7 @@ class Registries:
     item_trade: dict = field(default_factory=dict)            # item id -> ItemTrade (empty = unavailable)
     hidden_pieces: dict = field(default_factory=dict)         # crafting piece id -> is_hidden (empty = unavailable)
     factions: set = field(default_factory=set)                # defined clan <Faction> ids (empty = unavailable)
+    equipment_rosters: set = field(default_factory=set)       # defined <EquipmentRoster> ids (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -255,6 +256,7 @@ class Validator:
     def run(self) -> list:
         issues = []
         issues += self._ref_sweep()
+        issues += self._broken_roster_refs()
         issues += self._schema_checks()
         issues += self._duplicate_item_defs()
         issues += self._education_coverage()
@@ -431,6 +433,37 @@ class Validator:
                         entry_id=line_entry.get(line, ""),
                         message=f'{kind.label} "{kind.prefix}{ref}" does not resolve to any known {kind.label}',
                     ))
+        return issues
+
+    # -- BROKEN_ROSTER_REF -------------------------------------------------- #
+    # An <EquipmentSet id> naming no defined <EquipmentRoster> null-dereferences inside the
+    # NPCCharacters load, and the engine's empty catch then stops every character after it in the
+    # merged document from loading, with no crash at the typo (RCA 2026-10-04 M3). The refs are not
+    # prefixed, so REF_KINDS cannot sweep them, and 778 of them sit in lords.xslt, which
+    # _xml_files never reads. Roster ids come from TAOM, vanilla, the Armory and TAOM_Map.
+    def _broken_roster_refs(self) -> list:
+        known = self.reg.equipment_rosters
+        if not known:
+            return []   # no install: the registry is unavailable, and the caller reports the skip
+        issues = []
+        files = itertools.chain(self._xml_files(), self._extra_ref_files(),
+                                sorted(self.moduledata.rglob("*.xslt")))
+        for path in files:
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            rel = self._rel(path)
+            line_entry = None
+            for m in self._EQSET_REF_RE.finditer(text):
+                ref = m.group(1)
+                if ref in known:
+                    continue
+                if line_entry is None:
+                    line_entry = self._entry_by_line(text, "NPCCharacter", "id")
+                line = _lineno(text, m.start())
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="BROKEN_ROSTER_REF", file=rel, line=line,
+                    entry_id=line_entry.get(line, ""),
+                    message=f'<EquipmentSet id="{ref}"> does not resolve to any known <EquipmentRoster>',
+                ))
         return issues
 
     def _entry_by_line(self, text: str, entry_el: str, id_attr: str) -> dict:
@@ -2316,6 +2349,12 @@ _CLAN_DEF_RE = re.compile(r'<Faction\b[^>]*?\bid="([^"]+)"', re.S)
 # the engine never loads those rows, so a ref to one is as broken as a ref to a typo.
 _CLAN_STRIP_RE = re.compile(
     r"""<xsl:template\s+match="Faction\[@id='([^']+)'\]"\s*(?:/>|>\s*</xsl:template>)""", re.S)
+# A roster is <EquipmentRoster id="...">; the container <EquipmentRosters> stays out, and vanilla
+# writes the id on its own line after the element name, so this spans newlines.
+_ROSTER_DEF_RE = re.compile(r'<EquipmentRoster\b[^>]*?\bid="([^"]+)"', re.S)
+# An xslt that deletes a roster by id, as spclans.xslt does for clans: the engine never loads it.
+_ROSTER_STRIP_RE = re.compile(
+    r"""<xsl:template\s+match="EquipmentRoster\[@id='([^']+)'\]"\s*(?:/>|>\s*</xsl:template>)""", re.S)
 _SETTLEMENT_CULTURE_RE = re.compile(r'<Settlement\b[^>]*?\bculture="Culture\.([^"]+)"', re.S)
 # An XSLT template with an empty body and an unqualified `match="Settlement"`
 # deletes EVERY settlement contributed by earlier modules (TAOM_Map does exactly
@@ -2984,6 +3023,18 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         vanilla_factions -= set(_CLAN_STRIP_RE.findall(_read_stripped(moduledata / "spclans.xslt")))
     factions = _scan_files([moduledata / "characters" / "clans.xml"], _CLAN_DEF_RE) | vanilla_factions
 
+    # Rosters: every module a character can name one from. The registry is TAOM-only without the
+    # install, and vanilla defines rosters TAOM refs (the aserai civilian templates), so it is
+    # unavailable then rather than partial.
+    equipment_rosters = set()
+    if game_modules:
+        roster_roots = [moduledata] + [game_modules / name / "ModuleData" for name in (
+            "SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle", "NavalDLC",
+            "LOTRLOME_Armory", "TAOM_Map")]
+        equipment_rosters = _scan(roster_roots, _ROSTER_DEF_RE)
+        for xslt in sorted(moduledata.rglob("*.xslt")):
+            equipment_rosters -= set(_ROSTER_STRIP_RE.findall(_read_stripped(xslt)))
+
     items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
@@ -3075,6 +3126,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         item_trade=item_trade,
         hidden_pieces=hidden_pieces,
         factions=factions,
+        equipment_rosters=equipment_rosters,
     )
 
 
