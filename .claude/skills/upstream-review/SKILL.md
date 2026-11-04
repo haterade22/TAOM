@@ -69,7 +69,7 @@ of each item's commit body: credit the author with the pinned head.
   author, repo, path@pinned-head and lines, the evidence kind and the engine version, and the source's own qualifier in the
   same sentence; TAOM's own reading is tagged as such.
 - The record `docs/reviews/adopt-<author>-<date>.md` in the shape of the last one; the provenance register's pass and
-  Covers columns; the adoption history line in `docs/ai-includes/external-repo-adoption.md`.
+  Covers columns; the entry in `docs/reviews/adoption-history.md`.
 - Doc review: three finders (fidelity to source, consistency with TAOM code and docs, routing), then one Opus verifier;
   fix every confirmed item and record it in the record's "The doc review". Before merge, grep the batch for every name the
   code review renamed or deleted.

@@ -58,6 +58,13 @@ When an orchestrator dispatches fresh subagents to implement and then review wor
 
 This composes with the `Workflow` tool: a `pipeline()` can implement in stage 1, run spec-compliance review in stage 2, and code-quality review in stage 3 — each item flows through without a barrier. The `parallel()` adversarial-verify pattern in the Workflow docs is the fan-out form of step 3 above.
 
+### Workflow script gotchas
+
+- **`parallel()` and `pipeline()` take functions, not promises.** `parallel([agent(a), agent(b)])` throws "expects an array of functions"; write `parallel([() => agent(a), () => agent(b)])`, and do the same for a `parallel` nested inside a `pipeline()` stage. The agents that already ran keep their results in the run journal (`workflowProgress[]` and the output file), so a thunk bug costs the aggregation, not the finders' work.
+- **`run_in_background` is not a Workflow parameter.** The tool always runs in the background and notifies on completion; passing it is an input validation error.
+- **Resume is cheap.** Edit the persisted script file (the launch result names its path) and call `Workflow({scriptPath, resumeFromRunId})`: unchanged `agent()` calls return their cached results and only the fixed stages rerun.
+- **Keep the refute lens in a find-then-verify run.** One verifier to confirm and one to refute split a contested finding and filtered the false positives in the run that taught this (2026-06-25).
+
 ---
 
 ## Spawn Prompt Templates

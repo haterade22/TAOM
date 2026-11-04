@@ -202,10 +202,10 @@ The repo includes a Claude-powered translation pipeline that produces high-quali
 
 ```bash
 # Preview cost and counts (no API calls):
-python tools/translate_with_claude.py --lang PL --dry-run
+python tools/translate_with_claude.py --lang PL --module TAOM --dry-run
 
-# Run full translation across the TAOM files, TAOM_Map and Armory:
-python tools/translate_with_claude.py --lang PL --apply
+# Run full translation across the TAOM files, TAOM_Map and Armory (`all` also writes the live Armory, #1056):
+python tools/translate_with_claude.py --lang PL --module all --apply
 
 # Translate just one module:
 python tools/translate_with_claude.py --lang PL --module TAOM --apply
@@ -227,7 +227,7 @@ else. Each provider reads its own variable (`ANTHROPIC_API_KEY`, `DEEPSEEK_API_K
 python tools/translate_with_claude.py --lang PL --module TAOM --provider deepseek --apply
 
 # Override the provider's model, or the prices the estimate is printed from:
-python tools/translate_with_claude.py --lang PL --provider openrouter \
+python tools/translate_with_claude.py --lang PL --module TAOM --provider openrouter \
     --model deepseek/deepseek-v4-pro --price-in 0.435 --price-out 0.87 --apply
 ```
 
@@ -397,6 +397,19 @@ translations), carries a word from the wrong writing system: the translator mode
 in Turkish and Latin letters inside Russian words, and the placeholder check cannot see either. After a translator run, reset any
 flagged row to its English, drop its cache entry and re-run, or fix row and cache together by hand.
 
+### English has no language file
+
+`Main/_Module/ModuleData/Languages/` holds the 12 locale folders and a root `language_data.xml` whose
+`<LanguageData id="English">` is empty. So the inline default in `{=KEY}Default` is the only English
+text the engine ever reads. Rename something in a strings source and run the translator, and all 12
+languages follow while English keeps the old literal; treat the English default as a thirteenth
+translation that no tool updates for you. `LanguageFileCoverageTests` cannot see this drift, because it
+checks that a key has a row, not what the row says. Lord names have a gate:
+`LordNameAndSexConsistencyTests.EveryLordNameFallbackMatchesTheRegisteredEnglishText` compares every
+`characters/lords.xml` fallback with `taom_xslt_strings.xml`, and
+`python tools/oneoff/sync_lord_name_fallbacks.py --apply` repairs a mismatch (dry run without
+`--apply`). Other kinds of text have no such gate yet. <!-- verified 2026-11-03: the Languages folder listing, language_data.xml, the test and the script all exist -->
+
 ### Rewording a vanilla key: English only
 
 A vanilla key TAOM rewords (the `{=0CsbbwtN}` row that drops "the" before a kingdom name, say) is an English-only override
@@ -557,6 +570,8 @@ Armor, weapon, shield, and crafting piece names organized by owning culture.
 
 Untranslated entries fall back to English text; the game stays valid, just shows English where translation wasn't available. For current numbers run `python tools/check_external_loc_coverage.py`.
 
+That script is a ratchet for the two modules outside the repo (`TAOM_Map` and `LOTRLOME_Armory`). It counts rows still byte-identical to their English source (a proper-noun name counts too), compares the count with `tools/external-loc-coverage-baseline.json`, and exits 1 on any regression, because a module reinstall drops the English files back over the translated ones and nothing else would notice. Run `--update-baseline` and commit the new baseline after every external translator run, and after any settlement or item rename that writes the same name into all 12 files. Never update the baseline while rows are deliberately held back. When you look for owed translator runs, search issue bodies as well as titles: a checkbox item inside another issue is invisible to a title search.
+
 ---
 
 ## Known Limitations
@@ -568,7 +583,7 @@ Owed translations go in #763's table; the paid run needs the maintainer's word; 
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
 - **Troop/lord/clan/kingdom names were outside the pipeline; closed 2026-09-17.** Every `{=aom_*_name}` in `troops/*.xml`, most of `characters/lords.xml` (179/1184 had been registered via `taom_xslt_strings.xml`), most of `characters/clans.xml` (25/140 via `taom_module_strings.xml`), and all of the original 12 LOTR kingdoms' identity text in `taom_spkingdoms.xml` (name/short_name/title/ruler_title/text) were inline defaults with no row in any strings source, language file or cache (found 2026-09-13 for troops while investigating #572, which assumed stale translations that never existed). `tools/generate_name_localization_strings.py` is the Case B pipeline extension: it extracts every such key, excludes whatever is already registered elsewhere (so a lord already covered via XSLT strings doesn't get a duplicate row), and writes four generated English master files (`taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`) wired into `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list, and `LanguageDataXmlTests`. 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) across all 12 languages.
 - **The two gaps that pass left open were closed on 2026-10-01** by five more generator categories: hero biographies (`characters/heroes.xml` `text=`, 6 of 465 keys registered before) are in `taom_hero_text_strings.xml`, and the inline NPC names of `characters/*.xml` other than lords, clans and heroes are in `taom_character_name_strings.xml` unless `taom_module_strings.xml` already registers them (65 are), beside culture text, career data and Custom Battle scene names. Ten keys that two characters shared with different English were split first; `LocalizationKeyConsistencyTests.EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` now scans every generator source. **Known limitation:** `Hero.EncyclopediaText` is saved with its key and heroes.xml is read only for a new campaign, so in a save started before 0bd6abf3 the six second heroes of those pairs (lord_G5_6, G5_8, D1_9, D4_9, D4_10, D6_8) show their namesake's translated bio in the twelve languages until a new campaign. Two data files are never sources because the engine never loads them: the repo `settlements.xml` and `custom_settlements.xml` (TAOM's `SubModule.xml` has no `Settlements` node). **Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language.
-- **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping.
+- **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping. (Checked 2026-11-03: all 12 caches, RU included, share one layout: `json.dump(ensure_ascii=False, indent=2, sort_keys=True)` with CRLF terminators and one trailing newline, so RU is no longer the odd one out. Either way, prove an eviction by loading the JSON and comparing it with the original minus the evicted keys.)
 
 ---
 

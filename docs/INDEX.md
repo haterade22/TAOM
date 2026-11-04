@@ -391,6 +391,7 @@ LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](resea
 
 - [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
 - [taom-headless-server](research/taom-headless-server.md): why TAOM aborts the co-op dedicated server at load (40 types, `TAOM.Dependencies`), the problem points after `GetTypes`, options (a) to (e) and the batch plan; decision in [ADR-013](adrs/013-server-safe-core-client-ui-submodule.md) (accepted 2026-10-22).
+- [harmony-fork-feasibility](research/harmony-fork-feasibility.md): the researched, not pursued option of forking Harmony 2.4.2 into `TAOM.Dependencies` (shared-state finding, risks); the shipped route is the bundled `Lib.Harmony` package
 - [creature-bandits-roadmap](research/creature-bandits-roadmap.md): riderless creature bandits (Design B, chosen, bandits only) with an invisible-rider fallback (Design A); engine facts, render gate, spike plan, rollout.
 - [reference/external-resources.md](reference/external-resources.md) — verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy, BUTR deps, Harmony, LOTR/Tolkien lore + naming generators, comparable total-conversion mods, save-compat versioning). Cite this instead of re-searching the web.
 
