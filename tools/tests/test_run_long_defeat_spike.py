@@ -102,6 +102,98 @@ class JudgeTests(unittest.TestCase):
         self.assertIn("far 64", why)
 
 
+    def test_a_pile_on_the_frame_point_does_not_fail_the_run_and_is_named(self):
+        # The engine stands every soldier past the last slot on the frame point, and they spread out by themselves. Helm's Deep's terrace does this to every garrison.
+        log = FULL_LOG + "\n[LongDefeat][S1] spawn pile: defenders Infantry 41 of 68 on the frame point"
+        code, why = spike.judge(FINAL, None, log)
+        self.assertEqual(code, 0, why)
+        self.assertIn("spawn pile", why)
+
+    def test_a_clean_run_does_not_claim_a_pile(self):
+        self.assertNotIn("spawn pile", spike.judge(FINAL, None, FULL_LOG)[1])
+
+    def test_a_fight_with_no_result_fails(self):
+        # The first form of the stalemate rule felled 35 attackers with 2 defenders left, and that read as a clear. Past the straggler limit the run ends with this reason.
+        self.assertEqual(spike.judge({"reason": "stalemate"}, None, FULL_LOG), (1, "reason=stalemate"))
+
+    def test_the_result_counts_the_waves_that_ended_by_rule(self):
+        log = FULL_LOG + "\n[LongDefeat][S2] wave 2: nobody reached the last 1 attackers at 840.4 s, at (1.0, 2.0, 3.0); they fall"
+        self.assertIn("1 waves ended by felling stragglers", spike.judge(FINAL, None, log)[1])
+        self.assertIn("0 waves ended by felling stragglers", spike.judge(FINAL, None, FULL_LOG)[1])
+
+
+class ShaderDialogTests(unittest.TestCase):
+    """Helm's Deep can stop its load at the terrain shader's compile dialog (X4008), and nobody is at an unattended game to answer it."""
+
+    TITLE = "$BASE/Shaders/Sources/pbr_terrain.rs"
+    TEXTS = ["&Retry", "Cancel", 'Error compiling shader file: "$BASE/Shaders/Sources/pbr_terrain.rs" terrain_pixel_functions.rsh(818,29-63): error X4008: floating point division by zero']
+    BUTTONS = {"&Retry": 4, "Cancel": 2}
+
+    def answer(self, dialogs, click=True, seen=None):
+        said, clicks = [], []
+        seen = set() if seen is None else seen
+        with mock.patch.object(runner, "game_dialogs", lambda pid: dialogs), \
+                mock.patch.object(runner, "click_button", lambda hwnd, control: clicks.append((hwnd, control)) or click):
+            self.returned = spike.handle_dialogs(1, seen, said.append)
+        return said, clicks, seen
+
+    def test_the_terrain_shader_dialog_gets_cancel(self):
+        said, clicks, seen = self.answer([(7, self.TITLE, self.TEXTS, self.BUTTONS)])
+        self.assertEqual(clicks, [(7, 2)])
+        self.assertIn(7, seen)
+        self.assertEqual(len(said), 1)
+        self.assertIn("Cancel", said[0])
+        self.assertIn("X4008", said[0])
+
+    def test_the_gbuffer_variant_gets_cancel_too(self):
+        title = "$BASE/Shaders/Sources/pbr_terrain_gbuffer.rs"
+        _, clicks, _ = self.answer([(8, title, [t.replace("pbr_terrain", "pbr_terrain_gbuffer") for t in self.TEXTS], self.BUTTONS)])
+        self.assertEqual(clicks, [(8, 2)])
+
+    def test_another_shader_dialog_is_left_open(self):
+        # Only the known terrain variant is pressed: a dialog for another shader is a new fact, and the runner logs it.
+        for shader in ("taom_deformer_bow", "pbr_terrain_shadowmap", "pbr_terrain_pointlight"):
+            said, clicks, _ = self.answer([(9, f"$BASE/Shaders/Sources/{shader}.rs", ["&Retry", "Cancel", "Error compiling shader file:"], self.BUTTONS)])
+            self.assertEqual(clicks, [], shader)
+            self.assertIn("left open", said[0], shader)
+
+    def test_a_dialog_that_lingers_is_pressed_again_and_logged_once(self):
+        said, clicks, _ = self.answer([(7, self.TITLE, self.TEXTS, self.BUTTONS)], seen={7})
+        self.assertEqual(clicks, [(7, 2)])
+        self.assertEqual(said, [])
+
+    def test_a_click_that_fails_does_not_claim_a_press(self):
+        said, _, seen = self.answer([(7, self.TITLE, self.TEXTS, self.BUTTONS)], click=False)
+        self.assertFalse(any("pressed" in line for line in said), said)
+        self.assertIn("left open", said[0])
+
+    def test_a_matching_title_with_no_cancel_button_is_left_open(self):
+        said, clicks, _ = self.answer([(7, self.TITLE, ["&Retry"], {"&Retry": 4})])
+        self.assertEqual(clicks, [])
+        self.assertIn("left open", said[0])
+
+    def test_a_failed_listing_reports_once_and_does_not_stop_the_watch(self):
+        said = []
+
+        def broken(pid):
+            raise OSError("no windows")
+
+        with mock.patch.object(runner, "game_dialogs", broken):
+            self.assertIsNone(spike.handle_dialogs(1, set(), said.append))
+        self.assertEqual(len(said), 1)
+        self.assertIn("dialog check failed", said[0])
+
+    def test_a_crash_dialog_still_ends_the_watch(self):
+        crash = [(5, "Fatal problem", ["boom"], {"OK": 1})]
+        self.answer(crash)
+        self.assertIn("boom", self.returned)
+
+    def test_the_fords_mod_change_answer_still_runs(self):
+        notice = (5, runner.MOD_CHANGE_TITLE, [runner.MOD_CHANGE_TEXT + " x", "OK"], {"OK": 1})
+        said, clicks, _ = self.answer([notice])
+        self.assertEqual(clicks, [(5, 1)])
+
+
 class SourceTieTests(unittest.TestCase):
     """The judge and the arm text name strings the C# side owns. A rewording there would otherwise pass every test here."""
 
@@ -122,6 +214,10 @@ class SourceTieTests(unittest.TestCase):
         self.assertNotIn(".InitialPosition(", code)
         self.assertIn(".SetFormationPositioningFromDeploymentPlan(", code)
         self.assertIn(".MakeDefaultDeploymentPlans(", code)
+
+    def test_the_pile_label_is_text_the_runner_writes(self):
+        self.assertRegex(spike_code(), r"\bInfo\([^;]*\[S1\] spawn pile")
+        self.assertTrue(spike.SPAWN_PILE.endswith("[S1] spawn pile"))
 
     def test_every_batch_is_read_back(self):
         for who in ("defenders", "reinforcements", "attackers"):
@@ -157,10 +253,10 @@ class PatchTests(unittest.TestCase):
 
         def fake_main(rest):
             seen.update(env=runner.ENV_VAR, done=runner.DONE_FILE, status=runner.STATUS_FILE, root=runner.RUNS_ROOT,
-                        judge=runner.judge, arm=runner.arm_text_for, rest=rest)
+                        judge=runner.judge, arm=runner.arm_text_for, dialogs=runner.handle_dialogs, rest=rest)
             return 7
 
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
         with mock.patch.multiple(runner, main=fake_main, **keep):
             self.assertEqual(spike.main(["--dry-run"]), 7)
         self.assertEqual(seen["env"], spike.ENV_VAR)
@@ -168,11 +264,16 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(seen["status"], spike.STATUS_FILE)
         self.assertEqual(seen["root"], spike.RUNS_ROOT)
         self.assertIs(seen["judge"], spike.judge)
+        self.assertIs(seen["dialogs"], spike.handle_dialogs)
+        # While main has the runner's name patched, the wrapper must call the runner's own handler and not itself.
+        with mock.patch.object(runner, "handle_dialogs", spike.handle_dialogs), mock.patch.object(runner, "game_dialogs", lambda pid: []):
+            self.assertIsNone(spike.handle_dialogs(1, set(), lambda line: None))
         self.assertEqual(seen["rest"], ["--dry-run"])
         args = SimpleNamespace(wall_limit=None)
         text, limit = seen["arm"]("E:/out", args)
-        self.assertIn("wave_size=120\n", text)
+        self.assertIn("wave_size=110\n", text)
         self.assertIn("out=E:/out\n", text)
+        self.assertIn("garrison=170\n", text)
         self.assertEqual(limit, runner.DEFAULT_WALL_LIMIT_SECONDS)
 
 
@@ -185,6 +286,8 @@ class ArgumentTests(unittest.TestCase):
         known = self.parse()
         self.assertEqual(known.fortress, "helms")
         self.assertGreater(known.wave_size, spike.SHOCK_ASSAULT_UNITS)
+        # Run 20261103-215943, the numbers these defaults come from, cleared its third wave at 1,380.3 s.
+        self.assertGreater(known.live_limit, 1380.3)
 
     def test_an_unknown_fortress_is_refused(self):
         with self.assertRaises(SystemExit):
