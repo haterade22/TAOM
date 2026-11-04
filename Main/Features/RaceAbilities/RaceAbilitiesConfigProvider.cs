@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -8,6 +7,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
 using TAOM.Features.RaceAbilities.Domain;
+using TAOM.SceneScripts.Roads;
 
 namespace TAOM.Features.RaceAbilities;
 
@@ -161,10 +161,9 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
         var glow = (value ?? "").Trim();
         if (glow.Length == 0)
             return "";
-        if (glow.Length == 7 && glow[0] == '#'
-            && uint.TryParse(glow.Substring(1), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var rgb))
+        if (HexColorParser.TryParseRgb(glow, out var argb))
         {
-            color = 0xFF000000u | rgb;
+            color = argb;
             return "#" + glow.Substring(1).ToUpperInvariant();
         }
         Warn($"{field}='{value}' is not a #RRGGBB colour; no outline", ref rejected);

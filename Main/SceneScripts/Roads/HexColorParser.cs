@@ -2,6 +2,7 @@
 // github.com/Byak0/Alliance). Implementation written from a behavioral spec at
 // docs/scene-scripts/specs/cs-road.md; no Alliance source was copied. See
 // docs/scene-scripts/ATTRIBUTION.md for the clean-room procedure.
+using System;
 using System.Globalization;
 
 namespace TAOM.SceneScripts.Roads;
@@ -34,6 +35,24 @@ public static class HexColorParser
 
         packedArgb = ((uint)a << 24) | ((uint)r << 16) | ((uint)g << 8) | b;
         return true;
+    }
+
+    /// <summary>
+    /// Exactly "#" and six hex digits, as the config files document. <see cref="TryParse"/> alone would also
+    /// take eight digits as RRGGBBAA (so "#FFB0231B", written in ARGB order, would draw orange) and pad a
+    /// short byte with whitespace (so "#3F76B " would draw #3F760B), both silently. The result is opaque.
+    /// </summary>
+    public static bool TryParseRgb(string hexColor, out uint packedArgb)
+    {
+        packedArgb = 0u;
+        if (hexColor == null || hexColor.Length != 7 || hexColor[0] != '#')
+            return false;
+        for (int i = 1; i < 7; i++)
+        {
+            if (!Uri.IsHexDigit(hexColor[i]))
+                return false;
+        }
+        return TryParse(hexColor, out packedArgb);
     }
 
     private static bool TryParseByte(string source, int startIndex, out byte value)

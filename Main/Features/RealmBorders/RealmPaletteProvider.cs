@@ -94,21 +94,5 @@ public sealed class RealmPaletteProvider
         return new RealmPalette(curated, reserve);
     }
 
-    /// <summary>
-    /// Exactly "#" and six hex digits, as the file documents. The shared parser alone would also take
-    /// eight digits as RRGGBBAA (so "#FFB0231B", written in the code's ARGB order, would draw orange)
-    /// and pad a short byte with whitespace (so "#3F76B " would draw #3F760B), both silently.
-    /// </summary>
-    internal static bool TryParseColour(string? hex, out uint colour)
-    {
-        colour = 0;
-        if (hex == null || hex.Length != 7 || hex[0] != '#')
-            return false;
-        for (int i = 1; i < 7; i++)
-        {
-            if (!Uri.IsHexDigit(hex[i]))
-                return false;
-        }
-        return HexColorParser.TryParse(hex, out colour);
-    }
+    internal static bool TryParseColour(string? hex, out uint colour) => HexColorParser.TryParseRgb(hex, out colour);
 }
