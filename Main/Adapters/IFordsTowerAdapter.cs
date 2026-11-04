@@ -38,11 +38,18 @@ internal interface IFordsTowerAdapter
     void KillGunners(string towerId);
 
     /// <summary>
+    /// A rock, when <paramref name="rock"/> says so and its item loaded, leads the volley with no spread.
     /// Looses <paramref name="missiles"/> missiles from above the tower toward a ground point, each owned by a living gunner of
     /// that tower, at the missile's own speed: every second one is an arrow, when that item exists, and the rest are javelins. Returns how many missiles were added: 0 when the tower has no living gunner,
     /// the javelin item is missing or the target position is not finite. A target out of reach is still aimed at 45 degrees and counts.
     /// </summary>
-    int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f);
+    int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f, bool rock = false);
+
+    /// <summary>The side of the tower whose missile owner this agent is; null for any other agent. A missile owner's own team has no side.</summary>
+    MatchSide? OwnerSideOfGunner(object? agent);
+
+    /// <summary>Whether a tower's missile owner struck an agent of that tower's own side.</summary>
+    bool IsOwnShot(object attacker, object victim);
 
     /// <summary>Logs one <c>[Garrison] look</c> line: are the bowmen on the tower tops still on their spots. Main thread.</summary>
     void LogGarrison();

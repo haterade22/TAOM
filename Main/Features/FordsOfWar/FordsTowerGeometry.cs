@@ -17,7 +17,8 @@ internal static class FordsTowerGeometry
     /// <summary>How far above the tower's base position a volley leaves (an arrow loosed from the top of the barricade).</summary>
     public const float VolleyOriginHeight = 5f;
 
-    private const float GunnerSetback = 2f;
+    // A generated barricade's hidden missile owner keeps a capsule, so it stands outside the swing of attackers at the barricade.
+    private const float GunnerSetback = 8f;
     private const float GunnerSpacing = 1.2f;
     private const float QuarterTurn = (float)(Math.PI / 4d);
 

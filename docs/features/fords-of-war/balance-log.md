@@ -198,6 +198,14 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 A check of free waves also shows how far the hordes stand apart: by level and count per minute, Mordor scores 414 and Gundabad 396, and most factions 90 to 165. Dol Guldur's 105 is near its peers, so its waves alone do not explain its weak fights.
 
+### Towers with no bowmen (this change)
+
+**Why:** Mike, 2026-11-04: archers aim at the invulnerable bowmen on a tower, which wastes their time. Native target scans do not test invulnerability, so his report fits the code. The size is smaller than it looks in play: over the 20 newest reports, 1,376 missiles reached a bowman against about 108,000 other registered missile hits (1.3%), and 12 of the 20 had none. The reports cannot count shots aimed at a bowman. Melee blows on bowmen are 0 in every report since 2026-11-02.
+
+**Changed:** a hidden owner on a neutral team fires each tower's volley, and every third volley leads with a rock. Starting values, unmeasured: thrust 30, every third volley. Tower shots no longer wear shields, and a tower arrow that hits its own side registers a blow of 0 damage.
+
+**Result: not measured.** Read in the first run: `GunnerBlowsRanged` near 0, check 11 still in range, no own-side damage, kills per tower per minute, and whether a person sees the rock.
+
 ### Lost lanes
 
 **Why:** with every tower of a lane down, attackers still stopped to fight each free wave as it spawned at the base, 170 to 226 m short of an open keep. A siege needs the lead within 45 m. Erebor stood with all of Gundabad's towers down for 18 minutes and did 80 damage to the keep. The cause is likely, not proven.

@@ -289,6 +289,24 @@ public class FordsClientWiringTests
     }
 
     [DataTestMethod]
+    [DataRow(".Controller(AgentControllerType.None)", "the missile's damage cancels on a friend only for an AI owner, and the neutral team is a friend of both sides")]
+    [DataRow("BattleSideEnum.None", "native target scans reject an agent at IsEnemy, so a team hostile to nobody is what no AI aims at")]
+    [DataRow("SetVisible(false)", "the tower throws the missiles, and no bowman shows")]
+    [DataRow("TowerRockItemId", "a rock is a hurled missile with a small ring")]
+    public void TheTowerAdapter_BuildsAHiddenOwner_AndARock(string needed, string why)
+    {
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Adapters/FordsTowerAdapter.cs", stripComments: true), needed, why);
+    }
+
+    [TestMethod]
+    public void TheDamageReduction_ZeroesATowerShotOnItsOwnSide()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsUpgradeHooks.cs", stripComments: true);
+        var check = src.IndexOf("if (IsOwnTowerShot(in attack))", StringComparison.Ordinal);
+        Assert.IsTrue(check >= 0 && check < src.IndexOf("_west == null", check, StringComparison.Ordinal), "it must not wait for the first upgrade tick");
+    }
+
+    [DataTestMethod]
     [DataRow("IsDetachableFromFormation", "seated howdah and mumak crew stay out: the seat teleports them each frame")]
     [DataRow("IsRunningAway", "a soldier in flight stays out")]
     [DataRow("IsFadingOut", "a soldier fading out stays out")]

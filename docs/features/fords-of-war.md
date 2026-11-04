@@ -197,7 +197,7 @@ per record. Names are camelCase.
 | `towers.siegeDamageFactor` | float | Multiplier on hits from the Siege role | 3 |
 | `towers.regenPerSecond` | float | Hit points regained per second | 1 |
 | `towers.regenDelaySeconds` | float | Seconds without damage before regeneration starts | 45 |
-| `towers.gunnersPerTower` | int | Invulnerable archers garrisoning each tower | 2 |
+| `towers.rockEveryVolleys` | int, 0 to 100 | Every this many volleys of a tower, a rock leads the volley; 0 for none | 3 |
 | `towers.volleyIntervalSeconds` | float | Seconds between scripted volleys | 4 |
 | `towers.volleyMissiles` | int | Missiles per volley: every second one is an arrow, the rest javelins | 3 |
 | `towers.fireRange` | float | Metres: the nearest enemy inside it is a target (heroes first). Also the siege radius: the unit count, the entry distance, and the stay distance plus 15 m | 45 |
@@ -278,7 +278,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Wall wear from minute 15, 0.15 a minute | Even sides fight mid-lane and rarely reach a tower, so a match between them did not end. Mike set the target at 30 to 40 minutes, 30 best, on 2026-11-04. Rivendell beat Mordor at 39.6 minutes in the first wear match (`20261104-082014`). Balance runs of 15 minutes do not see the wear |
 | Hero damage 3 times, damage taken 0.4 times | Heroes made 0 to 2 kills per minute and died fast (balance-log.md, "Heroes and the AI's spare gold"). With the factors Elladan made 20 kills with no death and Mordor's heroes died 4 and 3 times against 11. A first guess: one hero must not decide a lane by itself |
 | Tower regen 1/s after 45 s without damage | Regeneration starts only after a quiet period and never above the maximum. At 15 per second after 20 s every lull healed all the damage an assault did (run 20261101-123312 and earlier), so damage now carries over from one assault to the next |
-| 2 gunners per tower, volley of 3 missiles (javelin, arrow, javelin) every 4 s, fire range 45 m | The garrison: scripted volleys at the nearest enemy in range, heroes first |
+| No visible bowmen, volley of 3 missiles (javelin, arrow, javelin) every 4 s, a rock in place of the first javelin every third volley, fire range 45 m | Scripted volleys at the nearest enemy in range, heroes first. Mike, 2026-11-04: archers aimed at the invulnerable bowmen, which wasted their time, so the tower itself throws |
 | Hold distance 60 m, fire range 45 m | A lane gathering at its hold line must stand out of tower fire: 45 m plus 15 m of formation depth. It was 35 m, inside the tower's reach. `ShippedMatch_LaneHoldLineIsOutsideTowerFireRange` pins the relation. The hold point is never closer than 60 m to the tower: on a lane under about 428 m it is exactly 60 m short of the tower, on a longer lane it is the midpoint, which is farther |
 | Attack range 20 m | Measured from the formation center to the tower; 6 m was too small for a center |
 | 2 heroes alive per side, respawn 60 s + 6 s per minute | Heroes decide fights, so the count is capped and a death costs time that grows with the match; buyback is 0.5 + 0.05 per minute of the price |
@@ -502,11 +502,22 @@ the mode's noon fallback.
   `FordsTowerComponent : DestructableComponent` is attached to the tagged entity at runtime. A unit counts as in contact at half width plus
   2.5 m. On a fall the engine hides the root, which hides the children, and turns physics off with the children; the fall line in the log
   reads `IsVisibleIncludeParents`, because each child's own flag stays true.
-- **Bowmen.** `fow_gunner_<side>_<lane>_<order>_<n>` tags are the bowman spots on a tower top (`TowerSlot.GunnerSpots`). A bowman cannot be
-  hurt, has speed limit 0, holds his spot under a scripted order and fires the tower's volley from a point outside the tower's walls
-  (`VolleyOriginFromSpot`).
+- **The missile owner.** `fow_gunner_<side>_<lane>_<order>_<n>` tags are spots on a tower top (`TowerSlot.GunnerSpots`), and a volley leaves from a
+  point outside the walls above the first one (`VolleyOriginFromSpot`). No bowman shows there. `AddCustomMissile` reads `shooterAgent.Index`, so each
+  tower has one hidden owner: the faction's first ranged troop, on that first spot, invulnerable, with `SetVisible(false)`, no formation and
+  `AgentControllerType.None`, on a team with `BattleSideEnum.None` that is hostile to nobody. Native target scans reject an agent at the enemy test,
+  so no AI aims at it (native 0x68EBC0, 0x68E650). With no AI controller its missiles still do damage, because `Mission.MissileHitCallback` cancels a
+  friend's hit only for an AI attacker. That also makes it a friend of its own side, so `FordsUpgradeHooks.Reduce` zeroes those hits (`IsOwnTowerShot`),
+  and `FordsMissionDirector.AttackerOf` takes its side from its tower. Its capsule stays, so a stray arrow can still vanish on it.
+  Tower shots no longer wear shields, because a friend's missile gives a shield no damage. Do not park the owner far away: a missile's first tick
+  sweeps scene objects from its start to its owner. On a generated map it stands 8 m behind the barricade, outside the attackers' swing.
 - **The volley.** Every second missile is the arrow `fow_tower_arrow` (`fords_items.xml`, registered for CustomGame only), the others are the
-  gunner's volley item. `AddCustomMissile` needs an owner agent, so a tower with no living bowman fires nothing.
+  owner's volley item, so a tower with no owner fires nothing.
+- **The rock.** Every `towers.rockEveryVolleys` volleys of a tower, `fow_tower_rock` takes the first javelin's place, with no spread. It is a hurled rock,
+  not a lobbed catapult shot: from about 27 m up and within 45 m a true lob takes 5 s or more and misses. The item copies `boulder_projectile` with
+  thrust 30 for 2500 and speed 25 for 8. Its `AffectsArea` ring is 1.2 m, full damage inside 1 m, and it ignores armour on a human. **Not proven in a
+  match:** that the rock shows and sounds right from a bare tower, its real damage, and no native fault on custom skeletons (the fire-pot crash in
+  `blow-diagnostics.md` is unresolved). Check 11 reads only the javelin and the arrow, and the rock counts as `otherItem`.
 - **Lane IDs.** `laneFaceIds` lists one navmesh face group per lane. `LaneFaceBars` bars each lane's units and mounts from the other lanes'
   groups and the tower-top group by `Agent.SetAgentExcludeStateForFaceGroupId`, which leaves room for five sets (the engine's limit is six).
   Cross paths and rings use group 0, which nobody is barred from. Not sealed yet: a run still logs up to 8% of unit time on a foreign group.
@@ -867,8 +878,8 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   native tower blows, which answers build-spec open question 3: melee AI does damage the barricade. The earlier FAIL (the 16:54
   match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten.
 - **The first AI matches saw no tower fall.** In `20261031-222418` and `20261031-225939` (1800 s, both
-  sides AI) no tower fell and no keep fell. Gunners absorb melee: a share of the blows land on the invulnerable gunners
-  (`GunnerBlowsMelee`) instead of the tower. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9
+  sides AI) no tower fell and no keep fell. On that generated map, gunners on the ground absorbed a share of the melee blows
+  (`GunnerBlowsMelee`); every report since they moved to the tower tops on 2026-11-02 records 0. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9
   info); the thrust damage floor (`towers.thrustFloorFactor`) turns the thrust ones into damage from 2026-11-01. Tower balance (hit points, regeneration, the damage factors) is the maintainer's call. Run `20261031-225939` lowered the
   deployed tower hit points for a test but could not prove which numbers loaded; the `[Tower] config` line now does. Since then towers do fall: the matches in [balance-log.md](fords-of-war/balance-log.md) lost 0 to 6 towers a side, and the 45-minute match `20261103-201138` lost 6 towers on one side with no keep down. The first keep fell in `20261103-203523`: Erebor beat Dol Guldur at 889 s, and check 14 passed its keep, result, exit and menu parts. A person has still to see the result panel.
 - **Regeneration against the damage stage.** Regeneration raises a tower's hit points, and the engine recomputes the stage from
@@ -899,6 +910,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-04: no bowmen on a tower: a hidden, neutral owner per tower, so no archer aims at it, and a rock every third volley (`towers.rockEveryVolleys`, `fow_tower_rock`); `towers.gunnersPerTower` is gone. Not yet run.
 - 2026-11-04: soldier control: P takes the soldier nearest the pointer (a hero in reach first) and hands it back, and a fall hands it back by itself; the panel and the commander camera stand aside and the match runs at 1x meanwhile (`FordsControlView`, `FordsPanelStandAside`, `FordsPointerPick`, `FordsAgentControl`, `FordsControlPick`), the engine's agent status HUD joins the view list, and the arm key `control_check` with the launcher flag `--control-check` scripts a take, a hand-back and a fall. Trolls, creature riders and seated crew cannot be taken. Not yet played. A lane whose towers have all fallen starts no new free wave for its owner (`TowerChain.LaneLost`); not yet measured. A tower takes at most 50 damage a second from ordinary blows (`towers.assaultDamagePerSecond`), and after minute 15 every blow on a tower does more (`towers.wearStartMinutes`, `towers.wearPerMinute`). Rohan's riders cost 0.7 of the full price for their level and its horse archers 0.5; Dol Guldur's four cheapest packs cost 0.8, its spider riders 1.5 and its fell wargs 1.2. Mordor's `damageToTowers` 0.6 of 2026-11-03 is gone. A threatened lane follows the buy cycle (`AiCommander.Defend`, committed late on 2026-11-03). Mike's target for a match is 30 to 40 minutes, 30 best, in place of 30 to 45. The engine is v1.5.6 changeset 125270.
 - 2026-11-03: nine more factions (Rivendell, Erebor, Harad, Gundabad, Dale, Dol Guldur, Easterlings, Umbar, Mirkwood), 13 in all, with more feats (tower range,
   regeneration, poison, order cooldown, camp reward); army upgrades bought with gold; the AI buys to each faction's identity (`aiBuyCycle` with `up:` and `beast:` entries);

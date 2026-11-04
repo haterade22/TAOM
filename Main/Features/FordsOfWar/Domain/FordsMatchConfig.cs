@@ -28,7 +28,7 @@ internal sealed record FordsMatchConfig(FordsEconomyConfig Economy, FordsWaveCon
     public static FordsMatchConfig Default { get; } = new(
         new FordsEconomyConfig(600, 120, 0.35f, 2, 300, 250, 60, 99999),
         new FordsWaveConfig(40f, 90, 300, 6, 3),
-        new FordsTowerConfig(8000, 11000, 18000, 0.15f, 4f, 3f, 1f, 45f, 2, 4f, 3, 45f, 20f, 0.2f, 50f, 15f, 0.15f),
+        new FordsTowerConfig(8000, 11000, 18000, 0.15f, 4f, 3f, 1f, 45f, 3, 4f, 3, 45f, 20f, 0.2f, 50f, 15f, 0.15f),
         new FordsHeroConfig(2, 60f, 6f, 0.5f, 0.05f, 300f, 3f, 0.4f),
         new FordsLaneConfig(20f, 25f, 6f, 60f, 70, 25f),
         new FordsCaptureConfig(12f, 20f),

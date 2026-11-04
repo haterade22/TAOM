@@ -7,13 +7,14 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <summary>
 /// The scripted volleys. A ready tower with an enemy inside its own fire range fires at the nearest hero if one is in range,
 /// otherwise at the nearest enemy, then waits VolleyIntervalSeconds. Destroyed and unknown towers never fire;
-/// a locked tower still does.
+/// a locked tower still does. Every RockEveryVolleys-th volley of a tower carries a rock (0 for none).
 /// </summary>
 internal sealed class TowerFireRules
 {
     private readonly FordsTowerConfig _config;
     private readonly TowerChain _chain;
     private readonly Dictionary<string, float> _cooldowns = new();
+    private readonly Dictionary<string, int> _volleysFired = new();
     private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
 
     public TowerFireRules(FordsTowerConfig config, TowerChain chain, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
@@ -47,7 +48,10 @@ internal sealed class TowerFireRules
             if (target == null)
                 continue;
 
-            volleys.Add(new TowerVolley(entry.TowerId, target.Key, _config.VolleyMissiles));
+            _volleysFired.TryGetValue(entry.TowerId, out var fired);
+            _volleysFired[entry.TowerId] = ++fired;
+            var rock = _config.RockEveryVolleys > 0 && fired % _config.RockEveryVolleys == 0;
+            volleys.Add(new TowerVolley(entry.TowerId, target.Key, _config.VolleyMissiles, rock));
             _cooldowns[entry.TowerId] = _config.VolleyIntervalSeconds / rate;
         }
 
