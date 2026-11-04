@@ -167,6 +167,7 @@ For EACH finding:
 
 **Check what Codex missed:**
 - Config ID consistency (kingdom/culture IDs match cheatsheet?)
+- Cross-config coverage: when a feature reads config A and config B, every entry in A has its entry in B (every CC culture in cultures.json has at least one career in taom_careers.xml)
 - Fail-safe defaults (`?? true` vs `?? false`)
 - No-op code paths
 - Dead config values

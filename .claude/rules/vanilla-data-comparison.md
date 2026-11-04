@@ -29,8 +29,8 @@ When you author a culture, faction or kingdom in one module, ask which other mod
 | any `scene_name=` that no longer resolves | — | `python tools/remap_stale_scene_names.py --dry-run` |
 | TaleWorlds API signatures | installed DLLs | `pwsh tools/taom-src.ps1 path <Type>` (NOT the decompiled dump) |
 | culture/clan/kingdom IDs | vanilla `SandBoxCore` XML | grep + `xml-data.md` ID table |
-| XSLT passthrough attributes | vanilla source the XSLT transforms (`xslt.md` file map) | transform and diff, `feedback_xslt_passthrough_unintended_inheritance.md` |
-| a culture's party-template bindings (`spcultures.xslt` or `taom_spcultures.xml`) | what the block EMITS vs what vanilla supplies for everything it does not name | `dotnet test TAOM.Tests --filter FullyQualifiedName~CulturePartyTemplate`; see [xslt.md](xslt.md) "Passthrough cuts both ways" |
+| XSLT passthrough attributes | vanilla source the XSLT transforms (`xslt.md` file map) | transform and diff |
+| a culture's party-template bindings (`spcultures.xslt` or `taom_spcultures.xml`) | what the block EMITS vs what vanilla supplies for everything it does not name | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~CulturePartyTemplate`; see [xslt.md](xslt.md) "Passthrough cuts both ways" |
 | GUI prefab **clones** (full `<Prefab>` copies of a vanilla prefab) | vanilla `Modules/{SandBox,SandBoxCore,Native}/GUI/Prefabs/<same-name>.xml` | `diff -w --strip-trailing-cr <vanilla> <taom>`; see [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md) |
 
 **Matching is case-insensitive.** Windows resolves `HART_ISENGARD` vs `HART_isengard`; an exact-case check produces false positives. The scene audit tools already lower-case both sides.

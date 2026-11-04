@@ -43,10 +43,7 @@ The file list (Files changed, or Implementation for a feature) names every shipp
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
-- A closing keyword in a commit body closes only the number that follows it: `Closes #1036, #1037,
-  #1040` closed #1036 alone on push (2026-10-27). Write the keyword before each number
-  (`Closes #1036, closes #1037`), or close the rest with `gh issue close`, and check every issue's
-  state after the push.
+- A closing keyword closes only the number after it; `tools/check_commit_msg.py` refuses `Closes #1, #2`. Check every issue's state after the push.
 - If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
   remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
   Before you add the label, write the check as steps in the feature doc's `## How to verify in game`

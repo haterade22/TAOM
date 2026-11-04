@@ -272,14 +272,6 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 
 ---
 
-## Post-Review Checklist
-
-The checks run in `/review-codex` Phase 3b. The one it lacks:
-
-- [ ] Cross-config coverage: when feature X reads from config A and config B, verify every entry in A has a corresponding entry in B (e.g., every CC culture in cultures.json has at least one career in taom_careers.xml). Review #24 found a crash from this gap.
-
----
-
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

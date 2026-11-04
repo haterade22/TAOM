@@ -12,14 +12,14 @@ compare with the snapshot under docs/reference/ when one exists.
 FIRST: which machine is this (docs/reference/development-machines.md)? On the laptop the live
 installs are partial, so broken refs into them are environment gaps, not defects.
 
-1. RUN THE GATES. Use the "Gate per file kind" section of `.claude/rules/moduledata-validation.md`
-   (the rule loads with any ModuleData XML you Read in the repo; if it has not, Read only that
-   section: Grep `^## Gate per file kind`, then Read from that line) and run
-   every gate its table lists for the kinds of file in scope; always run
-   `python tools/validate_xml_schemas.py <every changed engine XML file>` (it finds each file's
+1. RUN THE GATES. Run `python tools/data_gates.py <the live files in scope>`: the script owns the
+   table of gates per kind of file, takes the changed repo files from git, and needs the live
+   Armory and `TAOM_Map` files named on its command line (or `--all` for every gate). Its
+   `xml-schemas` gate is `python tools/validate_xml_schemas.py <every changed engine XML file>` (it finds each file's
    module itself; add that module's SubModule.xml to the list when it changed). Quote each
-   command and its summary line. A gate that could not run (no install, no lxml) is NOT RUN with
-   the reason, never a pass. Do NOT run dotnet: parallel reviewers building at once collide.
+   gate's line and the summary. A gate that could not run (no install, no lxml, SKIPPED) is NOT
+   RUN with the reason, never a pass. Do NOT pass `--with-tests` or run dotnet: parallel
+   reviewers building at once collide.
    NAME the shipped-data tests that cover your files (CulturePartyTemplateTests,
    CharacterFaceCoverageTests, StarterKitCoverageTests, CareerCultureCoverageTests,
    LanguageDataXmlTests, ...) and the orchestrator runs them.
@@ -35,8 +35,8 @@ installs are partial, so broken refs into them are environment gaps, not defects
    (listed by a `language_data.xml`) and STYLESHEET (applied to the data merged before its
    registration) load, but no XSD checks them. NATIVE means a `project.mbproj` row names it (or the
    stylesheet beside it); the line gives the row's id and type and claims no load, since the engine
-   loads a row only when it requests that id or reads that type, and the gates are in
-   `moduledata-validation.md` "Gate per file kind". NOT REGISTERED means no `<XmlName>`, manifest or
+   loads a row only when it requests that id or reads that type, and the gates are listed by
+   `python tools/data_gates.py --list`. NOT REGISTERED means no `<XmlName>`, manifest or
    `project.mbproj` row loads it, though the engine can still read it by fixed name
    (`global_strings.xml`, the scene lists); that is expected for C#-read data. Every line that says
    "(a real fault)" (a manifest the engine cannot load, a `Languages/` file no loadable manifest

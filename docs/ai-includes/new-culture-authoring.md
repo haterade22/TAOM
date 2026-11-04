@@ -301,7 +301,7 @@ Run these in order. Any FAIL blocks commit.
 python tools/validate_moduledata.py
 
 # 2. C# compile + tests.
-dotnet build Main --no-restore
+dotnet build Main --no-restore -p:DisableModuleCopy=true -p:ModuleId=
 dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
 ```
 
@@ -331,7 +331,7 @@ Expect Codex to catch similar patterns on your next culture.
 
 ### Build environment gotcha
 
-`dotnet build Main` may fail with `System.UnauthorizedAccessException: '0Harmony.dll' is denied` — this is the TAOM.Dependencies post-build copy step failing because Bannerlord (or Steam, or a recently-closed game) still has the DLL handle open. The C# compile already succeeded; only the deploy step blocked. Close Bannerlord/Steam and retry. **Do not** authorize sandbox-bypass workarounds; this is an environment issue per `.claude/rules/environment-failures.md`.
+`dotnet build Main` without `-p:ModuleId=` may fail with `System.UnauthorizedAccessException: '0Harmony.dll' is denied`: this is the TAOM.Dependencies post-build copy step failing because Bannerlord (or Steam, or a recently-closed game) still has the DLL handle open. The C# compile already succeeded; only the deploy step blocked. Close Bannerlord/Steam and retry. **Do not** authorize sandbox-bypass workarounds; this is an environment issue per `.claude/rules/environment-failures.md`.
 
 ---
 

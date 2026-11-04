@@ -21,7 +21,7 @@ Write `description:` as triggering conditions, ideally starting with "Use when�
 - Good: *"Use when a culture's troop tree or armor set needs authoring or revamping end-to-end."*
 - Bad: *"Scaffolds armor XML, swaps rosters, then validates."* (summarizes the body)
 
-> **Divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `bash tools/context_budget_scan.sh` flags >30-word descriptions.
+> Cap: 30 words (`tools/test_hooks.sh` 3b). Do not expand toward upstream's 1024 characters.
 
 ### Body structure
 
@@ -29,7 +29,7 @@ A skill holds the steps and the traps of its procedure; history and long referen
 
 ### Cross-references
 
-Every `/name` a skill body cites resolves to `.claude/skills/<name>/SKILL.md`, and every rule, ADR, memory and `docs/` path it cites exists. `python tools/lint_docs.py --quick` checks markdown links only, not a bare `/name`.
+Every `/name` a skill body cites resolves to `.claude/skills/<name>/SKILL.md`, and every rule, ADR and `docs/` path it cites exists. A skill cites no memory file: `python tools/lint_docs.py --fail-on-drift` fails on a `feedback_` token (`dead-memory-ref`). `python tools/lint_docs.py --quick` checks markdown links only, not a bare `/name`.
 
 ### Anti-patterns (from real upstream review)
 
@@ -62,13 +62,7 @@ The root may be a plugin repo, a marketplace or one skill folder; the whole tree
 
 ## Frontmatter field check
 
-For every field in the upstream skill's frontmatter, verify it appears in **`.claude/rules/harness-facts.md`** as documented-and-consumed by current Claude Code. As of 2026-04-26 the documented fields are:
-
-`name`, `description`, `allowed-tools`, `hooks`, `argument-hint`, `disable-model-invocation`, `when_to_use`
-
-That was the 2026-04-26 list and it is stale: `harness-facts.md` "Skill load semantics" holds the current one (verified 2026-07-18: it adds `model`, `effort`, `context`, `paths` and more), and its Agent table holds the subagent `model` / `effort` values. Check each upstream field there, not against the list above.
-
-Anything else is either undocumented (drop it) or might be consumed (verify with a doc URL before keeping).
+For every field in the upstream skill's frontmatter, verify it appears in **`.claude/rules/harness-facts.md`** ("Skill load semantics") as documented and consumed by current Claude Code. `tools/test_hooks.sh` 3b fails a key off the allowlist. A documented key missing from it goes into `SKILL_KEYS` and into harness-facts.md "Skill load semantics", with a doc URL. An undocumented key is dropped.
 
 **Specific killshots from prior reviews:**
 

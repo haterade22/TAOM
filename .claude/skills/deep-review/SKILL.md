@@ -192,7 +192,7 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 
 ## Step 3e: Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)
 
-If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. Per `.claude/rules/harness-facts.md` and `feedback_root_cause_mandatory.md` — this is not optional, not severity-gated, not "only HIGH." The literal text: *"Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features."*
+If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. It is not optional, not severity-gated, not "only HIGH." *"Do NOT skip this step. The point is not just to fix bugs, it's to make the same category of bug impossible in future features."*
 
 The recurring failure is conflating severity with importance for RCA: we patch LOW symptoms but never extract the systemic lesson, and the same category of bug ships again. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
 
@@ -202,8 +202,8 @@ The recurring failure is conflating severity with importance for RCA: we patch L
 
 1. Write the finding text + severity.
 2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.
-3. **Preventive action:** generalizable rule, feedback-memory entry, or scope extension to an existing rule? Or one-off?
-4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` + `~/.claude/projects/.../memory/feedback_*.md` for it), call that out — repeat-offender bugs need stronger preventive action than first-time bugs.
+3. **Preventive action:** generalizable rule, or scope extension to an existing rule? Or one-off?
+4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` for it), call that out: repeat-offender bugs need stronger preventive action than first-time bugs.
 
 **Write the result to `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`** following the format of `docs/reviews/rca-quickactions-2026-05-06.md` or `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md`:
 - Top-line summary
@@ -228,7 +228,7 @@ A better way that the review found and left in a report is a better way nobody g
 2. **Changed code only** (Mike, 2026-09-18). A FOLLOW-UP proposal (pre-existing code the change did not modify) is never applied here; list it with its issue number, or with the reason none is filed.
 3. **Re-verify, then apply or account.** Re-read the source behind each proposal before applying it (`.claude/rules/evidence-over-claims.md` §A). Every proposal not applied goes under NOT APPLIED with its reason: disproved, breaks an ADR, a single-owner file (`IoC.cs`, `SubModule.cs`) held by another session, or Mike declined. No silent skips.
 4. **Behaviour-changing proposals: ask once.** Put every CHANGING proposal in one `AskUserQuestion` batch before applying any; PRESERVING ones need no question.
-5. **Tests prove it.** The suite is green before you start. PRESERVING: an existing or new characterisation test, green before and after. CHANGING: its RED test first. Run at the `.claude/rules/evidence-over-claims.md` §B cadence and quote the final full suite. For XML, re-run the `.claude/rules/moduledata-validation.md` "Gate per file kind" gates for what you touched and the shipped-data tests Agent 7 named; edit XML per `tools/README.md` "XML I/O convention", never with `sed -i` on a CRLF file.
+5. **Tests prove it.** The suite is green before you start. PRESERVING: an existing or new characterisation test, green before and after. CHANGING: its RED test first. Run at the `.claude/rules/evidence-over-claims.md` §B cadence and quote the final full suite. For XML, re-run `python tools/data_gates.py` for what you touched and the shipped-data tests Agent 7 named; edit XML per `tools/README.md` "XML I/O convention", never with `sed -i` on a CRLF file.
 6. **One convergence pass, then stop.** Launch a single `deep-reviewer` on the diff of the applied improvements, checking standards and behaviour parity. Defects it finds go to the fix loop below; it may NOT open a new design round, which keeps the loop finite.
 7. **Review-only assignments skip this step.** Under a `.ai` review packet or any review-only request, the no-fix boundary in `.ai/roles/reviewer.md` wins: report the proposals, apply nothing.
 
