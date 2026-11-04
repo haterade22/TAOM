@@ -5600,3 +5600,10 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 - **Codex:** `ultra` on the range, 2 HIGH, 8 MEDIUM, 2 LOW. `high` on the fix diff, 2 HIGH, 6 MEDIUM, 2 LOW. Not run on round three, whose HIGH fix got the convergence pass only.
 - **Confirmed:** 21 rows in `docs/reviews/rca-follow-ups-2026-11-04.md`, 6 of them HIGH. One is proven in two game logs. Plan 032's owed fresh review found no CRITICAL or HIGH.
 - **In-game:** nothing was run. The owed checks are in the RCA.
+
+## Review (number assigned at merge): two Codex passes after the RCA follow-up fixes (2026-11-04)
+
+- **Scope:** the fixes no Codex pass had read, and the rules review's gates and tools in `f3653f9bb..49bf62fea`.
+- **Codex:** `xhigh`, twice, on Mike's word. 4 MEDIUM on the fixes, 7 MEDIUM and 6 LOW on the gates and tools.
+- **Confirmed:** 12 rows, C1 to C12, in `docs/reviews/rca-follow-ups-2026-11-04.md`. Eleven are fixed in `38e5e6274` and `ff2114556`, one is a recorded follow-up, and the rest are rejected with reasons there.
+- **In-game:** nothing was run. The owed checks are in the RCA.

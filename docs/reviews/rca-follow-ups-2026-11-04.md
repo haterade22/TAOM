@@ -57,15 +57,48 @@ Tooling ran `check_release_pair.py` read-only on the three release channels, aga
 
 This closes `rca-worker-thread-formation-patch-2026-10-02.md:140`. The last round, the evaluating cavalry gate, is sound. Its report found no CRITICAL or HIGH. The text items went into `35044f583`. The rest is below for Mike, as is what closing #714 needs: a session with the feature on, logs that show a layout assigned, and the body corrected.
 
+## The two Codex passes after round three (2026-11-04)
+
+Mike asked for Codex on 2026-11-04. One `xhigh` pass read the fixes no Codex pass had read (`4a7b7164d`, `0385cc041`, `931d59084`, `95a348a60`, `316b09529`), and one `xhigh` pass read the rules review's gates and tools in `f3653f9bb..49bf62fea`. It was the tier 2 pass the rules review still owed. I checked each finding against the code before acting on it.
+
+| # | Sev | Finding | Why missed | Result |
+|---|---|---|---|---|
+| C1 | MED | A remote puppet on a warg took the fallback branch, which cleared the timer and dropped the first rider's restore | The close sat only in the player and AI branches, and the warg trace did not treat a third kind of rider | `38e5e6274` |
+| C2 | MED | A rider on two wargs in overlapping rages can end with no formation | One rage's record lives in one tree | Not fixed: it needs a remount and a hit within about a second. Follow-up below |
+| C3 | MED | The hook's raw path let `git commit -n<input` through | Round four added `>` and not its pair | `ff2114556` |
+| C4 | MED | The NuGet rule missed a value holding a newline | `.+?` replaced a class that crossed lines | `ff2114556` |
+| C5 | MED | `commit_version` read the working file when `SubModule.xml` was not staged | The staged case was the only one written | `ff2114556` |
+| C6 | MED | `data_gates` kept git's quoted form of a non-ASCII path, so it selected no gate | Every fixture was ASCII | `ff2114556` |
+| C7 | MED | The signature gate skipped a generic service or adapter | Reflection's `Name` ends in the arity | `ff2114556` |
+| C8 | MED | `TROOP_ID_REMOVED` refused a single-quoted or spaced id. No shipped file has one | The pattern was copied from a double-quote writer | `ff2114556` |
+| C9 | MED | `config-protection` let `docs/./adrs` through | The path was normalized for separators and case only | `ff2114556` |
+| C10 | MED | The dotnet lint accepted a named `ModuleId`, or the word in a comment | It tested for the substring | `ff2114556` |
+| C11 | LOW | The doc graph ratchet passed an empty corpus | Lower counts always passed | `ff2114556` |
+| C12 | LOW | The release baseline test passed with the tag deleted from the call | The fake git read only the subcommand | `ff2114556` |
+
+**Rejected, with reason:**
+- An alias hiding an entry point, and two nested classes sharing a short name: no entry point in `Main` or `Client` uses such an alias, and the scanner fix would cost more than it gives.
+- `git merge -m "--no-verify"` is refused: the safe direction (row 18), and it is a message nobody writes.
+- `harness_retro` counting a denied request, and exiting 0 with one unreadable transcript: it warns on stderr, and the number only informs a person. `lint_docs` skipping an unreadable file: repo files are not unreadable here.
+- The ModuleData gates read the working tree: Mike kept this on 2026-11-04.
+
+**Clean in this pass, from source only:** the ladder cancel, the mutation gate, the prefab sizing and the hard AI income. Actual pixels and co-op integration stay UNVERIFIED.
+
+**Process:** my script committed `95a348a60` with one failing test, because the chain did not stop on a failure. `316b09529` corrected the test. A refused commit message then left two groups staged, so the next commit took both; I split them with a soft reset before anything left this machine. Both are the same fault: a command chain that carries on past a failure.
+
+## Mike's answers (2026-11-04)
+
+"As recommended": the 14 RCA decisions (`95a348a60`, `316b09529`), then the items below. No issue is filed for any of this.
+
 ## Follow-ups
 
-- FOLLOW-UP no issue: filing needs Mike's word. Owed in game: an unattended Fords match with check 12 reading stranded=0 and no "Exception running the behavior tree" line, a normal battle smoke, and a real crash under the Watchdog for `dump_crash`. With no issue, `triage-needs-ingame` does not list them.
-- FOLLOW-UP no issue: needs a log line or a native read, then Mike's call. Whether a mount's `IsPlayerControlled` is ever true decides if the "you lost control" branch in `PrepareOnFirstCall` ever runs.
-- FOLLOW-UP no issue: balance, Mike's call. `_random.Next(2, 3)` always gives 2 attacks, and `SetRageAttackTimer` restarts the timer every pass, so the 6 s timeout never ends a chase.
-- FOLLOW-UP no issue: Mixed Formations findings for Mike. A dead unit's slot returns at corpse deletion and not at death, a laid-out formation ignores shape orders, and the cavalry gate suspends a layout with no log line. `TaomSettings.cs:801`'s hint needs a new loc key.
-- FOLLOW-UP no issue: harness hardening needs Mike's word (`simplicity-criterion.md`). `_shellwords.py` passes `"$(git commit --no-verify)"`, backticks and wrappers such as `setsid`; nothing stops a deliberate bypass.
-- FOLLOW-UP no issue: hand-authored, so Mike's call. `mordor_num_*_template_lord_arc` and `kingdom_hero_party_gondor_{ithilien,belfalas}_template` are bound by nothing.
-- FOLLOW-UP no issue: pre-existing, LOW. `AgentHitBy` is held across frames with no slot check, a rider who moves to a second warg within a second loses his formation, and `party-templates.md` about :260 holds stale dry-run numbers.
+- FOLLOW-UP no issue: Mike waived it, 2026-11-04. Owed in game: the staged siege HUD strip, the career diamond tooltip frame, an unattended Fords match with check 12 reading stranded=0 and no "Exception running the behavior tree" line, a normal battle smoke, and a real crash under the Watchdog for `dump_crash`. With no issue, `triage-needs-ingame` does not list them.
+- FOLLOW-UP no issue: a native read on 2026-11-04 (`IMBAgent.SetController`) did not settle it, so the branch stays. The proof left is one warg rage while riding in a Custom Battle, which also answers `rca-seat-of-seeing-s1-2026-11-04.md:65`. Whether a mount's `IsPlayerControlled` is ever true decides if the "you lost control" branch in `PrepareOnFirstCall` ever runs.
+- Follow-up closed 2026-11-04 (Mike, 38e5e6274: the timer starts once and each attack restarts it, and `rageAttacks` says 2). `_random.Next(2, 3)` always gives 2 attacks, and `SetRageAttackTimer` restarts the timer every pass, so the 6 s timeout never ends a chase.
+- Follow-up closed 2026-11-04 (Mike, 38e5e6274: the gate logs once and the hint is corrected; the hint needed no key, since it is plain English; slot return and shape orders wait for the #714 session's logs). Mixed Formations findings for Mike. A dead unit's slot returns at corpse deletion and not at death, a laid-out formation ignores shape orders, and the cavalry gate suspends a layout with no log line. `TaomSettings.cs:801`'s hint needs a new loc key.
+- Follow-up closed 2026-11-04 (Mike: not fixed; only a deliberate command gets through, and a hook is not a security boundary). Harness hardening (`simplicity-criterion.md`). `_shellwords.py` passes `"$(git commit --no-verify)"`, backticks and wrappers such as `setsid`; nothing stops a deliberate bypass.
+- Follow-up closed 2026-11-04 (Mike, 38e5e6274: the two Mordor rosters are gone, and the Ithilien and Belfalas templates stay for those lords). `mordor_num_*_template_lord_arc` and `kingdom_hero_party_gondor_{ithilien,belfalas}_template` are bound by nothing.
+- FOLLOW-UP no issue: pre-existing, LOW, with Codex's proof in row C2. `AgentHitBy` is held across frames with no slot check, a rider who moves to a second warg within a second loses his formation, and `party-templates.md` about :260 holds stale dry-run numbers.
 - At the next deploy, delete `Modules/TAOM/GUI/Brushes/GoldIcon.xml` from the install: `package_release.py` refuses a stale module file.
 
 ## Feedback to codify
