@@ -353,7 +353,7 @@ The hover tooltip shows:
 
 | Sprite ID | Size | Count | Used By |
 |-----------|------|-------|---------|
-| `career_{id}_portrait` | 800x400 | 21 PNGs (`ls` of `SpriteParts/ui_taom_career_system/CareerSystem/Portraits`), used by 35 of the 70 careers because new-faction careers reuse portraits; 35 careers have none | CareerScreen header bar |
+| `career_{id}_portrait` | 800x400 | 21 PNGs (`ls` of `SpriteParts/ui_taom_career_system/CareerSystem/Portraits`), used by 46 of the 91 careers (counted 2026-11-04) because new-faction careers reuse portraits; 45 careers have none | CareerScreen header bar |
 | `{career_id}_ability` | 256x256 | 49 baked (named effect-icon set from 2026-07-07; see career-system.md); the 21 new-faction careers still need one | CareerScreen header bar ability icon |
 | `taom_{resource}_icon` | 45x45 | 8 remaining | Map bar resource icons |
 
