@@ -13,13 +13,16 @@ other codes would read as a flood of false findings. Read-only.
 
 Usage: python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules
 
-Exit code: 0 the pair agrees, 1 a disagreement, 2 a folder or file it needs is missing, so nothing
-was judged. Never read 2 as a pass.
+Exit code: 0 the pair agrees, 1 a disagreement, 2 a folder or file it needs is missing or does not
+parse, so nothing was judged, 3 the tool crashed (the traceback is on stderr), so nothing was judged
+either. Never read 2 or 3 as a pass.
 """
 from __future__ import annotations
 
 import argparse
 import sys
+import traceback
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -39,12 +42,25 @@ def main(argv=None) -> int:
 
     moduledata = args.modules / "TAOM" / "ModuleData"
     settlements_xml = args.modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
+    # settlements.xslt strips vanilla's settlement rows: without it they return in game.
     needed = (moduledata / "taom_spcultures.xml", moduledata / "characters" / "clans.xml", settlements_xml,
-              args.vanilla_modules / "SandBox" / "ModuleData" / "spclans.xml")
+              settlements_xml.with_suffix(".xslt"), args.vanilla_modules / "SandBox" / "ModuleData" / "spclans.xml")
     missing = [p for p in needed if not p.is_file()]
     if missing:
         for path in missing:
             print(f"ERROR: not found: {path}", file=sys.stderr)
+        print("No verdict: the pair was not checked.", file=sys.stderr)
+        return 2
+    # The registries read these files with regexes, which take a half-written file for a short one.
+    unparsed = []
+    for path in needed:
+        try:
+            ET.parse(path)
+        except (ET.ParseError, OSError) as exc:
+            unparsed.append((path, exc))
+    if unparsed:
+        for path, exc in unparsed:
+            print(f"ERROR: does not parse: {path}: {exc}", file=sys.stderr)
         print("No verdict: the pair was not checked.", file=sys.stderr)
         return 2
 
@@ -56,7 +72,8 @@ def main(argv=None) -> int:
         return 2
 
     validator = ts.Validator(moduledata, [], registries, extra_ref_roots=build_extra_ref_roots(args.modules))
-    issues = [i for i in validator._ref_sweep() + validator._landless_cultures() if i.code in PAIR_CODES]
+    issues = [i for i in validator._ref_sweep() + validator._broken_settlement_xslt_refs()
+              + validator._landless_cultures() if i.code in PAIR_CODES]
     issues.sort(key=lambda i: i.sort_key())
     if issues:
         print(ts.format_report(issues))
@@ -66,5 +83,18 @@ def main(argv=None) -> int:
     return 0
 
 
+def entry() -> int:
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code that
+    means "a disagreement", so a folder named folder.xml under TAOM/ModuleData read as a verdict on the
+    pair. argparse's SystemExit passes through."""
+    try:
+        return main()
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for a finding
+        traceback.print_exc()
+        print("ERROR: tools/check_release_pair.py crashed (traceback above); no verdict was reached, "
+              "exit 3.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(entry())

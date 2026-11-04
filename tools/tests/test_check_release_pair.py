@@ -5,9 +5,11 @@ Every test builds a synthetic channel and a synthetic install, because a channel
 E:/LOTRAOM_Releases is the maintainer's and holds no vanilla module."""
 import io
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
@@ -144,6 +146,80 @@ class ReleasePairTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertNotIn("PASS:", out)
         self.assertIn("no settlement", err)
+
+
+    def test_a_home_written_as_xslt_text_that_the_map_lacks_is_found(self):
+        # spclans.xslt writes its homes as <xsl:attribute> element text, which no XML attribute read sees.
+        _write(self.taom / "spclans.xslt",
+               '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+               '  <xsl:template match="Faction">\n'
+               '    <xsl:attribute name="initial_home_settlement">Settlement.town_b1</xsl:attribute>\n'
+               '  </xsl:template>\n</xsl:stylesheet>\n')
+        self._assert_finds("BROKEN_SETTLEMENT_REF")
+
+    def test_a_home_written_as_xslt_text_that_the_map_holds_passes(self):
+        _write(self.taom / "spclans.xslt",
+               '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+               '  <xsl:attribute name="initial_home_settlement">Settlement.town_a1</xsl:attribute>\n'
+               '</xsl:stylesheet>\n')
+        code, out, _ = self._run()
+        self.assertEqual(code, 0, out)
+
+    def _assert_refused(self, needle):
+        code, out, err = self._run()
+        self.assertEqual(code, 2, out + err)
+        self.assertNotIn("PASS:", out)
+        self.assertIn(needle, err)
+
+    def test_a_map_file_that_does_not_parse_is_refused_not_passed(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("</Settlements>", "  <Settlement id=\"town_a2\"\n"))
+        self._assert_refused("settlements.xml")
+
+    def test_a_taom_clans_file_that_does_not_parse_is_refused_not_passed(self):
+        _write(self.taom / "characters" / "clans.xml", "<Factions><Faction id=")
+        self._assert_refused("clans.xml")
+
+    def test_a_vanilla_clans_file_that_does_not_parse_is_refused_not_passed(self):
+        _write(self.install / "SandBox" / "ModuleData" / "spclans.xml", "<Factions>")
+        self._assert_refused("spclans.xml")
+
+    def test_a_map_with_no_settlements_xslt_is_refused_not_passed(self):
+        # Without the strip, vanilla's settlement rows would return in game.
+        (self.map / "settlements.xslt").unlink()
+        self._assert_refused("settlements.xslt")
+
+
+class EntryPointTests(unittest.TestCase):
+    """A crash must exit 3. Python's own code for an uncaught exception is 1, the code the tool documents
+    as a disagreement, so a folder named folder.xml read as a verdict on the pair."""
+
+    def test_unexpected_exception_exits_3_with_the_traceback(self):
+        err = io.StringIO()
+        with mock.patch.object(crp, "main", side_effect=RuntimeError("boom")), redirect_stderr(err):
+            code = crp.entry()
+        self.assertEqual(code, 3)
+        self.assertIn("Traceback", err.getvalue())
+
+    def test_a_normal_exit_code_passes_through(self):
+        for rc in (0, 1, 2):
+            with self.subTest(rc=rc), mock.patch.object(crp, "main", return_value=rc):
+                self.assertEqual(crp.entry(), rc)
+
+    def test_a_folder_named_like_an_xml_file_exits_3_from_the_command_line(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            modules, install = root / "channel" / "Modules", root / "install" / "Modules"
+            taom, map_ = modules / "TAOM" / "ModuleData", modules / "TAOM_Map" / "ModuleData"
+            _write(taom / "taom_spcultures.xml", CULTURES)
+            _write(taom / "characters" / "clans.xml", CLANS)
+            _write(map_ / "settlements.xml", SETTLEMENTS)
+            _write(map_ / "settlements.xslt", STRIP)
+            _write(install / "SandBox" / "ModuleData" / "spclans.xml", VANILLA_CLANS)
+            (taom / "folder.xml").mkdir()
+            run = subprocess.run([sys.executable, "-B", str(Path(crp.__file__).resolve()), str(modules),
+                                  "--vanilla-modules", str(install)], capture_output=True, text=True, timeout=120)
+        self.assertEqual(run.returncode, 3, run.stdout + run.stderr[-2000:])
+        self.assertIn("Traceback", run.stderr)
 
 
 if __name__ == "__main__":

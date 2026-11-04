@@ -821,6 +821,28 @@ class BuildRegistriesTests(unittest.TestCase):
         regs = ts.build_registries(self.md, modules)
         self.assertEqual([s for s in regs.suspect_registries if "body_properties" in s], [])
 
+    @staticmethod
+    def _suspect(regs, label):
+        return [s for s in regs.suspect_registries if s.startswith(f"{label} registry")]
+
+    def test_shrunken_settlements_and_rosters_registries_warn(self):
+        # A broken source path empties them, and an empty registry switches its pass off silently.
+        modules = Path(self._tmp.name) / "Modules"
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual(len(self._suspect(regs, "settlements")), 1)
+        self.assertEqual(len(self._suspect(regs, "equipment_rosters")), 1)
+
+    def test_healthy_settlements_and_rosters_registries_are_not_flagged(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "TAOM_Map" / "ModuleData" / "settlements.xml",
+               '<Settlements>\n' + "".join(f'  <Settlement id="s{i}" />\n' for i in range(600)) + '</Settlements>\n')
+        _write(modules / "SandBoxCore" / "ModuleData" / "sets.xml",
+               '<EquipmentRosters>\n' + "".join(f'  <EquipmentRoster id="r{i}" />\n' for i in range(2100))
+               + '</EquipmentRosters>\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual(self._suspect(regs, "settlements"), [])
+        self.assertEqual(self._suspect(regs, "equipment_rosters"), [])
+
     def test_no_game_install_does_not_flag_registries_suspect(self):
         # Empty-by-design, already reported by the CLI. Flagging it here would cry
         # wolf on every run without the game install.
@@ -3515,6 +3537,18 @@ class ItemSlotRejectedTests(unittest.TestCase):
         self.assertEqual(code, 2)
 
 
+class NoInstallWarningTests(unittest.TestCase):
+    def test_the_warning_names_every_ref_check_that_is_skipped(self):
+        with tempfile.TemporaryDirectory() as td:
+            md = Path(td) / "ModuleData"
+            md.mkdir()
+            _code, _out, err = _run_main("--moduledata", str(md), "--game-modules", str(Path(td) / "nowhere"),
+                                         "--code", "BROKEN_ROSTER_REF")
+        warning = err.split("SKIPPED", 1)[0]
+        for code in ("BROKEN_ITEM_REF", "BROKEN_ROSTER_REF", "BROKEN_SETTLEMENT_REF"):
+            self.assertIn(code, warning)
+
+
 class BrokenRosterRefTests(unittest.TestCase):
     """BROKEN_ROSTER_REF. An <EquipmentSet id> naming no defined <EquipmentRoster> null-dereferences
     inside the NPCCharacters load, and the engine's empty catch then stops every character after it in
@@ -3590,6 +3624,16 @@ class BrokenRosterRefTests(unittest.TestCase):
     def test_the_registry_is_unavailable_without_an_install(self):
         self.assertEqual(self._registry(with_install=False), set())
 
+    def test_a_roster_only_the_incompatible_navaldlc_defines_is_not_known(self):
+        # SubModule.xml lists NavalDLC as incompatible, so a roster only it defines is absent in game.
+        _write(self.root / "Modules" / "NavalDLC" / "ModuleData" / "naval_equipment_sets.xml",
+               '<EquipmentRosters>\n  <EquipmentRoster id="brother_char_creation_nord" />\n</EquipmentRosters>\n')
+        self.assertNotIn("brother_char_creation_nord", self._registry())
+        _write(self.md / "characters" / "lords_test.xml", self.NPC.format(ref="brother_char_creation_nord"))
+        regs = ts.build_registries(self.md, self.root / "Modules")
+        issues = ts.Validator(self.md, self.schemas, regs).run()
+        self.assertEqual([i.code for i in issues if i.code == "BROKEN_ROSTER_REF"], ["BROKEN_ROSTER_REF"])
+
 
 class BrokenSettlementRefTests(unittest.TestCase):
     """BROKEN_SETTLEMENT_REF. A clan's or kingdom's home and a village's bound town name a settlement in
@@ -3643,6 +3687,67 @@ class BrokenSettlementRefTests(unittest.TestCase):
         _write(self.md / "characters" / "clans.xml", self.CLAN.format(ref="town_none"))
         self.assertEqual(self._found(settlements=()), [])
 
+    XSLT = ('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+            '  <xsl:template match="Faction[@id=\'clan_x\']">\n%s'
+            '  </xsl:template>\n</xsl:stylesheet>\n')
+
+    def test_a_home_written_as_xsl_attribute_text_is_read(self):
+        # spclans.xslt, spkingdoms.xslt and spcultures.xslt write 34 homes this way, as element text.
+        _write(self.md / "spclans.xslt", self.XSLT %
+               '    <xsl:attribute name="initial_home_settlement">Settlement.town_none</xsl:attribute>\n')
+        found = self._found()
+        self.assertEqual([(i.file, i.line) for i in found], [("spclans.xslt", 3)])
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+        self.assertIn("town_none", found[0].message)
+
+    def test_a_home_written_as_an_attribute_value_in_an_xslt_is_read(self):
+        _write(self.md / "spkingdoms.xslt", self.XSLT %
+               '    <Faction initial_home_settlement="Settlement.town_none" />\n')
+        self.assertEqual([i.file for i in self._found()], ["spkingdoms.xslt"])
+
+    def test_a_known_home_in_an_xslt_is_clean(self):
+        _write(self.md / "spclans.xslt", self.XSLT %
+               '    <xsl:attribute name="initial_home_settlement">Settlement.town_known</xsl:attribute>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_a_loc_key_in_an_xslt_is_not_a_ref(self):
+        _write(self.md / "spcultures.xslt", self.XSLT %
+               '    <xsl:attribute name="name">{=Settlements.Settlement.name.x}Town</xsl:attribute>\n'
+               '    <xsl:text>{=Settlements.Settlement.name.y}</xsl:text>\n'
+               '    <xsl:text>"{=Settlements.Settlement.name.z}"</xsl:text>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_a_commented_out_xslt_home_is_ignored_and_lines_hold(self):
+        _write(self.md / "spclans.xslt", self.XSLT %
+               '    <!-- the old home\n         <xsl:attribute name="initial_home_settlement">Settlement.town_gone</xsl:attribute> -->\n'
+               '    <xsl:attribute name="initial_home_settlement">Settlement.town_none</xsl:attribute>\n')
+        self.assertEqual([i.line for i in self._found()], [5])
+
+    def test_the_xslt_pass_reads_only_the_tools_own_moduledata(self):
+        _write(self.root / "other" / "spclans.xslt", self.XSLT %
+               '    <xsl:attribute name="initial_home_settlement">Settlement.town_none</xsl:attribute>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_a_commented_out_xml_ref_is_ignored_and_lines_hold(self):
+        # A commented-out Faction row must not fail a good channel or the commit gate.
+        _write(self.md / "characters" / "clans.xml",
+               '<Factions>\n  <!-- <Faction id="clan_old" initial_home_settlement="Settlement.town_old"/>\n'
+               '       second comment line -->\n'
+               '  <Faction id="clan_x" initial_home_settlement="Settlement.town_none" />\n</Factions>\n')
+        found = self._found()
+        self.assertEqual([(i.file, i.line) for i in found], [("characters/clans.xml", 4)])
+        self.assertIn("town_none", found[0].message)
+
+    def test_a_commented_out_ref_of_every_other_kind_is_ignored_too(self):
+        _write(self.md / "characters" / "lords_test.xml",
+               '<NPCCharacters>\n  <!-- <equipment id="Item.ghost"/> <x culture="Culture.ghost"/>\n'
+               '       <x troop="NPCCharacter.ghost"/> <x f="Faction.ghost"/> -->\n</NPCCharacters>\n')
+        regs = ts.Registries(items={"real"}, item_def_files={}, npccharacters={"real"},
+                             cultures={"real"}, party_templates=set(), factions={"real"})
+        broken = [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                  if i.code in ("BROKEN_ITEM_REF", "BROKEN_TROOP_REF", "UNKNOWN_CULTURE", "BROKEN_FACTION_REF")]
+        self.assertEqual(broken, [])
+
     def _registry(self, strip=True):
         modules = self.root / "Modules"
         _write(modules / "SandBox" / "ModuleData" / "settlements.xml",
@@ -3664,6 +3769,16 @@ class BrokenSettlementRefTests(unittest.TestCase):
 
     def test_the_registry_is_unavailable_without_an_install(self):
         self.assertEqual(ts.build_registries(self.md, None).settlements, set())
+
+    def test_vanilla_cultures_can_come_from_a_second_modules_root(self):
+        # Culture.nord defined by the install must not read UNKNOWN_CULTURE on a channel that holds no SandBox.
+        channel, install = self.root / "channel", self.root / "install"
+        channel.mkdir()
+        _write(install / "SandBox" / "ModuleData" / "spcultures.xml",
+               '<SPCultures>\n  <Culture id="install_only_culture" />\n</SPCultures>\n')
+        self.assertNotIn("install_only_culture", ts.build_registries(self.md, channel).cultures)
+        self.assertIn("install_only_culture",
+                      ts.build_registries(self.md, channel, vanilla_modules=install).cultures)
 
     def test_vanilla_clans_can_come_from_a_second_modules_root(self):
         # A release channel holds no SandBox: its clan registry needs the install's.

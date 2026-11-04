@@ -747,9 +747,10 @@ def main() -> int:
         # Per environment-failures.md: report, don't guess. The item/culture
         # registry will be TAOM-only, so external refs will look broken.
         print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
-              f"         item / troop / party-template / body-property / faction ref checks\n"
+              f"         item / troop / party-template / body-property / faction / settlement / roster ref checks\n"
               f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
-              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF) will be\n"
+              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF,\n"
+              f"         BROKEN_ROSTER_REF) will be\n"
               f"         SKIPPED (need the game install for a complete registry). Culture-validity, duplicate-id,\n"
               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
               f"         pass --game-modules <path> to enable the skipped checks.\n"
