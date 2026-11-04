@@ -71,7 +71,7 @@ All verified against the installed v1.4.7 binaries, not assumed:
 
 3. **`IsFinalized` is already true inside the handler.** `MapEvent.State` is set to
    `WaitingRemoval` at `:2067`, one line *before* the dispatch at `:2068`. Sibling code
-   (`EncounterAdapter.cs:137`) legitimately gates on `IsFinalized` for a different purpose —
+   (`EncounterAdapter.cs:302`) legitimately gates on `IsFinalized` for a different purpose : 
    **doing so here would log nothing, forever, with no error.**
 
 ## Where the code lives now

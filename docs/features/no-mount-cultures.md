@@ -4,14 +4,14 @@
 
 Certain TAOM cultures intentionally omit horses from character creation equipment. This requires four Harmony patches to prevent vanilla's CC narrative stage from crashing when no horse is present in a culture's battle equipment roster.
 
-**Shipped no-mount cultures:** Ered Luin (the Blue Mountains dwarves, [ered-luin.md](ered-luin.md)), Goblin-town, the Misty Mountain orcs and Blue Craig: none of their `player_char_creation_{culture}_{title}_{m|f}` rosters has a Horse slot, and `tools/generate_char_creation_equipment.py` marks each `no_mount: True`. **Erebor is no longer one:** commit `440d65342` (2026-03-31) took the horse out of its rosters and `d80cd7645` (2026-04-07) put `sumpter_horse` and `light_harness` back into all 16, where they still are. Removing them again is open for Mike's decision.
+**Shipped no-mount cultures:** Ered Luin (the Blue Mountains dwarves, [ered-luin.md](ered-luin.md)), Goblin-town, the Misty Mountain orcs, Blue Craig and Angaladh: none of their `player_char_creation_{culture}_{title}_{m|f}` rosters has a Horse slot, and `tools/generate_char_creation_equipment.py` marks each `no_mount: True`. **Erebor is no longer one:** commit `440d65342` (2026-03-31) took the horse out of its rosters and `d80cd7645` (2026-04-07) put `sumpter_horse` and `light_harness` back into all 16, where they still are. Removing them again is open for Mike's decision.
 
 > **Updated 2026-08-28 (issue #515): "no-mount" now means "no HORSE".** Erebor fields a rideable war ram, so `troops_erebor.xml` carries Horse-slot entries for the first time and dwarves are no longer `CanRide="false"`. Nothing in this document's crash analysis changes: the patches key on whether a *character-creation* roster has a Horse slot (Erebor's have had one since `d80cd7645`; see above). The `MOUNTED_DWARF` validator rule likewise still fires for a dwarf on a horse; it allowlists only the two war-ram item ids. See [war-ram.md](war-ram.md).
 
 ## Why This Exists
 
 - **Vanilla behavior:** Six `Get*NarrativeMenuCharacterArgs` private methods in `CharacterCreationCampaignBehavior` drive each CC stage. Three of them (youth, adult, age selection) unconditionally read `DefaultEquipment[Horse].Item.StringId` and spawn a horse actor. All vanilla culture CC rosters include horse + harness slots.
-- **TAOM requirement:** Dwarves don't ride horses (lore). Ered Luin's, Goblin-town's, the Misty Mountain orcs' and Blue Craig's CC equipment rosters have no horse slots. (They do ride war rams as of #515, but that is a battle-roster mount and never appears in a CC roster, so this patch family is unaffected.)
+- **TAOM requirement:** Dwarves don't ride horses (lore). Ered Luin's, Goblin-town's, the Misty Mountain orcs', Blue Craig's and Angaladh's CC equipment rosters have no horse slots. (They do ride war rams as of #515, but that is a battle-roster mount and never appears in a CC roster, so this patch family is unaffected.)
 - **Without this fix:** Two cascading crashes per horse-reading CC stage:
   1. `NullReferenceException` in `Get{Youth|Adult|AgeSelection}MenuNarrativeMenuCharacterArgs` — `DefaultEquipment[Horse].Item` is null.
   2. `ArgumentNullException("key")` in `SpawnNonHumanNarrativeMenuCharacter` — horse scene character has uninitialized (null) item ID because `ModifyMenuCharacters` never set it.
@@ -24,7 +24,7 @@ Certain TAOM cultures intentionally omit horses from character creation equipmen
 
 ### Solution Approach
 
-Four thin Harmony patches in `Patch20_NarrativeHorseGuard`:
+Four thin Harmony patches in `Patch20_NarrativeHorseGuard` guard the horse (the category also holds two unrelated patches in the same file: `CharacterCreationNarrativeStageView_RefreshAgentVisuals_Patch` syncs each scene character's Race, and `CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch` replaces the age-30 animation). Each of the three Prefixes asks `INarrativeHorseGuardService.TryBuildNoHorseArgs`, which reads `IEquipmentRosterProvider.HasHorse` (true only when `DefaultEquipment[Horse].Item` is set; an unknown roster lets vanilla run) When the roster has no horse, the Prefix also removes the menu's non-human scene characters (`NarrativeHorseGuardPatchHelper.RemoveHorseCharacters`):
 
 1. **Prefix on `GetYouthMenuNarrativeMenuCharacterArgs`**: Looks up the culture's CC equipment roster. If `DefaultEquipment[Horse].Item == null`, returns a `__result` containing only the player character entry (`characterId: "player_youth_character"`, age 17) — skipping the horse `NarrativeMenuCharacterArgs` entirely. Vanilla runs for horse-enabled cultures (returns `true`).
 
@@ -32,13 +32,13 @@ Four thin Harmony patches in `Patch20_NarrativeHorseGuard`:
 
 3. **Prefix on `GetAgeSelectionMenuNarrativeMenuCharacterArgs`**: Identical logic. Returns only the player character entry (`characterId: "player_age_selection_character"`, age = `StartingAge`) when no horse is present.
 
-4. **Finalizer on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): Suppresses `ArgumentNullException("key")` that occurs when the horse scene character's item ID was never set (because the horse entry was skipped by any of the three Prefixes). The horse actor is simply not spawned.
+4. **Prefix on `SpawnNonHumanNarrativeMenuCharacter`** (`SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView`): a backstop behind the three Prefixes. It skips the spawn, and logs a warning, when the spawn point, either item id, the horse's action set code or the mount creation key is missing (`NarrativeHorseGuardPatchHelper.CanSpawnMount`). Vanilla reads each of these unchecked; a null item id or action set code is what throws `ArgumentNullException("key")`. It replaced a Finalizer that swallowed every NRE in the method. The horse actor is simply not spawned.
 
 ### Component Diagram
 
 ```
 taom_char_creation_equipment.xml
-  └── Ered Luin, Goblin-town, Misty Mountain orc and Blue Craig rosters: no Horse/HorseHarness slots
+  └── Ered Luin, Goblin-town, Misty Mountain orc, Blue Craig and Angaladh rosters: no Horse/HorseHarness slots
 
 Patch20_NarrativeHorseGuard
   ├── CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch [Prefix]
@@ -52,9 +52,9 @@ Patch20_NarrativeHorseGuard
   ├── CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Patch [Prefix]
   │     Same null check → returns "player_age_selection_character" only (age = StartingAge)
   │
-  └── CharacterCreationNarrativeStageView_SpawnNonHuman_Patch [Finalizer]
-        Catches ArgumentNullException("key") from null horse item ID
-        → horse actor simply not spawned (covers all three prefix paths)
+  └── CharacterCreationNarrativeStageView_SpawnNonHuman_Patch [Prefix]
+        Skips the spawn when a value vanilla reads unchecked is missing
+        → horse actor simply not spawned (backstop for all three prefix paths)
 ```
 
 ### Crash Flow (Without Patches)
@@ -103,7 +103,7 @@ The patches detect horse absence at runtime — no code change needed to make a 
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | All four patch classes (three Prefixes + Finalizer) |
+| `Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` | All six `Patch20_NarrativeHorseGuard` patch classes: the four horse guards (four Prefixes) plus the Race sync and the age-30 animation override; also the `NarrativeHorseGuardPatchHelper` |
 | `Main/SubModule.cs` | `PatchCategory("Patch20_NarrativeHorseGuard")` registration |
 | `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` | CC equipment rosters; the no-mount cultures' have no Horse slots |
 | `tools/generate_char_creation_equipment.py` | Writes a culture's CC rosters (`--append <culture>`); a `CULTURES` row with `no_mount: True` gets no Horse or HorseHarness |
@@ -116,7 +116,7 @@ The patches detect horse absence at runtime — no code change needed to make a 
 
 ## Tests
 
-No unit tests — all patches are thin Harmony entry points with no extractable service logic. The entire logic is a null check (`DefaultEquipment[Horse].Item != null`) and an exception type/parameter check (`ArgumentNullException { ParamName == "key" }`).
+The decision logic is extracted and tested: `TAOM.Tests/Features/CharacterCreation/NarrativeHorseGuardServiceTests.cs` (8 tests) covers `TryBuildNoHorseArgs`, and `NarrativeMountSpawnGuardTests.cs` (7 tests) covers `CanSpawnMount` and the patch's shape. The Harmony patch invocation itself needs a live game.
 
 **Trailer:** `Not-tested: Harmony patch invocation (requires live game)`
 

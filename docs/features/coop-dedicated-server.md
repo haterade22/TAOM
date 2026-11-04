@@ -131,7 +131,7 @@ With all three, TAOM stages with only `-Modules` and `-ExtraModules`, and TAOM_M
 |------|---------|
 | `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac` | The skeleton package |
 | `tools/build_ds_skeleton_pack.py` | Builds and checks it |
-| `tools/audit_armory_refs.py` | Warns on drift after an Armory sync |
+| `tools/audit_armory_refs.py` | Warns on skeleton-package drift after an Armory sync; its companion checks (section 7 of its docstring) fail the verdict |
 | `Main/TAOM.csproj` | `MirrorWin64ShippingClientToServer` |
 
 ## Tests and gates

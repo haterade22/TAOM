@@ -38,7 +38,7 @@ GetVolunteerTroopId(context)
 Weighted selection within each pool uses cumulative-weight roll-out (see `PickWeighted`).
 
 Pool data has two sources:
-1. **Hand-written C# `InitializeXxx*()` methods:** Gondor, Dol Guldur, Erebor, Lothlórien, Shaghâna, Âbanissa, Rhûn, Gundabad, Goblin, Misty Mountain Orcs, Rivendell, Blue Craig, Lindon, Mordor, Dale, Rohan, Harad, Dunland, Isengard, Mirkwood, Umbar, Arthedain, Cardolan, Rhudaur, Ered Luin. Static-constructor wiring; one method per (culture, scope) combination. Ered Luin's is a culture pool only: `eredluin_delver` (weight 6) heads the axe, mattock and bow lines, `eredluin_noble` (2) the Broadbeam and Firebeard lines.
+1. **Hand-written C# `InitializeXxx*()` methods:** Gondor, Dol Guldur, Erebor, Lothlórien, Shaghâna, Âbanissa, Rhûn, Gundabad, Goblin, Misty Mountain Orcs, Rivendell, Blue Craig, Lindon, Mordor, Dale, Rohan, Harad, Dunland, Isengard, Mirkwood, Umbar, Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion, South Rhovanion. Static-constructor wiring; one method per (culture, scope) combination. Ered Luin's is a culture pool only: `eredluin_delver` (weight 6) heads the axe, mattock and bow lines, `eredluin_noble` (2) the Broadbeam and Firebeard lines. Anduin Vale, Angáladh, Dorwinion and South Rhovanion are likewise culture-only pools of two roots each, a levy at weight 6 and a second root (`anduinvale_beorning_youth`, `angaladh_ironwood_youth`, `dorwinion_noble`, `southrhovanion_northman_youth`) at 2.
 2. **JSON file `recruitment_pools/gondor.json`** — for Gondor only as of 2026-05-23. Loaded lazily once per process via `EnsureGondorJsonLoaded` in the instance constructor (idempotent via `Interlocked.CompareExchange`). JSON entries OVERWRITE matching hand-written keys when present; absent JSON file = hand-written behaviour (which is what tests see).
 
 ### Reachability invariant (every troop is accounted for)
@@ -150,7 +150,7 @@ The predicate is evaluated **per-lookup**, not at registration time — kingdom 
 
 ## Tests
 
-- [`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`](../../TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs) — ~150 test methods covering:
+- [`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`](../../TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs): ~190 test methods covering:
   - Per-culture pool returns (Gondor, Dol Guldur, Erebor, Lothlórien, Shaghâna, Âbanissa, Rhûn, Ered Luin)
   - Settlement → bound-settlement → clan → culture fallback ordering
   - Weighted-random boundary rolls (every settlement pool's cumulative buckets validated at edge rolls)
@@ -222,7 +222,7 @@ Known overhead: the `LogDebug` call in `GetVolunteerTroopId` interpolates a stri
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
-- **Per-culture partial-file split (2026-07-01, #308).** The hand-written `InitializeXxx*()` pool methods no longer all live in `VolunteerRecruitmentService.cs`; they are split into per-culture partial files under `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs` (Dale, DolGuldur, Dunland, Erebor, Gondor, Harad, Isengard, Lothlorien, Mirkwood, Mordor, OrcKingdoms, Rhun, Rivendell, Rohan, Umbar; later PromotedCultures for Blue Craig and Lindon, Arthedain, Cardolan, Rhudaur and EredLuin). The core `VolunteerRecruitmentService.cs` file keeps the maps, the lookup cascade, and the weighted pick. Where sections above say a culture "lives entirely in `VolunteerRecruitmentService.cs`", read that as its `RecruitmentPools` partial.
+- **Per-culture partial-file split (2026-07-01, #308).** The hand-written `InitializeXxx*()` pool methods no longer all live in `VolunteerRecruitmentService.cs`; they are split into per-culture partial files under `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs` (Dale, DolGuldur, Dunland, Erebor, Gondor, Harad, Isengard, Lothlorien, Mirkwood, Mordor, OrcKingdoms, Rhun, Rivendell, Rohan, Umbar; later PromotedCultures for Blue Craig and Lindon, Arthedain, Cardolan, Rhudaur, EredLuin, AnduinVale, Angaladh, Dorwinion and SouthRhovanion). The core `VolunteerRecruitmentService.cs` file keeps the maps, the lookup cascade, and the weighted pick. Where sections above say a culture "lives entirely in `VolunteerRecruitmentService.cs`", read that as its `RecruitmentPools` partial.
 - **Gondor JSON coverage (full list).** The 23 regular chance groups in `recruitment_pools/gondor.json` cover Anórien / Osgiliath / Cair Andros / Lebennin / Pelargir / Lossarnach / Belfalas / Dol Amroth / Linhir / Tolfalas / Lamedon / Calembel / Pinnath Gelin / Arndir / Blackroot Vale / Anfalas / Serelond / Lond Cirion / Harondor / Methir, plus the conditional Ithil Guard rule (Osgiliath, Calembel, and Blackroot Vale are not named in the Configuration section's list above).
 - **Hand-written Gondor safety net by name.** The hand-written `InitializeGondorSettlements` method is kept as the safety net for the JSON: JSON entries overwrite the hand-written keys at runtime; test runs where the JSON file is missing fall back to hand-written behaviour.
 
