@@ -50,7 +50,7 @@ if [[ "$INPUT" =~ $CWD_RE ]]; then
   PAYLOAD_CWD=${PAYLOAD_CWD//\\\\/$SL}
   PAYLOAD_CWD=${PAYLOAD_CWD//\\\//$SL}
   PAYLOAD_TREE=$(git -C "$PAYLOAD_CWD" rev-parse --show-toplevel 2>/dev/null)
-  [[ -n "$PAYLOAD_TREE" ]] && cd "$PAYLOAD_TREE" 2>/dev/null
+  [[ -n "$PAYLOAD_TREE" ]] && { cd "$PAYLOAD_TREE" 2>/dev/null || true; }
 fi
 
 CHANGED=$(git diff --name-only 2>/dev/null)

@@ -3,6 +3,7 @@
 # save-data key constants ("_taom_fire_and_tribute_v1"), localization ids that contain "key"
 # in translation caches and feature docs, and a variable in vendored BCL code.
 # Added 2026-11-02: the test constant HitKey = "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit", a probe key.
+# Added 2026-11-03: line 5 of this file, which quotes that constant.
 # Format: <commit>:<file>:<rule>:<line>. Add a line only after reading the match.
 066dcaf01ed6ac62a561097d09e067a2a8069fa7:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
 0bd6abf330bbe8a605fdfef459ecdbb36aa8614d:tools/translation_cache/it.json:generic-api-key:5905
@@ -14,6 +15,7 @@
 21e0807f98599b7c8bcf81c370f3d352d7d8de22:Main/Features/FireAndTribute/Hooks/FireAndTributeBehavior.cs:generic-api-key:20
 21e0807f98599b7c8bcf81c370f3d352d7d8de22:docs/features/fire-and-tribute.md:generic-api-key:120
 43206df6d0964365b7c1b748fefa73b81f67aed5:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
+4358d1622c073ae6b2827c83223aad71a04a52bf:.gitleaksignore:generic-api-key:5
 bc356f5d7ac9ec61e7964ca30b4ed7240c78c7ce:tools/translation_cache/pl.json:generic-api-key:3697
 bc356f5d7ac9ec61e7964ca30b4ed7240c78c7ce:tools/translation_cache/pl.json:generic-api-key:4096
 bfc43bbb3a4fea4d9ebeaa02e7c6215c153ac17a:tools/translation_cache/pl.json:generic-api-key:3697

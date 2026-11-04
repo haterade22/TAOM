@@ -27,6 +27,10 @@ dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 If you cannot build (no SDK, or a different game version), say so in the PR. We build and test it
 on our side, but tell us exactly what you did and did not run.
 
+Turn on the repo's git hooks once per clone: `git config core.hooksPath .githooks`. They check the
+commit subject, the doc budgets and the ModuleData you stage. There is no CI, so these and your own
+test run are the only checks before a review.
+
 ## What a good PR has
 
 1. **A failing test first.** Tests live in `TAOM.Tests` (MSTest and NSubstitute). Show the test

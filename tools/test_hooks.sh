@@ -315,6 +315,11 @@ for p in (list(root.glob('.claude/skills/*/SKILL.md'))
     nm = d.get('name')
     if nm is not None and str(nm) != stem:
         bad.append(f"{p}: name '{nm}' must equal '{stem}' ({'its directory' if kind == 'skills' else 'its file stem'})")
+    # Descriptions are capped at 30 words (CLAUDE.md "Where new knowledge goes" item 4): every
+    # description is paid in every session, and creep came back twice before this check.
+    words = len(str(v).split()) if isinstance(v, str) else 0
+    if words > 30:
+        bad.append(f"{p}: description is {words} words, over the 30-word cap")
 print(f"COUNT {n}")
 for b in bad:
     print("BAD " + b)
@@ -370,6 +375,18 @@ if ! printf '%s' "$FM" | grep -q '^SKIP'; then
     printf '%s' "$FMS" | grep -q '^BAD .*rules.agents' \
         && bad "3b self-test: a rule under .claude/rules/agents/ was checked as an agent" \
         || ok "3b self-test: a rule under .claude/rules/agents/ is not checked as an agent"
+    # A description of 31 words is reported; 30 words pass.
+    W31="w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31"
+    mkdir -p "$FMT/.claude/skills/long" "$FMT/.claude/skills/edge"
+    printf -- '---\nname: long\ndescription: %s\n---\nbody\n' "$W31" > "$FMT/.claude/skills/long/SKILL.md"
+    printf -- '---\nname: edge\ndescription: %s\n---\nbody\n' "${W31% w31}" > "$FMT/.claude/skills/edge/SKILL.md"
+    FMS=$(fm_check "$FMT")
+    printf '%s' "$FMS" | grep -q "^BAD .*long.*description is 31 words" \
+        && ok "3b self-test: a 31-word description is reported" \
+        || bad "3b self-test: a 31-word description was not reported"
+    printf '%s' "$FMS" | grep -q "^BAD .*edge" \
+        && bad "3b self-test: a 30-word description was reported" \
+        || ok "3b self-test: a 30-word description passes"
     rm -rf "$FMT"
 fi
 
@@ -1078,6 +1095,25 @@ else
     done <<< "$ENTRY_DOC_LIST"
 fi
 
+# The rule drift checks scan these folders (tools/lint_docs.py); the trigger list must cover each one, or
+# the commit that adds a dead citation runs no check and a later, innocent commit is refused for it.
+DRIFT_DIRS=$("$HPY" -c 'import sys; sys.path.insert(0, "tools"); import lint_docs as l; print("\n".join(sorted(set(l.DEAD_MEMORY_DIRS) | set(l.DOTNET_FLAG_DIRS) | {l.RULES_DIR_REL})))' 2>/dev/null | tr -d '\r')
+[[ -n "$DRIFT_DIRS" ]] || bad "could not read the rule drift folders from tools/lint_docs.py"
+while IFS= read -r dir; do
+    [[ -n "$dir" ]] || continue
+    dir_covered=0
+    while IFS= read -r pat; do
+        IFS='|' read -r -a alts <<< "$pat"
+        for alt in "${alts[@]}"; do
+            # shellcheck disable=SC2053  # $alt is a glob on purpose, as in the hook's case
+            [[ "$dir/sample/x.md" == $alt ]] && dir_covered=1
+        done
+    done <<< "$RELEVANT_PATTERNS"
+    [[ $dir_covered -eq 1 ]] \
+        && ok "the drift hook's RELEVANT list covers $dir, which the rule drift checks scan" \
+        || bad "$dir is scanned by the rule drift checks but missing from $DRIFT_HOOK's RELEVANT list"
+done <<< "$DRIFT_DIRS"
+
 # The FOLLOW-UP check reads docs/reviews/rca-*.md (tools/lint_docs.py _RCA_PATHSPEC); the trigger list
 # must cover that same glob, or an RCA-only commit would skip the gate (#984).
 RCA_GLOB=$("$HPY" -c 'import sys; sys.path.insert(0, "tools"); import lint_docs; print(lint_docs._RCA_PATHSPEC)' 2>/dev/null | tr -d '\r')
@@ -1768,6 +1804,23 @@ PY
 [[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
     && ok "check-doc-config-drift: an amend over the scan limit falls back to the raw --amend" \
     || bad "check-doc-config-drift: an over-long amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# A linter that cannot judge allows, and says so where the agent reads it: an allow's stderr reaches no
+# one, and no output would read as "checked, clean".
+cat > "$PRJ_WT/tools/lint_docs.py" <<'CRASHWRAP'
+import os, sys
+sys.exit(int(os.environ.get("TAOM_STUB_LINT_RC", "3")))
+CRASHWRAP
+RCA_CRASH=docs/reviews/rca-crash-2026-11-03.md
+mkdir -p "$PRJ_WT/docs/reviews"; printf 'x\n' > "$PRJ_WT/$RCA_CRASH"
+git -C "$PRJ_WT" add "$RCA_CRASH" 2>/dev/null
+for stub_rc in 3 1; do
+    OUT=$(TAOM_STUB_LINT_RC=$stub_rc drift_run "$PRJ_WT_M" "git commit -m x")
+    [[ "$OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$OUT" && grep -q 'additionalContext' <<< "$OUT" \
+        && ok "check-doc-config-drift allows and says UNCHECKED when the linter exits $stub_rc with no finding" \
+        || bad "check-doc-config-drift on a linter exit $stub_rc with no finding: $(printf '%s' "$OUT" | head -c 200)"
+done
+git -C "$PRJ_WT" reset -q 2>/dev/null
+rm -f "$PRJ_WT/$RCA_CRASH"
 # Clear the index the amend and path-commit cases left before the same-command `git add` cases, which
 # replace the stub linter with the real one.
 git -C "$PRJ_WT" reset -q 2>/dev/null
@@ -1780,8 +1833,8 @@ sys.path.insert(0, os.environ["TAOM_REAL_TOOLS"])
 import lint_docs as ld
 ld.REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 ld.DOC_ROOTS = [ld.REPO_ROOT / "docs"]
-ld.check_context_budget = lambda: []
-ld.check_version_consistency = lambda: []
+ld.check_context_budget = lambda *a, **k: []
+ld.check_version_consistency = lambda *a, **k: []
 sys.exit(ld.main(sys.argv[1:]))
 REALWRAP
 export TAOM_REAL_TOOLS; TAOM_REAL_TOOLS=$(cygpath -m "$REPO/tools" 2>/dev/null || echo "$REPO/tools")
@@ -2381,6 +2434,36 @@ G7E_ROWS=(
   "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit -n -m x"
   "block-no-verify.sh|Bash|S|rc=2 allow|git -c core.hooksPath=/dev/null commit -m x"
   "block-no-verify.sh|Bash|S|rc=2 allow|git -c CORE.HOOKSPATH=/dev/null commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|(git commit --no-verify -m x)"
+  "block-no-verify.sh|Bash|S|rc=2 allow|(git commit -n -m x)"
+  "block-no-verify.sh|Bash|S|rc=2 allow|true;git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|cd /x&&git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c \"git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c 'git commit -n -m x'"
+  "block-no-verify.sh|Bash|S|rc=2 allow|exec git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit \"-n\" -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit '-n' -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -\"n\" -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m x \"-n\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -P commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --no-optional-locks commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --namespace=x commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -C \"E:/a b\" commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c \"user.name=a b\" commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c \"core.hooksPath=/dev/null\" commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c 'core.hooksPath=/dev/null' commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --config-env=core.hooksPath=V commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m fix#12 --no-verify"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m fix#12 -n"
+  "block-no-verify.sh|Bash|S|rc=2 allow|exec git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|sudo -u bob git commit --no-verify -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|eval \"cd /x && git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|pwsh -c \"git status; git commit --no-verify -m y\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|git --attr-source HEAD commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|( exec git commit -n -m x )"
+  "block-no-verify.sh|Bash|S|rc=2 allow|bash -c \"exec git commit -n -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|pwsh -ExecutionPolicy Bypass -Command \"git commit --no-verify -m x\""
+  "block-no-verify.sh|Bash|S|rc=2 allow|cat <<'EOF' # note${NL}it's${NL}EOF${NL}git commit --no-verify -m x"
   # Look-alikes stay allowed: a dry run, another flag, a message, another command.
   "block-no-verify.sh|Bash|S|rc=0 allow|git push -n origin feature"
   "block-no-verify.sh|Bash|S|rc=0 allow|git commit --no-verbose -m x"
@@ -2390,6 +2473,19 @@ G7E_ROWS=(
   "block-no-verify.sh|Bash|S|rc=0 allow|git commit-tree -n x"
   "block-no-verify.sh|Bash|S|rc=0 allow|git config --get core.hooksPath"
   "block-no-verify.sh|Bash|S|rc=0 allow|grep -n commit file"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"docs; git commit -n is refused\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"block --no-verify in the gate\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<EOF${NL}git commit -n is now refused${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -mn"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -uno -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git log --grep=--no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|grep --no-verify a.txt; git status"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m x # --no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|echo git commit --no-verify"
+  "block-no-verify.sh|Bash|S|rc=0 allow|sudo git commit -m \"the -n flag\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<'EOF' | tail -n 3${NL}fix: it's done${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -F - <<'EOF' && git log -n 1${NL}fix: it's done${NL}EOF"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"\$(echo \"it's\")\" && git log -n 1"
   # block-dangerous-git.sh confirms (ask) a command that can destroy work
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git reset --hard"
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|& git reset --hard HEAD~1"
@@ -2583,6 +2679,20 @@ for entry in "${G7E_ROWS[@]}"; do
         bad "$hook [$tool] expected '$want', got '$got' for: $shown"
     fi
 done
+
+# A command too long for the reader: _shellwords.py bypass raises, and block-no-verify.sh judges the raw
+# text, which proves the fallback is alive.
+g7e_long() {  # $1 the command's head; the rest is 300,000 letters
+    "$HPY" -c 'import json, sys; sys.stdout.write(json.dumps({"tool_name": "Bash", "tool_input": {"command": sys.argv[1] + "x" * 300000}}))' "$1" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/block-no-verify.sh" >/dev/null 2>&1
+    echo "rc=$?"
+}
+[[ "$(g7e_long 'git commit --no-verify -m ')" == rc=2 ]] \
+    && ok "block-no-verify judges a command too long to read on its raw text, and refuses the flag" \
+    || bad "block-no-verify let a too-long command with the flag through"
+[[ "$(g7e_long 'git commit -m ')" == rc=0 ]] \
+    && ok "block-no-verify allows a too-long command with no flag" \
+    || bad "block-no-verify refused a too-long command with no flag"
 
 # The four gates that judge what is staged only need to know a commit is coming. Each reaches its
 # `cd` to the project only past its two-stage commit test, so a bash -x trace shows the answer.
@@ -3641,13 +3751,33 @@ case "$VM_VERDICT" in
     *)                    bad "a validator crash was $VM_VERDICT, expected allow-with-traceback: $(printf '%s' "$VM_OUT" | head -c 200)" ;;
 esac
 # Control: a genuine findings exit (1) still denies.
-printf 'import sys\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
+printf 'import sys\nprint("BROKEN_ITEM_REF stub")\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
 VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
 if [[ "$(decision_of "$VM_OUT")" == deny ]]; then
     ok "a validator findings exit (1) still denies the commit"
 else
     bad "a validator findings exit (1) no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
 fi
+# An exit 1 with nothing to quote: the validator died while it loaded. Allow, and say so.
+printf 'import sys\nsys.exit(1)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
+    && ok "a validator exit 1 with no findings allows the commit and says UNCHECKED" \
+    || bad "a validator exit 1 with no findings: $(printf '%s' "$VM_OUT" | head -c 200)"
+# The career kit tool: a crash is no drift, and it is not silent; real drift still denies.
+printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/validate_moduledata.py"
+for kit in 'raise RuntimeError("kit broke")' 'import sys; sys.exit(3)' 'def ('; do
+    printf '%s\n' "$kit" > "$VM_REPO/tools/generate_career_kits.py"
+    VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+    [[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'generate_career_kits' <<< "$VM_OUT" && grep -q 'UNCHECKED' <<< "$VM_OUT" \
+        && ok "a career kit tool that cannot judge ($kit) allows the commit and says UNCHECKED" \
+        || bad "a career kit tool that cannot judge ($kit): $(printf '%s' "$VM_OUT" | head -c 200)"
+done
+printf 'import sys\nprint("kit drift")\nsys.exit(1)\n' > "$VM_REPO/tools/generate_career_kits.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$(decision_of "$VM_OUT")" == deny ]] \
+    && ok "career kit drift still denies the commit" \
+    || bad "career kit drift no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
 rm -rf "$VM_REPO"
 
 # ---------------------------------------------------------------------------

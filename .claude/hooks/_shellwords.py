@@ -5,8 +5,9 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < the hook payload (JSON)
   posix     the command as POSIX-shell text
+  bypass    the spelling that skips the commit hooks, as block-no-verify.sh names it, or an empty line
   commands  the posix text split at ; & | and newlines outside quotes (a # comment dropped), each
             segment from its command word on, one per line (#985): past VAR=value, shell grammar
             ({ ! if then do ...) and, for the Bash tool, the wrappers env, timeout, command, time,
@@ -47,8 +48,9 @@ opens a PowerShell statement is a value it prints, never a command, so it reads 
 Also not read by the commit and confirm gates: a gated word spelled with an escape inside it
 (`--no-verif''y`), which the raw prefilter cannot see, and git run through another command, such as
 `& ("git") commit ...`, `Start-Process git -ArgumentList ...`, `pwsh -c "git commit ..."` or
-`Invoke-Expression 'git reset --hard'`. validate-push.sh also judges the raw command, so it still
-refuses such a force push. Deliberate obfuscation is out of scope.
+`Invoke-Expression 'git reset --hard'`. Only bypass() reads a runner (its docstring).
+validate-push.sh also judges the raw command, so it still refuses such a force push. Deliberate
+obfuscation is out of scope.
 """
 import codecs
 import json
@@ -440,7 +442,7 @@ def push_candidates(cmd, tool):
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1[ \t]*\r?\n(.*?)\r?\n[ \t]*\2\b", re.S)
 CMD_SEP = set(";|&\n()")
 GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
-                       "--config-env"}
+                       "--config-env", "--attr-source"}
 # Commands that change the shell's directory: bash's, and PowerShell's as to_posix() leaves them. A push
 # saves the directory it leaves and a pop returns to it (Codex review 2026-10-16: a pushd with its popd
 # ignored judged the pushed directory).
@@ -797,11 +799,38 @@ def commands(cmd, tool, blind=False, depth=0, inherited=None):
     return "\n".join(out)
 
 
+def strip_comments(text):
+    """POSIX text without its comments, which start at a # that starts a word outside quotes, as in
+    segments(). shlex's own comment handling ends a word at any #, so it read `git commit -m fix#12 -n`
+    as `git commit -m fix`, losing the flag, and joined the next line to the same call."""
+    out, q, i, n, word_start = [], "", 0, len(text), True
+    while i < n:
+        c = text[i]
+        if c == "\\" and q != "'":
+            out.append(text[i:i + 2])
+            i += 2
+            word_start = False
+            continue
+        if q:
+            q = "" if c == q else q
+        elif c in "\"'":
+            q = c
+        elif c == "#" and word_start:
+            j = text.find("\n", i)
+            i = n if j < 0 else j
+            continue
+        word_start = not q and c in " \t\n;&|()"
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
 def command_tokens(s, partial=False):
-    """The words and separators of POSIX text; an unquoted newline separates commands, as in bash.
-    Quoting bash itself would reject raises ValueError, unless partial: then the words read before
-    the fault come back."""
-    lx = shlex.shlex(s, posix=True, punctuation_chars="();<>|&\n")
+    """The words and separators of POSIX text; an unquoted newline separates commands, as in bash, and
+    a comment is dropped first (strip_comments). Quoting bash itself would reject raises ValueError,
+    unless partial: then the words read before the fault come back."""
+    lx = shlex.shlex(strip_comments(s), posix=True, punctuation_chars="();<>|&\n")
+    lx.commenters = ""
     lx.whitespace = " \t\r"
     lx.whitespace_split = True
     if not partial:
@@ -867,7 +896,9 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
     That is base, moved by each cd before the call (a cd inside ( ) ends at its ), and then by the
     call's own -C. A commit whose stdin is piped from a command that only prints one word (a
     PowerShell here-string piped to `git commit -F -`, plan 027) gets that word first as a heredoc
-    placeholder, so `-F -` reads it. Raises ValueError on quoting bash would reject, unless partial."""
+    placeholder, so `-F -` reads it. With subcommand None, every git call matches, and args is every
+    word after `git`, global options included. Raises ValueError on quoting bash would reject, unless
+    partial."""
     found = []
     group, prev, sep = [], [], ""
     cwd, stack, pushed = base, [], []
@@ -888,7 +919,7 @@ def git_invocations(text, bodies, subcommand="commit", base=None, partial=False,
                 elif name in POPD and pushed:
                     cwd = pushed.pop()
                 calls = _git_call(group, bodies, subcommand, cwd, partial, depth)
-                piped = piped_text(prev) if sep == "|" else None
+                piped = piped_text(prev) if sep == "|" and subcommand else None
                 if piped is not None:
                     bodies.append(piped)
                     mark = ["<<", "__TAOM_HEREDOC_%d__" % (len(bodies) - 1)]
@@ -962,6 +993,8 @@ def _git_call(g, bodies, subcommand, cwd, partial, depth):
         return []
     i += 1
     repo = cwd
+    if subcommand is None:
+        return [(g[i:], repo)]
     while i < len(g) and g[i].startswith("-"):
         if g[i] == "-C" and i + 1 < len(g):
             repo = join_dir(repo, g[i + 1])
@@ -1071,6 +1104,118 @@ def commit_plan(cmd, tool, cwd=""):
     return amend, ([] if plain else paths)
 
 
+# ---- the spellings that skip the commit hooks (block-no-verify.sh, 2026-11-03) -------------------
+# --no-veri is the shortest spelling git accepts: --no-ver is ambiguous with --no-verbose.
+NO_VERIFY = re.compile(r"--no-veri(?:f|fy)?")
+# The subcommands with a --no-verify of their own: `git grep --no-verify` searches for those words.
+NO_VERIFY_COMMANDS = {"merge", "pull", "push", "rebase", "am"}
+HOOKS_PATH = re.compile(r"core\.hookspath(?:=|$)", re.I)
+# Commands that run what follows and that commands() does not peel: one hands its words on as an
+# argument list, the other reads them as a script, with their quotes gone.
+ARGV_RUNNERS = {"exec", "sudo", "doas", "xargs", "busybox", "rtk"}
+SCRIPT_RUNNERS = {"eval", "watch", "pwsh", "powershell", "cmd"}
+HOLDS_A_RUN = re.compile(r"""(?:^|[\s;&|('"/\\])(?:git|bash|sh|zsh)(?:\.exe)?['"]?(?:\s|$)""", re.I)
+
+
+def _commit_bypass(args):
+    """--no-verify or -n in one `git commit`'s arguments (the words after `commit`), as
+    block-no-verify.sh names it, or "". A value is never read as a flag: the word after -m, or the
+    rest of -mn, -uno and -Skey."""
+    i, n = 0, len(args)
+    while i < n:
+        w = args[i]
+        i += 1
+        if w == "--":
+            break
+        if w.startswith("--"):
+            if NO_VERIFY.fullmatch(w):
+                return "--no-verify"
+            if "=" not in w and len(w) > 2 and any(o.startswith(w) for o in COMMIT_VALUE_LONG):
+                i += 1
+        elif w.startswith("-") and len(w) > 1:
+            for k, ch in enumerate(w[1:], 1):
+                if ch == "n":
+                    return "git commit -n"
+                if ch in "uS":                        # an optional value, which only glues
+                    break
+                if ch in COMMIT_VALUE_SHORT:
+                    if k == len(w) - 1:
+                        i += 1
+                    break
+    return ""
+
+
+def _git_bypass(words):
+    """The spelling that skips the hooks in the words after `git`, or ""."""
+    i = 0
+    while i < len(words) and words[i].startswith("-"):
+        w = words[i]
+        name, eq, value = w.partition("=")
+        if (w in ("-c", "--config-env") and HOOKS_PATH.match(" ".join(words[i + 1:i + 2]))
+                or name == "--config-env" and eq and HOOKS_PATH.match(value)):
+            return "-c core.hooksPath"
+        i += 2 if w in GIT_OPTS_WITH_VALUE else 1
+    sub, args = (words[i], words[i + 1:]) if i < len(words) else ("", [])
+    if sub == "commit":
+        return _commit_bypass(args)
+    if sub in NO_VERIFY_COMMANDS and any(NO_VERIFY.fullmatch(a) for a in args):
+        return "--no-verify"
+    return ""
+
+
+def _runner_script(seg):
+    """What a runner commands() does not peel runs, as POSIX text: from the first git or shell among
+    its words for an argument-list runner, whatever options come first, or, for a script runner, its
+    words with their quotes gone from the first that holds a git or a shell, which skips an option and
+    its value. None for any other segment."""
+    words = _lead_words(seg, PEEL_WORDS)
+    if not words:
+        return None
+    name = os.path.basename(words[0][2]).lower()
+    name = name[:-4] if name.endswith(".exe") else name
+    if name in SCRIPT_RUNNERS:
+        names = [w[2] for w in words[1:]]
+        while names and not HOLDS_A_RUN.search(names[0]):
+            names.pop(0)
+        return " ".join(names)
+    if name in ARGV_RUNNERS:
+        for start, _end, word in words[1:]:
+            if GIT.fullmatch(word) or _is_shell(word):
+                return seg[start:]
+    return None
+
+
+def bypass(cmd, tool):
+    """The spelling in this tool call that skips the commit hooks, as block-no-verify.sh names it, or "".
+    Every git call is read as bash reads it: past quotes, ( ), a glued separator, a `bash -c` script
+    (the plain text keeps its newlines; commands() adds what a shell reads from a heredoc), each global
+    option and a runner (_runner_script). A message that names a flag is never read as one. Not read,
+    as deliberate obfuscation: a flag in a variable or a $(...), an alias, and the git config and
+    GIT_CONFIG_* forms of core.hooksPath, which the session banner shows. A command too long to read
+    raises, and so does quoting this reader cannot follow unless a line read alone already names a
+    bypass, so the hook judges the raw text."""
+    posix = to_posix(cmd, tool)
+    if len(posix) > REPO_SCAN_MAX or posix.count("<<") > HEREDOC_MAX_OPENERS:
+        raise ValueError("too long to read")
+    text, bodies = strip_heredocs(posix)
+    text = decode_ansi_c(text)
+    try:
+        command_tokens(text)
+        fault = False
+    except ValueError:                      # what follows the fault is unread
+        fault = True
+    lines = commands(cmd, tool).split("\n")
+    runners = [s for s in (_runner_script(line) for line in lines) if s]
+    for script in [text] + lines + runners + (text.split("\n") if fault else []):
+        for words, _repo in git_invocations(script, bodies, None, partial=True):
+            found = _git_bypass(words)
+            if found:
+                return found
+    if fault:
+        raise ValueError("quoting this reader cannot follow")
+    return ""
+
+
 def read_payload(raw):
     """(tool_name, tool_input.command) of a hook payload, empty strings where it holds none; None when
     it is no JSON object."""
@@ -1096,8 +1241,8 @@ def read_cwd(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan"):
-        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan < payload.json\n")
+    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan", "bypass"):
+        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan|bypass < payload.json\n")
         return 2
     raw = sys.stdin.buffer.read().decode("utf-8", "replace")
     payload = read_payload(raw)
@@ -1125,6 +1270,8 @@ def main(argv):
         text = kind + "\t" + target if target else kind
     elif mode == "commands":
         text = commands(cmd, tool, "--blind" in argv[2:])
+    elif mode == "bypass":
+        text = bypass(cmd, tool)
     else:
         text = to_posix(cmd, tool)
     sys.stdout.buffer.write((text + "\n").encode("utf-8", "replace"))

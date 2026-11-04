@@ -53,9 +53,7 @@ case "$COMMAND" in
 esac
 ```
 
-**MANDATORY for any new hook that detects git commits** (review 29 in `docs/reviews/REVIEW-LOG.md` found a bare matcher after the rule was written).
-
-When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping.
+**MANDATORY for any hook that detects git commits:** grep the diff for `git commit` substring matches. One not using the two-stage pattern above is a regression.
 
 **Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
 read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
@@ -68,16 +66,9 @@ through it. `validate-push.sh` is the one exception: it reads and judges the pus
 
 ## Prefilter on the gated word (maintainer decisions D39, D40)
 
-A hook for the shell tools reads `INPUT=$(cat)` first and exits with its allow output when the raw
-payload lacks the word it gates, and only then sources `_pybin.sh`, because the probe and the parse
-are two Python starts on every call (D39): filter on the gated word, not on `git`: `*commit*` for the
-four commit gates, `*push*` for `validate-push.sh`, `*no-verify*` for `block-no-verify.sh`, `git` in
-any case (`*[Gg][Ii][Tt]*`) for the two confirm gates, `*dotnet*` or `*build.ps1*` for a build or
-test hook. Never skip a payload that holds a `\u` escape: JSON may write any letter that way, so it
-takes the full parse, and the raw test stays safe whatever writes the payload (D40).
-`tools/test_hooks.sh` 4c fails a Bash hook that sources `_pybin.sh` on a payload without its word,
-feeds each prefiltered hook its word with one letter escaped, and 4d checks that the blocking gates
-answer the escaped form as they answer the plain one.
+A shell-tool hook exits with its allow output when the raw payload lacks its gated word, before it
+sources `_pybin.sh`. Never skip a payload holding a `\u` escape. Each hook's words and the tests:
+`docs/reference/hooks-catalog.md` "Prefilter".
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 
@@ -87,7 +78,7 @@ Two correct patterns depending on what the hook checks:
 
 | Hook checks | Correct amend handling |
 |-------------|------------------------|
-| Files in the commit's diff (e.g., is a ModuleData file in the commit?) | Compute the **post-amend file set**, the index against HEAD's parent (`check-doc-config-drift.sh` passes `--dash-base HEAD~1`), and apply the same gate. A ModuleData file already in HEAD's diff is still in the post-amend commit, so the gate correctly allows. |
+| Files in the commit's diff (e.g., is a ModuleData file in the commit?) | Compute the **post-amend file set**, the index against HEAD's parent (`check-doc-config-drift.sh` passes `--dash-base HEAD~1`), and apply the same gate. |
 | Working-tree state (e.g., is a file gitignored?) | Don't exempt amend at all. Working-tree state is amend-independent — a gitignored file on disk is just as broken in an amended commit as in a fresh one. |
 
 ## A detection hook must fail open, but NEVER fail silent (EMPIRICAL: TAOM 2026-08-10)
@@ -97,10 +88,8 @@ For a hook whose job is to **detect and warn**, fail-open is only half the contr
 those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
 as "never ran".
 
-The v1.4.7 to v1.4.8 bump printed no drift banner (2026-08-10): a path built as
-`"${BANNERLORD_GAME_DIR:-<literal>}/..."` covers an unset or empty variable, never a set but wrong
-one, and a guard with *any* silent-failure mode is the defect (lesson "A fail-open guard whose
-failure mode is silence").
+The v1.4.7 to v1.4.8 bump printed no drift banner: `"${VAR:-<literal>}/..."` covers an unset or empty
+variable, never a set but wrong one (lesson "A fail-open guard whose failure mode is silence").
 
 **When writing or reviewing a detect-and-warn hook:**
 
@@ -111,17 +100,13 @@ failure mode is silence").
 | Ask "what does this hook print when its input is missing?" before shipping | If the answer is "nothing", the hook has no failure signal at all. |
 | Test the broken-input path, not just the happy path | Export a bogus value and run the hook. The 2026-08-10 bug reproduced in one command. |
 
-Still `exit 0`, still never blocks — but loud about not knowing. Applies to `session-start.sh`'s
-checks, `upstream-watch.sh`, `check-polearm-shield-parity.sh` and any future hook whose value is the
-warning it emits.
+Still `exit 0`, but loud about not knowing. Applies to any hook whose value is the warning it emits.
 
 ## A timeout must be measured against the SLOW path (EMPIRICAL: TAOM 2026-08-31)
 
-A harness timeout is a **kill**, and a kill cannot speak: the harness discards a timed-out
-hook's output and surfaces nothing. So for a gate, "killed" and "passed cleanly" are the same
-observable event. A timeout sized against the fast path does not make a hook safe, it makes the
-gate **silently dead**, which is strictly worse than the hang it replaced because the hang was
-at least visible.
+A harness timeout is a **kill**, and a kill cannot speak: the harness discards a timed-out hook's
+output. For a gate, "killed" and "passed cleanly" are the same observable event, so a timeout sized
+against the fast path makes the gate **silently dead**.
 
 On 2026-08-31 a pass that added timeouts to all 27 registrations killed two gates on every run
 (lesson "A gate the harness kills is not a gate").
@@ -142,7 +127,7 @@ without an inner bound below it, (4b) every PreToolUse gate answers a commit ins
 registration, and (7j) every registration is anchored on `"$CLAUDE_PROJECT_DIR"` (a relative one
 dies after a `cd`, #690). Run it before committing `.claude/hooks/`, with
 `python -m unittest tools.tests.test_shell_lint_gate` (#1020): ShellCheck at warning level over
-every `.sh`, allowing SC2206 only on a line that starts `set -f;` (the split rule below). A deliberate
+every `.sh` and `.githooks/*`, allowing SC2206 only on a line that starts `set -f;` (the split rule below). A deliberate
 finding takes `# shellcheck disable=SCnnnn  # reason` on the line before that command.
 
 ## Prove a gate live (EMPIRICAL: TAOM 2026-09-23, #647)
@@ -168,10 +153,8 @@ or state files stay covered by this rule and review.
 
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 
-`jq` is not on PATH in this Git Bash install (verified 2026-08-20), so a hook that depends on jq
-alone is silently inert: a fail-open hook that never runs looks exactly like a hook with nothing to
-report. The grep+sed fallback truncates a value at the first escaped quote and leaves Windows
-backslashes doubled, so the fallback must be Python.
+`jq` is not on PATH here, so a hook's fallback must be Python: a grep+sed one truncates a value at the
+first escaped quote.
 
 On the dev machine `python3` resolves only to
 `C:\Users\mikew\AppData\Local\Microsoft\WindowsApps\python3`, a Microsoft Store App Execution
@@ -189,8 +172,7 @@ unreachable that way on 2026-08-31.
 convention. A portable candidate list may still include `python3` provided the loop rejects any
 resolved path matching `*[Ww]indows[Aa]pps*` first.
 
-**No file may use bare `python3`**: the Linux GitHub CI workflows, where it was the correct
-spelling, were removed on 2026-10-05.
+**No file may use bare `python3`.**
 
 ## Log-appending hooks: size-cap rotation (EMPIRICAL: TAOM 2026-07-12)
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Git pre-merge-commit hook (core.hooksPath = .githooks): a clean merge runs this instead of
+# pre-commit, so the same gates judge the merged result. Conflict merges stop first, and their later
+# `git commit` runs pre-commit. Git writes MERGE_HEAD only after this hook, so the flag tells the linter
+# what it could otherwise read from there.
+TAOM_CLEAN_MERGE=1
+export TAOM_CLEAN_MERGE
+exec "${0%/*}/pre-commit" "$@"

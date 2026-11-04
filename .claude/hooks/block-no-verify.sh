@@ -43,9 +43,24 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-no-verify" "the --no-verify ban" jq && { echo '{}'; exit 0; }
 
-# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
-# command back as the Bash text of the same command and names git `git` wherever it is the
-# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+refuse() {
+  echo "BLOCKED: $1 is not allowed. Fix what is making the hook fail instead of bypassing it." >&2
+  exit 2
+}
+
+# One Python run reads the whole command (_shellwords.py bypass), the way bash reads it: past quotes,
+# subshells, a glued separator, a `bash -c` script and every global option, and never taking a message
+# for a flag. Bounded inside the gate (hook-authoring.md, "a timeout is a kill").
+if [[ -n "${PYBIN:-}" ]]; then
+  if REASON=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-20}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" bypass 2>/dev/null); then
+    [[ -n "$REASON" ]] && refuse "$REASON"
+    exit 0
+  fi
+  echo "block-no-verify: _shellwords.py bypass failed, so the command is read as raw text" >&2
+fi
+
+# No reader: the raw text, as this gate read it before the reader. It over-blocks a message that names
+# a flag, which is the safe direction here, and misses a quoted flag.
 COMMAND=$(taom_hook_command posix block-no-verify)
 
 # Fail-open: nothing to inspect -> allow.
@@ -54,35 +69,14 @@ COMMAND=$(taom_hook_command posix block-no-verify)
 # Only git commands. --no-verify means something else entirely to other tools.
 [[ ! "$COMMAND" =~ (^|[[:space:]])git([[:space:]]|$) ]] && exit 0
 
-refuse() {
-  echo "BLOCKED: $1 is not allowed. Fix what is making the hook fail instead of bypassing it." >&2
-  exit 2
-}
-
 # --no-veri is the shortest spelling git accepts: --no-ver is ambiguous with --no-verbose.
 [[ "$COMMAND" =~ --no-veri ]] && refuse "--no-verify"
 # A config key is case-insensitive.
 [[ "${COMMAND,,}" =~ (^|[[:space:]])-c[[:space:]]+core\.hookspath= ]] && refuse "-c core.hooksPath"
-
-# `-n` means --no-verify only on `git commit`, so read it per segment, as block-broad-git-add.sh does.
-# A cheap test first: without a short flag holding n after `commit`, no segment can match.
-[[ "$COMMAND" =~ commit.*[[:space:]]-[a-zA-Z]*n ]] || exit 0
-SEGMENTS=$(taom_hook_segments block-no-verify)
-set -f; IFS=$'\n'; SEG_LIST=($SEGMENTS); IFS=$' \t\n'; set +f
-for seg in "${SEG_LIST[@]}"; do
-  seg="${seg#"${seg%%[![:space:]]*}"}"
-  while [[ "$seg" =~ ^[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+(.*)$ ]]; do
-    seg="${BASH_REMATCH[1]}"; seg="${seg#"${seg%%[![:space:]]*}"}"
-  done
-  [[ "$seg" =~ ^git([[:space:]]|$) ]] || continue
-  rest="${seg#git}"; rest="${rest#"${rest%%[![:space:]]*}"}"
-  while [[ "$rest" =~ ^(-c[[:space:]]+[^[:space:]]+|-C[[:space:]]+[^[:space:]]+|--git-dir[=[:space:]][^[:space:]]+|--work-tree[=[:space:]][^[:space:]]+|--no-pager|-p|--paginate|--bare|--no-replace-objects|--literal-pathspecs)[[:space:]]+(.*)$ ]]; do
-    rest="${BASH_REMATCH[2]}"; rest="${rest#"${rest%%[![:space:]]*}"}"
-  done
-  [[ "$rest" =~ ^commit([[:space:]]|$) ]] || continue
-  # Quoted spans first, so a message that mentions -n is never read as the flag.
-  rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
-  [[ "$rest" =~ [[:space:]]-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
-done
+# Quoted spans first, so a message that mentions -n is never read as the flag. A word holding a
+# separator or a line end ends the call, so the -n of a later `git log -n 1` or `tail -n 3` is not read.
+BARE=$(printf '%s' "$COMMAND" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+BARE=${BARE//$'\n'/ ; }
+[[ "$BARE" =~ (^|[[:space:]])git[[:space:]]+commit([[:space:]]+[^-\;\&\|][^[:space:]]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
 
 exit 0

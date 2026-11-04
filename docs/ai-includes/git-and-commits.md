@@ -20,7 +20,8 @@ when Mike asks for them.
   subject pass. Commits made outside Claude (IDE, terminal) meet the same label, length and
   attribution rules through the git hook `.githooks/commit-msg` (`core.hooksPath` = `.githooks`,
   2026-10-28), which runs `tools/check_commit_msg.py` and reads the version of the tree being
-  committed. The Claude hook reads the
+  committed. `.githooks/pre-commit` and `pre-merge-commit` run the doc budget, gitignored-file and
+  ModuleData gates for every committer (2026-11-03). The Claude hook reads the
   version of the repository the commit runs in, so a `git -C <worktree> commit` is judged against
   that worktree ([hooks catalog](../reference/hooks-catalog.md)).
 - **Length:** subject at most 72 characters (the label costs about 20, so the old 50 no longer fits);
