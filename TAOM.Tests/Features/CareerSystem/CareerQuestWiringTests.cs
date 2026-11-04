@@ -30,6 +30,16 @@ public class CareerQuestWiringTests
     }
 
     [TestMethod]
+    public void LadderStart_BuildsEachQuestIdWithNewQuestStringId()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/ArmourAcquisition/Hooks/LadderQuests.cs", stripComments: true);
+
+        Assert.IsFalse(Regex.IsMatch(src, "\"taom_cq_\"\\s*\\+"),
+            "A rung's quest id built from the definition alone gives two heroes' quests on one rung a shared journal record.");
+        StringAssert.Matches(src, new Regex(@"CareerQuestService\.NewQuestStringId\("));
+    }
+
+    [TestMethod]
     public void SessionLaunchAndDailyTick_PassTheirOwnSessionLaunchFlag()
     {
         var src = Behavior();
