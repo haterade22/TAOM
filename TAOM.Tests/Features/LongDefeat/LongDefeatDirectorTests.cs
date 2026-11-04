@@ -626,9 +626,26 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
-    public void Stalemate_ChargesThenFellsTheStragglers_AndTheWaveClearsAsAStaleOne()
+    public void FewQuietStragglers_FallWithNoCharge_AndTheDefendersKeepTheirTactic()
     {
         var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.KillAttackers(108);
+        rig.Field.AttackersStanding = 2;
+
+        rig.PumpUntil(() => rig.Calls.Any(c => c.StartsWith("Fell:")), dt: 5f);
+
+        Assert.AreEqual(1, rig.Field.Count("Fell:2"));
+        Assert.AreEqual(-1, rig.Field.Index("Charge"));
+        rig.Tick();
+        Assert.AreEqual(-1, rig.Field.Index("Restore"));
+        Assert.IsTrue(rig.Outcomes.Lines.Any(l => l.StartsWith("pass " + LongDefeatChecks.WaveId + " w1 ")), string.Join("\n", rig.Outcomes.Lines));
+    }
+
+    [TestMethod]
+    public void Stalemate_ChargesThenFellsTheStragglers_AndTheWaveClearsAsAStaleOne()
+    {
+        var rig = NewRig(rules: new RunRules { StragglerQuietSeconds = 3600f });
         rig.StartAndSpawnWave();
         rig.KillAttackers(105);
         rig.Field.AttackersStanding = 5;

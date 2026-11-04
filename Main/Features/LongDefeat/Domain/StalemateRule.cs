@@ -38,6 +38,12 @@ internal static class StalemateRule
         }
 
         state.Quiet += dt;
+        if (attackers > 0 && attackers <= r.StragglerShare * waveCount && attackers < defenders && state.Quiet >= r.StragglerQuietSeconds)
+        {
+            state.Quiet = 0f;
+            return new StalemateDecision(StalemateAction.FellStragglers, attackers);
+        }
+
         if (state.Charging)
         {
             if (!(state.Quiet >= r.StrandedSeconds) || attackers <= 0)
