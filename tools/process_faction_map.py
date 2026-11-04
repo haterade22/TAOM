@@ -395,7 +395,7 @@ crop_and_save(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]),
 def generate_regions_json(bboxes, canvas_w, canvas_h, output_path):
     """Generate regions.json from computed bounding boxes."""
     regions_data = {}
-    for region_id, display_name, old_id, game_faction, playable, side in REGIONS:
+    for region_id, *_ in REGIONS:
         if region_id not in bboxes:
             print(f"  Warning: No bbox for {region_id}, skipping in regions.json")
             continue

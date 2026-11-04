@@ -21,7 +21,7 @@ BORDER_THRESHOLD = 25  # pixels darker than this are "border"
 
 # Import region mappings from assemble script
 sys.path.insert(0, str(Path(__file__).parent))
-from assemble_faction_map import FILE_TO_REGION, REGION_META, require_inputs
+from assemble_faction_map import FILE_TO_REGION, require_inputs
 
 
 def extract_alpha_edge(alpha, thickness=2):

@@ -38,7 +38,8 @@ runs, or when the target segment's stored hash does not match its data (the form
 writes a timestamped .bak-hitcapsules-* copy first, and re-reads the result.
 
 Exit codes: 0 done (or dry run), 1 refused or failed a check, 2 the game or the Kit runs (or the process list
-could not be read). An unexpected error prints a traceback and exits 1.
+could not be read), or an input could not be used: a bad path, a file that is not a tpac or is cut short (one
+"ERROR: ..." line on stdout, no traceback). Any other unexpected error prints a traceback and exits 1.
 
 After a patch, load the module in the Kit once so it re-cooks the package's RuntimeDataCache entry, the same
 step as any other on-disk tpac edit. Needs numpy, scipy (fit only), lz4 and xxhash.
@@ -497,7 +498,8 @@ def main(argv=None):
     args = ap.parse_args(argv)
     try:
         return {"show": _cmd_show, "fit": _cmd_fit, "patch": _cmd_patch}[args.cmd](args)
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, tcm.CloneError, struct.error, lz4.block.LZ4BlockError) as exc:
+        # a bad path, a file that is not a tpac (CloneError), or one cut short (struct.error, LZ4BlockError)
         print("ERROR: %s" % exc)
         return 2
 

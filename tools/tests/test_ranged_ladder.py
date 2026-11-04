@@ -1028,6 +1028,20 @@ class RebalanceToolTests(unittest.TestCase):
         self.assertEqual(len(failures), 1)
         self.assertIn("troops_elf.xml", failures[0])
 
+    def test_docs_html_with_no_folder_writes_beside_the_working_directory(self):
+        # os.makedirs("") raised FileNotFoundError for a bare file name.
+        cwd = Path(self._tmp.name) / "cwd"
+        cwd.mkdir()
+        before = os.getcwd()
+        os.chdir(cwd)
+        try:
+            code = self._run("--docs-html", "out.html")
+        finally:
+            os.chdir(before)  # before tearDown removes the folder
+        self.assertEqual(code, 0)
+        self.assertEqual((cwd / "out.html").read_text(encoding="utf-8"),
+                         (self.report_dir / "REPORT.html").read_text(encoding="utf-8"))
+
     def test_docs_html_dash_skips_the_tracked_copy(self):
         self.assertEqual(self._run("--docs-html", "-"), 0)
         self.assertTrue((self.report_dir / "REPORT.html").exists())

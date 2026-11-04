@@ -7,9 +7,11 @@ The engine's usage-record lookups dereference an end sentinel on a miss and cras
 (creature-mount-authoring.md Phase 5). Only a creature steered by a behaviour tree queries every
 jump direction, so the warg (front and none only) and the vanilla horse are outside the check.
 """
+import contextlib
 import io
 import os
 import sys
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
@@ -129,6 +131,53 @@ class MissingInstallTests(unittest.TestCase):
                 mock.patch.object(sys, "stderr", err), redirect_stdout(io.StringIO()):
             self.assertEqual(amp.main(), 2)
         self.assertIn("BANNERLORD_GAME_DIR", err.getvalue())
+
+
+class SectionGGateTests(unittest.TestCase):
+    """data_gates.py reads only the exit code, so a gap section G prints must count under --strict."""
+
+    SECTIONS = ("section_a", "section_bc", "section_d", "section_e", "section_f")
+
+    def run_main(self, args, ram_gaps=None, ram_path="missing"):
+        with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
+            ram = {"monster": (os.path.join(td, ram_path + ".xml"), "taom_war_ram"),
+                   "action_sets": os.path.join(td, "missing_sets.xml")}
+            stack.enter_context(mock.patch.object(amp, "LOTR", td))
+            stack.enter_context(mock.patch.object(amp, "RAM", ram))
+            stack.enter_context(mock.patch.object(amp, "load_action_types", return_value={}))
+            stack.enter_context(mock.patch.object(amp, "section_strict", return_value=0))
+            for name in self.SECTIONS:
+                stack.enter_context(mock.patch.object(amp, name))
+            if ram_gaps is not None:
+                stack.enter_context(mock.patch.object(amp, "ram_gaps", return_value=ram_gaps))
+            stack.enter_context(mock.patch.object(sys, "argv", ["audit_mount_parity.py", *args]))
+            out = io.StringIO()
+            stack.enter_context(redirect_stdout(out))
+            return amp.main(), out.getvalue()
+
+    def test_main_Strict_AGapSectionGReturns_Exits1(self):
+        code, out = self.run_main(["--strict"], ram_gaps=["synthetic gap"])
+        self.assertEqual(code, 1)
+        self.assertIn("synthetic gap", out)
+
+    def test_main_Strict_MissingWarRamFile_ExitsOneInsteadOfRaising(self):
+        code, out = self.run_main(["--strict"])
+        self.assertEqual(code, 1)
+        self.assertIn("Monster taom_war_ram not found", out)
+
+    def test_main_NotStrict_AGap_StaysReportOnly(self):
+        code, out = self.run_main([], ram_gaps=["synthetic gap"])
+        self.assertEqual(code, 0)
+        self.assertIn("synthetic gap", out)
+
+    def test_main_Strict_NoGap_Exits0(self):
+        code, _ = self.run_main(["--strict"], ram_gaps=[])
+        self.assertEqual(code, 0)
+
+    def test_section_g_ReturnsItsGaps(self):
+        with mock.patch.object(amp, "RAM", {"monster": ("missing.xml", "taom_war_ram"), "action_sets": "missing.xml"}), \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(amp.section_g({}), ["Monster taom_war_ram not found"])
 
 
 if __name__ == "__main__":

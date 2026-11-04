@@ -705,7 +705,7 @@ def main(argv=None):
         fh.write(html)
     docs_html = args.docs_html or (str(DOCS_HTML) if args.apply else "-")
     if docs_html != "-":
-        os.makedirs(os.path.dirname(docs_html), exist_ok=True)
+        os.makedirs(os.path.dirname(docs_html) or ".", exist_ok=True)  # a bare file name has no folder to make
         with open(docs_html, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(html)
     print(f"Launchers: {len(launchers)}. Ranged troops: "

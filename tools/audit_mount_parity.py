@@ -546,22 +546,26 @@ def ram_gaps(monster, action_sets, types):
 
 
 def section_g(types):
+    """Prints section G and returns its gaps, which --strict counts: data_gates.py reads only the exit code."""
     print("=" * 72)
     print("G. WAR RAM vs VANILLA HORSE (horse-skeleton reskin, the horse usage set is inherited)")
-    monster = elem_by_id(RAM["monster"][0], "Monster", RAM["monster"][1])
+    # A missing file is a gap (ram_gaps names the absent Monster and sets), not a traceback.
+    monster = elem_by_id(RAM["monster"][0], "Monster", RAM["monster"][1]) if os.path.isfile(RAM["monster"][0]) else None
     wanted = {s for s, _ in RAM_SET_BASES}
-    sets = {e.get("id"): e for e in parse(RAM["action_sets"]).iter("action_set") if e.get("id") in wanted}
+    sets = ({e.get("id"): e for e in parse(RAM["action_sets"]).iter("action_set") if e.get("id") in wanted}
+            if os.path.isfile(RAM["action_sets"]) else {})
     gaps = ram_gaps(monster, sets, types)
     for g in gaps:
         print(f"      {g}   <-- REVIEW")
     if not gaps:
         print("      Monster inherits the horse, its three action sets chain over the horse's, head-butt typed actt_kick")
+    return gaps
 
 
 def main():
     ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables")
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, or the war ram (section G) has a gap")
     args = ap.parse_args()
     if not os.path.isdir(LOTR):
         print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
@@ -574,8 +578,8 @@ def main():
     section_d(types)
     section_e()
     section_f(types)
-    section_g(types)
-    failed = section_strict() if args.strict else 0
+    ram_gaps_found = section_g(types)
+    failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
     return 1 if failed else 0
