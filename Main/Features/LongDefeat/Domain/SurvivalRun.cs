@@ -325,6 +325,7 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        fx.RestShare = _r.RestShare;
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
     }

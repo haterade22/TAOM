@@ -26,4 +26,7 @@ internal sealed record RunRules
     public float KeepDecaySeconds { get; init; } = 90f;
     public int KeepMinAttackers { get; init; } = 12;
     public float KeepDominance { get; init; } = 2f;
+
+    /// <summary>The share of a standing defender's missing health regained at each clear: nothing else heals a soldier between waves.</summary>
+    public float RestShare { get; init; } = 0.5f;
 }

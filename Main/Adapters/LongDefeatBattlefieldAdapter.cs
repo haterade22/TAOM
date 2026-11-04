@@ -333,6 +333,27 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         SetOnlyTactic(team, new TacticDefendCastle(team));
     }
 
+    public LdRest RestDefenders(float share)
+    {
+        var count = 0;
+        var before = 0f;
+        var after = 0f;
+        foreach (var agent in _mission.DefenderTeam.ActiveAgents)
+        {
+            var limit = agent.HealthLimit;
+            if (!agent.IsHuman || !agent.IsActive() || !(limit > 0f))
+                continue;
+
+            var health = agent.Health;
+            agent.Health = Math.Min(limit, health + share * (limit - health));
+            before += health / limit;
+            after += agent.Health / limit;
+            count++;
+        }
+
+        return count == 0 ? default : new LdRest(count, before / count, after / count);
+    }
+
     public int Fell(int count)
     {
         if (count <= 0)

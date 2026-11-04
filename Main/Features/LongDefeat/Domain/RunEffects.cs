@@ -35,6 +35,7 @@ internal sealed class RunEffects
 
     public bool OrderCharge { get; set; }
     public bool RestoreDefenderTactic { get; set; }
+    public float RestShare { get; set; }
     public int FellAttackers { get; set; }
     public List<RunEvent> Events { get; } = new();
 }

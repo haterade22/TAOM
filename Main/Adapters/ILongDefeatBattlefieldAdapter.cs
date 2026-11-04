@@ -67,6 +67,9 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>The defenders get a new defend-the-castle tactic after a charge.</summary>
     void RestoreDefenderTactic();
 
+    /// <summary>Every standing defender regains <paramref name="share"/> of the health they are missing.</summary>
+    LdRest RestDefenders(float share);
+
     /// <summary>Kills up to <paramref name="count"/> standing attackers and returns how many fell.</summary>
     int Fell(int count);
 

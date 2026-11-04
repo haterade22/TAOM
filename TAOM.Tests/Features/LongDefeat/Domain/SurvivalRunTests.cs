@@ -980,6 +980,30 @@ public class SurvivalRunTests
     }
 
     [TestMethod]
+    public void Clear_RestsTheGarrisonByTheRulesShare()
+    {
+        var run = InFighting(Plan(new RunRules { RestShare = 0.25f }));
+
+        var quiet = run.Tick(Snap(attackers: 10, dt: 1f));
+        var fx = run.Tick(Snap(attackers: 0, dt: 1f));
+
+        Assert.AreEqual(0f, quiet.RestShare, "a tick with attackers standing rests nobody");
+        Assert.AreEqual(1, run.WavesCleared);
+        Assert.AreEqual(0.25f, fx.RestShare);
+    }
+
+    [TestMethod]
+    public void Clear_OfTheTargetWave_RestsNobody_BecauseTheRunIsOver()
+    {
+        var run = InFighting(Plan(new RunRules { RestShare = 0.25f }, new RunOptions { StopAfterWaves = 1 }));
+
+        var fx = run.Tick(Snap(attackers: 0, dt: 1f));
+
+        Assert.IsNotNull(run.Result);
+        Assert.AreEqual(0f, fx.RestShare);
+    }
+
+    [TestMethod]
     public void Clear_WithoutACharge_DoesNotRestoreTheDefenderTactic()
     {
         var run = InFighting();

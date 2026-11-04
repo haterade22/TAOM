@@ -160,7 +160,7 @@ public class LongDefeatConfigCatalogTests
         var rules = "'preparationSeconds':91,'intermissionSeconds':61,'earlyGoldPerSecond':3.5,'earlyGoldCap':121,'waveBonusBase':151," +
                     "'waveBonusPerWave':51,'spawnsPerTick':9,'liveCap':160,'garrisonCap':230,'musterBatch':21,'musterBatchSeconds':5.5," +
                     "'quietSeconds':61,'quietAnySeconds':181,'strandedSeconds':91,'stragglerShare':0.2,'keepRadius':13.5," +
-                    "'keepHeightBand':5.5,'keepHoldSeconds':46,'keepDecaySeconds':91,'keepMinAttackers':23,'keepDominance':2.5";
+                    "'keepHeightBand':5.5,'keepHoldSeconds':46,'keepDecaySeconds':91,'keepMinAttackers':23,'keepDominance':2.5,'restShare':0.25";
 
         var r = Load(waves: Waves(rules)).BuildPlan(Load().Fortresses[0], RunOptions.Default).Rules;
 
@@ -170,7 +170,7 @@ public class LongDefeatConfigCatalogTests
                 PreparationSeconds = 91f, IntermissionSeconds = 61f, EarlyGoldPerSecond = 3.5f, EarlyGoldCap = 121, WaveBonusBase = 151,
                 WaveBonusPerWave = 51, SpawnsPerTick = 9, LiveCap = 160, GarrisonCap = 230, MusterBatch = 21, MusterBatchSeconds = 5.5f,
                 QuietSeconds = 61f, QuietAnySeconds = 181f, StrandedSeconds = 91f, StragglerShare = 0.2f, KeepRadius = 13.5f,
-                KeepHeightBand = 5.5f, KeepHoldSeconds = 46f, KeepDecaySeconds = 91f, KeepMinAttackers = 23, KeepDominance = 2.5f,
+                KeepHeightBand = 5.5f, KeepHoldSeconds = 46f, KeepDecaySeconds = 91f, KeepMinAttackers = 23, KeepDominance = 2.5f, RestShare = 0.25f,
             },
             r);
         _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
@@ -217,6 +217,9 @@ public class LongDefeatConfigCatalogTests
     [DataRow("keepDominance", "0.9")]
     [DataRow("keepDominance", "11")]
     [DataRow("keepDominance", "NaN")]
+    [DataRow("restShare", "-0.1")]
+    [DataRow("restShare", "1.1")]
+    [DataRow("restShare", "NaN")]
     [DataRow("keepMinAttackers", "0")]
     [DataRow("keepMinAttackers", "101")]
     public void Rules_BadValue_KeepsTheDefaultWithOneWarningNamingTheKey(string key, string value)

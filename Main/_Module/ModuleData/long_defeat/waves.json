@@ -7,7 +7,8 @@
     "musterBatch": 20, "musterBatchSeconds": 4.0,
     "quietSeconds": 60, "quietAnySeconds": 180, "strandedSeconds": 90, "stragglerShare": 0.10,
     "keepRadius": 12.0, "keepHeightBand": 4.0, "keepHoldSeconds": 45.0, "keepDecaySeconds": 90.0,
-    "keepMinAttackers": 12, "keepDominance": 2.0
+    "keepMinAttackers": 12, "keepDominance": 2.0,
+    "restShare": 0.5
   },
   "bounties": {
     "fow_urukhai_fighter": 6, "fow_isengard_militia_spearman": 6, "fow_urukhai_skirmisher": 9,

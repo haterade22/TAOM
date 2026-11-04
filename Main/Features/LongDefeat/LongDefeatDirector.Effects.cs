@@ -13,6 +13,8 @@ internal sealed partial class LongDefeatDirector
 
     private static string F2(float v) => v.ToString("F2", CultureInfo.InvariantCulture);
 
+    private static string Percent(float share) => (share * 100f).ToString("F0", CultureInfo.InvariantCulture) + "%";
+
     /// <summary>Turns what the run decided into adapter calls, in the order the engine needs.</summary>
     private void Apply(RunEffects fx)
     {
@@ -52,6 +54,12 @@ internal sealed partial class LongDefeatDirector
 
         foreach (var e in fx.Events)
             OnEvent(e);
+        if (fx.RestShare > 0f)
+        {
+            var rest = _field.RestDefenders(fx.RestShare);
+            _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
+        }
+
         if (_run.Result != null)
             Finish();
     }

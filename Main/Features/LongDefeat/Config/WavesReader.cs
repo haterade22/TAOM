@@ -102,6 +102,7 @@ internal static class WavesReader
             KeepDecaySeconds = s.Float(o, p, "keepDecaySeconds", d.KeepDecaySeconds, 1f, 3600f),
             KeepMinAttackers = s.Int(o, p, "keepMinAttackers", d.KeepMinAttackers, 1, 100),
             KeepDominance = s.Float(o, p, "keepDominance", d.KeepDominance, 1f, 10f),
+            RestShare = s.Float(o, p, "restShare", d.RestShare, 0f, 1f),
         };
     }
 

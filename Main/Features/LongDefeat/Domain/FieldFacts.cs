@@ -52,3 +52,6 @@ internal enum LdRemovalKind
 
 /// <summary>What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is not a loss.</summary>
 internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId);
+
+/// <summary>A rest between waves: how many defenders it reached, and their mean health as a share of their limit, before and after.</summary>
+internal readonly record struct LdRest(int Count, float MeanBefore, float MeanAfter);

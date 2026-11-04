@@ -106,6 +106,8 @@ public class LongDefeatBindingTests
         Property(typeof(Agent), "Team", typeof(Team));
         Property(typeof(Agent), "Mission", typeof(Mission));
         Property(typeof(Agent), "IsHuman", typeof(bool));
+        Assert.IsNotNull(Property(typeof(Agent), "Health", typeof(float)).GetSetMethod(), "Agent.Health lost its public setter");
+        Property(typeof(Agent), "HealthLimit", typeof(float));
         Property(typeof(Agent), "IsRunningAway", typeof(bool));
         Property(typeof(Agent), "Character", typeof(BasicCharacterObject));
         var controller = Property(typeof(Agent), "Controller", typeof(AgentControllerType));

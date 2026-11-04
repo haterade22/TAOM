@@ -379,6 +379,7 @@ These numbers are a first guess, not a balance measure. Spike wave losses were 3
 | `keepRadius` | 2 to 50 | default |
 | `keepHeightBand` | 1 to 20 | default |
 | `keepDominance` | 1 to 10 | default |
+| `restShare` (added after the plan, see the feature doc) | 0 to 1 | default |
 | `keepMinAttackers` | 1 to 100 | default |
 | `countPerWave` | 0 to 100 | default |
 | `maxCount` | 101 to 1000 | default |

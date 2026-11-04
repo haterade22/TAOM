@@ -26,6 +26,7 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 16 | MED | The first wave table reached level 31 at wave 5 against a bot that buys level 11, and run `20261104-035343` lost at wave 4 of 5. A slower second table lost at wave 5 of 5 (`20261104-044306`), because the purse could not replace the losses | Balance guess | I wrote the table from the troop list and had no run past wave 2 | Third table and bounties 1.5 times higher; the runs below judge it. The feature doc holds the numbers. Final balance is Mike's |
 | 17 | LOW | I started the second rehearsal with a 10-minute timeout, and the earlier long run had 90 minutes | Own process slip | I retyped the command and not its options | Stopped within a minute and restarted; nothing lost |
 | 18 | LOW | Two of my proof scripts read nothing and printed empty rows: a state regex anchored on a time that follows a date, and a test that read a lazy catalog before it loaded. The test failed for the wrong reason | Evidence not read | I took a red result as proof without reading its message | Read the failing line; proved the fixed test against the old order |
+| 20 | MED | Wounds carried over: nothing heals a surviving defender between waves, so losses grew wave by wave on every table, and tuning the table alone did not help (`20261104-054852`) | Missing rule | The plan sold healing in Phase 3 and never asked what a wave does to survivors before that. I tuned the wave table twice before I asked what else carries over | `rules.restShare` and a line that measures the wound; the feature doc names what still carries over |
 | 19 | LOW | A fix for the standards rule put `DoNotAcceptEvents` on the modal shop panel's root, so a click on the dim background would reach lower layers. The checker read `EventManager` and `ScreenManager` and caught it before any run | Rule applied past its reason | The rule was written for HUD layers, and I passed it on without its scope. Native's `EscapeMenu.xml` has no such flag | Reverted on the seven containers; the host's comment names the reason |
 
 ## Not applied, with the reason
@@ -37,6 +38,8 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 - **A mid-wave power reading (engine 4):** it needs a rerun, and the thresholds were tuned with the current behaviour.
 - **Tooling 8, 10, 11:** follow-ups in the shared Fords runner, which other sessions drive.
 - **Tooling 12, the limits:** five waves took at most 2,427 live seconds, so they fit 3,600 s. No change.
+- **A `rest` check in the judge (rest review, data flow 12):** a run can pass with the rule dead, and the first run's `rest:` lines are read by hand. One verdict, a manifest row and the fixtures' upkeep for a rule with two tests and a log line: `simplicity-criterion.md` says no for now.
+- **Leaving a fleeing soldier out of the rest (rest review, data flow 9):** he counts in the line and gets the health. No harm, and a clause adds nothing.
 - **The sentence in `TaomCustomBattleMoraleModel.cs:26` (standards 5):** kept. It matches its neighbours in a shared model, and each of them names its rule.
 - **A second call to `ReturnToMainMenu` after a refused launch:** the call is guarded and caught, and I did not read what the engine does with it. It needs a data fault to run. Noted, not changed.
 
@@ -67,13 +70,13 @@ Most rows have no earlier miss: this review was the first read of the code by an
 - **The new tests can fail:** a builder broke eight production lines at once (the keep counts, the 0.5 s gate, the fleeing argument, the bot's clock, the respawn guard, the felled skip, the driver's fault clause, the done file's `expect`) and each test went red. Handing the runner the Fords judge turns the judge test red.
 - **Run `20261104-033424`, build `985b0d54e.dirty`:** PASS at 2 waves, every required check, HUD and order bar.
 - **Run `20261104-035343`, same base:** lost at wave 4 of 5. The respawn (`player-death via=respawn`), a lost run's report and the best-run file worked, with no fault.
-- **Run `20261104-044306`, same base, with the first wave's fixes:** lost at wave 5 of 5 after 4 cleared waves. `[LongDefeat][Hud] end panel open` was written, the morale counter reached 19, and frames averaged 11.16 ms with a worst of 66.67 ms.
+- **Run `20261104-054852`, clean build `1536be627`, with both waves' fixes and the third table:** lost at wave 5 of 5 after 4 cleared waves and 574 kills. Every check passed, and the judge failed only on the reason. `stragglers fall: count=1` is the felled path's first run in game.
+- **Run `20261104-044306`, same base as the two above, with the first wave's fixes:** lost at wave 5 of 5 after 4 cleared waves. `[LongDefeat][Hud] end panel open` was written, the morale counter reached 19, and frames averaged 11.16 ms with a worst of 66.67 ms.
 
 ## What this review did not prove
 
 - **In game:** the third wave table, five cleared waves, and every change from the second wave. The clean-tree runs after this commit answer those.
 - **The keep:** no run has brought a sampled attacker within 39 m, so a keep loss has run only in tests.
-- **The felled path:** Phase 1 runs hold no `stragglers fall` line, so it has run only in tests.
 - **What only a person can show:** the shop's clicks and its modal background, Leave, the Escape exit, Photo Mode's veto, the prefab colours, taking over a soldier with `E`. They are `[[human]]` rows or notes for Mike's first play.
 - **A full field:** the live cap of 150 attackers with a garrison of 220 has not been measured.
 - **Why wave 3 climbs:** from wave 3 far more attackers reach high ground than in wave 2, in every run and on every table. Nobody has traced why.

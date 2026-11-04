@@ -883,6 +883,34 @@ public class LongDefeatDirectorTests
         return (new LongDefeatRunRecords(new LongDefeatBestRunStore(dir), LongDefeatReportFile.For(System.IO.Path.Combine(dir, "taom_debug_2026-11-04_10-11-12.log"))), dir);
     }
 
+    [TestMethod]
+    public void AClear_RestsTheGarrison_AndTheLineNamesTheMeanHealthBeforeAndAfter()
+    {
+        var rig = NewRig(rules: new RunRules { RestShare = 0.5f });
+        rig.Field.RestResult = new LdRest(150, 0.6f, 0.8f);
+        rig.StartAndSpawnWave();
+        Assert.IsFalse(rig.Calls.Contains("Rest:0.5"), "no rest before the clear");
+
+        rig.KillAttackers(110);
+        rig.Tick();
+
+        CollectionAssert.Contains(rig.Calls, "Rest:0.5");
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Wave] 1 rest: defenders 150, mean health 60% to 80%")), string.Join("\n", rig.Log.Lines));
+    }
+
+    [TestMethod]
+    public void AClear_WithAZeroShare_TouchesNobody()
+    {
+        var rig = NewRig(rules: new RunRules { RestShare = 0f });
+        rig.StartAndSpawnWave();
+
+        rig.KillAttackers(110);
+        rig.Tick();
+
+        Assert.IsFalse(rig.Calls.Any(c => c.StartsWith("Rest:")));
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains(" rest: ")));
+    }
+
     private static void ClearOneWave(Rig rig)
     {
         rig.StartAndSpawnWave();

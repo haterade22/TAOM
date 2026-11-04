@@ -116,6 +116,14 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public void RestoreDefenderTactic() => Calls.Add("Restore");
 
+    public LdRest RestResult { get; set; }
+
+    public LdRest RestDefenders(float share)
+    {
+        Calls.Add("Rest:" + share.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        return RestResult;
+    }
+
     public int Fell(int count)
     {
         Calls.Add($"Fell:{count}");
