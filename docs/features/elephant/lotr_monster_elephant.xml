@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  TAOM war-elephant Monster — READY-TO-DROP reference (authored 2026-06-05).
+  TAOM war-elephant Monster: reference copy of the deployed file (authored 2026-06-05).
 
   Integration: copy this file to
     <game>/Modules/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml

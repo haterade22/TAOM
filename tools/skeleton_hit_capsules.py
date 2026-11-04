@@ -495,7 +495,11 @@ def main(argv=None):
             p.add_argument("--fit", required=True)
             p.add_argument("--apply", action="store_true")
     args = ap.parse_args(argv)
-    return {"show": _cmd_show, "fit": _cmd_fit, "patch": _cmd_patch}[args.cmd](args)
+    try:
+        return {"show": _cmd_show, "fit": _cmd_fit, "patch": _cmd_patch}[args.cmd](args)
+    except (OSError, ValueError) as exc:
+        print("ERROR: %s" % exc)
+        return 2
 
 
 if __name__ == "__main__":

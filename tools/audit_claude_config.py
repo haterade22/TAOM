@@ -166,6 +166,7 @@ _SECRET_PATTERNS = [
     ("secret-slack", r"xox[baprs]-[A-Za-z0-9-]{10,}", "Slack token"),
     ("secret-stripe", r"sk_(?:test|live)_[A-Za-z0-9]{16,}", "Stripe secret key"),
     ("secret-privatekey", r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----", "private key material"),
+    ("secret-nuget-cleartext", r'ClearTextPassword"\s+value="[^"]+"', "NuGet cleartext feed password"),
     ("secret-db-uri", r"(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis)://[^\s:@/]+:[^\s:@/]+@", "DB connection string with inline credentials"),
 ]
 _SECRET_COMPILED = [(rid, re.compile(rx), desc) for rid, rx, desc in _SECRET_PATTERNS]

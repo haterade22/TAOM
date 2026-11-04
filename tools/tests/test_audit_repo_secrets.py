@@ -22,6 +22,8 @@ import audit_claude_config as audit  # noqa: E402
 # Shaped like the real thing, matches the rule, is not a credential.
 ANTHROPIC_SHAPED = "sk-" + "ant-" + "api03-AbCdEfGhIjKlMnOpQrStUvWx"
 AWS_SHAPED = "AK" + "IA" + "QRSTUVWX1234ABCD"
+# The NuGet.config key that holds a feed password in the clear (three vendored tarballs carried one).
+NUGET_CLEARTEXT_KEY = "Clear" + "TextPassword"
 
 
 class TrackedPathRuleTests(unittest.TestCase):
@@ -96,6 +98,16 @@ class RepoSecretScanTests(unittest.TestCase):
     def test_finds_a_key_in_a_csharp_file(self):
         res = self._run({"Main/Svc.cs": 'const string K = "' + AWS_SHAPED + '";\n'})
         self.assertEqual([f.rule for f in res.findings], ["secret-aws"])
+
+    def test_finds_a_nuget_cleartext_password(self):
+        line = '<add key="' + NUGET_CLEARTEXT_KEY + '" value="Zx9qLm2pR7vK4nB8" />\n'
+        res = self._run({"vendor/NuGet.config": line})
+        self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+        self.assertEqual(res.findings[0].line, 1)
+
+    def test_a_nuget_placeholder_value_is_silent(self):
+        line = '<add key="' + NUGET_CLEARTEXT_KEY + '" value="<your feed PAT>" />\n'
+        self.assertEqual(self._run({"docs/plan.md": line}).findings, [])
 
     def test_masks_the_value_it_reports(self):
         res = self._run({"a.py": 'k = "' + ANTHROPIC_SHAPED + '"\n'})

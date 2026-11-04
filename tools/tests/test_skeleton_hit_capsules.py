@@ -239,6 +239,18 @@ class CliTests(unittest.TestCase):
     def _backups(self):
         return [f for f in os.listdir(self.tmp.name) if ".bak" in f]
 
+    def test_a_missing_tpac_is_one_error_line_not_a_traceback(self):
+        code, out = self._run("show", "--tpac", os.path.join(self.tmp.name, "absent.tpac"))
+        self.assertEqual(code, 2)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+        self.assertTrue(out.startswith("ERROR: "), out)
+
+    def test_an_unknown_skeleton_name_is_one_error_line_not_a_traceback(self):
+        code, out = self._run("show", "--tpac", self.tpac, "--skeleton", "no_such_skeleton")
+        self.assertEqual(code, 2)
+        self.assertIn("no_such_skeleton", out)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+
     def test_dry_run_writes_nothing(self):
         before = _read(self.tpac)
         code, out = self._run("patch", "--tpac", self.tpac, "--fit", self.fit)
