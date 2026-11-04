@@ -7,14 +7,11 @@ locates each region on the map via template matching, then generates:
   - Renamed region PNGs (region_{id}.png) ready for deployment
   - Full-canvas PNGs (fullres/region_{id}_full.png)
   - regions.json with normalized bounding boxes
-  - factions.json migrated from old data
   - polygon_widgets.xml snippet for the UI
 
 Usage:
     python tools/assemble_faction_map.py
-WARNING (#1062 review, 2026-10-29): factions.json is maintained by hand. This tool's tables still
-disagree with it on other rows and its output drops the {=taom_faction_*_name} keys, so never copy
-its output over factions.json.
+factions.json is maintained by hand and this tool does not write it (#1062 review, 2026-10-29).
 """
 
 import json
@@ -278,14 +275,6 @@ def find_region_position_ncc(full_gray, region_arr, initial_pos=None, search_rad
         return best_pos_fine, best_score_fine
 
 
-def default_color_for_side(side):
-    return {
-        "free": "#4870B8FF",
-        "evil": "#604830FF",
-        "neutral": "#706838FF",
-    }.get(side, "#808080FF")
-
-
 def main():
     require_inputs()
     print("=" * 70)
@@ -419,50 +408,6 @@ def main():
         json.dump(regions_data, f, indent=2)
     print(f"\nWrote {len(regions_data)} regions to {regions_json_path}")
 
-    # Write factions.json (migrate from current deployed version, then old vanilla)
-    current_factions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "factions.json"
-    current_factions = {}
-    if current_factions_path.exists():
-        with open(current_factions_path, "r", encoding="utf-8") as f:
-            current_factions = json.load(f)
-
-    new_factions = {}
-    for region_id, (display_name, old_id, game_faction, playable, side) in REGION_META.items():
-        if region_id == "map_boundary":
-            continue  # decorative, not a faction
-        # First try to migrate from current factions (already has migrated data)
-        if region_id in current_factions:
-            entry = dict(current_factions[region_id])
-            # Update fields that may have changed
-            entry["name"] = display_name
-            entry["playable"] = playable
-            entry["game_faction"] = game_faction
-            entry["side"] = side
-        elif old_id and old_id in current_factions:
-            entry = dict(current_factions[old_id])
-            entry["name"] = display_name
-            entry["image"] = f"faction_{region_id}"
-            entry["playable"] = playable
-            entry["game_faction"] = game_faction
-            entry["side"] = side
-        else:
-            entry = {
-                "name": display_name,
-                "color": default_color_for_side(side),
-                "playable": playable,
-                "game_faction": game_faction,
-                "side": side,
-                "description": f"The {display_name}.",
-                "image": f"faction_{region_id}",
-                "traits": [],
-            }
-        new_factions[region_id] = entry
-
-    factions_json_path = output_path / "factions.json"
-    with open(factions_json_path, "w", encoding="utf-8") as f:
-        json.dump(new_factions, f, indent=2, ensure_ascii=False)
-    print(f"Wrote {len(new_factions)} factions to {factions_json_path}")
-
     # Write PolygonWidget XML snippet
     xml_lines = ['<!-- Generated PolygonWidget entries for new Factions map -->',
                  '<!-- Replace existing PolygonWidgets in CharacterCreationCultureStage.xml -->', '']
@@ -502,7 +447,7 @@ def main():
     print(f"  1. Review region positions in regions.json")
     print(f"  2. Copy deploy/*.png to Modules/TAOM/GUI/SpriteData/FactionMap/")
     print(f"  3. Copy deploy/fullres/*.png to Modules/TAOM/GUI/SpriteData/FactionMap/fullres/")
-    print(f"  4. Copy regions.json + factions.json to Main/_Module/ModuleData/factionmap/")
+    print(f"  4. Copy regions.json to Main/_Module/ModuleData/factionmap/")
     print(f"  5. Update CharacterCreationCultureStage.xml with polygon_widgets.xml")
     print(f"  6. Create faction_*.png and banner_*.png for new regions")
 

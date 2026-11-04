@@ -78,5 +78,23 @@ class PathsAreDataNotCode(unittest.TestCase):
         self._assert_round_trip("a'+str(__import__('sys').stderr.write('X'))+'")
 
 
+class FactionsJsonIsHandKept(unittest.TestCase):
+    """A run writes the map assets and regions.json but never a factions.json (#1062 review)."""
+
+    def test_a_run_leaves_no_factions_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = os.path.join(tmp, "in")
+            out = os.path.join(tmp, "out")
+            os.makedirs(src)
+            with open(os.path.join(src, f"region_{pfm.REGIONS[0][0]}.png"), "wb") as f:
+                f.write(_rgba_png())
+
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                self.assertTrue(pfm.process_regions(src, out))
+
+            self.assertTrue(os.path.exists(os.path.join(out, "regions.json")))
+            self.assertFalse(os.path.exists(os.path.join(out, "factions.json")))
+
+
 if __name__ == "__main__":
     unittest.main()
