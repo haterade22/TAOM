@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="Pokazuje lub ukrywa granice i nazwy królestw na mapie kampanii. Domyślnie M." />
     <string id="taom_key_realm_borders_mode" text="Tryb mapy granic (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Przełącza granice między królestwami, Wolnymi Ludami przeciw Cieniowi oraz twoimi sojusznikami i wrogami. Domyślnie G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

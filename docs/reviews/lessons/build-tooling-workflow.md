@@ -4818,3 +4818,10 @@ with the clean-unload line present, so it would have failed every run.
   code), and scan for an ERROR CrashReport block past the done time.
 - **Source:** `docs/reviews/REVIEW-LOG.md` entry "Fords of War night batch and whole feature" (A-F1); fixed in
   `8d883051e`.
+
+### A draft manifest is `0.toml`, and its `fixed_in` is on trunk
+
+The Seat's manifest started as `seat-of-seeing.toml`, with a change to `RepoManifestGateTests` to accept a name with no number, and no reader could open that file. Its `fixed_in` named a commit only the branch held, so a rebase would have turned every build into "predates fixed_in". `tools/ingame_checks/0.toml` with `issue = 0` needs no gate change: `--issue 0` reads it, `--owed` never reaches it, and `--post` stops at `gh`. Hold one draft at a time, and rename it when the issue exists.
+- **Why missed:** the manifest began from "what lets the gate pass", not from "what a reader needs". The sibling's "commit before the feature" was copied without its reason.
+- **Prevent:** do not change a gate to fit a draft. Before writing a manifest, run its reader on a rendered line. Its `fixed_in` is a commit already on trunk.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 6 and 7.

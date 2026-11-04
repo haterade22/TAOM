@@ -1093,6 +1093,118 @@ class HeroRace1011Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
 
 
+class SeatOfSeeingManifestTests(unittest.TestCase):
+    """The real Seat of Seeing manifest. The fixtures render the [Check] lines SeatSession writes through IOutcomeLog (SeatChecks.cs
+    holds the ids; SeatOfSeeingChecksRenderTests in TAOM.Tests pins the rendered lines) and the three failure lines of the feature."""
+
+    NAME, ISSUE = "0.toml", "0"  # the rename changes these two
+
+    ENTER = "taom.seat-of-seeing.enter"
+    FRAMES = "taom.seat-of-seeing.frames"
+    LEAVE = "taom.seat-of-seeing.leave"
+    GLIDE = "taom.seat-of-seeing.glide"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest(self.NAME)
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-03_14-00-00")
+        return self.t.run(["--issue", self.ISSUE])
+
+    def manifest(self):
+        return iv.load_manifest(TOOLS / "ingame_checks" / self.NAME, int(self.ISSUE))
+
+    def check(self, check_id):
+        return next(c for c in self.manifest().checks if c.id == check_id)
+
+    def test_it_names_the_four_checks_the_session_writes(self):
+        ids = [self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE]
+        self.assertEqual([c.id for c in self.manifest().checks], ids)
+        # The fault id is named by every fail list, and has no check of its own: it must stay at zero.
+        self.assertEqual(iv.named_check_ids(self.manifest()), set(ids) | {"taom.seat-of-seeing.fault"})
+
+    def test_a_full_visit_passes_every_check(self):
+        code, out, _ = self.judge("seat_visit_pass.txt")
+        self.assertEqual(code, 0, out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+        self.assertIn("the drop key and the career key still act from the Seat", out)
+
+    def test_a_latched_fault_fails_all_four_checks(self):
+        code, out, _ = self.judge("seat_fault.txt")
+        self.assertEqual(code, 1, out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "FAIL", out)
+
+    def test_a_missing_elevation_setter_fails_only_the_glide(self):
+        code, out, _ = self.judge("seat_elevation_missing.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.GLIDE), "FAIL")
+        self.assertIn("elevation=missing", out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_an_enter_with_no_later_line_passes_enter_and_leaves_the_rest_not_reached(self):
+        code, out, _ = self.judge("seat_enter_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.ENTER), "PASS")
+        for check_id in (self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+
+    def test_each_failure_line_of_the_feature_fails_the_enter_check(self):
+        for fixture in ("seat_could_not_start.txt", "seat_hotkey_failed.txt", "seat_order_ray_failed.txt", "seat_enter_failed.txt"):
+            with self.subTest(fixture=fixture):
+                self.t = Tree(self)
+                self.t.real_manifest(self.NAME)
+                code, out, _ = self.judge(fixture)
+                self.assertEqual(code, 1, out)
+                self.assertEqual(verdict_of(out, self.ENTER), "FAIL", out)
+
+    def test_a_session_of_refused_key_presses_is_not_reached_and_says_why(self):
+        code, out, _ = self.judge("seat_skips_only.txt")
+        self.assertEqual(code, 4, out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=setting-off", out)
+
+    def test_a_leave_with_no_agent_to_follow_skips_the_glide_with_its_reason(self):
+        code, out, _ = self.judge("seat_visit_no_agent.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.LEAVE), "PASS")
+        self.assertEqual(verdict_of(out, self.GLIDE), "NOT REACHED")
+        self.assertIn("skipped: mission=1 reason=no-agent", out)
+
+    def test_the_leave_pass_pattern_takes_each_reason_and_no_other(self):
+        pattern = self.check(self.LEAVE).passes[0]
+        line = "[Check] id=taom.seat-of-seeing.leave result=pass mission=3 frames=12 glide=1 reason=%s"
+        for reason in ("key", "setting-off", "interlude", "rage", "finish"):
+            with self.subTest(reason=reason):
+                self.assertTrue(pattern.search(line % reason))
+        self.assertFalse(pattern.search(line % "teleport"))
+        self.assertFalse(pattern.search(line % "key-and-more"))
+
+    def test_the_dead_leave_fail_pattern_is_gone_and_the_fault_pattern_is_on_every_check(self):
+        self.assertEqual([p.pattern for p in self.check(self.LEAVE).fails],
+                         [r"\[Check\] id=taom\.seat-of-seeing\.fault result=fail"])
+        fault = r"\[Check\] id=taom\.seat-of-seeing\.fault result=fail"
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
+
+    def test_the_enter_fail_list_names_the_features_own_failure_lines(self):
+        fails = [p.pattern for p in self.check(self.ENTER).fails]
+        for line in (r"\[SeatOfSeeing\] the Seat could not start", r"\[SeatOfSeeing\] hotkey registration failed",
+                     r"\[SeatOfSeeing\] order ray failed", r"\[Check\] id=taom\.seat-of-seeing\.enter result=fail"):
+            with self.subTest(line=line):
+                self.assertIn(line, fails)
+
+
 class CrashReportEchoTests(unittest.TestCase):
     """A crash report writes the last log lines back into the log behind "[CrashReport] "."""
 

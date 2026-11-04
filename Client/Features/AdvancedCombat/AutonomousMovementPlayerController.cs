@@ -9,14 +9,13 @@ using TaleWorlds.LinQuick;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
+using TAOM.Features.SeatOfSeeing;
 
 namespace TAOM.Features.AdvancedCombat;
 
 [DefaultView]
 public class AutonomousMovementPlayerController : MissionView, IAutonomousMovementController
 {
-    public event OnLockedAgentChangedDelegate? OnLockedAgentChanged;
-    public event OnPotentialLockedAgentChangedDelegate? OnPotentialLockedAgentChanged;
     public bool IsDisabled { get; set; }
     public Agent? TargetAgent { get; set; }
 
@@ -111,27 +110,13 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
     public Agent? LockedAgent
     {
         get => _lockedAgent;
-        private set
-        {
-            if (_lockedAgent != value)
-            {
-                _lockedAgent = value;
-                OnLockedAgentChanged?.Invoke(value);
-            }
-        }
+        private set => _lockedAgent = value;
     }
 
     public Agent? PotentialLockTargetAgent
     {
         get => _potentialLockTargetAgent;
-        private set
-        {
-            if (_potentialLockTargetAgent != value)
-            {
-                _potentialLockTargetAgent = value;
-                OnPotentialLockedAgentChanged?.Invoke(value);
-            }
-        }
+        private set => _potentialLockTargetAgent = value;
     }
 
     public AutonomousMovementPlayerController()
@@ -643,13 +628,18 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
         {
             baseController.Disable();
             Enable();
+            HoldsHero = true;
         }
         else
         {
-            baseController.Enable();
+            if (!SeatPresence.IsSeated)
+                baseController.Enable();
             Disable();
+            HoldsHero = false;
         }
     }
+
+    public bool HoldsHero { get; private set; }
 
     private void OnPlayerToggleOrder(MissionPlayerToggledOrderViewEvent obj)
     {
@@ -688,7 +678,4 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
     private float _lastLockedAgentHeightDifference;
     public bool IsChatOpen;
     private bool _weaponUsageToggleRequested;
-
-    public delegate void OnLockedAgentChangedDelegate(Agent? newAgent);
-    public delegate void OnPotentialLockedAgentChangedDelegate(Agent? newPotentialAgent);
 }

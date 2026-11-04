@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="Показывает или скрывает границы и названия королевств на карте кампании. По умолчанию: M." />
     <string id="taom_key_realm_borders_mode" text="Режим карты границ (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Переключает границы между королевствами, Свободными Народами против Тени и вашими союзниками и врагами. По умолчанию: G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

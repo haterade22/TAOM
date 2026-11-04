@@ -37,11 +37,27 @@ Marshal's Word needs a screen, a player team and a single-player mission, so one
 - `Client/Features/MarshalsWord/MarshalView.cs` is a `MissionView` with `[DefaultView]`. It gets a `Local`
   row in `CoopMissionRoles.cs`, the matching row in `ClientViewRows_MatchTheClientTypeNames` and the doc's
   table. See `BattleActionBarMissionView.cs:13-16` for why it must be a default view.
-- At the first `OnMissionTick` the view reads `SeatMissionPolicy.Decide(SeatMissionClassifier.ReadFacts(mission))`
-  once, because the behaviour list is complete by then. Marshal's Word is live when `MarshalEnabled` holds,
+- At the first `OnMissionTick`, and at the first `OnMissionTick` after each `OnMissionModeChange` until the answer is yes, the view reads
+  `SeatMissionPolicy.Decide(SeatMissionClassifier.ReadFacts(mission, logger))` and keeps the answer until the next mode change. The mode
+  change callback only sets a volatile flag, because the thread that raises it is not proved. The behaviour list is complete by the first
+  tick, and the kind is read fresh because it depends on `Mission.Mode` (Seat contract section 4), so nothing here caches the kind. These
+  reads are few, so the foreign-camera walk in `ReadFacts` needs no cache of its own. Do not reuse `SeatView`'s cached answer: it freezes
+  the kind on the mode at its first read.
+  Marshal's Word is live when `MarshalEnabled` holds,
   `SeatPermissions.Orders` holds (a Battle or Hideout kind with no other camera in the mission),
-  `GameNetwork.IsSessionActive` is false and `Mission.PlayerTeam` exists. It then calls `IMarshalSession.Begin()`.
-  With no screen there is no view, so a dedicated server never runs any of this. The answer holds for the mission.
+  `GameNetwork.IsSessionActive` is false and `Mission.PlayerTeam` exists. A mission can make its player team after the first tick with no
+  mode change, so while the answer is yes and the session is not live, each `OnMissionTick` tests `Mission.PlayerTeam`, one managed read.
+  The view then calls `IMarshalSession.Begin()`.
+  With no screen there is no view, so a dedicated server never runs any of this. Once live, the session stays live for the mission.
+- **Teardown has two paths, and every stage here honours both:** `OnMissionScreenFinalize` (the end-mission path) and `OnRemoveBehavior`
+  (`MissionState.OnFinalize` removes the behaviours with no `EndMission`; `docs/reference/engine/mission-and-missionbehavior-lifecycle.md`
+  lines 100-123). Each hook calls one safe-to-repeat finish on the session, then sets the session field to null, because the screen can still
+  tick a removed view. Anything that outlives a frame or that a patch reads clears in that finish: a flag pool, a held key, a static, an event
+  handler.
+- **Command stays vanilla's question.** An enlisted soldier stripped of command gets no Marshal's Word. Read
+  `Main/Features/Enlistment/BattleCommandPolicy.cs` ("one predicate, three consumers") and add this feature as a consumer when the keys or
+  the capture could otherwise act. Pressed keys (543, 544, 545) act only on a selection, so they also test that the player may command now.
+  Host Review keeps the feature, except the panel provider in stage M6.
 - `IMarshalSession.IsLive` is what every patch reads first. It is a plain `volatile bool` field behind a static
   hook, and a patch does nothing when it is false.
 - **All main-thread work runs in two ticks of this view.** `OnMissionScreenTick` reads keys once per real frame
@@ -60,6 +76,23 @@ Patches live in `Main/Features/MarshalsWord/Hooks/` under category `Patch141_Mar
 `## Patch141_MarshalsWord` section to `docs/reference/harmony-patch-registry.md`
 (`PatchCategoryNumberTests`). Read `docs/reviews/lessons/harmony-il.md` first. None of these patches names a
 client-only assembly until M6. Harmony binds parameter names, so a binding test pins every target and name.
+The feature module declares this category at `ApplyPhase.FirstMission`, as `FordsOfWarModule` does, because
+`MovementOrder`'s type initializer reads `Mission.Current`, and a patch applied earlier can reach it through JIT
+preparation (`Main/SubModule.cs:2117-2125`). Every prefix that can skip the original needs a stance in
+`CoopVetoClassificationTests`, which fails hard without one. A new native write calls `MissionThreadGuard.NoteCall`.
+
+**TAOM patches on the same engine members.** Read each before you build the stage that meets it:
+
+| Engine member | TAOM patch | What it means here |
+|---|---|---|
+| `Formation.SetMovementOrder` | `Patch31` (prefix, postfix), `Patch35` (postfix) | Each queued step reads as a new order: `Patch31` cancels a charge cycle and `Patch35` clears a stance. That is the intended result of a player's order. The method can run off the main thread, and this feature only calls it from `OnMissionTick` |
+| `Formation.SetTargetFormation` | `Patch31b` | A mark reaches it as a player target (8.1) |
+| `Formation.GetOrderPositionOfUnit` | `Patch30` | Its prefix can answer with a mixed layout on workers, in field battles only (`docs/features/mixed-formations.md:34`). So the array preview and a soldier's real slot can differ in a mixed company. Accept this and name it in the feature doc. The slot clamp (9.2) reads the same member the soldiers follow |
+| `Formation.UnitDiameter` | `Patch92` scope | 6.3 and 9.1 |
+
+`Main/Features/CultureDoctrine/Hooks/Tactics/VolleyControl.cs` drives AI formations only, and it gives fire at will once on a player takeover. Read
+it before M3, and keep the two apart by the AI test. `Main/Features/CompanionTactics/BattleActionBar/TroopStanceManager.cs` and
+`Hooks/Behaviors/WallStances.cs` hold parked display stances with similar names. Do not reuse their names, and do not change what they map.
 
 ## 3. Keys
 
@@ -71,15 +104,21 @@ A new category `TaomMarshalHotKeyCategory`, same pattern and rules as the Seat's
 | 540 | Give the order in turn | `LeftShift` | Held | M1 |
 | 541 | Mark, do not move | `LeftControl` | Held | M4 |
 | 542 | Keep the widths | `LeftAlt` | Held | M2 |
-| 543 | Change the archers' fire | `N` | Pressed | M3 |
+| 543 | Change the archers' fire | `Comma` | Pressed | M3 |
 | 544 | Give the word | `M` | Pressed | M3 |
-| 545 | Hold the line | `I` | Pressed | M5 |
+| 545 | Hold the line | `Period` | Pressed | M5 |
+
+The defaults follow the rule in Seat contract section 3: a default stays clear of every key the mission's scene layer reads. `N` and `I`
+fail it, because they are the encyclopedia and inventory keys of `GenericCampaignPanelsGameKeyCategory` (39 and 38), which
+`MissionSingleplayerViewHandler` reads in every campaign mission. `Comma` and `Period` have no reader on that layer, and `M` is in no
+engine category. A test pins these three pressed defaults against the engine categories, the same way as the Seat's.
 
 Held keys read the bound key with the static `Input.IsKeyDown`, the way `ManyHammersCalls.ShiftHeld` does, and
-only while `Mission.IsOrderMenuOpen` holds. Pressed keys use the view's `Input.IsKeyPressed`, which goes quiet
-behind a menu. `FordsCommandHotkeys` also uses `N` and `M`, but the Fords mission has no Marshal's Word: it has
-its own camera view, so `SeatMissionFacts.ForeignCamera` turns this feature off there too. Game key 5 (ShowIndicators)
-also defaults to `LeftAlt`, so holding key 542 shows the banners as well. That is harmless and a help. Holding
+only while `Mission.IsOrderMenuOpen` holds. Pressed keys test the static `Input.IsKeyPressed` first, then the view's own
+`Input.IsKeyPressed`, which goes quiet behind a menu but gets a new array from `Input.GetClickKeys()` on each call (Seat contract section 3).
+A frame with no live session reads no key. `FordsCommandHotkeys` also uses `M`, but the Fords mission has no Marshal's Word: it has
+its own camera view, so `SeatMissionFacts.ForeignCamera` turns this feature off there too. Realm Borders uses `M` on the campaign map only.
+Game key 5 (ShowIndicators) also defaults to `LeftAlt`, so holding key 542 shows the banners as well. That is harmless and a help. Holding
 `LeftShift` in the Seat also flies faster (game key 24), and that is harmless too.
 
 ## 4. Settings
@@ -216,12 +255,13 @@ passes the same test, because its depth covers the snake.
 `MarshalView` draws one vanilla flag per queued position of the selected companies while the panel is open, and hides
 the flags when it closes. Use `GameEntity.Instantiate(scene, "order_flag_small", false)` the way
 `OrderTroopPlacer.AddOrderPositionEntity` does (503-530), with `EntityFlags.NotAffectedBySeason`. Keep a small pool,
-and place each flag at the ground height of the step's middle point. Refresh on a queue change and at 4 Hz. Hide every
-flag at `OnMissionScreenFinalize`.
+and place each flag at the ground height of the step's middle point. Refresh on a queue change and at 4 Hz. At the end of the
+mission drop the pool with no native call: the flags go with the scene, and vanilla's `OrderTroopPlacer` has no teardown for its own.
 
 ### 5.6 Log lines
 
-`IOutcomeLog` with `tools/ingame_checks/marshals-word.toml`. M1 checks: step captured, step started, step finished by
+`IOutcomeLog` with `tools/ingame_checks/0.toml`, the same draft manifest as the Seat, because one held issue covers both features (Seat
+contract, Deviations row 8). Each stage adds its checks there. M1 checks: step captured, step started, step finished by
 each end rule, patience spent (expected rare), queue cleared by a direct order, capture declined.
 
 ## 6. Stage M2: keep the array
@@ -395,8 +435,8 @@ internal static DrawStep Step(DrawState state, double since, in DrawInput input)
 `Attacking` is `movementFlag & Agent.MovementControlFlag.AttackMask` non-zero. `Cancelling` is the same with `DefendMask`. Setting the bit means clearing
 `AttackMask`, then adding `AttackDown`. The AI keeps its own wish to draw and aim, so this stage changes no behaviour weights and writes no `CanAttack`.
 
-`StandAside` is read at most 3 times a second per soldier, because it makes native calls: no ranged weapon wielded, company on `HoldFire`, detached,
-using a game object, or a target within `CloseQuarter`.
+`StandAside` is read at most 3 times a second per soldier, because it makes native calls: no formation, no ranged weapon wielded, company on `HoldFire`,
+detached, using a game object, or a target within `CloseQuarter`.
 
 `WordDue` is `word time + this soldier's jitter <= now`. Jitter is drawn once when the component is built, from 0 to `WordJitter`, so that a volley sounds like
 men and not a machine. The component reads the company's `FireMode` and word time from a main-thread array indexed by `Formation.Index`.
@@ -421,7 +461,8 @@ changes the mode again. `Formation.AddUnit` and `RemoveUnit` reset an agent's fi
 ### 7.3 The proof log
 
 Land this first, and leave it in. `MarshalView` overrides `OnAgentShootMissile` (confirm the signature on `MissionBehavior`) and counts shots by company and by the shooter's
-`DrawState`. Each company with a mode writes one summary line at most every 5 s:
+`DrawState`. The thread of that callback is not proved here, so it only adds to counters with `Interlocked` and touches no engine state. `OnMissionTick` reads the counters and writes the
+line. Each company with a mode writes one summary line at most every 5 s:
 
 `[Marshal] fire company=<n> mode=<m> drawing=<a> holding=<b> shotsWhileHolding=<c> shotsAfterWord=<d> shotsFree=<e>`
 
@@ -450,7 +491,7 @@ master controller's path reaches the same patches.
 
 ### 8.2 Outlines
 
-`MarshalOutlineService` runs in `OnMissionTick` at 4 Hz, only while `MarshalOutlines` holds and either the panel is open or game key 5 (ShowIndicators) is down.
+`MarshalOutlineService` runs in `OnMissionTick` at 4 Hz, only while `MarshalOutlines` holds and either the panel is open or game key 5 (ShowIndicators) is down. The screen tick reads that key and stores one bool, because nothing in `OnMissionTick` reads a key (section 2).
 
 The plan is pure. Given the wanted colour of each unit, it returns who to paint and who to clear, against a dictionary of what it last painted, keyed by `Agent` reference. `Domain/` gets
 the diff over integers, with tests. Only agents it painted are ever cleared.
@@ -518,7 +559,7 @@ Hotkeys come first, and every order above works with no panel entry. This stage 
 
 The engine tests these strings and types by value, so never rename or drop a base set: the string id `order_movement_charge` (GauntletOrderUIHandler.cs:582), the set ids `order_type_movement` and `order_type_facing` (178-179), the icon id `order_type_facing` (MissionOrderVM.cs:97), the icon ids `order_movement_advance` and charge (MissionOrderTroopControllerVM.cs:815, 839), and the `ReturnVisualOrder` type tests (GauntletOrderUIHandler.cs:461-496, MissionOrderVM.cs:538). `BannerlordConfig.OrderType` picks the bar or the radial movie and `OrderLayoutType` picks the sets, and any pairing is possible, so test both layouts in both movies. The panel's `OrderSets` list is empty until the first open (MissionOrderVM.cs:715), which is one more reason the keys never go through it.
 
-Clickable buttons, cards and a marked-target icon are not in this stage. A later stage can take the panel through `[OverrideView]` on `MissionGauntletSingleplayerOrderUIHandler` (it has the attribute itself, line 17) with a `MissionOrderVM` subclass and TAOM-named prefabs: a VM subclass or a distinct movie name misses the generated prefab and loads the XML (GauntletMovie.cs:147-168), so `UIConfig.DoNotUseGeneratedPrefabs` is never needed, and must never be used, because it changes how every movie loads. `[OverrideView]` does not reach `OrderTroopPlacer` in campaign or custom battle, because those mission lists construct it directly, so never plan on a placer subclass.
+Clickable buttons, cards and a marked-target icon are not in this stage. A later stage can take the panel through `[OverrideView]` on `MissionGauntletSingleplayerOrderUIHandler` (it has the attribute itself, line 17) with a `MissionOrderVM` subclass and TAOM-named prefabs. TAOM already sets `UIConfig.DoNotUseGeneratedPrefabs = true` (`Dependencies/SubModule.cs:42`), so TAOM's prefab XML loads with no further work. Do not change that flag. `[OverrideView]` does not reach `OrderTroopPlacer` in campaign or custom battle, because those mission lists construct it directly, so never plan on a placer subclass.
 
 ## 11. Definition of done for each stage
 
@@ -529,4 +570,10 @@ Clickable buttons, cards and a marked-target icon are not in this stage. A later
 
 ## Deviations
 
-None yet. Record each change to this contract here with its reason.
+Record each change to this contract here with its reason.
+
+1. **Before any build, from the Seat's S1 review.** Section 2: the mode change callback only sets a flag, nothing caches the kind or the
+   foreign-camera walk, and the player team is tested on each tick until the session is live. Section 3: a pressed key tests the static first,
+   because the view's own test allocates. Section 5.5: the end of the mission drops the flag pool with no native call. Section 7.2: a soldier
+   with no formation stands aside. Section 7.3: the shot callback only adds to counters, because its thread is not proved. Section 8.2: the
+   screen tick reads game key 5, because nothing in `OnMissionTick` reads a key.

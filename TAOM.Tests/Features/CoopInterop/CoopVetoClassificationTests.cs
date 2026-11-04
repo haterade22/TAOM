@@ -163,6 +163,13 @@ public class CoopVetoClassificationTests
             "writes no campaign state, so there is no replicated mutation to skip. A skipped item is built when it is " +
             "selected, and every other outcome (toggle off, adapter unbound, replay, disarmed) returns true and runs vanilla. " +
             "The toggle is presentation in CoopSettingsRelevance."),
+        ["Patch140_OrderFlagGetCollidedEntity"] = new(CoopVeto.ReviewedSafe,
+            "Seat of Seeing (build-spec 5.8): client-side view code. The prefix replaces OrderFlag.GetCollidedEntity only while the " +
+            "player's own view is in the Seat (SeatPresence, set by this peer's view on its own key press), and returns true " +
+            "at its first statement otherwise. It casts a ray to find which orderable entity the cursor or screen centre " +
+            "points at and writes nothing to campaign or battle state, so there is no replicated mutation to skip. The Seat " +
+            "is presentation in CoopSettingsRelevance, and a session gives the Seat the camera and its kind's orders, with no hand-off " +
+            "and no mission time."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +

@@ -1,0 +1,133 @@
+# In-game checks for the Seat of Seeing (stage S1), read by tools/ingame_verdict.py. All [Check] lines come from
+# Client/Features/SeatOfSeeing/SeatSession.cs through IOutcomeLog, with the ids in
+# Main/Features/SeatOfSeeing/Domain/SeatChecks.cs: enter and leave from the state changes (a refused key press writes an enter skip line,
+# and a leave names its reason), frames once a Seat has owned 60 frames, glide when the return glide is armed (a fail line when the
+# CameraElevation setter is missing, a skip line when there is no agent to follow), and fault when the latch fires. The hot-path counter
+# taom.seat-of-seeing.owned-frame appears in the [Session] summary only.
+#
+# DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
+issue = 0
+title = "Seat of Seeing S1: the camera lifts off the hero, flies, and glides back"
+fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.seat-of-seeing.enter"
+needs = "a field battle or custom battle: press the Seat key (Q unless rebound) once the deployment has ended, or turn on Begin Battles in the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.enter result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.enter result=pass mission=[0-9]+ blend=[01]$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.enter result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+  '\[SeatOfSeeing\] the Seat could not start',
+  '\[SeatOfSeeing\] hotkey registration failed',
+  '\[SeatOfSeeing\] order ray failed',
+]
+# A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the three lines
+# of the feature's own failures (the view could not start, the key could not register, the order ray threw). A refused key press
+# writes a skip line, which reads NOT REACHED with its reason.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.frames"
+needs = "stay in the Seat for at least a couple of seconds (60 owned frames)"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.enter result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.frames result=pass mission=[0-9]+ frames=60$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# The enter line without a frames line means the Seat was left, or the mission ended, inside 60 frames, which is a short visit and
+# not a failure by itself. A fault line fails it.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.leave"
+needs = "press the Seat key again in a battle, or end the mission while in the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.leave result=']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.leave result=pass mission=[0-9]+ frames=[0-9]+ glide=[01] reason=(key|setting-off|interlude|rage|finish)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.glide"
+needs = "leave the Seat with the key while the mission is in Battle mode and the hero is alive"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.glide result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.glide result=pass mission=[0-9]+ elevation=set$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.glide result=fail mission=[0-9]+ elevation=missing$',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# elevation=missing means MissionScreen.set_CameraElevation was not found (reflection-sites.md Category B). The glide still runs.
+# Missing: `CameraElevation` keeps what `HandleUserInput` integrated from the mouse during the stay (MissionScreen:3051-3053,
+# 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump. A skip line with reason=no-agent
+# means the camera had no agent to follow (the hero had fallen): no glide runs, the look written on leaving stays, and this reads
+# NOT REACHED.
+absence = "not-reached"
+
+[[human]]
+claim = "the view rises over about 0.7 seconds, then flies with WASD, Space and Z (game keys 14 and 15, rebindable) for up and down, the wheel for height and the mouse to look; the hero takes no movement or combat input, but the drop and equip key (game key 22), the career ability key (V) and the engine's perspective toggle (game key 27) still act"
+
+[[human]]
+claim = "the same key brings the view back to the hero: in third person with a short glide, from first person at once; the hero's controls work again at once"
+
+[[human]]
+claim = "in Fords of War, and with any other mod that owns the camera, the Seat does not enter and the log names the view that owns it ([SeatOfSeeing] another view owns the camera); in Fords, Q keeps its own camera turn"
+
+[[human]]
+claim = "the order panel opens from the Seat, and the order flag lands on the ground under the screen centre, also far from the hero"
+
+[[human]]
+claim = "the first press in a mission shows one message about the same key returning to the hero; the key does nothing during deployment and in photo mode"
+
+# HandleUserInput keeps running: while the followed agent is the player's and game key 24 is down it raises _zoomAmount with any weapon
+# on keyboard and mouse (a gamepad needs a ranged weapon out) and writes depth of field (3074-3078, 3119-3142, 3298-3303), and key 24
+# is the Seat's fast key. The Seat writes the two depth of field calls back every frame, so the view stays sharp.
+[[human]]
+claim = "flying low and fast across a hillside or a sharp rise never puts the view under the ground, and the picture stays sharp, also with the zoom key (game key 24) down before pressing the Seat key"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all (see the feature doc): during a warg rage the Seat key does nothing and a message says the rage holds you; a rage that starts while you are in the Seat brings the view back to the hero at once"
+
+[[human]]
+claim = "in a tournament, an arena and a town the Seat flies and returns, with no order panel use expected"
+
+[[human]]
+claim = "Options > Keybindings > Action shows the row \"Take the Seat (TAOM)\" with the key Q and no ERROR text"
+
+[[human]]
+claim = "the MCM group \"Seat of Seeing\" renders its rows"
+
+[[human]]
+claim = "with the game language set to Russian, the Seat's messages and settings show the English seeds, with no raw key such as taom_seat_other_view"
+
+[[human]]
+claim = "on a manned siege engine the Seat key shows \"You cannot take the Seat from this view.\" and the view stays on the engine"
+
+[[human]]
+claim = "at a tavern board game the Seat key shows the other-view message and the game continues"
+
+[[human]]
+claim = "in a campaign battle the Seat key prints no banner line (\"Can't access banner window right now!\")"
+
+[[human]]
+claim = "kill the hero's warg while seated with no rage running, and WASD does not move the hero"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all: fall during a rage, then press the key, and the Seat enters"
+
+[[human]]
+claim = "leave the Seat more than 2.1 seconds after the hero fell, and the look stays where it was"
+
+[[human]]
+claim = "the drop key and the career key still act from the Seat"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all: fall from the warg during a rage, take the Seat, kill the warg, and the flight keys do not move the hero"
+
+# The enter check accepts blend=0 and blend=1, so a key press alone passes it: only this row proves the setting.
+[[human]]
+claim = "Begin Battles in the Seat on, and a battle with a deployment begins in the Seat with no blend (enter ... blend=0)"
+
+[[human]]
+claim = "the Seat turned off in its MCM group: the key does nothing, and a Seat that is up comes down"
+
+[[human]]
+claim = "a first-person hero who holds a block or a swing at entry stops, and the head shows"

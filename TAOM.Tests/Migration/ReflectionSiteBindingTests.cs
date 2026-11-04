@@ -137,6 +137,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.HorseComponent", "HorseComponent", "set_BodyLength", "Method", "MonsterSizeCatalogAdapter.cs:23")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:30")]
+    // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
+    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:38")]
     // --- Creature Bandits route A (#692): the weapon-state probe. Missing: route A is skipped for every creature.
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "_primaryWieldedItemIndexPointer", "Field", "CreatureRouteAUnmount.cs:22")]
     // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init

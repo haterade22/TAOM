@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="キャンペーンマップ上の王国の国境と名前を表示または非表示にします。既定キーはMです。" />
     <string id="taom_key_realm_borders_mode" text="国境マップモード（TAOM）" />
     <string id="taom_key_realm_borders_mode_desc" text="国境の表示を、王国、自由の民対影の勢力、味方と敵の順に切り替えます。既定キーはGです。" />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

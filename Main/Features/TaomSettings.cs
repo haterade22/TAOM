@@ -2937,4 +2937,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_mh_mcm_hide_locked}Hide Locked Items from Smelting", Order = 11, RequireRestart = false,
         HintText = "{=taom_mh_mcm_hide_locked_hint}Weapons you locked in the inventory no longer appear in the smithy's smelting list, so they cannot be smelted by accident. Unlock one in the inventory to smelt it. A weapon you lock inside the smithy leaves the list at your next smelt or tab switch. No restart. Default: on.")]
     public bool ManyHammersHideLockedEnabled { get; set; } = TAOM.Features.ManyHammers.ManyHammersSettingsProvider.DefaultHideLockedEnabled;
+
+    // --- Seat of Seeing (docs/features/seat-of-seeing.md, stage S1) ---
+
+    [SettingPropertyGroup("Seat of Seeing", GroupOrder = 82)]
+    [SettingPropertyBool("{=taom_seat_mcm_enabled}Enable the Seat of Seeing", Order = 0, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up. Off, the key does nothing. Default: on.")]
+    public bool SeatEnabled { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_begin}Begin Battles in the Seat", Order = 1, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_begin_hint}When a battle's deployment ends, your view goes into the Seat at the camera you were using, with no blend, instead of back to your hero. Press the key to return to your hero. Default: off.")]
+    public bool BeginBattlesInSeat { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultBeginBattlesInSeat;
 }

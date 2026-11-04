@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="Muestra u oculta las fronteras y los nombres de los reinos en el mapa de campaña. Por defecto: M." />
     <string id="taom_key_realm_borders_mode" text="Modo de mapa de fronteras (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Alterna las fronteras entre los reinos, los Pueblos Libres contra la Sombra y tus aliados y enemigos. Por defecto: G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

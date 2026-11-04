@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="Blendet die Reichsgrenzen und die Namen der Reiche auf der Kampagnenkarte ein oder aus. Standard: M." />
     <string id="taom_key_realm_borders_mode" text="Kartenmodus der Reichsgrenzen (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Schaltet die Reichsgrenzen zwischen den Reichen, den Freien Völkern gegen den Schatten und deinen Verbündeten und Feinden um. Standard: G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

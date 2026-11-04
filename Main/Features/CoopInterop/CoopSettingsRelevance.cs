@@ -176,6 +176,11 @@ public static class CoopSettingsRelevance
         // Many Hammers (#911): whether YOUR smelting list leaves out the weapons you locked. A view filter on one client's
         // list; no campaign state is read or written.
         "ManyHammersHideLockedEnabled",
+        // Seat of Seeing (S1): where YOUR camera is, and whether it starts a battle in the Seat. The Seat lifts only this peer's
+        // view; the hero stands fast by a controller gate on this client, and in a session the policy gives the camera and the
+        // kind's orders (SeatMissionPolicy.cs:37-39), with no hand-off and no mission time. No campaign or battle state is read
+        // from either setting.
+        "SeatEnabled", "BeginBattlesInSeat",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableNameplateRelationColors", "NameplateRelationTintStrength",

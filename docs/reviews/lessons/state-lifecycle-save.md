@@ -1302,3 +1302,17 @@ A stack names the first null, not the only one. The first repair for bundle `3fb
 - **Why missed:** the engine's own copy looked safer than a hand copy, so nobody listed which copied fields TAOM owns.
 - **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
 - **Source:** [rca-offspring-parent-culture-2026-11-02.md](../rca-offspring-parent-culture-2026-11-02.md).
+
+### A guard on one caller leaves the other routes: put it on the write that does the harm
+
+The Seat of Seeing shuts vanilla's main agent controller while the player's view is off the hero, and the warg rage's `SwitchMainAgentController(false)` turns that controller back on. The first fix guarded the caller the review had named, a calm warg's death, with a flag that says a swap in ran. The re-review then found two more routes to the same harm: a rage that starts and ends between two screen ticks (fast time runs several mission ticks in one frame, so the Seat never sees it), and a rider who fell in a rage, took the Seat and then lost the warg. The flag also dropped a `Disable()` outside the Seat that nobody had asked to change. One test at the write, `if (!SeatPresence.IsSeated) baseController.Enable()`, closed all three and restored the old behaviour everywhere else.
+- **Why missed:** the fix answered the finding's example. Nobody restated the harm as "vanilla's controller turns on while the Seat holds it" and listed what reaches that write.
+- **Prevent:** before fixing a state bug, write the harm as one sentence about a write, then list every route to that write. Guard the write. A guard on a caller needs a stated reason why no other route exists.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 1 and 28.
+
+### A static a patch reads clears on both teardown paths, and a finished session is terminal
+
+`SeatPresence` is a static that two Harmony patches read. It cleared only from `OnMissionScreenFinalize`, and `MissionState.OnFinalize` removes the behaviours with no `EndMission`, so the patches could stay live into the next mission. This repeats "A per-mission summary is written on every teardown path" with a higher cost: a patch that acts in the wrong mission, not a lost log line. The first fix left a second hole. `RemoveMissionBehavior` does not take a view out of the screen's collection (only `UnregisterView` does, `MissionScreen.cs:3688`), so a finished session still in its field could enter again on a key press.
+- **Why missed:** the contract named one hook, and the builder followed the contract. The teardown fix asked which hooks run, not what can still call in afterwards.
+- **Prevent:** a view's cleanup runs from both hooks through one method that also drops the session field and removes its event handlers. Later stages clear their own state in one private session method, so a fault and both paths share it. The standing line is in `.claude/rules/harmony-patches.md`.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 3 and 29.

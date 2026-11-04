@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="Affiche ou masque les frontières et les noms des royaumes sur la carte de campagne. Touche par défaut : M." />
     <string id="taom_key_realm_borders_mode" text="Mode de carte des frontières (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Fait alterner les frontières entre les royaumes, les Peuples Libres contre l'Ombre, et vos alliés et ennemis. Touche par défaut : G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

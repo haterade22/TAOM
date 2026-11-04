@@ -2443,3 +2443,10 @@ The Long Defeat spike printed `[S4] repaired` for whatever `RepairGate` touched,
 - **Why missed:** the code that makes a change and the code that reports it were written together, so the report restated the request. The wrapper dropped the Fords report checks because a spike has no JSON, and nothing took their place. The same rule had been written the week before for the Staged Siege report.
 - **Prevent:** read the reported value back from the engine's own state after the change, and put the failure in the label (`NOT repaired`), so a substring check cannot pass it. When a gate drops a check, name what replaces it. Tie each string a tool looks for to the source that writes it.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 3, 5, 10 and 18.
+
+### Pin the wiring that must exist, not the name that must not
+
+The first S1 tests pinned the absence of removed names (`Pump`, `NoGround`, a deployment latch), and they would still pass with the same behaviour back under a new name. At the same time, deleting `_session?.OnMissionTick();` from the view left every test green, although that line is the only path that stands the hero fast. Inverting the order flag prefix's gate, which would replace vanilla's order ray for every player, also passed.
+- **Why missed:** each pin was written while fixing a finding, so it recorded what the fix removed. Nobody asked which single deletion would break the feature silently.
+- **Prevent:** for each entry point, delete each forwarding line in your head and name the test that fails. A view with no unit seam gets a source pin on the presence of its forwards, and a patch gets a behaviour test of its off state.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 36.

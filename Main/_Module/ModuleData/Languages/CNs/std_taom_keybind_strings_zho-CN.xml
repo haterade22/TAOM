@@ -21,5 +21,7 @@
     <string id="taom_key_realm_borders_desc" text="在战役地图上显示或隐藏国界与国度名称。默认按键为 M。" />
     <string id="taom_key_realm_borders_mode" text="国界地图模式（TAOM）" />
     <string id="taom_key_realm_borders_mode_desc" text="在各国度、自由民族对抗黑暗势力以及你的盟友与敌人之间切换国界显示。默认按键为 G。" />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
   </strings>
 </base>

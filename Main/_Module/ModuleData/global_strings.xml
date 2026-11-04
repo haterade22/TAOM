@@ -24,6 +24,12 @@
 	<string id="str_key_name.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability}Career Ability (TAOM)" />
 	<string id="str_key_description.TaomCareerHotKeyCategory_510" text="{=taom_key_career_ability_desc}Activates your career ability during a battle once its energy bar is full. Defaults to V." />
 
+	<!-- Seat of Seeing (docs/features/seat-of-seeing.md), under Options > Keybindings > Action because the key is pressed in a
+	     mission. Same numbering rule as above: the trailing number is the game key id, kept in step with
+	     TaomSeatHotKeyCategory. -->
+	<string id="str_key_name.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take}Take the Seat (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take_desc}Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+
 	<!-- Realm Borders (#698), under Options > Keybindings > Campaign Map. Same numbering rule as
 	     above: the trailing number is the game key id, kept in step with
 	     TaomRealmBordersHotKeyCategory. -->
