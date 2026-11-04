@@ -19,7 +19,7 @@ This is a data-reference bug, not an engine bug. **Check the references before s
 |---|---|
 | [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) | Extracts every settlement `scene_name` (live `TAOM_Map`, vanilla `SandBox`/`NavalDLC`, repo shadow), cross-references vs all `Modules/*/SceneObj/` folders (case-insensitive), classifies missing-everywhere vs WIP-in-`SceneEditData`, and diffs TAOM vs vanilla. |
 | [`tools/audit_battle_scenes.py`](../../tools/audit_battle_scenes.py) | Compares TAOM's `sp_battle_scenes.xml` Scene ids vs vanilla + on-disk SceneObj; flags ids with no folder; checks 0–255 `map_indices` coverage (an uncovered index = no battle scene). |
-| [`tools/build_battle_scenes.py`](../../tools/build_battle_scenes.py) `--check` | Exits 1 when `sp_battle_scenes.xml` differs from its `REGIONS` table, a scene id has no SceneObj folder, or a listed vanilla id left SandBox's live list. Needs the install; CI's `test_build_battle_scenes` checks the committed file against `REGIONS` without one. |
+| [`tools/build_battle_scenes.py`](../../tools/build_battle_scenes.py) `--check` | Exits 1 when `sp_battle_scenes.xml` differs from its `REGIONS` table, a scene id has no SceneObj folder, or a listed vanilla id left SandBox's live list. Needs the install; `tools/tests/test_build_battle_scenes.py` checks the committed file against `REGIONS` without one. |
 | [`tools/remap_stale_scene_names.py`](../../tools/remap_stale_scene_names.py) | Verified `scene_name` remap (every replacement confirmed present on disk before writing); backs up the external file. Edit its `REMAP` dict for new renames. |
 
 ```bash
@@ -53,7 +53,7 @@ Full machine output: [`docs/reviews/scene-name-audit-2026-05-28.txt`](../reviews
 
 - [`worldmap-battle-scene-grid.md`](worldmap-battle-scene-grid.md) — how the `map_indices` get *chosen*: the baked `worldmap_battle_scene_grid` texture that maps map cells → `sceneIndex`. This audit validates the `sp_battle_scenes.xml` side; that doc covers the texture side.
 - Rule: [`.claude/rules/vanilla-data-comparison.md`](../../.claude/rules/vanilla-data-comparison.md) (fires when editing the relevant XML)
-- Memory: `feedback_scene_name_refs_break_on_version_bump.md`
+- Lesson: [Stale settlement scene_name refs crash after a version bump](../reviews/lessons/xslt-moduledata.md)
 - Post-bump checklist: [`docs/migration/v1.4.x-changes.md`](../migration/v1.4.x-changes.md)
 
 ---

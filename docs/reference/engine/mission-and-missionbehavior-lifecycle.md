@@ -181,7 +181,7 @@ If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => M
 inheriting `MissionLogic`, then in `AddMissionBehavior` `missionBehavior as MissionLogic` evaluates to **null** and
 `MissionLogics.Add(null)` puts a **null in the `MissionLogics` list**. The engine then NREs the next time it
 iterates `MissionLogics` (e.g. `CheckMissionEnded` → `MissionEnded`) — **every tick, immediately.** Fix: **inherit
-`: MissionLogic`** (it sets `BehaviorType.Logic` for you). This is `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance`
+`: MissionLogic`** (it sets `BehaviorType.Logic` for you). This is the [lesson](../../reviews/lessons/gamemodels-services.md)
 (it has crashed TAOM twice: 3 ports in 2026-05 + the inlined `BehaviorTreeWrapper.dll` in 2026-05-24, whose `BehaviorTreeMissionLogic` now derives from
 `MissionLogic`: [RCA](../../reviews/rca-looter-battle-nre-2026-05-24.md)). Phase-4
 confirmation: the null-cast is `Mission.cs:4610`.

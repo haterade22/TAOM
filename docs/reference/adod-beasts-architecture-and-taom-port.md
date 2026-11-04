@@ -6,6 +6,7 @@
 > session re-decompiles ADOD in slices. Built 2026-06-06 from a full `ilspycmd` decompile of `ADOD_Beasts.dll`
 > (both builds), line-by-line audited against TAOM and verified against installed v1.4.5 DLLs (`taom-src`).
 > **ADOD_Beasts targets Bannerlord ~1.2.12 — it is a behavioral reference only; never a runtime dependency.**
+> **State:** the lifecycle diagram and the port verdicts record the 2026-06-06 audit. The elephant was reworked since (behavior tree, howdah, `AuthoredScale` 1.3), so [elephant.md](../features/elephant.md) holds the current design.
 > Companions: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md) (the howdah in depth),
 > [bannerlord-engine-and-toolchain.md](bannerlord-engine-and-toolchain.md), [elephant.md](../features/elephant.md),
 > [spider.md](../features/spider.md) + its RCA.
@@ -24,8 +25,9 @@ choice is the root of everything else:
 - The **elephant mount-lock + the structural trample/tusk mechanic** are ported from ADOD, re-homed onto a **ridden
   mount** troop (the mahout rides a `taom_war_elephant` Monster, like ADOD's ridden mount) — but the attack **damage**
   (trample 50-100 / tusk 50-75, randomized per victim, 2026-06-15) and the cooldown **cadence** (2026-06-10) are TAOM's
-  deliberate rebalance, NOT 1-for-1 with ADOD's fixed-10×2 / 0.001-per-tick roll. The **howdah is not ported** (a
-  separate future feature).
+  deliberate rebalance, NOT 1-for-1 with ADOD's fixed-10×2 / 0.001-per-tick roll. The **howdah is ported** since
+  #627 as TAOM's own platform and crew (`TaomHowdahMachine`, `HowdahCrewSpawner`, `HowdahHarness`; see
+  [elephant.md](../features/elephant.md)), not as a line-for-line copy of ADOD's.
 - The **wolf is not ported at all.** TAOM's **spider** solves the same "riderless non-humanoid combatant" problem
   with an **independent design** (a behavior tree reusing Warg/AdvancedCombat), not a port of the wolf's FSM. The
   wolf is a *reference* (its public-`SpawnMonster` spawn path is the spider's recommended render fix).
@@ -46,8 +48,9 @@ GAME START (campaign)
     ├─ campaignStarter.AddBehavior(ADODBeastsCampaignBehavior) → the WOLF acquisition/save behavior
     └─ wrap existing AgentStatCalculateModel in ADODAgentStatCalculateModel  (the mount-lock + pilot buffs)
         TAOM: resolves IElephantAttackService; constructs TaomAgentStatCalculateModel (subclass, not a wrapper)
-              via AddModel — the elephant mount-lock rides in the SHARED career stat model. No CampaignBehavior
-              (that's the wolf), no LoadMappings (no howdah).
+              via AddModel; the elephant mount-lock rides in the SHARED career stat model. No CampaignBehavior
+              (that's the wolf), no LoadMappings (a fixed harness list, ElephantConfig.HowdahHarnessStringIds,
+              replaces the armor→crew map).
 
 CAMPAIGN MAP (per day)
   ADODBeastsCampaignBehavior.WolfDailyTick
@@ -68,8 +71,10 @@ PER AGENT SPAWN  — ADODBeastsMissionLogic.OnAgentBuild(agent, banner)
     │     → wire ADODHowdahObject.elephantAgent/elephantRider → MountAgent.AddComponent(ADODBeastsElephantAgentComponent)
     │   wolf: if agent==Agent.Main && _acquiredWolfId set → Mission.SpawnMonster(wolfItem) → AddComponent(WolfComponent)
     │     → register proxy "adod_wolf_target" entity → AI humans get AddController(ADODBeastsHumanAIAgentController)
-    └─ TAOM: OnAgentBuild only adds the agent to a `_elephants` shadow list if its Monster.StringId==taom_war_elephant.
-          No howdah, no component on the mount, no wolf, no AI-controller. (Trample is driven from OnMissionTick.)
+    └─ TAOM: OnAgentBuild late-attaches a behavior tree (a BehaviorTreeAgentComponent on the mount, tracked by
+          CreatureTreeTracker) to an agent whose Monster is an elephant creature, and TryInstantiateHowdah builds the
+          howdah and queues its crew when the mahout's harness is one of the three howdah armours. No wolf, no
+          AI-controller. (Trample is driven by the tree, not by OnMissionTick.)
 
 PER FRAME  — ADODBeastsMissionLogic.OnMissionTick(dt)
     ├─ if Input.IsPressed(57 = Space) → MainAgentElephantDamageLogic(Agent.Main)   (player manual trample)
@@ -77,24 +82,27 @@ PER FRAME  — ADODBeastsMissionLogic.OnMissionTick(dt)
     └─ hand-iterate Mission.Agents, call each WolfComponent.Tick(dt)
        Elephant trample itself: ADODBeastsElephantAgentComponent.OnTickAsAI(dt) on the mount.
        Howdah: ADODHowdah.OnTick → UpdateHowdahMovement (frame-glue to neck) ; each seat OnTick force-spawns+locks crew.
-    └─ TAOM: ElephantMissionBehavior.OnMissionTick iterates `_elephants`, per elephant rolls TrampleChancePerTick
-          FIRST (perf pre-gate), then ShouldAiTrample(distance<3, dot>0.25) → radial GetNearbyAgents → CustomAttacksUtils.
-          NO input trample, NO hand-tick (v1.4.5 Agent.Tick auto-calls component.OnTick), NO wolf, NO howdah.
+    └─ TAOM: ElephantMissionBehavior.OnMissionTick attaches trees on the first tick, prunes dead elephants and drains
+          the howdah crew queue. The trample is the tree's (ElephantBehaviorTree: shared ElephantLikeEngageDecorator +
+          ElephantLikeTrampleTask, cooldowns 10 s trample / 4 s side swing), gated by ElephantLikeEngageDecorator
+          (an enemy within 3 × AuthoredScale, then ShouldEngage: dot > 0.25, not already attacking), then radial GetNearbyAgents → CustomAttacksUtils.
+          NO input trample, NO hand-tick (v1.4.5 Agent.Tick auto-calls component.OnTick), NO wolf. Each howdah seat
+          ticks itself (TaomHowdahStandingPoint.OnTick); TaomHowdahMachine.OnTick propagates the seat refs and releases the seats.
 
 ON HIT  — ADODBeastsMissionLogic.OnAgentHit → 30% elephantHit SFX; wolf retaliation targeting
     TAOM: none (hit-SFX deferred as cosmetic; no wolf).
 
 MISSION END / TEARDOWN
   ADOD: OnBattleEnded → clear _animals/_targets/_agentControllers, remove wolf proxy entity.
-  TAOM: ElephantMissionBehavior.OnRemoveBehavior → clear `_elephants`. (OnRemoveBehavior is broader than
+  TAOM: ElephantMissionBehavior.OnRemoveBehavior → clear the tree tracker and the howdah crew queue. (OnRemoveBehavior is broader than
         OnBattleEnded; both valid v1.4.5.)
 ```
 
 **The one big WHY:** ADOD's elephant is a *mount*, so the engine does spawn/locomotion/rider-attach for free and
-ADOD only writes the trample + howdah. TAOM makes the elephant a *Monster-swap troop* (the project's standing rule
-that non-humanoid creatures are troops, never rideable mounts — mounts crash on the campaign-map party-icon
-`ForceUpdateBoneFrames` path). That single re-homing is why TAOM drops the howdah, the rider camera, the
-GetPower patch, and the mount-AI — they're all properties of the ridden-mount idiom TAOM doesn't use.
+ADOD only writes the trample + howdah. TAOM keeps that idiom for the elephant: a mahout rides the `taom_war_elephant`
+Monster as a mount (`Harad` troop `harad_elephant_rider`), so the engine's spawn, locomotion and rider-attach carry over.
+What TAOM does not carry over is the rider camera pull-back and the `GetPower` patch, and it replaces ADOD's armor-map
+howdah with its own platform and crew (§3B).
 
 ## 3. Subsystem-by-subsystem — the WHY + the TAOM comparison
 
@@ -112,19 +120,21 @@ GetPower patch, and the mount-AI — they're all properties of the ridden-mount 
   (2026-06-10) replacing the 0.001/tick probability. The gate + damage formula are extracted to a unit-tested
   `IElephantAttackService` (ADR-002/007); the mount-lock folds into the shared `TaomAgentStatCalculateModel`. **Safer than ADOD** in two places: `?.` null-guards on
   `targetMount.Monster` (ADOD had a latent NRE), and exact `Monster.StringId == "taom_war_elephant"` identity vs
-  ADOD's brittle `Name.ToLower().Contains("elephant")` substring. **Crucially, TAOM moved the tick off the dead
-  `OnTickAsAI` onto `MissionLogic.OnMissionTick`** (see §5) — so TAOM's trample actually fires on 1.4.5 where
-  ADOD's would not. The one equivalent-but-different choice: TAOM rolls the probability *before* the distance/facing
-  native calls as a perf pre-gate, feeding the same roll into `ShouldAiTrample` (identical firing distribution).
+  ADOD's brittle `Name.ToLower().Contains("elephant")` substring. **Crucially, TAOM moved the attack off the dead
+  `OnTickAsAI` onto a per-elephant behavior tree** (`ElephantBehaviorTree`, attached by `ElephantMissionBehavior`; see §5),
+  so TAOM's trample actually fires on 1.4.5 where ADOD's would not. The trigger range and the damage radius are scaled
+  by `ElephantConfig.AuthoredScale` (3 m and 4 m at 1.0x), so they are no longer ADOD's raw 3 m and 2 m.
 
-### 3B. Howdah crew platform (`UsableMachine`) — **NOT PORTED** (Subsystem B)
+### 3B. Howdah crew platform (`UsableMachine`): **PORTED as TAOM's own platform, #627** (Subsystem B)
 - **What/why:** the multi-troop "crew on the elephant's back" is a `UsableMachine` (`ADODHowdah`) whose
   `StandingPoint` children are seats. It is **not bone-parented** — a free scene entity whose world frame is
   copied onto the elephant's neck point **every tick**; each seat **force-spawns** its own AI archer (armor-tier →
   `additional_elephant_characters.xml` → 1/2/4 crew) and locks it. Built as a `UsableMachine` because that is the
   engine's only crew-platform primitive (same as a siege engine / ship deck).
-- **TAOM:** zero howdah. The full line-level port spec + the 4 v1.4.5 drifts it must fix live in
-  [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md). This is the bigger future sub-feature.
+- **TAOM:** shipped (#627) as `TaomHowdahMachine` (the `UsableMachine`) with `TaomHowdahStandingPoint` seats, a prefab
+  `taom_howdah_platform`, and `HowdahCrewSpawner` force-spawning `harad_howdah_crew` archers; the three howdah harnesses
+  in `ElephantConfig.HowdahHarnessStringIds` trigger it, not an armor-to-crew XML map. The line-level port spec and the
+  v1.4.5 drifts are in [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md).
 
 ### 3C. Wolf creature-AI — **NOT PORTED; spider is independent** (Subsystem C)
 - **What/why ADOD:** a 6-state event-driven FSM in one ~600-line `AgentComponent` (Idle/Follow/Aggro/Attack/
@@ -148,33 +158,36 @@ The lifecycle skeleton (§2) plus the support classes. TAOM's relevant ports are
 scoped out:
 - **`ADODBeastsSaveDefiner`** persists the **wolf** (`_acquiredWolfId`), NOT the elephant → **the elephant feature
   needs no SaveDefiner**, and TAOM correctly ships none. (If the wolf is ever ported, it needs its own
-  `SaveableTypeDefiner` with a unique base id — `feedback_saveable_typedefiner_localid_offset.md` — never reuse
+  `SaveableTypeDefiner` with a unique base id (see the lesson
+  [SaveableTypeDefiner global id is base+localId](../reviews/lessons/state-lifecycle-save.md)), never reuse
   ADOD's `301412299`.)
-- **`ADODBeastsSettings`** (MCM): `elephantCameraDistance` (rider camera, moot for a troop) + `wolfAcquireChance`
-  (wolf). TAOM uses compile-time `ElephantConfig.cs` consts; no MCM knob for the elephant.
+- **`ADODBeastsSettings`** (MCM): `elephantCameraDistance` (rider camera, not ported) + `wolfAcquireChance`
+  (wolf). TAOM uses compile-time `ElephantConfig.cs` consts; no MCM tuning knob for the elephant (the only elephant
+  setting is the howdah diagnostics toggle).
 - **`ADODBeastsMissionView`/VM**: the **wolf HP bar**, not elephant. Not ported.
-- **Patches:** `ElephantCameraPatches` (rider camera pull-back — no rider in TAOM) + **`CharacterObjectPatch`**
-  (adds howdah-crew power to the elephant's `GetPower` — tied to the howdah TAOM doesn't have). Both correctly
-  absent.
+- **Patches:** `ElephantCameraPatches` (rider camera pull-back, which TAOM does not port) + **`CharacterObjectPatch`**
+  (adds howdah-crew power to the elephant's `GetPower`, tied to ADOD's armor-map crew). Neither exists in
+  `Main/Features/Elephant`.
 - **`NativeHook` (EasyHook) — DEAD IMPORT.** `using NativeHook;` appears but is **never used** anywhere in the
-  decompiled body. **The elephant does NOT need native movement hooks to move** — it's a vanilla mount (ADOD) /
-  engine-driven Monster-swap troop (TAOM). No NativeHook port required. *(This corrects an earlier impression that
+  decompiled body. **The elephant does NOT need native movement hooks to move**: it's a vanilla mount (ADOD) /
+  an engine-driven Monster mount (TAOM). No NativeHook port required. *(This corrects an earlier impression that
   the native hooks were load-bearing for movement; they are not — they're an unused reference.)*
 
 ## 4. Port verdict
 
 TAOM's elephant port is **faithful where it matters and safer in several places**: the trample (facing/range gates
 1-for-1; damage + cadence deliberately rebalanced — trample 50-100 / tusk 50-75, fixed-cooldown model), the mount-lock (`CanAgentRideMount`/`MountDifficulty=999`), and the `: MissionLogic` lifecycle
-are all correct, with added null-guards, exact-id matching, the dead-`OnTickAsAI`→`OnMissionTick` fix, and pure
-logic extracted to a tested service. Every **non-port** (howdah, rider camera, `GetPower` patch, MCM, manual-Space
-trample, hit-SFX, the entire wolf subsystem + its SaveDefiner/MissionView) is **correctly scoped out** because
-TAOM's elephant is a non-rideable creature-troop, not ADOD's ridden mount + howdah. **No bugs found in the port.**
+are all correct, with added null-guards, exact-id matching, the dead-`OnTickAsAI`→behavior-tree fix, and pure
+logic extracted to a tested service. Every **non-port** (rider camera, `GetPower` patch, MCM, manual-Space
+trample, hit-SFX, the entire wolf subsystem + its SaveDefiner/MissionView) is **scoped out**; the howdah is
+re-built as TAOM's own platform (§3B). **No bugs found in the port** (2026-06-06 audit; the elephant has been
+reworked since, see [elephant.md](../features/elephant.md)).
 
 ## 5. The 1.2.12 → 1.4.5 API drift catalogue (apply to any future ADOD port)
 
 | ADOD API (1.2.12) | v1.4.5 reality | Fix |
 |---|---|---|
-| `AgentComponent.OnTickAsAI(float)` | **does not exist** (only `OnTick`/`OnTickParallel`) | use `OnTick(dt)` (auto-called by `Agent.Tick`). TAOM's elephant already does (`MissionLogic.OnMissionTick`); a verbatim component port would be a dead override / compile error. |
+| `AgentComponent.OnTickAsAI(float)` | **does not exist** (only `OnTick`/`OnTickParallel`) | use `OnTick(dt)` (auto-called by `Agent.Tick`). TAOM's elephant already does (a behavior tree on the mount); a verbatim component port would be a dead override / compile error. |
 | `Agent.SetMovementDirection(ref Vec2)` | `SetMovementDirection(in Vec2)` | drop the `ref` |
 | `StandingPoint.OnUse(Agent)` | `OnUse(Agent, sbyte agentBoneIndex)` | add the param (howdah) |
 | `MissionObject.SetDisabled(bool)` toggle | bool is `isParentObject`; call **always disables** | re-architect seat enable/disable (howdah) |

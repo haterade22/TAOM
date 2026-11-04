@@ -53,11 +53,14 @@ Disabling servers is a `settings.local.json` / `.mcp.json` decision — user's c
 
 ## Regrowth guards
 
-- CLAUDE.md: `tools/lint_docs.py` budget (46 KB hard / 44 KB warn / 400-char rows / 600-char
-  prose), ENFORCED via `--fail-on-drift` in the `check-doc-config-drift.sh` pre-commit hook.
-  Since 2026-08-05 the warn is report-only (it used to hard-gate — a bug); only hard violations
-  block. At 28.4 KB there is ~15.6 KB of headroom before the first warning — the user declined a
-  cap ratchet, so watch this line in future baselines.
+- Entry docs (CLAUDE.md, AGENTS.md and orientation.md together; this paragraph described CLAUDE.md alone
+  on 2026-08-05): `tools/lint_docs.py` budget (25,600 B hard / 23,000 B warn, 200 lines per file,
+  400-char rows, 600-char prose; `python tools/lint_docs.py --context-budget-json` prints the caps),
+  ENFORCED via `--fail-on-drift` in the `check-doc-config-drift.sh` pre-commit hook and by
+  `.githooks/pre-commit` for every committer. Since 2026-08-05 the warn is report-only (it used to
+  hard-gate, a bug); only hard violations block. On 2026-08-05 CLAUDE.md alone measured 28.4 KB, with about
+  15.6 KB of headroom under that date's 44 KB warn cap (46 KB hard); the user declined a cap ratchet, so watch
+  this line in future baselines.
 - Skill descriptions ≤30 words: flagged by this scan.
 - Re-baseline here after: adding an MCP server or plugin, a new always-load rule, or ±10 KB on
   CLAUDE.md.

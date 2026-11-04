@@ -57,7 +57,7 @@ Animation coverage is not a concern either. Vanilla defines `hand_shield` action
 `as_human_warrior` and `as_human_female_warrior`, but every TAOM race reaches them: eleven race sets
 declare `base_set="as_human_warrior"`, `elf` and `sauron` use it directly, and the one standalone set
 (`as_dwarf_warrior`) carries the full surface. `python tools/audit_action_set_parity.py` reports
-*"every humanoid set has the full Native as_human_warrior surface (0 gaps)"* across 1304 humanoid sets.
+*"every humanoid set has the full Native as_human_warrior surface (0 gaps)"* across 1308 humanoid sets on 2026-11-03 (the tool prints the count).
 
 ## The real divergence — shape vs grip
 
@@ -158,8 +158,9 @@ python tools/audit_action_set_parity.py
 ```
 
 Neither tool checks shield *attributes*: `validate_mesh_refs.py` owns `body_name` /
-`shield_body_name` existence only, and `validate_all_troop_refs.py` skips shields by design (its
-`ARMOR_PREFIX_RE` matches `sk_*`/`ar_*` only, never `wm_*`/`sm_*`). The usage↔offhand-bone invariant
+`shield_body_name` existence only, and `validate_all_troop_refs.py` is armour-only (its
+`ARMOR_PREFIX_RE` matches `sk_*`, `sm_*`, `ar_*` and a few culture stems such as `harad*`, never `wm_*`, so `wm_*` shields are
+skipped; an `sm_*` shield is checked for id existence only). The usage↔offhand-bone invariant
 above has no automated check — it was verified by ad-hoc parse for this audit.
 
 ---

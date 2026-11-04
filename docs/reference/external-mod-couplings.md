@@ -20,10 +20,10 @@ Before renaming, retyping or moving a member in the tables, grep this file, and 
 
 ## Armory_TAOM (armor and auto-resolve for TAOM's scripted attacks)
 
-| TAOM member | How it is reached | Upstream line | TAOM path at 0c5d81408 |
+| TAOM member | How it is reached | Upstream line | TAOM path (lines re-read 2026-11-03) |
 |---|---|---|---|
 | `TrollBruteForce.Hooks.BruteForceRing.Deliver` | Harmony patch; one overload only (`FindSingle`) | `Armory_TAOMSubModule.cs`:43, 287-293 | `Main/Features/TrollBruteForce/Hooks/BruteForceRing.cs`:25 |
-| `SignatureStrikes.Hooks.SignatureStrikeRunner.Run` | Harmony patch | `:44` | `Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs`:51 |
+| `SignatureStrikes.Hooks.SignatureStrikeRunner.Run` | Harmony patch | `:44` | `Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs`:55 |
 | `ElephantLike.BehaviorTreeElements.ElephantLikeAttackTaskBase.Hit` (private) | Harmony patch | `:45` | `Main/Features/ElephantLike/BehaviorTreeElements/ElephantLikeAttackTasks.cs`:89 |
 | `Warg.WargAttackService.CalculateWargAttackDamage` | patch, after a fit test: returns `int`, first parameter named `target`, a `float armorEffectivenessPercent` | `:51`, 253-255 | `Main/Features/Warg/WargAttackService.cs`:27 |
 | `Spider.SpiderAttackService.CalculateSpiderBiteDamage` | same fit test | `:52`, 253-255 | `Main/Features/Spider/SpiderAttackService.cs`:26 |
@@ -48,7 +48,7 @@ named `TAOM`, then calling `TAOM.IoC.Resolve<T>()` on the interface; the type an
 |---|---|---|---|
 | `FieldCamp.UI.FieldCampMapView` | `AccessTools.TypeByName` (scans all assemblies) | `Map/MapBarCamp.cs`:19 | `Client/Features/FieldCamp/UI/FieldCampMapView.cs`:22 (`TAOM.Client`) |
 | `CareerSystem.UI.GauntletCareerScreen`, `CareerScreenGameState` | `TypeByName` | `Map/MapBarTiles.cs`:116-117 | `Main/Features/CareerSystem/UI/GauntletCareerScreen.cs`:20, `CareerScreenGameState.cs`:5 |
-| `IoC.Resolve<T>()` (generic, no parameters) | looked up by name in the assembly called `TAOM` | `Inventory/Bridges/PresetBridge.cs`:82-99, `Flow/PlayAs.cs`:107-138, `Flow/RaceRules.cs`:70-74 | `Main/IoC.cs`:273 |
+| `IoC.Resolve<T>()` (generic, no parameters) | looked up by name in the assembly called `TAOM` | `Inventory/Bridges/PresetBridge.cs`:82-99, `Flow/PlayAs.cs`:107-138, `Flow/RaceRules.cs`:70-74 | `Main/IoC.cs`:274 |
 | `EquipPresets.IEquipmentPresetService`: `GetPresets(string)`, `SaveCurrent(string,string,bool,bool)`, `LoadPresetWithReport(string,string)`, `DeletePreset(string,string)` | reflection on exact parameter types | `PresetBridge.cs`:82-99 | `Main/Features/EquipPresets/IEquipmentPresetService.cs`:15, 22, 29, 31 |
 | `EquipPresets.IEquipPresetsSettingsProvider` | type by name | `PresetBridge.cs`:82-99 | `Main/Features/EquipPresets/IEquipPresetsSettingsProvider.cs`:3 |
 | `Adapters.IInventoryScreenAdapter`: `SetActive(SPInventoryVM)`, `ActiveHeroStringId` | reflection | `PresetBridge.cs`:82-99 | `Main/Adapters/IInventoryScreenAdapter.cs`:26, 33 |
@@ -59,7 +59,7 @@ named `TAOM`, then calling `TAOM.IoC.Resolve<T>()` on the interface; the type an
 | `CharacterCreation.ICultureRaceFilterService.GetAllowedRaces` | reflection | `Flow/RaceRules.cs`:70-74 | `Main/Features/CharacterCreation/ICultureRaceFilterService.cs`:8 |
 | `RealmBorders.RealmAtlasService` | existence of the type in any assembly | `Map/MapWidgets.cs`:27 | `Main/Features/RealmBorders/RealmAtlasService.cs`:20 |
 | `ModuleData/special_resources/special_resources_config.xml` | read as a file under the `TAOM` module path | `Map/MapBarSeal.cs`:59-60 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` |
-| `ExecuteFastForward`, `ExecuteExtraFastForward` on the time-speed view model | bound by `Command.Click` in RealmUI's prefab | `GUI/Prefabs/RealmMapBar.xml`:219, 229 | `Client/Features/TimeAcceleration/UI/TimeAccelerationMixin.cs`:71, 81 |
+| `ExecuteFastForward`, `ExecuteExtraFastForward` on the time-speed view model | bound by `Command.Click` in RealmUI's prefab | `GUI/Prefabs/RealmMapBar.xml`:219, 229 | `Client/Features/TimeAcceleration/UI/TimeAccelerationMixin.cs`:81, 71 |
 
 Moving a `PlayAs` or `PresetBridge` target type into `TAOM.Client` (the ADR-013 direction) turns that RealmUI feature off,
 because the lookup needs `IoC` and the type in one assembly. `FieldCampMapView` already lives in `TAOM.Client` and still

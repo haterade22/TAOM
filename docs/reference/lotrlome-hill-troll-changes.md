@@ -91,8 +91,9 @@ Force action and both trolls' health.
 1. Copy `skins.xml`, `monsters.xml`, `action_sets.xml` and `action_types.xml` from
    `docs/reference/lotrlome-armory-snapshot/` (all four equal live on 2026-09-25; `action_types.xml` declares
    `act_troll_brute_force`, which both trolls' sets bind for #649). Check `git log` on the snapshot first: another
-   session's later edits to those files ride along. Since 2026-09-26 11:28 the snapshot's `skins.xml` no longer
-   equals live (the snapshot README's "Snapshot date"); `action_sets.xml` equals live as of 14:13 that day. The
+   session's later edits to those files ride along. On 2026-11-03 the snapshot's `action_sets.xml`, `monsters.xml` and
+   `action_types.xml` equal live, but `skins.xml` is behind live (the snapshot README's "Snapshot date" has the
+   byte counts), so diff it before copying it back. The
    clip packages' self-keying is not in any XML: re-run `set_clip_balance_name.py` (the Assets row above).
 2. Or re-run, in order: `python tools/wire_hill_troll_race.py --apply`; `python tools/patch_dwarf_action_parity.py
    --target <Armory>/ModuleData/action_sets.xml --set-id as_hill_troll_warrior --apply`; if the clip packages were
@@ -124,7 +125,7 @@ its own skeleton". The cave troll's Monster `hit_points` (200 since 2026-09-25) 
   entries (then `check_rdc_entries.py --under "Race Test/Mordor/Trolls/animations"`), Mike's Kit look, the
   in-game fight.
 - The hammer is an item since 2026-09-26 (rows above), seen in the troll's hands in game, reweighted at 14:07.
-  OWED: its names in the other languages (#679), and its swing speed and damage read in game.
+  Its names are translated in all 12 language folders of the live Armory (read 2026-11-03; #679). OWED: its swing speed and damage read in game.
 - The final data (body capsule 1.2, the narrowed rule 0, the hammer, the hand morphs) passed a Custom Battle on
   2026-09-26, 12:18 to 12:25: no crash, spacing right, no troll banners (Mike). The earlier 08:41 smoke ran before
   the capsule change (08:55) and the narrowing (09:15), so it tested neither. Neither tested the 30 self-keyed

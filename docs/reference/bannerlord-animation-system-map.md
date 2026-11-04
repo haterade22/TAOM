@@ -864,7 +864,7 @@ but a mid-walk call likely pops [Likely]. The managed `Agent.SetActionSet` also 
 | Delayed crash after "Could not find animation" | A phantom `animation=`: the slot keeps its inherited value or -1; a crash needs a later consumer that skips the -1 check [Certain] | creature-mount-authoring.md gotcha 7 (describes older behaviour) | `verify_mount_assets.py` CHECK 3 (creatures); the troll binders bind only clips on disk | No gate for humanoid sets; grep the rgl log |
 | Dedicated server dies on boot | A root-level `<action>`: `KeyNotFoundException` in `MergeElements` [Certain] | armory-guide.md "action_sets structure"; [module-armory.md](../modding/module-armory.md) | `audit_action_set_parity.py` (exits 1) | none |
 | A package's clips never appear | No `.rdc` entry: the package is skipped whole, silently [Likely] | lessons, "A hand-built tpac package is invisible" | `check_rdc_entries.py` | The client's skip path is UNVERIFIED |
-| Divide by zero in `CreateAgent` | A `monster_usage` miss: -1 (2026-06-04) | creature-mount-authoring.md Phase 5 | `audit_mount_parity.py` | It always exits 0 (per the creature doc), so nothing fails |
+| Divide by zero in `CreateAgent` | A `monster_usage` miss: -1 (2026-06-04) | creature-mount-authoring.md Phase 5 | `audit_mount_parity.py` | Exits 0 unless run with `--strict`, which fails on a usage gap in the spider, elephant or mumakil |
 | AV in `monster_usage.cpp` | A usage-table key miss dereferences the end sentinel (1.4.6); the path string still exists in 1.5.3 [Certain] | creature-mount-authoring.md Phase 5 | the parity audit | 1.5.3 offsets UNVERIFIED |
 | A clip silently missing | A duplicate clip name: the second is refused with a log line [Certain] | Section 6 | none | |
 | rglVec3 assert on load | TOC size 0 in a rewritten tpac | lessons, "A tpac's header carries the TOC size" | the writers' round-trip checks | |
@@ -937,7 +937,7 @@ rewrites seven flag combinations (section 4).
 | `python tools/check_race_morph_channels.py` | Race head and hand morph channels (FBX sources in its spec only) |
 | `python tools/verify_mount_assets.py` | Creature clips: `quad_movement` (CHECK 2) and bound clips that exist (CHECK 3) |
 | `python tools/audit_action_set_parity.py` | Root-level `<action>` (exit 1) and inheritance parity |
-| `python tools/audit_mount_parity.py` | Monster usage coverage (report only; always exits 0) |
+| `python tools/audit_mount_parity.py [--strict]` | Monster usage coverage (report only, exits 0; `--strict` exits 1 when the spider, elephant or mumakil usage set is not total) |
 | `python tools/wire_hill_troll_race.py --check` | Hill troll wiring, including no troll clip on a melee-table code unless it is self-keyed with a matching RDC stamp |
 | `python tools/set_clip_balance_name.py --clips-file <names> --check` | Self-keyed clips have the right bytes, checksum and RDC stamp |
 | `python tools/validate_moduledata.py` | Items, troops and cultures across the three modules |
