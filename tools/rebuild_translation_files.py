@@ -7,8 +7,14 @@ the target file is an empty stub (no <string> elements to substitute). This scri
 builds the target files from scratch by walking the English source structure and
 injecting translations from override/cache.
 
-Usage: python tools/rebuild_translation_files.py --lang RU
-       python tools/rebuild_translation_files.py --all
+A run is a dry run unless it carries --apply, and it must name every module it may write with --module
+(TAOM, TAOM_Map, Armory; repeat the flag for more than one). A run with no --module exits 2 and writes nothing.
+Do not rebuild the TAOM module this way: its language files are curated, and a rebuild drops rows
+(docs/features/name-grammar-tags.md, tools/README.md). The Armory and TAOM_Map writes are backed up first.
+
+Usage: python tools/rebuild_translation_files.py --lang RU --module Armory            (dry run)
+       python tools/rebuild_translation_files.py --lang RU --module Armory --apply    (writes)
+       python tools/rebuild_translation_files.py --all --module TAOM_Map --module Armory --dry-run
 """
 
 import argparse
@@ -172,7 +178,11 @@ def build_translation_xml(language_tag, ordered_entries):
     return "\r\n".join(lines)
 
 
-def rebuild_language(lang, dry_run=False, allow_live_write=False):
+MODULES = ("TAOM", "TAOM_Map", "Armory")
+
+
+def rebuild_language(lang, modules, dry_run=True, allow_live_write=False):
+    """Rebuild `lang` for the named `modules` only; writes nothing while dry_run is true (the default)."""
     locale, lang_name = LANGUAGES[lang]
     print(f"\n[{lang}] {lang_name}{' (dry run: nothing is written)' if dry_run else ''}")
 
@@ -198,7 +208,7 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
     # ─── TAOM module: the sources of tools/_loc_sources.py ──────────────────────
     owners = source_owners()
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
-    for src_rel, tgt_name in taom_sources(locale):
+    for src_rel, tgt_name in (taom_sources(locale) if "TAOM" in modules else []):
         src_path = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_rel
         if not src_path.exists():
             print(f"  [skip] {src_rel} not found")
@@ -225,7 +235,7 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
     # ─── TAOM_Map: settlements.xml ──────────────────────────────────────────────
     settlements_xml = GAME_ROOT / "TAOM_Map" / "ModuleData" / "settlements.xml"
     map_target = GAME_ROOT / "TAOM_Map" / "ModuleData" / "Languages" / lang / "loc_settlements.xml"
-    if settlements_xml.exists():
+    if "TAOM_Map" in modules and settlements_xml.exists():
         src_map = parse_settlements_xml(settlements_xml)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
@@ -242,14 +252,15 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
 
     # ─── LOTRLOME_Armory: 19 source XMLs at root of Languages/ ─────────────────
     armory_root = GAME_ROOT / "LOTRLOME_Armory" / "ModuleData" / "Languages"
-    # mkdir(parents=True) under a root that does not exist quietly builds the
-    # whole Modules/LOTRLOME_Armory/ModuleData/Languages/<lang> chain there,
-    # finds no loc_*.xml to read, and the run still ends on "Done." (#404).
-    ensure_exists(armory_root, what="the Armory Languages folder")
     armory_target = armory_root / lang
-    if not dry_run:
-        armory_target.mkdir(parents=True, exist_ok=True)
-    for src_path in sorted(armory_root.glob("loc_*.xml")):
+    if "Armory" in modules:
+        # mkdir(parents=True) under a root that does not exist quietly builds the
+        # whole Modules/LOTRLOME_Armory/ModuleData/Languages/<lang> chain there,
+        # finds no loc_*.xml to read, and the run still ends on "Done." (#404).
+        ensure_exists(armory_root, what="the Armory Languages folder")
+        if not dry_run:
+            armory_target.mkdir(parents=True, exist_ok=True)
+    for src_path in (sorted(armory_root.glob("loc_*.xml")) if "Armory" in modules else []):
         src_map = parse_armory_english(src_path)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
@@ -259,7 +270,7 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
             stats[source] += 1
         content = build_translation_xml(lang_name, ordered)
         tgt = armory_target / src_path.name
-        write_text_file(tgt, content, dry_run)
+        write_text_file(tgt, content, dry_run, backup=True)
         print(f"  Armory {src_path.name}: {len(ordered)} entries (override={stats['override']} cache={stats['cache']} en_fallback={stats['english_fallback']})")
 
 
@@ -267,8 +278,13 @@ def build_parser():
     p = argparse.ArgumentParser()
     p.add_argument("--lang", choices=list(LANGUAGES.keys()))
     p.add_argument("--all", action="store_true")
-    p.add_argument("--dry-run", action="store_true",
-                   help="build every file in memory and write none; for the live TAOM_Map file print the diff")
+    p.add_argument("--module", action="append", choices=MODULES, required=True,
+                   help="a module this run may write; repeat for more than one. TAOM is not meant for this tool")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true", help="write the files (default: a dry run that writes nothing)")
+    mode.add_argument("--dry-run", action="store_true",
+                      help="the default, kept for old command lines: build every file in memory and write none; "
+                           "for the live TAOM_Map file print the diff")
     p.add_argument("--allow-live-write", action="store_true",
                    help="add the grammar tags to the live TAOM_Map loc_settlements.xml too (outside the repo; it is backed up first)")
     return p
@@ -286,7 +302,7 @@ def main():
         p.error("Specify --lang LANG or --all")
 
     for lang in targets:
-        rebuild_language(lang, dry_run=args.dry_run, allow_live_write=args.allow_live_write)
+        rebuild_language(lang, set(args.module), dry_run=not args.apply, allow_live_write=args.allow_live_write)
 
     print("\nDone.")
 

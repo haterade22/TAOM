@@ -66,7 +66,7 @@ class WriterTests(unittest.TestCase):
             rebuild.REPO_ROOT, rebuild.GAME_ROOT = root, root / "game"
             try:
                 with contextlib.redirect_stdout(io.StringIO()):
-                    rebuild.rebuild_language("DE")
+                    rebuild.rebuild_language("DE", set(rebuild.MODULES), dry_run=False)
             finally:
                 rebuild.REPO_ROOT, rebuild.GAME_ROOT = saved
             self.assert_override_rules(target)

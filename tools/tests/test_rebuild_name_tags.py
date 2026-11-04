@@ -117,7 +117,12 @@ class WriteTextFileTests(unittest.TestCase):
 
 
 class RebuildMainTests(unittest.TestCase):
-    """main() on a temp repo and a temp Modules tree (BANNERLORD_GAME_MODULES style), BR only."""
+    """main() on a temp repo and a temp Modules tree (BANNERLORD_GAME_MODULES style), BR only.
+
+    A run writes nothing unless it carries --apply, and it must name every module it may touch.
+    """
+
+    ALL = ["--module", "TAOM", "--module", "TAOM_Map", "--module", "Armory"]
 
     def _tree(self, td):
         repo = Path(td) / "repo"
@@ -129,6 +134,8 @@ class RebuildMainTests(unittest.TestCase):
         (modules / "TAOM_Map" / "ModuleData" / "settlements.xml").write_text(
             '<S><Settlement name="{=k_erebor}Erebor" /></S>', encoding="utf-8")
         (modules / "LOTRLOME_Armory" / "ModuleData" / "Languages").mkdir(parents=True)
+        (modules / "LOTRLOME_Armory" / "ModuleData" / "Languages" / "loc_items.xml").write_text(
+            '<base><strings><string id="k_sword" text="Sword" /></strings></base>', encoding="utf-8")
         return repo, modules
 
     def _run(self, repo, modules, *args):
@@ -138,22 +145,28 @@ class RebuildMainTests(unittest.TestCase):
                 contextlib.redirect_stdout(io.StringIO()):
             rb.main()
 
+    def _apply(self, repo, modules, *args):
+        self._run(repo, modules, "--lang", "BR", "--apply", *self.ALL, *args)
+
     def _paths(self, repo, modules):
         taom = repo / "Main" / "_Module" / "ModuleData" / "Languages" / "BR" / "std_taom_module_strings_por-BR.xml"
         live = modules / "TAOM_Map" / "ModuleData" / "Languages" / "BR" / "loc_settlements.xml"
         return taom, live
 
+    def _armory(self, modules):
+        return modules / "LOTRLOME_Armory" / "ModuleData" / "Languages" / "BR" / "loc_items.xml"
+
     def test_main_RepoFile_IsTaggedWithoutTheFlag(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR")
+            self._apply(repo, modules)
             taom, _ = self._paths(repo, modules)
             self.assertIn('text="{.NS}Erebor"', taom.read_text(encoding="utf-8"))
 
     def test_main_MapFile_IsNotTaggedWithoutTheFlag(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR")
+            self._apply(repo, modules)
             _, live = self._paths(repo, modules)
             text = live.read_text(encoding="utf-8")
             self.assertIn('text="Erebor"', text)
@@ -162,42 +175,116 @@ class RebuildMainTests(unittest.TestCase):
     def test_main_MapFile_IsTaggedWithTheFlag(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR", "--allow-live-write")
+            self._apply(repo, modules, "--allow-live-write")
             _, live = self._paths(repo, modules)
             self.assertIn('text="{.NS}Erebor"', live.read_text(encoding="utf-8"))
 
     def test_main_MapFile_BacksUpOnlyWhenItsBytesChange(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR")
+            self._apply(repo, modules)
             _, live = self._paths(repo, modules)
-            self._run(repo, modules, "--lang", "BR", "--allow-live-write")
+            self._apply(repo, modules, "--allow-live-write")
             self.assertEqual(len([f for f in live.parent.iterdir() if ".bak_nametags_" in f.name]), 1)
-            self._run(repo, modules, "--lang", "BR", "--allow-live-write")
+            self._apply(repo, modules, "--allow-live-write")
             self.assertEqual(len([f for f in live.parent.iterdir() if ".bak_nametags_" in f.name]), 1)
+
+    def test_main_ArmoryFile_BacksUpOnlyWhenItsBytesChange(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            armory = self._armory(modules)
+            armory.parent.mkdir(parents=True)
+            armory.write_text("old", encoding="utf-8")
+            self._apply(repo, modules)
+            self.assertIn('id="k_sword"', armory.read_text(encoding="utf-8"))
+            backups = [f for f in armory.parent.iterdir() if ".bak_nametags_" in f.name]
+            self.assertEqual([b.read_text(encoding="utf-8") for b in backups], ["old"])
+            self._apply(repo, modules)
+            self.assertEqual(len([f for f in armory.parent.iterdir() if ".bak_nametags_" in f.name]), 1)
 
     def test_main_RepoFile_GetsNoBackup(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR")
-            self._run(repo, modules, "--lang", "BR")
+            self._apply(repo, modules)
+            self._apply(repo, modules)
             taom, _ = self._paths(repo, modules)
             self.assertEqual([f for f in taom.parent.iterdir() if ".bak_" in f.name], [])
 
-    def test_main_DryRunWithTheFlag_WritesNothing(self):
+    def test_main_NoApply_WritesNothingEvenForANamedLanguage(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
-            self._run(repo, modules, "--lang", "BR", "--dry-run", "--allow-live-write")
+            self._run(repo, modules, "--lang", "BR", *self.ALL, "--allow-live-write")
             taom, live = self._paths(repo, modules)
             self.assertFalse(taom.exists())
             self.assertFalse(live.exists())
+            self.assertFalse(self._armory(modules).exists())
+            self.assertFalse(self._armory(modules).parent.exists())
+
+    def test_main_DryRunFlag_IsStillAcceptedAndWritesNothing(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            self._run(repo, modules, "--lang", "BR", "--dry-run", *self.ALL, "--allow-live-write")
+            taom, live = self._paths(repo, modules)
+            self.assertFalse(taom.exists())
+            self.assertFalse(live.exists())
+            self.assertFalse(self._armory(modules).exists())
+
+    def test_main_ApplyWithDryRun_Exits2AndWritesNothing(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                self._run(repo, modules, "--lang", "BR", "--apply", "--dry-run", *self.ALL)
+            self.assertEqual(caught.exception.code, 2)
+            self.assertFalse(self._paths(repo, modules)[0].exists())
+
+    def test_main_NoModule_Exits2AndWritesNothing(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                self._run(repo, modules, "--lang", "BR", "--apply")
+            self.assertEqual(caught.exception.code, 2)
+            taom, live = self._paths(repo, modules)
+            self.assertFalse(taom.exists())
+            self.assertFalse(live.exists())
+            self.assertFalse(self._armory(modules).exists())
+
+    def test_main_ApplyArmoryOnly_LeavesTheTaomAndMapFilesUntouched(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            taom, live = self._paths(repo, modules)
+            taom.parent.mkdir(parents=True)
+            taom.write_bytes(b"taom bytes")
+            live.parent.mkdir(parents=True)
+            live.write_bytes(b"map bytes")
+            self._run(repo, modules, "--lang", "BR", "--apply", "--module", "Armory")
+            self.assertEqual(taom.read_bytes(), b"taom bytes")
+            self.assertEqual(live.read_bytes(), b"map bytes")
+            self.assertEqual([f.name for f in taom.parent.iterdir()], [taom.name])
+            self.assertIn('id="k_sword"', self._armory(modules).read_text(encoding="utf-8"))
+
+    def test_main_ApplyTaomOnly_LeavesTheArmoryAndMapAlone(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            self._run(repo, modules, "--lang", "BR", "--apply", "--module", "TAOM")
+            taom, live = self._paths(repo, modules)
+            self.assertTrue(taom.exists())
+            self.assertFalse(live.exists())
+            self.assertFalse(self._armory(modules).parent.exists())
+
+    def test_main_ArmoryNotNamed_NeverNeedsTheArmoryFolder(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo, modules = self._tree(td)
+            (modules / "LOTRLOME_Armory" / "ModuleData" / "Languages" / "loc_items.xml").unlink()
+            (modules / "LOTRLOME_Armory" / "ModuleData" / "Languages").rmdir()
+            self._run(repo, modules, "--lang", "BR", "--apply", "--module", "TAOM")
+            self.assertTrue(self._paths(repo, modules)[0].exists())
 
     def test_main_LanguageWithoutTags_NeverLoadsTheTableAndCompletes(self):
         with tempfile.TemporaryDirectory() as td:
             repo, modules = self._tree(td)
             with mock.patch.object(rb, "REPO_ROOT", repo), mock.patch.object(rb, "GAME_ROOT", modules), \
                     mock.patch.object(nt, "load_table", side_effect=RuntimeError("no table")) as load, \
-                    mock.patch("sys.argv", ["rebuild_translation_files.py", "--lang", "DE"]), \
+                    mock.patch("sys.argv", ["rebuild_translation_files.py", "--lang", "DE", "--apply", *self.ALL]), \
                     contextlib.redirect_stdout(io.StringIO()):
                 rb.main()
             load.assert_not_called()
@@ -209,16 +296,19 @@ class RebuildMainTests(unittest.TestCase):
             repo, modules = self._tree(td)
             with mock.patch.object(rb, "REPO_ROOT", repo), mock.patch.object(rb, "GAME_ROOT", modules), \
                     mock.patch.object(nt, "load_table", return_value=TABLE) as load, \
-                    mock.patch("sys.argv", ["rebuild_translation_files.py", "--lang", "BR", "--allow-live-write"]), \
+                    mock.patch("sys.argv", ["rebuild_translation_files.py", "--lang", "BR", "--apply", *self.ALL, "--allow-live-write"]), \
                     contextlib.redirect_stdout(io.StringIO()):
                 rb.main()
             self.assertEqual(load.call_count, 1)
 
     def test_build_parser_ParsesTheFlags(self):
-        args = rb.build_parser().parse_args(["--lang", "BR", "--dry-run", "--allow-live-write"])
+        args = rb.build_parser().parse_args(["--lang", "BR", "--dry-run", "--module", "TAOM", "--allow-live-write"])
         self.assertTrue(args.dry_run and args.allow_live_write)
-        args = rb.build_parser().parse_args(["--lang", "BR"])
+        self.assertFalse(args.apply)
+        args = rb.build_parser().parse_args(["--lang", "BR", "--apply", "--module", "TAOM", "--module", "Armory"])
+        self.assertTrue(args.apply)
         self.assertFalse(args.dry_run or args.allow_live_write)
+        self.assertEqual(args.module, ["TAOM", "Armory"])
 
 
 class WriteBackTests(unittest.TestCase):
