@@ -113,6 +113,10 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Gitleaks | `Gitleaks` `gitleaks/gitleaks` | MIT | interop-only | `/security-scan` runs the installed tool; `.gitleaksignore` (see detail) | cleared |
 | Ruff | `Ruff` `astral-sh/ruff` | MIT | interop-only | `ruff.toml`, `tools/tests/test_python_lint_gate.py` (see detail) | cleared |
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
+| ponytail | `ponytail` `DietrichGebert/ponytail` | MIT | behavioural-port | `.claude/rules/think-before-coding.md` ("Reuse before writing", the ordered reuse ladder; see detail) | cleared |
+| mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); a suggested-skills field for the since-removed `/context-save`; see detail | cleared |
+| pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
+| claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
 
 <!-- provenance-register-end -->
 
@@ -965,6 +969,41 @@ so the derivation is a behavioural port of a documented method. Five rule lines 
 rea's `AGENTS.md` and its reverse-engineering skill in TAOM's words (comparison-only). No rea text or
 code was copied, so no MIT notice is carried. Record:
 [`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md).
+
+### ponytail
+
+Upstream: https://github.com/DietrichGebert/ponytail. Its decision ladder was rewritten for TAOM as the
+"Reuse before writing" list in `.claude/rules/think-before-coding.md`. No ponytail code or file was
+vendored, so no MIT notice is carried, and the plugin was never installed. Record:
+[`docs/reviews/adopt-ponytail-2026-06-18.md`](../reviews/adopt-ponytail-2026-06-18.md).
+
+### mattpocock/skills
+
+Upstream: https://github.com/mattpocock/skills. Two reviews, both reading markdown only. The
+`improve-codebase-architecture` skill gave the shallow-module lens and the deepening deletion test, which
+are now one bullet in `.claude/skills/improve/references/audit-playbook.md`. The `handoff` skill gave one
+field, suggested skills for the next session, which went into `/context-save` (that skill was removed
+later, in commit `8b1083127`); `teach` was skipped. No text or file was vendored, so no MIT notice is
+carried. Records:
+[`docs/reviews/adopt-mattpocock-improve-architecture-2026-06-22.md`](../reviews/adopt-mattpocock-improve-architecture-2026-06-22.md),
+[`docs/reviews/adopt-mattpocock-teach-handoff-2026-06-22.md`](../reviews/adopt-mattpocock-teach-handoff-2026-06-22.md).
+
+### pstack
+
+Upstream: https://github.com/backnotprop/pstack (a mirror of Cursor's `cursor/plugins/pstack`), `18b6c36`,
+read from a shallow clone; nothing was installed or run. Seven ideas were restated in TAOM's words (the
+two-edit test check, comment review, a verification recipe per feature, the premise test, a worktree
+audit, a perf method, more prose tells). The record lists TAOM-side changes, not copied files, and the
+table of them is there:
+[`docs/reviews/adopt-pstack-2026-10-24.md`](../reviews/adopt-pstack-2026-10-24.md).
+
+### claude-plugins-official
+
+Upstream: https://github.com/anthropics/claude-plugins-official, `5826794`, read from a shallow clone;
+nothing was installed or run. Five ideas were rebuilt on the TAOM side: frontmatter key
+checks, two review-lens prompts, dangerous-sink rules, a canary test that must turn a run red, and
+token and cache accounting. The record describes ideas ported, not files copied. Record:
+[`docs/reviews/adopt-claude-plugins-official-2026-10-26.md`](../reviews/adopt-claude-plugins-official-2026-10-26.md).
 
 ---
 

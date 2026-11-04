@@ -9,6 +9,8 @@ How to create new clan/faction banner **sigil icons** for TAOM with AI (imagine.
 
 Heraldry is sober Tolkien style with one bold plain motif; show designs before wiring (Mike, 2026-10-28).
 
+Prompt nano-banana-pro for a solid filled silhouette in "J.R.R. Tolkien's own hand-drawn heraldic devices" or "medieval heraldic charge" style, with the guards "NOT high fantasy, no flourishes, no sparkles, no thin outlines" and a pure-black background. After the first round of Lindon emblems Mike asked for a more realistic look in Tolkien's own style, not high fantasy, and approved the bold swan-wave (Nos Brithombar) as the model. Show him a design sheet (raw plus banner mock) and wait for his picks before you key or wire anything.
+
 ## The three id layers (all share the icon id)
 
 | Layer | Where | Keyed by |

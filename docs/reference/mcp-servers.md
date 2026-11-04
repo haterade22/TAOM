@@ -14,8 +14,7 @@
 | **elevenlabs** | Project | Voice design and generation into `.voice-scratch/` ([kingdom-voices.md](../features/kingdom-voices.md)) | `.mcp.json` |
 | **blender** | Local (`E:\repos\TAOM` only) | Live Blender session for creature animation ([workflow](../ai-includes/creature-animation-blender-mcp-workflow.md)) | `~/.claude.json` |
 | **substance-painter** | Local (`E:\repos\TAOM` only) | Live Substance Painter session for texturing | `~/.claude.json` |
-| **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
-| **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
+| **davinci-resolve** | User | DaVinci Resolve control; machine-local, no TAOM skill, agent or rule calls it | `~/.claude.json` |
 
 **Removed 2026-09-29: `github`, `git`, `filesystem`.** None was called by any TAOM skill, agent or rule; each
 duplicated a tool with gates of its own (`gh`, which is authenticated; git through Bash, where the git
