@@ -125,7 +125,9 @@ Three consequences the table cannot show on its own.
 ## What the commit hook covers, and what it does not
 
 `check-moduledata-validation.sh` runs the error-severity checks before a `git commit` and blocks on
-failure. Four limits, all of them load-bearing.
+failure. `.githooks/pre-commit` runs the same checks for every committer whose clone sets
+`core.hooksPath`, so a commit from a terminal or an IDE meets them too (2026-11-03). Four limits, all
+of them load-bearing.
 
 1. **It is an explicit `--code` allowlist, not "all errors".** The hook names an explicit list.
    A new error check is silently non-blocking until it is added there. On 2026-08-31 five live error

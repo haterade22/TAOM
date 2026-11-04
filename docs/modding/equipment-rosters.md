@@ -407,6 +407,22 @@ are optional and every shipped culture has them anyway.
 - **The [xml-data rule](../../.claude/rules/xml-data.md) cites a memory file that does not exist.**
   Its `feedback_equipmenttype_civilian_required.md` reference has nothing behind it in the repo or
   the project memory store. The rule's own text is correct; only the citation is dangling.
+- **Townsfolk and notables need a plain battle roster beside the civilian one (#295).** #295's
+  in-game log showed arena stand spectators (it logged `townsman_erebor`) spawning with battle
+  equipment. That log is the only evidence: the spawner was not found in managed code, and notables
+  are covered on the same assumption. A character whose inline `<Equipments>` holds civilian rosters
+  only has no battle set, so `FirstBattleEquipment` is null, not empty (`BasicCharacterObject.cs:108`).
+  `GetRandomEquipmentElements` then returns an empty kit and the character stands naked in the arena
+  (`Equipment.cs:562-565`); a fixed-equipment spawn would throw (`Mission.cs:4108`). The town walk
+  (civilian equipment) looks fine. Every culture shipped that way until
+  `tools/add_townsfolk_battle_rosters.py` appended a battle twin to each civilian roster (1089 NPCs
+  across 20 cultures). Gate: `TOWNSFOLK_WITHOUT_BATTLE_ROSTER`.
+- **`CharacterSpawner` is not the arena crowd.** `CharacterSpawner` is a scene script, and the only
+  external caller of its `InitWithCharacter` in the v1.5.6 dump is `CharacterThumbnailCache`
+  (`FillEntityWithPose`); `BasicCharacterTableau` does not use it. Which UI screens reach that cache
+  was not traced. The arena spectators are real `Mission.Agent`s, and no mission call site of
+  `CharacterSpawner` appears in the dump's `Modules` and `MountAndBlade` folders, so do not chase
+  `CharacterSpawner` for an arena render bug.
 
 ### Not answered anywhere in TAOM
 

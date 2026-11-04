@@ -157,7 +157,7 @@ at a time, and installs only what verifies.
 - **Authoring and proof.** `tools/blender/add_mesh_lods.py` writes the levels;
   `audit_fbx_lods.py --diff <old> <new>` proves nothing else moved, bind pose included (a Blender
   export rewrites the file's axis system, so raw bind matrices always differ; compare relative
-  to a reference bone). `audit_fbx_lods.py --check` fails once a reinstall reverts a pass.
+  to a reference bone).
 - **Known defect: `sk_dwarf_beard_a_10`.** The FBX is fine, but `SK_Dwarf_Beards_geo.tpac`
   registers that metamesh with `_beard_a` replaced by eight NUL bytes, so the engine logs
   `Meta mesh with name sk_dwarf_beard_a_10 cannot be found!` and a dwarf who rolls beard 10 has

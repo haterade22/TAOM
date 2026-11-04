@@ -1166,8 +1166,7 @@ class NativeBucketTests(_Tree):
         data_line = next(l for l in lines if l.startswith("NATIVE") and "voice_definitions.xml" in l)
         self.assertIn('named by project.mbproj row id="soln_voice_definitions" type="-" (data); '
                       'it loads only if the engine requests that id or reads that type; '
-                      'no XSD here checks it; gates: .claude/rules/moduledata-validation.md '
-                      '"Gate per file kind"', data_line)
+                      'no XSD here checks it; gates: python tools/data_gates.py', data_line)
         sheet_line = next(l for l in lines if l.startswith("NATIVE") and "voice_definitions.xsl" in l)
         self.assertIn('row id="soln_voice_definitions" type="-" (stylesheet)', sheet_line)
         self.assertIn("2 native", lines[-1])

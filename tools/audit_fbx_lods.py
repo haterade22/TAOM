@@ -36,15 +36,16 @@ name.
 
 Usage:
   python tools/audit_fbx_lods.py                 # write docs/reference/armory-catalogue/lod-audit.md
-  python tools/audit_fbx_lods.py --check         # drift gate: exit 1 if the report no longer
-                                                 # reproduces (the Armory is unversioned, so a
-                                                 # reinstall silently reverts a LOD pass)
+  python tools/audit_fbx_lods.py --check         # gate: exit 1 if the report no longer reproduces
+                                                 # (the Armory is unversioned, so a reinstall
+                                                 # silently reverts a LOD pass) or if a shipped,
+                                                 # used chain lacks a level (LOD0 only, incomplete)
   python tools/audit_fbx_lods.py --fbx X.fbx     # one file's chains: levels and triangles
   python tools/audit_fbx_lods.py --diff A.fbx B.fbx
                                                  # per-mesh delta between two FBX (a .bak and its rewrite),
                                                  # plus the rig's bind-pose drift
 
-Exit: 0; 1 on drift (--check); 2 on a bad path.
+Exit: 0; 1 on drift or a level gap (--check); 2 on a bad path.
 """
 from __future__ import annotations
 
@@ -585,7 +586,27 @@ def drifted(committed, fresh) -> bool:
     """True when the committed report (None if absent) no longer matches a fresh run."""
     if committed is None:
         return True
-    return committed.replace("\r\n", "\n") != fresh.replace("\r\n", "\n")
+    # render() writes no backlinks footer; tools/build_backlinks.py appends one to the committed copy.
+    committed = re.sub(r"\n*<!-- backlinks-start.*?<!-- backlinks-end -->\n*", "\n", committed.replace("\r\n", "\n"),
+                       flags=re.DOTALL)
+    return committed != fresh.replace("\r\n", "\n")
+
+
+def check_problems(committed, text, sections) -> list:
+    """Why --check fails: the committed report differs from a fresh run, or a shipped, used chain
+    still lacks a level (the LOD0-only and incomplete sections must be empty)."""
+    problems = []
+    if drifted(committed, text):
+        problems.append("DRIFT: the committed report does not reproduce from the live Armory. An FBX "
+                        "changed (a LOD pass, an art drop, or a reinstall reverting one); regenerate "
+                        "and read the diff.")
+    gaps = sections["fix"] + sections["incomplete"] + [c for c in sections["defects"] if c.used_by]
+    if gaps:
+        shown = "; ".join(f"{c.fbx} {c.chain} lacks LOD{','.join(str(x) for x in sorted(c.missing))}"
+                          for c in gaps[:5])
+        problems.append(f"GAPS: {len(gaps)} shipped, used chain(s) lack a level of LOD0 to LOD5 "
+                        f"({shown}{'; ...' if len(gaps) > 5 else ''})")
+    return problems
 
 
 def describe_fbx(path) -> list:
@@ -651,10 +672,9 @@ def main() -> int:
     text = render(sections, stats)
     if args.check:
         out = Path(args.out)
-        if drifted(out.read_text(encoding="utf-8") if out.exists() else None, text):
-            print(f"DRIFT: {out} does not reproduce from the live Armory. An FBX changed (a LOD "
-                  "pass, an art drop, or a reinstall reverting one); regenerate and read the diff.",
-                  file=sys.stderr)
+        problems = check_problems(out.read_text(encoding="utf-8") if out.exists() else None, text, sections)
+        if problems:
+            print(f"{out}:\n" + "\n".join(problems), file=sys.stderr)
             return 1
         print(f"OK: {out} reproduces")
         return 0

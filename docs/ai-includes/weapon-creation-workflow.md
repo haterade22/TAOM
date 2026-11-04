@@ -322,13 +322,21 @@ loc files live outside the TAOM repo); see [`localize`](../localization/TRANSLAT
 
 ## Step W — Validate (before launching the game)
 
-Parse + cross-check with a short script:
-1. **Well-formed** — `xml.etree.ElementTree.parse()` succeeds on all four files (XSLTs are XML too).
-2. **Reference integrity** — every `<Piece id>` (File 4) and every `AvailablePiece`/`UsablePiece`
-   (Files 2-3) resolves to a `<CraftingPiece id>` defined in File 1.
-3. **Mesh existence** — every `mesh=` and `body_name=` resolves to a real string in the tpac (Step C).
-   Pending artist `bo_` meshes are the expected exception.
-4. **Datatype** — no decimals on single-piece `<Item>` weapon stats (Step L).
+Run the tools; do not write a script. Together they check that the files are well-formed and that every
+`mesh=` and `body_name=` resolves to a real string in the tpac (Step C; pending artist `bo_` meshes are the
+expected exception):
+
+```
+python tools/validate_moduledata.py
+python tools/validate_mesh_refs.py --scan-bodies
+python tools/audit_armory_refs.py --report -
+python tools/audit_polearm_shield_parity.py
+python tools/validate_xml_schemas.py <files>
+python tools/check_external_xslt.py
+```
+
+`python tools/data_gates.py <the live files you edited>` runs these and the other gates for those files.
+No gate in the table reads these two, so check them by hand: every `<Piece id>` (File 4) and every `AvailablePiece`/`UsablePiece` (Files 2-3) resolves to a `<CraftingPiece id>` defined in File 1, and single-piece `<Item>` weapon stats carry no decimals (Step L).
 
 ## Step X — In-game smoke test (authoritative)
 

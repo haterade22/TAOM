@@ -2482,6 +2482,278 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
 
+class WeaponSlotCoverageTests(unittest.TestCase):
+    """INCONSISTENT_WEAPON_SLOT. The weapon half of the cross-set rule in
+    `.claude/rules/troops.md`: slots 0-3 draw independently from the battle sets, so a
+    launcher or its ammo present in some sets only ships a half-kit (#529), and with no
+    weapon slot filled in every set a draw can leave the troop unarmed."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(
+            items=set(), item_def_files={}, npccharacters=set(), cultures={"umbar"},
+            party_templates=set(),
+            launchers={"good_bow": object()},
+            item_trade={"good_arrows": ts.ItemTrade(True, (), "", 0, "Arrows")})
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    @staticmethod
+    def _set(**slots):
+        rows = "".join(f'<equipment slot="{k}" id="Item.{v}" />' for k, v in slots.items())
+        return f"<EquipmentRoster>{rows}</EquipmentRoster>"
+
+    def _issues(self, equipments, attrs="", registries=None):
+        _write(self.md / "troops" / "troops_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="umbar_x" default_group="Ranged" culture="Culture.umbar"{attrs}>\n'
+               f"    <Equipments>{equipments}</Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        validator = ts.Validator(self.md, self.schemas, registries or self.registries)
+        return [i for i in validator.run() if i.code == "INCONSISTENT_WEAPON_SLOT"]
+
+    def test_launcher_in_one_set_and_a_sword_in_the_same_slot_of_another_warns(self):
+        found = self._issues(self._set(Item0="good_bow", Item1="good_arrows")
+                             + self._set(Item0="sword", Item1="good_arrows"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("Item0", found[0].message)
+        self.assertIs(found[0].severity, ts.Severity.WARNING)
+
+    def test_ammo_at_two_indices_warns(self):
+        found = self._issues(self._set(Item0="good_bow", Item1="good_arrows")
+                             + self._set(Item0="good_bow", Item2="good_arrows"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("ammo", found[0].message)
+
+    def test_ammo_in_some_sets_only_warns(self):
+        found = self._issues(self._set(Item0="good_bow", Item1="good_arrows")
+                             + self._set(Item0="good_bow", Item1="sword"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("ammo", found[0].message)
+
+    def test_consistent_archer_sets_are_clean(self):
+        kit = self._set(Item0="good_bow", Item1="good_arrows", Item2="sword")
+        self.assertEqual(self._issues(kit + kit), [])
+
+    def test_no_weapon_slot_filled_in_every_set_warns(self):
+        found = self._issues(self._set(Item0="sword") + self._set(Item1="sword"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("every battle set", found[0].message)
+
+    def test_a_hero_is_exempt(self):
+        self.assertEqual(
+            self._issues(self._set(Item0="sword") + self._set(Item1="sword"), attrs=' is_hero="true"'), [])
+
+    def test_a_single_battle_set_is_clean(self):
+        self.assertEqual(self._issues(self._set(Item0="sword")), [])
+
+    def test_a_civilian_set_does_not_count(self):
+        civ = '<EquipmentRoster civilian="true"><equipment slot="Item3" id="Item.sword" /></EquipmentRoster>'
+        self.assertEqual(self._issues(self._set(Item0="sword") + self._set(Item0="sword") + civ), [])
+
+    def test_a_troop_level_equipment_fills_the_slot_in_every_set(self):
+        """Troop-level <equipment> lies over every set (data-scripts.md), so Item0 is filled
+        in both sets even though the second roster leaves it empty."""
+        found = self._issues('<equipment slot="Item0" id="Item.sword" />'
+                             + self._set(Item1="sword") + self._set(Item2="sword"))
+        self.assertEqual(found, [])
+
+    def test_a_troop_level_equipment_with_an_empty_id_clears_the_slot_in_every_set(self):
+        """An empty id clears the slot (data-scripts.md): Item0 is gone from both sets, so no slot
+        index is filled in both."""
+        found = self._issues('<equipment slot="Item0" id="" />'
+                             + self._set(Item0="sword") + self._set(Item0="sword", Item1="sword"))
+        self.assertEqual(len(found), 1)
+        self.assertIn("every battle set", found[0].message)
+
+    def test_without_launcher_data_only_the_slot_rule_runs(self):
+        bare = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures={"umbar"}, party_templates=set())
+        sets = self._set(Item0="good_bow") + self._set(Item0="sword")
+        self.assertEqual(self._issues(sets, registries=bare), [])
+        self.assertEqual(len(self._issues(self._set(Item0="a") + self._set(Item1="a"), registries=bare)), 1)
+
+    def test_a_troop_with_no_weapon_in_any_set_is_not_flagged(self):
+        self.assertEqual(self._issues(self._set(Body="mail") + self._set(Body="mail")), [])
+
+
+class TownsfolkBattleRosterTests(unittest.TestCase):
+    """TOWNSFOLK_WITHOUT_BATTLE_ROSTER. A character whose inline Equipments hold civilian
+    rosters only has no battle set, so GetRandomEquipmentElements returns an empty kit and it
+    stands naked in the arena (#295)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                        cultures={"umbar"}, party_templates=set())
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, folder, inner):
+        _write(self.md / folder / "npcs_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="townsman_umbar" culture="Culture.umbar">\n'
+               f"    <Equipments>{inner}</Equipments>\n  </NPCCharacter>\n</NPCCharacters>\n")
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        return [i for i in issues if i.code == "TOWNSFOLK_WITHOUT_BATTLE_ROSTER"]
+
+    CIV = '<EquipmentRoster civilian="true"><equipment slot="Body" id="Item.rags" /></EquipmentRoster>'
+    BATTLE = '<EquipmentRoster><equipment slot="Body" id="Item.rags" /></EquipmentRoster>'
+
+    def test_civilian_only_is_a_warning(self):
+        found = self._found("characters", self.CIV)
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "townsman_umbar")
+        self.assertIs(found[0].severity, ts.Severity.WARNING)
+
+    def test_a_plain_twin_is_clean(self):
+        self.assertEqual(self._found("characters", self.CIV + self.BATTLE), [])
+
+    def test_no_equipment_block_is_clean(self):
+        self.assertEqual(self._found("characters", ""), [])
+
+    def test_troop_files_are_not_scanned(self):
+        self.assertEqual(self._found("troops", self.CIV), [])
+
+
+class TroopIdRemovedTests(unittest.TestCase):
+    """TROOP_ID_REMOVED. A shipped troop id that leaves the troops files leaves a hollow
+    CharacterObject in every save that held it (#670)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self.md = self.root / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                        cultures={"umbar"}, party_templates=set())
+        _write(self.md / "troops" / "troops_test.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="umbar_kept" culture="Culture.umbar"/>\n'
+               "  <!-- <NPCCharacter id=\"umbar_commented\" culture=\"Culture.umbar\"/> -->\n"
+               "</NPCCharacters>\n")
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, baseline):
+        path = self.root / "ids.txt"
+        if baseline is not None:
+            path.write_text(baseline, encoding="utf-8")
+        validator = ts.Validator(self.md, self.schemas, self.registries, shipped_troop_ids_file=path)
+        return [i for i in validator.run() if i.code == "TROOP_ID_REMOVED"]
+
+    def test_a_missing_baseline_id_is_an_error(self):
+        found = self._found("# tag: v1\numbar_kept\numbar_gone\n")
+        self.assertEqual([i.entry_id for i in found], ["umbar_gone"])
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+
+    def test_a_commented_out_definition_does_not_count(self):
+        self.assertEqual([i.entry_id for i in self._found("umbar_commented\n")], ["umbar_commented"])
+
+    def test_an_exception_with_a_reason_passes(self):
+        self.assertEqual(self._found("umbar_gone\n[exceptions]\numbar_gone | accepted by Mike\n"), [])
+
+    def test_an_exception_without_a_reason_does_not_pass(self):
+        self.assertEqual(len(self._found("umbar_gone\n[exceptions]\numbar_gone\n")), 1)
+
+    def test_no_baseline_file_is_one_error_not_a_silent_pass(self):
+        found = self._found(None)
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "(baseline)")
+
+    def test_a_baseline_holding_no_id_is_one_error_not_a_silent_pass(self):
+        for text in ("# tag: v1\n[exceptions]\n", "", "[exceptions]\numbar_gone | accepted\numbar_kept\n"):
+            found = self._found(text)
+            self.assertEqual([i.entry_id for i in found], ["(baseline)"], repr(text))
+            self.assertIs(found[0].severity, ts.Severity.ERROR)
+            self.assertIn("ids.txt", found[0].message)
+
+    def test_the_baseline_survives_a_write_and_read_with_its_exceptions(self):
+        path = self.root / "roundtrip.txt"
+        path.write_bytes(b"\xef\xbb\xbf# tag: v1\r\numbar_old\r\n[exceptions]\r\numbar_old | retired on purpose\r\n")
+        ids, exceptions = ts.read_shipped_troop_ids(path)
+        self.assertEqual((ids, exceptions), (["umbar_old"], {"umbar_old": "retired on purpose"}))
+        ts.write_shipped_troop_ids(path, "v2", ["umbar_b", "umbar_a", "umbar_b"], exceptions)
+        raw = path.read_bytes()
+        self.assertFalse(raw.startswith(b"\xef\xbb\xbf"))
+        self.assertNotIn(b"\r", raw)
+        ids, exceptions = ts.read_shipped_troop_ids(path)
+        self.assertEqual(ids, ["umbar_a", "umbar_b"])
+        self.assertEqual(exceptions, {"umbar_old": "retired on purpose"})
+        self.assertIn("# tag: v2", raw.decode("utf-8"))
+
+    def test_regenerating_keeps_the_exceptions_and_reads_the_tag_not_the_tree(self):
+        target = self.root / "regen.txt"
+        ts.write_shipped_troop_ids(target, "v1", ["umbar_old"], {"umbar_old": "retired on purpose"})
+        xml = ('<NPCCharacters><NPCCharacter id="umbar_new" culture="Culture.umbar"/>'
+               '<!-- <NPCCharacter id="umbar_commented"/> --></NPCCharacters>')
+
+        def fake_git(cmd, **kwargs):
+            args = cmd[3:]
+            out = {"describe": "v9\n", "ls-tree": "Main/_Module/ModuleData/troops/troops_x.xml\n",
+                   "show": xml}[args[0]]
+            return subprocess.CompletedProcess(cmd, 0, stdout=out.encode("utf-8"), stderr=b"")
+
+        with mock.patch.object(vm, "SHIPPED_TROOP_IDS", target), \
+                mock.patch.object(subprocess, "run", side_effect=fake_git), redirect_stdout(io.StringIO()):
+            self.assertEqual(vm.regenerate_shipped_troop_ids(), 0)
+        ids, exceptions = ts.read_shipped_troop_ids(target)
+        self.assertEqual(ids, ["umbar_new"])
+        self.assertEqual(exceptions, {"umbar_old": "retired on purpose"})
+        self.assertIn("# tag: v9", target.read_text(encoding="utf-8"))
+
+    def test_the_pass_is_off_without_a_baseline_argument(self):
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        self.assertEqual([i for i in issues if i.code == "TROOP_ID_REMOVED"], [])
+
+    def test_the_shipped_baseline_parses_and_names_only_defined_or_excepted_ids(self):
+        """The real file against the real tree: this is the gate, run as a test."""
+        repo = Path(__file__).resolve().parents[2]
+        baseline = repo / "tools" / "shipped_troop_ids.txt"
+        troops = repo / "Main" / "_Module" / "ModuleData"
+        if not baseline.is_file() or not troops.is_dir():
+            self.skipTest("baseline or troop data not present")
+        ids, exceptions = ts.read_shipped_troop_ids(baseline)
+        self.assertGreater(len(ids), 500)
+        validator = ts.Validator(troops, self.schemas, self.registries, shipped_troop_ids_file=baseline)
+        missing = [i.entry_id for i in validator._troop_ids_removed()]
+        self.assertEqual(missing, [], f"shipped troop ids gone from the troops files: {missing}")
+        self.assertTrue(all(reason.strip() for reason in exceptions.values()))
+
+
+class AppliesToCoverageTests(unittest.TestCase):
+    """Every file that defines an <NPCCharacter> must match an `applies_to` glob of
+    taom_npccharacter.json, or its duplicate-id and enum checks silently skip it."""
+
+    def test_every_npccharacter_file_is_covered(self):
+        md = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
+        if not md.is_dir():
+            self.skipTest("ModuleData not present")
+        schema = next(s for s in ts.load_schemas(SCHEMA_DIR) if s.name == "taom_npccharacter")
+        import fnmatch
+        comment = re.compile(r"<!--.*?-->", re.S)
+        defines = re.compile(r"<NPCCharacter\b")
+        files = []
+        for path in sorted(md.rglob("*.xml")):
+            text = comment.sub("", path.read_text(encoding="utf-8-sig", errors="ignore"))
+            if defines.search(text):
+                files.append(path.relative_to(md).as_posix())
+        self.assertGreater(len(files), 30, "the scan found almost no NPCCharacter files")
+        uncovered = [f for f in files if not any(fnmatch.fnmatch(f, g) for g in schema.applies_to)]
+        self.assertEqual(uncovered, [], "these files define <NPCCharacter> outside every applies_to "
+                         f"glob of tools/schemas/taom_npccharacter.json: {uncovered}")
+
+
 class MountWithoutHarnessTests(unittest.TestCase):
     """MOUNT_WITHOUT_HARNESS. A Horse slot requires a HorseHarness slot in the same
     equipment set. The harness is not only armour: on some mounts it carries the
@@ -3310,6 +3582,24 @@ class CommitGateCoverageTests(unittest.TestCase):
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)
         self.assertEqual(unknown, [], f"hook names codes the validator never emits: {unknown}")
+
+    DOC = (Path(__file__).resolve().parents[2] / "docs" / "reference" / "moduledata-validator-codes.md")
+
+    def test_every_emitted_code_has_a_row_in_the_codes_doc(self):
+        """The validator-codes doc promises every code and what repairs it. A code with no
+        row sends the reader to the source."""
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
+        emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
+                   | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   | self._named_codes(src, "ERROR") | self._named_codes(src, "WARNING")
+                   | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
+        doc = self.DOC.read_text(encoding="utf-8")
+        rows = set(re.findall(r"^\| `([A-Z_]+)`", doc, flags=re.M))
+        if "| `DUPLICATE_{NPC,CULTURE,ROSTER}_ID`" in doc:
+            rows |= {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"}
+        self.assertGreaterEqual(len(rows), 20, "the doc scan found almost no rows")
+        self.assertEqual(sorted(emitted - rows), [],
+                         f"codes with no row in {self.DOC.name}: add a row to its Codes table")
 
 
 class ArmourAcquisitionRefTests(unittest.TestCase):

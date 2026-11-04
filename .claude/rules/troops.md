@@ -40,8 +40,8 @@ pass it.)
 
 | Rule | Why |
 |---|---|
-| If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Slot 0 and slot 1 draw independently, so 3 ranged sets among 13 gives a working archer `(3/13)^2` = 5% of the time and a useless half-kit 36% of the time (#529) |
-| At least one slot index must hold a weapon in **every** battle set | Otherwise a draw can leave the troop with no weapon at all. Deleting a bow without promoting the sidearm into its slot is how you create this |
+| If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Gate: `INCONSISTENT_WEAPON_SLOT` (#529) |
+| At least one slot index must hold a weapon in **every** battle set | Gate: `INCONSISTENT_WEAPON_SLOT`. Promote the sidearm into a deleted bow's slot |
 | A shield in one set and a `requires_no_shield` weapon in another is the same defect as pairing them in one set | The AI will not draw the weapon. `audit_polearm_shield_parity.py` is per-set and cannot see the cross-set form (#531) |
 | `Horse` and `HorseHarness` (slots 10 and 11) also draw independently | Pair them consistently across sets |
 | Heroes are exempt | `CharacterObject` returns the single `HeroObject.BattleEquipment` when `IsHero`, and `Mission.BuildAgent` forces `FixedEquipment(true)`. Wanderer/companion templates pick a whole set once at creation (`Hero.SetInitialValuesFromCharacter` does `list.GetRandomElement().Clone()`). For those, in-set completeness is the whole requirement |
@@ -114,8 +114,7 @@ A template no culture, clan or hero binds is dead data, and a retagged culture i
 
 ## Save Compatibility
 
-- **Never change troop IDs** — rename display names only (keep `id` attribute)
-- **Never delete troops** — orphan them (remove from upgrade_targets) but keep in file
+- Never rename or delete a troop id; retire one by removing it from every upgrade_targets. Gate: `TROOP_ID_REMOVED`.
 - **is_basic_troop** — marks a troop as a standalone recruitment entry point
 - **Tier shifts are allowed** — moving a troop from T6 → T5 is fine if you also re-pick its skill curve + armor + equipment to match the new tier. Engine re-applies on next load. (Dale `dale_royal_cavalier` T6→T5, `dale_kinsman_of_eorl` T7→T6 worked cleanly across an existing save.)
 - **Display-name desync is OK** — `dale_master_crossbowman` can legitimately display "Royal Crossbowman" if a later rename swap put "Royal" at the higher tier. Document the desync in the feature doc.

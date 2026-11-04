@@ -454,7 +454,7 @@ monster leaves null native entries → spawn AV.
 
 | Instrument | What it catches |
 |---|---|
-| `python tools/audit_mount_parity.py` | ANY divergence from warg/elephant/horse across Monster XML, usage sets, action types, action-set binding coverage, rider partial — the tool that found 5 of the spider's 7 deltas in one pass. **Extend its `FILES`/`MOUNTS` maps for each new creature** |
+| `python tools/audit_mount_parity.py` | ANY divergence from warg/elephant/horse across Monster XML, usage sets, action types, action-set binding coverage, rider partial: the tool that found 5 of the spider's 7 deltas in one pass. **Extend its `FILES`/`MOUNTS` maps for each new creature**. `--strict` exits 1 when a behaviour-tree-driven mount in `STRICT_MOUNTS` (spider, elephant, mumakil; add yours) misses a verb, a jump row of the 45 or a per-pace reference row |
 | Animation-target sweep | every `animation=` in your sets byte-scanned against the real tpac inventories (module + vanilla `animation_clips.tpac`), phantoms compile into degenerate records |
 | The probe battery (`RunSpiderMountDiagnostics` pattern) | one-shot in-game probes: skeleton × set × usage spawn tests, engine-binding name resolution (compiled truth vs XML-on-disk), rider-partial inheritance per race set |
 | Control battles | warg-only (the known-good baseline), then the new creature; on a crash, bisect single-variable — and expect ≥2 independent causes (the spider had FIVE) |

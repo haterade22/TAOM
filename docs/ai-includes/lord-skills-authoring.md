@@ -203,13 +203,7 @@ Dry-run (preview without writing): omit `--apply`.
 
 The script is **idempotent** — re-running with no source changes produces no diff.
 
-**MANDATORY pre-flight before ANY `--apply`: verify the generator matches the committed XML.**
-`taom_lord_skill_sets.xml` has been hand-edited downstream at least once (the 1f7a7a9a
-legendary-lord hierarchy) — a blind regen would have reverted 14 hand-tuned canonical sets and
-**deleted** Sauron's/the Witch-King's sets. The generator was synced back in `874e7574`, but the
-check stays cheap and permanent: run `--skillsets-only --apply` on a CLEAN tree and require
-`git diff` to be empty (or id-sort-only) before layering your change. Non-empty diff = someone
-hand-edited the XML again → sync the generator's canonical entries FIRST (see the gotcha table).
+**Before any `--apply`, run `python tools/apply_culture_skills_traits.py --check`** (read-only; it compares the generated SkillSets with the committed file and ignores set order, and `test_generator_regions_in_sync.py` runs it). On drift, sync the generator's canonical entries first: a blind regeneration once nearly deleted Sauron's and the Witch-King's sets.
 
 **Per-culture `--culture X --apply` is UNSAFE for repointing live lords.** `process_file`
 re-resolves every NPC's archetype from bios/keywords, and the live XML carries hand-tuned

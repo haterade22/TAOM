@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -133,6 +134,15 @@ class ModuleDataQueryTests(unittest.TestCase):
         # code filter narrows
         only = self.q.validate(codes=["UNKNOWN_CULTURE"])
         self.assertTrue(all(i["code"] == "UNKNOWN_CULTURE" for i in only["issues"]))
+
+    def test_validate_checks_the_shipped_troop_baseline_for_the_repo_tree_only(self):
+        """TROOP_ID_REMOVED needs the baseline file, which describes the repo's own troops."""
+        repo_q = tq.ModuleDataQuery(tq._REPO_MODULEDATA, self.reg, [])
+        for query, want in ((repo_q, tq._SHIPPED_TROOP_IDS), (self.q, None)):
+            with mock.patch.object(tq.ts, "Validator") as validator:
+                validator.return_value.run.return_value = []
+                query.validate()
+            self.assertEqual(validator.call_args.kwargs.get("shipped_troop_ids_file"), want)
 
 
 if __name__ == "__main__":
