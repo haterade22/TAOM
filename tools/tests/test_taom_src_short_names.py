@@ -29,10 +29,12 @@ def installed():
     return bool(shutil.which("pwsh") and shutil.which("ilspycmd") and game and Path(game).is_dir())
 
 
-def run(*args, profile=None):
+def run(*args, profile=None, game=None):
     env = dict(os.environ)
     if profile:
         env["USERPROFILE"] = str(profile)
+    if game:
+        env["BANNERLORD_OVERRIDE_DIR"] = str(game)
     return subprocess.run(["pwsh", "-NoProfile", "-File", str(SCRIPT), "path", *args], capture_output=True,
                           text=True, encoding="utf-8", errors="replace", timeout=280, env=env)
 
@@ -52,6 +54,32 @@ class ModuleOrder(unittest.TestCase):
         py = re.search(r"VANILLA_MODULES = frozenset\(\{(.+?)\}\)", diff, flags=re.S)
         self.assertIsNotNone(py, "engine_body_diff.py no longer declares VANILLA_MODULES")
         self.assertEqual(set(re.findall(r"'([^']+)'", ps1.group(1))), set(re.findall(r'"([^"]+)"', py.group(1))))
+
+
+@unittest.skipUnless(shutil.which("pwsh"), "needs pwsh")
+class AnUpdateThatKeepsTheVersion(unittest.TestCase):
+    """Steam can replace every DLL and leave Version.xml alone. The old build's sources must not answer for the new one."""
+
+    def test_new_dlls_get_a_new_cache_folder_and_the_old_folder_stays(self):
+        root = Path(tempfile.mkdtemp(prefix="taom-src-test-"))
+        self.addCleanup(shutil.rmtree, root, True)
+        game = root / "game"
+        bin_dir = game / "bin" / "Win64_Shipping_Client"
+        bin_dir.mkdir(parents=True)
+        (bin_dir / "Version.xml").write_text('<Version><Singleplayer Value="v9.9.9"/></Version>', encoding="utf-8")
+        library = bin_dir / "TaleWorlds.Library.dll"
+        library.write_bytes(b"MZ")
+
+        os.utime(library, (1_700_000_000, 1_700_000_000))
+        before = version_dir(run("NoEngineTypeIsNamedThis", profile=root, game=game))
+        os.utime(library, (1_700_100_000, 1_700_100_000))
+        after = version_dir(run("NoEngineTypeIsNamedThis", profile=root, game=game))
+
+        self.assertIsNotNone(before, "the script no longer prints its cache folder")
+        self.assertIsNotNone(after, "the script no longer prints its cache folder")
+        self.assertTrue(before.name.startswith("v9.9.9"), before)
+        self.assertNotEqual(before, after, "the same version with new DLLs must not reuse the old build's sources")
+        self.assertTrue(before.is_dir(), "another session may be reading the old folder, so it stays")
 
 
 @unittest.skipUnless(installed(), "needs pwsh, ilspycmd and BANNERLORD_GAME_DIR")
