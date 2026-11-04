@@ -36,6 +36,6 @@ public static class LongDefeatMissionViews
             ViewCreator.CreateMissionSiegeEngineMarkerView(mission),
             new MissionItemContourControllerView(),
             new MissionAgentContourControllerView(),
-            new LongDefeatUnattendedView(),
+            new LongDefeatHudView(),
         };
 }

@@ -7400,6 +7400,52 @@
 
 
 
+    <string id="TAOM_LD_End_Abandoned" text="You left the fortress" />
+    <string id="TAOM_LD_End_Best" text="Best run: waves cleared {WAVES}, kills {KILLS}" />
+    <string id="TAOM_LD_End_DefendersDead" text="The garrison has fallen" />
+    <string id="TAOM_LD_End_KeepLost" text="The keep has fallen" />
+    <string id="TAOM_LD_End_Kills" text="Kills: {KILLS}" />
+    <string id="TAOM_LD_End_NoBest" text="No best run yet" />
+    <string id="TAOM_LD_End_Stalemate" text="The siege has stalled" />
+    <string id="TAOM_LD_End_TargetReached" text="The fortress held" />
+    <string id="TAOM_LD_End_Waves" text="Waves cleared: {WAVES}" />
+    <string id="TAOM_LD_Fortress_Helms" text="Helm's Deep" />
+    <string id="TAOM_LD_Hud_Attackers" text="Attackers: {COUNT}" />
+    <string id="TAOM_LD_Hud_Close" text="Close" />
+    <string id="TAOM_LD_Hud_Defenders" text="Defenders: {COUNT}" />
+    <string id="TAOM_LD_Hud_Gold" text="Gold: {GOLD}" />
+    <string id="TAOM_LD_Hud_HintOpen" text="B  Shop   H  Sound the horn and start the wave early" />
+    <string id="TAOM_LD_Hud_HintWave" text="Hold the walls. The shop opens between waves." />
+    <string id="TAOM_LD_Hud_Horn" text="Sound the horn: start the wave now for bonus gold" />
+    <string id="TAOM_LD_Hud_Keep" text="The keep is under attack" />
+    <string id="TAOM_LD_Hud_Leave" text="Return to the main menu" />
+    <string id="TAOM_LD_Hud_PackSize" text="Pack of {SIZE}" />
+    <string id="TAOM_LD_Hud_Preparation" text="Preparation" />
+    <string id="TAOM_LD_Hud_Price" text="{PRICE} gold" />
+    <string id="TAOM_LD_Hud_RunOver" text="The run is over" />
+    <string id="TAOM_LD_Hud_ShopTitle" text="Shop" />
+    <string id="TAOM_LD_Hud_Wave" text="Wave {WAVE}" />
+    <string id="TAOM_LD_Hud_WaveCleared" text="Wave {WAVE} cleared" />
+    <string id="TAOM_LD_MenuHint" text="Hold a fortress against wave after wave. Spend gold on defenders between waves and keep the keep from falling." />
+    <string id="TAOM_LD_MenuOption" text="The Long Defeat" />
+    <string id="TAOM_LD_NoClient" text="The Long Defeat needs the game client and cannot start here." />
+    <string id="TAOM_LD_NoContent" text="The Long Defeat has no fortress to defend. Check long_defeat/fortresses.json." />
+    <string id="TAOM_LD_Notice_GarrisonFull" text="The garrison is full." />
+    <string id="TAOM_LD_Notice_HornClosed" text="The horn can only sound between waves." />
+    <string id="TAOM_LD_Notice_NoGold" text="Not enough gold." />
+    <string id="TAOM_LD_Notice_RunOver" text="The run is over." />
+    <string id="TAOM_LD_Notice_ShopClosed" text="The shop is closed during a wave." />
+    <string id="TAOM_LD_Notice_UnknownOffer" text="That pack is not for sale." />
+    <string id="TAOM_LD_Offer_Axemen" text="Westfold Axemen" />
+    <string id="TAOM_LD_Offer_Bowmen" text="Eastfold Bowmen" />
+    <string id="TAOM_LD_Offer_Knights" text="King's Knights, on foot" />
+    <string id="TAOM_LD_Offer_Militia" text="Westfold Militia" />
+    <string id="TAOM_LD_Offer_Yeomen" text="Eastfold Yeomen" />
+    <string id="TAOM_LD_Prompt_Cancel" text="Cancel" />
+    <string id="TAOM_LD_Prompt_ChoiceBest" text="{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
+    <string id="TAOM_LD_Prompt_Choose" text="Choose" />
+    <string id="TAOM_LD_Prompt_Desc" text="Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+    <string id="TAOM_LD_StartFailed" text="The Long Defeat could not start. The log has the reason." />
   </strings>
 
 </base>

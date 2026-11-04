@@ -8,6 +8,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.LongDefeat;
+using TAOM.Features.LongDefeat.Autorun;
 
 namespace TAOM.Client;
 
@@ -27,7 +28,7 @@ public sealed class ClientSubModule : MBSubModuleBase
 
     private UIExtender? _uiExtender;
     private FordsAutorunDriver? _autorun;
-    private LongDefeatSpikeAutostart? _longDefeatSpike;
+    private LongDefeatAutorunDriver? _longDefeatAutorun;
     private bool _autorunResolved;
     private bool _autorunFaulted;
 
@@ -62,9 +63,9 @@ public sealed class ClientSubModule : MBSubModuleBase
         MainMenuStep.Run("fords of war final report", () => IoC.Resolve<FordsRunReport>().MainMenuReturned(), () => IoC.Resolve<IModLogger>());
     }
 
-    // The Fords of War autorun (docs/features/fords-of-war.md) and the Long Defeat spike's autostart: unarmed, which is every player session,
+    // The Fords of War autorun (docs/features/fords-of-war.md), and the Long Defeat autorun: unarmed, which is every player session,
     // this is one bool and two null checks per tick. The plan is resolved on the first tick (IoC.Configure ran in OnSubModuleLoad) and the driver only when it is armed,
-    // so an unarmed session never builds the config catalog. A fault is logged once.
+    // so an unarmed session builds no autorun driver (the Long Defeat catalog itself is built on the first menu draw, by LongDefeatMenuEntry). A fault is logged once.
     protected override void OnApplicationTick(float dt)
     {
         base.OnApplicationTick(dt);
@@ -74,11 +75,11 @@ public sealed class ClientSubModule : MBSubModuleBase
             {
                 _autorunResolved = true;
                 _autorun = FordsAutorunStart.Driver(IoC.Resolve<FordsAutorunPlan>(), IoC.Resolve<FordsAutorunDriver>, IoC.Resolve<IModLogger>());
-                _longDefeatSpike = LongDefeatSpikeAutostart.Armed(IoC.Resolve<IModLogger>(), IoC.Resolve<ILongDefeatGameManagerFactory>);
+                _longDefeatAutorun = LongDefeatAutorunStart.Driver(IoC.Resolve<LongDefeatAutorunPlan>(), IoC.Resolve<LongDefeatAutorunDriver>, IoC.Resolve<IModLogger>());
             }
 
             _autorun?.Tick(dt);
-            _longDefeatSpike?.Tick(dt);
+            _longDefeatAutorun?.Tick(dt);
         }
         catch (Exception ex)
         {
@@ -88,7 +89,7 @@ public sealed class ClientSubModule : MBSubModuleBase
             _autorunFaulted = true;
             try
             {
-                IoC.Resolve<IModLogger>().LogError($"[FordsOfWar][Autorun] the autorun tick failed (further failures are not logged): {ex}");
+                IoC.Resolve<IModLogger>().LogError($"[Autorun] an autorun tick failed (Fords of War or Long Defeat) (further failures are not logged): {ex}");
             }
             catch
             {

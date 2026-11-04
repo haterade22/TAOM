@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- The Long Defeat HUD (#1079), bound to LongDefeatHudVM. The player has an agent, so this layer takes no events and no cursor: a top
+         centre strip (wave, clock, gold, the two head counts), the keep bar under it while attackers hold the keep zone, the last notice,
+         and a hint line at the bottom. No static text is written here: every Text is a binding, so each line is a registered TAOM_LD_ key
+         (LongDefeatHudStringsTests). The movie root carries no DataSource (a root DataSource is never read). -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="4"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="14" MarginRight="14" MarginTop="4" MarginBottom="6"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#E9B84AFF"
+                            Text="@WaveText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="80" MarginRight="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
+                            Text="@TimerText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                            Text="@GoldText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#E5533DFF"
+                            Text="@AttackersText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#CCCCCCFF"
+                            Text="@DefendersText" DoNotAcceptEvents="true" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+
+        <!-- The keep bar: only while attackers are taking the keep zone. -->
+        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="52"
+                   StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsKeepVisible" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
+                        Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FF8A70FF"
+                        Text="@KeepText" DoNotAcceptEvents="true" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="10" MarginTop="2"
+                    Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@KeepFillWidth"
+                        HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#E5533DFF" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+          </Children>
+        </ListPanel>
+
+        <!-- The last refusal. -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="96"
+                    Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#FF9A7AFF"
+                    Text="@NoticeText" DoNotAcceptEvents="true" />
+
+        <!-- The key hint, low centre, clear of the order bar. -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150"
+                    Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                    Text="@HintText" DoNotAcceptEvents="true" />
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

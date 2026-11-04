@@ -1,6 +1,4 @@
 using TAOM.Core.Logging;
-using TAOM.Features.LongDefeat.Spike;
-using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.LongDefeat;
 
@@ -14,9 +12,9 @@ internal sealed class NullLongDefeatGameManagerFactory : ILongDefeatGameManagerF
         _logger = logger;
     }
 
-    public MBGameManager? Create(LongDefeatSpikeOptions options)
+    public bool Start(LongDefeatSetup setup)
     {
         _logger.LogInfo("[LongDefeat] no client game manager factory is registered (TAOM.Client is absent); nothing loads");
-        return null;
+        return false;
     }
 }
