@@ -1,6 +1,6 @@
 # Bannerlord animation system map: from the Modding Kit to an agent's pose
 
-> **Engine and date:** Bannerlord v1.5.3 (`.claude/pinned-game-version.txt`), read on 2026-09-26.
+> **Engine and date:** Bannerlord v1.5.3 (the pin on 2026-09-26; `.claude/pinned-game-version.txt` now reads v1.5.6), read on 2026-09-26.
 >
 > **Binaries:** the client `bin/Win64_Shipping_Client/TaleWorlds.Native.dll` (14,209,376 bytes, dated 2026-09-15,
 > SHA-256 prefix `45be32c57c451f78`) and the Modding Kit's `bin/Win64_Shipping_wEditor/TaleWorlds.Native.dll`
@@ -674,7 +674,8 @@ not measured by TAOM; review [adopt-mithrilforge-2026-09-29.md](../reviews/adopt
   [scripted-melee-strikes.md](scripted-melee-strikes.md).
 - **A module's XSLT sees only the modules loaded before it**: `CreateMergedXmlFile` applies module i's stylesheet,
   then merges its XML, which fits the merge order above. MithrilForge orders loading with an optional
-  `DependedModule`; TAOM never adds `DependedModule` rows, so check the load order instead.
+  `DependedModule`; TAOM's `Main/_Module/SubModule.xml` lists `DependedModule` rows only for TAOM.Dependencies, Native,
+  SandBoxCore, Sandbox and CustomBattle, none for the Armory or TAOM_Map, so check the load order instead.
 - Select action sets by feature (skeleton, movement system), never by id: a race module's root set (LOTRLOME's
   dwarves) need not derive from `as_human_warrior`.
 
@@ -789,8 +790,9 @@ from managed, 0x6E1BD0; v1.5.5 `SetActionChannel` 0x6E2300 writes `+0x2A` = 0 an
 | `Agent.GetCurrentAnimationFlag` | 0x6E1990 -> 0x605F90 | effective flags |
 
 Vanilla managed callers include the crosshair reload phases (Param 2 and the continue chain), NavalDLC machines (Param
-1, the blend partner, displacement) and `SettlementVisual`'s siege timings (Param 1). Nothing in TAOM's `Main/` calls
-these getters (R-Fields grep).
+1, the blend partner, displacement) and `SettlementVisual`'s siege timings (Param 1). Nothing in TAOM's `Main/` called
+these getters on 2026-09-26 (R-Fields grep). Since then `Main/Adapters/AnimVarietyAdapter.cs` calls
+`MBActionSet.GetActionAnimationDuration` and `GetActionBlendOutStartProgress` for the `[AnimVariety]` probe.
 
 **TAOM's own requests.** `TrollBruteForceCombat.StartFlags` passes `amf_priority_reload | anf_enforce_all |
 anf_lock_movement` as additional flags: the priority byte 60 replaces the clip's priority for the channel's lifetime,
@@ -854,7 +856,7 @@ but a mid-walk call likely pops [Likely]. The managed `Agent.SetActionSet` also 
 
 | Symptom | Cause | Doc | Gate | Gap |
 |---|---|---|---|---|
-| AV at `+0x6590B9` (v1.5.5: `+0x659879`) reading 0x8 to 0x50 (0x8 observed) on the first swing or blocked recoil | A release or blocked clip with no melee-table row, or an action the set does not bind (-1) reaching 0x659030 through 0x6825C0 or 0x683290 [Certain] | Section 3; [troll-race.md](../features/troll-race.md) "The swing CTD"; lessons, "A melee release bound to a custom clip crashes the first swing" | `bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`, unit tested); `wire_hill_troll_race.py --check`; `set_clip_balance_name.py --check` (all three in commit `30abf550`) | Covers `as_hill_troll_*` only, with no general gate. R-Life found the rule-0 and `--check` logic failing any `anim_*` clip on a release or blocked code; the versions edited at 14:11 and 14:12 read the packages (`set_clip_balance_name.keyed_clips`) and accept a self-keyed clip, and since the evening of 2026-09-26 only one whose RDC stamp also matches its checksum [Certain for the code; the gates' unit tests not run here]. Only `/armory-audit` lists the `--check` as a step after an Armory sync; nothing runs it automatically |
+| AV at `+0x6590B9` (v1.5.5: `+0x659879`) reading 0x8 to 0x50 (0x8 observed) on the first swing or blocked recoil | A release or blocked clip with no melee-table row, or an action the set does not bind (-1) reaching 0x659030 through 0x6825C0 or 0x683290 [Certain] | Section 3; [troll-race.md](../features/troll-race.md) "The swing CTD"; lessons, "A melee release bound to a custom clip crashes the first swing" | `bind_hill_troll_action_set.py` rule 0 (`MELEE_TABLE`, unit tested); `wire_hill_troll_race.py --check`; `set_clip_balance_name.py --check` (all three in commit `30abf550`) | Covers `as_hill_troll_*` only, with no general gate. R-Life found the rule-0 and `--check` logic failing any `anim_*` clip on a release or blocked code; the versions edited at 14:11 and 14:12 read the packages (`set_clip_balance_name.keyed_clips`) and accept a self-keyed clip, and since the evening of 2026-09-26 only one whose RDC stamp also matches its checksum [Certain for the code; the gates' unit tests not run here]. On 2026-11-03 `/armory-audit` runs `wire_hill_troll_race.py --check` itself (`COMPANION_CHECKS` in `tools/audit_armory_refs.py`) and `tools/data_gates.py` lists it as the `troll-wiring` gate; `set_clip_balance_name.py --check` is in neither, and no commit hook or build runs either |
 | AV at `+0x57070C` about a second into deployment | A race head, eye or mouth on LOD0 with no face morph channels: the Kit writes an empty morph record, and 0x570550's null check covers only the record pointer, not its buffer [Certain] | troll-race.md "Face morph channels"; [armory-guide.md](armory-guide.md) "Only LOD0 carries morphs" | `check_race_morph_channels.py` | Its spec covers only the hill troll and dwarf f1 FBX sources, not compiled tpacs |
 | Null read at `+0x18`, `+8` or `+0x2C` while a clip plays | A flag without its usage: `displace_position` without displacement (0x655E9C, 0x49DEF8); `align_with_ground` without blend (0x65868D); `spawn_particle` without particle (0x65658B or 0x6565AC); `switch_item_between_hands` without hand_switch (0x6C6230) [Certain from the code; not reproduced] | Section 5 | none; the installed clips pass a one-off scratch check | No committed gate |
 | AV in a mount context at `+8`, `+0xC` or `+0x10` | A horse movement-table clip without `quad_movement`: 10 unchecked sites, one reachable through `WalkingSpeedLimitOfMountable` (0x6E4C80, `+0x10`) [Certain for the sites] | [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) Phase 1 and "The ways a re-export breaks a working mount" | `verify_mount_assets.py` CHECK 2 | Only the creatures in its config. The 1.5.3 crash offset has not been observed (R-Life) |

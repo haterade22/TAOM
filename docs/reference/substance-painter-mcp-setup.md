@@ -35,7 +35,7 @@ to it and returns JSON. The MCP server itself speaks stdio only (no listening so
 | Server package | `C:\Users\mikew\substance_painter_mcp\` | Copied from the purchased v1.2.1 archive (kept off the E: asset folder). `uv` builds its `.venv` here on first run. |
 | MCP registration | `C:\Users\mikew\.claude.json` → `projects["E:/repos/TAOM"].mcpServers."substance-painter"` (the key's case matters: [mcp-servers.md](mcp-servers.md)) | Machine-local, sibling to `blender`. `uv run --directory … painter-mcp --mode full`. **Not** in the repo: no `.mcp.json` / `settings.local.json` change. |
 | Painter launcher | `C:\Users\mikew\substance_painter_mcp\launch-painter-remote.bat` | Starts Painter with `--enable-remote-scripting`. |
-| Painter | `C:\Program Files\Adobe\Adobe Substance 3D Painter\` | v12.1.5 (the exe's ProductVersion, 2026-10-16; this page was first written on 12.0.3), standalone Adobe install. |
+| Painter | `C:\Program Files\Adobe\Adobe Substance 3D Painter\` | v12.2.0 (the exe's ProductVersion, 2026-11-03; 12.1.5 on 2026-10-16; this page was first written on 12.0.3), standalone Adobe install. |
 
 ## Using it
 
@@ -68,7 +68,7 @@ emission) for what was painted.
 
 ## Painter 12.1.5 API traps (found 2026-10-16)
 
-The installed Painter is 12.1.5 (on disk since 2026-09-15); the 12.0.3 named elsewhere on this page
+These traps were found on 12.1.5 (on disk since 2026-09-15) and are not rechecked on the installed 12.2.0; the 12.0.3 named elsewhere on this page
 is the version the MCP server's local fixes were made against.
 
 | Symptom | Cause | Fix |
