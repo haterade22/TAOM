@@ -312,26 +312,105 @@ public class PrefabAttributeNameBindingTests
         var files = Directory.GetFiles(repoDir, "*.xml", SearchOption.AllDirectories);
         Assert.IsTrue(files.Length > 0, "No TAOM prefabs found; the gate is not reading the tree.");
 
-        var orphans = new List<string>();
+        var problems = new List<string>();
         foreach (var file in files.OrderBy(f => f, StringComparer.Ordinal))
         {
-            // XDocument drops comments, so a widget commented out of its prefab does not name a definition.
-            var doc = XDocument.Load(file, LoadOptions.SetLineInfo);
-            var named = new HashSet<string>(
-                doc.Descendants().Where(e => e.Name.LocalName != "VisualDefinition")
-                    .Select(e => (string)e.Attribute("VisualDefinition")).Where(n => n != null),
-                StringComparer.Ordinal);
-            foreach (var definition in doc.Descendants().Where(e => e.Name.LocalName == "VisualDefinition"))
-            {
-                var name = (string)definition.Attribute("Name");
-                if (!named.Contains(name))
-                    orphans.Add($"{file.Substring(repoDir.Length + 1).Replace('\\', '/')}:{((IXmlLineInfo)definition).LineNumber} {name}");
-            }
+            var rel = file.Substring(repoDir.Length + 1).Replace('\\', '/');
+            problems.AddRange(VisualDefinitionProblems(XDocument.Load(file, LoadOptions.SetLineInfo), rel));
         }
 
-        Assert.AreEqual(0, orphans.Count,
-            "These VisualDefinitions are named by no widget in their own prefab, so they never run. Delete them "
-            + "(and any Constant only they read): " + Environment.NewLine + string.Join(Environment.NewLine, orphans));
+        Assert.AreEqual(0, problems.Count,
+            "A VisualDefinition named by no widget in its own prefab never runs: delete it (and any Constant only it "
+            + "reads). A widget naming a definition its prefab does not hold throws at movie load: add the "
+            + "definition or fix the name: " + Environment.NewLine + string.Join(Environment.NewLine, problems));
+    }
+
+    /// <summary>
+    /// The VisualDefinition problems of one prefab: a definition no widget names, and a widget naming a definition
+    /// the prefab does not hold. Only elements outside <c>VisualDefinitions</c> count as widgets: a
+    /// <c>VisualState</c> inside a definition carrying its own name does not keep it alive. XDocument drops
+    /// comments, so a widget commented out of its prefab names nothing.
+    /// </summary>
+    private static List<string> VisualDefinitionProblems(XDocument doc, string rel)
+    {
+        bool InsideDefinitions(XElement e) => e.AncestorsAndSelf().Any(a => a.Name.LocalName == "VisualDefinitions");
+        var widgets = doc.Descendants().Where(e => !InsideDefinitions(e) && e.Attribute("VisualDefinition") != null).ToList();
+        var named = new HashSet<string>(widgets.Select(e => (string)e.Attribute("VisualDefinition")), StringComparer.Ordinal);
+        var definitions = doc.Descendants().Where(e => e.Name.LocalName == "VisualDefinition").ToList();
+        var defined = new HashSet<string>(definitions.Select(d => (string)d.Attribute("Name")).Where(n => n != null), StringComparer.Ordinal);
+
+        var problems = new List<string>();
+        foreach (var definition in definitions)
+        {
+            var name = (string)definition.Attribute("Name");
+            if (!named.Contains(name))
+                problems.Add($"{rel}:{((IXmlLineInfo)definition).LineNumber} VisualDefinition '{name}' is named by no widget");
+        }
+        foreach (var widget in widgets)
+        {
+            var name = (string)widget.Attribute("VisualDefinition");
+            if (!defined.Contains(name))
+                problems.Add($"{rel}:{((IXmlLineInfo)widget).LineNumber} <{widget.Name.LocalName}> names VisualDefinition '{name}', which its prefab does not hold");
+        }
+        return problems;
+    }
+
+    private const string PrefabWithOneUnusedDefinition =
+        "<Prefab><Window>"
+        + "<VisualDefinitions>"
+        + "<VisualDefinition Name=\"Used\"><VisualState State=\"Default\" /></VisualDefinition>"
+        + "<VisualDefinition Name=\"Unused\"><VisualState State=\"Default\" VisualDefinition=\"Unused\" /></VisualDefinition>"
+        + "</VisualDefinitions>"
+        + "<Widgets><Widget VisualDefinition=\"Used\" /></Widgets>"
+        + "</Window></Prefab>";
+
+    [TestMethod]
+    public void VisualDefinitionProblems_ANameOnlyAStateInsideAnUnusedDefinitionCarries_IsStillUnused()
+    {
+        var problems = VisualDefinitionProblems(XDocument.Parse(PrefabWithOneUnusedDefinition, LoadOptions.SetLineInfo), "a.xml");
+
+        Assert.AreEqual(1, problems.Count, string.Join("; ", problems));
+        StringAssert.Contains(problems[0], "Unused");
+        StringAssert.Contains(problems[0], "named by no widget");
+    }
+
+    [TestMethod]
+    public void VisualDefinitionProblems_AWidgetNamingADefinitionThePrefabLacks_IsReported()
+    {
+        // WidgetExtensions.SetWidgetAttributeFromStringAux indexes visualDefinitionTemplates[value] with no guard,
+        // so the movie fails to load.
+        var problems = VisualDefinitionProblems(XDocument.Parse(
+            PrefabWithOneUnusedDefinition.Replace("<Widget VisualDefinition=\"Used\" />",
+                "<Widget VisualDefinition=\"Used\" /><Widget VisualDefinition=\"Missing\" />")
+            .Replace("<VisualDefinition Name=\"Unused\"><VisualState State=\"Default\" VisualDefinition=\"Unused\" /></VisualDefinition>", ""),
+            LoadOptions.SetLineInfo), "a.xml");
+
+        Assert.AreEqual(1, problems.Count, string.Join("; ", problems));
+        StringAssert.Contains(problems[0], "Missing");
+        StringAssert.Contains(problems[0], "does not hold");
+    }
+
+    [TestMethod]
+    public void VisualDefinitionProblems_ACommentedOutWidget_DoesNotCount()
+    {
+        var problems = VisualDefinitionProblems(XDocument.Parse(
+            "<Prefab><Window><VisualDefinitions><VisualDefinition Name=\"A\" /></VisualDefinitions>"
+            + "<Widgets><!-- <Widget VisualDefinition=\"A\" /> --></Widgets></Window></Prefab>",
+            LoadOptions.SetLineInfo), "a.xml");
+
+        Assert.AreEqual(1, problems.Count, string.Join("; ", problems));
+        StringAssert.Contains(problems[0], "named by no widget");
+    }
+
+    [TestMethod]
+    public void VisualDefinitionProblems_EveryDefinitionUsedAndEveryNameDefined_IsClean()
+    {
+        var problems = VisualDefinitionProblems(XDocument.Parse(
+            "<Prefab><Window><VisualDefinitions><VisualDefinition Name=\"A\" /></VisualDefinitions>"
+            + "<Widgets><Widget VisualDefinition=\"A\" /></Widgets></Window></Prefab>",
+            LoadOptions.SetLineInfo), "a.xml");
+
+        Assert.AreEqual(0, problems.Count, string.Join("; ", problems));
     }
 
     private sealed class BadUse

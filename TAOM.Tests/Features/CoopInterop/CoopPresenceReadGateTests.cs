@@ -20,7 +20,7 @@ namespace TAOM.Tests.Features.CoopInterop;
 public class CoopPresenceReadGateTests
 {
     private static readonly Regex PresenceRead =
-        new(@"\.IsCoopActive\b|\bCoopPresence\.IsActive\b", RegexOptions.Compiled);
+        new(@"\.\s*IsCoopActive\b|\bCoopPresence\s*\.\s*IsActive\b", RegexOptions.Compiled);
 
     /// <summary>Repo-relative file (forward slashes) to the reason its presence read is the right predicate.</summary>
     private static readonly Dictionary<string, string> Allowed = new(StringComparer.OrdinalIgnoreCase)
@@ -45,11 +45,38 @@ public class CoopPresenceReadGateTests
 
     private static bool MentionsPresenceOutsideComments(string path)
     {
-        var text = File.ReadAllText(path);
+        return ReadsPresence(File.ReadAllText(path));
+    }
+
+    /// <summary>The literal prefilter keeps the whole-tree scan cheap; it names no dot, because C# allows
+    /// whitespace around one (<c>CoopPresence . IsActive</c>) and the regex decides.</summary>
+    private static bool ReadsPresence(string text)
+    {
         if (text.IndexOf("IsCoopActive", StringComparison.Ordinal) < 0
-            && text.IndexOf("CoopPresence.IsActive", StringComparison.Ordinal) < 0)
+            && text.IndexOf("CoopPresence", StringComparison.Ordinal) < 0)
             return false;
         return PresenceRead.IsMatch(StripComments(text));
+    }
+
+    [TestMethod]
+    public void ReadsPresence_LegalWhitespaceAroundTheDot_StillMatches()
+    {
+        Assert.IsTrue(ReadsPresence("var a = CoopPresence . IsActive;"));
+        Assert.IsTrue(ReadsPresence("var a = CoopPresence\r\n    .IsActive;"));
+        Assert.IsTrue(ReadsPresence("var a = presence. IsCoopActive;"));
+        Assert.IsTrue(ReadsPresence("var a = presence\r\n    . IsCoopActive;"));
+        Assert.IsTrue(ReadsPresence("var a = presence.IsCoopActive;"));
+        Assert.IsTrue(ReadsPresence("var a = CoopPresence.IsActive;"));
+    }
+
+    [TestMethod]
+    public void ReadsPresence_CommentsAndOtherMembers_DoNotMatch()
+    {
+        Assert.IsFalse(ReadsPresence("// presence . IsCoopActive"));
+        Assert.IsFalse(ReadsPresence("/* CoopPresence . IsActive */"));
+        Assert.IsFalse(ReadsPresence("var a = CoopPresence.IsActiveNow;"));
+        Assert.IsFalse(ReadsPresence("var a = presence.IsCoopActiveLater;"));
+        Assert.IsFalse(ReadsPresence("var a = OtherPresence.IsActive;"));
     }
 
     [TestMethod]
