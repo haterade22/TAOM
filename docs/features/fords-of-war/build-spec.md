@@ -1,5 +1,7 @@
 # Fords of War: build specification
 
+> **Status (2026-11-03): history, not the current description.** This is the design written before the build, and its Deviations stop at 2026-10-31. [fords-of-war.md](../fords-of-war.md) describes the mode as the code and data stand now, and `match.json` and `factions.json` hold the shipped numbers. Read the rule in the next paragraph ("fix the code") as superseded: the code and fords-of-war.md win. Differences that matter: lanes have four orders (Seize was added), not three; neutral camps are built (section 9 calls them Phase 3); there are 13 factions, not 4, with feats, traits, army upgrades, poison, a free hero every 5 minutes and a match speed control; section 5 lists an assault threshold of 40 and AI hero reserves of 200, 300 and 400, which ship as 70 and 600, 800 and 1000; and free-wave tiers are not always at minutes 0, 10 and 20.
+
 This is the contract every build stage follows. It pins names, signatures, folders and default
 numbers so that stages written by different agents fit together. When code and this file disagree,
 fix the code, or record the change in the section "Deviations" at the end with the reason.

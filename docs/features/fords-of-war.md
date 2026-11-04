@@ -4,13 +4,14 @@
 
 Fords of War is a campaign-free, single-player mission mode started from the main menu. Two sides,
 West (the player) and East (an AI), face each other across 3 lanes. The player has no agent: they are a
-commander with a free top-down camera and a command panel, spend gold on packs of troops and on heroes,
-give each lane a Push, Hold or Fall back order, and win by destroying the enemy keep. Each side owns a
+commander with a free top-down camera and a command panel, spend gold on packs of troops, on heroes and on army upgrades,
+give each lane a Push, Hold, Fall back or Seize order, and win by destroying the enemy keep. Each side owns a
 chain of towers per lane that shoots back, and the target length of a match is 30 to 45 minutes.
 
-The full build contract, with every signature and the stage-by-stage Deviations, is
-[fords-of-war/build-spec.md](fords-of-war/build-spec.md). This page is the maintainer's map: what exists,
-what the numbers mean, how to check it in game and where to change it.
+The original build contract, written before the build, with its stage-by-stage Deviations up to 2026-10-31, is
+[fords-of-war/build-spec.md](fords-of-war/build-spec.md). It is history: where it differs from this page, the code and this page win. This page is the maintainer's map: what exists,
+what the numbers mean, how to check it in game and where to change it. What each match showed, and what changed because of it, is in
+[fords-of-war/balance-log.md](fords-of-war/balance-log.md).
 
 ## Why This Exists
 
@@ -59,13 +60,13 @@ what the numbers mean, how to check it in game and where to change it.
   `MatchView`, the four commands, `AddGold` (console), a cached name lookup, the event feed and the
   camera numbers. The director fills it at mission start and clears it at mission end; every member
   takes the director's gate.
-- **Director and three adapters.** `FordsMissionDirector` builds the layout, towers and match, then each
+- **Director and four adapters.** `FordsMissionDirector` builds the layout, towers and match, then each
   tick samples the field, runs `match.Tick` and applies the effects: spawns within the per-tick budget,
   a lane order only when it differs from the last one applied, tower volleys, regeneration, the winner.
-  It reaches the engine through three mission-scoped adapters (they hold the `Mission`, so they are not
+  It reaches the engine through four mission-scoped adapters (they hold the `Mission`, so they are not
   IoC singletons; the mission logic builds them): `FordsBattlefieldAdapter` (spawn, orders, samples),
-  `FordsTowerAdapter` (tower entities, gunners, volleys) and `FordsSceneAdapter` (bases, ground and
-  navmesh snapping, tagged layouts).
+  `FordsTowerAdapter` (tower entities, gunners, volleys), `FordsSceneAdapter` (bases, ground and
+  navmesh snapping, tagged layouts) and `FordsCampAdapter` (neutral camps; the battlefield adapter makes it through `NewCampAdapter`).
 - **Patch131.** `Patch131_FordsOfWar` (`FordsOfWarModule.PatchCategory`, `ApplyPhase.FirstMission`) is
   one prefix, `FordsTowerHitPatch`, on `DestructableComponent.OnHit`. It hands the blow to
   `IFordsTowerHitHook` (the director) and writes back the damage the match allows. A component that is
@@ -134,7 +135,7 @@ match.json / factions.json / maps.json        Main menu "Fords of War"      taom
 
 Three files in `Main/_Module/ModuleData/fords_of_war/`. `FordsConfigCatalog` reads each once per
 process and never throws: a bad number reverts to its default with one warning naming the key, a bad
-unit, hero, free-wave tier or scene is skipped with one warning, and a missing file gives the built-in
+unit, hero, free-wave tier, upgrade or scene is skipped with one warning, and a missing file gives the built-in
 default (`FordsMatchConfig.Default`), no factions or no maps. The main-menu option hides itself while
 factions or maps are empty.
 
@@ -188,6 +189,7 @@ per record. Names are camelCase.
 | `lanes.assaultThreshold` | int | Live units the AI gathers in its assault lane before it pushes; 70 since 2026-11-01, when a 45-minute AI match at 40 never got enough units to a tower and one at 70 did (runs 20261101-143718 and -152949) | 70 |
 | `capture.radius` | float | Metres around a capture point that count units | 12 |
 | `capture.secondsToCapture` | float | Seconds for one side alone to take a point | 20 |
+| `upgrades[]` | list | The army upgrade tracks. Each has `id`, `name`, `effect` (`MeleeDamage`, `MissileDamage`, `MeleeArmour`, `MissileArmour`, `SiegeDamage` or `Fortify`), `step` (the change per level) and `prices` (gold per level, one entry per level). A missing or empty list gives the shipped defaults | six tracks of three levels at 300, 600 and 1000; step 0.1 for melee damage, missile damage and fortify, 0.08 for the two armours, 0.15 for siegecraft |
 | `aiProfiles.<id>.decisionIntervalSeconds` | float | Seconds between AI decisions | easy 12, normal 8, hard 5 |
 | `aiProfiles.<id>.incomeMultiplier` | float | Applied to the AI slot's passive income only, not to bounties | easy 0.8, normal 1.0, hard 1.2 |
 | `aiProfiles.<id>.mistakeChance` | float | Chance the AI skips a decision | easy 0.25, normal 0.1, hard 0.0 |
@@ -207,6 +209,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | `scenes[].layout` | string | `generated` (from the scene boundary) or `tags` (read the markers of a hand-built scene); an unknown value skips the scene |
 | `scenes[].options`, `towerPrefab`, `keepPrefab`, `camp` | object | Optional per-scene overrides of the defaults |
 | `scenes[].towerHalfWidth` | number, 0 to 50 | Default 0. Set only for a tags scene whose towers are real entities with a body: the half width of a tower in metres. Melee contact with a tower then counts within that plus 2.5 m (4 m without it), the tower entity gets a damage component at match start instead of a barricade, the fitter keeps it where it stands, and the map has no ground garrison. Out of range or not a number reverts to 0 with one warning |
+| `scenes[].laneFaceIds` | list of ints | Optional, for a tags scene. One navmesh face group id per lane (distinct positive integers): `LaneFaceBars` bars each lane's units and mounts from the other lanes' groups. A bad list, or one that needs more exclusion sets than the engine holds (6), gives the map no lane bars and logs one warning |
 
 ### Config File: `factions.json`
 
@@ -224,6 +227,9 @@ A file may override one profile or add a new name; a new profile starts from nor
 | `units[].price` | int | Optional explicit pack price that overrides `level` |
 | `heroes[].id`, `price` | string, int | NPCCharacter id and gold price |
 | `freeWaves[].fromMinute`, `units[]` | float, list | Tier that applies from that match minute; each unit is `troop` and `count` |
+| `feats`, `traits`, `upgradeCost`, `aiBuyCycle` | object, list, object, list | The faction's feats (see Factions), the strength and weakness lines the panel shows, price factors per upgrade track, and the AI's repeating buy order |
+| `rotation` | object | Call of the Regions (Gondor): `seconds`, `callFee` and `regions[]`, each with its own `units[]` |
+| `creatures` | object | The creature call: `cooldownSeconds` and `units[]`, with the same fields as the offers |
 
 ### Current Values
 
@@ -253,7 +259,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 **Maps** (three lanes, in this order): `taom_rohan_battle_002_forceatmo` (Rohan Plains II, the
 default: the first entry is the scene of a `taom.fords_start` with no scene argument),
 `taom_gondor_pelennor_fields_forceatmo`, `taom_mordor_battle_001_forceatmo` and `taom_rohan_battle_001_forceatmo`
-(Rohan Plains I), all `"layout": "generated"`, then `taom_fords_01_forceatmo` (`"layout": "tags"`, named by the key
+(listed as "Rohan Plains" in `maps.json`, called Rohan Plains I here), all `"layout": "generated"`, then `taom_fords_01_forceatmo` (`"layout": "tags"`, `towerHalfWidth` 5.5, `laneFaceIds` 1, 2 and 3, named by the key
 `TAOM_FOW_Map_Fords01`, "[Fords] Fords of War", last so it never becomes the default). Rohan Plains II is the scene the
 2026-10-31 fit result below was measured on; the other three generated maps have no recorded in-game fit since the fitter was
 rewritten. On `taom_fords_01_forceatmo` the director also logs two info lines every 30 mission seconds, fed by a 1 Hz look and read by
@@ -267,14 +273,23 @@ is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a 
 
 | Faction | Culture | Offers | Heroes |
 |---|---|---|---|
-| `gondor` | `gondor` | 9 | Imrahil `lord_1_9` 1000, Boromir `lord_1_75` 900, Faramir `lord_1_34` 800 |
-| `rohan` | `vlandia` | 9 | Theoden `lord_4_1` 1000, Eomer `lord_4_3_1` 900, Erkenbrand `lord_4_16` 800 |
-| `mordor` | `mordor` | 10, with `hill_troll` as the Siege unit | Sauron `lord_1_17` 2400, the Witch-King `lord_1_15` 1600, Nazgul `lord_1_48_1` 1000 |
-| `isengard` | `isengard` | 10, with `hill_troll` as the Siege unit | Saruman `lord_I1_0` 2000, Lurtz `lord_I4_1` 1000, Ugluk `lord_I1_1` 900 |
+| `gondor` | `gondor` | 2 always on (militia spears and archers), plus 12 regional bands of 4 | Imrahil `lord_1_9` 1000, Boromir `lord_1_75` 900, Faramir `lord_1_34` 800 |
+| `rohan` | `vlandia` | 8 | Theoden `lord_4_1` 1000, Eomer `lord_4_3_1` 900, Erkenbrand `lord_4_16` 800 |
+| `mordor` | `mordor` | 8, plus 4 creatures (warg raiders, goblin spider riders, hill troll, cave troll) | Sauron `lord_1_17` 2400, the Witch-King `lord_1_15` 1600, Nazgul `lord_1_48_1` 1000 |
+| `isengard` | `isengard` | 8, with `hill_troll` as the Siege unit | Saruman `lord_I1_0` 2000, Lurtz `lord_I4_1` 1000, Ugluk `lord_I1_1` 900 |
+| `rivendell` | `rivendell` | 5 | `lord_R1_1` 2400, `lord_R2_1` 1800, `lord_R1_3` 1000 |
+| `erebor` | `erebor` | 8 | `lord_E1_1` 2000, `lord_E1_2` 1200, `lord_E1_5` 900 |
+| `harad` | `aserai` | 8, plus 2 beasts (war elephant, mumak) | `lord_A9_u` 1400, `lord_3_3_1` 1000, `lord_A9_l` 800 |
+| `gundabad` | `gundabad` | 8 | `lord_G1_1` 1400, `lord_G1_2` 1000, `lord_G1_3` 800 |
+| `dale` | `sturgia` | 8 | `lord_2_7_1` 1400, `lord_S9_u` 1000, `lord_S9_l` 800 |
+| `dolguldur` | `dolguldur` | 8, plus 2 creatures (spider riders, fell wargs) | `lord_D1_2` 1400, `lord_D1_4` 1000, `lord_D1_5` 800 |
+| `easterlings` | `khuzait` | 8 | `lord_K8_u` 1400, `lord_K9_l` 1000, `lord_6_25` 800 |
+| `umbar` | `umbar` | 8 | `lord_U1_1` 1400, `lord_U2_1` 1000, `lord_U3_1` 800 |
+| `mirkwood` | `mirkwood` | 5 | `lord_M1_1` 2200, `lord_M1_11` 1600, `lord_M1_3` 900 |
 
-Gondor and Rohan have no siege unit. Each faction has free-wave tiers at minutes 0, 10 and 20. Hero
-prices and pack sizes are first guesses for the balance pass. `cave_troll` is not used: its weight row in
-`troop_weights.xml` is commented out. Decks are ordered so that the two dearest offers fall within F1 to
+Only Isengard sells a Siege unit; Mordor's trolls come through its creature call. Most factions have free-wave tiers at minutes 0, 10 and 20;
+Isengard's step up every 5 minutes (0, 5, 10, 15 and 20) and Gundabad has one tier. Hero
+prices and pack sizes are first guesses for the balance pass. Decks are ordered so that the two dearest offers fall within F1 to
 F8.
 
 ## Lane rules
@@ -332,12 +347,12 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot; 40% less damage to towers | `unitCapBonus` 100, `waveInterval` 0.75, `damageToTowers` 0.6 | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
-| Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150 | None yet |
+| Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150, `waveInterval` 1.5 | None yet |
 | Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |
-| Harad | Saves gold for one great beast at a time, then guards it | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
+| Harad | Saves gold for one great beast at a time, then guards it; poisoned arrows | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85, `poisonPerSecond` 3, `poisonSeconds` 8 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
 | Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
 | Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows) | None yet |
-| Dol Guldur | Walks under slowed towers; calls spiders and fell wargs | Less income | `enemyTowerFireRate` 0.75 (The Shadow), `income` 0.85 | Creature call on a 45 s timer |
+| Dol Guldur | Walks under slowed towers; calls spiders and fell wargs; venomed arrows | Less income | `enemyTowerFireRate` 0.75 (The Shadow), `income` 0.85, `poisonPerSecond` 2, `poisonSeconds` 6 | Creature call on a 45 s timer |
 | Easterlings | Answers the enemy fastest with a mixed army of horse archers and iron legions | Weaker tower fire | `orderCooldown` 0.5 (Discipline), `towerFireRate` 0.85 | None yet |
 | Umbar | Gets rich from the map: raids camps and holds capture points | Less income; no troop above level 31 | `campReward` 3, `captureIncome` 2 (Plunder), `bounty` 1.25, `income` 0.8 | None yet |
 | Mirkwood | Holds at range with the finest archers (skills x1.2) | 150 troops and only five offers; elk riders are its only cavalry | `towerRange` 1.5 (Far Sight), `unitCapBonus` -150 | None yet |
@@ -361,8 +376,8 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
   names the next region. `callFee` (150 gold) shows a chosen region at once and restarts the timer (key R opens the list). The region already showing costs nothing.
   The AI buys from whatever is showing and does not pay the fee.
 - **Creature call** (`creatures`, `FordsMatch.TryCallCreature`): the commander picks a creature (keys G, B, N, M) and pays for it, which queues it in the selected lane like
-  a bought pack and starts one shared timer of `cooldownSeconds` (30). The list starts with warg riders, goblin spider riders, a hill troll and an armored cave troll. The spider
-  is the ridden one: a free-roaming spider only works as a campaign bandit today (`creature-bandits.md`). The AI calls the dearest creature its gold reaches whenever the timer is ready.
+  a bought pack and starts one shared timer of `cooldownSeconds` (Mordor 30, Dol Guldur 45, Harad 120). Mordor's list is warg riders, goblin spider riders, a hill troll and an armored cave troll, Dol Guldur's spider riders and fell wargs, Harad's a war elephant and a mumak. The spider
+  is the ridden one: a free-roaming spider only works as a campaign bandit today (`creature-bandits.md`). The AI calls a creature only from a `beast:` entry in its `aiBuyCycle`.
 
 ## The roster
 
@@ -391,6 +406,8 @@ up), and took the spear off the King's Riders so they fight with sword and shiel
 | Battle board, bottom left | One row per lane that also selects it: tower bars from West's inner to East's inner, order, unit counts. Then capture points and camps | One place for the state of the battle; the row scopes the buy grid and the orders |
 | Command deck, bottom centre | The faction's mechanic row, gold and income, a fixed 4 by 2 buy grid (F1 to F8), 2 by 2 orders (Z X C V) | Slots never move, so key position equals button position |
 | Heroes, bottom right | One button per hero: state and what it costs | High value and rarely pressed |
+| Upgrades, right, above the heroes | Six upgrade tracks with level and price (Shift+F1 to F6 buys); key U shows or hides it | A purchase for the whole army, hidden when it is not wanted |
+| Speed button, top left | The match speed (1x, 2x, 4x or 10x); a click or key T steps to the next | Kept off the top strip, whose height the clock and keep bars set |
 | Feed, top right | At most 4 lines, each gone after 12 s, each with its own backing | News must read over the battle and leave |
 | Intro, centre | During the countdown: the faction, its traits and the keys | A player learns the faction before the first decision |
 
@@ -512,7 +529,7 @@ bool and one null check per application tick. The standing runbook (the idle gat
   the default): `west`, `east`, `ai`, `west_ai` (`1` puts an AI commander on the West side too, so both sides play; default 0), `speed` (1, 2, 4 or 10 from the first frame, default 1), `scene` (optional, resolved like `taom.fords_start`), `live_seconds` (mission seconds
   before the match is ended, default 600), `live_wait_seconds` (wall seconds to go live, default 600), `wall_limit_seconds`
   (wall seconds after the start at which the match is ended whatever the mission clock says, default 2400), `out` (required,
-  absolute folder for the status and done files) and `quit` (`1` quits the game at the end). A quoted `out=` value, or one holding
+  absolute folder for the status and done files), `quit` (`1` quits the game at the end) and `screenshots` (comma-separated live seconds at which the game saves a picture of the screen, UI included; one more is taken during the countdown). A quoted `out=` value, or one holding
   `<`, `>` or `|`, leaves the plan unarmed with the "needs an absolute out=<folder>" problem. A `live_seconds` at or above
   `wall_limit_seconds` is accepted with a warning (the wall limit then ends the match first). The `armed plan=` line ends with
   `arm=<path of the arm file>`, and the run's setup text and JSON carry `west_ai=0|1`.
@@ -536,11 +553,11 @@ bool and one null check per application tick. The standing runbook (the idle gat
   reason that follows an earlier outcome keeps both, for example `never_live+final_timeout`. The launcher fails every reason but
   `final`.
 - **Launcher.** `python tools/run_fords_autorun.py --live-seconds 120` (also `--scene`, `--west`, `--east`, `--ai`, `--west-ai`,
-  `--wall-limit`, `--runs`, `--runs-root`, `--dry-run`) writes the arm file, starts `Bannerlord.exe` directly with the module list of
+  `--wall-limit`, `--speed`, `--screenshots`, `--keep-on-crash`, `--require-idle-minutes`, `--runs`, `--runs-root`, `--dry-run`) writes the arm file, starts `Bannerlord.exe` directly with the module list of
   the F5 profile and the variable set, polls every 5 s, scans the engine logs for a crash and copies the results into
   `<runs-root>/<yyyyMMdd-HHmmss>/` (default `E:/Temp/fords-runs`; `--runs-root` is resolved to an absolute path): `arm.txt`,
   `runner_log.txt`, `runner_status.txt`, `fords_autorun_done.txt`, the newest `taom_debug_*.log`, the `fords_report_*_run1.json` and
-  the engine logs. It prints the verdict rows. `--wall-limit` and `--live-seconds` must be positive; the arm file always carries the
+  the engine logs (with `--screenshots`, also the pictures as PNG files). It prints the verdict rows. `--wall-limit` and `--live-seconds` must be positive; the arm file always carries the
   runner's wall limit (2400 s by default) and is written with LF. The deployed `TAOM.dll` must contain the autorun: look for
   `[FordsOfWar][Autorun] armed plan=` and `[BuildStamp]` in the new log.
 - **Pass rule.** The launcher exits 0 only when the done reason is `final`, the JSON says `final=true`, no verdict row is FAIL, the
@@ -551,7 +568,7 @@ bool and one null check per application tick. The standing runbook (the idle gat
   evidence still collected.
 - **Safety.** The module list is read from `Main/Properties/launchSettings.json` (profile `Bannerlord`, `$(ModuleId)` read as
   `TAOM`). The preflight fails closed: it refuses to start while any `Bannerlord.exe` or the game folder's `Watchdog.exe` runs, and
-  also when it cannot list the processes. The game is killed through its `Popen` handle (`proc.kill()`, then wait 30 s); the only
+  also when it cannot list the processes, and while the PC has had keyboard or mouse input within `--require-idle-minutes` (default 10; 0 turns the gate off; an age it cannot read refuses too). The game is killed through its `Popen` handle (`proc.kill()`, then wait 30 s); the only
   other process stopped is a `Watchdog.exe` whose command line holds `-p <pid>`.
 - **The mod-change dialog.** The first launcher run stalled because the engine shows a blocking dialog, "Mod change detected" ("A
   change in your active mods was detected. Deleting the runtime shader cache to avoid rendering issues.", one OK button),
@@ -560,11 +577,11 @@ bool and one null check per application tick. The standing runbook (the idle gat
   one log line per window, and the post is repeated on each poll while the window lingers. It fails the run on a dialog whose
   title names a crash, and logs any other dialog without touching it.
 - **Crash dump lost (follow-up, no code).** When the game crashes, `Watchdog.exe` asks a human what to do with the dump and the
-  launcher kills it, so the dump is lost; the copied `rgl_log` and `watchdog_log` files are the only native evidence of an
+  launcher kills it, so the dump is lost (`--keep-on-crash <seconds>` makes it wait that long for a person to answer the dialog first); the copied `rgl_log` and `watchdog_log` files are the only native evidence of an
   unattended crash. Starting the game under a watchdog configuration that saves the dump without a prompt is not done.
 - **`StopGameOnFocusLost`.** `BannerlordConfig.txt` has `StopGameOnFocusLost=True` on the desktop, and the launcher only logs
   it. It did not pause the mission in the probe run below (mission time ran at ratio 1.00 to wall time); the `clock` line
-  shows the ratio on every run, and `wall_limit_seconds` is the backstop if a run ever stalls.
+  shows the ratio on every run, and `wall_limit_seconds` is the backstop if a run ever stalls. An armed run also declines the Escape menu that a lost focus opens (`FordsCommandView`), which would otherwise pause the mission until someone closed it.
 
 **2026-10-31 result.** A 45-second probe run (`E:/Temp/fords-runs/probe-20261031-220442`) completed the whole chain: armed, main
 menu, start, live, end through the autorun limit, a final=1 report, a done file with `reason=final`, and the game quit by itself.
@@ -583,35 +600,38 @@ damage stage; see Known limitations for the fix), which the earlier launcher let
 
 | File | Purpose |
 |---|---|
-| `Main/Features/FordsOfWar/Domain/FordsMatch.cs` (+ `.View.cs`, `.SpawnFailures.cs`) | The aggregate: `Tick`, the `Try*` command API, kill credit, spawn-failure refunds, `GetView` |
-| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `LanePath`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing` |
+| `Main/Features/FordsOfWar/Domain/FordsMatch.cs` (+ `.View.cs`, `.SpawnFailures.cs`, `.Lanes.cs`, `.HeroArrivals.cs`, `.Upgrades.cs`) | The aggregate: `Tick`, the `Try*` command API, kill credit, spawn-failure refunds, `GetView` |
+| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `LanePath`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing`, `UpgradeBook`, `PoisonRules`, `SeizeRules`, `RegionDeck`, `HeroCombatFactors`, `FordsGameSpeed` |
 | `Main/Features/FordsOfWar/FordsOfWarModule.cs` | Feature module: registrations, `Patch131_FordsOfWar`, main-menu option on the MainMenu phase |
 | `Main/Features/FordsOfWar/FordsMissionDirector.cs` | Per-mission orchestrator; applies effects through the adapters |
 | `Main/Features/FordsOfWar/FordsSession.cs` | The one command and view surface for the client |
 | `Main/Features/FordsOfWar/Hooks/FordsMissionLauncher.cs` | Opens the mission with the eight behaviors |
 | `Main/Features/FordsOfWar/Hooks/FordsOfWarMissionLogic.cs` | `MissionLogic`: start, tick, removals, `MissionEnded` |
 | `Main/Features/FordsOfWar/Hooks/FordsTowerHitPatch.cs` | Patch131, prefix on `DestructableComponent.OnHit` |
+| `Main/Features/FordsOfWar/Hooks/FordsUpgradeHooks.cs` | The army upgrades and the hero damage factors, applied per blow from the Custom Battle damage model |
 | `Main/Features/FordsOfWar/FordsMissionExit.cs`, `FordsExitClock.cs` | Automatic return to the main menu: 25 s after the result, 3 s after a failed start |
 | `Main/Features/FordsOfWar/FordsMenuEntry.cs`, `FordsSetupPrompt.cs`, `FordsSetupChoices.cs` | Main-menu option `TaomFordsOfWar` and the start prompts |
 | `Main/Features/FordsOfWar/FordsOfWarCommands.cs`, `Cheats/FordsOfWarCheats.cs` | Console commands `taom.fords_start` and `taom.fords_gold` |
-| `Main/Features/FordsOfWar/Config/` | `FordsConfigCatalog` and the three readers |
+| `Main/Features/FordsOfWar/Config/` | `FordsConfigCatalog` and the four readers (match, factions, maps, upgrades) |
 | `Main/Features/FordsOfWar/Autorun/`, `Client/Features/FordsOfWar/FordsAutorunHost.cs`, `tools/run_fords_autorun.py` | The unattended run: plan, arm file, driver and its pure rules, status and done files; the launcher |
 | `Main/Features/FordsOfWar/FordsMatchPlan.cs`, `FordsSnapshotBuilder.cs`, `FordsLayoutFitter.cs`, `FordsLayoutPlanner.cs`, `FordsLayoutFit.cs`, `FordsTagLayoutReader.cs`, `FordsBaseFinder.cs`, `FordsTowerGeometry.cs`, `FordsSpawnPlacement.cs` | Pure helpers around the director |
 | `Main/Features/FordsOfWar/IFordsOfWarGameManagerFactory.cs`, `NullFordsOfWarGameManagerFactory.cs` | Core factory interface and null default (ADR-013) |
-| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsAgentRegistry.cs`, `FordsEngine.cs`, `FordsTowerStage.cs` (the shown tower stage only moves forward) | Adapters and engine helpers |
+| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsCampAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsMissionSpeed.cs` (match speed), `FordsTowerComponent.cs` (a real tower's destructible), `FordsAgentRegistry.cs`, `FordsEngine.cs`, `FordsTowerStage.cs` (the shown tower stage only moves forward) | Adapters and engine helpers |
 | `Client/Features/FordsOfWar/FordsOfWarGameManager.cs`, `FordsOfWarGameManagerFactory.cs` | Client game manager and factory |
 | `Client/Features/FordsOfWar/FordsOfWarMissionViews.cs` | `[ViewMethod]` list for the mission |
 | `Client/Features/FordsOfWar/FordsCommanderCameraView.cs`, `FordsCameraMath.cs` | Commander camera |
 | `Client/Features/FordsOfWar/FordsCommandView.cs`, `FordsCommandVM.cs`, `FordsCommandHotkeys.cs`, `FordsHudText.cs` | Command panel, hotkeys and every player-facing line |
 | `Main/_Module/GUI/PreFabs/FordsOfWar/FordsCommand.xml` | Panel prefab (movie `FordsCommand`) |
 | `Main/_Module/ModuleData/fords_of_war/match.json`, `factions.json`, `maps.json` | Configuration |
+| `Main/_Module/ModuleData/fords_of_war/fords_troops.xml`, `fords_items.xml` | The mode's own troop copies and items, loaded for CustomGame only (see The roster) |
 | `Main/Features/FordsOfWar/Diagnostics/` | The self-check report (`FordsRunReport`), the verdicts and the evidence classes |
 | `Main/Features/FordsOfWar/Hooks/FordsTelemetryLogic.cs`, `Hooks/FordsMissionResults.cs` | Mission behavior that feeds the report; the result hand-off |
 | `Main/Features/FordsOfWar/FordsFieldProbe.cs`, `Main/Adapters/FordsVolleyHits.cs` | Field measurements and volley hit records for the report |
 | `Main/Features/Warg/WargRageLog.cs` | Warg rage start and restore records the report reads |
 | `Client/Features/FordsOfWar/FordsCameraProbe.cs` | Camera evidence from the client (the view resolves the report and passes it in) |
 | `Client/ClientSubModule.OnBeforeInitialModuleScreenSetAsRoot` | The final report pass when the main menu is back |
-| `docs/features/fords-of-war/build-spec.md`, `greybox-scene-spec.md` | Build contract; Kit scene spec |
+| `docs/features/fords-of-war/build-spec.md`, `greybox-scene-spec.md`, `balance-log.md` | The original build contract (history); the tag spec for hand-built scenes; what each match showed |
+| `tools/fords_match_review.py` | Reads finished runs and flags what needs a person's reading |
 
 ## Dependencies
 
@@ -651,6 +671,9 @@ classes:
 - `ShippedFordsConfigTests.cs`: the shipped JSON parses; every troop, hero and culture id exists; computed
   prices equal the stored ones; the hold line is outside tower fire range; the volley item is a crafted
   javelin that SandBoxCore loads for a Custom Game.
+- `ShippedFordsRosterTests.cs` (the troop copies, each faction's feats, buy cycles and creature gate, the shipped upgrades, hero arrival, hero factors, AI reserves and poison),
+  `Domain/FordsUpgradeTests`, `FordsHeroArrivalTests`, `FordsHeroCombatTests`, `FordsGameSpeedTests`, `FordsMatchSeizeTests`, `AiBuyCycleTests`, `PoisonRulesTests`,
+  `Client/FordsCommandHotkeysTests` and `Client/FordsUpgradePanelTests`. The review tool has Python tests: `python -m unittest tools.tests.test_fords_match_review`.
 - `FordsMissionDirectorTests.cs`, `FordsSessionTests.cs`, `FordsOfWarMissionLogicTests.cs`,
   `FordsMissionLauncherTests.cs` (pins the behavior list and the omissions), `FordsMissionExitTests.cs`,
   `FordsExitClockTests.cs`.
@@ -701,13 +724,13 @@ checks below name log lines.
    hero ids (for example `lord_1_17`) resolve in a Custom Game. Report: `check=03` (every troop and hero id checked against this game, spawns and spawn failures by troop; a recorded start failure with no match started FAILs its `started` part, for the menu routes too; an `exceptions` part FAILs, naming the first type and site, when an exception was swallowed by TAOM's CrashReport finalizers since the mission started, because the mission telemetry listens to `CrashReportPatchHelper.Swallowed` (other Harmony finalizers, such as `PatchShield` and `Patch50`, are not heard), and it passes only when that listener was in place and none did).
 4. Wait out the 10 s countdown. Towers and keeps appear on both sides in 3 lanes, free waves march and
    fight, and your gold rises on kills. The camera pans (WASD), rotates (Q, E, right mouse drag) and
-   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership, and a `layout` part that FAILs on a missing tower or a keep open at the start and names the ids, for example `missing=tower_west_1_0 keepOpen=West`). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge. The battlefield is lit and exactly three dark boxes show (gold bar top centre, towers top left, deck bottom centre), each hugging its content; a box that reaches a screen edge is the stretch-in-cover layout fault.
+   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership, and a `layout` part that FAILs on a missing tower or a keep open at the start and names the ids, for example `missing=tower_west_1_0 keepOpen=West`). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge. The battlefield is lit and the panel's standing dark boxes (the top strip, the battle board at the bottom left, the command deck at the bottom centre, the heroes at the bottom right) each hug their content; a box that stretches to a screen edge it is not anchored to is the stretch-in-cover layout fault.
 5. Open the escape menu. Photo Mode reads disabled ("Photo mode isn't allowed."), and the Options entry
    opens the options screen. Report: `check=05` (pause edges, Photo Mode vetoes, Options requests and wiring).
 6. Run `taom.fords_gold 5000`. The console prints "Added 5000 gold. You now hold ..." and the panel's gold
    matches. Buy a pack with F1 to F8 or the buttons; the gold drops by the pack price and a feed line
    appears. Report: `check=06` (the gold command's reply, pack purchases, feed lines).
-7. Press H (or click a hero card) to field the most affordable hero, for Mordor Sauron at 2400. The hero
+7. Press H (or click a hero card) to field the first hero in the list that you can afford, for Mordor Sauron at 2400. The hero
    spawns in the selected lane. Kill it, then check the respawn timer on its card and the buyback button. Report: `check=07` (a fielded hero has a spawned mark of the same hero and side within 5 mission seconds, with the requested lane in the `[Hero]` line; death; respawn spawned within 1.5 mission seconds; buyback results). The row no longer compares the lane the engine put the hero in with the one asked for, because the adapter read that lane back from the formation it had just placed the hero in, so the two could never differ. Leaving the match more than 5 mission seconds after a fielding with no spawn mark reads FAIL. A hero bought in the last 5 s before the winner is named is excused, because the clock ended before the spawn ran: it neither fails the part nor takes away the pass of the heroes that did spawn, and a part with only excused purchases reads NOT_SEEN.
 8. Set a lane to Hold (X), then Push (Z) and Fall back (C). The order buttons show a cooldown; the lane
    forms up 60 m before the enemy tower, or at the lane midpoint on a lane over about 428 m, and does not stand inside tower fire
@@ -723,7 +746,7 @@ checks below name log lines.
     Check also that no warning says the reach is below the fire range. Report: `check=11` (item N and S, reach against fire range, per-hit magnitude against N x multiplier x (impact speed / S) squared). The `hits` part also FAILs when the towers asked to fire at least 10 times and not one missile was added (`launched` counts missiles the adapter added, 0 when the aim skipped them all), and when 20 or more missiles flew and no hit was seen; the row prints the hits it filtered out, by reason. The hit reader takes engine structs, so only your run proves it.
 12. Field a Mordor or Isengard warg rider (`warg_raiders`, `warg_enforcers`) and watch a raging warg: it
     returns to its lane formation instead of wandering off. Report: `check=12` (rage starts, formations restored, riders back in formation within 60 s of mission time, riders left on foot with no formation to return to, called `stranded`, which FAIL the restored part). A rider counts as back when it is within max(15 m, half the formation's width + 5 m) plus the formation's depth of the formation's front-middle, so a rider at the rear of a deep formation is not read as lost. A rider whose rage restarted before it returned is counted as `superseded` (in the row's numbers and a `[Warg][Rage]` log line): its first reset already counted toward `restored`, and only its return goes unjudged. The `[Warg][Rage]` lines in the log show each episode (start, end, returned, not-returned, stranded, superseded).
-13. Look at the capture-point row under the lane bars in the top-left panel: it shows owner and capture
+13. Look at the capture-point row under the lane rows of the battle board (bottom left): it shows owner and capture
     progress in percent, and a contested mark when both sides stand on the point. Report: `check=13` (captures, contested time, nearest approach per point).
 14. Destroy a keep (use `taom.fords_gold` and a hero or siege unit to speed it up). The result panel
     appears; do nothing and the game returns to the main menu after 25 s, or click its button to leave at once. Report: `check=14` (keep fall, result, the way out and its timings, main menu back).
@@ -758,9 +781,9 @@ with a large boundary and a navmesh; the layout is built from two base points fo
 `FordsLayoutFitter` snaps points to the ground and the navmesh.
 
 **Use a hand-built scene.** Follow [fords-of-war/greybox-scene-spec.md](fords-of-war/greybox-scene-spec.md):
-the greybox scene `taom_fords_greybox_01` in the Modding Kit, with waypoints tagged `fow_lane_<lane>_<n>`,
+a scene in the Modding Kit (the shipped `taom_fords_01_forceatmo` is one; the spec proposed the id `taom_fords_greybox_01`), with waypoints tagged `fow_lane_<lane>_<n>`,
 towers tagged `fow_tower_<west|east>_<lane>_<order>`, keeps `fow_keep_<west|east>`, capture points
-`fow_capture_<n>` and camps `fow_camp_<n>`. Then add it to `maps.json` with `"layout": "tags"`. An
+`fow_capture_<n>` and camps `fow_camp_<n>`. Then add it to `maps.json` with `"layout": "tags"` (plus `towerHalfWidth` for real towers and `laneFaceIds` for lane bars). An
 incomplete set of markers (a keep or the outer tower of a lane missing) falls back to the generated
 layout with one warning. A tagged entity that already has a `DestructableComponent` is adopted as the tower.
 
@@ -786,18 +809,17 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 - **A camp's ring is the map decal.** Its look on the ground is unconfirmed until someone sees it in game.
 - **Translations.** The `TAOM_FOW_` texts are English in all 12 languages until the translation backlog,
   issue #763.
-- **Greybox scene owed.** The Kit scene from the greybox spec is not built. The generated layout now fits Rohan Plains II cleanly
+- **Generated maps are unchecked.** The hand-built scene `taom_fords_01_forceatmo` is the dedicated lane scene (see The hand-built map). The generated layout fits Rohan Plains II cleanly
   (2026-10-31: 0 of 168 items dropped, all 14 towers built), but Rohan Plains I, Pelennor and Mordor have no in-game fit run since the
-  fitter was rewritten, and the planner limits (10% dropped, 30 m tower move, 5% bad segments) are untested in game. A dedicated
-  three-lane scene remains the long-term step.
+  fitter was rewritten, and the planner limits (10% dropped, 30 m tower move, 5% bad segments) are untested in game.
 - **Check 9 is resolved.** The unattended 600 s match `20261031-220826` (East AI against a passive West) passed check 9 with 731
   native tower blows, which answers build-spec open question 3: melee AI does damage the barricade. The earlier FAIL (the 16:54
   match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten.
-- **No tower fell in a 30-minute AI match, so check 14 is unseen.** In `20261031-222418` and `20261031-225939` (1800 s, both
+- **The first AI matches saw no tower fall.** In `20261031-222418` and `20261031-225939` (1800 s, both
   sides AI) no tower fell and no keep fell. Gunners absorb melee: a share of the blows land on the invulnerable gunners
   (`GunnerBlowsMelee`) instead of the tower. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9
   info); the thrust damage floor (`towers.thrustFloorFactor`) turns the thrust ones into damage from 2026-11-01. Tower balance (hit points, regeneration, the damage factors) is the maintainer's call. Run `20261031-225939` lowered the
-  deployed tower hit points for a test but could not prove which numbers loaded; the `[Tower] config` line now does.
+  deployed tower hit points for a test but could not prove which numbers loaded; the `[Tower] config` line now does. Since then towers do fall: the matches in [balance-log.md](fords-of-war/balance-log.md) lost 0 to 6 towers a side, and the 45-minute match `20261103-201138` lost 6 towers on one side with no keep down. The first keep fell in `20261103-203523`: Erebor beat Dol Guldur at 889 s, and check 14 passed its keep, result, exit and menu parts. A person has still to see the result panel.
 - **Regeneration against the damage stage.** Regeneration raises a tower's hit points, and the engine recomputes the stage from
   them, which once read `_destructionStates[-1]` and threw (seen in runs `20261031-220826` and `20261031-222418`, one exception
   each). `FordsTowerAdapter` now sets `DestructableComponent.OnCalculateDestructionStateIndex` so the shown stage only moves forward
@@ -826,6 +848,10 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-03: nine more factions (Rivendell, Erebor, Harad, Gundabad, Dale, Dol Guldur, Easterlings, Umbar, Mirkwood), 13 in all, with more feats (tower range,
+  regeneration, poison, order cooldown, camp reward); army upgrades bought with gold; the AI buys to each faction's identity (`aiBuyCycle` with `up:` and `beast:` entries);
+  a free hero every 5 minutes; hero damage factors; the AI hero reserve of 600, 800 and 1000 gold and `AiCommander.BuySparePack`; Mordor's `damageToTowers` 0.6; match speed
+  1x, 2x, 4x and 10x; the end-of-match balance lines, `tools/fords_match_review.py` and `balance-log.md`.
 - 2026-11-02: fixed a native crash at `TaleWorlds.Native.dll+0x6E5BCD`, about once in seven long matches: housekeeping faded a horse a soldier still held.
 - 2026-11-02: the mode has its own roster, `fords_troops.xml`, loaded for CustomGame only.
 - 2026-11-02: four factions that play differently: feats, traits, Gondor's Call of the Regions with a fee, Mordor's creature call, rosters built for each. New command panel. The

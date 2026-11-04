@@ -78,7 +78,7 @@ per application tick. The full key list and the wiring are in [fords-of-war.md](
 | Part | Content |
 |---|---|
 | Env var | `TAOM_FORDS_AUTORUN` = absolute path of a UTF-8 `key=value` arm file (LF) |
-| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
+| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `screenshots`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
 | Phases | Wait until the main menu has been up for 4 s (hiding any inquiry), start the match, wait for live, end it after `live_seconds` of mission time or at the wall limit, wait for the final=1 report pass, write the done file, quit |
 | Status | `fords_autorun_status.txt` rewritten every 5 s |
 | Done file | `fords_autorun_done.txt`: `reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `final_passes`, `final_total`, `started`, `ended` |
@@ -100,13 +100,15 @@ The launcher exits 0 only when all of these hold; the run folder's `runner_log.t
 The `[BuildStamp]` line in the copied log names the build that ran; quote it in the evidence. A PASS from a stale deploy proves nothing
 about the change under test.
 
+For a balance reading rather than a pass or fail, run `python tools/fords_match_review.py <run folder>` and record the result in [balance-log.md](../features/fords-of-war/balance-log.md).
+
 ## Costs and risks
 
 - **Screen and GPU.** The game window opens on the desktop and runs for minutes (a boot plus the live time, up to the wall limit). The
   idle gate is why a person is not in the middle of something else.
 - **The deploy replaces the maintainer's.** Building from a worktree changes what `Modules/TAOM` holds. Say which build you deployed in the report.
 - **Logs are pruned.** The launcher copies them out; the folder under `E:/Temp/fords-runs` is the record.
-- **A crash loses its dump.** `Watchdog.exe` asks a human what to do with it, and the launcher kills it, so only the copied `rgl_log` and
+- **A crash loses its dump.** `Watchdog.exe` asks a human what to do with it, and the launcher kills it (unless `--keep-on-crash` waits for an answer), so only the copied `rgl_log` and
   `watchdog_log` survive. Starting under a watchdog setting that saves the dump silently is not done.
 - **A killed game leaves `safely_exited = 0`.** The launcher resets it; if a session aborts the launcher by hand, check the value before the next start.
 - **One game at a time.** The preflight refuses while a game runs, including the maintainer's.

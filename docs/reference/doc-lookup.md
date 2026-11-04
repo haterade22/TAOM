@@ -12,6 +12,8 @@
 | Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
 | Read what the native engine does (below an `[EngineMethod]`, natively parsed data, a native crash or hang frame) | [ghidra-native-decompile.md](../features/ghidra-native-decompile.md): `tools/native_decompile.py --engine-method` / `--string` / `--rva`; crashes and hangs go through `/native-crash-triage`; an address from an older build: [native-build-match.md](../features/native-build-match.md) |
 | Get in-game evidence without a person (a check reads `NOT_SEEN`, or mission or engine code changed): start the game unattended, judge the run | [unattended-game-runs.md](unattended-game-runs.md) (the 10-minute idle gate, launch recipe, how to judge a run) and the `/game-run` skill; today it plays one Fords of War match: [fords-of-war.md](../features/fords-of-war.md) |
+| Work on Fords of War (the commander mode): rules, factions, config, in-game checks | [fords-of-war.md](../features/fords-of-war.md) |
+| Balance Fords of War: read what each match showed, record a change and the matches behind it | [balance-log.md](../features/fords-of-war/balance-log.md) and `python tools/fords_match_review.py <run folder>` |
 | Debug / iterate on problem | [iterative-problem-solving.md](../../docs/ai-includes/iterative-problem-solving.md) |
 | Compare multiple approaches | [multi-approach-validation.md](../../docs/ai-includes/multi-approach-validation.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |
