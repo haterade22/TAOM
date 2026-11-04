@@ -250,20 +250,17 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
     `taom_char_creation_equipment.xml`.
 11. Add the volunteer pool partial under `RecruitmentPools/` and a test beside it, when you want
     more than the culture's `basic_troop` on offer.
-12. Append the culture to the hardcoded `cultures` list in `tools/validate_all_troop_refs.py` or its
-    troop file is never swept.
-13. Give the culture a settlement. Until it owns one, it is a daily-tick CTD.
-14. Remove the culture from every `documentedExceptions` list in `TAOM.Tests/` that names it.
+12. Give the culture a settlement. Until it owns one, it is a daily-tick CTD.
+13. Remove the culture from every `documentedExceptions` list in `TAOM.Tests/` that names it.
 
-Check: `python tools/validate_moduledata.py` then `python tools/validate_all_troop_refs.py` then
-`dotnet test TAOM.Tests --filter CulturePartyTemplate`
+Check: `python tools/validate_moduledata.py` then `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CulturePartyTemplate`
 Takes effect: full game restart, then a new campaign. The `<XmlNode>` registry is built once per
 process (`Module.cs:246`, `:1026-1033`), so a newly registered file is invisible until Bannerlord is
 restarted; the lords, clans, kingdoms and settlements then seed at world generation, because
 `Heroes`, `Kingdoms` and `Factions` are skipped outright on a saved campaign
 (`SandBoxManager.cs:363-375`)
 Code: Code changes required in `Main/Features/CulturalFeats/TaomCulturalFeats.cs` for any new feat.
-The volunteer pool under `Main/Features/TroopProgression/RecruitmentPools/` is optional, see row 12
+The volunteer pool under `Main/Features/TroopProgression/RecruitmentPools/` is optional, see the volunteer pool step (step 11)
 
 ### Make an existing culture playable
 
@@ -352,10 +349,6 @@ separate C# edit under `Main/Features/TroopProgression/RecruitmentPools/`
   so parties spawned after the load use the new template, but parties already on the map keep the
   roster they were built with and vanilla only tops a patrol up below full strength. A tester
   reporting "still vanilla troops" from an old save is seeing this, not a regression.
-- **`tools/validate_all_troop_refs.py` sweeps a hardcoded list, not the folder.** 16
-  `troops_*.xml` files exist and the list names 10, so `dunland`, `goblin`, `harad`, `mirkwood`,
-  `rivendell` and `rohan` go unswept. A new culture must be appended there by hand.
-  <!-- measured: ls Main/_Module/ModuleData/troops/troops_*.xml | wc -l 2026-09-05 -->
 - **Only 3 schemas exist under `tools/schemas/`** (`taom_npccharacter.json`, `taom_spcultures.json`,
   `taom_equipmentsets.json`). Numeric ranges are not checked anywhere, and there is no schema for
   `taom_partyTemplates.xml` or `troop_weights.xml`. See
@@ -405,7 +398,6 @@ All measured 2026-09-05 from the repo at `bannerlord-1.4.5` and the installed mo
 | 210 wanderers over 20 cultures, 17 at exactly 10 (Erebor 12, Gondor 13, Mordor 15) | `python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter((e.get('culture') or '').replace('Culture.','') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(sum(c.values()),len(c),sum(1 for v in c.values() if v==10),{k:v for k,v in c.items() if v!=10})"` |
 | 20 `taom_equipment_sets_*.xml` files, all under `equipmentsets/` | `ls Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml \| wc -l` |
 | 16 `troops_*.xml` files | `ls Main/_Module/ModuleData/troops/troops_*.xml \| wc -l` |
-| 10 cultures in the `validate_all_troop_refs.py` hardcoded list | `sed -n '80,98p' tools/validate_all_troop_refs.py` |
 | 16 recruitment-pool partials, 22 distinct `CultureMap` keys | `ls Main/Features/TroopProgression/RecruitmentPools/*.cs \| wc -l` and `rg -o 'CultureMap\["[a-z]+"\] =' Main/Features/TroopProgression/RecruitmentPools/ \| sort -u \| wc -l` |
 | 383 `MBPartyTemplate` entries, 14 of them Lindon's (12 standard, 2 legacy) | `rg -c 'MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -o 'MBPartyTemplate id="[^"]*lindon[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml \| sort` |
 | 22 entries in `charactercreation/cultures.json`, using 10 distinct race values | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/charactercreation/cultures.json',encoding='utf-8-sig'));r=set();[r.update(x.get('races',[])) for x in d];print(len(d),len(r))"` |

@@ -1,7 +1,3 @@
----
-description: Environment failures are reported, not fixed. The agent works within infra; the user controls infra.
----
-
 # Environment failures: report, don't fix
 
 When something outside the repo's tracked files breaks (a missing tool, a broken path, permissions,

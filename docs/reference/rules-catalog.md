@@ -7,7 +7,7 @@
 
 ## Load convention
 
-A rule with `paths:` loads when Claude reads a matching file in the repo; a rule without it loads in
+A rule with `paths:` loads when Claude reads, writes or edits a matching file in the repo; a rule without it loads in
 every session and subagent. The details and their sources (never for a file outside the repo, the
 `/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-facts.md`
 "Rule loader (memory) semantics" and "Context loading".
@@ -20,18 +20,19 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down) and stop; don't fix infra. Check which machine you are on first. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; no performative agreement; no "done" without fresh output (a subagent's self-report doesn't count); never state an unread fact. |
-| `model-effort-selection.md` | The main session orchestrates; each subagent gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn; plan on `architect`, execute on a Sonnet specialist). Tier agents `fast-reader`, `implementer`, `architect`. |
+| `model-effort-selection.md` | The main session does most work (Mike, 2026-11-02); a delegated task gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `output-style.md` | Part 1 (chat): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`; one step per message in a live session. Part 2 (produced prose): no em or en dash, no AI-writing tells; boldface and tables stay. |
 | `simplicity-criterion.md` | Keep-or-reject matrix: a tiny gain with added complexity is rejected; a deletion that holds parity always wins. |
 | `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; reuse-before-write ladder. |
 | `working-discipline.md` | Autonomous-loop stewardship (continue established work, never stop to ask permission) and edit-scope discipline, including during a review gate. |
 
-## Path-scoped rules (load when a matching file is read)
+## Path-scoped rules (load when a matching file is read, written or edited)
 
 | Rule | Content |
 |------|---------|
 | `adapters.md` | Adapter pattern, research-first |
-| `csharp-architecture.md` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read, mission-scope agent handles and threads |
+| `config-providers.md` | Config files, MCM settings and editor-visible fields validate semantics at load, not only syntax; NaN and range checks, both-surface MCM clamps, reload scope |
+| `csharp-architecture.md` | Non-negotiable rules, IoC lifetimes, entity state matrix, session reset, float gates, lookup fallbacks, mission-scope agent handles and threads |
 | `csharp-patterns.md` | Hook, Strategy and GameModel patterns, quick reference |
 | `data-scripts.md` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
 | `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |

@@ -12,7 +12,7 @@ If you're authoring a **net-new culture** (armor + troops + recruitment), read [
 ## TL;DR
 
 1. **Source of truth**: hand-edited `CULTURES` dict in [`tools/apply_culture_skills_traits.py`](../../tools/apply_culture_skills_traits.py).
-2. **Generator**: `python tools/apply_culture_skills_traits.py --all-cultures --apply` emits 3 outputs — `taom_lord_skill_sets.xml` (SkillSets), updated `lords.xml` + `lords.xslt` (skill_template attr swaps + populated `<skills>`/`<Traits>` blocks).
+2. **Generator**: `python tools/apply_culture_skills_traits.py --all-cultures --apply` (unsafe for live lords: read Step 5) emits 3 outputs: `taom_lord_skill_sets.xml` (SkillSets), updated `lords.xml` + `lords.xslt` (skill_template attr swaps + populated `<skills>`/`<Traits>` blocks).
 3. **Engine consumption**: every adult NPCCharacter has `skill_template="SkillSet.taom_..."` that points to a TAOM-owned SkillSet; that is what the engine actually uses. Explicit `<skills>` blocks on hero NPCs were IGNORED through v1.4.8 (kept as documentation only); since v1.5.2 the loader applies them on top of a copy of the SkillSet, so they must equal it (`python tools/sync_lord_inline_skills.py --apply`; gate `LordInlineSkillParityTests`).
 4. **Verify**: XML well-formed (3 files), then in-game Encyclopedia spot-check (Boromir OneHanded=295 + level growth = ~302).
 5. **Ship**: commit-split (data + tool separate), one GitHub issue per culture via [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
@@ -45,7 +45,7 @@ TAOM adds three files (all registered in [`Main/_Module/SubModule.xml`](../../Ma
 |---|---|---|
 | [`Main/_Module/ModuleData/lords.xslt`](../../Main/_Module/ModuleData/lords.xslt) | Transforms vanilla `lords.xml` NPCs (renames, culture flips, gear, skill_template swap) | `<XmlName id="NPCCharacters" path="lords"/>` |
 | [`Main/_Module/ModuleData/characters/lords.xml`](../../Main/_Module/ModuleData/characters/lords.xml) | Adds TAOM-NET-NEW NPCs (Ciriel, Dorwen, the entire EW_/WE8_/WE9_/E*/M*/G*/D* ranges) | `<XmlName id="NPCCharacters" path="characters/lords"/>` |
-| [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | 120 TAOM-owned SkillSets — 35 archetype + 85 canonical-character | `<XmlName id="SkillSets" path="taom_lord_skill_sets"/>` |
+| [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | TAOM-owned SkillSets: archetypes plus per-character canonicals | `<XmlName id="SkillSets" path="taom_lord_skill_sets"/>` |
 
 **Load order matters.** SubModule.xml line ~60 loads `lords.xslt`-transformed vanilla NPCs FIRST. Line ~120 loads `characters/lords.xml` SECOND. An id in both files is **two definitions merged, not an override**: `MBObjectManager.MergeElements` merges attribute by attribute and child by child (a `<skill id>` matches by id), so `characters/lords.xml` wins whatever it redeclares and the XSLT copy still supplies the rest ([lord skills](../features/lord-skills.md)). `<Equipments>` unions: a set with a different id is added, and the hero picks one at random per campaign ([lesson #644](../reviews/lessons/xslt-moduledata.md)). Before editing a lord, grep BOTH files for its id. Vanilla lords belong only in `lords.xslt`, new ones only in `characters/lords.xml` (Mike, 2026-09-23).
 
@@ -147,6 +147,8 @@ Three shapes for a canonical entry:
 python tools/apply_culture_skills_traits.py --all-cultures --apply
 ```
 
+**Unsafe for live lords.** Like `--culture`, this mode re-resolves every NPC, so it can undo hand-tuned assignments. For a repoint use `tools/repoint_evil_lord_skillsets.py`.
+
 The script:
 - Regenerates `taom_lord_skill_sets.xml` from scratch (35 archetypes + every canonical with `skills=`)
 - Walks every NPCCharacter in lords.xml + lords.xslt with `culture="Culture.<id>"`
@@ -157,12 +159,11 @@ Dry-run first if uncertain — omit `--apply` and confirm the touched counts loo
 ### Step 6 — Verify XML well-formedness
 
 ```bash
-python -c "import xml.etree.ElementTree as ET; ET.parse('Main/_Module/ModuleData/characters/lords.xml'); print('lords.xml OK')"
-python -c "import xml.etree.ElementTree as ET; ET.parse('Main/_Module/ModuleData/lords.xslt'); print('lords.xslt OK')"
-python -c "import xml.etree.ElementTree as ET; ET.parse('Main/_Module/ModuleData/taom_lord_skill_sets.xml'); print('taom_lord_skill_sets.xml OK')"
+python tools/validate_moduledata.py
+python tools/check_external_xslt.py
 ```
 
-If any fail, the script wrote malformed output — investigate before committing.
+If either fails, the script wrote malformed output: investigate before committing.
 
 ### Step 7 — In-game smoke check
 
@@ -184,18 +185,7 @@ Commit one concern at a time ([git and commits](git-and-commits.md)). Default sp
 | 1 | `taom_lord_skill_sets.xml` + `lords.xml` + `lords.xslt` + `SubModule.xml` | `feat(lords-skills): ...` or `fix(lords-skills): ...` |
 | 2 (if changed) | `tools/apply_culture_skills_traits.py` + `tools/generate_culture_issue_drafts.py` | `docs(issues): ...` or `chore(tools): ...` |
 
-For brand-new culture work, also create a GitHub issue:
-
-```bash
-# Generate per-culture drafts (only if new cultures added)
-python tools/generate_culture_issue_drafts.py
-
-# Batch-create
-for f in docs/issues-drafts/lords-skills-*.md; do
-    title=$(head -1 "$f" | sed 's/^# //')
-    gh issue create --title "$title" --body-file "$f" --label 'enhancement' --label 'lords'
-done
-```
+For brand-new culture work, each new culture needs an issue: use `/issue`, on the maintainer's word; drafts come from `tools/generate_culture_issue_drafts.py`.
 
 ---
 
@@ -207,19 +197,13 @@ done
 |---|---|---|
 | `python tools/apply_culture_skills_traits.py --skillsets-only --apply` | Regenerates `taom_lord_skill_sets.xml` only | After tweaking `BASE_ARCHETYPES` values; no NPCCharacter edits needed |
 | `python tools/apply_culture_skills_traits.py --culture gondor --apply` | Re-applies skill_template + skills/Traits blocks for one culture | After editing one culture's canonical or keyword_archetypes |
-| `python tools/apply_culture_skills_traits.py --all-cultures --apply` | Full pass across all 17 cultures | After cross-cutting changes; the safe default |
+| `python tools/apply_culture_skills_traits.py --all-cultures --apply` | Full pass across all cultures | Unsafe for live lords, the same as `--culture`: it re-resolves every NPC. Use `tools/repoint_evil_lord_skillsets.py` for repoints |
 
 Dry-run (preview without writing): omit `--apply`.
 
 The script is **idempotent** — re-running with no source changes produces no diff.
 
-**MANDATORY pre-flight before ANY `--apply`: verify the generator matches the committed XML.**
-`taom_lord_skill_sets.xml` has been hand-edited downstream at least once (the 1f7a7a9a
-legendary-lord hierarchy) — a blind regen would have reverted 14 hand-tuned canonical sets and
-**deleted** Sauron's/the Witch-King's sets. The generator was synced back in `874e7574`, but the
-check stays cheap and permanent: run `--skillsets-only --apply` on a CLEAN tree and require
-`git diff` to be empty (or id-sort-only) before layering your change. Non-empty diff = someone
-hand-edited the XML again → sync the generator's canonical entries FIRST (see the gotcha table).
+**Before any `--apply`, run `python tools/apply_culture_skills_traits.py --check`** (read-only; it compares the generated SkillSets with the committed file and ignores set order, and `test_generator_regions_in_sync.py` runs it). On drift, sync the generator's canonical entries first: a blind regeneration once nearly deleted Sauron's and the Witch-King's sets.
 
 **Per-culture `--culture X --apply` is UNSAFE for repointing live lords.** `process_file`
 re-resolves every NPC's archetype from bios/keywords, and the live XML carries hand-tuned
@@ -468,7 +452,7 @@ This guide handles the skills layer. For the broader culture (armor + troops + r
 
 2. The script auto-discovers NPCs by `culture="Culture.arnor"`. No SubModule.xml change needed for culture additions — only if you're adding a NEW XML file (which `apply_culture_skills_traits.py` doesn't).
 
-3. Run `--all-cultures --apply`. Verify. Commit. Open one GitHub issue using [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
+3. Read the Step 5 warning, then run `--all-cultures --apply`. Verify. Commit. Open one GitHub issue (`/issue`, on the maintainer's word) from the draft that [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py) writes.
 
 ---
 
@@ -493,10 +477,10 @@ Before declaring done:
 
 Real failure modes from past sessions. Read these before you ship.
 
-| Trap | Source memory | Mitigation |
+| Trap | Source | Mitigation |
 |---|---|---|
-| `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref) — corrupted 24 BodyProperties lines in one apply | `feedback_re_sub_backref_followed_by_digit.md` | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
-| Renaming an NPC and forgetting `settlements.xml` lore-text references — "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | `feedback_rename_grep_all_moduledata.md` | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/` — audit every hit, not just `characters/` |
+| `re.sub` with `r'\1'` followed by a digit-starting string silently corrupts output (parses as `\10` backref), corrupted 24 BodyProperties lines in one apply | lesson archive | Use lambda: `pattern.sub(lambda m: m.group(1) + new + m.group(2), text)` or `\g<N>` |
+| Renaming an NPC and forgetting `settlements.xml` lore-text references, "Lady Vanyalos" shipped in town_EW7 flavor text after the rename | lesson archive | After any rename, `grep -rn "OLD_NAME" Main/_Module/ModuleData/`, audit every hit, not just `characters/` |
 | **An explicit `<skills>` block on a hero must equal its SkillSet.** Through v1.4.8 the engine ignored it beside a `skill_template` (the bug that led to the SkillSet rewrite); since v1.5.2 it lays the rows over the template, so a hand-edited row wins | `SKILL_TEMPLATE_MISMATCH`, `LordInlineSkillParityTests` (#626) | Swap `skill_template` to a TAOM SkillSet and let the generator write both; never hand-edit `<skills>` alone; `sync_lord_inline_skills.py --apply` repairs drift |
 | Same-ID NPCs in both `lords.xslt` (vanilla transform) and `characters/lords.xml` (TAOM additions) merge: `lords.xml` loads second and wins each attribute and `<skill id>` it redeclares, the XSLT copy supplies the rest, and differing `<Equipments>` sets union into a random per-campaign pick (#644) | `Main/_Module/SubModule.xml` load order; `MBObjectManager.MergeElements` | Grep BOTH files for the id before editing. If a fix isn't taking effect, the other file may redeclare that attribute or carry a second equipment set; #648 tracks the ids still in both |
 | Children (age <14) skipped by the script — appropriate for toddlers, but breaks for Nazgûl with placeholder ages 9/11 | Script's `process_file` | Canonical entries auto-bypass the age skip. Always add Nazgûl / immortals to `CULTURES[*]['canonical']` even if just `dict(archetype='nazgul')` |
@@ -525,7 +509,7 @@ Real failure modes from past sessions. Read these before you ship.
 | [`tools/oneoff/author_dale_lords.py`](../../tools/oneoff/author_dale_lords.py) | Finished one-off (#943) and the better authoring pattern: five Dale clans and 27 lords as idempotent marker blocks, byte-faithful reads and writes (inserted blocks assume CRLF); refuses to run without `--rerun-retired` |
 | [`tools/analyze_lord_balance.py`](../../tools/analyze_lord_balance.py) | Read-only per-culture stats + perk review; the verification lens for every balance pass |
 | [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py) | Per-culture GitHub issue draft generator |
-| [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | Generated — 120 SkillSets (DO NOT hand-edit) |
+| [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | Generated SkillSets (DO NOT hand-edit) |
 | [`Main/_Module/ModuleData/characters/lords.xml`](../../Main/_Module/ModuleData/characters/lords.xml) | TAOM-NET-NEW NPCCharacters (wins over XSLT-transformed vanilla at runtime) |
 | [`Main/_Module/ModuleData/lords.xslt`](../../Main/_Module/ModuleData/lords.xslt) | Vanilla NPCCharacter transform |
 | [`Main/_Module/ModuleData/heroes.xslt`](../../Main/_Module/ModuleData/heroes.xslt) | Biographical text overrides (engine-irrelevant for stats, but useful for archetype keyword detection) |

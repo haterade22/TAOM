@@ -66,7 +66,7 @@
 		<!-- WHEN BUMPING any of these three PackageReference versions: also bump the matching
 		     stub <Version> in Stubs/<ID>/_Module/SubModule.xml — third-party mods may pin via
 		     <DependedModuleMetadata version="..."/>. See docs/migration/dr3-maintenance.md
-		     "Stub modules" section + .serena/memories/task_completion_checklist.md. -->
+		     "Stub modules" section. -->
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
 		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.3" />
 		<PackageReference Include="Bannerlord.MCM" Version="5.12.3" />

@@ -3,20 +3,24 @@
 
 Usage: python tools/check_commit_msg.py <message file>
 Run by .githooks/commit-msg (core.hooksPath = .githooks), so a commit made from a terminal meets the
-same rules as one Claude runs, which .claude/hooks/check-commit-subject-version.sh checks:
+label, length and attribution rules of .claude/hooks/check-commit-subject-version.sh, plus the
+closing-keyword rule, which only this file has:
 
 - the subject reads <type>[(scope)][!]: vX.Y.Z - <description>, where vX.Y.Z is the <Version> of
   Main/_Module/SubModule.xml as the commit will carry it (the staged copy when staged);
 - the subject is at most 72 characters;
-- no AI attribution line (a Co-Authored-By naming an AI, or "Generated with Claude Code").
+- no AI attribution line (a Co-Authored-By naming an AI, or "Generated with Claude Code");
+- no closing keyword followed by a number list ("Closes #1, #2" closes only #1).
 
-Exit 0 to accept, 1 to refuse (git aborts the commit and prints the reasons). A fixup!, squash! or
+Exit 0 to accept, 1 to refuse (git aborts the commit and prints the reasons), 2 for a usage error, 3
+for a crash of the checker itself (no verdict). A fixup!, squash! or
 amend! subject is left to the later autosquash. A version it cannot read leaves only the label
 check out, and says so.
 """
 import re
 import subprocess
 import sys
+import traceback
 
 SUBMODULE = "Main/_Module/SubModule.xml"
 SUBJECT = re.compile(r"^[a-z][a-z0-9]*(?:\([^)]+\))?!?: (v\d+\.\d+\.\d+(?:\.\d+)?) - \S")
@@ -24,6 +28,11 @@ SUBJECT = re.compile(r"^[a-z][a-z0-9]*(?:\([^)]+\))?!?: (v\d+\.\d+\.\d+(?:\.\d+)
 AI_TRAILER = re.compile(
     r"^\s*(?:Co-Authored-By\s*[:=][^\n]*\b(?:claude|anthropic|openai|chatgpt|gpt-?\d|codex|copilot|gemini|kimi)\b"
     r"|[^\w\n]*Generated with \[?Claude Code)", re.I | re.M)
+# GitHub closes only the number right after a closing keyword: "Closes #1, #2" closes #1 alone.
+CLOSING_LIST = re.compile(
+    r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?):?\s+[\w./-]*#\d+(?:[ \t]*,[ \t]*(?:and[ \t]+)?|[ \t]*(?:and|&)[ \t]*|[ \t]+)[\w./-]*#\d+",
+    re.I)
+CODE_SPAN = re.compile(r"(`+)[^\n]*?\1")
 MAX_SUBJECT = 72
 
 
@@ -47,6 +56,10 @@ def check(message, version):
     hit = AI_TRAILER.search(text)
     if hit:
         problems.append(f"The message carries an AI attribution line: '{hit.group(0).strip()}'. TAOM commits carry none.")
+    closing = CLOSING_LIST.search(CODE_SPAN.sub("", text))   # a code span only names the form
+    if closing:
+        problems.append(f"'{closing.group(0)}' closes only the first issue. Write the closing keyword "
+                        f"before each number: 'Closes #1, closes #2'.")
     return problems
 
 
@@ -88,5 +101,18 @@ def main(argv):
     return 0
 
 
+def entry(argv):
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code
+    that means a finding, so a checker bug would read as a refused message. The traceback goes to
+    stderr; the hook decides what 3 means."""
+    try:
+        return main(argv)
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for a finding
+        traceback.print_exc()
+        print("[commit-msg] tools/check_commit_msg.py crashed (traceback above); no verdict was reached, exit 3.",
+              file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(entry(sys.argv))

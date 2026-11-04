@@ -25,7 +25,7 @@ untracked new file, a deleted one, a non-ASCII path, a folder whose case on disk
 empty input that must not read as a pass (lesson in `docs/reviews/lessons/build-tooling-workflow.md`).
 
 ## Naming Convention
-`MethodName_StateUnderTest_ExpectedBehavior`
+`MethodName_StateUnderTest_ExpectedBehavior`. A gate or invariant with no meaningful state may use `Subject_ExpectedBehavior`.
 
 Examples:
 - `LoadRegions_ValidJson_ReturnsRegionList`
@@ -38,12 +38,8 @@ Examples:
 - **No Moq** — Project uses NSubstitute exclusively
 
 ## Coverage Requirements
-| Layer | Required |
-|-------|----------|
-| Services/Engines | 100% |
-| Hooks | 80%+ |
-| Entry Points | N/A (thin delegation) |
-| Adapters | Via service tests |
+
+Every decision path in a service or engine has a test, judged by the two-edit test. No coverage percentage is measured or claimed.
 
 ## Skip-Guard Exhaustion (MANDATORY)
 
@@ -95,25 +91,7 @@ families with `heroes.xslt` (`LordFamilyTransformTests`) and the vanilla wandere
 
 ## Test categories (builds without the game)
 
-A `-p:TaomGameRefs=RefAsm` build (`.ai/verification.md`) uses metadata-only reference assemblies,
-where every engine method body throws. Tag the class `[TestCategory("RequiresGame")]` when a test executes
-engine code (constructing a `Vec2`, `TextObject`, `ExplainedNumber` or `CampaignBehaviorBase`
-counts, even through TAOM code), and `[TestCategory("LiveInstall")]` when it reads the live
-Armory or the vanilla install. A class tag is the default even when some of its tests would pass
-on the stubs; you may tag only the methods that need the game when that returns checks worth
-running there (`Patch86HideoutBossFightBindingTests`). `RequiresGame` only removes a test from
-the unit step: a `BindingVerification` test that executes engine code, or needs vanilla method
-IL or vanilla data, carries `RequiresGameIL` on the method. An untagged test that needs the game
-fails in a RefAsm run with a `NullReferenceException` from a `TaleWorlds` frame (a TaleWorlds attribute
-constructor run by `GetCustomAttributes` included), a `TypeInitializationException` wrapping one, a
-`FileNotFoundException` for a module assembly (`SandBox*`, `StoryMode*`,
-`TaleWorlds.MountAndBlade.View`) or a game-bin dependency (`System.Management`, `Steamworks.NET`,
-`GalaxyCSharp`, `StbSharp`), or a `ReflectionTypeLoadException` from `Assembly.GetTypes()` on TAOM's
-assembly (the test output does not print its `LoaderExceptions`): tag it, never catch the exception.
-A RefAsm build points `GameAssemblies` at its stub `refasm-game` folder, so `EnsureLoaded()` returns
-true there: an `if (!EnsureLoaded()) Assert.Inconclusive` guard does not keep a test off the stubs.
-`RequiresGameIL` removes a test only from the gate, so a test outside `BindingVerification` that
-reads vanilla IL or vanilla data carries `RequiresGame`.
+Tag a test `RequiresGame` when it executes engine code, even through TAOM code (`Vec2`, `TextObject`, `ExplainedNumber`, a `CampaignBehaviorBase` all count); `LiveInstall` when it reads the Armory or the vanilla install; `RequiresGameIL` on a `BindingVerification` method that needs vanilla IL or data. A class tag is the default; you may tag only the methods that need the game when that returns checks worth running on the stubs (`Patch86HideoutBossFightBindingTests`). A test outside `BindingVerification` that reads vanilla IL or data carries `RequiresGame`. Tag it, never catch the exception. `EnsureLoaded()` is true on stubs, so it is no guard. Symptoms: [.ai/verification.md](../../.ai/verification.md). The build and filter commands are there too (`-p:TaomGameRefs=RefAsm`).
 
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

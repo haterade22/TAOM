@@ -8,7 +8,7 @@ not a grant of authority or a description of Codex's available tools.
 
 **Audience:** any subagent spawned in the TAOM project (the custom agents in `.claude/agents/`, and ad-hoc `Explore` / `Plan` / `general-purpose` agents). Explore and Plan agents read this at the start of the run; other agents consult it. It tells you the execution model, which tools to run and how, and which skills exist (so you can *recommend* them; see below).
 
-> **What reaches you:** custom and general-purpose agents get CLAUDE.md, its imports (AGENTS.md and `docs/ai-includes/orientation.md`) and the unscoped `.claude/rules/` automatically, and a path rule loads when you read a matching file. The built-in Explore and Plan agents get none of these, and no subagent gets the main session's memory. This manual adds the execution model and the tool catalog.
+> **What reaches you:** custom and general-purpose agents get CLAUDE.md, its imports (AGENTS.md and `docs/ai-includes/orientation.md`) and the unscoped `.claude/rules/` automatically, and a path rule loads when you read a matching file. The built-in Explore and Plan agents get none of these. Against the docs, `MEMORY.md` reaches custom agents too: treat it as a stale index, never as evidence. This manual adds the execution model and the tool catalog.
 
 ---
 
@@ -81,8 +81,8 @@ When your job hits one of these situations, finish your analysis and **name the 
 Custom agents already hold AGENTS.md's invariants. Read these when your task touches them (Explore and Plan agents especially):
 
 - Architecture / layers: [`architecture.md`](./architecture.md) · patterns: [`patterns.md`](./patterns.md)
-- TDD workflow: [`tdd-enforcement.md`](./tdd-enforcement.md) · testing: [`testing-guide.md`](./testing-guide.md)
-- Adapter pattern (ADR-007), thin entry points (ADR-002), no #region/[Obsolete]/#if DEBUG (ADR-003/004/005): [`docs/adrs/`](../adrs/README.md)
+- TDD and tests: `.claude/rules/tests.md` (loads when you open a test) · shipped-data tests: [`testing-guide.md`](./testing-guide.md)
+- Adapter pattern (ADR-007), thin entry points (ADR-002), no #region/[Obsolete]/#if outside IoC.cs (ADR-003/004/005): [`docs/adrs/`](../adrs/README.md)
 - TaleWorlds research workflow: [`taleworlds-research-guide.md`](./taleworlds-research-guide.md)
 - The path-scoped `.claude/rules/*.md` load by themselves when a custom or general-purpose agent reads a matching file. Explore and Plan agents: no document says they do for you, so read the area's rule directly before touching its files.
 

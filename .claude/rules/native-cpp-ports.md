@@ -1,15 +1,11 @@
 ---
 paths:
-  - "Dependencies/**/*.cpp"
-  - "Dependencies/**/*.h"
-  - "Main/SceneScripts/**"
   - "Native/**/*.c"
   - "Native/**/*.h"
+  - "Native/**/*.cpp"
 ---
 
 # Native C++ Port Discipline
-
-Loads when native C++ (vendored hooks, scene scripts) is being edited. Moved verbatim from CLAUDE.md Working Discipline (repo-reorg 2026-07-12).
 
 **When porting C++ code from an upstream mod into TAOM (`Dependencies/*.NativeHooks/`, scene scripts, or any other vendored native), audit the port from scratch. "Upstream worked" only means "produced correct output" — it does NOT mean the port is fit to ship in TAOM.**
 
@@ -22,7 +18,7 @@ Before you commit a C++ port, walk this checklist:
 3. **Inter-function offsets.** Any computation like `helperFunc = mainFunc - 0xF6A0` is fragile across engine versions and must be replaced with an independent signature scan. The original NativeSkinFixes had one such offset for `NotifyPhysics`; the port replaced it with a 7th pattern.
 4. **Atomic counters.** Any `static int counter` touched from a hook body is racy if the engine fires on multiple threads. Use `volatile LONG64` + `InterlockedIncrement64`.
 5. **SRWLock balance.** Reads use `AcquireSRWLockShared`; writes use `AcquireSRWLockExclusive`. Verify both sides — upstream mods routinely take the exclusive lock for reads ("just in case") and silently serialise everything.
-6. **`/deep-review` with C++ in scope.** The skill prompt now includes C++ HOT-PATH CHECKS and C++ Native Hook Standards blocks that fire automatically when `.cpp`/`.h` files are in the changeset (per the post-mortem on the same RCA). Run it.
+6. `/deep-review` adds its C++ checks when `.c`, `.cpp` or `.h` files are in the changeset.
 
-This is a project-level discipline, not a one-off feature note — every future C++ port has the same risk profile. See `feedback_native_port_hot_path_audit.md`, `feedback_seh_filter_specificity.md`.
+This is a project-level discipline, not a one-off feature note: every future C++ port has the same risk profile.
 

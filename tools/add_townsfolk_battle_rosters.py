@@ -3,8 +3,9 @@
 
 Why: arena spectators are the settlement culture's townsfolk/notables (e.g. townsman_erebor),
 spawned with BATTLE equipment. Every TAOM culture's townsfolk/notables ship a civilian-ONLY
-roster (`<EquipmentRoster civilian="true">`, no plain battle roster), so FirstBattleEquipment is
-empty -> the arena crowd renders naked while the town walk (civilian equipment) is clothed.
+roster (`<EquipmentRoster civilian="true">`, no plain battle roster), so they have no battle set:
+GetRandomEquipmentElements returns an empty kit (a fixed-equipment spawn would throw) -> the arena
+crowd renders naked while the town walk (civilian equipment) is clothed.
 Confirmed in-game: `[MissionDiag][NakedSuspect] char='townsman_erebor' ... Body=empty Leg=empty`.
 
 Fix: for every <NPCCharacter> whose <Equipments> contains ONLY civilian="true" rosters, append a

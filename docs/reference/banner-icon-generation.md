@@ -7,6 +7,8 @@ How to create new clan/faction banner **sigil icons** for TAOM with AI (imagine.
 > 2. **GauntletUI sprite atlas** (`ui_taom_bannericons_*` + `TAOMSpriteData.xml`) — the per-icon UI sprite set, packed by the sprite generator.
 > A new icon shows **blank** until the relevant pipeline's binary asset is compiled. Static review can't prove an icon renders — only the running game can.
 
+Heraldry is sober Tolkien style with one bold plain motif; show designs before wiring (Mike, 2026-10-28).
+
 ## The three id layers (all share the icon id)
 
 | Layer | Where | Keyed by |
@@ -67,6 +69,7 @@ The flag draws from the **material** (`_mtl.tpac`), which references the **textu
 1. **Texture** — put the green-on-black source at `AssetSources/BannerIcons/taom_banners_<culture>_alpha_NN.(psd|png)` and import it. **Importing the source image (PSD *or* PNG) produces ONLY the `_tex.tpac`.** (Verified 2026-06: PSD-vs-PNG makes no difference — both yield texture-only. The earlier "use PSD" theory was wrong.)
    - **Import settings:** keep Type `Albedo (DXT1/DXT5 - RGBA)`, leave **Do Not Compress** clear and tick **Do Not Generate Mips**. Runtime Details must read `4096 x 4096, 1 Mip, DXT1, 8.000 Mb` (DXT5 and 16 Mb for a source with an alpha channel). An uncompressed sheet costs 64 Mb; all 33 sheets were that way until 2026-10-21 (2,112 Mb in total, now 336 Mb). Keep the single mip: with a full chain the banner render reads a smaller mip, and thin line-art sigils such as the Abanissa winged sun fade to a faint outline.
    - **Copy the saved `_tex.tpac` into the repo** (`Main/_Module/Assets/BannerIcons/`) before anyone builds. Every build deploys the repo's copy over the live one but leaves the live `RuntimeDataCache`, so a reverted header meets a recompiled cache: the sheet's sigils render blank, and the editor crashes on its next start while it recompiles (wEditor `TaleWorlds.Native.dll+0x4F626D`, a material with a null shader).
+   - A tpac with no `.rdc` is skipped whole (lesson: `animation-skeleton.md`). Check with `python tools/check_rdc_entries.py --under <Assets subfolder>`.
 2. **Material** — a **separate Kit step**: create a banner-icon **Material** named exactly `taom_banners_<culture>_alpha_NN`, assign the banner shader, point it at the texture, save → writes `_mtl.tpac`. This is the step that was missing when icons showed in the picker but rendered **blank on the flag**. The existing sheets' shader uses flags `two_sided` + `modulate1` + `alpha_test` (from the `_mtl.tpac` binary).
 3. `material_name` in `banner_icons.xml` must match exactly. **Verify BOTH** `_mtl.tpac` **and** `_tex.tpac` exist per material — `_tex` alone = blank flag (the picker may still show it via the GauntletUI sprite).
 

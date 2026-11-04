@@ -51,6 +51,8 @@ Configuration files are used to control various aspects of the mod, such as game
 
 ## Examples
 
+Historical examples from the initial decision; the files and paths below may no longer exist.
+
 ### XML Configuration Files
 
 **Location**: `/ModuleData/`
@@ -106,7 +108,11 @@ recursively, not through the `*.xml` item group shown above.
   `ObjectCreationHandling.Replace`, or the file's entries are added to the default instead of replacing it
   (`docs/reviews/lessons/state-lifecycle-save.md`).
 
-The Enforcement items above that ban JSON and copy only `.xml` are superseded.
+The Decision's XML-only line, the No JSON prohibition and the Enforcement items above that ban JSON and copy only `.xml` are superseded.
+
+### Amendment (2026-11-03): historical examples
+
+The Examples section is marked historical: its config files are not at the `ModuleData` top level today, and `development-guide.md` is not at the repo root or under `docs/`. The amendment above now names every superseded line, including the Decision's XML-only sentence. The reference to "Config Providers MUST Validate" in `.claude/rules/csharp-architecture.md` still resolves.
 
 ---
 

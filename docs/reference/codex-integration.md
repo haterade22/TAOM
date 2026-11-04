@@ -11,7 +11,7 @@ Claude dispatch adapters, not a mandatory role for Codex.
 | Claude skill | Purpose and source |
 | --- | --- |
 | `/review-codex [feature]` | Adversarial review and follow-up; [skill contract](../../.claude/skills/review-codex/SKILL.md) |
-| `/deep-review [feature] --codex` | Optional Codex pre-review before Claude reviewers; [skill contract](../../.claude/skills/deep-review/SKILL.md) |
+| `/deep-review [feature] --codex` | Codex pre-review before Claude reviewers. It runs at risk tier 1 under the maintainer's standing word (2026-11-03), at tier 2 after asking once per session, or with `--codex`; [skill contract](../../.claude/skills/deep-review/SKILL.md) |
 
 These skills contain Claude-specific Bash/background invocation, authentication
 checks and follow-up instructions. Their tool names, notification behavior and

@@ -4,10 +4,8 @@
 Run:  python -m unittest discover -s tools/tests -p "test_*.py"
   or:  python tools/tests/test_model_registry.py
 
-Two catalogues list TAOM's GameModel overrides and neither is ordinary documentation:
-`.claude/rules/gamemodels.md` is `paths:`-scoped to the model files, so its table is the
-briefing whoever edits a model receives; `docs/reference/gamemodel-registry.md` opens with
-"Every TAOM GameModel override". Both had drifted (12 and 6 models missing, a count claiming
+`docs/reference/gamemodel-registry.md` is the one catalogue of TAOM's GameModel overrides and
+opens with "Every TAOM GameModel override". It had drifted (models missing, a count claiming
 34 against 47 real classes) and nothing said so.
 
 Every test here builds a SYNTHETIC tree in a tempdir and repoints lint_docs's roots at it,
@@ -32,19 +30,18 @@ def _write(path: Path, text: str) -> None:
 
 
 class _SyntheticRepo(unittest.TestCase):
-    """A tree with two model classes and two catalogues, both correct by default."""
+    """A tree with two model classes and one registry, correct by default."""
 
     MODELS = ("TaomFooModel", "TaomBarModel")
 
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.root = Path(self._tmp.name)
-        self._saved = (ld.REPO_ROOT, ld.DOCS_DIR, ld.MODEL_RULES_DOC,
+        self._saved = (ld.REPO_ROOT, ld.DOCS_DIR,
                        ld.MODEL_REGISTRY_DOC, ld.MODELS_SEARCH_ROOT)
 
         ld.REPO_ROOT = self.root
         ld.DOCS_DIR = self.root / "docs"
-        ld.MODEL_RULES_DOC = self.root / ".claude" / "rules" / "gamemodels.md"
         ld.MODEL_REGISTRY_DOC = self.root / "docs" / "reference" / "gamemodel-registry.md"
         ld.MODELS_SEARCH_ROOT = self.root / "Main"
 
@@ -55,15 +52,14 @@ class _SyntheticRepo(unittest.TestCase):
         self.write_catalogues(self.MODELS, count=2)
 
     def tearDown(self):
-        (ld.REPO_ROOT, ld.DOCS_DIR, ld.MODEL_RULES_DOC,
+        (ld.REPO_ROOT, ld.DOCS_DIR,
          ld.MODEL_REGISTRY_DOC, ld.MODELS_SEARCH_ROOT) = self._saved
         self._tmp.cleanup()
 
     def write_catalogues(self, names, count=None):
         rows = "\n".join(f"| `{n}` | `Default` | `Feature` |" for n in names)
         header = f"TAOM has {count} GameModel overrides.\n\n" if count is not None else ""
-        _write(ld.MODEL_RULES_DOC, f"---\npaths:\n  - \"Main/**\"\n---\n\n{header}{rows}\n")
-        _write(ld.MODEL_REGISTRY_DOC, f"> Every TAOM GameModel override.\n\n{rows}\n")
+        _write(ld.MODEL_REGISTRY_DOC, f"{header}> Every TAOM GameModel override.\n\n{rows}\n")
 
     def kinds(self):
         return [k for _f, _l, k, _m in ld.check_model_registry()]
@@ -89,10 +85,10 @@ class CleanTree(_SyntheticRepo):
 
 
 class Drift(_SyntheticRepo):
-    def test_a_model_missing_from_the_catalogues_is_reported(self):
-        self.write_catalogues(["TaomFooModel"], count=2)   # TaomBarModel dropped from both
+    def test_a_model_missing_from_the_registry_is_reported(self):
+        self.write_catalogues(["TaomFooModel"], count=2)   # TaomBarModel dropped
         kinds = self.kinds()
-        self.assertEqual(2, kinds.count("unlisted-model"), "expected one per catalogue")
+        self.assertEqual(1, kinds.count("unlisted-model"))
         self.assertTrue(any("TaomBarModel" in m for _f, _l, k, m in ld.check_model_registry()
                             if k == "unlisted-model"))
 
@@ -100,38 +96,20 @@ class Drift(_SyntheticRepo):
         # The other direction of rot: a model gets renamed or deleted and its row stays,
         # reading as though someone still maintains it.
         self.write_catalogues(list(self.MODELS) + ["TaomDeletedModel"], count=2)
-        self.assertEqual(2, self.kinds().count("phantom-model"))
+        self.assertEqual(1, self.kinds().count("phantom-model"))
 
     def test_a_stale_count_claim_is_reported(self):
         self.write_catalogues(self.MODELS, count=34)
         counts = [m for _f, _l, k, m in ld.check_model_registry() if k == "model-count"]
-        self.assertEqual(1, len(counts), "only the rules doc carries a count claim")
+        self.assertEqual(1, len(counts), "the registry carries the one count claim")
         self.assertIn("claims 34", counts[0])
         self.assertIn("2 exist", counts[0])
-
-    def test_the_second_count_shape_is_also_checked(self):
-        # ".claude/rules/gamemodels.md" states its total twice, in two different sentences.
-        # Catching only the first would leave the table heading permanently wrong. The heading
-        # once carried a breakdown after a colon, which the first regex never matched, so a
-        # heading claiming 50 sat beside 51 classes with the check green. It now reads
-        # "(51 total)"; both shapes stay checked.
-        for heading in ("## Existing Overrides (34 total)",
-                        "## Existing Overrides (34 total: 32 registered, 1 parked, 1 abstract base)"):
-            with self.subTest(heading=heading):
-                _write(ld.MODEL_RULES_DOC, heading + "\n\n"
-                       + "\n".join(f"| `{n}` |" for n in self.MODELS) + "\n")
-                self.assertEqual(1, self.kinds().count("model-count"))
-
-    def test_a_correct_heading_with_a_breakdown_is_silent(self):
-        _write(ld.MODEL_RULES_DOC, "## Existing Overrides (2 total: 1 registered, 1 abstract base)\n\n"
-               + "\n".join(f"| `{n}` |" for n in self.MODELS) + "\n")
-        self.assertEqual(0, self.kinds().count("model-count"))
 
     def test_a_correct_count_is_silent(self):
         self.write_catalogues(self.MODELS, count=2)
         self.assertEqual(0, self.kinds().count("model-count"))
 
-    def test_a_missing_catalogue_is_reported(self):
+    def test_a_missing_registry_is_reported(self):
         ld.MODEL_REGISTRY_DOC.unlink()
         self.assertEqual(1, self.kinds().count("missing-doc"))
 
@@ -146,7 +124,7 @@ class Drift(_SyntheticRepo):
 class RealRepo(unittest.TestCase):
     def test_the_real_catalogues_are_in_sync(self):
         # Regression pin. This is the check that fires when someone adds a model without
-        # cataloguing it — the whole point of the check existing.
+        # listing it in the registry, the whole point of the check existing.
         findings = ld.check_model_registry()
         self.assertEqual([], findings,
                          "GameModel registry drift:\n" + "\n".join(m for *_ , m in findings))

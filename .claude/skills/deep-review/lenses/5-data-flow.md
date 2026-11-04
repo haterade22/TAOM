@@ -104,14 +104,6 @@ TRACE THESE DATA FLOWS:
     - Instead, check that the consumer survives the producer's absence: lookups by name with a logged error, not an unguarded dereference.
     - External modules (Native, SandBoxCore, Sandbox, CustomBattle, StoryMode) have a stable load order; skip them.
 
-11. **XML Parse Smoke Test (MANDATORY: fires for every modified ModuleData XML file).** Every new or modified XML file under a TAOM-managed module's `ModuleData/` must parse: run `pwsh -Command '[xml]$x = Get-Content -Raw "<file path>"; "<file>: OK"'` for each. A parse failure is CRITICAL: the engine rejects the file at load. Edge cases that pass a read but fail the parser:
-    - `--` (double-hyphen) inside an XML comment body.
-    - Unescaped `&`, `<`, `>` in attribute values.
-    - Mismatched element tags (`<Foo>...</Bar>`).
-    - Duplicate attribute on same element.
-    - Stray BOM in non-root position from copy-paste from concatenated files.
-    - Source: `taom_partyTemplates.xml` (`docs/reviews/codex-adversarial-bandit-management-2026-05-27.prompt.md`).
-
 12. **Bandit Culture / Clan Pair Coverage (fires when any `<Culture is_bandit="true">` row is added in the changeset).** A `Culture is_bandit="true"` row does NOT create a bandit clan: `Hideout.MapFaction` resolves via `clan.IsBanditFaction`, loaded from `<Faction is_bandit="true">` rows in `spclans`/`taom_spclans`/`characters/clans.xml`.
     - For each such culture, grep `Main/_Module/ModuleData/characters/clans.xml` (and any other `spclans*.xml` in scope) for a `<Faction>` row with `is_bandit="true"` AND `culture="Culture.<the-new-culture>"`. Absent: HIGH (hideouts get an unresolvable `MapFaction`, and `BanditSpawnCampaignBehavior` may NRE on spawn).
     - The clan row also needs `initial_home_settlement` on a real settlement of the right type (typically a hideout) and `default_party_template` on a real party template.

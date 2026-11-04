@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """graphify_taom.py: the one way TAOM builds and queries its graphify code graph (#677).
 
-graphify (PyPI `graphifyy`) builds a C# and Python code graph that answers what Serena
+graphify (PyPI `graphifyy`) builds a C# and Python code graph that answers what Grep
 does not: the reverse blast radius of changing a type, the architectural hubs, and a
 one-screen neighbourhood of a class. Every graphify WRITE goes through this wrapper, and
 `.claude/hooks/check-graphify-usage.sh` denies the raw verbs, because each one has a

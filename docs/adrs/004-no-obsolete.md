@@ -114,11 +114,9 @@ If a migration is too large to complete atomically:
 
 ## Enforcement
 
-1. **Code Review**: Reviewers REJECT any PR containing `[Obsolete]` attributes
-2. **Static Analysis**: Consider analyzer rule to flag `[Obsolete]` usage
-3. **PR Guidelines**: PRs introducing new patterns must migrate all existing usages
-4. **Documentation**: This ADR linked in CLAUDE.md
-5. **Build Warnings**: Treat obsolete warnings as errors (if any slip through)
+Enforcement: `BannedConstructsGateTests.NoCompiledCodeUsesObsolete`. Scope: TAOM's own declarations; calling an engine member that the engine marks obsolete is outside it.
+
+PRs that introduce a new pattern still migrate every existing usage in the same change.
 
 ## Real-World Example
 
@@ -143,6 +141,10 @@ public interface IMyService
 
 // Step 4: Old implementation GONE, no deprecation period
 ```
+
+### Amendment (2026-11-03): enforcement
+
+The Enforcement section listed a suggested analyzer, a link from CLAUDE.md and warnings treated as errors. None of those is in place; `ThreadStackCapture.cs` even disables warning CS0618 around an engine call. The ban is held by `BannedConstructsGateTests.NoCompiledCodeUsesObsolete`, which covers TAOM's own declarations.
 
 ---
 

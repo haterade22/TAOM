@@ -334,7 +334,7 @@ The six are `empire` (Dunlendings), `aserai` (Haradrim), `vlandia` (Rohirrim), `
 4. **To add to a vanilla list rather than replace it**, write a nested template instead: `<xsl:template match="Culture[@id='sturgia']/cultural_feats">` copies the vanilla children through `<xsl:apply-templates select="@*|node()"/>` and appends yours. Four of the six blocks take feats this way; `empire` and `vlandia` instead emit a full `<cultural_feats>` inline and exclude it in the filter, which replaces vanilla's. <!-- measured: rg -n '<cultural_feats>' and rg -n 'Culture\[@id=.*\]/cultural_feats' on Main/_Module/ModuleData/spcultures.xslt 2026-09-05 -->
 5. **Prove it mechanically.** Transform the stylesheet over the installed `SandBoxCore/ModuleData/spcultures.xml` and flag every emitted attribute whose value still carries a vanilla culture id. `CulturePartyTemplateTests` does exactly this against a sentinel document, so extend its attribute list when you bind something new.
 
-Check: `python tools/check_external_xslt.py` then `dotnet test TAOM.Tests --filter CulturePartyTemplate` and `dotnet test TAOM.Tests --filter CultureLordTemplate`
+Check: `python tools/check_external_xslt.py` then `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CulturePartyTemplate` and `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CultureLordTemplate`
 Takes effect: full game restart
 Code: No code changes needed, unless the test's attribute list has to grow, which is `TAOM.Tests/Core/CulturePartyTemplateTests.cs`
 
@@ -360,8 +360,8 @@ Code: No code changes needed
 |---|---|
 | `python tools/validate_moduledata.py` | `UNKNOWN_CULTURE` (a `Culture.` reference pointing at an id that does not exist), `LANDLESS_CULTURE` (a culture with content and no settlement), `BROKEN_PARTY_TEMPLATE_REF` (a `PartyTemplate.` reference with no definition, reported as a warning), `MISSING_EDUCATION_TEMPLATES` (a main culture with no stage-2 education tutor templates, which is the age-8 crash), `DUPLICATE_CULTURE_ID`. Run a single one with `--code <CODE>`. |
 | `python tools/check_external_xslt.py` | Well-formedness of every TAOM stylesheet, including the ones in the live modules that CI cannot reach. It does not check what a transform emits. |
-| `dotnet test TAOM.Tests --filter CulturePartyTemplate` | Runs `spcultures.xslt` over a synthetic vanilla document whose every party-template binding is a unique sentinel, then fails on attribute-absent, sentinel-survived or bound-to-a-non-TAOM-id. This is the only gate that can see an exclusion filter or an attribute that is simply not there. |
-| `dotnet test TAOM.Tests --filter CultureLordTemplate` | The `<lord_templates>` side of the same contract. |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CulturePartyTemplate` | Runs `spcultures.xslt` over a synthetic vanilla document whose every party-template binding is a unique sentinel, then fails on attribute-absent, sentinel-survived or bound-to-a-non-TAOM-id. This is the only gate that can see an exclusion filter or an attribute that is simply not there. |
+| `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CultureLordTemplate` | The `<lord_templates>` side of the same contract. |
 | `python tools/audit_cc_bonuses.py --report` | Read-only. The skill, attribute and focus bonuses each culture's character-creation options grant, which is where a new culture ends up over- or under-powered against the rest. |
 
 The passthrough rules and the vanilla file map a stylesheet must match are in [.claude/rules/xslt.md](../../.claude/rules/xslt.md). `CulturePartyTemplateTests` runs `spcultures.xslt` over a sentinel stub; for the other stylesheets, transform the vanilla file and diff the output by hand.

@@ -1,0 +1,23 @@
+# Entry-point classes (ADR-002) at 150 lines or more: <namespace.Class> <most lines it may have>.
+# Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, or with a static Prefix, Postfix, Transpiler or Finalizer).
+# The list may only shrink. Never add a line: move the logic into a service. To prune: set TAOM_WRITE_ENTRY_POINT_BASELINE=1,
+# run EntryPointLineCountGateTests.Baseline_Regenerate_WhenAsked.
+# Entries: 18.
+BehaviorTreeWrapper.BehaviorTreeMissionLogic 468
+TAOM.Features.AdvancedCombat.AutonomousMovementPlayerController 679
+TAOM.Features.CareerSystem.CareerPerkMissionBehavior 214
+TAOM.Features.CareerSystem.Quests.CareerQuestCampaignBehavior 175
+TAOM.Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView 160
+TAOM.Features.CultureMarketplace.CultureMarketplaceBehavior 161
+TAOM.Features.Elephant.ElephantMissionBehavior 220
+TAOM.Features.EliteEmissary.Hooks.EliteEmissaryBehavior 203
+TAOM.Features.Enlistment.Hooks.EnlistmentBattleBehavior 289
+TAOM.Features.Messengers.MessengerCampaignBehavior 668
+TAOM.Features.MountDespawn.Hooks.MountDespawnMissionBehavior 173
+TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel 197
+TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 209
+TAOM.Features.SpecialResources.SpecialResourcesBehavior 262
+TAOM.Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior 174
+TAOM.Features.TroopProgression.Models.TaomPartyWageModel 191
+TAOM.Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior 307
+TAOM.Features.Warg.WargMissionBehavior 183

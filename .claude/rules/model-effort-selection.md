@@ -1,8 +1,8 @@
 # Model & Effort Selection
 
-**Main session = orchestrator.** The main session plans, decides and reviews. It delegates
-execution to subagents, picks a model and effort for each based on the task, and does not do bulk
-or mechanical work itself.
+**The main session does most of the work** (Mike, 2026-11-02). Delegate only independent work that
+can run alongside it, a side job, or what a review gate requires, and give each subagent the
+cheapest model and effort that fits.
 
 | Tier | Agent | Use for |
 |---|---|---|

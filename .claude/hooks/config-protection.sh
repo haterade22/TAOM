@@ -1,12 +1,20 @@
 #!/bin/bash
 
-# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PreToolUse hook (Edit|Write): Block modifications to critical config files
 # Prevents AI from weakening configs instead of fixing code
 # Exit 2 = block, Exit 0 = allow
 
 INPUT=$(cat)
+
+# Prefilter before any Python starts: the payload must hold a protected name, in any case (NTFS
+# ignores it), or a \u escape, which JSON may use for any letter (maintainer decision D40). An edit
+# to any other file allows here, with no _pybin.sh probe and no parse.
+LOWER=${INPUT,,}
+[[ "$LOWER" == *settings* || "$LOWER" == *directory.build.props* || "$LOWER" == *adrs* || "$INPUT" == *'\u'* ]] \
+  || { echo "{}"; exit 0; }
+
+# Resolve a safe Python (never a Microsoft Store alias — those hang forever).
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "config-protection" "edits to settings.json / Directory.Build.props / ADRs" jq && { echo '{}'; exit 0; }
@@ -87,8 +95,20 @@ for PROTECTED in "${PROTECTED_FILES[@]}"; do
   fi
 done
 
-# Also protect ADR files from accidental weakening
+# Also protect ADR files from accidental weakening. An existing ADR stays protected. The README, and
+# an absolute path to an ADR that does not exist yet, are allowed: CLAUDE.md tells agents to write a
+# new ADR from the template. A path that is not absolute counts as existing, because the hook cannot
+# tell which directory it is relative to.
 if [[ ( "$NORM_PATH" == */docs/adrs/* || "$NORM_PATH" == docs/adrs/* ) && "$NORM_PATH" == *.md ]]; then
+  FS_PATH=${FILE_PATH//\\//}
+  if [[ "${BASENAME,,}" == "readme.md" ]]; then
+    echo "{}"
+    exit 0
+  fi
+  if [[ ( "$FS_PATH" == /* || "$FS_PATH" =~ ^[A-Za-z]:/ ) && ! -e "$FS_PATH" ]]; then
+    echo "{}"
+    exit 0
+  fi
   echo "BLOCKED: Modifying ADR $BASENAME is not allowed without explicit user request." >&2
   echo "ADRs are architectural decisions — changing them requires deliberate review." >&2
   exit 2

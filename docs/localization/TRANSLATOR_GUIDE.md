@@ -4,7 +4,7 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM ships with translatable strings across **three modules** and **twenty-three TAOM file types** (13 pre-existing, 4 added 2026-09-17 for troop/lord/clan/kingdom names, 5 added 2026-10-01 for the data text below, 1 added 2026-10-26 for Bandit Voices). Total, measured 2026-10-02: ~21,850 strings per language (TAOM 15,997 keys, TAOM_Map 1,241 rows, Armory 4,611 rows).
+TAOM ships with translatable strings across **three modules** and **twenty-three TAOM file types** (13 pre-existing, 4 added 2026-09-17 for troop/lord/clan/kingdom names, 5 added 2026-10-01 for the data text below, 1 added 2026-10-26 for Bandit Voices).
 
 ### TAOM module (23 files, 15,997 keys measured 2026-10-02, plus 80 added 2026-10-26)
 
@@ -190,7 +190,7 @@ Most Tolkien names should stay in their original form unless there is an establi
 
 ### Option A — AI first-draft pipeline (Recommended)
 
-The repo includes a Claude-powered translation pipeline that produces high-quality first-draft translations across all 27 files per language. You then review and refine.
+The repo includes a Claude-powered translation pipeline that produces high-quality first-draft translations across every file per language. You then review and refine.
 
 **Prereqs:**
 - `pip install anthropic`
@@ -202,10 +202,10 @@ The repo includes a Claude-powered translation pipeline that produces high-quali
 
 ```bash
 # Preview cost and counts (no API calls):
-python tools/translate_with_claude.py --lang PL --dry-run
+python tools/translate_with_claude.py --lang PL --module TAOM --dry-run
 
-# Run full translation across all 8 TAOM files + TAOM_Map + Armory:
-python tools/translate_with_claude.py --lang PL --apply
+# Run full translation across the TAOM files, TAOM_Map and Armory (`all` also writes the live Armory, #1056):
+python tools/translate_with_claude.py --lang PL --module all --apply
 
 # Translate just one module:
 python tools/translate_with_claude.py --lang PL --module TAOM --apply
@@ -227,7 +227,7 @@ else. Each provider reads its own variable (`ANTHROPIC_API_KEY`, `DEEPSEEK_API_K
 python tools/translate_with_claude.py --lang PL --module TAOM --provider deepseek --apply
 
 # Override the provider's model, or the prices the estimate is printed from:
-python tools/translate_with_claude.py --lang PL --provider openrouter \
+python tools/translate_with_claude.py --lang PL --module TAOM --provider openrouter \
     --model deepseek/deepseek-v4-pro --price-in 0.435 --price-out 0.87 --apply
 ```
 
@@ -305,10 +305,10 @@ as a run with nothing to do.
 
 | Gate | Where | What it matches on |
 |------|-------|--------------------|
-| **Discovery** | `_diff_files`, `tools/translate_with_claude.py:296-306` | Returns an entry only when `cur_text == eng_text`, meaning the target row still literally holds the English string. (An id the target file does not declare at all also qualifies, because `cur_text` defaults to the English: `tgt_map.get(sid, eng_text)` at `:303`.) A row that already holds a translation is never returned, so it never reaches the overrides, the cache, or the API. `_diff_against_settlement_source` (`:309-326`) filters the TAOM_Map settlement keys the same way. |
-| **Cache** | `main()`, `tools/translate_with_claude.py:883` | `elif e.string_id in cache` matches on `string_id` alone. So on the occasions a row does reach discovery (a file just reset by `generate_translation_template.py --apply`, or an entry whose translation failed validation and fell back to English), the cache answers with the translation of the OLD English. |
+| **Discovery** | `_diff_files` in `tools/translate_with_claude.py` | Returns an entry only when `cur_text == eng_text`, meaning the target row still literally holds the English string. (An id the target file does not declare at all also qualifies, because `cur_text` defaults to the English: `tgt_map.get(sid, eng_text)`.) A row that already holds a translation is never returned, so it never reaches the overrides, the cache, or the API. `_diff_against_settlement_source` (`:309-326`) filters the TAOM_Map settlement keys the same way. |
+| **Cache** | `main()` in `tools/translate_with_claude.py` | `elif e.string_id in cache` matches on `string_id` alone. So on the occasions a row does reach discovery (a file just reset by `generate_translation_template.py --apply`, or an entry whose translation failed validation and fell back to English), the cache answers with the translation of the OLD English. |
 
-**`--sync-ids` does not close this.** `sync_missing_ids` (`:711-754`) computes
+**`--sync-ids` does not close this.** `sync_missing_ids` computes
 `missing = [sid for sid in src_map if sid not in tgt_map]`, so it appends only the keys a
 per-language file lacks entirely. A key that is present but stale is not missing. For the same
 reason it never removes a key: when a generator RENAMES its ids, every language keeps the dead rows,
@@ -396,6 +396,19 @@ row, or a value in `tools/translation_cache/` (which also holds the Armory's and
 translations), carries a word from the wrong writing system: the translator model returned Korean 돌진
 in Turkish and Latin letters inside Russian words, and the placeholder check cannot see either. After a translator run, reset any
 flagged row to its English, drop its cache entry and re-run, or fix row and cache together by hand.
+
+### English has no language file
+
+`Main/_Module/ModuleData/Languages/` holds the 12 locale folders and a root `language_data.xml` whose
+`<LanguageData id="English">` is empty. So the inline default in `{=KEY}Default` is the only English
+text the engine ever reads. Rename something in a strings source and run the translator, and all 12
+languages follow while English keeps the old literal; treat the English default as a thirteenth
+translation that no tool updates for you. `LanguageFileCoverageTests` cannot see this drift, because it
+checks that a key has a row, not what the row says. Lord names have a gate:
+`LordNameAndSexConsistencyTests.EveryLordNameFallbackMatchesTheRegisteredEnglishText` compares every
+`characters/lords.xml` fallback with `taom_xslt_strings.xml`, and
+`python tools/oneoff/sync_lord_name_fallbacks.py --apply` repairs a mismatch (dry run without
+`--apply`). Other kinds of text have no such gate yet. <!-- verified 2026-11-03: the Languages folder listing, language_data.xml, the test and the script all exist -->
 
 ### Rewording a vanilla key: English only
 
@@ -489,7 +502,7 @@ The translator script applies overrides BEFORE consulting the cache or API, so t
 **Option A: GitHub Pull Request (preferred)**
 - Fork the repository
 - Edit only your translation files in `Languages/{LANG}/`
-- Open a PR targeting the active branch (currently `bannerlord-1.4.5`)
+- Open a PR targeting `bannerlord-1.5.x`
 
 **Option B: Send Files Directly**
 - Zip your translated XML files (preserve the `<MODULE>/Languages/<LANG>/` folder structure so they drop into the right place)
@@ -543,85 +556,37 @@ Kingdom/culture/clan/lord/hero descriptions injected via XSLT transformation. He
 
 Small UI surface for the Messenger feature.
 
-### Settlement Names (TAOM_Map, ~1,102)
+### Settlement Names (TAOM_Map)
 
 Town, castle, and village names + descriptions. Keys follow `Settlements.Settlement.name.<id>` and `Settlements.Settlement.text.<id>`.
 
-### Armory Equipment (~2,782 across 19 files)
+### Armory Equipment
 
 Armor, weapon, shield, and crafting piece names organized by owning culture.
 
 ---
 
-## Current Coverage (as of 2026-05-24)
+## Current Coverage
 
-The AI pipeline has produced first-draft translations across all 12 supported languages. PL is included: an earlier note describing it as community-hand-translated was wrong and had excluded it from every run until 2026-08-25, when its 4,009-entry backlog was cleared.
+Untranslated entries fall back to English text; the game stays valid, just shows English where translation wasn't available. For current numbers run `python tools/check_external_loc_coverage.py`.
 
-| Lang | TAOM | TAOM_Map | Armory | XSLT (Encyclopedia) |
-|------|------|----------|--------|---------------------|
-| RU   | 99%  | 99%      | 92%    | 99.9%               |
-| SP   | 97%  | 65%      | 87%    | 97%                 |
-| DE   | 97%  | 65%      | 82%    | 97%                 |
-| FR   | 97%  | 53%      | 92%    | 100%                |
-| IT   | 97%  | 65%      | 88%    | 94%                 |
-| BR   | 96%  | 65%      | 86%    | 94%                 |
-| JP   | 99%  | 97%      | 92%    | 100%                |
-| KO   | 99%  | 95%      | 91%    | 100%                |
-| TR   | 94%  | 64%      | 84%    | 97%                 |
-| CNs  | 99%  | 98%      | 89%    | 100%                |
-| CNt  | 99%  | 100%     | 91%    | 99.9%               |
-| PL   | see note | see note | see note | see note |
-
-**PL, added 2026-08-25.** PL was excluded from every translator run until 2026-08-25, on the
-mistaken belief that it was hand-translated. Its backlog was cleared that day: 5,033 entries
-written across all three modules, 4,009 of them needing an LLM pass, 0 failures, $7.26.
-No percentage is quoted for PL because the figures above were measured on 2026-05-24 by a
-method this pass could not reproduce (the external modules ship no EN reference file to diff
-against), and a number derived a different way does not belong in the same column as the
-others. The whole table predates the 2026-08-25 runs and is due a re-measure.
-
-Untranslated entries fall back to English text — the game stays valid, just shows English where translation wasn't available.
+That script is a ratchet for the two modules outside the repo (`TAOM_Map` and `LOTRLOME_Armory`). It counts rows still byte-identical to their English source (a proper-noun name counts too), compares the count with `tools/external-loc-coverage-baseline.json`, and exits 1 on any regression, because a module reinstall drops the English files back over the translated ones and nothing else would notice. Run `--update-baseline` and commit the new baseline after every external translator run, and after any settlement or item rename that writes the same name into all 12 files. Never update the baseline while rows are deliberately held back. When you look for owed translator runs, search issue bodies as well as titles: a checkbox item inside another issue is invisible to a title search.
 
 ---
 
 ## Known Limitations
+
+Owed translations go in #763's table; the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
 
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
 - **Troop/lord/clan/kingdom names were outside the pipeline; closed 2026-09-17.** Every `{=aom_*_name}` in `troops/*.xml`, most of `characters/lords.xml` (179/1184 had been registered via `taom_xslt_strings.xml`), most of `characters/clans.xml` (25/140 via `taom_module_strings.xml`), and all of the original 12 LOTR kingdoms' identity text in `taom_spkingdoms.xml` (name/short_name/title/ruler_title/text) were inline defaults with no row in any strings source, language file or cache (found 2026-09-13 for troops while investigating #572, which assumed stale translations that never existed). `tools/generate_name_localization_strings.py` is the Case B pipeline extension: it extracts every such key, excludes whatever is already registered elsewhere (so a lord already covered via XSLT strings doesn't get a duplicate row), and writes four generated English master files (`taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`) wired into `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list, and `LanguageDataXmlTests`. 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) across all 12 languages.
 - **The two gaps that pass left open were closed on 2026-10-01** by five more generator categories: hero biographies (`characters/heroes.xml` `text=`, 6 of 465 keys registered before) are in `taom_hero_text_strings.xml`, and the inline NPC names of `characters/*.xml` other than lords, clans and heroes are in `taom_character_name_strings.xml` unless `taom_module_strings.xml` already registers them (65 are), beside culture text, career data and Custom Battle scene names. Ten keys that two characters shared with different English were split first; `LocalizationKeyConsistencyTests.EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` now scans every generator source. **Known limitation:** `Hero.EncyclopediaText` is saved with its key and heroes.xml is read only for a new campaign, so in a save started before 0bd6abf3 the six second heroes of those pairs (lord_G5_6, G5_8, D1_9, D4_9, D4_10, D6_8) show their namesake's translated bio in the twelve languages until a new campaign. Two data files are never sources because the engine never loads them: the repo `settlements.xml` and `custom_settlements.xml` (TAOM's `SubModule.xml` has no `Settlements` node). **Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language.
-- **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping.
+- **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping. (Checked 2026-11-03: all 12 caches, RU included, share one layout: `json.dump(ensure_ascii=False, indent=2, sort_keys=True)` with CRLF terminators and one trailing newline, so RU is no longer the odd one out. Either way, prove an eviction by loading the JSON and comparing it with the original minus the evicted keys.)
 
 ---
 
-## Questions?
-
-Open an issue on GitHub or reach out on the mod's Discord channel.
-
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-- [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
-- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
-- [docs/features/localization.md](../features/localization.md)
-- [docs/features/oaths-of-service.md](../features/oaths-of-service.md)
-- [docs/features/war-chronicle.md](../features/war-chronicle.md)
-- [docs/INDEX.md](../INDEX.md)
-- [docs/modding/editing-safely.md](../modding/editing-safely.md)
-- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
-- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
-- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
-- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
-- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
-- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
-- [docs/reference/localization-map.md](../reference/localization-map.md)
-- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
-
-<!-- backlinks-end -->
 ## Adding a new strings file to the pipeline (order matters)
 
 Registering a key in a source XML is only half the job — a key that is not wired into the
@@ -659,3 +624,34 @@ validation. Four vanilla-derived strings with nested gender conditionals
 on every language that had not cached them. They are English-only overrides now and have a language row
 in Portuguese only (`kept-vanilla-key-rows.txt`), so they no longer reach the translator. Check the
 failed-ID list before treating exit 1 as a problem with your own strings.
+
+---
+
+## Questions?
+
+Open an issue on GitHub or reach out on the mod's Discord channel.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
+- [docs/features/localization.md](../features/localization.md)
+- [docs/features/oaths-of-service.md](../features/oaths-of-service.md)
+- [docs/features/war-chronicle.md](../features/war-chronicle.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/localization-map.md](../reference/localization-map.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+
+<!-- backlinks-end -->
+

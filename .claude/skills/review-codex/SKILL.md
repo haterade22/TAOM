@@ -6,6 +6,8 @@ argument-hint: "[optional: feature-name or path-to-review.md]"
 
 # Codex Adversarial Review Pipeline
 
+Codex cost is not a constraint, so do not hedge on it; the consent gate stays (Mike, 2026-08-01). `/deep-review` Step 0 says when his word covers a pass.
+
 Handles the full Codex review lifecycle automatically — Claude dispatches Codex directly via the local `codex` CLI (no terminal hand-off to the user). Detects what needs reviewing from context.
 
 **Argument handling:**
@@ -45,7 +47,7 @@ cd "<repo-root>" && codex exec -c model_reasoning_effort="<level>" -c project_do
 
 ### If no argument provided:
 
-1. Run `git diff --name-only HEAD` and `git diff --name-only HEAD~3..HEAD` to find recently changed `.cs` files
+1. Run `git diff --name-only HEAD` and `git diff --name-only HEAD~3..HEAD` to find recently changed `.cs`, `.xml` and `.xslt` files
 2. Group changed files by feature directory (e.g., `Main/Features/SettlementGuards/` → SettlementGuards)
 3. Check `docs/reviews/raw/` for any `codex-adversarial-*.md` file modified in the last hour
    - If found: go to **Phase 3** (verify that review)
@@ -75,7 +77,7 @@ Count files, identify GameModel overrides, Harmony patches, config files, and te
 
 For each Harmony patch, identify the vanilla class and method being patched.
 For each GameModel, identify the vanilla base class being overridden.
-Map these to paths in `E:\Decompiled_Bannerlord\` for the prompt.
+Name each target type in the prompt and tell Codex to read it from the installed DLLs through its ilspy server; the dump at `E:\Decompiled_Bannerlord\` is for browsing only.
 
 ### 2c: Identify Known Suspects
 
@@ -139,9 +141,7 @@ Tell the user:
 
 ## Phase 3: Verify Codex Review
 
-Read process docs first:
-- `docs/reviews/REVIEW-GUIDE.md` — failure patterns, success patterns
-- `docs/reviews/REVIEW-LOG.md` — scoring history
+Read process docs first: `docs/reviews/REVIEW-GUIDE.md` "Codex Failure Patterns". Do not read `docs/reviews/REVIEW-LOG.md`; grep it for the feature name.
 
 ### 3a: Read the Review
 
@@ -153,7 +153,7 @@ Read the Codex review file. Identify:
 
 ### 3b: Verify Each Finding
 
-**A Codex finding is a hypothesis, not a verdict** (per `.claude/rules/evidence-over-claims.md`; review accuracy is ~95%, not 100% — `feedback_audit_findings_not_always_correct.md`). Verify EVERY finding against the TAOM source and decompiled vanilla BEFORE implementing it — re-read the actual code, don't act on the reviewer's confidence. This skill auto-implements confirmed findings, so an unverified finding becomes an unverified change.
+**A Codex finding is a hypothesis, not a verdict** (per `.claude/rules/evidence-over-claims.md`). Verify EVERY finding against the TAOM source and decompiled vanilla BEFORE implementing it: re-read the actual code, don't act on the reviewer's confidence. This skill auto-implements confirmed findings, so an unverified finding becomes an unverified change.
 
 For EACH finding:
 
@@ -161,12 +161,13 @@ For EACH finding:
 
 **Verify "missing" claims.** Grep the codebase — don't trust "I didn't find it."
 
-**Decompile vanilla targets.** For Harmony/GameModel findings, check `E:\Decompiled_Bannerlord\` (Campaign/, MountAndBlade/, Modules/, Core/, UI/).
+**Decompile vanilla targets.** For Harmony/GameModel findings, use `pwsh tools/taom-src.ps1 path <Type>`; the dump at `E:\Decompiled_Bannerlord\` is for browsing and can lag an engine bump.
 
 **Check donor-comparison fairness.** Ported references may target an older Bannerlord — flag API differences.
 
 **Check what Codex missed:**
 - Config ID consistency (kingdom/culture IDs match cheatsheet?)
+- Cross-config coverage: when a feature reads config A and config B, every entry in A has its entry in B (every CC culture in cultures.json has at least one career in taom_careers.xml)
 - Fail-safe defaults (`?? true` vs `?? false`)
 - No-op code paths
 - Dead config values
@@ -239,21 +240,12 @@ For each confirmed bug:
 
 ### 3h: Update the Codex lessons (`.ai/review-reference.md`)
 
-Codex learns from us through the "Lessons From Prior Reviews" section of `.ai/review-reference.md`,
-which AGENTS.md "Start here" sends every reviewer to (the section left AGENTS.md so that file stays under
-its 8 KB cap). After each review:
-
-1. Add this review's essay, starting `Last updated: <date> (<review>`, at the top of
-   `docs/reviews/codex-track-record.md`, and move the sixth-oldest essay to
-   `docs/reviews/agents-md-review-lessons-archive.md` (the track record's convention).
-2. If Codex did something **particularly well**, add it to "What Codex does especially well"; if it
-   **missed a bug category** Claude caught, to "Look harder here"; if it produced a **new false positive
-   pattern**, to the false-positive list the section points at. Harvest any durable pattern into
-   `docs/reviews/lessons/<category>.md` too.
-3. In an `/improve` run the review lead lists these instead of writing them, and the orchestrator
-   consolidates them once at wrap-up.
-
-This creates a feedback loop: Claude's findings improve Codex's next review. Over time, Codex's accuracy improves and the gap between what Codex finds and what Claude catches shrinks.
+Codex reads the "Lessons From Prior Reviews" section of `.ai/review-reference.md`, which AGENTS.md
+"Start here" sends every reviewer to. Add a line there only for a new false-positive pattern or a
+missed category (a bug Codex missed that Claude caught). Harvest any durable pattern into
+`docs/reviews/lessons/<category>.md` too. `docs/reviews/codex-track-record.md` is frozen: do not add
+an essay to it. In an `/improve` run the review lead lists these instead of writing them, and the
+orchestrator consolidates them once at wrap-up.
 
 ### 3i: Update Review Log
 

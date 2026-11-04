@@ -13,6 +13,8 @@ The original build contract, written before the build, with its stage-by-stage D
 what the numbers mean, how to check it in game and where to change it. What each match showed, and what changed because of it, is in
 [fords-of-war/balance-log.md](fords-of-war/balance-log.md).
 
+Mike, 2026-11-03: balance values, roster picks and test plans are the agent's to decide and report; merge and push still need his word.
+
 ## Why This Exists
 
 - **Vanilla behavior:** Bannerlord battles are one field and one player agent. The commander screens

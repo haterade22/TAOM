@@ -4,9 +4,10 @@
 
 A single reusable, read-only validator for TAOM's Bannerlord ModuleData XML. It builds id registries from the installed game + the TAOM repo, resolves prefix-based cross-references (`Item.` / `NPCCharacter.` / `Culture.` / `PartyTemplate.` / `BodyProperty.` / `Faction.`), and runs per-schema duplicate-id / enum / civilian-type checks, emitting a severity-classified report. It consolidates the scattered one-shot validators (`validate_all_troop_refs.py`, `audit_item_refs.py`, the equipment-`equipmentType` PowerShell snippet, the duplicate-id-across-Armory-folders checks) into one schema-driven engine.
 
-The same engine backs **three consumers**: a **CLI** (`validate_moduledata.py` — batch report), a **pre-commit hook** (`.claude/hooks/check-moduledata-validation.sh` — blocks Claude-driven commits on ERRORs), and an **MCP server** (`taom_mcp_server.py` — interactive agent queries like "does this item exist?" / "what references this troop?").
+The same engine backs **five consumers**: a **CLI** (`validate_moduledata.py`: batch report), a **pre-commit hook** (`.claude/hooks/check-moduledata-validation.sh`: blocks Claude-driven commits on ERRORs), the tracked **git pre-commit hook** (`.githooks/pre-commit`: the same error codes on every commit from a clone whose `core.hooksPath` names `.githooks`), **`tools/data_gates.py`** (runs it with the other data gates and prints PASS, FAIL or NOT RUN; this is its read-first doc), and an **MCP server** (`taom_mcp_server.py`: interactive agent queries like "does this item exist?" / "what references this troop?").
 
 A schema-driven engine (`SchemaDefinition` / cross-reference / validation services) with an MCP-tool surface, implemented in Python. Every finding code, one row each: [moduledata-validator-codes.md](../reference/moduledata-validator-codes.md).
+`TROOP_ID_REMOVED`, `INCONSISTENT_WEAPON_SLOT` and `TOWNSFOLK_WITHOUT_BATTLE_ROSTER` have no section in this doc; their rows in that table carry the bug class and the repair. For `TROOP_ID_REMOVED` the baseline is `tools/shipped_troop_ids.txt`, which `/release` reseeds from the new tag; for the townsfolk code the mechanism is in [equipment-rosters.md](../modding/equipment-rosters.md) Gotchas.
 
 ## Why This Exists
 

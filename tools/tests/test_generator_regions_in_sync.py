@@ -31,6 +31,8 @@ from _gamedir import game_dir  # noqa: E402
 OWNERS = (
     [("generate_%s_troops.py" % c, ["--check"]) for c in kingdoms.REGENERATABLE]
     + [("generate_new_faction_kingdoms.py", ["--only", c, "--check"]) for c in kingdoms.REGENERATABLE]
+    # The lord skill sets: a blind --apply once nearly deleted Sauron's and the Witch-King's sets.
+    + [("apply_culture_skills_traits.py", ["--check"])]
 )
 
 # Promoter targets whose --check is not run here. Lindon: 13 enlist_lindon_* ids already shipped,

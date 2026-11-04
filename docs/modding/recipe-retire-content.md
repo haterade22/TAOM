@@ -43,7 +43,7 @@ before anyone checked
 
 | Strategy | What you do | Old saves | Use it when |
 |---|---|---|---|
-| **Orphan** | leave the entry, remove every path that reaches it (`<upgrade_target>`, party-template stack, recruitment pool) | survive intact | the default for a troop. `.claude/rules/troops.md:148-150` states it as a rule: never delete a troop, orphan it |
+| **Orphan** | leave the entry, remove every path that reaches it (`<upgrade_target>`, party-template stack, recruitment pool) | survive intact | the default for a troop. `.claude/rules/troops.md` "Save Compatibility" states it as a rule: never delete a troop, orphan it |
 | **Obsolete stub** | strip the entry to a shell and mark it, keeping the id resolvable | survive; the entity stops taking part in anything | vanilla's own answer, below. TAOM has never used it: `is_obsolete` appears 0 times in `Main/_Module/ModuleData` |
 | **Delete** | remove the entry and sweep every reference | break where the save names the id | you accept it and say so. `docs/features/gondor-armor-revamp.md:112` deleted 5 Lossarnach troops on the note that pre-1.0 saves are not preserved |
 

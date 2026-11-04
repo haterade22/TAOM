@@ -11,7 +11,7 @@
 #     every Task spawn. Agent BODIES load only when that specific agent is
 #     spawned. Same frontmatter-only charge applies.
 #   - Hooks are .sh scripts invoked by the harness — not in any model context.
-#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start, main session only.
+#   - MEMORY.md loads first ~200 lines / ~25KB at conversation start in the main session; subagent transcripts show it too (harness-facts.md).
 #   - CLAUDE.md's @-imports load at launch with it, so they are counted in full. Which files
 #     load, whether a rule is path-scoped, and every ADR-011 cap come from
 #     `tools/lint_docs.py --context-budget-json`, the same code the CI and commit gate run.
@@ -425,7 +425,7 @@ except Exception as e:
     # HEURISTIC (estimate from upstream docs). Counts updated 2026-04-26.
     # When adding/removing servers, update these AND document the source.
     #
-    #   serena:      HEURISTIC ~25 symbol/edit tools — https://github.com/oraios/serena
+    #   (serena left .mcp.json on 2026-11-03)
     #   (github, filesystem and git left .mcp.json on 2026-09-29; their rows went with them)
     #   ilspy:       EXACT 4 — counted from server.py (decompile_assembly,
     #                list_types, generate_diagrammer, get_assembly_info)
@@ -434,7 +434,6 @@ except Exception as e:
     #   imagine:     HEURISTIC ~5 — HTTP server (mcp.imagine.art); unauthenticated
     #                sessions load no tools, so this is a when-authed estimate
     declare -A SERVER_TOOLS=(
-        [serena]=25
         [ilspy]=4
         [sequential-thinking]=1
         [context7]=2

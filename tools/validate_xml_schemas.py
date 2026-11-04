@@ -72,7 +72,7 @@ with it, none of which an XSD checks:
     byte order mark says otherwise, the declared encoding ignored, a BOM-less UTF-16 file not well-formed;
     a character reference the engine accepts with CheckCharacters=false, such as `&#1;`, still
     fails here): passed by name, it is reported like a bad SubModule.xml. No XSD here checks
-    any of it; the gates are in `.claude/rules/moduledata-validation.md` "Gate per file kind".
+    any of it; the gates are listed by `python tools/data_gates.py --list`.
 A file passed by name that is a real fault (a manifest the engine cannot load, an unlisted .xml under
 ModuleData/Languages) makes the run exit 1 and the summary read FAIL; the summary counts them too. A
 whole-module run classifies nothing by name, so its exit code is unchanged.
@@ -524,8 +524,7 @@ def _print(report: dict, by_name: bool) -> bool:
     for rec in report["native"]:
         print(f"NATIVE  {rec['file']}: named by project.mbproj row id=\"{rec['id']}\" "
               f"type=\"{rec['type'] or '-'}\" ({rec['kind']}); it loads only if the engine requests that "
-              f"id or reads that type; no XSD here checks it; gates: "
-              f".claude/rules/moduledata-validation.md \"Gate per file kind\"")
+              f"id or reads that type; no XSD here checks it; gates: python tools/data_gates.py")
     for path in report["not_registered"]:
         if _xml_in_own_languages_folder(path):
             faults += 1

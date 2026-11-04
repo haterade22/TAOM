@@ -12,10 +12,19 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
      reference class is the horse, not the warg. Sections A-E are baselined on the spider and
      deliberately do not cover it.
 
-Read-only. Prints diffs only (parity rows are counted, not listed).
-Usage: python tools/audit_mount_parity.py
+Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
+"AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
+Usage: python tools/audit_mount_parity.py [--strict]
+
+--strict: for every mount in STRICT_MOUNTS (the behaviour-tree-driven creatures), the usage set must
+be total over the keys the engine can query: all ten verbs, nine jump directions x (start, loop and
+end by is_hard) = 45 rows, and a direction="none" turn_direction="none" reference row at every pace
+0..5. A missing key crashes the game (creature-mount-authoring.md Phase 5). The warg and the
+vanilla horse ship only front and none jumps and are not in the list.
 """
+import argparse
 import glob
+import sys
 import os
 import re
 import xml.etree.ElementTree as ET
@@ -67,6 +76,15 @@ FILES = {
 }
 
 MOUNTS = ["spider", "warg", "elephant", "mumakil"]
+
+# The mounts --strict holds to a total usage set: the creatures a behaviour tree steers, which turn
+# mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
+# not the horse.
+STRICT_MOUNTS = ("spider", "elephant", "mumakil")
+STRICT_VERBS = ("rear_action", "rear_damaged_action", "dash_action", "kick_action",
+                "fast_quick_stop_action", "quick_stop_action", "gallop_acceleration_head_action",
+                "hit_object_action", "hit_object_falling_action", "jump_start_action")
+JUMP_DIRECTIONS = ("front", "front_left", "front_right", "none", "left", "right", "back", "back_left", "back_right")
 
 # Section F. The chariot rides on its own 60-bone skeleton that embeds the complete vanilla horse
 # bone set by exact name, has no behaviour tree and no TAOM C# at all -- so the horse is its
@@ -184,6 +202,47 @@ def rows_of(setelem, table_path):
         key = tuple((k, (r.get(k) or "").lower()) for k in keys)
         out[key] = r.get("action", "")
     return out
+
+
+def strict_gaps(setelem):
+    """The totality gaps of one usage set element, as printable lines (empty = total)."""
+    if setelem is None:
+        return ["no monster_usage_set found"]
+    gaps = []
+    missing_verbs = [v for v in STRICT_VERBS if not setelem.get(v)]
+    if missing_verbs:
+        gaps.append(f"verb attribute(s) not wired: {', '.join(missing_verbs)}")
+    jumps = rows_of(setelem, "monster_usage_jumps/monster_usage_jump")
+    want = set()
+    for d in JUMP_DIRECTIONS:
+        want.add((("jump_state", "start"), ("direction", d), ("is_hard", "")))
+        for h in ("false", "true"):
+            want.add((("jump_state", "loop"), ("direction", d), ("is_hard", h)))
+            want.add((("jump_state", "end"), ("direction", d), ("is_hard", h)))
+    absent = want - set(jumps)
+    if absent:
+        dirs = sorted({dict(k)["direction"] for k in absent})
+        gaps.append(f"monster_usage_jumps misses {len(absent)} of {len(want)} rows "
+                    f"(direction(s): {', '.join(dirs)})")
+    moves = rows_of(setelem, "monster_usage_movements/monster_usage_movement")
+    have = {dict(k)["pace"] for k in moves if dict(k)["direction"] == "none" and dict(k)["turn_direction"] == "none"}
+    for pace in range(6):
+        if str(pace) not in have:
+            gaps.append(f'monster_usage_movements has no direction="none" turn_direction="none" row at pace {pace}')
+    return gaps
+
+
+def section_strict():
+    print("=" * 72)
+    print("STRICT. Usage-set totality for the behaviour-tree-driven mounts: " + ", ".join(STRICT_MOUNTS))
+    failed = 0
+    for n in STRICT_MOUNTS:
+        gaps = strict_gaps(usage_set(n))
+        print(f"  {n}: " + ("total" if not gaps else "GAPS"))
+        for g in gaps:
+            print(f"      {g}")
+        failed += bool(gaps)
+    return failed
 
 
 def section_bc(types):
@@ -452,6 +511,14 @@ def section_f(types):
 
 
 def main():
+    ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
+    ap.add_argument("--strict", action="store_true",
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables")
+    args = ap.parse_args()
+    if not os.path.isdir(LOTR):
+        print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
+              file=sys.stderr)
+        return 2
     types = load_action_types()
     print(f"action_types loaded: {len(types)} declarations")
     section_a()
@@ -459,9 +526,11 @@ def main():
     section_d(types)
     section_e()
     section_f(types)
+    failed = section_strict() if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

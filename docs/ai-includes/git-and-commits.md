@@ -20,11 +20,10 @@ when Mike asks for them.
   subject pass. Commits made outside Claude (IDE, terminal) meet the same label, length and
   attribution rules through the git hook `.githooks/commit-msg` (`core.hooksPath` = `.githooks`,
   2026-10-28), which runs `tools/check_commit_msg.py` and reads the version of the tree being
-  committed. The Claude hook reads the
-  version from the session's main checkout, not from the tree a `git -C <worktree> commit` names, so
-  a Claude commit in a worktree on another branch whose `<Version>` differs is refused even with
-  the right label: make that commit from a terminal
-  ([hooks catalog](../reference/hooks-catalog.md)).
+  committed. `.githooks/pre-commit` and `pre-merge-commit` run the doc budget, gitignored-file and
+  ModuleData gates for every committer (2026-11-03). The Claude hook reads the
+  version of the repository the commit runs in, so a `git -C <worktree> commit` is judged against
+  that worktree ([hooks catalog](../reference/hooks-catalog.md)).
 - **Length:** subject at most 72 characters (the label costs about 20, so the old 50 no longer fits);
   body wrapped at 72.
 - **No AI attribution.** No `Co-Authored-By` or similar trailer, whatever a harness reminder suggests.
@@ -33,8 +32,6 @@ when Mike asks for them.
 
 | Trailer | When | Example |
 |---|---|---|
-| `Constraint:` | a TaleWorlds limitation blocked the ideal solution | `Constraint: Hero is sealed, can't subclass` |
-| `Rejected:` | an alternative was considered and dropped | `Rejected: Prefix patch fires before state init` |
 | `Not-tested:` | parts that can't be unit tested | `Not-tested: Harmony patch invocation (requires live game)` |
 | `Research:` | what was decompiled to inform the change | `Research: DefaultPartyWageModel.GetCharacterWage` |
 | `Save-compat:` | save file impact | `Save-compat: New field, safe, defaults to 0 on load` |
@@ -42,7 +39,8 @@ when Mike asks for them.
 **One commit per concern.** TDD tests and the `IoC.cs` / `SubModule.cs` wiring go in the commit of
 the feature they serve, and one feature's C# and XML stay together; tests written after the code get
 their own `test:` commit. Types by path: `Main/Features/**` is `feat:` or `fix:`, ModuleData XML and
-XSLT on their own is `data:`, `docs/**` is `docs:`, CLAUDE.md and `.claude/**` are `chore:`.
+XSLT on their own is `data:`, `docs/**` is `docs:`, CLAUDE.md and `.claude/**` are `docs:` for prose
+and `chore:` for configuration.
 `CHANGELOG.md` changes only in a `/release` commit; any other staged edit to it is a hand edit to
 flag, never commit.
 
@@ -62,7 +60,7 @@ that was no longer there.
 
 | Rule | Why | Enforced by |
 |---|---|---|
-| **Commit, or stash deliberately, before any `git pull --rebase`** | Anything uncommitted is fair game for the auto-stash, including files you don't own. | nothing |
+| **Commit, or stash deliberately, before any `git pull --rebase`** | Anything uncommitted is fair game for the auto-stash, including files you don't own. | `rebase.autostash=false` in this machine's system gitconfig; only an explicit `--autostash` bypasses it |
 | **Run `git stash list` after any rebase and restore what it took** | An unpopped auto-stash is invisible data loss: no error, no conflict, just reverted files. The 2026-08-07 stash sat for two days before anyone looked. | `session-start.sh` prints the stash count |
 | **Recover with `git stash apply`, never `pop`** | `apply` keeps the stash as a safety net until the recovery is verified green. | nothing (`block-dangerous-git.sh` asks only on `stash drop`/`clear`) |
 | **Re-read your own changes from disk before any completion claim** | Another session restoring a path reverts your uncommitted edits with no error and a clean `git status`. The tree compiling is not proof your change is still in it. | nothing |
@@ -75,7 +73,6 @@ that was no longer there.
 | **Never write a reconstructed shared file to disk** | Rebuilding CHANGELOG.md from `HEAD` plus your own hunk and writing it to the worktree silently deletes other sessions' uncommitted entries and still looks well-formed (2026-08-28: two entries lost). Reconstruct into the index instead: `git hash-object -w` then `git update-index --cacheinfo`, which never touches the worktree. The tell: an append should be inserts only. | nothing |
 | **After a merge, stage only the backlink footers of docs the branch touched** | `python tools/build_backlinks.py` regenerates footers across the whole tree, including docs another session is still editing. | nothing |
 | **Delete a merged branch with `git branch -d`, never `-D`** | `-d` refuses an unmerged branch, so a refusal means the merge did not land: investigate it. Delete the remote branch only after the local delete succeeds. | nothing |
-| **Stage an edit in the same command that makes it** | An unstaged edit in a shared tree is fair game for the next git operation. On 2026-08-08 a nine-line CHANGELOG paragraph survived a reset, then vanished to a concurrent operation before it could be staged. | nothing |
 
 If the tree holds another session's edits, leave them unstaged and say so: don't commit, revert or
 tidy them. If Mike asks for both sessions' work to land, commit theirs as its own commit, attributed

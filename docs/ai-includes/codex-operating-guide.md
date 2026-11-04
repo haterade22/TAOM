@@ -85,13 +85,8 @@ MCP configuration as part of documentation or ordinary feature work. Record the
 actual model identity from runtime evidence when reporting a dispatched review.
 An identity written in an old template is not evidence.
 
-Local observation on 2026-09-11: `Get-Command codex` selected the VS Code extension
-binary and `codex --version` returned `0.154.0-alpha.6.2`. Its help advertised
-`on-request` and `never` approval choices, while the repository configuration
-contained `on-failure`. This is a compatibility check to resolve when configuring
-a run, not proof that the current application uses that binary or that the setting
-was rejected. Recheck the selected executable and effective settings. This docs
-change does not migrate the setting, test authentication or start a paid run.
+Check the approval choices in `codex --help` against `approval_policy` in
+`.codex/config.toml` before a dispatch; the repo value may lag the client.
 
 The existing project configuration declares filesystem, Git and ILSpy MCP servers.
 Check `codex mcp --help` and, when appropriate, `codex mcp list`; inspect output
@@ -162,12 +157,7 @@ of a legacy completion checklist.
 
 ## Independent review and explicit paid dispatch
 
-The maintainer authorizes paid AI dispatch when they explicitly ask to conduct
-it. That request is authorization within its stated scope and any budget; do
-not request the same permission repeatedly. A general build, documentation,
-diagnosis or local-review request is not blanket permission for additional paid
-agents. Ask only when an unresolved choice materially changes scope, cost or
-data sharing. See [the shared policy](../../.ai/policy.md).
+Paid dispatch: [the shared policy](../../.ai/policy.md).
 
 Use the [packet workflow](../../.ai/README.md) for a committed review. Confirm
 base/head and isolate the source from an active builder. A requested dirty-tree

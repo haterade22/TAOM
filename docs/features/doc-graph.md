@@ -9,7 +9,7 @@
 TAOM's knowledge base is ~300 cross-linked docs plus 90+ memory files. The existing tooling ([lint_docs.py](../../tools/lint_docs.py), [build_backlinks.py](../../tools/build_backlinks.py), INDEX.md) curates and lints that web but never lets you *interrogate its shape*.
 
 - **Before:** to learn how `cultural-feats` relates to `career-system` you open both docs and read. To find over-connected hubs or fragile single-link joins, you can't — grep sees lines, not topology.
-- **The graphify prompt:** the external tool [graphify](https://github.com/Graphify-Labs/graphify) (reviewed in [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md), then re-tested by trial install in [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md); it was `safishamsi/graphify` under MIT at the time of the port and is now `Graphify-Labs/graphify` under Apache-2.0) builds a queryable code/doc knowledge graph with `explain`/`path` verbs and "god node" / "bridge" metrics. Most of it duplicates TAOM tooling (Serena owns C# symbols; `taom_schema` owns game-data refs; `lint_docs` owns dead-link/orphan detection) or contradicts ADR-010 (Obsidian/HTML/RAG were explicitly rejected). The three ideas that *don't* duplicate anything (query verbs, graph metrics, confidence-tagging) are what this tool adopts, applied to the doc-link graph `lint_docs` already builds and discards.
+- **The graphify prompt:** the external tool [graphify](https://github.com/Graphify-Labs/graphify) (reviewed in [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md), then re-tested by trial install in [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md); it was `safishamsi/graphify` under MIT at the time of the port and is now `Graphify-Labs/graphify` under Apache-2.0) builds a queryable code/doc knowledge graph with `explain`/`path` verbs and "god node" / "bridge" metrics. Most of it duplicates TAOM tooling (Grep and `graphify_taom.py` cover C#; `taom_schema` owns game-data refs; `lint_docs` owns dead-link/orphan detection) or contradicts ADR-010 (Obsidian/HTML/RAG were explicitly rejected). The three ideas that *don't* duplicate anything (query verbs, graph metrics, confidence-tagging) are what this tool adopts, applied to the doc-link graph `lint_docs` already builds and discards.
 - **Without it:** KB hygiene stays invisible. An orphaned feature doc (nothing links it) or a star-topology (everything reachable only through INDEX.md) is never surfaced until a session can't find something.
 
 ## Architecture
@@ -40,7 +40,7 @@ docs/**/*.md
 
 These are enforced in the module docstrings and matter as much as the features:
 
-- **`.md` nodes only.** Docs may *link to* `.cs`, but source code is never a node — **Serena** owns the C# symbol graph.
+- **`.md` nodes only.** Docs may *link to* `.cs`, but source code is never a node: `tools/graphify_taom.py` owns the C# code graph.
 - **No game-data graph** — `taom_schema.py` / `taom_query.py` / the taom-moduledata MCP own item/troop/culture references.
 - **No LLM, no embeddings, no inferred edges** — edges are literal links only. Deterministic and offline.
 - **No HTML/D3/Obsidian/Neo4j export, no on-disk graph cache** — ADR-010 rejected viz + wikilinks; `build_backlinks.py` owns the only persisted graph artifact (the footers). The graph rebuilds from disk each run (sub-second).
@@ -92,7 +92,7 @@ These compose: a typical audit is `metrics` → `explain` the worst orphan / god
 | You actually want… | Use instead |
 |---|---|
 | "Which doc mentions term Z?" (full-text search) | `grep` / [INDEX.md](../INDEX.md) — this is topology, not search (ADR-010 deferred a `search_docs.py` for exactly this). |
-| C# type / method / reference relationships | **Serena** MCP. |
+| C# type / method / reference relationships | Grep, or [graphify](graphify-code-graph.md) for blast radius. |
 | Item / troop / culture / party-template references | `tools/taom_query.py` / the taom-moduledata MCP. |
 | "Where's the doc for feature X?" — a one-off lookup | [INDEX.md](../INDEX.md), faster than building the graph. |
 
