@@ -13,7 +13,7 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
 
 ## Phase 1 — Confirm + scope the drift
 
-1. Installed truth: `bin/Win64_Shipping_Client/Version.xml` + DLL `LastWriteTime`s (the update
+1. A hotfix can keep the version string, so no banner fires: a red `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` is then the first sign. Installed truth: `bin/Win64_Shipping_Client/Version.xml` + DLL `LastWriteTime`s (the update
    timestamp bounds which test runs were on which engine — decisive for crash attribution).
    `Version.xml` carries only `vX.Y.Z`; read the build number from `TaleWorlds.Library`
    (`ApplicationVersion.DefaultChangeSet`, `BuildInfo.GameVersion`) or `package_info.txt`. Steam
