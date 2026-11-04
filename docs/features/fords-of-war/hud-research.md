@@ -1,5 +1,7 @@
 # Fords of War commander HUD: research brief
 
+> **Status (2026-11-03): a research brief, not a description of the panel.** It informed the command panel, which is shipped and described under "The command panel" in [fords-of-war.md](../fords-of-war.md). The layout in section 3 was a recommendation, and the shipped panel differs: the orders (Z X C V, with V as Seize) sit in the command deck at the bottom centre beside the buy grid, the heroes are at the bottom right, the lane rows form a battle board at the bottom left, and there is a speed button at the top left and an upgrades panel.
+
 Labels: SRC = what a fetched or searched source says. INF = my inference. Sources marked (2nd) are secondary: blogs, forums, reviews. Evidence is thinner than requested; gaps are listed in section 6.
 
 ## 1. Rules that matter most

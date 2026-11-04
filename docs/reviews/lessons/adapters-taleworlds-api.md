@@ -1745,3 +1745,43 @@ ADR-013 puts client-only assemblies in `TAOM.Client` behind a core interface wit
 - **Why missed:** the setting defaults off, the field trial runs one battle, and the fake's read cannot throw. Hot keys by name are safe on an unregistered id, so the two kinds of read looked alike in the code.
 - **Prevent:** before reading a game key by id, name who registers its category on that context, and read the key only where that holds, for example while the panel that needs it is open. For a read that a setting adds, write a test that asserts no read happens where the handler is absent, and add a person's row for the mission kind with the least in it.
 - **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 5.
+### A spawn place you compute skips the layout's filter, so a scene with floors takes the soldier to the wrong one
+
+The Long Defeat spike copied the shape of Fords of War's spawn recipe, a grid of positions around a frame. At Helm's Deep the frame stood on a terrace at height 26.5, and most of the garrison stood at height 0.0 in the caves under it. Three died from the fall in the first 5 s. Vanilla passes no position. Its layout offers only slots that native `BatchFormationUnitPositions` accepts, spreading out from the frame (`Formation.cs:669-671`, `LineFormation.cs:495-497`), and `Mission.cs:3983-3985` then pulls a slot with no navmesh back toward the frame. When the slots run out, every remaining soldier stands on the frame point (`Mission.cs:3992-3995`).
+
+- **Why missed:** Fords of War's clean runs looked like proof of the recipe, and they all used one lane scene. A static review cannot see a scene's floors, and the run's judge read only whether its lines were present.
+- **Prevent:** on a scene with more than one walkable level, use the deployment plan and pass no position. A spike that spawns agents reads their height and navmesh back and logs a verdict, so a wrong floor is a failed line and not a person's report. When you replace a failing path, ask how the new path fails, and make the read-back see that as well (here, a pile on the frame point).
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 21, 22 and 26.
+
+### When a mission leaves out vanilla's ending, write how its fight ends
+
+The Long Defeat spike leaves out `BattleEndLogic` and forbids retreat. Its waves then had no ending: the last 7, then 6, attackers and 31 defenders stood apart until the run's limit, and one soldier in a later wave never left the spawn area. Nothing threw, and every log line looked healthy. My first rule for this felled every standing attacker, and at Minas Tirith it felled 35 with 2 defenders left, and the judge read a clear.
+
+- **Why missed:** the review of removed behaviors asked who reads them, and not what they do for the mission. Nobody read the plan for how a fight ends.
+- **Prevent:** when a mission removes an ending (a retreat, `BattleEndLogic`, a win check), write down in the plan what ends the fight in each state: both sides alive and apart, one soldier stranded, the attackers winning, everyone fleeing. An ending you add must not be able to turn a loss into a win, so test it against the state where the other side is ahead. Log a line when each rule fires, and let the result count those lines. Run it to the end once before you trust a long mission.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 31 and 36.
+
+### The engine's gates ignore visibility, so read a scene's hidden gates before you trust a siege lane
+
+`TeamAISiegeComponent` takes `InnerGate` and `OuterGate` by tag from all active gates, with no visibility check, and a hidden `CastleGate` returns from `OnTick`, so it never opens. Helm's Deep hides an inner gate at height 32.5. The Middle lane therefore stays closed, and `BehaviorAssaultWalls` stays in `AttackEntity` with soldiers standing at a gate that nothing draws. I had filtered hidden gates out of my own log line, which hid the cause, and I told a reader the cause was constant team power.
+
+- **Why missed:** the log filter came from a correct wish, to show only real gates. The false reason sounded right, and it did remove the other ways out.
+- **Reach (a scan of the live `TAOM_Map` scene files, 2026-11-04):** 5 of the 30 scenes with castle gate prefabs hide an inner gate: `taom_rohan_castle_helms_deep_forceatmo` and `taom_gondor_castle_001_forceatmo` have no other inner gate, and `taom_gondor_castle_002_forceatmo`, `taom_gondor_castle_003_forceatmo` and `taom_gondor_town_lossarnach_forceatmo` have a second, visible one. Nobody has checked what a campaign siege does on these scenes.
+- **Prevent:** before a siege feature trusts a scene, list every `CastleGate` in it with its visibility and tag. Log what the engine uses, not only what the player sees. Do not delete a hidden inner gate: a null `InnerGate` throws in `BehaviorAssaultWalls`.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 31 and 37.
+
+### A read-back check means only what it compares, so write its claim from the comparison
+
+My first read-back compared each soldier with his class's own frame, and I wrote that `ok` proves "the right floor". Helm's Deep authors the defender archers' frame at height 1.5, so all 33 could read `ok` on low ground below a terrace at 26.5. Three more lines kept naming a frame that no longer placed anyone, up to 95 m away.
+
+- **Why missed:** I wrote the sentence from the reason for the fix, and I kept the old log text because it still compiled.
+- **Prevent:** before a verdict line lands, write down what a pass does not prove, and put that sentence beside the line in the feature doc. When a code path changes, re-read every log line that names a value from the old path. Run the two-edit test on a source pin: reintroduce the regression, then change only the internals, and see each result.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 24, 25, 28 and 29.
+
+### A mode that copies a sibling's views must copy what they refuse (Long Defeat, 2026-11-04)
+
+The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed() => false` in `FordsCommanderCameraView`. The Escape menu offers Photo Mode unless a view says no, and the only exit lives in `CreatePhotoModeView`, which this mission leaves out. One click locked the player out of the run. The spike had met the same class of miss with the focus-lost Escape guard.
+
+- **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
+- **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.

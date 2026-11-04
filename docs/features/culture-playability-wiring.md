@@ -107,7 +107,7 @@ stage; the rest fail silently.
 | 6 | Starting denars | `startup_resources/startup_resources_config.xml` | silent |
 | 7 | At least one eligible career | `career_system/taom_careers.xml` + `charactercreation/career_menu.json` | silent |
 | 7b | Career starting kits, one per sex for each archetype the culture's careers offer | `equipmentsets/taom_career_starting_equipment.xml` (skeletons, then `tools/generate_career_kits.py --apply`) | silent: the career start keeps the youth kit |
-| 8 | Child / teen / lord / education equipment templates | `equipmentsets/taom_{child_equipment,lord_template_equipment,education_equipment}_templates.xml` | fatal — NRE on new game |
+| 8 | Child / teen / lord / education equipment templates | `equipmentsets/taom_{child_equipment,education_equipment}_templates.xml` and `equipmentsets/taom_lord_template_equipment.xml` | fatal: NRE on new game |
 | 9 | Stage-2 education tutor templates | `taom_education_character_templates.xml` | fatal — age-8 CTD (#354) |
 | 10 | Enlistment rosters, 4 ranks | `equipmentsets/taom_enlistment_equipment.xml` | silent — issues another culture's gear |
 | 11 | Owns at least one settlement | `TAOM_Map/ModuleData/settlements.xml` (**live, external**) | fatal — daily-tick CTD (#374) |
@@ -287,7 +287,7 @@ before retuning `taom_partyTemplates.xml`.
 | File | Purpose |
 |------|---------|
 | `Main/_Module/ModuleData/spcultures.xslt` | Retags the six vanilla cultures; party-template bindings live here |
-| `Main/_Module/ModuleData/taom_spcultures.xml` | The 30 TAOM-native `<Culture>` blocks, the bandit and creature cultures among them |
+| `Main/_Module/ModuleData/taom_spcultures.xml` | The 35 TAOM-native `<Culture>` blocks, the bandit and creature cultures among them |
 | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Every party template TAOM authors |
 | `Main/Features/CharacterCreation/CharacterCreationContentService.cs` | Registers custom cultures, sets race, teleports to the starting settlement |
 | `Main/Features/CharacterCreation/PlayerEquipmentRosterIds.cs` | Builds the CC roster id — unconditionally |
@@ -309,8 +309,9 @@ before retuning `taom_partyTemplates.xml`.
 - `TAOM.Tests/Features/CharacterCreation/CareerCultureCoverageTests.cs` — at least one eligible career.
 - `TAOM.Tests/Features/CharacterCreation/CareerKitCoverageTests.cs`: for every culture in
   `cultures.json`, a male and a female kit for each archetype among the careers it offers (read from
-  `taom_careers.xml` through `CareerSystemIoC`'s archetype map). Ered Luin offers only Infantry and
-  Ranged careers, so it needs four; the other 25 cultures need all six. No exceptions since 2026-10-23.
+  `taom_careers.xml` through `CareerSystemIoC`'s archetype map). Ered Luin and Angaladh offer Infantry,
+  Ranged and TwoHanded careers and no Cavalry one; the other 28 cultures offer Infantry, Ranged and
+  Cavalry. Each of the 30 needs six kits (three archetypes, both sexes). No exceptions since 2026-10-23.
 - `TAOM.Tests/Features/Enlistment/EnlistmentRosterCultureCoverageTests.cs` — four rank rosters.
 - `TAOM.Tests/Core/CulturePartyTemplateTests.cs`: every party-template binding on every culture, for
   both sources. Runs `spcultures.xslt` over a sentinel stub rather than reading the markup, which is

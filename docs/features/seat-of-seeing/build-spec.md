@@ -832,7 +832,7 @@ Build on `Mission.TakeControlOfAgent` (6407-6414), which sets the controller and
 
 1. **Never call `Mission.SetPlayerCanTakeControlOfAnotherAgentWhenDead` (6402).** That flag arms vanilla's held Kick key on `LastFollowedAgent` (MissionScreen:2890-2893), so from the Seat it would take a soldier the player did not point at.
    `TakeControlOfAgent` does not read the flag. Four openers set the flag themselves (`BannerlordMissions.cs:155` and `:237`, `SandBoxMissions.cs:713` and `:1461`: custom and campaign field battles and sieges with deployment), and so does
-   TAOM's `LongDefeatSpikeLauncher.cs:52`. So a postfix on `Mission.CanTakeControlOfAgent` (6393) in `Patch140_SeatOfSeeing` answers false while seated, and key 532 is the only way out of the sky. Outside the Seat those missions keep vanilla's key.
+   TAOM's `LongDefeatMissionLauncher.cs:89`. So a postfix on `Mission.CanTakeControlOfAgent` (6393) in `Patch140_SeatOfSeeing` answers false while seated, and key 532 is the only way out of the sky. Outside the Seat those missions keep vanilla's key.
    Vanilla's prompt on the Kick key reads the flag for its relevance and the postfix for its enabled state, so it may show disabled: the feature doc says so. On the fall, while seated, one message names key 532.
 2. When `SeatPermissions.TakeSoldier` (section 4) and `SeatTakeSoldierAfterFall` hold, key 532 in the Seat takes the soldier at the pointer. The panel cannot be open after a fall (MissionOrderVM:742-748, 915-921), so the pointer is the screen
    centre. If the view keeps to a company (section 7), the key takes the nearest eligible soldier of that company instead. No soldier refuses with one message and one `Skip` line. No mark shows the centre in this version: that is a known limit with a

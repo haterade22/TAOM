@@ -32,6 +32,10 @@ game to end. The default 0 stops the game at once. Pass it whenever someone may 
 
 `--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Use 4x for balance runs and 10x only for smoke and crash runs: 10x changes the match, as [balance-log.md](../features/fords-of-war/balance-log.md) measures.
 
+`--control-check 240` starts the scripted soldier control at that mission second: it takes the front soldier and hands it back, takes one and waits for its fall, then takes one again. Read the `[FordsOfWar][Control]` lines and the `[Speed]` lines in the run's log. Give `--live-seconds` about 300 seconds more than the start, and put `--screenshots` inside the holds to see the camera.
+
+The launcher does not judge the `[FordsOfWar][Control]` lines: its exit code covers the match, the report and the crash scan, so a session reads them. Each take writes a `took` line, each hand-back a `returned` line and each fall a `fell` line. Ten seconds after a return a `rejoin` line gives `moved`, `ai`, `brain` and `formation` for the returned soldier, which says whether its AI drives it again. A soldier that outlives the 180-second hold of the second round is handed back, so it writes `returned`, not `fell`. While a soldier is held the match runs at 1x, so above 1x the speed changes at each take and `tools/fords_match_review.py` calls the run not a clean sample: do not use a control-check run as a balance sample.
+
 `--screenshots 8,45,65` saves a picture of the screen at those live seconds, plus one during the countdown, through the engine's
 `Utilities.TakeScreenshot`. The picture holds the UI, so a session can read the panel itself. The engine writes 24-bit BMP data whatever the file is called, so the launcher
 turns each `hud_*.bmp` into a PNG in the run folder when the match ends. Static review cannot see a Gauntlet layout: use this for any change to a prefab.
@@ -78,7 +82,7 @@ per application tick. The full key list and the wiring are in [fords-of-war.md](
 | Part | Content |
 |---|---|
 | Env var | `TAOM_FORDS_AUTORUN` = absolute path of a UTF-8 `key=value` arm file (LF) |
-| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
+| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `control_check`, `screenshots`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
 | Phases | Wait until the main menu has been up for 4 s (hiding any inquiry), start the match, wait for live, end it after `live_seconds` of mission time or at the wall limit, wait for the final=1 report pass, write the done file, quit |
 | Status | `fords_autorun_status.txt` rewritten every 5 s |
 | Done file | `fords_autorun_done.txt`: `reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `final_passes`, `final_total`, `started`, `ended` |
@@ -99,6 +103,8 @@ The launcher exits 0 only when all of these hold; the run folder's `runner_log.t
 
 The `[BuildStamp]` line in the copied log names the build that ran; quote it in the evidence. A PASS from a stale deploy proves nothing
 about the change under test.
+
+For a balance reading rather than a pass or fail, run `python tools/fords_match_review.py <run folder>` and record the result in [balance-log.md](../features/fords-of-war/balance-log.md).
 
 ## Costs and risks
 
@@ -132,6 +138,8 @@ ArmorySim 0.2 is the maintainer's standalone tool and stays standalone: nothing 
 Today the in-game driver plays only a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises
 (mission start, agents, formations, destructibles). A general scenario driver, one that arms other in-game checks the same way, is planned
 separately and is not built; until it exists, a check outside Fords still needs a person to play it.
-The Long Defeat spike (#1079) has its own wrapper, `tools/run_long_defeat_spike.py`, under this same permission and gate; `/game-run` does not
-drive it yet.
+The Long Defeat (#1079) has its own wrapper, `tools/run_long_defeat.py`, under this same permission and gate. It reuses this runner's
+preflight, idle gate, launch, dialog handling and crash scan, arms the game with `TAOM_LONGDEFEAT_AUTORUN`, and presses Cancel on the
+Helm's Deep terrain shader dialog. `/game-run` names it for changes under `LongDefeat`. Exit 0 needs the `[Check]` lines of the plan, so
+read the run folder before rerunning.
 The Seat of Seeing's field trial has its own wrapper too, `tools/run_command_trial.py` (arm variable `TAOM_COMMAND_TRIAL`, runs in `E:\Temp\command-trial-runs`), under the same permission and gate; `/game-run` does not drive it yet. [Its steps and how to read a run](../features/seat-of-seeing.md#field-trial). It refuses a log whose `[BuildStamp]` is not this checkout (another sha than HEAD, a `.dirty` mark the tree does not match, or an uncommitted file under the build's own pathspec newer than the build), and one with no `[Shutdown] clean module unload` line.

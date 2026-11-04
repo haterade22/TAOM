@@ -62,9 +62,9 @@ SubModule.OnSubModuleLoad()
     └── [12 UI patches].Initialize(service, heroAdapter)
 
 SubModule.OnGameInitializationFinished()
-    ├── harmony.PatchCategory("Patch23_BannerColorPersistence")
-    ├── harmony.PatchCategory("Patch24_BannerDriftGuard")
-    └── harmony.Patch(MobilePartyVisual.AddCharacterToPartyIcon via reflection)
+    ├── TryPatchCategory("Patch23_BannerColorPersistence")
+    ├── TryPatchCategory("Patch24_BannerDriftGuard")
+    └── ManualPatchApplicator: harmony.Patch(MobilePartyVisualHelper.GetHumanAgentPartyVisual, transpiler)
 ```
 
 ### Key Design Decisions

@@ -1,7 +1,7 @@
 # Battle Scenes
 
 > **Status: ENABLED.** `Patch0_BattleScenes` is applied at module load (`TryPatchCategory("Patch0_BattleScenes")`,
-> [Main/SubModule.cs:520](../../Main/SubModule.cs)), re-enabled 2026-06-01. Since 2026-10-03 the field-battle
+> [Main/SubModule.cs:495](../../Main/SubModule.cs)), re-enabled 2026-06-01. Since 2026-10-03 the field-battle
 > scene list is generated per Middle-earth region by `tools/build_battle_scenes.py`, and TAOM's own Mordor and Rohan
 > field scenes are back in rotation, with the June `pbr_terrain` GPU crash risk accepted (#287). Two Gondor field
 > scenes joined on 2026-10-17 before any in-game load. In-game checks per region are owed (see "Verifying" below).

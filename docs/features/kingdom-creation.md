@@ -25,7 +25,7 @@ taom_module_strings.xml       (string IDs resolved first)
          |
 taom_spcultures.xml           (Culture object registered)
          |
-TAOM_spkingdoms.xml           (Kingdom object registered, references Culture)
+taom_spkingdoms.xml           (Kingdom object registered, references Culture)
          |
 characters/clans.xml          (Faction objects registered, reference Kingdom + Culture)
          |
@@ -53,7 +53,7 @@ Follow this sequence exactly. Each file depends on the previous ones being corre
 1. Decide the four core identifiers: kingdom `id`, culture `id` (same value), lord prefix (2-char uppercase), and capital settlement ID
 2. Write all module strings first — every other file references them
 3. `taom_spcultures.xml` — culture definition
-4. `TAOM_spkingdoms.xml` — kingdom definition
+4. `taom_spkingdoms.xml` — kingdom definition
 5. `characters/clans.xml` — one `<Faction>` per clan, tier 6 first
 6. `characters/lords.xml` — one `<NPCCharacter>` per lord
 7. `characters/heroes.xml` — one `<Hero>` per lord (**do not skip; see Known Crashes below**)
@@ -95,7 +95,7 @@ pipeline, and writes the unregistered ones into `taom_kingdom_name_strings.xml` 
 do this step proactively (the generator only catches it on its next run, which means English-only
 in the interim), but a missed key is now recoverable rather than lost.
 
-**Kingdom strings** (referenced by `TAOM_spkingdoms.xml`):
+**Kingdom strings** (referenced by `taom_spkingdoms.xml`):
 ```xml
 <string id="taom_{id}_name"        text="{=taom_{id}_name}Full Kingdom Name" />
 <string id="taom_{id}_short_name"  text="{=taom_{id}_short_name}Short Name" />
@@ -212,7 +212,7 @@ Required child elements:
 
 Crowd NPC attributes (townsfolk, guards, blacksmiths, etc.) can all reference vanilla culture equivalents. The Umbar culture, for example, sets `guard="NPCCharacter.guard_aserai"` for all crowd slots.
 
-### File 3 — `Main/_Module/ModuleData/TAOM_spkingdoms.xml`
+### File 3 — `Main/_Module/ModuleData/taom_spkingdoms.xml`
 
 Add one `<Kingdom>` element. Required attributes:
 
@@ -235,7 +235,7 @@ Add one `<Kingdom>` element. Required attributes:
 | `ruler_title` | `{=taom_{id}_ruler_title}King` |
 | `text` | `{=taom_{id}_desc}Description text` |
 
-The `<relationships>` block must include **every other kingdom** — both custom kingdoms in `TAOM_spkingdoms.xml` and the vanilla kingdoms wrapped by XSLT (aserai, empire, empire_w, empire_s, vlandia, battania, sturgia, khuzait). Relationship stances:
+The `<relationships>` block must include **every other kingdom** — both custom kingdoms in `taom_spkingdoms.xml` and the vanilla kingdoms wrapped by XSLT (aserai, empire, empire_w, empire_s, vlandia, battania, sturgia, khuzait). Relationship stances:
 
 | Stance | `value` | `isAtWar` |
 |--------|---------|-----------|
@@ -514,9 +514,10 @@ town-owning cultures shipped fielding Calradians (fixed 2026-08-12).
 
 Umbar, Shaghana and Abanissa all share Harad's troops and party templates this way.
 
-**Known gap, not yet fixed:** those three still carry roughly 40 vanilla `*_aserai` **NPC role**
-bindings between them (`tavernkeeper`, `blacksmith`, `guard`, `ransom_broker` and so on, plus the
-`villager_child` / `villager_teenager` / `village_woman_child` / `village_woman_teenager` set). Most
+**Known gap, not yet fixed:** those three still carry 44 vanilla `*_aserai` **NPC role**
+bindings between them. Umbar holds 36 (`tavernkeeper`, `blacksmith`, `guard`, `ransom_broker` and so on, plus the
+`villager_child` / `villager_teenager` / `village_woman_child` / `village_woman_teenager` set); Shaghana and Abanissa hold only
+that child and teenager set, 4 each. Most of Umbar's
 repoint cheaply to an existing `_harad` id, but the child and teenager ids have no `_harad`
 counterpart and would have to be authored. Deliberately left out of the 2026-08-12 party-template
 pass to keep that change to party data. If you are here to add a culture, do not copy the pattern.
@@ -541,7 +542,7 @@ pass to keep that change to party data. If you are here to add a culture, do not
 
 **Diagnosis:** Compare the `banner_key` length of a new clan against an established clan like `clan_umbar_1`. Established clans have keys hundreds of characters long. Placeholder keys are under 100 characters.
 
-**Fix:** Find the source clan in `clans.xml` (the clan the new one was derived from) and copy its `banner_key` exactly. For the Harad split, `clan_shaghana_1` (Ezarkia) copies from `clan_aserai_10` (the original Ezarkia definition). The kingdom's own `banner_key` in `TAOM_spkingdoms.xml` should match its ruling clan (clan tier 6).
+**Fix:** Find the source clan in `clans.xml` (the clan the new one was derived from) and copy its `banner_key` exactly. For the Harad split, `clan_shaghana_1` (Ezarkia) copies from `clan_aserai_10` (the original Ezarkia definition). The kingdom's own `banner_key` in `taom_spkingdoms.xml` should match its ruling clan (clan tier 6).
 
 ### Wanderers Not Appearing
 
@@ -564,7 +565,7 @@ pass to keep that change to party data. If you are here to add a culture, do not
 | Kingdom | Culture ID | File type | Lord prefix | Notes |
 |---------|------------|-----------|-------------|-------|
 | Umbar | `umbar` | Custom XML | `U` | Full implementation; reference for all 13 files |
-| Shaghana | `shaghana` | Custom XML | `SH` | Independent kingdom in the eastern reach of Harad. 9 NPC lords, own ruler title (Taskral). Reuses aserai militia and crowd NPCs. |
+| Shaghana | `shaghana` | Custom XML | `SH` | Independent kingdom in the eastern reach of Harad. 9 NPC lords, own ruler title (Taskral). Reuses Harad's militia and crowd NPCs. |
 | Abanissa | `abanissa` | Custom XML | `AB` | Independent kingdom in the deep south of Harad. 8 NPC lords, own ruler title (Châjaphân). Same inheritance pattern as Shaghana. |
 | Gondor | `gondor` | Custom XML | varies | Fully custom troops and equipment sets |
 | Harwan | n/a | XSLT | — | Stays on `Kingdom.aserai`; clans defined in `spclans.xslt` |
@@ -580,7 +581,7 @@ When in doubt, use Umbar as the reference implementation — it is the most comp
 - **Encoding:** UTF-8, CRLF line endings
 - **Indentation:** Tabs (not spaces) in XML; 2-space indentation in JSON
 - **String key format:** `{=string_id}Display Text` — the string ID before the closing `}` must exactly match a `<string id="...">` entry in `taom_module_strings.xml`
-- **Banner keys:** Long serialized strings (typically 200–2000+ characters). When splitting an existing kingdom, copy the key exactly from the original source clan — do not generate a placeholder. The ruling clan's key should also be used as the kingdom's `banner_key` in `TAOM_spkingdoms.xml`. A short key (under ~100 chars) is always a placeholder and will show a plain generic banner in-game. The Bannerlord banner editor in-game can generate a new key if designing from scratch.
+- **Banner keys:** Long serialized strings (typically 200–2000+ characters). When splitting an existing kingdom, copy the key exactly from the original source clan — do not generate a placeholder. The ruling clan's key should also be used as the kingdom's `banner_key` in `taom_spkingdoms.xml`. A short key (under ~100 chars) is always a placeholder and will show a plain generic banner in-game. The Bannerlord banner editor in-game can generate a new key if designing from scratch.
 - **BodyProperties keys:** 64-char hex strings encoding facial feature morph weights. Copy from a culturally similar lord and adjust `age`, `weight`, and `build` to differentiate individuals.
 - **Color format:** `0xffRRGGBB` — always prefix with `ff` for the alpha channel. Colors without the `ff` prefix render as transparent.
 
@@ -588,7 +589,7 @@ When in doubt, use Umbar as the reference implementation — it is the most comp
 
 | File | Purpose |
 |------|---------|
-| `Main/_Module/ModuleData/TAOM_spkingdoms.xml` | Kingdom definitions (custom kingdoms only) |
+| `Main/_Module/ModuleData/taom_spkingdoms.xml` | Kingdom definitions (custom kingdoms only) |
 | `Main/_Module/ModuleData/taom_spcultures.xml` | Culture definitions for all custom kingdoms |
 | `Main/_Module/ModuleData/characters/clans.xml` | Clan (Faction) definitions |
 | `Main/_Module/ModuleData/characters/lords.xml` | Lord NPCCharacter definitions |

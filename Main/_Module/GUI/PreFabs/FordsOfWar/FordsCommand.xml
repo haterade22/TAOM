@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Prefab>
   <Window>
-    <!-- Fords of War command panel, bound to FordsCommandVM. The player has no agent, so this is the whole interface. The layout keeps the
+    <!-- Fords of War command panel, bound to FordsCommandVM. The commander has no agent, so this is the whole interface, and it hides while the commander fights as a soldier. The layout keeps the
          middle of the screen clear and sets state at the edges: the speed button top left, keeps and clock on a slim top strip, the battle board bottom left (one row per
          lane that also selects it), the command deck bottom centre (gold, the faction's mechanic, a fixed 4 by 2 buy grid, 2 by 2 orders), the
          heroes bottom right, and the feed top right. Buy slots never move: a rotation changes what is in a slot, not where it is. Every widget

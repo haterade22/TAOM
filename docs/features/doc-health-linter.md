@@ -187,7 +187,7 @@ Every exemption, and the property it keys on:
 | `TEMPLATE.md` | check 1 | placeholder links |
 
 **The `raw/` exemption keys on the target, not the linking file, and that is deliberate.**
-`docs/reviews/raw/` is gitignored (`.gitignore:157` — the Codex transcripts are 2-4 MB each and stay
+`docs/reviews/raw/` is gitignored (`.gitignore:173`; the Codex transcripts are 2-4 MB each and stay
 on the reviewing machine), so 14 links resolved for whoever ran the review and were dead on every
 other clone. Exempting the *linking* files instead — `rca-*` and `REVIEW-LOG` are already exempt from
 check 2, so it looks consistent — would have switched off dead-link coverage for `REVIEW-LOG.md`'s

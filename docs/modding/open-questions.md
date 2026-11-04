@@ -70,7 +70,7 @@ hand edits, so land a repo-side validator gate with any fix.
 - Which integer a given race name resolves to, and whether inserting a race renumbers the ones after it. The table is built at runtime from the merged skins.xml list via a native call, so 'index 0 is human' stays strong inference, not decompile proof (docs/features/black-numenorean.md:162-176). The authoring comment above the sauron block in LOTRLOME_Armory/ModuleData/skins.xml records the merge-order dependency.
 - Whether the <Resistances> knockback/knockdown/dismount numbers do anything in a campaign. Only MultiplayerAgentStatCalculateModel was found reading them off the character; the singleplayer path derives dismount resistance from Riding. Zero TAOM troops set them, so nothing has ever tested it.
 - What names default_equipment_set may legally take. The pool is filled in code by Game.SetDefaultEquipments and the callers were not traced. No TAOM content uses it, so there is no example to work from.
-- tools/validate_all_troop_refs.py still skips 6 of the 16 troop files (dunland, goblin, harad, mirkwood, rivendell, rohan). That is a real gate hole, not a doc error, and the chapter documents it rather than fixing it.
+- RESOLVED (v2.0.34, b02467744): tools/validate_all_troop_refs.py now sweeps every troops_*.xml in the folder (`tools/validate_all_troop_refs.py:80-83`). The six files it used to skip (dunland, goblin, harad, mirkwood, rivendell, rohan) are covered.
 
 ## equipment-rosters.md
 
@@ -162,12 +162,12 @@ hand edits, so land a repo-side validator gate with any fix.
 - Whether Icon/@texture_index may exceed 15. Nothing in managed code clamps or validates it (Module.cs:684-686 just concatenates it into an asset name); vanilla and TAOM both stop at 15 because their sheets are 4x4. Untested for a larger sheet.
 - Whether the colour repoint for `clan_battania_3` and `clan_battania_4` (#951) suits their banners. Colour ids 132, 144 and 145 define a hex in no module, so the replacements (palette `92` for 132 and 144, palette `1` for 145) were chosen as the nearest palette colours to each clan's own `color` and `color2`, not to the lost originals. It needs an in-game look.
 - Whether GUI/SpriteParts/ui_taom_bannericons/22004.png (a sprite with no matching <Icon id>) is safe to delete, or is pending an icon that was never wired. (The 39 unreferenced ui_taom_bannericons_*.png sheets were removed on 2026-10-28, #1047.)
-- Which module's colour block is genuinely last in the merged palette at runtime. The merge appends later modules' new rows (MBObjectManager.cs:820-873) and TAOM pins Native to LoadBeforeThis (SubModule.xml:25), so TAOM's <Color id="333"> should be last, but nobody has confirmed it in a running game and it silently sets the outline colour of every auto-generated banner (Banner.cs:349 and five siblings).
+- Which module's colour block is genuinely last in the merged palette at runtime. The merge appends later modules' new rows (MBObjectManager.cs:820-873) and TAOM pins Native to LoadBeforeThis (SubModule.xml:32), so TAOM's <Color id="333"> should be last, but nobody has confirmed it in a running game and it silently sets the outline colour of every auto-generated banner (Banner.cs:349 and five siblings).
 
 ## configs-factions-and-world.md
 
 - Nothing reads the shipped `diplomacy/diplomacy.json` in any test: `DiplomacyConfigProviderTests` only writes temp files. A missing or stale pair silently resolves `AllianceTier.Neutral` (`DiplomacyService.cs:46`) and no gate catches it. Whether that is a deliberate choice is not recorded anywhere.
-- `culture_marketplace_config.xml` ships with zero `<Culture>` blocks, so the `<Blacklist>` and `<Boost>` sections that `culture-marketplace.md:60-82` documents have no shipped example. Whether they have ever been exercised in play is undocumented; the file's own header comment is the only reference.
+- `culture_marketplace_config.xml` ships 18 `<Culture>` blocks, three of them with a `<Blacklist>`, but no `<Boost>` section, so the `<Boost>` rows that `culture-marketplace.md:60-82` documents have no shipped example. Whether a Boost has ever been exercised in play is undocumented; the file's own header comment is the only reference.
 - The `<Clan>` tier of the settlement-guard fallback chain is parsed (`SettlementGuardConfigProvider.cs:89-95`) but has zero shipped blocks, so the middle rung is untested on shipped data. Same for `<PrisonGuard>`, which is parsed at `:159` and appears nowhere in the file.
 - `settlement-guards.md:88` says '14 settlements configured'; the file holds 16 `<Settlement>` blocks plus 1 `<Culture>` block. The doc was not updated when the last two were added, and no test pins the count.
 
@@ -186,13 +186,13 @@ hand edits, so land a repo-side validator gate with any fix.
 - No required-versus-optional split exists for the <Culture> attributes. Three docs give three different counts (~50, ~80+, 92) and none marks which are mandatory. The chapter points at the deserializer-sourced table in docs/modding/cultures.md instead.
 - banner_key / faction_banner_key grammar is undecoded. Keys under 100 characters are placeholders; the only documented practice is to copy a working key from the source clan. Banner.cs Deserialize / TryGetBannerDataFromCode was not opened this task.
 - docs/cultures.md is stale in three places (equipment-set file location, the 'Gaps' table for Umbar/Dale/Lothlorien, and '12 wanderers'). Corrected in the chapter with measured evidence, but the source doc still needs an upstream fix.
-- tools/validate_all_troop_refs.py sweeps a hardcoded list of 10 cultures while 16 troops_*.xml files exist. dunland, goblin, harad, mirkwood, rivendell and rohan are never swept. This is a real coverage hole, not just a doc error.
+- RESOLVED (v2.0.34, b02467744): the hardcoded list of 10 cultures in tools/validate_all_troop_refs.py is gone; the tool reads the troops_*.xml folder (`tools/validate_all_troop_refs.py:80-83`), so dunland, goblin, harad, mirkwood, rivendell and rohan are swept.
 - LOTRLOME_Armory skins.xml registers 14 races but only 13 facegen pairs exist in action_sets.xml (sauron has none). Whether that is deliberate (sauron is never a player race) was not determined.
 
 ## recipe-add-a-kingdom.md
 
-- Is the XSLT-row-before-plain-XML-row order inside Main/_Module/SubModule.xml load-bearing, or habit? Only the shipped positions are observable (Kingdoms at :70 and :130, NPCCharacters at :96 and :157) and no TAOM doc states whether the merge depends on it. Said so plainly in the chapter and pointed at load-order-and-dependencies.md.
-- Is the four newest kingdoms' absence from special_resources_config.xml (18 of 22 kingdom ids named) and from the ten older kingdoms' <relationships> blocks (0 rows naming them) deliberate or an authoring gap? No issue, no doc, no test covers either. Recorded as measured facts, not as verdicts.
+- Is the XSLT-row-before-plain-XML-row order inside Main/_Module/SubModule.xml load-bearing, or habit? Only the shipped positions are observable (Kingdoms at :95 and :172, NPCCharacters at :131 and :199) and no TAOM doc states whether the merge depends on it. Said so plainly in the chapter and pointed at load-order-and-dependencies.md.
+- Is the absence of `goblin`, `mistymountainorcs`, `bluecraig` and `lindon` from special_resources_config.xml (26 of 30 kingdom ids named on 2026-11-03) and from the ten older kingdoms' <relationships> blocks (0 rows naming them) deliberate or an authoring gap? No issue, no doc, no test covers either. Recorded as measured facts, not as verdicts.
 - Which <Culture> attributes are mandatory for a playable kingdom versus optional? Three docs give three different counts (~50, ~80+, 92) and none gives a required/optional split. Deferred to cultures.md and recipe-add-a-culture.md rather than guessed at.
 
 ## module-map.md

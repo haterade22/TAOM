@@ -2,11 +2,11 @@
 
 ## Overview
 
-TAOM supports all 12 languages that vanilla Bannerlord ships with. The English text is the authoritative source; all other languages are community-contributed overrides. When a player runs a non-English locale, TAOM looks up translated strings from the language-specific files — if a translation is missing, the English fallback is shown seamlessly.
+TAOM supports all 12 languages that vanilla Bannerlord ships with. The English text is the authoritative source; every other language is an AI first draft, and the rows in `tools/translation_overrides/<lang>.json` replace the draft. When a player runs a non-English locale, TAOM looks up translated strings from the language-specific files: if a translation is missing, the English fallback is shown seamlessly.
 
 ## Why This Exists
 
-The mod ships 1,773 LOTR-specific strings (faction names, culture terms, wanderer backstories) that vanilla language packs know nothing about. Without this infrastructure, non-English players would see raw English text for TAOM content even if they'd translated everything else in Bannerlord. The `Languages/` directory is how Bannerlord discovers and loads per-language overrides for each active module.
+The mod ships thousands of LOTR-specific strings in 23 English source files (faction names, culture terms, wanderer backstories, names, careers) that vanilla language packs know nothing about. Without this infrastructure, non-English players would see raw English text for TAOM content even if they'd translated everything else in Bannerlord. The `Languages/` directory is how Bannerlord discovers and loads per-language overrides for each active module.
 
 ## Architecture
 
@@ -30,12 +30,12 @@ TextObject("{=taom_str_faction_official.empire}a clansman of Dunland")
 
 ### String ID Convention
 
-TAOM uses two localization key prefixes:
+The two oldest key prefixes, each counted here in the source file it began in (`aom_*` keys also sit in other source files, and `taom_module_strings.xml` holds other prefixes too):
 
 | Prefix | Source file | Count | Example key |
 |--------|-------------|-------|-------------|
-| `taom_str_*` | `taom_module_strings.xml` | 596 | `taom_str_faction_official.empire` |
-| `aom_*` | `taom_wanderer_strings.xml` | 1,177 | `aom_prebackstory.spc_wanderer_gondor_0_text` |
+| `taom_str_*` | `taom_module_strings.xml` | 501 | `taom_str_faction_official.empire` |
+| `aom_*` | `taom_wanderer_strings.xml` | 2,545 | `aom_prebackstory.spc_wanderer_gondor_0_text` |
 
 The key is embedded directly in the source XML `text` attribute: `text="{=KEY}English fallback"`.
 
@@ -55,7 +55,7 @@ Main/_Module/ModuleData/
     ├── TR/  ├── BR/  ├── JP/  ├── KO/  ├── CNs/  ├── CNt/
 ```
 
-Each language dir follows the same 3-file pattern.
+Each language dir holds one translation file per English source file: 23 files, all listed in its `language_data.xml`. The tree above shows two of them.
 
 ### Language ID → Directory Mapping
 
@@ -80,11 +80,11 @@ Each language dir follows the same 3-file pattern.
 
 | File | Purpose |
 |------|---------|
-| `Main/_Module/ModuleData/taom_module_strings.xml` | Source of 596 English strings with `taom_str_*` keys |
-| `Main/_Module/ModuleData/taom_wanderer_strings.xml` | Source of 1,177 English strings with `aom_*` keys |
+| `Main/_Module/ModuleData/taom_module_strings.xml` | Source of 3,929 English strings, 501 of them with `taom_str_*` keys |
+| `Main/_Module/ModuleData/taom_wanderer_strings.xml` | Source of 2,545 English strings with `aom_*` keys |
 | `Main/_Module/ModuleData/Languages/language_data.xml` | English anchor, required for engine discovery; carries `name="English"` and Native's English `text_processor` |
 | `Main/_Module/ModuleData/Languages/{LANG}/language_data.xml` | Per-language manifest listing translation files; carries `name` and Native's `text_processor` where Native declares one |
-| `Main/_Module/ModuleData/Languages/{LANG}/std_taom_*.xml` | Community translation files (stub templates) |
+| `Main/_Module/ModuleData/Languages/{LANG}/std_taom_*.xml` | Translation files, one per English source file |
 | `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` | Structural contract tests |
 | `TAOM.Tests/Infrastructure/Localization/LanguageProcessorTests.cs` | Every file with a `name` carries Native's `text_processor` (TAOM's 13 files, and the live TAOM_Map and Armory files, #1026) |
 | `TAOM.Tests/Infrastructure/Localization/LocalizationKeyConsistencyTests.cs` | One key, one text: per language, per shared English key, inline default against registration, name keys |
@@ -115,7 +115,7 @@ sources (2026-10-02), alongside the others below):
 | `AllLanguageDataXml_HaveLanguageDataRootElement` | Root element is `<LanguageData>` |
 | `AllLanguageDataXml_HaveNonEmptyId` | Every manifest has a non-empty language ID |
 | `AllLanguageFilePaths_ReferenceExistingFiles` | Every `xml_path` in manifests resolves to a real file |
-| `AllTranslationFiles_AreWellFormedXml` | Translation stubs parse without error |
+| `AllTranslationFiles_AreWellFormedXml` | Translation files parse without error |
 | `AllTranslationFiles_HaveBaseRootWithTypeString` | Root is `<base type="string">` |
 | `AllTranslationFiles_HaveTagsElement` | `<tags><tag language="..."/></tags>` is present |
 | `AllTranslationFiles_HaveStringsElement` | `<strings>` container is present |
@@ -167,10 +167,11 @@ Bannerlord must already support the language natively (it must have an entry in 
    <LanguageData id="[id from vanilla]" name="[name from vanilla]" text_processor="[vanilla's text_processor]">
      <LanguageFile xml_path="PT/std_taom_module_strings_[locale].xml" />
      <LanguageFile xml_path="PT/std_taom_wanderer_strings_[locale].xml" />
+     <!-- one LanguageFile per English source file, 23 in all; copy the full list from an existing manifest -->
    </LanguageData>
    ```
    Give `name` and `text_processor` only where Native's `language_data.xml` declares a processor for that id; a `name` without the processor resets the language to a default that prints no grammar tokens.
-3. Create the two stub translation files following the pattern in any existing language dir
+3. Create the translation files, one per `LanguageFile` entry, following the pattern in any existing language dir
 4. Add the new dir name to `SupportedLanguageDirs` in `LanguageDataXmlTests.cs`, and to `AllTaomDirs` and (when Native declares a processor) `NativeProcessorByTaomDir` in `LanguageProcessorTests.cs`
 5. Run tests to confirm structure is correct
 
@@ -188,11 +189,11 @@ Hero biographies and NPC names used to sit in this table; since 2026-10-01 they 
 `taom_hero_text_strings.xml` and `taom_character_name_strings.xml` (with culture text, career data and
 Custom Battle scene names) and translated like the rest.
 
-**Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 311 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
+**Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 489 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
 
 ## Performance
 
-No performance impact — translation files are loaded once at startup by the engine and cached in a static dictionary. Empty translation files (the current stub state) add zero overhead.
+The engine loads the active language's listed files when that language is set and caches the rows in a static dictionary, so a lookup is one dictionary read. The load cost grows with the row count of those files; English reads no rows.
 
 ## Changelog
 

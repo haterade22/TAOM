@@ -47,6 +47,7 @@ public class TaomClientCompositionTests
         var container = new Container();
         container.Register<IFactionMapWidgetAdapter, NullFactionMapWidgetAdapter>(Reuse.Singleton);
         container.Register<IFrontEndSpriteTableAdapter, NullFrontEndSpriteTableAdapter>(Reuse.Singleton);
+        container.Register<IThumbnailCacheAdapter, NullThumbnailCacheAdapter>(Reuse.Singleton);
         container.Register<ICustomBattleFactionSelectionFactory, NullCustomBattleFactionSelectionFactory>(Reuse.Singleton);
         // The factory and the wrapper take these from the container when first resolved.
         container.RegisterInstance(Substitute.For<IModLogger>());
@@ -78,6 +79,7 @@ public class TaomClientCompositionTests
 
         Assert.IsInstanceOfType(container.Resolve<IFactionMapWidgetAdapter>(), typeof(FactionMapWidgetAdapter));
         Assert.IsInstanceOfType(container.Resolve<IFrontEndSpriteTableAdapter>(), typeof(FrontEndSpriteTableAdapter));
+        Assert.IsInstanceOfType(container.Resolve<IThumbnailCacheAdapter>(), typeof(ThumbnailCacheAdapter));
         Assert.IsInstanceOfType(container.Resolve<ICustomBattleFactionSelectionFactory>(), typeof(TaomFactionSelectionFactory));
         Assert.IsInstanceOfType(container.Resolve<IMomentumUIService>(), typeof(MomentumUIService));
         Assert.IsInstanceOfType(container.Resolve<IRealmBordersMapViewAdapter>(), typeof(RealmBordersMapViewAdapter));
@@ -93,14 +95,15 @@ public class TaomClientCompositionTests
         Assert.IsInstanceOfType(container.Resolve<IQuestJournalAdapter>(), typeof(QuestJournalAdapter));
         var seams = new[]
         {
-            typeof(IFactionMapWidgetAdapter), typeof(IFrontEndSpriteTableAdapter), typeof(ICustomBattleFactionSelectionFactory),
+            typeof(IFactionMapWidgetAdapter), typeof(IFrontEndSpriteTableAdapter), typeof(IThumbnailCacheAdapter),
+            typeof(ICustomBattleFactionSelectionFactory),
             typeof(IMomentumUIService), typeof(IRealmBordersMapViewAdapter), typeof(IFieldCampOverlayAdapter),
             typeof(IFiefsNavigationElementFactory), typeof(IMapConversationProviderWrapper),
             typeof(IHostReviewOrderProviderRegistrar), typeof(IShaderPrecompileGameManagerFactory),
             typeof(IShaderCompileNoticeWindowHost), typeof(ICampVisualService), typeof(IRefugeVisualService),
             typeof(ISupplyRouteVisualService), typeof(IQuestJournalAdapter),
         };
-        Assert.AreEqual(15, container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
+        Assert.AreEqual(16, container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
             "each seam is replaced, never appended");
     }
 }

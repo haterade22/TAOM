@@ -161,6 +161,7 @@ FieldCommissionBehavior (CampaignBehaviorBase)   FieldCommissionMissionLogic (Mi
 | `retainerAllowance` | int | Extra companions allowed beyond the clan-tier limit before offers defer. Must be ≥ 0. |
 | `maxOffersPerBattle` | int | Hard ceiling on promotion offers queued by ONE won battle, across all troop types. Must be ≥ 1. Default 2. Merit above the cap is kept and re-queues after the next won battle. |
 | `skillPointsPerLevel` | int | Skill-value budget granted per hero level (see Commission Skill Budget above). Must be ≥ 1. |
+| `diagnostics` | bool | Writes the `[FieldCommission]` trace to the TAOM debug log. Default false. |
 | `allowedRaceNames` | string[] | Race names (matched via `IRaceManager`) eligible for promotion. Blank/whitespace entries are sanitized out; a missing/null field defaults to the ten soldier races listed under "Race allow-list" above. |
 
 ### Current Values
@@ -203,11 +204,12 @@ need a full application restart**. The MCM knobs below do not — they are re-re
 | `FieldCommissionMeritPerKill` | 1 to 10 | `1` | `meritPerKill` |
 | `FieldCommissionMeritToPromote` | 1 to 100 | `32` | `meritThreshold` |
 | `FieldCommissionRetainerAllowance` | 0 to 10 | `0` | `retainerAllowance` |
+| `EnableFieldCommissionDiagnostics` ("Promotion Diagnostics") | bool | `false` | `diagnostics` |
 
 `skillPointsPerLevel` and `allowedRaceNames` stay JSON-only (advanced / pack-author territory).
 
 **Precedence, and its one sharp edge.** MCM has no "unset" state — once MCM is loaded, every property
-reads back a value, so for the six exposed knobs the MCM value always wins over the JSON one, even
+reads back a value, so for the seven exposed knobs the MCM value always wins over the JSON one, even
 when the player has never touched the slider. That is TAOM's house behaviour (every
 `*SettingsProvider` works this way) and it is the right default: the player outranks the pack author
 on tuning they can see. The consequence a pack author needs to know is that customising an
@@ -249,7 +251,7 @@ literal, and those two must describe the same game.
 | `Main/Features/FieldCommission/FieldCommissionDismissService.cs` / `IFieldCommissionDismissService.cs` | Dismissal back to the ranks (#540): the verdict, the remove-then-refund order, the picker and confirm chain |
 | `Main/Features/FieldCommission/FieldCommissionConfigProvider.cs` / `IFieldCommissionConfigProvider.cs` | JSON config load + validation |
 | `Main/Features/FieldCommission/FieldCommissionSettingsProvider.cs` | MCM-over-JSON merge; decorates the above behind the same interface |
-| `Main/Features/FieldCommission/Domain/FieldCommissionMcmSnapshot.cs` | Value-equality read of the six MCM knobs; the merged config's cache key |
+| `Main/Features/FieldCommission/Domain/FieldCommissionMcmSnapshot.cs` | Value-equality read of the seven MCM knobs; the merged config's cache key |
 | `Main/Features/FieldCommission/NullEnlistmentStateQuery.cs` | Null-object fallback for `IEnlistmentStateQuery` |
 | `Main/Features/FieldCommission/FieldCommissionIoC.cs` | DryIoc registration |
 | `Main/Features/FieldCommission/Domain/*.cs` | Pure POCOs + `CommissionSkillBudget` + `TroopUpgradeGraph` + the dismissal verdict types (`DismissOutcome`, `DismissCandidate`, `PromotedHeroSnapshot`) |

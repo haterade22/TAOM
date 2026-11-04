@@ -117,4 +117,4 @@ The two cap settings count as simulation-relevant for the co-op fingerprint (the
 ## GitHub Issue
 
 - **Issue:** [#910 Smith's Measure: capped smelting yield and a Make Tools button](https://github.com/haterade22/TAOM/issues/910)
-- **Status:** Built, uncommitted at the time of writing; in-game checks owed.
+- **Status:** Committed in 42148af4c (v2.0.35) and on `origin/bannerlord-1.5.x`; in-game checks owed.

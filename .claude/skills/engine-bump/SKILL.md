@@ -13,7 +13,7 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
 
 ## Phase 1 — Confirm + scope the drift
 
-1. Installed truth: `bin/Win64_Shipping_Client/Version.xml` + DLL `LastWriteTime`s (the update
+1. A hotfix can keep the version string, so no banner fires: a red `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` is then the first sign. Installed truth: `bin/Win64_Shipping_Client/Version.xml` + DLL `LastWriteTime`s (the update
    timestamp bounds which test runs were on which engine — decisive for crash attribution).
    `Version.xml` carries only `vX.Y.Z`; read the build number from `TaleWorlds.Library`
    (`ApplicationVersion.DefaultChangeSet`, `BuildInfo.GameVersion`) or `package_info.txt`. Steam
@@ -45,8 +45,8 @@ calibrations live in [engine-bump-history.md](../../../docs/migration/engine-bum
    is already booked: the open player report (untracked; read it with
    `git show b2e387db:crashz/report.json`; `BannerlordVersion v1.4.7.117484`) can no longer be
    triaged against a local binary.
-3. `taom-src` auto-detects the new version: a fresh cache and DLL index under `~/.taom-src/v<new>/`, and the
-   old caches stay unused. Pass a short or fully qualified type name. A mod's own copy of an engine assembly
+3. `taom-src` auto-detects the new build: a fresh cache and DLL index under `~/.taom-src/v<new>-<stamp>/`, and the
+   old caches stay unused. The stamp is `TaleWorlds.Library.dll`'s write time, because a Steam hotfix can keep the version string. Pass a short or fully qualified type name. A mod's own copy of an engine assembly
    (`Modules\Coop`) searches last (#1038), so only a type that copy alone still holds resolves from it. The
    tool prints only the cache path; `~/.taom-src/sources.json` names the DLL it read.
 4. **Warm the native decompiler, and read its map check.** Each new binary gets a fresh Ghidra

@@ -98,14 +98,15 @@ internal sealed class WaveScheduler
     /// Advances the free-wave timers and returns what to spawn now. <paramref name="committedInLane"/> and
     /// <paramref name="committedOnSide"/> read the units that hold room at the start of the tick, the live ones plus the ordinary
     /// ones already issued but not yet spawned; units emitted by this call are counted on top by the scheduler itself.
+    /// A lane <paramref name="laneLost"/> names starts no new free wave, though a bought pack still comes: fresh waves at the base would stop attackers short of an open keep.
     /// </summary>
-    public IReadOnlyList<SpawnRequest> Tick(float dt, float minute, Func<MatchSide, int, int> committedInLane, Func<MatchSide, int> committedOnSide)
+    public IReadOnlyList<SpawnRequest> Tick(float dt, float minute, Func<MatchSide, int, int> committedInLane, Func<MatchSide, int> committedOnSide, Func<MatchSide, int, bool>? laneLost = null)
     {
         var requests = new List<SpawnRequest>();
         if (_streams.Length == 0)
             return requests;
 
-        AdvanceTimers(dt, minute);
+        AdvanceTimers(dt, minute, laneLost);
 
         var budget = _config.MaxSpawnsPerTick;
         var emittedBySide = new Dictionary<MatchSide, int> { [MatchSide.West] = 0, [MatchSide.East] = 0 };
@@ -137,7 +138,7 @@ internal sealed class WaveScheduler
 
     private float IntervalOf(MatchSide side) => _config.FreeWaveIntervalSeconds * FeatsOf(side).WaveInterval;
 
-    private void AdvanceTimers(float dt, float minute)
+    private void AdvanceTimers(float dt, float minute, Func<MatchSide, int, bool>? laneLost)
     {
         if (dt <= 0f)
             return;
@@ -154,7 +155,7 @@ internal sealed class WaveScheduler
                 continue;
 
             stream.Timer %= interval;
-            if (stream.FreeWave.Count == 0)
+            if (stream.FreeWave.Count == 0 && laneLost?.Invoke(SideOf(index), LaneOf(index)) != true)
                 StartFreeWave(SideOf(index), stream, minute);
         }
     }

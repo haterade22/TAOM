@@ -122,7 +122,7 @@ The settings provider reads both through one cached accessor (`CampaignHotPathSe
 - `CastlePatrolSecurityAndBuildTests.cs`: 15 tests, security per level, no patrol, no Guard House, a town; the Guard House pick (unbuilt, the roll against the chance, ineligible, setting off).
 - `GuardHouseAdapterTests.cs`: 4 tests, source pins for the building type per settlement kind, vanilla's eligibility filter, the single roll and the single `GuardHouse` lookup.
 - `CastleGuardHouseUpgradeBehaviorTests.cs`: 4 tests, source pins for the listener, the castle-only building check before the null-safe version bump, the guard and the lack of a gate or save data, and an engine binding check (`BindingVerification`).
-- `CulturePartyTemplateTests.cs`: one more test, every level 1 to 3 patrol template (54 templates, 18 patrol families in `taom_partyTemplates.xml`) has a stack with a positive maximum.
+- `CulturePartyTemplateTests.cs`: one more test, every level 1 to 3 patrol template (69 templates, 23 patrol families in `taom_partyTemplates.xml`; the test only asserts a floor of 54) has a stack with a positive maximum.
 - `ShippedCastleOwnerCultureTests.cs`: 1 test (`LiveInstall`), no castle owner clan has a hideout-only or settlementless culture. Inconclusive without the install.
 
 ## Co-op

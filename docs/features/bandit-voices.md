@@ -14,7 +14,7 @@ Eight of TAOM's bandit clans speak in their own words. When a clan's warband rob
 
 - **Robbed.** When a bandit party catches the player (the player is the defender), the demand, the answer to an offer to bargain, the line after the toll is paid and the line when the fight starts come from the clan's own set. Vanilla picks from its six generic sets plus three copies of each clan set it finds, so with two sets the clan's own words are 6 of the 12 entries, half of the robberies; the generic sets stay in the mix.
 - **Attacking.** On a first meeting with a party of one of the eight clans, on land (a party that robbed the player earlier, or was paid off, counts as met and never greets), a quarter of the time the party greets the player with its own line, either a claim to be harmless or a bluff about warriors hiding nearby. The player's ultimatum reply is vanilla's own for that kind of greeting. After the first conversation vanilla records the party, so it never speaks this way again.
-- **Not touched.** Spiders of Mirkwood and wild trolls do not parley (Patch94). Looters stay vanilla. At sea, and on a repeat meeting, the greeting is vanilla's. The robbery pool does not check the meeting record, so a clan party robs in its own voice about half the time, on every meeting.
+- **Not touched.** Spiders of Mirkwood and wild trolls do not parley (Patch94). Looters stay vanilla, and so do the Feral Orcs, who have no voice rows ([feral-orcs.md](feral-orcs.md)). At sea, and on a repeat meeting, the greeting is vanilla's. The robbery pool does not check the meeting record, so a clan party robs in its own voice about half the time, on every meeting.
 
 ## Architecture
 

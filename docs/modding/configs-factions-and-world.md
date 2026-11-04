@@ -19,7 +19,7 @@ and opens the file directly, so there is no `<XmlName id>` row to add when you c
 
 | File (under `Main/_Module/ModuleData/`) | Root or top level | Provider | Registered in |
 |---|---|---|---|
-| `execution/alignment.json` | flat object, id to side | `Main/Features/Execution/AlignmentConfigProvider.cs` | `Main/Features/Execution/ExecutionIoC.cs:10` |
+| `execution/alignment.json` | flat object, id to side | `Main/Features/Execution/AlignmentConfigProvider.cs` | `Main/Features/Execution/ExecutionIoC.cs:11` |
 | `diplomacy/diplomacy.json` | `relationships` array | `Main/Features/Diplomacy/DiplomacyConfigProvider.cs` | `Main/Features/Diplomacy/DiplomacyIoC.cs:12` |
 | `diplomacy/war_of_the_ring.json` | object | `Main/Features/Diplomacy/WarOfTheRingConfigProvider.cs` | `Main/Features/Diplomacy/DiplomacyIoC.cs:15` |
 | `configs/army_targeting.json` | object | `Main/Features/ArmyTargeting/ArmyTargetingConfigProvider.cs` | `Main/Features/ArmyTargeting/ArmyTargetingIoC.cs:11` |
@@ -61,7 +61,7 @@ owned by `TAOM_Map/ModuleData/settlements.xml`.
 
 The dictionary answers **both** `GetKingdomSide` and `GetCultureSide` from the same flat map
 (`AlignmentService.cs:32-34`), and `ResolveSide(id, culture)` also reads minor clan ids from it, which is why
-the shipped file carries **29 keys**: the 23 live kingdom StringIds, `gondor` and `mordor` (the two cultures
+the shipped file carries **36 keys**: the 30 live kingdom StringIds, `gondor` and `mordor` (the two cultures
 whose kingdom carries a vanilla id: `empire_w` is Gondor, `empire_s` is Mordor), and four minor clan ids
 (`ghilman`, `skolderbrotva`, `forest_people`, `eleftheroi`); the Grey Company and the Corsair Blades are retagged
 to `arthedain` and `umbar` in `spclans.xslt` and need no row (an old save keeps the vanilla clan culture, so `MinorClanMigration` sets it on load; see [minor-factions.md](../features/minor-factions.md)). A clan row is `free` or `evil`: a `neutral` clan row is a no-op, because `ResolveSide` falls
@@ -137,14 +137,14 @@ to 1.0 through 5.0, read live on every call (`Main/Features/ArmyTargeting/ArmyTa
 
 `culture_marketplace_config.xml` is optional. When it is absent or empty the pools are derived from
 `MBObjectManager` ([culture-marketplace.md:63](../features/culture-marketplace.md)). The shipped
-file carries 11 `<Culture>` blocks (ten receiving cultures with `armour_from`, two of them with `<Stock>`
-rows, and Gondor's, which only blacklists the Arnor crown) and one `<Routing>` section; 20 `<Item>` rows
-in all (18 routing, 2 blacklist).
-<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter()))" 2026-10-08 -->
+file carries 18 `<Culture>` blocks (seventeen receiving cultures with `armour_from`, nine of them with `<Stock>`
+rows, and Gondor's, which only blacklists the Arnor crown) and one `<Routing>` section; 21 `<Item>` rows
+in all (18 routing, 3 blacklist).
+<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter()))" 2026-11-03 -->
 
 ### The battlefield and presentation files
 
-<!-- engine-ref type="TAOM.Features.BannerBearers.Domain.BannerBearerConfig" file="Main/Features/BannerBearers/Domain/BannerBearerConfig.cs" lines="10-115" -->
+<!-- engine-ref type="TAOM.Features.BannerBearers.Domain.BannerBearerConfig" file="Main/Features/BannerBearers/Domain/BannerBearerConfig.cs" lines="10-127" -->
 
 | Attribute (`banner_bearers_config.json`) | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
@@ -158,8 +158,8 @@ in all (18 routing, 2 blacklist).
 | `HorseArcherBannerPerSoldiers` | int | no | `15` | Inert while `HorseArcher` is not allowed | `BannerBearerConfig.cs:37` |
 | `OtherBannerPerSoldiers` | int | no | `25` | Any class outside the four above | `BannerBearerConfig.cs:38` |
 | `ExcludedRaces` | string[] | no | 5 compiled ids | Race ids that never carry a banner | `BannerBearerConfig.cs:43` |
-| `CultureBanners` | map of string to string | no | 28 compiled rows | Culture StringId to banner `ItemObject` id; `""` means no banner | `BannerBearerConfig.cs:62` |
-| `DefaultBannerItemId` | string | no | `""` | Fallback for an unmapped culture. Empty on purpose, so the fallback fails closed | `BannerBearerConfig.cs:115` |
+| `CultureBanners` | map of string to string | no | 39 compiled rows | Culture StringId to banner `ItemObject` id; `""` means no banner | `BannerBearerConfig.cs:63` |
+| `DefaultBannerItemId` | string | no | `""` | Fallback for an unmapped culture. Empty on purpose, so the fallback fails closed | `BannerBearerConfig.cs:127` |
 
 Keys prefixed `_comment` are notes in the shipped file and are ignored by the deserializer.
 
@@ -210,18 +210,18 @@ fails on a missing id.
 | File | Must the new kingdom id appear? | Enforced by |
 |---|---|---|
 | `configs/army_targeting.json` `KingdomTheaters` | Yes, even an empty list to mark it passive | `WarTheaterConfigInvariantsTests.EveryKingdom_HasATheaterDecisionRecorded` (`WarTheaterConfigInvariantsTests.cs:131-145`) |
-| `execution/alignment.json` | Yes; absent resolves `Neutral` | `ShippedClanSideCoverageTests.EveryKingdomClan_ResolvesItsKingdomsSide` fails (LiveInstall) for a kingdom that has clans and resolves Neutral outside the four Neutral realms; `ShippedAlignmentConfigTests.cs:125-151` pins 14 named culture rows |
+| `execution/alignment.json` | Yes; absent resolves `Neutral` | `ShippedClanSideCoverageTests.EveryKingdomClan_ResolvesItsKingdomsSide` fails (LiveInstall) for a kingdom that has clans and resolves Neutral outside the ten Neutral realms; `ShippedAlignmentConfigTests.cs:125-151` pins 14 named culture rows |
 | `diplomacy/diplomacy.json` | Yes, one row per opponent; absent pairs resolve `Neutral` | Nothing reads the shipped file |
 | `diplomacy/war_of_the_ring.json` | Only if it takes part in a scripted declaration | `WarOfTheRingShippedConfigTests.cs:51-105` pins days 30 and 44 and the two Phase 1 wars |
 | `factionmap/factions.json` and `regions.json` | Only if it is player-selectable | `FactionMapDataTests.cs:28-141` |
-| `banner_bearers/banner_bearers_config.json` `CultureBanners` | Keyed by **culture**, not kingdom | `ShippedBannerBearerConfigTests.cs:104-125` pins 20 cultures |
+| `banner_bearers/banner_bearers_config.json` `CultureBanners` | Keyed by **culture**, not kingdom | `ShippedBannerBearerConfigTests.cs:111-137` requires a row for every infantry troop culture a party template fields, except `wild_trolls` (`NoBannerByDesign`), and asserts the scan finds at least 15 |
 | `settlement_guards/settlement_guards_config.xml` | Optional | `ConfigIdValidationTests.cs:120-183` validates the ids that are present |
 
-The kingdom set the first test reads is derived from data, not hardcoded: 14 `<Kingdom>` rows in
+The kingdom set the first test reads is derived from data, not hardcoded: 22 `<Kingdom>` rows in
 `Main/_Module/ModuleData/taom_spkingdoms.xml` plus 8 vanilla kingdoms retagged by
-`Main/_Module/ModuleData/spkingdoms.xslt`, so **22** ids.
-<!-- measured: python -c "import xml.etree.ElementTree as ET,re;k=set(x.get('id') for x in ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom'));k|=set(re.findall(r\"Kingdom\[@id='([a-z_]+)'\]\",open('Main/_Module/ModuleData/spkingdoms.xslt').read()));print(len(k))" 2026-09-05 -->
-Note that `kingdom-creation.md` spells the first file `TAOM_spkingdoms.xml`; the file on disk is all
+`Main/_Module/ModuleData/spkingdoms.xslt`, so **30** ids.
+<!-- measured: python -c "import xml.etree.ElementTree as ET,re;k=set(x.get('id') for x in ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom'));k|=set(re.findall(r\"Kingdom\[@id='([a-z_]+)'\]\",open('Main/_Module/ModuleData/spkingdoms.xslt').read()));print(len(k))" 2026-11-03 -->
+Note that `kingdom-creation.md` spells the first file `taom_spkingdoms.xml`; the file on disk is all
 lowercase, and NTFS hides the difference until something case-sensitive reads it.
 
 ## Child elements
@@ -253,9 +253,9 @@ the fountain guard draws 3 of every 10 picks at the spawn points it lists.
 `merchant_cost` is the one-time emissary purchase price in the owner faction's special resource, and
 it lives on the `<Troop>` rows of `special_resources/troop_resource_costs.xml`, not here. It is a
 fourth cost attribute alongside `upgrade_cost`, `recruit_cost` and `daily_upkeep`, and
-[special-resources.md](../features/special-resources.md) omits it: 70 of the file's 77 `<Troop>`
+[special-resources.md](../features/special-resources.md) omits it: 71 of the file's 89 `<Troop>`
 rows carry one.
-<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;rows=ET.parse('Main/_Module/ModuleData/special_resources/troop_resource_costs.xml').getroot().findall('.//Troop');c=collections.Counter();[c.update(x.attrib) for x in rows];print(len(rows),dict(c))" 2026-09-05 -->
+<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;rows=ET.parse('Main/_Module/ModuleData/special_resources/troop_resource_costs.xml').getroot().findall('.//Troop');c=collections.Counter();[c.update(x.attrib) for x in rows];print(len(rows),dict(c))" 2026-11-03 -->
 The full cost table is in [configs-balance](configs-balance.md); price bands are in
 [elite-emissary.md:130-134](../features/elite-emissary.md).
 
@@ -271,7 +271,7 @@ The full cost table is in [configs-balance](configs-balance.md); price bands are
 
 `min_stock` bypasses the per-town roster cap, which is the only reason the ten Erebor war-ram rows
 exist: routing an already-Erebor item to Erebor changes no pool, it just buys the stock floor
-(the file's own comment at `culture_marketplace_config.xml:44-50`).
+(the file's own comment at `culture_marketplace_config.xml:142-148`).
 
 <!-- engine-ref type="TAOM.Features.FactionMap.FactionConfigProvider" file="Main/Features/FactionMap/FactionConfigProvider.cs" lines="1-119" -->
 
@@ -427,10 +427,10 @@ Code: No code changes needed
 
 - **Nothing here reloads without relaunching the game.** All 12 providers are `Reuse.Singleton` in a
   container built at module load, so a save reload and a new campaign both read the cached copy.
-  This is the single most common wasted hour on these files (`Main/Features/Execution/ExecutionIoC.cs:10`).
+  This is the single most common wasted hour on these files (`Main/Features/Execution/ExecutionIoC.cs:11`).
 - **`alignment.json` is not a kingdom-only map.** One flat dictionary answers `GetKingdomSide` and
   `GetCultureSide`, and `ResolveSide` reads minor clan ids from it, which is why it needs `gondor`, `mordor`
-  and four clan ids on top of the 23 kingdom ids (`Main/Features/Execution/AlignmentService.cs:32-34`). A
+  and four clan ids on top of the 30 kingdom ids (`Main/Features/Execution/AlignmentService.cs:32-34`). A
   `neutral` clan entry is a no-op (the lookup falls through to the culture), so clan rows are `free` or `evil`
   (`ShippedClanSideCoverageTests.ListedClanEntries_AreFreeOrEvil`).
 - **A `Neutral` faction is treated as everyone's enemy, not as nobody's.** `AreEnemyAlignments`
@@ -438,11 +438,11 @@ Code: No code changes needed
   that drops an id out of the map is not a no-op (`Main/Features/Execution/AlignmentService.cs:44-53`).
 - **Lore names are dead keys.** `empire` is Dunland, `vlandia` is Rohan, `empire_w` is Gondor,
   `empire_s` is Mordor, `sturgia` is Dale, `aserai` is Harad, `khuzait` is Rhun, `battania` is Khand
-  (`Main/_Module/ModuleData/spkingdoms.xslt:15-234`). The tables in
+  (`Main/_Module/ModuleData/spkingdoms.xslt:13-211`). The tables in
   `alignment-aware-execution.md:228-248` and `execution.md:74-94` have `empire` and `vlandia`
   swapped; do not copy them.
 - **`diplomacy.md`'s tier counts are stale.** It says 5 permanent, 11 natural, 10 permanent, 33
-  hostile; the shipped file holds 130 rows, 38 `Permanent`, 24 `Natural`, 7 `Neutral`, 61 `Hostile`
+  hostile; the shipped file holds 153 rows, 38 `Permanent`, 29 `Natural`, 7 `Neutral`, 79 `Hostile`
   ([diplomacy.md:92](../features/diplomacy.md)).
 - **A `cave_troll`-race troop named in a guard pool never appears.** The exclusion is a hardcoded
   invariant, not config, and the rejection is a one-line warning
@@ -459,8 +459,8 @@ Code: No code changes needed
 - **An emissary troop with no `merchant_cost` row is dropped at load, not priced at zero**
   (`Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml:5-6`).
 - **`culture_marketplace_config.xml` ships no `<Boost>` section** and one blacklisted item, the
-  Arnor King's Crown under `arthedain` and `gondor` (the shipped `<Blacklist>` example). Its other
-  `<Culture>` blocks carry `armour_from` and, for Lindon and Arthedain, `<Stock>` rows.
+  Arnor King's Crown under `arthedain`, `rhudaur` and `gondor` (the shipped `<Blacklist>` example). Its other
+  `<Culture>` blocks carry `armour_from` and, for nine cultures (Lindon, the three Arnor realms, Ered Luin, and the four realms cut from Dale and Rohan), `<Stock>` rows.
 - **`regions.json` carries one key that is not a faction**, `map_boundary`, so a script that treats
   the two files as parallel maps will trip on it (measured, command below).
 - **Dread aura race names and hero ids are not validated at load**, because the FaceGen registry is
@@ -474,20 +474,20 @@ Code: No code changes needed
 
 ## Numbers in this chapter
 
-All measured 2026-09-05 from the repo working tree at `Main/_Module/ModuleData/`; the two `alignment.json` rows were re-measured 2026-10-20.
+All measured 2026-09-05 from the repo working tree at `Main/_Module/ModuleData/`; the rows marked with a later date were re-measured then (2026-11-03 for the alignment, diplomacy, army targeting, guard, emissary, cost, marketplace, faction and banner rows).
 
 | Number | Command |
 |---|---|
-| `alignment.json`: 29 keys, 12 evil, 13 free, 4 neutral | `python -c "import json,collections;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d),collections.Counter(d.values()))"` |
-| 23 live kingdom ids (15 declared, 8 retagged by XSLT); the only alignment keys that are not kingdom ids are `gondor`, `mordor` and the four minor clan ids | `python -c "import xml.etree.ElementTree as ET,re,json;k=set(x.get('id') for x in ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom'));k\|=set(re.findall(r\"Kingdom\[@id='([a-z_]+)'\]\",open('Main/_Module/ModuleData/spkingdoms.xslt').read()));a=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(k),sorted(set(a)-k))"` |
-| `diplomacy.json`: 130 rows, 38 Permanent, 24 Natural, 7 Neutral, 61 Hostile | `python -c "import json,collections;print(collections.Counter(r['tier'] for r in json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json'))['relationships']))"` |
-| `army_targeting.json`: 4 theaters, 22 `KingdomTheaters` keys (2 empty), 9 `FactionPriorityTargets`, 5 `FactionAggressionMultipliers` | `python -c "import json;a=json.load(open('Main/_Module/ModuleData/configs/army_targeting.json'));print(len(a['Theaters']),len(a['KingdomTheaters']),len(a['FactionPriorityTargets']),len(a['FactionAggressionMultipliers']),[k for k,v in a['KingdomTheaters'].items() if not v])"` |
-| `settlement_guards_config.xml`: 16 `<Settlement>`, 0 `<Clan>`, 1 `<Culture>`, 38 `<Guard>` (37 with `spawn_points`), 16 `<Spear>` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml').getroot();g=r.findall('.//Guard');print(len(r.findall('Settlement')),len(r.findall('Clan')),len(r.findall('Culture')),len(g),sum(1 for x in g if 'spawn_points' in x.attrib),len(r.findall('.//Spear')))"` |
-| `elite_emissary_config.xml`: 11 key settlements, 11 culture offer lists, 70 `<Troop>` rows | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml').getroot();print(len(r.findall('.//KeySettlements/Settlement')),len(r.findall('.//CultureOffers/Culture')),len(r.findall('.//Troop')))"` |
-| `troop_resource_costs.xml`: 77 `<Troop>` rows, 70 with `merchant_cost` | `python -c "import xml.etree.ElementTree as ET,collections;rows=ET.parse('Main/_Module/ModuleData/special_resources/troop_resource_costs.xml').getroot().findall('.//Troop');c=collections.Counter();[c.update(x.attrib) for x in rows];print(len(rows),dict(c))"` |
-| `culture_marketplace_config.xml`: 11 `<Culture>` blocks, 1 `<Routing>`, 20 `<Item>` rows (2026-10-08) | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter())['Item'])"` |
-| `factions.json`: 45 factions, 18 playable, 16 evil, 14 free, 15 neutral (2026-10-28), 14 fields per entry; `regions.json` 46 entries, the extra key being `map_boundary` | `python -c "import json,collections;f=json.load(open('Main/_Module/ModuleData/factionmap/factions.json'));r=json.load(open('Main/_Module/ModuleData/factionmap/regions.json'));k=set();[k.update(v) for v in f.values()];print(len(f),sum(1 for v in f.values() if v['playable']),collections.Counter(v['side'] for v in f.values()),len(k),len(r),sorted(set(r)-set(f)))"` |
-| `banner_bearers_config.json`: 28 `CultureBanners`, 5 `ExcludedRaces`, `DefaultBannerItemId` empty | `python -c "import json;b=json.load(open('Main/_Module/ModuleData/banner_bearers/banner_bearers_config.json'));print(len(b['CultureBanners']),b['ExcludedRaces'],repr(b['DefaultBannerItemId']))"` |
+| `alignment.json`: 36 keys, 12 evil, 14 free, 10 neutral | `python -c "import json,collections;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d),collections.Counter(d.values()))"` |
+| 30 live kingdom ids (22 declared, 8 retagged by XSLT); the only alignment keys that are not kingdom ids are `gondor`, `mordor` and the four minor clan ids | `python -c "import xml.etree.ElementTree as ET,re,json;k=set(x.get('id') for x in ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom'));k\|=set(re.findall(r\"Kingdom\[@id='([a-z_]+)'\]\",open('Main/_Module/ModuleData/spkingdoms.xslt').read()));a=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(k),sorted(set(a)-k))"` |
+| `diplomacy.json`: 153 rows, 38 Permanent, 29 Natural, 7 Neutral, 79 Hostile | `python -c "import json,collections;print(collections.Counter(r['tier'] for r in json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json'))['relationships']))"` |
+| `army_targeting.json`: 4 theaters, 30 `KingdomTheaters` keys (2 empty), 9 `FactionPriorityTargets`, 5 `FactionAggressionMultipliers` | `python -c "import json;a=json.load(open('Main/_Module/ModuleData/configs/army_targeting.json'));print(len(a['Theaters']),len(a['KingdomTheaters']),len(a['FactionPriorityTargets']),len(a['FactionAggressionMultipliers']),[k for k,v in a['KingdomTheaters'].items() if not v])"` |
+| `settlement_guards_config.xml`: 18 `<Settlement>`, 0 `<Clan>`, 1 `<Culture>`, 44 `<Guard>` (43 with `spawn_points`), 21 `<Spear>` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml').getroot();g=r.findall('.//Guard');print(len(r.findall('Settlement')),len(r.findall('Clan')),len(r.findall('Culture')),len(g),sum(1 for x in g if 'spawn_points' in x.attrib),len(r.findall('.//Spear')))"` |
+| `elite_emissary_config.xml`: 11 key settlements, 11 culture offer lists, 71 `<Troop>` rows | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml').getroot();print(len(r.findall('.//KeySettlements/Settlement')),len(r.findall('.//CultureOffers/Culture')),len(r.findall('.//Troop')))"` |
+| `troop_resource_costs.xml`: 89 `<Troop>` rows, 71 with `merchant_cost` | `python -c "import xml.etree.ElementTree as ET,collections;rows=ET.parse('Main/_Module/ModuleData/special_resources/troop_resource_costs.xml').getroot().findall('.//Troop');c=collections.Counter();[c.update(x.attrib) for x in rows];print(len(rows),dict(c))"` |
+| `culture_marketplace_config.xml`: 18 `<Culture>` blocks, 1 `<Routing>`, 21 `<Item>` rows (2026-11-03) | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter())['Item'])"` |
+| `factions.json`: 45 factions, 18 playable, 16 evil, 12 free, 17 neutral (2026-11-03), 14 fields per entry; `regions.json` 46 entries, the extra key being `map_boundary` | `python -c "import json,collections;f=json.load(open('Main/_Module/ModuleData/factionmap/factions.json'));r=json.load(open('Main/_Module/ModuleData/factionmap/regions.json'));k=set();[k.update(v) for v in f.values()];print(len(f),sum(1 for v in f.values() if v['playable']),collections.Counter(v['side'] for v in f.values()),len(k),len(r),sorted(set(r)-set(f)))"` |
+| `banner_bearers_config.json`: 39 `CultureBanners`, 5 `ExcludedRaces`, `DefaultBannerItemId` empty | `python -c "import json;b=json.load(open('Main/_Module/ModuleData/banner_bearers/banner_bearers_config.json'));print(len(b['CultureBanners']),b['ExcludedRaces'],repr(b['DefaultBannerItemId']))"` |
 | `dread_aura_config.json`: 1 hero set, 1 hero id, 1 race, 2 `raceResist` rows | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/dread_aura/dread_aura_config.json'));print(len(d['heroSets']),len(d['heroIds']),len(d['races']),len(d['raceResist']))"` |
 | `uncapturable_heroes_config.json`: 13 keys, 7 of them `_comment_*`, 6 real | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/uncapturable_heroes/uncapturable_heroes_config.json'));print(len(d),sum(1 for k in d if k.startswith('_comment')))"` |
 | 12 of 12 config providers registered `Reuse.Singleton` | `rg -n "Register<I(ArmyTargeting\|Alignment\|BannerBearer\|DreadAura\|Messenger\|CultureMarketplace\|UncapturableHeroes\|Diplomacy\|WarOfTheRing\|SettlementGuard\|EliteEmissary\|Faction)ConfigProvider, [A-Za-z]+>\(Reuse.Singleton\)" Main/ \| wc -l` |

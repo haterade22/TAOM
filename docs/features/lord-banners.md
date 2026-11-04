@@ -76,7 +76,8 @@ warning. Repeated values in one row collapse silently.
 | Banner culture | Cultures | Effects (levels 1 to 3) |
 |----------------|----------|-------------------------|
 | `empire` | gondor, gondor_soldiers, arthedain, cardolan, rhudaur | less morale shock, less ranged damage taken |
-| `sturgia` | erebor, erebor_warriors, eredluin | less shield damage, less ranged damage taken |
+| `sturgia` | erebor, erebor_warriors, eredluin, anduinvale, angaladh, dorwinion | less shield damage, less ranged damage taken |
+| `vlandia` | southrhovanion | melee damage against mounted, charge damage |
 | `battania` | mirkwood, mirkwood_stalkers, dunland_raiders | troop speed, melee damage against mounted |
 | `aserai` | umbar, umbar_corsairs, abanissa, shaghana, harad_raiders | ranged accuracy, troop speed |
 | `khuzait` | rhun_raiders | ranged accuracy, mount speed |

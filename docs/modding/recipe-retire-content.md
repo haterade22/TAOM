@@ -45,7 +45,7 @@ before anyone checked
 |---|---|---|---|
 | **Orphan** | leave the entry, remove every path that reaches it (`<upgrade_target>`, party-template stack, recruitment pool) | survive intact | the default for a troop. `.claude/rules/troops.md` "Save Compatibility" states it as a rule: never delete a troop, orphan it |
 | **Obsolete stub** | strip the entry to a shell and mark it, keeping the id resolvable | survive; the entity stops taking part in anything | vanilla's own answer, below. TAOM has never used it: `is_obsolete` appears 0 times in `Main/_Module/ModuleData` |
-| **Delete** | remove the entry and sweep every reference | break where the save names the id | you accept it and say so. `docs/features/gondor-armor-revamp.md:112` deleted 5 Lossarnach troops on the note that pre-1.0 saves are not preserved |
+| **Delete** | remove the entry and sweep every reference | break where the save names the id | you accept it and say so. A shipped troop id that no `troops/troops_*.xml` file defines is the error `TROOP_ID_REMOVED` until the maintainer lists it as `id \| reason` under `[exceptions]` in `tools/shipped_troop_ids.txt`. `docs/features/gondor-armor-revamp.md:112` deleted 5 Lossarnach troops on the note that pre-1.0 saves are not preserved |
 
 Pick one before editing and put the choice in the commit message. The failure mode is picking none,
 deleting half, and leaving a file that reads as intentional.
@@ -142,9 +142,10 @@ one as a bare id with no prefix at all. Grep for the bare id too, never only the
    directly, and the generator that produced the troop recreates it on its next run unless you remove
    its definition there too (`docs/features/gondor-armor-revamp.md:118-121`).
 5. If you deleted, add the stub from the worked example to keep the id resolvable, or accept that those
-   saves break and say so.
+   saves break and say so. A deleted troop that shipped in the last release also needs the maintainer's
+   `[exceptions]` row, or `TROOP_ID_REMOVED` fails the validator.
 
-Check: `python tools/validate_moduledata.py --code BROKEN_TROOP_REF --code BROKEN_PARTY_TEMPLATE_REF`
+Check: `python tools/validate_moduledata.py --code BROKEN_TROOP_REF --code BROKEN_PARTY_TEMPLATE_REF --code TROOP_ID_REMOVED`
 Takes effect: full game restart
 Code: Code changes required in `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` when the troop is named there
 
@@ -202,9 +203,9 @@ Code: No code changes needed
    `BanditSpawnCampaignBehavior` indexes a hideout dictionary by clan culture with a hard indexer, so
    leaving those five clans in with no hideouts of their culture is a new-game crash. Later that
    comment is the only thing saying why the strip cannot be reverted.
-3. Check the strip by hand. No validator models XSLT: of the 16 stylesheets across the three modules,
-   exactly one is ever opened by any validator, `TAOM_Map/ModuleData/settlements.xslt`, and only for a
-   single yes or no question ([tools/README.md](../../tools/README.md), the XSLT note). Transform the
+3. Check the strip by hand. No validator checks what a stylesheet produces. Of the 20 stylesheets across the three modules,
+   `check_external_xslt.py` opens all of them for well-formedness only, and `taom_schema.py` reads the text of three
+   (`settlements.xslt`, `spclans.xslt`, `spcultures.xslt`) for a few facts, never their output ([tools/README.md](../../tools/README.md), the XSLT note). Transform the
    vanilla file yourself and count what came out.
 4. Grep before adding a strip block. The five bandit templates in `spclans.xslt` are already present
    twice, at lines 27 to 31 and again at 1160 to 1164, comment and all.

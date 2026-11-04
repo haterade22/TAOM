@@ -377,7 +377,7 @@ behind.
 
 ## Tests
 
-**28 tests** under `TAOM.Tests/Features/AiPartySize/` (24 service, 4 ordering), plus **4** in
+**90 test methods** under `TAOM.Tests/Features/AiPartySize/` (58 in `AiPartySizeServiceTests.cs`, which also holds the takeover-detection and shipped-defaults classes; 8 ordering; 11 settings watcher; 7 food-relief report; 6 caravan), plus **4** in
 `CareerPassiveServiceTests` for the flat-passive frame fix. `AiPartySizeServiceTests` covers the frame arithmetic (flat bonus not amplified by the
 factor, relief preserving sign on negative consumption, relief refusing to invert a wage bill),
 the gating predicate, and one non-finite case per knob per the engine-float gate rule.

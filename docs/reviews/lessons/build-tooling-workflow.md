@@ -4850,3 +4850,10 @@ The trial's status write sat inside the driver's try, so a failed `File.Replace`
 - **Why missed:** the shape it followed writes its files plainly. `FordsAutorunOutput.cs:36` already says "the quit must still follow" and was not read.
 - **Prevent:** an unattended driver's file writes log and return. The test holds a real handle with `FileShare.Read`, because a fake that throws proves only the catch.
 - **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), rows 5 and 6.
+### A cache keyed on the version string serves old sources after a hotfix (engine bump, 2026-11-04)
+
+Steam moved the game from changeset 125053 to 125270 and kept the version string v1.5.6. `taom-src` keyed its cache on that string and returned any cached file, so it served the old build's sources for over half an hour, while agents cited them as "decompiled from the installed DLLs". The drift banner compares the same string, so it stayed silent too. Only `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` noticed, because the changeset is compiled in.
+
+- **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
+- **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string: that is owed in [v1.5.6-impact.md](../../migration/v1.5.6-impact.md).
+- **Source:** [v1.5.6-impact.md](../../migration/v1.5.6-impact.md), "Hotfix: changeset 125270".

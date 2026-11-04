@@ -63,7 +63,7 @@ wearer (`level_to_band`: light to 13, medium 14 to 18, heavy 19 to 30, elite 31 
 `--tier-source roster-first`; an id keyword decides only for kit no troop wears, and kit with
 neither is left alone. Civilian sets never anchor, and the ladder-exempt troops
 (`taom_schema.Validator._ARMOUR_LADDER_EXEMPT`: the Ithilien ranger, the troll, the Harad mount
-riders) wear their kit without anchoring it, so the ranger's hood stays a hood. Since 2026-09-25
+riders, the five Feral Orc bandits) wear their kit without anchoring it, so the ranger's hood stays a hood. Since 2026-09-25
 two narrower mechanisms sit beside it: noble-line troops anchor a band up, and a `(troop, item)`
 pair excuses one piece (see the 2026-09-25 subsection below).
 
@@ -602,10 +602,11 @@ level.** It is implemented in the tools, not as exemptions:
   to 36 on a level-31 noble), while the gates stopped seeing Gondor's tier 3 to 7. Deep review
   wave 2 caught it the same day.
 
-**Hand decisions are (troop, item) pairs:** `_ARMOUR_LADDER_EXEMPT_ITEMS` holds the 18 regular
-troops' over-dressed pieces whose line ships no lower-tier variant (Anorien infantry helmets at
+**Hand decisions are (troop, item) pairs:** `_ARMOUR_LADDER_EXEMPT_ITEMS` holds 26 pairs: the
+18 over-dressed pieces of regular Gondor troops whose line ships no lower-tier variant (Anorien infantry helmets at
 level 6, Lamedon and Lossarnach heavy pauldron-capes, Anfalas, Anorien cavalry and Pinnath Gelin
-heavy helmets, Anorien and Osgiliath elite pauldron-capes). Only that item is excused on that troop:
+heavy helmets, Anorien and Osgiliath elite pauldron-capes), and 8 Arnor noble-chest pairs (the Arthedain king's guard
+and ranger captain, the Rhudaur lord of the Angle and ranger captain). Only that item is excused on that troop:
 it is not judged there and does not anchor its price, and the troop's other slots stay on the
 ladder. Whole-troop exemption had repriced slots nobody decided on (the Osgiliath chest 63 to 47).
 
@@ -644,7 +645,7 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 
 The kingdom overview has one: `tools/tests/test_analyze_kingdom_armour.py` (22 cases on a synthetic two-culture tree: region sums, civilian exclusion, classification, ladder-exempt handling, curve aliases, matrices, pairwise and bare-chested inversions, ceilings judged on the item's own folder, gate preview, a `main` run that hashes every fixture XML before and after, a sub-line item in a shared folder kept in the reserve, the two observation tables with a sub-line troop held to its own cap, and one over the shipped troops that fails if a troop the analyzer excludes by name is missing from `_ARMOUR_LADDER_EXEMPT`). The gate's own tests are `CrossCultureArmourInversionTests` in `tools/tests/test_validate_moduledata.py`, including one that fails if an `_ARMOUR_LADDER_EXEMPT` id no longer exists in the shipped troops.
 
-The kingdom-cap curve (#583) has `tools/tests/test_kingdom_caps.py` (23 cases): the cap table and ratios as the maintainer stated them, every cap key a folder or a routed line, the routing of each sub-line (`tier_from_value` included), the cap-model values per band and slot (rounding half up, lord = elite, the four Mordor-folder lines by id), secondaries by legacy proportion, weight on the legacy ladder, `level_to_band` at each band edge and shared with the derivation, the Black Numenoreans back on the curve with hero kit and the Khamul line told apart, the two-tier invariant clean on every cap and reported on a compressed one, anchors (battle sets only, civilian and ladder-exempt troops never anchor, the exempt set is the validator's, the map anchor first like the writer), and the writer (roster-first banding, secondaries by ratio with zero staying zero, weights and material kept while the extremity loot tables move, a commented copy skipped, BOM and CRLF preserved, one `.bak-<tag>` per file that a second apply leaves alone).
+The kingdom-cap curve (#583) has `tools/tests/test_kingdom_caps.py` (25 cases): the cap table and ratios as the maintainer stated them, every cap key a folder or a routed line, the routing of each sub-line (`tier_from_value` included), the cap-model values per band and slot (rounding half up, lord = elite, the four Mordor-folder lines by id), secondaries by legacy proportion, weight on the legacy ladder, `level_to_band` at each band edge and shared with the derivation, the Black Numenoreans back on the curve with hero kit and the Khamul line told apart, the two-tier invariant clean on every cap and reported on a compressed one, anchors (battle sets only, civilian and ladder-exempt troops never anchor, the exempt set is the validator's, the map anchor first like the writer), and the writer (roster-first banding, secondaries by ratio with zero staying zero, weights and material kept while the extremity loot tables move, a commented copy skipped, BOM and CRLF preserved, one `.bak-<tag>` per file that a second apply leaves alone).
 
 ## How-To
 

@@ -48,6 +48,8 @@ public class ShippedRacePositionConfigTests
             "CharacterAvatarPatch.json is missing from ModuleData/configs.");
         Assert.IsTrue(File.Exists(Path.Combine(ConfigDir, "CharacterImagePatch.json")),
             "CharacterImagePatch.json is missing from ModuleData/configs.");
+        Assert.IsTrue(File.Exists(Path.Combine(ConfigDir, "ItemIconPatch.json")),
+            "ItemIconPatch.json is missing from ModuleData/configs.");
     }
 
     // The load-bearing assertion. The loader never throws, so a warning is the ONLY signal that a
@@ -73,6 +75,28 @@ public class ShippedRacePositionConfigTests
         Assert.IsNotNull(_sut.ResolveImage("dwarf"), "dwarf lost its 2D portrait offsets.");
     }
 
+    [TestMethod]
+    public void ShippedIconConfig_ResolvesTheDwarfArmourRows()
+    {
+        Assert.IsNotNull(_sut.ResolveIcon("dwarf_helmet"), "dwarf helmets lost their icon offsets.");
+        Assert.IsNotNull(_sut.ResolveIcon("dwarf_armor"), "dwarf body armour lost its icon offsets.");
+    }
+
+    // An icon row is read only through ItemIconRaceMatcher.RowKey(race, slot). A key whose slot is
+    // not one of the vanilla camera slots, or whose race the matcher never returns, loads fine and
+    // is then read by nothing.
+    [TestMethod]
+    public void ShippedIconConfig_EveryRowNamesAKnownSlot()
+    {
+        foreach (var row in _sut.List(RacePositionSurface.Icon))
+        {
+            Assert.IsTrue(ItemIconRaceMatcher.TrySplitRowKey(row.Race, out var race, out _),
+                $"Icon row '{row.Race}' is not '<race>_<slot>' with a known slot, so nothing reads it.");
+            Assert.IsTrue(ItemIconRaceMatcher.IsRace(race),
+                $"Icon row '{row.Race}' names a race no armour is matched to, so nothing reads it.");
+        }
+    }
+
     // The two surfaces are tuned independently and are never merged. Pinning the asymmetry stops a
     // future "helpful" fallback from quietly framing 2D portraits with 3D numbers.
     [TestMethod]
@@ -89,7 +113,7 @@ public class ShippedRacePositionConfigTests
     [TestMethod]
     public void ShippedConfigs_EveryRowIsFiniteAndInRange()
     {
-        foreach (var surface in new[] { RacePositionSurface.Avatar, RacePositionSurface.Image })
+        foreach (var surface in new[] { RacePositionSurface.Avatar, RacePositionSurface.Image, RacePositionSurface.Icon })
         {
             foreach (var row in _sut.List(surface))
             {

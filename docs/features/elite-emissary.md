@@ -156,7 +156,9 @@ Since 2026-10-15 the two Harad riders are Emissary-only: neither is in any volun
 Omitted (no L36+ elites): Dale (sturgia), Dunland (empire), Umbar, Khand (battania), Lothlorien.
 Omitted (no special-resource mapping): goblin, mistymountainorcs.
 Omitted (no `<Culture>` row here, and no troop with a `troop_resource_costs.xml` row to price an offer):
-arthedain, cardolan, rhudaur, eredluin (Ered Luin). Erebor's offers other than its war rams start at
+arthedain, cardolan, rhudaur, eredluin (Ered Luin), and dorwinion, southrhovanion, anduinvale and angaladh
+(these four map to a resource, Lake Fish for Dorwinion and Marks for the other three, but none of their
+troops has a row in `troop_resource_costs.xml`). Erebor's offers other than its war rams start at
 level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 
 ### MCM — group "Elite Emissary"
@@ -180,7 +182,7 @@ level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 | `Main/Features/SpecialResources/...` | `MerchantCost` field + `*MerchantPurchase` methods |
 | `Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml` | Key settlements + culture offers |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | `merchant_cost` prices |
-| `Main/_Module/ModuleData/taom_emissary_strings.xml` | Player-facing strings (12-lang registered — `taom_emissary_coop_guest` is **not** in here yet) |
+| `Main/_Module/ModuleData/taom_emissary_strings.xml` | Player-facing strings, including `taom_emissary_coop_guest`, with 12 language files under `Languages/` |
 
 ## Dependencies
 
@@ -214,9 +216,7 @@ boundary code and not unit-testable per ADR-008 — verify it in a live two-clie
    `TAOM_Map/settlements.xml`).
 4. New player-facing strings → `{=KEY}` in `taom_emissary_strings.xml`, then run `/localize`.
 
-**Outstanding:** `{=taom_emissary_coop_guest}` skipped step 4. It exists only as the fallback literal in
-`EliteEmissaryInquiryPresenter.cs`, is absent from `taom_emissary_strings.xml`, and has no translations.
-Register it there first, then run `/localize`.
+`{=taom_emissary_coop_guest}` is registered in `taom_emissary_strings.xml` and has a row in each of the 12 `std_taom_emissary_strings_*.xml` language files.
 
 ## Performance
 

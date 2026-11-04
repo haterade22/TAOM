@@ -17,6 +17,7 @@ Enter The Age Of Men    ← SandBoxNewGame (renamed)
 Saved Games             ← CampaignResumeGame (kept)
 Continue Campaign       ← ContinueCampaign (kept)
 Pre-compile Shaders     ← TaomPrecompileShaders (PARKED 2026-09-25: not registered)
+Fords of War            ← TaomFordsOfWar (FordsMenuEntry, orderIndex 100; hidden while the Fords catalog has no content)
 Custom Battle
 Host Co-op
 Join Co-op
@@ -121,10 +122,10 @@ Note: `ModuleMenuAdapter` is not unit tested — it wraps `Module.CurrentModule`
 Edit `MainMenuCustomizerService.cs`:
 
 ```csharp
-_moduleMenuAdapter.RenameOption("SandBoxNewGame", "Enter The Age Of Men");
+_moduleMenuAdapter.RenameOption("SandBoxNewGame", NewGameName);
 ```
 
-Replace the second argument with the desired display text.
+Change the `NewGameName` constant in the same file (`{=taom_main_menu_new_game}Enter The Age Of Men`); the themed main menu (#704) finds the entry by that text, so both read the one constant.
 
 ## How to Hide or Show Additional Options
 

@@ -40,7 +40,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 
 - **XML-driven config:** Resource definitions with nested `<Kingdom>` and `<Culture>` child elements for many-to-one mappings
 - **Culture fallback:** Resolves via kingdom first, then culture — supports kingdomless players
-- **CampaignBehavior:** Hooks 12 events (SessionLaunched, DailyTickHero, MapEventEnded, RaidCompleted, PrisonerTaken, NewGameCreated, CharacterCreationIsOver, GameLoaded, TournamentFinished, HideoutBattleCompleted, UnitRecruited, GameOver) plus `ScreenManager.OnPushScreen` for the party-screen session
+- **CampaignBehavior:** Hooks 11 events (DailyTickHero, MapEventEnded, RaidCompleted, PrisonerTaken, NewGameCreated, CharacterCreationIsOver, GameLoaded, TournamentFinished, HideoutBattleCompleted, UnitRecruited, GameOver) plus `ScreenManager.OnPushScreen` for the party-screen session
 - **Earn policy:** `SpecialResourceEarnPolicy`: participation (not command) decides a battle payout, a raid or extortion event pays the battle credit only when a field party was beaten, and a dedicated server credits nobody. See [Earning Rules](#earning-rules)
 - **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
 - **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
@@ -266,7 +266,7 @@ question, not a defect, and the daily toast now makes it visible.
 | `Client/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
 | `Main/Features/SpecialResources/SpecialResourceTroopBadge.cs` | Pure predicate and tooltip rows for the encyclopedia badge (#590) |
 | `Client/Features/SpecialResources/UI/EncyclopediaUnitBadgeMixin.cs` | UIExtenderEx mixin on `EncyclopediaUnitVM`: badge visibility, icon sprite, lazy tooltip (#590) |
-| `Main/_Module/GUI/Prefabs/Encyclopedia/EncyclopediaSubPages/EncyclopediaUnitTreeNodeItem.xml` | TAOM clone of the vanilla troop-tree node; carries the badge widget beside the tier and type icons |
+| `Main/_Module/GUI/PreFabs/Encyclopedia/EncyclopediaSubPages/EncyclopediaUnitTreeNodeItem.xml` | TAOM clone of the vanilla troop-tree node; carries the badge widget beside the tier and type icons |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 85 cost rows: 43 with daily upkeep, 42 merchant-only emissary offers |
 

@@ -134,7 +134,7 @@ Not applied: P7 and P12, for the reasons under "Not applied".
 `/verify` on the final tree, 2026-11-04 12:00 to 12:11, on top of `8b041f03e`:
 
 - **Build:** exit 0, 0 errors, 10 warnings. **Restore:** exit 0, no NU1900, NU1903 or NU1904 line.
-- **C# tests:** `Failed!  - Failed:     1, Passed: 32555, Skipped:    11, Total: 32567, Duration: 2 m 3 s`. The one failure is `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`: Steam moved the game to changeset 125270 at 06:34, and this branch has not yet merged the bump from trunk. No other test failed.
+- **C# tests:** `Failed!  - Failed:     1, Passed: 32555, Skipped:    11, Total: 32567, Duration: 2 m 3 s`. The one failure is `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`: Steam moved the game to changeset 125270 at 06:34, and BUTR has published only `1.5.6.125053-beta`, so the test is red on trunk too and stays red until that pin moves (`docs/migration/v1.5.6-impact.md`, "The BUTR pin"). No other test failed.
 - **Tool tests:** `Ran 7237 tests in 459.282s`, `OK (skipped=11)`.
 - **Canary:** exit 1 with one `VERIFY_CANARY_TRIPPED` line, as it must be.
 - **API snapshot:** `OK: gamemodel-bases.md reproduces.` and `OK: patch-targets.md reproduces.`

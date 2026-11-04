@@ -31,7 +31,10 @@
     "volleyMissiles": 3,
     "fireRange": 45,
     "attackRange": 20,
-    "thrustFloorFactor": 0.2
+    "thrustFloorFactor": 0.2,
+    "assaultDamagePerSecond": 50,
+    "wearStartMinutes": 15,
+    "wearPerMinute": 0.15
   },
   "heroes": {
     "maxAlivePerSide": 2,

@@ -73,7 +73,7 @@ This pass extends the same pipeline to 5 more cultures via one Python generator 
 
 ## Dependencies
 
-- `LOTRLOME_Armory` module declared in `SubModule.xml`.
+- `LOTRLOME_Armory` is a separate module that TAOM's items and troops reference; `Main/_Module/SubModule.xml` does not declare it (its `DependedModules` list names only `TAOM.Dependencies`, `Native`, `SandBoxCore`, `Sandbox` and `CustomBattle`, lines 21-25).
 - KEYforce mesh `.tpac` packages in `Assets/<culture>_assets/` — shipped on rolling cadence; verified for Mordor (33 meshes), Isengard (12), Dol Guldur (5), Gundabad (5), Erebor (26), Rhun (45). Items reference mesh names by id; meshes not yet shipped will appear missing in-game until KEYforce delivers them.
 
 ## Tests

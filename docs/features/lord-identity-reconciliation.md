@@ -1,6 +1,6 @@
 # Lord identity: the two halves and how they drift
 
-**Status:** landed 2026-08-29, uncommitted. Suite 7748 green. Reviewed by nine agents; the fourteen
+**Status:** landed 2026-08-29 in `b930fd8a6`. Suite 7748 green. Reviewed by nine agents; the fourteen
 surviving findings are all fixed, and the write-up is
 [`docs/reviews/rca-lord-identity-2026-08-29.md`](../reviews/rca-lord-identity-2026-08-29.md).
 In-game smoke and `/localize` owed.
@@ -9,15 +9,15 @@ A named lord is defined in two places, and nothing before 2026-08-29 checked tha
 
 | Half | Files | Carries |
 |---|---|---|
-| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1181 `<NPCCharacter>`), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
-| What the player is told | `Main/_Module/ModuleData/characters/heroes.xml` (961 `<Hero>`), `Main/_Module/ModuleData/heroes.xslt` (399 templates over vanilla `SandBox/ModuleData/heroes.xml`) | `faction`, `father`, `mother`, `spouse`, and the encyclopedia `text` |
+| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1346 `<NPCCharacter>`), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
+| What the player is told | `Main/_Module/ModuleData/characters/heroes.xml` (1167 `<Hero>`), `Main/_Module/ModuleData/heroes.xslt` (396 templates over vanilla `SandBox/ModuleData/heroes.xml`) | `faction`, `father`, `mother`, `spouse`, and the encyclopedia `text` |
 
 The encyclopedia shows the name and the biography side by side, so a player reads both at once.
 
 ## Load order, and what "wins" actually means
 
-`Main/_Module/SubModule.xml`: line 96 `lords.xslt`, line 106 `heroes.xslt`, line 148
-`characters/heroes.xml`, line 157 `characters/lords.xml`. 176 ids are defined in both lords files
+`Main/_Module/SubModule.xml`: line 131 `lords.xslt`, line 141 `heroes.xslt`, line 190
+`characters/heroes.xml`, line 199 `characters/lords.xml`. 176 ids are defined in both lords files
 (179 until #644 removed three); their names agree on 175, the one deliberate exception being
 `lord_WE9_l`, where `lords.xml` has the fuller "Duinhir, Lord of Morthond".
 
@@ -69,9 +69,9 @@ that if a future vanilla patch adds ids in those files.
 | File | Keys | Registered | Translated ×12 |
 |---|---|---|---|
 | `lords.xslt` names | 396 | all, in `taom_xslt_strings.xml` | yes |
-| `heroes.xslt` biographies | 399 | all, in `taom_xslt_strings.xml` | yes |
-| `characters/lords.xml` names | 1181 | 176 in `taom_xslt_strings.xml` + 988 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 176 overlap) | yes, ~1164/1181 |
-| `characters/heroes.xml` biographies | 460 | all, in `taom_hero_text_strings.xml` (2026-10-01) | yes |
+| `heroes.xslt` biographies | 396 | all, in `taom_xslt_strings.xml` | yes |
+| `characters/lords.xml` names | 1346 | 176 in `taom_xslt_strings.xml` + 1153 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 176 overlap); the 17 `aom_lord_AB*` and `aom_lord_SH*` keys are in neither file | yes, all 1346 ids in each of the 12 language folders |
+| `characters/heroes.xml` biographies | 475 | 469 in `taom_hero_text_strings.xml` (2026-10-01), 6 in `taom_xslt_strings.xml` | yes |
 
 Through 2026-09-16 an edit confined to `characters/lords.xml` had zero locale ripple. As of
 2026-09-17 that is no longer true for NAMES: `taom_lord_name_strings.xml` is a third tier,

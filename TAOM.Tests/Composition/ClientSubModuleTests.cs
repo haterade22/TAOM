@@ -181,6 +181,7 @@ public class ClientSubModuleTests
         {
             typeof(TAOM.Adapters.IFactionMapWidgetAdapter),
             typeof(TAOM.Adapters.IFrontEndSpriteTableAdapter),
+            typeof(TAOM.Adapters.IThumbnailCacheAdapter),
             typeof(TAOM.Features.CustomBattles.ICustomBattleFactionSelectionFactory),
             typeof(TAOM.Features.WarOfTheRingMomentum.UI.IMomentumUIService),
             typeof(TAOM.Adapters.IRealmBordersMapViewAdapter),
@@ -193,6 +194,7 @@ public class ClientSubModuleTests
             typeof(TAOM.Features.FordsOfWar.IFordsOfWarGameManagerFactory),
             typeof(TAOM.Features.FordsOfWar.Autorun.IFordsAutorunHost),
             typeof(TAOM.Features.LongDefeat.ILongDefeatGameManagerFactory),
+            typeof(TAOM.Features.LongDefeat.Autorun.ILongDefeatAutorunHost),
             typeof(TAOM.Features.SupplyLines.ISupplyRouteVisualService),
             typeof(TAOM.Features.FieldCamp.ICampVisualService),
             typeof(TAOM.Features.Refuge.IRefugeVisualService),

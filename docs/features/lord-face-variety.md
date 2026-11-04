@@ -6,7 +6,7 @@ When a new campaign is created, one pass gives every campaign hero a face of the
 
 ## Why This Exists
 
-- **Vanilla behavior:** `Hero.Deserialize` (not `SetCharacterObject`) copies `CharacterObject.GetBodyPropertiesMin(returnBaseValue: true).StaticProperties` into `Hero.StaticBodyProperties` (`Hero.cs:1891`), and the minimum's weight and build into `Hero.Weight` and `Hero.Build`. A hero authored with a `face_key_template` therefore always gets the template's minimum, and a hero authored with one explicit `BodyProperties` key gets exactly that key. Only a hero born from a template is rolled (`DefaultHeroCreationModel.cs:197-202`).
+- **Vanilla behavior:** `Hero.Deserialize` (not `SetCharacterObject`) copies `CharacterObject.GetBodyPropertiesMin(returnBaseValue: true).StaticProperties` into `Hero.StaticBodyProperties` (`Hero.cs:1880`), and the minimum's weight and build into `Hero.Weight` and `Hero.Build`. A hero authored with a `face_key_template` therefore always gets the template's minimum, and a hero authored with one explicit `BodyProperties` key gets exactly that key. Only a hero born from a template is rolled (`DefaultHeroCreationModel.cs:197-202`).
 - **TAOM requirement:** the Haradrim lords all looked alike. 68 Harad women (36 Shaghana, 32 Abanissa) and four Umbar lords carried one explicit key, and the 107 Harad men on `BodyProperty.fighter_haradrim` all started on its minimum. The same shape showed up across the other cultures, so the pass covers every hero (issue #952, widened by the maintainer).
 - **Without this feature:** whole houses render as one face.
 

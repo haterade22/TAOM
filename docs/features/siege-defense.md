@@ -87,7 +87,7 @@ siege_defense_config.json
 | `Main/Features/Siege/Models/ActiveSiegeDefenseEvent.cs` | Runtime tracking state per settlement |
 | `Main/Adapters/ISiegeEventAdapter.cs` | Adapter interface for sealed `SiegeEvent` |
 | `Main/Adapters/SiegeEventAdapter.cs` | Wraps `SiegeEvent` with `?.` throughout |
-| `Main/Adapters/IPlayerContextAdapter.cs` | Interface — `GetPlayerKingdomId()`, `IsUnderMercenaryService()` |
+| `Main/Adapters/IPlayerContextAdapter.cs` | Interface: `GetPlayerKingdomId()`, `GetPlayerClanId()`, `IsUnderMercenaryService()` |
 | `Main/Adapters/PlayerContextAdapter.cs` | Wraps `Clan.PlayerClan` (sealed) |
 | `Main/_Module/ModuleData/siege/siege_defense_config.json` | Default config |
 | `TAOM.Tests/Features/Siege/SiegeDefenseServiceTests.cs` | 31 unit tests |

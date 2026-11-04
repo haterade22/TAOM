@@ -1,0 +1,14 @@
+{
+  "shops": {
+    "rohan": {
+      "startingGold": 600,
+      "offers": [
+        { "id": "militia", "name": "{=TAOM_LD_Offer_Militia}Westfold Militia", "troop": "fow_rohan_westfold_militiaman", "class": "Infantry", "packSize": 12, "price": 180 },
+        { "id": "yeomen", "name": "{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen", "troop": "fow_rohan_eastfold_skirmisher", "class": "Ranged", "packSize": 10, "price": 180 },
+        { "id": "axemen", "name": "{=TAOM_LD_Offer_Axemen}Westfold Axemen", "troop": "fow_rohan_westfold_axeman", "class": "Infantry", "packSize": 8, "price": 200 },
+        { "id": "bowmen", "name": "{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen", "troop": "fow_rohan_eastfold_bowman", "class": "Ranged", "packSize": 8, "price": 200 },
+        { "id": "kings_knights", "name": "{=TAOM_LD_Offer_Knights}King's Knights, on foot", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "class": "Infantry", "packSize": 6, "price": 360 }
+      ]
+    }
+  }
+}

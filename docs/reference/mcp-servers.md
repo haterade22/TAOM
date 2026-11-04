@@ -59,7 +59,7 @@ across several sites until 2026-08-31. The real name is `decompile_assembly(asse
 
 ## TaleWorlds Research — Lookup Order
 
-Follow the order below; `taom-src` is the authority for signatures. It runs `ilspycmd` against the installed DLLs (version auto-detected from `Version.xml`) and caches under `~/.taom-src/<version>/`. The `E:\Decompiled_Bannerlord\` dump matches the pin and is fine for browsing namespaces/patterns; for authoritative signatures prefer `taom-src` against the installed DLLs (the dump can lag after an engine bump).
+Follow the order below; `taom-src` is the authority for signatures. It runs `ilspycmd` against the installed DLLs (version from `Version.xml`, build stamp from `TaleWorlds.Library.dll`) and caches under `~/.taom-src/<version>-<stamp>/`. The `E:\Decompiled_Bannerlord\` dump matches the pin and is fine for browsing namespaces/patterns; for authoritative signatures prefer `taom-src` against the installed DLLs (the dump can lag after an engine bump).
 
 | Step | Action | When |
 |------|--------|------|

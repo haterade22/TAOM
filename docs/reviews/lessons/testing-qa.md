@@ -2506,3 +2506,10 @@ A simplification moved the Seat's keep rule into a pure function and deleted the
 - **Why missed:** "the old tests stay green" proves nothing about a behaviour whose test was among those deleted.
 - **Prevent:** a simplification that deletes a test writes down, per deleted test, the test that now fails on the same break, and breaks the code once to see it. A deletion with no such test is a loss to name, not parity.
 - **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 46.
+### A fake that returns 0 hides its seam, and a passing run says nothing past its last wave (Long Defeat, 2026-11-04)
+
+Phase 1's keep rule had full domain tests, yet swapping the attacker and defender counts in the director stayed green, because the fake returned 0 for both. A felled soldier raised no removal in the fake, although the engine raises one, so the no-gold rule ran only by assumption. The first judge passed on hand-written log lines. And run `20261104-033424` passed at 2 waves while the keep was out of reach and the wave table was too steep for wave 4, because the verdict never asked.
+
+- **Why missed:** each slice was tested alone, and the domain tests were good enough to look complete. The fake was written by the builder of the code it stands in for.
+- **Prevent:** a fake's field that the production code reads must be settable, with one test that moves it. When a fake stands in for an engine event, it raises what the engine raises. Fixtures for a judge come from a real run's log, verbatim. After a passing run, read the numbers the plan said would answer a risk, and run once past the target.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 5, 8, 9, 15 and 16.

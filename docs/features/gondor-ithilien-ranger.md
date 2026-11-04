@@ -2,7 +2,7 @@
 
 ## Overview
 
-A standalone T10 Gondor recruit, `gondor_ithilien_ranger` (level 51 on disk since the tier-10 ladder; the original design was T9 / level 41, and this doc's tree below still shows that. `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith and the two Ithilien-area castles. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (8 jerkin variants × matching hood/cloak/boots/bracers + Ithilien bows + Noldor Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
+A standalone T10 Gondor recruit, `gondor_ithilien_ranger` (level 51 on disk since the tier-10 ladder; the original design was T9 / level 41, and this doc's tree below still shows that. `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith, Osgiliath and Cair Andros. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (4 jerkin variants, two rosters each, × matching hood/cloak/boots/bracers + Ithilien bows + Noldor Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
 
 ## Why This Exists
 
@@ -27,23 +27,23 @@ Three coupled constraints:
 Pure data-layer feature — no new C# code, no new GameModel override, no Harmony patch. Adds:
 
 - One new `<NPCCharacter>` block in `troops/troops_gondor.xml`
-- Three settlement entries in the existing `VolunteerRecruitmentService.cs` static initializer
+- Ranger entries in the Gondor recruitment pools JSON (`recruitment_pools/gondor.json`), which `VolunteerRecruitmentService` loads over its hand-written Gondor pools
 - Per-slot equipment swap on the existing `faramir_bat_equipment` and `faramir_civ_equipment` rosters
 
-The new troop has 8 `<EquipmentRoster>` blocks, each pairing a unique Ithilien jerkin variant with a matching hood, boots, cloak, bracers, bow, and a unique Noldor Elven Arrow variant. The engine picks one roster per spawn, giving visual diversity across squads.
+The new troop has 8 `<EquipmentRoster>` blocks, each pairing one of four Ithilien jerkin variants (two rosters per jerkin) with a hood, boots, cloak, bracers, the same bow, and a Noldor Elven Arrow variant. The engine picks one roster per spawn, giving visual diversity across squads.
 
 ### Component Diagram
 
 ```
 troops/troops_gondor.xml
   └── gondor_ithilien_ranger (T10, level 51 on disk; authored as T9 / level 41, is_basic_troop)
-        ├── 8 EquipmentRoster blocks (1 per ithilien_jerkin_* body variant)
+        ├── 8 EquipmentRoster blocks (2 per ithilien_jerkin_* body variant, 4 variants)
         └── <upgrade_targets /> (empty — standalone)
 
-VolunteerRecruitmentService.cs InitializeGondorSettlements()
-  ├── town_EW1   → gondor_ano_peasant (7) + gondor_ithilien_ranger (3)
-  ├── castle_EW15 → gondor_ano_peasant (7) + gondor_ithilien_ranger (3)
-  └── castle_EW16 → gondor_ano_peasant (7) + gondor_ithilien_ranger (3)
+recruitment_pools/gondor.json (loaded by GondorRecruitmentJsonLoader into VolunteerRecruitmentService)
+  ├── town_EW1 (Minas Tirith)          → ... + gondor_ithilien_ranger (10 of 100)
+  ├── town_EW2, town_EW3 (Osgiliath)   → ... + gondor_ithilien_ranger (10 of 100)
+  └── castle_EW4 (Cair Andros)         → gondor_ca_noble (45) + gondor_ca_veteran (45) + gondor_ithilien_ranger (10)
          │
          └── TaomVolunteerModel.GetBasicVolunteer()
               └── notable.VolunteerTypes[i] = troop  ← no tier filter at this hop
@@ -59,43 +59,35 @@ taom_equipment_sets_gondor.xml
 
 ### Troop XML: `Main/_Module/ModuleData/troops/troops_gondor.xml`
 
-The `gondor_ithilien_ranger` `<NPCCharacter>` block sits after `gondor_brv_ranger` (~line 3420). Stats:
+The `gondor_ithilien_ranger` `<NPCCharacter>` block sits after `gondor_brv_ranger` (~line 5316). Stats:
 
 | Skill | Value |
 |---|---|
-| Athletics | 155 |
-| Riding | 40 |
-| OneHanded | 230 |
-| TwoHanded | 145 |
-| Polearm | 145 |
-| Bow | **280** |
-| Crossbow | 55 |
+| Athletics | 185 |
+| Riding | 45 |
+| OneHanded | 270 |
+| TwoHanded | 175 |
+| Polearm | 175 |
+| Bow | **380** |
+| Crossbow | 65 |
 | Throwing | 70 |
 
-Eight `<EquipmentRoster>` blocks, each with the same fixed items (`ithilien_bracers`, `wm_gondor_sword_a10`) and varied items:
+Eight `<EquipmentRoster>` blocks, each with the same fixed items (`ithilien_bracers`, `wm_gondor_sword_a03` in Item3, `ladder_ithilien_bow_t10` in Item0) and varied items; the arrows fill Item1 and Item2:
 
-| # | Body | Head | Leg | Cape | Bow | Arrows ×2 |
-|---|---|---|---|---|---|---|
-| 1 | `ithilien_jerkin_long` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v1_a` |
-| 2 | `ithilien_jerkin_long` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v2_a` |
-| 3 | `ithilien_jerkin_long_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v3_a` |
-| 4 | `ithilien_jerkin_long_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v4_a` |
-| 5 | `ithilien_jerkin_short` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak_var` | `wm_ithilien_bow` | `wm_elven_arrow_v1_b` |
-| 6 | `ithilien_jerkin_short` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v1_c` |
-| 7 | `ithilien_jerkin_short_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v1_d` |
-| 8 | `ithilien_jerkin_short_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow` | `wm_elven_arrow_v2_b` |
+| # | Body | Head | Leg | Cape | Arrows ×2 |
+|---|---|---|---|---|---|
+| 1 | `ithilien_jerkin_long` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak` | `wm_elven_arrow_v1_a` |
+| 2 | `ithilien_jerkin_long` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_elven_arrow_v2_a` |
+| 3 | `ithilien_jerkin_long_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak` | `wm_elven_arrow_v3_a` |
+| 4 | `ithilien_jerkin_long_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_elven_arrow_v4_a` |
+| 5 | `ithilien_jerkin_short` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak_var` | `wm_elven_arrow_v1_b` |
+| 6 | `ithilien_jerkin_short` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_elven_arrow_v1_c` |
+| 7 | `ithilien_jerkin_short_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak_var` | `wm_elven_arrow_v1_d` |
+| 8 | `ithilien_jerkin_short_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_elven_arrow_v2_b` |
 
-### Recruitment service: `Main/Features/TroopProgression/VolunteerRecruitmentService.cs`
+### Recruitment pools: `Main/_Module/ModuleData/recruitment_pools/gondor.json`
 
-Three settlements updated in `InitializeGondorSettlements()`:
-
-```csharp
-AddSettlement("town_EW1",    "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3); // Minas Tirith
-AddSettlement("castle_EW15", "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3); // Amonost
-AddSettlement("castle_EW16", "gondor_ano_peasant", 7, "gondor_ithilien_ranger", 3); // Erethir
-```
-
-Weight 7 vs 3 means a notable rolls ~70% basic peasant / ~30% Ithilien Ranger. Old notable troops (`gondor_mt_trainee`, `gondor_ith_watcher`) remain defined and reachable via clan-map fallback.
+The ranger sits in three pool groups at weight 10 of a 100 total: Minas Tirith (`town_EW1`), Osgiliath (`town_EW2`, `town_EW3`) and Cair Andros (`castle_EW4`). The loader (`GondorRecruitmentJsonLoader`, called from the `VolunteerRecruitmentService` constructor) overwrites matching settlement keys of the hand-written fallback pools, so a notable rolls about 10% Ithilien Ranger in those settlements. `castle_EW15` and `castle_EW16` no longer carry the ranger.
 
 ### Faramir equipment: `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml`
 
@@ -109,7 +101,7 @@ Weight 7 vs 3 means a notable rolls ~70% basic peasant / ~30% Ithilien Ranger. O
 | Cape | `ithilien_cloak_var` | `ithilien_cloak_var` |
 | Gloves | `faramir_bracers` | `faramir_bracers` |
 | Leg | `ithilien_boots_heavy` | `ithilien_boots_heavy` |
-| Horse | `charger` | — |
+| Horse | none | none |
 
 Civilian roster correctly tagged with `equipmentType="Civilian"` per the standalone EquipmentRosters schema.
 
@@ -117,10 +109,10 @@ Civilian roster correctly tagged with `equipmentType="Civilian"` per the standal
 
 | File | Purpose |
 |------|---------|
-| `Main/_Module/ModuleData/troops/troops_gondor.xml` (~line 3420) | `gondor_ithilien_ranger` `<NPCCharacter>` definition with 8 rosters |
-| `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (lines 84, 111, 112) | Settlement pool entries for `town_EW1`, `castle_EW15`, `castle_EW16` |
-| `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml` (lines 170–193) | `faramir_bat_equipment` + `faramir_civ_equipment` rosters |
-| `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | 6 tests: high-roll returns Ithilien Ranger at each of 3 settlements; low-roll returns basic at the 2 castles; region-specificity check on a non-Ithilien settlement |
+| `Main/_Module/ModuleData/troops/troops_gondor.xml` (~line 5316) | `gondor_ithilien_ranger` `<NPCCharacter>` definition with 8 rosters |
+| `Main/_Module/ModuleData/recruitment_pools/gondor.json` | Pool groups for `town_EW1`, `town_EW2`, `town_EW3`, `castle_EW4` |
+| `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml` (lines 396 to 417) | `faramir_bat_equipment` + `faramir_civ_equipment` rosters |
+| `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | `GondorJsonLoader_ProductionJson_PlacesIthilienRangerAtTenPercent`: drives the real `gondor.json` and checks the ranger at 10% in `town_EW1`, `town_EW2`, `town_EW3`, `castle_EW4` |
 
 ## Dependencies
 
@@ -130,25 +122,19 @@ Civilian roster correctly tagged with `equipmentType="Civilian"` per the standal
   - Leg: `ithilien_boots{,_heavy}`
   - Cape: `ithilien_cloak{,_var}`
   - Gloves: `faramir_bracers`, `ithilien_bracers`
-  - Weapons: `wm_gondor_faramir_sword`, `wm_gondor_sword_a10`, `wm_ithilien_bow{,_b,_c}`, `wm_elven_arrow_v*_*`
+  - Weapons: `wm_gondor_faramir_sword`, `wm_gondor_sword_a03`, `ladder_ithilien_bow_t10`, `wm_ithilien_bow_c` (Faramir), `wm_elven_arrow_v*_*`
 - **Vanilla items:** none (all gear is LOTRLOME-provided)
 
 ## Tests
 
-- `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` — 6 new test methods:
-  - `_MinasTirith_HighRoll_ReturnsIthilienRanger`
-  - `_AmonostCastle_HighRoll_ReturnsIthilienRanger`
-  - `_ErethirCastle_HighRoll_ReturnsIthilienRanger`
-  - `_AmonostCastle_LowRoll_ReturnsRegularTroop`
-  - `_ErethirCastle_LowRoll_ReturnsRegularTroop`
-  - `_NonIthilienSettlement_HighRoll_DoesNotReturnIthilienRanger` (region-specificity check on `town_EW2`)
+- `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`: `GondorJsonLoader_ProductionJson_PlacesIthilienRangerAtTenPercent` (4 data rows: `town_EW1`, `town_EW2`, `town_EW3`, `castle_EW4`) reads the production `gondor.json`, so the ranger cannot drop to 0% while the fallback-only tests stay green.
 - Full suite at the time of feature ship: 89 in `VolunteerRecruitmentServiceTests` (was 86 before).
 
 ## How to Add a Similar Region-Specialty Troop
 
 1. **Define the troop** in the matching `troops/troops_{culture}.xml` with `is_basic_troop="true"`, `<upgrade_targets />`, and one or more `<EquipmentRoster>` blocks.
 2. **Verify item IDs** — grep `LOTRLOME_Armory/ModuleData/LOTRLOME_items/<culture>/*.xml` for every `Item.id` referenced. Missing items cause the underwear bug.
-3. **Add settlement entries** in `VolunteerRecruitmentService.cs` `Initialize{Culture}Settlements()`. Three-arg overload: `(settlementId, regularTroop, regularWeight, notableTroop, notableWeight)`.
+3. **Add settlement entries** in `VolunteerRecruitmentService.cs` `Initialize{Culture}Settlements()` with `AddSettlement(string settlementId, params (string troopId, int weight)[] entries)`. For Gondor, also add the weights to `recruitment_pools/gondor.json`, which overwrites matching settlement keys.
 4. **Write TDD tests** in `VolunteerRecruitmentServiceTests.cs` covering high-roll, low-roll, and region-specificity (settlement OUTSIDE the targeted area should NOT return the new troop).
 5. **Write the commit body** with the feature, item IDs used, settlement allocation, and any save-compat notes: it is the changelog entry.
 
@@ -156,7 +142,7 @@ No code changes outside the service + tests + XML. `TaomVolunteerModel.MaxVolunt
 
 ## Performance
 
-None — pure data lookup. `VolunteerRecruitmentService.GetVolunteerTroopId` is called per notable per day at most, runs O(N) over a 2-entry pool, allocates zero. Static `Dictionary<string, List<VolunteerChance>>` maps populated once at class load.
+None: pure data lookup. `VolunteerRecruitmentService.GetVolunteerTroopId` is called per notable per day at most, runs O(N) over a pool of 3 to 8 entries, allocates zero. Static `Dictionary<string, List<VolunteerChance>>` maps populated once at class load.
 
 ## Changelog
 

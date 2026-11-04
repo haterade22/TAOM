@@ -229,8 +229,8 @@ done (`.claude/rules/moduledata-validation.md`).
 
 ## Key files
 
-- `tools/audit_deleted_mesh_impact.py` plus `tools/tests/test_audit_deleted_mesh_impact.py` (40 tests)
-- `tools/apply_dead_mesh_item_swaps.py` plus `tools/tests/test_apply_dead_mesh_item_swaps.py` (25 tests)
+- `tools/audit_deleted_mesh_impact.py` plus `tools/tests/test_audit_deleted_mesh_impact.py` (49 tests)
+- `tools/apply_dead_mesh_item_swaps.py` plus `tools/tests/test_apply_dead_mesh_item_swaps.py` (38 tests)
 - Report output: `tools/reports/mesh-cleanup/` (`REPORT.md`, `impact.tsv`, `impact.json`)
 - Consumers touched: `characters/npcs_{gondor,rhun}.xml`,
   `equipmentsets/taom_{char_creation,equipment_sets_gondor,lord_template,wanderer}_equipment.xml`,

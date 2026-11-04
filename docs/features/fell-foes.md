@@ -218,7 +218,7 @@ stop counts are not logged yet; a flicker check has to read `stopped` and `unste
 |------|---------|
 | `Main/Features/FellFoes/FellFoesModule.cs` | Module: registrations and the mission behavior declaration, builds the gate check |
 | `Main/Features/FellFoes/Hooks/FellFoesMissionLogic.cs` | Entry point (a `MissionLogic`): tick, catch, release at end and on removal |
-| `Main/Features/FellFoes/Hooks/FellFoesMissionGate.cs` | Battle allowlist, co-op stand-down, `MissionEnded` |
+| `Main/Features/FellFoes/Hooks/FellFoesMissionGate.cs` | Battle allowlist, co-op stand-down, `MissionEnded`; [Lost Footing](lost-footing.md) reuses it as it stands |
 | `Main/Features/FellFoes/FellFoesService.cs` | Clock and gate, three isolated passes, `ReleaseHolds`, debug line |
 | `Main/Features/FellFoes/FellFoesRules.cs` | The decisions, pure |
 | `Main/Features/FellFoes/Domain/` | Tunables, per-mission state, scan snapshot, enemy view |

@@ -101,11 +101,10 @@ Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age a
 | `Main/Features/RaceAge/Models/TaomPregnancyModel.cs` | GameModel override (race fertility) |
 | `Main/Features/RaceAge/RaceAgeBehavior.cs` | DailyTick age-death check |
 | `Main/Features/RaceAge/RaceAgeIoC.cs` | DryIoc registration |
-| `Main/Features/RaceAge/Hooks/GetCivilianEquipment_Patch.cs` | Harmony patch — defensive fallback for missing child equipment rosters |
 | `Main/Adapters/IHeroAgeAdapter.cs` | Adapter interface |
 | `Main/Adapters/HeroAgeAdapter.cs` | TaleWorlds API wrapper |
 | `Main/_Module/ModuleData/raceage/race_age_config.json` | Race age data |
-| `Main/_Module/ModuleData/taom_child_equipment_templates.xml` | Child equipment rosters for all 10 custom cultures |
+| `Main/_Module/ModuleData/equipmentsets/taom_child_equipment_templates.xml` | Child equipment rosters for 22 custom cultures (`shaghana` and `abanissa` have lord child rosters in `taom_lord_template_equipment.xml` instead) |
 
 ## How Race Is Determined
 
@@ -119,8 +118,8 @@ Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age a
 
 ## Tests
 
-- `TAOM.Tests/Features/RaceAge/RaceAgeServiceTests.cs` — 18 tests covering all lookups, fallback, immortality, death threshold
-- `TAOM.Tests/Features/RaceAge/RaceAgeConfigProviderTests.cs` — 4 tests for JSON loading, missing file, invalid JSON, immortal flag
+- `TAOM.Tests/Features/RaceAge/RaceAgeServiceTests.cs`: 22 tests covering all lookups, fallback, immortality, death threshold
+- `TAOM.Tests/Features/RaceAge/RaceAgeConfigProviderTests.cs`: 7 tests for JSON loading, missing file, invalid JSON, immortal flag, immortal fertility sentinel, inverted window reset
 - `TAOM.Tests/Features/RaceAge/TaomPregnancyModelTests.cs`: `ComputeBaseChance` branches, including the #628 brake ordering and player clamp
 - `TAOM.Tests/Features/RaceAge/ShippedFertilityConfigTests.cs`: loads the shipped `race_age_config.json` and `initial_child_generation.json` through the real providers and pins the #628 ceilings, the orc-culture exclusions, and that every excluded id is a real culture
 
@@ -181,7 +180,7 @@ When a hero gives birth, vanilla `DefaultHeroCreationModel.GetCivilianEquipment`
 
 ### Child Equipment Templates
 
-`taom_child_equipment_templates.xml` provides 60 equipment rosters (6 per culture × 10 custom cultures). Each roster has 2 `EquipmentSet` variants with Body + Leg slots using the lightest civilian items from each culture's Armory. Lothlorien shares rivendell items; umbar shares gondor items.
+`taom_child_equipment_templates.xml` provides 132 equipment rosters (6 per culture × 22 custom cultures). Each roster has 2 `EquipmentSet` variants (Mirkwood's have 1) with Body + Leg slots, using the lightest civilian items from the culture's Armory. Some cultures share another culture's items: arthedain, cardolan, rhudaur, anduinvale, angaladh, dorwinion and southrhovanion use gondor's; lindon and lothlorien use rivendell's; eredluin uses erebor's; mistymountainorcs and bluecraig use goblin's. Umbar uses gondor's items except that `boromir_jerkin` replaces `ithilien_jerkin_long`.
 
 The 6 XSLT cultures (empire/dunland, aserai/harad, vlandia/rohan, khuzait/rhun, sturgia/dale, battania/variag) are covered by vanilla `sandbox_equipment_sets.xml` since they retain their original culture IDs.
 

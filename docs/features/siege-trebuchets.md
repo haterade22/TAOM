@@ -18,7 +18,7 @@ The defender engine list is hardcoded in a C# iterator method on `DefaultSiegeEv
 
 ### Solution Approach
 
-Standard TAOM GameModel override pattern (ADR). `TaomSiegeEventModel` inherits `DefaultSiegeEventModel` and overrides only `GetAvailableDefenderSiegeEngines`. All other methods (attacker ranged, ram, tower, sally-out roster) fall through to base behavior.
+Standard TAOM GameModel override pattern (ADR). `TaomSiegeEventModel` inherits `DefaultSiegeEventModel` and overrides only `GetAvailableDefenderSiegeEngines`; the list itself comes from `ISiegeEngineAvailabilityService.GetDefenderEngines(hasFirePerks)`, which returns `DefenderSiegeEngineKind` values that the model maps to `DefaultSiegeEngineTypes`. All other methods (attacker ranged, ram, tower, sally-out roster) fall through to base behavior.
 
 Perk gating for `FireBallista`/`FireCatapult` is preserved — the override reproduces vanilla's `HasPerk(Stonecutters || SiegeEngineer)` check. `Trebuchet` is yielded unconditionally (no perk gate), mirroring how vanilla exposes it to attackers.
 
@@ -27,27 +27,29 @@ Perk gating for `FireBallista`/`FireCatapult` is preserved — the override repr
 ```
 SubModule.OnGameStart
         |
-campaignStarter.AddModel(new TaomSiegeEventModel())
+campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()))
         |
 TaomSiegeEventModel : DefaultSiegeEventModel
         |
 override GetAvailableDefenderSiegeEngines(PartyBase party)
-  -> yields Ballista, [FireBallista], Catapult, [FireCatapult], Trebuchet
+  -> asks SiegeEngineAvailabilityService, yields Ballista, [FireBallista], Catapult, [FireCatapult], Trebuchet
         |
 MapSiegeProductionVM (vanilla) populates defender dropdown
 ```
 
 ## Configuration
 
-None. Trebuchets are unconditionally available to every defender. To change this to a per-culture or per-settlement gate, convert the override to inject a service that reads a JSON/XML config — but that's a non-goal for the current scope.
+None. Trebuchets are unconditionally available to every defender. To change this to a per-culture or per-settlement gate, make `SiegeEngineAvailabilityService` read a JSON/XML config, but that is a non-goal for the current scope.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/Siege/Models/TaomSiegeEventModel.cs` | GameModel override (16 lines) |
+| `Main/Features/Siege/Models/TaomSiegeEventModel.cs` | GameModel override: the perk check and the kind-to-engine mapping |
+| `Main/Features/Siege/SiegeEngineAvailabilityService.cs` | Which engines a defender gets (`ISiegeEngineAvailabilityService`) |
+| `TAOM.Tests/Features/Siege/SiegeEngineAvailabilityServiceTests.cs` | Unit tests for that list |
 | `Main/SubModule.cs` | Registers the model in `OnGameStart` |
-| `CLAUDE.md` | Entry in the GameModel Overrides table |
+| `docs/reference/gamemodel-registry.md` | Entry in the GameModel overrides table |
 
 ## Dependencies
 
@@ -57,7 +59,7 @@ None. Trebuchets are unconditionally available to every defender. To change this
 
 ## Tests
 
-No direct unit tests. `DefaultSiegeEngineTypes.Trebuchet` resolves via `Game.Current.DefaultSiegeEngineTypes._siegeEngineTypeTrebuchet` — which is null in unit test context. Per `csharp-architecture.md`: entry-point models are verified in-game, not via unit tests.
+The engine list is unit tested: `SiegeEngineAvailabilityServiceTests` covers the perk and no-perk lists, the always-present Trebuchet, and the absence of ram and siege tower. The model itself has no unit test, because `DefaultSiegeEngineTypes.Trebuchet` resolves via `Game.Current.DefaultSiegeEngineTypes._siegeEngineTypeTrebuchet`, which is null in unit test context.
 
 **Manual verification:**
 1. Start a campaign, join a kingdom.
@@ -67,7 +69,7 @@ No direct unit tests. `DefaultSiegeEngineTypes.Trebuchet` resolves via `Game.Cur
 
 ## How To Change the Defender Engine List
 
-Edit `Main/Features/Siege/Models/TaomSiegeEventModel.cs`. Each `yield return` adds one engine. Candidates available in `DefaultSiegeEngineTypes`: `Ballista`, `FireBallista`, `Catapult`, `FireCatapult`, `Onager`, `FireOnager`, `Bricole`, `Trebuchet`, `FireTrebuchet` **(avoid — engine getter bug returns non-fire Trebuchet field)**.
+Edit `Main/Features/Siege/SiegeEngineAvailabilityService.cs`. Each `yield return` adds one engine; a new engine also needs a `DefenderSiegeEngineKind` value and a case in `TaomSiegeEventModel.Resolve`. Candidates available in `DefaultSiegeEngineTypes`: `Ballista`, `FireBallista`, `Catapult`, `FireCatapult`, `Onager`, `FireOnager`, `Bricole`, `Trebuchet`, `FireTrebuchet` **(avoid: engine getter bug returns non-fire Trebuchet field)**.
 
 ## Known Issues
 

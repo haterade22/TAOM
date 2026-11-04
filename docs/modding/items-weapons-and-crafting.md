@@ -15,14 +15,14 @@ All four weapon files live in the game install, in `LOTRLOME_Armory/ModuleData/`
 | `LOTRLOME_crafting_pieces.xml` | `<CraftingPieces>` | `<CraftingPiece>` | `CraftingPieces` | 195 | `TaleWorlds.Core.CraftingPiece` |
 | `crafting_templates.xslt` | stylesheet, patches `<CraftingTemplates>` | `<UsablePiece>` rows | `CraftingTemplates` | 205 | `TaleWorlds.Core.CraftingTemplate` |
 | `weapon_descriptions.xslt` | stylesheet, patches `<WeaponDescriptions>` | `<AvailablePiece>` rows | `WeaponDescriptions` | 213 | `TaleWorlds.Core.WeaponDescription` |
-| `LOTRLOME_items/LOTRAOM_weapons.xml` | `<Items>` | `<CraftedItem>` and `<Item>` | `Items` | 313 | `TaleWorlds.Core.ItemObject` |
+| `LOTRLOME_items/LOTRAOM_weapons.xml` | `<Items>` | `<CraftedItem>` and `<Item>` | `Items` | 348 | `TaleWorlds.Core.ItemObject` |
 
 Two things about that table are worth reading twice.
 
 - **`<CraftedItem>` has no registration of its own.** It is an `ItemObject` that lives inside an ordinary `<Items>` file next to plain `<Item>` rows, and `ItemObject.Deserialize` branches on the element name at `ItemObject.cs:420`. The root element is what routes a file, never the child names.
 - **The two stylesheets carry no `.xml` of their own.** The Armory ships `crafting_templates.xslt` and `weapon_descriptions.xslt` with no sibling `crafting_templates.xml` or `weapon_descriptions.xml`, so both patch the vanilla files from `Native/ModuleData/`. How a stylesheet reaches another module's file is [Load order and dependencies](load-order-and-dependencies.md) section E; how an `<XmlNode>` row is written is [SubModule and registration](submodule-and-registration.md).
 
-Vanilla supplies the categories the Armory extends: 12 `<CraftingTemplate>` ids and 22 `<WeaponDescription>` ids <!-- measured: grep -c '<CraftingTemplate$' Native/ModuleData/crafting_templates.xml && grep -c '<WeaponDescription$' Native/ModuleData/weapon_descriptions.xml 2026-09-05 -->. TAOM adds none of either: the Armory's stylesheets only extend the `<AvailablePieces>` and `<UsablePieces>` lists of vanilla's, across 14 weapon descriptions and 9 crafting templates <!-- measured: grep -c 'xsl:template match="WeaponDescription' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt && grep -c 'xsl:template match="CraftingTemplate' LOTRLOME_Armory/ModuleData/crafting_templates.xslt 2026-09-05 -->.
+Vanilla supplies the categories the Armory extends: 12 `<CraftingTemplate>` ids and 22 `<WeaponDescription>` ids <!-- measured: grep -c '<CraftingTemplate$' Native/ModuleData/crafting_templates.xml && grep -c '<WeaponDescription$' Native/ModuleData/weapon_descriptions.xml 2026-09-05 -->. TAOM adds none of either: the Armory's stylesheets only extend the `<AvailablePieces>` and `<UsablePieces>` lists of vanilla's, across 16 weapon description rules and 9 crafting template rules <!-- measured: grep -c 'xsl:template match="WeaponDescription' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt && grep -c 'xsl:template match="CraftingTemplate' LOTRLOME_Armory/ModuleData/crafting_templates.xslt 2026-11-03 -->.
 
 ### Load order inside one module
 
@@ -32,7 +32,7 @@ Every id reference between these four files resolves through `MBObjectManager.Ge
 - `CraftingTemplate`'s `<UsablePieces>` skips an unresolved `piece_id` (`CraftingTemplate.cs:212-214`).
 - `WeaponDescription`'s `<AvailablePieces>` skips an unresolved `id` (`WeaponDescription.cs:53-55`).
 
-`Native/SubModule.xml` orders them pieces (137), descriptions (146), templates (149). The Armory orders them pieces (195), templates (205), descriptions (213), with the item files after at 313. Both work because the vanilla objects already exist by the time the Armory's rows run; a new module writing its own `.xml` for all three should follow Native's order.
+`Native/SubModule.xml` orders them pieces (137), descriptions (146), templates (149). The Armory orders them pieces (195), templates (205), descriptions (213), with the weapons item file after at 348. Both work because the vanilla objects already exist by the time the Armory's rows run; a new module writing its own `.xml` for all three should follow Native's order.
 
 ## Attributes
 
@@ -96,7 +96,7 @@ You will rarely author one, because TAOM adds none, but you have to read them to
 | `use_weapon_as_holster_mesh` | bool | No | `false` | Draw the weapon itself on the belt instead of a scabbard mesh. | `CraftingTemplate.cs:156` |
 | `always_show_holster_with_weapon` | bool | No | `false` | Read, and no managed consumer exists in the dump. | `CraftingTemplate.cs:157` |
 | `rotate_weapon_in_holster` | bool | No | `false` | Read, and no managed consumer exists in the dump. | `CraftingTemplate.cs:158` |
-| `piece_type_to_scale_holster_with` | enum piece type, case-sensitive | No | `Invalid` | Read, and no managed consumer exists in the dump. Three of vanilla's 12 templates set `Blade`. | `CraftingTemplate.cs:159` |
+| `piece_type_to_scale_holster_with` | enum piece type, case-sensitive | No | `Invalid` | Read, and no managed consumer exists in the dump. Four of vanilla's 12 templates set `Blade`. | `CraftingTemplate.cs:159` |
 | `hidden_piece_types_on_holster` | string, colon separated piece types | No | nothing hidden | Which parts stop being drawn once sheathed. The accessor has no managed caller. | `CraftingTemplate.cs:161` |
 | `piece_type` | enum piece type, case-sensitive | Yes on `<PieceData>` | none, load crashes | Declares that the template has this slot. A type not listed cannot be fitted at all. | `CraftingTemplate.cs:184` |
 | `build_order` | int, may be negative | Yes on `<PieceData>` | none, load crashes | Assembly order along the axis. Vanilla `TwoHandedPolearm` uses Handle 0, Guard 1, Blade 2, Pommel -1. | `CraftingTemplate.cs:185` |
@@ -237,7 +237,7 @@ The legal `weapon_class` values, in enum order, are `Undefined`, `Dagger`, `OneH
 
 <!-- measured: grep -c '<BuildData' Native/ModuleData/crafting_pieces.xml && grep -c '</CraftingPiece>' Native/ModuleData/crafting_pieces.xml 2026-09-05 -->
 
-`<Material id>` and `<Flag name>` reuse the `id` and `name` rows in the attribute table above. `<Material id>` is read with a tolerant parse, so a misspelling such as `Iron_2` silently becomes `IronOre` rather than erroring; the legal names are `IronOre`, `Iron1` to `Iron6`, `Wood` and `Charcoal`. `<Flag name>` is parsed case-insensitively (`CraftingPiece.cs:272`, `:277`), which is why the four Armory pieces spelled `CanKnockdown` load exactly like the 141 spelled `CanKnockDown` <!-- measured: grep -o '<Flag name="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml | sort | uniq -c 2026-09-05 -->.
+`<Material id>` and `<Flag name>` reuse the `id` and `name` rows in the attribute table above. `<Material id>` is read with a tolerant parse, so a misspelling such as `Iron_2` silently becomes `IronOre` rather than erroring; the legal names are `IronOre`, `Iron1` to `Iron6`, `Wood` and `Charcoal`. `<Flag name>` is parsed case-insensitively (`CraftingPiece.cs:272`, `:277`), which is why a piece spelled `CanKnockdown` would load exactly like the 45 Armory pieces spelled `CanKnockDown` (no piece uses the lowercase spelling today) <!-- measured: grep -o '<Flag name="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml | sort | uniq -c 2026-09-05 -->.
 
 ### Under `<BladeData>`
 
@@ -337,8 +337,8 @@ The Armory's bows use `RangedWeapon`, `HasString`, `StringHeldByHand`, `NotUsabl
 The three attributes a reader changes first:
 
 1. **`crafting_template`** decides the item type, the holster slots and the whole list of usages the weapon can get. Changing `TwoHandedSword` to `OneHandedSword` changes the animations, not just a label.
-2. **`is_merchandise`** is the shop switch. Anduril ships as `true`, so shops may stock it. Only 8 of the 415 rows in this file set it to `false` <!-- measured: grep -c 'is_merchandise="false"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml 2026-09-05 -->.
-3. **`scale_factor`** is a percent, not a multiplier: 100 leaves the part alone, 110 makes it a tenth longer, and it raises smithing difficulty with it. Across this file the values are 100 (955 rows), 80 (46), 110 (14), 90 (7) and 70 (2) <!-- measured: grep -o 'scale_factor="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml | sort | uniq -c | sort -rn 2026-09-05 -->.
+2. **`is_merchandise`** is the shop switch. Anduril ships as `true`, so shops may stock it. Only 10 of the 403 rows in this file set it to `false` <!-- measured: grep -c 'is_merchandise="false"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml 2026-11-03 -->.
+3. **`scale_factor`** is a percent, not a multiplier: 100 leaves the part alone, 110 makes it a tenth longer, and it raises smithing difficulty with it. Across this file the values are 100 (836 rows), 110 (50), 80 (46), 120 (17), 115 (8), 105 (8), 90 (7) and 70 (2) <!-- measured: grep -o 'scale_factor="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml | sort | uniq -c | sort -rn 2026-11-03 -->.
 
 Note what the item does not carry: no mesh, no weight, no damage, no `Type`. Every one of those comes from the pieces and the template.
 
@@ -404,7 +404,7 @@ Note what the item does not carry: no mesh, no weight, no damage, no `Type`. Eve
 			<UsablePiece piece_id="wm_anduril_sword_blade"/>
 ```
 
-The blade appears in `crafting_templates.xslt` under `OneHandedSword` (line 115) and `TwoHandedSword` (line 347), and in `weapon_descriptions.xslt` under `OneHandedSword` (116), `TwoHandedSword` (347) and `OneHandedBastardSword` (1282). Every one of the four pieces has to appear in both stylesheets, under the description the item's template actually uses, or the item is gone.
+The blade appears in `crafting_templates.xslt` under `OneHandedSword` (line 115) and `TwoHandedSword` (line 369), and in `weapon_descriptions.xslt` under `OneHandedSword` (116), `TwoHandedSword` (369) and `OneHandedBastardSword` (1437). Every one of the four pieces has to appear in both stylesheets, under the description the item's template actually uses, or the item is gone.
 
 ### The single-piece bow: `highelf_longbowa`
 
@@ -516,7 +516,7 @@ Deletion is the operation TAOM has got wrong most often. A seven-commit Armoury 
 2. **Re-point the consumers first, delete second.** Every troop roster, equipment set, character-creation preset and career start naming the id has to move to a surviving item before the definition goes.
 3. **Removing a `<UsablePiece>` line deletes the item, not just the smithing option.** Gate 1 runs on the template's piece pool, so a `<CraftedItem>` still naming a piece that is no longer usable fails to build, gets unregistered and vanishes (`ItemObject.cs:469-474`). Sweep the item file before touching `crafting_templates.xslt`.
 4. **A stale `<AvailablePiece>` id is inert but not harmless.** `WeaponDescription.Deserialize` skips ids that do not resolve, so leaving one costs nothing today; it becomes wrong the moment somebody re-adds a piece under that id.
-5. **Take a backup whose last extension is not `.xml`.** A folder-registered `<XmlName id="Items" path="LOTRLOME_items/gondor"/>` globs every `.xml` in that folder, so `body_armors.bak.xml` would load and shadow ids. Use the `.bak-<topic>-<date>` shape the sweep tool recognises; all 13 backup sidecars under the Armory's `ModuleData` follow it and none of them ends in `.xml` <!-- measured: find LOTRLOME_Armory/ModuleData -name '*.bak*' | wc -l && find LOTRLOME_Armory/ModuleData -name '*.bak*.xml' | wc -l 2026-09-05 -->. Rules and the sweep script: [module-backup-sweep.md](../reference/module-backup-sweep.md).
+5. **Take a backup whose last extension is not `.xml`.** A folder-registered `<XmlName id="Items" path="LOTRLOME_items/gondor"/>` globs every `.xml` in that folder, so `body_armors.bak.xml` would load and shadow ids. Use the `.bak-<topic>` shape the sweep tool recognises; all 3 backup sidecars under the Armory's `ModuleData` follow it and none of them ends in `.xml` <!-- measured: find LOTRLOME_Armory/ModuleData -name '*.bak*' | wc -l && find LOTRLOME_Armory/ModuleData -name '*.bak*.xml' | wc -l 2026-11-03 -->. Rules and the sweep script: [module-backup-sweep.md](../reference/module-backup-sweep.md).
 
 Check: `python tools/audit_item_refs.py --show-locations` then `python tools/validate_moduledata.py`
 Takes effect: full game restart, and an existing save keeps the reference, so a deleted id shows as an empty equipment slot rather than a crash
@@ -546,23 +546,23 @@ Counting commands run from the game's `Modules` folder. Line references into the
 
 | Number | Command | Date |
 |---|---|---|
-| 672 `<CraftingPiece>` rows in the Armory (Blade 264, Handle 210, Pommel 108, Guard 90) | `grep -c '</CraftingPiece>' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml` and `grep -c 'piece_type="Blade"' ...` for each type | 2026-09-05 |
-| 347 `<CraftedItem>` and 68 `<Item>` rows in `LOTRAOM_weapons.xml` | `grep -c '</CraftedItem>' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` and `grep -c '</Item>' ...` | 2026-09-05 |
-| Templates used by those 347: TwoHandedPolearm 104, OneHandedSword 81, TwoHandedSword 43, TwoHandedAxe 40, OneHandedAxe 33, TwoHandedMace 25, Mace 17, Pike 2, Javelin 2 | `grep -o 'crafting_template="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml \| sort \| uniq -c \| sort -rn` | 2026-09-05 |
+| 752 `<CraftingPiece>` rows in the Armory (Blade 327, Handle 217, Pommel 114, Guard 94) | `grep -c '</CraftingPiece>' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml` and `grep -c 'piece_type="Blade"' ...` for each type | 2026-11-03 |
+| 335 `<CraftedItem>` and 68 `<Item>` rows in `LOTRAOM_weapons.xml` | `grep -c '</CraftedItem>' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` and `grep -c '</Item>' ...` | 2026-11-03 |
+| Templates used by those 335: TwoHandedPolearm 110, OneHandedSword 73, TwoHandedSword 40, TwoHandedAxe 36, OneHandedAxe 29, TwoHandedMace 26, Mace 17, Pike 2, Javelin 2 | `grep -o 'crafting_template="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml \| sort \| uniq -c \| sort -rn` | 2026-11-03 |
 | The 68 single-piece items: 35 Bow, 28 Arrow, 3 Crossbow, 2 Bolt | `grep -o 'weapon_class="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml \| sort \| uniq -c` | 2026-09-05 |
-| 1312 `<AvailablePiece>` rows and 778 `<UsablePiece>` rows | `grep -c '<AvailablePiece ' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` and `grep -c '<UsablePiece ' LOTRLOME_Armory/ModuleData/crafting_templates.xslt` | 2026-09-05 |
-| 14 weapon descriptions and 9 crafting templates the Armory extends | `grep -c 'xsl:template match="WeaponDescription' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` and `grep -c 'xsl:template match="CraftingTemplate' LOTRLOME_Armory/ModuleData/crafting_templates.xslt` | 2026-09-05 |
-| Vanilla: 12 `<CraftingTemplate>`, 22 `<WeaponDescription>`, 805 `<CraftingPiece>`, 58 `<item_usage_set>`, 20 `<ItemModifierGroup>` | `grep -c '<CraftingTemplate$' Native/ModuleData/crafting_templates.xml`, and the same shape for `weapon_descriptions.xml`, `crafting_pieces.xml`, `item_usage_sets.xml`, `item_modifiers_groups.xml` | 2026-09-05 |
-| 9 `<AvailablePiece>` rows inside the `TAOM-1H-POLEARM` marker block | `sed -n '673,683p' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt \| grep -c '<AvailablePiece'` | 2026-09-05 |
+| 1516 `<AvailablePiece>` rows and 878 `<UsablePiece>` rows | `grep -c '<AvailablePiece ' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` and `grep -c '<UsablePiece ' LOTRLOME_Armory/ModuleData/crafting_templates.xslt` | 2026-11-03 |
+| 16 weapon description rules and 9 crafting template rules in the Armory's stylesheets | `grep -c 'xsl:template match="WeaponDescription' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` and `grep -c 'xsl:template match="CraftingTemplate' LOTRLOME_Armory/ModuleData/crafting_templates.xslt` | 2026-11-03 |
+| Vanilla: 12 `<CraftingTemplate>`, 22 `<WeaponDescription>`, 805 `<CraftingPiece>`, 58 `<item_usage_set>`, 22 `<ItemModifierGroup>` | `grep -c '<CraftingTemplate$' Native/ModuleData/crafting_templates.xml`, and the same shape for `weapon_descriptions.xml`, `crafting_pieces.xml`, `item_usage_sets.xml`, `item_modifiers_groups.xml` | 2026-11-03 |
+| 9 `<AvailablePiece>` rows inside the `TAOM-1H-POLEARM` marker block | `sed -n '768,778p' LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt \| grep -c '<AvailablePiece'` | 2026-11-03 |
 | 1 illegal `modifier_group` value in the weapons file, at line 931 | `grep -n 'modifier_group="false"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` | 2026-09-05 |
-| 8 rows set `is_merchandise="false"` | `grep -c 'is_merchandise="false"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` | 2026-09-05 |
-| `scale_factor` values: 100 x955, 80 x46, 110 x14, 90 x7, 70 x2 | `grep -o 'scale_factor="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml \| sort \| uniq -c \| sort -rn` | 2026-09-05 |
-| `excluded_item_usage_features` in the Armory: swing 22, thrust 21, widegrip 13, long 2 | `grep -o 'excluded_item_usage_features="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml \| sort \| uniq -c` | 2026-09-05 |
-| `<Flag name>` values, including 4 spelled `CanKnockdown` beside 141 `CanKnockDown` | `grep -o '<Flag name="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml \| sort \| uniq -c` | 2026-09-05 |
-| 13 backup sidecars under the Armory's `ModuleData`, 0 of them ending in `.xml` | `find LOTRLOME_Armory/ModuleData -name '*.bak*' \| wc -l` and `find LOTRLOME_Armory/ModuleData -name '*.bak*.xml' \| wc -l` | 2026-09-05 |
+| 10 rows set `is_merchandise="false"`, of 403 | `grep -c 'is_merchandise="false"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml` | 2026-11-03 |
+| `scale_factor` values: 100 x836, 110 x50, 80 x46, 120 x17, 115 x8, 105 x8, 90 x7, 70 x2 | `grep -o 'scale_factor="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml \| sort \| uniq -c \| sort -rn` | 2026-11-03 |
+| `excluded_item_usage_features` in the Armory: swing 33, thrust 25, widegrip 14, long 4 | `grep -o 'excluded_item_usage_features="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml \| sort \| uniq -c` | 2026-11-03 |
+| `<Flag name>` values, including 45 spelled `CanKnockDown` and none spelled `CanKnockdown` | `grep -o '<Flag name="[^"]*"' LOTRLOME_Armory/ModuleData/LOTRLOME_crafting_pieces.xml \| sort \| uniq -c` | 2026-11-03 |
+| 3 backup sidecars under the Armory's `ModuleData`, 0 of them ending in `.xml` | `find LOTRLOME_Armory/ModuleData -name '*.bak*' \| wc -l` and `find LOTRLOME_Armory/ModuleData -name '*.bak*.xml' \| wc -l` | 2026-11-03 |
 | 531 of vanilla's 805 crafting pieces carry `<BuildData>` | `grep -c '<BuildData' Native/ModuleData/crafting_pieces.xml` and `grep -c '</CraftingPiece>' Native/ModuleData/crafting_pieces.xml` | 2026-09-05 |
-| 3 of vanilla's 12 crafting templates set `piece_type_to_scale_holster_with="Blade"` | `grep -c 'piece_type_to_scale_holster_with="Blade"' Native/ModuleData/crafting_templates.xml` | 2026-09-05 |
-| SubModule rows: CraftingPieces 195, CraftingTemplates 205, WeaponDescriptions 213, the weapons item file 313 | `grep -n 'CraftingPieces\|CraftingTemplates\|WeaponDescriptions\|LOTRAOM_weapons' LOTRLOME_Armory/SubModule.xml` | 2026-09-05 |
+| 4 of vanilla's 12 crafting templates set `piece_type_to_scale_holster_with="Blade"` | `grep -c 'piece_type_to_scale_holster_with="Blade"' Native/ModuleData/crafting_templates.xml` | 2026-11-03 |
+| SubModule rows: CraftingPieces 195, CraftingTemplates 205, WeaponDescriptions 213, the weapons item file 348 | `grep -n 'CraftingPieces\|CraftingTemplates\|WeaponDescriptions\|LOTRAOM_weapons' LOTRLOME_Armory/SubModule.xml` | 2026-11-03 |
 
 ## Read next
 

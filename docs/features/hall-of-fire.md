@@ -79,10 +79,10 @@ feature off, set `"cultures": {}`; a missing or empty file loads the built-in ro
 |---|---|---|
 | empire | gondor, arthedain, cardolan, rhudaur, rivendell, lindon | Stone towns and halls of the Men of the West and the Elves |
 | battania | mirkwood, lothlorien, dolguldur, empire (Dunland) | Forest settings; Dunland's marble Calradian default does not fit |
-| sturgia | erebor, eredluin, gundabad, mistymountainorcs, goblin, bluecraig | Cold, heavy halls for the mountain peoples |
+| sturgia | erebor, eredluin, anduinvale, angaladh, dorwinion, gundabad, mistymountainorcs, goblin, bluecraig | Cold, heavy halls for the mountain peoples |
 | aserai | umbar, shaghana, abanissa | Southern desert towns |
 | khuzait | mordor, battania (Khand) | Bare, hard country; Khand's Celtic forest default does not fit |
-| vlandia | isengard | Fortified keep look |
+| vlandia | isengard, southrhovanion | Fortified keep look |
 
 `empire` is Dunland and `battania` is Khand in TAOM. Rohan (`vlandia`), Dale (`sturgia`), Rhun (`khuzait`) and Harad
 (`aserai`) keep their vanilla backdrops and have no row.

@@ -1248,6 +1248,16 @@ record the same clash for Patch105 and Patch106.
 - **Source:** `docs/reviews/rca-alignment-scoring-2026-10-23.md` finding 1. Resolved at the B08 rebase: Messengers
   became Patch117, after a grep of every worktree and remote branch found no number above 116.
 
+### Patch the pose the engine consumes, not the object it built from it (Patch132, 2026-10-26)
+Patch132 first moved the entity `ItemThumbnailCache.CreateItemBaseEntity` returned. For gloves vanilla had already
+ticked a skeleton with the original frame inside that method, so a later `SetFrame` could leave the bones behind,
+and the 45-byte target was an inlining candidate.
+- **Why missed:** the shape was copied from Patch72 (adjust the finished thing) without reading what the method does
+  with its input before it returns.
+- **Prevent:** before a postfix edits an engine-built object, read every use of the input between where it is chosen
+  and where the method returns. If the engine consumes it (skeleton tick, native placement, bounding box), patch the
+  method that chooses it, through its `ref` parameter, and pin that parameter as by-ref in the binding test.
+- **Source:** `docs/reviews/rca-item-icon-race-2026-10-26.md` finding 1.
 ### A postfix that edits a view model's list or selection re-establishes every invariant its caller relies on next (#911, 2026-10-26)
 Many Hammers' `RefreshList` postfix removed locked rows from the smelting list. Vanilla's `RefreshList` clears the
 selection only when its own list is empty (`SmeltingVM.cs:207-210`), before the postfix runs, so smelting the last

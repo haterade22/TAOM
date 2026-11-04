@@ -7,7 +7,7 @@ Adds a 6th narrative menu stage to Bannerlord's character creation flow that let
 ## Why This Exists
 
 - **Vanilla behavior:** Bannerlord has 5 narrative stages (parent, childhood, education, youth, adulthood). No career/class system.
-- **TAOM requirement:** TAOM has 70 careers across 25 culture ids, but the CC flow auto-assigned the first eligible career with no player choice. Most cultures have 2-4 careers, so players always got the same one.
+- **TAOM requirement:** TAOM has 91 careers across 32 culture ids, but the CC flow auto-assigned the first eligible career with no player choice. Most cultures have 2-4 careers, so players always got the same one.
 - **Without this feature:** Players start every game with the same career for their culture. No meaningful class selection during character creation.
 
 ## Architecture
@@ -59,7 +59,7 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 
 ### Current Values
 
-70 entries, one per career. Every bonus is zero (`focus_to_add`, `skill_level_to_add` and `attribute_level_to_add` are 0, `skills` and `attribute` are empty), so the career drives specialization and the starting kit only.
+91 entries, one per career. Every bonus is zero (`focus_to_add`, `skill_level_to_add` and `attribute_level_to_add` are 0, `skills` and `attribute` are empty), so the career drives specialization and the starting kit only.
 
 ## Key Files
 
@@ -73,7 +73,7 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 | `Main/Features/CharacterCreation/CharacterCreationContentService.cs` | CC orchestrator — `AssignCareer()` uses stored selection |
 | `Main/Features/CharacterCreation/TaomCharacterCreationContentHandler.cs` | Entry point — calls `RegisterCareerMenu()` |
 | `Main/Features/CharacterCreation/CharacterCreationIoC.cs` | DryIoc registration |
-| `Main/_Module/ModuleData/charactercreation/career_menu.json` | 70 career CC bonus definitions |
+| `Main/_Module/ModuleData/charactercreation/career_menu.json` | 91 career CC bonus definitions |
 
 ## Dependencies
 
@@ -187,7 +187,7 @@ Generate a landscape image. [Scene description]. Single warrior only. Art style:
 
 ### Current Portrait Status
 
-The art is not tied to the 70 careers one to one: new-faction careers reuse portraits. <!-- measured: ls of SpriteParts/ui_taom_career_system/CareerSystem/Portraits (21 PNGs) and .../Abilities (49 PNGs) 2026-10-14 --> `Portraits` holds 21 PNGs and `Abilities` holds 49, so 21 careers still lack an ability icon. The per-career split is in [gui-sprite-system.md](gui-sprite-system.md) "Sprites Needed".
+The art is not tied to the 91 careers one to one: new-faction careers reuse portraits. <!-- measured: ls of SpriteParts/ui_taom_career_system/CareerSystem/Portraits (21 PNGs) and .../Abilities (49 PNGs) 2026-11-04 --> `Portraits` holds 21 PNGs and `Abilities` holds 49, so 42 careers still lack an ability icon. The per-career split is in [gui-sprite-system.md](gui-sprite-system.md) "Sprites Needed".
 
 ## Performance
 

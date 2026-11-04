@@ -825,8 +825,8 @@ flushed on the calling thread, which is the main thread here (`FileLogger.LogInf
 full clip table, and what each synchronous flush costs a frame. The scan reports its own cost
 (`scanMs`); nothing else is timed.
 
-**Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, three runs
-per cell) cannot resolve either one. At 60 fps the sample lands on one frame in sixty and the 5 s line
+**Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, five runs
+per group) cannot resolve either one. At 60 fps the sample lands on one frame in sixty and the 5 s line
 on one in three hundred, so a cost of X ms moves `avgMs` by X/60 (0.03 ms for a 2 ms stall), which the
 run-to-run variation that section warns of would hide. The five sampled frames in a window can move
 `p95Ms` by at most five places along the sorted frames, and `maxMs` only if one of them becomes the
@@ -1028,9 +1028,11 @@ the two busy times), the worst `maxMs`, and `gc0`, `gc1`, `gc2` per minute. The 
 it past `t=+30s`. `compare` prints the median of each metric per group, the delta and the
 percentage, with N per group, and refuses groups whose `[PerfContext]` build (Debug or Release) or
 texture quality differ unless given `--allow-mixed`. It counts the rows it could not check (no
-`[PerfContext]`, or `na` for either setting) under the table. Press F6 on the first frame so both
+`[PerfContext]`, or `na` for either setting) under the table. It adds an `INCONCLUSIVE:` line (and an
+`inconclusive` list in `--json`, with the exit code unchanged) when a group holds fewer than 5 runs, when the rows
+span more than one scene, or when a metric has fewer than 5 values in a group while both groups have some. Press F6 on the first frame so both
 sides are AI-controlled, and end each run at the same point: steady windows run to the end of the
-mission, routs included. Three runs per cell is the floor; AI battles vary. `gc2` should not climb
+mission, routs included. Five runs per group is the floor (`MIN_RUNS_PER_GROUP` in `tools/perf_runs.py`); AI battles vary. `gc2` should not climb
 faster with the change on.
 
 A run can imitate a smaller PC by pinning the game to N logical processors: yotthani's `run_scenario.ps1 -Cores N`

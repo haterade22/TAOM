@@ -4,7 +4,7 @@
 
 Per-race combat voice sets: the grunts, pain cries, death screams, war cries and shouted formation
 orders an agent emits in battle. TAOM ships three custom voice definitions (`dwarf_01`, `uruk_01`,
-`uruk_hai_01`) bound to seven of the fourteen custom races, plus 436 audio files under
+`uruk_hai_01`) bound to seven of the fourteen custom races, plus 437 audio files under
 `Main/_Module/ModuleSounds/`.
 
 This doc is a **system reference written from research, not from an implementation**. No TAOM C#
@@ -115,8 +115,8 @@ attribute gotcha recorded under Gotchas below.
 
 | Artifact | Count |
 |----------|-------|
-| Audio files under `Main/_Module/ModuleSounds/` | 436 (342 `.wav`, 93 `.mp3`, 1 `.ogg`) |
-| `<module_sound>` entries in `module_sounds.xml` | 249 |
+| Audio files under `Main/_Module/ModuleSounds/` | 437 (342 `.wav`, 93 `.mp3`, 2 `.ogg`) |
+| `<module_sound>` entries in `module_sounds.xml` | 250 |
 | Voice slots per TAOM voice definition | 56, all distinct types |
 | Distinct audio paths referenced (dwarf / uruk / uruk_hai) | 47 / 35 / 35 |
 
@@ -283,7 +283,7 @@ This is fixed by #821: a `VoiceOverModel` override maps each TAOM culture to a f
 | File | Purpose |
 |------|---------|
 | `Main/_Module/ModuleData/project.mbproj` | Registers the voice definitions and `module_sounds.xml`. **The only registration point**; `SubModule.xml` plays no part |
-| `Main/_Module/ModuleData/module_sounds.xml` | 231 `<module_sound>` entries mapping names to loose audio |
+| `Main/_Module/ModuleData/module_sounds.xml` | 250 `<module_sound>` entries mapping names to loose audio |
 | `Main/_Module/ModuleData/lotr_dwarf_voice_def.xml` | 56-slot reference definition, the model to copy |
 | `docs/audio/vo-script-dwarves.html` | The written line sheet for `dwarf_01`: what each slot actually says, and which stem feeds which sound group |
 | `docs/audio/vo-recording-guide.html`, `docs/audio/khuzdul-lexicon.html` | The actor-facing brief and the dwarvish reference behind that script |
@@ -456,7 +456,7 @@ Check 3 earns its keep: dilution is invisible in play because the voice does fir
 ## Tests
 
 No validator covers the data, and no test covers the voice API. One TAOM feature does call it:
-`Main/Features/DreadAura/Hooks/DreadPulseRunner.cs:96` fires `VoiceType.Fear` on a dread pulse, gated
+`Main/Features/DreadAura/Hooks/DreadPulseRunner.cs:101` fires `VoiceType.Fear` on a dread pulse, gated
 by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound only on `dwarf_01`,
 `uruk_01` and `uruk_hai_01`, so on any other race that call is silent.
 

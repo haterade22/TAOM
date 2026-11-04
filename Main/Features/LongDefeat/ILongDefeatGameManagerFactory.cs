@@ -1,6 +1,3 @@
-using TAOM.Features.LongDefeat.Spike;
-using TaleWorlds.MountAndBlade;
-
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
@@ -9,5 +6,9 @@ namespace TAOM.Features.LongDefeat;
 /// </summary>
 internal interface ILongDefeatGameManagerFactory
 {
-    MBGameManager? Create(LongDefeatSpikeOptions options);
+    /// <summary>
+    /// Builds the manager for <paramref name="setup"/> and starts loading it. False when no client is present. It starts the game
+    /// itself because the menu adapter's signature may name no engine class (ADR-007, <c>ServiceSignatureGateTests</c>).
+    /// </summary>
+    bool Start(LongDefeatSetup setup);
 }
