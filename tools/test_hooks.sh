@@ -2693,6 +2693,28 @@ g7e_long() {  # $1 the command's head; the rest is 300,000 letters
 [[ "$(g7e_long 'git commit -m ')" == rc=0 ]] \
     && ok "block-no-verify allows a too-long command with no flag" \
     || bad "block-no-verify refused a too-long command with no flag"
+# On the raw text a message or a heredoc line that names a flag is not the flag, and a flag quoted whole still is.
+[[ "$(g7e_long 'git commit -m "add -n flag" ; git log -n 1 ; echo ')" == rc=0 ]] \
+    && ok "raw text: the -n of a later git call after a stripped message is not read" \
+    || bad "raw text: a stripped message left a double space that read past the separator"
+[[ "$(g7e_long 'git commit -m "the --no-verify ban" ; echo ')" == rc=0 ]] \
+    && ok "raw text: a message that names --no-verify is allowed" \
+    || bad "raw text: a message that names --no-verify was refused"
+[[ "$(g7e_long 'git commit -m "the -c core.hooksPath=x form" ; echo ')" == rc=0 ]] \
+    && ok "raw text: a message that names core.hooksPath is allowed" \
+    || bad "raw text: a message that names core.hooksPath was refused"
+[[ "$(g7e_long $'git status\necho --no-verify\necho ')" == rc=0 ]] \
+    && ok "raw text: a line that runs no git may name the flag" \
+    || bad "raw text: a line that runs no git was refused for naming the flag"
+[[ "$(g7e_long 'git commit "--no-verify" -m ')" == rc=2 ]] \
+    && ok "raw text: a flag quoted as a whole word is refused" \
+    || bad "raw text: a flag quoted as a whole word went through"
+[[ "$(g7e_long $'git commit \\\n--no-verify -m ')" == rc=2 ]] \
+    && ok "raw text: a flag on a continuation line is refused" \
+    || bad "raw text: a flag on a continuation line went through"
+[[ "$(g7e_long 'git -c "core.hooksPath=/dev/null" commit -m ')" == rc=2 ]] \
+    && ok "raw text: a quoted core.hooksPath value is refused" \
+    || bad "raw text: a quoted core.hooksPath value went through"
 
 # The four gates that judge what is staged only need to know a commit is coming. Each reaches its
 # `cd` to the project only past its two-stage commit test, so a bash -x trace shows the answer.
@@ -3904,6 +3926,36 @@ for mode in "" "--verbose"; do
         ok "scan.sh ${mode:-(default)} ran clean under set -u"
     fi
 done
+# A session in a sibling worktree loads the main checkout's memory, so the scan must read that file.
+SC_H="$SANDBOX/sc-home"
+SC_M="$SANDBOX/scanmain"
+SC_W="$SANDBOX/scansibling"
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain/memory"
+printf 'one line\n' > "$SC_H/.claude/projects/e--x-scanmain/memory/MEMORY.md"
+git init -q "$SC_M" \
+    && git -C "$SC_M" -c user.name=t -c user.email=t@t commit -q --allow-empty -m base \
+    && git -C "$SC_M" worktree add -q "$SC_W"
+mkdir -p "$SC_W/tools"
+cp tools/context_budget_scan.sh "$SC_W/tools/"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/tools/context_budget_scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain/memory/MEMORY.md' <<< "$SC_OUT" \
+    && ok "scan.sh reads the main checkout's MEMORY.md from a sibling worktree" \
+    || bad "scan.sh missed the main checkout's MEMORY.md from a sibling worktree: $(printf '%s' "$SC_OUT" | grep -i memory | head -2)"
+# A card counts as linked through the archive MEMORY.md links, and a card nothing reaches is named.
+SC_D="$SC_H/.claude/projects/e--x-scanmain/memory"
+mkdir -p "$SC_D/features"
+printf -- '- [archive](archive.md)\n' > "$SC_D/MEMORY.md"
+printf -- '- [reached](features/reached.md)\n' > "$SC_D/archive.md"
+printf 'x\n' > "$SC_D/features/reached.md"
+printf 'x\n' > "$SC_D/features/lost.md"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/tools/context_budget_scan.sh" 2>&1)
+SC_LINE=$(grep 'does not reach' <<< "$SC_OUT")
+if [[ "$SC_LINE" == *features/lost.md* && "$SC_LINE" != *features/reached.md* && "$SC_LINE" != *archive.md* ]]; then
+    ok "scan.sh names the card nothing reaches and follows the archive to the rest"
+else
+    bad "scan.sh orphan line is wrong: $SC_LINE"
+fi
+rm -rf "$SC_H" "$SC_M" "$SC_W"
 
 # ---------------------------------------------------------------------------
 head2 "Summary"
