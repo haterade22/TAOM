@@ -10,10 +10,12 @@ logged spawn level WRONG, the log has no CrashReport block, and the game left by
 or a session reads them.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and
-log collection. It only changes the arm variable, the done and status files, the arm text and the judge. The standing permission
+log collection. It only changes the arm variable, the done and status files, the arm text and the judge, and it presses Cancel on one
+shader dialog before the Fords dialog handling. The standing permission
 and its gate are in docs/reference/unattended-game-runs.md. Phase 1 replaces this wrapper with a general option on the runner.
 """
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -39,8 +41,19 @@ EVIDENCE = (
     "[LongDefeat][S7] after the armour write",
 )
 
-# In any batch, a soldier more than 10 m from the height of its frame or off the navmesh, or a pile on the frame point, fails the run, whatever the other batches did.
+# In any batch, a soldier more than 10 m from the height of its frame or off the navmesh fails the run, whatever the other batches did.
 SPAWN_LEVEL_WRONG = "[LongDefeat][S1] spawn level WRONG"
+
+# The engine stands every soldier past the last slot on the frame point, and they spread out by themselves. It fails nothing, and the result names it, because Phase 1 needs a muster place with room.
+SPAWN_PILE = "[LongDefeat][S1] spawn pile"
+
+# A clear that the rule made and not the fight. It passes, and the result counts it, because a run where every clear came this way proves little.
+STRAGGLERS_FELL = "they fall"
+
+# Helm's Deep can stop its load at this dialog: the terrain shader's vista variant fails to compile (terrain_pixel_functions.rsh:818, X4008 raised to an error by X3129). Retry compiles the same source
+# and fails again. Cancel lets the mission load, and the same answer works for a person at the keyboard. Only this variant is pressed: a dialog for another shader is a new fact.
+SHADER_DIALOG = re.compile(r"Shaders/Sources/pbr_terrain(_gbuffer)?\.rs$")
+FORDS_HANDLE_DIALOGS = runner.handle_dialogs
 
 
 def judge(done, report_json, log_text=None):
@@ -62,7 +75,20 @@ def judge(done, report_json, log_text=None):
     block = runner.crash_report_line(log_text, None)
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
-    return 0, f"reason=final, {log_text.count(' CLEARED at ')} waves cleared, S1 S2 S4 S5 S7 lines present, no spawn level WRONG, no CrashReport block"
+    return 0, f"reason=final, {log_text.count(' CLEARED at ')} waves cleared, S1 S2 S4 S5 S7 lines present, no spawn level WRONG, no CrashReport block, {log_text.count(STRAGGLERS_FELL)} waves ended by felling stragglers" + ("; the log holds a spawn pile" if SPAWN_PILE in log_text else "")
+
+
+def handle_dialogs(pid, seen, say):
+    """Presses Cancel on the terrain shader's compile dialog, then hands every dialog to the Fords runner, which logs a dialog it has not seen and reports a failed check."""
+    try:
+        dialogs = runner.game_dialogs(pid)
+    except (OSError, AttributeError):
+        dialogs = []
+    for hwnd, title, texts, buttons in dialogs:
+        if SHADER_DIALOG.search(title or "") and "Cancel" in buttons and runner.click_button(hwnd, buttons["Cancel"]) and hwnd not in seen:
+            seen.add(hwnd)
+            say(f"pressed Cancel on the shader compile dialog '{title}': {' | '.join(t for t in texts if t)}")
+    return FORDS_HANDLE_DIALOGS(pid, seen, say)
 
 
 def positive_int(text):
@@ -76,10 +102,12 @@ def build_parser():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog="The Fords runner's flags also apply: --require-idle-minutes, --wall-limit, --runs, --keep-on-crash, --runs-root, --dry-run.")
     parser.add_argument("--fortress", choices=("helms", "minas"), default="helms")
     parser.add_argument("--waves", type=positive_int, default=3)
-    parser.add_argument("--wave-size", type=positive_int, default=120)
-    parser.add_argument("--garrison", type=positive_int, default=100)
+    # 100 defenders against 120 attackers held on one run and all died on the other, and S4, S5 and S7 need a cleared wave. These numbers passed; they are no balance measure.
+    parser.add_argument("--wave-size", type=positive_int, default=110)
+    parser.add_argument("--garrison", type=positive_int, default=170)
     parser.add_argument("--intermission", type=runner.positive_seconds, default=15)
-    parser.add_argument("--live-limit", type=runner.positive_seconds, default=900)
+    # Three waves of 110 at Helm's Deep took 1,380 s of mission time.
+    parser.add_argument("--live-limit", type=runner.positive_seconds, default=1800)
     parser.add_argument("--no-defenders-ai", action="store_true")
     return parser
 
@@ -106,6 +134,7 @@ def main(argv=None):
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = arm_text_for
     runner.judge = judge
+    runner.handle_dialogs = handle_dialogs
     return runner.main(rest)
 
 

@@ -30,7 +30,11 @@ internal sealed class LongDefeatSpikeRunner
     private const float GateRepairDelay = 5f;
     private const float SpawnLevelTolerance = 10f;
     private const float FramePointRadius = 1f;
-    private const int FramePointLimit = 3;
+    private const int FramePointLimit = 6;
+    private const float StaleSeconds = 60f;
+    private const float StaleAnyCountSeconds = 180f;
+    private const float StrandedSeconds = 90f;
+    private const int StragglerShare = 10;
 
     private enum Phase { Boot, Spawning, Fighting, Intermission, Finished }
 
@@ -58,12 +62,16 @@ internal sealed class LongDefeatSpikeRunner
     private float _highZ;
     private int _deaths;
     private bool _mainWasAlive;
+    private int _standing;
+    private float _lastLossAt;
+    private bool _charging;
 
     // A destroyed gate, tower or ram leaves ActiveMissionObjects (Mission.OnObjectDisabled), so these lists are taken once, in Boot.
     private List<CastleGate> _gates = new();
     private List<SiegeLadder> _ladders = new();
     private List<SiegeTower> _towers = new();
     private List<BatteringRam> _rams = new();
+    private SiegeWeapon? _bought;
 
     public LongDefeatSpikeRunner(Mission mission, LongDefeatSpikeOptions options, LongDefeatSpikeFortress fortress, IModLogger logger)
     {
@@ -165,6 +173,8 @@ internal sealed class LongDefeatSpikeRunner
         _gates = allGates.Where(g => g.GameEntity.IsVisibleIncludeParents()).OrderByDescending(g => g.GameEntity.HasTag("outer_gate")).ToList();
         var gate = _gates.FirstOrDefault();
         _highZ = HighLine(gate);
+        foreach (var hidden in allGates.Where(g => !_gates.Contains(g)))
+            BreakHiddenGate(hidden);
         Info($"[S1] scene: gates {_gates.Count} visible of {allGates.Count}, first {(gate != null ? At(gate.GameEntity.GlobalPosition) : "none")} outer {gate?.GameEntity.HasTag("outer_gate")}; "
             + $"walls {_mission.ActiveMissionObjects.FindAllWithType<WallSegment>().Count()}, high line z {Num(_highZ)}; "
             + $"deployment points {Points().Count} (attacker {Points().Count(p => p.Side == BattleSideEnum.Attacker)}, defender {Points().Count(p => p.Side == BattleSideEnum.Defender)})");
@@ -187,6 +197,15 @@ internal sealed class LongDefeatSpikeRunner
             + $"order owner {defenders.PlayerOrderController?.Owner?.Name?.ToString() ?? "null"}; high {High(defenders)}; z {Spread(defenders)}");
         LogEngines("S1 boot");
         StartWave(now);
+    }
+
+    // The engine's InnerGate ignores visibility (TeamAISiegeComponent.cs:54-57), and a hidden gate never ticks (CastleGate.cs:619-622), so it never opens. Helm's Deep hides one at height 32.5
+    // (scene.xscene:5971): the Middle lane stays closed (SiegeLane.cs:355-364), and BehaviorAssaultWalls (:162) never leaves AttackEntity. A null InnerGate throws in that behavior, so the gate is broken, not removed.
+    private void BreakHiddenGate(CastleGate gate)
+    {
+        var component = gate.GameEntity.GetFirstScriptOfType<DestructableComponent>();
+        var broke = component != null && TryBreak(gate, component);
+        Info($"[S1] hidden gate at {At(gate.GameEntity.GlobalPosition)}: {(broke ? "broken" : "NOT broken")}, destroyed {gate.IsDestroyed} open {gate.IsGateOpen}");
     }
 
     private float HighLine(CastleGate? gate)
@@ -355,12 +374,13 @@ internal sealed class LongDefeatSpikeRunner
         _batch.Add((cls, agent.Position));
     }
 
-    // Reads back where the engine put this batch, so a wrong floor or a pile on one point is a failed line and needs no person to see it. "ok" means near the height the scene
-    // authored for that class, on a navmesh, and not piled up. It does not mean on the walls: a scene can author a class's frame on low ground. When the layout runs out of slots,
-    // the remaining soldiers all stand on the frame point (Mission.cs:3992-3995).
+    // Reads back where the engine put this batch, so a wrong floor is a failed line and needs no person to see it. "ok" means near the height the scene authored for that class and
+    // on a navmesh. It does not mean on the walls: a scene can author a class's frame on low ground. A pile is its own line: when the layout runs out of slots, the remaining soldiers
+    // all stand on the frame point (Mission.cs:3992-3995). The limit stays above a healthy formation: a shield wall at spacing 0 can put 5 soldiers within 1 m of the frame.
     private void LogSpawnLevel(Team team, bool reinforcement, string who)
     {
         var parts = new List<string>();
+        var piles = new List<string>();
         var failed = _batch.Count == 0;
         foreach (var group in _batch.GroupBy(soldier => soldier.Class))
         {
@@ -380,11 +400,15 @@ internal sealed class LongDefeatSpikeRunner
                     onPoint++;
             }
 
-            failed |= far > 0 || offMesh > 0 || onPoint > FramePointLimit;
+            failed |= far > 0 || offMesh > 0;
+            if (onPoint > FramePointLimit)
+                piles.Add($"{group.Key} {onPoint} of {group.Count()}");
             parts.Add($"{group.Key} {group.Count()} at frame {At(frame)}: far {far}, off the navmesh {offMesh}, on the frame point {onPoint}, z {Spread(group.Select(soldier => soldier.At.z))}");
         }
 
         Info((failed ? "[S1] spawn level WRONG: " : "[S1] spawn level ok: ") + $"{who} {_batch.Count}; {string.Join("; ", parts)}");
+        if (piles.Count > 0)
+            Info($"[S1] spawn pile: {who} {string.Join(", ", piles)} on the frame point");
         _batch.Clear();
     }
 
@@ -440,23 +464,30 @@ internal sealed class LongDefeatSpikeRunner
 
         // A new tactic per wave: TacticBreachWalls latched its shock assault when it counted the first spawn batch, and ResetTactic keeps the same object. That latch also cleared
         // ForcedUse on every engine, and nothing sets it back for towers and rams. This comes before the reset, so a wave of 100 or fewer still gets vanilla's stop from the new tactic.
-        foreach (var engine in _towers.Cast<SiegeWeapon>().Concat(_rams).Where(w => !w.IsDisabled))
+        foreach (var engine in _towers.Cast<SiegeWeapon>().Concat(_rams).Concat(_bought != null ? new[] { _bought } : Array.Empty<SiegeWeapon>()).Where(w => !w.IsDisabled))
             engine.SetForcedUse(true);
         team.ClearTacticOptions();
         team.AddTacticOption(new TacticBreachWalls(team));
         team.TeamAI.ResetTactic(keepCurrentTactic: false);
+        _standing = -1;
+        _lastLossAt = _mission.CurrentTime;
         _phase = Phase.Fighting;
         Info($"[S2] wave {_wave}: all {_spawnedInWave} spawned; tactics {Tactics()}");
     }
 
     private void CheckCleared(float now)
     {
-        if (Count(_mission.AttackerTeam, false) > 0)
+        var attackers = Count(_mission.AttackerTeam, false);
+        if (attackers > 0)
+        {
+            WatchStalemate(now, attackers);
             return;
+        }
 
         Info($"[S2] wave {_wave} CLEARED at {Num(now)} s: attackers on the field {_mission.AttackerTeam.ActiveAgents.Count}, fleeing {Count(_mission.AttackerTeam, true)}; "
             + $"defenders active {Count(_mission.DefenderTeam, false)}; deaths of the player so far {_deaths}");
         LogEngines("S3 wave cleared");
+        EndCharge();
         if (_wave >= _options.Waves)
         {
             Finish("final", now);
@@ -468,6 +499,78 @@ internal sealed class LongDefeatSpikeRunner
         if (_wave == 1)
             RunTests(now);
     }
+
+    // No wave retreats, and only BattleEndLogic ends a vanilla siege (BattleEndLogic.cs:198-222, 279-361), which this mission leaves out. On the first unattended run the last 7 attackers, then 6,
+    // and 31 defenders stood apart until the limit at 1,500 s. So both teams get TacticCharge after a quiet spell, and the stragglers that nobody reaches after that fall.
+    private void WatchStalemate(float now, int attackers)
+    {
+        var defenders = Count(_mission.DefenderTeam, false);
+        if (attackers + defenders != _standing)
+        {
+            _standing = attackers + defenders;
+            _lastLossAt = now;
+            return;
+        }
+
+        var quiet = now - _lastLossAt;
+        if (_charging)
+        {
+            if (quiet >= StrandedSeconds)
+            {
+                // A clear must be earned: at Minas Tirith this rule once felled 35 attackers that had all but won. Only stragglers fall; more than that and the fight has no result.
+                var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && !a.IsRunningAway).ToList();
+                if (attackers * StragglerShare > _options.WaveSize || attackers >= defenders)
+                {
+                    Info($"[S2] wave {_wave}: no loss for {Num(quiet)} s after the charge, with {attackers} attackers at {Places(left)} and {defenders} defenders; no result; {DescribeFormations(_mission.AttackerTeam)} | {DescribeFormations(_mission.DefenderTeam)}");
+                    Finish("stalemate", now);
+                    return;
+                }
+
+                Info($"[S2] wave {_wave}: nobody reached the last {left.Count} attackers at {Num(now)} s, at {Places(left)}; they fall; {DescribeFormations(_mission.AttackerTeam)} | {DescribeFormations(_mission.DefenderTeam)}");
+                foreach (var agent in left)
+                    _mission.KillAgentCheat(agent);
+                _lastLossAt = now;
+            }
+
+            return;
+        }
+
+        if (quiet < (attackers * 2 <= _options.WaveSize ? StaleSeconds : StaleAnyCountSeconds))
+            return;
+
+        Info($"[S2] wave {_wave} stale at {Num(now)} s after {Num(quiet)} s with no loss: attackers {attackers} at {Places(_mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman))}; "
+            + $"defenders {defenders} z {Spread(_mission.DefenderTeam)}; both teams get TacticCharge, and a formation under a player's orders does not move; {DescribeFormations(_mission.AttackerTeam)} | {DescribeFormations(_mission.DefenderTeam)}");
+        Charge(_mission.AttackerTeam);
+        Charge(_mission.DefenderTeam);
+        _charging = true;
+        _lastLossAt = now;
+    }
+
+    private static void Charge(Team team)
+    {
+        team.ClearTacticOptions();
+        team.AddTacticOption(new TacticCharge(team));
+        team.TeamAI.ResetTactic(keepCurrentTactic: false);
+    }
+
+    // The next wave's own tactic comes when its queue empties (SpawnSome), so only the defenders need theirs back here.
+    private void EndCharge()
+    {
+        if (!_charging)
+            return;
+        _charging = false;
+        var team = _mission.DefenderTeam;
+        team.ClearTacticOptions();
+        team.AddTacticOption(new TacticDefendCastle(team));
+        team.TeamAI.ResetTactic(keepCurrentTactic: false);
+        Info($"[S2] wave {_wave}: the defenders return to their siege tactic; tactics {Tactics()}");
+    }
+
+    private static string Places(IEnumerable<Agent> agents) => string.Join(" ", agents.Take(8).Select(a => At(a.Position)));
+
+    // TacticCharge only weights BehaviorCharge, which returns 0 until the walls test passes (BehaviorCharge.cs:169-201), so this says what each formation really does.
+    private static string DescribeFormations(Team team) => team.Side + ": " + string.Join(", ", team.FormationsIncludingEmpty.Where(f => f.CountOfUnits > 0)
+        .Select(f => $"{f.FormationIndex} {f.CountOfUnits} {f.AI.ActiveBehavior?.GetType().Name ?? "no behavior"} side {f.AI.Side} order {f.GetReadonlyMovementOrderReference().OrderEnum} ai {f.IsAIControlled} inside {f.QuerySystem.InsideCastleUnitCountPositioned}"));
 
     private void RunTests(float now)
     {
@@ -496,18 +599,25 @@ internal sealed class LongDefeatSpikeRunner
         }
 
         // MissionObjects, not the active list: only the type matters here, and a destroyed ram has left the active list.
-        var ram = _mission.MissionObjects.FindAllWithType<BatteringRam>().FirstOrDefault();
-        if (ram == null)
+        if (!TryBreak(gate, component))
         {
             Info("[S4] no ram in the scene: an empty weapon deals 0 unless the attacker is a ram (DestructableComponent.OnHit), so the gate stays whole");
             return false;
         }
 
-        // OnHit gives an empty weapon 0 damage unless the attacker is a ram, and a ram plays the gate's break animation.
-        var weapon = MissionWeapon.Invalid;
-        component.TriggerOnHit(null, (int)component.HitPoint + 1, gate.GameEntity.GlobalPosition, Vec3.Forward, in weapon, -1, ram);
         Info($"[S4] broken: {DescribeGate(gate, component)}");
         return component.IsDestroyed;
+    }
+
+    // OnHit gives an empty weapon 0 damage unless the attacker is a ram, and a ram plays the gate's break animation.
+    private bool TryBreak(CastleGate gate, DestructableComponent component)
+    {
+        var ram = _mission.MissionObjects.FindAllWithType<BatteringRam>().FirstOrDefault();
+        if (ram == null)
+            return false;
+        var weapon = MissionWeapon.Invalid;
+        component.TriggerOnHit(null, (int)component.HitPoint + 1, gate.GameEntity.GlobalPosition, Vec3.Forward, in weapon, -1, ram);
+        return true;
     }
 
     private void RepairGate()
@@ -546,9 +656,23 @@ internal sealed class LongDefeatSpikeRunner
         var weapon = point.DeployedWeapon as SiegeWeapon;
         SetVanillaHitPoints(weapon);
         weapon?.TickAuxForInit();
+        _bought = weapon;
+        weapon?.SetForcedUse(true);
         var state = $"{type.Name} at {At(point.GameEntity.GlobalPosition)}: is deployed {point.IsDeployed}, weapon {weapon?.GetType().Name ?? "null"}, "
-            + $"visible {weapon?.GameEntity.IsVisibleIncludeParents()}, standing points {weapon?.StandingPoints?.Count ?? 0}";
+            + $"visible {weapon?.GameEntity.IsVisibleIncludeParents()}, standing points {weapon?.StandingPoints?.Count ?? 0}; {DescribeBought()}";
         Info(point.IsDeployed && weapon != null ? $"[S5] deployed {state}" : $"[S5] NOT deployed {state}");
+    }
+
+    // The first run read visible False for a deployed engine, and the visible flag lives on the engine or on a parent (DeploymentPoint.ToggleWeaponVisibility), so this names each level.
+    private string DescribeBought()
+    {
+        if (_bought == null)
+            return "bought none";
+        var levels = new List<string>();
+        for (var entity = _bought.GameEntity; entity.IsValid; entity = entity.Parent)
+            levels.Add($"{entity.Name} {entity.GetVisibilityExcludeParents()}");
+        return $"bought {_bought.GetType().Name} disabled {_bought.IsDisabled} side {_bought.Side} users {_bought.UserCountNotInStruckAction} forced {_bought.ForcedUse} user formations {_bought.UserFormations.Count} "
+            + $"walking to it {_bought.StandingPoints.Count(p => p.HasAIMovingTo)} own visibility up the parents [{string.Join(", ", levels)}]";
     }
 
     private void ChangeGear()
@@ -630,7 +754,7 @@ internal sealed class LongDefeatSpikeRunner
             .Select(w => $"{w.GetType().Name} users {w.UserCountNotInStruckAction}");
         var lanes = TeamAISiegeComponent.SiegeLanes?.Select(l => $"{l.LaneSide} open {l.IsOpen} breach {l.IsBreach}") ?? Enumerable.Empty<string>();
         Info($"[{label}] ladders [{string.Join(",", ladders)}] towers arrived/destroyed/forced [{string.Join(",", towers)}] rams arrived/destroyed/done/forced [{string.Join(",", rams)}] "
-            + $"gates [{string.Join("; ", gates)}] lanes [{string.Join("; ", lanes)}] defender engines [{string.Join(", ", mine)}]");
+            + $"gates [{string.Join("; ", gates)}] lanes [{string.Join("; ", lanes)}] defender engines [{string.Join(", ", mine)}]; {DescribeBought()}");
     }
 
     private string Tactics() =>

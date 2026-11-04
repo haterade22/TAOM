@@ -17,7 +17,7 @@ internal sealed class LongDefeatSpikeOptions
     public int WaveSize { get; set; } = 120;
     public int Garrison { get; set; } = 100;
     public float IntermissionSeconds { get; set; } = 15f;
-    public float LiveLimitSeconds { get; set; } = 900f;
+    public float LiveLimitSeconds { get; set; } = 1800f;
     public bool DefendersAi { get; set; } = true;
     public bool Quit { get; set; }
     public string? OutFolder { get; set; }
