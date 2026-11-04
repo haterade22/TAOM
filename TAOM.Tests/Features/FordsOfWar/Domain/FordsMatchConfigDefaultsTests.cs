@@ -78,6 +78,6 @@ public class FordsMatchConfigDefaultsTests
     {
         Assert.AreEqual(new FordsAiProfile("easy", 12f, 0.8f, 0.25f, 600), C.AiProfiles["easy"]);
         Assert.AreEqual(new FordsAiProfile("normal", 8f, 1.0f, 0.1f, 800), C.AiProfiles["normal"]);
-        Assert.AreEqual(new FordsAiProfile("hard", 5f, 1.2f, 0.0f, 1000), C.AiProfiles["hard"]);
+        Assert.AreEqual(new FordsAiProfile("hard", 5f, 1.0f, 0.0f, 1000), C.AiProfiles["hard"]);
     }
 }

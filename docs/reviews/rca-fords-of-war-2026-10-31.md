@@ -216,7 +216,7 @@ feature's own record, so none of them applied).
 3. **Lens 4 check 9** gains one clause for self-check verdicts.
 
 Follow-up closed 2026-11-04 (17b071c7a, 7a21239dc, 4a7b7164d; the in-game check is owed): a warg rider who leaves a living warg mid-rage never gets his formation back; check 12 now reports it as `stranded` (no issue: creating an issue needs the maintainer's word).
-FOLLOW-UP: after a lane loses its towers, its hold point before the keep can sit inside a neighbouring lane's inner tower range on maps with 300 to 500 m between the bases; check 8 now names the tower (no issue: creating an issue needs the maintainer's word).
+Follow-up closed 2026-11-04 (Mike: leave it, check 8 names the tower if it happens): after a lane loses its towers, its hold point before the keep can sit inside a neighbouring lane's inner tower range on maps with 300 to 500 m between the bases; check 8 now names the tower (no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: the AI commander rebuilds its full read model every tick and uses it once every 5 to 12 s (pre-existing; no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: the Fords verdict rows move onto the shared `[Check]` line, whose API (#1071) landed on trunk while this change was in review (#1069).
 
@@ -234,7 +234,7 @@ failure for item 15.
 Resolved overnight (see the next addendum): AI melee now strikes towers (check 9 PASS in every unattended match;
 731 native tower blows in the first 600 s run), and the layout fitter plus Rohan Plains II as the default scene
 remove the bad fit (0 points dropped, 14 of 14 towers built).
-FOLLOW-UP: five older TAOM prefabs hold the stretch-in-cover pattern (MomentumView, CareerScreen, BattleActionBar, PreBuildCharacterSelection, StagedSiegeHud); triage each, then lower its count in the ratchet (no issue: outside this feature, and the maintainer decides the work).
+Follow-up closed 2026-11-04 (Mike: StagedSiegeHud and CareerScreen fixed in 95a348a60, the other three on their next edit, and the ratchet holds them): five older TAOM prefabs hold the stretch-in-cover pattern (MomentumView, CareerScreen, BattleActionBar, PreBuildCharacterSelection, StagedSiegeHud); triage each, then lower its count in the ratchet (no issue: outside this feature, and the maintainer decides the work).
 
 ## Addendum: check 9, unattended runs and the second review (2026-10-31 night)
 
@@ -353,11 +353,11 @@ A tier 1 re-review of the floor and the C1-C8 fixes by the data-flow and engine-
 
 Open for the maintainer: the floor replaces only a zero, so a weak shaft thrust with raw 1 to 7 takes less than a floored zero (about 8): in run 103348, tower_west_0_0 took raw 1, 5 and 7 blows at face value beside 66 floored ones. The patch also floors the rare zero swing from a weapon with thrust damage (1 of 129), because `OnHit` carries no strike type. A max(raw, floor) rule would remove the inversion but also raise weak swings, which the maintainer's decision keeps as the engine computes them; a smaller factor (0.05 gives about 2 for a 40-thrust lance) is the other lever. Decided (Mike, 2026-11-01, on Claude's recommendation): keep the floor as built. The inversion touched 3 of 69 melee blows on the most-hit tower, a max(raw, floor) rule would raise swings against the decision, and a smaller factor would weaken spear assaults again.
 
-FOLLOW-UP: `FordsMissionDirector.AdjustTowerDamage` calls the report's `TowerBlow` after the rules changed their hit points, with no fault guard; if the report throws, the patch keeps the engine's raw value, so a floored blow would take about 8 in the rules and 0 in the engine, which check 9's drift rule would flag (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (Mike: no guard until a drift appears, check 9 reports one): `FordsMissionDirector.AdjustTowerDamage` calls the report's `TowerBlow` after the rules changed their hit points, with no fault guard; if the report throws, the patch keeps the engine's raw value, so a floored blow would take about 8 in the rules and 0 in the engine, which check 9's drift rule would flag (no issue: the maintainer chose no GitHub issues for Fords of War).
 
 Codex disputed 57 of the suspects in its two prompts with code evidence; those are recorded in `docs/reviews/REVIEW-LOG.md`.
 
-FOLLOW-UP: a tagged layout whose inner tower marker comes before its outer one can reject a layout that a different fitting order would keep; no shipped scene uses tagged layouts (no issue: hypothetical, the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (Mike: sort only when a scene author hits the warning): a tagged layout whose inner tower marker comes before its outer one can reject a layout that a different fitting order would keep; no shipped scene uses tagged layouts (no issue: hypothetical, the maintainer chose no GitHub issues for Fords of War).
 ## Addendum: tower balance and the lane siege rule (2026-11-01)
 
 Mike asked for Claude's recommendation on tower balance ("Proceed with your recommendation"). Two independent analyses
@@ -404,7 +404,7 @@ the lane-arc reach test gave while the lead stood 26 to 236 m away inside anothe
 the tower entity origin, and the tower geometry does not explain the gap.
 
 FOLLOW-UP: the existing in-reach AttackTower branch still fires by lane arc at any distance, and lane leads drift into a neighbouring lane's area in about two thirds of mid-field samples (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: `UnitsNear` runs about 12 times per mission frame and the own-side calls go through LINQ `NextTargetOf`; measure before optimising (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (Mike: reopen if a big fight goes over budget): `UnitsNear` runs about 12 times per mission frame and the own-side calls go through LINQ `NextTargetOf`; measure before optimising (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: check 9's ladder does not split tower blows by attacker class, so a ranged lane's damage cannot be told from melee contact (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: the hard AI profile's `incomeMultiplier` 1.2 gives the AI more gold than a human commander, which the maintainer's design (same shop, no extra powers) does not allow for; the maintainer decides (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: with the siege rule and `lanes.assaultThreshold` 70, a 45-minute AI match brought one outer tower to 1,750 of 8,000 hit points but felled none, and West (Gondor) never sieged; why one faction cannot win the ground at a tower, and whether an AI-against-AI match should reach a keep at all, stay open (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (Mike, set to 1.0 in 95a348a60): the hard AI profile's `incomeMultiplier` 1.2 gives the AI more gold than a human commander, which the maintainer's design (same shop, no extra powers) does not allow for; the maintainer decides (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (Mike: an even AI match need not end in a keep; judge length with a human side): with the siege rule and `lanes.assaultThreshold` 70, a 45-minute AI match brought one outer tower to 1,750 of 8,000 hit points but felled none, and West (Gondor) never sieged; why one faction cannot win the ground at a tower, and whether an AI-against-AI match should reach a keep at all, stay open (no issue: the maintainer chose no GitHub issues for Fords of War).

@@ -72,7 +72,7 @@ The builders reported green suites, truthfully. A green suite here proved the st
 - **Lens 3, `--no-build` for later `data_gates` dotnet rows, the retro's parse guard, and `Lazy` scans in the C# gates:** rarely run, and unmeasured or small.
 - **Rename of an over-cap rule reads as growth:** rare and loud, and the fix asks for the same trim.
 - **`block-no-verify` forms left unread:** a flag in a variable or `$(...)`, an alias, and the `git config` and `GIT_CONFIG_*` forms of `core.hooksPath`. These are deliberate obfuscation, which `_shellwords.py` puts out of scope, and the session banner shows a changed `hooksPath`.
-- **The ModuleData gates read the working tree, not the index:** a staged bad commit can pass behind a good working copy, and the Claude gate has the same limit. The hook names the unstaged files. FOLLOW-UP no issue: the maintainer decides at the comparison due about 2026-11-17, before the Claude gates go.
+- **The ModuleData gates read the working tree, not the index:** a staged bad commit can pass behind a good working copy, and the Claude gate has the same limit. The hook names the unstaged files. Follow-up closed 2026-11-04 (Mike: keep it, the hook names any unstaged file): the maintainer decides at the comparison due about 2026-11-17, before the Claude gates go.
 - **Brush and other non-prefab sprite names:** 35 of 526 resolve in no known set, outside this gate's claim. Follow-up closed 2026-11-04 (462d745ec) no issue: on the owed list in the merge report.
 - **Lens 2, the two validator passes ignore `equipmentType` and `EquipmentSet` references:** no data effect today, as measured by the reviewer.
 - **`.gitignore` keeps its `.serena` rows:** a leftover local cache may still exist on a machine.

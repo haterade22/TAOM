@@ -8,9 +8,9 @@ non-finite string net472's `Single.TryParse` accepts. The review confirmed seven
 findings and no HIGH: three fixed here (two untested guard branches, a missing calculator-author
 note, an overbroad CHANGELOG claim), two left for Mike (the missing GitHub issue, the silent
 fallback against config rule 5) and two plan-text errors left for the orchestrator. Agents 1, 2, 5
-and 6 also flagged, as FOLLOW-UP, that a finite parameter can still overflow to Infinity inside a calculator,
+and 6 also flagged, as a follow-up, that a finite parameter can still overflow to Infinity inside a calculator,
 past the accessor guard, because `MutationService.ApplyMutation` has no exit gate. That is
-pre-existing and behaviour-changing, so it waits on Mike.
+pre-existing and behaviour-changing, so it waited on Mike. Closed 2026-11-04: he chose the gate, in 95a348a60.
 
 The bug the plan fixed is a config float, a category `csharp-architecture.md` already names in its
 NaN-gate history (which counts six shipped instances), so no scope widening is owed. It escaped
