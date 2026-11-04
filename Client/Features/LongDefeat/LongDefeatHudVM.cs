@@ -38,6 +38,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private string _endTitle = string.Empty;
     private string _endLines = string.Empty;
     private string _bestText = string.Empty;
+    private string _reportText = string.Empty;
     private string _leaveText = string.Empty;
 
     internal LongDefeatHudVM(LongDefeatSession session, Action leave)
@@ -105,6 +106,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public string BestText { get => _bestText; private set => Set(ref _bestText, value, nameof(BestText)); }
+
+    [DataSourceProperty]
+    public string ReportText { get => _reportText; private set => Set(ref _reportText, value, nameof(ReportText)); }
 
     [DataSourceProperty]
     public string LeaveText { get => _leaveText; private set => Set(ref _leaveText, value, nameof(LeaveText)); }
@@ -182,7 +186,8 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         if (result != null)
         {
             EndTitle = LongDefeatHudText.EndTitle(result.Reason);
-            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills);
+            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves);
+            ReportText = _session.ReportPath is { } path ? LongDefeatHudText.ReportFile(System.IO.Path.GetFileName(path)) : string.Empty;
             BestText = _session.Best is { } best ? LongDefeatHudText.Best(best.Waves, best.Kills) : LongDefeatHudText.NoBest();
             LeaveText = LongDefeatHudText.Leave();
         }

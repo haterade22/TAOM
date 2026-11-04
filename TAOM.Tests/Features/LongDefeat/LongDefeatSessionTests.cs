@@ -8,6 +8,25 @@ namespace TAOM.Tests.Features.LongDefeat;
 [TestClass]
 public class LongDefeatSessionTests
 {
+    [TestMethod]
+    public void LostInClearedWaves_OutlivesClear_AndANewRunStartsAtZero()
+    {
+        var session = new LongDefeatSession();
+        Assert.AreEqual(0, session.LostInClearedWaves);
+
+        var run = NewRun();
+        session.Fill(run);
+        run.Stats.DefenderLost();
+        run.Stats.CloseWave(1, 10f, 0);
+        Assert.AreEqual(1, session.LostInClearedWaves);
+
+        session.Clear();
+        Assert.AreEqual(1, session.LostInClearedWaves);
+
+        session.Fill(NewRun());
+        Assert.AreEqual(0, session.LostInClearedWaves);
+    }
+
     private static SurvivalRun NewRun()
     {
         var waves = new WavePlan(

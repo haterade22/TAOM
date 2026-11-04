@@ -7,6 +7,21 @@ namespace TAOM.Tests.Features.LongDefeat.Domain;
 public class RunStatsTests
 {
     [TestMethod]
+    public void LostInClearedWaves_SumsTheClosedRows_AndLeavesOutTheWaveInProgress()
+    {
+        var stats = new RunStats();
+        stats.DefenderLost();
+        stats.DefenderLost();
+        stats.CloseWave(1, 10f, 0);
+        stats.DefenderLost();
+        stats.CloseWave(2, 10f, 0);
+
+        stats.DefenderLost();
+
+        Assert.AreEqual(3, stats.LostInClearedWaves);
+    }
+
+    [TestMethod]
     public void CloseWave_RecordsTheWavesCountsAndStartsTheNext()
     {
         var s = new RunStats();

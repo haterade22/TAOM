@@ -7456,6 +7456,8 @@
     <string id="TAOM_LD_Prompt_Choose" text="Choose" />
     <string id="TAOM_LD_Prompt_Desc" text="Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
     <string id="TAOM_LD_StartFailed" text="The Long Defeat could not start. The log has the reason." />
+    <string id="TAOM_LD_End_Lost" text="Defenders lost in cleared waves: {LOST}" />
+    <string id="TAOM_LD_End_Report" text="Report file, in bin/Win64_Shipping_Client/Logs:" />
   </strings>
 
 </base>

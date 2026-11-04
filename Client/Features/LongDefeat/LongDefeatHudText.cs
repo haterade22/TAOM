@@ -114,9 +114,13 @@ internal static class LongDefeatHudText
         }
     }
 
-    internal static string EndLines(int wavesCleared, int kills) =>
+    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves) =>
         new TextObject("{=TAOM_LD_End_Waves}Waves cleared: {WAVES}").SetTextVariable("WAVES", wavesCleared).ToString() + "\n" +
-        new TextObject("{=TAOM_LD_End_Kills}Kills: {KILLS}").SetTextVariable("KILLS", kills).ToString();
+        new TextObject("{=TAOM_LD_End_Kills}Kills: {KILLS}").SetTextVariable("KILLS", kills).ToString() + "\n" +
+        new TextObject("{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}").SetTextVariable("LOST", lostInClearedWaves).ToString();
+
+    internal static string ReportFile(string fileName) =>
+        new TextObject("{=TAOM_LD_End_Report}Report file, in bin/Win64_Shipping_Client/Logs:").ToString() + "\n" + fileName;
 
     internal static string Best(int waves, int kills) =>
         new TextObject("{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}").SetTextVariable("WAVES", waves).SetTextVariable("KILLS", kills).ToString();

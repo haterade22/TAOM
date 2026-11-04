@@ -17,7 +17,7 @@ A report signature was set aside for the same reason: its key would be public, a
 
 The mod stays offline: TAOM has no network code, and this adds none. A direct upload from the game can come later as an option, with a consent prompt.
 
-**Owed in the mod before launch:** the end panel must name the report's file, without its folder, because a Steam library under a user folder would show a Windows user name in a public clip. It must also show the defenders lost, because that is the second rank key and no rule can check it. Both are new player-facing strings.
+**The end panel helps both:** it names the report's file, without its folder, because a Steam library under a user folder would show a Windows user name in a public clip. It also shows the defenders lost in cleared waves, because that is the second rank key and no rule can check it.
 
 ## The report, schema 1
 
@@ -66,7 +66,7 @@ All six reports on record pass rules 4 to 12, each against its own table. All si
 ## The boards
 
 - **One board per fortress and per `balance`:** a change to the three JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
-- **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it.
+- **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it. The game's own "Best run" line ranks waves, then kills, so it can disagree with the board.
 - **One entry per Discord account per board:** the best one shows.
 - **The top 10:** an entry shows as unverified until a moderator accepts a clip link. A clip must show the end panel of that run, with its waves, kills and defenders lost.
 - **Opening:** with the first release that holds the mode, once its balance settles. No released build exists yet, so rule 2 cannot pass today.
@@ -89,7 +89,7 @@ A small separate repo holds the bot, because it is not part of the mod. A Discor
 ## Steps
 
 1. Report fields in the mod (built, proved by unit tests; an unattended run owes the proof).
-2. The end panel names the report file and the defenders lost, with their `/localize` rows.
+2. The end panel names the report file and the defenders lost, with their `/localize` rows (built; no game run has shown them yet, and their translations are owed in #763).
 3. The bot and its tests: each rule gets a real report as its fixture and one edited copy that the rule must refuse.
 4. A dry run in a private channel: one person submits a real report, then an edited one.
 5. The first release with the mode gives the bot its commit, its `balance` and its three files, read from the packaged install, and the board opens.

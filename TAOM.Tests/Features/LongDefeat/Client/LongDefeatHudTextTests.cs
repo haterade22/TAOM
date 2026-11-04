@@ -73,7 +73,8 @@ public class LongDefeatHudTextTests
     [TestMethod]
     public void TheEndLines_ReportWavesAndKills_AndTheBest()
     {
-        Assert.AreEqual("Waves cleared: 4\nKills: 321", LongDefeatHudText.EndLines(4, 321));
+        Assert.AreEqual("Waves cleared: 4\nKills: 321\nDefenders lost in cleared waves: 120", LongDefeatHudText.EndLines(4, 321, 120));
+        Assert.AreEqual("Report file, in bin/Win64_Shipping_Client/Logs:\nlong_defeat_report_x_ld1.json", LongDefeatHudText.ReportFile("long_defeat_report_x_ld1.json"));
         Assert.AreEqual("Best run: waves cleared 5, kills 900", LongDefeatHudText.Best(5, 900));
         Assert.AreEqual("No best run yet", LongDefeatHudText.NoBest());
     }

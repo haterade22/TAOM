@@ -84,9 +84,12 @@
                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10"
                                 Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
                                 Text="@EndLines" DoNotAcceptEvents="true" />
-                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8" MarginBottom="12"
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8"
                                 Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#CCCCCCFF"
                                 Text="@BestText" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8" MarginBottom="12"
+                                Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="#CCCCCCFF" Brush.TextHorizontalAlignment="Center"
+                                Text="@ReportText" DoNotAcceptEvents="true" />
                     <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44"
                                   Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteLeave">
                       <Children>

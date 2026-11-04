@@ -4569,7 +4569,9 @@
 	<string id="TAOM_LD_End_DefendersDead" text="{=TAOM_LD_End_DefendersDead}The garrison has fallen" />
 	<string id="TAOM_LD_End_KeepLost" text="{=TAOM_LD_End_KeepLost}The keep has fallen" />
 	<string id="TAOM_LD_End_Kills" text="{=TAOM_LD_End_Kills}Kills: {KILLS}" />
+	<string id="TAOM_LD_End_Lost" text="{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}" />
 	<string id="TAOM_LD_End_NoBest" text="{=TAOM_LD_End_NoBest}No best run yet" />
+	<string id="TAOM_LD_End_Report" text="{=TAOM_LD_End_Report}Report file, in bin/Win64_Shipping_Client/Logs:" />
 	<string id="TAOM_LD_End_Stalemate" text="{=TAOM_LD_End_Stalemate}The siege has stalled" />
 	<string id="TAOM_LD_End_TargetReached" text="{=TAOM_LD_End_TargetReached}The fortress held" />
 	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />

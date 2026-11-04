@@ -10,6 +10,7 @@ internal sealed class LongDefeatSession
 {
     private SurvivalRun? _run;
     private RunResult? _result;
+    private int _lostInClearedWaves;
 
     public bool IsActive => _run != null;
 
@@ -17,6 +18,8 @@ internal sealed class LongDefeatSession
     public string? Fault { get; private set; }
 
     public RunResult? Result => _run?.Result ?? _result;
+
+    public int LostInClearedWaves => _run?.Stats.LostInClearedWaves ?? _lostInClearedWaves;
 
     /// <summary>Mission seconds the director has ticked, for the unattended driver's live limit. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public float LiveSeconds { get; private set; }
@@ -58,6 +61,7 @@ internal sealed class LongDefeatSession
     internal void Clear()
     {
         _result = _run?.Result ?? _result;
+        _lostInClearedWaves = LostInClearedWaves;
         _run = null;
     }
 }
