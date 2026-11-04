@@ -83,7 +83,7 @@ internal sealed class LongDefeatConfigCatalog
     }
 
     public RunPlan BuildPlan(FortressEntry fortress, RunOptions options) =>
-        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep };
+        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster };
 
     private static T Guard<T>(IModLogger logger, string file, T fallback, Func<LongDefeatConfigScope, T> load)
     {

@@ -4,7 +4,7 @@ namespace TAOM.Features.LongDefeat.Domain;
 
 /// <summary>
 /// A group of soldiers to spawn into one formation. <c>FirstIndex</c> runs 0 to <c>BatchTotal</c> - 1 across the batch's soldiers,
-/// and <c>Place</c> is true only for the first batch of a formation, since placing again would move soldiers already standing.
+/// and <c>Place</c> is true only for the first batch of a formation, because a later batch joins the formation where it stands.
 /// </summary>
 internal sealed record SoldierBatch(string TroopId, FormationSlot Slot, int Count, int FirstIndex, int BatchTotal, bool Reinforcement, bool Place);
 

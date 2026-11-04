@@ -19,7 +19,8 @@ internal sealed record RunRules
     public float QuietSeconds { get; init; } = 60f;
     public float QuietAnySeconds { get; init; } = 180f;
     public float StrandedSeconds { get; init; } = 90f;
-    public float StragglerQuietSeconds { get; init; } = 20f;
+    public int StragglerCount { get; init; } = 5;
+    public float StragglerSeconds { get; init; } = 60f;
     public float StragglerShare { get; init; } = 0.10f;
     public float KeepRadius { get; init; } = 12f;
     public float KeepHeightBand { get; init; } = 4f;

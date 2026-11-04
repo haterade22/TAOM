@@ -26,5 +26,8 @@ internal sealed record RunPlan(
     /// <summary>The recorded keep point of the fortress, or null: the director then uses the scene's reinforcement frame and <see cref="RunRules.KeepRadius"/>.</summary>
     public KeepPoint? Keep { get; init; }
 
+    /// <summary>The recorded muster places of the fortress's defenders, or null: every defender then spawns at the scene's own frames.</summary>
+    public MusterPoints? Muster { get; init; }
+
     public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
 }

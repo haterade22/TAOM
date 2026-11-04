@@ -25,10 +25,10 @@ public class LongDefeatConfigCatalogTests
     [TestInitialize]
     public void Setup() => _logger = Substitute.For<IModLogger>();
 
-    private static string Fortress(string garrison = Garrison, string replaceKey = "", string replaceWith = "", string keep = "null")
+    private static string Fortress(string garrison = Garrison, string replaceKey = "", string replaceWith = "", string keep = "null", string muster = "")
     {
         var text = "{'id':'helms','name':'{=K}Helm','scene':'s','defenderCulture':'vlandia','attackerCulture':'isengard'," +
-                   "'playerTroop':'lord_4_1','waves':'r','shop':'sh','garrison':[" + garrison + "],'keep':" + keep + "}";
+                   "'playerTroop':'lord_4_1','waves':'r','shop':'sh','garrison':[" + garrison + "],'keep':" + keep + (muster.Length == 0 ? "" : ",'muster':" + muster) + "}";
         return replaceKey.Length == 0 ? text : text.Replace(replaceKey, replaceWith);
     }
 
@@ -174,7 +174,7 @@ public class LongDefeatConfigCatalogTests
         var rules = "'preparationSeconds':91,'intermissionSeconds':61,'earlyGoldPerSecond':3.5,'earlyGoldCap':121,'waveBonusBase':151," +
                     "'waveBonusPerWave':51,'spawnsPerTick':9,'liveCap':160,'garrisonCap':230,'musterBatch':21,'musterBatchSeconds':5.5," +
                     "'quietSeconds':61,'quietAnySeconds':181,'strandedSeconds':91,'stragglerShare':0.2,'keepRadius':13.5," +
-                    "'keepHeightBand':5.5,'keepHoldSeconds':46,'keepDecaySeconds':91,'keepMinAttackers':23,'keepDominance':2.5,'restShare':0.25,'stragglerQuietSeconds':21";
+                    "'keepHeightBand':5.5,'keepHoldSeconds':46,'keepDecaySeconds':91,'keepMinAttackers':23,'keepDominance':2.5,'restShare':0.25,'stragglerCount':6,'stragglerSeconds':61";
 
         var r = Load(waves: Waves(rules)).BuildPlan(Load().Fortresses[0], RunOptions.Default).Rules;
 
@@ -184,7 +184,7 @@ public class LongDefeatConfigCatalogTests
                 PreparationSeconds = 91f, IntermissionSeconds = 61f, EarlyGoldPerSecond = 3.5f, EarlyGoldCap = 121, WaveBonusBase = 151,
                 WaveBonusPerWave = 51, SpawnsPerTick = 9, LiveCap = 160, GarrisonCap = 230, MusterBatch = 21, MusterBatchSeconds = 5.5f,
                 QuietSeconds = 61f, QuietAnySeconds = 181f, StrandedSeconds = 91f, StragglerShare = 0.2f, KeepRadius = 13.5f,
-                KeepHeightBand = 5.5f, KeepHoldSeconds = 46f, KeepDecaySeconds = 91f, KeepMinAttackers = 23, KeepDominance = 2.5f, RestShare = 0.25f, StragglerQuietSeconds = 21f,
+                KeepHeightBand = 5.5f, KeepHoldSeconds = 46f, KeepDecaySeconds = 91f, KeepMinAttackers = 23, KeepDominance = 2.5f, RestShare = 0.25f, StragglerCount = 6, StragglerSeconds = 61f,
             },
             r);
         _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
@@ -234,9 +234,11 @@ public class LongDefeatConfigCatalogTests
     [DataRow("restShare", "-0.1")]
     [DataRow("restShare", "1.1")]
     [DataRow("restShare", "NaN")]
-    [DataRow("stragglerQuietSeconds", "0.5")]
-    [DataRow("stragglerQuietSeconds", "3601")]
-    [DataRow("stragglerQuietSeconds", "NaN")]
+    [DataRow("stragglerSeconds", "0.5")]
+    [DataRow("stragglerSeconds", "3601")]
+    [DataRow("stragglerSeconds", "NaN")]
+    [DataRow("stragglerCount", "-1")]
+    [DataRow("stragglerCount", "101")]
     [DataRow("keepMinAttackers", "0")]
     [DataRow("keepMinAttackers", "101")]
     public void Rules_BadValue_KeepsTheDefaultWithOneWarningNamingTheKey(string key, string value)
@@ -611,6 +613,99 @@ public class LongDefeatConfigCatalogTests
 
         Assert.IsNull(catalog.Fortresses.Single().Keep);
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("fortresses.json") && m.Contains("keep")));
+    }
+
+    private const string Foot = "{'x':10,'y':20,'z':30,'fx':0,'fy':1}";
+    private const string Archers = "{'x':40.5,'y':50.5,'z':60.5,'fx':1,'fy':0}";
+
+    [TestMethod]
+    public void Muster_ARecordedBlock_IsRead()
+    {
+        var muster = Load(Fortresses(Fortress(muster: "{'foot':" + Foot + ",'archers':" + Archers + "}"))).Fortresses.Single().Muster!;
+
+        Assert.AreEqual(new MusterFrame(10f, 20f, 30f, 0f, 1f), muster.Foot);
+        Assert.AreEqual(new MusterFrame(40.5f, 50.5f, 60.5f, 1f, 0f), muster.Archers);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Muster_TheLookIsNormalized()
+    {
+        var muster = Load(Fortresses(Fortress(muster: "{'foot':{'x':1,'y':2,'z':3,'fx':0,'fy':0.6}}"))).Fortresses.Single().Muster!;
+
+        Assert.AreEqual(0f, muster.Foot!.Fx);
+        Assert.AreEqual(1f, muster.Foot.Fy);
+    }
+
+    [TestMethod]
+    public void Muster_OnePointRecorded_LeavesTheOtherOnTheSceneFrame()
+    {
+        var muster = Load(Fortresses(Fortress(muster: "{'foot':" + Foot + "}"))).Fortresses.Single().Muster!;
+
+        Assert.IsNotNull(muster.Foot);
+        Assert.IsNull(muster.Archers);
+        Assert.IsNull(muster.For(FormationSlot.Ranged));
+        Assert.AreEqual(muster.Foot, muster.For(FormationSlot.Infantry));
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("null")]
+    [DataRow("{}")]
+    public void Muster_MissingOrEmpty_IsNullWithNoWarning(string muster)
+    {
+        var catalog = Load(Fortresses(Fortress(muster: muster)));
+
+        Assert.IsNull(catalog.Fortresses.Single().Muster);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("{'foot':{'x':NaN,'y':2,'z':3,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':{'x':1,'y':Infinity,'z':3,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':{'x':1,'y':2,'z':3,'fx':NaN,'fy':1}}")]
+    [DataRow("{'foot':{'x':100001,'y':2,'z':3,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':{'x':1,'y':-100001,'z':3,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':{'x':1,'y':2,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':{'x':1,'y':2,'z':3,'fx':0}}")]
+    [DataRow("{'foot':{'x':1,'y':2,'z':3,'fx':0,'fy':0}}")]
+    [DataRow("{'foot':{'x':1,'y':2,'z':3,'fx':3,'fy':4}}")]
+    [DataRow("{'foot':{'x':99999999999999999999999999,'y':2,'z':3,'fx':0,'fy':1}}")]
+    [DataRow("{'foot':7}")]
+    [DataRow("7")]
+    public void Muster_BadBlock_IsSkippedWithOneWarning_AndTheFortressStays(string muster)
+    {
+        var catalog = Load(Fortresses(Fortress(muster: muster)));
+
+        Assert.IsNull(catalog.Fortresses.Single().Muster);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("fortresses.json") && m.Contains("muster")));
+    }
+
+    [TestMethod]
+    public void Muster_ABadArchersPoint_RevertsTheWholeBlock()
+    {
+        var catalog = Load(Fortresses(Fortress(muster: "{'foot':" + Foot + ",'archers':{'x':1,'y':2,'z':3,'fx':0,'fy':0}}")));
+
+        Assert.IsNull(catalog.Fortresses.Single().Muster);
+        AssertOneWarningNaming("fortresses.json", "muster.archers");
+    }
+
+    [TestMethod]
+    public void Muster_ReachesTheRunPlan()
+    {
+        var catalog = Load(Fortresses(Fortress(muster: "{'foot':" + Foot + "}")));
+
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default);
+
+        Assert.AreEqual(catalog.Fortresses.Single().Muster, plan.Muster);
+    }
+
+    [TestMethod]
+    public void Muster_NoBlock_LeavesThePlanWithNone()
+    {
+        var catalog = Load();
+
+        Assert.IsNull(catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default).Muster);
     }
 
     [TestMethod]

@@ -659,7 +659,7 @@ public class SurvivalRunTests
     [TestMethod]
     public void Stalemate_AHandfulAgainstManyDefenders_FellsTheStragglersAndTheClearPaysTheBonus()
     {
-        var run = InFighting(Plan(new RunRules { StragglerQuietSeconds = 3600f }));
+        var run = InFighting(Plan(new RunRules { StragglerCount = 0 }));
         run.Tick(Snap(attackers: 5, defenders: 20, dt: 60f));
 
         var fx = run.Tick(Snap(attackers: 5, defenders: 20, dt: 90f));
@@ -877,7 +877,7 @@ public class SurvivalRunTests
     [TestMethod]
     public void WaveTwo_RestartsPlacementIndicesAndStatsAndTheCharge()
     {
-        var run = InFighting(Plan(new RunRules { StragglerQuietSeconds = 3600f }));
+        var run = InFighting(Plan(new RunRules { StragglerCount = 0 }));
         Assert.IsTrue(run.Tick(Snap(attackers: 5, defenders: 20, dt: 60f)).OrderCharge);
         Assert.AreEqual(5, run.Tick(Snap(attackers: 5, defenders: 20, dt: 90f)).FellAttackers);
         for (var i = 0; i < 5; i++)
@@ -959,7 +959,7 @@ public class SurvivalRunTests
     [TestMethod]
     public void Stalemate_FellCountIsCappedByTheAttackersStanding()
     {
-        var rules = new RunRules { LiveCap = 101, SpawnsPerTick = 1, StragglerQuietSeconds = 3600f };
+        var rules = new RunRules { LiveCap = 101, SpawnsPerTick = 1, StragglerCount = 0 };
         var plan = Plan(rules, waveSpecs: new[] { new WaveSpec(104, new[] { T("orc", FormationSlot.Infantry, 1) }) });
         var run = Begun(plan);
         run.TryStartWave();

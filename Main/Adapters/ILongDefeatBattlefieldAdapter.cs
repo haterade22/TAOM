@@ -37,8 +37,15 @@ internal interface ILongDefeatBattlefieldAdapter
     void BeginBatch(FormationSlot slot, int count, bool attackers);
 
     /// <summary>
+    /// Moves the defender formation of <paramref name="slot"/> to the recorded muster place and sends the open batch's soldiers there, into
+    /// the formation's next free slots. Call it right after <see cref="PlaceFormation"/> or <see cref="BeginBatch"/>. False, with nothing
+    /// changed, when the place has no navmesh: the batch then spawns at the scene's own frame. <see cref="EndBatch"/> ends the soldiers' routing; a formation under Advance with no enemy alive keeps the place and walks there.
+    /// </summary>
+    bool SetMusterFrame(FormationSlot slot, MusterFrame frame);
+
+    /// <summary>
     /// Spawns the batch's soldiers into the open batch of their formation with no position, so the engine's own layout slots apply,
-    /// and reads where each landed in the same call.
+    /// and reads where each landed in the same call. After a successful <see cref="SetMusterFrame"/> the read-back judges against that place.
     /// </summary>
     LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers);
 
