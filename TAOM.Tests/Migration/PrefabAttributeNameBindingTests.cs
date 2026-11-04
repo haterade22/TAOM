@@ -306,7 +306,7 @@ public class PrefabAttributeNameBindingTests
     }
 
     [TestMethod]
-    public void EveryVisualDefinition_IsNamedByAWidgetInItsPrefab()
+    public void VisualDefinitions_AndTheWidgetsThatNameThem_MatchInEveryPrefab()
     {
         var repoDir = RepoPrefabsDir();
         var files = Directory.GetFiles(repoDir, "*.xml", SearchOption.AllDirectories);
@@ -327,14 +327,14 @@ public class PrefabAttributeNameBindingTests
 
     /// <summary>
     /// The VisualDefinition problems of one prefab: a definition no widget names, and a widget naming a definition
-    /// the prefab does not hold. Only elements outside <c>VisualDefinitions</c> count as widgets: a
-    /// <c>VisualState</c> inside a definition carrying its own name does not keep it alive. XDocument drops
-    /// comments, so a widget commented out of its prefab names nothing.
+    /// the prefab does not hold. Only elements under <c>Window</c> count as widgets, because WidgetPrefab.LoadFrom
+    /// builds the tree from there: a <c>VisualState</c> or a <c>Constant</c> carrying the name does not keep a
+    /// definition alive. XDocument drops comments, so a widget commented out of its prefab names nothing.
     /// </summary>
     private static List<string> VisualDefinitionProblems(XDocument doc, string rel)
     {
-        bool InsideDefinitions(XElement e) => e.AncestorsAndSelf().Any(a => a.Name.LocalName == "VisualDefinitions");
-        var widgets = doc.Descendants().Where(e => !InsideDefinitions(e) && e.Attribute("VisualDefinition") != null).ToList();
+        bool InWidgetTree(XElement e) => e.Ancestors().Any(a => a.Name.LocalName == "Window");
+        var widgets = doc.Descendants().Where(e => InWidgetTree(e) && e.Attribute("VisualDefinition") != null).ToList();
         var named = new HashSet<string>(widgets.Select(e => (string)e.Attribute("VisualDefinition")), StringComparer.Ordinal);
         var definitions = doc.Descendants().Where(e => e.Name.LocalName == "VisualDefinition").ToList();
         var defined = new HashSet<string>(definitions.Select(d => (string)d.Attribute("Name")).Where(n => n != null), StringComparer.Ordinal);
@@ -355,14 +355,26 @@ public class PrefabAttributeNameBindingTests
         return problems;
     }
 
+    [TestMethod]
+    public void VisualDefinitionProblems_ANameOnAConstantOutsideTheWidgetTree_DoesNotKeepADefinitionAlive()
+    {
+        var problems = VisualDefinitionProblems(XDocument.Parse(
+            "<Prefab><Constants><Constant Name=\"K\" Value=\"0\" VisualDefinition=\"Unused\" /></Constants>"
+            + "<VisualDefinitions><VisualDefinition Name=\"Unused\" /></VisualDefinitions><Window><Widget /></Window></Prefab>",
+            LoadOptions.SetLineInfo), "a.xml");
+
+        Assert.AreEqual(1, problems.Count, string.Join("; ", problems));
+        StringAssert.Contains(problems[0], "named by no widget");
+    }
+
     private const string PrefabWithOneUnusedDefinition =
-        "<Prefab><Window>"
+        "<Prefab>"
         + "<VisualDefinitions>"
         + "<VisualDefinition Name=\"Used\"><VisualState State=\"Default\" /></VisualDefinition>"
         + "<VisualDefinition Name=\"Unused\"><VisualState State=\"Default\" VisualDefinition=\"Unused\" /></VisualDefinition>"
         + "</VisualDefinitions>"
-        + "<Widgets><Widget VisualDefinition=\"Used\" /></Widgets>"
-        + "</Window></Prefab>";
+        + "<Window><Widgets><Widget VisualDefinition=\"Used\" /></Widgets></Window>"
+        + "</Prefab>";
 
     [TestMethod]
     public void VisualDefinitionProblems_ANameOnlyAStateInsideAnUnusedDefinitionCarries_IsStillUnused()

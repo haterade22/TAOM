@@ -78,6 +78,6 @@ COMMAND=$(taom_hook_command posix block-no-verify)
 BARE=$(printf '%s' "$COMMAND" | sed -E "s/([[:space:]])[\"']+(-[a-zA-Z]*n[a-zA-Z]*)[\"']+/\1\2/g; s/\"[^\"]*\"//g; s/'[^']*'//g")
 BARE=${BARE//$'\\\n'/ }
 BARE=${BARE//$'\n'/ ; }
-[[ "$BARE" =~ (^|[[:space:]\;\&\|\(])git([[:space:]]+-[^[:space:]]+([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*)?)*[[:space:]]+commit([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
+[[ "$BARE" =~ (^|[[:space:]\;\&\|\(])git([[:space:]]+-[^[:space:]]+([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*)?)*[[:space:]]+commit([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]\;\&\|\)]|$) ]] && refuse "git commit -n"
 
 exit 0

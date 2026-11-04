@@ -79,9 +79,11 @@ def write_text_file(path, content, dry_run, backup=False):
         return
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    if backup and path.exists() and path.read_bytes() != content.replace("\n", os.linesep).encode("utf-8"):
+    data = content.encode("utf-8")
+    if backup and path.exists() and path.read_bytes() != data:
         shutil.copy2(path, str(path) + ".bak_nametags_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
-    path.write_text(content, encoding="utf-8")
+    # Bytes: the content already holds CRLF, and text mode would write CR CR LF.
+    path.write_bytes(data)
 
 
 def _rows_of(xml_text):
@@ -206,7 +208,7 @@ def rebuild_language(lang, modules, dry_run=True, allow_live_write=False):
         return english, "english_fallback"
 
     # ─── TAOM module: the sources of tools/_loc_sources.py ──────────────────────
-    owners = source_owners()
+    owners = source_owners() if "TAOM" in modules else {}
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
     for src_rel, tgt_name in (taom_sources(locale) if "TAOM" in modules else []):
         src_path = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_rel
@@ -235,7 +237,8 @@ def rebuild_language(lang, modules, dry_run=True, allow_live_write=False):
     # ─── TAOM_Map: settlements.xml ──────────────────────────────────────────────
     settlements_xml = GAME_ROOT / "TAOM_Map" / "ModuleData" / "settlements.xml"
     map_target = GAME_ROOT / "TAOM_Map" / "ModuleData" / "Languages" / lang / "loc_settlements.xml"
-    if "TAOM_Map" in modules and settlements_xml.exists():
+    if "TAOM_Map" in modules:
+        ensure_exists(settlements_xml, what="TAOM_Map's settlements.xml")
         src_map = parse_settlements_xml(settlements_xml)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
@@ -270,6 +273,8 @@ def rebuild_language(lang, modules, dry_run=True, allow_live_write=False):
             stats[source] += 1
         content = build_translation_xml(lang_name, ordered)
         tgt = armory_target / src_path.name
+        if dry_run:
+            report_dry_run(f"Armory {src_path.name}", tgt, content)
         write_text_file(tgt, content, dry_run, backup=True)
         print(f"  Armory {src_path.name}: {len(ordered)} entries (override={stats['override']} cache={stats['cache']} en_fallback={stats['english_fallback']})")
 
@@ -283,7 +288,7 @@ def build_parser():
     mode = p.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true", help="write the files (default: a dry run that writes nothing)")
     mode.add_argument("--dry-run", action="store_true",
-                      help="the default, kept for old command lines: build every file in memory and write none; "
+                      help="the default, stated: build every file in memory and write none; "
                            "for the live TAOM_Map file print the diff")
     p.add_argument("--allow-live-write", action="store_true",
                    help="add the grammar tags to the live TAOM_Map loc_settlements.xml too (outside the repo; it is backed up first)")

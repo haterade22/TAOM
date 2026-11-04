@@ -104,9 +104,16 @@ class WriteTextFileTests(unittest.TestCase):
     def test_write_text_file_WithBackup_SameBytes_MakesNoBackup(self):
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / "out.xml"
-            p.write_text("same\nline\n", encoding="utf-8")
-            rb.write_text_file(p, "same\nline\n", dry_run=False, backup=True)
+            p.write_bytes(b"same\r\nline\r\n")
+            rb.write_text_file(p, "same\r\nline\r\n", dry_run=False, backup=True)
             self.assertEqual([f.name for f in Path(td).iterdir()], ["out.xml"])
+
+    def test_write_text_file_KeepsCrlfAsItIs(self):
+        # Text mode on Windows wrote CR CR LF for content that already holds CRLF.
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "out.xml"
+            rb.write_text_file(p, "a\r\nb\r\n", dry_run=False)
+            self.assertEqual(p.read_bytes(), b"a\r\nb\r\n")
 
     def test_write_text_file_WithoutBackup_NeverBacksUp(self):
         with tempfile.TemporaryDirectory() as td:

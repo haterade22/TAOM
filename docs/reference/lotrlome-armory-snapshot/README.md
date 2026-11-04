@@ -711,7 +711,7 @@ CNs `loc_mordor.xml` the 12 ids `aom_sk_md_num_{arc,inf}_bracer_{med,heavy,elite
 CNs `loc_LOTRAOM_weapons.xml` `aom_sm_md_num_bow_a_name`; RU `loc_gondor.xml`
 `aom_sk_gd_ano_cav_helmet_heavy_b_name`; TAOM_Map `loc_settlements.xml` `Settlements.Settlement.name.castle_village_G4_1`
 in CNs, CNt, JP, KO and RU, and in RU `Settlements.Settlement.name.castle_EW8` and `=Settlements.Settlement.text.town_EW5`.
-Do not use `rebuild_translation_files.py` for this: it rewrites every repo language file. **Gates:** `python tools/check_external_loc_coverage.py`
+Do not use `rebuild_translation_files.py` for this: with `--module TAOM` it rewrites every repo language file. **Gates:** `python tools/check_external_loc_coverage.py`
 catches a row that fell back to English; `LanguageTextIntegrityTests.NoCachedTranslation_MixesWritingSystems` keeps
 the cache free of wrong-script words, so a replay cannot bring the CNs damage back.
 

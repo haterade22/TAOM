@@ -12,7 +12,7 @@ until a culture or a clan names it by id.
 ## Where it lives and how it is registered
 
 - **Repo file:** [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml).
-  It carries 383 templates and 3,295 stacks. <!-- measured: rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml && rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml 2026-09-05 -->
+  It carries 464 templates and 3,446 stacks. <!-- measured: rg -c '<MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml && rg -c '<PartyTemplateStack' Main/_Module/ModuleData/taom_partyTemplates.xml 2026-11-04 -->
 - **Registration:** `Main/_Module/SubModule.xml:331`, `<XmlName id="partyTemplates" path="taom_partyTemplates"/>`.
   Vanilla registers the same list id at `SandBox/SubModule.xml:59` with `path="partyTemplates"`. This
   file lives in the game install, not the repo; a module reinstall reverts hand edits, so land a
@@ -343,7 +343,7 @@ Code: No code changes needed
 | Erebor culture: 10 `PartyTemplate.` references, 8 attributes and 2 caravan children | the culture-block one-liner in the Worked example above | 2026-09-05 |
 | Current max sums: goblin and bluecraig 320, mordor / isengard / gundabad / dolguldur / mistymountainorcs 260, erebor 225 against a 220 target, gondor / rohan / dale / dunland / rhun / harad 200, rivendell / mirkwood / lindon 150 | `python tools/rebalance_party_template_maxes.py` | 2026-09-05 |
 | 193 templates in scope, 5 stacks would change on a re-run | `python tools/rebalance_party_template_maxes.py` | 2026-09-05 |
-| 21 template ids carrying `erebor` | `rg -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml \| wc -l` | 2026-09-05 |
+| 20 template ids carrying `erebor` | `rg -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml \| wc -l` | 2026-11-04 |
 | 7 MCM knobs in the "AI Party Size" group | `rg -c 'SettingPropertyGroup("AI Party Size"' Main/Features/TaomSettings.cs` | 2026-09-05 |
 | 4 cultures whose `default_party_template` is another culture's | the shared-template one-liner in the Gotchas bullet above | 2026-09-05 |
 | 1 file in the whole decompile dump mentions `GetUpperTroopLimit` or `GetLowerTroopLimit`, the one defining them | `rg -l "GetUpperTroopLimit\|GetLowerTroopLimit" <decompile root> -g '*.cs'` | 2026-09-05 |

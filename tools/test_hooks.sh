@@ -2722,6 +2722,12 @@ g7e_long() {  # $1 the command's head; the rest is 300,000 letters
 [[ "$(g7e_long 'git commit "-n" -m ')" == rc=2 ]] \
     && ok "raw text: a quoted -n is refused" \
     || bad "raw text: a quoted -n went through"
+[[ "$(g7e_long $'git commit -n;\necho ')" == rc=2 ]] \
+    && ok "raw text: -n right before a separator is refused" \
+    || bad "raw text: -n right before a separator went through"
+[[ "$(g7e_long $'git commit -n&& echo ok\necho ')" == rc=2 ]] \
+    && ok "raw text: -n right before && is refused" \
+    || bad "raw text: -n right before && went through"
 [[ "$(g7e_long 'git -C . commit -n -m ')" == rc=2 ]] \
     && ok "raw text: -n past a global option is refused" \
     || bad "raw text: -n past a global option went through"

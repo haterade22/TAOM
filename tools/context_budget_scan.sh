@@ -357,7 +357,7 @@ while todo:
         if t and not re.match(r"[a-z]+:", t) and (page.parent / t).exists():
             todo.append((page.parent / t).resolve())
 orphans = sorted(str(p.relative_to(root)).replace("\\", "/") for p in root.rglob("*.md")
-                 if p.name != "MEMORY.md" and p.resolve() not in linked)
+                 if p.name != "MEMORY.md" and p.is_file() and p.resolve() not in linked)
 print("DEAD " + " ".join(dead))
 print("ORPHAN " + " ".join(orphans))
 PYEOF

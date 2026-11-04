@@ -45,22 +45,16 @@ def main(argv=None) -> int:
     # settlements.xslt strips vanilla's settlement rows: without it they return in game.
     needed = (moduledata / "taom_spcultures.xml", moduledata / "characters" / "clans.xml", settlements_xml,
               settlements_xml.with_suffix(".xslt"), args.vanilla_modules / "SandBox" / "ModuleData" / "spclans.xml")
-    missing = [p for p in needed if not p.is_file()]
-    if missing:
-        for path in missing:
-            print(f"ERROR: not found: {path}", file=sys.stderr)
-        print("No verdict: the pair was not checked.", file=sys.stderr)
-        return 2
     # The registries read these files with regexes, which take a half-written file for a short one.
-    unparsed = []
+    unreadable = []
     for path in needed:
         try:
             ET.parse(path)
         except (ET.ParseError, OSError) as exc:
-            unparsed.append((path, exc))
-    if unparsed:
-        for path, exc in unparsed:
-            print(f"ERROR: does not parse: {path}: {exc}", file=sys.stderr)
+            unreadable.append((path, exc))
+    if unreadable:
+        for path, exc in unreadable:
+            print(f"ERROR: cannot read: {path}: {exc}", file=sys.stderr)
         print("No verdict: the pair was not checked.", file=sys.stderr)
         return 2
 
