@@ -27,7 +27,7 @@ Any future Steam-Workshop or manual update of `LOTRLOME_Armory` will overwrite o
 | `Prefabs/taom_mumakil_platform.xml` | The mumakil war tower's crew platform (#627 phase 2): three floor bodies (`moveable` + `barrier`) at the measured deck heights and eight crew frames, every entity `visible_only_when_editing` because the tower the player sees is `sk_mumakil_platform_a1` on the Horse item. Authored MOUNT-LOCAL, 1:1 with the FBX; `TaomMumakilPlatform` applies the 3.0x from `Agent.AgentScale` at runtime, so nothing here may be pre-multiplied. `MumakilCrewSpawner` instantiates it by name, and the platform attaches `Modules/TAOM/NavMeshPrefabs/taom_mumakil_platform_navmesh.bin` (face group 1) without which the crew fall to the ground: physics is what they stand on, navmesh is what makes it valid, and the tower needs both. Authored at FINAL in-game size since 2026-09-21; nothing scales it at runtime. **Added 2026-09-20.** `MumakilPlatformTests` fails if the live copy differs from this one. | ~11 KB |
 | `weapon_descriptions.xslt` | The Armory's additive override of Native's `<AvailablePieces>` lists: which crafting pieces each `WeaponDescription` accepts, and therefore which usages a crafted weapon resolves to. **Carries the one-handed-polearm registration** for the Dale spears and the Black Numenorean lance (see APPLIED EDIT below). Refreshed from the live file on 2026-09-25, after KEYforce's Lamedon drop replaced the `wm_swan_knight_spear_*` pieces with `wm_gondor_spear_flag_*` and `wm_gondor_light_spear_*`; the copy had last been taken on 2026-08-20 and lagged every Armory change since. Refreshed again on 2026-09-26 for the hill troll war hammer's two `TwoHandedMace` registrations (`wm_hill_troll_2h_hammer_head`, `wm_hill_troll_2h_hammer_handle`, after the cave troll mace's; [lotrlome-hill-troll-changes.md](../lotrlome-hill-troll-changes.md)), and on 2026-10-15 for KEYforce's Harad sword and spear pieces, couchable since that install (#805), and on 2026-10-16 for his javelin and mace pieces (lotraom-assets `03320a65`). | ~86 KB |
 
-> The first three are race-defining XML and are auto-loaded from every module root. `weapon_descriptions.xslt` is neither — it is here because it now carries an applied edit, and unlike the other three the live copy is already CRLF, so live and snapshot are byte-identical rather than differing by line ending.
+> The first three are race-defining XML and are auto-loaded from every module root. `weapon_descriptions.xslt` is neither: it is here because it now carries an applied edit, and unlike the other three the live copy is already CRLF, so a refreshed snapshot is byte-identical to live rather than differing by line ending (it was on 2026-10-16; see the 2026-11-03 drift check under "Snapshot date").
 
 ## How to restore from this snapshot
 
@@ -38,7 +38,7 @@ cp "docs/reference/lotrlome-armory-snapshot/action_sets.xml" \
    "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/action_sets.xml"
 ```
 
-Same for `monsters.xml` and `skins.xml` if needed. Then delete the compressed shader-cache sacks (see `feedback_shader_cache_invisible_cc.md` memory) and re-launch — Bannerlord will re-cook shaders and the action-set edits will take effect.
+Same for `monsters.xml` and `skins.xml` if needed. Then delete the compressed shader-cache sacks and re-launch; Bannerlord will re-cook shaders and the action-set edits will take effect.
 
 The howdah prefab restores to `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml`, not `ModuleData/`, and must never go
 back into `Main/_Module/Prefabs/` (`HowdahPrefabTests` fails if it does). It needs no shader-cache step.
@@ -98,9 +98,9 @@ python tools/oneoff/fix_orphaned_tavern_conversation_actions.py
 5. **Inventory / banner-editor / stand / sit poses** — `act_inventory_idle[_start]`, `act_visual_test_morph_animation`, `act_command`, `act_walk_idle_unarmed`, `act_stand_1`, `act_stand_2`, `act_sit_1`.
 6. **12 rider/horse story-background actions** — `act_rider_story_background_1..6` and `act_horse_story_background_1..6`.
 
-**Warning: slim facegen entries are insufficient.** A facegen action_set that declares only the 14 CC parent action types (relying on `base_set="as_human_warrior"` or similar, which has no childhood / toddler / inventory actions to give) WILL render the parent menu correctly but break **every subsequent CC stage** (Early Childhood lying-down pose, Youth / Adolescence / Adulthood narrative options without any character animation). This was caught on 2026-05-22 after the first in-game test of the slim elf entries; the v2 fix replaced them with verbatim copies of LOTRLOME's `as_dwarf_facegen` / `as_dwarf_female_facegen` blocks (with only `id` and `base_set` renamed). See memory `feedback_lotrlome_action_set_aliases.md` 2026-05-22 addendum. Corrected 2026-10-20 (#956 review): the cause was the empty base, not ignored inheritance.
+**Warning: slim facegen entries are insufficient.** A facegen action_set that declares only the 14 CC parent action types (relying on `base_set="as_human_warrior"` or similar, which has no childhood / toddler / inventory actions to give) WILL render the parent menu correctly but break **every subsequent CC stage** (Early Childhood lying-down pose, Youth / Adolescence / Adulthood narrative options without any character animation). This was caught on 2026-05-22 after the first in-game test of the slim elf entries; the v2 fix replaced them with verbatim copies of LOTRLOME's `as_dwarf_facegen` / `as_dwarf_female_facegen` blocks (with only `id` and `base_set` renamed). See the lesson [Adding a new race-bearing culture requires CREATING missing `as_<race>_facegen` sets](../../reviews/lessons/animation-skeleton.md). Corrected 2026-10-20 (#956 review): the cause was the empty base, not ignored inheritance.
 
-**Important rule** carried over to memory `feedback_lotrlome_action_set_aliases.md`: when fixing CC parent rendering, the recipe must both (a) **patch** existing facegen action_sets with 1.3 aliases AND (b) **create** missing facegen action_sets for any race in TAOM cultures that LOTRLOME's authors never anticipated as a playable race. Patching alone is not enough.
+**Important rule** (same lesson as above): when fixing CC parent rendering, the recipe must both (a) **patch** existing facegen action_sets with 1.3 aliases AND (b) **create** missing facegen action_sets for any race in TAOM cultures that LOTRLOME's authors never anticipated as a playable race. Patching alone is not enough.
 
 ## Standalone combat action_set parity — `as_dwarf_warrior`
 
@@ -762,6 +762,8 @@ form `<module>/<L>: name='...' text_processor=None, Native declares ...TextProce
 `LiveTaomMapAndArmoryLanguageData_InstalledNative_CarryTheSameProcessor` guards these files.
 
 ## Snapshot date
+
+Drift check 2026-11-03 (live Armory `ModuleData/` against this folder, line endings normalised to LF): `action_sets.xml`, `action_types.xml`, `monsters.xml`, `monster_usage_sets.xml` and `project.mbproj` equal live; `skins.xml` (live 5,623,378 bytes, here 5,619,454) and `weapon_descriptions.xslt` (live 87,812, here 87,261) are behind live. Nothing was re-copied.
 
 2026-10-18: `action_sets.xml` refreshed by a byte copy of the live file after `tools/bind_orc_goblin_locomotion.py
 --apply` wrote the two orc gait variant sets, `as_orc_warrior_b` and `as_orc_warrior_c` (24 walk and run forward rows

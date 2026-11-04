@@ -1204,7 +1204,7 @@ def check_context_budget(commit: CommitView | None = None) -> list[tuple[Path, i
 # With a commit in view they judge only the files it changes, as it records them. The commit hooks'
 # trigger lists must cover each folder scanned here (tools/test_hooks.sh 5d).
 
-DEAD_MEMORY_DIRS = (".claude/rules", ".claude/agents", ".claude/skills", "docs/ai-includes")
+DEAD_MEMORY_DIRS = (".claude/rules", ".claude/agents", ".claude/skills", "docs/ai-includes", "docs/reference/engine")
 # Memory files are machine-local, so no other client or machine can read a citation of one.
 # Lessons, RCAs and ADRs are history and are not scanned.
 _DEAD_MEMORY_RE = re.compile(r"feedback[_-]\w")

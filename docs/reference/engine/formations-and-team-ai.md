@@ -266,8 +266,8 @@ agents temporarily leave the grid (skirmish, man a siege engine) without leaving
   `Formation.SetMovementOrder` Postfix), **MixedFormations** (`Patch30` — arrangement/position math), **CompanionTactics**
   (`Patch35` — a `SetMovementOrder` Postfix). The two `SetMovementOrder` postfixes share the **deferred
   `Patch_MissionTime_SetMovementOrder` category** (applied at `OnMissionBehaviorInitialize`, not `OnSubModuleLoad`,
-  because `MovementOrder.cctor` reads `Mission.Current.CurrentTime` — `feedback_movementorder_cctor_mission_current`).
-  **Any future patch with `MovementOrder` in its postfix signature must use this category** (CLAUDE.md).
+  because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`; see [harmony-patches.md](../../../.claude/rules/harmony-patches.md)).
+  **Any future patch with `MovementOrder` in its postfix signature must use this category** ([harmony-patches.md](../../../.claude/rules/harmony-patches.md)).
 - **SmartCavalryAI + MixedFormations are field-battle only** (2026-07-16, siege CTD #349): both gate on
   `Mission.IsFieldBattle` (`Mission.cs:1373` — true ONLY for `MissionTeamAIType == FieldBattle`), so neither touches
   formations in a siege / sally-out / hideout / naval / settlement mission. Two gotchas worth inheriting: (1) **never
@@ -306,18 +306,18 @@ agents temporarily leave the grid (skirmish, man a siege engine) without leaving
   dismounting whoever is placed in it.
 - **Self-friend invariant:** `IsFriendOf` is just `!IsEnemyOf`, so **`team.IsFriendOf(team) == true`** — add an explicit
   `if (team == myTeam) continue;` belt-and-braces around friend checks in multi-team scenarios
-  (`feedback_taleworlds_invariant_check_explicit`).
+  ([lesson](../../reviews/lessons/harmony-il.md)).
 - **Threading:** Bannerlord names multi-threaded formation helpers with the **`_MT` suffix**
   (`CreateNewOrderWorldPositionMT`, `IsFormationUnitPositionAvailableMT`) and guards shared state with
   `TWSharedMutexReadLock`. Patches on `Formation`/`Mission`/`Scene` can fire from **worker threads** — service state
-  touched in a `SetMovementOrder` postfix must be lock-protected or immutable (`feedback_detect_engine_threading_via_mt_suffix`).
+  touched in a `SetMovementOrder` postfix must be lock-protected or immutable ([lesson](../../reviews/lessons/harmony-il.md)).
 - **Cross-feature handshake:** SmartCavalryAI and MixedFormations both write `Formation` state via a shared adapter; the
   more-specific feature must win (a cavalry charge-line silently overwritten by a mixed-formation layout was a real bug)
   — `/deep-review` reviews features in isolation, so cross-feature formation collisions are invisible
-  (`feedback_cross_feature_handshake_via_shared_adapter`).
+  ([lesson](../../reviews/lessons/gamemodels-services.md)).
 - **Replicate vanilla safety gates:** a `SetMovementOrder`/positioning Prefix that returns false must replicate every
   vanilla gate in the full call chain (navmesh validation, `IsFormationUnitPositionAvailable`) — buried helper checks
-  are easy to drop (`feedback_replicate_vanilla_safety_gates_in_prefix`).
+  are easy to drop ([lesson](../../reviews/lessons/harmony-il.md)).
 
 ## The native boundary
 **Managed:** `Formation`, `Team`, `IFormationArrangement` implementations, `TeamAIComponent`/`TacticComponent`/
@@ -341,7 +341,7 @@ exception.
   `GetFormationClass`); `TaleWorlds.Core.EquipmentIndex.cs`:21,23 (`ArmorItemEndSlot` == `Horse` == 10);
   `TaleWorlds.MountAndBlade.Mission.cs`:1555 (`GetAgentTroopClass_Override`, no subscriber), :2539-2551
   (`GetAgentTroopClass` + `DismountedClass` collapse), :4442 (`SpawnTroop` → `Team.GetFormation`).
-- TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, shared `Patch_MissionTime_SetMovementOrder` (CLAUDE.md). Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_taleworlds_invariant_check_explicit`, `feedback_detect_engine_threading_via_mt_suffix`, `feedback_cross_feature_handshake_via_shared_adapter`, `feedback_replicate_vanilla_safety_gates_in_prefix`.
+- TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, shared `Patch_MissionTime_SetMovementOrder` ([harmony-patch-registry.md](../harmony-patch-registry.md)). Gotcha lessons: [harmony-il](../../reviews/lessons/harmony-il.md), [gamemodels-services](../../reviews/lessons/gamemodels-services.md).
 
 ---
 
@@ -353,6 +353,7 @@ exception.
 - [docs/INDEX.md](../../INDEX.md)
 - [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/party-template-sizing.md](../party-template-sizing.md)
+- [docs/reviews/lessons/testing-qa.md](../../reviews/lessons/testing-qa.md)
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../../reviews/rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->

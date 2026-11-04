@@ -2,6 +2,12 @@
 
 Paste everything below the line into a fresh Claude Code session in `E:\repos\TAOM`.
 
+**Status (2026-11-03):** Phases 1 to 6 have run once. The catalog is in [README.md](README.md),
+[meshes.md](meshes.md) and [design-patterns.md](design-patterns.md), and six buildings are exported
+in one FBX ([gondor-buildings.md](../gondor-buildings.md)). The tools take `--kit erebor|gondor`
+(`tools/oneoff/kitbash_kits.py`). The counts below are the first session's measurements; the
+catalog holds the later ones.
+
 ---
 
 You will learn the Gondor kitbash piece by piece, then assemble buildings from it in headless
@@ -89,11 +95,13 @@ Largest: `X_Lossarnach.xml` 14,056, `dwarf_armory.xml` 5,931, `lotraom_kysaro_pr
 
 ## Ground rules
 
-- **Reuse the Erebor tools; generalise, do not fork.** Add a kit table (`--kit erebor|gondor`:
-  source folders, family rules, output folder) to `tools/oneoff/blender_catalog_erebor.py`,
-  `erebor_catalog_to_md.py`, `mine_erebor_prefab_joins.py`, `blender_render_erebor_prefab.py`,
-  `blender_test_erebor_joins.py`, `blender_assemble_erebor_buildings.py` and
-  `blender_probe_erebor_building.py`; `fbx_frame_compare.py` already takes any file. Prove parity:
+- **Reuse the Erebor tools; generalise, do not fork.** The kit table (`--kit erebor|gondor`:
+  source folders, family rules, output folder) is in `tools/oneoff/kitbash_kits.py` and used by
+  `tools/oneoff/blender_catalog_erebor.py`, `erebor_catalog_to_md.py`,
+  `mine_erebor_prefab_joins.py`, `blender_render_erebor_prefab.py` and
+  `blender_test_erebor_joins.py`. The assembler for Gondor is the separate
+  `blender_assemble_gondor_buildings.py`, which imports the Lond Cirion helpers;
+  `fbx_frame_compare.py` already takes any file. Prove parity:
   re-run the Erebor catalog with `--kit erebor` and diff its JSON against
   `E:\LOTRAOMAssets\_export\erebor\catalog\erebor_catalog.json` (identical), and keep
   `python -m pytest tools/tests/test_erebor_kit_tools.py` green. Renaming the tools to kit-neutral

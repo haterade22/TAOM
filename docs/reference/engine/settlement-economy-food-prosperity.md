@@ -147,11 +147,13 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
   troops. Field parties are hit far harder, losing 25%/day (:144-145).
 
   **TAOM leaves the starvation kill vanilla.** `TaomPartyHealingModel` (BattleBalance) is in the
-  GameModel registry against `DefaultPartyHealingModel`. Since #769 E11 it also overrides the
-  regulars path (`GetDailyHealingForRegulars`), but only to apply the career `WoundRecovery` factor
-  to a positive healing value on the non-prisoner call: the starving party's negative value passes
-  through untouched, so the 10%/day above is still pure vanilla behaviour (it was verified before
-  the override existed, 2026-09-06; the override adds nothing to a value at or below zero).
+  GameModel registry against `DefaultPartyHealingModel`. It also overrides the
+  regulars path (`GetDailyHealingForRegulars`) with two additive lines: camp rest (#860, main party
+  only, and `CampRestHealing.Grant` returns nothing while the party `isStarving`) and, since #769 E11,
+  the career `WoundRecovery` factor, applied only to a positive healing value on the non-prisoner
+  call (`CareerPassiveService.cs:266`). A starving garrison's negative value passes through
+  untouched, so the 10%/day above is still pure vanilla behaviour (it was verified before the
+  override existed, 2026-09-06).
 - **The cultural food-consumption feats do not touch garrisons.** `TaomFoodConsumptionModel` extends
   `DefaultMobilePartyFoodConsumptionModel`; its Goblin +20% / Dol Guldur +10% etc. apply only to
   **mobile field parties**. A "ravenous orc garrison eating its town dry" is not a real mechanic.
@@ -392,9 +394,9 @@ and a food change at or under 0 stops it (`:225-227`).
 `MaxWagePaymentLimit` from vanilla's 10000 (`DefaultPartyWageModel.cs:21`) to 20000 (`TaomPartyWageModel.cs:37`). That limit is
 the default `PaymentLimit` (`MobileParty.cs:328`), the ceiling of each fief's garrison wage limit
 (`ClanVariablesCampaignBehavior.cs:472`) and the value `HasLimitedWage` treats as unlimited (`MobileParty.cs:1657`), so it feeds
-the wage room above and the wage desertion count (`DefaultPartyDesertionModel.cs:57-61`). `TaomClanFinanceModel` (`:84-90`)
-raises tariff income for the Umbar, Erebor, Dale and Khand cultural feats (`CulturalFeatsService.cs:455-467`). Neither changes
-the payment formulas themselves.
+the wage room above and the wage desertion count (`DefaultPartyDesertionModel.cs:57-61`). `TaomClanFinanceModel` (`:108-114`)
+raises tariff income for the Umbar, Erebor, Dale and Khand cultural feats (`CulturalFeatsService.cs:455-467`). `TaomClanFinanceModel` also adds the clan leader's career `DailyGold` to the clan gold change (`AddCareerDailyGold`, #769 E11).
+Neither changes the wage payment formulas themselves.
 
 **Yotthani's measured result (hedged).** In `docs/balance-sim/campaign.md`@2ff002be (yotthani's `yotthani/bannerlord`, lines
 291-297), against six CampaignProbe runs (unattended 150-day game campaigns on v1.5.5 with TAOM 2.0.34; run 1's module list,
@@ -431,5 +433,6 @@ inputs, not the rules (`campaign.md` line 243).
 - [docs/modding/balance-levers.md](../../modding/balance-levers.md)
 - [docs/modding/settlements.md](../../modding/settlements.md)
 - [docs/reference/doc-lookup.md](../doc-lookup.md)
+- [docs/reference/engine/campaign-tick-time-and-party-ai.md](./campaign-tick-time-and-party-ai.md)
 
 <!-- backlinks-end -->

@@ -20,7 +20,7 @@ There are **two copies** of `settlements.xml` on disk:
 
 | Path | Status | Last touched | Modified by |
 |---|---|---|---|
-| `E:\Steam\…\Modules\TAOM_Map\ModuleData\settlements.xml` | **LIVE** (engine loads this) | 2026-10-28 (live edits) | Direct edits to external module |
+| `E:\Steam\…\Modules\TAOM_Map\ModuleData\settlements.xml` | **LIVE** (engine loads this) | 2026-10-30 (file mtime) | Direct edits to external module |
 | `Main/_Module/ModuleData/settlements.xml` (this repo) | **STALE** (orphan) | 2026-04-06 commit `59348b9` | Last edited via `tools/Apply-SettlementNames.ps1` |
 
 **Why the divergence exists:** at some point in early 2026 the team switched from editing the repo copy + manually deploying to TAOM_Map, to editing the external file directly. The repo copy was never deleted or marked stale, so it remains a confusing presence.
@@ -33,7 +33,7 @@ grep "XmlName id=\"Settlements\"" Main/_Module/SubModule.xml
 
 **The existing tools (`tools/Apply-SettlementNames.ps1`, `tools/Generate-Settlements.ps1`, `tools/Settlement-Breakdown.ps1`) target the STALE repo copy.** Use them only if you intend to update the repo's snapshot — do NOT rely on them to affect in-game behavior. For live changes, use [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) which targets the external module directly.
 
-**Harness memory pointer:** this live-vs-stale-shadow fact is also recorded in the Claude harness memory as `feedback_taom_map_live_vs_stale_shadow.md` (pre-reorg flat file name; preserved under the 2026-06-24 memory reorganization's backup/topic structure).
+This live-vs-stale-shadow fact is also in the "TAOM_Map settlements" row of the [trap index](../ai-includes/orientation.md).
 
 ## File Architecture
 
@@ -157,7 +157,7 @@ This is **save-safe** for the same reason renames are: only the `owner=` text at
 
 ## Correcting Entrance Coordinates (distinct from renaming)
 
-The third edit class on the same `<Settlement>` tag: the position AI parties actually path to. `posX`/`posY` is the map position; `gate_posX`/`gate_posY` overrides it for the entrance, and 256 of the live file's settlements carry it (every town and castle, 2026-10-27). `Settlement.Deserialize` (v1.4.7) sets `GatePosition` from `posX`/`posY` first and replaces it only when a `gate_posX` attribute exists, so a settlement with no gate attributes is entered at its map position.
+The third edit class on the same `<Settlement>` tag: the position AI parties actually path to. `posX`/`posY` is the map position; `gate_posX`/`gate_posY` overrides it for the entrance, and 280 of the live file's settlements carry it (every town and castle; `grep -c "<Town "` and `grep -c gate_posX` on the live file both print 280, 2026-11-03). `Settlement.Deserialize` (v1.4.7) sets `GatePosition` from `posX`/`posY` first and replaces it only when a `gate_posX` attribute exists, so a settlement with no gate attributes is entered at its map position.
 
 **The failure this fixes is silent.** An entrance can sit on a navmesh *island* the rest of the map cannot path to. Nothing crashes and nothing is written to the log: AI parties targeting that settlement simply fail their path query every tick, which the engine surfaces only as a repeating "Path finding target is not valid" assert. `PathFaceRecord.IsValid()` returns **true** for such faces, so an off-mesh check finds nothing — only comparing `FaceIslandIndex` against the rest of the map does.
 
@@ -167,7 +167,7 @@ The third edit class on the same `<Settlement>` tag: the position AI parties act
 
 | Settlement ID | Display name | Attribute to correct | Current live value |
 |---|---|---|---|
-| `town_MM2` | Western Moria | `gate_posX`/`gate_posY` | `676.8127, 994.5818` |
+| `town_MM2` | Western Moria | `gate_posX`/`gate_posY` | `674.6713, 995.6785` (was `676.8127, 994.5818` when reported; whether the audit has since cleared it is not recorded) |
 | `hideout_desert_7` | Haradrim Raider's Camp | `posX`/`posY` | `1072.412, 374.593` |
 | `castle_village_MM1_2` | Throk-gûl | `posX`/`posY` | `725.024, 1032.055` |
 
@@ -207,16 +207,16 @@ dups = {n: c for n, c in Counter(names).items() if c > 1 and n != "Hideout"}
 
 ## Known Pre-Existing Duplicates (NOT introduced by 2026-05-26 work)
 
-Four display-name collisions exist in the upstream TAOM_Map data. Worth fixing in a future cleanup pass:
+Three display-name collisions exist in the live TAOM_Map data (counted 2026-11-03; Melgobas and Sardol no longer collide). Worth fixing in a future cleanup pass:
 
 | Display name | Settlement IDs | Region |
 |---|---|---|
 | **Linhir** | `castle_EW12`, `village_EW4_4` | Gondor |
 | **Tumladen** | `castle_EW14`, `village_EW4_3` | Gondor |
-| **Melgobas** | `village_EW5_1`, `village_EW6_1` | Gondor |
-| **Sardol** | `castle_village_EW6_2`, `castle_village_EW6_4` | Gondor |
 
 These shipped before this session and weren't part of the placeholder rename pass.
+
+Newer than this list: **Methedras** (`castle_EN5`, `castle_MM5`; Dunland and the Misty Mountains). `castle_EN5` was still Lhan Tarren on 2026-07-08.
 
 ## Save Compatibility
 

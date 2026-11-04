@@ -63,7 +63,8 @@ For each id above, inside its `<Item>` block, set `beard_cover_type="type1"`. Ed
 Restart the game afterwards; item XML loads only at launch.
 
 **Backups** of the four pre-edit files: `E:\Temp\claude\armory-backups\beard-2026-10-01\<folder>\head_armors.xml`,
-outside the module so the engine never loads them. Restoring one undoes only this edit.
+outside the module so the engine never loads them. Restoring one undoes only this edit. That folder no longer
+exists (checked 2026-11-03), so the same applies to the other `armory-backups` paths below.
 
 ## Verification actually run (2026-10-01)
 
@@ -132,8 +133,8 @@ Khamul line (27), `mercenary` Northern (2) and Thenn, where `thenn_helm6` was a 
 1. **In game, after a full restart:** check for clipping on the six reversed Gondor helmets, a Dale A03 and B03,
    a plain and a horned Khamul, and the Loke-Rim F. 25 of the 47 are worn by no troop, so check those from the
    inventory, not Custom Battle.
-2. **Release copies:** `E:\LOTRAOM_Releases\{public,patreon,testing}` still hold the pre-edit files (byte
-   identical to the backups), so copying the four live files over carries exactly this change. Mike's call.
+2. **Release copies:** on 2026-11-03 `E:\LOTRAOM_Releases\testing` already carries the change (`sk_gd_lon_helmet_med_b`
+   reads `type1` in its Gondor file), while `public` and `patreon` still read `all`. Mike's call for those two.
 3. **Mirror:** the lotraom-assets mirror is Mike's to sync; it was not touched.
 
 ---

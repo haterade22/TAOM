@@ -61,8 +61,8 @@ motivated the mirror below.
 Distinct from the engine builds above: each module carries its **own** `bin/<build>/` folders, and the
 engine loads the one matching the build it is running. TAOM populates them from the assembled client
 folder via mirror targets. TAOM's server mirror excludes `TAOM.Client.*` and deletes stale copies
-(`Main/TAOM.csproj:212,216`); the editor mirror deletes a stale `TAOM.Client.*` from the editor bin
-(`Main/TAOM.csproj:186,189`); the client-only deploy target adds `TAOM.Client.dll` and its available
+(`Main/TAOM.csproj:216,220`); the editor mirror deletes a stale `TAOM.Client.*` from the editor bin
+(`Main/TAOM.csproj:191,194`); the client-only deploy target adds `TAOM.Client.dll` and its available
 `.pdb` to the two client/editor folders (`Client/TAOM.Client.csproj:98-131`). Game Pass is not
 supported (2026-10-22): no target writes its `Gaming.Desktop.x64_Shipping_Client` folder. The counts below
 precede B3 and do not include that client deployment:
@@ -182,7 +182,7 @@ them):
 | **`embree3.dll`** | Intel **Embree** ray-tracing kernels. | Offline **lighting / GI / lightmap bake** in the editor. Editor-build only. |
 | **`tbb.dll`** | Intel **Threading Building Blocks**. | Parallelism backend used by embree/nvtt and the engine. |
 | **`FreeImage.dll`** | **FreeImage** image library. | Loading/saving common image formats during import. Editor-build only. |
-| **`d3dcompiler_47.dll`** | Microsoft **D3D shader compiler**. | Compiles HLSL shaders (the `compressed_shader_cache.sack` pipeline; see `feedback_shader_cache_invisible_cc`). |
+| **`d3dcompiler_47.dll`** | Microsoft **D3D shader compiler**. | Compiles HLSL shaders (the `compressed_shader_cache.sack` pipeline). |
 | **`steam_api64.dll`** | **Steamworks** API. | Steam platform (workshop, achievements, friends). |
 | **`EOSSDK-Win64-Shipping.dll`** | **Epic Online Services** SDK. | Cross-play/Epic platform services. |
 
@@ -293,8 +293,8 @@ art source (.fbx, textures)
 
 - **tpac** = TaleWorlds' packed-asset container. Holds Skeleton / Mesh / Animation / Material / etc. items, each
   with metadata + LZ4-compressed data segments. Format reverse-engineered in `docs/tools/spider-skeleton-tpac-tools.md`
-  (Skeleton segments documented; Animation-clip metadata layout, incl. the `AnimFlags` field, is **not yet**
-  reverse-engineered — a `tpac_clip_flags.py` tool is a TODO there).
+  (Skeleton segments documented). The Animation-clip metadata layout, incl. the `AnimFlags` field, is mapped in
+  [bannerlord-animation-system-map.md](bannerlord-animation-system-map.md) section 2, and `tools/tpac_clipinfo.py` parses clip names, flags and frame ranges.
 - **Animation clip flags** are baked here (set in the Animation Clip Inspector) — see the dedicated
   [clip-flags reference](bannerlord-animation-clip-flags.md). They are NOT in `action_types.xml`.
 - The **skeleton** lives inside a `*_geo.tpac` (e.g. LOTRLOME's `adod_elephant_geo.tpac` carries `elephant_skeleton`;
@@ -349,7 +349,7 @@ Pulling the above together — to add a renderable, animated, fighting custom cr
    with `tpac_skeleton_transplant.py`. Bone cap: `Skeleton.MaxBoneCount = 64` (skeleton-total; author ≤63). **There
    is NO per-mesh bone-palette cap — corrected 2026-06-13:** the "~40 per-mesh" gotcha was a misdiagnosis (the
    elephant renders 59 active bones in one mesh, the chariot 54). A single mesh skins the whole skeleton; never
-   split a body for bone count. See `feedback_no_40_bone_per_mesh_limit`.
+   split a body for bone count. See [the lesson](../reviews/lessons/animation-skeleton.md).
 3. **Clips** (tpac): one clip per action, each with the **right `AnimFlags`** per type (movement → `synch_with_movement`+`cyclic`;
    attack → `lock_movement`+`enforce_all`; priority in the low byte) — see the clip-flags reference. A clip needs
    both its `_anm.tpac` AND correct flags.

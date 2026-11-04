@@ -60,7 +60,7 @@ Delete `Main/_Module/ModuleData/test_riders/wildmesh.xml` and its block in `Main
 carry no ladder or recruitment exemptions any more (the file sits outside `troops/`). The three dwarf mounts stay
 in `DWARF_MOUNT_IDS` once real dwarf troops ride them.
 
-**Done for v2.0.35 (2026-10-18),** with `tools/tests/test_wildmesh_test_riders.py`. A deploy only adds files, so the
+**Done for v2.0.35 (2026-10-18),** and the tool test that pinned the riders (`test_wildmesh_test_riders.py`) was deleted with them. A deploy only adds files, so the
 installed `Modules/TAOM/ModuleData/test_riders/wildmesh.xml` stays until the `/release` Phase 8 prune deletes it.
 Once this tree is deployed the file is inert, because the deployed `SubModule.xml` no longer names it; a deploy from
 a worktree that still carries the block registers the riders again. The testing channel's v2.0.35 package of

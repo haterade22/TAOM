@@ -86,3 +86,14 @@ A third run, with the flag unset in both settings files on the newest panel bina
 - **About 2026-11-17:** compare `.githooks/pre-commit` with the Claude commit gates, then delete those gates. Decide first what to do about the two limits in [commit gates](../features/commit-gates.md): the ModuleData gates read the working tree, and the hook cannot see an amend.
 - **Codex at tier 2 on the merged gates:** never run. Mike's word.
 - **Next retro:** read the tables above again, and ask whether the lens table has grown enough to judge a lens. It reads 20 of 555 RCAs today.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](../ai-includes/agent-teams.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

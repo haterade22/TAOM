@@ -76,6 +76,7 @@ gates inert until #647 (`harness-facts.md` "PreToolUse output contract", `tools/
 ## Referenced by
 
 - [docs/ai-includes/git-and-commits.md](../ai-includes/git-and-commits.md)
+- [docs/features/commit-gates.md](../features/commit-gates.md)
 - [docs/features/upstream-review.md](../features/upstream-review.md)
 - [docs/modding/validation-and-testing.md](../modding/validation-and-testing.md)
 

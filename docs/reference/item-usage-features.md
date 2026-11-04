@@ -99,7 +99,7 @@ Because exclusions are unioned across all pieces in a weapon, a correct audit en
 
 1. Build the effective piece list per `WeaponDescription`, honouring that
    `weapon_descriptions.xslt` **appends to** `<AvailablePieces>` for the descriptions it targets —
-   every one of its 15 override templates ends with `<xsl:apply-templates select="@*|node()"/>`,
+   every one of its 16 override templates (counted in the repo snapshot on 2026-11-03) ends with `<xsl:apply-templates select="@*|node()"/>`,
    which copies the vanilla entries it matched straight through. Measured 2026-08-10 by running the
    real chain (Native XML → the Armory's XSLT) under lxml: `OneHandedPolearm` emerges with 364
    entries — 130 from the Armory, 234 from vanilla — and the merged document holds 5,067
