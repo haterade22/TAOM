@@ -3,6 +3,7 @@
 
 Run:  python -m unittest tools.tests.test_run_long_defeat
 """
+import io
 import os
 import re
 import sys
@@ -496,10 +497,10 @@ class PatchTests(unittest.TestCase):
 
         def fake_main(rest):
             seen.update(env=runner.ENV_VAR, done=runner.DONE_FILE, status=runner.STATUS_FILE, root=runner.RUNS_ROOT,
-                        judge=runner.judge, arm=runner.arm_text_for, dialogs=runner.handle_dialogs, rest=rest)
+                        judge=runner.judge, arm=runner.arm_text_for, dialogs=runner.handle_dialogs, show=runner.show_results, rest=rest)
             return 7
 
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
         with mock.patch.multiple(runner, main=fake_main, **keep):
             self.assertEqual(ld.main(["--waves", "2", "--dry-run", "--runs", "3"]), 7)
         self.assertEqual(seen["env"], ld.ENV_VAR)
@@ -508,6 +509,7 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(seen["root"], ld.RUNS_ROOT)
         self.assertIs(seen["judge"], ld.judge)
         self.assertIs(seen["dialogs"], ld.handle_dialogs)
+        self.assertIs(seen["show"], ld.show_results)
         # While main has the runner's name patched, the wrapper must call the Fords handler and not itself.
         with mock.patch.object(runner, "handle_dialogs", ld.handle_dialogs), mock.patch.object(runner, "game_dialogs", lambda pid: []):
             self.assertIsNone(ld.handle_dialogs(1, set(), lambda line: None))
@@ -515,10 +517,25 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(ld.target_waves, 2)
         ld.target_waves = None
 
+    def test_the_results_print_long_defeat_evidence_and_no_fords_labels(self):
+        said = []
+        with tempfile.TemporaryDirectory() as root:
+            log = Path(root) / "taom_debug.log"
+            log.write_text("\n".join([stamp_line(), pass_line("wave"), "[2026-11-04 10:00:00] [INFO] [Shutdown] clean module unload"]), encoding="utf-8")
+            with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+                ld.show_results("reason=final\n", log, REPORT, said.append)
+        text = out.getvalue()
+        self.assertIn("[Check] id=taom.long-defeat.wave", text)
+        self.assertIn("[BuildStamp]", text)
+        self.assertIn("wavesCleared", text)
+        self.assertNotIn("report verdicts", text)
+        self.assertNotIn("final=1 lines", text)
+        self.assertIn("present", said[0])
+
     def test_a_run_is_judged_by_the_long_defeat_judge_not_the_fords_one(self):
         # runner.run_once calls the module global judge, so a binding taken before main swapped it would be the Fords judge, which passes
         # this done file and report with no log at all. The attribute test above cannot see that.
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
 
         class Proc:
             pid, returncode = 4242, 0
@@ -549,7 +566,7 @@ class PatchTests(unittest.TestCase):
         self.assertIn("no TAOM log", status)
 
     def test_the_arm_text_is_the_plans_and_the_wall_limit_is_the_long_one(self):
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
         captured = {}
         with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep):
             ld.main(["--waves", "3", "--screenshots", "5,60"])
@@ -564,7 +581,7 @@ class PatchTests(unittest.TestCase):
         ld.target_waves = None
 
     def test_the_wall_limit_flag_wins(self):
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
         captured = {}
         with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep):
             ld.main([])
@@ -574,7 +591,7 @@ class PatchTests(unittest.TestCase):
         ld.target_waves = None
 
     def test_lose_arms_the_small_garrison_and_the_expectation(self):
-        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs")}
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
         captured = {}
         with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep):
             ld.main(["--lose"])

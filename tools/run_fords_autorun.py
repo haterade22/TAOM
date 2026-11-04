@@ -67,6 +67,7 @@ STALL_SECONDS = 600
 OVERTIME_SECONDS = 15 * 60
 EXIT_GRACE_SECONDS = 120
 KILL_WAIT_SECONDS = 30
+DUMP_SECONDS = 180
 LOG_SLACK_SECONDS = 2
 MOD_CHANGE_TITLE = "Mod change detected"
 MOD_CHANGE_TEXT = "A change in your active mods was detected"
@@ -669,6 +670,29 @@ def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time):
     return False
 
 
+def dump_crash(pid, folder, say, run=subprocess.run, which=shutil.which):
+    """Takes a full dump of the crashed game with procdump before the launcher stops it. A missing tool or a failed dump is said, never
+    hidden: the Watchdog may block the attach, and only a real crash settles that."""
+    tool = which("procdump")
+    if tool is None:
+        say("no crash dump: procdump is not on PATH")
+        return
+    target = Path(folder) / "crash.dmp"
+    say(f"crash dump: procdump -ma {pid} (about 60 s)")
+    try:
+        result = run([tool, "-accepteula", "-ma", str(pid), str(target)], capture_output=True, text=True, timeout=DUMP_SECONDS)
+    except subprocess.TimeoutExpired:
+        say(f"crash dump timed out after {DUMP_SECONDS} s")
+        return
+    except OSError as error:
+        say(f"crash dump failed: could not start procdump ({type(error).__name__}: {error})")
+        return
+    if result.returncode != 0:
+        say(f"crash dump failed: procdump exit {result.returncode}: " + " ".join((result.stdout + result.stderr).split())[-300:])
+    else:
+        say("crash dump written: " + str(target))
+
+
 def png_chunk(tag, data):
     return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
 
@@ -777,6 +801,8 @@ def run_once(args, game, modules):
     say("watch ended: " + reason)
     if reason.startswith("crash"):
         wait_after_crash(proc, args.keep_on_crash, say)
+        if proc.poll() is None:
+            dump_crash(proc.pid, folder, say)
     if reason == "done":
         try:
             proc.wait(EXIT_GRACE_SECONDS)

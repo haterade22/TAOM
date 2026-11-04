@@ -202,6 +202,22 @@ def arm_pairs(known, out, wall_limit):
             ("out", out), ("quit", 1)]
 
 
+def show_results(done_text, log_copy, report_json, say):
+    """The Fords printer labels verdict rows this feature does not write: print what the judge reads instead."""
+    print(f"---- {DONE_FILE} ----\n" + done_text.strip())
+    if report_json is not None:
+        print("---- report (final=%s, reason=%s, wavesCleared=%s) ----" % (report_json.get("final"), report_json.get("reason"), report_json.get("wavesCleared")))
+    if log_copy is not None:
+        text = log_copy.read_text(encoding="utf-8", errors="replace")
+        print("---- [Check] lines of the log ----")
+        for line in text.splitlines():
+            if "[Check] id=" + CHECK_PREFIX in line:
+                print(line)
+        stamp = [line for line in text.splitlines() if "[BuildStamp]" in line]
+        print(stamp[0] if stamp else "no [BuildStamp] line")
+        say("clean module unload line: " + ("present" if "[Shutdown] clean module unload" in text else "ABSENT"))
+
+
 def main(argv=None):
     global target_waves, tree_head
     parser = build_parser()
@@ -224,6 +240,7 @@ def main(argv=None):
     runner.arm_text_for = arm_text_for
     runner.judge = judge
     runner.handle_dialogs = handle_dialogs
+    runner.show_results = show_results
     return runner.main(rest)
 
 

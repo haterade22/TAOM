@@ -93,9 +93,10 @@ The launcher exits 0 only when all of these hold; the run folder's `runner_log.t
 | `fords_autorun_done.txt` | `reason=final` |
 | `fords_report_*_run1.json` | `"final": true` and no verdict row with `Result` FAIL |
 | TAOM log | No `[ERROR] [CrashReport]` line from the done file's `started` time to the end of the log (a swallowed engine exception prints that block even when every in-game check passes; the driver writes `ended` before it quits, so a quit-time capture comes later and still counts) |
-| TAOM log | A `[Shutdown] clean module unload` line |
-| Exit | The game left by itself within 120 s of the done file with code 0 or `4294967295` (-1, normal after the game's own `QuitGame` when the unload line is present); any other code, for example `0xC0000005`, fails the run |
+| Exit | The game left by itself within 120 s of the done file with code 0 or `4294967295` (-1, normal after the game's own `QuitGame`); any other code, for example `0xC0000005`, fails the run |
 | Engine logs | No `Unhandled Exception Code` in `rgl_log`, no `Crash occurred` in `watchdog_log` |
+
+The launcher prints the TAOM log's `[Shutdown] clean module unload` line for the reader and does not judge it: a run passes without it.
 
 The `[BuildStamp]` line in the copied log names the build that ran; quote it in the evidence. A PASS from a stale deploy proves nothing
 about the change under test.
@@ -108,8 +109,9 @@ For a balance reading rather than a pass or fail, run `python tools/fords_match_
   idle gate is why a person is not in the middle of something else.
 - **The deploy replaces the maintainer's.** Building from a worktree changes what `Modules/TAOM` holds. Say which build you deployed in the report.
 - **Logs are pruned.** The launcher copies them out; the folder under `E:/Temp/fords-runs` is the record.
-- **A crash loses its dump at the default.** With `--keep-on-crash 0` the launcher kills `Watchdog.exe`, so only the copied `rgl_log` and
-  `watchdog_log` survive. A value above 0 waits for a person to answer the dialog. Starting under a watchdog setting that saves the dump silently is not done.
+- **A crash dump is tried, not promised.** On a crash the launcher runs `procdump -accepteula -ma <pid>` into `crash.dmp` in the run folder
+  (about 60 s, 180 s limit) before it kills the game, and says in `runner_log.txt` when procdump is missing, times out or fails. The Watchdog
+  may block the attach (`native-crash-triage` says so), and only a real crash settles it. A value of `--keep-on-crash` above 0 waits for a person to answer the Watchdog dialog first.
 - **A killed game leaves `safely_exited = 0`.** The launcher resets it; if a session aborts the launcher by hand, check the value before the next start.
 - **One game at a time.** The preflight refuses while a game runs, including the maintainer's.
 

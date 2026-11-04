@@ -844,6 +844,40 @@ class WaitAfterCrashTests(unittest.TestCase):
         self.assertEqual([], said)
 
 
+class DumpCrashTests(unittest.TestCase):
+    def test_runs_procdump_with_the_pid_and_the_run_folder(self):
+        said, calls = [], []
+
+        def run(command, **kwargs):
+            calls.append((command, kwargs))
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+        r.dump_crash(4242, Path("runs/one"), said.append, run=run, which=lambda name: "C:/tools/procdump.exe")
+        command, kwargs = calls[0]
+        self.assertEqual(["C:/tools/procdump.exe", "-accepteula", "-ma", "4242", str(Path("runs/one") / "crash.dmp")], command)
+        self.assertIn("timeout", kwargs)
+
+    def test_a_missing_tool_is_reported_and_does_not_raise(self):
+        said = []
+        r.dump_crash(1, Path("."), said.append, run=mock.Mock(side_effect=AssertionError), which=lambda name: None)
+        self.assertIn("procdump", said[0])
+
+    def test_a_failed_dump_is_reported(self):
+        said = []
+        failed = SimpleNamespace(returncode=1, stdout="", stderr="access denied")
+        r.dump_crash(1, Path("."), said.append, run=lambda command, **kwargs: failed, which=lambda name: "procdump")
+        self.assertIn("failed", said[-1])
+
+    def test_a_timeout_is_reported_and_does_not_raise(self):
+        said = []
+
+        def run(command, **kwargs):
+            raise subprocess.TimeoutExpired(command, 1)
+
+        r.dump_crash(1, Path("."), said.append, run=run, which=lambda name: "procdump")
+        self.assertIn("timed out", said[-1])
+
+
 class ScreenshotConversionTests(unittest.TestCase):
     @staticmethod
     def bmp(width, height, pixels):
