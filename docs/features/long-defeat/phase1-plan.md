@@ -152,7 +152,7 @@ Also edited:
 - All of the above, side by side with the new path, under the same mission name.
 - The factory gains `Create(LongDefeatSetup)` beside `Create(LongDefeatSpikeOptions)`; the old overload dies in Slice 9.
 
-**Later phases read S4, S5 and S7 from git.** Slice 9 adds this line to the feature doc: "recipes at commit <last spike commit>, `LongDefeatSpikeRunner`: `BreakGate`, `TryBreak`, `RepairGate` (gate), `BuyEngine` (engine buy), `ChangeGear` (gear)".
+**Later phases read S4, S5 and S7 from git.** Slice 9 adds this line to the feature doc: "recipes at commit 985b0d54e, `LongDefeatSpikeRunner`: `BreakGate`, `TryBreak`, `RepairGate` (gate), `BuyEngine` (engine buy), `ChangeGear` (gear)".
 
 ---
 
@@ -551,7 +551,7 @@ Then: `python tools/ingame_verdict.py --issue 1079 --sessions 4`.
 | `taom.long-defeat.boot` | Deployment finished, siege team AI, main agent, `friendly=false` | mission | fail |
 | `taom.long-defeat.general` | `GeneralAgent==main`, `IsPlayerGeneral`, order owner is main | mission | fail |
 | `taom.long-defeat.orders` | Client: `VisualOrderFactory.GetOrders().Count > 0` | mission | fail |
-| `taom.long-defeat.muster` | Per batch: no soldier far or off the navmesh; `on_point` ≤ 6; `overlap` ≤ 6, where `overlap` counts new soldiers within 0.4 m of a soldier from an earlier batch | mission | fail |
+| `taom.long-defeat.muster` | Per batch: no soldier far or off the navmesh; `on_point` at most half the batch (floor 6: the first game run read 9 of 20 with `overlap` 0, and a pile is most of a batch, as with 41 of 68); `overlap` ≤ 6, where `overlap` counts new soldiers within 0.4 m of a soldier from an earlier batch | mission | fail |
 | `taom.long-defeat.keep` | Keep point source and coordinates resolved | mission | fail |
 | `taom.long-defeat.wave` | Wave cleared and earned: felled ≤ `stragglerShare` × count. Detail has kills, felled, lost, seconds; `min = 5` | `w<N>` | not-reached |
 | `taom.long-defeat.stale` | Stale charge led to a clear | `w<N>` | not-reached |
@@ -603,7 +603,7 @@ Then: `python tools/ingame_verdict.py --issue 1079 --sessions 4`.
 **The keep point on Helm's Deep with no recording.**
 - At run start the director uses the defenders' reinforcement foot frame, the scene's `defender_infantry_reinforcement` entity: (138.4, 159.5, 32.5) in the run log, a terrace 32 m behind the (166.4, 191.2, 26.5) foot frame.
 - Radius 12 and height band ±4 come from config. The foot frame itself sits 30 m from the gate, so it would fall too easily.
-- Attackers do reach height 32.5 (`t 401` line in run `20261103-215943`). Whether this exact spot is a fair keep is risk 5, and the keep line logs attacker coordinates to answer it.
+- Attackers do reach height 32.5 (`t 401` line in run `20261103-215943`). Whether this exact spot is a fair keep is risk 5, and the keep line logs attacker coordinates to answer it. Answer, from runs 20261104-035343 and 20261104-033424: the nearest sampled attacker stayed 45.75 m and 64.6 m from the point, so no run has moved the keep, and the spot is neither fair nor unfair yet. Mike places it with `taom.ld_record keep`.
 
 **The player's death.**
 - The engine nulls `MainAgent` and delegates the team to AI (`Mission.cs:3017-3022, :3039-3042`), so the wave plays on and the run does not end.
@@ -653,7 +653,7 @@ Builders cannot invoke skills or spawn agents. They use `dotnet test TAOM.Tests 
 | 3 | implementer | `LongDefeatConfigCatalogTests` (one per validation row, missing file, not JSON), `LongDefeatShippedConfigTests` | `Config/`, three JSON files, module registers catalog | Green; `python tools/lint_docs.py --fail-on-drift` clean |
 | 4 | implementer | `LongDefeatMoraleTests` (arm, disarm, other mission, defender, null; uninitialized `Mission` as `DreadMissionGateFordsTests.cs:23`, `RequiresGame`), source pin on the model line | `LongDefeatMorale.cs`, the clause | Green; inert, since nothing arms yet |
 | 5 | implementer | `LongDefeatDirectorTests` with a fake adapter (a removal from a background thread parks and lands before the next `Tick`; a clear never fires before parked bounties; batch 1 never moving fails `muster`; `Place` once per defender formation), `LongDefeatSessionTests` (Fill, Clear, read, Fill), `LongDefeatChecksTests` (pass and fail per id), `LongDefeatRunReportTests` | Adapter interface, director, session, checks, report text | Green with no engine code |
-| 6 | implementer | `LongDefeatMissionLauncherTests` (list, no `GeneralsAndCaptainsAssignmentLogic`, `IsFriendlyMission` source pin), `LongDefeatBindingTests`, `LongDefeatEntryPointLineCountTests` | Engine adapter, logic, launcher, `LongDefeatSetup`, factory `Create(LongDefeatSetup)`, client manager, menu adapter (`EndGame`), `LongDefeatSetupPrompt.Start` only | Full compile, tests green. Nothing calls the new path yet, so this slice has no game run |
+| 6 | implementer | `LongDefeatMissionLauncherTests` (list, no `GeneralsAndCaptainsAssignmentLogic`, `IsFriendlyMission` source pin, an unknown fortress id is refused at runtime as `LongDefeatSpikeLauncher.cs:39-45` does, moved here from the shipped-data list in section 3), `LongDefeatBindingTests`, `LongDefeatEntryPointLineCountTests` | Engine adapter, logic, launcher, `LongDefeatSetup`, factory `Create(LongDefeatSetup)`, client manager, menu adapter (`EndGame`), `LongDefeatSetupPrompt.Start` only | Full compile, tests green. Nothing calls the new path yet, so this slice has no game run |
 | 7 | implementer | `LongDefeatBestRunStoreTests` (missing, bad JSON, NaN, atomic, armed folder), `LongDefeatReportFile` tests | Store, report file, director wiring | Green |
 | 8 | implementer | `LongDefeatAutorunPlanTests`, `LongDefeatAutorunDriverTests`, source pin that the unattended view reads `ArmedInThisProcess`, `test_run_long_defeat.py` (judge, args, shared strings, per-slice required list) | `Autorun/`, client host, `ClientSubModule.cs`, composition line, unattended view edit, `run_long_defeat.py`, `tools/README.md` row, manifest with every row except `orders`, `hud`, `menu`. `REQUIRED_CHECKS`: `boot, general, muster, keep, wave, no-rout, gold, shop, early-start, end, best-run` | Green, including `python -m unittest tools.tests.test_ingame_verdict`; main session: `--waves 2` exit 0 |
 | 9 | implementer | Adjust module tests; pin that `Spike` is gone from source; `~ConsoleCommandBinding` | Deletions listed under Slice 9 in section 1, new `LongDefeatCheats.cs` with `taom.ld_start` on `prompt.Start`, `dev-console.md:349` row, docs line on recipes | Full suite green; `--waves 2` again exit 0 |
@@ -703,7 +703,7 @@ Builders cannot invoke skills or spawn agents. They use `dotnet test TAOM.Tests 
 | 2 | Calling `OnInitialSpawnCompleted` before the garrison is whole may affect defender formation splitting | `[LongDefeat][Muster] batch k/n on_point=.. overlap=.. far=.. off_mesh=..`, and the 5 s `high` count against spike's 145 of 148 at t 200 |
 | 3 | No run has tested batching at the foot frame. Batches reuse slots, so the design needs batch 1 gone within 4 s | `[Check] muster` with `overlap` |
 | 4 | The gate stays broken from wave 2. Every spike run repaired it after wave 1 (spike `RunTests`, `RepairGate`), so this is unmeasured | `[LongDefeat][Engines] rams.. gates.. lanes..` and each wave's `seconds` |
-| 5 | Attackers may never stand in the fallback keep zone, or may fill it too easily. At waves above 110, a group of 12 to 15 is within the straggler share and can still take the keep | `[LongDefeat][Keep] attackers=.. defenders=.. progress=.. at=(..)` every 5 s, with up to 8 attacker positions |
+| 5 | Attackers may never stand in the fallback keep zone, or may fill it too easily. At waves above 110, a group of 12 to 15 is within the straggler share and can still take the keep | `[LongDefeat][Keep] attackers=.. defenders=.. progress=.. at=(..)` every 5 s, with up to 8 attacker positions. Answered: no run brought a sampled attacker within 39 m of the point (feature doc, Notes for Phase 1) |
 | 6 | Respawning after `_initialPlayerAgent` was nulled (`Mission.cs:3023-3026`). The setter is settled (`Mission.cs:4043`); the behaviour of the second player agent is not | `[LongDefeat][Player] respawned main=.. owner=.. controller=.. at=..` |
 | 7 | AI on a lord agent is proven only in vanilla's unconscious case, and may leave him idle | `[LongDefeat][Player] controller=AI kills=.. z=..` per wave |
 | 8 | Order of `PlayerOwner` then `DelegateCommandToAI` on a body swap | `[LongDefeat][General] ai_formations=N of M` right after adoption |
@@ -739,7 +739,7 @@ Builders cannot invoke skills or spawn agents. They use `dotnet test TAOM.Tests 
 
 **9 (fix replaced).** A named file and a removal slice for `ld_run` would keep a command nothing needs once Slice 6's in-game gate moves behind the autorun (finding 16). The proof the test would fail is correct (`ConsoleCommandBindingTests.cs:58`). `ld_run` is cut, `ld_start` keeps its row and moves in Slice 9, and console slices add the `~ConsoleCommandBinding` filter.
 
-**11 (fix replaced): a test on 45 s against 60 s.** The coordinate logging is in. Ordering the two timers would not protect the keep: `TacticCharge` "moves soldiers on some lanes and not on others" (feature doc, `BehaviorCharge.cs:169-201`), so a charge at 60 s does not bring defenders to the zone. `keepMinAttackers` 12 stops stragglers directly. The attack's UNVERIFIED stays open, since that log has no coordinates (risk 5).
+**11 (fix replaced): a test on 45 s against 60 s.** The coordinate logging is in. Ordering the two timers would not protect the keep: `TacticCharge` "moves soldiers on some lanes and not on others" (feature doc, `BehaviorCharge.cs:169-201`), so a charge at 60 s does not bring defenders to the zone. `keepMinAttackers` 12 stops stragglers directly. The attack's UNVERIFIED stays open, since that log has no coordinates (risk 5; the later runs' answer is in the feature doc, Notes for Phase 1).
 
 **13 (alternative only): correcting the text instead of setting the flag.** `AgentBuildData.IsReinforcement` is public (`AgentBuildData.cs:162`), so the lord can use the terrace frame, which is the safer place to rise.
 

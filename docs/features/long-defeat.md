@@ -2,7 +2,7 @@
 
 ## Overview
 
-A planned campaign-free survival mode on the siege maps: you defend Helm's Deep or Minas Tirith against wave after wave, and you spend gold between waves. **Today only the Phase 0 spike exists.** On 2026-11-03 an unattended run cleared three waves at Helm's Deep with every spike line present. The spike has no menu entry. Only a console command in cheat mode or an environment variable starts it, so a player session never meets it. The plan and the phases are in [#1079](https://github.com/haterade22/TAOM/issues/1079).
+A planned campaign-free survival mode on the siege maps: you defend Helm's Deep (Minas Tirith is a later fortress) against wave after wave, and you spend gold between waves. **Phase 1 is built and owes its in-game runs.** It is a main menu option ("The Long Defeat", hidden when no fortress loads and on a dedicated server) with Helm's Deep as its one fortress: ten authored waves, then the last wave scaled by count, a purse, a shop between waves, a horn for bonus gold, a keep point (see Notes for Phase 1), and a stalemate rule. `taom.ld_start` and the `TAOM_LONGDEFEAT_AUTORUN` environment variable start the same path without the prompt. The Phase 0 spike (below) proved the engine assumptions on 2026-11-03: an unattended run cleared three waves at Helm's Deep with every spike line present. The plan Phase 1 was built from is [long-defeat/phase1-plan.md](long-defeat/phase1-plan.md). The plan and the phases are in [#1079](https://github.com/haterade22/TAOM/issues/1079).
 
 ## Why This Exists
 
@@ -12,20 +12,20 @@ A planned campaign-free survival mode on the siege maps: you defend Helm's Deep 
 
 ## Architecture
 
-### What the spike leaves out of vanilla's list
+### What the mission leaves out of vanilla's list
 
-`LongDefeatSpikeLauncher` copies vanilla's custom siege list (`BannerlordMissions.OpenSiegeMissionWithDeployment`) and leaves these out: the spawn logic and handler, the reinforcement controller, `BattleEndLogic`, the two deployment behaviors, `BattlePowerCalculationLogic`, `GeneralsAndCaptainsAssignmentLogic`, and the observer, agent, banner, victory and highlight logics. `LongDefeatSpikeRunner` spawns every agent from `OnMissionTick`.
+`LongDefeatMissionLauncher.CreateBehaviors` copies vanilla's custom siege list (`BannerlordMissions.OpenSiegeMissionWithDeployment`) and leaves these out: the spawn logic and handler, the reinforcement controller, `BattleEndLogic`, the two deployment behaviors, `BattlePowerCalculationLogic`, `GeneralsAndCaptainsAssignmentLogic`, and the observer, agent, banner, victory and highlight logics. The director spawns every agent from the mission tick.
 
 Two engine paths read what is left out. [The lifecycle doc](../reference/engine/mission-and-missionbehavior-lifecycle.md) has the mechanism and the line numbers.
 
-| Engine path | What the spike does |
+| Engine path | What the mission does |
 |---|---|
-| `TeamQuerySystem` reads `IBattlePowerCalculationLogic` with no null check | `LongDefeatSpikeLogic` implements it and returns a large constant |
-| `GeneralsAndCaptainsAssignmentLogic` asks a model that reads the spawn logic | It stays out, so the team has no general. `AssignPlayerRoleInTeamMissionController` still sets the order owner |
+| `TeamQuerySystem` reads `IBattlePowerCalculationLogic` with no null check | `LongDefeatMissionLogic` implements it and returns a large constant |
+| `GeneralsAndCaptainsAssignmentLogic` asks a model that reads the spawn logic | It stays out. `AssignPlayerRoleInTeamMissionController` sets the order owner, and the director makes the player the general: the `general` check reads both |
 
 ### How a soldier gets a place
 
-Soldiers spawn with no position, and the deployment plan gives each formation its place. `Boot` gives `DefaultMissionDeploymentPlan` the troop counts and calls `MakeDefaultDeploymentPlans`. The garrison and each wave then call `Formation.BeginSpawn` and `Mission.SetFormationPositioningFromDeploymentPlan`, and each soldier asks `GetAgentBuildDataToSpawnTroop` with no position. Reinforcements skip those two calls, as vanilla does for a formation that already has a place (`MissionBattleSideSpawnContext.cs:369`). Two parts are not vanilla's path: each wave places its formations again, and a wave's batch stays open across several ticks. Vanilla's reader of `IsSpawning` is in the class this mission leaves out (`:403`).
+Soldiers spawn with no position, and the deployment plan gives each formation its place. `Boot` gives `DefaultMissionDeploymentPlan` the troop counts and calls `MakeDefaultDeploymentPlans`. The garrison and each wave then call `Formation.BeginSpawn` and `Mission.SetFormationPositioningFromDeploymentPlan`, and each soldier asks `GetAgentBuildDataToSpawnTroop` with no position. A later batch or a bought pack skips the placing (`SetFormationPositioningFromDeploymentPlan`) but still calls `Formation.BeginSpawn` (`LongDefeatDirector.SpawnBatch`, `LongDefeatBattlefieldAdapter.BeginBatch`), which vanilla does not do for a formation that already has a place (`MissionBattleSideSpawnContext.cs:369`). Two parts are not vanilla's path: each wave places its formations again, and a wave's batch stays open across several ticks. Vanilla's reader of `IsSpawning` is in the class this mission leaves out (`:403`).
 
 **What keeps a soldier on the right floor:**
 
@@ -36,47 +36,64 @@ Soldiers spawn with no position, and the deployment plan gives each formation it
 
 **Never compute a place by hand on a scene with floors.** The first version laid its own grid around the frame, in the manner of Fords of War's spawn block. On the first run at Helm's Deep, 64 of the 101 defenders stood below the wall line, with a median height of 0.0 against a frame at 26.5, and 3 died from the fall. Whether 0.0 came from a collider, from the terrain or from a miss was not traced.
 
-**The read-back:** `[S1] spawn level` records each soldier's height in the tick the soldier spawns, and prints each class with its frame, `far`, `off the navmesh`, `on the frame point` and a `z` spread. It says `ok` when every soldier is within 10 m of the height the scene authored for that class and on a navmesh. The unattended judge fails on `spawn level WRONG`. **`ok` does not mean on the walls.** The tolerance cannot separate a terrace at 26.5 from a gate at 20.5.
+**The read-back:** the spike's `[S1] spawn level` printed each class with its frame, `far`, `off the navmesh`, `on the frame point` and a `z` spread. Phase 1 writes `[LongDefeat] spawn level ok: <side> <class> N of M, far F, off the navmesh O, on the frame point P` when a batch closes, summed across the ticks it spans, for defenders and attackers alike. It says `ok` when every soldier is within 10 m of the height the scene authored for that class and on a navmesh, and `WRONG` otherwise. The unattended judge needs an `ok` line for each side and fails on `spawn level WRONG`. **`ok` does not mean on the walls.** The tolerance cannot separate a terrace at 26.5 from a gate at 20.5.
 
-**The pile:** the Helm's Deep terrace runs out of slots, so the engine stands the rest of the foot on one point: 41 of 68 in a garrison of 100, 64 of 115 in a garrison of 170 (the slots grow with the batch's planned shape, from 27 to 51). `[S1] spawn pile` names this when more than 6 of a class stand within 1 m of the frame point (a shield wall at spacing 0 can put 5 healthy soldiers there). A pile fails nothing, and they spread out by themselves: by t 30 s all 101 stood high. It looks wrong to a person, so Phase 1 needs a muster place with room. Reinforcements can pile on their own frame too (24 of 24 in wave 2, 2 of 16 in wave 3 of the same run), because `Reinforce` keeps the live formation's shape.
+**The pile:** the Helm's Deep terrace runs out of slots, so the engine stands the rest of the foot on one point: 41 of 68 in a garrison of 100, 64 of 115 in a garrison of 170 (the slots grow with the batch's planned shape, from 27 to 51). The spike's `[S1] spawn pile` line named this when more than 6 of a class stood within 1 m of the frame point (a shield wall at spacing 0 can put 5 healthy soldiers there). A pile failed nothing, and they spread out by themselves: by t 30 s all 101 stood high. It looks wrong to a person, so Phase 1 musters in timed batches (`[LongDefeat][Muster] batch`), each judged by the `muster` check. **`ok` for that check means that no more than half the batch stands on the frame point, or no more than 6 if that is the larger number**, with no soldier far or off the navmesh and at most 6 overlapping an earlier batch. A timed-batch garrison harmed nothing in run `20261104-033424`: `high` read 183 of 185 at about t 50 to 55, and 185 of 185 at t 60. Reinforcements can pile on their own frame too (the spike read 24 of 24 in wave 2 and 2 of 16 in wave 3), because a reinforcing batch keeps the live formation's shape.
 
-**A healthy Helm's Deep:** the defender archers' frame stands at height 1.5, so `[S1] after initial spawn` reads `high` of 68 of 101, with a `z` minimum near 1.3. That is the scene's frame and not the fault repeating. `[S1] frames` prints all six frames.
+**A healthy Helm's Deep:** the defender archers' frame stands at height 1.5, so the spike's `[S1] after initial spawn` read `high` of 68 of 101, with a `z` minimum near 1.3. That is the scene's frame and not the fault repeating. The spike's `[S1] frames` line printed all six frames; Phase 1 has no such line.
 
 ### How a wave ends
 
 No wave retreats, so a wave ends when no attacker stands, and that does not happen by itself. Only `BattleEndLogic` ends a vanilla siege, the player's exit aside: on a depleted side, or a side wholly running away (`BattleEndLogic.cs:198-222, 279-361`). Kills, a morale rout, the power retreat and the sally lead there. This mode leaves that logic out. On the first unattended run the last 7 attackers, then 6, and the last 31 defenders stood apart from t 420 s to the limit at t 1,500 s.
 
-**The hidden gate at Helm's Deep:** the scene holds a hidden inner gate at height 32.5 (`aserai_castle_gate_inner_l1 visible="false"`, `scene.xscene:5971`). The engine takes it as `InnerGate` with no visibility check (`TeamAISiegeComponent.cs:54-57`), and a hidden gate never ticks, so it never opens (`CastleGate.cs:619-622`). The Middle lane then stays closed (`SiegeLane.cs:355-364`), and attackers on the gate lane go to that gate and stay in `AttackEntity` (`BehaviorAssaultWalls.cs:161-166`). In all three runs the first attacker at height 32 or more appeared 20 s after the outer gate fell. Defenders hold their lane place on plain Move orders, and they hunt only with over 30 attackers inside (`TacticDefendCastle.cs:975`). Constant team power turns off the retreat and the sally, which are the other ways out. So `Boot` breaks any hidden gate and logs `[S1] hidden gate`. It is not removed, because a null `InnerGate` throws in `BehaviorAssaultWalls`. **A campaign siege on this scene meets the same hidden gate**, and nobody has checked what it does there. **Breaking it works** (run `20261103-235336`, build `985b0d54e`, defaults): `[S1] hidden gate at (133.4, 180.7, 32.5): broken`, and `Middle open True` once the outer gate falls. Waves 1 and 2 of 110 cleared at 349 s and 669 s with no `stale` line, against 465 s and 840 s before. Wave 3 went quiet with 44 attackers left, and the charge ended it at 1,254 s, with no soldier felled by rule.
+**The hidden gate at Helm's Deep:** the scene holds a hidden inner gate at height 32.5 (`aserai_castle_gate_inner_l1 visible="false"`, `scene.xscene:5971`). The engine takes it as `InnerGate` with no visibility check (`TeamAISiegeComponent.cs:54-57`), and a hidden gate never ticks, so it never opens (`CastleGate.cs:619-622`). The Middle lane then stays closed (`SiegeLane.cs:355-364`), and attackers on the gate lane go to that gate and stay in `AttackEntity` (`BehaviorAssaultWalls.cs:161-166`). In all three runs the first attacker at height 32 or more appeared 20 s after the outer gate fell. Defenders hold their lane place on plain Move orders, and they hunt only with over 30 attackers inside (`TacticDefendCastle.cs:975`). Constant team power turns off the retreat and the sally, which are the other ways out. So `Boot` breaks any hidden gate and logs `[LongDefeat][Boot] hidden gate at (...): broken` (or `NOT broken`), then `hidden gates broken N`. It is not removed, because a null `InnerGate` throws in `BehaviorAssaultWalls`. **A campaign siege on this scene meets the same hidden gate**, and nobody has checked what it does there. **Breaking it works** (spike run `20261103-235325`, build `985b0d54e`, defaults): `[S1] hidden gate at (133.4, 180.7, 32.5): broken`, and `Middle open True` once the outer gate falls. Waves 1 and 2 of 110 cleared at 349 s and 669 s with no `stale` line, against 465 s and 840 s before. Wave 3 went quiet with 44 attackers left, and the charge ended it at 1,254 s, with no soldier felled by rule.
 
-`WatchStalemate` is the rule for every other stand-off:
+`WatchStalemate` was the spike's rule for every other stand-off. Phase 1 carries it as `Domain/StalemateRule.cs`, with its thresholds in `waves.json` and its lines tagged `[LongDefeat][Wave]`:
 
-1. With half the wave down and no loss on either side for 60 s, or no loss for 180 s at any count, `[S2] wave N stale` prints the attackers' places and each formation's behavior, side, order and count inside, and both teams change to vanilla's `TacticCharge`. That tactic only weights `BehaviorCharge`, which returns 0 until the walls test passes (`BehaviorCharge.cs:169-201`), so it moves soldiers on some lanes and not on others, and a formation under a player's orders does not move at all.
-2. After 90 s more with no loss, `[S2] wave N: nobody reached the last M attackers` prints their places, and they fall (`Mission.KillAgentCheat`). One soldier can stand for good: in wave 2 of the passing run the last attacker never left the spawn area, at (260.2, 305.9, -0.8). Only stragglers fall: at most a tenth of the wave, and fewer than the defenders. Otherwise the run ends as `stalemate`: a clear must be earned, and at Minas Tirith the first form of this rule felled 35 attackers with 2 defenders left. The judge's result counts the waves that ended by this rule.
-3. At the wave's clear, the defenders get a new `TacticDefendCastle`, and they start the next wave out of place: `high` read 46 at the start of wave 3, and 163 of 170 about 15 s later. The next wave's new `TacticBreachWalls` comes when its queue empties, so the `tactics` text still says `TacticCharge` for the attackers until then.
+1. With half the wave down and no loss on either side for 60 s, or no loss for 180 s at any count, `[LongDefeat][Wave] N stale: both teams charge` is written (the spike's `[S2] wave N stale` also printed the attackers' places and each formation's behavior, which Phase 1 does not), and both teams change to vanilla's `TacticCharge`. That tactic only weights `BehaviorCharge`, which returns 0 until the walls test passes (`BehaviorCharge.cs:169-201`), so it moves soldiers on some lanes and not on others, and a formation under a player's orders does not move at all.
+2. After 90 s more with no loss, `[LongDefeat][Wave] N stragglers fall: ...` is written and they fall (`Mission.KillAgentCheat`; the spike printed their places under `[S2] wave N: nobody reached the last M attackers`). One soldier can stand for good: in wave 2 of the passing run the last attacker never left the spawn area, at (260.2, 305.9, -0.8). Only stragglers fall: at most a tenth of the wave, and fewer than the defenders. Otherwise the run ends as `stalemate`: a clear must be earned, and at Minas Tirith the first form of this rule felled 35 attackers with 2 defenders left. The judge's result counts the waves that ended by this rule.
+3. At the wave's clear, the defenders get a new `TacticDefendCastle`, and they start the next wave out of place: `high` read 46 at the start of wave 3, and 163 of 170 about 15 s later. The next wave's new `TacticBreachWalls` comes when its first batch is out (`RefreshAttackerTactic` in `Domain/SurvivalRun.cs`), so the attackers stay on `TacticCharge` until then.
 
 The rule fired in waves 2 and 3 of the passing run. A wave of 110 lost its last soldier at about 840 s and 1,380 s of mission time, 90 s and 128 s after the `stale` line. Soldiers can still flee on low morale, and Phase 1 closes that. The state lines of the four runs count none, and one `OnAgentPanicked` warning fired at Minas Tirith.
 
 ### The terrain shader dialog at Helm's Deep
 
-A Helm's Deep load can stop at a native dialog: `Error compiling shader file: $BASE/Shaders/Sources/pbr_terrain.rs` (and `pbr_terrain_gbuffer.rs`), X4008 at `terrain_pixel_functions.rsh:818`, raised to an error by X3129. **Press Cancel.** The mission then loads in seconds. Retry compiles the same source (native `FUN_1800934e0` returns to `D3DCompileFromFile`), and Cancel returns a null blob. Two native flags skip the dialog, and nobody has read what sets them. The dialog holds the game, and nobody is there in an unattended run, so `tools/run_long_defeat_spike.py` presses Cancel by itself and logs that in `runner_log.txt`. Left open for 304 s, the dialog makes `BattleLoadStallWatchdog` write a `[CrashReport]` block, which fails the judge.
+A Helm's Deep load can stop at a native dialog: `Error compiling shader file: $BASE/Shaders/Sources/pbr_terrain.rs` (and `pbr_terrain_gbuffer.rs`), X4008 at `terrain_pixel_functions.rsh:818`, raised to an error by X3129. **Press Cancel.** The mission then loads in seconds. Retry compiles the same source (native `FUN_1800934e0` returns to `D3DCompileFromFile`), and Cancel returns a null blob. Two native flags skip the dialog, and nobody has read what sets them. The dialog holds the game, and nobody is there in an unattended run, so `tools/run_long_defeat.py` presses Cancel by itself and logs that in `runner_log.txt`. Left open for 304 s, the dialog makes `BattleLoadStallWatchdog` write a `[CrashReport]` block, which fails the judge.
 
-Open: Mike's by-hand launches at 17:26 and 17:28 loaded in under 10 s and show no sign of this dialog, and all three unattended launches at this fortress met it. The runner's `shader cache list differs` does not explain that, because it is on all four runs, and Minas Tirith had no dialog. Nobody has seen how the terrain looks after a Cancel.
+Open: Mike's by-hand launches at 17:26 and 17:28 loaded in under 10 s and show no sign of this dialog, and all three unattended launches at this fortress met it. The runner's `shader cache list differs` does not explain that, because it is on all four runs, and Minas Tirith had no dialog. Phase 1 stands in for the cached-variant or guarded-copy ask with one sentence in the setup prompt ("If a shader error window appears while the fortress loads, press Cancel"), which replaces that ask only on Mike's word, and does not touch `Shaders/`, which belongs to the install. **Decision for Mike, open:** build a scene shader sack for Helm's Deep in the Kit. It would live in the unversioned `TAOM_Map`, so a reinstall reverts it, and the same dialog already threatens a Custom Battle siege at this scene.
 
-### Decisions the spike makes for now
+### Decisions from the spike
 
-- **Power never orders a retreat.** The constant keeps both power ratios near 1, so `TacticBreachWalls` never takes its one-way retreat on power, and `TacticDefendCastle` never sallies on it. No wave retreats in this mode (Mike, 2026-11-03). The constant closes only the team retreat: a soldier can still flee on low morale, so Phase 1 adds attackers to `TaomCustomBattleMoraleModel.CanPanicDueToMorale` and checks `FellFoesAdapter.SendOff`, which calls `Retreat` directly.
-- **Waves are larger than 100.** At 100 attackers or fewer, `TacticBreachWalls` stops using its machines. The by-hand default is a wave of 120 and a garrison of 100. The unattended default is 110 and 170, because 100 defenders held on one run and all died on the other, with about 45 attackers left, and the between-wave tests need a cleared wave. This is no balance measure.
-- **Each wave gets a new tactic.** The first spawn batch latches a shock assault and clears `ForcedUse` on the engines. The runner sets `ForcedUse` back and adds a new `TacticBreachWalls` when the wave's queue empties.
-- **The garrison refills between waves,** so a later wave's evidence does not depend on the first wave's losses.
-- **All in-mission tests run after wave 1:** S5, S7, then S4. Every later wave then meets the repaired gate.
+The first two still hold in Phase 1. The other three describe the spike's runner, which went with the spike: Phase 1 has no refill and no in-mission tests.
+
+- **Power never orders a retreat.** The constant keeps both power ratios near 1, so `TacticBreachWalls` never takes its one-way retreat on power, and `TacticDefendCastle` never sallies on it. No wave retreats in this mode (Mike, 2026-11-03). The constant closes only the team retreat: a soldier can still flee on low morale, so Phase 1 adds attackers to `TaomCustomBattleMoraleModel.CanPanicDueToMorale`, and its state lines count anyone who flees. `FellFoesAdapter.SendOff` calls `Retreat` directly, and the `no-rout` check fails if a soldier it sends off is counted.
+- **Waves are larger than 100.** At 100 attackers or fewer, `TacticBreachWalls` stops using its machines. The spike's by-hand default was a wave of 120 and a garrison of 100, and its unattended default was 110 and 170, because 100 defenders held on one run and all died on the other, with about 45 attackers left. Phase 1's balance is under "The first balance" below.
+- **Each wave got a new tactic.** The first spawn batch latches a shock assault and clears `ForcedUse` on the engines. The runner set `ForcedUse` back and added a new `TacticBreachWalls` when the wave's queue emptied.
+- **The garrison refilled between waves,** so a later wave's evidence did not depend on the first wave's losses.
+- **All in-mission tests ran after wave 1:** S5, S7, then S4. Every later wave then met the repaired gate.
+
+### The first balance
+
+The waves and prices are a guess tuned on the shop bot, and the balance is for Mike to judge in play. The bot buys the first offer it can pay for, so it fields level 11 packs, and a human should do better.
+
+| Table | Run | Result | Defenders lost per wave |
+|---|---|---|---|
+| First: 110 to 150 attackers, level 31 at wave 5 | `20261104-035343` | Lost at wave 4: 3 cleared, 456 kills | 34, 33, 142, then all 158 |
+| Second: same counts, ten waves, level 21 at wave 4 | `20261104-044306` | Lost at wave 5: 4 cleared, 564 kills | 29, 43, 109, 140, then all 114 |
+
+Wave 2 costs about 40 defenders in both runs, and wave 3 costs 110 to 140, although the second table's wave 3 holds no troop above wave 2's level. From wave 3 far more attackers reach high ground at once: at the 2 minute mark 71 stood high against 8 in wave 2. Nobody has traced why. Arrows are not the cause: `AmmoSupplyLogic` refills every AI defender every 3 s. The purse then falls behind, because at an even exchange a kill paid about 8.5 gold, with the wave bonus, and a replacement costs 15.
+
+The table now holds waves 3, 4 and 5 at 120, 125 and 130 attackers, with level 21 troops first at wave 5, and bounties 1.5 times higher. The old top mix stays at wave 10. To go back, revert `waves.json`. Fortifications and boons come in later phases and will shift all of this.
+
+The towers stay at the wall after wave 1, and Phase 1 has no gate repair, so from wave 2 attackers reached high ground 55 to 70 s after the wave began, against about 150 s in wave 1. A wave took 5.5 to 11 minutes, and five waves took at most 2,427 live seconds, under the wrapper's 3,600 s live limit.
 
 ### The spikes
 
-The run answers these through tagged lines in the TAOM log. `[S3]` lines also list the ladders, towers, rams, gates, siege lanes and defender engines.
+The spike's run answered these through the tagged lines below, which went with the spike (Phase 1 writes `[LongDefeat][...]` lines instead). Its `[S3]` lines also listed the ladders, towers, rams, gates, siege lanes and defender engines; Phase 1 keeps a shorter `[LongDefeat][Engines]` line.
 
 | Spike | Log lines | What it proves | Status |
 |---|---|---|---|
-| S1 Boot | `[LongDefeat][S1]`, `[S1 boot]`, `[S1] spawn level` | The mission opens without those behaviors, deployment finishes, you have an agent with an order bar, and each batch stands near its frame's height and on a navmesh. A pile is named and fails nothing | **Passed** (runs `20261103-215943` and `20261103-235336`) |
+| S1 Boot | `[LongDefeat][S1]`, `[S1 boot]`, `[S1] spawn level` | The mission opens without those behaviors, deployment finishes, you have an agent with an order bar, and each batch stands near its frame's height and on a navmesh. A pile is named and fails nothing | **Passed** (runs `20261103-215943` and `20261103-235325`) |
 | S2 Waves | `[S2] wave N starts`, `all N spawned`, `wave N CLEARED`, `reinforcements`, the 5 s state line | Several waves in a row, attackers climb, defenders man the walls | **Passed:** three waves of 110 cleared at 465 s, 840 s and 1,380 s, each refilling the garrison. Attackers climb, with at most 49, 57 and 33 high. No soldier fled |
 | S3 Engines | `[S3]`, `[S3 wave cleared]` | What ladders, towers and rams do across waves | **Passed:** both towers reach the wall by 191 s and the ram breaks the gate by 261 s. The towers stay at the wall, and later waves climb them. Helm's Deep has no ladders |
 | S4 Gate repair | `[S4] before`, `broken`, `repaired` or `NOT repaired` | Vanilla's `CastleGate.OnMissionReset` gives a closed gate that the AI attacks again | **Passed:** `repaired: hit points 15000.0/15000.0 destroyed False disabled False open False`, and wave 2's ram broke that gate again by 551 s |
@@ -90,38 +107,38 @@ Expect `defender detachment False` on the `[S4] repaired` line: `UsableMachine.D
 
 ## Configuration
 
-No MCM and no ModuleData. An unattended run takes an arm file of `key=value` lines: `fortress`, `waves`, `wave_size`, `garrison`, `intermission_seconds`, `live_limit_seconds`, `defenders_ai`, `quit`, `out`.
+No MCM. Three JSON files under `Main/_Module/ModuleData/long_defeat/` hold the content, and each bad value costs one logged warning and falls back to its default: `fortresses.json` (scene, cultures, garrison, keep point), `waves.json` (the `rules` numbers, bounties, wave rosters) and `shop.json` (offers and starting gold). The files are read once per game process, so an edit needs a full game restart, not a new run. An unattended run takes an arm file of `key=value` lines named by `TAOM_LONGDEFEAT_AUTORUN`: `fortress`, `waves`, `out` (required, absolute), `quit`, `live_limit_seconds`, `wall_limit_seconds`, `screenshots`, `garrison_scale`, `expect`. Player-facing text is the `TAOM_LD_*` rows of `taom_module_strings.xml`; the 12 language files carry the English seed until #763.
 
 ## Key Files
 
 - `Main/Features/LongDefeat/LongDefeatModule.cs`, `ILongDefeatGameManagerFactory.cs`, `NullLongDefeatGameManagerFactory.cs`, `LongDefeatMission.cs`: these stay after Phase 1.
-- `Main/Features/LongDefeat/Spike/`: the launcher, runner, logic, options, fortress table and console command. Phase 1 replaces this folder with a pure domain and adapters, so its direct engine access and the runner's lack of unit tests are deliberate.
-- `Client/Features/LongDefeat/`: the game manager and factory (ADR-013), the mission views, the autostart and the view that declines the focus-lost Escape menu in an armed run.
-- `tools/run_long_defeat_spike.py`: the unattended wrapper on `tools/run_fords_autorun.py`.
+- `Main/Features/LongDefeat/Domain/`, `Config/`, `Hooks/`, `Autorun/`, `Diagnostics/` and `Main/Adapters/LongDefeat*`: the Phase 1 code that replaced the spike folder. The spike's recipes are in git: recipes at commit 985b0d54e, `LongDefeatSpikeRunner`: `BreakGate`, `TryBreak`, `RepairGate` (gate), `BuyEngine` (engine buy), `ChangeGear` (gear).
+- `Client/Features/LongDefeat/`: the game manager and factory (ADR-013), the mission views, the HUD and shop panel (two Gauntlet layers, `B` for the shop and `H` for the horn), their view models and text, and the autorun host. `Main/_Module/GUI/PreFabs/LongDefeat/` holds the two prefabs.
+- `Main/Features/DevConsole/Cheats/LongDefeatCheats.cs`: `taom.ld_start`, `taom.ld_record`, `taom.ld_export`.
+- `tools/run_long_defeat.py`: the unattended wrapper on `tools/run_fords_autorun.py`.
 
 ## Dependencies
 
 - **Troops:** the `fow_*` troops in `Main/_Module/ModuleData/fords_of_war/fords_troops.xml`, which load in a CustomGame, and the stub lords in `characters/custom_battle_lords.xml`. The launcher refuses a fortress with an unknown troop.
-- **Scenes:** `taom_rohan_castle_helms_deep_forceatmo` and `taom_gondor_town_minas_tirith_forceatmo` in the unversioned `TAOM_Map`.
+- **Scenes:** `taom_rohan_castle_helms_deep_forceatmo` in the unversioned `TAOM_Map` (Phase 1 ships one fortress).
 - **Co-op:** absent. The launcher adds the only behavior, so no other mission carries it. A dedicated server keeps the null factory.
 
 ## Tests
 
-- `TAOM.Tests/Features/LongDefeat/`: the options parser, the module shape, the fix pins, and the fortress table against the shipped data.
-- `tools/tests/test_run_long_defeat_spike.py`: the judge, the arguments, and the strings shared with the C# side.
-- The runner has no unit test. The proof is a game run.
+- `TAOM.Tests/Features/LongDefeat/`: the domain rules and the run aggregate, the config catalog and the shipped data, the director over a fake adapter, the autorun plan and driver, the strings, the menu entry and the module shape.
+- `tools/tests/test_run_long_defeat.py`: the judge, the arguments, and the strings shared with the C# side.
+- `LongDefeatCommandsTests` runs `taom.ld_start` over the shipped config, and `LongDefeatModuleTests` pins that no spike code is left in `Main` or `Client`.
 
 ## How to verify in game
 
-**Preconditions:** a build that holds the spike, the main menu with no game loaded, cheat mode on, and the console open.
+**Preconditions:** a build that holds Phase 1, and the main menu with no game loaded.
 
-1. Enter `taom.ld_start helms`. The reply starts with `Starting:`, and the Helm's Deep siege scene loads. The defenders wait for your orders in this path, except that a formation that empties passes to the AI by engine rule and stays there after the refill.
-2. Look for `[LongDefeat][S1] after initial spawn` in the newest `taom_debug_*.log`. It must say `deployment finished True`, and the order owner must be your lord. Every `[S1] spawn level` line must say `ok`. Any `spawn level WRONG` line is a failure.
-3. Wait for each `[LongDefeat][S2] wave N CLEARED` line, or order your troops to fight. `[S2] run over:` names why the run ended, and the limit is 1,800 s. A `fault in phase` line, or a game that stops, is a failure: read the line and the crash report.
-4. After wave 1, read the `[S5]`, `[S7]` and `[S4]` lines. They must say `deployed`, `after the armour write` and `repaired`. `NOT deployed` or `NOT repaired` is a failed spike.
-5. In wave 2, watch the `[S3]` lines: the first gate's hit points must fall again if a ram reaches it.
+1. Click "The Long Defeat", read the prompt (it names the best run and the shader sentence) and pick Helm's Deep. Or, with cheat mode on, enter `taom.ld_start helms`; the reply starts with `Starting The Long Defeat at helms`. If a shader error window appears while the fortress loads, press Cancel.
+2. In the newest `taom_debug_*.log`, `[Check] id=taom.long-defeat.boot` must say `result=pass` with `friendly=false`, and `general` must pass. Any `spawn level WRONG` line is a failure.
+3. Watch the garrison muster in batches (`[LongDefeat][Muster]` lines, then `[Check] id=taom.long-defeat.muster`). The HUD strip shows the wave, the timer, gold and both head counts. `B` opens the shop, `H` sounds the horn for bonus gold, and the order bar moves formations. Tab does nothing.
+4. Each cleared wave writes `[Check] id=taom.long-defeat.wave`. The run ends by a result panel with its Leave button, which returns to the main menu, and writes `end` and `best-run` lines.
 
-**Unattended:** `python tools/run_long_defeat_spike.py --fortress helms`, under the gate in [unattended-game-runs.md](../reference/unattended-game-runs.md). Exit 0 needs every wave cleared, the S1, S2, S4, S5 and S7 lines present, and no `spawn level WRONG` line. It judges no other value on those lines, so read them. The first pass: `python tools/run_long_defeat_spike.py --fortress helms --wave-size 110 --garrison 170`, in `E:\Temp\long-defeat-runs\20261103-215943`. That run set `--live-limit 1800`, now the default. Minas Tirith, `--fortress minas --waves 2 --wave-size 120 --garrison 180`, in `E:\Temp\long-defeat-runs\20261103-222355`, before the straggler limit: its wave 2 is not a real clear, and the same command should now end as `stalemate`.
+**Unattended:** `python tools/run_long_defeat.py --waves 5`, under the gate in [unattended-game-runs.md](../reference/unattended-game-runs.md); `--lose` runs the loss case and `--runs 3` repeats it. The shop bot and an AI-driven main agent play. Exit 0 needs the done reason, the report, no `spawn level WRONG`, no failed check of this feature, a `[BuildStamp]` that starts with this tree's HEAD, a pass line for every required check, a read-back line for each side, as many `wave` pass lines as waves cleared, and no crash block. Then `python tools/ingame_verdict.py --issue 1079 --sessions 4`, which reads `tools/ingame_checks/1079.toml`. The Phase 0 recipes were run with `tools/run_long_defeat_spike.py`, which is gone: read it from commit 985b0d54e.
 
 An unreachable step is reported with the command tried and the unmet precondition. Never mark it verified through another path.
 
@@ -139,21 +156,28 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 
 ## Notes for Phase 1
 
-- **Where archers start:** Helm's Deep authors the defender archers' frame on low ground. Phase 1 keeps that, or posts them on recorded frames (S6).
-- **Leaving the mission:** holding Tab for 0.6 s ends the battle and pops to the Custom Battle screen, because no view clears `IsFriendlyMission`. The real manager needs Fords' `ReturnToMainMenu` and an answer to Tab. The Escape menu's own exit already goes to the main menu.
+- **The keep has not been tested:** in the three runs on record the nearest sampled attacker stayed 39.4 m (run 20261104-044306, at (160.2, 192.3, 26.6)), 45.75 m (run 20261104-035343, at (170.5, 192.1, 20.5)) and 64.6 m (run 20261104-033424) from the keep point (138.4, 159.5, 32.5), radius 12. That includes both lost runs, which ended with 86 and 44 attackers standing and 1 defender. So no run has moved the keep, and in practice a run ends when the defenders die. Each sample is the nearest 8 attackers per 5 s, on the earlier wave tables. Where the keep belongs is for Mike to decide (`taom.ld_record keep`). The plan's risk 5 is answered the same way, in [phase1-plan.md](long-defeat/phase1-plan.md).
+- **Where archers start:** Helm's Deep authors the defender archers' frame on low ground. Phase 1 keeps the authored frame; posting them on recorded frames (S6) is a later option.
+- **Leaving the mission:** `IsFriendlyMission` is false, so Tab does nothing. Escape's exit calls `MBGameManager.EndGame` itself (`MissionGauntletSingleplayerEscapeMenu.cs:220-225`). A boundary crossing reaches it through `OnRetreatMission` and the menu adapter. The result panel's Leave reaches it through `LongDefeatGameManager.ReturnToMainMenu`.
 - **Quit in a live mission:** works. `Utilities.QuitGame` with the mission still running exited with code 4294967295 and a clean-unload line on all four unattended runs.
-- **The shader dialog:** a player would meet it too (see above). Phase 1 needs an answer before a menu entry lands: a cached variant, or a guarded copy of line 818.
-- **The stalemate rule:** carry `WatchStalemate` into the domain, with its thresholds in JSON. `KillAgentCheat` credits the kill to the main agent, or with none to the victim's last hitter (`Mission.cs:6220`, `Agent.cs:4689-4693`). Prefer `Agent.Die` (`Agent.cs:4678`), which credits no main agent. A charge can send a formation to a closed inner gate (`BehaviorCharge.cs:25-31`). With the hidden gate broken at `Boot` and repairs limited to visible gates, that needs a `[S1] hidden gate ... NOT broken` line, or a scene with a visible inner gate that a repair closes.
-- **Muster place:** record one with room for the garrison, because the terrace frame piles most of it.
+- **The shader dialog:** a player would meet it too (see above). Phase 1 ships the prompt sentence as a stand-in. It replaces the older ask (a cached variant, or a guarded copy of line 818) only on Mike's word, which is still open, and the scene sack is a separate open decision.
+- **The stalemate rule:** Phase 1 carried `WatchStalemate` into the domain, with its thresholds in JSON. `KillAgentCheat` credits the kill to the main agent, or with none to the victim's last hitter (`Mission.cs:6220`, `Agent.cs:4689-4693`). Phase 1 keeps `KillAgentCheat` (the adapter calls it); `Agent.Die` (`Agent.cs:4678`), which credits no main agent, is the spike's suggestion and was not taken. A charge can send a formation to a closed inner gate (`BehaviorCharge.cs:25-31`). With the hidden gate broken at `Boot` and repairs limited to visible gates, that needs a `[LongDefeat][Boot] hidden gate ... NOT broken` line, or a scene with a visible inner gate that a repair closes.
+- **Muster place:** Phase 1 musters in timed batches at the scene frame, with the recorded muster-place consumer cut. A recorded place with room remains the spike's suggestion, because the terrace frame piles most of the garrison.
+- **Morale hold:** `LongDefeatMorale.HoldsAttacker` keeps attackers from fleeing on low morale. The morale model asks it only below morale 0.01, from agent threads, so each true answer bumps the any-thread counter `taom.long-defeat.morale-hold`; a run that shows the counter above 0 proves the clause fired.
+- **End panel in an unattended run:** the driver waits 2 s of wall time after the result (`EndPanelSeconds`) before it leaves, so the panel's 0.25 s refresh opens it and `[LongDefeat][Hud] end panel open` is written.
+- **Keys and photo mode:** `B` (shop) and `H` (horn) are free for this mission. The Escape menu offers Photo Mode and no Long Defeat view can close it again, so `LongDefeatHudView.IsPhotoModeAllowed` returns false and the item stays disabled.
+- **Terrain after Cancel:** the terrain renders after a Cancel on the shader dialog (screenshots in `E:\Temp\long-defeat-runs\20261104-033424`). The scene has a strong teal cast, which Mike is to judge.
 - **Trolls and repaired gates:** `CreatureSiegeRules` latches a gate as destroyed for good, so a troll would treat a repaired gate as open. Clear the track on a repair, or stand the role down in this mission.
 - **The Nine:** `DreadMissionGate` admits only Fords by name, so the Nine project no dread here.
-- **The buy point:** `DeploymentHandler` is absent, so the placeholder of the live deployment point stays visible until something deploys on it, except at Helm's Deep, whose scene hides it (`scene.xscene:1552`).
+- **The buy point:** `DeploymentHandler` is absent, but the adapter disables every defender deployment point at boot (the adapter's disable loop, the job of `SiegeDeploymentHandler.RemoveDeploymentPoints`), so no placeholder should show. Nobody has looked in game.
 
 ## Changelog
 
 - 2026-11-03: the Phase 0 spike lands on trunk at Mike's word, ahead of its first in-game run, so that F5 in the main checkout carries it.
 - 2026-11-03: first in-game runs. S1's boot and S3's engines work. The garrison spawned in the caves, so every spawn now takes vanilla's path, and `[S1] spawn level` fails a run that repeats the fault.
 - 2026-11-03: first unattended runs. A quiet fight now ends by rule (`WatchStalemate`), the wrapper answers the shader dialog, and a pile has its own line. The run passes with S2, S3, S4 and S7 proved on Helm's Deep.
+
+- 2026-11-04: Phase 1 is on the worktree branch `taom-long-defeat`: domain, config, director, adapter, menu entry, HUD and shop, autorun driver and wrapper, and the `TAOM_LD_*` string rows. The spike folder and its wrapper are deleted. Unattended run `20261104-033424` passed 2 waves, and `20261104-035343` lost at wave 4 of 5 and proved the respawn and the end of a lost run, both before the first review's fixes. `20261104-044306` ran with those fixes, lost at wave 5 of 5, and proved the end panel line and the morale hold. The waves now ramp more slowly.
 
 ## GitHub Issue
 

@@ -737,7 +737,7 @@ def collect(folder, bin_dir, done, started, pid, say):
 
 
 def show_results(done_text, log_copy, report_json, say):
-    print("---- fords_autorun_done.txt ----\n" + done_text.strip())
+    print(f"---- {DONE_FILE} ----\n" + done_text.strip())
     if report_json is not None:
         print("---- report verdicts (final=%s, reason=%s) ----" % (report_json.get("final"), report_json.get("reason")))
         for row in report_json.get("verdicts", []):

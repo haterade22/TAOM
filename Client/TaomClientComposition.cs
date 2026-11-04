@@ -19,6 +19,7 @@ using TAOM.Features.FiefManagement;
 using TAOM.Features.HallOfFire;
 using TAOM.Features.HostReview;
 using TAOM.Features.LongDefeat;
+using TAOM.Features.LongDefeat.Autorun;
 using TAOM.Features.Refuge;
 using TAOM.Features.Refuge.Visuals;
 using TAOM.Features.ShaderCompileNotice;
@@ -51,6 +52,7 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<IFordsOfWarGameManagerFactory, FordsOfWarGameManagerFactory>(Reuse.Singleton);
         registrator.Register<IFordsAutorunHost, FordsAutorunHost>(Reuse.Singleton);
         registrator.Register<ILongDefeatGameManagerFactory, LongDefeatGameManagerFactory>(Reuse.Singleton);
+        registrator.Register<ILongDefeatAutorunHost, LongDefeatAutorunHost>(Reuse.Singleton);
         registrator.Register<ICampVisualService, CampVisualService>(Reuse.Singleton);
         registrator.Register<IRefugeVisualService, RefugeVisualService>(Reuse.Singleton);
         registrator.Register<ISupplyRouteVisualService, SupplyRouteVisualService>(Reuse.Singleton);

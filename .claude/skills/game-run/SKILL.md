@@ -9,7 +9,7 @@ argument-hint: "[--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [-
 Starts Bannerlord with nobody at the keyboard, lets TAOM's env-armed driver play one Fords of War match, and judges the result from
 the logs. The permission, the launch recipe, every game-side file touched and the risks are in
 [unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md); read it once if you have not this session. Today the
-driver plays only Fords of War. A general scenario driver is planned separately and does not exist yet.
+driver plays Fords of War, and The Long Defeat (#1079) has its own wrapper, `python tools/run_long_defeat.py --waves 5` (add `--lose` for the loss case), under the same gate. A general scenario driver is planned separately and does not exist yet.
 
 Run these phases in order. `$ARGUMENTS` are passed to the launcher in Phase 4.
 
@@ -19,9 +19,9 @@ A run is owed when in-game evidence is missing for the change, not for its own s
 
 - a self-check or an [in-game verdicts](../../../docs/features/ingame-verdicts.md) manifest reads `NOT_SEEN` or `NOT REACHED`, or
 - the change touches mission or engine-facing code that a Fords match exercises (mission start, agents, formations, destructibles,
-  the Fords driver or report).
+  the Fords driver or report), or code under `LongDefeat` (run `tools/run_long_defeat.py` instead of the Fords runner).
 
-If neither holds, or the check is outside Fords (no driver exists for it), stop and say what a person must play instead. Do not run
+If neither holds, or the check is outside Fords and Long Defeat (no driver exists for it), stop and say what a person must play instead. Do not run
 the game to feel safe.
 
 ## Phase 2: Gate
