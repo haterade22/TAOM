@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Prefab>
   <Window>
-    <Widget DataSource="{..}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
         <!-- Action Bar Container - Bottom Center -->
