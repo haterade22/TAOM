@@ -234,7 +234,7 @@ See [arthedain.md](../features/arthedain.md).
 3. Write the `<Culture>` into `Main/_Module/ModuleData/taom_spcultures.xml`, or point the kingdom at
    an existing culture as Lindon and Blue Craig do. A new culture means walking the 14-row checklist
    in [`culture-playability-wiring.md:100-116`](../features/culture-playability-wiring.md) and
-   binding all twelve party templates ([party-templates](party-templates.md)) before going further.
+   binding all ten party templates ([party-templates](party-templates.md)) before going further.
 4. Write the `<Kingdom>` into `Main/_Module/ModuleData/taom_spkingdoms.xml`. Copy a shipped entry of
    a realm the same size, then change `id`, `culture`, `owner`, `initial_home_settlement`, the four
    colours, the five text attributes and `banner_key`. The `name` is the bare realm name (`Erebor`,

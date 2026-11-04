@@ -508,7 +508,7 @@ town-owning cultures shipped fielding Calradians (fixed 2026-08-12).
 |----------|-------------|-----|
 | Basic troop | The nearest TAOM culture | `basic_troop="NPCCharacter.harad_reg_levy"` in culture |
 | Militia troops | The nearest TAOM culture | `melee_militia_troop="NPCCharacter.harad_militia_spearman"` |
-| Party templates | Another TAOM culture's twelve | `default_party_template="PartyTemplate.kingdom_hero_party_harad_template"`, and bind ALL of them: see the [party-template binding contract](culture-playability-wiring.md) |
+| Party templates | Another TAOM culture's ten | `default_party_template="PartyTemplate.kingdom_hero_party_harad_template"`, and bind ALL of them: see the [party-template binding contract](culture-playability-wiring.md) |
 | Crowd NPCs | The nearest TAOM culture | `guard="NPCCharacter.guard_harad"` etc. in culture attributes |
 | Equipment sets | Any existing culture's sets | `<EquipmentSet id="harad_bat_template_medium_a" />` in lord `<Equipments>` |
 

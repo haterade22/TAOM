@@ -121,8 +121,9 @@ Scenario text that names Calradia directly is retitled to Middle-earth (the four
 language files regardless of which source XML declares them, and `LanguageFileCoverageTests` unions per
 language for exactly that reason. The rows still sit in `std_taom_module_strings_*.xml`; the next
 `translate_with_claude.py --sync-ids` run re-homes them into `std_taom_keybind_strings_*.xml` on its own
-(`rebuild_translation_files.py` does not list `global_strings.xml`, a pre-existing gap noted in the
-2026-09-15 CHANGELOG entry).
+(`rebuild_translation_files.py` now lists `global_strings.xml`: it reads `tools/_loc_sources.py`, which
+maps it to `std_taom_keybind_strings_{locale}.xml`; the gap noted in the 2026-09-15 CHANGELOG entry no
+longer applies).
 
 ## Gotchas
 

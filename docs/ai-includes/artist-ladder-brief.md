@@ -142,8 +142,8 @@ Edit the source and regenerate. A hand edit is overwritten by the next run, or f
 After any troop add, delete or gear change, **every generator that derives from troops must be
 re-checked**, not just the validator: deleting one troop turned `generate_career_kits.py --verify`
 red because it moved four career slots. Also, some tools write by default: read each tool's
-docstring first. `rebalance_ranged_ladders.py` rewrites the tracked `docs/reference/ranged-troops.html`
-even without `--apply`, and `audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` unless
+docstring first. `rebalance_ranged_ladders.py` writes the tracked `docs/reference/ranged-troops.html`
+only with `--docs-html` or on `--apply` (its reports go to the gitignored `tools/reports/`), and `audit_armory_refs.py` rewrites `docs/audits/armory-ref-audit.md` unless
 given `--report -`.
 
 ## 5. Checks to run before every commit

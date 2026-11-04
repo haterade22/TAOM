@@ -887,9 +887,10 @@ gap is latent, not live.
 **Fixed in #462.** `build_extra_ref_roots()` in `validate_moduledata.py` now returns both modules
 from one `_EXTRA_REF_MODULES` tuple, and `ExtraRefRootTests` pins the contract in both directions,
 including an end-to-end case where a bogus `Culture.` id in a synthetic TAOM_Map root must raise
-`UNKNOWN_CULTURE`. The registry asymmetry above is unchanged: TAOM_Map is still the sole source of
-`settled_cultures` and still contributes to no other registry. What changed is that its refs are no
-longer taken on trust.
+`UNKNOWN_CULTURE`. The registry asymmetry above has narrowed since: TAOM_Map is still the sole source of
+`settled_cultures`, but `tools/taom_schema.py` now also reads it for the equipment-roster ids
+(`equipment_rosters`) and the world's settlement ids (`settlements`). What changed first is that its
+refs are no longer taken on trust.
 
 **XSLT is barely modelled anywhere.** `_SETTLEMENT_STRIP_RE` matches only an empty
 `<xsl:template match="Settlement"/>` or its empty-body form; the file is never parsed as XML and

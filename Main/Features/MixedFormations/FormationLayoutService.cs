@@ -88,8 +88,9 @@ public sealed class FormationLayoutService : IFormationLayoutService
         if (!formation.IsHolding) return null;
         if (!formation.OrderPositionIsValid) return null;
         // Cross-feature handshake: SmartCavalryAI (Patch31) owns cavalry formation
-        // positioning during charge maneuvers. Skip Patch30 even if a layout was
-        // manually assigned to a cavalry formation via the cycle hotkey.
+        // positioning during charge maneuvers. Skip Patch30 for a cavalry formation. The default pass
+        // refuses cavalry, CycleLayouts skips a formation with no layout, and SetLayout has no caller, so
+        // this fires only for a formation that became cavalry after it was given a layout.
         // The evaluating read, as before plan 032. FormationQuerySystem clears the class-ratio queries' lifetimes
         // without re-evaluating them when units change formation (Formation.OnMassUnitTransferEnd, TransferUnits and
         // Split call QuerySystem.Expire()), so a cached flag would answer from the old composition while the

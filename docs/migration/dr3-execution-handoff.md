@@ -47,6 +47,8 @@ Iteration path: 358 → 122 → 18 → 358 → 122 → 26 → 14 → 0 → 95 (R
 
 ## The locked plan — next session(s)
 
+**Before copying any vendored drop's `src/` (Phases A to C), sweep the drop for inline package credentials, archives included, using the two-step form in [external-repo-adoption.md](../ai-includes/external-repo-adoption.md) (the "Before porting any file from a vendored drop" line of its security pass). `tools/audit_claude_config.py` carries the audit rule (`secret-nuget-cleartext`); scrub any hit, and tell upstream when the token is theirs.**
+
 ### Phase A: Replace Harmony source-merge with upstream (CRITICAL — this is what unblocks everything)
 
 1. Delete `Dependencies/ThirdParty/Harmony/` entirely.

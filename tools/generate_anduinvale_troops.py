@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Anduin Vale troop tree and its nine soldier party templates.
+"""Generate the Anduin Vale troop tree and its seven soldier party templates.
 
 Writes:
   Main/_Module/ModuleData/troops/troops_anduinvale.xml           (whole file, generated)

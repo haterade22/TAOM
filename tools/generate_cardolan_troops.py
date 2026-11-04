@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Cardolan troop tree and its nine soldier party templates (#978).
+"""Generate the Cardolan troop tree and its seven soldier party templates (#978).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_cardolan.xml            (whole file, generated)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Rhudaur troop tree and its nine soldier party templates (#978).
+"""Generate the Rhudaur troop tree and its seven soldier party templates (#978).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_rhudaur.xml             (whole file, generated)

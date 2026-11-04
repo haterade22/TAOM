@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Ered Luin troop tree and its nine soldier party templates.
+"""Generate the Ered Luin troop tree and its seven soldier party templates.
 
 Writes:
   Main/_Module/ModuleData/troops/troops_eredluin.xml            (whole file, generated)

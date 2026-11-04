@@ -9,7 +9,7 @@ from what a run would produce, so do not run it without reading the diff first.
 Targets:
   taom_wanderers.xml                       <- 10 wanderers per culture
   equipmentsets/taom_wanderer_equipment.xml<- wanderer companion roster per culture
-  taom_partyTemplates.xml                  <- 12 kingdom party templates per culture
+  taom_partyTemplates.xml                  <- 10 standard party templates per culture
   taom_spcultures.xml                      <- <Culture> block per culture (NO cultural_feats)
   taom_module_strings.xml                  <- str_faction_*/str_culture_* per culture
   ../SubModule.xml                         <- 3 XmlNode registrations per culture

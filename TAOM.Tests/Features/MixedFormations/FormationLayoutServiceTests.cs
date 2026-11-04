@@ -308,7 +308,7 @@ public class FormationLayoutServiceTests
     [TestMethod]
     public void IsMixedFormation_CavalryFormation_ReturnsFalse_HonoringSmartCavalryHandshake()
     {
-        // FormationLayoutService.cs:191 — `if (formation.RepresentativeIsCavalry) return false;`
+        // FormationLayoutService.IsMixedFormationInternal — `if (formation.RepresentativeIsCavalry) return false;`
         // Even a horse-archer formation that meets the 20%/≥5 ranged-minority threshold must NOT
         // be classified as mixed — SmartCavalryAI handles horse-archer behavior.
         var horseArchers = MakeFormation(8, 6); // would be mixed if not cavalry

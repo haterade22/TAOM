@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Dorwinion troop tree and its nine soldier party templates (#1062).
+"""Generate the Dorwinion troop tree and its seven soldier party templates (#1062).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_dorwinion.xml            (whole file, generated)

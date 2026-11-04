@@ -442,10 +442,11 @@ Restart Bannerlord fully, then start a new campaign.
 - No art was made for Ered Luin: its faction card shows the dwarf-hall image the Ered Duin
   placeholder carried (`GUI/SpriteData/FactionMap/faction_kingdom_of_ered_duin.png`, which
   `FactionImageWidget` loads by the card's `image`).
-- The three careers show no ability icon and the Firebeard Arbalester no portrait: `CareerScreenVM`
-  builds the icon name from the ability template id, and `TAOMSpriteData.xml` registers no sprite for
-  the cloned templates or for `career_crossbow_master_portrait`. Pre-existing for all 30 cloned
-  careers; a follow-up.
+- The three careers draw their root source's ability icon, not one of their own: each sets
+  `ability_sprite` in `taom_careers.xml`, and `CareerScreenVM` builds the icon name from it (else from
+  the ability template id). To give a clone its own icon, bake the PNG and delete that career's
+  `ability_sprite`. The Firebeard Arbalester still has no portrait, because `TAOMSpriteData.xml`
+  registers no sprite for `career_crossbow_master_portrait`; portraits stay a gap under #1058.
 - The six age-8 education tutors (`child_education_templates_stage_2_page_0_branch_0_eredluin` to
   `_5`) have no `race` and render as humans in human clothes, cloned from Erebor's identical gap. The
   fix is an engine-side patch that passes the race through the education screen, not data.

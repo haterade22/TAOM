@@ -405,8 +405,8 @@ Two crashes were encountered when deploying the elephant action-set self-contain
 
 ### Remaining seams (need the Modding Kit / Blender / you)
 
-1. **Monster + Item data** — **ready-to-drop files authored**: [`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml)
-   (copy to `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` + register in its SubModule.xml) and
+1. **Monster + Item data**: **reference copies authored**: [`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml)
+   (the live `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` differs from it in two attributes: the live file has `action_set="as_elephant"` and `monster_usage="elephant"`, the copy `as_war_elephant` and `war_elephant`, which need the TAOM-owned action set and usage first) and
    [`elephant/horse_item_taom_war_elephant.xml`](elephant/horse_item_taom_war_elephant.xml) (paste the `<Item>` into
    `LOTRAOM_horses.xml`). Both validated well-formed; the Monster id stays `taom_war_elephant` to match `ElephantConfig`.
    (Corrected one ADOD_Beasts 1.2.12-ism on the way: `bones_to_modify_on_sloping_ground_0` was `Spine2` — a bone our rig
@@ -800,7 +800,7 @@ not C#:
 
 `lotr_monster_elephant.xml` declares **0 of the 12 rein attributes** the engine reads, while being
 `Mountable="true"` (`family_type="10"`) — the repo snapshot at
-[`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml) matches the live file.
+[`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml) matches the live file apart from `action_set` and `monster_usage` (live: `as_elephant` and `elephant`; copy: `as_war_elephant` and `war_elephant`); the rein attributes are absent from both.
 Every vanilla `Mountable` monster carries all twelve: `horse`/`camel`/`mule` declare them and
 `horse_2` inherits them via `base_monster`. v1.4.8 fixed a "horse rein visual bug when a mounted
 agent died" — native, no managed diff, in a path that runs on **mounted-agent death**
