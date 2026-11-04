@@ -136,14 +136,14 @@ Quick Actions Sell Damaged and Sell Low Value ignore the hide.
 
 ## Tests
 
-62 tests in `TAOM.Tests/Features/TelcharsMark/`:
+64 tests in `TAOM.Tests/Features/TelcharsMark/`:
 
 - `ItemUpgradeScorerTests.cs` (44): every scoring rule above, one test per gate.
 - `TelcharsMarkServiceTests.cs` (7): rescore, score-then-reapply order, one test per hide condition.
 - `UpgradeItemKindMapTests.cs` (4): every `ItemTypeEnum` value and every engine `EquipmentModes` value is
   decided, so an engine update that adds one fails here. No game needed.
 - `UpgradeStatsReaderTests.cs` (2, RequiresGame): an empty element and a horse with no horse data.
-- `Patch109WiringTests.cs` (4): target and category on all three patches, the SubModule and IoC lines, the
+- `Patch109WiringTests.cs` (6): target and category on all three patches, the SubModule and IoC lines, the
   `item` parameter name, the checkbox appended last.
 - `UpgradeScreenAdapterBindingTests.cs` (1) and the `UpdateFilteredStatusOfItem` row in
   `ReflectionSiteBindingTests`: the open delegate binds. The patch targets bind through

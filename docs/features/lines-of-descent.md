@@ -141,7 +141,7 @@ Read-only UI with no campaign behavior and nothing saved, so it is not gated. Se
 ## Dependencies
 
 - `IHeroFamilyAdapter` (Adapters): the family graph, listing test and clan, kingdom and faction facts.
-- `IFamilyTreeService` (Core): resolved from the container by the popup and the clan mixin.
+- `IFamilyTreeService` (Core): injected into the popup's constructor by the container, and resolved once, in its constructor, by the clan mixin (the hero-page mixin captures the popup the same way).
 - UIExtenderEx and vanilla encyclopedia widgets (`EncyclopediaTroopScrollablePanel`, `EncyclopediaUnitTreeNodeItemBrushWidget`, `EncyclopediaSubPageElement`, the `Encyclopedia.CharacterTree.Line` brush).
 
 ## Tests
@@ -149,7 +149,7 @@ Read-only UI with no campaign behavior and nothing saved, so it is not gated. Se
 - `TAOM.Tests/Features/LinesOfDescent/FamilyTreeServiceTests.cs`: 41 tests on the root tiers and climb, the tree rules and caps, and the relation paths (words by gender, two-parent form, shortest path, hop cap, cycles, unreachable).
 - `TAOM.Tests/Features/LinesOfDescent/FamilyTreeTextsTests.cs`: 6 tests on phrase rendering.
 - `TAOM.Tests/Features/LinesOfDescent/FamilyTreeWiringTests.cs`: 5 tests on module registration and string keys.
-- `TAOM.Tests/Features/LinesOfDescent/FamilyTreeUiWiringTests.cs`: 15 tests pinning the prefab anchors, mixin method names, scrollbar names, bindings, gamepad scopes, the close and failed-open sequence, and that no mixin constructor calls `OnRefresh`.
+- `TAOM.Tests/Features/LinesOfDescent/FamilyTreeUiWiringTests.cs`: 16 tests pinning the prefab anchors, mixin method names, scrollbar names, bindings, gamepad scopes, the close and failed-open sequence, that no mixin constructor calls `OnRefresh`, and that no mixin resolves from the container outside its constructor.
 - `TAOM.Tests/Features/LinesOfDescent/FakeFamilyGraph.cs`: the in-memory `IHeroFamilyAdapter` the service tests use.
 
 ## Known limits and risks

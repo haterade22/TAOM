@@ -215,7 +215,7 @@ When the player visits a hideout, the encounter menu prose led with the literal 
 
 **Fix:** `Patch40_HideoutDescription` — a Postfix on the private `game_menu_hideout_place_on_init`. It runs after vanilla's body (still inside `on_init`, before the menu renders its `{=!}{HIDEOUT_TEXT}` text, whose value embeds `{HIDEOUT_DESCRIPTION}`). GameText variables resolve lazily at render — `MBTextManager.SetTextVariable` stores `new TextObject(value)` and nested `{HIDEOUT_DESCRIPTION}` is substituted from the global context when the menu draws — so re-setting `HIDEOUT_DESCRIPTION` in the Postfix propagates to the displayed prose. Only the `hideout_place` menu shows `{HIDEOUT_DESCRIPTION}`; `hideout_after_wait` uses its own culture-agnostic text, so a single patch is complete.
 
-`IHideoutDescriptionService.GetDescription(cultureStringId)` returns the `{=key}default` template for the five TAOM bandit cultures and `null` for any other culture (vanilla / other-mod hideouts keep their own engine description untouched). The service takes a `string` and returns a `string` — no TaleWorlds types cross the boundary (ADR-007).
+`IHideoutDescriptionService.GetDescription(cultureStringId)` returns the `{=key}default` template for the seven TAOM bandit cultures it maps (the five originals, `feral_orcs` and `erebor_warriors`) and `null` for any other culture (vanilla / other-mod hideouts keep their own engine description untouched). The service takes a `string` and returns a `string`; no TaleWorlds types cross the boundary (ADR-007).
 
 | Bandit culture | Description key | Biome flavor |
 |---|---|---|
@@ -225,8 +225,9 @@ When the player visits a hideout, the encounter menu prose led with the literal 
 | `rhun_raiders` | `taom_hideout_desc_rhun` | Grasslands of Rhûn |
 | `umbar_corsairs` | `taom_hideout_desc_umbar` | Sheltered southern cove |
 | `feral_orcs` | `taom_hideout_desc_feral_orcs` | A ragged den in a scarred hollow |
+| `erebor_warriors` | `taom_hideout_desc_erebor` | Bleak eastern hills, a fallen Blacklock dwarf-camp |
 
-The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). The C# default text in `HideoutDescriptionService` matches the XML default verbatim (so the compiled fallback equals the loaded string).
+The seven strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). The C# default text in `HideoutDescriptionService` matches the XML default verbatim (so the compiled fallback equals the loaded string).
 
 ## Clan and hideout pairing guard (Patch125, 2026-10-29, #1063)
 
@@ -254,6 +255,7 @@ A bandit clan is in TAOM's `characters/clans.xml` and the hideouts of its cultur
 | [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 18 party templates: one raider and one boss per bandit culture. A boss template is one `1/1` boss stack plus soldier stacks summing to min 3 / max 4 (#564) |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
 | [`tools/oneoff/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
+| [`Main/Features/BanditManagement/HideoutClanGuard.cs`](../../Main/Features/BanditManagement/HideoutClanGuard.cs) / [`Hooks/Patch125_HideoutClanGuard.cs`](../../Main/Features/BanditManagement/Hooks/Patch125_HideoutClanGuard.cs) | Clan and hideout pairing guard (#1063): the decisions and the Harmony patch |
 | [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | unit tests (scaling service, settings provider, density-model helpers, hideout descriptions, boss-fight service, Patch86 bindings) |
 | [`TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs`](../../TAOM.Tests/Core/HideoutBossPartyTemplateTests.cs) | Shipped-data gate on the nine boss templates: one pinned boss stack matching the culture's `bandit_boss`, soldier stacks summing to min 3 / max 4 |
 
@@ -265,11 +267,11 @@ A bandit clan is in TAOM's `characters/clans.xml` and the hideouts of its cultur
 - `SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight`: Harmony Prefix, original still runs (Patch86, sneak-in route). Private instance method in SandBox.dll; three private fields injected (`_allEnemyTroops`, `_overriddenHideoutBossAgentOrigin`, `_allEnemyTroopTypesCache`), pinned by `ReflectionSiteBindingTests`.
 - `TaomSettings` (MCM): 8 properties in the `World/Bandit Scaling` group (`BanditStartingHideoutsPerFaction` (first `BanditInitialHideoutsPerFaction`) added 2026-05-29, `BanditHideoutBossBodyguards` added by #564).
 - Existing TAOM culture troop XMLs — pulls raider-tier T1–T4 troops by ID; no new troop authoring.
-- `taom_partyTemplates.xml`: 16 templates (8 raider + 8 boss, one pair per bandit culture).
+- `taom_partyTemplates.xml`: 18 templates (9 raider + 9 boss, one pair per bandit culture).
 
 ## Tests
 
-[`TAOM.Tests/Features/BanditManagement/BanditScalingServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingServiceTests.cs) — 16 tests covering:
+[`TAOM.Tests/Features/BanditManagement/BanditScalingServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingServiceTests.cs), 18 tests covering:
 - Linear curve at 0, 0.5, 1.0
 - NaN/Infinity guards on PlayerProgress AND on curve
 - Negative-input clamping
@@ -332,7 +334,7 @@ The GameModel properties (`NumberOfMaximumHideoutsAtEachBanditFaction` etc.) are
 
 ## Localization
 
-Culture display names, male/female names, and the hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically. **Coverage gap (measured 2026-09-11):** `HideoutDescriptionService` maps 7 of the 9 bandit cultures (the five originals plus `erebor_warriors`); `gondor_soldiers` and `mirkwood_stalkers` have no `taom_hideout_desc_*` string, so their hideouts still show vanilla's "(Undefined hideout type)" placeholder. Two strings and two dictionary rows close it.
+Culture display names, male/female names, and the hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically. **Coverage gap (measured 2026-09-11, `feral_orcs` added 2026-10-29):** `HideoutDescriptionService` maps 7 of the 9 bandit cultures (the five originals plus `feral_orcs` and `erebor_warriors`); `gondor_soldiers` and `mirkwood_stalkers` have no `taom_hideout_desc_*` string, so their hideouts still show vanilla's "(Undefined hideout type)" placeholder. Two strings and two dictionary rows close it.
 
 The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/oneoff/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
 
@@ -366,7 +368,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 - **`TaomBanditDensityModel` overrides 6 properties** (source-verified): `NumberOfMinimumBanditPartiesInAHideoutToInfestIt`, `NumberOfMaximumHideoutsAtEachBanditFaction`, `NumberOfInitialHideoutsAtEachBanditFaction` (the early-game density lever, vanilla 7; TAOM's default was 14 until #559 and is 7 now), `NumberOfMaximumBanditPartiesInEachHideout`, `NumberOfMaximumTroopCountForFirstFightInHideout`, and `NumberOfMaximumTroopCountForBossFightInHideout`, which since #564 is `1 + Hideout Boss Bodyguards` from `IHideoutBossFightService` rather than a scaled vanilla value.
 - The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base. "Vanilla is the floor" holds for the five scaled properties; the boss-phase cap sits below vanilla's 6..11 by design.
-- The 8 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (9 rows, one `<Faction is_bandit="true">` per culture; verified 2026-09-11, `feral_orcs` added 2026-10-29).
+- The 9 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (one `<Faction is_bandit="true">` per culture; verified 2026-09-11, `feral_orcs` added 2026-10-29). The file now holds 11 `is_bandit` rows, the other two being the creature-bandit clans (`mirkwood_spiders`, `wild_trolls`).
 - The vanilla `looters` clan is **kept** because its `StringId == "looters"` is hardcoded in `DefaultBanditDensityModel`, and looter spawning runs on a separate code path from hideout bandits.
 - `TaomBanditDensityModel.GetMaxSupportedNumberOfLootersForClan` returns 0 for the Creature Bandits clans (`mirkwood_spiders`, `wild_trolls`, #692 and #694). Both are looter factions, so vanilla would spawn them anywhere on the map; their own spawners place them instead ([creature-bandits](creature-bandits.md)).
 - `TAOM_Map/SubModule.xml` declares `<DependedModule Id="TAOM"/>` (the external map module now depends on TAOM, so the LOTR bandit cultures its hideouts reference are guaranteed loaded).

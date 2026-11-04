@@ -275,9 +275,9 @@ postfix, so it has no `CoopVetoClassificationTests` row.
 - `TAOM.Tests/Features/TimeAcceleration/TimeAccelerationSettingsProviderTests.cs` carries 5 tests: the
   no-MCM fallbacks equal the compiled defaults, the defaults are ordered fast below extra below turbo,
   and `ClampExtra` floors extra at fast without touching a larger value
-- `TAOM.Tests/Features/TimeAcceleration/TaomTimeControlHotKeyCategoryTests.cs` carries 10 tests pinning the
+- `TAOM.Tests/Features/TimeAcceleration/TaomTimeControlHotKeyCategoryTests.cs` carries 11 tests pinning the
   three engine contracts above (id floor, slot count, MainCategoryId), plus context type, GroupId,
-  id uniqueness, the shipped defaults, and the null-`KeyboardKey` premise the adapter's guard relies on
+  id uniqueness, the shipped defaults, and the null-`KeyboardKey` and cleared-to-`Invalid` premises the adapter's guard relies on
 - `TAOM.Tests/Features/TimeAcceleration/TimeControlAdapterBindingTests.cs` carries 1 `BindingVerification`
   test: the adapter's `SimplifiedTimeControlMode` getter calls `Campaign.GetSimplifiedTimeControlMode` and not
   the raw `TimeControlMode`. The map profiler's speed tests fake the adapter, so this IL pin is the only check
