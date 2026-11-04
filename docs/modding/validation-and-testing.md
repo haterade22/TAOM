@@ -57,7 +57,7 @@ hand edits, so land a repo-side validator gate with any fix.
 | Command | Proves | Cannot see |
 |---|---|---|
 | `python tools/audit_mbproj_registration.py` | no `project.mbproj` `<file>` row carries an id the engine silently ignores | `SubModule.xml` registration, which is a separate list |
-| `python tools/check_external_xslt.py` | all 17 stylesheets across the three modules are well formed, and compile when lxml is present | what a stylesheet *means*; no tool models XSLT semantics |
+| `python tools/check_external_xslt.py` | every stylesheet across the three modules (20 today) is well formed, and compiles when lxml is present | what a stylesheet's output contains; `check_external_xslt.py` says nothing about it |
 | `python tools/audit_action_set_parity.py` | no humanoid `action_set` is short of Native's surface, and no root-level `<action>` exists | animation quality |
 | `python tools/audit_civilian_action_set_coverage.py` | every race has the civilian action-set family | battle sets |
 | `python tools/audit_mount_parity.py` | a creature mount's Monster, usage and action surfaces match warg / elephant / horse | rein attributes, and it always exits 0 (see the exit-code traps) |
@@ -115,12 +115,12 @@ Three consequences the table cannot show on its own.
   rule, `MOUNTED_DWARF` and `MOUNT_WITHOUT_HARNESS` apply to repo files only. That is free today because the Armory defines
   items and monsters and nothing else; author a troop or an equipment roster there and it is
   entirely unvalidated ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md)).
-- **No tool models XSLT.** `check_external_xslt.py` proves the stylesheets are well formed and
-  nothing more. `TAOM_Map/ModuleData/settlements.xslt` is opened only to regex one boolean, and
+- **No gate checks what a stylesheet produces.** `check_external_xslt.py` proves the stylesheets are well formed and
+  nothing more. `taom_schema.py` opens `settlements.xslt` only to regex one boolean, and reads `spclans.xslt` and `spcultures.xslt` for the clan registry and militia ids, and
   only three test classes transform the repo's copies (`CulturePartyTemplateTests`,
   `LordFamilyTransformTests`, `LordTemplateRosterTests`). A stylesheet that rewrites a vanilla culture in place
   is invisible to every gate here ([tools/README.md](../../tools/README.md) "No tool in this section
-  models XSLT").
+  checks what a stylesheet produces").
 
 ## What the commit hook covers, and what it does not
 
