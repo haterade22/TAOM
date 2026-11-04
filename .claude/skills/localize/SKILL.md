@@ -50,5 +50,7 @@ Stage the edit, then run `python tools/check_stale_loc_rows.py --staged` (report
 Then, after translating, run `python tools/loc_length_report.py --since <base>`: it lists translations much longer than their English. For each flagged key shown in a fixed-size Gauntlet widget, check that screen in game in that language, or record it under `Not-tested:` in the commit body. A key counted as "untranslated or identical to English" is checked after its translation lands.
 
 ## Gotchas
+
+- Search GitHub issue bodies, not only titles, for owed translator runs: #446 and four checkbox items were invisible to a title search.
 - Morphologically-rich languages (RU/JP/KO/TR/CN) hit gender-agreement rejections that fall back to English — flag for human polish (no auto-fix).
 - Two external modules also have loc (`TAOM_Map`, `LOTRLOME_Armory`) deployed straight to the game install, not in the repo.

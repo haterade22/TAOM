@@ -111,7 +111,7 @@ permissions; a shell sandbox does not establish an MCP server's write boundary.
 
 Start with the relevant [engine process doc](../reference/engine/), then inspect
 the installed type and its consumers. The [research guide](taleworlds-research-guide.md)
-has the detailed method. `tools/taom-src.ps1 path Fully.Qualified.Type` is the
+has the detailed method. `tools/taom-src.ps1 path <Type>` (a short or fully qualified name) is the
 repository helper: inspect its parameters and the resolved game before using it.
 It writes a versioned cache under the user's profile, which may need separate
 permission. It is not a workspace-only read. Never run its cleanup modes as an

@@ -374,6 +374,10 @@ the rest were accent-only fixes the translation already carried. The method, so 
 cheap: for each English source, walk `git log`, find the commit that last changed each key's text,
 and flag every language row that is byte-identical to its value at that commit's parent.
 
+`python tools/check_stale_loc_rows.py --staged` reports a new edit's stale rows (report only). The walk over history has no tool: the sweep's scratch `stale_detect.py` was not kept. 27 dead rows per language were still open on 2026-10-01.
+
+**Evicting a stale key.** The RU cache is not in the translator's canonical `json.dump(indent=2, sort_keys=True)` layout (one byte off, measured 2026-09-13), so remove the key's line and prove `json.loads` equals the original minus the key. The other 11 caches round-trip exactly, and all 12 are CRLF on disk.
+
 ### One key, one character
 
 The engine looks a translation up by key alone. A character copied from another with its

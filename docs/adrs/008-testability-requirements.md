@@ -40,13 +40,13 @@ A new abstraction migrates every consumer in the same change.
 
 Before marking any abstraction task as complete:
 
-- [ ] Interface created in `Main/Adapters/` or `Main/Core/Services/`
+- [ ] Interface created in `Main/Adapters/`, the feature's folder under `Main/Features/`, or `Main/Core/Infrastructure/`
 - [ ] Implementation created
 - [ ] Registered in `Main/IoC.cs` or feature-specific IoC
 - [ ] ALL services using old static calls refactored
-- [ ] Full test suite run: `dotnet test TAOM.Tests`
+- [ ] Full test suite run: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`
 - [ ] **Zero test failures** - not "most tests pass"
-- [ ] Coverage maintained or improved
+- [ ] Every decision path has a test; no percentage is measured
 
 ## Consequences
 
@@ -78,6 +78,8 @@ exception), so static calls in services are a review check, not a grep.
 ### Amendment (2026-11-03): provider rules removed
 
 The provider types this ADR told services to use (`ICampaignTimeProvider`, `IModulePathProvider`, `IPlayerHeroProvider`, `ICampaignProvider`) do not exist in TAOM code, and the "Create if needed" rows were never created. Seams and adapters (ADR-007) met the need. Rule 3, the provider items in Rule 4, Rule 5, Implementation Patterns 1 to 3, the codebase examples and the Migration Guide left with them. Pattern 3 taught catching `NullReferenceException` as control flow in a service, which contradicts `.claude/rules/adapters.md`.
+
+The Rule 4 checklist named a `Main/Core/Services/` folder that does not exist; a feature's services live in its folder under `Main/Features/`, and shared ones under `Main/Core/Infrastructure/`.
 
 What is true now: engine statics in a service live only in a boundary seam (ADR-007). Rule 2 keeps one requirement: a new abstraction migrates every consumer in the same change. The enforcement claims of a pre-commit hook with a coverage minimum and a CI gate were false; the section now says so.
 
