@@ -305,6 +305,35 @@ public class PrefabAttributeNameBindingTests
             + Environment.NewLine + string.Join(Environment.NewLine, stale));
     }
 
+    [TestMethod]
+    public void EveryVisualDefinition_IsNamedByAWidgetInItsPrefab()
+    {
+        var repoDir = RepoPrefabsDir();
+        var files = Directory.GetFiles(repoDir, "*.xml", SearchOption.AllDirectories);
+        Assert.IsTrue(files.Length > 0, "No TAOM prefabs found; the gate is not reading the tree.");
+
+        var orphans = new List<string>();
+        foreach (var file in files.OrderBy(f => f, StringComparer.Ordinal))
+        {
+            // XDocument drops comments, so a widget commented out of its prefab does not name a definition.
+            var doc = XDocument.Load(file, LoadOptions.SetLineInfo);
+            var named = new HashSet<string>(
+                doc.Descendants().Where(e => e.Name.LocalName != "VisualDefinition")
+                    .Select(e => (string)e.Attribute("VisualDefinition")).Where(n => n != null),
+                StringComparer.Ordinal);
+            foreach (var definition in doc.Descendants().Where(e => e.Name.LocalName == "VisualDefinition"))
+            {
+                var name = (string)definition.Attribute("Name");
+                if (!named.Contains(name))
+                    orphans.Add($"{file.Substring(repoDir.Length + 1).Replace('\\', '/')}:{((IXmlLineInfo)definition).LineNumber} {name}");
+            }
+        }
+
+        Assert.AreEqual(0, orphans.Count,
+            "These VisualDefinitions are named by no widget in their own prefab, so they never run. Delete them "
+            + "(and any Constant only they read): " + Environment.NewLine + string.Join(Environment.NewLine, orphans));
+    }
+
     private sealed class BadUse
     {
         public string TypeName;
