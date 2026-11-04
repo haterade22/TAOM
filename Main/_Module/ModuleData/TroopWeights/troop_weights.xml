@@ -150,6 +150,8 @@
     <!-- Mountain spider riders: the Dol Guldur spider rider package weight -->
     <TroopWeight id="goblin_spider_rider" weight="4.0" />
     <TroopWeight id="goblin_spider_lord" weight="4.0" />
+    <!-- Dire wolf lord (#1081): the warg rider weight -->
+    <TroopWeight id="goblin_wolf_lord" weight="2.0" />
 
     <!-- Khamul's Shadow Line: level 41 and 46, all 3.0 -->
     <TroopWeight id="dg_khamul_shadow_knight" weight="3.0" />
@@ -174,6 +176,8 @@
     <!-- ===== GUNDABAD ===== -->
     <TroopWeight id="gundabad_chosen_of_tharzog" weight="2.0" />
     <TroopWeight id="gundabad_warg_tamer" weight="2.0" />
+    <TroopWeight id="gundabad_dire_wolf_rider" weight="2.0" />
+    <TroopWeight id="gundabad_wolf_lord" weight="2.0" />
     <TroopWeight id="gundabad_bolgs_ironfang" weight="2.0" />
 
     <!-- ===== GONDOR ===== -->

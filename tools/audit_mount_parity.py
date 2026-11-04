@@ -48,6 +48,7 @@ FILES = {
         "elephant": LOTR + r"\Monsters\LOTR\lotr_monster_elephant.xml",
         # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil).
         "mumakil":  LOTR + r"\Monsters\LOTR\lotr_monster_mumakil.xml",
+        "dire_wolf": LOTR + r"\Monsters\LOTR\lotr_monster_dire_wolf.xml",
         "horse":    NATIVE + r"\monsters.xml",
     },
     "usage": {
@@ -56,6 +57,8 @@ FILES = {
         "elephant": (LOTR + r"\monster_usage_sets.xml", "elephant"),
         # Mûmakil reuses the elephant usage set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\monster_usage_sets.xml", "elephant"),
+        # The dire wolf shares the warg's usage set and action names on its own skeleton (#1081).
+        "dire_wolf": (LOTR + r"\monster_usage_sets.xml", "warg"),
         "horse":    (NATIVE + r"\monster_usage_sets.xml", "horse"),
     },
     "action_types": [
@@ -68,6 +71,7 @@ FILES = {
         "elephant": (LOTR + r"\action_sets.xml", "as_elephant"),
         # Mûmakil reuses the elephant action set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\action_sets.xml", "as_elephant"),
+        "dire_wolf": (LOTR + r"\action_sets.xml", "as_dire_wolf"),
     },
     "rider_partials": {
         "spider (LOTRLOME)": LOTR + r"\action_sets.xml",
@@ -75,7 +79,7 @@ FILES = {
     },
 }
 
-MOUNTS = ["spider", "warg", "elephant", "mumakil"]
+MOUNTS = ["spider", "warg", "elephant", "mumakil", "dire_wolf"]
 
 # The mounts --strict holds to a total usage set: the creatures a behaviour tree steers, which turn
 # mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
@@ -108,11 +112,16 @@ def parse(path):
 
 
 # ---------- A. Monster attributes ----------
-MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "mumakil": "taom_mumakil", "horse": "horse"}
+MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "mumakil": "taom_mumakil",
+               "dire_wolf": "dire_wolf", "horse": "horse"}
 
 
 def monster_elem(name):
-    root = parse(FILES["monster"][name])
+    path = FILES["monster"][name]
+    if not os.path.isfile(path):
+        print("  [FAIL] %s: Monster file not found: %s" % (name, path))
+        return None
+    root = parse(path)
     want = MONSTER_IDS[name]
     for m in root.iter("Monster"):
         if m.get("id") == want:

@@ -4838,3 +4838,11 @@ Steam moved the game from changeset 125053 to 125270 and kept the version string
 - **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
 - **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string: that is owed in [v1.5.6-impact.md](../../migration/v1.5.6-impact.md).
 - **Source:** [v1.5.6-impact.md](../../migration/v1.5.6-impact.md), "Hotfix: changeset 125270".
+
+### Break the asset before you trust a gate you wrote for it (dire wolves, 2026-11-04)
+
+`verify_mount_assets.py`, `gen_dire_wolf_anim_clips.ps1 -Verify` and the Blender report each printed success on the real wolf. A byte scan matched `x_trot` inside `x_trot_strafe`, so 8 of 40 clips could lose their tag or file; the gate exited 0 on no rows; `-Verify` passed with no masters on disk.
+
+- **Why missed:** the gates were treated as checks on the work, so they had no tests, and they only ever met a healthy mount.
+- **Prevent:** a gate gets a test that breaks each thing it guards, on the first commit. Match a resource by its exact item name, never by bytes. An exemption names the exact row it allows.
+- **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).

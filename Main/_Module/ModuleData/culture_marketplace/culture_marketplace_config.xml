@@ -139,6 +139,13 @@
     <Item id="warg_albino" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
     <Item id="warg_saddle" cultures="isengard,mordor,gundabad,dolguldur,goblin,mistymountainorcs,bluecraig" min_stock="1" />
 
+    <!-- Dire wolves (#1081), in LOTRAOM_horses.xml: pale skins for Gundabad, dark for the goblin realms. -->
+    <Item id="dire_wolf_grey"   cultures="gundabad" min_stock="1" />
+    <Item id="dire_wolf_white"  cultures="gundabad" min_stock="1" />
+    <Item id="dire_wolf_black"  cultures="goblin,mistymountainorcs,bluecraig" min_stock="1" />
+    <Item id="dire_wolf_brown"  cultures="goblin,mistymountainorcs,bluecraig" min_stock="1" />
+    <Item id="dire_wolf_saddle" cultures="gundabad,goblin,mistymountainorcs,bluecraig" min_stock="1" />
+
     <!-- Dwarven war rams and their bardings (#515), from
          LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml. Unlike the wargs above,
          all ten already carry culture="Culture.erebor" upstream, so the auto-derived pool

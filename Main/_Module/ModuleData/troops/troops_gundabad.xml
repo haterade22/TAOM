@@ -1814,6 +1814,8 @@
         <upgrade_targets>
             <upgrade_target
                 id="NPCCharacter.gundabad_sentry" />
+            <upgrade_target
+                id="NPCCharacter.gundabad_wolf_runner" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -1902,6 +1904,248 @@
                 <equipment
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gundabad_wolf_runner"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_gundabad_wolf_runner_name}[Gundabad] Wolf Runner"
+        occupation="Soldier"
+        culture="Culture.gundabad">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="115" />
+            <skill
+                id="Riding"
+                value="145" />
+            <skill
+                id="OneHanded"
+                value="125" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="135" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.gundabad_dire_wolf_rider" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_e" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_white" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_f" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gundabad_dire_wolf_rider"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_gundabad_dire_wolf_rider_name}[Gundabad] Dire Wolf Rider"
+        occupation="Soldier"
+        culture="Culture.gundabad">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="175" />
+            <skill
+                id="OneHanded"
+                value="170" />
+            <skill
+                id="TwoHanded"
+                value="130" />
+            <skill
+                id="Polearm"
+                value="195" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.gundabad_wolf_lord" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_white" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_h" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gundabad_wolf_lord"
+        race="pale_uruk"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_gundabad_wolf_lord_name}[Gundabad] Dire Wolf Lord"
+        occupation="Soldier"
+        culture="Culture.gundabad">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="135" />
+            <skill
+                id="Riding"
+                value="205" />
+            <skill
+                id="OneHanded"
+                value="220" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="255" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="75" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_d" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_e" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_light_a" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_white" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
+              <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_light_b" />
+              <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
+              <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_grey" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"

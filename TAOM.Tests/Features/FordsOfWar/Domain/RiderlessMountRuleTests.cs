@@ -13,6 +13,7 @@ public class RiderlessMountRuleTests
     [DataRow("horse")]
     [DataRow("warg")]
     [DataRow("fell_warg")]
+    [DataRow("dire_wolf")]
     public void IsSwept_HorsesAndWargs_Go(string monster) => Assert.IsTrue(RiderlessMountRule.IsSwept(monster));
 
     [TestMethod]

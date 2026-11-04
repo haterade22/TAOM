@@ -25,6 +25,7 @@ public class CreatureMountRidersTests
     [DataRow("horse")]
     [DataRow("camel")]
     [DataRow("warg")]
+    [DataRow("dire_wolf")]
     [DataRow("taom_war_ram")]
     [DataRow("taom_elk")]
     [DataRow("taom_animalia_elk")]

@@ -24,7 +24,7 @@ namespace TAOM.Tests.Features.CultureConversion;
 ///
 /// TAOM's rosters really are uneven. Measured 2026-09-20 across the 16 <c>troops_*.xml</c> files:
 /// Mirkwood fields nothing at all at tiers 4, 5 or 6; Goblin, Blue Craig and the Misty Mountain
-/// orcs field no cavalry the swap may use at any tier (their mountain spider riders, 2026-09-29, ride
+/// orcs field only their wolf riders (#1081) as cavalry the swap may use (their mountain spider riders, 2026-09-29, ride
 /// a mount-locked creature and never replace a stack); Dunland, Dale and Umbar stop at tier 6. The mapper's fallback
 /// ladder is what covers those, and <see cref="EveryConversionTargetCanReplaceEveryTierAndRole"/> is the
 /// test that proves it actually does, against the shipped data rather than a fixture.

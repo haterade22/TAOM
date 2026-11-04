@@ -477,6 +477,10 @@ purchase, so the meshes and animations are on firm ground, while the behavioural
 (trample, mount-lock, howdah) rests on the same relationship rather than on a separate written grant.
 Worth getting one line in writing from Artem covering the code as well as the art.
 
+The dire wolves (#1081) use the purchased wolf meshes, textures, skeleton and clip masters (`data-port`, Mike bought
+the pack). TAOM's clips carry warg flags on those masters, and no ADOD wolf code is taken
+([dire-wolf.md](../features/dire-wolf.md)).
+
 Since 2026-09-29 the elephant's visible body (`sk_elephant_basemesh_a`) and its six harnesses
 (`SK_Elephant_Armor_Variations`) are meshes KEYforce delivered, replacing ADOD_Beasts's `elephant_mesh` and armour;
 the `elephant_skeleton`, its hit capsules and the animation clips still come from the purchased ADOD_Beasts asset.

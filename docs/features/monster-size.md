@@ -113,6 +113,7 @@ the placeholder 100** when you size its Monster (the schema requires the attribu
 | `taom_animalia_moose` (#646) | `lotr_monster_animalia.xml` | 150 | 2.74 m |
 | `taom_wildmesh_boar`, `_warthog`, `_mountaingoat`, `_deer` (#794) | `lotr_monster_wildmesh.xml` | 100 | owed (first battle) |
 | `taom_wildmesh_moose` (#794) | `lotr_monster_wildmesh.xml` | 150 | owed (first battle) |
+| `dire_wolf` (#1081) | `lotr_monster_dire_wolf.xml` | 240 | owed (first battle) |
 
 Every other mount keeps its item's `body_length` (the war ram 100, the elephant 130, the mumakil 300). **Never size
 the elephant or the mumakil here:** their howdah and tower prefabs are baked in metres for the item's size, so a

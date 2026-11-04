@@ -25,6 +25,7 @@ public interface IAgentAdapter
     float GetCurrentActionProgress(int actionChannelNo);
     bool IsHorse();
     bool IsCamel();
+    string GetMonsterStringId();
     bool IsActive();
     bool IsFadingOut();
     int Health { get; }

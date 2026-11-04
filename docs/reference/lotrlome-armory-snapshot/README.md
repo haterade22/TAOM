@@ -785,6 +785,8 @@ in the one-handed sword description and 11 spear pieces in three polearm descrip
 added to `TwoHandedPolearm_Couchable`, which his commit left out. The previous copy was byte-identical to the live
 `weapon_descriptions.xslt.bak-keyforce-harad-20261015-140734`.
 
+2026-11-04: `action_sets.xml` and `project.mbproj` refreshed by a byte copy of the live files after the dire wolf writer (#1081, [ledger](../lotrlome-dire-wolf-changes.md)). Each previous copy was byte-identical to its live `.bak-direwolf-20261104-120720`.
+
 Earlier on 2026-10-15: `action_sets.xml` refreshed by a byte copy of the live file after the WildMesh3D sets (#794): the
 previous copy was byte-identical to the live `action_sets.xml.bak-wildmesh-20261014`, and the live file differed from
 that backup by one insertion of 16,919 bytes holding the 15 `as_wildmesh_*` sets (now 4,461,693 bytes). The writer's

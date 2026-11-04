@@ -86,7 +86,7 @@ public sealed class EliteEmissaryConfigProvider : IEliteEmissaryConfigProvider
                         _logger.LogWarning("EliteEmissaryConfigProvider: <Culture> with empty id — skipped");
                         continue;
                     }
-                    // A culture that maps to NO special resource (a typo, or goblin, mistymountainorcs) would
+                    // A culture that maps to NO special resource (a typo, or lindon) would
                     // pass the merchant_cost checks but be silently dead at runtime — ResolveResource
                     // returns null and HideWhenNoResource hides the option. Drop+warn at load instead of
                     // shipping a dead offer block (the parsed-but-unresolvable M1 trap; Codex review 2026-06-25 [MED]).
