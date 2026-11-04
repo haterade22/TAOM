@@ -41,7 +41,7 @@ public interface IFormationAdapter
     // -- SmartCavalryAI extensions (Patch31) -------------------------------------
 
     /// <summary>True when the formation's representative class is cavalry — backed by
-    /// <c>FormationQuerySystem.IsCavalryFormation</c> in v1.3.15.</summary>
+    /// <c>FormationQuerySystem.IsCavalryFormation</c>.</summary>
     bool RepresentativeIsCavalry { get; }
 
     /// <summary>True when the team AI commands this formation (<c>Formation.IsAIControlled</c>:
@@ -57,8 +57,7 @@ public interface IFormationAdapter
 
     /// <summary>The just-applied movement order's type, or <c>Other</c> for any value
     /// outside the cavalry-feature interest set (Charge/ChargeToTarget). Reads via
-    /// <c>Formation.GetReadonlyMovementOrderReference()</c> on v1.3.15 — there is no
-    /// public <c>MovementOrder</c> property.</summary>
+    /// <c>Formation.GetReadonlyMovementOrderReference()</c>.</summary>
     MovementOrderType CurrentMovementOrderType { get; }
 
     /// <summary>The formation's current 2D world position (the centroid that the engine
@@ -67,7 +66,7 @@ public interface IFormationAdapter
     Vec2 CurrentPosition { get; }
 
     /// <summary>True when the formation's riders are close to their own arrangement slots:
-    /// the MEAN distance from each rider to <c>Formation.GetOrderPositionOfUnit</c> is under
+    /// the MEAN distance from each rider to the slot read from <c>Formation.Arrangement</c> is under
     /// <c>LineAlignment.Tolerance(strictness)</c> (10 m at 0, 4.4 m at 0.7, 2 m at 1). Only
     /// meaningful under a Hold-type order (Move), which is when the state machine asks. Gates
     /// Forming to Charging and Reforming to the next cycle.</summary>
