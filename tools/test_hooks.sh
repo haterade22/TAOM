@@ -2693,19 +2693,38 @@ g7e_long() {  # $1 the command's head; the rest is 300,000 letters
 [[ "$(g7e_long 'git commit -m ')" == rc=0 ]] \
     && ok "block-no-verify allows a too-long command with no flag" \
     || bad "block-no-verify refused a too-long command with no flag"
-# On the raw text a message or a heredoc line that names a flag is not the flag, and a flag quoted whole still is.
+# On the raw text over-blocking is the safe direction, so anything that names --no-veri refuses. The -n test still reads
+# past a quoted message, because -n is common: a later git call's -n stays allowed.
 [[ "$(g7e_long 'git commit -m "add -n flag" ; git log -n 1 ; echo ')" == rc=0 ]] \
     && ok "raw text: the -n of a later git call after a stripped message is not read" \
     || bad "raw text: a stripped message left a double space that read past the separator"
-[[ "$(g7e_long 'git commit -m "the --no-verify ban" ; echo ')" == rc=0 ]] \
-    && ok "raw text: a message that names --no-verify is allowed" \
-    || bad "raw text: a message that names --no-verify was refused"
-[[ "$(g7e_long 'git commit -m "the -c core.hooksPath=x form" ; echo ')" == rc=0 ]] \
-    && ok "raw text: a message that names core.hooksPath is allowed" \
-    || bad "raw text: a message that names core.hooksPath was refused"
-[[ "$(g7e_long $'git status\necho --no-verify\necho ')" == rc=0 ]] \
-    && ok "raw text: a line that runs no git may name the flag" \
-    || bad "raw text: a line that runs no git was refused for naming the flag"
+[[ "$(g7e_long 'git commit -m x; git log -n 1 ; echo ')" == rc=0 ]] \
+    && ok "raw text: the -n of a later git call after a glued separator is not read" \
+    || bad "raw text: a word holding a separator did not end the call"
+[[ "$(g7e_long 'git commit -m "the --no-verify ban" ; echo ')" == rc=2 ]] \
+    && ok "raw text: a message that names --no-verify refuses, the safe direction" \
+    || bad "raw text: a message that names --no-verify went through"
+[[ "$(g7e_long 'bash -c "cd x && git commit --no-verify -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag inside bash -c is refused" \
+    || bad "raw text: the flag inside bash -c went through"
+[[ "$(g7e_long 'eval "cd x; git commit --no-verify -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag inside eval is refused" \
+    || bad "raw text: the flag inside eval went through"
+[[ "$(g7e_long 'bash -c "git -c core.hooksPath=/dev/null commit -m y" ; echo ')" == rc=2 ]] \
+    && ok "raw text: core.hooksPath inside bash -c is refused" \
+    || bad "raw text: core.hooksPath inside bash -c went through"
+[[ "$(g7e_long '(git commit --no-verify) ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag in a subshell is refused" \
+    || bad "raw text: the flag in a subshell went through"
+[[ "$(g7e_long 'true;git commit --no-verify ; echo ')" == rc=2 ]] \
+    && ok "raw text: the flag after a glued separator is refused" \
+    || bad "raw text: the flag after a glued separator went through"
+[[ "$(g7e_long 'git commit "-n" -m ')" == rc=2 ]] \
+    && ok "raw text: a quoted -n is refused" \
+    || bad "raw text: a quoted -n went through"
+[[ "$(g7e_long 'git -C . commit -n -m ')" == rc=2 ]] \
+    && ok "raw text: -n past a global option is refused" \
+    || bad "raw text: -n past a global option went through"
 [[ "$(g7e_long 'git commit "--no-verify" -m ')" == rc=2 ]] \
     && ok "raw text: a flag quoted as a whole word is refused" \
     || bad "raw text: a flag quoted as a whole word went through"
@@ -3941,6 +3960,14 @@ SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/tools/context_budget_scan.sh" 
 grep -q 'e--x-scanmain/memory/MEMORY.md' <<< "$SC_OUT" \
     && ok "scan.sh reads the main checkout's MEMORY.md from a sibling worktree" \
     || bad "scan.sh missed the main checkout's MEMORY.md from a sibling worktree: $(printf '%s' "$SC_OUT" | grep -i memory | head -2)"
+# The fallback search for a memory folder ends at the checkout's own name, so another project that holds the name is not read.
+mkdir -p "$SC_H/.claude/projects/e--x-scanmain-old/memory"
+printf 'another project\n' > "$SC_H/.claude/projects/e--x-scanmain-old/memory/MEMORY.md"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/tools/context_budget_scan.sh" --verbose 2>&1)
+grep -q 'e--x-scanmain-old/memory/MEMORY.md' <<< "$SC_OUT" \
+    && bad "scan.sh read another project's MEMORY.md through its fallback" \
+    || ok "scan.sh's fallback does not read another project that holds the checkout's name"
+rm -rf "$SC_H/.claude/projects/e--x-scanmain-old"
 # A card counts as linked through the archive MEMORY.md links, and a card nothing reaches is named.
 SC_D="$SC_H/.claude/projects/e--x-scanmain/memory"
 mkdir -p "$SC_D/features"
@@ -3954,6 +3981,15 @@ if [[ "$SC_LINE" == *features/lost.md* && "$SC_LINE" != *features/reached.md* &&
     ok "scan.sh names the card nothing reaches and follows the archive to the rest"
 else
     bad "scan.sh orphan line is wrong: $SC_LINE"
+fi
+# A linked folder that ends in .md must not stop the walker, or a dead link and an orphan go unreported.
+mkdir -p "$SC_D/dir.md"
+printf -- '- [archive](archive.md)\n- [folder](dir.md)\n- [gone](gone.md)\n' > "$SC_D/MEMORY.md"
+SC_OUT=$(HOME="$SC_H" timeout -k 2 60 bash "$SC_W/tools/context_budget_scan.sh" 2>&1)
+if grep -q 'links files that do not exist: gone.md' <<< "$SC_OUT" && grep -q 'does not reach.*features/lost.md' <<< "$SC_OUT"; then
+    ok "scan.sh's walker survives a linked folder named like a page"
+else
+    bad "scan.sh's walker stopped on a linked folder: $(grep -iE 'memory' <<< "$SC_OUT" | head -3)"
 fi
 rm -rf "$SC_H" "$SC_M" "$SC_W"
 

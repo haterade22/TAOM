@@ -59,28 +59,25 @@ if [[ -n "${PYBIN:-}" ]]; then
   echo "block-no-verify: _shellwords.py bypass failed, so the command is read as raw text" >&2
 fi
 
-# No reader: the raw text, line by line. Quoted spans go first, so a message that names a flag is not
-# read as one, but a flag quoted as a whole word and a quoted hooksPath value stay. A flag counts only on
-# a line that runs git, so a heredoc line that names one is not read. A body line that itself runs git
-# with the flag still refuses, which is the safe direction.
+# No reader: the raw text. This path needs a command past the reader's limit, a reader crash or a 20 s overrun,
+# so over-blocking is the safe direction: a message or a later command that names the long flag refuses too.
 COMMAND=$(taom_hook_command posix block-no-verify)
 
 # Fail-open: nothing to inspect -> allow.
 [[ -z "${COMMAND:-}" ]] && exit 0
 
 # Only git commands. --no-verify means something else entirely to other tools.
-[[ ! "$COMMAND" =~ (^|[[:space:]])git([[:space:]]|$) ]] && exit 0
+[[ ! "$COMMAND" =~ (^|[[:space:]\;\&\|\(\"\'])git([[:space:]]|$) ]] && exit 0
 
-BARE=$(printf '%s' "$COMMAND" | sed -E "s/([[:space:]])[\"']+(--no-veri[a-z]*)[\"']+/\1\2/g; s/(-c[[:space:]]+)[\"']+([Cc][Oo][Rr][Ee]\.)/\1\2/g; s/\"[^\"]*\"//g; s/'[^']*'//g")
-BARE=${BARE//$'\\\n'/ }
-GIT_LINES=$(printf '%s\n' "$BARE" | grep -E '(^|[[:space:];&|(])git([[:space:]]|$)')
 # --no-veri is the shortest spelling git accepts: --no-ver is ambiguous with --no-verbose.
-[[ "$GIT_LINES" =~ (^|[[:space:]])--no-veri ]] && refuse "--no-verify"
-# A config key is case-insensitive.
-[[ "${GIT_LINES,,}" =~ (^|[[:space:]])-c[[:space:]]+core\.hookspath= ]] && refuse "-c core.hooksPath"
-# A word holding a separator or a line end ends the call, so the -n of a later `git log -n 1` or
-# `tail -n 3` is not read.
+[[ "$COMMAND" =~ --no-veri ]] && refuse "--no-verify"
+# A config key is case-insensitive, and its value may be quoted.
+[[ "${COMMAND,,}" =~ (^|[[:space:]])-c[[:space:]]+[\"\']*core\.hookspath= ]] && refuse "-c core.hooksPath"
+# -n is common, so this one reads past quoted spans, except a -n quoted whole. A word holding a separator or a line end
+# ends the call, so the -n of a later `git log -n 1` or `tail -n 3` is not read. Global options may sit before commit.
+BARE=$(printf '%s' "$COMMAND" | sed -E "s/([[:space:]])[\"']+(-[a-zA-Z]*n[a-zA-Z]*)[\"']+/\1\2/g; s/\"[^\"]*\"//g; s/'[^']*'//g")
+BARE=${BARE//$'\\\n'/ }
 BARE=${BARE//$'\n'/ ; }
-[[ "$BARE" =~ (^|[[:space:]])git[[:space:]]+commit([[:space:]]+[^-\;\&\|[:space:]][^[:space:]]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
+[[ "$BARE" =~ (^|[[:space:]\;\&\|\(])git([[:space:]]+-[^[:space:]]+([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*)?)*[[:space:]]+commit([[:space:]]+[^-\;\&\|[:space:]][^[:space:]\;\&\|]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
 
 exit 0

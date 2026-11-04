@@ -303,7 +303,7 @@ scan_memory() {
         # heuristic missed). This preserves behavior on platforms where the
         # canonical slug derivation doesn't match Claude Code's actual format.
         local fallback
-        fallback=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*$(basename "$main_root")*/MEMORY.md" 2>/dev/null | head -1)
+        fallback=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*-$(basename "$main_root")/memory/MEMORY.md" 2>/dev/null | head -1)
         if [[ -n "$fallback" && -f "$fallback" ]]; then
             mem_file="$fallback"
             [[ $VERBOSE -eq 1 ]] && printf "  memory (slug %s not found; fell back to %s)\n" "$slug" "$mem_file"
@@ -349,7 +349,7 @@ dead = sorted(t for t in targets if not (root / t).exists())
 linked, todo = set(), [(root / t).resolve() for t in targets if (root / t).exists()]
 while todo:
     page = todo.pop()
-    if page in linked or page.suffix != ".md":
+    if page in linked or page.suffix != ".md" or not page.is_file():
         continue
     linked.add(page)
     for m in re.finditer(r"\]\(([^)\s]+)\)", page.read_text(encoding="utf-8", errors="replace")):
@@ -365,6 +365,7 @@ PYEOF
     local dead orphans
     dead=$(printf '%s\n' "$linkcheck" | sed -n 's/^DEAD //p' | tr -d '\r')
     orphans=$(printf '%s\n' "$linkcheck" | sed -n 's/^ORPHAN //p' | tr -d '\r')
+    [[ -z "$linkcheck" ]] && ISSUES+=("MEMORY.md's links were NOT checked: the walker failed")
     [[ -n "$dead" ]] && ISSUES+=("MEMORY.md links files that do not exist: $dead")
     [[ -n "$orphans" ]] && ISSUES+=("Memory files MEMORY.md does not reach, directly or through a file it links: $orphans")
 }
