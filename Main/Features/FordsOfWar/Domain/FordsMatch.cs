@@ -29,6 +29,8 @@ internal sealed partial class FordsMatch
     private readonly TowerChain _chain;
     private readonly TowerDamageRules _damage;
     private readonly TowerAssaultLimit _assaultLimit;
+    private readonly TowerWear _wear;
+    private bool _wearAnnounced;
     private readonly UpgradeBook _upgrades;
     private readonly PoisonRules _poison = new();
     private readonly TowerRegen _regen;
@@ -76,6 +78,7 @@ internal sealed partial class FordsMatch
         _upgrades = new UpgradeBook(config.UpgradesOrDefault, factions);
         _damage = new TowerDamageRules(config.Towers, _chain, feats, _upgrades);
         _assaultLimit = new TowerAssaultLimit(config.Towers.AssaultDamagePerSecond);
+        _wear = new TowerWear(config.Towers.WearStartMinutes, config.Towers.WearPerMinute);
         _regen = new TowerRegen(config.Towers, _chain, feats);
         _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes, feats);
@@ -129,6 +132,7 @@ internal sealed partial class FordsMatch
             return Finish(effects);
 
         Observe(snapshot);
+        AnnounceWear();
         PayPassiveIncome(dt);
         foreach (var deck in _decks.Values)
             deck.Tick(dt);
@@ -141,6 +145,15 @@ internal sealed partial class FordsMatch
         RunAi();
         IssueLaneCommands(effects);
         return Finish(effects);
+    }
+
+    private void AnnounceWear()
+    {
+        if (_wearAnnounced || !_wear.HasBegun(_clock.Minute))
+            return;
+
+        _wearAnnounced = true;
+        _pendingEvents.Add(new MatchEvent(MatchEventKind.WallsWeaken, MatchSide.West, string.Empty, 0));
     }
 
     public CommandResult TryBuyPack(int slot, int lane, string offerId)
@@ -414,11 +427,16 @@ internal sealed partial class FordsMatch
     public int AdjustTowerDamage(TowerHit hit, out TowerDamageReason reason)
     {
         var effective = Judge(hit, out reason);
-        if (reason == TowerDamageReason.Applied && hit.AttackerRole != UnitRole.Hero && hit.AttackerRole != UnitRole.Siege)
+        if (reason == TowerDamageReason.Applied)
         {
-            effective = _assaultLimit.Take(hit.TowerId, effective, _clock.Elapsed);
-            if (effective == 0)
-                reason = TowerDamageReason.Crowded;
+            var wear = _wear.Factor(_clock.Minute);
+            effective = (int)Math.Round(effective * wear, MidpointRounding.AwayFromZero);
+            if (hit.AttackerRole != UnitRole.Hero && hit.AttackerRole != UnitRole.Siege)
+            {
+                effective = _assaultLimit.Take(hit.TowerId, effective, _clock.Elapsed, wear);
+                if (effective == 0)
+                    reason = TowerDamageReason.Crowded;
+            }
         }
 
         if (effective > 0)

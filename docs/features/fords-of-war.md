@@ -6,7 +6,7 @@ Fords of War is a campaign-free, single-player mission mode started from the mai
 West (the player) and East (an AI), face each other across 3 lanes. The player has no agent: they are a
 commander with a free top-down camera and a command panel, spend gold on packs of troops, on heroes and on army upgrades,
 give each lane a Push, Hold, Fall back or Seize order, and win by destroying the enemy keep. Each side owns a
-chain of towers per lane that shoots back, and the target length of a match is 30 to 45 minutes.
+chain of towers per lane that shoots back, and the target length of a match is 30 to 40 minutes, with 30 best (Mike, 2026-11-04).
 
 The original build contract, written before the build, with its stage-by-stage Deviations up to 2026-10-31, is
 [fords-of-war/build-spec.md](fords-of-war/build-spec.md). It is history: where it differs from this page, the code and this page win. This page is the maintainer's map: what exists,
@@ -176,6 +176,8 @@ per record. Names are camelCase.
 | `towers.attackRange` | float | Metres, formation center to tower, at which a lane attacks it; under Push an unguarded tower is attacked from the fire range | 20 |
 | `towers.thrustFloorFactor` | float | Share (0 to 1) of the weapon's thrust damage that a melee blow the engine zeroed takes; 0 turns the floor off | 0.2 |
 | `towers.assaultDamagePerSecond` | float | Damage ordinary blows may do to one tower each second; heroes and siege units pass it; 0 means no limit | 50 |
+| `towers.wearStartMinutes` | float | The match minute after which the walls start to weaken | 15 |
+| `towers.wearPerMinute` | float | Added each minute after that to a factor on tower damage and on the assault limit; 0 turns it off | 0.15 |
 | `heroes.maxAlivePerSide` | int | Heroes alive at once per side | 2 |
 | `heroes.respawnBaseSeconds` | float | Respawn delay at minute 0 | 60 |
 | `heroes.respawnPerMinuteSeconds` | float | Added to the delay per match minute | 6 |
@@ -371,6 +373,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 - **Free heroes** (`heroes.freeArrivalSeconds`, `FordsMatch.HeroArrivals.cs`): every 5 minutes of live time each side's next hero takes the field for nothing, cheapest first, in the lane where the side is most outnumbered. A side with no slot free or no hero left waits for the next arrival, and a missed one does not carry over. A commander can still pay to field a hero early. The hero panel's title counts down. Proof in a run: `[FordsOfWar][Hero] kind=fielded` lines at about 300 and 600 s for both sides.
 - **Hero strength** (`heroes.damageFactor`, `heroes.damageTakenFactor`, `HeroCombatFactors`, `FordsUpgradeHooks`): a hero of the match deals 3 times the damage and takes 0.4 times the damage, per blow in `TaomCustomBattleDamageModel`. Blows on towers keep their own `towers.heroDamageFactor`. Proof in a run: `heroRaised` and `heroLowered` on the `[FordsOfWar][Upgrade]` totals line, and the hero table of `tools/fords_match_review.py`.
 - **Tower assault limit** (`towers.assaultDamagePerSecond`, `TowerAssaultLimit`): a tower takes at most 50 points a second from ordinary blows, and a blow past that is cut or counted as `Crowded`. Each tower holds at most one second's worth. Heroes and siege units pass the limit and spend none of it. So an outer tower lasts at least 160 s, an inner one 220 s and a keep 360 s against soldiers alone, and more bodies past a small assault add nothing. Without it the cheapest pack was the best tower killer in the game: see [balance-log.md](fords-of-war/balance-log.md).
+- **Wall wear** (`towers.wearStartMinutes`, `towers.wearPerMinute`, `TowerWear`): after minute 15 every blow on a tower or keep does more, and the assault limit rises with it: 3.25 times at minute 30 and 5.5 times at minute 45. Locks still hold. Even sides fight mid-lane and rarely reach a tower, so without this a match between them would not end. The feed says so once, and a `[FordsOfWar][Wear]` line records it. Balance runs read the first 15 minutes, so they do not see it. Each measure is in [balance-log.md](fords-of-war/balance-log.md).
 - **AI under threat** (`AiCommander.Defend`, `BuyNextInCycle`): a threatened lane gets the buy cycle's next entry, and the AI saves for it, so a side that falls behind keeps its elites and upgrades. A faction with no cycle buys the cheapest spear or infantry pack.
 - **AI spare gold** (`AiCommander.BuySparePack`): while its assault lane is full, gold above `heroReserveGold` buys the cycle's next pack for the lane with the most room, and the cycle moves on, so the faction's upgrades and elites keep their share. With every lane full the gold waits for a hero. Spending it on upgrades alone favoured a horde, whose army gains the most from a flat price: see [balance-log.md](fords-of-war/balance-log.md).
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of

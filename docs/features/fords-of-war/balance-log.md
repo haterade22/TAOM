@@ -66,6 +66,9 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-025552 | Dol Guldur's prices | Dol Guldur v Easterlings | 759 / 624 | 4 / 0 | 4,436 / 35,486 | Easterlings 1.3 | 4x. |
 | 20261104-030029 | Dol Guldur's prices | Dol Guldur v Rohan | 722 / 616 | 3 / 0 | 4,474 / 34,476 | Rohan 1.4 | 4x. |
 | 20261104-031711 | `0b9d37166` | Harad v Rohan | 630 / 651 | 2 / 3 | 25,287 / 18,530 | Harad 0.9 | 1x. Rohan also 0.9. The 4x match of this pair also ended 2 / 3. |
+| 20261104-075542 | wall wear | Dale v Gondor | 2,834 / 2,721 | 4 / 1 | 24,550 / 36,511 | Gondor 1.0 | 4x, 45 minutes, engine changeset 125270. No keep touched. |
+| 20261104-080805 | wall wear | Erebor v Gundabad | 2,187 / 5,788 | 1 / 6 | 40,502 / 19,840 | Erebor 1.1 | 4x, 45 minutes. All 6 towers down by 1,641 s, then 80 damage to the keep in 18 minutes. Check 12 failed. |
+| 20261104-082014 | wall wear | Rivendell v Mordor | 436 / 4,992 | 3 / 7 | 75,788 / 29,099 | Rivendell 2.6 | 4x. Rivendell won at 2,375 s, 39.6 minutes. 13 hero blows did 13,821 of the keep's damage. |
 
 ## Findings and changes
 
@@ -167,7 +170,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **How long a match lasts now:** three matches of 45 minutes (`011218`, `012426`, `013631`). No keep fell in any. Rivendell, which lost all 6 towers and took none before the limit, now leads Mordor 4 towers to 2 at 45 minutes, so a small army comes back as the match goes on. Erebor took all 6 of Gundabad's towers by 2,192 s and did not finish the keep in the 510 s left. Dale and Gondor reached 2 towers to 0: each side dealt only about a third of the 75,000 points that a side's towers and keep hold. So the limit fixed who can win, and a match between even sides now runs past the 30 to 45 minute target. Raising the limit would not solve that: only 15 to 25 percent of blows on any side's towers were `Crowded`. Even sides fight mid-lane, and few of them reach a tower.
 
-### Rohan's riders (this change)
+### Rohan's riders
 
 **Why:** over nine matches, by role, cavalry made 1.12 kills per death, close to ranged units' 1.18 and above infantry's 0.82, but its gold trade was 0.71 against 2.19 and 1.15. Rohan's riders traded at 0.09 to 0.49. So they fight as cavalry should, and the price is what fails the design's "finest cavalry in Middle-earth".
 
@@ -175,7 +178,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Result, six matches at 4x:** cavalry's gold trade across all factions rose from 0.71 to 1.20, and Rohan's from 0.47 to 0.72 against Mirkwood, 0.93 to 1.22 against Harad, and to 1.96 against Mordor. Rohan took 3 towers to 1 from Mirkwood and 3 to 2 from Harad. Horse archers improved to 0.38, and they remain Rohan's weak pack.
 
-### Dol Guldur (this change)
+### Dol Guldur
 
 **Why:** Dol Guldur lost its fights against all three opponents at about 0.6 gold trade (0.64 Erebor, 0.67 Easterlings, 0.62 Rohan), and earned about 5,000 gold where they earned 7,500. Creature calls returned 0.14 of their gold across those six matches.
 
@@ -183,9 +186,22 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Result:** mixed. Its gold trade against Erebor rose to 1.06, but it stayed at 0.66 against Easterlings and 0.63 against Rohan, and it took no tower in the three matches. The change stays because it does no harm, and Dol Guldur is still the weakest faction. Its next lever is its income or its poison, and each needs a new trait line.
 
+### Wall wear (this change)
+
+**Why:** even sides fought mid-lane and rarely reached a tower, so a match between them would not end. Mike approved a time-based rule on 2026-11-04.
+
+**Changed:** after minute 15 every blow on a tower or keep does more, and the assault limit rises with it, by 15% of the base for each minute: 3.25 times at minute 30 and 5.5 times at minute 45. The match feed says so once. Balance runs read the first 15 minutes, so they do not see it.
+
+**Result, three matches of 45 minutes at 4x:** Rivendell beat Mordor at 39.6 minutes, the first full win inside the target between factions that were not lopsided from the start. Dale v Gondor moved from 2 towers to 0, to 4 to 1. Erebor took all of Gundabad's towers at 1,641 s, where it took them at 2,192 s before.
+
+**What it does not solve:** a keep is almost never attacked. Erebor stood with every Gundabad tower down for 18 minutes and did 80 damage to the keep, with no recorded contact. In the same pair without wear, the keep took 12 in over 8 minutes. A likely cause, not proven: attackers stop to fight each wave as it spawns at the base, and 91% of lane samples after 1,500 s were in the Charge branch. Heroes finish keeps when they reach one: 13 hero blows did 13,821 of the damage to Mordor's.
+
+A check of free waves also shows how far the hordes stand apart: by level and count per minute, Mordor scores 414 and Gundabad 396, and most factions 90 to 165. Dol Guldur's 105 is near its peers, so its waves alone do not explain its weak fights.
+
 ## Open questions
 
-- **Match length (a decision for Mike):** even sides do not finish in 45 minutes. A time-based rule would end such matches, for example tower damage rising with the match clock after a set minute. That is a new rule rather than a number, so it waits for his word.
+- **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
+- **Reaching the keep:** see "Wall wear" above. This is now what limits match length.
 - **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
 - **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.

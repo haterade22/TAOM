@@ -216,7 +216,9 @@ function Try-Decompile {
     # `namespace`, attribute, modifier, type keyword, comment). Anything else —
     # "Could not find type definition", "MetadataFileNotSupportedException" for
     # native DLLs, raw stack frames — is a miss.
-    $output = & ilspycmd $DllPath -t $TypeFqn 2>&1 | Out-String
+    # A type in a module's own bin needs the engine bin as a reference path, else ilspycmd prints
+    # `//IL_000c: Unknown result type` and bare casts. SearchDirs[0] is the game's bin dir.
+    $output = & ilspycmd $DllPath -t $TypeFqn -r $script:SearchDirs[0] 2>&1 | Out-String
     if ([string]::IsNullOrWhiteSpace($output)) { return $null }
     $firstLine = ($output -split "`r?`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1).TrimStart()
     if ($firstLine -match '^(using |namespace |//|/\*|\[|public |internal |private |protected |class |struct |interface |enum |abstract |sealed |static |partial |readonly |unsafe |#)') {

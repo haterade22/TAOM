@@ -17,15 +17,16 @@ internal sealed class TowerAssaultLimit
         _perSecond = perSecond;
     }
 
-    /// <summary>The share of this blow that the tower's budget lets through at match time <paramref name="now"/>, spent from the budget.</summary>
-    public int Take(string towerId, int damage, float now)
+    /// <summary>The share of this blow that the tower's budget lets through at match time <paramref name="now"/>, spent from the budget. <paramref name="wear"/> raises the rate, so the limit does not hold weakened walls back.</summary>
+    public int Take(string towerId, int damage, float now, float wear = 1f)
     {
         if (!(_perSecond > 0f))
             return damage;
 
-        var budget = _perSecond;
+        var rate = _perSecond * wear;
+        var budget = rate;
         if (_towers.TryGetValue(towerId, out var last))
-            budget = Math.Min(_perSecond, last.Budget + Math.Max(0f, now - last.At) * _perSecond);
+            budget = Math.Min(rate, last.Budget + Math.Max(0f, now - last.At) * rate);
 
         var taken = Math.Min(damage, (int)budget);
         _towers[towerId] = (budget - taken, now);

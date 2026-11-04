@@ -13,4 +13,5 @@ internal enum MatchEventKind
     RegionCalled,
     CreatureCalled,
     UpgradeBought,
+    WallsWeaken,
 }

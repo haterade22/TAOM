@@ -184,6 +184,14 @@ class AStaleIndex(unittest.TestCase):
         self.assertTrue((self.directory / "dll-index.json").is_file())
         self.assertFalse((self.profile / ".taom-src" / "dll-index.json").exists())
 
+    def test_a_module_type_decompiles_against_the_engine_references(self):
+        """Without the game's bin as a reference path ilspycmd leaves //IL_ lines and bare casts."""
+        result = run("TaleWorlds.MountAndBlade.View.MissionViews.Order.OrderTroopPlacer", profile=self.profile)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        source = Path(result.stdout.strip().splitlines()[-1]).read_text(encoding="utf-8-sig")
+        self.assertIn("OrderTroopPlacer", source)
+        self.assertNotIn("//IL_", source)
+
 
 if __name__ == "__main__":
     unittest.main()

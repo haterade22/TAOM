@@ -4417,6 +4417,7 @@
 	<string id="TAOM_FOW_Feed_EnemyKeep" text="{=TAOM_FOW_Feed_EnemyKeep}The enemy keep has fallen!" />
 	<string id="TAOM_FOW_Feed_EnemyPoint" text="{=TAOM_FOW_Feed_EnemyPoint}The enemy holds a capture point." />
 	<string id="TAOM_FOW_Feed_EnemyTower" text="{=TAOM_FOW_Feed_EnemyTower}An enemy tower has fallen." />
+	<string id="TAOM_FOW_Feed_WallsWeaken" text="{=TAOM_FOW_Feed_WallsWeaken}The siege drags on: every tower and keep now weakens by the minute." />
 	<string id="TAOM_FOW_Feed_OwnCamp" text="{=TAOM_FOW_Feed_OwnCamp}We cleared a camp." />
 	<string id="TAOM_FOW_Feed_OwnHeroBack" text="{=TAOM_FOW_Feed_OwnHeroBack}{HERO} returns to the field." />
 	<string id="TAOM_FOW_Feed_OwnHeroDied" text="{=TAOM_FOW_Feed_OwnHeroDied}{HERO} has fallen." />

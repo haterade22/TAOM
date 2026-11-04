@@ -716,6 +716,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             case MatchEventKind.UpgradeBought:
                 _logger.LogInfo($"[FordsOfWar][Upgrade] side={e.Side} track={e.Subject} price={e.Amount}");
                 break;
+            case MatchEventKind.WallsWeaken:
+                _logger.LogInfo("[FordsOfWar][Wear] the walls begin to weaken");
+                break;
         }
     }
 
