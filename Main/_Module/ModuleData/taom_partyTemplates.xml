@@ -45,6 +45,25 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- Grishûk (clan_gundabad_6): the Snow Orcs of Mount Gram (troops_gundabad_snow.xml). -->
+	<MBPartyTemplate id="kingdom_hero_party_gundabad_snow_template">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="22" troop="NPCCharacter.gundabad_snow_recruit" />
+			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.gundabad_snow_savage" />
+			<PartyTemplateStack min_value="8" max_value="20" troop="NPCCharacter.gundabad_snow_huntsman" />
+			<PartyTemplateStack min_value="5" max_value="18" troop="NPCCharacter.gundabad_snow_warrior" />
+			<PartyTemplateStack min_value="5" max_value="18" troop="NPCCharacter.gundabad_snow_spearman" />
+			<PartyTemplateStack min_value="4" max_value="17" troop="NPCCharacter.gundabad_snow_skirmisher" />
+			<PartyTemplateStack min_value="3" max_value="17" troop="NPCCharacter.gundabad_snow_marauder" />
+			<PartyTemplateStack min_value="3" max_value="17" troop="NPCCharacter.gundabad_snow_reaver" />
+			<PartyTemplateStack min_value="3" max_value="17" troop="NPCCharacter.gundabad_snow_archer" />
+			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.gundabad_snow_wolf_rider" />
+			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.gundabad_blackshield_infantry" />
+			<PartyTemplateStack min_value="1" max_value="16" troop="NPCCharacter.gundabad_blackshield_spearman" />
+			<PartyTemplateStack min_value="1" max_value="15" troop="NPCCharacter.gundabad_blackshield_wolf_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
 	<MBPartyTemplate id="militia_gundabad_template">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_militia_spearman" />

@@ -344,7 +344,7 @@
     {
       "id": "gundabad",
       "folder": "gundabad",
-      "files": ["gundabad"],
+      "files": ["gundabad", "gundabad_snow"],
       "ranks": {"overall": 9, "damage": 9, "accuracy": 10},
       "tiers": {
         "Bow": [2, 3, 4, 5]

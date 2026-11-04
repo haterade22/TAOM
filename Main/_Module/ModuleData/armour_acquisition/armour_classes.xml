@@ -1370,6 +1370,26 @@
   <Item id="sk_dwarf_tunic_noble_c" class="light" next="sk_dwarf_erebor_chest_chain_a" />
   <Item id="sk_dwarf_tunic_normal_a" class="light" next="sk_dwarf_erebor_chest_chain_a" />
   <Item id="sk_dwarf_tunic_normal_b" class="light" next="sk_dwarf_erebor_chest_chain_a" />
+  <Item id="sk_gb_orc_arc_chest_heavy_a" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_arc_chest_heavy_b" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_arc_chest_light_a" class="light" next="sk_gb_orc_inf_chest_med_a" />
+  <Item id="sk_gb_orc_arc_chest_light_b" class="light" next="sk_gb_orc_inf_chest_med_a" />
+  <Item id="sk_gb_orc_arc_chest_med_a" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_arc_chest_med_b" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_arc_tunic_a" class="light" next="sk_gb_orc_inf_chest_med_a" />
+  <Item id="sk_gb_orc_arc_tunic_b" class="light" next="sk_gb_orc_inf_chest_med_a" />
+  <Item id="sk_gb_orc_inf_chest_heavy_a" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_inf_chest_heavy_b" class="heavy" next="sk_gb_uruk_chest_elite_a" />
+  <Item id="sk_gb_orc_inf_chest_light_a" class="light" next="sk_gb_orc_inf_chest_med_a" />
+  <Item id="sk_gb_orc_inf_chest_light_b" class="light" next="sk_gb_orc_inf_chest_med_b" />
+  <Item id="sk_gb_orc_inf_chest_med_a" class="medium" next="sk_gb_orc_inf_chest_heavy_a" />
+  <Item id="sk_gb_orc_inf_chest_med_b" class="medium" next="sk_gb_orc_inf_chest_heavy_b" />
+  <Item id="sk_gb_orc_inf_pauld_cape_heavy_a" class="heavy" next="sk_gb_uruk_pauldron_cape_elite_a" />
+  <Item id="sk_gb_orc_inf_pauld_cape_heavy_b" class="heavy" next="sk_gb_uruk_pauldron_cape_elite_a" />
+  <Item id="sk_gb_orc_inf_pauld_cape_light_a" class="light" next="sk_gb_orc_inf_pauld_cape_light_b" />
+  <Item id="sk_gb_orc_inf_pauld_cape_light_b" class="medium" next="sk_gb_orc_inf_pauld_cape_heavy_b" />
+  <Item id="sk_gb_orc_inf_pauld_cape_med_a" class="heavy" next="sk_gb_uruk_pauldron_cape_elite_a" />
+  <Item id="sk_gb_orc_inf_pauld_cape_med_b" class="heavy" next="sk_gb_uruk_pauldron_cape_elite_a" />
   <Item id="sk_gb_uruk_boots_elite_a" class="elite" />
   <Item id="sk_gb_uruk_boots_elite_b" class="elite" />
   <Item id="sk_gb_uruk_boots_elite_c" class="elite" />
@@ -1944,26 +1964,6 @@
   <Item id="sk_is_orc_sly_helmet_med_a" class="medium" next="sk_is_orc_sly_helmet_heavy_a" />
   <Item id="sk_is_orc_vgd_helmet_heavy_a" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
   <Item id="sk_is_orc_vgd_helmet_med_a" class="medium" next="sk_is_orc_vgd_helmet_heavy_a" />
-  <Item id="sk_md_mor_arc_bracer_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_arc_bracer_heavy_b" class="heavy" />
-  <Item id="sk_md_mor_arc_bracer_light_a" class="light" next="sk_md_mor_arc_bracer_med_a" />
-  <Item id="sk_md_mor_arc_bracer_light_b" class="light" next="sk_md_mor_arc_bracer_med_a" />
-  <Item id="sk_md_mor_arc_bracer_med_a" class="medium" next="sk_md_mor_arc_bracer_heavy_a" />
-  <Item id="sk_md_mor_arc_bracer_med_b" class="heavy" />
-  <Item id="sk_md_mor_arc_chest_heavy_a" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
-  <Item id="sk_md_mor_arc_chest_heavy_b" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
-  <Item id="sk_md_mor_arc_chest_heavy_c" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
-  <Item id="sk_md_mor_arc_chest_heavy_d" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
-  <Item id="sk_md_mor_arc_chest_light_a" class="light" next="sk_md_mor_arc_chest_med_a" />
-  <Item id="sk_md_mor_arc_chest_light_b" class="light" next="sk_md_mor_arc_chest_med_b" />
-  <Item id="sk_md_mor_arc_chest_med_a" class="medium" next="sk_md_mor_arc_chest_heavy_a" />
-  <Item id="sk_md_mor_arc_chest_med_b" class="medium" next="sk_md_mor_arc_chest_heavy_b" />
-  <Item id="sk_md_mor_arc_chest_med_c" class="medium" next="sk_md_mor_arc_chest_heavy_c" />
-  <Item id="sk_md_mor_arc_chest_med_d" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
-  <Item id="sk_md_mor_arc_helmet_elite_a" class="elite" />
-  <Item id="sk_md_mor_arc_helmet_elite_b" class="elite" />
-  <Item id="sk_md_mor_arc_helmet_heavy_a" class="heavy" next="sk_md_mor_arc_helmet_elite_a" />
-  <Item id="sk_md_mor_arc_helmet_heavy_b" class="heavy" next="sk_md_mor_arc_helmet_elite_b" />
   <Item id="sk_ll_gl_bracer_heavy_a" class="elite" />
   <Item id="sk_ll_gl_bracer_med_a" class="elite" />
   <Item id="sk_ll_gl_chest_elite_a" class="elite" />
@@ -2041,6 +2041,26 @@
   <Item id="sk_ll_rg_helmet_med_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_rg_pauld_light_a" class="heavy" next="sk_ll_rg_pauld_med_a" />
   <Item id="sk_ll_rg_pauld_med_a" class="elite" />
+  <Item id="sk_md_mor_arc_bracer_heavy_a" class="heavy" />
+  <Item id="sk_md_mor_arc_bracer_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_arc_bracer_light_a" class="light" next="sk_md_mor_arc_bracer_med_a" />
+  <Item id="sk_md_mor_arc_bracer_light_b" class="medium" next="sk_md_mor_arc_bracer_heavy_b" />
+  <Item id="sk_md_mor_arc_bracer_med_a" class="medium" next="sk_md_mor_arc_bracer_heavy_a" />
+  <Item id="sk_md_mor_arc_bracer_med_b" class="heavy" />
+  <Item id="sk_md_mor_arc_chest_heavy_a" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
+  <Item id="sk_md_mor_arc_chest_heavy_b" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
+  <Item id="sk_md_mor_arc_chest_heavy_c" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
+  <Item id="sk_md_mor_arc_chest_heavy_d" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
+  <Item id="sk_md_mor_arc_chest_light_a" class="light" next="sk_md_mor_arc_chest_med_a" />
+  <Item id="sk_md_mor_arc_chest_light_b" class="light" next="sk_md_mor_arc_chest_med_b" />
+  <Item id="sk_md_mor_arc_chest_med_a" class="medium" next="sk_md_mor_arc_chest_heavy_a" />
+  <Item id="sk_md_mor_arc_chest_med_b" class="medium" next="sk_md_mor_arc_chest_heavy_b" />
+  <Item id="sk_md_mor_arc_chest_med_c" class="medium" next="sk_md_mor_arc_chest_heavy_c" />
+  <Item id="sk_md_mor_arc_chest_med_d" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
+  <Item id="sk_md_mor_arc_helmet_elite_a" class="elite" />
+  <Item id="sk_md_mor_arc_helmet_elite_b" class="elite" />
+  <Item id="sk_md_mor_arc_helmet_heavy_a" class="heavy" next="sk_md_mor_arc_helmet_elite_a" />
+  <Item id="sk_md_mor_arc_helmet_heavy_b" class="heavy" next="sk_md_mor_arc_helmet_elite_b" />
   <Item id="sk_md_mor_arc_helmet_heavy_c" class="heavy" next="sk_md_mor_arc_helmet_elite_a" />
   <Item id="sk_md_mor_arc_helmet_light_a" class="light" next="sk_md_mor_arc_helmet_med_a" />
   <Item id="sk_md_mor_arc_helmet_light_b" class="light" next="sk_md_mor_arc_helmet_med_b" />
@@ -2109,8 +2129,8 @@
   <Item id="sk_md_mor_pik_helmet_med_c" class="medium" next="sk_md_mor_pik_helmet_heavy_c" />
   <Item id="sk_md_mor_pik_pauld_heavy_a" class="heavy" />
   <Item id="sk_md_mor_pik_pauld_heavy_b" class="heavy" />
-  <Item id="sk_md_mor_pik_pauld_light_a" class="light" next="sk_md_mor_pik_pauld_med_b" />
-  <Item id="sk_md_mor_pik_pauld_light_b" class="light" next="sk_md_mor_pik_pauld_med_b" />
+  <Item id="sk_md_mor_pik_pauld_light_a" class="light" next="sk_md_mor_pik_pauld_light_b" />
+  <Item id="sk_md_mor_pik_pauld_light_b" class="medium" next="sk_md_mor_pik_pauld_heavy_b" />
   <Item id="sk_md_mor_pik_pauld_med_a" class="heavy" />
   <Item id="sk_md_mor_pik_pauld_med_b" class="medium" next="sk_md_mor_pik_pauld_heavy_b" />
   <Item id="sk_md_num_arc_bracer_elite_a" class="elite" next="sk_md_num_arc_bracer_lord_a" />

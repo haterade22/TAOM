@@ -3154,8 +3154,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_GundabadCulture_Roll10_ReturnsHunter_ArcherLineEntry()
     {
-        // Pool (total 13): snaga(7)[0..6] grunt(2)[7..8] fighter(1)[9] hunter(2)[10..11] scout(1)[12].
-        _random.Next(13).Returns(10);
+        // Pool (total 15): snaga(7)[0..6] grunt(2)[7..8] fighter(1)[9] hunter(2)[10..11] scout(1)[12]
+        // snow_recruit(2)[13..14].
+        _random.Next(15).Returns(10);
         var context = new VolunteerContext(null, null, null, "gundabad");
         Assert.AreEqual("gundabad_hunter", _sut.GetVolunteerTroopId(context));
     }
@@ -3163,9 +3164,49 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_GundabadCulture_Roll12_ReturnsScout_HorseArcherLineEntry()
     {
-        _random.Next(13).Returns(12);
+        _random.Next(15).Returns(12);
         var context = new VolunteerContext(null, null, null, "gundabad");
         Assert.AreEqual("gundabad_scout", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_GundabadCulture_Roll13_ReturnsSnowOrcRecruit()
+    {
+        _random.Next(15).Returns(13);
+        var context = new VolunteerContext(null, null, null, "gundabad");
+        Assert.AreEqual("gundabad_snow_recruit", _sut.GetVolunteerTroopId(context));
+    }
+
+    // --- Gundabad Snow Orcs (troops_gundabad_snow.xml): Mount Gram and the Grishûk clan ---
+
+    [TestMethod]
+    [DataRow(0, "gundabad_snow_recruit")]  // town_G2: snow_recruit(6)[0..5] + snaga(3)[6..8] = total 9
+    [DataRow(6, "gundabad_snaga")]
+    public void GetVolunteerTroopId_MountGram_FieldsSnowOrcs(int roll, string expectedTroopId)
+    {
+        _random.Next(9).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: "town_G2",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "gundabad");
+
+        Assert.AreEqual(expectedTroopId, _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    [DataRow(0, "gundabad_snow_recruit")]  // clan_gundabad_6: snow_recruit(5)[0..4] + snaga(2)[5..6] = total 7
+    [DataRow(5, "gundabad_snaga")]
+    public void GetVolunteerTroopId_GrishukClan_FieldsSnowOrcs(int roll, string expectedTroopId)
+    {
+        _random.Next(7).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_gundabad_6",
+            cultureId: "gundabad");
+
+        Assert.AreEqual(expectedTroopId, _sut.GetVolunteerTroopId(context));
     }
 
     [TestMethod]

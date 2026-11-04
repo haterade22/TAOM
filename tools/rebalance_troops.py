@@ -282,6 +282,10 @@ def detect_culture(troop_id, filename_culture):
     # the easterling cavalry/pike deltas actually apply (the filename derives 'rhun_new').
     if filename_culture == 'rhun_new':
         return 'rhun'
+    # troops_gundabad_snow.xml is Gundabad's Snow Orc tree (tools/generate_snow_orc_troops.py);
+    # it takes Gundabad's modifier, not a zero one under the 'gundabad_snow' filename.
+    if filename_culture == 'gundabad_snow':
+        return 'gundabad'
     # Mordor Black Uruks (mordor_uruk_*) are an elite line inside the mordor file — route them
     # to their own elite modifier so they aren't dragged down to the weak Mordor-orc curve.
     if troop_id.startswith('mordor_uruk'):

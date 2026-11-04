@@ -1009,7 +1009,7 @@
 		is_noble="true"
 		color="FF1F1B18"
 		color2="FF5E4636"
-		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_snow_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
 
   <!-- Lugdush -->

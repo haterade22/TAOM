@@ -581,6 +581,9 @@
 	<string id="aom_gondor_tol_vet_crossbowman_name" text="{=aom_gondor_tol_vet_crossbowman_name}[Gondor] Tolfalas Veteran Crossbowman" />
 	<string id="aom_gundabad_archer_name" text="{=aom_gundabad_archer_name}[Gundabad] Archer" />
 	<string id="aom_gundabad_berserker_name" text="{=aom_gundabad_berserker_name}[Gundabad] Pale Uruk Bone Breaker" />
+	<string id="aom_gundabad_blackshield_infantry_name" text="{=aom_gundabad_blackshield_infantry_name}[Gundabad] Blackshield Infantry" />
+	<string id="aom_gundabad_blackshield_spearman_name" text="{=aom_gundabad_blackshield_spearman_name}[Gundabad] Blackshield Spearman" />
+	<string id="aom_gundabad_blackshield_wolf_rider_name" text="{=aom_gundabad_blackshield_wolf_rider_name}[Gundabad] Blackshield Wolf Rider" />
 	<string id="aom_gundabad_bolgs_ironfang_name" text="{=aom_gundabad_bolgs_ironfang_name}[Gundabad] Bolg's Ironfang" />
 	<string id="aom_gundabad_brute_name" text="{=aom_gundabad_brute_name}[Gundabad] Pale Uruk Ravager" />
 	<string id="aom_gundabad_chosen_of_tharzog_name" text="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Pale Uruk Mountain Guard" />
@@ -596,6 +599,16 @@
 	<string id="aom_gundabad_scout_name" text="{=aom_gundabad_scout_name}[Gundabad] Scout" />
 	<string id="aom_gundabad_sentry_name" text="{=aom_gundabad_sentry_name}[Gundabad] Sentry" />
 	<string id="aom_gundabad_snaga_name" text="{=aom_gundabad_snaga_name}[Gundabad] Pale Uruk Warrior" />
+	<string id="aom_gundabad_snow_archer_name" text="{=aom_gundabad_snow_archer_name}[Gundabad] Snow Orc Archer" />
+	<string id="aom_gundabad_snow_huntsman_name" text="{=aom_gundabad_snow_huntsman_name}[Gundabad] Snow Orc Huntsman" />
+	<string id="aom_gundabad_snow_marauder_name" text="{=aom_gundabad_snow_marauder_name}[Gundabad] Snow Orc Marauder" />
+	<string id="aom_gundabad_snow_reaver_name" text="{=aom_gundabad_snow_reaver_name}[Gundabad] Snow Orc Reaver" />
+	<string id="aom_gundabad_snow_recruit_name" text="{=aom_gundabad_snow_recruit_name}[Gundabad] Snow Orc Recruit" />
+	<string id="aom_gundabad_snow_savage_name" text="{=aom_gundabad_snow_savage_name}[Gundabad] Snow Orc Savage" />
+	<string id="aom_gundabad_snow_skirmisher_name" text="{=aom_gundabad_snow_skirmisher_name}[Gundabad] Snow Orc Skirmisher" />
+	<string id="aom_gundabad_snow_spearman_name" text="{=aom_gundabad_snow_spearman_name}[Gundabad] Snow Orc Spearman" />
+	<string id="aom_gundabad_snow_warrior_name" text="{=aom_gundabad_snow_warrior_name}[Gundabad] Snow Orc Warrior" />
+	<string id="aom_gundabad_snow_wolf_rider_name" text="{=aom_gundabad_snow_wolf_rider_name}[Gundabad] Snow Orc Wolf Rider" />
 	<string id="aom_gundabad_spear_warrior_name" text="{=aom_gundabad_spear_warrior_name}[Gundabad] Pale Uruk Spearman" />
 	<string id="aom_gundabad_sword_warrior_name" text="{=aom_gundabad_sword_warrior_name}[Gundabad] Pale Uruk Mauler" />
 	<string id="aom_gundabad_tracker_name" text="{=aom_gundabad_tracker_name}[Gundabad] Pale Uruk Fang Rider" />
