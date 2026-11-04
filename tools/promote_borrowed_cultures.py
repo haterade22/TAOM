@@ -57,6 +57,8 @@ TARGETS = {
         "src": "rivendell",
         "capital": "town_LN1",
         "race": "elf",
+        # Only the _a roster is read: the culture row names it, and the realm's lords use equip="rivendell".
+        "rosters_kept": r"^lindon_(bat_template_medium|civ_template_default)_a$",
         # Cirdan's Falathrim of the Grey Havens are Sindar mariners, not Imladris Noldor — the
         # distinction is the whole reason Lindon earns its own culture rather than staying a
         # rivendell skin. Troop identity beyond the clone is follow-up work, tracked in the doc.
@@ -94,6 +96,8 @@ TARGETS = {
         "capital": "town_GBC1",
         "race": "goblin",
         "raceword": "Goblin",
+        # Only the _a roster is read: the culture row names it, and the realm's lords use equip="goblin".
+        "rosters_kept": r"^bluecraig_(bat_template_medium|civ_template_default)_a$",
         "adjective": "Blue Craig",
         "tag": "Blue Craig",
         "short": "bcg",
