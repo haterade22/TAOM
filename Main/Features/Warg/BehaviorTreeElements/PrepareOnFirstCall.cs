@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
 
-public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, IBTInFormation
+public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, IBTInFormation, IBTMountBase
 {
     BTBlackboardValue<Agent> _agent;
     BTBlackboardValue<Agent> _agentHitBy;
@@ -18,12 +18,14 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
     BTBlackboardValue<Formation> _agentsFormation;
+    BTBlackboardValue<Agent> _rider;
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
     public BTBlackboardValue<int> RageAttackAmount { get => _rageAttackAmount; set => _rageAttackAmount = value; }
     public BTBlackboardValue<DateTime?> RageAttackStartTime { get => _rageAttackStartTime; set => _rageAttackStartTime = value; }
     public BTBlackboardValue<bool> FirstAttack { get => _firstAttack; set => _firstAttack = value; }
     public BTBlackboardValue<Formation> AgentsFormation { get => _agentsFormation; set => _agentsFormation = value; }
+    public BTBlackboardValue<Agent> Rider { get => _rider; set => _rider = value; }
 
     public override BTTaskStatus Execute()
     {
@@ -46,6 +48,8 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
                 {
                     // The tree was built before the rider, so its stored formation is null for a warg spawned after the first scan.
                     AgentsFormation.SetValue(rider.Formation);
+                    // A rider who leaves the living warg mid-rage is no longer its RiderAgent: the reset finds him through this.
+                    Rider.SetValue(rider);
                     WargRageLog.Active?.Started(rider, rider.Formation != null);
                     rider.Formation = null;
                 }

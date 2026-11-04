@@ -98,6 +98,7 @@ public class WargBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTWargBlackboa
             .Up()
             .Up()
             .AddSequence("no rider", new HasNoRiderDecorator())
+            .AddTask(new RestoreDismountedRider())
             .AddTask(new SleepTask(new(0, 0, 4)))
             .Up()
             .Up()
