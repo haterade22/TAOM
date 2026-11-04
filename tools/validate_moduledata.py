@@ -21,6 +21,7 @@ Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), 2 for bad 
 install), 3 when the validator itself crashed (the traceback is on stderr), else 0.
 """
 import argparse
+import functools
 import json
 import os
 import re
@@ -315,7 +316,16 @@ def _loaded_tpacs(game_modules: Path) -> list:
     return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
 
 
-def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
+def _item_refs(game_modules: Path, moduledata: Path) -> list:
+    """Every mesh, body and prefab ref in the Armory's ModuleData and this repo's."""
+    import validate_mesh_refs as vmr
+    refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
+    if moduledata.exists():
+        refs += vmr.extract_refs(moduledata)
+    return refs
+
+
+def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_refs=_item_refs) -> list:
     """ERROR per collision-body ref no loaded tpac ships, WARNING per visual mesh.
 
     A body the engine cannot resolve is not a warning class: `PreloadHelper.
@@ -347,9 +357,7 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path) -> list:
             message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
                     f"collision bodies were NOT verified this run")]
     try:
-        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
-        if moduledata.exists():
-            refs += vmr.extract_refs(moduledata)
+        refs = item_refs(game_modules, moduledata)
         present = vmr.build_present_set(tpacs)
         # A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
         # parse can hide one. Byte-scanning all of them took 110-119 s (4,611 packs, 22.6 GiB),
@@ -404,7 +412,7 @@ def _twin_owner(body: str, meshes: set):
     return None
 
 
-def borrowed_body_issues(game_modules: Path, moduledata: Path) -> list:
+def borrowed_body_issues(game_modules: Path, moduledata: Path, item_refs=_item_refs) -> list:
     """ERROR per weapon or crafting piece whose collision body is another kit's twin (#633).
 
     The convention (docs/ai-includes/weapon-creation-workflow.md, Step D) is that a weapon body
@@ -447,9 +455,7 @@ def borrowed_body_issues(game_modules: Path, moduledata: Path) -> list:
         present = vmr.build_present_set(tpacs)
         meshes = {n.lower() for n in present.metameshes}
         bodies = {n.lower() for n in present.physicsshapes}
-        refs = vmr.extract_refs(game_modules / "LOTRLOME_Armory" / "ModuleData")
-        if moduledata.exists():
-            refs += vmr.extract_refs(moduledata)
+        refs = item_refs(game_modules, moduledata)
     except Exception as exc:  # noqa: BLE001 - a scan that raised has verified nothing; say so
         return [ts.Issue(
             severity=ts.Severity.ERROR, code=BORROWED_BODY_CODE, file="", line=0, entry_id="",
@@ -793,8 +799,11 @@ def main() -> int:
         issues += armour_acquisition_ref_issues(registries, moduledata)
         # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
         # commit hook's --code line for it blocked nothing.
-        issues += missing_collision_body_issues(game_modules, moduledata)
-        issues += borrowed_body_issues(game_modules, moduledata)
+        # Both read the same refs, and the walk takes about 5 s. Only this run shares it: neither pass
+        # changes the list, and a failed walk is not kept, so each pass still reports its own failure.
+        item_refs = functools.lru_cache(maxsize=None)(_item_refs)
+        issues += missing_collision_body_issues(game_modules, moduledata, item_refs)
+        issues += borrowed_body_issues(game_modules, moduledata, item_refs)
         issues += slot_rejection_issues(game_modules, moduledata)
         # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
         issues += skill_template_mismatch_issues(game_modules.parent, moduledata)

@@ -86,6 +86,14 @@ class ModuleDataQueryTests(unittest.TestCase):
         # comment-stripped: a commented ref is not counted
         self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 0)
 
+    def test_find_references_reads_an_edit_made_after_the_last_query(self):
+        # The MCP server outlives an edit, so its queries must not read through the validator's cache.
+        path = self.md / "troops" / "troops_fresh.xml"
+        _write(path, '<NPCCharacters><NPCCharacter id="x" culture="Culture.gondor"/></NPCCharacters>\n')
+        self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 0)
+        _write(path, '<NPCCharacters><NPCCharacter id="x" culture="Culture.vlandia"/></NPCCharacters>\n')
+        self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 1)
+
     def test_find_references_covers_faction_and_body_property_refs(self):
         # Both are REF_KINDS the validator checks; without their prefixes here a lookup
         # returned a confident 0 for an id that is referenced.
