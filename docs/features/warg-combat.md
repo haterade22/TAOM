@@ -77,14 +77,15 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 6. On completion, enemy death or the 6 s timeout: control returns. `SetRageAttackTimer` restarts the timer on every pass, so
    the timeout fires only while the rage selector waits with nothing to do, never during a chase
 
-**How a rage closes.** The rage start stores the rider and his formation on the blackboard. Three tasks close a rage, all through
-`CleanIfEnemyDied`: its own end inside the rage branch, `CloseOpenRage` when no enemy is within 60 m (that branch wins every
-pass, so the rage branch would not run), and `RestoreDismountedRider` when the warg has no rider. The stored rider gets his
-formation back even if he has left the warg. A rider who took his place mid-rage joins it only if he has none, and a panicked
-rider stays out, because `Agent.OnFleeing` cleared his on purpose. Closing clears both stored values, so a later warg death
-touches nobody; `OnWargDied` gives a formation back only while a rage is open. A rage that took the player's controller stays
-open on a dismount, until a remount or the warg's death. Whether a mount's `IsPlayerControlled` is ever true is unverified:
-`Agent.Build` gives a mount the AI controller, and the managed code never changes it.
+**How a rage closes.** The rage start stores the rider and his formation on the blackboard. A rage belongs to that rider. Four
+tasks close it, all through `CleanIfEnemyDied`: its own end inside the rage branch, `CloseOpenRage` when no enemy is within 60 m
+(that branch wins every pass, so the rage branch would not run), `RestoreDismountedRider` when the warg has no rider, and
+`CloseRageOnNewRider` when another rider has mounted. The stored rider gets his formation back even if he has left the warg. A new
+rider keeps his own, and a panicked rider stays out, because `Agent.OnFleeing` cleared his on purpose. Closing clears both stored
+values, so a later warg death touches nobody; `OnWargDied` gives a formation back only while a rage is open. On a dismount, a
+player's rage with no stored formation stays open until a remount or the warg's death. Whether a mount's `IsPlayerControlled` is
+ever true is unverified: `Agent.Build` gives a mount the AI controller, and no managed code read so far changes it. If it never is,
+step 3 above never happens.
 
 ## Key Files
 
@@ -120,7 +121,7 @@ open on a dismount, until a remount or the warg's death. Whether a mount's `IsPl
 | `Main/Features/Warg/WargRiderHandManager.cs` | Player hand positioning on warg mane |
 | `Main/Features/Warg/WargIoC.cs` | Registers IWargAttackService |
 | `Main/Features/Warg/WargRageLog.cs` | Counts and logs each rage episode for the Fords of War run report (start, restored formation, returned, stranded, superseded); holds no engine type in a signature (`WargRageLogTests` gates that). Fed from `PrepareOnFirstCall` (rage start), `CleanIfEnemyDied.ResetAiControlledAgent` (rage end and warg death) and the telemetry logic (the 1 Hz watch) |
-| `Main/Features/Warg/BehaviorTreeElements/` | 15 BT nodes (decorators, tasks, listeners) |
+| `Main/Features/Warg/BehaviorTreeElements/` | BT nodes (decorators, tasks, listeners) |
 
 ## Dependencies
 
@@ -183,7 +184,7 @@ open on a dismount, until a remount or the warg's death. Whether a mount's `IsPl
 | The rage's end is seen | `end episode=N outcome=<outcome>`, where `<outcome>` is `restored`, `null-formation` or `rider-inactive` |
 | The rider is back in its formation | `returned episode=N s=<seconds>` |
 | Given up after 60 mission seconds | `not-returned episode=N s=<seconds>` |
-| Rider on foot with no formation for 30 mission seconds with no reset | `stranded episode=N` |
+| Rider on foot with no formation for 100 mission seconds with no reset | `stranded episode=N` |
 | A second rage began before the first returned | `superseded episode=N` |
 
 ## Changelog

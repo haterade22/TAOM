@@ -6,5 +6,5 @@ namespace TAOM.Features.Warg.BehaviorTreeElements;
 /// </summary>
 public class CloseOpenRage : CleanIfEnemyDied
 {
-    protected override bool RageIsOver() => RageAttackStartTime.GetValue() != null;
+    protected override bool ShouldClose() => RageAttackStartTime.GetValue() != null;
 }

@@ -538,8 +538,8 @@ internal static class FordsScenarios
         var rider = sc.AddRider();
         rider.HasMount = false;
         sc.RageStart(rider);
-        // On foot past the 30 mission seconds the tree's reset may lag a dismount by.
-        sc.Seconds(35);
+        // On foot past the 100 mission seconds the tree's reset may lag a dismount by.
+        sc.Seconds(105);
         return sc;
     }
 

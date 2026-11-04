@@ -24,9 +24,9 @@ internal sealed class WargRageLog
     private const int MaxOpen = 100;
     private const int MaxLogged = 25;
     private const float NotReturnedSeconds = 60f;
-    // The reset can lag a dismount by a tree sleep or wait on the wall clock, up to 6 s: 24 mission seconds in a 4x run. Counting a
-    // rider stranded inside that lag would close his episode, and the real reset would then find nothing.
-    private const float StrandedAfterSeconds = 30f;
+    // The reset can lag a dismount by a tree sleep or wait on the wall clock, up to about 9 s: 90 mission seconds in a 10x run. Counting
+    // a rider stranded inside that lag would close his episode, and the real reset would then find nothing.
+    private const float StrandedAfterSeconds = 100f;
     private const float MinReturnDistance = 15f;
     private const float ReturnMargin = 5f;
 

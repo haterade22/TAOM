@@ -86,9 +86,7 @@ public class WargTreeNodeInjectionTests
     }
 
     // Selector.Prepare evaluates every child. "enemy died" nulls the hitter just before this decorator runs, so a rage whose
-    // hitter is already dead threw here, in the pass that took the rider's formation, and the throw stopped the tree for the
-    // rest of the battle. Seen in two game logs, 2026-11-04.
-    [TestCategory("RequiresGame")]
+    // hitter is already dead threw here, in the pass that took the rider's formation, and the throw stopped the tree.
     [TestMethod]
     public void WargAiControlledIsNotFacingEnemy_EvaluateWithNoHitter_IsFalse()
     {
@@ -96,7 +94,7 @@ public class WargTreeNodeInjectionTests
         factory.GetAgentAdapter(null).Returns((IAgentAdapter)null);
         var decorator = new WargAiControlledIsNotFacingEnemy(factory)
         {
-            Agent = new BTBlackboardValue<Agent>(BareAgent()),
+            Agent = new BTBlackboardValue<Agent>(null),
             AgentHitBy = new BTBlackboardValue<Agent>(null),
         };
 

@@ -28,7 +28,7 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
 
     public override BTTaskStatus Execute()
     {
-        if (RageIsOver())
+        if (ShouldClose())
         {
             RageAttackStartTime.SetValue(null);
             RageAttackAmount.SetValue(0);
@@ -46,17 +46,17 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
         return BTTaskStatus.FinishedWithTrue;
     }
 
-    protected virtual bool RageIsOver() =>
+    protected virtual bool ShouldClose() =>
         AgentHitBy.GetValue() == null || AgentHitBy.GetValue().Health <= 0 || RageAttackAmount.GetValue() == 0;
 
-    // The formation is the stored rider's, so he gets it back even when he has left the warg. A rider who took his place mid-rage
-    // lost his own too (WargAiControlledGetToEnemy clears it) and stored none, so he joins it only if he has none.
+    // The formation is the stored rider's, so he gets it back even when he has left the warg. A rider who took his place lost
+    // nothing (CloseRageOnNewRider runs before the rage clears anything on him), so he keeps his own.
     public static void GiveFormationBack(Agent warg, Agent stored, Formation formation)
     {
         Agent owner = ValidStoredRider(stored);
         if (owner != null) ResetAiControlledAgent(owner, formation);
         Agent live = warg?.RiderAgent;
-        if (live != null && live != owner) ResetAiControlledAgent(live, live.Formation == null ? formation : null);
+        if (live != null && live != owner && CoopMissionOwnership.IsOwnedHere(live)) ResetAiControlledAgent(live, null);
     }
 
     // The stored handle is held across frames, so it must still be the slot's occupant, and in co-op only its owner restores it

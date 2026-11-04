@@ -281,9 +281,7 @@ public class WargRageLogTests
         scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
 
         scene.Log.Watch();
-        scene.Now = 30.0;
-        scene.Log.Watch();
-        scene.Now = 31.0;
+        scene.Now = 100.0;
         scene.Log.Watch();
 
         var c = scene.Log.Counts();
@@ -291,8 +289,8 @@ public class WargRageLogTests
         Assert.AreEqual(0, c.Open);
     }
 
-    // The reset can lag a dismount by a tree sleep or a tree wait on the wall clock, up to 6 s, which is 24 mission seconds in
-    // a 4x run. Counting a rider stranded inside that lag closes his episode, so the real reset then finds nothing.
+    // The reset can lag a dismount by a tree sleep or a tree wait on the wall clock, up to about 9 s, which is 90 mission seconds
+    // in a 10x run. Counting a rider stranded inside that lag closes his episode, so the real reset then finds nothing.
     [TestMethod]
     public void Watch_LooksOnFootInsideTheResetsLag_AreNotStranded_AndALateResetRestoresIt()
     {
@@ -304,9 +302,9 @@ public class WargRageLogTests
         scene.Log.Watch();
         scene.Now = 1.0;
         scene.Log.Watch();
-        scene.Now = 24.0;
+        scene.Now = 90.0;
         scene.Log.Watch();
-        Assert.AreEqual(0, scene.Log.Counts().Stranded, "the reset can lag a dismount by 24 mission seconds at 4x");
+        Assert.AreEqual(0, scene.Log.Counts().Stranded, "the reset can lag a dismount by 90 mission seconds at 10x");
         Assert.AreEqual(1, scene.Log.Counts().Open);
 
         scene.Log.Ended(rider, Form());
@@ -325,14 +323,14 @@ public class WargRageLogTests
         scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
         scene.Log.Watch();
 
-        scene.Now = 20.0;
+        scene.Now = 90.0;
         scene.View = new WargRageLog.RiderView(true, true, false, false, 0f, 0f, 0f);
         scene.Log.Watch();
 
-        scene.Now = 21.0;
+        scene.Now = 91.0;
         scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
         scene.Log.Watch();
-        scene.Now = 50.0;
+        scene.Now = 150.0;
         scene.Log.Watch();
 
         Assert.AreEqual(0, scene.Log.Counts().Stranded);

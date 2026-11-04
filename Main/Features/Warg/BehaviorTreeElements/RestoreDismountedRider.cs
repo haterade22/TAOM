@@ -8,11 +8,11 @@ namespace TAOM.Features.Warg.BehaviorTreeElements;
 /// </summary>
 public class RestoreDismountedRider : CleanIfEnemyDied
 {
-    protected override bool RageIsOver()
+    protected override bool ShouldClose()
     {
         if (RageAttackStartTime.GetValue() == null) return false;
-        // A rage that took the player's controller stored no formation, and FinishRageMode ends it, on a remount or at the warg's
-        // death. A rage that took only his formation gives it back here like any other.
+        // A player's rage with no stored formation may hold his controller, and FinishRageMode ends that, on a remount or at the
+        // warg's death. One that took his formation gives it back here like any other.
         Agent rider = ValidStoredRider(Rider.GetValue());
         return rider == null || !rider.IsPlayerControlled || AgentsFormation.GetValue() != null;
     }
