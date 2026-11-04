@@ -4468,19 +4468,44 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_lothlorien_lothlorien_1_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.rivendell_militia_spearman" />
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.rivendell_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.imladris_swordguard" />
-			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.imladris_nobleman" />
-			<PartyTemplateStack min_value="0" max_value="12" troop="NPCCharacter.battlemaster_of_the_first_age" />
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.rivendell_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.rivendell_militia_veteran_archer" />
-			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.imladris_bowman" />
-			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.imladris_marksman" />
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.rivendell_noble" />
-			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.rivendell_royal_knight" />
-			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.imladris_horse_archer" />
-			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.rider_of_himring" />
+			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.lorien_scout" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.lorien_spearman" />
+			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.lorien_infantry" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_warden" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.lorien_bowman" />
+			<PartyTemplateStack min_value="1" max_value="11" troop="NPCCharacter.lorien_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_longbowman" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_rider" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_lancer" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_gl_warrior" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_gl_infantry" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_gl_archer" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.lorien_gl_bladeguard" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_sentinel" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_marksman" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_blademaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_mallorn_defender" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_bowmaster" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.lorien_gl_highblade" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_lothlorien_lothlorien_2_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="18" troop="NPCCharacter.lorien_mw_sentry" />
+			<PartyTemplateStack min_value="2" max_value="16" troop="NPCCharacter.lorien_mw_archer" />
+			<PartyTemplateStack min_value="2" max_value="12" troop="NPCCharacter.lorien_mw_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_mw_ranger" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_mw_ambusher" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_mw_outrider" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.lorien_mw_high_ranger" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.lorien_mw_waystalker" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.lorien_mw_dawnrider" />
+			<PartyTemplateStack min_value="2" max_value="14" troop="NPCCharacter.lorien_scout" />
+			<PartyTemplateStack min_value="1" max_value="12" troop="NPCCharacter.lorien_spearman" />
+			<PartyTemplateStack min_value="1" max_value="10" troop="NPCCharacter.lorien_bowman" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.lorien_gl_warrior" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.lorien_gl_archer" />
 		</stacks>
 	</MBPartyTemplate>
 

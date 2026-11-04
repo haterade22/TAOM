@@ -1024,13 +1024,13 @@ public class VolunteerRecruitmentServiceTests
         Assert.AreEqual("harad_redserp_noble", result);
     }
 
-    // --- Lothlorien settlement verifications (temporarily borrows Rivendell troops) ---
+    // --- Lothlorien settlement verifications (troops_lothlorien.xml) ---
 
     [TestMethod]
-    [DataRow("town_L1", "imladris_recruit")]
-    [DataRow("castle_L1", "imladris_recruit")]
-    [DataRow("castle_L2", "imladris_recruit")]
-    [DataRow("castle_L3", "imladris_recruit")]
+    [DataRow("town_L1", "lorien_scout")]
+    [DataRow("castle_L1", "lorien_scout")]
+    [DataRow("castle_L2", "lorien_mw_sentry")]  // Talas Duiren, the Marchwardens' seat
+    [DataRow("castle_L3", "lorien_scout")]
     public void GetVolunteerTroopId_LothlorienSettlements_ReturnExpectedRegularTroop(
         string settlementId, string expectedTroopId)
     {
@@ -1047,10 +1047,10 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_LothlorienSettlement_HighRoll_ReturnsImladrisInfantry()
+    public void GetVolunteerTroopId_LothlorienSettlement_HighRoll_ReturnsGaladhrimWarrior()
     {
-        // town_L1: imladris_recruit(5) + imladris_infantry(3) = total 8
-        _random.Next(8).Returns(5);
+        // town_L1: lorien_scout(6) + lorien_gl_warrior(2) = total 8
+        _random.Next(8).Returns(6);
         var context = new VolunteerContext(
             settlementId: "town_L1",
             boundSettlementId: null,
@@ -1059,30 +1059,48 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_infantry", result);
+        Assert.AreEqual("lorien_gl_warrior", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_LothlorienCastleL2_HighRoll_ReturnsScout()
+    {
+        // castle_L2: lorien_mw_sentry(5) + lorien_scout(3) = total 8
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(
+            settlementId: "castle_L2",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "lothlorien");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("lorien_scout", result);
     }
 
     // --- Lothlorien clan verifications ---
 
     [TestMethod]
-    public void GetVolunteerTroopId_LothlorienClan_ReturnsImladrisRecruit()
+    [DataRow("clan_lothlorien_1", "lorien_scout")]
+    [DataRow("clan_lothlorien_2", "lorien_mw_sentry")]  // Wardens of the Naith
+    public void GetVolunteerTroopId_LothlorienClan_ReturnsEntryTroop(string clanId, string expectedTroopId)
     {
         _random.Next(Arg.Any<int>()).Returns(0);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
-            ownerClanId: "clan_lothlorien_1",
+            ownerClanId: clanId,
             cultureId: "lothlorien");
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_recruit", result);
+        Assert.AreEqual(expectedTroopId, result);
     }
 
     // --- Lothlorien culture fallback ---
 
     [TestMethod]
-    public void GetVolunteerTroopId_LothlorienCulture_LowRoll_ReturnsImladrisRecruit()
+    public void GetVolunteerTroopId_LothlorienCulture_LowRoll_ReturnsScout()
     {
         _random.Next(Arg.Any<int>()).Returns(0);
         var context = new VolunteerContext(
@@ -1093,15 +1111,15 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_recruit", result);
+        Assert.AreEqual("lorien_scout", result);
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_LothlorienCulture_HighRoll_ReturnsImladrisBowman()
+    public void GetVolunteerTroopId_LothlorienCulture_HighRoll_ReturnsMarchwardenSentry()
     {
-        // Culture pool: imladris_recruit(5) + imladris_infantry(3) + imladris_bowman(2) = 10
-        // Roll 8 should land in imladris_bowman range
-        _random.Next(10).Returns(8);
+        // Culture pool: lorien_scout(6) + lorien_gl_warrior(2) + lorien_mw_sentry(1) = 9
+        // Roll 8 should land in lorien_mw_sentry range
+        _random.Next(9).Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -1110,7 +1128,7 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_bowman", result);
+        Assert.AreEqual("lorien_mw_sentry", result);
     }
 
     // --- Lothlorien village bound settlement fallback ---
@@ -1127,7 +1145,7 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_recruit", result);
+        Assert.AreEqual("lorien_scout", result);
     }
 
     [TestMethod]
@@ -1142,7 +1160,7 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("imladris_recruit", result);
+        Assert.AreEqual("lorien_scout", result);
     }
 
     // --- Rhun settlement pools ---

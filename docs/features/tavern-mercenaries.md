@@ -108,7 +108,7 @@ One `<basic_mercenary_troops>` block per culture:
 
 ### Current picks (31 `_merc` troops defined, 30 offered by 24 culture blocks)
 
-Sources are weight-1 pool entries unless noted; Lothlórien, Umbar and the two Harad cultures have no
+Sources are weight-1 pool entries unless noted; Umbar and the two Harad cultures have no
 weight-1 entry, so they take their pool's minimum. Shaghana and Abanissa each own a copy since 2026-10-15, after the 2026-10-10 Harad rework deleted the troop they shared.
 
 | Culture | Source troops → `_merc` copies | Weight |
@@ -123,7 +123,7 @@ weight-1 entry, so they take their pool's minimum. Shaghana and Abanissa each ow
 | `dolguldur` | `dg_orc_scout` | 1 |
 | `goblin` | `goblin_fighter` | 1 |
 | `mistymountainorcs` | `goblin_fighter` (the goblin tree's copy, since `troops_mistymountainorcs.xml` was removed) | 1 |
-| `lothlorien` | `imladris_bowman` | 2 |
+| `lothlorien` | `lorien_mw_sentry` (since 2026-11-04, its own troops; `imladris_bowman_merc` is now offered by no block) | 1 |
 | `umbar` | `umbar_elite` | 3 |
 | `shaghana` | `harad_redserp_noble` (copy of its rarest pool entry) | 3 |
 | `abanissa` | `harad_pz_levy` (the Pezarsan camel line root) | 2 |

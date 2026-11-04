@@ -85,6 +85,24 @@
       }
     },
     {
+      "id": "lothlorien",
+      "folder": "lothlorien",
+      "files": ["lothlorien"],
+      "ranks": {"overall": 2, "damage": 2, "accuracy": 1},
+      "tiers": {
+        "Bow": [4, 5, 6, 7, 8, 9]
+      },
+      "donor": {"Bow": "highelf_longbowc"},
+      "donor_by_band": {
+        "Bow": {
+          "R": "wm_mirkwood_bow_a03",
+          "V": "highelf_longbowb",
+          "X": "highelf_longbowc",
+          "C": "highelf_longbowd"
+        }
+      }
+    },
+    {
       "id": "ithilien",
       "folder": "gondor",
       "files": ["gondor"],

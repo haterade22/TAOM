@@ -1022,9 +1022,9 @@
     is_main_culture="true"
     color="0xFF998C5E"
     color2="0xFFE8E6D5"
-    elite_basic_troop="NPCCharacter.imladris_infantry"
-    executioner="NPCCharacter.imladris_infantry"
-    basic_troop="NPCCharacter.imladris_recruit"
+    elite_basic_troop="NPCCharacter.lorien_gl_warrior"
+    executioner="NPCCharacter.lorien_gl_warrior"
+    basic_troop="NPCCharacter.lorien_scout"
     melee_militia_troop="NPCCharacter.rivendell_militia_spearman"
     ranged_militia_troop="NPCCharacter.rivendell_militia_archer"
     melee_elite_militia_troop="NPCCharacter.rivendell_militia_veteran_spearman"
@@ -1342,7 +1342,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.imladris_bowman_merc" />
+      <template name="NPCCharacter.lorien_mw_sentry_merc" />
     </basic_mercenary_troops>
   </Culture>
 
