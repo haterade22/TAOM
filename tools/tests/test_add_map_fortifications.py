@@ -153,6 +153,16 @@ class CheckTests(unittest.TestCase):
         found = amf.check([self.FORT], self.master, self.scene, self.loc, scene_folders=written - {"arena_empire_a"})
         self.assertEqual(found, ["town_X5: scene arena_empire_a has no scene.xscene in any module"])
 
+    def test_a_live_row_naming_a_scene_the_table_does_not_is_checked_too(self):
+        # The table's scenes all exist; the live row's own center scene does not.
+        written = {"empire_town_c", "arena_empire_a", "empire_house_c_tavern_a", "empire_castle_keep_a_l1_interior",
+                   "empire_castle_keep_a_l2_interior", "empire_castle_keep_a_l3_interior",
+                   "empire_dungeon_stealth", "empire_house_d_interior_house"}
+        stale = self.master.replace('scene_name="empire_town_c"', 'scene_name="missing_scene"', 1)
+        self.assertNotEqual(stale, self.master)
+        found = amf.check([self.FORT], stale, self.scene, self.loc, scene_folders=written)
+        self.assertEqual(found, ["town_X5: scene missing_scene has no scene.xscene in any module"])
+
     def test_a_castle_is_not_asked_for_town_only_scenes(self):
         castle = amf.Fort("castle_X6", "Keep", "clan_x_1", "arthedain", "castle", "taom_gondor_castle_001_forceatmo", 800, "a")
         have = {"taom_gondor_castle_001_forceatmo", "empire_castle_keep_a_l1_interior", "empire_castle_keep_a_l2_interior",
@@ -294,6 +304,7 @@ class MainNameCollisionTests(unittest.TestCase):
         err = io.StringIO()
         with tempfile.TemporaryDirectory() as td:
             tree = lw.Tree(td, live, scene, loc, lw.table())
+            tree.folders = {s.lower() for s in amf.fort_scenes(new)}  # never read the real install
             code = tree.run(amf, "add_map_fortifications.py", ["--apply"],
                             [mock.patch.object(amf, "FORTS", [new]), mock.patch("sys.stderr", err)])
             self.assertEqual(code, 1)

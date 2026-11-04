@@ -43,6 +43,7 @@ class Tree:
         self.scene = self.map + "/SceneObj/Main_map/scene.xscene"
         self.repo = root / "repo"
         self.table_path = root / "table.json"
+        self.folders = {"gondor_village_a"}  # the scene folders the real install would list; never read here
         for f, text in ((self.live, master), (self.scene, scene)):
             Path(f).parent.mkdir(parents=True, exist_ok=True)
             Path(f).write_bytes(text.encode("utf-8"))
@@ -63,6 +64,7 @@ class Tree:
     def run(self, module, name, args, extra=()):
         patches = [mock.patch.object(amv, "MAP", self.map), mock.patch.object(amv, "LIVE", self.live),
                    mock.patch.object(amv, "SCENE", self.scene), mock.patch.object(nt, "TABLE_PATH", self.table_path),
+                   mock.patch.object(amv, "live_scene_folders", return_value=self.folders),
                    mock.patch("sys.argv", [name, *args]), mock.patch("sys.stdout", io.StringIO()), *extra]
         with contextlib.ExitStack() as stack:
             for p in patches:
@@ -114,6 +116,18 @@ class AddMapVillagesMainTests(unittest.TestCase):
                             [mock.patch.object(amv, "VILLAGES", [self.VILLAGE]), mock.patch("sys.stderr", err)])
             self.assertEqual(code, 1)
             self.assertIn("is already on the map (town_A)", err.getvalue())
+            self.assertNotIn("village_X_1", Path(tree.live).read_text(encoding="utf-8"))
+            self.assertNotIn("village_X_1", tree.loc("DE"))
+
+    def test_main_Apply_SceneWithNoFolder_RefusesAndWritesNothing(self):
+        err = io.StringIO()
+        with tempfile.TemporaryDirectory() as td:
+            tree = Tree(td, self.MASTER, "<scene></scene>", self.LOC, table())
+            code = tree.run(amv, "add_map_villages.py", ["--apply"],
+                            [mock.patch.object(amv, "VILLAGES", [self.VILLAGE]), mock.patch("sys.stderr", err),
+                             mock.patch.object(amv, "live_scene_folders", return_value=set())])
+            self.assertNotEqual(code, 0)
+            self.assertIn("scene gondor_village_a has no scene.xscene in any module", err.getvalue())
             self.assertNotIn("village_X_1", Path(tree.live).read_text(encoding="utf-8"))
             self.assertNotIn("village_X_1", tree.loc("DE"))
 

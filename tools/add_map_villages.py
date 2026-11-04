@@ -425,6 +425,17 @@ def master_village_bound(master_text, sid):
     return m.group(1) if m else None
 
 
+def master_scene_names(master_text, sid):
+    """Every scene_name* value written in the <Settlement id="sid"> row of settlements.xml, in file order; [] for an
+    absent or self-closing row."""
+    start = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'(?=[\s>/])[^>]*>', master_text)
+    if not start or start.group(0).endswith("/>"):
+        return []
+    end = master_text.find("</Settlement>", start.end())
+    block = master_text[start.end():end if end != -1 else len(master_text)]
+    return re.findall(r'\sscene_name(?:_\d+)?="([^"]*)"', block)
+
+
 def resolve_position(v, scene_text, master_text, k):
     """(posX, posY, source). source is 'scene' or 'PLACEHOLDER' (parent + offset for the k-th one)."""
     pos = scene_position(scene_text, v.id)
@@ -623,10 +634,14 @@ def scene_findings(sid, scenes, scene_folders):
 
 def check(villages, master_text, scene_text, loc_texts, tolerance=0.01, scene_folders=None):
     """Findings (strings) for any table id whose data is missing, whose position drifted or whose name is taken,
-    or whose master culture or bound settlement differs from the table's, or whose scene has no scene.xscene."""
+    or whose master culture or bound settlement differs from the table's, or whose scene (the table's, or the one the
+    live row names) has no scene.xscene, or whose live row names a scene other than the table's."""
     findings = name_collisions([(v.id, v.name) for v in villages], master_text)
     for v in villages:
-        findings += scene_findings(v.id, [v.scene], scene_folders)
+        live_scenes = master_scene_names(master_text, v.id)
+        findings += scene_findings(v.id, [v.scene, *live_scenes], scene_folders)
+        findings += [f"{v.id}: settlements.xml names scene {s}, the table {v.scene}"
+                     for s in sorted(set(live_scenes)) if s.lower() != v.scene.lower()]
         pos = settlement_position(master_text, v.id)
         if not pos:
             findings.append(f"{v.id}: no <Settlement> row in settlements.xml")

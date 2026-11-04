@@ -259,6 +259,26 @@ class CheckTests(unittest.TestCase):
         findings = amv.check([PRESENT], MASTER, SCENE, {"DE": LOC}, scene_folders={"empire_village_x"})
         self.assertEqual(findings, ["castle_village_I2_3: scene empire_village_t has no scene.xscene in any module"])
 
+    def _live_row_naming(self, scene):
+        block = amv.village_block(PRESENT, "665.904", "812.459", "\n").replace(
+            f'scene_name="{PRESENT.scene}"', f'scene_name="{scene}"')
+        return MASTER.replace(MASTER[MASTER.index('  <Settlement id="castle_village_I2_3"'):MASTER.index("  <!-- LOTHLORIEN")], block)
+
+    def test_check_names_a_live_row_scene_with_no_scene_xscene(self):
+        # The table's scene exists; the settlements.xml row names one that does not.
+        master = self._live_row_naming("missing_scene")
+        findings = amv.check([PRESENT], master, SCENE, {"DE": LOC}, scene_folders={"empire_village_t"})
+        self.assertIn("castle_village_I2_3: scene missing_scene has no scene.xscene in any module", findings)
+
+    def test_check_names_a_live_row_scene_that_differs_from_the_table(self):
+        master = self._live_row_naming("empire_village_x")
+        findings = amv.check([PRESENT], master, SCENE, {"DE": LOC}, scene_folders={"empire_village_t", "empire_village_x"})
+        self.assertEqual(findings, ["castle_village_I2_3: settlements.xml names scene empire_village_x, the table empire_village_t"])
+
+    def test_check_accepts_a_live_row_on_the_tables_scene_in_any_case(self):
+        master = self._live_row_naming("EMPIRE_VILLAGE_T")
+        self.assertEqual(amv.check([PRESENT], master, SCENE, {"DE": LOC}, scene_folders={"empire_village_t"}), [])
+
     def test_check_compares_scene_folders_lower_cased(self):
         self.assertEqual(amv.check([PRESENT], MASTER, SCENE, {"DE": LOC}, scene_folders={"empire_village_t"}), [])
         shouting = amv.Village("castle_village_I2_3", "Bar-noss", "castle_I2", "trapper", "isengard", "EMPIRE_VILLAGE_T")

@@ -483,7 +483,7 @@ def check(forts, master_text, scene_text, loc_texts, villages=(), released=froze
     findings = amv.save_order_findings(master_text, batch_ids(forts, villages, released))
     findings += amv.name_collisions([(f.id, f.name) for f in forts], master_text)
     for f in forts:
-        findings += amv.scene_findings(f.id, fort_scenes(f), scene_folders)
+        findings += amv.scene_findings(f.id, [*fort_scenes(f), *amv.master_scene_names(master_text, f.id)], scene_folders)
         pos = amv.settlement_position(master_text, f.id)
         if not pos:
             findings.append(f"{f.id}: no <Settlement> row in settlements.xml")
