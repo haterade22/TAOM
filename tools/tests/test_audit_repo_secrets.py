@@ -110,6 +110,12 @@ class RepoSecretScanTests(unittest.TestCase):
         res = self._run({"vendor/NuGet.config": line})
         self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
 
+    def test_finds_a_nuget_password_whose_value_holds_a_newline(self):
+        for line in ('<add key="' + NUGET_CLEARTEXT_KEY + '" value="Zx9qLm2\npR7vK4nB8" />\n',
+                     '<add value="Zx9qLm2\npR7vK4nB8" key="' + NUGET_CLEARTEXT_KEY + '" />\n'):
+            res = self._run({"vendor/NuGet.config": line})
+            self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"], line)
+
     def test_finds_a_nuget_password_split_across_lines(self):
         key_first = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="Zx9qLm2pR7vK4nB8" />\n'
         value_first = '<configuration>\n<add\n  value="Zx9qLm2pR7vK4nB8"\n  key="' + NUGET_CLEARTEXT_KEY + '" />\n'

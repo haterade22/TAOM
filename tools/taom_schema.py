@@ -1479,7 +1479,7 @@ class Validator:
     # it with no gate to say so. tools/shipped_troop_ids.txt is the newest release tag's troop ids
     # (/release regenerates it); an id absent from the troops files fails unless the file's
     # [exceptions] section names it with a reason. Off unless the caller names the file.
-    _TROOP_ID_RE = re.compile(r'<NPCCharacter\b[^>]*?\bid="([A-Za-z0-9_.\-]+)"', re.S)
+    _TROOP_ID_RE = re.compile(r'''<NPCCharacter\b[^>]*?\bid\s*=\s*["']([A-Za-z0-9_.\-]+)["']''', re.S)
 
     def _troop_ids_removed(self) -> list:
         path = self.shipped_troop_ids_file

@@ -2714,6 +2714,10 @@ class TroopIdRemovedTests(unittest.TestCase):
         self.assertEqual(exceptions, {"umbar_old": "retired on purpose"})
         self.assertIn("# tag: v2", raw.decode("utf-8"))
 
+    def test_a_single_quoted_or_spaced_id_counts_as_present(self):
+        for spelling in ("<NPCCharacter id='kept'/>", '<NPCCharacter id = "kept"/>'):
+            self.assertEqual(ts.Validator._TROOP_ID_RE.findall(spelling), ["kept"], spelling)
+
     def test_regenerating_keeps_the_exceptions_and_reads_the_tag_not_the_tree(self):
         target = self.root / "regen.txt"
         ts.write_shipped_troop_ids(target, "v1", ["umbar_old"], {"umbar_old": "retired on purpose"})
@@ -2722,6 +2726,8 @@ class TroopIdRemovedTests(unittest.TestCase):
 
         def fake_git(cmd, **kwargs):
             args = cmd[3:]
+            if args[0] == "show":
+                self.assertEqual(args[1], "v9:Main/_Module/ModuleData/troops/troops_x.xml")
             out = {"describe": "v9\n", "ls-tree": "Main/_Module/ModuleData/troops/troops_x.xml\n",
                    "show": xml}[args[0]]
             return subprocess.CompletedProcess(cmd, 0, stdout=out.encode("utf-8"), stderr=b"")

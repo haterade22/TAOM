@@ -140,6 +140,15 @@ class UnflaggedDotnetTests(_Repo):
                "dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=\n")
         self.assertEqual(ld.check_unflagged_dotnet(), [])
 
+    def test_a_named_module_or_a_comment_is_not_the_empty_override(self):
+        _write(self.root / "docs/reference/a.md",
+               "dotnet test TAOM.Tests -p:ModuleId=TAOM\ndotnet test TAOM.Tests # clear ModuleId first\n")
+        self.assertEqual(len(ld.check_unflagged_dotnet()), 2)
+
+    def test_the_override_inside_a_code_span_passes(self):
+        _write(self.root / "docs/reference/a.md", "Run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`.\n")
+        self.assertEqual(ld.check_unflagged_dotnet(), [])
+
     def test_other_dirs_and_non_taom_targets_are_ignored(self):
         _write(self.root / "docs/features/a.md", "dotnet test TAOM.Tests\n")
         _write(self.root / "docs/reference/b.md", "dotnet build SomethingElse.sln\n")

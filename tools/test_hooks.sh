@@ -2728,6 +2728,9 @@ g7e_long() {  # $1 the command's head; the rest is 300,000 letters
 [[ "$(g7e_long $'git commit -n&& echo ok\necho ')" == rc=2 ]] \
     && ok "raw text: -n right before && is refused" \
     || bad "raw text: -n right before && went through"
+[[ "$(g7e_long 'git commit -n<input ; echo ')" == rc=2 ]] \
+    && ok "raw text: -n right before an input redirection is refused" \
+    || bad "raw text: -n right before an input redirection went through"
 [[ "$(g7e_long 'git -C . commit -n -m ')" == rc=2 ]] \
     && ok "raw text: -n past a global option is refused" \
     || bad "raw text: -n past a global option went through"
@@ -3009,6 +3012,8 @@ head2 "7g. config-protection blocks ADR and config edits whatever the path spell
 CP_CASES=(
   '2|E:\repos\TAOM\docs\adrs\012-graphify-code-graph-in-the-workflow.md'
   '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs/./adrs/010-knowledge-base-architecture.md'
+  '2|E:/repos/TAOM/docs/x/../adrs/010-knowledge-base-architecture.md'
   '0|/e/repos/TAOM/docs/adrs/README.md'
   '2|docs/adrs/011-knowledge-delivery-tiers.md'
   '2|docs\adrs\011-knowledge-delivery-tiers.md'
