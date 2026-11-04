@@ -188,6 +188,8 @@ internal static class FordsHudText
         var mine = e.Side == own;
         switch (e.Kind)
         {
+            case MatchEventKind.WallsWeaken:
+                return new TextObject("{=TAOM_FOW_Feed_WallsWeaken}The siege drags on: every tower and keep now weakens by the minute.").ToString();
             case MatchEventKind.TowerDestroyed:
                 return mine ? new TextObject("{=TAOM_FOW_Feed_OwnTower}We lost a tower.").ToString()
                             : new TextObject("{=TAOM_FOW_Feed_EnemyTower}An enemy tower has fallen.").ToString();
