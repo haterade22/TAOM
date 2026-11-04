@@ -60,7 +60,7 @@ internal static class FordsMatchConfigReader
         s.Float(g, "towers", "siegeDamageFactor", d.SiegeDamageFactor, 0f, 100f),
         s.Float(g, "towers", "regenPerSecond", d.RegenPerSecond, 0f, 100_000f),
         s.Float(g, "towers", "regenDelaySeconds", d.RegenDelaySeconds, 0f, 3600f),
-        s.Int(g, "towers", "gunnersPerTower", d.GunnersPerTower, 0, 10),
+        s.Int(g, "towers", "rockEveryVolleys", d.RockEveryVolleys, 0, 100),
         s.Float(g, "towers", "volleyIntervalSeconds", d.VolleyIntervalSeconds, 0.1f, 600f),
         s.Int(g, "towers", "volleyMissiles", d.VolleyMissiles, 0, 50),
         s.Float(g, "towers", "fireRange", d.FireRange, 1f, 500f),

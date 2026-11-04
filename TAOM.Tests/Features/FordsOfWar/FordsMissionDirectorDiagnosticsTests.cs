@@ -484,4 +484,23 @@ public class FordsMissionDirectorDiagnosticsTests
         Assert.IsTrue(stream.MarchSamples >= 1, "West lane 0 has a unit far from any tower, so it marches and the probe judges it");
         Assert.AreEqual(0, stream.PastSamples);
     }
+
+    [TestMethod]
+    public void AdjustTowerDamage_AHiddenTowerOwnerOnItsOwnSide_TakesNothing_ThoughItsTeamHasNoSide()
+    {
+        var f = FordsDirectorFixture.Create();
+        Assert.IsTrue(f.Director.Start());
+        f.Samples.Clear();
+        var owner = new object();
+        f.Towers.TowerIdOf(Arg.Any<object?>()).Returns(EastOuterLane0);
+        f.Battlefield.SideOf(owner).Returns((MatchSide?)null);
+        f.Towers.OwnerSideOfGunner(owner).Returns(MatchSide.East);
+        f.Director.Tick(1f);
+        f.Report.MissionTick(1f, 1.0);
+
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), owner, false, 40, 0), "its own side's tower");
+
+        f.Towers.OwnerSideOfGunner(owner).Returns(MatchSide.West);
+        Assert.IsTrue(f.Director.AdjustTowerDamage(new object(), owner, false, 40, 0) > 0, "the other side's tower");
+    }
 }

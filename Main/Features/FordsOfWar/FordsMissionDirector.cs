@@ -383,8 +383,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
     /// <summary>
     /// The side of an attacker (and its lane, when it is a lane unit) and its unit record, when it has one. The adapter lookups run
-    /// outside this class's gate, which is never held across an adapter call. An attacker with no unit record, such as a tower
-    /// gunner, still has a team.
+    /// outside this class's gate, which is never held across an adapter call. An attacker with no unit record still has a team,
+    /// except a tower's missile owner, whose team has no side: its side is its tower's.
     /// </summary>
     private FordsAttacker? AttackerOf(object? attacker, out UnitRecord? record)
     {
@@ -397,7 +397,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
                 _units.TryGetValue(attackerKey, out record);
         }
 
-        var side = record?.Side ?? (attacker != null ? _battlefield.SideOf(attacker) : null);
+        var side = record?.Side ?? (attacker != null ? _battlefield.SideOf(attacker) ?? _towers.OwnerSideOfGunner(attacker) : null);
         return side is { } known ? new FordsAttacker(known, record?.Lane ?? -1) : null;
     }
 
@@ -611,12 +611,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
     private void SpawnGunners(IReadOnlyList<TowerSlot> towers)
     {
-        // A real tower's garrison is its scene's bowman spots, however many: ground gunners would only soak melee blows at its foot.
+        // One hidden missile owner per tower. A real tower's stands on the scene's first bowman spot; one with no spots, a keep, fires nothing.
         var realTowers = _plan.Map.TowerHalfWidth > 0f;
-        var count = _plan.Config.Towers.GunnersPerTower;
-        if (count <= 0 && !realTowers)
-            return;
-
+        FordsUpgradeHooks.SetTowerShots(_towers.IsOwnShot);
         foreach (var side in new[] { MatchSide.West, MatchSide.East })
         {
             var troop = _plan.Factions[side].Units.FirstOrDefault(u => u.Role == UnitRole.Ranged)?.TroopId;
@@ -628,10 +625,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
             foreach (var tower in towers.Where(t => t.Owner == side))
             {
-                if (!realTowers)
-                    _towers.SpawnGunners(tower, troop, count);
-                else if (tower.GunnerSpots is { Count: > 0 } spots)
-                    _towers.SpawnGunners(tower, troop, spots.Count);
+                if (!realTowers || tower.GunnerSpots is { Count: > 0 })
+                    _towers.SpawnGunners(tower, troop, 1);
             }
         }
     }
@@ -677,7 +672,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         foreach (var volley in effects.Volleys)
         {
             var target = _battlefield.PositionOf(volley.Target);
-            _report.Volley(target != null, target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth) : 0);
+            _report.Volley(target != null, target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth, volley.Rock) : 0);
         }
 
         if (effects.Events.Count > 0)

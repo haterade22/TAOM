@@ -150,7 +150,7 @@ public class FordsOfWarMissionLogicTests
                 .ToList();
 
             Assert.IsFalse(code.Any(l => l.Contains("PlayerTroop")), relative + " names the player troop");
-            Assert.IsFalse(code.Any(l => l.Contains("AgentControllerType")), relative + " sets an agent controller");
+            Assert.IsFalse(code.Any(l => l.Contains("AgentControllerType.Player")), relative + " gives an agent the Player controller");
         }
     }
 

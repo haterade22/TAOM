@@ -332,8 +332,8 @@ public class FordsScenarioTests
 
         sc.Report.GunnerHit(tower.Gunners[0], enemy.Handle, false);
         sc.Report.GunnerHit(tower.Gunners[0], enemy.Handle, true);
-        sc.Report.GunnerHit(tower.Gunners[1], enemy.Handle, true);
-        sc.Report.GunnerHit(tower.Gunners[1], new object(), true);
+        sc.Report.GunnerHit(tower.Gunners[0], enemy.Handle, true);
+        sc.Report.GunnerHit(tower.Gunners[0], new object(), true);
         sc.Report.GunnerHit(new object(), enemy.Handle, false);
 
         var evidence = sc.Report.Run!.Towers[tower.Slot.Id];

@@ -42,4 +42,56 @@
     </ItemComponent>
     <Flags />
   </Item>
+  <!-- A hurled rock with a small ring, thrown by a tower's volley: boulder_projectile (SandBoxCore weapons.xml) with thrust 30 for 2500, which kills anything in the ring, and speed 25 for 8, the speed Fire launches at. Inside 1 m the ring ignores armour on a human. Tune from the ring's number. -->
+  <Item
+    id="fow_tower_rock"
+    name="{=pzfbPbWW}Boulder"
+    is_merchandise="false"
+    body_name="bo_projectile_rock"
+    holster_body_name="bo_axe_short"
+    mesh="projectile_rock"
+    holster_mesh=""
+    subtype="arrows"
+    weight="15"
+    difficulty="0"
+    appearance="1"
+    Type="Thrown"
+    item_holsters="">
+    <ItemComponent>
+      <Weapon
+        weapon_class="Boulder"
+        ammo_class="Boulder"
+        stack_amount="1"
+        position="0.05, -0.15, 0"
+        center_of_mass="0,0,0"
+        physics_material="boulder_stone"
+        thrust_speed="100"
+        speed_rating="0"
+        missile_speed="25"
+        weapon_length="95"
+        thrust_damage="30"
+        item_usage="heavy_stone"
+        flying_sound_code="event:/mission/combat/boulder/passby"
+        rotation_speed="2, 0.5, 0">
+        <WeaponFlags
+          RangedWeapon="true"
+          Consumable="true"
+          NotUsableWithOneHand="true"
+          TwoHandIdleOnMount="true"
+          CanPenetrateShield="true"
+          CanKnockDown="true"
+          MissileWithPhysics="true"
+          UseHandAsThrowBase="true"
+          LeavesTrail="true"
+          AmmoCanBreakOnBounceBack="true"
+          AffectsArea="true"
+          CanKillEvenIfBlunt="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags
+      QuickFadeOut="true"
+      CannotBePickedUp="true"
+      DropOnWeaponChange="true"
+      DropOnAnyAction="true" />
+  </Item>
 </Items>

@@ -38,11 +38,11 @@ public class FordsMissionDirectorGarrisonTests
     }
 
     [TestMethod]
-    public void Start_TowerWithSpots_SpawnsOneBowmanPerSpot_AndNoOtherGarrison()
+    public void Start_TowerWithSpots_SpawnsOneHiddenOwner_AndNoOtherGarrison()
     {
         var f = Started(FordsTestLayout.EastOuter0);
 
-        f.Towers.Received(1).SpawnGunners(Arg.Is<TowerSlot>(t => t.Id == FordsTestLayout.EastOuter0), Arg.Any<string>(), 3);
+        f.Towers.Received(1).SpawnGunners(Arg.Is<TowerSlot>(t => t.Id == FordsTestLayout.EastOuter0), Arg.Any<string>(), 1);
         f.Towers.Received(1).SpawnGunners(Arg.Any<TowerSlot>(), Arg.Any<string>(), Arg.Any<int>());
     }
 

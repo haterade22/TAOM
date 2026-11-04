@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.FordsOfWar.Domain;
@@ -14,6 +15,7 @@ internal static class FordsUpgradeHooks
     private static volatile CombatUpgradeFactors? _west;
     private static volatile CombatUpgradeFactors? _east;
     private static volatile HeroCombatFactors? _heroes;
+    private static volatile Func<object, object, bool>? _isOwnTowerShot;
     private static long _hitsRaised;
     private static long _hitsLowered;
     private static long _heroHitsRaised;
@@ -35,8 +37,26 @@ internal static class FordsUpgradeHooks
         _heroes = heroes;
     }
 
+    internal static void SetTowerShots(Func<object, object, bool> isOwnShot) => _isOwnTowerShot = isOwnShot;
+
+    /// <summary>
+    /// A tower's missile owner is a friend of both sides, so nothing cancels its hit on its own side: an arrow would hurt a defender, and a rock's
+    /// ring hits friends in any case. The owner is the only invulnerable attacker here, which keeps this cheap on the hit path.
+    /// </summary>
+    private static bool IsOwnTowerShot(in AttackInformation attack)
+    {
+        var check = _isOwnTowerShot;
+        var attacker = attack.AttackerAgent;
+        if (check == null || attacker == null || attacker.CurrentMortalityState != Agent.MortalityState.Invulnerable)
+            return false;
+
+        var body = attack.IsVictimAgentMount ? attack.VictimAgent?.RiderAgent : attack.VictimAgent;
+        return body != null && check(attacker, body);
+    }
+
     internal static void Clear()
     {
+        _isOwnTowerShot = null;
         _west = null;
         _east = null;
         _heroes = null;
@@ -69,6 +89,9 @@ internal static class FordsUpgradeHooks
 
     public static float Reduce(in AttackInformation attack, in AttackCollisionData collision, float damage)
     {
+        if (IsOwnTowerShot(in attack))
+            return 0f;
+
         if (_west == null)
             return damage;
 
