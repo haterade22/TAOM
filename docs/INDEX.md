@@ -93,6 +93,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [custom-battles](features/custom-battles.md) — TAOM factions/commanders/troops in custom battles (Patch19)
 - [fords-of-war](features/fords-of-war.md): the campaign-free commander mode started from the main menu (`Patch131_FordsOfWar`, 13 factions, three lanes of towers, army upgrades, free heroes, match speed, unattended runs). The original design is [build-spec](features/fords-of-war/build-spec.md), the tag spec for hand-built maps is [greybox-scene-spec](features/fords-of-war/greybox-scene-spec.md) and the panel research is [hud-research](features/fords-of-war/hud-research.md)
 - [fords-balance-log](features/fords-of-war/balance-log.md): what each Fords of War balance match showed and what changed because of it; `python tools/fords_match_review.py <run folder>` gives the numbers
+- [long-defeat](features/long-defeat.md): the planned wave survival mode on the siege maps (#1079). Only the Phase 0 spike exists: `taom.ld_start`, or `python tools/run_long_defeat_spike.py` with nobody at the keyboard. Its tagged log lines answer each spike, and the doc holds Mike's decisions for the later phases
 
 ### Career & progression
 - [career-system](features/career-system.md): 70 careers across 25 culture ids, XML-driven defs, ability + passive systems, career screen UI
