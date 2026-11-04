@@ -85,6 +85,7 @@ class Registries:
     hidden_pieces: dict = field(default_factory=dict)         # crafting piece id -> is_hidden (empty = unavailable)
     factions: set = field(default_factory=set)                # defined clan <Faction> ids (empty = unavailable)
     equipment_rosters: set = field(default_factory=set)       # defined <EquipmentRoster> ids (empty = unavailable)
+    settlements: set = field(default_factory=set)             # <Settlement> ids of the world the game builds (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -153,6 +154,7 @@ class RefKind:
     label: str
     prefix: str
     allow: set = field(default_factory=set)
+    skip_files: frozenset = frozenset()   # paths as Validator._rel prints them, never swept for this kind
 
 
 # Patterns are ATTRIBUTE-AGNOSTIC — they match the prefixed value on ANY
@@ -183,6 +185,13 @@ REF_KINDS = [
     # docs/modding/wanderers-and-named-companions.md).
     RefKind("faction", re.compile(r'="Faction\.([A-Za-z0-9_.\-]+)"'),
             "factions", Severity.ERROR, "BROKEN_FACTION_REF", "clan", "Faction.", {"neutral"}),
+    # Settlement.X: a clan's or kingdom's home, a village's bound town. Most of these cross from TAOM
+    # into the unversioned TAOM_Map, and a package pair that disagrees points them at nothing. TAOM's
+    # own two settlement files are in no SubModule.xml row, so the game never reads them
+    # (docs/modding/file-catalogue.md), and custom_settlements.xml names towns no map holds.
+    RefKind("settlement", re.compile(r'="Settlement\.([A-Za-z0-9_.\-]+)"'),
+            "settlements", Severity.ERROR, "BROKEN_SETTLEMENT_REF", "settlement", "Settlement.",
+            skip_files=frozenset({"settlements.xml", "custom_settlements.xml"})),
 ]
 
 
@@ -422,6 +431,8 @@ class Validator:
             id_attr = schema.id_attribute if schema else "id"
             line_entry = self._entry_by_line(text, entry_el, id_attr) if entry_el else {}
             for kind in active:
+                if rel in kind.skip_files:
+                    continue
                 registry = getattr(self.reg, kind.registry_attr)
                 for m in kind.pattern.finditer(text):
                     ref = m.group(1)
@@ -2356,6 +2367,7 @@ _ROSTER_DEF_RE = re.compile(r'<EquipmentRoster\b[^>]*?\bid="([^"]+)"', re.S)
 _ROSTER_STRIP_RE = re.compile(
     r"""<xsl:template\s+match="EquipmentRoster\[@id='([^']+)'\]"\s*(?:/>|>\s*</xsl:template>)""", re.S)
 _SETTLEMENT_CULTURE_RE = re.compile(r'<Settlement\b[^>]*?\bculture="Culture\.([^"]+)"', re.S)
+_SETTLEMENT_ID_RE = re.compile(r'<Settlement\b[^>]*?\bid="([^"]+)"', re.S)
 # An XSLT template with an empty body and an unqualified `match="Settlement"`
 # deletes EVERY settlement contributed by earlier modules (TAOM_Map does exactly
 # this). Detecting it is what keeps settled_cultures honest: without it the
@@ -2631,19 +2643,16 @@ def build_harness_registries(item_roots) -> tuple:
     return harness, mounts
 
 
-def build_settled_cultures(game_modules) -> set:
-    """Cultures that own at least one settlement in the world the game actually builds.
+def _world_settlement_values(game_modules, row_re) -> set:
+    """`row_re`'s group across the settlement rows of the world the game actually builds.
 
     Walks the settlement-contributing modules in load order and honours an
     unconditional `<xsl:template match="Settlement"/>` strip: TAOM_Map ships one,
-    so vanilla's 494 settlements are deleted and only TAOM_Map's 988 survive. Any
-    culture outside the resulting set is landless, which is what makes vanilla's
-    unguarded `Settlement.All.First(x => x.Culture == hero.Culture)` in
-    `HeroSpawnCampaignBehavior.SpawnLordParty` throw (crash 099f650c, Patch65)."""
+    so vanilla's 494 settlements are deleted and only TAOM_Map's survive."""
     if not game_modules:
         return set()
     game_modules = Path(game_modules)
-    cultures = set()
+    values = set()
     # Settlement-contributing modules, in SubModule load order.
     for name in ("Native", "SandBoxCore", "SandBox", "CustomBattle", "TAOM_Map"):
         moduledata_dir = game_modules / name / "ModuleData"
@@ -2651,11 +2660,20 @@ def build_settled_cultures(game_modules) -> set:
             continue
         xslt = moduledata_dir / "settlements.xslt"
         if xslt.exists() and _SETTLEMENT_STRIP_RE.search(_read_stripped(xslt)):
-            cultures = set()  # this module deletes everything contributed so far
+            values = set()  # this module deletes everything contributed so far
         xml = moduledata_dir / "settlements.xml"
         if xml.exists():
-            cultures |= set(_SETTLEMENT_CULTURE_RE.findall(_read_stripped(xml)))
-    return cultures
+            values |= set(row_re.findall(_read_stripped(xml)))
+    return values
+
+
+def build_settled_cultures(game_modules) -> set:
+    """Cultures that own at least one settlement in the world the game actually builds.
+
+    Any culture outside this set is landless, which is what makes vanilla's
+    unguarded `Settlement.All.First(x => x.Culture == hero.Culture)` in
+    `HeroSpawnCampaignBehavior.SpawnLordParty` throw (crash 099f650c, Patch65)."""
+    return _world_settlement_values(game_modules, _SETTLEMENT_CULTURE_RE)
 
 
 def build_settlement_economy(game_modules) -> list:
@@ -2975,11 +2993,13 @@ def build_item_trade(item_roots) -> tuple:
     return trade, hidden
 
 
-def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
+def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
     `game_modules` is .../Mount & Blade II Bannerlord/Modules. Missing roots are
-    skipped (reported by the caller, per environment-failures.md)."""
+    skipped (reported by the caller, per environment-failures.md). `vanilla_modules`
+    is a second Modules folder for vanilla's clans, because a release channel holds
+    TAOM's modules and no SandBox; without it `game_modules` serves."""
     moduledata = Path(moduledata)
     game_modules = Path(game_modules) if game_modules else None
 
@@ -3019,7 +3039,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     # row is not a clan the engine loads, so it leaves the registry.
     vanilla_factions = set()
     if game_modules:
-        vanilla_factions = _scan_files([game_modules / "SandBox" / "ModuleData" / "spclans.xml"], _CLAN_DEF_RE)
+        vanilla_root = Path(vanilla_modules) if vanilla_modules else game_modules
+        vanilla_factions = _scan_files([vanilla_root / "SandBox" / "ModuleData" / "spclans.xml"], _CLAN_DEF_RE)
         vanilla_factions -= set(_CLAN_STRIP_RE.findall(_read_stripped(moduledata / "spclans.xslt")))
     factions = _scan_files([moduledata / "characters" / "clans.xml"], _CLAN_DEF_RE) | vanilla_factions
 
@@ -3041,6 +3062,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)
     body_properties = _scan_files(bodyprop_files, _BODYPROP_DEF_RE)
     settled_cultures = build_settled_cultures(game_modules)
+    settlements = _world_settlement_values(game_modules, _SETTLEMENT_ID_RE)
     settlement_economy = build_settlement_economy(game_modules)
 
     # Only flag duplicate item defs inside the LOTRLOME_Armory item folders,
@@ -3127,6 +3149,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         hidden_pieces=hidden_pieces,
         factions=factions,
         equipment_rosters=equipment_rosters,
+        settlements=settlements,
     )
 
 

@@ -110,6 +110,11 @@ class ModuleDataQueryTests(unittest.TestCase):
         self.assertEqual(self.q.find_references("clan_x")["count"], 1, "a bare id searches every prefix")
         self.assertEqual(self.q.find_references("BodyProperty.fighter_x")["count"], 1)
 
+    def test_find_references_covers_settlement_refs(self):
+        _write(self.md / "clans.xml", '<Factions><Faction id="c" initial_home_settlement="Settlement.town_x" /></Factions>\n')
+        r = self.q.find_references("Settlement.town_x")
+        self.assertEqual((r["kind"], r["count"]), ("settlement", 1))
+
     def test_party_template_exists(self):
         self.assertTrue(self.q.party_template_exists("good_template")["exists"])
         self.assertTrue(self.q.party_template_exists("PartyTemplate.good_template")["exists"])

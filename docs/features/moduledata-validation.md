@@ -33,6 +33,15 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
   `spclans.xslt` strips with `<xsl:template match="Faction[@id='X']"/>` (the engine never loads
   those rows); `Faction.neutral` (the engine's clanless value for named companions) is allowed.
   XML only: the `faction` attributes `heroes.xslt` writes are not swept. (`BROKEN_FACTION_REF`, #949)
+- **An `<EquipmentSet id>` that names no roster** null-dereferences inside the NPCCharacters load, and the engine's
+  empty catch stops every character after it from loading, with no crash at the typo. The registry is every
+  `<EquipmentRoster id>` in TAOM, vanilla, the Armory and `TAOM_Map`, minus any an xslt strips by id; refs come from the
+  `.xml` files and TAOM's `.xslt` files, because `lords.xslt` binds rosters too. (`BROKEN_ROSTER_REF`)
+- **A `Settlement.X` reference to no settlement** (a clan's or kingdom's home, a village's `bound`) crosses from TAOM
+  into the unversioned `TAOM_Map`, so a pair of packages that disagree points it at nothing. The registry is the world the
+  game builds: `TAOM_Map`'s rows, since its `settlements.xslt` strips vanilla's. TAOM's two unregistered settlement files
+  are not read. (`BROKEN_SETTLEMENT_REF`). `tools/check_release_pair.py` runs this code, `UNKNOWN_CULTURE`,
+  `BROKEN_FACTION_REF` and `LANDLESS_CULTURE` against a release channel, which holds no vanilla module.
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.

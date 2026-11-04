@@ -3591,6 +3591,90 @@ class BrokenRosterRefTests(unittest.TestCase):
         self.assertEqual(self._registry(with_install=False), set())
 
 
+class BrokenSettlementRefTests(unittest.TestCase):
+    """BROKEN_SETTLEMENT_REF. A clan's or kingdom's home and a village's bound town name a settlement in
+    another, unversioned module, and no gate resolved those refs. A package pair where TAOM names a town
+    its map lacks is how Arthedain nearly shipped (rca-ered-luin-2026-10-27.md row 2)."""
+
+    CLAN = '<Factions>\n  <Faction id="clan_x" initial_home_settlement="Settlement.{ref}" />\n</Factions>\n'
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self.md = self.root / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _found(self, settlements=("town_known",)):
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures=set(), party_templates=set(), settlements=set(settlements))
+        issues = ts.Validator(self.md, self.schemas, regs).run()
+        return [i for i in issues if i.code == "BROKEN_SETTLEMENT_REF"]
+
+    def test_a_ref_to_no_settlement_is_an_error_with_its_line(self):
+        _write(self.md / "characters" / "clans.xml", self.CLAN.format(ref="town_none"))
+        found = self._found()
+        self.assertEqual(len(found), 1)
+        self.assertIs(found[0].severity, ts.Severity.ERROR)
+        self.assertEqual((found[0].file, found[0].line), ("characters/clans.xml", 2))
+        self.assertIn("town_none", found[0].message)
+
+    def test_a_ref_to_a_settlement_is_clean(self):
+        _write(self.md / "characters" / "clans.xml", self.CLAN.format(ref="town_known"))
+        self.assertEqual(self._found(), [])
+
+    def test_a_loc_key_that_starts_with_the_word_is_not_a_ref(self):
+        _write(self.md / "strings.xml", '<strings><string id="Settlements.Settlement.name.x" text="y" /></strings>\n')
+        self.assertEqual(self._found(), [])
+
+    def test_the_two_settlement_files_the_game_never_loads_are_not_read(self):
+        for name in ("custom_settlements.xml", "settlements.xml"):
+            _write(self.md / name, self.CLAN.format(ref="town_none"))
+        self.assertEqual(self._found(), [])
+
+    def test_a_file_of_that_name_in_another_folder_is_read(self):
+        _write(self.md / "sub" / "settlements.xml", self.CLAN.format(ref="town_none"))
+        self.assertEqual([i.file for i in self._found()], ["sub/settlements.xml"])
+
+    def test_an_empty_registry_means_the_pass_is_unavailable(self):
+        _write(self.md / "characters" / "clans.xml", self.CLAN.format(ref="town_none"))
+        self.assertEqual(self._found(settlements=()), [])
+
+    def _registry(self, strip=True):
+        modules = self.root / "Modules"
+        _write(modules / "SandBox" / "ModuleData" / "settlements.xml",
+               '<Settlements>\n  <Settlement id="town_vanilla" />\n</Settlements>\n')
+        _write(modules / "TAOM_Map" / "ModuleData" / "settlements.xml",
+               '<Settlements>\n  <Settlement\n    id="town_map" />\n  <!-- <Settlement id="town_commented" /> -->\n'
+               '</Settlements>\n')
+        if strip:
+            _write(modules / "TAOM_Map" / "ModuleData" / "settlements.xslt",
+                   '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
+                   '  <xsl:template match="Settlement"/>\n</xsl:stylesheet>\n')
+        return ts.build_registries(self.md, modules).settlements
+
+    def test_the_registry_is_the_world_the_game_builds(self):
+        self.assertEqual(self._registry(), {"town_map"})
+
+    def test_the_registry_keeps_vanilla_rows_when_the_map_does_not_strip_them(self):
+        self.assertEqual(self._registry(strip=False), {"town_map", "town_vanilla"})
+
+    def test_the_registry_is_unavailable_without_an_install(self):
+        self.assertEqual(ts.build_registries(self.md, None).settlements, set())
+
+    def test_vanilla_clans_can_come_from_a_second_modules_root(self):
+        # A release channel holds no SandBox: its clan registry needs the install's.
+        channel, install = self.root / "channel", self.root / "install"
+        channel.mkdir()
+        _write(install / "SandBox" / "ModuleData" / "spclans.xml",
+               '<Factions>\n  <Faction id="clan_vanilla" />\n</Factions>\n')
+        self.assertEqual(ts.build_registries(self.md, channel).factions, set())
+        self.assertEqual(ts.build_registries(self.md, channel, vanilla_modules=install).factions, {"clan_vanilla"})
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced

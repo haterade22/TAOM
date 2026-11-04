@@ -25,6 +25,7 @@ _PREFIXES = {
     "party_template": "PartyTemplate.",
     "body_property": "BodyProperty.",
     "faction": "Faction.",
+    "settlement": "Settlement.",
 }
 
 # The engine (taom_schema.REF_KINDS) names the troop kind "npccharacter"; the
