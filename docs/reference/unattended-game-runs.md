@@ -30,7 +30,7 @@ messages, which are not user input, so a run does not reset the clock it is gate
 in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
 game to end. The default 0 stops the game at once. Pass it whenever someone may be near the PC.
 
-`--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Read [balance-log.md](../features/fords-of-war/balance-log.md) before you compare a fast match with a normal one.
+`--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Use 4x for balance runs and 10x only for smoke and crash runs: 10x changes the match, as [balance-log.md](../features/fords-of-war/balance-log.md) measures.
 
 `--screenshots 8,45,65` saves a picture of the screen at those live seconds, plus one during the countdown, through the engine's
 `Utilities.TakeScreenshot`. The picture holds the UI, so a session can read the panel itself. The engine writes 24-bit BMP data whatever the file is called, so the launcher

@@ -10,7 +10,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// defends the worst threatened lane with the cheapest spear or infantry pack, buys back or fields heroes when gold
 /// beats price plus HeroReserveGold, then builds its best lane on Hold with the dearest pack it can pay until the lane
 /// holds AssaultThreshold units, and pushes. A faction's buy cycle also names its upgrades and its beasts; a creature
-/// comes only from there. MistakeChance skips a whole decision. Gold it plans to spend is tracked
+/// comes only from there. While the lane is full, gold above the reserve buys the next upgrade the cycle names.
+/// MistakeChance skips a whole decision. Gold it plans to spend is tracked
 /// locally, so one decision never asks for more than the slot owns.
 /// </summary>
 internal sealed class AiCommander
@@ -213,6 +214,25 @@ internal sealed class AiCommander
         return null;
     }
 
+    /// <summary>A full lane stops the cycle at a pack, so gold above the reserve buys the first upgrade further on that it reaches. The cycle keeps its place for when the lane opens.</summary>
+    private void BuySpareUpgrade(MatchView view, IReadOnlyList<string> cycle, int gold, List<AiAction> actions)
+    {
+        for (var step = 0; step < cycle.Count; step++)
+        {
+            var entry = cycle[(_buyIndex + step) % cycle.Count];
+            if (!entry.StartsWith(UpgradeEntry, StringComparison.Ordinal))
+                continue;
+
+            var id = entry.Substring(UpgradeEntry.Length);
+            var upgrade = view.Upgrades?.FirstOrDefault(u => u.Id == id);
+            if (upgrade?.NextPrice is { } price && gold > price + _profile.HeroReserveGold)
+            {
+                actions.Add(AiAction.BuyUpgrade(upgrade.Id));
+                return;
+            }
+        }
+    }
+
     /// <summary>The next entry that has something on show, moving the place in the cycle past any that has not (a rotating faction's role may be absent for a while).</summary>
     private MatchView.UnitOfferView? NextInCycle(MatchView view, IReadOnlyList<string> cycle, int gold)
     {
@@ -280,7 +300,10 @@ internal sealed class AiCommander
             }
 
             if (assault.OwnLive >= view.AssaultThreshold)
+            {
+                BuySpareUpgrade(view, cycle, gold, actions);
                 return;
+            }
 
             var next = NextInCycle(view, cycle, gold);
             if (next != null && next.Price <= gold)
