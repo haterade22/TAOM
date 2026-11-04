@@ -52,6 +52,19 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-004402 | tower limit 50 | Mirkwood v Rohan | 288 / 664 | 2 / 2 | 28,159 / 27,990 | Mirkwood 1.4 | 4x. |
 | 20261104-004839 | tower limit 50 | Erebor v Gundabad | 529 / 1,284 | 3 / 1 | 6,092 / 34,602 | Erebor 1.4 | 4x. |
 | 20261104-005316 | tower limit 50 | Harad v Rohan | 645 / 637 | 1 / 2 | 31,110 / 26,350 | Rohan 0.9 | 4x. Harad also 0.9. |
+| 20261104-011218 | `6e509d555` | Rivendell v Mordor | 651 / 5,557 | 2 / 4 | 40,064 / 20,959 | Rivendell 1.8 | 4x, 45 minutes. No keep fell. Check 8 failed again on the same lane. |
+| 20261104-012426 | `6e509d555` | Erebor v Gundabad | 2,163 / 5,622 | 1 / 6 | 41,037 / 20,266 | Erebor 1.1 | 4x, 45 minutes. No keep fell; Gundabad's last tower fell at 2,192 s. |
+| 20261104-013631 | `6e509d555` | Dale v Gondor | 2,660 / 2,756 | 2 / 0 | 20,456 / 26,074 | Dale 1.0 | 4x, 45 minutes. No keep fell. |
+| 20261104-014937 | `6e509d555` | Rivendell v Mordor | 145 / 1,609 | 1 / 0 | 4,669 / 16,870 | Rivendell 3.0 | 1x, the limit's confirmation. 290 blows `Crowded`. |
+| 20261104-022226 | Rohan's rider prices | Mirkwood v Rohan | 278 / 654 | 1 / 3 | 32,417 / 17,347 | Mirkwood 1.0 | 4x. Rohan 0.7. |
+| 20261104-022704 | Rohan's rider prices | Harad v Rohan | 654 / 670 | 2 / 3 | 25,529 / 16,206 | Rohan 1.2 | 4x. |
+| 20261104-023142 | Rohan's rider prices | Rohan v Gondor | 587 / 620 | 1 / 0 | 8,526 / 16,171 | Gondor 1.0 | 4x. Rohan 0.9. |
+| 20261104-023619 | Rohan's rider prices | Rohan v Mordor | 630 / 1,322 | 1 / 0 | 4,631 / 16,415 | Rohan 2.0 | 4x. |
+| 20261104-024056 | Rohan's rider prices | Dol Guldur v Easterlings | 734 / 614 | 3 / 0 | 0 / 29,604 | Easterlings 1.4 | 4x. |
+| 20261104-024532 | Rohan's rider prices | Dol Guldur v Rohan | 739 / 619 | 3 / 2 | 16,035 / 35,456 | Rohan 1.3 | 4x. |
+| 20261104-025115 | Dol Guldur's prices | Dol Guldur v Erebor | 768 / 526 | 3 / 0 | 11,936 / 27,090 | Dol Guldur 1.1 | 4x. |
+| 20261104-025552 | Dol Guldur's prices | Dol Guldur v Easterlings | 759 / 624 | 4 / 0 | 4,436 / 35,486 | Easterlings 1.3 | 4x. |
+| 20261104-030029 | Dol Guldur's prices | Dol Guldur v Rohan | 722 / 616 | 3 / 0 | 4,474 / 34,476 | Rohan 1.4 | 4x. |
 
 ## Findings and changes
 
@@ -149,12 +162,33 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Result, the same nine pairs at 4x:** towers lost moved from 5 / 0 to 2 / 1 for Rivendell v Mordor, 6 / 0 to 3 / 1 for Erebor v Gundabad, 3 / 0 to 1 / 0 for Dale v Gondor, and 1 / 3 to 1 / 0 for Umbar v Dale. Easterlings v Harad stayed one-sided at 0 / 3. The side that was behind now reaches towers: Rivendell's tower damage rose from 522 to 9,727, Dol Guldur's from 0 to 11,778, Isengard's from 0 to 8,407, and Erebor's from 5 to 6,092. No keep fell in 15 minutes, and first towers fell later, between 324 and 905 s in most pairs. Between 569 and 1,736 blows per match were `Crowded`.
 
-**Still to check:** how long a whole match lasts now, and at 1x. These are single matches at 4x.
+**At 1x:** one match of Rivendell v Mordor (`014937`) agrees: 1 tower lost to 0, Rivendell's gold trade 3.0, Mordor's tower damage 16,870.
+
+**How long a match lasts now:** three matches of 45 minutes (`011218`, `012426`, `013631`). No keep fell in any. Rivendell, which lost all 6 towers and took none before the limit, now leads Mordor 4 towers to 2 at 45 minutes, so a small army comes back as the match goes on. Erebor took all 6 of Gundabad's towers by 2,192 s and did not finish the keep in the 510 s left. Dale and Gondor reached 2 towers to 0: each side dealt only about a third of the 75,000 points that a side's towers and keep hold. So the limit fixed who can win, and a match between even sides now runs past the 30 to 45 minute target. Raising the limit would not solve that: only 15 to 25 percent of blows on any side's towers were `Crowded`. Even sides fight mid-lane, and few of them reach a tower.
+
+### Rohan's riders (this change)
+
+**Why:** over nine matches, by role, cavalry made 1.12 kills per death, close to ranged units' 1.18 and above infantry's 0.82, but its gold trade was 0.71 against 2.19 and 1.15. Rohan's riders traded at 0.09 to 0.49. So they fight as cavalry should, and the price is what fails the design's "finest cavalry in Middle-earth".
+
+**Changed:** Rohan's rider packs cost 0.7 of the full price for their level, and its horse archers 0.5, which makes them the only riders so discounted.
+
+**Result, six matches at 4x:** cavalry's gold trade across all factions rose from 0.71 to 1.20, and Rohan's from 0.47 to 0.72 against Mirkwood, 0.93 to 1.22 against Harad, and to 1.96 against Mordor. Rohan took 3 towers to 1 from Mirkwood and 3 to 2 from Harad. Horse archers improved to 0.38, and they remain Rohan's weak pack.
+
+### Dol Guldur (this change)
+
+**Why:** Dol Guldur lost its fights against all three opponents at about 0.6 gold trade (0.64 Erebor, 0.67 Easterlings, 0.62 Rohan), and earned about 5,000 gold where they earned 7,500. Creature calls returned 0.14 of their gold across those six matches.
+
+**Changed:** its four cheapest packs cost 0.8 of the full price, spider riders 1.5 where they cost 2.5, and fell wargs 1.2 where they cost 2.0. Its income and poison stay as its trait lines state.
+
+**Result:** mixed. Its gold trade against Erebor rose to 1.06, but it stayed at 0.66 against Easterlings and 0.63 against Rohan, and it took no tower in the three matches. The change stays because it does no harm, and Dol Guldur is still the weakest faction. Its next lever is its income or its poison, and each needs a new trait line.
 
 ## Open questions
 
+- **Match length (a decision for Mike):** even sides do not finish in 45 minutes. A time-based rule would end such matches, for example tower damage rising with the match clock after a set minute. That is a new rule rather than a number, so it waits for his word.
+- **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
-- **Dol Guldur and Harad:** Dol Guldur still loses its fights (gold trade 0.64), and Harad lost 3 towers and took none against Easterlings.
+- **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.
+- **Spears:** 0.73 to 0.79 gold trade in every set of matches. No lane here brings them the cavalry they are for.
 - **A small army's attack:** Rivendell dealt 7 tower damage in 45 minutes before the limit, and 9,727 in 15 minutes with it. Read it again in the next long match.
 - **A horde's late gold:** with every lane full, every hero out and its cycle's upgrades bought, Mordor has nothing to spend on. It ended a 45-minute match on 8,973 gold.
 - **Mordor's heroes:** 0.4 to 1.5 kills per minute in `200151` and `200628`, where Rivendell's made 1.7 to 5.4. In `201138` Sauron made 4.6 and the Nazgul 0.9.

@@ -204,6 +204,19 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
+    public void ShippedRohan_AloneDiscountsItsRiders_SoItsFinestCavalryCanBeMassed()
+    {
+        var factions = (JObject)JObject.Parse(File.ReadAllText(ConfigFile("factions.json")))["factions"]!;
+
+        static IEnumerable<float> RiderWeights(JToken faction) =>
+            faction["units"]!.Where(u => (string?)u["role"] == "Cavalry").Select(u => (float)u["eliteWeight"]!);
+
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w < 1f), "every Rohan rider pack is below the full price for its level");
+        var cheapestElsewhere = factions.Properties().Where(p => p.Name != "rohan").SelectMany(p => RiderWeights(p.Value)).Min();
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).Max() < cheapestElsewhere, "no other faction's riders are as cheap for their level");
+    }
+
+    [TestMethod]
     public void ShippedFactions_AreTheThirteenDesigned()
     {
         var catalog = Load(Substitute.For<IModLogger>());
