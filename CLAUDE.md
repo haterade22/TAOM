@@ -48,8 +48,7 @@ it, or gives its date.
 
 ## Skills
 
-A SKILL.md is executable
-instructions: follow its phases in order.
+A SKILL.md is executable instructions: follow its phases in order.
 
 | When | Invoke | Gate |
 |---|---|---|
@@ -110,5 +109,6 @@ the one-line note before each spawn are in `.claude/rules/model-effort-selection
   through Edit and Write ([MCP servers](docs/reference/mcp-servers.md)).
 - The Bash tool halves `\\`, and a command over 7,500 characters fails (`check-bash-length.sh`):
   write scripts with the Write tool. Never spell
-  `python3` (a Store alias that hangs); use `python`. Never `sed -i` a CRLF file. The PowerShell tool:
+  `python3` (a Store alias that hangs); use `python`. Never `sed -i` a CRLF file, and test for one
+  with `file <path>`: `grep -c $'\r'` reports 0 here. The PowerShell tool:
   [powershell-tool.md](docs/reference/powershell-tool.md).
