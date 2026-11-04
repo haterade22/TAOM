@@ -15,8 +15,8 @@ namespace TAOM.Adapters;
 /// The troops of a Fords of War mission (<see cref="IFordsBattlefieldAdapter"/>). West is the mission's player team and East the
 /// player's enemy team (the launcher builds exactly those two); lane <c>n</c> is the formation of class <c>n</c> on each (the four
 /// default classes, so at most four lanes). Units are spawned the way vanilla spawns a troop (<c>Mission.GetAgentBuildDataToSpawnTroop</c>
-/// then <c>SpawnTroopWithAgentBuildData</c>) with the lane's formation and an explicit spot. Nobody gets the Player controller:
-/// the mission keeps no main agent. Orders go through <c>Formation.SetMovementOrder</c> on the main thread. Agents are held by
+/// then <c>SpawnTroopWithAgentBuildData</c>) with the lane's formation and an explicit spot. No unit spawns with the Player controller:
+/// the mission has a main agent only while the commander controls a soldier (<c>FordsAgentControl</c>). Orders go through <c>Formation.SetMovementOrder</c> on the main thread. Agents are held by
 /// object in the shared <see cref="FordsAgentRegistry"/> and evicted when the engine removes them, never keyed by <c>Agent.Index</c>.
 /// </summary>
 internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter

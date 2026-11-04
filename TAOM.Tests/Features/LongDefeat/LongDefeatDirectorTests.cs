@@ -74,7 +74,7 @@ public class LongDefeatDirectorTests
     }
 
     private static Rig NewRig(RunOptions? options = null, RunRules? rules = null, int gold = 600, KeepPoint? keep = null,
-        LongDefeatRunRecords? records = null)
+        LongDefeatRunRecords? records = null, RunProvenance? provenance = null)
     {
         var rig = new Rig();
         var waves = new WavePlan(
@@ -99,6 +99,7 @@ public class LongDefeatDirectorTests
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
             Keep = keep,
+            Provenance = provenance ?? RunProvenance.Unknown,
         };
         rig.Director = new LongDefeatDirector(plan, rig.Field, rig.Session, rig.Log, rig.Outcomes, "m1", records);
         return rig;
@@ -926,6 +927,27 @@ public class LongDefeatDirectorTests
 
         Assert.IsFalse(rig.Calls.Any(c => c.StartsWith("Rest:")));
         Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains(" rest: ")));
+    }
+
+    [TestMethod]
+    public void TheReport_CarriesTheRunsTimes_AndThePlansProvenance()
+    {
+        var before = DateTime.UtcNow;
+        var rig = NewRig(new RunOptions { StopAfterWaves = 1 }, provenance: new RunProvenance("b+abc", "hash16", new[] { "TAOM v2.0.36" }, true));
+
+        ClearOneWave(rig);
+
+        var report = Newtonsoft.Json.Linq.JObject.Parse(rig.Director.ReportText);
+        Assert.AreEqual("b+abc", (string?)report["build"]);
+        Assert.AreEqual("hash16", (string?)report["balance"]);
+        Assert.AreEqual("TAOM v2.0.36", (string?)report["mods"]![0]);
+        Assert.IsTrue((bool)report["cheatMode"]!);
+        Assert.AreEqual(1, (int)report["targetWaves"]!);
+        var started = DateTime.Parse(report["startedUtc"]!.ToString(Newtonsoft.Json.Formatting.None).Trim('"'), null, System.Globalization.DateTimeStyles.RoundtripKind);
+        var ended = DateTime.Parse(report["endedUtc"]!.ToString(Newtonsoft.Json.Formatting.None).Trim('"'), null, System.Globalization.DateTimeStyles.RoundtripKind);
+        Assert.AreEqual(DateTimeKind.Utc, started.Kind);
+        Assert.IsTrue(before <= started && started <= ended && ended <= DateTime.UtcNow);
+        Assert.AreEqual(1, (int)report["schema"]!);
     }
 
     private static void ClearOneWave(Rig rig)

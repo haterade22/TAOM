@@ -18,7 +18,8 @@ namespace TAOM.Client.Features.FordsOfWar;
 /// back). The layer shows the cursor for the whole mission and takes mouse buttons and the wheel, but only where a widget takes
 /// events; the camera view reads keys, the right button and the wheel off the scene. A cursor left hidden is pinned to the screen
 /// centre and a layer under it gets no clicks (#970), so the restriction is set before the movie loads. Built by the mission's
-/// <c>[ViewMethod]</c> list (<see cref="FordsOfWarMissionViews"/>). Any fault latches the panel off and logs once. The panel only
+/// <c>[ViewMethod]</c> list (<see cref="FordsOfWarMissionViews"/>). While the commander controls a soldier the panel stands aside
+/// (<see cref="FordsPanelStandAside"/>) and reads no keys. Any fault latches the panel off and logs once. The panel only
 /// offers the result button; the automatic return to the menu belongs to the mission logic (<c>FordsMissionExit</c>).
 /// </summary>
 public sealed class FordsCommandView : MissionView
@@ -37,6 +38,7 @@ public sealed class FordsCommandView : MissionView
     private float _sinceRefresh = RefreshIntervalSec;
     private bool _failed;
     private FordsMissionSpeed? _speed;
+    private readonly FordsPanelStandAside _standAside = new();
 
     /// <summary>
     /// A lost focus opens the Escape menu, which pauses the mission until someone closes it. In an unattended run nobody will, so an armed run says no.
@@ -63,9 +65,10 @@ public sealed class FordsCommandView : MissionView
                 return;
 
             _vm.Tick(dt, MBCommon.IsPaused);
-            _speed?.Apply(Mission, _vm.Speed, dt);
+            var controlling = _standAside.Update(Mission, _vm, _layer!);
+            _speed?.Apply(Mission, _standAside.Speed(_vm), dt);
             _report?.Paused(MBCommon.IsPaused);
-            if (!_vm.IsResultVisible)
+            if (!_vm.IsResultVisible && !controlling)
                 FordsCommandHotkeys.Read(Input, _vm);
 
             _sinceRefresh += dt;

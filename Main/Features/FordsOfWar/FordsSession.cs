@@ -25,6 +25,16 @@ internal sealed class FordsSession
     private Vec3f _cameraLookAt;
     private IReadOnlyList<Vec3f> _polygon = new List<Vec3f>();
 
+    /// <summary>A match has ended, and its session is still here for the result panel.</summary>
+    public bool IsOver
+    {
+        get
+        {
+            lock (_gate)
+                return _match?.Phase == MatchPhase.Ended;
+        }
+    }
+
     /// <summary>A Fords match is running.</summary>
     public bool IsActive
     {

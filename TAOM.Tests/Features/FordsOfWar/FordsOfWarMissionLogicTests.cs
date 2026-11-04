@@ -138,7 +138,7 @@ public class FordsOfWarMissionLogicTests
     [TestMethod]
     public void TheLogicAndTheAdapters_NeverSpawnThePlayerTroopOrGiveAnAgentThePlayerController()
     {
-        // The mission must keep no main agent (build-spec 6.1). Comment lines may name both; code may not.
+        // These four files never take a main agent: only FordsAgentControl does, when the commander takes a soldier. Comment lines may name both; code may not.
         foreach (var relative in new[]
                  {
                      "Main/Features/FordsOfWar/Hooks/FordsOfWarMissionLogic.cs", "Main/Features/FordsOfWar/FordsMissionDirector.cs",

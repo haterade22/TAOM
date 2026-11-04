@@ -4499,7 +4499,10 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintSpeed" text="{=TAOM_FOW_Hud_KeysHintSpeed}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintControl" text="{=TAOM_FOW_Hud_KeysHintControl}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
 	<string id="TAOM_FOW_Hud_UpgradeDone" text="{=TAOM_FOW_Hud_UpgradeDone}Complete" />
 	<string id="TAOM_FOW_Hud_UpgradeLess" text="{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%" />
 	<string id="TAOM_FOW_Hud_UpgradeMore" text="{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" />
@@ -4569,7 +4572,9 @@
 	<string id="TAOM_LD_End_DefendersDead" text="{=TAOM_LD_End_DefendersDead}The garrison has fallen" />
 	<string id="TAOM_LD_End_KeepLost" text="{=TAOM_LD_End_KeepLost}The keep has fallen" />
 	<string id="TAOM_LD_End_Kills" text="{=TAOM_LD_End_Kills}Kills: {KILLS}" />
+	<string id="TAOM_LD_End_Lost" text="{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}" />
 	<string id="TAOM_LD_End_NoBest" text="{=TAOM_LD_End_NoBest}No best run yet" />
+	<string id="TAOM_LD_End_Report" text="{=TAOM_LD_End_Report}Report file, in bin/Win64_Shipping_Client/Logs:" />
 	<string id="TAOM_LD_End_Stalemate" text="{=TAOM_LD_End_Stalemate}The siege has stalled" />
 	<string id="TAOM_LD_End_TargetReached" text="{=TAOM_LD_End_TargetReached}The fortress held" />
 	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />

@@ -4844,3 +4844,10 @@ A scene refusal broke `test_live_map_writers_main` for hours, because each build
 - **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
 - **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
 - **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) finding 18.
+### A cache keyed on the version string serves old sources after a hotfix (engine bump, 2026-11-04)
+
+Steam moved the game from changeset 125053 to 125270 and kept the version string v1.5.6. `taom-src` keyed its cache on that string and returned any cached file, so it served the old build's sources for over half an hour, while agents cited them as "decompiled from the installed DLLs". The drift banner compares the same string, so it stayed silent too. Only `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` noticed, because the changeset is compiled in.
+
+- **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
+- **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string: that is owed in [v1.5.6-impact.md](../../migration/v1.5.6-impact.md).
+- **Source:** [v1.5.6-impact.md](../../migration/v1.5.6-impact.md), "Hotfix: changeset 125270".

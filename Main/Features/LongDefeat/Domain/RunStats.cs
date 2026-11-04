@@ -22,6 +22,9 @@ internal sealed class RunStats
     /// <summary>Cleared waves that needed the stalemate rule to fell stragglers.</summary>
     public int WavesFelled => _waves.Count(w => w.Felled > 0);
 
+    /// <summary>Defenders lost in the waves closed so far: the leaderboard's second rank key, so the end panel shows the same number.</summary>
+    public int LostInClearedWaves => _waves.Sum(w => w.Lost);
+
     public int Fled { get; private set; }
     public int FleeingPeak { get; private set; }
     public int PlayerDeaths { get; private set; }

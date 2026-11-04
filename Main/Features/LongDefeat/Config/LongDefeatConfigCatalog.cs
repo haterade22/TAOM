@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.LongDefeat.Domain;
@@ -18,6 +22,7 @@ internal sealed class LongDefeatConfigCatalog
     private const string WavesFile = "waves.json";
     private const string ShopFile = "shop.json";
 
+    private readonly Lazy<string> _balance;
     private readonly Lazy<WavesConfig> _waves;
     private readonly Lazy<IReadOnlyDictionary<string, ShopPlan>> _shops;
     private readonly Lazy<IReadOnlyList<FortressEntry>> _fortresses;
@@ -27,8 +32,11 @@ internal sealed class LongDefeatConfigCatalog
     {
     }
 
-    private LongDefeatConfigCatalog(IModLogger logger, Func<string, string?> read)
+    private LongDefeatConfigCatalog(IModLogger logger, Func<string, string?> readFile)
     {
+        var texts = new ConcurrentDictionary<string, string?>();
+        string? read(string name) => texts.GetOrAdd(name, readFile);
+        _balance = new Lazy<string>(() => HashOf(read(FortressesFile), read(WavesFile), read(ShopFile)));
         _waves = new Lazy<WavesConfig>(() => Guard(logger, WavesFile, WavesConfig.Empty,
             s => WavesReader.Read(read(WavesFile), s)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
@@ -40,6 +48,16 @@ internal sealed class LongDefeatConfigCatalog
     /// <summary>For tests: the same validation over text instead of the files. Null text is the missing-file case.</summary>
     internal static LongDefeatConfigCatalog FromTexts(string? fortresses, string? waves, string? shop, IModLogger logger) =>
         new(logger, name => name == FortressesFile ? fortresses : name == WavesFile ? waves : shop);
+
+    /// <summary>16 hex digits over the three files as loaded, line endings normalized: a checkout's line endings must not make a new balance version.</summary>
+    public string BalanceHash => _balance.Value;
+
+    private static string HashOf(params string?[] texts)
+    {
+        var joined = string.Join("\n\0\n", texts.Select(t => (t ?? "").Replace("\r\n", "\n")));
+        using var sha = SHA256.Create();
+        return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(joined)), 0, 8).Replace("-", "").ToLowerInvariant();
+    }
 
     /// <summary>Every valid fortress, in file order.</summary>
     public IReadOnlyList<FortressEntry> Fortresses => _fortresses.Value;
@@ -65,7 +83,7 @@ internal sealed class LongDefeatConfigCatalog
     }
 
     public RunPlan BuildPlan(FortressEntry fortress, RunOptions options) =>
-        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options) { Bounties = _waves.Value.Bounties, Keep = fortress.Keep };
+        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep };
 
     private static T Guard<T>(IModLogger logger, string file, T fallback, Func<LongDefeatConfigScope, T> load)
     {

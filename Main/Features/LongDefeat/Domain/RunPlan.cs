@@ -5,6 +5,12 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>A garrison row: <c>Count</c> soldiers of one troop in one formation at the start of a run.</summary>
 internal sealed record GarrisonRow(string TroopId, FormationSlot Slot, int Count);
 
+/// <summary>What a leaderboard reads to judge a run's report (#1080): the build, the hash of the balance files, the active modules with their versions, and cheat mode at launch.</summary>
+internal sealed record RunProvenance(string Build, string Balance, IReadOnlyList<string> Mods, bool CheatMode)
+{
+    public static RunProvenance Unknown { get; } = new("", "", new string[0], false);
+}
+
 /// <summary>What the <c>SurvivalRun</c> constructor takes: one fortress's garrison, its waves and shop, and the rules and options.</summary>
 internal sealed record RunPlan(
     string FortressId,
@@ -19,4 +25,6 @@ internal sealed record RunPlan(
 
     /// <summary>The recorded keep point of the fortress, or null: the director then uses the scene's reinforcement frame and <see cref="RunRules.KeepRadius"/>.</summary>
     public KeepPoint? Keep { get; init; }
+
+    public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
 }

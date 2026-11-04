@@ -7404,7 +7404,6 @@
 
     <string id="TAOM_FOW_Hud_SpeedButton" text="Speed {SPEED}x" />
 
-    <string id="TAOM_FOW_Hud_KeysHintSpeed" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   WASD pan   Q E turn   wheel zoom" />
 
     <string id="TAOM_FOW_Feed_WallsWeaken" text="The siege drags on: every tower and keep now weakens by the minute." />
 
@@ -7456,6 +7455,12 @@
     <string id="TAOM_LD_Prompt_Choose" text="Choose" />
     <string id="TAOM_LD_Prompt_Desc" text="Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
     <string id="TAOM_LD_StartFailed" text="The Long Defeat could not start. The log has the reason." />
+    <string id="TAOM_LD_End_Lost" text="Defenders lost in cleared waves: {LOST}" />
+    <string id="TAOM_LD_End_Report" text="Report file, in bin/Win64_Shipping_Client/Logs:" />
+    <string id="TAOM_FOW_Hud_KeysHintControl" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+    <string id="TAOM_FOW_Hud_ControlTaken" text="You fight as {NAME}. Press P to go back to the battlefield view." />
+    <string id="TAOM_FOW_Hud_ControlFell" text="{NAME} has fallen. You are back at the battlefield view." />
+    <string id="TAOM_FOW_Hud_ControlNone" text="None of your soldiers stands near the pointer." />
   </strings>
 
 </base>

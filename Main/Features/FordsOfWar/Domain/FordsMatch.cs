@@ -548,7 +548,7 @@ internal sealed partial class FordsMatch
         RunHeroArrivals();
         effects.Spawns.AddRange(_pendingSpawns);
         _pendingSpawns.Clear();
-        foreach (var request in _waves.Tick(dt, _clock.Minute, CommittedInLane, CommittedOnSide))
+        foreach (var request in _waves.Tick(dt, _clock.Minute, CommittedInLane, CommittedOnSide, _chain.LaneLost))
         {
             effects.Spawns.Add(request);
             Reserve(request);

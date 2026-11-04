@@ -21,6 +21,17 @@ namespace TAOM.Tests.Features.LongDefeat;
 [TestCategory("RequiresGame")]
 public class LongDefeatMissionLauncherTests
 {
+    [TestMethod]
+    public void Launch_StampsThePlanWithTheBuildTheModsAndCheatMode()
+    {
+        var source = File.ReadAllText(RepoPaths.RepoPath("Main", "Features", "LongDefeat", "Hooks", "LongDefeatMissionLauncher.cs"));
+
+        StringAssert.Contains(source, "Provenance = plan.Provenance with");
+        StringAssert.Contains(source, "BuildStampReport.ReadInformationalVersion");
+        StringAssert.Contains(source, "ModuleHelper.GetActiveModules");
+        StringAssert.Contains(source, "NativeConfig.CheatMode");
+    }
+
     private const string LauncherPath = "Main/Features/LongDefeat/Hooks/LongDefeatMissionLauncher.cs";
 
     [ClassInitialize]

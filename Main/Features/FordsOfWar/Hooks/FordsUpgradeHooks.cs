@@ -25,6 +25,9 @@ internal static class FordsUpgradeHooks
     /// <summary>Blows that the hero factors raised, and blows that they lowered, since the match started.</summary>
     internal static (long Raised, long Lowered) HeroCounts => (Interlocked.Read(ref _heroHitsRaised), Interlocked.Read(ref _heroHitsLowered));
 
+    /// <summary>Whether a troop is one of this match's heroes.</summary>
+    internal static bool IsHero(string? troopId) => _heroes?.IsHero(troopId) == true;
+
     internal static void Set(CombatUpgradeFactors west, CombatUpgradeFactors east, HeroCombatFactors heroes)
     {
         _west = west;

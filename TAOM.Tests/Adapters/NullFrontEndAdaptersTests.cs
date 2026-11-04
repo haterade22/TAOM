@@ -27,6 +27,10 @@ public class NullFrontEndAdaptersTests
     }
 
     [TestMethod]
+    public void NullThumbnailCacheAdapter_ClearsNothing()
+        => Assert.IsFalse(new NullThumbnailCacheAdapter().TryClearAll());
+
+    [TestMethod]
     public void NullCustomBattleFactionSelectionFactory_KeepsTheVanillaSelector()
     {
         // Through reflection: the test project does not reference the CustomBattle assembly the return type lives in.

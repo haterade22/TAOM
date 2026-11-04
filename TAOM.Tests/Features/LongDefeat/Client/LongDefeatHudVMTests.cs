@@ -231,11 +231,25 @@ public class LongDefeatHudVMTests
         Assert.IsFalse(vm.IsShopVisible, "an ended run has no shop");
         Assert.IsTrue(vm.WantsPanel);
         Assert.AreEqual(LongDefeatHudText.EndTitle(RunEndReason.Abandoned), vm.EndTitle);
-        Assert.AreEqual("Waves cleared: 0\nKills: 0", vm.EndLines);
+        Assert.AreEqual("Waves cleared: 0\nKills: 0\nDefenders lost in cleared waves: 0", vm.EndLines);
+        Assert.AreEqual("", vm.ReportText, "no report was written, so the panel names none");
         Assert.AreEqual("Best run: waves cleared 5, kills 900", vm.BestText);
 
         vm.ExecuteLeave();
         Assert.AreEqual(1, _leaves);
+    }
+
+    [TestMethod]
+    public void TheEndPanel_NamesTheReportFile_WithoutItsFolder()
+    {
+        var vm = Panel(out var session);
+        session.RecordReport(System.IO.Path.Combine("C:\\Users\\someone\\Logs", "long_defeat_report_x_ld1.json"));
+        _run.Abandon();
+
+        vm.Refresh();
+
+        StringAssert.Contains(vm.ReportText, "long_defeat_report_x_ld1.json");
+        Assert.IsFalse(vm.ReportText.Contains("someone"), "a clip of this panel must not show a Windows user name");
     }
 
     [TestMethod]

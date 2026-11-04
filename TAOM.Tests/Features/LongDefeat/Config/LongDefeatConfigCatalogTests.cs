@@ -103,6 +103,20 @@ public class LongDefeatConfigCatalogTests
     }
 
     [TestMethod]
+    public void BalanceHash_IgnoresLineEndings_AndFollowsAnyNumber()
+    {
+        var one = Waves();
+        var hash = Load(waves: one).BalanceHash;
+
+        Assert.AreEqual(16, hash.Length);
+        Assert.AreEqual(hash, Load(waves: one.Replace("\n", "\r\n")).BalanceHash);
+        Assert.AreEqual(hash, Load(waves: one).BuildPlan(Load(waves: one).Fortresses[0], RunOptions.Default).Provenance.Balance);
+        Assert.AreNotEqual(hash, Load(waves: Waves(rules: "'liveCap':200")).BalanceHash);
+        Assert.AreNotEqual(hash, Load(waves: one, shop: Shop().Replace("600", "601")).BalanceHash);
+        Assert.AreNotEqual(hash, Load(Fortresses(Fortress(replaceKey: "'scene':'s'", replaceWith: "'scene':'t'")), one).BalanceHash);
+    }
+
+    [TestMethod]
     public void BuildPlan_CarriesRulesBountiesAndOptions()
     {
         var catalog = Load(waves: Waves(rules: "'liveCap':200"));

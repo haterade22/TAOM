@@ -9,11 +9,11 @@ namespace TAOM.Client.Features.FordsOfWar;
 
 /// <summary>
 /// The view list for the "TaomFordsOfWar" mission (build-spec 6), cut from the lord's hall and host review lists to the views that
-/// work with no main agent. Kept: the singleplayer escape menu (its exit goes through <c>MBGameManager.EndGame</c>, which is how
+/// work with no main agent, or that only act while the commander controls a soldier. Kept: the singleplayer escape menu (its exit goes through <c>MBGameManager.EndGame</c>, which is how
 /// the match returns to the main menu), the boundary wall, and the options handler. Added: the commander camera and the command
-/// panel. Left out, each because it reads <c>Agent.Main</c> or the campaign: the main agent equipment and cheer controllers, the
-/// order bar (it refuses to open with no main agent, MissionOrderVM.cs:740-749), the order troop placer, the agent status and lock
-/// views, the deployment views, the boundary crossing view, the battle scoreboard and the campaign view. The screen fade is a global
+/// panel, the control view, and the agent status HUD, which shows only while the commander controls a soldier. Left out, each because it
+/// reads <c>Agent.Main</c> or the campaign: the main agent equipment and cheer controllers, the order bar (it refuses to open with no main
+/// agent, MissionOrderVM.cs:740-749), the order troop placer, the agent lock view, the deployment views, the boundary crossing view, the battle scoreboard and the campaign view. The screen fade is a global
 /// layer, not a mission view, so it needs no entry.
 ///
 /// The options handler dereferences <c>Mission.GetMissionBehavior&lt;MissionOptionsComponent&gt;()</c> unguarded in
@@ -33,8 +33,10 @@ public static class FordsOfWarMissionViews
         {
             ViewCreator.CreateMissionSingleplayerEscapeMenu(false),
             new MissionBoundaryWallView(),
+            ViewCreator.CreateMissionAgentStatusUIHandler(mission),
             new FordsCommanderCameraView(),
             new FordsCommandView(),
+            new FordsControlView(),
         };
         if (mission.GetMissionBehavior<MissionOptionsComponent>() != null)
             views.Add(ViewCreator.CreateOptionsUIHandler());

@@ -13,9 +13,10 @@
 | Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
 | Read what the native engine does (below an `[EngineMethod]`, natively parsed data, a native crash or hang frame) | [ghidra-native-decompile.md](../features/ghidra-native-decompile.md): `tools/native_decompile.py --engine-method` / `--string` / `--rva`; crashes and hangs go through `/native-crash-triage`; an address from an older build: [native-build-match.md](../features/native-build-match.md) |
 | Get in-game evidence without a person (a check reads `NOT_SEEN`, or mission or engine code changed): start the game unattended, judge the run | [unattended-game-runs.md](unattended-game-runs.md) (the 10-minute idle gate, launch recipe, how to judge a run) and the `/game-run` skill; today it plays one Fords of War match: [fords-of-war.md](../features/fords-of-war.md) |
-| Work on Fords of War (the commander mode): rules, factions, config, in-game checks | [fords-of-war.md](../features/fords-of-war.md) |
+| Work on Fords of War (the commander mode): rules, factions, config, fighting as a soldier, in-game checks | [fords-of-war.md](../features/fords-of-war.md) |
 | Balance Fords of War: read what each match showed, record a change and the matches behind it | [balance-log.md](../features/fords-of-war/balance-log.md) and `python tools/fords_match_review.py <run folder>` |
 | Work on The Long Defeat (wave survival on the siege maps): its `[Check]` lines, how a soldier gets a place, the decisions for later phases | [long-defeat.md](../features/long-defeat.md) |
+| Build or change The Long Defeat's leaderboard: the report's fields, the server's rules, the boards | [leaderboard-plan.md](../features/long-defeat/leaderboard-plan.md) |
 | Debug / iterate on problem | `/investigate` |
 | Compare multiple approaches | [think-before-coding.md](../../.claude/rules/think-before-coding.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |

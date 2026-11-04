@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using TAOM.Adapters;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
@@ -67,6 +69,15 @@ internal sealed class LongDefeatMissionLauncher
                 return false;
             }
 
+            plan = plan with
+            {
+                Provenance = plan.Provenance with
+                {
+                    Build = BuildStampReport.ReadInformationalVersion(typeof(LongDefeatMissionLauncher).Assembly),
+                    Mods = ModuleHelper.GetActiveModules().Select(m => m.Id + " " + m.Version).ToList(),
+                    CheatMode = TaleWorlds.Engine.NativeConfig.CheatMode,
+                },
+            };
             Game.Current.PlayerTroop = player;
             var defender = Combatant("{=!}The Long Defeat, Defenders", defenderCulture, BattleSideEnum.Defender);
             var attacker = Combatant("{=!}The Long Defeat, Attackers", attackerCulture, BattleSideEnum.Attacker);

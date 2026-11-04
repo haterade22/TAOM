@@ -33,6 +33,10 @@ game, so the dump the dialog would have written is lost. Pass it whenever someon
 
 `--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Use 4x for balance runs and 10x only for smoke and crash runs: 10x changes the match, as [balance-log.md](../features/fords-of-war/balance-log.md) measures.
 
+`--control-check 240` starts the scripted soldier control at that mission second: it takes the front soldier and hands it back, takes one and waits for its fall, then takes one again. Read the `[FordsOfWar][Control]` lines and the `[Speed]` lines in the run's log. Give `--live-seconds` about 300 seconds more than the start, and put `--screenshots` inside the holds to see the camera.
+
+The launcher does not judge the `[FordsOfWar][Control]` lines: its exit code covers the match, the report and the crash scan, so a session reads them. Each take writes a `took` line, each hand-back a `returned` line and each fall a `fell` line. Ten seconds after a return a `rejoin` line gives `moved`, `ai`, `brain` and `formation` for the returned soldier, which says whether its AI drives it again. A soldier that outlives the 180-second hold of the second round is handed back, so it writes `returned`, not `fell`. While a soldier is held the match runs at 1x, so above 1x the speed changes at each take and `tools/fords_match_review.py` calls the run not a clean sample: do not use a control-check run as a balance sample.
+
 `--screenshots 8,45,65` saves a picture of the screen at those live seconds, plus one during the countdown, through the engine's
 `Utilities.TakeScreenshot`. The picture holds the UI, so a session can read the panel itself. The engine writes 24-bit BMP data whatever the file is called, so the launcher
 turns each `hud_*.bmp` into a PNG in the run folder when the match ends. Static review cannot see a Gauntlet layout: use this for any change to a prefab.
@@ -79,7 +83,7 @@ per application tick. The full key list and the wiring are in [fords-of-war.md](
 | Part | Content |
 |---|---|
 | Env var | `TAOM_FORDS_AUTORUN` = absolute path of a UTF-8 `key=value` arm file (LF) |
-| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `screenshots`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
+| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `control_check`, `screenshots`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
 | Phases | Wait until the main menu has been up for 4 s (hiding any inquiry), start the match, wait for live, end it after `live_seconds` of mission time or at the wall limit, wait for the final=1 report pass, write the done file, quit |
 | Status | `fords_autorun_status.txt` rewritten every 5 s |
 | Done file | `fords_autorun_done.txt`: `reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `final_passes`, `final_total`, `started`, `ended` |

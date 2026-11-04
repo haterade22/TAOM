@@ -9,7 +9,7 @@ using static TAOM.Features.HeroRace.Configuration.RacePositionConfig;
 namespace TAOM.Features.HeroRace;
 
 /// <summary>
-/// Loads, serves and persists the two race-framing configs.
+/// Loads, serves and persists the three race-framing configs (avatar, image and item icon).
 ///
 /// <para>Replaces three independent loaders of the same two files: CharacterSpawnerService built
 /// its own lookup, the never-invoked CharacterTableauService built a second, and the never-invoked
@@ -25,6 +25,7 @@ public class RacePositionStore : IRacePositionStore
 {
     private const string AvatarConfigName = "CharacterAvatarPatch";
     private const string ImageConfigName = "CharacterImagePatch";
+    private const string IconConfigName = "ItemIconPatch";
     private const string MountPrefix = "mount_";
 
     private readonly IPathService _pathService;
@@ -32,8 +33,10 @@ public class RacePositionStore : IRacePositionStore
 
     private RacePositionConfig _avatarConfig;
     private RacePositionConfig _imageConfig;
+    private RacePositionConfig _iconConfig;
     private Dictionary<string, RacePositionConfigItem> _avatarLookup;
     private Dictionary<string, RacePositionConfigItem> _imageLookup;
+    private Dictionary<string, RacePositionConfigItem> _iconLookup;
 
     public RacePositionStore(IPathService pathService, IModLogger logger)
     {
@@ -46,6 +49,7 @@ public class RacePositionStore : IRacePositionStore
     {
         _avatarConfig = Load(AvatarConfigName);
         _imageConfig = Load(ImageConfigName);
+        _iconConfig = Load(IconConfigName);
         RebuildLookups();
     }
 
@@ -65,6 +69,7 @@ public class RacePositionStore : IRacePositionStore
     {
         _avatarLookup = BuildLookup(_avatarConfig);
         _imageLookup = BuildLookup(_imageConfig);
+        _iconLookup = BuildLookup(_iconConfig);
     }
 
     private static Dictionary<string, RacePositionConfigItem> BuildLookup(RacePositionConfig config)
@@ -86,6 +91,8 @@ public class RacePositionStore : IRacePositionStore
 
     public RacePositionConfigItem ResolveImage(string raceName) => Find(_imageLookup, raceName);
 
+    public RacePositionConfigItem ResolveIcon(string rowKey) => Find(_iconLookup, rowKey);
+
     public RacePositionConfigItem ResolveAvatarMount(string raceName)
         => string.IsNullOrEmpty(raceName) ? null : Find(_avatarLookup, MountPrefix + raceName);
 
@@ -98,7 +105,7 @@ public class RacePositionStore : IRacePositionStore
             return null;
 
         // Second gate behind the load-time validator, and it lives HERE rather than in one consumer
-        // so both surfaces inherit it. The validator runs on Reload only; the in-game tuner creates
+        // so every surface inherits it. The validator runs on Reload only; the in-game tuner creates
         // and edits rows afterwards, and every consumer of a row feeds it to a native SetFrame.
         // Returning null degrades to vanilla framing, which is the same contract as an absent row.
         return IsFinite(item) ? item : null;
@@ -130,8 +137,8 @@ public class RacePositionStore : IRacePositionStore
     }
 
     /// <summary>
-    /// Writes both configs. Both are STAGED to temp files first and only then swapped in, because
-    /// the pair is reloaded as a set: if the second write failed after the first had already
+    /// Writes all three configs. Each is STAGED to a temp file first and only then swapped in,
+    /// because they are reloaded as a set: if a later write failed after the first had already
     /// replaced its target (a denied ACL, a full disk), the next reload would combine new avatar
     /// data with old image data and nothing would say so.
     /// </summary>
@@ -145,7 +152,10 @@ public class RacePositionStore : IRacePositionStore
         if (RacePositionConfig.StageWrite(ImageConfigName, _imageConfig, _pathService))
             staged.Add(ImageConfigName);
 
-        // Both temps exist by here, so the remaining work is two renames. That is as close to
+        if (RacePositionConfig.StageWrite(IconConfigName, _iconConfig, _pathService))
+            staged.Add(IconConfigName);
+
+        // Every temp exists by here, so the remaining work is renames. That is as close to
         // atomic as this gets without a transaction, and it moves the likely failure (serialising,
         // or writing a new file) to before anything live has been touched.
         foreach (var name in staged)
@@ -153,8 +163,18 @@ public class RacePositionStore : IRacePositionStore
     }
 
     private RacePositionConfig ConfigFor(RacePositionSurface surface)
-        => surface == RacePositionSurface.Image ? _imageConfig : _avatarConfig;
+        => surface switch
+        {
+            RacePositionSurface.Image => _imageConfig,
+            RacePositionSurface.Icon => _iconConfig,
+            _ => _avatarConfig,
+        };
 
     private Dictionary<string, RacePositionConfigItem> LookupFor(RacePositionSurface surface)
-        => surface == RacePositionSurface.Image ? _imageLookup : _avatarLookup;
+        => surface switch
+        {
+            RacePositionSurface.Image => _imageLookup,
+            RacePositionSurface.Icon => _iconLookup,
+            _ => _avatarLookup,
+        };
 }

@@ -1,6 +1,6 @@
 # Fords of War: build specification
 
-> **Status (2026-11-03): history, not the current description.** This is the design written before the build, and its Deviations stop at 2026-10-31. [fords-of-war.md](../fords-of-war.md) describes the mode as the code and data stand now, and `match.json` and `factions.json` hold the shipped numbers. Read the rule in the next paragraph ("fix the code") as superseded: the code and fords-of-war.md win. Differences that matter: lanes have four orders (Seize was added), not three; neutral camps are built (section 9 calls them Phase 3); there are 13 factions, not 4, with feats, traits, army upgrades, poison, a free hero every 5 minutes and a match speed control; section 5 lists an assault threshold of 40 and AI hero reserves of 200, 300 and 400, which ship as 70 and 600, 800 and 1000; and free-wave tiers are not always at minutes 0, 10 and 20.
+> **Status (2026-11-03): history, not the current description.** This is the design written before the build, and its Deviations stop at 2026-10-31. [fords-of-war.md](../fords-of-war.md) describes the mode as the code and data stand now, and `match.json` and `factions.json` hold the shipped numbers. Read the rule in the next paragraph ("fix the code") as superseded: the code and fords-of-war.md win. Differences that matter: lanes have four orders (Seize was added), not three; neutral camps are built (section 9 calls them Phase 3); there are 13 factions, not 4, with feats, traits, army upgrades, poison, a free hero every 5 minutes and a match speed control; section 5 lists an assault threshold of 40 and AI hero reserves of 200, 300 and 400, which ship as 70 and 600, 800 and 1000; and free-wave tiers are not always at minutes 0, 10 and 20. Since 2026-11-04 three more things differ: the commander can take control of one soldier with the P key, so section 1 (the player has no agent) and section 4 (the mission must keep no main agent) no longer hold; the target length is 30 to 40 minutes with 30 best, not the 30 to 45 of section 1; and a tower takes at most 50 damage a second from ordinary blows and weakens after minute 15, which the TowerDamageRules row of section 3.4 does not say.
 
 This is the contract every build stage follows. It pins names, signatures, folders and default
 numbers so that stages written by different agents fit together. When code and this file disagree,
@@ -1123,7 +1123,7 @@ A deep review of the batch above (base `d4fb51a50`, reviewed head `4821f64e9`) p
 
 ## Self-check logging
 
-This change adds, beyond the contract above:
+The self-check stage (2026-10-31) added, beyond the contract above:
 
 - `Diagnostics/` in the Fords feature: `FordsRunReport`, the per-check verdicts, the evidence classes, the log line format and the report file writer (frame times come from the shared `MissionPerf.FrameStats`).
 - Domain counters: `TowerDamageReason`, `KillCredit`, a `TowerDamageRules.Decide` overload, `FordsMatch.Phase` and a return value from `OnUnitKilled`.

@@ -451,7 +451,7 @@ Source: `C:\Users\mikew\.taom-src\v1.5.6\TaleWorlds.MountAndBlade.*`. "Spike" me
 ## 5. UI
 
 **Two layers, both in `LongDefeatHudView`, built from the `[ViewMethod]` list:**
-- **HUD layer:** `new GauntletLayer("GauntletLayer", 20, false)`, no input restriction, movie `LongDefeatHud`. Fords sets a whole-mission cursor (`FordsCommandView.cs:91-93`) because it has no agent. This mode has one, so it must not.
+- **HUD layer:** `new GauntletLayer("GauntletLayer", 20, false)`, no input restriction, movie `LongDefeatHud`. Fords sets a whole-mission cursor (`FordsCommandView.cs:99-100`) because its commander has no agent until it takes a soldier, and it hands the cursor back while one is controlled (`FordsPanelStandAside`). This mode has one, so it must not.
 - **Panel layer:** created on open and removed on close, order 21, movie `LongDefeatPanel`. Exact shape of `MissionGauntletEscapeMenuBase.cs:76-82, :92-95`: `IsFocusLayer=true`, `SetInputRestrictions()`, `RegisterHotKeyCategory("GenericPanelGameKeyCategory")`, `TrySetFocus`. It does not call `PauseGameEngine` (`:73`), so the timer runs. `Exit` or `ToggleEscapeMenu` released on the panel closes it (`:103`).
 
 **Keys,** read from the view's `Input` with Ctrl and Alt skipped, like `FordsCommandHotkeys.cs:15-16`:
@@ -474,7 +474,7 @@ Source: `C:\Users\mikew\.taom-src\v1.5.6\TaleWorlds.MountAndBlade.*`. "Spike" me
 **View models**
 - `LongDefeatViewModel` is a copy of `FordsViewModel.cs`.
 - `LongDefeatOfferVM` has name, pack, price, can-afford.
-- `LongDefeatHudVM` takes `(LongDefeatSession, Action leave)` and refreshes every 0.25 s (`FordsCommandView.cs:30, :71-75`).
+- `LongDefeatHudVM` takes `(LongDefeatSession, Action leave)` and refreshes every 0.25 s (`FordsCommandView.cs:31, :74-78`).
 - Text lives in `LongDefeatHudText` as `TextObject("{=TAOM_LD_...}...")`.
 
 **The panel opens by itself** on run end; the end group's Leave calls `LongDefeatGameManager.ReturnToMainMenu`. It closes by itself at wave start.
@@ -501,7 +501,7 @@ Source: `C:\Users\mikew\.taom-src\v1.5.6\TaleWorlds.MountAndBlade.*`. "Spike" me
 **Arming**
 - Only `TAOM_LONGDEFEAT_AUTORUN` arms a run.
 - Keys: `fortress`, `waves`, `out` (required, absolute), `quit`, `live_limit_seconds`, `wall_limit_seconds`, `screenshots`, `garrison_scale`, `expect`.
-- `ArmedInThisProcess` is what `LongDefeatUnattendedView`, then `LongDefeatHudView.IsOpeningEscapeMenuOnFocusChangeAllowed` reads (`FordsCommandView.cs:45`).
+- `ArmedInThisProcess` is what `LongDefeatUnattendedView`, then `LongDefeatHudView.IsOpeningEscapeMenuOnFocusChangeAllowed` reads (`FordsCommandView.cs:47`).
 
 **Driver.** Ticked from `ClientSubModule.OnApplicationTick` on wall time, with the same menu gate as `FordsAutorunMenuGate.cs`:
 1. Wait until the menu has been up over 4 s, hiding inquiries.
