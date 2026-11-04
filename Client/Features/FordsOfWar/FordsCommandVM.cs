@@ -34,6 +34,7 @@ public sealed partial class FordsCommandVM : FordsViewModel
     private float _noticeSeconds;
 
     private bool _isVisible;
+    private bool _controlling;
     private bool _isResultVisible;
     private string _goldText = string.Empty;
     private string _clockText = string.Empty;
@@ -199,6 +200,13 @@ public sealed partial class FordsCommandVM : FordsViewModel
             list.Add(create(list.Count));
     }
 
+    /// <summary>Hides the panel while the commander fights as a soldier. The match goes on behind it.</summary>
+    internal void SetControlling(bool controlling)
+    {
+        _controlling = controlling;
+        IsVisible = !controlling && _view != null;
+    }
+
     /// <summary>Rebuilds the panel from the session's view; hides it while no match runs.</summary>
     internal void Refresh()
     {
@@ -211,7 +219,7 @@ public sealed partial class FordsCommandVM : FordsViewModel
             return;
         }
 
-        IsVisible = true;
+        IsVisible = !_controlling;
         KeepSelectedLaneOwned(view);
         GoldText = FordsHudText.Gold(view.Gold);
         ClockText = Clock(view.Elapsed);

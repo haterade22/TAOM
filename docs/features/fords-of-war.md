@@ -3,8 +3,8 @@
 ## Overview
 
 Fords of War is a campaign-free, single-player mission mode started from the main menu. Two sides,
-West (the player) and East (an AI), face each other across 3 lanes. The player has no agent: they are a
-commander with a free top-down camera and a command panel, spend gold on packs of troops, on heroes and on army upgrades,
+West (the player) and East (an AI), face each other across 3 lanes. The player starts with no agent: they are a
+commander with a free top-down camera and a command panel, spend gold on packs of troops, on heroes and on army upgrades, can take over one soldier with the P key,
 give each lane a Push, Hold, Fall back or Seize order, and win by destroying the enemy keep. Each side owns a
 chain of towers per lane that shoots back, and the target length of a match is 30 to 40 minutes, with 30 best (Mike, 2026-11-04).
 
@@ -31,10 +31,38 @@ Mike, 2026-11-03: balance values, roster picks and test plans are the agent's to
 
 ### Design Challenge
 
-- **No main agent.** A mission has a main agent only when an agent gets `AgentControllerType.Player`.
-  The mode never spawns the player troop, so `Agent.Main` stays null. Everything that reads it (the
-  vanilla order bar, `OrderController.GetOrderFormCustomWidth`, the boundary crossing handler) is either
-  left out of the mission or never used.
+- **No main agent, until the commander takes one.** A mission has a main agent only when an agent gets
+  `AgentControllerType.Player`. The mode never spawns the player troop, so `Agent.Main` stays null until the
+  commander takes control of a soldier (below). Everything that needs it all mission (the vanilla order bar,
+  `OrderController.GetOrderFormCustomWidth`, the boundary crossing handler) is left out of the mission or never used.
+- **Fighting as a soldier** (`FordsControlView`, `FordsPanelStandAside`, `FordsPointerPick`, `FordsAgentControl`, `FordsControlPick`): P takes
+  control of the soldier nearest the pointer, within 8% of the screen's height, and a hero in reach wins over a closer soldier. The
+  engine's own `Mission.TakeControlOfAgent` does the take, so the engine's controller, crosshair and camera do the
+  rest, and the agent status HUD comes into view. While a soldier is controlled the panel hides, reads no keys and
+  gives back the mouse, the commander camera stands aside, the lanes keep their last orders, and the match runs at 1x.
+  P hands the soldier back to its AI, and its fall hands control back by itself: the engine clears the main agent, and
+  `FordsControlView` polls for that because the removal can run off the main thread. The chosen speed comes back with
+  the panel. A match that ends hands the soldier back too. The key is read on the screen tick, because a fast forward
+  frame ticks the mission many times. The take and the hand-back run on the mission tick, because a view tick overlaps
+  the agent tick and the Controller setter changes the agent's component list.
+  - **Who can be taken** (`FordsAgentControl.Takeable`): a person of the commander's own side who stands in a formation
+    and is on foot or on a horse, camel or mule. Left out: tower gunners (no formation), seated howdah and mumak crew (the
+    seat teleports them each frame), trolls (their release and blocked clips have never run in a logged battle, see
+    [troll-race.md](troll-race.md)), riders of any other creature (a behavior tree drives the creature), and a soldier
+    in flight or fading out. Mike asked for "a person", so this first version keeps creatures out. A controlled soldier
+    can still walk to a loose warg and mount it, and its rage can turn vanilla's controller off, so `FordsAgentControl.Take` turns it back on.
+  - **The hand-back** (`FordsAgentControl.Return`): no vanilla code clears the main agent of a living agent, so this is
+    the part to watch. The engine's AI logics add new components that start on the Default behavior values, with morale at
+    a flat 50 and no recovery, so `Return` sets both from the lane's order. It also stands up a crouching soldier and ends a walk.
+  - **The evidence:** `[FordsOfWar][Control]` lines: `pick` for each press of P with the pointer, the reach and what it
+    named; `took` with `mode=`; `returned`; `fell`; and `rejoin`, 10 seconds after a return, which says whether the AI moves
+    the soldier again. A fault writes a `failed` error line and hands the soldier back.
+  - **Not proven yet:** nobody has played this. An unattended run with `--control-check` (see "Unattended runs") is the run
+    that proves the take, the hand-back and the fall, and a player owes the feel of the fight and the pointer pick.
+    Target lock needs `MissionMode.Battle` or `Stealth`, and `MissionCombatantsLogic.AfterStart` sets Battle, so target
+    lock is likely available if the player's lock option is on. The main agent equipment controller is not listed.
+    No boundary crossing handler stops a soldier at the map's edge, and where
+    `MissionHardBorderPlacer` stands relative to the camera's boundary is not read.
 - **No formation AI.** Under `MissionTeamAITypeEnum.NoTeamAI` no formation AI ticks on either side
   (`Formation.cs:2458`), so nothing moves unless the director orders it. The director issues every
   movement order for both sides and never hands a lane formation to AI control.
@@ -93,10 +121,10 @@ Mike, 2026-11-03: balance values, roster picks and test plans are the agent's to
   `FordsOfWarMissionLogic` is a `MissionLogic` under 150 lines; its tick also drives `FordsMissionExit`,
   the automatic return to the main menu, counted in mission time (a paused engine adds nothing).
 - **Commander camera.** `FordsCommanderCameraView` (a `MissionView`) overrides `UpdateOverridenCamera`
-  and returns true while `FordsSession.IsActive`, so it owns the frame: WASD or arrows pan, Q and E
+  and returns true while `FordsSession.IsActive` and no soldier is controlled, so it owns the frame: WASD or arrows pan, Q and E
   rotate, the wheel zooms between 15 m and 120 m, the right mouse button rotates and tilts, Shift doubles
   the pan speed. It keeps the camera inside the boundary polygon and suppresses spectator cycling every
-  frame. `IsPhotoModeAllowed()` returns false.
+  frame. `IsPhotoModeAllowed()` returns false. While the commander controls a soldier, `UpdateOverridenCamera` answers false and the engine's own camera follows the soldier.
 - **ADR-013 split.** The client game manager (`FordsOfWarGameManager : CustomGameManager`), the views,
   the panel and its view models live in `TAOM.Client`. Core declares `IFordsOfWarGameManagerFactory` and
   registers `NullFordsOfWarGameManagerFactory` as the default (it logs and returns null); `TAOM.Client`
@@ -246,6 +274,9 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Ranged factor 0.15 | Ranged hits are scaled down so archers do not strip a tower (spec section 3.4: ranged x `RangedDamageFactor`) |
 | Thrust floor 0.2 | Vanilla multiplies a thrust's base magnitude by 0.1 (Pierce on an object) and, for a shaft hit, by 0.15, then truncates to an int, so most spear and lance thrusts reached the tower as 0. The floor gives a blow that arrives as 0 from a weapon with thrust damage a fifth of that thrust damage (about 8 hit points per blow in run `20261101-103348`), which the maintainer chose on 2026-11-01 |
 | Hero factor 4, siege factor 3 | Heroes and the Siege role (the trolls) are the units that hurt towers; the factors multiply, so a hero archer gets both |
+| Assault limit 50 a second per tower | Without it a tower's fall time shrank with every body at its walls, so the cheapest pack was the best tower killer: an elven tower fell 32 s after its first blow (balance-log.md, "The tower assault limit"). The limit sets the least time a tower holds against soldiers: 160 s outer, 220 s inner, 360 s keep, until the walls wear |
+| Wall wear from minute 15, 0.15 a minute | Even sides fight mid-lane and rarely reach a tower, so a match between them did not end. Mike set the target at 30 to 40 minutes, 30 best, on 2026-11-04. Rivendell beat Mordor at 39.6 minutes in the first wear match (`20261104-082014`). Balance runs of 15 minutes do not see the wear |
+| Hero damage 3 times, damage taken 0.4 times | Heroes made 0 to 2 kills per minute and died fast (balance-log.md, "Heroes and the AI's spare gold"). With the factors Elladan made 20 kills with no death and Mordor's heroes died 4 and 3 times against 11. A first guess: one hero must not decide a lane by itself |
 | Tower regen 1/s after 45 s without damage | Regeneration starts only after a quiet period and never above the maximum. At 15 per second after 20 s every lull healed all the damage an assault did (run 20261101-123312 and earlier), so damage now carries over from one assault to the next |
 | 2 gunners per tower, volley of 3 missiles (javelin, arrow, javelin) every 4 s, fire range 45 m | The garrison: scripted volleys at the nearest enemy in range, heroes first |
 | Hold distance 60 m, fire range 45 m | A lane gathering at its hold line must stand out of tower fire: 45 m plus 15 m of formation depth. It was 35 m, inside the tower's reach. `ShippedMatch_LaneHoldLineIsOutsideTowerFireRange` pins the relation. The hold point is never closer than 60 m to the tower: on a lane under about 428 m it is exactly 60 m short of the tower, on a longer lane it is the midpoint, which is farther |
@@ -348,7 +379,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 | Faction | Strength | Weakness | Feats | Mechanic |
 |---|---|---|---|---|
-| Rohan | The best cavalry: six of eight offers are riders, the only ones priced below their level (`eliteWeight` 0.7, horse archers 0.5) | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
+| Rohan | The best cavalry: six of eight offers are riders, and all eight offers cost 0.7 of the full price for their level (the horse archers 0.5, `eliteWeight`) | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
@@ -372,8 +403,8 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 - **Match speed** (`FordsGameSpeed`, `FordsMissionSpeed`, key T or the button in the top left corner): 1x, 2x, 4x and 10x, for a human and for an unattended run (`--speed`). 2x and 4x set the mission's `FixedDeltaTimeMode` each frame to the frame's own time times the speed, capped at 0.1 s, so a slow frame slows the match. 10x is the engine's fast forward, `Mission.SetFastForwardingFromUI`, which runs the AI on the main thread in steps of up to 0.1 s. `Scene.TimeSpeed` cannot do this: `Mission.UpdateSceneTimeSpeed` caps it at 1 every frame. A `[FordsOfWar][Speed]` line records each change, and `tools/fords_match_review.py` names a fast match first. Balance runs use 4x, and 10x is for smoke and crash runs only, because six matches showed that 10x changes the result: see [balance-log.md](fords-of-war/balance-log.md).
 - **Free heroes** (`heroes.freeArrivalSeconds`, `FordsMatch.HeroArrivals.cs`): every 5 minutes of live time each side's next hero takes the field for nothing, cheapest first, in the lane where the side is most outnumbered. A side with no slot free or no hero left waits for the next arrival, and a missed one does not carry over. A commander can still pay to field a hero early. The hero panel's title counts down. Proof in a run: `[FordsOfWar][Hero] kind=fielded` lines at about 300 and 600 s for both sides.
 - **Hero strength** (`heroes.damageFactor`, `heroes.damageTakenFactor`, `HeroCombatFactors`, `FordsUpgradeHooks`): a hero of the match deals 3 times the damage and takes 0.4 times the damage, per blow in `TaomCustomBattleDamageModel`. Blows on towers keep their own `towers.heroDamageFactor`. Proof in a run: `heroRaised` and `heroLowered` on the `[FordsOfWar][Upgrade]` totals line, and the hero table of `tools/fords_match_review.py`.
-- **Tower assault limit** (`towers.assaultDamagePerSecond`, `TowerAssaultLimit`): a tower takes at most 50 points a second from ordinary blows, and a blow past that is cut or counted as `Crowded`. Each tower holds at most one second's worth. Heroes and siege units pass the limit and spend none of it. So an outer tower lasts at least 160 s, an inner one 220 s and a keep 360 s against soldiers alone, and more bodies past a small assault add nothing. Without it the cheapest pack was the best tower killer in the game: see [balance-log.md](fords-of-war/balance-log.md).
-- **Lost lanes** (`TowerChain.LaneLost`, `WaveScheduler.Tick`): a lane whose towers have all fallen starts no new free wave for its owner, though a bought pack still comes. Fresh waves at the base used to stop attackers 170 to 226 m short of an open keep, far outside the 45 m where a siege can start, so a match did not end. Measures are in [balance-log.md](fords-of-war/balance-log.md).
+- **Tower assault limit** (`towers.assaultDamagePerSecond`, `TowerAssaultLimit`): a tower takes at most 50 points a second from ordinary blows, and a blow past that is cut or counted as `Crowded`. Each tower holds at most one second's worth. Heroes and siege units pass the limit and spend none of it. So until the walls wear (see Wall wear), an outer tower lasts at least 160 s, an inner one 220 s and a keep 360 s against soldiers alone, and more bodies past a small assault add nothing. After minute 15 the limit rises with the wear: at minute 30 it is 162.5 points a second, and an outer tower of 8000 hit points can fall in about 49 s. Without it the cheapest pack was the best tower killer in the game: see [balance-log.md](fords-of-war/balance-log.md).
+- **Lost lanes** (`TowerChain.LaneLost`, `WaveScheduler.Tick`): a lane whose towers have all fallen starts no new free wave for its owner, though a bought pack still comes. A free wave that already started still spawns its remaining units, and the lane's timer keeps running. The reason: in a long match attackers stopped to fight each free wave as it spawned at the base, 170 to 226 m short of an open keep, and a siege needs the lead within 45 m. That cause is likely, not proven. **No match has measured this rule yet:** the four matches queued for it have not run (see "Lost lanes" in [balance-log.md](fords-of-war/balance-log.md)).
 - **Wall wear** (`towers.wearStartMinutes`, `towers.wearPerMinute`, `TowerWear`): after minute 15 every blow on a tower or keep does more, and the assault limit rises with it: 3.25 times at minute 30 and 5.5 times at minute 45. Locks still hold. Even sides fight mid-lane and rarely reach a tower, so without this a match between them would not end. The feed says so once, and a `[FordsOfWar][Wear]` line records it. Balance runs read the first 15 minutes, so they do not see it. Each measure is in [balance-log.md](fords-of-war/balance-log.md).
 - **AI under threat** (`AiCommander.Defend`, `BuyNextInCycle`): a threatened lane gets the buy cycle's next entry, and the AI saves for it, so a side that falls behind keeps its elites and upgrades. A faction with no cycle buys the cheapest spear or infantry pack.
 - **AI spare gold** (`AiCommander.BuySparePack`): while its assault lane is full, gold above `heroReserveGold` buys the cycle's next pack for the lane with the most room, and the cycle moves on, so the faction's upgrades and elites keep their share. With every lane full the gold waits for a hero. Spending it on upgrades alone favoured a horde, whose army gains the most from a flat price: see [balance-log.md](fords-of-war/balance-log.md).
@@ -422,6 +453,8 @@ up), and took the spear off the King's Riders so they fight with sword and shiel
 
 Every button has a key letter on its face and a dimmed disabled state; a price turns red when the gold does not reach it; an order on cooldown shows the seconds and a shade that
 drains. A faction changes only the accent colour and name, never the layout, so muscle memory carries over (`FordsFactionStyle`).
+
+**Soldier control (key P).** The panel is for a commander with no agent, so while the commander controls a soldier (see "Fighting as a soldier") `FordsPanelStandAside` hides it, stops its key table and gives back the mouse, and the match runs at 1x. The chosen speed and the panel come back with the hand-back. The key hint in the intro lists P (`TAOM_FOW_Hud_KeysHintControl`). Three messages go to the engine's message log, not the feed: which soldier was taken (`TAOM_FOW_Hud_ControlTaken`), that it fell (`TAOM_FOW_Hud_ControlFell`), and that no soldier stood near the pointer (`TAOM_FOW_Hud_ControlNone`).
 
 **A Gauntlet trap:** a child with `StretchToParent` inside a `CoverChildren` parent makes that parent fill the screen. A visibility binding on a widget with its own `DataSource` reads that
 data source, so a list's visibility goes on a wrapper.
@@ -535,13 +568,14 @@ bool and one null check per application tick. The standing runbook (the idle gat
 - **What arms it.** `TAOM_FORDS_AUTORUN` holds the absolute path of a UTF-8 `key=value` arm file. A set variable pointing at a
   missing file or a file without a usable `out=` logs one `[FordsOfWar][Autorun] not armed: ...` warning and stays off.
 - **Arm file keys** (case-insensitive, `#` comments, last duplicate wins; an unknown key or bad number logs a warning and uses
-  the default): `west`, `east`, `ai`, `west_ai` (`1` puts an AI commander on the West side too, so both sides play; default 0), `speed` (1, 2, 4 or 10 from the first frame, default 1), `scene` (optional, resolved like `taom.fords_start`), `live_seconds` (mission seconds
+  the default): `west`, `east`, `ai`, `west_ai` (`1` puts an AI commander on the West side too, so both sides play; default 0), `speed` (1, 2, 4 or 10 from the first frame, default 1), `control_check` (a positive mission second at which the scripted soldier control starts, see Control check below; default 0, off), `scene` (optional, resolved like `taom.fords_start`), `live_seconds` (mission seconds
   before the match is ended, default 600), `live_wait_seconds` (wall seconds to go live, default 600), `wall_limit_seconds`
   (wall seconds after the start at which the match is ended whatever the mission clock says, default 2400), `out` (required,
   absolute folder for the status and done files), `quit` (`1` quits the game at the end) and `screenshots` (comma-separated live seconds at which the game saves a picture of the screen, UI included; one more is taken during the countdown). A quoted `out=` value, or one holding
   `<`, `>` or `|`, leaves the plan unarmed with the "needs an absolute out=<folder>" problem. A `live_seconds` at or above
   `wall_limit_seconds` is accepted with a warning (the wall limit then ends the match first). The `armed plan=` line ends with
   `arm=<path of the arm file>`, and the run's setup text and JSON carry `west_ai=0|1`.
+- **Control check** (`control_check`, `FordsControlCheck`, launcher `--control-check <seconds>`): no keyboard reaches an unattended run, so from that mission second `FordsControlView` takes the soldier nearest an enemy (`FordsAgentControl.Front`) in three rounds. It holds the first for 30 s and hands it back, rests 15 s, holds the second for up to 180 s (the round ends early when the soldier falls), rests 15 s, then takes a third and holds it for 15 s. All three need about 255 mission seconds after the start. The `[FordsOfWar][Control]` lines (`took`, `returned`, `fell`, `rejoin`) and the `[FordsOfWar][Speed]` lines are the evidence; no verdict row reads them, and the `armed plan=` line does not echo the key.
 - **Wiring.** `FordsOfWarModule` registers `FordsAutorunPlan` and `FordsAutorunDriver`, with core's `NullFordsAutorunHost` as the
   host (it never starts a match). `TAOM.Client` replaces the host in `TaomClientComposition` with `FordsAutorunHost` (plan, setup
   prompt, logger), the way it replaces `IFordsOfWarGameManagerFactory`. `ClientSubModule` resolves the plan on the first
@@ -562,7 +596,7 @@ bool and one null check per application tick. The standing runbook (the idle gat
   reason that follows an earlier outcome keeps both, for example `never_live+final_timeout`. The launcher fails every reason but
   `final`.
 - **Launcher.** `python tools/run_fords_autorun.py --live-seconds 120` (also `--scene`, `--west`, `--east`, `--ai`, `--west-ai`,
-  `--wall-limit`, `--speed`, `--screenshots`, `--keep-on-crash`, `--require-idle-minutes`, `--runs`, `--runs-root`, `--dry-run`) writes the arm file, starts `Bannerlord.exe` directly with the module list of
+  `--wall-limit`, `--speed`, `--control-check`, `--screenshots`, `--keep-on-crash`, `--require-idle-minutes`, `--runs`, `--runs-root`, `--dry-run`) writes the arm file, starts `Bannerlord.exe` directly with the module list of
   the F5 profile and the variable set, polls every 5 s, scans the engine logs for a crash and copies the results into
   `<runs-root>/<yyyyMMdd-HHmmss>/` (default `E:/Temp/fords-runs`; `--runs-root` is resolved to an absolute path): `arm.txt`,
   `runner_log.txt`, `runner_status.txt`, `fords_autorun_done.txt`, the newest `taom_debug_*.log`, the `fords_report_*_run1.json` and
@@ -610,7 +644,7 @@ damage stage; see Known limitations for the fix), which the earlier launcher let
 | File | Purpose |
 |---|---|
 | `Main/Features/FordsOfWar/Domain/FordsMatch.cs` (+ `.View.cs`, `.SpawnFailures.cs`, `.Lanes.cs`, `.HeroArrivals.cs`, `.Upgrades.cs`) | The aggregate: `Tick`, the `Try*` command API, kill credit, spawn-failure refunds, `GetView` |
-| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `LanePath`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing`, `UpgradeBook`, `PoisonRules`, `SeizeRules`, `RegionDeck`, `HeroCombatFactors`, `FordsGameSpeed` |
+| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `LanePath`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing`, `UpgradeBook`, `PoisonRules`, `SeizeRules`, `RegionDeck`, `HeroCombatFactors`, `FordsGameSpeed`, `TowerAssaultLimit`, `TowerWear`, `FordsControlPick` |
 | `Main/Features/FordsOfWar/FordsOfWarModule.cs` | Feature module: registrations, `Patch131_FordsOfWar`, main-menu option on the MainMenu phase |
 | `Main/Features/FordsOfWar/FordsMissionDirector.cs` | Per-mission orchestrator; applies effects through the adapters |
 | `Main/Features/FordsOfWar/FordsSession.cs` | The one command and view surface for the client |
@@ -625,11 +659,14 @@ damage stage; see Known limitations for the fix), which the earlier launcher let
 | `Main/Features/FordsOfWar/Autorun/`, `Client/Features/FordsOfWar/FordsAutorunHost.cs`, `tools/run_fords_autorun.py` | The unattended run: plan, arm file, driver and its pure rules, status and done files; the launcher |
 | `Main/Features/FordsOfWar/FordsMatchPlan.cs`, `FordsSnapshotBuilder.cs`, `FordsLayoutFitter.cs`, `FordsLayoutPlanner.cs`, `FordsLayoutFit.cs`, `FordsTagLayoutReader.cs`, `FordsBaseFinder.cs`, `FordsTowerGeometry.cs`, `FordsSpawnPlacement.cs` | Pure helpers around the director |
 | `Main/Features/FordsOfWar/IFordsOfWarGameManagerFactory.cs`, `NullFordsOfWarGameManagerFactory.cs` | Core factory interface and null default (ADR-013) |
-| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsCampAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsMissionSpeed.cs` (match speed), `FordsTowerComponent.cs` (a real tower's destructible), `FordsAgentRegistry.cs`, `FordsEngine.cs`, `FordsTowerStage.cs` (the shown tower stage only moves forward) | Adapters and engine helpers |
+| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsCampAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsMissionSpeed.cs` (match speed), `FordsTowerComponent.cs` (a real tower's destructible), `FordsAgentRegistry.cs`, `FordsEngine.cs`, `FordsTowerStage.cs` (the shown tower stage only moves forward), `FordsAgentControl.cs` (static: the commander's take and return of a soldier; the mission's main agent is its only state) | Adapters and engine helpers |
 | `Client/Features/FordsOfWar/FordsOfWarGameManager.cs`, `FordsOfWarGameManagerFactory.cs` | Client game manager and factory |
 | `Client/Features/FordsOfWar/FordsOfWarMissionViews.cs` | `[ViewMethod]` list for the mission |
 | `Client/Features/FordsOfWar/FordsCommanderCameraView.cs`, `FordsCameraMath.cs` | Commander camera |
 | `Client/Features/FordsOfWar/FordsCommandView.cs`, `FordsCommandVM.cs`, `FordsCommandHotkeys.cs`, `FordsHudText.cs` | Command panel, hotkeys and every player-facing line |
+| `Client/Features/FordsOfWar/FordsControlView.cs`, `FordsPanelStandAside.cs`, `FordsPointerPick.cs` | Soldier control: key P on the screen tick, the take and hand-back on the mission tick, the `[FordsOfWar][Control]` lines; the panel, its speed and the mouse while a soldier is controlled; the pick on the screen |
+| `Main/Features/FordsOfWar/Domain/FordsControlPick.cs` | The pure pick: the unit the pointer names, a hero in reach first, within 8% of the screen's height; which mounts can be ridden |
+| `Main/Features/FordsOfWar/Autorun/FordsControlCheck.cs` | The scripted take, hand-back and fall for the arm key `control_check` |
 | `Main/_Module/GUI/PreFabs/FordsOfWar/FordsCommand.xml` | Panel prefab (movie `FordsCommand`) |
 | `Main/_Module/ModuleData/fords_of_war/match.json`, `factions.json`, `maps.json` | Configuration |
 | `Main/_Module/ModuleData/fords_of_war/fords_troops.xml`, `fords_items.xml` | The mode's own troop copies and items, loaded for CustomGame only (see The roster) |
@@ -677,6 +714,7 @@ classes:
 - `Domain/WaveSchedulerTests.cs`, `TowerChainTests.cs`, `TowerDamageRulesTests.cs`, `HeroRosterTests.cs`,
   `LaneMarchRulesTests.cs`, `CapturePointRulesTests.cs`, `AiCommanderTests.cs`, `LaneLayoutGeneratorTests.cs`:
   one class per rule.
+- Soldier control, lost lanes, the assault limit and wall wear: `Domain/FordsControlPickTests` (nearest in reach, a hero over a closer soldier, nothing out of reach, a NaN pixel out of reach, which mounts can be ridden), `Autorun/FordsControlCheckTests` (the three rounds, the rest between them, a fall ending its round), `FordsSessionTests` (`IsOver`), `Domain/FordsLostLaneTests`, `Domain/TowerAssaultLimitTests` and `Domain/TowerWearTests`. `Autorun/FordsAutorunPlanTests` reads the `control_check` key, and `Client/FordsClientWiringTests` pins the control view in the view list, the key on the screen tick and the agent change on the mission tick, the camera and the panel standing aside, and each rule of `FordsAgentControl`. Those are source reads: `FordsAgentControl` needs a live mission.
 - `ShippedFordsConfigTests.cs`: the shipped JSON parses; every troop, hero and culture id exists; computed
   prices equal the stored ones; the hold line is outside tower fire range; the volley item is a crafted
   javelin that SandBoxCore loads for a Custom Game.
@@ -703,7 +741,7 @@ classes:
   sums every file of a partial class. The launcher has Python tests: `python -m unittest tools.tests.test_run_fords_autorun`
   (arm text, judge and final verdict, preflight, stop-own-tree, watch, collect, dialog handling, input checks).
 - `Scenarios/` (the scenario harness): `FordsScenario` drives the real report, director and match, lane generator, spawn placement, field probe, exit clock and camera maths with faithful fakes, in the engine's per-frame order, then judges. `FordsScenarioTests` runs five scenarios (a clean three-lane match with no FAIL, one injected fault per row, a pause and a hitch, the camera pushed into the edge, the session tail after a finished run). `FordsVerdictContractTests` holds one row per verdict part (55) with the scenario that passes it and the fault that fails it, or `PassOnly`, and fails when the table and the parts `Judge` emits differ. The telemetry and mission logics are mirrored in the harness (they need a live mission), and the volley-hit reader is fed through the report, not driven (it takes engine structs).
-- Shared tests this mode touches: `MissionViewRegistrationGateTests.Allowlist` (the two views built by
+- Shared tests this mode touches: `MissionViewRegistrationGateTests.Allowlist` (the three views built by
   the mission's `[ViewMethod]` list), `ClientSubModuleTests` (the exact client registrations) and
   `ConsoleCommandBindingTests.MainMenuCommands`.
 
@@ -768,6 +806,8 @@ checks below name log lines.
 Report any unreachable step with the command tried and the unmet precondition, and never mark it verified
 through another path.
 
+**Soldier control (no check row yet).** In a running match put the pointer next to one of your soldiers and press P: a message names the soldier, the panel hides, the pointer is free and the engine's agent status HUD shows. Fight, then press P to hand it back: the panel and the commander camera return at their usual view angle, your speed setting comes back, and the soldier goes back to its lane. With a hero near the pointer, P should take the hero over a closer soldier. Press P at a troll or a warg rider: it should name another soldier, or say none stands near the pointer. Let a controlled soldier die: control returns by itself with a message, and P takes another. Read the `[FordsOfWar][Control]` lines: `pick`, `took` (with `mode=`), `returned`, `fell` and, 10 s after a return, `rejoin` (`ai=1`, `brain=1` and `formation=1` with `moved` above 0 mean the soldier is back under its AI). Judge by eye what the log cannot: the feel of the fight, whether target lock works, and whether the pick follows the pointer on a slope. No verdict row and no review tool reads these lines yet.
+
 ## How to tune or extend
 
 After every match, run `python tools/fords_match_review.py <run folder>`, read its findings, and add the result to [balance-log.md](fords-of-war/balance-log.md). The `side=` line of `[FordsOfWar][Balance]` says where each commander's gold came from and what it paid for.
@@ -809,7 +849,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Known limitations
 
-- **One native crash, engine side, unfixed.** Run `20261103-225059` (Dol Guldur v Erebor, 4x, about 760 s, 348 agents, no Kit open) died on an AI worker thread at `TaleWorlds.Native.dll` RVA `0x6B4C4E`, `FUN_1806b40e0`: it reads the target agent's record through index -1, slot -1 holds null, and the read of `[null + 0xC]` faults. Its caller `FUN_1806b2030` enters when its move state is 1, with no check on the index, and the agent's AI mode was 5. `IMBAgent_GetTargetAgent` reads the same two fields (`+0x1504`, `+0x225c`), so that index is the AI's target. The agent was an Erebor spearman (slot 68). No TAOM call on this path sets a target, so it looks like an engine fault in a large fight, not proven: one occurrence in about 25 matches. Compare the offset if a crash repeats. The launcher cannot get a dump from the Watchdog's dialog without a person, and answering Yes may upload to TaleWorlds, so take one with `procdump -ma <pid>` while the launcher waits; a full dump takes about 60 s.
+- **One native crash, engine side, unfixed.** Run `20261103-225059` (Dol Guldur v Erebor, 4x, about 760 s, 348 agents, no Kit open) died on an AI worker thread at `TaleWorlds.Native.dll` RVA `0x6B4C4E`, `FUN_1806b40e0`: it reads the target agent's record through index -1, slot -1 holds null, and the read of `[null + 0xC]` faults. Its caller `FUN_1806b2030` enters when its move state is 1, with no check on the index, and the agent's AI mode was 5. `IMBAgent_GetTargetAgent` reads the same two fields (`+0x1504`, `+0x225c`), so that index is the AI's target. The agent was an Erebor spearman (slot 68). No TAOM call on this path sets a target, so it looks like an engine fault in a large fight, not proven: one occurrence in about 25 matches. Compare the offset if a crash repeats, but only against a crash on the same engine changeset: this run was on changeset 125053, and the hotfix to 125270 on 2026-11-04 changed the native DLL (see "Hotfix: changeset 125270" in [v1.5.6-impact.md](../migration/v1.5.6-impact.md)). The launcher cannot get a dump from the Watchdog's dialog without a person, and answering Yes may upload to TaleWorlds, so take one with `procdump -ma <pid>` while the launcher waits; a full dump takes about 60 s.
 - **The white ground in Fords runs is closed (Mike, 2026-11-03).** It comes from his local ReShade setup, not TAOM: 28 of 28 runs with his setup were white at the countdown, and an empty ReShade base path gave 0.2 percent. Run no white tests and do not raise it unless he asks. If he does, the unproven lead is the `DPX` effect active in his `ReShadePreset.ini`, plus `obs_capture.addon64`; dlss5-bridge, renodx and swapchain_override alone each gave 0.3 percent near-white, without the shaders folder.
 - **Dread aura cannot rout troops here.** Nothing turns a panic into a rout: the launcher leaves out
   `MissionAgentPanicHandler` on purpose (the behavior whose `OnPreMissionTick` calls `Retreat`;
@@ -859,6 +899,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-04: soldier control: P takes the soldier nearest the pointer (a hero in reach first) and hands it back, and a fall hands it back by itself; the panel and the commander camera stand aside and the match runs at 1x meanwhile (`FordsControlView`, `FordsPanelStandAside`, `FordsPointerPick`, `FordsAgentControl`, `FordsControlPick`), the engine's agent status HUD joins the view list, and the arm key `control_check` with the launcher flag `--control-check` scripts a take, a hand-back and a fall. Trolls, creature riders and seated crew cannot be taken. Not yet played. A lane whose towers have all fallen starts no new free wave for its owner (`TowerChain.LaneLost`); not yet measured. A tower takes at most 50 damage a second from ordinary blows (`towers.assaultDamagePerSecond`), and after minute 15 every blow on a tower does more (`towers.wearStartMinutes`, `towers.wearPerMinute`). Rohan's riders cost 0.7 of the full price for their level and its horse archers 0.5; Dol Guldur's four cheapest packs cost 0.8, its spider riders 1.5 and its fell wargs 1.2. Mordor's `damageToTowers` 0.6 of 2026-11-03 is gone. A threatened lane follows the buy cycle (`AiCommander.Defend`, committed late on 2026-11-03). Mike's target for a match is 30 to 40 minutes, 30 best, in place of 30 to 45. The engine is v1.5.6 changeset 125270.
 - 2026-11-03: nine more factions (Rivendell, Erebor, Harad, Gundabad, Dale, Dol Guldur, Easterlings, Umbar, Mirkwood), 13 in all, with more feats (tower range,
   regeneration, poison, order cooldown, camp reward); army upgrades bought with gold; the AI buys to each faction's identity (`aiBuyCycle` with `up:` and `beast:` entries);
   a free hero every 5 minutes; hero damage factors; the AI hero reserve of 600, 800 and 1000 gold and `AiCommander.BuySparePack`; Mordor's `damageToTowers` 0.6; match speed

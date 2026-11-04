@@ -4499,7 +4499,10 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintSpeed" text="{=TAOM_FOW_Hud_KeysHintSpeed}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintControl" text="{=TAOM_FOW_Hud_KeysHintControl}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
 	<string id="TAOM_FOW_Hud_UpgradeDone" text="{=TAOM_FOW_Hud_UpgradeDone}Complete" />
 	<string id="TAOM_FOW_Hud_UpgradeLess" text="{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%" />
 	<string id="TAOM_FOW_Hud_UpgradeMore" text="{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" />

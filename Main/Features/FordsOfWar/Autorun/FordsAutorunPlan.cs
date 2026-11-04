@@ -63,6 +63,9 @@ internal sealed class FordsAutorunPlan
     /// <summary>The match speed from the first frame: 1, 2, 4 or 10.</summary>
     public int Speed { get; internal init; } = 1;
 
+    /// <summary>The mission second at which the scripted control check starts; 0 leaves it off.</summary>
+    public double ControlCheckSeconds { get; internal init; }
+
     /// <summary>The plan the running game uses: the real environment and file system.</summary>
     internal static FordsAutorunPlan Resolve() =>
         Resolve(Environment.GetEnvironmentVariable, File.Exists, path => File.ReadAllText(path, Encoding.UTF8));

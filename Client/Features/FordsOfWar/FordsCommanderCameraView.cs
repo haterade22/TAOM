@@ -13,7 +13,8 @@ namespace TAOM.Client.Features.FordsOfWar;
 
 /// <summary>
 /// The commander's camera for Fords of War (build-spec 6.1): a top-down RTS camera in place of the free spectator camera a mission
-/// with no main agent would fall back to. <c>MissionScreen.CheckForUpdateCamera</c> skips its own update when any view's
+/// with no main agent would fall back to. While the commander controls a soldier the view answers false and the engine's own <c>UpdateCamera</c>
+/// follows the soldier (MissionScreen.cs:808-811). <c>MissionScreen.CheckForUpdateCamera</c> skips its own update when any view's
 /// <see cref="UpdateOverridenCamera"/> answers true, so this view owns the frame and finishes it as the tail of the vanilla
 /// <c>UpdateCamera</c> does: the camera frame, the vertical field of view, <c>SceneView.SetCamera</c> and <c>Mission.SetCameraFrame</c>
 /// (audio and level of detail). WASD or the arrows pan relative to the yaw, Q and E turn, the wheel zooms, the right button drags to
@@ -22,7 +23,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 /// </summary>
 public sealed class FordsCommanderCameraView : MissionView
 {
-    private const float NearPlane = 0.1f, FarPlane = 12500f;
+    private const float NearPlane = 0.1f, FarPlane = 12500f, ViewAngle = 65f;
     private const float ScrollNotch = 120f;
     private const float GroundFollowPerSecond = 6f;
     private const float DegreesToRadians = (float)(Math.PI / 180.0);
@@ -51,7 +52,7 @@ public sealed class FordsCommanderCameraView : MissionView
         try
         {
             _session ??= IoC.Resolve<FordsSession>();
-            if (_session == null || !_session.IsActive || MissionScreen == null)
+            if (_session == null || !_session.IsActive || MissionScreen == null || FordsAgentControl.IsControlling(Mission))
                 return false;
 
             MissionScreen.SuppressSpectatorCyclingThisFrame();
@@ -138,10 +139,11 @@ public sealed class FordsCommanderCameraView : MissionView
 
         MissionScreen.UpdateFreeCamera(frame);
         var camera = MissionScreen.CombatCamera;
-        camera.SetFovVertical(MissionScreen.CameraViewAngle * DegreesToRadians, Screen.AspectRatio, NearPlane, FarPlane);
+        // Never MissionScreen.CameraViewAngle: only UpdateCamera writes it, so a soldier's zoom or first person angle would stay after the fight.
+        camera.SetFovVertical(ViewAngle * DegreesToRadians, Screen.AspectRatio, NearPlane, FarPlane);
         MissionScreen.SceneView.SetCamera(camera);
         var listener = origin;
-        Mission.SetCameraFrame(ref frame, 65f / MissionScreen.CameraViewAngle, ref listener);
+        Mission.SetCameraFrame(ref frame, 1f, ref listener);
         Probe().Pose(_state, _groundZ, dt);
     }
 }

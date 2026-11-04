@@ -2,7 +2,7 @@
 
 What each match showed, and what changed because of it. `python tools/fords_match_review.py <run folder>` gives the numbers; a person reads them for the design. One match proves little, so a change here names the matches behind it, and the same pair runs again after the change.
 
-**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`, 900 live seconds, no keep fell.
+**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
 
 ## Matches
 
@@ -78,7 +78,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 **Changed:** Mordor's free waves and `orc_rabble` start at level 11. Rivendell's free waves are 3 units every 60 seconds, not 5 every 40, and its elite packs cost a quarter more.
 **Result:** Mordor now wins tower damage or draws it (2 towers lost each in the second match), while Rivendell still wins the fighting by about 3 to 1 in gold value. That split suits the two factions' design, so neither number is a target by itself.
 
-### The AI spends its gold badly (this change)
+### The AI spends its gold badly
 
 **Seen in both Rivendell and Mordor matches:**
 
@@ -158,7 +158,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 - **A winner's or a horde's gold:** Erebor ended on 4,510 and Gundabad on 5,448, with nothing left to buy.
 - **Frame time** at 4x rose from about 4 ms in `170032` to about 10 ms from `190524` on. The builds between differ only by where the speed button stands. The cause is not known.
 
-### The tower assault limit (this change)
+### The tower assault limit
 
 **Why:** the measure above left the towers one-sided, and the cause sat in the tower rule. Every body at a wall counts in full, so a cheap pack is the best tower killer: an elven tower fell 32 s after its first blow, about 250 damage a second, while Rivendell's own attacks did 21 to 38 a second. That conflicts with the design, where a tower takes many waves. A horde then stands in every lane, so the other side never reaches a tower.
 
@@ -174,7 +174,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Why:** over nine matches, by role, cavalry made 1.12 kills per death, close to ranged units' 1.18 and above infantry's 0.82, but its gold trade was 0.71 against 2.19 and 1.15. Rohan's riders traded at 0.09 to 0.49. So they fight as cavalry should, and the price is what fails the design's "finest cavalry in Middle-earth".
 
-**Changed:** Rohan's rider packs cost 0.7 of the full price for their level, and its horse archers 0.5, which makes them the only riders so discounted.
+**Changed:** Rohan's rider packs cost 0.7 of the full price for their level, and its horse archers 0.5, the deepest discount any riders have (Gundabad's wolf riders are at 0.75).
 
 **Result, six matches at 4x:** cavalry's gold trade across all factions rose from 0.71 to 1.20, and Rohan's from 0.47 to 0.72 against Mirkwood, 0.93 to 1.22 against Harad, and to 1.96 against Mordor. Rohan took 3 towers to 1 from Mirkwood and 3 to 2 from Harad. Horse archers improved to 0.38, and they remain Rohan's weak pack.
 
@@ -186,7 +186,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Result:** mixed. Its gold trade against Erebor rose to 1.06, but it stayed at 0.66 against Easterlings and 0.63 against Rohan, and it took no tower in the three matches. The change stays because it does no harm, and Dol Guldur is still the weakest faction. Its next lever is its income or its poison, and each needs a new trait line.
 
-### Wall wear (this change)
+### Wall wear
 
 **Why:** even sides fought mid-lane and rarely reached a tower, so a match between them would not end. Mike approved a time-based rule on 2026-11-04.
 
@@ -198,10 +198,18 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 A check of free waves also shows how far the hordes stand apart: by level and count per minute, Mordor scores 414 and Gundabad 396, and most factions 90 to 165. Dol Guldur's 105 is near its peers, so its waves alone do not explain its weak fights.
 
+### Lost lanes
+
+**Why:** with every tower of a lane down, attackers still stopped to fight each free wave as it spawned at the base, 170 to 226 m short of an open keep. A siege needs the lead within 45 m. Erebor stood with all of Gundabad's towers down for 18 minutes and did 80 damage to the keep. The cause is likely, not proven.
+
+**Changed:** a lane whose towers have all fallen starts no new free wave for its owner (`TowerChain.LaneLost`, `WaveScheduler.Tick`). A free wave that already started still spawns its remaining units, and a bought pack still comes, so a comeback stays possible. The lane's timer keeps running, so a free wave could start again only if the lane held a standing tower, which no rule gives back today.
+
+**Result: not measured.** Four matches of up to 45 minutes at 4x were queued to measure it: Dale v Gondor, Erebor v Gundabad, Rivendell v Mordor and Harad v Rohan. They have not run, because Mike asked for the push first on 2026-11-04, and he plays next. Read those four against the 30-minute target before tuning the wear numbers again.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
-- **Reaching the keep:** see "Wall wear" above. This is now what limits match length.
+- **Reaching the keep:** see "Wall wear" and "Lost lanes" above. This is what limits match length, and the lost lane rule has not been measured against it.
 - **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
 - **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.

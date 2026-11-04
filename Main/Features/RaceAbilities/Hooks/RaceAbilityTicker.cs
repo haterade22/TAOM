@@ -50,7 +50,7 @@ public sealed class RaceAbilityTicker
 
         _due.Clear();
         _runtime.Waves.Flush(now, _due);
-        // Fords of War has no player agent and an ability fires every few seconds: the lines would only cover its battle board.
+        // Fords of War is watched from above and an ability fires every few seconds: the lines would only cover its battle board.
         if (_due.Count > 0 && _runtime.Settings.Messages && !FordsOfWarMission.IsActive(Mission.Current))
             foreach (var wave in _due)
                 InformationManager.DisplayMessage(new InformationMessage(

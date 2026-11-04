@@ -5,6 +5,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Features.FordsOfWar;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Tests.Features.FordsOfWar.Domain;
 using static TAOM.Tests.Features.FordsOfWar.Domain.FordsMatchFixture;
 
 namespace TAOM.Tests.Features.FordsOfWar;
@@ -38,6 +39,18 @@ public class FordsSessionTests
         Assert.AreEqual(CommandResult.NotLive, session.TrySetLaneOrder(0, LaneOrder.Hold));
         Assert.AreEqual(0, session.DrainEvents().Count);
         Assert.AreEqual(0, session.BoundaryPolygon.Count);
+    }
+
+    [TestMethod]
+    public void IsOver_IsFalseBeforeAMatchAndDuringIt_AndTrueOnceTheKeyFalls()
+    {
+        Assert.IsFalse(new FordsSession().IsOver);
+
+        var session = Filled(out _, out var match);
+        Assert.IsFalse(session.IsOver);
+
+        match.OnTowerDestroyed(FordsTestLayout.EastKeep, null);
+        Assert.IsTrue(session.IsOver);
     }
 
     [TestMethod]

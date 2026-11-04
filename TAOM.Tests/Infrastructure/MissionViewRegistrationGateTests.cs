@@ -22,6 +22,7 @@ public class MissionViewRegistrationGateTests
     {
         ["TAOM.Client.Features.FordsOfWar.FordsCommanderCameraView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
         ["TAOM.Client.Features.FordsOfWar.FordsCommandView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
+        ["TAOM.Client.Features.FordsOfWar.FordsControlView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
         ["TAOM.Client.Features.LongDefeat.LongDefeatHudView"] = "built by the [ViewMethod] list of the TaomLongDefeat mission (LongDefeatMissionViews)",
     };
 
