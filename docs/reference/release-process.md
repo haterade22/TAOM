@@ -188,6 +188,10 @@ the `harad_barding` packages), with four more `RuntimeDataCache` entries, and 38
 Abanissa enlistment kits name his weapons or shields (29 of them a mace or javelin). Check each channel before publishing:
 `python tools/validate_moduledata.py --game-modules E:/LOTRAOM_Releases/<channel>/Modules --code BROKEN_ITEM_REF | grep -E "Item\.(hr_st_|sg_st_|sm_hr_st_|sm_sg_st_|sk_(hr|sg)_st_|sk_hr_pz_camel_bard|ladder_harad_bow_t7)"`
 must print nothing.
+Since #1081 (2026-11-04) the six wolf riders in `troops_goblin.xml` and `troops_gundabad.xml` ride `dire_wolf_*` items and
+the `dire_wolf_saddle` from `LOTRAOM_horses.xml`, so the next Armory package must also carry those items, the Monster
+`lotr_monster_dire_wolf.xml`, the `as_dire_wolf*` sets and `Assets/creature/direwolf/`
+([ledger](lotrlome-dire-wolf-changes.md)). Without them those troops spawn on foot.
 
 **TAOM_Map ships in the same release when TAOM data names a settlement its package lacks.** Arthedain's towns (`town_AN1` to `town_AN3`) exist only in the live `TAOM_Map`; the `TAOM_Map` in all three release channels had none of them on 2026-10-14. The War Chronicle's `north` event is the smallest dependent: it targets Bree (`town_AN3`) and is Skipped with a logged warning without it. The kingdom itself also needs them: `clans.xml:2175-2176` gives `clan_arthedain_3` the home `Settlement.town_AN3`, `taom_spkingdoms.xml` gives the kingdom the home `Settlement.town_AN2`, and `cultures.json` starts the culture at `town_AN2`. [arthedain.md](../features/arthedain.md) notes that several of a new kingdom's surfaces crash rather than fail quietly, a culture that owns no settlement (#374) among them. The next release must ship a `TAOM_Map` package that contains `town_AN1` to `town_AN3`. Check each channel before publishing: `for t in town_AN1 town_AN2 town_AN3; do grep -c "id=\"$t\"" E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/ModuleData/settlements.xml; done` prints 1 three times.
 

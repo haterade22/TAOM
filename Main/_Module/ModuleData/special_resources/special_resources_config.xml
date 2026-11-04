@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SpecialResources>
 
-  <!-- War Spoils (Mordor/Isengard/Gundabad/Dol Guldur) — aggressive, war-driven factions -->
+  <!-- War Spoils (Mordor/Isengard/Gundabad/Dol Guldur, the three goblin realms since #1081) — aggressive, war-driven factions -->
   <!-- High battle/raid/siege earning, low daily (depend on conquest, not economy) -->
   <Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
     cap="10000" starting_amount="0" daily_per_town="0.2"
@@ -11,10 +11,16 @@
     <Kingdom id="isengard" />
     <Kingdom id="gundabad" />
     <Kingdom id="dolguldur" />
+    <Kingdom id="goblin" />
+    <Kingdom id="mistymountainorcs" />
+    <Kingdom id="bluecraig" />
     <Culture id="mordor" />
     <Culture id="isengard" />
     <Culture id="gundabad" />
     <Culture id="dolguldur" />
+    <Culture id="goblin" />
+    <Culture id="mistymountainorcs" />
+    <Culture id="bluecraig" />
   </Resource>
 
   <!-- Gems (Erebor) — mining economy, wealth through industry -->

@@ -1071,5 +1071,11 @@
     <string id="aom_southrhovanion_spearman_name" text="[South Rhovanion] Plainsman Spearman" />
     <string id="aom_southrhovanion_veteran_ford_guard_name" text="[South Rhovanion] Veteran Ford Guard" />
     <string id="aom_southrhovanion_veteran_horse_archer_name" text="[South Rhovanion] Veteran Horse-archer" />
+    <string id="aom_goblin_dire_wolf_rider_name" text="[Goblin] Dire Wolf Rider" />
+    <string id="aom_goblin_wolf_lord_name" text="[Goblin] Dire Wolf Lord" />
+    <string id="aom_goblin_wolf_runner_name" text="[Goblin] Wolf Runner" />
+    <string id="aom_gundabad_dire_wolf_rider_name" text="[Gundabad] Dire Wolf Rider" />
+    <string id="aom_gundabad_wolf_lord_name" text="[Gundabad] Dire Wolf Lord" />
+    <string id="aom_gundabad_wolf_runner_name" text="[Gundabad] Wolf Runner" />
   </strings>
 </base>

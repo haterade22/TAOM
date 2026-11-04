@@ -107,20 +107,11 @@ public class WargAttackService : IWargAttackService
         ActionIndexCache action;
         string actionName;
 
-        // skeleton_warg bone map (49 bones, verified 2026-05-24 #219):
-        //   17 Chest_M        — body slam impact
-        //   20 Head_M         — head impact
-        //   22 Jaw_M          — jaw root
-        //   23 JawEnd_M       — bite tip
-        //   32 Scapula_R      — right shoulder
-        //   36 Fingers1_R     — right front paw
-        //   37 Fingers2_R     — right front paw tip
-        //   38 Scapula_L      — left shoulder
-        //   42 Fingers1_L     — left front paw
-        //   43 Fingers2_L     — left front paw tip
-        // These 10 bones form the "impact cone" presented during a charge —
-        // anything in front of the warg's chest is likely to overlap at least
-        // one of them as the warg passes through.
+        // Chest, head, jaw, bite tip, both shoulders and both front paws (the bone map per
+        // skeleton is on WargConfig.ImpactBoneIds). These 10 bones form the "impact cone"
+        // presented during a charge — anything in front of the warg's chest is likely to
+        // overlap at least one of them as the warg passes through.
+        boneIds = WargConfig.ImpactBoneIds(warg.GetMonsterStringId());
         if (warg.MovementVelocity.Y >= 4)
         {
             // Running attack — full impact cone for fast charges. Prior single-bone
@@ -129,7 +120,6 @@ public class WargAttackService : IWargAttackService
             // single point on the warg. With 10 bones spread across the warg's
             // entire front, a 1.0m sphere on each gives a continuous detection
             // volume around the charging body.
-            boneIds = new List<sbyte> { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 };
             actionName = "act_warg_attack_running";
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.0f;
@@ -140,7 +130,6 @@ public class WargAttackService : IWargAttackService
         {
             // Stand attack — same impact cone but tighter radius since warg
             // is nearly stationary; the bones are positioned precisely each frame.
-            boneIds = new List<sbyte> { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 };
             actionName = "act_warg_attack_stand";
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.1f;

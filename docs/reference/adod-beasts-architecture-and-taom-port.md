@@ -28,7 +28,8 @@ choice is the root of everything else:
   deliberate rebalance, NOT 1-for-1 with ADOD's fixed-10×2 / 0.001-per-tick roll. The **howdah is ported** since
   #627 as TAOM's own platform and crew (`TaomHowdahMachine`, `HowdahCrewSpawner`, `HowdahHarness`; see
   [elephant.md](../features/elephant.md)), not as a line-for-line copy of ADOD's.
-- The **wolf is not ported at all.** TAOM's **spider** solves the same "riderless non-humanoid combatant" problem
+- The wolf's **art and clips** are in TAOM since #1081, as ridden [dire wolves](../features/dire-wolf.md) on TAOM's warg
+  behavior. The **wolf's code (pet, FSM, HP bar) is not ported.** TAOM's **spider** solves the same "riderless non-humanoid combatant" problem
   with an **independent design** (a behavior tree reusing Warg/AdvancedCombat), not a port of the wolf's FSM. The
   wolf is a *reference* (its public-`SpawnMonster` spawn path is the spider's recommended render fix).
 

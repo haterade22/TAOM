@@ -321,6 +321,7 @@ exceptions.** Measured across all 94 `<Monster>` definitions in the install:
 | `chariot` | LOTRLOME_Armory | 4 | yes | 12 | 12 |
 | `spider` | LOTRLOME_Armory | 1 | yes | **5** | 5 |
 | `warg` | LOTRLOME_Armory | 1 | yes | **5** | 5 |
+| `dire_wolf` (#1081) | LOTRLOME_Armory | 1 | yes | **5** | 5 |
 | `taom_war_elephant`, `taom_mumakil` | LOTRLOME_Armory | 10 | yes | **0** | 0 |
 
 TAOM breaks the pairing on four mounts. Rideability here is **declared, not inferred**: the

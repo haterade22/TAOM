@@ -2276,3 +2276,11 @@ follows the player's kingdom, and one said "shields" where weapon parries count 
   effect type's line in `CareerPerkConsumerMap.Describe` and the traps in `docs/features/career-system.md`
   (forced and heavy-charge knockdowns, the kingdom-first resource, influence outside a kingdom).
 - **Source:** `docs/reviews/rca-career-gondor-pilot-2026-10-15.md` pattern.
+
+### When a culture gains a system, search the prose as well as the code (dire wolves, 2026-11-04)
+
+Three goblin cultures joined War Spoils. The kingdom recipe, the Elite Emissary config and test, and the garrison swap comments still said they had no resource or no swap cavalry, and three paid riders had no `recruit_cost`, so a notable sold them free.
+
+- **Why missed:** the search covered code that branches on the resource, and the cost model was read from the upgrade path only.
+- **Prevent:** grep the culture ids across `docs/`, config comments and test comments in the same change. A paid troop's cost row covers each route that adds it: upgrade, recruit and merchant.
+- **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).

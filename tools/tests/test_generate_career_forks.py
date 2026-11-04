@@ -2222,15 +2222,22 @@ class RealResourceDataTests(unittest.TestCase):
         self.assertEqual(self.data.upkeep_troops(["vlandia"]), 0)
 
     def test_the_plans_no_resource_kingdoms_resolve_to_no_resource(self):
-        # Lindon, Goblin-town, the Misty Mountain Orcs and Blue Craig (their culture ids are the
-        # EligibleCultures of their careers in taom_careers.xml).
-        for culture in ("lindon", "goblin", "mistymountainorcs", "bluecraig"):
+        # Lindon (its culture id is the EligibleCultures of its careers in taom_careers.xml).
+        careers = [i for i in self.infos.values() if i.cultures == ["lindon"]]
+        self.assertGreaterEqual(len(careers), 1, "no shipped career is eligible for lindon alone")
+        for info in careers:
+            self.assertIsNone(self.data.resource_for(info.cultures), info.id)
+            self.assertEqual(self.data.upkeep_troops(info.cultures), 0, info.id)
+
+    def test_the_goblin_cultures_resolve_to_war_spoils(self):
+        # Since the dire wolves (#1081). Only Goblin-town's own troops carry its culture id, and
+        # the shared tree's costed rows name that culture.
+        for culture in ("goblin", "mistymountainorcs", "bluecraig"):
             with self.subTest(culture=culture):
                 careers = [i for i in self.infos.values() if i.cultures == [culture]]
                 self.assertGreaterEqual(len(careers), 1, f"no shipped career is eligible for {culture} alone")
                 for info in careers:
-                    self.assertIsNone(self.data.resource_for(info.cultures), info.id)
-                    self.assertEqual(self.data.upkeep_troops(info.cultures), 0, info.id)
+                    self.assertEqual(self.data.resource_for(info.cultures), "war_spoils", info.id)
 
     def test_every_shipped_career_resolves_without_ambiguity(self):
         self.assertGreater(len(self.infos), 50)
