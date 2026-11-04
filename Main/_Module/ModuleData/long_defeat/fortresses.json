@@ -1,0 +1,19 @@
+{
+  "fortresses": [
+    {
+      "id": "helms",
+      "name": "{=TAOM_LD_Fortress_Helms}Helm's Deep",
+      "scene": "taom_rohan_castle_helms_deep_forceatmo",
+      "defenderCulture": "vlandia",
+      "attackerCulture": "isengard",
+      "playerTroop": "lord_4_1",
+      "waves": "helms_isengard",
+      "shop": "rohan",
+      "garrison": [
+        { "troop": "fow_rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
+        { "troop": "fow_rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
+      ],
+      "keep": null
+    }
+  ]
+}

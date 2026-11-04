@@ -2443,3 +2443,11 @@ The Long Defeat spike printed `[S4] repaired` for whatever `RepairGate` touched,
 - **Why missed:** the code that makes a change and the code that reports it were written together, so the report restated the request. The wrapper dropped the Fords report checks because a spike has no JSON, and nothing took their place. The same rule had been written the week before for the Staged Siege report.
 - **Prevent:** read the reported value back from the engine's own state after the change, and put the failure in the label (`NOT repaired`), so a substring check cannot pass it. When a gate drops a check, name what replaces it. Tie each string a tool looks for to the source that writes it.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 3, 5, 10 and 18.
+
+### A fake that returns 0 hides its seam, and a passing run says nothing past its last wave (Long Defeat, 2026-11-04)
+
+Phase 1's keep rule had full domain tests, yet swapping the attacker and defender counts in the director stayed green, because the fake returned 0 for both. A felled soldier raised no removal in the fake, although the engine raises one, so the no-gold rule ran only by assumption. The first judge passed on hand-written log lines. And run `20261104-033424` passed at 2 waves while the keep was out of reach and the wave table was too steep for wave 4, because the verdict never asked.
+
+- **Why missed:** each slice was tested alone, and the domain tests were good enough to look complete. The fake was written by the builder of the code it stands in for.
+- **Prevent:** a fake's field that the production code reads must be settable, with one test that moves it. When a fake stands in for an engine event, it raises what the engine raises. Fixtures for a judge come from a real run's log, verbatim. After a passing run, read the numbers the plan said would answer a risk, and run once past the target.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 5, 8, 9, 15 and 16.

@@ -1,0 +1,136 @@
+using System;
+using System.Reflection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TaleWorlds.Core;
+using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
+using TAOM.Features.LongDefeat;
+using TAOM.Features.LongDefeat.Domain;
+using TAOM.Features.LongDefeat.Hooks;
+using TAOM.Tests.Infrastructure;
+using TAOM.Tests.Migration;
+
+namespace TAOM.Tests.Features.LongDefeat;
+
+[TestClass]
+[TestCategory("RequiresGame")]
+public class LongDefeatMissionLogicTests
+{
+    private const string LogicPath = "Main/Features/LongDefeat/Hooks/LongDefeatMissionLogic.cs";
+
+    [ClassInitialize]
+    public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => GameAssemblies.EnsureLoaded();
+
+    private static LongDefeatMissionLogic Logic(FakeLongDefeatMenu? menu = null) =>
+        new(new RunPlan("helms", new[] { new GarrisonRow("t", FormationSlot.Infantry, 1) },
+                new WavePlan(new[] { new WaveSpec(110, new[] { new WaveTroop("a", FormationSlot.Infantry, 1) }) }, new WaveScaling(10, 300)),
+                new ShopPlan(0, Array.Empty<ShopOffer>()), RunRules.Default, RunOptions.Default),
+            new LongDefeatSession(), Substitute.For<IModLogger>(), Substitute.For<IOutcomeLog>(), menu ?? new FakeLongDefeatMenu(), "m1");
+
+    // The text of the first block after the marker, by brace depth.
+    private static string BodyOf(string source, string marker)
+    {
+        var at = source.IndexOf(marker, StringComparison.Ordinal);
+        Assert.IsTrue(at >= 0, marker + " is not in the logic");
+        var open = source.IndexOf('{', at);
+        var depth = 0;
+        for (var i = open; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+                depth++;
+            else if (source[i] == '}' && --depth == 0)
+                return source.Substring(open, i - open + 1);
+        }
+
+        Assert.Fail(marker + " has no closing brace");
+        return "";
+    }
+
+    [TestMethod]
+    public void TheLogic_IsALogicBehavior_SoCheckMissionEndedPollsIt()
+    {
+        Assert.AreEqual(MissionBehaviorType.Logic, Logic().BehaviorType);
+    }
+
+    [TestMethod]
+    public void TheLogic_DoesNotOverrideOnBehaviorInitialize()
+    {
+        var method = typeof(LongDefeatMissionLogic).GetMethod("OnBehaviorInitialize", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        Assert.IsNull(method);
+    }
+
+    [TestMethod]
+    public void TheLogic_OverridesNoMissionEnded_BecauseNothingHereNeedsTheEnginesEndedState()
+    {
+        var method = typeof(LongDefeatMissionLogic).GetMethod("MissionEnded", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        Assert.IsNull(method);
+    }
+
+    [TestMethod]
+    public void Ticks_AndRemovals_BeforeAnythingStarted_DoNothingAndDoNotThrow()
+    {
+        var logic = Logic();
+
+        logic.OnMissionTick(0.1f);
+        logic.OnAgentRemoved(null!, null!, AgentState.Killed, default);
+        logic.OnAgentFleeing(null!);
+    }
+
+    [TestMethod]
+    public void OnRetreatMission_EndsTheGameThroughTheMenuAdapter()
+    {
+        var menu = new FakeLongDefeatMenu();
+
+        Logic(menu).OnRetreatMission();
+
+        Assert.AreEqual(1, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void OnRetreatMission_Twice_EndsTheGameOnce()
+    {
+        var menu = new FakeLongDefeatMenu();
+        var logic = Logic(menu);
+
+        logic.OnRetreatMission();
+        logic.OnRetreatMission();
+
+        Assert.AreEqual(1, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void TheMoraleHoldIsArmedInAfterStart_AndBothExitsTearDownTheHoldAndTheDirector()
+    {
+        var source = RepoPaths.ReadSource(LogicPath, stripComments: true);
+
+        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatMorale.Arm(Mission)");
+        foreach (var exit in new[] { "OnEndMission", "OnRemoveBehavior" })
+            StringAssert.Contains(BodyOf(source, "override void " + exit), "TearDown()", exit + " does not tear down");
+
+        var tearDown = BodyOf(source, "private void TearDown()");
+        StringAssert.Contains(tearDown, "LongDefeatMorale.Disarm(Mission)");
+        StringAssert.Contains(tearDown, "_host.ShutDown()");
+    }
+
+    [TestMethod]
+    public void IsLoss_IsAKillOrAKnockOut_NeverARoutOrADeletion()
+    {
+        Assert.IsTrue(LongDefeatMissionLogic.IsLoss(AgentState.Killed));
+        Assert.IsTrue(LongDefeatMissionLogic.IsLoss(AgentState.Unconscious));
+        Assert.IsFalse(LongDefeatMissionLogic.IsLoss(AgentState.Routed));
+        Assert.IsFalse(LongDefeatMissionLogic.IsLoss(AgentState.Deleted));
+        Assert.IsFalse(LongDefeatMissionLogic.IsLoss(AgentState.Active));
+    }
+
+    [TestMethod]
+    public void AfterStart_SpawnsNothing_TheFirstReadyTickStartsTheRun()
+    {
+        // An agent spawned inside AfterStart lets a SpawnAgent hook add a behavior to the list the engine is walking (rca-fords-of-war-2026-10-31.md).
+        var source = RepoPaths.ReadSource(LogicPath, stripComments: true);
+        var after = source.IndexOf("override void AfterStart", StringComparison.Ordinal);
+        var next = source.IndexOf("override void", after + 10, StringComparison.Ordinal);
+
+        Assert.IsFalse(source.Substring(after, next - after).Contains("StartRun("), "AfterStart must only mark the start as due");
+    }
+}

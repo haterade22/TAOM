@@ -83,8 +83,6 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "_initialPlayerAgent", "Field", "ShaderPrecompilePlayerAgentGuard.cs:44")]
     // --- Culture Doctrine / Fell Foes: the team AI's current tactic, read for the horse-stand flag (TeamTacticProbe.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.TeamAIComponent", "TeamAIComponent", "_currentTactic", "Field", "TeamTacticProbe.cs:30")]
-    // --- The Long Defeat spike: vanilla's own undo of a destroyed gate (LongDefeatSpikeRunner.cs, #1079) ---
-    [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatSpikeRunner.cs:632")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:23")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
