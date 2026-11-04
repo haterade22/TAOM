@@ -181,6 +181,7 @@ public class ClientSubModuleTests
         {
             typeof(TAOM.Adapters.IFactionMapWidgetAdapter),
             typeof(TAOM.Adapters.IFrontEndSpriteTableAdapter),
+            typeof(TAOM.Adapters.IThumbnailCacheAdapter),
             typeof(TAOM.Features.CustomBattles.ICustomBattleFactionSelectionFactory),
             typeof(TAOM.Features.WarOfTheRingMomentum.UI.IMomentumUIService),
             typeof(TAOM.Adapters.IRealmBordersMapViewAdapter),

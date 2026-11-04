@@ -1610,6 +1610,7 @@ public class SubModule : MBSubModuleBase
             "Late_ActionSetOverride",
             "Patch67_TableauResidencyDiag",
             "Patch72_TableauRacePosition",
+            "Patch132_ItemIconRacePosition",
         })
         {
             if (TryPatchCategory(previewCategory))

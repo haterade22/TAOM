@@ -23,6 +23,8 @@ namespace TAOM.Tests.Features.HeroRace;
 /// patch COULD bind; it cannot prove anything asks it to. Same reasoning and same shape as
 /// <c>BannerTripletOrderingTests</c> and <c>SiegeDismountWiringTests</c>.</para>
 ///
+/// <para>Patch132 (inventory icons) gets the same two pins.</para>
+///
 /// <para>Also pins Patch55's ActionIndexCache repair as the first statement of its prefix (#700), the
 /// only repair that reaches the Load Game save preview.</para>
 /// </summary>
@@ -159,6 +161,45 @@ public class HeroRaceWiringTests
 
         StringAssert.Contains(src, "new HeroRaceInfo(h.StringId, h.CharacterObject.Race, h.IsAlive)",
             "GetAllHeroRaces must pass Hero.IsAlive into HeroRaceInfo.");
+    }
+
+    // Patch132 (inventory icons) hangs off the same two silent lines as Patch72: the Initialize call
+    // in HeroRaceIoC and the category string in the guarded preview loop. Either missing leaves the
+    // icons at vanilla framing with no log line.
+    private const string IconCategory = "Patch132_ItemIconRacePosition";
+
+    [TestMethod]
+    public void HeroRaceIoC_InitializesTheIconPatch()
+    {
+        var src = ReadSource("Main", "Features", "HeroRace", "HeroRaceIoC.cs");
+
+        StringAssert.Contains(
+            src, "ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.Initialize",
+            "HeroRaceIoC no longer hands the store to Patch132. The patch null-guards a missing store, "
+            + "so dwarven armour icons would silently revert to vanilla framing.");
+    }
+
+    [TestMethod]
+    public void Patch132_CategoryAttributeIsAppliedInTheGuardedPreviewBatch()
+    {
+        var attribute = typeof(ItemThumbnailCache_GetItemPoseAndCamera_RacePatch)
+            .GetCustomAttributes(typeof(HarmonyPatchCategory), inherit: false)
+            .Cast<HarmonyPatchCategory>()
+            .SingleOrDefault();
+
+        Assert.IsNotNull(attribute, "Patch132 has no [HarmonyPatchCategory], so nothing ever applies it.");
+        Assert.AreEqual(IconCategory, attribute.info.category,
+            "The [HarmonyPatchCategory] literal drifted from the string SubModule.cs applies.");
+
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        var batchStart = src.IndexOf("foreach (var previewCategory in new[]", StringComparison.Ordinal);
+        Assert.IsTrue(batchStart >= 0,
+            "The guarded preview-category loop in SubModule.cs could not be located; this test needs updating.");
+
+        var batchEnd = src.IndexOf("})", batchStart, StringComparison.Ordinal);
+        var categoryIndex = src.IndexOf("\"" + IconCategory + "\"", StringComparison.Ordinal);
+        Assert.IsTrue(categoryIndex > batchStart && categoryIndex < batchEnd,
+            IconCategory + " is not an element of the guarded preview-category array.");
     }
 
     // #700: the Load Game save preview (BasicCharacterTableau) reads ActionIndexCache.act_inventory_idle
