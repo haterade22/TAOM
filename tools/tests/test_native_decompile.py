@@ -644,9 +644,10 @@ class GhidraIntegrationTests(unittest.TestCase):
         "v1.5.5": {"set_attack_state": "0x6DFE30", "weapon_equipped": "0x6E08C0",
                    "process_preload_queue": "0x4A1270", "import_stub": "0x9DC050",
                    "get_current_action_type": 0x6E2170, "thunk_target": "0x153D50"},
-        "v1.5.6": {"set_attack_state": "0x6E05B0", "weapon_equipped": "0x6E1040",
-                   "process_preload_queue": "0x4A19E0", "import_stub": "0x9DC7D0",
-                   "get_current_action_type": 0x6E28F0, "thunk_target": "0x153D50"},
+        # v1.5.6 is changeset 125270 (the 2026-11-04 hotfix); the 125053 row is gone.
+        "v1.5.6": {"set_attack_state": "0x6E16F0", "weapon_equipped": "0x6E2190",
+                   "process_preload_queue": "0x4A1930", "import_stub": "0x9DD6D0",
+                   "get_current_action_type": 0x6E3A40, "thunk_target": "0x153C80"},
     }
 
     def _pins(self):
