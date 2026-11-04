@@ -152,7 +152,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - **General:** the player leads the defenders, and a bought hero takes over while the player is down.
 - **Commanders:** waves 4, 8 and 12 and on bring a captain, a lieutenant, then a general, with abilities on a cooldown. Every faction's waves, commanders and summons use its own troops.
 - **Classes:** Sword and Board, Two Handed Infantry, Archer, Cavalry. Each has a start kit from the faction's own gear and its own boon pool. Cavalry is a sally force from a recorded point outside the walls, because a vanilla siege spawns everyone on foot (S9).
-- **Boons:** pick 1 of 3 after every 5 cleared waves. A boon lasts until the run ends. This is an assumption Mike may correct. The design reference is a comparison only, and its provenance row lands with the first commit that builds boons.
+- **Boons:** pick 1 of 3 after every 3 cleared waves (Mike moved this from 5 on 2026-11-04). A boon lasts until the run ends. This is an assumption Mike may correct. The design reference is a comparison only, and its provenance row lands with the first commit that builds boons.
 - **Affixes:** named powers on the attackers, rolled for each wave: 1 from wave 5, 2 from wave 10, 3 from wave 15.
 - **Endless scale:** a wave cannot exceed the battle size, so each wave also raises health and damage, and the troop tiers rise.
 
