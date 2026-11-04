@@ -134,6 +134,7 @@ battle of a later session can match a stale record.
 | The fit prefix is not attached to `InitWithSinglePhase` (it failed to apply, or another mod stripped it) | No picker is offered, one WARNING at the first offer; vanilla opens the mission with every troop |
 | The fit throws at runtime (an engine member stopped resolving) | The four totals stay untouched and one WARNING says the spawn totals were not fitted and deployment may stall. The list was already filtered, so this is not vanilla's behaviour |
 | A hero healed inside a continued map event (counted in the involved men, absent from the ready list) | The ready-list cap on the total prevents the deadlock, but only when the selection left someone out: with nobody left out no fit is recorded and the totals stay vanilla's |
+| A staged siege (a castle assault on a recorded scene, [staged-siege.md](staged-siege.md)) | Staged Siege's Patch126 also prefixes `InitWithSinglePhase`, at Low priority, and writes only the `spawnSettings` argument, so it does not change the four totals the fit writes |
 | Defender presses Escape mid-battle | Vanilla's surrender: the whole side surrenders, reserves included. The MCM hint says so |
 | Picker cancelled; saved while open | Cancel arms nothing; vanilla's own lord's hall cancel leaves the same state |
 | Nothing to choose (the player alone, or enlisted with no troops) | No picker; vanilla runs |
@@ -242,8 +243,7 @@ All lines carry `[SiegeForces]`:
 The design was researched on v1.5.3; Steam moved the installed game to v1.5.4 on 2026-10-05. Every
 signature Part 1 uses was compared in the v1.5.4 decompile and is unchanged, and every line the code
 comments cite sits at the same line number in v1.5.4. `SiegeForcesBindingTests` runs against the
-installed v1.5.4 DLLs. The repo still pins v1.5.3 (`.claude/pinned-game-version.txt`); no engine bump
-was made for this feature.
+installed v1.5.4 DLLs. When this was written the repo still pinned v1.5.3 (`.claude/pinned-game-version.txt`), and no engine bump was made for this feature. The pin has since moved to v1.5.6; both patched targets still exist there with the same parameters (`PlayerSiege.StartSiegeMission(Settlement)`, `DefaultBattleMissionAgentSpawnLogic.InitWithSinglePhase`).
 
 ## How to change which troops start unticked
 

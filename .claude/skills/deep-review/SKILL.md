@@ -94,7 +94,7 @@ Decide from the Step 1 split, within the tier above. A lens in scope that the ti
 
 ### Waves of four
 
-**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost (memory `agent-budget-discipline`; on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
+**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget"; on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
 
 ### The spawn prompt
 
@@ -114,7 +114,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 ## Step 2c: Adaptive Expansion (always evaluate)
 
-After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it (memory `agent-budget-discipline`).
+After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
 **Launch additional agents when:**
 - Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
@@ -212,7 +212,7 @@ The recurring failure is conflating severity with importance for RCA: we patch L
 - "Why each agent missed these" section: for each deep-review agent that ran and didn't catch the finding, state why their rule set didn't apply or why the agent's scope was too narrow
 - "Feedback memories to codify" section — only if there's a genuine systemic pattern; don't manufacture rules
 
-**Append the durable lesson to the master record.** For each systemic finding, also add an entry to the matching category file under `docs/reviews/lessons/` (e.g. `lessons/gamemodels-services.md`, `lessons/harmony-il.md`; index: `docs/reviews/LESSONS-LEARNED.md`), in the house shape (`### <imperative rule>` → `**Why missed:**` → `**Prevent:**` → `**Source:**`). The per-feature `rca-*.md` is the incident report; the lessons entry is the cross-feature rule that stops the *category* from recurring — it is the canonical, always-consulted record (indexed from the harness `MEMORY.md`). Read the relevant category FILE before the next review of that subsystem (per-category files keep the read cheap). Only touch `MEMORY.md` if a new feature/topic memory file is involved.
+**Append the durable lesson to the master record.** For each systemic finding, also add an entry to the matching category file under `docs/reviews/lessons/` (e.g. `lessons/gamemodels-services.md`, `lessons/harmony-il.md`; index: `docs/reviews/LESSONS-LEARNED.md`), in the house shape (`### <imperative rule>` → `**Why missed:**` → `**Prevent:**` → `**Source:**`). The per-feature `rca-*.md` is the incident report; the lessons entry is the cross-feature rule that stops the *category* from recurring: it is the canonical, always-consulted record. Read the relevant category FILE before the next review of that subsystem (per-category files keep the read cheap). Only touch `MEMORY.md` if a new feature/topic memory file is involved.
 
 **A deferred finding needs an owner.** Every uppercase `FOLLOW-UP` line you write in an RCA cites an issue (`#<number>`) or says `no issue:` and why; `python tools/lint_docs.py --fail-on-drift` fails on a new line that does neither (#984), and the commit hook runs the same check on the staged RCA. To mention the marker in passing, put it in backticks (`` `FOLLOW-UP` ``); an issue number in backticks does not count as a citation.
 

@@ -569,7 +569,7 @@ that differs from its twin or has none.
 | `Main/Features/TroopWeight/TroopWeightPenaltyScope.cs` | `PaysSizePenalty`: garrisons and patrol parties pay no size penalty; read by the penalty and by every capacity display (2026-10-16) |
 | `Main/Features/TroopWeight/TroopShedPlanning.cs` | Engine-free `WeightedTroopEntry` / `ShedInstruction` types for the pure shed planner |
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` + `TroopWeightXmlLoader.cs` | Loader interface + `IPathService` XML parser, graceful degradation on missing file |
-| `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` (7 patch initialisations) |
+| `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` (6 patch initialisations) |
 | `Main/Features/TroopWeight/Cheats/TroopWeightCheats.cs` | `taom.print_party_size`, prints the enforced and displayed frames side by side |
 | `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroops*` | Shed-on-upgrade: interface + boundary hook + postfix on `UpgradeReadyTroops` |
 | `Main/Features/TroopWeight/Hooks/TroopWeightDisplayHook.cs` | The one hook implementation behind all five display surfaces |

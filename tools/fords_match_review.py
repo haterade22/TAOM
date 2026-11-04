@@ -31,6 +31,9 @@ AVG_MS_FLAG = 7.0
 P95_MS_FLAG = 12.0
 SHADER_COMPILE_FLAG = 100
 FULL_MATCH_SECONDS = 880.0
+TARGET_MATCH_SECONDS = 1800.0
+BALANCE_SPEED = 4
+SMOKE_SPEED = 10
 HERO_MIN_SECONDS = 60.0
 HERO_KILLS_PER_MINUTE_FLAG = 2.0
 TOWER_CLASSES = ("melee", "ranged", "hero", "siege", "other")
@@ -48,7 +51,7 @@ def parse_log(text):
     """What the [FordsOfWar] lines of one match's log say. The last Summary and Housekeep lines stand for the match."""
     facts = {
         "mt": 0.0, "deaths": dict.fromkeys(SIDES, 0), "towers_lost": dict.fromkeys(SIDES, 0), "troops": {}, "gold": {}, "poison": {},
-        "upgrades": {side: [] for side in SIDES}, "wargs": 0, "riderless_others": "-", "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0, "speed": 1,
+        "upgrades": {side: [] for side in SIDES}, "wargs": 0, "riderless_others": "-", "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0, "speed": 1, "speed_changes": 0,
     }
     for line in text.splitlines():
         if (found := SUMMARY.search(line)):
@@ -68,6 +71,7 @@ def parse_log(text):
             facts["riderless_others"] = found[2]
         elif (found := SPEED.search(line)):
             facts["speed"] = max(facts["speed"], int(found[1]))
+            facts["speed_changes"] += 1
         elif "[EscMenu]" in line and "paused=true" in line:
             facts["esc_pauses"] += 1
         elif "[ERROR]" in line:
@@ -127,13 +131,25 @@ def _name(facts, side):
     return facts["west"] if side == "West" else facts["east"]
 
 
+def _speed_finding(facts):
+    speed, changes = facts["speed"], facts.get("speed_changes", 0)
+    if changes > 1:
+        return f"SPEED: the speed changed {changes} times in this match, up to {speed}x, so it is not a clean sample"
+    if speed >= SMOKE_SPEED:
+        return f"SPEED: {speed}x changes the result: use it for smoke and crash runs, not for balance"
+    if speed == BALANCE_SPEED:
+        return f"SPEED: {speed}x is the balance speed, but its tower damage reads low; confirm a big change at 1x"
+    return f"SPEED: {speed}x has not been compared with a normal match" if speed > 1 else None
+
+
 def _health_findings(facts):
     found = []
-    if facts["speed"] > 1:
-        found.append(f"SPEED: this match ran at up to {facts['speed']}x; do not read its numbers against a normal-speed match without saying so")
+    speed = _speed_finding(facts)
+    if speed:
+        found.append(speed)
     if facts["crashed"]:
         found.append(f"CRASH: the game died at {facts['mt']:.0f} s ({facts['reason']}); run /native-crash-triage before reading the rest")
-    elif facts["mt"] < FULL_MATCH_SECONDS:
+    elif facts["mt"] < FULL_MATCH_SECONDS and not facts.get("winner"):
         found.append(f"SHORT: the match stopped at {facts['mt']:.0f} s ({facts['reason']}), so its totals are partial")
     if facts["errors"]:
         found.append(f"ERROR: {len(facts['errors'])} error line(s) in the log; first: {facts['errors'][0]}")
@@ -148,6 +164,9 @@ def _health_findings(facts):
 
 def _balance_findings(facts):
     found = []
+    if facts.get("winner"):
+        late_enough = facts["keep_fell"] >= TARGET_MATCH_SECONDS
+        found.append(f"RESULT: {_name(facts, facts['winner'])} won at {facts['keep_fell']:.0f} s" + ("" if late_enough else ", under the 30-minute target"))
     values = _side_values(facts)
     west, east = values["West"], values["East"]
     if west["lost"] and east["lost"]:
@@ -271,7 +290,11 @@ def gather(run, factions_path=FACTIONS):
                   "tower_classes": {side: dict.fromkeys(TOWER_CLASSES, 0) for side in SIDES}})
     reports = sorted(folder.glob("fords_report_*.json"))
     if reports:
-        evidence = json.loads(reports[0].read_text(encoding="utf-8"))["evidence"]
+        report = json.loads(reports[0].read_text(encoding="utf-8"))
+        evidence = report["evidence"]
+        facts["build"] = report.get("taom", "")
+        end = evidence.get("End") or {}
+        facts["winner"], facts["keep_fell"] = end.get("Winner"), end.get("KeepFellMt")
         facts["spawned"] = evidence["Spawn"].get("SpawnedByTroop", {})
         for hero in evidence.get("Heroes", []):
             if hero.get("Kind") == "fielded":
@@ -291,7 +314,7 @@ def gather(run, factions_path=FACTIONS):
 
 def render(facts, found):
     """The match as text: the outcome, the two sides, each troop's trade, then the findings."""
-    lines = [f"# {facts['west']} (West) v {facts['east']} (East): {facts['mt']:.0f} s, {facts['reason']}", ""]
+    lines = [f"# {facts['west']} (West) v {facts['east']} (East): {facts['mt']:.0f} s, {facts['reason']}", "", f"Build: {facts.get('build') or 'not in the report'}.", ""]
     lines.append("| | " + facts["west"] + " | " + facts["east"] + " |")
     lines.append("|---|---|---|")
     for label, row in (("units lost", facts["deaths"]), ("towers lost", facts["towers_lost"]), ("tower damage", facts["tower_damage"]), ("heroes fielded", facts["heroes"])):

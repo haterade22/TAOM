@@ -13,7 +13,7 @@ Four surfaces carry balance values, and which one a number sits on decides who c
 | C# constant | the wage table, a culture feat's magnitude | needs a code change and a rebuild |
 | MCM setting, in game | AI lord party size multiplier | the player, at runtime, no file |
 
-TAOM's MCM surface in `Main/Features/TaomSettings.cs`: 440 lines carry a `[SettingProperty` attribute: 220 group labels, 219 value knobs and 1 button, in 56 groups. <!-- measured: grep -c "\[SettingProperty" Main/Features/TaomSettings.cs; grep -cE "^\s*\[SettingProperty(Bool|Integer|FloatingInteger|Dropdown|Text)\b" ...; grep -o 'SettingPropertyGroup("[^"]*"' ... | sort -u | wc -l 2026-09-11 --> Nothing in the repo catalogues them: [`docs/features/mcm.md`](../features/mcm.md) is a layout fix for one patch plus, since #559, the settings-posture rules (every value knob is read live and carries `RequireRestart = false`; a test enforces it), not a settings list. If you need to know whether a knob exists, read `TaomSettings.cs` directly. That is the honest answer, and it has been the honest answer for as long as the file has existed.
+TAOM's MCM surface in `Main/Features/TaomSettings.cs`: 948 lines carry a `[SettingProperty` attribute, four of them in a commented-out block: 472 group labels, 470 value knobs and 2 buttons, in 104 groups. <!-- measured: grep -c "\[SettingProperty" Main/Features/TaomSettings.cs; grep -cE "^\s*\[SettingProperty(Bool|Integer|FloatingInteger|Dropdown|Text)\b" ...; grep -E '^\s*\[SettingPropertyGroup\("' ... | grep -o 'SettingPropertyGroup("[^"]*"' | sort -u | wc -l 2026-11-03 --> Nothing in the repo catalogues them: [`docs/features/mcm.md`](../features/mcm.md) is a layout fix for one patch plus, since #559, the settings-posture rules (every value knob is read live and carries `RequireRestart = false`; a test enforces it), not a settings list. If you need to know whether a knob exists, read `TaomSettings.cs` directly. That is the honest answer, and it has been the honest answer for as long as the file has existed.
 
 ## Lever 1: a troop's `level`, and the four numbers it decides
 
@@ -24,13 +24,13 @@ TAOM's MCM surface in `Main/Features/TaomSettings.cs`: 440 lines carry a `[Setti
 | Derived value | Formula | Source |
 |---|---|---|
 | Tier | `clamp(ceil((level - 5) / 5), 0, MaxCharacterTier)` | `DefaultCharacterStatsModel.cs:18-25` |
-| `MaxCharacterTier` | 10 in TAOM, 6 in vanilla | `Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs:23`, `DefaultCharacterStatsModel.cs:11` |
+| `MaxCharacterTier` | 10 in TAOM, 6 in vanilla | `Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs:31`, `DefaultCharacterStatsModel.cs:11` |
 | Daily wage | a hardcoded table keyed by **tier** | `Main/Features/TroopProgression/TroopCostService.cs:9-36` |
 | Recruitment cost | a hardcoded table keyed by **level** | `TroopCostService.cs:38-60` |
 | Auto-resolve power, tiers 0 to 6 | `(2 + tier) * (10 + tier) * 0.02`, then `* 1.2` if mounted | `Main/Features/BattleBalance/Models/TaomMilitaryPowerModel.cs:19-55`, `DefaultMilitaryPowerModel.cs:244-253` |
-| Auto-resolve power, tiers 7 to 10 | one flat MCM value per tier, 2.91 / 3.26 / 3.61 / 3.96, then the same mounted multiplier | `Main/Features/TaomSettings.cs:252-280` |
+| Auto-resolve power, tiers 7 to 10 | one flat MCM value per tier, 2.91 / 3.26 / 3.61 / 3.96, then the same mounted multiplier | `Main/Features/TaomSettings.cs:412-430` |
 
-**Which model produces that last number.** A simulated map battle asks one model for one number per soldier. `DefaultCombatSimulationModel.SimulateHit` calls `MilitaryPowerModel.GetTroopPower` once for the striker and once for the struck, and every other term in the hit is a ratio of those two (`DefaultCombatSimulationModel.cs:18-22`). TAOM owns that model slot: `TaomMilitaryPowerModel` is registered at `Main/SubModule.cs:968` and overrides `GetDefaultTroopPower`, and it ships switched on, because `EnableCustomTroopPower` defaults to `true` (`Main/Features/TaomSettings.cs:245`). Below tier 7 it reproduces vanilla's formula exactly, so the toggle changes nothing there. Above tier 6 it substitutes four flat numbers, because vanilla's curve was written for a six-tier ladder and TAOM's runs to ten.
+**Which model produces that last number.** A simulated map battle asks one model for one number per soldier. `DefaultCombatSimulationModel.SimulateHit` calls `MilitaryPowerModel.GetTroopPower` once for the striker and once for the struck, and every other term in the hit is a ratio of those two (`DefaultCombatSimulationModel.cs:18-22`). TAOM owns that model slot: `TaomMilitaryPowerModel` is registered at `Main/SubModule.cs:1217` and overrides `GetDefaultTroopPower`, and it ships switched on, because `EnableCustomTroopPower` defaults to `true` (`Main/Features/TaomSettings.cs:405`). Below tier 7 it reproduces vanilla's formula exactly, so the toggle changes nothing there. Above tier 6 it substitutes four flat numbers, because vanilla's curve was written for a six-tier ladder and TAOM's runs to ten.
 
 Extending vanilla's curve to tiers 7 through 10 would give 3.06, 3.60, 4.18 and 4.80. TAOM ships 2.91, 3.26, 3.61 and 3.96, which flattens the top of the ladder: 5 percent under the formula at tier 7, rising to 18 percent at tier 10. <!-- measured: python -c "v=lambda t:(2+t)*(10+t)*0.02;sh={7:2.91,8:3.26,9:3.61,10:3.96};print([(t,round(v(t),2),sh[t],round(100*(v(t)-sh[t])/v(t),1)) for t in (7,8,9,10)])" 2026-09-05 -->
 
@@ -60,7 +60,7 @@ Two multipliers sit on top of the wage: `MountedWageMultiplier` 1.3 and `Mercena
 
 That makes [`auto-resolve-diagnostics.md`, "Why this exists"](../features/auto-resolve-diagnostics.md#why-this-exists), which says a simulated battle scores from `troop.level` alone, too absolute. Its own formula already carries the mounted factor, and two further inputs sit above the per-soldier number: the party leader's captain perks (`DefaultMilitaryPowerModel.cs:124-157`) and the terrain-and-side table (`:159-190`). Skills, armour and weapons still reach none of it.
 
-The levels TAOM actually uses across its 16 troop files are 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46 and 51, spread over 857 troop entries. The only off-grid one is `morannon_recruit` at level 7. <!-- measured: python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))" 2026-09-05 --> That grid matters for the skill tool as well: `rebalance_troops.py` keys its baselines on `{1, 6, 11, ... 51}` and skips any troop at a level it has no row for, so `morannon_recruit` is outside the curve entirely ([troop-skill-balance.md](../features/troop-skill-balance.md), "The formula").
+The levels TAOM actually uses across its 25 troop files are 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46 and 51, spread over 1064 troop entries. The only off-grid one is `morannon_recruit` at level 7. <!-- measured: python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))" 2026-11-03 --> That grid matters for the skill tool as well: `rebalance_troops.py` keys its baselines on `{1, 6, 11, ... 51}` and skips any troop at a level it has no row for, so `morannon_recruit` is outside the curve entirely ([troop-skill-balance.md](../features/troop-skill-balance.md), "The formula").
 
 ## Lever 2: a troop's skill values
 
@@ -81,9 +81,9 @@ A separate, level-driven term is easy to mistake for a skill effect. `BasicChara
 
 **In a simulated map battle**, skills do nothing at all. The per-soldier number is tier and mount, and what sits above it is the party leader's captain perks and a terrain modifier. No part of that chain reads a skill, which is why the project's main skill tool has never touched an axis auto-resolve can see ([auto-resolve-diagnostics.md, "Why this exists"](../features/auto-resolve-diagnostics.md#why-this-exists)).
 
-**Where the target numbers live.** `tools/rebalance_troops.py` holds the whole curve: `GROUP_BASELINES` at line 115 (four tables, Infantry / Ranged / Cavalry / HorseArcher, keyed by the eleven grid levels) and `CULTURAL_MODS` at line 126 (21 culture keys). <!-- measured: python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S|re.M).group(1),re.M)))" 2026-09-05 --> No doc prints the baseline tables; open the file. The per-culture deltas are printed in [troop-skill-balance.md:68-95](../features/troop-skill-balance.md). A missing `CULTURAL_MODS` key does not error, it silently rebaselines that whole faction to the bare curve, which is how a Lindon apply nearly stripped 30 troops in one run.
+**Where the target numbers live.** `tools/rebalance_troops.py` holds the whole curve: `GROUP_BASELINES` at line 148 (four tables, Infantry / Ranged / Cavalry / HorseArcher, keyed by the eleven grid levels) and `CULTURAL_MODS` at line 159 (21 culture keys). <!-- measured: python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S|re.M).group(1),re.M)))" 2026-09-05 --> No doc prints the baseline tables; open the file. The per-culture deltas are printed in [troop-skill-balance.md:68-95](../features/troop-skill-balance.md). A missing `CULTURAL_MODS` key does not error, it silently rebaselines that whole faction to the bare curve, which is how a Lindon apply nearly stripped 30 troops in one run.
 
-After the baseline and the culture delta, two more passes run: a weapon specialisation shift of `swap_amount = 15` (`tools/rebalance_troops.py:316`) triggered by keywords in the troop's name, and a roster-wide monotonicity clamp that raises a child's skill to its parent's over the whole upgrade graph.
+After the baseline and the culture delta, two more passes run: a weapon specialisation shift of `swap_amount = 15` (`tools/rebalance_troops.py:358`) triggered by keywords in the troop's name, and a roster-wide monotonicity clamp that raises a child's skill to its parent's over the whole upgrade graph.
 
 **A ranged troop's Bow or Crossbow is not on this curve.** Since #617 `rebalance_troops.ladder_cells` replaces it, for every troop carrying a ladder bow in a battle set at a tier its line lists, with the ranged ladder's cell (`tools/ranged_ladders.json`, `ranged_ladder.skill_cell`): a per-tier anchor shifted by the kingdom's rank, militia included. The same cell is what `tools/rebalance_ranged_ladders.py --apply` writes, so the two tools agree.
 
@@ -140,7 +140,7 @@ The exponent is the part that surprises people. All four armour stats on one ite
 
 ### The curve TAOM balances against
 
-`tools/rebalance_armor.py` is the source of truth. Since #583 (2026-09-13) the curve is the kingdom-cap model: `KINGDOM_CAPS` (one chest value per kingdom, Erebor 70 down to Thenn 35; a sub-line that shares a folder gets a `LINE_PREFIXES` row), `SLOT_CAP_RATIO` (helmet .9, bracer and pauldron .6, greaves .5) and `BAND_RATIO` (light .40, medium .64, heavy .84, elite 1.0, lord = elite), a worn item banded by its lowest battle-set wearer. `SLOT_BASELINES` and `CULTURAL_MODS` (20 culture keys, an additive protection and a multiplicative weight) now serve the civilian tier, the weights, the secondary-stat proportions and the uncapped folders only; editing a capped kingdom's `protection` changes nothing. The tables are in [armor-balance.md](../features/armor-balance.md), section "The kingdom-cap curve". Seven cultures are hand tuned and are skipped unless you pass `--all`: `PRESERVE_CULTURES` at `tools/rebalance_armor.py:43` lists gondor, mordor, isengard, dol_guldur, gundabad, erebor and iron_hills.
+`tools/rebalance_armor.py` is the source of truth. Since #583 (2026-09-13) the curve is the kingdom-cap model: `KINGDOM_CAPS` (one chest value per kingdom, Erebor 70 down to Thenn 35; a sub-line that shares a folder gets a `LINE_PREFIXES` row), `SLOT_CAP_RATIO` (helmet .9, bracer and pauldron .6, greaves .5) and `BAND_RATIO` (light .40, medium .64, heavy .84, elite 1.0, lord = elite), a worn item banded by its lowest battle-set wearer. `SLOT_BASELINES` and `CULTURAL_MODS` (20 culture keys, an additive protection and a multiplicative weight) now serve the civilian tier, the weights, the secondary-stat proportions and the uncapped folders only; editing a capped kingdom's `protection` changes nothing. The tables are in [armor-balance.md](../features/armor-balance.md), section "The kingdom-cap curve". Seven cultures are hand tuned and are skipped unless you pass `--all`: `PRESERVE_CULTURES` at `tools/rebalance_armor.py:44` lists gondor, mordor, isengard, dol_guldur, gundabad, erebor and iron_hills.
 
 There is a second, older curve. `tools/generate_gondor_armor.py` carries `STAT_TIERS`, imported by the per-culture generators, and it does not import `rebalance_armor`'s tables. The two have never been reconciled and no doc says which wins for a given item. If you are re-stating existing items, use `rebalance_armor.py`; the generators only matter when authoring a new set.
 
@@ -180,10 +180,37 @@ There is a second, older curve. `tools/generate_gondor_armor.py` carries `STAT_T
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
-        <equipment slot="Item1" id="Item.gond_shield_three_green" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
+        <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_b" />
-        <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_spear_b_pg" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
+        <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_spear_b_pg" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
+        <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_b" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
@@ -232,9 +259,9 @@ Its upgrade target `gondor_pg_cavalry` is level 26 on `default_group="Cavalry"`:
 
 A lord's roster at spawn and the cap he settles at are separate systems, and confusing them is the usual reason a party-size change appears not to work.
 
-**Spawn roster** comes from `taom_partyTemplates.xml`, 383 `<MBPartyTemplate>` blocks, each a list of `<PartyTemplateStack>` rows with `min_value` and `max_value`. The template's spawn ceiling is the sum of its stacks' `max_value`. Current sums for the base kingdom templates: goblin 320, mordor 260, isengard 260, erebor 225, gondor 200, rivendell 150. <!-- measured: python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t));print({p.get('id').split('_')[3]:sum(int(s.get('max_value')) for s in p.findall('.//PartyTemplateStack')) for p in t if p.get('id') in ('kingdom_hero_party_goblin_template','kingdom_hero_party_mordor_template','kingdom_hero_party_isengard_template','kingdom_hero_party_erebor_template','kingdom_hero_party_gondor_template','kingdom_hero_party_rivendell_template')})" 2026-09-05 --> [`party-template-sizing.md`](../reference/party-template-sizing.md) still narrates a 3500 target for Mordor and 4500 for goblins. Those numbers were retargeted on 2026-09-01 and the doc was not updated. Sum the file, do not trust the prose. Mechanics of the two attributes are in [Party templates](party-templates.md).
+**Spawn roster** comes from `taom_partyTemplates.xml`, 510 `<MBPartyTemplate>` blocks, each a list of `<PartyTemplateStack>` rows with `min_value` and `max_value`. The template's spawn ceiling is the sum of its stacks' `max_value`. Current sums for the base kingdom templates: goblin 320, mordor 267, isengard 260, erebor 225, gondor 200, rivendell 150. <!-- measured: python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t));print({p.get('id').split('_')[3]:sum(int(s.get('max_value')) for s in p.findall('.//PartyTemplateStack')) for p in t if p.get('id') in ('kingdom_hero_party_goblin_template','kingdom_hero_party_mordor_template','kingdom_hero_party_isengard_template','kingdom_hero_party_erebor_template','kingdom_hero_party_gondor_template','kingdom_hero_party_rivendell_template')})" 2026-11-03 --> [`party-template-sizing.md`](../reference/party-template-sizing.md) still narrates a 3500 target for Mordor and 4500 for goblins. Those numbers were retargeted on 2026-09-01 and the doc was not updated. Sum the file, do not trust the prose. Mechanics of the two attributes are in [Party templates](party-templates.md).
 
-**Steady-state cap** is `TaomPartySizeModel.GetPartyMemberSizeLimit`, and six writers land on the one `ExplainedNumber` vanilla hands back, in this order (`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:45-95`):
+**Steady-state cap** is `TaomPartySizeModel.GetPartyMemberSizeLimit`, and six writers land on the one `ExplainedNumber` vanilla hands back, in this order (`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:63-106`):
 
 | Order | Contributor | Shape |
 |---:|---|---|
@@ -245,13 +272,15 @@ A lord's roster at spawn and the cap he settles at are separate systems, and con
 | 5 | Eye of Sauron host bonus | result-frame add that lifts the hunter's limit to its own head count |
 | 6 | TroopWeight elite tax | result-frame subtraction of the weight surplus |
 
-The 12 cultures at contributor 1 are Mordor, Gundabad, Goblin, Blue Craig, Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad and Khand (`Main/Features/CulturalFeats/CulturalFeatsService.cs:245-273`). Their magnitudes are C#, not XML: `taom_spcultures.xml` only binds the feat id, and the number is the third argument to `FeatObject.Initialize` (Mordor's party size feat is `0.05f` at `Main/Features/CulturalFeats/TaomCulturalFeats.cs:913-916`). Changing a feat's strength is a code change.
+A seventh call, `ApplyCastlePatrolSize` (`TaomPartySizeModel.cs:59`), runs first, straight after the base call: vanilla answers 0 for a castle patrol, and the hook replaces that number before the culture feats apply their factors (#888).
 
-Contributor 6 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:181-196`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **105 live `<TroopWeight>` rows: 52 at weight 2.0, 51 at 3.0, one at 4.0 and one at 10.0** (since #585, 2026-09-13, every listed troop at level 41 or above pays 3.0). A raw grep returns 106 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" re-measured 2026-09-13 after #585 --> [`troop-weight-system.md`](../features/troop-weight-system.md) now carries the same measured breakdown (corrected 2026-09-06); [`gamemodels-services.md:418`](../reviews/lessons/gamemodels-services.md) still says "87 live weighted ids, 75 at 2.0" and remains stale. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
+The 12 cultures at contributor 1 are Mordor, Gundabad, Goblin, Blue Craig, Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad and Khand (`Main/Features/CulturalFeats/CulturalFeatsService.cs:247-274`). Their magnitudes are C#, not XML: `taom_spcultures.xml` only binds the feat id, and the number is the third argument to `FeatObject.Initialize` (Mordor's party size feat is `0.05f` at `Main/Features/CulturalFeats/TaomCulturalFeats.cs:913-916`). Changing a feat's strength is a code change.
 
-The 4.0 and 10.0 tiers are undocumented in every feature doc. They exist, and nothing says what they were sized against.
+Contributor 6 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:204-219`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **133 live `<TroopWeight>` rows: 59 at weight 2.0, 66 at 3.0, six at 4.0, one at 12.0 and one at 20.0** (since #585, 2026-09-13, every listed troop at level 41 or above pays 3.0; the spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 are mount packages that price the creature plus its crew, per the file's header comment, and `hill_troll` at 4.0 is a monster unit). A raw grep for `<TroopWeight ` returns 134 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" re-measured 2026-11-03 --> [`troop-weight-system.md`](../features/troop-weight-system.md) now carries the same measured breakdown (corrected 2026-09-06); [`gamemodels-services.md:440`](../reviews/lessons/gamemodels-services.md) holds a 2026-08-14 count of "87 live weighted ids, 75 at 2.0" and remains stale. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
 
-**MCM only.** Seven knobs under the "AI Party Size" group are the biggest party-size lever in the mod, and none of them is reachable from any file. All five numeric ones ship at vanilla: `AiLordPartyScale` 1.0, `AiLordPartyFlatBonus` 0, `AiGarrisonScale` 1.0, `AiPartyFoodRelief` 0, `AiPartyWageRelief` 0 (`Main/Features/AiPartySize/AiPartySizeService.cs:67-77`, declared at `Main/Features/TaomSettings.cs:40-79`). The reason there is no JSON twin is written down in [`ai-party-size.md:171-176`](../features/ai-party-size.md): two surfaces for one value have to enforce the same invariants at both or they drift.
+The five spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 are the mount packages: the file's header comment says they price the creature plus its crew rather than the rider's tier. `hill_troll` at 4.0 sits under its own monster-unit comment. Nothing records what these numbers were sized against.
+
+**MCM only.** Seven knobs under the "AI Party Size" group are the biggest party-size lever in the mod, and none of them is reachable from any file. All five numeric ones ship at vanilla: `AiLordPartyScale` 1.0, `AiLordPartyFlatBonus` 0, `AiGarrisonScale` 1.0, `AiPartyFoodRelief` 0, `AiPartyWageRelief` 0 (`Main/Features/AiPartySize/AiPartySizeService.cs:70-72, 90-91`, declared at `Main/Features/TaomSettings.cs:57-95`). The reason there is no JSON twin is written down in [`ai-party-size.md:171-176`](../features/ai-party-size.md): two surfaces for one value have to enforce the same invariants at both or they drift.
 
 ## Lever 5: settlement economy
 
@@ -290,7 +319,7 @@ Worth knowing before you go looking for a file that does not exist:
 - **The armour damage curve and the item value curve.** Both are vanilla engine models that TAOM does not override, so no file reaches them.
 - **The seven AI party size knobs.** MCM only, by design.
 
-One number readers expect on that list is missing on purpose. **Auto-resolve troop power is editable without a rebuild.** TAOM registers `TaomMilitaryPowerModel` (`Main/SubModule.cs:968`), so tiers 7 to 10, the mounted multiplier and the hero multiplier are all MCM knobs, and switching "Override Vanilla Tiers (T1-T6)" on moves tiers 0 to 6 into `Main/_Module/ModuleData/configs/battle_balance_config.json` as well. That file already carries the whole ladder, and its `T0` to `T6` rows are the vanilla formula written out, so the toggle on its own changes nothing until you edit them. <!-- measured: python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])" 2026-09-05 -->
+One number readers expect on that list is missing on purpose. **Auto-resolve troop power is editable without a rebuild.** TAOM registers `TaomMilitaryPowerModel` (`Main/SubModule.cs:1217`), so tiers 7 to 10, the mounted multiplier and the hero multiplier are all MCM knobs, and switching "Override Vanilla Tiers (T1-T6)" on moves tiers 0 to 6 into `Main/_Module/ModuleData/configs/battle_balance_config.json` as well. That file already carries the whole ladder, and its `T0` to `T6` rows are the vanilla formula written out, so the toggle on its own changes nothing until you edit them. <!-- measured: python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])" 2026-09-05 -->
 
 ## Recipes
 
@@ -308,7 +337,7 @@ Code: No code changes needed
 ### Retune a whole culture's troop skills
 
 1. Read the current state first: `python tools/analyze_troop_balance.py --stdout`, then open `tools/reports/troop-balance/REPORT.html`.
-2. Edit `CULTURAL_MODS['<culture>']` at `tools/rebalance_troops.py:126` for identity, or `GROUP_BASELINES` at line 115 for the whole power curve.
+2. Edit `CULTURAL_MODS['<culture>']` at `tools/rebalance_troops.py:159` for identity, or `GROUP_BASELINES` at line 148 for the whole power curve.
 3. Preview: `python tools/rebalance_troops.py --dry-run`. Read the downward changes first; a big drop usually means the modifier is too weak, not that the troops were over-tuned.
 4. Apply: `python tools/rebalance_troops.py --apply`.
 5. Read `git diff --stat` **per file**, not just the total. A file that moved an order of magnitude more than expected is the tool doing something you did not ask for. That is how a missing `CULTURAL_MODS` key was caught mid-apply, at 478 lines against an expected 30 ([troop-skill-balance.md:229-239](../features/troop-skill-balance.md)).
@@ -348,13 +377,13 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 - **An explicit `value=` on an item silences the whole price model.** `ItemObject.cs:477-484`. A hand-set `value="6000"` on a starter weapon is invisible to any armour or tier pass.
 - **A `modifier_group` the engine does not know resolves to null with no warning**, and the item then never rolls any modifier. Two shipped examples exist: `modifier_group="mail"` and `modifier_group="false"`. The legal set is the 20 group ids listed above.
 - **Party template prose in the docs is stale by a factor of 13.** Sum the file.
-- **Troop weight doc counts are stale.** 105 live rows, not 80 and not 87.
+- **Troop weight doc counts are stale.** 133 live rows, not 80, not 87 and not 105.
 
 ### Questions this chapter cannot answer
 
 - **What the full skill-to-stat mapping is.** Only the four relationships above were traced. `Modules/SandBox/SandBox.GameComponents/SandboxAgentStatCalculateModel.cs` is 1670 lines and no TAOM doc summarises it; [`agent-stats-and-driven-properties.md`](../reference/engine/agent-stats-and-driven-properties.md) covers the model plumbing and states no numbers, and its own citations are v1.4.5.
 - **Which armour curve wins, `STAT_TIERS` or `SLOT_BASELINES`.** Answered 2026-09-13: neither for a capped kingdom; `KINGDOM_CAPS` in `rebalance_armor.py` does, and the Black Numenorean generator imports it. The eight per-culture generators' private `STAT_TIERS` copies (`generate_dale_armor.py` to `generate_rhun_armor.py`) are still not reconciled with it and would write legacy numbers.
-- **What the 4.0 and 10.0 troop weights were sized against.** They are in the file and in no doc.
+- **What the mount-package troop weights were sized against.** The file's header comment says the spider, elephant and Mumakil rows price a mount package; the sizing is in no doc.
 - **Whether a culture whose whole roster is heavy is meant to sit at half the party cap.** The elite tax degenerates into a flat cut for such a roster, Rivendell and Mirkwood are the two, and neither takes a party-size feat. [`troop-weight-system.md`](../features/troop-weight-system.md) raises the question and leaves it open.
 - **Whether the settlement prosperity floors were chosen to sit just under the engine bands.** The floor table and the thresholds are both known; the intent is not recorded.
 
@@ -362,8 +391,8 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 
 | Number | Command | Date |
 |---|---|---|
-| 440 `[SettingProperty` lines (220 group, 219 value, 1 button) | `grep -c "\[SettingProperty" Main/Features/TaomSettings.cs` and the value-attribute grep in the paragraph above | 2026-09-11 |
-| 857 troop levels across 16 files; levels 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46, 51 | `python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))"` | 2026-09-05 |
+| 948 `[SettingProperty` lines (472 group, 470 value, 2 buttons, 4 commented out; 104 groups) | `grep -c "\[SettingProperty" Main/Features/TaomSettings.cs` and the value-attribute grep in the paragraph above | 2026-11-03 |
+| 1064 troop levels across 25 files; levels 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46, 51 | `python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))"` | 2026-11-03 |
 | 21 troop culture keys, 20 armour culture keys | `python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S\|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S\|re.M).group(1),re.M)))"` | 2026-09-05 |
 | Damage surviving magnitude 100 at armour 0 / 33 / 43 / 60 | `python -c "bf={'Blunt':0.6,'Cut':0.1,'Pierce':0.25}; sub={'Cut':0.5,'Pierce':0.33,'Blunt':0.2}; f=lambda t,ae:(lambda n2: bf[t]*n2+(1-bf[t])*max(0.0,n2-ae*sub[t]))(100*50.0/(50.0+ae)); print([(ae,{t:round(f(t,ae),1) for t in ('Cut','Pierce','Blunt')}) for ae in (0,33,43,60)])"` | 2026-09-05 |
 | 8883 denars, tier 3.9, 51.69 tier factor; 5582 at default appearance | `python -c "print(int(120*2.75**((33+10)*0.1-0.4)*(1+0.2*(3-1))+100*(3-1)), round(2.75**((33+10)*0.1-0.4),2))"` and the same with `0.5` for appearance | 2026-09-05 |
@@ -371,8 +400,8 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 | Vanilla tiers 7 to 10 at 3.06 / 3.60 / 4.18 / 4.80 against TAOM's 2.91 / 3.26 / 3.61 / 3.96, 5 to 18 percent lower | `python -c "v=lambda t:(2+t)*(10+t)*0.02;sh={7:2.91,8:3.26,9:3.61,10:3.96};print([(t,round(v(t),2),sh[t],round(100*(v(t)-sh[t])/v(t),1)) for t in (7,8,9,10)])"` | 2026-09-05 |
 | 14.3 percent, the gap between `CharacterObject.GetPower` and the real auto-resolve number at tier 4 | `python -c "print(round(100*(1-((2+4)*(8+4)*0.02)/((2+4)*(10+4)*0.02)),1))"` | 2026-09-05 |
 | `battle_balance_config.json` rows T0 to T6 equal the vanilla formula | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])"` | 2026-09-05 |
-| 383 party templates; goblin 320, mordor 260, isengard 260, erebor 225, gondor 200, rivendell 150 | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t))"` plus the per-template max sums | 2026-09-05 |
-| 105 live `<TroopWeight>` rows: 52 at 2.0, 51 at 3.0, 1 at 4.0, 1 at 10.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-09-13 |
+| 510 party templates; goblin 320, mordor 267, isengard 260, erebor 225, gondor 200, rivendell 150 | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t))"` plus the per-template max sums | 2026-11-03 |
+| 133 live `<TroopWeight>` rows: 59 at 2.0, 66 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-11-03 |
 | 20 item modifier groups | `grep -oE 'id="[^"]+"' Native/ModuleData/item_modifiers_groups.xml \| wc -l` | 2026-09-05 |
 | 3 validator schemas | `ls tools/schemas/ \| wc -l` | 2026-09-05 |
 | 9 keys in `settlement_food_config.json` | `grep -o '"[a-zA-Z]*"' Main/_Module/ModuleData/settlement_food/settlement_food_config.json \| sort -u \| wc -l` | 2026-09-06 |

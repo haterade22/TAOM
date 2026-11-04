@@ -80,7 +80,7 @@ crafting pieces including the deliberately-removed Gondor poleaxe. Full write-up
 
 **Key design decisions (mirrors `taom_schema.py` patterns):**
 - **Engine importable separately from CLI.** `extract_refs_from_text`, `classify`, `scan_tpac_metameshes`, `bodies_present_in_tpacs`, `parse_rgl_text` are pure functions the unit tests call directly with synthetic data — no game install needed (the present-set is injectable, analogous to `Registries` in the ModuleData validator).
-- **Attribute-exact extraction, not "ends-with."** The include set is the exact names `mesh`, `body_name`, `shield_body_name`, `holster_mesh`, `holster_mesh_with_weapon`, `flying_mesh` (derived by grepping the LOTRLOME_Armory + SandBoxCore item XML). This deliberately excludes the look-alike traps `mesh_maturity_type` (enum), `holster_mesh_length` (numeric), `recalculate_body` / `covers_body` (bool). Defensive support for `multi_mesh` / `<meshes>`/`<Mesh name>` is included (0× in the Armory today).
+- **Attribute-exact extraction, not "ends-with."** The include set is the exact names `mesh`, `body_name`, `shield_body_name`, `holster_mesh`, `holster_mesh_with_weapon`, `flying_mesh` (derived by grepping the LOTRLOME_Armory + SandBoxCore item XML), plus eight skin attributes from `skins.xml` (`body_meta_mesh`, `body_meta_mesh_shoulders`, `body_meta_mesh_upperbody`, `face_meta_mesh`, `hands_mesh`, `legs_mesh`, `underwear_bottom_mesh`, `underwear_top_mesh`; #403). This deliberately excludes the look-alike traps `mesh_maturity_type` (enum), `holster_mesh_length` (numeric), `recalculate_body` / `covers_body` (bool). Defensive support for `multi_mesh` / `<meshes>`/`<Mesh name>` is included (0× in the Armory today).
 - **Unparsed `.tpac` degrades, never lies.** On parse drift / suspicious `udep_count`, `scan_tpac_metameshes` soft-fails *that one pack* (records `UNPARSED_TPAC`) instead of aborting the run; any visual mesh that would have been "missing" because of an unparsed pack is downgraded to `UNVERIFIED_MESH` (WARNING) — a false `MISSING_MESH` ERROR is never emitted from an unparsed pack.
 - **Tier C matches the TOC exactly (corrected in #352).** Collision bodies ARE first-class `.tpac` TOC items (`PhysicsShape`, TYPE_GUID `e8528e0e-64b6-4e61-bae0-7569c0452aea` — `pack1.tpac` exposes 382). The tool originally asserted the opposite ("bodies aren't in the TOC; they live embedded in mesh metadata") and byte-scanned instead, which is why Tier C carried a "coarse, confirm via rgl_log" caveat for a year. The `PhysicsShape` count is confirmed independently two ways: this tool's hand-rolled GUID parse, and TpacTool's own `PhysicsShape.TYPE_GUID` via reflection. Exact-set matching also makes the suffix-typo case (`..._2h` vs the shipped `..._2h_a`) impossible to pass by accident.
 - **The raw-byte scan survives as the degraded fallback.** `bodies_present_in_tpacs` is still used when a pack soft-fails to parse (or Tier B is skipped), so an unreadable pack never produces a false `MISSING_BODY` — same philosophy as `UNVERIFIED_MESH`. It is framed to avoid prefix false-positives (length/NUL-framed tokens, so `bo_helm` does not match `bo_helm_a`) and reads each pack once for ALL needles (64 MB chunks with overlap) — O(total bytes), tractable against the ~150 Native packs (one is 2.4 GB).
@@ -107,6 +107,10 @@ python tools/validate_mesh_refs.py --no-tier-b
 # side, or vanilla's whole mesh library drowns the result.
 python tools/validate_mesh_refs.py --unreferenced --prefix sk_gd_
 python tools/validate_mesh_refs.py --unreferenced --tpac-modules LOTRLOME_Armory --code UNREFERENCED_MESH
+
+# Is a NEW mesh name free? Scans every module's loose Assets/ and AssetPackages/, case ignored.
+# Exit 0 free, 1 taken (holding packages listed), 2 a package could not be read.
+python tools/validate_mesh_refs.py --check-name taom_camp_orc_a
 ```
 
 **Interpreting the result:**
@@ -134,7 +138,7 @@ Tier A against `rgl_log_errors_77136.txt`: 1 INFO (`bo_gondor_brick_rubble_c`, a
 | File | Purpose |
 |------|---------|
 | `tools/validate_mesh_refs.py` | Engine (extract / present-set / rgl parse / classify / report) + CLI front-end |
-| `tools/tests/test_validate_mesh_refs.py` | 46 unittest cases (pure stdlib, synthetic fixtures, injectable present-set) |
+| `tools/tests/test_validate_mesh_refs.py` | 69 unittest cases (pure stdlib, synthetic fixtures, injectable present-set) |
 | `tools/tpac_skeleton_scan.py` | The proven `.tpac` TOC parser the Tier-B/`scan_tpac_metameshes` loop was lifted from |
 | `tools/Audit-MeshRefs.ps1` | The C#-DLL-dependent predecessor (visual-mesh only, no collision bodies) — design precedent |
 
@@ -142,7 +146,7 @@ Tier A against `rgl_log_errors_77136.txt`: 1 INFO (`bo_gondor_brick_rubble_c`, a
 
 **Python 3 standard library only** (`re`, `json`, `struct`, `argparse`, `dataclasses`, `enum`, `pathlib`) — no pip install. Reads (when present, all overridable via flags):
 - Item + crafting-piece XML: `E:\Steam\...\Modules\LOTRLOME_Armory\ModuleData\` (`--items`; covers `LOTRLOME_items/**` AND the `ModuleData/`-root `LOTRLOME_crafting_pieces.xml`)
-- `.tpac` present-set: `<game>\Modules\{LOTRLOME_Armory,Native,SandBoxCore}\AssetPackages\*.tpac` (`--game`, `--tpac-modules`). Shared meshes live outside the Armory, so the set is the union. A named module shipping no cooked packs falls back to its `Assets/**/*.tpac` (see Known Scope)
+- `.tpac` present-set: `<game>\Modules\{LOTRLOME_Armory,Native,SandBoxCore}\Assets\**\*.tpac`, or `AssetPackages\*.tpac` for a module with no loose tree (`--game`, `--tpac-modules`). Shared meshes live outside the Armory, so the set is the union. A module's loose `Assets/**/*.tpac` is read in preference to its cooked `AssetPackages/` (see Known Scope)
 - rgl logs: newest `rgl_log_errors_*.txt` under `C:\ProgramData\Mount and Blade II Bannerlord\logs` (`--rgl-log` / `--no-rgl-log`)
 
 Missing paths degrade gracefully (report the skip, run what you can), per `.claude/rules/environment-failures.md`.
@@ -154,13 +158,13 @@ python -m unittest discover -s tools/tests -p "test_*.py"     # full tools suite
 python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 ```
 
-46 cases covering: extraction of all 6 attrs with correct kind + line numbers; exclusion of the 3 false-positive attrs + `prefab` → `PREFAB_REF`; defensive `multi_mesh`/`<Mesh>`; comment-stripping; malformed-XML tolerance; Tier B present-vs-missing + `.lodN` base-name matching; unparsed-tpac → `UNVERIFIED_MESH` + `UNPARSED_TPAC` (no false ERROR); Tier C body byte-scan present/absent + prefix-no-false-match; Tier A `get_object failed` → `RUNTIME_MISSING_BODY` (ERROR when item-referenced, INFO when a scene body) + missing-material WARN + duplicate-line WARN; a **hand-built minimal TOC byte buffer** (magic `0x43415054`, version 2, one Metamesh item) proving the Tier-B struct offsets, plus its non-Metamesh / drifted-`udep_count` / non-magic soft-fail variants; CLI exit codes (0 / 1 / 2), `--code` filter, `--warnings-as-errors`; culture grouping in the report; and the reverse audit — orphan reported, referenced not reported, `_slim` suppressed only when its base is referenced, `--prefix` filtering candidates but never the referenced set, `.lodN` collapse, case-drift counting as referenced rather than as a false orphan, `UNREFERENCED_MESH` being INFO, the report block rendering, the report staying byte-identical when the mode is off, and both CLI degradations (`--prefix` without `--unreferenced`, `--unreferenced` without Tier B).
+69 cases, including: extraction of the item attrs with correct kind + line numbers; exclusion of the 3 false-positive attrs + `prefab` → `PREFAB_REF`; defensive `multi_mesh`/`<Mesh>`; comment-stripping; malformed-XML tolerance; Tier B present-vs-missing + `.lodN` base-name matching; unparsed-tpac → `UNVERIFIED_MESH` + `UNPARSED_TPAC` (no false ERROR); Tier C body byte-scan present/absent + prefix-no-false-match; Tier A `get_object failed` → `RUNTIME_MISSING_BODY` (ERROR when item-referenced, INFO when a scene body) + missing-material WARN + duplicate-line WARN; a **hand-built minimal TOC byte buffer** (magic `0x43415054`, version 2, one Metamesh item) proving the Tier-B struct offsets, plus its non-Metamesh / drifted-`udep_count` / non-magic soft-fail variants; CLI exit codes (0 / 1 / 2), `--code` filter, `--warnings-as-errors`; culture grouping in the report; and the reverse audit: orphan reported, referenced not reported, `_slim` suppressed only when its base is referenced, `--prefix` filtering candidates but never the referenced set, `.lodN` collapse, case-drift counting as referenced rather than as a false orphan, `UNREFERENCED_MESH` being INFO, the report block rendering, the report staying byte-identical when the mode is off, and both CLI degradations (`--prefix` without `--unreferenced`, `--unreferenced` without Tier B).
 
 ## Known Scope (intentional)
 
-- **Tier C is coarse by nature.** Collision bodies aren't in the `.tpac` TOC, so the raw-byte scan can only prove a name's *bytes* are present, not that the engine can instantiate the body. Always confirm a `MISSING_BODY` against an rgl_log.
+- **Tier C is exact for a pack that parses.** Collision bodies are `PhysicsShape` entries in the `.tpac` TOC (see the design decisions above). Only a pack that soft-failed to parse, or a run with no `PhysicsShape` entries to match against, falls back to the raw-byte scan, which proves a name's *bytes* are present, not that the engine can instantiate the body.
 - **Auto-discovered rgl_log may be empty.** "Newest" is by mtime; a freshly-launched session writes an essentially-empty error log. Pass `--rgl-log` explicitly to target a log with real warnings.
-- **Item XML only.** Scene-body / scene-mesh refs in `.sco`/scene XML are out of scope (Tier A still *reports* engine warnings about them, classified INFO). Material/texture refs, weapon-craft piece meshes, and skin/race body-meta meshes (`hands_mesh`, `legs_mesh`, etc. — present in race XML, not item XML) are not extracted.
+- **Item XML only.** Scene-body / scene-mesh refs in `.sco`/scene XML are out of scope (Tier A still *reports* engine warnings about them, classified INFO). Material/texture refs, and weapon-craft piece meshes are not extracted. Skin body-meta meshes (`hands_mesh`, `legs_mesh`, etc.) are extracted from `skins.xml` (#403).
 - **The scan root is the Armory only, and that is correct, not a gap.** Measured 2026-09-01:
   `Main/_Module/ModuleData` declares **0** visual-mesh and **0** collision-body references, so
   nothing in TAOM's own data goes unvalidated by this scoping. Re-measure before widening `--items`;

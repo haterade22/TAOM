@@ -152,8 +152,11 @@ themed movie that throws while building falls back to vanilla's and is not tried
   option's localized text and rebuilt when the language changes. Kysaro matched English strings in all
   three places. The backstory Random button picks an option and presses Next once per click.
 
-The patches are Patch95_FactionUI ([registry](../reference/harmony-patch-registry.md)), eight classes,
-applied in `OnSubModuleLoad` because the splash, the main menu and the loading window all appear before
+The patches are Patch95_FactionUI ([registry](../reference/harmony-patch-registry.md)), eleven classes: nine
+permanent ones and a temporary face-generator diagnostic (`FaceGenFirstOpenDiagnosticPatch` and its nested
+`TickWatch`, which still ships although the fix for the empty first open has landed; the count drops to nine when it goes). One of the nine, `BodyGeneratorViewOnTickPatch`, asks native
+every tick for the resources of each face generator model still loading, because vanilla asks once and a lost
+request leaves the model hidden. They are applied in `OnSubModuleLoad` because the splash, the main menu and the loading window all appear before
 any campaign. Two of Kysaro's per-frame patches are gone: the loading window gets its fonts, stone bars
 and brushes registered before its movie is built (so its prefab names them directly), and the
 menu-music silence is lifted from `FactionUITicker` when the player leaves the main menu, not from a
@@ -325,7 +328,7 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
   `IoC.cs` registers Player Switcher and the faction UI before FactionMap, and the launcher resolves
   before the uncapturable registry exists.
 - `FactionUIBindingTests.cs`: every Patch95 target and its parameter names against the installed engine,
-  the reflected members, the `MusicMode` values, the category on all eight classes, SubModule's
+  the reflected members, the `MusicMode` values, the category on all eleven classes, SubModule's
   registration, vanilla's stage order as the takeover restores it and `NextStage` running the handlers
   before it opens the next stage (both read from the engine's IL), and Patch77 checking the hidden panel
   before it clears the selection. `ReflectionSiteBindingTests` carries the four reflected members as gate rows.

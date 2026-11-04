@@ -44,7 +44,7 @@ No configuration. Purely data-driven via the `gear_practice_dummy_*` NPCCharacte
 
 ### gear_practice_dummy_* coverage
 
-Counting `id="gear_practice_dummy_` across `npcs_*.xml` (2026-10-27) finds **23**, one per culture file (coverage filled in session 2026-03-31, then one with each new culture); `npcs_umbar.xml`, `npcs_shaghana.xml` and `npcs_abanissa.xml` have none. Twenty-two of those cultures also carry the rest of the arena set (`weapon_practice_stage_1/2/3_*` and `gear_dummy_*`); Lothlórien has only the gear dummy. Representative sample below (`rohan`, `mistymountainorcs`, `goblin`, `bluecraig`, `lindon`, `arthedain`, `cardolan` and `rhudaur` also have entries but are not tabulated here):
+Counting `id="gear_practice_dummy_` across `npcs_*.xml` (2026-11-04) finds **27**, one per culture file (coverage filled in session 2026-03-31, then one with each new culture); `npcs_umbar.xml`, `npcs_shaghana.xml` and `npcs_abanissa.xml` have none. Twenty-six of those cultures also carry the rest of the arena set (`weapon_practice_stage_1/2/3_*` and `gear_dummy_*`); Lothlórien has only the gear dummy. Representative sample below (`rohan`, `mistymountainorcs`, `goblin`, `bluecraig`, `lindon`, `arthedain`, `cardolan`, `rhudaur`, `anduinvale`, `angaladh`, `dorwinion` and `southrhovanion` also have entries but are not tabulated here):
 
 | Culture | File | Body item |
 |---------|------|-----------|
@@ -77,8 +77,8 @@ resolves the same way.
 
 Net effect: in a Dunland, Harad, Rohan, Rhûn, Dale or Khand town the arena fighters wear vanilla
 Calradian kit and the TAOM sets authored for those six cultures are dead data. The rows for `harad`,
-`dunland`, `rhun`, `dale` and `khand` in the table above are authored but unreachable. Only the 18
-cultures that declare their own id in `taom_spcultures.xml` (plus `lothlorien`) actually resolve.
+`dunland`, `rhun`, `dale` and `khand` in the table above are authored but unreachable. Only the 21
+cultures that declare their own id in `taom_spcultures.xml` (`lothlorien` among them) actually resolve.
 Fixing it means renaming those six sets to the vanilla-id suffix, which changes the armour six
 cultures fight in, so it is a deliberate content decision rather than a typo repair. Not done.
 <!-- measured: culture ids from taom_spcultures.xml and spcultures.xslt template matches, checked
@@ -104,7 +104,7 @@ A culture with no item in the band draws from every culture's items; `base` (van
 | `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` | 20 unit tests (`ArmourDummyId`, start/end chance, `ShouldDismountInTournament`) |
 | `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | Tuning-constant invariants |
 | `TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs` | Prize bands: class, tier and merchandise rules |
-| `Main/SubModule.cs:1201` | Registration in `RegisterCulturalFeatModels` (called from `OnGameStart`): `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()))` |
+| `Main/SubModule.cs:1193` | Registration in `RegisterCulturalFeatModels` (called from `OnGameStart`): `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()))` |
 | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | `gear_practice_dummy_*` entries per culture |
 
 ## Dependencies

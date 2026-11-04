@@ -106,7 +106,7 @@ One `<basic_mercenary_troops>` block per culture:
 </basic_mercenary_troops>
 ```
 
-### Current picks (27 `_merc` troops defined, 26 offered by 20 culture blocks)
+### Current picks (31 `_merc` troops defined, 30 offered by 24 culture blocks)
 
 Sources are weight-1 pool entries unless noted; Lothlórien, Umbar and the two Harad cultures have no
 weight-1 entry, so they take their pool's minimum. Shaghana and Abanissa each own a copy since 2026-10-15, after the 2026-10-10 Harad rework deleted the troop they shared.
@@ -129,7 +129,7 @@ weight-1 entry, so they take their pool's minimum. Shaghana and Abanissa each ow
 | `abanissa` | `harad_pz_levy` (the Pezarsan camel line root) | 2 |
 
 The blocks added later (not in the table above; their weights are not audited here): `lindon` (`lindon_noble_merc`; `lindon_imladris_bowman_merc` is defined but no block offers it), `arthedain` (`arthedain_dunadan_youth_merc`), `bluecraig` (`goblin_fighter_merc`), `cardolan`
-(`cardolan_dunadan_merc`), `rhudaur` (`rhudaur_dunadan_merc`) and `eredluin` (`eredluin_noble_merc`, a copy of
+(`cardolan_dunadan_merc`), `rhudaur` (`rhudaur_dunadan_merc`), `anduinvale` (`anduinvale_beorning_youth_merc`), `angaladh` (`angaladh_ironwood_youth_merc`), `dorwinion` (`dorwinion_noble_merc`), `southrhovanion` (`southrhovanion_northman_youth_merc`) and `eredluin` (`eredluin_noble_merc`, a copy of
 the Noble of Ered Luin, its elite pool root).
 
 Excluded by rule: creature mounts (`taom_spider_creature`, Dol Guldur weight 1) and level-51
@@ -153,8 +153,8 @@ verbatim, so a hired troop is mechanically identical to its source.
 
 | File | Purpose |
 |------|---------|
-| `Main/_Module/ModuleData/taom_spcultures.xml` | 17 `<basic_mercenary_troops>` blocks |
-| `Main/_Module/ModuleData/troops/troops_<culture>.xml` | the 27 `_merc` troops, in a `TAVERN MERCENARIES` section at the end of each file; the four generated realm files (Arthedain, Cardolan, Rhudaur, Ered Luin) end with theirs, written by `tools/realm_troops.py` `add_mercenary` as a leaf copy of the rarest pool entry |
+| `Main/_Module/ModuleData/taom_spcultures.xml` | 24 `<basic_mercenary_troops>` blocks |
+| `Main/_Module/ModuleData/troops/troops_<culture>.xml` | the 31 `_merc` troops, in a `TAVERN MERCENARIES` section at the end of each file; the eight generated realm files (Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angaladh, Dorwinion, South Rhovanion) end with theirs, written by `tools/realm_troops.py` `add_mercenary` as a leaf copy of the rarest pool entry |
 | `tools/oneoff/generate_tavern_mercenaries.py` | idempotent generator; `PICKS` table is the source of truth for selection |
 | `Main/Features/TroopProgression/RecruitmentPools/*.cs` | `VolunteerChance` weights that decide which troops are "rarest" |
 | `Main/Features/TroopProgression/TroopCostService.cs` | the ×2 recruit / ×1.5 wage mercenary multipliers |

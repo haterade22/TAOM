@@ -7,7 +7,7 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <summary>
 /// The computer commander. It reads the same <see cref="MatchView"/> a human panel does and answers with
 /// <see cref="AiAction"/>s that the match applies through the human Try* methods. Every DecisionIntervalSeconds it
-/// defends the worst threatened lane with the cheapest spear or infantry pack, buys back or fields heroes when gold
+/// defends the worst threatened lane (with the buy cycle's next entry, or without a cycle the cheapest spear or infantry pack), buys back or fields heroes when gold
 /// beats price plus HeroReserveGold, then builds its best lane on Hold with the dearest pack it can pay until the lane
 /// holds AssaultThreshold units, and pushes. A faction's buy cycle also names its upgrades and its beasts; a creature
 /// comes only from there. While the lane is full, gold above the reserve keeps the cycle moving, into the lane with the most room.
@@ -71,8 +71,11 @@ internal sealed class AiCommander
         return actions;
     }
 
-    /// <summary>Buys the cheapest spear or infantry pack in the lane where the enemy outnumbers us the most. Returns the gold planned.</summary>
-    private static int Defend(MatchView view, List<MatchView.LaneView> lanes, int gold, List<AiAction> actions)
+    /// <summary>
+    /// Reinforces the lane where the enemy outnumbers us the most, and returns the gold planned. A faction with a buy cycle gives it the cycle's next entry and saves for it:
+    /// cheapest foot alone leaves a side that is behind with no elites and no upgrades, so it falls further behind. Without a cycle it buys the cheapest spear or infantry pack.
+    /// </summary>
+    private int Defend(MatchView view, List<MatchView.LaneView> lanes, int gold, List<AiAction> actions)
     {
         var worst = lanes
             .Where(l => l.Threat > l.OwnLive)
@@ -81,6 +84,9 @@ internal sealed class AiCommander
             .FirstOrDefault();
         if (worst == null)
             return 0;
+
+        if (view.AiBuyCycle is { Count: > 0 } cycle)
+            return BuyNextInCycle(view, worst.Index, cycle, gold, actions);
 
         var pack = view.UnitOffers
             .Where(o => (o.Role == UnitRole.Spear || o.Role == UnitRole.Infantry) && o.Price <= gold)
@@ -214,6 +220,28 @@ internal sealed class AiCommander
         return null;
     }
 
+    /// <summary>Buys the cycle's next entry for the lane when the gold reaches it, and moves the cycle on; otherwise it saves. Returns the gold planned.</summary>
+    private int BuyNextInCycle(MatchView view, int lane, IReadOnlyList<string> cycle, int gold, List<AiAction> actions)
+    {
+        if (SpecialDue(view, lane, cycle) is { } due)
+        {
+            if (due.Price > gold)
+                return 0;
+
+            actions.Add(due.Action);
+            _buyIndex++;
+            return due.Price;
+        }
+
+        var next = NextInCycle(view, cycle, gold);
+        if (next == null || next.Price > gold)
+            return 0;
+
+        actions.Add(AiAction.BuyPack(lane, next.OfferId));
+        _buyIndex++;
+        return next.Price;
+    }
+
     /// <summary>
     /// A full lane would stop the cycle at a pack, so gold above the reserve buys that pack for the lane with the most room, and the cycle moves on.
     /// Its upgrades and elites keep their share: upgrades alone would favour a horde, whose army gains the most from a flat price. With every lane full the gold waits for a hero.
@@ -287,29 +315,10 @@ internal sealed class AiCommander
 
         if (view.AiBuyCycle is { Count: > 0 } cycle)
         {
-            if (SpecialDue(view, assault.Index, cycle) is { } due)
-            {
-                if (due.Price <= gold)
-                {
-                    actions.Add(due.Action);
-                    _buyIndex++;
-                }
-
-                return;
-            }
-
-            if (assault.OwnLive >= view.AssaultThreshold)
-            {
+            if (assault.OwnLive < view.AssaultThreshold || SpecialDue(view, assault.Index, cycle) != null)
+                BuyNextInCycle(view, assault.Index, cycle, gold, actions);
+            else
                 BuySparePack(view, lanes, cycle, gold, actions);
-                return;
-            }
-
-            var next = NextInCycle(view, cycle, gold);
-            if (next != null && next.Price <= gold)
-            {
-                actions.Add(AiAction.BuyPack(assault.Index, next.OfferId));
-                _buyIndex++;
-            }
 
             return;
         }

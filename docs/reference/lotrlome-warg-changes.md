@@ -20,7 +20,7 @@ deployment crash history"). Ledger template: [lotrlome-war-ram-changes.md](lotrl
 
 1. **The dependency was undeclared.** `Main/_Module/SubModule.xml` never named `Alliance.Wargs`, yet
    TAOM ships **392 `Item.warg_*` references across 12 ModuleData files** (8 equipment sets, 4 troop
-   files) plus `AgentAdapter.IsWarg()` matching `Monster.StringId == "warg"`. Only
+   files) plus a Monster id check matching `Monster.StringId == "warg"` (then `AgentAdapter.IsWarg()`, now `WargConfig.IsWargMonster`, which also matches `fell_warg`). On 2026-11-03 the reference count is 403 across 13 files (`grep -rho "Item\.warg_" Main/_Module/ModuleData | wc -l`). Only
    `launchSettings.json` and `README.md` mentioned the module at all.
 2. **The spider depended on it too.** `action_sets.xml`'s spider rider partial binds 35 actions to 12
    distinct `rider_warg_*` clips, and a byte-scan of all ten LOTRLOME packs found none of them.
@@ -40,8 +40,9 @@ action_sets merge. See "Retirement" below.
 > **Moved 2026-09-01.** These eight files no longer sit beside the originals. The backup sweep
 > (`tools/sweep_module_backups.ps1`) relocated every sidecar in the three shipped modules to
 > `E:\Bannerlord_Backups\module_bak_sweep_2026-09-01\LOTRLOME_Armory\`, preserving the relative
-> paths below, because `.bak` breaks the Cloudflare distribution. To roll this change back, copy
-> them from there. `MANIFEST.csv` in that folder carries a SHA256 for each. See
+> paths below, because `.bak` breaks the Cloudflare distribution. They are no longer there: on
+> 2026-11-03 that folder holds only `MANIFEST.csv` and three sole-copy files, none of these eight.
+> `MANIFEST.csv` carries a SHA256 for seven of them (not `SubModule.xml.bak-wargabsorb-20260828`), so a copy found elsewhere can be checked against it. See
 > [module-backup-sweep](module-backup-sweep.md).
 
 Every edited file was copied to a sibling with a **non-`.xml`** extension before editing:
@@ -296,6 +297,11 @@ dereferences a null intrusive pointer.
 > be established and this table rewritten before anyone acts on it. Warg meshes themselves do still
 > resolve (7 present, including `warg_low` and `sk_gd_fellwarg`), so this is a bookkeeping and
 > crash-risk question, not missing art.
+>
+> **State on 2026-11-03.** The module has an `AssetPackages/` directory again (`pack0.tpac` to
+> `pack10.tpac`, no `warg.tpac`), `Assets/creature/warg/` and `AssetSources/creature/warg/` are both
+> present, and `<game>/_taom_disabled/` still holds `warg_loose_assets_20260828` and
+> `warg.tpac.preBake-20260828`. The table below still does not describe the install.
 
 | Location | State | Why |
 |---|---|---|
@@ -519,7 +525,7 @@ the cooked form shipped to **players**; `EmAssetPackages` is the cooked form shi
 modders**, so they can open the module in the Modding Kit without being given `AssetSources`. On a
 dev install the editor and the game both read `Assets/`, so a creature with no entry in either
 packages folder is in its normal pre-release state rather than broken. This module happens to have
-no `AssetPackages` folder at all and 13.6 GB of `EmAssetPackages`; neither fact had anything to do
+no `AssetPackages` folder at all and 13.6 GB of `EmAssetPackages` (on 2026-08-29; on 2026-11-03 it has `AssetPackages/` with pack0 to pack10 and no `EmAssetPackages/`); neither fact had anything to do
 with the warg. Folder semantics:
 [bannerlord-engine-and-toolchain.md](bannerlord-engine-and-toolchain.md) section 6.1.
 
@@ -741,7 +747,7 @@ wargs so a heavier mount does not reach level 21 scouts.
 | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` | 7,716 passed, 0 failed, 2 skipped |
 | XML parse of every edited and new file | PASS |
 
-**Still owed: the in-game ladder.** Nothing here has been run in the game yet. In order: main menu
+**The in-game ladder as owed on 2026-08-28.** Nothing in the table above had been run in the game then; section 12 records a launch and a battle with the warg invisible on 2026-08-29, and section 13 records the warg rendering on the campaign map on 2026-08-31; no other rung has a recorded pass. In order: main menu
 boot (where Crash #3 fires), party and inventory thumbnail of a warg-mounted troop (Crash #4),
 campaign map party icon, a settlement walk-in, an Isengard field battle with warg cavalry including a
 mounted-death pass, **a spider battle** (the `rider_warg_*` closure), and a footstep and voice audit.
@@ -749,8 +755,9 @@ mounted-death pass, **a spider battle** (the `rider_warg_*` closure), and a foot
 ## Retirement
 
 `Alliance.Wargs` is already out of the launch chain in `Main/Properties/launchSettings.json`, which is
-the non-destructive off-switch: the folder is untouched on disk, so a single-variable A/B is still
-possible. **Rename it to `Alliance.Wargs.OFF` rather than deleting it**, following the
+the non-destructive off-switch. Its folder is no longer in the game's `Modules` directory (checked
+2026-11-03; an unpacked copy and a zip remain in `E:\LOTRAOMAssets\`), so a single-variable A/B now
+means copying it back. The plan was to **rename it to `Alliance.Wargs.OFF` rather than delete it**, following the
 `Invoke-RdcAbTest.ps1` precedent that the script never deletes, and delete only after a full campaign
 session.
 

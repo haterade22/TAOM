@@ -94,7 +94,7 @@ The seeding runs again when the feature has been off on at least one in-game day
 
 ## Configuration
 
-MCM group `Personal Relations` (GroupOrder 58). Every value is read where it is used, so nothing needs a restart. The integers are clamped to 0 to 50, so a hand-edited `TAOM.json` cannot carry a negative or huge cost. A leader range given the wrong way round is swapped after clamping. There is no NaN case; the values are integers.
+MCM group `Personal Relations` (GroupOrder 60). Every value is read where it is used, so nothing needs a restart. The integers are clamped to 0 to 50, so a hand-edited `TAOM.json` cannot carry a negative or huge cost. A leader range given the wrong way round is swapped after clamping. There is no NaN case; the values are integers.
 
 | Setting | Type | Default | Range |
 |---------|------|---------|-------|

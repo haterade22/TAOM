@@ -85,3 +85,36 @@ The builders reported green suites, truthfully. A green suite here proved the st
 - **A commit gate is tested against the real tool at least once:** the merge test with the real linter found finding 16.
 - **Before landing a branch that edits an over-cap rule, run** `python tools/lint_docs.py --drift-only --dash-base <trunk>`. The lesson says why, and `/deep-review`'s tier 2 brief can name it when the tier table is next edited.
 - **A re-review compares the old gate with the new one, form by form,** because a rewrite that passes its own tests can still narrow a gate.
+
+## Second review: `taom-src` short names and the memory banner
+
+A later tier 2 pass (Data flow and Tooling, `effort: high`) on the night's remaining script changes: `tools/taom-src.ps1` short names, the `MEMORY.md` banner in `session-start.sh` and the removal of the teams flag. `CODEX: NOT AUTHORIZED`, so a Codex pass is owed. There was no HIGH finding, so no second wave ran.
+
+| # | Sev | Finding | Found by | Why missed | Fix |
+|---|---|---|---|---|---|
+| A | MED | `path BuildInfo` threw "No engine type", a regression: the index dropped every type with no namespace, and every dotless name now goes through the index. `BuildInfo` has no longer name to pass | Data flow, Tooling | The tests covered a namespaced type only | The index keeps a global type under its bare name |
+| B | MED | The index's first row picks a DLL, and `Modules\Coop` sorted before the game's own modules because it ships `TaleWorlds.*` DLLs. A short name also skipped `dll-index.json`, so short and full names could read different files after a bump | Tooling | The search order predates the change, and the tests compared only the file name | A list of the game's modules (`$VanillaModules`, held equal to `engine_body_diff.py` by a test) replaces the `TaleWorlds.*` guess. This also ends the #1038 `SandBox.*` trap |
+| C | MED | The index row's DLL was final: a dead row or a moved type threw, while the same type by its full name went through the probes | Data flow | A fast path was added beside the slow one instead of in front of it | The row's DLL is now the first probe, and the old chain follows it |
+| D | MED | `dll-index.json` sat in the cache root, so a mapping to Coop outlived a game version. `rca-engine-bump-v1.5.5-2026-10-14.md` had recorded 23 such types, and 134 stood tonight | Tooling | Named only as a follow-up in that RCA | The index is per version |
+| E | MED | The new 4 KB test row failed on this machine: Python text mode wrote a CRLF, so the file held 5,002 bytes | Tooling, then `test_hooks.sh` | The rows were written and not run before the review | Binary mode |
+| F | MED | The banner never fired from a sibling worktree, though such a session loads the main checkout's memory; and the unanchored glob could read another project that contains the name. The compact-time Dead ends find had both faults | Tooling, Data flow | The rows ran in a plain folder only | `main_checkout_name` from `--git-common-dir`, an anchored glob, and worktree rows in section 7n |
+| G | LOW | A cut or stale index answered "no such type" for a real type, with no way back but deleting the file by hand | Tooling, Data flow | The index was treated as a fact, not as a cache | A miss rebuilds it once. A write goes through a temp file |
+| H | LOW | The test docstring said `AgentVisuals` ships only in Native; the ambiguity test read the last index it globbed; `-Dll` with a short name threw "suddenly missing"; the not-found message named no nested type; `NavalDLC` types had left the short-name route | Tooling, Data flow | | Docstring and test corrected; the usage text says `-Dll` needs the full name; the message names nested types; the filter adds `NavalDLC` |
+| I | LOW | `agent-teams.md` said `SendMessage` "works" with the flag gone, while the probe saw only that it was offered, on an older CLI than the panel | Data flow | Written from memory of the probe | Reworded, and a third probe ran on 2.1.317 with the flag unset. The retro records it |
+
+**Root-cause pattern.** Findings A to D and G share one cause: a fast path was built beside the path it replaced, so each answer the old path gave had to be rebuilt, and four were not. The lesson is in `lessons/build-tooling-workflow.md`.
+
+**Two guards added without asking first:** the zero-hit rebuild and the temp file write, about four lines together. A cut index gives a false "no such type" that an agent reads as a fact about the engine, and lenses fan out in parallel right after a bump, when no index exists yet. To undo them, delete the `-Rebuild` branch and write the file directly.
+
+**Not applied:** `tools/context_budget_scan.sh` still derives its slug from the checkout and falls back to a substring match, so from a sibling worktree it can miss the main memory. FOLLOW-UP no issue: a report tool that a person runs from the main checkout, listed in the merge report. The fixes were not re-reviewed, because every finding was MED or below, and `/deep-review` fixes those and proves them with tests.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/commit-gates.md](../features/commit-gates.md)
+- [docs/reviews/harness-retro-2026-11-03.md](./harness-retro-2026-11-03.md)
+
+<!-- backlinks-end -->

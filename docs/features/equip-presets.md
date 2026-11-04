@@ -106,7 +106,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## Tests
 
-- `TAOM.Tests/Features/EquipPresets/EquipmentPresetServiceTests.cs` — 37 tests covering CRUD, missing-item / missing-modifier paths, MaxPresets enforcement (positive + negative), civilian/battle routing, IncludesMount toggle, IncludesCivilian toggle, orphan pruning, validate-before-lookup rule, modifier round-trip, slot-clearing on empty itemId.
+- `TAOM.Tests/Features/EquipPresets/EquipmentPresetServiceTests.cs`: 44 tests covering CRUD, missing-item / missing-modifier paths, MaxPresets enforcement (positive + negative), civilian/battle routing, IncludesMount toggle, IncludesCivilian toggle, orphan pruning, validate-before-lookup rule, modifier round-trip, slot-clearing on empty itemId.
 - `TAOM.Tests/Features/EquipPresets/HoNEquipmentPresetTests.cs` — 7 tests verifying default values, null-safety on item-ref ctor, AND `[SaveableProperty]` indexes (1..6 for the preset, 1..3 for the item-ref). Index numbers are part of the save format — these tests are the regression gate against accidental renumbering.
 - `TAOM.Tests/Features/EquipPresets/PresetSaveableTypeDefinerTests.cs` — 3 tests: BaseId matches the constant, BaseId is unique across all TAOM SaveableTypeDefiners, ctor is exception-free.
 - `TAOM.Tests/Features/EquipPresets/EquipPresetsSettingsProviderTests.cs` — 2 tests: range constants are coherent, default fits the [min, max] window.

@@ -193,7 +193,7 @@ public class ShippedFordsConfigTests
             Assert.IsNotNull(json[group] as JObject, group);
         Assert.AreEqual(8, ((JObject)json["economy"]!).Count);
         Assert.AreEqual(5, ((JObject)json["waves"]!).Count);
-        Assert.AreEqual(14, ((JObject)json["towers"]!).Count);
+        Assert.AreEqual(15, ((JObject)json["towers"]!).Count);
         Assert.AreEqual(0.2, (double)json["towers"]!["thrustFloorFactor"]!, 1e-9);
         Assert.AreEqual(8, ((JObject)json["heroes"]!).Count);
         Assert.AreEqual(6, ((JObject)json["lanes"]!).Count);
@@ -201,6 +201,19 @@ public class ShippedFordsConfigTests
         Assert.IsNotNull(json["countdownSeconds"]);
         foreach (var profile in new[] { "easy", "normal", "hard" })
             Assert.AreEqual(4, ((JObject)json["aiProfiles"]![profile]!).Count, profile);
+    }
+
+    [TestMethod]
+    public void ShippedRohan_AloneDiscountsItsRiders_SoItsFinestCavalryCanBeMassed()
+    {
+        var factions = (JObject)JObject.Parse(File.ReadAllText(ConfigFile("factions.json")))["factions"]!;
+
+        static IEnumerable<float> RiderWeights(JToken faction) =>
+            faction["units"]!.Where(u => (string?)u["role"] == "Cavalry").Select(u => (float)u["eliteWeight"]!);
+
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w < 1f), "every Rohan rider pack is below the full price for its level");
+        var cheapestElsewhere = factions.Properties().Where(p => p.Name != "rohan").SelectMany(p => RiderWeights(p.Value)).Min();
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).Max() < cheapestElsewhere, "no other faction's riders are as cheap for their level");
     }
 
     [TestMethod]

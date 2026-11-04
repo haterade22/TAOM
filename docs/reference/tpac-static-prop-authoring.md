@@ -19,7 +19,7 @@ layout, and nothing is logged beyond the entity count.
 **No player and no dev install has ever loaded them** (measured 2026-09-29):
 - **Releases** [Certain]: `E:\LOTRAOM_Releases\testing` and `\patreon` carry only the editor's
   `Modules/TAOM/AssetPackages/pack0.tpac`: 120 items, no Metamesh, none of the four. Publish Module writes that
-  folder from `Assets/`; it does not copy hand-written packages into it.
+  folder from `Assets/`; it does not copy hand-written packages into it. On 2026-11-03 `patreon` and `public` still hold only `pack0.tpac`, but `testing` also holds all four packages (written 2026-11-03 07:48) and has no `Assets/` tree; whether that build draws them is not recorded here.
 - **Dev install** [Certain for the log, Likely as a rule]: every client session logs one `Loading packages` line per
   module, and TAOM's is `$BASE/Modules/TAOM/Assets...` (`rgl_log_73032.txt:203`); no line loads
   `TAOM/AssetPackages`. A module with a loose `Assets/` tree loads that tree instead of its packages

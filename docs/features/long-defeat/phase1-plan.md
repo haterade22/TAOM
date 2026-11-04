@@ -7,7 +7,7 @@ Written 2026-11-03 by a design pass on the spike's evidence, then attacked from 
 - Spike line numbers moved by about 11, so spike code is now cited by method name.
 - Under `--lose`, `gold` and `no-rout` could fail on a run that cleared no wave, so both now handle that case.
 
-**Precondition, met:** the spike's last changes are commit `985b0d54e`. Line numbers below are for that commit. Risk 16 is closed by run `20261103-235336`: the hidden gate breaks, and the Middle lane opens.
+**Precondition, met:** the spike's last changes are commit `985b0d54e`. Line numbers below are for that commit. Risk 16 is closed by run `20261103-235325`: the hidden gate breaks, and the Middle lane opens.
 
 **Three findings that change the design:**
 - **`Mission.IsFriendlyMission` controls both Tab and the order bar.**

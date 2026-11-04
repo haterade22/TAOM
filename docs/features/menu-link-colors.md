@@ -30,7 +30,7 @@ v1.4.7 decompile:
    injected — it must be a style the brush already defines. This also rules out driving colours
    from `CultureObject.Color`.
 3. **`taom_spcultures.xml` colours would be the wrong source anyway.** `erebor`, `gondor` and
-   `mordor` carry byte-identical `color="0xFF23432D"`, the 8 bandit cultures carry none, and the
+   `mordor` carry byte-identical `color="0xFF23432D"`, the 11 bandit cultures carry none, and the
    values are dark banner tones unusable on a light background.
 
 So the design is: **static named styles in the brush XML, chosen at runtime by a style-name
@@ -94,8 +94,8 @@ is an XML edit with no rebuild.
 | | | | `goblin` | Goblins | `#2E4322` |
 | | | | `mistymountainorcs` | Misty Mountain Orcs | `#3F3A33` |
 
-The six kingdom cultures added since have no style: `lindon`, `bluecraig`, `arthedain`, `cardolan`,
-`rhudaur` and `eredluin` (Ered Luin) are not in `TaomCultureLinkStyles`, so their links keep vanilla's
+The ten kingdom cultures added since have no style: `lindon`, `bluecraig`, `arthedain`, `cardolan`,
+`rhudaur`, `eredluin` (Ered Luin), `anduinvale`, `angaladh`, `dorwinion` and `southrhovanion` are not in `TaomCultureLinkStyles`, so their links keep vanilla's
 style (`MenuLinkStyleRewriter` "KEPT VANILLA"), as a bandit culture's do.
 
 ### The contrast rule
@@ -144,7 +144,7 @@ brush:
 
 | Case | Renders as |
 |---|---|
-| The 8 bandit cultures (`dunland_raiders`, `umbar_corsairs`, …) | `Link.Settlement` / `Link.Hero` etc., retinted |
+| The 11 bandit cultures (`dunland_raiders`, `umbar_corsairs`, …) | `Link.Settlement` / `Link.Hero` etc., retinted |
 | A culture from another mod, or one added without a style | same |
 | An object that cannot be resolved from its href | same |
 | `Link.Concept`, `Link.Unit`, `Link.Ship`, bare `Link` | their own retinted styles |
@@ -188,7 +188,7 @@ from invisible-black-text into one log line naming the cause. **TAOM must load a
 
 ## Testing
 
-`dotnet test TAOM.Tests --filter MenuLinkColors` — 30 tests covering the rewrite for all four link
+`dotnet test TAOM.Tests --filter MenuLinkColors`: 32 tests covering the rewrite for all four link
 types, mixed cultures in one string, the `Faction-` clan prefix, every fallback path (unsupported
 culture, unresolvable object, malformed markup, lookup throwing, brush missing the style),
 idempotency, warn-once behaviour, staleness after a culture change, and the XML↔C# coverage,
@@ -221,7 +221,7 @@ glow and contrast guards.
 - `sturgia` and `battania` are renamed to Barding and Variag but never recoloured — they still
   carry vanilla Bannerlord blue and Battanian green.
 - `taom_spkingdoms.xml:11` has `color="FF004D26"`, missing the `0x` prefix every sibling carries.
-- TAOM's `GameMenu.xml` is a 573-line clone of Native's 634-line file — it predates newer vanilla
+- TAOM's `GameMenu.xml` is a 735-line file (`wc -l`) cloned from an older version of Native's file, which is 635 lines today. It predates newer vanilla
   brushes, which currently fall through to `DefaultBrush`. Same class as
   `rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`.
 

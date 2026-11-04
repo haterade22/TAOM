@@ -47,9 +47,9 @@ generate_dale_troops.py
 Main/_Module/ModuleData/troops/troops_dale.xml
 
 spcultures.xslt (Culture[@id='sturgia'] adds 9 military attrs)
-taom_partyTemplates.xml (+9 Dale templates)
+taom_partyTemplates.xml (+22 Dale templates)
 Main/_Module/SubModule.xml (registers troops_dale)
-VolunteerRecruitmentService.cs (+ InitializeDaleCulture)
+VolunteerRecruitmentService.Dale.cs (InitializeDaleCulture)
 ```
 
 ### Troop Tree
@@ -128,10 +128,10 @@ No JSON or runtime-tunable config. Two author-time data sources:
 | File | Change |
 |------|--------|
 | `Main/_Module/ModuleData/spcultures.xslt` | Dale block (`Culture[@id='sturgia']`, lines 1191-1312 as of 2026-08-12): 63 attribute overrides, of which 8 are the party/patrol template bindings, plus the two caravan child elements. The original 2026-05-26 pass set 9 military attributes; `villager_party_template` and both caravan lists were added 2026-08-12, and `villager_dale_template` / `caravan_template_dale` / `elite_caravan_template_dale` had to be authored because Dale had never had them |
-| `Main/_Module/ModuleData/taom_partyTemplates.xml` | Added 9 Dale party templates (lines 962-1056) |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | Dale party templates: the base set (villager, caravan, elite caravan, hero, mercenary, outlaw, militia, three patrol levels, rebels, vassal reward; from line 988), nine per-clan `kingdom_hero_party_dale_sturgia_N_template` (from line 2100) and `supply_caravan_template_dale` (line 5187) |
 | `Main/_Module/SubModule.xml` | Registered `troops/troops_dale` XmlNode |
-| `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Added `InitializeDaleCulture()` + call in static ctor |
-| `tools/validate_all_troop_refs.py` | Added `"dale"` to the cultures list |
+| `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Dale.cs` | `InitializeDaleCulture()` and `InitializeDaleSettlements()`, called from the static ctor in `VolunteerRecruitmentService.cs` |
+| `tools/validate_all_troop_refs.py` | Reads every `troops/troops_*.xml` from the folder, so `troops_dale.xml` is covered without a list entry |
 | `<armory>/SubModule.xml` | Registered `LOTRLOME_items/dale` Items XmlNode |
 
 ## Dependencies
@@ -143,12 +143,13 @@ No JSON or runtime-tunable config. Two author-time data sources:
 
 ## Tests
 
-`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` adds 4 tests (~+50 lines):
+`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` has 6 Dale tests (from line 2567):
 
-- `GetVolunteerTroopId_DaleCulture_LowRoll_ReturnsRecruit` — roll 0 → dale_recruit
-- `GetVolunteerTroopId_DaleCulture_MidRoll_ReturnsMilitia` — roll 5 → dale_militia
-- `GetVolunteerTroopId_DaleCulture_HighRoll_ReturnsSquire` — roll 10 (terminal) → dale_squire
-- `GetVolunteerTroopId_DaleSettlement_NoSettlementPool_FallsThroughToCulture` — no-settlement-pool path falls through to culture pool, not null
+- `GetVolunteerTroopId_DaleCulture_LowRoll_ReturnsDalianLevy`: roll 0 gives `dale_squire`
+- `GetVolunteerTroopId_DaleCulture_MidRoll_ReturnsRiverman`: roll 4 gives `dale_riverman`
+- `GetVolunteerTroopId_DaleCulture_HighRoll_ReturnsLakeTownPeasant`: roll 9 gives `dale_recruit`
+- `GetVolunteerTroopId_TownS1_LakeTown_LowRoll_ReturnsLakeTownPeasant` and `..._HighRoll_ReturnsDalianLevy`: the Lake-Town pool (`town_S1`, `dale_recruit` 9, `dale_squire` 1)
+- `GetVolunteerTroopId_OtherDaleSettlement_NoSettlementPool_FallsThroughToCulture`: a settlement without a pool falls through to the culture pool, not null
 
 Cross-reference validation:
 - `python tools/validate_all_troop_refs.py` — confirms every `sk_dale_*` armor reference in `troops_dale.xml` resolves to a real item in `LOTRLOME_Armory` (the underwear-bug gate per `multi_folder_id_uniqueness` memory)
@@ -157,7 +158,7 @@ Cross-reference validation:
 
 1. Open `tools/generate_dale_troops.py`
 2. Add a new `troops.append(Troop(...))` block to `build_troops()` with explicit ID, tier, default_group, skills, upgrades, rosters
-3. If the troop spawns from a recruitment pool: update `InitializeDaleCulture()` in `VolunteerRecruitmentService.cs` and add a test in `VolunteerRecruitmentServiceTests.cs`
+3. If the troop spawns from a recruitment pool: update `InitializeDaleCulture()` in `RecruitmentPools/VolunteerRecruitmentService.Dale.cs` and add a test in `VolunteerRecruitmentServiceTests.cs`
 4. If the troop appears in lord parties: add a `PartyTemplateStack` to `kingdom_hero_party_dale_template` (and/or patrol/mercenary/etc.) in `taom_partyTemplates.xml`
 5. Run `python tools/generate_dale_troops.py --apply` to regenerate `troops_dale.xml`
 6. Run `python tools/validate_all_troop_refs.py` to confirm every armor reference still resolves

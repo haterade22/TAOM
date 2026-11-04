@@ -79,8 +79,8 @@ for client/tool discovery.
 
 ### Targeted source helper
 
-The repository [source helper](../../tools/taom-src.ps1) takes a fully qualified
-type and locates its assembly across the selected game bin and module bins:
+The repository [source helper](../../tools/taom-src.ps1) takes a short or fully
+qualified type name and locates its assembly across the selected game bin and module bins:
 
 ```powershell
 pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty

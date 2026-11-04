@@ -89,22 +89,22 @@ same sentence applies to every `SandBoxCore/`, `SandBox/`, `CustomBattle/`, `TAO
 | `SandBoxCore` | Vanilla items, cultures, characters, rosters, skills, body properties | Never. Game install, `Official`, depends on `Native` (`SandBoxCore/SubModule.xml:10`) | `v1.5.5` | vanilla | 8 rows across 6 ids | none (no `project.mbproj`) | not counted |
 | `SandBox` | The vanilla campaign: settlements, kingdoms, clans, heroes, workshops, concepts, music. **Folder `SandBox`, id `Sandbox`** (`SandBox/SubModule.xml:4`); every TAOM manifest writes `Sandbox` on purpose | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`SandBox/SubModule.xml:10-11`) | `v1.5.5` | vanilla | 31 rows across 16 ids | 0 `<file>` rows | not counted |
 | `CustomBattle` | The custom-battle game type (`CustomGame`) and its scene list | Never. Game install, `Official`, depends on `Native` and `SandBoxCore` (`CustomBattle/SubModule.xml:10-11`) | `v1.5.5` | vanilla | 2 rows across 2 ids | none (no `project.mbproj`) | not counted |
-| `TAOM.Dependencies` | The library module: Harmony, UIExtenderEx, ButterLib, MCM and TAOM's shield layer, booted from one folder so a player enables only two TAOM entries | Repo, [`Dependencies/_Module/`](../../Dependencies/_Module/SubModule.xml); the build copies it | `v2.0.6` (`Dependencies/_Module/SubModule.xml:6`) | 7 `<SubModule>` entries | 0 | 0 (no `project.mbproj`) | 46 MB, 42 of it `bin/` <!-- measured: du -sm "<game>/Modules/TAOM.Dependencies"/* 2026-09-05 --> |
-| `TAOM` | The code and data module: `TAOM.dll`, every troop, lord, culture, kingdom, clan, roster, string, GUI and config | Repo, [`Main/_Module/`](../../Main/_Module/SubModule.xml); the build copies it | `v2.0.28` (`Main/_Module/SubModule.xml:6`) | 2: `TAOM.dll` (`TAOM.SubModule`) and client-only `TAOM.Client.dll` (`TAOM.Client.ClientSubModule`) | 100 `XmlNode` rows across 12 ids <!-- measured: grep -c "<XmlNode>" Main/_Module/SubModule.xml 2026-09-05 --> | 5 `<file>` rows (4 voice definitions, 1 module sound) | 6,147 MB, of which 5,141 MB is `RuntimeDataCache` <!-- measured: du -sm "<game>/Modules/TAOM" and du -sm "<game>/Modules/TAOM"/* 2026-09-05 --> |
-| `LOTRLOME_Armory` | Every TAOM-authored item, crafting piece, monster, race skin, action set and creature asset. Vanilla items keep loading beside them, from `SandBoxCore/SubModule.xml:15`. Data plus art, no C# | Game install only, `LOTRLOME_Armory/SubModule.xml`; the reinstall warning above applies | `v2.0.23` (`LOTRLOME_Armory/SubModule.xml:4`) | 0 (`<SubModules/>`, line 20) | 33 rows: 21 `Items`, 8 `Monsters`, 1 each `CraftingPieces`, `CraftingTemplates`, `WeaponDescriptions`, `ModuleSounds` <!-- measured: grep -o 'XmlName id="[^"]*"' LOTRLOME_Armory/SubModule.xml | sort | uniq -c 2026-09-05 --> | 11 `<file>` rows | 35,595 MB: 18,415 `AssetSources`, 12,978 `RuntimeDataCache`, 4,148 `Assets`, 22 `ModuleData` <!-- measured: du -sm "<game>/Modules/LOTRLOME_Armory"/* 2026-09-05 --> |
-| `TAOM_Map` | The Middle-earth campaign map: `SceneObj/Main_map`, `settlements.xml`, the distance cache, prefabs, atmospheres | Game install only, `TAOM_Map/SubModule.xml`; same warning | `v2.0.23` (`TAOM_Map/SubModule.xml:4`) | 0 (`<SubModules/>`, line 21) | 8 rows across 8 ids, 7 of them pointing at Kit template stubs | 9 `<Module>` rows, all inert (see below) | 56,404 MB: 21,205 `RuntimeDataCache`, 15,286 `AssetSources`, 12,859 `AssetPackages`, 3,929 `Assets`, 2,219 `SceneEditData`, 735 `SceneObj`, 14 `ModuleData` <!-- measured: du -sm "<game>/Modules/TAOM_Map"/* 2026-09-05 --> |
+| `TAOM.Dependencies` | The library module: Harmony, UIExtenderEx, ButterLib, MCM and TAOM's shield layer, booted from one folder so a player enables only two TAOM entries | Repo, [`Dependencies/_Module/`](../../Dependencies/_Module/SubModule.xml); the build copies it | `v2.0.36` (`Dependencies/_Module/SubModule.xml:6`) | 7 `<SubModule>` entries | 0 | 0 (no `project.mbproj`) | 46 MB, 42 of it `bin/` <!-- measured: du -sm "<game>/Modules/TAOM.Dependencies"/* 2026-09-05 --> |
+| `TAOM` | The code and data module: `TAOM.dll`, every troop, lord, culture, kingdom, clan, roster, string, GUI and config | Repo, [`Main/_Module/`](../../Main/_Module/SubModule.xml); the build copies it | `v2.0.36` (`Main/_Module/SubModule.xml:6`) | 2: `TAOM.dll` (`TAOM.SubModule`) and client-only `TAOM.Client.dll` (`TAOM.Client.ClientSubModule`) | 143 `XmlNode` rows across 13 ids <!-- measured: grep -c "<XmlNode>" Main/_Module/SubModule.xml 2026-11-03 --> | 5 `<file>` rows (4 voice definitions, 1 module sound) | 6,147 MB, of which 5,141 MB is `RuntimeDataCache` <!-- measured: du -sm "<game>/Modules/TAOM" and du -sm "<game>/Modules/TAOM"/* 2026-09-05 --> |
+| `LOTRLOME_Armory` | Nearly every TAOM-authored item (two `Items` rows stay in `TAOM`: `armour_acquisition/taom_lords_materials` and `fords_of_war/fords_items`), crafting piece, monster, race skin, action set and creature asset. Vanilla items keep loading beside them, from `SandBoxCore/SubModule.xml:15`. Data plus art, no C# | Game install only, `LOTRLOME_Armory/SubModule.xml`; the reinstall warning above applies | `v2.0.36` (`LOTRLOME_Armory/SubModule.xml:4`) | 0 (`<SubModules/>`, line 20) | 33 rows: 21 `Items`, 8 `Monsters`, 1 each `CraftingPieces`, `CraftingTemplates`, `WeaponDescriptions`, `ModuleSounds` <!-- measured: grep -o 'XmlName id="[^"]*"' LOTRLOME_Armory/SubModule.xml | sort | uniq -c 2026-09-05 --> | 11 `<file>` rows | 35,595 MB: 18,415 `AssetSources`, 12,978 `RuntimeDataCache`, 4,148 `Assets`, 22 `ModuleData` <!-- measured: du -sm "<game>/Modules/LOTRLOME_Armory"/* 2026-09-05 --> |
+| `TAOM_Map` | The Middle-earth campaign map: `SceneObj/Main_map`, `settlements.xml`, the distance cache, prefabs, atmospheres | Game install only, `TAOM_Map/SubModule.xml`; same warning | `v2.0.36` (`TAOM_Map/SubModule.xml:4`) | 0 (`<SubModules/>`, line 21) | 8 rows across 8 ids, 7 of them pointing at Kit template stubs | 9 `<Module>` rows, all inert (see below) | 56,404 MB: 21,205 `RuntimeDataCache`, 15,286 `AssetSources`, 12,859 `AssetPackages`, 3,929 `Assets`, 2,219 `SceneEditData`, 735 `SceneObj`, 14 `ModuleData` <!-- measured: du -sm "<game>/Modules/TAOM_Map"/* 2026-09-05 --> |
 
 The vanilla row counts come from the same `grep -o 'XmlName id=' | sort | uniq -c` over each
 vanilla manifest. <!-- measured: for f in Native SandBoxCore SandBox CustomBattle; do grep -o 'XmlName id="[^"]*"' "<game>/Modules/$f/SubModule.xml" | sort | uniq -c; done 2026-09-05 -->
 
-**Dependencies.** `TAOM`, `TAOM_Map` and `LOTRLOME_Armory` each declare exactly four `<DependedModule>`
-rows, `Native`, `SandBoxCore`, `Sandbox`, `CustomBattle` (`Main/_Module/SubModule.xml:11-14`,
-`TAOM_Map/SubModule.xml:9-12`, `LOTRLOME_Armory/SubModule.xml:9-12`). `TAOM.Dependencies` declares
+**Dependencies.** `TAOM_Map` and `LOTRLOME_Armory` each declare exactly four `<DependedModule>`
+rows, `Native`, `SandBoxCore`, `Sandbox`, `CustomBattle` (`TAOM_Map/SubModule.xml:9-12`,
+`LOTRLOME_Armory/SubModule.xml:9-12`). `TAOM` declares five, the same four plus `TAOM.Dependencies`
+listed first (`Main/_Module/SubModule.xml:21-25`). `TAOM.Dependencies` declares
 none (`Dependencies/_Module/SubModule.xml:10`), because it must sit above `Native` itself, and orders
 the other way round with 35 `<ModulesToLoadAfterThis>` rows (`:21-77`). <!-- measured: python ElementTree parse of the five manifests, len(findall('ModulesToLoadAfterThis/Module')) 2026-09-05 -->
-No TAOM manifest names another TAOM module as a hard dependency; the only cross-reference is
-`TAOM_Map/SubModule.xml:19`, a `<DependedModuleMetadata id="TAOM" order="LoadBeforeThis" />` row, in
-the element the engine never parses.
+Only `TAOM` names another TAOM module as a hard dependency, and that module is `TAOM.Dependencies`; the
+only other cross-references are two `<DependedModuleMetadata>` rows, `Main/_Module/SubModule.xml:31` and `TAOM_Map/SubModule.xml:19`, in the element the engine never parses.
 
 **The other eleven folders in `Modules/`** (`StoryMode`, `NavalDLC`, `BirthAndDeath`, `FastMode`,
 `Multiplayer`, `SandBoxCoreMP`, `Bannerlord.Diplomacy`, and the four stubs) are not part of the TAOM
@@ -121,17 +121,18 @@ Who registers what, measured from the four manifests:
 
 | Object id | `TAOM` | `TAOM_Map` | `LOTRLOME_Armory` | `TAOM.Dependencies` |
 |---|---|---|---|---|
-| `NPCCharacters` | 44 | 1 (Kit stub) | 0 | 0 |
-| `EquipmentRosters` | 27 | 0 | 0 | 0 |
-| `GameText` | 15 | 0 | 0 | 0 |
-| `SPCultures`, `Kingdoms`, `Factions`, `Heroes`, `SkillSets` | 2 each | 1 each except `Heroes` and `SkillSets` (Kit stubs) | 0 | 0 |
+| `NPCCharacters` | 69 | 1 (Kit stub) | 0 | 0 |
+| `EquipmentRosters` | 37 | 0 | 0 | 0 |
+| `GameText` | 20 | 0 | 0 | 0 |
+| `SPCultures` | 3 | 1 | 0 | 0 |
+| `Kingdoms`, `Factions`, `Heroes`, `SkillSets` | 2 each | 1 each except `Heroes` and `SkillSets` (Kit stubs) | 0 | 0 |
 | `partyTemplates`, `BodyProperties`, `BannerIcons`, `CustomBattleScenes` | 1 each | `partyTemplates` 1 (Kit stub) | 0 | 0 |
-| `Items` | 0 | 1 (Kit stub) | 21 | 0 |
+| `Items` | 2 | 1 (Kit stub) | 21 | 0 |
 | `Monsters` | 0 | 0 | 8 | 0 |
 | `CraftingPieces`, `CraftingTemplates`, `WeaponDescriptions`, `ModuleSounds` | 0 | 0 | 1 each | 0 |
 | `WorkshopTypes` | 0 | 1 (Kit stub) | 0 | 0 |
 | `Settlements` | **0** | **1** | 0 | 0 |
-| total `<XmlNode>` | 100 | 8 | 33 | 0 <!-- measured: grep -o 'XmlName id="[^"]*"' <manifest> | sort | uniq -c, over Main/_Module/SubModule.xml, Dependencies/_Module/SubModule.xml, TAOM_Map/SubModule.xml, LOTRLOME_Armory/SubModule.xml 2026-09-05 --> |
+| total `<XmlNode>` | 143 | 8 | 33 | 0 <!-- measured: grep -o 'XmlName id="[^"]*"' <manifest> | sort | uniq -c, over Main/_Module/SubModule.xml 2026-11-03 and over Dependencies/_Module/SubModule.xml, TAOM_Map/SubModule.xml, LOTRLOME_Armory/SubModule.xml 2026-09-05 --> |
 
 Three consequences, each with its file-level detail in [File catalogue](file-catalogue.md):
 
@@ -160,8 +161,8 @@ modules and the build copies them: `build.ps1` only restores and builds `TAOM.sl
 to `<game>/Modules/<ModuleId>` with `Clean="false"` (`Basic.targets:64-65`). [Module TAOM](module-taom.md)
 walks every copy target. Two facts follow from `Clean="false"`:
 
-- **Deployment is additive.** The repo `Main/_Module/ModuleData` has 367 files; the deployed
-  `TAOM/ModuleData` has 371, and a file deleted from the repo lives on in the install. <!-- measured: find Main/_Module/ModuleData -type f | wc -l; find "<game>/Modules/TAOM/ModuleData" -type f | wc -l 2026-09-05 -->
+- **Deployment is additive.** On 2026-09-05 the repo `Main/_Module/ModuleData` had 367 files and the deployed
+  `TAOM/ModuleData` 371 (the repo holds 567 on 2026-11-03), and a file deleted from the repo lives on in the install. <!-- measured: find Main/_Module/ModuleData -type f | wc -l; find "<game>/Modules/TAOM/ModuleData" -type f | wc -l 2026-09-05 -->
   The deployed copy also holds `RuntimeDataCache/`, `Shaders/` and, in `TAOM.Dependencies`, runtime
   files no build step produces. <!-- measured: ls "<game>/Modules/TAOM"; ls "<game>/Modules/TAOM.Dependencies" 2026-09-05 -->
 - **`-p:DisableModuleCopy=true` does not stop the copy.** Only the `PostBuildCopyToModules` wrapper
@@ -170,7 +171,7 @@ walks every copy target. Two facts follow from `Clean="false"`:
 
 Both repo modules keep their whole `_Module` folder in the repo, and so do the 4 alias-stub manifests
 under `Stubs/`. `Main/_Module/bin` holds 4 files, none of them a vendored binary ([orientation.md](../ai-includes/orientation.md)
-trap index, "Vendored DLLs"); all of it is build output. `Dependencies/_Module/bin` holds 42, the bundled
+trap index, "Vendored DLLs"); all of it is build output. `Dependencies/_Module/bin` holds 44, the bundled
 BUTR stack ([Module Dependencies](module-dependencies.md) has the allowlist). <!-- measured: find Main/_Module/bin -type f | wc -l; find Dependencies/_Module/bin -type f | wc -l; find Stubs -name SubModule.xml | wc -l 2026-09-05 -->
 
 **Live-only modules: `TAOM_Map` and `LOTRLOME_Armory`.** The repo holds no copy of either module: the
@@ -185,11 +186,11 @@ and for the highest-value Armory files a restore point under
 `Main/_Module/SubModule.xml` loads the same ids twice.
 
 The validators reach the three surfaces unevenly. The commit hook reads the staged file list and keeps
-only `Main/_Module/ModuleData/*.xml`
-([`check-moduledata-validation.sh`](../../.claude/hooks/check-moduledata-validation.sh), lines 59 and 71),
+only `Main/_Module/ModuleData/*.xml` and `*.xslt`
+([`check-moduledata-validation.sh`](../../.claude/hooks/check-moduledata-validation.sh), lines 73 and 91),
 so an edit in either live module is gated only when you run `python tools/validate_moduledata.py` by
 hand ([moduledata-validation](../features/moduledata-validation.md)).
-Counted today: `Main/_Module/ModuleData` holds 284 XML and 8 XSLT, `LOTRLOME_Armory/ModuleData` 425 XML
+Counted today: `Main/_Module/ModuleData` holds 451 XML and 11 XSLT (2026-11-03), `LOTRLOME_Armory/ModuleData` 425 XML
 and 8 XSLT, `TAOM_Map/ModuleData` 44 XML and 1 XSLT. <!-- measured: find <root> -name "*.xml" | wc -l and -name "*.xslt" | wc -l over the three ModuleData folders 2026-09-05 -->
 
 ## What ships to players
@@ -235,23 +236,21 @@ source and its licence, and its lines 20-21 point at the two files that do exist
 
 | Module | Value today | Where | When it changes |
 |---|---|---|---|
-| `TAOM` | `v2.0.28` | `Main/_Module/SubModule.xml:6` | Every release. It is what every crash bundle reports as `TaomVersion`, so it changes only in a release commit that is tagged `vX.Y.Z` and pushed ([release-process](../reference/release-process.md), "The contract") |
-| `TAOM.Dependencies` | `v2.0.6` | `Dependencies/_Module/SubModule.xml:6` | Only when the Dependencies assembly changes ([release-process](../reference/release-process.md), "The three version fields"). `v2.0.6` is not a phantom TAOM version, it is this module's number (same doc, "The five phantom versions") |
-| `TAOM_Map` | `v2.0.23` | `TAOM_Map/SubModule.xml:4` | By hand, in the live file. Not in git, so this string is the module's only version marker |
-| `LOTRLOME_Armory` | `v2.0.23` | `LOTRLOME_Armory/SubModule.xml:4` | By hand, in the live file. Same |
+| `TAOM` | `v2.0.36` | `Main/_Module/SubModule.xml:6` | Every release. It is what every crash bundle reports as `TaomVersion`, so it changes only in a release commit that is tagged `vX.Y.Z` and pushed ([release-process](../reference/release-process.md), "The contract") |
+| `TAOM.Dependencies` | `v2.0.36` | `Dependencies/_Module/SubModule.xml:6` | Every release since v2.0.29, so it reads the same as `TAOM`; it must change whenever the Dependencies assembly changed ([release-process](../reference/release-process.md), "The three version fields") |
+| `TAOM_Map` | `v2.0.36` | `TAOM_Map/SubModule.xml:4` | By hand, in the live file. Not in git, so this string is the module's only version marker |
+| `LOTRLOME_Armory` | `v2.0.36` | `LOTRLOME_Armory/SubModule.xml:4` | By hand, in the live file. Same |
 
-**Issue #371** is why the first two are a pair: `Main/TAOM.csproj:89-91` resolves HarmonyLib and
+**Issue #371** is why the first two are a pair: `Main/TAOM.csproj:84-86` resolves HarmonyLib and
 UIExtenderEx through `TAOM.Dependencies.dll`, so a `TAOM.dll` run against a stale copy fails at the
 member level while patches apply and every character renders in bind pose
-(`Main/_Module/SubModule.xml:15-22`; [release-process](../reference/release-process.md), "The three
-version fields"). That doc names a third field, a `<DependedModuleMetadata id="TAOM.Dependencies" version="v2.0.Y"/>`
-row in `TAOM`'s manifest, and **that field is not in the file**. `TAOM.Dependencies` occurs exactly
-once in `Main/_Module/SubModule.xml`, on line 15, as the opening line of the #371 comment itself;
-neither the metadata row nor a `<DependedModule Id="TAOM.Dependencies" />` sibling is present, while
-that comment still describes both as present. <!-- measured: grep -n "TAOM.Dependencies" Main/_Module/SubModule.xml 2026-09-05 -->
-As shipped, only the `/release` skill's check enforces the pairing ([release-process](../reference/release-process.md),
-"Cutting a release"); when and why the two rows left the file is an open question for the maintainer,
-and [Module Dependencies](module-dependencies.md) carries the pairing in full.
+(`Main/_Module/SubModule.xml:11-20`; [release-process](../reference/release-process.md), "The three
+version fields"). Both halves of the pairing are in `TAOM`'s manifest: `<DependedModule Id="TAOM.Dependencies" />`
+at line 21, the row the engine honours, and `<DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.36" />`
+at line 31, a version-pinned mirror for BUTR launchers that must equal the Dependencies version
+(comment at lines 28-30). The `/release` skill bumps both and runs `DependenciesPairing_MainMetadataEqualsDependenciesVersion`, which fails on a mismatch. <!-- measured: grep -n "TAOM.Dependencies" Main/_Module/SubModule.xml 2026-11-03 -->
+The vanilla launcher checks only that the dependency is present, not its version, because it reads no
+metadata row; [Module Dependencies](module-dependencies.md) carries the pairing in full.
 
 The other two numbers pair with nothing: `TAOM_Map`'s only tie to `TAOM` is the versionless metadata
 row at line 19, and `LOTRLOME_Armory` names `TAOM` nowhere. All three pin the engine the same way:
@@ -272,7 +271,7 @@ modules merges in, is decided in six steps:
 1. **The launcher reads its saved list**, `<Documents>\Mount and Blade II Bannerlord\Configs\LauncherData.xml`
    (`UserDataManager.cs:10-12`, `:21-34`, `:42-58`). On this machine it holds 14 `<UserModData>` rows,
    each `Id`, `LastKnownVersion`, `IsSelected`; `LastKnownVersion` is a cache from the last launch, not
-   a source of truth (it reads `v2.0.27.0` for `TAOM` while the manifest says `v2.0.28`). <!-- measured: grep -c "<UserModData>" "<Documents>/Mount and Blade II Bannerlord/Configs/LauncherData.xml" 2026-09-05 -->
+   a source of truth (it read `v2.0.27.0` for `TAOM` while the manifest said `v2.0.28` on that date). <!-- measured: grep -c "<UserModData>" "<Documents>/Mount and Blade II Bannerlord/Configs/LauncherData.xml" 2026-09-05 -->
 2. **Saved order first, then everything else.** `LauncherModsVM.LoadSubModules` adds modules in the
    saved order, then appends any installed module the file does not mention (`LauncherModsVM.cs:138-157`).
 3. **Then a topology sort.** `MBMath.TopologySort` with `ModuleHelper.GetDependentModulesOf` as the
@@ -329,7 +328,7 @@ The four TAOM manifests side by side, with each element explained once. These ar
 the files, not whole files, and none of them is a data entry addressed by an `id=` of its own, so each
 block is marked as an excerpt rather than an example.
 
-**`TAOM`, the identity block and the four hard dependencies** (`Main/_Module/SubModule.xml`, lines 1-14):
+**`TAOM`, the identity block and the five hard dependencies** (`Main/_Module/SubModule.xml`, lines 1-26):
 
 <!-- excerpt file="Main/_Module/SubModule.xml" -->
 ```xml
@@ -338,24 +337,38 @@ block is marked as an excerpt rather than an example.
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
   <Id value="TAOM" />
   <Name value="TAOM" />
-  <Version value="v2.0.28" />
+  <Version value="v2.0.36" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
   <DependedModules>
+    <!-- Issue #371. TAOM does not merely call into TAOM.Dependencies — Main/TAOM.csproj takes a
+         ProjectReference on it and resolves HarmonyLib AND Bannerlord.UIExtenderEx THROUGH that
+         assembly. A missing or stale copy therefore fails at the member level during patch
+         application, the preview patches never attach, and every character renders in bind pose.
+         Until now this hard requirement was declared nowhere, so the launcher had nothing to check
+         and a user could run any TAOM against any Dependencies. <DependedModule> is the
+         engine-honoured element (ModuleInfo.LoadWithFullPath parses it; it does NOT parse
+         DependedModuleMetadatas), so this is what actually blocks a broken pairing.
+         Listed first on purpose: the launcher shows TAOM.Dependencies at the top of TAOM's
+         dependency list, and the version-pinned mirror below keeps the same order. -->
+    <DependedModule Id="TAOM.Dependencies" />
     <DependedModule Id="Native" />
     <DependedModule Id="SandBoxCore" />
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
+  </DependedModules>
 ```
 
 1. `<Id value="TAOM" />` is what every other manifest and every crash bundle refers to. It matches the
    folder name here, but `Sandbox` proves it need not (`SandBox/SubModule.xml:4`).
-2. `<Version value="v2.0.28" />` changes only in a tagged release commit; it is the crash-bundle key.
+2. `<Version value="v2.0.36" />` changes only in a tagged release commit; it is the crash-bundle key.
 3. `<DependedModule Id="Sandbox" />` uses the declared id, lower-case b; `SandBox` would match nothing
    in `GetDependentModulesOf`, which compares ids case-sensitively (`ModuleHelper.cs:256`).
+4. `<DependedModule Id="TAOM.Dependencies" />` comes first on purpose: it is the #371 pairing, and the
+   launcher then lists it at the top of TAOM's dependency list.
 
-**`TAOM`, the two C# entry points** (`Main/_Module/SubModule.xml`, lines 70-93):
+**`TAOM`, the two C# entry points** (`Main/_Module/SubModule.xml`, lines 70-91):
 
 <!-- excerpt file="Main/_Module/SubModule.xml" -->
 ```xml
@@ -364,10 +377,8 @@ block is marked as an excerpt rather than an example.
       <Name value="TAOM" />
       <DLLName value="TAOM.dll" />
       <SubModuleClassType value="TAOM.SubModule" />
-      <Tags>
-        <Tag key="DedicatedServerType" value="none" />
-        <Tag key="IsNoRenderModeElement" value="false" />
-      </Tags>
+      <!-- ADR-013 B9: no client-only tag. Core is server-safe, so a dedicated server loads it and
+           skips TAOM.Client below by that submodule's own tags. -->
     </SubModule>
     <!-- ADR-013: the client-only half of TAOM (Client/TAOM.Client.csproj). Tagged like vanilla's UI
          submodules (Native's ViewSubModule), so a dedicated server never loads it. Its constructor hands
@@ -386,13 +397,14 @@ block is marked as an excerpt rather than an example.
 ```
 
 1. `<DLLName value="TAOM.dll" />` is probed at `bin\Win64_Shipping_Client` and loaded from
-   `bin/<ConfigName>`; `Main/TAOM.csproj:181-192` and `:206-218` mirror the client folder into the
+   `bin/<ConfigName>`; `Main/TAOM.csproj:186-197` and `:211-223` mirror the client folder into the
    editor and server folders. The server mirror excludes `TAOM.Client.*` and deletes stale copies;
-   the editor mirror deletes a stale `TAOM.Client.*` from the editor bin (`:186,189`).
+   the editor mirror deletes a stale `TAOM.Client.*` from the editor bin (`:191,194`).
    `Client/TAOM.Client.csproj:98-131` deploys `TAOM.Client.dll` and its available `.pdb` to the two
    client/editor folders only. Its entry point is `TAOM.Client.ClientSubModule`.
-2. `<Tag key="DedicatedServerType" value="none" />` is the vanilla `SandBox` pair; any other value
-   forces the DLL to count as certified (`SubModuleInfo.cs:87-90`), so shipping server binaries does
+2. The `TAOM` entry carries no `<Tags>` (comment at lines 75-76): core is server-safe, so a dedicated
+   server loads it and skips `TAOM.Client` by that entry's own tags. `<Tag key="DedicatedServerType" value="none" />`
+   on `TAOM.Client` is the vanilla `SandBox` pair; any other value forces the DLL to count as certified (`SubModuleInfo.cs:87-90`), so shipping server binaries does
    not by itself make TAOM server-capable ([bannerlord-engine-and-toolchain](../reference/bannerlord-engine-and-toolchain.md), section 1.2).
 
 **`TAOM.Dependencies`, the header** (`Dependencies/_Module/SubModule.xml`, lines 1-10):
@@ -404,7 +416,7 @@ block is marked as an excerpt rather than an example.
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
 	<Id value="TAOM.Dependencies" />
 	<Name value="TAOM Dependencies" />
-	<Version value="v2.0.6" />
+	<Version value="v2.0.36" />
 	<DefaultModule value="false" />
 	<ModuleCategory value="Singleplayer" />
 	<ModuleType value="Community" />
@@ -413,9 +425,9 @@ block is marked as an excerpt rather than an example.
 
 1. `<DependedModules />` is empty on purpose: adding `Native` here would force the module below
    `Native` in the sort and defeat the static-constructor redirect.
-2. `<Version value="v2.0.6" />` moves only when the Dependencies assembly changes.
+2. `<Version value="v2.0.36" />` moves with every release since v2.0.29 and must change whenever the Dependencies assembly did.
 
-**`TAOM.Dependencies`, its own entry** (`Dependencies/_Module/SubModule.xml`, lines 163-169):
+**`TAOM.Dependencies`, its own entry** (`Dependencies/_Module/SubModule.xml`, lines 165-171):
 
 <!-- excerpt file="Dependencies/_Module/SubModule.xml" -->
 ```xml
@@ -430,8 +442,8 @@ block is marked as an excerpt rather than an example.
 
 1. Seven `<SubModule>` blocks in this one manifest boot other projects' classes out of this module's
    `bin/`: UIExtenderEx, TAOM.Dependencies itself, ButterLib twice, MCMv5 twice, and the MBOptionScreen
-   loader (`SubModuleClassType` rows at lines 153, 166, 175, 193, 205, 215 and 229).
-2. The loader entry at lines 226-235 carries `<Tag key="LoaderFilter">` and two
+   loader (`SubModuleClassType` rows at lines 153, 168, 177, 195, 207, 217 and 231).
+2. The loader entry at lines 228-239 carries `<Tag key="LoaderFilter">` and two
    `<Tag key="LoaderSubModuleOrder">` rows. Neither key is in the engine's `SubModuleTags` enum
    (`SubModuleInfo.cs:12-21`), so `Enum.TryParse` drops both silently and only the BUTR loader class
    reads them back out of the file.
@@ -443,7 +455,7 @@ block is marked as an excerpt rather than an example.
 <Module>
 	<Name value="TAOM_Map"/>
 	<Id value="TAOM_Map"/>
-	<Version value="v2.0.23" />
+	<Version value="v2.0.36" />
 	<DefaultModule value="false" />
 	<ModuleCategory value="Singleplayer"/>
 	<ModuleType value="Community" />
@@ -476,7 +488,7 @@ block is marked as an excerpt rather than an example.
 ```xml
 	<Name value="LOTRLOME_Armory"/>
 	<Id value="LOTRLOME_Armory"/>
-	<Version value="v2.0.23" />
+	<Version value="v2.0.36" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
@@ -535,25 +547,25 @@ block is marked as an excerpt rather than an example.
 
 ## Numbers in this chapter
 
-All measured 2026-09-05 on this machine; the game install is referred to as `<game>`.
+All measured 2026-09-05 on this machine, except the repo manifest and ModuleData counts re-measured 2026-11-03; the game install is referred to as `<game>`.
 
 - 19 module folders, 15 with a root `SubModule.xml`, 4 without: `ls -d "<game>/Modules"/*/ | wc -l` and a `test -f "$d/SubModule.xml"` loop.
-- Manifest element counts (Main / Dependencies / Map / Armory): `<XmlNode>` 100 / 0 / 8 / 33; `<DependedModule>` 4 / 0 / 4 / 4; `<ModulesToLoadAfterThis>` rows 3 / 35 / 0 / 0; `<DependedModuleMetadata>` 7 / 5 / 5 / 4; `<SubModule>` 1 / 7 / 0 / 0: Python `xml.etree.ElementTree` `findall` over each file.
+- Manifest element counts (Main / Dependencies / Map / Armory): `<XmlNode>` 143 / 0 / 8 / 33; `<DependedModule>` 5 / 0 / 4 / 4; `<ModulesToLoadAfterThis>` rows 3 / 35 / 0 / 0; `<DependedModuleMetadata>` 8 / 5 / 5 / 4; `<SubModule>` 2 / 7 / 0 / 0: Python `xml.etree.ElementTree` `findall` over each file.
 - Registered ids per manifest (the "Who owns what data" table and the vanilla counts): `grep -o 'XmlName id="[^"]*"' <file> | sort | uniq -c`.
 - `project.mbproj` rows: `TAOM` 5 `<file>` (4 voice definitions, 1 module sound), `LOTRLOME_Armory` 11 `<file>`, `TAOM_Map` 0 `<file>` and 9 `<Module>`, `Native` 50 `<file>`, `SandBox` 0 `<file>`; `SandBoxCore`, `CustomBattle` and `TAOM.Dependencies` have no `project.mbproj` at all: `grep -c '<file '` and `grep -c '<Module '` over each, and `test -f`.
 - 39 distinct `soln_*` ids in `Native/ModuleData/project.mbproj` (`grep -o 'id="[^"]*"' <file> | sort -u | wc -l`), which the audit no longer uses as its vocabulary (#987): it checks rows against the 13 ids of `REQUESTED_IDS` in `audit_mbproj_registration.py`, and a row of one of the thirteen `NATIVE_BY_TYPE` types loads whatever its id (several of Native's own 39 ids, such as `soln_monsters`, are asked for by nothing); the audit reports 0 errors and 5 warnings (2026-10-24): `python tools/audit_mbproj_registration.py`.
 - `TAOM_Map` stub data files 197 to 245 bytes: `wc -c` on the seven files its manifest names. Its two unregistered music files are 7,390 and 3,346 bytes, and `grep -c settlement_track` returns 0 for both its manifest and its `project.mbproj`.
 - Settlements: repo shadow 863 elements in 1,023,041 bytes, live 988 in 1,153,217 bytes: Python `re.findall(rb'<Settlement\s', data)` and `len(data)`; 0 `id="Settlements"` rows in `Main/_Module/SubModule.xml`: `grep -c`.
-- `ModuleData` file counts: repo 367, deployed 371 (`find -type f | wc -l`); XML / XSLT: `Main` 284 / 8, `LOTRLOME_Armory` 425 / 8, `TAOM_Map` 44 / 1 (`find -name "*.xml" | wc -l`, `-name "*.xslt"`).
-- Repo module folders: `Main/_Module/bin` 7 files, `Dependencies/_Module/bin` 42, 4 stub manifests under `Stubs/`, and no `TAOM_Map` or `LOTRLOME_Armory` module directory anywhere under the repo root: `find <path> -type f | wc -l`, `find Stubs -name SubModule.xml | wc -l`, `find . -type d -name <name>`.
+- `ModuleData` file counts: repo 367 (567 on 2026-11-03), deployed 371 (`find -type f | wc -l`); XML / XSLT: `Main` 451 / 11 (2026-11-03), `LOTRLOME_Armory` 425 / 8, `TAOM_Map` 44 / 1 (`find -name "*.xml" | wc -l`, `-name "*.xslt"`).
+- Repo module folders: `Main/_Module/bin` 7 files, `Dependencies/_Module/bin` 44, 4 stub manifests under `Stubs/`, and no `TAOM_Map` or `LOTRLOME_Armory` module directory anywhere under the repo root: `find <path> -type f | wc -l`, `find Stubs -name SubModule.xml | wc -l`, `find . -type d -name <name>`.
 - Modules owning a `SceneObj/Main_map`: 3 (`NavalDLC`, `SandBox`, `TAOM_Map`): a `test -d "$d/SceneObj/Main_map"` loop over `<game>/Modules`.
 - Deployed `bin/` folders (2026-10-28): `TAOM` Client 7, wEditor 7, Server 5; `TAOM.Dependencies` Client 50, wEditor 50, Server 50 (plus a stale Gaming.Desktop folder, 4 and 3 files, on installs built before 2026-10-22): `ls <folder> | wc -l`.
 - Sizes: `TAOM` 6,147 MB (RuntimeDataCache 5,141); `TAOM.Dependencies` 46 MB (bin 42); `TAOM_Map` 56,404 MB (RuntimeDataCache 21,205, AssetSources 15,286, AssetPackages 12,859, Assets 3,929, SceneEditData 2,219, SceneObj 735, ModuleData 14); `LOTRLOME_Armory` 35,595 MB (AssetSources 18,415, RuntimeDataCache 12,978, Assets 4,148, ModuleData 22): `du -sm "<game>/Modules/<Id>"` and `du -sm "<game>/Modules/<Id>"/*`.
 - Release dry run: ships 23.94 GB of 95.84 GB, drops 71.91 GB (RUNTIME_DATA_CACHE 38.38, ASSET_SOURCES 33.44, PREFABS_UNUSED 0.05, NATIVE_DEBUG 0.03), per module `TAOM` 0.41 GB / 2,277 files, `TAOM_Map` 19.39 / 2,519, `LOTRLOME_Armory` 4.10 / 4,990, `TAOM.Dependencies` 0.04 / 142, candidates RACE_TEST 0.96 GB and EM_ASSET_PACKAGES 0.0 GB: `python tools/package_release.py --source "<game>/Modules" --dest <scratch> --dry-run`.
 - Backup sweep dry run: 40 files, 441.9 MB (repo `Main/_Module` 9, deployed `TAOM` 9, `LOTRLOME_Armory` 13, `TAOM_Map` scene backups 9 at 437.3 MB), 0 orphans: `pwsh tools/sweep_module_backups.ps1`.
 - `LauncherData.xml`: 14 `<UserModData>` rows, 0 `<Id>` rows naming a stub, 4 `<DLLName>` rows naming a stub DLL: `grep -c "<UserModData>"`, `grep -c "<Id>Bannerlord\.\(Harmony\|ButterLib\|UIExtenderEx\|MBOptionScreen\)<"`, `grep -n "Bannerlord\.\(Harmony\|ButterLib\|UIExtenderEx\|MBOptionScreen\)"`.
-- `TAOM.Dependencies` mentions in `Main/_Module/SubModule.xml`: 1, on line 15, inside a comment: `grep -n "TAOM.Dependencies" Main/_Module/SubModule.xml`.
-- Seven `<SubModule>` blocks in `Dependencies/_Module/SubModule.xml`, at `<SubModuleClassType>` lines 153, 166, 175, 193, 205, 215, 229: `grep -n "<SubModuleClassType" Dependencies/_Module/SubModule.xml`.
+- `TAOM.Dependencies` mentions in `Main/_Module/SubModule.xml` (2026-11-03): comments at lines 11 and 19, the `<DependedModule>` at line 21 and the metadata row at line 31: `grep -n "TAOM.Dependencies" Main/_Module/SubModule.xml`.
+- Seven `<SubModule>` blocks in `Dependencies/_Module/SubModule.xml`, at `<SubModuleClassType>` lines 153, 168, 177, 195, 207, 217, 231: `grep -n "<SubModuleClassType" Dependencies/_Module/SubModule.xml`.
 - `GetSortedModules` call sites: 3 hits, the definition plus two multiplayer callers; `Metadata` in `TaleWorlds.MountAndBlade.Launcher.Library`: 0 hits: `grep -rn` over the v1.4.8 category decompile.
 - Engine version `v1.5.6`: `cat "<game>/bin/Win64_Shipping_Client/Version.xml"` and `cat .claude/pinned-game-version.txt`.
 - `THIRD-PARTY-LICENSES.txt` present in `Main/_Module/` and `Dependencies/_Module/`, absent from both live modules: `ls` of the four module roots.

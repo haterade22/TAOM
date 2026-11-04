@@ -71,7 +71,7 @@ None. Hardcoded always-skip; no JSON/XML config and no MCM toggle.
 | File | Purpose |
 |------|---------|
 | `Main/Features/SkipCampaignIntro/Hooks/Patch58_SkipCampaignIntro.cs` | The `[HarmonyPatchCategory("Patch58_SkipCampaignIntro")]` Prefix + cached reflection bindings + `Initialize(IModLogger)`. |
-| `Main/SubModule.cs` | Registration: `Patch58_SkipCampaignIntro.Initialize(...)` + `_harmony.PatchCategory("Patch58_SkipCampaignIntro")` in `OnSubModuleLoad`. |
+| `Main/SubModule.cs` | Registration: `Patch58_SkipCampaignIntro.Initialize(...)` + `TryPatchCategory("Patch58_SkipCampaignIntro")` in `OnSubModuleLoad`. |
 
 ## Dependencies
 

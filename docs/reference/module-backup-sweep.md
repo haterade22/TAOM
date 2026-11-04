@@ -97,8 +97,8 @@ the manifest with 0 mismatches, `validate_moduledata.py` PASS, `check_prefab_bud
 
 ### What this run moved that other docs point at
 
-Several docs and tools name a specific sidecar as their rollback route. Those routes still work, but
-the file is now one directory tree away. Restore from the quarantine, same relative path.
+Several docs and tools name a specific sidecar as their rollback route. Those routes pointed at sidecars
+the run moved one directory tree away. As of 2026-11-03 `module_bak_sweep_2026-09-01` holds only `MANIFEST.csv` and three sole-copy files (the spider `.tpac.backup`, a chariot FBX `.bak-standalone-superseded`, and the retired `action_types_lotr_misc.xml.bak-superseded-20260828`), so the other sidecars in the table are no longer there; the manifest keeps each SHA256. A later sweep, `module_bak_sweep_2026-11-03`, has its own `MANIFEST.csv` (80 rows).
 
 | Route | Suffix | Moved |
 |---|---|---|
@@ -118,7 +118,7 @@ beside the live `TAOM_Map` file was already gone before this run, so that checkl
 for an unrelated reason and the sweep did not cause it.
 
 A `--revert` flag on those tools will not find its backup beside the live file any more. Copy it
-back from the quarantine first, then revert.
+back from the quarantine first (where it still exists, see above), then revert.
 
 ### The one that is not recoverable from anywhere else
 
@@ -138,8 +138,8 @@ distance cache, sweep afterwards, not before.
 
 ## The 2026-09-14 run
 
-**182 files, 455.0 MB**, four roots, thirteen days after the first run. Manifest at
-`E:\Bannerlord_Backups\module_bak_sweep_2026-09-14\MANIFEST.csv`.
+**182 files, 455.0 MB**, four roots, thirteen days after the first run. Manifest was at
+`E:\Bannerlord_Backups\module_bak_sweep_2026-09-14\MANIFEST.csv`; that folder does not exist on 2026-11-03.
 
 | Root | Category | Files | Size |
 |---|---|---|---|

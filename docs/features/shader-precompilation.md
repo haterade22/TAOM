@@ -208,12 +208,13 @@ The original values (`MaxTroopsPerSide=2000`, `SoldierCopies=4`, `StuckAbortSeco
 
 ## Tests
 
-The pure core is unit-tested (the runner / game manager / guard / patch are engine boundaries, ADR-008, game-only). 56 tests across four files in `TAOM.Tests/Features/ShaderPrecompilation/`:
+The pure core is unit-tested (the runner / game manager / guard / patch are engine boundaries, ADR-008, game-only). 56 tests across four files, plus a three-test wiring file (below), in `TAOM.Tests/Features/ShaderPrecompilation/`:
 
 - `ShaderPrecompileDeciderTests` (17): the observation state machine: first-frame-zero (RCA regression), render-grace vs load-grace (the 2026-06-17 premature-advance fix), settle, idle-dip, no-progress-stuck, absolute timeout, churn cap + reason, work-observed-during-loading, per-item cap overrides.
 - `ShaderPrecompilePlannerTests.cs` (22, two classes), `ShaderPrecompilePlannerTests` (17): character batches (single batch, exact multiple, partial last batch, partition without duplicates in roster order, sequential index and count, scenes after all batches with no ids, empty or null roster gives scenes only, blank and duplicate ids dropped, batch size below one throws, `CountBatches`), the bootstrap plan shape, `SliceBatch` matching `BuildPlan` and returning empty past the end, scene order and scene dedupe. `PrecompileSceneProviderParseTests` (5): `ParseSceneList` comments/blanks/trim and the fallback-drift invariant (`DefaultScenes_ExcludesDisabledCrashScenes` pins the 9 disabled crashers absent + `DefaultScenes_IncludesActiveSiegeScene` pins a representative active scene present).
 - `ShaderPrecompileCrashGuardTests` (10): inflight-marker format/parse round-trip, crashed-scene list parse and de-dupe, and the crash-skip lifecycle (mark then consume without clear records and skips; mark then clear then consume records nothing; a skip persists across walks).
 - `ShaderPrecompilationServiceTests` (7): character ids from all included cultures, bandit inclusion, adapter exception → empty result + logged error (both queries), deduplication, null/empty id exclusion, mixed bandit + non-bandit cultures.
+- `ShaderPrecompilationWiringTests` (3): the core registers `NullShaderPrecompileGameManagerFactory` (null in core, `TaomShaderGameManager` lives in TAOM.Client), the runner validates against the feature's registrations, and the runner builds its manager only through the factory and counts a null manager as an aborted item.
 
 `TAOM.Tests/Migration/ReflectionSiteBindingTests.cs` pins `Mission._initialPlayerAgent` against the installed engine; `SettingsFingerprintTests` pins the settable-property count the rename must not move; `SettingRequireRestartPostureTests` requires `RequireRestart = false` on both attributes once they are uncommented (while parked it cannot see them).
 

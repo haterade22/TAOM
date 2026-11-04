@@ -31,11 +31,12 @@ TAOM's files, and most of them point at TAOM by default. Read this once before y
 as proof that `<YourModule>` is sound.
 
 - `python tools/validate_moduledata.py` defaults to `--moduledata Main/_Module/ModuleData`, TAOM's
-  own folder (`tools/validate_moduledata.py:50`, `95`). Point it at yours and it does collect your
+  own folder (`tools/validate_moduledata.py:42`, `718`). Point it at yours and it does collect your
   items, troops and party templates and check references between them. Three things stay bound to
   TAOM's own names even then. Cultures are read from one filename, `taom_spcultures.xml`
-  (`tools/taom_schema.py:1719`), and body properties from `TAOM_bodyproperties.xml` (`:1728`). The
-  other modules it sweeps for definitions are a fixed list that does not include yours (`:1704-1711`).
+  (`tools/taom_schema.py:2955`), and body properties from `TAOM_bodyproperties.xml` (`:2964`). The
+  other modules it sweeps for definitions are a fixed list that does not include yours (`:2942-2948`,
+  and `_EXTRA_REF_MODULES` at `tools/validate_moduledata.py:74`).
   And the three schemas that drive duplicate-id and enum checking match TAOM's path shapes,
   `equipmentsets/*.xml`, `troops/troops_*.xml`, `characters/*.xml` and `taom_spcultures.xml`
   (`tools/schemas/`), so a file laid out differently is swept for references but never
@@ -43,7 +44,7 @@ as proof that `<YourModule>` is sound.
 - **`python tools/validate_xml_schemas.py --module <your module>` parses every registered file.** A file no manifest
   names gets no check: run the parser one-liner on it: `python -c "import xml.etree.ElementTree as ET,pathlib;[ET.parse(f) for f in pathlib.Path('<game>/Modules/<YourId>/ModuleData').rglob('*.xml')]"`
 - `python tools/check_external_xslt.py` checks the repo copy plus a hardcoded `TAOM_Map` and
-  `LOTRLOME_Armory` (`tools/check_external_xslt.py:47`). `--moduledata` swaps the repo copy for
+  `LOTRLOME_Armory` (`tools/check_external_xslt.py:46`). `--moduledata` swaps the repo copy for
   yours; there is no flag that adds a third live module.
 - `python tools/validate_mesh_refs.py` defaults to the Armory's item tree and its asset packs, and
   takes `--items` and `--tpac-modules` to look at yours instead.
@@ -51,7 +52,7 @@ as proof that `<YourModule>` is sound.
   id directly and needs nothing else (a module that is not installed, or has no `project.mbproj`,
   exits 2).
 - `python tools/audit_scene_names.py` takes no arguments at all and reads four hardcoded settlement
-  files (`tools/audit_scene_names.py:25-31`). Stage 16 says what that leaves uncovered.
+  files (`tools/audit_scene_names.py:25-30`). Stage 16 says what that leaves uncovered.
 
 Nothing in this repo validates a new module end to end. Where a stage's check cannot reach your
 files, the stage says so rather than implying it passed.
@@ -497,7 +498,7 @@ Chapters: [settlements](settlements.md), [module-map](module-map.md),
 **Check:** there is no gate for the crash this stage warns about, and running one that looks like
 it covers it is worse than running none. `python tools/audit_scene_names.py` takes no arguments,
 reads four hardcoded settlement files and compares their interior `scene_name` values against
-`SceneObj` folders (`tools/audit_scene_names.py:25-31`, `84-100`). It never opens your settlement
+`SceneObj` folders (`tools/audit_scene_names.py:25-30`, `84-102`). It never opens your settlement
 file and it never looks at `Main_map` entities, so it can print a clean report immediately before
 the map-load crash. What actually proves this stage: extract the `id` of every `<Settlement>` in
 your file and confirm each one appears as an entity name in your `Main_map/scene.xscene`, then run
@@ -659,7 +660,7 @@ Measured 2026-09-05 against the installed v1.4.8 game and this repo. `$MODULES` 
 | `<XmlName>` rows: Native 24, SandBoxCore 8, SandBox 31, CustomBattle 2, TAOM 100, TAOM_Map 8, LOTRLOME_Armory 33 | `grep -c '<XmlName ' "$MODULES/<mod>/SubModule.xml"` |
 | TAOM's 100 rows cover 12 distinct ids | `grep -o '<XmlName id="[^"]*"' Main/_Module/SubModule.xml \| sort -u \| wc -l` |
 | 8 XSLT-only registrations, each a `.xslt` with no `.xml` or `.xsl` sibling | `ls Main/_Module/ModuleData/{spkingdoms,spcultures,spclans,lords,heroes,module_strings,action_strings,comment_strings}.*` |
-| 17 stylesheets across the three live modules, all clean | `python tools/check_external_xslt.py` |
+| 20 stylesheets across the three modules, all clean (2026-11-03) | `python tools/check_external_xslt.py` |
 | 13 requested `soln_*` ids (`REQUESTED_IDS`, 2026-10-24) | `python tools/audit_mbproj_registration.py` |
 | Armory `<XmlName id="Monsters">` rows 8, `soln_monsters` rows 4 | `grep -c 'XmlName id="Monsters"' "$MODULES/LOTRLOME_Armory/SubModule.xml"`; `grep -c 'id="soln_monsters"' "$MODULES/LOTRLOME_Armory/ModuleData/project.mbproj"` |
 | 10 child element names filtered out of the `empire` passthrough in `spcultures.xslt` | `sed -n '317p' Main/_Module/ModuleData/spcultures.xslt \| grep -o 'self::[a-z_]*' \| wc -l` |

@@ -5,7 +5,7 @@
 The nine Ringwraiths — the Witch-King of Angmar, Khamûl the Easterling, and the seven other Nazgûl —
 never have a spouse, parents, or children. They are undead servants of Sauron, bound to the Nine Rings;
 a wife and heirs make no sense for them. This is enforced in two layers: a **data strip** in
-`characters/heroes.xslt` removes the vanilla family seed so a new campaign starts them family-free,
+`heroes.xslt` removes the vanilla family seed so a new campaign starts them family-free,
 and a `MarriageModel` override blocks any future runtime marriage (no spouse ⇒ no children). A
 clear-on-load behaviour severs the family on saves created before the data strip.
 
@@ -33,7 +33,7 @@ anyway (the "parent" is only an appearance/culture template).
 ## Architecture
 
 ```
-characters/heroes.xslt   ← DATA STRIP: removes spouse/father/mother from the 9 wraith Hero records
+heroes.xslt              ← DATA STRIP: removes spouse/father/mother from the 9 wraith Hero records
 SubModule (registers model + behavior)
    ├── TaomMarriageModel : DefaultMarriageModel   ← blocks FUTURE marriage (no spouse ⇒ no children)
    │      └── INazgulRegistry                      ← "is this StringId a wraith?"
@@ -61,7 +61,7 @@ SubModule (registers model + behavior)
   overridden — wraiths share the Mordor clan with non-wraith lords, so the per-hero/per-couple gates
   are the correct granularity.
 
-- **`characters/heroes.xslt`** is the primary mechanism. Each of the nine wraith Hero templates already
+- **`heroes.xslt`** is the primary mechanism. Each of the nine wraith Hero templates already
   rebuilds the Hero stripping `text` (and `faction` for the dolguldur cluster); the feature adds
   `spouse`/`father`/`mother` to that exclusion, matching the convention the other ~150 lord templates
   in the file already follow. After the strip, a new campaign seeds the wraiths with no family at all.
@@ -86,7 +86,7 @@ None. The wraith roster is a **fixed lore set**, not a tuning knob, so it is a c
 "the undead have no family" is a lore-correctness fix, always on.
 
 The nine wraith lord StringIds (verified against the canonical Hero definitions in
-`characters/heroes.xslt` + their display names). Note Khamûl (`lord_1_48`) carries a different
+`heroes.xslt` + their display names). Note Khamûl (`lord_1_48`) carries a different
 `skill_template` than the other eight (he is statted as an orc-warrior in `taom_lord_skill_sets.xml`),
 so a skill_template-only scope would miss him — he is canonically the second of the Nine regardless:
 

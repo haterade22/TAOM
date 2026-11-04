@@ -2,7 +2,7 @@
 
 ## Overview
 
-A recruiter (player or AI lord) cannot recruit volunteer troops from a settlement controlled by an enemy-aligned kingdom. A Free-aligned lord (Gondor, Rohan, the Elves, Dwarves, Dale) is barred from recruiting in an Evil-controlled settlement (Mordor, Isengard, Dol Guldur, Gundabad, Dunland, Rhûn, the orc/goblin factions), and — by default — the reverse. Neutral factions (Umbar, Shaghana, Abanissa, Khand) recruit and are recruited from freely.
+A recruiter (player or AI lord) cannot recruit volunteer troops from a settlement controlled by an enemy-aligned kingdom. A Free-aligned lord (Gondor, Rohan, the Elves, Dwarves, Dale) is barred from recruiting in an Evil-controlled settlement (Mordor, Isengard, Dol Guldur, Gundabad, Dunland, Rhûn, the orc/goblin factions), and, by default, the reverse. Neutral factions (Umbar, Shaghana, Abanissa, Khand, Cardolan, Rhudaur, Anduin Vale, Angáladh, Dorwinion, South Rhovanion) recruit and are recruited from freely.
 
 ## Why This Exists
 
@@ -60,7 +60,7 @@ Note: the service deliberately does **not** call `IAlignmentService.AreEnemyAlig
 | | `applyToPlayer` | `true` | When false, the player recruits unrestricted (AI lords are still gated if `applyToAi`). |
 | MCM "World/Recruitment Alignment" | Enable Recruitment Alignment Block / Only Good Rejects Evil / Apply To Player / Apply To AI Lords | as above | MCM overrides JSON at runtime (`Reuse.Singleton` — JSON edits need a process restart; MCM is live). The player and AI toggles are independent; the master toggle off disables the feature for everyone. |
 
-Alignment data itself lives in `execution/alignment.json` (shared with Execution + Diplomacy): 32 keys (kingdom ids, culture ids and minor clan ids; see [configs-balance.md](../modding/configs-balance.md)), no changes needed for this feature.
+Alignment data itself lives in `execution/alignment.json` (shared with Execution + Diplomacy): 36 keys (kingdom ids, culture ids and minor clan ids; see [configs-balance.md](../modding/configs-balance.md)), no changes needed for this feature.
 
 ## Key Files
 
@@ -87,7 +87,7 @@ Alignment data itself lives in `execution/alignment.json` (shared with Execution
 ## Tests
 
 `TAOM.Tests/Features/AlignmentRecruitment/`:
-- `RecruitmentAlignmentServiceTests` — one case per (recruiterSide × sourceSide) cell under both modes, plus master-toggle, the player-vs-AI × applyToAi branches, and null-id-resolves-Neutral. (20 cases)
+- `RecruitmentAlignmentServiceTests`: one case per (recruiterSide × sourceSide) cell under both modes, plus master-toggle, the player-vs-AI × applyToAi branches, and null-id-resolves-Neutral. (26 cases)
 - `RecruitmentAlignmentConfigProviderTests` — valid/case-insensitive/unknown `mode`, missing file, malformed JSON, empty object, caching. (8 cases)
 - `AiVolunteerEstimateBindingTests` (BindingVerification, three tests): the target resolves with `(Hero, Settlement)` and a `(int, float)` return; the category applies exactly one postfix on a scratch Harmony instance and the JIT accepts it; the IL of the private `AiHourlyTick` still calls the estimate, so the postfix is not inert.
 - `AlignmentRecruitmentWiringTests`: the module is listed once, named, not parked, owns no save data, declares its one ProcessLoad category, the hook carries that category and a postfix, no behavior or model, and `InitializeStatics` runs on a container.

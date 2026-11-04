@@ -621,6 +621,7 @@ Per-commit runs of the no-growth ratchet passed on the branch, because their bas
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/data-content-cultures.md](./data-content-cultures.md)
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)
+- [docs/reviews/rca-quality-gates-2026-10-26.md](../rca-quality-gates-2026-10-26.md)
 - [docs/reviews/rca-shader-precompile-repark-2026-09-25.md](../rca-shader-precompile-repark-2026-09-25.md)
 
 <!-- backlinks-end -->
@@ -4818,3 +4819,14 @@ with the clean-unload line present, so it would have failed every run.
   code), and scan for an ERROR CrashReport block past the done time.
 - **Source:** `docs/reviews/REVIEW-LOG.md` entry "Fords of War night batch and whole feature" (A-F1); fixed in
   `8d883051e`.
+
+### A fast path goes in front of the path it replaces, never beside it (taom-src short names, 2026-11-03)
+
+- **Why missed:** `path <short name>` resolved through a new index and then set the DLL as final. Every answer the old
+  probe chain gave had to be rebuilt by hand: global types, a moved type, a removed module, a stale first row. Four were
+  lost, and one was a regression for a type that used to resolve. The tests compared only the file name, so they could
+  not see which DLL was read.
+- **Prevent:** a cache or an index supplies the first guess, and a miss or a dead row continues into the slow path that
+  already answers the question. Test the failure paths (a dead row, a wrong row, a cut index), and assert on what was
+  read, not only on what came back.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md`, "Second review", findings A to D and G.

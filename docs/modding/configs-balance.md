@@ -13,8 +13,8 @@ All fifteen live under [`Main/_Module/ModuleData/`](../../Main/_Module/ModuleDat
 | File | Provider | Registered | MCM group |
 |---|---|---|---|
 | [`TroopWeights/troop_weights.xml`](../../Main/_Module/ModuleData/TroopWeights/troop_weights.xml) | `TroopWeightXmlLoader` | `TroopWeightIoC.cs:11` | Troop Weight (toggle only) |
-| [`special_resources/special_resources_config.xml`](../../Main/_Module/ModuleData/special_resources/special_resources_config.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:10` | none |
-| [`special_resources/troop_resource_costs.xml`](../../Main/_Module/ModuleData/special_resources/troop_resource_costs.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:10` | none |
+| [`special_resources/special_resources_config.xml`](../../Main/_Module/ModuleData/special_resources/special_resources_config.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:11` | none |
+| [`special_resources/troop_resource_costs.xml`](../../Main/_Module/ModuleData/special_resources/troop_resource_costs.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:11` | none |
 | [`startup_resources/startup_resources_config.xml`](../../Main/_Module/ModuleData/startup_resources/startup_resources_config.xml) | `StartupResourcesConfigProvider` | `StartupResourcesIoC.cs:13` | none |
 | [`configs/battle_balance_config.json`](../../Main/_Module/ModuleData/configs/battle_balance_config.json) | `BattleBalanceConfigProvider` | `BattleBalanceIoC.cs:9` | Battle Balance/Troop Power, Battle Balance/Casualty Ratios |
 | [`settlement_food/settlement_food_config.json`](../../Main/_Module/ModuleData/settlement_food/settlement_food_config.json) | `SettlementFoodConfigProvider` | `SettlementFoodIoC.cs:9` | Settlement Food (toggle only) |
@@ -25,14 +25,14 @@ All fifteen live under [`Main/_Module/ModuleData/`](../../Main/_Module/ModuleDat
 | [`configs/initial_child_generation.json`](../../Main/_Module/ModuleData/configs/initial_child_generation.json) | `InitialChildGenerationConfigProvider` | `InitialChildGenerationIoC.cs:12` | none |
 | [`field_commission/field_commission_config.json`](../../Main/_Module/ModuleData/field_commission/field_commission_config.json) | `FieldCommissionConfigProvider` | `FieldCommissionIoC.cs:37` | Battlefield Promotions |
 | [`recruitment_alignment/recruitment_alignment_config.json`](../../Main/_Module/ModuleData/recruitment_alignment/recruitment_alignment_config.json) | `RecruitmentAlignmentConfigProvider` | `RecruitmentAlignmentIoC.cs:9` | World/Recruitment Alignment |
-| [`enlistment/enlistment_duties.json`](../../Main/_Module/ModuleData/enlistment/enlistment_duties.json) | `EnlistmentContentConfigProvider` | `EnlistmentIoC.cs:70` | Enlistment (feature toggles only) |
+| [`enlistment/enlistment_duties.json`](../../Main/_Module/ModuleData/enlistment/enlistment_duties.json) | `EnlistmentContentConfigProvider` | `EnlistmentIoC.cs:78` | Enlistment (feature toggles only) |
 | [`career_system/taom_career_choices.xml`](../../Main/_Module/ModuleData/career_system/taom_career_choices.xml) | `CareerConfigProvider` | `CareerSystemIoC.cs:19` | none |
 
 **Reload scope is the same for every one of them: quit Bannerlord and relaunch.** All fourteen providers are registered `Reuse.Singleton`, so the file is read once per process and the parsed object is held until the process exits. <!-- measured: rg -n on the fourteen IoC.cs registrations listed above 2026-09-05 --> Starting a new campaign, loading a save or returning to the main menu will not re-read anything. The rule is stated for every provider in [csharp-architecture](../../.claude/rules/csharp-architecture.md) under "Doc requirement".
 
-**MCM beats JSON, and it beats it on installs you will never see.** Where a value is exposed both in a config file and in the in-game Mod Configuration Menu, the MCM value wins. MCM has no "unset" state: once it is loaded every property reads back a value, so the slider wins even when the player has never touched it ([field-commission](../features/field-commission.md), "Precedence, and its one sharp edge"). Worse for a pack author, `TaomSettings` persists with `FormatType => "json2"` (`TaomSettings.cs:16`), so anyone who has already launched TAOM has the old value written to their disk and will never see a changed default ([shader-precompilation](../features/shader-precompilation.md)). If a number must hold for everybody, put it in a field that has no MCM knob.
+**MCM beats JSON, and it beats it on installs you will never see.** Where a value is exposed both in a config file and in the in-game Mod Configuration Menu, the MCM value wins. MCM has no "unset" state: once it is loaded every property reads back a value, so the slider wins even when the player has never touched it ([field-commission](../features/field-commission.md), "Precedence, and its one sharp edge"). Worse for a pack author, `TaomSettings` persists with `FormatType => "json2"` (`TaomSettings.cs:22`), so anyone who has already launched TAOM has the old value written to their disk and will never see a changed default ([shader-precompilation](../features/shader-precompilation.md)). If a number must hold for everybody, put it in a field that has no MCM knob.
 
-**219 value knobs across 56 MCM groups** (440 `[SettingProperty` lines once the 220 group labels and the one button are counted) live in [`Main/Features/TaomSettings.cs`](../../Main/Features/TaomSettings.cs). <!-- measured: rg -o "\[SettingProperty" Main/Features/TaomSettings.cs | wc -l ; rg -o 'SettingPropertyGroup\("[^"]*"' Main/Features/TaomSettings.cs | sort -u | wc -l ; grep -cE "^\s*\[SettingProperty(Bool|Integer|FloatingInteger|Dropdown|Text)\b" Main/Features/TaomSettings.cs 2026-09-11 --> There is no catalogue doc for them, and some of the biggest balance levers exist only there. AI party size is the clearest case: seven knobs under "AI Party Size" (`TaomSettings.cs:40-80`) and no JSON file at all, all five numeric ones shipping at the vanilla value (`AiPartySizeService.cs:67-86`: lord factor 1.0, flat bonus 0, garrison factor 1.0, food relief 0, wage relief 0). If you want to know whether a lever is MCM-only, the file above is the only place to look.
+**470 value knobs across 104 MCM groups** (948 `[SettingProperty` lines: 472 group labels, 2 buttons and 4 lines in a commented-out block) live in [`Main/Features/TaomSettings.cs`](../../Main/Features/TaomSettings.cs). <!-- measured: rg -o "\[SettingProperty" Main/Features/TaomSettings.cs | wc -l ; rg -o 'SettingPropertyGroup\("[^"]*"' Main/Features/TaomSettings.cs | sort -u | wc -l ; grep -cE "^\s*\[SettingProperty(Bool|Integer|FloatingInteger|Dropdown|Text)\b" Main/Features/TaomSettings.cs 2026-11-03; the group count uses only uncommented [SettingPropertyGroup lines --> There is no catalogue doc for them, and some of the biggest balance levers exist only there. AI party size is the clearest case: seven knobs under "AI Party Size" (`TaomSettings.cs:57-106`) and no JSON file at all, all five numeric ones shipping at the vanilla value (`AiPartySizeService.cs:70-91`: lord factor 1.0, flat bonus 0, garrison factor 1.0, food relief 0, wage relief 0). If you want to know whether a lever is MCM-only, the file above is the only place to look.
 
 ## Attributes
 
@@ -47,7 +47,7 @@ All fifteen live under [`Main/_Module/ModuleData/`](../../Main/_Module/ModuleDat
 
 A troop with no row weighs **1.0** (`TroopWeightService.cs:43-45`, and the header comment on line 3 of the file says the same). `weight` must be finite and greater than zero: `NaN`, `Infinity`, zero and negatives are all skipped with a warning rather than clamped, because a poisoned weight casts to `int.MinValue` downstream (`TroopWeightXmlLoader.cs:83-89`). A duplicate id keeps the last value and warns (`TroopWeightXmlLoader.cs:92-93`).
 
-Weight is not a party-size cost by itself. The penalty is `weighted count minus raw count`, clamped so the limit never falls below 1, and it is skipped entirely when the base limit is under 2 (`TroopWeightService.cs:172-186`).
+Weight is not a party-size cost by itself. The penalty is `weighted count minus raw count`, clamped so the limit never falls below 1, and it is skipped entirely when the base limit is under 2 (`TroopWeightService.cs:204-219`).
 
 ### troop_resource_costs.xml
 
@@ -89,7 +89,7 @@ A culture with no row gets nothing. There is no fallback culture.
 | `CasualtyRatios.EnableCulturalSurvivalBonuses` | bool | no | `true` | Second gate on the culture bonuses below | `Hooks/SurvivalChanceLine.cs` (`Apply`) |
 | `CasualtyRatios.CulturalSurvivalBonuses.<cultureId>` | float | no | 0 | `newDeathChance = vanillaDeathChance * (1 - bonus)`. Legal `[-1, 1]`, else reverts to 0 with a warning | `BattleBalanceConfigProvider.cs:82-85` |
 
-**Read the tier block twice before you edit it.** `T7` to `T10` are never read while MCM is loaded: `CalculateTierPower` switches straight to the four MCM sliders for tier 7 and up (`TaomMilitaryPowerModel.cs:42-48`), whose defaults are 2.91 / 3.26 / 3.61 / 3.96 (`TaomSettings.cs:255-270`), the same numbers the JSON happens to carry. `T0` to `T6` are read only when "Override Vanilla Tiers (T1-T6)" is on, and it ships off (`TaomSettings.cs:250`). So out of the box every value in the `TierPower` block is inert and the tier curve you feel in play is vanilla's formula plus four sliders.
+**Read the tier block twice before you edit it.** `T7` to `T10` are never read while MCM is loaded: `CalculateTierPower` switches straight to the four MCM sliders for tier 7 and up (`TaomMilitaryPowerModel.cs:42-50`), whose defaults are 2.91 / 3.26 / 3.61 / 3.96 (`TaomSettings.cs:412-430`), the same numbers the JSON happens to carry. `T0` to `T6` are read only when "Override Vanilla Tiers (T1-T6)" is on, and it ships off (`TaomSettings.cs:410`). So out of the box every value in the `TierPower` block is inert and the tier curve you feel in play is vanilla's formula plus four sliders.
 
 ### settlement_food_config.json
 
@@ -231,7 +231,7 @@ The six MCM-exposed fields are the ones a pack author cannot rely on. The two JS
 | `applyToAi` | bool | `true` | either | Gate AI lords | `RecruitmentAlignmentConfigProvider.cs:61` |
 | `applyToPlayer` | bool | `true` | either | Gate the player | `RecruitmentAlignmentConfigProvider.cs:62` |
 
-All four are exposed under the MCM group "World/Recruitment Alignment", so all four are subject to the precedence warning above. The alignment data itself lives in `execution/alignment.json`, which has **31 keys and mixes kingdom ids, culture ids and minor clan ids** (`gondor` and `mordor` are cultures; `ghilman`, `skolderbrotva`, `forest_people` and `eleftheroi` are minor clans; `empire_w`, `khuzait`, `battania` and the rest are kingdoms). <!-- measured: python json key listing over execution/alignment.json 2026-10-23 --> Two feature docs call it a kingdom-id map. It is not, and adding a faction means checking which of the two you are adding. That file belongs to [Faction and world configs](configs-factions-and-world.md).
+All four are exposed under the MCM group "World/Recruitment Alignment", so all four are subject to the precedence warning above. The alignment data itself lives in `execution/alignment.json`, which has **36 keys and mixes kingdom ids, culture ids and minor clan ids** (`gondor` and `mordor` are cultures; `ghilman`, `skolderbrotva`, `forest_people` and `eleftheroi` are minor clans; `empire_w`, `khuzait`, `battania` and the rest are kingdoms). <!-- measured: python json key listing over execution/alignment.json 2026-11-03 --> Two feature docs call it a kingdom-id map. It is not, and adding a faction means checking which of the two you are adding. That file belongs to [Faction and world configs](configs-factions-and-world.md).
 
 ### enlistment_duties.json
 
@@ -263,7 +263,7 @@ The check is `bestSkill + max(0, trust) * 2 + rank * 4 + Next(0..50) >= difficul
 
 | Attribute on `<PassiveEffect>` | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `type` | string | yes | an inert `Special` passive (it takes one of the two places, and the load gate warns) | Which system the pip feeds; 23 distinct types ship | `CareerConfigProvider.ParsePassive` |
+| `type` | string | yes | an inert `Special` passive (it takes one of the two places, and the load gate warns) | Which system the pip feeds; 30 distinct types ship | `CareerConfigProvider.ParsePassive` |
 | `magnitude` | float | no | falls back to `value`, then 0 | The size of the effect | `CareerConfigProvider.ParsePassive` |
 | `value` | float | no | 0 | Alias for `magnitude`; `magnitude` wins when both are present | `CareerConfigProvider.ParsePassive` |
 | `attack_type_mask` | enum | no | `All` | Gates the four mask-gated types (`Damage`, `Resistance`, `TroopDamage`, `TroopResistance`) by hit kind (`Melee`, `Ranged`, or `Cut`, `Pierce`, `Blunt`, or `All`; comma or pipe separated). On any other type the loader warns and ignores it | `CareerConfigProvider.ParseAttackTypeMask` |
@@ -271,7 +271,7 @@ The check is `bestSkill + max(0, trust) * 2 + rank * 4 + Next(0..50) >= difficul
 | `operation` | string | no | ignored | Read but has no effect. Removed from the parser 2026-06-25 | `CareerConfigProvider.ParsePassive` |
 | `is_percentage` | bool | no | ignored | Read but has no effect. Same removal | `CareerConfigProvider.ParsePassive` |
 
-The shipped file carries **1,810 `<PassiveEffect>` elements across 23 types**, of which 310 use the wrapped `<PassiveEffects><PassiveEffect/></PassiveEffects>` form, 290 use `value=` without `magnitude=`, and 1,520 still carry the dead `operation` attribute. <!-- measured: python ElementTree scan of taom_career_choices.xml counting PassiveEffect elements, distinct type values, PassiveEffects children and per-attribute presence 2026-10-14 --> A choice reads up to **two** `<PassiveEffect>` elements, direct children and wrapper children in document order (`CareerConfigProvider.MaxPassivesPerChoice`, `ParsePassives`); a third is named in a load warning and ignored. Today no shipped choice carries more than one. <!-- measured: python count of Choice elements with more than one PassiveEffect in taom_career_choices.xml 2026-10-14 --> `<ChoiceGroup max_picks>` (default 0, unlimited) makes a group a fork: a positive value caps how many of its choices may be held, and no shipped group sets it yet. <!-- measured: python count of ChoiceGroup elements carrying max_picks in taom_career_choices.xml 2026-10-14 --> The full attribute list, including the career-level ones, is the "Attribute reference" in [career-system](../features/career-system.md).
+The shipped file carries **2,326 `<PassiveEffect>` elements across 30 types**, of which 403 use the wrapped `<PassiveEffects><PassiveEffect/></PassiveEffects>` form, 377 use `value=` without `magnitude=`, and 1,901 still carry the dead `operation` attribute. <!-- measured: python ElementTree scan of taom_career_choices.xml counting PassiveEffect elements, distinct type values, PassiveEffects children and per-attribute presence 2026-11-03 --> A choice reads up to **two** `<PassiveEffect>` elements, direct children and wrapper children in document order (`CareerConfigProvider.MaxPassivesPerChoice`, `ParsePassives`); a third is named in a load warning and ignored. Today six shipped choices carry a second one. <!-- measured: python count of Choice elements with more than one PassiveEffect in taom_career_choices.xml 2026-11-03 --> `<ChoiceGroup max_picks>` (default 0, unlimited) makes a group a fork: a positive value caps how many of its choices may be held, and 18 shipped groups set it. <!-- measured: python count of ChoiceGroup elements carrying max_picks in taom_career_choices.xml 2026-11-03 --> The full attribute list, including the career-level ones, is the "Attribute reference" in [career-system](../features/career-system.md).
 
 **Magnitude scale has to match the consumer.** Almost every type is fractional, where 0.10 means plus ten percent. `PartySize`, `Health` and `CompanionLimit` are whole counts, where 2 means two more units. Authoring a whole count on a fractional type multiplies the base instead of adding to it ([career-system](../features/career-system.md), "Magnitude scale").
 
@@ -288,11 +288,11 @@ The shipped file carries **1,810 `<PassiveEffect>` elements across 23 types**, o
 | `<Resource>` | `<Culture>` | many | A culture mapped to this resource |
 | `<Resource>` | `<Tiers>` | 0 or 1 | Wrapper; absent means an empty tier list |
 | `<Tiers>` | `<Tier>` | many | `level`, `name`, `threshold`, `description`; sorted by threshold at parse time |
-| `<StartupResources>` | `<Culture>` | 22 | One culture's starting gold and influence |
+| `<StartupResources>` | `<Culture>` | 30 | One culture's starting gold and influence |
 | `<Choice>` | `<PassiveEffect>` | up to 2 | The direct form; shares the cap of two with the wrapper |
 | `<Choice>` | `<PassiveEffects>` | many | Wrapper; its `<PassiveEffect>` children count toward the same cap of two |
 
-<!-- measured: python ElementTree structure walk over troop_weights.xml, troop_resource_costs.xml, special_resources_config.xml, startup_resources_config.xml and taom_career_choices.xml 2026-09-05 -->
+<!-- measured: python ElementTree structure walk over troop_weights.xml, troop_resource_costs.xml, special_resources_config.xml, startup_resources_config.xml and taom_career_choices.xml 2026-09-05; the StartupResources culture count re-measured 2026-11-03 -->
 
 The JSON configs nest by object rather than element: `TroopPower.TierPower` and `CasualtyRatios.CulturalSurvivalBonuses` in `battle_balance_config.json`; `crushThrough`, `chargeKnockdown`, `creatures`, `shieldPenetration`, `shieldBash` and `raceModifiers` in `combat_mechanics_config.json`; `races` in `race_age_config.json`; `defaults`, `culture_overrides` and `clan_overrides` in `initial_child_generation.json`; `fieldDuties`, `interactiveDuties` and `incidents` in `enlistment_duties.json`.
 
@@ -304,14 +304,20 @@ The header of `troop_weights.xml`, which states the fallback every unlisted troo
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <TroopWeights>
-    <!-- Default weight is 1.0 for all unlisted troops -->
+    <!-- Default weight is 1.0 for all unlisted troops.
+
+         Level rule (#585, 2026-09-13): a listed troop at level 41 or above pays 3.0, a listed
+         troop below that pays 2.0, and the mount packages (the spider riders 4.0, the elephant 12.0,
+         the Mumakil 20.0) price the creature plus its crew rather than the rider's tier. The file is a flat per-id
+         lookup and nothing in the code reads a troop's level, so the rule is only as true as
+         these rows: TroopWeightLevelBandTests pins it from both sides of the boundary. -->
 ```
 
-and five rows from the same file, lines 11 to 16:
+and five rows from the same file, lines 18 to 23:
 
 <!-- excerpt file="Main/_Module/ModuleData/TroopWeights/troop_weights.xml" -->
 ```xml
-    <!-- Legendary commanders (Weight 3.0) -->
+    <!-- Level 51 (3.0) -->
     <TroopWeight id="rivendell_glorfindel_guard" weight="3.0" />
     <TroopWeight id="rivendell_gondolin_battlemaster" weight="3.0" />
     <TroopWeight id="rivendell_high_captain" weight="3.0" />
@@ -387,7 +393,7 @@ Removing a row, a key, or a whole file.
 2. Deleting a `<Culture>` row from `startup_resources_config.xml` gives that culture nothing. There is no fallback.
 3. Deleting a JSON key falls back to the compiled default in the provider's config class, which is not always the shipped value. `settlement_economy_config.json` ships 25000 for `townGoldBase` and the compiled default is also 25000, but check the class before assuming.
 4. Deleting a whole file makes the provider log "not found" and use compiled defaults for every field. That is a working state, not a crash, which is why a deleted config can go unnoticed for a long time.
-5. Never delete `tools/settlement_economy_floor.json`. The validator treats a missing spec as an error rather than a pass, on purpose (`taom_schema.py:577-586`).
+5. Never delete `tools/settlement_economy_floor.json`. The validator treats a missing spec as an error rather than a pass, on purpose (`taom_schema.py:716-726`).
 
 Check: `rg -n "not found|reverting to default" Logs/taom_debug_*.log` after a launch
 Takes effect: full game restart
@@ -399,26 +405,26 @@ Code: No code changes needed
 - **A malformed JSON file is not an error you will see.** The provider logs and falls back to compiled defaults, and the game runs. Parse the file before launching.
 - **A value outside range reverts, it does not clamp.** Every provider in this chapter logs one warning per rejected field plus a summary warning, then uses the compiled default. `settlement_food_config.json` with `garrisonFoodDivisor: 0` runs at 20, not at 1 (`SettlementFoodConfigProvider.cs:70`).
 - **`NaN` and `Infinity` are rejected before the range check, everywhere.** This is not politeness: `value < min || value > max` is `false` for `NaN`, so a bare range check lets it through, and it has shipped three times ([csharp-architecture](../../.claude/rules/csharp-architecture.md), rule 4).
-- **`battle_balance_config.json`'s tier block is inert out of the box.** Tiers 7 to 10 always come from MCM sliders, tiers 0 to 6 come from the JSON only when "Override Vanilla Tiers (T1-T6)" is on, and it ships off (`TaomMilitaryPowerModel.cs:42-53`, `TaomSettings.cs:250`).
+- **`battle_balance_config.json`'s tier block is inert out of the box.** Tiers 7 to 10 always come from MCM sliders, tiers 0 to 6 come from the JSON only when "Override Vanilla Tiers (T1-T6)" is on, and it ships off (`TaomMilitaryPowerModel.cs:42-54`, `TaomSettings.cs:410`).
 - **List fields in `combat_mechanics_config.json` replace, they do not merge.** Deserialization uses `ObjectCreationHandling.Replace`, so writing one monster id deletes the other five ([combat-mechanics](../features/combat-mechanics.md)).
 - **The `race_age_config.json` table in the feature doc is stale.** The file ships human `maxAge` 200 and `comesOfAge` 18 for all 15 races; the doc says 85 and lists per-race values from 6 to 30 (`race-age-system.md:65-83`).
-- **The `~80` and `87` troop-weight counts in the feature docs are both wrong** (`troop-weight-system.md:339`, `lessons/gamemodels-services.md:418`). The file holds 105 live rows and two undocumented tiers, 4.0 and 10.0.
-- **`SETTLEMENT_ECONOMY_FLOOR` guards a file outside the repo.** It compares `TAOM_Map/ModuleData/settlements.xml` against a committed spec. This file lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix. That gate is exactly what the check is (`taom_schema.py:559-640`).
+- **The `87` troop-weight count in `lessons/gamemodels-services.md:440` is a 2026-08-14 count.** The file now holds 133 live rows; its header comment explains the spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 as mount packages, and `hill_troll` at 4.0 is a monster unit.
+- **`SETTLEMENT_ECONOMY_FLOOR` guards a file outside the repo.** It compares `TAOM_Map/ModuleData/settlements.xml` against a committed spec. This file lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix. That gate is exactly what the check is (`taom_schema.py:690-785`).
 - **Two questions this chapter cannot answer from any TAOM doc.** There is no catalogue of the MCM-only knobs and their defaults, so `Main/Features/TaomSettings.cs` is the only source. And there is no list of which troops lack a `troop_weights.xml` row or a `troop_resource_costs.xml` row; the fallbacks are documented (weight 1.0, no cost), but the coverage gap is not measured anywhere.
 
 ## Numbers in this chapter
 
 | Number | Command | Date |
 |---|---|---|
-| 105 live `<TroopWeight>` rows (106 raw lines, one commented out); 52 at 2.0, 51 at 3.0, 1 at 4.0, 1 at 10.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-09-13 |
-| 77 `<Troop>` rows with six distinct attributes in `troop_resource_costs.xml` | python ElementTree attribute union over `troop_resource_costs.xml` | 2026-09-05 |
+| 133 live `<TroopWeight>` rows (134 raw lines, one commented out); 59 at 2.0, 66 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-11-03 |
+| 89 `<Troop>` rows with six distinct attributes in `troop_resource_costs.xml` | python ElementTree attribute union over `troop_resource_costs.xml` | 2026-11-03 |
 | 11 `<Resource>` rows in `special_resources_config.xml` | python ElementTree count over `special_resources_config.xml` | 2026-09-05 |
-| 22 `<Culture>` rows in `startup_resources_config.xml` | python ElementTree count over `startup_resources_config.xml` | 2026-09-05 |
+| 30 `<Culture>` rows in `startup_resources_config.xml` | python ElementTree count over `startup_resources_config.xml` | 2026-11-03 |
 | 15 race entries in `race_age_config.json` | python json key count over `races` | 2026-09-05 |
 | 13 field duties, 11 interactive duties, 3 incidents; difficulties 40 to 76; `failureReward.trust` is 0 on all 13 | python json array lengths and field scan over `enlistment_duties.json` | 2026-09-05 |
 | 2,326 `<PassiveEffect>` elements, 30 distinct types, 403 wrapped in `<PassiveEffects>`, 377 using `value=`, 1,901 carrying `operation`, 6 choices with a second passive, 9 `troop_class`, 18 `max_picks` | python ElementTree scan over `taom_career_choices.xml` | 2026-10-30 |
 | 36 keys in `execution/alignment.json`, mixing kingdom, culture and minor clan ids | python json key listing | 2026-10-30 |
-| 219 value knobs across 56 MCM groups (440 `[SettingProperty` lines) | `rg -o "\[SettingProperty" Main/Features/TaomSettings.cs \| wc -l` and `rg -o 'SettingPropertyGroup\("[^"]*"' Main/Features/TaomSettings.cs \| sort -u \| wc -l` | 2026-09-11 |
+| 470 value knobs across 104 MCM groups (948 `[SettingProperty` lines, 4 commented out) | `rg -o "\[SettingProperty" Main/Features/TaomSettings.cs \| wc -l` and `rg -o 'SettingPropertyGroup\("[^"]*"' Main/Features/TaomSettings.cs \| sort -u \| wc -l` (uncommented group lines only) | 2026-11-03 |
 | 14 providers, all registered `Reuse.Singleton` | `rg -n` over the fourteen IoC files named in the registration table | 2026-09-05 |
 | 0 hits for any of the fifteen filenames in the ModuleData validator; 3 files in `tools/schemas/` | `rg -n` over `tools/validate_moduledata.py` and `tools/taom_schema.py`, and `ls tools/schemas/` | 2026-09-05 |
 

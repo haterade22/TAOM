@@ -52,27 +52,35 @@ only when something actually changed. Making it a GameModel lets mods retune any
 
 ## TAOM relevance + gotchas
 - **`TaomAgentStatCalculateModel`** (`Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs`, registered
-  `campaignStarter.AddModel<AgentStatCalculateModel>(...)` at SubModule.cs:1309). It **inherits
+  `campaignStarter.AddModel<AgentStatCalculateModel>(...)` at SubModule.cs:1285). It **inherits
   `SandboxAgentStatCalculateModel`** — note: **there is no `DefaultAgentStatCalculateModel`**; the abstract base is
   `AgentStatCalculateModel` and the SandBox concrete is `SandboxAgentStatCalculateModel`, so TAOM inherits the
-  most-derived *vanilla* model (keeping all SP stat logic) rather than a `Default*` (a documented exception to
-  gamemodels.md rule 2). Overrides:
+  most-derived *vanilla* model (keeping all SP stat logic) rather than a `Default*` (gamemodels.md rule 2 names
+  `Sandbox*` as an allowed concrete model). Overrides:
   - `UpdateAgentStats` → `base` → `ICareerAgentStatService.ApplyAgentStatModifiers(...)` (career passives mutate the
-    ADP) → set `ADP.MountDifficulty = ElephantConfig.MountDifficulty` for the elephant Monster (near-infinite → non-rider
-    AI can't take the elephant — 1-for-1 ADOD_Beasts mount-lock).
-  - `CanAgentRideMount` → `false` for an elephant Monster.
+    ADP) → set `ADP.MountDifficulty` to `ElephantConfig.MountDifficulty`, `SpiderConfig.MountDifficulty` or
+    `MumakilConfig.MountDifficulty` for that creature's Monster (near-infinite → non-rider AI can't take it; 1-for-1
+    ADOD_Beasts mount-lock) → culture aggression (`AgentAggressionApplier`, then `StandWeaponFavor`) → race ability stats
+    (`RaceAbilityHooks.ApplyStats`) → mount-side career bonuses (`ApplyMountStatModifiers`) → culture charge multiplier
+    (`MountChargeDamageApplier`).
+  - `InitializeMissionEquipment` → `base`, then the Ammo career passive for heroes (`CareerAmmoApplier`, #613).
+  - `CanAgentRideMount` → `false` for an elephant, spider or Mûmakil Monster.
+  - `GetKnockBackResistance` / `GetDismountResistance` → race ability resistance over `base`;
+    `GetDetachmentCostMultiplierOfAgent` → `CreatureSiegeHooks.DetachmentCost`.
   - `GetEffectiveMaxHealth` → the career `MountHealth` passive for a mount whose rider is a hero. The hero's own Health pip is not applied here: it lives in `TaomCharacterStatsModel.MaxHitpoints` (#394).
   - `GetKnockDownResistance` → race ability resistance first, then the career knockdown counter (`CareerTroopHooks.KnockDownResistance`, #769), over `base`.
 - **One override per type → consolidation** (Phase 7 last-added-wins): the **single** `AgentStatCalculateModel` slot
-  carries **both** career passives **and** the elephant lock. You cannot register two — combine them in one model (the
-  career model gained the elephant branch via `IElephantAttackService`).
+  carries career passives, the creature mount-locks, culture aggression, race abilities, cavalry charge and creature siege
+  detachment (order and history: the `TaomAgentStatCalculateModel` row of `docs/reference/gamemodel-registry.md`). You
+  cannot register two, so combine them in one model (the career model gained the elephant branch via `IElephantAttackService`).
 - **Thin boundary** (gamemodels.md rule 4): the model only extracts primitives from the sealed `Agent` and delegates;
-  all branching/stat math is in `ICareerAgentStatService`, the elephant id-check in `IElephantAttackService`. The body
-  uses only ternaries (no inline `if`/`foreach`/`switch`).
-- **Research scale + downstream consumer before touching any ADP** (`feedback_engine_scale_research`): a driven
+  all branching/stat math is in `ICareerAgentStatService`, the creature id-checks in `IElephantAttackService`,
+  `ISpiderAttackService` and `IMumakilAttackService`. The bodies use ternaries plus plain guards: `if (_aggression != null)`
+  and `if (_chargeDamage != null)` in `UpdateAgentStats`, `if (agent != null && agent.IsHero)` in `InitializeMissionEquipment` (no `foreach`/`switch`).
+- **Research scale + downstream consumer before touching any ADP** ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Research the engine SCALE..."): a driven
   property may be a *multiplier* or *additive*, may be *clamped*, and is consumed by a specific native path — a change
   with the wrong scale has "no effect or wrong magnitude." Decompile both the property's range and its consumer first.
-- **NaN/Infinity guard** (`feedback_clamp_nan_infinity_propagates`): a NaN written into the ADP propagates through the
+- **NaN/Infinity guard** ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Settings/MCM Clamp helpers must NaN/Infinity-guard"): a NaN written into the ADP propagates through the
   native sim (and any `5f * (1f - NaN)` style math) and freezes/breaks the agent — validate finite before `SetStat`.
 
 ## The native boundary
@@ -85,7 +93,7 @@ value surfaces as wrong in-sim behavior rather than a managed exception.
 ## Evidence (file:line, v1.4.5)
 - `AgentStatCalculateModel.cs`:8 (`abstract : MBGameModel<AgentStatCalculateModel>`), :14 (`InitializeAgentStats`), :28 (`UpdateAgentStats`), :32 (`CanAgentRideMount`), :44 (`GetEffectiveMaxHealth`), :49 (`GetEnvironmentSpeedFactor`), :109 (`GetEffectiveSkill`), :119-131 (damage/stealth/resistance abstracts).
 - `AgentDrivenProperties.cs`:6 (`class`), :16/:40/:52/:76 (named accessors → `GetStat`/`SetStat`). `DrivenProperty.cs`: enum `None=-1`..`98`; mount slots `MountChargeDamage=52`, `MountDifficulty=53`, `MountManeuver=92`, `MountSpeed=93`, `MountDashAccelerationMultiplier=94`.
-- TAOM: `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` (`: SandboxAgentStatCalculateModel`; `UpdateAgentStats`/`CanAgentRideMount`/`GetEffectiveMaxHealth`), `Main/SubModule.cs`:447 (`AddModel<AgentStatCalculateModel>`). Gotcha memories: `feedback_engine_scale_research`, `feedback_clamp_nan_infinity_propagates`; `.claude/rules/gamemodels.md` (thin-boundary rule 4). Linked: gamemodel-system.md (Phase 7), mount-and-rider-runtime.md (Phase 14, the `UpdateAgentStats`-on-mount call).
+- TAOM: `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` (`: SandboxAgentStatCalculateModel`; `UpdateAgentStats`/`CanAgentRideMount`/`GetEffectiveMaxHealth`), `Main/SubModule.cs`:1285 (`AddModel<AgentStatCalculateModel>`). Gotcha lessons: `docs/reviews/lessons/gamemodels-services.md`; `.claude/rules/gamemodels.md` (thin-boundary rule 4). Linked: gamemodel-system.md (Phase 7), mount-and-rider-runtime.md (Phase 14, the `UpdateAgentStats`-on-mount call).
 
 ---
 

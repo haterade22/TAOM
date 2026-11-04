@@ -176,9 +176,10 @@ vanilla's own-faction level for every coloured plate.
 - `SettlementPlatePresenterTests.cs`: 4 tests, the text-curve anchor by relation, tracked, unknown relation and missing settings.
 - `NameplateRelationPrefabTests.cs`: 6 tests over the three prefabs, one widget with the right Id and binding, every widget path (bar, text, frame, banner, tracked ring) resolves by Id, colour attributes well formed, the item widget's own paths intact, the item widget within the ancestor depth the widget walks, no state cascade on the capsule.
 - `NameplateRelationBindingTests.cs`: 6 tests, engine members pinned against the installed DLLs (`BindingVerification`), widget constructor and simple-name uniqueness.
+- `NameplateRelationIoCTests.cs`: 1 test, the widget context receives the container's settings provider.
 
-76 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
-The four MCM properties also move the settings fingerprint pin (`SettingsFingerprintTests`, 229 in
+77 tests in the feature; `dotnet test TAOM.Tests --filter FullyQualifiedName~SettlementNameplateRelation`.
+The four MCM properties also move the settings fingerprint pin (`SettingsFingerprintTests`, 474 in
 `TaomSettings`) and sit in `CoopSettingsRelevance`'s presentation list.
 
 The widget's render and the postfix body need the live game. In-game checklist: neutral plate

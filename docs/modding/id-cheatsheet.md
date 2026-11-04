@@ -17,28 +17,32 @@ The trap first. **Six cultures keep their vanilla Calradian id** because `spcult
 | Dale (Bardings) | `sturgia` | `dale` |
 | Khand (Variags) | `battania` | `khand` |
 
-The full set. 30 cultures are authored in `Main/_Module/ModuleData/taom_spcultures.xml` <!-- measured: python re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', taom_spcultures.xml, re.S) 2026-10-27 --> and the six above are XSLT-wrapped, so TAOM data may name 36 culture ids. The last column counts the `culture=` attribute on `<Settlement>` elements in the live map, hideouts included, 1,141 settlements in all <!-- measured: python re.finditer over TAOM_Map/ModuleData/settlements.xml, culture per <Settlement> 2026-10-27 -->. Two bandit cultures have no row: `mirkwood_spiders` and `wild_trolls` set `can_have_settlement="false"` and own no settlement on the live map. `TAOM_Map/ModuleData/settlements.xml` lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix.
+The full set. 35 cultures are authored in `Main/_Module/ModuleData/taom_spcultures.xml` <!-- measured: python re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', taom_spcultures.xml, re.S) 2026-11-03 --> and the six above are XSLT-wrapped, so TAOM data may name 41 culture ids. The last column counts the `culture=` attribute on `<Settlement>` elements in the live map, hideouts included, 1,266 settlements in all <!-- measured: python ElementTree over TAOM_Map/ModuleData/settlements.xml, culture per <Settlement> 2026-11-03 -->. Two bandit cultures have no row: `mirkwood_spiders` and `wild_trolls` set `can_have_settlement="false"` and own no settlement on the live map. `TAOM_Map/ModuleData/settlements.xml` lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix.
 
 | Culture id | Display name (`name=`) | Kind | Live-map settlements |
 |---|---|---|---|
 | `gondor` | Gondorian | custom, settled | 97 |
 | `mordor` | Mordor | custom, settled | 56 |
 | `erebor` | Dwarves | custom, settled | 52 |
-| `shaghana` | Shaghâna | custom, settled | 50 |
-| `abanissa` | Âbanissa | custom, settled | 45 |
+| `shaghana` | Shaghâna | custom, settled | 46 |
+| `abanissa` | Âbanissa | custom, settled | 49 |
 | `umbar` | Umbar | custom, settled | 40 |
 | `gundabad` | Gundabad Orcs | custom, settled | 38 |
 | `arthedain` | Arthedain | custom, settled (added 2026-10-07) | 34 |
 | `mistymountainorcs` | Misty Mountain Orcs | custom, settled | 33 |
 | `eredluin` | Dwarves of Ered Luin | custom, settled (added 2026-10-27) | 31 |
+| `southrhovanion` | Northmen of Rhovanion | custom, settled (added 2026-10-29) | 31 |
+| `dorwinion` | Men of Dorwinion | custom, settled (added 2026-10-29) | 30 |
 | `lindon` | Falathrim Elves | custom, settled | 28 |
 | `mirkwood` | Silvan Elves | custom, settled | 24 |
 | `bluecraig` | Blue Craig Goblins | custom, settled | 24 |
 | `dolguldur` | Dol Guldur Orcs | custom, settled | 23 |
 | `cardolan` | Cardolan | custom, settled (added 2026-10-23) | 23 |
+| `anduinvale` | Beornings | custom, settled (added 2026-10-28) | 22 |
 | `isengard` | Isengard | custom, settled | 21 |
 | `rivendell` | Ñoldor Elves | custom, settled | 21 |
 | `lothlorien` | Galadhrim Elves | custom, settled | 19 |
+| `angaladh` | Woodmen | custom, settled (added 2026-10-28) | 19 |
 | `rhudaur` | Rhudaur | custom, settled (added 2026-10-23) | 15 |
 | `goblin` | Goblins | custom, settled | 7 |
 | `umbar_corsairs` | Corsairs of Umbar | custom, bandit (hideouts) | 36 |
@@ -50,18 +54,18 @@ The full set. 30 cultures are authored in `Main/_Module/ModuleData/taom_spcultur
 | `gondor_soldiers` | Gondor Soldiers | custom, bandit (hideouts) | 10 |
 | `erebor_warriors` | Blacklocks | custom, bandit (hideouts) | 10 |
 | `mirkwood_stalkers` | Mirkwood Stalkers | custom, bandit (hideouts) | 10 |
-| `khuzait` | Easterlings | vanilla id, XSLT-renamed | 92 |
+| `khuzait` | Easterlings | vanilla id, XSLT-renamed | 88 |
 | `aserai` | Haradrim | vanilla id, XSLT-renamed | 50 |
 | `vlandia` | Rohirrim | vanilla id, XSLT-renamed | 48 |
-| `battania` | Variag | vanilla id, XSLT-renamed | 44 |
+| `battania` | Variag | vanilla id, XSLT-renamed | 48 |
 | `sturgia` | Barding | vanilla id, XSLT-renamed | 37 |
 | `empire` | Dunlendings | vanilla id, XSLT-renamed | 31 |
 
-The validator accepts 46 culture ids <!-- measured: python tools/validate_moduledata.py --code LANDLESS_CULTURE, "Registry: ... 46 cultures" 2026-10-27; mcp__taom-moduledata__list_cultures returned 45 from a registry cached before eredluin existed -->: the 36 above plus ten vanilla ids that `spcultures.xslt` never strips (`darshi`, `desert_bandits`, `forest_bandits`, `looters`, `mountain_bandits`, `neutral_culture`, `nord`, `sea_raiders`, `steppe_bandits`, `vakken`). Those ten own no TAOM settlement; naming one on a lord is the `LANDLESS_CULTURE` crash class ([tools README](../../tools/README.md), row `validate_moduledata.py`). Which cultures borrow another culture's troops and party templates is in [cultures](../cultures.md), lines 17-37; the menu link colours keyed on these ids are in [menu-link-colors](../features/menu-link-colors.md), lines 77-95.
+The validator accepts 51 culture ids <!-- measured: python tools/validate_moduledata.py --code LANDLESS_CULTURE, "Registry: ... 46 cultures" 2026-10-27, before Feral Orcs and the four Northmen cultures were authored (46 plus 5 is 51, validator not re-run); mcp__taom-moduledata__list_cultures returned 45 from a registry cached before eredluin existed -->: the 41 above plus ten vanilla ids that `spcultures.xslt` never strips (`darshi`, `desert_bandits`, `forest_bandits`, `looters`, `mountain_bandits`, `neutral_culture`, `nord`, `sea_raiders`, `steppe_bandits`, `vakken`). Those ten own no TAOM settlement; naming one on a lord is the `LANDLESS_CULTURE` crash class ([tools README](../../tools/README.md), row `validate_moduledata.py`). Which cultures borrow another culture's troops and party templates is in [cultures](../cultures.md), lines 17-37; the menu link colours keyed on these ids are in [menu-link-colors](../features/menu-link-colors.md), lines 77-95.
 
 ## Kingdom ids
 
-26 kingdoms exist: 18 in `Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured: python re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', taom_spkingdoms.xml, re.S) 2026-10-27 --> and 8 vanilla kingdoms that `Main/_Module/ModuleData/spkingdoms.xslt` rewrites in place <!-- measured: rg -c "xsl:template match=\"Kingdom\[@id=" spkingdoms.xslt 2026-10-27 -->. Three kingdom ids do not match their culture id, and that is where every `alignment.json`-style config goes wrong: `empire_w` is Gondor, `empire_s` is Mordor, and plain `empire` is Dunland. There is no `Kingdom.gondor`, no `Kingdom.mordor` and no `Culture.empire_w`. The Side column is quoted from [war-of-the-ring](../features/war-of-the-ring.md), lines 314-332, which lists 17 of the 26; the nine it omits are marked, and the three newest carry the side `Main/_Module/ModuleData/execution/alignment.json` gives them. The line spans were measured 2026-10-27 <!-- measured: rg -n 'xsl:template match="Kingdom\[@id=|</xsl:template>' spkingdoms.xslt; python line scan of <Kingdom and </Kingdom> in taom_spkingdoms.xml 2026-10-27 -->.
+30 kingdoms exist: 22 in `Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured: python re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', taom_spkingdoms.xml, re.S) 2026-11-03 --> and 8 vanilla kingdoms that `Main/_Module/ModuleData/spkingdoms.xslt` rewrites in place <!-- measured: rg -c "xsl:template match=\"Kingdom\[@id=" spkingdoms.xslt 2026-10-27 -->. Three kingdom ids do not match their culture id, and that is where every `alignment.json`-style config goes wrong: `empire_w` is Gondor, `empire_s` is Mordor, and plain `empire` is Dunland. There is no `Kingdom.gondor`, no `Kingdom.mordor` and no `Culture.empire_w`. The Side column is quoted from [war-of-the-ring](../features/war-of-the-ring.md), lines 314-335, which lists 20 of the 30; the ten it omits are marked, and the four newest carry the side `Main/_Module/ModuleData/execution/alignment.json` gives them. The line spans were measured 2026-10-27 <!-- measured: rg -n 'xsl:template match="Kingdom\[@id=|</xsl:template>' spkingdoms.xslt; python line scan of <Kingdom and </Kingdom> in taom_spkingdoms.xml 2026-10-27 -->.
 
 | Kingdom id | Display name | `culture=` | Defined in | Side (war-of-the-ring.md) |
 |---|---|---|---|---|
@@ -74,7 +78,7 @@ The validator accepts 46 culture ids <!-- measured: python tools/validate_module
 | `mirkwood` | Lasgalen | `Culture.mirkwood` | `taom_spkingdoms.xml` | Free |
 | `lindon` | Lindon | `Culture.lindon` | `taom_spkingdoms.xml` | not in that table |
 | `arthedain` | Arthedain | `Culture.arthedain` | `taom_spkingdoms.xml` (added 2026-10-07) | Free |
-| `eredluin` | Ered Luin | `Culture.eredluin` | `taom_spkingdoms.xml` (added 2026-10-27) | Free (`alignment.json`; not in that table) |
+| `eredluin` | Ered Luin | `Culture.eredluin` | `taom_spkingdoms.xml` (added 2026-10-27) | Free |
 | `empire_s` | Mordor | `Culture.mordor` | `spkingdoms.xslt:71-94` | Dark Power |
 | `isengard` | Isengard | `Culture.isengard` | `taom_spkingdoms.xml` | Dark Power |
 | `gundabad` | Gundabad | `Culture.gundabad` | `taom_spkingdoms.xml` | Dark Power |
@@ -89,8 +93,12 @@ The validator accepts 46 culture ids <!-- measured: python tools/validate_module
 | `shaghana` | Shaghâna | `Culture.shaghana` | `taom_spkingdoms.xml` | not in that table |
 | `abanissa` | Âbanissa | `Culture.abanissa` | `taom_spkingdoms.xml` | not in that table |
 | `battania` | Khand | `Culture.battania` | `spkingdoms.xslt:163-188` | Neutral |
-| `cardolan` | Cardolan | `Culture.cardolan` | `taom_spkingdoms.xml` (added 2026-10-23) | Neutral (`alignment.json`; not in that table) |
-| `rhudaur` | Rhudaur | `Culture.rhudaur` | `taom_spkingdoms.xml` (added 2026-10-23) | Neutral (`alignment.json`; not in that table) |
+| `cardolan` | Cardolan | `Culture.cardolan` | `taom_spkingdoms.xml` (added 2026-10-23) | Neutral |
+| `rhudaur` | Rhudaur | `Culture.rhudaur` | `taom_spkingdoms.xml` (added 2026-10-23) | Neutral |
+| `anduinvale` | Anduin Vale | `Culture.anduinvale` | `taom_spkingdoms.xml` (added 2026-10-28) | Neutral (`alignment.json`; not in that table) |
+| `angaladh` | Angáladh | `Culture.angaladh` | `taom_spkingdoms.xml` (added 2026-10-28) | Neutral (`alignment.json`; not in that table) |
+| `dorwinion` | Dorwinion | `Culture.dorwinion` | `taom_spkingdoms.xml` (added 2026-10-29) | Neutral (`alignment.json`; not in that table) |
+| `southrhovanion` | South Rhovanion | `Culture.southrhovanion` | `taom_spkingdoms.xml` (added 2026-10-29) | Neutral (`alignment.json`; not in that table) |
 
 Do not lift the kingdom tables in `docs/features/alignment-aware-execution.md` (lines 233-234 label `empire` Rohan and `vlandia` Arthedain) or `docs/features/execution.md` (lines 77-78 label `empire_w` Rohan and `vlandia` Gondor); the XSLT above says otherwise. A player-founded kingdom gets an engine-generated `new_kingdom*` id that is in no shipped table, which is why the alignment lookups fall back to the culture id (`docs/reviews/agents-md-review-lessons-archive.md:5`, review 70).
 
@@ -102,8 +110,11 @@ Settlement ids follow `town_<P><n>`, `castle_<P><n>`, `village_<P><n>` and `cast
 |---|---|---|---|
 | `A` | Khand / Harad, Aserai-mapped | `aserai` 50, `shaghana` 42, `abanissa` 17 | 109 |
 | `AN` | Arthedain (added 2026-10-07) | `arthedain` 34 | 34 |
+| `AND` | Angáladh (added 2026-10-28; count from the commit body) | `angaladh` 19 | 19 |
+| `AV` | Anduin Vale (added 2026-10-28; count from the commit body) | `anduinvale` 22 | 22 |
 | `CA` | Cardolan (added 2026-10-23; not in the naming doc) | `cardolan` 23 | 23 |
 | `DG` | Dol Guldur | `dolguldur` 23 | 23 |
+| `DO` | Dorwinion (added 2026-10-29; count from the commit body) | `dorwinion` 30 | 30 |
 | `E` | Erebor | `erebor` 52 | 52 |
 | `EL` | Ered Luin, the dwarves of the Blue Mountains (added 2026-10-27) | `eredluin` 31 | 31 |
 | `EN` | Dunland (Empire-North) | `empire` 30 | 30 |
@@ -114,7 +125,7 @@ Settlement ids follow `town_<P><n>`, `castle_<P><n>`, `village_<P><n>` and `cast
 | `GBC` | Blue Craig (Ered Luin goblins) | `bluecraig` 24 | 24 |
 | `GT` | Goblin-town (not in the naming doc) | `goblin` 7 | 7 |
 | `I` | Isengard | `isengard` 9 | 9 |
-| `K` | Khand (Variag) | `battania` 44, `khuzait` 4 | 48 |
+| `K` | Khand (Variag) | `battania` 48 | 48 |
 | `L` | Lothlórien | `lothlorien` 19 | 19 |
 | `LN` | Lindon (Grey Havens) | `lindon` 28 | 28 |
 | `M` | Northern Mirkwood | `mirkwood` 24 | 24 |
@@ -123,12 +134,13 @@ Settlement ids follow `town_<P><n>`, `castle_<P><n>`, `village_<P><n>` and `cast
 | `RH` | Rhudaur (added 2026-10-23; not in the naming doc) | `rhudaur` 15 | 15 |
 | `RU` | Rhûn | `khuzait` 88 | 88 |
 | `S` | Dale | `sturgia` 37 | 37 |
+| `SRH` | South Rhovanion (added 2026-10-29; count from the commit body) | `southrhovanion` 31 | 31 |
 | `U` | Umbar | `umbar` 40 | 40 |
 | `V` | Rohan | `vlandia` 48 | 48 |
 
-Thirteen ids break the pattern and twelve of them are Isengard's: `town_isengard`, `castle_orthanc_gate`, `village_isengard_a` to `village_isengard_f`, `castle_village_isengard_a` to `castle_village_isengard_d` (the `_b` to `_f` rows arrived 2026-09-11, #562), plus `retirement_retreat` (`Culture.empire`). Hideouts are `hideout_<biome>_<n>` over eight biome words (`desert`, `erebor`, `forest`, `gondor`, `mirkwood`, `mountain`, `seaside`, `steppe`) and carry the bandit cultures; 158 of the 1,141 settlements are hideouts <!-- measured: same census, ids starting hideout_ 2026-10-27 -->.
+Thirteen ids break the pattern and twelve of them are Isengard's: `town_isengard`, `castle_orthanc_gate`, `village_isengard_a` to `village_isengard_f`, `castle_village_isengard_a` to `castle_village_isengard_d` (the `_b` to `_f` rows arrived 2026-09-11, #562), plus `retirement_retreat` (`Culture.empire`). Hideouts are `hideout_<biome>_<n>` over eight biome words (`desert`, `erebor`, `forest`, `gondor`, `mirkwood`, `mountain`, `seaside`, `steppe`) and carry the bandit cultures; 181 of the 1,266 settlements are hideouts <!-- measured: same census, ids starting hideout_ 2026-11-03 -->.
 
-Lord ids follow `lord_{PREFIX}{CLAN_N}_{MEMBER_N}` ([kingdom-creation](../features/kingdom-creation.md), line 74). The prefix is a separate id space from the settlement prefix: goblin lords are `GB` while goblin settlements are `GT`, and Blue Craig lords are `BC` while its settlements are `GBC` ([xml-data rule](../../.claude/rules/xml-data.md), line 39, plus the census below). Measured from the 1,286 `<NPCCharacter>` elements in `Main/_Module/ModuleData/characters/lords.xml` <!-- measured: python census of lord_([A-Za-z]+) id prefixes (lord_EW_N counted as EW) against culture= over characters/lords.xml 2026-10-27 -->:
+Lord ids follow `lord_{PREFIX}{CLAN_N}_{MEMBER_N}` ([kingdom-creation](../features/kingdom-creation.md), line 74). The prefix is a separate id space from the settlement prefix: goblin lords are `GB` while goblin settlements are `GT`, and Blue Craig lords are `BC` while its settlements are `GBC` ([xml-data rule](../../.claude/rules/xml-data.md), line 39, plus the census below). Measured from the 1,346 `<NPCCharacter>` elements in `Main/_Module/ModuleData/characters/lords.xml` <!-- measured: python census of lord_([A-Za-z]+) id prefixes (lord_EW_N counted as EW) against culture= over characters/lords.xml 2026-10-27, plus the AV, AND, DO and SRH rows and the total re-counted 2026-11-03 -->:
 
 | Lord prefix | Culture | Lords |
 |---|---|---|
@@ -148,8 +160,12 @@ Lord ids follow `lord_{PREFIX}{CLAN_N}_{MEMBER_N}` ([kingdom-creation](../featur
 | `AN` | `arthedain` (added 2026-10-07; same prefix as its settlements) | 20 |
 | `CA` | `cardolan` (added 2026-10-23; same prefix as its settlements) | 16 |
 | `EL` | `eredluin` (added 2026-10-27; same prefix as its settlements) | 16 |
+| `AV` | `anduinvale` (added 2026-10-28; same prefix as its settlements) | 16 |
+| `DO` | `dorwinion` (added 2026-10-29; same prefix as its settlements) | 16 |
+| `SRH` | `southrhovanion` (added 2026-10-29; same prefix as its settlements) | 16 |
 | `R` | `rivendell` | 12 |
 | `RH` | `rhudaur` (added 2026-10-23; same prefix as its settlements) | 12 |
+| `AND` | `angaladh` (added 2026-10-28; same prefix as its settlements) | 12 |
 | `L` | `lothlorien` | 11 |
 | `WE` | `gondor` | 11 |
 | `U` | `umbar` | 10 |
@@ -176,27 +192,27 @@ So the "2-char uppercase, unique across all kingdoms" rule in kingdom-creation.m
 
 ## Race ids in merge order
 
-A race id is not an object reference. `BasicCharacterObject.Deserialize` sets `Race = 0` and, only if `race=` is present, looks the string up in FaceGen's dictionary (`BasicCharacterObject.cs:323-328`). That dictionary is built once from the native race-id list, split on `;`, and each race's integer is its position in the merged `skins.xml` order (`FaceGen.cs:17-27`, the `TaleWorlds.MountAndBlade` one). `GetRaceOrDefault` is a bare dictionary indexer with no fallback (`FaceGen.cs:115-118`), so a misspelt or mis-cased `race=` throws `KeyNotFoundException` at load, and the Monster for a race is fetched by the same string (`FaceGen.cs:49-60`). Index 0 being `human` is a strong inference, not decompile proof, because the list comes from native code ([black-numenorean](../features/black-numenorean.md), lines 162-176); everything else in the table is read straight off the files. `skins.xml` is registered through `project.mbproj` (`soln_skins`), not `SubModule.xml`, and there is no managed deserializer for it. <!-- measured: python re.finditer(r'<race\b[^>]*?\bid="([^"]+)"', skins.xml, re.S) over Native and LOTRLOME_Armory; rg -o 'race="[^"]+"' Main/_Module/ModuleData | sort | uniq -c 2026-09-05 -->
+A race id is not an object reference. `BasicCharacterObject.Deserialize` sets `Race = 0` and, only if `race=` is present, looks the string up in FaceGen's dictionary (`BasicCharacterObject.cs:323-328`). That dictionary is built once from the native race-id list, split on `;`, and each race's integer is its position in the merged `skins.xml` order (`FaceGen.cs:17-27`, the `TaleWorlds.MountAndBlade` one). `GetRaceOrDefault` is a bare dictionary indexer with no fallback (`FaceGen.cs:115-118`), so a misspelt or mis-cased `race=` throws `KeyNotFoundException` at load, and the Monster for a race is fetched by the same string (`FaceGen.cs:49-60`). Index 0 being `human` is a strong inference, not decompile proof, because the list comes from native code ([black-numenorean](../features/black-numenorean.md), lines 162-176); everything else in the table is read straight off the files. `skins.xml` is registered through `project.mbproj` (`soln_skins`), not `SubModule.xml`, and there is no managed deserializer for it. <!-- measured: python re.finditer(r'<race\b[^>]*?\bid="([^"]+)"', skins.xml, re.S) over Native and LOTRLOME_Armory 2026-09-05; rg -o 'race="[^"]+"' Main/_Module/ModuleData | sort | uniq -c 2026-11-03 -->
 
 | Index | Race id | Declared at | `race=` uses in repo data |
 |---|---|---|---|
-| 0 | `human` | `Native/ModuleData/skins.xml:3` | 8 (3 wanderers, 5 named companions) |
-| 1 | `dwarf` | `LOTRLOME_Armory/ModuleData/skins.xml:3` | 194 |
-| 2 | `uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:14953` | 160 |
+| 0 | `human` | `Native/ModuleData/skins.xml:3` | 13 (3 wanderers, 6 named companions, 4 faction-picker characters) |
+| 1 | `dwarf` | `LOTRLOME_Armory/ModuleData/skins.xml:3` | 340 |
+| 2 | `uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:14953` | 165 |
 | 3 | `nazghul` | `LOTRLOME_Armory/ModuleData/skins.xml:30860` | 0 (the Nine take it from `lords.xslt` since #644, which this column does not count) |
-| 4 | `orc` | `LOTRLOME_Armory/ModuleData/skins.xml:45257` | 295 |
-| 5 | `uruk_hai` | `LOTRLOME_Armory/ModuleData/skins.xml:59204` | 171 |
-| 6 | `berserker` | `LOTRLOME_Armory/ModuleData/skins.xml:75869` | 10 |
-| 7 | `cave_troll` | `LOTRLOME_Armory/ModuleData/skins.xml:92404` | 1 |
-| 8 | `hill_troll` | `LOTRLOME_Armory/ModuleData/skins.xml:108723` | 0 |
-| 9 | `pale_uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:125563` | 212 |
-| 10 | `dg_uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:141470` | 238 |
-| 11 | `goblin` | `LOTRLOME_Armory/ModuleData/skins.xml:157356` | 289 |
-| 12 | `elf` | `LOTRLOME_Armory/ModuleData/skins.xml:173244` | 458 |
+| 4 | `orc` | `LOTRLOME_Armory/ModuleData/skins.xml:45257` | 307 |
+| 5 | `uruk_hai` | `LOTRLOME_Armory/ModuleData/skins.xml:59204` | 187 |
+| 6 | `berserker` | `LOTRLOME_Armory/ModuleData/skins.xml:75869` | 11 |
+| 7 | `cave_troll` | `LOTRLOME_Armory/ModuleData/skins.xml:92404` | 3 |
+| 8 | `hill_troll` | `LOTRLOME_Armory/ModuleData/skins.xml:108723` | 3 |
+| 9 | `pale_uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:125563` | 223 |
+| 10 | `dg_uruk` | `LOTRLOME_Armory/ModuleData/skins.xml:141470` | 244 |
+| 11 | `goblin` | `LOTRLOME_Armory/ModuleData/skins.xml:157356` | 304 |
+| 12 | `elf` | `LOTRLOME_Armory/ModuleData/skins.xml:173244` | 492 |
 | 13 | `saruman` | `LOTRLOME_Armory/ModuleData/skins.xml:190015` | 1 (`lord_I1_0`, Saruman the White, head of Isengard, #added 2026-09-28) |
 | 14 | `sauron` | `LOTRLOME_Armory/ModuleData/skins.xml:204237` | 0 |
 
-Human troops carry no `race=` at all; the eight `race="human"` uses are all on wanderers and named companions (`taom_wanderers.xml:490, 516, 662` and `named_companions/named_companions.xml:4, 147, 399, 557, 653`). The Armory file is 220,975 lines <!-- measured: wc -l LOTRLOME_Armory/ModuleData/skins.xml 2026-09-05 -->; `TAOM_Map/ModuleData/skins.xml` is a 7-line file declaring no race <!-- measured: same finditer over TAOM_Map/ModuleData/skins.xml 2026-09-05 -->. Because the integer is a position, inserting a race anywhere but the end renumbers every race after it; that is why the `sauron` block was appended last (worked example below) and why hero races are persisted by name, not by index ([hero-race](../features/hero-race.md)). A race also needs five `<Monster>` ids (`<race>`, `<race>_child`, `<race>_settlement`, `<race>_settlement_slow`, `<race>_settlement_fast`) and an `as_<race>_facegen` action set, or townsfolk fail to spawn and the mesh T-poses ([culture-playability-wiring](../features/culture-playability-wiring.md), row 14).
+Human troops carry no `race=` at all; the thirteen `race="human"` uses are on wanderers (`taom_wanderers.xml:490, 516, 662`), named companions (`named_companions/named_companions.xml:4, 152, 404, 560, 656, 857`) and the four never-spawned picker characters in `characters/faction_ui_picker_characters.xml` (lines 24, 94, 168, 226). The Armory file is 220,975 lines <!-- measured: wc -l LOTRLOME_Armory/ModuleData/skins.xml 2026-09-05 -->; `TAOM_Map/ModuleData/skins.xml` is a 7-line file declaring no race <!-- measured: same finditer over TAOM_Map/ModuleData/skins.xml 2026-09-05 -->. Because the integer is a position, inserting a race anywhere but the end renumbers every race after it; that is why the `sauron` block was appended last (worked example below) and why hero races are persisted by name, not by index ([hero-race](../features/hero-race.md)). A race also needs five `<Monster>` ids (`<race>`, `<race>_child`, `<race>_settlement`, `<race>_settlement_slow`, `<race>_settlement_fast`) and an `as_<race>_facegen` action set, or townsfolk fail to spawn and the mesh T-poses ([culture-playability-wiring](../features/culture-playability-wiring.md), row 14).
 
 ## Item id prefix to Armory folder
 
@@ -446,10 +462,10 @@ The second example is the comment above the last race in the Armory skin registr
 
 ## Gotchas: what fails silently and what crashes
 
-- **The xml-data rule's region-code line disagrees with the map.** It says `EN=Rohan`, `B=Dunland`, `K=Easterlings`; the live file has `EN` = `Culture.empire` (Dunland), no `B` prefix at all, `K` = `Culture.battania` (Khand) with four `khuzait` holdouts, and Rohan under `V`. Trust the census above (`.claude/rules/xml-data.md:37` versus the `TAOM_Map/ModuleData/settlements.xml` census).
-- **The naming doc's `K` note is stale too.** It reports 26 of 27 `K` settlements as `battania`; the live count is 44 `battania` and 4 `khuzait` of 48 (`docs/reference/taom-map-settlement-naming.md:88`).
+- **The xml-data rule's region-code line disagrees with the map.** It says `EN=Rohan`, `B=Dunland`, `K=Easterlings`; the live file has `EN` = `Culture.empire` (Dunland), no `B` prefix at all, `K` = `Culture.battania` (Khand) with no `khuzait` holdouts, and Rohan under `V`. Trust the census above (`.claude/rules/xml-data.md:37` versus the `TAOM_Map/ModuleData/settlements.xml` census).
+- **The naming doc's `K` note is stale too.** It reports 26 of 27 `K` settlements as `battania`; the live count is 48 `battania` and no `khuzait` of 48 (`docs/reference/taom-map-settlement-naming.md:88`).
 - **Two Armory prefixes live where the guide says they do not** (`urukscout_*` in `mordor/`, `sk_dwarf_dain_*` in `iron_hills/`) and `clo_urukscout_*` names nothing (`docs/reference/armory-guide.md:27-33`). Adding a new item under the guide's folder would create the very shadowing the guide warns about.
-- **black-numenorean.md says TAOM has zero `race="human"`; it has eight**, all on wanderers and named companions, none on troops (`docs/features/black-numenorean.md:167-168`).
+- **black-numenorean.md says TAOM has zero `race="human"`; it has thirteen**, on wanderers, named companions and faction-picker display characters, none on troops (`docs/features/black-numenorean.md:167-168`).
 - **Five trait ids in `lords.xml` do nothing** (`Politician`, `Manager`, `KnightFightingSkills`, `CavalryFightingSkills`, `ArcherFightingSkills`) and a trait value is never clamped to its range (`PropertyOwner.cs:78-85`; `DefaultTraits.cs:129-153`).
 - **Twelve Armory items carry a `modifier_group` that is not a group** (`shield_wood`, `mail`, `false`) and will never roll a quality modifier (`ItemComponent.cs:21-25`; census above).
 - **`occupation` and `formation_position_preference` crash on a typo; `default_group` does not** and gives formation `-1` (`CharacterObject.cs:542`, `BasicCharacterObject.cs:498, 534-541`).
@@ -463,19 +479,19 @@ Measured 2026-09-05, except the culture, settlement, kingdom and lord rows, whic
 
 | Number | What | Command |
 |---|---|---|
-| 30 | cultures in `taom_spcultures.xml` (2026-10-27) | `python: re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', text, re.S)` over `Main/_Module/ModuleData/taom_spcultures.xml` |
+| 35 | cultures in `taom_spcultures.xml` (2026-11-03) | `python: re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', text, re.S)` over `Main/_Module/ModuleData/taom_spcultures.xml` |
 | 6 | cultures rewritten by `spcultures.xslt` (2026-10-27) | `rg -o "Culture\[@id='[^']+'\]" Main/_Module/ModuleData/spcultures.xslt \| sort -u` |
-| 34 | distinct culture ids on the live map (2026-10-27) | `python: set of culture= per <Settlement>` over `TAOM_Map/ModuleData/settlements.xml` |
-| 46 | culture ids the validator accepts (2026-10-27) | the `Registry:` line of `python tools/validate_moduledata.py --code LANDLESS_CULTURE`; `mcp__taom-moduledata__list_cultures` returned 45 from a registry cached before `eredluin` |
+| 39 | distinct culture ids on the live map (2026-11-03) | `python: set of culture= per <Settlement>` over `TAOM_Map/ModuleData/settlements.xml` |
+| 51 | culture ids the validator accepts (46 read on 2026-10-27, plus 5 authored since, not re-run) | the `Registry:` line of `python tools/validate_moduledata.py --code LANDLESS_CULTURE`; `mcp__taom-moduledata__list_cultures` returned 45 from a registry cached before `eredluin` |
 | false | `rohan` as a culture id (2026-10-27) | `mcp__taom-moduledata__culture_exists rohan` |
-| 1,141 | `<Settlement>` elements on the live map (158 hideouts) (2026-10-27) | `python: re.finditer(r'<Settlement\b[^>]*?\bid="([^"]+)"', text, re.S)` over `TAOM_Map/ModuleData/settlements.xml` |
+| 1,266 | `<Settlement>` elements on the live map (181 hideouts) (2026-11-03) | `python: re.finditer(r'<Settlement\b[^>]*?\bid="([^"]+)"', text, re.S)` over `TAOM_Map/ModuleData/settlements.xml` |
 | per-culture and per-prefix settlement counts | see the two tables (2026-10-27) | same census, grouped by `culture=` and by id prefix |
-| 18 | kingdoms in `taom_spkingdoms.xml` (2026-10-27) | `python: re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', text, re.S)` |
+| 22 | kingdoms in `taom_spkingdoms.xml` (2026-11-03) | `python: re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', text, re.S)` |
 | 8 | kingdom templates in `spkingdoms.xslt` (2026-10-27) | `rg -c "xsl:template match=\"Kingdom\[@id=" Main/_Module/ModuleData/spkingdoms.xslt` |
-| 1,286 | `<NPCCharacter>` in `characters/lords.xml`; per-prefix counts (2026-10-27) | `python: re.match(r'lord_([A-Za-z]+)', id)` grouped against `culture=` |
+| 1,346 | `<NPCCharacter>` in `characters/lords.xml`; per-prefix counts (2026-10-27, total and four new prefixes 2026-11-03) | `python: re.match(r'lord_([A-Za-z]+)', id)` grouped against `culture=` |
 | 15 | race ids (1 Native + 14 Armory) with line numbers | `python: re.finditer(r'<race\b[^>]*?\bid="([^"]+)"', text, re.S)` over `Native/ModuleData/skins.xml`, `LOTRLOME_Armory/ModuleData/skins.xml`, `TAOM_Map/ModuleData/skins.xml` |
 | 220,975 | lines in the Armory `skins.xml` | `wc -l LOTRLOME_Armory/ModuleData/skins.xml` |
-| 8, 194, 160, 295, 171, 10, 1, 212, 238, 289, 458 | `race=` uses per id in repo data (11 distinct) | `rg -o 'race="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |
+| 13, 340, 165, 307, 187, 11, 3, 3, 223, 244, 304, 492, 1 | `race=` uses per id in repo data (13 distinct, 2026-11-03) | `rg -o 'race="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |
 | 18 | Armory item folders | `ls -d LOTRLOME_Armory/ModuleData/LOTRLOME_items/*/ \| wc -l` |
 | per-prefix item counts | Armory prefix table | `python: count <Item\|CraftedItem id= per prefix per subfolder` |
 | 11 | distinct `slot=` names in repo data, with counts | `rg -o 'slot="[^"]+"' Main/_Module/ModuleData \| sort \| uniq -c` |

@@ -202,7 +202,7 @@ the operator and are not localized.
 
 ## Tests
 
-- `TAOM.Tests/Features/ServerSettings/ServerSettingsSchemaTests.cs`: 6 tests. Every settable property has one known kind (the parked pair is pinned), the schema matches the fingerprint's reflection per class (499 in all), and every compiled default passes its own validation.
+- `TAOM.Tests/Features/ServerSettings/ServerSettingsSchemaTests.cs`: 6 tests. Every settable property has one known kind (the parked pair is pinned), the schema matches the fingerprint's reflection per class (509 in all), and every compiled default passes its own validation.
 - `TAOM.Tests/Features/ServerSettings/ServerSettingsReaderTests.cs`: 35 tests, one per validation rule, plus unknown keys, summaries, malformed files, comments and empty files.
 - `TAOM.Tests/Features/ServerSettings/ServerSettingsDefaultsRendererTests.cs`: 5 tests. The defaults reference reads back with nothing reverted and shows the hitch probe off; the template reads as zero keys.
 - `TAOM.Tests/Features/ServerSettings/ServerSettingsFileStoreTests.cs`: 12 tests in real temp folders: the path rule, write-once, the creation race, a failed template write leaving no file, write-if-changed, unwritable and unreadable paths.

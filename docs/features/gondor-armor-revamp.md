@@ -90,9 +90,9 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 | `LOTRLOME_Armory/.../gondor/shoulder_armors.xml` | 9 new pauldrons (Lossarnach + Serelond) |
 | `LOTRLOME_Armory/.../gondor/arm_armors.xml` | 5 new bracers (Lossarnach + Serelond) |
 | `LOTRLOME_Armory/.../gondor/leg_armors.xml` | 4 new Serelond greaves |
-| `Main/_Module/ModuleData/troops/troops_gondor.xml` | 107 troops refit; 5 retired |
+| `Main/_Module/ModuleData/troops/troops_gondor.xml` | 107 troops refit; 5 retired, then the Lossarnach Noble line restored (2026-06-29) |
 | `Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml` | Castle EW8 guard pool — `_axeguard` → `_vet_axebearer` |
-| `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Castle EW8/EW12 + clan_empire_west_5 elite recruitment — `_noble` → `_axebearer` |
+| `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Gondor.cs` | Hand-written Gondor recruitment pools: the settlement pools are the C# fallback for `recruitment_pools/gondor.json`, and the clan pools have no JSON counterpart. `clan_empire_west_5` offers `gondor_loss_lumberman`, `gondor_loss_axebearer` and `gondor_loss_noble`. Castle EW8 is now a Pinnath Gelin pool and castle EW12 a Linhir pool |
 | `tools/generate_gondor_armor_phase2.py` | Idempotent armor item author |
 | `tools/apply_gondor_troop_revamp.py` | Equipment blueprint applier (107 troops) |
 | `tools/validate_gondor_refs.py` | Cross-reference gate for the underwear bug |
@@ -102,7 +102,7 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 
 - `LOTRLOME_Armory` module (declared in `SubModule.xml`) — must be loaded for items to resolve at runtime.
 - KEYforce mesh assets in `LOTRLOME_Armory/.../gondor/*.tpac` — the item XML references mesh names that must exist in the engine.
-- `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` — recruitment chain entry points must reference surviving troop ids.
+- `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Gondor.cs` and `Main/_Module/ModuleData/recruitment_pools/gondor.json`: recruitment chain entry points must reference surviving troop ids.
 
 ## Tests
 
@@ -125,7 +125,7 @@ This was done for 5 Lossarnach extras. New mod version permits ID changes — pr
 1. Add the troop id to `DELETE_IDS` in `tools/apply_gondor_troop_revamp.py`.
 2. Run `--apply`. The script deletes the entire `<NPCCharacter>` block and removes any `<upgrade_target id="NPCCharacter.<id>" />` references.
 3. Find external references: `grep -r "<deleted_id>" Main/`. Update:
-   - `VolunteerRecruitmentService.cs` — replace with surviving mainline ids
+   - `RecruitmentPools/VolunteerRecruitmentService.Gondor.cs` and `recruitment_pools/gondor.json`: replace with surviving mainline ids
    - `settlement_guards_config.xml` — same
    - `tools/generate_gondor_troops.py` — remove the troop's `Troop(...)` definition so re-runs don't recreate it
 4. Run `tools/validate_gondor_refs.py` and `./build.ps1 -RunTests`.

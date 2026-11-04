@@ -190,7 +190,7 @@ The probe counts which code each swing plays and where in the clip a hit lands, 
 - `TAOM.Tests/Features/AnimationVariety/AnimVarietyServiceTests.cs`: 49 tests; the off switch, every group warning, the blend-out comparison, swing counting, hit recording including the missile and early or late hit cases, the summary clock.
 - `TAOM.Tests/Features/AnimationVariety/AnimVarietyWiringTests.cs`: 9 tests; module declaration, entry point size, the missile gate and the agent list clear (source order), probe default on, the hint, and `MBActionSet.GetActionSetWithIndex(7).GetHashCode() == 7` (tagged `RequiresGame`) because the probe keys action sets on that hash.
 - `TAOM.Tests/Features/AnimationVariety/GaitVarietyWiringTests.cs`: 10 tests; module declaration, entry point under 150 lines, singleton catalog and container resolution, settings defaults and slider bounds, the step size hint, `EquipmentIndex.Horse`, the cached warning delegate.
-- `TAOM.Tests/Infrastructure/HotPathSettingsProvidersTests.cs`: both providers join the lazy-accessor, counting and container tests. `TAOM.Tests/Features/CoopInterop/SettingsFingerprintTests.cs`: the `TaomSettings` split is 387 reflected, 269 simulation-relevant.
+- `TAOM.Tests/Infrastructure/HotPathSettingsProvidersTests.cs`: both providers join the lazy-accessor, counting and container tests. `TAOM.Tests/Features/CoopInterop/SettingsFingerprintTests.cs`: the `TaomSettings` split is 474 reflected, 331 simulation-relevant.
 - Measured with coverlet (`--collect:"XPlat Code Coverage"`, 2026-10-18): 100% of lines and branches of `AnimVarietyService`, `GaitVarietyService` and `GaitVariantCatalog`.
 
 ## How to Test in Game

@@ -64,7 +64,7 @@ from `bannerlord_perks.json`, and resolves authoritative skills from `taom_lord_
 ### No single-formula "parity" lens (deliberate)
 The troop report colored each troop vs a single formula curve. Lords have **two** skill systems —
 `rebalance_lords.py` (a 12-archetype baseline + cultural mod + age, which writes the *inline* `<skills>`) and
-`apply_culture_skills_traits.py` (35 archetypes → the *SkillSets* the engine actually uses). Comparing the
+`apply_culture_skills_traits.py` (74 archetypes → the *SkillSets* the engine actually uses). Comparing the
 authoritative SkillSet skills against the `rebalance_lords` baseline compares two different systems (and the
 legendary baseline = ruler×2.5 ≈ 7975 is unreachable: 18 skills × 330 cap = 5940). So the report colors the total
 by **raw magnitude** instead of a misleading cross-system delta. The "curve" is established when a lord rebalance

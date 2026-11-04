@@ -100,6 +100,7 @@ class ParseLogTests(unittest.TestCase):
         self.assertEqual(self.parsed["speed"], 1)
         parsed = r.parse_log("[FordsOfWar][Speed] speed=4 mt=10.0\n[FordsOfWar][Speed] speed=10 mt=20.0\n[FordsOfWar][Speed] speed=1 mt=30.0\n")
         self.assertEqual(parsed["speed"], 10)
+        self.assertEqual(parsed["speed_changes"], 3)
 
     def test_pauses_errors_and_warnings_are_counted(self):
         self.assertEqual(self.parsed["esc_pauses"], 1)
@@ -153,6 +154,31 @@ class FindingTests(unittest.TestCase):
         self.assertIn("SPEED", r.findings(facts(speed=10))[0])
         self.assertIn("10x", r.findings(facts(speed=10))[0])
         self.assertNotIn("SPEED", text(r.findings(facts())))
+
+    def test_4x_is_named_as_the_balance_speed_with_its_one_caution(self):
+        found = r.findings(facts(speed=4, speed_changes=1))[0]
+        self.assertIn("4x", found)
+        self.assertIn("tower damage", found)
+
+    def test_10x_is_said_to_be_no_balance_evidence(self):
+        self.assertIn("smoke", r.findings(facts(speed=10, speed_changes=1))[0])
+
+    def test_a_speed_changed_during_the_match_is_not_a_clean_sample(self):
+        found = r.findings(facts(speed=10, speed_changes=4))[0]
+        self.assertIn("changed 4 times", found)
+
+    def test_a_normal_match_says_nothing_about_speed(self):
+        self.assertNotIn("SPEED", text(r.findings(facts())))
+
+    def test_a_fallen_keep_names_the_winner(self):
+        found = text(r.findings(facts(winner="East", keep_fell=2000.0, mt=2000.0)))
+        self.assertIn("RESULT: mordor won at 2000 s", found)
+        self.assertNotIn("under the", found)
+
+    def test_a_win_before_30_minutes_is_flagged_and_is_not_a_short_match(self):
+        found = text(r.findings(facts(winner="West", keep_fell=600.0, mt=600.0)))
+        self.assertIn("RESULT: rivendell won at 600 s, under the 30-minute target", found)
+        self.assertNotIn("SHORT", found)
 
     def test_a_tower_swing_is_flagged(self):
         self.assertIn("towers", text(r.findings(facts(towers_lost={"West": 0, "East": 4}))))

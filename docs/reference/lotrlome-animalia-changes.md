@@ -17,7 +17,7 @@ two animals play their OWN clips, so each has its own action set instead of borr
 | `Assets/creature/elk/animations/{elk,moose}/anim_animalia_*_anm.tpac` | 54 clips written by `tools/gen_animalia_anim_clips.ps1` (52, then the two `_movement` standing clips); they need one Kit load to get their RuntimeDataCache entries |
 
 `AssetSources/creature/animalia/` is the first staging copy (all six variants, all clips); Mike's layout above
-supersedes it.
+supersedes it, and that copy is no longer in the Armory (`AssetSources/creature/animalia/` is absent, checked 2026-11-03).
 
 ## Backups
 
@@ -61,8 +61,8 @@ types. No `project.mbproj` entry, for the reason the war ram's ledger gives.
 
 ## 3. `ModuleData/action_sets.xml`: two action sets and their twins
 
-Inserted after the war ram's sets, before the `/WARG` marker. `as_animalia_elk` (33 actions) and
-`as_animalia_moose` (30) are children of `as_horse` on `horse_skeleton`; each action copies the vanilla
+Inserted after the war ram's sets, before the `/WARG` marker. `as_animalia_elk` (33 actions, 34 with the antler row of section 5) and
+`as_animalia_moose` (30, 31 with its antler row) are children of `as_horse` on `horse_skeleton`; each action copies the vanilla
 `as_horse` action's attributes (the `alternative_group`s) and changes only the clip. Bound: the standing pace
 (`act_horse_stand_for_movement_data`), stands, idles, riderless idles, the forward gaits and their `_stand`
 twins (both gallop feet on one clip), backward walk, the kick, the falls and their `_continue` holds; the elk also
@@ -82,8 +82,8 @@ Inserted after `taom_elk_saddle_a`.
 | `taom_animalia_moose_a` "Mirkwood Moose" | `animalia_moose_big` | `Monster.taom_animalia_moose`, maneuver 60, speed 56, charge 65, extra_health 40, weight 550, value 1800 |
 
 Both `culture="Culture.mirkwood"`, `difficulty="0"`, `is_merchandise="false"`, `<Flags Civilian="true" />`.
-`is_merchandise` keeps them out of vanilla loot, workshop output and tournament prizes; TAOM's CultureMarketplace and
-vanilla caravans do not read it, so the Mirkwood culture pool can draw either into a Mirkwood market, and the Animalia elk is also routed there
+`is_merchandise` keeps them out of vanilla loot, workshop output and tournament prizes; vanilla caravans do not read it. CultureMarketplace's own pool
+ignores it too, but its stock gate (`ArmourMarketplaceGate`) refuses a non-merchandise item in the daily draw, so the elk and the moose both reach a Mirkwood market through the guaranteed stock: each is routed there
 with `min_stock` 1 (`culture_marketplace_config.xml`; section 7). **`body_length="100"` is only a placeholder** since section 6 (the engine's
 `Items.xsd` requires the attribute): the size is each Monster's `taom_body_length`. Before that the items carried it: 100 for both (the authored size; both
 meshes were fitted to the horse), the moose raised to 150 after the first battle (backup `.bak-sizes-20260923`). The
@@ -112,7 +112,7 @@ file parsed after, BOM and line endings kept); `tools/apply_animalia_armory.py` 
 | `Monsters/LOTR/lotr_monster_animalia.xml` | `taom_body_length="100"` on the elk, `"150"` on the moose; the header says the size lives here |
 | `LOTRLOME_items/LOTRAOM_horses.xml` | `body_length` set to the placeholder 100 on `taom_animalia_elk_a` and `taom_animalia_moose_a` (and on the great elk's `taom_elk_a`, [elk ledger](lotrlome-elk-changes.md) section 7); the block comment rewritten |
 | `action_sets.xml` | The twins comment no longer says the engine derives both (see section 3) |
-| `Languages/loc_LOTRAOM_horses.xml` | English rows `taom_animalia_elk_a` "Mirkwood Elk", `taom_animalia_moose_a` "Mirkwood Moose" after the elk saddle's; the twelve languages are owed (`/localize`) |
+| `Languages/loc_LOTRAOM_horses.xml` | English rows `taom_animalia_elk_a` "Mirkwood Elk", `taom_animalia_moose_a` "Mirkwood Moose" after the elk saddle's; the twelve languages were owed (`/localize`); all 12 language files carry both keys with translated text (checked 2026-11-03) |
 
 TAOM copies each `taom_body_length` into the items at every game init ([monster-size.md](../features/monster-size.md)).
 The engine's `Monsters.xsd` does not declare the attribute, so the rgl log shows one "not declared" validation line
@@ -149,7 +149,7 @@ is routed into Mirkwood markets, then (`.bak-moosesale-20260923`) the market wor
 CultureMarketplace does: it does not read `is_merchandise`, so the Mirkwood culture pool can draw either animal
 (Mike: the moose may be sold), then (`.bak-caravan-20260923`) the caravan clause corrected (caravans do not read
 `is_merchandise`). The comment matches `ITEMS` in `tools/apply_animalia_armory.py`; no test compares comments, so
-diff them by hand after an edit.
+diff them by hand after an edit. Since 2026-09-28 (`301cd338a`), and with gating off since 2026-10-02 (`bc39f6e4d`), the stock gate refuses non-merchandise items in the daily draw (section 4).
 
 ---
 

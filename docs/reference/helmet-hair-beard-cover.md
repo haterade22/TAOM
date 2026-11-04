@@ -57,13 +57,13 @@ only real choices are `All` (hidden) and anything else (shown).
 
 ## Current Armory distribution
 
-Measured 2026-10-05 over every `LOTRLOME_items/*/head_armors.xml` in the live Armory
+Measured 2026-11-03 (2026-10-05 before) over every `LOTRLOME_items/*/head_armors.xml` in the live Armory
 (`grep -rhoi '<attr>="[^"]*"' --include=head_armors.xml . | tr A-Z a-z | sort | uniq -c`):
 
 | Attribute | `all` | `none` | `type1` | `type2` | `type3` |
 |---|---|---|---|---|---|
-| `hair_cover_type` | 892 | 4 | 8 | 127 | 0 |
-| `beard_cover_type` | 526 | 157 | 247 | 2 | 99 |
+| `hair_cover_type` | 881 | 4 | 8 | 143 | 0 |
+| `beard_cover_type` | 514 | 163 | 253 | 16 | 90 |
 
 No helmet uses `type4` for either.
 

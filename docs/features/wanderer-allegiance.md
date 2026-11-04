@@ -250,7 +250,7 @@ tavern of the other. Two engine facts decide how any fix must work.
 `FactionSides.OfHero` returns `Of(clan.MapFaction)` (`Main/Adapters/FactionSides.cs`:33), and a mercenary clan keeps
 `Clan.Kingdom` set to its employer, so while a band serves a realm it resolves to that realm's id and side, and its own clan
 row in `alignment.json` is not read (yotthani's report says the same, line 40). The player's side in "The rule" above is the
-same reading (`OfPlayer`, `:55`). A clanless wanderer is the other branch: no faction id and its own culture (`:28-33`),
+same reading (`OfPlayer`, `:55`). A clanless wanderer is the other branch: no faction id and its own culture (`:28-34`),
 which is why the wanderer rule keys on culture. A future rule that wants a band's own side has to read the clan before the
 map faction.
 

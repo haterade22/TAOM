@@ -301,7 +301,7 @@ Rally radii run 6 to 12 m. The initiator and every third joiner shout.
 
 `Enable Race Abilities` (switching on takes effect from the next battle; switching off stops new abilities at once
 and lets running ones finish), `War Cries`, `Show Ability Messages` (one line when five or more soldiers on one side
-fire the same ability within two seconds; "your side" counts an allied lord's troops too), `Race Ability Debug Log`
+fire the same ability within two seconds; "your side" counts an allied lord's troops too; never shown in Fords of War, where an ability fires every few seconds, `RaceAbilityTicker.cs`), `Race Ability Debug Log`
 (off: see below), `Ability Glow and Sparks` (on: the outlines and sparks above, drawn on this client only, so co-op
 classifies it as presentation).
 

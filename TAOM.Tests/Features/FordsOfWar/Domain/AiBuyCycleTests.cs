@@ -227,6 +227,72 @@ public class AiBuyCycleTests
         Assert.AreEqual(0, bought.Lane, "lane 0 has the best odds, and it has room");
     }
 
+    /// <summary>The slot's view with every lane under threat, lane 1 the worst, and no hero slot free, so no lane can lead an assault.</summary>
+    private static MatchView AllLanesThreatened(FordsMatch match)
+    {
+        var view = match.GetView(EastSlot);
+        var lanes = view.Lanes.Select(l => l with { OwnLive = 10, EnemyLive = 50, Threat = l.Index == 1 ? 60 : 30 }).ToList();
+        return view with { AssaultThreshold = 70, HeroSlotsFree = 0, Lanes = lanes };
+    }
+
+    [TestMethod]
+    public void Decide_ALaneUnderThreat_BuysTheCyclesNextEntry_ForThatLane_NotTheCheapest()
+    {
+        var dearest = Offers.OrderByDescending(o => o.PackPrice).First();
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+
+        var bought = Spent(ai, AllLanesThreatened(Match(new[] { dearest.OfferId })), 10f).Single();
+
+        Assert.AreEqual(dearest.OfferId, bought.Id);
+        Assert.AreEqual(1, bought.Lane, "lane 1 has the worst threat");
+    }
+
+    [TestMethod]
+    public void Decide_EveryLaneUnderThreat_TheCycleMovesOn_SoASideThatIsBehindStillGetsItsUpgrades()
+    {
+        const string upgrade = "melee_damage";
+        var match = Match(new[] { Offers[0].OfferId, "up:" + upgrade });
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+        var view = AllLanesThreatened(match);
+
+        Assert.AreEqual(Offers[0].OfferId, Spent(ai, view, 10f).Single().Id);
+        var second = Spent(ai, view, 20f).Single();
+        Assert.AreEqual(AiActionKind.BuyUpgrade, second.Kind);
+        Assert.AreEqual(upgrade, second.Id);
+    }
+
+    [TestMethod]
+    public void Decide_ALaneUnderThreat_TheNextEntryCostsTooMuch_SavesForIt_AndBuysNothingCheaper()
+    {
+        var dearest = Offers.OrderByDescending(o => o.PackPrice).First();
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+
+        Assert.AreEqual(0, Spent(ai, AllLanesThreatened(Match(new[] { dearest.OfferId }, gold: dearest.PackPrice - 1)), 10f).Count);
+    }
+
+    [TestMethod]
+    public void Decide_ALaneUnderThreat_ABeastDue_ComesToThatLane()
+    {
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+
+        var call = ai.Decide(AllLanesThreatened(BeastMatch(new[] { "beast:mumak" }, 1000)), 10f).Single(a => a.Kind == AiActionKind.CallCreature);
+
+        Assert.AreEqual("mumak", call.Id);
+        Assert.AreEqual(1, call.Lane);
+    }
+
+    [TestMethod]
+    public void Decide_ALaneUnderThreat_WithoutACycle_StillBuysTheCheapestFoot()
+    {
+        var cheapestFoot = Offers.Where(o => o.Role == UnitRole.Spear || o.Role == UnitRole.Infantry).OrderBy(o => o.PackPrice).First();
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+
+        var bought = Spent(ai, AllLanesThreatened(Match(null)), 10f).Single();
+
+        Assert.AreEqual(cheapestFoot.OfferId, bought.Id);
+        Assert.AreEqual(1, bought.Lane);
+    }
+
     [TestMethod]
     public void Decide_WithABeastEntry_MakesNoOtherCall_SoTheGoldIsNotSpentOnTheCheapestBeast()
     {

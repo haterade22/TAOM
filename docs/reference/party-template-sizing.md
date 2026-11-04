@@ -68,10 +68,10 @@ One ratio `r` is drawn for the whole party, then applied to every stack. Callers
 that party's lifetime, and **completely independent of the template**.
 
 **Consequence:** the expected spawn roster is the midpoint of the min sum and the max sum, and
-raising the max sum raises it linearly. Mordor's culture template carries 52 stacks summing to
-min 47 (39 when this was written; commit `2fcbef10` added 13 Black Numenorean stacks and re-ran the
-tool, which re-absorbed them while holding the 3500 target). At the old max sum of 1446 the expected spawn roster was about 747. At the new 3500 it is
-about 1773.
+raising the max sum raises it linearly. Mordor's culture template carries 40 stacks on 2026-11-03, summing to
+min 47 (52 stacks at the sizes below; 39 when this was written; commit `2fcbef10` added 13 Black Numenorean stacks and re-ran the
+tool, which re-absorbed them while holding the 3500 target of that time). At the old max sum of 1446 the expected spawn roster was about 747. At 3500 it was
+about 1773. At exactly 260 it would be about 153; the live max sum is 267 on 2026-11-03 (the dry run would trim it), which gives about 157.
 
 ## `PartySizeLimit` is the steady-state cap, and it is a different model
 
@@ -91,7 +91,7 @@ penalty (`DefaultPartyMoraleModel.GetPartySizeMoraleEffect:132-142`, `-sqrt(over
 second, morale-based desertion on top of that.
 
 TAOM overrides that model with **`TaomPartySizeModel`** (`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs`,
-registered at `Main/SubModule.cs:827`). It layers three things onto the same `ExplainedNumber`:
+registered at `Main/SubModule.cs:1196`). It layers three things onto the same `ExplainedNumber`:
 
 1. **Culture party-size feats** via `ICulturalFeatsService.ApplyPartySizeFeats` (factor-based, `AddFactor`).
 2. **Career passives** via `ICareerPassiveService.ApplyFlat` (flat counts, not factors).
@@ -121,15 +121,15 @@ weight = (stack.MinValue + stack.MaxValue) / 2f                                 
 then draws `count` troops with `MBRandom.ChooseWeighted` over those per-stack weights. The draw is a
 plain `for (i = 0; i < count; i++)`, so a negative `count` simply does not run.
 
-**These targets push most lords past that gate.** The roster the lord is already holding at that
+**The 3500-era targets pushed most lords past that gate; the 260 target mostly does not.** The roster the lord is already holding at that
 point came from the template: `LordPartyComponent.InitializationArgs.InitializeLordPartyProperties`
 (`LordPartyComponent.cs:38-39`) hands `Clan.DefaultPartyTemplate` to
 `InitializeMobilePartyAroundPosition`, which routes to `FindAppropriateInitialRosterForMobileParty`
 (`MobileParty.cs:2645`). So the top-up fires only for the lords whose ratio draw happened to land the
 roster under their own limit, which is `r < (limit - minSum) / spread`. For Mordor that is
-`(limit - 47) / 3453`: against a limit near 200 it is about 4% of lords, down from about 11% at the
-old spread of 1399. For the other 96% the template alone sets starting size and the top-up adds
-nothing. The bigger the target, the more completely the template takes over.
+`(limit - 47) / 220` on the live 267: against a limit near 200 it is about 70% of lords. At the
+3500 target (spread 3453) it was about 4%, and about 11% at the old spread of 1399. So the bigger the
+target, the more completely the template takes over and the top-up adds nothing.
 
 On the parties where it does fire, `(min + max) / 2` per stack is what decides **which** troops get
 added, so editing a stack's `max_value` shifts that stack's share of the composition, not just the
@@ -145,7 +145,7 @@ scaling off the player's party rather than a constant). It is not part of the lo
 ## Current per-culture max-sum targets
 
 Set by `tools/rebalance_party_template_maxes.py` (`CULTURE_TARGETS`, lines 67-95) and applied to
-`Main/_Module/ModuleData/taom_partyTemplates.xml` on 2026-08-14. **193 templates** are in scope.
+`Main/_Module/ModuleData/taom_partyTemplates.xml` on 2026-08-14. **195 templates** are in scope (2026-11-03; the dry run prints the count, and it was 193 on the first day).
 "Old max" below is the culture-level template's max sum at `HEAD` before the 2026-08-14 pass; "min"
 is its min sum, which the tool never touches.
 
@@ -166,13 +166,13 @@ orc 132-176, goblin 162-187. An individual lord can land anywhere from 3 to 320.
 |---|---|---|---|---|---|
 | goblin | 320 | 11 | 12 | 54 | 600 |
 | bluecraig | 320 | 1 | 12 | 54 | 600 |
-| mordor | 260 | 16 | 52 | 47 | 1446 |
+| mordor | 260 | 17 | 52 | 47 | 1446 |
 | isengard | 260 | 12 | 19 | 54 | 950 |
 | gundabad | 260 | 6 | 15 | 58 | 750 |
 | dolguldur | 260 | 7 | 31 | 93 | 1550 |
 | mistymountainorcs | 260 | 6 | 12 | 54 | 600 |
 | erebor | 220 | 8 | 47 | 102 | 2350 |
-| gondor | 200 | 15 | 14 | 10 | 700 |
+| gondor | 200 | 16 | 14 | 10 | 700 |
 | rohan | 200 | 23 | 10 | 37 | 500 |
 | dale | 200 | 10 | 21 | 57 | 1050 |
 | dunland | 200 | 10 | 10 | 33 | 500 |
@@ -201,11 +201,14 @@ fight it. The lord template shipped with a max sum of 83, a midpoint spawn of ab
 target above, with the mins unchanged, after a 200-day balance simulation had Arthedain losing 66 % of
 its men. `python tools/generate_arthedain_troops.py --check` confirms the XML matches.
 
-**Cardolan, Rhudaur and Ered Luin are not in it either.** Each realm's generator
-(`generate_cardolan_troops.py`, `generate_rhudaur_troops.py`, `generate_eredluin_troops.py`, all on
+**Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion are not in it
+either** (the dry run lists their `kingdom_hero_party_<realm>_template` ids as SKIPPED). Each realm's generator
+(`generate_cardolan_troops.py`, `generate_rhudaur_troops.py`, `generate_eredluin_troops.py`,
+`generate_anduinvale_troops.py`, `generate_angaladh_troops.py`, `generate_dorwinion_troops.py`,
+`generate_southrhovanion_troops.py`, all on
 `tools/realm_troops.py`, as Arthedain's is) writes its templates inside its own `TAOM-<REALM>-PT` marker
 region. Their lord templates ship at Arthedain's shape: a max sum of 200 and a min sum of 8, over 14
-stacks for Cardolan and Rhudaur and 16 for Ered Luin. Each generator's `--check` confirms the XML matches.
+stacks, except Ered Luin's 16. Each generator's `--check` confirms the XML matches.
 
 `khand` is present in `CULTURE_TARGETS` and matches nothing: no `kingdom_hero_party_khand_*`
 template exists. Leaving the key costs nothing and documents the intent if one is ever authored.
@@ -255,11 +258,11 @@ Verified against `Main/_Module/ModuleData/taom_spcultures.xml` and `spcultures.x
 | umbar | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |
 | shaghana | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |
 | abanissa | `kingdom_hero_party_harad_template` | `taom_spcultures.xml` |
-| battania (Khand / Variag) | `kingdom_hero_party_rhun_template` | `spcultures.xslt:1349` |
+| battania (Khand / Variag) | `kingdom_hero_party_rhun_template` | `spcultures.xslt:1365` |
 
 Khand is the case to watch, and it shares far more than the one attribute the table lists. Across
-the fourteen troop and party-template attributes the two blocks set (`spcultures.xslt:1323-1370` for
-`battania`, `:923-939` for `khuzait`), thirteen are identical strings: the same `basic_troop`
+the fourteen troop and party-template attributes the two blocks set (`spcultures.xslt:1358-1386` for
+`battania`, `:926-943` for `khuzait`), thirteen are identical strings: the same `basic_troop`
 (`loke_rim_initiate`), the same `elite_basic_troop` (`loke_rim_cavalry`), the same four
 `rhun_militia_*` troops, and the same villager, militia, rebels and three patrol templates. Only
 `vassal_reward_party_template` differs, and it does not point at Rhûn either (Khand's is
@@ -300,7 +303,7 @@ excluded: they belong to minor factions, not kingdom lords.
 **One trap in the matcher.** The culture key is taken from the template id **prefix**, not from the
 owning clan's culture. `kingdom_hero_party_goblin_bluecraig_N_template` classifies as `goblin`, and
 `kingdom_hero_party_rivendell_lindon_N_template` classifies as `rivendell`. That is harmless today
-only because each of those pairs shares a target (4500 and 1000). Give Blue Craig or Lindon a
+only because each of those pairs shares a target (320 and 150). Give Blue Craig or Lindon a
 different number from its prefix culture and those clan templates will silently follow the prefix.
 The script prints a `WARNING: ... matched no culture key and were SKIPPED` block for ids that match
 nothing, so a genuinely unrecognised template is loud; a mis-attributed one is not.

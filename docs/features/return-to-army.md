@@ -172,7 +172,7 @@ Search the TAOM debug log for `[ReturnToArmy]`:
 
 - `left <settlement> as an unattached member of <leader>'s army` is the fix doing its job. One line
   per click, never per tick.
-- `could not read the party's army state, deferring to vanilla's wait menu` means the prefix threw
+- `could not read the party's army state or place it at the gate, deferring to vanilla's wait menu` means the prefix threw
   before touching anything. The player is back in the #566 trap; the exception text says why.
 - `the leave sequence threw after mutating` is an ERROR, not a fallback. Something between the gate
   move and the autosave signal failed; vanilla was skipped on purpose because its body would now

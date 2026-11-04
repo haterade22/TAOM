@@ -12,8 +12,9 @@
 
 ## Where the flags live (and where they DON'T)
 
-- **They are baked into the compiled clip** — the `*_anm.tpac` metadata. Set them in the Modding Kit's
-  **Animation Clip Inspector** (the checkbox list), then the clip is recompiled with the flag bitfield.
+- **They are baked into the compiled clip**: the `*_anm.tpac` metadata. Set them in the Modding Kit's
+  **Animation Clip Inspector** (the checkbox list); Save writes each set flag into the metadata as a name, not as a
+  bitfield (`set_clip_balance_name.py` `parse` reads a count, then one name per flag).
 - **NOT in `action_types.xml`** — that file declares action *types* (`name`, `usage_direction`) and binds them to
   clips in the `action_set`; it does **not** carry the per-clip flags.
 - The engine reads them at runtime via the native `MBAnimation_get_animation_flags` callback. The bitfield is the
@@ -292,14 +293,15 @@ Source: the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-202
   its clips play their own segment. A metadata-only clone saved in the Kit and bound to its own master plays that
   master, as TAOM's generated creature clips do (`tools/gen_troll_anim_clips.ps1`).
 
-## TODO — a tpac clip-flag tool (not yet built)
+## TODO: a tpac clip-flag patch tool (not yet built)
 
 The existing `tpac_skeleton_*` tools read/patch **Skeleton** UserData, not **Animation** clip metadata. A
-heuristic scan of the `_anm.tpac` metadata for the `AnimFlags` ulong was **unreliable** (false positives from
-adjacent duration floats — the Animation metadata layout isn't reverse-engineered). A proper
-`tpac_clip_flags.py` (read the exact baked flags; optionally patch them to avoid per-clip Kit clicking) is a
-high-value follow-up: it would let us read ADOD_Beasts's exact per-clip flags authoritatively and set the spider's
-programmatically. Until then: read/set flags in the Kit's Animation Clip Inspector.
+heuristic scan of the `_anm.tpac` metadata for the `AnimFlags` ulong was **unreliable**
+(false positives from adjacent duration floats). `tools/tpac_clipinfo.py` is a separate heuristic that scans for short strings and integral floats. The metadata layout is now mapped (system map section 2), and
+`tools/set_clip_balance_name.py` (`parse`) walks it in the engine's order and returns the exact flag names a clip
+carries; `tools/creature_fit.py index` reads them that way. What does not exist is a `tpac_clip_flags.py` that
+patches the flags to avoid per-clip Kit clicking: it would let us set the spider's flags programmatically. Until
+then: set flags in the Kit's Animation Clip Inspector.
 
 ---
 

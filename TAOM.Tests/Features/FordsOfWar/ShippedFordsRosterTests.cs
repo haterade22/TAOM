@@ -316,12 +316,12 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
-    public void TheShippedMordor_DoesLessToTowers_AndItsTraitsSaySo()
+    public void TheShippedTowerLimit_MakesAnOuterTowerLastOverTwoMinutes_AndIsTheDefault()
     {
-        var mordor = Catalog().Factions.Single(f => f.FactionId == "mordor");
+        var towers = Catalog().Match.Towers;
 
-        Assert.AreEqual(0.6f, mordor.FeatsOrNone.DamageToTowers);
-        Assert.IsTrue(mordor.Traits!.Any(t => !t.Strength && t.Text.Contains("40% less damage to towers")), "a player must read the weakness");
+        Assert.AreEqual(FordsMatchConfig.Default.Towers.AssaultDamagePerSecond, towers.AssaultDamagePerSecond);
+        Assert.IsTrue(towers.TowerHitPoints / towers.AssaultDamagePerSecond > 120f, "a horde must not take a tower in seconds");
     }
 
     [TestMethod]

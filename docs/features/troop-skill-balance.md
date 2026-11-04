@@ -27,7 +27,7 @@ final_skill = BASELINE[group][level][skill] + CULTURAL_MODS[culture].get(skill, 
 ```
 
 - **`GROUP_BASELINES`** — Infantry / Ranged / Cavalry / HorseArcher tables keyed by the 11 tier levels `{1,6,11,16,21,26,31,36,41,46,51}`. Troops at off-grid levels (e.g. L7, L13) are skipped (no reference).
-- **`CULTURAL_MODS`**: per-culture skill deltas applied on top of baseline (the faction's identity). Keyed by the **filename culture** (`troops_<culture>.xml`), with two special cases in `detect_culture`: `iron_hills_*` ids (which live in the erebor file) → `iron_hills`, and `rhun_new` (the Rhûn file) → `rhun`. **Every culture file must have an entry.** Lindon had none until 2026-08-30, so the formula ran against it with a zero modifier: the first `--apply` after that gap opened would have stripped the high-elf tuning off all 30 Lindon troops (27 of the 30 have a Rivendell twin carrying identical skill values). A missing key does not error, it silently rebaselines a whole faction to the bare curve.
+- **`CULTURAL_MODS`**: per-culture skill deltas applied on top of baseline (the faction's identity). Keyed by the **filename culture** (`troops_<culture>.xml`), with four special cases in `detect_culture`: `iron_hills_*` ids (which live in the erebor file) → `iron_hills`, `rhun_new` (the Rhûn file) → `rhun`, `mordor_uruk*` ids → `mordor_uruk`, and `orthanc*` ids → `isengard_orthanc`. **Every culture file must have an entry.** Nine of the 25 files have none today (`anduinvale`, `angaladh`, `arthedain`, `cardolan`, `dorwinion`, `eredluin`, `feral_orcs`, `rhudaur`, `southrhovanion`), so the formula treats each with a zero modifier. Lindon had none until 2026-08-30, so the formula ran against it with a zero modifier: the first `--apply` after that gap opened would have stripped the high-elf tuning off all 30 Lindon troops (27 of the 30 have a Rivendell twin carrying identical skill values). A missing key does not error, it silently rebaselines a whole faction to the bare curve.
 - **`SKIP_TROOP_IDS`**: troops excluded from the formula entirely (genuine non-humanoid creatures + hand-tuned bespoke mounts). The Iron Hills noble crossbow line left it on 2026-09-18 (#617, below). They still take part in the monotonicity clamp, which only ever raises, so a skip protects a hand-tune without letting it read backwards in the tree.
 - **Militia** take the level-21 baseline whatever their real level; the elite slots (`*_elite_militia_troop`, the veteran spearman and veteran archer) add `MILITIA_ELITE_BONUS` (15) on every skill, since 2026-09-13, because a level-11 militia archer and a level-16 veteran militia archer had been the same eight numbers. Militia are identified by the ids a culture **binds** to a militia slot in `taom_spcultures.xml` / `spcultures.xslt`, never by name. See "Militia are a binding, not a name" below.
 
@@ -78,7 +78,7 @@ GROUP_BASELINES + CULTURAL_MODS  (rebalance_troops.py — the curve)
    (WRITES skills via regex,      (READS, imports the curve,
     preserves all formatting)      emits HTML/MD/JSON overview)
         |                              |
-  troops_*.xml (16 files)        tools/reports/troop-balance/REPORT.{html,md} + .json
+  troops_*.xml (25 files)        tools/reports/troop-balance/REPORT.{html,md} + .json
 ```
 
 ## The cultural modifiers
@@ -130,7 +130,7 @@ Verification: `validate_moduledata` PASS (zero broken refs); diff perfectly bala
 
 **The rule: no skill on an upgrade target may sit below the troop it upgrades from.** A player reads the troop tree as a ladder, so an upgrade that lowers a stat reads as a bug however it got there. Vanilla is looser (87 of its 195 edges shed a secondary skill, worst single drop -70), but TAOM had drops down to -200 and 5 edges where the total of all 8 skills fell, so the tighter rule is the one that ships.
 
-`clamp_upgrade_monotonicity` runs after the formula and before the write, over the whole roster at once because a single topological order is what lets a raise propagate down a chain and lets formula-skipped troops lift their children. It spans two directories: all 682 edges inside `troops/` stay within their own file, but the 16 villager edges in `characters/npcs_*.xml` cross into it. It topologically orders the upgrade graph (871 nodes and 698 edges once the villager sources in `characters/npcs_*.xml` are included; acyclicity is asserted, not assumed) and sets `child[skill] = max(child[skill], parent[skill])`. Troops the formula skipped take part using their current values: they can lift a child and be lifted, and since a clamp only raises, a hand-tune is never reverted.
+`clamp_upgrade_monotonicity` runs after the formula and before the write, over the whole roster at once because a single topological order is what lets a raise propagate down a chain and lets formula-skipped troops lift their children. It spans two directories: all 844 edges inside `troops/` stay within their own file, but the 21 villager edges in `characters/npcs_*.xml` cross into it. It topologically orders the upgrade graph (1,064 troop definitions and 844 edges, plus 21 villager sources and their 21 edges, once the villagers in `characters/npcs_*.xml` are included; acyclicity is asserted, not assumed) and sets `child[skill] = max(child[skill], parent[skill])`. Troops the formula skipped take part using their current values: they can lift a child and be lifted, and since a clamp only raises, a hand-tune is never reverted.
 
 **Two modes, and picking the wrong one rebaselines the roster inside a bug fix.**
 
@@ -196,20 +196,20 @@ has a templated side today).
 
 ### The graph spans two directories
 
-Upgrade sources are not only in `troops/`. Each of the 15 `villager_<culture>` entries in
+Upgrade sources are not only in `troops/`. Each of the 21 `villager_<culture>` entries in
 `characters/npcs_*.xml` upgrades into its culture's tier-1 troop, and the engine treats any character
 with a non-empty `UpgradeTargets` array as upgradeable. Gating only `troops/` left 16 edges
 unchecked, six of them regressing, while `validate_moduledata.py` reported PASS. Those villagers now
 declare their skills explicitly, at exactly the values the vanilla template had been supplying, so
-the data is self-describing and every gate can read the whole graph: **698 edges, 682 of them inside
-`troops/` and 16 crossing in from `characters/`.** `rebalance_troops.py` loads the external sources
+the data is self-describing and every gate can read the whole graph: **865 edges, 844 of them inside
+`troops/` and 21 crossing in from `characters/`.** `rebalance_troops.py` loads the external sources
 read-only through `load_external_sources()`; they seed the clamp and are never written.
 
 ### Militia are a binding, not a name
 
-TAOM militia take the **level-21 baseline regardless of their actual level** so sieges and village defence stay costly (user direction, 2026-06-24), and the elite slots sit `MILITIA_ELITE_BONUS` (15) above that on every skill (2026-09-13; before that the four slots were identical and a level-11 militia archer and a level-16 veteran were the same troop). A militia promoting into another militia is therefore a fixed step off the curve, and those 6 edges are the only exemption from the rule above.
+TAOM militia take the **level-21 baseline regardless of their actual level** so sieges and village defence stay costly (user direction, 2026-06-24), and the elite slots sit `MILITIA_ELITE_BONUS` (15) above that on every skill (2026-09-13; before that the four slots were identical and a level-11 militia archer and a level-16 veteran were the same troop). A militia promoting into another militia is therefore a fixed step off the curve, and the 22 militia-to-militia edges (across 11 cultures) are exempt from the rule above. The one other exemption is `RespecializationExemptEdges` in the test: `sagarun_crossbowman` to `sagarun_naffatun` for Bow and Crossbow only.
 
-Which troops are militia comes from what a culture **binds**: the 60 ids in `militia_troop` / `melee_militia_troop` / `ranged_militia_troop` / `*_elite_militia_troop` across `taom_spcultures.xml` and `spcultures.xslt`. Both encodings have to be read, a plain attribute and an `<xsl:attribute>` element; Dale, Dunland, Harad, Rhûn and Rohan use only the second. Comments are masked first, so a commented-out `<Culture>` block cannot widen the exemption, and the 60 ids are pinned by identity in the C# gate rather than by count (the old name rule produces the same set plus one, so a count-only assertion would not have caught a revert). The Ranged/melee split for choosing the L21 table comes from `default_group`.
+Which troops are militia comes from what a culture **binds**: the 92 ids in `militia_troop` / `melee_militia_troop` / `ranged_militia_troop` / `*_elite_militia_troop` across `taom_spcultures.xml` and `spcultures.xslt`. Both encodings have to be read, a plain attribute and an `<xsl:attribute>` element; Dale, Dunland, Harad, Rhûn and Rohan use only the second. Comments are masked first, so a commented-out `<Culture>` block cannot widen the exemption, and the 92 ids are pinned by identity in the C# gate rather than by count (the old name rule produces the same set plus one, so a count-only assertion would not have caught a revert). The Ranged/melee split for choosing the L21 table comes from `default_group`.
 
 Until 2026-08-30 this was a name substring (`militia` plus one of spearman/archer/veteran). It had exactly one false positive across 871 troops, and that one shipped the worst upgrade edge in the game: `gondor_ano_archer_militia` is a level-11 Anórien **line** troop, bound only in `taom_partyTemplates.xml`, so it wore level-21 stats and out-statted its own level-16 target on seven of its eight skills, -145 total (Riding was already equal on both). Same defect family as the name-based weapon detection replaced in #340/#341.
 
@@ -258,8 +258,8 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 | `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and that the upgrade index leaves templates to `SKILL_TEMPLATE_MISMATCH` (`tools/tests/test_skill_template_mismatch.py`). |
 | `tools/fix_upgrade_armour_regressions.py` | The armour clamp (#541): family step-up, parent fallback, slot append, hero-kit demotion. `tools/tests/test_fix_upgrade_armour_regressions.py` covers it on synthetic data. |
 | `UPGRADE_ARMOUR_REGRESSION` in `tools/taom_schema.py` | The armour gate (WARNING), fed by `Registries.item_armour`; tests in `tools/tests/test_validate_moduledata.py`. |
-| `Main/_Module/ModuleData/troops/troops_*.xml` (×16) | The troop definitions (the data under management). |
-| `Main/_Module/ModuleData/characters/npcs_*.xml` (×22) | The 15 `villager_*` upgrade sources that feed into the tier-1 troops, read-only to the writer. |
+| `Main/_Module/ModuleData/troops/troops_*.xml` (×25) | The troop definitions (the data under management). |
+| `Main/_Module/ModuleData/characters/npcs_*.xml` (×31) | The 21 `villager_*` upgrade sources that feed into the tier-1 troops, read-only to the writer. |
 | `.claude/hooks/check-moduledata-validation.sh` | The commit gate. Its `--code` list is an ALLOWLIST, so a new ERROR check does not block until it is named there. |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Cross-referenced by the analyzer for weight-coverage gaps (army-composition weighting, not skills). |
 | `tools/reports/troop-balance/REPORT.{html,md}` + `troop-balance.json` | Generated overview (gitignored under `tools/reports/`; regenerate any time). |

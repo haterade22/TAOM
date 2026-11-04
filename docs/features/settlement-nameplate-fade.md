@@ -64,7 +64,7 @@ Defaults are tuned for a typical TAOM map view — adjust to taste. The service 
 | [Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs](../../Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs) | Harmony Postfix, thin entry point |
 | [Main/Features/TaomSettings.cs](../../Main/Features/TaomSettings.cs) | 3 new MCM properties (`EnableNameplateFade`, `NameplateFadeNearDistance`, `NameplateFadeFarDistance`) |
 | [Main/IoC.cs](../../Main/IoC.cs) | Feature registration |
-| [Main/SubModule.cs](../../Main/SubModule.cs) | `Initialize` cached service + `_harmony.PatchCategory("Patch38_SettlementNameplateFade")` in `OnGameInitializationFinished` |
+| [Main/SubModule.cs](../../Main/SubModule.cs) | `Initialize` caches the fade and relation services, then `TryPatchCategory("Patch38_SettlementNameplateFade")` in `OnGameInitializationFinished` |
 
 ## Dependencies
 
