@@ -215,7 +215,9 @@ behavior framework itself is managed, which is why it's the safe, no-Harmony ext
 ## Referenced by
 
 - [docs/ai-includes/orientation.md](../../ai-includes/orientation.md)
+- [docs/features/long-defeat.md](../../features/long-defeat.md)
 - [docs/features/shader-precompilation.md](../../features/shader-precompilation.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reviews/lessons/adapters-taleworlds-api.md](../../reviews/lessons/adapters-taleworlds-api.md)
 
 <!-- backlinks-end -->

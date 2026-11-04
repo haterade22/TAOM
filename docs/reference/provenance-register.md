@@ -1012,6 +1012,7 @@ token and cache accounting. The record describes ideas ported, not files copied.
 ## Referenced by
 
 - [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/ai-includes/external-repo-adoption.md](../ai-includes/external-repo-adoption.md)
 - [docs/features/butter-lib-distance-matrix.md](../features/butter-lib-distance-matrix.md)
 - [docs/features/companion-tactics.md](../features/companion-tactics.md)
 - [docs/features/creature-siege-role.md](../features/creature-siege-role.md)
@@ -1021,6 +1022,7 @@ token and cache accounting. The record describes ideas ported, not files copied.
 - [docs/features/map-view-release.md](../features/map-view-release.md)
 - [docs/features/mission-start-guard.md](../features/mission-start-guard.md)
 - [docs/features/nameplate-cull.md](../features/nameplate-cull.md)
+- [docs/features/native-build-match.md](../features/native-build-match.md)
 - [docs/features/realm-borders.md](../features/realm-borders.md)
 - [docs/features/refuge.md](../features/refuge.md)
 - [docs/features/siege-forces.md](../features/siege-forces.md)

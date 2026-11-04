@@ -433,5 +433,6 @@ inputs, not the rules (`campaign.md` line 243).
 - [docs/modding/balance-levers.md](../../modding/balance-levers.md)
 - [docs/modding/settlements.md](../../modding/settlements.md)
 - [docs/reference/doc-lookup.md](../doc-lookup.md)
+- [docs/reference/engine/campaign-tick-time-and-party-ai.md](./campaign-tick-time-and-party-ai.md)
 
 <!-- backlinks-end -->

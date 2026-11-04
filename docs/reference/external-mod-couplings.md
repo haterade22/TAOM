@@ -78,3 +78,19 @@ It reads TAOM's side table as a file, `Modules/TAOM/ModuleData/execution/alignme
 empty file switches its rules off with a log line. TAOM's copy is `Main/_Module/ModuleData/execution/alignment.json`. It also
 prefixes `MakePeaceAction.ApplyInternal` next to TAOM's own prefix; see [diplomacy.md](../features/diplomacy.md)
 "Free/Shadow side boundary".
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
+- [docs/features/career-system.md](../features/career-system.md)
+- [docs/features/troll-brute-force.md](../features/troll-brute-force.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+- [docs/reference/engine/campaign-tick-time-and-party-ai.md](engine/campaign-tick-time-and-party-ai.md)
+- [docs/reference/gamemodel-registry.md](./gamemodel-registry.md)
+
+<!-- backlinks-end -->

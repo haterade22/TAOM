@@ -71,3 +71,16 @@ Not applicable: tooling. To check it by hand, stage a doc that cites a `feedback
 - [Hooks catalog](../reference/hooks-catalog.md): every hook, with who it covers.
 - [ADR-011](../adrs/011-knowledge-delivery-tiers.md): the budgets.
 - [The review of these gates](../reviews/rca-rules-review-2026-11-03.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reviews/harness-retro-2026-11-03.md](../reviews/harness-retro-2026-11-03.md)
+
+<!-- backlinks-end -->

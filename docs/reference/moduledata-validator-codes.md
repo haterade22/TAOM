@@ -118,3 +118,15 @@ The file and ref counts, the full matrix and the named gaps:
 ## Why the validator exists
 
 These bug classes recur (the underwear bug, dup ids across Armory folders, dead troop refs after deletions, `rohan`-vs-`vlandia` typos) and each was previously caught, if at all, by a separate hand-run script. The validator makes them catchable in one pass. Full design: [docs/features/moduledata-validation.md](../features/moduledata-validation.md). Sibling data rules: [troops.md](../../.claude/rules/troops.md), [xml-data.md](../../.claude/rules/xml-data.md), [vanilla-data-comparison.md](../../.claude/rules/vanilla-data-comparison.md). Matcher-authoring lesson: [Bannerlord prefix-ref matchers must be attribute-agnostic](../reviews/lessons/xslt-moduledata.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/moduledata-validation.md](../features/moduledata-validation.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/rules-catalog.md](./rules-catalog.md)
+
+<!-- backlinks-end -->

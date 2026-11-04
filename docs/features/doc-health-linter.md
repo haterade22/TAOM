@@ -326,6 +326,7 @@ may delete this one.
 
 ## Referenced by
 
+- [docs/features/commit-gates.md](./commit-gates.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 

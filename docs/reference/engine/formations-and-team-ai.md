@@ -353,6 +353,7 @@ exception.
 - [docs/INDEX.md](../../INDEX.md)
 - [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/party-template-sizing.md](../party-template-sizing.md)
+- [docs/reviews/lessons/testing-qa.md](../../reviews/lessons/testing-qa.md)
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../../reviews/rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->

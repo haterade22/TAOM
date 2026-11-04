@@ -64,3 +64,13 @@ Disabling servers is a `settings.local.json` / `.mcp.json` decision — user's c
 - Skill descriptions ≤30 words: flagged by this scan.
 - Re-baseline here after: adding an MCP server or plugin, a new always-load rule, or ±10 KB on
   CLAUDE.md.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](./INDEX.md)
+
+<!-- backlinks-end -->

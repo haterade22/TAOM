@@ -1187,9 +1187,20 @@ bands, read 2026-09-26); `Agent.cs`, `MBActionSet.cs`, `MBAnimation.cs`, `Monste
 
 ## Referenced by
 
+- [docs/ai-includes/quadruped-pack-to-horse-skeleton-workflow.md](../ai-includes/quadruped-pack-to-horse-skeleton-workflow.md)
+- [docs/features/elk.md](../features/elk.md)
+- [docs/features/spider.md](../features/spider.md)
 - [docs/features/troll-race.md](../features/troll-race.md)
+- [docs/features/war-ram.md](../features/war-ram.md)
+- [docs/modding/items-mounts-and-harness.md](../modding/items-mounts-and-harness.md)
+- [docs/modding/recipe-add-a-race-or-creature.md](../modding/recipe-add-a-race-or-creature.md)
 - [docs/reference/bannerlord-animation-clip-flags.md](./bannerlord-animation-clip-flags.md)
+- [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
 - [docs/reference/engine/mission-frame-threads-and-native-costs.md](engine/mission-frame-threads-and-native-costs.md)
+- [docs/reference/harmony-patch-registry.md](./harmony-patch-registry.md)
+- [docs/reference/head-mesh-and-groom-authoring.md](./head-mesh-and-groom-authoring.md)
+- [docs/reference/lotrlome-animalia-changes.md](./lotrlome-animalia-changes.md)
+- [docs/reference/lotrlome-elk-changes.md](./lotrlome-elk-changes.md)
 - [docs/reference/lotrlome-hill-troll-changes.md](./lotrlome-hill-troll-changes.md)
 - [docs/reference/scripted-melee-strikes.md](./scripted-melee-strikes.md)
 - [docs/reference/tpac-static-prop-authoring.md](./tpac-static-prop-authoring.md)
