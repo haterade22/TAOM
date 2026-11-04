@@ -621,6 +621,7 @@ Per-commit runs of the no-growth ratchet passed on the branch, because their bas
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/lessons/data-content-cultures.md](./data-content-cultures.md)
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)
+- [docs/reviews/rca-quality-gates-2026-10-26.md](../rca-quality-gates-2026-10-26.md)
 - [docs/reviews/rca-shader-precompile-repark-2026-09-25.md](../rca-shader-precompile-repark-2026-09-25.md)
 
 <!-- backlinks-end -->

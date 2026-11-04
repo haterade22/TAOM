@@ -107,3 +107,14 @@ A later tier 2 pass (Data flow and Tooling, `effort: high`) on the night's remai
 **Two guards added without asking first:** the zero-hit rebuild and the temp file write, about four lines together. A cut index gives a false "no such type" that an agent reads as a fact about the engine, and lenses fan out in parallel right after a bump, when no index exists yet. To undo them, delete the `-Rebuild` branch and write the file directly.
 
 **Not applied:** `tools/context_budget_scan.sh` still derives its slug from the checkout and falls back to a substring match, so from a sibling worktree it can miss the main memory. FOLLOW-UP no issue: a report tool that a person runs from the main checkout, listed in the merge report. The fixes were not re-reviewed, because every finding was MED or below, and `/deep-review` fixes those and proves them with tests.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/commit-gates.md](../features/commit-gates.md)
+- [docs/reviews/harness-retro-2026-11-03.md](./harness-retro-2026-11-03.md)
+
+<!-- backlinks-end -->

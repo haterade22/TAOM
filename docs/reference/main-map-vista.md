@@ -12,7 +12,7 @@ player pulls the camera back, which is how it can ship unnoticed.
 
 One element, `<terrain>`, in the **LIVE** `Modules/TAOM_Map/SceneObj/Main_map/scene.xscene`. The
 repo carries no copy of the scene at all, so unlike `settlements.xml` there is not even a stale
-shadow to confuse matters. See the "TAOM_Map settlements" trap in CLAUDE.md for the general rule
+shadow to confuse matters. See the "TAOM_Map settlements" trap in [orientation.md](../ai-includes/orientation.md) for the general rule
 about editing live module data.
 
 Read the current values without opening the Modding Kit:
@@ -88,6 +88,9 @@ vista_diffuse_blend_amount="0.000"  vista_albedo_multiplier="0.670"
 vista_detail_tile="20.000"    vista_tileset=""
 ```
 
+Live on 2026-11-03: `vista_normalmap=""`, `vista_diffuse_name="Vista_map_settlements"`, blend type 2, blend amount
+0.000, albedo multiplier 0.670, detail tile 20.000, `vista_tileset=""`. Only the texture differs from the target above.
+
 **Blend Mode is not load-bearing and is not worth chasing.** The two working custom-texture maps
 disagree on it (lemmy uses 1, A Dance of Dragons uses 0), and with Blend Weight at 0.000 there is
 nothing for it to act on. The editor binary registers exactly one label next to "Blend Mode", the
@@ -136,8 +139,8 @@ reports it as 15 mip / 170.667 MB at runtime against a 506.919 MB source. `16K_V
 resolution *with* alpha, and is what the working lineage map points at. When picking between them,
 prefer the one with alpha.
 
-`TAOM_Map` ships **no `AssetPackages/`**, only loose `Assets/**/*.tpac` descriptors, matching the
-"no cooked tree" finding recorded for `LOTRLOME_Armory` in CLAUDE.md.
+On 2026-09-04 `TAOM_Map` shipped **no `AssetPackages/`**, only loose `Assets/**/*.tpac` descriptors. On 2026-11-03 it has an
+`AssetPackages/` directory (5 packs, written 2026-11-03) beside the loose `Assets/` tree, and `LOTRLOME_Armory` has 11.
 
 ## Diagnosing a vista regression
 
@@ -180,7 +183,7 @@ dd if="$f" bs=1 skip=$((off-3000)) count=6000 2>/dev/null | tr -c '[:print:]\n' 
 | **Clearing the Texture flips Blend Weight to 1.000** | Observed across the 11:14 to 11:23 saves. When restoring the Texture, set it first and then correct Blend Weight, because assigning a texture can move the weight on its own. |
 | **An older backup is not automatically the right one** | The Aug 20 copy had the correct empty `vista_normalmap` but predated the whole 16K vista import. Two backups can each be right about a different field, which is why the reference table exists. |
 | **Re-importing changes asset GUIDs** | 103 bytes across six 16-byte blocks per descriptor. Import settings survive; anything keying on the old GUID does not. Scene references are by name, so the vista itself is unaffected. |
-| **The live module is unversioned** | Every fix here lives only in the game folder and a module reinstall reverts it silently, the same trap as the `LOTRLOME_Armory` and `TAOM_Map` fixes recorded in CLAUDE.md. |
+| **The live module is unversioned** | Every fix here lives only in the game folder and a module reinstall reverts it silently, the same trap as the "Unversioned modules" line in [orientation.md](../ai-includes/orientation.md). |
 | **The Kit holds the scene in memory** | Hand-editing `scene.xscene` while the Kit has `Main_map` open loses the edit on its next save. Make the change in the UI, or close the Kit first. |
 | **Blend Mode has one label** | The editor exposes only `Blend`. Do not go hunting for a different entry; the value is inert while Blend Weight is 0. |
 

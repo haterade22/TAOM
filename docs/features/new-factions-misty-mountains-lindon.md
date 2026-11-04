@@ -6,7 +6,7 @@ Adds **four new kingdoms** and two new cultures to TAOM: the **Misty Mountain Or
 **Goblins** (two new orc cultures), **Goblins of Blue Craig** (a second goblin-culture kingdom),
 and **Lindon** (a new High-Elven kingdom that first reused the `rivendell` culture and has had its own
 `lindon` culture since 2026-08-11, `cc1713eb3`). All four
-are full, **CC-playable** AI map-factions with settlements, clans, lords, troop trees, recruitment
+are full AI map-factions (three **CC-playable**; Lindon is parked, see below) with settlements, clans, lords, troop trees, recruitment
 pools, **cultural feats**, faction-map cards, and **forever-alliance diplomacy** ties. The orc
 cultures' troops are infantry + archer lines wearing **orc armor** with mixed orc weapons.
 
@@ -139,18 +139,17 @@ Both orc cultures have authored feats (`Main/Features/CulturalFeats/TaomCultural
 
 | Culture | Feats |
 |---|---|
-| **goblin** | +10% party size (Goblin Swarm; +40% until 2026-10-18, #818), +25% volunteer respawn (Endless Spawn), +10% snow speed (Tunnel-Runners), **+20% food consumption** (Ravenous Swarm, penalty) |
-| **mistymountainorcs** | −40% army influence cost (Orc Horde), +10% party size (Mountain Host; +30% until 2026-10-18, #818), +10% snow speed (Mountain-Bred), **+15% food consumption** (Hungry Host, penalty) |
+| **goblin** | +10% party size (Goblin Swarm; +40% until 2026-10-18, #818), +25% volunteer respawn (Endless Spawn), +10% snow speed (Tunnel-Runners), **+20% food consumption** (Ravenous Swarm, penalty), -10% smithing energy cost (Captured-Weapon Hoard), +10% raid damage (Goblin Ambush) |
+| **mistymountainorcs** | −40% army influence cost (Orc Horde), +10% party size (Mountain Host; +30% until 2026-10-18, #818), +10% snow speed (Mountain-Bred), **+15% food consumption** (Hungry Host, penalty), -15% smithing energy cost (Looted Forges), +15% raid damage (Cave Troll Levy), -10% construction speed (Echoing Halls, penalty) |
 
 The 10% party-size bonuses (the cap since #818) only partly offset weaker troops; the
 food-consumption penalty is the cost of the horde. Snow-speed reflects their snow-navmesh mountain home. Lindon's own culture lists the same 6
 feats as Rivendell (`taom_spcultures.xml`; a shared culture until 2026-08-11). Feat string-ids in XML exactly match the C# `Register()`
-ids (verified); all 8 are dispatched in `CulturalFeatsService`.
+ids (verified), and all of them are dispatched in `CulturalFeatsService`. The goblin culture lists six feats and Misty Mountain Orcs seven; Blue Craig takes five of the goblin feats and its own party-size feat (`taom_bluecraig_party_size`).
 
 ### Playable faction cards
 
-All 3 are `playable=true` in `factions.json` (`goblins_of_goblin_town`→goblin,
-`kingdom_of_moria`→mistymountainorcs, `high_kingdom_of_lindon`→lindon since 2026-08-11) with bonuses/perks
+`goblins_of_goblin_town` (→goblin) and `kingdom_of_moria` (→mistymountainorcs) are `playable=true` in `factions.json`; `high_kingdom_of_lindon` (→lindon since 2026-08-11) is `playable=false` since the Lindon parking above. All three cards carry bonuses/perks
 that match the authored feats (the party-size percentages are checked by
 `FactionMapDataTests.FactionCard_PartySizePercent_MatchesProductionFeat`). Lindon's card mirrors Imladris (the same feats on its own `lindon` culture).
 Strings registered via `tools/harvest_factionmap_strings.py`. Added to `cultures.json` (CC
@@ -180,7 +179,7 @@ troops; clans 2 to 6 share the second template.
 | `tools/add_bluecraig_castles.py` | Adds the 4 Blue Craig castles (`castle_GBC1..4`) + 12 castle-villages to the live settlements.xml, spread across clans 2-5 (`--apply` + backup; idempotent; positions FROM scene.xscene). Only adds ids already placed in the scene. |
 
 Re-run order: `generate_new_factions.py` → `insert_new_factions.py` → `generate_new_faction_kingdoms.py`
-(it takes `--only`, offers only `arthedain`, `cardolan`, `rhudaur` and `eredluin`, and writes only with
+(it takes `--only`, offers only `arthedain`, `cardolan`, `rhudaur`, `eredluin`, `anduinvale`, `angaladh`, `dorwinion` and `southrhovanion`, and writes only with
 `--apply`: this doc's four realms have drifted from
 their table entries, Lindon retagged to `Culture.lindon`, so a regeneration would revert them)
 (the settlements generator is retired: `--rerun-retired`, #1042). All inserts are idempotent
@@ -260,7 +259,7 @@ After `/engine-bump`, with TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 
 | Layer | File | New / Modified |
 |---|---|---|
-| Cultures | `taom_spcultures.xml` | +2 `<Culture>` blocks (no `<cultural_feats>`) |
+| Cultures | `taom_spcultures.xml` | +2 `<Culture>` blocks (goblin lists six `<cultural_feats>`, mistymountainorcs seven) |
 | Troops | `troops/troops_goblin.xml` | new (cloned). `troops_mistymountainorcs.xml` shipped alongside it and was **retired 2026-08-29**: it was the same tree with a different race tag and skill numbers, so the Orc-host now fields the goblin file and keeps one bespoke capstone in it |
 | NPCs | `characters/npcs_goblin.xml`, `…_mistymountainorcs.xml` | new (69 NPCs each) |
 | Equipment | `equipmentsets/taom_equipment_sets_{goblin,mistymountainorcs}.xml` | new (10 rosters each) |
@@ -272,7 +271,7 @@ After `/engine-bump`, with TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 | Heroes | `characters/heroes.xml` | +42 `<Hero>` rows |
 | Settlements | `TAOM_Map/ModuleData/settlements.xml` (LIVE, external) | +45 `<Settlement>` (968 total then; 1,141 on 2026-10-28) |
 | Registration | `SubModule.xml` | +6 `<XmlNode>` (troops/npcs/equipment ×2 orc cultures) |
-| Recruitment | `Features/TroopProgression/VolunteerRecruitmentService.cs` | +`InitializeGoblinCulture/MistyMountainOrcsCulture/RivendellCulture` (fixes the previously-missing `CultureMap["rivendell"]`, which also benefits the existing Rivendell kingdom) |
+| Recruitment | `Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.{OrcKingdoms,Rivendell}.cs` | +`InitializeGoblinCulture/MistyMountainOrcsCulture/RivendellCulture` (fixes the previously-missing `CultureMap["rivendell"]`, which also benefits the existing Rivendell kingdom) |
 | Faction map | `factionmap/factions.json` | `game_faction` set on `goblins_of_goblin_town`→goblin, `kingdom_of_moria`→mistymountainorcs (`high_kingdom_of_lindon`: `lindon` since 2026-08-11) |
 | Localization | `taom_module_strings.xml` | `str_faction_*` / `str_culture_*` per orc culture |
 | Tests | `VolunteerRecruitmentServiceTests.cs` (+6), `ConfigIdValidationTests.cs` (sets 16→18 cultures, 18→21 kingdoms) | modified |
@@ -287,8 +286,8 @@ After `/engine-bump`, with TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 
 ## Known Limitations / Follow-ups (placeholders by design)
 
-1. **Cultural feats — DONE** (4 each; see above). Lindon inherits rivendell's feats.
-2. **CC-playable — DONE** (all 3 `playable=true` with full faction cards).
+1. **Cultural feats: DONE** (6 for goblin, 7 for Misty Mountain Orcs; see above). Lindon inherits rivendell's feats.
+2. **CC-playable: DONE for goblin and Misty Mountain Orcs** (`playable=true` with full faction cards); Lindon's card is `playable=false` (parked).
 3. **Lindon villages: DONE** (placed in the editor; #1039 added the second wave).
 4. **Battle-scene grid** — new settlement positions in the central Misty Mountains / Grey Havens may
    need worldmap battle-scene-grid coverage so field battles near them load correct terrain

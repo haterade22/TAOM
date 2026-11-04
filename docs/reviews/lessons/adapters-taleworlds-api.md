@@ -1705,6 +1705,22 @@ The Long Defeat spike copied the shape of Fords of War's spawn recipe, a grid of
 - **Prevent:** on a scene with more than one walkable level, use the deployment plan and pass no position. A spike that spawns agents reads their height and navmesh back and logs a verdict, so a wrong floor is a failed line and not a person's report. When you replace a failing path, ask how the new path fails, and make the read-back see that as well (here, a pile on the frame point).
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 21, 22 and 26.
 
+### When a mission leaves out vanilla's ending, write how its fight ends
+
+The Long Defeat spike leaves out `BattleEndLogic` and forbids retreat. Its waves then had no ending: the last 7, then 6, attackers and 31 defenders stood apart until the run's limit, and one soldier in a later wave never left the spawn area. Nothing threw, and every log line looked healthy. My first rule for this felled every standing attacker, and at Minas Tirith it felled 35 with 2 defenders left, and the judge read a clear.
+
+- **Why missed:** the review of removed behaviors asked who reads them, and not what they do for the mission. Nobody read the plan for how a fight ends.
+- **Prevent:** when a mission removes an ending (a retreat, `BattleEndLogic`, a win check), write down in the plan what ends the fight in each state: both sides alive and apart, one soldier stranded, the attackers winning, everyone fleeing. An ending you add must not be able to turn a loss into a win, so test it against the state where the other side is ahead. Log a line when each rule fires, and let the result count those lines. Run it to the end once before you trust a long mission.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 31 and 36.
+
+### The engine's gates ignore visibility, so read a scene's hidden gates before you trust a siege lane
+
+`TeamAISiegeComponent` takes `InnerGate` and `OuterGate` by tag from all active gates, with no visibility check, and a hidden `CastleGate` returns from `OnTick`, so it never opens. Helm's Deep hides an inner gate at height 32.5. The Middle lane therefore stays closed, and `BehaviorAssaultWalls` stays in `AttackEntity` with soldiers standing at a gate that nothing draws. I had filtered hidden gates out of my own log line, which hid the cause, and I told a reader the cause was constant team power.
+
+- **Why missed:** the log filter came from a correct wish, to show only real gates. The false reason sounded right, and it did remove the other ways out.
+- **Prevent:** before a siege feature trusts a scene, list every `CastleGate` in it with its visibility and tag. Log what the engine uses, not only what the player sees. Do not delete a hidden inner gate: a null `InnerGate` throws in `BehaviorAssaultWalls`.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 31 and 37.
+
 ### A read-back check means only what it compares, so write its claim from the comparison
 
 My first read-back compared each soldier with his class's own frame, and I wrote that `ok` proves "the right floor". Helm's Deep authors the defender archers' frame at height 1.5, so all 33 could read `ok` on low ground below a terrace at 26.5. Three more lines kept naming a frame that no longer placed anyone, up to 95 m away.

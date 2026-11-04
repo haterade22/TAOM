@@ -343,8 +343,8 @@ change here was checked against the v1.5.4 DLLs.
   so 6 is safe either way; and **path
   planning skips excluded faces in code** (the planner passes the agent's id list to A*, which skips a
   neighbour in the list, `0x4DCFD0`), so RG-A is a confirmation spike, no longer a decision gate.
-- The repo still pins v1.5.3; no engine bump was made for this feature. The binding tests run against
-  the installed v1.5.4 DLLs.
+- No engine bump was made for this feature. The pin is v1.5.6
+  now (`.claude/pinned-game-version.txt`), and the binding tests run against whichever DLLs are installed.
 
 ## How to tune the gate damage
 

@@ -176,7 +176,7 @@ Animalia items, inserted after the saddle on 2026-09-23: restore a later backup,
    legs in motion (the FBX binds them lower than the ram's) and the seat.
 2. **Delete `take 001`** in the Kit and save the Armory (also refreshes the package's `.rdc`); then re-run
    `python tools/check_rdc_entries.py --under creature/elk`.
-3. **Translate the two item names**: `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply`
+3. **Translated** (checked 2026-11-03: all 12 language files carry both keys and no row still reads the English text). The method was: `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply`
    per language. `--sync-ids` seeds the keys into each language file first, or `write_back` silently discards the
    paid translation; `--apply` calls the API.
 4. **Record the elk art's source and licence** in [provenance-register.md](./provenance-register.md) if it came

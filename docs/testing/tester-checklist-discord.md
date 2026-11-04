@@ -14,11 +14,12 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 # MESSAGE 2 — Character Creation
 
-## 1. :bust_in_silhouette: CHARACTER CREATION (16 cultures)
+## 1. :bust_in_silhouette: CHARACTER CREATION (18 playable realms on 2026-11-03)
 
 **1a. Culture/Race Selection**
 - Start new campaign — faction map UI loads with all regions clickable
-- All 16 cultures selectable: Gondor, Mordor, Erebor, Rivendell, Lothlorien, Mirkwood, Isengard, Gundabad, Dol Guldur, Umbar, Harad, Dunland, Easterlings, Dale, Rohan, Barding
+- All 18 playable realms selectable (`"playable": true` in `Main/_Module/ModuleData/factionmap/factions.json`): Gondor, Mordor, Erebor, Imladris (Rivendell), Lothlorien, Lasgalen (Mirkwood), Isengard, Gundabad, Dol Guldur, Harwan (Harad), Dunland, Rhun, Dale, Rohan, Arthedain, Orcs of the Misty Mountains (Moria), Goblin Town, Blue Craig
+- Parked realms show a lore card but cannot be confirmed: Lindon, Ered Luin, Cardolan, Rhudaur, Umbar, Khand, Anduin Vale, Angaladh, Dorwinion, South Rhovanion
 - Faction colors, descriptions, and lore text display correctly
 - Selecting a culture shows correct race model (elf for Rivendell, dwarf for Erebor, orc/uruk for evil factions)
 - Race dropdown in FaceGen shows all races without broken indices
@@ -177,15 +178,14 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 ## 7. :moneybag: STARTUP RESOURCES
 
-**Gold Distribution (new campaign).** Flattened 2026-08-14, so most cultures are now identical
-- Every culture's lords: 250,000 starting gold
-- Except the four elven realms (Rivendell, Lothlorien, Mirkwood, Lindon): 500,000
-- No other culture is a special case. Erebor, Umbar, Gondor and the orc kingdoms are all on the flat 250,000
-- Player hero gets culture `playerGold` at character creation instead, which was NOT flattened (elves 4,000, Erebor 3,500, everyone else 2,000). Lord gold skips the player clan
+**Gold Distribution (new campaign).** Set per culture from the troop wage bill (the 2026-08-14 flat 250,000 was superseded the same day)
+- Each culture's lords get their own starting gold: 65,000 (Goblin, Blue Craig) up to 580,000 (Rivendell), so Mordor, Gundabad and Gondor differ from each other
+- The four elven realms are the richest (Rivendell 580,000, Mirkwood 515,000, Lindon 475,000, Lothlorien 440,000)
+- Player hero gets culture `playerGold` at character creation instead (elves 4,000, Erebor 3,500, Ered Luin 3,000, everyone else 2,000). Lord gold skips the player clan
 - Live values: `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml`
 
 **Influence Distribution**
-- Every culture's clans: 1,000 starting influence, with no exceptions
+- Each culture's clans get 200, 400 or 600 starting influence (Goblin and Blue Craig 200; the elves, Erebor, Gondor, Mordor and Isengard 600; the rest 400)
 - Check AI clans in encyclopedia to verify
 
 **Idempotency**
@@ -224,12 +224,12 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 ## 11. :shield: TROOP TREES & RECRUITMENT
 
-**Gondor (182 troops)**
+**Gondor (188 troops on 2026-11-03)**
 - Visit settlements — recruit from correct regional pools (Anorien, Minas Tirith, etc.)
 - Upgrade paths work all the way to T9 (Swan Knights, Fountain Guard, Moon Guard)
 - No underwear troops
 
-**Erebor (41 troops)**
+**Erebor (66 troops on 2026-11-03)**
 - Miner > Militia > branches work
 - Noble line reaches Royal Warden; Oathsworn elite reachable
 
@@ -238,7 +238,7 @@ Welcome testers! Work through each section below and report any **crashes, visua
 - Orc Recruit > Gnasher AND Warg Scout (dual path)
 - Khamul humans (T4-T9): Shadow Initiate entry, all 14 troops upgradeable
 
-**Rhun (113 troops)**
+**Rhun (117 troops on 2026-11-03)**
 - All 11 unit groups recruit: Easterling Regular, Loke-Rim, Dragon-Wrath, Wainriders, Black Sun, Darkhun, etc.
 
 **All Other Factions**
@@ -264,7 +264,7 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 **Clan Ownership**
 - No orphaned clans — every clan has a valid owner
-- Harad clans (aserai_10-26) have unique heroes
+- Harad clans (clan_shaghana_1-9, clan_abanissa_1-8) have unique heroes
 - Umbar clans (umbar_2-6) have unique heroes
 
 **Notable NPCs**
@@ -313,7 +313,7 @@ Welcome testers! Work through each section below and report any **crashes, visua
 ## 17. :baby: CHILD EQUIPMENT
 
 - Trigger offspring delivery (or cheat) — no crash
-- Children of all 10 custom cultures wear culture-appropriate clothing
+- Children of the 22 cultures with templates in `Main/_Module/ModuleData/equipmentsets/taom_child_equipment_templates.xml` (2026-11-03) wear their culture's clothing; for the six vanilla-id cultures, note what appears (`vlandia` falls back to SandBox's template)
 - Evil culture children: no crash even with initial child gen disabled
 
 ---

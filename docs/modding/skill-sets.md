@@ -2,7 +2,7 @@
 
 ## What this file is
 
-A skill set is a named block of skill numbers that a character points at instead of writing its own. `Main/_Module/ModuleData/taom_lord_skill_sets.xml` holds 145 of them for lords and `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml` holds 170 for wanderers and town notables. <!-- measured: python regex count of '<SkillSet id="' in both files 2026-09-05 --> The schema is the smallest in the game: an `id`, then a flat list of `<skill id="..." value="..."/>` lines, and nothing else.
+A skill set is a named block of skill numbers that a character points at instead of writing its own. `Main/_Module/ModuleData/taom_lord_skill_sets.xml` holds 146 of them for lords and `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml` holds 170 for wanderers and town notables. <!-- measured: python regex count of '<SkillSet id="' in both files 2026-11-03 --> The schema is the smallest in the game: an `id`, then a flat list of `<skill id="..." value="..."/>` lines, and nothing else.
 
 ## Where it lives and how it is registered
 
@@ -10,8 +10,8 @@ A skill set is a named block of skill numbers that a character points at instead
 
 | File | Registered at | Root element | Per entry | Engine class |
 |---|---|---|---|---|
-| `Main/_Module/ModuleData/taom_lord_skill_sets.xml` | `SubModule.xml:752` `<XmlName id="SkillSets" path="taom_lord_skill_sets"/>` | `<SkillSets>` | `<SkillSet>` | `TaleWorlds.Core.MBCharacterSkills` |
-| `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml` | `SubModule.xml:762` `<XmlName id="SkillSets" path="taom_wanderer_skill_sets"/>` | `<SkillSets>` | `<SkillSet>` | `TaleWorlds.Core.MBCharacterSkills` |
+| `Main/_Module/ModuleData/taom_lord_skill_sets.xml` | `SubModule.xml:1087` `<XmlName id="SkillSets" path="taom_lord_skill_sets"/>` | `<SkillSets>` | `<SkillSet>` | `TaleWorlds.Core.MBCharacterSkills` |
+| `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml` | `SubModule.xml:1097` `<XmlName id="SkillSets" path="taom_wanderer_skill_sets"/>` | `<SkillSets>` | `<SkillSet>` | `TaleWorlds.Core.MBCharacterSkills` |
 | `SandBoxCore/ModuleData/sandboxcore_skill_sets.xml` | `SandBoxCore/SubModule.xml:51` | `<SkillSets>` | `<SkillSet>` | same |
 | `SandBox/ModuleData/sandbox_skill_sets.xml` | `SandBox/SubModule.xml:178` | `<SkillSets>` | `<SkillSet>` | same |
 | `Native/ModuleData/native_skill_sets.xml` | `Native/SubModule.xml:92` | `<SkillSets>` | none, the file is an empty `<SkillSets></SkillSets>` | same |
@@ -20,7 +20,7 @@ Those last three files live in the game install, not the repo; a module reinstal
 
 **Position in `SubModule.xml` does not matter.** The engine registers the type at `Game.cs:321` with the singular element name `SkillSet` and the plural list name `SkillSets`, then loads every registered `SkillSets` file inside `Game.LoadBasicFiles` at `Game.cs:445`. Character files load much later, at `SandBoxManager.cs:362`. Every skill set therefore exists before any character can point at one, and you cannot get the order wrong.
 
-**`taom_lord_skill_sets.xml` is generated. Do not hand-edit it.** Line 3 of the file says so, and the owning tool is `tools/apply_culture_skills_traits.py` ([tools README](../../tools/README.md) line 136). Every run rewrites the whole file from `BASE_ARCHETYPES` plus the per-culture canonical tables, so a hand edit survives only until the next regen. `taom_wanderer_skill_sets.xml` carries no such banner; two tools name it, `tools/extract_wanderers.py` and `tools/generate_batch2_wanderers.py`, and the second one appends rather than regenerating (its docstring, line 3). TAOM has no single index mapping every generated data file to the tool that owns it. The closest thing is [tools README](../../tools/README.md), which lists the tool per row but is organised by tool, not by output file.
+**`taom_lord_skill_sets.xml` is generated. Do not hand-edit it.** Line 3 of the file says so, and the owning tool is `tools/apply_culture_skills_traits.py` ([tools README](../../tools/README.md) line 213). Every run rewrites the whole file from `BASE_ARCHETYPES` plus the per-culture canonical tables, so a hand edit survives only until the next regen. `taom_wanderer_skill_sets.xml` carries no such banner; two tools name it, `tools/extract_wanderers.py` and `tools/generate_batch2_wanderers.py`, and the second one appends rather than regenerating (its docstring, line 3; the [tools README](../../tools/README.md) marks it stale, so do not run it). TAOM has no single index mapping every generated data file to the tool that owns it. The closest thing is [tools README](../../tools/README.md), which lists the tool per row but is organised by tool, not by output file.
 
 ## Attributes
 
@@ -45,7 +45,7 @@ Both attributes are read by one shared generic reader, `PropertyOwner<SkillObjec
 | `id` | one of the 18 skill ids, case-sensitive | yes | none, missing throws | Picks the skill. An id that is not one of the 18 resolves to null and **the whole line is dropped in silence**, so a typo costs you the points with no error anywhere | `PropertyOwner.cs:78, 80-85` |
 | `value` | int | yes | none, missing throws | The number. Parsed with `Convert.ToInt32`, so `30.5` or `high` throws a `FormatException`. `value="0"` is not "set to zero", it deletes the entry (`PropertyOwner.cs:30-40`), and an absent skill already reads back as 0 (`PropertyOwner.cs:42-48`). Negative values are stored as written | `PropertyOwner.cs:79, 83` |
 
-Nothing clamps the number at load. TAOM lord values run from 20 to 417 <!-- measured: python min/max over every value= in taom_lord_skill_sets.xml 2026-09-05 --> against vanilla troop templates in the 10 to 30 band. `DefaultCharacterDevelopmentModel.cs:33` declares `MaxSkillLevels = 1024`, but that constant appears nowhere else in the v1.4.8 dump, so treat it as unrelated to loading, not as a cap. <!-- measured: rg -rn --glob '*.cs' -c "MaxSkillLevels" over the v1.4.8 dump, one file one hit 2026-09-05 -->
+Nothing clamps the number at load. TAOM lord values run from 20 to 417 <!-- measured: python min/max over every value= in taom_lord_skill_sets.xml 2026-11-03 --> against vanilla troop templates in the 10 to 30 band. `DefaultCharacterDevelopmentModel.cs:33` declares `MaxSkillLevels = 1024`, but that constant appears nowhere else in the v1.4.8 dump, so treat it as unrelated to loading, not as a cap. <!-- measured: rg -rn --glob '*.cs' -c "MaxSkillLevels" over the v1.4.8 dump, one file one hit 2026-09-05 -->
 
 ### The 18 skill ids
 
@@ -71,10 +71,10 @@ Nothing clamps the number at load. TAOM lord values run from 20 to 417 <!-- meas
 | Every 25 points up to 300 | One perk tier. The ladder is the literal array `25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300` at `DefaultPerks.cs:809-813`, so 12 tiers and nothing above 300 |
 | `Athletics` up to 300 | Step size, `min(0.8 + 0.2 * Athletics * 0.00333333, 1)` at `BasicCharacterObject.cs:242-244`. It saturates exactly at 300 |
 | Any skill up to 300, for equipped gear | The AI's estimate of the character's power weights each item by `0.3 + skill / 300 * 0.7` (`CharacterObject.cs:640`). Above 300 the weight stops moving |
-| Steward, on a party leader | Party size. TAOM records it as +0.25 per point ([lord skills authoring](../ai-includes/lord-skills-authoring.md) line 240) |
+| Steward, on a party leader | Party size. TAOM records it as +0.25 per point ([lord skills authoring](../ai-includes/lord-skills-authoring.md), `StewardPartySizeBonus`) |
 | Nothing at all | Tier. `DefaultCharacterStatsModel.cs:18-25` computes a troop's tier as `clamp(ceil((level - 5) / 5), 0, 6)` from `level` alone, and a hero is always tier 0. Raising skills never raises tier |
 
-Three practical consequences. Values above 300 are flavour in the formulas above: TAOM ships 84 such lines in the lord file and 33 in the wanderer file. <!-- measured: python count of value>300 over both skill set files 2026-09-05 --> A hero does not get the declared numbers exactly, because `DefaultHeroCreationModel.cs:361-378` adds `MBRandom.RandomInt(5, 10)` to every non-zero skill (`:462-466`), and returns an empty list for a hero under `HeroComesOfAge`, so a child lord gets nothing from the set at all. And `SkillFactor`, despite the name, reads `level` and never a skill: `min(level, 32) / 32` at `BasicCharacterObject.cs:74` with the 32 declared at `:14`, consumed by `Agent.UpdateLocalPositionError` (`Agent.cs:5083-5086`) to decide how sloppily an agent holds its slot in formation.
+Three practical consequences. Values above 300 are flavour in the formulas above: TAOM ships 88 such lines in the lord file and 33 in the wanderer file. <!-- measured: python count of value>300 over both skill set files 2026-11-03 --> A hero does not get the declared numbers exactly, because `DefaultHeroCreationModel.cs:361-378` adds `MBRandom.RandomInt(5, 10)` to every non-zero skill (`:462-466`), and returns an empty list for a hero under `HeroComesOfAge`, so a child lord gets nothing from the set at all. And `SkillFactor`, despite the name, reads `level` and never a skill: `min(level, 32) / 32` at `BasicCharacterObject.cs:74` with the 32 declared at `:14`, consumed by `Agent.UpdateLocalPositionError` (`Agent.cs:5083-5086`) to decide how sloppily an agent holds its slot in formation.
 
 ### The two attributes that point at a set
 
@@ -100,7 +100,7 @@ Traits are read by the same `PropertyOwner` reader from a `<Traits>` block on th
 | 0 to 20 | no | `Frequency`, `Commander`, `Surgeon`, `Tracking`, `Blacksmith`, `SergeantCommandSkills`, `EngineerSkills`, `RogueSkills`, `ScoutSkills`, `Trader`, `Thug`, `Smuggler`, `NavalSoldier` |
 | 0 to 20 | yes | `Egalitarian`, `Oligarchic`, `Authoritarian` |
 
-Two things measured while writing this chapter. **The declared range is not enforced at load**: `PropertyOwner.Deserialize` never consults `TraitObject.MinValue`/`MaxValue`, so `<Trait id="Honor" value="50"/>` is stored as 50. Whether anything downstream clamps it was not determined. **Six ids TAOM writes are not registered ids at all**: `ArcherFightingSkills`, `BalancedFightingSkills`, `CavalryFightingSkills`, `KnightFightingSkills`, `Manager` and `Politician` appear nowhere in the v1.4.8 dump, so those 111 lines of 13,788 are dropped by the same silent path a misspelt skill takes. <!-- measured: python count of <Trait id= across characters/*.xml + lords.xslt, differenced against the 25 ids in DefaultTraits.RegisterAll 2026-09-05 --> Vanilla ships the same dead ids in `SandBox/ModuleData/lords.xml`, so they are inherited, not a TAOM mistake. `Commander` is real; the other three names that TAOM docs group with it are not.
+Two things measured while writing this chapter. **The declared range is not enforced at load**: `PropertyOwner.Deserialize` never consults `TraitObject.MinValue`/`MaxValue`, so `<Trait id="Honor" value="50"/>` is stored as 50. Whether anything downstream clamps it was not determined. **Six ids TAOM writes are not registered ids at all**: `ArcherFightingSkills`, `BalancedFightingSkills`, `CavalryFightingSkills`, `KnightFightingSkills`, `Manager` and `Politician` appear nowhere in the v1.4.8 dump, so those 111 lines of 15,528 are dropped by the same silent path a misspelt skill takes. <!-- measured: python count of <Trait id= across characters/*.xml + lords.xslt, differenced against the 25 ids in DefaultTraits.RegisterAll 2026-11-03 --> Vanilla ships the same dead ids in `SandBox/ModuleData/lords.xml`, so they are inherited, not a TAOM mistake. `Commander` is real; the other three names that TAOM docs group with it are not.
 
 ## Child elements
 
@@ -146,7 +146,7 @@ Merging is worth seeing once, because vanilla itself relies on it. `SandBoxCore/
 The three things a reader changes first:
 
 1. **`id`**, only when adding a new set. Changing an existing id orphans every character pointing at it, and because a dangling reference auto-creates an empty placeholder they all drop to zero skills without an error.
-2. **`Leadership`, `Steward`, `Tactics`**, the command axis. These are what a lord's army and autoresolve run on, and they are the numbers TAOM's balance passes actually move ([lord skills authoring](../ai-includes/lord-skills-authoring.md) lines 360-373).
+2. **`Leadership`, `Steward`, `Tactics`**, the command axis. These are what a lord's army and autoresolve run on, and they are the numbers TAOM's balance passes actually move ([lord skills authoring](../ai-includes/lord-skills-authoring.md), "Power thresholds").
 3. **The combat skill matching the lord's role**, here `OneHanded` at 255. TAOM's canonical hero specialty band is 270 to 330, so this set is deliberately a notch below a named legend.
 
 Sixteen characters point at this one set: 6 in `Main/_Module/ModuleData/characters/lords.xml` and 10 in `Main/_Module/ModuleData/lords.xslt`. <!-- measured: rg -c 'taom_black_numenorean_skills' over both files 2026-09-05 --> That is the point of a set, and it is also why editing one is never a local change.
@@ -158,13 +158,13 @@ Sixteen characters point at this one set: 6 in `Main/_Module/ModuleData/characte
 Add a canonical set for one named character through the generator's override table. Never by typing into the XML.
 
 1. Confirm the character exists: `rg -n 'id="lord_R3_2"' Main/_Module/ModuleData/characters/lords.xml Main/_Module/ModuleData/lords.xslt`. If it does not, create the `<NPCCharacter>` first, per [Lords and heroes](lords-and-heroes.md).
-2. Commit or stash first. The generator rewrites the whole of `taom_lord_skill_sets.xml` plus `lords.xml` and `lords.xslt`, and a dirty tree makes the diff unreadable. [tools README](../../tools/README.md) line 136 states the pre-flight: a regen on a clean tree must diff empty before any `--apply`.
+2. Commit or stash first. The generator rewrites the whole of `taom_lord_skill_sets.xml` plus `lords.xml` and `lords.xslt`, and a dirty tree makes the diff unreadable. The pre-flight is `python tools/apply_culture_skills_traits.py --check`, which compares the generated SkillSets with `taom_lord_skill_sets.xml` on disk, ignoring set order, and exits 1 on drift; run it before any `--apply` ([tools README](../../tools/README.md) line 213).
 3. Open `tools/apply_culture_skills_traits.py`, find `CULTURES['<culture>']['canonical']`, and add an entry keyed by the character id with a `skills=dict(...)` of all 18 skills and a `traits=dict(...)`. An entry may instead carry `archetype='<name>'` alone, or an archetype plus a partial override.
 4. Dry run: `python tools/apply_culture_skills_traits.py --all-cultures`. Read what it says it would change.
 5. Apply: `python tools/apply_culture_skills_traits.py --all-cultures --apply`. It writes a new set named `taom_canonical_<id>_skills` and points the character's `skill_template` at it.
 
 Check: `python -c "import xml.etree.ElementTree as ET; ET.parse('Main/_Module/ModuleData/taom_lord_skill_sets.xml'); print('well-formed')"`
-Takes effect: new campaign only. The XML reloads on a full game restart, but a hero created in an existing save keeps the numbers it was born with ([lord skills authoring](../ai-includes/lord-skills-authoring.md) line 63).
+Takes effect: new campaign only. The XML reloads on a full game restart, but a hero created in an existing save keeps the numbers it was born with ([lord skills authoring](../ai-includes/lord-skills-authoring.md), "Layer 3: Engine consumption").
 Code: No code changes needed.
 
 ### Modify
@@ -174,7 +174,7 @@ Code: No code changes needed.
 1. Find who points where: `rg -n 'skill_template="SkillSet.taom_lord_skills"' Main/_Module/ModuleData/`.
 2. Change the attribute value on the `<NPCCharacter>` in `Main/_Module/ModuleData/characters/lords.xml`, or the matching `<xsl:attribute>` in `Main/_Module/ModuleData/lords.xslt`. Keep the `SkillSet.` prefix.
 3. If the character exists in both files, the engine merges the two definitions: `characters/lords.xml` loads second and wins every attribute it redeclares, so its `skill_template` (if it states one) is the one used, while the XSLT copy still supplies what the row omits ([lord skills](../features/lord-skills.md) line 20). Grep both files for the id first.
-4. For a culture-wide swap onto a variant set, use `python tools/repoint_evil_lord_skillsets.py` (dry run by default, `--apply` to write) rather than re-running the generator per culture. The live XML carries hand-tuned assignments the generator cannot reproduce ([tools README](../../tools/README.md) line 137).
+4. For a culture-wide swap onto a variant set, use `python tools/repoint_evil_lord_skillsets.py` (dry run by default, `--apply` to write) rather than re-running the generator per culture. The live XML carries hand-tuned assignments the generator cannot reproduce ([tools README](../../tools/README.md) line 215).
 
 Check: `rg -c 'skill_template="SkillSet\.' Main/_Module/ModuleData/characters/lords.xml` before and after, and confirm the count is unchanged.
 Takes effect: new campaign only.
@@ -183,9 +183,9 @@ Code: No code changes needed.
 #### Retune the numbers
 
 1. For a lord set, edit `BASE_ARCHETYPES` (an archetype, which moves every character resolving to it) or the culture's `canonical` entry (one character) in `tools/apply_culture_skills_traits.py`, then re-run it with `--apply`. Editing the XML directly is undone by the next regen.
-2. Never edit a shared base archetype in place to fix one culture. Fork a variant, alias it in that culture's `archetype_alias`, and repoint. Six cultures already carry an alias map ([lord skills authoring](../ai-includes/lord-skills-authoring.md) lines 346-351).
+2. Never edit a shared base archetype in place to fix one culture. Fork a variant, alias it in that culture's `archetype_alias`, and repoint. Six cultures already carry an alias map ([lord skills authoring](../ai-includes/lord-skills-authoring.md), "Per-culture balance variants").
 3. For a wanderer set, edit `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml` by hand. It has no generator banner.
-4. For a troop, this chapter does not apply. TAOM troops carry no `skill_template` at all: all 857 `<NPCCharacter>` blocks under `Main/_Module/ModuleData/troops/` use an inline `<skills>` block. <!-- measured: python count of '<NPCCharacter' and 'skill_template' across Main/_Module/ModuleData/troops/*.xml 2026-09-05 --> Retune those through `tools/rebalance_troops.py` and see [Troops](troops.md).
+4. For a troop, this chapter does not apply. TAOM troops carry no `skill_template` at all: all 1,064 `<NPCCharacter>` blocks under `Main/_Module/ModuleData/troops/` use an inline `<skills>` block. <!-- measured: python count of '<NPCCharacter' and 'skill_template' across Main/_Module/ModuleData/troops/*.xml 2026-11-03 --> Retune those through `tools/rebalance_troops.py` and see [Troops](troops.md).
 
 Check: `python tools/analyze_lord_balance.py --culture <key> --stdout`, which resolves each lord through its `skill_template` and reports drift between the set and the inline block.
 Takes effect: new campaign only.
@@ -206,7 +206,7 @@ Code: No code changes needed.
 
 - **One bad `value=` kills every remaining set in the file, with no log line.** `MBObjectManager.LoadXML` wraps the whole document parse in a bare `try { ... } catch (Exception) { }`, so a `FormatException` from `Convert.ToInt32` aborts the load of everything below it and the game carries on. The symptom is lords further down the file having all-zero skills. `MBObjectManager.cs:790-796`, `PropertyOwner.cs:83`.
 - **A misspelt skill id is dropped without a word.** `GetObject<SkillObject>` returns null, the line is skipped, the skill stays 0. `PropertyOwner.cs:80-85`.
-- **A `skill_template` pointing at an id that does not exist is not an error either.** The engine auto-creates an empty placeholder, so a character with no inline rows ends up at zero across the board (since 1.5.2 any inline rows are laid over that empty placeholder). `MBObjectManager.cs:724-729`. `python tools/validate_moduledata.py` catches a dangling reference only when inline `<skills>` rows sit beside it (`SKILL_TEMPLATE_MISMATCH`, #626); a bare template with a dangling id is still unchecked. The repo is clean today, with 271 distinct `skill_template` values across 2,471 attributes and zero unresolvable. <!-- measured: python resolving every skill_template in Main/_Module/ModuleData against the ids in both TAOM set files plus sandbox and sandboxcore 2026-09-05 -->
+- **A `skill_template` pointing at an id that does not exist is not an error either.** The engine auto-creates an empty placeholder, so a character with no inline rows ends up at zero across the board (since 1.5.2 any inline rows are laid over that empty placeholder). `MBObjectManager.cs:724-729`. `python tools/validate_moduledata.py` catches a dangling reference only when inline `<skills>` rows sit beside it (`SKILL_TEMPLATE_MISMATCH`, #626); a bare template with a dangling id is still unchecked. The repo is clean today, with 326 distinct `skill_template` values across 3,607 attributes and zero unresolvable. <!-- measured: python resolving every skill_template in Main/_Module/ModuleData against the ids in both TAOM set files plus sandbox and sandboxcore 2026-11-03 -->
 - **A `skill_template` without a dot is a hard crash**, unlike everything else here. `MBObjectManager.cs:1519-1534` throws `MBInvalidReferenceException` when the value has no `.` separator.
 - **Declaring `skill_template` and an inline `<skills>` block: the engine version decides.** On 1.4.8 the inline block was discarded, no merge, no warning; until 2026-08-31 that described 44 TAOM militia troops, authored at 850 total skill points and delivered at 215 while every TAOM tool reported the authored figure ([troop skill balance](../features/troop-skill-balance.md)). Since 1.5.2 `BasicCharacterObject.Deserialize` copies the template and lays the inline rows over it, so each listed row wins. TAOM's rule holds on both: the rows must equal the template. `validate_moduledata.py` errors on a differing row as `SKILL_TEMPLATE_MISMATCH` and `TAOM.Tests/Core/LordInlineSkillParityTests.cs` pins it in the C# suite; `python tools/sync_lord_inline_skills.py --apply` rewrites the rows from the SkillSet, which is the source of truth (#626). An **empty** `<skills>` block beside a template is the legitimate shape and is left alone.
 - **`value="0"` does not mean zero, it means delete the line.** You cannot use it to override an inherited value back down to nothing. `PropertyOwner.cs:30-40`.
@@ -218,14 +218,14 @@ Code: No code changes needed.
 
 | Number | Command | Date |
 |---|---|---|
-| 145 sets in `taom_lord_skill_sets.xml`, 170 in `taom_wanderer_skill_sets.xml` | python `re.findall(r'<SkillSet\s+id="([^"]+)"')` over each file | 2026-09-05 |
-| 2,610 `<skill>` lines in the lord file, values 20 to 417 | python min/max over every `value=` in `taom_lord_skill_sets.xml` | 2026-09-05 |
-| 84 lord lines and 33 wanderer lines above 300 | python count of `value > 300` over both files | 2026-09-05 |
-| 271 distinct `skill_template` values, 2,471 attributes, 0 unresolvable, 0 missing the dot | python resolving each `skill_template` in `Main/_Module/ModuleData` against the ids defined in both TAOM set files plus `sandbox_skill_sets.xml` and `sandboxcore_skill_sets.xml` | 2026-09-05 |
-| 857 `<NPCCharacter>` blocks and 857 inline `<skills>` blocks under `troops/`, 0 `skill_template` | python count over `Main/_Module/ModuleData/troops/*.xml` | 2026-09-05 |
+| 146 sets in `taom_lord_skill_sets.xml`, 170 in `taom_wanderer_skill_sets.xml` | python `re.findall(r'<SkillSet\s+id="([^"]+)"')` over each file | 2026-11-03 |
+| 2,628 `<skill>` lines in the lord file, values 20 to 417 | python min/max over every `value=` in `taom_lord_skill_sets.xml` | 2026-11-03 |
+| 88 lord lines and 33 wanderer lines above 300 | python count of `value > 300` over both files | 2026-11-03 |
+| 326 distinct `skill_template` values, 3,607 attributes, 0 unresolvable, 0 missing the dot | python resolving each `skill_template` in `Main/_Module/ModuleData` against the ids defined in both TAOM set files plus `sandbox_skill_sets.xml` and `sandboxcore_skill_sets.xml` | 2026-11-03 |
+| 1,064 `<NPCCharacter>` blocks and 1,064 inline `<skills>` blocks under `troops/`, 0 `skill_template` | python count over `Main/_Module/ModuleData/troops/*.xml` | 2026-11-03 |
 | 16 characters point at `taom_black_numenorean_skills`, 6 plus 10 | `rg -c 'taom_black_numenorean_skills'` over `characters/lords.xml` and `lords.xslt` | 2026-09-05 |
-| 111 of 13,788 `<Trait>` lines use an id the engine never registers | python count of `<Trait id=` across `characters/*.xml` and `lords.xslt`, differenced against the 25 ids created in `DefaultTraits.RegisterAll` | 2026-09-05 |
-| 74 archetypes in `BASE_ARCHETYPES` (tool lines 29-330), 74 archetype sets and 71 canonical sets in the generated file | python key count inside the `BASE_ARCHETYPES` literal, and a prefix split of the generated ids | 2026-09-05 |
+| 111 of 15,528 `<Trait>` lines use an id the engine never registers | python count of `<Trait id=` across `characters/*.xml` and `lords.xslt`, differenced against the 25 ids created in `DefaultTraits.RegisterAll` | 2026-11-03 |
+| 74 archetypes in `BASE_ARCHETYPES` (tool lines 29-330), 74 archetype sets and 72 canonical sets in the generated file | python key count inside the `BASE_ARCHETYPES` literal, and a prefix split of the generated ids | 2026-11-03 |
 | `MaxSkillLevels` appears once in the v1.4.8 dump, at its own declaration | `rg -rn --glob '*.cs' -c "MaxSkillLevels"` over the decompile root | 2026-09-05 |
 
 Two numbers this chapter deliberately does not print. The per-level, per-formation troop baselines live in `tools/rebalance_troops.py`: `INFANTRY_BASELINES` at lines 63-75, `RANGED_BASELINES` at 77-88, `CAVALRY_BASELINES` at 90-101, `HORSEARCHER_BASELINES` at 103-113, grouped by `GROUP_BASELINES` at 115-120 with `CULTURAL_MODS` at 126. Infantry, ranged and cavalry are keyed to levels 1 through 51 in steps of 5; horse archers stop at 46. <!-- measured: python listing the integer keys of each baseline dict in tools/rebalance_troops.py 2026-09-05 --> Those tables drive troop `<skills>` blocks, not skill sets, and they belong to [Troops](troops.md) and [Balance levers](balance-levers.md).

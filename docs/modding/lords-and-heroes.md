@@ -33,20 +33,20 @@ Each is one `<XmlNode>` block, of this shape:
 
 | Line in `SubModule.xml` | `XmlName id` | `path` | What it is |
 |---|---|---|---|
-| 96 | `NPCCharacters` | `lords` | the `lords.xslt` stylesheet |
-| 106 | `Heroes` | `heroes` | the `heroes.xslt` stylesheet |
-| 139 | `Factions` | `characters/clans` | TAOM's clans |
-| 148 | `Heroes` | `characters/heroes` | TAOM's heroes |
-| 157 | `NPCCharacters` | `characters/lords` | TAOM's lords |
+| 131 | `NPCCharacters` | `lords` | the `lords.xslt` stylesheet |
+| 141 | `Heroes` | `heroes` | the `heroes.xslt` stylesheet |
+| 181 | `Factions` | `characters/clans` | TAOM's clans |
+| 190 | `Heroes` | `characters/heroes` | TAOM's heroes |
+| 199 | `NPCCharacters` | `characters/lords` | TAOM's lords |
 
-<!-- measured: grep -n 'path="lords"\|path="heroes"\|path="characters/heroes"\|path="characters/lords"\|path="characters/clans"' Main/_Module/SubModule.xml 2026-09-05 -->
+<!-- measured: grep -n 'path="lords"\|path="heroes"\|path="characters/heroes"\|path="characters/lords"\|path="characters/clans"' Main/_Module/SubModule.xml 2026-11-03 -->
 
 Everything sharing an `XmlName id` is merged into one document before any of it is deserialized, in
-registration order, so the plain XML at lines 148 and 157 is applied after the stylesheets at 96 and
-106. The merge is **per attribute, not per node**: `MergeElementAttributes` copies only the
+registration order, so the plain XML at lines 190 and 199 is applied after the stylesheets at 131 and
+141. The merge is **per attribute, not per node**: `MergeElementAttributes` copies only the
 attributes the later document actually declares, so an attribute `characters/lords.xml` leaves out
 survives from the stylesheet's output rather than being cleared. Only `_replaceWhileMerging="true"`
-wipes the element first, and TAOM never uses it.
+wipes the element first. TAOM does not use it in the lord, hero or clan files; it appears only in `equipmentsets/taom_player_start_vanilla_override.xml` and `equipmentsets/taom_char_creation_equipment.xml`.
 
 <!-- engine-ref type="TaleWorlds.ObjectSystem.MBObjectManager" file="Core/TaleWorlds.ObjectSystem/TaleWorlds.ObjectSystem/MBObjectManager.cs" lines="799-817" -->
 
@@ -98,10 +98,10 @@ uses differently from a line troop.
 | Attribute | What it means on a lord | Read at (file:line) |
 |---|---|---|
 | `is_hero="true"` | Half of a matched pair. In the campaign the flag itself is overridden: `CharacterObject.IsHero` returns `_heroObject != null`, and only `Hero.SetCharacterObject` ever fills that. So the flag without a `<Hero>` row does not make a hero. | `BasicCharacterObject.cs:334`, `CharacterObject.cs:294` |
-| `occupation="Lord"` | Parsed with `Enum.Parse`, so a misspelling throws and the rest of the file stops loading. All 1181 TAOM lord entries use `Lord`. | `CharacterObject.cs:539-542` |
+| `occupation="Lord"` | Parsed with `Enum.Parse`, so a misspelling throws and the rest of the file stops loading. All 1346 TAOM lord entries use `Lord`. | `CharacterObject.cs:539-542` |
 | `skill_template` | Points at a shared `SkillSet`. Through v1.4.8 an inline `<skills>` child beside it was ignored outright (the trap that produced TAOM's SkillSet rewrite); since v1.5.2 the rows are laid over a copy of the set, so TAOM keeps them equal to it (`SKILL_TEMPLATE_MISMATCH`, #626). See [Skill sets](skill-sets.md). | `BasicCharacterObject.cs:337`, `:353-364` |
 | `is_female` | Read here, then copied onto the `Hero` once. It travels as a unit with `<beard_tags>` and the `<BodyProperties key>`; flipping the attribute alone leaves a bearded woman. | `BasicCharacterObject.cs:479` |
-| `race` | Skeleton, meshes and hit points. Absent means index 0, the human convention. 525 of 1181 TAOM lords leave it off. | `BasicCharacterObject.cs:324` |
+| `race` | Skeleton, meshes and hit points. Absent means index 0, the human convention. 660 of 1346 TAOM lords leave it off. | `BasicCharacterObject.cs:324` |
 | `age` | The starting age. Overridden at runtime by the hero's own age once the campaign is running. | `BasicCharacterObject.cs:485` |
 | `voice` | Bare trait id, no `Trait.` prefix: `curt`, `ironic`, `earnest`, `softspoken`. Absent means `softspoken`. | `CharacterObject.cs:572` |
 | `is_obsolete` | The supported retirement switch. Its only consumer in the shipping decompile is `Hero.cs:1537`. | `BasicCharacterObject.cs:336` |
@@ -413,17 +413,15 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
   Contract: [tools/README.md](../../tools/README.md).
   [lord identity reconciliation](../features/lord-identity-reconciliation.md).
 - **Lord names reach the pipeline through THREE tiers, and since 2026-10-01 hero biographies do too.** Names edited in the stylesheets touch keys registered in `taom_xslt_strings.xml`
-  (176 of 1181 since #644 removed three duplicate rows). Names edited directly in `characters/lords.xml` that are NOT in that
+  (176 of 1346 since #644 removed three duplicate rows). Names edited directly in `characters/lords.xml` that are NOT in that
   176 are now covered by a third tier, `taom_troop_name_strings.xml`'s sibling
-  `taom_lord_name_strings.xml` (988 keys, generated by `tools/generate_name_localization_strings.py`,
-  which excludes whatever the XSLT tier already carries): together ~1164 of 1181 lord name keys
+  `taom_lord_name_strings.xml` (1153 keys, generated by `tools/generate_name_localization_strings.py`,
+  which excludes whatever the XSLT tier already carries): together 1329 of 1346 lord name keys
   are now registered and translated in all 12 languages. **Biographies in `characters/heroes.xml`**
   (6 of 465 `text=` keys registered until then; the file has no `name=` attribute, hero names come
-  from procedural generation) are generated into `taom_hero_text_strings.xml` (460 keys) and
+  from procedural generation) are generated into `taom_hero_text_strings.xml` (469 keys) and
   translated in all 12 languages since 2026-10-01. [lord identity reconciliation](../features/lord-identity-reconciliation.md).
-  <!-- measured: tools/generate_name_localization_strings.py --dry-run 2026-09-17; prior baseline
-  was a python one-liner matching {=KEY} prefixes in characters/lords.xml and characters/heroes.xml
-  against <string id> rows in taom_xslt_strings.xml, 2026-09-05 -->
+  <!-- measured: tools/generate_name_localization_strings.py --dry-run 2026-09-17; recounted 2026-11-03 with a python one-liner matching {=KEY} prefixes in characters/lords.xml and characters/heroes.xml against <string id> rows in taom_xslt_strings.xml, taom_lord_name_strings.xml and taom_hero_text_strings.xml; the 465 is the 2026-09-05 baseline -->
 - **Nothing in this chapter reaches an existing save.** `Heroes`, `Kingdoms` and `Factions` are
   loaded only when `isSavedCampaign` is false, and `Name`, `Culture`, `IsFemale` and the skills are
   copied onto the hero once, at creation. Verification needs a full application restart and a fresh
@@ -438,19 +436,11 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 
 ### Not answered anywhere in TAOM
 
-- **How to author a `banner_key` from scratch.** The number-group grammar is not decoded in any TAOM
-  doc. The places to look are `Banner.cs` (`Deserialize` and `TryGetBannerDataFromCode`) in the
-  decompile, [banner icon generation](../reference/banner-icon-generation.md) for the icon and colour
-  id pools, and a working key such as `clan_erebor_1`'s above. Copying an existing key is the only
-  documented method.
 - **What the minimum viable kingdom is** in clans, lords and settlements before it stops crashing.
   `kingdom-creation.md` lists the crash classes and `culture-playability-wiring.md` has a 14-row
   fatal-or-silent checklist, but neither states a floor. See
   [kingdom creation](../features/kingdom-creation.md) and
   [culture playability wiring](../features/culture-playability-wiring.md).
-- **What `tier` on a clan actually changes.** The filing order says to create the tier-6 clan first,
-  and `clans.xml` ships rows from tier 1 to tier 6, but no TAOM doc states the range or the effect.
-  Read `Clan.Deserialize` in the decompile, and see [Clans](clans.md) when that chapter lands.
 - **Whether `preferred_upgrade_formation` reaches a formation several tiers down an upgrade tree.**
   `CharacterHelper.SearchForFormationInTroopTree` was not read for this chapter, so the search depth
   is unknown. No TAOM lord sets the attribute, so nothing depends on the answer today.
@@ -459,19 +449,19 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 
 | Number | Command | Date |
 |---|---|---|
-| 1001 `<Hero>` rows in `characters/heroes.xml` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();print(len(r))"` | 2026-09-05 |
-| Hero attribute usage: `id` 1001, `faction` 1001, `text` 465, `spouse` 207, `father` 79, `mother` 47, `alive` 1 | `python -c "import xml.etree.ElementTree as ET;from collections import Counter;r=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();print(sorted(Counter(k for e in r for k in e.attrib).items()))"` | 2026-09-05 |
-| 1181 `<NPCCharacter>` rows in `characters/lords.xml`, all 1181 `occupation="Lord"`, 504 `is_female="true"` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();print(len(r),sum(1 for e in r if e.get('occupation')=='Lord'),sum(1 for e in r if e.get('is_female')=='true'))"` | 2026-09-23 |
-| `race` on those 1181: absent 525, `orc` 151, `dg_uruk` 126, `pale_uruk` 100, `goblin` 80, `elf` 63, `uruk` 56, `uruk_hai` 39, `dwarf` 36, `berserker` 5 (the Nine's `nazghul` comes from `lords.xslt`, which this counts no more than Sauron's `sauron`) | `python -c "import xml.etree.ElementTree as ET;from collections import Counter;r=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();print(Counter(e.get('race') for e in r).most_common())"` | 2026-09-23 |
-| Registration lines 96, 106, 139, 148 and 157 in `SubModule.xml` | `grep -n 'path="lords"\|path="heroes"\|path="characters/heroes"\|path="characters/lords"\|path="characters/clans"' Main/_Module/SubModule.xml` | 2026-09-05 |
-| 145 `<Faction>` rows in `characters/clans.xml` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/clans.xml').getroot();print(len(r))"` | 2026-09-05 |
+| 1167 `<Hero>` rows in `characters/heroes.xml` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();print(len(r))"` | 2026-11-03 |
+| Hero attribute usage: `id` 1167, `faction` 1167, `text` 475, `spouse` 340, `father` 91, `mother` 59, `alive` 1 | `python -c "import xml.etree.ElementTree as ET;from collections import Counter;r=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();print(sorted(Counter(k for e in r for k in e.attrib).items()))"` | 2026-11-03 |
+| 1346 `<NPCCharacter>` rows in `characters/lords.xml`, all 1346 `occupation="Lord"`, 580 `is_female="true"` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();print(len(r),sum(1 for e in r if e.get('occupation')=='Lord'),sum(1 for e in r if e.get('is_female')=='true'))"` | 2026-11-03 |
+| `race` on those 1346: absent 660, `orc` 151, `dg_uruk` 126, `pale_uruk` 100, `goblin` 80, `elf` 76, `uruk` 56, `uruk_hai` 39, `dwarf` 52, `berserker` 5, `saruman` 1 (the Nine's `nazghul` comes from `lords.xslt`, which this counts no more than Sauron's `sauron`) | `python -c "import xml.etree.ElementTree as ET;from collections import Counter;r=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();print(Counter(e.get('race') for e in r).most_common())"` | 2026-11-03 |
+| Registration lines 131, 141, 181, 190 and 199 in `SubModule.xml` | `grep -n 'path="lords"\|path="heroes"\|path="characters/heroes"\|path="characters/lords"\|path="characters/clans"' Main/_Module/SubModule.xml` | 2026-11-03 |
+| 188 `<Faction>` rows in `characters/clans.xml` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/characters/clans.xml').getroot();print(len(r))"` | 2026-11-03 |
 | 403 templates in `lords.xslt` and 397 in `heroes.xslt`, one of each being the identity template | `grep -c '<xsl:template' Main/_Module/ModuleData/lords.xslt Main/_Module/ModuleData/heroes.xslt` | 2026-10-21 |
 | 397 live `<Hero>` rows in vanilla's file, and 23 `is_hero="true"` characters in `characters/lords.xml` with no `<Hero>` row in either file | `BANNERLORD_GAME_MODULES=... python -c "import os,xml.etree.ElementTree as ET;V=os.path.join(os.environ['BANNERLORD_GAME_MODULES'],'SandBox','ModuleData','heroes.xml');vh={e.get('id') for e in ET.parse(V).getroot()};h={e.get('id') for e in ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot()};l=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();print(len(vh),len([e for e in l if e.get('is_hero')=='true' and e.get('id') not in h and e.get('id') not in vh]))"` | 2026-09-05 |
-| 1446 `<string>` rows in `taom_xslt_strings.xml`; 176 of 1181 lord name keys registered | `python -c "import xml.etree.ElementTree as ET,re;reg=set(re.findall(r'<string id=\"([^\"]+)\"',open('Main/_Module/ModuleData/taom_xslt_strings.xml',encoding='utf-8').read()));l=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();k=[re.match(r'\{=([^}]+)\}',e.get('name','')).group(1) for e in l if e.get('name','').startswith('{=')];print(len(reg),len(k),sum(1 for x in k if x in reg))"` | 2026-09-23 |
-| 6 of 465 biography keys registered | `python -c "import xml.etree.ElementTree as ET,re;reg=set(re.findall(r'<string id=\"([^\"]+)\"',open('Main/_Module/ModuleData/taom_xslt_strings.xml',encoding='utf-8').read()));h=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();k=[re.match(r'\{=([^}]+)\}',e.get('text')).group(1) for e in h if (e.get('text') or '').startswith('{=')];print(len(k),sum(1 for x in k if x in reg))"` | 2026-09-05 |
+| 1447 `<string>` rows in `taom_xslt_strings.xml`; 176 of 1346 lord name keys registered | `python -c "import xml.etree.ElementTree as ET,re;reg=set(re.findall(r'<string id=\"([^\"]+)\"',open('Main/_Module/ModuleData/taom_xslt_strings.xml',encoding='utf-8').read()));l=ET.parse('Main/_Module/ModuleData/characters/lords.xml').getroot();k=[re.match(r'\{=([^}]+)\}',e.get('name','')).group(1) for e in l if e.get('name','').startswith('{=')];print(len(reg),len(k),sum(1 for x in k if x in reg))"` | 2026-11-03 |
+| 6 of 475 biography keys registered | `python -c "import xml.etree.ElementTree as ET,re;reg=set(re.findall(r'<string id=\"([^\"]+)\"',open('Main/_Module/ModuleData/taom_xslt_strings.xml',encoding='utf-8').read()));h=ET.parse('Main/_Module/ModuleData/characters/heroes.xml').getroot();k=[re.match(r'\{=([^}]+)\}',e.get('text')).group(1) for e in h if (e.get('text') or '').startswith('{=')];print(len(k),sum(1 for x in k if x in reg))"` | 2026-11-03 |
 | 30 `is_obsolete="true"` in vanilla's obsolete-characters file | `grep -o 'is_obsolete="true"' "<install>/Modules/SandBoxCore/ModuleData/obsolete_characters.xml" \| wc -l` | 2026-09-05 |
-| 0 `is_obsolete` anywhere in TAOM ModuleData | `grep -rho 'is_obsolete="[^"]*"' Main/_Module/ModuleData/ \| sort \| uniq -c` | 2026-09-05 |
-| `validate_moduledata.py` registry: 5,900 items, 5,291 NPCCharacters, 40 cultures, 476 party templates | `python tools/validate_moduledata.py --code LANDLESS_CULTURE` | 2026-09-05 |
+| 255 `is_obsolete="true"` in TAOM ModuleData, none on a lord: 42 in `characters/taom_vanilla_troop_obsolete_overrides.xml`, 213 in `fords_of_war/fords_troops.xml` | `grep -rc 'is_obsolete="true"' Main/_Module/ModuleData/characters Main/_Module/ModuleData/fords_of_war` | 2026-11-03 |
+| `validate_moduledata.py` registry: 6,387 items, 6,639 NPCCharacters, 51 cultures, 603 party templates | `python tools/validate_moduledata.py --code LANDLESS_CULTURE` | 2026-11-03 |
 
 ## Read next
 

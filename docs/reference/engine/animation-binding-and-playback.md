@@ -57,7 +57,7 @@ action sets**: `MBGlobals.GetActionSetWithSuffix(monster, isFemale, "_villager"/
 
 ### `Agent.ActionSet` (Agent.cs:696)
 `=> new MBActionSet(MBAPI.IMBAgent.GetActionSetNo(GetPtr()))` — the agent's *current* action set, read from native.
-TAOM's spider/elephant gate on `agent.ActionSet.IsValid` before driving actions (an unbound/invalid action set =
+TAOM's elephant-like creatures gate on `creature.ActionSet.IsValid` (`ElephantLikeEngageDecorator.cs:41`) before driving actions (an unbound/invalid action set =
 no animations).
 
 ## HOW it works — playback

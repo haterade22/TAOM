@@ -33,7 +33,7 @@ pass. Spec: `lotraom-assets/tools/mordor_armor_and_troops.md`, "Black Numenorean
 | Shields | 6 | `LOTRLOME_items/LOTRAOM_shields.xml` |
 | Bardings | 10 | `LOTRLOME_items/LOTRAOM_horses.xml` (#602, 2026-09-15; see "Barding ladder" below) |
 | Troops | 13 | `Main/_Module/ModuleData/troops/troops_mordor.xml` |
-| Party-template stacks | 13 x 16 | `taom_partyTemplates.xml` |
+| Party-template stacks | 13 x 2 houses, 8 in Sauron's template, 1 vassal reward | `taom_partyTemplates.xml` |
 
 96 of the 106 authorable meshes appear on a troop roster. The 10 that do not are the 8 lord-tier
 pieces (authored, hero-reserved) and `sk_md_num_hood_a` / `_b`, two untiered plain hoods the spec doc
@@ -345,7 +345,7 @@ over the whole file during review: 232 shields, zero violations, and all 6 new o
 | **The lance shipped registered in 3 of 4 polearm descriptions** (fixed 2026-08-20) | As authored, `sm_md_num_lance_blade_a` and `_handle_a` went into `TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and `TwoHandedPolearm_Couchable`, but not `OneHandedPolearm`. That is the only one whose usage set permits a shield, and it sits FIRST in Native's `TwoHandedPolearm` template, so it decides the primary usage. All 8 cavalry rosters carry a shield, so the primary resolved to `requires_no_shield` and the AI drew a sword the moment combat started, holding the lance only through the pre-battle phase (spawn wield is slot order). Silent: nothing errors, nothing logs. Now registered by `tools/register_one_handed_polearms.py`; gated by `tools/audit_polearm_shield_parity.py`, which is what found it. Script or hand edit both work here and neither is mandated: the script is usually easier because it replays the registration after a module refresh reverts it, a hand edit is fine when the change is small and the script's block is coarser than you want. What is NOT optional is the item staying in `ONE_HANDED_ITEMS` so the replay exists, and the gate above noticing if the registration goes missing. The lance ends up with four usages: `OneHandedPolearm` primary, then `TwoHandedPolearm`, `_Couchable` and `_Bracing` as alternates, so it is wielded one- or two-handed and still couches. **The Armory exists in two places and the 2026-08-20 fix reached only one of them** (see below). |
 | **The spec's 2H `bo_` list is a copy-paste of the 1H one** | Its "2H Sword Parts" block repeats the 1H hull names. The real hulls are `bo_sm_md_num_sword_2h_blade_{a,b,c}` and they do exist. |
 | **A Cavalry troop with a mountless roster is a silent bug** | `_isMounted` is set once at deserialize from `default_group`, never from the equipment, and `RandomBattleEquipment` picks uniformly among battle rosters with no check that the chosen one carries a Horse. So a Cavalry-grouped troop that rolls a mountless roster walks while the AI treats it as cavalry. All 8 cavalry rosters here carry both Horse and HorseHarness; nothing in the engine enforces that, so keep it true when editing. |
-| **`F:\Project_TAoM\` does not exist** | The spec's stated source path is dead. Real FBX sources are under `lotraom-assets/v1.4/LOTRLOME_Armory/AssetSources/`. |
+| **`F:\Project_TAoM\` does not exist** | The spec's stated source path is dead. Real FBX sources are under `lotraom-assets/v1.5/LOTRLOME_Armory/AssetSources/`. |
 
 ## Verification
 
@@ -353,7 +353,7 @@ over the whole file during review: 232 shields, zero violations, and all 6 new o
 python tools/generate_black_numenorean_armor.py --dry-run       # 78 items
 python tools/generate_black_numenorean_weapons.py --dry-run     # 22 pieces + 7 crafted + 6 shields
 python tools/apply_black_numenorean_troops.py --dry-run         # 13 troops
-python tools/wire_black_numenorean_troops.py --dry-run          # 18 templates + weights + costs
+python tools/wire_black_numenorean_troops.py --dry-run          # 3 templates + weights + costs
 
 python tools/validate_moduledata.py                             # PASS, no DUPLICATE_ITEM_DEF
 python tools/validate_all_troop_refs.py                         # mordor 196 refs, 0 missing
@@ -634,8 +634,8 @@ and any of the ten accepted when dragged onto a horse in the player inventory, w
   the absent cloth body; `m_ar_art_gloves_a` (an Arnor material) on the infantry bracer;
   `m_md_num_chainmail_a` shipping only `t_md_num_chainmail_b_*` textures; the dead
   `F:\Project_TAoM\` path in the spec.
-- **Armory copy drift.** `sync-modules.ps1` maps `LOTRLOME_Armory` to `shared\LOTRLOME_Armory`, and
-  `shared\`, `v1.2\` and `v1.3\` do not exist (only `v1.4\` does), so the script silently skips the
+- **Armory copy drift.** `lotraom-assets/sync-modules.ps1` maps `LOTRLOME_Armory` to `shared\LOTRLOME_Armory`, and
+  `shared\`, `v1.2\` and `v1.3\` do not exist (only `v1.5\` does), so the script silently skips the
   Armory on every run. The live and assets-repo copies of the five `mordor/` item files had drifted
   by 88 / 66 / 48 / 40 / 208 lines with identical item counts, meaning stat edits. This pass appends
   to **both** copies, which cannot collide with that drift, but the drift itself is unresolved and
