@@ -28,7 +28,8 @@ messages, which are not user input, so a run does not reset the clock it is gate
 
 `--keep-on-crash <seconds>` makes the launcher wait after a crash, because the Watchdog holds the process and asks a person about a dump
 in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
-game to end. The default 0 stops the game at once. Pass it whenever someone may be near the PC.
+game to end. The default 0 does not wait: the launcher takes its own dump with procdump if that is on the PATH (below), then stops the
+game, so the dump the dialog would have written is lost. Pass it whenever someone may be near the PC.
 
 `--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Use 4x for balance runs and 10x only for smoke and crash runs: 10x changes the match, as [balance-log.md](../features/fords-of-war/balance-log.md) measures.
 
@@ -110,7 +111,7 @@ For a balance reading rather than a pass or fail, run `python tools/fords_match_
 - **The deploy replaces the maintainer's.** Building from a worktree changes what `Modules/TAOM` holds. Say which build you deployed in the report.
 - **Logs are pruned.** The launcher copies them out; the folder under `E:/Temp/fords-runs` is the record.
 - **A crash dump is tried, not promised.** On a crash the launcher runs `procdump -accepteula -ma <pid>` into `crash.dmp` in the run folder
-  (about 60 s, 180 s limit) before it kills the game, and says in `runner_log.txt` when procdump is missing, times out or fails. The Watchdog
+  (about 60 s, 180 s limit) before it kills the game, and says in `runner_log.txt` when procdump is missing, times out or leaves no dump. A dump counts as written when `crash.dmp` exists and is not empty, because procdump v12.01 exits 0xFFFFFFFE for success and for a missing pid alike; its own output is in `procdump.log` beside it. The Watchdog
   may block the attach (`native-crash-triage` says so), and only a real crash settles it. A value of `--keep-on-crash` above 0 waits for a person to answer the Watchdog dialog first.
 - **A killed game leaves `safely_exited = 0`.** The launcher resets it; if a session aborts the launcher by hand, check the value before the next start.
 - **One game at a time.** The preflight refuses while a game runs, including the maintainer's.

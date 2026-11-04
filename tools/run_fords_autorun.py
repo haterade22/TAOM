@@ -670,27 +670,34 @@ def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time):
     return False
 
 
-def dump_crash(pid, folder, say, run=subprocess.run, which=shutil.which):
+def dump_crash(pid, folder, say, run=subprocess.run, which=shutil.which, timeout=DUMP_SECONDS):
     """Takes a full dump of the crashed game with procdump before the launcher stops it. A missing tool or a failed dump is said, never
-    hidden: the Watchdog may block the attach, and only a real crash settles that."""
+    hidden: the Watchdog may block the attach, and only a real crash settles that.
+
+    procdump v12.01 exits 0xFFFFFFFE both for a dump it wrote and for a pid it never found, so the exit code decides nothing: the dump is
+    written when crash.dmp exists and is not empty. Its output goes to procdump.log in the run folder, not to a pipe: procdump.exe starts
+    procdump64.exe, which inherits a pipe, so a timeout killed the parent and then waited on the child, and the UTF-16 text reached
+    runner_log.txt as NUL bytes."""
     tool = which("procdump")
     if tool is None:
         say("no crash dump: procdump is not on PATH")
         return
     target = Path(folder) / "crash.dmp"
     say(f"crash dump: procdump -ma {pid} (about 60 s)")
+    log = Path(folder) / "procdump.log"
     try:
-        result = run([tool, "-accepteula", "-ma", str(pid), str(target)], capture_output=True, text=True, timeout=DUMP_SECONDS)
+        with open(log, "wb") as log_file:
+            result = run([tool, "-accepteula", "-ma", str(pid), str(target)], stdout=log_file, stderr=subprocess.STDOUT, timeout=timeout)
     except subprocess.TimeoutExpired:
-        say(f"crash dump timed out after {DUMP_SECONDS} s")
+        say(f"crash dump timed out after {timeout:g} s (procdump output: {log})")
         return
     except OSError as error:
-        say(f"crash dump failed: could not start procdump ({type(error).__name__}: {error})")
+        say(f"crash dump failed: could not run procdump ({type(error).__name__}: {error})")
         return
-    if result.returncode != 0:
-        say(f"crash dump failed: procdump exit {result.returncode}: " + " ".join((result.stdout + result.stderr).split())[-300:])
-    else:
+    if target.is_file() and target.stat().st_size > 0:
         say("crash dump written: " + str(target))
+    else:
+        say(f"crash dump failed: procdump exit {result.returncode} left no dump at {target} (procdump output: {log})")
 
 
 def png_chunk(tag, data):
@@ -841,7 +848,7 @@ def build_parser():
                         help=f"wall seconds after the start before the match is ended (default {DEFAULT_WALL_LIMIT_SECONDS:g})")
     parser.add_argument("--keep-on-crash", type=non_negative_minutes, default=0,
                         help="after a crash wait this many seconds for a person to answer the dump dialog before stopping the game "
-                             "(default 0: stop at once, which loses the dump)")
+                             "(default 0: do not wait; procdump takes its own dump if it is on PATH, then the game is stopped, so the dialog's dump is lost)")
     parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
     parser.add_argument("--speed", type=int, choices=[1, 2, 4, 10], help="the match speed from the first frame (default 1); live_seconds stay mission seconds, so 10 ends a match in about a tenth of the time")
