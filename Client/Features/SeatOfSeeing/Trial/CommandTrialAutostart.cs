@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
@@ -61,13 +62,14 @@ internal sealed class CommandTrialAutostart
             if (_phase == Phase.WaitMenu)
                 WaitForMenu(dt);
             else if (_phase == Phase.Live)
-                WhileLive();
+                WhileLive(dt);
             else
                 WhileEnding();
         }
         catch (Exception ex)
         {
             _logger.LogError($"[SeatTrial] the autostart failed, so the run ends: {ex}");
+            CommandTrialRun.Finish("autostart_failed");
             Finish("autostart_failed");
         }
     }
@@ -78,8 +80,8 @@ internal sealed class CommandTrialAutostart
         + "\nwall_seconds=" + Seconds((float)wallSeconds) + "\nstarted=" + started + "\nended=" + ended + "\n";
 
     /// <summary>The text of the status file, which the runner's stall watch reads: it must change while the run lives.</summary>
-    internal static string StatusText(string phase, string step, float missionSeconds, double wallSeconds) =>
-        "phase=" + phase + "\nstep=" + step + "\nmt=" + Seconds(missionSeconds) + "\nwall=" + Seconds((float)wallSeconds) + "\n";
+    internal static string StatusText(string phase, string step, float liveSeconds, double wallSeconds) =>
+        "phase=" + phase + "\nstep=" + step + "\nlive=" + Seconds(liveSeconds) + "\nwall=" + Seconds((float)wallSeconds) + "\n";
 
     private static string Seconds(float value) => value.ToString("F1", CultureInfo.InvariantCulture);
 
@@ -107,17 +109,19 @@ internal sealed class CommandTrialAutostart
         _host.StartGame();
     }
 
-    private void WhileLive()
+    // The live clock is real time: the application ticks' dt summed while a mission is open, because mission time stands still under a pause.
+    private void WhileLive(float dt)
     {
-        var missionSeconds = _host.MissionSeconds;
-        if (missionSeconds != null)
+        var missionOpen = _host.MissionOpen;
+        if (missionOpen)
         {
             _sawMission = true;
-            _liveSeconds = Math.Max(_liveSeconds, missionSeconds.Value);
+            if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
+                _liveSeconds += dt;
         }
 
         var unfinished = CommandTrialRun.Outcome == null
-            ? UnfinishedReason(_liveSeconds, _options.LiveLimitSeconds, _host.WallSeconds - _phaseStart, _sawMission, missionSeconds != null)
+            ? UnfinishedReason(_liveSeconds, _options.LiveLimitSeconds, _host.WallSeconds - _phaseStart, _sawMission, missionOpen)
             : null;
         if (unfinished != null)
             CommandTrialRun.Finish(unfinished);
@@ -127,14 +131,14 @@ internal sealed class CommandTrialAutostart
             return;
 
         _reason = outcome;
-        _logger.LogInfo($"[SeatTrial] ending the run: {outcome} at mt={Seconds(_liveSeconds)}");
+        _logger.LogInfo($"[SeatTrial] ending the run: {outcome} after {Seconds(_liveSeconds)} live seconds");
         Enter(Phase.Ending);
         _host.ReturnToMainMenu();
     }
 
     /// <summary>
-    /// Why the run must end although the script has not reported, or null while it may go on: the live limit (mission seconds), a mission
-    /// that never opened, a wall limit past the load allowance and the live limit (a mission clock that stopped would otherwise hold the run
+    /// Why the run must end although the script has not reported, or null while it may go on: the live limit (real seconds), a mission
+    /// that never opened, a wall limit past the load allowance and the live limit (application ticks that stopped feeding the live clock would otherwise hold the run
     /// until the runner's own limit), and a mission that closed under the script.
     /// </summary>
     internal static string? UnfinishedReason(float liveSeconds, float liveLimit, double wallSeconds, bool sawMission, bool missionOpen)

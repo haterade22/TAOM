@@ -1,13 +1,18 @@
-# In-game checks for the Seat of Seeing (stage S1), read by tools/ingame_verdict.py. All [Check] lines come from
+# In-game checks for the Seat of Seeing (stages S1 to S3), read by tools/ingame_verdict.py. All [Check] lines come from
 # Client/Features/SeatOfSeeing/SeatSession.cs through IOutcomeLog, with the ids in
-# Main/Features/SeatOfSeeing/Domain/SeatChecks.cs: enter and leave from the state changes (a refused key press writes an enter skip line,
+# Main/Features/SeatOfSeeing/Domain/SeatChecks.cs. Stages S2 and S3 add cursor (the first cursor of a mission), focus (the formation focus
+# patch put the pointer in the handler's field), panel-reopened (keep the panel open reopened it, or the view model could not be reached),
+# hide (the interface hidden, and restored with its reason) and keep and let-go (keeping to a soldier or a company, and letting go).
+# A [PatchApply] line for a Patch140 class that failed or was skipped fails the enter check too: Harmony stops a category at its first failing
+# class, so one such line is up to ten Seat patches off, and five of them are proved only by a press.
+# Stage S1: enter and leave from the state changes (a refused key press writes an enter skip line,
 # and a leave names its reason), frames once a Seat has owned 60 frames, glide when the return glide is armed (a fail line when the
 # CameraElevation setter is missing, a skip line when there is no agent to follow), and fault when the latch fires. The hot-path counter
 # taom.seat-of-seeing.owned-frame appears in the [Session] summary only.
 #
 # DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
 issue = 0
-title = "Seat of Seeing S1: the camera lifts off the hero, flies, and glides back"
+title = "Seat of Seeing S1 to S3: the camera lifts off the hero, points, keeps to a soldier or a company, and glides back"
 fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
 logs = ["taom"]
 
@@ -22,10 +27,11 @@ fail = [
   '\[SeatOfSeeing\] the Seat could not start',
   '\[SeatOfSeeing\] hotkey registration failed',
   '\[SeatOfSeeing\] order ray failed',
+  '\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)',
 ]
-# A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the three lines
-# of the feature's own failures (the view could not start, the key could not register, the order ray threw). A refused key press
-# writes a skip line, which reads NOT REACHED with its reason.
+# A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the lines of the
+# feature's own failures (the view could not start, the key could not register, the order ray threw, a Seat patch did not apply). A refused
+# key press writes a skip line, which reads NOT REACHED with its reason.
 absence = "not-reached"
 
 [[check]]
@@ -62,8 +68,71 @@ fail = [
 # NOT REACHED.
 absence = "not-reached"
 
+[[check]]
+id = "taom.seat-of-seeing.cursor"
+needs = "in the Seat with the order panel open and Show a cursor with the order panel on (it is by default): open the panel with its usual key"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass mission=[0-9]+ cursor=shown$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# One line a mission, at the first show. Whether the cursor really draws, and where it stands after the middle-button look, is for a person.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.focus"
+needs = "in the Seat with the cursor shown over an enemy company: the formation focus patch has run once"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.focus result=pass mission=[0-9]+ focus=cursor$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# The line says the patch set the handler's reference point to the pointer. Which company a left release charges is for a person to see.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.panel-reopened"
+needs = "Keep the order panel open on, in the Seat: give an order from the panel and watch it open again"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=pass mission=[0-9]+ panel=reopened$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# result=fail with reason=site means GauntletOrderUIHandler._dataSource was not found (reflection-sites.md Category B): the panel stays closed.
+# A reopen the engine refuses (OpenToggleOrder returns when the hero or the last troop is gone) writes result=skip with reason=refused, which
+# reads NOT REACHED with that reason: the line is a pass only when Mission.IsOrderMenuOpen reads open after the call.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.hide"
+needs = "in the Seat press Hide the interface (End unless rebound), then open the order panel or leave the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.hide result=pass mission=[0-9]+ interface=hidden$']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.hide result=pass mission=[0-9]+ interface=restored reason=(key|panel|dialog|layer|leave|fault)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# Hidden with no restored line is a fail: Cleanup restores the interface on every leave and fault, so the Seat's own hide cannot outlive the
+# Seat, and only a crash or a kill during a hide leaves it unrestored, and a read while the Seat still holds a hide also reads FAIL (the crash has its own block beside it in the log). A named limit: the
+# manifest pairs nothing per mission, so one mission that restores and a later one that does not still reads PASS; Cleanup restores on every
+# exit but a crash, which is what makes that case unreachable here.
+absence = "fail"
+
+[[check]]
+id = "taom.seat-of-seeing.keep"
+needs = "in the Seat press Keep to this soldier or company (Insert unless rebound) with the pointer on a soldier, or with the order panel open and one company selected"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.keep result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.keep result=pass mission=[0-9]+ kind=(Soldier|Company)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# A press that finds nobody writes a skip line with reason=nobody and one message; it reads as skipped, not as a failure.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.let-go"
+needs = "while keeping to a target, press the key again, fly with the movement keys, rise or sink, or let the target die"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.let-go result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.let-go result=pass mission=[0-9]+ reason=(key|flight|gone) kind=(Soldier|Company)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# A let-go with reason=leave only says that the Seat was left with a target kept, which the key, flight and death routes (the three reasons
+# above) do not prove, so it reads reached and not passed.
+absence = "not-reached"
+
 [[human]]
-claim = "the view rises over about 0.7 seconds, then flies with WASD, Space and Z (game keys 14 and 15, rebindable) for up and down, the wheel for height and the mouse to look; the hero takes no movement or combat input, but the drop and equip key (game key 22), the career ability key (V) and the engine's perspective toggle (game key 27) still act"
+claim = "the view rises over about 0.7 seconds, then flies with WASD, Space and Z (game keys 14 and 15, rebindable) for up and down, the wheel for height and the mouse to look; the hero takes no movement or combat input"
 
 [[human]]
 claim = "the same key brings the view back to the hero: in third person with a short glide, from first person at once; the hero's controls work again at once"
@@ -116,8 +185,17 @@ claim = "if a rage holds the hero in single player at all: fall during a rage, t
 [[human]]
 claim = "leave the Seat more than 2.1 seconds after the hero fell, and the look stays where it was"
 
+# Closed in stage S2 (build-spec 6.4): private patches, reached only by a press, so only a press proves them. The walk mode control opens on
+# the hot key ControlModeToggle, the controller's left pad down; game key 30 (CapsLock) is read by MissionMainAgentController.cs:811, which the
+# shut controller already stops, so the patch on that control serves a player who mixes a gamepad with the Seat and its row presses left pad down.
 [[human]]
-claim = "the drop key and the career key still act from the Seat"
+claim = "from the Seat, pressing the drop and equip keys (game keys 13 and 22), the equip wheel key (34) and the cheer wheel key (31) does nothing: no weapon drops, no wheel opens, the hero does not cheer; a press under half a second made just before entering does not drop a weapon on the first tick after the Seat"
+
+[[human]]
+claim = "on a gamepad, or a gamepad mixed with the keyboard, left pad down from the Seat opens no walk mode control"
+
+[[human]]
+claim = "the career ability key and the perspective toggle (game key 27) still act from the Seat"
 
 [[human]]
 claim = "if a rage holds the hero in single player at all: fall from the warg during a rage, take the Seat, kill the warg, and the flight keys do not move the hero"
@@ -127,7 +205,52 @@ claim = "if a rage holds the hero in single player at all: fall from the warg du
 claim = "Begin Battles in the Seat on, and a battle with a deployment begins in the Seat with no blend (enter ... blend=0)"
 
 [[human]]
+claim = "in the Seat the attack direction arrow, the crosshair and the hit marker are gone from the sky view, also after loosing an arrow just before entering"
+
+[[human]]
+claim = "with the order panel open in the Seat a cursor shows, and the order flag and the focused enemy company follow it; holding the middle mouse button hides the cursor and looks, and on release the cursor is where it was"
+
+[[human]]
+claim = "at a usable area below 1, if the game can be given one on a PC: the company the cursor points at is the one a left release charges, with no offset from the screen edge"
+
+[[human]]
+claim = "Keep the order panel open on: after an order the panel opens again, and Escape, the right mouse button, the panel key and the hold key each leave it closed (also game key 77 at the root of a layout that has a Return order); a conversation that closes the panel is not followed by a reopen"
+
+[[human]]
+claim = "Keep the order panel open on, in a town, an indoor scene, a village, an arena practice, a duel and an alley: the Seat flies and returns and nothing faults (these missions build no order handler, so no close signal may be read there)"
+
+[[human]]
+claim = "Keep the order panel open on, a Transfer order from the panel: the transfer window opens and takes focus, and the order panel stays closed after it"
+
+[[human]]
+claim = "Keep the order panel open on, after an order given with the cursor: the pointer stays where it was, and it does not jump to the screen centre"
+
+[[human]]
+claim = "a click on one of the order panel's buttons in the Seat does not press it yet: it gives a Move order on the ground behind it (the panel's buttons take clicks only from Marshal's Word stage M7)"
+
+[[human]]
+claim = "each new default key (Insert, End) leaves the chat box shut, and Options > Keybindings > Action shows \"Keep to this soldier or company (TAOM)\" and \"Hide the interface (TAOM)\" with the keys Insert and End and no ERROR text"
+
+[[human]]
+claim = "Insert pressed in the Seat takes no screenshot (the engine's debug category binds Insert to its screenshot hot key, DebugHotKeyCategory.cs:598; no managed reader was found, and a native one is unproved)"
+
+[[human]]
+claim = "Hide the interface hides every bar and the order panel stays usable: opening the panel, a dialog or another screen brings the interface back at once, and a toggle_ui typed in the console before entering keeps its choice after the Seat is left"
+
+[[human]]
+claim = "keeping to a soldier orbits the soldier with the mouse, the wheel changes the distance between 4 and 90 metres, the movement keys let go with no jump, also from the lowest pitch over flat ground, and a soldier in a wood is picked"
+
+[[human]]
+claim = "a soldier behind a hill is not picked by the keep key, at ordinary range or at long range (the ray is native, and its reach over 1000 metres is unproved)"
+
+[[human]]
+claim = "keeping to a company with the order panel open orbits its middle on the ground, also under a gatehouse roof; letting go by the key or by flying shows no message, and only losing the target or every unit of the company shows one"
+
+[[human]]
 claim = "the Seat turned off in its MCM group: the key does nothing, and a Seat that is up comes down"
 
 [[human]]
 claim = "a first-person hero who holds a block or a swing at entry stops, and the head shows"
+
+[[human]]
+claim = "the hero stands under real movement keys: with the Seat up, WASD, the mouse buttons and the use key move or do nothing to the hero (a trial cannot press real keys, so hero_stands only observes the hero's speed)"

@@ -11,11 +11,12 @@ controls in order, and writes one line per step:
     [SeatTrial] step=<name> result=<PASS|FAIL> <facts>
 
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
-no failed Seat check line and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout: the
-stamp's sha is HEAD, its .dirty mark agrees with the tree (dirty with uncommitted files, clean without), and no uncommitted file under
-the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
+no failed Seat check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's line for a trial or
+Seat site count) and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
+is judged: the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
+clean without), and no uncommitted file under the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
 the edited file is still uncommitted (docs/features/seat-of-seeing.md names the cases only a content hash in the stamp could close),
-and the PASS text names the build that was judged. Exit 1 is any failure, including a preflight refusal or an unreadable git; exit
+and the PASS text names the build that was judged and the [Session] swallowed counts. Exit 1 is any failure, including a preflight refusal or an unreadable git; exit
 2 is a bad argument; a --dry-run that exits 0 only means the preflight passed. A person still looks at the hud_*.png pictures the run
 saves.
 
@@ -54,11 +55,26 @@ SEAT_STEPS = (
     "hero_stands",
     "leave_glide",
     "reenter_keeps_height",
+    "cursor_with_panel",
+    "focus_follows_cursor",
+    "keep_panel_reopens",
+    "hide_bars_restored",
+    "keep_to_soldier",
+    "keep_to_company",
+    "let_go_on_death",
 )
 STEPS = SEAT_STEPS
 
 STEP_LINE = re.compile(r"\[SeatTrial\] step=(\w+) result=(PASS|FAIL)\b")
 SEAT_CHECK_FAIL = re.compile(r"\bid=(taom\.seat-of-seeing\.[a-z0-9.-]+) result=fail\b")
+# An [ERROR] line of the Seat or its trial (stage S2 onward): a fault, a failed start or a script failure; a Seat patch that failed to apply
+# or was skipped (Harmony stops a category at its first failing class, so one line is ten patches off: Main/PatchCategoryApplier.cs); the
+# thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost and SeatHeroAdapter). The
+# hot key failure is logged at LogError for the same reason. Another feature's patch or guard line does not fail this run.
+SEAT_ERROR = re.compile(
+    r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter)\.\w+ ran off the main mission thread)")
+SESSION_SUMMARY = re.compile(r"\[Session\] summary reason=\S+ .*?\bswallowed=(\d+) shield_swallowed=(\d+)(?:.*?\berrors=(\d+))?")
+SESSION_SITE = re.compile(r"\[Session\] swallowed feature=(\S+) site=(\S+) n=(\d+)")
 BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.(\d{8}-\d{6})Z\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)")
 UNLOAD_LINE = "[Shutdown] clean module unload"
 # The pathspec the build marks a stamp .dirty from (Directory.Build.props, target TaomStampWorkingTreeState); a test reads it out of there.
@@ -71,6 +87,8 @@ def stale_build(log_text, head, changed):
     match = BUILD_STAMP.search(log_text)
     if match is None:
         return "the log has no [BuildStamp] line with a git sha"
+    if "MISMATCH" in log_text[match.start():].split("\n", 1)[0]:
+        return "the stamp says MISMATCH: the TAOM modules in the deploy were not built together"
     if not head.startswith(match.group(2)):
         return f"the deploy is {match.group(2)[:9]}, this checkout is {head[:9]}"
     if bool(match.group(3)) != bool(changed):
@@ -107,10 +125,28 @@ def git_state(repo=REPO):
     return head, changed
 
 
-def judge(done, report_json, log_text=None, steps=STEPS, *, head, changed):
+def session_swallowed(log_text):
+    """The [Session] swallowed counts of the log, for the PASS text: the last summary line's two counters and errors, and every site that was
+    written. A PASS with a swallowed exception is still a PASS, and the reader sees the number beside it. errors above zero means a check
+    line may be missing (ingame_verdict.py warns of it), so the text carries it too."""
+    summaries = SESSION_SUMMARY.findall(log_text)
+    if not summaries:
+        return "no [Session] summary line in the log"
+    swallowed, shielded, errors = summaries[-1]
+    text = f"[Session] swallowed={swallowed} shield_swallowed={shielded}"
+    if errors:
+        text += f" errors={errors}"
+    sites = {(feature, site): count for feature, site, count in SESSION_SITE.findall(log_text)}
+    if sites:
+        text += " (" + ", ".join(f"{feature}.{site}={count}" for (feature, site), count in sites.items()) + ")"
+    return text
+
+
+def judge(done, report_json, log_text=None, steps=STEPS):
     """(exit code, why). A trial run has no JSON report: its evidence is the tagged log lines. The whole log counts for the CrashReport
-    check: it opens at this launch, so a boot-time swallow is this run's too. head and changed are git_state(): the log must come from this
-    checkout's build."""
+    check: it opens at this launch, so a boot-time swallow is this run's too. The log must come from this checkout's build, and the
+    checkout is read here, when the run is judged after the game exits, and not when it was launched: an edit, a merge or an earlier run of a
+    batch made in between is seen."""
     if not done:
         return 1, "no done file"
     reason = done.get("reason", "")
@@ -118,6 +154,10 @@ def judge(done, report_json, log_text=None, steps=STEPS, *, head, changed):
         return 1, f"reason={reason or '?'}"
     if not log_text:
         return 1, "reason=final but no TAOM log was copied, and that log is the trial's evidence"
+    try:
+        head, changed = git_state()
+    except (OSError, subprocess.SubprocessError) as error:
+        return 1, f"cannot read the checkout from git ({error}); a verdict needs to know which build it judges"
     stale = stale_build(log_text, head, changed)
     if stale is not None:
         return 1, "the game ran a build that is not this checkout: " + stale
@@ -141,11 +181,14 @@ def judge(done, report_json, log_text=None, steps=STEPS, *, head, changed):
     faults = sorted({match.group(1) for match in map(SEAT_CHECK_FAIL.search, log_text.splitlines()) if match})
     if faults:
         return 1, "a Seat check line failed: " + ", ".join(faults)
+    errors = [line.strip() for line in log_text.splitlines() if SEAT_ERROR.search(line)]
+    if errors:
+        return 1, f"{len(errors)} [ERROR] line(s) of the Seat or its trial in the log, the first: " + errors[0][:200]
     if UNLOAD_LINE not in log_text:
         return 1, "reason=final but the TAOM log has no clean module unload line"
     stamp = BUILD_STAMP.search(log_text)
     build = f"{stamp.group(2)[:9]}{stamp.group(3) or ''} built {stamp.group(1)} UTC"
-    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat check, clean unload, build {build}"
+    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat check, no Seat [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
 
 
 def normalised_steps(text):
@@ -194,8 +237,9 @@ def main(argv=None):
         parser.error(str(error))
     known.steps = ",".join(steps) if known.steps else None
 
+    # Refuse a broken git before a launch. The answer is not kept: the judge reads the checkout again when the run is judged.
     try:
-        head, changed = git_state()
+        git_state()
     except (OSError, subprocess.SubprocessError) as error:
         print(f"cannot read the checkout from git ({error}); a verdict needs to know which build it judges")
         return 1
@@ -209,7 +253,7 @@ def main(argv=None):
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = arm_text_for
-    runner.judge = functools.partial(judge, steps=steps, head=head, changed=changed)
+    runner.judge = functools.partial(judge, steps=steps)
     return runner.main(rest)
 
 

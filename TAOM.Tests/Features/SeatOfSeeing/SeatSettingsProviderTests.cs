@@ -21,6 +21,8 @@ public class SeatSettingsProviderTests
 
         Assert.IsTrue(sut.Enabled);
         Assert.IsFalse(sut.BeginBattlesInSeat);
+        Assert.IsTrue(sut.CursorWithPanel, "the pointer is the point of stage S2");
+        Assert.IsFalse(sut.KeepPanelOpen, "a player who never asks sees vanilla behaviour");
     }
 
     [TestMethod]
@@ -30,6 +32,10 @@ public class SeatSettingsProviderTests
 
         Assert.AreEqual(SeatSettingsProvider.DefaultEnabled, settings.SeatEnabled);
         Assert.AreEqual(SeatSettingsProvider.DefaultBeginBattlesInSeat, settings.BeginBattlesInSeat);
+        Assert.AreEqual(SeatSettingsProvider.DefaultCursorWithPanel, settings.SeatCursorWithPanel);
+        Assert.AreEqual(SeatSettingsProvider.DefaultKeepPanelOpen, settings.SeatKeepPanelOpen);
+        Assert.IsTrue(SeatSettingsProvider.DefaultCursorWithPanel);
+        Assert.IsFalse(SeatSettingsProvider.DefaultKeepPanelOpen);
         Assert.IsTrue(SeatSettingsProvider.DefaultEnabled);
         Assert.IsFalse(SeatSettingsProvider.DefaultBeginBattlesInSeat, "a player who never asks sees vanilla behaviour (build-spec section 1)");
     }
@@ -37,12 +43,14 @@ public class SeatSettingsProviderTests
     [TestMethod]
     public void SavedValues_AreRead()
     {
-        var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true };
+        var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true };
 
         var sut = new SeatSettingsProvider(settings);
 
         Assert.IsFalse(sut.Enabled);
         Assert.IsTrue(sut.BeginBattlesInSeat);
+        Assert.IsFalse(sut.CursorWithPanel);
+        Assert.IsTrue(sut.KeepPanelOpen);
     }
 
     [TestMethod]
@@ -83,6 +91,8 @@ public class SeatSettingsProviderTests
     [DataTestMethod]
     [DataRow(nameof(TaomSettings.SeatEnabled))]
     [DataRow(nameof(TaomSettings.BeginBattlesInSeat))]
+    [DataRow(nameof(TaomSettings.SeatCursorWithPanel))]
+    [DataRow(nameof(TaomSettings.SeatKeepPanelOpen))]
     public void EachSetting_SitsInTheSeatGroup_NeedsNoRestart_AndStatesItsDefault(string name)
     {
         var property = typeof(TaomSettings).GetProperty(name)!;

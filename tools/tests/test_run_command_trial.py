@@ -38,6 +38,9 @@ CLEAN_STAMP_LINE = STAMP_LINE.replace(".dirty", "")
 UNLOAD_LINE = "[2026-11-04 03:12:21] [INFO] [Shutdown] clean module unload"
 OLDER_CHANGE = {"Main/a.cs": datetime(2026, 11, 4, 9, 0, 0)}
 
+# The steps that run had: stage S1's six, the first six names of the table. Its lines are a stage S1 run, so it is judged against these.
+S1_STEPS = trial.SEAT_STEPS[:6]
+
 # The newest real run (E:/Temp/command-trial-runs/20261104-042903), copied from its log: the build stamp, the six step lines and the unload line.
 REAL_RUN_LINES = (
     "[2026-11-04 04:29:13] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261104-102854Z+1735f2add88c0aa640afe3a1cdbb2dfa88b0dddc.dirty "
@@ -69,11 +72,10 @@ def full_log(skip=(), extra=(), stamp=CLEAN_STAMP_LINE, unload=True):
     return "\n".join(rows)
 
 
-def judge(done, report_json, log_text=None, **kwargs):
-    """trial.judge with this checkout's HEAD and a clean tree (no changed file), unless a test says otherwise."""
-    kwargs.setdefault("head", HEAD)
-    kwargs.setdefault("changed", {})
-    return trial.judge(done, report_json, log_text, **kwargs)
+def judge(done, report_json, log_text=None, *, head=HEAD, changed=None, **kwargs):
+    """trial.judge over a git that answers this checkout's HEAD and a clean tree (no changed file), unless a test says otherwise."""
+    with mock.patch.object(trial, "git_state", return_value=(head, changed or {})):
+        return trial.judge(done, report_json, log_text, **kwargs)
 
 
 RUNNER_NAMES = ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for")
@@ -207,19 +209,164 @@ class JudgeTests(unittest.TestCase):
         """The judge on lines the game itself wrote, not lines this file made: a format drift fails here before a run does."""
         changed = {"Client/Features/SeatOfSeeing/Trial/CommandTrialScript.cs": datetime(2026, 11, 4, 10, 0, 0)}
         log = "\n".join(REAL_RUN_LINES)
-        code, why = judge(FINAL, None, log, changed=changed)
+        code, why = judge(FINAL, None, log, steps=S1_STEPS, changed=changed)
         self.assertEqual(code, 0, why)
-        self.assertIn(f"{len(trial.STEPS)} steps with a PASS line", why)
+        self.assertIn(f"{len(S1_STEPS)} steps with a PASS line", why)
 
         broken = log.replace("step=fly result=PASS", "step=fly result=FAIL")
         self.assertNotEqual(broken, log)
-        code, why = judge(FINAL, None, broken, changed=changed)
+        code, why = judge(FINAL, None, broken, steps=S1_STEPS, changed=changed)
         self.assertEqual(code, 1)
         self.assertIn("fly", why)
 
     def test_the_real_run_lines_carry_the_tables_steps_in_order(self):
         names = [match.group(1) for match in map(trial.STEP_LINE.search, REAL_RUN_LINES) if match]
-        self.assertEqual(tuple(names), trial.STEPS)
+        self.assertEqual(tuple(names), S1_STEPS)
+
+    def test_a_log_of_stage_one_alone_misses_every_later_step_by_name(self):
+        """The same real lines judged against the whole table: the seven steps of stages S2 and S3 have no line, so the run fails."""
+        code, why = judge(FINAL, None, "\n".join(REAL_RUN_LINES), changed={"Main/a.cs": datetime(2026, 11, 4, 10, 0, 0)})
+        self.assertEqual(code, 1)
+        for step in trial.SEAT_STEPS[6:]:
+            self.assertIn(step, why)
+
+
+class SeatErrorLineTests(unittest.TestCase):
+    """From stage S2 on, an [ERROR] line of the Seat or its trial fails a run that every step passed."""
+
+    def error_line(self, tag, text="the Seat failed and is off for this mission"):
+        return f"[2026-11-04 10:01:30] [ERROR] [{tag}] {text}"
+
+    def test_an_error_line_of_the_seat_fails_the_run_and_is_quoted(self):
+        code, why = judge(FINAL, None, full_log(extra=[self.error_line("SeatOfSeeing")]))
+        self.assertEqual(code, 1)
+        self.assertIn("[SeatOfSeeing]", why)
+        self.assertIn("the Seat failed", why)
+
+    def test_an_error_line_of_the_trial_fails_the_run(self):
+        code, why = judge(FINAL, None, full_log(extra=[self.error_line("SeatTrial", "the script failed in step fly")]))
+        self.assertEqual(code, 1)
+        self.assertIn("the script failed in step fly", why)
+
+    def test_an_error_line_of_another_feature_does_not_fail_the_run(self):
+        code, why = judge(FINAL, None, full_log(extra=[self.error_line("FordsOfWar")]))
+        self.assertEqual(code, 0, why)
+
+    def test_a_warning_of_the_seat_is_not_an_error(self):
+        # A level test: the Seat's own failures are written at LogError, so a warning of the Seat is a note and does not fail a passing run.
+        code, why = judge(FINAL, None, full_log(extra=["[2026-11-04 10:01:30] [WARNING] [SeatOfSeeing] a note the run survives"]))
+        self.assertEqual(code, 0, why)
+
+    def test_a_hotkey_registration_failure_fails_the_run(self):
+        """Every step presses by method and an unregistered key reads as not pressed, so only this line tells the run that the keys are dead."""
+        text = "hotkey registration failed, the Seat key stays unbound: ArgumentOutOfRangeException: Index was out of range."
+        code, why = judge(FINAL, None, full_log(extra=[self.error_line("SeatOfSeeing", text)]))
+        self.assertEqual(code, 1)
+        self.assertIn("hotkey registration failed", why)
+
+    PATCH_FAILED = ("[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch140_SeatOfSeeing FAILED (Harmony stops a category at its first failing class): "
+                    "System.ArgumentException: No such field defined in class MissionFormationTargetSelectionHandler")
+    PATCH_SKIPPED = ("[2026-11-04 10:00:05] [ERROR] [PatchApply] TAOM.Client.Features.SeatOfSeeing.Hooks.Patch140_CrosshairArrows SKIPPED "
+                     "(its attributes cannot be read, so its patches are off; every other class still applies): System.TypeLoadException")
+
+    def test_a_seat_patch_that_failed_to_apply_fails_the_run(self):
+        code, why = judge(FINAL, None, full_log(extra=[self.PATCH_FAILED]))
+        self.assertEqual(code, 1)
+        self.assertIn("Patch140_SeatOfSeeing FAILED", why)
+
+    def test_a_seat_patch_class_that_was_skipped_fails_the_run(self):
+        code, why = judge(FINAL, None, full_log(extra=[self.PATCH_SKIPPED]))
+        self.assertEqual(code, 1)
+        self.assertIn("Patch140_CrosshairArrows SKIPPED", why)
+
+    def test_another_features_patch_failure_does_not_fail_the_run(self):
+        other = "[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch95_FactionUI FAILED (Harmony stops a category at its first failing class): boom"
+        info = "[2026-11-04 10:00:05] [INFO] [PatchApply] category applied max_category=Patch140_SeatOfSeeing"
+        code, why = judge(FINAL, None, full_log(extra=[other, info]))
+        self.assertEqual(code, 0, why)
+
+    def test_the_thread_guards_line_for_a_trial_or_seat_site_fails_the_run(self):
+        tail = " (thread 9, main 1). An engine callback here is parked for the next mission tick, which is expected; a TAOM blow is a regression."
+        for site in ("CommandTrialHost.Kill", "CommandTrialHost.SelectChosenCompany", "SeatHeroAdapter.StandFast"):
+            with self.subTest(site=site):
+                line = f"[2026-11-04 10:01:31] [ERROR] [TAOM] {site} ran off the main mission thread" + tail
+                code, why = judge(FINAL, None, full_log(extra=[line]))
+                self.assertEqual(code, 1)
+                self.assertIn(site, why)
+
+    def test_another_features_guard_line_does_not_fail_the_run_at_any_level(self):
+        for level in ("ERROR", "WARNING", "INFO"):
+            with self.subTest(level=level):
+                line = f"[2026-11-04 10:01:31] [{level}] [TAOM] BehaviorTreeMissionLogic.OnAgentDismount ran off the main mission thread (thread 9, main 1)."
+                code, why = judge(FINAL, None, full_log(extra=[line]))
+                self.assertEqual(code, 0, why)
+
+    def test_the_scan_needs_the_level_and_the_tag_in_that_order(self):
+        self.assertIsNotNone(trial.SEAT_ERROR.search(self.error_line("SeatTrial")))
+        self.assertIsNone(trial.SEAT_ERROR.search("[2026-11-04 10:01:30] [SeatTrial] [ERROR] wrong order"))
+        self.assertIsNone(trial.SEAT_ERROR.search("[2026-11-04 10:01:30] [INFO] [SeatTrial] step=fly result=PASS reason=ok"))
+        self.assertIsNone(trial.SEAT_ERROR.search(self.PATCH_FAILED.replace("[ERROR]", "[INFO]")), "a patch line below the error level is not a failure")
+        self.assertIsNone(trial.SEAT_ERROR.search("[2026-11-04 10:01:30] [INFO] [Hot] max_category=Patch140_SeatOfSeeing"))
+
+
+class SessionSwallowedTests(unittest.TestCase):
+    """The PASS text carries the [Session] swallowed counts, so a run that passed with a swallowed exception says so."""
+
+    SUMMARY = ("[2026-11-04 10:02:00] [INFO] [Session] summary reason=exit uptime_s=120 checks_pass=7 checks_fail=0 swallowed={n} "
+               "shield_swallowed={s} checks_skip=1 errors=0 dropped=0")
+    SITE = "[2026-11-04 10:02:00] [INFO] [Session] swallowed feature=SeatOfSeeing site=FaultLatch n=2 first=InvalidOperationException"
+
+    def test_the_pass_text_carries_the_last_summarys_two_counters(self):
+        log = full_log(extra=[self.SUMMARY.format(n=0, s=0)])
+        code, why = judge(FINAL, None, log)
+        self.assertEqual(code, 0, why)
+        self.assertIn("[Session] swallowed=0 shield_swallowed=0", why)
+
+    def test_a_swallowed_exception_still_passes_but_the_count_and_the_site_are_in_the_text(self):
+        log = full_log(extra=[self.SUMMARY.format(n=2, s=1), self.SITE])
+        code, why = judge(FINAL, None, log)
+        self.assertEqual(code, 0, why)
+        self.assertIn("swallowed=2 shield_swallowed=1", why)
+        self.assertIn("SeatOfSeeing.FaultLatch=2", why)
+
+    def test_six_sites_are_all_listed_and_the_first_is_not_dropped(self):
+        sites = [self.SITE.replace("feature=SeatOfSeeing site=FaultLatch n=2", f"feature={name} n={n}")
+                 for name, n in (("SeatOfSeeing site=Tick", 4), ("Tactics site=A", 3), ("TownScene site=B", 3), ("Siege site=C", 3),
+                                 ("Camps site=D", 3), ("Wotr site=E", 2))]
+        text = judge(FINAL, None, full_log(extra=[self.SUMMARY.format(n=18, s=0)] + sites))[1]
+        self.assertIn("SeatOfSeeing.Tick=4", text)
+        for name in ("Tactics.A=3", "TownScene.B=3", "Siege.C=3", "Camps.D=3", "Wotr.E=2"):
+            self.assertIn(name, text)
+
+    def test_a_site_written_twice_shows_its_last_count_once(self):
+        first = self.SITE.replace("n=2", "n=1")
+        text = judge(FINAL, None, full_log(extra=[self.SUMMARY.format(n=3, s=0), first, self.SITE]))[1]
+        self.assertEqual(text.count("SeatOfSeeing.FaultLatch"), 1)
+        self.assertIn("SeatOfSeeing.FaultLatch=2", text)
+
+    def test_the_error_count_is_in_the_text_when_the_summary_has_one(self):
+        log = full_log(extra=[self.SUMMARY.format(n=0, s=0).replace("errors=0", "errors=3")])
+        code, why = judge(FINAL, None, log)
+        self.assertEqual(code, 0, why)
+        self.assertIn("errors=3", why)
+        self.assertIn("errors=0", judge(FINAL, None, full_log(extra=[self.SUMMARY.format(n=0, s=0)]))[1])
+
+    def test_the_last_summary_wins(self):
+        log = full_log(extra=[self.SUMMARY.format(n=5, s=0), self.SUMMARY.format(n=1, s=0)])
+        self.assertIn("swallowed=1 shield_swallowed=0", judge(FINAL, None, log)[1])
+
+    def test_a_log_with_no_summary_says_so_and_still_passes(self):
+        code, why = judge(FINAL, None, full_log())
+        self.assertEqual(code, 0, why)
+        self.assertIn("no [Session] summary line", why)
+
+    def test_the_summary_pattern_reads_the_line_the_game_writes(self):
+        """The writer is Main/Core/Logging/OutcomeLog.cs WriteSummary: the two counters are named and ordered there."""
+        source = (REPO / "Main" / "Core" / "Logging" / "OutcomeLog.cs").read_text(encoding="utf-8")
+        self.assertIn('.Append(" swallowed=")', source)
+        self.assertIn('.Append(" shield_swallowed=")', source)
+        self.assertLess(source.index('.Append(" swallowed=")'), source.index('.Append(" shield_swallowed=")'))
+        self.assertIn("[Session] swallowed feature=", source)
 
 
 class StaleBuildTests(unittest.TestCase):
@@ -258,6 +405,44 @@ class StaleBuildTests(unittest.TestCase):
 
     def test_a_file_at_exactly_the_stamps_time_is_not_stale(self):
         self.assertIsNone(trial.stale_build(STAMP_LINE, HEAD, {"Main/a.cs": BUILT}))
+
+    MISMATCH_TAIL = (" TAOM.Dependencies=v0.1.0.0 build.20261104-091104Z+" + HEAD + " MISMATCH \u2014 built 2d 03h 10m apart. These modules were not built "
+                     "together; update BOTH from the same release or expect the preview patches to fail (issue #371).")
+    REBUILT_TAIL = (" (pair rebuilt 0d 00h 12m apart \u2014 one module was rebuilt after the other, which is normal mid-session and is usually a docs or "
+                    "config commit. Rebuild both if the preview patches misbehave. Issue #371.)")
+
+    def stamp(self, tail):
+        return CLEAN_STAMP_LINE.split(" TAOM.Dependencies=")[0] + tail
+
+    def test_a_stamp_marked_mismatch_is_stale(self):
+        """The tail is on the tier that was built apart: the TAOM= tier the pattern reads can look right while the pair does not."""
+        reason = trial.stale_build(self.stamp(self.MISMATCH_TAIL), HEAD, {})
+        self.assertIn("MISMATCH", reason)
+
+    def test_a_stamp_with_the_pair_rebuilt_tail_is_not_stale(self):
+        self.assertIsNone(trial.stale_build(self.stamp(" TAOM.Dependencies=v0.1.0.0 build.20261104-091104Z+" + HEAD + self.REBUILT_TAIL), HEAD, {}))
+
+    def test_a_stamp_line_with_no_sha_before_the_real_one_does_not_hide_the_mismatch(self):
+        """The line that is judged is the one the sha was read from, and the word sits at the tail of that one."""
+        no_sha = "[2026-11-04 03:11:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261104-091104Z (no git sha)"
+
+        reason = trial.stale_build(no_sha + "\n" + self.stamp(self.MISMATCH_TAIL), HEAD, {})
+
+        self.assertIsNotNone(reason)
+        self.assertIn("MISMATCH", reason)
+
+    def test_the_word_mismatch_on_another_line_is_not_the_stamps(self):
+        other = "[2026-11-04 10:00:00] [WARNING] [Player] MISMATCH: no snapshot at all."
+        self.assertIsNone(trial.stale_build(other + "\n" + CLEAN_STAMP_LINE, HEAD, {}))
+        self.assertIsNone(trial.stale_build(CLEAN_STAMP_LINE + "\n" + other, HEAD, {}))
+
+    def test_a_nogit_stamp_is_refused(self):
+        nogit = CLEAN_STAMP_LINE.replace(HEAD, HEAD + ".nogit", 1)
+
+        reason = trial.stale_build(nogit, HEAD, {})
+
+        self.assertIsNotNone(reason)
+        self.assertIn("[BuildStamp]", reason)
 
     def test_a_clean_match_with_no_changed_file_is_not_stale(self):
         self.assertIsNone(trial.stale_build(CLEAN_STAMP_LINE, HEAD, {}))
@@ -326,17 +511,19 @@ class GitStateTests(unittest.TestCase):
 
             (repo / "Main/edit.cs").write_text("// edited\n", encoding="utf-8")
             git("mv", "Main/old.cs", "Main/new.cs")
-            (repo / "Client/fresh.cs").write_text("// untracked\n", encoding="utf-8")
+            # A new folder, so only -uall lists the file: a plain status shows the folder and not what is in it.
+            (repo / "Client/New").mkdir()
+            (repo / "Client/New/fresh.cs").write_text("// untracked\n", encoding="utf-8")
             (repo / "Client/gone.cs").unlink()
-            for name in ("Main/edit.cs", "Main/new.cs", "Client/fresh.cs"):
+            for name in ("Main/edit.cs", "Main/new.cs", "Client/New/fresh.cs"):
                 os.utime(repo / name, (1762247465, 1762247465))
             self.assertIn("R  Main/old.cs -> Main/new.cs", git("status", "--porcelain", "-uall"), "the fixture must hold a staged rename")
 
             head, changed = trial.git_state(repo)
 
         self.assertRegex(head, r"^[0-9a-f]{40}$")
-        self.assertEqual(sorted(changed), ["Client/fresh.cs", "Client/gone.cs", "Main/edit.cs", "Main/new.cs", "Main/old.cs"])
-        for name in ("Main/edit.cs", "Main/new.cs", "Client/fresh.cs"):
+        self.assertEqual(sorted(changed), ["Client/New/fresh.cs", "Client/gone.cs", "Main/edit.cs", "Main/new.cs", "Main/old.cs"])
+        for name in ("Main/edit.cs", "Main/new.cs", "Client/New/fresh.cs"):
             self.assertEqual(changed[name], datetime(2025, 11, 4, 9, 11, 5), name)
         for name in ("Client/gone.cs", "Main/old.cs"):
             self.assertEqual(changed[name], datetime.min, name)
@@ -361,6 +548,15 @@ class GitStateTests(unittest.TestCase):
         self.assertEqual(reached, [])
         self.assertIn("git", out.getvalue())
 
+    def test_main_refuses_when_git_times_out_and_never_reaches_the_runner(self):
+        reached = []
+        with restoring_runner(main=lambda rest: reached.append(rest) or 0), \
+                mock.patch.object(trial, "git_state", side_effect=subprocess.TimeoutExpired("git", 60)), \
+                contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(trial.main(["--dry-run"]), 1)
+        self.assertEqual(reached, [])
+        self.assertIn("git", out.getvalue())
+
 
 class SourceTieTests(unittest.TestCase):
     """The judge and the arm text name strings the C# side owns. A rewording there would otherwise pass every test here."""
@@ -368,6 +564,29 @@ class SourceTieTests(unittest.TestCase):
     def test_the_seats_steps_are_the_seats_row_lists_names_in_order(self):
         source = STEPS_SOURCE.read_text(encoding="utf-8")
         self.assertEqual(tuple(re.findall(r'new SeatTrialStep\(\s*"(\w+)"', source)), trial.SEAT_STEPS)
+
+    def test_the_patch_failure_lines_are_the_ones_the_applier_and_the_module_write(self):
+        applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
+        module = (REPO / "Main" / "Features" / "SeatOfSeeing" / "SeatOfSeeingModule.cs").read_text(encoding="utf-8")
+        self.assertIn("$\"[PatchApply] {category} FAILED (", applier)
+        self.assertIn("$\"[PatchApply] {name} SKIPPED (", applier)
+        self.assertEqual(len(re.findall(r"LogError\(\s*\$\"\[PatchApply\]", applier)), 2, "both are written at LogError")
+        category = re.search(r'PatchCategory = "(Patch140_\w+)"', module)
+        self.assertIsNotNone(category)
+        self.assertTrue(trial.SEAT_ERROR.search(f"[2026-11-04 10:00:05] [ERROR] [PatchApply] {category.group(1)} FAILED (Harmony stops a category"))
+        template = re.search(r'\$"(\[PatchApply\] \{category\} FAILED \()', applier)
+        self.assertIsNotNone(template)
+        fixture = (REPO / "tools" / "tests" / "fixtures" / "ingame_verdict" / "seat_patch_failed.txt").read_text(encoding="utf-8")
+        line = next(l for l in fixture.splitlines() if "[PatchApply]" in l)
+        self.assertRegex(line, r"\] \[ERROR\] " + re.escape(template.group(1).replace("{category}", category.group(1))))
+        self.assertTrue(trial.SEAT_ERROR.search("[2026-11-04 10:00:05] [ERROR] [PatchApply] TAOM.Features.SeatOfSeeing.Hooks.Patch140_CrosshairArrows SKIPPED (its"))
+        guard = (REPO / "Main" / "Features" / "AdvancedCombat" / "MissionThreadGuard.cs").read_text(encoding="utf-8")
+        self.assertIn("ran off the main mission thread", guard)
+        self.assertIn('"[TAOM] {site} ran off', guard.replace("$", ""), "the line starts with the TAOM tag and the site")
+        host = (TRIAL_SOURCE / "CommandTrialHost.Seat.cs").read_text(encoding="utf-8")
+        hero = (REPO / "Main" / "Adapters" / "SeatHeroAdapter.cs").read_text(encoding="utf-8")
+        self.assertIn('NoteCall("SeatHeroAdapter.StandFast", _logger.LogError)', hero)
+        self.assertIn('MissionThreadGuard.NoteCall(site, _logger.LogError)', host)
 
     def test_every_step_is_a_features_steps_so_far_the_seats(self):
         self.assertEqual(trial.STEPS, trial.SEAT_STEPS)
@@ -463,15 +682,16 @@ class PatchTests(unittest.TestCase):
             seen["judge"] = runner.judge
             return 0
 
+        # The judge reads the checkout itself when it judges, so the patch has to cover the judging too.
+        rows = [STAMP_LINE, pass_line("enter"), pass_line("fly"), UNLOAD_LINE]
         with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})):
             trial.main(["--steps", "enter,fly"])
-        rows = [STAMP_LINE, pass_line("enter"), pass_line("fly"), UNLOAD_LINE]
-        self.assertEqual(seen["judge"](FINAL, None, "\n".join(rows))[0], 1, "Main/a.cs is newer than the build")
+            self.assertEqual(seen["judge"](FINAL, None, "\n".join(rows))[0], 1, "Main/a.cs is newer than the build")
         clean_rows = [CLEAN_STAMP_LINE, pass_line("enter"), pass_line("fly"), UNLOAD_LINE]
         with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
             trial.main(["--steps", "enter,fly"])
-        self.assertEqual(seen["judge"](FINAL, None, "\n".join(clean_rows))[0], 0)
-        self.assertEqual(seen["judge"](FINAL, None, "\n".join([CLEAN_STAMP_LINE, pass_line("enter"), UNLOAD_LINE]))[0], 1)
+            self.assertEqual(seen["judge"](FINAL, None, "\n".join(clean_rows))[0], 0)
+            self.assertEqual(seen["judge"](FINAL, None, "\n".join([CLEAN_STAMP_LINE, pass_line("enter"), UNLOAD_LINE]))[0], 1)
 
     def test_a_wall_limit_flag_reaches_the_arm_text_result(self):
         seen = {}
@@ -487,6 +707,53 @@ class PatchTests(unittest.TestCase):
         self.assertIn("steps=enter,fly\n", text)
         self.assertIn("scene=battle_terrain_b\n", text)
         self.assertEqual(limit, 1234.0)
+
+
+class CheckoutAtJudgingTests(unittest.TestCase):
+    """C2: the run is judged after the game exits, so the checkout is read then and not when it was launched."""
+
+    def judged(self, states, log=None, **kwargs):
+        """Judge once through the partial main binds, with git_state answering from states in turn; returns the verdict and the call count."""
+        seen = {}
+        with restoring_runner(main=lambda rest: seen.update(judge=runner.judge) or 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+            trial.main(["--dry-run"])
+        with mock.patch.object(trial, "git_state", side_effect=states) as git:
+            return seen["judge"](FINAL, None, log if log is not None else full_log(), **kwargs), git.call_count
+
+    def test_a_head_that_moves_after_the_launch_fails_the_run(self):
+        moved = "0000000deadbeefdeadbeefdeadbeefdeadbeef0"
+        (code, why), _ = self.judged([(moved, {})])
+        self.assertEqual(code, 1)
+        self.assertIn("not this checkout", why)
+        self.assertIn("0000000de", why)
+
+    def test_an_edit_made_after_the_launch_fails_the_run(self):
+        (code, why), _ = self.judged([(HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})], log=full_log(stamp=STAMP_LINE))
+        self.assertEqual(code, 1)
+        self.assertIn("Main/a.cs", why)
+
+    def test_the_checkout_is_read_once_for_each_judged_run(self):
+        (code, why), calls = self.judged([(HEAD, {}), (HEAD, {})])
+        self.assertEqual(code, 0, why)
+        self.assertEqual(calls, 1)
+
+    def test_a_git_that_fails_at_the_moment_of_judging_is_exit_1_with_the_reason(self):
+        (code, why), _ = self.judged(OSError("git status exited 128: not a repository"))
+        self.assertEqual(code, 1)
+        self.assertIn("cannot read the checkout from git", why)
+        self.assertIn("exited 128", why)
+
+    def test_a_git_that_times_out_at_the_moment_of_judging_is_exit_1_with_the_reason(self):
+        (code, why), _ = self.judged(subprocess.TimeoutExpired("git", 60))
+        self.assertEqual(code, 1)
+        self.assertIn("cannot read the checkout from git", why)
+
+    def test_main_binds_nothing_from_the_early_git_call(self):
+        """The early call only refuses a broken git before a launch: the partial holds the steps and not a head."""
+        seen = {}
+        with restoring_runner(main=lambda rest: seen.update(judge=runner.judge) or 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+            trial.main(["--dry-run"])
+        self.assertEqual(sorted(seen["judge"].keywords), ["steps"])
 
 
 class RunOnceTests(unittest.TestCase):
@@ -617,6 +884,8 @@ class ArgumentTests(unittest.TestCase):
         self.assertIn("100000", epilog)
 
     def test_the_steps_are_normalised_to_the_tables_order_and_names(self):
+        # "fly" and "cursor_with_panel" are in the table's order and the reverse of the alphabetical one, so a sorting mutant is seen.
+        self.assertEqual(trial.normalised_steps(" Fly , cursor_with_panel ,fly"), ("fly", "cursor_with_panel"))
         self.assertEqual(trial.normalised_steps(" Fly , enter ,fly"), ("enter", "fly"))
         self.assertEqual(trial.normalised_steps(None), trial.STEPS)
 

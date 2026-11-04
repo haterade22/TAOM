@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.SeatOfSeeing.Domain;
 
@@ -24,6 +25,7 @@ internal sealed partial class CommandTrialScript
     private int _index;
     private IEnumerator<Verdict>? _running;
     private bool _awaitsMissionTick;
+    // Real seconds, summed from the screen tick's dt, which runs under a pause. Mission time is only ever a measured fact.
     private float _now;
     private float _stepStart;
     private int _passed;
@@ -60,14 +62,15 @@ internal sealed partial class CommandTrialScript
     /// <summary>True once the run has ended, as final or as a script failure.</summary>
     internal bool IsDone { get; private set; }
 
-    /// <summary>Once per real frame, from <c>SeatView.OnMissionScreenTick</c>: the steps, and the deployment.</summary>
-    internal void OnScreenTick()
+    /// <summary>Once per real frame, from <c>SeatView.OnMissionScreenTick</c>: the clock, the steps and the deployment.</summary>
+    internal void OnScreenTick(float dt)
     {
         if (IsDone)
             return;
         try
         {
-            _now = _host.MissionTime;
+            if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
+                _now += dt;
             FinishDeploymentWhenDue();
             if (_running == null)
                 Begin();
@@ -87,9 +90,8 @@ internal sealed partial class CommandTrialScript
             return;
         try
         {
-            _now = _host.MissionTime;
             _heroAt = _host.HeroPosition();
-            _heroTime = _now;
+            _heroTime = _host.MissionTime;
             if (_awaitsMissionTick)
                 Settle(Next());
         }
@@ -108,7 +110,7 @@ internal sealed partial class CommandTrialScript
             return;
 
         _host.FinishDeployment();
-        _logger.LogInfo("[SeatTrial] deployment finished at mt=" + Num(_now));
+        _logger.LogInfo("[SeatTrial] deployment finished at real=" + Num(_now));
     }
 
     private void Begin()
@@ -129,6 +131,8 @@ internal sealed partial class CommandTrialScript
             verdict = Verdict.Failed("reason=timeout waiting=" + verdict.Text);
         if (!verdict.Done)
             return;
+        if (!verdict.Pass)
+            ReleaseAfterFailure();
 
         Report(step, verdict);
         _running!.Dispose();
@@ -137,6 +141,13 @@ internal sealed partial class CommandTrialScript
         _index++;
         if (_index >= _steps.Count)
             Complete();
+    }
+
+    private void ReleaseAfterFailure()
+    {
+        _host.SetInput(NoInput);
+        if (_host.PanelOpen)
+            _host.ClosePanel(asPlayer: true);
     }
 
     private void Report(SeatTrialStep step, Verdict verdict)

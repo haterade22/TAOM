@@ -148,26 +148,49 @@ public class SeatTrialStepsTests
     }
 
     [TestMethod]
-    public void OwnedEnoughFrames_NeedsMoreThanAHundred()
+    public void OwnedEnoughFrames_NeedsMoreThanThirtyPerRealSecond()
     {
-        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(100));
-        Assert.IsTrue(SeatTrialRules.OwnedEnoughFrames(101));
-        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(0));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(90, 3f), "exactly 30 a second is not above 30");
+        Assert.IsTrue(SeatTrialRules.OwnedEnoughFrames(91, 3f));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(91, 4f), "the window is the real seconds, so a longer window needs more frames");
+        Assert.IsTrue(SeatTrialRules.OwnedEnoughFrames(61, 2f));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(0, 3f));
+    }
+
+    [TestMethod]
+    public void OwnedEnoughFrames_AWindowThatIsNotAPositiveNumber_ProvesNothing()
+    {
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(1000, 0f));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(1000, -1f));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(1000, float.NaN));
+        Assert.IsFalse(SeatTrialRules.OwnedEnoughFrames(1000, float.PositiveInfinity));
     }
 
     [TestMethod]
     public void HeightKept_AllowsOneMetreOrTenPercentWhicheverIsLarger()
     {
-        Assert.IsTrue(SeatTrialRules.HeightKept(22f, 22f));
-        Assert.IsTrue(SeatTrialRules.HeightKept(22f, 24.1f), "inside ten percent of 22 m");
-        Assert.IsFalse(SeatTrialRules.HeightKept(22f, 24.4f), "outside ten percent of 22 m");
-        Assert.IsTrue(SeatTrialRules.HeightKept(22f, 19.9f));
-        Assert.IsFalse(SeatTrialRules.HeightKept(22f, 19.5f));
-        Assert.IsTrue(SeatTrialRules.HeightKept(2f, 2.9f), "one metre floor at low height");
-        Assert.IsFalse(SeatTrialRules.HeightKept(2f, 3.2f));
-        Assert.IsFalse(SeatTrialRules.HeightKept(22f, 9f), "a height that fell back is not a kept one");
-        Assert.IsFalse(SeatTrialRules.HeightKept(float.NaN, 22f), "a step that never measured the first height cannot pass");
-        Assert.IsFalse(SeatTrialRules.HeightKept(22f, float.NaN));
+        const float entry = 22f;
+        Assert.IsTrue(SeatTrialRules.HeightKept(32f, 32f, entry));
+        Assert.IsTrue(SeatTrialRules.HeightKept(32f, 35.1f, entry), "inside ten percent of 32 m");
+        Assert.IsFalse(SeatTrialRules.HeightKept(32f, 35.3f, entry), "outside ten percent of 32 m");
+        Assert.IsTrue(SeatTrialRules.HeightKept(32f, 28.9f, entry));
+        Assert.IsFalse(SeatTrialRules.HeightKept(32f, 28.7f, entry));
+        Assert.IsTrue(SeatTrialRules.HeightKept(2f, 2.9f, entry), "one metre floor at low height");
+        Assert.IsFalse(SeatTrialRules.HeightKept(2f, 3.2f, entry));
+        Assert.IsFalse(SeatTrialRules.HeightKept(32f, 22f, entry), "a height that fell back to the entry height is not a kept one");
+        Assert.IsFalse(SeatTrialRules.HeightKept(float.NaN, 22f, entry), "a step that never measured the first height cannot pass");
+        Assert.IsFalse(SeatTrialRules.HeightKept(32f, float.NaN, entry));
+        Assert.IsFalse(SeatTrialRules.HeightKept(32f, 32f, float.NaN));
+    }
+
+    [TestMethod]
+    public void HeightKept_WhenTheHeightBeforeNeverLeftTheEntryHeight_Fails()
+    {
+        // A re-entry that dropped the last flight comes back at the entry height, so a height that never left it proves nothing.
+        Assert.IsFalse(SeatTrialRules.HeightKept(22f, 22f, 22f), "a lift that did nothing");
+        Assert.IsFalse(SeatTrialRules.HeightKept(23.9f, 23.9f, 22f), "inside the tolerance of the entry height (2.2 m at 22 m)");
+        Assert.IsFalse(SeatTrialRules.HeightKept(24.2f, 24.2f, 22f), "the tolerance is the larger of one metre and a tenth of the height before");
+        Assert.IsTrue(SeatTrialRules.HeightKept(24.5f, 24.5f, 22f), "just outside it");
     }
 
     [TestMethod]
@@ -182,7 +205,7 @@ public class SeatTrialStepsTests
     public void TheTimingConstants_MatchTheContract()
     {
         Assert.AreEqual(5f, SeatTrialRules.DeploymentFinishSeconds, "FinishDeployment five seconds in");
-        Assert.AreEqual(3f, SeatTrialRules.EnterWindowSeconds, "frame count above 100 after 3 s");
+        Assert.AreEqual(3f, SeatTrialRules.EnterWindowSeconds, "owned frames are judged 3 s after the press");
         Assert.AreEqual(2f, SeatTrialRules.FlySeconds, "forward input for 2 s");
     }
 

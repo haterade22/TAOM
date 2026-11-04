@@ -38,6 +38,34 @@ public class CommandTrialRunTests
     }
 
     [TestMethod]
+    public void Settings_InAnUnarmedSession_IsThePlainProviderItself()
+    {
+        var plain = new FakeSeatSettings { Enabled = false, BeginBattlesInSeat = true };
+
+        var given = CommandTrialRun.Settings(plain);
+
+        Assert.AreSame(plain, given, "a player's session gets the saved values, not the trial's");
+        Assert.IsFalse(given.Enabled);
+        Assert.IsTrue(given.BeginBattlesInSeat);
+    }
+
+    [TestMethod]
+    public void Settings_WhenArmed_AreTheTrialsOwn_WhateverThePlayerSaved()
+    {
+        Arm("out=C:\\runs");
+        var plain = new FakeSeatSettings { Enabled = false, BeginBattlesInSeat = true, CursorWithPanel = false, KeepPanelOpen = false };
+
+        var given = CommandTrialRun.Settings(plain);
+
+        Assert.IsInstanceOfType(given, typeof(CommandTrialSettings));
+        Assert.IsTrue(given.Enabled, "the Seat is on");
+        Assert.IsFalse(given.BeginBattlesInSeat, "a saved Begin Battles in the Seat would turn the script's press into a leave");
+        Assert.IsTrue(given.CursorWithPanel);
+        Assert.IsTrue(given.KeepPanelOpen);
+        Assert.AreEqual(0, plain.Reads, "nothing is read from, and nothing is written to, the saved values");
+    }
+
+    [TestMethod]
     public void Script_InAnUnarmedSession_IsNull_BuildsNoHost_AndWritesNothing()
     {
         Assert.IsNull(Script());

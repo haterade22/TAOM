@@ -12,8 +12,8 @@ internal interface ICommandTrialGameHost
     /// <summary>Starts the trial's campaign-free game from the main menu.</summary>
     void StartGame();
 
-    /// <summary>The open mission's seconds, or null while no mission is open.</summary>
-    float? MissionSeconds { get; }
+    /// <summary>A mission is open.</summary>
+    bool MissionOpen { get; }
 
     /// <summary>Wall seconds since the host was built: the clock of every limit.</summary>
     double WallSeconds { get; }

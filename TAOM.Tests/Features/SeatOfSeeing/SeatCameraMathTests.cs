@@ -512,6 +512,17 @@ public class SeatCameraMathTests
         Assert.AreEqual(pose, SeatCameraMath.AboveGround(pose, rawGround: 103f));
     }
 
+    [TestMethod]
+    public void AboveGround_WithTheFlightsMinimumHeightAsClearance_LiftsAnOrbitToTheHeightALetGoStartsFrom()
+    {
+        var pose = new SeatPose(1f, 2f, 100.2f, 0.3f, 0.05f);
+
+        var floored = SeatCameraMath.AboveGround(pose, rawGround: 100f, SeatCameraMath.MinHeight);
+
+        Assert.AreEqual(101.5f, floored.Z, 0.0001f, "a flight is never lower than MinHeight above the ground, so an orbit's floor is that high (build-spec 7)");
+        Assert.AreEqual(100.5f, SeatCameraMath.AboveGround(pose, rawGround: 100f).Z, 0.0001f, "a flight frame keeps its own half metre");
+    }
+
     [DataTestMethod]
     [DataRow(float.NaN)]
     [DataRow(float.PositiveInfinity)]

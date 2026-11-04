@@ -30,7 +30,7 @@ internal sealed class CommandTrialGameHost : ICommandTrialGameHost
 
     public void StartGame() => MBGameManager.StartNewGame(new CommandTrialGameManager(_options, _logger));
 
-    public float? MissionSeconds => Mission.Current?.CurrentTime;
+    public bool MissionOpen => Mission.Current != null;
 
     public double WallSeconds => _wall.Elapsed.TotalSeconds;
 

@@ -41,12 +41,12 @@ public class CommandTrialAutostartTests
     }
 
     [TestMethod]
-    public void StatusText_ChangesWithMissionTime_SoTheRunnersStallWatchSeesALivingRun()
+    public void StatusText_ChangesWithTheLiveSeconds_SoTheRunnersStallWatchSeesALivingRun()
     {
         var first = CommandTrialAutostart.StatusText("Live", "fly", 12.34f, 70.0);
         var later = CommandTrialAutostart.StatusText("Live", "fly", 17.5f, 75.0);
 
-        Assert.AreEqual("phase=Live\nstep=fly\nmt=12.3\nwall=70.0\n", first);
+        Assert.AreEqual("phase=Live\nstep=fly\nlive=12.3\nwall=70.0\n", first);
         Assert.AreNotEqual(first, later);
         Assert.AreEqual(4, first.TrimEnd('\n').Split('\n').Count());
     }
@@ -270,7 +270,7 @@ public class CommandTrialAutostartTests
     public void Live_WhenTheScriptReportsFinal_GoesBackToTheMenu_AndWritesTheDoneFileOnceTheMenuIsThere()
     {
         var sut = Live();
-        _game.MissionSeconds = 14.8f;
+        _game.MissionOpen = true;
         Tick(sut, 2);
         Assert.AreEqual("Live", StatusPhase());
         CommandTrialRun.Finish("final");
@@ -284,7 +284,7 @@ public class CommandTrialAutostartTests
         _game.AtMainMenu = true;
         Tick(sut);
         Assert.AreEqual("final", DoneReason());
-        StringAssert.Contains(File.ReadAllText(Path.Combine(_folder, CommandTrialAutostart.DoneFile)), "live_seconds=14.8");
+        StringAssert.Contains(File.ReadAllText(Path.Combine(_folder, CommandTrialAutostart.DoneFile)), "live_seconds=3.0");
         Assert.AreEqual(1, _game.Quits);
         Tick(sut, 3);
         Assert.AreEqual(1, _game.Quits, "a finished run does nothing more");
@@ -294,7 +294,7 @@ public class CommandTrialAutostartTests
     public void Ending_WhenTheMenuNeverReturns_EndsAsExitStalled_AfterSixtySeconds()
     {
         var sut = Live();
-        _game.MissionSeconds = 10f;
+        _game.MissionOpen = true;
         CommandTrialRun.Finish("final");
         Tick(sut);
 
@@ -352,6 +352,19 @@ public class CommandTrialAutostartTests
     }
 
     [TestMethod]
+    public void Tick_WhenTheHostThrows_LatchesTheOutcome_SoALaterMissionGetsNoScript()
+    {
+        var sut = Live();
+        _game.MissionReadFails = true;
+
+        Tick(sut);
+
+        Assert.AreEqual("autostart_failed", CommandTrialRun.Outcome);
+        Assert.IsNull(CommandTrialRun.Script(() => throw new InvalidOperationException("a later mission asked for a host"), _log),
+            "with quit=0 a later mission would otherwise get a script and run the steps again");
+    }
+
+    [TestMethod]
     public void Live_WithNoMissionBeyondTheLoadAllowance_EndsAsNeverLive()
     {
         var sut = Live();
@@ -365,14 +378,23 @@ public class CommandTrialAutostartTests
     }
 
     [TestMethod]
-    public void Live_AMissionClockThatStopped_EndsAsWallLimit_PastTheLoadAllowancePlusTheLiveLimit()
+    public void Live_ApplicationTicksThatStoppedFeedingTheClock_EndAsWallLimit_PastTheLoadAllowancePlusTheLiveLimit()
     {
         var sut = Live(liveLimit: 60);
-        _game.MissionSeconds = 10f;
+        _game.MissionOpen = true;
 
-        Tick(sut, 340);
+        for (var i = 0; i < 340; i++)
+        {
+            _game.WallSeconds += 1.0;
+            sut.Tick(0f);
+        }
+
         Assert.AreEqual(0, _game.Returns, "inside 300 s of load plus the limit");
-        Tick(sut, 40);
+        for (var i = 0; i < 40; i++)
+        {
+            _game.WallSeconds += 1.0;
+            sut.Tick(0f);
+        }
 
         EndTheRun(sut, "wall_limit");
     }
@@ -381,9 +403,9 @@ public class CommandTrialAutostartTests
     public void Live_AMissionThatClosesUnderTheScript_EndsAsMissionClosed()
     {
         var sut = Live();
-        _game.MissionSeconds = 5f;
+        _game.MissionOpen = true;
         Tick(sut);
-        _game.MissionSeconds = null;
+        _game.MissionOpen = false;
 
         Tick(sut);
 
@@ -394,10 +416,9 @@ public class CommandTrialAutostartTests
     public void Live_PastTheLiveLimit_EndsAsLiveLimit()
     {
         var sut = Live(liveLimit: 60);
-        _game.MissionSeconds = 59f;
-        Tick(sut);
+        _game.MissionOpen = true;
+        Tick(sut, 59);
         Assert.AreEqual(0, _game.Returns);
-        _game.MissionSeconds = 60f;
 
         Tick(sut);
 
@@ -405,10 +426,21 @@ public class CommandTrialAutostartTests
     }
 
     [TestMethod]
+    public void Live_NoMissionOpen_DoesNotCountLiveSeconds()
+    {
+        var sut = Live(liveLimit: 60);
+
+        Tick(sut, 100);
+
+        Assert.AreEqual(0, _game.Returns, "a load is not live time: only never_live bounds it");
+    }
+
+    [TestMethod]
     public void Live_AnOutcomeTheScriptAlreadySet_IsNotReplacedByALimit()
     {
         var sut = Live(liveLimit: 60);
-        _game.MissionSeconds = 61f;
+        _game.MissionOpen = true;
+        Tick(sut, 59);
         CommandTrialRun.Finish("final");
 
         Tick(sut);
@@ -421,14 +453,15 @@ public class CommandTrialAutostartTests
     {
         var sut = Live();
         CommandTrialRun.OnStep("fly");
-        _game.MissionSeconds = 3f;
+        _game.MissionOpen = true;
         Tick(sut, 5);
 
         var first = File.ReadAllText(Path.Combine(_folder, CommandTrialAutostart.StatusFile));
         Tick(sut, 5);
         var later = File.ReadAllText(Path.Combine(_folder, CommandTrialAutostart.StatusFile));
 
-        StringAssert.Contains(later, "phase=Live\nstep=fly\nmt=3.0\n");
+        StringAssert.Contains(later, "phase=Live\nstep=fly\nlive=");
+        Assert.AreNotEqual(first.Split('\n')[2], later.Split('\n')[2], "the live line counts real seconds, so it moves with the run");
         Assert.AreNotEqual(first, later, "the wall line changes, so the runner's stall watch sees a living run");
     }
 
@@ -463,7 +496,7 @@ public class CommandTrialAutostartTests
 
     private sealed class FakeGame : ICommandTrialGameHost
     {
-        private float? _missionSeconds;
+        private bool _missionOpen;
 
         public bool AtMainMenu { get; set; } = true;
 
@@ -477,10 +510,10 @@ public class CommandTrialAutostartTests
 
         public bool MissionReadFails { get; set; }
 
-        public float? MissionSeconds
+        public bool MissionOpen
         {
-            get => MissionReadFails ? throw new InvalidOperationException("the mission read failed") : _missionSeconds;
-            set => _missionSeconds = value;
+            get => MissionReadFails ? throw new InvalidOperationException("the mission read failed") : _missionOpen;
+            set => _missionOpen = value;
         }
 
         public double WallSeconds { get; set; }

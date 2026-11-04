@@ -6,11 +6,11 @@ namespace TAOM.Client.Adapters;
 /// Every read and write the Seat makes on the mission screen and the mission's camera (build-spec 5.4), so the state machine runs
 /// in a test. A client type: <c>MissionScreen</c> and <c>MissionMainAgentController</c> sit in the client-only
 /// <c>TaleWorlds.MountAndBlade.View</c> assembly (ADR-013), and no core code calls it. All members run on the main thread, from the
-/// mission screen tick and from <c>UpdateOverridenCamera</c> inside <c>Mission.OnTick</c>.
+/// mission screen tick, from <c>UpdateOverridenCamera</c> and from <c>OnMissionTick</c>.
 /// </summary>
 internal interface ISeatScreenAdapter
 {
-    /// <summary>The mission's mode, photo mode, custom camera and ended state right now, and whether a warg rage holds the hero.</summary>
+    /// <summary>The mission's mode, photo mode, custom camera and ended state right now, whether a warg rage holds the hero, and whether the radial menu is active.</summary>
     SeatEngineFacts ReadFacts();
 
     /// <summary>The camera the player has now, and the view angle in degrees it renders with; false when it cannot be read.</summary>
@@ -51,4 +51,56 @@ internal interface ISeatScreenAdapter
 
     /// <summary>Shows one of the Seat's messages to the player.</summary>
     void Say(SeatMessage message);
+
+    /// <summary>The order panel is open: the engine's plain <c>Mission.IsOrderMenuOpen</c> (build-spec 6.1).</summary>
+    bool IsPanelOpen();
+
+    /// <summary>The middle mouse button is down on the scene layer, which looks with the cursor hidden.</summary>
+    bool LookHeld();
+
+    /// <summary>
+    /// Shows or hides the cursor. The adapter builds one small layer on the first show (it asks the screen manager for a visible cursor and
+    /// takes no input) and after that only toggles that layer's mouse visibility, as the banner editor and the face generator do; the
+    /// screen finalizes the layer at teardown. Hiding with no layer built is a no-op, and it is safe at every teardown path.
+    /// </summary>
+    void SetCursor(bool show);
+
+    /// <summary>Asks the engine not to move the cursor when it hides, so it comes back where it was (<c>MBWindowManager.DontChangeCursorPos</c>).</summary>
+    void HoldCursorPosition();
+
+    /// <summary>The player's own ways to close the panel that this frame shows (build-spec 6.2).</summary>
+    SeatCloseSignals ReadCloseSignals();
+
+    /// <summary>
+    /// Opens the order panel again; false when the view model cannot be reached. True means the site was reached: the engine can still refuse
+    /// without a word (<c>MissionOrderVM.OpenToggleOrder</c> returns when the hero or the last troop is gone), so the caller reads
+    /// <see cref="IsPanelOpen"/> to know that the panel opened.
+    /// </summary>
+    bool OpenPanel();
+
+    /// <summary>The troop transfer menu is open (<c>Mission.IsTransferMenuOpen</c>). The Transfer order closes the panel on purpose.</summary>
+    bool TransferMenuOpen();
+
+    /// <summary>The engine's flag that stops every Gauntlet draw (<c>MBDebug.DisableAllUI</c>), which no other TAOM code writes.</summary>
+    bool ReadUiHidden();
+
+    void WriteUiHidden(bool hidden);
+
+    /// <summary>A dialog shows over the mission.</summary>
+    bool DialogShown();
+
+    /// <summary>A layer other than the mission's scene layer holds the focus.</summary>
+    bool OtherLayerFocused();
+
+    /// <summary>
+    /// Keeps to something (build-spec section 7): with the panel open and one company selected, that company; else the soldier under the
+    /// pointer (the cursor when shown, else the screen centre). The adapter holds the target. None when nothing is there.
+    /// </summary>
+    SeatKeepKind TryKeep();
+
+    /// <summary>The kept target's position, or gone: the soldier is not in the mission or the company has no units.</summary>
+    SeatTargetRead ReadKept();
+
+    /// <summary>Drops the kept target.</summary>
+    void Unkeep();
 }

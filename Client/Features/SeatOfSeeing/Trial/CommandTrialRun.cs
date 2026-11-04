@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
@@ -20,6 +21,9 @@ internal static class CommandTrialRun
     internal static string Step { get; private set; } = "none";
 
     internal static void Arm(CommandTrialOptions options) => Options = options;
+
+    /// <summary>The settings a mission's session gets: the trial's own when armed, else the plain provider itself.</summary>
+    internal static ISeatSettingsProvider Settings(ISeatSettingsProvider plain) => IsArmed ? new CommandTrialSettings() : plain;
 
     internal static void Finish(string reason) => Outcome ??= reason;
 

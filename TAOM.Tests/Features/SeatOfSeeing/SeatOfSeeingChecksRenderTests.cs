@@ -73,8 +73,81 @@ public class SeatOfSeeingChecksRenderTests
     [TestMethod]
     public void CheckIds_AreValid()
     {
-        foreach (var id in new[] { SeatChecks.EnterId, SeatChecks.LeaveId, SeatChecks.FramesId, SeatChecks.GlideId, SeatChecks.FaultId, SeatChecks.FrameCounterId })
+        foreach (var id in new[] { SeatChecks.EnterId, SeatChecks.LeaveId, SeatChecks.FramesId, SeatChecks.GlideId, SeatChecks.FaultId, SeatChecks.FrameCounterId,
+                     SeatChecks.CursorId, SeatChecks.FocusId, SeatChecks.PanelReopenedId, SeatChecks.HideId, SeatChecks.KeepId, SeatChecks.LetGoId })
             Assert.IsTrue(OutcomeLog.IsValidId(id), id);
+    }
+
+    [TestMethod]
+    public void RenderedLines_OfAVisitThroughStagesTwoAndThree_AreTheOnesTheManifestAndFixturesRead()
+    {
+        _settings.KeepPanelOpen = true;
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+
+        _screen.PanelOpen = true;
+        _sut.OnScreenTick(false);
+        SeatPresence.MarkFocusSet();
+        _sut.OnScreenTick(false);
+        _screen.PanelOpen = false;
+        _sut.OnScreenTick(false);
+        _sut.PressHide();
+        _screen.PanelOpen = true;
+        _sut.OnScreenTick(false);
+        _screen.PanelOpen = false;
+        _sut.OnScreenTick(false);
+        _screen.KeepResult = SeatKeepKind.Soldier;
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+        _screen.Kept = new SeatTargetRead(true, 0f, 0f, 0f);
+        _sut.OnFrame(0.02f);
+        while (_sut.Frames < 100)
+            _sut.OnFrame(0.02f);
+        Key();
+
+        var visit = new[]
+        {
+            "[Check] id=taom.seat-of-seeing.enter result=pass mission=1 blend=1",
+            "[Check] id=taom.seat-of-seeing.cursor result=pass mission=1 cursor=shown",
+            "[Check] id=taom.seat-of-seeing.focus result=pass mission=1 focus=cursor",
+            "[Check] id=taom.seat-of-seeing.panel-reopened result=pass mission=1 panel=reopened",
+            "[Check] id=taom.seat-of-seeing.hide result=pass mission=1 interface=hidden",
+            "[Check] id=taom.seat-of-seeing.hide result=pass mission=1 interface=restored reason=panel",
+            "[Check] id=taom.seat-of-seeing.keep result=pass mission=1 kind=Soldier",
+            "[Check] id=taom.seat-of-seeing.let-go result=pass mission=1 reason=gone kind=Soldier",
+            "[Check] id=taom.seat-of-seeing.frames result=pass mission=1 frames=60",
+            "[Check] id=taom.seat-of-seeing.leave result=pass mission=1 frames=100 glide=1 reason=key",
+            "[Check] id=taom.seat-of-seeing.glide result=pass mission=1 elevation=set",
+        };
+        CollectionAssert.AreEqual(visit, CheckLines());
+        AssertInFixture("seat_panel_visit_pass.txt", visit);
+        AssertInFixture("seat_panel_reopen_site_missing.txt", visit[0]);
+        AssertInFixture("seat_hide_stuck.txt", visit[0], visit[4]);
+        AssertInFixture("seat_keep_and_flight.txt", visit[0]);
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAReopenThatCannotReachTheViewModel_AndForAKeepThatFindsNobody()
+    {
+        _settings.KeepPanelOpen = true;
+        _screen.ReopenWorks = false;
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _screen.PanelOpen = true;
+        _sut.OnScreenTick(false);
+        _screen.PanelOpen = false;
+        _sut.OnScreenTick(false);
+        _screen.KeepResult = SeatKeepKind.None;
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+
+        var lines = CheckLines();
+        CollectionAssert.Contains(lines, "[Check] id=taom.seat-of-seeing.panel-reopened result=fail mission=1 reason=site");
+        CollectionAssert.Contains(lines, "[Check] id=taom.seat-of-seeing.keep result=skip mission=1 reason=nobody");
+        AssertInFixture("seat_panel_reopen_site_missing.txt", "[Check] id=taom.seat-of-seeing.panel-reopened result=fail mission=1 reason=site");
+        AssertInFixture("seat_keep_nobody.txt", "[Check] id=taom.seat-of-seeing.keep result=skip mission=1 reason=nobody");
     }
 
     [TestMethod]
@@ -97,6 +170,64 @@ public class SeatOfSeeingChecksRenderTests
         AssertInFixture("seat_visit_pass.txt", visit);
         AssertInFixture("seat_elevation_missing.txt", visit[0], visit[1], visit[2]);
         AssertInFixture("seat_enter_only.txt", visit[0]);
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAFlightLetGo_IsTheLineTheFixtureReads()
+    {
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnFrame(0.02f);
+        _screen.KeepResult = SeatKeepKind.Company;
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+        _screen.Input = new SeatInput(0f, 1f, 0f, 0f, 0f, 0f, false);
+        _sut.OnFrame(0.02f);
+
+        var lines = CheckLines();
+        CollectionAssert.Contains(lines, "[Check] id=taom.seat-of-seeing.keep result=pass mission=1 kind=Company");
+        CollectionAssert.Contains(lines, "[Check] id=taom.seat-of-seeing.let-go result=pass mission=1 reason=flight kind=Company");
+        AssertInFixture("seat_keep_and_flight.txt", "[Check] id=taom.seat-of-seeing.keep result=pass mission=1 kind=Company",
+            "[Check] id=taom.seat-of-seeing.let-go result=pass mission=1 reason=flight kind=Company");
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAReopenTheEngineRefused_IsTheSkipLineTheFixtureReads()
+    {
+        _settings.KeepPanelOpen = true;
+        _screen.EngineRefusesReopen = true;
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _screen.PanelOpen = true;
+        _sut.OnScreenTick(false);
+        _screen.PanelOpen = false;
+        _sut.OnScreenTick(false);
+
+        var refused = "[Check] id=taom.seat-of-seeing.panel-reopened result=skip mission=1 reason=refused";
+        CollectionAssert.Contains(CheckLines(), refused);
+        CollectionAssert.DoesNotContain(CheckLines(), "[Check] id=taom.seat-of-seeing.panel-reopened result=pass mission=1 panel=reopened");
+        AssertInFixture("seat_panel_reopen_refused.txt", refused);
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAKeepThenALeave_AreTheOnesTheFixtureReads()
+    {
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnFrame(0.02f);
+        _screen.KeepResult = SeatKeepKind.Company;
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+        Key();
+
+        var kept = "[Check] id=taom.seat-of-seeing.keep result=pass mission=1 kind=Company";
+        var left = "[Check] id=taom.seat-of-seeing.let-go result=pass mission=1 reason=leave kind=Company";
+        CollectionAssert.Contains(CheckLines(), kept);
+        CollectionAssert.Contains(CheckLines(), left);
+        AssertInFixture("seat_keep_then_leave.txt", kept, left);
     }
 
     [TestMethod]
@@ -188,7 +319,10 @@ public class SeatOfSeeingChecksRenderTests
     [DataRow("seat_order_ray_failed.txt", "Client/Features/SeatOfSeeing/Hooks/Patch140_OrderFlagGetCollidedEntity.cs", "[SeatOfSeeing] order ray failed")]
     public void TheFeaturesOwnFailureLines_AreInTheCode_AndInTheFixtures(string fixture, string source, string prefix)
     {
-        StringAssert.Contains(ReadSource(source, stripComments: true), prefix, source);
+        var code = ReadSource(source, stripComments: true);
+        StringAssert.Contains(code, prefix, source);
+        Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(code, @"LogError\(\s*\$""" + System.Text.RegularExpressions.Regex.Escape(prefix)),
+            source + " must write " + prefix + " at LogError");
 
         var path = RepoPath("tools", "tests", "fixtures", Fixtures, fixture);
         Assert.IsTrue(File.ReadAllLines(path).Any(l => l.Contains("] [ERROR] " + prefix)), fixture);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Client.Features.SeatOfSeeing;
 using TAOM.Client.Features.SeatOfSeeing.Trial;
 using TAOM.Features.SeatOfSeeing.Domain;
 using Verdict = TAOM.Client.Features.SeatOfSeeing.Trial.CommandTrialScript.Verdict;
@@ -115,34 +116,62 @@ public class CommandTrialScriptTests
     }
 
     [TestMethod]
-    public void Deployment_WhenTheScriptStartsLate_StillWaitsForTheRefusalStepToReportFirst()
+    public void Deployment_IsNotFinishedWhileTheRefusalStepIsStillRunning_EvenPastFiveRealSeconds()
     {
-        _world.Time = 6f;
-        var script = Script();
+        var ticks = 0;
+        IEnumerable<Verdict> Slow()
+        {
+            while (ticks < 14)
+                yield return Verdict.Waiting("slow");
+            yield return Verdict.Passed("slow=1");
+        }
 
-        _world.Run(script, 0.5f);
+        var rows = new[]
+        {
+            new SeatTrialStep("refuse_in_deployment", Array.Empty<string>(), 20f),
+            new SeatTrialStep("after", Array.Empty<string>(), 20f),
+        };
+        var handlers = new Dictionary<string, Func<CommandTrialScript, IEnumerable<Verdict>>>
+        {
+            ["refuse_in_deployment"] = _ => Slow(),
+            ["after"] = _ => WaitsForever(),
+        };
+        var script = new CommandTrialScript(_world, rows, _log, _finished.Add, _stepsSeen.Add, handlers);
 
-        Assert.AreEqual(1, _world.PressesInDeployment, "the press came in Deployment, before the mode changed");
-        Assert.AreEqual(1, _world.DeploymentFinishes);
-        StringAssert.Contains(Line("refuse_in_deployment"), "result=PASS");
+        for (; ticks < 12; ticks++)
+            _world.ScreenTick(script, 0.5f);
+        Assert.AreEqual(0, _world.DeploymentFinishes, "six real seconds in, the refusal step has not reported, and the mode must not change under it");
+
+        for (; ticks < 16; ticks++)
+            _world.ScreenTick(script, 0.5f);
+        Assert.AreEqual(1, _world.DeploymentFinishes, "once it has reported, the deployment ends");
     }
 
     [TestMethod]
-    public void Deployment_IsNotFinishedWhileTheRefusalStepStillWaitsForItsPress()
+    public void Deployment_AfterAPressThatIsNeverTaken_StillEndsAtFiveRealSeconds()
     {
-        _world.Time = 6f;
         _world.PressesAreIgnored = true;
         var script = Script();
 
-        _world.Run(script, 1.5f);
-
-        Assert.AreEqual(0, _world.DeploymentFinishes, "the refusal step has not reported, and the mode must not change under it");
-        Assert.AreEqual(0, Lines().Count);
+        _world.Run(script, 4.5f);
+        StringAssert.Contains(Line("refuse_in_deployment"), "reason=press-not-taken");
+        Assert.AreEqual(0, _world.DeploymentFinishes, "not before five real seconds");
 
         _world.Run(script, 1f);
+        Assert.AreEqual(1, _world.DeploymentFinishes);
+    }
 
-        StringAssert.Contains(Line("refuse_in_deployment"), "reason=press-not-taken");
-        Assert.AreEqual(1, _world.DeploymentFinishes, "once it has reported, the deployment ends");
+    [TestMethod]
+    public void TheStepTimers_RunOnRealTimeFromTheScreenTicksDt_NotOnTheMissionClock()
+    {
+        // A mission clock that never moves (a pause): the deployment still ends at five real seconds and a step still times out.
+        var script = Script();
+        for (var i = 0; i < 400 && _world.DeploymentFinishes == 0; i++)
+            _world.ScreenTick(script, 0.05f);
+
+        Assert.AreEqual(0f, _world.Time, "the mission clock did not move");
+        Assert.AreEqual(1, _world.DeploymentFinishes);
+        Assert.IsTrue(_world.PressTimes.Count >= 1);
     }
 
     // ---- refuse_in_deployment ----
@@ -344,6 +373,31 @@ public class CommandTrialScriptTests
     }
 
     [TestMethod]
+    public void Fly_PutsTheDotOfTheDisplacementWithTheViewsForwardOnTheLine()
+    {
+        RunAll();
+
+        var line = Line("fly");
+        Assert.AreEqual(1f, float.Parse(Fact(line, "dot")), 0.01f);
+    }
+
+    [DataTestMethod]
+    [DataRow(true, false, DisplayName = "backward by the right distance")]
+    [DataRow(false, true, DisplayName = "sideways by the right distance")]
+    public void Fly_WhenTheViewGoesTheRightDistanceTheWrongWay_Fails(bool backward, bool sideways)
+    {
+        _world.FlightSign = backward ? -1f : 1f;
+        _world.FliesSideways = sideways;
+
+        RunAll();
+
+        var line = Line("fly");
+        StringAssert.Contains(line, "result=FAIL");
+        Assert.AreEqual(float.Parse(Fact(line, "expected")), float.Parse(Fact(line, "moved")), 3f, "the distance alone is right");
+        Assert.IsTrue(float.Parse(Fact(line, "dot")) < 0.9f, line);
+    }
+
+    [TestMethod]
     public void Fly_PassesAtTwentyPercentSlow_AndFailsAtFortyPercentSlow()
     {
         _world.SpeedFactor = 0.8f;
@@ -485,19 +539,44 @@ public class CommandTrialScriptTests
         var line = Line("reenter_keeps_height");
         StringAssert.Contains(line, "result=PASS");
         Assert.AreEqual(float.Parse(Fact(line, "before")), float.Parse(Fact(line, "after")), 0.5f);
-        Assert.AreEqual(22f, float.Parse(Fact(line, "after")), 0.5f);
+        Assert.IsTrue(float.Parse(Fact(line, "before")) > SeatCameraMath.EntryHeight + 3f,
+            "leave_glide lifts the view by several metres first, so the height it leaves at is not the entry height: " + line);
     }
 
     [TestMethod]
     public void Reenter_WhenTheEntryHeightComesBack_Fails()
     {
-        _world.ReenterHeight = 12f;
+        // The height a re-entry that dropped the last flight produces: the entry height itself.
+        _world.ReenterHeight = SeatCameraMath.EntryHeight;
 
         RunAll();
 
         var line = Line("reenter_keeps_height");
         StringAssert.Contains(line, "result=FAIL");
-        Assert.AreEqual(12f, float.Parse(Fact(line, "after")), 0.5f);
+        Assert.AreEqual(SeatCameraMath.EntryHeight, float.Parse(Fact(line, "after")), 0.5f);
+    }
+
+    [TestMethod]
+    public void Reenter_WhenTheLiftDidNothing_Fails_EvenThoughTheHeightIsKept()
+    {
+        _world.LiftDoesNothing = true;
+
+        RunAll();
+
+        var line = Line("reenter_keeps_height");
+        StringAssert.Contains(line, "result=FAIL");
+        Assert.AreEqual(float.Parse(Fact(line, "before")), float.Parse(Fact(line, "after")), 0.5f, "kept, but never moved off the entry height");
+        Assert.AreEqual(SeatCameraMath.EntryHeight, float.Parse(Fact(line, "before")), 0.5f);
+    }
+
+    [TestMethod]
+    public void LeaveGlide_LiftsTheViewBeforeItMeasures_AndReleasesTheInput()
+    {
+        RunAll("enter,leave_glide");
+
+        Assert.IsTrue(_world.HighestFlight > SeatCameraMath.EntryHeight + 3f, "the lift input raised the flight: " + _world.HighestFlight);
+        StringAssert.Contains(Line("leave_glide"), "result=PASS");
+        Assert.AreEqual(0f, _world.InputLog.Where(i => i.HasValue).Last()!.Value.Lift, "the lift is released before the step ends");
     }
 
     [TestMethod]
@@ -573,8 +652,8 @@ public class CommandTrialScriptTests
         _world.ClockFailsFrom = 0f;
         var failing = Script();
 
-        failing.OnScreenTick();
-        failing.OnScreenTick();
+        failing.OnMissionTick();
+        failing.OnMissionTick();
 
         Assert.IsTrue(failing.IsDone);
         CollectionAssert.AreEqual(new[] { "script_failed" }, _finished);
@@ -649,9 +728,9 @@ public class CommandTrialScriptTests
         var script = ScriptOf(WritesInTheMissionTick);
         _world.Time = 0.1f;
 
-        script.OnScreenTick();
-        script.OnScreenTick();
-        script.OnScreenTick();
+        script.OnScreenTick(0.1f);
+        script.OnScreenTick(0.1f);
+        script.OnScreenTick(0.1f);
 
         Assert.AreEqual(0, _world.Presses, "the write waits for the mission tick");
         Assert.IsFalse(script.IsDone);
@@ -669,10 +748,7 @@ public class CommandTrialScriptTests
         var script = ScriptOf(WritesInTheMissionTick, budgetSeconds: 2f);
 
         for (var i = 0; i < 4; i++)
-        {
-            _world.Time += 1f;
-            script.OnScreenTick();
-        }
+            script.OnScreenTick(1f);
 
         Assert.AreEqual(0, _world.Presses);
         var line = Line("marked");
@@ -684,8 +760,8 @@ public class CommandTrialScriptTests
     public void AnExceptionAfterTheMarker_EndsTheRunAsAScriptFailure_InTheMissionTick()
     {
         var script = ScriptOf(() => ThrowsInTheMissionTick());
-        script.OnScreenTick();
-        script.OnScreenTick();
+        script.OnScreenTick(0.1f);
+        script.OnScreenTick(0.1f);
         Assert.IsFalse(script.IsDone);
 
         script.OnMissionTick();
@@ -705,10 +781,10 @@ public class CommandTrialScriptTests
     public void AStepThatEndsWithNoVerdict_Fails()
     {
         var script = ScriptOf(() => EndsAfterOneWait());
-        script.OnScreenTick();
+        script.OnScreenTick(0.1f);
         Assert.AreEqual(0, Lines().Count, "still waiting");
 
-        script.OnScreenTick();
+        script.OnScreenTick(0.1f);
 
         StringAssert.Contains(Line("marked"), "result=FAIL");
         StringAssert.Contains(Line("marked"), "reason=no-verdict");
@@ -719,7 +795,7 @@ public class CommandTrialScriptTests
     {
         var script = ScriptOf(() => Enumerable.Empty<Verdict>());
 
-        script.OnScreenTick();
+        script.OnScreenTick(0.1f);
 
         StringAssert.Contains(Line("marked"), "reason=no-verdict");
     }
@@ -737,7 +813,7 @@ public class CommandTrialScriptTests
         for (var i = 0; i < 5; i++)
         {
             _world.Time += 0.1f;
-            script.OnScreenTick();
+            script.OnScreenTick(0.1f);
             script.OnMissionTick();
         }
 
@@ -757,10 +833,7 @@ public class CommandTrialScriptTests
         var script = ScriptOf(() => WaitsForever(), budgetSeconds: 1f);
 
         for (var i = 0; i < 4; i++)
-        {
-            _world.Time += 0.5f;
-            script.OnScreenTick();
-        }
+            script.OnScreenTick(0.5f);
 
         var line = Line("marked");
         StringAssert.Contains(line, "reason=timeout waiting=the-thing");

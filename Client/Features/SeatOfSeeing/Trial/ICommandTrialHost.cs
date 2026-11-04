@@ -5,7 +5,7 @@ namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 /// <summary>Everything the field trial's script reads from the engine and does to it (build-spec section 12), so the script runs against a stand-in in a test.</summary>
 internal partial interface ICommandTrialHost
 {
-    /// <summary>Mission seconds: <c>Mission.CurrentTime</c>. Every step's timer runs on this.</summary>
+    /// <summary>Mission seconds: <c>Mission.CurrentTime</c>. Only a measured fact, such as the hero's speed; no timer runs on it.</summary>
     float MissionTime { get; }
 
     bool InDeployment { get; }

@@ -7418,6 +7418,18 @@
 
     <string id="taom_seat_rage" text="You cannot take the Seat while the rage holds you." />
 
+    <string id="taom_seat_keep_nobody" text="There is nobody there to keep to." />
+
+    <string id="taom_seat_keep_gone" text="The one you were keeping to is gone." />
+
+    <string id="taom_seat_mcm_cursor" text="Show a cursor with the order panel" />
+
+    <string id="taom_seat_mcm_cursor_hint" text="While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
+
+    <string id="taom_seat_mcm_keep_panel" text="Keep the order panel open" />
+
+    <string id="taom_seat_mcm_keep_panel_hint" text="While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+
 
   </strings>
 

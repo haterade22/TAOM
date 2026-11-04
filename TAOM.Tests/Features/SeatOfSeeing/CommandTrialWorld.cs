@@ -61,10 +61,11 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
     }
 
     /// <summary>One screen tick: the key is taken first (as the view does), then the script runs.</summary>
-    internal void ScreenTick(CommandTrialScript script)
+    internal void ScreenTick(CommandTrialScript script, float dt = 1f / 60f)
     {
         TakeThePress();
-        script.OnScreenTick();
+        TakeTheReopen();
+        script.OnScreenTick(dt);
     }
 
     /// <summary>One mission tick: the camera frame (it runs first in Mission.OnTick), the hero, then the script's mission tick.</summary>
@@ -72,7 +73,15 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
     {
         Frame(dt);
         _heroDrift += HeroDriftPerSecond * dt;
-        script.OnMissionTick();
+        InMissionTick = true;
+        try
+        {
+            script.OnMissionTick();
+        }
+        finally
+        {
+            InMissionTick = false;
+        }
     }
 
     internal void Run(CommandTrialScript script, float seconds, float dt = 1f / 60f)
@@ -81,7 +90,7 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
         while (Time < end && !script.IsDone)
         {
             Time += dt;
-            ScreenTick(script);
+            ScreenTick(script, dt);
             MissionTick(script, dt);
         }
     }

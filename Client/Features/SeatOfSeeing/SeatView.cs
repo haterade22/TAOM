@@ -1,6 +1,5 @@
 using System;
 using TaleWorlds.Core;
-using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
@@ -29,6 +28,7 @@ public sealed class SeatView : MissionView
 
     private SeatSession? _session;
     private SeatHotKeys? _keys;
+    private SeatKeys? _moreKeys;
     private CommandTrialScript? _trial;
     private bool _seatKeyPressed;
 
@@ -51,9 +51,10 @@ public sealed class SeatView : MissionView
             var serial = (++_missionSerial).ToString(System.Globalization.CultureInfo.InvariantCulture);
             var screen = new SeatScreenAdapter(MissionScreen, mission);
             var session = _session = new SeatSession(screen, IoC.Resolve<ISeatHeroAdapter>(),
-                IoC.Resolve<ISeatSettingsProvider>(), Permissions, IoC.Resolve<IOutcomeLog>(), logger, serial);
+                CommandTrialRun.Settings(IoC.Resolve<ISeatSettingsProvider>()), Permissions, IoC.Resolve<IOutcomeLog>(), logger, serial);
+            _moreKeys = new SeatKeys(_keys, session);
             mission.OnMainAgentChanged += OnMainAgentChanged;
-            _trial = CommandTrialRun.Script(() => new CommandTrialHost(this, session, screen, mission, MissionScreen), logger);
+            _trial = CommandTrialRun.Script(() => new CommandTrialHost(this, session, screen, mission, MissionScreen, logger), logger);
         }
         catch (Exception ex)
         {
@@ -67,18 +68,16 @@ public sealed class SeatView : MissionView
         base.OnMissionScreenTick(dt);
         if (_session != null && _keys != null)
         {
-            // The static test is cheap; the view's own context test allocates a click key array on each call (InputContext.cs:310-312) and
-            // is the one that goes quiet behind a menu.
-            var key = _keys.TakeTheSeat;
-            if (key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && Input.IsKeyPressed(key))
+            if (SeatKeys.Pressed(_keys.TakeTheSeat, Input))
                 PressSeatKey();
 
             var pressed = _seatKeyPressed;
             _seatKeyPressed = false;
+            _moreKeys?.Tick(Input);
             _session.OnScreenTick(pressed);
         }
 
-        _trial?.OnScreenTick();
+        _trial?.OnScreenTick(dt);
     }
 
     public override bool UpdateOverridenCamera(float dt) => _session != null && _session.OnFrame(dt, TrialInput);
@@ -118,6 +117,7 @@ public sealed class SeatView : MissionView
     private void EndSession()
     {
         _trial = null;
+        _moreKeys = null;
         _session?.Finish();
         _session = null;
         if (Mission != null)

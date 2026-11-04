@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
-/// <summary>One row of the field trial's step order: the steps chosen with it, and the mission seconds it may take before it fails on a timeout.</summary>
+/// <summary>One row of the field trial's step order: the steps chosen with it, and the real seconds it may take before it fails on a timeout.</summary>
 internal sealed record SeatTrialStep(string Name, IReadOnlyList<string> Requires, float BudgetSeconds);
 
 /// <summary>The field trial's steps in the order they run, joined from each feature's row list, and the choice of a subset.</summary>

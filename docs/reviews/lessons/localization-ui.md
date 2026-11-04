@@ -1483,3 +1483,10 @@ The old gui-ui rule said that adding to `MapInfoVM.SecondaryInfoItems` threw an 
 - **Why missed:** a crash explanation was promoted to a rule without a decompile on the then-installed engine.
 - **Prevent:** state the engine version you verified against when writing a rule from a crash; `/investigate` finds a real root cause for the `GauntletCareerScreen` comment if it matters.
 - **Source:** the "Discouraged, on ownership grounds" paragraph in `.claude/rules/gui-ui.md`, which keeps the shape of the hazard and the dormant-in-practice finding.
+
+### List every producer of a closing edge before a rule answers it
+
+With keep-open on, the Seat of Seeing reopened the order panel on any close that no player key explained. The Transfer order closes the panel on purpose (`GauntletOrderUIHandler.cs:467-479`), and the reopen cleared `IsTransferActive` (`MissionOrderVM.cs:723`), so the Transfer cancelled itself. Game key 77 at the root of the legacy layout was a player's close that the rule also missed.
+- **Why missed:** the contract named Transfer when it rejected the panel's event, and not in its edge rule. The rule's tests walked the player's routes, and the fake world has no Transfer.
+- **Prevent:** grep every caller of the close method and every writer of the field the edge reads, and write down what each producer wants before the rule sorts them. A rule that says "not the player, so reopen" answers for every producer it did not list.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), rows 6 and 21.

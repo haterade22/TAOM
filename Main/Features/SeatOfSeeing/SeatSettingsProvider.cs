@@ -11,6 +11,12 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>Off by default: a player who never asks sees vanilla behaviour (build-spec section 1).</summary>
     internal const bool DefaultBeginBattlesInSeat = false;
 
+    /// <summary>On, because the pointer is the point of stage S2; it only acts while the order panel is open in the Seat.</summary>
+    internal const bool DefaultCursorWithPanel = true;
+
+    /// <summary>Off by default: a player who never asks sees vanilla behaviour.</summary>
+    internal const bool DefaultKeepPanelOpen = false;
+
     private TaomSettings? _settings;
 
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
@@ -22,4 +28,8 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     public bool Enabled => Settings?.SeatEnabled ?? DefaultEnabled;
 
     public bool BeginBattlesInSeat => Settings?.BeginBattlesInSeat ?? DefaultBeginBattlesInSeat;
+
+    public bool CursorWithPanel => Settings?.SeatCursorWithPanel ?? DefaultCursorWithPanel;
+
+    public bool KeepPanelOpen => Settings?.SeatKeepPanelOpen ?? DefaultKeepPanelOpen;
 }

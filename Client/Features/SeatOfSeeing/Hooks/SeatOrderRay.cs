@@ -19,7 +19,8 @@ namespace TAOM.Features.SeatOfSeeing.Hooks;
 internal static class SeatOrderRay
 {
     private const float RayLength = 10000f;
-    private const float RayThickness = 0.3f;
+    internal const float RayThickness = 0.3f;
+    internal const BodyFlags RayFlags = BodyFlags.CommonFocusRayCastExcludeFlags | BodyFlags.BodyOwnerFlora;
     private const float SeatedRayLength = 1000f;
 
     /// <summary>
@@ -36,14 +37,19 @@ internal static class SeatOrderRay
         return rayBegin + line * (SeatedRayLength / length);
     }
 
-    internal static WeakGameEntity Collide(MissionScreen screen, Mission mission, out Vec3 closestPoint)
+    /// <summary>The ray through the pointer: the cursor when the screen shows one, else the screen centre.</summary>
+    internal static void PointerRay(MissionScreen screen, out Vec3 begin, out Vec3 end)
     {
         var point = screen.MouseVisible ? Input.MousePositionRanged : new Vec2(0.5f, 0.5f);
-        screen.ScreenPointToWorldRay(point, out var rayBegin, out var rayEnd);
+        screen.ScreenPointToWorldRay(point, out begin, out end);
+    }
+
+    internal static WeakGameEntity Collide(MissionScreen screen, Mission mission, out Vec3 closestPoint)
+    {
+        PointerRay(screen, out var rayBegin, out var rayEnd);
         var rayEndFar = rayBegin + (rayEnd - rayBegin).NormalizedCopy() * RayLength;
 
-        mission.Scene.RayCastForClosestEntityOrTerrain(rayBegin, rayEndFar, out _, out closestPoint, out var entity, RayThickness,
-            BodyFlags.CommonFocusRayCastExcludeFlags | BodyFlags.BodyOwnerFlora);
+        mission.Scene.RayCastForClosestEntityOrTerrain(rayBegin, rayEndFar, out _, out closestPoint, out var entity, RayThickness, RayFlags);
 
         while (entity.IsValid && !entity.GetScriptComponents().Any(sc => sc is IOrderable orderable && orderable.GetOrder(Mission.Current.PlayerTeam.Side) != OrderType.None))
             entity = entity.Parent;

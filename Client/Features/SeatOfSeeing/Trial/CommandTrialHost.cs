@@ -4,11 +4,12 @@ using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TAOM.Client.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
-/// <summary>The field trial's window onto the engine and the Seat view (build-spec section 12): the reads and actions of <see cref="ICommandTrialHost"/>, on the main thread, with no write to an agent.</summary>
+/// <summary>The field trial's window onto the engine and the Seat view (build-spec section 12): the reads and actions of <see cref="ICommandTrialHost"/>, on the main thread, each write to an agent or a formation passing <c>NoteWrite</c>.</summary>
 internal sealed partial class CommandTrialHost : ICommandTrialHost
 {
     private const float GroundProbeStartHeight = 10000f;
@@ -18,15 +19,17 @@ internal sealed partial class CommandTrialHost : ICommandTrialHost
     private readonly SeatScreenAdapter _adapter;
     private readonly Mission _mission;
     private readonly MissionScreen _screen;
+    private readonly IModLogger _logger;
     private readonly string _outFolder;
 
-    internal CommandTrialHost(SeatView view, SeatSession session, SeatScreenAdapter adapter, Mission mission, MissionScreen screen)
+    internal CommandTrialHost(SeatView view, SeatSession session, SeatScreenAdapter adapter, Mission mission, MissionScreen screen, IModLogger logger)
     {
         _view = view;
         _session = session;
         _adapter = adapter;
         _mission = mission;
         _screen = screen;
+        _logger = logger;
         _outFolder = CommandTrialRun.Options!.OutFolder;
     }
 

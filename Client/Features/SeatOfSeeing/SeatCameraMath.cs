@@ -65,6 +65,11 @@ internal static class SeatCameraMath
         return new SeatFlight(x, y, height, yaw, pitch);
     }
 
+    /// <summary>The flight that holds a pose: its position and angles, and the height above <paramref name="groundZ"/> held to the height range.</summary>
+    internal static SeatFlight FlightOf(SeatPose pose, float groundZ) =>
+        new(pose.X, pose.Y, FordsCameraMath.Clamp(pose.Z - groundZ, MinHeight, MaxHeight), pose.Yaw,
+            FordsCameraMath.Clamp(pose.Pitch, MinPitch, MaxPitch));
+
     /// <summary>The camera pose for a flight over the given ground height.</summary>
     internal static SeatPose Pose(SeatFlight flight, float groundZ) =>
         new(flight.X, flight.Y, groundZ + flight.Height, flight.Yaw, flight.Pitch);
@@ -127,14 +132,15 @@ internal static class SeatCameraMath
 
     /// <summary>
     /// The floor (build-spec 5.2). Smoothing lags the ground on a slope, so a low, fast view would go under the terrain; this
-    /// returns the pose with <c>Z</c> at least <paramref name="rawGround"/> plus <see cref="GroundClearance"/>, and the pose as it is
-    /// when the raw ground is not a real number.
+    /// returns the pose with <c>Z</c> at least <paramref name="rawGround"/> plus <paramref name="clearance"/> (a flight frame keeps
+    /// <see cref="GroundClearance"/>; an orbit passes <see cref="MinHeight"/>, the lowest height a flight holds, so letting go has no jump),
+    /// and the pose as it is when the raw ground is not a real number.
     /// </summary>
-    internal static SeatPose AboveGround(SeatPose pose, float rawGround)
+    internal static SeatPose AboveGround(SeatPose pose, float rawGround, float clearance = GroundClearance)
     {
         if (!FiniteFloatValidator.IsFinite(rawGround))
             return pose;
-        var floor = rawGround + GroundClearance;
+        var floor = rawGround + clearance;
         return pose.Z >= floor ? pose : new SeatPose(pose.X, pose.Y, floor, pose.Yaw, pose.Pitch);
     }
 

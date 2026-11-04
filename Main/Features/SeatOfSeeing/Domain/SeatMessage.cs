@@ -7,4 +7,6 @@ internal enum SeatMessage
     OtherView,
     Faulted,
     RageHolds,
+    KeepNobody,
+    KeepGone,
 }

@@ -1738,3 +1738,10 @@ ADR-013 puts client-only assemblies in `TAOM.Client` behind a core interface wit
 - **Why missed:** the name reads as cheap, and no earlier wave opened `InputContext`.
 - **Prevent:** a `[DefaultView]` runs for every player in every mission. Read the body of each engine call on its per-frame path, including the ones with cheap names.
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 34.
+
+### Read a game key by id only where its category is registered
+
+`InputContext.IsGameKeyPressed(int)` indexes `_registeredGameKeys` and dereferences the slot (`InputContext.cs:226-233`), and a slot stays null unless a category that holds the key was registered on that context. The order keys are registered on the mission's scene layer only by `MissionGauntletSingleplayerOrderUIHandler.cs:95-97`, so reading them in a town, an indoor scene, a village, an arena practice, a duel or an alley throws. The Seat of Seeing read them every seated frame with one setting on, and that setting faulted the feature in each of those missions.
+- **Why missed:** the setting defaults off, the field trial runs one battle, and the fake's read cannot throw. Hot keys by name are safe on an unregistered id, so the two kinds of read looked alike in the code.
+- **Prevent:** before reading a game key by id, name who registers its category on that context, and read the key only where that holds, for example while the panel that needs it is open. For a read that a setting adds, write a test that asserts no read happens where the handler is absent, and add a person's row for the mission kind with the least in it.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 5.
