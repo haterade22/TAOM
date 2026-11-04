@@ -486,9 +486,10 @@ class InstalledEngineTests(unittest.TestCase):
             "v1.5.5": {"addresses": (("get_current_action_type", 0x6E2170), ("set_attack_state", 0x6DFE30),
                                      ("set_scripted_target_entity", 0x6E2D00)),
                        "counts": {"MountAndBlade": 687, "Engine": 1562, "DotNet": 33}},
-            "v1.5.6": {"addresses": (("get_current_action_type", 0x6E28F0), ("set_attack_state", 0x6E05B0),
-                                     ("set_scripted_target_entity", 0x6E3480)),
-                       "counts": {"MountAndBlade": 687, "Engine": 1563, "DotNet": 33}},
+            # v1.5.6 is changeset 125270 (the 2026-11-04 hotfix); the 125053 row is gone. It removed MBNetwork.server_ping, so MountAndBlade counts 686.
+            "v1.5.6": {"addresses": (("get_current_action_type", 0x6E3A40), ("set_attack_state", 0x6E16F0),
+                                     ("set_scripted_target_entity", 0x6E45D0)),
+                       "counts": {"MountAndBlade": 686, "Engine": 1563, "DotNet": 33}},
         }
         version = nd.engine_version(dll)
         if version not in pins:
