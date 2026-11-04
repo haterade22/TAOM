@@ -28,6 +28,9 @@ internal sealed class LongDefeatSpikeRunner
     private const float WallMargin = 3f;
     private const float GateToWallFallback = 4f;
     private const float GateRepairDelay = 5f;
+    private const float SpawnLevelTolerance = 10f;
+    private const float FramePointRadius = 1f;
+    private const int FramePointLimit = 3;
 
     private enum Phase { Boot, Spawning, Fighting, Intermission, Finished }
 
@@ -37,12 +40,12 @@ internal sealed class LongDefeatSpikeRunner
     private readonly IModLogger _logger;
     private readonly string _startedAt = DateTime.Now.ToString("o");
     private readonly Stopwatch _wall = Stopwatch.StartNew();
-    private readonly Queue<(BasicCharacterObject Troop, FormationClass Class)> _queue = new();
+    private readonly Queue<(BasicCharacterObject Troop, FormationClass Class, int Count, int Index)> _queue = new();
+    private readonly List<(FormationClass Class, Vec3 At)> _batch = new();
 
     private Phase _phase = Phase.Boot;
     private int _wave;
     private int _spawnedInWave;
-    private int _rowIndex;
     private float _intermissionEnds;
     private float _gateRepairAt = -1f;
     private float _nextLog;
@@ -52,10 +55,6 @@ internal sealed class LongDefeatSpikeRunner
     private float _frameMax;
     private float _frameTotal;
     private long _frames;
-    private Vec3 _attackerAt;
-    private Vec2 _attackerDir;
-    private Vec3 _defenderAt;
-    private Vec2 _defenderDir;
     private float _highZ;
     private int _deaths;
     private bool _mainWasAlive;
@@ -172,7 +171,12 @@ internal sealed class LongDefeatSpikeRunner
         if (_options.Waves < 2)
             Info("[S1] one wave only: S4, S5 and S7 run between waves, so they do not run");
 
-        ChooseFrames(attackers, defenders, gate);
+        if (!ChooseFrames(attackers, defenders, gate))
+        {
+            Finish("no_spawn_frames", now);
+            return;
+        }
+
         DeployEngines();
         SpawnGarrison(defenders);
         _mission.OnInitialSpawnCompleted();
@@ -193,48 +197,51 @@ internal sealed class LongDefeatSpikeRunner
         return (gate != null ? gate.GameEntity.GlobalPosition.z : 0f) + GateToWallFallback;
     }
 
-    private void ChooseFrames(Team attackers, Team defenders, CastleGate? gate)
+    // Vanilla gives the plan its troop counts first, because they set each formation's planned width and depth (DefaultBattleMissionAgentSpawnLogic.cs:675, :690-694).
+    private bool ChooseFrames(Team attackers, Team defenders, CastleGate? gate)
     {
-        var plan = true;
         try
         {
-            _mission.DeploymentPlan.MakeDefaultDeploymentPlans();
+            // Mission.cs:1804-1807: with no MissionDeploymentPlanningLogic in the list, the mission builds this type.
+            if (!(_mission.DeploymentPlan is DefaultMissionDeploymentPlan plan))
+            {
+                _logger.LogWarning($"{Tag}[S1] the deployment plan is a {_mission.DeploymentPlan?.GetType().Name ?? "null"}");
+                return false;
+            }
+
+            var archers = _options.Garrison / 3;
+            plan.AddTroops(defenders, FormationClass.Infantry, _options.Garrison - archers + 1);
+            plan.AddTroops(defenders, FormationClass.Ranged, archers);
+            plan.AddTroops(attackers, FormationClass.Infantry, _options.WaveSize - _options.WaveSize / 4, 0, true);
+            plan.AddTroops(attackers, FormationClass.Ranged, _options.WaveSize / 4, 0, true);
+            plan.MakeDefaultDeploymentPlans();
         }
         catch (Exception ex)
         {
-            plan = false;
-            _logger.LogWarning($"{Tag}[S1] MakeDefaultDeploymentPlans threw {ex.GetType().Name}: {ex.Message}");
+            _logger.LogWarning($"{Tag}[S1] the deployment plan threw {ex.GetType().Name}: {ex.Message}");
+            return false;
         }
 
-        var attackerPoints = Points().Where(p => p.Side == BattleSideEnum.Attacker).Select(p => p.GameEntity.GlobalPosition).ToList();
-        var gateAt = gate != null ? gate.GameEntity.GlobalPosition : Vec3.Zero;
-        var centre = attackerPoints.Count > 0 ? Centre(attackerPoints) : gateAt;
-        var outward = new Vec2(centre.x - gateAt.x, centre.y - gateAt.y);
-        if (!(outward.Normalize() > 0.1f))
-            outward = new Vec2(1f, 0f);
-
-        var fallbackAttacker = centre + new Vec3(outward.x * 30f, outward.y * 30f);
-        var fallbackDefender = gateAt - new Vec3(outward.x * 25f, outward.y * 25f);
-        var planAttacker = plan ? PlanFrame(attackers, true) : null;
-        var planDefender = plan ? PlanFrame(defenders, false) : null;
-        Info($"[S1] frames: plan attacker {Describe(planAttacker)}, plan defender {Describe(planDefender)}, "
-            + $"fallback attacker {At(fallbackAttacker)}, fallback defender {At(fallbackDefender)}; gate {At(gateAt)}");
-
-        _attackerAt = planAttacker?.At ?? fallbackAttacker;
-        _attackerDir = planAttacker?.Dir ?? -outward;
-        _defenderAt = planDefender?.At ?? fallbackDefender;
-        _defenderDir = planDefender?.Dir ?? outward;
+        var attackerFoot = PlanFrame(attackers, FormationClass.Infantry, true);
+        var attackerArchers = PlanFrame(attackers, FormationClass.Ranged, true);
+        var defenderFoot = PlanFrame(defenders, FormationClass.Infantry, false);
+        var defenderArchers = PlanFrame(defenders, FormationClass.Ranged, false);
+        var extraFoot = PlanFrame(defenders, FormationClass.Infantry, true);
+        var extraArchers = PlanFrame(defenders, FormationClass.Ranged, true);
+        Info($"[S1] frames: attackers foot {Describe(attackerFoot)}, archers {Describe(attackerArchers)}; defenders foot {Describe(defenderFoot)}, archers {Describe(defenderArchers)}; "
+            + $"reinforcements foot {Describe(extraFoot)}, archers {Describe(extraArchers)}; gate {(gate != null ? At(gate.GameEntity.GlobalPosition) : "none")}");
+        return attackerFoot != null && attackerArchers != null && defenderFoot != null && defenderArchers != null && extraFoot != null && extraArchers != null;
     }
 
-    private (Vec3 At, Vec2 Dir)? PlanFrame(Team team, bool reinforcement)
+    private Vec3? PlanFrame(Team team, FormationClass cls, bool reinforcement)
     {
         try
         {
-            _mission.GetFormationSpawnFrame(team, FormationClass.Infantry, reinforcement, out var position, out var direction);
+            _mission.GetFormationSpawnFrame(team, cls, reinforcement, out var position, out _);
             var at = position.GetGroundVec3();
             if (!at.IsValid || at.LengthSquared < 1f)
                 return null;
-            return (at, direction);
+            return at;
         }
         catch (Exception ex)
         {
@@ -243,15 +250,7 @@ internal sealed class LongDefeatSpikeRunner
         }
     }
 
-    private static string Describe((Vec3 At, Vec2 Dir)? frame) => frame.HasValue ? At(frame.Value.At) : "none";
-
-    private static Vec3 Centre(List<Vec3> points)
-    {
-        var sum = Vec3.Zero;
-        foreach (var point in points)
-            sum += point;
-        return sum * (1f / points.Count);
-    }
+    private static string Describe(Vec3? frame) => frame.HasValue ? At(frame.Value) : "none";
 
     private void DeployEngines()
     {
@@ -311,59 +310,105 @@ internal sealed class LongDefeatSpikeRunner
 
     private void SpawnGarrison(Team defenders)
     {
+        var archers = _options.Garrison / 3;
+        var foot = _options.Garrison - archers + 1;
+        PlaceFormation(defenders, FormationClass.Infantry, foot, false);
+        PlaceFormation(defenders, FormationClass.Ranged, archers, false);
         var player = MBObjectManager.Instance.GetObject<BasicCharacterObject>(_fortress.Player);
-        Spawn(player, defenders, true, FormationClass.Infantry, _defenderAt, _defenderDir, 0);
-        SpawnDefenders(defenders, _options.Garrison);
-        foreach (var cls in new[] { FormationClass.Infantry, FormationClass.Ranged })
-            defenders.GetFormation(cls).SetPositioning(new WorldPosition(_mission.Scene, UIntPtr.Zero, _defenderAt, false), _defenderDir);
-        Info($"[S1] garrison spawned: active {defenders.ActiveAgents.Count} at {At(_defenderAt)}");
+        SpawnDefenders(defenders, _options.Garrison, false, 1);
+        Spawn(player, defenders, true, FormationClass.Infantry, false, foot, 0);
+        defenders.GetFormation(FormationClass.Infantry).EndSpawn();
+        defenders.GetFormation(FormationClass.Ranged).EndSpawn();
+        Info($"[S1] garrison spawned: active {defenders.ActiveAgents.Count}");
+        LogSpawnLevel(defenders, false, "defenders");
     }
 
-    private void SpawnDefenders(Team defenders, int count)
+    private void SpawnDefenders(Team defenders, int count, bool reinforcement, int firstFootIndex)
     {
         var infantry = MBObjectManager.Instance.GetObject<BasicCharacterObject>(_fortress.DefenderInfantry);
         var ranged = MBObjectManager.Instance.GetObject<BasicCharacterObject>(_fortress.DefenderRanged);
         var archers = count / 3;
-        for (var i = 0; i < count; i++)
-        {
-            Spawn(i < archers ? ranged : infantry, defenders, true, i < archers ? FormationClass.Ranged : FormationClass.Infantry,
-                _defenderAt, _defenderDir, i + 1);
-        }
+        var foot = count - archers;
+        for (var i = 0; i < archers; i++)
+            Spawn(ranged, defenders, true, FormationClass.Ranged, reinforcement, archers, i);
+        for (var i = 0; i < foot; i++)
+            Spawn(infantry, defenders, true, FormationClass.Infantry, reinforcement, firstFootIndex + foot, firstFootIndex + i);
     }
 
-    private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, Vec3 at, Vec2 dir, int index)
+    // Vanilla's order, MissionBattleSideSpawnContext.cs:371-372. EndSpawn comes after the last soldier of the batch. Vanilla does this only for a formation with no place yet
+    // (:369), so Reinforce skips it. A new wave does it again on purpose: the last wave's formation is empty, and the frame is the place the wave must start from.
+    private void PlaceFormation(Team team, FormationClass cls, int count, bool reinforcement)
     {
-        var side = new Vec2(-dir.y, dir.x);
-        var column = index % 10 - 4.5f;
-        var row = index / 10;
-        var x = at.x + side.x * column * 1.6f - dir.x * row * 1.6f;
-        var y = at.y + side.y * column * 1.6f - dir.y * row * 1.6f;
-        var ground = _mission.Scene.GetGroundHeightAtPosition(new Vec3(x, y, at.z + 2f), BodyFlags.CommonCollisionExcludeFlags);
-        var z = !float.IsNaN(ground) && !float.IsInfinity(ground) && Math.Abs(ground - at.z) < 8f ? ground : at.z;
-        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, false, false, false, 0, -1, new Vec3(x, y, z), dir)
-            .Formation(team.GetFormation(cls)).Banner(team.Banner);
-        return _mission.SpawnTroopWithAgentBuildData(data, true, true);
+        var formation = team.GetFormation(cls);
+        formation.BeginSpawn(count, false);
+        _mission.SetFormationPositioningFromDeploymentPlan(formation, reinforcement);
+    }
+
+    // No position here. The engine then takes the place from the formation's layout, which offers only slots that native accepts around the frame (Formation.cs:669-671,
+    // LineFormation.cs:495-497), and Mission.GetTroopSpawnFrameWithIndex (:3983-3995) handles a slot with no navmesh. A position computed here skips all of that:
+    // at Helm's Deep it put most of the garrison in the caves under the fortress on the first in-game run.
+    private void Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index)
+    {
+        var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
+            .Banner(team.Banner);
+        var agent = _mission.SpawnTroopWithAgentBuildData(data, true, true);
+        _batch.Add((cls, agent.Position));
+    }
+
+    // Reads back where the engine put this batch, so a wrong floor or a pile on one point is a failed line and needs no person to see it. "ok" means near the height the scene
+    // authored for that class, on a navmesh, and not piled up. It does not mean on the walls: a scene can author a class's frame on low ground. When the layout runs out of slots,
+    // the remaining soldiers all stand on the frame point (Mission.cs:3992-3995).
+    private void LogSpawnLevel(Team team, bool reinforcement, string who)
+    {
+        var parts = new List<string>();
+        var failed = _batch.Count == 0;
+        foreach (var group in _batch.GroupBy(soldier => soldier.Class))
+        {
+            _mission.GetFormationSpawnFrame(team, group.Key, reinforcement, out var position, out _);
+            var frame = position.GetGroundVec3();
+            var far = 0;
+            var offMesh = 0;
+            var onPoint = 0;
+            foreach (var soldier in group)
+            {
+                var at = soldier.At;
+                if (!(Math.Abs(at.z - frame.z) <= SpawnLevelTolerance))
+                    far++;
+                if (_mission.Scene.GetNavigationMeshForPosition(in at) == UIntPtr.Zero)
+                    offMesh++;
+                if (at.AsVec2.Distance(frame.AsVec2) <= FramePointRadius)
+                    onPoint++;
+            }
+
+            failed |= far > 0 || offMesh > 0 || onPoint > FramePointLimit;
+            parts.Add($"{group.Key} {group.Count()} at frame {At(frame)}: far {far}, off the navmesh {offMesh}, on the frame point {onPoint}, z {Spread(group.Select(soldier => soldier.At.z))}");
+        }
+
+        Info((failed ? "[S1] spawn level WRONG: " : "[S1] spawn level ok: ") + $"{who} {_batch.Count}; {string.Join("; ", parts)}");
+        _batch.Clear();
     }
 
     private void StartWave(float now)
     {
         _wave++;
         _spawnedInWave = 0;
-        _rowIndex = 0;
         if (_wave > 1)
             Reinforce();
         var ranged = MBObjectManager.Instance.GetObject<BasicCharacterObject>(_fortress.AttackerRanged);
         var infantry = _fortress.AttackerInfantry.Select(id => MBObjectManager.Instance.GetObject<BasicCharacterObject>(id)).ToArray();
-        for (var i = 0; i < _options.WaveSize; i++)
-        {
-            if (i % 4 == 3)
-                _queue.Enqueue((ranged, FormationClass.Ranged));
-            else
-                _queue.Enqueue((infantry[i % infantry.Length], FormationClass.Infantry));
-        }
+        var rangedCount = _options.WaveSize / 4;
+        var infantryCount = _options.WaveSize - rangedCount;
+        PlaceFormation(_mission.AttackerTeam, FormationClass.Infantry, infantryCount, true);
+        PlaceFormation(_mission.AttackerTeam, FormationClass.Ranged, rangedCount, true);
+
+        // One class after the other, as vanilla does (MissionBattleSideSpawnContext.cs:318-394): each change of class rebuilds the layout (Formation.cs:3109-3112).
+        for (var i = 0; i < rangedCount; i++)
+            _queue.Enqueue((ranged, FormationClass.Ranged, rangedCount, i));
+        for (var i = 0; i < infantryCount; i++)
+            _queue.Enqueue((infantry[i % infantry.Length], FormationClass.Infantry, infantryCount, i));
 
         _phase = Phase.Spawning;
-        Info($"[S2] wave {_wave} starts at {Num(now)} s: {_options.WaveSize} attackers at {At(_attackerAt)}");
+        Info($"[S2] wave {_wave} starts at {Num(now)} s: {_options.WaveSize} attackers");
     }
 
     private void Reinforce()
@@ -372,8 +417,9 @@ internal sealed class LongDefeatSpikeRunner
         var missing = _options.Garrison - Count(defenders, false);
         if (missing <= 0)
             return;
-        SpawnDefenders(defenders, missing);
-        Info($"[S2] wave {_wave}: {missing} reinforcements at {At(_defenderAt)}; defenders active {Count(defenders, false)}");
+        SpawnDefenders(defenders, missing, true, 0);
+        Info($"[S2] wave {_wave}: {missing} reinforcements; defenders active {Count(defenders, false)}");
+        LogSpawnLevel(defenders, true, "reinforcements");
     }
 
     private void SpawnSome()
@@ -382,14 +428,15 @@ internal sealed class LongDefeatSpikeRunner
         for (var i = 0; i < SpawnsPerTick && _queue.Count > 0; i++)
         {
             var next = _queue.Dequeue();
-            Spawn(next.Troop, team, false, next.Class, _attackerAt, _attackerDir, _rowIndex++);
+            Spawn(next.Troop, team, false, next.Class, true, next.Count, next.Index);
             _spawnedInWave++;
         }
 
         if (_queue.Count > 0)
             return;
-        foreach (var cls in new[] { FormationClass.Infantry, FormationClass.Ranged })
-            team.GetFormation(cls).SetPositioning(new WorldPosition(_mission.Scene, UIntPtr.Zero, _attackerAt, false), _attackerDir);
+        team.GetFormation(FormationClass.Infantry).EndSpawn();
+        team.GetFormation(FormationClass.Ranged).EndSpawn();
+        LogSpawnLevel(team, true, "attackers");
 
         // A new tactic per wave: TacticBreachWalls latched its shock assault when it counted the first spawn batch, and ResetTactic keeps the same object. That latch also cleared
         // ForcedUse on every engine, and nothing sets it back for towers and rams. This comes before the reset, so a wave of 100 or fewer still gets vanilla's stop from the new tactic.
@@ -591,9 +638,11 @@ internal sealed class LongDefeatSpikeRunner
 
     private int High(Team team) => team.ActiveAgents.Count(a => a.IsHuman && a.Position.z >= _highZ);
 
-    private static string Spread(Team team)
+    private static string Spread(Team team) => Spread(team.ActiveAgents.Where(a => a.IsHuman).Select(a => a.Position.z));
+
+    private static string Spread(IEnumerable<float> values)
     {
-        var heights = team.ActiveAgents.Where(a => a.IsHuman).Select(a => a.Position.z).OrderBy(z => z).ToList();
+        var heights = values.OrderBy(z => z).ToList();
         return heights.Count == 0 ? "none" : $"{Num(heights[0])}/{Num(heights[heights.Count / 2])}/{Num(heights[heights.Count - 1])}";
     }
 

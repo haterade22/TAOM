@@ -1696,3 +1696,19 @@ I chose a constant team power for the right result and gave a false reason: that
 - **Why missed:** the line says what I expected, and I did not trace how control reaches it. The behaviour I wanted was right, so nothing failed.
 - **Prevent:** before writing "X happens because of line N", trace the path into line N from the call in question. A reason in a standing engine doc outlives the code it was written for, so it gets the same proof as the code.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), row 14.
+
+### A spawn place you compute skips the layout's filter, so a scene with floors takes the soldier to the wrong one
+
+The Long Defeat spike copied the shape of Fords of War's spawn recipe, a grid of positions around a frame. At Helm's Deep the frame stood on a terrace at height 26.5, and most of the garrison stood at height 0.0 in the caves under it. Three died from the fall in the first 5 s. Vanilla passes no position. Its layout offers only slots that native `BatchFormationUnitPositions` accepts, spreading out from the frame (`Formation.cs:669-671`, `LineFormation.cs:495-497`), and `Mission.cs:3983-3985` then pulls a slot with no navmesh back toward the frame. When the slots run out, every remaining soldier stands on the frame point (`Mission.cs:3992-3995`).
+
+- **Why missed:** Fords of War's clean runs looked like proof of the recipe, and they all used one lane scene. A static review cannot see a scene's floors, and the run's judge read only whether its lines were present.
+- **Prevent:** on a scene with more than one walkable level, use the deployment plan and pass no position. A spike that spawns agents reads their height and navmesh back and logs a verdict, so a wrong floor is a failed line and not a person's report. When you replace a failing path, ask how the new path fails, and make the read-back see that as well (here, a pile on the frame point).
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 21, 22 and 26.
+
+### A read-back check means only what it compares, so write its claim from the comparison
+
+My first read-back compared each soldier with his class's own frame, and I wrote that `ok` proves "the right floor". Helm's Deep authors the defender archers' frame at height 1.5, so all 33 could read `ok` on low ground below a terrace at 26.5. Three more lines kept naming a frame that no longer placed anyone, up to 95 m away.
+
+- **Why missed:** I wrote the sentence from the reason for the fix, and I kept the old log text because it still compiled.
+- **Prevent:** before a verdict line lands, write down what a pass does not prove, and put that sentence beside the line in the feature doc. When a code path changes, re-read every log line that names a value from the old path. Run the two-edit test on a source pin: reintroduce the regression, then change only the internals, and see each result.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 24, 25, 28 and 29.
