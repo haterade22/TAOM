@@ -297,7 +297,7 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 ## How to Add a New Faction Priority List
 
-1. Determine the faction's **faction StringId** — for custom TAOM kingdoms check `TAOM_spkingdoms.xml` for `id=`; for vanilla kingdoms (empire_s, empire_w, empire, khuzait, sturgia, vlandia, battania, aserai) use the vanilla kingdom id. **Do NOT use culture StringId** — Mordor, Gondor, and Dunland all share `Culture.empire` so culture IDs are ambiguous.
+1. Determine the faction's **faction StringId** — for custom TAOM kingdoms check `taom_spkingdoms.xml` for `id=`; for vanilla kingdoms (empire_s, empire_w, empire, khuzait, sturgia, vlandia, battania, aserai) use the vanilla kingdom id. **Do NOT use culture StringId** — Mordor, Gondor, and Dunland all share `Culture.empire` so culture IDs are ambiguous.
 2. Find the target settlement IDs — grep `settlements.xml` for `id="town_` filtered by the target region.
 3. Add an entry to `army_targeting.json`, keyed on the **kingdom** id:
    ```json

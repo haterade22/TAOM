@@ -94,7 +94,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 | `Main/Adapters/IEquipmentSlotAdapter.cs` + `EquipmentSlotAdapter.cs` | 11-slot reader/writer, modifier-preserving via `equipment[EquipmentIndex] = new EquipmentElement(item, modifier)`. Hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>(...)` — heroes do NOT live in `MBObjectManager` (only items/modifiers/templates do); using the wrong manager makes every `HeroExists` check fail and produces the user-visible `No active hero` save error. |
 | `Main/Adapters/IItemModifierLookupAdapter.cs` + `ItemModifierLookupAdapter.cs` | Validates modifier StringId BEFORE the lookup is acted on |
 | `Main/Adapters/IInventoryScreenAdapter.cs` + `InventoryScreenAdapter.cs` | Wraps active `SPInventoryVM` (active hero, equipment mode, item lock, refresh, clear) |
-| `Main/_Module/GUI/Prefabs/PresetsOverlay.xml` | Vanilla-brushes-only overlay markup |
+| `Main/_Module/GUI/PreFabs/PresetsOverlay.xml` | Vanilla-brushes-only overlay markup |
 
 ## Dependencies
 
@@ -121,7 +121,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## How to Extend the Overlay UI
 
-1. Edit `Main/_Module/GUI/Prefabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `Popup.Button.Text`, etc.); no custom sprites are registered for this feature.
+1. Edit `Main/_Module/GUI/PreFabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `Popup.Button.Text`, etc.); no custom sprites are registered for this feature.
 2. Add the corresponding `[DataSourceProperty]` and parameterless command method to `PresetsOverlayVM`.
 3. Bindings use `@PropertyName` for text and `Command.Click="MethodName"` for click handlers.
 
