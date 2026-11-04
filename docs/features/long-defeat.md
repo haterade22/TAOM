@@ -201,6 +201,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - 2026-11-04: boon picks moved from every 5 cleared waves to every 3, on Mike's word. Boons are not built yet.
 - 2026-11-04: the run report gained what a leaderboard checks (`9a99ec752`, #1080). No game run has written the new fields yet.
 - 2026-11-04: speed controls (#1079): 1x, 2x, 4x and 10x by key `M` or four buttons in the shop panel, arm key `speed`, launcher `--speed`, and `maxSpeed` in the run report. Not yet played.
+- 2026-11-04: Phase 1's proof at build `c075c92f0`: three unattended 5-wave runs passed (`20261104-151412`, `20261104-154452`, and the run of 16:35 with 594 kills), and one `--lose` run passed with `reason=lost_defenders`. The first `--speed 10` run, at `dba8f886e`, cleared 4 waves and then ended in a stalemate on wave 5: 89 attackers against 1 defender who could not be reached, so the `stale` row reads FAIL in `ingame_verdict.py`. It played 2,614 mission seconds in 283 s of wall time, about 9.2x, and its report shows `maxSpeed` 10. It lost 135 and 154 defenders in waves 3 and 4, against 68 to 77 and 58 to 126 in the 1x runs. One run cannot say whether 10x causes that. Felled stragglers return to the same places, (332.8, 256.6) and (307, 231) for ranged soldiers and about (262, 305) for infantry.
 
 ## GitHub Issue
 

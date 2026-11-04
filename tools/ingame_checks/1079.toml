@@ -3,12 +3,10 @@
 # ids and verdicts in LongDefeatClientChecks.cs; the ids are const strings there. A row lands with its emitter. The unattended judge, tools/run_long_defeat.py, holds a
 # run to its REQUIRED_CHECKS list; this manifest is what ingame_verdict reads across sessions.
 #
-# allow_dirty and the commit before the Phase 1 work are for iterating only. Slice 13 sets fixed_in to the commit the runs were built
-# from and removes allow_dirty, because a .dirty build otherwise reads NOT REACHED.
+# fixed_in is the commit the runs were built from, so a .dirty build reads NOT REACHED.
 issue = 1079
 title = "The Long Defeat: a wave survival mode on siege maps"
-fixed_in = "758c8f6fc"   # the Phase 0 spike, an ancestor of this branch
-allow_dirty = true
+fixed_in = "c075c92f0"   # the build of the three clean 5-wave runs and the lose run
 logs = ["taom"]
 
 [[check]]
