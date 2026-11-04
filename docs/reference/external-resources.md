@@ -1,6 +1,6 @@
 # External Resources for TAOM
 
-Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR total conversion). Compiled 2026-05-29 via web research with per-resource verification (fetched URLs; the docs hierarchy was personally re-checked to correct an official-vs-community mislabel). This is the high-value subset — not an exhaustive dump. Cite this node instead of re-searching.
+Curated, verified external references for improving TAOM (a Bannerlord LOTR total conversion; v1.4.5 when this was compiled, v1.5.6 now). Compiled 2026-05-29 via web research with per-resource verification (fetched URLs; the docs hierarchy was personally re-checked to correct an official-vs-community mislabel). This is the high-value subset, not an exhaustive dump. Cite this node instead of re-searching.
 
 > **Verification key:** ✅ = fetched/confirmed this session · 🔎 = strong search hit, not deep-fetched.
 
@@ -9,7 +9,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 | Resource | Status | Use for |
 |---|---|---|
 | **[moddocs.bannerlord.com](https://moddocs.bannerlord.com/)** — *OFFICIAL (TaleWorlds)* | ✅ | The authoritative modding reference: asset management, XSLT usage, best practices, editor, audio, Workshop. **Canonical — prefer over the community mirrors.** |
-| **[apidoc.bannerlord.com](https://apidoc.bannerlord.com/)** — *OFFICIAL API ref* | 🔎 | TaleWorlds.Core/CampaignSystem/Engine API surface. **⚠️ lags at v1.3.14** — for 1.4.5 keep using `pwsh tools/taom-src.ps1` + the binding gate (decompilation is our source of truth). |
+| **[apidoc.bannerlord.com](https://apidoc.bannerlord.com/)**: *OFFICIAL API ref* | 🔎 | TaleWorlds.Core/CampaignSystem/Engine API surface. **⚠️ lagged at v1.3.14** (as of 2026-05-29); for the installed game version keep using `pwsh tools/taom-src.ps1` + the binding gate (decompilation is our source of truth). |
 | **[docs.bannerlordmodding.com](https://docs.bannerlordmodding.com/)** — *community* ([Bannerlord-Modding/Documentation](https://github.com/Bannerlord-Modding/Documentation)) | ✅ | Community C# API / Gauntlet / XML reference. Practical, but **not official** (the research initially mislabeled it "official" — it isn't). |
 | **[docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt/modding/models/)** — *community* | ✅ | Has the clearest **GameModel decorator-pattern** write-up (wrap-previous-model, delegate, override) + localization notes. |
 | **[BUTR ReferenceAssemblies docs](https://butr.github.io/Bannerlord.ReferenceAssemblies.Documentation/)** | 🔎 | DocFX API reference; sometimes more current than apidoc when TaleWorlds lags. |
@@ -37,7 +37,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 
 ## Known gaps (no good external resource exists)
 
-- **No published v1.4.5 API docs** — decompilation (`taom-src` / the binding gate) is the source of truth. Already handled.
+- **No published v1.4.5 API docs** (as of 2026-05-29, not rechecked for v1.5.6): decompilation (`taom-src` / the binding gate) is the source of truth. Already handled.
 - **No Bannerlord-specific perf profiler/guide** — profile our own hot paths (GameModel ticks, Harmony per-frame patches, SpatialGrid) if/when a perf issue actually surfaces. Don't pre-build a harness.
 - **No LOTR-mod-authoring resource library** — TAOM's own domain docs (`docs/ai-includes/new-culture-authoring.md`, etc.) are the asset; nothing external matches.
 

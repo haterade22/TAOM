@@ -2,20 +2,20 @@
 
 ## Current State
 
-_Recounted from the files 2026-10-27, after Cardolan, Rhudaur and Ered Luin. The 2026-08-12 count
+_Recounted from the files 2026-11-03, after Anduin Vale, Angáladh, Dorwinion, South Rhovanion and the Feral Orcs. The 2026-08-12 count
 had corrected an older block that said "10 custom cultures" and mapped battania to Dunland (it is
 Khand)._
-<!-- measured: python ElementTree over taom_spcultures.xml (Culture ids, is_main_culture, is_bandit, can_have_settlement); ls characters/npcs_*.xml, troops/troops_*.xml, equipmentsets/taom_equipment_sets_*.xml | wc -l 2026-10-27 -->
+<!-- measured: python ElementTree over taom_spcultures.xml (Culture ids, is_main_culture, is_bandit, can_have_settlement); ls characters/npcs_*.xml, troops/troops_*.xml, equipmentsets/taom_equipment_sets_*.xml | wc -l 2026-11-03 -->
 
-- **30 cultures** defined in `taom_spcultures.xml`. Twenty are settled: erebor, rivendell, mirkwood,
+- **35 cultures** defined in `taom_spcultures.xml`. Twenty-four are settled: erebor, rivendell, mirkwood,
   lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor, shaghana, abanissa, goblin,
-  mistymountainorcs, lindon, bluecraig, arthedain, cardolan, rhudaur, eredluin. Ten are bandit
-  cultures: eight hold hideouts (dunland_raiders, rhun_raiders, harad_raiders, gundabad_raiders,
-  umbar_corsairs, gondor_soldiers, erebor_warriors, mirkwood_stalkers), and two, mirkwood_spiders
+  mistymountainorcs, lindon, bluecraig, arthedain, cardolan, rhudaur, eredluin, anduinvale, angaladh, dorwinion, southrhovanion. Eleven are bandit
+  cultures: nine hold hideouts (dunland_raiders, rhun_raiders, harad_raiders, gundabad_raiders,
+  feral_orcs, umbar_corsairs, gondor_soldiers, erebor_warriors, mirkwood_stalkers), and two, mirkwood_spiders
   and wild_trolls, set `can_have_settlement="false"` and own no settlement.
 - **6 retagged vanilla cultures** in `spcultures.xslt`: empire (Dunland), aserai (Harad),
   vlandia (Rohan), khuzait (Rhun), sturgia (Dale/Barding), battania (Khand/Variag).
-- **27** `characters/npcs_*.xml` files, **20** `troops/troops_*.xml` files, **24**
+- **31** `characters/npcs_*.xml` files, **25** `troops/troops_*.xml` files, **28**
   `equipmentsets/taom_equipment_sets_*.xml` files
 
 ### Which cultures share another culture's troops and party templates
@@ -196,10 +196,10 @@ idempotent; add the culture's picks to its `PICKS` table).
 
 ## Gaps / Missing Files in Current Cultures
 
-Re-checked 2026-10-27: Umbar, Dale and Lothlórien now have their `taom_equipment_sets_*.xml`, and
-Cardolan, Rhudaur and Ered Luin each have their own `npcs_*.xml`, `troops_*.xml` and
+Re-checked 2026-11-03: Umbar, Dale and Lothlórien now have their `taom_equipment_sets_*.xml`, and
+Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion each have their own `npcs_*.xml`, `troops_*.xml` and
 `taom_equipment_sets_*.xml`. Khand still borrows Rhun's troops (see the sharing table above).
-<!-- measured: ls characters/npcs_*.xml, troops/troops_*.xml and equipmentsets/taom_equipment_sets_*.xml 2026-10-27 -->
+<!-- measured: ls characters/npcs_*.xml, troops/troops_*.xml and equipmentsets/taom_equipment_sets_*.xml 2026-11-03 -->
 
 | Culture | Missing |
 |---------|---------|

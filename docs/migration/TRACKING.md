@@ -187,7 +187,7 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 | Coverage audit: all 12 cultures pass 8/8 mandatory combos | ✅ |
 | Build + test gate green | ✅ |
 
-**Approach:** the generator extracts items from each culture's existing `<EquipmentRoster id="<culture>_bat_template_*">` and `<culture>_civ_template_*">` rosters and emits 6 new rosters per culture with the right `<Flags>` combinations. Shaghana + abanissa (no per-culture equipment files; Harad sub-cultures per `kingdom-culture-mapping.md` memory) fall back to harad items + also get 2 extra rosters (child M/F) since they aren't covered by `taom_child_equipment_templates.xml`.
+**Approach:** the generator extracts items from each culture's existing `<EquipmentRoster id="<culture>_bat_template_*">` and `<culture>_civ_template_*">` rosters and emits 6 new rosters per culture with the right `<Flags>` combinations. Shaghana + abanissa (no per-culture equipment files; Harad sub-cultures, see `docs/cultures.md`) fall back to harad items + also get 2 extra rosters (child M/F) since they aren't covered by `taom_child_equipment_templates.xml`.
 
 **Deferred (4 of 12 optional combos per culture):** `IsKingdomRulerTemplate` × {male, female} × {Battle, Civilian}. The engine should fall back to `IsLordTemplate` rosters when no ruler-specific roster exists — verify in S6/S7. If the fallback isn't adequate, author dedicated ruler equipment in a future pass.
 
@@ -227,20 +227,20 @@ S6 was the smoke-test gate; S7-S10 were feature validation; S11 was Codex; S12 w
 | `taom_child_equipment_templates.xml` uses 160 deprecated `EquipmentFlags` values | S5a | 🟡 single-file manual review |
 | `taom_spcultures.xml` defines 12 cultures, but no `<Flags>` elements in 15 culture roster files — engine cannot resolve them by template | S5b | 🔥 missing rosters → naked NPCs |
 | 6 TAOM sites use `VerticalBottomToTop` ListPanel layout — v1.4.0 fixed inversion; visual order may be wrong now | S5 | 🟡 cosmetic but possible |
-| TAOM.Dependencies project source is de-tracked from git (since 0b16cca, April 2026); needs restore via `git checkout 0b16cca -- Dependencies/` | S1 | 🟡 blocks Dependencies rebuild |
-| GitHub tracking issue not yet opened | S0 (final) | 🟢 process |
+| TAOM.Dependencies project source was de-tracked from git (0b16cca, April 2026). Resolved: commit 43206df6d restored it, and `git ls-files Dependencies` lists it again | S1 | ✅ resolved |
+| GitHub tracking issue not yet opened | S0 (final) | ✅ resolved: opened as #210 (closed 2026-08-08, see header) |
 
 ### Resolved open questions (from S0)
 
 | Question | Answer |
 |---|---|
-| Where does TAOM.Dependencies project source live? | In this repo at `Dependencies/TAOM.Dependencies.csproj`, but de-tracked from git in commit `0b16cca` (April 2026). Last-known-good csproj is recoverable via `git show 0b16cca:Dependencies/TAOM.Dependencies.csproj`. Bundles Harmony 2.4.2 internalized fork + polyfills. |
+| Where does TAOM.Dependencies project source live? | In this repo at `Dependencies/TAOM.Dependencies.csproj`. It was de-tracked from git in commit `0b16cca` (April 2026) and tracked again by commit `43206df6d`. Bundles Harmony 2.4.2 internalized fork + polyfills. |
 | How many cultures does TAOM have? | 12 (not 10): erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor, shaghana, abanissa. CLAUDE.md is stale. |
 | Do any TAOM prefabs use `VerticalTopToBottom` / `VerticalBottomToTop`? | Yes — 6 sites (5 in `PreBuildCharacterSelection.xml`, 1 string-injected in `MessengerEncyclopediaPrefabExtension.cs`). All use `VerticalBottomToTop`. May need swap to `VerticalTopToBottom` after S6 smoke test. |
 | Is `equipmentType="Battle"` implicit or required? | IMPLICIT. Vanilla 1.4.5 omits the attribute on battle sets. Only `Civilian` and `Stealth` are explicit. Migration tool revised accordingly. |
 | Are `<EquipmentRoster civilian="true">` inline rosters also deprecated? | NO. Vanilla 1.4.5 still uses 1,097× in `spnpccharacters.xml`. Only `<EquipmentSet civilian="true">` is deprecated. |
 | Is `IsNobleTemplate` removed or renamed? | RENAMED 1:1 to `IsLordTemplate`. Dev migration notes mislabeled as "removed". |
-| Vanilla module Native dep version format? | TAOM uses BUTR schema `version="e1.4.5.*"`. Vanilla uses `DependentVersion="v1.4.5"` (different schema, same purpose). TAOM stays on BUTR since SubModule.xml references BUTR XmlSchema. |
+| Vanilla module Native dep version format? | At S0 TAOM used BUTR schema `version="e1.4.5.*"` (today `v1.5.6.*`, a `DependedModuleMetadata` in `Main/_Module/SubModule.xml`). Vanilla uses `DependentVersion="v1.4.5"` (different schema, same purpose). TAOM stays on BUTR since SubModule.xml references BUTR XmlSchema. |
 
 ---
 
@@ -443,7 +443,7 @@ These lords include custom cultures: gondor, mordor, erebor, rivendell, mirkwood
 
 Copied from `E:/LOTRAOMAssets/LOTRAOM_Jan_1_Patreon/Modules/LOTRAOM/ModuleData/` to `Main/_Module/ModuleData/troops/`.
 
-**Status:** STAGED (copied but NOT registered in SubModule.xml)
+**Status:** registered since staging. `Main/_Module/SubModule.xml` lists `troops/troops_*` as `NPCCharacters` entries (25 on 2026-11-03; `grep -c "troops/troops_" Main/_Module/SubModule.xml` prints the count). The table below records the state when the files were staged (2026-01-24).
 
 | File | Status | Lines | Culture | Notes |
 |------|--------|-------|---------|-------|

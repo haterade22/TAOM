@@ -56,9 +56,9 @@ parent — **a wrong/missing bone name yields -1 / fails, silently breaking that
 
 ### Capsules + flags (sub-nodes, parsed in the same Deserialize)
 - `<Capsules><body_capsule radius= pos1= pos2=/>` → the physics collision capsule (PhysX — Phase 0 toolchain).
-- `<Flags Mountable= CanRear= RunsAwayWhenHit= CanCharge= CanWander= IsHumanoid= …/>` → behavior flags. For a
-  TAOM creature-troop: `Mountable="false"` (never a rideable mount — the map-icon `ForceUpdateBoneFrames` crash),
-  `IsHumanoid="false"`.
+- `<Flags Mountable= CanRear= RunsAwayWhenHit= CanCharge= CanWander= IsHumanoid= …/>` → behavior flags. TAOM's
+  spider and elephant are Horse-slot mounts (`Mountable="true"`, [spider.md](../../features/spider.md)).
+  `IsHumanoid` is left unset, which leaves the flag off.
 - Eye/camera: `standing_eye_height`, `eye_offset_wrt_head`, `rider_camera_height_adder`.
 
 ### `base_monster` inheritance
@@ -80,12 +80,12 @@ names in `monsters.xml` MUST exactly match the creature's skeleton** — and why
   into `AnimationSystemData`.
 - `FillCapsuleData` / `FillSpawnData` (read in `CreateAgent`, Phase 1) supply the physics capsule + spawn data.
 - `CreateAgent(monster, …)` (Phase 1) passes the Monster into native agent creation.
-- The flags drive mount/AI; `Mountable` gates the map-party-icon path TAOM must avoid for creatures.
+- The flags drive mount/AI; `Mountable` becomes the agent's `AgentFlag.Mountable`.
 
 ## TAOM relevance + gotchas
 - This file is **exactly** what TAOM authors per creature: `lotr_monster_spider.xml`, `lotr_monster_elephant.xml`.
-  Get the bone names right (match the skeleton) and the flags right (`Mountable=false`/`IsHumanoid=false` for a
-  creature-troop) and most of the rig "just works."
+  Get the bone names right (match the skeleton) and the flags right (`Mountable=true`, `IsHumanoid` unset for a
+  creature mount) and most of the rig "just works."
 - **Foot-IK is 2 effectors only** — a >2-leg spider can't fully ground via this; expect partial grounding
   (matches the AnimFlags `disable_foot_ik` note). Don't `disable_foot_ik` on grounded clips.
 - **Wrong bone name = silent -1** (validateHasParentBone): broken look-at/ragdoll/IK with no error. Cross-check every

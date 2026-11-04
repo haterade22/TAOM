@@ -77,11 +77,4 @@ name exactly and throws on an unknown one. It fails on a race computed at transf
 race as literal text.
 
 ## Identity Transform
-Every XSLT file must include the identity transform template to copy unmatched nodes:
-```xml
-<xsl:template match="@*|node()">
-  <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-  </xsl:copy>
-</xsl:template>
-```
+Every stylesheet keeps the identity template, or it drops every unmatched node.

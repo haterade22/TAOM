@@ -49,7 +49,7 @@ Report:
 - Passed / Failed / Skipped
 - Any failure details (test name + assertion message)
 
-A total under 20,000 (today about 26,192) means discovery broke: not a pass.
+A total under 20,000 (today about 31,700) means discovery broke: not a pass.
 
 ## Step 2b: Python tool tests
 

@@ -150,6 +150,10 @@ so an `.xml` backup injects duplicate ids.
 > at all: it had no live sibling, so the sweep classified it as a sole copy rather than a backup.
 > The "nothing globs it" outcome above is unchanged and now holds for a stronger reason. See
 > [module-backup-sweep](module-backup-sweep.md).
+>
+> **Pruned by 2026-11-03.** Of these three, only `Animations/action_types_lotr_misc.xml.bak-superseded-20260828`
+> is still in that folder; `ModuleData/action_types.xml.bak-solnfix-20260828` and
+> `ModuleData/project.mbproj.bak-solnfix-20260828` are not (the manifest keeps their SHA256).
 
 ## Verification
 

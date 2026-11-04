@@ -40,7 +40,7 @@ Main/Features/{FeatureName}/
 └── Models/                      # POCOs/DTOs
 
 TAOM.Tests/Features/{FeatureName}/
-└── {Name}ServiceTests.cs        # 100% service coverage
+└── {Name}ServiceTests.cs        # one test per behaviour and guard
 ```
 
 ## IoC Pattern
@@ -59,7 +59,7 @@ internal static class {FeatureName}IoC
 - **MSTest** + **NSubstitute** (NOT Moq)
 - Naming: `MethodName_StateUnderTest_ExpectedBehavior`
 - AAA pattern: Arrange, Act, Assert
-- Coverage: 100% for services, 80%+ for hooks
+- Coverage: every decision path in a service or engine has a test, judged by the two-edit test; no percentage is measured
 
 ## Iterative Retrieval
 

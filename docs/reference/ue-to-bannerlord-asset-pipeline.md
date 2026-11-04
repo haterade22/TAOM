@@ -499,9 +499,12 @@ next pack: [`quadruped-pack-to-horse-skeleton-workflow.md`](../ai-includes/quadr
 
 Animalia elk and moose (2026-09-23, #646): 6 reskinned variants built, 2 in use (`animalia_elk_08`,
 `animalia_moose_big`), 97 retargeted clips and 9 1K textures, sources in
-`LOTRLOME_Armory\AssetSources\creature\elk\`. Textures, 3 materials and both meshes imported in the Kit.
-Open: the clip import and module save, clip resources with the horse recipe, the jump clips' vertical travel,
-the game-side Monsters, action sets, items and troops.
+`LOTRLOME_Armory\AssetSources\creature\elk\`. Textures, 3 materials and both meshes imported in the Kit, the
+97 masters wired to `horse_skeleton`, the clip resources written by `tools/gen_animalia_anim_clips.ps1`, and the
+Monsters, action sets, items and riders in place (gaits and idles seen in game; the record is
+[animalia-elk-moose.md](../features/animalia-elk-moose.md)).
+Open: the jump clips (vanilla for now; the pack's jumps lift the pelvis about 2 m and need re-cutting) and the
+in-game checks that file still lists.
 
 Cave troll (2026-09-18): 52 masters + 52 clips live in the Armory, playing correctly in the Kit; 213
 `as_cave_troll_warrior` overrides bound; LOME meshes re-skinned and in the Armory sources. Open: Kit

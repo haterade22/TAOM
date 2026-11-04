@@ -84,8 +84,10 @@ deserializes it.
   catches **statically** (BROKEN_ITEM_REF / BROKEN_TROOP_REF / UNKNOWN_CULTURE) before it becomes a runtime null —
   run it before committing ModuleData. (Sibling: `.claude/rules/moduledata-validation.md`.)
 - **Cross-module resolution is order-tolerant** at runtime (everything's merged before `LoadXML`), so TAOM resolving
-  LOTRLOME items/monsters works without declaring LOTRLOME as a dependency (ADOD_Beasts comparison finding) — but the
-  *static* validator still needs `--game-modules` to see LOTRLOME.
+  LOTRLOME items/monsters works without declaring LOTRLOME as a dependency (ADOD_Beasts comparison finding), and the
+  *static* validator sweeps `LOTRLOME_Armory` and `TAOM_Map` for cross-references too (`_EXTRA_REF_MODULES`), reading
+  them from `--game-modules` (default: `$BANNERLORD_GAME_MODULES`, else the install under `$BANNERLORD_GAME_DIR` or the
+  default Steam path).
 - The `RegisterType` **typeId** (Monster=2, Item=4, NPCCharacter=16…) is the **object-type** tag in `MBGUID` — distinct
   from the `SaveableTypeDefiner` base ids used for non-`MBObjectBase` saveable classes (Phase 6).
 - New object types a mod adds need a `RegisterType<T>` (in a `BeforeRegisterTypes`/`OnRegisterTypes` override) + the

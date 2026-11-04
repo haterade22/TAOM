@@ -37,8 +37,8 @@ Cape/Horse/HorseHarness/Banner/…), the **`ItemComponent`** (the type-specific 
 - **`EquipmentElement` (EquipmentElement.cs:9 — `struct`)** = **`Item` (ItemObject) + `ItemModifier`** (+ `CosmeticItem`,
   `IsQuestItem`). ⭐ **The modifier (Sharp/Reinforced/Tempered/…) lives on the ELEMENT, not the ItemObject.**
   `IsEmpty => Item == null`.
-- **`Equipment`** is the `EquipmentElement[12]` set, with `this[EquipmentIndex]` access, `FillFrom(other)` (slot-merge
-  — copies non-empty slots from another set), `Clone`, civilian/battle variants.
+- **`Equipment`** is the `EquipmentElement[12]` set, with `this[EquipmentIndex]` access, `FillFrom(other)` (a full
+  copy: `this[i] = sourceEquipment[i]` for all 12 slots, empty ones included, Equipment.cs:184-194 on v1.5.6), `Clone`, civilian/battle variants.
 
 ### How it feeds the spawn chain (Phases 1, 3)
 Troop XML `<Equipment><EquipmentRoster><equipment slot="Body" id="Item.X"/>…</EquipmentRoster></Equipment>` →
@@ -57,17 +57,18 @@ instance state on the element. The fixed `EquipmentIndex` slots give the engine 
 - **TAOM authors thousands of items** (LOTRLOME_Armory: `body_armors.xml`/`head_armors.xml`/`leg_armors.xml`/… +
   `LOTRAOM_weapons/shields/horses`). The **mount items** (spider_mount_a, taom_war_elephant) are `Type="Horse"` +
   `<Horse monster="Monster.X">`. Author per the **canonical-folder rule** (item id prefix → one folder, or dup-id
-  shadowing) and set **cover attributes** correctly (`covers_legs`/`covers_hands` — `feedback_lotrlome_armor_cover_attributes`).
+  shadowing) and set **cover attributes** correctly (`covers_legs`/`covers_hands`; [data-content-cultures lessons](../../reviews/lessons/data-content-cultures.md), "LOTRLOME armor needs `covers_*` attributes...").
 - **Modifier-preserving overloads** ⭐ — because the modifier is on the `EquipmentElement`: APIs taking
   `(ItemObject, int)` **drop the modifier**; the `(EquipmentElement, int)` overload **preserves** it. Always audit
-  both when adding/transferring items (`feedback_adapter_modifier_preserving_overload` — the "Sharp horse comes out
+  both when adding/transferring items ([adapters lessons](../../reviews/lessons/adapters-taleworlds-api.md), "Prefer the `(EquipmentElement, int)` overload..."; the "Sharp horse comes out
   stock" siege-dismount bug).
 - **Inventory/equipment mutations** must route through `InventoryLogic.TransferCommand` + `AddTransferCommands`, NOT
   direct `equipment[slot] = element` — direct assignment duplicates inventory items, loses displaced gear, skips slot-fit
-  + `AfterTransfer` UI refresh (`feedback_inventory_mutations_via_vanilla_inventorylogic`).
-- **`FillFrom` slot-merge** — TAOM's career starting-equipment override `FillFrom`s a roster onto the culture default;
-  **non-cavalry archetypes need explicit empty `Horse`/`HorseHarness` overrides** or they inherit a mount (CLAUDE.md
-  CareerSystem note).
+  + `AfterTransfer` UI refresh ([adapters lessons](../../reviews/lessons/adapters-taleworlds-api.md), "Mutate hero equipment from inventory only through vanilla `InventoryLogic.TransferCommand`").
+- **`FillFrom` replaces all 12 slots**: TAOM's career starting-equipment override `FillFrom`s a roster onto the
+  player's battle set (`PlayerEquipmentAdapter`), so a slot the roster leaves empty (Head, Cape, Gloves, and the
+  Horse of a non-cavalry archetype) ends up empty, not inherited from the culture default
+  ([starting-equipment-tuning.md](../../features/starting-equipment-tuning.md)).
 - **Broken `Item.X` ref → `GetObject` null → no mesh = the "underwear bug"** (Phase 5). Run `tools/validate_moduledata.py`
   (BROKEN_ITEM_REF) before committing item/troop XML.
 - The mount slot is `Horse`=`ArmorItemEndSlot`=10; `is_mountable="false"` on the `HorseComponent` keeps a creature mount
@@ -84,7 +85,7 @@ instance state on the element. The fixed `EquipmentIndex` slots give the engine 
 - `ItemObject.cs`:13 (`sealed : MBObjectBase`), `ItemComponent.cs`:7 (`abstract : MBObjectBase`), `HorseComponent.cs`:10 (`: ItemComponent`, the mount — `Monster`/`BodyLength`/…).
 - `Equipment.cs`:12 (the slot set; armor-slot iteration `NumAllWeaponSlots..ArmorItemEndSlot`).
 - Registration: `RegisterType<ItemObject>("Item","Items",4u)` (Core.cs:14288, Phase 5). Spawn use: `EquipItemsFromSpawnEquipment` (Phase 1).
-- TAOM gotchas: `feedback_adapter_modifier_preserving_overload`, `feedback_inventory_mutations_via_vanilla_inventorylogic`, `feedback_lotrlome_armor_cover_attributes`; `.claude/rules/moduledata-validation.md`.
+- TAOM gotchas: `docs/reviews/lessons/adapters-taleworlds-api.md`, `docs/reviews/lessons/data-content-cultures.md`; `.claude/rules/moduledata-validation.md`.
 
 ---
 
