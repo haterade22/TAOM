@@ -4576,5 +4576,16 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- SeatScreenAdapter -->
 	<string id="taom_seat_rage" text="{=taom_seat_rage}You cannot take the Seat while the rage holds you." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- MarshalScreenAdapter -->
+	<string id="taom_marshal_queue_full" text="{=taom_marshal_queue_full}A selected company already has twelve orders waiting. The order was not given." />
+	<string id="taom_marshal_fault" text="{=taom_marshal_fault}Marshal's Word failed and is off until this scene ends. Your orders work as before." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_marshal_mcm_enabled" text="{=taom_marshal_mcm_enabled}Enable Marshal's Word" />
+	<string id="taom_marshal_mcm_enabled_hint" text="{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on." />
+	<string id="taom_marshal_mcm_keep_array" text="{=taom_marshal_mcm_keep_array}Keep the Array" />
+	<string id="taom_marshal_mcm_keep_array_hint" text="{=taom_marshal_mcm_keep_array_hint}Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on." />
+	<string id="taom_marshal_mcm_arrive_together" text="{=taom_marshal_mcm_arrive_together}Arrive Together" />
+	<string id="taom_marshal_mcm_arrive_together_hint" text="{=taom_marshal_mcm_arrive_together_hint}Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on." />
 
 </strings>

@@ -181,6 +181,10 @@ public static class CoopSettingsRelevance
         // kind's orders (SeatMissionPolicy.cs:37-39), with no hand-off and no mission time. No campaign or battle state is read
         // from either setting.
         "SeatEnabled", "BeginBattlesInSeat",
+        // Marshal's Word (M1, M2): richer orders for YOUR companies in a single-player battle. The session is off whenever a network
+        // session is active (MarshalView.MayRun asks GameNetwork.IsSessionActive), so no value reaches a co-op simulation, and the
+        // orders it issues go through the same OrderController a player's click does.
+        "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableNameplateRelationColors", "NameplateRelationTintStrength",

@@ -1738,3 +1738,10 @@ ADR-013 puts client-only assemblies in `TAOM.Client` behind a core interface wit
 - **Why missed:** the name reads as cheap, and no earlier wave opened `InputContext`.
 - **Prevent:** a `[DefaultView]` runs for every player in every mission. Read the body of each engine call on its per-frame path, including the ones with cheap names.
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 34.
+
+### Trace every order kind before you state what an engine reading means
+
+The Marshal's Word contract said a target shift on a marching company "means a later order moved it". Charge, Stop and Retreat move nobody's order position (`MovementOrder.cs:178, 552, 690-691, 1248-1250`, `Formation.cs:862, 907, 2485-2490`), so the shift stayed small and the pace table kept slowing a company the player had told to charge. The fix asks the formation which order it is on, and treats anything but its Move, or AI control, as a huge shift.
+- **Why missed:** the sentence read as a description, not a claim. The builder and the checker compare code with the contract, so a wrong contract line passes both. Lens 5, lens 2 and Codex found it because they read the engine.
+- **Prevent:** when a spec says what a reading means, list every producer of a change to that reading and every order that leaves it alone, with the line of each. A field that "changes when X" also needs the list of what does not change it.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), row 1.

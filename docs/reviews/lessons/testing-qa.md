@@ -2450,3 +2450,31 @@ The first S1 tests pinned the absence of removed names (`Pump`, `NoGround`, a de
 - **Why missed:** each pin was written while fixing a finding, so it recorded what the fix removed. Nobody asked which single deletion would break the feature silently.
 - **Prevent:** for each entry point, delete each forwarding line in your head and name the test that fails. A view with no unit seam gets a source pin on the presence of its forwards, and a patch gets a behaviour test of its off state.
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 36.
+
+### A log verdict needs a number for the broken build and for the working one
+
+`march-spread` checked that companies arrived within an allowance of each other. Two companies on nearly equal walks arrive together with the pace code removed, so the check passed on a dead feature, and a short walk that cannot slow below the pace floor failed it on a working one. `finished` had the same shape: one arrival line met a `min` that was meant to need two steps, because the latch key held no step id. The fixes write a `no-test` Skip when the walks cannot prove anything, and put the step in the key.
+- **Why missed:** the tests pinned each rule's arithmetic. Nobody fed the rule what a build without the feature would log. The Tooling lens found five of these by doing that by hand. "A spike's log line must report what the engine did, and its PASS must need that line" names the line; this names the rule's inputs.
+- **Prevent:** for each check in a manifest, compute what the build with the feature removed would read, and what the working build reads at the edge of its range. If the two overlap, the rule writes a Skip in the overlap. `IOutcomeLog` writes one line per `(id, result, key)`, so read the key before you write a `min`.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 8 to 12.
+
+### A fake that takes an argument records it
+
+`FakeMarshalOrders.ReadMarch` returned canned legs and ignored the targets it was given. Deleting the line that hands the targets to the adapter left every test green, while the real adapter would have read an empty list and ended every march at once.
+- **Why missed:** the fake was enough for the pure rule's tests, so nobody asked what it hid. The wire was found only by breaking it and running the suite.
+- **Prevent:** a fake records each argument it receives, and at least one test asserts on the record. Before a review, delete each hand-off line in your head and name the test that fails.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 26 to 29.
+
+### A verdict's control and its measure need one definition
+
+`march-spread` stamped an arrival at the 3 m slack and stored exact times to the order point as its control, so a group with no pace could read PASS and a correct pace could read FAIL. Later the spread read the survivors of a march while the control read the companies of its first pass. Each number was right in its own terms.
+- **Why missed:** the sweeps gave the shorter walk to the near company, at equal, double or half speed, and no reader compared the units of the two numbers.
+- **Prevent:** derive a verdict's measure and its control from one function over one membership. Where they must differ, say so in the row's comment, and feed a dead build through both.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 33, 34 and 44.
+
+### Measure the input before you sweep a rule over guesses
+
+Three fix rounds set and reset `march-spread`'s margin and floor on a Python restatement of the march, over speed factors from 0.5 to 1.5. Each round found another corner of that grid, and no round had a real reading of what soldiers do against the cached speed. Nothing had run in the game in that time, and one real march prints the numbers the sweeps assumed.
+- **Why missed:** a sweep is cheap and reads as evidence. A game run needs a free machine and a landed harness step, so it stayed later in the plan.
+- **Prevent:** before a second round on a verdict's constant, get one real reading, or mark the row provisional in its comment and move on. A finding about a value that no run has measured is capped at MEDIUM and proved by the run.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 37, 43, 44, 49 and 50.

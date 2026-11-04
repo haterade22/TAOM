@@ -23,5 +23,9 @@
     <string id="taom_key_realm_borders_mode_desc" text="왕국 국경 표시를 왕국, 자유 민족 대 어둠의 세력, 동맹과 적 순으로 전환합니다. 기본 키는 G입니다." />
     <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
     <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+    <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
+    <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
+    <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
+    <string id="taom_key_marshal_widths_desc" text="Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
   </strings>
 </base>

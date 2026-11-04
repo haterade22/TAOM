@@ -1316,3 +1316,10 @@ The Seat of Seeing shuts vanilla's main agent controller while the player's view
 - **Why missed:** the contract named one hook, and the builder followed the contract. The teardown fix asked which hooks run, not what can still call in afterwards.
 - **Prevent:** a view's cleanup runs from both hooks through one method that also drops the session field and removes its event handlers. Later stages clear their own state in one private session method, so a fault and both paths share it. The standing line is in `.claude/rules/harmony-patches.md`.
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 3 and 29.
+
+### A fix that drops an input from a pass also drops it from what the pass stored
+
+A Marshal's Word fix made a march leave out a company with no units. `Spread` still walked the company list from the march's start and used the company's last stored estimate, so a company wiped out mid march could write a false FAIL. Two second-wave lenses found it on their first reading of the fix. The fix for that made the last pass's legs the membership and left the proof's baseline on the first pass, and the fix for that compared two counts, which missed a company that left and came back. The march now compares each pass's companies with the pass before and writes no verdict if they changed.
+- **Why missed:** the fix was small and its finding was clear, so its tests covered what it asked for: the march ends. They did not read the later consumer. The S1 and harness reviews recorded the same "a fix read less closely than new code" pattern.
+- **Prevent:** when a fix removes an input from a loop, grep every field that loop writes, and read each reader of those fields. Test the reader with a value that the removed input left behind. Prefer one membership source over a second list that must stay in step with it.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 20, 33 and 45.

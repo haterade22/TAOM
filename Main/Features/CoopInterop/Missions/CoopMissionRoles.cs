@@ -101,6 +101,7 @@ public static class CoopMissionRoles
         ["BattleActionBarMissionView"] = CoopMissionRole.Local,
         ["StagedSiegeMissionView"] = CoopMissionRole.Local,
         ["SeatView"] = CoopMissionRole.Local,
+        ["MarshalView"] = CoopMissionRole.Local,
         [nameof(MissionDiagnosticBehavior)] = CoopMissionRole.Local,
         [nameof(CrashReportDevTriggerMissionBehavior)] = CoopMissionRole.Local,
         [nameof(HeroKillCounterMissionLogic)] = CoopMissionRole.Local,

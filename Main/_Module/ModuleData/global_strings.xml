@@ -30,6 +30,14 @@
 	<string id="str_key_name.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take}Take the Seat (TAOM)" />
 	<string id="str_key_description.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take_desc}Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
 
+	<!-- Marshal's Word (docs/features/marshals-word.md), under Options > Keybindings > Action because the keys are held in a
+	     mission. Same numbering rule as above: the trailing number is the game key id, kept in step with
+	     TaomMarshalHotKeyCategory. -->
+	<string id="str_key_name.TaomMarshalHotKeyCategory_540" text="{=taom_key_marshal_queue}Give the Order in Turn (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_540" text="{=taom_key_marshal_queue_desc}Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
+	<string id="str_key_name.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths}Keep the Widths (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths_desc}Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
+
 	<!-- Realm Borders (#698), under Options > Keybindings > Campaign Map. Same numbering rule as
 	     above: the trailing number is the game key id, kept in step with
 	     TaomRealmBordersHotKeyCategory. -->

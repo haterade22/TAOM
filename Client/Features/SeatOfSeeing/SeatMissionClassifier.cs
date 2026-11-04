@@ -14,7 +14,8 @@ namespace TAOM.Client.Features.SeatOfSeeing;
 
 /// <summary>
 /// Turns a live mission into the <see cref="SeatMissionFacts"/> the policy decides from (build-spec section 4). One entry,
-/// <see cref="ReadFacts"/>, which <c>SeatView</c> calls the first time the Seat is asked to enter. The kind comes from
+/// <see cref="ReadFacts"/>, which <c>SeatView</c> calls the first time the Seat is asked to enter and <c>MarshalView</c> calls at each
+/// decision to go live, so the foreign-camera line can appear with no Seat key pressed. The kind comes from
 /// presence tests, never from a mission name: a hideout, tournament or arena controller, a campaign location, then the combat type
 /// and the team AI. <c>Mission.Mode</c> reads StartUp in a town, so it proves nothing alone. The foreign-camera rule (5.6) walks the
 /// mission's views once and names the type that owns the camera in one log line.

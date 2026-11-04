@@ -87,6 +87,7 @@ public class CoopMissionRolePolicyTests
             "TAOM.Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView",
             "TAOM.Features.StagedSiege.Hooks.StagedSiegeMissionView",
             "TAOM.Client.Features.SeatOfSeeing.SeatView",
+            "TAOM.Client.Features.MarshalsWord.MarshalView",
         })
         {
             var type = client.GetType(fullName);
@@ -111,7 +112,7 @@ public class CoopMissionRolePolicyTests
         var outside = new[] { "BattleLoadPhaseBehavior", "CustomBattleTeamFixBehavior", "HostReviewMissionLogic" };
 
         // Built by the engine from [DefaultView] (TAOM.Client, ADR-013), outside AddTaomBehavior; Local by construction.
-        var defaultViews = new[] { "AutonomousMovementPlayerController", "BattleActionBarMissionView", "StagedSiegeMissionView", "SeatView" };
+        var defaultViews = new[] { "AutonomousMovementPlayerController", "BattleActionBarMissionView", "StagedSiegeMissionView", "SeatView", "MarshalView" };
         int variableAdds = Regex.Matches(subModule, @"AddTaomBehavior\(\s*\w+\s*\)").Count;
         Assert.AreEqual(0, variableAdds,
             "an AddTaomBehavior(variable) site appeared: a MissionView added there never ticks; make it a [DefaultView]");

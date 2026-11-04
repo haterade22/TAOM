@@ -278,7 +278,8 @@ with `1 - exp(-6 dt)`, and the view never goes below the raw ground plus 0.5 m (
 **Preconditions:** a Custom Battle or a campaign field battle, the MCM group "Seat of Seeing" on (it is by default), no restart
 needed. Not in Fords of War: its own camera makes the Seat stand down. `tools/ingame_checks/0.toml` is a draft manifest with
 `issue = 0`: `python tools/ingame_verdict.py --issue 0` reads it. When the issue exists, rename the file to `<issue>.toml` and set
-`issue`.
+`issue`. The manifest is shared with Marshal's Word, so a session of one feature alone exits 4, because the other feature's checks are
+NOT REACHED; `--issue 0 --sessions 2` over one session of each feature exits 0.
 
 1. Press Q after the deployment ends. The view rises and the log shows `[Check] id=taom.seat-of-seeing.enter result=pass`. A result only
    a person can see: the blend is smooth, the hero stands still. The first press in a mission shows one message that the same key

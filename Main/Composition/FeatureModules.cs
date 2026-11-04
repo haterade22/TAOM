@@ -98,5 +98,6 @@ internal static class FeatureModules
         new Features.FordsOfWar.FordsOfWarModule(),
         new Features.LongDefeat.LongDefeatModule(),
         new Features.SeatOfSeeing.SeatOfSeeingModule(),
+        new Features.MarshalsWord.MarshalsWordModule(),
     };
 }

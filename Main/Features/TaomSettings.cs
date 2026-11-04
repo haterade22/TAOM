@@ -2949,4 +2949,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_seat_mcm_begin}Begin Battles in the Seat", Order = 1, RequireRestart = false,
         HintText = "{=taom_seat_mcm_begin_hint}When a battle's deployment ends, your view goes into the Seat at the camera you were using, with no blend, instead of back to your hero. Press the key to return to your hero. Default: off.")]
     public bool BeginBattlesInSeat { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultBeginBattlesInSeat;
+
+    // --- Marshal's Word (docs/features/marshals-word.md, stages M1 and M2) ---
+
+    [SettingPropertyGroup("Marshal's Word", GroupOrder = 83)]
+    [SettingPropertyBool("{=taom_marshal_mcm_enabled}Enable Marshal's Word", Order = 0, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings > Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on.")]
+    public bool MarshalEnabled { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_keep_array}Keep the Array", Order = 1, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_keep_array_hint}Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on.")]
+    public bool MarshalKeepArray { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultKeepArray;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_arrive_together}Arrive Together", Order = 2, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_arrive_together_hint}Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on.")]
+    public bool MarshalArriveTogether { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultArriveTogether;
 }

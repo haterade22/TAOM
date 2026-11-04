@@ -59,7 +59,7 @@ Marshal's Word needs a screen, a player team and a single-player mission, so one
   tick a removed view. Anything that outlives a frame or that a patch reads clears in that finish: a flag pool, a held key, a static, an event
   handler. The finish makes no native call: the agents and the flags go with the mission.
 - **One fault latch.** Every session entry (the mission tick, the screen tick, the capture) runs in one try. A throw latches `MarshalHooks.IsLive` off for the mission, clears the hooks, and writes
-  one `IOutcomeLog` fail line, and in the capture it answers "not queued" so that vanilla runs. An order issued on the master controller can throw inside `Mission.Tick` (section 5.3, rule 2 shows one way), and `SeatSession` wraps
+  one `IOutcomeLog` fail line, and in the capture it answers "not queued" so that vanilla runs. A fault also hides the flags through the adapter, before the session tears down, because a fault can come with the panel open and the mission goes on. The safe-to-repeat finish above stays free of native calls. An order issued on the master controller can throw inside `Mission.Tick` (section 5.3, rule 2 shows one way), and `SeatSession` wraps
   each tick path the same way. The M2 prefix (6.1) and the native callback (7.2) keep their own latch, because each has a different safe state.
 - **Command stays vanilla's question.** Pressed keys (543, 544, 545) act only on a selection, and they test `Mission.PlayerTeam.IsPlayerGeneral || IsPlayerSergeant`, the question
   `MissionOrderVM.CheckCanBeOpened` asks at 758. That already covers an enlisted soldier stripped of command, because `EnlistmentBattleRoleMissionBehavior.cs:78` calls `team.SetPlayerRole(false, false)`, so
@@ -168,8 +168,8 @@ A provider with a lazy accessor that joins `HotPathSettingsProvidersTests`. MCM 
   (Formation.cs, `PlayerOwner` setter).
 - **`BeforeSetOrder` takes a company off AI control** when it has a `PlayerOwner` (OrderController:722-727), on the master controller too. So the driver tests AI control before each start (5.3, rule 2).
 - `OnOrderIssued` of the player's controller fires only for orders that went through it, so a step re-issued on
-  the master controller does not look like a new player order. Two vanilla listeners miss a step for the same reason, and both go in the feature doc as accepted limits. `AgentVictoryLogic` (114, 119-128): a step that starts during a victory
-  cheer does not end the cheer for those soldiers. `MissionOrderTroopControllerVM` (444, 790): a step that starts with the panel open leaves the panel's active icons on the old order until it reopens (MissionOrderVM:736). `Team.OnOrderIssued` does see steps (Team:296).
+  the master controller does not look like a new player order. Three vanilla listeners miss a step for the same reason, and all three go in the feature doc as accepted limits. `AgentVictoryLogic` (114, 119-128): a step that starts during a victory
+  cheer does not end the cheer for those soldiers. `MissionOrderTroopControllerVM` (444, 790): a step that starts with the panel open leaves the panel's active icons on the old order until it reopens (MissionOrderVM:736). `MusicBattleMissionView` (66, 69-78): a step that charges does not raise the battle music. `Team.OnOrderIssued` does see steps (Team:296).
 - `MoveToLineSegment` fires per company with `OrderType.Move` (1578, 1590, 1599), so the event names each company.
 
 ### 5.2 Capture
@@ -268,9 +268,9 @@ Rules, each with a unit test over a fake adapter (`IMarshalOrderAdapter`):
 ### 5.4 Arrival
 
 `IMarshalOrderAdapter.Arrived(company)` reads only cached values, so it costs almost nothing:
-`OrderPositionIsValid`, and `Formation.CurrentPosition` within `ArrivalSlack` of `OrderPosition`. `CurrentPosition` is the engine's own estimate of the company's order point: the cached average position moved by the
+`OrderPositionIsValid`, `CountOfUnitsWithoutDetachedOnes > 0`, and `Formation.CurrentPosition` within `ArrivalSlack` of `OrderPosition`. `CurrentPosition` is the engine's own estimate of the company's order point: the cached average position moved by the
 local average (Formation:567), or the vanguard of a column (556-565). So it needs no allowance for depth, and a company that turned to face back along its walk is not called arrived a depth too early, which a test on the plain average would do.
-An arrival read right after a step start does not see the old position, because `MovementOrder.OnApply` calls `SetPositioning` at once for a Move (690-691). A Move skipped at OrderController:994-995 gives no false arrival, and that step falls to patience.
+An arrival read right after a step start does not see the old position, because `MovementOrder.OnApply` calls `SetPositioning` at once for a Move (690-691). A line order skips a company with no undetached units (OrderController:990-998), so that company keeps its old `OrderPosition`. The unit count above stops a false arrival there, and that step falls to patience.
 
 ### 5.5 Show the road
 
@@ -285,7 +285,7 @@ mission drop the pool with no native call: the flags go with the scene, and vani
 `IOutcomeLog` with `tools/ingame_checks/0.toml`, the same draft manifest as the Seat, because one held issue covers both features (Seat
 contract, Deviations row 8). Each stage adds its checks there. M1 checks: step captured, step started, step finished with its reason, queue cleared by a direct order, capture declined, session fault.
 
-The arrival check passes on `reason=arrival` only. Patience has its own line and a number: a `Fail` when patience ended more than one step in four, once at least 8 steps have finished, because a broken arrival test would otherwise read as many finished steps. `TargetGone` and
+The arrival check passes on `reason=arrival` only. Patience has its own line and a number: a `Fail` when patience ended more than one step in four, once at least 8 steps have finished, because a broken arrival test would otherwise read as many finished steps. A step counts only if patience could end it: an `AtOnce` or `TargetGone` step does not count, because a row of instant steps would dilute the share. `TargetGone` and
 `EntityOrderEnded` need a kill or a siege, so NOT_SEEN is acceptable for them after a field battle. Each pass and fail case has a fixture.
 
 ## 6. Stage M2: keep the array
@@ -309,6 +309,8 @@ The prefix takes over only when all of these hold; otherwise it returns true and
 - `Mission.Current.Mode` is not Deployment. Deployment has its own position rules (`SimulateNewOrderWithFrameAndWidth`
   line 1401).
 
+**No test separates a siege wall.** A click or a drag on a wall section reaches `SetOrderWithTwoPositions` as a plain line order: `OrderFlag.cs:343` stops only on an `IOrderable`, `WallSegment` is not one, so the placer takes `OrderTroopPlacer.cs:406, 411, 415`. The `MoveToLineSegment` case of `SetOrderWithOrderableObject` (OrderController:1055-1068) has no producer in this engine: every `GetOrder` in `TaleWorlds.MountAndBlade.dll` returns `None`, `FollowEntity`, `Use`, `AttackEntity` or `Move`. So the takeover keeps the array on a wall too, and a rear company stays behind the line that the player drew. The preview shows that before the click. Keep the Array off lays such a line as in the base game, and the feature doc names this as a limit.
+
 A throw inside the prefix latches the takeover off for the mission and falls to vanilla **before any output is written**:
 solve first, then build outputs, and let vanilla run on any fault.
 
@@ -331,7 +333,7 @@ internal readonly record struct ArrayPlacement(int Company, float X, float Y, fl
 3. **A drag.** New right is the line's direction, and new forward is `(-right.y, right.x)` (1318). The player draws the front of the group, so the anchor differs from a click's: the centre of the group's width lands on the
    line's middle, and the largest `Along` lands on the line, so the front of the group lies on what the player drew.
    - `Span` is the group's width: the largest `Across + Width / 2` less the smallest `Across - Width / 2`.
-   - `Stretch = LineLength / Span`. With `KeepWidthsHeld`, `Stretch = 1`, so the group only turns. The prefix reads that static, because keys are read in the screen tick (section 2).
+   - `Stretch = LineLength / Span`. With `KeepWidthsHeld`, `Stretch = 1`, so the group only turns. The prefix reads that static, because keys are read in the screen tick (section 2). A queued drag uses the key as it stood when the player gave the order: `MarshalOrderPayload.ForTwoPositions` records `KeepWidthsHeld` at the capture, and the issue sets the static to that value for the call and restores it in a `finally`, on the main thread.
    - Each company's new width is `Clamp(Width * Stretch, MinWidth, MaxWidth)`. A `Column` keeps its width (6.3).
    - Each company's new `Across` is `Across * Stretch`. `Along` does not change, so the rear stays behind the front.
    - **Shoulder pass.** Walk the companies in `Across` order. If this company's depth band `[Along - Depth, Along]` overlaps an
@@ -356,8 +358,8 @@ site is needed:
 - Each position comes from `Mission.Current.GetStraightPathToTarget(target2D, formationLineBegin)`, as at 1237-1242, so it stays on the mesh.
 - The fit test is the loop at 1334-1357, over the public `Formation.GetUnitPositionWithIndexAccordingToNewOrder` overload with
   `actualWidth`. It must stay the public overload, because `Patch92_TrollFormationSpacing` opens its scope there, and
-  `Formation.GetHashCode` throws on a team-less copy (registry section Patch92). Replace the simulation copy when spacing differs,
-  as at 1336-1339. Never use a simulation copy as a dictionary key. The simulation copy comes from `simulationFormations?[f]`, as at 1256.
+  `Formation.GetHashCode` throws on a team-less copy (registry section Patch92). Replace the simulation copy for the fit test only, when spacing differs,
+  as at 1336-1339. The frames of line 1410 use the dictionary's copy, as at 1329. Never use a simulation copy as a dictionary key. The simulation copy comes from `simulationFormations?[f]`, as at 1256.
 - `simulationAgentFrames`, when requested, gets one entry per unit index from the overload at line 1410.
 - `simulationFormationChanges`, when requested, gets `(formation, unitSpacingReduction, width, position, direction)`.
 - A column passes its `Arrangement.FlankWidth` as width. A custom form order that differs by over 0.01 transposes a column
@@ -365,6 +367,8 @@ site is needed:
 
 Accepted limit, in the feature doc: on a click, `MoveToLineSegment` turns every company to the largest one's direction when that
 company has a set direction (1594-1597). A group with mixed directions lines up on a click. That is fine, and it is vanilla's choice.
+
+Accepted limit, in the feature doc: after a placement that had to shrink a company, the preview reads live widths (OrderController:1206-1236) and the commit restores the controller's private records (1531, 1535, 1561, 1569), so the preview can differ from the commit. Vanilla's own preview has the same gap, and reading those records needs a reflection site for a rare case.
 
 Solver quality near a wall is not proved: `GetStraightPathToTarget` from one begin point can clip several companies to one hit. The game run looks for this, and any change goes under Deviations.
 
@@ -377,9 +381,9 @@ one march, with each company's target position. The Move itself applies after th
 
 1. For each company: `Remaining = max(0, distance from CurrentPosition to OrderPosition)`,
    `Speed = max(CachedMovementSpeed, 1)`, `Eta = Remaining / Speed`. Record the company's first time at `Remaining` 0, for the log.
-2. `Longest` is the largest Eta. The march ends and the table is cleared when `Longest` is under 2 s, or when any company's `OrderPosition` is more than 1 m from its stored target, which means a later order moved it.
+2. `Longest` is the largest Eta. The march ends and the table is cleared when `Longest` is under 2 s, when any company's `OrderPosition` is more than 1 m from its stored target, or when any company's order is no longer a Move or the company is under AI control. Charge, Stop and Retreat carry no position and leave `OrderPosition` where it was (MovementOrder.cs:178, Formation.cs:862), so the position test alone misses them. A company with no units leaves the march, and a march with fewer than two companies ends. A march also ends past `max(MinPatience, PatiencePerEta * first Longest)`, so one stuck company does not keep the others slow for the rest of the battle. Each of these writes a `Skip`, with its reason.
 3. Each company's pace is `Clamp(Eta / Longest, MinPace, 1)`, with `MinPace = 0.3`.
-4. Publish a new immutable array of `(Formation, float)` with one reference write. Clear it with a null.
+4. Publish a new immutable array of `(Formation, float)` with one reference write. Clear it with a null. `MarshalHooks.Begin` also clears it, because a new session must not read an old table.
 
 The engine reads pace through one postfix on the public `HumanAIComponent.GetDesiredSpeedInFormation(bool isCharging)` (551):
 
@@ -401,7 +405,7 @@ log line, no settings read.
 
 ### 6.5 Log lines
 
-Array solved (click or drag), fallback to vanilla, march started. The march's end writes `spread=<s> longest=<s>`: `spread` is the time between the first and the last company's first arrival, and `longest` is the first pass's `Longest`. The line passes when `spread <= 2 + 0.25 * longest`, which a group without pace does not reach once speeds differ. A march that a later order ended writes a `Skip`. The session computes this and writes the check line, so that the manifest reads a verdict and not a trend.
+Array solved (click or drag), fallback to vanilla, march started. The march's end writes `spread=<s> longest=<s> shortest=<s>`. All three use one meaning of arrival, coming within `ArrivalSlack` of the order point, so that the measure and its control can be compared: `spread` is the time between the first and the last company's first arrival, and `longest` and `shortest` are the first pass's largest and smallest time to that arrival at full speed. Paces, the march's end and its patience stay on `Eta`, the time to the order point itself. `SpreadAllowance = 2 + 0.25 * longest + max(0, longest - shortest / MinPace)`: the last term is what pace cannot remove, because a company at `MinPace` still arrives early when its walk is very short. The line passes when `spread <= SpreadAllowance`. The test proves something only when a group without pace would clearly fail it, which is `longest >= 15` and `longest - shortest > 1.4 * SpreadAllowance`: the margin is there because a company can beat its first read, a soldier's catch-up factor by up to 1.1 (`HumanAIComponent.cs:581`) and a Line company that goes untidy by 1.25 when it loses its arrangement's restriction (`Formation.cs:1484-1491`, `ArrangementOrder.cs:87`), and a FAIL wins for the session. The floor keeps out short walks, on which a slow near company's slack window can be wider than the allowance. If that is false, the march writes a `Skip` with `reason=no-test`, not a pass. A march whose companies differ between two passes writes a `Skip` with `reason=company-left` before that test, because the first pass's times can come from a company that left, and a company that came back missed part of the walk. Companies at about 2.5:1 in distance at one speed give a proof (100 m and 40 m at 3 to 6 m/s), and 80 m and 10 m do not. A march that ended for any other reason writes a `Skip` with that reason. The session computes this and writes the check line, so that the manifest reads a verdict and not a trend.
 
 ## 7. Stage M3: loose on my word
 
@@ -672,7 +676,7 @@ Clickable buttons, cards and a marked-target icon are not in this stage. A later
 | Stage | Steps and pass rules |
 |---|---|
 | M1 | `queue_two_moves`: a Move, then a queued Move for one company. The first check line reads captured, the company arrives at the first point and then at the second, in that order, and both steps end with `reason=arrival`. `direct_order_clears`: a queued step, then a direct Move: the queue is empty |
-| M2 | `array_keeps_offsets`: two companies, then a drag on their own front. After it, each company's offset from the other is within 3 m of what it was. `arrive_together`: the check line of 6.5 passes |
+| M2 | `array_keeps_offsets`: two companies, then a drag on their own front. After it, each company's offset from the other is within 3 m of what it was. `arrive_together`: two companies in Line at about 2.5:1 in distance, the far one at least 15 s from the slack at its speed, so that the check line of 6.5 can prove the pace. It passes, and a `no-test` skip fails the step |
 | M3 | `volley_holds`: the archers in OnWord against a target in range: the check line `volley-hold` passes, and the facts name how many held. `volley_looses`: the word: the check line `volley-release` passes. Massed gets its own step only after the stop rule in section 7 clears |
 | M4 | `mark_keeps_order`: a company on Stop marks an enemy company: `TargetFormation` is that company, `OrderEnum` is still Stop, and the facts carry `onTarget`. `outline_clears`: the panel closes: the service's dictionary is empty within one pass |
 | M5 | `square_side_kept`: a pure infantry company in a square at a chosen side, then one unit removed: the side is within one unit's width, and `placed == units`. `hold_line_flag`: hold on, then a charge: the flag is back on every soldier within 1 s |
@@ -696,3 +700,76 @@ Record each change to this contract here with its reason.
    - **M6.** TAOM's provider answered before vanilla's hideout set, and it would have shown Advance in every hideout. The availability rule is now one formula. A click stores a press, because `ExecuteOrder` runs in the screen tick. The set's position is pinned, because a set past the F key count has no shortcut, and in Legacy it would have sat where F9 closes the panel.
    - **Decisions taken with these corrections, each reversible:** `LeftShift` stays on key 540 with its zoom named, because it is the convention for queueing, and the zoom does not move the order ray (section 3). `LeftControl` stays on key 541 with its three readers named. A mode does not return when a company comes back from the AI. A mark holds only until the next movement order, by any route. 9.3 is off under co-op and on a dedicated server.
    - Section 11 gained the field trial table, because section 12 of the Seat contract named these steps and nothing gave their pass rules.
+3. **Stages M1 and M2 as built, 2026-11-04.** Each change below is a shape or a number the contract left open, or a point where the
+   code needed one more member than the contract named. None changes a stated behaviour.
+   - **Two records carry a direction.** `ArrayCompany` has `DirX` and `DirY`, and `ArrayPlacement` has `DirX` and `DirY` (6.2). The group's
+     forward is the facing of its largest company, which the solver cannot know without it, and a placement has to hand back a direction:
+     a click gives each company its own, a drag gives all of them the new forward. `ArrayResult` also carries `Ok` so that a non-finite input
+     falls to vanilla, and `Solve` takes the bipedal radius and the keep-the-widths flag as parameters.
+   - **The drivers live outside the session.** The queue and the march are `MarshalQueueDriver` and `MarshalMarchDriver` in
+     `Main/Features/MarshalsWord/`, which the session's `OnMissionTick` calls. The Domain gate forbids `TAOM.Adapters`, and the rules are
+     tested over a fake `IMarshalOrderAdapter`, so they cannot sit in `Domain/`. `MarshalSession` gates going live itself (section 2) and
+     calls `Begin()` from its own `OnMissionTick`; the view builds the session once and forwards. The patches hold an `IMarshalHookSink`
+     that the session implements, which is how the capture, the array report and the march request reach it.
+   - **The shoulder pass does not repeat the average shift (6.2).** The whole extent is centred on the line's middle afterwards, which
+     gives the same placement. A company is pushed only when its width overlaps an earlier one's, to a gap of `FormationGapInLine`, as written.
+   - **The march records "arrived" within `ArrivalSlack` of the order point (6.4).** A float distance is never exactly 0. A company that is
+     not within the slack when the march ends (up to 2 s early) counts at its estimated arrival, `now + Eta`, so the spread is not left open.
+     A non-finite leg ends the march with no verdict.
+   - **Step and finish lines have per-step keys (5.6).** `IOutcomeLog` writes one line per `(id, result, key)`, so a key shared by every
+     arrival would show the first only. `finished` is keyed by mission, reason and step, and `started` and `captured` by mission and kind.
+     The arrival check reads `reason=arrival` lines alone. The patience verdict is a Pass at the eighth finished step and a Fail whenever
+     patience ended more than one in four from then on, and a step counts as finished when its last member leaves.
+   - **Only the keys of M1 and M2 are registered.** `TaomMarshalHotKeyCategory` holds 540 and 542 (slot count 543); 541 and 543 to 545 join
+     with their stages. The pressed-default test of section 3 has no key to loop over yet, and the held defaults are pinned by value. The
+     settings are `MarshalEnabled`, `MarshalKeepArray` and `MarshalArriveTogether`. `MarshalEnabled` is read when the session decides to go
+     live and not again, as "once live, the session stays live" says.
+   - **One more PatchShield entry.** `HumanAIComponent.GetDesiredSpeedInFormation` joins `PatchShieldPolicy.ExcludedTargetMethods`, because
+     it runs for every soldier in the hold state on the AI thread and the workers (`lessons/harmony-il.md`, 2026-09-26). The other targets stay shielded.
+   - **Siege defence lines.** The builder noted that `SetOrderWithOrderableObject` calls `MoveToLineSegment` for a defence point
+     (OrderController.cs:1065), and asked whether to gate it out. Row 5 answers: that route has no producer.
+   - **Nothing in these stages reads by reflection**, so no row joins `reflection-sites.md` and no `ReflectionSiteBindingTests` row is owed.
+   - **The view gives the field trial one more read.** Besides `TrialHoldQueue` and `TrialHoldWidths` (one per held key, ORed into the key
+     read so the trial uses the same path), `MarshalView.Session` exposes the session so a step can read the queue. M1 and M2 have no pressed
+     key, so there is no stored-press member yet; M3 and M5 add theirs.
+4. **Corrections after the M1 and M2 build, 2026-11-04.** This row first gated siege defence lines out of the takeover, and row 5 reverses that. The session's teardown also keeps its owner test for the controller static: the adapter's `Detach` no longer writes `MarshalHooks.PlayerController`, because `MarshalHooks.Clear`, which only the owner runs, already nulls it, and a session that finishes late must not clear the next mission's hooks.
+5. **Corrections after the first review of M1 and M2, 2026-11-04.**
+   - **The siege gate is gone.** Row 4 added `MarshalOrderableLinePatch` on the belief that a wall order reaches `SetOrderWithOrderableObject`. It does not, and nothing in this engine does (6.1). The patch had no caller to guard, so it is deleted with its static and its tests. The `Detach` fix of row 4 stays.
+   - **A march ends when a member leaves its Move,** when it is emptied, or past its patience (6.4). The old rule read only `OrderPosition`, and Charge, Stop and Retreat leave that where it was, so a charging company stayed slowed.
+   - **The spread check names what it cannot prove** (6.5). The old rule passed a march with equal walks, where no pace acted, and failed a march that no pace could close.
+   - **Smaller corrections:** `Arrived` tests the undetached count (5.4), the patience share skips instant steps (5.6), a queued drag keeps its width key (6.2), the fit test alone replaces the simulation copy (6.3), a fault hides the flags (section 2), and `Begin` clears the pace table (6.4).
+   - **Limits named, not fixed:** the preview against the commit after a shrink (6.3), and a wall line under the takeover (6.1).
+6. **Choices made while applying the first review, 2026-11-04.** The contract left these open.
+   - A session whose answer is no writes one `captured` skip line, `reason=setting-off` (Enable off) or `reason=mission-refused` (a mission the
+     feature does not run in), so that the manifest can say why nine checks read "no line matched". The `captured` check no longer lists
+     `skip` among its `reached` patterns, so the verdict tool prints that reason.
+   - The two new ends of a march write `reason=emptied` and `reason=patience`. The `march-spread` pass line and its `no-test` skip line
+     carry `shortest=`.
+   - The `finished` check needs two `end=Arrival` lines, and the `started` pass pattern leaves out `ImplicitArrival`, because the implicit
+     wait starts whether or not the captured order is ever issued.
+   - The flag of a line stands at the ground probed at its middle point, asked from the larger of the two ends' ground heights. With no scene
+     to ask, or a probe that answers 0 (the native answer for no hit), it stands at the average of the ends. A valley at exactly 0 reads as no hit.
+7. **Choices made while applying the second review, 2026-11-04.** The contract named these differently or left them open.
+   - Section 6.5 lists a fallback to vanilla as a log line. Only a throw writes one: the prefix latches the takeover off and the session writes
+     the `array` fail line with `reason=fault`. A non-finite input, which `MarshalArraySolver.Solve` answers as not Ok, falls to vanilla for that
+     call and writes no line.
+   - The engine half of keep-the-array is `MarshalArrayLayout`, in `Main/Features/MarshalsWord/Hooks/`. It is a static helper that only
+     `MarshalArrayPatch` calls, so it is not an adapter and has no interface.
+8. **The flag of a Move or a line is read once.** Section 5.5 refreshes the flags at 4 Hz, and the refresh moves them. The ground point of a Move,
+   or of a line's middle, is read from the engine when the step's first flag is drawn and kept for the step, because each read costs native
+   calls on every refresh. If the ground changes under a queued flag, the flag keeps its old height until the step ends. An orderable's point is
+   read each time, because an entity can move.
+9. **Corrections after the re-review of M1 and M2, 2026-11-04.**
+   - **One meaning of arrival** (6.5). The old proof compared exact times to the order point with arrivals recorded at the slack, so a group with no pace could read PASS and a correct pace could read FAIL. Row 3's estimate of `now + Eta` becomes `now +` the time to the slack.
+   - **The proof has a floor and a margin, and a march that lost a company proves nothing** (6.5). A company that left could supply the first pass's longest time while the spread read only the survivors.
+   - **Limits named, not fixed:** a near company that stops short of the slack still counts at its estimate, so this check cannot judge such a march. A company with every living unit detached when a line step is issued does not receive that line (`OrderController.cs:994`), and a unit that rejoins on the old order point ends the step early with `reason=arrival`. Patience would also start the next step with no walk, so the rejoin changes how soon that happens, the word on the line and the patience count: a step that would have timed out counts as an arrival, so the rejoin can turn a patience FAIL into a PASS.
+10. **The `finished` check reads a chain, 2026-11-04.** The `finished` line ends `behind=1` when the last member of the Move
+    ahead of it arrived while this step had not started, and `behind=0` otherwise (a lone Move, a step behind an instant, dropped or timed-out step,
+    a step behind a Move that one member arrived at and another did not, or the implicit wait ahead of a step behind a walk). The check passes on one `end=Arrival` line that ends
+    `behind=1`. This replaces the two lines that row 6 asked for, because two Moves for two different companies also wrote two lines and
+    proved no chain.
+11. **Corrections after the third re-review of M1 and M2, 2026-11-04.**
+    - **`behind=1` is written when the hand-over happens, not at capture** (row 10). A flag set at capture also read PASS for a Move behind an instant step, a dropped step or a timed-out step, and for a queue that started both steps at once.
+    - **The proof's floor is 15 s and its margin is 1.4** (6.5). The margin covers companies that beat their first read by one factor up to about 1.35 on the walks swept, and a far company at 1.1 with a near company at 1. A Line company cannot reach more than 1.25 over a tidy read, because `HumanAIComponent.cs:581` clamps a soldier at their own maximum and the read carries the 0.8 restriction. The floor removes the false FAIL at true speeds on two companies in the walks swept.
+    - **A march whose companies differ between two passes proves nothing** (6.5). A count of the first and the latest pass missed a company that left and came back, and one company replacing another.
+    - **Limits named, not fixed:** a far company further above its read than the near one can still read PASS with no pace, and a company in Shield Wall, Square or Circle that runs untidy loses a restriction of 0.3 or 0.5, so this check is for Line. A working pace can FAIL in two ways, because the pace equalizes the time to the order point from the first read and the check measures the slack. A near company that reads up to about 1.5 m/s on a walk up to about 18 m can do so at its read or on either side of it. A far company under its first read with a near company over it, by about 1.37 between them, can do so on ordinary walks, most of all near 3:1.

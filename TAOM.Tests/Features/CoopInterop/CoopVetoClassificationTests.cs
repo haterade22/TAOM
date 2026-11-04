@@ -170,6 +170,18 @@ public class CoopVetoClassificationTests
             "points at and writes nothing to campaign or battle state, so there is no replicated mutation to skip. The Seat " +
             "is presentation in CoopSettingsRelevance, and a session gives the Seat the camera and its kind's orders, with no hand-off " +
             "and no mission time."),
+        ["MarshalOrderCapturePatch"] = new(CoopVeto.ReviewedSafe,
+            "Marshal's Word (build-spec 5.2): prefixes on the six OrderController order methods that skip vanilla only while this peer's " +
+            "own queue key is down with the panel open, and only for the player's own controller (MarshalHooks.PlayerController). The " +
+            "order is stored as a step and issued again later on the team's master controller, so it is delayed, and a step that cannot run is logged as dropped; " +
+            "no replicated campaign state is skipped. The session is off whenever GameNetwork.IsSessionActive, so a co-op peer never " +
+            "reaches the prefix with IsLive set, and every fault answers false so vanilla runs the order."),
+        ["MarshalArrayPatch"] = new(CoopVeto.ReviewedSafe,
+            "Marshal's Word (build-spec 6.1): replaces the layout arithmetic of OrderController.SimulateNewOrderWithPositionAndDirectionAux " +
+            "and writes the same outputs, so vanilla's commit code (Move, facing, width, events) still runs. It takes over only while " +
+            "MarshalHooks.IsLive and the Keep the Array setting hold, for two or more companies of the player's team in a non-deployment " +
+            "vertical layout, and returns true otherwise. The session is off in a network session. A throw latches the takeover off " +
+            "for the mission and vanilla runs. The positions it computes are a player's own order, not replicated campaign state."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +
