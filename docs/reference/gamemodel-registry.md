@@ -44,7 +44,7 @@ TAOM has 70 GameModel overrides, the parked and abstract ones included (`tools/l
 | `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor in arena practice fights (tournament fighters keep their own) + culture-specific prize pools capped at heavy (armour-class bands) + winner renown and influence scaled by heroes and culture ([tournament-rewards.md](../features/tournament-rewards.md)) |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans (elven immortality, dwarf/hobbit aging) |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults; an adult lord created at runtime gets a peer kit ([generated-lord-kits.md](../features/generated-lord-kits.md)) |
+| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | An adult lord created at runtime gets a peer kit ([generated-lord-kits.md](../features/generated-lord-kits.md)) |
 | `TaomEquipmentSelectionModel` | `DefaultEquipmentSelectionModel` | Come-of-age, companion-to-lord and stepping-down-ruler kits by culture, race and sex ([generated-lord-kits.md](../features/generated-lord-kits.md)) |
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints on alliance formation |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision permission rules |
