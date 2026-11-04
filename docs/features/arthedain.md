@@ -190,8 +190,8 @@ known-culture set in `CustomBattleCommandersProvider` (pinned to the playable cu
   `TavernMercenaryDataTests`, `RealmPaletteTests`, `TaomStartOptionsProviderTests`,
   `PlayerStartCoverageTests`, `CareerCultureCoverageTests`, `NarrativeCultureCoverageTests`.
   Count pins moved with the data: `WarTheaterConfigInvariantsTests` (86 priority targets),
-  `SettingsFingerprintTests` (328 settings), `TroopUpgradeSkillMonotonicityTests` (militia cultures),
-  `LotrIssueConfigProviderTests` (75 issues).
+  `SettingsFingerprintTests` (331 settings), `TroopUpgradeSkillMonotonicityTests` (militia cultures),
+  `LotrIssueConfigProviderTests` (82 issues).
 - Tools: `tools/tests/test_generate_arthedain_troops.py` (self-check, skill monotonicity, militia
   rule, ladder cells), `tools/tests/test_add_map_fortifications.py` (gate maths, block shape,
   `--check`, the save-order rule) and `tools/tests/test_add_map_villages.py`.

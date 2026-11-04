@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Kingdom of Ered Luin is a playable dwarf realm in the Blue Mountains, the range on the western
+The Kingdom of Ered Luin is a dwarf realm in the Blue Mountains (parked, so not yet playable), the range on the western
 edge of the TAOM_Map main map, between Lindon and the Arnor realms. It has its own culture
 (`eredluin`, race `dwarf`), troop tree, kingdom, four clans, sixteen lords, character creation,
 careers and faction card. Durin's Folk hold Thorin's Halls, and in TAOM the Broadbeams and the
@@ -214,12 +214,12 @@ a dwarf rule takes Erebor's row. These keep no row, as none has one for Arthedai
 |-------|-----------|-----|
 | `execution/alignment.json` | `free` | the Free side, with Erebor and Lindon ("Diplomacy") |
 | `diplomacy/diplomacy.json`, `configs/army_targeting.json` | 9 Hostile rows and 2 Natural; theater `north` | "Diplomacy" |
-| `factionmap/factions.json` faction card | `kingdom_of_ered_duin`: playable, `game_faction` `eredluin`, side `free`, difficulty 5, "Kingdom of Ered Luin" | The non-playable Ered Duin placeholder, converted in place. Its key stays because the CC prefab (`CharacterCreationCultureStage.xml`), `factionmap/regions.json` and the card's image `faction_kingdom_of_ered_duin.png` use it. New text: six bonuses (six of Erebor's eight cultural feats, which the `eredluin` culture block carries; the promoter drops garrison wages and tariff income, the two that come from Erebor's wealth), three perks, three special units (King's Guard of Thorin's Halls, Master Arbalester of Nogrod, Warden of Thorin's Halls), three strengths and three weaknesses; the four traits are unchanged |
+| `factionmap/factions.json` faction card | `kingdom_of_ered_duin`: not playable while the realm is parked (`playable` is false), `game_faction` `eredluin`, side `free`, difficulty 5, "Kingdom of Ered Luin" | The non-playable Ered Duin placeholder, converted in place. Its key stays because the CC prefab (`CharacterCreationCultureStage.xml`), `factionmap/regions.json` and the card's image `faction_kingdom_of_ered_duin.png` use it. New text: six bonuses (six of Erebor's eight cultural feats, which the `eredluin` culture block carries; the promoter drops garrison wages and tariff income, the two that come from Erebor's wealth), three perks, three special units (King's Guard of Thorin's Halls, Master Arbalester of Nogrod, Warden of Thorin's Halls), three strengths and three weaknesses; the four traits are unchanged |
 | `FactionUI/faction_kingdoms.json` | `kingdom_of_ered_duin` to `eredluin` | the card's Leader and Lords lists show Ered Luin's king and lords |
 | `special_resources_config.xml` | `<Kingdom id="eredluin" />` and `<Culture id="eredluin" />` on Erebor's Gems | the dwarf mining resource; its shared tier texts still name Erebor (Known gaps) |
 | `troop_resource_costs.xml` | no row, a comment | Erebor's only costed tree troops are the Ironpass war rams, which Ered Luin does not field; Erebor's other Gems rows are emissary offers at level 41 and up, past Ered Luin's level 36 King's Guard |
 | `startup_resources_config.xml` | gold 75,000 per lord, influence 400, playerGold 3,000 | The file's runway rule: 150 days (a step under Erebor's 270) on the 4.86 denars a head measured from `kingdom_hero_party_eredluin_template`, 72,900 rounded. Influence and playerGold are a step under Erebor's 600 and 3,500; playerGold is open (Known gaps) |
-| `realm_borders/palette.json` and MCM | `#7B68EE`, `RealmColourEredLuin` (Realm Colours, Order 25; Your Realm moved to 26) | a slate blue clear of Erebor's `#2A4DA8`; `RealmPaletteTests` holds every pair of colours at least `minimumDeltaE` (15) apart |
+| `realm_borders/palette.json` and MCM | `#7B68EE`, `RealmColourEredLuin` (Realm Colours, Order 25; Your Realm is Order 30 now, after the four realms added later) | a slate blue clear of Erebor's `#2A4DA8`; `RealmPaletteTests` holds every pair of colours at least `minimumDeltaE` (15) apart |
 | `configs/battle_balance_config.json` survival bonus | 0.3 | Erebor's |
 | `combat_mechanics/combat_mechanics_config.json` charge multiplier | 1.0 | Erebor's; no Ered Luin troop rides |
 | `banner_bearers/banner_bearers_config.json` | `banner_of_oaken_shields_t1` | Erebor's |
@@ -234,7 +234,7 @@ a dwarf rule takes Erebor's row. These keep no row, as none has one for Arthedai
 | Liege titles | King and Queen of Ered Luin (`str_liege_title.eredluin`, `str_liege_title_female.eredluin`, tag `TaomEredLuinCultureTag`) | |
 | `culture_marketplace/culture_marketplace_config.xml` | `armour_from="erebor"`, `<Stock from="erebor" kind="armour" />` and `kind="weapons"` | Its troops wear Erebor's armour and carry its weapons, and `armour_from` gives it Erebor's lord kit and lord's material. Erebor's war rams and their barding are neither armour nor weapons, so they stay out |
 | `lotr_issues/taom_lotr_issues.xml` | its own Armourer's Commission (`lotr_armourer_commission_eredluin`, reward `sk_dwarf_iron_chest_heavy_b`); `eredluin` on Erebor's Deep Seam row (`lotr_deep_seam_erebor`) | the reward is the chest its level 26 troops (Veteran Hall Warden, Firebeard Marksman) wear; the Deep Seam pays Erebor's lord's material, which `armour_from` makes Ered Luin's |
-| `culture_doctrine/culture_doctrines.json` | Erebor's row whole: Erebor's tactics, `neverRout`, bravery 15, `horseStand` dismount false | without a row Ered Luin takes the default doctrine and routs; the `horseStand` opt-in now covers five cultures (Known gaps) |
+| `culture_doctrine/culture_doctrines.json` | Erebor's row whole: Erebor's tactics, `neverRout`, bravery 15, `horseStand` dismount false | without a row Ered Luin takes the default doctrine and routs; the `horseStand` opt-in now covers eight cultures (Known gaps) |
 | C# lists | `TaomStartOptionsProvider.TaomKingdomIds`, `CustomBattleCommandersProvider.KnownCultureIds`, the compiled twins of the JSON rows above (`BannerBearerConfig`, `BattleBalanceConfig`, `CombatMechanicsConfig`, `CrownGuardMap`, `HallOfFireMap`, `LordBannerMap`, `VoiceAccentMap`), `RealmBordersSettingsProvider` and `CoopSettingsRelevance` (as the other realm colours), `VolunteerRecruitmentService.EredLuin.cs` | the compiled twins mirror the JSON rows; the Advanced Start Options picker's name is `str_campaign_starting_options_item_name.eredluin` in `global_strings.xml` |
 
 ## Careers and character creation
@@ -339,15 +339,15 @@ Erebor's default dwarf body.
   (the Delver on rolls 0 and 5, the Noble on 6 and 7, the pool exists).
 - `ClonedCultureFlavorTests` scans Ered Luin's player-facing text for 19 of Erebor's identity words
   (Erebor, Lonely Mountain, Dale, Smaug, Iron Hills, Dáin and the rest).
-- Count and list pins moved with the data: `ArmourAcquisitionShippedDataTests` (22 commissions),
-  `LotrIssueConfigProviderTests` (78 issues), `InnRoundsDataTests` (26 main cultures),
-  `SettingsFingerprintTests` (468 reflected in `TaomSettings`), `ServerSettingsSchemaTests` (498),
-  `ShippedCultureDoctrinesConfigTests` (the never-rout list, five `horseStand` cultures),
+- Count and list pins moved with the data: `ArmourAcquisitionShippedDataTests` (26 commissions),
+  `LotrIssueConfigProviderTests` (82 issues), `InnRoundsDataTests` (30 main cultures),
+  `SettingsFingerprintTests` (474 reflected in `TaomSettings`), `ServerSettingsSchemaTests` (509),
+  `ShippedCultureDoctrinesConfigTests` (the never-rout list, eight `horseStand` cultures),
   `DiplomacyShippedConfigTests` (Arthedain's new-free-realm test runs for `eredluin` too),
   `FactionMapDataTests` (`kingdom_of_ered_duin`), `GlobalStringsOverridesTests`,
   `TroopUpgradeSkillMonotonicityTests` (`ExpectedMilitiaCultures`); in `tools/tests`,
-  `test_generate_name_tags.py` (78 kingdom names), `test_militia_elite_bonus.py` (38 veteran militia),
-  `test_rebalance_template_power.py` (50 templates) and `test_upgrade_skill_monotonicity.py` (76
+  `test_generate_name_tags.py` (90 kingdom names), `test_militia_elite_bonus.py` (46 veteran militia),
+  `test_rebalance_template_power.py` (59 templates) and `test_upgrade_skill_monotonicity.py` (92
   militia-bound troops).
 - Existing gates that now cover it: `WandererBackstoryCoverageTests`, `RealmPaletteTests`,
   `ShippedClanSideCoverageTests`, `WarTheaterConfigInvariantsTests`, `CareerArchetypeServiceTests`,
@@ -385,9 +385,9 @@ Restart Bannerlord fully, then start a new campaign.
 6. Visit Thorin's Halls. Confirm the guards are the King's Guard and the Hall Wardens, and an Ered
    Luin lord calls his liege the King of Ered Luin in conversation.
 7. Start a second character and open the Kingdom of Ered Luin on the faction map. Confirm the card
-   is playable, Free and difficulty 5, shows the dwarf-hall image, its six bonuses and three special
+   is Free and difficulty 5 (it is playable only once the realm is unparked), shows the dwarf-hall image, its six bonuses and three special
    units, and its Leader and Lords lists show King Farin II and Ered Luin's lords.
-8. Pick it and go through the narrative stages. Confirm each of the four menus offers six options
+8. When unparked: pick it and go through the narrative stages. Confirm each of the four menus offers six options
    set in the Blue Mountains, no horse appears, the mother wears the dwarf dress and the father the
    noble tunic, and the campaign starts at Thorin's Halls.
 9. On the career screen, confirm three careers (Warden of Thorin's Halls, Mattock Hewer of Belegost,
@@ -419,7 +419,7 @@ Restart Bannerlord fully, then start a new campaign.
 - **Open decisions for Mike:**
   - playerGold 3,000, between Erebor's 3,500 and Cardolan's and Rhudaur's 2,000; 2,000 is the
     alternative.
-  - The doctrine row came whole from Erebor, `horseStand` (dismount false) included, so five
+  - The doctrine row came whole from Erebor, `horseStand` (dismount false) included, so eight
     cultures now opt in to it although Ered Luin fields no mounted troop.
   - The Warden and the Hewer share every number; the Hewer has no two-handed mechanics of its own,
     only its own wording and starting kit.

@@ -39,8 +39,8 @@ be non-zero (`ClanColorInfo.HasCustomColors`), and the agent must carry a party 
 That is the only path on which the older "armour follows the kingdom" claim still holds, and it is
 why a leaderless garrison or militia still fields kingdom colours.
 
-Minor and bandit factions reach the clan colour by both routes, which is why the 8 bandit clans were
-recoloured off their flat gray `FF8B7C73`.
+Minor and bandit factions reach the clan colour by both routes, which is why the 8 original bandit clans were
+recoloured off their flat gray `FF8B7C73`; `feral_orcs`, the ninth, was authored with its own colours.
 
 **Save-compat. Read this before concluding that a colour edit "did not work".** `Clan.Color` and
 `Clan.Color2` are `[SaveableProperty(76)]` and `(77)`, so an existing save keeps the colours it was
@@ -62,7 +62,7 @@ Pipeline (tooling-first, idempotent, dry-run/apply):
 
 ```
 tools/repaint_kingdom_colors.py   ── Phase 0: 8 XSLT kingdoms' color/color2 → lore palette
-tools/clan_registry.py            ── exact 209-clan inventory (id, culture, source, current color)
+tools/clan_registry.py            ── exact clan inventory (id, culture, source, current color; 278 clans in the committed file)
                                       → docs/reviews/_clan_registry.json
 tools/build_clan_specs.py         ── the ORIGINAL composer (2026-08 rollout, one-shot):
                                        · color = lore base + deterministic per-clan HSL variation
@@ -109,7 +109,7 @@ there; shaghana owns its own troop lines since the 2026-10-10 Harad rework); Lot
 |---|---|
 | `Main/_Module/ModuleData/clan_heraldry/gondor.json` | hand-authored Gondor fiefdom spec |
 | `Main/_Module/ModuleData/clan_heraldry/<culture>.json` | auto-generated specs (15 cultures + 4 troopless) |
-| `Main/_Module/ModuleData/clan_heraldry/bandits.json` | colours-only recolour of 8 bandit clans |
+| `Main/_Module/ModuleData/clan_heraldry/bandits.json` | colours-only recolour of 9 bandit clans |
 
 Spec entry: `{ id, source: xml|xslt, template_id?, theme, color, color2, roster: [{troop,min,max}] }`.
 An empty/absent `roster` ⇒ colours-only (no template, no `default_party_template` override).

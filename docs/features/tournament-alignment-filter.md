@@ -30,7 +30,7 @@ The rule, in `TournamentAlignmentFilterService` over the `execution/alignment.js
 
 An entrant is replaced only when both sides are Free or Evil and they differ. Never replaced:
 
-- Neutral heroes. The Neutral realms are Khand (`battania`), Umbar, Shaghana and Abanissa. Dunland (`empire`) is Evil in the table. Khand's troops are `khuzait` and the Harad realms' are `aserai`, both Evil, so only their lords and wanderers are Neutral.
+- Neutral heroes. The Neutral realms are Khand (`battania`), Umbar, Shaghana, Abanissa, Cardolan, Rhudaur, Anduin Vale, Angáladh, Dorwinion and South Rhovanion. Dunland (`empire`) is Evil in the table. Khand's troops are `khuzait` and the Harad realms' are `aserai`, both Evil, so only their lords and wanderers are Neutral.
 - Anyone in a town whose owner is Neutral.
 - The player and the player's clan.
 - An entrant with no culture and no kingdom (vanilla stands).

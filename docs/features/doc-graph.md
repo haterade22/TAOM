@@ -56,7 +56,7 @@ None. The tool reads `docs/` directly and takes no config file. Behaviour is con
 |------|---------|
 | [tools/doc_graph.py](../../tools/doc_graph.py) | Shared library: edge extraction, BFS, degrees, components, bridges, metrics, node resolution. Imports link primitives from `lint_docs`. |
 | [tools/graph_query.py](../../tools/graph_query.py) | CLI: `explain` / `path` / `metrics`, output rendering + `--json`. |
-| [tools/tests/test_graph_query.py](../../tools/tests/test_graph_query.py) | 17 hermetic tests over a synthetic fixture graph. |
+| [tools/tests/test_graph_query.py](../../tools/tests/test_graph_query.py) | 20 hermetic tests over a synthetic fixture graph. |
 | [tools/lint_docs.py](../../tools/lint_docs.py) | Source of the reused link parser + exemptions (not modified). |
 | [tools/build_backlinks.py](../../tools/build_backlinks.py) | Owns the `strip_backlinks_region` footer logic (copied once into `doc_graph` to avoid a circular import; see the TODO there). |
 
@@ -67,7 +67,7 @@ None. The tool reads `docs/` directly and takes no config file. Behaviour is con
 
 ## Tests
 
-- [tools/tests/test_graph_query.py](../../tools/tests/test_graph_query.py) — 17 tests, hermetic (synthetic docs tree in a tempdir; never reads the live `docs/` tree, per memory `feedback_mirror_table_drifts_from_production`). Covers edge extraction (fence/inline-code/non-md/http/fragment handling), footer dedup, eligibility filter, inbound/degrees, `explain`, BFS `path` (directed + undirected + no-path + symmetry), components, **bridges** (the highest-value metric), god-node ranking, orphans, and node resolution (slug/filename/relpath + ambiguity).
+- [tools/tests/test_graph_query.py](../../tools/tests/test_graph_query.py): 20 tests, hermetic (synthetic docs tree in a tempdir; never reads the live `docs/` tree, per memory `feedback_mirror_table_drifts_from_production`). Covers edge extraction (fence/inline-code/non-md/http/fragment handling), footer dedup, eligibility filter, inbound/degrees, `explain`, BFS `path` (directed + undirected + no-path + symmetry), components, **bridges** (the highest-value metric), god-node ranking, orphans, and node resolution (slug/filename/relpath + ambiguity).
 - Run: `python -m unittest discover -s tools/tests -p "test_*.py"`
 
 ## When this is the ideal tool (use-cases)
@@ -124,7 +124,7 @@ Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 
 
 Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `python tools/lint_docs.py` to confirm clean — and re-run `metrics` to verify the signal improved.
 
-**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. **That is now closed:** `tools/check_doc_graph_ratchet.py` gates orphans and components against `tools/doc_graph_baseline.json` in the `validate-xml` CI job. Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
+**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. **That is now closed:** `tools/check_doc_graph_ratchet.py` gates orphans and components against `tools/doc_graph_baseline.json`. It ran in the `validate-xml` CI job until the workflows were removed in v2.0.34 (`c8d69a0dc`); now it runs by hand ([.ai/verification.md](../../.ai/verification.md)). Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### Agent / session entry points
 
@@ -167,10 +167,10 @@ reach for this tool via `python tools/graph_query.py`.
 - **Nothing ran this tool, and that is now fixed.** `graph_query.py` appeared in zero hooks and zero
   CI jobs, and between 2026-06-08 and 2026-08-18 the isolated-doc count went from 64 to 153 with
   nobody noticing. `tools/check_doc_graph_ratchet.py` plus `tools/doc_graph_baseline.json` now gate
-  it in the `validate-xml` job. It passes today with no slack, and has not yet had a regression to
-  catch: the committed baseline was lowered to 152 orphans and 155 components on 2026-08-21, after
+  it (in the `validate-xml` job then; by hand since v2.0.34, see above). It passes today with one of slack on each count (9 orphans against 10, 13 components against 14),
+  and it has caught a regression: a comment in the removed workflow said the ratchet had been failing since 2026-08-28. The committed baseline was lowered to 152 orphans and 155 components on 2026-08-21, after
   this session's cross-links closed one of each. Lowering it further is the work; the gate only ever
-  stops it going back up.
+  stops it going back up. The committed baseline is now 10 orphans and 14 components.
 
 ## Changelog
 

@@ -147,11 +147,10 @@ Mirkwood's Nos Galengrim flies 17006, 17007 and 17008.
 | `castle_AND2` | Emyn Duir Watch | castle | `sturgia_castle_003` | 800 |
 
 The castle scenes rotate Dale's three. Angáladh's castles keep the empire map icons Mike placed. The 41
-rows (11 fortifications and 30 villages, town first) go at the end of the live
-`TAOM_Map/ModuleData/settlements.xml`, which has 1,141 rows today because they are held back
-("Merging this branch"). Written once, the file had 1,182 rows. That built state is kept beside the
-file and each of the 12 `loc_settlements.xml` as `*.bak_av_and_built_20261028_200935`; the state
-before it is `*.bak_mapforts_20261028_181850`.
+rows (11 fortifications and 30 villages, town first) follow Ered Luin's in the live
+`TAOM_Map/ModuleData/settlements.xml`, with the later realms' rows after them. All 41 ids are in the live file now (checked 2026-11-04;
+the file has 1,266 rows, the later realms included), so the hold-back described in "Merging this
+branch" is over. The built state (`*.bak_av_and_built_20261028_200935`) and the state before it (`*.bak_mapforts_20261028_181850`), for the file and the `loc_settlements.xml` files, moved out of the module folder to `E:\taom-live-backups\2026-10-28-anduin-vale-angaladh\TAOM_Map\ModuleData\`. Written once, the file had 1,182 rows.
 
 **Scene fix.** The entity `castle_village_AN1_1` among Angáladh's castles was renamed
 `castle_village_AND1_1` in the live `Main_map/scene.xscene` (one occurrence; backup
@@ -207,7 +206,7 @@ loyalty), so each faction card carries two bonuses.
 | `race_abilities` | on Dale's `sturgia` key (Bard's Aim) | same |
 | `settlement_guards` | `<Spear>` row | `<Spear>` row |
 | `crown_guard` | `anduinvale_bear_warden` | `angaladh_woodmen_guard` |
-| `realm_borders/palette.json` and MCM | `#654D37`, `RealmColourAnduinVale` (Order 26) | `#587A4A`, `RealmColourAngaladh` (27); Your Realm moved to 28 |
+| `realm_borders/palette.json` and MCM | `#654D37`, `RealmColourAnduinVale` (Order 26) | `#587A4A`, `RealmColourAngaladh` (27); Your Realm moved to 28, and to 30 when Dorwinion and South Rhovanion took 28 and 29 |
 | Liege titles | Chieftain of Anduin Vale | King and Queen of Angáladh |
 | `lotr_issues` | Armourer's Commission (`sk_dale_chest_infrantry_a03`); on Dale's Deep Seam row | Armourer's Commission (`sk_dale_chest_archer_a03`); on the same row |
 | Faction card | `anduin_vale`: `game_faction` `anduinvale`, neutral, parked, difficulty 5 | `kingdom_of_angaladh`: `angaladh`, neutral, parked, difficulty 6 |
@@ -301,9 +300,10 @@ registered, so the file loads at the next campaign start or save load.
 
 A new campaign is required, as for [Ered Luin](ered-luin.md#save-compatibility). A save made before
 the realms loads `settlements.xml` again but never the new kingdoms, clans or heroes. The 41 new rows
-sit at the end of the file, so the unfinished rows are dropped and every older settlement has
+follow every older settlement in the file (the later realms' rows come after them), so the unfinished rows are dropped and every older settlement has
 already loaded. Once the rows are applied and the distance cache is rebuilt for them, a save made before them is
-expected to stop loading (v1.5.6 decompile, not reproduced; #1041).
+expected to stop loading (v1.5.6 decompile, not reproduced; #1041). The distance cache was rebuilt
+with the new ids in `4b207f951`, so that condition holds now.
 
 ## How to Change the Realms
 
@@ -313,6 +313,9 @@ generator and `--only anduinvale` or `--only angaladh`. `generate_new_faction_ki
 realm, set `playable` to `true` on its card ([faction-map.md](faction-map.md#parked-realms)).
 
 ## Merging this branch
+
+**Status (checked 2026-11-04): merged and applied; in-game checks still owed.** The commit is on trunk (`88c6365c2`) and the live
+`settlements.xml` holds all 41 rows. Step 4's new campaign, in-game checks and dedicated server re-stage have no recorded run. The steps below are the record of the procedure.
 
 The live `TAOM_Map` is shared by every checkout and the deployed game. With the 41 rows in it, the
 live map named cultures and clans that trunk and the deployed TAOM lack: the base checkout's
@@ -374,14 +377,11 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
 
 ## Known gaps
 
-- **The branch validator fails while the rows are held back.** `python tools/validate_moduledata.py`
-  on this branch reports 53 `LANDLESS_CULTURE` errors, because the two cultures own no live
-  settlement. Commit only inside the merge sitting, after the step 3 gates. Never re-apply the rows
-  mid-build to make that error go away.
-- **The map rows are held back.** The live `TAOM_Map` has 1,141 rows today; the 41 rows return in
-  the merge sitting ("Merging this branch"). Once they are applied, start no new campaign and
-  re-stage no dedicated server until the deploy: the live map and the deployed TAOM must agree.
-  The channel check is in [release-process.md](../reference/release-process.md).
+- **The map rows are applied.** The live `TAOM_Map` holds all 41 rows (checked 2026-11-04) and the
+  feature commit is on trunk, so the held-back state, and the 53 `LANDLESS_CULTURE` errors it caused
+  on the branch, no longer apply. A TAOM build without `4b207f951`, the later commit the live map also needs, throws on a new campaign: the
+  live map and the deployed TAOM must agree. The channel check is in
+  [release-process.md](../reference/release-process.md).
 - The armour is Dale's, as a placeholder. Dale's ids carry no tier keyword, so
   `ARMOUR_MESH_TIER_LADDER` cannot check them.
 - Harad's tier 6 now shows a `CROSS_CULTURE_ARMOUR_INVERSION` warning: the two realms field
@@ -394,7 +394,7 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
   - Starting gold sits on the 150-day runway tier; the 100-day tier gives about 60,000.
   - Banner icons for Angáladh are Silvan ornaments and a plain sun, not a tree. A design for Mike to
     review. Icons 17000 and 17001 are also the `keystone_icon` of Mirkwood's Silvan Archer and Elk
-    Rider careers (`career_system/taom_careers.xml` lines 824 and 845), which is a career screen,
+    Rider careers (`career_system/taom_careers.xml` lines 833 and 854), which is a career screen,
     not a banner. One Lindon clan flies the same background and sigil colours (2021 with 2022) with
     icon 31003.
   - The name "Angáladh" is read as "iron-tree" in the kingdom text (Sindarin `ang` plus `galadh`).
@@ -430,8 +430,8 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
 ## GitHub Issue
 
 - **Issue:** #1053.
-- **Status:** built in data; map rows held back until the merge sitting; in-game check owed
-  ("How to verify in game"), then the distance-cache rebuild.
+- **Status:** built in data and on trunk; map rows applied to the live map; in-game check owed
+  ("How to verify in game").
 
 ---
 
