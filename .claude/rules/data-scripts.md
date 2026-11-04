@@ -6,11 +6,7 @@ paths:
 
 ## Writing a data-mutating script? Read `tools/README.md` "XML I/O convention" FIRST
 
-This rule loads on `tools/**/*.py` and `tools/**/*.ps1` for one reason: the byte-faithful XML I/O
-convention lives in `tools/README.md`, which **nothing auto-loads**, and the rule paths once
-covered only *repo* ModuleData — so a script editing `Modules/<Mod>/ModuleData/*.xml` in the game
-install loaded no convention at all. That gap has now produced the same defect **three times**
-(scene tooling 2026-05-28, a scratchpad one-off, and `fix_uruk_hai_hands_teamcolor.py` 2026-08-06).
+A script that edits XML follows the XML I/O convention (`tools/README.md`).
 
 **The two sanctioned idioms — pick one, never mix them:**
 
@@ -33,21 +29,13 @@ Also mandatory for any script that writes outside the repo: a backup before the 
 item ids), a dry-run default with an explicit `--apply`, idempotency on re-run, and exact-token
 comparison rather than substring containment when deriving a target set from a report or index.
 
-**And parse the result before writing it.** Any script that transforms XML must run the transformed
-text through `ElementTree` and refuse to write a document that no longer parses. On 2026-08-28 a
-swap script masked XML comments by byte offset and restored them at those offsets; the swap changed
-the text length, so comments were spliced into the middle of item ids and 8 ModuleData files were
-written malformed. Nothing detected it until a hand-check afterwards, and the directory-wide revert
-used to undo it destroyed a concurrent session's uncommitted work. The parse costs microseconds and
-makes the whole class unshippable. Corollary for masking: restore by TOKEN (an indexed sentinel),
-never by recorded offset, because any length-changing edit between mask and restore invalidates
-every offset.
+**Parse before writing.** Any script that transforms XML runs the result through `ElementTree` and refuses a document that no longer parses. Restore masked text by indexed token, never by recorded offset: a length-changing edit invalidates every offset.
 
-> **A blocking lint was evaluated and rejected (2026-08-06):** 92 of 124 XML-writing scripts trip a
-> naive mixed-shape heuristic, so a build gate would fail on pre-existing debt and the heuristic
-> false-positives on read-only analyzers. Loading the convention at authoring time is the effective
-> control; the deep-review Tooling correctness lens (`.claude/skills/deep-review/lenses/tooling.md`)
-> remains the review-time backstop.
+No lint: 92 of 124 XML-writing scripts trip a naive heuristic (rejected 2026-08-06). Backstop: the deep-review tooling lens.
+
+## Hand edit or script
+
+A judgment call (Mike, 2026-08-21): script when it repeats or needs replay, hand edit for a one-off. Keep the id, the gate and the doc note either way. A tool's activity count never describes what a file lacked.
 
 ## Reading what a troop carries? Model the deserializer, not the markup
 

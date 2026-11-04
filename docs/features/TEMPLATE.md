@@ -6,7 +6,7 @@ What this feature does in 2-3 sentences. What gameplay behavior does it change o
 
 ## Why This Exists
 
-The problem this feature solves. Be specific — reference vanilla Bannerlord behavior, Middle-earth lore requirements, or gameplay gaps.
+The problem this feature solves. Be specific: reference vanilla Bannerlord behavior, Middle-earth lore requirements, or gameplay gaps.
 
 - **Vanilla behavior:** What Bannerlord does by default
 - **TAOM requirement:** What we need instead and why
@@ -57,27 +57,27 @@ Table of current configuration values with notes explaining the choices.
 | `Main/Features/<Name>/Service.cs` | Core logic |
 | `Main/Features/<Name>/IService.cs` | Service interface |
 | `Main/Features/<Name>/Behavior.cs` | CampaignBehavior or GameModel |
-| `Main/Features/<Name>/IoC.cs` | DryIoc registration |
+| `Main/Features/<Name>/<Name>Module.cs` | Feature module: DI, patches and models it declares |
 | `Main/Adapters/IXxxAdapter.cs` | Adapter interface |
 | `Main/Adapters/XxxAdapter.cs` | TaleWorlds API wrapper |
 | `Main/_Module/ModuleData/<config>` | Configuration data |
 
 ## Dependencies
 
-- `IServiceName` (Core/Feature) — What it provides
-- `IAdapterName` (Adapters) — What TaleWorlds API it wraps
+- `IServiceName` (Core/Feature): what it provides
+- `IAdapterName` (Adapters): what TaleWorlds API it wraps
 
 ## Tests
 
-- `TAOM.Tests/Features/<Name>/ServiceTests.cs` — N tests covering [summary]
-- `TAOM.Tests/Features/<Name>/BehaviorTests.cs` — N tests covering [summary]
+- `TAOM.Tests/Features/<Name>/ServiceTests.cs`: N tests covering [summary]
+- `TAOM.Tests/Features/<Name>/BehaviorTests.cs`: N tests covering [summary]
 - A campaign behavior declared by a feature module also needs its co-op row in `docs/features/coop-interop.md` (gated table or "Deliberately NOT gated"); `CoopGateDocCoverageTests` enforces it. Behaviors that predate the test are listed in its `Baseline` and still need classifying; behaviors added by hand in `Main/SubModule.cs` are not checked by the test but still need a row.
 
 ## How to verify in game
 
 **Preconditions:** new campaign or existing save, whether a restart is needed, the MCM toggle, the module set.
 
-1. One exact `taom.*` console command or UI action, then the observable result that proves it (a printed value, a menu option, a log line).
+1. One exact `taom.*` command or UI action, then the `[Check]` line, log line or report field that proves pass or fail, written by the code before the first test (Mike, 2026-10-31). Add a manifest in `tools/ingame_checks/` when an issue exists. A result only a person can see says so.
 2. Next step, same pairing.
 
 An unreachable step is reported with the command tried and the unmet precondition. Never mark it verified through another path.
@@ -92,7 +92,7 @@ Step-by-step guide for the most common modification (e.g., "How to add a new rac
 
 ## Performance
 
-_Optional section — include only if there are meaningful performance considerations._
+_Optional section: include only if there are meaningful performance considerations._
 
 Description of any optimizations, caching, or performance-sensitive patterns used.
 
@@ -100,9 +100,9 @@ Description of any optimizations, caching, or performance-sensitive patterns use
 
 Dated, feature-sliced history (newest first). Add a bullet here whenever the feature changes; the commit bodies, which `/release` gathers into `CHANGELOG.md`, are the chronological log of record.
 
-- YYYY-MM-DD — summary of the change to this feature.
+- YYYY-MM-DD: summary of the change to this feature.
 
 ## GitHub Issue
 
-- **Issue:** #NNN — [title](link)
+- **Issue:** #NNN: [title](link)
 - **Status:** Closed / Open

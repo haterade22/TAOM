@@ -21,8 +21,7 @@ Every gate answers exactly one question. Pick the row that matches what you edit
 | 5 | World map and scenes | do settlements, scenes and prefabs still resolve? | `settlements.xml`, scene names, prefabs, owners, prosperity |
 | 6 | Only the running game | did the engine actually load it, and does it look right? | everything, always, last |
 
-TAOM ships 37 read-only gates across categories 1 to 5.
-<!-- measured: counted the tool-inventory rows whose category is validator or audit and whose modder_usable flag is true, then confirmed each named script exists with `ls` 2026-09-05 -->
+TAOM ships these read-only gates across categories 1 to 5.
 Everything below names them. Anything not in these tables either writes files (a generator or a
 rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only.
 
@@ -30,10 +29,9 @@ rebalancer, covered in [balance-levers](balance-levers.md)) or is developer-only
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | engine XSD required attributes; whether an id points at the *right* thing |
+| `python tools/validate_moduledata.py` | the whole cross-reference sweep plus duplicate ids, enums, civilian tagging, landless cultures, bare-chested troops, upgrade-tier collapse, harness family type and pairing, and any mount left with an empty HorseHarness slot | whether an id points at the *right* thing |
 | `python tools/validate_xml_schemas.py [FILE ...]` | every engine-loaded ModuleData file against the XSD the engine itself picks (a missing required attribute, an undeclared one, a DOCTYPE, a registration that loads nothing); a file passed by name is classed LANGUAGE FILE, STYLESHEET, NATIVE or NOT REGISTERED | what a file means, a registration with no XSD (NO SCHEMA, such as the Armory's `ModuleSounds`), any file no `<XmlName>` loads, and a run without lxml (exit 2) |
-| `python tools/validate_all_troop_refs.py` | armour ids in ten troop files resolve against the Armory | six troop files, and weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
-| `python tools/validate_gondor_refs.py` | the Gondor-only ancestor of the above | superseded; prefer `validate_moduledata.py` |
+| `python tools/validate_all_troop_refs.py` | armour ids in every `troops_*.xml` resolve against the Armory (it globs the troop folder) | weapons, arrows, mounts, harnesses (it says so in its own PASS banner) |
 | `python tools/audit_item_refs.py` | every `Item.X` reference in TAOM ModuleData against the multi-module item registry | armour-only scope is gone here, but rosters applied at runtime are still invisible |
 | `python tools/audit_equipment_roster_coverage.py` | every custom culture provides the eight mandatory v1.4.3 equipment rosters | whether the items inside them are any good |
 | `python tools/audit_enlistment_roster_coverage.py` | the enlistment service kits obey the slot allowlist and the culture attribute | anything outside the enlistment rosters |
@@ -92,26 +90,23 @@ hand edits, so land a repo-side validator gate with any fix.
 | `pwsh tools/Generate-SceneEntitiesDoc.ps1` | the world-map scene's settlement entities as a doc | it reads the scene only, never ModuleData |
 | `python tools/clan_registry.py` | every clan that exists after `spclans.xslt` runs, with culture and kingdom | whether that clan has lords |
 
-The thirty-seventh gate is `python tools/lint_docs.py --quick`, which checks documentation health
-rather than data. Category 6 has no scripts at all: see "In-game smoke" below.
+`tools/lint_docs.py --quick` also checks documentation health rather than data. Category 6 has no scripts at all: see "In-game smoke" below.
 
 ## The three-module coverage matrix
 
-TAOM's data spans three modules and only one of them is in the repo. Counts measured today.
+TAOM's data spans three modules and only one of them is in the repo. The file counts and the full
+matrix are in [moduledata-validation](../features/moduledata-validation.md).
 
-<!-- measured: find <module>/ModuleData -name '*.xml' | wc -l ; find <module>/ModuleData -name '*.xslt' | wc -l 2026-09-05 -->
-
-| Module | Where | ModuleData XML | XSLT | Cross-ref sweep | Schema checks | Commit hook fires |
-|---|---|---|---|---|---|---|
-| TAOM | this repo, `Main/_Module/ModuleData` | 284 (169 of them under `Languages/`) | 8 | yes | yes | yes, for Claude-driven commits |
-| `LOTRLOME_Armory` | game install | 425 | 8 | yes, via `extra_ref_roots` | no, by design | no |
-| `TAOM_Map` | game install | 44 | 1 | yes, since #462 | no | no |
-| total | | 753 | 17 | | | |
+| Module | Where | Cross-ref sweep | Schema checks | Commit hook fires |
+|---|---|---|---|---|
+| TAOM | this repo, `Main/_Module/ModuleData` | yes | yes | yes, for Claude-driven commits |
+| `LOTRLOME_Armory` | game install | yes, via `extra_ref_roots` | no, by design | no |
+| `TAOM_Map` | game install | yes, since #462 | no | no |
 
 Three consequences the table cannot show on its own.
 
 - **Editing either live module gates nothing automatically.** The hook matches staged
-  `Main/_Module/ModuleData/*.xml` (`check-moduledata-validation.sh:71`) and neither live module is
+  `Main/_Module/ModuleData/*.xml` (`check-moduledata-validation.sh`) and neither live module is
   in git, so an Armory or map edit stages nothing and is checked by nothing until you run
   `python tools/validate_moduledata.py` yourself. The RCA is blunt about it: "The Armory is
   untracked, so the commit hook that would have caught it never fires"
@@ -120,7 +115,7 @@ Three consequences the table cannot show on its own.
   rule, `MOUNTED_DWARF` and `MOUNT_WITHOUT_HARNESS` apply to repo files only. That is free today because the Armory defines
   items and monsters and nothing else; author a troop or an equipment roster there and it is
   entirely unvalidated ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md)).
-- **No tool models XSLT.** `check_external_xslt.py` proves 17 stylesheets are well formed and
+- **No tool models XSLT.** `check_external_xslt.py` proves the stylesheets are well formed and
   nothing more. `TAOM_Map/ModuleData/settlements.xslt` is opened only to regex one boolean, and
   only three test classes transform the repo's copies (`CulturePartyTemplateTests`,
   `LordFamilyTransformTests`, `LordTemplateRosterTests`). A stylesheet that rewrites a vanilla culture in place
@@ -130,10 +125,11 @@ Three consequences the table cannot show on its own.
 ## What the commit hook covers, and what it does not
 
 `check-moduledata-validation.sh` runs the error-severity checks before a `git commit` and blocks on
-failure. Four limits, all of them load-bearing.
+failure. `.githooks/pre-commit` runs the same checks for every committer whose clone sets
+`core.hooksPath`, so a commit from a terminal or an IDE meets them too (2026-11-03). Four limits, all
+of them load-bearing.
 
-1. **It is an explicit `--code` allowlist, not "all errors".** The hook names 19 codes.
-   <!-- measured: grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh | wc -l 2026-09-06 -->
+1. **It is an explicit `--code` allowlist, not "all errors".** The hook names an explicit list.
    A new error check is silently non-blocking until it is added there. On 2026-08-31 five live error
    checks were missing from that list; `CommitGateCoverageTests` in
    `tools/tests/test_validate_moduledata.py` is now the reference between the two files.
@@ -142,7 +138,7 @@ failure. Four limits, all of them load-bearing.
    warnings. Run the tool yourself to see them.
 3. **It fires only inside a Claude Code session.** These hooks run when Claude invokes Bash through
    the tool dispatch; they do not fire when you type `git commit` in your own shell
-   ([harness-facts.md:93](../../.claude/rules/harness-facts.md)). If you edit by hand and commit by
+   ([harness-facts.md](../../.claude/rules/harness-facts.md) "Hook lifecycle"). If you edit by hand and commit by
    hand, no hook has ever seen your change.
 4. **It fails open on purpose.** Missing python, missing game install, validator crash or an inner
    timeout all let the commit through rather than blocking on the gate's own fault
@@ -160,7 +156,7 @@ A green exit is not the same claim in every tool.
 | Tool | Exit code behaviour |
 |---|---|
 | `validate_moduledata.py` | 1 on any ERROR, 0 when clean, 2 on bad input. Warnings do not change the code |
-| `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md:56`) |
+| `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md`, the `audit_mount_parity.py` row) |
 | `audit_polearm_shield_parity.py` | 1 on a polearm violation, WARN on two-handers, and SKIP at exit 0 when there is no game install |
 | `check_prefab_budget.py` | prints `OK` while the real cross-module total sits near the cap, because it counts `TAOM_Map/Prefabs` alone |
 | `audit_action_set_parity.py` | non-zero on either failure class, so it is safe to chain |
@@ -219,16 +215,16 @@ and `tools/insert_new_faction_cc_menus.py` (Ered Luin, 2026-10-27, which also ad
 Two more are stdout-only and just as destructive in practice: `tools/generate_gondor_troops.py` and
 `tools/generate_rhun_troops.py` have no write mode, so the documented usage is a shell redirect
 printed in their own docstring (`tools/generate_gondor_troops.py:5`) and pointed at the real file by
-`tools/README.md:83-84`. That regenerates the whole troop file and destroys every hand edit made
+`tools/README.md`. That regenerates the whole troop file and destroys every hand edit made
 since. Confirmed in the source: without `--dry-run`, `generate_gondor_troops.py:1917` prints the
 entire XML and writes nothing itself. `tools/generate_dale_troops.py` is the modern shape
 (`--dry-run` / `--apply` / `--output`) and is the one to copy.
 
-**There is no table anywhere mapping a generated file to the tool that owns it.** TAOM has never
-written one, so do not assume a file is safe to hand-edit. The only whole-file regenerations proven
+**The nearest table mapping a generated file to its tool is
+[artist-ladder-brief](../ai-includes/artist-ladder-brief.md) section 4; for any other file, grep the tools
+folder for its name.** Do not assume a file is safe to hand-edit. The only whole-file regenerations proven
 here are `troops_gondor.xml` and `troops_rhun.xml`; every other writer must be checked one at a time.
-To find the owning tool for a file, grep the tools folder for the file's name and read each
-docstring: `rg -l "taom_partyTemplates.xml" tools/*.py` returns eight scripts today, and
+Read each docstring the grep returns: `rg -l "taom_partyTemplates.xml" tools/*.py` returns eight scripts today, and
 `tools/generate_clan_heraldry.py:27-29` shows the flag shape you want to see (a dry run by default,
 an explicit `--apply`). The nearest thing to an index is [tools/README.md](../../tools/README.md),
 which has no row for 58 of the 183 top-level scripts.
@@ -288,7 +284,7 @@ Three things to read out of that transcript rather than skim past.
    The engine picks each slot from an independently chosen set, so the troop can spawn with a gap
    nobody authored, and every UI surface renders set number one and looks fine.
 3. **`validate_all_troop_refs.py` prints its own scope, and it is narrower than it sounds.** Armour
-   ids only, and ten cultures only. Weapons, arrows, mounts and harnesses need `audit_item_refs.py`.
+   ids only. Weapons, arrows, mounts and harnesses need `audit_item_refs.py`.
 
 **Check:** `python tools/validate_moduledata.py` returns `0 error(s)`.
 **Takes effect:** full game restart (a NEW item or equipment XML file is registered only at process
@@ -364,7 +360,7 @@ These cannot be checked with the tools above and are not a data modder's job to 
 | Anything a stylesheet does | no gate interprets XSLT. `spcultures.xslt` rewriting a vanilla culture in place is invisible to every check here; `CulturePartyTemplateTests` is the only detector and it is a C# test |
 | A culture fielding another faction's troops | the ref sweep proves an id resolves, never that it points at the right faction. That gap hid nine cultures' worth of Calradian troops for months |
 | A lord with the wrong name or sex for his body | free text behind a localization key; `LordNameAndSexConsistencyTests` owns it |
-| The C# suite | `dotnet test TAOM.Tests` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
+| The C# suite | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` needs the build. Shipped-data tests such as `CultureLordTemplateTests` and `CulturePartyTemplateTests` read ModuleData off disk and are the layer between the validator and the game ([testing-guide.md](../ai-includes/testing-guide.md) "Shipped-Data Tests") |
 | Harmony patches, GameModels, MissionLogics, CampaignBehaviors | cannot be unit tested at all; they need a running game (`testing-guide.md` "What Cannot Be Unit Tested") |
 | Deploying your repo edit into the install | the copy happens during a build, not on save |
 
@@ -376,7 +372,7 @@ Run these in order. Each one is cheap; the expensive step is the campaign at the
 2. The category tables above, for the thing you actually touched.
 3. `python tools/check_external_xslt.py` if any `.xslt` changed.
 4. `python tools/audit_mbproj_registration.py` if you added a file.
-5. Ask a developer for `dotnet test TAOM.Tests` if you touched cultures, party templates or lords.
+5. Ask a developer for `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` if you touched cultures, party templates or lords.
 6. Full game restart, new campaign, the in-game smoke above.
 
 For a targeted question mid-edit rather than a full run, the `taom-moduledata` MCP server exposes the
@@ -384,54 +380,6 @@ same engine as nine tools (`item_exists`, `troop_exists`, `culture_exists`, `fin
 `list_cultures`, `registry_sizes` and the rest). It needs a Claude restart to load
 ([mcp-servers.md](../reference/mcp-servers.md)); the command-line equivalent is always
 `python tools/validate_moduledata.py`.
-
-## Rehearsal runs, 2026-09-05
-
-Every gate quoted in this chapter was run against the tree as it stands today. This is the record, so
-a future reader can tell drift from breakage.
-
-<!-- measured: each command in the first column, run from the repo root 2026-09-05 -->
-
-| Command | Exit | Result |
-|---|---|---|
-| `python tools/validate_moduledata.py` | 0 | 0 errors, 94 warnings, all `INCONSISTENT_ARMOUR_SLOT` |
-| `python tools/validate_all_troop_refs.py` | 0 | 10 cultures swept, 647 troops, 1,713 armour refs, 0 missing |
-| `python tools/audit_item_refs.py` | 0 | 5,910 item ids, 2,955 referenced, 0 broken |
-| `python tools/validate_mesh_refs.py` | 0 | 0 errors, 3 `KNOWN_DEAD_MESH` warnings (the troll set) |
-| `python tools/audit_polearm_shield_parity.py` | 0 | PASS, with two-hander warnings on the Mordor Numenorean rosters |
-| `python tools/check_external_xslt.py` | 0 | PASS, 17 stylesheets clean |
-| `python tools/generate_armory_catalogue.py --check` | 0 | catalogue reproduces exactly, 4,839 rows |
-| `python tools/audit_action_set_parity.py` | 0 | humanoid sets clean; 9 creature sets excluded from the human audit |
-
-The 94 warnings and the 3 dead meshes are known and accepted, not new. If your run shows more,
-compare against this table before assuming the tool broke.
-
-## Numbers in this chapter
-
-All measured 2026-09-05 from the repo root.
-
-| Number | Command |
-|---|---|
-| 37 read-only gates | `inv-tools.json` rows with `category` in (`validator`, `audit`) and `modder_usable: true` |
-| 284 TAOM ModuleData XML, 169 under `Languages/` | `find Main/_Module/ModuleData -name '*.xml' \| wc -l` and the same under `Languages` |
-| 425 Armory ModuleData XML, 44 TAOM_Map | `find <module>/ModuleData -name '*.xml' \| wc -l` |
-| 8 + 8 + 1 = 17 stylesheets | `find <module>/ModuleData -name '*.xslt' \| wc -l`, confirmed by `check_external_xslt.py`'s `PASS: 17 stylesheet(s) clean` |
-| 0 errors, 94 warnings | `python tools/validate_moduledata.py` |
-| 5,900 items / 5,291 NPCCharacters / 40 cultures / 476 party templates / 121 body properties | the `Registry:` line of the same run |
-| 5,910 item ids, 2,955 referenced, 0 broken | `python tools/audit_item_refs.py` |
-| 3 `KNOWN_DEAD_MESH` warnings | `python tools/validate_mesh_refs.py` |
-| 4,839 catalogue rows | `python tools/generate_armory_catalogue.py --check` |
-| 19 `--code` entries in the commit hook | `grep -oE '\-\-code [A-Z_]+' .claude/hooks/check-moduledata-validation.sh \| wc -l` |
-| 16 troop files on disk, 16 registered, 10 swept, 6 unswept | `ls Main/_Module/ModuleData/troops/troops_*.xml \| wc -l`; `rg -c 'XmlName id="NPCCharacters" path="troops/' Main/_Module/SubModule.xml`; the `cultures` list at `tools/validate_all_troop_refs.py:80-97` |
-| 21 Armory `<XmlName id="Items">` rows | `rg -c 'XmlName id="Items"' <install>/Modules/LOTRLOME_Armory/SubModule.xml` |
-| 286 deployed XML against 284 in the repo, 2 orphans | `diff` of `find . -name '*.xml' \| sort` under both trees |
-| 165 `tools/*.py`, 18 `tools/*.ps1`, 64 `tools/oneoff/*.py` | `ls tools/*.py \| wc -l` and the two siblings |
-| 7 scripts with no dry run, of the 10 measured on 2026-09-05 | `grep -cE '\-\-apply\|\-\-dry-run'` on each of the ten: seven 0, three 3 (2026-10-27) |
-
-The six unswept troop files are `dunland`, `goblin`, `harad`, `mirkwood`, `rivendell` and `rohan`.
-The tool says so itself at `tools/validate_all_troop_refs.py:90-92`: a new culture must be appended to
-that hardcoded list or its troop file is never opened. Any doc claiming the tool covers "all 7
-culture troop XMLs" is wrong on both numbers.
 
 ## Read next
 
@@ -446,8 +394,7 @@ culture troop XMLs" is wrong on both numbers.
 - [`tools/README.md`](../../tools/README.md) for every script, and its mandatory XML I/O convention
   at the top before you write or modify one.
 - [`docs/reference/hooks-catalog.md`](../reference/hooks-catalog.md) for what each hook does.
-- [`docs/ai-includes/testing-guide.md`](../ai-includes/testing-guide.md) for the three test types and
-  what cannot be unit tested.
+- [`docs/ai-includes/testing-guide.md`](../ai-includes/testing-guide.md) for the shipped-data tests.
 - [`docs/reviews/lessons/testing-qa.md`](../reviews/lessons/testing-qa.md) and
   [`docs/reviews/lessons/build-tooling-workflow.md`](../reviews/lessons/build-tooling-workflow.md)
   for the failures these gates were built from.

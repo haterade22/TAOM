@@ -67,6 +67,16 @@ CONTEXT_BUCKETS = ((200_000, "under 200k"), (300_000, "200k to 300k"), (500_000,
 REVIEW_AGENT = "deep-reviewer"
 REVIEW_RUN_GAP_SECONDS = 3600   # lenses of one session further apart than this are separate review runs
 
+# The SessionStart banners CLAUDE.md names, the skill each asks for, and the skill's main command as it
+# appears in a shell call. Section 7 pairs them, so a banner nobody acts on shows as such.
+BANNERS = (
+    ("GAME VERSION DRIFT", "engine-bump", re.compile(r"(?:^|[\\/])(?:native_archive\.py|decompile_bannerlord\.ps1)$")),
+    ("ARMORY ART DRIFT", "armory-audit", re.compile(r"(?:^|[\\/])audit_armory_refs\.py$")),
+    ("UPSTREAM AHEAD", "upstream-review", re.compile(r"(?:^|[\\/])upstream_watch\.py$")),
+    ("HARNESS RETRO DUE", "harness-retro", re.compile(r"(?:^|[\\/])harness_retro\.py$")),
+)
+RULES_MARKER = "/.claude/rules/"
+
 HOOK_DENY_RE = re.compile(r"^(PreToolUse|PostToolUse):(\S+) hook error: \[([^\]]+)\](.*)", re.S)
 CLASSIFIER_PREFIX = "Permission for this action was denied by the Claude Code auto mode classifier"
 REJECTION_PREFIX = "The user doesn't want to proceed with this tool use"
@@ -157,15 +167,50 @@ def command_family(command, tool="Bash"):
         segs = _shellwords.segments(text).split("\n")
     except Exception:  # a reader failure costs one bucket, never the run
         segs = [command or ""]
+    for name, _exe, rest in _segment_commands(segs, tool):
+        if name not in _NOT_A_FAMILY:
+            return name + _family_detail(name, rest)
+    return "(unknown)"
+
+
+def _segment_commands(segs, tool):
+    """(lower-case name, the command word as written, its arguments) of what each segment runs."""
+    found = []
     for seg in segs:
         words = [w[2] for w in _shellwords._lead_words(seg, 40)]
         k = _shellwords.command_index(words, tool)
-        if k >= len(words):
-            continue
-        name = re.sub(r"\.exe$", "", re.split(r"[\\/]", words[k])[-1].lower())
-        if name not in _NOT_A_FAMILY:
-            return name + _family_detail(name, words[k + 1:])
-    return "(unknown)"
+        if k < len(words):
+            found.append((re.sub(r"\.exe$", "", re.split(r"[\\/]", words[k])[-1].lower()), words[k], words[k + 1:]))
+    return found
+
+
+def command_runs_script(command, rx, tool="Bash"):
+    """True when a segment of the command runs a script `rx` matches: the first operand of a script
+    runner (`python -B tools/x.py`), or the command word itself (`./tools/x.sh`). A command that only
+    names the script (`git diff tools/x.py`, `grep y tools/x.py`) does not."""
+    try:
+        text, _bodies = _shellwords.strip_heredocs(_shellwords.to_posix((command or "")[:FAMILY_HEAD], tool))
+        segs = _shellwords.segments(text).split("\n")
+    except Exception:   # a reader failure costs one command, never the run
+        return False
+    for name, exe, rest in _segment_commands(segs, tool):
+        target = exe
+        if name in _SCRIPT_TOOLS:
+            target, skip = None, False
+            for w in rest:
+                lw = w.lower()
+                if skip:
+                    skip = False
+                elif lw in _INLINE_FLAGS:
+                    break
+                elif lw in _PWSH_VALUE_OPTS:
+                    skip = True
+                elif not w.startswith("-"):
+                    target = w
+                    break
+        if target and rx.search(target):
+            return True
+    return False
 
 
 def _family_detail(name, rest):
@@ -290,6 +335,10 @@ class Stats:
         self.main_context = defaultdict(lambda: [0, 0.0])    # bucket -> requests, USD
         self.rebuilds = defaultdict(lambda: [0, 0, 0.0])     # (who, idle gap) -> events, tokens, USD
         self.lenses = []                                     # (session, start, USD, requests, peak context)
+        self.banner_sessions = defaultdict(set)              # banner -> sessions whose SessionStart printed it
+        self.direct_sessions = defaultdict(set)              # banner -> sessions that ran its skill's command
+        self.versions = defaultdict(set)                     # Claude Code version -> sessions
+        self.rules_loaded = defaultdict(lambda: [set(), set()])   # rule file -> main sessions, subagent files
 
 
 def add_output(table, key, size):
@@ -519,6 +568,42 @@ def handle_attachment(stats, att, sid, ts=None):
             stats.cancel_timeouts[label] += 1
 
 
+def note_banners(stats, att, sid):
+    """Record which banners a SessionStart hook printed in this session."""
+    if not isinstance(att, dict) or att.get("type") != "hook_success" or att.get("hookEvent") != "SessionStart":
+        return
+    text = att.get("content")
+    if isinstance(text, str):
+        for banner, _skill, _rx in BANNERS:
+            if banner in text:
+                stats.banner_sessions[banner].add(sid)
+
+
+def rule_name(path):
+    """The rule file under .claude/rules/ that `path` names, else None."""
+    if not isinstance(path, str):
+        return None
+    norm = path.replace("\\", "/")
+    at = norm.lower().find(RULES_MARKER)
+    return norm[at + len(RULES_MARKER):] if at >= 0 and norm.lower().endswith(".md") else None
+
+
+def note_rules_loaded(stats, att, sid, agent, stem):
+    """Record rule files named by an `instructions` attachment (the files loaded at launch) or a
+    `nested_memory` one (a path rule loaded on a matching read). A subagent transcript counts once per
+    file, because the attachment can repeat inside it."""
+    if not isinstance(att, dict):
+        return
+    if att.get("type") == "instructions" and isinstance(att.get("files"), list):
+        paths = [f.get("path") for f in att["files"] if isinstance(f, dict)]
+    elif att.get("type") == "nested_memory":
+        paths = [att.get("path")]
+    else:
+        return
+    for name in filter(None, (rule_name(p) for p in paths)):
+        stats.rules_loaded[name][1 if agent else 0].add(stem if agent else sid)
+
+
 def queued_prompt_text(prompt):
     """The text of a queued_command prompt: a string, or content blocks of which only text counts."""
     if isinstance(prompt, str):
@@ -625,6 +710,10 @@ def handle_assistant(stats, r, tools, count):
             tools[b["id"]] = (name, str(msg.get("id") or b["id"]), detail)
         if not count:
             continue
+        if name in ("Bash", "PowerShell"):
+            for banner, _skill, rx in BANNERS:
+                if command_runs_script(str(inp.get("command", "")), rx, name):
+                    stats.direct_sessions[banner].add(str(r.get("sessionId") or ""))
         if name == "Skill" and inp.get("skill"):
             stats.skills[str(inp["skill"])] += 1
         elif name in ("Agent", "Task"):
@@ -676,6 +765,8 @@ def scan_file(stats, path, since_str, agent=None):
             if ts and (stats.newest_date is None or ts[:10] > stats.newest_date):
                 stats.newest_date = ts[:10]
             sid = str(r.get("sessionId") or path.stem)
+            if isinstance(r.get("version"), str) and r["version"]:
+                stats.versions[r["version"]].add(sid)
             if rtype == "assistant":
                 got = read_usage(r)
                 if got:
@@ -699,6 +790,8 @@ def scan_file(stats, path, since_str, agent=None):
             elif rtype == "attachment":
                 att = r.get("attachment")
                 handle_attachment(stats, att, sid, ts)
+                note_banners(stats, att, sid)
+                note_rules_loaded(stats, att, sid, agent, path.stem)
                 if handle_human(stats, r, sid, ts):
                     flush()   # typed while the model worked: no twin user record, still a human turn
                     skill = None
@@ -734,9 +827,12 @@ def scan_file(stats, path, since_str, agent=None):
     commit_usage(stats, calls, agent, path.stem)
 
 
-def discover(transcripts, since_dt):
-    """Return (main, subagent) transcript paths whose mtime is not older than the window."""
+def discover(transcripts, since_dt, excluded=()):
+    """Return (main, subagent) transcript paths whose mtime is not older than the window.
+
+    A session in `excluded` loses its main transcript and everything under its folder."""
     cutoff = (since_dt - timedelta(days=1)).timestamp()
+    skip = set(excluded)
 
     def fresh(p):
         try:
@@ -744,9 +840,10 @@ def discover(transcripts, since_dt):
         except OSError:
             return False
 
-    main = sorted(p for p in transcripts.glob("*.jsonl") if fresh(p))
+    main = sorted(p for p in transcripts.glob("*.jsonl") if fresh(p) and p.stem not in skip)
     # `**` because a workflow's agents sit one level down, in subagents/workflows/<run>/.
-    sub = sorted(p for p in transcripts.glob("*/subagents/**/agent-*.jsonl") if fresh(p))
+    sub = sorted(p for p in transcripts.glob("*/subagents/**/agent-*.jsonl")
+                 if fresh(p) and p.relative_to(transcripts).parts[0] not in skip)
     return main, sub
 
 
@@ -1040,6 +1137,33 @@ def model_overrides(stats, repo):
     return found
 
 
+def banner_rows(stats):
+    """Per banner: sessions that printed it, invocations of the skill it names (the Skill tool plus a
+    typed slash command), and sessions that ran the skill's main command in a shell call."""
+    return [{"banner": banner, "skill": skill,
+             "sessions_printing": len(stats.banner_sessions.get(banner, ())),
+             "invocations": stats.skills.get(skill, 0) + stats.slash_commands.get(skill, 0),
+             "direct_sessions": len(stats.direct_sessions.get(banner, ()))}
+            for banner, skill, _rx in BANNERS]
+
+
+def version_key(v):
+    return [int(x) for x in re.findall(r"\d+", v)] or [0]
+
+
+def version_rows(stats):
+    """Each Claude Code version seen in the window with its session count, oldest first."""
+    return [{"version": v, "sessions": len(s)}
+            for v, s in sorted(stats.versions.items(), key=lambda kv: (version_key(kv[0]), kv[0]))]
+
+
+def rule_rows(stats):
+    """Rule files loaded: main sessions that listed the file, and subagent transcripts that did."""
+    return [{"rule": name, "sessions": len(loaded[0]), "subagents": len(loaded[1])}
+            for name, loaded in sorted(stats.rules_loaded.items(),
+                                       key=lambda kv: (-len(kv[1][0]) - len(kv[1][1]), kv[0]))]
+
+
 def build_signals(stats, args, since, today, main, sub):
     n = args.top
     tool_rows = top_groups(stats.tool_errors, n, ("signature", "tool"))
@@ -1051,9 +1175,13 @@ def build_signals(stats, args, since, today, main, sub):
     used = set(stats.skills) | set(stats.slash_commands)
     runaways = sorted(stats.runaways, key=lambda r: -r["length"])[:n]
     return {
-        "window": {"since": since.isoformat(), "newest": stats.newest_date, "today": today.isoformat()},
+        "window": {"since": since.isoformat(), "newest": stats.newest_date, "today": today.isoformat(),
+                   "excluded_sessions": list(args.exclude_session)},
         "sessions": {"main_files": len(main), "subagent_files": len(sub), "records": stats.records,
                      "parse_failures": stats.parse_failures, "compactions": stats.compactions},
+        "versions": version_rows(stats),
+        "banners": banner_rows(stats),
+        "rules_loaded": rule_rows(stats),
         "hook_denies": top_groups(stats.denies, n, ("hook", "event", "tool")),
         "hook_blocks": top_groups(stats.blocks, n, ("hook", "event")),
         "hook_broken": top_groups(stats.broken, n, ("script", "stderr_signature")),
@@ -1101,7 +1229,12 @@ def render(sig):
     L += table(["Measure", "Value"], [
         ["Main transcripts", s["main_files"]], ["Subagent transcripts", s["subagent_files"]],
         ["Records parsed", s["records"]], ["Parse failures", s["parse_failures"]],
-        ["Compactions", s["compactions"]]])
+        ["Compactions", s["compactions"]],
+        ["Excluded sessions", ", ".join(w["excluded_sessions"]) or "none"]])
+    L += ["### Claude Code versions seen", "",
+          "Compare with the `since vX` notes in `.claude/rules/harness-facts.md`: a version past a fact's "
+          "last check may have changed it.", ""]
+    L += table(["Version", "Sessions"], [[v["version"], v["sessions"]] for v in sig["versions"]])
     L += ["## 2. Hook outcomes", "", "### Denies", ""]
     L += table(["Hook", "Event", "Tool", "Count", "Sessions", "Last seen", "Sample reason"],
                [[r["hook"], r["event"], r["tool"], r["count"], r["sessions"], r["last_seen"], r["sample"]]
@@ -1149,6 +1282,18 @@ def render(sig):
     L += table(["Model", "Count"], sorted(u["models"].items(), key=lambda kv: -kv[1]))
     L += ["### Skills with zero invocations in window", ""]
     L += ["- `%s`" % x for x in sig["unused_skills"]] or ["_none_"]
+    L += ["", "### Banners against the skills they name", "",
+          "Sessions whose SessionStart output printed the banner, invocations of the skill it names (Skill "
+          "tool plus typed slash command), and sessions that ran the skill's main command in a shell call. "
+          "No verdict.", ""]
+    L += table(["Banner", "Skill", "Sessions printing", "Invocations", "Sessions running the command"],
+               [[b["banner"], b["skill"], b["sessions_printing"], b["invocations"], b["direct_sessions"]]
+                for b in sig["banners"]])
+    L += ["### Rule files loaded", "",
+          "From the `instructions` and `nested_memory` attachments: main sessions that listed the file, and "
+          "subagent transcripts that did. A path rule appears only after a matching read.", ""]
+    L += table(["Rule", "Sessions", "Subagent transcripts"],
+               [[r["rule"], r["sessions"], r["subagents"]] for r in sig["rules_loaded"]])
     m = sig["memory"]
     L += ["", "## 8. Memory health", "",
           "MEMORY.md: %s bytes, %s lines (numbers only, no pass or fail)." % (
@@ -1275,6 +1420,8 @@ def parse_args(argv):
     p.add_argument("--memory", type=Path, default=home / "memory")
     p.add_argument("--out", type=Path, default=None)
     p.add_argument("--top", type=int, default=20)
+    p.add_argument("--exclude-session", action="append", default=[], metavar="ID",
+                   help="leave this session's transcripts out, for work that would distort a comparison (repeatable)")
     return p.parse_args(argv)
 
 
@@ -1302,8 +1449,17 @@ def main(argv=None):
               file=sys.stderr)
         return 2
 
+    matched = [sid for sid in args.exclude_session
+               if (args.transcripts / (sid + ".jsonl")).is_file() or (args.transcripts / sid).is_dir()]
+    for sid in args.exclude_session:
+        if sid not in matched:
+            print("warning: --exclude-session %s matches no transcript in %s" % (sid, args.transcripts),
+                  file=sys.stderr)
+    args.exclude_session = matched   # the report names only what was left out
+
     stats = Stats()
-    main_files, sub_files = discover(args.transcripts, datetime.combine(since, datetime.min.time()))
+    main_files, sub_files = discover(args.transcripts, datetime.combine(since, datetime.min.time()),
+                                     args.exclude_session)
     for path in main_files + sub_files:
         try:
             scan_file(stats, path, since.isoformat(), agent_type(path) if path in sub_files else None)

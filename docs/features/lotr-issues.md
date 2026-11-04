@@ -9,10 +9,10 @@
 > follow are the original research deliverable, kept for provenance. Engine mechanics are documented in
 > [issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md).
 >
-> Since 2026-10-27 the shipped file holds 78 issues: the 43, 22 "Armourer's Commission" DeliverGoods rows
+> Since 2026-10-29 the shipped file holds 82 issues: the 43, 26 "Armourer's Commission" DeliverGoods rows
 > from [armour acquisition](armour-acquisition.md) (an artisan trades a heavy chest of the town's people for
 > steel, through the template's until-then unused `reward_item`; 18 on 2026-09-28, then Arthedain's,
-> Cardolan's, Rhudaur's and Ered Luin's), and 13 "Deep Seam" rows for its lord's
+> Cardolan's, Rhudaur's, Ered Luin's, Anduin Vale's, Angáladh's, Dorwinion's and South Rhovanion's), and 13 "Deep Seam" rows for its lord's
 > gear ladder (a village headman pays five of the culture's lord's materials for timber: `reward_count`,
 > how many of `reward_item` completion grants, 1 to 99, default 1). Ered Luin shares Erebor's Deep Seam
 > row (`cultures="erebor,eredluin"`), and its commission rewards `sk_dwarf_iron_chest_heavy_b`.
@@ -212,7 +212,7 @@ test per validation rule.
 ### Registration
 
 One thin `LotrIssuesCampaignBehavior : CampaignBehaviorBase`, added in `SubModule.OnGameStart`
-([SubModule.cs:294-307](../../Main/SubModule.cs#L294), single-owner — recommend the edit, don't make it from a
+([SubModule.cs:1519-1526](../../Main/SubModule.cs#L1519), single-owner: recommend the edit, don't make it from a
 subagent). It subscribes a single `OnCheckForIssueEvent` listener and delegates to `ILotrIssueService`, which selects
 eligible LOTR issues for the hero (occupation + culture + settlement) and calls `AddPotentialIssueData`. One
 data-driven dispatcher replaces the 43 vanilla behaviors.
@@ -241,7 +241,7 @@ modules before any `OnGameStart`, and TAOM loads after Sandbox).
 
 | Option | Why rejected |
 |--------|--------------|
-| `CanHaveCampaignIssuesEvent` veto | Over-reach — the same gate governs notable disappearance/retirement (`NotablesCampaignBehavior.cs:280`); suppressing issues would freeze notable despawn. |
+| `CanHaveCampaignIssuesEvent` veto | Over-reach: the same gate governs notable disappearance/retirement (`NotablesCampaignBehavior.cs:297`); suppressing issues would freeze notable despawn. |
 | `IssueModel` frequency override | No such knob — `IssueModel` has no per-issue-type frequency; frequency is in `IssuesCampaignBehavior.GetFrequencyScore`. |
 | Harmony patch on selection | Invasive + engine-bump-fragile + redundant. Keep only as a last-resort fallback. |
 
@@ -317,7 +317,7 @@ Codex pass. Every one of the 43 issues maps onto one of these via XML config —
 
 | Template (`IssueBase` + paired `QuestBase`) | Mechanic | Issues |
 |---|---|---|
-| **DeliverGoods** | accumulate N of an `item:<id>` trade good, hand in via dialog | 14 (grain/supplies/draught/crafting/tools/horses/herd/artisan×2/offload/revenue/art-of-trade/tutor/special-weapons) |
+| **DeliverGoods** | accumulate N of an `item:<id>` trade good, hand in via dialog | 53: 14 original (grain/supplies/draught/crafting/tools/horses/herd/artisan×2/offload/revenue/art-of-trade/tutor/special-weapons), 26 Armourer's Commission and 13 Deep Seam |
 | **DeliverPersonnel** | hand over N captives — any non-hero prisoner in the player's `PrisonRoster` | 2 (gang recruits, mine laborers) |
 | **Combat** (`variant=`) | event-driven count, auto-completes on N (no turn-in) | 27 — `DefeatRaids` (24, won battles), `CaptureLords` (1, at-war lord taken prisoner), `WinTournaments` (2, tournament won) |
 
@@ -339,13 +339,13 @@ mechanics (accompany a live party, price intervention, siege objectives, social 
 `IssuesCampaignBehavior` so `OnCheckForIssueEvent` still fires. Saves register at base `726900801`, localIds 101–106
 (3 issue/quest pairs).
 
-**Localization:** 308 keys in `taom_lotr_issue_strings.xml` (English source-of-truth; defaults also embed inline in
+**Localization:** 327 keys in `taom_lotr_issue_strings.xml` (English source-of-truth; defaults also embed inline in
 the config so text renders pre-translation), registered as a GameText node + an 8th `<LanguageFile>` in all 12
 `language_data.xml` with per-language stubs. AI translation propagation via `tools/translate_with_claude.py` is the
 one remaining standard pipeline step (deferred — English fallback is live).
 
 **Per-type behavior (one mechanism fixed, one is an accepted v1 trade-off — this doc's Risk #5).** All configs of a
-template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 14 DeliverGoods → `typeof(DeliverGoodsLotrIssue)`,
+template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 53 DeliverGoods → `typeof(DeliverGoodsLotrIssue)`,
 2 DeliverPersonnel → `typeof(DeliverPersonnelLotrIssue)`. Two engine mechanisms key on the issue **type**:
 
 - **Accept gate — FIXED (Codex review, 2026-06-20).** `IssueBase.CheckPreconditions` blocks accepting a second active
@@ -396,9 +396,9 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 | `Main/Features/LotrIssues/LotrIssueSaveableTypeDefiner.cs` | save registration (base `726900801`, localIds 101–106) |
 | `Main/Features/LotrIssues/Domain/*.cs` | `LotrIssueDefinition` + `LotrIssueTemplate`/`IssueGiverOccupation`/`IssueFrequencyTier` enums |
 | `Main/Adapters/{ILotrIssueGiverAdapter,ILotrIssueRewardAdapter}.cs` (+impls) | sealed-type boundary (ADR-007) |
-| `Main/_Module/ModuleData/lotr_issues/taom_lotr_issues.xml` | the 43 issue configs (flavor, cultures, rewards, counts) |
-| `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | 308 localization keys (English source-of-truth) |
-| `TAOM.Tests/Features/LotrIssues/*` | config-provider + service + suppression tests (50) |
+| `Main/_Module/ModuleData/lotr_issues/taom_lotr_issues.xml` | the 82 issue configs (flavor, cultures, rewards, counts) |
+| `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | 327 localization keys (English source-of-truth) |
+| `TAOM.Tests/Features/LotrIssues/*` | config-provider + service + suppression tests (84 `[TestMethod]` methods, plus two data-driven ones) |
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 

@@ -93,7 +93,7 @@ anything: zero matched files may have a real game extension last.
 
 Verified: 0 sidecars remaining on a re-scan, 10 sampled files re-hashed at the destination against
 the manifest with 0 mismatches, `validate_moduledata.py` PASS, `check_prefab_budget.py` OK,
-`dotnet test TAOM.Tests` 7,770 passed.
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` 7,770 passed.
 
 ### What this run moved that other docs point at
 

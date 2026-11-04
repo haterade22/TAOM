@@ -70,7 +70,7 @@ banner_bearers/banner_bearers_config.json      taom_spcultures.xml / spcultures.
    culture->banner, majority-culture vote)                      |
        /                    \                                   |
 TaomBattleBannerBearersModel   BannerBearerAssignmentMissionLogic
-  (GameModel: the engine          (MissionLogic: OnTeamDeployed ->
+  (GameModel: the engine          (MissionLogic: OnBattleSideSpawned ->
    asks it "how many?" and          SetFormationBanner for formations
    "may this agent?"; each          vanilla skipped)
    disabled path -> base)
@@ -88,9 +88,9 @@ MixedFormations Patch30 falls through for `unit.Banner != null`
 | Where | What |
 |---|---|
 | [Main/IoC.cs](../../Main/IoC.cs) | `BannerBearersIoC.RegisterBannerBearersFeature(container)` — both services `Reuse.Singleton` |
-| [Main/SubModule.cs](../../Main/SubModule.cs) `OnGameStart` | `campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(...))` |
+| [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterSpecialResourcesAndCareers` (called from `OnGameStart`) | `campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(...))` |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterCustomBattleModels` (called from `OnGameStart`, `BasicGameStarter` only) | `basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(...))`: Custom Battle and the editor's test battle |
-| [Main/SubModule.cs](../../Main/SubModule.cs) `OnMissionBehaviorInitialize` | `AddTaomBehavior(new BannerBearerAssignmentMissionLogic())` — unconditional, gates internally |
+| [Main/SubModule.cs](../../Main/SubModule.cs) `AddTaomMissionBehaviors` (called from `OnMissionBehaviorInitialize`) | `AddTaomBehavior(new BannerBearerAssignmentMissionLogic())`: unconditional, gates internally |
 
 `MissionGameModels` resolves the slot in its constructor via `GameModelsManager.GetGameModel<T>()`, which iterates **backwards** — last registered wins. TAOM's `OnGameStart` runs after SandBox's `InitializeGameStarter`, so TAOM's model wins. This is the same seam `TaomCombatMechanicsModel` (`AgentApplyDamageModel`) already uses.
 
@@ -146,7 +146,7 @@ TAOM re-skins the six vanilla cultures through `spcultures.xslt`, which override
 | Easterlings (Rhûn) | **`khuzait`** | `spcultures.xslt` |
 | Barding (Dale) | **`sturgia`** | `spcultures.xslt` |
 | Variag (Khand) | **`battania`** | `spcultures.xslt` |
-| Gondor, Erebor, Mordor, … (27 more, Ered Luin's `eredluin` the newest) | own id | `taom_spcultures.xml` |
+| Gondor, Erebor, Mordor, … (32 more, South Rhovanion's `southrhovanion` the newest) | own id | `taom_spcultures.xml` |
 
 There is **no** culture with id `rohan`, `dunland`, `harad`, `rhun`, `dale` or `khand`. Keying on those names is silent at every layer — no type error, no parse error, no engine warning; the lookup simply misses and the faction flies `DefaultBannerItemId`. The first cut of this feature shipped exactly that bug for all six; `ShippedBannerBearerConfigTests` now pins every key against the real culture set. See [rca-banner-bearers-2026-07-16.md](../reviews/rca-banner-bearers-2026-07-16.md).
 
@@ -244,7 +244,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 
 ## Gotchas
 
-1. **Never call `SetFormationBanner` outside `Mission.Mode == MissionMode.Deployment.`** It freezes bearers for the entire battle and can throw `KeyNotFoundException` (`OnDeploymentFinished` clears `_initialSpawnEquipments`, which the demote branch indexes unguarded at `:757`). The guard lives in `BannerBearerAssignmentMissionLogic.OnTeamDeployed`.
+1. **Never call `SetFormationBanner` outside `Mission.Mode == MissionMode.Deployment.`** It freezes bearers for the entire battle and can throw `KeyNotFoundException` (`OnDeploymentFinished` clears `_initialSpawnEquipments`, which the demote branch indexes unguarded at `:757`). The guard lives in `BannerBearerAssignmentMissionLogic.AssignBannersForTeam`, which `OnBattleSideSpawned` calls for each team of the side (v1.5.0 removed `OnTeamDeployed`).
 2. **Every override's disabled path must be `return base.<Method>(...)`, never a computed "off" value.** The model stays registered when the feature is off and the engine still asks it about formations TAOM never touched — including ones vanilla's hero-captain path banners. Returning `0` while "disabled" *suppresses* that vanilla mechanic instead of leaving it alone. The first cut did exactly that; see [rca-banner-bearers-2026-07-16.md](../reviews/rca-banner-bearers-2026-07-16.md).
 3. **`CultureBanners` keys are StringIds, not LOTR names** — Rohan is `vlandia`, Dunland is `empire`. A dead key is silent everywhere. See the table above.
 4. **`SetFormationBanner` validates nothing.** Its check is a stripped `Debug.Assert`, so a typo'd or non-banner item id is accepted **silently** and then fails downstream with no diagnostic. `BannerBearerAssignmentMissionLogic` checks `BannerBearerLogic.IsBannerItem` and warns once per bad id.

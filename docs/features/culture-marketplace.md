@@ -95,7 +95,7 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 | `Main/Adapters/IItemPoolAdapter.cs` + `ItemPoolAdapter.cs` | Wraps `MBObjectManager.GetObjectTypeList<ItemObject>()`; ID-prefix table for culture fallback; flags character armour and weapons (`HasWeaponComponent`). |
 | `Main/Adapters/ITownRosterAdapter.cs` + `TownRosterAdapter.cs` | Wraps `Settlement.OwnerClan.Culture` + `Settlement.ItemRoster` operations per ADR-007. Exposes `AddItem`, `GetItemCounts`, `RemoveItem` (via `AddToCounts(-N)`), `EnumerateRoster` (returning `RosterItemSnapshot` DTOs that keep `ItemObject` out of the service layer). |
 | `Main/Adapters/RosterItemSnapshot.cs` | TAOM-owned DTO carrying `ItemId + CultureStringId + Count` for one roster entry. |
-| `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` | Optional XML override: `armour_from` donors, the `<Stock>` rows of Arthedain, Lindon, Cardolan, Rhudaur and Ered Luin, the crown blacklist, routing. |
+| `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` | Optional XML override: `armour_from` donors, the `<Stock>` rows of Arthedain, Lindon, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion, the crown blacklist, routing. |
 
 ## Dependencies
 
@@ -128,6 +128,8 @@ not exist or a `match` that does not compile or finds no item.
 | `cardolan` | `gondor`, every kind | Cardolan's troops wear Gondor's armour, so its markets sell Gondor's goods; the crown stays out through Gondor's own blacklist (#978) |
 | `rhudaur` | Arthedain's three rows, and the King's Crown blacklisted | Rhudaur wears the Arnor kit, so the Arnor kit and Numenorean blades come first and Gondor's other goods are a supplement (#978) |
 | `eredluin` | `erebor` armour, `erebor` weapons | Ered Luin's troops wear Erebor's armour and carry its weapons; Erebor's war rams and their barding are neither, so they stay out, and Ered Luin fields no rams (2026-10-27) |
+| `anduinvale`, `angaladh`, `dorwinion` | `sturgia` armour, `sturgia` weapons | Anduin Vale and Angáladh (cut from Dale) and Dorwinion (#1062) wear and carry Dale's kit, and Dale has no row of its own, so they draw on its auto-derived pool (`culture_marketplace_config.xml`, commits 88c6365c2, 4b207f951) |
+| `southrhovanion` | `vlandia` armour, `vlandia` weapons | South Rhovanion is cut from Rohan, so it takes Rohan's pool (the `vlandia` culture id) the same way (commit 4b207f951) |
 
 ## Tests
 
@@ -147,7 +149,7 @@ not exist or a `match` that does not compile or finds no item.
 
 - `TAOM.Tests/Features/CultureMarketplace/MarketplaceDailyDigestTests.cs` — 15 tests covering the daily roll-up: quiet day returns null, an all-no-op day returns null, foreign-removals-only still earns a line, totals sum across towns, active-over-touched town counts, top-3 ordering + id tie-break + cap, top list omitted when no town was active, picks-vs-injections divergence surfaced/suppressed, counters reset on flush and days do not leak, same town recorded twice accumulates, null/empty settlement id still counts toward totals.
 
-Total: 132 tests across 12 classes, all green (`dotnet test --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`).
+Total: 150 test methods across 13 classes, counting `CultureMarketplaceStockRuleTests` (18, two of them `[DataTestMethod]` with 7 data rows between them) (`dotnet test --filter "FullyQualifiedName~CultureMarketplace|FullyQualifiedName~ItemPoolAdapter"`).
 
 ## Cross-Culture Item Routing
 

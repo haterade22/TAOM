@@ -9,7 +9,7 @@
 ## Context
 
 graphify (PyPI `graphifyy`, Apache-2.0) builds a C# and Python code graph that answers three
-questions Serena does not: the reverse blast radius of changing a type (`affected`), the
+questions Grep does not: the reverse blast radius of changing a type (`affected`), the
 architectural hubs (`god-nodes`), and a one-screen neighbourhood of a class (`explain`). The
 2026-08-18 v8 review ([adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md))
 kept it installed but **wired into nothing**, to be run by hand from a scratchpad, and recorded
@@ -46,7 +46,7 @@ graphify becomes a standing part of TAOM's workflow, used and refreshed through 
    stale, in the background).
 4. **The graph is read at fixed points**: `/deep-review` Step 1 (callers outside the diff for the
    completeness and data-flow lenses), `/investigate` Phase 1, `/new-feature` before the first
-   file, `/research` step 6, the `feature-builder` and `refactoring-specialist` agents, and for
+   file, `/research` step 6, the `feature-builder` agent, and for
    every AI client through AGENTS.md and the `.agents/skills` routing.
 
 What does **not** change from the v8 review: graphify is not the cross-domain graph. It reads no
@@ -75,7 +75,7 @@ server, no `install`.
 
 ### Neutral
 - Engine types are external nodes minted once per referencing file (54 `MobileParty` nodes), so
-  "which TAOM code uses engine type X" stays a Grep or Serena question.
+  "which TAOM code uses engine type X" stays a Grep question.
 - A name can be ambiguous between a type and a per-file reference node; the fix is to rerun with
   the repo-relative `.cs` path graphify lists.
 
@@ -137,6 +137,10 @@ no stamp and reports MISSING until the first `refresh`.
   ADR-010's 2026-09-26 amendment points here.
 - [ADR-011](./011-knowledge-delivery-tiers.md): Knowledge Delivery Tiers. The gate is tier 1; the
   AGENTS.md row is tier 2.
+
+### Amendment (2026-11-03): session-start refresh, and `/research`
+
+Since 2026-10-26 (#995), `session-start.sh` starts `refresh --if-stale --detach` when the graph is stale, under the wrapper's lock. Point-of-use refresh stays. This supersedes the rejection in Alternative 2, which ruled out a background refresh at session start. In Decision 4, the `/research` skill was retired, so the fixed point "`/research` step 6" no longer exists. The `refactoring-specialist` agent is deleted, so Decision 4 no longer lists it, and Serena is out of the harness, so Context and Consequences compare graphify with Grep instead.
 
 ---
 

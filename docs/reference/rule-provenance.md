@@ -101,6 +101,14 @@ Enforcement is `check_ai_dashes` in `tools/lint_docs.py`, scoped to lines added 
 
 ---
 
+## vanilla-data-comparison.md
+
+### Where the incidents behind this rule are written up
+
+- The 2026-05-28 battle crashes after the v1.4.5 bump (stale `scene_name` references, a missing `battle_terrain_extended` scene): [scene-reference-audit.md](scene-reference-audit.md).
+- The 2026-05-31 stale GUI prefab clones (every Party-screen troop thumbnail stuck on the loading spinner): [rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](../reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md), method in [gui-prefab-clones.md](gui-prefab-clones.md).
+- The 2026-08-03 structurally illegal `action_sets.xml` and unreachable settlement entrances, and the 2026-08-04 landless Variag culture (campaign crash `099f650c`): [data-content-cultures.md](../reviews/lessons/data-content-cultures.md) and [lord-spawn-guard.md](../features/lord-spawn-guard.md).
+
 ## 2026-09-23 compression (ADR-011)
 
 The always-load set went from seven rules (about 51 KB) to six (about 12 KB), and
@@ -121,6 +129,19 @@ operative rule survived. The exact pre-compression text of any rule is in git:
 CLAUDE.md's closing note to run `/reload-plugins` after adding or changing a skill was dropped
 rather than moved: no session had verified it, and the documentation read for ADR-011 did not
 mention it. Re-add it with a source if it proves needed.
+
+## harness-facts.md stories and counts (2026-11-03 trim)
+
+The dated observations behind `harness-facts.md` rows moved here; the rows keep the fact, the
+source and the instruction.
+
+| Row | Observation |
+|---|---|
+| Subagents load `MEMORY.md` | On 2026-11-02, every subagent transcript of `e--repos-TAOM` was read: `MEMORY.md` was in the `instructions` file list and the rendered text of all 2,232 subagent spawns that had that record, against the docs. The cause stays unknown. |
+| Idle compaction | The harness retro of 2026-11-02 (`harness_retro.py` section 11) found 74 main-session rewrites of about 430K tokens after an idle hour between 2026-10-24 and 2026-11-02 ($254.83). Most ran on builds older than 2.1.314, the first with idle compaction in the VS Code panel. Re-measure in the retro after 2026-11-10. |
+| Stop output reaches Claude only as JSON | On 2026-09-23 `suggest-compact.sh` printed about 18 times in one session and none arrived. On 2026-09-29 `check-polearm-shield-parity.sh` was found to have reported to stderr on exit 0 since 2026-08-20, so no one saw a report (`tools/test_hooks.sh` 7k). |
+| PreToolUse decisions nest in `hookSpecificOutput` | On 2026-09-23 nine TAOM gates printed a top-level `permissionDecision`, which Claude Code ignores, and a live commit the label gate had denied ran anyway. Fixed in #647. |
+| An `ask` prompts even in bypass mode | On 2026-09-26 the maintainer saw a confirm-gate prompt from a plan 027 review agent in a bypass session. A reviewer the night before had stalled for nine hours, most likely the same way. |
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

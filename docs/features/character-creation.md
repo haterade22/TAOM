@@ -122,8 +122,8 @@ starting character on vanilla's budget:
 
 | Source | Payload now | Why |
 |--------|-------------|-----|
-| **Career stage** (`career_menu.json`, 70 entries) | `focus/skill/attr = 0`, `skills`/`attribute` **cleared** | A 6th stage vanilla doesn't have. Career still picks specialization + starting equipment; it just grants no stat bonus. Clearing `skills`/`attribute` (not just zeroing the magnitudes) makes a selected career render the same line as "No specialization" (`0 unspent Focus/Attribute Point`); without it the engine's `GetPositiveEffectText` shows a confusing `0 Skill Level … to <skills>` on the career menu **and** the final review screen. |
-| **Culture base** (`cultures.json` `focus_to_add` / `skill_level_to_add`, 18 entries) | `0 / 0` | An on-top add vanilla doesn't have. |
+| **Career stage** (`career_menu.json`, 91 entries) | `focus/skill/attr = 0`, `skills`/`attribute` **cleared** | A 6th stage vanilla doesn't have. Career still picks specialization + starting equipment; it just grants no stat bonus. Clearing `skills`/`attribute` (not just zeroing the magnitudes) makes a selected career render the same line as "No specialization" (`0 unspent Focus/Attribute Point`); without it the engine's `GetPositiveEffectText` shows a confusing `0 Skill Level … to <skills>` on the career menu **and** the final review screen. |
+| **Culture base** (`cultures.json` `focus_to_add` / `skill_level_to_add`, 30 entries) | `0 / 0` | An on-top add vanilla doesn't have. |
 
 Result: 5 total focus, 5 total attribute points — matching vanilla. **Concentration is
 deliberately left as-is:** because the per-culture themes repeat across stages and aren't gated
@@ -210,7 +210,7 @@ just a new campaign.
 | `TAOM.Tests/Features/CharacterCreation/NarrativeDataProviderTests.cs` | JSON parsing, caching, `GetMenuOptionsForCulture` filtering, missing file handling |
 | `TAOM.Tests/Features/CharacterCreation/NarrativeMenuBuilderTests.cs` | Option construction, empty input handling |
 | `TAOM.Tests/Features/CharacterCreation/CultureRaceFilterServiceTests.cs` | 24 tests: per-culture allow-lists, fallback, case-insensitive matching, empty-array handling |
-| `TAOM.Tests/Features/CharacterCreation/FaceGenRaceSelectorRebuilderTests.cs` | 12 tests for pure helpers: `BuildGlobalIndexMap`, `MapFilteredIndexToGlobal`, `MapGlobalIndexToFiltered`, round-trip property |
+| `TAOM.Tests/Features/CharacterCreation/FaceGenRaceSelectorRebuilderTests.cs` | 19 tests for pure helpers: `BuildGlobalIndexMap`, `MapFilteredIndexToGlobal`, `MapGlobalIndexToFiltered`, `ShouldForceSwitchToDefault`, round-trip property |
 | `TAOM.Tests/Features/CharacterCreation/CCBodyPropertiesProviderTests.cs` | XML parsing, 128-hex validation, missing file handling, duplicate-id last-wins, malformed XML |
 | `TAOM.Tests/Features/CharacterCreation/CCBodyPropertiesServiceTests.cs` | Apply-for-culture happy path, missing-config no-op, adapter-rejection logging |
 
@@ -275,7 +275,7 @@ User clicks filtered position N
 - Adding a new race: add the race ID to the `races` array of every culture that should permit it. Position determines whether it becomes the new default.
 - Adding a new culture: add a culture entry with `culture_id` and `races` array. If `races` is empty or the culture is unknown, the filter falls back to showing all races (with a one-time warning per culture in the log).
 
-### Current allow-lists (as of 2026-10-27)
+### Current allow-lists (as of 2026-11-03)
 | Culture | Allowed races |
 |---------|---------------|
 | `erebor` / `eredluin` | `dwarf` |
@@ -286,7 +286,7 @@ User clicks filtered position N
 | `mistymountainorcs` | `orc`, `goblin`, `human` |
 | `mirkwood` / `lothlorien` / `rivendell` / `lindon` | `elf`, `human` |
 | `isengard` | `uruk_hai`, `berserker`, `orc`, `human`, `saruman` |
-| `gondor` / `umbar` / `shaghana` / `abanissa` / `arthedain` / `cardolan` / `rhudaur` | `human` |
+| `gondor` / `umbar` / `shaghana` / `abanissa` / `arthedain` / `cardolan` / `rhudaur` / `anduinvale` / `angaladh` / `dorwinion` / `southrhovanion` | `human` |
 | `empire` / `vlandia` / `sturgia` / `aserai` / `battania` / `khuzait` | `human` |
 
 ### Race finalization (review-driven hardening)

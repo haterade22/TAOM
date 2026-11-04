@@ -50,7 +50,7 @@ Design notes:
 
 ## Configuration
 
-MCM page **"TAOM — Blow Diagnostics"** (`BlowDiagnosticsSettings`, id `TAOM.BlowDiagnostics`), one toggle `EnableBlowDiagnostics` (default `false`). No JSON config. `Reuse.Singleton` provider — a mid-session toggle takes effect on the next blow.
+MCM page **"TAOM: Blow Diagnostics"** (`BlowDiagnosticsSettings`, id `TAOM.BlowDiagnostics`), one toggle `EnableBlowDiagnostics` (default `false`). No JSON config of its own, but a dedicated server, where MCM is not loaded, reads this toggle from `taom-server-settings.json` ([server-settings](server-settings.md)). `Reuse.Singleton` provider: a mid-session toggle takes effect on the next blow.
 
 ## Files
 

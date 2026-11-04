@@ -91,8 +91,7 @@ short: read git log and git status and continue from there, never reset.
     changed and why, written for a reader of the release note (it is the changelog entry); no
     Co-Authored-By or other AI attribution; a Not-tested: trailer for what cannot be tested. Write the
     message to a file and run git commit -F "<file>". Never --no-verify. If a hook denies, read its reason
-    and fix the cause if it is yours; if the hook judged the main checkout rather than your worktree,
-    stop and return BLOCKED with its text. For staged work, commit once per stage.
+    and fix the cause if it is yours. For staged work, commit once per stage.
 11. Shared files. Do not edit CHANGELOG.md (generated at /release) or plans/README.md (the
     orchestrator's index). No GitHub issues, comments or labels. A lesson your prompt asks for goes at
     the end of its category file under docs/reviews/lessons/, with a blank line before its ### heading;

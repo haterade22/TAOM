@@ -5,7 +5,7 @@ InitialChildGeneration populates every major-faction clan with a realistic numbe
 
 ## Why This Exists
 - **Vanilla behavior:** Bannerlord starts a new campaign with most clans having few or no child heroes. The succession system depends on children existing, but vanilla's child spawn-in happens reactively over campaign time.
-- **TAOM requirement:** TAOM's 10 custom cultures each have hand-authored lords. Without initial children, those clans have no heirs at campaign start, which means clans die off rapidly after their lords are killed, breaking faction survival over longer playthroughs.
+- **TAOM requirement:** TAOM's cultures (30 ids in `charactercreation/cultures.json`, six of them re-skinned vanilla ids) each have hand-authored lords. Without initial children, those clans have no heirs at campaign start, which means clans die off rapidly after their lords are killed, breaking faction survival over longer playthroughs.
 - **Without this feature:** Custom TAOM clans go extinct within the first few in-game years whenever a lord dies in battle, leaving factions without enough nobles to hold territory.
 
 ## Architecture

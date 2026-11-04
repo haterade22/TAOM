@@ -37,9 +37,9 @@ every ordinary Mordor lord. Race got you one of them:
 
 | Hero | Race attribute at ship (2026-08-26) | Since #644 (2026-09-23) | Where defined |
 |---|---|---|---|
-| `lord_1_17` Sauron | `race="sauron"`, the only one in the mod | unchanged | `lords.xslt:1063` |
-| `lord_1_15` (Witch-King), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38`, `lord_1_48` (Khamûl) | **none**, so vanilla race 0 (human) | `race="nazghul"` | `lords.xslt` templates at `:888`, `:943`, `:998`, `:1597`, `:2090`, `:3555` |
-| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `race="nazghul"` | `lords.xslt` templates at `:6113`, `:6169`, `:6225` (vanilla ids; their duplicate `characters/lords.xml` rows went in #644) |
+| `lord_1_17` Sauron | `race="sauron"`, the only one in the mod | unchanged | `lords.xslt:1119` |
+| `lord_1_15` (Witch-King), `lord_1_155`, `lord_1_16`, `lord_1_28`, `lord_1_38`, `lord_1_48` (Khamûl) | **none**, so vanilla race 0 (human) | `race="nazghul"` | `lords.xslt` templates at `:944`, `:999`, `:1054`, `:1653`, `:2146`, `:3611` |
+| `lord_1_48_1`, `lord_1_48_2`, `lord_1_48_3` | `race="uruk"` | `race="nazghul"` | `lords.xslt` templates at `:6169`, `:6225`, `:6281` (vanilla ids; their duplicate `characters/lords.xml` rows went in #644) |
 
 So a race list freed six of the Nine, and adding `uruk` to catch the other three would have
 protected every uruk lord in the game. Since #644 a race list naming `nazghul` would reach all nine,

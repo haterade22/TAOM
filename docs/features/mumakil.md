@@ -323,7 +323,9 @@ the old "slide" class does not reproduce here.
 **Do not equip a HorseHarness on `harad_mumakil_rider`.** The tower is an `AdditionalMesh`, and `taom_mumakil` sets
 `affected_by_cover="true"`, so equipping a harness routes the mesh down the `ManeCoverType` branch where a covered
 mount drops it entirely: eight archers standing on nothing. `tools/taom_schema.py` exempts the troop in
-`_HARNESSLESS_BY_DESIGN` for exactly this reason, and the comment in `troops_harad.xml` now says so.
+`_HARNESSLESS_BY_DESIGN` for exactly this reason, and the comment in `troops_harad.xml` now says so. The Fords of War
+battle mode carries its own copy, `fow_harad_mumakil_rider` (`fords_of_war/fords_troops.xml`), with the same empty
+harness slot and the same exemption.
 
 ### Risks to settle before or during the smoke
 

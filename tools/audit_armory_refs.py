@@ -42,16 +42,27 @@ WHAT IT CHECKS (each section reuses the engine that owns it; nothing is re-deriv
                           the `--unreferenced` matcher is case-insensitive and
                           reported the new bows as used when nothing used them).
 
+  7. companion checks     the gates a reinstall or an art drop reverts and nothing else
+                          reads, run here so the verdict covers them:
+                          `wire_hill_troll_race.py --check` (the troll swing CTD),
+                          `register_armory_names.py --check`,
+                          `bind_orc_goblin_locomotion.py --check`,
+                          `audit_fbx_lods.py --check` (LOD0 to LOD5 with no gaps), and
+                          `validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE
+                          --code COLLISION_BODY_BORROWED`. Unlike the generators, a
+                          failing companion is a failure; one that prints SKIPPED has
+                          not passed either.
+
 Exit code (mirrors validate_moduledata.py): 1 if any MISSING_BODY, MISSING_MESH,
-referenced DELETE / RENAME or dead item id; 2 if an input path is bad; else 0.
-Generator drift is a warning in the report, never a failure (exit_code). The
-report is written either way.
+referenced DELETE / RENAME, dead item id or failing companion check; 2 if an input
+path is bad; else 0. Generator drift is a warning in the report, never a failure
+(exit_code). The report is written either way.
 
 Usage:
   python tools/audit_armory_refs.py                       # report to docs/audits/armory-ref-audit.md
   python tools/audit_armory_refs.py --regen-catalogue     # also rewrite the committed catalogue
   python tools/audit_armory_refs.py --report -            # print the report instead of writing it
-  python tools/audit_armory_refs.py --no-generators       # skip the generator check subprocesses (fast)
+  python tools/audit_armory_refs.py --no-generators       # skip the generator and companion subprocesses (fast; the verdict then covers neither)
 """
 from __future__ import annotations
 
@@ -82,6 +93,14 @@ GENERATOR_VERIFIES = [
     ["generate_ranged_ladder_items.py", "--verify"],
     ["generate_starter_kit.py", "--verify", "--quiet"],
     ["build_ds_skeleton_pack.py", "--check"],
+]
+# Checks that read the live install and fail the verdict (section 7 of the docstring).
+COMPANION_CHECKS = [
+    ["wire_hill_troll_race.py", "--check"],
+    ["register_armory_names.py", "--check"],
+    ["bind_orc_goblin_locomotion.py", "--check"],
+    ["audit_fbx_lods.py", "--check"],
+    ["validate_moduledata.py", "--code", "CREATURE_GEAR_OBTAINABLE", "--code", "COLLISION_BODY_BORROWED"],
 ]
 BREAKING_CODES = ("MISSING_BODY", "MISSING_MESH")
 
@@ -151,6 +170,7 @@ class Summary:
     tpac_count: int = 0
     mesh_count: int = 0
     body_count: int = 0
+    companion_checks: list = field(default_factory=list)   # (command, status, last line); status 0 passed
 
     @property
     def errors(self) -> list:
@@ -162,6 +182,8 @@ def exit_code(s: Summary) -> int:
     write something other than what ships, which is #569's class, not #352's.
     A verdict that stays BROKEN over it trains readers to ignore the verdict."""
     if s.errors or s.dead_item_refs or count_breaking(s.catalogue):
+        return 1
+    if any(status != 0 for _, status, _ in s.companion_checks):
         return 1
     return 0
 
@@ -247,6 +269,14 @@ def render_report(s: Summary, when: str, head: str) -> str:
     if not s.generator_checks:
         L.append("- skipped (`--no-generators`)")
     L.append("")
+    L.append("## Companion checks (a failure here is a failure of the audit)")
+    L.append("")
+    for cmd, status, last in s.companion_checks:
+        L.append(f"- `{cmd}`: {'OK' if status == 0 else 'NOT PASSED' if status == 2 else 'FAILED'} "
+                 f"(status {status}) {last}".rstrip())
+    if not s.companion_checks:
+        L.append("- skipped (`--no-generators`), so this verdict does not cover them")
+    L.append("")
     L.append("## How to read this")
     L.append("")
     L.append("- A `MISSING_BODY` row hangs every mission that preloads a carrier: repoint the item to the art that "
@@ -282,6 +312,34 @@ def run_generator_checks(repo: Path) -> list:
             out.append((cmd, p.returncode, detail))
         except Exception as e:  # noqa: BLE001
             out.append((cmd, 2, f"could not run: {e}"))
+    return out
+
+
+def companion_status(returncode: int, output: str) -> int:
+    """0 passed, 1 failed, 2 did not run: a check that exits 2 (game running, unreadable input) or
+    prints SKIPPED has not passed."""
+    if returncode == 2:
+        return 2
+    if returncode != 0:
+        return 1
+    return 2 if "SKIPPED" in output else 0
+
+
+def run_companion_checks(repo: Path) -> list:
+    out = []
+    for argv in COMPANION_CHECKS:
+        cmd = " ".join(argv)
+        try:
+            p = subprocess.run([sys.executable, str(repo / "tools" / argv[0]), *argv[1:]],
+                               capture_output=True, text=True, timeout=600, cwd=str(repo))
+            text = p.stdout + p.stderr
+            lines = [l.strip() for l in text.splitlines() if l.strip()]
+            status = companion_status(p.returncode, text)
+            bad = [l for l in lines if l.startswith(("DRIFT", "GAPS", "FAIL", "MISSING", "EXTRA", "ERROR")) or "SKIPPED" in l]
+            detail = "; ".join(dict.fromkeys(bad[:5])) if status and bad else (lines[-1] if lines else "")
+            out.append((cmd, status, detail))
+        except Exception as e:  # noqa: BLE001
+            out.append((cmd, 1, f"could not run: {e}"))
     return out
 
 
@@ -323,10 +381,11 @@ def build_summary(game: Path, module: str, consumers: Path, generators: bool) ->
     unreferenced_new = [n for n in changes["new"] if n.lower() not in {x.lower() for x in live_names}
                         and not n.startswith(("bo_", "clo_")) and not n.endswith("_slim")]
     checks = run_generator_checks(REPO_ROOT) if generators else []
+    companions = run_companion_checks(REPO_ROOT) if generators else []
     return Summary(catalogue=changes, issues=issues, impact=impact, dead_item_refs=dead,
                    generator_checks=checks, unreferenced_new=unreferenced_new,
                    tpac_count=len(present.tpac_paths), mesh_count=len(present.metameshes),
-                   body_count=len(present.physicsshapes))
+                   body_count=len(present.physicsshapes), companion_checks=companions)
 
 
 def main() -> int:
@@ -343,7 +402,8 @@ def main() -> int:
     ap.add_argument("--report", default=str(DEFAULT_REPORT), help="markdown report path, or - for stdout")
     ap.add_argument("--regen-catalogue", action="store_true",
                     help="after the report, rewrite the committed catalogue so --diff is clean")
-    ap.add_argument("--no-generators", action="store_true", help="skip the generator --verify subprocesses")
+    ap.add_argument("--no-generators", action="store_true",
+                    help="skip the generator --verify and companion check subprocesses (fast; the verdict then covers neither)")
     args = ap.parse_args()
     game = ensure_exists(args.game, "the Bannerlord install")
     summary = build_summary(Path(game), args.module, Path(args.consumers), not args.no_generators)
@@ -357,7 +417,8 @@ def main() -> int:
         print(f"Wrote {out.relative_to(REPO_ROOT) if out.is_relative_to(REPO_ROOT) else out}")
     rc = exit_code(summary)
     print(f"Verdict: {'CLEAN' if rc == 0 else 'BROKEN'}  warnings={warning_count(summary)} errors={len(summary.errors)} dead_items={len(summary.dead_item_refs)} "
-          f"breaking_drift={count_breaking(summary.catalogue)} generators={[c[1] for c in summary.generator_checks]}")
+          f"breaking_drift={count_breaking(summary.catalogue)} generators={[c[1] for c in summary.generator_checks]} "
+          f"companions={[c[1] for c in summary.companion_checks]}")
     if args.regen_catalogue:
         r = subprocess.run([sys.executable, str(REPO_ROOT / "tools" / "generate_armory_catalogue.py"),
                             "--game", str(game), "--module", args.module], cwd=str(REPO_ROOT))

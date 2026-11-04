@@ -9,7 +9,7 @@ and lets vanilla's loop run unchanged. Category `Patch90_PreloadBodyGuard`, issu
 
 ## Why This Exists
 
-Vanilla's wait (installed v1.5.3, same shape as v1.4.8):
+Vanilla's wait (installed v1.5.6, same shape as v1.5.3 and v1.4.8):
 
 ```
 do {
@@ -86,6 +86,7 @@ collision shape away on a slow disk.
   guard that throws inside the load it protects is worse than the hang.
 - **Applied in `OnSubModuleLoad`** beside Patch89, own try/catch, because the education screen
   and the custom-battle preload call the wait before any campaign initialises.
+- **Client only.** The patch class carries `[ClientOnly]` (v2.0.35), so a dedicated server leaves it out of its patch index.
 
 ### Component Diagram
 

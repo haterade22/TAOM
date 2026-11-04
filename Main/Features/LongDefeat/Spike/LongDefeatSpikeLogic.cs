@@ -7,7 +7,7 @@ namespace TAOM.Features.LongDefeat.Spike;
 internal sealed class LongDefeatSpikeLogic : MissionLogic, IBattlePowerCalculationLogic
 {
     // A constant, not a running total: it keeps RemainingPowerRatio and TotalPowerRatio near 1, so power never orders TacticBreachWalls' one-way retreat
-    // (ShouldRetreat) or TacticDefendCastle's sally. The spike therefore cannot show that retreat; Phase 1 decides whether waves may retreat.
+    // (ShouldRetreat) or TacticDefendCastle's sally. No wave retreats in this mode (Mike, 2026-11-03). A soldier can still flee on low morale, and Phase 1 closes that.
     private const float TeamPower = 1000000f;
 
     private readonly LongDefeatSpikeOptions _options;

@@ -141,6 +141,15 @@ _json_escape() {
     printf '%s' "$s"
 }
 
+# Memory cards and session scratchpads are not code the freeze protects, and the rules send agents
+# to write there. Allow them whatever the boundary.
+case "$FILE_PATH" in
+    */.claude/projects/*/memory/* | */scratchpad/* )
+        echo '{}'
+        exit 0
+        ;;
+esac
+
 case "$FILE_PATH" in
     "$FREEZE_DIR" | "$FREEZE_DIR"/* )
         # Inside boundary — allow.

@@ -16,13 +16,13 @@ On every hero prisoner row, on either side of the party screen (the left and the
 
 - **Clan banner:** `Clan.ClanOriginalBanner`, top left of the portrait.
 - **Kingdom banner:** `Kingdom.Banner`, top right, only when the clan has a kingdom.
-- **Noble icon:** the vanilla sprite `General\Mission\noble`, tinted gold (`#FFD700`), bottom left, only when `clan.Leader == hero`.
+- **Noble icon:** the vanilla sprite `General\Mission\noble`, tinted gold (`#FFD700`), bottom left, only when `hero.IsClanLeader`.
 
 Nothing is added to a non-hero row, a row that is not a prisoner, a hero with no clan, or any row while the MCM toggle is off. The talk icon keeps vanilla's tint, and no hover hint is added.
 
 ## Rules
 
-`PrisonerBannerRules.Decide(enabled, isPrisoner, isHero, hasClan, hasKingdom, isClanLeader)` returns the three flags. Only an enabled hero prisoner with a clan gets anything; the kingdom banner also needs a kingdom and the icon also needs the leader.
+`PrisonerBannerRules.Decide(enabled, isPrisoner, hasClan, hasKingdom, isClanLeader)` returns the three flags. Only an enabled prisoner with a clan gets anything (the mixin takes the clan from `Character.HeroObject`, so a non-hero row has none); the kingdom banner also needs a kingdom and the icon also needs the leader.
 
 A hero row has no tier icon (`CharacterStatsModel.GetTier` is 0 for a hero, so `CampaignUIHelper.GetCharacterTierData` returns an empty sprite) and no type icon (`GetCharacterTypeData` returns an empty sprite for a hero), so both top corners are free. Both banner view models are built nine-grid (`new BannerImageIdentifierVM(banner, nineGrid: true)`), which is what the vanilla brush `Flat.Tuple.Banner.Small.Hero` is paired with. A mercenary clan shows its employer's kingdom banner, because mercenary service sets `Clan.Kingdom`.
 

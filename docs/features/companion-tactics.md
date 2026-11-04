@@ -198,12 +198,13 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 
 ## Tests
 
-182 tests across 15 files in `TAOM.Tests/Features/CompanionTactics/`, plus `TAOM.Tests/Adapters/HeroCombatAdapterTests.cs` (2 tests; the equipment overload Auto-Assign uses). The counts are from a TRX run of the folder:
+The folder `TAOM.Tests/Features/CompanionTactics/` holds 18 test files, plus `TAOM.Tests/Adapters/HeroCombatAdapterTests.cs` (2 tests; the equipment overload Auto-Assign uses). The per-file counts below, and the earlier total of 182 tests across 15 files, are from a TRX run made before the three #970 bar files at the end of the BattleActionBar entries were added, so they do not add up to the folder's current size:
 
 - `Roles/CompanionRoleServiceTests.cs` — 25 tests; one per role + edge cases (no equipment; mounted+ranged → HorseArcher; mounted+melee → Cavalry; cache hit/miss; null hero / null equipment).
 - `BattleActionBar/FormationCompositionAnalyzerTests.cs` — 10 tests; HasRanged / HasPolearm / HasShield / HasCavalry positive + negative; ratio thresholds.
-- `BattleActionBar/BattleActionBarServiceTests.cs` — 10 tests; composition→buttons mapping; `EnableVolleyFire = false` removes Volley button; feature-disabled returns empty.
+- `BattleActionBar/BattleActionBarServiceTests.cs`: 13 tests; composition→buttons mapping; `EnableVolleyFire = false` removes Volley button; feature-disabled returns empty.
 - `BattleActionBar/TroopStanceManagerTests.cs`: 9 tests; per-formationIndex isolation; ClearAllStances; SetStance toggle behavior.
+- `BattleActionBar/BattleActionBarChecksTests.cs`, `BattleActionBarInputTests.cs` and `BattleActionBarMissionViewGateTests.cs` (#970, #1072): the `[Check]` ids and the attach verdict truth table; the view's mouse-buttons-only input restriction and no hotkey polling (read from source, since the view's base type is not referenced), the renamed off-by-default setting and the stance click after the setting turns off; and the attach gate (`Mission.IsFieldBattle` in Battle mode).
 - `FormationPresets/FormationPresetServiceTests.cs`: 14 tests; save, get, delete, the name-in-use, empty-name and limit refusals, an update not counting against the limit, `OnGameLoaded` (replace and null list) and `GetPresetsForSaving` returning a copy.
 - `FormationPresets/HeroAutoAssignerTests.cs`: 19 tests; role scoring per class plus the `PlanCaptains` cells (empty and null inputs, matching class, tie-break, unknown role, Unset class, global-over-local choice, one use per hero and slot, null hero, the two 50-point mixed-slot fits).
 - `FormationPresets/OOBButtonsVMTests.cs`: 22 tests; the Assign Heroes command and the Presets menu: delegation, the no-screen message, each result's text, the button texts, the not-general message with no menu, vanilla's Ok and Cancel, Load (counts, the skipped line), Delete, and Save (capture then save with the prompt texts, the counts, braces removed from the name, an empty name, each refusal). Needs the game assemblies (`RequiresGame`).
@@ -211,7 +212,7 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 - `FormationPresets/OOBPresetApplierTests.cs`: 3 tests; the null-VM, null-preset and not-general early returns apply nothing.
 - `FormationPresets/OOBPresetApplierBindingTests.cs`: 7 tests; pins the vanilla members the applier reads and calls (plus `HasFormation`, which Auto-Assign reads), the `DeploymentFormationClass` numbers, that `OnFormationAcceptCaptain` clears the old assignment before assigning, and that `InitializeFormationCallbacks` wires the selection and both accept callbacks.
 - `FormationPresets/OOBCaptainAutoAssignerTests.cs`: 2 tests; the null-VM and not-general early returns never reach the planner.
-- `CompanionTacticsWiringTests.cs`: 1 test; the overlay's DI graph (with `IOOBCaptainAutoAssigner` and `IOOBPresetApplier`) resolves.
+- `CompanionTacticsWiringTests.cs`: 2 tests; the overlay's DI graph (with `IOOBCaptainAutoAssigner` and `IOOBPresetApplier`) resolves.
 - `CompanionTacticsSettingsProviderTests.cs`: 3 tests; the documented defaults without MCM, every fallback equal to the MCM compiled default, and reads going through the cached settings so live MCM edits apply.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
 - `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.

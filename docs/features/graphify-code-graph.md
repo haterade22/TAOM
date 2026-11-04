@@ -14,7 +14,7 @@ way to build or query it, and a PreToolUse hook denies graphify's raw write verb
 - **Before:** graphify was installed but wired into nothing
   ([adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)). Five weeks later
   the only graph ever built had been lost with its session scratchpad, and nothing had used it.
-- **The need:** Serena answers "who calls this method, right now"; nothing answered "what is the
+- **The need:** Grep answers "who calls this method, right now"; nothing answered "what is the
   whole dependent set of this type, at depth 2, with file and line" or "which types are the hubs".
   A reviewer who never sees the callers outside the diff cannot find the bug that lives there.
 - **Without the wrapper and gate:** each raw graphify verb has a silent trap (below), and the
@@ -108,7 +108,7 @@ the lock.
 | `/deep-review` Step 1 | `affected` on every changed public type | callers outside the diff, for the completeness and data-flow lenses; a `Blast radius:` line in the report |
 | `/investigate` Phase 1 | `explain` + `affected` on the failing type | the Phase 3 pattern-match candidate list |
 | `/new-feature` | `explain` + `affected` on every type the feature extends | extend-versus-modify, before the first file |
-| `feature-builder`, `refactoring-specialist` | `affected` before changing or moving a type | the refactor's move set; more than five dependents means a design change |
+| `feature-builder` | `affected` before changing or moving a type | the refactor's move set; more than five dependents means a design change |
 | Codex (`.agents/skills/taom-build`, `taom-review`, `taom-research`) and AGENTS.md | the same wrapper | the same caller trace |
 
 ## Tests
@@ -185,7 +185,7 @@ resolves this way). A type name that returns no dependents can still
 have some through a file-level import (a GameModel is reached only from `SubModule.cs`): retry with
 its file path, `affected "Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs"`, before
 concluding nothing uses it. **Engine types are not single nodes** (54 separate `MobileParty` nodes,
-one per referencing file), so "which TAOM code uses engine type X" is a Grep or Serena question.
+one per referencing file), so "which TAOM code uses engine type X" is a Grep question.
 
 **Evidence standard.** Code-only nodes are parsed from real files, so their paths and lines are
 accurate at build time. Staleness is the risk. A stale query now prints, on stderr,

@@ -17,7 +17,7 @@ Two ways to use it:
     fragile joins to reinforce (bridges), and disconnected docs (orphans).
 
 Deterministic + offline: reads only links already on disk. No LLM, no network, no
-new dependency. Nodes are `.md` files only — Serena owns the C# symbol graph and
+new dependency. Nodes are `.md` files only: tools/graphify_taom.py owns the C# code graph and
 the taom-moduledata MCP owns game-data references; this tool does neither.
 
 Usage:

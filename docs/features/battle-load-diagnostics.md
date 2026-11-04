@@ -498,8 +498,8 @@ shipped before, and the first cut of this class walked into it by mirroring `Mem
 whose own `_sessionLineEmitted` / `_warnLatched` still have the same gap.
 
 **Gating.** Its own `EnableMemorySampler` toggle, exactly like `MemoryPressureSampler` and for the
-same reason. **No MCM property was added**, because `SettingsFingerprintTests` asserts a hard count of 7
-reflected properties on this page, and a new one would break both it and the doc-count assertion
+same reason. **No MCM property was added**, because `SettingsFingerprintTests` asserts a hard count of
+reflected properties on this page (24 today), and a new one would break both it and the doc-count assertion
 beside it.
 
 The token tail comes from one extracted `MemoryPressureSampler.FormatSampleTokens`, so `[MemSample]`
@@ -593,7 +593,7 @@ reports a path only after `File.Exists` says so, and otherwise prints
 
 ## Configuration
 
-MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`, auto-registered by MCM). Defaults are the "diagnose now" posture — everything ON.
+MCM page **"TAOM: Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`, auto-registered by MCM). Defaults are the "diagnose now" posture: the diagnostics are ON, while the load-time stamps, screen-open timer and profilers are OFF.
 
 | Setting | Default | Effect |
 |---------|---------|--------|
@@ -606,6 +606,10 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 | `EnableLoadTimeStamps` | `false` | The detailed load-time lines ([load-time-stamps.md](load-time-stamps.md)). Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
+| `LogScreenOpenTimes` | `false` | One `[ScreenOpen]` line per screen open (screen, phase, milliseconds), to compare a Fast Open switch off against on. Group "Screen Performance". |
+| `ClanFastOpen`, `InventoryFastOpen`, `PartyFastOpen`, `QuestLogFastOpen` | `true` | One switch per screen (group "Screen Performance"): on opens that screen faster, off restores vanilla's build for it. Read on every open. |
+
+The page also holds the "Mission Performance" and "Map Performance" groups, described in [mission-perf-heartbeat.md](mission-perf-heartbeat.md) and [map-perf-profiler.md](map-perf-profiler.md); 24 settings in all.
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 
@@ -630,7 +634,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs` | Prefix + finalizer on `Mission.TickAgentsAndTeamsImp` and `MissionState.TickMissionAux` (the latter armed only while `Continuing`). With these two the `Hooks/` folder holds 21 `[HarmonyPatch]` classes (counted 2026-09-22), so the "17" in the row above is stale |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats`, `GpuMemorySplit` DTOs |
-| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 10 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) — 17 patch classes total |
+| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 12 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) and `SandBoxSaveHelper_TryLoadSave_DisarmPatch` (#440): 19 `Patch43` classes in all |
 | `Main/Features/BattleLoadDiagnostics/IEngineMemoryStatsReader.cs` / `EngineMemoryStatsReader.cs` | ADR-007 boundary over the `TaleWorlds.Engine.Utilities` memory statics (the two string surfaces, the GPU cost estimate, the GPU dump, and since 2026-09-12 `GetVertexBufferChunkSystemMemoryUsage` and `GetGPUMemoryStats`). Each call guarded separately, so one unavailable native surface cannot blank the others; a dump path is reported only once the file exists. **Deliberately does not call `GetMemoryUsageOfCategory(int)`**: no category-count/name API exists, so a blind index walk is an AV risk. `GetGpuMemoryOfAllocationGroup(name)` was checked and dropped: the native binary carries no group-name vocabulary |
 | `Main/Features/BattleLoadDiagnostics/MemoryProbeReportFormatter.cs` | Pure `EngineMemoryStats + MemorySample? + label → string` for `taom.print_memory`. Owns the `[MemProbe]` tag and the station-label validator (the log-forgery guard) |
 | `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `taom.print_memory [label] [gpu]` — Tier A, cheat gate (`RunAnywhere`). See [dev-console.md](dev-console.md) |
@@ -638,7 +642,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsIoC.cs` | DryIoc registrations |
 | `Main/Core/Logging/FileLogger.cs` | **Not part of this feature, but load-bearing for its contract** — INFO/WARNING/ERROR drain synchronously so a stamp survives a hard crash; DEBUG stays async. Changing that reopens the blind window (#350) |
 
-Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializationFinished` `Initialize(...)`s all 17 hooks then applies `Patch43` (try/catch-guarded: the category binds **four** private engine methods by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name; `OnGameEnd` calls `ResetLifecycle()` (best-effort, try/catch'd) so a still-open exit window dies with the `Game` (#425).
+Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs`: `OnGameInitializationFinished` `Initialize(...)`s all 19 hooks then applies `Patch43` (try/catch-guarded: the category binds **four** private engine methods by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name; `OnGameEnd` calls `ResetLifecycle()` (best-effort, try/catch'd) so a still-open exit window dies with the `Game` (#425).
 
 Beside `Patch43`, `OnGameInitializationFinished` applies `Patch91_MissionTickStall` (its own try/catch, inside the once-per-process patch guard) and starts `MissionTickStallWatchdog` (idempotent) (#634).
 

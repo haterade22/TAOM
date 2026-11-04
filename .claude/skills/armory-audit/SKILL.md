@@ -1,6 +1,6 @@
 ---
 name: armory-audit
-description: Use after any Armory sync, art drop, or "ARMORY ART DRIFT" at session start. Audits every mesh and body ref, joins breakage to troops, commits the report.
+description: Use after any Armory sync, art drop, or "ARMORY ART DRIFT" at session start. Audits every mesh and body ref, joins breakage to troops, writes the report.
 argument-hint: [check|regen]
 ---
 
@@ -36,16 +36,12 @@ proves nothing, because UVs are normalized ([module-armory.md](../../../docs/mod
 ```bash
 python tools/audit_armory_refs.py                    # check
 python tools/audit_armory_refs.py --regen-catalogue  # regen
-python tools/wire_hill_troll_race.py --check         # both modes: the only gate that catches an unkeyed troll clip on a melee-table code (the +0x6590B9 swing CTD)
-python tools/register_armory_names.py --check        # both modes: an Armory item or piece name with no English row (a drop's new names); --apply registers them
-python tools/bind_orc_goblin_locomotion.py --check   # both modes: exit 1 when the orc and goblin locomotion rows in as_orc_warrior / as_goblin_warrior or the orc gait variants as_orc_warrior_b / _c are missing or wrong, or a clip folder is empty (#791); a reinstall reverts both
-python tools/validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE  # both modes: a reinstall reverts the troll gear lock; repair: python tools/lock_creature_gear.py --apply
 ```
 
-About 15 s against the live install. Writes `docs/audits/armory-ref-audit.md` and prints
+About 60 s against the live install (18 s with `--no-generators`). Writes `docs/audits/armory-ref-audit.md` and prints
 `Verdict: CLEAN|BROKEN`. Exit 1 on any `MISSING_BODY`, `MISSING_MESH`, dead `Item.<id>`, or a
 deleted or renamed mesh the live XML still names. Generator drift is a WARNING with its `DRIFT:`
-lines shown.
+lines shown. A reinstall or art drop reverts the troll wiring, the orc locomotion rows, the FBX LOD passes and the troll gear lock while the ref checks stay CLEAN, so the audit runs those checks and `validate_moduledata.py --code COLLISION_BODY_BORROWED` itself (`COMPANION_CHECKS` in the tool) and folds them into the verdict and exit 1; a check that prints SKIPPED has not passed.
 
 ## Step 2: read the report, in this order
 
@@ -69,10 +65,10 @@ with `regen`, and `git diff docs/audits/armory-ref-audit.md` is the change log.
 Then regenerate the armour acquisition class table, which the game reads to gate markets, loot and
 the armoury: `python tools/generate_armour_classes.py --check`, and if it is stale, `--apply`.
 
-## Step 4: commit the audit files and the class table
+## Step 4: the commit
 
-`docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
-regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml` go in the same commit as
+When the maintainer asks for the commit, these files go in one commit: `docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
+regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml`, together with
 the ref repair. The Armory XML itself is unversioned here; say in the commit body which files changed
 in the live install.
 
@@ -81,5 +77,5 @@ in the live install.
 - The catalogue diff's own "REFERENCED, will break" flag is the flag at the last regen, not today's; the audit re-derives it from the live XML. Trust the audit's count.
 - `validate_mesh_refs.py --unreferenced` matches case-insensitively and reported the new elven bows as used when nothing used them; the audit's "new art nothing uses" is an exact match.
 - `validate_moduledata.py` now carries the same body check as `MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), so the commit hook blocks on it too (since #622: until 2026-09-18 `main()` never called the pass; the MCP tool and `/verify` still do not run it, #623). The audit is still the only place the troops are joined in.
-- A body that RESOLVES can still be borrowed, and this audit cannot see that (#633): three Rhun longbows carried the elven bow's `bo_wm_elven_bow_a03` and every ref check here read CLEAN. After an art drop also run `python tools/validate_moduledata.py --code COLLISION_BODY_BORROWED`, which errors on a body that is provably another kit's twin (same-kit sharing and the Rhun family exempt). The audit does not run that pass itself yet.
+- A body that RESOLVES can still be borrowed (#633): three Rhun longbows carried the elven bow's `bo_wm_elven_bow_a03` and every ref check read CLEAN. `COLLISION_BODY_BORROWED` errors on a body that is provably another kit's twin (same-kit sharing and the Rhun family exempt), and the audit runs it.
 - Each release channel (`E:\LOTRAOM_Releases\testing`, `patreon`, `public`) ships its own copy of the Armory; a repair here reaches players only through Mike's next editor package for that channel (`/release` Phase 8).

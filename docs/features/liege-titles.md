@@ -41,7 +41,7 @@ crowned with one title and addressed with the other, as in vanilla.
 
 ## Configuration
 
-None. The 40 rows (20 cultures, a male and a female title each) are in `Main/_Module/ModuleData/taom_module_strings.xml` (keys `taom_str_liege_title.<culture>` and
+None. The 48 rows (24 cultures, a male and a female title each) are in `Main/_Module/ModuleData/taom_module_strings.xml` (keys `taom_str_liege_title.<culture>` and
 `taom_str_liege_title_female.<culture>`), seeded in English in the 12 language files; translation is owed in #763.
 
 ## Key Files
@@ -49,7 +49,7 @@ None. The 40 rows (20 cultures, a male and a female title each) are in `Main/_Mo
 | File | Purpose |
 |------|---------|
 | `Main/Features/LiegeTitles/TaomCultureTags.cs` | One conversation tag per TAOM-only kingdom culture |
-| `Main/_Module/ModuleData/taom_module_strings.xml` | The 40 tagged title rows and Dunland's coronation line |
+| `Main/_Module/ModuleData/taom_module_strings.xml` | The 48 tagged title rows and Dunland's coronation line |
 | `Main/_Module/ModuleData/module_strings.xslt` | Removes vanilla's Calradian emperor line |
 | `Main/_Module/ModuleData/comment_strings.xslt` | The six vanilla-id titles (existing) |
 

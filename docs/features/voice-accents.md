@@ -105,14 +105,14 @@ last value without a warning, and `ShippedConfig_EqualsTheBuiltInDefault` guards
 
 | Accent | Cultures |
 |--------|----------|
-| `imperial` | gondor, gondor_soldiers, arthedain, cardolan, rhudaur, neutral_culture, rivendell, lothlorien, mirkwood, lindon, erebor, erebor_warriors, eredluin, umbar, abanissa, shaghana, darshi |
+| `imperial` | gondor, gondor_soldiers, arthedain, cardolan, rhudaur, neutral_culture, rivendell, lothlorien, mirkwood, lindon, erebor, erebor_warriors, eredluin, anduinvale, angaladh, dorwinion, southrhovanion, umbar, abanissa, shaghana, darshi |
 | `khuzait` | battania (Khand) |
 | `sturgian` | nord, vakken |
 | `looters` | dunland_raiders, mirkwood_stalkers |
 | `steppe_bandits` | rhun_raiders |
 | `desert_bandits` | harad_raiders |
 | `sea_raiders` | umbar_corsairs |
-| `silent` | mordor, isengard, gundabad, dolguldur, goblin, bluecraig, mistymountainorcs, gundabad_raiders, wild_trolls, mirkwood_spiders |
+| `silent` | mordor, isengard, gundabad, dolguldur, goblin, bluecraig, mistymountainorcs, gundabad_raiders, feral_orcs, wild_trolls, mirkwood_spiders |
 
 No row for `empire`, `vlandia`, `sturgia`, `khuzait` and `aserai`: vanilla keeps them. Race rows: `nazghul`,
 `cave_troll`, `hill_troll` and `sauron` are `silent`; `saruman` is `imperial`. Race precedence means Saruman

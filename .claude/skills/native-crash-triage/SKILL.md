@@ -14,10 +14,12 @@ corruption) named and fixed in one day with exactly this protocol.
 `TaleWorlds.Native.dll` (or another native module). For managed TAOM bugs use `/investigate`
 instead — this skill is the native-side complement (and `/investigate` may hand off here).
 
-**Iron rule (from `/investigate`):** no fixes without a named site + root cause. Every fix this
-protocol has produced was DATA (XML) or a routing patch — never a blind retry.
+**Iron rule (from `/investigate`):** no fixes without a named site + root cause. Most fixes
+have been data (XML) or a routing patch; never a blind retry.
 
 ## Phase 1 — Collect (no debugger needed)
+
+A crash reported only by logs: read every line of both logs, collapsing repeats with `sort | uniq -c`, before naming a cause. Never tail and grep, because a native crash leaves no error line (Mike, 2026-09-22). A player's engine build is context, not a finding to file, and never "tell players to update" (Mike, 2026-09-12); you still need it to read an RVA.
 
 1. **Windows Event Log gives the faulting module + offset even after a CTD:**
    ```powershell
@@ -63,27 +65,11 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    (2026-07-24 `rglConcurrentQueue`: Ignore → permanent loading-screen hang). Editor crashes:
    pass `--dll` pointing at the **Win64_Shipping_wEditor** `TaleWorlds.Native.dll` — offsets
    differ from the shipping client build.
-6. **Any derived offset is valid only against the engine version its binary carries — check the
-   wEditor version BEFORE trusting one.** `Win64_Shipping_wEditor` (the Modding Kit build) updates
-   on its OWN Steam schedule and can sit at a different engine version than the shipping client the
-   crash came from. It did: on 2026-08-10 it jumped `v1.4.5.114928` → `v1.4.8.119303` — three
-   engine versions in one update — while the client went v1.4.7 → v1.4.8 (`TaleWorlds.Library`
-   `GameVersion` in `_editor_build_v1.4.5` vs `_editor_build`). Every offset ever derived from that
-   binary before then was against a v1.4.5 image, and it moved with no signal. Even at a matching
-   version string the builds are not identical (v1.4.5 client `.115026` vs v1.4.5 editor `.114928`).
-   **So: read `<game>/bin/Win64_Shipping_wEditor/Version.xml` and compare it against the crash
-   report's `BannerlordVersion` before believing any RVA you derive from it.** A mismatch means the
-   offset does not transfer — the same rule as step 2's `--dump` build-version caveat, applied to
-   the editor binary.
-7. **Steam overwrites in place, so old native images do not survive — archive one before each
-   engine bump.** The only `TaleWorlds.Native.dll` copies on this machine are the two live ones
-   under `bin/Win64_Shipping_{Client,wEditor}`, and each carries the version its own Version.xml states (compare both with the pin; the archived `.dll` twins under `E:\Decompiled_Bannerlord\_native` are the exception); nothing from an earlier engine version
-   is preserved in the repo or under `E:\Decompiled_Bannerlord\` (the decompile stack holds `.cs`
-   for managed assemblies only — native modules are merely *listed* in `_native_dlls.txt`).
-   Consequence: the open player report `crashz/report.json` (untracked; `git show b2e387db:crashz/report.json`; `BannerlordVersion v1.4.7.117484`)
-   **cannot currently be triaged locally** — there is no v1.4.7 image to disassemble against.
-   Copy both `TaleWorlds.Native.dll` files aside before the next update lands. The archive holds
-   client builds from v1.5.2 on; a report from any of them is read against its own image.
+6. A derived offset holds only for the engine its binary carries. `Win64_Shipping_wEditor` updates on its own Steam
+   schedule: read its `Version.xml` and compare with the report's `BannerlordVersion` before believing an RVA from it.
+7. SessionStart archives each new native build into `E:/Decompiled_Bannerlord/_native` (client builds from v1.5.2 on); read a
+   report against its own image. A report from v1.4.7 (`git show b2e387db:crashz/report.json`) has no local image. If
+   `native_archive.py --status` lacks the installed build, follow `/engine-bump` Phase 1 item 2.
 
 ## Phase 2 — Name the site (offline, fully scripted)
 
@@ -114,7 +100,7 @@ common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
   dereferencing its end-sentinel** (asserts compiled out of shipping) → a DATA TABLE is missing
-  a key. Fix: make the table TOTAL (see `feedback_engine_lookup_total_key_coverage` memory)
+  a key. Fix: make the table TOTAL
   **The missing key is usually still in a register:** `--dump` prints the faulting thread's registers
   (the melee-table miss at +0x6590B9 keeps its clip index in `r9`). An in-game enumeration names it:
   log every action whose `MBActionSet.GetAnimationIndexOfAction` equals the key (the removed
@@ -200,4 +186,4 @@ control battle that exercises the trigger, and compare the next Event Log offset
 crashes — a NEW offset is progress, not failure.
 
 Full worked example with all three patterns: `docs/features/spider.md` ("The v1.4.6 engine-bump
-campaign"); generalized lessons: memory `feedback_engine_lookup_total_key_coverage`.
+campaign").

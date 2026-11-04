@@ -77,9 +77,9 @@ Every number is a finite float. A NaN, infinite or out-of-range value reverts to
 | `moraleMin`, `moraleMax` | 20, 40 | 0..100, min at most max | Morale a party round gives, before the scale |
 | `renownMin`, `renownMax` | 1, 3 | 0..50, min at most max | Renown a house round gives, before the scale |
 | `charmXpMin`, `charmXpMax` | 20, 60 | 0..1000, min at most max | Charm experience a round gives |
-| `cultureDrinks` | 26 rows | `beer` or `wine` | The drink each culture id pours; an unlisted culture pours beer |
+| `cultureDrinks` | 30 rows | `beer` or `wine` | The drink each culture id pours; an unlisted culture pours beer |
 
-The 26 rows are the 20 main cultures of `taom_spcultures.xml` and the six renamed vanilla ones (`empire`, `vlandia`, `battania`, `khuzait`, `aserai`, `sturgia`). A test pins that every one has a row here and a name in `taom_module_strings.xml`. Ered Luin, the newest, pours beer and names it "blue-mountain stout".
+The 30 rows are the 24 main cultures of `taom_spcultures.xml` and the six renamed vanilla ones (`empire`, `vlandia`, `battania`, `khuzait`, `aserai`, `sturgia`). A test pins that every one has a row here and a name in `taom_module_strings.xml`. Ered Luin pours beer and names it "blue-mountain stout".
 
 ### MCM
 
@@ -99,7 +99,7 @@ The 26 rows are the 20 main cultures of `taom_spcultures.xml` and the six rename
 | `Main/Features/NotableServices/HoldsRevealService.cs` | The shared reveal rules |
 | `Main/Adapters/IInnRoundsAdapter.cs`, `InnRoundsAdapter.cs` | Engine boundary |
 | `Main/_Module/ModuleData/inn_rounds/inn_rounds.json` | Configuration data |
-| `Main/_Module/ModuleData/taom_module_strings.xml` | The 26 drink names (`str_taom_round_drink.<cultureId>`) and the round texts |
+| `Main/_Module/ModuleData/taom_module_strings.xml` | The 30 drink names (`str_taom_round_drink.<cultureId>`) and the round texts |
 
 ## Dependencies
 

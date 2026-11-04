@@ -87,7 +87,7 @@ CultureDoctrineConfigProvider (validating loader, once per process)
         |
 DoctrineCatalog -> Doctrine -> TacticEntry            (immutable domain)
         |
-CultureDoctrineMissionLogic : MissionLogic            (entry point, main thread, 147 lines)
+CultureDoctrineMissionLogic : MissionLogic            (entry point, main thread, 134 lines)
    EarlyStart: toggle, Mission.IsFieldBattle (live read), per AI team:
        TeamCombatantSelector (IBattleCombatants of the side) -> SideProfile (majority culture, best Tactics skill)
        -> DoctrineCatalog.Resolve -> TacticRoster.Build (side + skill filter, Charge guaranteed)
@@ -95,7 +95,7 @@ CultureDoctrineMissionLogic : MissionLogic            (entry point, main thread,
    OnMissionTick: [Doctrine] status line every 5 s when the debug toggle is on (TeamTacticProbe)
         |
    nine vanilla wrappers   TacticCharge : TaleWorlds.MountAndBlade.TacticCharge   weight = base * multiplier
-   four TAOM tactics       TaomTacticShieldWall / InfantryMass / CavalryDominance / ArcherRing : TaomTacticBase
+   eleven TAOM tactics     TaomTacticShieldWall / InfantryMass / CavalryDominance / ArcherRing (TaomTactics.cs) and seven more (TaomTacticsPhaseC.cs) : TaomTacticBase
                               TaomTacticBase = vanilla lifecycle once (split, join test, TacticPhaseMachine, BehaviorWeightApplier)
                               DoctrinePlan (pure weight tables) + DoctrineWeights (pure weight functions over TeamQuerySnapshot)
 ```
@@ -133,15 +133,15 @@ forms a Circle sized around the archers' `BehaviorFireFromInfantryCover` Square,
 
 | Tactic | Cultures | Plan | Weight |
 |---|---|---|---|
-| `TaomTacticShieldWall` | `erebor`, `erebor_warriors`, `eredluin`, `isengard`, `sturgia` (Dale) | Defender: infantry `BracedDefend` at the position the high-ground race picks (below) with a low `TacticalCharge`; cavalry `ProtectFlank` + `CavalryScreen` in both phases, never `Flank`. Attacker: infantry `BracedAdvance` with `TacticalCharge` 0.5 then 0.8; cavalry may take a flank once joined | `(Inf + Rng) * 1.2 * advantage / sqrt(RemainingPowerRatio)`, not gated on `IsDefenseApplicable` |
+| `TaomTacticShieldWall` | `erebor`, `erebor_warriors`, `eredluin`, `isengard`, `sturgia` (Dale), `anduinvale`, `angaladh`, `dorwinion` | Defender: infantry `BracedDefend` at the position the high-ground race picks (below) with a low `TacticalCharge`; cavalry `ProtectFlank` + `CavalryScreen` in both phases, never `Flank`. Attacker: infantry `BracedAdvance` with `TacticalCharge` 0.5 then 0.8; cavalry may take a flank once joined | `(Inf + Rng) * 1.2 * advantage / sqrt(RemainingPowerRatio)`, not gated on `IsDefenseApplicable` |
 | `TaomTacticTwoLineWall` | `erebor`, `erebor_warriors`, `eredluin` (defender only) | 2/1/2/1 split: the front line as the wall, the second line `BracedDefend` twelve paces behind it (facing the enemy) until joined, then `TacticalCharge` 1 over `BracedDefend` 0.5, the reserve committing | the wall's weight times 1.6 (`GatedEdge`), 0 under 80 infantry |
-| `TaomTacticInfantryMass` | `mordor`, `dolguldur`, `gundabad`, `gundabad_raiders`, `mistymountainorcs`, `goblin`, `dunland_raiders` (attacker) | Always engaged: infantry `Charge` 1.5 + `TacticalCharge` 1, archers `Skirmish`, cavalry `TacticalCharge` + `Flank` | `1.5 * Inf * clamp(members / enemies, 0.5, 2) * sqrt(RemainingPowerRatio)` |
-| `TaomTacticEnvelop` | the six orc cultures | 3/1/2/1 split, always engaged: centre `Advance` + `TacticalCharge`, left and right wings `EnvelopWing` (a deep line to a point beside the enemy body on its own side, then `ChargeToTarget`), archers `Skirmish`, cavalry `TacticalCharge` + `Flank` | the mass's weight times 1.6 (`GatedEdge`); 0 under 1.2x numbers or 60 infantry |
-| `TaomTacticCavalryDominance` | `vlandia` (Rohan), `khuzait` (Rhun), `battania` (Khand) | 1/1/1/1 split, 7 s join threshold: cavalry `Advance` + `Vanguard`, then `CycleCharge` 1.2 + `TacticalCharge` 0.8 + `Flank` 0.8; infantry `Advance` behind | vanilla `FrontalCavalryCharge` formula times 1.3 |
-| `TaomTacticEoredScreen` | `vlandia` (defender only) | 1/1/2/1 split, 7 s join: both cavalry blocks `CavalryScreen` + `ProtectFlank`, infantry `Defend` where the race puts it; once joined the blocks `CycleCharge` 1.2 + `Flank` 0.8 + `ProtectFlank` 0.5 | `Cav * 1.6 * advantage / sqrt(RemainingPowerRatio)`, defender only |
+| `TaomTacticInfantryMass` | `mordor`, `dolguldur`, `gundabad`, `gundabad_raiders`, `mistymountainorcs`, `goblin`, `feral_orcs`, `dunland_raiders` (attacker) | Always engaged: infantry `Charge` 1.5 + `TacticalCharge` 1, archers `Skirmish`, cavalry `TacticalCharge` + `Flank` | `1.5 * Inf * clamp(members / enemies, 0.5, 2) * sqrt(RemainingPowerRatio)` |
+| `TaomTacticEnvelop` | the seven orc cultures (`InfantryMass`'s list without `dunland_raiders`) | 3/1/2/1 split, always engaged: centre `Advance` + `TacticalCharge`, left and right wings `EnvelopWing` (a deep line to a point beside the enemy body on its own side, then `ChargeToTarget`), archers `Skirmish`, cavalry `TacticalCharge` + `Flank` | the mass's weight times 1.6 (`GatedEdge`); 0 under 1.2x numbers or 60 infantry |
+| `TaomTacticCavalryDominance` | `vlandia` (Rohan), `khuzait` (Rhun), `battania` (Khand), `southrhovanion` | 1/1/1/1 split, 7 s join threshold: cavalry `Advance` + `Vanguard`, then `CycleCharge` 1.2 + `TacticalCharge` 0.8 + `Flank` 0.8; infantry `Advance` behind | vanilla `FrontalCavalryCharge` formula times 1.3 |
+| `TaomTacticEoredScreen` | `vlandia`, `southrhovanion` (defender only) | 1/1/2/1 split, 7 s join: both cavalry blocks `CavalryScreen` + `ProtectFlank`, infantry `Defend` where the race puts it; once joined the blocks `CycleCharge` 1.2 + `Flank` 0.8 + `ProtectFlank` 0.5 | `Cav * 1.6 * advantage / sqrt(RemainingPowerRatio)`, defender only |
 | `TaomTacticArcherRing` | `lindon`, `lothlorien`, `mirkwood`, `mirkwood_stalkers`, `rivendell` (defender only) | infantry `DefensiveRing` on a runtime `TacticalPosition` at the position the high-ground race picks (the archers' high ground, or where the infantry stands), facing the enemy; archers `FireFromInfantryCover` + `Skirmish` 0.5 under volley control; cavalry guards the flanks; the ring holds in both phases | vanilla `DefensiveRing` formula (`min(Inf, Rng) * 3 * advantage / sqrt(RemainingPowerRatio)`), 0 for an attacker, when out-shot (`IsDefenseApplicable`), or when the infantry cannot ring the archers' square (`RingGeometry.Fits`, vanilla's radius test) |
 | `TaomTacticArcherAdvance` | the five Elven cultures (attacker only) | infantry `CautiousAdvance` behind the archers' `SkirmishLine` + `ScreenedSkirmish`, cavalry `ProtectFlank` + `CavalryScreen`; once joined infantry `Advance` + `TacticalCharge` 0.7, archers `ScreenedSkirmish` + `Skirmish`, cavalry may `Flank` 0.7; volley control throughout | `min(Inf, Rng) * 2 * sqrt(RemainingPowerRatio)`, attacker only |
-| `TaomTacticDisciplinedLine` | `gondor`, `gondor_soldiers`, `khuzait`, `sturgia` | Defender: infantry `Defend` where the race puts it, archers `SkirmishLine` in front, cavalry `ProtectFlank` + `CavalryScreen`; attacker: `CautiousAdvance` instead of `Defend`. Once joined: infantry `Advance` + `TacticalCharge` 0.8 + `Defend` 0.5, archers `ScreenedSkirmish` + `Skirmish`, cavalry `TacticalCharge` + `Flank` + `ProtectFlank` 0.5 | `(Inf + Rng) * 1.5 * advantage / sqrt(RemainingPowerRatio)` |
+| `TaomTacticDisciplinedLine` | `gondor`, `gondor_soldiers`, `khuzait`, `sturgia`, `anduinvale`, `angaladh`, `dorwinion` | Defender: infantry `Defend` where the race puts it, archers `SkirmishLine` in front, cavalry `ProtectFlank` + `CavalryScreen`; attacker: `CautiousAdvance` instead of `Defend`. Once joined: infantry `Advance` + `TacticalCharge` 0.8 + `Defend` 0.5, archers `ScreenedSkirmish` + `Skirmish`, cavalry `TacticalCharge` + `Flank` + `ProtectFlank` 0.5 | `(Inf + Rng) * 1.5 * advantage / sqrt(RemainingPowerRatio)` |
 | `TaomTacticHitAndRun` | `empire` (Dunland), `dunland_raiders` (attacker only) | Always engaged: infantry `InfantrySkirmish` 1 + `TacticalCharge` 0.7 + `Advance` 0.5 (the skirmish weighs 0 once the javelins are spent, so the charge takes the line), archers `Skirmish`, cavalry `Flank` + `TacticalCharge` 0.8 | `Inf * 1.4 * clamp(throwing share / 0.5, 0, 1) * sqrt(RemainingPowerRatio)` |
 | `TaomTacticMumakVanguard` | `aserai` (Harad, attacker only) | 1/1/2/1 with the team's `HeavyCavalry` formation kept apart as the vanguard: it rides ahead (`Vanguard` + `Advance` 0.8), infantry `Advance`, archers screened, cavalry guards; once joined the vanguard `TacticalCharge` 1.2 + `Charge`, infantry `Advance` + `TacticalCharge`, cavalry `TacticalCharge` + `Flank` | `(Inf + Cav) * 1.4 * sqrt(RemainingPowerRatio)`, 0 without a routed vanguard formation |
 
@@ -174,8 +174,7 @@ tactic's tick and a lost race re-forms on the spot;
 once arrived (within `BehaviorDefend`'s 10 m), or once the closest enemy is inside
 `BehaviorHoldHighGround`'s lock radius (`max(0.8 * archers' missile range, 30 m)`), the position
 is locked. All of it is `HighGroundRace` (pure, `HighGroundRaceTests`) over eight cached engine
-reads; the status line shows the state (`TaomTacticShieldWall:Defend:Marching|Holding|Arrived`). Cultures without a row (Harad, Rhun, Khand, Dale, Umbar, the
-bandits) use `default`, which is exactly vanilla's set at multiplier 1.
+reads; the status line shows the state (`TaomTacticShieldWall:Defend:Marching|Holding|Arrived`). Cultures without a row (`shaghana`, `abanissa`, `bluecraig`, `arthedain`, `cardolan`, `rhudaur`, the bandit cultures `harad_raiders`, `rhun_raiders`, `umbar_corsairs`, `mirkwood_spiders` and `wild_trolls`, and the looters) use `default`, which is exactly vanilla's set at multiplier 1.
 
 **Per-side culture.** `MissionCombatantsLogic.GetAllCombatants()` is public and yields the
 campaign's `MapEvent.InvolvedParties` or Custom Battle's two `CustomBattleCombatant`s.
@@ -222,7 +221,7 @@ with line citations) and asserts, for every shipped TAOM row, that it beats ever
 shares a list with by the 1.5x sticky factor at the culture's canonical army. Retune the JSON to
 the test, not the test to the JSON.
 
-**TAOM behaviours.** Five `BehaviorComponent`s on a shared `TaomBehaviorBase`
+**TAOM behaviours.** Seven `BehaviorComponent`s on a shared `TaomBehaviorBase`
 (`Hooks/Behaviors/`), the same wrapped lifecycle the tactics have: `GetAiWeight` ->
 `Weigh()`, `CalculateCurrentOrder` -> `Plan()`, `OnBehaviorActivatedAux` -> `Activate()`,
 `TickOccasionally` -> `OnActiveTick()` then `Plan()` then the orders pushed to the formation,
@@ -390,6 +389,9 @@ still opt in: `erebor_warriors` is one, with its own row and stand block. Shippe
 | `eredluin` (Ered Luin) | false | no mounted troops; Erebor's row, copied whole |
 | `isengard` | false | every mounted troop rides a warg |
 | `sturgia` (Dale) | true | ordinary horses |
+| `anduinvale` | true | Dale's row, ordinary horses |
+| `angaladh` | true | Dale's row whole; no Angaladh troop rides |
+| `dorwinion` | true | Dale's row whole; its river riders sit ordinary horses |
 
 Gondor and the Elven ring do not adopt it. The stand is armed at install by the pure
 `HorseStand.PolicyFor(enabled, culture, isDefender, isPlayerTeam)`: the MCM switch on, the team
@@ -749,7 +751,7 @@ foot.
   (preference order, choke facing and insurmountable, choke width, the cap, the hold distance, a
   race lost to horse that a foot-only race would win, NaN speeds, empty input),
   `StandWeaponFavorTests` (the predicate and the service's switch); `ShippedDoctrineOrderingTests` also
-  pins the stand army and `StandEdge`, and `ShippedCultureDoctrinesConfigTests` the five opted-in cultures
+  pins the stand army and `StandEdge`, and `ShippedCultureDoctrinesConfigTests` the eight opted-in cultures
   and their `dismount` flags. `HorseStandTests` also pins the side-vs-side outnumbered rule and
   `PolicyFor` (switch off, player team, attacker, AI defender); `StandGroundTests` pins `HoldOf`;
   `BraceDecisionTests` pins no Square while holding a choke. The stand's binding tests
@@ -902,9 +904,9 @@ lines 97-101 and 112-118, measured in recordings (n=13 and n=39), measured with 
 - The Elven ring is the engine's circle, not a hollow square; `SquareFormation` builds four
   sides with `MaxRank = (UnitCountOfOuterSide + 1) / 2` and whether its centre stays hollow is
   unverified.
-- `TaomTacticBase` is about 300 lines: it is the one place the vanilla lifecycle exists in TAOM
-  (vanilla's tactics are 180 to 370 lines each) and the eleven tactics on top of it are 15 to
-  45 lines. The slot code that writes `TacticComponent`'s protected fields cannot leave the
+- `TaomTacticBase` is about 460 lines: it is the one place the vanilla lifecycle exists in TAOM
+  (vanilla's tactics are 180 to 370 lines each) and the eleven tactics on top of it are 9 to
+  52 lines. The slot code that writes `TacticComponent`'s protected fields cannot leave the
   class; the picking (`FormationSlots`), the volley (`VolleyControl`) and every decision
   (`Doctrines/`) already have.
 - A TAOM behaviour added to a formation by `Ensure<T>` stays on that formation for the mission
@@ -1075,8 +1077,8 @@ To opt the culture into the horse stand, add `"horseStand": { "dismount": <bool>
 (`true` only when its riders sit on ordinary horses; a culture whose mounts are rams, wargs or other
 creatures says `false`). The row must also carry a `ShieldWall` or `TwoLineWall` entry with a
 multiplier above 0 for the defender side, or the block does nothing, and
-`ShippedCultureDoctrinesConfigTests` fails if an opted-in culture lacks one. The set of opted-in cultures is pinned there by id (today `erebor`,
-`erebor_warriors`, `isengard`, `sturgia`), so a new one is added to that test too. A culture with no
+`ShippedCultureDoctrinesConfigTests` fails if an opted-in culture lacks one. The set of opted-in cultures is pinned there by id (today `anduinvale`, `angaladh`,
+`dorwinion`, `erebor`, `erebor_warriors`, `eredluin`, `isengard`, `sturgia`), so a new one is added to that test too. A culture with no
 row resolves to `default`; one with a row but no block uses its own row and never stands.
 
 ---

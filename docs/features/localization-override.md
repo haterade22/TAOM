@@ -2,7 +2,7 @@
 
 ## Overview
 
-Patches `MBTextManager.GetLocalizedText` so that hardcoded vanilla Bannerlord English strings (311 registered ids today) can be overridden through the TAOM strings XML, including phrases like "The Empire" → "Gondor" or capitalization fixes. These vanilla string IDs aren't reachable through Bannerlord's standard `Languages/` translation pipeline because vanilla short-circuits the localization lookup for English. This feature is the **only intervention point** for fixing typos and replacing baked-in faction phrasing in English text. It applies **only while the game language is English** (#706): in every other language vanilla reads that language's translated row, and the override stays out of its way.
+Patches `MBTextManager.GetLocalizedText` so that English strings (489 registered ids today, 180 of them vanilla-style) can be overridden through the TAOM strings XML, including phrases like "The Empire" → "Gondor" or capitalization fixes. These vanilla string IDs aren't reachable through Bannerlord's standard `Languages/` translation pipeline because vanilla short-circuits the localization lookup for English. This feature is the **only intervention point** for fixing typos and replacing baked-in faction phrasing in English text. It applies **only while the game language is English** (#706): in every other language vanilla reads that language's translated row, and the override stays out of its way.
 
 ## Distinction from `localization.md`
 
@@ -11,14 +11,14 @@ This feature is **not** about TAOM's added translation strings. There are two re
 | Doc | Scope |
 |---|---|
 | [localization.md](localization.md) | TAOM's 1,773 added translation strings shipped in `Languages/<locale>/` for 12 languages. Pure data, no C#. |
-| **localization-override.md** (this doc) | A Harmony Prefix on `MBTextManager.GetLocalizedText` that overrides the registered English string IDs (311 today) at runtime, in English only. C# only. |
+| **localization-override.md** (this doc) | A Harmony Prefix on `MBTextManager.GetLocalizedText` that overrides the registered English string IDs (489 today) at runtime, in English only. C# only. |
 
 If a string already worked through TAOM's translation files, you wouldn't need this feature. If you only had this feature, you couldn't translate to French. They cover different gaps — keep them separate.
 
 ## Why This Exists
 
 - **Vanilla behavior:** `MBTextManager.GetLocalizedText("{=SomeID}default text")` short-circuits in English: it returns `"default text"` and never asks `LocalizedTextManager` whether anyone registered an override for `SomeID`. This means a `module_strings.xml` entry like `<string id="..." text="{=SomeID}New Text">` is silently ignored when the game language is English.
-- **TAOM requirement:** TAOM needs to overwrite vanilla English phrasing for LOTR immersion (e.g. cultural names that vanilla bakes into C# strings rather than reading from culture XML). The loader registers 311 ids from `taom_module_strings.xml` (179 vanilla-style ids, 90 `aom_*` keys and 42 `TAOM_*` keys, counted 2026-10-26).
+- **TAOM requirement:** TAOM needs to overwrite vanilla English phrasing for LOTR immersion (e.g. cultural names that vanilla bakes into C# strings rather than reading from culture XML). The loader registers 489 ids from `taom_module_strings.xml` (180 vanilla-style ids, 90 `aom_*` keys and 219 `TAOM_*` keys, counted 2026-11-03).
 - **Without this feature:** Every time `MBTextManager.GetLocalizedText` is called with a vanilla `{=ID}` token, the original baked text wins — TAOM overrides for those IDs are dead bytes in the XML.
 - **Why English only (#706):** the short-circuit above is an English-only behavior. In any other language vanilla looks up that language's row: TAOM's own translated row for the `aom_*` and `TAOM_*` ids, and vanilla's curated row for the vanilla-style ids, except the pairs that keep TAOM's row (see "A reworded vanilla key has no language rows" below). An override applied there would hide the player's own language, so the prefix steps aside unless the active language is English.
 
@@ -33,7 +33,7 @@ The override registry has to be populated *before* the patch goes live (otherwis
 ### Solution Approach
 
 1. **Loader.** [LocalizationOverrideLoader](../../Main/Features/LocalizationOverride/LocalizationOverrideLoader.cs) parses `Main/_Module/ModuleData/taom_module_strings.xml`. For every `<string text="...">` entry whose value starts with `{=ID}`, it extracts the `ID` and the rest-of-text. IDs starting with `taom_` are skipped (those are TAOM's own strings, handled by the normal localization pipeline). IDs `!` and `*` are skipped (they're Bannerlord's "always-translate" / "no-localization" sentinels). Everything else is a candidate vanilla-string override and gets recorded in a `Dictionary<string, string>`.
-2. **Registration.** Inside `SubModule.OnSubModuleLoad` ([Main/SubModule.cs:275-289](../../Main/SubModule.cs)), the patch category is applied (`TryPatchCategory("Patch25_LocalizationOverride")`, the guarded apply: a category that fails to patch is logged and does not stop module load) and then the loader runs. Each parsed override is registered with `MBTextManager_GetLocalizedText_Patch.RegisterOverride(id, text)`.
+2. **Registration.** Inside `SubModule.OnSubModuleLoad` ([Main/SubModule.cs:274-288](../../Main/SubModule.cs)), the patch category is applied (`TryPatchCategory("Patch25_LocalizationOverride")`, the guarded apply: a category that fails to patch is logged and does not stop module load) and then the loader runs. Each parsed override is registered with `MBTextManager_GetLocalizedText_Patch.RegisterOverride(id, text)`.
 3. **Patch.** [MBTextManager_GetLocalizedText_Patch](../../Main/Features/LocalizationOverride/Hooks/MBTextManager_GetLocalizedText_Patch.cs) is a HarmonyPrefix. It parses the input text for a `{=ID}` prefix, asks the [OverrideLanguageGate](../../Main/Features/LocalizationOverride/OverrideLanguageGate.cs) whether the text language is English (if not, it returns `true` and vanilla runs), looks up the ID in the static override dictionary (keyed by an [IdSlice](../../Main/Features/LocalizationOverride/IdSlice.cs) of the input, so the lookup allocates nothing), and if found assigns `__result = overrideText` and returns `false` (skipping vanilla). If no override is registered, returns `true` (let vanilla run).
 
 The override dictionary is process-static. There's no per-save state and no runtime mutation API exposed to other features — it's load-once at module init. `ClearOverrides()` exists but is intended for tests, not gameplay.
@@ -47,7 +47,7 @@ Until #706 the prefix applied in every language. For a non-English player that h
 - **The predicate is vanilla's:** the language id equals `"English"`, ordinal (`English`, `Deutsch`, `Français` and the rest are the ids in the `language_data.xml` files). Any other value, including `null`, turns the overrides off for that lookup.
 - **The language is read on every call** through `ITextLocalizerAdapter.ActiveLanguage` (over `MBTextManager.ActiveTextLanguage`), so a change while the game runs takes effect at once. It is not cached and there is no patch on `MBTextManager.ChangeLanguage` to keep a cache current: that would add a second patch to save a string compare that vanilla runs on every lookup too. Measured on 2026-10-03 in a throwaway Debug-build loop, the gate costs about 7 to 9 ns per lookup, and a lookup in another language now ends before the dictionary probe: about 27 ns for the whole prefix, against about 65 ns for an English lookup of a registered id.
 - **One INFO line per switch**, written when a lookup first sees the new language and never again for it, into TAOM's own log (`Logs/taom_debug_<timestamp>.log`): `[LocalizationOverride] Text language 'Deutsch' is not English: ...` when the language changes to a non-English one, and `[LocalizationOverride] Text language is English again: the English string overrides apply` when it changes back to English from one. A session that starts in English writes neither, since nothing was off before it. The only state is the last language seen, held in one interlocked field because a text can resolve on any thread; `NoteLanguageChange` is that latch step, internal so a test can call it directly. The logger is resolved from the container inside that rare path, and a logger that cannot be resolved costs one failed attempt, never a failed lookup.
-- **Left to vanilla:** a language with no row for an id shows the call site's inline English, as vanilla does for every other string, and no longer gets TAOM's override as a stand-in. None of today's twelve languages is in that state for the 311 ids.
+- **Left to vanilla:** a language with no row for an id shows the call site's inline English, as vanilla does for every other string, and no longer gets TAOM's override as a stand-in. None of today's twelve languages is in that state for the 489 ids.
 
 ### A reworded vanilla key has no language rows
 
@@ -118,7 +118,7 @@ No dedicated config file. Overrides live alongside TAOM's added strings in [Main
 | `<string id="..." text="plain text without {=...}" />` | Skipped by the loader (no `{=` prefix) |
 | `<string text="{=!}..." />` or `{=*}` | Skipped (sentinel) |
 
-The patch is gated on Harmony category `Patch25_LocalizationOverride`. To disable feature-wide, comment out the `TryPatchCategory("Patch25_LocalizationOverride");` line in [Main/SubModule.cs:275](../../Main/SubModule.cs).
+The patch is gated on Harmony category `Patch25_LocalizationOverride`. To disable feature-wide, comment out the `TryPatchCategory("Patch25_LocalizationOverride");` line in [Main/SubModule.cs:274](../../Main/SubModule.cs).
 
 ## Key Files
 
@@ -128,7 +128,7 @@ The patch is gated on Harmony category `Patch25_LocalizationOverride`. To disabl
 | [Main/Features/LocalizationOverride/Hooks/MBTextManager_GetLocalizedText_Patch.cs](../../Main/Features/LocalizationOverride/Hooks/MBTextManager_GetLocalizedText_Patch.cs) | HarmonyPrefix on `MBTextManager.GetLocalizedText` + static override registry |
 | [Main/Features/LocalizationOverride/OverrideLanguageGate.cs](../../Main/Features/LocalizationOverride/OverrideLanguageGate.cs) | Decides whether the text language is English and logs once per switch away from English and once per return to it (#706) |
 | [Main/Adapters/TextLocalizerAdapter.cs](../../Main/Adapters/TextLocalizerAdapter.cs) | The shared `ITextLocalizerAdapter`: `ActiveLanguage` reads `MBTextManager.ActiveTextLanguage` |
-| [Main/SubModule.cs:275-289](../../Main/SubModule.cs) | Patch category application + loader invocation |
+| [Main/SubModule.cs:274-288](../../Main/SubModule.cs) | Patch category application + loader invocation |
 | [Main/_Module/ModuleData/taom_module_strings.xml](../../Main/_Module/ModuleData/taom_module_strings.xml) | The data source (mixed: TAOM-added strings + vanilla overrides, distinguished by ID prefix) |
 
 No IoC registration and no service interface: the feature is static-only, so the patch builds its `OverrideLanguageGate` itself over the shared language adapter, and a test swaps it through `UseLanguageGate`.
@@ -162,13 +162,13 @@ The Harmony patching itself isn't unit-tested — the prefix logic is exercised 
 
 ## How to Disable
 
-Comment out the `TryPatchCategory` line at [Main/SubModule.cs:275](../../Main/SubModule.cs):
+Comment out the `TryPatchCategory` line at [Main/SubModule.cs:274](../../Main/SubModule.cs):
 
 ```csharp
 // TryPatchCategory("Patch25_LocalizationOverride");
 ```
 
-The loader will still run (lines 276-289 do not depend on the category), but its `RegisterOverride` calls land in a dictionary that nothing reads, since the patch is no longer applied. Vanilla short-circuit wins for every call. No harm, no extra cost.
+The loader will still run (lines 275-288 do not depend on the category), but its `RegisterOverride` calls land in a dictionary that nothing reads, since the patch is no longer applied. Vanilla short-circuit wins for every call. No harm, no extra cost.
 
 ## Changelog
 

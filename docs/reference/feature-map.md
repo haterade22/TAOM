@@ -1,6 +1,8 @@
 # Feature & Component Map
 
-> Full `Main/Features/` + component path map. Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure). The crash-time traps stay inline in CLAUDE.md "Key Paths".
+> Full `Main/Features/` and component path map. Traps: the [trap index](../ai-includes/orientation.md).
+>
+> Row form: feature, path, patches or models, a link to `docs/features/<name>.md`, and one clause of purpose. Trim a row when you next touch it; no bulk rewrite.
 
 
 | Component | Path |

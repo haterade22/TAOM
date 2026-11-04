@@ -21,9 +21,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
+import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlparse
@@ -51,7 +53,7 @@ AUDITS_DIR = DOCS_DIR / "audits"
 # trap index, a standing lesson is one line in its area rule, and nothing is restated. AGENTS.md
 # alone is also capped at 8,192 bytes by tools/reviewctl.py (the provider-neutral bootstrap every
 # Codex session pays for), which is stricter than anything here. Bytes are counted with CRLF
-# folded to LF, so a Windows checkout and CI agree.
+# folded to LF, so a Windows and any other checkout agree.
 ENTRY_DOC_ROOT = "CLAUDE.md"
 IMPORT_MAX_HOPS = 4                # Claude Code follows nested @-imports this deep (memory docs)
 ENTRY_DOCS_MAX_BYTES = 25_600      # hard cap on the entry docs together (fails --fail-on-drift)
@@ -66,9 +68,7 @@ TRAP_INDEX_MAX_ROW_CHARS = 180
 RULES_DIR_REL = ".claude/rules"
 UNSCOPED_RULES_MAX_BYTES = 16_384  # hard cap on every rule without `paths:`, together
 UNSCOPED_RULES_WARN_BYTES = 14_500
-SCOPED_RULE_MAX_BYTES = 12_288     # per path-scoped rule
-# Report-only until the path-rule diet (ADR-011) brings every scoped rule under the cap.
-SCOPED_RULE_BUDGET_ENFORCE = False
+SCOPED_RULE_MAX_BYTES = 12_288     # per path-scoped rule; over it, only growth over HEAD gates
 # Budget findings that report without failing --fail-on-drift / --drift-only.
 REPORT_ONLY_BUDGET_KINDS = frozenset({"size-warn", "frontmatter-unchecked"})
 CONTEXT_BUDGET_ENFORCE = True
@@ -249,6 +249,8 @@ class LintReport:
     rca_followups: list[tuple[Path, int, str, str]] = field(default_factory=list)
     feature_verify: list[tuple[Path, int, str, str]] = field(default_factory=list)
     git_diff_failures: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    rule_drift: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    adr_symbols: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -267,6 +269,8 @@ class LintReport:
             + len(self.rca_followups)
             + len(self.feature_verify)
             + len(self.git_diff_failures)
+            + len(self.rule_drift)
+            + len(self.adr_symbols)
         )
 
 
@@ -441,15 +445,98 @@ def check_untracked_link_targets(
     return findings
 
 
-def _read_pin() -> str:
+def _cat_file_batch(specs: list[str]) -> list[str | None]:
+    """The text of each object (`:path`, `HEAD:path`) through one git process, because a process per
+    file costs about 27 ms and a doc commit reads hundreds. None for anything but a file."""
+    if not specs:
+        return []
+    try:
+        proc = subprocess.run(["git", "-C", str(REPO_ROOT), "cat-file", "--batch"],
+                              input=("\n".join(specs) + "\n").encode("utf-8"), capture_output=True)
+    except OSError:
+        return [None] * len(specs)
+    if proc.returncode != 0:
+        return [None] * len(specs)
+    texts: list[str | None] = []
+    pos = 0
+    for _ in specs:
+        end = proc.stdout.index(b"\n", pos)
+        fields = proc.stdout[pos:end].rsplit(b" ", 2)
+        pos = end + 1
+        if len(fields) != 3 or not fields[2].isdigit():      # `<spec> missing`, `<spec> ambiguous`
+            texts.append(None)
+            continue
+        size = int(fields[2])
+        texts.append(proc.stdout[pos:pos + size].decode("utf-8", "replace") if fields[1] == b"blob" else None)
+        pos += size + 1
+    return texts
+
+
+class CommitView:
+    """The tree a commit records, for the gating checks, so another session's unstaged edit in the same
+    checkout cannot refuse this commit and a staged breach cannot pass behind a clean working copy.
+    `names` are the repo-relative paths the commit changes against `base`. A plain commit records the
+    index, and a git hook always sees the final index. A path commit records its named working copies
+    on top of HEAD, whatever else is staged."""
+
+    def __init__(self, names: set[str], from_index: bool, base: str = "HEAD"):
+        self.names = names
+        self.from_index = from_index
+        self.base = base
+        self._texts: dict[str, str | None] = {}
+
+    @staticmethod
+    def name_of(path: Path) -> str:
+        return Path(os.path.normpath(path)).relative_to(REPO_ROOT).as_posix()
+
+    def load(self, paths) -> None:
+        """Read these files at once, so the reads after it spawn nothing."""
+        names = [n for n in dict.fromkeys(self.name_of(p) for p in paths) if n not in self._texts]
+        for name in [n for n in names if not self.from_index and n in self.names]:
+            path = REPO_ROOT / name
+            self._texts[name] = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else None
+        from_git = [n for n in names if n not in self._texts]
+        prefix = ":" if self.from_index else "HEAD:"
+        self._texts.update(zip(from_git, _cat_file_batch([prefix + n for n in from_git])))
+
+    def read(self, path: Path) -> str | None:
+        """The file's text as the commit records it; None when it records no such file."""
+        self.load([path])
+        return self._texts[self.name_of(path)]
+
+
+def commit_view(staged: bool, only_paths: list[str] | None, base: str) -> CommitView | None:
+    """What this run judges: None for the working copies, with neither flag or outside a git tree
+    (fail open, as the other git-reading checks do)."""
+    if not staged and not only_paths:
+        return None
+    inside = _git_run("rev-parse", "--is-inside-work-tree")
+    if inside is None or inside.returncode != 0:
+        return None
+    if only_paths:
+        listed = _git_out("-c", "core.quotePath=false", "ls-files", "--", *only_paths)
+    else:
+        against = [] if base == "HEAD" and _is_unborn_head() else [base]
+        listed = _git_out("-c", "core.quotePath=false", "diff", "--cached", "--name-only", "--no-renames",
+                          "--diff-filter=d", *against)
+    return CommitView({n.strip() for n in (listed or "").splitlines() if n.strip()}, not only_paths, base)
+
+
+def _commit_text(path: Path, commit: CommitView | None) -> str | None:
+    """A file's text: as the commit records it, or the working copy with no commit in view. None when
+    there is no such file."""
+    try:
+        return path.read_text(encoding="utf-8", errors="replace") if commit is None else commit.read(path)
+    except (OSError, ValueError):
+        return None
+
+
+def _read_pin(commit: CommitView | None = None) -> str:
     """The pinned game version exactly as committed ('v1.4.7'); '' if absent or unreadable.
 
     Returned raw, not normalised: check_version_consistency quotes it verbatim in its findings.
     """
-    try:
-        return (REPO_ROOT / ".claude" / "pinned-game-version.txt").read_text(encoding="utf-8").strip()
-    except OSError:
-        return ""
+    return (_commit_text(REPO_ROOT / ".claude" / "pinned-game-version.txt", commit) or "").strip()
 
 
 CLAUSE_BREAK_RE = re.compile(
@@ -593,26 +680,27 @@ def _is_historical_doc(f: Path) -> bool:
     return False
 
 
-def check_config_example_drift(files: list[Path]) -> list[tuple[Path, int, str, str]]:
+def check_config_example_drift(files: list[Path],
+                               commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
+    files = [f for f in files if not _is_historical_doc(f)]
+    if commit is not None:
+        commit.load(files)
     for f in files:
-        if _is_historical_doc(f):
-            continue
-        try:
-            text = f.read_text(encoding="utf-8", errors="replace")
-        except OSError:
+        text = _commit_text(f, commit)
+        if text is None:
             continue
         for cfg_path, json_body, lineno in _config_json_blocks(text):
-            cfg_file = (REPO_ROOT / cfg_path.replace("\\", "/")).resolve()
-            if not cfg_file.exists():
+            shipped_text = _commit_text(REPO_ROOT / cfg_path.replace("\\", "/"), commit)
+            if shipped_text is None:
                 continue
             try:
                 doc_json = json.loads(json_body)
             except ValueError:
                 continue  # annotated / partial example — not comparable
             try:
-                shipped = json.loads(cfg_file.read_text(encoding="utf-8-sig"))
-            except (OSError, ValueError):
+                shipped = json.loads(shipped_text.lstrip("\ufeff"))
+            except ValueError:
                 continue
             if not isinstance(doc_json, dict) or not isinstance(shipped, dict):
                 continue
@@ -636,20 +724,17 @@ def _norm_ver(s: str) -> str:
     return s.strip().lower().lstrip("v")
 
 
-def check_version_consistency() -> list[tuple[Path, int, str, str]]:
+def check_version_consistency(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
-    pin_raw = _read_pin()
+    pin_raw = _read_pin(commit)
     pin = _norm_ver(pin_raw)
     if not pin:
         return findings
 
     def check_file(path: Path, pattern: re.Pattern, what: str) -> bool:
         """Report every match that disagrees with the pin; return whether anything matched."""
-        if not path.exists():
-            return False
-        try:
-            text = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
+        text = _commit_text(path, commit)
+        if text is None:
             return False
         matched = False
         for lineno, line in enumerate(text.splitlines(), start=1):
@@ -848,10 +933,16 @@ def _rule_is_scoped(text: str) -> bool:
     return _rule_scope(text) == "scoped"
 
 
-def _rule_files() -> list[Path]:
-    """Every rule, subfolders included: Claude Code discovers .claude/rules recursively."""
+def _rule_files(commit: CommitView | None = None) -> list[Path]:
+    """Every rule, subfolders included: Claude Code discovers .claude/rules recursively. With a commit
+    in view, also those it records but the working tree has lost; read each through the commit, which
+    answers None for one on disk that it does not record."""
     rules_dir = REPO_ROOT / RULES_DIR_REL
-    return sorted(rules_dir.rglob("*.md")) if rules_dir.is_dir() else []
+    found = set(rules_dir.rglob("*.md")) if rules_dir.is_dir() else set()
+    if commit is not None:
+        found.update(REPO_ROOT / n for n in commit.names
+                     if n.startswith(RULES_DIR_REL + "/") and n.endswith(".md"))
+    return sorted(found)
 
 
 _IMPORT_RE = re.compile(r"(?:^|\s)@([^\s`]+)")
@@ -892,12 +983,13 @@ def markdown_imports(text: str) -> list[tuple[int, str]]:
     return [(prose.count("\n", 0, m.start(1)) + 1, m.group(1)) for m in _IMPORT_RE.finditer(prose)]
 
 
-def entry_docs() -> tuple[list[Path], list[tuple[Path, int, str]]]:
+def entry_docs(commit: CommitView | None = None) -> tuple[list[Path], list[tuple[Path, int, str]]]:
     """What CLAUDE.md loads at launch: CLAUDE.md, then each file it @-imports, following nested
     imports IMPORT_MAX_HOPS deep, in load order without repeats. Also returns (file, lineno,
     target) for every import that resolves to no file. Like Claude Code, an import is resolved
     from the importing file's folder and ignored inside a code span or fenced block; a `~/`
-    import is machine-local, so it is outside the repo's budget."""
+    import is machine-local, so it is outside the repo's budget. With a commit in view, the files
+    are the ones it records."""
     docs: list[Path] = []
     missing: list[tuple[Path, int, str]] = []
     seen: set[Path] = set()
@@ -910,18 +1002,17 @@ def entry_docs() -> tuple[list[Path], list[tuple[Path, int, str]]]:
         docs.append(path)
         if depth >= IMPORT_MAX_HOPS:
             return
-        text = path.read_text(encoding="utf-8", errors="replace")
-        for lineno, target in markdown_imports(text):
+        for lineno, target in markdown_imports(_commit_text(path, commit) or ""):
             if target.startswith("~"):
                 continue
             child = path.parent / target
-            if child.is_file():
+            if child.is_file() if commit is None else _commit_text(child, commit) is not None:
                 visit(child, depth + 1)
             else:
                 missing.append((path, lineno, target))
 
     root = REPO_ROOT / ENTRY_DOC_ROOT
-    if root.is_file():
+    if root.is_file() if commit is None else _commit_text(root, commit) is not None:
         visit(root, 0)
     return docs, missing
 
@@ -987,16 +1078,33 @@ def _trap_index_rows(text: str) -> list[tuple[int, str]]:
     return rows
 
 
-def check_context_budget() -> list[tuple[Path, int, str, str]]:
-    """ADR-011 context budgets. Findings are (file, lineno, kind, message); lineno 0 means the
-    whole file. Kind "size-warn" is report-only; every other kind gates --fail-on-drift.
-    Fenced code blocks are exempt from the line caps."""
+def _grew_past_base(rule: Path, size: int, base: str) -> bool:
+    """Whether a rule of this size is larger than its copy at `base`. A rule `base` lacks has grown
+    from nothing; a tree git cannot read never counts as grown (fail open, as the other git-reading
+    checks do)."""
+    inside = _git_run("rev-parse", "--is-inside-work-tree")
+    if inside is None or inside.returncode != 0:
+        return False
+    head = _git_run("show", f"{base}:{rule.relative_to(REPO_ROOT).as_posix()}")
+    if head is None:
+        return False
+    if head.returncode != 0:
+        return True
+    return size > _loaded_bytes(head.stdout.lstrip("\ufeff"))
+
+
+def check_context_budget(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
+    """ADR-011 context budgets, on what the commit records with one in view. Findings are (file,
+    lineno, kind, message); lineno 0 means the whole file. Kind "size-warn" is report-only; every
+    other kind gates --fail-on-drift. Fenced code blocks are exempt from the line caps. A path rule
+    over its cap is "size-warn" unless this change grows it past its copy at the base, which is
+    "scoped-rule-size": the cap stops growth without forcing a diet of the rules already over it."""
     findings: list[tuple[Path, int, str, str]] = []
 
     total = 0
     claude_md = REPO_ROOT / ENTRY_DOC_ROOT
     trap_doc = (REPO_ROOT / TRAP_INDEX_DOC).resolve()
-    docs, missing = entry_docs()
+    docs, missing = entry_docs(commit)
     for path, lineno, target in missing:
         findings.append((path, lineno, "import-missing",
                          f"`@{target}` resolves to no file, so Claude Code loads nothing for it."))
@@ -1006,7 +1114,7 @@ def check_context_budget() -> list[tuple[Path, int, str, str]]:
                          f"index loads in no session."))
     for path in docs:
         rel_path = rel(path)
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = _commit_text(path, commit) or ""
         total += _loaded_bytes(text)
         nlines = len(text.splitlines())
         if nlines > ENTRY_DOC_MAX_LINES:
@@ -1050,8 +1158,13 @@ def check_context_budget() -> list[tuple[Path, int, str, str]]:
 
     rules_dir = REPO_ROOT / RULES_DIR_REL
     unscoped_total = 0
-    for rule in _rule_files():
-        text = rule.read_text(encoding="utf-8", errors="replace")
+    rules = _rule_files(commit)
+    if commit is not None:
+        commit.load(rules)
+    for rule in rules:
+        text = _commit_text(rule, commit)
+        if text is None:
+            continue
         size = _loaded_bytes(text)
         scope = _rule_scope(text)
         if scope == "invalid":
@@ -1062,11 +1175,14 @@ def check_context_budget() -> list[tuple[Path, int, str, str]]:
         if scope != "scoped":
             unscoped_total += size
         elif size > SCOPED_RULE_MAX_BYTES:
-            kind = "scoped-rule-size" if SCOPED_RULE_BUDGET_ENFORCE else "size-warn"
+            in_commit = commit is None or commit.name_of(rule) in commit.names
+            grew = in_commit and _grew_past_base(rule, size, commit.base if commit else "HEAD")
+            kind = "scoped-rule-size" if grew else "size-warn"
             findings.append((rule, 0, kind,
-                             f"path-scoped rule is {size:,} B (cap {SCOPED_RULE_MAX_BYTES:,} B); move "
-                             f"incident narratives to lessons or an RCA and keep the rule."))
-    if _yaml is None and _rule_files():
+                             f"path-scoped rule is {size:,} B (cap {SCOPED_RULE_MAX_BYTES:,} B)"
+                             + ("" if kind == "size-warn" else " and larger than its HEAD copy")
+                             + "; move incident narratives to lessons or an RCA and keep the rule."))
+    if _yaml is None and rules:
         findings.append((rules_dir, 0, "frontmatter-unchecked",
                          "PyYAML is not installed, so rule frontmatter was not parsed: a rule that "
                          "loads everywhere because its YAML is broken would pass. pip install pyyaml."))
@@ -1081,19 +1197,126 @@ def check_context_budget() -> list[tuple[Path, int, str, str]]:
     return findings
 
 
+# --------------------------------------------------------------------------- rule text drift
+#
+# Three checks on the text that instructs agents (rules, agents, skills, ai-includes). They gate
+# --fail-on-drift, because each names something an agent would then act on and that is not there.
+# With a commit in view they judge only the files it changes, as it records them. The commit hooks'
+# trigger lists must cover each folder scanned here (tools/test_hooks.sh 5d).
+
+DEAD_MEMORY_DIRS = (".claude/rules", ".claude/agents", ".claude/skills", "docs/ai-includes")
+# Memory files are machine-local, so no other client or machine can read a citation of one.
+# Lessons, RCAs and ADRs are history and are not scanned.
+_DEAD_MEMORY_RE = re.compile(r"feedback[_-]\w")
+SYMBOL_SUFFIXES = ("Service", "Adapter", "Factory", "Provider", "Tests", "Hook")
+_SYMBOL_RE = re.compile(r"`([A-Z][A-Za-z0-9]*(?:" + "|".join(SYMBOL_SUFFIXES) + r"))`")
+# A line with this marker names a type on purpose as an example, so it need not exist.
+_ILLUSTRATIVE_RE = re.compile(r"<!--\s*illustrative-name\s*-->")
+DOTNET_FLAG_DIRS = ("docs/modding", "docs/reference", "docs/ai-includes", ".claude/skills",
+                    ".claude/rules", ".claude/agents")
+_DOTNET_TARGET_RE = re.compile(
+    r"\bdotnet\s+(?:test|build)\s+(?:-\S+\s+(?:[^-\s]\S*\s+)?)*[\"']?(?:\S*TAOM\S*|Main\b\S*)")
+_LINE_CONTINUATIONS = ("\\", "`", "^")
+
+
+def _md_files_under(rels) -> list[Path]:
+    out: list[Path] = []
+    for d in rels:
+        base = REPO_ROOT / d
+        if base.is_dir():
+            out.extend(sorted(p for p in base.rglob("*.md") if p.is_file()))
+    return out
+
+
+def _md_texts_under(rels, commit: CommitView | None) -> list[tuple[Path, str]]:
+    """(file, text) of the markdown under rels to judge: every working copy with no commit in view,
+    else only the files the commit changes, as it records them. A deleted file is skipped."""
+    if commit is None:
+        return [(p, p.read_text(encoding="utf-8", errors="replace")) for p in _md_files_under(rels)]
+    prefixes = tuple(d + "/" for d in rels)
+    paths = [REPO_ROOT / n for n in sorted(commit.names) if n.endswith(".md") and n.startswith(prefixes)]
+    commit.load(paths)
+    return [(p, t) for p, t in ((p, commit.read(p)) for p in paths) if t is not None]
+
+
+def check_dead_memory_refs(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
+    findings: list[tuple[Path, int, str, str]] = []
+    for path, text in _md_texts_under(DEAD_MEMORY_DIRS, commit):
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            if _DEAD_MEMORY_RE.search(line):
+                findings.append((path, lineno, "dead-memory-ref",
+                                 "cites a machine-local memory file; delete the citation and keep "
+                                 "the rule text."))
+    return findings
+
+
+def check_rule_symbols(adrs: bool = False,
+                       commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
+    """Backticked names ending in Service, Adapter, Factory, Provider, Tests or Hook, outside code
+    fences, that no tracked .cs file or tools .py file contains. adrs=True scans docs/adrs/ instead
+    of .claude/rules/ and tags the findings `adr-symbol` (report-only: an ADR keeps history). A name
+    resolves against what git tracks, the index for a plain commit, so a file staged in the same
+    commit counts, and an untracked one does not. Outside a git tree it searches the files on disk."""
+    kind = "adr-symbol" if adrs else "rule-symbol"
+    hits: list[tuple[Path, int, str]] = []
+    if adrs:
+        texts = [(p, p.read_text(encoding="utf-8", errors="replace")) for p in sorted(ADRS_DIR.glob("*.md"))]
+    else:
+        texts = _md_texts_under((RULES_DIR_REL,), commit)
+    for path, text in texts:
+        for lineno, line in iter_lines_outside_code_fences(text):
+            if _ILLUSTRATIVE_RE.search(line):
+                continue
+            for m in _SYMBOL_RE.finditer(line):
+                hits.append((path, lineno, m.group(1)))
+    pending = {name for _, _, name in hits}
+    if pending:
+        args = ("-h", "-o", "-w", "-F", *(x for n in sorted(pending) for x in ("-e", n)),
+                "--", "*.cs", "tools/*.py")
+        found = _git_run("grep", *(("--cached",) if commit is not None and commit.from_index else ()), *args)
+        if found is not None and found.returncode > 1:
+            found = _git_run("grep", "--no-index", *args)
+        if found is None or found.returncode > 1:     # a tool fault is no finding
+            return []
+        pending -= set(found.stdout.split())
+    return [(path, lineno, kind,
+             f"`{name}` is in no tracked .cs file or tools .py file; name a real symbol, or mark "
+             f"an example line with <!-- illustrative-name -->.")
+            for path, lineno, name in hits if name in pending]
+
+
+def check_unflagged_dotnet(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
+    """`dotnet test|build` of a TAOM target with no `-p:ModuleId=` in the command, a command wrapped
+    with a line continuation read whole: the post-build step deploys into a game install that may be
+    running."""
+    findings: list[tuple[Path, int, str, str]] = []
+    for path, text in _md_texts_under(DOTNET_FLAG_DIRS, commit):
+        lines = text.splitlines()
+        for i, line in enumerate(lines):
+            if not _DOTNET_TARGET_RE.search(line):
+                continue
+            command, j = line, i
+            while command.rstrip().endswith(_LINE_CONTINUATIONS) and j + 1 < len(lines):
+                j += 1
+                command = lines[j]
+                line += " " + command
+            if "ModuleId" not in line:
+                findings.append((path, i + 1, "unflagged-dotnet",
+                                 "add -p:DisableModuleCopy=true -p:ModuleId= so the command does "
+                                 "not deploy into the game install."))
+    return findings
+
+
 # --------------------------------------------------------------------------- model registry
 #
-# Two files catalogue TAOM's GameModel overrides, and neither is ordinary documentation.
-# `.claude/rules/gamemodels.md` carries `paths: Main/Features/**/Models/*.cs`, so it is loaded
-# automatically whenever a model is edited — its table IS the briefing the next person gets,
-# including the cross-entity-propagation rule written after the NavalTravel #296 RCA. A model
-# missing from it is a model that rule never reaches. `docs/reference/gamemodel-registry.md`
-# opens with "Every TAOM GameModel override", which is a claim a checker can hold it to.
+# `docs/reference/gamemodel-registry.md` is the one catalogue of TAOM's GameModel overrides.
+# It opens with "Every TAOM GameModel override", which is a claim a checker can hold it to.
+# (`.claude/rules/gamemodels.md` is `paths:`-scoped to the model files and loads whenever a
+# model is edited whether or not the model has a row, so it carries no table.)
 #
 # Both directions matter, and so does the count in the prose: a hardcoded "TAOM has N overrides"
-# is exactly the shape that rots, and it rots silently because nobody recounts 40 table rows.
+# is exactly the shape that rots, and it rots silently because nobody recounts the table rows.
 
-MODEL_RULES_DOC = REPO_ROOT / ".claude" / "rules" / "gamemodels.md"
 MODEL_REGISTRY_DOC = DOCS_DIR / "reference" / "gamemodel-registry.md"
 MODELS_SEARCH_ROOT = REPO_ROOT / "Main"
 
@@ -1103,12 +1326,7 @@ MODEL_CLASS_RE = re.compile(
     r"^[ \t]*(?:public\s+|internal\s+)?(?:sealed\s+|abstract\s+|partial\s+)*"
     r"class\s+(Taom\w*Model)\s*:\s*(\w*Model)\b", re.M)
 MODEL_MENTION_RE = re.compile(r"`(Taom\w*Model)`")
-MODEL_COUNT_CLAIM_RES = (
-    re.compile(r"TAOM has (\d+) GameModel overrides"),
-    # "(N total)", the heading's shape today, or "(N total: 49 registered, ...)", a shape it once had; the
-    # colon form never matched before
-    re.compile(r"Existing Overrides \((\d+) total[):]"),
-)
+MODEL_COUNT_CLAIM_RE = re.compile(r"TAOM has (\d+) GameModel overrides")
 
 
 def discover_model_classes() -> dict[str, Path]:
@@ -1145,26 +1363,25 @@ def check_model_registry() -> list[tuple[Path, int, str, str]]:
                          "the search root moved, so this check cannot vouch for anything"))
         return findings
 
-    for doc in (MODEL_RULES_DOC, MODEL_REGISTRY_DOC):
-        if not doc.is_file():
-            findings.append((doc, 0, "missing-doc", f"{rel(doc)} does not exist"))
-            continue
-        text = doc.read_text(encoding="utf-8", errors="replace")
-        listed = set(MODEL_MENTION_RE.findall(text))
+    doc = MODEL_REGISTRY_DOC
+    if not doc.is_file():
+        findings.append((doc, 0, "missing-doc", f"{rel(doc)} does not exist"))
+        return findings
+    text = doc.read_text(encoding="utf-8", errors="replace")
+    listed = set(MODEL_MENTION_RE.findall(text))
 
-        for name in sorted(set(in_code) - listed):
-            findings.append((doc, 0, "unlisted-model",
-                             f"`{name}` ({rel(in_code[name])}) is not in {rel(doc)}"))
-        for name in sorted(listed - set(in_code)):
-            findings.append((doc, _line_of(text, f"`{name}`"), "phantom-model",
-                             f"`{name}` is listed in {rel(doc)} but no such class exists"))
+    for name in sorted(set(in_code) - listed):
+        findings.append((doc, 0, "unlisted-model",
+                         f"`{name}` ({rel(in_code[name])}) is not in {rel(doc)}"))
+    for name in sorted(listed - set(in_code)):
+        findings.append((doc, _line_of(text, f"`{name}`"), "phantom-model",
+                         f"`{name}` is listed in {rel(doc)} but no such class exists"))
 
-        for pattern in MODEL_COUNT_CLAIM_RES:
-            for m in pattern.finditer(text):
-                claimed = int(m.group(1))
-                if claimed != len(in_code):
-                    findings.append((doc, text.count("\n", 0, m.start()) + 1, "model-count",
-                                     f"claims {claimed} GameModel overrides; {len(in_code)} exist"))
+    for m in MODEL_COUNT_CLAIM_RE.finditer(text):
+        claimed = int(m.group(1))
+        if claimed != len(in_code):
+            findings.append((doc, text.count("\n", 0, m.start()) + 1, "model-count",
+                             f"claims {claimed} GameModel overrides; {len(in_code)} exist"))
     return findings
 
 
@@ -1377,12 +1594,20 @@ def _is_rca_doc(path: Path) -> bool:
         and path.suffix == ".md"
 
 
-def _followup_has_owner(raw: str) -> bool:
+def _followup_owner_prose(raw: str) -> str:
     prose = _INLINE_CODE_RE.sub(" ", raw)
     # A link target is dropped, except an /issues/<n> inside it.
     prose = _LINK_TARGET_RE.sub(
         lambda m: " " + " ".join(_ISSUE_LINK_TARGET_RE.findall(m.group(0))) + " ", prose)
-    prose = _NOT_AN_ISSUE_RE.sub(" ", prose)
+    return _NOT_AN_ISSUE_RE.sub(" ", prose)
+
+
+def _followup_has_issue(raw: str) -> bool:
+    return bool(_ISSUE_REF_RE.search(_followup_owner_prose(raw)))
+
+
+def _followup_has_owner(raw: str) -> bool:
+    prose = _followup_owner_prose(raw)
     return bool(_ISSUE_REF_RE.search(prose) or _NO_ISSUE_RE.search(prose))
 
 
@@ -1408,6 +1633,23 @@ def scan_text_for_followups(
             continue
         findings.append((path, lineno, "followup-no-owner", raw.strip()[:120]))
     return findings
+
+
+def list_unfiled_followups() -> list[tuple[Path, int, str, str]]:
+    """Every FOLLOW-UP line in docs/reviews/rca-*.md that cites no issue number: the backlog the
+    gate lets through with `no issue: <reason>`. The gate itself is check_rca_followups."""
+    rows: list[tuple[Path, int, str, str]] = []
+    reviews = REPO_ROOT / "docs" / "reviews"
+    if not reviews.is_dir():
+        return rows
+    for path in sorted(reviews.glob("rca-*.md")):
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        for lineno, raw in iter_lines_outside_code_fences(text):
+            prose = _LINK_TARGET_RE.sub(" ", _INLINE_CODE_RE.sub(" ", raw))
+            if _FOLLOWUP_RE.search(prose) and not _followup_has_issue(raw):
+                kind = "reason" if _followup_has_owner(raw) else "bare"
+                rows.append((path, lineno, kind, raw.strip()[:160]))
+    return rows
 
 
 def check_rca_followups(
@@ -1487,7 +1729,8 @@ def _merge_heads() -> list[str]:
 
 
 def check_feature_doc_verify_section(
-    base: str = "HEAD", staged: bool = False, also_new: list[str] | None = None
+    base: str = "HEAD", staged: bool = False, also_new: list[str] | None = None,
+    only_paths: list[str] | None = None,
 ) -> list[tuple[Path, int, str, str]]:
     """A NEW docs/features/*.md with no `## How to verify in game` section that has a body.
 
@@ -1495,20 +1738,29 @@ def check_feature_doc_verify_section(
     index and reads the file from it). Working-tree mode also counts untracked files. A modified
     existing doc is never checked, and neither are TEMPLATE.md, README.md and a subdirectory doc.
     `also_new` names paths a pending `git add` in the same command will add: each one absent from
-    HEAD and present in the working tree is checked from the working tree.
+    HEAD and present in the working tree is checked from the working tree. `only_paths` narrows the
+    check to those paths' working copies, whatever `staged` says: what `git commit -- <paths>` records.
     """
-    cached = ["--cached"] if staged else []
-    listing = _git_out("-c", "core.quotePath=false", "diff", *cached, "--name-status",
-                       "--diff-filter=A", base, "--", _FEATURE_DOC_PATHSPEC)
     names: list[str] = []
-    for line in (listing or "").splitlines():
-        parts = line.split("\t")
-        if len(parts) >= 2:
-            names.append(parts[-1].strip())
-    if not staged:
-        untracked = _git_out("-c", "core.quotePath=false", "ls-files", "--others",
-                             "--exclude-standard", "--", _FEATURE_DOC_PATHSPEC)
-        names.extend(n.strip() for n in (untracked or "").splitlines() if n.strip())
+    if only_paths:
+        staged = False
+        listed = _git_out("-c", "core.quotePath=false", "ls-files", "--", *only_paths) or ""
+        known = set((_git_out("-c", "core.quotePath=false", "ls-tree", "-r", "--name-only", base,
+                              "--", "docs/features/") or "").splitlines())
+        names = [n for n in dict.fromkeys(x.strip() for x in listed.splitlines())
+                 if n.startswith("docs/features/") and n not in known]
+    else:
+        cached = ["--cached"] if staged else []
+        listing = _git_out("-c", "core.quotePath=false", "diff", *cached, "--name-status",
+                           "--diff-filter=A", base, "--", _FEATURE_DOC_PATHSPEC)
+        for line in (listing or "").splitlines():
+            parts = line.split("\t")
+            if len(parts) >= 2:
+                names.append(parts[-1].strip())
+        if not staged:
+            untracked = _git_out("-c", "core.quotePath=false", "ls-files", "--others",
+                                 "--exclude-standard", "--", _FEATURE_DOC_PATHSPEC)
+            names.extend(n.strip() for n in (untracked or "").splitlines() if n.strip())
     # During a merge, a doc the merged branch already has is not new to this change.
     merge_parents = _merge_heads()
     names = [n for n in names
@@ -1562,6 +1814,7 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**",
         f"- New feature docs with no `{VERIFY_HEADING}` section: **{len(report.feature_verify)}**",
         f"- Git diff failed, so the new-lines checks could not run: **{len(report.git_diff_failures)}**",
+        f"- Rule text drift (dead memory citations, missing symbols, unflagged dotnet): **{len(report.rule_drift)}**",
     ]
     if drift_only:
         out.append("Only the checks `--fail-on-drift` gates on (`--drift-only`); run without it for the rest.")
@@ -1576,8 +1829,9 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         out.append(f"- Prose trapped in an auto-generated backlinks region: **{len(report.backlinks_prose)}**")
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
         out.extend(gating)
-        out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
+        out.append(f"- GameModel registry drift (code vs the registry): **{len(report.model_registry)}**")
         out.append(f"- Em/en dashes in newly written prose: **{len(report.dashes)}**")
+        out.append(f"- Missing symbols in ADRs (report-only): **{len(report.adr_symbols)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -1664,10 +1918,8 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         if report.model_registry:
             out.append("## GameModel registry drift")
             out.append("")
-            out.append("`.claude/rules/gamemodels.md` is `paths:`-scoped to the model files, so it is the "
-                       "briefing whoever edits a model actually receives — a model missing from its table "
-                       "never gets the cross-entity-propagation rule. `docs/reference/gamemodel-registry.md` "
-                       "claims to list every override. Add the model to both, or correct the claim.")
+            out.append("`docs/reference/gamemodel-registry.md` claims to list every override and states "
+                       "their total. Add the model to it, or correct the claim.")
             out.append("")
             for f, lineno, kind, msg in report.model_registry:
                 loc = f"`{rel(f)}:{lineno}`" if lineno else f"`{rel(f)}`"
@@ -1704,6 +1956,25 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
             for f, lineno, kind, snippet in report.feature_verify:
                 out.append(f"- `{rel(f)}:{lineno}` [{kind}] {snippet}")
             out.append("")
+    if report.rule_drift:
+        out.append("## Rule text drift")
+        out.append("")
+        out.append("Rules, agents, skills and ai-includes may not cite memory files (`feedback_*`), "
+                   "name a `...Service`, `...Adapter`, `...Factory`, `...Provider`, `...Tests` or "
+                   "`...Hook` that exists in no tracked .cs or tools .py file, or give a `dotnet` "
+                   "command for a TAOM project without `-p:ModuleId=`.")
+        out.append("")
+        for f, lineno, kind, msg in report.rule_drift:
+            out.append(f"- `{rel(f)}:{lineno}` [{kind}] {msg}")
+        out.append("")
+    if report.adr_symbols and not quick:
+        out.append("## Missing symbols in ADRs (report-only)")
+        out.append("")
+        out.append("An ADR keeps its historical names, so these do not gate. Read them when you edit the ADR.")
+        out.append("")
+        for f, lineno, kind, msg in report.adr_symbols:
+            out.append(f"- `{rel(f)}:{lineno}` {msg}")
+        out.append("")
     if report.git_diff_failures:
         out.append("## Git diff failed")
         out.append("")
@@ -1734,6 +2005,10 @@ def _dash_base_resolves(ref: str) -> bool:
     return inside is None or inside.returncode != 0
 
 
+def _rule_drift(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
+    return check_dead_memory_refs(commit) + check_rule_symbols(commit=commit) + check_unflagged_dotnet(commit)
+
+
 def main(argv: list[str]) -> int:
     # Force UTF-8 stdout on Windows so em-dashes / unicode arrows don't garble.
     if hasattr(sys.stdout, "reconfigure"):
@@ -1748,23 +2023,30 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--fail-on-drift", action="store_true",
                     help="Exit 1 on config-example drift, a version mismatch, a context-budget "
                          "breach (size-warn findings excepted), a newly written RCA FOLLOW-UP "
-                         "line with no issue or reason, or a new feature doc with no "
-                         "'## How to verify in game' section.")
+                         "line with no issue or reason, a new feature doc with no "
+                         "'## How to verify in game' section, or rule text drift.")
     ap.add_argument("--drift-only", action="store_true",
                     help="Run only the checks --fail-on-drift gates on, and gate on them.")
     ap.add_argument("--staged", action="store_true",
-                    help="Read the RCA FOLLOW-UP and new-feature-doc checks from the index, not "
-                         "the working tree: what a commit would record. The commit hook's mode.")
+                    help="Judge the tree a commit would record, read from the index, not the working "
+                         "copies: every gating check. The rule text and path-rule size checks judge only "
+                         "the files it changes. The commit hooks' mode.")
+    ap.add_argument("--clean-merge", action="store_true",
+                    help="The index is a clean merge's (.githooks/pre-merge-commit). Git writes "
+                         "MERGE_HEAD only after that hook, so a doc the merged branch holds looks new: "
+                         "skip the new-feature-doc check, which that branch's own commit passed.")
     ap.add_argument("--also-new", action="append", default=[], metavar="PATH",
                     help="A docs/features/*.md that a pending `git add` will add (repeatable): "
                          "checked from the working tree if HEAD lacks it.")
     ap.add_argument("--context-budget-json", action="store_true",
                     help="Print the context-budget inputs (entry docs, rules, caps) as JSON and exit.")
+    ap.add_argument("--followups", action="store_true",
+                    help="List every RCA FOLLOW-UP line that cites no issue number, then the "
+                         "count on the last line. Report only: the gate is unchanged.")
     ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
     ap.add_argument("--only-paths", nargs="+", metavar="PATH", default=None,
-                    help="Read the RCA FOLLOW-UP check from these paths' working copies, not the "
-                         "index: what `git commit -- PATH...` records. Give it last. Only the RCA docs "
-                         "among them are read. Limits (the hook, not this tool): `git commit "
+                    help="Judge these paths' working copies on top of HEAD, not the index: what `git "
+                         "commit -- PATH...` records. Give it last. Limits (the hook, not this tool): `git commit "
                          "-i/--include` and `--pathspec-from-file` are judged as index commits, and "
                          "more than ~450 named paths exceed the Windows argument limit and fall back "
                          "to the index.")
@@ -1775,6 +2057,13 @@ def main(argv: list[str]) -> int:
                          "counts every file as added. A ref git cannot resolve is an error: "
                          "exit 2, no report.")
     args = ap.parse_args(argv)
+
+    if args.followups:
+        rows = list_unfiled_followups()
+        for f, lineno, kind, text in rows:
+            sys.stdout.write(f"{rel(f)}:{lineno} [{kind}] {text}\n")
+        sys.stdout.write(f"unfiled FOLLOW-UP lines: {len(rows)}\n")
+        return 0
 
     if args.context_budget_json:
         sys.stdout.write(json.dumps(context_budget_snapshot(), indent=2) + "\n")
@@ -1790,16 +2079,9 @@ def main(argv: list[str]) -> int:
             files.extend(iter_markdown(root))
 
     report = LintReport()
+    commit = commit_view(args.staged, args.only_paths, args.dash_base)
     if args.drift_only:
         args.fail_on_drift = True
-        report.config_drift = check_config_example_drift(files)
-        report.version_mismatches = check_version_consistency()
-        report.budget = check_context_budget()
-        report.rca_followups = check_rca_followups(
-            args.dash_base, staged=args.staged, only_paths=args.only_paths,
-            failures=report.git_diff_failures)
-        report.feature_verify = check_feature_doc_verify_section(args.dash_base, staged=args.staged,
-                                                                  also_new=args.also_new)
     else:
         link_files = files + harness_link_files()
         report.dead_links = check_dead_links(link_files)
@@ -1809,16 +2091,21 @@ def main(argv: list[str]) -> int:
         report.orphan_features = check_orphan_features(files)
         report.backlinks_prose = check_backlinks_region_prose(files)
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
-        report.config_drift = check_config_example_drift(files)
-        report.version_mismatches = check_version_consistency()
-        report.budget = check_context_budget()
         report.model_registry = check_model_registry()
         report.dashes = check_ai_dashes(args.dash_base, failures=report.git_diff_failures)
+        report.adr_symbols = check_rule_symbols(adrs=True)
+    if args.drift_only or not args.quick:
+        report.config_drift = check_config_example_drift(files, commit)
+        report.version_mismatches = check_version_consistency(commit)
+        report.budget = check_context_budget(commit)
         report.rca_followups = check_rca_followups(
             args.dash_base, staged=args.staged, only_paths=args.only_paths,
             failures=report.git_diff_failures)
-        report.feature_verify = check_feature_doc_verify_section(args.dash_base, staged=args.staged,
-                                                                  also_new=args.also_new)
+        if not args.clean_merge:
+            report.feature_verify = check_feature_doc_verify_section(args.dash_base, staged=args.staged,
+                                                                      also_new=args.also_new,
+                                                                      only_paths=args.only_paths)
+        report.rule_drift = _rule_drift(commit)
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
@@ -1830,10 +2117,11 @@ def main(argv: list[str]) -> int:
             ("model_registry", report.model_registry), ("ai_dashes", report.dashes),
             ("rca_followups", report.rca_followups), ("feature_verify", report.feature_verify),
             ("git_diff_failed", report.git_diff_failures),
+            ("rule_drift", report.rule_drift), ("adr_symbols", report.adr_symbols),
         ]
         if args.drift_only:
             counters = [c for c in counters if c[0] in ("config_drift", "version_mismatch", "context_budget", "rca_followups",
-                                                  "feature_verify", "git_diff_failed")]
+                                                  "feature_verify", "git_diff_failed", "rule_drift")]
         summary = "\n".join(["---"]
                             + [f"{(name + ':').ljust(19)}{len(items)}" for name, items in counters]
                             + [f"total_findings:    {report.total}", "---", ""])
@@ -1863,10 +2151,21 @@ def main(argv: list[str]) -> int:
         or report.rca_followups
         or report.feature_verify
         or report.git_diff_failures
+        or report.rule_drift
     ):
         return 1
     return 0
 
 
+def entry(argv: list[str]) -> int:
+    """main, with a crash as exit 3: exit 1 is a finding, and the commit hooks refuse on it."""
+    try:
+        return main(argv)
+    except Exception:
+        traceback.print_exc()
+        print("lint_docs: crashed (traceback above); no verdict.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1:]))
+    raise SystemExit(entry(sys.argv[1:]))

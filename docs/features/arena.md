@@ -103,7 +103,7 @@ Two extension points, both delegating to `ITournamentService`:
 
 ```
 == (A) GameModel ==
-SubModule.OnGameStart → RegisterCulturalFeatModels  (Main/SubModule.cs:1201)
+SubModule.OnGameStart → RegisterCulturalFeatModels  (Main/SubModule.cs:1193)
    campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))
         |
 TaomTournamentModel : DefaultTournamentModel        ← thin: converts sealed→primitive, delegates
@@ -155,7 +155,7 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 | [Main/Features/Arena/TournamentPrizeRules.cs](../../Main/Features/Arena/TournamentPrizeRules.cs) | Pure prize rules: `PrizeBand`, `PrizeClass`, `XmlMerchandise`, `Fits`, `PreferCulture`, and for Tournament Rewards' Join choice `AdvertisedBand` (the band the alternatives come from: elite for a heavy, elite, lord or named prize) and `PickChoices` (the seeded three) |
 | [Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs](../../Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs) | Harmony postfix — clears Horse/HorseHarness for dwarf participants |
 | [Main/Features/Arena/ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs) | `container.Register<ITournamentService, TournamentService>(Reuse.Singleton)` |
-| [Main/SubModule.cs:1201](../../Main/SubModule.cs) | `AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()))`, in `RegisterCulturalFeatModels` (called from `OnGameStart`) |
+| [Main/SubModule.cs:1193](../../Main/SubModule.cs) | `AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()))`, in `RegisterCulturalFeatModels` (called from `OnGameStart`) |
 | [Main/SubModule.cs](../../Main/SubModule.cs) | `TryPatchCategory("Patch46_TournamentDwarfDismount")` in `OnGameInitializationFinished` (next to Patch71_HeroResetEquipmentsGuard) |
 | `Main/_Module/ModuleData/characters/npcs_<culture>.xml` | `gear_practice_dummy_<culture>` NPCs (armor data) — see [tournament-armor-assignment.md](tournament-armor-assignment.md) |
 

@@ -213,13 +213,13 @@ so the same placement argument holds), and resets it in the unload list.
 - `LordPartyTemplateServiceTests.cs` (5): mapped, unmapped, null, empty, case-sensitive.
 - `LordPartyTemplateResolutionTests.cs` (7): no ambient owner, another clan's read, owner without a
   clan, unknown read clan, unmapped owner (a clanmate), the hit, blank lookup result.
-- `ShippedLordPartyTemplateTests.cs` (13): the JSON maps both lords, both hero ids are retagged in
+- `ShippedLordPartyTemplateTests.cs` (14): the JSON maps both lords, both hero ids are retagged in
   `lords.xslt` or defined in `characters/lords.xml`, both templates exist and are bound by no clan
   or culture, every stack troop has a level, no zero max or min above max, min sums in band,
   Faramir sums to 200 at 100 / 40 / 60 by `default_group` and is Ithilien on foot with Minas Tirith
   horse, Sauron sums to 260 at 104 / 78 / 78 by level band with only Uruk and Black Numenorean high
   tier and nothing under level 11.
-- `Patch88LordPartyTemplateTests.cs` (12): the getter, `SpawnLordParty(hero, isNewGame)` private
+- `Patch88LordPartyTemplateTests.cs` (11): the getter, `SpawnLordParty(hero, isNewGame)` private
   with one overload, `InitializeLordPartyProperties(mobileParty, owner)` on the nested args type,
   both vanilla bodies still call the getter, every engine member the postfix references, the
   category literal on all three classes, the `SubModule.cs` apply / initialize / reset lines,

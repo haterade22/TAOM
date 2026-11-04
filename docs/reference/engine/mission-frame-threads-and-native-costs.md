@@ -1,4 +1,4 @@
-# Mission frame, threads and native costs (v1.5.3)
+# Mission frame, threads and native costs
 
 Sibling reference, not a numbered phase. What one battle frame does on which thread, what the managed
 runtime is, and what a few engine calls TAOM uses cost inside `TaleWorlds.Native.dll`. Written for the
@@ -17,6 +17,8 @@ Every claim carries a tag:
   re-derived. Native addresses yotthani gives for 1.5.3 are RVAs on the same binary hash.
 
 Native offsets hold for this one binary only; re-verify after any engine bump (`/engine-bump`).
+
+Most claims were last checked on v1.5.3 or v1.5.5. Treat an offset as unverified on v1.5.6 until its command in "How to re-verify" has run.
 
 ## 1. The battle frame
 
@@ -103,9 +105,43 @@ checked). (yotthani, MithrilForge `docs/perf-audit/particle-sim-wait.md`,
   `IUtil.GetFrameLimiterWithSleep` is a three-byte stub at `0x28F10` in the client; the real code is in the
   dedicated server build, where `GetRendererFps` returns 0. The consumer is TAOM's `mainMs` and `renderMs`
   in [the heartbeat](../../features/mission-perf-heartbeat.md).
-- Which callbacks reach which thread, and how TAOM code must treat them, is the thread table in
-  [`.claude/rules/harmony-patches.md`](../../../.claude/rules/harmony-patches.md) "Which thread runs your
-  target". This page does not repeat it.
+
+### Which thread runs your target
+
+Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered
+from native, and native decides the thread. Verified on v1.4.8, identical on v1.5.3 (#592, #595, #634):
+
+| Runs on | Engine entry points reached from it |
+|---|---|
+| Main thread | `Mission.OnTick` -> every `MissionBehavior.OnMissionTick`, then LAST `TickAgentsAndTeamsAsync`; `OrderController` (player orders); `Mission.SpawnAgent` -> `OnAgentBuild`; `MissionAgentPanicHandler.OnPreMissionTick` -> `Mission.OnAgentFleeing`; views, UI and input after `Mission.OnTick` returns |
+| Async AI thread (`Mission.TickAgentsAndTeams`, an `[MBCallback]`) | `Agent.Tick` -> `AgentComponent.OnTick` (vanilla's `CommonAIComponent.OnTick` -> `Panic` -> `Mission.OnAgentPanicked` -> every `MissionBehavior.OnAgentPanicked`, and `SetAlarmState`), `HumanAIComponent.OnTick` -> `Agent.UseGameObject` -> `Mission.OnObjectUsed`, and its `ItemPickupTick` -> `Agent.StopUsingGameObject` -> `Mission.OnObjectStoppedBeingUsed`, `TickAsAI`; `Team.Tick` -> `TeamAI` -> `Formation.SetMovementOrder` / `SetTargetFormation` (also the retreat branch for the PLAYER's team); `Formation.Tick`; `MBSubModuleBase.AfterAsyncTickTick` |
+| TWParallel worker pool (`Mission.AgentTickMT`) | `Agent.TickParallel` -> `AgentComponent.OnTickParallel` (`CommonAIComponent.OnTickParallel` -> `Agent.StartFadingOut` for routers), `HumanAIComponent.ParallelUpdateFormationMovement` -> `Agent.GetBaseFormationFrame` -> `Formation.GetOrderPositionOfUnit` |
+| **Either: native decides, and off-main is observed** | `Mission.OnAgentRemoved` (then `Agent.OnRemove` -> every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`, `OnAgentDismount`, `Agent.OnAgentAlarmedStateChanged`. A v1.4.8 player log caught `OnAgentRemoved`, `OnAgentShootMissile`, `OnAgentDismount`, `OnAgentAlarmedStateChanged`, `OnObjectUsed` and `OnObjectStoppedBeingUsed` off the main thread (#634; the thread ids cannot say whether on the async tick thread or a pool worker). Vanilla's own handlers take no lock, so if they are safe native must serialise these with the agent tick rather than the main thread; nothing managed proves which |
+| **Engine-declared multi-thread** (`[MBCallback(null, true)]`, v1.5.4) | `Mission.GetDefendCollisionResults` -> `MissionCombatMechanicsHelper.GetDefendCollisionResults` -> `DecideCrushedThrough` (TAOM: `TaomCombatMechanicsModel`, `TaomCustomBattleDamageModel`, so `RaceAbilityHooks.CrushVerdict` and `CombatMechanicsHooks.CrushThrough`, and in the campaign model only `CareerTroopHooks.ApplyCrushHold`, #769 E10: it reads `Origin.BattleCombatant`, takes the passive-cache lock and, when the defender's leader holds a `TroopCrushHold` pip for its class, draws its own locked `System.Random`, never `MBRandom`; detail in career-system.md "Troop counters"); `Agent.GetWeaponInaccuracy`; `Agent.UpdateMountAgentCache`; `Mission.OnFixedTick`, `CanPhysicsCollideBetweenTwoEntities`, `MissileCalculatePassbySoundParametersCallbackMT`. Native calls the defend callback inside the parallel melee sweep (yotthani, decompile v1.5.3); no TAOM log has caught it off the main thread yet. The crush path's TAOM writes are the race-ability telemetry (`RaceAbilityTelemetry.Add`, `Interlocked`) and, from the career hold, the troop counter tally and the hook fault set under a lock; it is not read-only either: `CombatMechanicsHooks` draws `MBRandom.RandomFloat` (`Game.Current.RandomGenerator`, unsynchronized) on this multi-threaded callback. That is the campaign model's long-standing behaviour and, since #788, Custom Battle's too; two concurrent draws corrupt its XorShift state (reproduced on v1.5.5, 2026-10-15), so a new draw on this path uses its own locked generator |
+
+The frame order matters: `OnMissionTick` never overlaps the same frame's agent tick (the next frame's
+`OnPreTick` waits in `WaitTickCompletion`), but everything on the main thread after `Mission.OnTick`
+returns does, and `AfterAsyncTickTick` runs after `tickCompleted` is set, so it can overlap the next
+frame's `OnMissionTick`. A stuck agent tick freezes the game with no exception; Patch91's
+`[MissionStall]` line names the frame.
+
+A patch on a target in the last four rows may run concurrently with the first row. Its shared state
+takes a lock (`CavalryChargeService`, `TroopStanceManager` are the shape), or writes a concurrent collection
+under that lock so a hot reader needs none (`FormationLayoutService.FindLaidOutFormation`), it
+never registers a blow or spawns an agent, and a team filter is not a thread filter (Patch35 gated on
+`PlayerTeam` and still ran on the async tick whenever that team's formations were AI-controlled). The
+`??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` or
+`AgentComponent` callback is not main-thread by virtue of being a callback: every callback in the last
+row can arrive off the main thread. A behavior or component that owns main-thread collections routes the write
+through `DeferredCallbackQueue.RunOrDefer` (inline on the main thread, parked for the next
+`OnMissionTick` anywhere else; `BehaviorTreeMissionLogic`, `BehaviorTreeAgentComponent` and
+`MountDespawnMissionBehavior`, `CareerPerkMissionBehavior`, `WargMissionBehavior`, `SpatialGrid.Remove` are the
+shape; #595, #634), or keeps the state behind a lock or in a concurrent collection when replay order does
+not matter (`FieldCommissionMeritService.RegisterKill` locks because its map's insertion order breaks kill
+ties; `SignatureAgentRoster` is a `ConcurrentDictionary`). Such a queue's owner marks the main thread itself (`MissionThreadGuard.MarkMainThread`
+at the top of its `OnMissionTick`), and reports a parked callback at WARNING to the file log, never to an
+on-screen logger: the report runs on the thread that raised the callback. A row in this table is a claim until a log line proves it:
+the #595 audit trusted a "main thread" row for `OnAgentRemoved` that one player log falsified.
 
 ## 2. The managed runtime is the .NET Framework CLR
 

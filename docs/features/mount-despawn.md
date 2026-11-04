@@ -129,11 +129,11 @@ exists because below it the corpse pops while the death animation is still playi
 | File | Role |
 |---|---|
 | [Main/Features/MountDespawn/Hooks/MountDespawnMissionBehavior.cs](../../Main/Features/MountDespawn/Hooks/MountDespawnMissionBehavior.cs) | Entry point. Owns the `Agent` handles, does the fade. |
-| [Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs](../../Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs) | Mission allowlist. Also gates [Battle Corpses](battle-corpses.md) (#701), so a change here moves both. |
+| [Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs](../../Main/Features/MountDespawn/Hooks/MountDespawnMissionGate.cs) | Mission allowlist. Also gates [Battle Corpses](battle-corpses.md) (#701), Fell Foes (#893) and Lost Footing (#894), so a change here moves all four. |
 | [Main/Features/MountDespawn/DeadMountDespawnService.cs](../../Main/Features/MountDespawn/DeadMountDespawnService.cs) | Schedule, clamp, budget. |
 | [Main/Features/MountDespawn/MountDespawnSettingsProvider.cs](../../Main/Features/MountDespawn/MountDespawnSettingsProvider.cs) | MCM isolation. Passes values through raw. |
 | [Main/Features/MountDespawn/MountDespawnIoC.cs](../../Main/Features/MountDespawn/MountDespawnIoC.cs) | Both registrations `Reuse.Singleton`. |
-| `Main/SubModule.cs` `OnMissionBehaviorInitialize` | Registers the behavior unconditionally. |
+| `Main/SubModule.cs` `AddTaomMissionBehaviors` (called from `OnMissionBehaviorInitialize`) | Registers the behavior unconditionally. |
 
 ## Dependencies
 

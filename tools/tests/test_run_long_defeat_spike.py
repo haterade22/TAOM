@@ -4,6 +4,7 @@
 Run:  python -m unittest tools.tests.test_run_long_defeat_spike
 """
 import os
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -17,7 +18,15 @@ import run_long_defeat_spike as spike  # noqa: E402
 
 SPIKE_SOURCE = Path(__file__).resolve().parents[2] / "Main" / "Features" / "LongDefeat" / "Spike"
 
+
+def spike_code():
+    """Every C# file of the spike, without comments, so that a comment naming a call neither satisfies nor trips a pin."""
+    text = "\n".join(path.read_text(encoding="utf-8") for path in sorted(SPIKE_SOURCE.glob("*.cs")))
+    return re.sub(r"//.*", "", text)
+
+
 FULL_LOG = "\n".join([
+    "[LongDefeat][S1] spawn level ok: defenders 101; Infantry 68 at frame (1.0, 2.0, 3.0): far 0, off the navmesh 0, on the frame point 1, z 2.5/3.0/4.0",
     "[LongDefeat][S1] after initial spawn: deployment finished True",
     "[LongDefeat][S2] wave 1 CLEARED at 120.0 s",
     "[LongDefeat][S5] deployed Mangonel at (1.0, 2.0, 3.0)",
@@ -71,6 +80,27 @@ class JudgeTests(unittest.TestCase):
             self.assertEqual(code, 1, bad)
             self.assertIn(good, why)
 
+    def test_soldiers_on_the_wrong_floor_fail_even_when_another_batch_was_right(self):
+        # The first in-game run put most of the garrison in the caves under Helm's Deep, and S1's line was still there.
+        log = FULL_LOG + "\n[LongDefeat][S1] spawn level WRONG: attackers 120; Infantry 90 at frame (1.0, 2.0, 3.0): far 64, off the navmesh 8, on the frame point 0, z 0.0/0.0/4.0"
+        code, why = spike.judge(FINAL, None, log)
+        self.assertEqual(code, 1)
+        self.assertIn("far 64", why)
+
+    def test_a_log_from_a_build_without_the_spawn_check_fails(self):
+        old = "\n".join(row for row in FULL_LOG.splitlines() if "spawn level" not in row)
+        code, why = spike.judge(FINAL, None, old)
+        self.assertEqual(code, 1)
+        self.assertIn("spawn level ok", why)
+
+    def test_a_run_that_also_ended_early_still_names_the_wrong_floor(self):
+        # The by-hand caves run ended at the time limit, and that reason alone would hide the cause.
+        log = FULL_LOG + "\n[LongDefeat][S1] spawn level WRONG: defenders 101; Infantry 68 at frame (1.0, 2.0, 3.0): far 64, off the navmesh 8, on the frame point 0, z 0.0/0.0/4.0"
+        code, why = spike.judge({"reason": "live_limit"}, None, log)
+        self.assertEqual(code, 1)
+        self.assertIn("reason=live_limit", why)
+        self.assertIn("far 64", why)
+
 
 class SourceTieTests(unittest.TestCase):
     """The judge and the arm text name strings the C# side owns. A rewording there would otherwise pass every test here."""
@@ -80,6 +110,27 @@ class SourceTieTests(unittest.TestCase):
         for line in spike.EVIDENCE:
             text = line.replace("[LongDefeat]", "").replace("wave 1", "wave {_wave}")
             self.assertIn(text, source, line)
+
+    def test_the_failure_label_is_text_the_runner_writes(self):
+        source = (SPIKE_SOURCE / "LongDefeatSpikeRunner.cs").read_text(encoding="utf-8")
+        self.assertIn(spike.SPAWN_LEVEL_WRONG.replace("[LongDefeat]", ""), source)
+
+    def test_the_engine_places_each_soldier_not_a_grid_of_the_runner(self):
+        # The engine computes a soldier's place only when the build data holds no position (Mission.cs:4227, :4262). A place from the runner skips the layout's navmesh filter.
+        code = spike_code()
+        self.assertRegex(code, r"GetAgentBuildDataToSpawnTroop\([^;]*,\s*null,\s*null\b")
+        self.assertNotIn(".InitialPosition(", code)
+        self.assertIn(".SetFormationPositioningFromDeploymentPlan(", code)
+        self.assertIn(".MakeDefaultDeploymentPlans(", code)
+
+    def test_every_batch_is_read_back(self):
+        for who in ("defenders", "reinforcements", "attackers"):
+            self.assertRegex(spike_code(), r'LogSpawnLevel\([^;]*"%s"\)' % who, who)
+
+    def test_the_judged_lines_carry_the_tag(self):
+        code = spike_code()
+        self.assertIn('Tag = "[LongDefeat]"', code)
+        self.assertRegex(code, r"\bInfo\([^;]*\[S1\] spawn level WRONG")
 
     def test_each_arm_key_is_one_the_options_read(self):
         source = (SPIKE_SOURCE / "LongDefeatSpikeOptions.cs").read_text(encoding="utf-8")

@@ -40,9 +40,8 @@ as proof that `<YourModule>` is sound.
   `equipmentsets/*.xml`, `troops/troops_*.xml`, `characters/*.xml` and `taom_spcultures.xml`
   (`tools/schemas/`), so a file laid out differently is swept for references but never
   schema-checked.
-- **Nothing here checks that your XML is well formed.** The validator works on text, not a parser
-  (the only `ET.parse` in `tools/taom_schema.py` is line 1631, in the settlement-economy pass). Run
-  the parser yourself: `python -c "import xml.etree.ElementTree as ET,pathlib;[ET.parse(f) for f in pathlib.Path('<game>/Modules/<YourId>/ModuleData').rglob('*.xml')]"`
+- **`python tools/validate_xml_schemas.py --module <your module>` parses every registered file.** A file no manifest
+  names gets no check: run the parser one-liner on it: `python -c "import xml.etree.ElementTree as ET,pathlib;[ET.parse(f) for f in pathlib.Path('<game>/Modules/<YourId>/ModuleData').rglob('*.xml')]"`
 - `python tools/check_external_xslt.py` checks the repo copy plus a hardcoded `TAOM_Map` and
   `LOTRLOME_Armory` (`tools/check_external_xslt.py:47`). `--moduledata` swaps the repo copy for
   yours; there is no flag that adds a third live module.

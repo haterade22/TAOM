@@ -288,7 +288,7 @@ class TranslatorMainTests(unittest.TestCase):
                 mock.patch.object(twc.name_tags, "load_table", return_value=table) as load, \
                 mock.patch.object(twc, "REPO_ROOT", repo_root or Path(td) / "repo"), \
                 contextlib.redirect_stdout(out):
-            code = twc.main(["--lang", "BR", "--provider", "deepseek", "--apply", *extra])
+            code = twc.main(["--lang", "BR", "--module", "all", "--provider", "deepseek", "--apply", *extra])
         return code, out.getvalue(), calls, load
 
     def _entries(self, f):
@@ -403,7 +403,7 @@ class TranslatorMainTests(unittest.TestCase):
                     mock.patch.object(twc.name_tags, "load_table", side_effect=FileNotFoundError("no table")), \
                     contextlib.redirect_stdout(io.StringIO()):
                 with self.assertRaises(FileNotFoundError):
-                    twc.main(["--lang", "BR", "--provider", "deepseek", "--apply"])
+                    twc.main(["--lang", "BR", "--module", "all", "--provider", "deepseek", "--apply"])
             self.assertEqual(calls, [])
 
     def test_main_LanguageWithoutTags_NeverLoadsTheTable(self):
@@ -416,7 +416,7 @@ class TranslatorMainTests(unittest.TestCase):
                     mock.patch.object(twc, "save_cache"), \
                     mock.patch.object(twc.name_tags, "load_table") as load, \
                     contextlib.redirect_stdout(out):
-                twc.main(["--lang", "DE", "--provider", "deepseek", "--apply"])
+                twc.main(["--lang", "DE", "--module", "all", "--provider", "deepseek", "--apply"])
             load.assert_not_called()
 
 

@@ -242,9 +242,9 @@ a Mirkwood market like any Mirkwood item (Mike, 2026-09-23: it may be sold).
 
 ## Tests
 
-- `ElkConfigTests` (11): the Monster id, and that it differs from the ram's so the two behaviors never attach a
+- `ElkConfigTests` (12): the Monster id, and that it differs from the ram's so the two behaviors never attach a
   tree to one agent; the shared action and set; the four equal slots; single target; cooldown longer than the
-  clip; trigger range inside the radius; the reach at 1.0x with `ReachScalesWithBody` set; the live Monster
+  clip; trigger range inside the radius; the reach at 1.0x with `ReachScalesWithBody` set; the elk profile passing that flag on; the live Monster
   declaring a valid `taom_body_length` while `taom_elk_a` holds the placeholder `body_length` 100; one 60 Blunt blow.
 - `ElkAttackServiceTests` (30, one six-row data test among them): the gate and cooldown tests mirror the ram's; the
   charge is 60 whatever the roll and 15 shield-blocked; a rider bonus scales it (75 at +25%, 19 on a block, 30 at a

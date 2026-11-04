@@ -70,11 +70,11 @@ taom_is_project_repo "$COMMIT_REPO" || { echo '{}'; exit 0; }
 
 # Files in the commit. No blanket --amend skip (amend is commonly "oops, add a
 # file" -- exactly the case to catch); include HEAD's files on amend.
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$(git -c core.quotePath=false diff --cached --name-only --no-renames 2>/dev/null)
 case "$COMMAND" in
     *"--amend"*)
         STAGED=$(printf '%s\n%s\n' "$STAGED" \
-            "$(git show HEAD --name-only --pretty=format: 2>/dev/null)" | sort -u)
+            "$(git -c core.quotePath=false show HEAD --name-only --no-renames --pretty=format: 2>/dev/null)" | sort -u)
         ;;
 esac
 
@@ -103,7 +103,7 @@ PY="$PYBIN"
 # allowlist, so a new ERROR check is silently non-blocking until it is named here: on 2026-08-31
 # UPGRADE_SKILL_REGRESSION, LANDLESS_CULTURE, MOUNTED_DWARF, SETTLEMENT_ECONOMY_FLOOR and
 # BROKEN_BODY_PROPERTY_REF were all live ERROR checks that this hook let straight through.
-# Inner bound, deliberately below the 60s registered timeout. A harness kill DISCARDS
+# Inner bound of 45 s, deliberately below the registered timeout. A harness kill DISCARDS
 # the hook's output, so an overrun there is indistinguishable from a clean pass. That is
 # exactly how this gate died on 2026-08-31: it was re-registered at 5s against a 27.0s
 # runtime, so every ModuleData commit silently skipped the check. Bounding the work here
@@ -133,6 +133,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code COLLISION_BODY_BORROWED --code ITEM_SLOT_REJECTED \
         --code SCHEMA_INVALID --code ARMOUR_ACQUISITION_REF \
         --code CREATURE_GEAR_OBTAINABLE --code BROKEN_FACTION_REF \
+        --code TROOP_ID_REMOVED \
         2>"$ERR_FILE")
 RC=$?
 
@@ -146,10 +147,17 @@ fi
 
 # Career kits (#743): taom_career_starting_equipment.xml is generated from the troop files, so a
 # troop edit can leave it off its rule with nothing staged in it. 998f054c did, and the file sat
-# adrift from v2.0.31 to v2.0.34 because its pin only ran by hand. ~0.8s; 10s bound keeps the
-# hook inside its 60s registration. Exit 1 is drift and blocks; 2 (no install) fails open.
+# adrift from v2.0.31 to v2.0.34 because its pin only ran by hand. ~0.8s; the 10s bound keeps the
+# hook inside its overall budget. Exit 1 is drift and blocks; 2 (no install) fails open.
+# A crash in the tool exits 3, and one that dies while it loads opens its output with the traceback or
+# the bad line: neither is drift, and the allow below says so.
 KIT_OUT=$(timeout -k 2 10 "$PY" tools/generate_career_kits.py --verify 2>&1)
-if [[ $? -eq 1 ]]; then
+KIT_RC=$?
+KIT_UNCHECKED=0
+if [[ $KIT_RC -eq 3 || $KIT_RC -eq 124 || $KIT_RC -eq 137 \
+      || ( $KIT_RC -eq 1 && ( "$KIT_OUT" == "Traceback (most recent call last):"* || "$KIT_OUT" == "  File "* ) ) ]]; then
+    KIT_UNCHECKED=1
+elif [[ $KIT_RC -eq 1 ]]; then
     OUT=$(printf '%s\n%s\nRepair: python tools/generate_career_kits.py --apply, then python tools/wire_starter_kit_rosters.py --apply' "$OUT" "$KIT_OUT")
     RC=1
 fi
@@ -173,7 +181,20 @@ print(json.dumps(
 fi
 [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
 
-[[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
+if [[ $RC -ne 1 ]]; then
+    if [[ $KIT_UNCHECKED -eq 1 ]]; then
+        printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"[check-moduledata-validation] tools/generate_career_kits.py --verify could not judge, so this commit is UNCHECKED for career kit drift. This is NOT a pass. Run: python tools/generate_career_kits.py --verify"}}'
+    else
+        echo '{}'
+    fi
+    exit 0
+fi
+
+# Exit 1 with no finding to quote: the validator died while it loaded. Allow, and say so.
+if [[ -z "${OUT//[[:space:]]/}" ]]; then
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"[check-moduledata-validation] tools/validate_moduledata.py exited 1 with no findings, so this commit is UNCHECKED by it. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
+    exit 0
+fi
 
 # Build a JSON-escaped deny message with the validator's findings (bounded).
 MSG=$(printf '%s' "$OUT" | "$PYBIN" -c '
@@ -183,7 +204,9 @@ print(json.dumps(
     "[check-moduledata-validation] git commit BLOCKED: tools/validate_moduledata.py "
     "or tools/generate_career_kits.py --verify found ERROR-severity issues in staged "
     "ModuleData XML (broken Item/NPCCharacter ref, unknown culture, duplicate id, or a "
-    "career kit off its rule). Fix them and re-stage. See details: "
+    "career kit off its rule). The findings may sit in the live TAOM_Map or LOTRLOME_Armory "
+    "install, which the validator also reads, rather than in the staged files. Either fix "
+    "them, or ask the owner of that live edit; never bypass this hook. See details: "
     "python tools/validate_moduledata.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }

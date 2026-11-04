@@ -20,9 +20,7 @@ Tool flags, loaders, model availability and configuration can change. Check
 installed help and current official docs before automating a provider. Do not
 copy another provider's hook/skill frontmatter or assume equivalent semantics.
 
-An explicit user request to conduct paid dispatch is authorization within the
-stated scope and budget. Do not ask for the same permission again, or infer it
-from a request to build or update documentation. See [dispatch policy](policy.md#paid-dispatch-authority).
+Paid dispatch: [policy](policy.md#paid-dispatch-authority).
 
 ## Universal builder prompt
 
@@ -55,9 +53,3 @@ its own configuration and permission model. Existing `.mcp.json` and
 read roots for the game dump and external modules; keep tokens local. The
 ModuleData server at `tools/taom_mcp_server.py` is optional, not a review gate.
 
-Before broad automation, manually prove one builder-to-two-reviewer cycle with
-actual accounts. Then add optional provider adapters that accept a prompt path
-and emit a report path, recording client/model versions, exit status, run ID,
-cost, timeout and raw-output location. Such adapters and authenticated CI
-ingestion are future work, not present features. Do not let a wrapper convert
-an empty response, error, timeout or parser failure into a CLEAN result.

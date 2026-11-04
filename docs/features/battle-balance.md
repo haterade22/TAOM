@@ -7,8 +7,8 @@ Three GameModel overrides that tune large-scale battle math: troop power values 
 ## Why This Exists
 
 - **Vanilla behavior:**
-  - `DefaultMilitiaModel.GetDefaultTroopPower` uses the formula `(2 + tier) * (10 + tier) * 0.02` and never sees a tier above 6.
-  - `DefaultCombatSimulationModel.GetBluntDamageChance` returns a fixed ~10% blunt chance regardless of who's fighting.
+  - `DefaultMilitaryPowerModel.GetDefaultTroopPower` uses the formula `(2 + tier) * (10 + tier) * 0.02` and never sees a tier above 6.
+  - `DefaultCombatSimulationModel.GetBluntDamageChance` returns a fixed blunt chance: 30% in a player map event, 10% otherwise.
   - `DefaultPartyHealingModel.GetSurvivalChance` produces uniform survival chances across cultures.
 - **TAOM requirement:** Tier 7-10 troops exist (Cultural Feats system, lots of elite LOTR units like Dúnedain Rangers, Royal Guard); their power values must be authored, not extrapolated. LOTR cultures should also have distinct casualty profiles — Mordor armies shrug off losses (or rather, players shrug off losing them), elite Eldar formations should rarely take real casualties — and the player should be able to dial wound-vs-kill ratios for their own battles separately from AI-vs-AI sim.
 - **Without this feature:** T7+ troops fall back to a polynomial extrapolation that produces unintuitive AutoCalc results; cultural identity in losses is invisible; the player can't tune lethality without editing source.
@@ -113,7 +113,7 @@ Both providers register `Reuse.Singleton`, so the JSON file is cached for the en
 | File | Purpose |
 |---|---|
 | [Main/Features/BattleBalance/Models/TaomMilitaryPowerModel.cs](../../Main/Features/BattleBalance/Models/TaomMilitaryPowerModel.cs) | Override — tier power table + hero/mounted multipliers |
-| [Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs](../../Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs) | Override — player vs AI blunt-damage chance |
+| [Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs](../../Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs) | Override: player vs AI blunt-damage chance, plus a `SimulateHit` override that applies the refuge defender damage reduction (#507) |
 | [Main/Features/BattleBalance/Models/TaomPartyHealingModel.cs](../../Main/Features/BattleBalance/Models/TaomPartyHealingModel.cs) | Override, a thin entry point: `GetSurvivalChance` is base plus `Hooks/SurvivalChanceLine` (cultural bonus, career passive; an enlisted player rolls with his own party) over the pure `SurvivalChanceMath`; `GetDailyHealingForRegulars` is the field camp rest line on base, then the career `WoundRecovery` (#769 E11, positive values on the non-prisoner call only), and `GetDailyHealingHpForHeroes` adds `HeroHealing` |
 | [Main/Features/BattleBalance/BattleBalanceConfig.cs](../../Main/Features/BattleBalance/BattleBalanceConfig.cs) | POCOs (`TroopPowerSection`, `CasualtyRatiosSection`) with default-valued dictionaries baked in |
 | [Main/Features/BattleBalance/BattleBalanceConfigProvider.cs](../../Main/Features/BattleBalance/BattleBalanceConfigProvider.cs) | Loads + caches `battle_balance_config.json`; logs warnings on missing/malformed |
@@ -122,7 +122,7 @@ Both providers register `Reuse.Singleton`, so the JSON file is cached for the en
 | [Main/Features/BattleBalance/IBattleBalanceSettingsProvider.cs](../../Main/Features/BattleBalance/IBattleBalanceSettingsProvider.cs) | Interface (12 properties) |
 | [Main/Features/BattleBalance/BattleBalanceIoC.cs](../../Main/Features/BattleBalance/BattleBalanceIoC.cs) | Two singleton registrations |
 | [Main/_Module/ModuleData/configs/battle_balance_config.json](../../Main/_Module/ModuleData/configs/battle_balance_config.json) | The JSON config file |
-| [Main/SubModule.cs:291-295](../../Main/SubModule.cs) | `campaignStarter.AddModel(...)` for all three models |
+| [Main/SubModule.cs:1217-1219](../../Main/SubModule.cs) | `campaignStarter.AddModel(...)` for all three models |
 
 ## Dependencies
 
@@ -137,7 +137,7 @@ Both providers register `Reuse.Singleton`, so the JSON file is cached for the en
 - [TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs) — **10 tests**: T7-T10 configured values, T6 vanilla/override fallback, T11+ formula extension, low-tier override behavior.
 - [TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs) — **5 tests**: player vs AI blunt-chance routing, fallback to vanilla when `EnableCustomCasualtyRatios=false`.
 - [TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs): **15 `[TestMethod]`s** across three classes (this file also holds the casualty-ratio and troop-power config tests): cultural bonus zero / positive / negative, boundary clamping (0..1), and the null-party path of `SurvivalChanceLine`. The career `TroopSurvival` term (`Math.Min(1f, ScaleByPassive(...))`, floored at zero by the bounded scale) is pinned in `CareerCampaignPassivesTests`.
-- [TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs](../../TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs): **1 test**, Lindon's row in the shipped JSON equals Rivendell's (#749). It reads the file with `ObjectCreationHandling.Replace`, because the provider's default merge would fill a missing key from the compiled dictionary and hide its absence.
+- [TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs](../../TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs): **3 tests**: Lindon's row in the shipped JSON equals Rivendell's (#749), Arthedain's equals Gondor's, and the compiled defaults carry every culture row the shipped file does. They read the file with `ObjectCreationHandling.Replace`, because the provider's default merge would fill a missing key from the compiled dictionary and hide its absence.
 - [TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs](../../TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs): **10 tests**: the no-MCM fallbacks (six literal pins, and all twelve against the `TaomSettings` compiled defaults), read-through (one setting edited per pass, after every getter has been read once, reaches its own getter and no other), resolution from a real DryIoc container, and an IL rule that no getter or constructor calls `TaomSettings.Instance`, only the private lazy accessor (PERF-04).
 
 The models themselves test the static helpers (`CalculateTierPower`, `CalculateBluntChance`, and `SurvivalChanceMath.ApplyCulturalSurvivalBonus`): the `override`-method paths that touch `IoC.Resolve` and live game state are exercised in-game.

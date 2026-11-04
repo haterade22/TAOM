@@ -580,6 +580,36 @@ results (rest error 2.8e-6 m).
   keys, and check a no-op pose moves nothing before trusting any other.
 - **Source:** `tools/blender/transfer_hand_morphs.py`.
 
+### A git hook that claims to bind every committer runs under the git an IDE ships (rules review, 2026-11-03)
+`.githooks/*` opened with `#!/usr/bin/env bash`. The git inside Visual Studio and GitHub Desktop ships `sh` but no `bash`, so `env` found the WSL launcher and every commit failed; `commit-msg` had carried this since it landed. Those gits also have no GNU `timeout`, and System32's `timeout.exe` exits 1 on GNU arguments, which read as a finding.
+- **Why missed:** every test ran Git for Windows from a Git Bash shell, while the header said "an IDE included".
+- **Prevent:** POSIX `sh` in `.githooks/`; probe `timeout --version`; count only on `sh`, `grep`, `sed`, `tail` and `printf`. `BundledGit` in `tools/tests/test_githooks_pre_commit.py` runs the hooks through each git installed here.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 1, 2.
+
+### shlex ends a word at any `#`, so drop comments yourself (rules review, 2026-11-03)
+`shlex` with its default `commenters` read `git commit -m fix#12 -n` as `git commit -m fix`, losing the flag and joining the next line to the same call. It misled every reader of `git_invocations`: the amend and path readers too, not only the new one.
+- **Why missed:** no reader test held a `#`; the re-review found it by comparing the old hook with the new one form by form.
+- **Prevent:** `_shellwords.strip_comments` first, with `lx.commenters = ""`. A rewrite of a gate gets a form-by-form comparison with what it replaces, because passing its own tests does not prove it did not narrow.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` row 11.
+
+### A commit gate reads the tree the commit records, in every check (rules review, 2026-11-03)
+Fixing `--staged` for the checks a review named left the budget, config and version checks on the working tree, and widening the triggers then exposed far more commits to another session's unstaged edit. A staged breach could also pass behind a trimmed working copy.
+- **Why missed:** the fix followed the finding, not the property. Stubbed tools in the hook tests could not see it.
+- **Prevent:** one reader, `CommitView` in `tools/lint_docs.py`: a new check inherits it. A path commit records its named working copies on top of HEAD, not the index. Test each check in both directions: staged bad with a clean copy, unstaged bad with a clean index.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 4, 6, 12.
+
+### A ratchet's base at a merge is trunk, so simulate the merge before landing (rules review, 2026-11-03)
+Per-commit runs of the no-growth ratchet passed on the branch, because their base was the branch's own HEAD. The merge's base is trunk, where two over-cap rules were smaller, so the hook would have refused the branch's merge, and `block-no-verify` refuses the bypass. Also, git writes `MERGE_HEAD` only after `pre-merge-commit`, so a check reading it sees no merge there.
+- **Why missed:** the hook tests stubbed the linter, and no run crossed a merge.
+- **Prevent:** before landing, run `python tools/lint_docs.py --drift-only --dash-base <trunk>`. Test a merge against the real tool at least once.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 13, 16.
+
+### A table that feeds a decision gets its rows read, not only its tests run (rules review, 2026-11-03)
+`analyze_reviews`' lens table had green tests while it counted "no issues" rows as findings, erased one whole RCA's credits, and read 9 real bugs out of a parenthesis on a clean review. Reading a sample of real rows found all three.
+- **Why missed:** the tests fed fixtures shaped like the parser, and a noise-stripping parser treats whatever survives as data.
+- **Prevent:** prefer an allow list of the names a table may hold, and print how many rows got no credit. Before a number drives a spend decision, read a sample of the rows behind it.
+- **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 14, 15, 31.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

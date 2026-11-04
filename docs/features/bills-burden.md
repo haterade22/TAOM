@@ -78,8 +78,7 @@ lines, no text, no background, centered, bold readable silhouette that stays cle
 pixels. Medieval fantasy style matching a strategy game's map bar icons (coin, food, morale)." Cropped to
 its alpha bounds with about 3% margin and resized to 64x64 (Lanczos).
 
-**Owed:** the sprite bake for `MapBar\taom_cargo`. Until `TAOMSpriteData.xml` declares the sprite,
-the row draws an empty icon slot, with no error and no log line. The steps:
+**Owed:** step 5 below. `Main/_Module/GUI/TAOMSpriteData.xml` now declares `MapBar\taom_cargo` (a SpritePart and a GenericSprite entry, landed in commit 9985f2db3 with the repacked banner sheets), so steps 1 to 4 are done as far as the repo shows. `CargoSprite_IsDeclaredInTheTaomSpriteSheet` keeps its `[Ignore]`. Before the sheet declared the sprite, the row drew an empty icon slot, with no error and no log line. The steps:
 
 1. Deploy this change, so the install has the PNG.
 2. In the editor, run the sprite generation and the texture compile.

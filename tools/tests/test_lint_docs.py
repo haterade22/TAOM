@@ -245,15 +245,12 @@ class ContextBudgetTests(_TempRepo):
                 mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 200):
             self.assertNotIn("rules-size", self._kinds())
 
-    def test_an_oversized_scoped_rule_warns_until_enforced(self):
+    def test_an_oversized_scoped_rule_only_warns_outside_a_git_tree(self):
+        # No HEAD copy to compare with: fail open, the way the other git-reading checks do.
         self._entry()
         self._rule("scoped.md", "x" * 500 + "\n", paths="Main/**")
-        with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300), \
-                mock.patch.object(ld, "SCOPED_RULE_BUDGET_ENFORCE", False):
+        with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300):
             self.assertEqual(self._kinds(), ["size-warn"])
-        with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300), \
-                mock.patch.object(ld, "SCOPED_RULE_BUDGET_ENFORCE", True):
-            self.assertEqual(self._kinds(), ["scoped-rule-size"])
 
     def test_a_dead_link_in_an_entry_doc_or_a_rule_is_found(self):
         self._entry(claude="# c\n\n[gone](docs/missing.md)\n")
@@ -824,6 +821,236 @@ class _GitRepo(unittest.TestCase):
                 mock.patch.object(ld, "check_version_consistency", return_value=[]), \
                 mock.patch("sys.stdout", new_callable=io.StringIO) as out:
             return ld.main(list(argv)), out.getvalue()
+
+
+class ScopedRuleRatchetTests(_GitRepo):
+    """An over-cap path rule gates only when it is larger than its HEAD copy: the working copy
+    normally, the staged copy under --staged."""
+
+    RULE = ".claude/rules/scoped.md"
+
+    def setUp(self):
+        super().setUp()
+        _write(self.root / "CLAUDE.md", ContextBudgetTests.IMPORTS)
+        _write(self.root / "AGENTS.md", "# a\n")
+        _write(self.root / "docs" / "ai-includes" / "orientation.md", ContextBudgetTests.TRAP_HEAD)
+        self._set_rule(500)
+        self._commit()
+        cap = mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300)
+        cap.start()
+        self.addCleanup(cap.stop)
+
+    def _set_rule(self, size):
+        _write(self.root / self.RULE, '---\npaths:\n  - "Main/**"\ndescription: x\n---\n' + "x" * size + "\n")
+
+    def _kinds(self, staged=False, only_paths=None, base="HEAD"):
+        return [f[2] for f in ld.check_context_budget(ld.commit_view(staged, only_paths, base))]
+
+    def test_staged_growth_past_the_cap_gates_with_the_working_copy_under_it(self):
+        self._set_rule(100)
+        self._commit()
+        self._set_rule(500)
+        self._git("add", self.RULE)
+        self._set_rule(100)
+        self.assertEqual(self._kinds(staged=True), ["scoped-rule-size"])
+        self.assertEqual(self._kinds(), [])
+
+    def test_a_working_copy_over_the_cap_with_the_index_under_it_is_not_this_commits(self):
+        self._set_rule(100)
+        self._commit()
+        self._set_rule(500)
+        self.assertEqual(self._kinds(staged=True), [])
+        self.assertEqual(self._kinds(), ["scoped-rule-size"])
+
+    def test_a_path_commit_judges_the_named_working_copy(self):
+        self._set_rule(600)
+        self.assertEqual(self._kinds(staged=True, only_paths=[self.RULE]), ["scoped-rule-size"])
+
+    def test_a_path_commit_does_not_judge_a_rule_it_leaves_out(self):
+        self._set_rule(600)
+        self._git("add", self.RULE)
+        self.assertEqual(self._kinds(staged=True, only_paths=["CLAUDE.md"]), ["size-warn"])
+
+    def test_an_amend_compares_with_the_base(self):
+        self._set_rule(600)
+        self._commit()
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+        self.assertEqual(self._kinds(staged=True, base="HEAD~1"), ["scoped-rule-size"])
+
+    def test_an_over_cap_rule_that_did_not_grow_only_warns(self):
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_an_over_cap_rule_that_shrank_only_warns(self):
+        self._set_rule(400)
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_an_over_cap_rule_that_grew_gates(self):
+        self._set_rule(600)
+        self.assertEqual(self._kinds(), ["scoped-rule-size"])
+
+    def test_a_new_over_cap_rule_gates(self):
+        _write(self.root / ".claude/rules/fresh.md", '---\npaths:\n  - "Main/**"\n---\n' + "y" * 500 + "\n")
+        self.assertEqual(sorted(self._kinds()), ["scoped-rule-size", "size-warn"])
+
+    def test_growth_under_the_cap_is_silent(self):
+        self._set_rule(100)
+        self._commit()
+        self._set_rule(200)
+        self.assertEqual(self._kinds(), [])
+
+    def test_staged_mode_ignores_an_unstaged_growth(self):
+        self._set_rule(600)
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+
+    def test_staged_mode_reads_the_index_not_the_working_copy(self):
+        self._set_rule(600)
+        self._git("add", self.RULE)
+        self._set_rule(500)
+        self.assertEqual(self._kinds(staged=True), ["scoped-rule-size"])
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+
+class CommitViewTests(_GitRepo):
+    """Every gating check judges the tree the commit records, so another session's unstaged edit in
+    the same checkout cannot refuse this commit, and a staged breach cannot pass behind a clean
+    working copy."""
+
+    CONFIG = "Main/_Module/ModuleData/thing.json"
+    DOC = "docs/features/thing.md"
+
+    def setUp(self):
+        super().setUp()
+        _write(self.root / "CLAUDE.md", ContextBudgetTests.IMPORTS)
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n")
+        _write(self.root / "docs" / "ai-includes" / "orientation.md", ContextBudgetTests.TRAP_HEAD)
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v1.5.6\n")
+        _write(self.root / ".claude" / "rules" / "plain.md", "# plain\n")
+        _write(self.root / self.CONFIG, '{"Speed": 1}\n')
+        _write(self.root / self.DOC, f"`{self.CONFIG}`:\n\n```json\n{{\"Speed\": 1}}\n```\n")
+        _write(self.root / "docs" / "reference" / "a.md", "one\n")
+        self._commit()
+        self.size = ld._loaded_bytes((self.root / "AGENTS.md").read_text(encoding="utf-8"))
+        total = sum(ld._loaded_bytes(p.read_text(encoding="utf-8")) for p in ld.entry_docs()[0])
+        cap = mock.patch.object(ld, "ENTRY_DOCS_MAX_BYTES", total + 50)
+        warn = mock.patch.object(ld, "ENTRY_DOCS_WARN_BYTES", total + 50)
+        rules = mock.patch.object(ld, "UNSCOPED_RULES_MAX_BYTES", 100)
+        rules_warn = mock.patch.object(ld, "UNSCOPED_RULES_WARN_BYTES", 100)
+        docs_dir = mock.patch.object(ld, "DOCS_DIR", self.root / "docs")
+        for patcher in (cap, warn, rules, rules_warn, docs_dir):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def _budget(self, staged=True, only_paths=None):
+        return [f[2] for f in ld.check_context_budget(ld.commit_view(staged, only_paths, "HEAD"))]
+
+    def _grow_agents(self):
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n" + "x" * 200 + "\n")
+
+    def _trim_agents(self):
+        _write(self.root / "AGENTS.md", "# a\n\nTarget: Bannerlord v1.5.6\n")
+
+    def test_a_staged_entry_doc_over_budget_with_a_trimmed_working_copy_gates(self):
+        self._grow_agents()
+        self._git("add", "AGENTS.md")
+        self._trim_agents()
+        self.assertEqual(self._budget(), ["size"])
+
+    def test_another_sessions_unstaged_entry_doc_growth_does_not_refuse_this_commit(self):
+        self._grow_agents()
+        _write(self.root / "docs" / "reference" / "a.md", "two\n")
+        self._git("add", "docs/reference/a.md")
+        self.assertEqual(self._budget(), [])
+        self.assertEqual(self._budget(staged=False), ["size"])
+
+    def test_a_path_commit_reads_the_named_copy_and_head_for_the_rest(self):
+        self._grow_agents()
+        self.assertEqual(self._budget(only_paths=["AGENTS.md"]), ["size"])
+        self.assertEqual(self._budget(only_paths=[ "docs/reference/a.md"]), [])
+
+    def test_a_path_commit_ignores_what_is_staged_outside_it(self):
+        self._grow_agents()
+        self._git("add", "AGENTS.md")
+        self._trim_agents()
+        self.assertEqual(self._budget(only_paths=["docs/reference/a.md"]), [])
+
+    def test_unstaged_unscoped_rule_growth_does_not_refuse_this_commit(self):
+        _write(self.root / ".claude" / "rules" / "plain.md", "x" * 200 + "\n")
+        self.assertEqual(self._budget(), [])
+        self._git("add", ".claude/rules/plain.md")
+        self.assertEqual(self._budget(), ["rules-size"])
+
+    def test_an_untracked_rule_is_no_part_of_the_commit(self):
+        _write(self.root / ".claude" / "rules" / "another.md", "x" * 200 + "\n")
+        self.assertEqual(self._budget(), [])
+
+    def test_a_rule_staged_for_deletion_is_not_counted(self):
+        _write(self.root / ".claude" / "rules" / "plain.md", "x" * 200 + "\n")
+        self._commit()
+        self._git("rm", "-q", "--cached", ".claude/rules/plain.md")
+        self.assertEqual(self._budget(), [])
+
+    def test_an_import_the_index_lacks_is_missing(self):
+        self._git("rm", "-q", "--cached", "docs/ai-includes/orientation.md")
+        self.assertIn("import-missing", self._budget())
+
+    def _drift(self, staged=True, only_paths=None):
+        files = [self.root / self.DOC]
+        return ld.check_config_example_drift(files, ld.commit_view(staged, only_paths, "HEAD"))
+
+    def test_unstaged_config_drift_does_not_refuse_this_commit(self):
+        _write(self.root / self.CONFIG, '{"Speed": 2}\n')
+        self.assertEqual(self._drift(), [])
+        self.assertEqual(len(self._drift(staged=False)), 1)
+
+    def test_a_staged_config_drift_gates_behind_a_clean_working_copy(self):
+        _write(self.root / self.CONFIG, '{"Speed": 2}\n')
+        self._git("add", self.CONFIG)
+        _write(self.root / self.CONFIG, '{"Speed": 1}\n')
+        self.assertEqual(len(self._drift()), 1)
+
+    def test_the_version_pin_is_read_from_the_index(self):
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v9.9.9\n")
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertEqual(ld.check_version_consistency(view), [])
+        self.assertEqual(len(ld.check_version_consistency(None)), 1)
+        self._git("add", ".claude/pinned-game-version.txt")
+        self.assertEqual(len(ld.check_version_consistency(ld.commit_view(True, None, "HEAD"))), 1)
+
+    def test_a_crlf_working_copy_and_its_lf_index_copy_measure_the_same(self):
+        path = self.root / "AGENTS.md"
+        path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertEqual(ld._loaded_bytes(view.read(path)), self.size)
+
+    def test_a_tree_or_a_missing_path_reads_as_no_file(self):
+        view = ld.commit_view(True, None, "HEAD")
+        self.assertIsNone(view.read(self.root / "docs"))
+        self.assertIsNone(view.read(self.root / "nope.md"))
+        self.assertEqual(view.read(self.root / "docs" / "reference" / "a.md").strip(), "one")
+
+    def test_a_path_with_a_space_reads(self):
+        _write(self.root / "docs" / "two words.md", "spaced\n")
+        self._commit()
+        self.assertEqual(ld.commit_view(True, None, "HEAD").read(self.root / "docs" / "two words.md").strip(), "spaced")
+
+    def test_outside_a_git_tree_there_is_no_commit_in_view(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(ld, "REPO_ROOT", Path(tmp)):
+            self.assertIsNone(ld.commit_view(True, None, "HEAD"))
+
+    def test_no_staged_or_path_argument_means_no_commit_in_view(self):
+        self.assertIsNone(ld.commit_view(False, None, "HEAD"))
+
+
+class CrashExitTests(unittest.TestCase):
+    def test_a_crash_exits_3_because_exit_1_is_a_finding(self):
+        err = io.StringIO()
+        with mock.patch.object(ld, "main", side_effect=RuntimeError("boom")), mock.patch("sys.stderr", err):
+            self.assertEqual(ld.entry([]), 3)
+        self.assertIn("boom", err.getvalue())
+
+    def test_an_ordinary_exit_passes_through(self):
+        with mock.patch.object(ld, "main", return_value=1):
+            self.assertEqual(ld.entry([]), 1)
 
 
 class AiDashGitScopeTests(_GitRepo):

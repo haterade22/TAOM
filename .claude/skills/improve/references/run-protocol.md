@@ -228,8 +228,7 @@ merge" below).
      block only when both sides start with the common base lines (it keeps ours, then theirs' lines
      after the base); any other block sends its path to exit 2. It prints
      `ready to commit: git commit -F "<message file>"`: run that commit yourself through Bash, as
-     `git -C "<wt-integrate>" commit -F "<message file>"`, so every PreToolUse commit gate judges it
-     (a gate that judged the main checkout: execute-and-review "Commit gates in worktrees").
+     `git -C "<wt-integrate>" commit -F "<message file>"`, so every PreToolUse commit gate judges it.
    - **Exit 1**: refused before this run started a merge, for example the main checkout, a dirty tree,
      a message file that fails `check_public_text.py`, or a merge already in progress (refused and left
      as it was). Read the reason.
@@ -287,10 +286,9 @@ checkout by the pull, so back it up byte for byte before he pulls; ports to the 
 
 - Every plan row set with `python tools/improve_ctl.py status plans/README.md <num> "<text>"`; no
   RUNNING row left in PROGRESS.md; Next and Blockers current.
-- Codex lessons consolidated, once for the run: each Codex review's essay into
-  `docs/reviews/codex-track-record.md` (newest on top, the sixth-oldest to its archive), durable patterns
-  into `.ai/review-reference.md` "Lessons From Prior Reviews" and the lessons files (review-codex Phase
-  3h).
+- Codex lessons consolidated, once for the run: only a new false-positive pattern or a missed
+  category, into `.ai/review-reference.md` "Lessons From Prior Reviews"; durable patterns into the
+  lessons files (review-codex Phase 3h). The track record is frozen, so no essay.
 - REVIEW-LOG entries this run wrote unnumbered get their numbers, in merge order, in one commit.
 - Every "owed" marker the run wrote ("convergence pass owed", "issue to be filed") is closed by the step
   that discharged it, or listed in FOR-MIKE.md.

@@ -41,7 +41,7 @@ if [[ ! -f "$JUDGE" ]]; then
   exit 0
 fi
 
-# Bounded inside the 10 s registration, so an overrun can still speak (hook-authoring.md).
+# Bounded at 5 s inside the hook, so an overrun can still speak (hook-authoring.md).
 OUT=$(printf '%s' "$INPUT" | timeout -k 1 5 "$PYBIN" "$JUDGE" gate 2>/dev/null)
 RC=$?
 

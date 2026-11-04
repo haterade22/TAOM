@@ -19,7 +19,6 @@ Update ALL of the following (checklist):
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
-| 7. Commit body | the commit message | Describe the changes; `/release` builds `CHANGELOG.md` from it |
 
 ## Equipment sets are mixed PER SLOT, not chosen whole (MANDATORY before editing any troop roster)
 
@@ -29,20 +28,20 @@ alternatives; they are a menu the engine orders one item from per slot. Write ev
 troop to be **interchangeable slot by slot with every other**, or the engine will assemble a
 combination you never authored.
 
-`Equipment.GetRandomEquipmentElements` (v1.4.8, `TaleWorlds.Core.cs:6055`) loops the 12 slots and
+`Equipment.GetRandomEquipmentElements` (v1.5.6, `TaleWorlds.Core.Equipment.cs`) loops the 12 slots and
 draws each from `list[weaponSetNo]`. There is **no set-count threshold** in the method, so this
 starts at **two** battle sets. A campaign battle always takes the seeded branch, which re-rolls the
 set index at the top of every iteration and so makes all 12 slots independent:
 `Mission.SpawnTroop` chains `AgentData.TroopOrigin`, which calls `EquipmentSeed(troopOrigin.Seed)`,
 and `CharacterHelper.GetPartyMemberFaceSeed` (`CharacterHelper.cs:589`) returns `abs(...) % 2000`,
 so the seed can never be the `-1` that would group slots. (`GuardsCampaignBehavior` does pass `-1`
-for settlement guard visuals; on that path `Weapon0` and `Weapon1` share a draw. Battle spawns never
-reach it.)
+for settlement guard visuals: seed -1 groups slots 0-1, 2-3 and the rest. Battle spawns never
+pass it.)
 
 | Rule | Why |
 |---|---|
-| If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Slot 0 and slot 1 draw independently, so 3 ranged sets among 13 gives a working archer `(3/13)^2` = 5% of the time and a useless half-kit 36% of the time (#529) |
-| At least one slot index must hold a weapon in **every** battle set | Otherwise a draw can leave the troop with no weapon at all. Deleting a bow without promoting the sidearm into its slot is how you create this |
+| If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Gate: `INCONSISTENT_WEAPON_SLOT` (#529) |
+| At least one slot index must hold a weapon in **every** battle set | Gate: `INCONSISTENT_WEAPON_SLOT`. Promote the sidearm into a deleted bow's slot |
 | A shield in one set and a `requires_no_shield` weapon in another is the same defect as pairing them in one set | The AI will not draw the weapon. `audit_polearm_shield_parity.py` is per-set and cannot see the cross-set form (#531) |
 | `Horse` and `HorseHarness` (slots 10 and 11) also draw independently | Pair them consistently across sets |
 | Heroes are exempt | `CharacterObject` returns the single `HeroObject.BattleEquipment` when `IsHero`, and `Mission.BuildAgent` forces `FixedEquipment(true)`. Wanderer/companion templates pick a whole set once at creation (`Hero.SetInitialValuesFromCharacter` does `list.GetRandomElement().Clone()`). For those, in-set completeness is the whole requirement |
@@ -58,17 +57,6 @@ correct in every UI surface. Only a live mission agent mixes. Check it in the da
 - `dg_goblin_slave` — Dol Guldur, goblin race, slave role
 - `dg_khamul_shadow_initiate` — Dol Guldur, Khamul's line, shadow initiate
 - `gondor_ano_peasant` — Gondor, Anórien origin, peasant role
-
-## Race Attributes by Culture
-
-| Culture | Race Lines | Race Attribute |
-|---------|-----------|---------------|
-| Dol Guldur | Goblin | `race="goblin"` |
-| Dol Guldur | Orc | `race="orc"` |
-| Dol Guldur | Uruk | `race="dg_uruk"` |
-| Dol Guldur | Khamul (human) | no `race` attribute |
-| Gondor | Human | no `race` attribute |
-| Gundabad | Goblin/Orc | `race="goblin"` / `race="orc"` |
 
 ## Three cultures, one goblin tree
 
@@ -112,28 +100,9 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 | `caravan_template_{culture}` | Caravans | 1 armed trader + 5-10 guards + 1-5 veterans |
 | `elite_caravan_template_{culture}` | Elite caravans | 1 armed trader + 10-20 guards + 5-10 veterans |
 
-Twelve per-culture types, not nine. The last three were missing from this table until 2026-08-12, and
-Dale had shipped without any of them, so its villagers and caravans were vanilla Sturgians. Authoring
-the three was the only new content the whole party-template fix needed.
+Twelve per-culture types, not nine.
 
-The clan row is per CLAN, not per culture, and that is where 176 of the 193 lord-party templates live
-(the other 17 are the culture defaults, which `Clan.DefaultPartyTemplate` falls back to only when the
-clan binds nothing). The binding is `default_party_template` in `characters/clans.xml` or
-`spclans.xslt`, and those two files are what you grep to prove a clan template is reachable, NOT the
-culture files. The id is a convention, not a derivation, so never compute one. Most embed the clan id
-minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebor_1_template`), but
-Gondor's 14 embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds
-`kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the ROSTER's culture,
-which is not always the clan's: the five `Culture.bluecraig` clans bind
-`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. The five
-`Culture.mistymountainorcs` clans are the counter-example that proves the token is a convention and
-not a derivation: they keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks
-are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing instead of
-grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
-`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14. A third binding site exists
-since 2026-09-12: `lord_party_templates/lord_party_templates.json` binds a template to ONE hero
-(Patch88, `docs/features/lord-party-templates.md`), and a template listed there is deliberately
-absent from every clan and culture. Grep it too before calling a template dead.
+A clan template id is a convention: never compute one. Grep `characters/clans.xml`, `spclans.xslt` and `lord_party_templates/lord_party_templates.json` for its binding ([party-templates.md](../../docs/modding/party-templates.md)).
 
 **`max_value` is not the party's size.** The engine draws ONE uniform ratio per party and fills every
 stack to `min + (max - min) * r`, so a template's max sum is a spawn ceiling and the expected spawn
@@ -141,17 +110,11 @@ roster is the midpoint of its min and max sums; `PartySizeLimit` still governs r
 Read [docs/reference/party-template-sizing.md](../../docs/reference/party-template-sizing.md) before
 retuning these numbers, and use `tools/rebalance_party_template_maxes.py` rather than hand-editing.
 
-**Writing a template is half the job. It is dead data until a culture binds it**, and a culture in
-`spcultures.xslt` inherits Calradia for every attribute its block does not name. That has shipped four
-times (Dale, Rohan, Khand, settlement patrols). The binding contract, both crash surfaces and the
-`CulturePartyTemplateTests` gate: [culture-playability-wiring.md](../../docs/features/culture-playability-wiring.md).
-Quick check that a template you just wrote is actually reachable: grep `taom_spcultures.xml` and
-`spcultures.xslt` for its id, and if there are zero hits it is dead.
+A template no culture, clan or hero binds is dead data, and a retagged culture inherits Calradia for what its block omits. Gate: `CulturePartyTemplateTests`. Contract: [culture-playability-wiring.md](../../docs/features/culture-playability-wiring.md).
 
 ## Save Compatibility
 
-- **Never change troop IDs** — rename display names only (keep `id` attribute)
-- **Never delete troops** — orphan them (remove from upgrade_targets) but keep in file
+- Never rename or delete a troop id; retire one by removing it from every upgrade_targets. Gate: `TROOP_ID_REMOVED`.
 - **is_basic_troop** — marks a troop as a standalone recruitment entry point
 - **Tier shifts are allowed** — moving a troop from T6 → T5 is fine if you also re-pick its skill curve + armor + equipment to match the new tier. Engine re-applies on next load. (Dale `dale_royal_cavalier` T6→T5, `dale_kinsman_of_eorl` T7→T6 worked cleanly across an existing save.)
 - **Display-name desync is OK** — `dale_master_crossbowman` can legitimately display "Royal Crossbowman" if a later rename swap put "Royal" at the higher tier. Document the desync in the feature doc.
@@ -167,36 +130,6 @@ The pool resolution order is (highest priority first):
 
 When you add an entry to a higher-priority map, lower-priority entries are **shadowed** for that settlement/clan — not merged. If you want per-settlement to extend (not replace) the culture pool, you must copy the culture entries into the settlement entry explicitly.
 
-## Per-Tier Explicit Armor Pattern (use when authoring a culture's tree)
+## Weapon tiers
 
-Don't rely on the generic `_armor_suffix(tier, variant)` tier→suffix table for new cultures. Use explicit-suffix helpers that take a literal `a01`..`b04` string:
-
-| Helper (in `tools/generate_dale_troops.py`) | Mesh class | Solus spelling quirk |
-|---|---|---|
-| `chivalry_armor_explicit(suffix)` | cavalry (chivlary + chivalry chest) | chest uses `chivalry`, other 4 slots use `chivlary` typo |
-| `infantry_armor_explicit(suffix)` | royal infantry | `infrantry` typo throughout |
-| `archer_armor_explicit(suffix)` | archer / crossbowman | shoulder fallback for missing `a02/b02` variants |
-| `lake_town_armor_explicit(suffix, no_helmet=, no_shoulder=, no_bracers=)` | Lake-Town mariner | shoulder fallback `a02→a01, a04→a03, b02→b01, b04→b03` |
-
-Color convention: `a` = bronze, `b` = silver. Light lines use `a`, heavy lines use `b` (or invert per user spec — Dale's cavalry inverts this).
-
-## "Royal Goes Last" Naming Convention
-
-Across all Dale lines, "Royal" is reserved for the highest-rank tier (typically T7). "Master" is the T6 stepping-stone. If you author a chain with both, "Royal" must be on the more elite troop. If only "Master" exists (no "Royal" sibling in the line), it's fine to leave "Master" at the top.
-
-This is a TAOM-wide convention as of Dale (May 2026). Apply when authoring new culture trees.
-
-## Cross-Reference Vanilla Weapon Stats Before Tier-Ordered Picks
-
-Names don't imply tier. Codex Review #227 caught Dale's `lowland_yew_bow` placed at T5 while `lowland_longbow` at T6, but vanilla stats: yew = higher difficulty / damage / speed than longbow. The T5 archer could roll a stronger bow than its T6 upgrade.
-
-**Bows and crossbows are no longer picked by hand.** Since #582 / #617 a troop's launcher is the generated `ladder_<line>_<bow|xbow>_t<tier>` for its line and engine tier, and its Bow or Crossbow skill is that cell's (`tools/ranged_ladders.json`). Give a new archer any bow of the right class, then run `python tools/rebalance_ranged_ladders.py --apply`; a tier its line lists no cell for is a `RANGED_LADDER_INVERSION` finding, and the line needs that tier added to the spec. `docs/features/ranged-ladders.md`.
-
-Before committing tier-ordered weapons (polearms, swords and other melee), grep vanilla stats:
-
-```bash
-grep -A20 'id="<weapon_id>"' "<game>/Modules/SandBoxCore/ModuleData/items/weapons.xml" \
-  | grep -E 'difficulty|damage|missile_speed|speed'
-```
-
-Then sort by primary damage stat and assign tiers in ascending order.
+Names do not imply tier. Launchers are generated ladder cells: give a new archer any bow of the class, then `python tools/rebalance_ranged_ladders.py --apply` (`docs/features/ranged-ladders.md`). Melee weapons fit a DPS band: `MELEE_LADDER_INVERSION`, repair with `python tools/fix_melee_ladder.py`.

@@ -7,6 +7,7 @@ Run:  python tools/tests/test_check_commit_msg.py
 Pure stdlib. check() is tested on message text; the end-to-end test commits in a throwaway git
 repository whose core.hooksPath points at the repo's .githooks folder.
 """
+import io
 import os
 import shutil
 import subprocess
@@ -14,6 +15,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -70,12 +72,70 @@ class CheckTests(unittest.TestCase):
         for prefix in ("fixup! ", "squash! ", "amend! "):
             self.assertEqual(ccm.check(prefix + "anything at all\n", V), [], prefix)
 
+    def test_a_closing_keyword_with_a_number_list_fails(self):
+        for body in ("Closes #1036, #1037", "fixes #1 ,#2", "Resolves #5,  #6, #7",
+                     "Close #1, #2", "Closed #1, #2", "Fix #1, #2", "Fixed #1, #2", "Resolve #1, #2",
+                     "Resolved #1, #2", "Closes #1 and #2", "Closes #1 & #2", "Closes #1 #2",
+                     "Closes: #1, #2", "(closes #182 #187 #188)", "This fixes #1, #2 stays open"):
+            problems = ccm.check("fix: v2.0.36 - a fix\n\n" + body + "\n", V)
+            self.assertEqual(len(problems), 1, body)
+            self.assertIn("keyword before each number", problems[0])
+
+    def test_a_comma_and_then_and_is_still_a_number_list(self):
+        for body in ("Closes #1, and #2", "Fixes #1 , and #2", "Resolves #5, #6, and #7"):
+            problems = ccm.check("fix: v2.0.36 - a fix\n\n" + body + "\n", V)
+            self.assertEqual(len(problems), 1, body)
+            self.assertIn("keyword before each number", problems[0])
+
+    def test_a_separator_never_crosses_a_line(self):
+        self.assertEqual(ccm.check("fix: v2.0.36 - a fix\n\nCloses #1071\n\n#1072 is left open.\n", V), [])
+
+    def test_a_double_backtick_span_naming_the_form_passes(self):
+        body = "The gate refuses ``Closes #1, #2`` because it closes only #1."
+        self.assertEqual(ccm.check("fix: v2.0.36 - a fix\n\n" + body + "\n", V), [])
+
+    def test_a_code_span_naming_the_form_passes(self):
+        for body in ("The gate refuses `Closes #1, #2` because it closes only #1.",
+                     "Fixes #4. The old form `Closes #1 #2` is refused."):
+            self.assertEqual(ccm.check("fix: v2.0.36 - a fix\n\n" + body + "\n", V), [], body)
+
+    def test_a_number_after_a_keyword_that_is_not_an_issue_list_passes(self):
+        msg = "fix: v2.0.36 - a fix\n\nFixes #4 100 lines of drift, closes #5\n"
+        self.assertEqual(ccm.check(msg, V), [])
+
+    def test_a_keyword_before_each_number_passes(self):
+        msg = "fix: v2.0.36 - a fix\n\nCloses #1036, closes #1037\nFixes #4\n"
+        self.assertEqual(ccm.check(msg, V), [])
+
     def test_empty_message_is_left_to_git(self):
         self.assertEqual(ccm.check("# only a comment\n\n", V), [])
 
     def test_unknown_version_checks_only_the_other_rules(self):
         self.assertEqual(ccm.check("Add things\n", None), [])
         self.assertIn("72", ccm.check("Add " + "x" * 80 + "\n", None)[0])
+
+
+class EntryTests(unittest.TestCase):
+    """Python exits 1 for an uncaught exception, the code that means "a finding"."""
+
+    def test_a_crash_exits_three_with_the_traceback_on_stderr(self):
+        err = io.StringIO()
+        with mock.patch.object(ccm, "main", side_effect=RuntimeError("boom")), mock.patch.object(sys, "stderr", err):
+            self.assertEqual(ccm.entry(["check_commit_msg.py", "msg.txt"]), 3)
+        self.assertIn("RuntimeError: boom", err.getvalue())
+        self.assertIn("exit 3", err.getvalue())
+
+    def test_a_finding_still_exits_one_and_a_pass_zero(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            msg = Path(tmp) / "msg.txt"
+            for text, want in (("Add things\n", 1), ("fix: v2.0.36 - a fix\n", 0)):
+                msg.write_text(text, encoding="utf-8")
+                with mock.patch.object(ccm, "commit_version", return_value=V), mock.patch.object(sys, "stderr", io.StringIO()):
+                    self.assertEqual(ccm.entry(["check_commit_msg.py", str(msg)]), want, text)
+
+    def test_a_usage_error_still_exits_two(self):
+        with mock.patch.object(sys, "stderr", io.StringIO()):
+            self.assertEqual(ccm.entry(["check_commit_msg.py"]), 2)
 
 
 @unittest.skipUnless(shutil.which("git") and shutil.which("bash"), "needs git and bash")

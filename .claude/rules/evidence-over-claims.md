@@ -1,7 +1,3 @@
----
-description: Evidence over performance. Verify a review finding before implementing it, never agree performatively, claim nothing done without fresh output, and never state an unread fact.
----
-
 # Evidence over claims
 
 Technical truth over social comfort. Verify a finding before acting on it, prove a result before
@@ -22,26 +18,20 @@ A review finding (Codex, a `/deep-review` lens, a subagent, the user) is a hypot
 4. **Spot-check a subagent's load-bearing claims before relaying them**, security claims above all.
    Relaying an unchecked report is the same failure as trusting an agent's "done".
 
-Banned, because they carry no information: "You're absolutely right!", "Great point!", "Excellent
-catch!". Say what you verified and what you are changing instead.
-
 ## B. Verify before "done"
 
 Before claiming built, passing, fixed or done: name the command that proves it, run it now, read the
 exit code and output, then state the claim with that evidence, or report the failure with it. Name
-what the run did not cover (no in-game check, one build, the laptop untested) beside the claim.
+what the run did not cover (no in-game check, one build) beside the claim.
 
 Not verification: an earlier run, "should pass", a linter pass (it does not compile), a subagent's
 self-report, your own confidence. Stop and verify if you are about to type "Done!" or commit on an
 unrun build.
 
-This gates claims, not edits. The cadence that keeps it cheap:
-
-| When | Run |
-|---|---|
-| After each edit | a compile |
-| Iterating on one component | the filtered suite: `python tools/graphify_taom.py tests "<changed type or file>"` prints the `dotnet test --filter` line for the tests the change reaches |
-| At each work-item boundary, and once before the review gate | the full suite; this is the run you quote |
+This gates claims, not edits. The cadence that keeps it cheap: a compile after each edit; the filtered
+suite while iterating (`python tools/graphify_taom.py tests "<changed type or file>"` prints its
+`dotnet test --filter` line); and at each work-item boundary, before the review gate and after any
+generator ran, the full suite, C# and `tools/tests` (`/verify` Steps 2 and 2b). That is the run you quote.
 
 Batch related `taom-src` lookups into one command. A verification you ran this turn and have not
 invalidated is still evidence; re-running it adds none.
