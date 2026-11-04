@@ -18,6 +18,7 @@ public class FordsUpgradeTests
     private const string Fortify = "fortify";
 
     private static readonly FordsAiProfile Hard = new("hard", 5f, 1.2f, 0f, 100000);
+    private static readonly FordsAiProfile Spender = new("spender", 5f, 1f, 0f, 100);
 
     private static IReadOnlyList<UpgradeTrack> Tracks => FordsMatchConfig.Default.UpgradesOrDefault;
 
@@ -208,6 +209,84 @@ public class FordsUpgradeTests
         var match = new FordsMatch(config, Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
 
         Assert.AreEqual(Melee, Decide(match, 1).Single(a => a.Kind == AiActionKind.BuyUpgrade).Id);
+    }
+
+    private static FordsMatch LaneMatch(IReadOnlyList<string> cycle, int gold, bool full)
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        factions[MatchSide.East] = factions[MatchSide.East] with { AiBuyCycle = cycle };
+        var config = Config(c => c with { Economy = c.Economy with { StartingGold = gold }, Lanes = c.Lanes with { AssaultThreshold = full ? 0 : 1000 } });
+        return new FordsMatch(config, Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
+    }
+
+    private static List<AiAction> Spent(AiCommander ai, FordsMatch match, float now) =>
+        ai.Decide(match.GetView(EastSlot), now).Where(a => a.Kind == AiActionKind.BuyUpgrade || a.Kind == AiActionKind.BuyPack).ToList();
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_SpareGoldBuysTheNextUpgradeInTheCycle()
+    {
+        var offer = Factions()[MatchSide.East].Units[0].OfferId;
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        var spent = Spent(ai, LaneMatch(new[] { offer, "up:" + Missile, "up:" + Melee }, 5000, full: true), 10f);
+
+        Assert.AreEqual(AiActionKind.BuyUpgrade, spent.Single().Kind);
+        Assert.AreEqual(Missile, spent.Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_ASpareUpgrade_KeepsTheCyclesPlaceForWhenTheLaneOpens()
+    {
+        var offer = Factions()[MatchSide.East].Units[0].OfferId;
+        var cycle = new[] { offer, "up:" + Melee };
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Spent(ai, LaneMatch(cycle, 5000, full: true), 10f);
+        var next = Spent(ai, LaneMatch(cycle, 5000, full: false), 20f);
+
+        Assert.AreEqual(AiActionKind.BuyPack, next.Single().Kind);
+        Assert.AreEqual(offer, next.Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_GoldInsideTheReserve_BuysNoUpgrade()
+    {
+        var offer = Factions()[MatchSide.East].Units[0].OfferId;
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Assert.AreEqual(0, Spent(ai, LaneMatch(new[] { offer, "up:" + Melee }, 400, full: true), 10f).Count, "300 for the level and 100 of reserve leave nothing spare");
+
+        Assert.AreEqual(Melee, Spent(ai, LaneMatch(new[] { offer, "up:" + Melee }, 401, full: true), 20f).Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_ACompleteUpgrade_IsPassedOverForTheNext()
+    {
+        var offer = Factions()[MatchSide.East].Units[0].OfferId;
+        var match = LaneMatch(new[] { offer, "up:" + Melee, "up:" + Missile }, 5000, full: true);
+        for (var i = 0; i < 3; i++)
+            match.TryBuyUpgrade(EastSlot, Melee);
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Assert.AreEqual(Missile, Spent(ai, match, 10f).Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_ACycleWithNoUpgrade_BuysNothing()
+    {
+        var offer = Factions()[MatchSide.East].Units[0].OfferId;
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Assert.AreEqual(0, Spent(ai, LaneMatch(new[] { offer }, 5000, full: true), 10f).Count);
+    }
+
+    [TestMethod]
+    public void Decide_TheLaneHasRoom_StillSavesForThePackDue_AndBuysNoUpgradeAhead()
+    {
+        var dearest = Factions()[MatchSide.East].Units.OrderByDescending(o => o.PackPrice).First();
+        var ai = new AiCommander(EastSlot, Spender, new SeededFordsRandom(3));
+
+        Assert.AreEqual(0, Spent(ai, LaneMatch(new[] { dearest.OfferId, "up:" + Melee }, dearest.PackPrice - 1, full: false), 10f).Count(a => a.Kind == AiActionKind.BuyUpgrade));
     }
 
     [TestMethod]

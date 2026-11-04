@@ -45,6 +45,32 @@ def text(found):
     return "\n".join(found)
 
 
+class HeroLivesTests(unittest.TestCase):
+    MARKS = [
+        {"Kind": "fielded", "HeroId": "a", "Side": "West", "Mt": 100.0},
+        {"Kind": "spawned", "HeroId": "a", "Side": "West", "Mt": 100.0},
+        {"Kind": "died", "HeroId": "a", "Side": "West", "Mt": 160.0},
+        {"Kind": "spawned", "HeroId": "a", "Side": "West", "Mt": 200.0},
+        {"Kind": "respawned", "HeroId": "a", "Side": "West", "Mt": 200.0},
+        {"Kind": "spawned", "HeroId": "b", "Side": "East", "Mt": 300.0},
+    ]
+
+    def test_a_life_runs_to_its_death_or_to_the_end_of_the_match(self):
+        lives = r.hero_lives(self.MARKS, end=400.0)
+        self.assertEqual({"side": "West", "lives": 2, "seconds": 260.0}, lives["a"])
+        self.assertEqual({"side": "East", "lives": 1, "seconds": 100.0}, lives["b"])
+
+    def test_a_hero_that_kills_little_for_its_time_on_the_field_is_flagged(self):
+        found = text(r.findings(facts(hero_lives={"h": {"side": "West", "lives": 2, "seconds": 600.0}}, troops={"h": {"kills": 5, "deaths": 2, "valueKilled": 100, "valueLost": 2000}})))
+        self.assertIn("HERO weak: h (rivendell) 5 kills in 600 s on the field, 0.5 per minute", found)
+
+    def test_a_hero_that_kills_well_or_barely_fought_is_not_flagged(self):
+        strong = facts(hero_lives={"h": {"side": "West", "lives": 1, "seconds": 60.0}}, troops={"h": {"kills": 5, "deaths": 1, "valueKilled": 100, "valueLost": 1000}})
+        brief = facts(hero_lives={"h": {"side": "East", "lives": 1, "seconds": 30.0}})
+        self.assertNotIn("HERO weak", text(r.findings(strong)))
+        self.assertNotIn("HERO weak", text(r.findings(brief)))
+
+
 class ParseLogTests(unittest.TestCase):
     def setUp(self):
         self.parsed = r.parse_log(LOG)

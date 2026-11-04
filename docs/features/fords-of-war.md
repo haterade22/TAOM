@@ -180,6 +180,8 @@ per record. Names are camelCase.
 | `heroes.buybackBaseFraction` | float | Buyback price as a fraction of the hero price at minute 0 | 0.5 |
 | `heroes.buybackPerMinuteFraction` | float | Added to that fraction per match minute | 0.05 |
 | `heroes.freeArrivalSeconds` | float | How often each side's next hero comes for nothing; 0 turns it off | 300 |
+| `heroes.damageFactor` | float | Multiplies the blows of a hero on the field, before armour | 3 |
+| `heroes.damageTakenFactor` | float | Multiplies the blows a hero takes, after armour | 0.4 |
 | `lanes.orderCooldownSeconds` | float | Cooldown between lane order changes | 20 |
 | `lanes.engageRange` | float | Metres: enemies inside it make the lane charge, unless it is sieging (an enemy inside it no longer always makes a sieging lane charge) | 25 |
 | `lanes.waypointReachRadius` | float | Metres at which a waypoint counts as reached | 6 |
@@ -191,7 +193,7 @@ per record. Names are camelCase.
 | `aiProfiles.<id>.decisionIntervalSeconds` | float | Seconds between AI decisions | easy 12, normal 8, hard 5 |
 | `aiProfiles.<id>.incomeMultiplier` | float | Applied to the AI slot's passive income only, not to bounties | easy 0.8, normal 1.0, hard 1.2 |
 | `aiProfiles.<id>.mistakeChance` | float | Chance the AI skips a decision | easy 0.25, normal 0.1, hard 0.0 |
-| `aiProfiles.<id>.heroReserveGold` | int | Gold the AI keeps beyond a hero's price before it buys one | easy 200, normal 300, hard 400 |
+| `aiProfiles.<id>.heroReserveGold` | int | Gold the AI keeps beyond the price before it buys a hero, a buyback or a spare upgrade | easy 600, normal 800, hard 1000 |
 
 A file may override one profile or add a new name; a new profile starts from normal.
 
@@ -245,7 +247,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Order cooldown 20 s | Setting the standing order again returns Ok and costs no cooldown |
 | Capture 12 m radius, 20 s, 60 gold per minute per point | Starting values |
 | Countdown 10 s | Seconds before the match goes live |
-| AI: easy 12 s, x0.8, 0.25, 200; normal 8 s, x1.0, 0.1, 300; hard 5 s, x1.2, 0.0, 400 | Difficulty comes from decision speed, passive income, skipped decisions and hero reserve; the multiplier never touches bounties |
+| AI: easy 12 s, x0.8, 0.25, 600; normal 8 s, x1.0, 0.1, 800; hard 5 s, x1.2, 0.0, 1000 | Difficulty comes from decision speed, passive income, skipped decisions and hero reserve; the multiplier never touches bounties |
 
 **Layout options** (shipped default): `laneCount` 3, `laneSpread` 45, `waypointStep` 12, `towerFractions`
 0.36 and 0.2, `keepInset` 0.04.
@@ -349,8 +351,10 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 - **Upgrades** (`match.json` `upgrades`, `UpgradeBook`, `FordsUpgradeHooks`, key U hides the panel, Shift+F1 to F6 or a click buys): gold buys three levels on each of six tracks for the whole army: melee damage, missile
   damage, melee armour, missile armour, siegecraft and fortify. The damage and armour tracks work per blow in `TaomCustomBattleDamageModel`, so a level reaches the units already on the field with no stat refresh. Tower gunners gain nothing from the damage tracks.
   A faction's `upgradeCost` scales its prices. An `aiBuyCycle` entry `up:<track>` makes the AI save for that upgrade. Proof in a run: `[FordsOfWar][Upgrade]` lines, one per purchase and one with the blow totals at the end.
-- **Match speed** (`FordsGameSpeed`, `FordsMissionSpeed`, key T or the button under the clock): 1x, 2x, 4x and 10x, for a human and for an unattended run (`--speed`). 2x and 4x set the mission's `FixedDeltaTimeMode` each frame to the frame's own time times the speed, capped at 0.1 s, so a slow frame slows the match. 10x is the engine's fast forward, `Mission.SetFastForwardingFromUI`, which runs the AI on the main thread in steps of up to 0.1 s. `Scene.TimeSpeed` cannot do this: `Mission.UpdateSceneTimeSpeed` caps it at 1 every frame. A `[FordsOfWar][Speed]` line records each change, and `tools/fords_match_review.py` names a fast match first. A fast match is only evidence for balance after a comparison with a normal one: see [balance-log.md](fords-of-war/balance-log.md).
+- **Match speed** (`FordsGameSpeed`, `FordsMissionSpeed`, key T or the button in the top left corner): 1x, 2x, 4x and 10x, for a human and for an unattended run (`--speed`). 2x and 4x set the mission's `FixedDeltaTimeMode` each frame to the frame's own time times the speed, capped at 0.1 s, so a slow frame slows the match. 10x is the engine's fast forward, `Mission.SetFastForwardingFromUI`, which runs the AI on the main thread in steps of up to 0.1 s. `Scene.TimeSpeed` cannot do this: `Mission.UpdateSceneTimeSpeed` caps it at 1 every frame. A `[FordsOfWar][Speed]` line records each change, and `tools/fords_match_review.py` names a fast match first. Balance runs use 4x, and 10x is for smoke and crash runs only, because six matches showed that 10x changes the result: see [balance-log.md](fords-of-war/balance-log.md).
 - **Free heroes** (`heroes.freeArrivalSeconds`, `FordsMatch.HeroArrivals.cs`): every 5 minutes of live time each side's next hero takes the field for nothing, cheapest first, in the lane where the side is most outnumbered. A side with no slot free or no hero left waits for the next arrival, and a missed one does not carry over. A commander can still pay to field a hero early. The hero panel's title counts down. Proof in a run: `[FordsOfWar][Hero] kind=fielded` lines at about 300 and 600 s for both sides.
+- **Hero strength** (`heroes.damageFactor`, `heroes.damageTakenFactor`, `HeroCombatFactors`, `FordsUpgradeHooks`): a hero of the match deals 3 times the damage and takes 0.4 times the damage, per blow in `TaomCustomBattleDamageModel`. Blows on towers keep their own `towers.heroDamageFactor`. Proof in a run: `heroRaised` and `heroLowered` on the `[FordsOfWar][Upgrade]` totals line, and the hero table of `tools/fords_match_review.py`.
+- **AI spare gold** (`AiCommander.BuySpareUpgrade`): while its assault lane is full, the AI buys the next upgrade its buy cycle names with gold above `heroReserveGold`. The cycle keeps its place for when the lane opens.
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of
   that role the gold reaches, which suits Gondor's rotating bands. `up:<track>` names an upgrade and `beast:<offer>` a creature. The AI saves up when the next entry costs too much. It calls a creature only from this list, and a gate makes every creature faction name one, because an automatic call on the timer once took most of Mordor's gold. An upgrade or beast still comes while the assault lane is full, so a small faction's gold does not sit unspent. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
 - **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.

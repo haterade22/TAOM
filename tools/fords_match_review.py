@@ -31,6 +31,9 @@ AVG_MS_FLAG = 7.0
 P95_MS_FLAG = 12.0
 SHADER_COMPILE_FLAG = 100
 FULL_MATCH_SECONDS = 880.0
+HERO_MIN_SECONDS = 60.0
+HERO_KILLS_PER_MINUTE_FLAG = 2.0
+TOWER_CLASSES = ("melee", "ranged", "hero", "siege", "other")
 
 SUMMARY = re.compile(r"\[Summary\] .*?mt=([\d.]+) .*?deathsW=(\d+) deathsE=(\d+) .*?towersW=(\d+) towersE=(\d+)")
 TROOP = re.compile(r"\[Balance\] troop=(\S+) kills=(\d+) deaths=(\d+) valueKilled=(\d+) valueLost=(\d+)")
@@ -100,6 +103,26 @@ def _side_values(facts):
     return values
 
 
+def hero_lives(marks, end):
+    """hero -> side, lives and seconds on the field, from the report's hero marks. A life with no death counts up to the end of the match."""
+    lives, spawned_at = {}, {}
+    for mark in marks:
+        hero, kind = mark["HeroId"], mark["Kind"]
+        row = lives.setdefault(hero, {"side": mark["Side"], "lives": 0, "seconds": 0.0})
+        if kind == "spawned":
+            row["lives"] += 1
+            spawned_at[hero] = mark["Mt"]
+        elif kind == "died" and hero in spawned_at:
+            row["seconds"] += mark["Mt"] - spawned_at.pop(hero)
+    for hero, start in spawned_at.items():
+        lives[hero]["seconds"] += end - start
+    return lives
+
+
+def _kills_per_minute(facts, hero, row):
+    return facts["troops"].get(hero, {}).get("kills", 0) * 60.0 / row["seconds"] if row["seconds"] > 0 else 0.0
+
+
 def _name(facts, side):
     return facts["west"] if side == "West" else facts["east"]
 
@@ -153,6 +176,16 @@ def _troop_findings(facts):
     return found
 
 
+def _hero_findings(facts):
+    found = []
+    for hero, row in sorted(facts.get("hero_lives", {}).items()):
+        rate = _kills_per_minute(facts, hero, row)
+        if row["seconds"] >= HERO_MIN_SECONDS and rate < HERO_KILLS_PER_MINUTE_FLAG:
+            kills = facts["troops"].get(hero, {}).get("kills", 0)
+            found.append(f"HERO weak: {hero} ({_name(facts, row['side'])}) {kills} kills in {row['seconds']:.0f} s on the field, {rate:.1f} per minute")
+    return found
+
+
 def _economy_findings(facts):
     found = []
     for side in SIDES:
@@ -190,7 +223,7 @@ def _feature_findings(facts):
 
 def findings(facts):
     """One line per number worth a person's reading, the most urgent kind first."""
-    return _health_findings(facts) + _balance_findings(facts) + _troop_findings(facts) + _economy_findings(facts) + _feature_findings(facts)
+    return _health_findings(facts) + _balance_findings(facts) + _troop_findings(facts) + _hero_findings(facts) + _economy_findings(facts) + _feature_findings(facts)
 
 
 def _faction_tables(factions_path, west, east):
@@ -234,7 +267,8 @@ def gather(run, factions_path=FACTIONS):
     facts["faction_of"], facts["creatures"], facts["free_troops"], facts["poison_factions"] = _faction_tables(factions_path, facts["west"], facts["east"])
     rgl = glob.glob(str(folder / "rgl_log_*.txt"))
     facts["shader_compiles"] = Path(rgl[0]).read_text(encoding="utf-8", errors="replace").count("compile_shader:") if rgl else 0
-    facts.update({"spawned": {}, "heroes": dict.fromkeys(SIDES, 0), "tower_damage": dict.fromkeys(SIDES, 0), "perf": {"avg": 0.0, "p95": 0.0}})
+    facts.update({"spawned": {}, "heroes": dict.fromkeys(SIDES, 0), "tower_damage": dict.fromkeys(SIDES, 0), "perf": {"avg": 0.0, "p95": 0.0}, "hero_lives": {},
+                  "tower_classes": {side: dict.fromkeys(TOWER_CLASSES, 0) for side in SIDES}})
     reports = sorted(folder.glob("fords_report_*.json"))
     if reports:
         evidence = json.loads(reports[0].read_text(encoding="utf-8"))["evidence"]
@@ -242,8 +276,13 @@ def gather(run, factions_path=FACTIONS):
         for hero in evidence.get("Heroes", []):
             if hero.get("Kind") == "fielded":
                 facts["heroes"][hero["Side"]] += 1
+        facts["hero_lives"] = hero_lives(evidence.get("Heroes", []), evidence.get("Mt") or facts["mt"])
         for name, tower in evidence.get("Towers", {}).items():
-            facts["tower_damage"]["West" if "east" in name else "East"] += sum(tower.get("AppliedDamage") or [])
+            attacker = "West" if "east" in name else "East"
+            applied = tower.get("AppliedDamage") or []
+            facts["tower_damage"][attacker] += sum(applied)
+            for kind, damage in zip(TOWER_CLASSES, applied):
+                facts["tower_classes"][attacker][kind] += damage
         windows = evidence.get("Perf", {}).get("Windows") or []
         if windows:
             facts["perf"] = {"avg": sum(w["AvgMs"] for w in windows) / len(windows), "p95": max(w["P95Ms"] for w in windows)}
@@ -257,6 +296,10 @@ def render(facts, found):
     lines.append("|---|---|---|")
     for label, row in (("units lost", facts["deaths"]), ("towers lost", facts["towers_lost"]), ("tower damage", facts["tower_damage"]), ("heroes fielded", facts["heroes"])):
         lines.append(f"| {label} | {row['West']} | {row['East']} |")
+    for kind in TOWER_CLASSES:
+        classes = facts.get("tower_classes", {})
+        if classes.get("West", {}).get(kind) or classes.get("East", {}).get(kind):
+            lines.append(f"| tower damage by {kind} | {classes['West'][kind]} | {classes['East'][kind]} |")
     for key in ("earned", "income", "bounty", "towers", "camps", "captures", "refund", "spent", "units", "creatures", "heroes", "upgrades", "regions", "left"):
         lines.append(f"| gold {key} | {facts['gold'].get('West', {}).get(key, '-')} | {facts['gold'].get('East', {}).get(key, '-')} |")
     lines.append(f"| upgrades | {', '.join(facts['upgrades']['West']) or '-'} | {', '.join(facts['upgrades']['East']) or '-'} |")
@@ -266,6 +309,11 @@ def render(facts, found):
     lines += ["| troop | kills | deaths | value killed | value lost |", "|---|---|---|---|---|"]
     for troop, row in sorted(facts["troops"].items(), key=lambda p: -p[1]["valueKilled"]):
         lines.append(f"| {troop} | {row['kills']} | {row['deaths']} | {row['valueKilled']} | {row['valueLost']} |")
+    if facts.get("hero_lives"):
+        lines += ["", "| hero | side | lives | seconds on the field | kills | kills per minute |", "|---|---|---|---|---|---|"]
+        for hero, row in sorted(facts["hero_lives"].items()):
+            kills = facts["troops"].get(hero, {}).get("kills", 0)
+            lines.append(f"| {hero} | {_name(facts, row['side'])} | {row['lives']} | {row['seconds']:.0f} | {kills} | {_kills_per_minute(facts, hero, row):.1f} |")
     lines += ["", "## Findings", ""] + ([f"- {line}" for line in found] or ["- nothing flagged"])
     return "\n".join(lines) + "\n"
 

@@ -50,6 +50,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     }
 
     private readonly FordsMatchPlan _plan;
+    private readonly HeroCombatFactors _heroCombat;
     private readonly IFordsBattlefieldAdapter _battlefield;
     private readonly IFordsTowerAdapter _towers;
     private readonly IFordsCampAdapter _camps;
@@ -96,6 +97,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         IFordsCampAdapter camps, IFordsSceneAdapter scene, FordsSession session, IModLogger logger, IFordsRandom random, FordsRunReport report)
     {
         _plan = plan;
+        _heroCombat = HeroCombatFactors.Of(plan.Factions.Values.SelectMany(f => f.Heroes), plan.Config.Heroes);
         _battlefield = battlefield;
         _towers = towers;
         _camps = camps;
@@ -227,7 +229,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             var snapshot = FordsSnapshotBuilder.Build(dt, samples, IsHero, StandingTowers(), _layout.CapturePoints,
                 _plan.Config.Towers, _plan.Config.Capture, t => match.FireRange(t.Id));
             effects = match.Tick(snapshot);
-            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East));
+            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East), _heroCombat);
             phase = match.Phase;
         }
 
@@ -429,7 +431,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _shutDown = true;
         LogBalance();
         var upgradeHits = FordsUpgradeHooks.Counts;
-        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} (totals)");
+        var heroHits = FordsUpgradeHooks.HeroCounts;
+        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} (totals)");
         FordsUpgradeHooks.Clear();
         _report.BindGunnerLookup(null);
         _report.BindTowerLookup(null);

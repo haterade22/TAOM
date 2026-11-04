@@ -39,7 +39,9 @@
     "respawnPerMinuteSeconds": 6,
     "buybackBaseFraction": 0.5,
     "buybackPerMinuteFraction": 0.05,
-    "freeArrivalSeconds": 300
+    "freeArrivalSeconds": 300,
+    "damageFactor": 3,
+    "damageTakenFactor": 0.4
   },
   "lanes": {
     "orderCooldownSeconds": 20,
@@ -62,8 +64,8 @@
     { "id": "fortify", "name": "{=TAOM_FOW_Upgrade_Fortify}Fortify", "effect": "Fortify", "step": 0.1, "prices": [300, 600, 1000] }
   ],
   "aiProfiles": {
-    "easy": { "decisionIntervalSeconds": 12, "incomeMultiplier": 0.8, "mistakeChance": 0.25, "heroReserveGold": 200 },
-    "normal": { "decisionIntervalSeconds": 8, "incomeMultiplier": 1.0, "mistakeChance": 0.1, "heroReserveGold": 300 },
-    "hard": { "decisionIntervalSeconds": 5, "incomeMultiplier": 1.2, "mistakeChance": 0.0, "heroReserveGold": 400 }
+    "easy": { "decisionIntervalSeconds": 12, "incomeMultiplier": 0.8, "mistakeChance": 0.25, "heroReserveGold": 600 },
+    "normal": { "decisionIntervalSeconds": 8, "incomeMultiplier": 1.0, "mistakeChance": 0.1, "heroReserveGold": 800 },
+    "hard": { "decisionIntervalSeconds": 5, "incomeMultiplier": 1.2, "mistakeChance": 0.0, "heroReserveGold": 1000 }
   }
 }

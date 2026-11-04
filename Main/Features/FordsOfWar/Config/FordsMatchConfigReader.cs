@@ -73,7 +73,9 @@ internal static class FordsMatchConfigReader
         s.Float(g, "heroes", "respawnPerMinuteSeconds", d.RespawnPerMinuteSeconds, 0f, 600f),
         s.Float(g, "heroes", "buybackBaseFraction", d.BuybackBaseFraction, 0f, 10f),
         s.Float(g, "heroes", "buybackPerMinuteFraction", d.BuybackPerMinuteFraction, 0f, 10f),
-        s.Float(g, "heroes", "freeArrivalSeconds", d.FreeArrivalSeconds, 0f, 3600f));
+        s.Float(g, "heroes", "freeArrivalSeconds", d.FreeArrivalSeconds, 0f, 3600f),
+        s.Float(g, "heroes", "damageFactor", d.DamageFactor, 0f, 100f),
+        s.Float(g, "heroes", "damageTakenFactor", d.DamageTakenFactor, 0f, 10f));
 
     private static FordsLaneConfig ReadLanes(JObject? g, FordsLaneConfig d, FordsConfigScope s) => new(
         s.Float(g, "lanes", "orderCooldownSeconds", d.OrderCooldownSeconds, 0f, 600f),

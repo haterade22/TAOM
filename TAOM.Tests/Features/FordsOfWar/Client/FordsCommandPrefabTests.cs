@@ -40,6 +40,15 @@ public class FordsCommandPrefabTests
     }
 
     [TestMethod]
+    public void TheSpeedButton_StandsAloneInTheTopLeftCorner_OffTheTopStrip()
+    {
+        var button = Root().Element("Children")!.Elements("ButtonWidget").Single(b => (string?)b.Attribute("Command.Click") == "ExecuteCycleSpeed");
+
+        Assert.AreEqual("Left", (string?)button.Attribute("HorizontalAlignment"));
+        Assert.AreEqual("Top", (string?)button.Attribute("VerticalAlignment"));
+    }
+
+    [TestMethod]
     public void EveryBinding_ResolvesToAMemberOfTheViewModelInScope()
     {
         var failures = new List<string>();

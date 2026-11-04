@@ -2,7 +2,7 @@
 <Prefab>
   <Window>
     <!-- Fords of War command panel, bound to FordsCommandVM. The player has no agent, so this is the whole interface. The layout keeps the
-         middle of the screen clear and sets state at the edges: keeps and clock on a slim top strip, the battle board bottom left (one row per
+         middle of the screen clear and sets state at the edges: the speed button top left, keeps and clock on a slim top strip, the battle board bottom left (one row per
          lane that also selects it), the command deck bottom centre (gold, the faction's mechanic, a fixed 4 by 2 buy grid, 2 by 2 orders), the
          heroes bottom right, and the feed top right. Buy slots never move: a rotation changes what is in a slot, not where it is. Every widget
          except a button ignores events, so the right mouse drag and the wheel reach the camera view; the layer shows the cursor for the whole
@@ -11,6 +11,18 @@
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
+
+        <!-- Top left corner: the match speed. It stays off the top strip, whose height the clock and the keep bars set. -->
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="34"
+                      HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="8" MarginTop="8"
+                      Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteCycleSpeed">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                        Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
+                        Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                        Text="@SpeedText" DoNotAcceptEvents="true" />
+          </Children>
+        </ButtonWidget>
 
         <!-- Top strip, centre: who we are, our keep, the clock, their keep, who we face. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
@@ -47,23 +59,9 @@
                     </Widget>
                   </Children>
                 </ListPanel>
-                <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center"
-                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
-                                Text="@ClockText" DoNotAcceptEvents="true" />
-                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="100" SuggestedHeight="24"
-                                  HorizontalAlignment="Center" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteCycleSpeed">
-                      <Children>
-                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
-                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
-                                    Text="@SpeedText" DoNotAcceptEvents="true" />
-                      </Children>
-                    </ButtonWidget>
-                  </Children>
-                </ListPanel>
+                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
+                            Text="@ClockText" DoNotAcceptEvents="true" />
                 <ListPanel DataSource="{EnemyKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
                            StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                   <Children>

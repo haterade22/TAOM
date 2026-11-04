@@ -316,6 +316,25 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void TheShippedHeroFactors_MakeAHeroWorthItsPrice_AndAreTheDefault()
+    {
+        Assert.AreEqual(FordsMatchConfig.Default.Heroes.DamageFactor, Catalog().Match.Heroes.DamageFactor);
+        Assert.AreEqual(FordsMatchConfig.Default.Heroes.DamageTakenFactor, Catalog().Match.Heroes.DamageTakenFactor);
+        Assert.IsTrue(Catalog().Match.Heroes.DamageFactor > 1f, "a hero's blows must beat a soldier's");
+        Assert.IsTrue(Catalog().Match.Heroes.DamageTakenFactor < 1f, "a hero must outlast a soldier");
+    }
+
+    [TestMethod]
+    public void TheShippedAiReserves_KeepHeroesToSurplusGold_AndAreTheDefaults()
+    {
+        foreach (var name in new[] { "easy", "normal", "hard" })
+        {
+            Assert.AreEqual(FordsMatchConfig.Default.AiProfiles[name].HeroReserveGold, Catalog().Match.AiProfiles[name].HeroReserveGold, name);
+            Assert.IsTrue(Catalog().Match.AiProfiles[name].HeroReserveGold >= 500, name + " would spend its unit gold on heroes");
+        }
+    }
+
+    [TestMethod]
     public void TheShippedUpgrades_AreTheDefaults()
     {
         var shipped = Catalog().Match.UpgradesOrDefault;
