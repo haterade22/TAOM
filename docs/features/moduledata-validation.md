@@ -40,7 +40,7 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **A `Settlement.X` reference to no settlement** (a clan's or kingdom's home, a village's `bound`) crosses from TAOM
   into the unversioned `TAOM_Map`, so a pair of packages that disagree points it at nothing. The registry is the world the
   game builds: `TAOM_Map`'s rows, since its `settlements.xslt` strips vanilla's. TAOM's two unregistered settlement files
-  are not read. (`BROKEN_SETTLEMENT_REF`). `tools/check_release_pair.py` runs this code, `UNKNOWN_CULTURE`,
+  are not read, and TAOM's `.xslt` files are, because `spclans.xslt` writes homes as element text. (`BROKEN_SETTLEMENT_REF`). `tools/check_release_pair.py` runs this code, `UNKNOWN_CULTURE`,
   `BROKEN_FACTION_REF` and `LANDLESS_CULTURE` against a release channel, which holds no vanilla module.
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an

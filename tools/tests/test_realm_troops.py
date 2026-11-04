@@ -422,30 +422,18 @@ class UnboundDataTests(unittest.TestCase):
         text = rt.PARTY.read_text(encoding="utf-8-sig")
         self.assertEqual(re.findall(r'id="(kingdom_hero_party_(?:mercenary|outlaw)_[^"]+)"', text), [])
 
-    def test_no_promoted_realm_keeps_a_lord_roster_past_the_four_its_clans_use(self):
+    def test_no_promoted_realm_keeps_a_lord_roster_nothing_wears(self):
         # generate_new_faction_kingdoms.py gives a clan's lords a, b, c, d by position, and these realms' clans
-        # hold at most four. A fifth roster carries no <Flags>, so no engine template search reads it either.
-        # Lindon and Blue Craig are the exception the other way: their lords use equip="rivendell" and
-        # equip="goblin", so only the _a row (the culture's default roster) is read, and they keep only that.
-        only_a = ("lindon", "bluecraig")
-        kept = {name: cfg.get("rosters_kept") for name, cfg in promo.TARGETS.items()
-                if cfg.get("rosters_kept") or name in only_a}
-        for name in only_a:
-            self.assertTrue(kept[name], f"{name} sets no rosters_kept, so a run would bring back its _b, _c, _d rows")
-        for name, pattern in kept.items():
-            self.assertRegex(f"{name}_bat_template_medium_a", pattern)
-            self.assertRegex(f"{name}_civ_template_default_a", pattern)
-            self.assertNotRegex(f"{name}_bat_template_medium_e", pattern)
-            self.assertNotRegex(f"{name}_civ_template_default_e", pattern)
-            last_ok, first_bad = ("d", None) if name not in only_a else ("a", "b")
-            if first_bad:
-                for suffix in "bcd":
-                    self.assertNotRegex(f"{name}_bat_template_medium_{suffix}", pattern)
-                    self.assertNotRegex(f"{name}_civ_template_default_{suffix}", pattern)
-                self.assertNotRegex(f"{name}_glorfindel_bat_equipment", pattern)
-            else:
-                self.assertRegex(f"{name}_bat_template_medium_{last_ok}", pattern)
-                self.assertRegex(f"{name}_civ_template_default_{last_ok}", pattern)
+        # hold at most four. Lindon's and Blue Craig's lords use equip="rivendell" and equip="goblin", so only
+        # their culture's _a row is read. A roster nothing wears carries no <Flags>, so no engine search reads it.
+        for name, cfg in promo.TARGETS.items():
+            pattern = cfg.get("rosters_kept")
+            self.assertTrue(pattern, f"{name} sets no rosters_kept, so a run would bring back rosters nothing wears")
+            last = "a" if name in ("lindon", "bluecraig") else "d"
+            for family in ("bat_template_medium", "civ_template_default"):
+                for letter in "abcde":
+                    keeps = self.assertRegex if letter <= last else self.assertNotRegex
+                    keeps(f"{name}_{family}_{letter}", pattern)
 
 
 class DwarfRealmOptionTests(unittest.TestCase):
