@@ -25,6 +25,41 @@ public class FordsCameraMathTests
         new(forward, right, 0f, 0f, 0f, 0f, fast);
 
     [TestMethod]
+    public void Pan_ForwardAtYawZero_MovesAlongPlusY()
+    {
+        var (x, y) = FordsCameraMath.Pan(10f, 20f, yaw: 0f, forward: 1f, right: 0f, distance: 5f);
+
+        Assert.AreEqual(10f, x, Eps);
+        Assert.AreEqual(25f, y, Eps);
+    }
+
+    [TestMethod]
+    public void Pan_RightAtYawZero_MovesAlongPlusX()
+    {
+        var (x, y) = FordsCameraMath.Pan(10f, 20f, yaw: 0f, forward: 0f, right: 1f, distance: 5f);
+
+        Assert.AreEqual(15f, x, Eps);
+        Assert.AreEqual(20f, y, Eps);
+    }
+
+    [TestMethod]
+    public void Pan_ADiagonalStick_IsNormalisedToTheDistance()
+    {
+        var (x, y) = FordsCameraMath.Pan(0f, 0f, yaw: 0f, forward: 1f, right: 1f, distance: 5f);
+
+        Assert.AreEqual(5f, (float)Math.Sqrt(x * x + y * y), Eps);
+    }
+
+    [TestMethod]
+    public void Pan_AHalfStick_IsNotStretched()
+    {
+        var (x, y) = FordsCameraMath.Pan(0f, 0f, yaw: 0f, forward: 0.5f, right: 0f, distance: 5f);
+
+        Assert.AreEqual(2.5f, y, Eps);
+        Assert.AreEqual(0f, x, Eps);
+    }
+
+    [TestMethod]
     public void Step_PanForwardAtYawZero_MovesAlongPlusY()
     {
         var next = FordsCameraMath.Step(At(500f, 250f), Pan(forward: 1f), Dt, Square);

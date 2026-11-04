@@ -74,7 +74,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 3. Player: loses control, sees "Your warg entered into a rage" message
 4. AI: rider leaves formation, warg navigates to enemy
 5. Warg attacks, decrementing rage counter
-6. On completion, enemy death or the 6 s timeout: control returns. `SetRageAttackTimer` restarts the timer on every pass, so
+6. On completion, enemy death or the 6 s timeout: control returns (vanilla's controller is turned back on, unless the Seat of Seeing is up: its leave turns it on, see [seat-of-seeing.md](seat-of-seeing.md)). `SetRageAttackTimer` restarts the timer on every pass, so
    the timeout fires only while the rage selector waits with nothing to do, never during a chase
 
 **How a rage closes.** The rage start stores the rider and his formation on the blackboard. A rage belongs to that rider. Four
@@ -108,7 +108,7 @@ step 3 above never happens.
 | `Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs` | MissionLogic: SpatialGrid + BoneCollision ticking; owns the adapter cache lifecycle (build, delete, mission end, #592) |
 | `Main/Features/AdvancedCombat/MissionThreadGuard.cs` | Marks the main mission thread; reports once per site when a blow or creature action runs off it (#592) |
 | `Main/Features/AdvancedCombat/AgentSlotIdentity.cs` | Is this managed `Agent` still its slot's occupant (`Mission.FindAgentWithIndex`); the guard behind `AgentAdapter.IsActive()` and `TakeDamage` (#592) |
-| `Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs` | [DefaultView] MissionView for rage mode (TAOM.Client); also holds the swap with vanilla's `MissionMainAgentController` (`SwitchMainAgentController`) |
+| `Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs` | [DefaultView] MissionView for rage mode (TAOM.Client); also holds the swap with vanilla's `MissionMainAgentController` (`SwitchMainAgentController`; the swap back skips vanilla's `Enable()` while the Seat of Seeing is up, and the Seat's own leave turns it on) |
 | `Main/Features/AdvancedCombat/IAutonomousMovementController.cs` | The core seam: the interface the Warg code drives |
 | `Main/Features/AdvancedCombat/AdvancedCombatIoC.cs` | Registers IBoneCollisionService, ISpatialGridDebugService |
 | `Main/Features/AdvancedCombat/TaomBTLogger.cs` | ILogger forwarding to IModLogger |
@@ -189,6 +189,10 @@ step 3 above never happens.
 
 ## Changelog
 
+- 2026-11-04: `SwitchMainAgentController(false)` no longer calls vanilla's `Enable()` while `SeatPresence.IsSeated` (the Seat's leave
+  does), so a calm warg's death, a rage that ends between two screen ticks or a lost warg cannot turn vanilla's controller on under the
+  Seat. Outside the Seat it does what it did. The two events with no reader (`OnLockedAgentChanged`, `OnPotentialLockedAgentChanged`)
+  were deleted.
 - 2026-10-02 (plan 033): the creature trees read `DateTime.UtcNow`, `Selector.Prepare` reuses its
   child lists, and `BehaviorTreeMissionLogic` returns before allocating or parking when nothing
   listens; it logs the first such skip per mission and a mission-end summary of skips and parked
@@ -231,6 +235,7 @@ step 3 above never happens.
 - **Status:** Closed (2026-08-08 issue triage)
 - **Issue:** #659, [Warg battles: cut per-tick service lookups, scan allocations and skeleton wrappers](https://github.com/haterade22/TAOM/issues/659) (plan 015)
 - **Status:** Open (in-game warg Custom Battle owed)
+- **Open question (found while building the Seat of Seeing):** `PrepareOnFirstCall.cs:34` tests the warg's own `IsPlayerControlled`, and `Agent.Build` gives a non-humanoid an AI controller, so the swap into a rage may never run in single player (not proved in game). The in-game warg Custom Battle owed above should settle it. Until it does, `IAutonomousMovementController.HoldsHero` may stay false, and then the Seat's rage rules are inert and harmless ([seat-of-seeing.md](seat-of-seeing.md)).
 
 ---
 

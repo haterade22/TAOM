@@ -21,5 +21,15 @@
     <string id="taom_key_realm_borders_desc" text="Mostra ou oculta as fronteiras e os nomes dos reinos no mapa de campanha. Padrão: M." />
     <string id="taom_key_realm_borders_mode" text="Modo de Mapa das Fronteiras (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Alterna as fronteiras entre os reinos, os Povos Livres contra a Sombra e seus aliados e inimigos. Padrão: G." />
+    <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+    <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
+    <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
+    <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
+    <string id="taom_key_marshal_widths_desc" text="Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
+    <string id="taom_key_seat_keep" text="Keep to this soldier or company (TAOM)" />
+    <string id="taom_key_seat_keep_desc" text="In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
+    <string id="taom_key_seat_hide" text="Hide the interface (TAOM)" />
+    <string id="taom_key_seat_hide_desc" text="In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
   </strings>
 </base>

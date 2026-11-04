@@ -1,0 +1,6 @@
+[2026-11-04 14:00:01] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-11-04 14:00:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-11-04 14:07:00] [INFO] [Check] id=taom.marshals-word.array result=pass mission=1 kind=drag companies=2
+[2026-11-04 14:07:01] [INFO] [Check] id=taom.marshals-word.march result=pass mission=1 companies=2
+[2026-11-04 14:07:50] [INFO] [Check] id=taom.marshals-word.march-spread result=fail mission=1 spread=39.5 longest=25.0 shortest=7.5
+[2026-11-04 14:20:00] [INFO] [Shutdown] clean module unload

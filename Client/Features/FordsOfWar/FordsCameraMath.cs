@@ -49,8 +49,18 @@ internal static class FordsCameraMath
         var tilt = Clamp(state.Tilt + input.DragPixelsY * DragTiltPerPixel, -MaxTilt, MaxTilt);
         var height = ClampHeight(state.Height * (float)Math.Pow(ZoomPerNotch, input.ZoomNotches));
 
-        var forward = input.PanForward;
-        var right = input.PanRight;
+        var distance = PanSpeed(state.Height) * (input.Fast ? 2f : 1f) * dt;
+        var (x, y) = Pan(state.X, state.Y, yaw, input.PanForward, input.PanRight, distance);
+        var (clampedX, clampedY) = ClampInside(boundary, x, y);
+        return new FordsCameraState(clampedX, clampedY, yaw, height, tilt);
+    }
+
+    /// <summary>
+    /// The ground point after moving <paramref name="distance"/> metres along the stick (<paramref name="forward"/>, <paramref name="right"/>),
+    /// relative to the yaw. A stick longer than 1 is normalised, so a diagonal is no faster than straight.
+    /// </summary>
+    internal static (float X, float Y) Pan(float x, float y, float yaw, float forward, float right, float distance)
+    {
         var magnitude = (float)Math.Sqrt(forward * forward + right * right);
         if (magnitude > 1f)
         {
@@ -58,12 +68,9 @@ internal static class FordsCameraMath
             right /= magnitude;
         }
 
-        var distance = PanSpeed(state.Height) * (input.Fast ? 2f : 1f) * dt;
         var heading = Forward(yaw);
-        var x = state.X + (heading.X * forward + (float)Math.Cos(yaw) * right) * distance;
-        var y = state.Y + (heading.Y * forward + (float)Math.Sin(yaw) * right) * distance;
-        var (clampedX, clampedY) = ClampInside(boundary, x, y);
-        return new FordsCameraState(clampedX, clampedY, yaw, height, tilt);
+        return (x + (heading.X * forward + (float)Math.Cos(yaw) * right) * distance,
+            y + (heading.Y * forward + (float)Math.Sin(yaw) * right) * distance);
     }
 
     /// <summary>The pitch below the horizon in radians: steeper at height, shifted by the player's tilt, held between <see cref="MinPitch"/> and <see cref="MaxPitch"/>.</summary>
@@ -169,9 +176,9 @@ internal static class FordsCameraMath
 
     private static float ClampHeight(float height) => Clamp(height, MinHeight, MaxHeight);
 
-    private static float Clamp(float value, float min, float max) => value < min ? min : value > max ? max : value;
+    internal static float Clamp(float value, float min, float max) => value < min ? min : value > max ? max : value;
 
-    private static float WrapAngle(float angle)
+    internal static float WrapAngle(float angle)
     {
         while (angle > Math.PI)
             angle -= TwoPi;

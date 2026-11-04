@@ -2937,4 +2937,43 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_mh_mcm_hide_locked}Hide Locked Items from Smelting", Order = 11, RequireRestart = false,
         HintText = "{=taom_mh_mcm_hide_locked_hint}Weapons you locked in the inventory no longer appear in the smithy's smelting list, so they cannot be smelted by accident. Unlock one in the inventory to smelt it. A weapon you lock inside the smithy leaves the list at your next smelt or tab switch. No restart. Default: on.")]
     public bool ManyHammersHideLockedEnabled { get; set; } = TAOM.Features.ManyHammers.ManyHammersSettingsProvider.DefaultHideLockedEnabled;
+
+    // --- Seat of Seeing (docs/features/seat-of-seeing.md, stage S1) ---
+
+    [SettingPropertyGroup("Seat of Seeing", GroupOrder = 82)]
+    [SettingPropertyBool("{=taom_seat_mcm_enabled}Enable the Seat of Seeing", Order = 0, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up. Off, the key does nothing. Default: on.")]
+    public bool SeatEnabled { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_begin}Begin Battles in the Seat", Order = 1, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_begin_hint}When a battle's deployment ends, your view goes into the Seat at the camera you were using, with no blend, instead of back to your hero. Press the key to return to your hero. Default: off.")]
+    public bool BeginBattlesInSeat { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultBeginBattlesInSeat;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_cursor}Show a cursor with the order panel", Order = 2, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on.")]
+    public bool SeatCursorWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCursorWithPanel;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_keep_panel}Keep the order panel open", Order = 3, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off.")]
+    public bool SeatKeepPanelOpen { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultKeepPanelOpen;
+
+    // --- Marshal's Word (docs/features/marshals-word.md, stages M1 and M2) ---
+
+    [SettingPropertyGroup("Marshal's Word", GroupOrder = 83)]
+    [SettingPropertyBool("{=taom_marshal_mcm_enabled}Enable Marshal's Word", Order = 0, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings > Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on.")]
+    public bool MarshalEnabled { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_keep_array}Keep the Array", Order = 1, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_keep_array_hint}Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on.")]
+    public bool MarshalKeepArray { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultKeepArray;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_arrive_together}Arrive Together", Order = 2, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_arrive_together_hint}Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on.")]
+    public bool MarshalArriveTogether { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultArriveTogether;
 }

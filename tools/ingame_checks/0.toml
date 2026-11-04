@@ -1,0 +1,436 @@
+# In-game checks for the Seat of Seeing (stages S1 to S3) and Marshal's Word (stages M1 and M2), one draft manifest for both features because one held
+# issue covers them (Seat contract, Deviations row 8). Read by tools/ingame_verdict.py. The Seat's lines come first; Marshal's Word's checks begin
+# at the comment "Marshal's Word, stages M1" below.
+#
+# The Seat's part: All [Check] lines come from
+# Client/Features/SeatOfSeeing/SeatSession.cs through IOutcomeLog, with the ids in
+# Main/Features/SeatOfSeeing/Domain/SeatChecks.cs. Stages S2 and S3 add cursor (the first cursor of a mission), focus (the formation focus
+# patch put the pointer in the handler's field), panel-reopened (keep the panel open reopened it, or the view model could not be reached),
+# hide (the interface hidden, and restored with its reason) and keep and let-go (keeping to a soldier or a company, and letting go).
+# A [PatchApply] line for a Patch140 class that failed or was skipped fails the enter check too: Harmony stops a category at its first failing
+# class, so one such line is up to ten Seat patches off, and five of them are proved only by a press.
+# Stage S1: enter and leave from the state changes (a refused key press writes an enter skip line,
+# and a leave names its reason), frames once a Seat has owned 60 frames, glide when the return glide is armed (a fail line when the
+# CameraElevation setter is missing, a skip line when there is no agent to follow), and fault when the latch fires. The hot-path counter
+# taom.seat-of-seeing.owned-frame appears in the [Session] summary only.
+#
+# DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
+issue = 0
+title = "Seat of Seeing S1 to S3 and Marshal's Word M1 and M2: the camera lifts off the hero, points, keeps to a target and glides back, orders queue, companies keep the array"
+fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.seat-of-seeing.enter"
+needs = "a field battle or custom battle: press the Seat key (Q unless rebound) once the deployment has ended, or turn on Begin Battles in the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.enter result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.enter result=pass mission=[0-9]+ blend=[01]$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.enter result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+  '\[SeatOfSeeing\] the Seat could not start',
+  '\[SeatOfSeeing\] hotkey registration failed',
+  '\[SeatOfSeeing\] order ray failed',
+  '\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)',
+]
+# A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the lines of the
+# feature's own failures (the view could not start, the key could not register, the order ray threw, a Seat patch did not apply). A refused
+# key press writes a skip line, which reads NOT REACHED with its reason.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.frames"
+needs = "stay in the Seat for at least a couple of seconds (60 owned frames)"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.enter result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.frames result=pass mission=[0-9]+ frames=60$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# The enter line without a frames line means the Seat was left, or the mission ended, inside 60 frames, which is a short visit and
+# not a failure by itself. A fault line fails it.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.leave"
+needs = "press the Seat key again in a battle, or end the mission while in the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.leave result=']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.leave result=pass mission=[0-9]+ frames=[0-9]+ glide=[01] reason=(key|setting-off|interlude|rage|finish)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.glide"
+needs = "leave the Seat with the key while the mission is in Battle mode and the hero is alive"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.glide result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.glide result=pass mission=[0-9]+ elevation=set$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.glide result=fail mission=[0-9]+ elevation=missing$',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# elevation=missing means MissionScreen.set_CameraElevation was not found (reflection-sites.md Category B). The glide still runs.
+# Missing: `CameraElevation` keeps what `HandleUserInput` integrated from the mouse during the stay (MissionScreen:3051-3053,
+# 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump. A skip line with reason=no-agent
+# means the camera had no agent to follow (the hero had fallen): no glide runs, the look written on leaving stays, and this reads
+# NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.cursor"
+needs = "in the Seat with the order panel open and Show a cursor with the order panel on (it is by default): open the panel with its usual key"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass mission=[0-9]+ cursor=shown$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# One line a mission, at the first show. Whether the cursor really draws, and where it stands after the middle-button look, is for a person.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.focus"
+needs = "in the Seat with the cursor shown over an enemy company: the formation focus patch has run once"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.cursor result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.focus result=pass mission=[0-9]+ focus=cursor$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# The line says the patch set the handler's reference point to the pointer. Which company a left release charges is for a person to see.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.panel-reopened"
+needs = "Keep the order panel open on, in the Seat: give an order from the panel and watch it open again"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=pass mission=[0-9]+ panel=reopened$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.panel-reopened result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# result=fail with reason=site means GauntletOrderUIHandler._dataSource was not found (reflection-sites.md Category B): the panel stays closed.
+# A reopen the engine refuses (OpenToggleOrder returns when the hero or the last troop is gone) writes result=skip with reason=refused, which
+# reads NOT REACHED with that reason: the line is a pass only when Mission.IsOrderMenuOpen reads open after the call.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.hide"
+needs = "in the Seat press Hide the interface (End unless rebound), then open the order panel or leave the Seat"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.hide result=pass mission=[0-9]+ interface=hidden$']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.hide result=pass mission=[0-9]+ interface=restored reason=(key|panel|dialog|layer|leave|fault)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# Hidden with no restored line is a fail: Cleanup restores the interface on every leave and fault, so the Seat's own hide cannot outlive the
+# Seat, and only a crash or a kill during a hide leaves it unrestored, and a read while the Seat still holds a hide also reads FAIL (the crash has its own block beside it in the log). A named limit: the
+# manifest pairs nothing per mission, so one mission that restores and a later one that does not still reads PASS; Cleanup restores on every
+# exit but a crash, which is what makes that case unreachable here.
+absence = "fail"
+
+[[check]]
+id = "taom.seat-of-seeing.keep"
+needs = "in the Seat press Keep to this soldier or company (Insert unless rebound) with the pointer on a soldier, or with the order panel open and one company selected"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.keep result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.keep result=pass mission=[0-9]+ kind=(Soldier|Company)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# A press that finds nobody writes a skip line with reason=nobody and one message; it reads as skipped, not as a failure.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.let-go"
+needs = "while keeping to a target, press the key again, fly with the movement keys, rise or sink, or let the target die"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.let-go result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.let-go result=pass mission=[0-9]+ reason=(key|flight|gone) kind=(Soldier|Company)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# A let-go with reason=leave only says that the Seat was left with a target kept, which the key, flight and death routes (the three reasons
+# above) do not prove, so it reads reached and not passed.
+absence = "not-reached"
+
+# ---- Marshal's Word, stages M1 (orders in turn) and M2 (keep the array) ----
+# [Check] lines come from Client/Features/MarshalsWord/MarshalSession.cs and Main/Features/MarshalsWord/MarshalQueueDriver.cs and
+# MarshalMarchDriver.cs through IOutcomeLog, with the ids in Main/Features/MarshalsWord/Domain/MarshalChecks.cs. The session's one fault
+# line (taom.marshals-word.fault) has no check of its own: it is in every fail list and must stay at zero. A decline, a drop, a patience end
+# and a session that never went live write skip lines, which read NOT REACHED with their reason. The exception is `started`: a capture
+# that a direct order clears, that a drop removes, or that the end of the mission cuts off before its step starts reads FAIL, because no
+# step started; behind a walk that window is the whole walk, so read the log's cleared, dropped and end=ImplicitArrival lines first. The
+# manifest is shared with the Seat of Seeing, so a session of one feature alone exits 4 (the other feature's checks are NOT REACHED): read
+# both with `--sessions 2`.
+
+[[check]]
+id = "taom.marshals-word.captured"
+needs = "a field battle in single player: open the order panel, select a company, hold Left Shift (Give the order in turn) and give it a Move"
+reached = ['\[Check\] id=taom\.marshals-word\.captured result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.captured result=pass mission=[0-9]+ kind=\S+ companies=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[MarshalsWord\] Marshal.s Word could not start',
+  '\[MarshalsWord\] hotkey registration failed',
+]
+# A full queue needs twelve captures first, so its log already holds a pass line and this check passes. A session that never went live
+# (Enable off, or a mission it does not run in) writes one skip line with reason=setting-off or reason=mission-refused: NOT REACHED, with that reason.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.started"
+needs = "after the capture, wait for the company to start the step (the driver passes four times a second of mission time). A capture cleared by a direct order, dropped, or cut off by the mission's end before its step starts also reads FAIL, and behind a walk that is the whole walk: read the log's cleared, dropped and end=ImplicitArrival lines first"
+reached = ['\[Check\] id=taom\.marshals-word\.captured result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.started result=pass mission=[0-9]+ end=(AtOnce|Arrival|TargetGone|EntityOrderEnded) companies=[0-9]+$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# A captured step that never starts is the failure this check exists for, so it reads FAIL, not NOT REACHED, when a capture line exists.
+# The pattern leaves out end=ImplicitArrival: that is the wait the driver puts ahead of a step behind a walk, and it starts even when the
+# captured order is never issued. The line is keyed by mission and end kind, so it is the first start of each kind, not every step.
+
+[[check]]
+id = "taom.marshals-word.finished"
+needs = "queue two Moves for one company (hold Left Shift for both): each step ends by arrival and the second starts after the first, which its line shows as behind=1"
+reached = ['\[Check\] id=taom\.marshals-word\.finished result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.finished result=pass mission=[0-9]+ reason=arrival end=Arrival company=[0-9]+ behind=1$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.patience result=fail',
+]
+# The check passes on one reason=arrival line of a Move with behind=1 (build-spec 5.6). behind=1 says the last member of the Move ahead of this
+# step arrived while this step had not started: it is the chain this row exists to prove. A lone Move writes behind=0, and so do a step behind an instant,
+# dropped or timed-out step, a step behind a Move that one member arrived at and another did not, and the end=ImplicitArrival wait the driver puts ahead of a step behind a walk, so any number of
+# lone Moves reads NOT REACHED. A step that ends by patience writes a skip line with reason=patience and a number, and the patience check
+# fails once it ended more than one step in four after eight finished steps. TargetGone and EntityOrderEnded
+# need a kill or a siege, so they have no check; their pass lines show the reason when a battle reaches them.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.patience"
+needs = "eight or more finished steps in one mission (a battle with several queued Moves)"
+reached = ['\[Check\] id=taom\.marshals-word\.finished result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.patience result=pass mission=[0-9]+ finished=8 by-patience=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.patience result=fail',
+]
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.cleared"
+needs = "queue a Move for a company, then give it a direct Move without the queue key"
+reached = ['\[Check\] id=taom\.marshals-word\.captured result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.cleared result=pass mission=[0-9]+ company=[0-9]+ steps=[0-9]+$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.declined"
+needs = "give an order with the queue key held and no company selected, or in Deployment, or to a company under AI control"
+reached = ['\[Check\] id=taom\.marshals-word\.declined result=skip']
+pass = ['\[Check\] id=taom\.marshals-word\.declined result=skip mission=[0-9]+ reason=(none-selected|not-allowed|deployment|ai-controlled)$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# The decline path is judged by its line: it must name its reason, and vanilla runs the order at once.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.array"
+needs = "select two or more companies and, with the order panel open, click once and drag once on the ground (Keep the Array on)"
+reached = ['\[Check\] id=taom\.marshals-word\.array result=(pass|fail)']
+pass = [
+  '\[Check\] id=taom\.marshals-word\.array result=pass mission=[0-9]+ kind=click companies=[0-9]+$',
+  '\[Check\] id=taom\.marshals-word\.array result=pass mission=[0-9]+ kind=drag companies=[0-9]+$',
+]
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.array result=fail',
+]
+# A fail line means the layout threw, latched itself off for the mission, and vanilla laid out every later order.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.march"
+needs = "order two or more selected companies with a drag, with Arrive Together on"
+reached = ['\[Check\] id=taom\.marshals-word\.array result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.march result=pass mission=[0-9]+ companies=[0-9]+$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.march-spread"
+needs = "order two companies in Line at clearly different distances (about 2.5:1, for example 100 m and 40 m) with one drag, with Arrive Together on, and let the march run to its end without giving them another order; a far walk that takes under 15 s to the slack at its speed writes no-test, so riders, and anything above 6 m/s, need longer walks than that example"
+reached = ['\[Check\] id=taom\.marshals-word\.march-spread result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.march-spread result=pass mission=[0-9]+ spread=[0-9.]+ longest=[0-9.]+ shortest=[0-9.]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.march-spread result=fail',
+]
+# longest and shortest are the first pass's longest and shortest time to the 3 m arrival slack, in seconds, and spread is the gap between the
+# first and the last company to come within it. Passes when the spread is within 2 s + a quarter of longest, plus what no pace can remove
+# (a company at the 0.3 floor still arrives early when its walk is very short). It proves the pace only when the longest takes at least 15 s
+# and the walks differ by more than 1.4 times that allowance, because a Line company can beat a tidy first read by at most 1.25 and a far company at
+# 1.1 with a near company at 1 needs 1.4 on the walks swept: anything closer also passes without any pace, so the march writes a skip line with reason=no-test (spread, longest and shortest in the
+# line) and this reads NOT REACHED. The proof cannot separate a far company further above its read than the near one, or a company in Shield Wall,
+# Square or Circle that runs untidy, so this row is for companies in Line. A working pace can FAIL when a near company reads up to about 1.5 m/s on a walk up to about 18 m, or when a far company under
+# its first read meets a near company over it, by about 1.37 between them: read shortest, the walk and the speeds before you blame the pace.
+# A march whose companies changed between two passes writes reason=company-left with no verdict, because the spread and the walks it was
+# proved on no longer name the same companies. A march ended by a later order, an emptied company, its patience, a reading that is not a number, a replacement, the setting or a
+# change of the player's team writes a skip line with its reason (reordered, emptied, patience, invalid, replaced, setting-off, team-changed):
+# also NOT REACHED. This row cannot
+# judge a march whose near company stopped short of the slack: it counts as arriving at the end of the march, however long ago it stopped.
+absence = "not-reached"
+
+[[human]]
+claim = "the view rises over about 0.7 seconds, then flies with WASD, Space and Z (game keys 14 and 15, rebindable) for up and down, the wheel for height and the mouse to look; the hero takes no movement or combat input"
+
+[[human]]
+claim = "the same key brings the view back to the hero: in third person with a short glide, from first person at once; the hero's controls work again at once"
+
+[[human]]
+claim = "in Fords of War, and with any other mod that owns the camera, pressing the Seat key does not enter the Seat and the log then names the view that owns it ([SeatOfSeeing] another view owns the camera; Marshal's Word asks the same question when a mission starts, so that line can also appear with no press); in Fords, Q keeps its own camera turn"
+
+[[human]]
+claim = "the order panel opens from the Seat, and the order flag lands on the ground under the screen centre, also far from the hero"
+
+[[human]]
+claim = "the first press in a mission shows one message about the same key returning to the hero; the key does nothing during deployment and in photo mode"
+
+# HandleUserInput keeps running: while the followed agent is the player's and game key 24 is down it raises _zoomAmount with any weapon
+# on keyboard and mouse (a gamepad needs a ranged weapon out) and writes depth of field (3074-3078, 3119-3142, 3298-3303), and key 24
+# is the Seat's fast key. The Seat writes the two depth of field calls back every frame, so the view stays sharp.
+[[human]]
+claim = "flying low and fast across a hillside or a sharp rise never puts the view under the ground, and the picture stays sharp, also with the zoom key (game key 24) down before pressing the Seat key"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all (see the feature doc): during a warg rage the Seat key does nothing and a message says the rage holds you; a rage that starts while you are in the Seat brings the view back to the hero at once"
+
+[[human]]
+claim = "in a tournament, an arena and a town the Seat flies and returns, with no order panel use expected"
+
+[[human]]
+claim = "Options > Keybindings > Action shows the row \"Take the Seat (TAOM)\" with the key Q and no ERROR text"
+
+[[human]]
+claim = "the MCM group \"Seat of Seeing\" renders its rows"
+
+[[human]]
+claim = "with the game language set to Russian, the Seat's messages and settings show the English seeds, with no raw key such as taom_seat_other_view"
+
+[[human]]
+claim = "on a manned siege engine the Seat key shows \"You cannot take the Seat from this view.\" and the view stays on the engine"
+
+[[human]]
+claim = "at a tavern board game the Seat key shows the other-view message and the game continues"
+
+[[human]]
+claim = "in a campaign battle the Seat key prints no banner line (\"Can't access banner window right now!\")"
+
+[[human]]
+claim = "kill the hero's warg while seated with no rage running, and WASD does not move the hero"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all: fall during a rage, then press the key, and the Seat enters"
+
+[[human]]
+claim = "leave the Seat more than 2.1 seconds after the hero fell, and the look stays where it was"
+
+# Closed in stage S2 (build-spec 6.4): private patches, reached only by a press, so only a press proves them. The walk mode control opens on
+# the hot key ControlModeToggle, the controller's left pad down; game key 30 (CapsLock) is read by MissionMainAgentController.cs:811, which the
+# shut controller already stops, so the patch on that control serves a player who mixes a gamepad with the Seat and its row presses left pad down.
+[[human]]
+claim = "from the Seat, pressing the drop and equip keys (game keys 13 and 22), the equip wheel key (34) and the cheer wheel key (31) does nothing: no weapon drops, no wheel opens, the hero does not cheer; a press under half a second made just before entering does not drop a weapon on the first tick after the Seat"
+
+[[human]]
+claim = "on a gamepad, or a gamepad mixed with the keyboard, left pad down from the Seat opens no walk mode control"
+
+[[human]]
+claim = "the career ability key and the perspective toggle (game key 27) still act from the Seat"
+
+[[human]]
+claim = "if a rage holds the hero in single player at all: fall from the warg during a rage, take the Seat, kill the warg, and the flight keys do not move the hero"
+
+# The enter check accepts blend=0 and blend=1, so a key press alone passes it: only this row proves the setting.
+[[human]]
+claim = "Begin Battles in the Seat on, and a battle with a deployment begins in the Seat with no blend (enter ... blend=0)"
+
+[[human]]
+claim = "in the Seat the attack direction arrow, the crosshair and the hit marker are gone from the sky view, also after loosing an arrow just before entering"
+
+[[human]]
+claim = "with the order panel open in the Seat a cursor shows, and the order flag and the focused enemy company follow it; holding the middle mouse button hides the cursor and looks, and on release the cursor is where it was"
+
+[[human]]
+claim = "at a usable area below 1, if the game can be given one on a PC: the company the cursor points at is the one a left release charges, with no offset from the screen edge"
+
+[[human]]
+claim = "Keep the order panel open on: after an order the panel opens again, and Escape, the right mouse button, the panel key and the hold key each leave it closed (also game key 77 at the root of a layout that has a Return order); a conversation that closes the panel is not followed by a reopen"
+
+[[human]]
+claim = "Keep the order panel open on, in a town, an indoor scene, a village, an arena practice, a duel and an alley: the Seat flies and returns and nothing faults (these missions build no order handler, so no close signal may be read there)"
+
+[[human]]
+claim = "Keep the order panel open on, a Transfer order from the panel: the transfer window opens and takes focus, and the order panel stays closed after it"
+
+[[human]]
+claim = "Keep the order panel open on, after an order given with the cursor: the pointer stays where it was, and it does not jump to the screen centre"
+
+[[human]]
+claim = "a click on one of the order panel's buttons in the Seat does not press it yet: it gives a Move order on the ground behind it (the panel's buttons take clicks only from Marshal's Word stage M7)"
+
+[[human]]
+claim = "each new default key (Insert, End) leaves the chat box shut, and Options > Keybindings > Action shows \"Keep to this soldier or company (TAOM)\" and \"Hide the interface (TAOM)\" with the keys Insert and End and no ERROR text"
+
+[[human]]
+claim = "Insert pressed in the Seat takes no screenshot (the engine's debug category binds Insert to its screenshot hot key, DebugHotKeyCategory.cs:598; no managed reader was found, and a native one is unproved)"
+
+[[human]]
+claim = "Hide the interface hides every bar and the order panel stays usable: opening the panel, a dialog or another screen brings the interface back at once, and a toggle_ui typed in the console before entering keeps its choice after the Seat is left"
+
+[[human]]
+claim = "keeping to a soldier orbits the soldier with the mouse, the wheel changes the distance between 4 and 90 metres, the movement keys let go with no jump, also from the lowest pitch over flat ground, and a soldier in a wood is picked"
+
+[[human]]
+claim = "a soldier behind a hill is not picked by the keep key, at ordinary range or at long range (the ray is native, and its reach over 1000 metres is unproved)"
+
+[[human]]
+claim = "keeping to a company with the order panel open orbits its middle on the ground, also under a gatehouse roof; letting go by the key or by flying shows no message, and only losing the target or every unit of the company shows one"
+
+[[human]]
+claim = "the Seat turned off in its MCM group: the key does nothing, and a Seat that is up comes down"
+
+[[human]]
+claim = "a first-person hero who holds a block or a swing at entry stops, and the head shows"
+
+[[human]]
+claim = "the hero stands under real movement keys: with the Seat up, WASD, the mouse buttons and the use key move or do nothing to the hero (a trial cannot press real keys, so hero_stands only observes the hero's speed)"
+
+# ---- Marshal's Word, stages M1 and M2: what only a person can see ----
+
+[[human]]
+claim = "with the order panel open, holding Left Shift (Give the order in turn) and giving a Move to a walking company draws a flag at the new point and the company finishes its walk before it starts the new one; releasing the key before the click gives the order at once"
+
+[[human]]
+claim = "the flags of the road ahead show for the selected companies only, one per queued position, and all vanish when the panel closes"
+
+[[human]]
+claim = "a company with twelve queued steps shows the message that it already has twelve orders waiting and the thirteenth order is not given"
+
+[[human]]
+claim = "holding Left Shift zooms the hero's camera (game key 24) and Left Alt shows the banners (game key 5) with the order panel open, and both still do so with the panel closed, because they are vanilla's keys and Marshal's Word only reads them as its own while the panel is open; Left Alt also extends the on-screen message timer (GauntletInformationView.cs:61)"
+
+[[human]]
+claim = "Options > Keybindings > Action shows the rows \"Give the Order in Turn (TAOM)\" with Left Shift and \"Keep the Widths (TAOM)\" with Left Alt, and no ERROR text"
+
+[[human]]
+claim = "the MCM group \"Marshal's Word\" renders Enable Marshal's Word, Keep the Array and Arrive Together, and with Enable off the new behaviour does not act from the next battle on (a battle already running keeps it)"
+
+[[human]]
+claim = "with the game language set to Russian, Marshal's Word's messages, key rows and settings show the English seeds, with no raw key such as taom_marshal_queue_full"
+
+[[human]]
+claim = "two selected companies dragged onto the ground keep their places relative to each other, turn together and stretch together, and the preview shows the same layout the commit produces"
+
+[[human]]
+claim = "holding Left Alt (Keep the widths) during a drag turns the group without stretching it"
+
+[[human]]
+claim = "a mixed company (melee and ranged) in a field battle can stand in rows that differ from the array preview, and a pure infantry company does not (Patch30 answers with the mixed layout on workers)"
+
+[[human]]
+claim = "a mixed company (melee and ranged, about 120 men) that a drag stretched from about 30 m to 60 m ends its queued step by arrival and not by patience; the arithmetic of the feature doc says it may read about 3.7 m short of its point and give up after the patience, which the finished lines of that step show"
+
+[[human]]
+claim = "a click with three or more companies on rough ground near a wall leaves no company stuck on the wall (GetStraightPathToTarget from one begin point can clip several to one hit)"
+
+[[human]]
+claim = "companies ordered together at different distances arrive at about the same time, and a cavalry company in the group does not read as slower or faster than the log's spread says"
+
+[[human]]
+claim = "a Move queued for a smart cavalry company that is running a charge cycle cancels the cycle, and the log says so"
+
+[[human]]
+claim = "on a siege, a drag along a wall with two companies keeps the array and a rear company stands behind the line the player drew; with Keep the Array off the companies are laid out as in the base game"
+
+[[human]]
+claim = "a scripted order issued while Left Shift is held and the panel is open (a hideout ambush's own charge) is queued instead of run, which the feature doc accepts"

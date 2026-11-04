@@ -7743,6 +7743,50 @@
 
     <string id="TAOM_FOW_Feed_WallsWeaken" text="The siege drags on: every tower and keep now weakens by the minute." />
 
+    <string id="taom_seat_first_entry" text="Press the Seat key to return to your hero." />
+
+    <string id="taom_seat_other_view" text="You cannot take the Seat from this view." />
+
+    <string id="taom_seat_fault" text="The Seat of Seeing failed and is off until this scene ends. Your own view is back." />
+
+    <string id="taom_seat_mcm_enabled" text="Enable the Seat of Seeing" />
+
+    <string id="taom_seat_mcm_enabled_hint" text="Lets one key (Take the Seat, default Q, rebindable under Keybindings &gt; Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up. Off, the key does nothing. Default: on." />
+
+    <string id="taom_seat_mcm_begin" text="Begin Battles in the Seat" />
+
+    <string id="taom_seat_mcm_begin_hint" text="When a battle's deployment ends, your view goes into the Seat at the camera you were using, with no blend, instead of back to your hero. Press the key to return to your hero. Default: off." />
+
+    <string id="taom_seat_rage" text="You cannot take the Seat while the rage holds you." />
+
+    <string id="taom_marshal_queue_full" text="A selected company already has twelve orders waiting. The order was not given." />
+
+    <string id="taom_marshal_fault" text="Marshal's Word failed and is off until this scene ends. Your orders work as before." />
+
+    <string id="taom_marshal_mcm_enabled" text="Enable Marshal's Word" />
+
+    <string id="taom_marshal_mcm_enabled_hint" text="Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on." />
+
+    <string id="taom_marshal_mcm_keep_array" text="Keep the Array" />
+
+    <string id="taom_marshal_mcm_keep_array_hint" text="Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on." />
+
+    <string id="taom_marshal_mcm_arrive_together" text="Arrive Together" />
+
+    <string id="taom_marshal_mcm_arrive_together_hint" text="Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on." />
+
+    <string id="taom_seat_keep_nobody" text="There is nobody there to keep to." />
+
+    <string id="taom_seat_keep_gone" text="The one you were keeping to is gone." />
+
+    <string id="taom_seat_mcm_cursor" text="Show a cursor with the order panel" />
+
+    <string id="taom_seat_mcm_cursor_hint" text="While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
+
+    <string id="taom_seat_mcm_keep_panel" text="Keep the order panel open" />
+
+    <string id="taom_seat_mcm_keep_panel_hint" text="While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+
 
 
     <string id="TAOM_LD_End_Abandoned" text="You left the fortress" />

@@ -4,7 +4,7 @@
 # run EntryPointLineCountGateTests.Baseline_Regenerate_WhenAsked.
 # Entries: 18.
 BehaviorTreeWrapper.BehaviorTreeMissionLogic 468
-TAOM.Features.AdvancedCombat.AutonomousMovementPlayerController 679
+TAOM.Features.AdvancedCombat.AutonomousMovementPlayerController 665
 TAOM.Features.CareerSystem.CareerPerkMissionBehavior 214
 TAOM.Features.CareerSystem.Quests.CareerQuestCampaignBehavior 175
 TAOM.Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView 160

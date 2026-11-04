@@ -25,6 +25,8 @@ using TAOM.Features.LostFooting;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.Refuge;
+using TAOM.Features.MarshalsWord;
+using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.SettlementNameplateRelation;
@@ -82,6 +84,8 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(NameplateFadeSettingsProvider))]
     [DataRow(typeof(BattleBalanceSettingsProvider))]
     [DataRow(typeof(NameplateRelationSettingsProvider))]
+    [DataRow(typeof(SeatSettingsProvider))]
+    [DataRow(typeof(MarshalSettingsProvider))]
     // #746: static, read per hit against a creature bandit. It has no instance to construct, so the counting
     // test below cannot take it: CreatureBanditTuningLiveTests runs the same CountingMcm check on it.
     [DataRow(typeof(CreatureBanditTuning))]
@@ -133,6 +137,8 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(IAnimVarietyProbeSettingsProvider), typeof(AnimVarietyProbeSettingsProvider))]
     [DataRow(typeof(IFellFoesSettingsProvider), typeof(FellFoesSettingsProvider))]
     [DataRow(typeof(ILostFootingSettingsProvider), typeof(LostFootingSettingsProvider))]
+    [DataRow(typeof(ISeatSettingsProvider), typeof(SeatSettingsProvider))]
+    [DataRow(typeof(IMarshalSettingsProvider), typeof(MarshalSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -216,6 +222,12 @@ public class HotPathSettingsProvidersTests
         // Settlement nameplate relation colours: read per frame per plate.
         [typeof(NameplateRelationSettingsProvider)] = (() => new NameplateRelationSettingsProvider(null),
             nameof(INameplateRelationSettingsProvider.ColorsEnabled), nameof(TaomSettings.EnableNameplateRelationColors), () => new TaomSettings()),
+        // Seat of Seeing: read every mission screen frame (the view asks whether the Seat is on and whether a battle begins in it).
+        [typeof(SeatSettingsProvider)] = (() => new SeatSettingsProvider(),
+            nameof(ISeatSettingsProvider.Enabled), nameof(TaomSettings.SeatEnabled), () => new TaomSettings()),
+        // Marshal's Word: the session copies KeepArray and ArriveTogether once per mission screen frame while a battle runs.
+        [typeof(MarshalSettingsProvider)] = (() => new MarshalSettingsProvider(),
+            nameof(IMarshalSettingsProvider.KeepArray), nameof(TaomSettings.MarshalKeepArray), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -244,6 +256,8 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(NameplateFadeSettingsProvider))]
     [DataRow(typeof(BattleBalanceSettingsProvider))]
     [DataRow(typeof(NameplateRelationSettingsProvider))]
+    [DataRow(typeof(SeatSettingsProvider))]
+    [DataRow(typeof(MarshalSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];

@@ -1309,3 +1309,23 @@ The warg rage stores a rider and a formation, and four things can end it. A foll
 - **Why missed:** the brief was the line, and the line named one order. Two game logs already held the tree exception, and nobody read them, because check 12 counted those rages as restored.
 - **Prevent:** before the first edit on a stored-state fix, write down each state, each event that can arrive in it and who owns the record. A record with one owner ends when its owner changes. Read the logs of the runs you have, not only the verdict line.
 - **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) findings 1 to 4.
+### A guard on one caller leaves the other routes: put it on the write that does the harm
+
+The Seat of Seeing shuts vanilla's main agent controller while the player's view is off the hero, and the warg rage's `SwitchMainAgentController(false)` turns that controller back on. The first fix guarded the caller the review had named, a calm warg's death, with a flag that says a swap in ran. The re-review then found two more routes to the same harm: a rage that starts and ends between two screen ticks (fast time runs several mission ticks in one frame, so the Seat never sees it), and a rider who fell in a rage, took the Seat and then lost the warg. The flag also dropped a `Disable()` outside the Seat that nobody had asked to change. One test at the write, `if (!SeatPresence.IsSeated) baseController.Enable()`, closed all three and restored the old behaviour everywhere else.
+- **Why missed:** the fix answered the finding's example. Nobody restated the harm as "vanilla's controller turns on while the Seat holds it" and listed what reaches that write.
+- **Prevent:** before fixing a state bug, write the harm as one sentence about a write, then list every route to that write. Guard the write. A guard on a caller needs a stated reason why no other route exists.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 1 and 28.
+
+### A static a patch reads clears on both teardown paths, and a finished session is terminal
+
+`SeatPresence` is a static that two Harmony patches read. It cleared only from `OnMissionScreenFinalize`, and `MissionState.OnFinalize` removes the behaviours with no `EndMission`, so the patches could stay live into the next mission. This repeats "A per-mission summary is written on every teardown path" with a higher cost: a patch that acts in the wrong mission, not a lost log line. The first fix left a second hole. `RemoveMissionBehavior` does not take a view out of the screen's collection (only `UnregisterView` does, `MissionScreen.cs:3688`), so a finished session still in its field could enter again on a key press.
+- **Why missed:** the contract named one hook, and the builder followed the contract. The teardown fix asked which hooks run, not what can still call in afterwards.
+- **Prevent:** a view's cleanup runs from both hooks through one method that also drops the session field and removes its event handlers. Later stages clear their own state in one private session method, so a fault and both paths share it. The standing line is in `.claude/rules/harmony-patches.md`.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 3 and 29.
+
+### A fix that drops an input from a pass also drops it from what the pass stored
+
+A Marshal's Word fix made a march leave out a company with no units. `Spread` still walked the company list from the march's start and used the company's last stored estimate, so a company wiped out mid march could write a false FAIL. Two second-wave lenses found it on their first reading of the fix. The fix for that made the last pass's legs the membership and left the proof's baseline on the first pass, and the fix for that compared two counts, which missed a company that left and came back. The march now compares each pass's companies with the pass before and writes no verdict if they changed.
+- **Why missed:** the fix was small and its finding was clear, so its tests covered what it asked for: the march ends. They did not read the later consumer. The S1 and harness reviews recorded the same "a fix read less closely than new code" pattern.
+- **Prevent:** when a fix removes an input from a loop, grep every field that loop writes, and read each reader of those fields. Test the reader with a value that the removed input left behind. Prefer one membership source over a second list that must stay in step with it.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 20, 33 and 45.

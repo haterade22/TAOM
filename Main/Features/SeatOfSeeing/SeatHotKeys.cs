@@ -1,0 +1,53 @@
+using TaleWorlds.InputSystem;
+using TaleWorlds.MountAndBlade;
+
+namespace TAOM.Features.SeatOfSeeing;
+
+/// <summary>
+/// The Seat's keys as the player has bound them in Options > Keybindings > Action. It holds the <see cref="GameKey"/> REFERENCE and
+/// re-reads the <see cref="InputKey"/> behind it on every call, because <c>HotKeyManager.LoadAsync</c> applies a saved binding by
+/// mutating <c>KeyboardKey</c> when one exists and by replacing it when it is null, so only a fresh read sees both. An unbound or
+/// unregistered key reads <see cref="InputKey.Invalid"/>, which the view treats as not pressed. The scan runs once, on the first
+/// read, and latches a miss: registration happens in OnSubModuleLoad, before any mission, so a miss means it threw.
+/// </summary>
+internal sealed class SeatHotKeys
+{
+    private GameKey? _takeTheSeat;
+    private GameKey? _keepTo;
+    private GameKey? _hideTheInterface;
+    private bool _resolved;
+
+    /// <summary>The key bound to "Take the Seat", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey TakeTheSeat => Bound(ref _takeTheSeat);
+
+    /// <summary>The key bound to "Keep to this soldier or company", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey KeepTo => Bound(ref _keepTo);
+
+    /// <summary>The key bound to "Hide the interface", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey HideTheInterface => Bound(ref _hideTheInterface);
+
+    private InputKey Bound(ref GameKey? key)
+    {
+        Resolve();
+        return key?.KeyboardKey?.InputKey ?? InputKey.Invalid;
+    }
+
+    private void Resolve()
+    {
+        if (_resolved)
+            return;
+
+        // GetCategory is a raw dictionary indexer that throws on a missing id, so scan.
+        foreach (var category in HotKeyManager.GetAllCategories())
+        {
+            if (category.GameKeyCategoryId != TaomSeatHotKeyCategory.CategoryId)
+                continue;
+            _takeTheSeat = category.GetGameKey(TaomSeatHotKeyCategory.TakeTheSeatKeyId);
+            _keepTo = category.GetGameKey(TaomSeatHotKeyCategory.KeepToKeyId);
+            _hideTheInterface = category.GetGameKey(TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
+            break;
+        }
+
+        _resolved = true;
+    }
+}

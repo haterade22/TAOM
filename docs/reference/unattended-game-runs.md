@@ -145,3 +145,4 @@ The Long Defeat (#1079) has its own wrapper, `tools/run_long_defeat.py`, under t
 preflight, idle gate, launch, dialog handling and crash scan, arms the game with `TAOM_LONGDEFEAT_AUTORUN`, and presses Cancel on the
 Helm's Deep terrain shader dialog. `/game-run` names it for changes under `LongDefeat`. Exit 0 needs the `[Check]` lines of the plan, so
 read the run folder before rerunning.
+The Seat of Seeing's field trial has its own wrapper too, `tools/run_command_trial.py` (arm variable `TAOM_COMMAND_TRIAL`, runs in `E:\Temp\command-trial-runs`), under the same permission and gate; `/game-run` does not drive it yet. [Its steps and how to read a run](../features/seat-of-seeing.md#field-trial). It refuses a log whose `[BuildStamp]` is not this checkout (another sha than HEAD, a `.dirty` mark the tree does not match, or an uncommitted file under the build's own pathspec newer than the build), and one with no `[Shutdown] clean module unload` line.

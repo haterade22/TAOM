@@ -65,10 +65,36 @@ public class WargControllerSwapTests
         // Whitespace collapsed, so each branch must hold both calls, adjacent and in order: a deleted or reversed
         // call fails (Codex B4c review F2: an IndexOf comparison passed with a call missing).
         var body = Regex.Replace(src.Substring(method), @"\s+", " ");
-        StringAssert.Contains(body, "if (switchToSpecialController) { baseController.Disable(); Enable(); }",
-            "rage: vanilla off, then the special on");
-        StringAssert.Contains(body, "else { baseController.Enable(); Disable(); }",
-            "end: vanilla on, then the special off");
+        StringAssert.Contains(body, "if (switchToSpecialController) { baseController.Disable(); Enable(); HoldsHero = true; }",
+            "rage: vanilla off, then the special on, then the flag the Seat reads");
+        StringAssert.Contains(body, "else { if (!SeatPresence.IsSeated) baseController.Enable(); Disable(); HoldsHero = false; }",
+            "end: vanilla on unless the Seat is up (its own leave turns it on), then the special off, then the flag clears; the "
+            + "branch does not test HoldsHero, so outside the Seat it does what it did before the Seat (build-spec 5.5)");
+        Assert.IsFalse(body.Contains("else if (HoldsHero)"));
+        Assert.AreEqual(1, Regex.Matches(body, @"baseController\.Enable\(\)").Count);
+    }
+
+    // The Seat of Seeing (docs/features/seat-of-seeing/build-spec.md 5.5) reads HoldsHero to stay out of a rage. A behaviour test is
+    // not possible: the controller is a MissionView and the swap needs a live mission, so the shape is pinned in the source.
+    [TestMethod]
+    public void HoldsHero_IsOnTheInterface_SetOnlyBySwitchMainAgentController_AndNeverReadsActivated()
+    {
+        var contract = RepoPaths.ReadSource("Main/Features/AdvancedCombat/IAutonomousMovementController.cs", stripComments: true);
+        StringAssert.Contains(Regex.Replace(contract, @"\s+", " "), "bool HoldsHero { get; }");
+
+        var src = RepoPaths.ReadSource("Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs", stripComments: true);
+        var squashed = Regex.Replace(src, @"\s+", " ");
+        StringAssert.Contains(squashed, "public bool HoldsHero { get; private set; }");
+        Assert.AreEqual(2, Regex.Matches(squashed, @"HoldsHero = (true|false);").Count, "only the two branches of the swap write it");
+    }
+
+    [TestMethod]
+    public void ClientController_HasNoLockedAgentEvents_TheyHadNoReader()
+    {
+        // Deleted to pay for the swap's lines (the file is on a shrink-only baseline); build-spec 5.5.
+        var src = RepoPaths.ReadSource("Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs", stripComments: true);
+        Assert.IsFalse(src.Contains("OnLockedAgentChanged"));
+        Assert.IsFalse(src.Contains("OnPotentialLockedAgentChanged"));
     }
 
     [TestMethod]
