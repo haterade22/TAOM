@@ -89,6 +89,8 @@ Three runs at Helm's Deep and one at Minas Tirith, `E:\Temp\long-defeat-runs\`. 
 | 39 | MED | Seven of 18 mutants survived the new dialog and default tests, among them a recursion that would hang every real run | Test gap | I wrote one test per happy path and never ran a break edit | Tests for each survivor; the press line now carries the compile error, so a new error in the same shader stays visible |
 | 40 | LOW | Smaller items, each fixed: S5's "no crew through two waves" (one wave, and one soldier came); the stale line claimed both sides charge, which a player-led team does not; several numbers in the doc and RCA; `shader cache list differs` offered as a clue when all four runs log it; the docstring; the S1 row still required no pile; the 3 stranded soldiers cited for a rule on attackers could not be attackers | Own change | First read by the review | Fixed in this change |
 
+**Proof of the fixes:** run `20261103-235336`, build `985b0d54e`, Helm's Deep at the wrapper's defaults: PASS, 3 waves in 1,254 s, 0 waves ended by felling stragglers. `[S1] hidden gate ... broken`, `Middle open True`, and wave 1 cleared 116 s sooner than before. `[S5]` read `mangonel_b_spawner False`, as lens 2 predicted from the scene.
+
 ## Follow-up
 
 FOLLOW-UP: `docs/reference/unattended-game-runs.md` says exit 0 needs a clean-unload line, and the runner only logs that line. no issue: pre-existing and outside this change; Phase 1 generalizes the runner and rewrites this page, so the correction lands there.
