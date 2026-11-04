@@ -40,30 +40,29 @@ public class RaceAgeService : IRaceAgeService
         return currentAge > entry.MaxAge;
     }
 
-    public float GetDailyPregnancyBaseChance(
-        int raceId, int spouseRaceId, float heroAge, int childCount, int clanTier,
-        int aliveLords, bool playerOrSpouseInvolved)
+    public bool CanConceive(int raceId, int spouseRaceId, float heroAge)
     {
         if (IsImmortal(raceId))
-            return 0f;
+            return false;
 
         // The engine only ever passes the FEMALE to the pregnancy model
         // (PregnancyCampaignBehavior.DailyTickHero gates on hero.IsFemale), so an immortal FATHER
         // (Sauron, Saruman, a wraith) must be blocked via the spouse's race or his immortal flag
         // never gates conception (#321).
         if (IsImmortal(spouseRaceId))
-            return 0f;
+            return false;
 
-        int comesOfAge = GetComesOfAge(raceId);
-        int fertilityEnd = GetFertilityEndAge(raceId);
+        return heroAge >= GetComesOfAge(raceId) && heroAge <= GetFertilityEndAge(raceId);
+    }
 
-        if (heroAge < comesOfAge || heroAge > fertilityEnd)
-            return 0f;
-
+    public float GetDailyPregnancyBaseChance(
+        int raceId, float heroAge, int childCount, int clanTier,
+        int aliveLords, bool playerOrSpouseInvolved)
+    {
         return ComputeBaseChance(
             heroAge: heroAge,
-            comesOfAge: comesOfAge,
-            fertilityEnd: fertilityEnd,
+            comesOfAge: GetComesOfAge(raceId),
+            fertilityEnd: GetFertilityEndAge(raceId),
             childCount: childCount,
             clanTier: clanTier,
             aliveLords: aliveLords,

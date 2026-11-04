@@ -203,46 +203,45 @@ public class RaceAgeServiceTests
         _sut.ResetCache(); // No exceptions
     }
 
-    // --- GetDailyPregnancyBaseChance: the guards moved out of TaomPregnancyModel (ADR-007) ---
+    // --- The guards and the formula moved out of TaomPregnancyModel (ADR-007) ---
 
     [TestMethod]
-    public void GetDailyPregnancyBaseChance_ImmortalHero_ReturnsExactlyZero()
+    public void CanConceive_ImmortalHero_IsFalse()
     {
-        var result = _sut.GetDailyPregnancyBaseChance(3, 0, 30f, 0, 0, 0, true);
-
-        Assert.AreEqual(0f, result);
+        Assert.IsFalse(_sut.CanConceive(3, 0, 30f));
     }
 
     [TestMethod]
-    public void GetDailyPregnancyBaseChance_ImmortalSpouse_ReturnsExactlyZero()
+    public void CanConceive_ImmortalSpouse_IsFalse()
     {
         // #321: the engine only passes the female, so an immortal father is caught by his race.
-        var result = _sut.GetDailyPregnancyBaseChance(0, 3, 30f, 0, 0, 0, true);
-
-        Assert.AreEqual(0f, result);
+        Assert.IsFalse(_sut.CanConceive(0, 3, 30f));
     }
 
     [TestMethod]
-    public void GetDailyPregnancyBaseChance_BelowComesOfAge_ReturnsExactlyZero()
+    public void CanConceive_BelowComesOfAge_IsFalse()
     {
-        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 17.9f, 0, 0, 0, true);
-
-        Assert.AreEqual(0f, result);
+        Assert.IsFalse(_sut.CanConceive(0, 0, 17.9f));
     }
 
     [TestMethod]
-    public void GetDailyPregnancyBaseChance_PastFertilityEnd_ReturnsExactlyZero()
+    public void CanConceive_PastFertilityEnd_IsFalse()
     {
-        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 45.1f, 0, 0, 0, true);
+        Assert.IsFalse(_sut.CanConceive(0, 0, 45.1f));
+    }
 
-        Assert.AreEqual(0f, result);
+    [TestMethod]
+    public void CanConceive_InsideTheWindow_IsTrue()
+    {
+        Assert.IsTrue(_sut.CanConceive(0, 0, 18f));
+        Assert.IsTrue(_sut.CanConceive(0, 0, 45f));
     }
 
     [TestMethod]
     public void GetDailyPregnancyBaseChance_HumanAtComesOfAge_ReturnsPeakChance()
     {
         // ageFactor 1.2, one-child divisor 1, 0.12, population factor 1 (player involved), modifier 1.0
-        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 18f, 0, 0, 0, true);
+        var result = _sut.GetDailyPregnancyBaseChance(0, 18f, 0, 0, 0, true);
 
         Assert.AreEqual(0.144f, result, 0.001f);
     }
@@ -251,8 +250,17 @@ public class RaceAgeServiceTests
     public void GetDailyPregnancyBaseChance_Dwarf_AppliesRaceModifier()
     {
         // dwarf window 30..120, modifier 0.6: peak 0.144 * 0.6
-        var result = _sut.GetDailyPregnancyBaseChance(1, 0, 30f, 0, 0, 0, true);
+        var result = _sut.GetDailyPregnancyBaseChance(1, 30f, 0, 0, 0, true);
 
         Assert.AreEqual(0.0864f, result, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_ClanFarOverItsCap_StaysNegative()
+    {
+        // Tier 0 caps at 4 lords, so 9 lords give a population factor of -0.25: 1.2 * 0.12 * -0.25.
+        var result = _sut.GetDailyPregnancyBaseChance(0, 18f, 0, 0, 9, false);
+
+        Assert.AreEqual(-0.036f, result, 0.001f);
     }
 }

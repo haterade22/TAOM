@@ -19,6 +19,12 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         if (hero.Spouse == null)
             return 0f;
 
+        var race = hero.CharacterObject.Race;
+
+        // Before any Clan read: the engine lets a clanless hero through (PregnancyCampaignBehavior.DailyTickHero).
+        if (!_raceAgeService.CanConceive(race, hero.Spouse.CharacterObject.Race, hero.Age))
+            return 0f;
+
         bool playerOrSpouseInvolved = (hero == Hero.MainHero) || (hero.Spouse == Hero.MainHero);
 
         // Phase 9b Codex review (2026-05-13): heroAge MUST be float (not int). Vanilla
@@ -28,17 +34,12 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         // chance. Pre-extract code used `hero.Age` directly; passing (int) here was a regression
         // in the extraction commit. Keep heroAge as float to preserve byte-for-byte equivalence.
         float baseChance = _raceAgeService.GetDailyPregnancyBaseChance(
-            raceId: hero.CharacterObject.Race,
-            spouseRaceId: hero.Spouse.CharacterObject.Race,
+            raceId: race,
             heroAge: hero.Age,
             childCount: hero.Children.Count,
             clanTier: hero.Clan.Tier,
             aliveLords: hero.Clan.AliveLords.Count,
             playerOrSpouseInvolved: playerOrSpouseInvolved);
-
-        // A guarded hero (immortal, or outside the fertility window) gets exactly 0f, before any perk is read.
-        if (baseChance <= 0f)
-            return 0f;
 
         var result = new ExplainedNumber(baseChance);
         if (hero.GetPerkValue(DefaultPerks.Charm.Virile) || hero.Spouse.GetPerkValue(DefaultPerks.Charm.Virile))

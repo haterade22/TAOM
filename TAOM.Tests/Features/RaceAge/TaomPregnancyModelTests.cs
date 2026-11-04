@@ -4,12 +4,27 @@ using TAOM.Features.RaceAge;
 namespace TAOM.Tests.Features.RaceAge;
 
 // Tests for the pure-math portion of the daily pregnancy chance, RaceAgeService.ComputeBaseChance.
-// The guards (immortal hero or spouse, fertility window) live in RaceAgeService.GetDailyPregnancyBaseChance
+// The guards (immortal hero or spouse, fertility window) live in RaceAgeService.CanConceive
 // and are tested in RaceAgeServiceTests. TaomPregnancyModel keeps the Hero reads and the Virile perk,
 // which stay engine-coupled (sealed Hero, ExplainedNumber) and are not unit-tested.
 [TestClass]
 public class TaomPregnancyModelTests
 {
+    // The engine lets a clanless hero through (PregnancyCampaignBehavior.DailyTickHero), so an immortal or out-of-window hero must
+    // return before any Clan read. A negative chance must reach the Virile factor, not be floored. Hero is sealed: pinned in source.
+    [TestMethod]
+    public void GetDailyChance_ReadsTheClanOnlyAfterTheGuards_AndKeepsANegativeChance()
+    {
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/RaceAge/Models/TaomPregnancyModel.cs", stripComments: true);
+
+        var guard = src.IndexOf("_raceAgeService.CanConceive(", System.StringComparison.Ordinal);
+        var clan = src.IndexOf("hero.Clan", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(guard >= 0, "the guards are gone from the model");
+        Assert.IsTrue(clan > guard, "hero.Clan is read before the guards, so a clanless hero throws where it used to get 0");
+        Assert.IsFalse(src.Contains("baseChance <= 0f"), "a negative chance must reach the Virile factor as it did");
+    }
+
     // --- Age-factor branches (heroAge relative to comesOfAge .. fertilityEnd) ---
 
     [TestMethod]
