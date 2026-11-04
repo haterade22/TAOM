@@ -91,6 +91,10 @@ internal sealed class TowerChain
             && o.Slot.Order < slot.Order);
     }
 
+    /// <summary>Whether none of a side's towers (keeps excluded) stands in a lane.</summary>
+    public bool LaneLost(MatchSide owner, int lane) =>
+        !_states.Values.Any(s => s.Slot.Kind == TowerKind.Tower && s.Slot.Owner == owner && s.Slot.Lane == lane && !s.Destroyed);
+
     /// <summary>The standing towers (keeps excluded) of a side in a lane, outermost first.</summary>
     public IReadOnlyList<TowerSlot> AliveTowers(MatchSide owner, int lane) =>
         _states.Values
