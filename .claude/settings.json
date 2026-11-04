@@ -5,7 +5,6 @@
     "sessionUrl": false
   },
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe",
     "PYTHONIOENCODING": "utf-8"

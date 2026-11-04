@@ -4,7 +4,7 @@ The rest of the test rules (TDD, MSTest and NSubstitute, no-deploy commands) are
 
 ## Shipped-Data Tests (required for content that can fail silently)
 
-Neither of the two above covers TAOM's largest failure surface: **XML that ships to players and is
+Neither unit tests nor integration tests cover TAOM's largest failure surface: **XML that ships to players and is
 wrong without any code being wrong.** A missing culture attribute, a party template nothing binds, a
 troop id pointing at a Calradian, an equipment roster with no civilian tag. No unit test touches it
 (there is no unit), and no integration test either (the component graph is fine, the data is not).

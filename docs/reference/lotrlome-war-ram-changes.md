@@ -45,8 +45,8 @@ in `.xml` is parsed as real data and duplicates every item id in the file.
 
 **Scope check:** only the `dwarf` block was touched. `cave_troll` and `cave_troll_settlement` keep
 `CanRide="false"`. `dwarf_settlement` was already `true`. This does not let dwarves ride horses:
-that is still blocked repo-side by the `MOUNTED_DWARF` validator rule, which now allowlists only the
-two ram item ids.
+that is still blocked repo-side by the `MOUNTED_DWARF` validator rule, which allowlists only the
+two ram item ids and the three WildMesh dwarf mounts (`DWARF_MOUNT_IDS` in `tools/taom_schema.py`).
 
 ## 2. `ModuleData/Monsters/LOTR/lotr_monster_war_ram.xml`: new file
 

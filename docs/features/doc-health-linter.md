@@ -49,7 +49,7 @@ skip the whole report — including the six checks that were correct.
 | 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | **yes** | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference (`#<number>` or an `/issues/<number>` URL) nor a stated reason (`no issue: <reason>`, `no issue filed, <reason>`, `none is filed because <reason>`). See "Check 8" below |
 | 9 | **Git diff failed** ([#987](https://github.com/haterade22/TAOM/issues/987)) | **yes** | the new-lines checks (dashes, check 8) could not diff because the diff failed on a resolvable base, which means repository damage (a broken index or a missing object; a mistyped `--dash-base` exits 2 instead). Reported once under its own heading and `git_diff_failed:` counter; it used to read as zero findings |
 | 10 | **Feature doc verify section** | **yes** | a new docs/features/*.md with no `## How to verify in game` section that has a body |
-| 11 | **Rule text drift** | **yes** | in `.claude/rules/`, `.claude/agents/`, `.claude/skills/` and `docs/ai-includes/`: a `feedback_` or `feedback-` token (`dead-memory-ref`, a machine-local memory file); in `.claude/rules/`, a backticked `...Service`, `...Adapter`, `...Factory`, `...Provider`, `...Tests` or `...Hook` name outside code fences that no tracked `.cs` or `tools/**/*.py` file contains (`rule-symbol`; mark an example line `<!-- illustrative-name -->`; `docs/adrs/` is listed report-only); a `dotnet test` or `dotnet build` of a TAOM target without `-p:ModuleId=` in the command, a line continuation read whole, in `docs/modding`, `docs/reference`, `docs/ai-includes`, `.claude/rules`, `.claude/agents` and `.claude/skills` (`unflagged-dotnet`). Under `--staged` or `--only-paths` it judges only the files the commit records, as it records them |
+| 11 | **Rule text drift** | **yes** | in `.claude/rules/`, `.claude/agents/`, `.claude/skills/`, `docs/ai-includes/` and, for this token, `docs/reference/engine/`: a `feedback_` or `feedback-` token (`dead-memory-ref`, a machine-local memory file); in `.claude/rules/`, a backticked `...Service`, `...Adapter`, `...Factory`, `...Provider`, `...Tests` or `...Hook` name outside code fences that no tracked `.cs` or `tools/**/*.py` file contains (`rule-symbol`; mark an example line `<!-- illustrative-name -->`; `docs/adrs/` is listed report-only); a `dotnet test` or `dotnet build` of a TAOM target without `-p:ModuleId=` in the command, a line continuation read whole, in `docs/modding`, `docs/reference`, `docs/ai-includes`, `.claude/rules`, `.claude/agents` and `.claude/skills` (`unflagged-dotnet`). Under `--staged` or `--only-paths` it judges only the files the commit records, as it records them |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -326,6 +326,7 @@ may delete this one.
 
 ## Referenced by
 
+- [docs/features/commit-gates.md](./commit-gates.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 

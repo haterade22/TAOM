@@ -176,7 +176,7 @@ the horse usage set fires that itself. [animalia-elk-moose.md](../features/anima
 taom.spawn_troops <test rider id> 5 ally
 taom.spawn_troops <test rider id> 5 enemy
 ```
-The rider ids are the stage 11 file's (the Animalia riders were `taom_test_<animal>_rider`, the WildMesh ones, removed for v2.0.35 and restorable from `6553b8c70`,
+The rider ids are the stage 11 file's (no test rider ships now: the Animalia ones, `taom_test_animalia_<animal>_rider`, were removed for v2.0.31 ([animalia-elk-moose.md](../features/animalia-elk-moose.md)), and the WildMesh ones, removed for v2.0.35 and restorable from `6553b8c70`,
 `taom_test_wildmesh_<animal>_rider`). Read the TAOM log (`<game>\bin\Win64_Shipping_Client\Logs\taom_debug_*.log`) for `[MonsterSize]` (the sizes
 applied), `[MissionDiag] ActionSet '...' used by ... monster=...` and the feature's own `[Animalia]` lines, and the
 engine's `rgl_log_*.txt` (one expected "taom_body_length ... not declared" line per sized Monster; the engine

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Well-formedness gate for every TAOM XSLT stylesheet, including the live ones.
 
-TAOM ships 16 stylesheets across three modules and, until #462, only the repo's 8
-had any gate at all. CI's "Validate XML & XSLT" job globs
-`Main/_Module/ModuleData/**/*.xslt`, so it cannot reach `TAOM_Map`'s one or `LOTRLOME_Armory`'s seven. CI
-*structurally* cannot: those modules are not in the checkout. This script is the
-developer-side counterpart, which is the only place such a check can live.
+TAOM ships 20 stylesheets across three modules (11 in the repo, 8 in `LOTRLOME_Armory`,
+1 in `TAOM_Map`; run this script for the current count) and, until #462, only the repo's
+own had any gate at all. The "Validate XML & XSLT" CI job globbed
+`Main/_Module/ModuleData/**/*.xslt`, so it never reached `TAOM_Map` or `LOTRLOME_Armory`:
+those modules are not in the checkout. That job went with the workflows in `c8d69a0dc`, and
+no CI has run since. This script is the only gate for the live modules, so run it by hand.
 
 Why it matters more than "a malformed file would be obvious": `taom_schema.py`
 decides whether vanilla's settlements were stripped by regex-matching

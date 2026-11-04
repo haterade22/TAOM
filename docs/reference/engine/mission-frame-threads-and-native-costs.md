@@ -530,7 +530,7 @@ the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapt
   `0xD9E160`, pool-1 guard site `0x6A1D4`, pool-2 load `0x69F95` and pool-2 guard site `0x6B410`, all v1.5.5. The log
   of that start (`taom_debug_2026-10-15_12-45-22.log` lines 40-41) reads `[SkeletonBuffer] guard ON pool 1:
   site=0x6A1D4 resume=0x6A1E1 ... scanMs=174.3` and `guard ON pool 2: site=0x6B410 resume=0x6B41D ...`, so both
-  patterns matched exactly once on v1.5.5. The offsets in the table above are v1.5.4 and were not re-derived on v1.5.5.
+  patterns matched exactly once on v1.5.5. The offsets in the table above are v1.5.4 and were not re-derived on v1.5.5. `KnownBuilds` also holds a v1.5.6 row (14,215,008 bytes): the same watch and guard sites as v1.5.5, the global at `0xD9F160`.
 - [yotthani, MithrilForge `docs/engine/perf.md`@0a2f4761 lines 2090-2101, 2560 x 1080, V-Sync off, v1.5.4, measured
   with TAOM's mod list ("TAOM-Liste"; the TAOM version is not stated there)] The first seconds after deployment, about
   7 s, are the slowest phase (51 to 57 FPS against 80 at 1,751 agents, about 1.6 times slower overall), which

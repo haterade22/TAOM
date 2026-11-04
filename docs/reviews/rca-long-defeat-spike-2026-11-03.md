@@ -68,7 +68,28 @@ Mike ran `taom.ld_start helms` on build `fd36dcb85` and reported: "We spawned un
 
 **Not applied:** a judge check for a log with two launches of the mission (tooling lens). It needs a person at the console during an unattended run, and Phase 1 replaces this wrapper, so it is a speculative guard (`simplicity-criterion.md`). Mike can re-weigh it.
 
+**Re-review of the fix pass (lens 5 with lens 2's check, `high`):** one MED. A limit of 3 soldiers on the frame point could fail a healthy shield wall, which can put 5 within 1 m (row 32).
+
 **Who found what:** lenses 5 and 2 and Tooling ran at `max`, and none found a HIGH or CRITICAL, so no second wave ran. Lenses 1, 3, 4 and 6 are SKIPPED BY TIER. Codex did not run, because this work has no paid-dispatch word. Step 2c's all-missions agent did not run: this mission's behavior list is unchanged, and the soldiers now reach those behaviors through the path every custom battle uses. Lenses 5 and 2 found rows 24 to 27 independently of each other. Tooling found rows 28 and 29 by running edits against the tests.
+
+## First unattended runs (the same night)
+
+Three runs at Helm's Deep and one at Minas Tirith, `E:\Temp\long-defeat-runs\`. `20261103-211432` (100 defenders, 120 attackers): the load stopped at a shader dialog for 9 minutes until a session pressed Cancel, then the fight froze at t 420 s and the run ended at its limit. `20261103-215114` (same numbers): all defenders dead at t 445 s, about 45 attackers left. `20261103-215943` (170 and 110): **PASS**, three waves cleared in 1,380 s, with S1, S2, S3, S4 and S7 answered and S5 in part. `20261103-222355` (Minas Tirith, 180 and 120): PASS by the judge, with S8 answered, but its wave 2 is no real clear (row 36).
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 31 | HIGH | A wave could never clear. Only `BattleEndLogic` ends a vanilla siege, and this mission leaves it out, while constant team power turns off the retreat and the sally. At Helm's Deep a hidden inner gate also held the Middle lane closed and drew gate-lane attackers to height 32.5, so the last 7, then 6, attackers and 31 defenders stood apart until the limit | Removed vanilla behavior | The repeat of row 1's class. I traced who reads the removed behaviors, and not what they were doing for the mission: they ended it. Three review waves read this code, and none asked how a fight ends | `WatchStalemate`: charge, then stragglers fall; `Boot` breaks a hidden gate; both log; lesson |
+| 32 | MED | A limit of 3 on the frame point could fail a healthy shield wall, and a real pile failed the run although the soldiers sort themselves out | Gate proves the wrong thing | I set the number from a line formation, and joined two facts in one verdict | Limit 6; `spawn pile` is its own line and fails nothing |
+| 33 | MED | The terrace frame runs out of slots, so 41 of 68 soldiers spawn on one point | Engine overflow | Lens 2 predicted it from the source, and row 26 added the count that found it. Not a defect of the path: a limit of the scene's frame | Recorded for Phase 1: a muster place with room |
+| 34 | MED | A shader compile dialog held the first unattended run for 9 minutes, with the runner logging it and leaving it open, and the watchdog wrote a `[CrashReport]` block, which fails the judge when a run ends well | Known engine fault met again | #287 and the changelog archive record this dialog at Helm's Deep, and the plan's reading of the pilot scene did not reach them | The wrapper presses Cancel on the two named shaders only; feature doc section |
+| 35 | MED | `DeploymentPoint.Deploy` in mid-mission reports deployed, but at Helm's Deep the engine reads invisible (its spawners are hidden in the scene), and at Minas Tirith one soldier used it for about 20 s and then none | Not solved | First reached on these runs | `[S5]` and `[S3]` now name each level's visibility, the users, `forced` and who walks to it; `ForcedUse` is set again each wave; S5 stays open for Phase 4 |
+| 36 | HIGH | The first form of the stalemate rule felled every standing attacker. At Minas Tirith wave 2 it felled 35 with 2 defenders left, and the judge read `PASS` and `2 waves cleared` | False evidence | My own fix, written from one stalemate of 6 attackers. I did not ask what the rule does when the attackers are winning. Found on reading the lines of a run that passed | Only a tenth of the wave falls by rule, and fewer than the defenders; beyond that the run ends as `stalemate`, which the judge fails, and the result counts the waves that ended by rule. The feature doc marks that run's wave 2 as no real clear; lesson |
+| 37 | MED | I stated the cause of the stand-off as constant power, in a comment, the doc, this RCA and a lesson. Lens 2 found the hidden gate: constant power removes the exits and does not make soldiers stand apart | Claim not verified | The third case of row 14: a true-sounding reason read off one branch. I wrote the lesson "static review cannot show a stalemate" while the scene file and `SiegeLane` show this one | Text corrected, the lesson rewritten; the next run settles it through `Middle open` |
+| 38 | MED | The wrapper's new defaults kept a live limit of 900 s, which cannot finish the run they came from (1,380 s), so "these numbers passed" held only with a flag the docs left out | Gate proves less than it says | I moved two numbers of a set of three | Default 1,800 s, in the C# options too; a test pins it above 1,380 s |
+| 39 | MED | Seven of 18 mutants survived the new dialog and default tests, among them a recursion that would hang every real run | Test gap | I wrote one test per happy path and never ran a break edit | Tests for each survivor; the press line now carries the compile error, so a new error in the same shader stays visible |
+| 40 | LOW | Smaller items, each fixed: S5's "no crew through two waves" (one wave, and one soldier came); the stale line claimed both sides charge, which a player-led team does not; several numbers in the doc and RCA; `shader cache list differs` offered as a clue when all four runs log it; the docstring; the S1 row still required no pile; the 3 stranded soldiers cited for a rule on attackers could not be attackers | Own change | First read by the review | Fixed in this change |
+
+**Proof of the fixes:** run `20261103-235325`, build `985b0d54e`, Helm's Deep at the wrapper's defaults: PASS, 3 waves in 1,254 s, 0 waves ended by felling stragglers. `[S1] hidden gate ... broken`, `Middle open True`, and wave 1 cleared 116 s sooner than before. `[S5]` read `mangonel_b_spawner False`, as lens 2 predicted from the scene.
 
 ## Follow-up
 
@@ -76,7 +97,7 @@ FOLLOW-UP: `docs/reference/unattended-game-runs.md` says exit 0 needs a clean-un
 
 FOLLOW-UP: `show_results` in `tools/run_fords_autorun.py` prints Fords labels over spike data. no issue: wording only, and Phase 1 replaces the wrapper with a general option on the runner.
 
-FOLLOW-UP: S6, S8 and the rest of S7, plus the Phase 1 notes in [long-defeat.md](../features/long-defeat.md), are owed under #1079.
+FOLLOW-UP: S6, S9 and the rest of S7, plus the Phase 1 notes in [long-defeat.md](../features/long-defeat.md), are owed under #1079.
 
 ## Feedback memories to codify
 

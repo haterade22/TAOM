@@ -12,7 +12,7 @@ spiders, wargs), race-specific lifespans, alignment-driven diplomacy, a full car
 system, per-kingdom special resources, and dozens of other systems. Every kingdom, clan, lord, and
 troop has been replaced or rewritten to fit Tolkien's world.
 
-> Development happens on **`bannerlord-1.5.x`** (Bannerlord v1.5.6). The GitHub default branch, **`bannerlord-1.4.5`**, is the v1.4.8 line and shows its own README.
+> Development happens on **`bannerlord-1.5.x`** (Bannerlord v1.5.6), which is also the GitHub default branch. **`bannerlord-1.4.5`** is the legacy v1.4.8 line and shows its own README.
 
 ## Working with AI
 
@@ -57,7 +57,8 @@ dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=   # tests only, no
 A successful build deploys the module into your game's `Modules/` folder. Enable **TAOM** in the
 Bannerlord launcher and start a **new campaign** (existing saves are not supported).
 
-`TAOM.sln` at the root contains both `Main` (mod code) and `TAOM.Tests`. Tests run with MSTest +
+`TAOM.sln` at the root contains `Main` (mod code), `Client` (`TAOM.Client`, the UI half), `Dependencies`
+(`TAOM.Dependencies`) and `TAOM.Tests`. Tests run with MSTest +
 NSubstitute. Shared build settings live in [`Directory.Build.props`](Directory.Build.props).
 
 ## Project Structure
@@ -69,6 +70,8 @@ TAOM/
 │   ├── Core/                 # Core infrastructure + IoC
 │   ├── Adapters/             # Sealed-type adapters (IHeroAdapter, etc.)
 │   └── _Module/              # Bannerlord module files (SubModule.xml, ModuleData, GUI)
+├── Client/                   # TAOM.Client: the UI a dedicated server cannot load (widgets, MapViews, MissionViews)
+├── Dependencies/             # TAOM.Dependencies: Harmony, ButterLib, UIExtenderEx and MCM bundled with the mod
 ├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute)
 ├── docs/
 │   ├── adrs/                 # Architecture Decision Records
@@ -105,7 +108,7 @@ See the [Architecture Decision Records](docs/adrs/) for the full set of design c
 
 | Free Peoples | Dark Powers | Independent |
 |--------------|-------------|-------------|
-| Gondor · Rohan · Erebor · Dale · Rivendell · Lothlórien · Mirkwood · **Lindon** | Mordor · Isengard · Dol Guldur · Gundabad · **Misty Mountain Orcs** · **Goblin-town** · **Blue Craig** · Dunland · Easterlings (Rhûn) · Harad · Khand | Umbar (corsairs) · Shaghâna · Âbanissa |
+| Gondor · Rohan · Erebor · Dale · Rivendell · Lothlórien · Mirkwood · **Lindon** · **Arthedain** · **Ered Luin** | Mordor · Isengard · Dol Guldur · Gundabad · **Misty Mountain Orcs** · **Goblin-town** · **Blue Craig** · Dunland · Easterlings (Rhûn) · Harad · Khand | Umbar (corsairs) · Shaghâna · Âbanissa · **Cardolan** · **Rhudaur** · **Anduin Vale** · **Angáladh** · **Dorwinion** · **South Rhovanion** |
 
 Over 100 clans and 800+ unique troop definitions across all factions. Settlements like Erebor are
 hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/).
@@ -145,8 +148,8 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** is integrated as more than a
   code generator: custom slash-command skills, specialized agents, automated hooks,
-  path-scoped rule files, persistent cross-session memory, and project MCP servers (symbolic code
-  navigation, decompilation, git, GitHub). [AGENTS.md](AGENTS.md), with Claude's [CLAUDE.md](CLAUDE.md) layer, is the authoritative reference
+  path-scoped rule files, persistent cross-session memory, and project MCP servers (decompilation,
+  ModuleData queries, image and voice generation). [AGENTS.md](AGENTS.md), with Claude's [CLAUDE.md](CLAUDE.md) layer, is the authoritative reference
   every session loads.
 - **Codex** (OpenAI) runs as an *independent adversarial reviewer* — it shares no session context
   with Claude, so it provides a genuine second opinion. Review
