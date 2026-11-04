@@ -5,8 +5,9 @@ Run:  python tools/run_long_defeat_spike.py [--fortress helms|minas] [--waves N]
                                             [--live-limit S] [--no-defenders-ai] [--require-idle-minutes N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the spike idles at the main menu,
-and the run ends as a stall after 10 minutes. Exit 0 means every wave cleared, the S1, S2, S4, S5 and S7 lines are in the log, the log has
-no CrashReport block, and the game left by itself. It judges no value on those lines: a person or a session reads them.
+and the run ends as a stall after 10 minutes. Exit 0 means every wave cleared, the S1, S2, S4, S5 and S7 lines are in the log, no batch
+logged spawn level WRONG, the log has no CrashReport block, and the game left by itself. It judges no other value on those lines: a person
+or a session reads them.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and
 log collection. It only changes the arm variable, the done and status files, the arm text and the judge. The standing permission
@@ -30,6 +31,7 @@ SHOCK_ASSAULT_UNITS = 100
 
 # The lines a complete spike run prints. A run that lacks one has not answered that spike.
 EVIDENCE = (
+    "[LongDefeat][S1] spawn level ok",
     "[LongDefeat][S1] after initial spawn",
     "[LongDefeat][S2] wave 1 CLEARED",
     "[LongDefeat][S4] repaired",
@@ -37,23 +39,30 @@ EVIDENCE = (
     "[LongDefeat][S7] after the armour write",
 )
 
+# In any batch, a soldier more than 10 m from the height of its frame or off the navmesh, or a pile on the frame point, fails the run, whatever the other batches did.
+SPAWN_LEVEL_WRONG = "[LongDefeat][S1] spawn level WRONG"
+
 
 def judge(done, report_json, log_text=None):
     """(exit code, why). A spike run has no JSON report: its evidence is the tagged log lines. The whole log counts for the CrashReport
     check, because the log opens at this launch and the mission load comes before the done file's start time."""
     if not done:
         return 1, "no done file"
+    wrong = next((row for row in (log_text or "").splitlines() if SPAWN_LEVEL_WRONG in row), None)
+    note = f"; the log holds {wrong[:400]}" if wrong else ""
     if done.get("reason") != "final":
-        return 1, f"reason={done.get('reason', '?')}"
+        return 1, f"reason={done.get('reason', '?')}{note}"
     if not log_text:
         return 1, "reason=final but no TAOM log was copied, and that log is the spike's evidence"
+    if wrong:
+        return 1, "reason=final" + note
     missing = [line for line in EVIDENCE if line not in log_text]
     if missing:
         return 1, "reason=final but the log lacks: " + ", ".join(missing)
     block = runner.crash_report_line(log_text, None)
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
-    return 0, f"reason=final, {log_text.count(' CLEARED at ')} waves cleared, S1 S2 S4 S5 S7 lines present, no CrashReport block"
+    return 0, f"reason=final, {log_text.count(' CLEARED at ')} waves cleared, S1 S2 S4 S5 S7 lines present, no spawn level WRONG, no CrashReport block"
 
 
 def positive_int(text):

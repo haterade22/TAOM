@@ -14,6 +14,7 @@
 | Get in-game evidence without a person (a check reads `NOT_SEEN`, or mission or engine code changed): start the game unattended, judge the run | [unattended-game-runs.md](unattended-game-runs.md) (the 10-minute idle gate, launch recipe, how to judge a run) and the `/game-run` skill; today it plays one Fords of War match: [fords-of-war.md](../features/fords-of-war.md) |
 | Work on Fords of War (the commander mode): rules, factions, config, in-game checks | [fords-of-war.md](../features/fords-of-war.md) |
 | Balance Fords of War: read what each match showed, record a change and the matches behind it | [balance-log.md](../features/fords-of-war/balance-log.md) and `python tools/fords_match_review.py <run folder>` |
+| Work on The Long Defeat (wave survival on the siege maps): the spike, its log lines, how a soldier gets a place, the decisions for later phases | [long-defeat.md](../features/long-defeat.md) |
 | Debug / iterate on problem | [iterative-problem-solving.md](../../docs/ai-includes/iterative-problem-solving.md) |
 | Compare multiple approaches | [multi-approach-validation.md](../../docs/ai-includes/multi-approach-validation.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |
