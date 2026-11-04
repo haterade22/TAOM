@@ -316,6 +316,15 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void TheShippedMordor_DoesLessToTowers_AndItsTraitsSaySo()
+    {
+        var mordor = Catalog().Factions.Single(f => f.FactionId == "mordor");
+
+        Assert.AreEqual(0.6f, mordor.FeatsOrNone.DamageToTowers);
+        Assert.IsTrue(mordor.Traits!.Any(t => !t.Strength && t.Text.Contains("40% less damage to towers")), "a player must read the weakness");
+    }
+
+    [TestMethod]
     public void TheShippedHeroFactors_MakeAHeroWorthItsPrice_AndAreTheDefault()
     {
         Assert.AreEqual(FordsMatchConfig.Default.Heroes.DamageFactor, Catalog().Match.Heroes.DamageFactor);

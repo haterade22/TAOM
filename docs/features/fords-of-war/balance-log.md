@@ -19,6 +19,13 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261103-170032 | `f3653f9bb` | Rivendell v Mordor | 146 / 1,544 | 2 / 1 | 16,113 / 21,440 | Rivendell 2.7 | 4x. |
 | 20261103-190524 | `fd36dcb85` | Rivendell v Mordor | 148 / 1,512 | 3 / 1 | 18,145 / 34,866 | Rivendell 3.1 | 1x, except 10x from 45 to 99 s after a press of the speed control. Builds ran beside it: frames averaged 9.4 ms. |
 | 20261103-192127 | `fd36dcb85` | Rivendell v Mordor | 155 / 1,549 | 2 / 2 | 17,935 / 20,924 | Rivendell 3.1 | 4x. |
+| 20261103-193518 | `eedfca818` | Rivendell v Mordor | 164 / 1,466 | 5 / 1 | 13,211 / 52,608 | Rivendell 2.2 | 4x. Hero factors and spare upgrades. Mordor bought 3,990 gold of upgrades. Check 8 failed once. |
+| 20261103-193955 | `eedfca818` | Rivendell v Mordor | 166 / 1,445 | 4 / 0 | 13 / 50,782 | Rivendell 1.8 | 4x. The same build. |
+| 20261103-195038 | after `eedfca818` | Rivendell v Mordor | 173 / 1,618 | 3 / 0 | 2,682 / 44,071 | Rivendell 2.7 | 4x. Spare gold moves the buy cycle. |
+| 20261103-195514 | after `eedfca818` | Rivendell v Mordor | 207 / 1,324 | 5 / 0 | 3 / 48,833 | Rivendell 1.5 | 4x. The same build. |
+| 20261103-200151 | after `eedfca818` | Rivendell v Mordor | 185 / 1,546 | 4 / 1 | 8,003 / 40,762 | Rivendell 1.4 | 4x. Mordor `damageToTowers` 0.6 added. |
+| 20261103-200628 | after `eedfca818` | Rivendell v Mordor | 180 / 1,583 | 4 / 0 | 493 / 36,226 | Rivendell 1.9 | 4x. The same build. |
+| 20261103-201138 | after `eedfca818` | Rivendell v Mordor | 878 / 4,603 | 6 / 0 | 7 / 64,717 | Rivendell 1.2 | 4x, 45 minutes of match time. No keep fell. Mordor ended on 8,973 gold. |
 
 ## Findings and changes
 
@@ -53,7 +60,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Decision:** balance runs use 4x, about 246 s of wall time against 928 s at 1x. A change that matters is confirmed at 1x, and tower damage is not judged from 4x alone. 10x is for smoke and crash runs, about 109 s; its numbers are not balance evidence. The cause of the 10x difference is not known. The engine's fast forward runs the AI on the main thread in steps of up to 0.1 s, but no test ties that to the extra tower contact.
 
-### Heroes and the AI's spare gold (this change)
+### Heroes and the AI's spare gold (`eedfca818`)
 
 **Seen:**
 
@@ -71,7 +78,31 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **To check on the next Rivendell and Mordor match at 4x:** heroes pass 2 kills per minute, `heroRaised` shows that they land blows, Mordor's hero share falls and its unit share rises, and both sides end with less unspent gold. The factors are a first guess: one hero must not decide a lane by itself.
 
+### What `eedfca818` did, and the second pass (this change)
+
+**Seen on `eedfca818`, two matches at 4x:** the hero factors worked. Elladan made 20 kills with no death, and Mordor's heroes died 4 and 3 times, where they died 11 times in `190524`. The gold rules did not work. Rivendell lost 5 and 4 towers and took 1 and 0. Mordor put 56% and 71% of its gold into upgrades, five levels by about 500 s, and Rivendell bought one level in that time.
+
+**Cause:** contact on Rivendell's towers doubled, from 2,058 to 2,213 unit-seconds to 4,075 to 5,080, while damage per blow rose from 14.5 to 15.2 up to 16.0 to 17.6. Without its 1,000-gold hero at about 210 s, Mordor brought a larger horde sooner. Upgrades then gave it more, because their price is flat and their value grows with the army.
+
+**Changed:** the spare-upgrade rule is gone. While the assault lane is full, gold above the reserve buys the cycle's next pack for the lane with the most room, and the cycle moves on.
+
+**Result, `195038` and `195514`:** spending now fits the design: Mordor spent 3,825 and 3,610 gold on units and 1,140 on upgrades, and fielded its first temple guard. Check 8 passed. The towers did not change: Rivendell lost 3 and 5 and took none.
+
+**What that shows:** the even towers before this pass came from Mordor wasting its gold. Value lost in the logs puts an orc at about 5 gold, and its blow does about the same tower damage as an elite's, so a cheap pack is the best tower killer in the game. An 8,000-point elven tower fell 32 and 34 s after its first logged blow, where a Mordor tower took 163 and 216 s against Rivendell.
+
+**Changed:** Mordor's units deal 40% less damage to towers (`damageToTowers` 0.6), and a fourth trait line tells the player.
+
+**Result, `200151` and `200628`:** Rivendell's towers fell later: at 222, 246, 621 and 852 s, and at 213, 396, 512 and 882 s, where they fell at 181, 220 and 412 s, and at 187, 205, 305, 382 and 628 s, without the feat. Rivendell still lost 4 and took 1 and 0.
+
+**Who wins, `201138`:** the first match run past 15 minutes on these rules, 45 minutes at 4x. No keep fell. Rivendell lost all 6 towers, the last at 2,372 s, and Mordor lost none. Rivendell dealt 7 tower damage in 45 minutes. Its two inner towers lasted about 25 minutes under attack, which fits the 30 to 45 minute target. Mordor ended on 8,973 gold.
+
+**Check 8:** it failed once, in `193518`: a held Mordor lane stood in elven tower fire for four samples. The hold rule already stands back by the extra reach (`LaneMarchRules.Hold`, 82.5 m from an elven tower), so that is not the cause. It passed in the next five matches. The cause is not known.
+
 ## Open questions
+
+- **A small army's AI never attacks:** `AiCommander.PickAssaultLane` takes only a lane that is not threatened, and a horde threatens every lane, so Rivendell spreads its buying and never gathers an attack. This may hold for every small army: the other pairs will say.
+- **A horde's late gold:** with every lane full, every hero out and its cycle's upgrades bought, Mordor has nothing to spend on. It ended a 45-minute match on 8,973 gold.
+- **Mordor's heroes:** 0.4 to 1.5 kills per minute in `200151` and `200628`, where Rivendell's made 1.7 to 5.4. In `201138` Sauron made 4.6 and the Nazgul 0.9.
 
 - **Swordguard:** 725 and 850 kills for 47 and 34 deaths. It may be simply the elite answer to level 11 orcs. Read it against Erebor and Gondor before any change.
 - **Horde feeds bounty:** Rivendell earned 7,286 and 8,099 gold, of which passive income gives about 1,800. A horde's deaths pay its enemy. The new gold words will give the bounty share.
