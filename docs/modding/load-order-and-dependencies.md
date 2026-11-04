@@ -107,7 +107,7 @@ Forward-safe attributes, with the line that reads each:
 | `<Item>` / `<CraftedItem>` | `culture`; `<Horse monster>`; a crafting piece's `culture` | `ItemObject.cs:487`, `540`; `HorseComponent.cs:150`; `CraftingPiece.cs:160` |
 | `<ItemModifier>` | `modifier_group` (the modifier adds itself to the group) | `ItemModifier.cs:76` |
 
-A forward-safe reference to a typo is the worst kind of error to have, because the game runs. A troop whose `culture="Culture.erebro"` gets a culture object that no file ever fills, the ghost is dropped at `Campaign.cs:1438`, and the troop simply has no culture. The static gate for this class is `python tools/validate_moduledata.py` (`BROKEN_ITEM_REF`, `BROKEN_TROOP_REF`, `BROKEN_PARTY_TEMPLATE_REF`, `BROKEN_BODY_PROPERTY_REF`), which resolves ids across all three modules before the engine ever runs. <!-- measured: grep -o "BROKEN_[A-Z_]*" tools/validate_moduledata.py | sort -u 2026-09-05 -->
+A forward-safe reference to a typo is the worst kind of error to have, because the game runs. A troop whose `culture="Culture.erebro"` gets a culture object that no file ever fills, the ghost is dropped at `Campaign.cs:1438`, and the troop simply has no culture. The static gate for this class is `python tools/validate_moduledata.py` (`BROKEN_ITEM_REF`, `BROKEN_TROOP_REF`, `BROKEN_PARTY_TEMPLATE_REF`, `BROKEN_BODY_PROPERTY_REF`, `BROKEN_FACTION_REF`), which resolves ids across all three modules before the engine ever runs. <!-- measured: grep -o "BROKEN_[A-Z_]*" tools/validate_moduledata.py | sort -u 2026-11-03 -->
 
 Must-already-exist lookups, and what each does with `null`:
 
@@ -295,7 +295,7 @@ All measured 2026-09-05. Paths under the game install are written module-relativ
 | 14 modules in `Configs/LauncherData.xml`, in the order quoted in section B | `python` with `xml.etree.ElementTree`, `SingleplayerData/ModDatas` |
 | 3 hits for `GetSortedModules` (one definition, two multiplayer callers) | `grep -rn GetSortedModules` over the v1.4.8 decompile |
 | 2 hits for `IsObsolete` (the read and `Hero.cs:1537`) | `grep -rn IsObsolete` over the v1.4.8 decompile |
-| 4 `BROKEN_*` codes plus `LANDLESS_CULTURE` in the validator | `grep -o "BROKEN_[A-Z_]*\|LANDLESS_CULTURE" tools/validate_moduledata.py \| sort -u` |
+| 5 `BROKEN_*` codes plus `LANDLESS_CULTURE` in the validator (2026-11-03; `BROKEN_FACTION_REF` arrived 2026-10-20) | `grep -o "BROKEN_[A-Z_]*\|LANDLESS_CULTURE" tools/validate_moduledata.py \| sort -u` |
 | 494 vanilla settlements, 988 TAOM_Map settlements | `grep -cP "<Settlement\b"` on `SandBox/ModuleData/settlements.xml` and `TAOM_Map/ModuleData/settlements.xml` |
 | 52 Erebor settlements (4 town, 9 castle, 16 village, 23 castle village), 13 clan-owned | `grep -oP '<Settlement id="[^"]*"[^>]*culture="Culture.erebor"'` on the live file, then `sort \| uniq -c` on the id prefix and on `owner=` |
 | 6 files, 137 items in `LOTRLOME_items/erebor/`; 5 files, 168 items in `LOTRLOME_items/iron_hills/` | `ls` each folder; `cat <folder>/*.xml \| grep -cP "<Item\b"` |

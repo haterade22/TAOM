@@ -355,9 +355,10 @@ requires the slot everywhere, with exceptions argued in `_HARNESSLESS_BY_DESIGN`
    name so it can be translated and a `culture=` so it stocks in the right shops.
 5. Hand it out with `<Equipment slot="HorseHarness" id="Item.<your id>" />` beside the `slot="Horse"`
    row in the roster, never on its own: a harness with no mount in the same set is unequipped on the
-   next inventory transfer (`SPInventoryVM.cs:3919-3922`).
+   next inventory transfer (`SPInventoryVM.cs:3919-3922`). A row whose item type the engine will not put in
+   that slot is reported as `ITEM_SLOT_REJECTED` (`tools/validate_moduledata.py:639`).
 
-Check: `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH --code MOUNT_WITHOUT_HARNESS`
+Check: `python tools/validate_moduledata.py --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH --code MOUNT_WITHOUT_HARNESS --code ITEM_SLOT_REJECTED`
 Takes effect: full game restart
 Code: No code changes needed
 
@@ -471,9 +472,9 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
   than a wrong one, because 0 is the human family and fits nothing.
 - **A typo in `monster="Monster.x"` does not crash and is not gated.** An unknown id registers an
   empty placeholder Monster (`MBObjectManager.cs:718-731`), so the mount loads with no skeleton and
-  no hit points. The repo's reference sweep resolves `Item.`, `NPCCharacter.`, `Culture.` and
-  `PartyTemplate.` prefixes only (`tools/taom_schema.py:161-167`), so nothing checks `Monster.`
-  references. Read the id back off the Monster file by eye.
+  no hit points. The repo's reference sweep resolves `Item.`, `NPCCharacter.`, `Culture.`,
+  `PartyTemplate.`, `BodyProperty.` and `Faction.` prefixes only (`tools/taom_schema.py:165-184`), so
+  nothing checks `Monster.` references. Read the id back off the Monster file by eye.
 - **A bad `base_monster` silently kills the rest of the file.** The reference is dereferenced
   immediately after lookup (`Monster.cs:205-206`) and the load walk sits inside an empty catch
   (`MBObjectManager.cs:786-796`), so every `<Monster>` after the broken one is never registered: a
@@ -510,10 +511,13 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
   convention that replaces the extension instead, `LOTRAOM_horses.xml.bak-<topic>`, which is what the
   shipped sidecars do ([module-backup-sweep](../reference/module-backup-sweep.md)).
 - **The gates do less than their names suggest.** `python tools/verify_mount_assets.py` knows three
-  creatures, `spider`, `elephant` and `mumakil` (`tools/verify_mount_assets.py:37-68`); the warg, the
-  fell warg, the chariot and the war ram are not covered. `python tools/audit_mount_parity.py` never
-  exits non-zero and prints a diff you have to read, currently 431 lines
+  creatures, `spider`, `elephant` and `mumakil` (`tools/verify_mount_assets.py:37-69`); the warg, the
+  fell warg, the chariot and the war ram are not covered. `python tools/audit_mount_parity.py` exits 0
+  and prints a diff you have to read, currently 431 lines
   <!-- measured: python tools/audit_mount_parity.py redirected to a file, then wc -l on it, exit code 0 2026-09-05 -->.
+  Its `--strict` flag adds a verdict and exits 1 when a behaviour-tree creature's usage set lacks a key
+  the engine can query (`tools/audit_mount_parity.py:19-24, 83, 235-245`); the warg and the war ram are not in that
+  list.
   `python tools/validate_moduledata.py` checks ids, duplicates and the harness family rules, not
   whether a number is sensible: there is no schema for item files at all, only for
   `taom_npccharacter`, `taom_spcultures` and `taom_equipmentsets`
