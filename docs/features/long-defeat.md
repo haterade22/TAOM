@@ -115,6 +115,8 @@ Expect `defender detachment False` on the `[S4] repaired` line: `UsableMachine.D
 
 No MCM. Three JSON files under `Main/_Module/ModuleData/long_defeat/` hold the content, and each bad value costs one logged warning and falls back to its default: `fortresses.json` (scene, cultures, garrison, keep point), `waves.json` (the `rules` numbers, bounties, wave rosters) and `shop.json` (offers and starting gold). The files are read once per game process, so an edit needs a full game restart, not a new run. An unattended run takes an arm file of `key=value` lines named by `TAOM_LONGDEFEAT_AUTORUN`: `fortress`, `waves`, `out` (required, absolute), `quit`, `live_limit_seconds`, `wall_limit_seconds`, `screenshots`, `garrison_scale`, `expect`. Player-facing text is the `TAOM_LD_*` rows of `taom_module_strings.xml`; the 12 language files carry the English seed until #763.
 
+**The run report** (`long_defeat_report_*.json`, beside the log) also carries what a leaderboard checks: `schema`, `build`, `balance` (a hash of the three JSON files with line endings normalized), `cheatMode`, `mods` (ids with versions), `autoplay`, `garrisonScale`, `targetWaves`, `startedUtc` and `endedUtc`. It holds no player name. The board itself is not built: [leaderboard-plan.md](long-defeat/leaderboard-plan.md), #1080.
+
 ## Key Files
 
 - `Main/Features/LongDefeat/LongDefeatModule.cs`, `ILongDefeatGameManagerFactory.cs`, `NullLongDefeatGameManagerFactory.cs`, `LongDefeatMission.cs`: these stay after Phase 1.

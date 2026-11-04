@@ -37,6 +37,7 @@ internal sealed partial class LongDefeatDirector
     private float _keepRadius;
     private int _chargedWave;
     private bool _started;
+    private DateTime _startedUtc;
     private bool _shutDown;
     private bool _finished;
     private float _keepClock;
@@ -83,6 +84,8 @@ internal sealed partial class LongDefeatDirector
         MissionThreadGuard.MarkMainThread();
         if (_started || _shutDown)
             return false;
+
+        _startedUtc = DateTime.UtcNow;
 
         if (!_field.Boot(PlanSizes(), out var problem))
         {

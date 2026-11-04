@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -9,8 +10,45 @@ namespace TAOM.Tests.Features.LongDefeat.Diagnostics;
 [TestClass]
 public class LongDefeatRunReportTests
 {
+    private static readonly DateTime Started = new(2026, 11, 4, 12, 0, 0, DateTimeKind.Utc);
+
+    private static string Text(RunResult result, RunStats stats, Purse purse, RunOptions? options = null, RunProvenance? provenance = null) =>
+        LongDefeatRunReport.Build("helms", options ?? RunOptions.Default, provenance ?? RunProvenance.Unknown, result, stats, purse, Started, Started.AddMinutes(40));
+
     private static JObject Build(RunResult result, RunStats stats, Purse purse) =>
-        JObject.Parse(LongDefeatRunReport.Build("helms", result, stats, purse));
+        JObject.Parse(Text(result, stats, purse));
+
+    [TestMethod]
+    public void Build_CarriesWhatALeaderboardChecks()
+    {
+        var provenance = new RunProvenance("v2.0.0.0 build.1+abc", "0123456789abcdef", new[] { "Native", "TAOM" }, true);
+        var options = new RunOptions { Autoplay = true, GarrisonScale = 0.5f, StopAfterWaves = 5 };
+
+        var text = Text(new RunResult(RunEndReason.DefendersDead, 2, 1, 80), new RunStats(), new Purse(600), options, provenance);
+        var report = JObject.Parse(text);
+
+        Assert.AreEqual(1, (int)report["schema"]!);
+        Assert.AreEqual("v2.0.0.0 build.1+abc", (string?)report["build"]);
+        Assert.AreEqual("0123456789abcdef", (string?)report["balance"]);
+        Assert.IsTrue((bool)report["cheatMode"]!);
+        CollectionAssert.AreEqual(new[] { "Native", "TAOM" }, report["mods"]!.Select(m => (string)m!).ToArray());
+        Assert.IsTrue((bool)report["autoplay"]!);
+        Assert.AreEqual(0.5f, (float)report["garrisonScale"]!);
+        Assert.AreEqual(5, (int)report["targetWaves"]!);
+        StringAssert.Contains(text, "\"startedUtc\": \"2026-11-04T12:00:00.0000000Z\"");
+        StringAssert.Contains(text, "\"endedUtc\": \"2026-11-04T12:40:00.0000000Z\"");
+    }
+
+    [TestMethod]
+    public void Build_APlayersRun_ReadsAsCleanWithNoTarget()
+    {
+        var report = Build(new RunResult(RunEndReason.DefendersDead, 2, 1, 80), new RunStats(), new Purse(600));
+
+        Assert.IsFalse((bool)report["autoplay"]!);
+        Assert.IsFalse((bool)report["cheatMode"]!);
+        Assert.AreEqual(1f, (float)report["garrisonScale"]!);
+        Assert.AreEqual(JTokenType.Null, report["targetWaves"]!.Type);
+    }
 
     [TestMethod]
     public void Build_CarriesTheResultTheWavesAndTheGoldBooks()
@@ -64,7 +102,7 @@ public class LongDefeatRunReportTests
         var stats = new RunStats();
         stats.CloseWave(1, float.NaN, 0);
 
-        var text = LongDefeatRunReport.Build("helms", new RunResult(RunEndReason.Abandoned, 1, 1, 0), stats, new Purse(0));
+        var text = Text(new RunResult(RunEndReason.Abandoned, 1, 1, 0), stats, new Purse(0));
 
         Assert.IsNotNull(JObject.Parse(text), "a NaN timer must not break the report");
     }
