@@ -1130,7 +1130,7 @@ The campaign-map side of Creature Bandits (#692). A bandit party's map icon is i
 
 ## Patch95_FactionUI
 
-**Target:** eight patch classes in `Main/Features/FactionUI/Hooks/`: `GauntletLayer.LoadMovie(string movieName, ViewModel dataSource)` (prefix, postfix, finalizer); `UIResourceManager.Refresh()` (postfix); `VideoPlayerView.PlayVideo(string, string, float, bool)` (prefix); `VideoPlaybackState.SetStartingParameters` (prefix); the private `MBMusicManager.ActivateMenuMode` (prefix, may skip); the `LoadingWindowViewModel.LoadingImageName` setter (prefix); the `BodyGeneratorView` constructor (prefix, bound as the type's only constructor, the Patch77 way); the static `BodyGeneratorView.InitCamera(Camera camera, Vec3 cameraPosition)` (prefix, postfix).
+**Target:** eleven patch classes in `Main/Features/FactionUI/Hooks/` (nine permanent, plus the temporary `FaceGenFirstOpenDiagnosticPatch` and its nested `TickWatch`): `GauntletLayer.LoadMovie(string movieName, ViewModel dataSource)` (prefix, postfix, finalizer); `UIResourceManager.Refresh()` (postfix); `VideoPlayerView.PlayVideo(string, string, float, bool)` (prefix); `VideoPlaybackState.SetStartingParameters` (prefix); the private `MBMusicManager.ActivateMenuMode` (prefix, may skip); the `LoadingWindowViewModel.LoadingImageName` setter (prefix); the `BodyGeneratorView` constructor (prefix, bound as the type's only constructor, the Patch77 way); the static `BodyGeneratorView.InitCamera(Camera camera, Vec3 cameraPosition)` (prefix, postfix).
 
 **Dedicated server (ADR-013, B6c):** not applied, core-target classes included (`SubModule.InitializeFactionUi`): those three only theme menu music and video.
 

@@ -563,7 +563,7 @@ SubModule.OnGameInitializationFinished:
 | `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | Honor-penalty decision, delegation to the relation service | 44 |
 | `Main/Features/Execution/Hooks/ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch.cs` | Harmony postfix: rewrites the per-clan relation penalty | 82 |
 | `Main/Features/Execution/Hooks/TraitLevelingHelper_OnBloodFeudStarted_Patch.cs` | Harmony prefix: skips the honor penalty | 54 |
-| `Main/_Module/ModuleData/execution/alignment.json` | Kingdom, culture and minor clan id to side (32 entries: 26 kingdoms, `gondor`, `mordor`, 4 minor clans) | 34 |
+| `Main/_Module/ModuleData/execution/alignment.json` | Kingdom, culture and minor clan id to side (36 entries: 30 kingdoms, `gondor`, `mordor`, 4 minor clans) | 34 |
 
 ### Modified Files
 
@@ -592,7 +592,7 @@ Tests the hook with mocked `IAlignmentService` and `IExecutionRelationService`:
 
 Tests the decision with a mocked `IAlignmentService`: a kingdom-less executor, a victim whose clan was destroyed by the kill, an evaluator with no kingdom, a participant classified on neither id, cross-alignment zeroing, kinslaying at 1.5 times, and the notification flag.
 
-### `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs` (13 tests, `LiveInstall`)
+### `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs` (14 tests, `LiveInstall`)
 
 The data gate for the alignment table (#957). It runs the real `spclans.xslt` over the installed SandBox `spclans.xml`
 and adds `characters/clans.xml`, the way the engine loads them (and the same for the kingdoms, with

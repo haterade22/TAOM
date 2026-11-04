@@ -91,7 +91,7 @@ Optional `<PrisonGuard troop="..."/>` overrides the culture's default prison gua
   weight 2), the Warden of Thorin's Halls (`eredluin_halls_warden`, 3) and the Veteran Hall Warden
   (`eredluin_veteran_hall_warden`, 3)
 
-The `<Spears>` section maps 17 cultures; Ered Luin takes Erebor's `western_spear_3_t3`. Cardolan, Rhudaur and
+The `<Spears>` section maps 21 cultures; Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion take Erebor's `western_spear_3_t3`. Cardolan, Rhudaur and
 the other cultures without a row get vanilla's `western_spear_3_t3` fallback.
 
 ## Guard-Duty Race Exclusions (#346)

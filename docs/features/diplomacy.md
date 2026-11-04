@@ -211,7 +211,7 @@ three gaps. TAOM is now Bannerlord 1.5.6 and v2.0.36; each gap below was re-chec
   contract, v1.5.6 asks `DiplomacyModel.IsAtConstantWar(clan, kingdom)` and returns on true
   (`DiplomaticBartersBehavior.cs`:117; the minor-clan branch is `:135-137`, the barterable is built at `:197-199`; the
   defection branch checks it too at `:94`). TAOM already overrides that model (`TaomDiplomacyModel.cs`:11, 35-44; registered at
-  `SubModule.cs`:1145). Not known: whether answering true also makes the pair fight. `FactionHelper.cs`:390
+  `SubModule.cs`:1150 now, 1145 at 0c5d81408). Not known: whether answering true also makes the pair fight. `FactionHelper.cs`:390
   (`AdjustFactionStancesForClanJoiningKingdom`) and `LordConversationsCampaignBehavior.cs`:2686 read it as well, and
   `FactionManager.IsAtConstantWarAgainstFaction` is not in the cache. Read those before using the seam.
 

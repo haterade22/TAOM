@@ -40,7 +40,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 
 - **XML-driven config:** Resource definitions with nested `<Kingdom>` and `<Culture>` child elements for many-to-one mappings
 - **Culture fallback:** Resolves via kingdom first, then culture — supports kingdomless players
-- **CampaignBehavior:** Hooks 12 events (SessionLaunched, DailyTickHero, MapEventEnded, RaidCompleted, PrisonerTaken, NewGameCreated, CharacterCreationIsOver, GameLoaded, TournamentFinished, HideoutBattleCompleted, UnitRecruited, GameOver) plus `ScreenManager.OnPushScreen` for the party-screen session
+- **CampaignBehavior:** Hooks 11 events (DailyTickHero, MapEventEnded, RaidCompleted, PrisonerTaken, NewGameCreated, CharacterCreationIsOver, GameLoaded, TournamentFinished, HideoutBattleCompleted, UnitRecruited, GameOver) plus `ScreenManager.OnPushScreen` for the party-screen session
 - **Earn policy:** `SpecialResourceEarnPolicy`: participation (not command) decides a battle payout, a raid or extortion event pays the battle credit only when a field party was beaten, and a dedicated server credits nobody. See [Earning Rules](#earning-rules)
 - **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
 - **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
