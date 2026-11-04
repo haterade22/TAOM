@@ -68,7 +68,7 @@ public class FordsMissionDirectorTests
     {
         var f = Started();
 
-        f.Towers.Received(14).SpawnGunners(Arg.Any<TowerSlot>(), "archer", 2);
+        f.Towers.Received(14).SpawnGunners(Arg.Any<TowerSlot>(), "archer", 1);
         f.Towers.Received(1).SetDestroyedHandler(Arg.Any<System.Action<string>>());
     }
 
@@ -89,7 +89,7 @@ public class FordsMissionDirectorTests
 
         Assert.IsTrue(f.Director.Start());
 
-        f.Towers.Received(14).SpawnGunners(Arg.Any<TowerSlot>(), "archer", 2);
+        f.Towers.Received(14).SpawnGunners(Arg.Any<TowerSlot>(), "archer", 1);
     }
 
     [TestMethod]

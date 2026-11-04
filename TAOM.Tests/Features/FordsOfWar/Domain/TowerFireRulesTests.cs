@@ -35,6 +35,42 @@ public class TowerFireRulesTests
         Assert.AreEqual(Config.VolleyMissiles, volleys[0].Missiles);
     }
 
+    private static List<bool> RockPerVolley(TowerFireRules rules, int volleys)
+    {
+        var rocks = new List<bool>();
+        for (var i = 0; i < volleys; i++)
+            rocks.Add(rules.Tick(Config.VolleyIntervalSeconds, Targets(FordsTestLayout.EastOuter0, Foe(7, 30f))).Single().Rock);
+        return rocks;
+    }
+
+    [TestMethod]
+    public void Tick_EveryThirdVolleyOfATower_CarriesARock()
+    {
+        var (rules, _) = Setup();
+
+        CollectionAssert.AreEqual(new[] { false, false, true, false, false, true }, RockPerVolley(rules, 6));
+    }
+
+    [TestMethod]
+    public void Tick_TheRockCount_IsPerTower()
+    {
+        var (rules, _) = Setup();
+        RockPerVolley(rules, 2);
+
+        var other = rules.Tick(Config.VolleyIntervalSeconds, Targets(FordsTestLayout.EastInner0, Foe(7, 30f))).Single();
+
+        Assert.IsFalse(other.Rock, "another tower's first volley");
+    }
+
+    [TestMethod]
+    public void Tick_RockEveryVolleysZero_NeverCarriesARock()
+    {
+        var off = Config with { RockEveryVolleys = 0 };
+        var rules = new TowerFireRules(off, new TowerChain(FordsTestLayout.Create(), off));
+
+        CollectionAssert.DoesNotContain(RockPerVolley(rules, 6), true);
+    }
+
     [TestMethod]
     public void Tick_NoEnemies_FiresNothing()
     {

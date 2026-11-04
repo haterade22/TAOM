@@ -473,7 +473,11 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
     {
     }
 
-    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f)
+    public MatchSide? OwnerSideOfGunner(object? agent) => null;
+
+    public bool IsOwnShot(object attacker, object victim) => false;
+
+    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f, bool rock = false)
     {
         if (NeverFires || Item == null || !_entities.TryGetValue(towerId, out var e) || e.Gunners.Count == 0)
             return 0;

@@ -26,7 +26,7 @@
     "siegeDamageFactor": 3,
     "regenPerSecond": 1,
     "regenDelaySeconds": 45,
-    "gunnersPerTower": 2,
+    "rockEveryVolleys": 3,
     "volleyIntervalSeconds": 4,
     "volleyMissiles": 3,
     "fireRange": 45,

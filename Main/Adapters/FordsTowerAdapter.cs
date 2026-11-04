@@ -31,6 +31,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     /// </summary>
     internal const string VolleyItemId = "western_javelin_2_t3";
     internal const string TowerArrowItemId = "fow_tower_arrow";
+    internal const string TowerRockItemId = "fow_tower_rock";
 
     private const float VolleySpread = 1.5f;
     private const string FallParticle = "psys_game_wooden_barricade_destruction";
@@ -75,6 +76,10 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     private Action<string>? _onDestroyed;
     private ItemObject? _volleyItem;
     private float _volleySpeed;
+    private Team? _ownerTeam;
+    private ItemObject? _rockItem;
+    private bool _rockLookedUp;
+    private float _rockSpeed;
     private ItemObject? _arrowItem;
     private bool _arrowLookedUp;
     private float _arrowSpeed;
@@ -183,6 +188,10 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         var scene = _mission.Scene;
         var facing = FordsTowerGeometry.MarchDirection(slot);
         var direction = new Vec2(facing.X, facing.Y);
+        // AddCustomMissile needs an owner agent. Native target scans reject an agent at IsEnemy, so one on a team hostile to nobody draws no
+        // aim, whatever the distance. With no AI controller its missiles still do damage (Mission.MissileHitCallback cancels a friend's only
+        // for an AI attacker). The west banner stands in, as for the camps: the build data needs one, and nobody sees this agent.
+        _ownerTeam ??= _mission.Teams.Add(BattleSideEnum.None, uint.MaxValue, uint.MaxValue, team.Banner, false, false, false);
         var spots = slot.GunnerSpots;
         for (var i = 0; i < count; i++)
         {
@@ -191,7 +200,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
                 var spot = spots != null ? spots[i] : FordsTowerGeometry.GunnerPosition(slot, i, count);
                 var position = new Vec3(spot.X, spot.Y, spots != null ? spot.Z : FordsEngine.TerrainAt(scene, spot.X, spot.Y), -1f);
                 var data = new AgentBuildData(character)
-                    .Team(team)
+                    .Team(_ownerTeam)
+                    .Controller(AgentControllerType.None)
                     .Banner(team.Banner)
                     .ClothingColor1(team.Color)
                     .ClothingColor2(team.Color2)
@@ -201,6 +211,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
                     .InitialDirection(in direction);
                 var agent = _mission.SpawnTroopWithAgentBuildData(data, false, true);
                 agent.SetMortalityState(Agent.MortalityState.Invulnerable);
+                agent.AgentVisuals?.SetVisible(false);
                 var hold = new WorldPosition(scene, UIntPtr.Zero, position, false);
                 var flags = Agent.AIScriptedFrameFlags.ConsiderRotation;
                 if (spots != null)
@@ -287,7 +298,19 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         _logger.LogInfo("[FordsOfWar][Garrison] " + FordsTowerLines.GarrisonLook(held, total, maxDrift, maxDz, byFace, worst));
     }
 
-    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f)
+    public MatchSide? OwnerSideOfGunner(object? agent)
+    {
+        if (agent == null)
+            return null;
+
+        lock (_gate)
+            return _byGunner.TryGetValue(agent, out var id) && _towers.TryGetValue(id, out var tower) ? tower.Slot.Owner : null;
+    }
+
+    public bool IsOwnShot(object attacker, object victim) =>
+        victim is Agent body && OwnerSideOfGunner(attacker) is { } owner && FordsEngine.SideOf(_mission, body.Team) == owner;
+
+    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f, bool rock = false)
     {
         var tower = Find(towerId);
         var shooter = tower?.Gunners.Find(IsLive);
@@ -306,10 +329,12 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         var added = 0;
         for (var i = 0; i < missiles; i++)
         {
-            var aimAt = target + new Vec3f(Spread(), Spread(), 0f);
+            // A rock leads its volley, with no spread: the spread is wider than its ring.
+            var stone = rock && i == 0 ? TowerRock() : null;
+            var aimAt = stone != null ? target : target + new Vec3f(Spread(), Spread(), 0f);
             // Every second missile of a volley is an arrow, when the item loaded.
             var arrow = i % 2 == 1 ? TowerArrow() : null;
-            var speed = arrow != null ? _arrowSpeed : _volleySpeed;
+            var speed = stone != null ? _rockSpeed : arrow != null ? _arrowSpeed : _volleySpeed;
             if (FordsTowerGeometry.AimDirection(origin, aimAt, speed) is not { } aim)
                 continue;
 
@@ -317,7 +342,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             var orientation = Mat3.Identity;
             orientation.f = direction;
             orientation.Orthonormalize();
-            var weapon = new MissionWeapon(arrow ?? item, null, null, 1);
+            var weapon = new MissionWeapon(stone ?? arrow ?? item, null, null, 1);
             _mission.AddCustomMissile(shooter, weapon, FordsEngine.ToVec3(origin), direction, orientation, speed, speed,
                 false, tower.Component);
             added++;
@@ -466,6 +491,25 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         if (FordsTowerGeometry.Reach(_arrowSpeed) < _fireRange)
             _logger.LogWarning($"[FordsOfWar] the tower arrow '{TowerArrowItemId}' reaches {FordsTowerGeometry.Reach(_arrowSpeed):0.#} m at 45 degrees (missile speed {_arrowSpeed}), short of the fire range {_fireRange:0.#} m");
         return _arrowItem;
+    }
+
+    private ItemObject? TowerRock()
+    {
+        if (_rockLookedUp)
+            return _rockItem;
+
+        _rockLookedUp = true;
+        _rockItem = MBObjectManager.Instance?.GetObject<ItemObject>(TowerRockItemId);
+        if (_rockItem == null)
+        {
+            _logger.LogWarning($"[FordsOfWar] the tower rock item '{TowerRockItemId}' does not exist; towers fire no rocks");
+            return null;
+        }
+
+        var probe = new MissionWeapon(_rockItem, null, null, 1);
+        _rockSpeed = probe.GetModifiedMissileSpeedForCurrentUsage();
+        _logger.LogInfo($"[FordsOfWar] tower rock item '{TowerRockItemId}': thrust damage {probe.GetModifiedThrustDamageForCurrentUsage()}, missile speed {_rockSpeed}");
+        return _rockItem;
     }
 
     private ItemObject? VolleyItem()
