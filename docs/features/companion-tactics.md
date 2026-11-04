@@ -186,8 +186,8 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 | `Main/Adapters/{I,}AgentCombatAdapter.cs` | Mission-time `Agent` wrapper |
 | `Main/Adapters/IFormationAdapter.cs` (EXTENDED) | Adds `FormationIndex` + 4 unit-count properties |
 | `Main/Adapters/FormationAdapter.cs` (EXTENDED) | TTL-cached polearm/shield count scan |
-| `Main/_Module/GUI/Prefabs/BattleActionBar.xml` | Bound to `BattleActionBarVM` (vanilla brushes only) |
-| `Main/_Module/GUI/Prefabs/OOBButtonsOverlay.xml` | Bound to `OOBButtonsVM` (vanilla brushes only) |
+| `Main/_Module/GUI/PreFabs/BattleActionBar.xml` | Bound to `BattleActionBarVM` (vanilla brushes only) |
+| `Main/_Module/GUI/PreFabs/OOBButtonsOverlay.xml` | Bound to `OOBButtonsVM` (vanilla brushes only) |
 
 ## Dependencies
 

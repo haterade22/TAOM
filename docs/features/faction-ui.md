@@ -262,7 +262,7 @@ faction screen of a launch logs that warning for `faction_characters.json`, `fac
 | `Main/Adapters/FrontEndResourceAdapter.cs`, `FrontEndStateAdapter.cs`, `MenuMusicAdapter.cs` | Sprite table, textures, fonts, prefab lookup; game state and movie release; music mode |
 | `Main/Adapters/PresetAppearanceAdapter.cs`, `FactionRosterAdapter.cs`, `TextLocalizerAdapter.cs` | Copying a pick onto the player; heroes, troops and wanderers; the active language |
 | `Main/Adapters/CharacterCreationStagesAdapter.cs` | The stage list by kind: count, index, take a stage out, append it back |
-| `Main/_Module/GUI/Prefabs/FactionUI/` | Kysaro's 23 prefabs |
+| `Main/_Module/GUI/PreFabs/FactionUI/` | Kysaro's 23 prefabs |
 | `Main/_Module/GUI/Brushes/TAOM{MainMenu,Loading,CharCreation,FactionScreen}.xml` | Kysaro's brushes |
 | `Main/_Module/ModuleData/characters/faction_ui_picker_characters.xml` | The eight picker-only legends |
 

@@ -111,7 +111,7 @@ saves adopt the race: `RacePersistenceService` leaves the Nine's XML race alone
 
 | File | Purpose |
 |------|---------|
-| `Main/_Module/ModuleData/characters/heroes.xslt` | **Data strip** — removes `spouse`/`father`/`mother` from the 9 wraith Hero templates |
+| `Main/_Module/ModuleData/heroes.xslt` | **Data strip** — removes `spouse`/`father`/`mother` from the 9 wraith Hero templates |
 | `Main/Features/NazgulFamily/INazgulRegistry.cs` | Interface — `IsWraith(stringId)` |
 | `Main/Features/NazgulFamily/NazgulRegistry.cs` | The 9-id wraith roster (compiled constant) |
 | `Main/Features/NazgulFamily/Models/TaomMarriageModel.cs` | `DefaultMarriageModel` override — wraiths unmarriageable |
