@@ -10,7 +10,7 @@ paths:
 # Adapter Pattern Rules (ADR-007)
 
 ## Core Principle
-Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces.
+Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces. Gate: `ServiceSignatureGateTests`.
 
 ## Creating New Adapters
 1. **Research first:** read the type with `pwsh tools/taom-src.ps1 path <Type>` before creating the adapter interface.

@@ -22,10 +22,7 @@ in game: empty, many and long-text states, disabled reasons, a way out, consiste
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
-1. **Read `Main/_Module/GUI/TAOMSpriteData.xml`** — find the `<Name>` entry for your sprite
-2. **Use the EXACT registered name** — sprite ID = filename without extension, prefixed by subfolder path using backslashes
-3. **Do NOT add module prefixes** — a PNG at `SpriteParts/ui_taom/CareerSystem/foo.png` is `CareerSystem\foo`, NOT `TAOM\CareerSystem\foo`
-4. **Verify the PNG exists** — check `GUI/SpriteParts/ui_taom/<subfolder>/` before referencing
+Use the exact registered name, with no module prefix: a PNG at `SpriteParts/ui_taom/CareerSystem/foo.png` is `CareerSystem\foo`, NOT `TAOM\CareerSystem\foo`. Find the `<Name>` in `Main/_Module/GUI/TAOMSpriteData.xml`. Gate for `Sprite=` in a prefab or PrefabExtension: `PrefabSpriteTests` (vanilla and runtime sprites count). `GetSprite("X")` in C# is not gated, so check that name by hand.
 
 **Why:** Sprite="TAOM\CareerSystem\career_button_placeholder" failed silently (blank button, no crash, no log) because the registered name was "CareerSystem\career_button_placeholder". This class of bug is invisible without in-game testing.
 

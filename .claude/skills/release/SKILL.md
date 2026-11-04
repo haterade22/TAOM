@@ -75,12 +75,10 @@ Outside the repo, set the same `v2.0.X` in the live `<game>/Modules/TAOM_Map/Sub
 `<game>/Modules/LOTRLOME_Armory/SubModule.xml` too. Both modules are unversioned (no git), and the release
 note tells players all four modules read the release number. The gate below checks only the two repo files.
 
-**The #371 gate — do not skip.** After editing, read both files back and assert the two `v2.0.Y`
-values are byte-identical:
+**The #371 gate: do not skip.** After editing, run the pairing test; red stops the release:
 
 ```bash
-grep -o '<Version value="[^"]*"' Dependencies/_Module/SubModule.xml | head -1
-grep -o 'id="TAOM.Dependencies"[^>]*version="[^"]*"' Main/_Module/SubModule.xml
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter DependenciesPairing_MainMetadataEqualsDependenciesVersion
 ```
 
 BUTR/BLSE launchers read `DependedModuleMetadatas`; the vanilla launcher does not. A mismatch lets a
@@ -172,6 +170,10 @@ refspec. Then confirm it landed:
 git ls-remote --tags origin | grep vX.Y.Z          # expect the ref and its ^{} peel
 git describe --tags --match 'v[0-9]*' <release commit sha>   # expect vX.Y.Z
 ```
+
+Then reseed the `TROOP_ID_REMOVED` baseline from the new tag, which reads the tag's troop files with `git show`, never
+today's tree: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids vX.Y.Z`. If
+`tools/shipped_troop_ids.txt` changed, commit it on its own (its `[exceptions]` section is kept as it stands).
 
 ## Phase 8: Build and package at the tag
 

@@ -13,10 +13,10 @@ Full guide: `docs/ai-includes/architecture.md`
 
 | Rule | Detail |
 |------|--------|
-| Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions") |
+| Entry points <150 lines | ADR-002: delegate immediately to service. Gate: `EntryPointLineCountGateTests` |
+| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions"). Gate: `ServiceSignatureGateTests` |
 | Interfaces that earn their file | Every adapter has one (ADR-007); a service gets one only when a test fakes it or a second class implements it (ADR-002) |
-| Constructor injection only | No service locator in services |
+| Constructor injection only | No service locator in services. Gate: `ServiceLocatorGateTests` |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check — see `adapters.md` |
 | Core names no client-only assembly | ADR-013: code that needs SandBox.View, Gauntlet, a ViewModelCollection or WinForms goes to TAOM.Client behind a core interface with a null; `ServerJitGateTests` fails a new core method that names one (unless its key is already in the baseline) |

@@ -141,11 +141,11 @@ When refactoring existing code:
 
 ## Enforcement
 
-Enforcement: `/deep-review` lens 1 rule 5. No automated test checks entry point line counts.
+Enforcement: `EntryPointLineCountGateTests` fails an entry point of 150 lines or more, against the shrink-only list of older classes in `EntryPointLineCountBaseline.txt`. `/deep-review` lens 1 rule 5 judges what a line count cannot, such as a patch holding logic.
 
 ### Amendment (2026-11-03): samples and the adapter factory
 
-The BAD and GOOD code samples left this ADR. The GOOD patch passed `Agent` into a service, against ADR-007, and the GOOD model used an adapter factory interface that TAOM never had. The property-override section, which taught full reimplementation of model methods, also left; the warning it guarded survives as "GameModel base calls" above. The central `IAdapterFactory`, its caching benefits and every mention of it left too. Adapters are built per feature, as the "Adapter Factory Pattern" section now says. Enforcement is the lens named above; the earlier claims of architecture tests and a CLAUDE.md link did not hold.
+The BAD and GOOD code samples left this ADR. The GOOD patch passed `Agent` into a service, against ADR-007, and the GOOD model used an adapter factory interface that TAOM never had. The property-override section, which taught full reimplementation of model methods, also left; the warning it guarded survives as "GameModel base calls" above. The central `IAdapterFactory`, its caching benefits and every mention of it left too. Adapters are built per feature, as the "Adapter Factory Pattern" section now says. The earlier claims of architecture tests and a CLAUDE.md link did not hold. The same day `EntryPointLineCountGateTests` landed to back the line limit, and `ServiceLocatorGateTests` to hold the rule that only a boundary class calls `IoC.Resolve`.
 
 ## Related ADRs
 

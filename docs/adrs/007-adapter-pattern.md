@@ -6,19 +6,19 @@
 
 ## Decision
 
-Service layer MUST use adapter interfaces for all sealed TaleWorlds game classes. Entry points (CampaignBehaviors, GameModels, Harmony patches, MissionViews) convert sealed types to adapters before calling services. **Adapters MUST recursively wrap ALL nested sealed types** - when a sealed class contains properties that return other sealed classes, those nested types must also be wrapped in adapter interfaces. This enables 100% testability of business logic.
+Service layer MUST use adapter interfaces for all TaleWorlds game classes (sealed or not), in public, internal and protected signatures alike. Entry points (CampaignBehaviors, GameModels, Harmony patches, MissionViews) convert sealed types to adapters before calling services. **Adapters MUST recursively wrap ALL nested sealed types** - when a sealed class contains properties that return other sealed classes, those nested types must also be wrapped in adapter interfaces. This enables 100% testability of business logic.
 
 ## Rationale
 
 ### The Problem: Sealed Game Classes Cannot Be Mocked
 
-TaleWorlds game classes are sealed, preventing:
+Most TaleWorlds game classes are sealed, and the rest are public classes or static classes that a test cannot substitute either. Any of them prevents:
 - Unit testing with mocked objects
 - Test-driven development (TDD)
 - Service isolation during testing
 - Fast test execution (no game framework initialization)
 
-**Sealed Classes Requiring Adapters**:
+**Classes Requiring Adapters** (`TroopRoster`, `ItemRoster`, `Equipment`, `WeaponComponentData`, `ArmorComponent`, `Town`, `Village` and `Hideout` are public classes, not sealed; the three Action types are static; the rest are sealed):
 - **Core**: `Hero`, `MobileParty`, `Settlement`, `Clan`, `Kingdom`, `CharacterObject`
 - **Party**: `TroopRoster`, `ItemRoster`, `PartyBase`, `MapEvent`
 - **Items**: `ItemObject`, `Equipment`, `WeaponComponentData`, `ArmorComponent`
@@ -63,7 +63,7 @@ public class PatrolService : IPatrolService
 ```
 
 **Problems**:
-- `Settlement` and `TroopRoster` are sealed, cannot be mocked
+- `Settlement` is sealed and `TroopRoster` is a public class; neither can be mocked
 - Service requires real game framework to test (slow, brittle)
 - TDD impossible (cannot write tests before implementation)
 - Cannot isolate service behavior in unit tests
@@ -247,7 +247,7 @@ Design Guideline 4 and ADR-008 Rule 1, which point here.
 
 ## Enforcement
 
-Enforcement: `/deep-review` lens 1 rule 1.
+Enforcement: `ServiceSignatureGateTests` fails a public, internal or protected member of a `*Service` type or an `I*Adapter` interface that names a TaleWorlds class (sealed or not), against the shrink-only list in `ServiceSignatureBaseline.txt`. `/deep-review` lens 1 rule 1 judges the rest.
 
 Review checklist for PRs touching the service layer:
 - [ ] Service interfaces accept adapter interfaces (NOT sealed types)
@@ -265,7 +265,7 @@ Review checklist for PRs touching the service layer:
 
 ### Amendment (2026-11-03): no central factory, shorter samples
 
-The central `IAdapterFactory` and `AdapterFactory` never existed in TAOM code, yet this ADR named them throughout, along with `ReflectionExtensions` and an architecture test file that is not in the repository. All of that left. Adapters are built at the boundary by a feature factory or a static helper, as "Adapter Factory Pattern" says. The recursive wrapping rule is unchanged but now takes a paragraph instead of 160 lines of invented samples. The reflection rule now names the real helpers and the places reflection may live. The testing samples and the six-phase migration plan also left, because `.claude/rules/tests.md` carries the workflow. The coverage threshold left with them; no gate checks one. Enforcement is review (lens 1 rule 1).
+The central `IAdapterFactory` and `AdapterFactory` never existed in TAOM code, yet this ADR named them throughout, along with `ReflectionExtensions` and an architecture test file that is not in the repository. All of that left. Adapters are built at the boundary by a feature factory or a static helper, as "Adapter Factory Pattern" says. The recursive wrapping rule is unchanged but now takes a paragraph instead of 160 lines of invented samples. The reflection rule now names the real helpers and the places reflection may live. The testing samples and the six-phase migration plan also left, because `.claude/rules/tests.md` carries the workflow. The coverage threshold left with them; no gate checks one. The same day `ServiceSignatureGateTests` landed, because the architecture test this ADR once cited never existed. The rule covers any TaleWorlds class (sealed or not), public, internal or protected: `TroopRoster`, `ItemRoster`, `Equipment`, `WeaponComponentData`, `ArmorComponent`, `Town`, `Village` and `Hideout` are public classes, not sealed, the three Action types are static, and the gate also fails protected members. Where this ADR still says "sealed", read it as that.
 
 ---
 
