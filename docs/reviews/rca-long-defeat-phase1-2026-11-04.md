@@ -30,7 +30,19 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 21 | MED | A wave's end could wait 150 s on its last attackers, and Mike closed a run because 2 attackers stood far outside the walls with nothing moving | Felt only in play | The stalemate rule was judged by whether it cleared the wave, and every unattended run waits as long as it must. The per-wave waits were in the logs, and I did not read them as a player would | `stragglerQuietSeconds`: few quiet stragglers fall after 20 s, with no charge |
 | 19 | LOW | A fix for the standards rule put `DoNotAcceptEvents` on the modal shop panel's root, so a click on the dim background would reach lower layers. The checker read `EventManager` and `ScreenManager` and caught it before any run | Rule applied past its reason | The rule was written for HUD layers, and I passed it on without its scope. Native's `EscapeMenu.xml` has no such flag | Reverted on the seven containers; the host's comment names the reason |
 
+**The leaderboard's report fields (#1080), the same day.** Tier 1 lenses 5 and 2 read the diff and the plan, and ran the plan's rules on six real reports. They found no HIGH, and rules 4 to 12 held on all six.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 22 | MED | The plan ranked on defenders lost, and no rule read it, so zeroing that number passed every rule | Gate proves less than it says | I wrote the rank and the rules apart and never read one against the other | The plan says so, and the end panel owes a line for the clip to prove |
+| 23 | MED | The plan called `balance` the balance, but it covers three JSON files, not troops, gear, the scene or AI code | Overclaim | I named the field for what I wanted it to mean | The plan names what it covers, and a release that changes the rest opens a board by hand |
+| 24 | MED | The bot held only `waves.json`, though the roster and the starting gold come from the other two, and the plan gave no source for the released pair and no way to rederive the hash | Spec gap | One roster exists today, so the gap did not show | The bot holds all three and recomputes the hash; the pair comes from a report made on the packaged install |
+| 25 | LOW | Smaller items, each fixed: a director test that did not prove the wiring; dead null checks; a wrong reason for rule 6; rule 12 stale and too strict for autoplay data; rule 13 trusting the player's clock; rule 14 beaten by one added space; a routed attacker refusing an honest run; `mods` without the versions that record the engine changeset | Mixed | First read by the review | Fixed in the code or the plan |
+
 ## Not applied, with the reason
+
+- **A latch for cheat mode switched on mid-run:** nobody has tested whether a player can do that. A guard for an unseen case is Mike's call under `simplicity-criterion.md`, and the plan names the gap.
+- **The runner's report copy after a game closed by hand:** `run_fords_autorun.py` falls back to `fords_report_*`, so run `20261104-071020` left its report in `Logs`. Pre-existing and harmless to a verdict, because such a run already fails. no issue: nothing depends on the copy.
 
 - **The shared horn formula (design 5):** the `early-start` check recomputes the amount on purpose. A check that shares the formula cannot catch a change in it.
 - **A guard for a speculative race (first wave, data flow 10):** `simplicity-criterion.md` makes that Mike's call. I name it in the report.

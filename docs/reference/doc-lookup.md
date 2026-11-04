@@ -16,6 +16,7 @@
 | Work on Fords of War (the commander mode): rules, factions, config, in-game checks | [fords-of-war.md](../features/fords-of-war.md) |
 | Balance Fords of War: read what each match showed, record a change and the matches behind it | [balance-log.md](../features/fords-of-war/balance-log.md) and `python tools/fords_match_review.py <run folder>` |
 | Work on The Long Defeat (wave survival on the siege maps): its `[Check]` lines, how a soldier gets a place, the decisions for later phases | [long-defeat.md](../features/long-defeat.md) |
+| Build or change The Long Defeat's leaderboard: the report's fields, the server's rules, the boards | [leaderboard-plan.md](../features/long-defeat/leaderboard-plan.md) |
 | Debug / iterate on problem | `/investigate` |
 | Compare multiple approaches | [think-before-coding.md](../../.claude/rules/think-before-coding.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |

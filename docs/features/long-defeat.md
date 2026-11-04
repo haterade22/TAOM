@@ -161,6 +161,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - **Boons:** pick 1 of 3 after every 3 cleared waves (Mike moved this from 5 on 2026-11-04). A boon lasts until the run ends. This is an assumption Mike may correct. The design reference is a comparison only, and its provenance row lands with the first commit that builds boons.
 - **Affixes:** named powers on the attackers, rolled for each wave: 1 from wave 5, 2 from wave 10, 3 from wave 15.
 - **Endless scale:** a wave cannot exceed the battle size, so each wave also raises health and damage, and the troop tiers rise.
+- **Leaderboard:** players submit the run report through a Discord command, a bot checks it and updates the board, and a top 10 entry also needs a clip. Mike accepted this on 2026-11-04. The plan is [leaderboard-plan.md](long-defeat/leaderboard-plan.md), and Luiz has the brief for the bot.
 
 ## Notes for Phase 1
 
@@ -185,9 +186,13 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - 2026-11-03: first in-game runs. S1's boot and S3's engines work. The garrison spawned in the caves, so every spawn now takes vanilla's path, and `[S1] spawn level` fails a run that repeats the fault.
 - 2026-11-03: first unattended runs. A quiet fight now ends by rule (`WatchStalemate`), the wrapper answers the shader dialog, and a pile has its own line. The run passes with S2, S3, S4 and S7 proved on Helm's Deep.
 
-- 2026-11-04: Phase 1 is on the worktree branch `taom-long-defeat`: domain, config, director, adapter, menu entry, HUD and shop, autorun driver and wrapper, and the `TAOM_LD_*` string rows. The spike folder and its wrapper are deleted. Unattended run `20261104-033424` passed 2 waves, and `20261104-035343` lost at wave 4 of 5 and proved the respawn and the end of a lost run, both before the first review's fixes. `20261104-044306` ran with those fixes, lost at wave 5 of 5, and proved the end panel line and the morale hold. The waves now ramp more slowly. Clean-tree runs `20261104-054852` and `20261104-071020` followed: the first lost at wave 5, and Mike closed the second at the end of wave 5, so no run has yet ended by reaching its target of 5 waves. Phase 1 lands on trunk on Mike's word, with the rest rule and the straggler rule, and those three clean 5-wave runs and a `--lose` run still owed.
+- 2026-11-04: Phase 1 is on trunk at `1a8be537d`: domain, config, director, adapter, menu entry, HUD and shop, autorun driver and wrapper, and the `TAOM_LD_*` string rows. The spike folder and its wrapper are deleted. Unattended run `20261104-033424` passed 2 waves, and `20261104-035343` lost at wave 4 of 5 and proved the respawn and the end of a lost run, both before the first review's fixes. `20261104-044306` ran with those fixes, lost at wave 5 of 5, and proved the end panel line and the morale hold. The waves now ramp more slowly. Clean-tree runs `20261104-054852` and `20261104-071020` followed: the first lost at wave 5, and Mike closed the second at the end of wave 5, so no run has yet ended by reaching its target of 5 waves. Phase 1 landed on trunk on Mike's word, with the rest rule and the straggler rule, and those three clean 5-wave runs and a `--lose` run still owed.
+- 2026-11-04: Steam moved the game to changeset 125270 with the same version string. No bound engine member changed: [v1.5.6-impact.md](../migration/v1.5.6-impact.md), "Hotfix: changeset 125270". Run `20261104-071020` played on it.
+- 2026-11-04: boon picks moved from every 5 cleared waves to every 3, on Mike's word. Boons are not built yet.
+- 2026-11-04: the run report gained what a leaderboard checks (`9a99ec752`, #1080). No game run has written the new fields yet.
 
 ## GitHub Issue
 
 - **Issue:** [#1079](https://github.com/haterade22/TAOM/issues/1079), The Long Defeat: wave survival mode on the siege maps
 - **Status:** Open
+- **Leaderboard:** [#1080](https://github.com/haterade22/TAOM/issues/1080), open
