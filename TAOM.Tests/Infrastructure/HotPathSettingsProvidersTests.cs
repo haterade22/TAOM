@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features;
 using TAOM.Features.AnimationVariety;
+using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
@@ -25,6 +26,8 @@ using TAOM.Features.MixedFormations;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.Refuge;
 using TAOM.Features.SiegePropDiagnostics;
+using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.SignatureStrikes;
 using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SmartCavalryAI;
@@ -76,6 +79,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(AnimVarietyProbeSettingsProvider))]
     [DataRow(typeof(FellFoesSettingsProvider))]
     [DataRow(typeof(LostFootingSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     // #746: static, read per hit against a creature bandit. It has no instance to construct, so the counting
     // test below cannot take it: CreatureBanditTuningLiveTests runs the same CountingMcm check on it.
     [DataRow(typeof(CreatureBanditTuning))]
@@ -201,6 +207,15 @@ public class HotPathSettingsProvidersTests
         // Lost Footing census: read on every tick while a battle runs.
         [typeof(LostFootingSettingsProvider)] = (() => new LostFootingSettingsProvider(),
             nameof(ILostFootingSettingsProvider.CensusEnabled), nameof(TaomSettings.LostFootingCensus), () => new TaomSettings()),
+        // Settlement nameplate fade: read per frame per visible plate.
+        [typeof(NameplateFadeSettingsProvider)] = (() => new NameplateFadeSettingsProvider(),
+            nameof(INameplateFadeSettingsProvider.Enabled), nameof(TaomSettings.EnableNameplateFade), () => new TaomSettings()),
+        // Battle balance: read per casualty and per roster row in every party strength sum.
+        [typeof(BattleBalanceSettingsProvider)] = (() => new BattleBalanceSettingsProvider(),
+            nameof(IBattleBalanceSettingsProvider.EnableCustomTroopPower), nameof(TaomSettings.EnableCustomTroopPower), () => new TaomSettings()),
+        // Settlement nameplate relation colours: read per frame per plate.
+        [typeof(NameplateRelationSettingsProvider)] = (() => new NameplateRelationSettingsProvider(null),
+            nameof(INameplateRelationSettingsProvider.ColorsEnabled), nameof(TaomSettings.EnableNameplateRelationColors), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -226,6 +241,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(AnimVarietyProbeSettingsProvider))]
     [DataRow(typeof(FellFoesSettingsProvider))]
     [DataRow(typeof(LostFootingSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];
