@@ -70,11 +70,21 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 ### Rage Mode Flow
 
 1. Warg takes >10 damage from enemy within 10 units
-2. 10% chance to enter rage (2-3 attacks)
+2. 10% chance to enter rage, for 2 attacks: `Random.Next`'s upper bound is exclusive, so `maxRageAttacks` 3 is never reached
 3. Player: loses control, sees "Your warg entered into a rage" message
 4. AI: rider leaves formation, warg navigates to enemy
 5. Warg attacks, decrementing rage counter
-6. On completion/timeout (6s)/enemy death: control returns
+6. On completion, enemy death or the 6 s timeout: control returns. `SetRageAttackTimer` restarts the timer on every pass, so
+   the timeout fires only while the rage selector waits with nothing to do, never during a chase
+
+**How a rage closes.** The rage start stores the rider and his formation on the blackboard. Three tasks close a rage, all through
+`CleanIfEnemyDied`: its own end inside the rage branch, `CloseOpenRage` when no enemy is within 60 m (that branch wins every
+pass, so the rage branch would not run), and `RestoreDismountedRider` when the warg has no rider. The stored rider gets his
+formation back even if he has left the warg. A rider who took his place mid-rage joins it only if he has none, and a panicked
+rider stays out, because `Agent.OnFleeing` cleared his on purpose. Closing clears both stored values, so a later warg death
+touches nobody; `OnWargDied` gives a formation back only while a rage is open. A rage that took the player's controller stays
+open on a dismount, until a remount or the warg's death. Whether a mount's `IsPlayerControlled` is ever true is unverified:
+`Agent.Build` gives a mount the AI controller, and the managed code never changes it.
 
 ## Key Files
 
@@ -173,7 +183,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | The rage's end is seen | `end episode=N outcome=<outcome>`, where `<outcome>` is `restored`, `null-formation` or `rider-inactive` |
 | The rider is back in its formation | `returned episode=N s=<seconds>` |
 | Given up after 60 mission seconds | `not-returned episode=N s=<seconds>` |
-| Rider left on foot with no formation | `stranded episode=N` |
+| Rider on foot with no formation for 30 mission seconds with no reset | `stranded episode=N` |
 | A second rage began before the first returned | `superseded episode=N` |
 
 ## Changelog

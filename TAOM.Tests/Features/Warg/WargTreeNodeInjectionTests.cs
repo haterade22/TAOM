@@ -84,4 +84,48 @@ public class WargTreeNodeInjectionTests
         Assert.AreEqual(expected, decorator.Evaluate());
         hitByAdapter.Received(1).IsAttackLikelyToHit(wargAdapter, 30, WargConfig.WargAttackRange);
     }
+
+    // Selector.Prepare evaluates every child. "enemy died" nulls the hitter just before this decorator runs, so a rage whose
+    // hitter is already dead threw here, in the pass that took the rider's formation, and the throw stopped the tree for the
+    // rest of the battle. Seen in two game logs, 2026-11-04.
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void WargAiControlledIsNotFacingEnemy_EvaluateWithNoHitter_IsFalse()
+    {
+        var factory = Substitute.For<IMissionAdapterFactory>();
+        factory.GetAgentAdapter(null).Returns((IAgentAdapter)null);
+        var decorator = new WargAiControlledIsNotFacingEnemy(factory)
+        {
+            Agent = new BTBlackboardValue<Agent>(BareAgent()),
+            AgentHitBy = new BTBlackboardValue<Agent>(null),
+        };
+
+        Assert.IsFalse(decorator.Evaluate());
+    }
+
+    // A mount has no Team, so with its rider gone these read a null team. The rider can leave while the rage selector waits,
+    // and the tick listener evaluates this decorator with no rider; the throw stops the tree before the no-rider branch runs.
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void PeriodicallyCheckIfCanAttackAnyone_EvaluateOnARiderlessWargWithNoTeam_IsFalse()
+    {
+        var decorator = new PeriodicallyCheckIfCanAttackAnyone(Substitute.For<IMissionAdapterFactory>())
+        {
+            Agent = new BTBlackboardValue<Agent>(BareAgent()),
+        };
+
+        Assert.IsFalse(decorator.Evaluate());
+    }
+
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void CheckOnceIfCanAttackEnemy_EvaluateOnARiderlessWargWithNoTeam_IsFalse()
+    {
+        var decorator = new CheckOnceIfCanAttackEnemy(Substitute.For<IMissionAdapterFactory>())
+        {
+            Agent = new BTBlackboardValue<Agent>(BareAgent()),
+        };
+
+        Assert.IsFalse(decorator.Evaluate());
+    }
 }

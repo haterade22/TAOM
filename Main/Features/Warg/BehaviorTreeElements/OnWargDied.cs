@@ -2,6 +2,7 @@ using BehaviorTrees;
 using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.AbstractDecoratorsListeners;
 using BehaviorTreeWrapper.BlackBoardClasses;
+using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
 using System;
 using TaleWorlds.MountAndBlade;
@@ -31,13 +32,14 @@ public class OnWargDied : BannerlordConstantEventListener, IBTBannerlordBase, IB
     public override void Notify(object[] data)
     {
         Agent rider = Rider.GetValue();
-        if (rider == null || rider.Health == 0) return;
+        if (rider == null || rider.Health == 0 || !AgentSlotIdentity.IsCurrentOccupant(rider)) return;
         // Co-op (#967): the rider's owner resets it; a peer holding the rider as a puppet must not.
         if (!CoopMissionOwnership.IsOwnedHere(rider)) return;
 
         if (rider.IsPlayerControlled)
             FinishRageMode.Reset(Agent.GetValue());
-        else
+        // Only an open rage holds anything to give back: a warg that never raged still has its rider from the first scan.
+        else if (RageAttackStartTime.GetValue() != null)
             CleanIfEnemyDied.ResetAiControlledAgent(rider, AgentsFormation.GetValue());
     }
 }

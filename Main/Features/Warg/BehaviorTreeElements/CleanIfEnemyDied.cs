@@ -28,41 +28,52 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
 
     public override BTTaskStatus Execute()
     {
-        if (AgentHitBy.GetValue() == null || AgentHitBy.GetValue().Health <= 0 || RageAttackAmount.GetValue() == 0)
+        if (RageIsOver())
         {
             RageAttackStartTime.SetValue(null);
             RageAttackAmount.SetValue(0);
             AgentHitBy.SetValue(null);
 
-            if (Agent.GetValue().IsPlayerControlled)
-                FinishRageMode.Reset(Agent.GetValue());
+            Agent warg = Agent.GetValue();
+            if (warg.IsPlayerControlled)
+                FinishRageMode.Reset(warg);
             else
-            {
-                ResetAiControlledAgent(RiderToRestore(Agent.GetValue(), Rider.GetValue()), AgentsFormation.GetValue());
-                // Given back: a later warg death must not move him back to it from wherever he is by then.
-                AgentsFormation.SetValue(null);
-            }
+                GiveFormationBack(warg, Rider.GetValue(), AgentsFormation.GetValue());
+            // Given back: a later warg death must not move him back to it from wherever he is by then.
+            AgentsFormation.SetValue(null);
+            Rider.SetValue(null);
         }
         return BTTaskStatus.FinishedWithTrue;
     }
 
-    // The warg's live rider, else the one the rage start stored (he left a living warg mid-rage). The stored handle is held across
-    // frames, so it must still be the slot's occupant, and in co-op only its owner restores it (as OnWargDied does).
-    public static Agent RiderToRestore(Agent warg, Agent stored)
+    protected virtual bool RageIsOver() =>
+        AgentHitBy.GetValue() == null || AgentHitBy.GetValue().Health <= 0 || RageAttackAmount.GetValue() == 0;
+
+    // The formation is the stored rider's, so he gets it back even when he has left the warg. A rider who took his place mid-rage
+    // lost his own too (WargAiControlledGetToEnemy clears it) and stored none, so he joins it only if he has none.
+    public static void GiveFormationBack(Agent warg, Agent stored, Formation formation)
     {
+        Agent owner = ValidStoredRider(stored);
+        if (owner != null) ResetAiControlledAgent(owner, formation);
         Agent live = warg?.RiderAgent;
-        if (live != null) return live;
+        if (live != null && live != owner) ResetAiControlledAgent(live, live.Formation == null ? formation : null);
+    }
+
+    // The stored handle is held across frames, so it must still be the slot's occupant, and in co-op only its owner restores it
+    // (as OnWargDied does). Null otherwise.
+    public static Agent ValidStoredRider(Agent stored)
+    {
         if (stored == null || !AgentSlotIdentity.IsCurrentOccupant(stored) || !CoopMissionOwnership.IsOwnedHere(stored)) return null;
         return stored;
     }
 
-    // A warg that dies without raging never stored a formation (the tree is built before its rider), so a null here means
-    // "nothing to restore": the rider keeps the formation he still has.
+    // A null formation means "nothing to restore": the rider keeps the one he has. A panicked rider stays out of it, because
+    // Agent.OnFleeing cleared his on purpose.
     public static void ResetAiControlledAgent(Agent rider, Formation formation)
     {
         WargRageLog.Active?.Ended(rider, formation);
         if (rider == null || rider.State != TaleWorlds.Core.AgentState.Active) return;
-        if (formation != null) rider.Formation = formation;
+        if (formation != null && !rider.IsRunningAway) rider.Formation = formation;
         rider.DisableScriptedMovement();
     }
 }

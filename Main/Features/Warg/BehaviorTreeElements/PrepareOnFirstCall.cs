@@ -40,17 +40,22 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
                 WargMissionBehavior.SwitchMainAgentController(true);
                 var controller = Mission.Current.GetMissionBehavior<IAutonomousMovementController>();
                 if (controller != null) controller.TargetAgent = AgentHitBy.GetValue();
+                // The no-rider branch and OnWargDied find whose controller this rage holds through this.
+                Rider.SetValue(Agent.GetValue().RiderAgent);
             }
             else
             {
                 Agent rider = Agent.GetValue()?.RiderAgent;
                 if (rider != null)
                 {
-                    // The tree was built before the rider, so its stored formation is null for a warg spawned after the first scan.
-                    AgentsFormation.SetValue(rider.Formation);
+                    // The tree was built before the rider's formation was set, so its stored formation is null for a warg spawned after
+                    // the first scan. A hit in the second after a rage's last attack starts the next rage before the first closes: this
+                    // rider has no formation by then, and the stored one is still his.
+                    if (rider.Formation != null || !ReferenceEquals(Rider.GetValue(), rider))
+                        AgentsFormation.SetValue(rider.Formation);
                     // A rider who leaves the living warg mid-rage is no longer its RiderAgent: the reset finds him through this.
                     Rider.SetValue(rider);
-                    WargRageLog.Active?.Started(rider, rider.Formation != null);
+                    WargRageLog.Active?.Started(rider, AgentsFormation.GetValue() != null);
                     rider.Formation = null;
                 }
             }
