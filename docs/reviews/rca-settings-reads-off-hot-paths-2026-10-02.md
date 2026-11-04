@@ -79,7 +79,7 @@ Three lessons, appended to the category files:
 
 ## Follow-ups
 
-Pre-existing code the review saw, recorded in the deep-review report's FOLLOW-UP list; issue filing
+Pre-existing code the review saw, recorded in the deep-review report's `FOLLOW-UP` (worked through 2026-11-04 in 69275212f; the NaN path and #706 stay open) list; issue filing
 waits on Mike in this run: the hotkey's undefined `InputKey` values, Patch35's catch message, the
 CultureDoctrine fallback question (no runtime effect), a NaN `VictimMaxHealth` path,
 `NameplateFadeSettingsProvider`'s constructor read, an MCM-bump checklist line, and #706.

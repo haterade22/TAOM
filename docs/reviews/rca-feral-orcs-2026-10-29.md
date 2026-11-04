@@ -64,7 +64,7 @@ without asking what the change did to other cultures.
 
 ## Follow-ups
 
-- FOLLOW-UP: `GarrisonCultureCoverageTests` lists minor factions by hand and lacks `feral_orcs`. no issue: a bandit culture owns no garrison, so the test does not apply; noted for the next edit of that test.
+- `FOLLOW-UP`: `GarrisonCultureCoverageTests` lists minor factions by hand and lacks `feral_orcs`. no issue: a bandit culture owns no garrison, so the test does not apply; noted for the next edit of that test.
 - The settlement distance cache was rebuilt by Mike at 14:31 and holds all 23 dens (lens 2).
 
 ## Lessons codified

@@ -31,7 +31,7 @@ recommends no deletion; an explicit CLI flag was rejected by the simplicity crit
 rule); two guarantees of the exemption had no test (only pack files exempt, the message naming the checked root); the
 visual-attribute check had no negative fixture; and one removal also dropped two spaces of its line.
 
-FOLLOW-UP (no issue: a look change, so it needs Mike's word): vanilla's custom battle panels use
+Follow-up closed 2026-11-04 (abb718c2f, #1027) (no issue: a look change, so it needs Mike's word): vanilla's custom battle panels use
 `EaseType="EaseOut" EaseFunction="Quint"` where TAOM's copy had the dead `EaseIn="true"`; adopting vanilla's values would
 make the panels ease visibly.
 

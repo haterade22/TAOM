@@ -68,12 +68,12 @@ The builders reported green suites, truthfully. A green suite here proved the st
 
 ## Not applied
 
-- **Lens 3, the validator's `lru_cache` that misses almost every read, and `extract_refs` run twice:** pre-existing code. Worth about 6 s of a 19 s validator run. FOLLOW-UP no issue: Mike waived issues for this work, so it is on the owed list in the merge report.
+- **Lens 3, the validator's `lru_cache` that misses almost every read, and `extract_refs` run twice:** pre-existing code. Worth about 6 s of a 19 s validator run. Follow-up closed 2026-11-04 (5f87810ed, 334c187e4) no issue: Mike waived issues for this work, so it is on the owed list in the merge report.
 - **Lens 3, `--no-build` for later `data_gates` dotnet rows, the retro's parse guard, and `Lazy` scans in the C# gates:** rarely run, and unmeasured or small.
 - **Rename of an over-cap rule reads as growth:** rare and loud, and the fix asks for the same trim.
 - **`block-no-verify` forms left unread:** a flag in a variable or `$(...)`, an alias, and the `git config` and `GIT_CONFIG_*` forms of `core.hooksPath`. These are deliberate obfuscation, which `_shellwords.py` puts out of scope, and the session banner shows a changed `hooksPath`.
 - **The ModuleData gates read the working tree, not the index:** a staged bad commit can pass behind a good working copy, and the Claude gate has the same limit. The hook names the unstaged files. FOLLOW-UP no issue: the maintainer decides at the comparison due about 2026-11-17, before the Claude gates go.
-- **Brush and other non-prefab sprite names:** 35 of 526 resolve in no known set, outside this gate's claim. FOLLOW-UP no issue: on the owed list in the merge report.
+- **Brush and other non-prefab sprite names:** 35 of 526 resolve in no known set, outside this gate's claim. Follow-up closed 2026-11-04 (462d745ec) no issue: on the owed list in the merge report.
 - **Lens 2, the two validator passes ignore `equipmentType` and `EquipmentSet` references:** no data effect today, as measured by the reviewer.
 - **`.gitignore` keeps its `.serena` rows:** a leftover local cache may still exist on a machine.
 - **Second occurrence lands a gate (G8-048), and the lens 5 deletion item:** part of the review-spend changes, held by the maintainer's word until about 2026-11-10.
@@ -106,7 +106,7 @@ A later tier 2 pass (Data flow and Tooling, `effort: high`) on the night's remai
 
 **Two guards added without asking first:** the zero-hit rebuild and the temp file write, about four lines together. A cut index gives a false "no such type" that an agent reads as a fact about the engine, and lenses fan out in parallel right after a bump, when no index exists yet. To undo them, delete the `-Rebuild` branch and write the file directly.
 
-**Not applied:** `tools/context_budget_scan.sh` still derives its slug from the checkout and falls back to a substring match, so from a sibling worktree it can miss the main memory. FOLLOW-UP no issue: a report tool that a person runs from the main checkout, listed in the merge report. The fixes were not re-reviewed, because every finding was MED or below, and `/deep-review` fixes those and proves them with tests.
+**Not applied:** `tools/context_budget_scan.sh` still derives its slug from the checkout and falls back to a substring match, so from a sibling worktree it can miss the main memory. Follow-up closed 2026-11-04 (8afe46d39, 000bcf1d1) no issue: a report tool that a person runs from the main checkout, listed in the merge report. The fixes were not re-reviewed, because every finding was MED or below, and `/deep-review` fixes those and proves them with tests.
 
 ---
 

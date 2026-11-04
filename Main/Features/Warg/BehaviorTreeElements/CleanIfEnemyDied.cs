@@ -33,6 +33,7 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
             RageAttackStartTime.SetValue(null);
             RageAttackAmount.SetValue(0);
             AgentHitBy.SetValue(null);
+            FirstAttack.SetValue(false);
 
             Agent warg = Agent.GetValue();
             if (warg.IsPlayerControlled)

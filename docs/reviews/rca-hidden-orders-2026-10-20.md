@@ -80,7 +80,7 @@ registration walk in the tool. Restoring the 12 blank-line module strings files 
 each). The external translation ratchet still fails on nine TAOM_Map settlement names; their translation is owed
 under #763.
 
-**Why the follow-ups recurred.** Each had been written down as "FOLLOW-UP, not fixed here" with no issue and no
+**Why the follow-ups recurred.** Each had been written down as "`FOLLOW-UP`, not fixed here" with no issue and no
 failing test, which `lessons/localization-ui.md` already warns turns a follow-up into a note; the recurrence bullet
 there records this round.
 

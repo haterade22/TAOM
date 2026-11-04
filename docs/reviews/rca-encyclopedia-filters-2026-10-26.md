@@ -27,10 +27,10 @@ page padding finding came from three reviewers independently.
 **Kept by design (lens 5):** a filter predicate that throws logs once and returns true, so a broken hero
 stays visible in the list instead of vanishing. The brief chose visibility over precision.
 
-FOLLOW-UP (no issue: a one-line LOW in a merged file; filing it needs Mike's word): the Lines of Descent
+Follow-up closed 2026-11-04 (#1006) (no issue: a one-line LOW in a merged file; filing it needs Mike's word): the Lines of Descent
 mixin `EncyclopediaHeroFamilyTreeMixin.cs` resolves its logger inside its catch, the same shape as finding 7.
 
-FOLLOW-UP (no issue: older than this change, in race assignment; filing it needs Mike's word): Codex found
+Follow-up closed 2026-11-04 (#1011) (no issue: older than this change, in race assignment; filing it needs Mike's word): Codex found
 that a generated hero whose race differs from its template, and who then dies, can reload with the template
 race, because the engine reinitializes dead template heroes on load (`SandBoxManager.cs:393-410`). The Race
 filter then lists that dead hero under the template's race. UNVERIFIED in game.

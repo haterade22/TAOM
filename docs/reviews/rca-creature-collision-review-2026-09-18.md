@@ -6,7 +6,7 @@
 `tools/skeleton_hit_capsules.py`, the Yotthani handoff adoption, and the docs. Eight lenses ran on the
 `deep-reviewer` agent, two at a time: data flow, XML, standards, engine compatibility, completeness, tooling,
 efficiency, design. **No CRITICAL or HIGH.** Every confirmed finding was fixed in the same session unless the table
-says FOLLOW-UP; the full C# suite (9,799 passed, 2 skipped) and tools suite (1,725) were green after the fixes.
+says `FOLLOW-UP`; the full C# suite (9,799 passed, 2 skipped) and tools suite (1,725) were green after the fixes.
 
 ## Findings
 
@@ -20,7 +20,7 @@ says FOLLOW-UP; the full C# suite (9,799 passed, 2 skipped) and tools suite (1,7
 | 6 | MED | `check_rdc_entries.py` exited 0 after checking nothing (misspelled `--under`, or only `_mtl` packages) | tooling | Silent-clean class, already in the tooling lens checklist; the tool predates the lens | Exit 1 on a missing folder or zero packages; two tests |
 | 7 | MED | `skeleton_hit_capsules.py`'s running-game guard returned "not running" when `tasklist` could not run, so `--apply` wrote the live Armory | tooling | The guard was written as a convenience check, not as a gate, so its failure path defaulted to "go" | Fails closed, CSV output; three tests |
 | 8 | MED | No GitHub issue for the elephant collision work; #618's body predated the single-target work | completeness | The work grew inside a session that already had an issue for the ram | #624 filed (retroactive), #618 comment |
-| 9 | MED | No provenance row for the Yotthani handoff / MithrilForge | completeness | `/adopt-external` does not list the register among its outputs | Row + detail added; the adoption doc's cycle should name it (FOLLOW-UP to `external-repo-adoption.md`, not done here) |
+| 9 | MED | No provenance row for the Yotthani handoff / MithrilForge | completeness | `/adopt-external` does not list the register among its outputs | Row + detail added; the adoption doc's cycle should name it (Follow-up closed 2026-11-04 (affcee2ea: the adoption doc names the register) to `external-repo-adoption.md`, not done here) |
 | 10 | MED | No in-repo gate for the barding team-colour flags in the unversioned Armory | completeness | The CLAUDE.md trap "land an in-repo gate beside an external edit" was not applied to a data-only change Mike made himself | `tools/tests/test_live_ram_bardings.py`, proven both ways |
 | 11 | LOW | Claims ahead of evidence: "the confirmed slide mechanism" (the elephant doc itself says unconfirmed), "its one base-game caller" (13, all navmesh ids), "applied" before the Kit re-cook, "130 entries" (165, 130 with a window), hit-vs-ragdoll semantics and the `UnknownUInt2` rule stated as fact | engine | Repeat of the morning RCA's F3 class (a claim ahead of its measurement); the words were copied from earlier summaries instead of re-read from their source | All hedged or corrected with the evidence named |
 | 12 | LOW | Stale comments by old value: the ram tree's 6 s cooldown and auto-tick, the Monster header still justifying `as_horse`, `WarRamCombat`'s "vanilla as_horse clips", a README cell on RDC validity, a test header's frame count | standards / design | Repeat of the morning RCA's F1 class (sweep by the new symbol, not the old value) | Fixed; the morning lesson already covers it, so no new rule |
@@ -28,7 +28,7 @@ says FOLLOW-UP; the full C# suite (9,799 passed, 2 skipped) and tools suite (1,7
 | 14 | LOW | Tool refusals missing: a fit for another skeleton, a misspelled `--mesh`, duplicate stripped bone names; read-back compared the radius only | tooling | Only the happy path and the hash refusal were designed | Four refusals, four-field read-back, tests for each |
 | 15 | LOW | Skill sweep command omitted `TAOM_Map/SubModule.xml` while the next paragraph said to add it | standards | Edited one bullet without reading the committed sentence after it | Folded into the command |
 
-FOLLOW-UP, not applied (pre-existing or out of scope): a shared `set_segment_payload` helper for the two tpac
+Follow-up closed 2026-11-04 (rejected: a helper for two callers, by simplicity-criterion.md), not applied (pre-existing or out of scope): a shared `set_segment_payload` helper for the two tpac
 writers (design); exception wrapping in `skeleton_hit_capsules.main` (tooling); the dry-run FBX location in
 `fbx_remap_materials.py` (tooling, needs a Kit measurement); a ram section in `audit_mount_parity.py` (XML); the
 stale "READY-TO-DROP" header of the repo's elephant reference copy (completeness). NOT APPLIED: moving the skill's

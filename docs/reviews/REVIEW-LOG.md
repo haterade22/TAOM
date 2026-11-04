@@ -5592,3 +5592,11 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 **Where Claude caught what Codex got wrong:** no false positives. Claude rated all three findings lower after verifying them, and the two lenses' partial-repair finding came before Codex read the code.
 
 **Metrics:** not recomputed here. Three real items, 0 false positives. The fixes were not re-reviewed by Codex, because Mike approved one pass.
+
+## Review (number assigned at merge): RCA follow-up fixes, tier-1 deep review (two waves, a fresh plan 032 review, convergence) and two Codex passes (2026-11-04)
+
+- **Scope:** `chore/follow-ups`, `9edc3a88b..35aa37439`, then its fixes to `0385cc041`: a Harmony patch deleted, two GameModels, the warg rage tree, the validator, hooks, tools, 68 and 14 unbound data rows removed, about 40 docs.
+- **Claude:** wave 1 lenses 5, 2, 7, Tooling at max, plus an adversarial warg trace and a closure audit of 34 RCA lines (29 held, 5 partial). Wave 2 lenses 1, 3, 4, 6 and 5 again at `high`.
+- **Codex:** `ultra` on the range, 2 HIGH, 8 MEDIUM, 2 LOW. `high` on the fix diff, 2 HIGH, 6 MEDIUM, 2 LOW. Not run on round three, whose HIGH fix got the convergence pass only.
+- **Confirmed:** 21 rows in `docs/reviews/rca-follow-ups-2026-11-04.md`, 6 of them HIGH. One is proven in two game logs. Plan 032's owed fresh review found no CRITICAL or HIGH.
+- **In-game:** nothing was run. The owed checks are in the RCA.

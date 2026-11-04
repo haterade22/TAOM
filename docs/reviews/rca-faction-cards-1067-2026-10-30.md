@@ -47,5 +47,5 @@ so no caller reaches it today.
 
 Nothing new. The rule exists as a lesson since #889, and this is its first recurrence. A lesson in
 `docs/reviews/lessons/` loads only when someone reads it, so a builder brief does not get it.
-FOLLOW-UP no issue: a harness question, not a code defect; raise it at the HARNESS RETRO DUE run, which
+Follow-up closed 2026-11-04 (1011a4ef6: completion-workflow.md step 6) no issue: a harness question, not a code defect; raise it at the HARNESS RETRO DUE run, which
 is the place to decide whether the fact sweep becomes a line in the builder brief or a completion step.

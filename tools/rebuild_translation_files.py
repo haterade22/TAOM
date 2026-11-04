@@ -19,7 +19,6 @@ Usage: python tools/rebuild_translation_files.py --lang RU --module Armory      
 
 import argparse
 import json
-import os
 import re
 import shutil
 import sys

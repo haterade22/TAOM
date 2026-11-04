@@ -90,6 +90,7 @@ public class WargRageFormationTests
         var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
 
         StringAssert.Contains(src, "if (ShouldClose())");
+        StringAssert.Contains(src, "FirstAttack.SetValue(false);");
         StringAssert.Contains(src, "GiveFormationBack(warg, Rider.GetValue(), AgentsFormation.GetValue())");
     }
 

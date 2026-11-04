@@ -158,8 +158,8 @@ def _is_placeholder(value: str) -> bool:
 
 # The key and its value in either order. `\s+` crosses a newline, which the per-line pass cannot see:
 # scan_secrets runs this same pattern over the whole text for the pairs split across lines.
-_NUGET_CLEARTEXT_RX = (r'''(?:ClearTextPassword["']\s+value\s*=\s*["'][^"']+["']'''
-                       r'''|value\s*=\s*["'][^"']+["']\s+key\s*=\s*["']ClearTextPassword["'])''')
+_NUGET_CLEARTEXT_RX = (r'''(?:ClearTextPassword["']\s+value\s*=\s*(?P<q1>["']).+?(?P=q1)'''
+                       r'''|value\s*=\s*(?P<q2>["']).+?(?P=q2)\s+key\s*=\s*["']ClearTextPassword["'])''')
 _NUGET_CLEARTEXT = re.compile(_NUGET_CLEARTEXT_RX)
 
 _SECRET_PATTERNS = [

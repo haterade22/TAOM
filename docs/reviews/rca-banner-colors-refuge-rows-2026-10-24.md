@@ -33,7 +33,7 @@ and LOW findings were fixed before commit. Neither fix has been seen in game.
 | 8 | LOW | A new refuge lookup duplicated `IRefugeBook.GetByPartyId`. | Simplicity | Reuse rung 2 not checked. | Replaced by the existing lookup. |
 | 9 | LOW | `OnPartySelection` (looked up by name) had no reflection-catalogue row. | Catalogue (pre-existing) | No gate enforces rows. | Row and DataRow added. |
 
-FOLLOW-UP (no issue: needs a `Main/SubModule.cs` edit, the single-owner file): `ClanPartyItemVM_GetCharacterCode_Patch` can never change a result (heroes are recoloured inside `CampaignUIHelper.GetCharacterCode`, non-heroes get no clan info); delete it with its `SubModule.cs` initialize line when that file is free.
+Follow-up closed 2026-11-04 (8dbdfeb12) (no issue: needs a `Main/SubModule.cs` edit, the single-owner file): `ClanPartyItemVM_GetCharacterCode_Patch` can never change a result (heroes are recoloured inside `CampaignUIHelper.GetCharacterCode`, non-heroes get no clan info); delete it with its `SubModule.cs` initialize line when that file is free.
 
 ## Root-cause pattern: a value written where nothing reads it
 

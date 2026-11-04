@@ -25,7 +25,7 @@ lenses found only LOW items, and every one in the changed code was fixed before 
 - The Advanced Starting Options menu still offers the six kingdoms for a King, Vassal or Mercenary start (Mike, 2026-10-28).
 - The faction screen logs one warning per tuning file, once per process, for the parked rows (Lens 7 F3). Aligning the
   runtime check with the relaxed gate changes production logging; not done.
-- FOLLOW-UP (no issue: filing one is public and waits on Mike's word): `tools/make_new_factions_playable.py --apply`
+- Follow-up closed 2026-11-04 (b7fefdae6, f9a8bdebc) (no issue: filing one is public and waits on Mike's word): `tools/make_new_factions_playable.py --apply`
   writes stale entries straight into `factions.json` (Lindon playable with `game_faction` `rivendell`, Blue Craig with
   `goblin`), and `tools/assemble_faction_map.py` and `tools/process_faction_map.py` overwrite `playable` and
   `game_faction` from old tables. `WorkInProgressFaction_IsNotPlayable` now catches a flag flip; nothing pins a real

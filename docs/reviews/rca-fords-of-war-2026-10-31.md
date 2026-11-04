@@ -89,7 +89,7 @@ Not fixed, by decision: the Dread drain cannot rout troops in a Fords match. The
 for the maintainer, now written in `dread-aura.md`. The camp feed keys stay: neutral camps are the
 maintainer's decision 8, wired in a later phase.
 
-FOLLOW-UP: AI steering to capture points (no issue: creating an issue needs the maintainer's word).
+Follow-up closed 2026-11-04 (88b189e80): AI steering to capture points (no issue: creating an issue needs the maintainer's word).
 
 ### Found by /verify before the commit
 
@@ -215,7 +215,7 @@ feature's own record, so none of them applied).
 2. **Lesson** (`lessons/testing-qa.md`): judge a self-check rule only on evidence its real producers made.
 3. **Lens 4 check 9** gains one clause for self-check verdicts.
 
-FOLLOW-UP: a warg rider who leaves a living warg mid-rage never gets his formation back; check 12 now reports it as `stranded` (no issue: creating an issue needs the maintainer's word).
+Follow-up closed 2026-11-04 (17b071c7a, 7a21239dc, 4a7b7164d; the in-game check is owed): a warg rider who leaves a living warg mid-rage never gets his formation back; check 12 now reports it as `stranded` (no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: after a lane loses its towers, its hold point before the keep can sit inside a neighbouring lane's inner tower range on maps with 300 to 500 m between the bases; check 8 now names the tower (no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: the AI commander rebuilds its full read model every tick and uses it once every 5 to 12 s (pre-existing; no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: the Fords verdict rows move onto the shared `[Check]` line, whose API (#1071) landed on trunk while this change was in review (#1069).
@@ -304,10 +304,10 @@ code or the engine decompile before it entered this table.
 4. **Process:** an unattended match on the desktop is now the proof before a Fords merge
    (`python tools/run_fords_autorun.py --west-ai`), and its folder is cited in the commit.
 
-FOLLOW-UP: AI melee spends many swings on the invulnerable tower gunners (1,075 melee blows in the 600 s run); the maintainer decided on 2026-11-01 to build real tower structures on the map with unkillable bowmen up on the tower, which needs the scene work and tagged gunner spots the layout reader can read (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (22d4f4c70: on the hand-built scene; the four generated scenes are unmeasured): AI melee spends many swings on the invulnerable tower gunners (1,075 melee blows in the 600 s run); the maintainer decided on 2026-11-01 to build real tower structures on the map with unkillable bowmen up on the tower, which needs the scene work and tagged gunner spots the layout reader can read (no issue: the maintainer chose no GitHub issues for Fords of War).
 Resolved (2026-11-01, next addendum): most melee blows on a tower did zero raw damage because vanilla scales a thrust on an object to almost nothing; a thrust damage floor now applies.
-FOLLOW-UP: no tower fell in two 30-minute AI matches, so check 14 (keep, result, exit) is still unseen; tower balance is the maintainer's call, and the R3 evidence gives the numbers (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: a crash in an unattended run loses its dump, because the watchdog asks a human before it writes one and the launcher stops the game (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (run 20261103-203523: check 14 passed): no tower fell in two 30-minute AI matches, so check 14 (keep, result, exit) is still unseen; tower balance is the maintainer's call, and the R3 evidence gives the numbers (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (c31a7ef69, 91185bdc5: the launcher tries procdump; untested on a real crash): a crash in an unattended run loses its dump, because the watchdog asks a human before it writes one and the launcher stops the game (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: the layout planner's limits (10 % dropped, 5 % bad segments) are unmeasured; set them from the attempt lines of the four scenes (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: `FordsSnapshotBuilder` still groups with LINQ (about 36 KB per tick at 240 units); a bucketed builder brings it to about 4 KB (no issue: pre-existing code, the maintainer chose no GitHub issues for Fords of War).
 

@@ -4830,3 +4830,17 @@ with the clean-unload line present, so it would have failed every run.
   already answers the question. Test the failure paths (a dead row, a wrong row, a cut index), and assert on what was
   read, not only on what came back.
 - **Source:** `docs/reviews/rca-rules-review-2026-11-03.md`, "Second review", findings A to D and G.
+
+### Run the whole tools suite at each work item, and prove a gate on a neighbour of its fault
+
+A scene refusal broke `test_live_map_writers_main` for hours, because each builder ran its own tool's tests. `dump_crash`'s tests faked `returncode=0`, so a real procdump, which exits 0xFFFFFFFE after a good dump, read as a failure. Three new gates passed with a fault one step from the one they were written for.
+- **Why missed:** scoped test runs read as verification, and each gate's red step used its own example.
+- **Prevent:** `python -m unittest discover -s tools/tests -t .` before each block leaves a worktree. Run an external tool once for real before you fake its result. After a gate's first red, try one other spelling of the fault (another attribute order, element text in place of an attribute, a sibling element).
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) findings 5, 11, 13, 14, 17, 19.
+
+### A last-resort path errs toward refusing
+
+`8afe46d39` stopped `block-no-verify`'s raw fallback from over-blocking a message that named a flag, and lost eight refusals, among them `bash -c`. That path runs only past the reader's limit, on a reader crash or on an overrun, so a false refusal costs one retry and a missed one skips a gate.
+- **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
+- **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) finding 18.

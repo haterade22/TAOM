@@ -40,7 +40,7 @@ as an heir, which is not yet confirmed.
 Pre-existing, outside the change:
 
 - **Ladder start id.** `LadderQuests.cs:38` still starts every rung's quest as `"taom_cq_" + def.Id`, so
-  two heroes' quests on one rung share a journal record. FOLLOW-UP: no issue: filing waits for Mike's word.
+  two heroes' quests on one rung share a journal record. Follow-up closed 2026-11-04 (32aeb9e10): no issue: filing waits for Mike's word.
 - **An old hero's ladder quest stalls (Agent 5 F5).** Kills credit only the current hero's rung quest,
   battles credit every running `CareerQuest`. FOLLOW-UP: no issue: filing waits for Mike's word.
 - **One-day window (Agent 2).** Between the hero change and the next daily tick, the stale quest still
@@ -83,6 +83,6 @@ traced.
   a rule that relies on a read has now missed twice. A gate test that fails a new
   `ICoopPresenceProvider.IsCoopActive` read in a service outside an allowlist (PatchShield install, UI
   registration, `PlayerPossessionService`, this session-launch term) would catch it at build time.
-  FOLLOW-UP: no issue: proposing the gate to Mike first.
+  Follow-up closed 2026-11-04 (53febe1a1): no issue: proposing the gate to Mike first.
 - Lesson appended to `lessons/campaign-mechanics.md` (presence gate, repeat) and
   `lessons/state-lifecycle-save.md` (quest StringId keys the journal).

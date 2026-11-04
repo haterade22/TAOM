@@ -32,7 +32,7 @@ same session except the items under "Not applied".
   included) until it finds the hero, so restoring R heroes among C characters costs O(R x C) at load (Codex, lens 5).
   The 30 kept debug logs on the desktop hold 3 restore lines, each "Restored race for 0 heroes"; an index waits for a
   measurement (`simplicity-criterion.md`).
-- FOLLOW-UP (no issue: a dead attribute in a prefab outside this change; correcting its casing would shrink the text to 6,
+- Follow-up closed 2026-11-04 (103636439 removed the prefab) (no issue: a dead attribute in a prefab outside this change; correcting its casing would shrink the text to 6,
   so it needs Mike's look): `Main/_Module/GUI/PreFabs/PreviewPanel.xml:16` sets `Brush.Fontsize`, which the engine
   ignores because property lookup is case-sensitive.
 - UNVERIFIED (co-op, lens 2 and lens 5): the co-op module syncs `BasicCharacterObject.Race`, so a client now logs one sync

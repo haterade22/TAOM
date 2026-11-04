@@ -39,7 +39,7 @@ I did not check which reviews ran on `e6dbea3e0`, so I make no claim about why t
 
 ## Follow-up
 
-FOLLOW-UP: finding 2 stays as it is. no issue: the sibling test fails the suite on the same file with
+`FOLLOW-UP`: finding 2 stays as it is. no issue: the sibling test fails the suite on the same file with
 the right message, so only the wording of a second failure line is wrong, and a fix adds code for a
 case that needs a malformed prefab already in `Known`.
 
