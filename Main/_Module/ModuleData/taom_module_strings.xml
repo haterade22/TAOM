@@ -4625,6 +4625,9 @@
 	<string id="TAOM_LD_Hud_Price" text="{=TAOM_LD_Hud_Price}{PRICE} gold" />
 	<string id="TAOM_LD_Hud_RunOver" text="{=TAOM_LD_Hud_RunOver}The run is over" />
 	<string id="TAOM_LD_Hud_ShopTitle" text="{=TAOM_LD_Hud_ShopTitle}Shop" />
+	<string id="TAOM_LD_Hud_Speed" text="{=TAOM_LD_Hud_Speed}Speed: {SPEED}x   M  Next speed" />
+	<string id="TAOM_LD_Hud_SpeedButton" text="{=TAOM_LD_Hud_SpeedButton}{SPEED}x" />
+	<string id="TAOM_LD_Hud_SpeedTitle" text="{=TAOM_LD_Hud_SpeedTitle}Game speed" />
 	<string id="TAOM_LD_Hud_Wave" text="{=TAOM_LD_Hud_Wave}Wave {WAVE}" />
 	<string id="TAOM_LD_Hud_WaveCleared" text="{=TAOM_LD_Hud_WaveCleared}Wave {WAVE} cleared" />
 	<string id="TAOM_LD_MenuHint" text="{=TAOM_LD_MenuHint}Hold a fortress against wave after wave. Spend gold on defenders between waves and keep the keep from falling." />

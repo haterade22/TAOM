@@ -8,7 +8,7 @@ namespace TAOM.Client.Features.LongDefeat;
 
 /// <summary>
 /// The panel layer of the Long Defeat HUD: created when the view model wants it, removed when it does not, in the shape of
-/// <c>MissionGauntletEscapeMenuBase</c> but without its engine pause, so the wave timer runs. Also reads B and H while no panel is open.
+/// <c>MissionGauntletEscapeMenuBase</c> but without its engine pause, so the wave timer runs. Also reads M, B and H.
 /// </summary>
 internal sealed class LongDefeatPanelHost
 {
@@ -22,10 +22,19 @@ internal sealed class LongDefeatPanelHost
 
     internal LongDefeatPanelHost(Action<string> log) => _log = log;
 
-    /// <summary>B toggles the shop and H sounds the horn. Ctrl or Alt leave every key to the game.</summary>
+    /// <summary>
+    /// M steps the speed, also while a panel is open (read from that panel's own input, since the focus layer takes the keys). B toggles the shop and H sounds the horn,
+    /// while no panel is open. Ctrl or Alt leave every key to the game. Not T: the chat view reads it from the scene layer.
+    /// </summary>
     internal void ReadKeys(IInputContext input, LongDefeatHudVM vm)
     {
-        if (_layer != null || input.IsControlDown() || input.IsAltDown())
+        var keys = _layer?.Input ?? input;
+        if (keys.IsControlDown() || keys.IsAltDown())
+            return;
+
+        if (keys.IsKeyPressed(InputKey.M))
+            vm.CycleSpeed();
+        if (_layer != null)
             return;
 
         if (input.IsKeyPressed(InputKey.B))

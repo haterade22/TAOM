@@ -1,3 +1,5 @@
+using System;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Features.LongDefeat;
@@ -8,9 +10,13 @@ namespace TAOM.Features.LongDefeat;
 /// </summary>
 internal sealed class LongDefeatSession
 {
+    /// <summary>The speeds, in the order the key steps through them: the levels of <see cref="FordsGameSpeed"/>.</summary>
+    internal static readonly int[] SpeedLevels = { 1, 2, 4, 10 };
+
     private SurvivalRun? _run;
     private RunResult? _result;
     private int _lostInClearedWaves;
+    private readonly FordsGameSpeed _speed = new();
 
     public bool IsActive => _run != null;
 
@@ -30,11 +36,30 @@ internal sealed class LongDefeatSession
     /// <summary>The fortress's best run as the director's save left it, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public BestRun? Best { get; private set; }
 
+    /// <summary>The mission speed the player chose: 1, 2, 4 or 10. Held here, not in the run, so a wave or an intermission never changes it; 1 once the run has a <see cref="Result"/>, because a fight with no rules must not run fast behind the end panel; the next <c>Fill</c> resets it to 1.</summary>
+    public int Speed => Result != null ? 1 : _speed.Current;
+
+    /// <summary>The highest speed set since the last <c>Fill</c>, for the run report. Outlives <see cref="Clear"/>.</summary>
+    public int MaxSpeed { get; private set; } = 1;
+
     public RunView? GetView() => _run?.GetView();
 
     public BuyResult TryBuy(string offerId) => _run?.TryBuy(offerId) ?? BuyResult.RunOver;
 
     public StartResult TryStartWave() => _run?.TryStartWave() ?? StartResult.RunOver;
+
+    internal void CycleSpeed()
+    {
+        _speed.Cycle();
+        MaxSpeed = Math.Max(MaxSpeed, _speed.Current);
+    }
+
+    /// <summary>Sets a speed; a value that is no level changes nothing.</summary>
+    internal void SetSpeed(int speed)
+    {
+        _speed.Set(speed);
+        MaxSpeed = Math.Max(MaxSpeed, _speed.Current);
+    }
 
     internal void RecordFault(string where) => Fault = where;
 
@@ -54,6 +79,8 @@ internal sealed class LongDefeatSession
         LiveSeconds = 0f;
         ReportPath = null;
         Best = null;
+        _speed.Set(1);
+        MaxSpeed = 1;
         _run = run;
         _result = null;
     }

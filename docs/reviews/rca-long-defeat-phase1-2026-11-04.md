@@ -46,6 +46,14 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 26 | MED | New defenders spawned on a terrace and stuck there, and every check passed, because no check can see where a healthy spawn should be | Felt only in play | The plan cut the recorded place, and the `ok` lines judge height and navmesh only | Recorded points, and a failed check when a point is lost |
 | 27 | MED | The first draft's fallback only warned, so the terrace could return with a green judge, and the doc said no point shipped | Gate proves less than it says | The builder wrote the doc before the points landed, and the fallback copied the keep's quiet shape | `MusterPlaceLost`, `source=` in the check, a shipped-data test, corrected doc |
 
+**Speed controls, the same day.** Tier 1 lenses 5 and 2 found no signature break.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 28 | MED | At 10x with a person driving, engine fast forward read each key press once per internal step, so use could start and stop in one frame | Sibling guard not copied | Vanilla allows it only for a dead player, and Fords forces 1x while controlling. The first draft took Fords' speed rule but not that guard. Repeat of row 1 | A fixed step for a person at 10x, with one tick per frame; a played check owed |
+| 29 | MED | Speed stayed up after the run ended, so a fight with no rules ran at 10x behind the end panel | State not cleared | The speed was tied to the mission's end, not the run's | `Session.Speed` reads 1 once the run has a result |
+| 30 | LOW | A HUD fault could leave 10x on, and the judge could pass `--speed 10` on a build that played at 1x | Gate proves less than it says | First read by the review | `Stop` runs first; the judge compares `maxSpeed` with the flag |
+
 ## Not applied, with the reason
 
 - **Restoring a formation's place after a bought pack:** it matters only for a player's Advance order between waves, and no run has shown harm. The feature doc names it.

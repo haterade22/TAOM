@@ -565,6 +565,19 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void TheReport_NamesTheHighestSpeedTheSessionHeldInTheRun()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Session.SetSpeed(4);
+        rig.Session.SetSpeed(2);
+
+        rig.Director.Shutdown();
+
+        Assert.AreEqual(4, (int)JObject.Parse(rig.Director.ReportText)["maxSpeed"]!);
+    }
+
+    [TestMethod]
     public void Removal_ThatIsNotAKillOrKnockOut_ChangesNothing()
     {
         var rig = NewRig();

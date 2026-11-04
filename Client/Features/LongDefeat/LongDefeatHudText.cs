@@ -33,6 +33,13 @@ internal static class LongDefeatHudText
 
     internal static string Defenders(int count) => new TextObject("{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}").SetTextVariable("COUNT", count).ToString();
 
+    /// <summary>The HUD strip's speed line. It names the key, as the hint line names B and H.</summary>
+    internal static string Speed(int speed) => new TextObject("{=TAOM_LD_Hud_Speed}Speed: {SPEED}x   M  Next speed").SetTextVariable("SPEED", speed).ToString();
+
+    internal static string SpeedTitle() => new TextObject("{=TAOM_LD_Hud_SpeedTitle}Game speed").ToString();
+
+    internal static string SpeedButton(int speed) => new TextObject("{=TAOM_LD_Hud_SpeedButton}{SPEED}x").SetTextVariable("SPEED", speed).ToString();
+
     internal static string Keep() => new TextObject("{=TAOM_LD_Hud_Keep}The keep is under attack").ToString();
 
     internal static string Hint(RunPhase phase)

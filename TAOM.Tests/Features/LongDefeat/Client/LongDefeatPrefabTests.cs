@@ -53,7 +53,7 @@ public class LongDefeatPrefabTests
         foreach (var movie in Movies)
             Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
 
-        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM) })
+        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM) })
         {
             var names = bound.TryGetValue(vmType, out var found) ? found : new HashSet<string>();
             foreach (var property in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
@@ -114,6 +114,23 @@ public class LongDefeatPrefabTests
             foreach (Match m in Regex.Matches(text, "\"#([0-9A-Fa-f]{8})\""))
                 Assert.IsTrue(Convert.ToInt32(m.Groups[1].Value.Substring(6), 16) >= 0x80, movie + ": #" + m.Groups[1].Value + " has alpha below 0x80 read as RGBA");
         }
+    }
+
+    [TestMethod]
+    public void TheShopPanel_HasTheFourSpeedButtons_WithAMarkOnTheCurrentOne()
+    {
+        var list = Root("LongDefeatPanel").Descendants().Single(e => (string?)e.Attribute("DataSource") == "{Speeds}");
+        var button = list.Descendants("ButtonWidget").Single();
+
+        Assert.AreEqual("ExecuteSelect", (string?)button.Attribute("Command.Click"));
+        Assert.IsTrue(button.Descendants().Any(e => (string?)e.Attribute("IsVisible") == "@IsCurrent"), "the current speed is marked");
+        Assert.IsTrue(Root("LongDefeatPanel").Descendants().Any(e => (string?)e.Attribute("Text") == "@SpeedTitle"));
+    }
+
+    [TestMethod]
+    public void TheHudStrip_ShowsTheSpeed()
+    {
+        Assert.IsTrue(Root("LongDefeatHud").Descendants().Any(e => (string?)e.Attribute("Text") == "@SpeedText"));
     }
 
     [TestMethod]

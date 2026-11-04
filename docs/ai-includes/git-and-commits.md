@@ -95,3 +95,5 @@ More incidents and the reasoning behind these rules:
 - [docs/ai-includes/lord-skills-authoring.md](./lord-skills-authoring.md)
 
 <!-- backlinks-end -->
+
+**Clean up after each commit or merge (Mike, 2026-11-04).** Remove your merged worktrees and branches, scratch left in shared folders and stray processes, and say in one line what went. Keep only what a running job still uses, and touch nothing another session owns. A waiter script survives a task stop, so list the processes and stop it by process id.

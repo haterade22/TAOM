@@ -7501,6 +7501,9 @@
     <string id="TAOM_FOW_Hud_ControlTaken" text="You fight as {NAME}. Press P to go back to the battlefield view." />
     <string id="TAOM_FOW_Hud_ControlFell" text="{NAME} has fallen. You are back at the battlefield view." />
     <string id="TAOM_FOW_Hud_ControlNone" text="None of your soldiers stands near the pointer." />
+    <string id="TAOM_LD_Hud_Speed" text="Speed: {SPEED}x   M  Next speed" />
+    <string id="TAOM_LD_Hud_SpeedButton" text="{SPEED}x" />
+    <string id="TAOM_LD_Hud_SpeedTitle" text="Game speed" />
   </strings>
 
 </base>

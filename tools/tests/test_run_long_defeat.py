@@ -72,6 +72,38 @@ class JudgeTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
 
+    def test_a_given_speed_must_be_the_reports_max_speed(self):
+        ld.expected_speed = 10
+        self.addCleanup(setattr, ld, "expected_speed", None)
+
+        code, why = ld.judge(FINAL, {**REPORT, "maxSpeed": 10}, FULL_LOG)
+
+        self.assertEqual(code, 0, why)
+        self.assertIn("speed 10x", why)
+
+    def test_a_report_with_another_max_speed_fails_naming_both(self):
+        ld.expected_speed = 10
+        self.addCleanup(setattr, ld, "expected_speed", None)
+
+        for report in ({**REPORT, "maxSpeed": 4}, {**REPORT, "maxSpeed": 1}, REPORT, {**REPORT, "maxSpeed": "10"}):
+            code, why = ld.judge(FINAL, report, FULL_LOG)
+            self.assertEqual(code, 1, report)
+            self.assertIn("maxSpeed", why)
+            self.assertIn("--speed 10", why)
+
+    def test_the_speed_check_holds_a_lose_run_too(self):
+        ld.expected_speed = 4
+        self.addCleanup(setattr, ld, "expected_speed", None)
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+
+        self.assertEqual(ld.judge(lost, {"maxSpeed": 4, "final": True}, LOSE_LOG)[0], 0)
+        self.assertEqual(ld.judge(lost, {"maxSpeed": 1, "final": True}, LOSE_LOG)[0], 1)
+
+    def test_no_speed_given_asks_nothing_of_the_report(self):
+        self.assertIsNone(ld.expected_speed)
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
+        self.assertNotIn("speed", ld.judge(FINAL, REPORT, FULL_LOG)[1])
+
     def test_a_full_run_passes_and_counts_the_felled_waves(self):
         code, why = ld.judge(FINAL, REPORT, FULL_LOG)
         self.assertEqual(code, 0, why)
@@ -350,9 +382,31 @@ class SourceTieTests(unittest.TestCase):
 
     def test_each_arm_key_is_one_the_plan_reads(self):
         plan = source("Autorun", "LongDefeatAutorunPlan.cs")
-        known = SimpleNamespace(fortress="helms", waves=5, lose=True, garrison_scale=None, live_limit=900, screenshots="5")
+        known = SimpleNamespace(fortress="helms", waves=5, lose=True, garrison_scale=None, live_limit=900, screenshots="5", speed=10)
         for key, _ in ld.arm_pairs(known, "out", 3900):
             self.assertIn(f'case "{key}":', plan, key)
+
+    def test_speed_is_armed_when_given_and_left_out_when_not(self):
+        parser = ld.build_parser()
+
+        known, _ = parser.parse_known_args(["--speed", "10"])
+        self.assertEqual(10, known.speed)
+        self.assertEqual(10, dict(ld.arm_pairs(known, "out", 3900))["speed"])
+
+        known, _ = parser.parse_known_args([])
+        self.assertIsNone(known.speed)
+        self.assertIsNone(dict(ld.arm_pairs(known, "out", 3900))["speed"], "an unset speed is dropped from the arm text, so the game plays at 1x")
+
+    def test_a_speed_that_is_no_level_is_refused_before_the_game_starts(self):
+        parser = ld.build_parser()
+        for bad in ("3", "0", "20", "x"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=bad):
+                parser.parse_known_args(["--speed", bad])
+
+    def test_the_speed_levels_are_the_ones_the_game_accepts(self):
+        game = (REPO / "Main" / "Features" / "FordsOfWar" / "Domain" / "FordsGameSpeed.cs").read_text(encoding="utf-8")
+        self.assertIn("{ 1, 2, 4, FastForwardLevel }", game)
+        self.assertEqual([1, 2, 4, 10], list(ld.SPEED_LEVELS))
 
     def test_the_file_names_and_the_variable_match_the_game(self):
         done = source("Autorun", "LongDefeatAutorunDone.cs")

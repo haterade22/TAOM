@@ -29,6 +29,8 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private float _keepFillWidth;
     private bool _isKeepVisible;
     private string _hintText = string.Empty;
+    private string _speedText = string.Empty;
+    private string _speedTitle = string.Empty;
     private string _noticeText = string.Empty;
     private bool _isShopVisible;
     private string _shopTitle = string.Empty;
@@ -46,6 +48,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         _session = session;
         _leave = leave;
         Offers = new MBBindingList<LongDefeatOfferVM>();
+        Speeds = new MBBindingList<LongDefeatSpeedVM>();
+        foreach (var level in LongDefeatSession.SpeedLevels)
+            Speeds.Add(new LongDefeatSpeedVM(level, SelectSpeed));
     }
 
     internal bool WantsPanel => IsShopVisible || IsEndVisible;
@@ -76,6 +81,15 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public string HintText { get => _hintText; private set => Set(ref _hintText, value, nameof(HintText)); }
+
+    [DataSourceProperty]
+    public string SpeedText { get => _speedText; private set => Set(ref _speedText, value, nameof(SpeedText)); }
+
+    [DataSourceProperty]
+    public string SpeedTitle { get => _speedTitle; private set => Set(ref _speedTitle, value, nameof(SpeedTitle)); }
+
+    [DataSourceProperty]
+    public MBBindingList<LongDefeatSpeedVM> Speeds { get; }
 
     [DataSourceProperty]
     public string NoticeText { get => _noticeText; private set => Set(ref _noticeText, value, nameof(NoticeText)); }
@@ -155,6 +169,19 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         Refresh();
     }
 
+    /// <summary>The speed key: the next of 1x, 2x, 4x and 10x, then back to 1x.</summary>
+    internal void CycleSpeed()
+    {
+        _session.CycleSpeed();
+        Refresh();
+    }
+
+    private void SelectSpeed(int speed)
+    {
+        _session.SetSpeed(speed);
+        Refresh();
+    }
+
     internal void SoundHorn()
     {
         Notify(LongDefeatHudText.Refusal(_session.TryStartWave()));
@@ -168,6 +195,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         if (view == null && result == null)
             return;
 
+        ApplySpeed();
         if (view != null)
             ApplyStrip(view);
         if (view == null || !view.ShopOpen || result != null)
@@ -204,6 +232,14 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;
+    }
+
+    private void ApplySpeed()
+    {
+        SpeedText = LongDefeatHudText.Speed(_session.Speed);
+        SpeedTitle = LongDefeatHudText.SpeedTitle();
+        foreach (var button in Speeds)
+            button.Update(_session.Speed);
     }
 
     private void ApplyOffers(RunView view)

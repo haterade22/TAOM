@@ -41,6 +41,87 @@ public class LongDefeatSessionTests
     }
 
     [TestMethod]
+    public void Speed_StartsAtOne_StepsThroughTheFourLevels_AndIgnoresAnythingElse()
+    {
+        var session = new LongDefeatSession();
+        Assert.AreEqual(1, session.Speed);
+        Assert.AreEqual(1, session.MaxSpeed);
+
+        var seen = new List<int>();
+        for (var i = 0; i < 5; i++)
+        {
+            session.CycleSpeed();
+            seen.Add(session.Speed);
+        }
+
+        CollectionAssert.AreEqual(new[] { 2, 4, 10, 1, 2 }, seen);
+        session.SetSpeed(3);
+        Assert.AreEqual(2, session.Speed, "3 is no level");
+        session.SetSpeed(10);
+        Assert.AreEqual(10, session.Speed);
+    }
+
+    [TestMethod]
+    public void Speed_ReadsOneOnceTheRunHasAResult_AndMaxSpeedKeepsItsValue()
+    {
+        var run = NewRun();
+        var session = new LongDefeatSession();
+        session.Fill(run);
+        session.SetSpeed(10);
+        Assert.AreEqual(10, session.Speed);
+
+        run.Abandon();
+
+        Assert.IsNotNull(session.Result);
+        Assert.AreEqual(1, session.Speed, "a fight with no rules must not run at 10x behind the end panel");
+        Assert.AreEqual(10, session.MaxSpeed);
+
+        session.Clear();
+        Assert.AreEqual(1, session.Speed);
+        Assert.AreEqual(10, session.MaxSpeed);
+
+        session.Fill(NewRun());
+        Assert.AreEqual(1, session.Speed);
+        Assert.AreEqual(1, session.MaxSpeed);
+    }
+
+    [TestMethod]
+    public void SpeedLevels_AreExactlyTheOnesTheFordsRuleAccepts_InStepOrder()
+    {
+        var session = new LongDefeatSession();
+        var stepped = new List<int> { session.Speed };
+        for (var i = 1; i < LongDefeatSession.SpeedLevels.Length; i++)
+        {
+            session.CycleSpeed();
+            stepped.Add(session.Speed);
+        }
+
+        CollectionAssert.AreEqual(LongDefeatSession.SpeedLevels, stepped);
+        session.CycleSpeed();
+        Assert.AreEqual(1, session.Speed);
+        Assert.IsFalse(TAOM.Features.FordsOfWar.Domain.FordsGameSpeed.IsLevel(3));
+    }
+
+    [TestMethod]
+    public void MaxSpeed_IsTheHighestSetThisRun_SurvivesClear_AndANewRunResetsBoth()
+    {
+        var session = new LongDefeatSession();
+        session.Fill(NewRun());
+        session.SetSpeed(4);
+        session.SetSpeed(2);
+        Assert.AreEqual(2, session.Speed);
+        Assert.AreEqual(4, session.MaxSpeed);
+
+        session.Clear();
+        Assert.AreEqual(2, session.Speed, "the HUD still reads it after the mission has gone");
+        Assert.AreEqual(4, session.MaxSpeed);
+
+        session.Fill(NewRun());
+        Assert.AreEqual(1, session.Speed);
+        Assert.AreEqual(1, session.MaxSpeed);
+    }
+
+    [TestMethod]
     public void Fault_SurvivesClear_AndResetsAtTheNextFill()
     {
         var session = new LongDefeatSession();
