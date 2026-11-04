@@ -202,4 +202,57 @@ public class RaceAgeServiceTests
     {
         _sut.ResetCache(); // No exceptions
     }
+
+    // --- GetDailyPregnancyBaseChance: the guards moved out of TaomPregnancyModel (ADR-007) ---
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_ImmortalHero_ReturnsExactlyZero()
+    {
+        var result = _sut.GetDailyPregnancyBaseChance(3, 0, 30f, 0, 0, 0, true);
+
+        Assert.AreEqual(0f, result);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_ImmortalSpouse_ReturnsExactlyZero()
+    {
+        // #321: the engine only passes the female, so an immortal father is caught by his race.
+        var result = _sut.GetDailyPregnancyBaseChance(0, 3, 30f, 0, 0, 0, true);
+
+        Assert.AreEqual(0f, result);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_BelowComesOfAge_ReturnsExactlyZero()
+    {
+        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 17.9f, 0, 0, 0, true);
+
+        Assert.AreEqual(0f, result);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_PastFertilityEnd_ReturnsExactlyZero()
+    {
+        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 45.1f, 0, 0, 0, true);
+
+        Assert.AreEqual(0f, result);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_HumanAtComesOfAge_ReturnsPeakChance()
+    {
+        // ageFactor 1.2, one-child divisor 1, 0.12, population factor 1 (player involved), modifier 1.0
+        var result = _sut.GetDailyPregnancyBaseChance(0, 0, 18f, 0, 0, 0, true);
+
+        Assert.AreEqual(0.144f, result, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetDailyPregnancyBaseChance_Dwarf_AppliesRaceModifier()
+    {
+        // dwarf window 30..120, modifier 0.6: peak 0.144 * 0.6
+        var result = _sut.GetDailyPregnancyBaseChance(1, 0, 30f, 0, 0, 0, true);
+
+        Assert.AreEqual(0.0864f, result, 0.001f);
+    }
 }
