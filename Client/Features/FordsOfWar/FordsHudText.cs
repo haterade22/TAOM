@@ -101,7 +101,7 @@ internal static class FordsHudText
     internal static string SpeedButton(int speed) => new TextObject("{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x").SetTextVariable("SPEED", speed).ToString();
 
     internal static string KeysHint() =>
-        new TextObject("{=TAOM_FOW_Hud_KeysHintControl}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom").ToString();
+        new TextObject("{=TAOM_FOW_Hud_KeysHintFull}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom").ToString();
 
     internal static string ControlTaken(string name) => new TextObject("{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view.").SetTextVariable("NAME", name).ToString();
 

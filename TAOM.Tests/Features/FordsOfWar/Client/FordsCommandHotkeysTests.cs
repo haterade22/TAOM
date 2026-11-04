@@ -43,7 +43,7 @@ public class FordsCommandHotkeysTests
     [TestMethod]
     public void Read_TheSpeedKey_MovesToTheNextSpeed_AndThePanelSaysSo()
     {
-        FordsCommandHotkeys.Read(Pressed(InputKey.T), _vm);
+        FordsCommandHotkeys.Read(Pressed(InputKey.L), _vm);
 
         Assert.AreEqual(2, _vm.Speed.Current);
         StringAssert.Contains(_vm.SpeedText, "2x");
