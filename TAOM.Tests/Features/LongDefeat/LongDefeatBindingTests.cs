@@ -88,6 +88,10 @@ public class LongDefeatBindingTests
         Assert.IsNotNull(owner.GetSetMethod(), "Formation.PlayerOwner lost its public setter");
         Method(typeof(Formation), "BeginSpawn", typeof(void), typeof(int), typeof(bool));
         Method(typeof(Formation), "EndSpawn", typeof(void));
+        // SetMusterFrame: the formation's order position, and the WorldPosition built from a recorded point.
+        Method(typeof(Formation), "SetPositioning", typeof(void), typeof(WorldPosition?), typeof(Vec2?), typeof(int?));
+        Assert.IsNotNull(typeof(WorldPosition).GetConstructor(new[] { typeof(Scene), typeof(Vec3) }), "WorldPosition(Scene, Vec3) no longer resolves");
+        Assert.IsNotNull(typeof(Vec2).GetConstructor(new[] { typeof(float), typeof(float) }), "Vec2(float, float) no longer resolves");
         Method(typeof(DefaultMissionDeploymentPlan), "AddTroops", typeof(void), typeof(Team), typeof(FormationClass), typeof(int), typeof(int), typeof(bool));
         Method(typeof(DefaultMissionDeploymentPlan), "MakeDefaultDeploymentPlans", typeof(void));
         Assert.IsNotNull(typeof(TacticBreachWalls).GetConstructor(new[] { typeof(Team) }));
@@ -115,6 +119,7 @@ public class LongDefeatBindingTests
         Method(typeof(Agent), "IsActive", typeof(bool));
         Method(typeof(AgentBuildData), "IsReinforcement", typeof(AgentBuildData), typeof(bool));
         Method(typeof(AgentBuildData), "Banner", typeof(AgentBuildData), typeof(Banner));
+        Method(typeof(AgentBuildData), "SpawnsIntoOwnFormation", typeof(AgentBuildData), typeof(bool));
         Method(typeof(BannerlordConfig), "GetRealBattleSizeForSiege", typeof(int));
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }

@@ -10,7 +10,7 @@ internal static class RiderlessMountRule
     internal const string Horse = "horse";
 
     /// <summary>The Monster ids of the wargs, which a test holds to WargConfig's list.</summary>
-    internal static readonly string[] Wargs = { "warg", "fell_warg" };
+    internal static readonly string[] Wargs = { "warg", "fell_warg", "dire_wolf" };
 
     /// <summary>Longer than any mount or dismount takes.</summary>
     internal const double WaitSeconds = 20.0;

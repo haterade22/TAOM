@@ -377,6 +377,7 @@
 	<string id="aom_goblin_bolgs_ironfang_name" text="{=aom_goblin_bolgs_ironfang_name}[Goblin] Bolg's Ironfang" />
 	<string id="aom_goblin_brute_name" text="{=aom_goblin_brute_name}[Goblin] Goblin Ravager" />
 	<string id="aom_goblin_chosen_of_tharzog_name" text="{=aom_goblin_chosen_of_tharzog_name}[Goblin] Goblin Mountain Guard" />
+	<string id="aom_goblin_dire_wolf_rider_name" text="{=aom_goblin_dire_wolf_rider_name}[Goblin] Dire Wolf Rider" />
 	<string id="aom_goblin_fighter_name" text="{=aom_goblin_fighter_name}[Goblin] Goblin Raider" />
 	<string id="aom_goblin_grunt_name" text="{=aom_goblin_grunt_name}[Goblin] Goblin Brawler" />
 	<string id="aom_goblin_guard_name" text="{=aom_goblin_guard_name}[Goblin] Goblin Impaler" />
@@ -392,6 +393,8 @@
 	<string id="aom_goblin_veteran_berserker_name" text="{=aom_goblin_veteran_berserker_name}[Goblin] Goblin Skull Crusher" />
 	<string id="aom_goblin_veteran_spear_warrior_name" text="{=aom_goblin_veteran_spear_warrior_name}[Goblin] Goblin Pike-Reaver" />
 	<string id="aom_goblin_veteran_sword_warrior_name" text="{=aom_goblin_veteran_sword_warrior_name}[Goblin] Goblin Infantry" />
+	<string id="aom_goblin_wolf_lord_name" text="{=aom_goblin_wolf_lord_name}[Goblin] Dire Wolf Lord" />
+	<string id="aom_goblin_wolf_runner_name" text="{=aom_goblin_wolf_runner_name}[Goblin] Wolf Runner" />
 	<string id="aom_gondor_anf_cavalry_name" text="{=aom_gondor_anf_cavalry_name}[Gondor] Anfalas Cavalry" />
 	<string id="aom_gondor_anf_footman_name" text="{=aom_gondor_anf_footman_name}[Gondor] Anfalas Footman" />
 	<string id="aom_gondor_anf_guardsman_name" text="{=aom_gondor_anf_guardsman_name}[Gondor] Anfalas Guardsman" />
@@ -582,6 +585,7 @@
 	<string id="aom_gundabad_brute_name" text="{=aom_gundabad_brute_name}[Gundabad] Pale Uruk Ravager" />
 	<string id="aom_gundabad_chosen_of_tharzog_name" text="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Pale Uruk Mountain Guard" />
 	<string id="aom_gundabad_despoiler_of_the_vale_name" text="{=aom_gundabad_despoiler_of_the_vale_name}[Gundabad] Despoiler of the Vale" />
+	<string id="aom_gundabad_dire_wolf_rider_name" text="{=aom_gundabad_dire_wolf_rider_name}[Gundabad] Dire Wolf Rider" />
 	<string id="aom_gundabad_dread_rider_of_the_tower_name" text="{=aom_gundabad_dread_rider_of_the_tower_name}[Gundabad] Azog's Defiler" />
 	<string id="aom_gundabad_fighter_name" text="{=aom_gundabad_fighter_name}[Gundabad] Pale Uruk Raider" />
 	<string id="aom_gundabad_grunt_name" text="{=aom_gundabad_grunt_name}[Gundabad] Pale Uruk Brawler" />
@@ -599,6 +603,8 @@
 	<string id="aom_gundabad_veteran_spear_warrior_name" text="{=aom_gundabad_veteran_spear_warrior_name}[Gundabad] Pale Uruk Pike-Reaver" />
 	<string id="aom_gundabad_veteran_sword_warrior_name" text="{=aom_gundabad_veteran_sword_warrior_name}[Gundabad] Pale Uruk Infantry" />
 	<string id="aom_gundabad_warg_tamer_name" text="{=aom_gundabad_warg_tamer_name}[Gundabad] Pale Uruk Wolf Rider" />
+	<string id="aom_gundabad_wolf_lord_name" text="{=aom_gundabad_wolf_lord_name}[Gundabad] Dire Wolf Lord" />
+	<string id="aom_gundabad_wolf_runner_name" text="{=aom_gundabad_wolf_runner_name}[Gundabad] Wolf Runner" />
 	<string id="aom_harad_howdah_crew_name" text="{=aom_harad_howdah_crew_name}[Harwan] Howdah Archer" />
 	<string id="aom_harad_militia_archer_name" text="{=aom_harad_militia_archer_name}[Harwan] Militia Archer" />
 	<string id="aom_harad_militia_spearman_name" text="{=aom_harad_militia_spearman_name}[Harwan] Militia Spearman" />

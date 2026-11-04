@@ -10,7 +10,7 @@ public class StalemateRuleTests
     private static readonly RunRules R = RunRules.Default;
 
     /// <summary>The charge path alone: the stragglers' short wait never comes.</summary>
-    private static readonly RunRules LongPath = R with { StragglerQuietSeconds = 3600f };
+    private static readonly RunRules LongPath = R with { StragglerCount = 0 };
 
     /// <summary>Ticks one second at a time and returns the first decision that is not None.</summary>
     private static StalemateDecision Quiet(ref StalemateState s, float seconds, int attackers, int defenders, int wave = 110, RunRules? rules = null)
@@ -26,45 +26,36 @@ public class StalemateRuleTests
     }
 
     [TestMethod]
-    public void FewQuietStragglers_FallAfterTheirOwnShortWait_WithNoCharge()
+    public void FiveOrFewerAttackers_FallAfterSixtySeconds_WithNoCharge()
     {
         var s = new StalemateState();
 
-        Assert.AreEqual(StalemateAction.None, Quiet(ref s, R.StragglerQuietSeconds - 1f, 2, 48).Action);
+        Assert.AreEqual(StalemateAction.None, Quiet(ref s, 59, 5, 48).Action);
 
-        var last = StalemateRule.Step(ref s, 1f, false, 2, 48, 110, R);
+        var last = StalemateRule.Step(ref s, 1f, false, 5, 48, 110, R);
 
         Assert.AreEqual(StalemateAction.FellStragglers, last.Action);
-        Assert.AreEqual(2, last.Count);
+        Assert.AreEqual(5, last.Count);
         Assert.IsFalse(s.Charging, "the defenders stay on the walls");
     }
 
     [TestMethod]
-    public void NaNStragglerQuietSeconds_NeverFellsByTheShortWait()
+    public void ADeath_DoesNotRestartTheStragglersClock()
     {
-        var rules = R with { StragglerQuietSeconds = float.NaN };
         var s = new StalemateState();
+        Quiet(ref s, 59, 2, 48);
 
-        Assert.AreEqual(StalemateAction.Charge, Quiet(ref s, R.QuietSeconds, 2, 48, rules: rules).Action);
+        var d = StalemateRule.Step(ref s, 1f, true, 2, 48, 110, R);
+
+        Assert.AreEqual(StalemateAction.FellStragglers, d.Action);
     }
 
     [TestMethod]
-    public void ALoss_RestartsTheStragglersWait()
-    {
-        var s = new StalemateState();
-        Quiet(ref s, R.StragglerQuietSeconds - 1f, 2, 48);
-
-        StalemateRule.Step(ref s, 1f, true, 2, 48, 110, R);
-
-        Assert.AreEqual(StalemateAction.None, Quiet(ref s, R.StragglerQuietSeconds - 1f, 2, 48).Action);
-    }
-
-    [TestMethod]
-    public void TooManyToBeStragglers_TakeTheChargePath()
+    public void SixAttackers_TakeTheChargePath()
     {
         var s = new StalemateState();
 
-        Assert.AreEqual(StalemateAction.Charge, Quiet(ref s, R.QuietSeconds, 12, 48).Action, "12 of 110 is over the tenth");
+        Assert.AreEqual(StalemateAction.Charge, Quiet(ref s, R.QuietSeconds, 6, 48).Action);
     }
 
     [TestMethod]
@@ -76,13 +67,22 @@ public class StalemateRuleTests
     }
 
     [TestMethod]
-    public void Stragglers_DuringACharge_FallAfterTheShortWaitToo()
+    public void TheClockStarts_WhenTheCountFirstReachesFive_EvenDuringACharge()
     {
         var s = new StalemateState();
         Assert.AreEqual(StalemateAction.Charge, Quiet(ref s, R.QuietSeconds, 40, 48).Action);
-        StalemateRule.Step(ref s, 1f, true, 2, 48, 110, R);
 
-        Assert.AreEqual(StalemateAction.FellStragglers, Quiet(ref s, R.StragglerQuietSeconds, 2, 48).Action);
+        Assert.AreEqual(StalemateAction.None, Quiet(ref s, 59, 2, 48).Action);
+        Assert.AreEqual(StalemateAction.FellStragglers, StalemateRule.Step(ref s, 1f, false, 2, 48, 110, R).Action);
+    }
+
+    [TestMethod]
+    public void NaNStragglerSeconds_NeverFellsByThisRule_AndTheWaveCanStillCharge()
+    {
+        var rules = R with { StragglerSeconds = float.NaN };
+        var s = new StalemateState();
+
+        Assert.AreEqual(StalemateAction.Charge, Quiet(ref s, R.QuietSeconds, 2, 48, rules: rules).Action);
     }
 
     [TestMethod]

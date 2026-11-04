@@ -60,6 +60,8 @@ public class LongDefeatShippedConfigTests
         Assert.AreEqual(150, helms.Garrison.Sum(g => g.Count));
         Assert.AreEqual(600, helms.Shop.StartingGold);
         Assert.AreEqual(5, helms.Shop.Offers.Count);
+        Assert.IsNotNull(helms.Muster?.Foot, "new foot must not fall back to the terrace");
+        Assert.IsNotNull(helms.Muster?.Archers, "new archers must not fall back to the terrace");
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 

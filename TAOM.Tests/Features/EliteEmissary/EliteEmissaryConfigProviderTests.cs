@@ -145,23 +145,23 @@ public class EliteEmissaryConfigProviderTests
     [TestMethod]
     public void GetConfig_KnownCultureWithNoResourceMapping_DroppedWithWarning()
     {
-        // goblin is a known culture id but maps to NO special resource -> its offers would be silently
+        // lindon is a known culture id but maps to NO special resource -> its offers would be silently
         // dead at runtime (ResolveResource null + HideWhenNoResource). Drop+warn at load. Codex 2026-06-25 [MED]/S4.
-        _resourceConfig.GetTroopCost("goblin_x").Returns(Priced("goblin_x", 12));
-        // _resourceConfig.GetByCultureId("goblin") returns null (substitute default)
+        _resourceConfig.GetTroopCost("lindon_x").Returns(Priced("lindon_x", 12));
+        // _resourceConfig.GetByCultureId("lindon") returns null (substitute default)
 
         WriteConfig(@"<EliteEmissary enabled=""true"">
   <CultureOffers>
-    <Culture id=""goblin"">
-      <Troop id=""goblin_x"" />
+    <Culture id=""lindon"">
+      <Troop id=""lindon_x"" />
     </Culture>
   </CultureOffers>
 </EliteEmissary>");
 
         var config = _sut.GetConfig();
 
-        Assert.IsFalse(config.CultureOffers.ContainsKey("goblin"));
-        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("goblin") && s.Contains("no special resource")));
+        Assert.IsFalse(config.CultureOffers.ContainsKey("lindon"));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("lindon") && s.Contains("no special resource")));
     }
 
     [TestMethod]

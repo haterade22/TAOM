@@ -68,10 +68,13 @@ internal static class LongDefeatChecks
         return Verdict(ok, $"general_is_main={Flag(f.GeneralIsMain)} player_general={Flag(f.IsPlayerGeneral)} order_owner_is_main={Flag(f.OrderOwnerIsMain)}");
     }
 
-    internal static CheckVerdict Muster(int onPoint, int overlap, int far, int offMesh, int batch)
+    /// <summary>A shipped muster point the scene no longer serves: the run still plays, on the scene's frame, but it must not read as a pass.</summary>
+    internal static CheckVerdict MusterPlaceLost(FormationSlot slot) => Verdict(false, $"source=scene class={slot} recorded place has no navmesh");
+
+    internal static CheckVerdict Muster(int onPoint, int overlap, int far, int offMesh, int batch, string source = "scene")
     {
         var ok = far == 0 && offMesh == 0 && onPoint <= Math.Max(MusterLimit, batch / 2) && overlap <= MusterLimit;
-        return Verdict(ok, $"on_point={Num(onPoint)} of={Num(batch)} overlap={Num(overlap)} far={Num(far)} off_mesh={Num(offMesh)}");
+        return Verdict(ok, $"on_point={Num(onPoint)} of={Num(batch)} overlap={Num(overlap)} far={Num(far)} off_mesh={Num(offMesh)} source={source}");
     }
 
     /// <summary><paramref name="source"/> is where the point came from: "recorded" for a keep block of fortresses.json, "scene" for the reinforcement frame.</summary>

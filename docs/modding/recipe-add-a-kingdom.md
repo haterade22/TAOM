@@ -365,10 +365,9 @@ Code: No code changes needed
   tools append, and `add_map_fortifications.py --check` refuses any other order. Arthedain's batch
   first landed with Luinkrag ahead of 34 existing rows; the 2026-10-07 review caught it
   ([rca](../reviews/rca-arthedain-2026-10-07.md)).
-- **Four kingdoms have no special resource.** `special_resources_config.xml` names 26 of the 30
-  kingdom ids; `goblin`, `mistymountainorcs`, `bluecraig` and `lindon` are the four absent ones.
-  Nothing reports it.
-  <!-- measured: rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml | sort -u | wc -l 2026-10-29 -->
+- **One kingdom has no special resource.** `special_resources_config.xml` names 29 of the 30
+  kingdom ids; `lindon` is the absent one. Nothing reports it.
+  <!-- measured: rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml | sort -u | wc -l 2026-11-04 -->
 - **TAOM has never written down whether the row order inside `SubModule.xml` matters.** What is on
   disk is that the XSLT rows sit above the plain-XML rows (`SubModule.xml:70` and `:130` for
   `Kingdoms`, `:96` and `:157` for `NPCCharacters`) and no doc says whether that is load-bearing.

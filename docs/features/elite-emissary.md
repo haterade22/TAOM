@@ -154,7 +154,7 @@ co-op refusal was added 2026-08-03 from field testing.
 Since 2026-10-15 the two Harad riders are Emissary-only: neither is in any volunteer pool, so this is the only way a player gets one. Their `recruit_cost` (50 and 2000) charges only a captured rider recruited from prisoners.
 
 Omitted (no L36+ elites): Dale (sturgia), Dunland (empire), Umbar, Khand (battania), Lothlorien.
-Omitted (no special-resource mapping): goblin, mistymountainorcs.
+Omitted: lindon (no special-resource mapping); goblin, mistymountainorcs and bluecraig (War Spoils since #1081, no offers listed).
 Omitted (no `<Culture>` row here, and no troop with a `troop_resource_costs.xml` row to price an offer):
 arthedain, cardolan, rhudaur, eredluin (Ered Luin), and dorwinion, southrhovanion, anduinvale and angaladh
 (these four map to a resource, Lake Fish for Dorwinion and Marks for the other three, but none of their

@@ -9,6 +9,9 @@ namespace TAOM.Features.LongDefeat;
 
 internal sealed partial class LongDefeatDirector
 {
+    // The defender classes whose recorded muster place had no navmesh: warned once, then left on the scene's frame for the rest of the run.
+    private readonly HashSet<FormationSlot> _musterFallback = new();
+
     private static string F1(float v) => v.ToString("F1", CultureInfo.InvariantCulture);
 
     private static string F2(float v) => v.ToString("F2", CultureInfo.InvariantCulture);
@@ -78,6 +81,8 @@ internal sealed partial class LongDefeatDirector
                 _field.PlaceFormation(b.Slot, b.BatchTotal + reserve, attackers);
             else
                 _field.BeginBatch(b.Slot, b.BatchTotal + reserve, attackers);
+            if (!attackers)
+                UseMusterPlace(b.Slot);
         }
 
         var report = _field.SpawnBatch(b, attackers);
@@ -93,6 +98,21 @@ internal sealed partial class LongDefeatDirector
         LogSpawnLevel(b, attackers, report, last);
         if (!attackers)
             JudgeDefenderBatch(b, report, standing);
+    }
+
+    // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers never do.
+    private void UseMusterPlace(FormationSlot slot)
+    {
+        var frame = _plan.Muster?.For(slot);
+        if (frame == null || _musterFallback.Contains(slot))
+            return;
+
+        if (_field.SetMusterFrame(slot, frame))
+            return;
+
+        _musterFallback.Add(slot);
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission + slot, LongDefeatChecks.MusterPlaceLost(slot));
+        _logger.LogWarning($"{Tag}[Muster] the recorded {slot} place ({F1(frame.X)}, {F1(frame.Y)}, {F1(frame.Z)}) has no navmesh; defenders of that class spawn at the scene's frame");
     }
 
     private void LogSpawnLevel(SoldierBatch b, bool attackers, LdSpawnReport report, bool last)
@@ -123,7 +143,7 @@ internal sealed partial class LongDefeatDirector
                 _musterBatchesSpawned++;
             var label = b.Slot == FormationSlot.Infantry ? $"{_musterBatchesSpawned}/{_run.MusterBatchCount}" : "archers";
             _logger.LogInfo($"{Tag}[Muster] batch {label} {b.Slot} {b.TroopId} count={report.Spawned} on_point={report.OnPoint} overlap={overlap} far={report.Far} off_mesh={report.OffMesh}");
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission, LongDefeatChecks.Muster(report.OnPoint, overlap, report.Far, report.OffMesh, report.Spawned));
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission, LongDefeatChecks.Muster(report.OnPoint, overlap, report.Far, report.OffMesh, report.Spawned, _plan.Muster?.For(b.Slot) != null && !_musterFallback.Contains(b.Slot) ? "recorded" : "scene"));
             return;
         }
 

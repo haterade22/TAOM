@@ -29,6 +29,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
+    // The recorded muster place each defender class spawns at while its batch is open (SetMusterFrame to EndBatch). A class with no entry spawns at the scene's frame.
+    private readonly Dictionary<FormationSlot, Vec3> _muster = new();
+
     // A destroyed gate, tower or ram leaves ActiveMissionObjects (Mission.OnObjectDisabled), so these lists are taken once, at deployment.
     private List<CastleGate> _gates = new();
     private List<SiegeLadder> _ladders = new();
@@ -223,6 +226,20 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _open[(attackers, slot)] = count;
     }
 
+    // Moves the formation to the recorded place and makes SpawnBatch ask for SpawnsIntoOwnFormation. Mission.cs:3950-3953 then takes the spawn frame from the formation's own order
+    // position, and :4243-4247 takes the slot from CountOfUnits, so the next free native slot around the place applies, as it does around the scene's frame. A Move order takes the
+    // order position back on the next Formation.Tick (Formation.cs:2484-2490), so standing soldiers stay at their posts and each batch sets it again.
+    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame)
+    {
+        var at = new Vec3(frame.X, frame.Y, frame.Z);
+        if (_mission.Scene.GetNavigationMeshForPosition(in at) == UIntPtr.Zero)
+            return false;
+
+        Side(false).GetFormation(Class(slot)).SetPositioning(new WorldPosition(_mission.Scene, at), new Vec2(frame.Fx, frame.Fy));
+        _muster[slot] = at;
+        return true;
+    }
+
     // No position here. The engine then takes the place from the formation's layout, which offers only slots that native accepts around the frame (Formation.cs:669-671,
     // LineFormation.cs:495-497), and Mission.GetTroopSpawnFrameWithIndex (:3983-3995) handles a slot with no navmesh. A position computed here skips all of that.
     public LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers)
@@ -238,11 +255,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
         var reinforcement = attackers || batch.Reinforcement;
         var open = _open.TryGetValue((attackers, batch.Slot), out var started) ? started : batch.BatchTotal;
-        var frame = FrameOf(team, Class(batch.Slot), reinforcement);
+        Vec3 musterAt = default;
+        var mustered = !attackers && _muster.TryGetValue(batch.Slot, out musterAt);
+        var frame = mustered ? musterAt : FrameOf(team, Class(batch.Slot), reinforcement);
         int far = 0, offMesh = 0, onPoint = 0;
         for (var i = 0; i < batch.Count; i++)
         {
-            var at = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false).Position;
+            var at = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false, mustered).Position;
             points.Add(Point(at));
             if (frame is not { } f)
                 continue;
@@ -257,7 +276,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         return new LdSpawnReport(points, far, offMesh, onPoint);
     }
 
-    private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement)
+    private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
+        bool intoOwnFormation = false)
     {
         var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
             .Banner(team.Banner);
@@ -265,6 +285,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
             data.IsReinforcement(true);
+        if (intoOwnFormation)
+            data.SpawnsIntoOwnFormation(true);
         return _mission.SpawnTroopWithAgentBuildData(data, true, true);
     }
 
@@ -275,6 +297,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     {
         Side(attackers).GetFormation(Class(slot)).EndSpawn();
         _open.Remove((attackers, slot));
+        if (!attackers)
+            _muster.Remove(slot);
     }
 
     public bool SpawnPlayer(bool respawn)
@@ -354,6 +378,14 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         return count == 0 ? default : new LdRest(count, before / count, after / count);
     }
 
+    private static string DescribeStraggler(Agent agent)
+    {
+        var formation = agent.Formation;
+        var at = agent.Position;
+        return $"[LongDefeat][Wave] straggler {agent.Character?.StringId} ranged={agent.IsRangedCached} formation={formation?.RepresentativeClass} "
+            + $"behavior={formation?.AI?.ActiveBehavior?.GetType().Name} speed={agent.MovementVelocity.Length:F1} at=({at.x:F1}, {at.y:F1}, {at.z:F1})";
+    }
+
     public int Fell(int count)
     {
         if (count <= 0)
@@ -361,7 +393,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
         var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway).Take(count).ToList();
         foreach (var agent in left)
+        {
+            _logger.LogInfo(DescribeStraggler(agent));
             _mission.KillAgentCheat(agent);
+        }
+
         return left.Count;
     }
 
@@ -394,6 +430,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _towers = new List<SiegeTower>();
         _rams = new List<BatteringRam>();
         _open.Clear();
+        _muster.Clear();
         _lastMain = null;
         _knownMain = null;
     }

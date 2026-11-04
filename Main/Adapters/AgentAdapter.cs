@@ -59,6 +59,7 @@ public class AgentAdapter : IAgentAdapter
 
     public bool IsHorse() => _agent.Monster.StringId == "horse";
     public bool IsCamel() => _agent.Monster.StringId == "camel";
+    public string GetMonsterStringId() => _agent.Monster?.StringId;
     // The engine's own IsActive() reads the agent's slot through a pointer captured at creation, so a
     // deleted agent's handle answers for whoever inherited its index (#592). Active means: alive AND
     // still the occupant of its slot. Adapters are held across frames (bone-check targets), which is
