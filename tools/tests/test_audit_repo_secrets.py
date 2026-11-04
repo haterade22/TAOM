@@ -105,6 +105,31 @@ class RepoSecretScanTests(unittest.TestCase):
         self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
         self.assertEqual(res.findings[0].line, 1)
 
+    def test_finds_a_nuget_password_written_value_first(self):
+        line = '<add value="Zx9qLm2pR7vK4nB8" key="' + NUGET_CLEARTEXT_KEY + '" />\n'
+        res = self._run({"vendor/NuGet.config": line})
+        self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+
+    def test_finds_a_nuget_password_split_across_lines(self):
+        key_first = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="Zx9qLm2pR7vK4nB8" />\n'
+        value_first = '<configuration>\n<add\n  value="Zx9qLm2pR7vK4nB8"\n  key="' + NUGET_CLEARTEXT_KEY + '" />\n'
+        for name, text, line in (("key first", key_first, 1), ("value first", value_first, 3)):
+            with self.subTest(name):
+                res = self._run({"vendor/NuGet.config": text})
+                self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+                self.assertEqual(res.findings[0].line, line)
+                self.assertNotIn("Zx9qLm2pR7vK4nB8", res.findings[0].snippet)
+
+    def test_a_split_nuget_placeholder_is_silent(self):
+        text = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="<your feed PAT>" />\n'
+        self.assertEqual(self._run({"docs/plan.md": text}).findings, [])
+
+    def test_audit_allow_on_either_split_line_suppresses_it(self):
+        text = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="Zx9qLm2pR7vK4nB8" /> audit-allow: secret-nuget-cleartext\n'
+        res = self._run({"docs/plan.md": text})
+        self.assertEqual(res.findings, [])
+        self.assertEqual(len(res.suppressed), 1)
+
     def test_a_nuget_placeholder_value_is_silent(self):
         line = '<add key="' + NUGET_CLEARTEXT_KEY + '" value="<your feed PAT>" />\n'
         self.assertEqual(self._run({"docs/plan.md": line}).findings, [])

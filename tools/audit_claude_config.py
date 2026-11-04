@@ -156,6 +156,12 @@ def _is_placeholder(value: str) -> bool:
 # Secret rules  (run on every scanned file)
 # --------------------------------------------------------------------------- #
 
+# The key and its value in either order. `\s+` crosses a newline, which the per-line pass cannot see:
+# scan_secrets runs this same pattern over the whole text for the pairs split across lines.
+_NUGET_CLEARTEXT_RX = (r'(?:ClearTextPassword"\s+value="[^"]+"'
+                       r'|value="[^"]+"\s+key="ClearTextPassword")')
+_NUGET_CLEARTEXT = re.compile(_NUGET_CLEARTEXT_RX)
+
 _SECRET_PATTERNS = [
     ("secret-anthropic", r"sk-ant-[A-Za-z0-9_\-]{20,}", "Anthropic API key"),
     ("secret-openai", r"sk-(?:proj-)?[A-Za-z0-9]{32,}", "OpenAI API key"),
@@ -166,7 +172,7 @@ _SECRET_PATTERNS = [
     ("secret-slack", r"xox[baprs]-[A-Za-z0-9-]{10,}", "Slack token"),
     ("secret-stripe", r"sk_(?:test|live)_[A-Za-z0-9]{16,}", "Stripe secret key"),
     ("secret-privatekey", r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----", "private key material"),
-    ("secret-nuget-cleartext", r'ClearTextPassword"\s+value="[^"]+"', "NuGet cleartext feed password"),
+    ("secret-nuget-cleartext", _NUGET_CLEARTEXT_RX, "NuGet cleartext feed password"),
     ("secret-db-uri", r"(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis)://[^\s:@/]+:[^\s:@/]+@", "DB connection string with inline credentials"),
 ]
 _SECRET_COMPILED = [(rid, re.compile(rx), desc) for rid, rx, desc in _SECRET_PATTERNS]
@@ -221,6 +227,26 @@ def scan_secrets(path: Path, rel: str, text: str, res: Result) -> None:
             res.findings.append(Finding(
                 "secret-generic", "HIGH", "secrets", rel, lineno,
                 f"Hardcoded {key.lower()} literal", _mask(val)))
+    _scan_split_nuget(rel, text, res)
+
+
+def _scan_split_nuget(rel: str, text: str, res: Result) -> None:
+    """The NuGet key and value on different lines. A same-line pair was reported by the per-line pass;
+    this reports only the pairs that span a newline, so none is found twice. An `audit-allow` on any
+    line the pair spans suppresses it."""
+    lines = text.splitlines()
+    for m in _NUGET_CLEARTEXT.finditer(text):
+        tok = m.group(0)
+        if "\n" not in tok or _is_placeholder(tok):
+            continue
+        first = text.count("\n", 0, m.start()) + 1
+        last = first + tok.count("\n")
+        if any(_suppressed(lines[n - 1], "secret-nuget-cleartext") for n in range(first, last + 1)):
+            res.suppressed.append(f"{rel}:{first} secret-nuget-cleartext")
+            continue
+        res.findings.append(Finding(
+            "secret-nuget-cleartext", "CRITICAL", "secrets", rel, first,
+            "Possible committed NuGet cleartext feed password", _mask(tok)))
 
 
 # --------------------------------------------------------------------------- #
