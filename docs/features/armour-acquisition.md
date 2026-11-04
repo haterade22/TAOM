@@ -281,13 +281,14 @@ thamaskene 260. Special resources earn about 14 per battle won, so 150 is roughl
 
 ### `culture_marketplace_config.xml`
 
-Thirteen `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
+Seventeen `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
 Rivendell, Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), the
-three orc cultures and Umbar on Mordor, Arthedain (2026-10-07), Cardolan and Rhudaur on Gondor, and
-Ered Luin on Erebor (2026-10-27). Those cultures own 35 of the 92 towns in the live map (counted
-2026-10-27). `armour_from` always names the lord kit, ladder weapon and lord's material donor;
+three orc cultures and Umbar on Mordor, Arthedain (2026-10-07), Cardolan and Rhudaur on Gondor, Ered Luin
+on Erebor (2026-10-27), Anduin Vale, Angáladh and Dorwinion on Dale (`sturgia`), and South Rhovanion
+on Rohan (`vlandia`). Those cultures own 43 of the 100 towns in the live map (counted
+2026-11-03). `armour_from` always names the lord kit, ladder weapon and lord's material donor;
 for the market it only applies to a culture without `<Stock>` rows. Lindon, Arthedain, Cardolan,
-Rhudaur and Ered Luin stock their markets through `<Stock>` rows instead (#755, [culture marketplace](culture-marketplace.md)). The Animalia moose is
+Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion stock their markets through `<Stock>` rows instead (#755, [culture marketplace](culture-marketplace.md)). The Animalia moose is
 routed to Mirkwood with `min_stock="1"`.
 
 ### MCM: "Armour Acquisition"
@@ -298,7 +299,7 @@ game's gate is on. The ladder has no toggle of its own: it runs while the gate i
 
 ### Data rows elsewhere
 
-- `lotr_issues/taom_lotr_issues.xml`: 22 `lotr_armourer_commission_*` DeliverGoods rows (Artisan giver,
+- `lotr_issues/taom_lotr_issues.xml`: 26 `lotr_armourer_commission_*` DeliverGoods rows (Artisan giver,
   4 steel plus up to 12 by difficulty), one per culture group, each rewarding a heavy (Umbar and
   Mirkwood: elite) chest; and 13 `lotr_deep_seam_*` rows, "The Deep Seam" (Headman giver, 6 hardwood
   plus up to 18 by difficulty), one per culture that owns armour and shared by the cultures that draw on
@@ -411,7 +412,7 @@ Seam's culture map and player filter, a material and weapon picks for all thirte
 Elsewhere: `SpecialResourceSpenderTests`, `CultureMarketplaceArmourDonorTests` (the pool merge and its
 config), the CultureMarketplace injection tests (the per-town filter), the Animalia moose route,
 `CareerQuestConfigProviderTests` and `CareerQuestServiceTests` (`HeroKills`),
-`LotrIssueConfigProviderTests` (74 shipped issues, `reward_count`, `for_player_culture`),
+`LotrIssueConfigProviderTests` (82 shipped issues, `reward_count`, `for_player_culture`),
 `LotrIssueServiceTests` (`OffersTo`), `ReflectionSiteBindingTests` (`set_NotMerchandise`). Python:
 `tools/tests/test_generate_armour_classes.py`, and in `test_validate_moduledata.py`
 `ArmourClassTableDriftTests`, `ArmourAcquisitionRefTests` (the ladder's references included) and

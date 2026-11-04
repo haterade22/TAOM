@@ -4,7 +4,7 @@
 
 A Free-aligned hero cannot marry an Evil-aligned one. A lord of Gondor, Rohan, Dale, Erebor or the
 Elves will not wed a hero of Mordor, Isengard, Gundabad, Dol Guldur or any orc culture, and the
-reverse holds too. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland (`empire`) is Evil.
+reverse holds too. Neutral cultures (Khand, Umbar, Shaghana, Abanissa, Cardolan, Rhudaur, Anduin Vale, Angáladh, Dorwinion, South Rhovanion) marry anyone; Dunland (`empire`) is Evil.
 
 The rule keys on **culture**, and a companion Harmony transpiler narrows the AI's partner search so
 Free factions do not lose most of their marriages as a side effect.
@@ -70,9 +70,9 @@ about peoples, so it keys on culture:
 - `GetClanAfterMarriage` moves the bride into the groom's clan and kingdom, so kingdom is the thing
   the marriage itself changes.
 
-All 1,286 lords in `lords.xml` resolve to 26 cultures and every one of them is classified in
-`execution/alignment.json` (723 evil, 337 free, 226 neutral; counted 2026-10-27, Ered Luin's 16 free
-lords included). The 10 `taom_spcultures.xml` cultures absent from that file are the bandit and
+All 1,346 lords in `lords.xml` resolve to 30 cultures and every one of them is classified in
+`execution/alignment.json` (723 evil, 337 free, 286 neutral; counted 2026-11-03, Ered Luin's 16 free lords and the four neutral
+realms added 2026-10-29, Anduin Vale, Angáladh, Dorwinion and South Rhovanion, included). The 11 `taom_spcultures.xml` cultures absent from that file are the bandit and
 creature cultures, which seed no lords.
 
 There is deliberately **no runtime kingdom fallback** for an unclassified culture. An unclassified

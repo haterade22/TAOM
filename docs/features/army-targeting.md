@@ -40,9 +40,9 @@ The AI target-selection system runs deep inside `AiMilitaryBehavior.AiHourlyTick
 
 **Why nearest fortification and not `FactionMidSettlement`.** The medoid distorts wide empires by up to 3.4x (Rhûn to Gondor is 167 path units from its nearest fort but 567 from its mid), and `Kingdom.CalculateMidSettlement` re-runs on `AddClanInternal`, its removal twin, `OnFortificationAdded` and `OnFortificationRemoved`, so the anchor drifts toward whatever a kingdom is currently conquering, widening its reach in the direction it is already winning.
 
-**Why weighting and not a gate.** A hard theater gate was designed and rejected on measurement. Minimum fortification-to-fortification gaps put Rohan to Mordor at 148 map units, Gondor to Rhûn at 167 and Rohan to Rhûn at 183: those kingdoms border each other, and a partition drawn on kingdom centroids severs four genuine fronts. Corrected so it stops severing them, a gate vetoes six pairs, all of which the reach falloff already kills. Weighting also avoids stranding a kingdom whose enemies are all foreign, which `Army.CheckInactivity` punishes by disbanding its army roughly two days later.
+**Why weighting and not a gate.** A hard theater gate was designed and rejected on measurement. Minimum fortification-to-fortification gaps put Rohan to Mordor at 148 map units, Gondor to Rhûn at 167 and Rohan to Rhûn at 183: those kingdoms border each other, and a partition drawn on kingdom centroids severs four genuine fronts. Corrected so it stops severing them, a gate vetoes six pairs. A reach falloff once killed those same pairs, but it was removed on 2026-08-22. Weighting also avoids stranding a kingdom whose enemies are all foreign, which `Army.CheckInactivity` punishes by disbanding its army roughly two days later.
 
-**Fail open, always.** A kingdom absent from `KingdomTheaters` weights at 1.0, not as foreign. Player-founded kingdoms get the runtime StringId `new_kingdom`, rebels get `<settlementId>_rebel_clan`, and neither can appear in a shipped config; failing closed would silently make the player's own realm un-besiegeable. The same rule covers an unmeasurable distance: `GetReachMultiplier(NaN)` returns 1.0 rather than suppressing on garbage.
+**Fail open, always.** A kingdom absent from `KingdomTheaters` weights at 1.0, not as foreign. Player-founded kingdoms get the runtime StringId `new_kingdom`, rebels get `<settlementId>_rebel_clan`, and neither can appear in a shipped config; failing closed would silently make the player's own realm un-besiegeable. An unmeasurable distance at the rescue gate also leaves vanilla's verdict standing: `IsWithinBorderRescueRange(NaN)` returns false.
 
 **Why the rescue radius is its own value.** It was briefly shared with the score-side falloff radius, and widening that falloff from 3 to 6 gaps silently widened this gate too, at which point all 80 authored priority entries fit inside it and the gate bounded nothing. 3.2 gaps clears the widest genuine hostile front on the live map (Lothlorien to Gundabad, 3.08 gaps by the engine's own path cache) without admitting the whole map.
 
@@ -50,7 +50,7 @@ The AI target-selection system runs deep inside `AiMilitaryBehavior.AiHourlyTick
 
 Priority list advancement is stateless — captured settlements disappear from the enemy settlement pool, so the next unconquered entry naturally becomes the highest-boosted target with no tracking required.
 
-Only `Besieger` receives the priority, theater and reach terms; only `Defender` receives the defence multiplier. Both receive the army focus. `Raider` is deliberately untouched because vanilla already hard-zeroes raiders past 5 town gaps in `GetDistanceScoreForRaiding`. A non-finite or non-positive `BaseScore` returns unchanged.
+Only `Besieger` receives the priority and theater terms; only `Defender` receives the defence multiplier. Both receive the army focus. `Raider` is deliberately untouched because vanilla already hard-zeroes raiders past 5 town gaps in `GetDistanceScoreForRaiding`. A non-finite or non-positive `BaseScore` returns unchanged.
 
 ### Component Diagram
 
@@ -65,16 +65,15 @@ ArmyTargetingService
   - _theaterIndex:    Dict<kingdomId, string[]>                   (built once at startup, [0] = primary)
   - GetTargetMultiplier(candidateId, committedTargetId?, factionId?) -> float
   - GetStrengthMultiplier(factionId?) -> float          (inflates ourStrength pre-gate)
-  - GetReachMultiplier(normalizedDistance) -> float     (1.0 flat, then linear to ReachFloor)
-  - IsWithinReach(normalizedDistance) -> bool           (gates the Patch22 border floor)
+  - IsWithinBorderRescueRange(normalizedDistance) -> bool (gates the Patch22 border floor)
   - GetTheaterWeight(attackerId?, targetOwnerId?) -> float
   - ApplyTargetScoreModifiers(TargetScoreContext) -> float
         |
 TaomTargetScoreModel : DefaultTargetScoreCalculatingModel
   - GetTargetScoreForFaction(Settlement, ArmyTypes, MobileParty, float)
-  - maps ArmyTypes -> ArmyTargetingMission via ArmyMissionMapper
-  - extracts factionId / target owner / settlement StringIds at the boundary
-  - inflates ourStrength -> calls base -> hands a TargetScoreContext to the service
+  - ITargetScoreContextFactory.Create: maps ArmyTypes -> ArmyTargetingMission via ArmyMissionMapper,
+    extracts factionId / target owner / settlement StringIds, inflates ourStrength
+  - calls base with the inflated strength -> hands the TargetScoreContext to the service
         |
 IMapReachAdapter / MapReachAdapter   (Main/Adapters/)
   - GetNormalizedDistanceToNearestFortification(Settlement, IFaction) -> float (town gaps, NaN if unmeasurable)
@@ -88,7 +87,7 @@ MCM (TaomSettings)
   - EvilFactionAggressionScale
   - ArmyBorderProximityFloor
   - EnableWarTheaters
-  - ArmyReachRadiusInTownGaps
+  - ArmyBorderRescueRadius
   - ArmyDefenderPriority
   - HoldCapturedForts   (Hold the Walls' switch, read by the service through this provider)
         |
@@ -174,10 +173,10 @@ pair's gap is inside the march radius, because anything past it is governed by g
 
 | Theater | Kingdoms (primary in **bold**) |
 |---|---|
-| `north` | **gundabad**, **mirkwood**, **rivendell**, **goblin**, **mistymountainorcs**, **dolguldur**, **lothlorien**, **erebor**, **sturgia** (Dale), **arthedain**, **cardolan**, **rhudaur**, **eredluin** (Ered Luin), empire (Dunland), isengard |
-| `central` | **vlandia** (Rohan), **isengard**, **empire** (Dunland), empire_w (Gondor), empire_s (Mordor), khuzait (Rhûn), goblin, mistymountainorcs, dolguldur, lothlorien |
+| `north` | **gundabad**, **mirkwood**, **rivendell**, **goblin**, **mistymountainorcs**, **dolguldur**, **lothlorien**, **erebor**, **sturgia** (Dale), **arthedain**, **cardolan**, **rhudaur**, **eredluin** (Ered Luin), **anduinvale** (Anduin Vale), **angaladh** (Angáladh), **dorwinion**, empire (Dunland), isengard |
+| `central` | **vlandia** (Rohan), **southrhovanion** (South Rhovanion), **isengard**, **empire** (Dunland), empire_w (Gondor), empire_s (Mordor), khuzait (Rhûn), goblin, mistymountainorcs, dolguldur, lothlorien |
 | `south` | **empire_w** (Gondor), **empire_s** (Mordor), **aserai** (Harad), **umbar**, **shaghana**, **abanissa**, battania (Khand) |
-| `east` | **khuzait** (Rhûn), **battania** (Khand), erebor, sturgia (Dale), empire_s (Mordor) |
+| `east` | **khuzait** (Rhûn), **battania** (Khand), erebor, sturgia (Dale), empire_s (Mordor), anduinvale, angaladh, dorwinion |
 | *(passive)* | `bluecraig`, `lindon` |
 
 `bluecraig` and `lindon` carry no theater deliberately: the 20 Bluecraig settlements measured then
@@ -191,6 +190,7 @@ settlements were placed on 2026-10-27 and no Map Tools rebuild has included them
 ([ered-luin.md](ered-luin.md), "How to verify in game"), so the analyzer has no positions for them and its
 membership is unmeasured.
 
+`anduinvale`, `angaladh` and `dorwinion` carry `north` first and `east` second; `southrhovanion` carries `central` only.
 ### Current priority lists
 
 All 86 entries: the 80 as originally authored, plus Arthedain's three towns on Gundabad's and
@@ -220,11 +220,11 @@ Tools rebuild (2026-08-26), which predates them.
 | Erebor | `erebor` | RU7/RU2/RU1/RU4/RU3/RU5/RU6/RU8 (Rhûn) |
 
 **A list is an axis of advance, not a claim about reach.** The two are separate on purpose: the list
-says where a faction wants to go in order, and the reach falloff decides how much it wants each step
+says where a faction wants to go in order, and vanilla's distance term decides how much it wants each step
 today. Do not delete an entry because it is currently far.
 
 **No priority list (vanilla logic):** Rohan (`vlandia`), Harad (`aserai`), Shaghâna, Âbanissa, Khand
-(`battania`), Umbar, Mirkwood, Lothlórien, Rivendell, Lindon, Blue Craig, Arthedain, Cardolan, Rhudaur, Ered Luin.
+(`battania`), Umbar, Mirkwood, Lothlórien, Rivendell, Lindon, Blue Craig, Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion, South Rhovanion.
 These either defend, or have no scripted axis of advance. No other kingdom's list names an Ered Luin town.
 
 **Kingdom ID notes (keys are kingdom StringIds, not culture StringIds).** `WarTheaterConfigInvariantsTests`
@@ -239,7 +239,7 @@ exact dead-key class has shipped five or more times:
 | File | Purpose |
 |------|---------|
 | `Main/Features/ArmyTargeting/Models/TaomTargetScoreModel.cs` | GameModel override — intercepts score, extracts primitives, calls service |
-| `Main/Features/ArmyTargeting/ArmyTargetingService.cs` | Core logic: commitment, priority, theater weighting, reach falloff, defence multiplier |
+| `Main/Features/ArmyTargeting/ArmyTargetingService.cs` | Core logic: commitment, priority, theater weighting, border rescue gate, defence multiplier |
 | `Main/Features/ArmyTargeting/ArmyTargetingMission.cs` | TAOM's mission enum, mapped from `Army.ArmyTypes` at the boundary |
 | `Main/Features/ArmyTargeting/ArmyMissionMapper.cs` | The `Army.ArmyTypes` to `ArmyTargetingMission` converter, kept out of the model so its body stays branch-free |
 | `Main/Features/ArmyTargeting/TargetScoreContext.cs` | Primitives extracted at the model boundary (base score, effective strength, mission, both faction ids, settlement ids, normalised distance) |
@@ -280,12 +280,13 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 - `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingServiceTests.cs` (20 tests):
   - `GetTargetMultiplier` (12): feature disabled, commitment stickiness, non-committed, null committed, first/middle/last priority entry, combined commitment+priority, null faction, unknown faction, empty list, single-entry list
   - `GetStrengthMultiplier` (5): feature disabled, null faction, configured value, unknown faction, scale applied
-- `TAOM.Tests/Features/ArmyTargeting/WarTheaterAndReachTests.cs` (44 tests):
-  - reach curve (13): origin, inside the inner radius, at and beyond the outer radius, `float.MaxValue`, the 1e30 unreachable sentinel, NaN and infinity both declining to suppress, negative distance, **monotonic non-increase across 0 to 40 gaps** (the guard against a sign error inverting the whole feature), feature disabled, NaN radius setting, and an inner radius above the outer one proving the span cannot go non-positive
-  - `IsWithinReach` (4): near, beyond, NaN false (opposite polarity to the multiplier, and deliberately so), feature disabled
-  - theater weighting (10): primary, shared-but-not-primary, foreign, foreign-is-damped-not-vetoed, `new_kingdom`, `player_faction` and `<settlement>_rebel_clan` all neutral, passive kingdom, null ids, both toggles
-  - `ApplyTargetScoreModifiers` (11): NaN and infinite base score, vanilla rejection, null context, Defender multiplier, Raider and Patrolling pass-through, master switch, boosted near primary target, damped far foreign target, and **commitment cannot outrun suppression**
-- `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingConfigProviderValidationTests.cs` (22 tests): one per rejection branch in `Validate`, covering NaN, out-of-range and sign-flipped values for every float, both ordering invariants, an undeclared theater name, and null, blank and duplicate priority target ids
+  - `IsInPriorityList` (3)
+- `TAOM.Tests/Features/ArmyTargeting/WarTheaterAndReachTests.cs` (37 tests):
+  - `IsWithinBorderRescueRange` (7): near, at the widest real front, beyond the radius, NaN and infinity both false, feature disabled, NaN radius setting falling back to the config radius
+  - priority list and aggression robustness (7): duplicate, null and blank priority ids, a long list inside the declared boost range, infinite, NaN and absurd aggression dropped to neutral, an infinite aggression keeping the effective strength finite
+  - theater weighting (11): primary, shared-but-not-primary, foreign, foreign-is-damped-not-vetoed, `new_kingdom`, `player_faction` and `<settlement>_rebel_clan` all neutral, passive kingdom, null ids, duplicate entries, both toggles
+  - `ApplyTargetScoreModifiers` (12): NaN and infinite base score, vanilla rejection, null context, Defender multiplier and its out-of-range fallback, Raider and Patrolling pass-through, master switch, boosted near primary target, damped foreign target, and the ranking spread staying below vanilla's own distance ramp
+- `TAOM.Tests/Features/ArmyTargeting/ArmyTargetingConfigProviderValidationTests.cs` (13 tests): a valid config changing nothing, one bad value for each theater weight (NaN primary, negative secondary, zero foreign), both ordering invariants, null, blank and duplicate priority target ids, a null priority list, an undeclared theater name, a null theater list, and null dictionaries
 - `TAOM.Tests/Features/ArmyTargeting/HoldTheWalls/CapturedFortHoldConfigTests.cs`: the `CapturedFortHold` validation branches and their two ordering pairs
 - `TAOM.Tests/Features/ArmyTargeting/WarTheaterConfigInvariantsTests.cs` (11 tests against the SHIPPED JSON):
   - every `KingdomTheaters` and `FactionPriorityTargets` key resolves against `taom_spkingdoms.xml` + `spkingdoms.xslt`; the six lore names are rejected by name; every shipped kingdom has a theater decision recorded; every theater name used is declared; declared names are unique; passive kingdoms are exactly the acknowledged pair; no duplicate entry within a kingdom's list; both ordering invariants; and the shipped file survives its own validator with no warning
@@ -316,10 +317,9 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 | `GetStrengthMultiplier` | O(1) — 1 dict lookup | Called before base — must be minimal |
 | `GetTargetMultiplier` | O(1) — 2 dict lookups | Commitment + priority index |
 | `GetTheaterWeight` | O(1): 2 dict lookups + a scan of ≤4 strings | Linear scan beats a HashSet alloc at this list length |
-| `GetReachMultiplier` | O(1): arithmetic only | The distance itself comes from the adapter |
 | `IMapReachAdapter` | O(1) on a hit; O(fiefs) on a miss, at most **27** on this map (Gondor) | **Off the scoring path entirely.** Reached only from `Patch22`, which itself only runs when vanilla already scored the target unreachable. Invalidated on campaign identity, on fief transfer (via `ArmyTargetingLifecycleBehavior`), on a fief-count change, and on the campaign day as a backstop |
 
-- Feature disabled: immediate `return 1.0f` in every service method, and `Patch22` returns before touching `bestDistanceScore`, so no fief walk and no distance-cache access happens
+- Feature disabled: `GetTargetMultiplier`, `GetStrengthMultiplier` and `GetTheaterWeight` return `1.0f`, `IsWithinBorderRescueRange` returns true, `ApplyTargetScoreModifiers` returns the base score, and `Patch22` returns before touching `bestDistanceScore`, so no fief walk and no distance-cache access happens
 - All three indexes (`_priorityIndex`, `_aggressionIndex`, `_theaterIndex`) built once at service construction, zero rebuilding at runtime
 - The theater verdict is two dictionary lookups and needs no distance, so an out-of-theater target is cheap to weight
 - All lookups use `TryGetValue` — no `ContainsKey` + indexer double-lookup
@@ -331,19 +331,19 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 **Implemented:** `Patch22_ArmyTargeting`, a Harmony Postfix on `CalculateDistanceScoreForBesieging`. When `bestDistanceScore == 0`, the target is in the faction's priority list, **and the target is inside the march radius**, substitutes `BorderProximityFloor` (MCM, default 0.15).
 
-The reach condition was added 2026-08-21 and is the important half. Without it the floor rescued any priority-list entry at any distance, which is what turned the list into an ignore-geography list and is named in the `Patch49` registry entry as the cause of cross-map siege steering. Note the polarity: an unmeasurable distance makes `IsWithinReach` return **false**, so the floor is not applied. That looks inverted next to `GetReachMultiplier`, which returns 1.0 on NaN, but both defer to vanilla, here vanilla had already rejected the target, and garbage is no grounds to overrule it. A refusal logs once at DEBUG.
+The reach condition was added 2026-08-21 and is the important half. Without it the floor rescued any priority-list entry at any distance, which is what turned the list into an ignore-geography list and is named in the `Patch49` registry entry as the cause of cross-map siege steering. Note the polarity: an unmeasurable distance makes `IsWithinBorderRescueRange` return **false**, so the floor is not applied. Vanilla had already rejected the target, and garbage is no grounds to overrule it. A refusal logs once at DEBUG.
 
 ## Patch49 — Siege-gathering dead-end guard + diagnostics
 
 ### The vanilla crash
 
-`Army.FindBestGatheringSettlementAndMoveTheLeader` (called from `Army.OnSiegeStarted` on the map tick that starts a siege) dereferences `settlement.GatePosition` at `Army.cs:726` **with no null guard** when a besieger army can't resolve a gathering fortification — every `Kingdom.Settlements` fortification is under siege / out of range **and** `SettlementHelper.FindNearestFortificationToMobileParty` returns null. A null `Kingdom` (kingdomless leader clan) throws in the same method at `Army.cs:659`. This is a vanilla missing-null-guard; TAOM's aggressive cross-map siege targeting (Patch22, above) only makes it more reachable. Crash report 2026-06-17 (issue #285), Bannerlord v1.4.6.
+`Army.FindBestGatheringSettlementAndMoveTheLeader` (called from `Army.OnSiegeStarted` on the map tick that starts a siege) dereferences `settlement.GatePosition` **with no null guard** when a besieger army can't resolve a gathering fortification (every `Kingdom.Settlements` fortification is under siege / out of range **and** `SettlementHelper.FindNearestFortificationToMobileParty` returns null). The line is `Army.cs:728` in v1.5.6 (726 in the v1.4.6 crash report below). A null `Kingdom` (kingdomless leader clan) throws in the same method at `Army.cs:661` (659 then). This is a vanilla missing-null-guard; TAOM's aggressive cross-map siege targeting (Patch22, above) only makes it more reachable. Crash report 2026-06-17 (issue #285), Bannerlord v1.4.6.
 
 ### The guard
 
-`Patch49_ArmyGatheringNreGuard` — a Harmony **Finalizer** on `FindBestGatheringSettlementAndMoveTheLeader` that swallows **only** `NullReferenceException` (rethrows anything else) and returns null. The broken army skips relocating its gathering leader this tick (vanilla already null-guards `AiBehaviorObject` downstream at Army.cs:480-490/564) and re-plans next tick — strictly better than a CTD. Finalizer (not Prefix) is the right pattern for a *managed* NRE; contrast Patch47/48/57's prevent-the-call Prefixes for *native* AVs a finalizer can't catch. Registered unconditionally in `SubModule.OnSubModuleLoad` right after `Patch22_ArmyTargeting`.
+`Patch49_ArmyGatheringNreGuard`: a Harmony **Finalizer** on `FindBestGatheringSettlementAndMoveTheLeader` that swallows only a `NullReferenceException` thrown from vanilla's own body while the army is in one of those two dead ends, and returns null. A `Priority.Last` prefix sets the finalizer's state just before vanilla's body, so an exception from a foreign prefix is not swallowed (`0002cb561`). Every other exception goes back with its throw site kept. The broken army skips relocating its gathering leader this tick and re-plans next tick, strictly better than a CTD. Vanilla guards `AiBehaviorObject` at some later reads and not others; whether a contained throw reaches an unguarded one is unverified (the patch's own comment lists the lines). Finalizer (not Prefix) is the right pattern for a *managed* NRE; contrast Patch47/48/57's prevent-the-call Prefixes for *native* AVs a finalizer can't catch. Registered unconditionally in `SubModule.OnSubModuleLoad` right after `Patch22_ArmyTargeting`.
 
-> **Debugger note:** a Finalizer runs *after* the throw, so under an attached debugger with break-on-`NullReferenceException` enabled this still surfaces as a **first-chance exception** at `Army.cs:726` (`Source = "0Harmony"`, a `[Lightweight Function]` frame). That is expected — pressing Continue lets the finalizer suppress it; there is no CTD in shipped play. Don't chase the first-chance break; read the diagnostics log instead.
+> **Debugger note:** a Finalizer runs *after* the throw, so under an attached debugger with break-on-`NullReferenceException` enabled this still surfaces as a **first-chance exception** at `Army.cs:728` (`Source = "0Harmony"`, a `[Lightweight Function]` frame). That is expected: pressing Continue lets the finalizer suppress it; there is no CTD in shipped play. Don't chase the first-chance break; read the diagnostics log instead.
 
 ### The diagnostics (what makes dead-end sieges reviewable)
 

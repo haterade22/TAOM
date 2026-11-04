@@ -11,10 +11,10 @@ engine's `horse_skeleton` went through the Kit and was bound as `act_war_ram_but
 ## Why This Exists
 
 TAOM already shipped a **`ram_rider` career** with nothing to ride.
-`Main/_Module/ModuleData/career_system/taom_careers.xml:637` defines it: ranks Ram-Breaker,
+`Main/_Module/ModuleData/career_system/taom_careers.xml:646` defines it: ranks Ram-Breaker,
 Goatback Charger and Vanguard of Dáin, gated to `Culture.erebor`, with a "Mountain Charge" ability
 (+25% charge damage, +20% mount speed, `taom_ability_templates.xml:276`) and
-`CareerArchetype.Cavalry` in `Main/Features/CareerSystem/CareerSystemIoC.cs:134`. The career was
+`CareerArchetype.Cavalry` in `Main/Features/CareerSystem/CareerSystemIoC.cs:152`. The career was
 reachable and its mount did not exist.
 
 Erebor was otherwise a deliberate no-mount culture: before this change `troops_erebor.xml` contained
@@ -258,7 +258,7 @@ The head-butt fires under ANY rider, the player included, as the warg's bite doe
 | `Main/Features/WarRam/WarRamBehaviorTree.cs` | Mumakil shell with only the butt branch wired, no new node classes |
 | `Main/Features/WarRam/WarRamMissionBehavior.cs` | **`: MissionLogic`**, attaches keyed on `Monster.StringId` |
 | `Main/Features/WarRam/WarRamIoC.cs` | Registration helper |
-| `Main/IoC.cs:114`, `Main/SubModule.cs:1559` | The two single-owner wiring lines |
+| `Main/IoC.cs:132`, `Main/SubModule.cs:2189` | The two single-owner wiring lines |
 | `Main/_Module/ModuleData/troops/troops_erebor.xml` | The six Ironpass ram cavalry troops (16 to 41) |
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Erebor.cs` | Pools `ironpass_ram_herder` as the branch root |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | The Gems gate at 31+ |
