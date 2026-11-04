@@ -65,6 +65,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-025115 | Dol Guldur's prices | Dol Guldur v Erebor | 768 / 526 | 3 / 0 | 11,936 / 27,090 | Dol Guldur 1.1 | 4x. |
 | 20261104-025552 | Dol Guldur's prices | Dol Guldur v Easterlings | 759 / 624 | 4 / 0 | 4,436 / 35,486 | Easterlings 1.3 | 4x. |
 | 20261104-030029 | Dol Guldur's prices | Dol Guldur v Rohan | 722 / 616 | 3 / 0 | 4,474 / 34,476 | Rohan 1.4 | 4x. |
+| 20261104-031711 | `0b9d37166` | Harad v Rohan | 630 / 651 | 2 / 3 | 25,287 / 18,530 | Harad 0.9 | 1x. Rohan also 0.9. The 4x match of this pair also ended 2 / 3. |
 
 ## Findings and changes
 
@@ -162,7 +163,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Result, the same nine pairs at 4x:** towers lost moved from 5 / 0 to 2 / 1 for Rivendell v Mordor, 6 / 0 to 3 / 1 for Erebor v Gundabad, 3 / 0 to 1 / 0 for Dale v Gondor, and 1 / 3 to 1 / 0 for Umbar v Dale. Easterlings v Harad stayed one-sided at 0 / 3. The side that was behind now reaches towers: Rivendell's tower damage rose from 522 to 9,727, Dol Guldur's from 0 to 11,778, Isengard's from 0 to 8,407, and Erebor's from 5 to 6,092. No keep fell in 15 minutes, and first towers fell later, between 324 and 905 s in most pairs. Between 569 and 1,736 blows per match were `Crowded`.
 
-**At 1x:** one match of Rivendell v Mordor (`014937`) agrees: 1 tower lost to 0, Rivendell's gold trade 3.0, Mordor's tower damage 16,870.
+**At 1x:** one match of Rivendell v Mordor (`014937`) agrees: 1 tower lost to 0, Rivendell's gold trade 3.0, Mordor's tower damage 16,870. One match of Harad v Rohan on the final prices (`031711`) was close, as at 4x: 2 towers to 3, gold trades 0.94 and 0.89.
 
 **How long a match lasts now:** three matches of 45 minutes (`011218`, `012426`, `013631`). No keep fell in any. Rivendell, which lost all 6 towers and took none before the limit, now leads Mordor 4 towers to 2 at 45 minutes, so a small army comes back as the match goes on. Erebor took all 6 of Gundabad's towers by 2,192 s and did not finish the keep in the 510 s left. Dale and Gondor reached 2 towers to 0: each side dealt only about a third of the 75,000 points that a side's towers and keep hold. So the limit fixed who can win, and a match between even sides now runs past the 30 to 45 minute target. Raising the limit would not solve that: only 15 to 25 percent of blows on any side's towers were `Crowded`. Even sides fight mid-lane, and few of them reach a tower.
 
