@@ -184,6 +184,7 @@ verified through another path.
    line is due.
 5. Run `python -m unittest tools.tests.test_ingame_verdict`; `RepoManifestGateTests` fails until
    the id is in the source.
+6. A draft with no issue yet is `0.toml` with `issue = 0`, and only one draft can exist at a time.
 
 ## Performance
 

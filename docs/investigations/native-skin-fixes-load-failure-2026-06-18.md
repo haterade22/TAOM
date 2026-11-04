@@ -12,7 +12,7 @@ G:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM\bin\Wi
 
 - **Win32 error 126 = `ERROR_MOD_NOT_FOUND`** — on a `LoadLibrary`, this means **either the DLL itself OR one of its DLL dependencies could not be found.** It is NOT "access denied" or "bad image" — it's "a module in the dependency chain is missing." This is the single most important clue: a *present* DLL still throws 126 when a **dependency** is absent.
 - The feature failed **gracefully** (the managed wrapper is try/caught and goes inert) — not a crash. But the covers_head morph fix + hair/beard cloth simulation are OFF for this player.
-- The player's install is on **`G:\SteamLibrary\`** (a different drive than the dev's `E:\Steam\`), and they are heavily modded (RTSCamera, MBSuperSpeed, ProvenSteel, UpgradeableWorkshops, EquipmentUpgradeMod, Palantir.Debugger, etc.). The mod list is almost certainly a red herring for THIS issue, but note it.
+- The player's install is on **`G:\SteamLibrary\`** (a different drive than the dev's `E:\Steam\`), and they are heavily modded (MBSuperSpeed, ProvenSteel, UpgradeableWorkshops, EquipmentUpgradeMod, Palantir.Debugger, etc.). The mod list is almost certainly a red herring for THIS issue, but note it.
 
 ## What NativeSkinFixes is (TAOM facts — CLAUDE.md "Key Paths" + `docs/features/native-skin-fixes.md`)
 

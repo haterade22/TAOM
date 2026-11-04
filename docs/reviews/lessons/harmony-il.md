@@ -1372,3 +1372,16 @@ listed.
   method's postfixes, swap that call site with a transpiler instead (the fix here). Add a real-Harmony
   test with a counting postfix on the skipped method.
 - **Source:** `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` finding 8.
+
+### Find one real producer before you build a guard for a path
+
+A Marshal's Word patch guarded `SetOrderWithOrderableObject` on the belief that a click on a siege wall reaches it. A wall click is a plain line order, and a decompile grep over the whole game found no caller on that route, so the patch, its static, its tests and its registry bullet were all deleted. The belief came from the contract's author, not the builder.
+- **Why missed:** the guard looked like caution, and a guard that never fires fails no test. The builder built what the contract said, and the unit tests drove the guard directly.
+- **Prevent:** before a patch or a guard is written for a route, quote one line that reaches it in the installed engine, or a log line that shows it. No producer means a named limit in the doc, not code. Search the bare name as well as the call shape.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), row 16.
+### A skip prefix on a tick also skips what the tick clears
+
+`MissionGauntletMainAgentEquipmentControllerView.OnMissionScreenTick` clears its press fields only in its else branch, and the Seat of Seeing's skip prefixes sit on the two methods inside the true branch. A short press of the drop key just before entering stayed set through the whole stay, and the first tick after the Seat ran the quick-release drop, so the hero dropped a weapon. On a client that also sends a network message.
+- **Why missed:** the contract said "skip while seated", the tests call the prefix for its return value, and the data flow lens followed the open wheels and not the press state.
+- **Prevent:** before a skip prefix on a method that a tick calls, read the whole tick and list what the skipped body and its sibling branches clear. A prefix that skips while a mode holds takes those fields by injection and clears them itself, and a test calls it with the refs.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 2.

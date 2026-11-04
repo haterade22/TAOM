@@ -1093,6 +1093,484 @@ class HeroRace1011Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
 
 
+class SeatOfSeeingManifestTests(unittest.TestCase):
+    """The real Seat of Seeing manifest. The fixtures render the [Check] lines SeatSession writes through IOutcomeLog (SeatChecks.cs
+    holds the ids; SeatOfSeeingChecksRenderTests in TAOM.Tests pins the rendered lines) and the three failure lines of the feature."""
+
+    NAME, ISSUE = "0.toml", "0"  # the rename changes these two
+
+    ENTER = "taom.seat-of-seeing.enter"
+    FRAMES = "taom.seat-of-seeing.frames"
+    LEAVE = "taom.seat-of-seeing.leave"
+    GLIDE = "taom.seat-of-seeing.glide"
+    CURSOR = "taom.seat-of-seeing.cursor"
+    FOCUS = "taom.seat-of-seeing.focus"
+    REOPENED = "taom.seat-of-seeing.panel-reopened"
+    HIDE = "taom.seat-of-seeing.hide"
+    KEEP = "taom.seat-of-seeing.keep"
+    LET_GO = "taom.seat-of-seeing.let-go"
+    STAGE_ONE = (ENTER, FRAMES, LEAVE, GLIDE)
+    NEW = (CURSOR, FOCUS, REOPENED, HIDE, KEEP, LET_GO)
+    ALL = STAGE_ONE + NEW
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest(self.NAME)
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-03_14-00-00")
+        return self.t.run(["--issue", self.ISSUE])
+
+    def manifest(self):
+        return iv.load_manifest(TOOLS / "ingame_checks" / self.NAME, int(self.ISSUE))
+
+    def check(self, check_id):
+        return next(c for c in self.manifest().checks if c.id == check_id)
+
+    def test_it_names_the_ten_checks_the_session_writes(self):
+        ids = list(self.ALL)
+        # The manifest is shared with Marshal's Word, whose checks follow the Seat's.
+        self.assertEqual([c.id for c in self.manifest().checks][:len(ids)], ids)
+        # The fault id is named by every fail list, and has no check of its own: it must stay at zero. The set is exact, so a check
+        # added or renamed without the test is noticed.
+        named = {i for i in iv.named_check_ids(self.manifest()) if i.startswith("taom.seat-of-seeing.")}
+        self.assertEqual(named, set(ids) | {"taom.seat-of-seeing.fault"})
+
+    def test_a_full_visit_of_stage_one_passes_its_four_checks_and_leaves_the_six_later_ones_not_reached(self):
+        code, out, _ = self.judge("seat_visit_pass.txt")
+        self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
+        for check_id in self.STAGE_ONE:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+        for check_id in self.NEW:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+        self.assertIn("the career ability key and the perspective toggle (game key 27) still act from the Seat", out)
+
+    def test_a_full_visit_of_stages_two_and_three_passes_every_check(self):
+        code, out, _ = self.judge("seat_panel_visit_pass.txt")
+        self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
+        for check_id in self.ALL:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_a_latched_fault_fails_all_ten_checks(self):
+        code, out, _ = self.judge("seat_fault.txt")
+        self.assertEqual(code, 1, out)
+        for check_id in self.ALL:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "FAIL", out)
+
+    def test_a_reopen_that_cannot_reach_the_view_model_fails_only_that_check(self):
+        code, out, _ = self.judge("seat_panel_reopen_site_missing.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.REOPENED), "FAIL", out)
+        self.assertIn("reason=site", out)
+        self.assertEqual(verdict_of(out, self.ENTER), "PASS", out)
+        self.assertEqual(verdict_of(out, self.CURSOR), "NOT REACHED", out)
+
+    def test_a_reopen_the_engine_refused_reads_not_reached_with_its_reason_and_is_not_a_pass(self):
+        code, out, _ = self.judge("seat_panel_reopen_refused.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.REOPENED), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=refused", out)
+        self.assertNotRegex(out, r"(?m)^\s*FAIL\s")  # A verdict line: the shared manifest's needs text says FAIL too
+
+    def test_a_press_that_finds_nobody_is_skipped_with_its_reason_and_is_not_a_failure(self):
+        code, out, _ = self.judge("seat_keep_nobody.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.KEEP), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=nobody", out)
+        self.assertNotRegex(out, r"(?m)^\s*FAIL\s")  # A verdict line: the shared manifest's needs text says FAIL too
+
+    def test_an_interface_that_was_hidden_and_never_restored_fails_and_exits_1(self):
+        code, out, _ = self.judge("seat_hide_stuck.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.HIDE), "FAIL", out)
+
+    def test_a_visit_that_never_hid_the_interface_leaves_the_hide_check_not_reached(self):
+        code, out, _ = self.judge("seat_enter_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HIDE), "NOT REACHED", out)
+
+    def test_the_hide_check_pairs_nothing_per_mission_and_the_row_says_so(self):
+        """A named limit: one mission that restores and a later one that does not still reads PASS."""
+        text = (TOOLS / "ingame_checks" / self.NAME).read_text(encoding="utf-8")
+        self.assertIn("pairs nothing per mission", text)
+        self.assertEqual(self.check(self.HIDE).absence, "fail")
+
+    def test_a_keep_then_a_flight_let_go_passes_both_with_their_kinds(self):
+        code, out, _ = self.judge("seat_keep_and_flight.txt")
+        self.assertEqual(verdict_of(out, self.KEEP), "PASS", out)
+        self.assertEqual(verdict_of(out, self.LET_GO), "PASS", out)
+
+    def test_the_new_pass_patterns_take_their_own_details_and_no_others(self):
+        cases = {
+            self.CURSOR: ("cursor=shown", "cursor=hidden"),
+            self.FOCUS: ("focus=cursor", "focus=centre"),
+            self.REOPENED: ("panel=reopened", "panel=closed"),
+            self.KEEP: ("kind=Soldier", "kind=Horse"),
+        }
+        for check_id, (good, bad) in cases.items():
+            with self.subTest(check_id=check_id):
+                pattern = self.check(check_id).passes[0]
+                line = "[Check] id=%s result=pass mission=3 " % check_id
+                self.assertTrue(pattern.search(line + good))
+                self.assertFalse(pattern.search(line + bad))
+
+    def test_the_hide_pair_reaches_on_the_hide_and_passes_on_a_restore_with_a_known_reason(self):
+        check = self.check(self.HIDE)
+        line = "[Check] id=taom.seat-of-seeing.hide result=pass mission=3 interface=%s"
+        self.assertTrue(check.reached[0].search(line % "hidden"))
+        self.assertFalse(check.reached[0].search(line % "restored reason=key"))
+        for reason in ("key", "panel", "dialog", "layer", "leave", "fault"):
+            with self.subTest(reason=reason):
+                self.assertTrue(check.passes[0].search(line % ("restored reason=" + reason)))
+        self.assertFalse(check.passes[0].search(line % "restored reason=whim"))
+
+    def test_the_let_go_pass_pattern_takes_each_reason_and_kind(self):
+        pattern = self.check(self.LET_GO).passes[0]
+        line = "[Check] id=taom.seat-of-seeing.let-go result=pass mission=3 reason=%s kind=%s"
+        for reason in ("key", "flight", "gone"):
+            for kind in ("Soldier", "Company"):
+                with self.subTest(reason=reason, kind=kind):
+                    self.assertTrue(pattern.search(line % (reason, kind)))
+        self.assertFalse(pattern.search(line % ("boredom", "Soldier")))
+        self.assertFalse(pattern.search(line % ("leave", "Soldier")), "a leave only says the Seat was left with a target kept")
+        self.assertFalse(pattern.search(line % ("leave", "Company")))
+        self.assertFalse(pattern.search(line % ("key", "Horse")))
+        self.assertFalse(pattern.search("[Check] id=taom.seat-of-seeing.let-go result=pass mission=3 reason=key"), "a line with no kind")
+
+    def test_a_keep_then_a_leave_alone_reaches_the_let_go_check_and_does_not_pass_it(self):
+        code, out, _ = self.judge("seat_keep_then_leave.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.KEEP), "PASS", out)
+        self.assertEqual(verdict_of(out, self.LET_GO), "NOT REACHED", out)
+
+    def test_the_closed_keys_have_a_human_row_and_the_career_key_row_is_narrowed(self):
+        claims = list(self.manifest().human)
+        self.assertTrue(any("game keys 13 and 22" in c and "does nothing" in c for c in claims), claims)
+        self.assertFalse(any(c == "the drop key and the career key still act from the Seat" for c in claims))
+        self.assertTrue(any("(game key 27) still act from the Seat" in c for c in claims))
+
+    def test_the_human_rows_of_the_second_pass_are_in_the_manifest_and_the_wrong_claims_are_gone(self):
+        claims = list(self.manifest().human)
+        for fragment in ("in a town, an indoor scene, a village", "a Transfer order from the panel", "the pointer stays where it was",
+                         "left pad down from the Seat opens no walk mode control", "a soldier behind a hill is not picked",
+                         "Insert pressed in the Seat takes no screenshot", "the hero stands under real movement keys",
+                         "with the keys Insert and End", "also game key 77", "does not press it yet: it gives a Move order"):
+            with self.subTest(fragment=fragment):
+                self.assertTrue(any(fragment in c for c in claims), fragment)
+        self.assertFalse(any("the drop and equip key (game key 22), the career" in c for c in claims), "key 22 is closed by stage S2")
+        self.assertFalse(any("the walk mode key (30)" in c for c in claims), "game key 30 is read by a controller the Seat already shuts")
+        self.assertTrue(any("letting go by the key or by flying shows no message" in c for c in claims))
+
+    def test_a_missing_elevation_setter_fails_only_the_glide(self):
+        code, out, _ = self.judge("seat_elevation_missing.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.GLIDE), "FAIL")
+        self.assertIn("elevation=missing", out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_an_enter_with_no_later_line_passes_enter_and_leaves_the_rest_not_reached(self):
+        code, out, _ = self.judge("seat_enter_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.ENTER), "PASS")
+        for check_id in (self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+
+    def test_each_failure_line_of_the_feature_fails_the_enter_check(self):
+        for fixture in ("seat_could_not_start.txt", "seat_hotkey_failed.txt", "seat_order_ray_failed.txt", "seat_enter_failed.txt", "seat_patch_failed.txt"):
+            with self.subTest(fixture=fixture):
+                self.t = Tree(self)
+                self.t.real_manifest(self.NAME)
+                code, out, _ = self.judge(fixture)
+                self.assertEqual(code, 1, out)
+                self.assertEqual(verdict_of(out, self.ENTER), "FAIL", out)
+
+    def test_a_session_of_refused_key_presses_is_not_reached_and_says_why(self):
+        code, out, _ = self.judge("seat_skips_only.txt")
+        self.assertEqual(code, 4, out)
+        for check_id in (self.ENTER, self.FRAMES, self.LEAVE, self.GLIDE):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=setting-off", out)
+
+    def test_a_leave_with_no_agent_to_follow_skips_the_glide_with_its_reason(self):
+        code, out, _ = self.judge("seat_visit_no_agent.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.LEAVE), "PASS")
+        self.assertEqual(verdict_of(out, self.GLIDE), "NOT REACHED")
+        self.assertIn("skipped: mission=1 reason=no-agent", out)
+
+    def test_the_leave_pass_pattern_takes_each_reason_and_no_other(self):
+        pattern = self.check(self.LEAVE).passes[0]
+        line = "[Check] id=taom.seat-of-seeing.leave result=pass mission=3 frames=12 glide=1 reason=%s"
+        for reason in ("key", "setting-off", "interlude", "rage", "finish"):
+            with self.subTest(reason=reason):
+                self.assertTrue(pattern.search(line % reason))
+        self.assertFalse(pattern.search(line % "teleport"))
+        self.assertFalse(pattern.search(line % "key-and-more"))
+
+    def test_the_dead_leave_fail_pattern_is_gone_and_the_fault_pattern_is_on_every_check(self):
+        self.assertEqual([p.pattern for p in self.check(self.LEAVE).fails],
+                         [r"\[Check\] id=taom\.seat-of-seeing\.fault result=fail"])
+        fault = r"\[Check\] id=taom\.seat-of-seeing\.fault result=fail"
+        for check_id in self.ALL:
+            with self.subTest(check_id=check_id):
+                self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
+
+    def test_the_enter_fail_list_names_the_features_own_failure_lines(self):
+        fails = [p.pattern for p in self.check(self.ENTER).fails]
+        for line in (r"\[SeatOfSeeing\] the Seat could not start", r"\[SeatOfSeeing\] hotkey registration failed",
+                     r"\[SeatOfSeeing\] order ray failed", r"\[Check\] id=taom\.seat-of-seeing\.enter result=fail",
+                     r"\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)"):
+            with self.subTest(line=line):
+                self.assertIn(line, fails)
+
+    def test_a_seat_patch_that_failed_or_was_skipped_fails_the_enter_check_and_another_features_does_not(self):
+        patterns = self.check(self.ENTER).fails
+        failed = "[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch140_SeatOfSeeing FAILED (Harmony stops a category at its first failing class): boom"
+        skipped = ("[2026-11-04 10:00:05] [ERROR] [PatchApply] TAOM.Features.SeatOfSeeing.Hooks.Patch140_CrosshairArrows SKIPPED "
+                   "(its attributes cannot be read, so its patches are off; every other class still applies): boom")
+        other = "[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch95_FactionUI FAILED (Harmony stops a category at its first failing class): boom"
+        info = "[2026-11-04 10:00:05] [INFO] [PatchApply] category applied max_category=Patch140_SeatOfSeeing"
+        self.assertTrue(any(p.search(failed) for p in patterns))
+        self.assertTrue(any(p.search(skipped) for p in patterns))
+        self.assertFalse(any(p.search(other) for p in patterns))
+        self.assertFalse(any(p.search(info) for p in patterns))
+
+
+class MarshalsWordManifestTests(unittest.TestCase):
+    """The Marshal's Word checks of the shared draft manifest. The fixtures render the [Check] lines the session and the two drivers write
+    through IOutcomeLog (MarshalChecks.cs holds the ids). A session with no Seat lines leaves the Seat's four checks NOT REACHED, so a
+    run of these fixtures exits 4 unless a check fails."""
+
+    NAME, ISSUE = SeatOfSeeingManifestTests.NAME, SeatOfSeeingManifestTests.ISSUE  # the manifest is shared, and so is its rename
+
+    PREFIX = "taom.marshals-word."
+    CAPTURED = PREFIX + "captured"
+    STARTED = PREFIX + "started"
+    FINISHED = PREFIX + "finished"
+    PATIENCE = PREFIX + "patience"
+    CLEARED = PREFIX + "cleared"
+    DECLINED = PREFIX + "declined"
+    ARRAY = PREFIX + "array"
+    MARCH = PREFIX + "march"
+    SPREAD = PREFIX + "march-spread"
+    ALL = [CAPTURED, STARTED, FINISHED, PATIENCE, CLEARED, DECLINED, ARRAY, MARCH, SPREAD]
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest(self.NAME)
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-04_14-00-00")
+        return self.t.run(["--issue", self.ISSUE])
+
+    def manifest(self):
+        return iv.load_manifest(TOOLS / "ingame_checks" / self.NAME, int(self.ISSUE))
+
+    def check(self, check_id):
+        return next(c for c in self.manifest().checks if c.id == check_id)
+
+    def test_the_manifest_names_the_nine_checks_the_session_writes_after_the_seats_ten(self):
+        ids = [c.id for c in self.manifest().checks]
+        self.assertEqual(ids[len(SeatOfSeeingManifestTests.ALL):], self.ALL)
+        # The fault id is named by every fail list, and has no check of its own: it must stay at zero. The set is exact.
+        named = {i for i in iv.named_check_ids(self.manifest()) if i.startswith(self.PREFIX)}
+        self.assertEqual(named, set(self.ALL) | {self.PREFIX + "fault"})
+        fault = r"\[Check\] id=taom\.marshals-word\.fault result=fail"
+        for check_id in self.ALL:
+            with self.subTest(check_id=check_id):
+                self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
+
+    def test_a_full_session_passes_every_check(self):
+        code, out, _ = self.judge("marshal_full_pass.txt")
+        self.assertEqual(code, 4, out)  # only the Seat's four are not reached
+        for check_id in self.ALL:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_a_latched_fault_fails_every_check_it_can_reach(self):
+        code, out, _ = self.judge("marshal_fault.txt")
+        self.assertEqual(code, 1, out)
+        for check_id in (self.CAPTURED, self.STARTED, self.FINISHED, self.PATIENCE, self.CLEARED, self.DECLINED, self.ARRAY, self.MARCH, self.SPREAD):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "FAIL", out)
+
+    def test_each_failure_line_of_the_feature_fails_the_capture_check(self):
+        for fixture in ("marshal_could_not_start.txt", "marshal_hotkey_failed.txt"):
+            with self.subTest(fixture=fixture):
+                self.t = Tree(self)
+                self.t.real_manifest(self.NAME)
+                code, out, _ = self.judge(fixture)
+                self.assertEqual(code, 1, out)
+                self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
+
+    def test_a_session_that_never_went_live_says_why_and_is_not_reached(self):
+        code, out, _ = self.judge("marshal_session_off.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=setting-off", out)
+
+    def test_a_captured_step_that_never_starts_fails_the_started_check(self):
+        code, out, _ = self.judge("marshal_captured_never_started.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.STARTED), "FAIL", out)
+
+    def test_a_capture_dropped_inside_its_first_pass_reads_started_fail_and_the_report_names_the_dropped_line(self):
+        code, out, _ = self.judge("marshal_captured_then_dropped.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.STARTED), "FAIL", out)
+        self.assertIn("cleared, dropped and end=ImplicitArrival lines", self.check(self.STARTED).needs)
+        self.assertIn("cleared, dropped and end=ImplicitArrival lines", out)
+
+    def test_a_capture_behind_a_walk_that_a_direct_order_clears_reads_started_fail_and_the_report_names_the_implicit_wait(self):
+        code, out, _ = self.judge("marshal_captured_behind_a_walk_cleared.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.STARTED), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.CLEARED), "PASS", out)
+        self.assertIn("ImplicitArrival", self.check(self.STARTED).needs)
+        self.assertIn("behind a walk that is the whole walk", self.check(self.STARTED).needs)
+
+    def test_the_started_pass_pattern_takes_each_real_end_and_not_the_implicit_wait(self):
+        pattern = self.check(self.STARTED).passes[0]
+        line = "[Check] id=taom.marshals-word.started result=pass mission=3 end=%s companies=2"
+        for end in ("AtOnce", "Arrival", "TargetGone", "EntityOrderEnded"):
+            with self.subTest(end=end):
+                self.assertTrue(pattern.search(line % end))
+        for end in ("ImplicitArrival", "Arrival-and-more", "Other"):
+            with self.subTest(end=end):
+                self.assertFalse(pattern.search(line % end))
+
+    def test_one_lone_move_is_not_a_chain(self):
+        code, out, _ = self.judge("marshal_one_arrival.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FINISHED), "NOT REACHED", out)
+        self.assertIn("no line matched pass pattern", out)
+
+    def test_two_lone_moves_are_not_a_chain_either(self):
+        code, out, _ = self.judge("marshal_two_lone_moves.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FINISHED), "NOT REACHED", out)
+        self.assertIn("behind=0", out)
+
+    def test_a_move_queued_behind_another_passes_the_finished_check_and_leaves_patience_for_eight_steps(self):
+        code, out, _ = self.judge("marshal_two_moves.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FINISHED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.PATIENCE), "NOT REACHED", out)
+
+    def test_a_step_that_ends_by_patience_is_not_an_arrival(self):
+        code, out, _ = self.judge("marshal_arrival_by_patience_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FINISHED), "NOT REACHED", out)
+        self.assertIn("reason=patience", out)
+
+    def test_patience_too_often_fails_the_patience_check_and_the_arrival_check(self):
+        code, out, _ = self.judge("marshal_patience_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.PATIENCE), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.FINISHED), "FAIL", out)
+
+    def test_declines_write_skip_lines_that_name_their_reason(self):
+        # A full queue needs twelve captures first, so a real log with reason=full already holds a captured pass: no fixture has it alone.
+        code, out, _ = self.judge("marshal_declines_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.DECLINED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "NOT REACHED", out)
+        self.assertIn("no line matched", out)
+        self.assertNotIn("reason=full", out)
+
+    def test_the_decline_pass_pattern_takes_each_reason_and_no_other(self):
+        pattern = self.check(self.DECLINED).passes[0]
+        line = "[Check] id=taom.marshals-word.declined result=skip mission=3 reason=%s"
+        for reason in ("none-selected", "not-allowed", "deployment", "ai-controlled"):
+            with self.subTest(reason=reason):
+                self.assertTrue(pattern.search(line % reason))
+        self.assertFalse(pattern.search(line % "lost-control"))
+        self.assertFalse(pattern.search(line % "deployment-and-more"))
+
+    def test_a_layout_that_threw_fails_the_array_check(self):
+        code, out, _ = self.judge("marshal_array_fault.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.ARRAY), "FAIL", out)
+
+    def test_a_click_alone_leaves_the_array_and_the_march_checks_not_reached(self):
+        code, out, _ = self.judge("marshal_array_click_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.ARRAY), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.MARCH), "NOT REACHED", out)
+
+    def test_the_array_check_needs_both_a_click_and_a_drag(self):
+        pattern_kinds = sorted(p.pattern.split("kind=")[1].split(" ")[0] for p in self.check(self.ARRAY).passes)
+        self.assertEqual(pattern_kinds, ["click", "drag"])
+
+    def test_a_spread_beyond_the_allowance_fails_the_march_check(self):
+        code, out, _ = self.judge("marshal_spread_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.SPREAD), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.MARCH), "PASS", out)
+
+    def test_a_march_whose_walks_prove_nothing_is_not_reached_and_says_no_test(self):
+        code, out, _ = self.judge("marshal_march_no_test.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SPREAD), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.MARCH), "PASS", out)
+        self.assertIn("reason=no-test", out)
+
+    def test_the_spread_pass_pattern_carries_the_shortest_time(self):
+        pattern = self.check(self.SPREAD).passes[0]
+        self.assertTrue(pattern.search("[Check] id=taom.marshals-word.march-spread result=pass mission=3 spread=1.5 longest=24.0 shortest=12.0"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.march-spread result=pass mission=3 spread=1.5 longest=24.0"))
+        self.assertIn("2.5:1", self.check(self.SPREAD).needs)
+        self.assertIn("in Line", self.check(self.SPREAD).needs)
+
+    def test_a_march_ended_by_a_later_order_is_not_reached_and_says_why(self):
+        code, out, _ = self.judge("marshal_march_reordered.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SPREAD), "NOT REACHED", out)
+        self.assertIn("reason=reordered", out)
+
+    def test_the_finished_pass_pattern_takes_the_arrival_of_a_move_queued_behind_another_and_needs_one(self):
+        check = self.check(self.FINISHED)
+        pattern = check.passes[0]
+        line = "[Check] id=taom.marshals-word.finished result=pass mission=3 reason=%s end=Arrival company=2 behind=1"
+        self.assertTrue(pattern.search(line % "arrival"))
+        for reason in ("at-once", "target-gone", "entity-ended", "patience", "arrival-and-more"):
+            with self.subTest(reason=reason):
+                self.assertFalse(pattern.search(line % reason))
+        # A lone Move and the implicit wait ahead of a step write behind=0, and behind=1 alone proves the chain.
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.finished result=pass mission=3 reason=arrival end=Arrival company=2 behind=0"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.finished result=pass mission=3 reason=arrival end=ImplicitArrival company=2 behind=1"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.finished result=pass mission=3 reason=arrival end=Arrival company=2 behind=1-and-more"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.finished result=pass mission=3 reason=arrival end=Arrival company=2"))
+        self.assertEqual(check.min, 1)
+
+    def test_every_check_that_waits_on_a_later_stage_keeps_its_not_reached_absence(self):
+        # Removing `absence` from one of these makes a session that did not reach it FAIL instead (the default is "fail").
+        for check_id in (self.CAPTURED, self.FINISHED, self.PATIENCE, self.CLEARED, self.DECLINED, self.ARRAY, self.MARCH, self.SPREAD):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(self.check(check_id).absence, "not-reached")
+
+    def test_one_session_of_each_feature_exits_0_with_sessions_2(self):
+        # The manifest is shared, so a Seat-only or a Marshal-only session leaves the other feature's checks NOT REACHED and exits 4.
+        self.t.taom("seat_panel_visit_pass.txt", "2026-11-03_14-00-00")
+        self.t.taom("marshal_full_pass.txt", "2026-11-04_14-00-00")
+        code, out, _ = self.t.run(["--issue", self.ISSUE, "--sessions", "2"])
+        self.assertEqual(code, 0, out)
+        for check_id in self.ALL + [SeatOfSeeingManifestTests.ENTER, SeatOfSeeingManifestTests.GLIDE]:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+
 class CrashReportEchoTests(unittest.TestCase):
     """A crash report writes the last log lines back into the log behind "[CrashReport] "."""
 

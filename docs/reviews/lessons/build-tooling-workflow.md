@@ -4820,6 +4820,12 @@ with the clean-unload line present, so it would have failed every run.
 - **Source:** `docs/reviews/REVIEW-LOG.md` entry "Fords of War night batch and whole feature" (A-F1); fixed in
   `8d883051e`.
 
+### A draft manifest is `0.toml`, and its `fixed_in` is on trunk
+
+The Seat's manifest started as `seat-of-seeing.toml`, with a change to `RepoManifestGateTests` to accept a name with no number, and no reader could open that file. Its `fixed_in` named a commit only the branch held, so a rebase would have turned every build into "predates fixed_in". `tools/ingame_checks/0.toml` with `issue = 0` needs no gate change: `--issue 0` reads it, `--owed` never reaches it, and `--post` stops at `gh`. Hold one draft at a time, and rename it when the issue exists.
+- **Why missed:** the manifest began from "what lets the gate pass", not from "what a reader needs". The sibling's "commit before the feature" was copied without its reason.
+- **Prevent:** do not change a gate to fit a draft. Before writing a manifest, run its reader on a rendered line. Its `fixed_in` is a commit already on trunk.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 6 and 7.
 ### A fast path goes in front of the path it replaces, never beside it (taom-src short names, 2026-11-03)
 
 - **Why missed:** `path <short name>` resolved through a new index and then set the DLL as final. Every answer the old
@@ -4831,6 +4837,19 @@ with the clean-unload line present, so it would have failed every run.
   read, not only on what came back.
 - **Source:** `docs/reviews/rca-rules-review-2026-11-03.md`, "Second review", findings A to D and G.
 
+### An unattended wrapper binds its PASS to the build under test (Seat field trial, 2026-11-04)
+
+`tools/run_command_trial.py` judged the log's lines and never its `[BuildStamp]`, so a run of a stale deploy, or a log with no stamp, printed the normal PASS text. Deploying is a separate step, and three ordinary things leave an old build in place: a test run with `DisableModuleCopy`, F5 from another checkout, and a rerun after a fix with no rebuild. A `.dirty` stamp keeps its sha after any later edit, so the sha alone is not enough.
+- **Why missed:** the contract named sibling runners as the shape, and both have the same gap. A shape copied with no question about what it lacks carries its gaps along. `tools/ingame_verdict.py:32-33,517-537` already binds evidence to a build.
+- **Prevent:** a wrapper that can report PASS compares the stamp's sha with `HEAD`, the stamp's `.dirty` with the tree, and the stamp's time with every uncommitted file under the build's own pathspec, read from `Directory.Build.props`. If git cannot answer, it refuses.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), rows 1, 23 and 24.
+
+### A heartbeat write never ends a run, and a done write never loses the quit (Seat field trial, 2026-11-04)
+
+The trial's status write sat inside the driver's try, so a failed `File.Replace` ended a healthy run as `autostart_failed`, and could replace a passing `final`. The runner itself is a producer: it reads that file every 30 s while the game replaces it every 5 s, and `File.Replace` throws `IOException` on .NET Framework while a reader holds the file. `Finish` entered `Done` first, so a failed done write also skipped the quit.
+- **Why missed:** the shape it followed writes its files plainly. `FordsAutorunOutput.cs:36` already says "the quit must still follow" and was not read.
+- **Prevent:** an unattended driver's file writes log and return. The test holds a real handle with `FileShare.Read`, because a fake that throws proves only the catch.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), rows 5 and 6.
 ### A cache keyed on the version string serves old sources after a hotfix (engine bump, 2026-11-04)
 
 Steam moved the game from changeset 125053 to 125270 and kept the version string v1.5.6. `taom-src` keyed its cache on that string and returned any cached file, so it served the old build's sources for over half an hour, while agents cited them as "decompiled from the installed DLLs". The drift banner compares the same string, so it stayed silent too. Only `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` noticed, because the changeset is compiled in.

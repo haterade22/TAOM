@@ -158,6 +158,10 @@ public static class PatchShieldPolicy
         // Patch93_CreatureBanditNoRout: CommonAIComponent.OnTickParallel asks it for every AI agent, horses
         // included, every 0.5 to 0.6 s on the TWParallel workers.
         "TaleWorlds.MountAndBlade.Mission.CanAgentRout",
+        // Patch141_MarshalsWord's pace postfix (build-spec 6.4): GetDesiredSpeedInFormation is asked for every soldier of a company in the
+        // hold state, on the AI thread and the workers, and it also runs inside AfterSetOrder on the main thread. MarshalPatchTests
+        // .ThePaceTarget_IsOnPatchShieldsHotMethodList walks the real target through IsExcludedTargetMethod.
+        "TaleWorlds.MountAndBlade.HumanAIComponent.GetDesiredSpeedInFormation",
         // Mission tick targets, trimmed by maintainer decision D13 (2026-10-03; lessons/harmony-il.md). Since plan 034
         // the shield's finalizer binds no __originalMethod and is cheap (the figures are in PatchShieldPolicy's ExcludedTargetNamespacePrefixes comment),
         // so an entry kept for cost alone no longer earns the rescue it gives up: Mission.OnTick and Mission.OnPreTick

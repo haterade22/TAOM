@@ -101,6 +101,8 @@ A behavior added through `AddTaomBehavior` gets `OnCreated`, `EarlyStart` and `A
 restarts the mission load every frame, #699), and a change that makes
 such code run for the first time gets one Custom Battle run.
 
+A static a patch reads clears from both teardown paths, `OnMissionScreenFinalize` (or `OnEndMission`) and `OnRemoveBehavior`, through one safe-to-repeat method. A view's finished session is dropped there too: the screen can still tick a removed view (`MissionScreen.cs:3688`).
+
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Read the caller chain up to the thread first. `[MBCallback]` methods run where native decides; off-main is observed for `OnAgentRemoved`, `OnAgentHit` and siblings. On any off-main target shared state takes a lock or a concurrent collection, never registers a blow or spawns, and a team filter is not a thread filter. Table: [mission-frame-threads-and-native-costs.md](../../docs/reference/engine/mission-frame-threads-and-native-costs.md) "Which thread runs your target".

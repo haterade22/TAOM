@@ -1697,6 +1697,60 @@ I chose a constant team power for the right result and gave a false reason: that
 - **Prevent:** before writing "X happens because of line N", trace the path into line N from the call in question. A reason in a standing engine doc outlives the code it was written for, so it gets the same proof as the code.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), row 14.
 
+### A default key clears every category on the mission's scene layer
+
+`MissionScreen` registers six hot key categories on its scene layer (`MissionScreen.cs:389-394`). The Seat's first default, `B`, is also game key 36 in `GenericCampaignPanelsGameKeyCategory`, which `MissionSingleplayerViewHandler` reads in every campaign mission (37-127), so each press also printed "Can't access banner window right now!".
+- **Why missed:** the contract's key check read the combat and chat categories and stopped. A comment at `TaomRealmBordersHotKeyCategory.cs:26-28` already said the panels bind `B`.
+- **Prevent:** choose a default against all six categories and TAOM's own keys, and pin it with a test in the shape of `Default_IsUnboundInTheCategoriesTheMissionSceneLayerReads`.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 2.
+
+### Agent fields vanilla writes from the pre-mission tick are written from the mission tick
+
+The Seat's stand fast wrote `MovementFlags`, `MovementInputVector`, `EventControlFlags` and `HeadCameraMode` from the key press in the screen tick, which may overlap the agent tick. Vanilla writes those four only from `OnPreMissionTick` (`MissionMainAgentController.cs:239`, 419). The fix writes them from `OnMissionTick` behind a volatile flag, with `MissionThreadGuard.NoteCall`, and needs no queue. A paused mission still reaches `OnMissionTick`, with a `dt` of 0.
+- **Why missed:** the contract deferred the event handler and treated the key path as safe because it runs on the main thread. "Main thread" does not mean "not overlapping the agent tick".
+- **Prevent:** before writing an agent field from a screen tick or a UI callback, find which tick vanilla writes it from. An engine event and a key press that both need the write set one flag, and the mission tick does the work.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 14.
+
+### Read every branch of an engine method you call for its side effect
+
+The Seat borrowed `IMissionListener.OnMissionModeChange` for its return glide. With no agent to follow, its branch zeroes the bearing and the elevation (`MissionScreen.cs:4576-4582`), and the first-person path of `UpdateCamera` (1676) ignores the position it seeds. The contract had read one branch of each, so a leave after the hero fell zeroed the look, and the check said the glide had passed. The elevation also kept what `HandleUserInput` integrated during the stay on every leave outside Battle.
+- **Why missed:** the method was read for the case the feature wanted.
+- **Prevent:** for an engine method called for its side effect, list each branch and each later reader of what it writes, and say what happens in each. Report a path that does not do the work as its own check result.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 5, 17 and 18.
+
+### A search for callers misses a method group: search the bare name
+
+Every review of the Seat listed `Enable()` and `Disable()` callers of `MissionMainAgentController` and found one board game. `MissionMainAgentController.cs:190-193` itself subscribes both as method groups (`OnRoundStarted += Disable`, `OnPreparationEnded += Enable`), so a round-based multiplayer mode would reopen the gate under the Seat. A partial Codex pass and the convergence lens found it by tracing the writers of `_activated`. TAOM does not run in such a mode, so this ended as a named limit, but the review had not known to ask.
+- **Why missed:** the searches carried the call parentheses or a receiver dot, so `+= Enable` matched nothing. The first search that used `+=` also ran over `_categories_v1.5.6`, which holds no `TaleWorlds.MountAndBlade.View` types, and it returned an empty result with no error.
+- **Prevent:** to list what reaches a method, search the bare name with `\bEnable\b` in the type's own file as well, and read each `+=`. Make the search find one known hit first, then trust an empty result. Say which pattern and which scope you searched.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 40.
+
+### A core interface and a null adapter need a core caller
+
+ADR-013 puts client-only assemblies in `TAOM.Client` behind a core interface with a null. The Seat's contract applied that shape to its screen adapter, whose only consumers are client types. `TAOM.Client` does not load on a server, so the null could never run. It cost 43 lines, a `Bind` method on a shared instance, and a "not bound yet" guard on every member. `DedicatedServer` in the mission facts had the same cause: its only producer is in the client.
+- **Why missed:** the contract copied the ADR's shape without asking the question the ADR answers: which core code calls this?
+- **Prevent:** before adding a core interface for a client type, name the core caller. With none, the interface and the adapter stay in the client, and the view builds the adapter per mission (`BattleActionBarMissionView.cs:178`).
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 39.
+
+### `InputContext.IsKeyPressed` allocates on every call: test the static first on a per-frame path
+
+`InputContext.IsKeyPressed` runs `CanUse`, which calls `Input.GetClickKeys()`, and the engine's body makes two engine calls and returns a new `InputKey[2]` or `InputKey[3]` each time (`EngineInputManager.cs:161-175`). A view that runs in every mission paid that each frame while its doc said "one key test". The static `TaleWorlds.InputSystem.Input.IsKeyPressed(key)` is one read, so test it first and let the layer's context decide only on a real press.
+- **Why missed:** the name reads as cheap, and no earlier wave opened `InputContext`.
+- **Prevent:** a `[DefaultView]` runs for every player in every mission. Read the body of each engine call on its per-frame path, including the ones with cheap names.
+- **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 34.
+
+### Trace every order kind before you state what an engine reading means
+
+The Marshal's Word contract said a target shift on a marching company "means a later order moved it". Charge, Stop and Retreat move nobody's order position (`MovementOrder.cs:178, 552, 690-691, 1248-1250`, `Formation.cs:862, 907, 2485-2490`), so the shift stayed small and the pace table kept slowing a company the player had told to charge. The fix asks the formation which order it is on, and treats anything but its Move, or AI control, as a huge shift.
+- **Why missed:** the sentence read as a description, not a claim. The builder and the checker compare code with the contract, so a wrong contract line passes both. Lens 5, lens 2 and Codex found it because they read the engine.
+- **Prevent:** when a spec says what a reading means, list every producer of a change to that reading and every order that leaves it alone, with the line of each. A field that "changes when X" also needs the list of what does not change it.
+- **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), row 1.
+### Read a game key by id only where its category is registered
+
+`InputContext.IsGameKeyPressed(int)` indexes `_registeredGameKeys` and dereferences the slot (`InputContext.cs:226-233`), and a slot stays null unless a category that holds the key was registered on that context. The order keys are registered on the mission's scene layer only by `MissionGauntletSingleplayerOrderUIHandler.cs:95-97`, so reading them in a town, an indoor scene, a village, an arena practice, a duel or an alley throws. The Seat of Seeing read them every seated frame with one setting on, and that setting faulted the feature in each of those missions.
+- **Why missed:** the setting defaults off, the field trial runs one battle, and the fake's read cannot throw. Hot keys by name are safe on an unregistered id, so the two kinds of read looked alike in the code.
+- **Prevent:** before reading a game key by id, name who registers its category on that context, and read the key only where that holds, for example while the panel that needs it is open. For a read that a setting adds, write a test that asserts no read happens where the handler is absent, and add a person's row for the mission kind with the least in it.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 5.
 ### A spawn place you compute skips the layout's filter, so a scene with floors takes the soldier to the wrong one
 
 The Long Defeat spike copied the shape of Fords of War's spawn recipe, a grid of positions around a frame. At Helm's Deep the frame stood on a terrace at height 26.5, and most of the garrison stood at height 0.0 in the caves under it. Three died from the fall in the first 5 s. Vanilla passes no position. Its layout offers only slots that native `BatchFormationUnitPositions` accepts, spreading out from the frame (`Formation.cs:669-671`, `LineFormation.cs:495-497`), and `Mission.cs:3983-3985` then pulls a slot with no navmesh back toward the frame. When the slots run out, every remaining soldier stands on the frame point (`Mission.cs:3992-3995`).
