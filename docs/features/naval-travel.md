@@ -147,7 +147,7 @@ lifetime — edits need an app restart).
 
 | Key | Default | Meaning |
 |-----|---------|---------|
-| `enabled` | `true` | Master gate (MCM-overridable). |
+| `enabled` | `false` | Master gate (MCM-overridable). Shipped false while the feature is parked (JSON, `NavalTravelConfig.Enabled` and MCM `EnableNavalTravel` all default false). |
 | `applyToPlayer` | `true` | Player party can sail (MCM-overridable). |
 | `applyToAi` | `true` | AI parties can sail (MCM-overridable). Set false for the conservative player-only option. |
 | `embarkThresholdDistance` | `0.5` | Embark/disembark proximity. Validated finite within `[0, 50]`. |

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Adapters;
 using TAOM.Client.Adapters;
 using TAOM.Core.Logging;
@@ -12,7 +13,7 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 internal sealed class FakeSeatScreen : ISeatScreenAdapter
 {
     internal SeatEngineFacts Facts = new(Deployment: false, Interlude: false, BattleMode: true, PhotoMode: false, CustomCamera: false, MissionEnded: false,
-        RageHoldsHero: false);
+        RageHoldsHero: false, RadialMenuActive: false);
     internal SeatPose Camera = new(100f, 200f, 103f, 0f, 0.1f);
     internal float ViewAngleDegrees = 65f;
     internal bool CameraReadable = true;
@@ -39,6 +40,32 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
     internal int InputReads;
     internal int FactsReads;
     internal readonly List<(float X, float Y)> GroundReads = new();
+
+    // Stage S2 and S3: the panel, the cursor, the hidden interface and the kept target.
+    internal bool PanelOpen;
+    internal bool Look;
+    internal bool ReopenWorks = true;
+    internal bool EngineRefusesReopen;
+    internal bool TransferOpen;
+    internal int TransferReads;
+    internal SeatCloseSignals Signals;
+    internal bool UiHidden;
+    internal bool Dialog;
+    internal bool OtherLayer;
+    internal SeatKeepKind KeepResult = SeatKeepKind.Soldier;
+    internal SeatTargetRead Kept = new(false, 100f, 210f, 101f);
+    internal readonly List<bool> CursorWrites = new();
+    internal readonly List<bool> UiWrites = new();
+    internal int Reopens;
+    internal int Holds;
+    internal int Unkeeps;
+    internal int SignalReads;
+    internal int DialogReads;
+    internal int LayerReads;
+    internal int KeepCalls;
+    internal Exception? CursorThrows;
+    internal Exception? UiThrows;
+    internal Exception? KeepThrows;
 
     public SeatEngineFacts ReadFacts()
     {
@@ -106,6 +133,76 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
     }
 
     public void Say(SeatMessage message) => Messages.Add(message);
+
+    public bool IsPanelOpen() => PanelOpen;
+
+    public bool LookHeld() => Look;
+
+    public void SetCursor(bool show)
+    {
+        CursorWrites.Add(show);
+        Calls.Add(show ? "cursor:on" : "cursor:off");
+        if (CursorThrows != null)
+            throw CursorThrows;
+    }
+
+    public void HoldCursorPosition() => Holds++;
+
+    public SeatCloseSignals ReadCloseSignals()
+    {
+        SignalReads++;
+        return Signals;
+    }
+
+    // A reopen that works opens the panel, as OpenToggleOrder does (MissionOrderVM.cs:720). EngineRefusesReopen is the engine returning
+    // silently from its own CheckCanBeOpened (MissionOrderVM.cs:716-719): the site was reached and the panel stays closed.
+    public bool OpenPanel()
+    {
+        Reopens++;
+        if (ReopenWorks && !EngineRefusesReopen)
+            PanelOpen = true;
+        return ReopenWorks;
+    }
+
+    public bool TransferMenuOpen()
+    {
+        TransferReads++;
+        return TransferOpen;
+    }
+
+    public bool ReadUiHidden() => UiHidden;
+
+    public void WriteUiHidden(bool hidden)
+    {
+        UiWrites.Add(hidden);
+        if (UiThrows != null)
+            throw UiThrows;
+        UiHidden = hidden;
+    }
+
+    public bool DialogShown()
+    {
+        DialogReads++;
+        return Dialog;
+    }
+
+    public bool OtherLayerFocused()
+    {
+        LayerReads++;
+        return OtherLayer;
+    }
+
+    public SeatKeepKind TryKeep()
+    {
+        KeepCalls++;
+        if (KeepThrows != null)
+            throw KeepThrows;
+        return KeepResult;
+    }
+
+    public SeatTargetRead ReadKept() => Kept;
+
+    public void Unkeep() => Unkeeps++;
 }
 
 internal sealed class FakeSeatHero : ISeatHeroAdapter
@@ -127,6 +224,8 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
     internal int Reads;
     private bool _enabled = true;
     private bool _beginBattlesInSeat;
+    private bool _cursorWithPanel = true;
+    private bool _keepPanelOpen;
 
     public bool Enabled
     {
@@ -147,6 +246,26 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
         }
         set => _beginBattlesInSeat = value;
     }
+
+    public bool CursorWithPanel
+    {
+        get
+        {
+            Reads++;
+            return _cursorWithPanel;
+        }
+        set => _cursorWithPanel = value;
+    }
+
+    public bool KeepPanelOpen
+    {
+        get
+        {
+            Reads++;
+            return _keepPanelOpen;
+        }
+        set => _keepPanelOpen = value;
+    }
 }
 
 /// <summary>An <see cref="IOutcomeLog"/> that keeps every line, for the checks the manifest reads.</summary>
@@ -157,6 +276,7 @@ internal sealed class RecordingOutcomeLog : IOutcomeLog
 
     // The real log writes a line the first time it sees (id, result, key) in the process and only counts after that.
     private readonly HashSet<(string, string, string)> _seen = new();
+    private readonly List<(string Result, string Id)> _calls = new();
 
     public void Pass(string id, string key, string detail) => Write("pass", id, key, detail);
 
@@ -166,9 +286,12 @@ internal sealed class RecordingOutcomeLog : IOutcomeLog
 
     private void Write(string result, string id, string key, string detail)
     {
+        _calls.Add((result, id));
         if (_seen.Add((id, result, key)))
             Lines.Add((result, id, key, detail));
     }
+
+    internal int Calls(string result, string id) => _calls.Count(c => c.Result == result && c.Id == id);
 
     public OutcomeCounter Counter(string id)
     {

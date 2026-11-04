@@ -147,13 +147,15 @@ has none of it; the tool exits 2 there naming that page. The map also needs `ils
   single-owner addresses are named; no seed from a map with problems or at the current version), and
   the string mode (ASCII, UTF-16, a substring, no references, text not in the DLL, empty text,
   `--callers` refused).
-- Opt-in integration (`GHIDRA_INSTALL_DIR` and `TAOM_GHIDRA_IT=1`; the address pins skip on any engine
-  but v1.5.3, the map's completeness check does not): Ghidra's entries equal `.pdata` starts for three
-  functions; a lone `.gpr` exits 2; the map resolves all 688 + 1,561 + 33 ids with no problem and three
-  known addresses;
-  `IMBAgent.SetAttackState` decompiles at `0x6DF670`; the string `IMono_MBAgent::weapon_equipped`
-  leads to `IMBAgent_WeaponEquipped` at `0x6E0100`, the function the id map predicts; and
-  `--rva 0x6E19B4` decompiles inside a function only seeding created. About 30 s for all six.
+- Opt-in integration (`GHIDRA_INSTALL_DIR` and `TAOM_GHIDRA_IT=1`; the address pins hold a row per
+  engine version, v1.5.3 to v1.5.6, and skip on an unlisted one; the map's completeness check does
+  not skip): Ghidra's entries equal `.pdata` starts for three
+  functions; a lone `.gpr` exits 2; the map resolves every id with no problem (v1.5.6: 687 + 1,563 + 33)
+  and three known addresses;
+  `IMBAgent.SetAttackState` decompiles at its pinned address (`0x6E05B0` on v1.5.6); the string
+  `IMono_MBAgent::weapon_equipped` leads to `IMBAgent_WeaponEquipped` at its pinned address, the function
+  the id map predicts; and `--rva` four bytes into `IMBAgent.GetCurrentActionType` decompiles inside a
+  function only seeding created; a thunked engine method shows the code it jumps to, and a stub that jumps to an import does not crash. About 30 s for the first six.
 
 ## How to use it
 

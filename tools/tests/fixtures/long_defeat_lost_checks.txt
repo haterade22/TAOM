@@ -1,0 +1,28 @@
+[2026-11-04 03:53:52] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261104-095325Z+985b0d54e1672ede8d9dc08ed986d0f3870aa5d3.dirty TAOM.Dependencies=v0.1.0.0 build.20261104-095325Z+985b0d54e1672ede8d9dc08ed986d0f3870aa5d3.dirty (pair OK)
+[2026-11-04 03:54:10] [INFO] [Check] id=taom.long-defeat.menu result=pass fortresses=1 dedicated=false
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.keep result=pass source=scene at=(138.4,159.5,32.5) radius=12.0
+[2026-11-04 03:54:27] [INFO] [LongDefeat] spawn level ok: defenders Ranged 50 of 50, far 0, off the navmesh 0, on the frame point 2
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.muster result=pass on_point=2 of=50 overlap=0 far=0 off_mesh=0
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.general result=pass general_is_main=true player_general=true order_owner_is_main=true
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.hud result=pass movie=LongDefeatHud wave_text=set hud_loaded=True panel_loaded=True
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.shop result=pass spawned=12 of=12 on_point=2 overlap=0
+[2026-11-04 03:54:27] [INFO] [Check] id=taom.long-defeat.shop result=pass spawned=10 of=10 on_point=2 overlap=0
+[2026-11-04 03:54:28] [INFO] [Check] id=taom.long-defeat.orders result=pass sets=9
+[2026-11-04 03:54:57] [INFO] [Check] id=taom.long-defeat.early-start result=pass paid=120 expected=120 left=60.0
+[2026-11-04 03:54:57] [INFO] [LongDefeat] spawn level ok: attackers Ranged 27 of 27, far 0, off the navmesh 0, on the frame point 3
+[2026-11-04 04:02:29] [INFO] [Check] id=taom.long-defeat.wave result=pass kills=110 felled=0 lost=34 seconds=452.1 count=110
+[2026-11-04 04:02:29] [INFO] [Check] id=taom.long-defeat.stale result=pass cleared=true
+[2026-11-04 04:02:59] [INFO] [Check] id=taom.long-defeat.early-start result=pass paid=61 expected=61 left=30.0
+[2026-11-04 04:09:54] [INFO] [Check] id=taom.long-defeat.wave result=pass kills=120 felled=0 lost=33 seconds=414.7 count=120
+[2026-11-04 04:09:54] [INFO] [Check] id=taom.long-defeat.stale result=pass cleared=true
+[2026-11-04 04:10:24] [INFO] [Check] id=taom.long-defeat.early-start result=pass paid=61 expected=61 left=30.0
+[2026-11-04 04:18:54] [INFO] [Check] id=taom.long-defeat.wave result=pass kills=130 felled=0 lost=142 seconds=509.9 count=130
+[2026-11-04 04:18:54] [INFO] [Check] id=taom.long-defeat.stale result=pass cleared=true
+[2026-11-04 04:18:54] [INFO] [Check] id=taom.long-defeat.player-death result=pass via=respawn
+[2026-11-04 04:19:24] [INFO] [Check] id=taom.long-defeat.early-start result=pass paid=61 expected=61 left=30.0
+[2026-11-04 04:27:48] [INFO] [Check] id=taom.long-defeat.stale result=skip cleared=false end=DefendersDead
+[2026-11-04 04:27:48] [INFO] [Check] id=taom.long-defeat.no-rout result=pass fled=0 fleeing_peak=0 kills=456
+[2026-11-04 04:27:48] [INFO] [Check] id=taom.long-defeat.gold result=pass start=600 earned=3793 spent=3420 balance=973 bounty=2740 bonus=750 early=303
+[2026-11-04 04:27:48] [INFO] [Check] id=taom.long-defeat.end result=pass reason=DefendersDead wave=4 cleared=3 kills=456 report=built
+[2026-11-04 04:27:48] [INFO] [Check] id=taom.long-defeat.best-run result=pass waves=3 kills=456 read_back=same

@@ -85,7 +85,7 @@ public class SeatPatchWiringTests
     }
 
     [TestMethod]
-    public void Index_FromTheLoadedTaomAssemblies_HoldsTheTwoClientClasses()
+    public void Index_FromTheLoadedTaomAssemblies_HoldsEveryPatch140Class()
     {
         Engine(MissionScreenName);
         var previous = ClientComposition.Current;
@@ -95,7 +95,9 @@ public class SeatPatchWiringTests
             var index = PatchCategoryIndex.Build(ClientComposition.LoadedTaomAssemblies());
 
             Assert.AreEqual(0, index.SkippedClasses.Count, string.Join("; ", index.SkippedClasses.Select(k => k.Key.FullName)));
-            CollectionAssert.AreEquivalent(PatchClasses, index.ClassesOf(SeatOfSeeingModule.PatchCategory).ToArray());
+            var expected = PatchClasses.Concat(typeof(Patch140_CrosshairArrows).Assembly.GetTypes()
+                .Where(t => t.Namespace == "TAOM.Features.SeatOfSeeing.Hooks" && t.Name.StartsWith("Patch140_", StringComparison.Ordinal))).Distinct();
+            CollectionAssert.AreEquivalent(expected.ToArray(), index.ClassesOf(SeatOfSeeingModule.PatchCategory).ToArray());
         }
         finally
         {

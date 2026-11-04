@@ -1,0 +1,190 @@
+# In-game checks for #1079 (The Long Defeat), read by tools/ingame_verdict.py. Every [Check] line comes from
+# Main/Features/LongDefeat/LongDefeatDirector*.cs and LongDefeatChecks.cs, and the client rows (orders, hud) from LongDefeatHudView.cs, with their
+# ids and verdicts in LongDefeatClientChecks.cs; the ids are const strings there. A row lands with its emitter. The unattended judge, tools/run_long_defeat.py, holds a
+# run to its REQUIRED_CHECKS list; this manifest is what ingame_verdict reads across sessions.
+#
+# allow_dirty and the commit before the Phase 1 work are for iterating only. Slice 13 sets fixed_in to the commit the runs were built
+# from and removes allow_dirty, because a .dirty build otherwise reads NOT REACHED.
+issue = 1079
+title = "The Long Defeat: a wave survival mode on siege maps"
+fixed_in = "758c8f6fc"   # the Phase 0 spike, an ancestor of this branch
+allow_dirty = true
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.boot"
+needs = "start a Long Defeat run (autorun, or taom.ld_start helms)"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=']
+pass = ['\[Check\] id=taom\.long-defeat\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false']
+fail = ['\[Check\] id=taom\.long-defeat\.boot result=fail']
+# Deployment finished, siege team AI, a main agent and IsFriendlyMission false (Tab and the order bar depend on it). A boot that could
+# not host the run writes the fail line itself. The mission-start rows below (general, muster, keep) are reached once the boot line
+# passed, so a mission that booted and never wrote its own row is a FAIL, not NOT REACHED.
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.general"
+needs = "the same run"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass']
+pass = ['\[Check\] id=taom\.long-defeat\.general result=pass general_is_main=true player_general=true order_owner_is_main=true']
+fail = ['\[Check\] id=taom\.long-defeat\.general result=fail']
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.muster"
+needs = "the same run: the garrison musters in timed batches"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass']
+pass = ['\[Check\] id=taom\.long-defeat\.muster result=pass ']
+fail = ['\[Check\] id=taom\.long-defeat\.muster result=fail']
+# Per batch: no soldier far or off the navmesh, on_point at most half the batch (floor 6), overlap at most 6. The overlap radius of 0.4 m is a first guess (risk 17),
+# so a fail here is a thing to read in the [LongDefeat][Muster] lines before it is a bug.
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.keep"
+needs = "the same run"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass']
+pass = ['\[Check\] id=taom\.long-defeat\.keep result=pass source=(scene|recorded) at=\(']
+fail = ['\[Check\] id=taom\.long-defeat\.keep result=fail']
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.orders"
+needs = "the same run, once the HUD view has seen the main agent"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass']
+pass = ['\[Check\] id=taom\.long-defeat\.orders result=pass sets=[1-9]']
+fail = ['\[Check\] id=taom\.long-defeat\.orders result=fail']
+# Client: VisualOrderFactory.GetOrders().Count > 0. Zero means IsFriendlyMission is still true or no provider is registered. A booted
+# mission whose view never wrote the line (it faulted, or never saw the agent) is a FAIL.
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.hud"
+needs = "the same run"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass']
+pass = ['\[Check\] id=taom\.long-defeat\.hud result=pass movie=LongDefeatHud wave_text=set']
+fail = ['\[Check\] id=taom\.long-defeat\.hud result=fail']
+# Client (LongDefeatClientChecks.cs): both movies report IsLoaded (the panel is loaded and released once at mission start) and the view
+# model's WaveText is set. A missing prefab raises no exception, so a false IsLoaded is the only sign. A panel that fails to load later
+# latches the view off and writes this id's fail line. A screenshot of the panel is the human row below.
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.wave"
+needs = "clear five waves"
+reached = ['\[Check\] id=taom\.long-defeat\.wave result=']
+pass = ['\[Check\] id=taom\.long-defeat\.wave result=pass kills=[0-9]+ felled=[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.wave result=fail']
+min = 5
+# One line per cleared wave. A wave fails when more than the straggler share of it was felled by the stalemate rule instead of killed.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.stale"
+needs = "a wave that stalls and is charged"
+reached = ['\[Check\] id=taom\.long-defeat\.stale result=']
+pass = ['\[Check\] id=taom\.long-defeat\.stale result=pass cleared=true']
+fail = ['\[Check\] id=taom\.long-defeat\.stale result=fail']
+# A stalled wave is not guaranteed, so a session with none is NOT REACHED. Only a run that ended as a stalemate after a charge fails it.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.no-rout"
+needs = "a run with kills"
+reached = ['\[Check\] id=taom\.long-defeat\.no-rout result=']
+pass = ['\[Check\] id=taom\.long-defeat\.no-rout result=pass fled=0 fleeing_peak=0 ']
+fail = ['\[Check\] id=taom\.long-defeat\.no-rout result=fail']
+# The morale clause holds every attacker at morale 0.01, so none may flee. A run with no kills writes a skip line and reads NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.gold"
+needs = "a run that ends"
+reached = ['\[Check\] id=taom\.long-defeat\.gold result=']
+pass = ['\[Check\] id=taom\.long-defeat\.gold result=pass start=']
+fail = ['\[Check\] id=taom\.long-defeat\.gold result=fail']
+# Start plus earned minus spent is the balance, a kill owes a bounty and a cleared wave owes its bonus.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.shop"
+needs = "a run in which the shop bot (or a person) buys a pack"
+reached = ['\[Check\] id=taom\.long-defeat\.shop result=']
+pass = ['\[Check\] id=taom\.long-defeat\.shop result=pass spawned=[0-9]+ of=[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.shop result=fail']
+# The pack must come back at its full count. on_point and overlap are detail only and fail nothing.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.early-start"
+needs = "a run in which the horn sounds with time left in a phase"
+reached = ['\[Check\] id=taom\.long-defeat\.early-start result=']
+pass = ['\[Check\] id=taom\.long-defeat\.early-start result=pass paid=[0-9]+ expected=[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.early-start result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.player-death"
+needs = "a run in which the player's agent dies and is replaced"
+reached = ['\[Check\] id=taom\.long-defeat\.player-death result=']
+pass = ['\[Check\] id=taom\.long-defeat\.player-death result=pass via=(respawn|takeover)']
+fail = ['\[Check\] id=taom\.long-defeat\.player-death result=fail']
+# The unattended run's main agent may never die, so a session with no death is NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.end"
+needs = "a run that ends"
+reached = ['\[Check\] id=taom\.long-defeat\.end result=']
+pass = ['\[Check\] id=taom\.long-defeat\.end result=pass reason=[A-Za-z]+ wave=[0-9]+ cleared=[0-9]+ kills=[0-9]+ report=built']
+fail = ['\[Check\] id=taom\.long-defeat\.end result=fail']
+# A mission fault writes this id's fail line, so a faulted run reads FAIL.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.best-run"
+needs = "a run that ends (every exit saves its run, a 0-wave loss included)"
+reached = ['\[Check\] id=taom\.long-defeat\.best-run result=']
+pass = ['\[Check\] id=taom\.long-defeat\.best-run result=pass waves=[0-9]+ kills=[0-9]+ read_back=same']
+fail = ['\[Check\] id=taom\.long-defeat\.best-run result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.menu"
+needs = "the main menu drawn once (any session that reaches it, with no autorun needed)"
+reached = ['\[Check\] id=taom\.long-defeat\.menu result=']
+pass = ['\[Check\] id=taom\.long-defeat\.menu result=pass fortresses=[1-9]']
+fail = ['\[Check\] id=taom\.long-defeat\.menu result=fail']
+# Written by LongDefeatMenuEntry the first time the menu asks whether the option is hidden. A config with no fortress hides it and fails;
+# a dedicated server hides it on purpose and writes a skip line, which reads NOT REACHED. The click-through itself is the prompt-text human row.
+absence = "not-reached"
+
+[[human]]
+claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"
+
+[[human]]
+claim = "orders move formations: the order bar's orders take the selected formation"
+
+[[human]]
+claim = "B opens the shop with the player held in place, and the shop feels right"
+
+[[human]]
+claim = "after the player dies, E takes a soldier"
+
+[[human]]
+claim = "the terrain looks right after Cancel on the shader dialog"
+
+[[human]]
+claim = "the prompt text reads well"
+
+[[human]]
+claim = "Tab does nothing"
+
+[[human]]
+claim = "leaving the boundary returns to the main menu"
+
+[[human]]
+claim = "Leave on the end panel returns to the main menu"
+
+[[human]]
+claim = "the Escape exit returns to the main menu and the report still lands"

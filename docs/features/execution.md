@@ -81,9 +81,10 @@ same entity. An id that appears in none of those roles resolves Neutral, which i
 
 ### Current Values
 
-Kingdom ids are what `Hero.Clan.Kingdom.StringId` returns at runtime, so most of them are the vanilla
-ids that `Main/_Module/ModuleData/spkingdoms.xslt` renames rather than replaces. The in-game names
-below are taken from that XSLT, not from the id.
+Kingdom ids are what `Hero.Clan.Kingdom.StringId` returns at runtime. Eight are vanilla ids that
+`Main/_Module/ModuleData/spkingdoms.xslt` renames rather than replaces (`empire`, `empire_w`, `empire_s`,
+`sturgia`, `aserai`, `vlandia`, `battania`, `khuzait`); the other 22 rows are kingdoms that
+`taom_spkingdoms.xml` defines outright. The in-game names below are taken from those files, not from the id.
 
 | Kingdom id | In-game name | Alignment | Rationale |
 |---|---|---|---|
@@ -113,6 +114,10 @@ below are taken from that XSLT, not from the id.
 | `abanissa` | Abanissa | neutral | tribal, so both sides can target it |
 | `cardolan` | Cardolan | neutral | an Arnor remnant that stands apart from the War of the Ring (#978) |
 | `rhudaur` | Rhudaur | neutral | an Arnor remnant that stands apart from the War of the Ring (#978) |
+| `anduinvale` | Anduin Vale | neutral | |
+| `angaladh` | Angáladh | neutral | |
+| `dorwinion` | Dorwinion | neutral | |
+| `southrhovanion` | South Rhovanion | neutral | |
 
 Two further keys are **culture** ids, not kingdom ids. Every other playable culture shares its id
 with its kingdom, but Gondor and Mordor do not, so they need their own entries for the culture
@@ -125,7 +130,7 @@ fallback to place a kingdom-less hero:
 
 Four further keys are **minor clan** ids, for the clans whose own culture is unlisted or on the wrong side:
 `ghilman` (Serpent Guard, evil), `skolderbrotva` (Axemen of Erebor, free), `forest_people` (Druedain, free) and
-`eleftheroi` (Beornings, free). The file holds 32 keys in all (26 kingdoms, `gondor`, `mordor`, the 4 clans). The
+`eleftheroi` (Beornings, free). The file holds 36 keys in all (30 kingdoms, `gondor`, `mordor`, the 4 clans). The
 other ten minor clans resolve through their culture; the per-clan table is in
 [alignment-aware-execution.md](alignment-aware-execution.md) ("Minor Clan ID Reference").
 
@@ -168,7 +173,7 @@ No feature-specific adapters: participants are `SideIds` pairs built by `TAOM.Ad
 - `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs`: **12 tests**, `ShouldApplyHonorPenalty` per alignment pairing plus the kingdom-less executor and destroyed-victim-clan paths, and `GetRelationModifier` delegation: the service delta is returned unchanged (zero included), every participant reaches the service intact, notifications are requested off; `IsPlayerTheBereaved` for the player's clan, another clan and an unknown clan.
 - `TAOM.Tests/Features/Execution/ExecutionRelationServiceTests.cs`: **17 tests**, cross-alignment branching, kinslaying multiplier, notification suppression, and a kingdom-less participant in each of the three positions.
 - `TAOM.Tests/Features/Execution/ShippedMainCultureAlignmentCoverageTests.cs`: **3 tests**, every playable TAOM culture has an alignment entry and resolves to its declared side through the kingdom-less path.
-- `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs`: **13 tests**, the data gate for the clan rows (every minor clan and kingdom clan, the troops and leader templates); described once in [alignment-aware-execution.md](alignment-aware-execution.md) ("Tests").
+- `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs`: **14 tests**, the data gate for the clan rows (every minor clan and kingdom clan, the troops and leader templates); described once in [alignment-aware-execution.md](alignment-aware-execution.md) ("Tests").
 - `TAOM.Tests/Features/Execution/SidePairScanTests.cs`: **3 tests**, the IL gate on `ResolveSide(id, culture)` callers and on where a `SideIds` is built; described once in the same place.
 - `TAOM.Tests/Features/Execution/PartyTupleVanillaParityTests.cs`: **3 tests**, both of TAOM's party tuple copies against the installed vanilla prefabs, element for element apart from TAOM's two edits (LiveInstall, one per tuple), and the blood-feud mark beside the Execute skull, which runs without the game (#1031).
 

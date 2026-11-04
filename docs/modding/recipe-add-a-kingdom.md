@@ -33,7 +33,7 @@ logs nothing. The id lists live in [id-cheatsheet](id-cheatsheet.md).
 **Two spelling corrections to the older docs.** The file on disk is `taom_spkingdoms.xml`, all
 lowercase, and `Main/_Module/SubModule.xml:130` registers it as
 `<XmlName id="Kingdoms" path="taom_spkingdoms"/>`. `docs/features/kingdom-creation.md` writes
-`TAOM_spkingdoms.xml` on eight lines, among them 28, 56 and 215 (`rg -n 'TAOM_spkingdoms'`, 2026-10-27).
+`taom_spkingdoms.xml` on eight lines, among them 28, 56 and 215 (`rg -n 'TAOM_spkingdoms'`, 2026-10-27).
 Harmless on Windows, wrong as documentation.
 
 ## Filing order

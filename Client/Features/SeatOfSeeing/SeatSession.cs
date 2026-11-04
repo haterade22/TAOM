@@ -31,6 +31,15 @@ internal sealed class SeatSession
     private int _frames;
     private bool _controllerShut;
     private bool _firstEntryShown;
+    private bool _focusNoted;
+    private SeatKeepKind _keep;
+    private SeatOrbitState _orbit;
+    private bool _cursorShown;
+    private bool _hideInForce;
+    private bool _hideSaved;
+    private bool _panelWasOpen;
+    private bool _keepOwed;
+    private SeatCloseSignals _previousSignals;
 
     // Set from the engine's callbacks (a mode change, a main agent change), which may not run on the thread that reads them.
     private volatile bool _deploymentEnded;
@@ -52,6 +61,15 @@ internal sealed class SeatSession
     internal SeatState State { get; private set; }
 
     internal bool Faulted { get; private set; }
+
+    /// <summary>What the view keeps to; the field trial reads it.</summary>
+    internal SeatKeepKind Keep => _keep;
+
+    /// <summary>Frames the Seat has owned since the latest entry.</summary>
+    internal int Frames => _frames;
+
+    /// <summary>True when the latest leave armed the engine's return glide.</summary>
+    internal bool GlideBegan { get; private set; }
 
     /// <summary>Once per real frame, from <c>OnMissionScreenTick</c>. A frame with no key and no stored deployment edge reads no setting and no fact.</summary>
     internal void OnScreenTick(bool keyPressed)
@@ -75,9 +93,10 @@ internal sealed class SeatSession
 
     /// <summary>
     /// Once per real frame, from <c>UpdateOverridenCamera</c>. True when the Seat owns the frame; false while Off, in photo mode, with
-    /// a custom camera set, and after a fault, so the engine's own camera runs.
+    /// a custom camera set, and after a fault, so the engine's own camera runs. <paramref name="input"/> replaces the screen's flight
+    /// input when it is set; only the field trial sets it (build-spec section 12).
     /// </summary>
-    internal bool OnFrame(float dt)
+    internal bool OnFrame(float dt, SeatInput? input = null)
     {
         if (State == SeatState.Off || Faulted)
             return false;
@@ -88,25 +107,19 @@ internal sealed class SeatSession
                 return false;
 
             var rising = State == SeatState.Rising;
+            var fraction = 1f;
+            SeatPose pose;
             if (rising)
             {
-                if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
-                    _elapsed += dt;
+                pose = FlightPose(true, default, dt, out fraction);
             }
             else
             {
-                _flight = Bounded(SeatCameraMath.Step(_flight, _screen.ReadInput(dt), dt), _flight);
+                var read = input ?? _screen.ReadInput(dt);
+                if (!TryOrbitPose(read, dt, out pose))
+                    pose = FlightPose(false, read, dt, out _);
             }
 
-            var flightGround = _screen.GroundHeight(_flight.X, _flight.Y, _applied.Z);
-            _ground = SeatCameraMath.SmoothGround(_ground, flightGround, dt);
-            _flight = SeatCameraMath.CapFlight(_flight, _heightLimit, _ground);
-            var goal = SeatCameraMath.Pose(_flight, _ground);
-            var fraction = SeatCameraMath.BlendFraction(_elapsed);
-            var pose = SeatCameraMath.CapHeight(rising ? SeatCameraMath.Blend(_from, goal, fraction) : goal, _heightLimit);
-
-            var rawGroundUnderPose = rising ? _screen.GroundHeight(pose.X, pose.Y, pose.Z) : flightGround;
-            pose = SeatCameraMath.AboveGround(pose, rawGroundUnderPose);
             _screen.ApplyFrame(pose, _viewAngle, SeatCameraMath.ListenerHeight(pose.Z, _ground));
             _applied = pose;
             if (rising && fraction >= 1f)
@@ -126,17 +139,65 @@ internal sealed class SeatSession
     }
 
     /// <summary>
-    /// From the mission tick, the only place the hero's agent is written (5.5): while in the Seat, a write that is owed is done once. A
-    /// paused mission still ticks, with a <c>dt</c> of 0, so the write does not wait on time.
+    /// From the mission tick, the only place the hero's agent is written (5.5): the stand-fast write that is owed is done once while in the Seat,
+    /// and a stored keep press is acted on. A paused mission still ticks, with a <c>dt</c> of 0, so neither waits on time.
     /// </summary>
     internal void OnMissionTick()
     {
-        if (State == SeatState.Off || Faulted || !_standFastOwed)
+        if (Faulted)
             return;
         try
         {
-            _standFastOwed = false;
-            _hero.StandFast();
+            if (State != SeatState.Off && _standFastOwed)
+            {
+                _standFastOwed = false;
+                _hero.StandFast();
+            }
+
+            if (_keepOwed)
+            {
+                _keepOwed = false;
+                if (State == SeatState.Seated && !_screen.ReadFacts().PhotoMode)
+                    KeepPress();
+            }
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    /// <summary>The key to keep to a soldier or a company, stored for the next mission tick, where the rays are cast. Only a seated view acts on it.</summary>
+    internal void PressKeep()
+    {
+        if (State != SeatState.Seated)
+            return;
+        try
+        {
+            if (!_screen.ReadFacts().PhotoMode)
+                _keepOwed = true;
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    /// <summary>The key to hide the interface, from the screen tick and only while seated: it hides, or brings the interface back.</summary>
+    internal void PressHide()
+    {
+        if (State != SeatState.Seated)
+            return;
+        try
+        {
+            // Photo mode is the engine's second writer of the flag (MissionGauntletPhotoMode.cs:118, 139, 183, 192, 200, 317), and no Seat key
+            // acts in it (5.3).
+            if (_screen.ReadFacts().PhotoMode)
+                return;
+            if (_hideInForce)
+                RestoreHide("key");
+            else
+                BeginHide();
         }
         catch (Exception ex)
         {
@@ -181,7 +242,7 @@ internal sealed class SeatSession
         battleStart &= facts.BattleMode;
         if (!keyPressed && !battleStart)
             return;
-        if (facts.Deployment || facts.Interlude || facts.PhotoMode || facts.MissionEnded)
+        if (facts.Deployment || facts.Interlude || facts.PhotoMode || facts.MissionEnded || facts.RadialMenuActive)
             return;
 
         if (!enabled)
@@ -217,6 +278,174 @@ internal sealed class SeatSession
             Leave("rage", facts.BattleMode);
         else if (!facts.PhotoMode && keyPressed)
             Leave("key", facts.BattleMode);
+        else if (!facts.PhotoMode && State == SeatState.Seated)
+            PanelWork();
+    }
+
+    private void PanelWork()
+    {
+        var open = _screen.IsPanelOpen();
+
+        // The close signals are game keys that only the order handler registers on the scene layer, and a read of a key nobody registered
+        // throws (InputContext.cs:226-233). A mission with no handler has no panel, and a closing edge always has the panel open on the
+        // frame before it, so no edge is lost by reading only around an open panel (6.2).
+        var keepOpen = (open || _panelWasOpen) && _settings.KeepPanelOpen;
+        var signals = keepOpen ? _screen.ReadCloseSignals() : default;
+        if (keepOpen && SeatPanelRule.ClosingEdge(_panelWasOpen, open) && SeatPanelRule.ShouldReopen(signals, _previousSignals, _screen.TransferMenuOpen()))
+            open = TryReopen();
+
+        _panelWasOpen = open;
+        _previousSignals = signals;
+
+        var wanted = open && _settings.CursorWithPanel;
+        var look = wanted && _screen.LookHeld();
+        if (look)
+            _screen.HoldCursorPosition();
+        ShowCursor(wanted && !look);
+        if (_cursorShown && !_focusNoted && SeatPresence.TakeFocusSet())
+        {
+            _focusNoted = true;
+            _outcomes.Pass(SeatChecks.FocusId, _key, "mission=" + _key + " focus=cursor");
+        }
+
+        if (_hideInForce)
+        {
+            var why = SeatHideRule.RestoreReason(open, _screen.DialogShown(), _screen.OtherLayerFocused());
+            if (why != null)
+                RestoreHide(why);
+        }
+    }
+
+    // A refused reopen is not a reopen: OpenToggleOrder returns without a word when the hero or the last troop is gone
+    // (MissionOrderVM.cs:716-719), so the line is a pass only if the field it sets (:720) reads open.
+    private bool TryReopen()
+    {
+        if (!_screen.OpenPanel())
+        {
+            _outcomes.Fail(SeatChecks.PanelReopenedId, _key, "mission=" + _key + " reason=site");
+            return false;
+        }
+
+        if (!_screen.IsPanelOpen())
+        {
+            _outcomes.Skip(SeatChecks.PanelReopenedId, _key + ":refused", "mission=" + _key + " reason=refused");
+            return false;
+        }
+
+        _outcomes.Pass(SeatChecks.PanelReopenedId, _key, "mission=" + _key + " panel=reopened");
+        return true;
+    }
+
+    private void ShowCursor(bool show)
+    {
+        if (show == _cursorShown)
+            return;
+        _cursorShown = show;
+        SeatPresence.SetCursor(show);
+        _screen.SetCursor(show);
+        if (show)
+            _outcomes.Pass(SeatChecks.CursorId, _key, "mission=" + _key + " cursor=shown");
+    }
+
+    private void BeginHide()
+    {
+        _hideSaved = _screen.ReadUiHidden();
+        _screen.WriteUiHidden(true);
+        _hideInForce = true;
+        _outcomes.Pass(SeatChecks.HideId, _key + ":hidden", "mission=" + _key + " interface=hidden");
+    }
+
+    private void RestoreHide(string reason)
+    {
+        _hideInForce = false;
+        _screen.WriteUiHidden(_hideSaved);
+        _outcomes.Pass(SeatChecks.HideId, _key + ":restored-" + reason, "mission=" + _key + " interface=restored reason=" + reason);
+    }
+
+    private void KeepPress()
+    {
+        if (_keep != SeatKeepKind.None)
+        {
+            LetGo("key");
+            return;
+        }
+
+        var kind = _screen.TryKeep();
+        if (kind == SeatKeepKind.None)
+        {
+            _outcomes.Skip(SeatChecks.KeepId, _key + ":nobody", "mission=" + _key + " reason=nobody");
+            _screen.Say(SeatMessage.KeepNobody);
+            return;
+        }
+
+        _keep = kind;
+        _orbit = SeatOrbit.Begin(_applied);
+        _outcomes.Pass(SeatChecks.KeepId, _key + ":" + kind, "mission=" + _key + " kind=" + kind);
+    }
+
+    private void LetGo(string reason, SeatMessage? message = null)
+    {
+        if (_keep == SeatKeepKind.None)
+            return;
+        var kind = _keep;
+        _keep = SeatKeepKind.None;
+        _screen.Unkeep();
+        _outcomes.Pass(SeatChecks.LetGoId, _key + ":" + reason, "mission=" + _key + " reason=" + reason + " kind=" + kind);
+        if (message.HasValue)
+            _screen.Say(message.Value);
+    }
+
+    private SeatPose FlightPose(bool rising, SeatInput read, float dt, out float fraction)
+    {
+        if (rising)
+        {
+            if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
+                _elapsed += dt;
+        }
+        else
+        {
+            _flight = Bounded(SeatCameraMath.Step(_flight, read, dt), _flight);
+        }
+
+        var flightGround = _screen.GroundHeight(_flight.X, _flight.Y, _applied.Z);
+        _ground = SeatCameraMath.SmoothGround(_ground, flightGround, dt);
+        _flight = SeatCameraMath.CapFlight(_flight, _heightLimit, _ground);
+        var goal = SeatCameraMath.Pose(_flight, _ground);
+        fraction = SeatCameraMath.BlendFraction(_elapsed);
+        var pose = SeatCameraMath.CapHeight(rising ? SeatCameraMath.Blend(_from, goal, fraction) : goal, _heightLimit);
+
+        var rawGroundUnderPose = rising ? _screen.GroundHeight(pose.X, pose.Y, pose.Z) : flightGround;
+        return SeatCameraMath.AboveGround(pose, rawGroundUnderPose);
+    }
+
+    private bool TryOrbitPose(SeatInput read, float dt, out SeatPose pose)
+    {
+        pose = default;
+        if (_keep == SeatKeepKind.None)
+            return false;
+        var target = _screen.ReadKept();
+        if (target.Gone)
+        {
+            LetGo("gone", SeatMessage.KeepGone);
+            return false;
+        }
+
+        if (SeatKeepRule.LetsGo(read))
+        {
+            LetGo("flight");
+            return false;
+        }
+
+        _orbit = SeatOrbit.Step(_orbit, read, target.X, target.Y, target.Z, dt);
+        var raw = SeatOrbit.Pose(_orbit);
+        var (x, y) = _screen.ClampToBoundary(raw.X, raw.Y);
+        var inside = FiniteFloatValidator.IsFinite(x) && FiniteFloatValidator.IsFinite(y);
+        pose = SeatCameraMath.CapHeight(new SeatPose(inside ? x : _applied.X, inside ? y : _applied.Y, raw.Z, raw.Yaw, raw.Pitch), _heightLimit);
+        var rawGround = _screen.GroundHeight(pose.X, pose.Y, pose.Z);
+        pose = SeatCameraMath.AboveGround(pose, rawGround, SeatCameraMath.MinHeight);
+        _ground = SeatCameraMath.SmoothGround(_ground, rawGround, dt);
+        _flight = SeatCameraMath.FlightOf(pose, _ground);
+        return true;
     }
 
     private void Enter(bool blend)
@@ -243,6 +472,7 @@ internal sealed class SeatSession
         _applied = camera;
         _elapsed = 0f;
         _frames = 0;
+        _panelWasOpen = false;
 
         _controllerShut = true;
         _screen.SetHeroController(false);
@@ -264,11 +494,11 @@ internal sealed class SeatSession
         var look = _applied;
         _last = _flight;
         State = SeatState.Off;
-        SeatPresence.Set(false);
-        ReleaseController();
+        Cleanup(latching: false);
 
         var lookWritten = !writeLook || _screen.WriteLook(look.Yaw, look.Pitch);
         var began = glide && _screen.BeginGlide();
+        GlideBegan = began;
         _outcomes.Pass(SeatChecks.LeaveId, _key + ":" + reason, "mission=" + _key + " frames="
             + _frames.ToString(System.Globalization.CultureInfo.InvariantCulture) + " glide=" + (began ? "1" : "0") + " reason=" + reason);
 
@@ -286,6 +516,25 @@ internal sealed class SeatSession
         _screen.SetHeroController(true);
     }
 
+    private void Cleanup(bool latching)
+    {
+        Step(latching, () => SeatPresence.Set(false));
+        if (_controllerShut)
+            Step(latching, ReleaseController);
+        Step(latching, () => ShowCursor(false));
+        if (_hideInForce)
+            Step(latching, () => RestoreHide(latching ? "fault" : "leave"));
+        Step(latching, () => LetGo("leave"));
+    }
+
+    private void Step(bool latching, Action step)
+    {
+        if (latching)
+            Swallow(step);
+        else
+            step();
+    }
+
     private SeatFlight Bounded(SeatFlight next, SeatFlight fallback)
     {
         var (x, y) = _screen.ClampToBoundary(next.X, next.Y);
@@ -300,9 +549,7 @@ internal sealed class SeatSession
             return;
         Faulted = true;
         State = SeatState.Off;
-        SeatPresence.Set(false);
-        if (_controllerShut)
-            Swallow(ReleaseController);
+        Cleanup(latching: true);
 
         Swallow(() => _logger.LogError($"[SeatOfSeeing] the Seat failed and is off for this mission, the hero's own camera restored: {ex}"));
         Swallow(() => _outcomes.Fail(SeatChecks.FaultId, _key, "mission=" + _key + " error=" + ex.GetType().Name));

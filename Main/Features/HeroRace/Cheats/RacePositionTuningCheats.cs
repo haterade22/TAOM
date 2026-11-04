@@ -29,29 +29,30 @@ public static class RacePositionTuningCheats
     private const string AvatarTail =
         "\nUse '.' for <race> to target the race the on-screen tableau is showing. On the 'avatar'\n"
         + "surface, prefix a race with 'mount_' to move its mount instead; the 'image' surface has no\n"
-        + "mount row. Edits are live but in memory: run taom.save_race_offsets to keep them.";
+        + "mount row. On the 'icon' surface <race> is '<race>_<slot>' (dwarf_helmet; slots helmet,\n"
+        + "armor, boot, glove, cape). Edits are live but in memory: run taom.save_race_offsets to keep them.";
 
     private const string PrintUsage =
-        "Format is \"taom.print_race_offsets [avatar|image]\".\n"
-        + "Lists the configured framing offsets. With no argument, lists both surfaces and reports\n"
+        "Format is \"taom.print_race_offsets [avatar|image|icon]\".\n"
+        + "Lists the configured framing offsets. With no argument, lists all surfaces and reports\n"
         + "which race the on-screen tableau is showing.";
 
     private const string SetUsage =
-        "Format is \"taom.set_race_offset <avatar|image> <race> <horizontal> <vertical> <zoom>\".\n"
+        "Format is \"taom.set_race_offset <avatar|image|icon> <race> <horizontal> <vertical> <zoom>\".\n"
         + "Sets all three offsets for a race outright." + AvatarTail;
 
     private const string NudgeUsage =
-        "Format is \"taom.nudge_race_offset <avatar|image> <race> <h|v|z> <delta>\".\n"
+        "Format is \"taom.nudge_race_offset <avatar|image|icon> <race> <h|v|z> <delta>\".\n"
         + "Adds delta to one axis: h = horizontal (left/right), v = vertical (up/down),\n"
         + "z = zoom (nearer/farther, negative is farther)." + AvatarTail;
 
     private const string SaveUsage =
         "Format is \"taom.save_race_offsets\".\n"
-        + "Writes both framing configs to ModuleData/configs, keeping the previous file as .prev.";
+        + "Writes all three framing configs to ModuleData/configs, keeping the previous files as .prev.";
 
     private const string ReloadUsage =
         "Format is \"taom.reload_race_offsets\".\n"
-        + "Re-reads both framing configs from disk, discarding unsaved edits.";
+        + "Re-reads all three framing configs from disk, discarding unsaved edits.";
 
     [CommandLineFunctionality.CommandLineArgumentFunction("print_race_offsets", "taom")]
     public static string PrintRaceOffsets(List<string> strings) =>
@@ -65,6 +66,7 @@ public static class RacePositionTuningCheats
             {
                 report.Append(Describe(store, RacePositionSurface.Avatar));
                 report.Append(Describe(store, RacePositionSurface.Image));
+                report.Append(Describe(store, RacePositionSurface.Icon));
                 return report.ToString();
             }
 
@@ -93,9 +95,9 @@ public static class RacePositionTuningCheats
             item.Vertical = v;
             item.Zoom = z;
 
-            RequestRedraw(surface);
+            var cleared = RequestRedraw(surface);
             return $"{surface} '{race}' set to {RacePositionTuningParser.Format(item)}. "
-                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface);
+                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface, cleared);
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("nudge_race_offset", "taom")]
@@ -123,9 +125,9 @@ public static class RacePositionTuningCheats
             item.Vertical = v;
             item.Zoom = z;
 
-            RequestRedraw(surface);
+            var cleared = RequestRedraw(surface);
             return $"{surface} '{race}' now {RacePositionTuningParser.Format(item)}. "
-                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface);
+                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface, cleared);
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("save_race_offsets", "taom")]
@@ -137,7 +139,8 @@ public static class RacePositionTuningCheats
 
             var path = IoC.Resolve<IPathService>().ConfigPath;
             return $"Wrote CharacterAvatarPatch.json ({store.List(RacePositionSurface.Avatar).Count} rows) "
-                 + $"and CharacterImagePatch.json ({store.List(RacePositionSurface.Image).Count} rows) to {path}.\n"
+                 + $"CharacterImagePatch.json ({store.List(RacePositionSurface.Image).Count} rows) "
+                 + $"and ItemIconPatch.json ({store.List(RacePositionSurface.Icon).Count} rows) to {path}.\n"
                  + "Previous files kept as .prev. These live in the game install, not the repo: copy them\n"
                  + "back into Main/_Module/ModuleData/configs/ to keep them.";
         });
@@ -148,7 +151,9 @@ public static class RacePositionTuningCheats
         {
             IoC.Resolve<IRacePositionStore>().Reload();
             RequestRedraw();
-            return "Reloaded both framing configs from disk. Unsaved edits discarded.";
+            var cleared = RequestRedraw(RacePositionSurface.Icon);
+            return "Reloaded all three framing configs from disk. Unsaved edits discarded."
+                 + RedrawNote(RacePositionSurface.Icon, cleared);
         });
 
     private static bool ResolveRace(string raw, RacePositionSurface surface, out string race, out string error)
@@ -171,17 +176,43 @@ public static class RacePositionTuningCheats
     // CharacterSpawner.InitWithCharacter, and nothing here retains or re-initialises that spawner. So
     // an image edit is real but invisible until the portrait is next built. Callers say that rather
     // than implying a redraw that did not happen.
-    private static string RedrawNote(RacePositionSurface surface)
-        => surface == RacePositionSurface.Image
-            ? " The 2D portrait does not redraw on demand: reopen the screen showing it to see this."
-            : string.Empty;
+    //
+    // The ICON surface is redrawn by dropping the thumbnail cache: every icon is rendered again, and
+    // so re-runs Patch132, the next time a screen asks for it.
+    private static string RedrawNote(RacePositionSurface surface, bool iconCacheCleared)
+        => surface switch
+        {
+            RacePositionSurface.Image => " The 2D portrait does not redraw on demand: reopen the screen showing it to see this.",
+            RacePositionSurface.Icon when iconCacheCleared => " Icon cache cleared: reopen the inventory to see the new icons.",
+            RacePositionSurface.Icon => " The icon cache could not be cleared: the new icons show after the next map load.",
+            _ => string.Empty,
+        };
 
-    private static void RequestRedraw(RacePositionSurface surface)
+    /// <summary>Returns false only when an icon cache clear was needed and did not happen.</summary>
+    private static bool RequestRedraw(RacePositionSurface surface)
     {
-        if (surface != RacePositionSurface.Avatar)
-            return;
+        if (surface == RacePositionSurface.Icon)
+            return ClearIconCache();
 
-        RequestRedraw();
+        if (surface == RacePositionSurface.Avatar)
+            RequestRedraw();
+
+        return true;
+    }
+
+    // Through the client seam: the cache manager is a View type, and a core method naming it fails
+    // to JIT on a dedicated server (ADR-013).
+    private static bool ClearIconCache()
+    {
+        try
+        {
+            return IoC.Resolve<TAOM.Adapters.IThumbnailCacheAdapter>().TryClearAll();
+        }
+        catch
+        {
+            // Best effort, same as the tableau redraw: vanilla clears the cache on the next map load.
+            return false;
+        }
     }
 
     private static void RequestRedraw()

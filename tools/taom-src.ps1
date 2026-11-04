@@ -4,9 +4,9 @@
     Decompile and cache TaleWorlds types via a single command. Auto-detects version.
 .DESCRIPTION
     Mirrors the opensrc pattern (https://github.com/vercel-labs/opensrc) for TAOM's
-    closed-source TaleWorlds dependencies. Caches at $env:USERPROFILE\.taom-src\<version>\
-    where <version> is auto-detected from Version.xml in the resolved bin dir
-    (e.g. v1.3.15, v1.4.5). Multiple versions can coexist.
+    closed-source TaleWorlds dependencies. Caches at $env:USERPROFILE\.taom-src\<version>-<stamp>\
+    where <version> is auto-detected from Version.xml in the resolved bin dir and <stamp> is
+    TaleWorlds.Library.dll's write time (e.g. v1.5.6-202611041234). Multiple builds can coexist.
 
     Bin dir resolution order:
       1. $env:BANNERLORD_OVERRIDE_DIR\bin\Win64_Shipping_Client (if set)
@@ -133,7 +133,10 @@ function Resolve-Version {
         throw "Could not parse Version.xml at $versionXml. Expected <Version><Singleplayer Value='vX.Y.Z'/></Version>."
     }
     $script:Version = $detected
-    $script:VersionDir = Join-Path $CacheRoot $detected
+    # A Steam hotfix keeps Version.xml and re-stamps the DLLs (v1.5.6, 2026-11-04), so the version alone would keep serving the old build's sources.
+    $library = Join-Path $BinDir 'TaleWorlds.Library.dll'
+    $folder = if (Test-Path $library) { $detected + '-' + (Get-Item $library).LastWriteTimeUtc.ToString('yyyyMMddHHmm') } else { $detected }
+    $script:VersionDir = Join-Path $CacheRoot $folder
     # Per version: a shared index kept routing types to Coop's stale copies after a bump (2026-10-14).
     $script:IndexPath = Join-Path $script:VersionDir 'dll-index.json'
     Write-Progress2 "detected version $detected -> cache $($script:VersionDir)"
@@ -213,7 +216,9 @@ function Try-Decompile {
     # `namespace`, attribute, modifier, type keyword, comment). Anything else —
     # "Could not find type definition", "MetadataFileNotSupportedException" for
     # native DLLs, raw stack frames — is a miss.
-    $output = & ilspycmd $DllPath -t $TypeFqn 2>&1 | Out-String
+    # A type in a module's own bin needs the engine bin as a reference path, else ilspycmd prints
+    # `//IL_000c: Unknown result type` and bare casts. SearchDirs[0] is the game's bin dir.
+    $output = & ilspycmd $DllPath -t $TypeFqn -r $script:SearchDirs[0] 2>&1 | Out-String
     if ([string]::IsNullOrWhiteSpace($output)) { return $null }
     $firstLine = ($output -split "`r?`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1).TrimStart()
     if ($firstLine -match '^(using |namespace |//|/\*|\[|public |internal |private |protected |class |struct |interface |enum |abstract |sealed |static |partial |readonly |unsafe |#)') {

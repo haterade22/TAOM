@@ -94,7 +94,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 | `Main/Adapters/IEquipmentSlotAdapter.cs` + `EquipmentSlotAdapter.cs` | 11-slot reader/writer, modifier-preserving via `equipment[EquipmentIndex] = new EquipmentElement(item, modifier)`. Hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>(...)` — heroes do NOT live in `MBObjectManager` (only items/modifiers/templates do); using the wrong manager makes every `HeroExists` check fail and produces the user-visible `No active hero` save error. |
 | `Main/Adapters/IItemModifierLookupAdapter.cs` + `ItemModifierLookupAdapter.cs` | Validates modifier StringId BEFORE the lookup is acted on |
 | `Main/Adapters/IInventoryScreenAdapter.cs` + `InventoryScreenAdapter.cs` | Wraps active `SPInventoryVM` (active hero, equipment mode, item lock, refresh, clear) |
-| `Main/_Module/GUI/Prefabs/PresetsOverlay.xml` | Vanilla-brushes-only overlay markup |
+| `Main/_Module/GUI/PreFabs/PresetsOverlay.xml` | Vanilla-brushes-only overlay markup |
 
 ## Dependencies
 
@@ -106,7 +106,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## Tests
 
-- `TAOM.Tests/Features/EquipPresets/EquipmentPresetServiceTests.cs` — 37 tests covering CRUD, missing-item / missing-modifier paths, MaxPresets enforcement (positive + negative), civilian/battle routing, IncludesMount toggle, IncludesCivilian toggle, orphan pruning, validate-before-lookup rule, modifier round-trip, slot-clearing on empty itemId.
+- `TAOM.Tests/Features/EquipPresets/EquipmentPresetServiceTests.cs`: 44 tests covering CRUD, missing-item / missing-modifier paths, MaxPresets enforcement (positive + negative), civilian/battle routing, IncludesMount toggle, IncludesCivilian toggle, orphan pruning, validate-before-lookup rule, modifier round-trip, slot-clearing on empty itemId.
 - `TAOM.Tests/Features/EquipPresets/HoNEquipmentPresetTests.cs` — 7 tests verifying default values, null-safety on item-ref ctor, AND `[SaveableProperty]` indexes (1..6 for the preset, 1..3 for the item-ref). Index numbers are part of the save format — these tests are the regression gate against accidental renumbering.
 - `TAOM.Tests/Features/EquipPresets/PresetSaveableTypeDefinerTests.cs` — 3 tests: BaseId matches the constant, BaseId is unique across all TAOM SaveableTypeDefiners, ctor is exception-free.
 - `TAOM.Tests/Features/EquipPresets/EquipPresetsSettingsProviderTests.cs` — 2 tests: range constants are coherent, default fits the [min, max] window.
@@ -121,7 +121,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## How to Extend the Overlay UI
 
-1. Edit `Main/_Module/GUI/Prefabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `Popup.Button.Text`, etc.); no custom sprites are registered for this feature.
+1. Edit `Main/_Module/GUI/PreFabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `Popup.Button.Text`, etc.); no custom sprites are registered for this feature.
 2. Add the corresponding `[DataSourceProperty]` and parameterless command method to `PresetsOverlayVM`.
 3. Bindings use `@PropertyName` for text and `Command.Click="MethodName"` for click handlers.
 

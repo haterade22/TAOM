@@ -13,16 +13,23 @@ namespace TAOM.Features.SeatOfSeeing;
 internal sealed class SeatHotKeys
 {
     private GameKey? _takeTheSeat;
+    private GameKey? _keepTo;
+    private GameKey? _hideTheInterface;
     private bool _resolved;
 
     /// <summary>The key bound to "Take the Seat", or <see cref="InputKey.Invalid"/>.</summary>
-    public InputKey TakeTheSeat
+    public InputKey TakeTheSeat => Bound(ref _takeTheSeat);
+
+    /// <summary>The key bound to "Keep to this soldier or company", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey KeepTo => Bound(ref _keepTo);
+
+    /// <summary>The key bound to "Hide the interface", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey HideTheInterface => Bound(ref _hideTheInterface);
+
+    private InputKey Bound(ref GameKey? key)
     {
-        get
-        {
-            Resolve();
-            return _takeTheSeat?.KeyboardKey?.InputKey ?? InputKey.Invalid;
-        }
+        Resolve();
+        return key?.KeyboardKey?.InputKey ?? InputKey.Invalid;
     }
 
     private void Resolve()
@@ -36,6 +43,8 @@ internal sealed class SeatHotKeys
             if (category.GameKeyCategoryId != TaomSeatHotKeyCategory.CategoryId)
                 continue;
             _takeTheSeat = category.GetGameKey(TaomSeatHotKeyCategory.TakeTheSeatKeyId);
+            _keepTo = category.GetGameKey(TaomSeatHotKeyCategory.KeepToKeyId);
+            _hideTheInterface = category.GetGameKey(TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
             break;
         }
 

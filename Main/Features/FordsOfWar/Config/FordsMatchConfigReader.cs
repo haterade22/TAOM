@@ -65,7 +65,10 @@ internal static class FordsMatchConfigReader
         s.Int(g, "towers", "volleyMissiles", d.VolleyMissiles, 0, 50),
         s.Float(g, "towers", "fireRange", d.FireRange, 1f, 500f),
         s.Float(g, "towers", "attackRange", d.AttackRange, 0.5f, 200f),
-        s.Float(g, "towers", "thrustFloorFactor", d.ThrustFloorFactor, 0f, 1f));
+        s.Float(g, "towers", "thrustFloorFactor", d.ThrustFloorFactor, 0f, 1f),
+        s.Float(g, "towers", "assaultDamagePerSecond", d.AssaultDamagePerSecond, 0f, MaxGold),
+        s.Float(g, "towers", "wearStartMinutes", d.WearStartMinutes, 0f, 600f),
+        s.Float(g, "towers", "wearPerMinute", d.WearPerMinute, 0f, 100f));
 
     private static FordsHeroConfig ReadHeroes(JObject? g, FordsHeroConfig d, FordsConfigScope s) => new(
         s.Int(g, "heroes", "maxAlivePerSide", d.MaxAlivePerSide, 0, 10),

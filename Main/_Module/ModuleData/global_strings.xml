@@ -29,6 +29,10 @@
 	     TaomSeatHotKeyCategory. -->
 	<string id="str_key_name.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take}Take the Seat (TAOM)" />
 	<string id="str_key_description.TaomSeatHotKeyCategory_530" text="{=taom_key_seat_take_desc}Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+	<string id="str_key_name.TaomSeatHotKeyCategory_531" text="{=taom_key_seat_keep}Keep to this soldier or company (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_531" text="{=taom_key_seat_keep_desc}In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
+	<string id="str_key_name.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide}Hide the interface (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide_desc}In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
 
 	<!-- Marshal's Word (docs/features/marshals-word.md), under Options > Keybindings > Action because the keys are held in a
 	     mission. Same numbering rule as above: the trailing number is the game key id, kept in step with

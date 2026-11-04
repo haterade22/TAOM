@@ -109,7 +109,7 @@ The `<Module>` root is parsed by `ModuleInfo.LoadWithFullPath`. `<DependedModule
 |---|---|---|---|---|---|
 | `Name@value` | string | yes | throws | Launcher display name. TAOM: `TAOM` (`SubModule.xml:5`) | `ModuleInfo.cs:81` |
 | `Id@value` | string | yes | throws | The module identity every lookup keys on, lower-cased (`ModuleHelper.cs:87, 95-97`); dependency edges compare it with ordinal `==`, so a `<DependedModule Id>` must match it letter for letter (`ModuleHelper.cs:105, 256, 264`). TAOM: `TAOM` (`SubModule.xml:4`) | `ModuleInfo.cs:82` |
-| `Version@value` | version string | yes | throws | Parsed with `ApplicationVersion.FromString`. TAOM: `v2.0.28` (`SubModule.xml:6`) | `ModuleInfo.cs:87` |
+| `Version@value` | version string | yes | throws | Parsed with `ApplicationVersion.FromString`. TAOM: `v2.0.36` (`SubModule.xml:6`) | `ModuleInfo.cs:87` |
 | `RequiredBaseVersion@value` | version string | no | not set | Parsed if present; the only consumer compares it for the module named `NavalDLC` (`ModuleHelper.cs:73-80`). Absent in TAOM | `ModuleInfo.cs:88-91` |
 | `DefaultModule@value` | literal `true` | no | `false` | Case-sensitive `Equals("true")`. TAOM: `false` (`SubModule.xml:7`) | `ModuleInfo.cs:92` |
 | `ModuleType@value` | enum | no | unchanged | `Enum.TryParse`. TAOM: `Community` (`SubModule.xml:9`), which keeps the declared `<Version>` intact; official modules get their changeset overwritten in `InitializeModules` (`ModuleHelper.cs:90-93`) | `ModuleInfo.cs:93-97` |
@@ -338,14 +338,14 @@ Code: No code changes needed
 ### Add: a new language folder
 
 1. Find the id vanilla uses for the language in `Native/ModuleData/Languages/<DIR>/language_data.xml` (12 of them are listed in `docs/features/localization.md:62-75`).
-2. Create `Main/_Module/ModuleData/Languages/<DIR>/language_data.xml` with `<LanguageData id="<that id>">` and one `<LanguageFile xml_path="<DIR>/std_taom_<file>_<locale>.xml"/>` per source strings file; today that is 17 rows (the DE example above). The `xml_path` is relative to `ModuleData/Languages`, not to the new folder (`LanguageData.cs:130`).
-3. Generate the 17 files. `python tools/generate_translation_template.py` writes English templates for the 10 it covers (`tools/README.md:292`; the remaining 7, including the 4 name-strings files, are hand-seeded or covered by `translate_with_claude.py --sync-ids`); `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` fills them (`tools/README.md:324`), and it only knows the codes in its `LANGUAGES` table (`tools/translate_with_claude.py:91`), so a language new to TAOM needs a row there first.
+2. Create `Main/_Module/ModuleData/Languages/<DIR>/language_data.xml` with `<LanguageData id="<that id>">` and one `<LanguageFile xml_path="<DIR>/std_taom_<file>_<locale>.xml"/>` per source strings file; today that is 23 rows (the example above shows the first 13 of DE's). The `xml_path` is relative to `ModuleData/Languages`, not to the new folder (`LanguageData.cs:130`).
+3. Generate the 23 files. `python tools/generate_translation_template.py` writes English templates for the 15 it covers (`tools/README.md:533`; the remaining 8, named in its `NOT_TEMPLATED` set, are seeded with `translate_with_claude.py --sync-ids`); `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` fills them (`tools/README.md:535`), and it only knows the codes in its `LANGUAGES` table (`tools/translate_with_claude.py:93`), so a language new to TAOM needs a row there first.
 4. Do not create an English folder. `LoadLanguage` deserializes `<string>` rows only when the language id is not `English` (`LocalizedTextManager.cs:235`); the inline `{=KEY}Fallback` text in the source XML is the English.
 5. `./build.ps1`, full restart, switch the game language.
 
 Check: `./build.ps1 -RunTests` (runs `LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile` at `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`)
 Takes effect: full game restart
-Code: Code changes required in `tools/translate_with_claude.py` (the `LANGUAGES` table at line 91) when the language is new to the translator; the game needs none
+Code: Code changes required in `tools/translate_with_claude.py` (the `LANGUAGES` table at line 93) when the language is new to the translator; the game needs none
 
 ### Modify: bump the version for a release
 

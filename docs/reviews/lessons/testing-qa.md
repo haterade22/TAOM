@@ -2478,3 +2478,65 @@ Three fix rounds set and reset `march-spread`'s margin and floor on a Python res
 - **Why missed:** a sweep is cheap and reads as evidence. A game run needs a free machine and a landed harness step, so it stayed later in the plan.
 - **Prevent:** before a second round on a verdict's constant, get one real reading, or mark the row provisional in its comment and move on. A finding about a value that no run has measured is capped at MEDIUM and proved by the run.
 - **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 37, 43, 44, 49 and 50.
+### Read what a counter counts before you cite it as a clean log (Seat field trial, 2026-11-04)
+
+The first trial's write-up cited `[Session] errors=0` as evidence of a clean run. That counter holds `OutcomeLog`'s own faults (`Main/Core/Logging/OutcomeLog.cs:49,66,73,103`), and the same log has a real `[ERROR]` line at line 157.
+- **Why missed:** the name reads as "errors in this session", and the line was quoted from a summary with no look at its writer.
+- **Prevent:** quote the counter's writer once before you rely on it. For a clean run, cite `checks_pass`, `checks_fail` and `swallowed`, and grep the log for `[ERROR]` separately.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 21.
+
+### A fix's test helper must not default to the state the fix is about (Seat field trial, 2026-11-04)
+
+The first fix for a stale deploy passed in three states, and its own test helper's default was one of them: a `.dirty` stamp with no changed file. Every test that used the helper then pinned the false PASS.
+- **Why missed:** the fix and its fixture came from one assumption, and only a later wave ran the real function on each state.
+- **Prevent:** write the truth table of the new check first, one test per row. Choose the helper's default from the state a clean run has, and make the real run's shape its own test.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 23.
+
+### Take a fixture from the first real output, the day one exists (Seat field trial, 2026-11-04)
+
+The trial's judge was tested only on step lines built by hand, and the C# script and the judge shared nothing. A drift between them would have shown only as a failed night's run. Real lines existed after the first run, and no fixture came from them.
+- **Why missed:** the tests predate the first run, and that run's follow-up looked at the game and not at the tests.
+- **Prevent:** when a producer first runs for real, paste its lines as a fixture beside the hand-built ones, and assert both the pass and one changed line's failure.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 31.
+
+### A scan gate reads where the banned write would live (Seat field trial, 2026-11-04)
+
+The gate against agent writes in the trial scanned the script, and the script reaches the engine only through its host, so an agent write in the host passed. A split behind an interface moves the place that a banned call can live, and the gate stays where it was.
+- **Why missed:** the gate's scope was set before the host existed, and nothing asks for a gate's scope again.
+- **Prevent:** when a seam splits a class, re-read each source-text gate on it. Prove the gate by adding the banned line to each file it should cover.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 33.
+
+### A kill a harness makes follows the engine's own kill
+
+The Seat of Seeing's field trial killed soldiers through `Agent.Die` with `new Blow(-1)`. `CustomBattleMoraleModel.CalculateMaxMoraleChangeDueToAgentIncapacitated` reads the attacker's formation with no null test, so each kill threw through `Mission.OnAgentRemoved`, the crash report's finalizer caught it, the game went on, and a company of 20 never emptied. The step failed for a reason that had nothing to do with the feature, and only a game run showed it.
+- **Why missed:** the trial's fake world cannot reach a vanilla model, and the review read `Agent.Die` and `Blow` as signatures, not their listeners.
+- **Prevent:** a harness that kills, spawns or removes an agent copies the shape of the engine's own cheat or order, attacker included (`Mission.KillAgentCheat`, `AgentDamageCheats.cs:91-104`), and follows the call into its listeners before the first run. A crash block in a run's log is the first thing to read when a step fails on a count.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 1.
+
+### A judge scans for its feature's own failure lines, not for one tag
+
+The Seat of Seeing's judge failed on `[ERROR] [SeatOfSeeing]` lines, as its contract said. A failed apply of its Harmony category writes `[ERROR] [PatchApply]`, a failed hot key registration wrote a warning, and the thread guard writes `[TAOM]`, so a run passed with the feature's patches dead or with every key dead, because each step presses by method. The fixture for the hot key failure said `[ERROR]` where the code said warning, and a second gate read the same line as a FAIL.
+- **Why missed:** the judge met its contract. Nothing ran a real failure line through it, and a fixture pinned the level only against itself.
+- **Prevent:** when you write a judge, list every line the feature's failure can write, by grepping its module start, its patch category name and its guard sites, and feed each through the judge as a test. Pin a fixture's level against the emitter's source.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), rows 7, 8 and 15.
+
+### A press stored for a later tick is tested at the press and at the tick
+
+The Seat of Seeing's keep key stores its press for the mission tick, because a pick reads the agents there. The photo mode gate stood only at the tick, and its test held photo mode on through the tick. A press in photo mode followed by the end of photo mode then picked a target on return. Codex ran that order on the production session and read `pickCalls=1`.
+- **Why missed:** the rule was written for the moment of the press and placed at the moment of the work, and the test kept the fact true across both.
+- **Prevent:** when a press or a request waits for a later callback, each fact that can refuse it is read at the press and again at the callback. Write one test where the fact is true only at the press and one where it is true only at the callback.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 45.
+
+### A deleted test's parity proof names what now pins its behaviour
+
+A simplification moved the Seat's keep rule into a pure function and deleted the two tests that reached it through the session. The rule's rows passed and the kept tests passed, and nothing pinned the panel fact at the call: passing `true` there failed no unit test. A later reader found it only by writing a table of each deleted test beside what still catches its break.
+- **Why missed:** "the old tests stay green" proves nothing about a behaviour whose test was among those deleted.
+- **Prevent:** a simplification that deletes a test writes down, per deleted test, the test that now fails on the same break, and breaks the code once to see it. A deletion with no such test is a loss to name, not parity.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 46.
+### A fake that returns 0 hides its seam, and a passing run says nothing past its last wave (Long Defeat, 2026-11-04)
+
+Phase 1's keep rule had full domain tests, yet swapping the attacker and defender counts in the director stayed green, because the fake returned 0 for both. A felled soldier raised no removal in the fake, although the engine raises one, so the no-gold rule ran only by assumption. The first judge passed on hand-written log lines. And run `20261104-033424` passed at 2 waves while the keep was out of reach and the wave table was too steep for wave 4, because the verdict never asked.
+
+- **Why missed:** each slice was tested alone, and the domain tests were good enough to look complete. The fake was written by the builder of the code it stands in for.
+- **Prevent:** a fake's field that the production code reads must be settable, with one test that moves it. When a fake stands in for an engine event, it raises what the engine raises. Fixtures for a judge come from a real run's log, verbatim. After a passing run, read the numbers the plan said would answer a risk, and run once past the target.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 5, 8, 9, 15 and 16.

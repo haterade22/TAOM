@@ -186,12 +186,12 @@
         { "text": "{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers.", "strength": false }
       ],
       "units": [
-        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 6, "level": 16, "eliteWeight": 1.0 },
-        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 6, "level": 16, "eliteWeight": 1.0 },
-        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
-        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
-        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 1.0 },
-        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
+        { "id": "spear_riders", "troop": "fow_rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 6, "level": 16, "eliteWeight": 0.7 },
+        { "id": "sword_riders", "troop": "fow_rohan_edoras_golden_hall_rider", "role": "Cavalry", "packSize": 6, "level": 16, "eliteWeight": 0.7 },
+        { "id": "lancers", "troop": "fow_rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 0.7 },
+        { "id": "horse_archers", "troop": "fow_rohan_wold_veteran_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 21, "eliteWeight": 0.5 },
+        { "id": "kings_knights", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 0.7 },
+        { "id": "riders_of_rohan", "troop": "fow_rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 0.7 },
         { "id": "militia", "troop": "fow_rohan_westfold_militiaman", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.7 },
         { "id": "yeomen", "troop": "fow_rohan_eastfold_skirmisher", "role": "Ranged", "packSize": 10, "level": 11, "eliteWeight": 0.7 }
       ],
@@ -622,10 +622,10 @@
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income.", "strength": false }
       ],
       "units": [
-        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 1.0 },
-        { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
-        { "id": "hunters", "troop": "fow_dg_goblin_archer", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
-        { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.8 },
+        { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 0.8 },
+        { "id": "hunters", "troop": "fow_dg_goblin_archer", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 0.8 },
+        { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 0.8 },
         { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
         { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
         { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
@@ -634,8 +634,8 @@
       "creatures": {
         "cooldownSeconds": 45,
         "units": [
-          { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 2.5 },
-          { "id": "fell_wargs", "troop": "fow_dg_fell_warg_rider", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 2.0 }
+          { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 1.5 },
+          { "id": "fell_wargs", "troop": "fow_dg_fell_warg_rider", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 1.2 }
         ]
       },
       "heroes": [

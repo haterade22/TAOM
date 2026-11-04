@@ -316,6 +316,26 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void TheShippedTowerLimit_MakesAnOuterTowerLastOverTwoMinutes_AndIsTheDefault()
+    {
+        var towers = Catalog().Match.Towers;
+
+        Assert.AreEqual(FordsMatchConfig.Default.Towers.AssaultDamagePerSecond, towers.AssaultDamagePerSecond);
+        Assert.IsTrue(towers.TowerHitPoints / towers.AssaultDamagePerSecond > 120f, "a horde must not take a tower in seconds");
+    }
+
+    [TestMethod]
+    public void TheShippedWear_StartsAfterTheBalanceWindow_AndIsTheDefault()
+    {
+        var towers = Catalog().Match.Towers;
+
+        Assert.AreEqual(FordsMatchConfig.Default.Towers.WearStartMinutes, towers.WearStartMinutes);
+        Assert.AreEqual(FordsMatchConfig.Default.Towers.WearPerMinute, towers.WearPerMinute);
+        Assert.IsTrue(towers.WearStartMinutes >= 15f, "balance runs read the first 15 minutes, before any wear");
+        Assert.IsTrue(towers.WearPerMinute > 0f, "even sides must finish");
+    }
+
+    [TestMethod]
     public void TheShippedHeroFactors_MakeAHeroWorthItsPrice_AndAreTheDefault()
     {
         Assert.AreEqual(FordsMatchConfig.Default.Heroes.DamageFactor, Catalog().Match.Heroes.DamageFactor);

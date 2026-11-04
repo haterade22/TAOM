@@ -56,18 +56,18 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 
 ### Current Values
 
-NPC-lord `gold` and clan `influence` are derived, not hand-set: see "Deriving the gold values" below. They briefly went flat on 2026-08-14 (250,000 for every culture, 500,000 for the elves) and were re-derived the same day. They remain tuning knobs and may drift, so consult `startup_resources_config.xml` for the live numbers. `playerGold` was not part of either pass. The four tiers below account for all 26 culture rows, but they were not all set at once: the tier structure comes from the 2026-06-30 downward rebalance, which ran against the 18 rows the config had then. The four rows added on 2026-08-11 (`goblin`, `mistymountainorcs`, `bluecraig`, `lindon`) and the three Arnor realms (`arthedain`, then `cardolan` and `rhudaur`) were seeded into the tiers that already existed; Ered Luin (2026-10-27) opened a new one between Erebor and the baseline.
+NPC-lord `gold` and clan `influence` are derived, not hand-set: see "Deriving the gold values" below. They briefly went flat on 2026-08-14 (250,000 for every culture, 500,000 for the elves) and were re-derived the same day. They remain tuning knobs and may drift, so consult `startup_resources_config.xml` for the live numbers. `playerGold` was not part of either pass. The four tiers below account for all 30 culture rows, but they were not all set at once: the tier structure comes from the 2026-06-30 downward rebalance, which ran against the 18 rows the config had then. The four rows added on 2026-08-11 (`goblin`, `mistymountainorcs`, `bluecraig`, `lindon`), the three Arnor realms (`arthedain`, then `cardolan` and `rhudaur`) and the four Neutral realms (`anduinvale`, `angaladh`, `dorwinion`, `southrhovanion`) were seeded into the tiers that already existed; Ered Luin (2026-10-27) opened a new one between Erebor and the baseline.
 
 | Culture | playerGold | Rationale |
 |---------|-----------|-----------|
 | rivendell, lothlorien, mirkwood, lindon | 4,000 | Elven wealth, the highest player start |
 | erebor | 3,500 | Dwarven hoard culture, just below the elves |
 | eredluin (Ered Luin) | 3,000 | The poorer Blue Mountains dwarves, a step under Erebor; Mike may prefer the 2,000 baseline |
-| the other 20: gondor, arthedain, cardolan, rhudaur, vlandia (Rohan), sturgia (Dale), empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun), shaghana, abanissa, mordor, isengard, gundabad, dolguldur, umbar, goblin, mistymountainorcs, bluecraig | 2,000 | Flat baseline for every human + orc culture |
+| the other 24: gondor, arthedain, cardolan, rhudaur, anduinvale, angaladh, dorwinion, southrhovanion, vlandia (Rohan), sturgia (Dale), empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun), shaghana, abanissa, mordor, isengard, gundabad, dolguldur, umbar, goblin, mistymountainorcs, bluecraig | 2,000 | Flat baseline for every human + orc culture |
 
-`shaghana` (eastern Harad reach) and `abanissa` (deep south Harad) are independent Harad-region kingdoms, full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân) rather than sub-cultures, and are now selectable in character creation, so their `playerGold` is live.
+`shaghana` (eastern Harad reach) and `abanissa` (deep south Harad) are independent Harad-region kingdoms, full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân) rather than sub-cultures. Neither has a playable faction card in `factionmap/factions.json`, so neither is selectable in character creation and their `playerGold` is not live for the player.
 
-`goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, the three Arnor realms and `eredluin` are selectable too, so every one of the config's 26 rows is live. What puts a culture in the character-creation picker is `is_main_culture="true"`: 20 of the 26 carry it in `taom_spcultures.xml` and the other six inherit it from vanilla, which `spcultures.xslt` never touches. `Main/_Module/ModuleData/charactercreation/cultures.json` is read *after* the pick, for the race filter and the body/settlement defaults, and it too has an entry for all 26. The narrative menus are the one surface that does not cover everything: 24 cultures have their own youth, parents, education, and adulthood options, while `shaghana` and `abanissa` have none in any of the four. Blue Craig and Lindon were promoted out of borrowed cultures on 2026-08-10 (Blue Craig off goblin, Lindon off rivendell) and needed rows of their own, because these values key on culture and before the split their kingdoms had none.
+`goblin`, `mistymountainorcs`, `bluecraig` and `arthedain` are selectable too, but not all of the config's 30 rows are live for the player. `CharacterCreationContentService.RegisterCustomCultures` registers the cultures from `Main/_Module/ModuleData/charactercreation/cultures.json`, which has an entry for all 30 and also supplies the race filter and the body/settlement defaults; the player can only confirm a culture through a faction card with `"playable": true` in `factionmap/factions.json`. Twelve of the 30 have no such card: the ten [parked realms](faction-map.md#parked-realms) (`lindon`, `eredluin`, `cardolan`, `rhudaur`, `umbar`, `battania`, `anduinvale`, `angaladh`, `dorwinion`, `southrhovanion`) plus `shaghana` and `abanissa`. `is_main_culture="true"` (24 of the 30 in `taom_spcultures.xml`) is not that gate ([culture playability](culture-playability-wiring.md)). The narrative menus are the one surface that does not cover everything: 28 cultures have their own youth, parents, education, and adulthood options, while `shaghana` and `abanissa` have none in any of the four. Blue Craig and Lindon were promoted out of borrowed cultures on 2026-08-10 (Blue Craig off goblin, Lindon off rivendell) and needed rows of their own, because these values key on culture and before the split their kingdoms had none.
 
 ## Deriving the gold values
 
@@ -125,8 +125,8 @@ lords far outnumber tier-4 clan leaders, so 100 is probably still biased high. A
 is owed.
 
 `runwayDays` is the only judgement call: **270** for the mythic treasuries (the four elven realms
-and Erebor), **150** for the great realms (Gondor, Rhûn, Umbar, Mordor, Moria) and Ered Luin, one tier
-under Erebor, **100** for the regional powers, **70** for Goblin-town and Blue Craig. Ered Luin's rate,
+and Erebor), **150** for the great realms (Gondor, Rhûn, Umbar, Mordor, Moria), Ered Luin and the four Neutral
+realms (Anduin Vale, Angáladh, Dorwinion, South Rhovanion), one tier under Erebor, **100** for the regional powers, **70** for Goblin-town and Blue Craig. Ered Luin's rate,
 4.86 denars a head measured from `kingdom_hero_party_eredluin_template`, gives 72,900, shipped as 75,000.
 Arthedain (90,000), Cardolan (90,000) and Rhudaur (80,000) carry no derivation in the config, only a
 comment that they are poor remnants well under Gondor's 150,000. `K` scales the whole table to a target pool.
@@ -169,9 +169,8 @@ spread) the cheapest remaining correction.
 
 **Why not just add settlements?** Because the engine's `rglConcurrentQueue` assert caps loaded
 prefab entities at 131,072 globally, across every loaded module. The size of the remaining headroom
-is genuinely unsettled: `tools/check_prefab_budget.py` reports 93,407, but CLAUDE.md's own trap
-table warns that the checker counts only `TAOM_Map/Prefabs` and therefore "prints OK at 99% of the
-cap", citing an all-module measurement of 130,151 with ~921 spare on 2026-08-08. **Neither figure
+is genuinely unsettled: `tools/check_prefab_budget.py` reported 96,982 on 2026-11-03, but the orientation.md trap
+index warns that the queue is global while the checker counts only TAOM_Map, and `tools/README.md` cites an all-module measurement of 130,151 with ~921 spare on 2026-08-08. **Neither figure
 has been verified as an all-module total recently**, so treat adding settlements as needing a fresh
 measurement first rather than as either safe or blocked. It was not attempted here.
 

@@ -22,7 +22,7 @@ The file is [`Main/_Module/ModuleData/TAOM_bodyproperties.xml`](../../Main/_Modu
     </XmlNode>
 ```
 
-`SubModule.xml:166-174`. The `path` carries no extension and no `ModuleData/` prefix. The node lists three game types and not `EditorGame`, unlike its neighbour at `SubModule.xml:156-164`, so these presets are absent in the editor game type.
+`SubModule.xml:219-227`. The `path` carries no extension and no `ModuleData/` prefix. The node lists three game types and not `EditorGame`, unlike its neighbour at `SubModule.xml:209-217`, so these presets are absent in the editor game type.
 
 - **Root element** `<BodyProperties>`, **per-entry element** `<BodyProperty id="...">`, **engine class** `TaleWorlds.Core.MBBodyProperty`.
 - The type is registered as element `BodyProperty` inside list `BodyProperties` at `Game.cs:319`, and the file is read in `Game.LoadBasicFiles` at `Game.cs:444`, after Monsters (`:437`) and before SkillSets (`:445`). That is long before any troop file, so a `face_key_template` on a troop always finds a populated preset.
@@ -189,7 +189,7 @@ A per-character `<face>` block may override the three tag lists but not the rang
   </Culture>
 ```
 
-`cc_body_properties.xml:39-42`. Six TAOM factions ride on vanilla culture string ids and must be written as the vanilla id: `vlandia` is Rohan, `empire` is Dunland, `battania` is Khand, `aserai` is Harad, `sturgia` is Barding, `khuzait` is Rhun (`cc_body_properties.xml:23-31`). Writing `id="rohan"` produces an entry that never matches and never complains. The file currently seeds 21 cultures. <!-- measured: rg -o '<Culture id="[^"]+"' over cc_body_properties.xml, 22 hits of which one is the placeholder in the header comment 2026-09-05 -->
+`cc_body_properties.xml:39-42`. Six TAOM factions ride on vanilla culture string ids and must be written as the vanilla id: `vlandia` is Rohan, `empire` is Dunland, `battania` is Khand, `aserai` is Harad, `sturgia` is Barding, `khuzait` is Rhun (`cc_body_properties.xml:23-31`). Writing `id="rohan"` produces an entry that never matches and never complains. The file currently seeds 29 cultures. <!-- measured: rg -o '<Culture id="[^"]+"' over cc_body_properties.xml, 30 hits of which one is the placeholder in the header comment 2026-11-03 -->
 
 ## Recipes: Add / Modify / Delete
 
@@ -202,7 +202,7 @@ A per-character `<face>` block may override the three tag lists but not the rang
 5. Set `age`, `weight` and `build` on both nodes. Leaving one out gives you 30 / 0.5 / 0.5, not zero.
 6. Set the tag lists to names that the target race actually declares. The declaration site is the `<style_tag name="...">` entries inside that race's `<skin>` blocks in `skins.xml`; see the race table in Gotchas below for how few some races declare.
 
-Check: `python tools/validate_moduledata.py` (the `BROKEN_BODY_PROPERTY_REF` gate reads this file as its definition set, `tools/taom_schema.py:1728-1733`).
+Check: `python tools/validate_moduledata.py` (the `BROKEN_BODY_PROPERTY_REF` gate reads this file as its definition set, `tools/taom_schema.py:2960-2984`).
 Takes effect: full game restart. Existing heroes keep the body stored in their save (`Hero.cs:169` and `Hero.cs:1813`); troops re-roll their face on every spawn.
 Code: No code changes needed.
 
@@ -212,7 +212,7 @@ Code: No code changes needed.
 2. Open [`Main/_Module/ModuleData/charactercreation/cc_body_properties.xml`](../../Main/_Module/ModuleData/charactercreation/cc_body_properties.xml) and add a `<Culture id="...">` block holding the pasted `<BodyProperties .../>` element.
 3. Use the runtime culture id, not the LOTR name. The six rebound ids are listed in the file's own header at `cc_body_properties.xml:23-31`.
 4. Note the different defaults on this path: it goes through `BodyProperties.FromString`, where an absent `weight` or `build` is `0`, not `0.5` (`BodyProperties.cs:101-103`). `age=` is parsed and then ignored, because `Hero.Age` comes from `BirthDay` and TAOM does not touch it.
-5. This is separate from the vanilla per-culture hook, which is the `default_character_creation_body_property="BodyProperty.<id>"` attribute on a `<Culture>` in `taom_spcultures.xml`, read at `CultureObject.cs:339`. 16 TAOM cultures set that attribute. <!-- measured: rg -c default_character_creation_body_property over taom_spcultures.xml 2026-09-05 -->
+5. This is separate from the vanilla per-culture hook, which is the `default_character_creation_body_property="BodyProperty.<id>"` attribute on a `<Culture>` in `taom_spcultures.xml`, read at `CultureObject.cs:339`. 24 TAOM cultures set that attribute. <!-- measured: rg -c default_character_creation_body_property over taom_spcultures.xml 2026-11-03 -->
 
 Check: after the restart, read `taom_debug_*.log` under the game install's `bin/Win64_Shipping_Client/Logs/` for the `CCBodyPropertiesProvider: Loaded N culture body-property entries` line and any skip warning.
 Takes effect: full game restart. The provider is a DryIoc singleton with a load-once cache (`CharacterCreationIoC.cs:18`, `CCBodyPropertiesProvider.cs:32-39`), so a save-load or a new campaign is not enough.
@@ -224,7 +224,7 @@ Code: No code changes needed.
 2. Keep the `BodyProperty.` prefix and the dot. A bare `value="fighter_gondor"` throws `MBInvalidReferenceException` at `MBObjectManager.cs:1504-1508`.
 3. For a bulk change across every troop file, [`tools/oneoff/apply_troop_bodyproperties.py`](../../tools/oneoff/apply_troop_bodyproperties.py) is the pattern to copy: it rewrites only the value string, in binary, so the BOM and CRLF survive. Dry run is the default, `--apply` writes.
 
-Check: `python tools/validate_moduledata.py`, which reports `BROKEN_BODY_PROPERTY_REF` for a target that resolves nowhere (`tools/taom_schema.py:172-173`).
+Check: `python tools/validate_moduledata.py`, which reports `BROKEN_BODY_PROPERTY_REF` for a target that resolves nowhere (`tools/taom_schema.py:178-179`).
 Takes effect: full game restart.
 Code: No code changes needed.
 
@@ -260,7 +260,7 @@ Code: No code changes needed.
 - **A misspelled `face_key_template` target is not an error either, it is a blank face.** `GetPresumedObject` auto-creates a missing target (`MBObjectManager.cs:713-735`, `autoCreateInstance` defaults to true at `MBObjectManager.cs:376`), so the character gets a brand-new empty preset with a zero key, no tags and age 0. Nothing is logged. This is the first thing to check when a new troop has the wrong face.
 - **Omitting the `<face>` element entirely is the same failure with a worse symptom: the character renders as a toddler.** `Deserialize` declares `bodyProperties` and `bodyProperties2` as `default(BodyProperties)` (`BasicCharacterObject.cs:346-347`) and, when nothing set `BodyPropertyRange` from a `face_key_template`, registers a fresh `MBBodyProperty` from those two locals (`:472-475`). An all-zero struct has age 0, and `skins.xml` maps age 0 to `mesh_maturity_type="toddler"`, `min_scale` 0.52 against the adult 1.07. Every race in the merged file has a toddler skin, so no race is exempt. Nothing is logged, and the character is otherwise fully functional: correct name, correct equipment, correct stats, waist-high. TAOM shipped 46 such characters, the arena practice set for ten cultures, and players reported the arena fighters as children before anyone read the deserializer.
 - **The engine's two age guards do not catch that, because they read a different age.** `Mission.SpawnAgent` takes `agentCharacter.Age`, forces 29 when it is exactly 0, and forces 27 for a sub-teenager in `Battle`, `Duel`, `Tournament` or `Stealth` mode (`Mission.cs:4101-4122`). But `Age` is its own property, set at deserialisation to `max(20f, BodyPropertyMax.Age)` when the XML carries no `age=` attribute (`BasicCharacterObject.cs:486`), so a faceless character reports a healthy 20 and passes both guards while its visual age stays 0. The campaign age and the visual age are separate numbers and only one of them is wrong. `CharacterFaceCoverageTests` is the gate for the missing element; the reference gate below is the gate for a typo'd one.
-- **The one gate that does catch it is external.** `python tools/validate_moduledata.py` raises `BROKEN_BODY_PROPERTY_REF` against a definition set built from the four `*_bodyproperties.xml` files, so a cross-module reference such as `BodyProperty.fighter_empire` passes and a typo does not. `tools/taom_schema.py:172-173` and `:1728-1733`. TAOM leans on this: 234 of its 2,650 references resolve in vanilla files rather than in TAOM's own. <!-- measured: rg -o 'BodyProperty\.[A-Za-z0-9_]+' over Main/_Module/ModuleData compared against the id set of TAOM_bodyproperties.xml 2026-09-05 -->
+- **The one gate that does catch it is external.** `python tools/validate_moduledata.py` raises `BROKEN_BODY_PROPERTY_REF` against a definition set built from the four `*_bodyproperties.xml` files, so a cross-module reference such as `BodyProperty.fighter_empire` passes and a typo does not. `tools/taom_schema.py:178-179` and `:2960-2984`. TAOM leans on this: 515 of its 4,575 references resolve in vanilla files rather than in TAOM's own. <!-- measured: rg -o 'BodyProperty\.[A-Za-z0-9_]+' over Main/_Module/ModuleData compared against the id set of TAOM_bodyproperties.xml 2026-11-03 -->
 - **Redefining a vanilla id merges, it does not replace.** Every module's file is concatenated and merged on `@id`, with the later module's attributes layered on top (`MBObjectManager.cs:799-818`), and the Min and Max nodes are marked always-prefer-merge, so you can override just `weight=` and inherit vanilla's key. TAOM already does this by accident with `fighter_sturgia`. To wipe the vanilla version instead, put `_replaceWhileMerging="true"` on your node; the attribute is injected into every schema at load time (`MBObjectManager.cs:1092`), so it is legal even though the XSD never lists it.
 - **`race=` is the one attribute here that hard-crashes on a typo.** `FaceGen.GetRaceOrDefault` is a raw dictionary index despite its name (`FaceGen.cs:115-118`, the MountAndBlade one), so an unknown race string throws `KeyNotFoundException` out of `Deserialize` and into the same silent swallow, killing the rest of that character file.
 - **Race numbers are positions in the merged `skins.xml` list, not stable ids.** Inserting a `<race>` renumbers every race after it, which is why the `sauron` block was appended at the end with an authoring comment saying exactly that (`LOTRLOME_Armory/ModuleData/skins.xml:204236`) and why TAOM saves a `_taom_raceNameLegend` beside its saved race integers ([`docs/features/hero-race.md`](../features/hero-race.md) line 32).
@@ -310,16 +310,16 @@ Code: No code changes needed.
 | 24 toddler skins and 24 adult skins across the 12 races in `LOTRLOME_Armory/ModuleData/skins.xml` | re.findall of `mesh_maturity_type\s*=\s*"(toddler\|adult)"` over the file | 2026-09-06 |
 | 30 `<BodyProperty>` entries in `TAOM_bodyproperties.xml`; 60 `key` attributes, every one exactly 128 characters | `python -c` re.findall of `<BodyProperty\s+id="([^"]+)"` and `key="([^"]*)"` over the file | 2026-09-05 |
 | 69 in `sandboxcore_bodyproperties.xml`, 14 in `sandbox_bodyproperties.xml`, 9 in `naval_bodyproperties.xml`; 121 in the merged registry; `fighter_sturgia` the one shared id | the same re.findall per file, plus the `Registry:` line from `python tools/validate_moduledata.py` | 2026-09-05 |
-| 2,650 `BodyProperty.` references across `Main/_Module/ModuleData`, 26 distinct targets, 5 of them (234 references) defined outside TAOM | `rg -o 'BodyProperty\.[A-Za-z0-9_]+' --glob '*.xml' .` piped through `sort | uniq -c`, diffed against the id set | 2026-09-05 |
+| 4,575 `BodyProperty.` references across `Main/_Module/ModuleData`, 35 distinct targets, 14 of them (515 references) defined outside TAOM | `rg -o 'BodyProperty\.[A-Za-z0-9_]+' --glob '*.xml' .` piped through `sort | uniq -c`, diffed against the id set | 2026-11-03 |
 | 9 of the 30 TAOM presets referenced nowhere in TAOM's ModuleData | the same reference counts diffed against the id list | 2026-09-05 |
 | 290 tag rows in `TAOM_bodyproperties.xml`, 25 distinct names, all declared somewhere in the merged `skins.xml` | re.findall of `<(hair\|beard\|tattoo)_tag\s+name="([^"]+)"` checked against `<style_tag\s+name="([^"]+)"` in the Native and Armory files | 2026-09-05 |
 | 15 races: 1 in `Native/ModuleData/skins.xml`, 14 in `LOTRLOME_Armory/ModuleData/skins.xml`, 0 in `TAOM_Map/ModuleData/skins.xml` | `rg -n '<race' <each skins.xml>` | 2026-09-05 |
 | Style tags per race: elf 46, nine races 45, dwarf 7, saruman 3, orc and nazghul 0 | python split of the Armory `skins.xml` on `<race id="...">` then re.findall of `style_tag name=` per block | 2026-09-05 |
 | 10 `<skin>` elements per race; 28 adult skins, 22 spelled `mesh_maturity_type="adult"` and 6 with a space before the equals sign | `awk` range over the dwarf block, then `rg -c` for both spellings over the whole Armory `skins.xml` | 2026-09-05 |
-| `race=` usage across `Main/_Module/ModuleData`: elf 458, orc 295, goblin 289, dg_uruk 238, pale_uruk 212, dwarf 194, uruk_hai 171, uruk 163, berserker 10, human 8, cave_troll 1 | `rg -o 'race="[^"]+"' --glob '*.xml' .` piped through `sort | uniq -c` | 2026-09-05 |
+| `race=` usage across `Main/_Module/ModuleData`: elf 492, dwarf 340, orc 307, goblin 304, dg_uruk 244, pale_uruk 223, uruk_hai 187, uruk 165, human 13, berserker 11, hill_troll 3, cave_troll 3, saruman 1 | `rg -o 'race="[^"]+"' --glob '*.xml' .` piped through `sort | uniq -c` | 2026-11-03 |
 | 66 `race="dwarf"` lines in `troops/troops_erebor.xml` | `rg -c 'race="dwarf"' Main/_Module/ModuleData/troops/troops_erebor.xml` | 2026-09-05 |
-| 21 cultures seeded in `cc_body_properties.xml` (22 `<Culture id=` hits, one of which is the placeholder in the header comment) | `rg -o '<Culture id="[^"]+"'` over the file | 2026-09-05 |
-| 16 cultures carrying `default_character_creation_body_property` in `taom_spcultures.xml` | `rg -c default_character_creation_body_property Main/_Module/ModuleData/taom_spcultures.xml` | 2026-09-05 |
+| 29 cultures seeded in `cc_body_properties.xml` (30 `<Culture id=` hits, one of which is the placeholder in the header comment) | `rg -o '<Culture id="[^"]+"'` over the file | 2026-11-03 |
+| 24 cultures carrying `default_character_creation_body_property` in `taom_spcultures.xml` | `rg -c default_character_creation_body_property Main/_Module/ModuleData/taom_spcultures.xml` | 2026-11-03 |
 | 15 entries in `race_age_config.json` | `python -c` json load of the `races` object | 2026-09-05 |
 | 131 distinct `<style_tag>` names in `Native/ModuleData/skins.xml` | re.findall of `<style_tag\s+name="([^"]+)"` over the file | 2026-09-05 |
 | Exactly one file in the v1.4.8 dump reads an attribute named `version`, and it is `HotKeyManager.cs` | `rg -c --glob '*.cs' 'Attributes\["version"\]\|GetAttribute("version")\|ReadString([^)]*"version"' <dump root>` | 2026-09-05 |

@@ -87,7 +87,7 @@ published as one, for example) never triggers it. Then update this table and run
 | `IDedicatedServerProvider` / `DedicatedServerProvider` | **Process-constant**: "is there a real player in this process at all". Reads the engine's build constant `GameNetwork.IsDedicatedServer` (the server DLL returns true, the client DLL false), NOT co-op role; `TAOM.Dependencies` reads the same constant directly and `DedicatedServerProvider` is the test seam for the services. Startup code that runs before the container is built, or must not resolve a service, reads the same constant through `Main/Composition/ClientComposition.IsDedicatedServer()` (the B6c `SubModule` and `ManualPatchApplicator` guards, ADR-013). |
 | `ServerAssemblyReport` | On a dedicated server only, one Info line at the start of the once-per-process part of `OnGameInitializationFinished`: `[Server] client-only assemblies loaded at game init: <names>; not loaded: <names>`, over the 16 `ClientAssemblies` names. "Not loaded" means not loaded yet, not unavailable: the Coop module loads its copies of the view layer after TAOM boots. Never throws (ADR-013, B6c). |
 | `PlayerControl` / `IPlayerControlQuery` / `CoopPlayerControlQuery` | **Per entity**: "is this party, clan or hero a human player's?" (Player, NotPlayer, Unknown). Reflection-bound to Coop's `PlayerManager.TryGetControlledObjectInfo`, answers live, caches only the binding (#966). See [Who is a player](#who-is-a-player-the-fourth-question). |
-| `RecruitAttributionScope` and `Hooks/CoopRecruitAttributionPatch` (Patch113) | A thread-static party id set around Coop's server-side `HandleOnRecruitmentDone`, so the party-less `OnUnitRecruited` can be charged to the recruiting guest's party leader. Policy: `SpecialResources/RecruitChargePolicy`. Applied at `Main/SubModule.cs:1866`; notes in [the patch registry](../reference/harmony-patch-registry.md). |
+| `RecruitAttributionScope` and `Hooks/CoopRecruitAttributionPatch` (Patch113) | A thread-static party id set around Coop's server-side `HandleOnRecruitmentDone`, so the party-less `OnUnitRecruited` can be charged to the recruiting guest's party leader. Policy: `SpecialResources/RecruitChargePolicy`. Applied at `Main/SubModule.cs:1840`; notes in [the patch registry](../reference/harmony-patch-registry.md). |
 | `CoopSessionPolicy` | The pure authority decision, split out so it is testable without a game — same pattern as `PatchShieldPolicy` / `SaveShieldPolicy`. |
 | `Missions/` (`CoopMissionRole`, `CoopMissionRoles`, `CoopMissionRolePolicy`, `ICoopMissionAuthority`, `CoopMissionAuthority`, `CoopMissionOwnership`) | The mission behavior layer (#967 C7): each TAOM behavior's role, the add-time filter, and the reflection-bound live ownership read. See [Mission behaviors](#mission-behaviors-967-c7). |
 | `CoopSuppressedUiAttribute` / `CoopUiRegistrationPolicy` | Marks and filters UIExtenderEx types a co-op host has taken ownership of. |
@@ -123,7 +123,7 @@ reflection on first use and keeps the result, success or failure. Coop loads `Ga
 a retry would only rescan the AppDomain for an unchanged answer. A container provider without a
 readable `IsServer`, or a type finder that throws, leaves the probe unavailable and TAOM
 authoritative; the failure is logged once. `CoopPlayerControlQuery` binds Coop's `PlayerManager` the
-same way, once (the `Lazy` field at `CoopPlayerControlQuery.cs:28`, `Bind` at `:101`), and in a live session answers Unknown for any
+same way, once (the `Lazy` field at `CoopPlayerControlQuery.cs:30`, `Bind` at `:116`), and in a live session answers Unknown for any
 entity while that bind failed.
 
 ## Layer 2 — assembly resolution
@@ -260,8 +260,8 @@ player's party reads as an AI party. Code that means "a human drives this" asks
 | `NotPlayer` | The AI. With no co-op session this is everything but this peer's own party and clan, so single-player is unchanged. A session TAOM cannot see (BannerlordTogether, or a failed Coop container bind) also answers `NotPlayer`, not `Unknown`, because `IsSessionActive` is false there: remote players are not protected from desertion or the troop weight shed in that case |
 | `Unknown` | A session is live but the registry is unreadable: the bind failed or the call threw |
 
-**How it reads.** `OfParty`, `OfClan` and `OfHero` (`CoopPlayerControlQuery.cs:49,55,61`) pass the entity and
-its local comparison to `Classify` (`:68`). With no session the local comparison is the answer and nothing
+**How it reads.** `OfParty`, `OfClan` and `OfHero` (`CoopPlayerControlQuery.cs:54,60,66`) pass the entity and
+its local comparison to `Classify` (`:73`). With no session the local comparison is the answer and nothing
 is scanned. In a session the registry alone decides, the local entity included: no human plays on the
 authority process, the registry lists joiners only, and on the co-op server `Hero.MainHero`, `MainParty`
 and the player faction are temporarily a guest's inside `BarterPlayerContext` and `MainHeroSubstitutionScope`,
@@ -531,7 +531,7 @@ reason.
 
 | Test class | What it holds |
 |---|---|
-| `CoopMissionRolePolicyTests` | The truth table, table coverage, `Table_UnsafeSet_IsExactlyTheSixDroppedInASession`, `Table_CultureDoctrine_IsLocalAndNotGated`. |
+| `CoopMissionRolePolicyTests` | The truth table, table coverage, `Table_UnsafeSet_IsExactlyTheSevenDroppedInASession`, `Table_CultureDoctrine_IsLocalAndNotGated`. |
 | `CoopMissionAuthorityTests` | The bind, the three registry states, the mount-to-rider rule, the per-mission resolve, live answers, `Decide_CleanBind_LogsNoWarning`, and the failure paths: `Decide_TypeFinderThrows_FallsBackToControllerAndWarnsOnce`, `Decide_RegistryMemberRenamed_FallsBackToControllerAndWarnsOnce`, registry resolve throws, rider probe throws, a null agent in a session, a registry that throws in two missions (two warnings), and `LinkFor_BehaviorEnumerationAlwaysThrows_DoesNotReArmTheWarning`. |
 | `CoopMissionOwnershipTests` | The static face, including a resolver that returns null. |
 | `CoopMissionBindingTests` | Loads the installed Coop DLLs (skipped when absent) and asserts the members `CoopMissionAuthority` binds still exist with the shapes it expects, plus the two `CoopSessionProvider` members. |
@@ -556,7 +556,7 @@ The fix needs a seat relay (#967 C3). Before C7 every peer spawned its own crew.
 
 **Owed by #967 C7 (in-game checks):**
 
-1. One `[CoopMission] skipped` line per Unsafe behavior: five in an ordinary battle, six only when the shader guard
+1. One `[CoopMission] skipped` line per Unsafe behavior: six in an ordinary battle, seven only when the shader guard
    claims the mission.
 2. Creature trees (host-owned creatures, idle non-owner copies, adopted creatures after a handoff) act only on owned
    creatures: a host-owned creature attacks once on a guest.
@@ -619,13 +619,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **514** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **516** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 479 in `TaomSettings`, 24 in `BattleLoadDiagnosticsSettings`, 10 in
+  the split is 481 in `TaomSettings`, 24 in `BattleLoadDiagnosticsSettings`, 10 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **331 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 331 are in
-  `TaomSettings`. The 183 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the three Marshal's Word settings added 2026-11-04, and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854) are instrumentation, player-local convenience,
+  `TaomSettings`. The 185 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04, and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
@@ -707,7 +707,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   `MirrorWin64ShippingClientToServer` target modelled on the existing `…ToEditor` mirror. It
   mirrors the **assembled** client folder because the vendored natives and NuGet companions only
   exist there after `PostBuildCopyToModules`. TAOM's mirror excludes `TAOM.Client.*` and deletes
-  stale copies from its server bin (`Main/TAOM.csproj:212,216`). A verified
+  stale copies from its server bin (`Main/TAOM.csproj:216,220`). A verified
   deploying build mirrored 10 files for TAOM and 42 for TAOM.Dependencies. A server that boots also
   needs the `LOTRLOME_Armory` `action_sets.xml` fix: build 117131, which the dedicated-server engine
   ships, throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path
@@ -818,8 +818,8 @@ Still unconfirmed — worth walking if you have two machines:
 1. `[CoopPresence] EnsureProbed: co-op module(s) ACTIVE: Coop` in `Modules/TAOM.Dependencies/diag.log`,
    and `[PatchShield] co-op module(s) active … install skipped` alongside it.
 2. A `[HarmonyCensus]` block naming `Bannerlord.Coop`; check its `TRANSPILER CONFLICT` rows against
-   TAOM's own transpilers (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main`; 18 methods in 16 files
-   on 2026-10-14).
+   TAOM's own transpilers (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main`; 20 methods in 18 files
+   on 2026-11-03).
 3. TAOM behaves identically **solo** with the Coop module merely enabled — what the `IsAuthority`
    fail-open direction protects, and now also where the PatchShield cost above lands.
 4. The spawned `/server` process starts TAOM cleanly (no blocking UI).

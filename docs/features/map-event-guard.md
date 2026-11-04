@@ -131,7 +131,7 @@ public void AddNonSerializedListener(object owner, Action<T> action)
 
 Registration is therefore **LIFO: the last listener registered is the first invoked.** TAOM adds its
 campaign behaviours in `SubModule.OnGameStart`, deliberately after SandBox has registered its own
-(see the comment at `SubModule.cs:721`), so TAOM registers later, sits at the head, and runs **first**.
+(see the comment at `SubModule.cs:926`), so TAOM registers later, sits at the head, and runs **first**.
 
 The chain that follows:
 

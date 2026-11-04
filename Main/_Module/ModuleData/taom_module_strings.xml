@@ -4417,6 +4417,7 @@
 	<string id="TAOM_FOW_Feed_EnemyKeep" text="{=TAOM_FOW_Feed_EnemyKeep}The enemy keep has fallen!" />
 	<string id="TAOM_FOW_Feed_EnemyPoint" text="{=TAOM_FOW_Feed_EnemyPoint}The enemy holds a capture point." />
 	<string id="TAOM_FOW_Feed_EnemyTower" text="{=TAOM_FOW_Feed_EnemyTower}An enemy tower has fallen." />
+	<string id="TAOM_FOW_Feed_WallsWeaken" text="{=TAOM_FOW_Feed_WallsWeaken}The siege drags on: every tower and keep now weakens by the minute." />
 	<string id="TAOM_FOW_Feed_OwnCamp" text="{=TAOM_FOW_Feed_OwnCamp}We cleared a camp." />
 	<string id="TAOM_FOW_Feed_OwnHeroBack" text="{=TAOM_FOW_Feed_OwnHeroBack}{HERO} returns to the field." />
 	<string id="TAOM_FOW_Feed_OwnHeroDied" text="{=TAOM_FOW_Feed_OwnHeroDied}{HERO} has fallen." />
@@ -4498,7 +4499,10 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintSpeed" text="{=TAOM_FOW_Hud_KeysHintSpeed}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintControl" text="{=TAOM_FOW_Hud_KeysHintControl}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
+	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
 	<string id="TAOM_FOW_Hud_UpgradeDone" text="{=TAOM_FOW_Hud_UpgradeDone}Complete" />
 	<string id="TAOM_FOW_Hud_UpgradeLess" text="{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%" />
 	<string id="TAOM_FOW_Hud_UpgradeMore" text="{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" />
@@ -4587,5 +4591,61 @@
 	<string id="taom_marshal_mcm_keep_array_hint" text="{=taom_marshal_mcm_keep_array_hint}Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on." />
 	<string id="taom_marshal_mcm_arrive_together" text="{=taom_marshal_mcm_arrive_together}Arrive Together" />
 	<string id="taom_marshal_mcm_arrive_together_hint" text="{=taom_marshal_mcm_arrive_together_hint}Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on." />
+	<!-- SeatScreenAdapter -->
+	<string id="taom_seat_keep_nobody" text="{=taom_seat_keep_nobody}There is nobody there to keep to." />
+	<string id="taom_seat_keep_gone" text="{=taom_seat_keep_gone}The one you were keeping to is gone." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_seat_mcm_cursor" text="{=taom_seat_mcm_cursor}Show a cursor with the order panel" />
+	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
+	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
+	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
+	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
+	<string id="TAOM_LD_End_DefendersDead" text="{=TAOM_LD_End_DefendersDead}The garrison has fallen" />
+	<string id="TAOM_LD_End_KeepLost" text="{=TAOM_LD_End_KeepLost}The keep has fallen" />
+	<string id="TAOM_LD_End_Kills" text="{=TAOM_LD_End_Kills}Kills: {KILLS}" />
+	<string id="TAOM_LD_End_Lost" text="{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}" />
+	<string id="TAOM_LD_End_NoBest" text="{=TAOM_LD_End_NoBest}No best run yet" />
+	<string id="TAOM_LD_End_Report" text="{=TAOM_LD_End_Report}Report file, in bin/Win64_Shipping_Client/Logs:" />
+	<string id="TAOM_LD_End_Stalemate" text="{=TAOM_LD_End_Stalemate}The siege has stalled" />
+	<string id="TAOM_LD_End_TargetReached" text="{=TAOM_LD_End_TargetReached}The fortress held" />
+	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />
+	<string id="TAOM_LD_Fortress_Helms" text="{=TAOM_LD_Fortress_Helms}Helm's Deep" />
+	<string id="TAOM_LD_Hud_Attackers" text="{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}" />
+	<string id="TAOM_LD_Hud_Close" text="{=TAOM_LD_Hud_Close}Close" />
+	<string id="TAOM_LD_Hud_Defenders" text="{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}" />
+	<string id="TAOM_LD_Hud_Gold" text="{=TAOM_LD_Hud_Gold}Gold: {GOLD}" />
+	<string id="TAOM_LD_Hud_HintOpen" text="{=TAOM_LD_Hud_HintOpen}B  Shop   H  Sound the horn and start the wave early" />
+	<string id="TAOM_LD_Hud_HintWave" text="{=TAOM_LD_Hud_HintWave}Hold the walls. The shop opens between waves." />
+	<string id="TAOM_LD_Hud_Horn" text="{=TAOM_LD_Hud_Horn}Sound the horn: start the wave now for bonus gold" />
+	<string id="TAOM_LD_Hud_Keep" text="{=TAOM_LD_Hud_Keep}The keep is under attack" />
+	<string id="TAOM_LD_Hud_Leave" text="{=TAOM_LD_Hud_Leave}Return to the main menu" />
+	<string id="TAOM_LD_Hud_PackSize" text="{=TAOM_LD_Hud_PackSize}Pack of {SIZE}" />
+	<string id="TAOM_LD_Hud_Preparation" text="{=TAOM_LD_Hud_Preparation}Preparation" />
+	<string id="TAOM_LD_Hud_Price" text="{=TAOM_LD_Hud_Price}{PRICE} gold" />
+	<string id="TAOM_LD_Hud_RunOver" text="{=TAOM_LD_Hud_RunOver}The run is over" />
+	<string id="TAOM_LD_Hud_ShopTitle" text="{=TAOM_LD_Hud_ShopTitle}Shop" />
+	<string id="TAOM_LD_Hud_Wave" text="{=TAOM_LD_Hud_Wave}Wave {WAVE}" />
+	<string id="TAOM_LD_Hud_WaveCleared" text="{=TAOM_LD_Hud_WaveCleared}Wave {WAVE} cleared" />
+	<string id="TAOM_LD_MenuHint" text="{=TAOM_LD_MenuHint}Hold a fortress against wave after wave. Spend gold on defenders between waves and keep the keep from falling." />
+	<string id="TAOM_LD_MenuOption" text="{=TAOM_LD_MenuOption}The Long Defeat" />
+	<string id="TAOM_LD_NoClient" text="{=TAOM_LD_NoClient}The Long Defeat needs the game client and cannot start here." />
+	<string id="TAOM_LD_NoContent" text="{=TAOM_LD_NoContent}The Long Defeat has no fortress to defend. Check long_defeat/fortresses.json." />
+	<string id="TAOM_LD_Notice_GarrisonFull" text="{=TAOM_LD_Notice_GarrisonFull}The garrison is full." />
+	<string id="TAOM_LD_Notice_HornClosed" text="{=TAOM_LD_Notice_HornClosed}The horn can only sound between waves." />
+	<string id="TAOM_LD_Notice_NoGold" text="{=TAOM_LD_Notice_NoGold}Not enough gold." />
+	<string id="TAOM_LD_Notice_RunOver" text="{=TAOM_LD_Notice_RunOver}The run is over." />
+	<string id="TAOM_LD_Notice_ShopClosed" text="{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave." />
+	<string id="TAOM_LD_Notice_UnknownOffer" text="{=TAOM_LD_Notice_UnknownOffer}That pack is not for sale." />
+	<string id="TAOM_LD_Offer_Axemen" text="{=TAOM_LD_Offer_Axemen}Westfold Axemen" />
+	<string id="TAOM_LD_Offer_Bowmen" text="{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen" />
+	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
+	<string id="TAOM_LD_Offer_Militia" text="{=TAOM_LD_Offer_Militia}Westfold Militia" />
+	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
+	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
+	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
+	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
+	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+	<string id="TAOM_LD_StartFailed" text="{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason." />
 
 </strings>

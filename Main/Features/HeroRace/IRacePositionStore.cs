@@ -3,7 +3,7 @@ using static TAOM.Features.HeroRace.Configuration.RacePositionConfig;
 
 namespace TAOM.Features.HeroRace;
 
-/// <summary>Which of the two independently-tuned framing surfaces a lookup refers to.</summary>
+/// <summary>Which of the three independently-tuned framing surfaces a lookup refers to.</summary>
 public enum RacePositionSurface
 {
     /// <summary>The 3D character tableau: inventory, party, encyclopedia. CharacterAvatarPatch.json.</summary>
@@ -11,10 +11,16 @@ public enum RacePositionSurface
 
     /// <summary>The 2D portrait thumbnails. CharacterImagePatch.json.</summary>
     Image,
+
+    /// <summary>
+    /// Inventory icons of race-shaped armour (helmets, body armour, boots, gloves, capes).
+    /// ItemIconPatch.json. Rows are keyed <c>&lt;race&gt;_&lt;slot&gt;</c>, see <see cref="ItemIconRaceMatcher"/>.
+    /// </summary>
+    Icon,
 }
 
 /// <summary>
-/// Single owner of the two race-framing configs.
+/// Single owner of the three race-framing configs.
 ///
 /// <para>The surfaces are deliberately NOT merged. They are tuned independently against different
 /// cameras and different scenes, so a race can legitimately have a row in one file and not the
@@ -35,6 +41,12 @@ public interface IRacePositionStore
     RacePositionConfigItem ResolveImage(string raceName);
 
     /// <summary>
+    /// Inventory icon offsets for a <c>&lt;race&gt;_&lt;slot&gt;</c> row (for example <c>dwarf_helmet</c>),
+    /// or null when that combination is unconfigured (vanilla icon framing).
+    /// </summary>
+    RacePositionConfigItem ResolveIcon(string rowKey);
+
+    /// <summary>
     /// Returns the live row for a race on a surface, creating a zeroed one if absent. A zeroed row
     /// is a no-op offset, so adding one never changes what the player sees until it is edited.
     /// </summary>
@@ -43,9 +55,9 @@ public interface IRacePositionStore
     /// <summary>Every configured row on a surface, in file order.</summary>
     IReadOnlyList<RacePositionConfigItem> List(RacePositionSurface surface);
 
-    /// <summary>Re-reads both files from disk, discarding unsaved edits.</summary>
+    /// <summary>Re-reads all three files from disk, discarding unsaved edits.</summary>
     void Reload();
 
-    /// <summary>Writes both files back to <c>ModuleData/configs</c>.</summary>
+    /// <summary>Writes all three files back to <c>ModuleData/configs</c>.</summary>
     void Save();
 }

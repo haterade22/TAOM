@@ -1,5 +1,7 @@
 # Fords of War: greybox scene spec
 
+> **Status (2026-11-03): the scene exists, under another id.** A hand-built scene is in the live `TAOM_Map` as `taom_fords_01_forceatmo` (unversioned), and `maps.json` lists it with `"layout": "tags"`, `towerHalfWidth` 5.5 and `laneFaceIds` 1, 2 and 3. The id, the size and the hand-off below were proposals for it. The tag names below are the ones the code reads. What the shipped scene adds (real towers instead of the barricade prefab, bowmen on tower tops, lane face groups) is under "The hand-built map" in [fords-of-war.md](../fords-of-war.md).
+
 For Mike, building the first purpose-built Fords of War scene in the Modding Kit. The mode already
 runs on a lane layout it generates from the boundary of an existing field battle scene. A
 greybox replaces the generated layout with lanes you place by hand, so lane width, choke points and

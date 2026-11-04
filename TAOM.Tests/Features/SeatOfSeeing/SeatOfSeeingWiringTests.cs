@@ -146,25 +146,25 @@ public class SeatOfSeeingWiringTests
         var code = RepoPaths.ReadSource("Client/Features/SeatOfSeeing/SeatView.cs", stripComments: true);
 
         var screenTick = Slice(code, "OnMissionScreenTick");
-        StringAssert.Contains(screenTick, "IsKeyPressed");
-        Assert.IsFalse(Slice(code, "OnMissionTick").Contains("IsKeyPressed"),
+        StringAssert.Contains(screenTick, "SeatKeys.Pressed(");
+        Assert.IsFalse(Slice(code, "OnMissionTick").Contains("Pressed("),
             "fast time repeats OnMissionTick several times in one frame (MissionState.cs:171-198)");
         Assert.IsFalse(code.Contains("Input.IsKeyDown"), "flight input is read through the screen adapter in UpdateOverridenCamera");
     }
 
     [TestMethod]
-    public void TheViews_KeyTest_IsTheCheapStaticTestFirst_ThenTheContextsOwn()
+    public void TheViews_KeyTest_IsTheOneSeatKeysHolds_WhichTestsTheCheapStaticInputFirst()
     {
-        // The context's test allocates a click key array on each call (InputContext.cs:310-312) and is the one that goes quiet behind a
-        // menu, so the static test (cheap) comes first and the context's second (build-spec 3).
-        StringAssert.Contains(ViewMember("public override void OnMissionScreenTick(float dt)"),
-            "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && Input.IsKeyPressed(key)");
+        StringAssert.Contains(ViewMember("public override void OnMissionScreenTick(float dt)"), "SeatKeys.Pressed(_keys.TakeTheSeat, Input)");
+        StringAssert.Contains(RepoPaths.ReadSource("Client/Features/SeatOfSeeing/SeatKeys.cs", stripComments: true),
+            "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && input.IsKeyPressed(key)");
     }
 
     [TestMethod]
     public void TheView_DrivesTheSessionFromTheFrameAndTheMissionTick()
     {
-        StringAssert.Contains(ViewMember("public override bool UpdateOverridenCamera(float dt)"), "_session != null && _session.OnFrame(dt)");
+        // The field trial's input (build-spec section 12) rides along, null in every session that is not armed.
+        StringAssert.Contains(ViewMember("public override bool UpdateOverridenCamera(float dt)"), "_session != null && _session.OnFrame(dt, TrialInput)");
         StringAssert.Contains(ViewMember("public override void OnMissionTick(float dt)"), "base.OnMissionTick(dt); _session?.OnMissionTick();");
     }
 

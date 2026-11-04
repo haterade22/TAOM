@@ -42,7 +42,7 @@ SpatialGrid (singleton)
 ```
 
 ## Configuration
-None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.cs`. Grid update interval is hardcoded (`GridUpdateInterval = 2f` seconds) in `AdvancedCombatBehavior.cs`.
+None. Grid cell size is hardcoded (`CellSize = 20f`, a public instance field, not a `const`) in `SpatialGrid.cs`. Grid update interval is a hardcoded constant (`GridUpdateInterval = 2f` seconds) in `AdvancedCombatBehavior.cs`.
 
 ## Key Files
 | File | Purpose |

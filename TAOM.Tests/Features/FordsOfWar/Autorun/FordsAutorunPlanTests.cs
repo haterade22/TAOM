@@ -58,6 +58,16 @@ public class FordsAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_ControlCheckKey_SetsItsStart_AndABadValueWarnsAndLeavesItOff()
+    {
+        Assert.AreEqual(240.0, Resolve("out=E:\\x\ncontrol_check=240").ControlCheckSeconds);
+        Assert.AreEqual(0.0, Resolve("out=E:\\x").ControlCheckSeconds);
+        var bad = Resolve("out=E:\\x\ncontrol_check=soon");
+        Assert.AreEqual(0.0, bad.ControlCheckSeconds);
+        Assert.IsTrue(bad.Warnings.Any(w => w.Contains("control_check")), string.Join("; ", bad.Warnings));
+    }
+
+    [TestMethod]
     public void Resolve_SpeedKey_SetsTheMatchSpeed_AndAnythingButALevelWarnsAndStaysAtOne()
     {
         Assert.AreEqual(10, Resolve("out=E:\\x\nspeed=10").Speed);

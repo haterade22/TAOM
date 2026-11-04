@@ -42,7 +42,7 @@ internal sealed class SeatOfSeeingModule : TaomFeatureModule
         }
         catch (Exception ex)
         {
-            resolver.Resolve<IModLogger>().LogWarning(
+            resolver.Resolve<IModLogger>().LogError(
                 $"[SeatOfSeeing] hotkey registration failed, the Seat key stays unbound: {ex.GetType().Name}: {ex.Message}");
         }
     }

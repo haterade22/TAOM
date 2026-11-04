@@ -133,7 +133,7 @@ Eleven KEEP proposals, all applied under E1 to E10 and E16. Design 1 changed beh
 `/verify` on the final tree, 2026-11-04 11:43 to 11:53, on top of `1d5d0a561`:
 
 - **Build:** exit 0, 0 errors, 10 warnings. **Restore:** exit 0, no NU1900, NU1903 or NU1904 line.
-- **C# tests:** `Failed!  - Failed:     1, Passed: 32509, Skipped:    11, Total: 32521, Duration: 1 m 35 s`. The one failure is `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`: Steam moved the game to changeset 125270 at 06:34, and this branch has not yet merged the bump from trunk. No other test failed.
+- **C# tests:** `Failed!  - Failed:     1, Passed: 32509, Skipped:    11, Total: 32521, Duration: 1 m 35 s`. The one failure is `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`: Steam moved the game to changeset 125270 at 06:34, and BUTR has published only `1.5.6.125053-beta`, so the test is red on trunk too and stays red until that pin moves (`docs/migration/v1.5.6-impact.md`, "The BUTR pin"). No other test failed.
 - **Tool tests:** `Ran 7151 tests in 388.630s`, `OK (skipped=11)`.
 - **Canary:** exit 1 with one `VERIFY_CANARY_TRIPPED` line, as it must be.
 - **API snapshot:** `OK: gamemodel-bases.md reproduces.` and `OK: patch-targets.md reproduces.`

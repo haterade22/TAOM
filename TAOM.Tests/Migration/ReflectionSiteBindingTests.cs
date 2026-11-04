@@ -83,8 +83,6 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "_initialPlayerAgent", "Field", "ShaderPrecompilePlayerAgentGuard.cs:44")]
     // --- Culture Doctrine / Fell Foes: the team AI's current tactic, read for the horse-stand flag (TeamTacticProbe.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.TeamAIComponent", "TeamAIComponent", "_currentTactic", "Field", "TeamTacticProbe.cs:30")]
-    // --- The Long Defeat spike: vanilla's own undo of a destroyed gate (LongDefeatSpikeRunner.cs, #1079) ---
-    [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatSpikeRunner.cs:475")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:23")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
@@ -138,7 +136,16 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:30")]
     // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
-    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:38")]
+    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:44")]
+    // --- Seat of Seeing (S2): keep the order panel open reaches the panel's view model through the handler's protected _dataSource. Missing: the reopen cannot run, and the session writes a fail line on taom.seat-of-seeing.panel-reopened.
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "_dataSource", "Field", "SeatScreenAdapter.cs:48")]
+    // --- Seat of Seeing (S2), the field trial only: the focus step reads the handler's reference point (MissionFormationTargetSelectionHandler.cs:36) to see that the pointer reached it. Missing: the step reads NaN and fails.
+    [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionFormationTargetSelectionHandler", "MissionFormationTargetSelectionHandler", "_centerOfScreen", "Field", "CommandTrialHost.Seat.cs:21, Patch140_FormationFocusPoint.cs:23")]
+    // --- Seat of Seeing (S2): the two equipment-view key ticks are skipped while seated, and each prefix clears the view's pending press and hold time through injected ____ parameters. Missing: Harmony refuses the prefix at apply time.
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.MissionGauntletMainAgentEquipmentControllerView", "MissionGauntletMainAgentEquipmentControllerView", "_prevDropKeyDown", "Field", "Patch140_EquipmentViewDropTick.cs:20")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.MissionGauntletMainAgentEquipmentControllerView", "MissionGauntletMainAgentEquipmentControllerView", "_dropHoldTime", "Field", "Patch140_EquipmentViewDropTick.cs:20")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.MissionGauntletMainAgentEquipmentControllerView", "MissionGauntletMainAgentEquipmentControllerView", "_prevEquipKeyDown", "Field", "Patch140_EquipmentViewEquipTick.cs:20")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.MissionGauntletMainAgentEquipmentControllerView", "MissionGauntletMainAgentEquipmentControllerView", "_equipHoldTime", "Field", "Patch140_EquipmentViewEquipTick.cs:20")]
     // --- Creature Bandits route A (#692): the weapon-state probe. Missing: route A is skipped for every creature.
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "_primaryWieldedItemIndexPointer", "Field", "CreatureRouteAUnmount.cs:22")]
     // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init

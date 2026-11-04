@@ -17,6 +17,7 @@ internal static class FordsAutorunArmFile
         var quit = false;
         var westAi = false;
         var speed = 1;
+        var controlCheck = 0.0;
         var screenshots = new List<double>();
 
         foreach (var raw in text.TrimStart('\uFEFF').Split('\n'))
@@ -47,6 +48,7 @@ internal static class FordsAutorunArmFile
                 case "quit": quit = Flag(key, value, quit, warnings); break;
                 case "west_ai": westAi = Flag(key, value, westAi, warnings); break;
                 case "speed": speed = Speed(key, value, speed, warnings); break;
+                case "control_check": controlCheck = Seconds(key, value, controlCheck, warnings); break;
                 case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
@@ -62,7 +64,7 @@ internal static class FordsAutorunArmFile
         return new FordsAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, West = west, East = east, Ai = ai, Scene = scene, OutFolder = outFolder!,
-            LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi, ScreenshotSeconds = screenshots, Speed = speed,
+            ControlCheckSeconds = controlCheck, LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi, ScreenshotSeconds = screenshots, Speed = speed,
         };
     }
 

@@ -9,9 +9,9 @@ two languages. This is phase 1 of [#1023](https://github.com/haterade22/TAOM/iss
 and Polish are not covered. Phase 1 includes the live TAOM_Map apply, done on 2026-10-26.
 
 **The Italian half depends on #1026.** TAOM's `language_data.xml` files did not declare the text processors, so the Italian
-processor never ran and the Italian tags had nothing to read. The fix is in a separate change. Until it ships, every Italian
-claim below holds on paper only, and the processor canary in the report header (see "How to verify in game") says whether the
-processor runs.
+processor never ran and the Italian tags had nothing to read. The fix is on trunk (commit `41aa2779b`, v2.0.35): TAOM's
+`language_data.xml` files now declare each language's processor. Players get it only when a release also ships new TAOM_Map and
+Armory packages, and the processor canary in the report header (see "How to verify in game") says whether the processor runs.
 
 ## Why This Exists
 
@@ -293,4 +293,4 @@ table does not know, so a rewritten name never loses it. The three live-map writ
 ## GitHub Issue
 
 - **Issue:** #1023, [Grammar tags on TAOM's translated names for Portuguese and Italian](https://github.com/haterade22/TAOM/issues/1023)
-- **Status:** Open (phase 1 built and applied to the live TAOM_Map; the in-game render and the kept-pair deletions are owed, then the tags for DE, FR, SP, PL and RU; the Italian half waits on #1026)
+- **Status:** Open (phase 1 built and applied to the live TAOM_Map; the in-game render and the kept-pair deletions are owed, then the tags for DE, FR, SP, PL and RU; the Italian half waits on a release that ships the #1026 fix in the TAOM_Map and Armory packages)

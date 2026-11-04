@@ -67,8 +67,8 @@ Three reasons, each written down in the repo.
    four upstream modules (`Dependencies/_Module/SubModule.xml:124-126`).
 3. **Independent versioning.** The Dependencies assembly changes on its own cadence, which is what
    the #371 pairing exists to track ([release-process.md](../reference/release-process.md) lines
-   42-57). `Main/TAOM.csproj:89-91` takes a `<ProjectReference>` on it with `Private=False`, and the
-   comment at `Main/TAOM.csproj:102-106` says TAOM resolves `HarmonyLib` and
+   42-57). `Main/TAOM.csproj:84-86` takes a `<ProjectReference>` on it with `Private=False`, and the
+   comment at `Main/TAOM.csproj:97-104` says TAOM resolves `HarmonyLib` and
    `Bannerlord.UIExtenderEx` types through that assembly at runtime.
 
 ## How the engine reads a manifest
@@ -118,7 +118,7 @@ Two consequences of the second table matter for this module. The `DumpXML`, `Loa
 read by UIExtenderEx and the BUTR module loader from the XML themselves, which this chapter did not
 trace. And the DLL existence probe is hardcoded to `Win64_Shipping_Client`, so a dedicated server
 needs the same files mirrored into `bin/Win64_Shipping_Server/`, which the
-`MirrorWin64ShippingClientToServer` target does (`Dependencies/TAOM.Dependencies.csproj:115-124`).
+`MirrorWin64ShippingClientToServer` target does (`Dependencies/TAOM.Dependencies.csproj:122-131`).
 
 **What `<DependedModules>` does in singleplayer, and what it does not.** `Module.Initialize` passes
 the launcher's saved id list to `ModuleHelper.InitializeModules` (`Module.cs:261`), which inserts each
@@ -136,7 +136,7 @@ decompile tree, so that half is cited from [dr3-maintenance.md](../migration/dr3
 
 ## The version pairing (#371)
 
-Issue #371 is the release that shipped bind-posed characters. `Main/TAOM.csproj:89-91` resolves
+Issue #371 is the release that shipped bind-posed characters. `Main/TAOM.csproj:84-86` resolves
 Harmony and UIExtenderEx through `TAOM.Dependencies.dll`, so a new `TAOM.dll` run against a stale
 `TAOM.Dependencies.dll` fails at the member level while patches apply, the HeroRace preview patches
 never attach, and every character renders in bind pose (`Main/_Module/SubModule.xml:11-20`,
@@ -159,9 +159,9 @@ three fields:
 **All three fields are in the files.** `cc1713eb` (2026-08-11, a cultures commit) removed
 `<DependedModule Id="TAOM.Dependencies" />` and its `<DependedModuleMetadata>` mirror, and `95085de30`
 (2026-09-14) restored both. The element is at `Main/_Module/SubModule.xml:21`, first in `<DependedModules>`
-under the #371 comment at lines 11-20, and the mirror is at line 31 with `version="v2.0.34"`, the value
+under the #371 comment at lines 11-20, and the mirror is at line 31 with `version="v2.0.36"`, the value
 the `/release` gate (`.claude/skills/release/SKILL.md`) reads.
-<!-- measured: rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml 2026-10-14 -->
+<!-- measured: rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml 2026-11-03 -->
 
 Two facts about the numbers. Both `<Version>` values sit at line 6
 (`Dependencies/_Module/SubModule.xml`, `Main/_Module/SubModule.xml`); the Dependencies one moves only
@@ -169,23 +169,23 @@ when its assembly changes, so the two are not required to match
 ([release-process.md](../reference/release-process.md) line 152). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
 Main's `<DependedModuleMetadata id="Native" version="v1.5.6.*" />` equals
 `.claude/pinned-game-version.txt` plus `.*`
-(`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:200-224`); the pin file
+(`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:213-237`); the pin file
 reads `v1.5.6`. <!-- measured: cat .claude/pinned-game-version.txt 2026-10-27 -->
 
 ## Vendored DLLs, the allowlist and THIRD-PARTY-LICENSES
 
 There are two vendored-binary folders in the repo, and they have different rules.
 
-**`Dependencies/_Module/bin/Win64_Shipping_Client/`** holds 39 files on disk, of which 36 are tracked
-in git; the 3 untracked ones are `System.Runtime.CompilerServices.Unsafe.dll`,
-`TAOM.Dependencies.dll` and `TAOM.Dependencies.pdb`, which a build produces.
-<!-- measured: ls Dependencies/_Module/bin/Win64_Shipping_Client | wc -l; git ls-files Dependencies/_Module/bin/Win64_Shipping_Client | wc -l 2026-09-05 -->
+**`Dependencies/_Module/bin/Win64_Shipping_Client/`** holds 44 files tracked in git (the ButterLib implementation DLLs `1.4.0` to `1.4.8` plus `1.5.1`, and the matching
+MBOptionScreen files, since `6027ecfae`); the untracked ones a build adds are `System.Runtime.CompilerServices.Unsafe.dll`,
+`TAOM.Dependencies.dll` and `TAOM.Dependencies.pdb`.
+<!-- measured: git ls-files Dependencies/_Module/bin/Win64_Shipping_Client | wc -l 2026-11-03 -->
 The three NuGet DLLs (`0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll`) are not in that
-folder at all; they arrive at build time and the live module's `bin/Win64_Shipping_Client/` holds 42
+folder at all; they arrive at build time and the live module's `bin/Win64_Shipping_Client/` holds 50
 files, the same count as its `bin/Win64_Shipping_Server/` mirror.
-<!-- measured: ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" | wc -l; ls ".../bin/Win64_Shipping_Server" | wc -l 2026-09-05 -->
-The vendored set is the `Bannerlord.ButterLib.Implementation.1.4.N.dll` and `Bannerlord.MBOptionScreen.v1.4.N.dll`
-files, one per game build, plus the `BUTR.CrashReport*` files (`ls Dependencies/_Module/bin/Win64_Shipping_Client`).
+<!-- measured: ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" | wc -l; ls ".../bin/Win64_Shipping_Server" | wc -l 2026-11-03 -->
+The vendored set is the `Bannerlord.ButterLib.Implementation.1.N.N.dll` and `Bannerlord.MBOptionScreen.v1.N.N.dll`
+files (`1.4.0` to `1.4.8` plus `1.5.1`), one per game build, plus the `BUTR.CrashReport*` files (`ls Dependencies/_Module/bin/Win64_Shipping_Client`).
 Package versions are in `Dependencies/TAOM.Dependencies.csproj`; the notice file
 `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` names each binary family's version. Read a DLL's own version with
 `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion`.
@@ -205,7 +205,7 @@ empty: NativeSkinFixes (`MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`) was re
 the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs")).
 `MCMv5.dll` is never vendored there: MCM's runtime comes from this module and the compile-time
 reference comes from the `Bannerlord.MCM` NuGet with `IncludeAssets="compile"`
-(`Main/TAOM.csproj:99`, `.gitignore:68`, [dr3-maintenance.md](../migration/dr3-maintenance.md)
+(`Main/TAOM.csproj:94`, `.gitignore:68`, [dr3-maintenance.md](../migration/dr3-maintenance.md)
 line 109).
 
 **One pin that looks like a typo and is not.** `Dependencies/TAOM.Dependencies.csproj:47` pins
@@ -227,10 +227,10 @@ Lib.Harmony, the BUTR stack, .NET Foundation, Serilog and BetaDeps
 ([provenance-register.md](../reference/provenance-register.md), the rows of those names). The notice file
 names each binary family with its exact version, holder, licence and upstream URL, then the full MIT
 and Apache-2.0 texts, then a closing paragraph scoping what is TAOM's own work
-(`Dependencies/_Module/THIRD-PARTY-LICENSES.txt`, 124 lines). <!-- measured: wc -l Dependencies/_Module/THIRD-PARTY-LICENSES.txt 2026-09-05 -->
+(`Dependencies/_Module/THIRD-PARTY-LICENSES.txt`, 125 lines). <!-- measured: wc -l Dependencies/_Module/THIRD-PARTY-LICENSES.txt 2026-11-03 -->
 `ThirdPartyLicenses_NameTheActuallyShippedVersions` asserts that the versions named in it match the
 DLLs on disk and the csproj pins
-(`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:228-255`). The main module
+(`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:241-268`). The main module
 has its own notice at `Main/_Module/THIRD-PARTY-LICENSES.txt`, which defers to this one for the BUTR
 stack (its lines 16-18).
 
@@ -257,11 +257,11 @@ and BannerlordCoop was invisible to every shield until 2026-08-01
 `CoopPresence.CompiledModuleDefaults`, `coop-modules.txt`, and `<ModulesToLoadAfterThis>` in both
 `SubModule.xml` manifests ([coop-interop.md](../features/coop-interop.md) lines 80-83). Two tests pin
 that: `ModulesToLoadAfterThis_ContainsEveryCoopModuleIdFromTheShippedConfig` checks both manifests
-against the file (`BundledDependencyManifestTests.cs:265-301`), and
+against the file (`BundledDependencyManifestTests.cs:278-314`), and
 `CompiledModuleDefaults_MatchesTheShippedCoopModulesFile` checks the compiled array against the file
 (`TAOM.Tests/Infrastructure/Dependencies/AssemblyRedirectListTests.cs:107-123`). The pin has to be in
 `<ModulesToLoadAfterThis>` and not only in `<DependedModuleMetadatas>` because the engine never reads
-the latter (`BundledDependencyManifestTests.cs:273-276`).
+the latter (`BundledDependencyManifestTests.cs:286-289`).
 
 ## The alias stub modules
 
@@ -281,7 +281,7 @@ vendored DLL's own FileVersion for ButterLib) and `.99.0` satisfies any reasonab
 bound a third-party mod declares, without claiming a major jump. A minor bump needs a stub edit; a
 patch bump does not ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 219-226). Both
 derivations are asserted by `StubVersions_NuGetPinnedDeps_TrackPackageMinorAs99` and
-`StubVersion_ButterLib_TracksVendoredDllMinorAs99` (`BundledDependencyManifestTests.cs:122-150`). The
+`StubVersion_ButterLib_TracksVendoredDllMinorAs99` (`BundledDependencyManifestTests.cs:135-163`). The
 stub's own comment warns that a legacy mod pinning a strict `v2.4.0.*` wildcard will not match
 `v2.4.99.0` (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:19-20`).
 
@@ -293,7 +293,7 @@ constructor breaks reordering for every other mod (`Dependencies/AliasStubSubMod
 
 **Where they deploy, and the problem with it.** `DeployTAOMDependenciesStubs` copies
 `Stubs/**\SubModule.xml` into the game's `Modules/` folder preserving the relative directory
-(`Dependencies/TAOM.Dependencies.csproj:90-103`), so each file lands at
+(`Dependencies/TAOM.Dependencies.csproj:97-110`), so each file lands at
 `Modules/<Id>/_Module/SubModule.xml`. On this machine each of the four deployed stub folders contains
 exactly that one file and nothing at its root. <!-- measured: find "<game>/Modules/Bannerlord.Harmony" -type f (and the three siblings) 2026-09-05 -->
 Those deployed folders live in the game install, not the repo; a module reinstall reverts hand edits,
@@ -324,7 +324,7 @@ Lines 1-10, the header:
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
 	<Id value="TAOM.Dependencies" />
 	<Name value="TAOM Dependencies" />
-	<Version value="v2.0.34" />
+	<Version value="v2.0.36" />
 	<DefaultModule value="false" />
 	<ModuleCategory value="Singleplayer" />
 	<ModuleType value="Community" />
@@ -333,7 +333,7 @@ Lines 1-10, the header:
 
 1. `<Id value="TAOM.Dependencies" />` (line 4) must equal the folder name under `Modules/`; every
    other manifest's `<DependedModule Id>` matches on this string, lowercased (`ModuleHelper.cs:37`).
-2. `<Version value="v2.0.34" />` (line 6) is the Dependencies half of the #371 pairing; bump it only
+2. `<Version value="v2.0.36" />` (line 6) is the Dependencies half of the #371 pairing; bump it only
    when the assembly changes, and only through `/release`.
 3. `<DependedModules />` (line 10) is empty on purpose. This module must be able to construct before
    `Native`; listing `Native` here would pull it below the vanilla stack and defeat the static
@@ -413,7 +413,7 @@ Lines 69-84, the three co-op ids and the BLSE-only metadata mirror:
 ```
 
 4. Lines 69, 70 and 76 are the 3 ids from `coop-modules.txt`, and the test at
-   `BundledDependencyManifestTests.cs:265-301` fails if one is missing here or in Main's manifest.
+   `BundledDependencyManifestTests.cs:278-314` fails if one is missing here or in Main's manifest.
 5. Lines 79-83 are 5 `<DependedModuleMetadata>` rows, `LoadAfterThis` and `optional`, for the BUTR
    and BLSE launchers. <!-- measured: rg -c '<DependedModuleMetadata ' Dependencies/_Module/SubModule.xml 2026-09-05 -->
    The engine never reads them; they restate lines 23-27 for launchers that do.
@@ -656,7 +656,7 @@ Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.MCM
 ```
 
-9. The version in each heading is what the test at `BundledDependencyManifestTests.cs:228-255`
+9. The version in each heading is what the test at `BundledDependencyManifestTests.cs:241-268`
    compares against the csproj pin or the DLL's FileVersion. Change one and the other must follow.
 
 <!-- excerpt file="Dependencies/TAOM.Dependencies.csproj" -->
@@ -679,7 +679,7 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
 ```
 
-10. `Main/TAOM.csproj:99, 110-111` pins the same three packages with `IncludeAssets="compile"`;
+10. `Main/TAOM.csproj:94, 105-106` pins the same three packages with `IncludeAssets="compile"`;
     `CompilePins_MainAndDependenciesCsproj_MatchExactly` fails the build when they differ
     (`BundledDependencyManifestTests.cs:103-118`).
 
@@ -691,15 +691,15 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
    that. Everything under `_Module/` is copied to `Modules/TAOM.Dependencies/` with the `_Module`
    segment stripped; the repo and live `SubModule.xml` are byte-identical.
    <!-- measured: diff --strip-trailing-cr Dependencies/_Module/SubModule.xml "<game>/Modules/TAOM.Dependencies/SubModule.xml" 2026-09-05 -->
-2. Write `Dependencies/TAOM.Dependencies.csproj` (126 lines in TAOM's).
-   <!-- measured: wc -l Dependencies/TAOM.Dependencies.csproj 2026-09-05 -->
+2. Write `Dependencies/TAOM.Dependencies.csproj` (150 lines in TAOM's).
+   <!-- measured: wc -l Dependencies/TAOM.Dependencies.csproj 2026-11-03 -->
    The parts that matter: `<ModuleId>` and `<ModuleName>` (lines 7-8) name the destination folder;
    the `TaleWorlds.*.dll` reference glob with `<Private>False</Private>` (lines 16-20) references
-   engine DLLs without copying them; `<Compile Remove="_Module\bin\**" />` (lines 24-26) keeps
+   engine DLLs without copying them; `<Compile Remove="_Module\bin\**" />` (line 24) keeps
    vendored DLLs out of the compile; `Bannerlord.BuildResources` (lines 36-39) supplies the deploy
    targets; the three pins (lines 70-72) and the Unsafe pin (line 47).
-3. Pin the same three packages in `Main/TAOM.csproj` with `IncludeAssets="compile"` (lines 99,
-   110-111) and take the `<ProjectReference>` with `Private=False` (lines 89-91).
+3. Pin the same three packages in `Main/TAOM.csproj` with `IncludeAssets="compile"` (lines 94,
+   105-106) and take the `<ProjectReference>` with `Private=False` (lines 84-86).
 4. Copy the vendored DLLs from the two Workshop folders into `_Module/bin/Win64_Shipping_Client/`
    following the table at [dr3-maintenance.md](../migration/dr3-maintenance.md) lines 48-55, all six
    `BUTR.CrashReport*` files included.
@@ -711,14 +711,14 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
    library class in the order at `Dependencies/_Module/SubModule.xml:150-235`. Read each class name
    from the upstream module's own `SubModule.xml`.
 7. Write `Dependencies/SubModule.cs` with the static-constructor `AssemblyResolve` redirect
-   (`Dependencies/SubModule.cs:21-30, 123-162`) and, if you keep the shields, the 16 `Foundation/`
-   files. <!-- measured: ls Dependencies/Foundation/*.cs | wc -l 2026-09-05 -->
+   (`Dependencies/SubModule.cs:21-30, 123-162`) and, if you keep the shields, the 19 `Foundation/`
+   files. <!-- measured: ls Dependencies/Foundation/*.cs | wc -l 2026-11-03 -->
 8. Write `_Module/THIRD-PARTY-LICENSES.txt` in the shape of TAOM's: one paragraph per binary family
    with exact version, holder, licence and URL, then the licence texts.
 9. Add the four stubs under `Stubs/<Id>/_Module/SubModule.xml` and the `DeployTAOMDependenciesStubs`
-   target (`Dependencies/TAOM.Dependencies.csproj:90-103`), knowing the deployed depth problem
+   target (`Dependencies/TAOM.Dependencies.csproj:97-110`), knowing the deployed depth problem
    described above.
-10. Copy `BundledDependencyManifestTests.cs` (9 tests), `DependenciesPairingTests.cs` (2) and
+10. Copy `BundledDependencyManifestTests.cs` (11 tests), `DependenciesPairingTests.cs` (2) and
     `AssemblyRedirectListTests.cs` (5) and point them at your paths; they assert relationships
     between declarations, never version literals (`BundledDependencyManifestTests.cs:20-22`).
     <!-- measured: rg -c '\[TestMethod\]' over the three test files 2026-09-05 -->
@@ -735,8 +735,8 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
 ### Update a library
 
 1. **NuGet package** (Harmony, UIExtenderEx, MCM): bump the `Version=` in
-   `Dependencies/TAOM.Dependencies.csproj:70-72` and the matching line in `Main/TAOM.csproj:99,
-   110-111`. If the bump crosses a minor, also set the matching stub in `Stubs/<Id>/_Module/SubModule.xml`
+   `Dependencies/TAOM.Dependencies.csproj:70-72` and the matching line in `Main/TAOM.csproj:94,
+   105-106`. If the bump crosses a minor, also set the matching stub in `Stubs/<Id>/_Module/SubModule.xml`
    to the new minor's `.99.0` (MCM's stub is `Bannerlord.MBOptionScreen`). Run
    `dotnet restore Dependencies/TAOM.Dependencies.csproj`
    ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 29-38).
@@ -744,10 +744,10 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
    Workshop folder into `Dependencies/_Module/bin/Win64_Shipping_Client/`, add any new family to the
    `.gitignore` allowlist, `git add` the files. Every DLL in a family must come from one release;
    `VendoredButterLibDlls_AllShareOneVersion` and `VendoredMbOptionScreenDlls_AllShareOneVersion` fail
-   on a half-finished refresh (`BundledDependencyManifestTests.cs:154-183`).
+   on a half-finished refresh (`BundledDependencyManifestTests.cs:167-196`).
 3. **Engine bump**: set Main's `<DependedModuleMetadata id="Native" version="v<new>.*" />` and
    `.claude/pinned-game-version.txt` together, and re-check the Workshop impl set. On this machine the
-   ButterLib and MBOptionScreen Workshop folders each hold 9 versioned DLLs, `1.4.0` through `1.4.8`.
+   ButterLib and MBOptionScreen Workshop folders each hold versioned DLLs from `1.0.0` through `1.5.1`, 9 of them in the `1.4.N` pattern (`1.4.0` through `1.4.8`).
    <!-- measured: ls "<workshop>/2859232415/bin/Win64_Shipping_Client" | rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll' and the 2859238197 MBOptionScreen pattern 2026-09-05 -->
    The `/engine-bump` skill is the named workflow for this and is not run from this chapter.
 4. Update `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` so every heading names the version now
@@ -796,7 +796,7 @@ Code: No code changes needed
 
 - **The four alias stubs deploy to `Modules/<Id>/_Module/SubModule.xml`, one level too deep for the
   engine**, which requires `Modules/<Id>/SubModule.xml` and skips the folder otherwise. On the vanilla
-  launcher the stubs are invisible (`ModuleHelper.cs:364-376, v1.5.5`; `Dependencies/TAOM.Dependencies.csproj:99-101`;
+  launcher the stubs are invisible (`ModuleHelper.cs:364-376, v1.5.5`; `Dependencies/TAOM.Dependencies.csproj:106-108`;
   the deployed folders listed on this machine).
 - **`-p:DisableModuleCopy=true` does not stop deployment.** `CopyBinariesWindows` and `CopyModule`
   fire regardless; the game holds `0Harmony.dll` and `Bannerlord.ButterLib.dll`, so a build with the
@@ -848,16 +848,16 @@ Code: No code changes needed
 ## Numbers in this chapter
 
 All measured 2026-09-05 from the repo at its current commit and the live install on this machine,
-except the two MCM FileVersion values (`5.12.3.0`), which were re-read on 2026-10-03, and the Dependencies
+except the two MCM FileVersion values (`5.12.3.0`), which were re-read on 2026-10-03, the rows re-measured on 2026-11-03 (the 44 tracked files, the 50 / 50 live file counts, the 9 / 9 / 6 vendored and 9 / 9 Workshop DLL counts, and the stub versions), and the Dependencies
 manifest line count and the ButterLib `<Assembly>` range, re-measured on 2026-10-22 after the two server tags
 were added (a later manifest edit moves them again).
 
 | Number | What | Command |
 |---|---|---|
 | 241 | lines in `Dependencies/_Module/SubModule.xml` | `wc -l Dependencies/_Module/SubModule.xml` |
-| 126 | lines in `Dependencies/TAOM.Dependencies.csproj` | `wc -l Dependencies/TAOM.Dependencies.csproj` |
+| 150 | lines in `Dependencies/TAOM.Dependencies.csproj` | `wc -l Dependencies/TAOM.Dependencies.csproj` |
 | 31 | lines in `Dependencies/_Module/coop-modules.txt` | `wc -l Dependencies/_Module/coop-modules.txt` |
-| 124 | lines in `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` | `wc -l Dependencies/_Module/THIRD-PARTY-LICENSES.txt` |
+| 125 | lines in `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` | `wc -l Dependencies/_Module/THIRD-PARTY-LICENSES.txt` |
 | 7 | `<SubModule>` entries in the Dependencies manifest | `rg -c '^\s*<SubModule>' Dependencies/_Module/SubModule.xml` |
 | 35 | `<Module Id>` rows in its `<ModulesToLoadAfterThis>` | `sed -n '21,77p' Dependencies/_Module/SubModule.xml \| rg -c '<Module Id='` |
 | 5 | `<DependedModuleMetadata>` rows in the Dependencies manifest | `rg -c '<DependedModuleMetadata ' Dependencies/_Module/SubModule.xml` |
@@ -866,17 +866,17 @@ were added (a later manifest edit moves them again).
 | 4 (lines 11, 19, 21, 31) | mentions of `TAOM.Dependencies` in `Main/_Module/SubModule.xml` | `rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml` |
 | 3 | ids in the `[modules]` section of `coop-modules.txt` | `awk '/^\[modules\]/{f=1;next} /^\[/{f=0} f && !/^#/ && NF' Dependencies/_Module/coop-modules.txt` |
 | 4 | stub module folders | `ls -d Stubs/*/ \| wc -l` |
-| v2.4.99.0, v2.13.99.0, v2.11.99.0, v5.12.99.0 | stub versions (Harmony, UIExtenderEx, ButterLib, MBOptionScreen) | `rg -n '<Version value=' Stubs/*/_Module/SubModule.xml` |
-| 39 / 36 / 3 | vendored folder: files on disk / git-tracked / untracked | `ls Dependencies/_Module/bin/Win64_Shipping_Client \| wc -l`; `git ls-files Dependencies/_Module/bin/Win64_Shipping_Client \| wc -l` |
-| 42 / 42 | live `bin/Win64_Shipping_Client` / `bin/Win64_Shipping_Server` file counts | `ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" \| wc -l` (and `_Server`) |
-| 6 / 6 / 6 | vendored `ButterLib.Implementation.1.4.N` / `MBOptionScreen.v1.4.N` / `BUTR.CrashReport*` DLLs | `ls Dependencies/_Module/bin/Win64_Shipping_Client \| rg -c '<pattern>'` |
+| v2.4.99.0, v2.13.99.0, v2.12.99.0, v5.12.99.0 | stub versions (Harmony, UIExtenderEx, ButterLib, MBOptionScreen) | `rg -n '<Version value=' Stubs/*/_Module/SubModule.xml` |
+| 44 | files git-tracked in the vendored folder (a build adds 3 untracked) | `git ls-files Dependencies/_Module/bin/Win64_Shipping_Client \| wc -l` |
+| 50 / 50 | live `bin/Win64_Shipping_Client` / `bin/Win64_Shipping_Server` file counts | `ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" \| wc -l` (and `_Server`) |
+| 9 / 9 / 6 | vendored `ButterLib.Implementation.1.4.N` / `MBOptionScreen.v1.4.N` / `BUTR.CrashReport*` DLLs | `ls Dependencies/_Module/bin/Win64_Shipping_Client \| rg -c '<pattern>'` |
 | 9 / 9 | Workshop `Implementation.1.4.N` / `MBOptionScreen.v1.4.N` DLLs (`1.4.0` to `1.4.8`) | `ls "<workshop>/261550/2859232415/bin/Win64_Shipping_Client" \| rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll'` (and `2859238197`) |
 | 0 | files tracked under `Main/_Module/bin` | `git ls-files Main/_Module/bin \| wc -l` |
 | 13 | `!` allow patterns at `.gitignore:52-64` | `sed -n '52,64p' .gitignore \| rg -c '^!'` |
-| 16 | `.cs` files in `Dependencies/Foundation/` | `ls Dependencies/Foundation/*.cs \| wc -l` |
+| 19 | `.cs` files in `Dependencies/Foundation/` | `ls Dependencies/Foundation/*.cs \| wc -l` |
 | 17 | simple names in `RedirectedSimpleNames` | `sed -n '39,98p' Dependencies/SubModule.cs \| rg -c '^\s*"[^"]+",'` |
-| 9 / 2 / 5 | `[TestMethod]` in `BundledDependencyManifestTests` / `DependenciesPairingTests` / `AssemblyRedirectListTests` | `rg -c '\[TestMethod\]' <file>` |
-| 2.11.0.0, 5.12.3.0, 1.0.1.50, 14.0.0.99 | FileVersion of `Bannerlord.ButterLib.dll`, `MCM.UI.Adapter.MCMv5.dll`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`, `BUTR.CrashReport.dll` | `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion` |
+| 11 / 2 / 5 | `[TestMethod]` in `BundledDependencyManifestTests` / `DependenciesPairingTests` / `AssemblyRedirectListTests` | `rg -c '\[TestMethod\]' <file>` |
+| 2.12.0.0, 5.12.3.0, 1.0.1.50, 14.0.0.99 | FileVersion of `Bannerlord.ButterLib.dll`, `MCM.UI.Adapter.MCMv5.dll`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`, `BUTR.CrashReport.dll` | `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion` |
 | 2.4.2.0, 2.13.2.0, 5.12.3.0 | FileVersion of the live `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` | same, over the live `bin/Win64_Shipping_Client` |
 | 4.0.4.1 / 4.0.1.1 | assembly version of `System.Runtime.CompilerServices.Unsafe.dll` (repo and live) / vendored `System.Memory.dll` | `[Reflection.AssemblyName]::GetAssemblyName(<dll>).Version` |
 | 17 / 17 | language folders under the live `ModuleData/Languages` / `ModuleData/Languages_MCM` | `ls "<game>/Modules/TAOM.Dependencies/ModuleData/Languages" \| wc -l` (and `_MCM`) |

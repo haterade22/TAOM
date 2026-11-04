@@ -2950,6 +2950,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_seat_mcm_begin_hint}When a battle's deployment ends, your view goes into the Seat at the camera you were using, with no blend, instead of back to your hero. Press the key to return to your hero. Default: off.")]
     public bool BeginBattlesInSeat { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultBeginBattlesInSeat;
 
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_cursor}Show a cursor with the order panel", Order = 2, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on.")]
+    public bool SeatCursorWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCursorWithPanel;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_keep_panel}Keep the order panel open", Order = 3, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off.")]
+    public bool SeatKeepPanelOpen { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultKeepPanelOpen;
+
     // --- Marshal's Word (docs/features/marshals-word.md, stages M1 and M2) ---
 
     [SettingPropertyGroup("Marshal's Word", GroupOrder = 83)]

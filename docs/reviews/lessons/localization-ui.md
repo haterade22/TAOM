@@ -1483,3 +1483,17 @@ The old gui-ui rule said that adding to `MapInfoVM.SecondaryInfoItems` threw an 
 - **Why missed:** a crash explanation was promoted to a rule without a decompile on the then-installed engine.
 - **Prevent:** state the engine version you verified against when writing a rule from a crash; `/investigate` finds a real root cause for the `GauntletCareerScreen` comment if it matters.
 - **Source:** the "Discouraged, on ownership grounds" paragraph in `.claude/rules/gui-ui.md`, which keeps the shape of the hazard and the dormant-in-practice finding.
+
+### List every producer of a closing edge before a rule answers it
+
+With keep-open on, the Seat of Seeing reopened the order panel on any close that no player key explained. The Transfer order closes the panel on purpose (`GauntletOrderUIHandler.cs:467-479`), and the reopen cleared `IsTransferActive` (`MissionOrderVM.cs:723`), so the Transfer cancelled itself. Game key 77 at the root of the legacy layout was a player's close that the rule also missed.
+- **Why missed:** the contract named Transfer when it rejected the panel's event, and not in its edge rule. The rule's tests walked the player's routes, and the fake world has no Transfer.
+- **Prevent:** grep every caller of the close method and every writer of the field the edge reads, and write down what each producer wants before the rule sorts them. A rule that says "not the player, so reopen" answers for every producer it did not list.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), rows 6 and 21.
+### Gauntlet reads `#RRGGBBAA`, and `DoNotAcceptEvents` stops at a modal panel's root (Long Defeat, 2026-11-04)
+
+Two prefabs wrote `#FFE9B84A`, ARGB order, for a gold text. The engine parses red first and alpha last (`TaleWorlds.Library.Color.cs:172-183`), so the text read as a pale cream at alpha 0x4A. Later, a fix for the rule "every non-button widget sets `DoNotAcceptEvents`" put the flag on the shop panel's root. `EventManager.AnyWidgetsAt` then found no widget over the dim background, `GauntletLayer.HitTest` returned false, and `ScreenManager` would pass the click on to lower layers.
+
+- **Why missed:** no test read a colour's alpha, and a small strip in a screenshot shows no tint. The rule was written for HUD layers, which must not take clicks, and I passed it to a builder without that scope. Native's `EscapeMenu.xml` sets no such flag.
+- **Prevent:** a prefab test reads every 8-digit colour and fails on a low alpha. A display-only layer flags every widget. A modal focus panel keeps its root accepting, so a click cannot reach the mission.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 2 and 19.

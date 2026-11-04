@@ -3,19 +3,25 @@ using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Engine.Options;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.GauntletUI;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
+using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Order;
+using TaleWorlds.ScreenSystem;
 using TAOM.Adapters;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Client.Features.SeatOfSeeing;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.SeatOfSeeing.Domain;
+using TAOM.Features.SeatOfSeeing.Hooks;
 
 namespace TAOM.Client.Adapters;
 
@@ -38,10 +44,19 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private static readonly MethodInfo? CameraElevationSetter =
         AccessTools.PropertySetter(typeof(MissionScreen), nameof(MissionScreen.CameraElevation));
 
+    // GauntletOrderUIHandler._dataSource is protected (v1.5.6 GauntletOrderUIHandler.cs:41). Cached once, never per call.
+    private static readonly FieldInfo? OrderDataSource = AccessTools.Field(typeof(GauntletOrderUIHandler), "_dataSource");
+
+    private const int CursorLayerOrder = 30;
+
     private readonly MissionScreen _screen;
     private readonly Mission _mission;
     private MissionMainAgentController? _controller;
     private IAutonomousMovementController? _rage;
+    private GauntletOrderUIHandler? _orderHandler;
+    private GauntletLayer? _cursorLayer;
+    private Agent? _keptAgent;
+    private Formation? _keptFormation;
 
     internal SeatScreenAdapter(MissionScreen screen, Mission mission)
     {
@@ -54,7 +69,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var mode = _mission.Mode;
         var interlude = mode == MissionMode.Conversation || mode == MissionMode.Barter || mode == MissionMode.CutScene;
         return new SeatEngineFacts(mode == MissionMode.Deployment, interlude, mode == MissionMode.Battle,
-            _screen.IsPhotoModeEnabled, _screen.CustomCamera != null, _mission.MissionEnded, RageHoldsHero());
+            _screen.IsPhotoModeEnabled, _screen.CustomCamera != null, _mission.MissionEnded, RageHoldsHero(), _screen.IsRadialMenuActive);
     }
 
     public bool TryReadCamera(out SeatPose pose, out float viewAngle)
@@ -99,7 +114,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var input = _screen.SceneLayer.Input;
         var lift = (input.IsGameKeyDown((int)GameKeyDefinition.Jump) ? 1f : 0f) - (input.IsGameKeyDown((int)GameKeyDefinition.Crouch) ? 1f : 0f);
 
-        var looksWithMouse = !_screen.MouseVisible || input.IsKeyDown(InputKey.MiddleMouseButton);
+        var looksWithMouse = !_screen.MouseVisible || LookHeld();
         var (yaw, pitch) = looksWithMouse
             ? SeatCameraMath.Look(input.GetMouseMoveX(), input.GetMouseMoveY(), input.GetGameKeyAxis("CameraAxisX"),
                 input.GetGameKeyAxis("CameraAxisY"), dt, input.GetMouseSensitivity(), NativeConfig.InvertMouse, input.GetIsMouseActive())
@@ -186,13 +201,163 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         return true;
     }
 
-    public void Say(SeatMessage message) => InformationManager.DisplayMessage(new InformationMessage(TextFor(message).ToString()));
+    public void Say(SeatMessage message)
+    {
+        Said++;
+        LastSaid = message;
+        InformationManager.DisplayMessage(new InformationMessage(TextFor(message).ToString()));
+    }
+
+    /// <summary>How many messages the Seat has shown in this mission, for the field trial's facts.</summary>
+    internal int Said { get; private set; }
+
+    internal SeatMessage? LastSaid { get; private set; }
+
+    public bool IsPanelOpen() => _mission.IsOrderMenuOpen;
+
+    public bool LookHeld() => _screen.SceneLayer.Input.IsKeyDown(InputKey.MiddleMouseButton);
+
+    // One layer for the mission, built on the first show and then only toggled, the way vanilla keeps a cursor layer (the banner editor and
+    // the face generator, in TaleWorlds.MountAndBlade.GauntletUI.dll). The layer takes no input (its mask stays Invalid) and only asks for
+    // a visible cursor, which ScreenManager.UpdateMouseVisibility grants while any active layer asks (ScreenManager.cs:763-774). It is never
+    // removed: RemoveLayer finalizes a layer and AddLayer refuses a finalized one (ScreenBase.cs:299-301, 327), and the screen finalizes
+    // its layers itself at teardown (ScreenBase.cs:60-63). SetMouseVisibility is a plain setter (InputRestrictions.cs:23-26), so hiding is
+    // safe on any teardown path, with the layer live or already finalized.
+    public void SetCursor(bool show)
+    {
+        if (_cursorLayer == null)
+        {
+            if (!show)
+                return;
+            var layer = new GauntletLayer("SeatCursor", CursorLayerOrder);
+            layer.InputRestrictions.SetMouseVisibility(true);
+            _screen.AddLayer(layer);
+            _cursorLayer = layer;
+            return;
+        }
+
+        _cursorLayer.InputRestrictions.SetMouseVisibility(show);
+    }
+
+    public void HoldCursorPosition() => MBWindowManager.DontChangeCursorPos();
+
+    public SeatCloseSignals ReadCloseSignals()
+    {
+        var input = _screen.SceneLayer.Input;
+        var byTrial = TrialPlayerClose;
+        TrialPlayerClose = false;
+        // Game key 77 (SelectOrderReturn) closes the panel at the root of a layout that has a Return order (GauntletOrderUIHandler.cs:449-452,
+        // 484-492), so it shares the view-orders bit. A signal counts only on a closing edge, so a Return press in a sub-menu suppresses nothing.
+        return new SeatCloseSignals(input.IsHotKeyReleased("ToggleEscapeMenu"), input.IsKeyReleased(InputKey.RightMouseButton),
+            input.IsGameKeyPressed((int)GameKeyDefinition.ViewOrders) || input.IsGameKeyPressed((int)GameKeyDefinition.SelectOrderReturn) || byTrial,
+            input.IsGameKeyReleased((int)GameKeyDefinition.HoldOrder));
+    }
+
+    public bool TransferMenuOpen() => _mission.IsTransferMenuOpen;
+
+    /// <summary>The field trial closed the panel as the player does, so the session must not reopen it.</summary>
+    internal bool TrialPlayerClose { get; set; }
+
+    public bool OpenPanel()
+    {
+        var panel = OrderPanel();
+        panel?.OpenToggleOrder(false, false);
+        return panel != null;
+    }
+
+    internal void ClosePanel() => OrderPanel()?.TryCloseToggleOrder();
+
+    private MissionOrderVM? OrderPanel()
+    {
+        if (OrderDataSource == null)
+            return null;
+        _orderHandler ??= _mission.GetMissionBehavior<GauntletOrderUIHandler>();
+        return _orderHandler == null ? null : OrderDataSource.GetValue(_orderHandler) as MissionOrderVM;
+    }
+
+    public bool ReadUiHidden() => MBDebug.DisableAllUI;
+
+    public void WriteUiHidden(bool hidden) => MBDebug.DisableAllUI = hidden;
+
+    public bool DialogShown() => ((IMissionScreen)_screen).GetDisplayDialog();
+
+    public bool OtherLayerFocused()
+    {
+        var focused = ScreenManager.FocusedLayer;
+        return focused != null && focused != _screen.SceneLayer;
+    }
+
+    public SeatKeepKind TryKeep()
+    {
+        _keptAgent = null;
+        _keptFormation = null;
+        var selected = _mission.PlayerTeam?.PlayerOrderController?.SelectedFormations;
+        var count = selected?.Count ?? 0;
+        var first = count > 0 ? selected![0] : null;
+        if (SeatKeepRule.KeepsCompany(_mission.IsOrderMenuOpen, count, first?.CountOfUnits ?? 0))
+        {
+            _keptFormation = first;
+            return SeatKeepKind.Company;
+        }
+
+        _keptAgent = SoldierAtPointer();
+        return _keptAgent != null ? SeatKeepKind.Soldier : SeatKeepKind.None;
+    }
+
+    // RayCastForClosestAgent can answer a mount, so the soldier is its rider and a riderless mount is a miss. The soldier counts unless
+    // terrain or an entity is nearer along the same ray, with the order placer's thickness and flags (OrderTroopPlacer.cs:205).
+    private Agent? SoldierAtPointer()
+    {
+        SeatOrderRay.PointerRay(_screen, out var begin, out var end);
+        var hit = _mission.RayCastForClosestAgent(begin, end, -1, SeatOrderRay.RayThickness, out var agentDistance);
+        var soldier = hit != null && hit.IsMount ? hit.RiderAgent : hit;
+        if (soldier == null || !soldier.IsHuman || !AgentSlotIdentity.IsCurrentOccupant(soldier) || !soldier.IsActive())
+            return null;
+
+        var terrainHit = _mission.Scene.RayCastForClosestEntityOrTerrain(begin, end, out var terrainDistance, out _, out _, SeatOrderRay.RayThickness,
+            SeatOrderRay.RayFlags);
+        return SeatKeepRule.AgentCounts(terrainHit, terrainDistance, agentDistance) ? soldier : null;
+    }
+
+    public SeatTargetRead ReadKept()
+    {
+        var gone = new SeatTargetRead(true, 0f, 0f, 0f);
+        if (_keptAgent != null)
+        {
+            if (!AgentSlotIdentity.IsCurrentOccupant(_keptAgent) || !_keptAgent.IsActive())
+                return gone;
+            var chest = _keptAgent.GetChestGlobalPosition();
+            return new SeatTargetRead(false, chest.x, chest.y, chest.z);
+        }
+
+        // An empty Formation stays in Team.FormationsIncludingEmpty (Team.cs:280-287), and no read of its position says that it emptied, so the
+        // count decides.
+        if (_keptFormation == null || _keptFormation.CountOfUnits <= 0)
+            return gone;
+        var ground = _keptFormation.CachedMedianPosition.GetGroundVec3();
+        return new SeatTargetRead(false, ground.x, ground.y, ground.z);
+    }
+
+    public void Unkeep()
+    {
+        _keptAgent = null;
+        _keptFormation = null;
+    }
+
+    /// <summary>The field trial's check that the kept soldier is the one it aimed at: a reference, never an agent index.</summary>
+    internal bool KeepsAgent(Agent agent) => ReferenceEquals(_keptAgent, agent);
+
+    internal bool KeepsFormation(Formation formation) => ReferenceEquals(_keptFormation, formation);
+
+    internal bool MouseVisible => _screen.MouseVisible;
 
     private static TextObject TextFor(SeatMessage message) => message switch
     {
         SeatMessage.FirstEntry => new TextObject("{=taom_seat_first_entry}Press the Seat key to return to your hero."),
         SeatMessage.OtherView => new TextObject("{=taom_seat_other_view}You cannot take the Seat from this view."),
         SeatMessage.RageHolds => new TextObject("{=taom_seat_rage}You cannot take the Seat while the rage holds you."),
+        SeatMessage.KeepNobody => new TextObject("{=taom_seat_keep_nobody}There is nobody there to keep to."),
+        SeatMessage.KeepGone => new TextObject("{=taom_seat_keep_gone}The one you were keeping to is gone."),
         _ => new TextObject("{=taom_seat_fault}The Seat of Seeing failed and is off until this scene ends. Your own view is back."),
     };
 }

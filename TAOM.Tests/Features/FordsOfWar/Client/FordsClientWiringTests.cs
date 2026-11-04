@@ -49,6 +49,9 @@ public class FordsClientWiringTests
     [DataRow("FordsCommanderCameraView")]
     [DataRow("FordsCommandView")]
     [DataRow("FordsCommandVM")]
+    [DataRow("FordsControlView")]
+    [DataRow("FordsPanelStandAside")]
+    [DataRow("FordsPointerPick")]
     public void TheClientTypes_LiveInTaomClientOnly(string name)
     {
         var full = "TAOM.Client.Features.FordsOfWar." + name;
@@ -181,7 +184,7 @@ public class FordsClientWiringTests
     }
 
     [TestMethod]
-    public void TheViewList_HasTheEscapeMenuTheBoundaryWallAndBothFordsViews()
+    public void TheViewList_HasTheEscapeMenuTheBoundaryWallAndTheCameraAndPanelViews()
     {
         var src = Source("FordsOfWarMissionViews.cs");
 
@@ -206,7 +209,6 @@ public class FordsClientWiringTests
     [DataRow("CreateMissionMainAgentCheerBarkControllerView")]
     [DataRow("CreateMissionMainAgentEquipDropView")]
     [DataRow("CreateMissionOrderUIHandler")]
-    [DataRow("CreateMissionAgentStatusUIHandler")]
     [DataRow("CreateMissionAgentLockVisualizerView")]
     [DataRow("CreateMissionBoundaryCrossingView")]
     [DataRow("CreateMissionBattleScoreUIHandler")]
@@ -219,9 +221,92 @@ public class FordsClientWiringTests
     }
 
     [TestMethod]
-    public void TheClientSource_NeverReadsOrSpawnsAMainAgent()
+    public void TheViewList_CarriesTheControlView_AndTheHudOfAControlledSoldier()
     {
-        foreach (var file in new[] { "FordsCommanderCameraView.cs", "FordsCommandView.cs", "FordsCommandVM.cs", "FordsOfWarGameManager.cs" })
+        var src = Source("FordsOfWarMissionViews.cs");
+        StringAssert.Contains(src, "new FordsControlView()");
+        StringAssert.Contains(src, "ViewCreator.CreateMissionAgentStatusUIHandler(mission)");
+    }
+
+    [TestMethod]
+    public void TheControlKey_IsInTheControlView_AndNotInThePanelsKeyTable()
+    {
+        StringAssert.Contains(Source("FordsControlView.cs"), "InputKey.P");
+        Assert.IsFalse(Source("FordsCommandHotkeys.cs").Contains("InputKey.P"), "the panel's table must leave the control key alone");
+    }
+
+    [TestMethod]
+    public void TheCameraView_StandsAsideWhileASoldierIsControlled()
+    {
+        var src = Source("FordsCommanderCameraView.cs");
+        var stand = src.IndexOf("FordsAgentControl.IsControlling(Mission)", StringComparison.Ordinal);
+        var step = src.IndexOf("FordsCameraMath.Step", StringComparison.Ordinal);
+        Assert.IsTrue(stand >= 0 && stand < step, "the engine's camera follows the soldier only when this view answers false");
+    }
+
+    [TestMethod]
+    public void TheCommandView_WhileASoldierIsControlled_FreesTheMouse_HoldsTheSpeedAndReadsNoPanelKeys()
+    {
+        var aside = Source("FordsPanelStandAside.cs");
+        StringAssert.Contains(aside, "FordsAgentControl.IsControlling(mission)");
+        StringAssert.Contains(aside, "ResetInputRestrictions");
+        StringAssert.Contains(aside, "_controlling ? _fightSpeed : vm.Speed");
+        var view = Source("FordsCommandView.cs");
+        StringAssert.Contains(view, "_standAside.Speed(_vm)");
+        StringAssert.Contains(view, "!_vm.IsResultVisible && !controlling");
+    }
+
+    [TestMethod]
+    public void TheControlView_ReturnsTheSoldier_WhenTheMatchIsOver_AndTakesNoOneThen()
+    {
+        var src = Source("FordsControlView.cs");
+        StringAssert.Contains(src, "controlling && _session!.IsOver");
+        StringAssert.Contains(src, "if (_session!.IsOver)");
+        Assert.IsFalse(Source("FordsPanelStandAside.cs").Contains("FordsAgentControl.Return"), "a view tick overlaps the agent tick, so only the mission tick hands back");
+    }
+
+    [TestMethod]
+    public void TheControlView_ReadsTheKeyOnTheScreenTick_AndChangesTheAgentOnlyOnTheMissionTick()
+    {
+        var src = Source("FordsControlView.cs");
+        var screen = src.IndexOf("void OnMissionScreenTick", StringComparison.Ordinal);
+        var key = src.IndexOf("InputKey.P", StringComparison.Ordinal);
+        var mission = src.IndexOf("void OnMissionTick", StringComparison.Ordinal);
+        var step = src.IndexOf("Step(", StringComparison.Ordinal);
+        Assert.IsTrue(screen >= 0 && screen < key && key < mission && mission < step, "a fast forward frame ticks the mission many times, and a view tick overlaps the agent tick");
+    }
+
+    [TestMethod]
+    public void ThePointerPick_KeepsANaNPixelOutOfThePick()
+    {
+        StringAssert.Contains(Source("FordsPointerPick.cs"), "!(w > 0f)");
+    }
+
+    [TestMethod]
+    public void TheCameraView_UsesItsOwnViewAngle_BecauseAFightLeavesTheEnginesAngleZoomed()
+    {
+        Assert.IsFalse(Source("FordsCommanderCameraView.cs").Contains("CameraViewAngle"), "only UpdateCamera writes it, and it stops running when the fight ends");
+    }
+
+    [DataTestMethod]
+    [DataRow("IsDetachableFromFormation", "seated howdah and mumak crew stay out: the seat teleports them each frame")]
+    [DataRow("IsRunningAway", "a soldier in flight stays out")]
+    [DataRow("IsFadingOut", "a soldier fading out stays out")]
+    [DataRow("TrollBruteForceConfig.ActionSetsByMonster", "a troll stays out: its release and blocked clips have never run in a logged battle")]
+    [DataRow("FordsControlPick.MayRide", "a creature's rider stays out: a behavior tree drives the creature")]
+    [DataRow("SwitchMainAgentController(false)", "a warg's rage can leave vanilla's controller off, so a take turns it back on")]
+    [DataRow("RefreshBehaviorValues", "a new AI component starts on the Default set until the lane's next order")]
+    [DataRow("CommonAIComponent?.Initialize()", "AddComponent does not initialize, so morale would sit at a flat 50 with no recovery")]
+    [DataRow("EventControlFlag.Stand", "only the player's controller stands a crouching soldier up")]
+    public void TheAgentControl_CarriesEachRuleItsDocStates(string needed, string why)
+    {
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Adapters/FordsAgentControl.cs", stripComments: true), needed, why);
+    }
+
+    [TestMethod]
+    public void TheClientSource_ReachesTheMainAgentOnlyThroughFordsAgentControl()
+    {
+        foreach (var file in new[] { "FordsCommanderCameraView.cs", "FordsCommandView.cs", "FordsCommandVM.cs", "FordsOfWarGameManager.cs", "FordsControlView.cs", "FordsPanelStandAside.cs", "FordsPointerPick.cs" })
         {
             var src = Source(file);
             foreach (var banned in new[] { "MainAgent", "Agent.Main", "PlayerTroop", "AgentControllerType" })
@@ -298,7 +383,7 @@ public class FordsClientWiringTests
     [TestMethod]
     public void TheViews_AreNotDefaultViewsAndHaveParameterlessConstructors()
     {
-        foreach (var type in new[] { typeof(FordsCommanderCameraView), typeof(FordsCommandView) })
+        foreach (var type in new[] { typeof(FordsCommanderCameraView), typeof(FordsCommandView), typeof(FordsControlView) })
         {
             Assert.IsNotNull(type.GetConstructor(Type.EmptyTypes), type.Name + " is built with new() by the view list");
             Assert.AreEqual(0, type.GetCustomAttributesData().Count(a => a.AttributeType.Name == "DefaultView"),

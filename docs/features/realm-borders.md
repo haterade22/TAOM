@@ -224,7 +224,7 @@ in the political mode.
 | Mode | Lines | Colours |
 |---|---|---|
 | Political | every pair of neighbouring realms | each realm's palette colour, the player's frontier gilded |
-| Free Peoples and the Shadow | the one front line where the two sides meet; realms are grouped by `IAlignmentService.ResolveSide`, and a neutral realm (the `neutral` rows of `alignment.json`: Khand, Shaghâna, Abanissa and Umbar) stands on neither side, so it draws no line | pale blue-white for the Free Peoples, red for the Shadow |
+| Free Peoples and the Shadow | the one front line where the two sides meet; realms are grouped by `IAlignmentService.ResolveSide`, and a neutral realm (the `neutral` rows of `alignment.json`: Khand, Shaghâna, Abanissa, Umbar, Cardolan, Rhudaur, Anduin Vale, Angáladh, Dorwinion and South Rhovanion) stands on neither side, so it draws no line | pale blue-white for the Free Peoples, red for the Shadow |
 | Allies and enemies | between realms of different standing towards the player: own, allied, enemy, neutral, by the settlement nameplates' own rule (at war, same faction, allied, else neutral) | the nameplates' frame colours (`NameplateRelationPalette`), so the map and the nameplates agree; a war front burns where the player's side meets an enemy |
 
 ### Realm names
@@ -355,7 +355,7 @@ its best colour again in every campaign.
 | `Main/Features/RealmBorders/Domain/MapMode.cs`, `RealmRelation.cs` | The map modes and the allies and enemies mode's relation groups |
 | `Main/Features/RealmBorders/RealmBordersModule.cs`, `RealmBordersIoC.cs` | Module wiring and registrations |
 | `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` | Events, the dedicated-server and Kingdom Borders gates, the map view |
-| `Main/Features/RealmBorders/UI/` | The map view, the names view models, the key category |
+| `Main/Features/RealmBorders/UI/`, `Client/Features/RealmBorders/UI/` | The names view models and the key category (Main); the map view and the key reads, `RealmBordersMapView` and `RealmBordersKeys` (TAOM.Client) |
 | `Main/Features/RealmBorders/RealmAtlasService.cs`, `Domain/AtlasSheet.cs` | The parchment map: when to build and show it, its quads and its fade |
 | `Main/Features/RealmBorders/Cheats/RealmBordersCheats.cs` | The borders' five console commands |
 | `Main/Features/RealmBorders/Cheats/RealmAtlasCheats.cs` | The parchment map's four console commands |
@@ -380,7 +380,7 @@ its best colour again in every campaign.
 
 ## Tests
 
-258 test methods in `TAOM.Tests/Features/RealmBorders/`:
+260 test methods in `TAOM.Tests/Features/RealmBorders/`:
 
 - `ProvincePartitionerTests` (16), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
   walls, rivers, diagonal ridges, pockets, water, NaN seeds and positions, chain tracing (saddles and
@@ -408,7 +408,7 @@ its best colour again in every campaign.
   border material in the late pass, the second winding only for a material that culls back faces, the
   parchment map's flags and render orders, and its switch on with no settings. `RealmNameLetteringTests`
   (7), `RealmNamesVMTests` (4), `RealmNamesPrefabTests` (4), `ProvinceBitmapTests` (3).
-- `RealmBordersWiringTests` (10): the module listed once, no hand registration, the behavior's gates and
+- `RealmBordersWiringTests` (12): the module listed once, no hand registration, the behavior's gates and
   events, the key category and its Options names, the map view driving the parchment map every
   frame and on close, and the renderer's call sites for the winding, the late pass and the render orders.
 

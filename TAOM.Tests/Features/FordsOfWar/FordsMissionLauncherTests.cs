@@ -109,7 +109,7 @@ public class FordsMissionLauncherTests
     [TestMethod]
     public void TheLauncher_SpawnsNoPlayerAgent()
     {
-        // The mission keeps no main agent (build-spec 6.1): nothing here may name the player troop or a controller type.
+        // The launcher spawns no main agent (build-spec 6.1; the commander takes a soldier later, through FordsAgentControl): nothing here may name the player troop or a controller type.
         var source = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsMissionLauncher.cs", stripComments: true);
 
         foreach (var banned in new[] { "PlayerTroop", "AgentControllerType", "SpawnLogic", "BattleEndLogic" })

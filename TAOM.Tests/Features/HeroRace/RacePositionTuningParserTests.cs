@@ -238,4 +238,61 @@ public class RacePositionTuningParserTests
         StringAssert.Contains(RacePositionTuningParser.Format(Item(0f, 0.15f, -0.1f)), "v=0.150");
         StringAssert.Contains(RacePositionTuningParser.Format(Item(0f, 0.15f, -0.1f)), "z=-0.100");
     }
+
+    // --- Icon surface -------------------------------------------------------------------------
+
+    [TestMethod]
+    public void TryParseSurface_Icon_Parses()
+    {
+        Assert.IsTrue(RacePositionTuningParser.TryParseSurface("icon", out var s, out _));
+        Assert.AreEqual(RacePositionSurface.Icon, s);
+    }
+
+    [TestMethod]
+    public void TryResolveRace_IconRowKey_Accepted()
+    {
+        Assert.IsTrue(RacePositionTuningParser.TryResolveRace(
+            "Dwarf_Helmet", RacePositionSurface.Icon, KnownRaces, null, out var race, out _));
+        Assert.AreEqual("dwarf_helmet", race);
+    }
+
+    // cave_troll is a known race, and the key splits on its last underscore, but no armour is ever
+    // matched to it: a row would be saved and never read, so the console refuses it.
+    [TestMethod]
+    public void TryResolveRace_IconRaceTheMatcherNeverReturns_Refused()
+    {
+        Assert.IsFalse(RacePositionTuningParser.TryResolveRace(
+            "cave_troll_armor", RacePositionSurface.Icon, KnownRaces, null, out _, out var error));
+        StringAssert.Contains(error, "never be read");
+    }
+
+    [TestMethod]
+    public void TryResolveRace_IconBareRace_Refused()
+    {
+        Assert.IsFalse(RacePositionTuningParser.TryResolveRace(
+            "dwarf", RacePositionSurface.Icon, KnownRaces, null, out _, out var error));
+        StringAssert.Contains(error, "<race>_<slot>");
+    }
+
+    [TestMethod]
+    public void TryResolveRace_IconUnknownSlot_Refused()
+    {
+        Assert.IsFalse(RacePositionTuningParser.TryResolveRace(
+            "dwarf_shield", RacePositionSurface.Icon, KnownRaces, null, out _, out _));
+    }
+
+    [TestMethod]
+    public void TryResolveRace_IconUnknownRace_Refused()
+    {
+        Assert.IsFalse(RacePositionTuningParser.TryResolveRace(
+            "hobbit_helmet", RacePositionSurface.Icon, KnownRaces, null, out _, out _));
+    }
+
+    // There is no on-screen icon to stand in for '.', even when a tableau is showing a race.
+    [TestMethod]
+    public void TryResolveRace_IconDot_Refused()
+    {
+        Assert.IsFalse(RacePositionTuningParser.TryResolveRace(
+            ".", RacePositionSurface.Icon, KnownRaces, "dwarf", out _, out _));
+    }
 }

@@ -137,7 +137,7 @@ Every table that names `arthedain` was decided for both. Four keep no row for ei
 | `configs/army_targeting.json` | theater `north` | theater `north` |
 | `realm_borders/palette.json` and MCM | `#28745C` (the banner green), `RealmColourCardolan` | `#E0735A`, `RealmColourRhudaur` |
 | Careers | Bowman of Minhiriath, Warden of Tyrn Gorthad, Knight of Cardolan | Ranger of the Angle, Captain of Cameth Brin, Rider of the Fells |
-| Faction card | playable, Neutral, difficulty 5 | playable, Neutral, difficulty 6 |
+| Faction card | parked (`playable: false`), Neutral, difficulty 5 | parked (`playable: false`), Neutral, difficulty 6 |
 
 ## Key Files
 
@@ -162,9 +162,9 @@ Every table that names `arthedain` was decided for both. Four keep no row for ei
   mercenary, ladder cells, party templates, labels and cultures).
 - `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`: both pools.
 - Count and list pins moved with the data: `TroopUpgradeSkillMonotonicityTests`
-  (`ExpectedMilitiaCultures`), `ShippedRaceAbilitiesConfigTests` (20 cultures),
-  `SettingsFingerprintTests` (423 in `TaomSettings`), `ShippedClanSideCoverageTests` (`NeutralRealmIds`),
-  `LotrIssueConfigProviderTests` (77 issues), `GlobalStringsOverridesTests` (the picker names).
+  (`ExpectedMilitiaCultures`), `ShippedRaceAbilitiesConfigTests` (24 cultures),
+  `SettingsFingerprintTests` (474 in `TaomSettings`), `ShippedClanSideCoverageTests` (`NeutralRealmIds`),
+  `LotrIssueConfigProviderTests` (82 issues), `GlobalStringsOverridesTests` (the picker names).
 - `TAOM.Tests/Core/FemaleLordHairDataTests.cs`: every human lady on a face template carries her own
   hair tags.
 - `ClonedCultureFlavorTests` scans both realms for Gondor's places and Arthedain's seats.

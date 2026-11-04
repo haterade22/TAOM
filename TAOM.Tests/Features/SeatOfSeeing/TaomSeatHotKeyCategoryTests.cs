@@ -29,40 +29,60 @@ public class TaomSeatHotKeyCategoryTests
     private GameKey[] RegisteredKeys => _sut.RegisteredGameKeys.Where(k => k != null).ToArray();
 
     [TestMethod]
-    public void Ctor_RegistersExactlyTheTakeTheSeatKey_AtId530()
+    public void Ctor_RegistersTheKeysOfTheBuiltStages_AtTheContractsIds()
     {
         Assert.AreEqual(530, TaomSeatHotKeyCategory.TakeTheSeatKeyId);
-        CollectionAssert.AreEqual(new[] { 530 }, RegisteredKeys.Select(k => k.Id).ToArray());
+        Assert.AreEqual(531, TaomSeatHotKeyCategory.KeepToKeyId);
+        Assert.AreEqual(536, TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
+        CollectionAssert.AreEqual(new[] { 530, 531, 536 }, RegisteredKeys.Select(k => k.Id).ToArray(),
+            "keys 532 to 535 belong to stages S5 and S6 and are not registered before them");
     }
 
     [TestMethod]
-    public void Default_IsQ()
+    public void Defaults_AreTheContractsKeys()
     {
-        Assert.AreEqual(InputKey.Q, RegisteredKeys.Single().KeyboardKey.InputKey);
+        var defaults = RegisteredKeys.ToDictionary(k => k.Id, k => k.KeyboardKey.InputKey);
+
+        Assert.AreEqual(InputKey.Q, defaults[530]);
+        Assert.AreEqual(InputKey.Insert, defaults[531]);
+        Assert.AreEqual(InputKey.End, defaults[536]);
     }
 
     [TestMethod]
-    public void Default_IsUnboundInTheCategoriesTheMissionSceneLayerReads()
+    public void EveryDefault_IsUnboundInTheCategoriesTheMissionSceneLayerReads()
     {
-        // MissionScreen registers six categories on its layer (389-394), and one physical key then acts twice. B was key 36 of
+        // MissionScreen registers six categories on its layer (389-394), the order handler adds MissionOrderHotkeyCategory, and the chat
+        // log view adds ChatLogHotKeyCategory on the same input; one physical key then acts twice. B was key 36 of
         // GenericCampaignPanelsGameKeyCategory, which would print "Can't access banner window right now!" on every press (build-spec 3).
         // GenericPanelGameKeyCategory is left out on purpose: it holds Q and E for a panel's tab change, but only panel layers read
         // them (SwitchToPreviousTab), and vanilla's own use key is E, so Q is free in a mission.
         var categories = new GameKeyContext[]
         {
-            new CombatHotKeyCategory(),
+            new GenericGameKeyContext(),
             new GenericCampaignPanelsGameKeyCategory(),
             new ScoreboardHotKeyCategory(),
+            new CombatHotKeyCategory(),
+            new TaleWorlds.Engine.InputSystem.CheatsHotKeyCategory(),
             new MissionOrderHotkeyCategory(),
+            new ChatLogHotKeyCategory(),
         };
-        var seatKey = RegisteredKeys.Single().KeyboardKey.InputKey;
 
         foreach (var category in categories)
         {
             var bound = category.RegisteredGameKeys.Where(k => k?.KeyboardKey != null).Select(k => k.KeyboardKey.InputKey)
-                .Concat(category.RegisteredHotKeys.SelectMany(h => h.Keys.Where(k => k != null).Select(k => k.InputKey)));
-            CollectionAssert.DoesNotContain(bound.ToList(), seatKey, category.GetType().Name + " already binds the Seat's default");
+                .Concat(category.RegisteredHotKeys.SelectMany(h => h.Keys.Where(k => k != null).Select(k => k.InputKey))).ToList();
+            foreach (var key in RegisteredKeys)
+                CollectionAssert.DoesNotContain(bound, key.KeyboardKey.InputKey,
+                    category.GetType().Name + " already binds the default of key " + key.Id);
         }
+    }
+
+    [TestMethod]
+    public void TheDefaults_AreDistinctFromEachOther()
+    {
+        var keys = RegisteredKeys.Select(k => k.KeyboardKey.InputKey).ToList();
+
+        Assert.AreEqual(keys.Count, keys.Distinct().Count());
     }
 
     [TestMethod]
@@ -82,7 +102,8 @@ public class TaomSeatHotKeyCategoryTests
             TaomRealmBordersHotKeyCategory.ToggleBordersKeyId, TaomRealmBordersHotKeyCategory.CycleMapModeKeyId,
         };
 
-        CollectionAssert.DoesNotContain(others, TaomSeatHotKeyCategory.TakeTheSeatKeyId);
+        foreach (var id in new[] { TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomSeatHotKeyCategory.KeepToKeyId, TaomSeatHotKeyCategory.HideTheInterfaceKeyId })
+            CollectionAssert.DoesNotContain(others, id);
     }
 
     [TestMethod]
@@ -133,13 +154,18 @@ public class TaomSeatHotKeyCategoryTests
     }
 
     [TestMethod]
-    public void TheNameRow_CarriesTheTaomSuffixOfItsSiblings()
+    public void EveryNameRow_CarriesTheTaomSuffixOfItsSiblings()
     {
         var path = RepoPaths.RepoPath("Main", "_Module", "ModuleData", "global_strings.xml");
-        var row = XDocument.Load(path).Root!.Elements("string")
-            .Single(e => (string)e.Attribute("id")! == "str_key_name.TaomSeatHotKeyCategory_530");
+        var rows = XDocument.Load(path).Root!.Elements("string").ToList();
 
-        StringAssert.EndsWith((string)row.Attribute("text")!, "(TAOM)");
+        Assert.IsTrue(RegisteredKeys.Count() >= 3, "the keys of stages S1 to S3 are 530, 531 and 536");
+        foreach (var key in RegisteredKeys)
+        {
+            var id = "str_key_name." + TaomSeatHotKeyCategory.CategoryId + "_" + key.Id;
+            var row = rows.Single(e => (string)e.Attribute("id")! == id);
+            StringAssert.EndsWith((string)row.Attribute("text")!, "(TAOM)", id);
+        }
     }
 
     [TestMethod]
@@ -150,5 +176,7 @@ public class TaomSeatHotKeyCategoryTests
 
         Assert.AreEqual(InputKey.Invalid, keys.TakeTheSeat);
         Assert.AreEqual(InputKey.Invalid, keys.TakeTheSeat, "a miss latches; a second read gives the same answer");
+        Assert.AreEqual(InputKey.Invalid, keys.KeepTo);
+        Assert.AreEqual(InputKey.Invalid, keys.HideTheInterface);
     }
 }

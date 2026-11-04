@@ -25,9 +25,9 @@ extension point, `[StartOptionsProvider]` on a static `void (AdvancedStartOption
 
 **ASO's faction pickers are hardcoded, not data-driven.** `SandBoxStartOptionsProvider.GetCultureItems()`
 returns a literal list of the eight vanilla StringIds. TAOM keeps those eight ids and renames the
-kingdoms in place via `spkingdoms.xslt`, then adds fourteen more in `taom_spkingdoms.xml`. Left
+kingdoms in place via `spkingdoms.xslt`, then adds twenty-two more in `taom_spkingdoms.xml`. Left
 alone, the menu therefore offered "Western Empire" and dropped the player into Gondor, and TAOM's
-fourteen LOTR kingdoms were invisible.
+twenty-two LOTR kingdoms were invisible.
 
 | ASO showed | Actually is |
 |---|---|
@@ -68,7 +68,7 @@ MCM-or-JSON answer the diplomacy rule uses; `IoC.Configure` has already run when
 the War of the Ring off, the four scenarios stay. See [war-of-the-ring.md](war-of-the-ring.md) for the
 phase rule.
 
-### 2. TAOM's fourteen kingdoms are added to every faction picker
+### 2. TAOM's twenty-two kingdoms are added to every faction picker
 
 `KingdomId`, `LastStandKingdomId`, `InvasionScenarioFactionId`, `TwoFactionWarFaction1Id`,
 `TwoFactionWarFaction2Id`.
@@ -80,12 +80,12 @@ receiving a castle. That is a gameplay quirk, not a crash.
 
 ### 3. The menu is re-localised, in two files, and one of them needs a runtime re-apply
 
-49 rows, two id families, two readers, two files. Which file a row sits in is the whole of #604.
+65 rows, two id families, two readers, two files. Which file a row sits in is the whole of #604.
 
 | Family | Reader | Manager it reads | File |
 |---|---|---|---|
-| `str_campaign_starting_options_item_name.<id>` (the list entry, and the `{Token}` interpolation in scenario text via `AdvancedStartOptions.SetTextVariables`), `_description.<option>`, `_item_description.<item>` | the main-menu screen: `AdvancedStartOptions.cs:62/73`, `AdvancedStartOption.cs:77`, `ListAdvancedStartOption.cs:64/70`, the category and locked-reason lookups in `SandBox.ViewModelCollection` | `Module.CurrentModule.GlobalTextManager` | **`global_strings.xml`** (26 rows) |
-| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (23 rows) |
+| `str_campaign_starting_options_item_name.<id>` (the list entry, and the `{Token}` interpolation in scenario text via `AdvancedStartOptions.SetTextVariables`), `_description.<option>`, `_item_description.<item>` | the main-menu screen: `AdvancedStartOptions.cs:62/73`, `AdvancedStartOption.cs:77`, `ListAdvancedStartOption.cs:64/70`, the category and locked-reason lookups in `SandBox.ViewModelCollection` | `Module.CurrentModule.GlobalTextManager` | **`global_strings.xml`** (34 rows) |
+| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (31 rows) |
 
 **The two managers are different objects with different loaders.** `Module.CurrentModule.GlobalTextManager`
 (Module.cs:110) is filled once by `GameTextManager.LoadDefaultTexts` (Module.cs:278, before any submodule
@@ -102,7 +102,7 @@ not follow it.
 (`StreamReader` + `XmlDocument.LoadXml` + the private `LoadFromXML`): no `MBObjectManager` merge, no
 XSLT, no id-keyed override. Each row goes through `GameText.AddVariationWithId`, which APPENDS a same-id
 variation whose text differs, and `GameText.GetVariation` is a first-match scan. Native loads first, so
-TAOM's `sturgia` -> "Dale" would trail Native's "Sturgia" and never be returned; the 14 TAOM-only ids would
+TAOM's `sturgia` -> "Dale" would trail Native's "Sturgia" and never be returned; the 22 TAOM-only ids would
 resolve and the 8 renamed kingdoms plus the 4 Calradia rewrites would not. The engine's replace primitive
 is the public `GameText.SetVariationWithId`, which overwrites the first same-id variation in place.
 `GlobalStringsOverrides` parses TAOM's own `global_strings.xml` the way `LoadFromXML` does (id split once
@@ -112,7 +112,7 @@ TaleWorlds ever makes `AddVariationWithId` replace, the pin fails and the class 
 delete rather than unexplained belt-and-braces.
 
 **The per-Game manager needs none of this.** Its `GameText` XMLs go through `MBObjectManager.MergeElements`,
-keyed on `@id` per `GameText.xsd`, and `MergeElementAttributes` overwrites `text`, so the 23 value-name
+keyed on `@id` per `GameText.xsd`, and `MergeElementAttributes` overwrites `text`, so the 31 value-name
 rows override vanilla's by the ordinary merge and stay where they were. That is also why an XSLT is the
 right tool for in-game string overrides (`module_strings.xslt`) and the wrong one here.
 
@@ -183,13 +183,12 @@ block, so the pairing is refused rather than left to chance.
 
 - In-game (owed again after #604): open the ASO screen, pick Last Stand, and confirm the Last Standing
   Faction list reads Dunland / Gondor / Mordor / Dale / Harad / Rohan / Khand / Rhun then Erebor through
-  Goblins of Blue Craig, then Arthedain, Cardolan, Rhudaur and Ered Luin, with no ERROR row, the description names the chosen kingdom, the Invasion and
+  Goblins of Blue Craig, then Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion, with no ERROR row, the description names the chosen kingdom, the Invasion and
   Randomized texts say Middle-earth, and United Empire is absent. With the War of the Ring on, Last Stand,
   2 Faction War, Invasion and the alternative Calradia scenario are absent too, so pick Last Stand only
   with the War of the Ring switched off. Then start that campaign and open the
   Escape menu's starting-options summary to confirm the in-game value names still resolve.
-- A translator run for the 49 new string rows (they exist in all 12 languages as English fallback; parked
-  with the other pending runs in #579).
+- A translator run for the seven kingdom names still in English: Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion (they exist in all 12 languages as English fallback).
 - Decide whether Lindon and Goblin-town should be excluded from the Vassal start rather than falling
   back, once the fallback has been seen in play.
 

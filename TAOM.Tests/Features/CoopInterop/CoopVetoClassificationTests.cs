@@ -182,6 +182,12 @@ public class CoopVetoClassificationTests
             "MarshalHooks.IsLive and the Keep the Array setting hold, for two or more companies of the player's team in a non-deployment " +
             "vertical layout, and returns true otherwise. The session is off in a network session. A throw latches the takeover off " +
             "for the mission and vanilla runs. The positions it computes are a player's own order, not replicated campaign state."),
+        ["Patch140_CrosshairHitMarker"] = new(CoopVeto.ReviewedSafe,
+            "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips CrosshairVM.ShowHitMarker only while the player's own view is in the Seat (SeatPresence, set by this peer's view on its own key press), and returns true otherwise. The method only flips three flags on a view model that draws a hit marker, so there is no replicated mutation to skip. The Seat is presentation in CoopSettingsRelevance."),
+        ["Patch140_EquipmentViewDropTick"] = new(CoopVeto.ReviewedSafe,
+            "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips the equipment controller view's DropWeaponTick only while the player's own view is in the Seat, so the drop key (game key 22) does not drop a weapon from the air; otherwise it returns true. The tick reads this peer's input and acts on this peer's own main agent (the original ends in Agent.HandleDropWeapon, or on a client in a DropWeapon network message), and the Seat removes the press, not engine work. It also clears the view's pending press and hold time, which the view clears only in its else branch. The Seat is presentation in CoopSettingsRelevance."),
+        ["Patch140_EquipmentViewEquipTick"] = new(CoopVeto.ReviewedSafe,
+            "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips the equipment controller view's EquipWeaponTick only while the player's own view is in the Seat, so the equip key (game key 13) does not act from the air; otherwise it returns true. The tick reads this peer's input and acts on this peer's own main agent, and the Seat is presentation in CoopSettingsRelevance."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +

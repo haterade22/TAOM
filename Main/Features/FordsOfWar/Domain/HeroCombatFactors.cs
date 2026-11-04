@@ -24,5 +24,5 @@ internal sealed class HeroCombatFactors
 
     public float Taken(string? troopId) => IsHero(troopId) ? _taken : 1f;
 
-    private bool IsHero(string? troopId) => troopId != null && _heroIds.Contains(troopId);
+    public bool IsHero(string? troopId) => troopId != null && _heroIds.Contains(troopId);
 }

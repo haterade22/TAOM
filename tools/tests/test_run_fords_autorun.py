@@ -27,6 +27,8 @@ class ArmTextTests(unittest.TestCase):
         self.assertEqual(r.arm_text(r"E:\x"), "out=E:\\x\nquit=1\n")
 
     def test_west_ai_adds_its_key_only_when_set(self):
+        self.assertIn("control_check=240\n", r.arm_text(r"E:\x", control_check=240))
+        self.assertNotIn("control_check", r.arm_text(r"E:\x"))
         self.assertIn("speed=10\n", r.arm_text(r"E:\x", speed=10))
         self.assertNotIn("speed", r.arm_text(r"E:\x"))
         self.assertIn("west_ai=1\n", r.arm_text(r"E:\x", west_ai=True))

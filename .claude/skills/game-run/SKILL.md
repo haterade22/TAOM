@@ -1,7 +1,7 @@
 ---
 name: game-run
 description: Use when in-game evidence is owed. Gates on no running game and 10 idle minutes, deploys the tree under test, runs the unattended Fords match, judges the run folder, reports.
-argument-hint: "[--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [--west-ai] [--runs N]"
+argument-hint: "[--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [--west-ai] [--speed 1|2|4|10] [--control-check N] [--runs N]"
 ---
 
 # Unattended game run
@@ -9,7 +9,7 @@ argument-hint: "[--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [-
 Starts Bannerlord with nobody at the keyboard, lets TAOM's env-armed driver play one Fords of War match, and judges the result from
 the logs. The permission, the launch recipe, every game-side file touched and the risks are in
 [unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md); read it once if you have not this session. Today the
-driver plays only Fords of War. A general scenario driver is planned separately and does not exist yet.
+driver plays Fords of War, and The Long Defeat (#1079) has its own wrapper, `python tools/run_long_defeat.py --waves 5` (add `--lose` for the loss case), under the same gate. A general scenario driver is planned separately and does not exist yet.
 
 Run these phases in order. `$ARGUMENTS` are passed to the launcher in Phase 4.
 
@@ -19,9 +19,9 @@ A run is owed when in-game evidence is missing for the change, not for its own s
 
 - a self-check or an [in-game verdicts](../../../docs/features/ingame-verdicts.md) manifest reads `NOT_SEEN` or `NOT REACHED`, or
 - the change touches mission or engine-facing code that a Fords match exercises (mission start, agents, formations, destructibles,
-  the Fords driver or report).
+  the Fords driver or report; for soldier control (`FordsControlView`, `FordsAgentControl`) add `--control-check 240 --live-seconds 540`), or code under `LongDefeat` (run `tools/run_long_defeat.py` instead of the Fords runner).
 
-If neither holds, or the check is outside Fords (no driver exists for it), stop and say what a person must play instead. Do not run
+If neither holds, or the check is outside Fords and Long Defeat (no driver exists for it), stop and say what a person must play instead. Do not run
 the game to feel safe.
 
 ## Phase 2: Gate
@@ -72,6 +72,8 @@ build you deployed), and the `rgl_log` and `watchdog_log` copies if a crash was 
 review). For an owed manifest, `python tools/ingame_verdict.py --issue <N>` reads the newest session; confirm its `[BuildStamp]`
 is the run's.
 
+With `--control-check`, also read the `[FordsOfWar][Control]` lines in the copied TAOM log: `took`, `returned`, `fell`, and a `rejoin` line 10 seconds after each return. The launcher does not judge them, so quote each one in the report. The run proves the take, the hand-back and the fall; the feel of the fight and the pointer pick stay a player's to check, and the match runs at 1x while a soldier is held, so it is not a balance sample.
+
 A failed row is a finding to investigate, not to explain away. A crash goes to `/native-crash-triage` or `/investigate`.
 
 ## Phase 6: Restore
@@ -82,5 +84,5 @@ Confirm the file matches the backup. If the maintainer's own deploy mattered, sa
 ## Phase 7: Report
 
 Tell the maintainer, in prose: the run folder, the verdicts (pass, fail and not-seen counts, each FAIL with its reason), the build
-deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen, Fords only).
+deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen, no feel of a soldier fight or the pointer pick, Fords only).
 Every run is reported, including one the launcher refused.

@@ -104,11 +104,11 @@ There is no config file and no MCM toggle. The player has to pick the menu optio
 
 ## Tests
 
-46 tests in total.
+49 tests in total.
 
 - `TAOM.Tests/Features/HostReview/HostReviewServiceTests.cs`: 27 tests covering every block and their order (including a main hero who is wounded, absent or the roster empty), the lineup rule (main hero first, heroes before troops, wounded skipped, battle size cuts) and the `Launch()` outcomes.
 - `TAOM.Tests/Features/HostReview/HostReviewTroopSupplierTests.cs`: 9 tests covering supply counts, ranks in lineup order, exhaustion and `NumRemovedTroops` being always zero.
-- `TAOM.Tests/Features/HostReview/HostReviewWiringTests.cs`: 9 tests covering module listing, the behavior declaration (one `RequiresGame` test builds it), and source pins: option id, menu, index 5 and `OnAfterSessionLaunchedEvent`, `DisableDying` inside `OnAfterDeploymentFinished`, `new HostReviewMissionLogic(` in the launcher, and an explicit `ReasonText` case for every block.
+- `TAOM.Tests/Features/HostReview/HostReviewWiringTests.cs`: 12 tests covering module listing, the behavior declaration (one `RequiresGame` test builds it), and source pins: option id, menu, index 5 and `OnAfterSessionLaunchedEvent`, `DisableDying` inside `OnAfterDeploymentFinished`, `new HostReviewMissionLogic(` in the launcher, and an explicit `ReasonText` case for every block.
 - `TAOM.Tests/Infrastructure/ViewCreatorModuleGateTests.cs`: 1 `RequiresGame` test that every static method on a `[ViewCreatorModule]` class carries `[ViewMethod]`.
 
 The mission, views and menu need the game and are covered by the in-game checks below.

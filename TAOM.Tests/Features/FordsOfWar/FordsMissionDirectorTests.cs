@@ -526,7 +526,7 @@ public class FordsMissionDirectorTests
         f.DestroyedHandler!(EastOuterLane0);
         f.Director.Tick(1f);
 
-        Assert.AreEqual(100, f.Director.AdjustTowerDamage(new object(), null, false, 100, 0));
+        Assert.AreEqual(40, f.Director.AdjustTowerDamage(new object(), null, false, 40, 0));
         f.Towers.Received(1).KillGunners(EastOuterLane0);
         Assert.AreEqual(900, f.Session.GetView()!.Gold);
         var fell = f.Session.DrainEvents().Single(e => e.Kind == MatchEventKind.TowerDestroyed);

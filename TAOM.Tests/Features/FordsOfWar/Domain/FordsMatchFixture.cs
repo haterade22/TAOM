@@ -31,6 +31,7 @@ internal static class FordsMatchFixture
             Economy = d.Economy with { StartingGold = 1000, IncomePerMinute = 0 },
             Waves = d.Waves with { FreeWaveIntervalSeconds = 0f, MaxSpawnsPerTick = 1000 },
             Heroes = d.Heroes with { FreeArrivalSeconds = 0f },
+            Towers = d.Towers with { AssaultDamagePerSecond = 0f, WearPerMinute = 0f },
             AiProfiles = new Dictionary<string, FordsAiProfile>
             {
                 ["hard"] = new("hard", 5f, 1.2f, 0f, 400),

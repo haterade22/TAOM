@@ -84,8 +84,8 @@ link rather than acting on the phrasing.
 | "build a map from nothing" | [A new mod from zero, Stage 16](recipe-new-mod-from-zero.md#stage-16-the-map-module-and-its-settlements) |
 | "start a mod from an empty folder" | [A new mod from zero, Stage 1](recipe-new-mod-from-zero.md#stage-1-make-the-folder-and-the-manifest) |
 
-60 rows, reaching every one of the other 38 chapters.
-<!-- measured: rg -c '^. "' docs/modding/README.md, and a python count of distinct .md targets in that table 2026-09-05 -->
+61 rows, reaching 39 chapters.
+<!-- measured: rg -c '^. "' docs/modding/README.md, and a python count of distinct .md targets in that table 2026-11-03 -->
 
 ## Reading order for a brand-new modder
 
@@ -331,9 +331,9 @@ the data and `python tools/lint_docs.py --summary` for the docs.
 
 | Number | Command or source | Date |
 |---|---|---|
-| 39 chapters in the handbook, this one included | `ls docs/modding/*.md \| wc -l` | 2026-09-05 |
-| 60 rows in the "I want to..." table | `rg -c '^. "' docs/modding/README.md` | 2026-09-05 |
-| 38 distinct chapters that table reaches | a python count of distinct `.md` link targets inside the table | 2026-09-05 |
+| 41 chapters in the handbook, this one included | `ls docs/modding/*.md \| wc -l` | 2026-11-03 |
+| 61 rows in the "I want to..." table | `rg -c '^. "' docs/modding/README.md` | 2026-11-03 |
+| 39 distinct chapters that table reaches | a python count of distinct `.md` link targets inside the table | 2026-11-03 |
 | The four modules' ship sizes and file counts | quoted from [Modules overview, What ships to players](modules-overview.md#what-ships-to-players), which measured them with `python tools/package_release.py --dry-run` | 2026-09-05 |
 
 ## Read next

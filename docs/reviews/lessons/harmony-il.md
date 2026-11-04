@@ -1248,6 +1248,16 @@ record the same clash for Patch105 and Patch106.
 - **Source:** `docs/reviews/rca-alignment-scoring-2026-10-23.md` finding 1. Resolved at the B08 rebase: Messengers
   became Patch117, after a grep of every worktree and remote branch found no number above 116.
 
+### Patch the pose the engine consumes, not the object it built from it (Patch132, 2026-10-26)
+Patch132 first moved the entity `ItemThumbnailCache.CreateItemBaseEntity` returned. For gloves vanilla had already
+ticked a skeleton with the original frame inside that method, so a later `SetFrame` could leave the bones behind,
+and the 45-byte target was an inlining candidate.
+- **Why missed:** the shape was copied from Patch72 (adjust the finished thing) without reading what the method does
+  with its input before it returns.
+- **Prevent:** before a postfix edits an engine-built object, read every use of the input between where it is chosen
+  and where the method returns. If the engine consumes it (skeleton tick, native placement, bounding box), patch the
+  method that chooses it, through its `ref` parameter, and pin that parameter as by-ref in the binding test.
+- **Source:** `docs/reviews/rca-item-icon-race-2026-10-26.md` finding 1.
 ### A postfix that edits a view model's list or selection re-establishes every invariant its caller relies on next (#911, 2026-10-26)
 Many Hammers' `RefreshList` postfix removed locked rows from the smelting list. Vanilla's `RefreshList` clears the
 selection only when its own list is empty (`SmeltingVM.cs:207-210`), before the postfix runs, so smelting the last
@@ -1369,3 +1379,9 @@ A Marshal's Word patch guarded `SetOrderWithOrderableObject` on the belief that 
 - **Why missed:** the guard looked like caution, and a guard that never fires fails no test. The builder built what the contract said, and the unit tests drove the guard directly.
 - **Prevent:** before a patch or a guard is written for a route, quote one line that reaches it in the installed engine, or a log line that shows it. No producer means a named limit in the doc, not code. Search the bare name as well as the call shape.
 - **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), row 16.
+### A skip prefix on a tick also skips what the tick clears
+
+`MissionGauntletMainAgentEquipmentControllerView.OnMissionScreenTick` clears its press fields only in its else branch, and the Seat of Seeing's skip prefixes sit on the two methods inside the true branch. A short press of the drop key just before entering stayed set through the whole stay, and the first tick after the Seat ran the quick-release drop, so the hero dropped a weapon. On a client that also sends a network message.
+- **Why missed:** the contract said "skip while seated", the tests call the prefix for its return value, and the data flow lens followed the open wheels and not the press state.
+- **Prevent:** before a skip prefix on a method that a tick calls, read the whole tick and list what the skipped body and its sibling branches clear. A prefix that skips while a mode holds takes those fields by injection and clears them itself, and a test calls it with the refs.
+- **Source:** [rca-seat-of-seeing-s2-s3-2026-11-04.md](../rca-seat-of-seeing-s2-s3-2026-11-04.md), row 2.

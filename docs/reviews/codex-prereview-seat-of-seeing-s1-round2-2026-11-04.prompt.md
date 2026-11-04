@@ -2,17 +2,22 @@
 
 Role: reviewer (`.ai/roles/reviewer.md`). Review only; make no edits, commits or AI calls. Read
 `AGENTS.md` and `.ai/review-reference.md` first. Work only from this worktree and the engine cache: do
-not search the rest of the disk. S1 landed as one commit on top of `a8aac6399` on this branch, so these fixes
-have no diff of their own: judge them from the code named below. Later commits on this branch may hold later
-stages; review S1's files only. The contract is `docs/features/seat-of-seeing/build-spec.md`: sections 2 to 5 are built, and sections 6 to 12
+not search the rest of the disk. S1 landed as one commit, `f2ee9a16f`, on top of `a8aac6399`, so these fixes
+have no diff of their own: judge them from the code named below. This tree sits at `1d5d0a561`: the commits above
+S1 are a merge of the trunk and a contract correction. Review S1's files only. The contract is `docs/features/seat-of-seeing/build-spec.md`: sections 2 to 5 are built, and sections 6 to 12
 are later stages, so their absence is not a finding. Deviations row 13 lists what this round changed.
 
 Engine source for v1.5.6 is in `C:\Users\mikew\.taom-src\v1.5.6\` (for example
 `TaleWorlds.MountAndBlade.View.Screens.MissionScreen.cs`); `pwsh tools/taom-src.ps1 path <FullTypeName>`
-decompiles a type that is not cached yet. Mark anything you cannot prove from code as UNVERIFIED. Nothing
-here has run in the game. Your two earlier reports are at the end of
-`docs/reviews/raw/codex-prereview-seat-of-seeing-s1-2026-11-03.md` and
-`docs/reviews/raw/codex-prereview-seat-of-seeing-s1-fixes-2026-11-04.md`. Do not repeat a finding from them
+decompiles a type that is not cached yet. Mark anything you cannot prove from code as UNVERIFIED. A scripted
+field trial has since run this stage twice in a real custom battle, on a build with the trial's code on top of
+these files, and both runs passed: entry through the key's path, flight, the hero standing, the glide back and
+a clean unload. The trial replaces the input read with scripted values, so real key bindings, axes, wheel and
+mouse have not run, and neither have a rage, a warg, a fault or another mission type. The trial's code is not
+in this tree. Your two earlier reports are at the end of
+`E:/repos/taom-seat-of-seeing/docs/reviews/raw/codex-prereview-seat-of-seeing-s1-2026-11-03.md` and
+`E:/repos/taom-seat-of-seeing/docs/reviews/raw/codex-prereview-seat-of-seeing-s1-fixes-2026-11-04.md`: you may
+read those two files, and nothing else outside this tree and the engine cache. Do not repeat a finding from them
 unless the fix did not close it or the fix made it worse. The drag data and the crosshair angle stay
 accepted LOW items.
 

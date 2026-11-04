@@ -18,7 +18,7 @@ The shared seam for new relation code. `IRelationGrantService.Grant` clamps and 
 
 1. A blank hero id, a zero delta or a dedicated server returns 0 and touches nothing.
 2. The delta is clamped to -100..100.
-3. `IHeroRelationAdapter.ApplyPlayerRelation` applies it with the on-screen quick notification off. It returns what landed, the relation with the player after the change minus before (`player.GetRelation(hero)` read before and after the engine call), and 0 for an unknown hero, a dead hero, the player hero, a zero delta, or an engine fault (logged by the adapter). The call's own `affectRelatives` argument is not forwarded by the v1.5.5 engine, so the seam does not offer it.
+3. `IHeroRelationAdapter.ApplyPlayerRelation` applies it with the on-screen quick notification off. It returns what landed, the relation with the player after the change minus before (`player.GetRelation(hero)` read before and after the engine call), and 0 for an unknown hero, a dead hero, the player hero, a zero delta, or an engine fault (logged by the adapter). The call's own `affectRelatives` argument is not forwarded by the v1.5.6 engine, so the seam does not offer it.
 4. `Grant` returns that number. A non-zero change is written to the TAOM log as `[Relations] <hero id> asked +N, landed +M (<reason>)`, and nothing is logged when nothing landed. A caller shows its notice only for a non-zero result.
 
 ### What the engine does with a change

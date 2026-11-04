@@ -16,7 +16,7 @@ The building is one family with six names, chosen by the fief's culture:
 |---|---|
 | Postern Gate (default) | any culture not listed below |
 | Hidden Door | `erebor`, `eredluin` |
-| Culvert | `vlandia` (Rohan) |
+| Culvert | `vlandia` (Rohan), `southrhovanion` |
 | Sally Port | `gondor`, `arthedain`, `cardolan`, `rhudaur` |
 | Hidden Way | `rivendell`, `mirkwood`, `lothlorien`, `lindon` |
 | Bolt-Hole | `mordor`, `isengard`, `gundabad`, `dolguldur`, `goblin`, `mistymountainorcs`, `bluecraig` |

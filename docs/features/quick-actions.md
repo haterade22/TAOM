@@ -20,11 +20,12 @@ A second concern was the "shared adapter for QuickActions + EquipPresets" requir
 
 ### Solution Approach
 
-Three Harmony patches under `Patch34_QuickActions`:
+Four Harmony patches under `Patch34_QuickActions`, each marked `[ClientOnly]` so a dedicated server leaves them out (`Main/ClientOnlyAttribute.cs`):
 
 1. **`Patch34_SPInventoryVMCapture`** — Postfix on `SPInventoryVM` constructor. Captures the new VM into `InventoryVMAdapter`'s `_active` field. Each inventory open creates a new VM, so the reference naturally turns over.
 2. **`Patch34_SellAllItemsMenu`** — Prefix on `SPInventoryVM.ExecuteSellAllItems`. When `EnableQuickActions = true`, opens a 4-option `MultiSelectionInquiryData` and returns `false` to skip vanilla. The "Sell All (Vanilla)" option dispatches a manual replication of vanilla bulk-sell (iterates `RightItemListVM`, calls `SPItemVM.ProcessSellItem`) — calling `__instance.ExecuteSellAllItems()` would re-enter the patch and infinite-loop.
 3. **`Patch34_SPInventoryVMSearchApply`** — Postfix on `SPInventoryVM.RefreshCallbacks` (called once per inventory open from `GauntletInventoryScreen.OnActivate`). Applies `IsSearchAvailable` from the `InventorySearchCampaignBehavior` to the live VM.
+4. **`Patch34_SPInventoryVMFinalize`**: Postfix on `SPInventoryVM.OnFinalize`. Clears the adapter's active-VM reference when that VM is the active one, so a closed inventory never reads as available.
 
 The `InventorySearchCampaignBehavior` holds the per-save bool via `SyncData("TAOM_IsInventorySearchAvailable")`. It seeds from MCM on new-game / on-load and reconciles every campaign tick — sub-second sync is unnecessary because the apply happens on inventory open, not on tick.
 
@@ -87,6 +88,7 @@ ExecuteRemoveZeroCounts
 | `Main/Features/QuickActions/Hooks/Patch34_SellAllItemsMenu.cs` | Prefix on `ExecuteSellAllItems` |
 | `Main/Features/QuickActions/Hooks/Patch34_SPInventoryVMCapture.cs` | Captures active VM into adapter |
 | `Main/Features/QuickActions/Hooks/Patch34_SPInventoryVMSearchApply.cs` | Applies search toggle on inventory open |
+| `Main/Features/QuickActions/Hooks/Patch34_SPInventoryVMFinalize.cs` | Clears the active VM when the inventory closes |
 | `Main/Features/QuickActions/Hooks/InventorySearchCampaignBehavior.cs` | SyncData + MCM reconcile |
 | `Main/Adapters/IInventoryVMAdapter.cs` + impl | Active-VM wrapper (load-bearing for EquipPresets) |
 | `Main/Adapters/IInventoryItemAdapter.cs` + impl | Per-item wrapper (preserves `EquipmentElement`) |

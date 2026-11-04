@@ -36,8 +36,11 @@ internal static class RacePositionTuningParser
             case "image":
                 surface = RacePositionSurface.Image;
                 return true;
+            case "icon":
+                surface = RacePositionSurface.Icon;
+                return true;
             default:
-                error = $"Unknown surface '{raw}'. Expected 'avatar' or 'image'.";
+                error = $"Unknown surface '{raw}'. Expected 'avatar', 'image' or 'icon'.";
                 return false;
         }
     }
@@ -98,6 +101,9 @@ internal static class RacePositionTuningParser
 
         var value = (raw ?? string.Empty).Trim();
 
+        if (surface == RacePositionSurface.Icon)
+            return TryResolveIconRow(value, isValidRaceName, out race, out error);
+
         if (value == ".")
         {
             if (string.IsNullOrEmpty(liveRaceName))
@@ -143,6 +149,52 @@ internal static class RacePositionTuningParser
             error = $"'{bareRace}' is not a race this game knows about. "
                   + "Run taom.print_race_offsets to see the race the current tableau is showing, "
                   + "or use '.' to target it.";
+            return false;
+        }
+
+        race = candidate;
+        return true;
+    }
+
+    /// <summary>
+    /// Icon rows are keyed <c>&lt;race&gt;_&lt;slot&gt;</c> (<c>dwarf_helmet</c>), not by a bare race: one
+    /// race has a different offset per icon camera. There is no on-screen icon to resolve '.' against,
+    /// and no mount row, so both are refused rather than creating a row nothing reads.
+    /// </summary>
+    private static bool TryResolveIconRow(
+        string value,
+        Func<string, bool> isValidRaceName,
+        out string race,
+        out string error)
+    {
+        race = null;
+        error = null;
+        var slots = string.Join(", ", ItemIconRaceMatcher.Slots);
+
+        if (value == "." || string.IsNullOrEmpty(value))
+        {
+            error = $"The 'icon' surface needs '<race>_<slot>', for example 'dwarf_helmet'. Slots: {slots}.";
+            return false;
+        }
+
+        var candidate = value.ToLowerInvariant();
+        if (!ItemIconRaceMatcher.TrySplitRowKey(candidate, out var bareRace, out var slot))
+        {
+            error = $"'{value}' is not '<race>_<slot>'. Slots: {slots}.";
+            return false;
+        }
+
+        if (isValidRaceName != null && !isValidRaceName(bareRace))
+        {
+            error = $"'{bareRace}' is not a race this game knows about.";
+            return false;
+        }
+
+        // A known race is not enough: only races the item matcher can name ever read an icon row.
+        if (!ItemIconRaceMatcher.IsRace(bareRace))
+        {
+            error = $"No armour is recognised as '{bareRace}', so an icon row for it would never be read. "
+                  + $"Icon races: {string.Join(", ", ItemIconRaceMatcher.Races)}.";
             return false;
         }
 

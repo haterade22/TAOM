@@ -20,7 +20,7 @@ Keep the two version numbers apart when reading anything sourced from that repor
 
 | Requirement | Details |
 |-------------|---------|
-| Bannerlord version | **v1.5.5**: TAOM's pin (`.claude/pinned-game-version.txt`, set by `4f9985852`). BT a0.5.3.2's declared dependency version for Native/SandBoxCore/Sandbox/StoryMode/CustomBattle was v1.4.7 when this table was written and has **not been re-checked since**; BT is not installed on the dev machine, so verify against BT's own `SubModule.xml` before relying on this row |
+| Bannerlord version | **v1.5.6**: TAOM's pin (`.claude/pinned-game-version.txt`). BT a0.5.3.2's declared dependency version for Native/SandBoxCore/Sandbox/StoryMode/CustomBattle was v1.4.7 when this table was written and has **not been re-checked since**; BT is not installed on the dev machine, so verify against BT's own `SubModule.xml` before relying on this row |
 | BannerlordTogether | a0.5.3.2 (the reviewed build) |
 | TAOM version | **Same version on every client — not enforced.** The `TAOM_Build` stamp in save metadata records which build wrote a save and is logged on load, which makes a mismatch diagnosable after the fact, not preventable |
 | All players | Must have TAOM installed and enabled, with matching MCM settings |
@@ -131,7 +131,7 @@ It reports:
 - **contested** methods patched by more than one distinct owner where at least one isn't TAOM;
 - **TRANSPILER CONFLICT** rows where two owners both rewrite the same method's IL — the highest-risk
   Harmony conflict class, and TAOM brings its own (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main` lists
-  them: 18 methods in 16 files on 2026-10-14);
+  them: 20 methods in 18 files on 2026-11-04);
 - how many `0Harmony` assemblies are loaded, with paths and versions.
 
 That last line is the one to read first. **If BT's owner id never appears while the game plainly
@@ -260,8 +260,8 @@ NavalTravel and NativeSkinFixes to be disabled at the wiring level instead.
 D1 survived for months because nothing forced anyone to ask the question. `CoopVetoClassificationTests`
 now does, at build time: it scans `Main/` for every class declaring a bool-returning Harmony prefix
 and requires each to carry a disposition — `GatedForCoop`, `ReviewedSafe`, or `Parked` — with a
-written reason. Adding a prefix without classifying it fails the build. 61 classes are classified
-(2026-10-14: 57 ReviewedSafe, 3 GatedForCoop, 1 Parked); three are gated.
+written reason. Adding a prefix without classifying it fails the build. 71 classes are classified
+(2026-11-04: 62 ReviewedSafe, 8 GatedForCoop, 1 Parked); eight are gated.
 
 The classification question is: **can this skip a campaign-state mutation the co-op host replicates,
 AND can its condition evaluate differently on two peers?** Both halves matter — `TraitLevelingHelper`
@@ -275,7 +275,7 @@ Two things about *how* it scans are load-bearing, both found by the test failing
   the ones worth classifying. A scan that silently misses the risky half reads as coverage.
 - It keys on **class, not file**, matches prefixes with **no access modifier** (several are
   implicitly private), and strips comments before parsing. Each of those three was a real miss:
-  `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` alone holds three patch classes.
+  `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` alone holds six patch classes now.
 
 `Registry_HasNoStaleEntries` is the other half — it fails when a registry entry no longer matches a
 real prefix, which is what caught the reflection under-reporting in the first place.
@@ -298,7 +298,7 @@ An override that fully replaces a vanilla body silently deletes any BT patch on 
 
 | Limitation | Impact | Workaround |
 |------------|--------|------------|
-| **Settings parity is reported, not exchanged** | TAOM's 514 MCM settings live in a per-user file outside the save; **331 are simulation-relevant** (traced per setting to the consuming feature, see [coop-interop.md](coop-interop.md) "What is NOT done"). Two players with different values still simulate differently (battle autocalc, bandit spawn density, AI army targeting, desertion rates) and nothing on the wire corrects it | `SettingsFingerprint` writes one code per MCM group to each peer's log under the co-op gate, so the manual comparison is a few short strings rather than every value. Exchanging them through save metadata and warning on join is the remaining step and needs two machines to verify |
+| **Settings parity is reported, not exchanged** | TAOM's 516 MCM settings live in a per-user file outside the save; **331 are simulation-relevant** (traced per setting to the consuming feature, see [coop-interop.md](coop-interop.md) "What is NOT done"). Two players with different values still simulate differently (battle autocalc, bandit spawn density, AI army targeting, desertion rates) and nothing on the wire corrects it | `SettingsFingerprint` writes one code per MCM group to each peer's log under the co-op gate, so the manual comparison is a few short strings rather than every value. Exchanging them through save metadata and warning on join is the remaining step and needs two machines to verify |
 | **PatchShield still swallows the missing-API trinity everywhere it shields** | The co-op SAVE-LOAD rethrow covers SaveShield's own targets (PatchShield now skips those), but on any other method a `MissingMethod`/`MissingField`/`TypeLoad` exception is still swallowed | Intended: that swallow is what keeps a stale third-party mod from killing the session |
 | **TAOM state that mutates mid-session is join-time-only** | War of the Ring momentum, War Chronicle effects, event rows and rally tiers, culture-conversion progress, messenger fleet, career progression and caravan memory reach the client through the host's save at join and then drift. BT has no schema for these fields, so its replication cannot correct them. Under BannerlordTogether every peer also runs the War Chronicle itself, since `IsAuthority` fails open there. Watchful Holds is the exception beside it: it stands down on every peer there (`ShouldDeferToHost`), like Eye of Sauron. | None yet. Needs an "am I the simulation authority" signal from BT. One exception: the character-creation package (race, culture gold, career, resource seed) is re-applied on **detection** rather than replicated, so a joiner keeps it even though nothing syncs it |
 | Siege defense rewards fire on the host only | Client players don't trigger `SiegeDefenseBehavior` rewards | Host handles siege events; client still fights |
