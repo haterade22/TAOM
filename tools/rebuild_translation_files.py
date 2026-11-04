@@ -23,7 +23,8 @@ from pathlib import Path
 
 import name_tags
 from _gamedir import DEFAULT_GAME_ROOT, ensure_exists, game_modules
-from translate_with_claude import override_ids_to_skip
+from _loc_sources import TAOM_SOURCES
+from translate_with_claude import key_owners, override_ids_to_skip
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
@@ -44,6 +45,21 @@ LANGUAGES = {
     "SP":  ("spa-LA", "Spanish (LA)"),
     "TR":  ("tur-TR", "Turkish"),
 }
+
+
+def taom_sources(locale):
+    """The TAOM English sources and their language file names, from the table every localization tool shares."""
+    return [(src, tpl.format(locale=locale)) for src, tpl in TAOM_SOURCES]
+
+
+def source_owners():
+    """Each key's owning source: the first table row that declares it (key_owners)."""
+    return key_owners([REPO_ROOT / "Main" / "_Module" / "ModuleData" / src for src, _ in TAOM_SOURCES])
+
+
+def owned_elsewhere(owners, key, src_path):
+    """True when another source owns the key: a row here would load after the owner's and replace its curated row."""
+    return owners.get(key, src_path) != src_path
 
 
 def escape(text):
@@ -179,21 +195,10 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
             return cache[sid], "cache"
         return english, "english_fallback"
 
-    # ─── TAOM module: 10 source XMLs ────────────────────────────────────────────
-    taom_sources = [
-        ("taom_module_strings.xml",                       f"std_taom_module_strings_{locale}.xml"),
-        ("taom_wanderer_strings.xml",                     f"std_taom_wanderer_strings_{locale}.xml"),
-        ("named_companions/named_companion_strings.xml",  f"std_taom_named_companion_strings_{locale}.xml"),
-        ("taom_cc_strings.xml",                           f"std_taom_cc_strings_{locale}.xml"),
-        ("taom_career_strings.xml",                       f"std_taom_career_strings_{locale}.xml"),
-        ("taom_messenger_strings.xml",                    f"std_taom_messenger_strings_{locale}.xml"),
-        ("taom_xslt_strings.xml",                         f"std_taom_xslt_strings_{locale}.xml"),
-        ("taom_wotr_strings.xml",                          f"std_taom_wotr_strings_{locale}.xml"),
-        ("taom_lotr_issue_strings.xml",                   f"std_taom_lotr_issue_strings_{locale}.xml"),
-        ("taom_emissary_strings.xml",                     f"std_taom_emissary_strings_{locale}.xml"),
-    ]
+    # ─── TAOM module: the sources of tools/_loc_sources.py ──────────────────────
+    owners = source_owners()
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
-    for src_rel, tgt_name in taom_sources:
+    for src_rel, tgt_name in taom_sources(locale):
         src_path = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_rel
         if not src_path.exists():
             print(f"  [skip] {src_rel} not found")
@@ -206,7 +211,7 @@ def rebuild_language(lang, dry_run=False, allow_live_write=False):
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
         for sid, english in src_map.items():
-            if sid in english_only:
+            if sid in english_only or owned_elsewhere(owners, sid, src_path):
                 continue
             text, source = resolve(sid, english)
             ordered.append((sid, text))

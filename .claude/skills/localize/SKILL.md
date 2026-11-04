@@ -36,7 +36,7 @@ Stage the edit, then run `python tools/check_stale_loc_rows.py --staged` (report
 
 ## Tools
 - `tools/translate_with_claude.py` — 4-tier fallback (override → cache → LLM → English); cache in `tools/translation_cache/<lang>.json` is git-tracked, so re-runs are free. `--provider anthropic` (default, `claude-opus-5`) | `deepseek` | `openrouter`; the last two need no SDK and read `DEEPSEEK_API_KEY` / `OPENROUTER_API_KEY`. `--module TAOM` works with no game installed; `--module all` reads TAOM_Map and Armory from the install, so it needs `$BANNERLORD_GAME_DIR` and exits 2 without it.
-- `tools/rebuild_translation_files.py`: rebuild per-language files from cache; not for the TAOM module (own source list, overwrites hand edits), and it skips English-only overrides of vanilla keys.
+- `tools/rebuild_translation_files.py`: rebuild per-language files from cache; not for the TAOM module (a row with no cache entry falls back to English, and it overwrites hand edits), and it skips English-only overrides of vanilla keys.
 - `tools/translation_status.sh` — coverage report.
 
 ## Validate
