@@ -78,8 +78,11 @@ What follows from those two facts:
 `base.Mission.RemoveMissionBehavior(this)` (`DeploymentMissionController.cs:41-80`, re-checked on v1.5.5). Calling it
 from another behaviour's `OnMissionTick` removes the controller from inside the tick loop (TAOM's parked
 `ShaderPrecompilePlayerAgentGuard` does, see [shader-precompilation.md](../../features/shader-precompilation.md)).
-The engine's own call is the auto-finish at the end of `SetupTeams` (`:181-184`); which callback runs `SetupTeams` was
-not traced here, so whether that call sits inside the tick loop is open.
+The engine's own call is the auto-finish at the end of `SetupTeams` (`:181-184`), and the controller's own `OnMissionTick`
+runs `SetupTeams` (`:83-96`, v1.5.6), so that call sits inside the tick loop. It holds because the loop runs downward and the
+removals take the running controller and, for a battle, the handler above it (`BattleDeploymentMissionController.cs:51-55`;
+a 2026-11-04 mission list had them at 26 and 27), so no index below the cursor moves. A removal from a behaviour higher in
+the list is the case the rule below forbids: it moves the running behaviour down, and the loop ticks two behaviours twice.
 
 **Rule:** never remove a behaviour from inside `OnMissionTick`. Set a flag there and act on it at the start of
 the next frame's tick (or from a callback that is not inside the behaviour loop). This is an inference from the
