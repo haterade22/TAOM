@@ -61,6 +61,13 @@ class DeadMemoryRefTests(_Repo):
         _write(self.root / "docs/ai-includes/z.md", "feedback_thing\n")
         self.assertEqual(len(ld.check_dead_memory_refs()), 3)
 
+    def test_the_engine_study_is_scanned_and_the_rest_of_reference_is_not(self):
+        _write(self.root / "docs/reference/engine/a.md", "see `feedback_foo`\n")
+        _write(self.root / "docs/reference/rule-provenance.md", "came from feedback_old\n")
+        f = ld.check_dead_memory_refs()
+        self.assertEqual(self.kinds(f), ["dead-memory-ref"])
+        self.assertIn("engine", str(f[0][0]))
+
     def test_a_bare_memory_path_is_not_a_hit(self):
         _write(self.root / ".claude/rules/a.md", "files in `~/.claude/projects/x/memory/` load\n")
         self.assertEqual(ld.check_dead_memory_refs(), [])
