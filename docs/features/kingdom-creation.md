@@ -514,9 +514,10 @@ town-owning cultures shipped fielding Calradians (fixed 2026-08-12).
 
 Umbar, Shaghana and Abanissa all share Harad's troops and party templates this way.
 
-**Known gap, not yet fixed:** those three still carry roughly 40 vanilla `*_aserai` **NPC role**
-bindings between them (`tavernkeeper`, `blacksmith`, `guard`, `ransom_broker` and so on, plus the
-`villager_child` / `villager_teenager` / `village_woman_child` / `village_woman_teenager` set). Most
+**Known gap, not yet fixed:** those three still carry 44 vanilla `*_aserai` **NPC role**
+bindings between them. Umbar holds 36 (`tavernkeeper`, `blacksmith`, `guard`, `ransom_broker` and so on, plus the
+`villager_child` / `villager_teenager` / `village_woman_child` / `village_woman_teenager` set); Shaghana and Abanissa hold only
+that child and teenager set, 4 each. Most of Umbar's
 repoint cheaply to an existing `_harad` id, but the child and teenager ids have no `_harad`
 counterpart and would have to be authored. Deliberately left out of the 2026-08-12 party-template
 pass to keep that change to party data. If you are here to add a culture, do not copy the pattern.
@@ -564,7 +565,7 @@ pass to keep that change to party data. If you are here to add a culture, do not
 | Kingdom | Culture ID | File type | Lord prefix | Notes |
 |---------|------------|-----------|-------------|-------|
 | Umbar | `umbar` | Custom XML | `U` | Full implementation; reference for all 13 files |
-| Shaghana | `shaghana` | Custom XML | `SH` | Independent kingdom in the eastern reach of Harad. 9 NPC lords, own ruler title (Taskral). Reuses aserai militia and crowd NPCs. |
+| Shaghana | `shaghana` | Custom XML | `SH` | Independent kingdom in the eastern reach of Harad. 9 NPC lords, own ruler title (Taskral). Reuses Harad's militia and crowd NPCs. |
 | Abanissa | `abanissa` | Custom XML | `AB` | Independent kingdom in the deep south of Harad. 8 NPC lords, own ruler title (Châjaphân). Same inheritance pattern as Shaghana. |
 | Gondor | `gondor` | Custom XML | varies | Fully custom troops and equipment sets |
 | Harwan | n/a | XSLT | — | Stays on `Kingdom.aserai`; clans defined in `spclans.xslt` |

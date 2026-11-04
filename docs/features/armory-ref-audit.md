@@ -67,7 +67,10 @@ the generators' `--verify` is per generator. And nothing ran any of them after a
   every broken item to every troop, lord, roster and config that carries it, directly or through
   a standalone `<EquipmentSet id>`; `taom_schema.build_registries` for dead `Item.<id>` refs; the
   two scaffolders' `--verify` and `build_ds_skeleton_pack.py --check` (the dedicated server's creature
-  skeletons, #972) as subprocesses.
+  skeletons, #972) as subprocesses. A second group of subprocesses, the companion checks, runs the same way (the troll
+race wiring, the Armory name registration, the orc and goblin locomotion binding, the FBX LOD
+chain, and `validate_moduledata.py` for `CREATURE_GEAR_OBTAINABLE` and `COLLISION_BODY_BORROWED`).
+Unlike a generator, a companion that fails, exits 2 or prints SKIPPED keeps the verdict from reading `CLEAN`; `--no-generators` skips the companions, and the verdict then does not cover them.
 - **A committed report.** Deterministic markdown (sorted rows, run date and HEAD in the header) at
   `docs/audits/armory-ref-audit.md`, so `git diff` after a re-run is the change log. Verdict
   `CLEAN` or `BROKEN`; generator drift is a WARNING with its `DRIFT:` lines, because a verdict that
@@ -112,7 +115,7 @@ the CLI.
 | File | Role |
 |------|------|
 | `tools/audit_armory_refs.py` | the composer; `flag_breakage`, `join_impact`, `render_report`, `exit_code` are pure |
-| `tools/tests/test_audit_armory_refs.py` | nine synthetic tests, no install |
+| `tools/tests/test_audit_armory_refs.py` | sixteen synthetic tests, no install |
 | `docs/audits/armory-ref-audit.md` | the committed report |
 | `tools/validate_moduledata.py` | `missing_collision_body_issues`, `BODY_CODE`, `MESH_CODE`, `_loaded_tpacs` |
 | `tools/tests/test_validate_moduledata.py` | `MissingCollisionBodyTests`; `CommitGateCoverageTests` scans both emitting files |
@@ -128,12 +131,13 @@ the CLI.
 
 ## Tests
 
-- `python -m unittest tools/tests/test_audit_armory_refs.py` (9): live-ref flagging beats the
+- `python -m unittest tools/tests/test_audit_armory_refs.py` (16): live-ref flagging beats the
   committed flag; direct and roster-hop consumers both appear; the report names body, item and
   troop on one row and is byte-stable; exit code semantics; generator drift warns; the server skeleton package is checked; every check names
-  a script that exists.
+  a script that exists; the companion checks are named, run, and decide the verdict (a failure makes it
+  BROKEN, an exit of 2 means not run, a skip is not a pass).
 - `python -m unittest tools.tests.test_validate_moduledata.MissingCollisionBodyTests
-  tools.tests.test_validate_moduledata.CommitGateCoverageTests` (5).
+  tools.tests.test_validate_moduledata.CommitGateCoverageTests` (14).
 - `bash tools/test_hooks.sh` (208) covers the hook's timeout and inner bound.
 - Negative proof on real tpacs (2026-09-15): a probe item with `body_name="bo_this_body_does_not_exist"`
   produced exactly one `MISSING_COLLISION_BODY` ERROR naming the body, the item and the file.
@@ -155,7 +159,7 @@ leaves it alone.)
 
 ## Performance
 
-About 15 s against 4,497 tpacs (TOC scan only) including the two generator subprocesses; 3 s
+About 15 s against 4,497 tpacs (TOC scan only) including the generator and companion subprocesses (not re-measured since the count grew); 3 s
 with `--no-generators`. The validator's pass adds about 3 s to `validate_moduledata.py`: about
 5.9 s without it, about 9 s with it, measured 2026-09-18 once #622 wired it in (the 4.8 s recorded
 on 2026-09-15 was the validator without the pass, which never ran then). Inside the commit hook's

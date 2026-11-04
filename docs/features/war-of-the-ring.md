@@ -333,6 +333,10 @@ Later War of the Ring beats belong in their own state, keyed off the phases rath
 | battania | Khand | Neutral |
 | cardolan | Cardolan | Neutral |
 | rhudaur | Rhudaur | Neutral |
+| anduinvale | Anduin Vale | Neutral |
+| angaladh | Angáladh | Neutral |
+| dorwinion | Dorwinion | Neutral |
+| southrhovanion | South Rhovanion | Neutral |
 
 ---
 

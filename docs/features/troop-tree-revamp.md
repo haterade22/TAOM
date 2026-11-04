@@ -42,7 +42,7 @@ Two downstream cleanup scripts close the cross-file consistency loop:
 
 C# downstream:
 
-- **`VolunteerRecruitmentService.InitializeGundabadCulture()`** — Adds fallback recruitment pool; Gundabad had ZERO recruitment entries before this issue.
+- **`VolunteerRecruitmentService.InitializeGundabadCulture()`** (in `RecruitmentPools/VolunteerRecruitmentService.OrcKingdoms.cs`): Adds fallback recruitment pool; Gundabad had ZERO recruitment entries before this issue.
 
 Validation:
 
@@ -129,7 +129,7 @@ tools/validate_all_troop_refs.py      (gate: 0 missing refs)
 | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Party stack composition per culture |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | AI strength weighting |
 | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | Per-troop kingdom resource cost |
-| `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | `InitializeGundabadCulture()` recruitment pool |
+| `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.OrcKingdoms.cs` | `InitializeGundabadCulture()` recruitment pool (registered from `VolunteerRecruitmentService.cs`) |
 
 ## Dependencies
 

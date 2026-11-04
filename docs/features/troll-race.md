@@ -156,7 +156,7 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
 | Health | `Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json` (`baseHitPoints` 200) read by `TaomCharacterStatsModel` (campaign); the Armory Monsters' `hit_points` (Custom Battle) |
 | Bandit twins (#694) | `Main/_Module/ModuleData/characters/troll_bandits.xml` (`taom_troll_bandit_cave`, `taom_troll_bandit_hill`) in `wild_trolls_band_template`: the Wild Troll bands ([creature-bandits](creature-bandits.md)). `TrollBanditDataTests.EveryTwin_MatchesItsMordorTroll` fails after a hand edit to a Mordor troll's level, skills, face or weapons until the twin matches (the twins wear no armour); the twins' troop weight is the default, since `troop_weights.xml` is keyed by id |
 | Special resources | `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` (recruit 50 War Spoils, upkeep 5 and 4) |
-| Other troop wiring | `Main/Features/SettlementGuards/SettlementGuardService.cs` (no guard duty), `troop_weights.xml` (4.0), `CharacterAvatarPatch.json` (encyclopedia framing), `tools/taom_schema.py` (`_BODYLESS_BY_DESIGN`, `_ARMOUR_LADDER_EXEMPT`), `tools/melee_ladders.json` (exempt) |
+| Other troop wiring | `Main/Features/SettlementGuards/SettlementGuardService.cs` (no guard duty), `troop_weights.xml` (4.0 for `hill_troll`; the `cave_troll` row is commented out there), `CharacterAvatarPatch.json` (encyclopedia framing), `tools/taom_schema.py` (`_BODYLESS_BY_DESIGN`, `_ARMOUR_LADDER_EXEMPT`), `tools/melee_ladders.json` (exempt) |
 | Race C# | `Main/Core/Domain/RaceManager.cs`, `Main/Features/HeroRace/` (no change needed) |
 
 ## Tests

@@ -299,6 +299,10 @@ never infer one from the other.
 | `abanissa` | Abanissa | Neutral | Custom kingdom |
 | `cardolan` | Cardolan | Neutral | Custom kingdom |
 | `rhudaur` | Rhudaur | Neutral | Custom kingdom |
+| `anduinvale` | Anduin Vale | Neutral | Custom kingdom |
+| `angaladh` | Angáladh | Neutral | Custom kingdom |
+| `dorwinion` | Dorwinion | Neutral | Custom kingdom |
+| `southrhovanion` | South Rhovanion | Neutral | Custom kingdom |
 
 That is every kingdom the game actually loads, verified against the live install.
 
@@ -458,8 +462,8 @@ its culture id resolves `Neutral`, and Neutral is nobody's ally and everybody's 
 executor's kill costs only the victim's own side and a Neutral evaluator never charges anything.
 
 A stated consequence, not an accident of the predicates: **executing a Neutral-aligned lord costs
-nothing from anyone, including that lord's own faction, and docks no Honor.** Khand, Umbar, Shaghana
-and Abanissa are all Neutral, so a Corsair captain can be executed with no political cost at all.
+nothing from anyone, including that lord's own faction, and docks no Honor.** Khand, Umbar, Shaghana,
+Abanissa, Cardolan, Rhudaur, Anduin Vale, Angáladh, Dorwinion and South Rhovanion are all Neutral, so a Corsair captain can be executed with no political cost at all.
 That follows from "Neutral is nobody's ally", it was reviewed and kept deliberately on 2026-09-06,
 and it is written down here so a future reader does not re-flag it as a gap. Making a Neutral
 victim's own faction react would mean giving Neutral a same-side relation of its own, which changes
@@ -602,7 +606,7 @@ It fails when:
 - the set of minor clans differs from the intended-side table in the test, or a minor clan does not resolve its intended side on its own id and culture (the Grey Company and the Corsair Blades pass only on their retagged cultures)
 - a troop or a named leader template reads the opposite of its clan's side, does not resolve to an `NPCCharacter`, or a leader clone differs from its original beyond id and culture
 - the load migration's target cultures or clones differ from the shipped data
-- a kingdom clan resolves Neutral on its kingdom's pair outside the four Neutral realms, or its own pair (its id and its own culture, which is how a victim whose clan the kill destroyed reads) differs from its kingdom's side
+- a kingdom clan resolves Neutral on its kingdom's pair outside the ten Neutral realms, or its own pair (its id and its own culture, which is how a victim whose clan the kill destroyed reads) differs from its kingdom's side
 - `player_faction` is listed, a listed clan row is not `free` or `evil`, an `alignment.json` key names no loaded culture, kingdom or clan (a typo guard), or a row is listed for a clan id that is also a culture or kingdom id (a bandit clan shares its id with its culture)
 
 ### `TAOM.Tests/Features/Execution/SidePairScanTests.cs` (3 tests)
@@ -636,7 +640,7 @@ All re-verified against decompiled Bannerlord v1.4.8 DLLs (2026-09-06, #556):
 ## How to Add a New Kingdom
 
 1. Add a new entry to `Main/_Module/ModuleData/execution/alignment.json` with the kingdom's StringId and side
-2. No code changes needed: `AlignmentService` reads the JSON at startup. `ShippedClanSideCoverageTests` fails when a kingdom's clans resolve Neutral outside the four Neutral realms
+2. No code changes needed: `AlignmentService` reads the JSON at startup. `ShippedClanSideCoverageTests` fails when a kingdom's clans resolve Neutral outside the ten Neutral realms
 
 ## How to Add a Minor Clan
 

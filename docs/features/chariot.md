@@ -130,7 +130,7 @@ speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 
 | File | Purpose |
 |---|---|
-| `Main/_Module/ModuleData/troops/troops_rhun_new.xml` | Horse-slot swap on the two wainrider chariot tiers (HorseHarness removed — the chariot item carries its own harness mesh) |
+| `Main/_Module/ModuleData/troops/troops_rhun_new.xml` | Horse-slot swap on the two wainrider chariot tiers (Horse `taom_chariot_a` plus HorseHarness `taom_chariot_armour_rhun`, see the barding section) |
 | LOTRLOME_Armory (see table above) | Monster/actions/usage/XSLT/item + compiled assets under `Assets/creature/chariot/` |
 | `E:\LOTRAOMAssets\_auto_workspace\chariot\*.ps1` | TpacTool-based generators (clips, skeleton wiring, inspection) |
 
@@ -177,8 +177,8 @@ nothing was restored. Check again after any future re-import
 - ✅ `/deep-review` complete (6 reviewers + adversarial verify; HIGH jump-clip typo + parity gaps fixed, RCA filed).
 - Follow-ups: black/white horse variants + `wide_chariot` (drop-in: single merged mesh, items exist in the
   upstream pack), proper mount-death clips (currently `chariot_stand_1` freeze), localization pass for
-  `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13),
-  parameterize `tools/audit_mount_parity.py` to cover the chariot vs vanilla-horse baseline.
+  `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13).
+  (`tools/audit_mount_parity.py` section F now covers the chariot vs the vanilla-horse baseline.)
 
 ## The missing second horse — resolved (2026-06-13)
 

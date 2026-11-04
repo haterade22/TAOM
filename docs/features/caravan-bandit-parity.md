@@ -7,7 +7,8 @@ compares, so a caravan meeting a warband on the road no longer runs. Two halves 
 power-budget retune of the 50 bandit and caravan party templates
 (`tools/rebalance_template_power.py`), and a caravan member-cap bonus in `TaomPartySizeModel` so a
 caravan may hold the roster its template spawns. (Since #564, 2026-09-11, the eight boss templates
-have left the tool's scope, so it manages 42: 8 raider and 34 caravan. See "The retune" below.)
+have left the tool's scope, which took it to 42: 8 raider and 34 caravan. Later cultures added raider
+and caravan templates, so it now manages 59: 9 raider and 50 caravan. See "The retune" below.)
 
 Bandit warbands drop from up to 200 men to 56-80, sized so every culture's warband lands at the same
 **power** rather than the same headcount. Caravans rise from 20-36 men to 60-88, sized so the weakest
@@ -96,7 +97,7 @@ vanilla's `(2 + tier) * (10 + tier) * 0.02` for tiers 0-6 (`OverrideVanillaTierP
 and applies a `MountedMultiplier` of 1.2 that vanilla does not have. Tiers 7-10 come from the
 MCM-settable `TaomSettings.Tier7Power..Tier10Power`, NOT from
 `configs/battle_balance_config.json` as an earlier draft of this doc claimed; the tool reads the
-JSON, whose values equal those compiled defaults, and no troop in the 42 templates it manages exceeds
+JSON, whose values equal those compiled defaults, and no troop in the 59 templates it manages exceeds
 tier 5, so the two agree today. For a non-hero troop `IsMounted` is assigned from
 `DefaultFormationClass.IsMounted()` during `Deserialize`, so `default_group` decides it outright.
 
@@ -235,8 +236,9 @@ clamp" taken to zero.
 - **Villagers are untouched, on purpose.** `villager_<culture>` is level 1, tier 0, 0.40 power, in a
   15-30 template, so a villager party is about 9 power and flees everything. It did in vanilla too.
   Villagers are meant to run from bandits; the smaller warbands are the whole benefit they need.
-- **Patrol, mercenary and outlaw templates** are out of scope; the 34 mercenary and outlaw
-  templates still carry the flat 50 from #315.
+- **Patrol, mercenary and outlaw templates** are out of scope; the 30 such
+  templates of the older cultures still carry the flat 50 from #315, and the 16 added for later
+  cultures cap at 4, 8 and 16.
 - **SupplyLines is no longer coupled to these templates at all.** It used to build the
   player's supply caravans from `culture.CaravanPartyTemplates[0]`, so this retune took its
   escort from 20-29 troops to 60-70 and its provisioning cost with it (#549, found by the
@@ -259,10 +261,10 @@ clamp" taken to zero.
 |---|---|
 | `tools/rebalance_template_power.py` | The power-budget solver and the template writer |
 | `tools/tests/test_rebalance_template_power.py` | 57 tests: tier maths, all three solvers, byte-faithful IO, boss templates out of scope |
-| `tools/generate_supply_caravan_templates.py` | The 17 SupplyLines crew templates (#549) |
+| `tools/generate_supply_caravan_templates.py` | The 25 SupplyLines crew templates (#549) |
 | `Main/Features/SupplyLines/SupplyCaravanService.cs` | `PickCaravanTemplate` resolves the crew template |
 | `TAOM.Tests/Features/SupplyLines/SupplyCaravanTemplateTests.cs` | The decoupling invariants |
-| `Main/_Module/ModuleData/taom_partyTemplates.xml` | 50 retuned templates on 2026-09-06 (16 bandit, 34 caravan); 42 in the tool's scope since #564 (8 raider, 34 caravan) |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | 50 retuned templates on 2026-09-06 (16 bandit, 34 caravan); 42 in the tool's scope after #564 (8 raider, 34 caravan); 59 now (9 raider, 50 caravan) |
 | `Main/_Module/ModuleData/characters/npcs_rohan.xml` | The four repaired caravan NPCs |
 | `Main/Features/AiPartySize/AiPartySizeService.cs` | `ApplyCaravanScaling`, `ApplyCaravanCapBonus`, `DefaultCaravanFlatBonus` |
 | `Main/Features/AiPartySize/IAiPartySizeService.cs` | Contract, including why this member is ungated |
@@ -305,7 +307,7 @@ regular, 77-88 elite against 60-70 and 66-75).
   every bound caravan template has a supply crew sibling, and crew plus the default escort
   fits under the flat 20-man cap. `SupplyCrewTemplates_AreMuchSmallerThanTheAiCaravanTemplatesTheyReplaced`
   fails rather than quietly restoring #549 if anyone regenerates these from the AI numbers.
-- **`tools/tests/test_rebalance_template_power.py`** (54) covers tier derivation, all three solvers, the
+- **`tools/tests/test_rebalance_template_power.py`** (57) covers tier derivation, all three solvers, the
   `min + 1` floor that prevents the 2026-09-04 stack-deletion class, refusal to emit `min > max`,
   idempotency, BOM and line-ending preservation, and a parse-after-transform assertion.
 
