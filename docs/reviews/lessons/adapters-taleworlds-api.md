@@ -1718,6 +1718,7 @@ The Long Defeat spike leaves out `BattleEndLogic` and forbids retreat. Its waves
 `TeamAISiegeComponent` takes `InnerGate` and `OuterGate` by tag from all active gates, with no visibility check, and a hidden `CastleGate` returns from `OnTick`, so it never opens. Helm's Deep hides an inner gate at height 32.5. The Middle lane therefore stays closed, and `BehaviorAssaultWalls` stays in `AttackEntity` with soldiers standing at a gate that nothing draws. I had filtered hidden gates out of my own log line, which hid the cause, and I told a reader the cause was constant team power.
 
 - **Why missed:** the log filter came from a correct wish, to show only real gates. The false reason sounded right, and it did remove the other ways out.
+- **Reach (a scan of the live `TAOM_Map` scene files, 2026-11-04):** 5 of the 30 scenes with castle gate prefabs hide an inner gate: `taom_rohan_castle_helms_deep_forceatmo` and `taom_gondor_castle_001_forceatmo` have no other inner gate, and `taom_gondor_castle_002_forceatmo`, `taom_gondor_castle_003_forceatmo` and `taom_gondor_town_lossarnach_forceatmo` have a second, visible one. Nobody has checked what a campaign siege does on these scenes.
 - **Prevent:** before a siege feature trusts a scene, list every `CastleGate` in it with its visibility and tag. Log what the engine uses, not only what the player sees. Do not delete a hidden inner gate: a null `InnerGate` throws in `BehaviorAssaultWalls`.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 31 and 37.
 
