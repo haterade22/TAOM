@@ -164,7 +164,8 @@ public class SeatOfSeeingWiringTests
     [TestMethod]
     public void TheView_DrivesTheSessionFromTheFrameAndTheMissionTick()
     {
-        StringAssert.Contains(ViewMember("public override bool UpdateOverridenCamera(float dt)"), "_session != null && _session.OnFrame(dt)");
+        // The field trial's input (build-spec section 12) rides along, null in every session that is not armed.
+        StringAssert.Contains(ViewMember("public override bool UpdateOverridenCamera(float dt)"), "_session != null && _session.OnFrame(dt, TrialInput)");
         StringAssert.Contains(ViewMember("public override void OnMissionTick(float dt)"), "base.OnMissionTick(dt); _session?.OnMissionTick();");
     }
 

@@ -134,3 +134,4 @@ Today the in-game driver plays only a Fords of War match, so `/game-run` serves 
 separately and is not built; until it exists, a check outside Fords still needs a person to play it.
 The Long Defeat spike (#1079) has its own wrapper, `tools/run_long_defeat_spike.py`, under this same permission and gate; `/game-run` does not
 drive it yet.
+The Seat of Seeing's field trial has its own wrapper too, `tools/run_command_trial.py` (arm variable `TAOM_COMMAND_TRIAL`, runs in `E:\Temp\command-trial-runs`), under the same permission and gate; `/game-run` does not drive it yet. [Its steps and how to read a run](../features/seat-of-seeing.md#field-trial). It refuses a log whose `[BuildStamp]` is not this checkout (another sha than HEAD, a `.dirty` mark the tree does not match, or an uncommitted file under the build's own pathspec newer than the build), and one with no `[Shutdown] clean module unload` line.

@@ -1583,4 +1583,82 @@ public class SeatSessionTests
         Assert.AreEqual(200f - 9f, pose.Y, Eps);
         Assert.IsFalse(_sut.Faulted);
     }
+
+    // ---- What the field trial reads and sets (build-spec section 12) ----
+
+    [TestMethod]
+    public void OnFrame_WithAnInputOverride_FliesOnItAndReadsNoScreenInput()
+    {
+        Seated();
+        var before = _screen.Frames.Last().Pose;
+        _screen.Input = new SeatInput(1f, 0f, 0f, 0f, 0f, 0f, false);
+        var reads = _screen.InputReads;
+
+        Assert.IsTrue(_sut.OnFrame(0.1f, new SeatInput(0f, 1f, 0f, 0f, 0f, 0f, false)));
+
+        Assert.AreEqual(reads, _screen.InputReads, "the override replaces ReadInput");
+        var pose = _screen.Frames.Last().Pose;
+        Assert.IsTrue(pose.Y > before.Y, "forward moved the view");
+        Assert.AreEqual(before.X, pose.X, Eps, "the screen's sideways input was not used");
+    }
+
+    [TestMethod]
+    public void OnFrame_WithAnInputOverrideWhileRising_StillGivesTheBlendNoInput()
+    {
+        var wild = new SeatInput(1f, 1f, 1f, 1f, 5f, 5f, false);
+        Enter();
+        _sut.OnFrame(0.1f, wild);
+        var withOverride = _screen.Frames.Last().Pose;
+        Assert.AreEqual(SeatState.Rising, _sut.State);
+
+        Setup();
+        Enter();
+        _sut.OnFrame(0.1f);
+
+        Assert.AreEqual(_screen.Frames.Last().Pose, withOverride, "the blend moved the same with and without the override");
+    }
+
+    [TestMethod]
+    public void Frames_CountsOwnedFramesOfTheStay_AndStartsAgainOnTheNextEntry()
+    {
+        Enter();
+        Assert.AreEqual(0, _sut.Frames);
+
+        _sut.OnFrame(0.1f);
+        _sut.OnFrame(0.1f);
+        _sut.OnFrame(0.1f);
+        Assert.AreEqual(3, _sut.Frames);
+
+        Finish();
+        Tick(key: true);
+        Enter();
+        Assert.AreEqual(0, _sut.Frames);
+    }
+
+    [TestMethod]
+    public void GlideBegan_IsTrueAfterALeaveThatArmedTheGlide_AndFalseBeforeAnyLeave()
+    {
+        Assert.IsFalse(_sut.GlideBegan);
+        Seated();
+        Assert.IsFalse(_sut.GlideBegan);
+
+        Tick(key: true);
+
+        Assert.IsTrue(_sut.GlideBegan);
+    }
+
+    [TestMethod]
+    public void GlideBegan_IsFalseWhenThereWasNoAgentToFollow_AndAfterALeaveOutsideBattleMode()
+    {
+        _screen.GlideBegins = false;
+        Seated();
+        Tick(key: true);
+        Assert.IsFalse(_sut.GlideBegan, "no agent to follow");
+
+        _screen.GlideBegins = true;
+        Seated();
+        _screen.Facts = _screen.Facts with { BattleMode = false };
+        Tick(key: true);
+        Assert.IsFalse(_sut.GlideBegan, "the glide runs in Battle mode only, and the latest leave is the one that counts");
+    }
 }

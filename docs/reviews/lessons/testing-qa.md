@@ -2450,3 +2450,31 @@ The first S1 tests pinned the absence of removed names (`Pump`, `NoGround`, a de
 - **Why missed:** each pin was written while fixing a finding, so it recorded what the fix removed. Nobody asked which single deletion would break the feature silently.
 - **Prevent:** for each entry point, delete each forwarding line in your head and name the test that fails. A view with no unit seam gets a source pin on the presence of its forwards, and a patch gets a behaviour test of its off state.
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), row 36.
+
+### Read what a counter counts before you cite it as a clean log (Seat field trial, 2026-11-04)
+
+The first trial's write-up cited `[Session] errors=0` as evidence of a clean run. That counter holds `OutcomeLog`'s own faults (`Main/Core/Logging/OutcomeLog.cs:49,66,73,103`), and the same log has a real `[ERROR]` line at line 157.
+- **Why missed:** the name reads as "errors in this session", and the line was quoted from a summary with no look at its writer.
+- **Prevent:** quote the counter's writer once before you rely on it. For a clean run, cite `checks_pass`, `checks_fail` and `swallowed`, and grep the log for `[ERROR]` separately.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 21.
+
+### A fix's test helper must not default to the state the fix is about (Seat field trial, 2026-11-04)
+
+The first fix for a stale deploy passed in three states, and its own test helper's default was one of them: a `.dirty` stamp with no changed file. Every test that used the helper then pinned the false PASS.
+- **Why missed:** the fix and its fixture came from one assumption, and only a later wave ran the real function on each state.
+- **Prevent:** write the truth table of the new check first, one test per row. Choose the helper's default from the state a clean run has, and make the real run's shape its own test.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 23.
+
+### Take a fixture from the first real output, the day one exists (Seat field trial, 2026-11-04)
+
+The trial's judge was tested only on step lines built by hand, and the C# script and the judge shared nothing. A drift between them would have shown only as a failed night's run. Real lines existed after the first run, and no fixture came from them.
+- **Why missed:** the tests predate the first run, and that run's follow-up looked at the game and not at the tests.
+- **Prevent:** when a producer first runs for real, paste its lines as a fixture beside the hand-built ones, and assert both the pass and one changed line's failure.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 31.
+
+### A scan gate reads where the banned write would live (Seat field trial, 2026-11-04)
+
+The gate against agent writes in the trial scanned the script, and the script reaches the engine only through its host, so an agent write in the host passed. A split behind an interface moves the place that a banned call can live, and the gate stays where it was.
+- **Why missed:** the gate's scope was set before the host existed, and nothing asks for a gate's scope again.
+- **Prevent:** when a seam splits a class, re-read each source-text gate on it. Prove the gate by adding the banned line to each file it should cover.
+- **Source:** [rca-seat-of-seeing-trial-2026-11-04.md](../rca-seat-of-seeing-trial-2026-11-04.md), row 33.

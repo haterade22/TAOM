@@ -564,7 +564,7 @@ S1 was built for one key and one mission tick job. This stage changes these firs
 - **`SeatKeys`**, a small client type, holds the hot keys and every key test beyond "Take the Seat", so `SeatView` stays under its 150 lines
   (`EntryPointLineCountGateTests`) with one call per screen tick. It tests key 536 only while the state is Seated, and keys 531 and 532 only
   while the state is not Off, so a player who never enters still pays one key test a frame. S6's time keys are the only exception (section 10).
-  `PressSeatKey`, `TrialInput`, `State` and the read-only trial members stay on the view.
+  `PressSeatKey`, `PressPending` and `TrialInput` stay on the view; the trial host reads the rest from the session (section 12).
 - **Each extra key has one session method:** `PressHide()`, `PressKeep()`, `PressTake()`, `PressTime(SeatTimeKey)`. `OnScreenTick(bool keyPressed)` keeps
   its signature and its tests. The trial calls the same methods.
 - **`SeatHotKeys`** gains one property per key.
@@ -915,7 +915,7 @@ keyboard, presses the feature's own controls in order, and writes one log line p
 later stage, in this contract and in Marshal's Word, adds its steps and its evidence lines.
 
 **Arming.** Environment variable `TAOM_COMMAND_TRIAL` holds the absolute path of an arm file (`key=value`, LF), with no file fallback.
-An unarmed session costs one null check per application tick and one per mission tick. Keys: `out` (required, absolute folder), `quit`,
+An unarmed session pays one environment read per process, one static read per mission, one null check per application tick and per mission tick, one null check, a bool read and a bool write per screen tick, one `SeatInput?` copy per camera frame, and one static read per focus loss. It allocates nothing per frame. Keys: `out` (required, absolute folder), `quit`,
 `scene` (default `battle_terrain_a`), `live_limit_seconds` (default 420), `steps` (a comma list, default all).
 
 **Files**, all under `Client/Features/SeatOfSeeing/Trial/`:
@@ -923,9 +923,9 @@ An unarmed session costs one null check per application tick and one per mission
 | Type | Job | Shape to read |
 |---|---|---|
 | `CommandTrialOptions` | Parses the arm file | `LongDefeatSpikeOptions` |
-| `CommandTrialAutostart` | Waits for 4 s at the main menu, hides inquiries, starts the game. One field and one tick line in `Client/ClientSubModule.cs` | `LongDefeatSpikeAutostart` |
+| `CommandTrialAutostart`, `ICommandTrialGameHost`, `CommandTrialGameHost` | Waits for 4 s at the main menu, hides inquiries, starts the game, and ends the run. The phases and exits are pure over the narrow host, so a fake drives every exit. One field and one tick line in `Client/ClientSubModule.cs` | `FordsAutorunDriver` over `IFordsAutorunHost` |
 | `CommandTrialGameManager` | A `CustomGameManager` that opens the mission in `OnLoadFinished`, and goes back to the menu on a failure | `LongDefeatGameManager` |
-| `CommandTrialScript` | The steps. `SeatView` holds it in one nullable field, built only when armed, and calls it from `OnMissionTick` and `OnMissionScreenTick` | Pure step order in `Main/Features/SeatOfSeeing/Domain/`, with a unit test |
+| `CommandTrialScript` | The driver. `SeatView` holds it in one nullable field, built only when armed, and calls it from `OnMissionTick` and `OnMissionScreenTick`. The steps are iterators in a partial file per feature, `CommandTrialScript.Seat.cs` here | Pure step order in `Main/Features/SeatOfSeeing/Domain/`, with a unit test |
 | `CommandTrialSettings` | An `ISeatSettingsProvider` wrapper the session gets when armed (S2 onward) | "Settings in a run" below |
 
 **The mission** is the real thing: `BannerlordMissions.OpenCustomBattleMission(scene, player, playerParty, enemyParty, isPlayerGeneral: true, null, "", "", 12f)`
@@ -942,8 +942,8 @@ Refuse to start on an unknown id, as `LongDefeatSpikeLauncher` does, so that a b
 two behaviours (DeploymentMissionController:80, BattleDeploymentMissionController:51-55), so it must never run inside `OnMissionTick` (`docs/reference/engine/mission-and-missionbehavior-lifecycle.md`). This also proves that the Seat refuses during Deployment:
 a press there leaves the state Off, and the step's own line says so. Deployment writes no `[Check]` refusal (5.10). The direct call skips `OrderOfBattleVM.ExecuteBeginMission`, the route a player takes, so the banner handlers that method removes (OrderOfBattleVM:2059-2063) stay subscribed. A banner bearer's change then expires formation queries, and deselects and reselects a selected formation (:846-866). S1 selects nothing, but the panel steps of S2 and S3 run on this route, so read a selection that flickers in a panel step with this in mind.
 
-**Pressing the controls.** A step never fakes a key at the OS level. The real key test and the step call the same method, so a step exercises the same path a player does. S1's members on `SeatView`, used only by the real key test and the trial, are `PressSeatKey()`, `TrialInput` (a
-nullable `SeatInput` that `OnFrame` uses in place of `ISeatScreenAdapter.ReadInput` when it is set), `State`, and the read-only `PressPending`, `Frames`, `GlideBegan` and `Faulted`. Later keys live in `SeatKeys` (6.0), and `ICommandTrialHost` grows by one press member per key, so `SeatView` stays
+**Pressing the controls.** A step never fakes a key at the OS level. The real key test and the step call the same method, so a step exercises the same path a player does. S1's members on `SeatView`, used only by the real key test and the trial, are `PressSeatKey()`, the read-only `PressPending`, and `TrialInput` (a
+nullable `SeatInput` that `OnFrame` uses in place of `ISeatScreenAdapter.ReadInput` when it is set). The host gets the session and the view's one `SeatScreenAdapter`, and reads `State`, `Frames`, `GlideBegan` and `Faulted` from the session, so a trial read sees the real cursor and target state. Later keys live in `SeatKeys` (6.0), and `ICommandTrialHost` grows by one press member per key, so `SeatView` stays
 under its 150 lines. Four controls are not Seat keys:
 
 - **The order panel.** One trial member opens and closes it through the 6.2 site (`MissionOrderVM.OpenToggleOrder`, `TryCloseToggleOrder`).
@@ -952,7 +952,11 @@ under its 150 lines. Four controls are not Seat keys:
 - **Steps outside the Seat.** S7's steps first press the Seat key and pass only with the state Off.
 
 **Clocks and ticks.** Every step timer uses real time, summed from `OnMissionScreenTick`'s `dt`, which runs under pause (MissionScreen:595-600), because mission time stands still under a pause and repeats under fast time. A step reads mission time only as a measured fact, and the status
-file's timer is real time too. S2 moves S1's steps to this. A step that writes an agent, a formation or a mission flag runs in the script's `OnMissionTick` handler. A step that removes a behaviour runs in the screen tick. Each row in `SeatTrialSteps` names what it requires and its time budget.
+file's timer is real time too. S2 moves S1's steps to this. A step is an iterator: its state is local, a wait is a `yield`, and the driver stops at the first verdict that is done. A step that writes an agent, a formation or a mission flag first yields `Verdict.InMissionTick`, and the code after that marker runs inside the script's `OnMissionTick`. A step that removes a behaviour runs in the screen tick. Each row in `SeatTrialSteps` names what it requires and its time budget.
+
+**One file per feature.** Two features add steps in parallel, so each keeps its rows, handlers and host members in its own files. `SeatTrialSteps.All` concatenates each feature's row list, the script's static constructor calls each feature's registration, and `ICommandTrialHost`, `CommandTrialHost` and the test world are `partial`. The wrapper keeps one tuple per feature, each tied to its table by a test.
+
+**Prove a stage with `--steps`.** S3 and S5 kill soldiers and the hero, so a later row cannot assume a fresh battle in a full run. Run each stage's rows as a subset, with what `Requires` names.
 
 **Settings in a run.** Some steps need a setting that defaults to off. When armed, the session gets `CommandTrialSettings`, a wrapper over the plain provider with `SeatEnabled` on, `BeginBattlesInSeat` off, and `SeatKeepPanelOpen`, `SeatHeroFightsOn` and `SeatRiseWithPanel` forced on, in memory only. A saved `BeginBattlesInSeat` would otherwise make `enter` fail with facts that never name the setting, because the entry at the deployment edge turns the script's press into a leave. It never writes the MCM file, because json2
 keeps saved values. A test pins that an unarmed session gets the plain provider. `back_to_stand` turns its fight value off.
@@ -976,9 +980,9 @@ Stages in Marshal's Word add theirs (`queue_two_moves`, `array_keeps_offsets`, `
 **Pictures.** `Utilities.TakeScreenshot` saves `hud_<step>.bmp` into the run folder at each `enter`, `fly`, `keep_to_company` and `hide_bars_restored` step, as the Fords autorun does, so that a session can look at the frame. The runner turns each into a PNG. A person or a session reads them: nothing judges them by machine, so the first run's stray arrow passed every step.
 
 **Ending.** The script reports `final`. The autostart then calls `MBGameManager.EndGame` from the application tick, waits for the main menu, writes the done file, and calls `Utilities.QuitGame` when `quit=1`. An armed run answers no to `IsOpeningEscapeMenuOnFocusChangeAllowed`. Files: `command_trial_status.txt` every 5 s,
-and `command_trial_done.txt` with `reason`, `run`, `log`, `live_seconds`, `wall_seconds`, `started`, `ended`. A failed write of either file logs a warning and the run goes on, because the runner reads the status file while the game replaces it, and the quit must still follow a lost done file. `reason=final` is the only success. The other reasons are `start_refused`, `start_failed`, `script_failed`, `never_live`, `wall_limit`, `mission_closed`, `live_limit` and `autostart_failed`.
+and `command_trial_done.txt` with `reason`, `run`, `report` (always `none`, for the runner it reuses), `log`, `live_seconds`, `wall_seconds`, `started`, `ended`. A failed write of either file logs a warning and the run goes on, because the runner reads the status file while the game replaces it, and the quit must still follow a lost done file. `reason=final` is the only success. The other reasons are `start_refused`, `start_failed`, `script_failed`, `never_live`, `wall_limit`, `mission_closed`, `live_limit` and `autostart_failed`.
 
-**The wrapper**, `tools/run_command_trial.py`, is the same shape as `tools/run_long_defeat_spike.py`, with `RUNS_ROOT = E:\Temp\command-trial-runs` and tests in `tools/tests/test_run_command_trial.py`. Its judge fails a run with any `result=FAIL` line, a missing `[SeatTrial]` line for a step in `steps`, a `[CrashReport]` block, no `[Shutdown] clean module unload` line, a failed `taom.seat-of-seeing.*` check line, or a `reason` other than `final`. It also fails a log whose `[BuildStamp]` is not this checkout: a sha other than `HEAD`, or an uncommitted file under `Main/`, `Client/` or `Dependencies/` newer than the build. Otherwise a run of an old deploy reports PASS for code it never ran. From S2 onward it also fails on a line that matches `\] \[ERROR\] \[Seat(?:OfSeeing|Trial)\]`, and its PASS text reports the `[Session]` swallowed counts.
+**The wrapper**, `tools/run_command_trial.py`, is the same shape as `tools/run_long_defeat_spike.py`, with `RUNS_ROOT = E:\Temp\command-trial-runs` and tests in `tools/tests/test_run_command_trial.py`. Its judge fails a run with any `result=FAIL` line, a missing `[SeatTrial]` line for a step in `steps`, a `[CrashReport]` block, no `[Shutdown] clean module unload` line, a failed `taom.seat-of-seeing.*` check line, or a `reason` other than `final`. It also fails a log whose `[BuildStamp]` is not this checkout: a sha other than `HEAD`, a `.dirty` stamp with no uncommitted file or a clean stamp with one, or an uncommitted file newer than the build. It watches the build's own pathspec (`Main`, `Client`, `Dependencies`, `Stubs`, `Directory.Build.props`, `GameReferences.targets`). Otherwise a run of an old deploy reports PASS for code it never ran. From S2 onward it also fails on a line that matches `\] \[ERROR\] \[Seat(?:OfSeeing|Trial)\]`, and its PASS text reports the `[Session]` swallowed counts.
 
 A builder writes all of this and never launches it. The orchestrator deploys and runs it under the gate in `docs/reference/unattended-game-runs.md`.
 
@@ -1109,3 +1113,20 @@ Contract corrections after a read of the unbuilt stages against the engine, befo
     The four controls that are not Seat keys have a named path. Row 19's rule for `enter` moves to a rate.
 32. **Decisions taken with these corrections, each reversible:** `SeatKeepPanelOpen` accepts the quarter speed of `SlowDownOnOrder` and says so (6.2); `SeatCursorWithPanel` stays true with the pass-through click named as a limit until M7 (6.1); after a fall the pointer is the screen centre with no mark in this version (section 9); the boundary prefix also serves a stand-fast hero (8.2).
 33. **Trial harness after its review, 2026-11-04.** The wrapper passed on a stale deploy, because it never compared the log's `[BuildStamp]` with the checkout, so it now refuses one (section 12). A status write that failed ended a healthy run as `autostart_failed` and could overwrite a passing `final`, and a failed done write lost the quit, so a write now logs a warning and the run goes on, as `FordsAutorunOutput` does. The script releases the trial's input on an abort as well as on completion, and an armed process with an outcome builds no second script. `SeatTrialStep` drops `Stage` and `PassRule`, because nothing reads them and section 12 holds the rules. `CommandTrialHost.GroundHeight` calls the adapter's probe instead of a copy of it. Not changed, because none has a known producer: a process that never reaches the main menu ends at the runner's limit, about 55 minutes; a bad `--scene` reaches the native loader; a failed picture ends the run as `script_failed`.
+34. **Trial harness after its second review wave, 2026-11-04.** The script's steps become iterators, because six steps already needed eleven shared fields and a reset list, and sections 6 to 11 and Marshal's section 11 add at least 28 more. `Verdict.InMissionTick` gives section 12's tick rule one marker line, where each builder would otherwise have invented a seam. Each feature keeps its steps in its own files, so two builders edit two shared lines. The host gets the session and the one adapter, because S2 and S3 put the cursor layer and the kept target in that adapter, and a second instance would see neither. The autostart's phases sit behind `ICommandTrialGameHost`, because the exit matrix is the only thing that guarantees an unattended run ends, and it had no test. The build check now also compares the stamp's `.dirty` with the tree, and reads the build's own pathspec. Rejected: reading the wrapper's step list from the C# table, because a table that only partly matches would silently drop a row, and a tuple with its tie test fails loudly.
+35. **Trial harness, second wave: what the builder chose where this contract was silent.** The Seat's rows are in
+    `Main/Features/SeatOfSeeing/Domain/SeatTrialRows.cs`, and `SeatTrialSteps.All` is that list until a second feature joins one. The
+    interface, the host and the test world each have a `.Seat.cs` part with the Seat's members (`PressSeatKey`, `PressPending`,
+    `SetInput`, `State`, `Frames`, `GlideBegan`, `Faulted`); the rest stay in the base file. `CommandTrialScript` takes an optional handler
+    table as its last constructor argument, the one test seam that drives `Verdict.InMissionTick` and the no-verdict rule, because no S1
+    step uses the marker. A wait has a name (`Verdict.Waiting("battle")`), the timeout fact is `reason=timeout waiting=<name>`, and a step
+    that ends without a verdict fails with `reason=no-verdict`. The autostart's clock is `ICommandTrialGameHost.WallSeconds`, a stopwatch
+    in the host, and not the sum of the ticks' `dt`, so a long load still counts in full. `CommandTrialRun.Script` takes the host as a
+    `Func<ICommandTrialHost>`, and `SeatView` passes a lambda, which costs one closure per unarmed mission; a static lambda with a state
+    tuple would avoid it but adds a generic parameter and a five-element tuple to the view. `FinishDeployment` is guarded by
+    `InDeployment` alone, because the engine changes the mode inside the call (`DeploymentHandler.FinishDeployment`, then
+    `DeploymentMissionController.FinishDeployment` line 79 to `BattleDeploymentMissionController.AfterDeploymentFinished` lines 51-55,
+    `Mission.RemoveMissionBehavior` lines 4708-4710, `DeploymentHandler.OnRemoveBehavior` lines 44-48, `Mission.SetMissionMode` lines
+    1618-1625): the `_deploymentFinished` flag and the empty-list branch are gone. A mission whose `DeploymentHandler` is missing would
+    log the finish line every tick; no producer of that is known. In the wrapper a path that no longer exists (a deletion, or the old
+    name of a rename) is a changed path with no time, and the Seat's step tuple is `SEAT_STEPS`.

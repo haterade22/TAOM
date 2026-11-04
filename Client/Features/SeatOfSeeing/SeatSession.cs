@@ -53,6 +53,12 @@ internal sealed class SeatSession
 
     internal bool Faulted { get; private set; }
 
+    /// <summary>Frames the Seat has owned since the latest entry.</summary>
+    internal int Frames => _frames;
+
+    /// <summary>True when the latest leave armed the engine's return glide.</summary>
+    internal bool GlideBegan { get; private set; }
+
     /// <summary>Once per real frame, from <c>OnMissionScreenTick</c>. A frame with no key and no stored deployment edge reads no setting and no fact.</summary>
     internal void OnScreenTick(bool keyPressed)
     {
@@ -75,9 +81,10 @@ internal sealed class SeatSession
 
     /// <summary>
     /// Once per real frame, from <c>UpdateOverridenCamera</c>. True when the Seat owns the frame; false while Off, in photo mode, with
-    /// a custom camera set, and after a fault, so the engine's own camera runs.
+    /// a custom camera set, and after a fault, so the engine's own camera runs. <paramref name="input"/> replaces the screen's flight
+    /// input when it is set; only the field trial sets it (build-spec section 12).
     /// </summary>
-    internal bool OnFrame(float dt)
+    internal bool OnFrame(float dt, SeatInput? input = null)
     {
         if (State == SeatState.Off || Faulted)
             return false;
@@ -95,7 +102,7 @@ internal sealed class SeatSession
             }
             else
             {
-                _flight = Bounded(SeatCameraMath.Step(_flight, _screen.ReadInput(dt), dt), _flight);
+                _flight = Bounded(SeatCameraMath.Step(_flight, input ?? _screen.ReadInput(dt), dt), _flight);
             }
 
             var flightGround = _screen.GroundHeight(_flight.X, _flight.Y, _applied.Z);
@@ -269,6 +276,7 @@ internal sealed class SeatSession
 
         var lookWritten = !writeLook || _screen.WriteLook(look.Yaw, look.Pitch);
         var began = glide && _screen.BeginGlide();
+        GlideBegan = began;
         _outcomes.Pass(SeatChecks.LeaveId, _key + ":" + reason, "mission=" + _key + " frames="
             + _frames.ToString(System.Globalization.CultureInfo.InvariantCulture) + " glide=" + (began ? "1" : "0") + " reason=" + reason);
 

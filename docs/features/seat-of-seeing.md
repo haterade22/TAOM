@@ -214,6 +214,9 @@ with `1 - exp(-6 dt)`, and the view never goes below the raw ground plus 0.5 m (
 | `Main/Features/SeatOfSeeing/SeatSettingsProvider.cs` | MCM provider with the lazy accessor |
 | `Main/Features/SeatOfSeeing/SeatPresence.cs` | The one static the patches read |
 | `tools/ingame_checks/0.toml` | The in-game verdict manifest (a draft with `issue = 0`, see below) |
+| `Main/Features/SeatOfSeeing/Domain/SeatTrialRows.cs`, `SeatTrialSteps.cs`, `SeatTrialRules.cs`, `SeatTrialRoster.cs` | The field trial's Seat rows, the step table joined from them, pass rules and armies (pure) |
+| `Client/Features/SeatOfSeeing/Trial/` | The field trial: `CommandTrialOptions`, `CommandTrialRun`, `CommandTrialAutostart` over `ICommandTrialGameHost` (`CommandTrialGameHost`), `CommandTrialGameManager`, `CommandTrialLauncher`, `CommandTrialScript` (the driver) with `CommandTrialScript.Seat.cs` (the six steps), and `ICommandTrialHost` with `CommandTrialHost`, each with a `.Seat.cs` part |
+| `tools/run_command_trial.py` | The runner and judge of the field trial |
 
 ## Dependencies
 
@@ -272,6 +275,19 @@ with `1 - exp(-6 dt)`, and the view never goes below the raw ground plus 0.5 m (
 - `tools/tests/test_ingame_verdict.py`: `SeatOfSeeingManifestTests` runs the real manifest against ten fixtures (a full visit, a
   fault, a missing elevation setter, an enter only, a leave with no agent to follow, refused key presses, an enter that could not read,
   and each of the three failure lines of the feature).
+- The field trial: `SeatTrialStepsTests.cs` (the table, the choice of steps, each pass rule at its edges, the line shape),
+  `SeatTrialRosterTests.cs` (the ids against the repo's own ModuleData, the mounted troop's horse), `CommandTrialOptionsTests.cs`,
+  `CommandTrialScriptTests.cs` with `CommandTrialWorld.cs` and `CommandTrialWorld.Seat.cs` (a stand-in for the engine and the Seat: a
+  whole trial, each step broken one fact at a time, the deployment finishing only after the refusal step has reported, the times of
+  every press and picture, and the driver's own rules: the in-mission-tick marker, a step with no verdict, no code after a verdict),
+  `CommandTrialRunTests.cs` (the armed, ended, refused and failed decision of `CommandTrialRun.Script`), `CommandTrialAutostartTests.cs`
+  (every exit of the run through a fake game: `start_refused`, the move to ending, `exit_stalled`, a lost done file with the quit still
+  following, `autostart_failed`, `never_live`, `wall_limit`, `mission_closed`, `live_limit`; the done and status text, `TryWrite`,
+  `UnfinishedReason`, `DoneLine` and `Armed`), `CommandTrialWiringTests.cs` (source-text gates: one path for the key, the flag cleared
+  in the screen tick, one screen adapter, one environment read, the null checks, no record, no new view, no agent write in the host or
+  the script, no engine type in the autostart), `SeatSessionTests.cs` (the input override, `Frames`, `GlideBegan`), and
+  `tools/tests/test_run_command_trial.py` (the judge on a copy of a real run's lines, the build check in each state, a real git
+  repository for the changed-file list, the arguments, ties to the C# names, and one whole run with a fake game).
 
 ## How to verify in game
 
@@ -319,8 +335,130 @@ needed. Not in Fords of War: its own camera makes the Seat stand down. `tools/in
     down (`leave ... reason=setting-off`).
 16. With a first-person hero holding a block or a swing, press Q: the hero stops, and the head shows.
 
-An unreachable step is reported with the command tried and the unmet precondition. None of the 16 steps has been run: no game was
-launched while building S1.
+An unreachable step is reported with the command tried and the unmet precondition. No person has run the 16 steps. The [field trial](#field-trial) covers the camera half of steps 1, 2 and 3 and the Deployment half of step 8
+without a person (it feeds the flight input itself, so it leaves the engine's input reads, the look and the hero's head to a person).
+
+## Field trial
+
+Unit tests cannot show that a camera flies over a real battle. The field trial (contract section 12) is a script inside the game: it
+opens one real custom battle with nobody at the keyboard, presses the Seat's own controls in order, and writes one log line per fact.
+It runs stage S1's six steps only; each later stage adds its steps as rows.
+
+**The first run** (2026-11-04, build `1735f2add.dirty`, folder `E:\Temp\command-trial-runs\20261104-031119`) passed all six steps and
+exited 0. It took 14.8 mission seconds and 50 s of wall time including the load, ran at about 84 frames a second with 272 agents (251
+owned frames in the 3-second `enter` window), and `fly` logged `moved=59.7 expected=59.7`. It did not cover real key bindings, the axes,
+the wheel and the mouse, because `TrialInput` replaces `ReadInput`. It did not judge how the blend and the glide look. It passed with the
+vanilla attack direction arrow on screen, which stage S2 removes.
+
+**Two later runs** the same day, each after a round of review fixes, passed the same six steps and exited 0. Build `1735f2add.dirty`
+(folder `E:\Temp\command-trial-runs\20261104-042903`) added the judge's build check and logged `frames=244`, `moved=60.0 expected=59.9`.
+Build `1d5d0a561.dirty` (folder `E:\Temp\command-trial-runs\20261104-052645`) ran the script as iterators and the autostart over its host,
+and logged `frames=239`, `moved=59.7 expected=59.7`. Both logs hold `checks_fail=0`, `swallowed=0` and a clean module unload.
+
+**Run it** (a builder never does; the orchestrator deploys the tree, then runs it under the permission and the idle gate of
+[unattended-game-runs.md](../reference/unattended-game-runs.md)):
+
+```
+./build.ps1
+python tools/run_command_trial.py --dry-run
+python tools/run_command_trial.py
+```
+
+`--dry-run` prints the arm file, the idle state and the preflight and starts nothing. A subset is `--steps enter,fly` (the game refuses
+a step chosen without one it needs, and the done file then says `start_refused`). Of the Fords runner's flags these apply:
+`--require-idle-minutes`, `--runs`, `--keep-on-crash <seconds>` (wait for a person to answer the dump dialog), `--runs-root` and
+`--dry-run`. `--wall-limit` moves only the runner's own deadline and does not end the match. The Fords match flags (`--west`, `--speed`
+and the like) parse and are ignored. Keep `--live-limit` well under the wall limit plus 15 minutes, the runner's deadline (3300 s by
+default); at 100000 or more the game keeps its default of 420. By its step timers the run needs about 15 mission seconds after the load
+(14.8 in the first run, 50 s of wall time with the load). A build without the trial idles at the main menu and the run ends as a stall
+after 10 minutes; the judge reads the copied log's `[BuildStamp]` and refuses a build that is not this checkout.
+
+**Arming.** The environment variable `TAOM_COMMAND_TRIAL` holds the absolute path of an arm file (`key=value` lines, LF). There is no
+file fallback. `CommandTrialOptions.FromEnvironment` is the only read of the variable and runs once per process. An unarmed session pays
+one environment read per process, one static read per mission, one null check per application tick and per mission tick, one null check,
+a bool read and a bool write per screen tick, one `SeatInput?` copy per camera frame, and one static read per focus loss, plus one
+closure per mission for `CommandTrialRun.Script`. It allocates nothing per frame, and its behaviour does not change. Keys: `out`
+(required, an absolute folder), `quit`, `scene` (default `battle_terrain_a`), `live_limit_seconds` (default 420), `steps` (default
+all). Precondition: the saved MCM values of the Seat of Seeing are the defaults. Stage S1 has no `CommandTrialSettings`, so a saved
+`BeginBattlesInSeat` or a Seat switched off fails `enter` without the line naming the setting.
+
+**The battle.** The real thing, `BannerlordMissions.OpenCustomBattleMission(scene, hero, playerParty, enemyParty, isPlayerGeneral: true,
+null, "", "", 12f)`. The player's side defends.
+
+| Side | Culture | Troops |
+|---|---|---|
+| Player | `gondor`, hero `lord_1_9` | 40 `fow_gondor_militia_spearman`, 40 `fow_gondor_ano_archer_militia`, 20 `fow_gondor_pg_cavalry` |
+| Enemy | `mordor` | 120 `fow_mordor_orc_fighter`, 30 `fow_mordor_orc_hunter` |
+
+The mounted troop is `fow_gondor_pg_cavalry` (Pinnath Gelin Light Horseman), in `ModuleData/fords_of_war/fords_troops.xml`: Culture.gondor,
+level 26, `empire_horse` with `gondor_horse_armor_4`. Every id was read from the repo's data (the cultures in `taom_spcultures.xml`, the
+hero as a stub in `characters/custom_battle_lords.xml` and listed in `custom_battle/custom_battle_commanders.json`, the five troops in
+`fords_troops.xml`), and `SeatTrialRosterTests` fails when a rename strands one. `python tools/validate_moduledata.py` reports 0 errors.
+At run time the launcher asks the game's object manager for every id first and refuses to open the mission when one is missing
+(`start_refused`, with the ids named in the log), so a bad id fails loudly instead of fielding a short army.
+
+**The steps**, in the order of `SeatTrialSteps.All`. Mission time runs every timer. A step that fails does not stop the run; the next one
+checks its own precondition and fails at once, so every step reports and nothing hangs. Each step also has a time budget and fails on
+`reason=timeout` past it.
+
+| Step | What it does | Passes when |
+|---|---|---|
+| `refuse_in_deployment` | One second in, presses the Seat key while the mission is in Deployment | the session took the press and the state is still Off (Deployment writes no `[Check]` line, so this step is its evidence) |
+| `enter` | Five seconds in, finishes the deployment (once the step above has reported), waits for Battle mode and a living hero, settles one second, presses the key | the state was Rising and then Seated, more than 100 frames were owned 3 s after the press, and the hero's controller is still Player |
+| `fly` | Holds forward input for 2 s | the view moved within 25 percent of the Pan speed at its height times the elapsed time |
+| `hero_stands` | Measures the hero over 1.5 s while seated | his ground speed is under 0.5 m/s |
+| `leave_glide` | Presses the key again | the state is Off, the glide was armed, and the engine's own camera is within 10 m of the hero inside 4 s |
+| `reenter_keeps_height` | Presses the key again | one second after the entry the view stands at the height above ground it left from, within a metre or 10 percent |
+
+Each line reads `[SeatTrial] step=<name> result=<PASS|FAIL> <facts>`, for example `step=fly result=PASS moved=60.0 expected=60.1
+height=22.0 seconds=2.0` (numbers from the test stand-in). The facts are what a person reads when a step fails. `leave_glide` writes `after=`, the distance 0.1 s after
+the leave, so a glide that eases (large) and one that snaps (small, the known limit below) can be told apart; a snap does not fail the step.
+Pictures: `hud_enter.bmp` two seconds after the entry and `hud_fly.bmp` 1.5 s into the flight, which the runner turns into PNG files.
+
+**How the key gets pressed.** `SeatView.PressSeatKey()` sets the flag that the real key test sets in `OnMissionScreenTick`, and the
+session reads that one flag, so the trial and a player take one path. `SeatView.TrialInput` replaces `ISeatScreenAdapter.ReadInput` in
+`OnFrame` while it is set, and `PressPending` is a read-only view of the flag. The host reads `State`, `Frames`, `GlideBegan` and
+`Faulted` from the session, and its ground reads go through the view's one `SeatScreenAdapter`, so a later stage's cursor and kept
+target are the state the trial sees.
+
+**How the script is built.** `CommandTrialScript.cs` is the driver and `CommandTrialScript.Seat.cs` holds the six steps and their
+registration, so each feature adds steps in files of its own (`SeatTrialSteps.All` joins each feature's row list, and the interface,
+the host and the test world are `partial`). A step is an iterator: its state is local, a wait is a `yield`, and the driver stops at the
+first verdict that is done. A step that ends without a verdict fails (`reason=no-verdict`). A step that must write an agent, a formation
+or a mission flag first yields `Verdict.InMissionTick`, and the code after the marker runs inside the script's `OnMissionTick`, which
+the screen tick does not resume. A step that outlasts its budget fails with `reason=timeout waiting=<what>`.
+
+**Ending.** The script reports `final` to `CommandTrialRun`; the autostart (on the application tick) calls `MBGameManager.EndGame`, which
+ends the mission through the normal teardown while the Seat is still up (so the `Finish` path runs with the Seat up), waits for the main
+menu, writes `command_trial_done.txt` (`reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `started`, `ended`) and quits.
+`command_trial_status.txt` is rewritten every 5 s. `reason=final` is the only success; the failures are `start_refused`, `start_failed`,
+`script_failed`, `never_live`, `wall_limit` (the mission clock stopped), `mission_closed`, `live_limit`, `autostart_failed`, or one of them
+joined to `exit_stalled`. A file write that fails (the runner reads the status file while the game replaces it) is logged as one warning
+and does not end the run; a done file that could not be written is logged as lost, and the quit still follows. An armed run
+answers no to `IsOpeningEscapeMenuOnFocusChangeAllowed`, which keeps the GauntletUI escape menu shut on a lost window focus; whether
+the engine pauses the mission on its own then is UNVERIFIED, and `wall_limit` bounds such a run. The autostart's phases and exits are
+pure over `ICommandTrialGameHost`, and `CommandTrialAutostartTests` drives each exit through a fake game with its own clock.
+
+**The judge** (`run_command_trial.py`) fails a run with any `result=FAIL` line, a missing `[SeatTrial]` line for a step in `--steps`, a
+`[CrashReport]` block, a failed `taom.seat-of-seeing.*` check line (the fault latch must stay silent), a log with no
+`[Shutdown] clean module unload` line, a `[BuildStamp]` that is not this checkout, or a `reason` other than `final`. A stamp is not this
+checkout when its sha is not HEAD, when its `.dirty` mark disagrees with the tree (dirty with no uncommitted file, or clean with one,
+a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `Dependencies`, `Stubs`,
+`Directory.Build.props`, `GameReferences.targets`) is newer than the stamp's build time. It cannot tell a dirty deploy of a sibling
+worktree at the same HEAD from this one when this tree's edits are older than that build, a deletion made after a dirty build, or a file
+restored to HEAD after a dirty build while an older edit stays in the tree. Only a content hash in the stamp could close those three. Its
+PASS text names the build.
+
+**What a PASS does not prove**, because only a person or a further run can:
+
+- The physical key and the engine's input reads. `TrialInput` stands in for `ReadInput`, so the game keys 14, 15 and 24, the movement
+  axes, the wheel and the mouse are not exercised, and neither is the two-part key test or a rebind.
+- How the blend and the glide look, whether the picture stays sharp, and whether the hero shows or hides correctly. The two pictures are
+  the only look at the frame.
+- Anything outside a custom battle: a campaign field battle, a siege, a hideout, a tournament, Fords of War, photo mode, a warg rage.
+- That the frame rate is high enough on another machine: the `enter` rule asks for more than 100 owned frames in 3 s, which is about
+  34 frames per second. A slower run fails that step honestly.
+- The order panel, the fault latch under a real throw, and first person (the trial leaves the player's camera mode as the config holds it).
 
 ## Known limits
 
@@ -367,7 +505,8 @@ launched while building S1.
 1. Add its id to `TaomSeatHotKeyCategory` (next free id from the contract table), raise `RegisteredSlotCount`, and register it. Pick
    a default no category on the mission scene layer binds, and add the category to the unbound-default test.
 2. Add its `str_key_name` and `str_key_description` rows to `global_strings.xml` and seed the 12 languages.
-3. Read it in `SeatView.OnMissionScreenTick` through `SeatHotKeys`, never in `OnMissionTick`.
+3. Read it from `SeatKeys`, which stage S2 adds so that `SeatView` stays under its 150 lines (contract 6.0); until then in
+   `SeatView.OnMissionScreenTick` through `SeatHotKeys`. Never in `OnMissionTick`.
 
 ## Performance
 
@@ -380,6 +519,13 @@ increment.
 
 ## Changelog
 
+- 2026-11-04: the field trial harness after its second review (contract Deviations 33 and 34): the script's steps are iterators, one
+  file per feature (`CommandTrialScript.Seat.cs`, `SeatTrialRows.cs`), the host gets the session and the view's one screen adapter, the
+  autostart runs over `ICommandTrialGameHost` with a test for every exit, `CommandTrialRun.Script` holds the armed, ended, refused and
+  failed decision, and the wrapper refuses a deploy whose `.dirty` mark disagrees with the tree.
+- 2026-11-04: the field trial (contract section 12) for stage S1: `Client/Features/SeatOfSeeing/Trial/`, the step table in `Domain/`,
+  `PressSeatKey`, `TrialInput` and `PressPending` on `SeatView`, `Frames` and `GlideBegan` on `SeatSession`, and
+  `tools/run_command_trial.py`. First run the same day: six steps passed (see Field trial).
 - 2026-11-04: S1 second review fixes: the default key is Q (B printed a banner message in campaign missions), the deployment edge comes
   from `OnMissionModeChange` and teardown also runs from `OnRemoveBehavior`, stand fast is written only from the mission tick (the
   queue is gone), the swap back of the warg rage needs a swap in and a rider who fell is not held, the look is written on every leave and
@@ -398,4 +544,5 @@ increment.
 
 - **Issue:** none yet. Open one before the first commit; `tools/ingame_checks/0.toml` (`issue = 0`) is renamed to `<issue>.toml`, with
   `issue` set, when it exists. Add a `triage-needs-ingame` label on close: the in-game steps above are owed.
-- **Status:** S1 built, not run in the game.
+- **Status:** S1 built. The field trial ran once in the game (2026-11-04, build `1735f2add.dirty`, six steps passed, exit 0); what it did
+  not cover is listed under Field trial, and the 16 steps for a person are still owed.
