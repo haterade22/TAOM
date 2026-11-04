@@ -4553,7 +4553,6 @@
 	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />
 	<string id="TAOM_FOW_Trait_Mordor_Beasts" text="{=TAOM_FOW_Trait_Mordor_Beasts}Call a creature to battle every 30 seconds." />
 	<string id="TAOM_FOW_Trait_Mordor_Orcs" text="{=TAOM_FOW_Trait_Mordor_Orcs}Orcs are very weak. Uruks and Numenoreans cost a lot." />
-	<string id="TAOM_FOW_Trait_Mordor_Stone" text="{=TAOM_FOW_Trait_Mordor_Stone}Your units deal 40% less damage to towers." />
 	<string id="TAOM_FOW_Trait_Isengard_Siege" text="{=TAOM_FOW_Trait_Isengard_Siege}Your units deal 15% more damage to towers." />
 	<string id="TAOM_FOW_Trait_Isengard_Waves" text="{=TAOM_FOW_Trait_Isengard_Waves}Free waves grow stronger every 5 minutes." />
 	<string id="TAOM_FOW_Trait_Isengard_Few" text="{=TAOM_FOW_Trait_Isengard_Few}50 fewer troops in the field, and only warg riders for cavalry." />

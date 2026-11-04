@@ -43,6 +43,15 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261103-233703 | threatened-lane rule | Mirkwood v Rohan | 256 / 681 | 1 / 3 | 26,667 / 21,849 | Mirkwood 2.9 | 4x. |
 | 20261103-234225 | threatened-lane rule | Erebor v Gundabad | 561 / 1,201 | 6 / 0 | 5 / 57,423 | Erebor 1.3 | 4x. Gundabad spent 5,824 on heroes; Erebor bought 2,850 of upgrades. |
 | 20261103-234757 | threatened-lane rule | Harad v Rohan | 642 / 661 | 3 / 2 | 25,505 / 23,569 | Harad 1.1 | 4x. Poison 718 doses, 8,692 damage. |
+| 20261104-001612 | tower limit 50 | Rivendell v Mordor | 142 / 1,533 | 2 / 1 | 9,727 / 22,881 | Rivendell 2.4 | 4x. 1,566 blows `Crowded`. Mordor's feat removed. |
+| 20261104-002054 | tower limit 50 | Dol Guldur v Erebor | 733 / 503 | 2 / 1 | 11,778 / 34,553 | Erebor 1.5 | 4x. No crash this time. |
+| 20261104-002531 | tower limit 50 | Gundabad v Isengard | 1,162 / 631 | 1 / 2 | 21,571 / 8,407 | Gundabad 1.0 | 4x. Check 12 failed: one warg rider not back in 60 s. |
+| 20261104-003008 | tower limit 50 | Dale v Gondor | 673 / 646 | 1 / 0 | 11,914 / 18,906 | Dale 1.1 | 4x. |
+| 20261104-003451 | tower limit 50 | Easterlings v Harad | 681 / 701 | 0 / 3 | 26,105 / 3,212 | Easterlings 1.0 | 4x. |
+| 20261104-003928 | tower limit 50 | Umbar v Dale | 722 / 643 | 1 / 0 | 20,757 / 9,790 | Dale 1.7 | 4x. |
+| 20261104-004402 | tower limit 50 | Mirkwood v Rohan | 288 / 664 | 2 / 2 | 28,159 / 27,990 | Mirkwood 1.4 | 4x. |
+| 20261104-004839 | tower limit 50 | Erebor v Gundabad | 529 / 1,284 | 3 / 1 | 6,092 / 34,602 | Erebor 1.4 | 4x. |
+| 20261104-005316 | tower limit 50 | Harad v Rohan | 645 / 637 | 1 / 2 | 31,110 / 26,350 | Rohan 0.9 | 4x. Harad also 0.9. |
 
 ## Findings and changes
 
@@ -132,9 +141,21 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 - **A winner's or a horde's gold:** Erebor ended on 4,510 and Gundabad on 5,448, with nothing left to buy.
 - **Frame time** at 4x rose from about 4 ms in `170032` to about 10 ms from `190524` on. The builds between differ only by where the speed button stands. The cause is not known.
 
+### The tower assault limit (this change)
+
+**Why:** the measure above left the towers one-sided, and the cause sat in the tower rule. Every body at a wall counts in full, so a cheap pack is the best tower killer: an elven tower fell 32 s after its first blow, about 250 damage a second, while Rivendell's own attacks did 21 to 38 a second. That conflicts with the design, where a tower takes many waves. A horde then stands in every lane, so the other side never reaches a tower.
+
+**Changed:** a tower takes at most 50 points a second from ordinary blows (`towers.assaultDamagePerSecond`). Heroes and siege units pass the limit and spend none of it. An outer tower now lasts at least 160 s against soldiers alone. Mordor's `damageToTowers` 0.6 and its trait line are gone, because the limit treats every horde the same way.
+
+**Result, the same nine pairs at 4x:** towers lost moved from 5 / 0 to 2 / 1 for Rivendell v Mordor, 6 / 0 to 3 / 1 for Erebor v Gundabad, 3 / 0 to 1 / 0 for Dale v Gondor, and 1 / 3 to 1 / 0 for Umbar v Dale. Easterlings v Harad stayed one-sided at 0 / 3. The side that was behind now reaches towers: Rivendell's tower damage rose from 522 to 9,727, Dol Guldur's from 0 to 11,778, Isengard's from 0 to 8,407, and Erebor's from 5 to 6,092. No keep fell in 15 minutes, and first towers fell later, between 324 and 905 s in most pairs. Between 569 and 1,736 blows per match were `Crowded`.
+
+**Still to check:** how long a whole match lasts now, and at 1x. These are single matches at 4x.
+
 ## Open questions
 
-- **A small army's attack:** Rivendell dealt 7 tower damage in 45 minutes. The new rule may change that. If it does not, a side that is behind needs a way to gather an attack in one lane.
+- **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
+- **Dol Guldur and Harad:** Dol Guldur still loses its fights (gold trade 0.64), and Harad lost 3 towers and took none against Easterlings.
+- **A small army's attack:** Rivendell dealt 7 tower damage in 45 minutes before the limit, and 9,727 in 15 minutes with it. Read it again in the next long match.
 - **A horde's late gold:** with every lane full, every hero out and its cycle's upgrades bought, Mordor has nothing to spend on. It ended a 45-minute match on 8,973 gold.
 - **Mordor's heroes:** 0.4 to 1.5 kills per minute in `200151` and `200628`, where Rivendell's made 1.7 to 5.4. In `201138` Sauron made 4.6 and the Nazgul 0.9.
 

@@ -28,6 +28,7 @@ internal sealed partial class FordsMatch
     private readonly BountyRules _bounty;
     private readonly TowerChain _chain;
     private readonly TowerDamageRules _damage;
+    private readonly TowerAssaultLimit _assaultLimit;
     private readonly UpgradeBook _upgrades;
     private readonly PoisonRules _poison = new();
     private readonly TowerRegen _regen;
@@ -74,6 +75,7 @@ internal sealed partial class FordsMatch
         _chain = new TowerChain(layout, config.Towers, feats);
         _upgrades = new UpgradeBook(config.UpgradesOrDefault, factions);
         _damage = new TowerDamageRules(config.Towers, _chain, feats, _upgrades);
+        _assaultLimit = new TowerAssaultLimit(config.Towers.AssaultDamagePerSecond);
         _regen = new TowerRegen(config.Towers, _chain, feats);
         _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes, feats);
@@ -412,6 +414,13 @@ internal sealed partial class FordsMatch
     public int AdjustTowerDamage(TowerHit hit, out TowerDamageReason reason)
     {
         var effective = Judge(hit, out reason);
+        if (reason == TowerDamageReason.Applied && hit.AttackerRole != UnitRole.Hero && hit.AttackerRole != UnitRole.Siege)
+        {
+            effective = _assaultLimit.Take(hit.TowerId, effective, _clock.Elapsed);
+            if (effective == 0)
+                reason = TowerDamageReason.Crowded;
+        }
+
         if (effective > 0)
         {
             _chain.ApplyDamage(hit.TowerId, effective);

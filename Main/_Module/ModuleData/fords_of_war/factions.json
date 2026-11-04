@@ -232,12 +232,11 @@
       "culture": "mordor",
       "aiBuyCycle": ["orc_rabble", "orc_rabble", "orc_impalers", "beast:warg_pack", "orc_hunters", "orc_rabble", "uruk_warriors", "up:melee_damage", "orc_rabble", "orc_hunters", "beast:hill_troll", "orc_rabble", "uruk_crossbows", "orc_rabble", "orc_impalers", "up:melee_armour", "baraddur_guard", "orc_rabble", "beast:cave_troll", "num_knights", "orc_rabble", "temple_guard"],
       "upgradeCost": { "melee_damage": 0.85, "melee_armour": 1.25, "missile_armour": 1.25 },
-      "feats": { "damageToTowers": 0.6, "unitCapBonus": 100, "waveInterval": 0.75 },
+      "feats": { "unitCapBonus": 100, "waveInterval": 0.75 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Mordor_Beasts}Call a creature to battle every 30 seconds.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Mordor_Orcs}Orcs are very weak. Uruks and Numenoreans cost a lot.", "strength": false },
-        { "text": "{=TAOM_FOW_Trait_Mordor_Stone}Your units deal 40% less damage to towers.", "strength": false }
+        { "text": "{=TAOM_FOW_Trait_Mordor_Orcs}Orcs are very weak. Uruks and Numenoreans cost a lot.", "strength": false }
       ],
       "units": [
         { "id": "orc_rabble", "troop": "fow_mordor_orc_fighter", "role": "Infantry", "packSize": 24, "level": 11, "eliteWeight": 0.6 },
