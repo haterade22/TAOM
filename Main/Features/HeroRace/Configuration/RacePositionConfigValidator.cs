@@ -6,7 +6,7 @@ using static TAOM.Features.HeroRace.Configuration.RacePositionConfig;
 namespace TAOM.Features.HeroRace.Configuration;
 
 /// <summary>
-/// Semantic validation for the two race-framing configs, per the "Config Providers MUST Validate"
+/// Semantic validation for the race-framing configs, per the "Config Providers MUST Validate"
 /// rule in <c>.claude/rules/csharp-architecture.md</c>.
 ///
 /// <para>These files are hand-edited (the documented workflow for adding a race is "tune values
