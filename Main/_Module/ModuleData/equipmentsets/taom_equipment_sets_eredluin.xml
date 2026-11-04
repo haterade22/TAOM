@@ -49,18 +49,6 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-		<EquipmentRoster id="eredluin_bat_template_medium_e" culture="Culture.eredluin">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_iron_sword_b" />
-			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_e" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
 	<!-- ==================== EREBOR LORD CIVILIAN EQUIPMENT ==================== -->
 
 		<EquipmentRoster id="eredluin_civ_template_default_a" culture="Culture.eredluin">
@@ -106,18 +94,6 @@
 			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_e" />
 			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_a" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-		<EquipmentRoster id="eredluin_civ_template_default_e" culture="Culture.eredluin">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
-			<Equipment slot="Item1" id="Item.sm_dwarf_iron_sword_b" />
-			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
-			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
-			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
-			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_e" />
-			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

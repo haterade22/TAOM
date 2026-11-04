@@ -156,10 +156,10 @@ TARGETS = {
         # ---- opt-in keys ----
         # Clone only these standalone files. The troop tree is tools/generate_arthedain_troops.py.
         "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
-        # Of Gondor's 74 equipment rosters keep the lord template family a to e only: the culture block
-        # names _a, and generate_new_faction_kingdoms.py assigns letters a to e by lord (Arthedain's four
+        # Of Gondor's equipment rosters keep the lord template family a to d only: the culture block
+        # names _a, and generate_new_faction_kingdoms.py assigns letters by lord (Arthedain's four
         # lords per clan use a to d). The rest are Gondor's named lords' kits.
-        "rosters_kept": r"^arthedain_(bat_template_medium|civ_template_default)_[a-e]$",
+        "rosters_kept": r"^arthedain_(bat_template_medium|civ_template_default)_[a-d]$",
         # The cloned lord, ruler, heir and enlistment rosters wear the Arnor kit (Mike, 2026-10-07):
         # Gondor's armour piece -> the Arnor piece of the same slot and tier; weapons, horses and
         # harnesses keep. Applied only to these files' cloned blocks.
@@ -278,7 +278,7 @@ def _arnor_successor(**over):
                                 "party_names", "own_reg")}
     c = over["tag"].lower()
     cfg.update(
-        rosters_kept=rf"^{c}_(bat_template_medium|civ_template_default)_[a-e]$",
+        rosters_kept=rf"^{c}_(bat_template_medium|civ_template_default)_[a-d]$",
         id_overrides={f"{c}_ano_peasant": f"{c}_levy", f"{c}_ano_footman": f"{c}_dunadan"},
         mercenaries=[f"{c}_dunadan_merc"],
     )
@@ -419,8 +419,8 @@ TARGETS["eredluin"] = {
               "taom_erebor_morale", "taom_erebor_smithing", "taom_erebor_snow_speed"],
     # ---- opt-in keys, as Arthedain's ----
     "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
-    # The lord template family a to e only: Erebor's ram rosters are for a realm that rides rams.
-    "rosters_kept": r"^eredluin_(bat_template_medium|civ_template_default)_[a-e]$",
+    # The lord template family a to d only: Erebor's ram rosters are for a realm that rides rams.
+    "rosters_kept": r"^eredluin_(bat_template_medium|civ_template_default)_[a-d]$",
     "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],
     # The villager's upgrade path and the culture's basic troop land on the generated tree. The
     # noble and the four militia ids are the same names in both trees.
@@ -517,9 +517,9 @@ def _northman_successor(scaffold, **over):
         "orc_remap": False,
         "feats": s["feats"],
         "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
-        # The lord template family a to e only, as Arthedain's (Dale has a to h, and Rohan its named
+        # The lord template family a to d only, as Arthedain's (Dale has a to h, and Rohan its named
         # lords' kits besides).
-        "rosters_kept": rf"^{c}_(bat_template_medium|civ_template_default)_[a-e]$",
+        "rosters_kept": rf"^{c}_(bat_template_medium|civ_template_default)_[a-d]$",
         "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],
         # The culture's basic and elite basic troops (and executioner) land on the generated tree. The
         # four militia ids are the same names in both trees. The source npcs, equipment sets and
@@ -1103,14 +1103,13 @@ def source_blocks(kind, text, src, cfg=None):
             text, r'([ \t]*<EquipmentRoster\b[^>]*\bid="npc_companion_equipment_template_%s".*?</EquipmentRoster>\n)' % src,
             f"wanderer roster {src}")
     if kind == "party":
-        # Match the 12 CANONICAL template ids exactly, never "any id containing the source name".
+        # Match the 10 CANONICAL template ids exactly, never "any id containing the source name".
         # The loose form also swept up the per-clan family that generate_new_faction_kingdoms.py
         # owns — `kingdom_hero_party_goblin_bluecraig_1_template` contains "goblin", so cloning it
         # for Blue Craig produced `kingdom_hero_party_bluecraig_bluecraig_1_template`: a duplicate
         # id, invisible to the validator, that the engine resolves by silently shadowing one copy.
         names = [f"villager_{src}_template", f"caravan_template_{src}", f"elite_caravan_template_{src}",
-                 f"kingdom_hero_party_{src}_template", f"kingdom_hero_party_mercenary_{src}_template",
-                 f"kingdom_hero_party_outlaw_{src}_template", f"militia_{src}_template",
+                 f"kingdom_hero_party_{src}_template", f"militia_{src}_template",
                  f"patrol_party_{src}_template_level_1", f"patrol_party_{src}_template_level_2",
                  f"patrol_party_{src}_template_level_3", f"rebels_{src}_template",
                  f"vassal_reward_troops_{src}"]

@@ -128,7 +128,7 @@ No JSON or runtime-tunable config. Two author-time data sources:
 | File | Change |
 |------|--------|
 | `Main/_Module/ModuleData/spcultures.xslt` | Dale block (`Culture[@id='sturgia']`, lines 1191-1312 as of 2026-08-12): 63 attribute overrides, of which 8 are the party/patrol template bindings, plus the two caravan child elements. The original 2026-05-26 pass set 9 military attributes; `villager_party_template` and both caravan lists were added 2026-08-12, and `villager_dale_template` / `caravan_template_dale` / `elite_caravan_template_dale` had to be authored because Dale had never had them |
-| `Main/_Module/ModuleData/taom_partyTemplates.xml` | Dale party templates: the base set (villager, caravan, elite caravan, hero, mercenary, outlaw, militia, three patrol levels, rebels, vassal reward; from line 988), nine per-clan `kingdom_hero_party_dale_sturgia_N_template` (from line 2100) and `supply_caravan_template_dale` (line 5187) |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | Dale party templates: the base set (villager, caravan, elite caravan, hero, militia, three patrol levels, rebels, vassal reward; from line 988), nine per-clan `kingdom_hero_party_dale_sturgia_N_template` (from line 2100) and `supply_caravan_template_dale` (line 5187) |
 | `Main/_Module/SubModule.xml` | Registered `troops/troops_dale` XmlNode |
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Dale.cs` | `InitializeDaleCulture()` and `InitializeDaleSettlements()`, called from the static ctor in `VolunteerRecruitmentService.cs` |
 | `tools/validate_all_troop_refs.py` | Reads every `troops/troops_*.xml` from the folder, so `troops_dale.xml` is covered without a list entry |

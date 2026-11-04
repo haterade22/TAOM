@@ -221,12 +221,6 @@ def party_templates():
             (p + "forest_guard", 0, 15), (p + "woodman_axeman", 0, 13), (p + "forest_archer", 0, 13),
             (p + "ironwood_guard", 0, 10), (p + "veteran_forest_guard", 0, 8), (p + "master_archer", 0, 8),
             (p + "woodman_axe_warrior", 0, 8), (p + "forest_warden", 0, 5)]),
-        ("kingdom_hero_party_mercenary_angaladh_template", [
-            (p + "spearman", 8, 16), (p + "woodman_bowman", 4, 8), (p + "forest_spearman", 4, 8),
-            (p + "woodman_archer", 2, 4), (p + "woodman_axeman", 2, 4)]),
-        ("kingdom_hero_party_outlaw_angaladh_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "woodman_bowman", 2, 4)]),
         ("militia_angaladh_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_angaladh_template_level_1", [

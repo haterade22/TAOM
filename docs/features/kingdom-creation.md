@@ -162,7 +162,7 @@ Required attributes:
 | `settlement_patrol_template_level_3` | `PartyTemplate.patrol_party_harad_template_level_3` | Strong, Guard House level 3 |
 
 Every value above was a vanilla Calradian id or a non-existent one until 2026-08-12. Harad is used as
-the worked example because it is a complete TAOM culture with all twelve templates; substitute
+the worked example because it is a complete TAOM culture with all ten templates; substitute
 whichever culture yours is adjacent to. Leaving the three patrol rows as "existing template" is how
 they got left unbound in the first place, so they now name real ids. Full contract, including the
 two crash surfaces and the caravan two-edit rule:

@@ -18,6 +18,7 @@ rides on Rohan's mounts (every horse with a harness) and adds the horse-archer r
 """
 import dataclasses
 import os
+import re
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -32,6 +33,7 @@ import generate_dorwinion_troops as gdot  # noqa: E402
 import generate_eredluin_troops as gelt  # noqa: E402
 import generate_rhudaur_troops as grt  # noqa: E402
 import generate_southrhovanion_troops as gsrt  # noqa: E402
+import promote_borrowed_cultures as promo  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
 import realm_troops as rt  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
@@ -401,9 +403,34 @@ class RohanRealmTests(unittest.TestCase):
             self.assertIsNone(npc.get("race"), npc.get("id"))
             self.assertEqual(npc.find("face/face_key_template").get("value"), "BodyProperty.fighter_rohan")
 
-    def test_the_party_templates_are_the_nine_cardolan_names(self):
+    def test_the_party_templates_are_the_cardolan_names(self):
         wanted = {tid.replace("cardolan", "{c}") for tid, _ in gct.party_templates()}
         self.assertEqual({tid.replace(gsrt.CULTURE, "{c}") for tid, _ in gsrt.party_templates()}, wanted)
+
+
+class UnboundDataTests(unittest.TestCase):
+    """Only a clan's default_party_template binds a hero party template, and no TAOM clan names a mercenary or
+    outlaw one, so every realm that wrote them shipped dead data (rca-ered-luin-2026-10-27.md row 16). The
+    engine reads no such id by name: its one kingdom_hero_party literal is the caravan ambushers'."""
+
+    def test_no_realm_writes_a_mercenary_or_outlaw_template(self):
+        for module in GENERATORS:
+            ids = [tid for tid, _ in module.party_templates()]
+            self.assertEqual([tid for tid in ids if "_mercenary_" in tid or "_outlaw_" in tid], [], module.__name__)
+
+    def test_the_shipped_file_holds_no_mercenary_or_outlaw_template(self):
+        text = rt.PARTY.read_text(encoding="utf-8-sig")
+        self.assertEqual(re.findall(r'id="(kingdom_hero_party_(?:mercenary|outlaw)_[^"]+)"', text), [])
+
+    def test_no_promoted_realm_keeps_a_lord_roster_past_the_four_its_clans_use(self):
+        # generate_new_faction_kingdoms.py gives a clan's lords a, b, c, d by position, and these realms' clans
+        # hold at most four. A fifth roster carries no <Flags>, so no engine template search reads it either.
+        kept = {name: cfg["rosters_kept"] for name, cfg in promo.TARGETS.items() if cfg.get("rosters_kept")}
+        self.assertTrue(kept, "no target carries rosters_kept")
+        for name, pattern in kept.items():
+            self.assertRegex(f"{name}_bat_template_medium_d", pattern)
+            self.assertNotRegex(f"{name}_bat_template_medium_e", pattern)
+            self.assertNotRegex(f"{name}_civ_template_default_e", pattern)
 
 
 class DwarfRealmOptionTests(unittest.TestCase):

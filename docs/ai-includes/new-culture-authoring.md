@@ -13,7 +13,7 @@ If you're creating a **net-new culture entry in `taom_spcultures.xml`** (the und
 
 1. **Armor**: enumerate Solus's mesh IDs from `.tpac` → write generator script → emit XML files → register `<culture>/` folder in `LOTRLOME_Armory/SubModule.xml`.
 2. **Troops**: lore-research → tier design on paper → write generator script → emit `troops_<culture>.xml` → register in `Main/_Module/SubModule.xml`.
-3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (12 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
+3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (10 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
 4. **Validate** via `python tools/validate_moduledata.py` (read its warnings), then `/verify` → `/deep-review` → RCA + commit. `/review-codex` runs only when the maintainer asks for it (paid).
 5. **Expect 5–10 iteration commits** after the initial ship (renames, equipment swaps, balance tuning, settlement-specific recruitment, color schemes). That's normal — the first ship is a draft.
 
@@ -247,13 +247,11 @@ absent, unbound or points outside `taom_partyTemplates.xml`. Full contract:
 
 ### 3b. Party templates
 
-Add 12 standard templates to `taom_partyTemplates.xml` (mirror an existing well-developed culture like Rohan, which has all twelve):
+Add 10 standard templates to `taom_partyTemplates.xml` (mirror an existing well-developed culture like Rohan, which has all ten):
 
 | Template | Composition |
 |---|---|
 | `kingdom_hero_party_<culture>_template` | Full T2–T7 lineup. 10–20 lowest tier, scaling down to 1–3 elites. |
-| `kingdom_hero_party_mercenary_<culture>_template` | 8–16 recruits + 4–8 mid-tier + 2–4 elite |
-| `kingdom_hero_party_outlaw_<culture>_template` | 8–16 recruits + 4–8 militia + 2–4 specialists |
 | `militia_<culture>_template` | 1+1 of the spearman + archer militia troops |
 | `patrol_party_<culture>_template_level_1/2/3` | T2 / T4 / T6-grade patrols |
 | `rebels_<culture>_template` | 24–32 recruits + 2–3 militia |
@@ -393,7 +391,7 @@ The patterns visible in the Dale generator code (clone these explicitly for your
 | **Crown guard** | `Main/_Module/ModuleData/crown_guard/crown_guard_cultures.json` and `CrownGuardMap.Default()` | modified when the culture rules a kingdom (+ a row; gated by `ShippedConfig_KeysEqualTheKingdomCultures`) |
 | **Hall of Fire** | `Main/_Module/ModuleData/hall_of_fire/hall_of_fire.json` and `HallOfFireMap.Default()` | modified when the culture owns a settlement (+ a row; gated by `ShippedConfig_EveryConversionTargetCultureHasARowOrIsVanilla`, `ShippedConfig_EqualsTheBuiltInDefault` and the live `EveryCultureOwningANonHideoutSettlement_HasARowOrIsVanilla`) |
 | **Culture wiring** | `Main/_Module/ModuleData/spcultures.xslt` | modified (Culture[@id='X'] block — ~9 military attrs minimum) |
-| **Party templates** | `Main/_Module/ModuleData/taom_partyTemplates.xml` | modified (+12 templates) |
+| **Party templates** | `Main/_Module/ModuleData/taom_partyTemplates.xml` | modified (+10 templates) |
 | **Recruitment** | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | modified (+ `InitializeXxxCulture` minimum) |
 | **Tests** | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | modified (+ low/high/fallthrough tests) |
 | **Feature doc** | `docs/features/<culture>.md` | new |

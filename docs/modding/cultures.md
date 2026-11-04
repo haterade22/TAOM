@@ -416,7 +416,7 @@ Every count below was produced by the command beside it, run from the repo root,
 ## Read next
 
 - [`docs/features/culture-playability-wiring.md`](../features/culture-playability-wiring.md), the 14-row playability checklist and the party-template contract.
-- [`docs/ai-includes/new-culture-authoring.md`](../ai-includes/new-culture-authoring.md), the bind-versus-passthrough table and the 12 standard party templates.
+- [`docs/ai-includes/new-culture-authoring.md`](../ai-includes/new-culture-authoring.md), the bind-versus-passthrough table and the 10 standard party templates.
 - [`.claude/rules/xslt.md`](../../.claude/rules/xslt.md), the passthrough rules and the two-edit rule for child elements.
 - [`docs/features/kingdom-creation.md`](../features/kingdom-creation.md), the 13-file ordered sequence and the id naming conventions.
 - [`docs/features/cultural-feats.md`](../features/cultural-feats.md), what a feat can actually do and where its C# lives.

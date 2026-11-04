@@ -320,8 +320,6 @@ Per `.claude/rules/troops.md`, each TAOM culture should have these templates:
 | Template ID pattern | Purpose |
 |---|---|
 | `kingdom_hero_party_{culture}_template` | Lord retinue (full T1-T9 range) |
-| `kingdom_hero_party_mercenary_{culture}_template` | Mercenary band (mid-tier professional) |
-| `kingdom_hero_party_outlaw_{culture}_template` | Outlaw / raider mix |
 | `patrol_party_{culture}_template_level_1` | Weak patrol |
 | `patrol_party_{culture}_template_level_2` | Medium patrol |
 | `patrol_party_{culture}_template_level_3` | Elite patrol |
@@ -618,7 +616,7 @@ Every `<PartyTemplateStack troop="NPCCharacter.X" />` must resolve to a real tro
 
 **Step 3 — per-culture coverage audit per `.claude/rules/troops.md` template-type table:**
 
-For each of the 10 TAOM custom cultures (+5 XSLT-renamed), confirm the 12 expected templates exist (`kingdom_hero_party_{culture}_template`, `kingdom_hero_party_mercenary_{culture}_template`, etc.). Missing patrol_party_level_3 → no elite patrols for that culture.
+For each of the 10 TAOM custom cultures (+5 XSLT-renamed), confirm the 10 expected templates exist (`kingdom_hero_party_{culture}_template`, `militia_{culture}_template`, etc.). Missing patrol_party_level_3 → no elite patrols for that culture.
 
 ### NPC files (18 files in `characters/`)
 

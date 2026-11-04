@@ -238,12 +238,6 @@ def party_templates():
             (p + "axe_warrior", 0, 15), (p + "woodman_archer", 0, 13), (p + "carrock_guard", 0, 13),
             (p + "vale_horseman", 0, 10), (p + "veteran_beorning", 0, 8), (p + "woodman_marksman", 0, 8),
             (p + "great_axe", 0, 8), (p + "champion", 0, 5)]),
-        ("kingdom_hero_party_mercenary_anduinvale_template", [
-            (p + "axeman", 8, 16), (p + "woodman_bowman", 4, 8), (p + "beorning_axeman", 4, 8),
-            (p + "woodman_archer", 2, 4), (p + "vale_rider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_anduinvale_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "woodman_bowman", 2, 4)]),
         ("militia_anduinvale_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_anduinvale_template_level_1", [

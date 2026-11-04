@@ -59,20 +59,6 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="bluecraig_bat_template_medium_e" culture="Culture.bluecraig">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.wm_gundabad_mace_a01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
-			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
 	<!-- ==================== GUNDABAD LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="bluecraig_civ_template_default_a" culture="Culture.bluecraig">
@@ -126,20 +112,6 @@
 			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
 			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
 			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
-			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
-			<Equipment slot="Horse" id="Item.warg_brown" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="bluecraig_civ_template_default_e" culture="Culture.bluecraig">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.wm_gundabad_mace_a01" />
-			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
-			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>

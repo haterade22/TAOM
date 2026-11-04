@@ -186,8 +186,7 @@ def main():
         for n in range(10))
     gund_wroster = extract(src_wequip, r'([ \t]*<EquipmentRoster\b[^>]*\bid="npc_companion_equipment_template_gundabad".*?</EquipmentRoster>\n)')
     party_ids = ["villager_gundabad_template", "caravan_template_gundabad", "elite_caravan_template_gundabad",
-                 "kingdom_hero_party_gundabad_template", "kingdom_hero_party_mercenary_gundabad_template",
-                 "kingdom_hero_party_outlaw_gundabad_template", "militia_gundabad_template",
+                 "kingdom_hero_party_gundabad_template", "militia_gundabad_template",
                  "patrol_party_gundabad_template_level_1", "patrol_party_gundabad_template_level_2",
                  "patrol_party_gundabad_template_level_3", "rebels_gundabad_template", "vassal_reward_troops_gundabad"]
     gund_party = "".join(

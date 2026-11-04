@@ -220,15 +220,14 @@ Check: `python tools/validate_moduledata.py --code BROKEN_PARTY_TEMPLATE_REF`
 Takes effect: next save load, and only for parties spawned after it. The `partyTemplates` list is re-read on every campaign load, saved games included (`Campaign.cs:1396-1399`, `:1466-1473`); an existing lord keeps the roster he was created with.
 Code: No code changes needed
 
-### Add the twelve templates a new culture needs
+### Add the ten templates a new culture needs
 
-1. Author all twelve per-culture kinds in the same file, using an existing culture as the pattern:
-   `kingdom_hero_party_<c>_template`, `kingdom_hero_party_mercenary_<c>_template`,
-   `kingdom_hero_party_outlaw_<c>_template`, `patrol_party_<c>_template_level_1` and `_2` and `_3`,
+1. Author all ten per-culture kinds in the same file, using an existing culture as the pattern:
+   `kingdom_hero_party_<c>_template`, `patrol_party_<c>_template_level_1` and `_2` and `_3`,
    `rebels_<c>_template`, `vassal_reward_troops_<c>`, `militia_<c>_template`,
    `villager_<c>_template`, `caravan_template_<c>`, `elite_caravan_template_<c>`. Erebor ships all of
-   them, plus one per-clan template each for its seven clans, which is 21 ids carrying `erebor`.
-   <!-- measured: rg -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | wc -l 2026-09-05 -->
+   them, plus one per-clan template each for its seven clans, which is 20 ids carrying `erebor`.
+   <!-- measured: rg -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | wc -l 2026-11-04 -->
 2. Add a `kingdom_hero_party_<c>_<clan>_N_template` for each clan you intend to give its own roster.
 3. Bind the eight culture attributes and both caravan child lists in `taom_spcultures.xml`, per the
    table in "What binds a template" above. See [Cultures](cultures.md).

@@ -39,7 +39,7 @@ reordered so the rows that crash come before the rows that only disappoint.
 | 8 | Child, teen, lord and education equipment templates | `equipmentsets/taom_{child_equipment,lord_template_equipment,education_equipment}_templates.xml` ([equipment-rosters.md](equipment-rosters.md)) | NRE on new game |
 | 9 | Stage-2 education tutor templates, 6 of them | `taom_education_character_templates.xml` | Age-8 CTD (#354) |
 | 11 | Owns at least one settlement | `TAOM_Map/ModuleData/settlements.xml` ([settlements.md](settlements.md)) | Daily-tick CTD (#374) |
-| 13 | Party templates: all twelve authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` plus `taom_spcultures.xml` ([party-templates.md](party-templates.md)) | A null or empty binding is an NRE in `SpawnPatrolParty` / `SpawnCaravan`; an unbound one is silently Calradian |
+| 13 | Party templates: all ten authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` plus `taom_spcultures.xml` ([party-templates.md](party-templates.md)) | A null or empty binding is an NRE in `SpawnPatrolParty` / `SpawnCaravan`; an unbound one is silently Calradian |
 | 14 | `as_<race>_facegen` action set, only if the culture introduces a race | `LOTRLOME_Armory/ModuleData/action_sets.xml` | T-pose or contorted mesh |
 
 Row 11 and row 14 name files in the game install. This file lives in the game install, not the repo;
@@ -183,9 +183,9 @@ appends a null and the first caravan spawn is an NRE:
     </elite_caravan_party_templates>
 ```
 
-Lindon carries 14 party templates in `taom_partyTemplates.xml`: the 12 standard ones plus two legacy
-`kingdom_hero_party_rivendell_lindon_*` rows left over from the borrowed era.
-<!-- measured: rg -o 'MBPartyTemplate id="[^"]*lindon[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | sort 2026-09-05 -->
+Lindon carries 13 party templates in `taom_partyTemplates.xml`: the 10 standard ones, a supply caravan and two
+legacy `kingdom_hero_party_rivendell_lindon_*` rows left over from the borrowed era.
+<!-- measured: rg -o 'MBPartyTemplate id="[^"]*lindon[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | sort 2026-11-04 -->
 
 The three new files are registered in `Main/_Module/SubModule.xml` inside a
 `<!-- TAOM-NEWCULTURE-REG:BEGIN -->` marker region, one `<XmlNode>` each for
@@ -239,7 +239,7 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
 4. Author `troops/troops_{id}.xml` and register it. To clone a generator, copy
    `tools/generate_dale_troops.py` per [new-culture-authoring.md](../ai-includes/new-culture-authoring.md).
 5. Author `characters/npcs_{id}.xml` (26 notable and headman slots plus townsfolk), and register it.
-6. Add the twelve party templates to `taom_partyTemplates.xml` ([party-templates.md](party-templates.md),
+6. Add the ten party templates to `taom_partyTemplates.xml` ([party-templates.md](party-templates.md),
    [party-template-sizing.md](../reference/party-template-sizing.md)).
 7. Add 10 wanderers, 10 wanderer skill sets and each wanderer's seven backstory rows in
    `taom_wanderer_strings.xml` (`WandererBackstoryCoverageTests`).
@@ -399,7 +399,7 @@ All measured 2026-09-05 from the repo at `bannerlord-1.4.5` and the installed mo
 | 20 `taom_equipment_sets_*.xml` files, all under `equipmentsets/` | `ls Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml \| wc -l` |
 | 16 `troops_*.xml` files | `ls Main/_Module/ModuleData/troops/troops_*.xml \| wc -l` |
 | 16 recruitment-pool partials, 22 distinct `CultureMap` keys | `ls Main/Features/TroopProgression/RecruitmentPools/*.cs \| wc -l` and `rg -o 'CultureMap\["[a-z]+"\] =' Main/Features/TroopProgression/RecruitmentPools/ \| sort -u \| wc -l` |
-| 383 `MBPartyTemplate` entries, 14 of them Lindon's (12 standard, 2 legacy) | `rg -c 'MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -o 'MBPartyTemplate id="[^"]*lindon[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml \| sort` |
+| 464 `MBPartyTemplate` entries, 13 of them Lindon's (10 standard, 1 supply caravan, 2 legacy) | `rg -c 'MBPartyTemplate id=' Main/_Module/ModuleData/taom_partyTemplates.xml` and `rg -o 'MBPartyTemplate id="[^"]*lindon[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml \| sort` |
 | 22 entries in `charactercreation/cultures.json`, using 10 distinct race values | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/charactercreation/cultures.json',encoding='utf-8-sig'));r=set();[r.update(x.get('races',[])) for x in d];print(len(d),len(r))"` |
 | Lindon `<Culture>` element: 336 lines | `python -c "l=open('Main/_Module/ModuleData/taom_spcultures.xml',encoding='utf-8-sig').read().split('\n');s=[i for i,x in enumerate(l) if 'id=\"lindon\"' in x][0]-1;e=[i for i,x in enumerate(l) if '</Culture>' in x and i>s][0];print(e-s+1)"` |
 | 74 NPCs in `npcs_lindon.xml`, 26 of them notables and headmen | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/characters/npcs_lindon.xml').getroot();c=collections.Counter(e.get('occupation') for e in r.iter('NPCCharacter'));print(sum(c.values()),sum(v for k,v in c.items() if k in ('Merchant','Preacher','Artisan','GangLeader','RuralNotable','Headman')))"` |
