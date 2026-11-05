@@ -46,6 +46,8 @@ public class MessengerEncyclopediaPrefabTests
         Assert.IsNotNull(button);
         Assert.AreEqual("@IsMessengerAvailable", button.GetAttribute("IsEnabled"));
         Assert.AreEqual("ExecuteSendMessenger", button.GetAttribute("Command.Click"));
+        // ButtonWidget.RefreshState hands its state to the label only when UpdateChildrenStates is set (#989).
+        Assert.AreEqual("true", button.GetAttribute("UpdateChildrenStates"), "the label must dim with the disabled button");
         // The mixin binds an empty hint whenever the button is enabled (MessengerEncyclopediaMixin.UpdateAvailability),
         // so a hint inside the button could never show anything: the one hint sits on the wrapper.
         Assert.IsNull(button.SelectSingleNode("descendant::HintWidget"), "no hint inside the button: it would never show text");

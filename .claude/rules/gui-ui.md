@@ -30,6 +30,8 @@ brush is its own declaration. Shipped instances of this bug: `ButtonBrush1.Text`
 PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml ×14 —
 deferred cleanup, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
 
+**Gate:** `PrefabExtensionBrushTests` fails a brush-typed attribute (`Brush`, `IconBrush`, ...) in a PrefabExtension that no module in TAOM's DependedModule set declares (#989). It does not cover prefab XML files.
+
 ### Adding a NEW sprite (not just referencing an existing one)
 
 The 4 steps above are for *referencing* a sprite that's already baked. **Adding a new sprite PNG is a different, multi-step process** — a loose PNG + a hand-added `TAOMSpriteData.xml` entry alone renders **BLANK** in the player client (no error, no log). Follow the canonical workflow in [docs/features/gui-sprite-system.md](../../docs/features/gui-sprite-system.md) ("The sprite-bake pipeline" + "Adding a New Sprite" + "Verifying a sprite"):

@@ -39,13 +39,14 @@ internal class MessengerEncyclopediaPrefabExtension : PrefabExtensionInsertPatch
             " IsEnabled=\"@IsMessengerAvailable\"" +
             " Command.Click=\"ExecuteSendMessenger\"" +
             " DoNotPassEventsToChildren=\"true\"" +
-            " Brush=\"Popup.PartySelection.Confirm\">" +
+            " UpdateChildrenStates=\"true\"" +
+            " Brush=\"Popup.Button.Base\">" +
             "<Children>" +
             "<TextWidget" +
             " WidthSizePolicy=\"StretchToParent\"" +
             " HeightSizePolicy=\"StretchToParent\"" +
             " Text=\"@SendMessengerActionName\"" +
-            " Brush=\"Popup.PartySelection.Button.Text\"" +
+            " Brush=\"Popup.Button.Text\"" +
             " VerticalAlignment=\"Center\"" +
             " HorizontalAlignment=\"Center\" />" +
             "</Children>" +

@@ -169,6 +169,7 @@ The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerSetti
 
 ## Changelog
 
+- 2026-10-24: the Send Messenger button now uses the declared brushes `Popup.Button.Base` and `Popup.Button.Text` (its two old names resolved to nothing), and its label dims when the button is disabled (#989).
 - 2026-10-20: the Send Messenger hint for the disabled state now shows: the hint sits beside the button in an enabled wrapper, as vanilla's governor button does (#944).
 - 2026-05-13 — Wired Messengers into IoC + campaign starter (fixed encyclopedia hero-click NRE, #121) and added a wiring regression test (#191); fixed UI mixin notifications firing on self (#166) and per-campaign/arrival state-reset gaps (#123).
 - 2026-05-06 — Ported the LOTRAOM messenger system to TAOM (1.3.15): paid messenger dispatch from the encyclopedia/dialog, travel + arrival conversation routing, primitive-dict save, MCM + JSON tunables, 12-language localization (#109).
