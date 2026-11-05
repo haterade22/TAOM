@@ -92,6 +92,12 @@ public static class PatchShield
     private static long _swallowedTypeLoad;
     private static long _swallowedOther;
 
+    // Exceptions handed back to Harmony with their stack preserved. Kept apart from the swallow
+    // counters (Codex A2: a rethrow is not a swallow). The preserver's cost lands only here, and how
+    // often exceptions cross a shield in normal play is decided by the modlist, so the session
+    // summary prints it.
+    private static long _rethrown;
+
     public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
     public static int UnpatchedCount { get { lock (_lock) return _unpatched.Count; } }
 
@@ -102,6 +108,7 @@ public static class PatchShield
     public static long SwallowedTypeLoad => Interlocked.Read(ref _swallowedTypeLoad);
     public static long SwallowedOther => Interlocked.Read(ref _swallowedOther);
     public static long SwallowedTotal => SwallowedMissingMethod + SwallowedMissingField + SwallowedTypeLoad + SwallowedOther;
+    public static long RethrownCount => Interlocked.Read(ref _rethrown);
 
     public static bool IsDisabled()
     {
@@ -240,10 +247,20 @@ public static class PatchShield
     /// Finalizer for void-return methods. Catches the swallow-trinity and returns
     /// silently to suppress the exception; non-matching exceptions are re-thrown by
     /// returning the ORIGINAL exception (Harmony Finalizer convention).
+    ///
+    /// Harmony calls this on EVERY call of the patched method, with a null exception when
+    /// nothing threw, so the no-exception path must stay one null check.
     /// </summary>
     private static Exception? ShieldFinalizerVoid(MethodBase __originalMethod, Exception __exception)
     {
-        return ShouldSwallow(__originalMethod, __exception) ? null : __exception;
+        if (__exception == null || ShouldSwallow(__originalMethod, __exception)) return null;
+
+        // Harmony rethrows a returned exception with `throw` (this finalizer returns a value, so
+        // the wrapper never uses `rethrow`), which would replace its stack trace with the frames
+        // from this method outward (player bundle 2d446100: a childbirth failure reported as five
+        // frames ending at MapState.OnTick_Patch2).
+        Interlocked.Increment(ref _rethrown);
+        return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
     }
 
     /// <summary>
@@ -254,7 +271,11 @@ public static class PatchShield
     /// </summary>
     private static Exception? ShieldFinalizerWithResult(MethodBase __originalMethod, Exception __exception)
     {
-        return ShouldSwallow(__originalMethod, __exception) ? null : __exception;
+        if (__exception == null || ShouldSwallow(__originalMethod, __exception)) return null;
+
+        // Same rethrow as ShieldFinalizerVoid; see there.
+        Interlocked.Increment(ref _rethrown);
+        return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
     }
 
     private static bool ShouldSwallow(MethodBase originalMethod, Exception exception)
@@ -269,7 +290,8 @@ public static class PatchShield
         // education CTD bundle showed a bare NRE anchored at ExecuteCommand_Patch3
         // with no inner exception). Returning the original TIE keeps the inner
         // exception — and its intact stack — for the crash reporter, and restores
-        // vanilla propagation semantics.
+        // vanilla propagation semantics. The same reset hits a plain exception's OWN
+        // frames, which is what the finalizers' RethrowStackPreserver call repairs.
         var ex = exception;
         while (ex is TargetInvocationException && ex.InnerException != null)
             ex = ex.InnerException;
@@ -418,7 +440,8 @@ public static class PatchShield
                 (withheld > 0 ? $", withheld {withheld} target(s) (co-op active)" : string.Empty) + ", " +
                 $"swallowed {SwallowedTotal} exception(s) " +
                 $"(MissingMethod {SwallowedMissingMethod}, MissingField {SwallowedMissingField}, " +
-                $"TypeLoad {SwallowedTypeLoad}, other {SwallowedOther}). " +
+                $"TypeLoad {SwallowedTypeLoad}, other {SwallowedOther}), " +
+                $"rethrew {RethrownCount} with the stack preserved. " +
                 $"Top unpatched owner: {topOwner}.");
         }
         catch (Exception ex)

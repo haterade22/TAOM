@@ -49,6 +49,40 @@ public class PlainTextCrashReportRendererTests
     }
 
     [TestMethod]
+    public void Render_ExceptionCrossedAShield_FrameSectionsSayTheyShowTheLastSegmentOnly()
+    {
+        // Both sections come from `new StackTrace(ex)`, which only sees the frames after the last
+        // shield rethrow; the real throw site is above a marker in the StackTrace text. Without the note
+        // a triager reads "Stack Frames" and "Patches on throwing call stack" as the throw site.
+        var ex = new ExceptionFrame("System.NullReferenceException", "msg", "src", 0, "TS", "stack",
+            new[] { new DataEntry("TAOM.ThrowSite", "A.X <- B.Y") }, null);
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext() with { Exception = ex });
+
+        var frames = Between(text, "--- Stack Frames", "--- Harmony Correlation ---");
+        var harmony = Between(text, "--- Harmony Correlation ---", "--- Modules");
+        StringAssert.Contains(frames, "last segment only");
+        StringAssert.Contains(harmony, "last segment only");
+    }
+
+    [TestMethod]
+    public void Render_ExceptionNeverCrossedAShield_NoSegmentNote()
+    {
+        var ex = new ExceptionFrame("System.Exception", "msg", "src", 0, "TS", "stack", Array.Empty<DataEntry>(), null);
+
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext() with { Exception = ex });
+
+        Assert.IsFalse(text.Contains("last segment only"));
+    }
+
+    private static string Between(string text, string start, string end)
+    {
+        var from = text.IndexOf(start, StringComparison.Ordinal);
+        Assert.IsTrue(from >= 0, $"section '{start}' missing");
+        var to = text.IndexOf(end, from, StringComparison.Ordinal);
+        return to < 0 ? text.Substring(from) : text.Substring(from, to - from);
+    }
+
+    [TestMethod]
     public void Render_ExceptionAndInnerChain_ShowsBoth()
     {
         var inner = new ExceptionFrame("System.IO.IOException", "inner-msg", "src", 0, "TS", "stack", System.Array.Empty<DataEntry>(), null);

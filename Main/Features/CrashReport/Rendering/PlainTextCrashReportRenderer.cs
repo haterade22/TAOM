@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using TAOM.Dependencies.Foundation;
 using TAOM.Features.CrashReport.Domain;
 
 namespace TAOM.Features.CrashReport.Rendering;
@@ -31,8 +32,8 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
 
         RenderIdentity(sb, c.Identity);
         RenderException(sb, c.Exception);
-        RenderStackFrames(sb, c.StackFrames);
-        RenderHarmony(sb, c.Harmony);
+        RenderStackFrames(sb, c.StackFrames, c.Exception);
+        RenderHarmony(sb, c.Harmony, c.Exception);
         RenderModules(sb, c.Modules);
         RenderAssemblies(sb, c.Assemblies);
         RenderCampaign(sb, c.Campaign);
@@ -98,9 +99,21 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         if (ex.InnerException != null) RenderExceptionFrame(sb, ex.InnerException, depth + 1);
     }
 
-    private static void RenderStackFrames(StringBuilder sb, IReadOnlyList<StackFrameSnapshot> frames)
+    // Both frame sections come from `new StackTrace(ex)`, which only sees the frames after the last
+    // Harmony finalizer rethrow. When a shield preserved earlier frames, the real throw site is above a
+    // marker in the StackTrace text instead, and a triager reading these sections alone would blame
+    // the shielded frame (player bundle 2d446100).
+    private const string LastSegmentNote =
+        "(last segment only: the exception crossed a Harmony finalizer rethrow; the original throw " +
+        "site is in the StackTrace text above and in Data " + RethrowStackPreserver.ThrowSiteDataKey + ")";
+
+    private static bool CrossedAShield(ExceptionFrame? ex)
+        => ex != null && ex.Data.Any(d => d.Key == RethrowStackPreserver.ThrowSiteDataKey);
+
+    private static void RenderStackFrames(StringBuilder sb, IReadOnlyList<StackFrameSnapshot> frames, ExceptionFrame? ex)
     {
         Section(sb, $"Stack Frames ({frames.Count})");
+        if (CrossedAShield(ex)) sb.AppendLine(LastSegmentNote);
         if (frames.Count == 0) { sb.AppendLine("(stack trace unavailable)"); return; }
         foreach (var f in frames)
         {
@@ -110,7 +123,7 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
         }
     }
 
-    private static void RenderHarmony(StringBuilder sb, HarmonyCorrelationSnapshot h)
+    private static void RenderHarmony(StringBuilder sb, HarmonyCorrelationSnapshot h, ExceptionFrame? ex)
     {
         Section(sb, "Harmony Correlation");
         sb.AppendLine($"Total patched methods in process: {h.TotalPatchedMethods}");
@@ -121,6 +134,7 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
 
         sb.AppendLine();
         sb.AppendLine("Patches on throwing call stack:");
+        if (CrossedAShield(ex)) sb.AppendLine(LastSegmentNote);
         foreach (var frame in h.PatchesPerStackFrame)
         {
             sb.AppendLine($"  Frame [{frame.FrameIndex:D3}] {frame.MethodFullName}:");
