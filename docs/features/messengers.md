@@ -109,7 +109,7 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 | [Main/Features/Messengers/MessengerSettingsProvider.cs](../../Main/Features/Messengers/MessengerSettingsProvider.cs) | Reads `TaomSettings.Instance.*` |
 | [Main/Features/Messengers/IMessengerRandomSource.cs](../../Main/Features/Messengers/IMessengerRandomSource.cs) | Random-float contract (for accident roll testability) |
 | [Main/Features/Messengers/MessengerRandomSource.cs](../../Main/Features/Messengers/MessengerRandomSource.cs) | `MBRandom.RandomFloat` wrapper |
-| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (10 hero properties) for validation |
+| [Main/Features/Messengers/Domain/HeroSnapshot.cs](../../Main/Features/Messengers/Domain/HeroSnapshot.cs) | Boundary POCO (9 hero properties) for validation |
 | [Main/Features/Messengers/Domain/MessengerValidationResult.cs](../../Main/Features/Messengers/Domain/MessengerValidationResult.cs) | 11-value rejection enum |
 | [Main/Features/Messengers/Domain/PendingMessenger.cs](../../Main/Features/Messengers/Domain/PendingMessenger.cs) | Saveable POCO + `Serialize`/`TryDeserialize` |
 | [Main/Features/Messengers/Domain/PositionUpdate.cs](../../Main/Features/Messengers/Domain/PositionUpdate.cs) | Service return struct (new position + arrived flag) |

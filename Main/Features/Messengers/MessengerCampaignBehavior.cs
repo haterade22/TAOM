@@ -570,6 +570,8 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
 
     // --- Helpers ---
 
+    // FindFirst scans Characters on purpose: Hero.Find misses a dead hero the engine unregistered (UnregisterDeadHero),
+    // which would drop the messenger with no "lost" notice.
     private static Hero ResolveHero(string heroId)
     {
         if (string.IsNullOrEmpty(heroId)) return null;
@@ -582,7 +584,6 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         var inPlayerParty = hero.PartyBelongedTo != null
                             && Hero.MainHero?.PartyBelongedTo != null
                             && hero.PartyBelongedTo == Hero.MainHero.PartyBelongedTo;
-        var inMapEvent = hero.PartyBelongedTo?.MapEvent != null;
         return new HeroSnapshot(
             heroId: hero.StringId,
             isAlive: hero.IsAlive,
@@ -592,8 +593,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             isActive: hero.IsActive,
             isWanderer: hero.IsWanderer,
             isHumanPlayerCharacter: hero.IsHumanPlayerCharacter,
-            isInPlayerParty: inPlayerParty,
-            isInMapEvent: inMapEvent);
+            isInPlayerParty: inPlayerParty);
     }
 
     private static bool IsTargetAvailableNow(Hero hero)

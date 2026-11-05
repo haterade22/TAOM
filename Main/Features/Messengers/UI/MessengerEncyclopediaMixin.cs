@@ -107,7 +107,6 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
         var inPlayerParty = hero.PartyBelongedTo != null
                             && Hero.MainHero?.PartyBelongedTo != null
                             && hero.PartyBelongedTo == Hero.MainHero.PartyBelongedTo;
-        var inMapEvent = hero.PartyBelongedTo?.MapEvent != null;
         return new Domain.HeroSnapshot(
             heroId: hero.StringId,
             isAlive: hero.IsAlive,
@@ -117,8 +116,7 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
             isActive: hero.IsActive,
             isWanderer: hero.IsWanderer,
             isHumanPlayerCharacter: hero.IsHumanPlayerCharacter,
-            isInPlayerParty: inPlayerParty,
-            isInMapEvent: inMapEvent);
+            isInPlayerParty: inPlayerParty);
     }
 
     [DataSourceMethod]
