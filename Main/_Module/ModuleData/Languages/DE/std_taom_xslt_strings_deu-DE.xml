@@ -1103,7 +1103,6 @@
     <string id="TAOM_hero_1_24" text="Amrothos, jüngster Sohn Imrahils, ist noch jung, zeigt aber bereits den kriegerischen Geist und edlen Charakter seiner Familie." />
     <string id="TAOM_hero_1_44" text="Nemos ist ein Hauptmann der Turmwache, geschworen, den Truchsess zu beschützen." />
     <string id="TAOM_hero_1_9" text="Imrahil II., Fürst von Dol Amroth, ist der größte Ritter Gondors. Seine Linie trägt Elbenblut, und er gilt als der schönste Fürst im ganzen Reich. Seine Schwanenritter sind in ganz Mittelerde legendär." />
-    <string id="TAOM_hero_1_9_5" text="Lothwen, Fürstin von Dol Amroth, steht seit Jahrzehnten an Imrahils Seite im Dienst für Gondor. Sie ist bekannt für ihre Anmut und stille Weisheit." />
     <string id="TAOM_hero_1_10" text="Aranel, Gemahlin Elphirs, ist eine edle Dame Gondors, bekannt für ihre Würde und ihren scharfen Verstand." />
     <string id="TAOM_hero_1_35" text="Erchirion, zweiter Sohn Imrahils, dient als Ritter von Dol Amroth. Kühn im Kampf und seinem Haus treu, reitet er mit den Schwanenrittern seines Vaters." />
     <string id="TAOM_hero_1_25" text="Elphir, ältester Sohn Imrahils, ist Erbe von Dol Amroth. Er führt die Schwanenritter mit kriegerischer Präzision und trägt die edle Haltung seines Vaters." />
@@ -1125,7 +1124,6 @@
     <string id="TAOM_hero_1_57_1" text="Calathiel, Gemahlin Caldamirs, ist eine junge Adlige von Lossarnach." />
     <string id="TAOM_hero_1_57_2" text="Imloth ist Tochter Baranors und erlernt die Sitten des Adels Gondors in den Tälern von Lossarnach." />
     <string id="TAOM_hero_1_52" text="Hirluin der Schöne, Herr von Pinnath Gelin, führt seine grün gekleideten Krieger aus den Hügeln Gondors. Er ist bekannt für seine Tapferkeit und Treue zum Truchsess." />
-    <string id="TAOM_hero_1_52_4" text="Nauriel, Gemahlin Hirluins, ist die Herrin von Pinnath Gelin, bekannt für ihre Standhaftigkeit und Fürsorge für die Menschen der grünen Hügel." />
     <string id="TAOM_hero_1_52_1" text="Anariel, Tochter Hirluins, ist unter den Kriegern von Pinnath Gelin aufgewachsen und kann sich im Kampf behaupten." />
     <string id="TAOM_hero_1_52_2" text="Barandor, Sohn Hirluins, übt sich darin, eines Tages die Krieger von Pinnath Gelin zu führen. Er reitet mit der grün gekleideten Schar seines Vaters." />
     <string id="TAOM_hero_1_62" text="Oromar, Gemahl Anariels, trat durch ihre Verbindung dem Hause Halboronionath bei. Er dient dem Herrn von Pinnath Gelin treu." />
@@ -1134,7 +1132,6 @@
     <string id="TAOM_hero_1_73" text="Narmir, jüngerer Bruder Angbors, dient bei der Verteidigung Lamedons. Er teilt den Mut seines Bruders, wenn auch noch nicht dessen Erfahrung." />
     <string id="TAOM_hero_1_73_1" text="Belwen, Gemahlin Angbors, steht standhaft an der Seite ihres Gatten bei der Verteidigung Lamedons." />
     <string id="TAOM_hero_1_71" text="Golasgil, Herr von Anfalas, befehligt die lange Küste gegen die Überfälle der Korsaren. Er ist ein wettergegerbter Seekapitän, der seit Jahrzehnten Gondors Küsten verteidigt." />
-    <string id="TAOM_hero_1_71_1" text="Laswen, Gemahlin Golasgils, beaufsichtigt die Küstensiedlungen von Anfalas, während ihr Gatte die Seewege bewacht." />
     <string id="TAOM_hero_WE8_c" text="Pelendur, Sohn Golasgils, wird ausgebildet, um eines Tages die Küste von Anfalas zu verteidigen, wie es sein Vater getan hat." />
     <string id="TAOM_hero_WE8_u" text="Barandil, Bruder Golasgils, dient als Hauptmann der Küstenwache von Anfalas." />
     <string id="TAOM_hero_WE9_l" text="Duinhir, Herr von Morthond, führt seine Bogenschützen aus dem Schwarzwurzeltal zur Verteidigung Gondors. Er ist ein strenger und fähiger Befehlshaber." />

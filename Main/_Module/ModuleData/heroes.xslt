@@ -609,16 +609,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="Hero[@id='lord_1_9_5']">
-		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'faction']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_9_5}Lothwen, Princess of Dol Amroth, has stood beside Imrahil through decades of service to Gondor. She is known for her grace and quiet wisdom.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_1_9</xsl:attribute>
-			<xsl:attribute name="faction">Faction.clan_empire_west_2</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
-		</xsl:copy>
-	</xsl:template>
-
 	<xsl:template match="Hero[@id='lord_1_10']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
@@ -814,15 +804,6 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="Hero[@id='lord_1_52_4']">
-		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_52_4}Nauriel, wife of Hirluin, is the Lady of Pinnath Gelin, known for her steadfastness and care for the people of the green hills.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_1_52</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
-		</xsl:copy>
-	</xsl:template>
-
 	<xsl:template match="Hero[@id='lord_1_52_1']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'spouse']"/>
@@ -896,15 +877,6 @@
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_71}Golasgil, Lord of Anfalas, commands the long coastline against Corsair raids. He is a weathered sea-lord who has defended Gondor's shores for decades.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_71_1</xsl:attribute>
-			<xsl:apply-templates select="node()"/>
-		</xsl:copy>
-	</xsl:template>
-
-	<xsl:template match="Hero[@id='lord_1_71_1']">
-		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_71_1}Laswen, wife of Golasgil, oversees the coastal settlements of Anfalas while her husband guards the sea lanes.</xsl:attribute>
-			<xsl:attribute name="spouse">Hero.lord_1_71</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
