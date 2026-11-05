@@ -766,6 +766,24 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertIn("fighter_empire", regs.body_properties)
         self.assertNotIn("fighter_umbar", regs.body_properties)
 
+    def test_item_registry_counts_only_items_documents(self):
+        # A config that quotes item ids in <Item id> rows must not define them, or no gate can fail on them.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "w.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <CraftedItem id="real_sword" crafting_template="OneHandedSword" />\n</Items>\n')
+        _write(self.md / "taom_spcultures.xml",
+               '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n</SPCultures>\n')
+        _write(self.md / "culture_marketplace" / "culture_marketplace_config.xml",
+               '<?xml version="1.0"?>\n<CultureMarketplaceConfig>\n  <Blacklist><Item id="retired_helm" /></Blacklist>\n</CultureMarketplaceConfig>\n')
+        _write(self.md / "own_items.xml",
+               '<?xml version="1.0"?>\n<!-- TAOM\'s own items -->\n<Items>\n  <Item id="taom_own" Type="Goods" />\n</Items>\n')
+
+        regs = ts.build_registries(self.md, modules)
+
+        self.assertIn("real_sword", regs.items)
+        self.assertIn("taom_own", regs.items, "TAOM's own <Items> file still defines its items")
+        self.assertNotIn("retired_helm", regs.items, "a config row quoting an id is not a definition")
+
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",
                '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n  <!-- <Culture id="ghost_example" /> -->\n</SPCultures>\n')
