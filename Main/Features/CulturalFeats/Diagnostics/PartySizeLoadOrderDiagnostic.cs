@@ -38,7 +38,8 @@ public static class PartySizeLoadOrderDiagnostic
 
         _logged = true;
 
-        var heroId = CareerPassiveHero.ResolveId(party);
+        // The leader, as TaomPartySizeModel resolves it (#768), so the probe and the model agree.
+        var heroId = party.LeaderHero?.StringId;
         var careerPartySize = careerPassives?.GetPassiveMagnitude(heroId, PassiveEffectType.PartySize) ?? 0f;
         int raw = party.MemberRoster?.TotalManCount ?? -1;
 

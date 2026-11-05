@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Garde Immortelle" />
     <string id="taom_ws_t3_a_p2_desc" text="La veille ne prend jamais fin. +9 santé." />
     <string id="taom_ws_t3_a_p3" text="Commandant de Garnison" />
-    <string id="taom_ws_t3_a_p3_desc" text="Votre garnison grossit avec des volontaires. +4 taille de groupe." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Gloire du Défenseur" />
     <string id="taom_ws_t3_a_p4_desc" text="La victoire en défense apporte un grand honneur. +12% gain de renommée au combat." />
     <string id="taom_ws_t3_b_key" text="Toujours Vigilant" />

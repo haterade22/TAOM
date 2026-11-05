@@ -125,7 +125,27 @@ public static class CareerPerkCheats
         Probe(snapshot, "max hitpoints", () => models.CharacterStatsModel.MaxHitpoints(hero.CharacterObject, true));
         Probe(snapshot, "party speed", () => party.SpeedExplained);
         Probe(snapshot, "seeing range", () => party.SeeingRangeExplanation);
-        Probe(snapshot, "party size limit", () => models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, true));
+        Probe(snapshot, "party size limit (tooltip value)", () => models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, true));
+        // The tooltip value above skips the TroopWeight penalty and is not cut to an int. The next line is
+        // what the engine enforces if it recomputed now: PartyBase.PartySizeLimit is
+        // (int)GetPartyMemberSizeLimit(this, false).ResultNumber. Only a gap between that value and the
+        // cached line below means the cache is stale until a roster bump (#768).
+        try
+        {
+            snapshot.Probes.Add($"party size limit (enforcement value now) {(int)models.PartySizeLimitModel.GetPartyMemberSizeLimit(party.Party, false).ResultNumber}");
+        }
+        catch (Exception ex)
+        {
+            snapshot.Probes.Add($"party size limit (enforcement value now): {ex.GetType().Name} {ex.Message}");
+        }
+        try
+        {
+            snapshot.Probes.Add($"party size limit (engine cache) {party.Party.PartySizeLimit}");
+        }
+        catch (Exception ex)
+        {
+            snapshot.Probes.Add($"party size limit (engine cache): {ex.GetType().Name} {ex.Message}");
+        }
         Probe(snapshot, "morale", () => party.MoraleExplained);
         Probe(snapshot, "wages", () => models.PartyWageModel.GetTotalWage(party, party.MemberRoster, true));
         Probe(snapshot, "inventory capacity", () => models.InventoryCapacityModel.CalculateInventoryCapacity(party, party.IsCurrentlyAtSea, true));

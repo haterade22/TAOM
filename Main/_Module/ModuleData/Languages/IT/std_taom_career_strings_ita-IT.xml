@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Guardia Immortale" />
     <string id="taom_ws_t3_a_p2_desc" text="La veglia non finisce mai. +9 salute." />
     <string id="taom_ws_t3_a_p3" text="Comandante di Guarnigione" />
-    <string id="taom_ws_t3_a_p3_desc" text="La tua guarnigione si riempie di volontari. +4 dimensione gruppo." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Gloria del Difensore" />
     <string id="taom_ws_t3_a_p4_desc" text="La vittoria in difesa porta grande onore. +12% guadagno rinomanza battaglia." />
     <string id="taom_ws_t3_b_key" text="Sempre Vigile" />
