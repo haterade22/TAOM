@@ -85,12 +85,19 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             _lastAmount = -1;
         }
 
+        var items = ViewModel?.SecondaryInfoItems;
         var resource = _lastResource;
-        if (resource == null) return;
+        if (resource == null)
+        {
+            // No resource for this hero (#977): take the entry off the bar, or it keeps the old amount and icon.
+            // The Contains guard below adds it back if a resource returns; that comes with a kingdom or culture
+            // change, which resets _lastAmount, so the value refreshes too.
+            items?.Remove(_resourceInfo);
+            return;
+        }
 
         // Insert on the first refresh (#958): MapBarVM.Initialize runs it before the view loads, and the next one
-        // comes 2 s later (v1.4.8 and v1.5.5). Contains keeps it to one entry and re-adds it if CreateItems clears the list.
-        var items = ViewModel?.SecondaryInfoItems;
+        // comes 2 s later (v1.4.8). Contains keeps it to one entry and re-adds it if CreateItems clears the list.
         if (items != null && !items.Contains(_resourceInfo)) items.Add(_resourceInfo);
 
         var amount = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);

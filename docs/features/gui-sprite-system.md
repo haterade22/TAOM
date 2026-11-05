@@ -311,6 +311,7 @@ Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects. A `SpecialR
 SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM, hooks "Refresh")
 ├── Creates MapInfoItemVM("special_resource", GetTooltipProperties)
 ├── Adds to SecondaryInfoItems on the first refresh, guarded by Contains (#958)
+├── Removes it while the hero has no resource (#977)
 ├── Updates Value, IntValue, HasWarning on every refresh (every 0.2 s)
 └── GetTooltipProperties() → rich tooltip with tier, daily change, earning rates
 
