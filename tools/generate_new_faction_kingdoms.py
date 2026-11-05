@@ -7,8 +7,11 @@ for Lindon) and parametrized — no hand-copied XML. Idempotent via TAOM-NEWFACT
 
 Run: python tools/generate_new_faction_kingdoms.py
 """
-import os, re, json
+import os, re, json, sys
 import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _marker_region import replace_region  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MD = os.path.join(ROOT, "Main", "_Module", "ModuleData")
@@ -95,24 +98,8 @@ def get_block(text, pattern):
 
 
 def upsert(text, close_tag, payload, marker):
-    # Replace an existing block where it stands (#947): re-appending it moved it below any block or rows
-    # added after it (heroes.xml keeps hand-authored heroes after the lindon block). Only an absent block goes
-    # before the closing tag. A second region or a lone BEGIN or END is refused: the engine loads the later row of a repeated id, so a stale copy
-    # must fail.
-    if close_tag not in text:
-        raise RuntimeError(f"{marker}: closing tag {close_tag} not found")
-    begin, end = f"<!-- {marker}:BEGIN -->", f"<!-- {marker}:END -->"
-    block = f"  {begin}\n{payload}  {end}\n"
-    pattern = r"[ \t]*" + re.escape(begin) + r".*?" + re.escape(end) + r"\n?"
-    begins, ends = text.count(begin), text.count(end)
-    text, found = re.subn(pattern, lambda _: block, text, flags=re.DOTALL)
-    if not (found == begins == ends <= 1):
-        raise RuntimeError(f"{marker} before {close_tag}: {begins} BEGIN and {ends} END marker(s), "
-                           f"{found} complete region(s); expected at most one")
-    if found:
-        return text
-    idx = text.rfind(close_tag)
-    return text[:idx] + block + text[idx:]
+    # In place, or refused when damaged (#947, #975): see tools/_marker_region.py.
+    return replace_region(text, marker, f"  <!-- {marker}:BEGIN -->\n{payload}  <!-- {marker}:END -->\n", close_tag)
 
 
 def main():
