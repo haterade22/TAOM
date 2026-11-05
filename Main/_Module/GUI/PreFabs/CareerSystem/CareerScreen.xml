@@ -327,12 +327,12 @@
                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="30" MarginLeft="40" MarginRight="40">
                   <Children>
                     <!-- Picker header -->
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@SwitchModeSubtitle" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="20" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@SwitchModeSubtitle" Brush="CareerSystem.Effects.Passive" Brush.FontSize="20" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" MarginTop="15" Sprite="Clan\divider_mid" />
 
                     <!-- Empty-state message: shown when switch mode is active but the eligible-targets list is empty -->
                     <!-- (forced static-entry-point, stale eligibility, or _heroAdapter == null) -->
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="60" Text="@NoTargetsMessage" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="20" IsVisible="@HasNoSwitchTargets" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="60" Text="@NoTargetsMessage" Brush="CareerSystem.Effects.Passive" Brush.FontSize="20" IsVisible="@HasNoSwitchTargets" />
 
                     <!-- Eligible target list (scrollable). Hidden when EligibleSwitchTargets is empty -->
                     <!-- so the prior render doesn't leave a 760px tall blank scroll canvas (Codex Review #32). -->
@@ -361,9 +361,9 @@
                                               <Children>
                                                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
                                                   <Children>
-                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Name" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
-                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="16" MarginTop="6" />
-                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@AbilityName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="14" MarginTop="10" />
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Name" Brush="CareerSystem.Effects.Title" Brush.TextHorizontalAlignment="Left" Brush.FontSize="24" />
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Description" Brush="CareerSystem.Effects.Passive" Brush.FontSize="16" MarginTop="6" />
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@AbilityName" Brush="CareerSystem.Effects.Title" Brush.TextHorizontalAlignment="Left" Brush.FontSize="14" MarginTop="10" />
                                                   </Children>
                                                 </ListPanel>
                                               </Children>

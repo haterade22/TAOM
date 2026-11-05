@@ -22,8 +22,7 @@
                 MarginRight="10"
                 Brush="ButtonBrush2"
                 Command.Click="ExecuteAssignCharacters"
-                IsEnabled="true"
-                AcceptEvents="true">
+                IsEnabled="true">
               <Children>
                 <TextWidget 
                     WidthSizePolicy="StretchToParent" 
@@ -42,8 +41,7 @@
                 SuggestedHeight="!DoneButton.Height"
                 Brush="ButtonBrush1"
                 Command.Click="ExecuteManagePresets"
-                IsEnabled="true"
-                AcceptEvents="true">
+                IsEnabled="true">
               <Children>
                 <TextWidget 
                     WidthSizePolicy="StretchToParent" 
