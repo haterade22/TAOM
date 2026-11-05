@@ -37,6 +37,7 @@ The test classes under `TAOM.Tests/Migration/`:
 - `GameModelOverrideBindingTests` — every `Taom*Model` is registered in `SubModule.cs`, overrides ≥1 base virtual, and doesn't shadow a base virtual without `override`.
 - `ReflectionSiteBindingTests` — each catalogued auxiliary reflection member resolves.
 - `TranspilerSiteBindingTests`: the transpilers it lists, run over the installed engine's IL, still find their sites.
+- `ViewModelMixinBindingTests`: every `[ViewModelMixin("Method")]` refresh name resolves to one non-abstract method on its target view model.
 
 ## Step 2 — Interpret a failure (do NOT just rerun)
 
@@ -52,6 +53,7 @@ A red gate is an environment gap or a real finding. `Assert.Inconclusive failed.
 | `ManualPatchApplicator applies patch classes this gate never checks` | a new hand-applied patch | give the class a `TargetMethod()` or add a `ManualPatches` row in `HarmonyPatchBindingTests` |
 | target/member `did not resolve` / `not found` | engine renamed/moved/removed the member in this version | `/research` the new signature, update the patch / adapter / GameModel; if a reflection site, update both `reflection-sites.md` and the `[DataRow]` |
 | a `TranspilerSiteBindingTests` count is off | the engine IL moved under a fail-safe transpiler, so the feature silently stopped | read the new IL, re-anchor the transpiler, then set the count from the new site (cite its line) |
+| a `[ViewModelMixin]` refresh method `is not declared` | UIExtenderEx 2.13.2 throws a NullReferenceException at `UIExtender.Register` for a name that no longer resolves | look up the renamed method with `pwsh tools/taom-src.ps1 path <Type>` and update the attribute |
 | GameModel `never AddModel'd` | a `Taom*Model` compiles but isn't registered | add `campaignStarter.AddModel(new TaomXModel(...))` in `Main/SubModule.cs` |
 
 If the fix needs an unknown TaleWorlds signature, hand off to `/research` first. If it's a deeper "why did this break" question, use `/investigate`.

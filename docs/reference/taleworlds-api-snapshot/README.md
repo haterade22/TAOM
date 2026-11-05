@@ -42,6 +42,7 @@ Runs under `dotnet test` — no game launch. TAOM.Tests references the installed
 | `GameModelOverrideBindingTests` | Every GameModel (count: the `gamemodel-bases.md` header): registered with `AddModel`, overrides at least one base virtual, no shadow without `override`. | 2 tests |
 | `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members from `reflection-sites.md` Category B, one `[DataRow]` each. | one `[DataRow]` per site |
 | `TranspilerSiteBindingTests` | The transpilers it lists, run over the installed IL, still find their sites (the disabled Patch15's site is still absent). | one test per listed transpiler |
+| `ViewModelMixinBindingTests` | Every UIExtenderEx `[ViewModelMixin("Method")]` names one non-abstract method on its target view model. | one assertion accumulating all failures |
 
 ```bash
 dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
