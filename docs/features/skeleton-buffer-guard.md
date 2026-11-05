@@ -218,7 +218,7 @@ declaration-only stubs first (68 of 226 failing), and seven mutations of its cod
 ## After an engine bump
 
 `SkeletonBufferInstalledBinaryTests` goes Inconclusive for a build missing from its `KnownBuilds` table (a test-only
-pin; the game itself scans by pattern). Read the `[SkeletonBuffer] guard` lines of the first start: `guard ON pool 1`
+pin; the game itself scans by pattern). That is a skip in the default suite and, on 1.4.x, in the binding gate too until WP122's runsettings map Inconclusive to Failed; `NativePinGateTests` keeps the class tagged `BindingVerification` for that day. Read the `[SkeletonBuffer] guard` lines of the first start: `guard ON pool 1`
 and `guard ON pool 2` mean both patterns still match exactly once; `guard OFF` with a pattern reason means players lost
 the freeze protection for that pool with this build. Re-derive by running `SkeletonBufferInstalledBinaryTests` (each pattern must still match once), read the code
 at each reservation with `python tools/native_crash_triage.py --rva 0x886BC` and `--rva 0x898F8` (the v1.4.8
@@ -250,10 +250,12 @@ until the peak line reports overflows above zero in either pool.
 
 - 2026-10-08 (1.5.x line): added, adapted from yotthani's VanillaTuning, with TAOM's two-page layout and the executed-code-block
   test; the second pool's guard added the same day (TAOM's own block, Mike's decision after the review found the pool).
+- 2026-10-15 (1.5.x line): both native pin classes sit in the engine-bump binding gate, checked by `NativePinGateTests` (#806); on 1.4.x since plan 109.
 - 2026-11-04: ported to the 1.4.x line by plan 109 with the v1.4.8 KnownBuilds row; installed from the feature-module runner's MainMenu phase.
 
 ## GitHub Issue
 
 - **Issue:** #776 (draft item 2 in `docs/reviews/adopt-yotthani-2026-10-08.md` on the 1.5.x line (not ported)).
+- **Issue:** #806: the native pin gate for both KnownBuilds classes.
 - **1.4.x port:** plans/109-mission-start-and-skeleton-guards.md.
 - **Status:** built and unit-tested 2026-10-08; in-game check owed.

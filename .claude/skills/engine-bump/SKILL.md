@@ -130,10 +130,20 @@ NATIVE-internal; 1.4.8 moved 8 of 56 base-bin assemblies, 3 of those by build nu
 5. Update the pin: write the new version into `.claude/pinned-game-version.txt` (the file
    `session-start.sh` reads; note it's `.claude/`, NOT `.claude/state/`).
 6. CLAUDE.md target-version note + memory update (needs explicit user OK for CLAUDE.md).
+7. **The per-build native address pins.** Two C# `KnownBuilds` tables, in
+   `ClipBudgetSignatureInstalledBinaryTests` and `SkeletonBufferInstalledBinaryTests`, pin the
+   `TaleWorlds.Native.dll` addresses of the clip-budget pattern and of the skeleton buffer guard's
+   patterns (the game finds them by pattern; only the tests pin). On a build with no row both read
+   Inconclusive: a skip in the default suite and, on 1.4.x, in the `TestCategory=BindingVerification`
+   gate too until plan 008's `TAOM.Tests/binding-gate.runsettings` (WP122) maps Inconclusive to
+   Failed, so read the skip count. `NativePinGateTests` keeps both classes tagged
+   `BindingVerification` and named here. Add a row per build from a read-only scan of the installed
+   DLL (its file length, then the RVAs the tests resolve), and check the first start's guard lines
+   (Phase 5).
 
 ## Phase 5 — Control battles before believing anything
 
-Vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
+First read the new build's first start in `taom_debug_*.log` for the native guards (`docs/features/skeleton-buffer-guard.md`, "After an engine bump"): both `[SkeletonBuffer] guard ON pool 1` and `guard ON pool 2` must appear; a `guard OFF pool N` (or one `guard OFF:`) with a pattern reason means players lost that pool's freeze protection until the patterns are re-derived. Then: vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
 Windows Event Log fault offset against the previous version's known sites BEFORE assuming your
 last change caused it** (`/native-crash-triage` Phase 1) — the rewritten native lookups in new
 engine versions turn previously-tolerated data misses into AVs

@@ -16,6 +16,7 @@ namespace TAOM.Tests.Features.SkeletonBuffer;
 /// </summary>
 [TestClass]
 [TestCategory("LiveInstall")]
+[TestCategory("BindingVerification")]
 public class SkeletonBufferInstalledBinaryTests
 {
     /// <summary>Verified targets per client build, keyed by TaleWorlds.Native.dll file length. Add a row

@@ -1,0 +1,90 @@
+using System;
+using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.MissionPerf.AnimMemory;
+using TAOM.Tests.Migration;
+
+namespace TAOM.Tests.Features.MissionPerf.AnimMemory;
+
+/// <summary>
+/// Runs the eviction-pass signature against the installed <c>TaleWorlds.Native.dll</c> on disk. A
+/// failure here after an engine bump is the prompt to re-derive the pattern with
+/// <c>tools/native_sig_author.py</c>; the probe itself would disable with one reason line.
+/// </summary>
+[TestClass]
+[TestCategory("LiveInstall")]
+[TestCategory("BindingVerification")]
+public class ClipBudgetSignatureInstalledBinaryTests
+{
+    /// <summary>Verified targets per client build, keyed by TaleWorlds.Native.dll file length. Add a row
+    /// at every engine bump; an unlisted build is Inconclusive rather than a silent pass.</summary>
+    private static readonly System.Collections.Generic.Dictionary<long, (string Build, int LoadSite, int BudgetSite, int Counter, int Budget)> KnownBuilds =
+        new System.Collections.Generic.Dictionary<long, (string, int, int, int, int)>
+        {
+            [14185944] = ("v1.4.8", 0x23AADF, 0x23AB04, 0xDA59B0, 0xB2BC9C),
+        };
+
+    [TestMethod]
+    public void InstalledNativeDll_Signature_MatchesOnceWithTargetsInDataAndRdataAndA12MiBBudget()
+    {
+        var image = LoadInstalled(out _);
+        var match = Resolve(image, out var rdata, out var data);
+
+        Assert.AreEqual(1, match.MatchCount);
+        Assert.IsTrue(data.Contains(match.CounterRva, 4), "the counter target must lie inside .data");
+        Assert.IsTrue(rdata.Contains(match.BudgetRva, 4), "the budget target must lie inside .rdata");
+        Assert.AreEqual(0, match.CounterRva % 4);
+        Assert.AreEqual(0, match.BudgetRva % 4);
+        var budget = BitConverter.ToSingle(image, rdata.PointerToRawData + (match.BudgetRva - rdata.VirtualAddress));
+        Assert.AreEqual(12582912f, budget);
+    }
+
+    [TestMethod]
+    public void InstalledNativeDll_KnownBuild_TargetsAreTheVerifiedRvas()
+    {
+        var image = LoadInstalled(out var length);
+        if (!KnownBuilds.TryGetValue(length, out var expected))
+            Assert.Inconclusive($"TaleWorlds.Native.dll is {length} bytes, which matches no verified build; add its row to KnownBuilds at the engine bump.");
+
+        var match = Resolve(image, out _, out _);
+
+        Assert.AreEqual(expected.LoadSite, match.LoadSiteRva, expected.Build);
+        Assert.AreEqual(expected.BudgetSite, match.BudgetSiteRva, expected.Build);
+        Assert.AreEqual(expected.Counter, match.CounterRva, expected.Build);
+        Assert.AreEqual(expected.Budget, match.BudgetRva, expected.Build);
+    }
+
+    private static byte[] LoadInstalled(out long length)
+    {
+        // 1.4.x: GameAssemblies has no three-argument ResolveGameDir (plan 008, WP122). EnsureLoaded resolves
+        // BANNERLORD_OVERRIDE_DIR, then BANNERLORD_GAME_DIR, the same order.
+        var dir = GameAssemblies.EnsureLoaded() ? GameAssemblies.GameDir : null;
+        if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
+            Assert.Inconclusive("No Bannerlord install folder resolved (BANNERLORD_OVERRIDE_DIR, BANNERLORD_GAME_DIR).");
+        var path = Path.Combine(dir!, "bin", "Win64_Shipping_Client", "TaleWorlds.Native.dll");
+        if (!File.Exists(path))
+            Assert.Inconclusive($"TaleWorlds.Native.dll not found at {path}.");
+        var bytes = File.ReadAllBytes(path);
+        length = bytes.LongLength;
+        return bytes;
+    }
+
+    private static SignatureMatch Resolve(byte[] image, out PeSection rdata, out PeSection data)
+    {
+        var headers = new byte[4096];
+        Array.Copy(image, headers, Math.Min(headers.Length, image.Length));
+        var sections = PeSectionTable.Parse(headers);
+        Assert.IsNotNull(sections, "the installed DLL's PE headers did not parse");
+        var text = PeSectionTable.Find(sections!, ".text");
+        rdata = PeSectionTable.Find(sections!, ".rdata")!;
+        data = PeSectionTable.Find(sections!, ".data")!;
+        Assert.IsNotNull(text);
+        Assert.IsNotNull(rdata);
+        Assert.IsNotNull(data);
+
+        var rawLength = Math.Min(text!.VirtualSize, text.SizeOfRawData);
+        var rawText = new byte[rawLength];
+        Array.Copy(image, text.PointerToRawData, rawText, 0, rawLength);
+        return ClipBudgetSignature.Resolve(rawText, text.VirtualAddress);
+    }
+}
