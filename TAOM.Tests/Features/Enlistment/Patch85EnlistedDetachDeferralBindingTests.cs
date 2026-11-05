@@ -129,7 +129,7 @@ public class Patch85EnlistedDetachDeferralBindingTests
         Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
 
         var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch85_EnlistedDetachDeferral\")",
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch85_EnlistedDetachDeferral\")",
             "SubModule.cs no longer applies Patch85_EnlistedDetachDeferral — the patch is dead code.");
 
         // Without Initialize the resolver delegates are null, the postfix no-ops, and the detach

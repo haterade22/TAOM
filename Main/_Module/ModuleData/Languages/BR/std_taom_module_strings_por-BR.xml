@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="Manutenção por dia" />
     <string id="taom_res_badge_emissary" text="Preço do Emissário de Elite" />
     <string id="taom_res_badge_paid_in" text="Melhorias, recrutamentos e manutenção são pagos com seu próprio {RESOURCE}" />
+    <string id="taom_patch_apply_failed" text="TAOM: os grupos de correções não foram aplicados durante {PHASE}: {GROUPS}. Algumas correções desses grupos estão desativadas nesta sessão; o log do TAOM indica a causa." />
+    <string id="taom_patch_apply_phase_startup" text="a inicialização" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="a inicialização do jogo" />
+    <string id="taom_patch_apply_phase_mission_start" text="o início da missão" />
   </strings>
 </base>

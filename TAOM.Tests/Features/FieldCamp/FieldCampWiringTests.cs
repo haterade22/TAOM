@@ -188,7 +188,7 @@ public class FieldCampWiringTests
     {
         var src = ReadSource("Main", "SubModule.cs");
 
-        StringAssert.Contains(src, ".PatchCategory(\"Patch74_FieldCampNameplateIcon\")",
+        StringAssert.Contains(src, "TryPatchCategory(\"Patch74_FieldCampNameplateIcon\")",
             "SubModule.cs no longer applies Patch74_FieldCampNameplateIcon, so Harmony is never "
             + "asked to apply the nameplate-icon postfix and the icon goes dead silently.");
     }

@@ -59,7 +59,7 @@ public class RefugeWiringTests
     {
         var src = ReadSource("Main", "SubModule.cs");
 
-        StringAssert.Contains(src, ".PatchCategory(\"Patch75_Refuge\")",
+        StringAssert.Contains(src, "TryPatchCategory(\"Patch75_Refuge\")",
             "SubModule.cs no longer applies Patch75_Refuge; Harmony is never asked to apply the "
             + "clan-screen and encounter patches, and both features die silently.");
     }
