@@ -1865,23 +1865,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="ゴブリン" />
     <string id="taom_str_player_father_name.goblin" text="ナルズク" />
     <string id="taom_str_player_mother_name.goblin" text="ボルリア" />
-    <string id="taom_bandit_goblin_name" text="ゴブリン略奪者" />
-    <string id="taom_bandit_goblin_m1" text="ボルグ" />
-    <string id="taom_bandit_goblin_m2" text="ヤズネグ" />
-    <string id="taom_bandit_goblin_m3" text="フィンブル" />
-    <string id="taom_bandit_goblin_m4" text="ナルズグ" />
-    <string id="taom_bandit_goblin_m5" text="ゴルバグ" />
-    <string id="taom_bandit_goblin_m6" text="マウフール" />
-    <string id="taom_bandit_goblin_m7" text="スナガ" />
-    <string id="taom_bandit_goblin_m8" text="ウフサク" />
-    <string id="taom_bandit_goblin_m9" text="ラドブグ" />
-    <string id="taom_bandit_goblin_m10" text="ルグドゥシュ" />
-    <string id="taom_bandit_goblin_f1" text="スカーラ" />
-    <string id="taom_bandit_goblin_f2" text="ヴォルガ" />
-    <string id="taom_bandit_goblin_f3" text="マズラ" />
-    <string id="taom_bandit_goblin_f4" text="グリシュタ" />
-    <string id="taom_bandit_goblin_f5" text="ナルズガ" />
-    <string id="taom_hideout_desc_goblin" text="高い峠の岩山の下に、むき出しの岩に深く掘られたゴブリンの悪臭漂う巣窟を発見した。" />
     <string id="taom_str_faction_official.mistymountainorcs" text="霧ふり山脈の族長" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="霧ふり山脈の女族長" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="大将" />
@@ -1899,23 +1882,6 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="オーク" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="ナルズク" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="ボルリア" />
-    <string id="taom_bandit_mistymountainorcs_name" text="オークの略奪者" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="ボルグ" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="ヤズネグ" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="フィンブル" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="ナルズグ" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="ゴルバグ" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="マウフール" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="スナガ" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="ウフサク" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="ラドバグ" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="ラグドゥシュ" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="スカラ" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="ヴォルガ" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="マズラ" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="グリシュタ" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="ナルズガ" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="霧ふり山脈の岩山の下に、むき出しの岩に掘られたオークの穢れた巣窟を発見した。" />
     <string id="taom_bld_stall_title" text="TAOM: 前回の戦闘読み込みが完了していない可能性があります" />
     <string id="taom_bld_stall_dismiss" text="閉じる" />
     <string id="taom_bld_stall_openfolder" text="ログフォルダを開く" />

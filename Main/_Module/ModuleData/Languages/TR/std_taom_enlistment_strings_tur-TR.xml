@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="Kol, birikmiş maaşının {AMOUNT}{GOLD_ICON} kadarının hesabını artık veremiyor." />
     <string id="taom_enlist_wage_paid" text="Alınan maaş: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Hizmet maaşı" />
-    <string id="taom_enlist_wait_text" text="{COMMANDER} bölüğünde hizmet ediyorsun. Kol, komutanının hızıyla ilerliyor." />
 
     <string id="taom_enlist_welcome" text="Kola hoş geldin, asker. Safa gir." />
 

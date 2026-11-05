@@ -1911,23 +1911,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Goblin" />
     <string id="taom_str_player_father_name.goblin" text="Narzuk" />
     <string id="taom_str_player_mother_name.goblin" text="Borlia" />
-    <string id="taom_bandit_goblin_name" text="Goblin-Räuber" />
-    <string id="taom_bandit_goblin_m1" text="Bolg" />
-    <string id="taom_bandit_goblin_m2" text="Yazneg" />
-    <string id="taom_bandit_goblin_m3" text="Fimbul" />
-    <string id="taom_bandit_goblin_m4" text="Narzug" />
-    <string id="taom_bandit_goblin_m5" text="Gorbag" />
-    <string id="taom_bandit_goblin_m6" text="Mauhûr" />
-    <string id="taom_bandit_goblin_m7" text="Snaga" />
-    <string id="taom_bandit_goblin_m8" text="Ufthak" />
-    <string id="taom_bandit_goblin_m9" text="Radbug" />
-    <string id="taom_bandit_goblin_m10" text="Lugdush" />
-    <string id="taom_bandit_goblin_f1" text="Skarra" />
-    <string id="taom_bandit_goblin_f2" text="Vorga" />
-    <string id="taom_bandit_goblin_f3" text="Mazra" />
-    <string id="taom_bandit_goblin_f4" text="Grishta" />
-    <string id="taom_bandit_goblin_f5" text="Narzga" />
-    <string id="taom_hideout_desc_goblin" text="Unter den Klippen des Hohen Passes findet Ihr einen stinkenden Bau von Kobolden, tief in den nackten Fels gegraben." />
     <string id="taom_str_faction_official.mistymountainorcs" text="ein Häuptling des Nebelgebirges" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="eine Häuptlingin des Nebelgebirges" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Kriegsherr" />
@@ -1945,23 +1928,6 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Ork" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Narzuk" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Borlia" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Ork-Räuber" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Bolg" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Yazneg" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Fimbul" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Narzug" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Gorbag" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Mauhûr" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Snaga" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Ufthak" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Radbug" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Lugdush" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Skarra" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Vorga" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Mazra" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Grishta" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Narzga" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Unter den Klippen des Nebelgebirges findet Ihr einen üblen Bau von Orks, in den nackten Fels gegraben." />
     <string id="taom_bld_stall_title" text="TAOM: Letztes Schlachtladen möglicherweise nicht abgeschlossen" />
     <string id="taom_bld_stall_dismiss" text="Verwerfen" />
     <string id="taom_bld_stall_openfolder" text="Protokollordner öffnen" />

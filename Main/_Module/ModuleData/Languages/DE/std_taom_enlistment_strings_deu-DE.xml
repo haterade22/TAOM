@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="Die Kolonne kann {AMOUNT}{GOLD_ICON} deines ausstehenden Solds nicht mehr aufbringen." />
     <string id="taom_enlist_wage_paid" text="Sold erhalten: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Dienstsold" />
-    <string id="taom_enlist_wait_text" text="Ihr dient in der Schar von {COMMANDER}. Die Kolonne zieht im Tempo Eures Befehlshabers." />
 
     <string id="taom_enlist_welcome" text="Willkommen in der Kolonne, Soldat. Antreten." />
 

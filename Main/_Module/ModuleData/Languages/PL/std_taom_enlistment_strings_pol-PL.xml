@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="Kolumna nie potrafi już rozliczyć {AMOUNT}{GOLD_ICON} twojego zaległego żołdu." />
     <string id="taom_enlist_wage_paid" text="Otrzymany żołd: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Żołd za służbę" />
-    <string id="taom_enlist_wait_text" text="Służysz w kompanii {COMMANDER}. Kolumna posuwa się w tempie twojego dowódcy." />
 
     <string id="taom_enlist_welcome" text="Witaj w kolumnie, żołnierzu. W szyk." />
 

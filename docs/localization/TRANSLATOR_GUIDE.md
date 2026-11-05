@@ -328,6 +328,10 @@ A key two English sources declare belongs to the first one in `tools/_loc_source
 
 An 8-character vanilla id in `taom_module_strings.xml` is a rewording for English players (181 today). Give it no language row: the game's own translation shows. The 369 rows that stay are listed in `kept-vanilla-key-rows.txt`, each with its reason; 1,803 rows were removed on the 1.4.x line. The tools skip these keys. To change the meaning in every language, give the text a TAOM key instead.
 
+### Rows that nothing reads
+
+`python tools/check_orphan_loc_rows.py` lists registered `taom_*` rows that no code, data, composed family (`tools/loc_composed_families.json`) or reasoned allowlist entry (`tools/loc_orphan_allowlist.json`) reads. It looks only inside this repo, so before retiring a row, grep the live `TAOM_Map` and `LOTRLOME_Armory` `ModuleData` for its id; a row they read goes on the allowlist with that reason. An `UNREAD` row leaves the English file, the 12 language files and the caches. A `SHADOWED` row (a later row registers the same vanilla key) leaves the English file only.
+
 ## Adding Canonical Translations to Overrides
 
 If you want certain key terms translated consistently (e.g., always render "Strider" as "Бродяжник" in Russian), add them to `tools/translation_overrides/<lang>.json`:

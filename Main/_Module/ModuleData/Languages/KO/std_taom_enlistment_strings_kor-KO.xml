@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="부대는 당신의 미지급 임금 {AMOUNT}{GOLD_ICON}을 더 이상 책임질 수 없다." />
     <string id="taom_enlist_wage_paid" text="수령한 임금: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="복무 임금" />
-    <string id="taom_enlist_wait_text" text="당신은 {COMMANDER}의 부대에서 복무합니다. 행렬은 지휘관의 속도로 움직입니다." />
 
     <string id="taom_enlist_welcome" text="행렬에 온 것을 환영한다, 병사. 열에 서라." />
 

@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="Отряд больше не может отчитаться за {AMOUNT}{GOLD_ICON} вашего невыплаченного жалованья." />
     <string id="taom_enlist_wage_paid" text="Получено жалованье: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Жалованье за службу" />
-    <string id="taom_enlist_wait_text" text="Вы служите в отряде {COMMANDER}. Колонна идёт со скоростью вашего командира." />
 
     <string id="taom_enlist_welcome" text="Добро пожаловать в колонну, солдат. Встань в строй." />
 

@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="這支隊伍再也無法交代你 {AMOUNT}{GOLD_ICON} 的欠餉。" />
     <string id="taom_enlist_wage_paid" text="已領取薪餉：{AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="服役薪餉" />
-    <string id="taom_enlist_wait_text" text="你在{COMMANDER}的隊伍中服役。行列依指揮官的步調前進。" />
 
     <string id="taom_enlist_welcome" text="歡迎加入行列，士兵。列隊。" />
 

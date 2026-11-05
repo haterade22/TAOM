@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="部隊はもはやあなたの未払い給金{AMOUNT}{GOLD_ICON}を清算できない。" />
     <string id="taom_enlist_wage_paid" text="受け取った給金：{AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="従軍給金" />
-    <string id="taom_enlist_wait_text" text="あなたは{COMMANDER}の部隊に従軍している。隊列は指揮官の歩調で進む。" />
 
     <string id="taom_enlist_welcome" text="隊列へようこそ、兵士。列に入れ。" />
 

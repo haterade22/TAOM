@@ -1863,23 +1863,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Goblin" />
     <string id="taom_str_player_father_name.goblin" text="Narzuk" />
     <string id="taom_str_player_mother_name.goblin" text="Borlia" />
-    <string id="taom_bandit_goblin_name" text="Asaltantes Goblin" />
-    <string id="taom_bandit_goblin_m1" text="Bolg" />
-    <string id="taom_bandit_goblin_m2" text="Yazneg" />
-    <string id="taom_bandit_goblin_m3" text="Fimbul" />
-    <string id="taom_bandit_goblin_m4" text="Narzug" />
-    <string id="taom_bandit_goblin_m5" text="Gorbag" />
-    <string id="taom_bandit_goblin_m6" text="Mauhûr" />
-    <string id="taom_bandit_goblin_m7" text="Snaga" />
-    <string id="taom_bandit_goblin_m8" text="Ufthak" />
-    <string id="taom_bandit_goblin_m9" text="Radbug" />
-    <string id="taom_bandit_goblin_m10" text="Lugdush" />
-    <string id="taom_bandit_goblin_f1" text="Skarra" />
-    <string id="taom_bandit_goblin_f2" text="Vorga" />
-    <string id="taom_bandit_goblin_f3" text="Mazra" />
-    <string id="taom_bandit_goblin_f4" text="Grishta" />
-    <string id="taom_bandit_goblin_f5" text="Narzga" />
-    <string id="taom_hideout_desc_goblin" text="Bajo los riscos del Paso Alto encuentras una madriguera apestosa de trasgos excavada profundamente en la roca desnuda." />
     <string id="taom_str_faction_official.mistymountainorcs" text="un jefe de las Montañas Nubladas" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="una jefa de las Montañas Nubladas" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Señor de la Guerra" />
@@ -1897,23 +1880,6 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Orco" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Narzuk" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Borlia" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Saqueadores Orcos" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Bolg" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Yazneg" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Fimbul" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Narzug" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Gorbag" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Mauhûr" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Snaga" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Ufthak" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Radbug" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Lugdush" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Skarra" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Vorga" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Mazra" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Grishta" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Narzga" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Bajo los riscos de las Montañas Nubladas encuentras una repugnante madriguera de orcos excavada en la roca desnuda." />
     <string id="taom_bld_stall_title" text="TAOM: la última carga de batalla puede no haber terminado" />
     <string id="taom_bld_stall_dismiss" text="Descartar" />
     <string id="taom_bld_stall_openfolder" text="Abrir carpeta de registro" />

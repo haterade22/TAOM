@@ -1867,23 +1867,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Гоблинский" />
     <string id="taom_str_player_father_name.goblin" text="Нарзук" />
     <string id="taom_str_player_mother_name.goblin" text="Борлия" />
-    <string id="taom_bandit_goblin_name" text="Гоблинские Налётчики" />
-    <string id="taom_bandit_goblin_m1" text="Больг" />
-    <string id="taom_bandit_goblin_m2" text="Язнег" />
-    <string id="taom_bandit_goblin_m3" text="Фимбул" />
-    <string id="taom_bandit_goblin_m4" text="Нарзуг" />
-    <string id="taom_bandit_goblin_m5" text="Горбаг" />
-    <string id="taom_bandit_goblin_m6" text="Маухур" />
-    <string id="taom_bandit_goblin_m7" text="Снага" />
-    <string id="taom_bandit_goblin_m8" text="Уфтак" />
-    <string id="taom_bandit_goblin_m9" text="Радбуг" />
-    <string id="taom_bandit_goblin_m10" text="Лугдуш" />
-    <string id="taom_bandit_goblin_f1" text="Скарра" />
-    <string id="taom_bandit_goblin_f2" text="Ворга" />
-    <string id="taom_bandit_goblin_f3" text="Мазра" />
-    <string id="taom_bandit_goblin_f4" text="Гришта" />
-    <string id="taom_bandit_goblin_f5" text="Нарзга" />
-    <string id="taom_hideout_desc_goblin" text="Под скалами Высокого Перевала вы находите зловонное логово гоблинов, вырытое глубоко в голой скале." />
     <string id="taom_str_faction_official.mistymountainorcs" text="вождь Мглистых гор" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="предводительница Мглистых гор" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Военачальник" />
@@ -1901,23 +1884,6 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Орочий" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Нарзук" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Борлия" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Орочьи налётчики" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Болг" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Язнег" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Фимбул" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Нарзуг" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Горбаг" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Маухур" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Снага" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Уфтак" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Радбуг" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Лугдуш" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Скарра" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Ворга" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Мазра" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Гришта" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Нарзга" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Под скалами Мглистых гор вы находите мерзкое логово орков, вырытое в голой скале." />
     <string id="taom_bld_stall_title" text="TAOM: загрузка последней битвы могла не завершиться" />
     <string id="taom_bld_stall_dismiss" text="Закрыть" />
     <string id="taom_bld_stall_openfolder" text="Открыть папку с логами" />

@@ -1863,23 +1863,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="哥布林" />
     <string id="taom_str_player_father_name.goblin" text="纳尔祖克" />
     <string id="taom_str_player_mother_name.goblin" text="波尔利亚" />
-    <string id="taom_bandit_goblin_name" text="哥布林袭击者" />
-    <string id="taom_bandit_goblin_m1" text="波格" />
-    <string id="taom_bandit_goblin_m2" text="亚兹奈格" />
-    <string id="taom_bandit_goblin_m3" text="芬布尔" />
-    <string id="taom_bandit_goblin_m4" text="纳尔祖格" />
-    <string id="taom_bandit_goblin_m5" text="戈尔巴格" />
-    <string id="taom_bandit_goblin_m6" text="毛胡尔" />
-    <string id="taom_bandit_goblin_m7" text="斯纳加" />
-    <string id="taom_bandit_goblin_m8" text="乌夫萨克" />
-    <string id="taom_bandit_goblin_m9" text="拉德布格" />
-    <string id="taom_bandit_goblin_m10" text="卢格杜什" />
-    <string id="taom_bandit_goblin_f1" text="斯卡拉" />
-    <string id="taom_bandit_goblin_f2" text="沃尔加" />
-    <string id="taom_bandit_goblin_f3" text="玛兹拉" />
-    <string id="taom_bandit_goblin_f4" text="格里什塔" />
-    <string id="taom_bandit_goblin_f5" text="纳尔兹加" />
-    <string id="taom_hideout_desc_goblin" text="在高山隘口的峭壁之下,你发现了一个恶臭的哥布林巢穴,深深钻入裸露的岩石之中。" />
     <string id="taom_str_faction_official.mistymountainorcs" text="迷雾山脉的酋长" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="迷雾山脉的女酋长" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="军阀" />
@@ -1897,23 +1880,6 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="半兽人" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="纳尔祖克" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="波尔利亚" />
-    <string id="taom_bandit_mistymountainorcs_name" text="半兽人袭击者" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="波格" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="亚兹奈格" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="芬布尔" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="纳尔祖格" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="戈巴格" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="毛胡尔" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="斯纳加" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="乌夫萨克" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="拉德布格" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="卢格杜什" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="斯卡拉" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="沃尔加" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="马兹拉" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="格里什塔" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="纳尔兹加" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="在迷雾山脉的峭壁之下,你发现了一个污秽的半兽人巢穴,它们在光秃秃的岩石中挖掘出洞窟。" />
     <string id="taom_bld_stall_title" text="TAOM: 上次战斗加载可能未完成" />
     <string id="taom_bld_stall_dismiss" text="关闭" />
     <string id="taom_bld_stall_openfolder" text="打开日志文件夹" />
