@@ -56,6 +56,15 @@ public interface ICareerAgentStatService
     /// </summary>
     void ApplyMountStatModifiers(string? riderHeroId, int? riderAgentIndex, AgentDrivenProperties mountProps);
 
+    /// <summary>The hero's <c>Ammo</c> passive as a fraction (0.10 for +10%), 0 for no hero, no
+    /// passive or a negative value. The model hands it to <c>CareerAmmoApplier</c> from
+    /// <c>InitializeMissionEquipment</c> (#613).</summary>
+    float AmmoBonus(string? heroId);
+
+    /// <summary>Clears the <c>[CareerPerks]</c> dedupe state so the next mission's first stat
+    /// application logs again. Called from the mission behavior's end-of-mission teardown (#613).</summary>
+    void ResetDiagnostics();
+
     /// <summary>
     /// Returns the post-amplification damage value. Applies the attacker's ArmorPenetration
     /// career passive and the attacker's <c>Damage</c> passive for the hit's delivery type

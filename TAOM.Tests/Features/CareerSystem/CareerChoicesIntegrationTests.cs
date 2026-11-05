@@ -136,4 +136,36 @@ public class CareerChoicesIntegrationTests
             "Every parsed PassiveEffect must have a finite, non-zero magnitude. Offenders: "
             + string.Join(", ", bad));
     }
+
+    [TestMethod]
+    public void RealChoicesXml_EveryAttackTypeMask_ParsesAndKindPipsAreKinded()
+    {
+        // #613: an unparseable attack_type_mask lands on None (inert) with a warning at load. That
+        // must never ship: a typo would silently kill the pip. And the five pips that name a kind
+        // ("+5% blunt resistance", "+8% cut resistance") must carry that kind now, not All.
+        var choices = _provider.LoadChoices();
+
+        var inert = choices
+            .Where(c => c.Passive != null && c.Passive.AttackTypeMask == AttackTypeMask.None)
+            .Select(c => c.Id)
+            .ToList();
+        Assert.AreEqual(0, inert.Count, "attack_type_mask failed to parse on: " + string.Join(", ", inert));
+
+        var kinded = choices
+            .Where(c => c.Passive != null && (c.Passive.AttackTypeMask & AttackTypeMaskMatch.KindBits) != AttackTypeMask.None)
+            .Select(c => c.Id)
+            .OrderBy(id => id)
+            .ToList();
+        CollectionAssert.AreEquivalent(
+            new[]
+            {
+                "avanc_luth_raider_t2_b_p2",
+                "black_uruk_captain_t1_a_p2",
+                "black_uruk_captain_t2_a_p3",
+                "olog_hai_warchief_t1_a_p2",
+                "watchman_of_stangard_t1_a_p4",
+            },
+            kinded,
+            "the set of kind-masked pips moved; re-read their wording before accepting the change");
+    }
 }

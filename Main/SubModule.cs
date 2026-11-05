@@ -1262,7 +1262,7 @@ public class SubModule : MBSubModuleBase
         var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
-        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
+        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService, IoC.Resolve<IModLogger>()));
         // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
         // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
@@ -2156,7 +2156,7 @@ public class SubModule : MBSubModuleBase
                 careerAbilityService,
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
-                IoC.Resolve<Features.CareerSystem.ICareerPassiveService>(),
+                IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>(),
                 IoC.Resolve<Features.CareerSystem.ICareerConfigProvider>(),
                 IoC.Resolve<IModLogger>()));
         }

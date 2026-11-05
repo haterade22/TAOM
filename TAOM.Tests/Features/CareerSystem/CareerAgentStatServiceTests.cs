@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
@@ -19,12 +20,14 @@ public class CareerAgentStatServiceTests
 {
     private CareerAgentStatService _sut = null!;
     private ICareerPassiveService _passives = null!;
+    private IModLogger _logger = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _passives = Substitute.For<ICareerPassiveService>();
-        _sut = new CareerAgentStatService(_passives);
+        _logger = Substitute.For<IModLogger>();
+        _sut = new CareerAgentStatService(_passives, _logger);
         // Static state — pre-reset so prior tests don't leak buffs into ours.
         CareerAbilityBuffTracker.ClearAll();
     }
@@ -219,6 +222,107 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // [CareerPerks] logging (#613): the hero's own stat application logs once per distinct set of
+    // applied values, the per-hit paths log at DEBUG when a passive moved the number.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithPassives_LogsOncePerDistinctSetOfValues()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+
+        var props = new AgentDrivenProperties();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("SwingSpeed +5%")));
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_ValuesChange_LogsAgain()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageBonus = 0.15f });
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("self buff") && s.Contains("dmg +15%")));
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_ClearsTheDedupe_SoTheNextSpawnLogsAgain()
+    {
+        // The service is a singleton; without a reset a second battle with the same values would
+        // log nothing at spawn, which is the re-test loop the feature doc recommends.
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _sut.ResetDiagnostics();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("agent stats for 'hero1'")));
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("mount stats for rider 'hero1'")));
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_NonHeroSoldier_NeverLogs()
+    {
+        // Every soldier recomputes stats on spawn and on formation orders; only the career hero's
+        // own agent is worth a line.
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageBonus = 0.10f });
+
+        _sut.ApplyAgentStatModifiers(heroId: null, agentIndex: 42, isHuman: true, isHero: false, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_HeroRider_LogsOncePerDistinctSetOfValues()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
+
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties { MountChargeDamage = 1f });
+        _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties { MountChargeDamage = 1f });
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("mount") && s.Contains("MountChargeDamage +15%")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_PassiveMovedTheNumber_LogsDebugWithBaseAndResult()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        Assert.AreEqual(55f, result, 0.01f);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("50.0") && s.Contains("55.0") && s.Contains("ArmorPenetration")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_PassiveMovedTheNumber_LogsDebug()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+
+        var result = _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+
+        Assert.AreEqual(36f, result, 0.01f);
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("Resistance") && s.Contains("Blunt")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_NothingApplied_DoesNotLog()
+    {
+        _sut.CalculateDamageAmplification(null, null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // ApplyMountStatModifiers (#611): the rider's MountChargeDamage passive and the Cavalry
     // ability's two mount fields, applied on the MOUNT's properties via the rider's ids.
     // ──────────────────────────────────────────────────────────────────────────
@@ -347,6 +451,28 @@ public class CareerAgentStatServiceTests
         Assert.AreEqual(3f, mount.MountSpeed, 0.001f);
         Assert.AreEqual(100f, mount.MountChargeDamage, 0.01f);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // AmmoBonus (#613): the magnitude the model hands CareerAmmoApplier at InitializeMissionEquipment.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void AmmoBonus_HeroWithPassive_ReturnsTheMagnitude()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Ammo).Returns(0.15f);
+
+        Assert.AreEqual(0.15f, _sut.AmmoBonus("hero1"), 0.0001f);
+    }
+
+    [TestMethod]
+    public void AmmoBonus_NullHeroOrNegativeMagnitude_ReturnsZeroAndNeverQueriesForNull()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Ammo).Returns(-0.2f);
+
+        Assert.AreEqual(0f, _sut.AmmoBonus("hero1"), 0.0001f);
+        Assert.AreEqual(0f, _sut.AmmoBonus(null), 0.0001f);
+        _passives.DidNotReceive().GetPassiveMagnitude(null!, PassiveEffectType.Ammo);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
