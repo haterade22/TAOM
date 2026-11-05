@@ -70,7 +70,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 1. Warg takes >10 damage from enemy within 10 units
 2. 10% chance to enter rage (2-3 attacks)
 3. Player: loses control, sees "Your warg entered into a rage" message
-4. AI: rider leaves formation, warg navigates to enemy
+4. AI: rider leaves formation (its live formation is stored first and restored when the rage ends or the warg dies; a warg spawned after the first scan used to store null), warg navigates to enemy
 5. Warg attacks, decrementing rage counter
 6. On completion/timeout (6s)/enemy death: control returns
 
