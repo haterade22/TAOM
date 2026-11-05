@@ -13,7 +13,14 @@ public class WargAiControlledIsNotFacingEnemy : BTReturnFalseDecorator, IBTBanne
     BTBlackboardValue<int> _rageAttackAmount;
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
-    private static IMissionAdapterFactory AdapterFactory => IoC.Resolve<IMissionAdapterFactory>();
+    // Passed in by WargBehaviorTree.BuildTree, resolved once per tree, never per evaluation (the
+    // root runs every tick).
+    private readonly IMissionAdapterFactory _adapterFactory;
+
+    public WargAiControlledIsNotFacingEnemy(IMissionAdapterFactory adapterFactory)
+    {
+        _adapterFactory = adapterFactory;
+    }
 
     public BTBlackboardValue<Agent> Agent { get => agent; set => agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
@@ -23,8 +30,8 @@ public class WargAiControlledIsNotFacingEnemy : BTReturnFalseDecorator, IBTBanne
 
     public override bool Evaluate()
     {
-        var agentHitByAdapter = AdapterFactory.GetAgentAdapter(AgentHitBy.GetValue());
-        var agentAdapter = AdapterFactory.GetAgentAdapter(Agent.GetValue());
+        var agentHitByAdapter = _adapterFactory.GetAgentAdapter(AgentHitBy.GetValue());
+        var agentAdapter = _adapterFactory.GetAgentAdapter(Agent.GetValue());
         return !agentHitByAdapter.IsAttackLikelyToHit(agentAdapter, 30, WargConfig.WargAttackRange);
     }
 }
