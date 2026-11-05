@@ -23,12 +23,14 @@ public class EnlistmentPlayerActionServiceTests
     private IDutyOrchestrationService _duties;
     private IMobilePartyAttachmentAdapter _attachment = null!;
     private IEncounterAdapter _encounter = null!;
+    private IGameMenuAdapter _gameMenu = null!;
+    private IModLogger _logger = null!;
     private EnlistmentPlayerActionService _sut;
 
     [TestInitialize]
     public void Setup()
     {
-        var logger = Substitute.For<IModLogger>();
+        var logger = _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(logger);
         _commander = Substitute.For<ICommanderLordAdapter>();
         _conversation = Substitute.For<IMapConversationAdapter>();
@@ -44,10 +46,11 @@ public class EnlistmentPlayerActionServiceTests
         _store.Record.CommanderHeroId = "lord_1";
 
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
+        _gameMenu = Substitute.For<IGameMenuAdapter>();
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.EnsureSettlementEncounter(Arg.Any<string>()).Returns(true);
         _sut = new EnlistmentPlayerActionService(
-            _store, _commander, _conversation, _duties, Coop(), _attachment, _encounter, logger);
+            _store, _commander, _conversation, _duties, Coop(), _attachment, _encounter, _gameMenu, logger);
     }
 
     [TestMethod]
@@ -169,6 +172,175 @@ public class EnlistmentPlayerActionServiceTests
         Assert.IsFalse(_sut.TakeTownLeave());
         _encounter.DidNotReceive().EnsureSettlementEncounter(Arg.Any<string>());
         Assert.IsFalse(_store.Record.OnTownLeave);
+    }
+
+    // ---- A discharge during load (#828): the saved wait menu comes back with nobody serving ----
+
+    [TestMethod]
+    public void IsServing_NotEnlisted_ReturnsFalse()
+    {
+        _store.Record.State = EnlistmentState.NotEnlisted;
+        Assert.IsFalse(_sut.IsServing);
+    }
+
+    [TestMethod]
+    public void IsServing_Enlisted_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.IsServing);
+    }
+
+    private const string ServiceMenu = "taom_enlistment_service_wait";
+
+    private void NotServing() => _store.Record.State = EnlistmentState.NotEnlisted;
+
+    private void InsideSettlementInMapEvent(string settlementId) =>
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true, isInMapEvent: true, settlementId: settlementId));
+
+    [TestMethod]
+    public void LeaveAfterDischarge_StillServing_ReentersServiceMenu()
+    {
+        _sut.LeaveAfterDischarge();
+
+        _gameMenu.Received(1).SwitchTo(ServiceMenu);
+        _gameMenu.DidNotReceive().ExitToLast();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_OnMap_ExitsToLast()
+    {
+        NotServing();
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(mainPartyExists: true));
+
+        _sut.LeaveAfterDischarge();
+
+        _gameMenu.Received(1).ExitToLast();
+        _encounter.DidNotReceive().EnsureSettlementEncounter(Arg.Any<string>());
+        _attachment.DidNotReceive().LeaveSettlement();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_InSettlementDuringMapEvent_ExitsWithoutTouchingSettlement()
+    {
+        NotServing();
+        InsideSettlementInMapEvent("town_EW1");
+
+        _sut.LeaveAfterDischarge();
+
+        _gameMenu.Received(1).ExitToLast();
+        _encounter.DidNotReceive().EnsureSettlementEncounter(Arg.Any<string>());
+        _attachment.DidNotReceive().LeaveSettlement();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_InsideSettlement_OpensItsMenu()
+    {
+        NotServing();
+        InsideSettlement("town_EW1");
+        _gameMenu.CurrentSettlementMenuId.Returns("town");
+        _gameMenu.EnsureMenuOpen("town").Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        _encounter.Received(1).EnsureSettlementEncounter("town_EW1");
+        _gameMenu.Received(1).EnsureMenuOpen("town");
+        _gameMenu.DidNotReceive().ExitToLast();
+        _attachment.DidNotReceive().LeaveSettlement();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_SettlementMenuWontOpen_FinishesWalksOutAndExits()
+    {
+        NotServing();
+        InsideSettlement("town_EW1");
+        _gameMenu.CurrentSettlementMenuId.Returns("town");
+        _gameMenu.EnsureMenuOpen("town").Returns(false);
+        _encounter.Finish(true).Returns(true);
+        _attachment.LeaveSettlement().Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        Received.InOrder(() =>
+        {
+            _encounter.Finish(true);
+            _attachment.LeaveSettlement();
+            _gameMenu.ExitToLast();
+        });
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_NullSettlementMenuId_FinishesWalksOutAndExits()
+    {
+        NotServing();
+        InsideSettlement("town_EW1");
+        _gameMenu.CurrentSettlementMenuId.Returns((string)null);
+        _encounter.Finish(true).Returns(true);
+        _attachment.LeaveSettlement().Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        Received.InOrder(() =>
+        {
+            _encounter.Finish(true);
+            _attachment.LeaveSettlement();
+            _gameMenu.ExitToLast();
+        });
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_EncounterFails_WalksOutWithoutFinish()
+    {
+        NotServing();
+        InsideSettlement("town_EW1");
+        _encounter.EnsureSettlementEncounter("town_EW1").Returns(false);
+        _attachment.LeaveSettlement().Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _attachment.Received(1).LeaveSettlement();
+        _gameMenu.Received(1).ExitToLast();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_WalkOutFails_KeepsServiceMenu()
+    {
+        NotServing();
+        InsideSettlement("town_EW1");
+        _encounter.EnsureSettlementEncounter("town_EW1").Returns(false);
+        _attachment.LeaveSettlement().Returns(false);
+
+        _sut.LeaveAfterDischarge();
+
+        _gameMenu.Received(1).EnsureMenuOpen(ServiceMenu);
+        _gameMenu.DidNotReceive().ExitToLast();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_EncounterStillLiveInMapEvent_WarnsAndExits()
+    {
+        NotServing();
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(mainPartyExists: true, isInMapEvent: true));
+        _encounter.HasCurrent.Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("encounter")));
+        _logger.DidNotReceiveWithAnyArgs().LogError(default!);
+        _gameMenu.Received(1).ExitToLast();
+    }
+
+    [TestMethod]
+    public void LeaveAfterDischarge_EncounterStillLiveWithoutMapEvent_LogsErrorAndExits()
+    {
+        NotServing();
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(mainPartyExists: true));
+        _encounter.HasCurrent.Returns(true);
+
+        _sut.LeaveAfterDischarge();
+
+        _logger.Received().LogError(Arg.Is<string>(m => m.Contains("no map event")));
+        _gameMenu.Received(1).ExitToLast();
     }
 
     private void InsideSettlement(string settlementId) =>

@@ -15,6 +15,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     private readonly ICoopSessionProvider _coopSession;
     private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IEncounterAdapter _encounter;
+    private readonly IGameMenuAdapter _gameMenu;
     private readonly IModLogger _logger;
 
     public EnlistmentPlayerActionService(
@@ -25,6 +26,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         ICoopSessionProvider coopSession,
         IMobilePartyAttachmentAdapter attachment,
         IEncounterAdapter encounter,
+        IGameMenuAdapter gameMenu,
         IModLogger logger)
     {
         _store = store;
@@ -34,6 +36,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         _coopSession = coopSession;
         _attachment = attachment;
         _encounter = encounter;
+        _gameMenu = gameMenu;
         _logger = logger;
     }
 
@@ -131,6 +134,58 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         _store.Record.OnTownLeave = true;
         _logger?.LogInfo("[Enlistment] shore leave granted — the settlement menu is the player's until the column moves");
         return true;
+    }
+
+    public bool IsServing => _store.Record.IsEnlisted;
+
+    public void LeaveAfterDischarge()
+    {
+        if (IsServing)
+        {
+            // EndWait already ran before an isLeave consequence, and options redraw only on a menu
+            // refresh, so re-enter the menu: SwitchTo restarts the wait.
+            _gameMenu.SwitchTo(EnlistmentMenuService.ServiceWaitMenuId);
+            return;
+        }
+
+        // The adapter catches its own read failures and answers "not in a settlement".
+        var presence = _attachment.GetPresenceFlags();
+
+        // Never open a town menu over a live battle: vanilla re-pushes its own menu for a map event.
+        if (presence.IsInSettlement && !presence.IsInMapEvent)
+        {
+            // The load-time discharge left him in a town with no PlayerEncounter (#510 shape), so
+            // the town menu is only safe once the encounter exists.
+            var encounterReady = _encounter.EnsureSettlementEncounter(presence.SettlementId);
+            if (encounterReady && _gameMenu.EnsureMenuOpen(_gameMenu.CurrentSettlementMenuId))
+                return;
+
+            // Same order as DischargeService.RestoreCampaignContext: close what we opened, then
+            // walk out explicitly. Never leave him in a settlement with no menu.
+            _logger?.LogWarning($"[Enlistment] discharged exit: could not open the menu for '{presence.SettlementId ?? "-"}', leaving the settlement");
+            if (encounterReady && !_encounter.Finish(forcePlayerOutFromSettlement: true))
+                _logger?.LogError("[Enlistment] discharged exit: could not finish the settlement encounter just opened; the player may be unable to start encounters");
+
+            if (InsideSettlement() && !_attachment.LeaveSettlement())
+            {
+                _logger?.LogError($"[Enlistment] discharged exit: COULD NOT leave '{presence.SettlementId ?? "-"}'; keeping the service menu so the player still has an exit");
+                // Finish may already have exited the menu; keep one with a working exit on screen.
+                _gameMenu.EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+                return;
+            }
+        }
+
+        // In a map event vanilla re-pushes 'encounter'. With no map event a live encounter has no
+        // menu to advance it and blocks every new encounter, so that case is an error, not a note.
+        if (_encounter.HasCurrent)
+        {
+            if (presence.IsInMapEvent)
+                _logger?.LogWarning("[Enlistment] discharged exit: a player encounter is still live; vanilla re-pushes its menu for the map event");
+            else
+                _logger?.LogError("[Enlistment] discharged exit: a player encounter is still live with no map event; nothing will advance it and new encounters stay blocked");
+        }
+
+        _gameMenu.ExitToLast();
     }
 
     /// <summary>

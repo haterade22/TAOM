@@ -461,6 +461,10 @@
 
 	<string id="taom_fc_dismissed" text="{HERO_NAME}已作为{TROOP_NAME}回到队列中。" />
 
+	<string id="taom_enlist_menu_discharged_leave" text="Go on your way" />
+
+	<string id="taom_enlist_wait_discharged" text="Your service has ended." />
+
   </strings>
 
 </base>

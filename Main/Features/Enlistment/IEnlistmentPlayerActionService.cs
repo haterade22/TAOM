@@ -34,7 +34,7 @@ public enum TalkToCommanderResult
 /// The player's agency while serving: talk to the commander, ask for work. Both were shipped
 /// behaviours with no way to reach them — the enlisted dialog surface (reassignment, quartermaster,
 /// discharge in person) existed but nothing could open a conversation, and duties only ever arrived
-/// unbidden on the daily tick.
+/// unbidden on the daily tick. Also owns the exit from the service menu once service has ended (#828).
 /// </summary>
 public interface IEnlistmentPlayerActionService
 {
@@ -61,4 +61,20 @@ public interface IEnlistmentPlayerActionService
     /// resting in. Returns false when the gate has closed since the option was drawn.
     /// </summary>
     bool TakeTownLeave();
+
+    /// <summary>
+    /// Is anyone serving right now? Pure read, safe in a menu-option condition every frame. Each
+    /// service-menu option gates itself on this, because the wait menu's own condition is `true`
+    /// (a false one hides every option and nothing exits the menu, #567 and #828).
+    /// </summary>
+    bool IsServing { get; }
+
+    /// <summary>
+    /// "Go on your way": leave the service menu after a discharge that ran before the map existed
+    /// (a load with the MCM switch off, or the identity guard). The wait has already ended by the
+    /// time this runs. Still serving: re-enter the service menu, which restarts the wait. Inside a settlement outside a map event: open its menu, or if that fails close
+    /// the encounter, walk out and exit; if the walk-out fails, keep the service menu so a working
+    /// exit stays on screen. Otherwise exit to the last menu.
+    /// </summary>
+    void LeaveAfterDischarge();
 }

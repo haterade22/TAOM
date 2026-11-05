@@ -13,6 +13,9 @@ public interface IServiceStatusTextWriter
 {
     void Write(ServiceStatusModel status);
 
+    /// <summary>The wait text when nobody is serving (a discharge that ran before the map existed).</summary>
+    void WriteNotServing();
+
     /// <summary>True when the board was last rendered in a language other than the active one.</summary>
     bool IsStale { get; }
 }
@@ -76,6 +79,10 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
     private string? _renderedLanguage;
 
     public bool IsStale => _renderedLanguage != MBTextManager.ActiveTextLanguage;
+
+    public void WriteNotServing() =>
+        MBTextManager.SetTextVariable(
+            WaitTextVariable, new TextObject("{=taom_enlist_wait_discharged}Your service has ended."));
 
     /// <summary>
     /// The one thing standing between the player and their next rank. Promotion needs FIVE

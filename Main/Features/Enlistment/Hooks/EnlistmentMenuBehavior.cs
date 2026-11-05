@@ -84,7 +84,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
             EnlistmentMenuService.ServiceWaitMenuId,
             "{TAOM_ENLISTMENT_WAIT_TEXT}",
             OnWaitMenuInit,
-            args => _store.Record.IsEnlisted,
+            args => true, // #567, #828: never gate this; each option gates itself (EnlistmentServiceMenuWiringTests)
             null,
             OnWaitMenuTick,
             GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption,
@@ -134,11 +134,6 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
         _maintenance.Pump(elapsed, CampaignTime.Now.ToHours);
     }
-
-    // Asking to leave is a DECISION with a cost the player must see first, so the whole thing —
-    // verdict, popup, discharge — lives in the presenter. The menu exit is DischargeService's
-    // job now (INV-D1); calling ExitToLast here as well would stop campaign time on the refusal
-    // paths, where nothing was discharged at all.
 
     private void OnConversationEnded(IEnumerable<CharacterObject> characters)
     {

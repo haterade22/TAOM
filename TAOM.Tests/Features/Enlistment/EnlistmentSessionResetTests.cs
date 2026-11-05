@@ -94,7 +94,7 @@ public class EnlistmentSessionResetTests
         return new EnlistmentWaitMenuPresenter(store, Substitute.For<ICommanderLordAdapter>(),
             Substitute.For<IEnlistmentDialogGateService>(), Substitute.For<IEnlistmentService>(),
             inquiry, coop, actions, Substitute.For<IGameMenuAdapter>(),
-            Substitute.For<IServiceStatusService>(), settings, Substitute.For<IModLogger>());
+            Substitute.For<IServiceStatusService>(), Substitute.For<IServiceStatusTextWriter>(), settings, Substitute.For<IModLogger>());
     }
 
     private static void AssertOffersShown(IInquiryAdapter inquiry, int count) =>
