@@ -399,6 +399,12 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (winnerSide != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
+        // A "send troops" clear raises this twice for one event (#790): first from its success menu,
+        // before the event is finalized, then from HideoutEventComponent.OnBeforeMapEventFinalize.
+        // MapEvent.FinalizeEventAux sets WaitingRemoval just before that second raise (v1.4.8 MapEvent.cs:2078, then :2138), so
+        // paying only a finalized event pays once, and a save made in the success menu still pays
+        // once after load. Re-check this line order at an engine bump.
+        if (!component.MapEvent.IsFinalized) return;
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
