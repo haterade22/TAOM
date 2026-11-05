@@ -48,7 +48,12 @@ writes its diagnostic log + crash bundles). The **Open log folder** button on th
    `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\` on some installs
    (grab it from whichever exists). This is the engine's own log and is what
    *confirms* a missing mesh.
-4. **Your save file** — if the hang reproduces from a specific save.
+4. **`rgl_log_<number>.txt`**: the FULL engine log from the same folder. It shows whether the engine
+   was still compiling shaders: `compile_shader:` lines.
+5. **If the game is stuck right now:** before closing it, create a dump file of Bannerlord.exe in Task
+   Manager (Details tab, right-click). It is large (about the game's memory use), so do not attach it;
+   say you have it and we will ask for it.
+6. **Your save file**: if the hang reproduces from a specific save.
 
 ## Your setup
 

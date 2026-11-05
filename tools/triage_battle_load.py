@@ -1324,8 +1324,7 @@ def _format_timings(t: dict) -> list:
             # polls=1 there means the thread was blocked INSIDE frame 1. A heartbeat is
             # emitted FROM INSIDE a TickLoading frame, so polls=1 there means frame 1 had not
             # even arrived yet when the threshold elapsed: the block was BEFORE the frame.
-            # Printing the first reading for the second case sends the reader to #352 for a
-            # stall that is nowhere near WaitForMeshesToBeLoaded.
+            # Printing the first reading for the second case names the wrong place.
             if t.get("wait_incomplete"):
                 out.append("  polls=1 on a heartbeat — the FIRST TickLoading frame had not "
                            "arrived yet when the threshold elapsed, so the block is BEFORE "
@@ -1333,9 +1332,9 @@ def _format_timings(t: dict) -> list:
                            "what runs between Mission.Initialize returning and the first "
                            "TickLoading frame.")
             else:
-                out.append("  polls=1 with a large wait — the main thread BLOCKED inside one "
-                           "frame (a native spin, the #352 WaitForMeshesToBeLoaded shape), "
-                           "not async streaming.")
+                out.append("  polls=1 with a large wait: the main thread BLOCKED inside one frame, not async streaming. "
+                           "This is not the #352 wait: v1.4.8's WaitForMeshesToBeLoaded runs after loading, once "
+                           "rendering starts.")
         if t["wait_ms"] is None:
             out.append("  waitMs was omitted by the game (MissionInitializeDone not "
                        "observed) — it is unmeasured, not zero.")

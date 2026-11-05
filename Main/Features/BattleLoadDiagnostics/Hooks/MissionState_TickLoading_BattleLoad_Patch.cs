@@ -10,10 +10,10 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // FinishMissionLoadingBegin.
 //
 // Reading the pair matters more than the count itself (MissionState.cs:221-233):
-//   polls=1, waitMs large   -> the block was INSIDE a single TickLoading call. The main thread is
-//                              spinning in native code, not waiting on workers. This is the #352
-//                              PreloadHelper.WaitForMeshesToBeLoaded shape, and it is TAOM-data
-//                              driven (an unresolvable physics-body name spins that loop forever).
+//   polls=1, waitMs large   -> the block was INSIDE a single frame: the main thread stalled, it
+//                              was not waiting on workers. This is NOT the #352
+//                              PreloadHelper.WaitForMeshesToBeLoaded wait: on v1.4.8 that wait runs
+//                              from OnSceneRenderingStarted, after loading has finished.
 //   polls ~ waitMs/16       -> genuine multi-frame async streaming at ~60fps; the main thread is
 //                              healthy and the engine is waiting on disk/worker threads.
 //   polls=0                 -> THE BINDING FAILED. It does not mean "no wait". Say so in triage.
