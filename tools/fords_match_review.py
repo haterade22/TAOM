@@ -97,7 +97,7 @@ def _ratio(killed, lost):
     return killed / lost if lost > 0 else float("inf")
 
 
-def _side_values(facts):
+def side_values(facts):
     values = {side: {"killed": 0, "lost": 0} for side in SIDES}
     for troop, row in facts["troops"].items():
         side = facts["faction_of"].get(troop)
@@ -129,6 +129,17 @@ def _kills_per_minute(facts, hero, row):
 
 def _name(facts, side):
     return facts["west"] if side == "West" else facts["east"]
+
+
+def won_on_time(facts):
+    """Whether the match ended on the clock. The report's own flag when it has one, else a winner with no fallen keep."""
+    on_time = facts.get("on_time")
+    return on_time if isinstance(on_time, bool) else bool(facts.get("winner")) and facts.get("keep_fell") is None
+
+
+def match_seconds(facts):
+    """The mission second the winner was named, else the last summary's second."""
+    return facts.get("winner_mt") or facts["mt"]
 
 
 def _speed_finding(facts):
@@ -164,12 +175,12 @@ def _health_findings(facts):
 
 def _balance_findings(facts):
     found = []
-    if facts.get("winner") and facts["keep_fell"] is None:
-        found.append(f"RESULT: {_name(facts, facts['winner'])} won on time at {facts['mt']:.0f} s")
-    elif facts.get("winner"):
+    if facts.get("winner") and won_on_time(facts):
+        found.append(f"RESULT: {_name(facts, facts['winner'])} won on time at {match_seconds(facts):.0f} s")
+    elif facts.get("winner") and facts["keep_fell"] is not None:
         late_enough = facts["keep_fell"] >= TARGET_MATCH_SECONDS
         found.append(f"RESULT: {_name(facts, facts['winner'])} won at {facts['keep_fell']:.0f} s" + ("" if late_enough else ", under the 30-minute target"))
-    values = _side_values(facts)
+    values = side_values(facts)
     west, east = values["West"], values["East"]
     if west["lost"] and east["lost"]:
         west_trade, east_trade = _ratio(west["killed"], west["lost"]), _ratio(east["killed"], east["lost"])
@@ -248,29 +259,32 @@ def findings(facts):
 
 
 def _faction_tables(factions_path, west, east):
-    """troop -> side, the troops each side calls, the troops that only come free, and the sides with poison. A mirror match reads as West."""
+    """troop -> side, the troops each side calls, the troops that only come free, and the sides with poison. A mirror match reads as West.
+    The game tallies by troop id alone, so an id both factions field belongs to neither side."""
     factions = json.loads(Path(factions_path).read_text(encoding="utf-8"))["factions"]
-    faction_of, creatures, free, poison, on_sale = {}, {"West": set(), "East": set()}, set(), [], set()
+    owned, creatures, free, poison, on_sale = {"West": set(), "East": set()}, {"West": set(), "East": set()}, set(), [], set()
     for side, name in (("East", east), ("West", west)):
         faction = factions.get(name, {})
         for offer in faction.get("units", []):
-            faction_of[offer["troop"]] = side
+            owned[side].add(offer["troop"])
             on_sale.add(offer["troop"])
         for band in (faction.get("rotation") or {}).get("regions", []):
             for offer in band.get("units", []):
-                faction_of[offer["troop"]] = side
+                owned[side].add(offer["troop"])
                 on_sale.add(offer["troop"])
         for offer in (faction.get("creatures") or {}).get("units", []):
-            faction_of[offer["troop"]] = side
+            owned[side].add(offer["troop"])
             creatures[side].add(offer["troop"])
         for wave in faction.get("freeWaves", []):
             for unit in wave["units"]:
-                faction_of[unit["troop"]] = side
+                owned[side].add(unit["troop"])
                 free.add(unit["troop"])
         for hero in faction.get("heroes", []):
-            faction_of[hero["id"]] = side
+            owned[side].add(hero["id"])
         if faction.get("feats", {}).get("poisonPerSecond"):
             poison.append(side)
+    shared = owned["West"] & owned["East"] if west != east else set()
+    faction_of = {troop: side for side in ("East", "West") for troop in owned[side] if troop not in shared}
     return faction_of, creatures, free - on_sale, poison
 
 
@@ -282,6 +296,7 @@ def gather(run, factions_path=FACTIONS):
         return None
     facts = parse_log(logs[0].read_text(encoding="utf-8", errors="replace"))
     arm = dict(re.findall(r"^(\w+)=(.*)$", (folder / "arm.txt").read_text(encoding="utf-8"), re.M)) if (folder / "arm.txt").exists() else {}
+    facts["arm"] = arm
     facts["west"], facts["east"] = arm.get("west", "West"), arm.get("east", "East")
     runner = (folder / "runner_log.txt").read_text(encoding="utf-8", errors="replace") if (folder / "runner_log.txt").exists() else ""
     facts["reason"], facts["crashed"] = runner_outcome(runner)
@@ -289,7 +304,7 @@ def gather(run, factions_path=FACTIONS):
     rgl = glob.glob(str(folder / "rgl_log_*.txt"))
     facts["shader_compiles"] = Path(rgl[0]).read_text(encoding="utf-8", errors="replace").count("compile_shader:") if rgl else 0
     facts.update({"spawned": {}, "heroes": dict.fromkeys(SIDES, 0), "tower_damage": dict.fromkeys(SIDES, 0), "perf": {"avg": 0.0, "p95": 0.0}, "hero_lives": {},
-                  "tower_classes": {side: dict.fromkeys(TOWER_CLASSES, 0) for side in SIDES}})
+                  "final": False, "winner_mt": None, "on_time": None, "tower_classes": {side: dict.fromkeys(TOWER_CLASSES, 0) for side in SIDES}})
     reports = sorted(folder.glob("fords_report_*.json"))
     if reports:
         report = json.loads(reports[0].read_text(encoding="utf-8"))
@@ -297,6 +312,7 @@ def gather(run, factions_path=FACTIONS):
         facts["build"] = report.get("taom", "")
         end = evidence.get("End") or {}
         facts["winner"], facts["keep_fell"] = end.get("Winner"), end.get("KeepFellMt")
+        facts["final"], facts["winner_mt"], facts["on_time"] = report.get("final") is True, end.get("WinnerMt"), end.get("EndedOnTime")
         facts["spawned"] = evidence["Spawn"].get("SpawnedByTroop", {})
         for hero in evidence.get("Heroes", []):
             if hero.get("Kind") == "fielded":

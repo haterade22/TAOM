@@ -6,7 +6,7 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 ## How balance is decided
 
-Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. A balance change starts a new round.
+Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. Only finished, clean, scheduled matches count: a final report with a winner, from a build that is not `.dirty` or `.nogit`, with the scheduled faction on the West side, played at 4x with both sides AI and no control check. The faction table comes from the `factions.json` the build committed, and a troop both factions field counts for neither side. Folders of other builds are skipped silently; a left-out folder of this build is named on stderr. A balance change starts a new round.
 
 ## Matches
 

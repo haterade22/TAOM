@@ -852,7 +852,7 @@ def build_parser():
     parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
     parser.add_argument("--speed", type=int, choices=[1, 2, 4, 10], help="the match speed from the first frame (default 1); live_seconds stay mission seconds, so 10 ends a match in about a tenth of the time")
-    parser.add_argument("--control-check", type=int, metavar="SECONDS",
+    parser.add_argument("--control-check", type=positive_seconds, metavar="SECONDS",
                         help="at this mission second start the scripted take, hand-back and fall of a soldier, for [FordsOfWar][Control] lines")
     parser.add_argument("--runs", type=int, default=1, help="how many matches to run, one game process each")
     parser.add_argument("--runs-root", default=RUNS_ROOT, help="folder that holds one subfolder per run")

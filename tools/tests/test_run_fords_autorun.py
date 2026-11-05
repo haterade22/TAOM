@@ -28,11 +28,15 @@ class ArmTextTests(unittest.TestCase):
     def test_only_out_gives_out_and_quit(self):
         self.assertEqual(r.arm_text(r"E:\x"), "out=E:\\x\nquit=1\n")
 
-    def test_west_ai_adds_its_key_only_when_set(self):
+    def test_control_check_adds_its_key_only_when_set(self):
         self.assertIn("control_check=240\n", r.arm_text(r"E:\x", control_check=240))
         self.assertNotIn("control_check", r.arm_text(r"E:\x"))
+
+    def test_speed_adds_its_key_only_when_set(self):
         self.assertIn("speed=10\n", r.arm_text(r"E:\x", speed=10))
         self.assertNotIn("speed", r.arm_text(r"E:\x"))
+
+    def test_west_ai_adds_its_key_only_when_set(self):
         self.assertIn("west_ai=1\n", r.arm_text(r"E:\x", west_ai=True))
         self.assertNotIn("west_ai", r.arm_text(r"E:\x"))
 
@@ -770,6 +774,14 @@ class LauncherInputTests(unittest.TestCase):
             for value in ("0", "-5", "nan"):
                 with self.assertRaises(SystemExit, msg=f"{flag} {value}"), mock.patch("sys.stderr"):
                     parser.parse_args([flag, value])
+
+    def test_a_non_positive_control_check_is_rejected_and_a_positive_one_reaches_the_arm_file(self):
+        parser = r.build_parser()
+        for value in ("0", "-5", "nan"):
+            with self.assertRaises(SystemExit, msg=value), mock.patch("sys.stderr"):
+                parser.parse_args(["--control-check", value])
+        text, _ = r.arm_text_for(r"E:\x", parser.parse_args(["--control-check", "240"]))
+        self.assertIn("control_check=240.0\n", text)
 
     def test_the_documented_command_line_still_parses(self):
         args = r.build_parser().parse_args(["--scene", "s", "--west", "w", "--east", "e", "--ai", "a", "--live-seconds", "90",
