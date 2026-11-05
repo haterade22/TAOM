@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -175,5 +176,74 @@ public class PrefabExtensionBrushTests
         Assert.AreEqual(0, unknown.Count,
             "These PrefabExtension brushes are not loaded by the engine for TAOM's module set, so Gauntlet draws the "
             + "widget with the default brush: " + Environment.NewLine + string.Join(Environment.NewLine, unknown));
+    }
+}
+
+/// <summary>
+/// A <c>Brush.&lt;Property&gt;</c> attribute, in a GUI prefab or in the XML a PrefabExtension source injects, must name a
+/// public property of <c>TaleWorlds.GauntletUI.Brush</c>. It reads only repo files and reflects on the referenced assembly,
+/// so it needs no game install.
+/// </summary>
+[TestClass]
+public class PrefabBrushPropertyTests
+{
+    // Brush.<Property>="..." inside the XML held by a C# string literal; the first segment is the property.
+    private static readonly Regex BrushPropertyLiteral = new Regex(@"\bBrush\.([A-Za-z]+)(?:\.[A-Za-z.]+)?\s*=", RegexOptions.Compiled);
+
+    [TestMethod]
+    public void BrushPropertyLiteral_MatchesTheFirstSegmentCaseSensitively()
+    {
+        var names = BrushPropertyLiteral.Matches("<X Brush.FontSize=\"3\" Brush.fontsize=\"3\" IconBrush.Foo=\"1\" Brush.Color.Red=\"1\" />")
+            .Cast<Match>().Select(m => m.Groups[1].Value).ToList();
+        CollectionAssert.AreEqual(new[] { "FontSize", "fontsize", "Color" }, names);
+    }
+
+    [TestMethod]
+    public void EveryGuiPrefabBrushProperty_NamesABrushProperty()
+    {
+        // WidgetExtensions.GetObjectAndProperty looks the segment up exactly and drops an unknown one without an error.
+        var properties = new HashSet<string>(
+            typeof(TaleWorlds.GauntletUI.Brush)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Select(p => p.Name),
+            StringComparer.Ordinal);
+        Assert.IsTrue(properties.Contains("FontSize"), "Brush reflection is broken: FontSize is missing.");
+
+        var unknown = new SortedSet<string>(StringComparer.Ordinal);
+        var repoDir = RepoPath();
+        var used = 0;
+        foreach (var file in Directory.EnumerateFiles(RepoPath("Main", "_Module", "GUI", "PreFabs"), "*.xml", SearchOption.AllDirectories))
+            foreach (var attribute in XDocument.Load(file).Descendants().SelectMany(e => e.Attributes()))
+            {
+                var name = attribute.Name.LocalName;
+                if (!name.StartsWith("Brush.", StringComparison.Ordinal))
+                    continue;
+                used++;
+                var property = name.Substring("Brush.".Length).Split('.')[0];
+                if (!properties.Contains(property))
+                    unknown.Add($"{name}  ({file.Substring(repoDir.Length).TrimStart(Path.DirectorySeparatorChar)})");
+            }
+
+        Assert.IsTrue(used > 0, "No Brush.<Property> attribute found in any GUI prefab; the scan is broken.");
+
+        var usedInCSharp = 0;
+        foreach (var file in CSharpFiles())
+        {
+            var text = File.ReadAllText(file);
+            if (!text.Contains("[PrefabExtension("))
+                continue;
+            foreach (Match m in BrushPropertyLiteral.Matches(text))
+            {
+                usedInCSharp++;
+                if (!properties.Contains(m.Groups[1].Value))
+                    unknown.Add($"Brush.{m.Groups[1].Value}  ({file.Substring(repoDir.Length).TrimStart(Path.DirectorySeparatorChar)})");
+            }
+        }
+
+        Assert.IsTrue(usedInCSharp > 0, "No Brush.<Property> literal found in any PrefabExtension source; the C# scan is broken.");
+        Assert.AreEqual(0, unknown.Count,
+            "These GUI prefab or PrefabExtension attributes name no public property of TaleWorlds.GauntletUI.Brush "
+            + "(compared case-sensitively), so Gauntlet silently drops them: "
+            + Environment.NewLine + string.Join(Environment.NewLine, unknown));
     }
 }
