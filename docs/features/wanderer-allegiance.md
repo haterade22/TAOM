@@ -177,7 +177,7 @@ wanderer templates and all 7 on the 17 named companions are classified in `align
 | `Main/Features/WandererAllegiance/WandererAllegianceConfig.cs`, `WandererAllegianceConfigProvider.cs` | JSON DTO and validating loader |
 | `Main/Features/WandererAllegiance/WandererAllegianceSettingsProvider.cs` | MCM over JSON |
 | `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` | DryIoc registration, called by `WandererAllegianceModule.RegisterServices` |
-| `Main/Features/WandererAllegiance/WandererAllegianceModule.cs` | The feature module, listed in `Main/Composition/FeatureModules.cs`: registers the services and declares the dialog behavior, which the module runner adds at campaign start after every hand-wired behavior |
+| `Main/Features/WandererAllegiance/WandererAllegianceModule.cs` | The feature module, listed in `Main/Composition/FeatureModules.cs`: registers the services and declares the dialog behavior, which the module runner adds at campaign start after every hand-wired behavior (the runner and the porting rules: [composition-root.md](composition-root.md)) |
 | `Main/Features/TaomSettings.cs` | The `World/Wanderer Allegiance` group (GroupOrder 51) |
 | `Main/_Module/ModuleData/wanderer_allegiance/wanderer_allegiance_config.json` | Shipped config |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_wa_refuse_free`, `taom_wa_refuse_evil` |
