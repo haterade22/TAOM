@@ -34,7 +34,7 @@
     "thrustFloorFactor": 0.2,
     "assaultDamagePerSecond": 50,
     "wearStartMinutes": 15,
-    "wearPerMinute": 0.15
+    "wearPerMinute": 0.25
   },
   "heroes": {
     "maxAlivePerSide": 2,

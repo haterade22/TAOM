@@ -222,6 +222,14 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, three matches of 45 minutes at 4x:** the rule does what it was for. Erebor v Gundabad stalled before, with all six towers down and 80 damage to the keep in 18 minutes. Now the last lane cleared at 2,030 s and the keep fell at 2,350 s, 320 s later, to 425 blows with 2,641 unit-seconds of contact, so attackers do reach it. Rivendell v Mordor cleared its last lane at 2,216 s and the keep fell at 2,396 s. Dale v Gondor still has no winner at 45 minutes: East kept all its towers and West lost 3. Harad v Rohan did not run. Both wins came at about 40 minutes, so the target of 30 is not met.
 
+### Faster wall wear (this change)
+
+**Why:** with the lost lane rule, wins came at about 40 minutes, and the first towers fell at about 25. Mike's target is 30.
+
+**Changed:** `towers.wearPerMinute` from 0.15 to 0.25. The walls are as weak at minute 24 as they were at minute 30. This is a test value.
+
+**Result: not measured.** Read Dale v Gondor, Erebor v Gundabad, Rivendell v Mordor and Harad v Rohan at 4x against 30 minutes.
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
