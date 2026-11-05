@@ -7,6 +7,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.TroopWeight;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.SpecialResources;
 
@@ -77,7 +78,7 @@ public class SpecialResourcesBehaviorSessionResetTests
     public void SyncData_LoadingASaveWithoutTheKey_YieldsEmptyStorage()
     {
         LeavePriorCampaignBalances();
-        var store = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
+        var store = new EngineDataStore { Loading = true };
 
         _sut.SyncData(store);
 
@@ -92,13 +93,13 @@ public class SpecialResourcesBehaviorSessionResetTests
         _storage.Set("main_hero", "caster", 0f);
         _storage.Set("lord_1_1", "gems", 600f);
         var expected = new Dictionary<string, float>(_storage.GetAllData());
-        var store = new FakeDataStore { Mode = FakeDataStore.StoreMode.Saving };
+        var store = new EngineDataStore { Loading = false };
         _sut.SyncData(store);
 
         // A different campaign's balances are live in the singleton when the save is loaded.
         var loadStorage = new SpecialResourceStorageService();
         loadStorage.Set("other_hero", "elven_wine", 77f);
-        store.Mode = FakeDataStore.StoreMode.Loading;
+        store.Loading = true;
         NewBehavior(loadStorage, Substitute.For<ISpecialResourceService>()).SyncData(store);
 
         var loaded = loadStorage.GetAllData();
@@ -112,44 +113,12 @@ public class SpecialResourcesBehaviorSessionResetTests
     {
         LeavePriorCampaignBalances();
         var live = _storage.GetAllData();
-        var store = new FakeDataStore { Mode = FakeDataStore.StoreMode.Saving };
+        var store = new EngineDataStore { Loading = false };
 
         _sut.SyncData(store);
 
         Assert.AreSame(live, store.GetSaved<Dictionary<string, float>>(Key));
         Assert.AreSame(live, _storage.GetAllData());
         Assert.AreEqual(3, live.Count);
-    }
-
-    /// <summary>
-    /// Mirrors the engine's behavior data store (v1.4.8 <c>BehaviorSaveData.SyncData</c>): a load of
-    /// a missing key returns false and leaves the ref unchanged; a save records what it is handed,
-    /// null included, and a second save of the same key throws, as the engine's <c>Add</c> does.
-    /// </summary>
-    private class FakeDataStore : IDataStore
-    {
-        public enum StoreMode { Saving, Loading }
-
-        private readonly Dictionary<string, object?> _data = new();
-
-        public StoreMode Mode { get; set; }
-
-        public bool SyncData<T>(string key, ref T data)
-        {
-            if (Mode == StoreMode.Loading)
-            {
-                if (!_data.TryGetValue(key, out var stored)) return false;
-                data = (T)stored!;
-                return true;
-            }
-
-            _data.Add(key, data);
-            return true;
-        }
-
-        public T GetSaved<T>(string key) => _data.TryGetValue(key, out var v) ? (T)v! : default!;
-
-        public bool IsSaving => Mode == StoreMode.Saving;
-        public bool IsLoading => Mode == StoreMode.Loading;
     }
 }

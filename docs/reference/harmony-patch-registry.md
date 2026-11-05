@@ -3,6 +3,8 @@
 Full per-category rationale, history, and RCA links for every TAOM Harmony patch — moved verbatim from CLAUDE.md's Harmony Patch Categories table (repo-reorg 2026-07-12) so the eager-loaded CLAUDE.md keeps only the thin routing table (category | feature | target | status). **Before editing any patch, read its section here** and the scoped rule [.claude/rules/harmony-patches.md](../../.claude/rules/harmony-patches.md) (loads automatically when a `Main/**/Hooks/**` file is opened). Most sections end with a `docs/features/<x>.md` pointer — that feature doc remains the deep-dive.
 
 > **Ground truth is the code:** `grep -r 'HarmonyPatchCategory' Main/` enumerates every attribute-registered category — this registry is maintained by hand and can lag. Two caveats when reconciling: **manual patches carry no category attribute by design** (Patch28_SettlementGuards' two manual patches, Patch23_BannerColorPersistence's manual entries), and the Patch31_SmartCavalryAI / Patch35_CompanionTactics `Formation.SetMovementOrder` postfixes register under the shared `Patch_MissionTime_SetMovementOrder` category attribute, not their feature-numbered ones.
+>
+> **Gate:** `PatchCategoryNumberTests` fails when one `PatchNNN` number names two features, when a category has no `## <category>` heading here, or when a feature-map row cites a patch number that is not its feature's.
 
 ## Patch0_BattleScenes
 

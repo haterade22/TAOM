@@ -6,7 +6,7 @@ A committed, in-repo snapshot of the exact TaleWorlds v1.4.8 engine surface that
 
 The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtime validation gate (S6 smoke test) was never run as a discrete step — see [`docs/migration/TRACKING.md`](../../migration/TRACKING.md). The compiler proves a lot (an `override` whose base signature drifted is CS0115; `AccessTools` typos are flagged by the BUTR analyzer below), but three failure modes slip through a green build and surface only at game load — silently:
 
-1. **Harmony resolution ambiguity** — a name-only `[HarmonyPatch]` on a method that is overloaded *anywhere in the type hierarchy* throws `AmbiguousMatchException` at `PatchAll`, so the patch never applies. (The compiler and the BUTR analyzer both pass it — the member exists.)
+1. **Harmony resolution failures**: Harmony resolves an attribute target on the declared type only, so a target declared only on a base type does not resolve, and a name-only `[HarmonyPatch]` on a method with two overloads declared on the named type throws `AmbiguousMatchException` when the category applies. Either way the patch never applies. (The compiler and the BUTR analyzer both pass it: the member exists.)
 2. **Auxiliary reflection drift** — a private engine field/method reached by string name returns null after a rename; the reflecting code logs-and-survives, so the feature degrades with no crash.
 3. **Unregistered GameModel** — a `Taom*Model` that compiles but is never `AddModel`'d; the engine silently uses the vanilla `Default`.
 
@@ -38,12 +38,14 @@ Runs under `dotnet test` — no game launch. TAOM.Tests references the installed
 
 | Test class | Covers | Granularity |
 |------------|--------|-------------|
-| `HarmonyPatchBindingTests` | Every `[HarmonyPatch]` / `TargetMethod` target, resolved with HarmonyLib `AccessTools` (base types searched; Harmony itself resolves the declared type only) (count: the `patch-targets.md` header). | one assertion accumulating all failures |
+| `HarmonyPatchBindingTests` | Every patch class, resolved and bound the way Lib.Harmony 2.4.2 applies it (`HarmonyTargetResolver`: declared type only, each patch parameter, a body to patch), plus the patches `ManualPatchApplicator` applies by hand (count: the `patch-targets.md` header). | one assertion accumulating all failures |
 | `GameModelOverrideBindingTests` | Every GameModel (count: the `gamemodel-bases.md` header): registered with `AddModel`, overrides at least one base virtual, no shadow without `override`. | 2 tests |
 | `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members from `reflection-sites.md` Category B, one `[DataRow]` each. | one `[DataRow]` per site |
+| `TranspilerSiteBindingTests` | The transpilers it lists, run over the installed IL, still find their sites (the disabled Patch15's site is still absent). | one test per listed transpiler |
+| `ViewModelMixinBindingTests` | Every UIExtenderEx `[ViewModelMixin("Method")]` names one non-abstract method on its target view model. | one assertion accumulating all failures |
 
 ```bash
-dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
 > **First run (2026-05-28) caught a real defect.** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(typeof(HeroViewModel), "FillFrom")]`. `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` resolution found 3 candidates and threw `AmbiguousMatchException` — the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning argument types. This is exactly the gap the compiler and the BUTR analyzer miss.
@@ -63,7 +65,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 ## Maintenance
 
-- After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test --filter "TestCategory=BindingVerification"`.
+- After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"`.
 - When you add a reflection site against an engine member: add a row to `reflection-sites.md` Category B **and** a `[DataRow]` to `ReflectionSiteBindingTests`.
 - Local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce; it ignores the backlinks footer and prints up to 20 differing lines).
 
