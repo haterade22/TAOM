@@ -33,7 +33,7 @@
 | `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats (Mordor, Gundabad, Isengard) + career TroopDamage passive. **`CalculateHitDamage` is settlement raid SPEED, not combat damage** — it drains `SettlementHitPoints`. It was `TroopDamage`'s only consumer until 2026-08-06, which made 105 pips promising "+N% troop damage" inert in every battle; the battle half now lives on `CalculateDamageAmplification` (#395). Both consumers are intentional |
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power (MCM + JSON) |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio per battle type (MCM); `SimulateHit` also applies the refuge defender bonus via `IRefugeDefenseService` + `RefugeDamageReduction` (the (1-r)-on-final contract shared with the real-time path) |
-| `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses (JSON per-faction death chance multiplier) |
+| `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses (JSON per-faction death chance multiplier) and the career `TroopSurvival` factor in `GetSurvivalChance`; the career `HeroHealing` factor in `GetDailyHealingHpForHeroes`. An enlisted player rolls survival with his own party (no commander-party redirect since WP132) |
 | `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + culture-specific prize pools (Tierf-based) for regular and elite rewards |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans (elven immortality, dwarf/hobbit aging) |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |

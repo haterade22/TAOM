@@ -21,6 +21,8 @@ Three independent vanilla GameModels each need overriding with different shapes 
 
 A fourth wrinkle: `TaomPartyHealingModel` integrates the [career system](career-system.md)'s `TroopSurvival` passive — survival chance gets a multiplicative bonus when the party leader has the passive. This crosses feature boundaries deliberately (career passives are an opt-in modifier on top of the cultural baseline, not a replacement).
 
+An enlisted player rolls survival with his own party, exactly as a freelancer does. v1.4.8 uses the party leader as surgeon when none is assigned (`DefaultPartyHealingModel.cs:328-338`; `MobileParty.EffectiveSurgeon`, `MobileParty.cs:834-844`), so his own Medicine and Cheat Death already count. An older redirect that rolled him against his commander's party was removed in WP132 (port of 1.5.x `5d70714c4`); `SurvivalRoll_TakesNoEnlistmentState` pins it.
+
 ### Solution Approach
 
 Standard GameModel override (see [.claude/rules/gamemodels.md](../../.claude/rules/gamemodels.md)) for each of the three vanilla models. Two providers fan in the data:
@@ -147,6 +149,8 @@ The models themselves test the static helpers (`CalculateTierPower`, `CalculateB
 Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Power / Tier10Power**. Changes apply on the next `GetDefaultTroopPower` call, no restart needed. To make ≤T6 also use JSON values, flip MCM **OverrideVanillaTierPower** to `true`.
 
 ## Changelog
+
+- 2026-11-04: an enlisted player rolls survival with his own party; the redirect to the commander's party is removed (WP132, port of 1.5.x `5d70714c4`).
 
 - 2026-11: 1.5.x plan 003 (PERF-04), ported by WP123: `BattleBalanceSettingsProvider` stops resolving `TaomSettings.Instance` on every read; it caches the reference lazily on the first non-null read and reads through it, so MCM edits still apply live.
 - 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).
