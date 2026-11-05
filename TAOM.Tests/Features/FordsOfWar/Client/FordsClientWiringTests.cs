@@ -308,6 +308,13 @@ public class FordsClientWiringTests
     }
 
     [TestMethod]
+    public void TheVolleyHitReader_FilesARockApart_AndTheShutdownLineCountsOwnTowerShots()
+    {
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Adapters/FordsVolleyHits.cs", stripComments: true), "\"rock\"");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/FordsOfWar/FordsMissionDirector.cs", stripComments: true), "ownTowerShots=");
+    }
+
+    [TestMethod]
     public void TheDamageReduction_ZeroesATowerShotOnItsOwnSide()
     {
         var src = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsUpgradeHooks.cs", stripComments: true);
@@ -323,7 +330,7 @@ public class FordsClientWiringTests
     [DataRow("FordsControlPick.MayRide", "a creature's rider stays out: a behavior tree drives the creature")]
     [DataRow("SwitchMainAgentController(false)", "a warg's rage can leave vanilla's controller off, so a take turns it back on")]
     [DataRow("RefreshBehaviorValues", "a new AI component starts on the Default set until the lane's next order")]
-    [DataRow("CommonAIComponent?.Initialize()", "AddComponent does not initialize, so morale would sit at a flat 50 with no recovery")]
+    [DataRow("CommonAIComponent?.Initialize()", "MissionState.OpenNew adds AgentCommonAILogic by default, and AddComponent does not initialize, so morale would sit at a flat 50 with no recovery")]
     [DataRow("EventControlFlag.Stand", "only the player's controller stands a crouching soldier up")]
     public void TheAgentControl_CarriesEachRuleItsDocStates(string needed, string why)
     {

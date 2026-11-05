@@ -367,7 +367,8 @@
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
+        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Rivendell_SlowWaves}Free troops come at half the usual rate.", "strength": false }
       ],
       "units": [
         { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
@@ -785,7 +786,8 @@
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
+        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Mirkwood_SlowWaves}Free troops come a third less often.", "strength": false }
       ],
       "units": [
         { "id": "silvan_levy", "troop": "fow_mirkwood_recruit", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },

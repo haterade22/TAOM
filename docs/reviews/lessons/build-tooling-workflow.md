@@ -4878,3 +4878,11 @@ Steam moved the game from changeset 125053 to 125270 and kept the version string
 - **Why missed:** the gates were treated as checks on the work, so they had no tests, and they only ever met a healthy mount.
 - **Prevent:** a gate gets a test that breaks each thing it guards, on the first commit. Match a resource by its exact item name, never by bytes. An exemption names the exact row it allows.
 - **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).
+
+### Test the function that decides what counts, on bad folders, before trusting the table (Fords of War, 2026-11-05)
+
+`tools/fords_round_robin.py` counted matches that never finished, `.dirty` builds, swapped and smoke runs, and stopped on one unreadable report, which its queue read as "complete". Its pure functions had tests; `results_for` had none. This repeats the dire wolf lesson of 2026-11-04 the same day. The queue's own crash guard also matched the word "refused" inside a verdict line and paused a healthy round twice.
+
+- **Why missed:** the tool printed sensible numbers on clean folders.
+- **Prevent:** a counting function gets temp-tree tests with an unfinished, a foreign-build, a swapped and an unreadable folder on its first commit, plus a mutation check that disables each rule. A shell guard reads only the launcher's anchored closing line.
+- **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).

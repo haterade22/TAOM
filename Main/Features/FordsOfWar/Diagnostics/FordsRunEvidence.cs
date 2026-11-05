@@ -272,6 +272,7 @@ internal sealed class FordsVolleyEvidence
     public bool ArrowReported;
     public bool ArrowReachShort;
     public int Launched;
+    public int RocksLaunched;
     public int NoGunnerOrItem;
     public int NoTarget;
     public long HitsSeen;
@@ -298,6 +299,7 @@ internal sealed class FordsPointEvidence
 internal sealed class FordsEndEvidence
 {
     public double? KeepFellMt;
+    public bool EndedOnTime;
     public string? Winner;
     public double? WinnerMt;
     public double? WinnerWall;

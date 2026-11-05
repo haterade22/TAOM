@@ -4535,6 +4535,8 @@
 	<string id="TAOM_FOW_Trait_Easterlings_Discipline" text="{=TAOM_FOW_Trait_Easterlings_Discipline}Discipline: new orders are ready twice as fast." />
 	<string id="TAOM_FOW_Trait_Easterlings_Towers" text="{=TAOM_FOW_Trait_Easterlings_Towers}Towers fire 15% slower." />
 	<string id="TAOM_FOW_Trait_Elves_FarSight" text="{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others." />
+	<string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="{=TAOM_FOW_Trait_Rivendell_SlowWaves}Free troops come at half the usual rate." />
+	<string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="{=TAOM_FOW_Trait_Mirkwood_SlowWaves}Free troops come a third less often." />
 	<string id="TAOM_FOW_Trait_Elves_Few" text="{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds." />
 	<string id="TAOM_FOW_Trait_Mirkwood_Archers" text="{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth." />
 	<string id="TAOM_FOW_Trait_Umbar_Bounty" text="{=TAOM_FOW_Trait_Umbar_Bounty}Kills pay a quarter more." />

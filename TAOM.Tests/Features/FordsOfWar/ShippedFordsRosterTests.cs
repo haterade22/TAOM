@@ -370,6 +370,16 @@ public class ShippedFordsRosterTests
         }
     }
 
+    [DataTestMethod]
+    [DataRow("rivendell", "TAOM_FOW_Trait_Rivendell_SlowWaves")]
+    [DataRow("mirkwood", "TAOM_FOW_Trait_Mirkwood_SlowWaves")]
+    public void AnElfFactionWithSlowFreeWaves_SaysSoInAWeakness(string faction, string key)
+    {
+        var shipped = Shipped(faction);
+        Assert.IsTrue(shipped.FeatsOrNone.WaveInterval > 1f);
+        Assert.IsTrue(shipped.Traits.Any(t => !t.Strength && t.Text.Contains(key)), faction);
+    }
+
     [TestMethod]
     public void Mordor_SendsTheLargestFreeWaves_BecauseOnlyASwarmBeatsTheElves()
     {

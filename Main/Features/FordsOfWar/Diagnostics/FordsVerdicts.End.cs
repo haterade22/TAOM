@@ -25,7 +25,7 @@ internal static partial class FordsVerdicts
     private static FordsVerdictRow Check14(FordsRunEvidence run)
     {
         var e = run.End;
-        var keep = e.KeepFellMt != null ? FordsResult.Pass : FordsResult.NotSeen;
+        var keep = e.KeepFellMt != null || e.EndedOnTime ? FordsResult.Pass : FordsResult.NotSeen;
 
         var result = FordsResult.NotSeen;
         if (e.Winner != null)
@@ -46,12 +46,12 @@ internal static partial class FordsVerdicts
 
         return Row(14, new[]
         {
-            Part("keep", keep, "fellMt=" + (e.KeepFellMt == null ? "-" : N(e.KeepFellMt.Value))),
+            Part("keep", keep, "fellMt=" + (e.KeepFellMt == null ? "-" : N(e.KeepFellMt.Value)) + " onTime=" + (e.EndedOnTime ? 1 : 0)),
             Part("result", result, "winner=" + (e.Winner ?? "-") + " success=" + Tri(e.ResultSuccess)),
             Part("exit", exit, "via=" + (e.EndGameVia ?? "-") + (e.Winner != null && e.EndGameVia == null && run.Closed ? " left through the escape menu" : "")),
             Part("menu", menu),
         }, info,
-            "A keep fell, the mission result matches the winner, the way out ended the mission within 15 seconds, and the main menu came back; the 25 second exit clock is arithmetic and is printed, not judged.",
+            "A keep fell or the time limit ended the match, the mission result matches the winner, the way out ended the mission within 15 seconds, and the main menu came back; the 25 second exit clock is arithmetic and is printed, not judged.",
             "The result panel appears and its button leaves at once.");
     }
 

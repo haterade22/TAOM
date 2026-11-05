@@ -61,6 +61,41 @@ public class FordsRunReportTests
     private CaptureLogger _log = null!;
     private FordsRunReport _report = null!;
 
+    [TestMethod]
+    public void Volley_ARock_CountsApartFromTheJavelinsAndArrows_SoTheHitRateStaysLikeForLike()
+    {
+        StartedRun();
+
+        _report.Volley(true, 3, rock: true);
+        _report.Volley(true, 3);
+
+        Assert.AreEqual(5, _report.Run!.Volley.Launched);
+        Assert.AreEqual(1, _report.Run.Volley.RocksLaunched);
+    }
+
+    [TestMethod]
+    public void TheReportJson_CarriesTheEndKeysTheTools_Read()
+    {
+        StartedRun();
+        _report.EndedOnTime();
+        _report.Winner(MatchSide.West);
+
+        var end = JObject.Parse(File.ReadAllText(ReportPath(1)))["evidence"]!["End"]!;
+        Assert.IsTrue((bool)end["EndedOnTime"]!, "tools/fords_match_review.py reads End.EndedOnTime");
+        Assert.IsNotNull((double?)end["WinnerMt"], "tools/fords_match_review.py reads End.WinnerMt");
+    }
+
+    [TestMethod]
+    public void EndedOnTime_IsRecorded()
+    {
+        StartedRun();
+        Assert.IsFalse(_report.Run!.End.EndedOnTime);
+
+        _report.EndedOnTime();
+
+        Assert.IsTrue(_report.Run.End.EndedOnTime);
+    }
+
     [TestInitialize]
     public void Init()
     {

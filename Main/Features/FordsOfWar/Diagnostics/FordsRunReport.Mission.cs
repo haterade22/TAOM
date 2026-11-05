@@ -522,14 +522,19 @@ internal sealed partial class FordsRunReport
         Info("Tower", "fell tower=" + towerId + " keep=" + keep);
     });
 
-    internal void Volley(bool targetFound, int missiles) => Guard(nameof(Volley), () =>
+    /// <summary>A volley's launch. A rock counts apart, so the javelins' and arrows' hit rate stays like for like.</summary>
+    internal void Volley(bool targetFound, int missiles, bool rock = false) => Guard(nameof(Volley), () =>
     {
         var run = _run;
         if (run == null)
             return;
 
         if (missiles > 0)
-            run.Volley.Launched += missiles;
+        {
+            var rocks = rock ? 1 : 0;
+            run.Volley.Launched += missiles - rocks;
+            run.Volley.RocksLaunched += rocks;
+        }
         else if (!targetFound)
             run.Volley.NoTarget++;
         else
@@ -728,6 +733,13 @@ internal sealed partial class FordsRunReport
             }
         }
     }
+
+    internal void EndedOnTime() => Guard(nameof(EndedOnTime), () =>
+    {
+        var run = _run;
+        if (run != null)
+            run.End.EndedOnTime = true;
+    });
 
     internal void Winner(MatchSide winner) => Guard(nameof(Winner), () =>
     {

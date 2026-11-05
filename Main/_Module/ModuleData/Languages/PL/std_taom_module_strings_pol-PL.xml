@@ -7628,6 +7628,8 @@
     <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
     <string id="TAOM_LD_Prompt_ClassTitle" text="Choose your class" />
+    <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
+    <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
   </strings>
 
 </base>

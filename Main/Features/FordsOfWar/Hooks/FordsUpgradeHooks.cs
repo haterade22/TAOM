@@ -20,9 +20,13 @@ internal static class FordsUpgradeHooks
     private static long _hitsLowered;
     private static long _heroHitsRaised;
     private static long _heroHitsLowered;
+    private static long _ownTowerShots;
 
     /// <summary>Blows that the upgrades raised, and blows that they lowered, since the match started. The log line at the end of a match proves that the seam ran.</summary>
     internal static (long Raised, long Lowered) Counts => (Interlocked.Read(ref _hitsRaised), Interlocked.Read(ref _hitsLowered));
+
+    /// <summary>Blows from a tower's missile owner on its own side that were zeroed, since the match started.</summary>
+    internal static long OwnTowerShots => Interlocked.Read(ref _ownTowerShots);
 
     /// <summary>Blows that the hero factors raised, and blows that they lowered, since the match started.</summary>
     internal static (long Raised, long Lowered) HeroCounts => (Interlocked.Read(ref _heroHitsRaised), Interlocked.Read(ref _heroHitsLowered));
@@ -56,6 +60,7 @@ internal static class FordsUpgradeHooks
 
     internal static void Clear()
     {
+        Interlocked.Exchange(ref _ownTowerShots, 0);
         _isOwnTowerShot = null;
         _west = null;
         _east = null;
@@ -90,7 +95,10 @@ internal static class FordsUpgradeHooks
     public static float Reduce(in AttackInformation attack, in AttackCollisionData collision, float damage)
     {
         if (IsOwnTowerShot(in attack))
+        {
+            Interlocked.Increment(ref _ownTowerShots);
             return 0f;
+        }
 
         if (_west == null)
             return damage;

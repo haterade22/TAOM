@@ -15,4 +15,5 @@ internal enum TowerDamageReason
     Weaponless,
     FactionFeat,
     Crowded,
+    MatchEnded,
 }

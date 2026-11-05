@@ -382,4 +382,29 @@ public class FordsScenarioTests
         Assert.AreEqual("2", m["menuReturn.blocks"], "the menu return adds no pass to a route C run");
         Assert.IsNull(sc.Report.Run!.End.MenuReturnedWall);
     }
+
+    [TestMethod]
+    public void TimeLimit_EndsTheMatch_AndTheDirectorRecordsAnEndOnTime()
+    {
+        var sc = FordsScenarios.Started(s => s.ConfigTweak = c => c with { TimeLimitMinutes = 1f });
+        sc.Seconds(120);
+
+        Assert.IsNotNull(sc.Report.Run!.End.Winner);
+        Assert.IsTrue(sc.Report.Run.End.EndedOnTime);
+    }
+
+    [TestMethod]
+    public void ARockVolley_IsCountedApartByTheDirector_WhenTheRockLoaded()
+    {
+        var sc = FordsScenarios.Started(s =>
+        {
+            s.ConfigTweak = c => c with { Towers = c.Towers with { RockEveryVolleys = 1 } };
+            s.Towers.RockLoadedFlag = true;
+        });
+        sc.Seconds(600);
+
+        var volley = sc.Report.Run!.Volley;
+        Assert.IsTrue(volley.RocksLaunched > 0, $"launched {volley.Launched}");
+        Assert.AreEqual(sc.Towers.Missiles - volley.RocksLaunched, volley.Launched, "every volley's rock is counted apart from its other missiles");
+    }
 }

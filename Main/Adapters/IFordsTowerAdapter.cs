@@ -45,6 +45,9 @@ internal interface IFordsTowerAdapter
     /// </summary>
     int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f, bool rock = false);
 
+    /// <summary>Whether the rock item loaded, so a rock volley really led with a rock. Read after <see cref="Fire"/>.</summary>
+    bool RockLoaded { get; }
+
     /// <summary>The side of the tower whose missile owner this agent is; null for any other agent. A missile owner's own team has no side.</summary>
     MatchSide? OwnerSideOfGunner(object? agent);
 

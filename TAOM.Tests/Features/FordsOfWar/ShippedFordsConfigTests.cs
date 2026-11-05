@@ -90,6 +90,20 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
+    public void TowerRock_IsTheShippedItemTheAdapterNames_AHurledBoulderWithARing()
+    {
+        var item = System.Xml.Linq.XDocument.Load(ConfigFile("fords_items.xml")).Descendants("Item")
+            .Single(i => (string)i.Attribute("id") == TAOM.Adapters.FordsTowerAdapter.TowerRockItemId);
+        var weapon = item.Descendants("Weapon").Single();
+
+        Assert.AreEqual("Thrown", (string)item.Attribute("Type"));
+        Assert.AreEqual("Boulder", (string)weapon.Attribute("weapon_class"));
+        Assert.AreEqual("true", (string)weapon.Element("WeaponFlags")!.Attribute("AffectsArea"));
+        Assert.IsTrue((int)weapon.Attribute("thrust_damage") > 0);
+        Assert.IsTrue((int)weapon.Attribute("missile_speed") >= 20, "the adapter launches at the item's own speed");
+    }
+
+    [TestMethod]
     public void TowerArrow_IsAShippedItemThatDealsDamage_AndNeverSells()
     {
         var item = System.Xml.Linq.XDocument.Load(ConfigFile("fords_items.xml")).Descendants("Item").Single(i => (string)i.Attribute("id") == "fow_tower_arrow");

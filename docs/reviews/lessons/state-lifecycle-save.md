@@ -1337,3 +1337,11 @@ A Marshal's Word fix made a march leave out a company with no units. `Spread` st
 - **Why missed:** the normal path passed in the game, and the tests asserted flags, not the effect. Each teardown was written for one exit and reused for another.
 - **Prevent:** the write that matters runs in a `finally`. A bounded debt stays until the effect reads true, and the test asserts the effect with a fake that throws before its write. List each exit of a session (leave, fault in each tick, finish) and say what each owes the engine while the mission lives.
 - **Source:** [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) row 1, [rca-marshals-word-m3-m4-2026-11-04.md](../rca-marshals-word-m3-m4-2026-11-04.md) row 6.
+
+### A new way to end a match lists every hook still installed through the end window (Fords of War, 2026-11-05)
+
+The time limit ended matches through the same phase as a fallen keep, but the tower hit hook stays installed for the 25 second result window, and `AdjustTowerDamage` never checked the phase while three sibling callbacks did. A keep could fall under "time ran out", and the run tools then called a time win a keep win.
+
+- **Why missed:** the new end reused the old end's plumbing, and nobody listed what runs after it.
+- **Prevent:** when adding an end path, list the hooks and timers that outlive the end, gate each on the end phase, and record the end's kind in the run evidence.
+- **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).
