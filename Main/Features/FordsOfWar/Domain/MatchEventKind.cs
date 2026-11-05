@@ -14,4 +14,6 @@ internal enum MatchEventKind
     CreatureCalled,
     UpgradeBought,
     WallsWeaken,
+    TimeRunningOut,
+    TimeUp,
 }

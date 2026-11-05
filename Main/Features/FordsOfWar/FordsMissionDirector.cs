@@ -714,6 +714,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             case MatchEventKind.WallsWeaken:
                 _logger.LogInfo("[FordsOfWar][Wear] the walls begin to weaken");
                 break;
+            case MatchEventKind.TimeUp:
+                _logger.LogInfo($"[FordsOfWar][Time] time is up: {e.Side} wins, {e.Subject} (towers/share of hit points)");
+                break;
         }
     }
 

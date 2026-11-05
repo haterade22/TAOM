@@ -4417,6 +4417,10 @@
 	<string id="TAOM_FOW_Feed_EnemyKeep" text="{=TAOM_FOW_Feed_EnemyKeep}The enemy keep has fallen!" />
 	<string id="TAOM_FOW_Feed_EnemyPoint" text="{=TAOM_FOW_Feed_EnemyPoint}The enemy holds a capture point." />
 	<string id="TAOM_FOW_Feed_EnemyTower" text="{=TAOM_FOW_Feed_EnemyTower}An enemy tower has fallen." />
+	<string id="TAOM_FOW_Feed_TimeRunningOut" text="{=TAOM_FOW_Feed_TimeRunningOut}Five minutes remain. The side with the most towers standing will then win." />
+	<string id="TAOM_FOW_Feed_TimeUp" text="{=TAOM_FOW_Feed_TimeUp}Time is up." />
+	<string id="TAOM_FOW_Result_TimeVictoryText" text="{=TAOM_FOW_Result_TimeVictoryText}Time ran out, and you hold more of the field." />
+	<string id="TAOM_FOW_Result_TimeDefeatText" text="{=TAOM_FOW_Result_TimeDefeatText}Time ran out, and the enemy holds more of the field." />
 	<string id="TAOM_FOW_Feed_WallsWeaken" text="{=TAOM_FOW_Feed_WallsWeaken}The siege drags on: every tower and keep now weakens by the minute." />
 	<string id="TAOM_FOW_Feed_OwnCamp" text="{=TAOM_FOW_Feed_OwnCamp}We cleared a camp." />
 	<string id="TAOM_FOW_Feed_OwnHeroBack" text="{=TAOM_FOW_Feed_OwnHeroBack}{HERO} returns to the field." />
@@ -4499,7 +4503,7 @@
 	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
 	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
 	<string id="TAOM_FOW_Hud_SpeedButton" text="{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x" />
-	<string id="TAOM_FOW_Hud_KeysHintControl" text="{=TAOM_FOW_Hud_KeysHintControl}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHintFull" text="{=TAOM_FOW_Hud_KeysHintFull}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_ControlTaken" text="{=TAOM_FOW_Hud_ControlTaken}You fight as {NAME}. Press P to go back to the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlFell" text="{=TAOM_FOW_Hud_ControlFell}{NAME} has fallen. You are back at the battlefield view." />
 	<string id="TAOM_FOW_Hud_ControlNone" text="{=TAOM_FOW_Hud_ControlNone}None of your soldiers stands near the pointer." />
@@ -4525,7 +4529,7 @@
 	<string id="TAOM_FOW_Trait_Dale_Bows" text="{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer." />
 	<string id="TAOM_FOW_Trait_Dale_Melee" text="{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds." />
-	<string id="TAOM_FOW_Trait_DolGuldur_Poor" text="{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income." />
+	<string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower." />
 	<string id="TAOM_FOW_Trait_Easterlings_Army" text="{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army." />
 	<string id="TAOM_FOW_Trait_Easterlings_Discipline" text="{=TAOM_FOW_Trait_Easterlings_Discipline}Discipline: new orders are ready twice as fast." />

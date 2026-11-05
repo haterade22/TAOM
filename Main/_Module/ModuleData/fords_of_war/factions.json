@@ -363,7 +363,7 @@
       "culture": "rivendell",
       "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
       "upgradeCost": { "missile_damage": 0.85, "melee_armour": 0.85 },
-      "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 1.5 },
+      "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 2 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
@@ -614,12 +614,12 @@
       "culture": "dolguldur",
       "aiBuyCycle": ["foul", "hunters", "beast:fell_wargs", "crawlers", "up:melee_damage", "fighters", "beast:spider_riders", "warg_riders", "fellbows", "up:missile_armour", "beast:fell_wargs", "fell_fangs", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
-      "feats": { "enemyTowerFireRate": 0.75, "income": 0.85, "poisonPerSecond": 2, "poisonSeconds": 6 },
+      "feats": { "enemyTowerFireRate": 0.75, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Venom}Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income.", "strength": false }
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three.", "strength": false }
       ],
       "units": [
         { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 0.8 },
@@ -781,7 +781,7 @@
       "culture": "mirkwood",
       "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "borderwardens", "up:missile_armour", "silvan_levy", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
       "upgradeCost": { "missile_damage": 0.75, "missile_armour": 0.85 },
-      "feats": { "towerRange": 1.5, "unitCapBonus": -150 },
+      "feats": { "towerRange": 1.5, "unitCapBonus": -150, "waveInterval": 1.5 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth.", "strength": true },

@@ -357,6 +357,19 @@ public class FordsRunReportDiagnosticsTests
     }
 
     [TestMethod]
+    public void TowerBlow_CountsMeleeApartFromOtherClasses_OnTheLadder()
+    {
+        Order(MatchSide.West, 1, "east_outer_0");
+
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 10, 8, new FordsAttacker(MatchSide.West, 1));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, TowerDamageReason.Applied, 10, 8, new FordsAttacker(MatchSide.West, 1));
+
+        var stream = Stream(MatchSide.West, 1);
+        Assert.AreEqual(2, stream.TowerBlows);
+        Assert.AreEqual(1, stream.MeleeTowerBlows);
+    }
+
+    [TestMethod]
     public void TowerBlow_AStreamOrderedAtTowerA_WhoseUnitsStrikeTowerB_CountsNothingOnItsLadder()
     {
         Order(MatchSide.West, 1, "east_outer_0");

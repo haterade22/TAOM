@@ -428,7 +428,7 @@ public sealed partial class FordsCommandVM : FordsViewModel
 
         var won = view.Winner == view.Side;
         ResultTitle = FordsHudText.ResultTitle(won);
-        ResultText = FordsHudText.ResultText(won);
+        ResultText = FordsHudText.ResultText(won, view.EndedOnTime);
         ResultButtonText = FordsHudText.ResultButton();
     }
 
