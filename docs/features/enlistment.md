@@ -1884,6 +1884,34 @@ shows English inline text and never reads string files for English (`LocalizedTe
 
 **Owed in-game checks (WP128).** See `plans/128-enlistment-fixes-a.md`, "In-game checks owed".
 
+## Fixes ported from the 1.5.x line (port148 WP132)
+
+These fixes reached the 1.4.x line in WP132 of the 2026-11-04 port programme, after WP128's.
+Engine facts were re-checked on v1.4.8. The `docs/reviews/rca-*` files named below describe the
+1.5.x review and cite v1.5.5 lines.
+
+### The quartermaster says why he refuses (#829)
+
+`QuartermasterAnswerPolicy.For(EquipmentIssueResult)` picks the reply to a kit request: issued,
+already drawn for this tier, empty stores (no roster or no valid item) or cannot load (party
+unavailable, and the default for any result added later). On a co-op client the behavior's
+authority branch answers "Only the host's quartermaster can issue kit" without reaching the
+issuer. Each conditioned answer is its own dialog line at priority 112; the cannot-load line has
+no condition and sits at 100, below them, so it also answers anything without a line of its own.
+Before #829 the refusal line had no condition at 111, so every refusal read "already drawn". The
+kit, reassignment and release lines are gated by `IEnlistmentDialogGateService.IsServingUnder`
+(renamed from `CanRequestDischargeFrom`). `QuartermasterAnswerPolicyTests` pins the mapping and the
+wiring. Review: `rca-quartermaster-answers-2026-10-19.md`.
+
+### Kit tiers are not ranks (#936)
+
+The equipment rosters key on `EnlistmentKitTier` (renamed from `EnlistmentRank`; same four members,
+values and roster ids), distinct from the career rank `ServiceRank`. The issuer and ledger members
+say tier: `IssueForTier`, `HasIssuedForTier`, `HighestIssuedTier`, `TierToken`,
+`AlreadyIssuedForTier`, `ServiceContentRecord.HighestIssuedKitTier`. The save key stays `kitRank`,
+pinned by `KitTierSaveKeyTests`, so old saves keep their kit ledger. The 1.5.x seven-rank ladder
+that prompted the rename is not ported.
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
