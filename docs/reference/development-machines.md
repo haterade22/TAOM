@@ -113,6 +113,8 @@ procdump nor WinDbgX on PATH), so `tools/native_decompile.py` exits 2 there nami
 with `TAOM_GHIDRA_PROJECTS` set (verified 2026-11-04 on v1.4.8: 2,261 engine methods mapped with no
 one-sided id, and a client-to-wEditor oracle with 0 wrong).
 
+**TpacTool** (the PowerShell tpac tools) is set up on the desktop; the laptop has not been checked. They load ShortJake's TpacTool v0.5.1 (MIT, .NET Framework 4.6.2) from `E:\Release_v0.5.1\bin` by default (`-TpacToolBin`), since the old `E:\Bannerlord_Art\TpacTool_0.4.0` was found gone (2026-10-14, 1.5.x line). Unblock the folder once after a fresh download: the zip's Internet zone mark makes .NET Framework refuse the DLLs (`0x80131515` in Windows PowerShell 5.1; pwsh ignores it).
+
 ## Writing docs and tools on either machine
 
 Prefer the environment variable to the literal path when you write a new tool. When you must write

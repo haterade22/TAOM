@@ -92,6 +92,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
+| TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -165,6 +166,8 @@ Upstream: https://github.com/szszss/TpacTool · MIT.
 
 The `.tpac` binary format was reverse-engineered from decompiling `TpacTool.Lib.dll`. MIT permits
 this; the attribution is at [`docs/tools/spider-skeleton-tpac-tools.md:378`](../tools/spider-skeleton-tpac-tools.md).
+
+Since 2026-10-14 the PowerShell tpac tools load `TpacTool.Lib.dll` from ShortJake's fork, https://github.com/ShortJake/TpacTool (MIT, a fork of hunharibo/TpacTool), release v0.5.1, through `-TpacToolBin`. That is `interop-only`: the library is loaded at run time on the desktop, never shipped, and no code is derived from it.
 
 ### NVIDIA SkillSpector
 
