@@ -807,6 +807,7 @@ public class EnlistmentReconcilerTests
 
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
         _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -849,5 +850,125 @@ public class EnlistmentReconcilerTests
 
         _encounter.Received(1).Finish(true);
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    // ---- #1021 item 1: an orphaned joined-battle encounter while attached ----------------
+
+    private void OrphanJoinedEncounterWhileAttached(bool joined = true, bool inside = false, bool inMapEvent = false)
+    {
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: false, inMapEvent: inMapEvent, hasEncounter: true,
+            settlementId: inside ? "town_A1" : null);
+        _encounter.HasCurrent.Returns(true);
+        _encounter.IsJoinedBattleEncounter.Returns(joined);
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: inMapEvent, playerInsideSettlement: inside));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_AttachedWithOrphanJoinedEncounter_ClosesItAfterTheWindow()
+    {
+        // A save taken while latched loads as exactly this: attached, parked outside a
+        // settlement, the join's encounter still open against the opposing leader, no map event.
+        OrphanJoinedEncounterWhileAttached();
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        _encounter.Received(1).Finish(true);
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _partyAdapter.Received().ParkNear(Arg.Any<string>());
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("llegal")));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_AttachedOrphan_FirstTickOnly_LeavesItAlone()
+    {
+        OrphanJoinedEncounterWhileAttached();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_AttachedOrphan_InsideASettlement_IsNotClosed()
+    {
+        OrphanJoinedEncounterWhileAttached(inside: true);
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_AttachedOrphan_NotAJoinedEncounter_IsNotClosed()
+    {
+        // A lord the player is talking to is not a join. Attached plus an open encounter is normal.
+        OrphanJoinedEncounterWhileAttached(joined: false);
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_AttachedOrphan_PlayerInHisMapEvent_IsNotClosed()
+    {
+        OrphanJoinedEncounterWhileAttached(inMapEvent: true);
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    // ---- #1021 item 2: an orphan inside the commander's town -----------------------------
+
+    private void OrphanInsideTown(bool conversation = false)
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderInSettlement("town_A1");
+        PlayerPresence(parked: false, inMapEvent: false, hasEncounter: true, settlementId: "town_A1");
+        _encounter.HasCurrent.Returns(true);
+        _encounter.IsJoinedBattleEncounter.Returns(true);
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, conversationInProgress: conversation, hasEncounteredMobileParty: true,
+            encounteredPartyId: "besieger_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: true));
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_OrphanInsideTheTown_ReleasesTheStateWithoutFinishing()
+    {
+        // The defender's repulsed assault keeps the encounter. Finish would escape-teleport an active
+        // party at war, so the state is released and the encounter is left for the next assault.
+        OrphanInsideTown();
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void StaleBattleLatch_OrphanInsideTheTown_DuringAConversation_StaysLatched()
+    {
+        OrphanInsideTown(conversation: true);
+
+        _reconciler.ReconcileHourly(Now);
+        _reconciler.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
     }
 }

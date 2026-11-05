@@ -15,6 +15,8 @@ public sealed class EncounterAdapter : IEncounterAdapter
 {
     private readonly IModLogger _logger;
 
+    private bool _joinedBattleReadFailed;
+
     public EncounterAdapter(IModLogger logger)
     {
         _logger = logger;
@@ -23,6 +25,26 @@ public sealed class EncounterAdapter : IEncounterAdapter
     public bool HasCurrent => PlayerEncounter.Current != null;
 
     public bool IsInsideSettlement => PlayerEncounter.InsideSettlement;
+
+    public bool IsJoinedBattleEncounter
+    {
+        get
+        {
+            try
+            {
+                return PlayerEncounter.Current?.IsJoinedBattle == true;
+            }
+            catch (Exception ex)
+            {
+                if (!_joinedBattleReadFailed)
+                {
+                    _joinedBattleReadFailed = true;
+                    _logger?.LogError($"[Enlistment] IsJoinedBattleEncounter failed: {ex.Message}");
+                }
+                return false;
+            }
+        }
+    }
 
     public string EncounteredPartyId => PlayerEncounter.EncounteredMobileParty?.StringId;
 
@@ -475,6 +497,24 @@ public sealed class EncounterAdapter : IEncounterAdapter
         if (settlement.IsCastle) return new CastleEncounter(settlement);
         if (settlement.IsHideout) return new HideoutEncounter(settlement);
         return null;
+    }
+
+    // Forgets the ended battle's result on a reused encounter (#1021); see IEncounterAdapter.
+    public void ForgetEndedBattleResult()
+    {
+        try
+        {
+            if (PlayerEncounter.Current == null || PlayerEncounter.Battle != null
+                || PlayerEncounter.CampaignBattleResult == null)
+                return;
+
+            PlayerEncounter.CampaignBattleResult = null;
+            _logger?.LogInfo("[Enlistment] cleared the last battle's result from the reused encounter (#1021)");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] ForgetEndedBattleResult failed: {ex.Message}");
+        }
     }
 
     // NO DEFAULT, deliberately. The engine's own default is TRUE; this once defaulted to false,

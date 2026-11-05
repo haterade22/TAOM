@@ -152,6 +152,12 @@ public class ServiceBattleService : IServiceBattleService
 
         if (encounterReady)
         {
+            // A reused encounter (a defender's repulsed assault keeps it) still carries that battle's result
+            // (EnemyRetreated). For a defender, PlayerEncounter's continue check (v1.4.8 PlayerEncounter.cs:1860-1866)
+            // reads it as a battle to continue, and ContinueBattle (:1287-1295) finishes the new assault and opens
+            // menu_siege_strategies. A NULL result makes that check return false, so forget it first (#1021).
+            _encounter.ForgetEndedBattleResult();
+
             // Attacker only. MapEvent.AddInvolvedPartyInternal converts a siege ASSAULT to
             // SiegeOutside when a defender joins with CurrentSettlement == null — so leaving the
             // settlement before a defender join would rewrite the battle type for every
@@ -161,18 +167,18 @@ public class ServiceBattleService : IServiceBattleService
 
             if (_encounter.JoinBattle(side.Value))
             {
-                // The menu is not cosmetic: the engine ticks every map event EXCEPT the player's,
-                // which advances only through PlayerEncounter.Update, driven from this menu. A
-                // verified join with no menu freezes the event permanently — and the hourly
-                // recovery cannot rescue it, because the player IS in a map event by then, so
-                // Assess reports Attached rather than BattleJoinRequired. Roll back instead.
                 if (_gameMenu.EnsureMenuOpen("encounter"))
                 {
                     _logger?.LogInfo($"[Enlistment] joined commander battle on side {side.Value} ({trigger})");
                     return;
                 }
 
-                _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu — rolling back to avoid freezing the map event");
+                // The join landed, so the player is in his map event and a rollback could only freeze it or
+                // pull him out. The engine opens `encounter` itself when no menu is up (#1021).
+                _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu; staying in it and leaving the menu to the game");
+                if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+                    _gameMenu.ExitToLast();
+                return;
             }
         }
 

@@ -163,6 +163,15 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         // restores presence, closes any encounter and hands them back somewhere they can act.
         if (_feature?.IsEnabled == false)
         {
+            // The discharge's step 5 (RestorePresence, whose first call clears AttachedTo) pulls a merged
+            // soldier out of his battle.
+            // Wait for the battle to end; the next hourly tick releases him (#1021).
+            if (_encounter.IsMainPartyInMapEvent)
+            {
+                _logger?.LogInfo("[Enlistment] feature disabled: waiting for the battle to end before releasing");
+                return;
+            }
+
             _logger?.LogInfo("[Enlistment] feature disabled in settings while serving — releasing the player honourably");
             _discharge.Execute(DischargeReason.PlayerRequest);
             return;
@@ -442,14 +451,29 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// survives. That is also why it hands R1c the decision rather than calling
     /// <c>_encounter.Finish</c> itself: the policy owns whether an encounter is ours to close, and
     /// R1 still refuses outright if the player turns out to be in a map event after all.
+    ///
+    /// WIDENED (#1021): the same timed episode also covers an <c>EnlistedAttached</c> soldier outside a
+    /// settlement whose open encounter is a joined battle (a save taken while latched
+    /// leaves it), and an <c>EnlistedBattle</c> soldier INSIDE a settlement is
+    /// released to attached without finishing the encounter. A finish there is wrong for either kind of
+    /// soldier: unmerged, the finish escape-teleports the party and walks it out of the
+    /// settlement (both need AttachedTo == null, so both run); merged, neither runs, but the finish
+    /// leaves him inside the settlement with no encounter, the #510 crash shape.
     /// </summary>
     private bool BreakStaleBattleLatch(
         EnlistmentRecord record, PlayerPresenceSnapshot presence, string commanderPartyId, double nowDays)
     {
-        var latched = record.State == EnlistmentState.EnlistedBattle
-            && presence != null
+        // Two shapes share the timer. EnlistedBattle with an orphaned encounter is the original (#551).
+        // EnlistedAttached with an orphaned JOINED-battle encounter outside a settlement is the same
+        // orphan after a rollback or a load forced the state back (#1021): the ownership policy cannot
+        // tell it from a lord conversation by the encountered party, but IsJoinedBattle can.
+        var latched = presence != null
             && presence.HasPlayerEncounter
-            && !presence.IsInMapEvent;
+            && !presence.IsInMapEvent
+            && (record.State == EnlistmentState.EnlistedBattle
+                || (record.State == EnlistmentState.EnlistedAttached
+                    && !presence.IsHeldInsideSettlement
+                    && _encounter.IsJoinedBattleEncounter));
 
         if (!latched || !FiniteFloatValidator.IsFinite(nowDays))
         {
@@ -480,8 +504,26 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (!(elapsedDays >= thresholdDays))
             return false;
 
-        var verdict = _ownership.Evaluate(
-            EncounterFinishIntent.StaleBattleLatch, _encounter.GetOwnership(commanderPartyId));
+        var ownership = _encounter.GetOwnership(commanderPartyId);
+        var verdict = _ownership.Evaluate(EncounterFinishIntent.StaleBattleLatch, ownership);
+
+        // #1021 item 2: an orphan INSIDE the commander's town (a defender's repulsed assault keeps its
+        // encounter). R1c refuses inside a settlement and R4 skips, so nothing else releases the state.
+        // Finish is NOT safe here: unmerged, FinishEncounterInternal escape-teleports an active party at war and
+        // PlayerEncounter.Finish then walks it out via its own LeaveSettlement (both need AttachedTo == null; v1.4.8 PlayerEncounter.cs:1091-1093 and :1082-1084);
+        // merged, neither runs but he is left inside with no
+        // encounter, the #510 crash shape. Release the state only; the encounter stays for the next assault to reuse, and the exit rules work again.
+        if (verdict == EncounterFinishVerdict.SkipNotOurs
+            && record.State == EnlistmentState.EnlistedBattle
+            && ownership.PlayerInsideSettlement)
+        {
+            _logger?.LogWarning(
+                $"[Enlistment] releasing a stale EnlistedBattle latch inside a settlement after {elapsedDays * 24.0:F1} " +
+                "in-game hours without closing the encounter: Finish would teleport an active party (#1021)");
+            _staleBattleLatchSinceDays = double.NaN;
+            return _machine.TryTransition(EnlistmentState.EnlistedAttached);
+        }
+
         if (verdict != EncounterFinishVerdict.Finish)
         {
             // A skip is not a reset. Whatever caused it (a conversation, a settlement) will pass,
@@ -491,7 +533,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         }
 
         _logger?.LogWarning(
-            $"[Enlistment] breaking a stale EnlistedBattle latch after {elapsedDays * 24.0:F1} in-game hours: " +
+            $"[Enlistment] breaking a stale battle latch (state {record.State}) after {elapsedDays * 24.0:F1} in-game hours: " +
             "an encounter is open, the player is in no map event, and nothing else can release him (#551)");
 
         if (!_encounter.Finish(true))
@@ -503,8 +545,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _staleBattleLatchSinceDays = double.NaN;
 
         // The transition is what unblocks everything else: the maintenance pump gates its menu work
-        // on EnlistedAttached, and ServiceBattleService refuses every join from any other state.
-        if (!_machine.TryTransition(EnlistmentState.EnlistedAttached))
+        // on EnlistedAttached, and ServiceBattleService refuses every join from any other state. An
+        // already-attached orphan (#1021) needs none, and attached to attached is an illegal edge.
+        if (record.State == EnlistmentState.EnlistedBattle
+            && !_machine.TryTransition(EnlistmentState.EnlistedAttached))
             return false;
 
         _attachment.EnsureParked(record.CommanderHeroId);

@@ -92,6 +92,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         // Matrix rows: Attached + in a map event -> Battle; Attached + a live BATTLE encounter
         // (PlayerEncounter.Battle still set, the aftermath window) -> Battle; Attached + a
         // settlement encounter (#510 opens one on every placement, not a battle) -> unchanged.
+        // Since #1021 the stale-latch recovery also times an Attached soldier outside a settlement whose open encounter is a joined battle.
         // EnlistedAttached -> EnlistedBattle is the join's own edge, so it is legal here.
         if (record.State == EnlistmentState.EnlistedAttached && IsMidBattle(presence))
         {
