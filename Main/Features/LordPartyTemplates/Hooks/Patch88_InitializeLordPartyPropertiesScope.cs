@@ -19,7 +19,13 @@ namespace TAOM.Features.LordPartyTemplates.Hooks;
 /// Same save-and-restore shape as <see cref="Patch88_SpawnLordPartyScope"/>, and for the same
 /// reason: this runs nested inside that scope on the daily-tick and new-game paths.
 /// </summary>
+// BUTR.Harmony.Analyzer 1.0.1.50 does not resolve a nested target type: it reports this attribute as
+// BHA0001 against "TaleWorlds.CampaignSystem.Party.PartyComponents.InitializationArgs", a name with the
+// containing LordPartyComponent dropped. The target exists on v1.4.8 (LordPartyComponent.cs:14, :29)
+// and Patch88LordPartyTemplateTests.InitializeLordPartyProperties_StillResolves_OnTheNestedArgs_MobilePartyAndOwner pins it.
+#pragma warning disable BHA0001
 [HarmonyPatch(typeof(LordPartyComponent.InitializationArgs), nameof(LordPartyComponent.InitializationArgs.InitializeLordPartyProperties))]
+#pragma warning restore BHA0001
 [HarmonyPatchCategory(Patch88_LordPartyTemplate.Category)]
 public static class Patch88_InitializeLordPartyPropertiesScope
 {
