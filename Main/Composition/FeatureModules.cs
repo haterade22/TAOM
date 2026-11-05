@@ -21,5 +21,6 @@ internal static class FeatureModules
         new Features.SkeletonBuffer.SkeletonBufferModule(),
         new Features.BattleCorpses.BattleCorpsesModule(),
         new Features.MapEventGuard.StuckBattleModule(),
+        new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
     };
 }

@@ -79,6 +79,8 @@ public static class CoopSettingsRelevance
         "EnableTickProfiler", "TickProfilerTopN", "HitchThresholdMs", "EnableHitchProbe",
         // The Patch101 campaign map profiler's toggle: log lines, never a computation.
         "EnableMapProfiler",
+        // The [AnimMem] clip memory probe; it reads, never changes, the engine.
+        "EnableAnimMemoryProbe",
     };
 
     /// <summary>

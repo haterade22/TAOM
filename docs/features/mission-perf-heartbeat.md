@@ -808,14 +808,12 @@ components (the thread line), and the native cost of the clip-loading call (the 
 
 ## Animation clip memory probe
 
-> **1.4.x:** this probe arrives with Part B of plan 117; until that commit lands nothing on this line writes `[AnimMem]`.
-
 Bannerlord keeps animation clips marked Loading Type 1 or 2 "on demand": a worker that samples an
 unloaded clip blocks until it loads, which delays the parallel agent tick and shows up as a frame
 spike. The engine's eviction pass works against a **12 MiB** budget: it measures the excess over
 12 MiB once, when it starts, and evicts idle loaded clips until it has freed that much. Clips in use,
 and loads that finish during the pass, can leave the total above 12 MiB. A pass is scheduled once a
-load takes the total past 15 MiB (the loader's compare at `0x591327`; that the compare schedules the
+load takes the total past 15 MiB (the loader's compare at `0x591327` on v1.5.3, not re-derived for v1.4.8; that the compare schedules the
 pass is inferred, not traced). The `[AnimMem]`
 probe logs how many bytes of on-demand clip data the engine holds against that budget, whether a clip
 is loading at the instant of a sample, and how often the total fell between samples. A troll-heavy
@@ -832,9 +830,7 @@ that wait (see "Reading it" and the
 `subss` of the budget float, with the four rip displacements wildcarded). The match must be unique;
 the counter target must be an aligned 4-byte address inside `.data` and the budget target one inside
 `.rdata`, both proven before either is read; the budget float must read exactly `12582912`; and the
-first counter read must not be negative. On the v1.5.3 client the site is at RVA `0x21E00F`, the
-budget `subss` at `0x21E034`, the counter at `0xDABE40` and the budget float at `0xB2E2DC`; v1.5.4
-keeps the first three and moves the budget float to `0xB2E2CC` (still `12582912`). Any failed
+first counter read must not be negative. On the v1.4.8 client (build 119303, 14,185,944 bytes) the site is at RVA `0x23AADF`, the budget `subss` at `0x23AB04`, the counter at `0xDA59B0` and the budget float at `0xB2BC9C` (reading `12582912`); `ClipBudgetSignatureInstalledBinaryTests` pins that row. Any failed
 check turns the probe off for the rest of the process with one `[AnimMem] disabled` line naming the
 reason; `[MissionPerf]` is unaffected. The probe never writes engine memory.
 
@@ -906,7 +902,7 @@ a percentage is floored. The formats are pinned literally by `AnimMemLineTests`.
 
 | Line | When | Fields | Example |
 |---|---|---|---|
-| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4` |
+| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA2B5DC loadSite=0x23AADF budgetSite=0x23AB04 counter=0xDA59B0 budget=0xB2BC9C budgetBytes=12582912 scanMs=23.4` |
 | disabled | once per process, when a check fails or the counter later reads negative | the reason | `[AnimMem] disabled for this process: TaleWorlds.Native.dll is not loaded in this process. No further [AnimMem] samples will be taken; [MissionPerf] is unaffected.` |
 | off | each mission start with the toggle off | none | `[AnimMem] off for this mission: 'Enable Animation Clip Memory Probe' is off (Battle Load Diagnostics page).` |
 | mission start | each mission start with the probe armed | first sample in KB, budget in KB, percent of budget, whether a clip is loading (0 or 1) | `[AnimMem] mission start: sample every 1 s, line every 5 s, startKB=10240 budgetKB=12288 pctOfBudget=83 loadingNow=0` |
