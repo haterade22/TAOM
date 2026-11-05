@@ -228,7 +228,7 @@
     <string id="aom_prebackstory.spc_wanderer_gundabad_1_text" text="Hah! Hikayem mi? Zayıflar gücümü kıskanır. Bu benim lanetim." />
     <string id="aom_backstory_a.spc_wanderer_gundabad_1_text" text="Yavru iken, çukurumdaki herhangi birinden daha iyi kafatasları ezdim. 'Goblinler arasında bir canavarsın,' diye homurdanırlardı. Övünmüyorum, bunlar gerçekler. Dişlerim çıktığında, şan kazanmak için ayrıldım." />
     <string id="aom_backstory_b.spc_wanderer_gundabad_1_text" text="Azog'un kalıntılarına katıldım. Sızlayan korkaklar arasında tek gerçek katil. Gölgelerde gizleniyorlardı, cüce baltalarından korkuyorlardı. Küçümseyerek kükredim; gözetmen ağzımı kapatmamı ya da kaçmamı emretti. Ben de kaçtım." />
-    <string id="aom_backstory_c.spc_wanderer_gundabad_1_text" text="Sonra Sisli Dağlar goblinleri, 'Gölge Gizleyiciler.' Zavallı bir isim. Fareler gibi saklandılar. Elf dizilerine돌진edip uzuvları parçalardım, ama 'Neden safları bozuyorsun?' diye sızlanırlardı." />
+    <string id="aom_backstory_c.spc_wanderer_gundabad_1_text" text="Then the Misty Mountain goblins, 'Shadow Lurkers.' Pathetic name. They hid like rats. I'd charge into elf-lines, rending limbs, yet they'd whine, 'Why break ranks?'" />
     <string id="aom_response_1.spc_wanderer_gundabad_1_text" text="Garip bir sürü." />
     <string id="aom_response_2.spc_wanderer_gundabad_1_text" text="Hordadaki bir gedik kıyameti davet eder, ihanet!" />
     <string id="aom_backstory_d.spc_wanderer_gundabad_1_text" text="Artık zafiyet yok. Gerçek katillerden oluşan bir horde arıyorum." />
@@ -765,7 +765,7 @@
     <string id="aom_backstory_c.spc_wanderer_lothlorien_7_text" text="Şimdi becerilerimi nereye gidersem götürüyorum, birlikte seyahat ettiğim kişilerin silahlarını koruyup geliştiriyorum. Eğitimli ellerde iyi bir kılıç, bir savaşın gidişatını değiştirebilir." />
     <string id="aom_response_1.spc_wanderer_lothlorien_7_text" text="İlkeli bir zanaatkar nadir ve değerlidir." />
     <string id="aom_response_2.spc_wanderer_lothlorien_7_text" text="İlkeler sizi kışın sıcak tutmaz." />
-    <string id="aom_backstory_d.spc_wanderer_lothlorien_7_text" text="Beni doyurun ve bana bir demirhanə verin, çeliğinizi keskin tutarım." />
+    <string id="aom_backstory_d.spc_wanderer_lothlorien_7_text" text="Keep me fed and give me a forge, and I'll keep your steel sharp." />
     <string id="aom_generic_backstory.spc_wanderer_lothlorien_7_text" text="Altın Orman'dan bir ayna demircisi, amaç ve macera arıyor." />
     <string id="aom_prebackstory.spc_wanderer_lothlorien_8_text" text="Hızlı bir atın üstünde yüzünüze çarpan rüzgar gibi özgürlük yoktur..." />
     <string id="aom_backstory_a.spc_wanderer_lothlorien_8_text" text="Altın Orman'ın atlı kuvvetlerinde hizmet ettim, sınırları devriye gezdim ve Doğu'daki Gölge'nin akın gruplarına karşı hızlı saldırılar düzenledim. Atlı yeteneklerim Galadhrim arasında eşsizdi." />

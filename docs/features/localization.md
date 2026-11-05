@@ -166,6 +166,8 @@ Bannerlord must already support the language natively (it must have an entry in 
 
 **Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
 
+**Consistency gates.** `LocalizationKeyConsistencyTests` keeps one English text per key across the sources, inline C# and data defaults equal to their registration, and one name per name key. `LanguageTextIntegrityTests` scans every language row and every `tools/translation_cache/<lang>.json` value for words from another writing system; a row equal to its registered English passes, so a damaged row goes back to English and its cache entry goes, and the next translator run fills it.
+
 ## Performance
 
 No performance impact — translation files are loaded once at startup by the engine and cached in a static dictionary. Empty translation files (the current stub state) add zero overhead.

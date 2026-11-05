@@ -320,6 +320,10 @@ than paying for a pass that would produce twelve slightly different renderings o
 
 ---
 
+### Key ownership
+
+A key two English sources declare belongs to the first one in `tools/_loc_sources.py`: the translator seeds and translates it only in that source's language file, and it does not seed a key another file of the language already carries. A row the target file already holds is still diffed.
+
 ## Adding Canonical Translations to Overrides
 
 If you want certain key terms translated consistently (e.g., always render "Strider" as "Бродяжник" in Russian), add them to `tools/translation_overrides/<lang>.json`:

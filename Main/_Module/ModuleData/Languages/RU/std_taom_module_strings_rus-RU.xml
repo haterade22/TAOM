@@ -549,7 +549,7 @@
     <string id="aom_sh_notable_1b" text="Купец восточных степей" />
     <string id="aom_sh_notable_2" text="Торговец шёлком Шаганы" />
     <string id="aom_sh_notable_2b" text="Торговец степей Харада" />
-    <string id="aom_sh_notable_3" text="Менялa Шаганы" />
+    <string id="aom_sh_notable_3" text="Shaghâna money-changer" />
     <string id="aom_sh_notable_3b" text="Торговец восточными товарами" />
     <string id="aom_sh_notable_4" text="Хозяин базара Шаганы" />
     <string id="aom_sh_notable_4b" text="Хитрый купец Шаганы" />
@@ -656,7 +656,7 @@
     <string id="TAOM_karakhuzaits_text" text="Дикие истерлинги — непокорённые степные кланы Моря Рун, что противостояли власти каждого властителя, пытавшегося их усмирить — будь то вождь Руна, лейтенант Мордора или Король Дейла. Они кочуют по пастбищам к востоку от Келдуина, сгоняя коней, совершая набеги на стада и собирая дорожную дань с любого каравана, настолько глупого, чтобы пересечь их степь без вооружённой охраны." />
     <string id="TAOM_forest_people_name" text="Друэдайн" />
     <string id="TAOM_forest_people_short" text="Дикари" />
-    <string id="TAOM_forest_people_text" text="Друэдайн, известные людям как вóзы или Дикие Люди Леса — древний народ, обитающий в глубоких лесах Друадана и скрытых долинах Белых гор. Они выжигают землю огнём, выращивают всё необходимое на богатой золой почве и переходят дальше, когда земля истощается — образ жизни, который оседлые народы Средиземья никогда не понимали и не пытались понять. Друэдайн не хотят лорда, не платят податей и просят лишь одного — чтобы их оставили в лесной тишине." />
+    <string id="TAOM_forest_people_text" text="The Drúedain, known to Men as Woses or the Wild Men of the Woods, are an ancient people who dwell in the deep forest of Drúadan and the hidden valleys of the White Mountains. They clear ground with fire, grow what they need on the ash-rich soil, and move on when the land is spent — a way of life the settled peoples of Middle-earth have never understood and never bothered to. The Drúedain want no lord, pay no tax, and ask only to be left to the forest's silence." />
     <string id="TAOM_eleftheroi_name" text="Беорнинги" />
     <string id="TAOM_eleftheroi_short" text="Беорнинги" />
     <string id="TAOM_eleftheroi_text" text="Беорнинги — великие лесовики, обитающие в долине Андуина меж Мглистых гор и Лихолесьем, ведомые оборотнями рода Беорна. Они не пропускают ни одного орка через свои земли, взимают пошлину у Брода Каррок на содержание дозора и не отвечают ни перед одним королём Средиземья. Хотя они торгуют и говорят с эльфами и гномами, любое войско, что пройдёт через их лес без позволения, обнаружит, что у беорнингов очень большие зубы." />
@@ -713,7 +713,7 @@
     <string id="taom_career_rank1_black_uruk_captain" text="Урук-Воин" />
     <string id="taom_career_rank2_black_uruk_captain" text="Чёрный Урук" />
     <string id="taom_career_rank3_black_uruk_captain" text="Капитан Красного Ока" />
-    <string id="taom_career_rank1_blade_dancer" text="Ñолдорский Мечник" />
+    <string id="taom_career_rank1_blade_dancer" text="Ñoldor Bladesman" />
     <string id="taom_career_rank2_blade_dancer" text="Клинок Золотого Цветка" />
     <string id="taom_career_rank3_blade_dancer" text="Мастер Клинка Имладриса" />
     <string id="taom_career_rank1_blademaster_of_ren" text="Клинок Рена" />
@@ -779,24 +779,24 @@
     <string id="taom_career_rank1_knight_of_belfalas" text="Оруженосец Дол Амрота" />
     <string id="taom_career_rank2_knight_of_belfalas" text="Рыцарь-Лебедь" />
     <string id="taom_career_rank3_knight_of_belfalas" text="Рыцарь Серебряного Лебедя" />
-    <string id="taom_career_rank1_lokhas_drus_marksman" text="Лучник Лôкхас Дрûс" />
-    <string id="taom_career_rank2_lokhas_drus_marksman" text="Пробиватель Доспехов Лôкхас Дрûс" />
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="Lôkhas Drûs Bowman" />
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="Lôkhas Drûs Plate-Piercer" />
     <string id="taom_career_rank3_lokhas_drus_marksman" text="Солнечнооперённая Смерть Востока" />
-    <string id="taom_career_rank1_mahud_beast_rider" text="Укротитель Зверей Махûд" />
-    <string id="taom_career_rank2_mahud_beast_rider" text="Погонщик Мûмака" />
-    <string id="taom_career_rank3_mahud_beast_rider" text="Военачальник Мûмаков" />
+    <string id="taom_career_rank1_mahud_beast_rider" text="Mahûd Beast-Tamer" />
+    <string id="taom_career_rank2_mahud_beast_rider" text="Mûmak Driver" />
+    <string id="taom_career_rank3_mahud_beast_rider" text="Mûmak War-Leader" />
     <string id="taom_career_rank1_marksman_of_aldburg" text="Лучник Восточной Марки" />
     <string id="taom_career_rank2_marksman_of_aldburg" text="Стрелок Альдбурга" />
     <string id="taom_career_rank3_marksman_of_aldburg" text="Стражник Стрел Марки" />
     <string id="taom_career_rank1_mulkerhili_cultist" text="Поклявшийся Шёпоту" />
-    <string id="taom_career_rank2_mulkerhili_cultist" text="Голос Лугбûрза" />
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Voice of Lugbúrz" />
     <string id="taom_career_rank3_mulkerhili_cultist" text="Глашатай Недремлющего Ока" />
     <string id="taom_career_rank1_necromancer_acolyte" text="Послушник Колдовства" />
     <string id="taom_career_rank2_necromancer_acolyte" text="Ткач Чёрного Дыхания" />
     <string id="taom_career_rank3_necromancer_acolyte" text="Владыка Дол Гулдура" />
     <string id="taom_career_rank1_olog_hai_warchief" text="Боевой Тролль" />
     <string id="taom_career_rank2_olog_hai_warchief" text="Олог-хай" />
-    <string id="taom_career_rank3_olog_hai_warchief" text="Военачальник Лугбûрза" />
+    <string id="taom_career_rank3_olog_hai_warchief" text="Warchief of Lugbúrz" />
     <string id="taom_career_rank1_pezarsani_javelineer" text="Дротикометатель Пезарсани" />
     <string id="taom_career_rank2_pezarsani_javelineer" text="Застрельщик с Метательными Копьями" />
     <string id="taom_career_rank3_pezarsani_javelineer" text="Алый Мастер Копья" />
@@ -1399,7 +1399,7 @@
     <string id="taom_faction_dominion_of_mordor_strength_1" text="Почти не требуется влияния для похода" />
     <string id="taom_faction_dominion_of_mordor_strength_2" text="Мастерство ночных боёв" />
     <string id="taom_faction_dominion_of_mordor_strength_3" text="Самообеспечение через набеги и Нурн" />
-    <string id="taom_faction_dominion_of_mordor_strength_4" text="Тролли и чёрные uruки" />
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="Trolls and Black Uruks" />
     <string id="taom_faction_dominion_of_mordor_su_0_desc" text="Элитная ударная пехота из Барад-дура." />
     <string id="taom_faction_dominion_of_mordor_su_0_name" text="Чёрный урук" />
     <string id="taom_faction_dominion_of_mordor_su_1_desc" text="Осадный зверь, выращенный в ямах." />
@@ -2267,7 +2267,7 @@
     <string id="taom_feat_dg_ncta" text="Тёмные кузницы" />
     <string id="taom_feat_dg_ncta_desc" text="+1 знатный ремесленник в городах." />
     <string id="taom_feat_dg_nctg" text="Капитаны тени" />
-    <string id="taom_feat_dg_nctg_desc" text="+13 знатных главарей банд в городах (центр тёмного command Дол Гулдура)." />
+    <string id="taom_feat_dg_nctg_desc" text="+13 gang-leader notables in towns (Dol Guldur's shadow command center)." />
     <string id="taom_feat_dg_ncv" text="Скрытые лачуги" />
     <string id="taom_feat_dg_ncv_desc" text="Количество знатных людей в деревнях увеличено на 10%." />
     <string id="taom_feat_gon_gw" text="Стража Башни" />

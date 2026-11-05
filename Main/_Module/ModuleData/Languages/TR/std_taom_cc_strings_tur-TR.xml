@@ -127,17 +127,17 @@
     <string id="taom_cc_taom_parent_umbar_6_text" text="Umbar'ın Kaçakçıları" />
     <string id="taom_cc_taom_parent_umbar_6_desc" text="Aileniz gölgelerde hareket ediyor, Korsanların hayatta kalması için hayati önem taşıyan malları ve bilgileri kaçırıyordu." />
     <string id="taom_cc_taom_parent_empire_1_text" text="Eski Reislerin Soyundan Gelenler" />
-    <string id="taom_cc_taom_parent_empire_1_desc" text="Aileniz Dunlending氏族ları arasında reis olarak hüküm sürüyor, soy ve güç yoluyla saygı kazanıyordu. Babanız çatışma zamanlarında savaşçıları toplarken, anneniz氏族ın işlerini yönetiyordu." />
-    <string id="taom_cc_taom_parent_empire_2_text" text="氏族 Tüccarları" />
-    <string id="taom_cc_taom_parent_empire_2_desc" text="Aileniz Dunlending氏族ları ile dış dünya arasında mal ticareti yapıyordu. Toprak ve insanlar hakkındaki bilgileri hanenize refah getiriyordu." />
-    <string id="taom_cc_taom_parent_empire_3_text" text="Özgür氏族 Halkı" />
+    <string id="taom_cc_taom_parent_empire_1_desc" text="Your family held sway as chieftains among the Dunlending clans, commanding respect through lineage and strength. Your father rallied warriors in times of conflict, while your mother managed the clan's affairs." />
+    <string id="taom_cc_taom_parent_empire_2_text" text="Clan Merchants" />
+    <string id="taom_cc_taom_parent_empire_2_desc" text="Your family traded goods between the Dunlending clans and the outside world. Their knowledge of the land and its people brought prosperity to your household." />
+    <string id="taom_cc_taom_parent_empire_3_text" text="Free Clansfolk" />
     <string id="taom_cc_taom_parent_empire_3_desc" text="Aileniz Dunland'ın özgür halkıydı, tepeler arasında toprak işliyor ve koyun gütüyordu. Savaş geldiğinde reislerin çağrısına cevap veriyorlardı." />
     <string id="taom_cc_taom_parent_empire_4_text" text="Yetenekli Zanaatkarlar" />
-    <string id="taom_cc_taom_parent_empire_4_desc" text="Aileniz Dunlending氏族larının zanaatkarlarıydı, tepelerin kaynaklarından silahlar, aletler ve süslemeler yapıyordu." />
+    <string id="taom_cc_taom_parent_empire_4_desc" text="Your family were craftsmen of the Dunlending clans, fashioning weapons, tools, and ornaments from the resources of the hills." />
     <string id="taom_cc_taom_parent_empire_5_text" text="Orman Toplayıcıları" />
     <string id="taom_cc_taom_parent_empire_5_desc" text="Aileniz Dunland'ın vahşi topraklarında yaşıyor, Sisli Dağlar'ın sınırındaki yoğun ormanlarda av ve ot topluyordu." />
     <string id="taom_cc_taom_parent_empire_6_text" text="Göçebeler ve Sürgünler" />
-    <string id="taom_cc_taom_parent_empire_6_desc" text="Aileniz başıboşlardı,氏族lardan kovulmuş ya da onların erişiminin ötesinde yaşamayı seçmişlerdi. Zekalarıyla ve bazen daha az dürüst yollarla hayatta kalıyorlardı." />
+    <string id="taom_cc_taom_parent_empire_6_desc" text="Your family were drifters, cast out from the clans or choosing to live beyond their reach. They survived by their wits and occasionally by less honest means." />
     <string id="taom_cc_taom_parent_vlandia_1_text" text="Marşalin Hizmetkarları" />
     <string id="taom_cc_taom_parent_vlandia_1_desc" text="Aileniz Riddermark'ın marşallarına hizmet ediyor, Rohan'ın sınırlarının savunmasında onlarla birlikte sürüyordu. Babanız yetenekli bir süvari ve savaşçıydı." />
     <string id="taom_cc_taom_parent_vlandia_2_text" text="Edoras Tüccarları" />
@@ -571,7 +571,7 @@
     <string id="taom_cc_taom_education_empire_4_text" text="Demirhanede ve ahşap oymacılık tezgahında çalıştı." />
     <string id="taom_cc_taom_education_empire_4_desc" text="Dunlending yerleşimlerinin pratik zanaatlarında metal ve ahşap şekillendirmeyi öğrendin, klanlar için alet, silah ve donanım yaptın. İş sana becerikli eller ve eşyaların nasıl bir araya getirildiğini ve nasıl sökülüp parçalanabileceğini görebilecek bir göz verdi." />
     <string id="taom_cc_taom_education_empire_5_text" text="Dunland ormanlarında avlandı ve besin topladı." />
-    <string id="taom_cc_taom_education_empire_5_desc" text="Genç bir avcı olarak Sisli Dağlar sınırındaki ormanlık sırtları öğrendin, geyik izleyip çoğu çocuk제대로 tutamadan yayı aldın. Orman sırlarını sakladı ve sen onların çoğunu öğrendin." />
+    <string id="taom_cc_taom_education_empire_5_desc" text="You learned the wooded ridges bordering the Misty Mountains as a young hunter, tracking deer and picking up the bow before most children could properly grip it. The forest kept its secrets, and you learned most of them." />
     <string id="taom_cc_taom_education_empire_6_text" text="Bir dışlanmış olarak klanlar arasında sürüklendi." />
     <string id="taom_cc_taom_education_empire_6_desc" text="Kovuldun ya da kaçtın, oluşum yıllarını Dunlending toplumunun kenarlarında geçirerek, eşit ölçüde iş ve sorun toplayarak. İyi hedeflenmiş bir atış ya da inandırıcı bir yalanın, hiçbir klan rozetinin açamayacağı kapıları açabileceğini öğrendin." />
     <string id="taom_cc_taom_education_vlandia_1_text" text="Mareşalin hanedanında eğitimle ata bindi." />
@@ -767,7 +767,7 @@
     <string id="taom_cc_taom_adulthood_dolguldur_6_text" text="Elf Kralı'nın sarayına tüccar olarak sızdın ve duyduklarını rapor ettin." />
     <string id="taom_cc_taom_adulthood_dolguldur_6_desc" text="Thranduil'in salonlarında sahte bir kimlik altında geçirilen üç ay, Dol Guldur'un hiçbir ajanının kulak misafiri olmadığı konuşmalara erişim sağladı. Gölge ustalarının bir sonraki sezonun stratejisini şekillendirmek için kullandığı isimler, planlar ve ilişkilerle geri döndün. Elfler hakkındaki deneyimi beklenmedik şekilde öğretici buldun." />
     <string id="taom_cc_taom_adulthood_umbar_1_text" text="On yılın en hızlı Anduin baskınına kaptanlık ettin." />
-    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="Gemين Gondor nehir zincirini geçti, Pelargir'daki ikmal deposuna saldırdı ve garnizonun işaret ateşleri sönmeden denize geri döndü. Korsanlar filosu kaptanları geldiğinde senin adına kadeh kaldırdılar, bu onların bildikleri tek tören türüydü." />
+    <string id="taom_cc_taom_adulthood_umbar_1_desc" text="Your ship made it past the Gondorian river chain, struck the supply depot at Pelargir, and was back at sea before the garrison's signal fires had burned down. The Corsair fleet captains raised a cup in your name when you came in, which was the only kind of ceremony they knew." />
     <string id="taom_cc_taom_adulthood_umbar_2_text" text="Körfez üzerinden liman gelirini iki katına çıkaran yeni bir ticaret yolu kurdun." />
     <string id="taom_cc_taom_adulthood_umbar_2_desc" text="Mevcut rotalar tüccarların alternatifler aramasına neden olacak şekilde vergilendirilmişti. Körfez adaları arasından az kullanılan bir geçit belirledin, ücretleri ayarladın ve bir sezon içinde üç yeni tüccar evini limana getirdin. Liman müdürleri rahatsız oldu ama zenginleştiler." />
     <string id="taom_cc_taom_adulthood_umbar_3_text" text="Umbar'ın filo bakım darboğazını çözen yeni kuru havuzu tasarladın." />

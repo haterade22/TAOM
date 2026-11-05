@@ -673,7 +673,7 @@
     <string id="taom_precompile_shaders" text="셰이더 사전 컴파일" />
     <string id="taom_precompile_hint" text="병사 및 장비 셰이더를 미리 컴파일하여 첫 전투에서 끊김이나 멈춤이 발생하지 않도록 합니다. 모드 목록을 변경한 뒤에는 다시 실행하십시오. 모듈 목록이 바뀌면 게임이 컴파일된 셰이더를 삭제합니다." />
     <string id="taom_precompile_inquiry_title" text="셰이더 사전 컴파일" />
-    <string id="taom_precompile_inquiry_body" text="TAOM과 기본 게임의 병사, 영주, 전투 장비가 포함된 일련의 숨겨진 전투를 불러와, 각 문화권과의 첫 전투 도중이 아니라 지금 셰이더를 컴파일합니다.{newline}{newline}시간이 다소 걸립니다. 셰이더 캐시가 비어 있다면 20~70분 정도 예상하십시오. 게임을 켜 둔 채로 두고 다른 전투를 시작하지 마십시오. 진행 상황은 로딩 화면과 상태 표시줄에 나타납니다. 언제든 Ctrl+Shift+K를 누르고 있으면 취소됩니다.{newline}{newline}모듈 목록이 변경될 때마다 게임이 컴파일된 셰이더를 삭제하므로, 모드를 추가하거나 제거하거나 순서를 바꾼 뒤에는 다시 실행하십시오.{newline}{newline}장면 단계(TAOM 자체 전투 장면의 지형 및 대기 셰이더)는 일부 GPU에서 충돌을 일으키므로 기본적으로 꺼져 있습니다. 원하신다면 모드 옵션 &gt; TAOM &gt; 그래픽/셰이더 사전 컴파일에서 켜십시오.{newline}{newline}'Shader pre-compilation COMPLETE'가 표시되면 플레이하실 수 있습니다." />
+    <string id="taom_precompile_inquiry_body" text="Loads a series of hidden battles containing the troops, lords and battle equipment of TAOM and the base game, so their shaders are compiled now instead of during your first battle against each culture.{newline}{newline}This takes a while: expect 20 to 70 minutes on a fresh shader cache. Leave the game running and do not start another battle; progress shows on the loading screen and as a status line. Hold Ctrl+Shift+K at any time to cancel.{newline}{newline}The game clears its compiled shaders whenever your module list changes, so run this again after adding, removing or reordering mods.{newline}{newline}Scene passes (terrain and atmosphere shaders for TAOM's own battle scenes) are off by default because they crash some GPUs. Turn them on under Mod Options, TAOM, Graphics/Shader Precompilation if you want them.{newline}{newline}When you see 'Shader pre-compilation COMPLETE', you can play." />
     <string id="taom_main_menu_new_game" text="인간의 시대로" />
     <string id="taom_career_screen_title" text="직업" />
     <string id="taom_career_done" text="완료" />
@@ -870,7 +870,7 @@
     <string id="taom_career_grp_black_uruk_captain_t3_a" text="눈꺼풀 없는 눈의 분노" />
     <string id="taom_career_grp_black_uruk_captain_t3_b" text="검은 문의 대장" />
     <string id="taom_career_grp_blade_dancer_t1_a" text="별빛의 강철" />
-    <string id="taom_career_grp_blade_dancer_t1_b" text="이ム라드리스의 수호자" />
+    <string id="taom_career_grp_blade_dancer_t1_b" text="Guard of Imladris" />
     <string id="taom_career_grp_blade_dancer_t2_a" text="곤돌린의 춤" />
     <string id="taom_career_grp_blade_dancer_t2_b" text="숨겨진 골짜기의 수호자" />
     <string id="taom_career_grp_blade_dancer_t3_a" text="제1시대의 검" />

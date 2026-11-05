@@ -1614,7 +1614,7 @@
     <string id="taom_faction_kingdom_of_arthedain_trait_0" text="阿尔诺遗裔" />
     <string id="taom_faction_kingdom_of_arthedain_trait_1" text="安努米那斯真知晶石" />
     <string id="taom_faction_kingdom_of_arthedain_trait_2" text="北方登丹人" />
-    <string id="taom_faction_kingdom_of_cardolan_desc" text="卡多兰的继承国度,曾是伟大的阿尔诺王国的一部分。如今是一片散落定居点和被尸妖haunted的古老墓丘之地。" />
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="The successor realm of Cardolan, once part of the great kingdom of Arnor. Now a land of scattered settlements and ancient barrows haunted by wights." />
     <string id="taom_faction_kingdom_of_cardolan_name" text="卡多兰王国" />
     <string id="taom_faction_kingdom_of_cardolan_trait_0" text="阿尔诺的继承者" />
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="古墓岗" />
@@ -2147,7 +2147,7 @@
     <string id="taom_feat_mrk_mor" text="林地的羁绊" />
     <string id="taom_feat_mrk_mor_desc" text="队伍士气提高3点。" />
     <string id="taom_feat_mrk_aic" text="闭关朝堂" />
-    <string id="taom_feat_mrk_aic_desc" text="组建军队所需influence增加15%。" />
+    <string id="taom_feat_mrk_aic_desc" text="Army recruitment costs 15% more influence." />
     <string id="taom_feat_loth_fs" text="金色森林" />
     <string id="taom_feat_loth_fs_desc" text="部队在森林中的移动速度提高10%。" />
     <string id="taom_feat_loth_gw" text="洛丝罗林守卫" />
