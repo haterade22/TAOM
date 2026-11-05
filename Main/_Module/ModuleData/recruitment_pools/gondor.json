@@ -18,8 +18,8 @@
       "description": "Glanhir and its Ringlo Vale villages (Upper Ringló, Vale Village): Ringlo Vale only",
       "settlements": ["castle_EW2", "castle_village_EW2_1", "castle_village_EW2_2"],
       "troops": {
-        "gondor_ring_peasant": 50,
-        "gondor_ring_militia": 50
+        "gondor_ring_militia": 50,
+        "gondor_ring_footman": 50
       }
     },
     {

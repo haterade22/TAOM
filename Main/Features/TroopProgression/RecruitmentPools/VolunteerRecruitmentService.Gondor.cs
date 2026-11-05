@@ -139,8 +139,8 @@ public partial class VolunteerRecruitmentService
             ("gondor_lam_swordman", 1));
         // Glanhir: Ringlo Vale only (its villages Upper Ringló and Vale Village too, in the JSON)
         AddSettlement("castle_EW2",
-            ("gondor_ring_peasant", 1),
-            ("gondor_ring_militia", 1));
+            ("gondor_ring_militia", 1),
+            ("gondor_ring_footman", 1));
         // Imrazorionath / Garvirionath / Hirilionath: Belfalas only
         AddSettlement("castle_EW3",
             ("gondor_bel_recruit", 1),
