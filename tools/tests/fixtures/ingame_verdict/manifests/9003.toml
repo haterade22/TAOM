@@ -1,0 +1,9 @@
+# Fixture: a Coop client line, placed by mtime and its first HH:mm:ss.
+issue = 9003
+fixed_in = "40385aa5b"
+logs = ["taom", "coop-client"]
+
+[[check]]
+id = "coop.fixture.connect"
+needs = "join a co-op server"
+pass = ['Coop\.Core\.Client\.CoopClient\] Attempting connection to ']

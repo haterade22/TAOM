@@ -1,0 +1,7 @@
+[2026-10-30 12:57:23] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-30 13:09:13] [INFO] [BattleLoad] seq=5 t=+54585ms phase=MissionOpenNew mission='Battle' scene='battle_terrain_r' encountered='Corsairs of Umbar' side=Defender main=1 enemy=24
+[2026-10-30 13:09:13] [INFO] [BattleLoad] seq=6 t=+55343ms phase=MissionOpenNewDone mission='Battle' created=True
+[2026-10-30 13:11:40] [INFO] [Check] id=taom.battle-action-bar.attach result=skip reason=setting-off
+[2026-10-30 13:28:22] [INFO] [MemSample] privMB=10137 wsMB=6058 heapMB=281 sysCommitUsedMB=100135 sysCommitLimitMB=128662 availPhysMB=17641 memLoad=72%
+[2026-10-30 13:28:27] [INFO] [Shutdown] clean module unload

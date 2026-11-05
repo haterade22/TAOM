@@ -1,0 +1,7 @@
+[(90596) 14:09:50 INF Coop.CoopMod] ========================================================
+[(90596) 14:09:50 INF Coop.CoopMod] Bannerlord Coop - Client
+[(90596) 14:09:50 INF Coop.CoopMod] Game Version: 1.5.5
+[(90596) 14:10:36 INF Coop.Core.Common.Session.SteamIntegrationBoot] Steam integration active
+[(90596) 14:10:41 INF Coop.Core.Client.CoopClient] Attempting connection to 127.0.0.1:4200...
+[(90596) 14:21:58 INF Common.FpsLogger] [Fps] frames=2482 seconds=30.00 avg=82.7 min=35.7 max=142.9
+[(90596) 14:22:03 INF Coop.Steam.SteamTunnelHost] Steam tunnel host stopped
