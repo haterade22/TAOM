@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -48,7 +48,7 @@ public class EnlistmentLoadNormalizerTests
             EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
             Substitute.For<IArmyMembershipAdapter>(), _logger);
         _normalizer = new EnlistmentLoadNormalizer(
-            _store, _machine, reconciler, _partyAdapter, discharge, _encounter, _logger);
+            _store, _machine, reconciler, _partyAdapter, discharge, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -78,7 +78,7 @@ public class EnlistmentLoadNormalizerTests
         _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
             hasEncounter: true, hasEncounteredMobileParty: isBattle,
             encounteredPartyId: isBattle ? "enemy_lord_party" : null, encounteredPartyIsCommanderRelated: false,
-            playerInMapEvent: false, playerInsideSettlement: !isBattle, isBattleEncounter: isBattle));
+            playerInMapEvent: false, playerInsideSettlement: !isBattle));
     }
 
     // ---- The save coercion: EnlistedBattle persists as EnlistedAttached (#577) -----------------
@@ -104,12 +104,12 @@ public class EnlistmentLoadNormalizerTests
     }
 
     [TestMethod]
-    public void Normalize_SavedInTheAftermath_BattleEncounterStillOpen_RestoresBattleStateAndHoldsPresence()
+    public void Normalize_SavedWithAnEncounterThatOutlivedItsBattle_StaysAttached()
     {
-        // The map event is already gone (MapEventSide.Clear() runs before the encounter closes),
-        // the encounter's own battle handle is not. Without the re-derivation this reloads as an
-        // active, unparked Attached soldier, Assess says AttachRequired, and the reconciler parks
-        // the party out of its live encounter: #577's crash shape, reached by reload.
+        // No map event behind the encounter: it outlived its battle (the loot screens keep the party
+        // in its map event), so there is no battle to restore. The sweep does not own a leftover whose
+        // encountered party is a mobile opposing leader outside a settlement (R4 returns SkipNotOurs,
+        // #1021 item 1): it stays until a discharge or the stale-latch recovery closes it.
         MakeEnlisted(EnlistmentState.EnlistedAttached);
         CommanderHealthy();
         Presence(parked: false, inMapEvent: false, hasEncounter: true);
@@ -117,8 +117,7 @@ public class EnlistmentLoadNormalizerTests
 
         _normalizer.Normalize("main_hero", Now);
 
-        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
-        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
     }
 
     [TestMethod]

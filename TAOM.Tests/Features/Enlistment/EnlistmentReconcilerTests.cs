@@ -96,7 +96,7 @@ public class EnlistmentReconcilerTests
     /// reads it, so leaving it false lets the latch break for the wrong reason and the test passes
     /// without exercising anything.
     /// </summary>
-    private void SettlementShapedEncounter(bool playerInsideSettlement = false, bool isBattleEncounter = false)
+    private void SettlementShapedEncounter(bool playerInsideSettlement = false)
     {
         _encounter.HasCurrent.Returns(true);
         _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
@@ -106,8 +106,7 @@ public class EnlistmentReconcilerTests
             encounteredPartyId: null,
             encounteredPartyIsCommanderRelated: false,
             playerInMapEvent: false,
-            playerInsideSettlement: playerInsideSettlement,
-            isBattleEncounter: isBattleEncounter));
+            playerInsideSettlement: playerInsideSettlement));
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
     }
 
@@ -186,22 +185,39 @@ public class EnlistmentReconcilerTests
     }
 
     [TestMethod]
-    public void Reconcile_BattleAftermathEncounter_IsNeverTornDown()
+    public void Reconcile_EnlistedBattle_RepulsedAssaultLeftoverOutsideSettlement_SweepClosesIt()
     {
-        // The regression the deep review caught, and the reason the state gate could not simply be
-        // deleted. MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes, so the
-        // loot screen after a siege reads as "no battle anywhere" to every guard in this method: the
-        // state is still EnlistedBattle, neither party is in a map event, and the encounter is open.
-        // Without R1b the sweep closes the player's own battle result, which is the exact scenario
-        // the strand fix was written for.
+        // A repulsed assault leaves an encounter behind with nobody in a map event and no mobile
+        // party encountered. Likely, not verified: vanilla does not clear it, and it would block
+        // every later encounter.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         CommanderHealthy(inMapEvent: false);
         PlayerPresence(parked: true, inMapEvent: false, hasEncounter: true);
-        SettlementShapedEncounter(isBattleEncounter: true);
+        SettlementShapedEncounter();
+
+        _reconciler.ReconcileHourly(Now);
+
+        _encounter.Received(1).Finish(true);
+    }
+
+    [TestMethod]
+    public void Reconcile_LootWindow_PlayerStillInMapEvent_IsNeverTornDown()
+    {
+        // The loot and aftermath screens run while the main party is still in its map event; on that
+        // path vanilla removes it inside PlayerEncounter.Finish. The map-event guard keeps the sweep out.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: false, inMapEvent: true, hasEncounter: true);
+        _encounter.HasCurrent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: true));
 
         _reconciler.ReconcileHourly(Now);
 
         _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -601,9 +617,9 @@ public class EnlistmentReconcilerTests
     [TestMethod]
     public void Reconcile_BattleStateWithOpenEncounter_StaysInBattle()
     {
-        // Regression (2026-08-07): the map event reads as gone while the loot/aftermath encounter
-        // is still open. Demoting here re-parked the player mid-battle and handed the aftermath
-        // menus to the redirect guard — an hourly tick could undo a successful join.
+        // Regression (2026-08-07), fixture restated: an encounter that outlived its map event stays
+        // open with the map event gone. Demoting here re-parked the player mid-battle and handed the
+        // encounter's menus to the redirect guard — an hourly tick could undo a successful join.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         CommanderHealthy(inMapEvent: false);
         PlayerPresence(parked: false, inMapEvent: false);
@@ -617,12 +633,12 @@ public class EnlistmentReconcilerTests
     // ---- The presence hold while a battle encounter is live (#577) ----------------------------
 
     /// <summary>
-    /// The loot and aftermath window as the game actually presents it: EnlistedBattle, the party
+    /// An encounter that outlived its map event: EnlistedBattle, the party
     /// active and visible (RestorePresence ran at the join), in no map event, the commander in
     /// none either, and the PlayerEncounter still open, read the same way by the presence snapshot
     /// and by the encounter adapter (both are PlayerEncounter.Current != null in the real adapters).
     /// </summary>
-    private void BattleAftermathWindow()
+    private void EncounterOutlivedItsMapEvent()
     {
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         CommanderHealthy(inMapEvent: false);
@@ -631,16 +647,16 @@ public class EnlistmentReconcilerTests
         _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
             hasEncounter: true, hasEncounteredMobileParty: true,
             encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
-            playerInMapEvent: false, playerInsideSettlement: false, isBattleEncounter: true));
+            playerInMapEvent: false, playerInsideSettlement: false));
     }
 
     [TestMethod]
-    public void Reconcile_BattleAftermathEncounter_DoesNotReParkTheActivePlayer()
+    public void Reconcile_EncounterOutlivedItsMapEvent_DoesNotReParkTheActivePlayer()
     {
         // The test above pins the STATE and nothing else; the park it never asserted against is
         // the #577 detach. ParkNear clears AttachedTo, which pulls the party off its MapEventSide,
         // and "Send troops" then indexes SelectedTroops[-1] (BattleSimulation.cs:62).
-        BattleAftermathWindow();
+        EncounterOutlivedItsMapEvent();
 
         _reconciler.ReconcileHourly(Now);
 
@@ -649,13 +665,13 @@ public class EnlistmentReconcilerTests
     }
 
     [TestMethod]
-    public void Reconcile_BattleAftermathEncounter_CommanderDied_NeitherRestoresNorDischarges()
+    public void Reconcile_EncounterOutlivedItsMapEvent_CommanderDied_NeitherRestoresNorDischarges()
     {
         // A commander killed in this very battle. The hold outranks commander fitness on purpose:
         // otherwise the discharge (RestorePresence, LeaveArmy, ClearArmyAttachment) would run from
         // inside PlayerEncounter.Finish when the re-entrant "army left" edge fires. It waits for
         // the encounter to close; the next pass sees the dead commander and discharges then.
-        BattleAftermathWindow();
+        EncounterOutlivedItsMapEvent();
         CommanderDead();
 
         _reconciler.ReconcileHourly(Now);
@@ -667,11 +683,11 @@ public class EnlistmentReconcilerTests
     }
 
     [TestMethod]
-    public void Reconcile_BattleAftermathEncounter_DoesNotLogTheUnhandledReasonError()
+    public void Reconcile_EncounterOutlivedItsMapEvent_DoesNotLogTheUnhandledReasonError()
     {
         // ReconcileBlocked fails loudly on a reason it does not know. The new reason needs its own
-        // arm, or every loot screen logs an ERROR that reads like a fault.
-        BattleAftermathWindow();
+        // arm, or every leftover encounter logs an ERROR that reads like a fault.
+        EncounterOutlivedItsMapEvent();
 
         _reconciler.ReconcileHourly(Now);
 
@@ -685,7 +701,7 @@ public class EnlistmentReconcilerTests
         // sets Army = null on the commander's party, which dispatches OnPartyLeftArmy, which is the
         // "army left" edge this reconciler subscribes. That pass runs from INSIDE the join or
         // inside PlayerEncounter.Finish, on half-mutated adapter state. It must not run at all.
-        BattleAftermathWindow();
+        EncounterOutlivedItsMapEvent();
         _army.IsMutating.Returns(true);
 
         _reconciler.ReconcileNow(Now, "army left");
@@ -732,7 +748,8 @@ public class EnlistmentReconcilerTests
     /// The crash state: EnlistedBattle, an encounter still open, the player in no map event, and
     /// the commander still fighting. Three guards each refuse to move it and each is individually
     /// right: TryBreakBattleLatch returns on HasPlayerEncounter, SweepStrandedEncounter returns on
-    /// commanderInMapEvent, and R1b defers every intent because the encounter reads as a battle.
+    /// commanderInMapEvent, and the policy skips the sweep because the encountered party is the opposing
+    /// leader.
     /// </summary>
     private void LatchedInBattleState()
     {
@@ -744,14 +761,14 @@ public class EnlistmentReconcilerTests
         _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
             hasEncounter: true, hasEncounteredMobileParty: true,
             encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
-            playerInMapEvent: false, playerInsideSettlement: false, isBattleEncounter: true));
+            playerInMapEvent: false, playerInsideSettlement: false));
     }
 
     [TestMethod]
     public void StaleBattleLatch_FirstTickOnly_LeavesItAlone()
     {
-        // The loot and aftermath window has exactly this shape. Recovering on sight would tear down
-        // the battle result the player is reading, which is what R1b exists to prevent.
+        // Nothing distinguishes a fresh orphan from one about to be cleared by vanilla, so recovering
+        // on sight would act before the latch has outlasted its margin.
         LatchedInBattleState();
 
         _reconciler.ReconcileHourly(Now);
@@ -765,7 +782,7 @@ public class EnlistmentReconcilerTests
     {
         // Issue #551. The player sat here for four and a half minutes of real time with a dead
         // encounter menu, no way to act, and no path in TAOM that could move him. An hour of
-        // campaign time in this shape is not a loot screen.
+        // campaign time in this shape is far past any screen the player could still be reading.
         LatchedInBattleState();
 
         _reconciler.ReconcileHourly(Now);
@@ -779,7 +796,7 @@ public class EnlistmentReconcilerTests
     public void StaleBattleLatch_ClearsWhenTheStateResolvesItself()
     {
         // The timer measures one CONTINUOUS episode. A tick in which the shape is gone must reset
-        // it, or two unrelated loot windows an hour apart would add up to a recovery.
+        // it, or two unrelated latched episodes an hour apart would add up to a recovery.
         LatchedInBattleState();
         _reconciler.ReconcileHourly(Now);
 
@@ -816,8 +833,8 @@ public class EnlistmentReconcilerTests
         // The reconciler is Reuse.Singleton, so it outlives the campaign. An anchor left behind by a
         // campaign that ended while latched is a LIVE HAZARD, not dead weight: campaign days are
         // absolute, so loading a later save makes `elapsed` enormous and the recovery fires on the
-        // very first latched tick, tearing down what may be a genuine loot screen with no real wait.
-        // That is precisely the destructive Finish that R1b exists to prevent, on the recovery path.
+        // very first latched tick, finishing an encounter with no real wait. That defeats the margin
+        // the threshold exists to give, on the recovery path.
         LatchedInBattleState();
         _reconciler.ReconcileHourly(Now);          // anchors here
 

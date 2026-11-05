@@ -156,9 +156,8 @@ public class ServiceMaintenanceServiceTests
     {
         // Issue #551. The reconciler is Reuse.Singleton and its latch anchor is an ABSOLUTE campaign
         // day, so a campaign that ended while latched leaves it behind. Load a later save and the
-        // elapsed time is enormous: the recovery fires on the first latched tick and finishes what
-        // may be a live loot screen with no real waiting, which is the destructive Finish that R1b
-        // exists to prevent, committed by the safety net itself.
+        // elapsed time is enormous: the recovery fires on the first latched tick and finishes an
+        // encounter with no real waiting, which defeats the margin the threshold exists to give.
         //
         // Asserted separately from the army handle above so that deleting either wiring names which
         // one broke.
@@ -512,7 +511,7 @@ public class ServiceMaintenanceServiceTests
     [TestMethod]
     public void Pump_BattleStateWithOpenEncounter_DoesNotDemote()
     {
-        // The loot/aftermath encounter is still open — demoting would re-park mid-battle.
+        // An encounter that outlived its map event is still open — demoting would re-park mid-battle.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         Presence(parked: false, inMapEvent: false, encounter: true);
 

@@ -288,7 +288,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // The reconciler is a singleton too, and its stale-battle-latch anchor is an absolute
         // campaign day (#551). A campaign that ended WHILE latched leaves that anchor behind; load a
         // later save and the elapsed time is enormous, so the recovery fires on the first latched
-        // tick and finishes a live loot screen with no real waiting. Dropped here for the same
+        // tick and finishes an encounter with no real waiting. Dropped here for the same
         // reason the army handle is, rather than being wired separately into a lifecycle hook.
         // The same reset re-arms the commander-loss modal's shown-once latch (#656).
         _reconciler?.ResetForNewSession();

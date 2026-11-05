@@ -39,15 +39,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// <summary>
     /// Campaign day the current stale-battle-latch episode was first observed, or NaN when the
     /// player is not in that shape (issue #551). One CONTINUOUS episode: any tick where the shape
-    /// is absent clears it, so two unrelated loot windows an hour apart never add up to a recovery.
+    /// is absent clears it, so two unrelated latched episodes an hour apart never add up to a recovery.
     ///
     /// NOT PERSISTED, AND THAT IS NOT THE SAME AS SAFE. This class is <c>Reuse.Singleton</c>, so it
     /// outlives the campaign: a campaign that ends WHILE latched leaves a finite anchor behind, and
     /// campaign days are absolute. Load a later save and <c>elapsed</c> is enormous, so the recovery
-    /// fires on the very first latched tick and finishes what may be a genuine loot screen with no
-    /// real waiting at all: exactly the destructive <c>Finish</c> R1b exists to prevent, committed by
-    /// the code meant to be the safety net. Two independent guards: <see cref="ResetForNewSession"/>
-    /// runs from <c>ResetSessionCaches</c> on every peer's load, on a new campaign and at game end,
+    /// fires on the very first latched tick and finishes an encounter with no real waiting, which
+    /// defeats the margin the threshold exists to give. Two independent guards:
+    /// <see cref="ResetForNewSession"/> runs from <c>ResetSessionCaches</c> on every peer's load, on a new campaign and at game end,
     /// and the backwards-clock re-anchor in <see cref="BreakStaleBattleLatch"/> stays as the
     /// self-contained second guard for any path that skips the reset.
     /// </summary>
@@ -306,19 +305,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// and blocks <c>ServiceMaintenanceService.TryBreakBattleLatch</c>, which is what turned it into
     /// a permanent latch after a siege.
     ///
-    /// The caller's state is NOT a guard here, and getting to that safely took a correction worth
-    /// recording. The first version of this fix removed the old <c>EnlistedAttached</c> gate on the
-    /// grounds that "the state was never the real guard". That was wrong: the state gate WAS doing
-    /// real work, because <c>EnlistedBattle</c> is exactly the state the loot/aftermath window lives
-    /// in, and this method's guards are <c>noBattleAnywhere</c> MINUS its <c>!HasCurrent</c> term.
-    /// Removing the state gate alone would have let the sweep tear down the player's own battle
-    /// result after a siege, which is the very scenario that was being fixed.
-    ///
-    /// What replaced it is a guard that names the real condition instead of proxying it:
-    /// <see cref="EncounterOwnershipSnapshot.IsBattleEncounter"/> (policy rule R1b), so a battle
-    /// encounter is protected in EVERY state and for every intent rather than only while the state
-    /// happens to read <c>EnlistedAttached</c>. The two map-event checks and
-    /// <see cref="IEncounterOwnershipPolicy"/> carry the rest.
+    /// The caller's state is not a guard here, and the map event is. The loot and aftermath screens run
+    /// while the main party is still in its map event: on that path vanilla removes it inside
+    /// `PlayerEncounter.Finish` (`MapEvent.FinalizeEventAux` calls `MapEventSide.HandleMapEventEnd`, and
+    /// `MapEvent.Update` skips `FinishBattle` for the player's event while an encounter is open), so the
+    /// `presence.IsInMapEvent` guard keeps the sweep out of that window in every state. Other exits leave
+    /// the encounter open with the party already out of the event (a repulsed assault, an army leader
+    /// leaving, `LeaveBattle`). An encounter with no map event behind it has outlived its battle, and
+    /// `IEncounterOwnershipPolicy` decides whether it is ours to close.
     /// </summary>
     private void SweepStrandedEncounter(
         PlayerPresenceSnapshot presence, bool commanderInMapEvent, string commanderPartyId)
@@ -441,15 +435,15 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// event. A join that lands and is torn down in the same second produces it, and nothing else
     /// in this feature can move it. <c>ServiceMaintenanceService.TryBreakBattleLatch</c> returns on
     /// <c>HasPlayerEncounter</c>; <c>SweepStrandedEncounter</c> returns while the commander is in a
-    /// map event; the ownership policy's R1b defers every intent, discharge included, because the
-    /// encounter reads as a battle; and <c>ServiceBattleService.TryJoin</c> refuses every rejoin
+    /// map event; the ownership policy skips the sweep's intents because the
+    /// encountered party is the opposing leader; and <c>ServiceBattleService.TryJoin</c> refuses every rejoin
     /// because the state is not <c>EnlistedAttached</c>. Four correct guards, no exit between them.
     ///
-    /// THE DISCRIMINATOR IS TIME, and only time. R1b protects the loot and aftermath window, which
-    /// has this exact shape and is legitimate, so the recovery may not act on the shape alone. It
-    /// waits out <c>StaleBattleLatchDays</c> of continuous latching first, which no loot screen
-    /// survives. That is also why it hands R1c the decision rather than calling
-    /// <c>_encounter.Finish</c> itself: the policy owns whether an encounter is ours to close, and
+    /// THE DISCRIMINATOR IS TIME, and only time. The loot and aftermath screens do not have this
+    /// shape (the player stays in his map event until <c>PlayerEncounter.Finish</c>), but nothing
+    /// distinguishes a fresh orphan from one about to be cleared by vanilla, so the recovery waits
+    /// out <c>StaleBattleLatchDays</c> of continuous latching. That is also why it hands R1c the
+    /// decision rather than calling <c>_encounter.Finish</c> itself: the policy owns whether an encounter is ours to close, and
     /// R1 still refuses outright if the player turns out to be in a map event after all.
     ///
     /// WIDENED (#1021): the same timed episode also covers an <c>EnlistedAttached</c> soldier outside a
@@ -566,10 +560,11 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (BreakStaleBattleLatch(record, presence, snapshot.PartyId, nowDays))
             presence = _attachment.GetPresence(record.CommanderHeroId);
 
-        // No map event on either side and no open encounter — there is no battle anywhere. An OPEN
-        // encounter means the battle is still live (loot/aftermath runs inside it, and the map event
-        // reads as gone before the encounter closes), so treating that as "over" would re-park
-        // mid-battle and hand the menu guard the aftermath menus.
+        // No map event on either side and no open encounter — there is no battle anywhere. An open
+        // encounter is not counted as over. During loot and aftermath the map-event terms already
+        // hold, because on that path the main party leaves its event inside `PlayerEncounter.Finish`;
+        // an encounter that outlived its battle belongs to the stale-latch recovery and the sweep,
+        // not to this demotion.
         var noBattleAnywhere = !presence.IsInMapEvent
             && !snapshot.PartyIsInMapEvent
             && !_encounter.HasCurrent;

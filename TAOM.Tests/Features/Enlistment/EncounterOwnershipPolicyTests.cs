@@ -28,10 +28,29 @@ public class EncounterOwnershipPolicyTests
         new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: false,
             playerInsideSettlement: false);
 
-    /// <summary>The loot/aftermath window: encounter still open, map event already cleared.</summary>
-    private static EncounterOwnershipSnapshot BattleAftermath() =>
+    /// <summary>
+    /// A joined battle whose map event is gone but whose encounter is still open. After a join the
+    /// encountered party is the opposing side's leader (v1.4.8 PlayerEncounter.cs:945), and IsJoinedBattle
+    /// stays set until LeaveBattle (:1992), so the engine really produces this shape.
+    /// </summary>
+    private static EncounterOwnershipSnapshot JoinedBattleOutlivedItsEvent() =>
+        new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: false, playerInsideSettlement: false);
+
+    /// <summary>
+    /// The same leftover after a repulsed assault. Likely, not verified: the defending leader of an
+    /// assault is the settlement's party, so no mobile party is encountered.
+    /// </summary>
+    private static EncounterOwnershipSnapshot RepulsedAssaultLeftover() =>
         new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: false,
-            playerInMapEvent: false, isBattleEncounter: true);
+            playerInMapEvent: false, playerInsideSettlement: false);
+
+    /// <summary>The loot window as the engine presents it: the main party is still in its map event.</summary>
+    private static EncounterOwnershipSnapshot LootWindow() =>
+        new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "enemy_lord_party", encounteredPartyIsCommanderRelated: false,
+            playerInMapEvent: true);
 
     private static EncounterOwnershipSnapshot SomeoneElsesParty() =>
         new EncounterOwnershipSnapshot(hasEncounter: true, hasEncounteredMobileParty: true,
@@ -43,26 +62,31 @@ public class EncounterOwnershipPolicyTests
         new EncounterOwnershipSnapshot(hasEncounter: true, conversationInProgress: inConversation,
             hasEncounteredMobileParty: true, encounteredPartyId: "enemy_lord_party",
             encounteredPartyIsCommanderRelated: false,
-            playerInMapEvent: false, playerInsideSettlement: insideSettlement, isBattleEncounter: true);
+            playerInMapEvent: false, playerInsideSettlement: insideSettlement);
 
     // ---- R1c: the stale battle latch (issue #551) ------------------------------------------
 
     [TestMethod]
-    public void StaleBattleLatch_FinishesABattleEncounterNoOtherIntentMay()
+    public void StaleBattleLatch_JoinedBattleOutlivedItsEvent_Finishes()
     {
-        // R1b defers every other intent here, Discharge included, and it is right to: this is the
-        // shape of the loot window. What separates the loot window from the #551 latch is DURATION,
-        // which is why the caller only reaches for this intent after the state has persisted, and
-        // why R1b's own reasoning ("the window is short and every caller retries") is what licenses
-        // the inversion rather than contradicting it.
         Assert.AreEqual(EncounterFinishVerdict.Finish,
             _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch, LatchedBattleEncounter()));
-
-        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
-            _policy.Evaluate(EncounterFinishIntent.Discharge, LatchedBattleEncounter()));
-        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
-            _policy.Evaluate(EncounterFinishIntent.ParkedSweep, LatchedBattleEncounter()));
     }
+
+    [TestMethod]
+    public void Evaluate_Discharge_JoinedBattleOutlivedItsEvent_Finishes()
+        => Assert.AreEqual(EncounterFinishVerdict.Finish,
+            _policy.Evaluate(EncounterFinishIntent.Discharge, JoinedBattleOutlivedItsEvent()));
+
+    [TestMethod]
+    public void Evaluate_StrandedOutsideSettlement_RepulsedAssaultLeftover_Finishes()
+        => Assert.AreEqual(EncounterFinishVerdict.Finish,
+            _policy.Evaluate(EncounterFinishIntent.StrandedOutsideSettlement, RepulsedAssaultLeftover()));
+
+    [TestMethod]
+    public void Evaluate_ParkedSweep_JoinedBattleOutlivedItsEvent_SkipsNotOurs()
+        => Assert.AreEqual(EncounterFinishVerdict.SkipNotOurs,
+            _policy.Evaluate(EncounterFinishIntent.ParkedSweep, JoinedBattleOutlivedItsEvent()));
 
     [TestMethod]
     public void StaleBattleLatch_NeverTearsDownABattleThePlayerIsActuallyIn()
@@ -71,7 +95,7 @@ public class EncounterOwnershipPolicyTests
         // map event; if he is, there is a battle to fight and nothing to recover.
         var inHisOwnBattle = new EncounterOwnershipSnapshot(hasEncounter: true,
             hasEncounteredMobileParty: true, encounteredPartyId: "enemy_lord_party",
-            playerInMapEvent: true, isBattleEncounter: true);
+            playerInMapEvent: true);
 
         Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
             _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch, inHisOwnBattle));
@@ -84,12 +108,12 @@ public class EncounterOwnershipPolicyTests
                 LatchedBattleEncounter(inConversation: true)));
 
     [TestMethod]
-    public void StaleBattleLatch_InsideASettlement_DefersRatherThanDestroyingTheVisit()
+    public void StaleBattleLatch_InsideASettlement_NeverFinishes()
     {
         // The precondition is enforced HERE rather than owed by the caller, the same correction
         // StrandedOutsideSettlement already carries: a caller reading "outside a settlement" from an
         // earlier snapshot in the same tick is how R3 got bypassed the first time.
-        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+        Assert.AreEqual(EncounterFinishVerdict.SkipNotOurs,
             _policy.Evaluate(EncounterFinishIntent.StaleBattleLatch,
                 LatchedBattleEncounter(insideSettlement: true)));
     }
@@ -293,28 +317,16 @@ public class EncounterOwnershipPolicyTests
     }
 
     [TestMethod]
-    public void Evaluate_EveryIntent_BattleEncounter_DefersToTheBattle()
+    public void Evaluate_EveryIntent_LootWindowPlayerStillInMapEvent_DefersToTheBattle()
     {
-        // R1b. An open encounter with no map event is NOT proof the battle is over: the loot and
-        // aftermath menus run inside the still-open encounter, and MapEventSide.Clear() nulls
-        // MainParty.MapEvent BEFORE the encounter closes. EnlistmentReconciler's own
-        // noBattleAnywhere predicate and ServiceBattleService.OnCommanderBattleEnded both already
-        // treat an open encounter as "battle still live" for exactly this reason. Finishing here
-        // tears down the player's own loot screen, and PlayerEncounter.Finish also forces
-        // TimeControlMode.Stop and GameMenu.ExitToLast().
-        //
-        // ONE NAMED EXCEPTION, and it stays named rather than dropping the enum sweep: R1c
-        // (StaleBattleLatch, issue #551) inverts R1b deliberately, because a caller that has already
-        // waited out an hour of this shape is not looking at a loot screen. Every other intent, and
-        // every intent added later, still has to defer here.
+        // The loot and aftermath screens run while the main party is still in its map event: on that
+        // path vanilla removes it inside PlayerEncounter.Finish. R1 therefore protects that window for every
+        // intent, StaleBattleLatch included, and a new intent has to defer here too.
         foreach (EncounterFinishIntent intent in System.Enum.GetValues(typeof(EncounterFinishIntent)))
         {
-            if (intent == EncounterFinishIntent.StaleBattleLatch)
-                continue;
-
             Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
-                _policy.Evaluate(intent, BattleAftermath()),
-                $"intent {intent} tore down a battle encounter");
+                _policy.Evaluate(intent, LootWindow()),
+                $"intent {intent} tore down a battle the player is still in");
         }
     }
 
