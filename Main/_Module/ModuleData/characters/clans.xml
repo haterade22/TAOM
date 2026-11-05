@@ -1081,7 +1081,7 @@
   <Faction
 		id="clan_umbar_1"
 		initial_home_settlement="Settlement.town_U1"
-		name="{=aom_clan_umbar_1_name}House of Casîmirionî"
+		name="{=aom_clan_umbar_casimirioni_name}House of Casîmirionî"
 		tier="6"
 		owner="Hero.lord_U1_1"
 		culture="Culture.umbar"
