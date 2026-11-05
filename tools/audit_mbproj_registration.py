@@ -1,13 +1,29 @@
 #!/usr/bin/env python3
-"""Audit every module's `project.mbproj` for registrations the engine silently ignores.
+"""Audit every module's `project.mbproj` for registrations the engine silently ignores or throws on.
 
-A `<file>` row in `project.mbproj` only ever loads if something ASKS for its `id`.
-`MBObjectManager.GetMergedXmlForNative(id)` walks `XmlResource.MbprojXmls` and keeps the
-entries whose `Id` matches EXACTLY; it is reached from eight hardcoded ids in
-`Module.CreateProcessed*XMLForNative` plus one native callback that builds the id as
-`"soln_" + xmlType`. Native only ever passes the standard type names. So an invented id
-matches nothing, no file is read, and there is no error: the row looks like registration
-and is inert.
+The engine loads a `<file>` row of `project.mbproj` in two independent ways
+(managed half verified on v1.4.8, MBObjectManager.cs:920-946 and the callers listed; NATIVE_BY_TYPE comes from v1.5.5 disassembly of FUN_180719810 and is UNVERIFIED on v1.4.8, whose native DLL holds all thirteen strings):
+
+  Managed, by `id`. `MBObjectManager.GetMergedXmlForNative(id)` walks `XmlResource.MbprojXmls`
+  and keeps the entries whose `Id` matches EXACTLY. It is reached only from the requesters
+  below. An invented id matches nothing, no file is read and nothing is logged: the row looks
+  like registration and is inert.
+  Native, by `type`. Native's loader asks for thirteen kinds of file by `type` (`NATIVE_BY_TYPE`,
+  the callers of `FUN_180719810`), reads each matching row's `name` and never its `id`, so a
+  row of one of those types loads whatever its id is (TAOM's own `soln_module_sound` row loads
+  this way). Any other `type` is ignored. In particular `skin`, `item`, `monster`, `action_set`
+  and `action_type` are not among the thirteen: a row of those types is loaded only through its
+  id.
+
+The set of ids the requesters ask for is not a Python constant here. It is the eight ids of
+`Module.CreateProcessed*XMLForNative`,
+`soln_soundtrack` (`MBMusicManager` reads `MbprojXmls` for it directly; the row's name is
+ignored and the music loads from `<module>/Music/soundtrack.xml`) and five ids native code
+requests by `"soln_" + xmlType`: `soln_movement_sets`, `soln_full_movement_sets`,
+`soln_bone_body_types`, `soln_monster_usage_sets`, `soln_item_usage_sets`. `MANAGED_IDS` holds the
+managed ones and the audit takes the `soln_*` ids of the vanilla Native project.mbproj as a
+STAND-IN for the native ones: it is a superset in practice, not the exact set native asks for.
+Switching to the exact list is follow-up work.
 
 That is not hypothetical. The giant spider shipped `soln_spider_*` ids in 2026-06, its
 action_sets and monster_usage_set never loaded, `GetMonsterUsageIndex("spider")` returned
@@ -20,11 +36,26 @@ therefore never reached the engine while `action_sets.xml` bound them 221 times.
 This is the regression gate for that class. `LOTRLOME_Armory` is a separate, untracked
 module, so a reinstall silently reverts the fix; run this to find out.
 
-Four checks:
-  DEAD-ID    a `soln_*` id outside the vanilla vocabulary  -> the file never loads  (ERROR)
+The file is parsed as XML the way the engine reads it (decoded text, the declared encoding
+ignored; `validate_xml_schemas._parse_like_engine`), so attribute order does not matter.
+
+Checks:
+  BAD-FILE   the file does not parse, its root is not `<base>`, or a `<file>` row has no `id` or
+             no `name`: `XmlResource.GetMbprojxmls` throws at startup. Also an action_types.xml
+             or action_sets.xml that does not parse  (ERROR)
+  DEAD-ID    an id nothing requests AND a `type` outside `NATIVE_BY_TYPE` (a row with no `type`
+             counts as having none)  -> the file never loads  (ERROR)
   UNDECLARED an `<action type=>` bound in action_sets.xml, declared nowhere (ERROR)
   MERGE-RISK a duplicated id that HAS an XSD  -> takes the MergeElements path  (WARN)
   MISSING    a `<file name=>` that is not on disk  (WARN)
+
+Load-bearing test: `NativeTypeTable.test_spider_era_rows_are_dead` replays the six rows that
+were dead (their `type` was action_set, action_type, monster or monster_usage_set, all
+vanilla types). Never widen `NATIVE_BY_TYPE` to the types vanilla's own project.mbproj uses.
+
+Not checked: the exact set of native-requested ids (the stand-in above), that a `type` row's
+`name` is a file native can parse, other native readers of `project.mbproj`, and `<file>` rows
+outside `<base>`.
 
 MISSING is only a warning because vanilla itself ships four of them (`strings.xml`,
 `skeletons.xml`, `tags.xml`, `clothing_materials.xml` are all registered in Native's
@@ -48,15 +79,54 @@ from __future__ import annotations
 
 import argparse
 import os
-import re
 import sys
 import xml.etree.ElementTree as ET
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from validate_xml_schemas import _parse_like_engine, mbproj_rows  # noqa: E402
+
 DEFAULT_GAME_DIR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
-# The modules TAOM's own data surface spans (CLAUDE.md "Three-module data surface").
+# The modules TAOM's own data surface spans (docs/ai-includes/orientation.md, "Three modules").
 # Anything else installed is somebody else's module and is only audited under --all.
 TAOM_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory")
+
+# What the engine can read from a project.mbproj row
+# (managed half verified on v1.4.8, MBObjectManager.cs:920-946 and the callers listed; NATIVE_BY_TYPE comes from v1.5.5 disassembly of FUN_180719810 and is UNVERIFIED on v1.4.8, whose native DLL holds all thirteen strings).
+#
+# MANAGED_IDS: ids a managed caller asks GetMergedXmlForNative for by exact string.
+#   Module.CreateProcessed*XMLForNative: skins, item_holsters, action_sets, action_types,
+#   animations, voice_definitions, sound_event_data, sound_parameter_data
+#   (TaleWorlds.MountAndBlade.Module, the decompile's Module.cs).
+#   (TaleWorlds.MountAndBlade.View.Scripts.MapColorGradeManager, TaleWorlds.MountAndBlade.View.dll).
+#   MBMusicManager reads XmlResource.MbprojXmls for soln_soundtrack directly (the row's name is
+#   ignored; the music loads from <module>/Music/soundtrack.xml).
+# The five ids native code requests by "soln_" + xmlType (soln_movement_sets,
+# soln_full_movement_sets, soln_bone_body_types, soln_monster_usage_sets, soln_item_usage_sets)
+# are not listed: audit_module takes the `soln_*` ids of the vanilla Native project.mbproj as a
+# stand-in for them. It is a stand-in, not the exact set native requests (switching: #987).
+MANAGED_IDS = {
+    "soln_skins",
+    "soln_item_holsters",
+    "soln_action_sets",
+    "soln_action_types",
+    "soln_animations",
+    "soln_voice_definitions",
+    "soln_sound_event_data",
+    "soln_sound_parameter_data",
+    "soln_soundtrack",
+}
+
+# NATIVE_BY_TYPE: the row `type` values native's loader requests by type. Source: the 14 callers
+# of FUN_180719810 (TaleWorlds.Native.dll), which select the rows of a `type` and read each
+# row's `name`, never its `id`. Exactly these thirteen. Not in the list, so loaded only through
+# their id: skin, item, monster, action_set, action_type, monster_usage_set, item_holster,
+# tag and the rest of vanilla's types.
+NATIVE_BY_TYPE = {
+    "hard_coded_sound", "module_sound", "animation_combat_parameters", "native_parameters",
+    "decal_set", "face_animation_record", "postfx", "prebaked_animation", "physics_material",
+    "sound_files", "skinned_decals", "collision_infos", "sound_event_data",
+}
 
 # Actions bound in a module's action_sets.xml that are declared in no action_types.xml
 # anywhere. Pre-existing and NOT the dead-id class: these were never declared at all, so
@@ -76,63 +146,64 @@ UNDECLARED_BASELINE = {
 }
 
 
-def strip_comments(text: str) -> str:
-    return re.sub(r"<!--.*?-->", "", text, flags=re.S)
-
-
-def read(path: str) -> str:
-    with open(path, encoding="utf-8-sig") as handle:
-        return handle.read()
-
-
-def declared_actions(path: str) -> set[str]:
-    """Action names declared in an action_types.xml, ignoring commented-out rows."""
+def action_attrs(path: str, attr: str) -> tuple[list[str], list[str]]:
+    """(values, problems) of the `attr` attribute of every <action> element of an action XML
+    file, in document order, read as XML in any attribute order (a commented-out row is not an
+    element). A file that is absent has neither; one that does not parse is a problem."""
     if not os.path.exists(path):
-        return set()
-    return set(re.findall(r'<action\s+name="([^"]+)"', strip_comments(read(path))))
+        return [], []
+    try:
+        root = _parse_like_engine(path)
+    except (ET.ParseError, OSError, ValueError, LookupError) as exc:
+        return [], [f"{path} cannot be parsed ({exc}); the engine throws at startup."]
+    return [e.get(attr) for e in root.iter("action") if e.get(attr)], []
 
 
 def vanilla_ids(game_dir: str) -> set[str]:
-    """The only `soln_*` vocabulary the engine ever requests, taken from Native itself."""
+    """The `soln_*` ids of Native's own project.mbproj: the stand-in for the ids native
+    requests by `"soln_" + xmlType`."""
     native = os.path.join(game_dir, "Modules", "Native", "ModuleData", "project.mbproj")
-    if not os.path.exists(native):
-        return set()
-    return set(re.findall(r'id="(soln_[a-z_]+)"', strip_comments(read(native))))
+    return {i for i, _, _ in mbproj_rows(native)[0] if i.startswith("soln_")}
 
 
-def audit_module(module_dir: str, game_dir: str, known_ids: set[str]) -> list[tuple[str, str]]:
-    """Return (severity, message) pairs for one module. Severity is ERROR or WARN."""
+def audit_module(module_dir: str, game_dir: str, vanilla: set[str]) -> list[tuple[str, str]]:
+    """Return (severity, message) pairs for one module. Severity is ERROR or WARN. `vanilla` is
+    the stand-in for the ids native requests; the managed requesters and the thirteen native
+    types are added here."""
+    requested = vanilla | MANAGED_IDS
     name = os.path.basename(module_dir.rstrip("\\/"))
     mbproj = os.path.join(module_dir, "ModuleData", "project.mbproj")
     if not os.path.exists(mbproj):
         return []
 
     findings: list[tuple[str, str]] = []
-    body = strip_comments(read(mbproj))
-    rows = re.findall(r'<file\s+id="([^"]+)"\s+name="([^"]+)"', body)
+    rows, problems = mbproj_rows(mbproj)
+    for problem in problems:
+        findings.append(("ERROR", f"{'BAD-FILE':<11}{problem}"))
 
     seen: dict[str, int] = {}
-    for file_id, rel in rows:
+    for file_id, rel, file_type in rows:
         seen[file_id] = seen.get(file_id, 0) + 1
 
-        if file_id.startswith("soln_") and file_id not in known_ids:
+        if file_id not in requested and file_type not in NATIVE_BY_TYPE:
             findings.append((
                 "ERROR",
-                f"DEAD-ID    {file_id}\n"
+                f"{'DEAD-ID':<11}{file_id}\n"
                 f"             -> {rel}\n"
-                f"             nothing ever requests this id, so the file never loads.\n"
+                f"             nothing requests this id and native does not read\n"
+                f"             type={file_type!r}, so the file never loads.\n"
                 f"             Fold its content into the standard-id file instead.",
             ))
 
         target = os.path.join(module_dir, rel.replace("/", os.sep))
         if not os.path.exists(target):
-            findings.append(("WARN", f"MISSING    {file_id} -> {rel} is not on disk"))
+            findings.append(("WARN", f"{'MISSING':<11}{file_id} -> {rel} is not on disk"))
 
     for file_id, count in sorted(seen.items()):
         if count > 1 and os.path.exists(os.path.join(game_dir, "XmlSchemas", f"{file_id}.xsd")):
             findings.append((
                 "WARN",
-                f"MERGE-RISK {file_id} appears {count}x and {file_id}.xsd EXISTS,\n"
+                f"{'MERGE-RISK':<11}{file_id} appears {count}x and {file_id}.xsd EXISTS,\n"
                 f"             so the extra rows take the MergeElements path\n"
                 f"             (KeyNotFoundException at startup, elephant Crash #3).",
             ))
@@ -140,15 +211,23 @@ def audit_module(module_dir: str, game_dir: str, known_ids: set[str]) -> list[tu
     sets_path = os.path.join(module_dir, "ModuleData", "action_sets.xml")
     if os.path.exists(sets_path):
         native_types = os.path.join(game_dir, "Modules", "Native", "ModuleData", "action_types.xml")
-        available = declared_actions(os.path.join(module_dir, "ModuleData", "action_types.xml"))
-        available |= declared_actions(native_types)
-        bound = re.findall(r'<action\s+type="([^"]+)"', strip_comments(read(sets_path)))
+        own_types = os.path.join(module_dir, "ModuleData", "action_types.xml")
+        available: set[str] = set()
+        parse_problems: list[str] = []
+        for types_path in (own_types, native_types):
+            declared, bad = action_attrs(types_path, "name")
+            available.update(declared)
+            parse_problems += bad
+        bound, bad = action_attrs(sets_path, "type")
+        parse_problems += bad
+        for problem in parse_problems:
+            findings.append(("ERROR", f"{'BAD-FILE':<11}{problem}"))
         baseline = UNDECLARED_BASELINE.get(name, set())
         unresolved = sorted({a for a in bound if a not in available} - baseline)
         for action in unresolved:
             findings.append((
                 "ERROR",
-                f"UNDECLARED {action} is bound {bound.count(action)}x in action_sets.xml\n"
+                f"{'UNDECLARED':<11}{action} is bound {bound.count(action)}x in action_sets.xml\n"
                 f"             but declared in no action_types.xml. It resolves to act_none.",
             ))
 
@@ -176,11 +255,13 @@ def main() -> int:
         print("Set $BANNERLORD_GAME_DIR or pass --game-dir. Skipping (not a failure).")
         return 0
 
-    known = vanilla_ids(args.game_dir)
-    if not known:
+    vanilla = vanilla_ids(args.game_dir)
+    if not vanilla:
         print("Could not read Native/ModuleData/project.mbproj; cannot establish the id vocabulary.")
         return 0
-    print(f"Vanilla soln_* vocabulary: {len(known)} ids\n")
+    print(f"Requested ids: {len(vanilla | MANAGED_IDS)} ({len(vanilla)} soln_* ids of Native's "
+          f"project.mbproj as a stand-in for the ids native requests, plus the managed requesters), "
+          f"{len(NATIVE_BY_TYPE)} native types\n")
 
     if args.module:
         names = [args.module]
@@ -197,7 +278,7 @@ def main() -> int:
             continue
         if os.path.exists(os.path.join(path, "ModuleData", "project.mbproj")):
             audited += 1
-        findings.extend(audit_module(path, args.game_dir, known))
+        findings.extend(audit_module(path, args.game_dir, vanilla))
 
     errors = [m for sev, m in findings if sev == "ERROR"]
     warns = [m for sev, m in findings if sev == "WARN"]
@@ -213,7 +294,8 @@ def main() -> int:
 
     print(f"{audited} module(s) with a project.mbproj audited: {len(errors)} error(s), {len(warns)} warning(s)")
     if errors:
-        print("\nA dead id is not a load-order problem and produces no engine error.")
+        print("\nA dead id is not a load-order problem and produces no engine error;")
+        print("a BAD-FILE makes the engine throw at startup.")
         print("Ledger for the 2026-08-28 fix: docs/reference/lotrlome-soln-id-fix.md")
         return 1
     print("No silently-ignored registrations.")

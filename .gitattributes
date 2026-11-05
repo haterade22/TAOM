@@ -22,3 +22,5 @@
 
 # A generated, tracked page: the generator writes LF and the file must diff clean on every machine.
 docs/reference/ranged-troops.html text eol=lf
+# The snapshot's project.mbproj is a byte copy of the live file (LF, UTF-8 BOM) for the same reason.
+docs/reference/lotrlome-armory-snapshot/project.mbproj text eol=lf
