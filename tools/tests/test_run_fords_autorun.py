@@ -859,6 +859,57 @@ class WaitAfterCrashTests(unittest.TestCase):
         self.assertFalse(r.wait_after_crash(self.Proc([None]), 0, said.append))
         self.assertEqual([], said)
 
+    def test_calls_on_poll_while_it_waits_and_once_after(self):
+        polls = []
+        r.wait_after_crash(self.Proc([None, None, 0]), 60, lambda _: None, sleep=lambda _: None, on_poll=lambda: polls.append(1))
+        self.assertEqual(3, len(polls))
+
+
+class SaveEngineDumpTests(unittest.TestCase):
+    """2026-11-05: the crash uploader deleted crashes/<stamp>/dump.dmp when Mike sent the report, so the run kept no dump."""
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, str(self.root), True)
+        self.crashes = self.root / "crashes"
+        self.run = self.root / "run"
+        self.run.mkdir()
+        self.target = self.run / "engine_dump.dmp"
+
+    def write_dump(self, stamp, data, mtime=None):
+        path = self.crashes / stamp / "dump.dmp"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        if mtime is not None:
+            os.utime(path, (mtime, mtime))
+        return path
+
+    def test_copies_a_new_dump_once_its_size_holds_still(self):
+        self.write_dump("a", b"x" * 10)
+        seen, said = {}, []
+        self.assertFalse(r.save_engine_dump(self.crashes, 0, self.target, seen, said.append), "first sight only records the size")
+        self.assertTrue(r.save_engine_dump(self.crashes, 0, self.target, seen, said.append))
+        self.assertEqual(b"x" * 10, self.target.read_bytes())
+        self.assertIn("engine_dump.dmp", said[-1])
+
+    def test_waits_while_the_dump_still_grows(self):
+        path = self.write_dump("a", b"x" * 10)
+        seen = {}
+        r.save_engine_dump(self.crashes, 0, self.target, seen, lambda _: None)
+        path.write_bytes(b"x" * 20)
+        self.assertFalse(r.save_engine_dump(self.crashes, 0, self.target, seen, lambda _: None))
+        self.assertFalse(self.target.exists())
+
+    def test_ignores_a_dump_from_before_the_run(self):
+        self.write_dump("old", b"x" * 10, mtime=1000)
+        seen = {}
+        for _ in range(2):
+            self.assertFalse(r.save_engine_dump(self.crashes, 2000, self.target, seen, lambda _: None))
+        self.assertFalse(self.target.exists())
+
+    def test_a_missing_crashes_folder_saves_nothing(self):
+        self.assertFalse(r.save_engine_dump(self.root / "none", 0, self.target, {}, lambda _: None))
+
 
 class DumpCrashTests(unittest.TestCase):
     """procdump v12.01 returns 0xFFFFFFFE for a dump it wrote and for a pid it never found, so the file decides."""

@@ -637,7 +637,7 @@ bool and one null check per application tick. The standing runbook (the idle gat
   one log line per window, and the post is repeated on each poll while the window lingers. It fails the run on a dialog whose
   title names a crash, and logs any other dialog without touching it.
 - **Crash dump lost (follow-up, no code).** When the game crashes, `Watchdog.exe` asks a human what to do with the dump and the
-  launcher kills it, so the dump is lost (`--keep-on-crash <seconds>` makes it wait that long for a person to answer the dialog first); the copied `rgl_log` and `watchdog_log` files are the only native evidence of an
+  launcher kills it, so the dump is lost (`--keep-on-crash <seconds>` makes it wait that long for a person to answer the dialog first, and copies the engine's dump to `engine_dump.dmp` in the run folder during that wait, before the crash uploader deletes it); the copied `rgl_log` and `watchdog_log` files are the only native evidence of an
   unattended crash. Starting the game under a watchdog configuration that saves the dump without a prompt is not done.
 - **`StopGameOnFocusLost`.** `BannerlordConfig.txt` has `StopGameOnFocusLost=True` on the desktop, and the launcher only logs
   it. It did not pause the mission in the probe run below (mission time ran at ratio 1.00 to wall time); the `clock` line

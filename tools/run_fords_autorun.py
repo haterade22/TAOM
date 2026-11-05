@@ -58,6 +58,7 @@ DEFAULT_IDLE_MINUTES = 10.0
 LAUNCH_SETTINGS = Path(__file__).resolve().parent.parent / "Main" / "Properties" / "launchSettings.json"
 RUNS_ROOT = r"E:\Temp\fords-runs"
 LOGS_DIR = r"C:\ProgramData\Mount and Blade II Bannerlord\logs"
+CRASHES_DIR = r"C:\ProgramData\Mount and Blade II Bannerlord\crashes"
 DONE_FILE = "fords_autorun_done.txt"
 STATUS_FILE = "fords_autorun_status.txt"
 DEFAULT_WALL_LIMIT_SECONDS = 2400.0
@@ -656,18 +657,47 @@ def safe_watch(proc, folder, wall_limit, say):
         return f"runner error: {type(error).__name__}: {error}"
 
 
-def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time):
+def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time, on_poll=None):
     """True when the crashed game ended by itself within the limit. The Watchdog holds the process and asks a person about a dump (a WPF
-    window no script can press), and killing the game loses the dump, so with --keep-on-crash the launcher waits. 0 keeps the old behaviour."""
+    window no script can press), and killing the game loses the dump, so with --keep-on-crash the launcher waits. 0 keeps the old behaviour.
+    on_poll runs on every poll and once more at the end, so the engine's own dump is saved before the crash uploader deletes it."""
     if seconds <= 0:
         return False
     say(f"crash: waiting up to {seconds:g} s; answer the dump dialog on screen, then the game ends")
     deadline = now() + seconds
-    while now() < deadline:
-        if proc.poll() is not None:
+    try:
+        while now() < deadline:
+            if proc.poll() is not None:
+                return True
+            if on_poll is not None:
+                on_poll()
+            sleep(POLL_SECONDS)
+        return False
+    finally:
+        if on_poll is not None:
+            on_poll()
+
+
+def save_engine_dump(crashes_dir, started, target, seen, say):
+    """Copies the newest crashes/<stamp>/dump.dmp written since the run started to target, once its size held still between two calls.
+    Returns True when target holds it. The crash uploader deletes the whole crashes folder when a person sends the report (2026-11-05),
+    so the copy must happen while the launcher waits. seen maps a dump path to the size the last call saw."""
+    try:
+        dumps = [(p, p.stat()) for p in Path(crashes_dir).glob("*/dump.dmp")]
+        dumps = [(p, st) for p, st in dumps if st.st_mtime >= started and st.st_size > 0]
+        if not dumps:
+            return False
+        newest, stat = max(dumps, key=lambda item: item[1].st_mtime)
+        if seen.get(newest) != stat.st_size:
+            seen[newest] = stat.st_size
+            return False
+        if Path(target).is_file() and Path(target).stat().st_size == stat.st_size:
             return True
-        sleep(POLL_SECONDS)
-    return False
+        shutil.copy2(newest, target)
+    except OSError:
+        return False
+    say(f"engine crash dump saved: {target} ({stat.st_size:,} bytes, from {newest})")
+    return True
 
 
 def dump_crash(pid, folder, say, run=subprocess.run, which=shutil.which, timeout=DUMP_SECONDS):
@@ -807,7 +837,9 @@ def run_once(args, game, modules):
     reason = safe_watch(proc, folder, wall_limit, say)
     say("watch ended: " + reason)
     if reason.startswith("crash"):
-        wait_after_crash(proc, args.keep_on_crash, say)
+        seen = {}
+        wait_after_crash(proc, args.keep_on_crash, say,
+                         on_poll=lambda: save_engine_dump(CRASHES_DIR, started, folder / "engine_dump.dmp", seen, say))
         if proc.poll() is None:
             dump_crash(proc.pid, folder, say)
     if reason == "done":

@@ -28,7 +28,9 @@ messages, which are not user input, so a run does not reset the clock it is gate
 
 `--keep-on-crash <seconds>` makes the launcher wait after a crash, because the Watchdog holds the process and asks a person about a dump
 in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
-game to end. The default 0 does not wait: the launcher takes its own dump with procdump if that is on the PATH (below), then stops the
+game to end. While it waits, it copies the engine's own `crashes/<stamp>/dump.dmp` into the run folder as `engine_dump.dmp` once its
+size holds still between two polls, because the crash uploader deletes the whole `crashes` folder when a person sends the report
+(2026-11-05: one dump lost that way). The default 0 does not wait: the launcher takes its own dump with procdump if that is on the PATH (below), then stops the
 game, so the dump the dialog would have written is lost. Pass it whenever someone may be near the PC.
 
 `--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Use 4x for balance runs and 10x only for smoke and crash runs: 10x changes the match, as [balance-log.md](../features/fords-of-war/balance-log.md) measures.
