@@ -78,6 +78,7 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
             if (!File.Exists(_markerPath)) return null;
             var text = File.ReadAllText(_markerPath);
             var info = Parse(text, _markerPath);   // parse the already-read content FIRST
+            info.Evidence = StallEvidenceReader.TryRead(info.LogFilePath);
             // The counterpart to MarkInflight's line, and the more valuable of the two: it puts
             // "the PREVIOUS session died loading scene X" into THIS session's log, so a player who
             // only ever sends the newest log still hands over the scene name. Warning level
@@ -86,7 +87,8 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
                 $"{Tag} stale inflight marker found: the previous session's load of scene " +
                 $"'{(string.IsNullOrEmpty(info.SceneName) ? "<unrecorded>" : info.SceneName)}' " +
                 $"never reached playable (marker written {FormatUtc(info.WrittenUtc)}). " +
-                $"Prior log: {(string.IsNullOrEmpty(info.LogFilePath) ? "<unrecorded>" : info.LogFilePath)}");
+                $"Prior log: {(string.IsNullOrEmpty(info.LogFilePath) ? "<unrecorded>" : info.LogFilePath)} " +
+                $"evidence={info.Evidence?.Classify() ?? StallEvidenceKind.None}");
             // Best-effort consume. If the delete fails (read-only Logs, AV lock), surfacing the
             // stall still matters more than the at-most-once guarantee — a duplicate soft notice
             // next session beats silently dropping a real hang report.

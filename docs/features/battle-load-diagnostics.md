@@ -718,6 +718,7 @@ OUTERMOST gate.
 `TAOM.Tests/Features/BattleLoadDiagnostics/` (307 tests as of 2026-09-22, all green; the 211 quoted here earlier was stale; 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests); see *Crash-durability caveat*:
 
 - `RenderWaitNoticeDeciderTests` (9): one test per reading of the honesty rule.
+- `StallEvidenceTests` (6): the next-session notice's reading of the prior log, with `[Freeze]` lines built by `FreezeLog` so the contract stays one.
 - `MainThreadFreezeWatchdogTests` (16), `MainThreadHeartbeatTests` (3), `FreezeSamplePolicyTests` (6), `FreezeLogTests` (4), `RglLogLocatorTests` (4) and `RglCompileTailTests` (6): the 10/20/40/80 s schedule, one `recovered` line, every stand-down, the heap gate with the E4 calibration, the pinned literals, the engine-log tail.
 - `MissionTickStallWatchdogTests` (13) and `ThreadStackCaptureTests` (3), #634: the 10/20/40 s schedule, episode reset, one stack per thread (a nested same-thread tick is photographed once, as the frame), both threads photographed when the agent tick is stuck on its own, the exit-window stand-down, master-toggle independence, a throwing capture still reported, `Start()` idempotent, the probe's thread record, and the capture's null and dead-thread guards and line format.
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
@@ -742,6 +743,8 @@ A hang freezes the **main thread**, so no in-the-moment dialog can render and th
 - **phase 4** (`Mission.Initialize` prefix) writes `Logs/battle-load-inflight.marker` (scene + UTC + the current `taom_debug` log path);
 - **phase 6 / mission end** (`BattleLoadPhaseBehavior`) deletes it once the load reaches a tick;
 - the **next session's main menu** (`SubModule.OnBeforeInitialModuleScreenSetAsRoot`) calls `TryConsumeStaleMarker()` — a *surviving* marker means the previous load never finished, so `StallReportNotifier` shows a soft `ShowInquiry` ("last battle load may not have finished") with an **Open log folder** button pointing at the prior session's log.
+
+**The notice says what the last load was doing.** `TryConsumeStaleMarker` reads the last 256 KB of the prior log (`StallEvidenceReader`, `StallEvidence.Parse`), scoped to the lines after the last `MissionInitialize`, and adds ` evidence=<Kind>` to its WARNING line. A `[Freeze]` line counts only when no phase line follows it. With the last phase `WaitingForRender`: `rglCompiles` above 0 is `Compiling` ("still being prepared"), `rglCompiles=0` at 60 s or more of silence is `Stuck` ("had stopped loading"), anything else is `RenderWaitUnknown` ("the log cannot tell"). Any other phase adds no sentence and the message is unchanged. The main-thread shader count never decides this.
 
 This complements the watchdog: the watchdog fires for a player who **waits** past the threshold; the marker catches the (more common) player who **force-quits** the hang long before that. The marker lives in `Logs/` alongside `taom_debug_*.log` and the crash bundle, so one folder has everything. Wording is soft because a benign Alt-F4 during a load also leaves a marker — a low-harm false positive.
 
@@ -892,6 +895,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-11-04 (1.4.x, WP113): next-session stall notice says what the last load was doing, from the prior log (LOADING-HANG-04).
 - 2026-11-04 (1.4.x, WP113): render-wait notice that says "compiling" only while the engine log shows compiles.
 - 2026-11-04 (1.4.x, WP113): main-thread heartbeat and `[Freeze]` sampler, with the engine log's `compile_shader` count in every line.
 - 2026-11-04 (1.4.x port, WP113): triage end state from 1.5.x (#1025): a silent render-wait stream is a frozen count, not a drain; session-rate heuristic; render-wait guidance for players.
