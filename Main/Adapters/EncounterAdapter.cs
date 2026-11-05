@@ -1,5 +1,8 @@
 using System;
+using Helpers;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -147,6 +150,26 @@ public sealed class EncounterAdapter : IEncounterAdapter
             {
                 _logger?.LogError($"[Enlistment] IsMainPartyLeadingItsBattleSide failed: {ex.Message}");
                 return null;
+            }
+        }
+    }
+
+    public bool IsAttackBarredByTruce
+    {
+        get
+        {
+            try
+            {
+                // The cast picks the (MenuContext, TextObject) ctor; it only stores its arguments and
+                // IsEnabled defaults to true, so the probe stays enabled unless the check disables it.
+                var probe = new MenuCallbackArgs((MenuContext)null, null);
+                MenuHelper.CheckEnemyAttackableHonorably(probe);
+                return !probe.IsEnabled;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] IsAttackBarredByTruce failed: {ex.Message}");
+                return true;
             }
         }
     }

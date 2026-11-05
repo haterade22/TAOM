@@ -43,10 +43,19 @@ public interface IEncounterAdapter
     /// True when the main party leads its side of its current map event, false when another
     /// party leads it, null when the main party is in no map event at all. The same read the two
     /// enlisted mission behaviors make inline (<c>mapEvent.GetLeaderParty(mapEvent.PlayerSide) ==
-    /// PartyBase.MainParty</c>); exposed here so <c>EnlistmentDeploymentService</c> can feed
-    /// <c>BattleCommandPolicy</c> without touching an engine type (#576).
+    /// PartyBase.MainParty</c>); exposed here so <c>EnlistmentDeploymentService</c> and
+    /// <c>EnlistmentMenuService</c> can feed <c>BattleCommandPolicy</c> without touching an
+    /// engine type (#576, #827).
     /// </summary>
     bool? IsMainPartyLeadingItsBattleSide { get; }
+
+    /// <summary>
+    /// True when vanilla's honour check (<c>MenuHelper.CheckEnemyAttackableHonorably</c>) would
+    /// grey out 'Attack' and 'Send troops' in the encounter menu, which is what a safe-passage
+    /// truce with the enemy faction does to a soldier who is not in an army. Asks that method
+    /// itself so the rule cannot drift. True on error (fail open, so the menu exits stay) (#827).
+    /// </summary>
+    bool IsAttackBarredByTruce { get; }
 
     /// <summary>
     /// True when the given party's map event is still live enough to join. This is a MECHANICAL

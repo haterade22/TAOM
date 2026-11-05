@@ -15,6 +15,9 @@ namespace TAOM.Features.Enlistment;
 ///   service assignment names, and puts him back there after vanilla's own captain and general
 ///   assignment has moved him.</item>
 /// </list>
+/// The encounter-menu gate (<c>EnlistmentMenuService.ShouldBlockBattleExit</c>, #827) starts from this
+/// predicate but is not a fourth consumer that must match: it releases the exits when a safe-passage
+/// truce leaves the soldier no way forward.
 ///
 /// Strip command exactly when the battle was entered as enlisted service
 /// (<see cref="EnlistmentState.EnlistedBattle"/>) and the player does not lead the battle side.

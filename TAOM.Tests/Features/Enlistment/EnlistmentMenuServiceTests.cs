@@ -13,13 +13,98 @@ public class EnlistmentMenuServiceTests
     private IModLogger _logger = null!;
     private EnlistmentStore _store = null!;
     private EnlistmentMenuService _service = null!;
+    private IEncounterAdapter _encounter = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(_logger);
-        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), Substitute.For<IMobilePartyAttachmentAdapter>(), _logger);
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), Substitute.For<IMobilePartyAttachmentAdapter>(), _encounter, _logger);
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleAndCommanderLeadsSide_ReturnsTrue()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+
+        Assert.IsTrue(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleAndPlayerLeadsSide_ReturnsFalse()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EnlistedBattleWithNoMapEvent_ReturnsFalse()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns((bool?)null);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_TruceBarsAttackAndSendTroops_ReturnsFalse()
+    {
+        // Vanilla's honour check greys out both advance options under a safe-passage truce; the
+        // encounter menu is the only thing that advances the player's own map event, so the last
+        // exit must stay (#827).
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(false);
+        _encounter.IsAttackBarredByTruce.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_PlayerLeadsSide_DoesNotProbeTruce()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.IsMainPartyLeadingItsBattleSide.Returns(true);
+
+        Assert.IsFalse(_service.ShouldBlockBattleExit());
+        _ = _encounter.DidNotReceive().IsAttackBarredByTruce;
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EveryNonBattleState_DoesNotReadEncounter()
+    {
+        // Every state but EnlistedBattle, so a state added later is covered without a new row.
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            if (state == EnlistmentState.EnlistedBattle)
+                continue;
+
+            MakeEnlisted(state);
+
+            Assert.IsFalse(_service.ShouldBlockBattleExit(), $"state {state} must not block");
+            _ = _encounter.DidNotReceive().IsMainPartyLeadingItsBattleSide;
+            _ = _encounter.DidNotReceive().IsAttackBarredByTruce;
+        }
+    }
+
+    [TestMethod]
+    public void ShouldBlockBattleExit_EveryStateAndSide_MatchesShouldStripPlayerCommandWithoutTruce()
+    {
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            foreach (var leads in new[] { true, false })
+            {
+                MakeEnlisted(state);
+                _encounter.IsAttackBarredByTruce.Returns(false);
+                _encounter.IsMainPartyLeadingItsBattleSide.Returns(leads);
+                Assert.AreEqual(BattleCommandPolicy.ShouldStripPlayerCommand(state, leads), _service.ShouldBlockBattleExit(),
+                    $"Battle-exit gate and command strip disagree for state {state}, leads={leads}.");
+            }
+        }
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
