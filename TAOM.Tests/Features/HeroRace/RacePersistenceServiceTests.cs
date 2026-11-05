@@ -43,7 +43,7 @@ public class RacePersistenceServiceTests
     {
         // Phase 9b #130 P2 — pre-fix filtered out race=0 (humans) to keep map small. This silently
         // reverted deliberate human-resets on next load. Now all heroes are captured.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_human", 0),
             new HeroRaceInfo("hero_dwarf", 1),
@@ -58,7 +58,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_ClearsPreviousDataOnReCapture()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -72,7 +72,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_EmptyHeroList_StoresNothing()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>());
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>());
 
         _sut.CaptureHeroRaces();
 
@@ -85,7 +85,7 @@ public class RacePersistenceServiceTests
         // Phase 9b #130 P2 — humans are now captured too. Restoring race=0 is the mechanism
         // by which CharacterCreation/Patch3_SetRace/NamedCompanions can deliberately reset a hero
         // to human and have that survive save-load.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_1", 0),
             new HeroRaceInfo("hero_2", 0)
@@ -107,14 +107,14 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void RestoreHeroRaces_RestoresRaceForCapturedHeroes()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
 
         _sut.CaptureHeroRaces();
 
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0)
         });
@@ -127,14 +127,14 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void RestoreHeroRaces_SkipsHeroesNotInSavedMap()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
 
         _sut.CaptureHeroRaces();
 
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_new", 0)
         });
@@ -147,14 +147,14 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void RestoreHeroRaces_SkipsHeroesWhoseRaceAlreadyMatches()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
 
         _sut.CaptureHeroRaces();
 
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -167,7 +167,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void RestoreHeroRaces_LogsRestoredCount()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1),
             new HeroRaceInfo("hero_elf", 2)
@@ -175,7 +175,7 @@ public class RacePersistenceServiceTests
 
         _sut.CaptureHeroRaces();
 
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0),
             new HeroRaceInfo("hero_elf", 0)
@@ -198,7 +198,7 @@ public class RacePersistenceServiceTests
     {
         // Hero captured with race=99 (now-removed mod ID). On restore, IsValidRaceId(99)=false →
         // skip SetHeroRace call entirely so the hero keeps its current XML-defined race.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_removed", 99)
         });
@@ -206,7 +206,7 @@ public class RacePersistenceServiceTests
 
         // Now simulate race=99 having been removed from RaceManager (mod uninstalled).
         _raceManager.IsValidRaceId(99).Returns(false);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_removed", 0) // Currently human at load (XML default)
         });
@@ -221,13 +221,13 @@ public class RacePersistenceServiceTests
     {
         // race=0 (human) is intentionally captured (Phase 9b #130 fix) and must round-trip.
         // The IsValidRaceId guard only fires for non-zero races, so race=0 is always restored.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_reset_to_human", 0)
         });
         _sut.CaptureHeroRaces();
 
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_reset_to_human", 2) // Currently elf at load
         });
@@ -240,7 +240,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void ResetForNewCampaign_WithCapturedRaces_ClearsMap()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -262,7 +262,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void RestoreHeroRaces_AfterReset_DoesNothing()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -270,7 +270,7 @@ public class RacePersistenceServiceTests
         _sut.ResetForNewCampaign();
 
         // After reset, even if the live roster has the same hero, the map is empty and no SetHeroRace fires.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0)
         });
@@ -282,7 +282,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_DuplicateStringIds_StoresFirstOnly()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1),
             new HeroRaceInfo("hero_dwarf", 2)
@@ -313,7 +313,7 @@ public class RacePersistenceServiceTests
         };
         _sut.SyncRaceData(store);
         _raceManager.GetRaceIdFromName("dwarf").Returns(5);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1) // engine loaded the hero with the stale index
         });
@@ -335,7 +335,7 @@ public class RacePersistenceServiceTests
         };
         _sut.SyncRaceData(store);
         _raceManager.IsValidRaceName("elf").Returns(false); // race removed from the module set
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_elf", 0)
         });
@@ -359,7 +359,7 @@ public class RacePersistenceServiceTests
             NextLoadLegend = "human;dwarf"
         };
         _sut.SyncRaceData(store);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_corrupt", 0)
         });
@@ -380,7 +380,7 @@ public class RacePersistenceServiceTests
             NextLoadLegend = "human;dwarf;elf"
         };
         _sut.SyncRaceData(store);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1) // identity mapping: dwarf still resolves to id 1
         });
@@ -393,7 +393,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_SetsLegendFromOrderedRaceNames()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -417,7 +417,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_OneRaceLegend_DoesNotOverwriteRicherCapturedData()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1),
             new HeroRaceInfo("hero_elf", 2)
@@ -427,7 +427,7 @@ public class RacePersistenceServiceTests
 
         // Now the degenerate host: one race in FaceGen, so every hero reads back as human.
         _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0),
             new HeroRaceInfo("hero_elf", 0)
@@ -446,7 +446,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void CaptureHeroRaces_OneRaceLegend_ThenRestore_DoesNotMassHumanizeHeroes()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1),
             new HeroRaceInfo("hero_elf", 2)
@@ -454,7 +454,7 @@ public class RacePersistenceServiceTests
         _sut.CaptureHeroRaces();
 
         _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0),
             new HeroRaceInfo("hero_elf", 0)
@@ -475,7 +475,7 @@ public class RacePersistenceServiceTests
     public void CaptureHeroRaces_OneRaceLegend_LogsWarning()
     {
         _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0)
         });
@@ -491,7 +491,7 @@ public class RacePersistenceServiceTests
         // A genuinely one-race world with nothing captured yet: skipping leaves the map empty, so
         // RestoreHeroRaces takes its "no saved data" path and heroes keep their XML races.
         _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_a", 0)
         });
@@ -510,7 +510,7 @@ public class RacePersistenceServiceTests
         // at all reports zero races. Capturing then would write an EMPTY legend, which RestoreHeroRaces
         // reads as "pre-#330 save" and falls through to the raw-index path — silently reinterpreting
         // every saved value against whatever race order the next session happens to have.
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -534,7 +534,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void SyncRaceData_Loading_AbsentKeys_ClearsStaleState()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1),
             new HeroRaceInfo("hero_elf", 2)
@@ -553,7 +553,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void SyncRaceData_Saving_DoesNotClear()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -569,7 +569,7 @@ public class RacePersistenceServiceTests
     [TestMethod]
     public void ResetForNewCampaign_ClearsLegend()
     {
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 1)
         });
@@ -595,7 +595,7 @@ public class RacePersistenceServiceTests
             // NextLoadLegend deliberately absent — pre-#330 save
         };
         _sut.SyncRaceData(store);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_dwarf", 0)
         });
@@ -615,7 +615,7 @@ public class RacePersistenceServiceTests
         };
         _sut.SyncRaceData(store);
         _raceManager.IsValidRaceId(99).Returns(false);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_removed", 0)
         });
@@ -634,7 +634,7 @@ public class RacePersistenceServiceTests
             NextLoadDict = new Dictionary<string, int> { ["hero_reset_to_human"] = 0 }
         };
         _sut.SyncRaceData(store);
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo("hero_reset_to_human", 2)
         });
@@ -661,7 +661,7 @@ public class RacePersistenceServiceTests
         // Step 1 — CharacterCreation finalize: player gets race=2 (elf).
         const string playerId = "player_hero";
         const int elfRace = 2;
-        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo(playerId, elfRace),
             new HeroRaceInfo("npc_dwarf", 1)
@@ -702,7 +702,7 @@ public class RacePersistenceServiceTests
 
         // Step 5 — OnSessionLaunched restore: heroes are loaded with race=0 (vanilla), Restore
         // re-applies the captured races translated through the legend to the CURRENT ids.
-        freshAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        freshAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo(playerId, 0),
             new HeroRaceInfo("npc_dwarf", 0)
@@ -711,6 +711,133 @@ public class RacePersistenceServiceTests
 
         freshAdapter.Received(1).SetHeroRace(playerId, 7);
         freshAdapter.Received(1).SetHeroRace("npc_dwarf", 4);
+    }
+
+    // --- #1011: dead and disabled heroes. The engine resets CharacterObject.Race from the template
+    // for every non-original character on load, dead ones included, so the roster the adapter
+    // returns holds every hero character and the service treats a dead hero like any other entry.
+
+    [TestMethod]
+    public void CaptureHeroRaces_DeadHeroInRoster_StoresItsRace()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_alive", 0),
+            new HeroRaceInfo("hero_dead_elf", 2)
+        });
+
+        _sut.CaptureHeroRaces();
+
+        Assert.AreEqual(2, _sut.CapturedRaceCount);
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+        Assert.AreEqual(2, store.LastSavedDict["hero_dead_elf"]);
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_DeadHeroRaceDiffers_SetsSavedRace()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dead_dwarf"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dead_dwarf", 0) // reverted to the template race on load
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dead_dwarf", 1);
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_DeadHeroAbsentFromOldSave_DoesNotSetRace()
+    {
+        // A hero who died before #1011 was never captured: keep the reverted race, touch nothing.
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_alive"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_alive", 1),
+            new HeroRaceInfo("hero_died_before_fix", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace("hero_died_before_fix", Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_DeadHeroRemovedRaceName_SkipsAndWarns()
+    {
+        _raceManager.IsValidRaceName("elf").Returns(false);
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dead_elf"] = 2 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dead_elf", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("hero_dead_elf") && s.Contains("no longer exists")));
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_DeadHeroRaceAlreadyMatches_DoesNotSetRace()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dead_dwarf"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dead_dwarf", 1)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_OneRaceLegend_KeepsPriorDeadEntries()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dead_elf", 2)
+        });
+        _sut.CaptureHeroRaces();
+
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+        _heroRosterAdapter.GetAllHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dead_elf", 0)
+        });
+        _sut.CaptureHeroRaces();
+
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human", "dwarf", "elf" });
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dead_elf", 2);
     }
 }
 
