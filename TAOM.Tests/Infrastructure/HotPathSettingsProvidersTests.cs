@@ -9,6 +9,7 @@ using MCM.Abstractions.Base.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features;
+using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
@@ -17,6 +18,8 @@ using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Domain;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.Refuge;
+using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Tests.Migration;
@@ -59,6 +62,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetGetMethod(true);
@@ -145,6 +151,15 @@ public class HotPathSettingsProvidersTests
         // #745: read per hit on a refuge's defenders, real-time and auto-resolve.
         [typeof(RefugeSettingsProvider)] = (() => new RefugeSettingsProvider(),
             nameof(IRefugeSettingsProvider.Enabled), nameof(TaomSettings.EnableRefuges), () => new TaomSettings()),
+        // Settlement nameplate fade: read per frame per visible plate.
+        [typeof(NameplateFadeSettingsProvider)] = (() => new NameplateFadeSettingsProvider(),
+            nameof(INameplateFadeSettingsProvider.Enabled), nameof(TaomSettings.EnableNameplateFade), () => new TaomSettings()),
+        // Battle balance: read per casualty and per roster row in every party strength sum.
+        [typeof(BattleBalanceSettingsProvider)] = (() => new BattleBalanceSettingsProvider(),
+            nameof(IBattleBalanceSettingsProvider.EnableCustomTroopPower), nameof(TaomSettings.EnableCustomTroopPower), () => new TaomSettings()),
+        // Settlement nameplate relation colours: read per frame per plate.
+        [typeof(NameplateRelationSettingsProvider)] = (() => new NameplateRelationSettingsProvider(null),
+            nameof(INameplateRelationSettingsProvider.ColorsEnabled), nameof(TaomSettings.EnableNameplateRelationColors), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -162,6 +177,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];
