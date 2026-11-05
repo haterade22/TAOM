@@ -20,6 +20,7 @@ internal sealed partial class CommandTrialWorld
     internal SeatInput? Input;
 
     internal bool PressesAreIgnored;
+    internal int IgnorePressesFrom;
     internal bool GlideArms = true;
     internal bool FaultOnEntry;
     internal bool FaultInDeployment;
@@ -76,7 +77,7 @@ internal sealed partial class CommandTrialWorld
 
     private void TakeThePress()
     {
-        if (_pending && !PressesAreIgnored)
+        if (_pending && !PressesAreIgnored && (IgnorePressesFrom == 0 || Presses < IgnorePressesFrom))
         {
             _pending = false;
             Take();
@@ -127,6 +128,7 @@ internal sealed partial class CommandTrialWorld
         MarshalFrame(dt);
         ResolveStageTwoAndThree();
         ResolveStageFourAndFive();
+        ResolveRise(dt);
         if (State == SeatState.Rising)
         {
             _blend += dt;

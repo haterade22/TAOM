@@ -285,6 +285,41 @@ internal sealed partial class CommandTrialHost
 
     private void NoteWrite(string site) => MissionThreadGuard.NoteCall(site, _logger.LogError);
 
+    public void PressTime(SeatTimeKey key) => _session.PressTime(key);
+
+    public float TimeLevel => _session.TimeLevel;
+
+    public SeatTimeState ReadTimeState() => _adapter.ReadTime();
+
+    public void SetOtherFastForward(bool raised)
+    {
+        NoteWrite("CommandTrialHost.SetOtherFastForward");
+        _mission.SetFastForwardingFromUI(raised);
+    }
+
+    public bool OtherTimeRequest
+    {
+        get
+        {
+            foreach (var id in SeatTrialRules.EngineRequestIds)
+                if (_mission.GetRequestedTimeSpeed(id, out _))
+                    return true;
+            return false;
+        }
+    }
+
+    public void ReleaseTime() => _session.ResetTime();
+
+    public bool ThirdPerson => !_mission.CameraIsFirstPerson;
+
+    public float LiftHeight() => _adapter.LiftHeight();
+
+    public Vec3f CameraTargetOffset()
+    {
+        var offset = _mission.CustomCameraTargetLocalOffset;
+        return new Vec3f(offset.x, offset.y, offset.z);
+    }
+
     private void WatchFocus()
     {
         _focusHandler ??= _mission.GetMissionBehavior<MissionFormationTargetSelectionHandler>();

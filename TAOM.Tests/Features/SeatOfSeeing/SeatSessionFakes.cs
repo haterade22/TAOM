@@ -37,6 +37,7 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
     internal int GlideCalls;
     internal int HeightLimitReads;
     internal readonly List<SeatMessage> Messages = new();
+    internal readonly List<string?> MessageArguments = new();
     internal int InputReads;
     internal int FactsReads;
     internal readonly List<(float X, float Y)> GroundReads = new();
@@ -139,7 +140,11 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
         return GlideBegins;
     }
 
-    public void Say(SeatMessage message) => Messages.Add(message);
+    public void Say(SeatMessage message, string? argument = null)
+    {
+        Messages.Add(message);
+        MessageArguments.Add(argument);
+    }
 
     public bool IsPanelOpen() => PanelOpen;
 
@@ -222,7 +227,117 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
         TakeCalls++;
         if (TakeThrows != null)
             throw TakeThrows;
+        // Mission.TakeControlOfAgent clears fast forward before it sets the controller (Mission.cs:6407-6414).
+        if (TakeResult.Outcome == SeatTakeOutcome.Taken)
+            FastForward = false;
         return TakeResult;
+    }
+
+    // Stage S6: mission time, kept the way the engine keeps it. FastForward, FixedStep and Paused are the engine's flags. SlowRequests holds the
+    // requests under the Seat's id: a remove with none present throws (Mission.cs:2115-2125), and an add never replaces (2100-2103).
+    internal bool FastForward;
+    internal bool FixedStep;
+    internal bool Paused;
+    internal bool OwnedElsewhere;
+    internal readonly List<float> SlowRequests = new();
+    internal readonly List<string> TimeWrites = new();
+    internal int TimeReads;
+    internal int FastApplies;
+    internal int Stops;
+    internal Exception? StopThrows;
+    /// <summary>The flags stay up after a stop: another view that owns the clock writes them again every frame.</summary>
+    internal bool StopDoesNotStick;
+    internal int StopThrowsTimes = int.MaxValue;
+    internal Exception? PausedThrows;
+    internal Exception? RemoveThrows;
+    internal float LastFastDt;
+
+    public SeatTimeState ReadTime()
+    {
+        TimeReads++;
+        return new SeatTimeState(FastForward, FixedStep, Paused, SlowRequests.Count > 0);
+    }
+
+    // FordsMissionSpeed.Set: level 10 raises the flag with no fixed step, 2 and 4 lower the flag and write the fixed step of a frame that has time.
+    public void ApplyFastTime(int level, float realDt)
+    {
+        FastApplies++;
+        LastFastDt = realDt;
+        TimeWrites.Add("apply:" + level);
+        FastForward = level == 10;
+        FixedStep = level != 10 && realDt > 0f;
+    }
+
+    public void StopFastTime()
+    {
+        Stops++;
+        TimeWrites.Add("stop");
+        if (StopThrows != null && StopThrowsTimes-- > 0)
+            throw StopThrows;
+        if (StopDoesNotStick)
+            return;
+        FastForward = false;
+        FixedStep = false;
+    }
+
+    public void AddSlowRequest(float factor)
+    {
+        TimeWrites.Add("add:" + factor.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        SlowRequests.Add(factor);
+    }
+
+    public void RemoveSlowRequest()
+    {
+        TimeWrites.Add("remove");
+        if (RemoveThrows != null)
+            throw RemoveThrows;
+        if (SlowRequests.Count == 0)
+            throw new ArgumentOutOfRangeException("index", "RemoveTimeSpeedRequest with no request of that id");
+        SlowRequests.RemoveAt(SlowRequests.Count - 1);
+    }
+
+    public void SetPaused(bool paused)
+    {
+        TimeWrites.Add(paused ? "pause" : "resume");
+        if (PausedThrows != null)
+            throw PausedThrows;
+        Paused = paused;
+    }
+
+    internal int OwnerReads;
+
+    public bool ClockOwnedElsewhere()
+    {
+        OwnerReads++;
+        return OwnedElsewhere;
+    }
+
+    // Stage S7: the lift of the third-person view. LiftWrites keeps every offset the Seat wrote, in order.
+    internal bool RisePanelOpen;
+    internal bool RiseFirstPerson;
+    internal float RiseHeight = SeatPanelLift.FieldHeight;
+    internal int RiseReads;
+    internal int HeightReads;
+    internal readonly List<float> LiftWrites = new();
+    internal Exception? LiftThrows;
+
+    public SeatRiseRead ReadRise()
+    {
+        RiseReads++;
+        return new SeatRiseRead(RisePanelOpen, RiseFirstPerson, Facts.BattleMode);
+    }
+
+    public float LiftHeight()
+    {
+        HeightReads++;
+        return RiseHeight;
+    }
+
+    public void SetPanelLift(float metres)
+    {
+        if (LiftThrows != null)
+            throw LiftThrows;
+        LiftWrites.Add(metres);
     }
 }
 
@@ -301,6 +416,7 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
     private bool _keepPanelOpen;
     private bool _heroFightsOn;
     private bool _takeSoldierAfterFall = true;
+    private bool _riseWithPanel;
 
     public bool Enabled
     {
@@ -360,6 +476,16 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
             return _takeSoldierAfterFall;
         }
         set => _takeSoldierAfterFall = value;
+    }
+
+    public bool RiseWithPanel
+    {
+        get
+        {
+            Reads++;
+            return _riseWithPanel;
+        }
+        set => _riseWithPanel = value;
     }
 }
 

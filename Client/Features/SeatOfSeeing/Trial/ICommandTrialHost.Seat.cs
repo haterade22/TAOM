@@ -132,4 +132,31 @@ internal partial interface ICommandTrialHost
 
     /// <summary>Who owns the player team's formations and order controller now.</summary>
     SeatHandOverReading ReadHandOver();
+
+    /// <summary>A time key, through the session method the real key calls from the screen tick.</summary>
+    void PressTime(SeatTimeKey key);
+
+    /// <summary>The level the Seat now holds: 0.25, 0.5, 1, 2, 4 or 10.</summary>
+    float TimeLevel { get; }
+
+    /// <summary>The engine's fast forward flag, its fixed step, the pause, and whether the Seat's request is held.</summary>
+    SeatTimeState ReadTimeState();
+
+    /// <summary>Raises or lowers the engine's fast forward flag as another writer does, through <c>Mission.SetFastForwardingFromUI</c>. A mission flag write: call it after the in-mission-tick marker.</summary>
+    void SetOtherFastForward(bool raised);
+
+    /// <summary>One of the engine's own time speed requests is held (the radial menu, the equip wheel, the order panel, the cheat key).</summary>
+    bool OtherTimeRequest { get; }
+
+    /// <summary>Puts mission time back to normal with no message: the release after a failed step.</summary>
+    void ReleaseTime();
+
+    /// <summary>The hero's view is third person (<c>!Mission.CameraIsFirstPerson</c>).</summary>
+    bool ThirdPerson { get; }
+
+    /// <summary>How high the panel lifts the view in this mission, the constant of section 11; 0 for none.</summary>
+    float LiftHeight();
+
+    /// <summary>The camera target's offset: <c>Mission.CustomCameraTargetLocalOffset</c>.</summary>
+    Vec3f CameraTargetOffset();
 }

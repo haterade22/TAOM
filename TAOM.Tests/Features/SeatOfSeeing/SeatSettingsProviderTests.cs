@@ -25,6 +25,7 @@ public class SeatSettingsProviderTests
         Assert.IsFalse(sut.KeepPanelOpen, "a player who never asks sees vanilla behaviour");
         Assert.IsFalse(sut.HeroFightsOn, "the hand-off stays off until a run in the game proves it (build-spec section 8)");
         Assert.IsTrue(sut.TakeSoldierAfterFall, "it acts only after the fall, in a battle, on its own key");
+        Assert.IsFalse(sut.RiseWithPanel, "section 1 promises vanilla behaviour to a player who never asks for the lift");
     }
 
     [TestMethod]
@@ -38,6 +39,8 @@ public class SeatSettingsProviderTests
         Assert.AreEqual(SeatSettingsProvider.DefaultKeepPanelOpen, settings.SeatKeepPanelOpen);
         Assert.AreEqual(SeatSettingsProvider.DefaultHeroFightsOn, settings.SeatHeroFightsOn);
         Assert.AreEqual(SeatSettingsProvider.DefaultTakeSoldierAfterFall, settings.SeatTakeSoldierAfterFall);
+        Assert.AreEqual(SeatSettingsProvider.DefaultRiseWithPanel, settings.SeatRiseWithPanel);
+        Assert.IsFalse(SeatSettingsProvider.DefaultRiseWithPanel, "a new setting whose default is off, so a player who never asks sees vanilla behaviour");
         Assert.IsFalse(SeatSettingsProvider.DefaultHeroFightsOn, "a default is never flipped under an unchanged name once it ships");
         Assert.IsTrue(SeatSettingsProvider.DefaultTakeSoldierAfterFall);
         Assert.IsTrue(SeatSettingsProvider.DefaultCursorWithPanel);
@@ -50,7 +53,7 @@ public class SeatSettingsProviderTests
     public void SavedValues_AreRead()
     {
         var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true,
-            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false };
+            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false, SeatRiseWithPanel = true };
 
         var sut = new SeatSettingsProvider(settings);
 
@@ -60,6 +63,7 @@ public class SeatSettingsProviderTests
         Assert.IsTrue(sut.KeepPanelOpen);
         Assert.IsTrue(sut.HeroFightsOn);
         Assert.IsFalse(sut.TakeSoldierAfterFall);
+        Assert.IsTrue(sut.RiseWithPanel);
     }
 
     [TestMethod]
@@ -104,6 +108,7 @@ public class SeatSettingsProviderTests
     [DataRow(nameof(TaomSettings.SeatKeepPanelOpen))]
     [DataRow(nameof(TaomSettings.SeatHeroFightsOn))]
     [DataRow(nameof(TaomSettings.SeatTakeSoldierAfterFall))]
+    [DataRow(nameof(TaomSettings.SeatRiseWithPanel))]
     public void EachSetting_SitsInTheSeatGroup_NeedsNoRestart_AndStatesItsDefault(string name)
     {
         var property = typeof(TaomSettings).GetProperty(name)!;
@@ -115,5 +120,16 @@ public class SeatSettingsProviderTests
         var hint = (string)Read(bool_, "HintText");
         StringAssert.Contains(hint, "Default: ");
         StringAssert.StartsWith(hint, "{=taom_seat_mcm_");
+    }
+
+    [TestMethod]
+    public void TheTwoSettingsThatStopTheTimeKeysAndLiftTheView_SayWhatTheyDo()
+    {
+        var enabled = (string)Read(Attribute(typeof(TaomSettings).GetProperty(nameof(TaomSettings.SeatEnabled))!, "SettingPropertyBoolAttribute")!, "HintText");
+        var rise = (string)Read(Attribute(typeof(TaomSettings).GetProperty(nameof(TaomSettings.SeatRiseWithPanel))!, "SettingPropertyBoolAttribute")!, "HintText");
+
+        StringAssert.Contains(enabled, "mission time keys", "the contract has the hint say that the Seat off also stops keys 533 to 535");
+        StringAssert.Contains(rise, "target lock", "a lift drops the target lock, and no new lock starts until the view has sunk");
+        StringAssert.Contains(rise, "third person");
     }
 }

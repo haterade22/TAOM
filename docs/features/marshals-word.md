@@ -265,7 +265,7 @@ with its engine line), `MarshalsWordWiringTests` (the Domain gate, the module, t
    - `python tools/run_command_trial.py --steps volley_holds,volley_looses`
    - `python tools/run_command_trial.py --steps mark_keeps_order`
 
-   A run with no `--steps` arms every step of the Seat and of Marshal's Word in one battle, which the Seat's steps fit and Marshal's do not.
+   A run with no `--steps` arms every step of the Seat and of Marshal's Word in one battle. Prove each stage by its subset; the Seat's rows ran in one battle once (`20261105-003513`), and Marshal's steps do not all fit it.
    Each step waits for a battle and a live session, writes real orders through the player's controller after the in-mission-tick marker, and
    ends in a `[SeatTrial] step=<name> result=PASS|FAIL` line with the facts it judged. A direct order shuts the order panel (the panel's own listener,
    `MissionOrderTroopControllerVM.cs:827`), so a step that holds a key after one opens the panel again first, and `array_keeps_offsets` and

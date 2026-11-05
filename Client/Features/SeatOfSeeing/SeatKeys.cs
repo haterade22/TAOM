@@ -4,7 +4,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing;
 
-/// <summary>The Seat's keys beyond "Take the Seat" (build-spec 6.0), tested once per screen tick so <see cref="SeatView"/> stays small.</summary>
+/// <summary>The Seat's keys beyond "Take the Seat" (build-spec 6.0), tested once per screen tick so <see cref="SeatView"/> stays small, and the per-frame work of mission time and the lift.</summary>
 internal sealed class SeatKeys
 {
     private readonly SeatHotKeys _keys;
@@ -16,8 +16,16 @@ internal sealed class SeatKeys
         _session = session;
     }
 
-    internal void Tick(IInputContext input)
+    internal void Tick(IInputContext input, float dt)
     {
+        if (Pressed(_keys.QuickenTime, input))
+            _session.PressTime(SeatTimeKey.Quicken);
+        if (Pressed(_keys.SlowTime, input))
+            _session.PressTime(SeatTimeKey.Slow);
+        if (Pressed(_keys.StayTime, input))
+            _session.PressTime(SeatTimeKey.Stay);
+        _session.OnFrameTick(dt);
+
         var state = _session.State;
         if (state == SeatState.Off)
             return;

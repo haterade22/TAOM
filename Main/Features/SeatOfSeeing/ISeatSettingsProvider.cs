@@ -20,4 +20,7 @@ internal interface ISeatSettingsProvider
 
     /// <summary>After the hero falls, a key in the Seat takes the soldier at the pointer.</summary>
     bool TakeSoldierAfterFall { get; }
+
+    /// <summary>With the hero's view in third person and the order panel open, the view lifts so the player can see over the ranks.</summary>
+    bool RiseWithPanel { get; }
 }

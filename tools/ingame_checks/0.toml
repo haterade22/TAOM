@@ -1,14 +1,16 @@
-# In-game checks for the Seat of Seeing (stages S1 to S5) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
+# In-game checks for the Seat of Seeing (stages S1 to S7) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
 # issue covers them (Seat contract, Deviations row 8). Read by tools/ingame_verdict.py. The Seat's lines come first; Marshal's Word's checks begin
 # at the comment "Marshal's Word, stages M1" below.
 #
-# The Seat's part: All [Check] lines come from
-# Client/Features/SeatOfSeeing/SeatSession.cs through IOutcomeLog, with the ids in
+# The Seat's part: the [Check] lines come from Client/Features/SeatOfSeeing/SeatSession.cs, SeatTimeControl.cs (time) and
+# SeatRiseControl.cs (rise) through IOutcomeLog, with the ids in
 # Main/Features/SeatOfSeeing/Domain/SeatChecks.cs. Stages S2 and S3 add cursor (the first cursor of a mission), focus (the formation focus
 # patch put the pointer in the handler's field), panel-reopened (keep the panel open reopened it, or the view model could not be reached),
 # hide (the interface hidden, and restored with its reason) and keep and let-go (keeping to a soldier or a company, and letting go).
 # Stage S4 adds fight-on (the hero handed to the AI on the first mission tick of a stay, and handed back on the first one after the leave) and
 # stage S5 adds take (a soldier taken after the fall, with the number of formations the command was handed over for).
+# Stage S6 adds time (a level step, a pause and a resume of mission time, from SeatTimeControl) and stage S7 adds rise (the first lift of the hero's
+# third-person view with the order panel open, with its height).
 # A [PatchApply] line for a Patch140 class that failed or was skipped fails the enter check too: Harmony stops a category at its first failing
 # class, so one such line can leave every later Seat patch off, and some of them are proved only by a press.
 # Stage S1: enter and leave from the state changes (a refused key press writes an enter skip line,
@@ -18,7 +20,7 @@
 #
 # DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
 issue = 0
-title = "Seat of Seeing S1 to S5 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target, glides back, the hero fights on and a soldier can be taken, orders queue, companies keep the array, archers loose on the word, a company marks its target"
+title = "Seat of Seeing S1 to S7 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target, glides back, the hero fights on and a soldier can be taken, mission time steps and pauses, the view rises with the order panel, orders queue, companies keep the array, archers loose on the word, a company marks its target"
 fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
 logs = ["taom"]
 
@@ -35,10 +37,11 @@ fail = [
   '\[SeatOfSeeing\] order ray failed',
   '\[SeatOfSeeing\] expected exactly one Agent\.IsPlayerControlled read',
   '\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)',
+  '\[ERROR\] \[TAOM\] Seat(?:Hero|Screen)Adapter\.\w+ ran off the main mission thread',
 ]
 # A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the lines of the
 # feature's own failures (the view could not start, the key could not register, the order ray threw, the order panel's transpiler found
-# no single read to swap, a Seat patch did not apply). A refused key press writes a skip line, which reads NOT REACHED with its reason.
+# no single read to swap, a Seat patch did not apply, an adapter write ran off the main mission thread). A refused key press writes a skip line, which reads NOT REACHED with its reason.
 absence = "not-reached"
 
 [[check]]
@@ -168,6 +171,36 @@ fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
 # nobody, and so is a kept company whose every unit is refused: neither writes the soldier's own reason. A take that handed over no formation
 # (formations=0) reached the take and did not pass: a hero who commanded nothing is a legitimate take, so it reads NOT REACHED and the human
 # row decides.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.time"
+needs = "in a single player battle press Quicken time (Page Up unless rebound), Slow time (Page Down) and Stay time (Home) with the Seat up or down: one level step, one pause and one resume"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.time result=pass']
+pass = [
+  '\[Check\] id=taom\.seat-of-seeing\.time result=pass mission=[0-9]+ level=(0\.25|0\.5|1|2|4|10) event=level$',
+  '\[Check\] id=taom\.seat-of-seeing\.time result=pass mission=[0-9]+ level=(0\.25|0\.5|1|2|4|10) event=stay$',
+  '\[Check\] id=taom\.seat-of-seeing\.time result=pass mission=[0-9]+ level=(0\.25|0\.5|1|2|4|10) event=resume$',
+]
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.time result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# A key outside Battle mode writes nothing, except Stay time resuming a pause, whatever the setting and the permission, which writes its resume line. A refusal writes a skip line with its reason (denied for a mission that gives the Seat no time, setting-off for a
+# Seat that is disabled, other-clock for a battle whose own view runs the clock) and reads NOT REACHED with it. The three pass lines are three different
+# presses, and each level logs once a mission (the level is in the dedup key). A cancel after a fault, or after a time key pressed with the Seat off, that left time on is tried three times
+# in all and then writes a fail line (reason=cancel-failed); a mission's end has no later tick, so a cancel that left time on there writes none. The Seat's fault line
+# fails it too.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.rise"
+needs = "with Rise to give orders on and your hero's view in third person in a field battle or a siege (the Seat down), open the order panel"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.rise result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.rise result=pass mission=[0-9]+ height=(7|3)\.0$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# One line a mission, at the first lift, with the height the mission gave (7 for a field battle, 3 for a siege or a sally out). A mission with no lift height, a
+# setting that is off, a first-person view and a panel opened in the Seat write nothing, and read NOT REACHED.
 absence = "not-reached"
 
 # ---- Marshal's Word, stages M1 (orders in turn) and M2 (keep the array) ----
@@ -536,6 +569,35 @@ claim = "in a campaign field battle (the one check owed beyond the custom battle
 
 [[human]]
 claim = "a soldier who is retreating, using an engine, wounded below a quarter of his health, a howdah or mumak crew member, a soldier who belongs to no formation or an enemy is refused with one message and a skip line with the reason"
+
+# ---- Stages S6 and S7: what only a person can see ----
+
+[[human]]
+claim = "the time keys (Quicken, Slow and Stay time, Page Up, Page Down and Home unless rebound) step mission time through 0.25, 0.5, 1, 2, 4 and 10 and pause it, from the Seat and from the hero's eyes in a field battle: each press shows one message, the battle visibly slows, quickens and stops, and the sound and the effects behave under the pause and under fast time (the engine's managed writers of the pause flag are the cheat key, the error report and a false at start, and its native PauseMission callback has a caller nobody has read, so the pause's native and sound behaviour under this key is owed)"
+
+[[human]]
+claim = "under a pause the Seat's view still flies and the order panel still opens; the Escape menu opens and closes without leaving the battle paused or un-pausing it"
+
+[[human]]
+claim = "level 10 outside the Seat with a living hero stops at 4, a leave from the Seat at 10 steps down to 4, and with nobody left to fight as level 10 works from the Seat or outside it (after a take the soldier is the main agent, so outside the Seat the ladder stops at 4 again); the F key of the score screen after the hero has fallen raises fast forward and the Seat gives up its slow request or fixed step on the next frame, but the score screen keeps its own copy of the flag (MissionGauntletBattleScore.cs:178), so the first F after the Seat's level 10 writes true and changes nothing and a second F is needed, and one F after a Seat stop writes false and changes nothing (the effect in the game is unverified); at level 10 in the Seat with a living hero, the career ability key (V) may show a false 'still charging' message after a cast, because the fast forward repeats the mission tick"
+
+[[human]]
+claim = "in a Long Defeat battle the quicken key says the battle has its own speed control, slow time and the pause still work (the Seat's half-speed request multiplies into the battle's own speed, so at Long Defeat's 10x a half reads about 5x), and Long Defeat's own speed keys still work"
+
+[[human]]
+claim = "with the Seat turned off in the MCM group, the time keys do nothing and any slow time, fast time or pause they made ends at the next press of a time key (Stay time on a held pause resumes it first, in any mode); in a tournament, an arena and a town they do nothing, and in an online or co-op session they do nothing"
+
+[[human]]
+claim = "with Rise to give orders on and the hero's view in third person, opening the order panel in a field battle lifts the view over the ranks within about half a second and closing it sinks the view in about 0.4 s with no jump, also after a quick close and open; a siege lifts less; first person does not lift"
+
+[[human]]
+claim = "Options > Keybindings > Action shows Quicken time (TAOM) with Page Up, Slow time (TAOM) with Page Down and Stay time (TAOM) with Home, each with its description and no 'ERROR: Text with id' line, and the Seat of Seeing group of the mod options shows Rise to give orders after Take a soldier after your hero falls; in a language other than English the three keys, their descriptions and the setting show the English text and no raw key such as taom_key_seat_quicken"
+
+[[human]]
+claim = "while the view is lifted the target lock key starts no lock, and after the view has sunk the target lock works again (the offset ends at exactly zero)"
+
+[[human]]
+claim = "with Rise to give orders on, under a gatehouse or a roof the view rises through it (a known limit: the engine's box cast does not test the segment from the hero up to the lifted point), and the picture is not stuck inside geometry after the panel closes"
 
 # ---- Marshal's Word, stages M1 and M2: what only a person can see ----
 

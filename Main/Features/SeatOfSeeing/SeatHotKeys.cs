@@ -16,6 +16,9 @@ internal sealed class SeatHotKeys
     private GameKey? _keepTo;
     private GameKey? _hideTheInterface;
     private GameKey? _takeThisSoldier;
+    private GameKey? _quickenTime;
+    private GameKey? _slowTime;
+    private GameKey? _stayTime;
     private bool _resolved;
 
     /// <summary>The key bound to "Take the Seat", or <see cref="InputKey.Invalid"/>.</summary>
@@ -29,6 +32,15 @@ internal sealed class SeatHotKeys
 
     /// <summary>The key bound to "Take this soldier", or <see cref="InputKey.Invalid"/>.</summary>
     public InputKey TakeThisSoldier => Bound(ref _takeThisSoldier);
+
+    /// <summary>The key bound to "Quicken time", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey QuickenTime => Bound(ref _quickenTime);
+
+    /// <summary>The key bound to "Slow time", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey SlowTime => Bound(ref _slowTime);
+
+    /// <summary>The key bound to "Stay time", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey StayTime => Bound(ref _stayTime);
 
     private InputKey Bound(ref GameKey? key)
     {
@@ -50,6 +62,9 @@ internal sealed class SeatHotKeys
             _keepTo = category.GetGameKey(TaomSeatHotKeyCategory.KeepToKeyId);
             _hideTheInterface = category.GetGameKey(TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
             _takeThisSoldier = category.GetGameKey(TaomSeatHotKeyCategory.TakeThisSoldierKeyId);
+            _quickenTime = category.GetGameKey(TaomSeatHotKeyCategory.QuickenTimeKeyId);
+            _slowTime = category.GetGameKey(TaomSeatHotKeyCategory.SlowTimeKeyId);
+            _stayTime = category.GetGameKey(TaomSeatHotKeyCategory.StayTimeKeyId);
             break;
         }
 

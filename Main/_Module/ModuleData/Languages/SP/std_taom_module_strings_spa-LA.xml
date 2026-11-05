@@ -7407,7 +7407,7 @@
 
     <string id="taom_seat_mcm_enabled" text="Enable the Seat of Seeing" />
 
-    <string id="taom_seat_mcm_enabled_hint" text="Lets one key (Take the Seat, default Q, rebindable under Keybindings &gt; Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Off, the key does nothing. Default: on." />
+    <string id="taom_seat_mcm_enabled_hint" text="Lets one key (Take the Seat, default Q, rebindable under Keybindings &gt; Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Off, the key does nothing, the mission time keys (Quicken, Slow and Stay time) stop too, and the next press of one cancels any change they made. Default: on." />
 
     <string id="taom_seat_mcm_begin" text="Begin Battles in the Seat" />
 
@@ -7513,6 +7513,12 @@
     <string id="TAOM_LD_Hud_Speed" text="Speed: {SPEED}x   M  Next speed" />
     <string id="TAOM_LD_Hud_SpeedButton" text="{SPEED}x" />
     <string id="TAOM_LD_Hud_SpeedTitle" text="Game speed" />
+    <string id="taom_seat_time_level" text="Mission time: {LEVEL}x" />
+    <string id="taom_seat_time_stayed" text="The battle is paused. Press Stay time (Home unless rebound) again to go on." />
+    <string id="taom_seat_time_resumed" text="The battle goes on." />
+    <string id="taom_seat_time_other_clock" text="This battle has its own speed control." />
+    <string id="taom_seat_mcm_rise" text="Rise to give orders" />
+    <string id="taom_seat_mcm_rise_hint" text="With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off." />
   </strings>
 
 </base>

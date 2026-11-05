@@ -14,4 +14,8 @@
 [2026-11-03 14:05:56] [INFO] [Check] id=taom.seat-of-seeing.fight-on result=pass mission=1 event=begin
 [2026-11-03 14:06:01] [INFO] [Check] id=taom.seat-of-seeing.fight-on result=pass mission=1 event=end
 [2026-11-03 14:06:30] [INFO] [Check] id=taom.seat-of-seeing.take result=pass mission=1 kind=Soldier formations=3
+[2026-11-03 14:06:40] [INFO] [Check] id=taom.seat-of-seeing.time result=pass mission=1 level=2 event=level
+[2026-11-03 14:06:41] [INFO] [Check] id=taom.seat-of-seeing.time result=pass mission=1 level=1 event=stay
+[2026-11-03 14:06:42] [INFO] [Check] id=taom.seat-of-seeing.time result=pass mission=1 level=1 event=resume
+[2026-11-03 14:06:50] [INFO] [Check] id=taom.seat-of-seeing.rise result=pass mission=1 height=7.0
 [2026-11-03 14:20:00] [INFO] [Shutdown] clean module unload

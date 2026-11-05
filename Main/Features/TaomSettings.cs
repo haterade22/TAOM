@@ -2942,7 +2942,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Seat of Seeing", GroupOrder = 82)]
     [SettingPropertyBool("{=taom_seat_mcm_enabled}Enable the Seat of Seeing", Order = 0, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Off, the key does nothing. Default: on.")]
+        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Off, the key does nothing, the mission time keys (Quicken, Slow and Stay time) stop too, and the next press of one cancels any change they made. Default: on.")]
     public bool SeatEnabled { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEnabled;
 
     [SettingPropertyGroup("Seat of Seeing")]
@@ -2969,6 +2969,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_seat_mcm_take}Take a soldier after your hero falls", Order = 5, RequireRestart = false,
         HintText = "{=taom_seat_mcm_take_hint}After your hero falls in a battle, the key Take this soldier (Delete unless rebound, under Options > Keybindings > Action) in the Seat takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Off, the key does nothing. Not in an online session. Default: on.")]
     public bool SeatTakeSoldierAfterFall { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultTakeSoldierAfterFall;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_rise}Rise to give orders", Order = 6, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_rise_hint}With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off.")]
+    public bool SeatRiseWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultRiseWithPanel;
 
     // --- Marshal's Word (docs/features/marshals-word.md) ---
 

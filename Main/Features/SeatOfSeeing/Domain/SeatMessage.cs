@@ -13,4 +13,8 @@ internal enum SeatMessage
     TakeNobody,
     TakeRefused,
     TakeHeroAlive,
+    TimeLevel,
+    TimeStayed,
+    TimeResumed,
+    TimeOtherClock,
 }

@@ -24,6 +24,13 @@ internal static class SeatTrialRows
         new SeatTrialStep("fight_on", new[] { "enter" }, 40f),
         new SeatTrialStep("morale_held", new[] { "fight_on" }, 12f),
         new SeatTrialStep("back_to_stand", new[] { "fight_on" }, 30f),
+        new SeatTrialStep("pause_flies", new[] { "enter" }, 12f),
+        new SeatTrialStep("slow", new[] { "enter" }, 15f),
+        new SeatTrialStep("fast", new[] { "enter" }, 40f),
+        new SeatTrialStep("adopt_flag", new[] { "enter" }, 30f),
+        new SeatTrialStep("speed_cleared", new[] { "enter" }, 25f),
+        new SeatTrialStep("rise_with_panel", new[] { "enter" }, 25f),
+        new SeatTrialStep("sink_on_close", new[] { "rise_with_panel" }, 12f),
         new SeatTrialStep("hero_falls", new[] { "enter" }, 30f),
         new SeatTrialStep("take_soldier", new[] { "hero_falls" }, 30f),
     };

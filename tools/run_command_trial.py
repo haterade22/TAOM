@@ -21,8 +21,8 @@ and the PASS text names the build that was judged and the [Session] swallowed co
 2 is a bad argument; a --dry-run that exits 0 only means the preflight passed. A person still looks at the hud_*.png pictures the run
 saves.
 
-A run with no --steps arms every step, the Seat's and Marshal's Word's together, in ONE battle. The Seat's steps fit that battle; Marshal's Word's do not
-all fit it, because the battle runs out of time and soldiers before the volley and mark steps (docs/features/marshals-word.md, "How to verify in game",
+A run with no --steps arms every step, the Seat's and Marshal's Word's together, in ONE battle. Prove each stage by its subset; the Seat's rows ran in one battle once.
+Marshal's Word's do not all fit it, because the battle runs out of time and soldiers before the volley and mark steps (docs/features/marshals-word.md, "How to verify in game",
 lists the subsets). Run each Marshal's Word subset with its own --steps list, one battle each.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and
@@ -70,6 +70,13 @@ SEAT_STEPS = (
     "fight_on",
     "morale_held",
     "back_to_stand",
+    "pause_flies",
+    "slow",
+    "fast",
+    "adopt_flag",
+    "speed_cleared",
+    "rise_with_panel",
+    "sink_on_close",
     "hero_falls",
     "take_soldier",
 )
@@ -247,7 +254,7 @@ EPILOG = (
 def build_parser():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog=EPILOG)
     parser.add_argument("--scene", default=DEFAULT_SCENE)
-    parser.add_argument("--live-limit", type=runner.positive_seconds, default=DEFAULT_LIVE_LIMIT, help="mission seconds before the game ends the run (default %(default)s)")
+    parser.add_argument("--live-limit", type=runner.positive_seconds, default=DEFAULT_LIVE_LIMIT, help="real seconds with a mission open before the game ends the run (default %(default)s)")
     parser.add_argument("--steps", help="a comma list of steps (default: all of " + ", ".join(STEPS) + ")")
     return parser
 

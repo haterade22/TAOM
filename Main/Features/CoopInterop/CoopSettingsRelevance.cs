@@ -176,13 +176,13 @@ public static class CoopSettingsRelevance
         // Many Hammers (#911): whether YOUR smelting list leaves out the weapons you locked. A view filter on one client's
         // list; no campaign state is read or written.
         "ManyHammersHideLockedEnabled",
-        // Seat of Seeing (S1 to S5): where YOUR camera is, whether it starts a battle in the Seat, whether it shows a cursor with the order panel and
+        // Seat of Seeing (S1 to S7): where YOUR camera is, whether it starts a battle in the Seat, whether it shows a cursor with the order panel and
         // whether the panel reopens after an order (a view toggle on this peer's own panel; the orders it gives are the vanilla panel's). The Seat lifts only this peer's
         // view; the hero stands fast by a controller gate on this client, and in a session the policy gives the camera and the
         // kind's orders (SeatMissionPolicy.cs), with no hand-off, no mission time and no take of a soldier. The last two settings write the hero's
         // controller and the player team's order owner, but only where the policy allows FightOn and TakeSoldier, which a network session never
-        // does. No campaign state is read from any of these settings.
-        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen", "SeatHeroFightsOn", "SeatTakeSoldierAfterFall",
+        // does. SeatRiseWithPanel, the lift of the third-person view with the order panel open, writes only this peer's camera target offset. No campaign state is read from any of these settings.
+        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen", "SeatHeroFightsOn", "SeatTakeSoldierAfterFall", "SeatRiseWithPanel",
         // Marshal's Word (M1 to M4): richer orders for YOUR companies in a single-player battle. The session is off whenever a network
         // session is active (MarshalView.MayRun asks the network fact, the engine's session or a live co-op session), so no value reaches a co-op simulation, and the
         // orders it issues go through the same OrderController a player's click does.

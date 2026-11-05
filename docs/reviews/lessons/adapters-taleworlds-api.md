@@ -1799,3 +1799,11 @@ The Seat and Marshal's Word gated their writes on `GameNetwork.IsSessionActive`.
 - **Why missed:** the name sounds like the question. The contract answered the co-op question with it, and the unit test fed the fact by hand, so nothing pinned where it came from. `coop-interop.md` repeated the same fact, and nobody had read the co-op mod's code for it.
 - **Prevent:** a gate on online play reads the engine's fact or `ICoopSessionProvider.IsSessionActive`, and a test pins both reads. A presentation patch can still change authority: ask who reaches it on a client-hosted mission.
 - **Source:** [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) rows 3 and 4.
+
+### Read every multiplier in `MissionState.TickMission` before you state a clock rate
+
+The fast-forward flag is not the mission's clock. The engine takes a fixed step as the frame (`MissionState.cs:155-158`), multiplies a time speed request into it (`:159-164`), then adds nine more steps in fast forward (`:173`) and the frame itself (`:196`). A level 4 fixed step at 60 FPS under another writer's flag reads about 40x, and a 0.5 request reads 5x. A feature that writes one of these and adopts another writer's flag must give up the rest of its own.
+
+- **Why missed:** the Seat's contract said to write nothing when the flag is adopted, and its test read only the level.
+- **Prevent:** name the three multipliers wherever a rule mentions another writer of the clock, and read the fixed step and the request in the test that adopts the flag.
+- **Source:** [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md), rows 1, 3
