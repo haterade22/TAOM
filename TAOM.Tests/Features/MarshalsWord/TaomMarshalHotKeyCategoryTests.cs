@@ -30,31 +30,33 @@ public class TaomMarshalHotKeyCategoryTests
     private GameKey[] RegisteredKeys => _sut.RegisteredGameKeys.Where(k => k != null).ToArray();
 
     [TestMethod]
-    public void Ctor_RegistersExactlyTheFiveKeys_AtIds540To544()
+    public void Ctor_RegistersExactlyTheSixKeys_AtIds540To545()
     {
         Assert.AreEqual(540, TaomMarshalHotKeyCategory.QueueKeyId);
         Assert.AreEqual(541, TaomMarshalHotKeyCategory.MarkKeyId);
         Assert.AreEqual(542, TaomMarshalHotKeyCategory.KeepWidthsKeyId);
         Assert.AreEqual(543, TaomMarshalHotKeyCategory.FireModeKeyId);
         Assert.AreEqual(544, TaomMarshalHotKeyCategory.WordKeyId);
-        CollectionAssert.AreEqual(new[] { 540, 541, 542, 543, 544 }, RegisteredKeys.Select(k => k.Id).ToArray());
+        Assert.AreEqual(545, TaomMarshalHotKeyCategory.HoldLineKeyId);
+        CollectionAssert.AreEqual(new[] { 540, 541, 542, 543, 544, 545 }, RegisteredKeys.Select(k => k.Id).ToArray());
     }
 
     [TestMethod]
-    public void Defaults_AreTheContractsKeys_TheHeldModifiersAndTheTwoPressedKeys()
+    public void Defaults_AreTheContractsKeys_TheHeldModifiersAndTheThreePressedKeys()
     {
         Assert.AreEqual(InputKey.LeftShift, RegisteredKeys.Single(k => k.Id == 540).KeyboardKey.InputKey);
         Assert.AreEqual(InputKey.LeftControl, RegisteredKeys.Single(k => k.Id == 541).KeyboardKey.InputKey);
         Assert.AreEqual(InputKey.LeftAlt, RegisteredKeys.Single(k => k.Id == 542).KeyboardKey.InputKey);
         Assert.AreEqual(InputKey.Comma, RegisteredKeys.Single(k => k.Id == 543).KeyboardKey.InputKey);
         Assert.AreEqual(InputKey.M, RegisteredKeys.Single(k => k.Id == 544).KeyboardKey.InputKey);
+        Assert.AreEqual(InputKey.Period, RegisteredKeys.Single(k => k.Id == 545).KeyboardKey.InputKey);
     }
 
     [TestMethod]
     public void EveryPressedDefault_IsUnboundInTheCategoriesTheMissionSceneLayerReads()
     {
         // The Seat's rule (contract section 3): a pressed key's default stays clear of every key the scene layer reads, or one press acts twice.
-        // The held keys are the accepted exception, so only 543 and 544 loop here. GenericPanelGameKeyCategory is left out for the Seat's reason.
+        // The held keys are the accepted exception, so only 543, 544 and 545 loop here. GenericPanelGameKeyCategory is left out for the Seat's reason.
         var categories = new GameKeyContext[]
         {
             new GenericGameKeyContext(),
@@ -70,7 +72,7 @@ public class TaomMarshalHotKeyCategoryTests
         {
             var bound = category.RegisteredGameKeys.Where(k => k?.KeyboardKey != null).Select(k => k.KeyboardKey.InputKey)
                 .Concat(category.RegisteredHotKeys.SelectMany(h => h.Keys.Where(k => k != null).Select(k => k.InputKey))).ToList();
-            foreach (var key in RegisteredKeys.Where(k => k.Id == 543 || k.Id == 544))
+            foreach (var key in RegisteredKeys.Where(k => k.Id == 543 || k.Id == 544 || k.Id == 545))
                 CollectionAssert.DoesNotContain(bound, key.KeyboardKey.InputKey, category.GetType().Name + " already binds the default of key " + key.Id);
         }
     }

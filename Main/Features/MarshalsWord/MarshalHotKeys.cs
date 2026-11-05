@@ -16,6 +16,7 @@ internal sealed class MarshalHotKeys
     private GameKey? _keepWidths;
     private GameKey? _fireMode;
     private GameKey? _word;
+    private GameKey? _holdLine;
     private bool _resolved;
 
     /// <summary>The key bound to "Give the order in turn", or <see cref="InputKey.Invalid"/>.</summary>
@@ -32,6 +33,9 @@ internal sealed class MarshalHotKeys
 
     /// <summary>The key bound to "Give the word", or <see cref="InputKey.Invalid"/>.</summary>
     public InputKey Word => Read(ref _word);
+
+    /// <summary>The key bound to "Hold the line", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey HoldLine => Read(ref _holdLine);
 
     private InputKey Read(ref GameKey? key)
     {
@@ -54,6 +58,7 @@ internal sealed class MarshalHotKeys
             _keepWidths = category.GetGameKey(TaomMarshalHotKeyCategory.KeepWidthsKeyId);
             _fireMode = category.GetGameKey(TaomMarshalHotKeyCategory.FireModeKeyId);
             _word = category.GetGameKey(TaomMarshalHotKeyCategory.WordKeyId);
+            _holdLine = category.GetGameKey(TaomMarshalHotKeyCategory.HoldLineKeyId);
             break;
         }
 

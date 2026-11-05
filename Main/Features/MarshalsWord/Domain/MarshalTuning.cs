@@ -61,6 +61,42 @@ internal static class MarshalTuning
     /// <summary>The most a soldier's own delay after a word can be, drawn once when its component is built.</summary>
     internal const double WordJitter = 0.3;
 
+    /// <summary>A Drawing soldier whose draw began longer ago than this many seconds stops counting as eligible for Massed, because it has no view of a target.</summary>
+    internal const double DrawLimit = 6.0;
+
+    /// <summary>The share of the eligible soldiers that must hold before Massed gives the word.</summary>
+    internal const double ReadyShare = 0.7;
+
+    /// <summary>Mission seconds that must pass between two words of a Massed company.</summary>
+    internal const double WordGap = 2.5;
+
+    /// <summary>Mission seconds between two Massed counts.</summary>
+    internal const double MassedPassSeconds = 0.2;
+
+    /// <summary>Mission seconds after hold the line goes on before the proof counts blows, so a swing already begun does not count.</summary>
+    internal const double HoldSettleSeconds = 3.0;
+
+    /// <summary>Mission seconds the hold-the-line proof counts blows for.</summary>
+    internal const double HoldProofSeconds = 10.0;
+
+    /// <summary>Soldiers whose attack flag must read off before the proof judges.</summary>
+    internal const int HoldMinFlagOff = 5;
+
+    /// <summary>Blows the control company must deal in the window before it proves anything.</summary>
+    internal const int HoldControlMinBlows = 10;
+
+    /// <summary>The held company's blows may be at most one in this many of the control's.</summary>
+    internal const int HoldShareDenominator = 10;
+
+    /// <summary>Mission seconds between two hold-the-line summary lines of one company.</summary>
+    internal const double HoldSummarySeconds = 5.0;
+
+    /// <summary>The least mission seconds between two square proof lines of one company.</summary>
+    internal const double SquareLineSeconds = 1.0;
+
+    /// <summary>Two spacing limits closer than this many metres are the same value.</summary>
+    internal const float SpacingEpsilon = 0.001f;
+
     /// <summary>Holding soldiers a company needs before either volley check judges.</summary>
     internal const int VolleyMinHolding = 5;
 
@@ -108,4 +144,28 @@ internal static class MarshalTuning
 
     /// <summary>Fewest sampled soldiers with a target for the mark check to judge.</summary>
     internal const int MarkMinSampled = 3;
+
+    /// <summary>Mission seconds a soldier keeps the attack flag after a real wound, so that a held line still answers a blow (9.2).</summary>
+    internal const double StrikeBackSeconds = 4.0;
+
+    /// <summary>A walk is called away from the slot when the cosine between the input and the direction to the slot is under minus this (9.2).</summary>
+    internal const float SlotAwayDot = 0.3f;
+
+    /// <summary>A held soldier closer than this many metres to the slot is in place and is never steered (9.2).</summary>
+    internal const float SlotSlack = 0.25f;
+
+    /// <summary>Mission seconds between two reads of a held soldier's qualifying facts and slot, and between two passes that apply them (9.2).</summary>
+    internal const double HoldReadSeconds = 1.0 / 3.0;
+
+    /// <summary>Mission seconds between two lines of the slot proof of one held company.</summary>
+    internal const double SlotSummarySeconds = 5.0;
+
+    /// <summary>A held soldier within this many metres of the slot counts as near it in the slot proof.</summary>
+    internal const float SlotNearMetres = 2f;
+
+    /// <summary>Steered hold reads a window needs before the slot proof judges which way the clamp moved the soldiers.</summary>
+    internal const int SlotMinSteered = 5;
+
+    /// <summary>A change in the distance to the slot of less than this many metres between two reads is neither closer nor farther.</summary>
+    internal const float SlotTrendMetres = 0.1f;
 }

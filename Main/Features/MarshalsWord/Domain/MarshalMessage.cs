@@ -7,5 +7,8 @@ internal enum MarshalMessage
     Faulted,
     FireFree,
     FireOnWord,
+    FireMassed,
+    HoldOn,
+    HoldOff,
     WordGiven,
 }

@@ -9,6 +9,7 @@ using TAOM.Client.Features.CustomBattles;
 using TAOM.Client.Features.FiefManagement;
 using TAOM.Client.Features.HallOfFire;
 using TAOM.Client.Features.HostReview;
+using TAOM.Client.Features.MarshalsWord;
 using TAOM.Client.Features.ShaderCompileNotice;
 using TAOM.Client.Features.ShaderPrecompilation;
 using TAOM.Composition;
@@ -19,6 +20,7 @@ using TAOM.Features.FieldCamp;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.HallOfFire;
 using TAOM.Features.HostReview;
+using TAOM.Features.MarshalsWord;
 using TAOM.Features.Refuge;
 using TAOM.Features.Refuge.Visuals;
 using TAOM.Features.ShaderCompileNotice;
@@ -61,6 +63,7 @@ public class TaomClientCompositionTests
         container.Register<IFiefsNavigationElementFactory, NullFiefsNavigationElementFactory>(Reuse.Singleton);
         container.Register<IMapConversationProviderWrapper, NullMapConversationProviderWrapper>(Reuse.Singleton);
         container.Register<IHostReviewOrderProviderRegistrar, NullHostReviewOrderProviderRegistrar>(Reuse.Singleton);
+        container.Register<IMarshalOrderProviderRegistrar, NullMarshalOrderProviderRegistrar>(Reuse.Singleton);
         container.Register<IShaderPrecompileGameManagerFactory, NullShaderPrecompileGameManagerFactory>(Reuse.Singleton);
         container.Register<IShaderCompileNoticeWindowHost, NullShaderCompileNoticeWindowHost>(Reuse.Singleton);
         // The shader factory's constructor dependencies come from core's feature registrations.
@@ -87,6 +90,7 @@ public class TaomClientCompositionTests
         Assert.IsInstanceOfType(container.Resolve<IFiefsNavigationElementFactory>(), typeof(TaomFiefsNavigationElementFactory));
         Assert.IsInstanceOfType(container.Resolve<IMapConversationProviderWrapper>(), typeof(HallOfFireConversationWrapper));
         Assert.IsInstanceOfType(container.Resolve<IHostReviewOrderProviderRegistrar>(), typeof(HostReviewOrderProviderRegistrar));
+        Assert.IsInstanceOfType(container.Resolve<IMarshalOrderProviderRegistrar>(), typeof(MarshalOrderProviderRegistrar));
         Assert.IsInstanceOfType(container.Resolve<IShaderPrecompileGameManagerFactory>(), typeof(ShaderPrecompileGameManagerFactory));
         Assert.IsInstanceOfType(container.Resolve<IShaderCompileNoticeWindowHost>(), typeof(ShaderCompileNoticeWindowHost));
         Assert.IsInstanceOfType(container.Resolve<ICampVisualService>(), typeof(CampVisualService));
@@ -99,11 +103,11 @@ public class TaomClientCompositionTests
             typeof(ICustomBattleFactionSelectionFactory),
             typeof(IMomentumUIService), typeof(IRealmBordersMapViewAdapter), typeof(IFieldCampOverlayAdapter),
             typeof(IFiefsNavigationElementFactory), typeof(IMapConversationProviderWrapper),
-            typeof(IHostReviewOrderProviderRegistrar), typeof(IShaderPrecompileGameManagerFactory),
+            typeof(IHostReviewOrderProviderRegistrar), typeof(IMarshalOrderProviderRegistrar), typeof(IShaderPrecompileGameManagerFactory),
             typeof(IShaderCompileNoticeWindowHost), typeof(ICampVisualService), typeof(IRefugeVisualService),
             typeof(ISupplyRouteVisualService), typeof(IQuestJournalAdapter),
         };
-        Assert.AreEqual(16, container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
+        Assert.AreEqual(17, container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
             "each seam is replaced, never appended");
     }
 }

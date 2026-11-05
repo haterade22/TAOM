@@ -260,6 +260,10 @@ public class MarshalMarkCaptureAndShotTableTests
         public void MarchRequested(IReadOnlyList<MarchTarget> targets)
         {
         }
+
+        public void PanelPress(PanelAction action, IReadOnlyList<int> companies)
+        {
+        }
     }
 
     [TestMethod]
@@ -397,11 +401,11 @@ public class MarshalMarkCaptureAndShotTableTests
     public void TheComponent_RunsItsWholeCallbackInOneTry_AndLatchesOffWithOneSwallowedLine()
     {
         // Agent.cs:1660-1666 calls every component's OnAIInputSet with no try, and the native shim has no finalizer (harmony-patch-registry.md:309).
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
         var body = code.Substring(code.IndexOf("public override void OnAIInputSet(", StringComparison.Ordinal));
 
         StringAssert.Contains(body, "if (_faulted) return; try {");
-        StringAssert.Contains(body, "catch (Exception ex) { _faulted = true; Outcomes.Swallowed(\"MarshalsWord\", \"MarshalFireComponent.OnAIInputSet\", ex); }");
+        StringAssert.Contains(body, "catch (Exception ex) { _faulted = true; Outcomes.Swallowed(\"MarshalsWord\", \"MarshalWordComponent.OnAIInputSet\", ex); }");
     }
 
     [TestMethod]
@@ -409,7 +413,7 @@ public class MarshalMarkCaptureAndShotTableTests
     {
         // Native copies the stored result over the agent's flags before the callback, so a hold repeats each call, and the AI's abandon bit
         // (0x4000) must not stand beside the draw (build-spec 7.2).
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
         StringAssert.Contains(code, "movementFlag &= ~(Agent.MovementControlFlag.AttackMask | Agent.MovementControlFlag.DefendMask); movementFlag |= Agent.MovementControlFlag.AttackDown;");
         StringAssert.Contains(code, "movementFlag &= ~Agent.MovementControlFlag.AttackMask; Volatile.Write(ref _releasedByWord, wordDue ? 1 : 0); Volatile.Write(ref _releasedAt, now);");
@@ -419,7 +423,7 @@ public class MarshalMarkCaptureAndShotTableTests
     public void TheComponent_RecordsWhetherTheWordCausedARelease_SoAHoldThatRanOutIsNotCountedAsTheWordsShot()
     {
         // The release at HoldLimit (MarshalFireRules.Step) clears the same bits as a word's, so only the cause tells a shot of the word from a shot of the limit.
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
         StringAssert.Contains(code, "Apply(step.Action, now, wordDue, ref movementFlag);");
         StringAssert.Contains(code, "return Volatile.Read(ref _releasedByWord) != 0 ? ShotKind.AfterWord : ShotKind.AfterOther;");
@@ -429,7 +433,7 @@ public class MarshalMarkCaptureAndShotTableTests
     public void TheComponent_ReportsNoStandAsideBeforeItsFirstRead_SoTheCensusDoesNotCountAFreshSoldierAsAside()
     {
         // The first callback reads the answer before it uses it, so the starting value is seen only by the census that touches the soldier.
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
         StringAssert.Contains(code, "private bool _standAside; private double _nextAsideRead = double.NegativeInfinity;");
     }
@@ -446,10 +450,11 @@ public class MarshalMarkCaptureAndShotTableTests
     public void TheComponent_WritesNoCanAttack_NoLogLine_AndNoBehaviourWeight()
     {
         // Build-spec 7.4: no AgentFlag.CanAttack, no behaviour weights, no movement input. The callback is a hot path: counters only.
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
-        Assert.IsFalse(Regex.IsMatch(code, @"CanAttack|SetAgentFlags|SetAIBehaviorParams|SetFiringOrder|inputVector\s*="), "the callback writes flags and nothing else");
-        Assert.IsFalse(Regex.IsMatch(code, @"LogInfo|LogWarning|LogError|\.Pass\(""|\.Fail\(|\.Skip\("), "no line is written from the callback; counters only");
+        var callback = code.Substring(code.IndexOf("public override void OnAIInputSet(", StringComparison.Ordinal), code.IndexOf("private void Apply(", StringComparison.Ordinal) - code.IndexOf("public override void OnAIInputSet(", StringComparison.Ordinal));
+        Assert.IsFalse(Regex.IsMatch(callback, @"CanAttack|ApplyHold|SetAgentFlags|SetAIBehaviorParams|SetFiringOrder|inputVector\s*="), "the callback writes the movement flags and nothing else; the attack flag is the driver's, from the mission tick");
+        Assert.IsFalse(Regex.IsMatch(code, @"LogInfo|LogWarning|LogError|\.Pass\(""|\.Fail\(|\.Skip\("), "no line is written from the component; counters only");
         StringAssert.Contains(code, "Holds.Pass();");
         StringAssert.Contains(code, "Releases.Pass();");
     }
@@ -457,7 +462,7 @@ public class MarshalMarkCaptureAndShotTableTests
     [TestMethod]
     public void TheComponent_ReadsItsStandAsideFactsAtMostThreeTimesASecond_AndNeverTheSlotsIndex()
     {
-        var code = Code("Main/Features/MarshalsWord/MarshalFireComponent.cs");
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
         StringAssert.Contains(code, "if (now >= _nextAsideRead) { _standAside = ReadStandsAside(formation, company); _nextAsideRead = now + MarshalTuning.StandAsideReadSeconds; }");
         Assert.IsFalse(Regex.IsMatch(code, @"Agent\.Index"), "never key on Agent.Index");
@@ -471,9 +476,10 @@ public class MarshalMarkCaptureAndShotTableTests
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
 
         StringAssert.Contains(code, "if (_touched.Add(agent)) agent.SetHasOnAiInputSetCallback(true);");
-        StringAssert.Contains(code, "if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted) return; agent.SetHasOnAiInputSetCallback(false); agent.GetComponent<MarshalFireComponent>()?.Reset();");
+        StringAssert.Contains(code, "if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted) return;");
+        StringAssert.Contains(code, "try { if (component is { OwesAttackFlag: true } or { OwesFiringOrder: true }) component.ReleaseHold(); } finally { agent.SetHasOnAiInputSetCallback(false); component?.Reset(); }");
         StringAssert.Contains(code, "MissionThreadGuard.NoteCall(\"MarshalFireAdapter.Sweep\", _logger.LogError);");
-        Assert.IsFalse(Regex.IsMatch(code, @"\.Index\b"), "the touched set is keyed by the agent object");
+        Assert.IsFalse(Regex.IsMatch(code, @"\b(?:agent|unit|Agent)\.Index\b"), "the touched set is keyed by the agent object, never its index; a company is the formation's Index");
     }
 
     [TestMethod]
@@ -482,7 +488,7 @@ public class MarshalMarkCaptureAndShotTableTests
         // A fault leaves the mission running, so every touched soldier keeps its callback flag until this turns it off (build-spec 7.2).
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
 
-        StringAssert.Contains(code, "public void ReleaseAll() { MissionThreadGuard.NoteCall(\"MarshalFireAdapter.ReleaseAll\", _logger.LogError); foreach (var agent in _touched) TurnOff(agent); Drop(); }");
+        StringAssert.Contains(code, "public void ReleaseAll() { MissionThreadGuard.NoteCall(\"MarshalFireAdapter.ReleaseAll\", _logger.LogError); Exception? first = null; foreach (var agent in _touched) { try { TurnOff(agent); }");
     }
 
     [TestMethod]
@@ -490,8 +496,9 @@ public class MarshalMarkCaptureAndShotTableTests
     {
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
 
-        StringAssert.Contains(code, "_census.Add(new FireCensus(company, _drawing, _holding, _idle, _aside));");
-        StringAssert.Contains(code, "if (state == DrawState.Drawing) _drawing++; else if (state == DrawState.Holding) _holding++; else if (component.StandingAside) _aside++; else _idle++;");
+        StringAssert.Contains(code, "_census.Add(Read(company));");
+        StringAssert.Contains(code, "if (state == DrawState.Drawing) { _drawing[company]++; if (MarshalFireRules.IsStaleDraw(component.StateSince, now)) _stale[company]++; } else if (state == DrawState.Holding) { _holding[company]++; } else if (component.StandingAside) { _aside[company]++; } else { _idle[company]++; }");
+        StringAssert.Contains(code, "if (component.AttackFlagOff) _flagOff[company]++;");
     }
 
     [TestMethod]
@@ -583,7 +590,7 @@ public class MarshalMarkCaptureAndShotTableTests
         // may not evaluate a query system, so the archers are found by its cached flag (FormationQuerySystem.cs:195).
         var code = Code("Client/Features/MarshalsWord/Trial/CommandTrialHost.Marshal.cs");
 
-        StringAssert.Contains(code, "public bool MarshalFaulted => (MarshalSessionOfMission?.Faulted ?? false) || MarshalFireComponent.IsFaulted;");
+        StringAssert.Contains(code, "public bool MarshalFaulted => (MarshalSessionOfMission?.Faulted ?? false) || MarshalWordComponent.IsFaulted;");
         StringAssert.Contains(code, "f.CountOfUnits > 0 && f.QuerySystem.IsRangedFormationReadOnly)");
         Assert.IsFalse(code.Contains("QuerySystem.IsRangedFormation)"), "the evaluating flag writes the engine's cache");
     }
@@ -597,7 +604,8 @@ public class MarshalMarkCaptureAndShotTableTests
         StringAssert.Contains(code, "base.OnAgentShootMissile(shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex); MarshalFireTable.OnShot(shooterAgent);");
         StringAssert.Contains(code, "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && Input.IsKeyPressed(key)");
         StringAssert.Contains(code, "Input.IsGameKeyDown((int)GameKeyDefinition.ShowIndicators)");
-        StringAssert.Contains(code, "var fire = _trialFire || Pressed(_keys.FireMode); var word = _trialWord || Pressed(_keys.Word); _trialFire = false; _trialWord = false;");
+        StringAssert.Contains(code, "var fire = _trialFire || Pressed(_keys.FireMode); var word = _trialWord || Pressed(_keys.Word); var hold = _trialHold || Pressed(_keys.HoldLine); _trialFire = false; _trialWord = false; _trialHold = false;");
+        StringAssert.Contains(code, "base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in attackCollisionData); MarshalFireTable.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);");
     }
 
     [TestMethod]

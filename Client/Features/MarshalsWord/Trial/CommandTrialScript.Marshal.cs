@@ -36,6 +36,7 @@ internal sealed partial class CommandTrialScript
         into["volley_looses"] = s => s.VolleyLooses();
         into["mark_keeps_order"] = s => s.MarkKeepsOrder();
         into["outline_clears"] = s => s.OutlineClears();
+        MarshalM5Steps(into);
     }
 
     private string Faulted() => " faulted=" + Bit(_host.MarshalFaulted);
@@ -107,7 +108,7 @@ internal sealed partial class CommandTrialScript
         _host.PanelOpen && armed ? "" : "reason=not-armed-at-order panel=" + Bit(_host.PanelOpen) + " armed=" + Bit(armed);
 
     // The chosen companies stand at their order points, or hold none, for a moment: an earlier step's walk is over, so what a step reads next is what they hold.
-    private IEnumerable<Verdict> MarshalWaitSettled(int count, float limitSeconds = SettleLimitSeconds)
+    private IEnumerable<Verdict> MarshalWaitSettled(int count, float limitSeconds = SettleLimitSeconds, Func<string>? facts = null)
     {
         var startedAt = _now;
         var stillSince = float.NaN;
@@ -125,7 +126,7 @@ internal sealed partial class CommandTrialScript
             yield return Verdict.Waiting("settle");
         }
 
-        yield return Verdict.Failed("reason=not-settled first=" + Bit(_host.MarshalSettled(0)) + (count > 1 ? " second=" + Bit(_host.MarshalSettled(1)) : ""));
+        yield return Verdict.Failed("reason=not-settled first=" + Bit(_host.MarshalSettled(0)) + (count > 1 ? " second=" + Bit(_host.MarshalSettled(1)) : "") + (facts == null ? "" : facts()));
     }
 
     private IEnumerable<Verdict> MarshalStageColumn()
@@ -363,33 +364,13 @@ internal sealed partial class CommandTrialScript
 
     private IEnumerable<Verdict> VolleyHolds()
     {
-        foreach (var verdict in MarshalBattle())
+        var ground = new VolleyGround();
+        foreach (var verdict in VolleyApproach(ground))
             yield return verdict;
-        var units = _host.MarshalChooseArchers();
-        if (units == 0)
-            yield return Verdict.Failed("reason=no-archers");
-        if (_host.MarshalChooseNearestEnemy() == 0)
-            yield return Verdict.Failed("reason=no-enemy");
-        if (float.IsNaN(_host.MarshalPlanApproach(0, 0, MarshalTrialRules.VolleyReachMetres)))
-            yield return Verdict.Failed("reason=no-point");
-
-        yield return Verdict.InMissionTick;
-        _host.MarshalSelect(0, 1);
-        _host.MarshalMoveTo(0);
-        foreach (var verdict in MarshalWaitSettled(1, ApproachSettleSeconds))
-            yield return verdict;
-        var gap = _host.MarshalEnemyDistance(0);
-        if (_host.MarshalFireMode(0) != FireMode.Free)
-            yield return Verdict.Failed("reason=not-free mode=" + _host.MarshalFireMode(0));
-
-        var controlFrom = _host.MissionTime;
-        var controlWaitedAt = _now;
-        _host.MarshalWatchBegin(0);
-        while (_host.MissionTime - controlFrom < MarshalTrialRules.ControlSeconds && _now - controlWaitedAt < ControlWaitSeconds)
-            yield return Verdict.Waiting("free-fire-control");
-        var freeShots = _host.MarshalWatchShots;
-        var freeShooters = _host.MarshalWatchShooters;
-        _host.MarshalWatchEnd();
+        var units = ground.Units;
+        var gap = ground.Gap;
+        var freeShots = ground.FreeShots;
+        var freeShooters = ground.FreeShooters;
 
         yield return Verdict.InMissionTick;
         _host.MarshalSelect(0, 1);
@@ -441,7 +422,8 @@ internal sealed partial class CommandTrialScript
             yield return Verdict.Waiting("release-window");
 
         var release = _host.MarshalReleaseVerdict;
-        _host.MarshalPressFire();
+        foreach (var verdict in MarshalBackToFree())
+            yield return verdict;
         var facts = "holding=" + holding.ToString(CultureInfo.InvariantCulture) + " judged=" + Bit(release != previous && release != null)
             + (release != null ? " loosed=" + release.Value.Shots.ToString(CultureInfo.InvariantCulture) + " of=" + release.Value.Holding.ToString(CultureInfo.InvariantCulture) : "")
             + Faulted();

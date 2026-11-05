@@ -75,6 +75,12 @@ internal interface IMarshalOrderAdapter
     /// <summary>One read per player company that has a target company: the soldiers that aim at it, for the mark-effect check (build-spec 8.1).</summary>
     IReadOnlyList<MarkSample> ReadMarks();
 
+    /// <summary>One read per player company in the plain engine square, for the square's proof line (build-spec 9.1).</summary>
+    IReadOnlyList<SquareRead> ReadSquares();
+
+    /// <summary>The first player company with a rider but not a significant number of them, with its four limits and the two values it could read; null when there is none (build-spec 9.3).</summary>
+    SpacingRead? ReadSpacing();
+
     /// <summary>Publishes the paces to the speed postfix with one reference write; an empty list clears it.</summary>
     void PublishPaces(IReadOnlyList<MarchPace> paces);
 }

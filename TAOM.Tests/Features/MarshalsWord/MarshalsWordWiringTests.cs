@@ -28,6 +28,7 @@ public class MarshalsWordWiringTests
         var container = new Container();
         new MarshalsWordModule().RegisterServices(container);
         container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.MixedFormations.IFormationLayoutService>());
         return container;
     }
 

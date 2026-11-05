@@ -4586,7 +4586,7 @@
 	<string id="taom_marshal_fault" text="{=taom_marshal_fault}Marshal's Word failed and is off until this scene ends. Your orders work as before." />
 	<!-- TaomSettings.cs -->
 	<string id="taom_marshal_mcm_enabled" text="{=taom_marshal_mcm_enabled}Enable Marshal's Word" />
-	<string id="taom_marshal_mcm_enabled_hint" text="{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on." />
+	<string id="taom_marshal_mcm_enabled_hint" text="{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on, except Spacing Repair, which is decided when the game starts and needs this on at that start. Default: on." />
 	<string id="taom_marshal_mcm_keep_array" text="{=taom_marshal_mcm_keep_array}Keep the Array" />
 	<string id="taom_marshal_mcm_keep_array_hint" text="{=taom_marshal_mcm_keep_array_hint}Once the battle has begun, a click or a drag on the ground moves several selected companies as one body: they keep their places relative to each other, and a drag turns and stretches the whole group. Hold the keep-the-widths key (default Left Alt) to turn the group without stretching it. Off, the companies line up side by side as in the base game. Default: on." />
 	<string id="taom_marshal_mcm_arrive_together" text="{=taom_marshal_mcm_arrive_together}Arrive Together" />
@@ -4668,5 +4668,21 @@
 	<string id="taom_seat_mcm_fight_on_hint" text="{=taom_seat_mcm_fight_on_hint}While you are in the Seat in a battle, your hero fights on with the company, driven by the game's AI, and you get the controls back when you leave. It acts the next time you take the Seat. Not in an online session. Default: off." />
 	<string id="taom_seat_mcm_take" text="{=taom_seat_mcm_take}Take a soldier after your hero falls" />
 	<string id="taom_seat_mcm_take_hint" text="{=taom_seat_mcm_take_hint}After your hero falls in a battle, the key Take this soldier (Delete unless rebound, under Options &gt; Keybindings &gt; Action) in the Seat takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Off, the key does nothing. Not in an online session. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- MarshalScreenAdapter -->
+	<string id="taom_marshal_fire_massed" text="{=taom_marshal_fire_massed}The archers draw and hold, and the word is given for you once most of them are ready. A bow is held for 14 seconds at most." />
+	<string id="taom_marshal_hold_on" text="{=taom_marshal_hold_on}The selected companies hold the line: shielded foot soldiers in a shield wall, circle or square stop attacking until you press Hold the Line again or order a charge." />
+	<string id="taom_marshal_hold_off" text="{=taom_marshal_hold_off}The selected companies fight again." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_marshal_mcm_hollow_square" text="{=taom_marshal_mcm_hollow_square}Hollow Square" />
+	<string id="taom_marshal_mcm_hollow_square_hint" text="{=taom_marshal_mcm_hollow_square_hint}Once the battle has begun, a Square order on a company of yours that you command forms the plain square of the base game, which keeps the side you give it and grows only when its soldiers no longer fit, instead of the packed schiltron. A company of foot and ranged soldiers mixed keeps its mixed layout and ignores the side. Default: on." />
+	<string id="taom_marshal_mcm_spacing_repair" text="{=taom_marshal_mcm_spacing_repair}Spacing Repair" />
+	<string id="taom_marshal_mcm_spacing_repair_hint" text="{=taom_marshal_mcm_spacing_repair_hint}A company of foot soldiers with riders under a tenth of its soldiers keeps the spacing limits of a foot company, as it already keeps their spacing, instead of the limits of cavalry. A change takes a restart of the game, and it applies only if Enable Marshal's Word is on when the game starts. It stays off in a co-op session and on a dedicated server, so that two machines never compute different widths. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- MarshalsWord -->
+	<string id="taom_marshal_panel_fire" text="{=taom_marshal_panel_fire}Archers' fire" />
+	<string id="taom_marshal_panel_word" text="{=taom_marshal_panel_word}Give the word" />
+	<string id="taom_marshal_panel_hold" text="{=taom_marshal_panel_hold}Hold the line" />
+	<string id="taom_marshal_panel_set" text="{=taom_marshal_panel_set}Marshal's Word" />
 
 </strings>

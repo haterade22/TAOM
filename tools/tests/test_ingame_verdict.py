@@ -1484,8 +1484,15 @@ class MarshalsWordManifestTests(unittest.TestCase):
     RELEASE = PREFIX + "volley-release"
     MARK = PREFIX + "mark"
     EFFECT = PREFIX + "mark-effect"
+    MASSED = PREFIX + "massed"
+    HOLD_TOGGLE = PREFIX + "hold"
+    HOLD_LINE = PREFIX + "hold-line"
+    HOLD_SLOT = PREFIX + "hold-slot"
+    HOLD_STRIKE = PREFIX + "hold-strike"
+    SQUARE = PREFIX + "square"
+    SPACING = PREFIX + "spacing"
     STAGE_TWO = [CAPTURED, STARTED, FINISHED, PATIENCE, CLEARED, DECLINED, ARRAY, MARCH, SPREAD]
-    NEW = [FIRE, WORD, HOLD, RELEASE, MARK, EFFECT]
+    NEW = [FIRE, WORD, HOLD, RELEASE, MARK, EFFECT, MASSED, HOLD_TOGGLE, HOLD_LINE, HOLD_SLOT, HOLD_STRIKE, SQUARE, SPACING]
     ALL = STAGE_TWO + NEW
 
     def setUp(self):
@@ -1502,7 +1509,7 @@ class MarshalsWordManifestTests(unittest.TestCase):
     def check(self, check_id):
         return next(c for c in self.manifest().checks if c.id == check_id)
 
-    def test_the_manifest_names_the_fifteen_checks_the_session_writes_after_the_seats_ten_in_stage_order(self):
+    def test_the_manifest_names_the_checks_the_session_writes_after_the_seats_in_stage_order(self):
         ids = [c.id for c in self.manifest().checks]
         self.assertEqual(ids[len(SeatOfSeeingManifestTests.ALL):], self.ALL)
         # The fault id is named by every fail list, and has no check of its own: it must stay at zero. The set is exact.
@@ -1527,9 +1534,161 @@ class MarshalsWordManifestTests(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertTrue(any(pattern.search(line) for pattern in fails), "no fail pattern of the captured check matches: " + line)
 
+
+    # ---- Massed fire, hold the line, the square and the spacing repair ----
+
+    def test_a_massed_word_and_the_volley_after_it_pass_the_massed_check_with_the_eligible_count_on_the_line(self):
+        code, out, _ = self.judge("marshal_massed_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.MASSED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.RELEASE), "PASS", out)
+        self.assertIn("eligible=28", out)
+
+    def test_a_massed_word_that_the_archers_did_not_answer_fails_the_massed_check_and_the_release_check(self):
+        code, out, _ = self.judge("marshal_massed_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.MASSED), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.RELEASE), "FAIL", out)
+
+    def test_a_massed_word_given_to_too_few_holders_reads_not_reached_with_its_reason(self):
+        code, out, _ = self.judge("marshal_massed_few.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.MASSED), "NOT REACHED", out)
+        self.assertIn("reason=too-few-holding", out)
+
+    def test_the_massed_pass_needs_five_holding_and_no_fail_line(self):
+        pattern = self.check(self.MASSED).passes[0]
+        self.assertTrue(pattern.search("[Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=5 shots=4 eligible=6 stale=0"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=4 shots=4 eligible=6 stale=0"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.massed result=skip mission=1 reason=too-few-holding company=1 holding=3"))
+
+    def test_both_presses_of_hold_the_line_are_needed_for_the_hold_check(self):
+        code, out, _ = self.judge("marshal_hold_line_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HOLD_TOGGLE), "PASS", out)
+        self.assertEqual(verdict_of(out, self.HOLD_LINE), "PASS", out)
+        code, out, _ = self.judge("marshal_hold_line_fail.txt")
+        self.assertEqual(verdict_of(out, self.HOLD_TOGGLE), "NOT REACHED", out)
+
+    def test_a_held_company_that_struck_as_often_as_the_control_fails_the_hold_line_check(self):
+        code, out, _ = self.judge("marshal_hold_line_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.HOLD_LINE), "FAIL", out)
+        self.assertIn("blows=37", out)
+
+    def test_a_control_that_fought_too_little_reads_not_reached_with_its_reason(self):
+        code, out, _ = self.judge("marshal_hold_line_no_control.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HOLD_LINE), "NOT REACHED", out)
+        self.assertIn("reason=no-control", out)
+
+    def test_a_quiet_control_skip_followed_by_a_busy_windows_pass_reads_pass(self):
+        code, out, _ = self.judge("marshal_hold_line_quiet_then_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HOLD_LINE), "PASS", out)
+
+    def test_a_held_line_that_stayed_near_its_anchors_passes_and_one_that_wandered_fails(self):
+        code, out, _ = self.judge("marshal_hold_slot_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HOLD_SLOT), "PASS", out)
+        code, out, _ = self.judge("marshal_hold_slot_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.HOLD_SLOT), "FAIL", out)
+        self.assertIn("far=12", out)
+
+    def test_the_slot_pass_names_the_order_and_needs_five_qualified_soldiers(self):
+        pattern = self.check(self.HOLD_SLOT).passes[0]
+        line = "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=%s far=1 order=%s"
+        self.assertTrue(pattern.search(line % (5, "Stop")))
+        self.assertFalse(pattern.search(line % (4, "Stop")))
+        self.assertFalse(pattern.search(line % (30, "Move")), "a moving slot is never judged, so a pass line for it proves nothing")
+        self.assertFalse(pattern.search(line % (30, "None")))
+
+    def test_a_wound_answered_with_the_flag_passes_the_strike_check_and_one_left_disarmed_fails(self):
+        code, out, _ = self.judge("marshal_hold_strike_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.HOLD_STRIKE), "PASS", out)
+        code, out, _ = self.judge("marshal_hold_strike_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.HOLD_STRIKE), "FAIL", out)
+        self.assertIn("flagOn=0", out)
+
+    def test_the_strike_pass_needs_a_settled_wound_and_a_flag_that_is_on(self):
+        pattern = self.check(self.HOLD_STRIKE).passes[0]
+        line = "[Check] id=taom.marshals-word.hold-strike result=pass mission=1 company=1 struck=%s flagOn=%s"
+        self.assertTrue(pattern.search(line % (3, 2)))
+        self.assertFalse(pattern.search(line % (0, 0)))
+        self.assertFalse(pattern.search(line % (3, 0)))
+
+    def test_a_square_that_gave_every_soldier_a_slot_passes_and_one_that_left_two_without_fails(self):
+        code, out, _ = self.judge("marshal_square_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SQUARE), "PASS", out)
+        code, out, _ = self.judge("marshal_square_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.SQUARE), "FAIL", out)
+        self.assertIn("placed=38", out)
+
+    def test_a_square_whose_soldiers_take_their_places_from_the_mixed_layout_is_not_a_pass_of_the_square_row(self):
+        code, out, _ = self.judge("marshal_square_laid_out.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SQUARE), "NOT REACHED", out)
+        code, out, _ = self.judge("marshal_square_pass.txt")
+        self.assertEqual(verdict_of(out, self.SQUARE), "PASS", out)
+
+    def test_the_square_pass_needs_the_square_alone_to_place_the_soldiers(self):
+        pattern = self.check(self.SQUARE).passes[0]
+        line = "[Check] id=taom.marshals-word.square result=pass mission=1 company=1 side=14.5 files=9 ranks=5 units=40 placed=40 laidOut=%s"
+        self.assertTrue(pattern.search(line % 0))
+        self.assertFalse(pattern.search(line % 1), "the side has no effect on a company the layout places, so its line proves nothing")
+
+    def test_a_spacing_transpiler_that_left_a_method_as_it_was_fails_the_spacing_check_and_the_captured_check(self):
+        code, out, _ = self.judge("marshal_spacing_degraded.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.SPACING), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
+
+    def test_a_swallowed_callback_fault_fails_the_rows_whose_proof_rests_on_the_callback(self):
+        code, out, _ = self.judge("marshal_component_fault.txt")
+        self.assertEqual(code, 1, out)
+        for check_id in (self.HOLD, self.MASSED, self.HOLD_SLOT):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "FAIL", out)
+
+    def test_every_site_the_component_swallows_at_fails_the_rows_that_rest_on_the_callback(self):
+        source = (REPO / "Main" / "Features" / "MarshalsWord" / "MarshalWordComponent.cs").read_text(encoding="utf-8")
+        sites = re.findall(r'Outcomes\.Swallowed\("MarshalsWord", "(MarshalWordComponent\.\w+)"', source)
+        self.assertTrue(sites, "the component swallows at its callback")
+        for site in sites:
+            line = "[2026-11-04 14:00:00] [WARNING] [Swallowed] feature=MarshalsWord site=" + site + " first=NullReferenceException. This line is logged once per site"
+            for check_id in (self.HOLD, self.MASSED, self.HOLD_SLOT):
+                with self.subTest(site=site, check_id=check_id):
+                    self.assertTrue(any(pattern.search(line) for pattern in self.check(check_id).fails), "no fail pattern of " + check_id + " matches " + line)
+
+    def test_limits_that_read_as_foot_soldiers_pass_the_spacing_check_and_cavalry_limits_fail_it(self):
+        code, out, _ = self.judge("marshal_spacing_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SPACING), "PASS", out)
+        code, out, _ = self.judge("marshal_spacing_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.SPACING), "FAIL", out)
+        self.assertIn("taom.marshals-word.spacing result=fail", out)
+
+    def test_a_repair_that_is_not_applied_reads_not_reached_with_the_reason_it_names(self):
+        code, out, _ = self.judge("marshal_spacing_not_applied.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.SPACING), "NOT REACHED", out)
+        self.assertIn("reason=coop", out)
+
+    def test_the_spacing_pass_needs_a_rider_in_the_company(self):
+        pattern = self.check(self.SPACING).passes[0]
+        line = "[Check] id=taom.marshals-word.spacing result=pass mission=1 company=1 units=41 riders=%d minDistance=0.00 maxDistance=0.40 minInterval=0.00 maxInterval=0.38 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reads=Infantry"
+        self.assertTrue(pattern.search(line % 1))
+        self.assertFalse(pattern.search(line % 0))
+
     def test_a_full_session_passes_every_check(self):
         code, out, _ = self.judge("marshal_full_pass.txt")
-        self.assertEqual(code, 4, out)  # only the Seat's four are not reached
+        self.assertEqual(code, 4, out)  # every one of the Seat's checks is absent from this fixture, so each reads not reached
         for check_id in self.ALL:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)

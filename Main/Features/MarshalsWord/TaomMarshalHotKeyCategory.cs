@@ -6,9 +6,9 @@ namespace TAOM.Features.MarshalsWord;
 /// <summary>
 /// Registers Marshal's Word's keys as native, rebindable game keys, so they appear in Options > Keybindings under "Action" beside the
 /// vanilla combat keys, built the way <c>TaomSeatHotKeyCategory</c> is. Three keys are held: "Give the order in turn" (540, default Left
-/// Shift), "Mark, do not move" (541, default Left Ctrl) and "Keep the widths" (542, default Left Alt). Two are pressed: "Change the archers'
-/// fire" (543, default Comma) and "Give the word" (544, default M). The ids come from build-spec section 3; 545 (hold the line) joins with its
-/// stage, and each stage raises <see cref="RegisteredSlotCount"/>.
+/// Shift), "Mark, do not move" (541, default Left Ctrl) and "Keep the widths" (542, default Left Alt). Three are pressed: "Change the archers'
+/// fire" (543, default Comma), "Give the word" (544, default M) and "Hold the line" (545, default Period). The ids come from build-spec section 3, and each stage raises
+/// <see cref="RegisteredSlotCount"/>.
 ///
 /// <b>Never register this context on a layer.</b> <c>InputContext.RegisterHotKeyCategory</c> sizes its slot list from the first category
 /// on that layer (116 entries), so an id of 540 would throw. The view holds the <see cref="GameKey"/> reference
@@ -26,21 +26,23 @@ public sealed class TaomMarshalHotKeyCategory : GameKeyContext
     public const int KeepWidthsKeyId = 542;
     public const int FireModeKeyId = 543;
     public const int WordKeyId = 544;
+    public const int HoldLineKeyId = 545;
 
     // RegisterGameKey is an INDEXED write into a list the ctor pre-fills with this many nulls, so this must stay greater than the largest
     // id above or construction throws ArgumentOutOfRangeException. Raise it with each stage's key.
-    private const int RegisteredSlotCount = WordKeyId + 1;
+    private const int RegisteredSlotCount = HoldLineKeyId + 1;
 
     public TaomMarshalHotKeyCategory()
         : base(CategoryId, RegisteredSlotCount, GameKeyContextType.Default)
     {
         // The held keys are read only while the order panel is open, and the feature doc names their vanilla side effects (build-spec section 3).
-        // Comma and M are in none of the eight categories the mission's scene layer reads.
+        // Comma, M and Period are in none of the eight categories the mission's scene layer reads.
         RegisterGameKey(new GameKey(QueueKeyId, "TaomMarshalQueue", CategoryId, InputKey.LeftShift, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(MarkKeyId, "TaomMarshalMark", CategoryId, InputKey.LeftControl, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(KeepWidthsKeyId, "TaomMarshalKeepWidths", CategoryId, InputKey.LeftAlt, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(FireModeKeyId, "TaomMarshalFireMode", CategoryId, InputKey.Comma, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(WordKeyId, "TaomMarshalWord", CategoryId, InputKey.M, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(HoldLineKeyId, "TaomMarshalHoldLine", CategoryId, InputKey.Period, GameKeyMainCategories.ActionCategory));
     }
 
     /// <summary>

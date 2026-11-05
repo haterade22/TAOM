@@ -18,6 +18,7 @@ internal static class MarshalHooks
     private static volatile bool _keepWidthsHeld;
     private static volatile bool _keepArray;
     private static volatile bool _arriveTogether;
+    private static volatile bool _hollowSquare;
     private static volatile bool _arrayFaulted;
     private static volatile OrderController? _playerController;
     private static volatile IMarshalHookSink? _sink;
@@ -48,6 +49,9 @@ internal static class MarshalHooks
     /// <summary>The <c>MarshalArriveTogether</c> setting, copied once a frame while live.</summary>
     internal static bool ArriveTogether => _arriveTogether;
 
+    /// <summary>The <c>MarshalHollowSquare</c> setting, copied once a frame while live.</summary>
+    internal static bool HollowSquare => _hollowSquare;
+
     internal static OrderController? PlayerController
     {
         get => _playerController;
@@ -70,13 +74,14 @@ internal static class MarshalHooks
     }
 
     /// <summary>Written together once a frame by the session, from the keys and the settings.</summary>
-    internal static void Arm(bool queue, bool keepWidths, bool keepArray, bool arriveTogether, bool mark = false)
+    internal static void Arm(bool queue, bool keepWidths, bool keepArray, bool arriveTogether, bool mark = false, bool hollowSquare = false)
     {
         _queueArmed = queue;
         _markArmed = mark;
         _keepWidthsHeld = keepWidths;
         _keepArray = keepArray;
         _arriveTogether = arriveTogether;
+        _hollowSquare = hollowSquare;
     }
 
     /// <summary>The array prefix threw: the takeover is off for the rest of the mission and vanilla lays out every order.</summary>
@@ -93,6 +98,9 @@ internal static class MarshalHooks
 
     internal static void RequestMarch(IReadOnlyList<MarchTarget> targets) => _sink?.MarchRequested(targets);
 
+    /// <summary>A click on a panel entry: the session stores it as it stores a key, and a mission with no live session ignores it.</summary>
+    internal static void PanelPress(PanelAction action, IReadOnlyList<int> companies) => _sink?.PanelPress(action, companies);
+
     /// <summary>True when this sink is the live session. A session that finishes late must not clear the next mission's hooks.</summary>
     internal static bool IsOwnedBy(IMarshalHookSink sink) => ReferenceEquals(_sink, sink);
 
@@ -105,6 +113,7 @@ internal static class MarshalHooks
         _keepWidthsHeld = false;
         _keepArray = false;
         _arriveTogether = false;
+        _hollowSquare = false;
         _playerController = null;
         _sink = null;
         _paces = null;

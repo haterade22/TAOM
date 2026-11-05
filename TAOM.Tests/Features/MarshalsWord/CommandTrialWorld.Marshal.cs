@@ -143,6 +143,8 @@ internal sealed partial class CommandTrialWorld
             EndMarch();
         _outlines = !MarshalSessionLive ? 0 : (_selected.Count > 0 && PanelOpen && OutlinesPaint) ? 30 : (OutlinesClearWhenTheStepCloses ? 0 : _outlines);
         AdvanceArchers(dt);
+        AdvanceMassed();
+        AdvanceHold(dt);
         if (_watching && ArchersExist && MarshalFireMode(0) == FireMode.Free)
             _watchedShots += FreeShotsPerSecond * dt;
     }
@@ -212,7 +214,7 @@ internal sealed partial class CommandTrialWorld
 
     private void AdvanceArchers(float dt)
     {
-        if (!ArchersExist || !_modes.TryGetValue(0, out var mode) || mode != FireMode.OnWord)
+        if (!ArchersExist || !_modes.TryGetValue(0, out var mode) || mode == FireMode.Free)
         {
             _held = 0;
             _holdSince = float.NaN;
@@ -228,6 +230,8 @@ internal sealed partial class CommandTrialWorld
         if (!float.IsNaN(_wordAt) && Time - _wordAt >= MarshalTuning.WordJitter + MarshalTuning.ReleaseWindowPadSeconds)
         {
             _releaseVerdict = new VolleyVerdict(VolleyCheck.Release, WordLoosesThem, _held, WordLoosesThem ? _held : 1);
+            _releasesJudged++;
+            NameTheWordOfTheRelease();
             _wordAt = float.NaN;
         }
     }
@@ -368,6 +372,7 @@ internal sealed partial class CommandTrialWorld
     public void MarshalDrag()
     {
         Note("marshal-drag");
+        ApplySquareDrag();
         TheEngineClosesThePanel();
         _marchLeft = MarchNeverEnds ? float.NaN : 30f;
         var arrangeSideBySide = !ArrayKeepsTheOffsets;
@@ -406,10 +411,13 @@ internal sealed partial class CommandTrialWorld
         return (float)Math.Sqrt((c.X - p.X) * (c.X - p.X) + (c.Y - p.Y) * (c.Y - p.Y));
     }
 
+    /// <summary>The archers' walk never ends: the order point is not reached, whatever the time.</summary>
+    internal bool ArchersCannotSettle;
+
     public bool MarshalSettled(int company)
     {
         var c = Companies[_chosen[company]];
-        return c.TargetX == null || At(c);
+        return !(ArchersCannotSettle && c.Ranged) && (c.TargetX == null || At(c));
     }
 
     public float MarshalAhead(int from, int to) => Companies[_chosen[to]].X - Companies[_chosen[from]].X;
@@ -485,9 +493,9 @@ internal sealed partial class CommandTrialWorld
 
     public int MarshalWatchShooters => _watchedShots > 0f ? FreeShooters : 0;
 
-    public int MarshalIdle(int company) => MarshalFireMode(company) == FireMode.OnWord ? IdleCount : 0;
+    public int MarshalIdle(int company) => MarshalFireMode(company) != FireMode.Free ? IdleCount : 0;
 
-    public int MarshalAside(int company) => MarshalFireMode(company) == FireMode.OnWord ? AsideCount : 0;
+    public int MarshalAside(int company) => MarshalFireMode(company) != FireMode.Free ? AsideCount : 0;
 
     public float MarshalEnemyDistance(int company) => _enemyChosen ? Math.Max(10f, EnemyStartMetres - EnemyClosingSpeed * Time) : float.NaN;
 
@@ -496,6 +504,7 @@ internal sealed partial class CommandTrialWorld
         Note("marshal-charge");
         if (!_enemyChosen)
             return;
+        _chargedAt = Time;
         if (MarshalMarkArmed && MarkTakes)
         {
             _markedEnemy = true;
@@ -539,9 +548,10 @@ internal sealed partial class CommandTrialWorld
     {
         if (!FireKeyWorks)
             return;
-        _modes[0] = MarshalFireMode(0) == FireMode.Free ? FireMode.OnWord : FireMode.Free;
+        _modes[0] = MarshalFireRules.NextMode(MarshalFireMode(0));
         _holdVerdict = null;
         _holdSince = float.NaN;
+        _massedAt = float.NaN;
     }
 
     public void MarshalPressWord()

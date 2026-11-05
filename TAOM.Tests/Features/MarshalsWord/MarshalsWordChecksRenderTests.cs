@@ -11,6 +11,7 @@ using TAOM.Client.Features.MarshalsWord;
 using TAOM.Core.Logging;
 using TAOM.Features.MarshalsWord;
 using TAOM.Features.MarshalsWord.Domain;
+using TAOM.Features.MarshalsWord.Hooks;
 using TAOM.Tests.Features.LoadTimeStamps;
 using static TAOM.Tests.Infrastructure.RepoPaths;
 
@@ -466,11 +467,14 @@ public class MarshalsWordChecksRenderTests
         FirePass(driver, 2.25);
         driver.PressFire();
         FirePass(driver, 3.0);
+        driver.PressFire();
+        FirePass(driver, 4.0);
 
         var lines = new[]
         {
             "[Check] id=taom.marshals-word.fire result=pass mission=1 mode=OnWord company=1",
             "[Check] id=taom.marshals-word.word result=pass mission=1 company=1 holding=6",
+            "[Check] id=taom.marshals-word.fire result=pass mission=1 mode=Massed company=1",
             "[Check] id=taom.marshals-word.fire result=pass mission=1 mode=Free company=1",
         };
         CollectionAssert.AreEqual(lines, CheckLines());
@@ -629,4 +633,221 @@ public class MarshalsWordChecksRenderTests
     }
 
     private static string[] Toml() => File.ReadAllLines(RepoPath("tools", "ingame_checks", "0.toml"));
+
+    [TestMethod]
+    public void RenderedLines_ForAMassedWord_ArePassAndFailAsTheFixturesHoldThem()
+    {
+        foreach (var (loosed, expected, release, fixture) in new[]
+                 {
+                     (19, "[Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=21 shots=19 eligible=28 stale=2",
+                         "[Check] id=taom.marshals-word.volley-release result=pass mission=1 company=1 holding=21 shots=19", "marshal_massed_pass.txt"),
+                     (3, "[Check] id=taom.marshals-word.massed result=fail mission=1 company=1 holding=21 shots=3 eligible=28 stale=2",
+                         "[Check] id=taom.marshals-word.volley-release result=fail mission=1 company=1 holding=21 shots=3", "marshal_massed_fail.txt"),
+                 })
+        {
+            Fresh();
+            var driver = FireDriver(new FakeMarshalFire { Census = { [1] = new FireCensus(1, 6, 21, 3, 0, 2) } });
+            _orders.Selected.Add(1);
+            driver.PressFire();
+            FirePass(driver, 1.0);
+            driver.PressFire();
+            FirePass(driver, 2.0);
+            for (var i = 0; i < loosed; i++)
+                MarshalFireTable.Count(1, ShotKind.AfterWord);
+            for (var t = 2.25; t <= 5.0; t += 0.25)
+                FirePass(driver, t);
+
+            Assert.IsTrue(CheckLines().Contains(expected), string.Join("\n", CheckLines()));
+            Assert.IsTrue(CheckLines().Contains(release), string.Join("\n", CheckLines()));
+            AssertInFixture(fixture, expected, release);
+            MarshalFireTable.Clear();
+        }
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForHoldTheLine_AreTheTogglesAndTheJudgedProofOfTheFixtures()
+    {
+        foreach (var (controlBlows, heldBlows, expected, fixture) in new[]
+                 {
+                     (41, 0, "[Check] id=taom.marshals-word.hold-line result=pass mission=1 company=1 flagOff=30 blows=0 control=2 controlBlows=41 seconds=10.3", "marshal_hold_line_pass.txt"),
+                     (41, 37, "[Check] id=taom.marshals-word.hold-line result=fail mission=1 company=1 flagOff=30 blows=37 control=2 controlBlows=41 seconds=10.3", "marshal_hold_line_fail.txt"),
+                 })
+        {
+            Fresh();
+            var driver = FireDriver(new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 0, 40, 0, 0, 30) } });
+            _orders.Selected.Add(1);
+            for (var i = 0; i < 2; i++)
+                MarshalFireTable.CountBlow(2);
+            driver.PressHold();
+            FirePass(driver, 0.0);
+            FirePass(driver, 3.0);
+            for (var i = 0; i < controlBlows; i++)
+                MarshalFireTable.CountBlow(2);
+            for (var i = 0; i < heldBlows; i++)
+                MarshalFireTable.CountBlow(1);
+            FirePass(driver, 13.25);
+
+            Assert.IsTrue(CheckLines().Contains(expected), string.Join("\n", CheckLines()));
+            AssertInFixture(fixture, expected);
+            MarshalFireTable.Clear();
+        }
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheHoldKey_AreTheOnAndOffLinesOfTheFixtures()
+    {
+        var driver = FireDriver(new FakeMarshalFire());
+        _orders.Selected.Add(1);
+        driver.PressHold();
+        FirePass(driver, 1.0);
+        driver.PressHold();
+        FirePass(driver, 2.0);
+
+        var lines = new[]
+        {
+            "[Check] id=taom.marshals-word.hold result=pass mission=1 hold=on company=1",
+            "[Check] id=taom.marshals-word.hold result=pass mission=1 hold=off company=1",
+        };
+        CollectionAssert.AreEqual(lines, CheckLines());
+        AssertInFixture("marshal_hold_line_pass.txt", lines);
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAControlThatFoughtTooLittle_IsTheSkipTheFixtureHolds()
+    {
+        var driver = FireDriver(new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 0, 40, 0, 0, 30) } });
+        _orders.Selected.Add(1);
+        for (var i = 0; i < 2; i++)
+            MarshalFireTable.CountBlow(2);
+        driver.PressHold();
+        FirePass(driver, 0.0);
+        FirePass(driver, 3.0);
+        for (var i = 0; i < 2; i++)
+            MarshalFireTable.CountBlow(2);
+        FirePass(driver, 13.25);
+
+        var skip = CheckLines().Single(l => l.Contains("hold-line result=skip"));
+        StringAssert.EndsWith(skip, "reason=no-control");
+        StringAssert.StartsWith(skip, "[Check] id=taom.marshals-word.hold-line result=skip mission=1 company=1 flagOff=30 blows=0 control=2 controlBlows=2");
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheSquareAndTheSpacing_AreTheOnesTheFixturesHold()
+    {
+        var watch = new MarshalProofWatch(_orders, _log, _logger, "1");
+        MarshalSpacingPatch.WhyNot = "";
+        var infantry = new SpacingLimits(0f, 0.4f, 0f, 0.38f);
+        var cavalry = new SpacingLimits(1.7f, 2.0f, 0.18f, 0.5f);
+        try
+        {
+            _orders.Squares = new[] { new SquareRead(1, 14.5f, 9, 5, 40, 40, false) };
+            _orders.Spacing = new SpacingRead(1, 41, 1, infantry, infantry, cavalry);
+            _orders.Now = 1.0;
+            watch.Pass();
+
+            var square = "[Check] id=taom.marshals-word.square result=pass mission=1 company=1 side=14.5 files=9 ranks=5 units=40 placed=40 laidOut=0";
+            var spacing = "[Check] id=taom.marshals-word.spacing result=pass mission=1 company=1 units=41 riders=1 minDistance=0.00 maxDistance=0.40 minInterval=0.00 "
+                + "maxInterval=0.38 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reads=Infantry";
+            CollectionAssert.AreEqual(new[] { square, spacing }, CheckLines());
+            AssertInFixture("marshal_square_pass.txt", square);
+            AssertInFixture("marshal_spacing_pass.txt", spacing);
+
+            Fresh();
+            watch = new MarshalProofWatch(_orders, _log, _logger, "1");
+            _orders.Squares = new[] { new SquareRead(1, 14.5f, 9, 5, 40, 38, false) };
+            _orders.Spacing = new SpacingRead(1, 41, 1, cavalry, infantry, cavalry);
+            _orders.Now = 1.0;
+            watch.Pass();
+
+            AssertInFixture("marshal_square_fail.txt", "[Check] id=taom.marshals-word.square result=fail mission=1 company=1 side=14.5 files=9 ranks=5 units=40 placed=38 laidOut=0");
+            AssertInFixture("marshal_spacing_fail.txt", "[Check] id=taom.marshals-word.spacing result=fail mission=1 company=1 units=41 riders=1 minDistance=1.70 maxDistance=2.00 "
+                + "minInterval=0.18 maxInterval=0.50 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reads=Cavalry");
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    "[Check] id=taom.marshals-word.square result=fail mission=1 company=1 side=14.5 files=9 ranks=5 units=40 placed=38 laidOut=0",
+                    "[Check] id=taom.marshals-word.spacing result=fail mission=1 company=1 units=41 riders=1 minDistance=1.70 maxDistance=2.00 minInterval=0.18 maxInterval=0.50 "
+                    + "infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reads=Cavalry",
+                },
+                CheckLines());
+
+            Fresh();
+            watch = new MarshalProofWatch(_orders, _log, _logger, "1");
+            MarshalSpacingPatch.WhyNot = "coop";
+            _orders.Spacing = new SpacingRead(1, 41, 1, cavalry, infantry, cavalry);
+            _orders.Now = 1.0;
+            watch.Pass();
+
+            AssertInFixture("marshal_spacing_not_applied.txt", "[Check] id=taom.marshals-word.spacing result=skip mission=1 company=1 units=41 riders=1 minDistance=1.70 maxDistance=2.00 "
+                + "minInterval=0.18 maxInterval=0.50 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reason=coop");
+        }
+        finally
+        {
+            MarshalSpacingPatch.WhyNot = "not-prepared";
+        }
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForAMassedWordWithTooFewHolding_IsTheSkipTheFixtureHolds()
+    {
+        var driver = FireDriver(new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 3) } });
+        _orders.Selected.Add(1);
+        driver.PressFire();
+        FirePass(driver, 1.0);
+        driver.PressFire();
+        FirePass(driver, 2.0);
+        FirePass(driver, 3.0);
+
+        var skip = CheckLines().Single(l => l.Contains("massed result=skip"));
+        Assert.AreEqual("[Check] id=taom.marshals-word.massed result=skip mission=1 reason=too-few-holding company=1 holding=3", skip);
+        AssertInFixture("marshal_massed_few.txt", skip);
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheSlotAndStrikeChecks_AreTheLinesOfTheFixtures()
+    {
+        foreach (var (far, steered, closer, farther, struckFlagOn, slot, strike, slotFixture, strikeFixture) in new[]
+                 {
+                     (2, 8, 6, 2, 3, "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop",
+                         "[Check] id=taom.marshals-word.hold-strike result=pass mission=1 company=1 struck=3 flagOn=3", "marshal_hold_slot_pass.txt", "marshal_hold_strike_pass.txt"),
+                     (12, 8, 2, 6, 0, "[Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=30 far=12 order=Stop",
+                         "[Check] id=taom.marshals-word.hold-strike result=fail mission=1 company=1 struck=3 flagOn=0", "marshal_hold_slot_fail.txt", "marshal_hold_strike_fail.txt"),
+                 })
+        {
+            Fresh();
+            var fire = new FakeMarshalFire
+            {
+                HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, far, 5, 3, 3, struckFlagOn, 0.5f, 0.1f, "Stop", "", closer, farther, steered) },
+            };
+            var driver = FireDriver(fire);
+            _orders.Selected.Add(1);
+            driver.PressHold();
+            FirePass(driver, 0.0);
+            FirePass(driver, 1.0);
+
+            Assert.IsTrue(CheckLines().Contains(slot), string.Join("\n", CheckLines()));
+            Assert.IsTrue(CheckLines().Contains(strike), string.Join("\n", CheckLines()));
+            AssertInFixture(slotFixture, slot);
+            AssertInFixture(strikeFixture, strike);
+            MarshalFireTable.Clear();
+        }
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheSlotLine_NamesTheOrderBesideTheDistance()
+    {
+        var fire = new FakeMarshalFire { HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, 2, 5, 0, 0, 0, 1.25f, 0.4f, "Stop", "", 0, 0, 0, 2) } };
+        var driver = FireDriver(fire);
+        _orders.Selected.Add(1);
+        driver.PressHold();
+        FirePass(driver, 0.0);
+        FirePass(driver, 1.0);
+
+        var line = Lines(nameof(IModLogger.LogInfo)).Single(l => l.StartsWith("[Marshal] slot ", StringComparison.Ordinal));
+        Assert.AreEqual("[Marshal] slot company=1 units=30 qualified=30 flagOff=30 anchored=30 far=2 max=1.3 mean=0.4 order=Stop wounded=5 struck=0 why=none closer=0 farther=0 steered=0 loose=2", line);
+        MarshalFireTable.Clear();
+    }
 }

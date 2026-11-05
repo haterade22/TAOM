@@ -2974,7 +2974,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Marshal's Word", GroupOrder = 83)]
     [SettingPropertyBool("{=taom_marshal_mcm_enabled}Enable Marshal's Word", Order = 0, RequireRestart = false,
-        HintText = "{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings > Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on.")]
+        HintText = "{=taom_marshal_mcm_enabled_hint}Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings > Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on, except Spacing Repair, which is decided when the game starts and needs this on at that start. Default: on.")]
     public bool MarshalEnabled { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultEnabled;
 
     [SettingPropertyGroup("Marshal's Word")]
@@ -2991,4 +2991,14 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_marshal_mcm_outlines}Outlines", Order = 3, RequireRestart = false,
         HintText = "{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on.")]
     public bool MarshalOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_hollow_square}Hollow Square", Order = 4, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_hollow_square_hint}Once the battle has begun, a Square order on a company of yours that you command forms the plain square of the base game, which keeps the side you give it and grows only when its soldiers no longer fit, instead of the packed schiltron. A company of foot and ranged soldiers mixed keeps its mixed layout and ignores the side. Default: on.")]
+    public bool MarshalHollowSquare { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultHollowSquare;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_spacing_repair}Spacing Repair", Order = 5, RequireRestart = true,
+        HintText = "{=taom_marshal_mcm_spacing_repair_hint}A company of foot soldiers with riders under a tenth of its soldiers keeps the spacing limits of a foot company, as it already keeps their spacing, instead of the limits of cavalry. A change takes a restart of the game, and it applies only if Enable Marshal's Word is on when the game starts. It stays off in a co-op session and on a dedicated server, so that two machines never compute different widths. Default: on.")]
+    public bool MarshalSpacingRepair { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultSpacingRepair;
 }

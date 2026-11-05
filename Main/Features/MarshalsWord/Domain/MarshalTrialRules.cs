@@ -181,6 +181,182 @@ internal static class MarshalTrialRules
     internal static string Describe(TrialDrag drag) =>
         "near=" + drag.Near.ToString("F1", CultureInfo.InvariantCulture) + " far=" + drag.Far.ToString("F1", CultureInfo.InvariantCulture);
 
+    /// <summary>Enemy soldiers that must stand within <see cref="HoldReachMetres"/> of the held company before a hold-the-line step reads its result as proved.</summary>
+    internal const int HoldMinEnemiesInReach = 10;
+
+    /// <summary>The metres within which an enemy soldier counts as in reach of a company in the hold-the-line step.</summary>
+    internal const float HoldReachMetres = 15f;
+
+    /// <summary>The Massed rule's own answer for the numbers a word was given on, as if no word had been given before.</summary>
+    internal static bool MassedWordWasDue(int holding, int eligible) =>
+        MarshalFireRules.MassedWordDue(holding, eligible, now: MarshalTuning.WordGap, lastWord: 0.0);
+
+    /// <summary>
+    /// Massed fire passed: a word was given by the share rule on enough holding soldiers to prove a release, the share was the rule's, and the archers loosed. The share is
+    /// read again here from the numbers on the log line, so a word given below the share cannot pass.
+    /// </summary>
+    internal static bool MassedPasses(int words, int holding, int eligible, bool releasePassed, bool faulted) =>
+        words >= 1 && holding >= MarshalTuning.VolleyMinHolding && MassedWordWasDue(holding, eligible) && releasePassed && !faulted;
+
+    /// <summary>The walk of an approach is waited out for at most this multiple of its time at the company's speed, because a line gathers itself before it walks.</summary>
+    internal const float ApproachSlackFactor = 2f;
+
+    /// <summary>The least real seconds an approach is waited for, the time a company needs to turn and set off.</summary>
+    internal const float ApproachFloorSeconds = 15f;
+
+    /// <summary>The most real seconds an approach is waited for, whatever the walk.</summary>
+    internal const float ApproachCeilingSeconds = 150f;
+
+    /// <summary>The slowest speed an approach is planned at, in metres a second, because the engine's cached speed has a floor of 0.1.</summary>
+    internal const float ApproachMinSpeed = 1f;
+
+    /// <summary>The real seconds a settle waits for after an order that walks <paramref name="walkMetres"/> at <paramref name="speed"/>; the ceiling when the walk is not a number.</summary>
+    internal static float ApproachWaitSeconds(float walkMetres, float speed)
+    {
+        if (!IsReal(walkMetres) || walkMetres < 0f)
+            return ApproachCeilingSeconds;
+        var planned = IsReal(speed) && speed > ApproachMinSpeed ? speed : ApproachMinSpeed;
+        return Math.Min(ApproachCeilingSeconds, ApproachFloorSeconds + ApproachSlackFactor * walkMetres / planned);
+    }
+
+    /// <summary>The unit widths a drag asks the square's side to differ from the side it had.</summary>
+    internal const float SquareDragUnits = 4f;
+
+    /// <summary>A side to ask of the square: several unit widths over the side it has, or under it when the maximum is too near, never outside its bounds. NaN when neither fits.</summary>
+    internal static float SideTarget(float before, float minimum, float maximum, float unitWidth)
+    {
+        if (!IsReal(before) || !IsReal(minimum) || !IsReal(maximum) || !IsReal(unitWidth) || unitWidth <= 0f || maximum < minimum)
+            return float.NaN;
+        var step = SquareDragUnits * unitWidth;
+        if (before + step <= maximum)
+            return before + step;
+        return before - step >= minimum ? before - step : float.NaN;
+    }
+
+    /// <summary>The side after the drag is more than one unit's width from the side before it, so a drag that did nothing reads false.</summary>
+    internal static bool SideMoved(float before, float after, float unitWidth) =>
+        IsReal(before) && IsReal(after) && IsReal(unitWidth) && unitWidth > 0f && Math.Abs(after - before) > unitWidth;
+
+    /// <summary>Why the square step failed, in the order the causes happen: not the plain square, soldiers the mixed layout places, a drag that moved nothing, and the side, the removal and the slots after it. Empty when it passed.</summary>
+    internal static string SquareTrialReason(bool plain, bool laidOut, bool dragMoved, bool askedReached, bool sideKept, int placed, int units, int lost)
+    {
+        if (!plain)
+            return "not-the-plain-square";
+        if (laidOut)
+            return "laid-out";
+        if (!dragMoved)
+            return "drag-did-nothing";
+        if (!askedReached)
+            return "side-not-reached";
+        if (lost < 1)
+            return "nobody-removed";
+        if (!sideKept)
+            return "side-not-kept";
+        return MarshalSquareRules.ProofPasses(placed, units) ? "" : "unplaced";
+    }
+
+    /// <summary>Real seconds the hold-the-line steps wait for the line's judged result after the hold goes on.</summary>
+    internal const float HoldVerdictWaitSeconds = 150f;
+
+    /// <summary>Real seconds after a charge within which every held soldier's attack flag must read on again.</summary>
+    internal const float HoldRestoreSeconds = 1.5f;
+
+    /// <summary>Hold reads the slot step needs after the clamp's first steer, enough for the driver's slot windows to have judged them.</summary>
+    internal const int SlotMinSamples = 45;
+
+    /// <summary>Why the hold-the-line proof step failed, resting on the driver's judged verdict for this mission; empty when it passed.</summary>
+    internal static string HoldVerdictReason(HoldVerdict? driver, int peakEnemiesNear, bool restored, int flagOffNow)
+    {
+        if (driver == null)
+            return flagOffNow < MarshalTuning.HoldMinFlagOff ? "flag-not-off" : "driver-never-judged";
+        if (peakEnemiesNear < HoldMinEnemiesInReach)
+            return "enemy-not-in-reach";
+        switch (driver.Value.Proof)
+        {
+            case HoldProof.Pending:
+                return "flag-not-off";
+            case HoldProof.NoControl:
+                return "control-quiet";
+            case HoldProof.Fail:
+                return "held-company-struck";
+        }
+
+        return restored ? "" : "flag-not-restored";
+    }
+
+    /// <summary>
+    /// Why the slot step failed, ground first: the driver's slot check failed or the totals of the whole hold moved more soldiers away than toward their slot, the clamp
+    /// never replaced an input, too few hold reads followed the first steer, or too few reads were steered at all. Empty when the clamp acted and walked the right way.
+    /// </summary>
+    internal static string SlotTrialReason(int samples, bool slotFailed, int steered, int closer, int farther, string order, int qualified, int anchored, int woundedEver,
+        int peakEnemiesNear, int clamps)
+    {
+        if (qualified < MarshalTuning.HoldMinFlagOff)
+            return "not-qualified";
+        if (order != MarshalHoldLineRules.StopOrder)
+            return "order-not-stop";
+        if (peakEnemiesNear < HoldMinEnemiesInReach)
+            return "enemy-not-in-reach";
+        if (anchored * 2 < qualified)
+            return "no-anchor";
+        if (woundedEver < 1)
+            return "nobody-struck";
+        var totals = MarshalHoldLineRules.TrendProof(steered, closer, farther);
+        if (slotFailed || totals == HoldProof.Fail)
+            return "steered-away";
+        if (clamps < 1)
+            return "no-clamp";
+        if (samples < SlotMinSamples)
+            return "too-few-samples";
+        return totals == HoldProof.Pending ? "too-few-steers" : "";
+    }
+
+    /// <summary>Why the strike back step failed: the line was never disarmed before a wound, no soldier was wounded, no wound settled in the window, the flag stayed off for the wounded, or no blow followed.</summary>
+    internal static string StrikeTrialReason(int flagOffBeforeWound, int woundedEver, int settledPeak, int flagOnAtPeak, int blowsAfterWound)
+    {
+        if (flagOffBeforeWound < MarshalTuning.HoldMinFlagOff)
+            return "flag-not-off";
+        if (woundedEver < 1)
+            return "nobody-wounded";
+        if (settledPeak < 1)
+            return "strike-window-missed";
+        if (MarshalHoldLineRules.StrikeProof(settledPeak, flagOnAtPeak) != HoldProof.Pass)
+            return "flag-stayed-off";
+        return blowsAfterWound < 1 ? "no-blow-after-wound" : "";
+    }
+
+    /// <summary>Why the charge step failed: the line never stood, the flags never read off, or they did not come back in time.</summary>
+    internal static string FlagTrialReason(int qualified, int flagOffBefore, bool restored)
+    {
+        if (qualified < MarshalTuning.HoldMinFlagOff)
+            return "not-qualified";
+        if (flagOffBefore < MarshalTuning.HoldMinFlagOff)
+            return "flag-not-off";
+        return restored ? "" : "flag-not-restored";
+    }
+
+    /// <summary>Why the hold-the-line step has no ground to stand on: the split moved no soldier into the control, or a company is not the player's. Empty when it has.</summary>
+    internal static string HoldGroundReason(int heldUnits, int controlUnits, bool heldControllable, bool controlControllable)
+    {
+        if (heldUnits < 1 || controlUnits < 1)
+            return "no-split";
+        return heldControllable && controlControllable ? "" : "not-controllable";
+    }
+
+    /// <summary>Why the spacing step failed, ground first: the rider joined no one, the soldier who joined is on foot, or the engine's own count missed the rider. Empty when it passed.</summary>
+    internal static string SpacingTrialReason(int before, int units, int riders, bool any, bool significant)
+    {
+        if (units <= before)
+            return "rider-not-moved";
+        if (riders < 1)
+            return "no-rider-in-company";
+        return any && !significant ? "" : "rider-not-counted";
+    }
+
+    /// <summary>The side after a change is within one unit's width of the side before it.</summary>
+    internal static bool SideKept(float before, float after, float unitWidth) =>
+        IsReal(before) && IsReal(after) && IsReal(unitWidth) && unitWidth > 0f && Math.Abs(after - before) <= unitWidth;
+
     private static TrialDrag? Candidate(IReadOnlyList<ArrayCompany> companies, Shape s, float sign, float ahead, float bipedalRadius)
     {
         // The line runs along the group's forward (or back), a quarter turn from its front, as long as the group is wide, ahead of the group.

@@ -1149,4 +1149,54 @@ public class MarshalSessionTests
         Assert.AreEqual(0, _session.Queue.TotalSteps);
         CollectionAssert.AreEqual(new[] { 1 }, _orders.Issued.Single().Companies);
     }
+
+    // ---- the panel's entries ----
+
+    [TestMethod]
+    public void PanelPress_WhileLive_StoresTheClicksCompanies_AndTheNextMissionTickAppliesThem()
+    {
+        GoLive();
+
+        _session.PanelPress(PanelAction.Fire, new[] { 4 });
+
+        Assert.AreEqual(FireMode.Free, MarshalFireTable.ModeOf(4), "an engine write waits for the mission tick");
+        _session.OnMissionTick();
+        Assert.AreEqual(FireMode.OnWord, MarshalFireTable.ModeOf(4));
+    }
+
+    [TestMethod]
+    public void PanelPress_TheWordAndTheHold_ReachTheirOwnPresses()
+    {
+        GoLive();
+        MarshalFireTable.SetMode(4, FireMode.OnWord);
+
+        _session.PanelPress(PanelAction.Word, new[] { 4 });
+        _session.PanelPress(PanelAction.Hold, new[] { 4 });
+        _orders.Now = 5.0;
+        _session.OnMissionTick();
+
+        Assert.AreEqual(5.0, MarshalFireTable.WordTimeOf(4));
+        Assert.IsTrue(MarshalFireTable.HoldOf(4));
+    }
+
+    [TestMethod]
+    public void PanelPress_BeforeTheSessionIsLive_StoresNothing()
+    {
+        _session.PanelPress(PanelAction.Fire, new[] { 4 });
+        GoLive();
+        _session.OnMissionTick();
+
+        Assert.AreEqual(FireMode.Free, MarshalFireTable.ModeOf(4));
+    }
+
+    [TestMethod]
+    public void PanelPress_AfterTheFinish_StoresNothing()
+    {
+        GoLive();
+        _session.Finish();
+
+        _session.PanelPress(PanelAction.Hold, new[] { 4 });
+
+        Assert.IsFalse(MarshalFireTable.HoldOf(4));
+    }
 }

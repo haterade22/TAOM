@@ -1,4 +1,6 @@
+using TAOM.Adapters;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Features.MarshalsWord;
 using TAOM.Features.MarshalsWord.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
@@ -164,4 +166,125 @@ internal partial interface ICommandTrialHost
 
     /// <summary>Units that wear an outline Marshal's Word painted.</summary>
     int MarshalOutlinesPainted { get; }
+
+    /// <summary>Massed words the driver has given, and the numbers the latest was given on, or null before the first.</summary>
+    int MarshalMassedWords { get; }
+
+    MassedWord? MarshalLastMassed { get; }
+
+    /// <summary>Release windows the driver has judged, so a step can tell a new verdict from an older one of the same numbers.</summary>
+    int MarshalReleasesJudged { get; }
+
+    /// <summary>The soldiers of the chosen company drawing a bow at the latest census.</summary>
+    int MarshalDrawing(int company);
+
+    /// <summary>
+    /// Splits the largest player company of foot soldiers that holds no hero in two, by giving the player's Transfer order for half of it to an empty formation of the player's team, and chooses the two:
+    /// the first keeps the larger half. Returns how many companies are chosen, 0 when none could be split; the soldiers have moved only if both companies then hold some. A formation write: call it after the in-mission-tick marker.
+    /// </summary>
+    int MarshalSplitInfantry();
+
+    /// <summary>The chosen company has soldiers and is not under AI control, so a key can toggle it.</summary>
+    bool MarshalControllable(int company);
+
+    /// <summary>Stores a press of key 545 as the key's own press is stored.</summary>
+    void MarshalPressHold();
+
+    /// <summary>Hold the line is on for the chosen company.</summary>
+    bool MarshalHeld(int company);
+
+    /// <summary>Melee blows the chosen company's soldiers have dealt this mission.</summary>
+    int MarshalBlows(int company);
+
+    /// <summary>Blows the chosen company's wounded soldiers dealt inside their strike back window.</summary>
+    int MarshalStrikeBlows(int company);
+
+    /// <summary>The soldiers of the chosen company whose attack flag reads off now, read from each soldier's own flags.</summary>
+    int MarshalFlagOff(int company);
+
+    /// <summary>Enemy soldiers within <paramref name="metres"/> of the chosen company.</summary>
+    int MarshalEnemiesNear(int company, float metres);
+
+    /// <summary>The latest hold-the-line verdict of the driver, or null.</summary>
+    HoldVerdict? MarshalHoldLineVerdict { get; }
+
+    /// <summary>Gives the selected companies the shield wall arrangement through the player's order controller. An order write.</summary>
+    void MarshalOrderShieldWall();
+
+    /// <summary>The driver's latest count of the chosen held company's line: who qualifies, the slot distances, the wounds and the strike back; empty before its first pass.</summary>
+    HoldCensus MarshalHoldCensus(int company);
+
+    /// <summary>The line of the chosen company has answered a wound with its attack flag, as the driver's strike check judged it.</summary>
+    bool MarshalStrikePassed(int company);
+
+    /// <summary>Soldiers the slot clamp steered who ended a hold read nearer their slot, summed over the chosen company's hold; 0 once the hold is lifted.</summary>
+    int MarshalSlotCloser(int company);
+
+    /// <summary>Soldiers the slot clamp steered who ended a hold read farther from their slot, summed over the chosen company's hold; 0 once the hold is lifted.</summary>
+    int MarshalSlotFarther(int company);
+
+    /// <summary>Steered hold reads of the chosen held company, summed since the hold went on: the denominator of the two sides.</summary>
+    int MarshalSlotSteered(int company);
+
+    /// <summary>The driver's slot check has failed for the chosen held company since the hold went on.</summary>
+    bool MarshalSlotFailed(int company);
+
+    /// <summary>The proof line's laidOut fact for the chosen company: the soldiers take their places from the mixed layout and not from the square.</summary>
+    bool MarshalSquareLaidOut(int company);
+
+    /// <summary>Inputs the slot clamp has replaced since the process began, from the counter the session summary prints.</summary>
+    int MarshalClamps { get; }
+
+    /// <summary>The metres between the chosen company's position and its order point, 0 with no order point.</summary>
+    float MarshalOrderGap(int company);
+
+    /// <summary>Chooses the largest player company with no rider and no ranged soldier that holds no hero; returns its unit count, 0 for none.</summary>
+    int MarshalChoosePureInfantry();
+
+    /// <summary>Gives the selected companies the Square order through the player's order controller. An order write.</summary>
+    void MarshalOrderSquare();
+
+    /// <summary>The chosen company's arrangement is the plain engine square and not the packed schiltron.</summary>
+    bool MarshalPlainSquare(int company);
+
+    /// <summary>The chosen company's arrangement name, for the line a failed step writes.</summary>
+    string MarshalArrangementName(int company);
+
+    /// <summary>The square's side and its bounds, the width of one unit, and the soldiers with and without a slot; NaN or 0 when the arrangement is not the plain square.</summary>
+    float MarshalSquareSide(int company);
+
+    float MarshalSquareMinimum(int company);
+
+    float MarshalSquareMaximum(int company);
+
+    float MarshalUnitWidth(int company);
+
+    int MarshalUnits(int company);
+
+    int MarshalPlaced(int company);
+
+    /// <summary>Stores a line of <paramref name="side"/> metres across the chosen company's front, centred where the company stands, for <see cref="MarshalDrag"/>.</summary>
+    void MarshalPlanSideDrag(int company, float side);
+
+    /// <summary>Kills the last soldier of the chosen company through the engine's own kill. An agent write: call it after the in-mission-tick marker. False when the company has none.</summary>
+    bool MarshalKillOne(int company);
+
+    /// <summary>Gives the player's Transfer order for one rider of the largest company of riders into the chosen company of foot soldiers. Returns that company's unit count after the order, 0 when there was no pair to order. A formation write.</summary>
+    int MarshalMoveOneRider();
+
+    /// <summary>How the spacing proof read the company with one rider, or null while it has not.</summary>
+    SpacingReading? MarshalSpacingVerdict { get; }
+
+    /// <summary>Why the spacing repair is not applied, or an empty string while it is.</summary>
+    string MarshalSpacingWhy { get; }
+
+    /// <summary>The riders of the chosen company counted fresh, and whether the engine counts it as having any rider and a significant number of them.</summary>
+    int MarshalRiders(int company);
+
+    bool MarshalHasAnyRider(int company);
+
+    bool MarshalHasSignificantRiders(int company);
+
+    /// <summary>The chosen company's four spacing limits and the values it could read as foot soldiers and as cavalry, read from the engine now; null for no company.</summary>
+    SpacingRead? MarshalSpacingOfChosen(int company);
 }

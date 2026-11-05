@@ -18,10 +18,19 @@
 [2026-11-04 14:07:11] [INFO] [Check] id=taom.marshals-word.march result=pass mission=1 companies=2
 [2026-11-04 14:07:50] [INFO] [Check] id=taom.marshals-word.march-spread result=pass mission=1 spread=0.5 longest=24.0 shortest=12.0
 [2026-11-04 14:08:00] [INFO] [Check] id=taom.marshals-word.fire result=pass mission=1 mode=OnWord company=1
+[2026-11-04 14:08:30] [INFO] [Check] id=taom.marshals-word.fire result=pass mission=1 mode=Massed company=1
 [2026-11-04 14:09:00] [INFO] [Check] id=taom.marshals-word.fire result=pass mission=1 mode=Free company=1
 [2026-11-04 14:10:00] [INFO] [Check] id=taom.marshals-word.word result=pass mission=1 company=1 holding=6
 [2026-11-04 14:11:00] [INFO] [Check] id=taom.marshals-word.volley-hold result=pass mission=1 company=1 holding=6 shots=0
 [2026-11-04 14:12:00] [INFO] [Check] id=taom.marshals-word.volley-release result=pass mission=1 company=1 holding=10 shots=8
 [2026-11-04 14:13:00] [INFO] [Check] id=taom.marshals-word.mark result=pass mission=1 companies=1
 [2026-11-04 14:14:00] [INFO] [Check] id=taom.marshals-word.mark-effect result=pass mission=1 company=2 target=6 context=RangedOnStop onTarget=5 of=8
+[2026-11-04 14:15:00] [INFO] [Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=21 shots=19 eligible=28 stale=2
+[2026-11-04 14:16:00] [INFO] [Check] id=taom.marshals-word.hold result=pass mission=1 hold=on company=1
+[2026-11-04 14:16:30] [INFO] [Check] id=taom.marshals-word.hold result=pass mission=1 hold=off company=1
+[2026-11-04 14:17:00] [INFO] [Check] id=taom.marshals-word.hold-line result=pass mission=1 company=1 flagOff=30 blows=0 control=2 controlBlows=41 seconds=10.3
+[2026-11-04 14:17:20] [INFO] [Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop
+[2026-11-04 14:17:40] [INFO] [Check] id=taom.marshals-word.hold-strike result=pass mission=1 company=1 struck=3 flagOn=3
+[2026-11-04 14:18:00] [INFO] [Check] id=taom.marshals-word.square result=pass mission=1 company=1 side=14.5 files=9 ranks=5 units=40 placed=40 laidOut=0
+[2026-11-04 14:19:00] [INFO] [Check] id=taom.marshals-word.spacing result=pass mission=1 company=1 units=41 riders=1 minDistance=0.00 maxDistance=0.40 minInterval=0.00 maxInterval=0.38 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reads=Infantry
 [2026-11-04 14:20:00] [INFO] [Shutdown] clean module unload

@@ -29,6 +29,7 @@ internal sealed class MarshalSession : IMarshalHookSink
     private readonly MarshalMarchDriver _march;
     private readonly MarshalFireDriver _fire;
     private readonly MarshalMarkWatch _marks;
+    private readonly MarshalProofWatch _proofs;
 
     private bool _answerYes;
     private bool _live;
@@ -58,6 +59,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         _march = new MarshalMarchDriver(orders, outcomes, missionKey);
         _fire = new MarshalFireDriver(orders, fire, outcomes, logger, _screen.Say, missionKey);
         _marks = new MarshalMarkWatch(orders, outcomes, logger, missionKey);
+        _proofs = new MarshalProofWatch(orders, outcomes, logger, missionKey);
     }
 
     internal bool IsLive => _live;
@@ -90,6 +92,12 @@ internal sealed class MarshalSession : IMarshalHookSink
     /// <summary>Field trial: the latest mark-effect verdict of a company, the one its check line carries, or null.</summary>
     internal MarkVerdict? MarkJudgedOf(int company) => _marks.JudgedOf(company);
 
+    /// <summary>Field trial: the latest square line written, or null.</summary>
+    internal SquareRead? LatestSquare => _proofs.LatestSquare;
+
+    /// <summary>Field trial: how the spacing proof read the company with one rider, or null while it has not.</summary>
+    internal SpacingReading? SpacingVerdict => _proofs.SpacingVerdict;
+
     /// <summary>Field trial: units that wear an outline this session painted.</summary>
     internal int OutlinesPainted => _outlines.PaintedCount;
 
@@ -107,12 +115,14 @@ internal sealed class MarshalSession : IMarshalHookSink
         try
         {
             MarshalHooks.Arm(input.QueueKeyDown && input.PanelOpen, input.WidthsKeyDown && input.PanelOpen, _settings.KeepArray, _settings.ArriveTogether,
-                input.MarkKeyDown && input.PanelOpen);
+                input.MarkKeyDown && input.PanelOpen, _settings.HollowSquare);
             _showOutlines = _settings.Outlines && (input.PanelOpen || input.IndicatorsDown);
             if (input.FirePressed)
                 _fire.PressFire();
             if (input.WordPressed)
                 _fire.PressWord();
+            if (input.HoldPressed)
+                _fire.PressHold();
             RefreshFlags(input);
         }
         catch (Exception ex)
@@ -138,6 +148,7 @@ internal sealed class MarshalSession : IMarshalHookSink
             _march.Pass(MarshalHooks.ArriveTogether);
             _fire.Pass();
             _marks.Pass();
+            _proofs.Pass();
             _outlines.Pass(_orders.Now, _showOutlines);
         }
         catch (Exception ex)
@@ -182,6 +193,31 @@ internal sealed class MarshalSession : IMarshalHookSink
         if (result == CaptureResult.Full)
             _screen.Say(MarshalMessage.QueueFull);
         return result != CaptureResult.Declined;
+    }
+
+    public void PanelPress(PanelAction action, IReadOnlyList<int> companies)
+    {
+        if (!_live)
+            return;
+        try
+        {
+            switch (action)
+            {
+                case PanelAction.Fire:
+                    _fire.PressFire(companies);
+                    break;
+                case PanelAction.Word:
+                    _fire.PressWord(companies);
+                    break;
+                default:
+                    _fire.PressHold(companies);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
     }
 
     public void ArraySolved(bool click, int companies)
@@ -246,7 +282,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         _orders.PlayerTeamChanged += OnPlayerTeamChanged;
         _orders.Attach();
         MarshalHooks.Begin(this);
-        MarshalHooks.Arm(queue: false, keepWidths: false, _settings.KeepArray, _settings.ArriveTogether);
+        MarshalHooks.Arm(queue: false, keepWidths: false, _settings.KeepArray, _settings.ArriveTogether, hollowSquare: _settings.HollowSquare);
         _live = true;
     }
 
@@ -256,6 +292,7 @@ internal sealed class MarshalSession : IMarshalHookSink
         _march.OnPlayerTeamChanged();
         _fire.OnPlayerTeamChanged();
         _marks.OnPlayerTeamChanged();
+        _proofs.OnPlayerTeamChanged();
     }
 
     private void RefreshFlags(MarshalScreenInput input)

@@ -48,6 +48,20 @@ internal sealed class FakeMarshalOrders : IMarshalOrderAdapter
 
     public IReadOnlyList<MarkSample> ReadMarks() => Marks;
 
+    internal IReadOnlyList<SquareRead> Squares { get; set; } = Array.Empty<SquareRead>();
+
+    internal SpacingRead? Spacing { get; set; }
+
+    internal int SpacingReads;
+
+    public IReadOnlyList<SquareRead> ReadSquares() => Squares;
+
+    public SpacingRead? ReadSpacing()
+    {
+        SpacingReads++;
+        return Spacing;
+    }
+
     public event Action<IReadOnlyList<int>>? DirectOrder;
 
     public event Action? PlayerTeamChanged;
@@ -163,6 +177,10 @@ internal sealed class FakeMarshalSettings : IMarshalSettingsProvider
     public bool ArriveTogether { get; set; } = true;
 
     public bool Outlines { get; set; } = true;
+
+    public bool HollowSquare { get; set; } = true;
+
+    public bool SpacingRepair { get; set; } = true;
 }
 
 /// <summary>
@@ -185,16 +203,39 @@ internal static class TestPositions
 internal sealed class FakeMarshalFire : IMarshalFireAdapter
 {
     internal readonly List<int[]> Swept = new();
+    internal readonly List<int[]> SweptHeld = new();
+    internal readonly List<int[]> Counted = new();
+    internal readonly List<double> CountedAt = new();
     internal readonly Dictionary<int, FireCensus> Census = new();
+    internal readonly Dictionary<int, HoldCensus> HoldCensuses = new();
+    internal readonly List<int[]> HoldPasses = new();
+    internal readonly List<double> HoldPassAt = new();
     internal int Dropped;
     internal int Released;
     internal System.Exception? ReleaseThrows;
 
     public bool HasTouched { get; set; }
 
-    public IReadOnlyList<FireCensus> Sweep(IReadOnlyList<int> ruled)
+    public bool CallbackFaulted { get; set; }
+
+    public IReadOnlyList<HoldCensus> Hold(IReadOnlyList<int> held, double now)
+    {
+        HoldPasses.Add(held.ToArray());
+        HoldPassAt.Add(now);
+        return held.Where(c => HoldCensuses.ContainsKey(c)).Select(c => HoldCensuses[c]).ToList();
+    }
+
+    public IReadOnlyList<FireCensus> Count(IReadOnlyList<int> companies, double now)
+    {
+        Counted.Add(companies.ToArray());
+        CountedAt.Add(now);
+        return companies.Where(c => Census.ContainsKey(c)).Select(c => Census[c]).ToList();
+    }
+
+    public IReadOnlyList<FireCensus> Sweep(IReadOnlyList<int> ruled, IReadOnlyList<int> held, double now)
     {
         Swept.Add(ruled.ToArray());
+        SweptHeld.Add(held.ToArray());
         HasTouched = ruled.Count > 0;
         return ruled.Select(c => Census.TryGetValue(c, out var census) ? census : new FireCensus(c, 0, 0)).ToList();
     }

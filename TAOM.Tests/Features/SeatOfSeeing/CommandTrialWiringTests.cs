@@ -166,12 +166,44 @@ public class CommandTrialWiringTests
     }
 
     [TestMethod]
+    public void TheMarshalHost_MovesSoldiersWithThePlayersTransferOrder_NeverWithTheAisSplit()
+    {
+        var host = TrialSource(@"^CommandTrialHost\.Marshal");
+
+        Assert.IsTrue(host.Length > 3000 && host.Contains("MarshalSplitInfantry"), "the Marshal host file was read");
+        Assert.IsFalse(Regex.IsMatch(host, @"\.TransferUnits\("), "Formation.TransferUnits is the AI's split and returns at once for a company the player owns (Formation.cs:2157)");
+        var transfer = BodyOf(host, "private void PlayerTransfer");
+        StringAssert.Contains(transfer, "SetOrderWithFormationAndNumber(OrderType.Transfer, target, count)");
+        var selected = transfer.IndexOf("SelectFormation(source)", StringComparison.Ordinal);
+        Assert.IsTrue(selected >= 0 && selected < transfer.IndexOf("SetOrderWithFormationAndNumber", StringComparison.Ordinal), "the order moves the selected companies, so the source is selected first");
+        foreach (var mover in new[] { "MarshalSplitInfantry", "MarshalMoveOneRider" })
+        {
+            StringAssert.Contains(BodyOf(host, "public int " + mover), "PlayerTransfer(", mover);
+            StringAssert.Contains(BodyOf(host, "public int " + mover), "NoteWrite(\"CommandTrialHost." + mover + "\")", "a formation write reports the thread it runs on");
+        }
+    }
+
+    [TestMethod]
+    public void TheMarshalHost_CountsTheRidersFresh_AndReadsTheEnginesCountOnlyAfterRefreshingIt()
+    {
+        var host = TrialSource(@"^CommandTrialHost\.Marshal");
+
+        var riders = host.Substring(host.IndexOf("public int MarshalRiders", StringComparison.Ordinal), 400);
+        StringAssert.Contains(riders, "GetCountOfUnitsBelongingToPhysicalClass(FormationClass.Cavalry");
+        StringAssert.Contains(riders, "GetCountOfUnitsBelongingToPhysicalClass(FormationClass.HorseArcher");
+        Assert.IsFalse(riders.Contains("ReadOnly"), "the stored ratio is the engine's count under test, and the census is not");
+        var any = BodyOf(host, "public bool MarshalHasAnyRider");
+        var refresh = any.IndexOf("CalculateHasSignificantNumberOfMounted", StringComparison.Ordinal);
+        Assert.IsTrue(refresh >= 0 && refresh < any.IndexOf("HasAnyMountedUnit", StringComparison.Ordinal), "the non-ReadOnly accessor evaluates an expired ratio, and HasAnyMountedUnit reads it as stored");
+    }
+
+    [TestMethod]
     public void TheMarkerGate_FindsTheHostsRealWriters_SoAnEmptyResultIsNotAScanThatSawNothing()
     {
         var writers = HostWriters(TrialSource("^CommandTrialHost"));
 
         foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero",
-            "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy" })
+            "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy", "MarshalSplitInfantry", "MarshalMoveOneRider", "MarshalOrderSquare", "MarshalKillOne" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
         foreach (var held in new[] { "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalPressFire", "MarshalPressWord" })
@@ -199,6 +231,14 @@ public class CommandTrialWiringTests
         "MarshalReleaseKeys", "MarshalSettled", "MarshalAhead", "MarshalOrderedOffset", "MarshalStepsCaptured", "MarshalStepsByArrival",
         "MarshalOrderPoint", "MarshalEnemyDistance", "MarshalMarkJudged", "MarshalChooseNearestEnemy", "MarshalPlanApproach", "MarshalWatchBegin",
         "MarshalWatchEnd", "MarshalWatchShots", "MarshalWatchShooters", "MarshalAside", "MarshalIdle", "CensusOfChosen",
+        // Massed, hold the line, the square and the spacing repair: reads of the chosen companies and the session's counters, a stored press, and a stored line. The four writers are
+        // found by their verbs: MarshalSplitInfantry and MarshalMoveOneRider (through PlayerTransfer), MarshalOrderSquare (SetOrder) and MarshalKillOne (through Kill).
+        "MarshalMassedWords", "MarshalReleasesJudged", "MarshalLastMassed", "MarshalDrawing", "MarshalControllable", "MarshalPressHold", "MarshalHeld", "MarshalBlows",
+        "MarshalFlagOff", "MarshalEnemiesNear", "MarshalHoldLineVerdict", "MarshalChoosePureInfantry", "MarshalPlainSquare", "MarshalArrangementName", "MarshalSquareSide",
+        "MarshalSquareMinimum", "MarshalSquareMaximum", "MarshalUnitWidth", "MarshalUnits", "MarshalPlaced", "MarshalPlanSideDrag", "MarshalSpacingVerdict",
+        "MarshalSpacingWhy", "MarshalRiders", "MarshalHasAnyRider", "MarshalHasSignificantRiders", "MarshalSpacingOfChosen", "PureInfantry", "PlainSquareOf",
+        // Hold the line beyond the flag: reads of the driver's count of the line, the strike blows and the gap to the order point. The shield wall order is found by its verb.
+        "MarshalHoldCensus", "MarshalStrikePassed", "MarshalStrikeBlows", "MarshalOrderGap", "MarshalSlotCloser", "MarshalSlotFarther", "MarshalSlotSteered", "MarshalSlotFailed", "MarshalSquareLaidOut", "MarshalClamps",
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
         "TookFromKeptCompany", "ReadHandOver",
@@ -347,7 +387,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(";
+        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {

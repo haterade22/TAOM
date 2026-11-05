@@ -20,7 +20,7 @@ public class CommandTrialMarshalStepsTests
     private static readonly string[] Rows =
     {
         "queue_two_moves", "direct_order_clears", "array_keeps_offsets", "arrive_together", "volley_holds", "volley_looses", "mark_keeps_order",
-        "outline_clears",
+        "outline_clears", "volley_massed", "square_side_kept", "spacing_one_rider", "hold_line_proof", "hold_line_slot", "hold_line_strike", "hold_line_flag",
     };
 
     private CommandTrialWorld _world = null!;
@@ -71,7 +71,7 @@ public class CommandTrialMarshalStepsTests
     // ---- The table ----
 
     [TestMethod]
-    public void TheRows_AreTheContractsNine_InItsOrder_AfterTheSeatsRows()
+    public void TheRows_AreTheTablesRows_InItsOrder_AfterTheSeatsRows()
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 

@@ -10,6 +10,8 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     internal const bool DefaultKeepArray = true;
     internal const bool DefaultArriveTogether = true;
     internal const bool DefaultOutlines = true;
+    internal const bool DefaultHollowSquare = true;
+    internal const bool DefaultSpacingRepair = true;
 
     private TaomSettings? _settings;
 
@@ -26,4 +28,8 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     public bool ArriveTogether => Settings?.MarshalArriveTogether ?? DefaultArriveTogether;
 
     public bool Outlines => Settings?.MarshalOutlines ?? DefaultOutlines;
+
+    public bool HollowSquare => Settings?.MarshalHollowSquare ?? DefaultHollowSquare;
+
+    public bool SpacingRepair => Settings?.MarshalSpacingRepair ?? DefaultSpacingRepair;
 }

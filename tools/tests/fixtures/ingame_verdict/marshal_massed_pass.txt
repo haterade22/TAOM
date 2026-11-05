@@ -1,0 +1,8 @@
+[2026-11-04 14:00:01] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-11-04 14:00:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-11-04 14:08:00] [INFO] [Check] id=taom.marshals-word.fire result=pass mission=1 mode=OnWord company=1
+[2026-11-04 14:08:30] [INFO] [Check] id=taom.marshals-word.fire result=pass mission=1 mode=Massed company=1
+[2026-11-04 14:09:00] [INFO] [Check] id=taom.marshals-word.word result=pass mission=1 company=1 holding=21
+[2026-11-04 14:09:02] [INFO] [Check] id=taom.marshals-word.volley-release result=pass mission=1 company=1 holding=21 shots=19
+[2026-11-04 14:09:02] [INFO] [Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=21 shots=19 eligible=28 stale=2
+[2026-11-04 14:20:00] [INFO] [Shutdown] clean module unload

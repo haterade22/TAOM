@@ -55,6 +55,10 @@ public class MarshalPatchTests
         public void ArrayFault(Exception exception) => Fault = exception;
 
         public void MarchRequested(IReadOnlyList<MarchTarget> targets) => Marches.Add(targets.ToList());
+
+        public void PanelPress(PanelAction action, IReadOnlyList<int> companies)
+        {
+        }
     }
 
     [ClassInitialize]
@@ -501,7 +505,7 @@ public class MarshalPatchTests
         // A session that finishes late must not clear the next mission's hooks: only MarshalHooks.Clear, run by the owner, nulls it.
         var next = Blank<OrderController>();
         MarshalHooks.PlayerController = next;
-        var adapter = new MarshalOrderAdapter(Substitute.For<IModLogger>());
+        var adapter = new MarshalOrderAdapter(Substitute.For<IModLogger>(), Substitute.For<TAOM.Features.MixedFormations.IFormationLayoutService>());
         var field = typeof(MarshalOrderAdapter).GetField("_controller", AnyInstance)!;
         field.SetValue(adapter, Blank<OrderController>());
 
@@ -515,7 +519,7 @@ public class MarshalPatchTests
     public void ATeamChange_StillWritesThePlayerControllerStatic_ANullIncluded()
     {
         MarshalHooks.PlayerController = Blank<OrderController>();
-        var adapter = new MarshalOrderAdapter(Substitute.For<IModLogger>());
+        var adapter = new MarshalOrderAdapter(Substitute.For<IModLogger>(), Substitute.For<TAOM.Features.MixedFormations.IFormationLayoutService>());
 
         typeof(MarshalOrderAdapter).GetMethod("OnTeamChanged", AnyInstance)!.Invoke(adapter, new object?[] { null, null });
 

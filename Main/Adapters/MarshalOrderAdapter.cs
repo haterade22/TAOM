@@ -26,7 +26,13 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
     private int _onTarget;
     private int _of;
 
-    public MarshalOrderAdapter(IModLogger logger) => _logger = logger;
+    private readonly TAOM.Features.MixedFormations.IFormationLayoutService _layout;
+
+    public MarshalOrderAdapter(IModLogger logger, TAOM.Features.MixedFormations.IFormationLayoutService layout)
+    {
+        _logger = logger;
+        _layout = layout;
+    }
 
     /// <summary>The number the queue and the table know a company by: <c>Formation.Index</c>, a field of the player's team.</summary>
     internal static int CompanyOf(Formation formation) => formation.Index;
@@ -208,6 +214,54 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
         }
 
         return samples;
+    }
+
+    public IReadOnlyList<SquareRead> ReadSquares()
+    {
+        var formations = Mission.Current?.PlayerTeam?.FormationsIncludingSpecialAndEmpty;
+        if (formations == null)
+            return Array.Empty<SquareRead>();
+        List<SquareRead>? reads = null;
+        foreach (var formation in formations)
+        {
+            var arrangement = formation.Arrangement;
+            if (formation.CountOfUnits == 0 || arrangement == null || arrangement.GetType() != typeof(SquareFormation))
+                continue;
+            var side = arrangement.Width;
+            var laidOut = Mission.Current?.IsFieldBattle == true && _layout.FindLaidOutFormation(formation) != null;
+            (reads ??= new List<SquareRead>()).Add(new SquareRead(formation.Index, side, MarshalSquareRules.UnitsAlongSide(side, formation.UnitDiameter, formation.Interval),
+                arrangement.RankCount, formation.CountOfUnitsWithoutDetachedOnes, arrangement.PositionedUnitCount, laidOut));
+        }
+
+        return reads ?? (IReadOnlyList<SquareRead>)Array.Empty<SquareRead>();
+    }
+
+    public SpacingRead? ReadSpacing()
+    {
+        var formations = Mission.Current?.PlayerTeam?.FormationsIncludingSpecialAndEmpty;
+        if (formations == null)
+            return null;
+        foreach (var formation in formations)
+        {
+            if (formation.CountOfUnits == 0 || formation.CalculateHasSignificantNumberOfMounted || !formation.HasAnyMountedUnit)
+                continue;
+            return SpacingOf(formation);
+        }
+
+        return null;
+    }
+
+    /// <summary>A company's four spacing limits as the engine answers them now, and the values it would answer as foot soldiers and as cavalry (Formation.cs:587-595, 3024-3057).</summary>
+    internal static SpacingRead SpacingOf(Formation formation)
+    {
+        var spacing = formation.ArrangementOrder.GetUnitSpacing();
+        var measured = new SpacingLimits(formation.MinimumDistance, formation.MaximumDistance, formation.MinimumInterval, formation.MaximumInterval);
+        var infantry = new SpacingLimits(Formation.GetDefaultMinimumUnitDistance(false), Formation.GetDefaultUnitDistance(false, spacing),
+            Formation.GetDefaultMinimumUnitInterval(false), Formation.GetDefaultUnitInterval(false, spacing));
+        var cavalry = new SpacingLimits(Formation.GetDefaultMinimumUnitDistance(true), Formation.GetDefaultUnitDistance(true, spacing),
+            Formation.GetDefaultMinimumUnitInterval(true), Formation.GetDefaultUnitInterval(true, spacing));
+        var riders = (int)((formation.QuerySystem.CavalryUnitRatioReadOnly + formation.QuerySystem.RangedCavalryUnitRatioReadOnly) * formation.CountOfUnits + 0.5f);
+        return new SpacingRead(formation.Index, formation.CountOfUnits, riders, measured, infantry, cavalry);
     }
 
     // At most MarkSampleMax soldiers; one native read each.

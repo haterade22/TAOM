@@ -4,6 +4,7 @@ internal enum FireMode
 {
     Free,
     OnWord,
+    Massed,
 }
 
 internal enum DrawState
@@ -58,5 +59,18 @@ internal static class MarshalFireRules
         facts.ModeFree || facts.NoFormation || facts.NoRangedWielded || facts.HoldFireOrder || facts.Detached || facts.UsingObject
         || !(facts.TargetDistance >= MarshalTuning.CloseQuarter);
 
-    internal static FireMode NextMode(FireMode mode) => mode == FireMode.Free ? FireMode.OnWord : FireMode.Free;
+    internal static FireMode NextMode(FireMode mode) => mode switch
+    {
+        FireMode.Free => FireMode.OnWord,
+        FireMode.OnWord => FireMode.Massed,
+        _ => FireMode.Free,
+    };
+
+    /// <summary>The soldiers a Massed word counts against: those who hold, draw or stand ready, less the ones whose draw is stale. A soldier who stands aside is not among them.</summary>
+    internal static int Eligible(int holding, int drawing, int idle, int staleDrawing) => holding + drawing + idle - staleDrawing;
+
+    internal static bool IsStaleDraw(double since, double now) => now - since > MarshalTuning.DrawLimit;
+
+    internal static bool MassedWordDue(int holding, int eligible, double now, double lastWord) =>
+        holding >= 1 && eligible >= holding && holding >= MarshalTuning.ReadyShare * eligible - 1e-9 && now - lastWord >= MarshalTuning.WordGap;
 }

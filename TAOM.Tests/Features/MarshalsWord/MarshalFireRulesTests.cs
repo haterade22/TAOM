@@ -131,10 +131,65 @@ public class MarshalFireRulesTests
     }
 
     [TestMethod]
-    public void NextMode_CyclesFreeAndOnWord_InThisSlice()
+    public void NextMode_CyclesFreeOnWordMassedAndBackToFree()
     {
         Assert.AreEqual(FireMode.OnWord, MarshalFireRules.NextMode(FireMode.Free));
-        Assert.AreEqual(FireMode.Free, MarshalFireRules.NextMode(FireMode.OnWord));
+        Assert.AreEqual(FireMode.Massed, MarshalFireRules.NextMode(FireMode.OnWord));
+        Assert.AreEqual(FireMode.Free, MarshalFireRules.NextMode(FireMode.Massed));
+    }
+
+    // ---- Massed (build-spec 7.2) ----
+
+    [TestMethod]
+    public void Eligible_CountsHoldingDrawingAndIdleSoldiers_AndNotTheOnesStandingAside()
+    {
+        Assert.AreEqual(30, MarshalFireRules.Eligible(holding: 20, drawing: 4, idle: 6, staleDrawing: 0));
+    }
+
+    [TestMethod]
+    public void Eligible_LeavesOutDrawingSoldiersWhoseDrawIsOlderThanTheDrawLimit()
+    {
+        Assert.AreEqual(28, MarshalFireRules.Eligible(holding: 21, drawing: 10, idle: 3, staleDrawing: 6));
+    }
+
+    [TestMethod]
+    public void IsStaleDraw_ADrawJustOverTheLimit_IsStale_AndOneAtTheLimitIsNot()
+    {
+        Assert.IsTrue(MarshalFireRules.IsStaleDraw(since: 90.0, now: 90.0 + MarshalTuning.DrawLimit + 0.01));
+        Assert.IsFalse(MarshalFireRules.IsStaleDraw(since: 90.0, now: 90.0 + MarshalTuning.DrawLimit));
+    }
+
+    [TestMethod]
+    public void MassedWordDue_OneReadySoldierAmongThirty_IsNotDue()
+    {
+        Assert.IsFalse(MarshalFireRules.MassedWordDue(holding: 1, eligible: 30, now: 100.0, lastWord: double.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void MassedWordDue_TwentyOneOfThirty_IsDue_AndTwentyIsNot()
+    {
+        Assert.IsTrue(MarshalFireRules.MassedWordDue(21, 30, 100.0, double.NegativeInfinity));
+        Assert.IsFalse(MarshalFireRules.MassedWordDue(20, 30, 100.0, double.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void MassedWordDue_NobodyHolding_IsNeverDue()
+    {
+        Assert.IsFalse(MarshalFireRules.MassedWordDue(0, 0, 100.0, double.NegativeInfinity));
+        Assert.IsFalse(MarshalFireRules.MassedWordDue(0, 5, 100.0, double.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void MassedWordDue_ALoneHoldingSoldierWhoIsAlsoTheOnlyEligibleOne_IsDue()
+    {
+        Assert.IsTrue(MarshalFireRules.MassedWordDue(1, 1, 100.0, double.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void MassedWordDue_BeforeTheWordGapHasPassed_IsNotDue_AndAtTheGapIsDue()
+    {
+        Assert.IsFalse(MarshalFireRules.MassedWordDue(30, 30, 100.0 + MarshalTuning.WordGap - 0.01, 100.0));
+        Assert.IsTrue(MarshalFireRules.MassedWordDue(30, 30, 100.0 + MarshalTuning.WordGap, 100.0));
     }
 
     private static StandAsideFacts Calm() => new(false, false, false, false, false, false, double.PositiveInfinity);

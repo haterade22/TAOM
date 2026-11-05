@@ -46,9 +46,11 @@
 	<string id="str_key_name.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths}Keep the Widths (TAOM)" />
 	<string id="str_key_description.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths_desc}Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
 	<string id="str_key_name.TaomMarshalHotKeyCategory_543" text="{=taom_key_marshal_fire}Change the Archers' Fire (TAOM)" />
-	<string id="str_key_description.TaomMarshalHotKeyCategory_543" text="{=taom_key_marshal_fire_desc}Press with a company selected to switch its archers between firing at will and drawing their bows to hold until your word, or for 14 seconds at most. Defaults to Comma." />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_543" text="{=taom_key_marshal_fire_desc}Press with a company selected to switch its archers between firing at will, drawing their bows to hold until your word (or for 14 seconds at most), and drawing and holding until most of them are ready, when the word is given for you. Defaults to Comma." />
 	<string id="str_key_name.TaomMarshalHotKeyCategory_544" text="{=taom_key_marshal_word}Give the Word (TAOM)" />
 	<string id="str_key_description.TaomMarshalHotKeyCategory_544" text="{=taom_key_marshal_word_desc}Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
+	<string id="str_key_name.TaomMarshalHotKeyCategory_545" text="{=taom_key_marshal_hold}Hold the Line (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_545" text="{=taom_key_marshal_hold_desc}Press with a company selected: its shielded foot soldiers in a shield wall, circle or square stop attacking and keep their places, and strike back for a few seconds when wounded. A charge, a retreat or a second press lets them fight. Defaults to Period." />
 
 	<!-- Realm Borders (#698), under Options > Keybindings > Campaign Map. Same numbering rule as
 	     above: the trailing number is the game key id, kept in step with

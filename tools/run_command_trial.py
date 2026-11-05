@@ -13,7 +13,7 @@ controls in order, and writes one line per step:
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
 no failed Seat or Marshal's Word check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
 line for a trial or Seat site count), no [ERROR] line of Marshal's Word (a hotkey registration that failed, a session that could not start, a patch
-class of its category that failed or was skipped, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
+class of its category that failed or was skipped, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
 is judged: the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
 clean without), and no uncommitted file under the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
 the edited file is still uncommitted (docs/features/seat-of-seeing.md names the cases only a content hash in the stamp could close),
@@ -83,6 +83,13 @@ MARSHAL_STEPS = (
     "volley_looses",
     "mark_keeps_order",
     "outline_clears",
+    "volley_massed",
+    "square_side_kept",
+    "spacing_one_rider",
+    "hold_line_proof",
+    "hold_line_slot",
+    "hold_line_strike",
+    "hold_line_flag",
 )
 STEPS = SEAT_STEPS + MARSHAL_STEPS
 
@@ -95,8 +102,8 @@ MARSHAL_CHECK_FAIL = re.compile(r"\bid=(taom\.marshals-word\.[a-z0-9.-]+) result
 # hot key failure is logged at LogError for the same reason. Another feature's patch or guard line does not fail this run.
 SEAT_ERROR = re.compile(
     r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter|SeatScreenAdapter)\.\w+ ran off the main mission thread)")
-# An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, and a session that could not
-# start); the category Patch141 that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
+# An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, a session that could not
+# start, the order panel's registration that failed, and the spacing repair's transpiler that left a method as it was); the category Patch141 that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
 # namespace that was skipped (the applier writes the class's full name, which holds no "Patch141_"); and the thread guard's line for one of its
 # adapters' native writes. Its fault and its array fault also write a failed check line, which MARSHAL_CHECK_FAIL reads.
 MARSHAL_ERROR = re.compile(
@@ -200,16 +207,16 @@ def judge(done, report_json, log_text=None, steps=STEPS):
             results.setdefault(match.group(1), []).append(match.group(2))
     failed = sorted({step for step, seen in results.items() if "FAIL" in seen})
     other_fails = [line.strip() for line in lines if "result=FAIL" in line and not STEP_LINE.search(line)]
+    faults = sorted({match.group(1) for pattern in (SEAT_CHECK_FAIL, MARSHAL_CHECK_FAIL) for match in map(pattern.search, lines) if match})
     if failed or other_fails:
         named = ", ".join(failed + [line[:120] for line in other_fails])
-        return 1, f"FAIL lines: {named}"
+        return 1, f"FAIL lines: {named}" + (f"; failed checks: {', '.join(faults)}" if faults else "")
     missing = [step for step in steps if step not in results]
     if missing:
         return 1, "reason=final but the log has no [SeatTrial] line for: " + ", ".join(missing)
     block = runner.crash_report_line(log_text, None)
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
-    faults = sorted({match.group(1) for pattern in (SEAT_CHECK_FAIL, MARSHAL_CHECK_FAIL) for match in map(pattern.search, lines) if match})
     if faults:
         return 1, "a Seat or Marshal's Word check line failed: " + ", ".join(faults)
     errors = [line.strip() for line in lines if SEAT_ERROR.search(line) or MARSHAL_ERROR.search(line)]

@@ -1,4 +1,4 @@
-# In-game checks for the Seat of Seeing (stages S1 to S5) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
+# In-game checks for the Seat of Seeing (stages S1 to S5) and Marshal's Word (stages M1 to M6), one draft manifest for both features because one held
 # issue covers them (Seat contract, Deviations row 8). Read by tools/ingame_verdict.py. The Seat's lines come first; Marshal's Word's checks begin
 # at the comment "Marshal's Word, stages M1" below.
 #
@@ -18,7 +18,7 @@
 #
 # DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
 issue = 0
-title = "Seat of Seeing S1 to S5 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target, glides back, the hero fights on and a soldier can be taken, orders queue, companies keep the array, archers loose on the word, a company marks its target"
+title = "Seat of Seeing S1 to S5 and Marshal's Word M1 to M6: the camera lifts off the hero, points, keeps to a target, glides back, the hero fights on and a soldier can be taken, orders queue, companies keep the array, archers loose on the word and by themselves, a company marks its target, holds the line and forms a square, a rider no longer spoils spacing, the order panel offers the new orders"
 fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
 logs = ["taom"]
 
@@ -190,7 +190,9 @@ fail = [
   '\[MarshalsWord\] Marshal.s Word could not start',
   '\[MarshalsWord\] Marshal.s Word failed',
   '\[MarshalsWord\] the array layout failed',
+  '\[MarshalsWord\] the spacing repair',
   '\[MarshalsWord\] hotkey registration failed',
+  '\[MarshalsWord\] order panel registration failed',
   '\[PatchApply\] (?:\S*Patch141_\S*|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)',
 ]
 # A full queue needs twelve captures first, so its log already holds a pass line and this check passes. A session that never went live
@@ -301,18 +303,18 @@ absence = "not-reached"
 
 # Stages M3 and M4. The archers' lines come from MarshalFireDriver.cs and the mark lines from MarshalQueueDriver.cs and MarshalMarkWatch.cs,
 # through IOutcomeLog, with the ids in MarshalChecks.cs. The plain [Marshal] lines (word, fire, mark) are the evidence a person reads; the
-# check lines are the verdicts. Stage M3 is built with Massed held back: key 543 cycles free and on-word only.
+# check lines are the verdicts. Key 543 cycles free, on-word and Massed.
 
 [[check]]
 id = "taom.marshals-word.fire"
-needs = "select a company of archers and press Change the Archers' Fire (default Comma): it goes to on-word, and a second press returns it to free. A company under AI control is skipped with a reason"
+needs = "select a company of archers and press Change the Archers' Fire (default Comma): it goes to on-word, a second press to Massed and a third returns it to free. A company under AI control is skipped with a reason"
 reached = ['\[Check\] id=taom\.marshals-word\.fire result=pass']
 pass = [
   '\[Check\] id=taom\.marshals-word\.fire result=pass mission=[0-9]+ mode=OnWord company=[0-9]+$',
   '\[Check\] id=taom\.marshals-word\.fire result=pass mission=[0-9]+ mode=Free company=[0-9]+$',
 ]
 fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
-# The check needs both modes, so one press alone (the way into the on-word mode) reads NOT REACHED: a second press must bring the company back to free.
+# The check needs both modes, so one press alone (the way into the on-word mode) reads NOT REACHED: the company must be brought back to free, which takes a third press, because the second goes to Massed.
 absence = "not-reached"
 
 [[check]]
@@ -332,6 +334,7 @@ pass = ['\[Check\] id=taom\.marshals-word\.volley-hold result=pass mission=[0-9]
 fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[Check\] id=taom\.marshals-word\.volley-hold result=fail',
+  '\[Swallowed\] feature=MarshalsWord site=MarshalWordComponent\.OnAIInputSet',
 ]
 # holding is the smallest count of the window and shots counts the arrows that left while a soldier held. A fail means the bow did not stay drawn:
 # the stage stops there (build-spec 7), and the cause is one of the three native beliefs of 7.1. Fewer than five holding judges nothing: NOT REACHED.
@@ -373,6 +376,108 @@ fail = [
 # company on a Move read onTarget=1 of=20 (run 20261104-185456) and is not judged any more: soldiers in hand to hand choose their own foe (build-spec
 # Deviations row 19). A company on Charge, Advance or ChargeToTarget holds a target vanilla gave it and is neither sampled nor logged. A company with any
 # other order, or fewer than three soldiers with a target, is logged on the [Marshal] mark line and not judged. A fail stops the stage (build-spec 8.1).
+absence = "not-reached"
+
+# Stages M3 (Massed fire) and M5. The lines come from MarshalFireDriver.cs and MarshalProofWatch.cs through IOutcomeLog, with the ids in MarshalChecks.cs. A skip
+# line reads NOT REACHED with its reason, because none of these rows lists skip among its reached patterns.
+
+[[check]]
+id = "taom.marshals-word.massed"
+needs = "put a company of archers on Massed fire (press Change the Archers' Fire twice, default Comma) with an enemy in range: when at least 70 percent of the archers who can still shoot hold a drawn bow, the word is given for them, and at least 70 percent of the holders loose within 1.3 seconds"
+reached = ['\[Check\] id=taom\.marshals-word\.massed result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.massed result=pass mission=[0-9]+ company=[0-9]+ holding=([5-9]|[1-9][0-9]+) shots=[0-9]+ eligible=[0-9]+ stale=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.massed result=fail',
+  '\[Swallowed\] feature=MarshalsWord site=MarshalWordComponent\.OnAIInputSet',
+]
+# This is the volley that followed a word the share rule gave, so it reads the same release window as volley-release and adds the eligible count and the draws left out as
+# stale. A Massed word with fewer than five holding judges no window and writes a skip with reason=too-few-holding: NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.hold"
+needs = "select a company and press Hold the Line (default Period): its soldiers stop attacking; a second press lets them fight again. A company under AI control is skipped with a reason"
+reached = ['\[Check\] id=taom\.marshals-word\.hold result=pass']
+pass = [
+  '\[Check\] id=taom\.marshals-word\.hold result=pass mission=[0-9]+ hold=on company=[0-9]+$',
+  '\[Check\] id=taom\.marshals-word\.hold result=pass mission=[0-9]+ hold=off company=[0-9]+$',
+]
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# Both presses are needed, as for fire: one press alone reads NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.hold-line"
+needs = "hold the line on a company of foot soldiers that fights beside a company that does not hold: from 3 seconds after the press, for 10 seconds, the soldiers of the line deal at most one blow in ten of the other company's, which must deal at least 10, and at least 5 held soldiers read the attack flag off. A soldier of the held company who is not in the line (no shield, or an order that is not a hold) is not counted against it, and every soldier of the other company counts"
+reached = ['\[Check\] id=taom\.marshals-word\.hold-line result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.hold-line result=pass mission=[0-9]+ company=[0-9]+ flagOff=[0-9]+ blows=[0-9]+ control=[0-9]+ controlBlows=[0-9]+ seconds=[0-9.]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.hold-line result=fail',
+]
+# The soldiers who qualify are shielded foot soldiers in the shield wall, circle or square under an order that is not a charge; a wounded soldier's blows inside the strike back window count as hold-strike's, not as the held company's.
+# The control is the busiest company that is not on hold, chosen once the baseline is taken. A control that dealt under ten blows (reason=no-control) takes a new baseline and the window stays open,
+# so a later busy window writes the verdict (the skip is written once, and a later pass line makes the row PASS); a flag that read on for the held soldiers (reason=flag-not-off) writes a skip too: NOT REACHED.
+# A fail stops the stage (build-spec 9.2): the flag does not stop the AI that already holds a target.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.hold-slot"
+needs = "hold the line on a company of foot soldiers in the shield wall, circle or square under Stop, with enemies pressing and at least one soldier wounded: in each five second window with at least five steered reads, no more of the soldiers the clamp steered end a read farther from the place they held when the order was given than nearer to it"
+reached = ['\[Check\] id=taom\.marshals-word\.hold-slot result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.hold-slot result=pass mission=[0-9]+ company=[0-9]+ qualified=([5-9]|[1-9][0-9]+) far=[0-9]+ order=Stop$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.hold-slot result=fail',
+  '\[Swallowed\] feature=MarshalsWord site=MarshalWordComponent\.OnAIInputSet',
+]
+# Judged every five seconds from the driver's count of the line, and only under Stop, where the slot is an anchor the soldier's own place set (a Move gives a moving slot the check does not judge).
+# It waits for five qualified soldiers, at least half of whom read an anchor, for a wound, and for five steered reads in the window, because a line that nobody presses stays in place whatever the steering does: NOT REACHED until then.
+# The [Marshal] slot line carries the order beside the distances, so a zero under Stop does not read as a pass. A fail stops the clamp (build-spec 9.2): the AI's input is in another frame, or replacing it moves soldiers away.
+# The line ends with closer=, farther=, steered= and loose=: over its five seconds, the steered soldiers whose next hold read ended nearer their slot than the distance at their first replaced tick, those who ended farther, all steered reads
+# (a soldier in his strike back window is left out), and the reads beyond the slack that no replaced tick preceded. The check judges closer against farther. far= and max= are facts: a crowd, a press or an input the clamp leaves alone moves soldiers,
+# and the clamp walks back no soldier who was pushed away. A slot line is also written when the hold goes off, with no verdict.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.hold-strike"
+needs = "hold the line on a company of foot soldiers with enemies pressing: a soldier wounded by a blow (not an arrow, not a parried blow) has the attack flag back for four seconds, and at least half of the soldiers wounded long enough ago to be read have it on"
+reached = ['\[Check\] id=taom\.marshals-word\.hold-strike result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.hold-strike result=pass mission=[0-9]+ company=[0-9]+ struck=[1-9][0-9]* flagOn=[1-9][0-9]*$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.hold-strike result=fail',
+]
+# A wound counts when it is settled, which is two reads (0.67 seconds) old, so the pass that has only just seen it is never counted as a failure to answer. Judged once per company for a pass
+# and again for a fail. No settled wound is NOT REACHED. A fail means the strike back never gave the flag back: hold the line then disarms a company that is being cut down.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.square"
+needs = "give a Square order to a company of foot soldiers only (no archers, no riders) that you command: the plain square of the base game forms, every soldier has a slot, and the line reads laidOut=0"
+reached = ['\[Check\] id=taom\.marshals-word\.square result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.square result=pass mission=[0-9]+ company=[0-9]+ side=[0-9.]+ files=[0-9]+ ranks=[0-9]+ units=[0-9]+ placed=[0-9]+ laidOut=0$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.square result=fail',
+]
+# placed is the arrangement's count of soldiers with a slot, and it must equal units. laidOut=1 marks a mixed company, whose slots Patch30 answers and on which the side has no effect: its pass line proves nothing about the square and does not match, so the row reads NOT REACHED.
+# A fail stops the stage (build-spec 9.1): the plain class has never run in a shipped mission.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.spacing"
+needs = "a company of foot soldiers with one rider, with Spacing Repair on (a restart after changing it) and no co-op: its four spacing limits read as a foot company's"
+reached = ['\[Check\] id=taom\.marshals-word\.spacing result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.spacing result=pass mission=[0-9]+ company=[0-9]+ units=[0-9]+ riders=[1-9][0-9]* minDistance=[0-9.]+ maxDistance=[0-9.]+ minInterval=[0-9.]+ maxInterval=[0-9.]+ infantry=[0-9./]+ cavalry=[0-9./]+ reads=Infantry$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.spacing result=fail',
+  '\[MarshalsWord\] the spacing repair',
+]
+# A skip names why the repair is off (setting-off, repair-off, coop, dedicated-server, prepare-failed) or that infantry and cavalry share the values (no-test): NOT REACHED.
+# The getters can be inlined, and a patch on an inlined method never runs, so reads=Cavalry or reads=Mixed on a session with the repair applied is the finding (build-spec 9.3).
 absence = "not-reached"
 
 [[human]]
@@ -619,3 +724,39 @@ claim = "a mark given by a left click on an enemy company, with the order panel 
 
 [[human]]
 claim = "a company of throwers (javelins or throwing axes) put on the word holds the drawn throw for up to 14 seconds or looses it at the word, as archers do, and nothing else about it changes"
+
+[[human]]
+claim = "Options > Keybindings > Action shows the row \"Hold the Line (TAOM)\" with the key Period and no ERROR text, and the Change the Archers' Fire row says it cycles three modes"
+
+[[human]]
+claim = "the MCM group \"Marshal's Word\" shows the rows Hollow Square and Spacing Repair, and Spacing Repair says a change takes a restart"
+
+[[human]]
+claim = "with archers on Massed fire the word is given by itself once most of the archers who can still shoot hold a drawn bow, the volley sounds like a word's (a fraction of a second apart), and a third press of Comma returns the company to fire at will"
+
+[[human]]
+claim = "Hold the Line on a company of shielded foot soldiers in the shield wall, circle or square under Stop, meeting the enemy: they stop attacking and keep their places (the clamp stops a soldier walking away from his place; it does not walk back a soldier who was knocked away or drawn off, which the feature doc names as a limit), a soldier who is wounded by a blow strikes back for about four seconds and is then disarmed again, a second press or any charge makes the whole company fight at once, a soldier who is not shielded, is mounted, holds a bow or a thrown weapon, or fights on a siege engine is left alone, and the hero fighting on in the Seat is never disarmed"
+
+[[human]]
+claim = "a Square order on a pure infantry company forms a hollow square of the side a drag asks for, the side stays when a soldier falls or joins, and a company of foot and ranged soldiers mixed keeps its mixed layout and ignores the side; a square entered from a column starts packed"
+
+[[human]]
+claim = "an army that has one rider in a company of foot soldiers draws that company at the foot soldiers' spacing in the order preview and on the field, and the spacing looks the same on the next battle after a restart with Spacing Repair off"
+
+[[human]]
+claim = "a company on Hold the Line that the hero's fall hands to the AI fights at once, with no one left to press the key, and a Move or an Advance given to it keeps its wall"
+
+[[human]]
+claim = "in a Host Review mission, where nothing can be hurt, a held company never strikes back (damage is not dealt there), which the feature doc names"
+
+[[human]]
+claim = "the order panel shows one more set, Marshal's Word, with Archers' fire, Give the word and Hold the line, in all four pairs of the Order Type option (bar or radial) and the Order Layout option (default or legacy): the set fits its movie, the set's own button and the entries show their icons, and a click on each does what its key does for the companies that were selected"
+
+[[human]]
+claim = "with the legacy layout the new set is reached by F8 and F9 still closes the panel; with the default layout the set is the tenth and has no key, and Comma, M and Period still work from the keyboard"
+
+[[human]]
+claim = "the new set does not appear in a town, an arena or a hideout, and in a Host Review mission the panel shows the base game's orders; the active state of Archers' fire and Hold the line follows the selected companies when the selection changes or the panel opens (a panel that stays open shows the old state until then, which the feature doc names as a limit)"
+
+[[human]]
+claim = "the icons of the set's own button (the base game's toggle icon) and of the three panel entries (the fire toggle, the skirmish icon and the shield wall icon) read well beside the base game's, in both movies, and none is blank"

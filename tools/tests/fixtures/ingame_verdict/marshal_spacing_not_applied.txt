@@ -1,0 +1,4 @@
+[2026-11-04 14:00:01] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-11-04 14:00:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-11-04 14:08:00] [INFO] [Check] id=taom.marshals-word.spacing result=skip mission=1 company=1 units=41 riders=1 minDistance=1.70 maxDistance=2.00 minInterval=0.18 maxInterval=0.50 infantry=0.00/0.40/0.00/0.38 cavalry=1.70/2.00/0.18/0.50 reason=coop
+[2026-11-04 14:20:00] [INFO] [Shutdown] clean module unload

@@ -31,6 +31,7 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
         registrator.Register<IMarshalFireAdapter, MarshalFireAdapter>(Reuse.Transient);
         registrator.Register<IMarshalOutlineAdapter<TaleWorlds.MountAndBlade.Agent>, MarshalOutlineAdapter>(Reuse.Transient);
         registrator.Register<MarshalHotKeys>(Reuse.Singleton);
+        registrator.Register<IMarshalOrderProviderRegistrar, NullMarshalOrderProviderRegistrar>(Reuse.Singleton);
     }
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
@@ -49,6 +50,23 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
         {
             resolver.Resolve<IModLogger>().LogError(
                 $"[MarshalsWord] hotkey registration failed, the Marshal's Word keys stay unbound: {ex.GetType().Name}: {ex.Message}");
+        }
+
+        RegisterOrderProvider(resolver);
+    }
+
+    // Once per process, as Host Review does (the engine's factory rejects a second provider of the same type). A failure leaves the panel as the base game builds it,
+    // and the keys still work.
+    private static void RegisterOrderProvider(IResolver resolver)
+    {
+        try
+        {
+            resolver.Resolve<IMarshalOrderProviderRegistrar>().Register();
+        }
+        catch (Exception ex)
+        {
+            resolver.Resolve<IModLogger>().LogError(
+                $"[MarshalsWord] order panel registration failed, the panel keeps the base game's entries: {ex.GetType().Name}: {ex.Message}");
         }
     }
 }

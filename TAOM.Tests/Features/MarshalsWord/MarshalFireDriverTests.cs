@@ -63,14 +63,19 @@ public class MarshalFireDriverTests
     }
 
     [TestMethod]
-    public void PressFire_Twice_ReturnsTheCompanyToFree_WithNoOrder()
+    public void PressFire_ThreeTimes_GoesOnWordThenMassedThenFree_AndOnlyTheFirstTwoGiveFireAtWill()
     {
         Press(1.0);
         Press(2.0);
 
+        Assert.AreEqual(FireMode.Massed, MarshalFireTable.ModeOf(3));
+        Assert.AreEqual(2, _orders.Issued.Count, "a change to a mode with a word gives fire at will");
+
+        Press(3.0);
+
         Assert.AreEqual(FireMode.Free, MarshalFireTable.ModeOf(3));
-        Assert.AreEqual(1, _orders.Issued.Count, "only the change to OnWord gives fire at will");
-        CollectionAssert.AreEqual(new[] { MarshalMessage.FireOnWord, MarshalMessage.FireFree }, _said);
+        Assert.AreEqual(2, _orders.Issued.Count, "the change to Free gives no order");
+        CollectionAssert.AreEqual(new[] { MarshalMessage.FireOnWord, MarshalMessage.FireMassed, MarshalMessage.FireFree }, _said);
     }
 
     [TestMethod]

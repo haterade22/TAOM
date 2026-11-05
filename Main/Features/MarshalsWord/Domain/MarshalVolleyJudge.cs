@@ -25,6 +25,9 @@ internal sealed class MarshalVolleyJudge
     private int _wordHolding;
     private int _releaseShotsAtWord;
 
+    /// <summary>A word opened a release window that has not been judged yet.</summary>
+    internal bool ReleaseOpen => _releaseOpen;
+
     internal VolleyVerdict? JudgeHold(double now, int holding, int shotsWhileHolding, double lastWord)
     {
         if (holding < MarshalTuning.VolleyMinHolding)

@@ -243,6 +243,19 @@ class MarshalJudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("taom.marshals-word.volley-hold", why)
 
+    def test_a_failing_step_and_a_failed_marshal_check_are_named_together_in_the_fail_text(self):
+        check = "[2026-11-04 10:01:04] [WARNING] [Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=18 far=7 order=Stop"
+        step = fail_line("enter", "reason=timeout")
+        code, why = judge(FINAL, None, full_log(extra=(step, check)))
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL lines: enter", why)
+        self.assertIn("failed checks: taom.marshals-word.hold-slot", why)
+
+    def test_a_failing_step_with_no_failed_check_names_no_checks(self):
+        code, why = judge(FINAL, None, full_log(extra=(fail_line("enter"),)))
+        self.assertEqual(code, 1)
+        self.assertNotIn("failed checks", why)
+
     def test_the_fault_check_of_marshals_word_fails_the_run(self):
         check = "[2026-11-04 10:01:04] [INFO] [Check] id=taom.marshals-word.fault result=fail mission=1 error=NullReferenceException"
         code, why = judge(FINAL, None, full_log(extra=(check,)))
@@ -715,8 +728,8 @@ class SourceTieTests(unittest.TestCase):
         source = MARSHAL_STEPS_SOURCE.read_text(encoding="utf-8")
         self.assertEqual(tuple(re.findall(r'new SeatTrialStep\(\s*"(\w+)"', source)), trial.MARSHAL_STEPS)
 
-    def test_every_marshal_step_has_a_handler_in_the_marshal_script_file(self):
-        script = (MARSHAL_TRIAL_SOURCE / "CommandTrialScript.Marshal.cs").read_text(encoding="utf-8")
+    def test_every_marshal_step_has_a_handler_in_one_of_the_three_marshal_script_files(self):
+        script = "".join((MARSHAL_TRIAL_SOURCE / name).read_text(encoding="utf-8") for name in ("CommandTrialScript.Marshal.cs", "CommandTrialScript.MarshalM5.cs", "CommandTrialScript.MarshalHold.cs"))
         registered = tuple(re.findall(r'into\["(\w+)"\] = ', script))
         self.assertEqual(registered, trial.MARSHAL_STEPS)
 

@@ -21,9 +21,9 @@ namespace TAOM.Client.Features.MarshalsWord;
 /// any mission with a screen and a player team. Built by the engine as a <c>[DefaultView]</c> (a view TAOM adds in OnMissionBehaviorInitialize is never registered and never
 /// ticks, #970), so every field stays null-safe. It builds one <see cref="MarshalSession"/> in <c>OnMissionScreenInitialize</c> and never
 /// again: a null session field is final, because the mission still calls <c>OnMissionTick</c> after <c>OnMissionScreenFinalize</c>
-/// (MissionScreen.cs:4241-4245 only unregisters from the screen; Mission.cs:3751-3754 walks the behaviours), and <c>RemoveMissionBehavior</c>
+/// (MissionScreen.cs:2918-2922 only unregisters from the screen; Mission.cs:3751-3754 walks the behaviours), and <c>RemoveMissionBehavior</c>
 /// leaves the view in the screen's list (Mission.cs:4708-4725). The keys are read in <c>OnMissionScreenTick</c> (once per real frame, never in
-/// <c>OnMissionTick</c>, which fast time repeats), only while the session is live: the three held keys only with the order panel open, and the two
+/// <c>OnMissionTick</c>, which fast time repeats), only while the session is live: the three held keys only with the order panel open, and the three
 /// pressed keys and the show-indicators key on every live frame.
 /// </summary>
 [DefaultView]
@@ -39,6 +39,7 @@ public sealed class MarshalView : MissionView
     private volatile bool _trialWidths;
     private volatile bool _trialFire;
     private volatile bool _trialWord;
+    private volatile bool _trialHold;
 
     public override void OnMissionScreenInitialize()
     {
@@ -75,11 +76,13 @@ public sealed class MarshalView : MissionView
         var open = Mission.IsOrderMenuOpen;
         var fire = _trialFire || Pressed(_keys.FireMode);
         var word = _trialWord || Pressed(_keys.Word);
+        var hold = _trialHold || Pressed(_keys.HoldLine);
         _trialFire = false;
         _trialWord = false;
+        _trialHold = false;
         session.OnScreenTick(new MarshalScreenInput(open && (_trialQueue || Down(_keys.Queue)), open && (_trialWidths || Down(_keys.KeepWidths)), open,
             Time.ApplicationTime, open && (_trialMark || Down(_keys.Mark)), Input.IsGameKeyDown((int)GameKeyDefinition.ShowIndicators),
-            fire, word));
+            fire, word, hold));
     }
 
     public override void OnMissionTick(float dt)
@@ -96,14 +99,22 @@ public sealed class MarshalView : MissionView
         MarshalFireTable.OnShot(shooterAgent);
     }
 
+    // Native chooses this callback's thread too, so the hit callback only adds to a counter, and only with a session.
+    public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
+    {
+        base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in attackCollisionData);
+        MarshalFireTable.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);
+    }
+
     public override void OnMissionModeChange(MissionMode oldMissionMode, bool atStart)
     {
         base.OnMissionModeChange(oldMissionMode, atStart);
         _session?.OnModeChange();
     }
 
-    // Two teardown paths: the end-mission path (MissionScreen.cs:4241-4245) and MissionState.OnFinalize, which removes the behaviours with
-    // no EndMission. Finishing is terminal: a screen tick can still run after the second.
+    // Two teardown paths: the end-mission path (MissionScreen.cs:2918-2922) and MissionState.OnFinalize, which removes the behaviours with
+    // no EndMission. Finishing is terminal: a screen tick can still run after the second. Nothing in TAOM or the cached engine removes this view while the mission runs
+    // (Mission.OnMissionStateFinalize at Mission.cs:2209-2224 is the one caller that walks every behaviour), so the finish owes the soldiers no restore.
     public override void OnMissionScreenFinalize()
     {
         base.OnMissionScreenFinalize();
@@ -133,6 +144,9 @@ public sealed class MarshalView : MissionView
 
     /// <summary>Field trial: stores a press of "Give the word".</summary>
     internal void TrialPressWord() => _trialWord = true;
+
+    /// <summary>Field trial: stores a press of "Hold the line".</summary>
+    internal void TrialPressHold() => _trialHold = true;
 
     // The static test is cheap, and the view's own context test allocates a click key array on each call (InputContext.cs:310-312).
     private bool Pressed(InputKey key) => key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && Input.IsKeyPressed(key);

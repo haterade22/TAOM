@@ -19,4 +19,7 @@ internal interface IMarshalHookSink
 
     /// <summary>An array commit of two or more companies asks for a march.</summary>
     void MarchRequested(IReadOnlyList<MarchTarget> targets);
+
+    /// <summary>A click on one of Marshal's Word's panel entries, from the panel's screen tick, for the companies the panel had selected.</summary>
+    void PanelPress(PanelAction action, IReadOnlyList<int> companies);
 }

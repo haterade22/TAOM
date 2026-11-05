@@ -182,6 +182,19 @@ public class CoopVetoClassificationTests
             "MarshalHooks.IsLive and the Keep the Array setting hold, for two or more companies of the player's team in a non-deployment " +
             "vertical layout, and returns true otherwise. The session is off in a network session. A throw latches the takeover off " +
             "for the mission and vanilla runs. The positions it computes are a player's own order, not replicated campaign state."),
+        ["MarshalSquareArrangementPatch"] = new(CoopVeto.ReviewedSafe,
+            "Marshal's Word (build-spec 9.1): the prefix on ArrangementOrder.GetArrangement replaces the arrangement a Square order builds with the engine's plain SquareFormation " +
+            "only while MarshalHooks.IsLive and the Hollow Square setting hold, for a formation of the player's own team that is not under AI control, and returns true at its first " +
+            "tests otherwise. The session is off whenever a network session is active (the engine's or a co-op one), so a co-op peer never reaches the replacement, and the " +
+            "arrangement is a layout of this machine's own company, not replicated campaign state."),
+        ["MarshalSquareReapplyPatch"] = new(CoopVeto.ReviewedSafe,
+            "Marshal's Word (build-spec 9.1): the prefix on Formation.ReapplyFormOrder skips vanilla only for a formation whose arrangement is exactly the plain SquareFormation, which only " +
+            "the live session's Square prefix builds, and keeps the square's side in the custom width where vanilla would copy its perimeter. Every other arrangement returns true at once. " +
+            "The write is the same SetFormOrder call vanilla makes, on the formation it was given, and no replicated campaign state is skipped."),
+        ["MarshalSquareWidthPatch"] = new(CoopVeto.ReviewedSafe,
+            "Marshal's Word (build-spec 9.1): the prefix on Formation.CalculateDesiredWidth answers only for a formation whose arrangement is exactly the plain SquareFormation, which " +
+            "only the live session's Square prefix builds, and returns the square's own side clamped to its bounds. Every other arrangement returns true at once. It reads the formation it " +
+            "was given and writes nothing, so no replicated campaign state is skipped."),
         ["Patch140_CrosshairHitMarker"] = new(CoopVeto.ReviewedSafe,
             "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips CrosshairVM.ShowHitMarker only while the player's own view is in the Seat (SeatPresence, set by this peer's view on its own key press), and returns true otherwise. The method only flips three flags on a view model that draws a hit marker, so there is no replicated mutation to skip. The Seat is presentation in CoopSettingsRelevance."),
         ["Patch140_EquipmentViewDropTick"] = new(CoopVeto.ReviewedSafe,

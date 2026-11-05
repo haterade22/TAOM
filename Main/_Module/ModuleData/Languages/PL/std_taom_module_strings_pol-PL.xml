@@ -7439,7 +7439,7 @@
 
     <string id="taom_marshal_mcm_enabled" text="Enable Marshal's Word" />
 
-    <string id="taom_marshal_mcm_enabled_hint" text="Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on. Default: on." />
+    <string id="taom_marshal_mcm_enabled_hint" text="Richer orders for your companies in a battle. Once the battle has begun, hold Give the Order in Turn (default Left Shift, rebindable under Keybindings &gt; Action) while you give an order with the order panel open, and the company carries it out after its current orders. Off, none of this acts from the next battle on, except Spacing Repair, which is decided when the game starts and needs this on at that start. Default: on." />
 
     <string id="taom_marshal_mcm_keep_array" text="Keep the Array" />
 
@@ -7531,6 +7531,17 @@
     <string id="TAOM_LD_Hud_Speed" text="Speed: {SPEED}x   M  Next speed" />
     <string id="TAOM_LD_Hud_SpeedButton" text="{SPEED}x" />
     <string id="TAOM_LD_Hud_SpeedTitle" text="Game speed" />
+    <string id="taom_marshal_fire_massed" text="The archers draw and hold, and the word is given for you once most of them are ready. A bow is held for 14 seconds at most." />
+    <string id="taom_marshal_hold_on" text="The selected companies hold the line: shielded foot soldiers in a shield wall, circle or square stop attacking until you press Hold the Line again or order a charge." />
+    <string id="taom_marshal_hold_off" text="The selected companies fight again." />
+    <string id="taom_marshal_mcm_hollow_square" text="Hollow Square" />
+    <string id="taom_marshal_mcm_hollow_square_hint" text="Once the battle has begun, a Square order on a company of yours that you command forms the plain square of the base game, which keeps the side you give it and grows only when its soldiers no longer fit, instead of the packed schiltron. A company of foot and ranged soldiers mixed keeps its mixed layout and ignores the side. Default: on." />
+    <string id="taom_marshal_mcm_spacing_repair" text="Spacing Repair" />
+    <string id="taom_marshal_mcm_spacing_repair_hint" text="A company of foot soldiers with riders under a tenth of its soldiers keeps the spacing limits of a foot company, as it already keeps their spacing, instead of the limits of cavalry. A change takes a restart of the game, and it applies only if Enable Marshal's Word is on when the game starts. It stays off in a co-op session and on a dedicated server, so that two machines never compute different widths. Default: on." />
+    <string id="taom_marshal_panel_fire" text="Archers' fire" />
+    <string id="taom_marshal_panel_word" text="Give the word" />
+    <string id="taom_marshal_panel_hold" text="Hold the line" />
+    <string id="taom_marshal_panel_set" text="Marshal's Word" />
   </strings>
 
 </base>

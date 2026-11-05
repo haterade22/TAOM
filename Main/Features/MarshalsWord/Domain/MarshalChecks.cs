@@ -23,12 +23,22 @@ internal static class MarshalChecks
     internal const string WordId = "taom.marshals-word.word";
     internal const string VolleyHoldId = "taom.marshals-word.volley-hold";
     internal const string VolleyReleaseId = "taom.marshals-word.volley-release";
+    internal const string MassedId = "taom.marshals-word.massed";
+    internal const string HoldId = "taom.marshals-word.hold";
+    internal const string HoldLineId = "taom.marshals-word.hold-line";
+    internal const string SquareId = "taom.marshals-word.square";
+    internal const string SpacingId = "taom.marshals-word.spacing";
     internal const string MarkId = "taom.marshals-word.mark";
     internal const string MarkEffectId = "taom.marshals-word.mark-effect";
+    internal const string HoldSlotId = "taom.marshals-word.hold-slot";
+    internal const string StrikeId = "taom.marshals-word.hold-strike";
 
     /// <summary>Hot-path counters of the archers' callback: one increment per Hold and one per Release, no string and no I/O.</summary>
     internal const string HoldCounterId = "taom.marshals-word.fire-hold";
     internal const string ReleaseCounterId = "taom.marshals-word.fire-release";
+
+    /// <summary>Hot-path counter of the held line's steering: one increment per input the clamp replaced.</summary>
+    internal const string ClampCounterId = "taom.marshals-word.hold-clamp";
 
     /// <summary>Hot-path counter of preview solves: one increment per preview, at most 30 a second with the mouse held, no string and no I/O.</summary>
     internal const string PreviewCounterId = "taom.marshals-word.array-preview";
