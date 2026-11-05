@@ -41,6 +41,19 @@ public interface IEnlistmentWaitMenuPresenter
     /// per settlement stop, so a re-follow does not re-ask.
     /// </summary>
     void OfferTownLeave(string settlementId, double nowHours);
+
+    /// <summary>
+    /// Forget which stop was last offered and when. Session reset only (a load, a new campaign
+    /// or game end): the cooldown stamp is an absolute campaign hour, so an earlier save's clock
+    /// would otherwise keep the offer silent until it caught up.
+    /// </summary>
+    void ResetForNewSession();
+
+    /// <summary>
+    /// The column has left the stop: forget which settlement was offered, so the next stop there
+    /// is offered again (once per stop, not once per session). The cooldown stamp stays.
+    /// </summary>
+    void OnStopEnded();
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -58,8 +71,9 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IModLogger _logger;
 
     /// <summary>
-    /// Which settlement we last offered a pass for. Session state, never persisted: see
-    /// <see cref="OfferTownLeave"/>.
+    /// Which settlement we last offered a pass for, during the current stop. Never persisted: see
+    /// <see cref="OfferTownLeave"/>. Cleared when the stop ends (<see cref="OnStopEnded"/>) and on
+    /// a session reset.
     /// </summary>
     private string _lastOfferedSettlementId;
 
@@ -156,6 +170,14 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
 
         _logger?.LogInfo($"[Enlistment] offered shore leave on arrival at '{settlementId}'");
     }
+
+    public void ResetForNewSession()
+    {
+        _lastOfferedSettlementId = null;
+        _lastOfferedAtHours = null;
+    }
+
+    public void OnStopEnded() => _lastOfferedSettlementId = null;
 
     public void TakeTownLeave()
     {

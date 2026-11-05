@@ -48,9 +48,10 @@ public interface IServiceMaintenanceService
     void OnPartyJoinedRunningMapEvent(string partyId);
 
     /// <summary>
-    /// Drop every per-session cache. Call on game load and session launch — a commander-party
-    /// handle cached from a previous campaign matches by StringId and would drive the position
-    /// sync from a destroyed party.
+    /// Drop the caches listed in <c>ResetSessionCaches</c>. Call on game load, on a new campaign and
+    /// at game end: a commander-party handle cached from a previous campaign matches by StringId and
+    /// would drive the position sync from a destroyed party. Runs on every peer, so keep it to
+    /// in-memory field clears.
     /// </summary>
     void ResetSessionCaches();
 }

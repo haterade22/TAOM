@@ -832,10 +832,10 @@ public class EnlistmentReconcilerTests
     [TestMethod]
     public void StaleBattleLatch_ClockRanBackwards_ReAnchorsInsteadOfRecovering()
     {
-        // Belt and braces for the path the reset does not reach: ResetSessionCaches is wired to
-        // OnGameLoaded only, so a brand-new campaign in the same process never calls it. A new
-        // campaign starts at a low day count, so the leftover anchor is in the FUTURE — and a clock
-        // that ran backwards can only mean a different campaign or save, never a continuous episode.
+        // Belt and braces for any path that skips the reset: ResetSessionCaches runs on every
+        // peer's load, on a new campaign and at game end. A new campaign starts
+        // at a low day count, so a leftover anchor is in the FUTURE, and a clock that ran
+        // backwards can only mean a different campaign or save, never a continuous episode.
         LatchedInBattleState();
         _reconciler.ReconcileHourly(Now);          // anchors at 200
 

@@ -6,9 +6,14 @@ public class RacePersistenceBehavior : CampaignBehaviorBase
 {
     private readonly IRacePersistenceService _service;
 
+    /// <summary>
+    /// SubModule.OnGameStart builds this behavior with <c>new</c> for every campaign, before any SyncData, so the reset
+    /// here also covers a load the engine gives no SyncData call (#1035).
+    /// </summary>
     public RacePersistenceBehavior(IRacePersistenceService service)
     {
         _service = service;
+        _service.ResetForNewSession();
     }
 
     public override void RegisterEvents()

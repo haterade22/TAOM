@@ -4,7 +4,9 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment;
+using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Domain;
+using TAOM.Features.Enlistment.Presentation;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -24,6 +26,8 @@ public class ServiceMaintenanceServiceTests
     private IArmyMembershipAdapter _army = null!;
     private IEncounterAdapter _encounter = null!;
     private IEnlistmentReconciler _reconciler = null!;
+    private IEnlistmentWaitMenuPresenter _presenter = null!;
+    private IArmyRhythmSnapshotService _rhythm = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -42,6 +46,8 @@ public class ServiceMaintenanceServiceTests
         _status = Substitute.For<IServiceStatusService>();
         _army = Substitute.For<IArmyMembershipAdapter>();
         _reconciler = Substitute.For<IEnlistmentReconciler>();
+        _presenter = Substitute.For<IEnlistmentWaitMenuPresenter>();
+        _rhythm = Substitute.For<IArmyRhythmSnapshotService>();
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         Encounter(none: true);
@@ -49,7 +55,7 @@ public class ServiceMaintenanceServiceTests
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
             _status, _army, _encounter, new EncounterOwnershipPolicy(),
-            _reconciler, _logger);
+            _reconciler, _presenter, _rhythm, _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -118,7 +124,7 @@ public class ServiceMaintenanceServiceTests
         _pump.ResetSessionCaches();
 
         _army.Received(1).ResetSessionCaches();
-        _attachment.Received(1).InvalidateCommanderCache();
+        _attachment.Received(1).ResetForNewSession();   // also drops the cached commander party
         _status.Received(1).Invalidate();
         _reconciler.Received(1).ResetForNewSession();
     }
@@ -161,6 +167,32 @@ public class ServiceMaintenanceServiceTests
         PumpExpensive();
 
         _army.DidNotReceive().ResetSessionCaches();
+    }
+
+    [TestMethod]
+    public void ResetSessionCaches_AlsoDropsTheDwellAnchorTheOfferLatchAndTheRhythmCache()
+    {
+        // All three hold absolute campaign-hour state on singletons. Asserted here, on the one
+        // reset point, so a new collaborator reset cannot be wired into a hook instead.
+        _pump.ResetSessionCaches();
+
+        _attachment.Received(1).ResetForNewSession();
+        _presenter.Received(1).ResetForNewSession();
+        _rhythm.Received(1).ResetForNewSession();
+    }
+
+    [TestMethod]
+    public void Pump_DoesNotResetTheDwellAnchorTheOfferLatchOrTheRhythmCache()
+    {
+        // Session resets only. Clearing the dwell anchor on an ordinary pump would bring back
+        // the enter-and-leave strobe the dwell exists to stop.
+        MakeEnlisted();
+
+        PumpExpensive();
+
+        _attachment.DidNotReceive().ResetForNewSession();
+        _presenter.DidNotReceive().ResetForNewSession();
+        _rhythm.DidNotReceive().ResetForNewSession();
     }
 
     // ---- gating -------------------------------------------------------------------------

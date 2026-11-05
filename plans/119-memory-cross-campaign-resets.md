@@ -271,7 +271,7 @@ No ModuleData, hook or tool file changes here, so the data, hook and tool-test g
 
 ## Scope
 
-**In scope** (the only files you create or modify; 32):
+**In scope** (the only files you create or modify; 33):
 
 - Part A, Enlistment (plan 014): the 10 files under `Main/Features/Enlistment/` and the 9 under
   `TAOM.Tests/Features/Enlistment/` that `git diff --name-only 6fb37c9f7^ aac0e05bf -- Main/Features/Enlistment TAOM.Tests/Features/Enlistment`
@@ -289,6 +289,7 @@ No ModuleData, hook or tool file changes here, so the data, hook and tool-test g
   `RacePersistenceBehavior.cs`; `TAOM.Tests/Features/HeroRace/RacePersistenceServiceTests.cs`,
   `RacePersistenceBehaviorTests.cs`, `RacePersistenceWiringTests.cs` (new); `docs/features/hero-race.md`.
 - Part B: `docs/investigations/second-game-retention-2026-11.md` (new).
+- This plan file, once: the commit that corrected Step A4's expected error code (the 33rd file).
 
 **Out of scope** (do not touch):
 
@@ -582,9 +583,11 @@ grep -c '\[TestMethod\]' TAOM.Tests/Features/SpecialResources/SpecialResourcesBe
 **Verify**: `1`, `0`, `5`. (The re-cite is the per-port rule: the fake mirrors installed v1.4.8
 `BehaviorSaveData.SyncData`, `CampaignBehaviorDataStore.cs:26-38`, which behaves as the comment says.)
 
-Run "Build, errors only". **Verify** (RED): exit non-zero; codes `CS0122` only; the only file named
-is `SpecialResourcesBehaviorSessionResetTests.cs` (`OnNewGameCreated` is `private` today). Anything
-else: STOP.
+Run "Build, errors only". **Verify** (RED): exit non-zero; codes `CS1061` only; the only file named
+is `SpecialResourcesBehaviorSessionResetTests.cs`, at its two `OnNewGameCreated` calls (`OnNewGameCreated`
+is `private` today, and the build reports it as `does not contain a definition`, not as inaccessible;
+this step first predicted `CS0122`, corrected after the first run printed `CS1061`). Anything else:
+STOP.
 
 ### Step A5 (GREEN): SpecialResources code and doc, then commit B
 
@@ -1043,7 +1046,7 @@ cd /c/Users/mikew/source/repos/taom-port/119 && git commit -F C:/Users/mikew/sou
    notes". Act only on findings that change runtime behaviour or break this plan; land each fix as one
    extra commit `fix(enlistment): v2.0.28 - review follow-ups` (or the matching scope; tests first;
    same commit procedure) and re-run the Done criteria. After a follow-up, four criteria cannot hold
-   literally (Part B's `HEAD~1..HEAD` check, `Total` = T0 + 49, the file count `32`, and any
+   literally (Part B's `HEAD~1..HEAD` check, `Total` = T0 + 49, the file count `33`, and any
    byte-identical check on a file the follow-up changed): allow exactly the follow-up's own files and
    tests, and list each deviation in the hand-off. Never rewrite earlier commits. If your session
    cannot invoke skills, say so in the hand-off and the integrator runs it. Never run `/review-codex`
@@ -1129,13 +1132,13 @@ Run in the worktree after Step B2 (and again after any review follow-up commit).
 - [ ] `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` exits 0 with 0 errors.
 - [ ] `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId=` reports `Failed: 0`
       and `Total` = T0 + 49.
-- [ ] `git diff --name-only $(git merge-base HEAD bannerlord-1.4.5)..HEAD | wc -l` prints `32`, and
+- [ ] `git diff --name-only $(git merge-base HEAD bannerlord-1.4.5)..HEAD | wc -l` prints `33`, and
       `git diff --name-only $(git merge-base HEAD bannerlord-1.4.5)..HEAD | grep -cE '^(CHANGELOG\.md|docs/reviews/|Main/IoC\.cs|\.claude/)'`
       prints `0`.
 - [ ] `git diff $(git merge-base HEAD bannerlord-1.4.5)..HEAD -- Main/SubModule.cs | grep -cE '^[-+][^-+]'`
       prints `2`.
 - [ ] `git log --format=%s $(git merge-base HEAD bannerlord-1.4.5)..HEAD | awk 'length($0) > 72 || $0 !~ / v2\.0\.28 - /'`
-      prints nothing (five subjects, more with review follow-ups).
+      prints nothing (six subjects, more with review follow-ups).
 - [ ] `git status --porcelain` prints nothing.
 
 ## STOP conditions

@@ -2,6 +2,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.Enlistment.Presentation;
 
 namespace TAOM.Features.Enlistment.Hooks;
 
@@ -24,17 +25,20 @@ public class EnlistmentMaintenanceBehavior : CampaignBehaviorBase
     private readonly IEnlistmentReconciler _reconciler;
     private readonly IEnlistmentStore _store;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IEnlistmentWaitMenuPresenter _presenter;
 
     public EnlistmentMaintenanceBehavior(
         IServiceMaintenanceService maintenance,
         IEnlistmentReconciler reconciler,
         IEnlistmentStore store,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        IEnlistmentWaitMenuPresenter presenter)
     {
         _maintenance = maintenance;
         _reconciler = reconciler;
         _store = store;
         _coopSession = coopSession;
+        _presenter = presenter;
     }
 
     public override void RegisterEvents()
@@ -76,10 +80,28 @@ public class EnlistmentMaintenanceBehavior : CampaignBehaviorBase
     }
 
     private void OnSettlementLeft(MobileParty party, Settlement settlement) =>
-        ReconcileIfCommander(party, "settlement left");
+        OnPartyLeftSettlement(party?.LeaderHero?.StringId);
 
-    private void OnPartyLeftArmy(MobileParty party, TaleWorlds.CampaignSystem.Army army) =>
-        ReconcileIfCommander(party, "army left");
+    /// <summary>
+    /// The commander walking out is the end of the column's stop, however the player leaves the
+    /// town: walked out by the exit sweep, or on foot later from a shore-leave pass, which suspends
+    /// that sweep. So the arrival offer's settlement latch is cleared here (#656). internal for
+    /// TAOM.Tests (InternalsVisibleTo): a <c>MobileParty</c> cannot be built in a unit test.
+    /// </summary>
+    internal void OnPartyLeftSettlement(string leaderHeroId)
+    {
+        if (!IsCommander(leaderHeroId))
+            return;
+
+        _presenter.OnStopEnded();
+        _reconciler.ReconcileNow(CampaignTime.Now.ToDays, "settlement left");
+    }
+
+    private void OnPartyLeftArmy(MobileParty party, TaleWorlds.CampaignSystem.Army army)
+    {
+        if (IsCommander(party?.LeaderHero?.StringId))
+            _reconciler.ReconcileNow(CampaignTime.Now.ToDays, "army left");
+    }
 
     /// <summary>
     /// Both edges fire for EVERY party in the world, so filter on the commander's id before doing
@@ -87,17 +109,12 @@ public class EnlistmentMaintenanceBehavior : CampaignBehaviorBase
     /// settlement following makes the reconciler call LeaveSettlementAction, which dispatches
     /// OnSettlementLeft straight back into this handler.
     /// </summary>
-    private void ReconcileIfCommander(MobileParty party, string trigger)
+    private bool IsCommander(string leaderHeroId)
     {
         if (!_coopSession.IsAuthority)
-            return;
+            return false;
 
         var commanderId = _store.Record.CommanderHeroId;
-        if (string.IsNullOrEmpty(commanderId))
-            return;
-        if (party?.LeaderHero?.StringId != commanderId)
-            return;
-
-        _reconciler.ReconcileNow(CampaignTime.Now.ToDays, trigger);
+        return !string.IsNullOrEmpty(commanderId) && leaderHeroId == commanderId;
     }
 }
