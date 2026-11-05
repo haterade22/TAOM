@@ -30,6 +30,8 @@ public class MainThreadFreezeWatchdogTests
     private List<string> _infos = null!;
     private int _gen0;
     private bool _walk;
+    private bool _inRenderWait;
+    private IRenderWaitNotice _notice = null!;
 
     [TestInitialize]
     public void Setup()
@@ -51,7 +53,9 @@ public class MainThreadFreezeWatchdogTests
         _missionFrame = new MissionTickStallProbe("mission frame");
         _gen0 = 0;
         _walk = false;
-        _sut = new MainThreadFreezeWatchdog(_logger, _settings, _service, _heartbeat, _missionFrame, _tail, () => _gen0, () => _walk)
+        _inRenderWait = false;
+        _notice = Substitute.For<IRenderWaitNotice>();
+        _sut = new MainThreadFreezeWatchdog(_logger, _settings, _service, _notice, _heartbeat, _missionFrame, _tail, () => _gen0, () => _walk, () => _inRenderWait)
         {
             DescribeStack = thread => "    at Fake.Frame",
         };
@@ -223,6 +227,28 @@ public class MainThreadFreezeWatchdogTests
         Assert.AreEqual(0, empty.FrameCount, "the test needs a stack with no frames");
 
         Assert.AreEqual(FreezeLog.NoManagedFrames, MainThreadFreezeWatchdog.FormatStack(empty));
+    }
+
+    [TestMethod]
+    public void RenderWaitSilence_PublishesTheDecisionEveryPoll()
+    {
+        _inRenderWait = true;
+        _tail.CompilesSinceFresh.Returns(40);
+        _tail.SecondsSinceLastCompile(Arg.Any<long>()).Returns(1d);
+        BeatAndSeeIt();
+
+        _sut.Poll(At(6));
+        _sut.Poll(At(7));
+
+        _notice.Received(2).Show(Arg.Is<RenderWaitNoticeDecision>(d => d.Kind == RenderWaitNoticeKind.Compiling && d.Compiles == 40));
+    }
+
+    [TestMethod]
+    public void NewBeat_PublishesHidden()
+    {
+        BeatAndSeeIt();
+
+        _notice.Received(1).Show(Arg.Is<RenderWaitNoticeDecision>(d => d.Kind == RenderWaitNoticeKind.Hidden));
     }
 
     [TestMethod]

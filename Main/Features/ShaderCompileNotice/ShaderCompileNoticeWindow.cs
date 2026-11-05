@@ -59,6 +59,11 @@ internal sealed class ShaderCompileNoticeWindow : Form
         set => _title.Text = value;
     }
 
+    public string DetailText
+    {
+        set => _detail.Text = value;
+    }
+
     protected override bool ShowWithoutActivation => true;
 
     protected override CreateParams CreateParams

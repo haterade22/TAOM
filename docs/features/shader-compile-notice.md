@@ -61,6 +61,9 @@ SubModule.OnSubModuleLoad ──> ShaderCompileNoticeEntry.Start   (game thread:
 SubModule.OnBeforeInitialModuleScreenSetAsRoot ──> ShaderCompileNoticeEntry.Stop
 ```
 
+The same window serves the battle render wait: see "The render-wait notice" in
+[battle-load-diagnostics.md](battle-load-diagnostics.md).
+
 ## Configuration
 
 None. Log lines: `[ShaderNotice] the engine is compiling its shaders: notice shown, expected about N` and

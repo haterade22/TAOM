@@ -18,17 +18,7 @@ public static class ShaderCompileNoticeEntry
     {
         try
         {
-            var ids = new List<string>();
-            var modules = ModuleHelper.GetActiveModules();
-            if (modules != null)
-            {
-                foreach (var module in modules)
-                {
-                    if (module != null) ids.Add(module.Id);
-                }
-            }
-
-            if (!ShaderCompileProgress.ShouldStart(isDedicatedServer, ids)) return;
+            if (!ShaderCompileProgress.ShouldStart(isDedicatedServer, ActiveModuleIds())) return;
             ShaderCompileNotice.Start(ResolveTexts(), logger);
         }
         catch (Exception e)
@@ -38,6 +28,21 @@ public static class ShaderCompileNoticeEntry
     }
 
     public static void Stop() => ShaderCompileNotice.Stop();
+
+    internal static List<string> ActiveModuleIds()
+    {
+        var ids = new List<string>();
+        var modules = ModuleHelper.GetActiveModules();
+        if (modules != null)
+        {
+            foreach (var module in modules)
+            {
+                if (module != null) ids.Add(module.Id);
+            }
+        }
+
+        return ids;
+    }
 
     private static ShaderCompileNoticeTexts ResolveTexts()
     {

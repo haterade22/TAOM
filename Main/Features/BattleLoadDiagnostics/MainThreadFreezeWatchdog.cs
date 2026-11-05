@@ -21,11 +21,13 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
     private readonly IModLogger _logger;
     private readonly IBattleLoadDiagnosticsSettingsProvider _settings;
     private readonly IBattleLoadDiagnosticsService _service;
+    private readonly IRenderWaitNotice _notice;
     private readonly MainThreadHeartbeat _heartbeat;
     private readonly MissionTickStallProbe _missionFrame;
     private readonly IRglCompileTail _tail;
     private readonly Func<int> _gen0;
     private readonly Func<bool> _walkActive;
+    private readonly Func<bool> _inRenderWait;
 
     private Timer? _timer;
     private int _pollActive; // a capture that outlives the period must not overlap the next poll
@@ -48,10 +50,12 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
     public MainThreadFreezeWatchdog(
         IModLogger logger,
         IBattleLoadDiagnosticsSettingsProvider settings,
-        IBattleLoadDiagnosticsService service)
-        : this(logger, settings, service, MainThreadHeartbeat.Instance, MissionTickStallProbe.MissionFrame,
+        IBattleLoadDiagnosticsService service,
+        IRenderWaitNotice notice)
+        : this(logger, settings, service, notice, MainThreadHeartbeat.Instance, MissionTickStallProbe.MissionFrame,
             new RglCompileTail(RglLogLocator.ResolveForCurrentProcess),
-            () => GC.CollectionCount(0), () => BattleLoadStallWatchdog.SuppressStallDetection)
+            () => GC.CollectionCount(0), () => BattleLoadStallWatchdog.SuppressStallDetection,
+            () => BattleLoadLoadingWindow.IsOpen && BattleLoadRenderWaitProbe.ShadersInFlight >= 0)
     {
     }
 
@@ -59,20 +63,24 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
         IModLogger logger,
         IBattleLoadDiagnosticsSettingsProvider settings,
         IBattleLoadDiagnosticsService service,
+        IRenderWaitNotice notice,
         MainThreadHeartbeat heartbeat,
         MissionTickStallProbe missionFrame,
         IRglCompileTail tail,
         Func<int> gen0Collections,
-        Func<bool> walkActive)
+        Func<bool> walkActive,
+        Func<bool> inRenderWait)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _service = service ?? throw new ArgumentNullException(nameof(service));
+        _notice = notice ?? throw new ArgumentNullException(nameof(notice));
         _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
         _missionFrame = missionFrame ?? throw new ArgumentNullException(nameof(missionFrame));
         _tail = tail ?? throw new ArgumentNullException(nameof(tail));
         _gen0 = gen0Collections ?? throw new ArgumentNullException(nameof(gen0Collections));
         _walkActive = walkActive ?? throw new ArgumentNullException(nameof(walkActive));
+        _inRenderWait = inRenderWait ?? throw new ArgumentNullException(nameof(inRenderWait));
     }
 
     /// <summary>The stack source; tests swap it for a fake that suspends nothing.</summary>
@@ -114,6 +122,7 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
         if (!_settings.MainThreadFreezeSamplerEnabled)
         {
             _episode = null;
+            ShowNotice(RenderWaitNoticeDecision.Hidden);
             return;
         }
 
@@ -122,6 +131,7 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
         if (beat != _lastSeenBeat)
         {
             _lastSeenBeat = beat;
+            ShowNotice(RenderWaitNoticeDecision.Hidden);
             if (_episode != null && _episode.LinesLogged > 0)
                 _logger.LogInfo(FreezeLog.FormatRecovered(Secs(beat - _episode.Since), _tail.Available, _tail.CompilesSinceFresh));
             _episode = null;
@@ -134,6 +144,8 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
         double silent = SecsD(now - beat);
         _episode ??= new Episode(beat);
         _tail.ReadNew(now);
+        ShowNotice(RenderWaitNoticeDecider.Decide(_inRenderWait(), _walkActive(), silent,
+            _tail.Available, _tail.CompilesSinceFresh, _tail.SecondsSinceLastCompile(now)));
 
         if (!FreezeSamplePolicy.CrossesThreshold(silent, _episode.SamplesTaken)) return;
 
@@ -167,6 +179,13 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
                 _tail.Available, _tail.CompilesSinceFresh, LastCompileAgo(now), ProcessMemoryTokens.Format(),
                 _service.CurrentStatusLine)
             + "\n" + second);
+    }
+
+    // A notice failure never stops the sampling.
+    private void ShowNotice(RenderWaitNoticeDecision decision)
+    {
+        try { _notice.Show(decision); }
+        catch (Exception ex) { _logger.LogWarning($"{FreezeLog.Tag} notice failed: {ex.GetType().Name}: {ex.Message}"); }
     }
 
     private string Describe(Thread? main)
