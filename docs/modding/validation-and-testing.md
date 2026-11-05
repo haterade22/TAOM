@@ -73,7 +73,6 @@ hand edits, so land a repo-side validator gate with any fix.
 | `python tools/derive_armor_tiers.py` | an item's intended tier, derived from which troops actually wear it | items no roster references |
 | `python tools/analyze_lord_balance.py` | per-culture lord skills resolved through `skill_template` to the real `SkillSet` | traits expressed only in dialogue |
 | `python tools/audit_cc_bonuses.py` | character-creation skill, attribute and focus bonuses per culture | in-play difficulty |
-| `python tools/analyze_battle_logs.py` | how the auto-resolve counter and race matrices behaved in recorded battles | anything you have not played yet |
 | `python tools/generate_culture_issue_drafts.py` | a per-culture worklist for lord skills and traits | it writes drafts, it checks nothing |
 
 ### Category 5: world map and scenes

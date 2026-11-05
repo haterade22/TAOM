@@ -52,7 +52,6 @@ public static class CoopSettingsRelevance
     private static readonly HashSet<string> Instrumentation = new HashSet<string>(StringComparer.Ordinal)
     {
         "BattleActionBarDebug", "CompanionRolesDebug", "EnableSiegePropDiagnostics",
-        "LogAutoResolvedBattles", "LogAutoResolveTroopCensus",
         "FormationPresetsDebug", "MixedFormationsDebug", "SiegeDismountDebug",
         "SiegePropDiagnosticsVerbose", "SmartCavalryDebug", "FiefManagementDebug",
         "EquipPresetsDebug", "QuickActionsDebug",

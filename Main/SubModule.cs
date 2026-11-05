@@ -1386,9 +1386,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>()));
         // Rolls the town-gold ledger onto a fresh day and clears it between campaigns (#317 follow-up).
         campaignStarter.AddBehavior(IoC.Resolve<Features.EconomyDiagnostics.EconomyDiagnosticsBehavior>());
-        // Records one raw record per completed map battle so auto-resolve balance can be tuned
-        // against real armies rather than party templates. Gated by MCM; one line per battle.
-        campaignStarter.AddBehavior(IoC.Resolve<Features.AutoResolveDiagnostics.AutoResolveDiagnosticsBehavior>());
 
         // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
         // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
