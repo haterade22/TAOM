@@ -278,6 +278,12 @@ public class CoopVetoClassificationTests
             "copy carries the bad pair would otherwise freeze on that load, so gating the guard " +
             "under co-op would restore the hang on exactly the peer that needs it."),
 
+        ["MBObjectManager_CreateMergedXmlFile_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Patch99: replaces the engine's module-XML merge loop with one proven byte-identical on every " +
+            "type of the live install. Each peer merges its own module files during game init, before any " +
+            "session state exists, and on that module set gets the document the engine would have built; it stands aside for " +
+            "foreign patches and re-runs the engine's own merge on any exception."),
+
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +

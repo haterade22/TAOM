@@ -18,5 +18,6 @@ internal static class FeatureModules
         new Features.WandererAllegiance.WandererAllegianceModule(),
         new Features.BardTownGuard.BardTownGuardModule(),
         new Features.LoadTimeStamps.LoadTimeStampsModule(),
+        new Features.XmlMerge.XmlMergeModule(),
     };
 }

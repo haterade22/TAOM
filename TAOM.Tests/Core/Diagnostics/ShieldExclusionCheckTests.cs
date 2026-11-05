@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Core.Diagnostics;
 using TAOM.Features.LoadTimeStamps;
+using TAOM.Features.XmlMerge;
 
 namespace TAOM.Tests.Core.Diagnostics;
 
@@ -57,5 +58,11 @@ public class ShieldExclusionCheckTests
     public void Problem_AgainstTheBuiltDependencies_TheLoadTimeStampTargetsAreExcluded()
     {
         Assert.IsNull(ShieldExclusionCheck.Problem(LoadTimeStampsModule.ShieldTargets));
+    }
+
+    [TestMethod]
+    public void Problem_AgainstTheBuiltDependencies_TheXmlMergeTargetIsExcluded()
+    {
+        Assert.IsNull(ShieldExclusionCheck.Problem(XmlMergeModule.ShieldTargets));
     }
 }
