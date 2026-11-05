@@ -151,7 +151,7 @@ public class ShippedFordsConfigTests
         Assert.AreEqual("gondor", setup.WestFaction);
         Assert.AreEqual("rohan", setup.EastFaction);
         Assert.AreEqual("normal", setup.AiProfile);
-        Assert.AreEqual("taom_rohan_battle_002_forceatmo", setup.SceneName, "the first scene listed in maps.json");
+        Assert.AreEqual("taom_fords_01_forceatmo", setup.SceneName, "the only scene listed in maps.json");
     }
 
     [TestMethod]
@@ -449,7 +449,6 @@ public class ShippedFordsConfigTests
             .ToDictionary(s => (string)s.Attribute("id")!, StringComparer.OrdinalIgnoreCase);
         var catalog = Load(Substitute.For<IModLogger>());
 
-        Assert.IsTrue(catalog.Maps.Count >= 2 && catalog.Maps.Count <= 5, "two to five scenes");
         foreach (var map in catalog.Maps.Where(m => m.Layout == MapLayoutMode.Generated))
         {
             Assert.IsTrue(scenes.TryGetValue(map.SceneId, out var scene), map.SceneId + " is not a custom_battle_scenes.xml row");
@@ -459,30 +458,15 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedMaps_ListRohanPlainsIIFirst_ThenPelennorMordorRohanPlainsAndFordsLast()
+    public void ShippedMaps_AreOnlyFordsOfWar_ATagsMap()
     {
-        // The first scene is the default of a console start with no scene argument (FordsSetupChoices) and of a one-scene menu.
+        // Mike, 2026-11-05: remove all maps but Fords of War. With one map the menu asks no map question (FordsSetupPrompt).
         var catalog = Load(Substitute.For<IModLogger>());
 
-        CollectionAssert.AreEqual(new[]
-        {
-            "taom_rohan_battle_002_forceatmo", "taom_gondor_pelennor_fields_forceatmo", "taom_mordor_battle_001_forceatmo", "taom_rohan_battle_001_forceatmo",
-            "taom_fords_01_forceatmo",
-        }, catalog.Maps.Select(m => m.SceneId).ToList());
-        Assert.AreEqual("{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II", catalog.Maps[0].DisplayName);
-        Assert.AreEqual(MapLayoutMode.Generated, catalog.Maps[0].Layout);
-    }
-
-    [TestMethod]
-    public void ShippedMaps_Fords01_IsATagsMapAndNotTheDefault()
-    {
-        var catalog = Load(Substitute.For<IModLogger>());
-
-        var fords = catalog.Maps.Single(m => m.SceneId == "taom_fords_01_forceatmo");
+        var fords = catalog.Maps.Single();
+        Assert.AreEqual("taom_fords_01_forceatmo", fords.SceneId);
         Assert.AreEqual(MapLayoutMode.Tags, fords.Layout);
         Assert.AreEqual("{=TAOM_FOW_Map_Fords01}[Fords] Fords of War", fords.DisplayName);
-        Assert.AreSame(fords, catalog.Maps[catalog.Maps.Count - 1], "last, so Rohan Plains II stays the default");
-        Assert.AreNotEqual("taom_fords_01_forceatmo", catalog.Maps[0].SceneId);
     }
 
     [TestMethod]

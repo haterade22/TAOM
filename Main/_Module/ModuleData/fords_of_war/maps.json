@@ -7,26 +7,6 @@
   },
   "scenes": [
     {
-      "scene": "taom_rohan_battle_002_forceatmo",
-      "name": "{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II",
-      "layout": "generated"
-    },
-    {
-      "scene": "taom_gondor_pelennor_fields_forceatmo",
-      "name": "{=aom_taom_gondor_pelennor_fields_forceatmo_name}[Gondor] Pelennor Fields",
-      "layout": "generated"
-    },
-    {
-      "scene": "taom_mordor_battle_001_forceatmo",
-      "name": "{=aom_taom_mordor_battle_001_forceatmo_name}[Mordor] Mordor Plains I",
-      "layout": "generated"
-    },
-    {
-      "scene": "taom_rohan_battle_001_forceatmo",
-      "name": "{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains",
-      "layout": "generated"
-    },
-    {
       "scene": "taom_fords_01_forceatmo",
       "name": "{=TAOM_FOW_Map_Fords01}[Fords] Fords of War",
       "layout": "tags",
