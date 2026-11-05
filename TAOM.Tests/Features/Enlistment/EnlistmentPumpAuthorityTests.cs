@@ -53,7 +53,7 @@ public class EnlistmentPumpAuthorityTests
             Substitute.For<IServiceStatusService>(), Substitute.For<IArmyMembershipAdapter>(),
             _encounter, new EncounterOwnershipPolicy(),
             Substitute.For<IEnlistmentReconciler>(), Substitute.For<IEnlistmentWaitMenuPresenter>(),
-            Substitute.For<IArmyRhythmSnapshotService>(), _logger);
+            Substitute.For<IArmyRhythmSnapshotService>(), new SitOutLedger(), new BattleMeritAccumulator(), _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";

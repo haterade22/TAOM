@@ -7,7 +7,8 @@ using TAOM.Features.Enlistment.Content.Domain;
 namespace TAOM.Features.Enlistment.Presentation;
 
 /// <summary>
-/// Everything the daily tick says out loud. Split out of <c>EnlistmentContentBehavior</c> for the
+/// Everything the daily tick and the battle end say out loud: wages, promotions, the merit toast and
+/// the sat-out lines. Split out of <c>EnlistmentContentBehavior</c> for the
 /// same reason <see cref="EnlistmentWaitMenuOptions"/> was split out of <c>EnlistmentMenuBehavior</c>
 /// (ADR-003 decomposition): the behavior's job is lifecycle — subscribe, forward the tick, unhook —
 /// and the wording of player-facing messages is a separate, growing concern that had pushed it past
@@ -19,6 +20,12 @@ public interface IServiceDailyAnnouncer
     void AnnounceWage(WageDecision decision);
 
     void AnnouncePromotion(ServiceRank rank);
+
+    /// <summary>The merit toast for the battle's band. Silent when the battle had no sample.</summary>
+    void AnnounceMerit(string gradeKey);
+
+    /// <summary>Say that he stayed back from a battle and why (#830). Silent for a null reason.</summary>
+    void AnnounceSatOut(SitOutVerdict? reason);
 }
 
 /// <inheritdoc />
@@ -59,6 +66,39 @@ public sealed class ServiceDailyAnnouncer : IServiceDailyAnnouncer
         var text = new TextObject("{=taom_enlist_promoted}You have been promoted to {RANK}.");
         text.SetTextVariable("RANK", ServiceVocabulary.RankName(rank));
         InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
+    }
+
+    public void AnnounceMerit(string gradeKey)
+    {
+        if (string.IsNullOrEmpty(gradeKey))
+            return;
+        var text = new TextObject("{=taom_enlist_merit_toast}The sergeants noted your conduct: {GRADE}.");
+        text.SetTextVariable("GRADE", ServiceVocabulary.GradeName(gradeKey));
+        InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
+    }
+
+    public void AnnounceSatOut(SitOutVerdict? reason)
+    {
+        var template = SatOutTemplate(reason);
+        if (template == null)
+            return;
+        InformationManager.DisplayMessage(new InformationMessage(new TextObject(template).ToString()));
+    }
+
+    /// <summary>The line for a sat-out reason, or null when the reason is not a sit-out. Pure, so it is unit-tested.</summary>
+    internal static string SatOutTemplate(SitOutVerdict? reason)
+    {
+        switch (reason)
+        {
+            case SitOutVerdict.WoundedFree:
+                return "{=taom_enlist_sat_out_wounded_line}You were wounded and stayed back while the column fought.";
+            case SitOutVerdict.OverwhelmingCost:
+                return "{=taom_enlist_sat_out_line}You stayed back while the column fought, and your share of the battle's due was cut.";
+            case SitOutVerdict.ForcedOpen:
+                return "{=taom_enlist_sat_out_forced_line}The column fought without you, and you had no way into the line.";
+            default:
+                return null;
+        }
     }
 
     private static void Say(string template, int amount)

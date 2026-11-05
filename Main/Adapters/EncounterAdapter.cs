@@ -3,6 +3,7 @@ using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.GameState;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -220,6 +221,78 @@ public sealed class EncounterAdapter : IEncounterAdapter
                 return true;
             }
         }
+    }
+
+    public bool PlayerMapEventHasWinner
+    {
+        get
+        {
+            try
+            {
+                return MapEvent.PlayerMapEvent?.HasWinner == true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] PlayerMapEventHasWinner failed: {ex.Message}");
+                return false;
+            }
+        }
+    }
+
+    public SitOutSnapshot GetSitOutSnapshot()
+    {
+        // Each field in its OWN try, like GetOwnership: a throw in one read must not blank the rest.
+        bool? wounded = null;
+        try { wounded = Hero.MainHero?.IsWounded; }
+        catch (Exception ex) { _logger?.LogError($"[Enlistment] GetSitOutSnapshot: IsWounded threw: {ex.Message}"); }
+
+        bool? attackAvailable = null;
+        try
+        {
+            // The throwaway args are built the way IsAttackBarredByTruce builds them, but this probe mirrors
+            // vanilla's WHOLE Attack condition (honour check, then EncounterAttackCondition), while the
+            // truce probe mirrors only the honour check. Both write only to the args. The cast picks the
+            // (MenuContext, TextObject) ctor, which only stores its arguments; IsEnabled defaults to true.
+            var probe = new MenuCallbackArgs((MenuContext)null, null);
+            MenuHelper.CheckEnemyAttackableHonorably(probe);
+            var shown = MenuHelper.EncounterAttackCondition(probe);
+            attackAvailable = shown && probe.IsEnabled;
+        }
+        catch (Exception ex) { _logger?.LogError($"[Enlistment] GetSitOutSnapshot: attack probe threw: {ex.Message}"); }
+
+        bool? isSiege = null;
+        try
+        {
+            // The assault and the sally-out only (the lord's hall phase is part of the assault). A relief
+            // battle outside the walls, a siege ambush and a naval blockade are not siege battles here.
+            var mapEvent = MapEvent.PlayerMapEvent;
+            if (mapEvent != null)
+                isSiege = mapEvent.IsSiegeAssault || mapEvent.IsSallyOut;
+        }
+        catch (Exception ex) { _logger?.LogError($"[Enlistment] GetSitOutSnapshot: siege read threw: {ex.Message}"); }
+
+        float? share = null;
+        try
+        {
+            var mapEvent = MapEvent.PlayerMapEvent;
+            if (mapEvent != null)
+            {
+                // Read-only: sums GetCustomStrength over the involved parties (each side starts at 0.1,
+                // so the total is never zero). Never MapEvent.RecalculateStrengthOfSides(), which writes
+                // the saved StrengthOfSide.
+                mapEvent.GetStrengthsRelativeToParty(mapEvent.PlayerSide, out var mine, out var theirs);
+                var total = mine + theirs;
+                if (total > 0f && !float.IsNaN(total) && !float.IsInfinity(total))
+                {
+                    var ratio = mine / total;
+                    if (!float.IsNaN(ratio) && !float.IsInfinity(ratio))
+                        share = ratio;
+                }
+            }
+        }
+        catch (Exception ex) { _logger?.LogError($"[Enlistment] GetSitOutSnapshot: strength read threw: {ex.Message}"); }
+
+        return new SitOutSnapshot(wounded, attackAvailable, isSiege, share);
     }
 
     // Mechanical joinability only — see IEncounterAdapter for why MapEvent.CanPartyJoinBattle

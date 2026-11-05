@@ -36,7 +36,9 @@ public sealed class MeritScoringConfig
     /// outright when the sample says LeftTheField, so a walkout cannot buy standing at any penalty
     /// value, and `MeritTrustFloorTests` pins the shipped ladder against the ceiling as well. Both
     /// exist because relying on a boundary that happens to sit above 45 is exactly how paying trust
-    /// from `solid` quietly started rewarding quitters.
+    /// from `solid` quietly started rewarding quitters. A walkout that was never downed can also be a
+    /// battle he sat out (#830); the sit-out rule then governs the base pay and renown, and the band
+    /// still pays what he did before he left.
     /// </para>
     /// </summary>
     public int LeftFieldPenalty { get; set; } = 30;

@@ -13,6 +13,8 @@ public class EnlistmentMenuService : IEnlistmentMenuService
     private readonly IEnlistmentStore _store;
     private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IEncounterAdapter _encounter;
+    private readonly Content.IEnlistmentContentConfigProvider _contentConfig;
+    private readonly SitOutLedger _ledger;
     private readonly IModLogger _logger;
 
     // Built once in the ctor (singleton provider, process-stable config) — hot path.
@@ -24,11 +26,15 @@ public class EnlistmentMenuService : IEnlistmentMenuService
         IEnlistmentConfigProvider config,
         IMobilePartyAttachmentAdapter attachment,
         IEncounterAdapter encounter,
+        Content.IEnlistmentContentConfigProvider contentConfig,
+        SitOutLedger ledger,
         IModLogger logger)
     {
         _store = store;
         _attachment = attachment;
         _encounter = encounter;
+        _contentConfig = contentConfig;
+        _ledger = ledger;
         _logger = logger;
         _redirectIds = new HashSet<string>(
             config.GetConfig().RedirectMenuIds ?? new List<string>(), StringComparer.Ordinal);
@@ -51,17 +57,50 @@ public class EnlistmentMenuService : IEnlistmentMenuService
     /// </summary>
     public bool ShouldBlockBattleExit()
     {
-        var state = _store.Record.State;
-        if (state != EnlistmentState.EnlistedBattle)
-            return false;
-
-        var leads = _encounter.IsMainPartyLeadingItsBattleSide;
-        if (leads == null || !BattleCommandPolicy.ShouldStripPlayerCommand(state, leads.Value))
+        if (!ServesInCommandersBattle())
             return false;
 
         // Never hide the last exit: vanilla's honour check greys out Attack and Send troops under a
         // safe-passage truce, and this menu is the only thing that advances the player's own map event.
         return !_encounter.IsAttackBarredByTruce;
+    }
+
+    /// <summary>
+    /// The sit-out verdict for the 'Send troops' option (#830). The patch calls this only when vanilla
+    /// showed and enabled the option. The winner check is read before the gate on purpose: inside the
+    /// gate, a leadership handover in the aftermath would let a later refresh overwrite the verdict
+    /// taken when the player clicked. Past that check the gate runs, and outside the commander's battle
+    /// the verdict is <see cref="SitOutVerdict.Unchanged"/> with no snapshot read. Every such call
+    /// records its verdict, the closed gate included, so each click is preceded by a fresh record. A
+    /// battle that ends without a payout can leave its last verdict behind; that is harmless, because
+    /// the simulation flag is set only after a click on an enabled option whose refresh recorded a
+    /// fresh verdict. No logging, the predicate runs per refresh.
+    /// </summary>
+    public SitOutVerdict EvaluateSitOut()
+    {
+        if (_encounter.PlayerMapEventHasWinner)
+            return SitOutVerdict.Unchanged;
+
+        var verdict = ServesInCommandersBattle()
+            ? SitOutPolicy.Decide(_encounter.GetSitOutSnapshot(), _contentConfig.GetConfig().SitOut.OverwhelmingShare)
+            : SitOutVerdict.Unchanged;
+        _ledger.Record(verdict);
+        return verdict;
+    }
+
+    /// <summary>
+    /// The one gate for the commander's-battle rules: state EnlistedBattle, and the command strip's
+    /// predicate says the player does not lead his side. The state check comes first so a refresh
+    /// outside a battle never reads the engine.
+    /// </summary>
+    private bool ServesInCommandersBattle()
+    {
+        var state = _store.Record.State;
+        if (state != EnlistmentState.EnlistedBattle)
+            return false;
+
+        var leads = _encounter.IsMainPartyLeadingItsBattleSide;
+        return leads != null && BattleCommandPolicy.ShouldStripPlayerCommand(state, leads.Value);
     }
 
     public bool TryRedirectMenu(string requestedMenuId, out string redirectedMenuId)

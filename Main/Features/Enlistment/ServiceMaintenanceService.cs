@@ -50,6 +50,9 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     // For ResetSessionCaches only: a service never calls presentation (popups stay presenter-side).
     private readonly Presentation.IEnlistmentWaitMenuPresenter _presenter;
     private readonly Content.IArmyRhythmSnapshotService _rhythm;
+    // Singletons holding per-battle state that must not leak into the next campaign (#830).
+    private readonly SitOutLedger _sitOutLedger;
+    private readonly Content.IBattleMeritAccumulator _meritAccumulator;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -72,6 +75,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IEnlistmentReconciler reconciler,
         Presentation.IEnlistmentWaitMenuPresenter presenter,
         Content.IArmyRhythmSnapshotService rhythm,
+        SitOutLedger sitOutLedger,
+        Content.IBattleMeritAccumulator meritAccumulator,
         IModLogger logger)
     {
         _store = store;
@@ -87,6 +92,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _reconciler = reconciler;
         _presenter = presenter;
         _rhythm = rhythm;
+        _sitOutLedger = sitOutLedger;
+        _meritAccumulator = meritAccumulator;
         _logger = logger;
     }
 
@@ -228,6 +235,11 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// </summary>
     public void ResetSessionCaches()
     {
+        // A verdict or an unconsumed merit sample from the previous world would be paid to the first
+        // battle of the next one.
+        _sitOutLedger?.Consume();
+        _meritAccumulator?.Consume();
+
         _cachedCommanderPartyId = null;
         _lastJoinRequestedForMapEventToken = 0;
         _menuFailures = 0;

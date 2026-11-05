@@ -46,6 +46,8 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentReconciler, EnlistmentReconciler>(Reuse.Singleton);
         container.Register<IServiceMaintenanceService, ServiceMaintenanceService>(Reuse.Singleton);
         container.Register<IEnlistmentLoadNormalizer, EnlistmentLoadNormalizer>(Reuse.Singleton);
+        // Consumed by the payout and by ServiceMaintenanceService.ResetSessionCaches (#830); never saved.
+        container.Register<SitOutLedger>(Reuse.Singleton);
         container.Register<IEnlistmentMenuService, EnlistmentMenuService>(Reuse.Singleton);
         container.Register<IServiceBattleService, ServiceBattleService>(Reuse.Singleton);
         // Consumed by TaomBattleInitializationModel (registered in SubModule.OnGameStart): keeps
@@ -84,7 +86,7 @@ public static class EnlistmentIoC
         container.Register<Content.IAssignmentService, Content.AssignmentService>(Reuse.Singleton);
         container.Register<Content.IEnlistmentDailyService, Content.EnlistmentDailyService>(Reuse.Singleton);
         container.Register<Content.IBattleMeritAccumulator, Content.BattleMeritAccumulator>(Reuse.Singleton);
-        container.Register<Content.IEnlistmentBattlePayoutService, Content.EnlistmentBattlePayoutService>(Reuse.Singleton);
+        container.Register<Content.EnlistmentBattlePayoutService>(Reuse.Singleton);
 
         // Entry points (resolved by SubModule for AddBehavior)
         container.Register<EnlistmentBehavior>(Reuse.Singleton);

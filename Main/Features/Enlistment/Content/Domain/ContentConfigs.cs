@@ -11,6 +11,23 @@ public sealed class EnlistmentContentConfig
     public List<MeritBand> MeritBands { get; set; } = new List<MeritBand>();
     public SchedulerConfig Scheduler { get; set; } = new SchedulerConfig();
     public List<PromotionRequirement> Promotions { get; set; } = new List<PromotionRequirement>();
+    public SitOutConfig SitOut { get; set; } = new SitOutConfig();
+}
+
+/// <summary>
+/// The 'Leave it to the others' rule (#830). Shipped values are in the <c>sitOut</c> section of
+/// enlistment_config.json and must equal these defaults (pinned by the config provider tests).
+/// </summary>
+public sealed class SitOutConfig
+{
+    /// <summary>Player side strength share at or above which a healthy soldier may stay back. In (0.5, 1].</summary>
+    public float OverwhelmingShare { get; set; } = 0.85f;
+
+    /// <summary>Trust docked when a healthy soldier uses that allowance. At least 0.</summary>
+    public int TrustCost { get; set; } = 1;
+
+    /// <summary>Multiplier on the base win/loss XP of a battle he sat out. In [0, 1].</summary>
+    public float BaseXpFactor { get; set; } = 0.5f;
 }
 
 /// <summary>Aggregate for enlistment_duties.json (the duty/incident content tables).</summary>

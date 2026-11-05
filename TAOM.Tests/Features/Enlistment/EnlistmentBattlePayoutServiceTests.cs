@@ -33,9 +33,16 @@ public class EnlistmentBattlePayoutServiceTests
         _rewards = Substitute.For<IServiceRewardService>();
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         var promotion = new PromotionService(_contentStore, _config, _skillXp, _store, _logger);
+        _ledger = new SitOutLedger();
         _service = new EnlistmentBattlePayoutService(
-            _store, _contentStore, _config, _accumulator, _rewards, promotion, _logger);
+            _store, _contentStore, _config, _accumulator, _rewards, promotion, _ledger, _logger);
     }
+
+    private SitOutLedger _ledger = null!;
+
+    private static bool PaysRenown(RewardSpec r) => r.Renown > 0;
+
+    private static MeritSample Fought() => new MeritSample { Kills = 0, SurvivalRatio = 1f };
 
     private void MakeEnlisted()
     {
@@ -49,7 +56,7 @@ public class EnlistmentBattlePayoutServiceTests
     {
         _accumulator.Submit(new MeritSample { Kills = 5 });
 
-        Assert.IsFalse(_service.PayOutBattle(won: true));
+        Assert.IsFalse(_service.PayOutBattle(won: true, playerSimulated: false));
         Assert.IsNull(_accumulator.Consume(), "stale sample must not survive into the next service term");
     }
 
@@ -58,7 +65,7 @@ public class EnlistmentBattlePayoutServiceTests
     {
         MakeEnlisted();
 
-        Assert.IsTrue(_service.PayOutBattle(won: true));
+        Assert.IsTrue(_service.PayOutBattle(won: true, playerSimulated: false));
         Assert.AreEqual(40, _contentStore.Record.ServiceXp);
         Assert.AreEqual("", _service.LastBandGradeKey);
     }
@@ -68,7 +75,7 @@ public class EnlistmentBattlePayoutServiceTests
     {
         MakeEnlisted();
 
-        _service.PayOutBattle(won: false);
+        _service.PayOutBattle(won: false, playerSimulated: false);
 
         Assert.AreEqual(15, _contentStore.Record.ServiceXp);
     }
@@ -79,7 +86,7 @@ public class EnlistmentBattlePayoutServiceTests
         MakeEnlisted();
         _accumulator.Submit(new MeritSample { Kills = 40, SurvivalRatio = 1f });
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         // 40 win XP + capped 10 kills * 25 = 290. Uncapped would be 1040.
         Assert.AreEqual(290, _contentStore.Record.ServiceXp);
@@ -95,7 +102,7 @@ public class EnlistmentBattlePayoutServiceTests
             CommanderProximityRatio = 1f, EngagementRatio = 1f,
         });
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         Assert.AreEqual("distinguished", _service.LastBandGradeKey);
         _rewards.Received(1).Grant(
@@ -133,7 +140,7 @@ public class EnlistmentBattlePayoutServiceTests
             LeftTheField = true,
         });
 
-        _service.PayOutBattle(won: false);
+        _service.PayOutBattle(won: false, playerSimulated: false);
 
         _rewards.Received(1).Grant(
             Arg.Is<RewardSpec>(r => r.Trust == 0 && r.ServiceXp == 12 && r.Gold == 5),
@@ -153,7 +160,7 @@ public class EnlistmentBattlePayoutServiceTests
 
         _accumulator.Submit(new MeritSample { Kills = 6, SurvivalRatio = 1f, LeftTheField = false });
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Trust == 5), "merit-rough");
     }
@@ -164,9 +171,9 @@ public class EnlistmentBattlePayoutServiceTests
         MakeEnlisted();
         _accumulator.Submit(new MeritSample { Kills = 3, SurvivalRatio = 1f });
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
         var xpAfterFirst = _contentStore.Record.ServiceXp;
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         Assert.AreEqual(xpAfterFirst + 40, _contentStore.Record.ServiceXp,
             "second battle sees no sample — base XP only");
@@ -182,7 +189,7 @@ public class EnlistmentBattlePayoutServiceTests
         _contentStore.Record.DaysServed = 10;
         _contentStore.Record.ServiceXp = 70; // +40 win = 110 >= 100
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         Assert.IsTrue(_service.LastBattlePromoted);
         Assert.AreEqual(ServiceRank.Soldier, _service.LastPromotedRank);
@@ -198,7 +205,7 @@ public class EnlistmentBattlePayoutServiceTests
         _contentStore.Record.DaysServed = 10;
         _contentStore.Record.ServiceXp = 70; // +40 win = 110 >= 100: promotes in any other state
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         Assert.IsFalse(_service.LastBattlePromoted);
         Assert.AreEqual(ServiceRank.Recruit, _contentStore.Record.Rank);
@@ -210,9 +217,197 @@ public class EnlistmentBattlePayoutServiceTests
         MakeEnlisted();
         _contentStore.Record.DaysServed = 2; // days gate unmet
 
-        _service.PayOutBattle(won: true);
+        _service.PayOutBattle(won: true, playerSimulated: false);
 
         Assert.IsFalse(_service.LastBattlePromoted);
         Assert.AreEqual(ServiceRank.Recruit, _contentStore.Record.Rank);
+    }
+
+    [TestMethod]
+    public void PayOut_SimulatedNoSampleOverwhelming_HalfXpNoRenownOneTrustCost()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+
+        Assert.IsTrue(_service.PayOutBattle(won: true, playerSimulated: true));
+
+        Assert.AreEqual(20, _contentStore.Record.ServiceXp, "half of the 40 win XP");
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => PaysRenown(r)), Arg.Any<string>());
+        _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Trust == -1 && r.Renown == 0 && r.ServiceXp == 0), Arg.Any<string>());
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _service.LastSatOutReason);
+    }
+
+    [DataTestMethod]
+    [DataRow(SitOutVerdict.WoundedFree)]
+    [DataRow(SitOutVerdict.ForcedOpen)]
+    public void PayOut_SimulatedNoSampleWoundedOrForcedOpen_FullXpNoRenownNoTrustCost(SitOutVerdict recorded)
+    {
+        MakeEnlisted();
+        _ledger.Record(recorded);
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(40, _contentStore.Record.ServiceXp);
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => PaysRenown(r)), Arg.Any<string>());
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => r.Trust != 0), Arg.Any<string>());
+        Assert.AreEqual(recorded, _service.LastSatOutReason);
+    }
+
+    [DataTestMethod]
+    [DataRow(SitOutVerdict.Unchanged)]
+    [DataRow(SitOutVerdict.RefusedField)]
+    [DataRow(SitOutVerdict.RefusedSiege)]
+    public void PayOut_SimulatedNoSampleButNoAllowedVerdict_IsPaidNormallyWithRenown(SitOutVerdict recorded)
+    {
+        // The simulation did not come from an option the gate let him use (an empty or refused
+        // ledger), so it is not a battle he was allowed to sit out.
+        MakeEnlisted();
+        _ledger.Record(recorded);
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(40, _contentStore.Record.ServiceXp);
+        Assert.IsNull(_service.LastSatOutReason);
+        _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Renown == 2), "battle-won");
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => r.Trust != 0), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void PayOut_SimulatedLossOverwhelming_HalvesTheLossXpToo()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+
+        _service.PayOutBattle(won: false, playerSimulated: true);
+
+        Assert.AreEqual(8, _contentStore.Record.ServiceXp, "15 x 0.5 = 7.5 rounds up to 8 (to-even gives 8 too)");
+    }
+
+    [TestMethod]
+    public void PayOut_SimulatedOverwhelmingHalfPoint_RoundsAwayFromZeroNotToEven()
+    {
+        // 13 x 0.5 = 6.5: away from zero gives 7, rounding to even would give 6.
+        MakeEnlisted();
+        var config = EnlistmentContentConfigProvider.BuildDefaults();
+        config.Progression.BattleWinXp = 13;
+        _config.GetConfig().Returns(config);
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(7, _contentStore.Record.ServiceXp);
+    }
+
+    [TestMethod]
+    public void PayOut_SimulatedWithAFoughtSample_IsPaidAsNormal()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+        _accumulator.Submit(Fought());
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(40, _contentStore.Record.ServiceXp, "full base XP (band XP goes through the mocked reward service)");
+        Assert.IsNull(_service.LastSatOutReason);
+        _rewards.Received().Grant(Arg.Is<RewardSpec>(r => r.Renown == 2), "battle-won");
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => r.Trust == -1), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void PayOut_WalkoutNeverDownedWithOverwhelmingVerdict_IsSatOutButKeepsBandPay()
+    {
+        // He walked out of the mission without being downed: the sit-out rule governs base pay and
+        // renown, while the sample still pays what he did before he left.
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+        _accumulator.Submit(new MeritSample { LeftTheField = true, SurvivalRatio = 1f });
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(SitOutVerdict.OverwhelmingCost, _service.LastSatOutReason);
+        Assert.AreEqual(20, _contentStore.Record.ServiceXp);
+        _rewards.Received().Grant(Arg.Is<RewardSpec>(r => r.ServiceXp > 0), Arg.Is<string>(s => s.StartsWith("merit-")));
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => PaysRenown(r)), Arg.Any<string>());
+        _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Trust == -1), "sat-out");
+    }
+
+    [TestMethod]
+    public void PayOut_WalkoutAfterBeingDowned_IsNotSatOut()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+        _accumulator.Submit(new MeritSample { LeftTheField = true, SurvivalRatio = 0f, FellEarly = true });
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.IsNull(_service.LastSatOutReason);
+        Assert.AreEqual(40, _contentStore.Record.ServiceXp);
+        _rewards.Received().Grant(Arg.Is<RewardSpec>(r => r.Renown == 2), "battle-won");
+    }
+
+    [TestMethod]
+    public void PayOut_NotSimulatedNoSample_IsPaidAsNormal()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+
+        _service.PayOutBattle(won: true, playerSimulated: false);
+
+        Assert.AreEqual(40, _contentStore.Record.ServiceXp);
+        Assert.IsNull(_service.LastSatOutReason);
+        _rewards.Received(1).Grant(Arg.Is<RewardSpec>(r => r.Renown == 2), "battle-won");
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => r.Trust != 0), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void PayOut_AnyOutcome_ConsumesTheLedger()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+        _service.PayOutBattle(won: true, playerSimulated: false);
+        Assert.AreEqual(SitOutVerdict.Unchanged, _ledger.Consume());
+
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+        _service.PayOutBattle(won: true, playerSimulated: true);
+        Assert.AreEqual(SitOutVerdict.Unchanged, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void PayOut_NotEnlisted_StillConsumesTheLedger()
+    {
+        _ledger.Record(SitOutVerdict.WoundedFree);
+
+        Assert.IsFalse(_service.PayOutBattle(won: true, playerSimulated: true));
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _ledger.Consume());
+    }
+
+    [TestMethod]
+    public void PayOut_NextBattle_ResetsTheSatOutReason()
+    {
+        MakeEnlisted();
+        _ledger.Record(SitOutVerdict.ForcedOpen);
+        _service.PayOutBattle(won: true, playerSimulated: true);
+        Assert.IsNotNull(_service.LastSatOutReason);
+
+        _service.PayOutBattle(won: true, playerSimulated: false);
+
+        Assert.IsNull(_service.LastSatOutReason);
+    }
+
+    [TestMethod]
+    public void PayOut_ZeroXpFactorAndTrustCost_PaysNoXpAndNoTrust()
+    {
+        MakeEnlisted();
+        var config = EnlistmentContentConfigProvider.BuildDefaults();
+        config.SitOut.BaseXpFactor = 0f;
+        config.SitOut.TrustCost = 0;
+        _config.GetConfig().Returns(config);
+        _ledger.Record(SitOutVerdict.OverwhelmingCost);
+
+        _service.PayOutBattle(won: true, playerSimulated: true);
+
+        Assert.AreEqual(0, _contentStore.Record.ServiceXp);
+        _rewards.DidNotReceive().Grant(Arg.Is<RewardSpec>(r => r.Trust != 0), Arg.Any<string>());
     }
 }
