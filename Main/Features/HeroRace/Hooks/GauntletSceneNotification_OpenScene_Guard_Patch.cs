@@ -1,5 +1,7 @@
 using System;
+using System.Reflection;
 using HarmonyLib;
+using TAOM.Dependencies.Foundation;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.GauntletUI.SceneNotification;
@@ -52,6 +54,9 @@ public static class GauntletSceneNotification_OpenScene_Guard_Patch
 {
     private static IModLogger _logger;
 
+    // TAOM.Tests sets the logger; at runtime it resolves lazily from IoC on the first swallow.
+    internal static void UseLogger(IModLogger logger) => _logger = logger;
+
     /// <summary>
     /// Set by the Finalizer when it swallows an OpenScene NRE; consumed by the OnTick Postfix to run the
     /// notification teardown AFTER OnTick re-touches focus/input (see the deferred-close note above). Static
@@ -61,17 +66,24 @@ public static class GauntletSceneNotification_OpenScene_Guard_Patch
     internal static bool CloseRequested;
 
     [HarmonyFinalizer]
-    public static Exception Finalizer(Exception __exception)
+    public static Exception Finalizer(Exception __exception, MethodBase __originalMethod)
     {
-        if (!(__exception is NullReferenceException)) return __exception; // re-throw anything else
+        // Cold target (once per cinematic), so binding __originalMethod for the rethrow marker is cheap.
+        if (!(__exception is NullReferenceException)) return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
+
+        // The state change comes before any I/O: a failed log line must not leave the cinematic's input
+        // soft-locked. Dequeued by the OnTick Postfix, after OnTick re-touches focus/input.
+        CloseRequested = true;
 
         try
         {
             _logger ??= IoC.Resolve<IModLogger>();
-            _logger?.LogDebug(
-                "SceneNotificationVisualGuard: suppressed NRE building a scene-notification character " +
-                "visual (e.g. become-king cinematic); aborting the cinematic cleanly (deferred close).");
-            CloseRequested = true; // dequeued by the OnTick Postfix, after OnTick re-touches focus/input
+            // WARNING with the whole exception: the vanilla read this guard exists for was never pinned
+            // down, so the stack is the only way to tell it from another mod's NRE (audit 2026-10-27).
+            _logger?.LogWarning(
+                "SceneNotificationVisualGuard: suppressed an NRE building a scene-notification character " +
+                "visual (e.g. become-king cinematic); aborting the cinematic cleanly (deferred close). " +
+                __exception);
         }
         catch
         {

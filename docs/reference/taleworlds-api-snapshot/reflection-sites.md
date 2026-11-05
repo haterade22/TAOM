@@ -39,6 +39,8 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:41` | Companion role tooltip cache bust |
 | `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `SubModule.cs:503` (manual patch) | Captain tooltip role hint |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_selectedRace` | field | `FaceGenRaceSelectorRebuilder.cs:208` | CC culture-restricted race dropdown |
+| `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView` | `SpawnNonHumanNarrativeMenuCharacter` | method | `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153` | Patch20 narrative mount guard: the `TargetMethod` of its prefix |
+| `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView` | `_characterScene` | field | `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157` | Patch20 narrative mount guard: injected as `____characterScene` to find the spawn point |
 | `…Core.ViewModelCollection.Selector.SelectorVM`1` | `_selectedIndex` | field | `FaceGenRaceSelectorRebuilder.cs:211` | Selector reset trick (no-op-setter bypass) |
 | `…SelectorVM`1` | `_selectedItem` | field | `FaceGenRaceSelectorRebuilder.cs:212` | Selector reset trick |
 | `…SelectorVM`1` | `_onChange` | field | `FaceGenRaceSelectorRebuilder.cs:213`, `CommanderSelectorRebuilder.cs:21` | Selector callback rewire |

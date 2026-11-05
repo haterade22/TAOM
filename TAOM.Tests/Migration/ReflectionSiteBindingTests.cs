@@ -45,6 +45,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "SubModule.cs:503 (manual patch)")]
+    // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
+    [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153 (TargetMethod)")]
+    [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157 (____characterScene)")]
     // --- CharacterCreation race selector (FaceGenRaceSelectorRebuilder.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_selectedRace", "Field", "FaceGenRaceSelectorRebuilder.cs:208")]
     // --- SelectorVM<T> backing fields (FaceGen + CustomBattles commander selector) ---

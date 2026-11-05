@@ -460,9 +460,10 @@ public class SubModule : MBSubModuleBase
         ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
 
         TryPatchCategory("Patch22_ArmyTargeting");
-        // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
-        // which NREs (Army.cs:726 settlement.GatePosition / 659 Kingdom.Settlements, v1.4.6) when a
-        // besieger army can't resolve a gathering fortification — a map-tick CTD on siege start.
+        // Patch49: Finalizer (with a state-setting prefix) guarding vanilla
+        // Army.FindBestGatheringSettlementAndMoveTheLeader, which NREs (v1.4.8 Army.cs:726
+        // settlement.GatePosition / :659 Kingdom.Settlements) when a besieger army can't resolve a
+        // gathering fortification: a map-tick CTD on siege start. It contains only those two dead ends.
         // No TAOM patch is on the stack; aggressive Patch22 targeting just makes it more reachable.
         // Crash report 2026-06-17. See the patch's doc-comment.
         TryPatchCategory("Patch49_ArmyGatheringNreGuard");

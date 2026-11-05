@@ -1,8 +1,10 @@
 using System;
+using System.Reflection;
 using System.Text;
 using HarmonyLib;
 using SandBox.ViewModelCollection.Tournament;
 using TAOM.Core.Logging;
+using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Features.Arena.Hooks;
 
@@ -17,9 +19,9 @@ namespace TAOM.Features.Arena.Hooks;
 /// nulls <c>Participant</c> without ever resetting <c>IsValid</c> back to false. We could not
 /// reproduce that state from a full 16-entrant bracket, so it is not guarded; it IS logged.
 ///
-/// On any exception this dumps the entire bracket — every round, match, team and participant slot,
-/// with <c>IsValid</c>, whether <c>Participant</c> is null, and the character behind it — then
-/// swallows. The winner panel ends up incomplete, which is strictly better than the tournament
+/// On any exception this logs it with its stack and dumps the entire bracket (every round, match, team
+/// and participant slot, with <c>IsValid</c>, whether <c>Participant</c> is null, and the character
+/// behind it); then it swallows a <see cref="NullReferenceException"/> only and rethrows anything else. The winner panel ends up incomplete, which is strictly better than the tournament
 /// screen dying mid-input. If a bundle ever arrives with this dump in it, the offending slot is
 /// named outright and the guess becomes a root cause.
 ///
@@ -49,18 +51,28 @@ public static class Patch69_TournamentEndGuard
     /// <summary>Module-unload lifecycle hook — drop the cached IoC reference.</summary>
     public static void ResetForUnload() => _logger = null;
 
+    // Cold target (once per tournament), so binding __originalMethod for the rethrow marker is cheap.
     [HarmonyFinalizer]
-    public static Exception Finalizer(Exception __exception, TournamentVM __instance)
+    public static Exception Finalizer(Exception __exception, TournamentVM __instance, MethodBase __originalMethod)
     {
         if (__exception == null) return null;
+        return Settle(__exception, GetLogger(), () => TournamentBracketFormatter.Dump(__instance), __originalMethod);
+    }
 
-        var logger = GetLogger();
-        if (logger == null) return __exception;   // no way to report it — let vanilla propagation stand
+    /// <summary>
+    /// The finalizer's decision without the <c>TournamentVM</c> type, so TAOM.Tests can run it. Logs the
+    /// exception with its stack (a foreign NRE must be attributable from the log alone), then swallows
+    /// only an NRE; everything else goes back with its throw site kept.
+    /// </summary>
+    internal static Exception Settle(Exception exception, IModLogger logger, Func<string> dumpBracket, MethodBase site)
+    {
+        // No way to report it: let vanilla propagation stand.
+        if (logger == null) return RethrowStackPreserver.PreserveForRethrow(exception, site);
 
         try
         {
-            logger.LogError($"{Tag} OnTournamentEnd threw {__exception.GetType().Name}: {__exception.Message}");
-            logger.LogError($"{Tag} {TournamentBracketFormatter.Dump(__instance)}");
+            logger.LogError($"{Tag} OnTournamentEnd threw {exception}");
+            logger.LogError($"{Tag} {dumpBracket()}");
         }
         catch (Exception dumpFailure)
         {
@@ -84,11 +96,17 @@ public static class Patch69_TournamentEndGuard
         // Mission.OnTick cleared tickCompleted (Mission.cs:3740). A rethrow there lands on Patch37 at
         // Module.OnApplicationTick, which swallows, so the agent tick that sets the flag again never
         // starts; Patch91b restores the flag, at the cost of that frame's agent tick.
-        if (!(__exception is NullReferenceException)) return __exception;
+        if (!ShouldSwallow(exception)) return RethrowStackPreserver.PreserveForRethrow(exception, site);
 
         // The tournament screen survives with an incomplete winner panel. That is all the swallowed NRE
         // costs: the prize (TournamentBehavior.cs:247), the leaderboard entry (:248) and
         // OnTournamentFinished (:256) all run before the event.
+        // That is why the NRE stays contained by a finalizer rather than a prefix (NRE guard
+        // audit 2026-10-27). A non-NRE is still rethrown, with the same hang risk; no input is known to
+        // produce one here.
         return null;
     }
+
+    // Internal for TAOM.Tests (InternalsVisibleTo): the decision is pure, the finalizer is not.
+    internal static bool ShouldSwallow(Exception exception) => exception is NullReferenceException;
 }
