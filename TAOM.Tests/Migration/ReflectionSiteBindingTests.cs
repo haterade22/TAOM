@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Migration;
 
@@ -47,7 +51,7 @@ public class ReflectionSiteBindingTests
     // --- CompanionTactics role tooltips (RoleTooltipDecorator.cs) + manual patch (SubModule.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
-    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "SubModule.cs:503 (manual patch)")]
+    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:25 (manual patch)")]
     // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153 (TargetMethod)")]
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157 (____characterScene)")]
@@ -61,7 +65,7 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.CustomBattle.CustomBattleSideVM", "CustomBattleSideVM", "OnCultureSelection", "Method", "CustomBattleSideVM_Constructor_Patch.cs:23")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories.ClanPartiesVM", "ClanPartiesVM", "OnPartySelection", "Method", "RefugeClanScreenPatch.cs:41")]
     // --- AdvancedCombat custom attacks (CustomAttacksUtils.cs) ---
-    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:55")]
+    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:60")]
     // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:31,54")]
     // --- MissionPerf attribution: the protected internal script tick it binds and swaps (MissionAttributionInstaller.cs) ---
@@ -74,11 +78,11 @@ public class ReflectionSiteBindingTests
     // --- ShaderPrecompilation 1.4.7 headless-battle deployment-NRE guard (ShaderPrecompilePlayerAgentGuard.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "_initialPlayerAgent", "Field", "ShaderPrecompilePlayerAgentGuard.cs:44")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
-    [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:21")]
+    [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:22")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
-    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:71")]
+    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:72")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
-    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:31")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:32")]
     // --- EditorCacheRebuild distance-cache reflection web (NavigationCacheAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "_settlementToSettlementDistanceWithLandRatio", "Field", "NavigationCacheAdapter.cs:71")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "_fortificationNeighbors", "Field", "NavigationCacheAdapter.cs:73")]
@@ -87,24 +91,24 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GetUpdatedSettlementsForNeighborDetection", "Method", "NavigationCacheAdapter.cs:81")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "AddClosestEntrancePairBase", "Method", "NavigationCacheAdapter.cs:83")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "AddNeighbor", "Method", "NavigationCacheAdapter.cs:85")]
-    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "CheckBeingNeighbor", "Method", "NavigationCacheAdapter.cs:88")]
-    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GetCacheElement", "Method", "NavigationCacheAdapter.cs:91")]
-    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GetRealDistanceAndLandRatioBetweenSettlements", "Method", "NavigationCacheAdapter.cs:94")]
-    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "SetSettlementToSettlementDistanceWithLandRatio", "Method", "NavigationCacheAdapter.cs:97")]
+    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "CheckBeingNeighbor", "Method", "NavigationCacheAdapter.cs:374")]
+    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GetCacheElement", "Method", "NavigationCacheAdapter.cs:388")]
+    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GetRealDistanceAndLandRatioBetweenSettlements", "Method", "NavigationCacheAdapter.cs:404")]
+    [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "SetSettlementToSettlementDistanceWithLandRatio", "Method", "NavigationCacheAdapter.cs:420")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "GenerateClosestSettlementToFaceCache", "Method", "NavigationCacheAdapter.cs:104")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "Serialize", "Method", "NavigationCacheAdapter.cs:110")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "Deserialize", "Method", "NavigationCacheAdapter.cs:113")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCacheElement`1", "NavigationCacheElement`1", "Sort", "Method", "NavigationCacheAdapter.cs:101")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.SandBoxNavigationCache", "SandBoxNavigationCache", "GetSceneXmlCrcValues", "Method", "NavigationCacheAdapter.cs:107")]
     // --- SettlementGuards patch-body reflection (patch TARGETS are auto-covered by HarmonyPatchBindingTests) ---
-    [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "PrepareGuardAgentDataFromGarrison", "Method", "GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30")]
+    [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "PrepareGuardAgentDataFromGarrison", "Method", "GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:32")]
     [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "_garrisonTroops", "Field", "GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33")]
     // --- Player Switcher (#514). The single load-bearing reflection site of the feature.
     // Campaign.PlayerDefaultFaction is internal, Clan.PlayerClan is a computed getter over it, and
     // ChangePlayerCharacterAction never updates it. Without this write the player clan pointer stays
     // on the abandoned character-creation clan, CharacterDeveloperVM throws enumerating its Heroes,
     // and KillCharacterAction's victim.Clan != Clan.PlayerClan guard stops that clan being destroyed.
-    [DataRow("TaleWorlds.CampaignSystem.Campaign", "Campaign", "PlayerDefaultFaction", "Property", "PlayerIdentityAdapter.cs:34")]
+    [DataRow("TaleWorlds.CampaignSystem.Campaign", "Campaign", "PlayerDefaultFaction", "Property", "PlayerIdentityAdapter.cs:35")]
     // --- Diplomacy Patch80 kingdom-vote deadlock (#547, #550): the members KingdomVoteDeadlockBinding
     // caches once in Initialize. Patch80KingdomVoteDeadlockBindingTests pins their shapes; these pin
     // existence. ExecuteDone is protected and is what seam D runs on a pre-concluded election.
@@ -122,12 +126,12 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.BanditSpawnCampaignBehavior", "BanditSpawnCampaignBehavior", "_hideouts", "Field", "Patch125_HideoutClanGuard.cs (____hideouts)")]
     // --- MissionStartGuard (Patch103): the six start calls the transpiler swaps, found by AccessTools.Method at install.
     // A miss makes AccessTools.Method return null; Rewrite's fit check rejects the null target, so Mission.AfterStart stays vanilla.
-    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnBeforeMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:23,32")]
-    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "OnBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:24,32")]
-    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:25,32")]
-    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "EarlyStart", "Method", "MissionStartGuardSwaps.cs:26,32")]
-    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "AfterStart", "Method", "MissionStartGuardSwaps.cs:27,32")]
-    [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "AfterMissionStart", "Method", "MissionStartGuardSwaps.cs:28,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnBeforeMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:23")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "OnBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:24")]
+    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:25")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "EarlyStart", "Method", "MissionStartGuardSwaps.cs:26")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "AfterStart", "Method", "MissionStartGuardSwaps.cs:27")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "AfterMissionStart", "Method", "MissionStartGuardSwaps.cs:28")]
     // --- NameplateCull (Patch104): the three private fields the adapter binds with AccessTools.FieldRefAccess.
     // A miss makes Initialize return a reason, the cull stays off and the vanilla nameplate update runs (one WARNING line).
     [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM", "SettlementNameplatesVM", "_mapCamera", "Field", "NameplateCullAdapter.cs:49")]
@@ -147,7 +151,7 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Owner", "Property", "CampaignListenerAdapter.cs")]
     // --- XmlMerge (plan 042): the fast path loads each file through the engine's private loader. A miss turns the fast
     // path off for the session (logged at start); every module XML merge then runs the engine's own code.
-    [DataRow("TaleWorlds.ObjectSystem.MBObjectManager", "MBObjectManager", "CreateDocumentFromXmlFile", "Method", "XmlMergeEngineAdapter.cs:52")]
+    [DataRow("TaleWorlds.ObjectSystem.MBObjectManager", "MBObjectManager", "CreateDocumentFromXmlFile", "Method", "XmlMergeEngineAdapter.cs:23")]
     // --- Quest Log Fast Open (#854): the replay of the private PopulateQuestLog for a finished quest built on demand.
     // A miss makes Bind return a reason, the quest log is never deferred and vanilla builds every quest at open.
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestItemVM", "QuestItemVM", "PopulateQuestLog", "Method", "QuestJournalAdapter.cs:30")]
@@ -160,7 +164,7 @@ public class ReflectionSiteBindingTests
     // --- Dependencies foundation probes, resolved by string through Type.GetMethod. A GetActiveModules
     // miss sends IncompatibleModDetector to a directory scan but makes CoopPresence read co-op as absent;
     // a FromParametersFile miss leaves the game version undetected.
-    [DataRow("TaleWorlds.ModuleManager.ModuleHelper", "ModuleHelper", "GetActiveModules", "Method", "IncompatibleModDetector.cs:210")]
+    [DataRow("TaleWorlds.ModuleManager.ModuleHelper", "ModuleHelper", "GetActiveModules", "Method", "IncompatibleModDetector.cs:226")]
     [DataRow("TaleWorlds.Library.ApplicationVersion", "ApplicationVersion", "FromParametersFile", "Method", "VersionProbe.cs:78")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
@@ -175,6 +179,127 @@ public class ReflectionSiteBindingTests
         Assert.IsTrue(HasMember(type, member, kind),
             $"{kind} '{member}' not found on {type.FullName}. The reflection site at {source} would resolve null " +
             "at runtime (silent feature degradation, no crash) — the member was likely renamed or removed in this Bannerlord version.");
+    }
+
+    /// <summary>
+    /// A "File.cs:N" or "File.cs:N,M" label is only a pointer, and it drifts when code above the site
+    /// changes. It shows only in a failure message, so nothing else catches the drift. This reads the
+    /// labels off the DataRows above and checks each labelled line still names its member (a property
+    /// accessor by its property name). Comments are blanked first, so a doc comment that mentions the
+    /// member cannot satisfy a label. No game needed: it reads source files only, so it carries no
+    /// BindingVerification category and runs on any machine with the repo.
+    ///
+    /// Convention: label the line that spells the member (its string literal, its nameof, or the name
+    /// filter inside the lookup), not the first line of a multi-line call and not a declaration. A label
+    /// with no line number only has to name a file that exists under Main/ or Dependencies/.
+    ///
+    /// Limit: RepoPaths.StripComments is not string-aware, so a "//" or "/*" inside a string literal blanks
+    /// the code after it. If this test reports a line that does spell its member, look for such a string on
+    /// that line or above it, and put the lookup on a line of its own.
+    /// </summary>
+    [TestMethod]
+    public void EveryLineLabel_PointsAtALineThatNamesItsMember()
+    {
+        var labelPattern = new Regex(@"(?<file>[\w.]+\.cs)(?::(?<lines>\d+(?:,\d+)*))?");
+        var failures = new List<string>();
+        var checkedLabels = 0;
+
+        foreach (var (member, source) in CatalogueRows())
+        {
+            var needles = new List<string> { member };
+            if (member.StartsWith("get_") || member.StartsWith("set_")) needles.Add(member.Substring(4));
+
+            foreach (Match label in labelPattern.Matches(source))
+            {
+                var fileName = label.Groups["file"].Value;
+                var files = SourceFilesNamed(fileName);
+                if (files.Count == 0)
+                {
+                    failures.Add($"{fileName}: no such file under Main/ or Dependencies/ (member {member})");
+                    continue;
+                }
+                if (!label.Groups["lines"].Success) continue;
+
+                var fileLines = files
+                    .Select(f => RepoPaths.StripComments(File.ReadAllText(f)).Split('\n'))
+                    .ToList();
+                foreach (var n in label.Groups["lines"].Value.Split(',').Select(int.Parse))
+                {
+                    checkedLabels++;
+                    var ok = fileLines.Any(l => n >= 1 && n <= l.Length && needles.Any(x => l[n - 1].Contains(x)));
+                    if (ok) continue;
+
+                    var now = fileLines.SelectMany(l => Enumerable.Range(1, l.Length)
+                            .Where(i => needles.Any(x => l[i - 1].Contains(x))))
+                        .Distinct().OrderBy(i => i);
+                    failures.Add($"{fileName}:{n} -> {member} now appears (outside comments) at line(s): "
+                        + (now.Any() ? string.Join(", ", now) : "none"));
+                }
+            }
+        }
+
+        Assert.IsTrue(checkedLabels > 0, "No line labels were found; the label pattern or the DataRow layout changed.");
+        Assert.AreEqual(0, failures.Count,
+            $"{failures.Count} stale line label(s). Repoint each DataRow and its reflection-sites.md row to the "
+            + "line that spells the member in the reflection lookup:\n" + string.Join("\n", failures));
+    }
+
+    /// <summary>
+    /// Every DataRow's member and source label must be repeated in a row of reflection-sites.md, so the
+    /// catalogue cannot lose a site the test pins.
+    /// </summary>
+    [TestMethod]
+    public void EveryDataRow_HasAMatchingRowInTheCatalogue()
+    {
+        var doc = RepoPaths.ReadSource("docs/reference/taleworlds-api-snapshot/reflection-sites.md")
+            .Split('\n');
+        var tokenPattern = new Regex(@"[\w.]+\.cs(?::\d+(?:,\d+)*)?");
+        var failures = new List<string>();
+
+        foreach (var (member, source) in CatalogueRows())
+        {
+            var tokens = tokenPattern.Matches(source).Cast<Match>().Select(m => m.Value).ToList();
+            var cell = $"| `{member}` |";
+            var found = doc.Any(l => l.Contains(cell) && tokens.All(t => HasExactToken(l, t)));
+            if (!found)
+                failures.Add($"{member} ({source}): no catalogue row with that member and label");
+        }
+
+        Assert.AreEqual(0, failures.Count,
+            $"{failures.Count} DataRow(s) missing from reflection-sites.md Category B:\n" + string.Join("\n", failures));
+    }
+
+    // A label token matches only whole: "File.cs:23" must not match "File.cs:230" or "File.cs:23,30", and
+    // "File.cs" must not match "OtherFile.cs" (Codex pass 2, 2026-10-09).
+    private static bool HasExactToken(string line, string token) =>
+        Regex.IsMatch(line, @"(?<![\w.])" + Regex.Escape(token) + @"(?![\w:,])");
+
+    [TestMethod]
+    public void HasExactToken_LongerLineNumberOrLongerFileName_DoesNotMatch()
+    {
+        Assert.IsTrue(HasExactToken("| `MonsterSizeCatalogAdapter.cs:23` | x |", "MonsterSizeCatalogAdapter.cs:23"));
+        Assert.IsFalse(HasExactToken("| `MonsterSizeCatalogAdapter.cs:230` | x |", "MonsterSizeCatalogAdapter.cs:23"));
+        Assert.IsFalse(HasExactToken("| `X.cs:35,66,70` | x |", "X.cs:35,66"));
+        Assert.IsFalse(HasExactToken("| `OtherAdapter.cs` | x |", "Adapter.cs"));
+        Assert.IsFalse(HasExactToken("| `Adapter.cs:12` | x |", "Adapter.cs"));
+    }
+
+    private static IEnumerable<(string Member, string Source)> CatalogueRows()
+    {
+        var method = typeof(ReflectionSiteBindingTests).GetMethod(nameof(ReflectionSite_ResolvesAgainstInstalledEngine));
+        return method.GetCustomAttributes<DataRowAttribute>()
+            .Select(r => ((string)r.Data[2], (string)r.Data[4]))
+            .ToList();
+    }
+
+    private static List<string> SourceFilesNamed(string fileName)
+    {
+        // Main/ and Dependencies/: TAOM.Dependencies binds engine members by name too.
+        var sep = Path.DirectorySeparatorChar;
+        return new[] { "Main", "Dependencies" }
+            .SelectMany(root => Directory.GetFiles(RepoPaths.RepoPath(root), fileName, SearchOption.AllDirectories))
+            .Where(f => !f.Contains(sep + "obj" + sep) && !f.Contains(sep + "bin" + sep))
+            .ToList();
     }
 
     // --- helpers ---
