@@ -128,7 +128,7 @@ GATES = (
          ("docs/reference/banner-icon-generation.md",), note="a listed package needs a Modding Kit save"),
     Gate("gui-tests", "GUI prefabs, PrefabExtension XML, sprite data",
          ("*/gauntletui/*", "*/prefabs/*.xml", "*prefabextension*", "*spritedata.xml"),
-         _dotnet("PrefabExtensionBrushTests",
+         _dotnet("PrefabExtensionBrushTests", "PrefabSpriteTests",
                  "PrefabElementTypeBindingTests", "PrefabExtensionBindingTests", "PrefabInsertPositionTests",
                  "PrefabHintParentGateTests", "PrefabCloneWidgetReferenceTests", "PartyTupleVanillaParityTests",
                  "PrefabBrushPropertyTests", "PrefabAttributeNameBindingTests", "GauntletStretchInCoverRatchetTests"),
