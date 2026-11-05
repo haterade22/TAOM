@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,6 +12,9 @@ using BehaviorTrees.Nodes;
 //
 // Cleaned from the decompile: dropped ILSpy artifacts and rewrote C# 12 primary-constructor
 // syntax to plain ctors (TAOM compiles at LangVersion=10). No behavior change.
+//
+// Changed since the port: Selector.Prepare reuses its child lists (plan 033, ported by plan 124) and
+// RunTree caps the node transitions of one call (plan 124, FREEZE-THREADING-09).
 
 namespace BehaviorTrees;
 
@@ -34,6 +38,13 @@ public enum BTTaskStatus
 public abstract class BehaviorTree
 {
     public readonly int _rootEvaluationDelay = 2000;
+
+    // The most node transitions one RunTree call may make. A walk ends at the root or at a node that
+    // waits; a longer one is a cycle that would hold the mission thread for ever (plan 124, FREEZE-THREADING-09).
+    internal const int MaxNodeTransitionsPerRun = 1000;
+
+    // Tree types whose runaway has been logged: one line per type per process, however many of its trees stop.
+    private static readonly ConcurrentDictionary<Type, byte> RunawayReported = new();
 
     public bool IsRunning { get; private set; } = true;
     public bool ShouldRunNextTick { get; internal set; }
@@ -59,8 +70,14 @@ public abstract class BehaviorTree
                 CurrentNode.HandleExecute();
             if (CurrentNode.ShouldExitTree())
                 return;
+            int transitions = 0;
             do
             {
+                if (++transitions > MaxNodeTransitionsPerRun)
+                {
+                    StopRunaway();
+                    return;
+                }
                 CurrentNode = CurrentNode.HandleExecute();
                 if (CurrentNode.ShouldExitTree())
                     return;
@@ -75,6 +92,24 @@ public abstract class BehaviorTree
         {
             BTRegister.Logger?.LogMessage("Exception running the behavior tree: " + ex.Message);
             IsRunning = false;
+        }
+    }
+
+    // Stops the tree the way the exception path does, then logs the first runaway of this tree type. The log
+    // call is guarded: a log line must never throw out of the mission tick.
+    private void StopRunaway()
+    {
+        IsRunning = false;
+        if (!RunawayReported.TryAdd(GetType(), 0))
+            return;
+        try
+        {
+            BTRegister.Logger?.LogMessage("Behavior tree " + GetType().Name + " made " + MaxNodeTransitionsPerRun
+                + " node transitions in one RunTree call without reaching its root or a waiting node; the tree is stopped.");
+        }
+        catch
+        {
+            // never throw from the tree tick
         }
     }
 

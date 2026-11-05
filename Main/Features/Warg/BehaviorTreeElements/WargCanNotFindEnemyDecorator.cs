@@ -26,7 +26,7 @@ public class WargCanNotFindEnemyDecorator : BannerlordTickTimedDecorator, IBTWar
     public override bool Evaluate()
     {
         if (RageAttackStartTime == null || RageAttackStartTime.GetValue() == null) return false;
-        if (DateTime.Now - RageAttackStartTime.GetValue() > waitSeconds)
+        if (DateTime.UtcNow - RageAttackStartTime.GetValue() > waitSeconds)
             return true;
         return false;
     }

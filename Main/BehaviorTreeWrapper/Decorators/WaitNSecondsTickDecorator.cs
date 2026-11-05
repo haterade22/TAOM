@@ -18,10 +18,10 @@ public class WaitNSecondsTickDecorator : BannerlordTickTimedDecorator
     {
         if (!_lastTime.HasValue)
         {
-            _lastTime = DateTime.Now;
+            _lastTime = DateTime.UtcNow;
             return false;
         }
-        if (DateTime.Now - _lastTime > _waitSeconds)
+        if (DateTime.UtcNow - _lastTime > _waitSeconds)
         {
             _lastTime = null;
             return true;

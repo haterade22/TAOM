@@ -34,6 +34,6 @@ public class ElephantLikeAttackOffCooldownDecorator : BTReturnFalseDecorator, IB
     {
         var stamp = _kind == ElephantLikeAttackKind.Trample ? TrampleLastFired : SideAttackLastFired;
         _service ??= _profile.ResolveService();
-        return _service.IsOffCooldown(stamp.GetValue(), DateTime.Now, _cooldownSeconds);
+        return _service.IsOffCooldown(stamp.GetValue(), DateTime.UtcNow, _cooldownSeconds);
     }
 }

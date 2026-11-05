@@ -1,4 +1,3 @@
-using TAOM.Adapters;
 using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -7,11 +6,16 @@ namespace TAOM.Features.Warg;
 
 internal static class WargRiderHandManager
 {
+    /// <summary>
+    /// Called every mission tick by WargMissionBehavior. Warg-ness comes from the mount's own Monster,
+    /// as WargMissionBehavior.TryAttachWargTree decides it: no container lookup and no adapter cache
+    /// lookup per frame.
+    /// </summary>
     public static void Tick()
     {
         if (Agent.Main == null) return;
 
-        if (Agent.Main.HasMount && IoC.Resolve<IMissionAdapterFactory>().GetAgentAdapter(Agent.Main.MountAgent).IsWarg())
+        if (Agent.Main.HasMount && WargConfig.IsWargMonster(Agent.Main.MountAgent.Monster?.StringId))
         {
             UpdateWargRiderHandle();
         }

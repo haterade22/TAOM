@@ -7,7 +7,7 @@ namespace TAOM.Tests.Features.Warg;
 /// <summary>
 /// Pins which Monster ids count as a warg.
 ///
-/// This matters more than it looks. <c>AgentAdapter.IsWarg()</c> is the only gate on
+/// This matters more than it looks. <c>WargConfig.IsWargMonster</c> is the only gate on
 /// <c>WargMissionBehavior</c> (the bite attack, both the first-tick scan and OnAgentBuild) and on
 /// <c>WargRiderHandManager.Tick()</c> (rider hand posing). It was exact string equality against
 /// "warg", so a second warg-family Monster silently got no bite and no rider posing: no crash, no
