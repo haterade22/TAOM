@@ -30,6 +30,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 
 | Engine type | Member | Kind | Source site | What it drives |
 |---|---|---|---|---|
+| `TaleWorlds.CampaignSystem.CharacterObject` | `_originCharacter` | field | `HeroCharacterStateAdapter.cs:13` | StaleCharacterRepair: a hollow parent takes its registered XML twin as origin |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_currentCharacter` | field | `InventoryScreenAdapter.cs:29` | EquipPresets active hero |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_inventoryLogic` | field | `InventoryScreenAdapter.cs:32` | EquipPresets transfer commands |
 | `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:57` | CompanionTactics OOB overlay attach |

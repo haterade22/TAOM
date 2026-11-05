@@ -907,7 +907,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch83_StaleCharacterRepair
 
-**Target:** `MBObjectManager.PreAfterLoad()` (public instance, parameterless, Postfix)
+**Target:** `MBObjectManager.PreAfterLoad()` (public instance, parameterless, Postfix) + `HeroCreator.DeliverOffSpring(Hero, Hero, bool)` (public static, void `Prefix` with `out bool __state` and a void `Finalizer`, `Patch83_OffspringParentRepair`, #1076: repairs a hollow parent before the birth clones it; shares the method with `Patch13_RaceAge`'s transpiler `DeliverOffSpring_RaceAssert_Patch`; applied with the rest of Patch83 at `OnSubModuleLoad`; [doc](../features/stale-character-repair.md))
 
 **Feature:** StaleCharacterRepair, `Main/Features/StaleCharacterRepair/Hooks/Patch83_StaleCharacterRepair.cs`. **Status:** ACTIVE (crash bundle 065939b6, 2026-09-05).
 

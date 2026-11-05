@@ -36,6 +36,8 @@ public class ReflectionSiteBindingTests
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
+    // --- A hollow parent takes its registered XML twin as origin (HeroCharacterStateAdapter.cs, #1076) ---
+    [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "_originCharacter", "Field", "HeroCharacterStateAdapter.cs:13")]
     // --- CompanionTactics formation-preset overlay (OOBOverlayService.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_isActive", "Field", "OOBOverlayService.cs:57")]
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_dataSource", "Field", "OOBOverlayService.cs:58")]

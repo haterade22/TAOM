@@ -159,6 +159,9 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - **A test that derives its own expected set from the artefact under test** (2026-09-01, #525). A coverage test parsed its culture list out of the roster file it was auditing, so deleting a culture's rows removed it from the test's own input and stayed green, as did renaming them to an invalid StringId. Ask of any coverage test: what happens if I DELETE a row?
 - **A gate made only of prohibitions.** #525 shipped 15 rosters with no weapon in them past four green gates, because every rule said what a kit must NOT contain and none said what it MUST. When a gate exists for a defect, look for the defect's negation stated positively; if it is absent, the gate cannot fail on the thing it was written for.
 - **A ratchet or suppression list with no multiplicity.** Keyed on `(owner, item)` alone, 10 entries were suppressing 13 occurrences, so an already-listed roster gaining a SECOND copy of the same bad item filed as old debt.
+- **A load-time engine method called at another time** (2026-11-02, hollow parent repair #1076, a Codex catch). At load a later system puts
+  back what the method overwrites; `InitializeHeroCharacterOnAfterLoad` during a birth runs after `RacePersistenceService` has finished, so it
+  replaced a restored race. List each field such a call writes, and who else writes that field, and in what order.
 
 **False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
 

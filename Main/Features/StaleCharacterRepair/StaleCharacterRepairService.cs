@@ -61,6 +61,9 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     // sample keeps the line readable while the count carries the true scale.
     internal const int MaxNamedIds = 20;
 
+    public const string ParentRepairCheckId = "taom.stale-character.parent-repair";
+    public const string BirthCompletedCheckId = "taom.stale-character.parent-birth";
+
     private readonly IStaleCharacterAdapter _adapter;
     private readonly IModLogger _logger;
 
@@ -68,6 +71,66 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     {
         _adapter = adapter;
         _logger = logger;
+    }
+
+    public void ReportHollowHeroCharacters()
+    {
+        try
+        {
+            var heroes = _adapter.FindHollowHeroCharacters();
+            if (heroes.Count == 0) return;
+
+            SafeWarn(
+                $"census: {heroes.Count} hero(es) have a hollow character. Cloning one throws in the engine; the " +
+                $"birth seam repairs a parent just before that (crash bundle 3fbdc0c5). " +
+                $"{Describe(heroes.Select(DescribeOrFallback).ToList())}");
+        }
+        catch (Exception ex)
+        {
+            Swallowed(nameof(ReportHollowHeroCharacters), ex);
+        }
+    }
+
+    public bool RepairOffspringParent(IHeroCharacterStateAdapter parent)
+    {
+        try
+        {
+            if (!parent.IsCharacterHollow) return false;
+
+            var state = DescribeOrFallback(parent);
+            if (!parent.TryRepairCharacter())
+            {
+                Check(ParentRepairCheckId, "fail", state);
+                return false;
+            }
+
+            Check(ParentRepairCheckId, "pass", state);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Swallowed(nameof(RepairOffspringParent), ex);
+            Check(ParentRepairCheckId, "fail", $"hero={parent.HeroId} threw={ex.GetType().Name}");
+            return false;
+        }
+    }
+
+    public void ReportBirthAfterRepair(string childId, Exception failure)
+    {
+        if (failure == null && !string.IsNullOrEmpty(childId))
+            Check(BirthCompletedCheckId, "pass", $"child={childId}");
+        else
+            Check(BirthCompletedCheckId, "fail", $"threw={failure?.GetType().Name ?? "none"}");
+    }
+
+    private string DescribeOrFallback(IHeroCharacterStateAdapter hero)
+    {
+        try { return hero.DescribeState(); }
+        catch (Exception ex)
+        {
+            Swallowed("DescribeState", ex);
+            return $"hero={hero.HeroId} state=unavailable";
+        }
     }
 
     public int RepairStaleCharacters()
@@ -176,5 +239,34 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     {
         try { _logger?.LogWarning($"[StaleCharacterRepair] {message}"); }
         catch { /* a load-path repair must never fail over its own logging */ }
+    }
+
+    // The [Check] and [Swallowed] line formats of the 1.5.x outcome log, written through IModLogger
+    // until that service reaches this line (WP139), so the in-game verdict reader can already read them.
+    private void Check(string id, string result, string detail)
+    {
+        try
+        {
+            var line = $"[Check] id={id} result={result}" + (string.IsNullOrEmpty(detail) ? string.Empty : " " + detail);
+            if (result == "fail") _logger?.LogWarning(line);
+            else _logger?.LogInfo(line);
+        }
+        catch
+        {
+            // A failed log line must never block a birth or a save load.
+        }
+    }
+
+    private void Swallowed(string site, Exception ex)
+    {
+        try
+        {
+            _logger?.LogWarning(
+                $"[Swallowed] feature=StaleCharacterRepair site={site} first={ex?.GetType().Name ?? "(none)"}. Root cause: {ex}");
+        }
+        catch
+        {
+            // Logging is already the fallback path.
+        }
     }
 }
