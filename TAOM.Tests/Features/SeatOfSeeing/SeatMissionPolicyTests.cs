@@ -13,19 +13,20 @@ public class SeatMissionPolicyTests
     private static SeatPermissions Decide(SeatMissionKind kind, bool network = false, bool foreign = false) =>
         SeatMissionPolicy.Decide(new SeatMissionFacts(kind, network, foreign));
 
-    // Kind, camera, fight on, orders, time.
+    // Kind, camera, fight on, orders, time, take a soldier. Only a battle lets the player take a soldier: a hideout's duel has no known
+    // end for a stand-in, and the ambush has its own controller.
     [DataTestMethod]
-    [DataRow((int)SeatMissionKind.Battle, true, true, true, true)]
-    [DataRow((int)SeatMissionKind.Hideout, true, false, true, true)]
-    [DataRow((int)SeatMissionKind.Tournament, true, false, false, false)]
-    [DataRow((int)SeatMissionKind.Arena, true, false, false, false)]
-    [DataRow((int)SeatMissionKind.Settlement, true, false, false, false)]
-    [DataRow((int)SeatMissionKind.Other, true, false, false, false)]
-    public void Decide_EachKind_FollowsTheTable(int kind, bool camera, bool fightOn, bool orders, bool time)
+    [DataRow((int)SeatMissionKind.Battle, true, true, true, true, true)]
+    [DataRow((int)SeatMissionKind.Hideout, true, false, true, true, false)]
+    [DataRow((int)SeatMissionKind.Tournament, true, false, false, false, false)]
+    [DataRow((int)SeatMissionKind.Arena, true, false, false, false, false)]
+    [DataRow((int)SeatMissionKind.Settlement, true, false, false, false, false)]
+    [DataRow((int)SeatMissionKind.Other, true, false, false, false, false)]
+    public void Decide_EachKind_FollowsTheTable(int kind, bool camera, bool fightOn, bool orders, bool time, bool take)
     {
         var result = Decide((SeatMissionKind)kind);
 
-        Assert.AreEqual(new SeatPermissions(camera, fightOn, orders, time), result);
+        Assert.AreEqual(new SeatPermissions(camera, fightOn, orders, time, take), result);
     }
 
     // A session keeps the camera and the orders the kind allows, and loses the hero's hand-off and mission time.
@@ -40,7 +41,7 @@ public class SeatMissionPolicyTests
     {
         var result = Decide((SeatMissionKind)kind, network: true);
 
-        Assert.AreEqual(new SeatPermissions(true, false, kindOrders, false), result);
+        Assert.AreEqual(new SeatPermissions(true, false, kindOrders, false, false), result);
     }
 
     [DataTestMethod]
@@ -59,6 +60,6 @@ public class SeatMissionPolicyTests
     {
         var none = default(SeatPermissions);
 
-        Assert.IsFalse(none.Camera || none.FightOn || none.Orders || none.Time);
+        Assert.IsFalse(none.Camera || none.FightOn || none.Orders || none.Time || none.TakeSoldier);
     }
 }

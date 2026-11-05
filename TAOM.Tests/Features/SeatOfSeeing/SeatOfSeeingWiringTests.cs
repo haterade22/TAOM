@@ -118,7 +118,7 @@ public class SeatOfSeeingWiringTests
 
         Assert.AreEqual(0, container.GetServiceRegistrations().Count(r => r.ServiceType.Name == "ISeatScreenAdapter"));
         StringAssert.Contains(RepoPaths.ReadSource("Client/Features/SeatOfSeeing/SeatView.cs", stripComments: true),
-            "new SeatScreenAdapter(MissionScreen, mission)");
+            "new SeatScreenAdapter(MissionScreen, mission, logger)");
     }
 
     // ---- The view ----

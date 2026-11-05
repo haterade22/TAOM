@@ -1791,3 +1791,11 @@ The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed(
 - **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
 - **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.
+
+### A co-op battle is not a network session to the engine: read `ICoopSessionProvider` (Seat of Seeing, 2026-11-04)
+
+The Seat and Marshal's Word gated their writes on `GameNetwork.IsSessionActive`. That is true only for the engine's own multiplayer game types, and the BannerlordCoop repo has no use of `CurrentGameType`, so a co-op battle read as single player. The gate had shipped to trunk, where Marshal's Word could then act in a co-op battle.
+
+- **Why missed:** the name sounds like the question. The contract answered the co-op question with it, and the unit test fed the fact by hand, so nothing pinned where it came from. `coop-interop.md` repeated the same fact, and nobody had read the co-op mod's code for it.
+- **Prevent:** a gate on online play reads the engine's fact or `ICoopSessionProvider.IsSessionActive`, and a test pins both reads. A presentation patch can still change authority: ask who reaches it on a client-hosted mission.
+- **Source:** [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) rows 3 and 4.

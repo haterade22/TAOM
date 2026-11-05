@@ -232,10 +232,10 @@ public class MarshalsWordWiringTests
     {
         // SeatMissionPolicy.Decide computes Orders from the mission kind alone (SeatMissionPolicy.cs:36-39), so this clause is the whole gate that
         // keeps Marshal's Word off a co-op session. The doc's four questions and the CoopSettingsRelevance reasons rest on it.
-        var mayRun = ViewMember("private static bool MayRun(Mission mission, IModLogger logger)");
+        var mayRun = ViewMember("private static bool MayRun(Mission mission, ICoopSessionProvider coop, IModLogger logger)");
 
         StringAssert.Contains(mayRun, "return SeatMissionPolicy.Decide(facts).Orders && !facts.NetworkSession;");
-        StringAssert.Contains(ViewMember("public override void OnMissionScreenInitialize()"), "() => MayRun(mission, logger)");
+        StringAssert.Contains(ViewMember("public override void OnMissionScreenInitialize()"), "() => MayRun(mission, coop, logger)");
     }
 
     private static string ViewMember(string signature)

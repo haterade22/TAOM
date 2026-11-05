@@ -30,6 +30,9 @@ internal sealed class SeatOfSeeingModule : TaomFeatureModule
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 
+    // The order panel's transpiler logs a drifted anchor at error level, which fails a field run.
+    public override void InitializeStatics(IResolver resolver) => SeatPatchLog.Logger = resolver.Resolve<IModLogger>();
+
     // After Native has cleared and filled the key contexts, as the time controls do. A failure leaves the key unbound; letting it
     // escape would fault the module.
     public override void OnPhase(ApplyPhase phase, IResolver resolver)

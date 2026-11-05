@@ -9,6 +9,7 @@ using TAOM.Adapters;
 using TAOM.Client.Adapters;
 using TAOM.Client.Features.SeatOfSeeing;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.MarshalsWord;
 using TAOM.Features.SeatOfSeeing.Domain;
 
@@ -45,10 +46,11 @@ public sealed class MarshalView : MissionView
                 return;
 
             _keys = IoC.Resolve<MarshalHotKeys>();
+            var coop = IoC.Resolve<ICoopSessionProvider>();
             var mission = Mission;
             var serial = (++_missionSerial).ToString(System.Globalization.CultureInfo.InvariantCulture);
             _session = new MarshalSession(IoC.Resolve<IMarshalOrderAdapter>(), new MarshalScreenAdapter(mission), IoC.Resolve<IMarshalSettingsProvider>(),
-                () => MayRun(mission, logger), IoC.Resolve<IOutcomeLog>(), logger, serial);
+                () => MayRun(mission, coop, logger), IoC.Resolve<IOutcomeLog>(), logger, serial);
         }
         catch (Exception ex)
         {
@@ -106,9 +108,9 @@ public sealed class MarshalView : MissionView
 
     private static bool Down(InputKey key) => key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyDown(key);
 
-    private static bool MayRun(Mission mission, IModLogger logger)
+    private static bool MayRun(Mission mission, ICoopSessionProvider coop, IModLogger logger)
     {
-        var facts = SeatMissionClassifier.ReadFacts(mission, logger);
+        var facts = SeatMissionClassifier.ReadFacts(mission, coop, logger);
         return SeatMissionPolicy.Decide(facts).Orders && !facts.NetworkSession;
     }
 

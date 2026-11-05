@@ -9,4 +9,8 @@ internal enum SeatMessage
     RageHolds,
     KeepNobody,
     KeepGone,
+    HeroFell,
+    TakeNobody,
+    TakeRefused,
+    TakeHeroAlive,
 }

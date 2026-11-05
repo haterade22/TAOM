@@ -2,8 +2,8 @@ namespace TAOM.Features.SeatOfSeeing.Domain;
 
 /// <summary>
 /// The in-game check ids of the Seat, read by tools/ingame_checks/0.toml (renamed to its issue number once the issue exists): entered,
-/// left, a frame owned for <see cref="FramesThreshold"/> frames, the glide armed, the fault latch (which must stay zero), and the pointer, panel,
-/// interface and keep checks of stages S2 and S3.
+/// left, a frame owned for <see cref="FramesThreshold"/> frames, the glide armed, the fault latch (which must stay zero), the pointer, panel,
+/// interface and keep checks of stages S2 and S3, and the hero hand-off and take of stages S4 and S5.
 /// </summary>
 internal static class SeatChecks
 {
@@ -18,6 +18,8 @@ internal static class SeatChecks
     internal const string HideId = "taom.seat-of-seeing.hide";
     internal const string KeepId = "taom.seat-of-seeing.keep";
     internal const string LetGoId = "taom.seat-of-seeing.let-go";
+    internal const string FightOnId = "taom.seat-of-seeing.fight-on";
+    internal const string TakeId = "taom.seat-of-seeing.take";
 
     /// <summary>The hot-path counter of owned frames: one increment a frame, no string and no I/O.</summary>
     internal const string FrameCounterId = "taom.seat-of-seeing.owned-frame";

@@ -17,6 +17,12 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>Off by default: a player who never asks sees vanilla behaviour.</summary>
     internal const bool DefaultKeepPanelOpen = false;
 
+    /// <summary>Off until a run in the game proves the hand-off (build-spec section 8): a player who never asks sees vanilla behaviour.</summary>
+    internal const bool DefaultHeroFightsOn = false;
+
+    /// <summary>On: it acts only after the hero has fallen, in a battle, and only on the key.</summary>
+    internal const bool DefaultTakeSoldierAfterFall = true;
+
     private TaomSettings? _settings;
 
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
@@ -32,4 +38,8 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     public bool CursorWithPanel => Settings?.SeatCursorWithPanel ?? DefaultCursorWithPanel;
 
     public bool KeepPanelOpen => Settings?.SeatKeepPanelOpen ?? DefaultKeepPanelOpen;
+
+    public bool HeroFightsOn => Settings?.SeatHeroFightsOn ?? DefaultHeroFightsOn;
+
+    public bool TakeSoldierAfterFall => Settings?.SeatTakeSoldierAfterFall ?? DefaultTakeSoldierAfterFall;
 }

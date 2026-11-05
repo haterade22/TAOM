@@ -176,14 +176,15 @@ public static class CoopSettingsRelevance
         // Many Hammers (#911): whether YOUR smelting list leaves out the weapons you locked. A view filter on one client's
         // list; no campaign state is read or written.
         "ManyHammersHideLockedEnabled",
-        // Seat of Seeing (S1, S2): where YOUR camera is, whether it starts a battle in the Seat, whether it shows a cursor with the order panel and
+        // Seat of Seeing (S1 to S5): where YOUR camera is, whether it starts a battle in the Seat, whether it shows a cursor with the order panel and
         // whether the panel reopens after an order (a view toggle on this peer's own panel; the orders it gives are the vanilla panel's). The Seat lifts only this peer's
         // view; the hero stands fast by a controller gate on this client, and in a session the policy gives the camera and the
-        // kind's orders (SeatMissionPolicy.cs:37-39), with no hand-off and no mission time. No campaign or battle state is read
-        // from any of these settings.
-        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen",
+        // kind's orders (SeatMissionPolicy.cs), with no hand-off, no mission time and no take of a soldier. The last two settings write the hero's
+        // controller and the player team's order owner, but only where the policy allows FightOn and TakeSoldier, which a network session never
+        // does. No campaign state is read from any of these settings.
+        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen", "SeatHeroFightsOn", "SeatTakeSoldierAfterFall",
         // Marshal's Word (M1, M2): richer orders for YOUR companies in a single-player battle. The session is off whenever a network
-        // session is active (MarshalView.MayRun asks GameNetwork.IsSessionActive), so no value reaches a co-op simulation, and the
+        // session is active (MarshalView.MayRun asks the network fact, the engine's session or a live co-op session), so no value reaches a co-op simulation, and the
         // orders it issues go through the same OrderController a player's click does.
         "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether",
         "SupplyShowRouteVisual",

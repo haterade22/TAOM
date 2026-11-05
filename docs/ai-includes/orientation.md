@@ -43,7 +43,7 @@ and the gate.
 | Mission logic | Logic `BehaviorType` needs `: MissionLogic`; no throw and no spawn in `AfterStart` | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` merges into an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
-| Co-op gating | Co-op loaded, peer authority, dedicated server, "a human player's party": four questions; server X.Instance is never null | [co-op](../features/coop-interop.md) |
+| Co-op gating | Loaded, authority, dedicated server, human party; server X.Instance not null; `GameNetwork.IsSessionActive` false in co-op | [co-op](../features/coop-interop.md) |
 | Server stop | A hard-killed launcher leaves its engine on UDP 4200: end both, or the next boot exits 3 | [server](../features/coop-dedicated-server.md) |
 | Console commands | Route through `TaomConsole`; a wrongly shaped command throws in unguarded startup discovery | [console](../features/dev-console.md) |
 | Landless cultures | A culture owning no settlement CTDs the daily clan tick: `Patch65`, `LANDLESS_CULTURE` | [spawn guard](../features/lord-spawn-guard.md) |

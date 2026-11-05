@@ -22,7 +22,7 @@
     <string id="taom_key_realm_borders_mode" text="Modalità Mappa dei Confini (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Alterna i confini tra i regni, i Popoli Liberi contro l'Ombra e i tuoi alleati e nemici. Predefinito: G." />
     <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
-    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Defaults to Q." />
     <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
     <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
     <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
@@ -31,5 +31,7 @@
     <string id="taom_key_seat_keep_desc" text="In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
     <string id="taom_key_seat_hide" text="Hide the interface (TAOM)" />
     <string id="taom_key_seat_hide_desc" text="In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
+    <string id="taom_key_seat_take_soldier" text="Take this soldier (TAOM)" />
+    <string id="taom_key_seat_take_soldier_desc" text="In the Seat, after your hero has fallen in a battle, takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Defaults to Delete." />
   </strings>
 </base>

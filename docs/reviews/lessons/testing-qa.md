@@ -2540,3 +2540,19 @@ Phase 1's keep rule had full domain tests, yet swapping the attacker and defende
 - **Why missed:** each slice was tested alone, and the domain tests were good enough to look complete. The fake was written by the builder of the code it stands in for.
 - **Prevent:** a fake's field that the production code reads must be settable, with one test that moves it. When a fake stands in for an engine event, it raises what the engine raises. Fixtures for a judge come from a real run's log, verbatim. After a passing run, read the numbers the plan said would answer a risk, and run once past the target.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), rows 5, 8, 9, 15 and 16.
+
+### A field trial step makes its own ground (Seat of Seeing and Marshal's Word, 2026-11-04)
+
+Six steps failed or passed for the wrong reason on where they stood. `hero_falls` read a reaction that comes a tick later. `take_soldier` needed the camera to look at soldiers. `back_to_stand` measured a hero whose company still held a Charge. `queue_two_moves` armed against a panel its own direct order had shut. `volley_holds` read at most 6 of 40 holding in one run, with no cause shown, and 35 of 40 at a gap of 80.3 m in a later run. Eight Marshal steps run in one battle ran out of battle.
+
+- **Why missed:** the test world gave each step its ground for free: same-tick reactions, an open panel, no walk left over. The first game run looked like a verdict on the feature.
+- **Prevent:** a step sets up what it measures (keeps a company, stops the walk, moves into range), waits for the reaction within a named limit, and reads a control where a share is the claim. The stand-in does what the engine does, and each change to it first makes the old step fail. A failing step is first explained from its log, before anyone doubts or trusts the feature. Each subset runs in its own battle.
+- **Source:** [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) row 12, [rca-marshals-word-m3-m4-2026-11-04.md](../rca-marshals-word-m3-m4-2026-11-04.md) row 12.
+
+### A judge's failure lines are read from the code, and a fix travels to the sibling feature (Marshal's Word, 2026-11-04)
+
+The Seat's review found that a failed patch and a failed key registration passed its judge. Marshal's Word, built next, had both defects, and its guard test passed on a class name that no class has.
+
+- **Why missed:** the fix lived in the Seat's tests. The Marshal contract was written before it, and its regex copied the old shape.
+- **Prevent:** feed the judge the feature's real failure lines, taken from source by a sweep test, never a made-up name. When a review finds a class of bug in one feature, grep the sibling that shares the tool in the same pass.
+- **Source:** [rca-marshals-word-m3-m4-2026-11-04.md](../rca-marshals-word-m3-m4-2026-11-04.md) rows 1, 2 and 9, [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) row 2.

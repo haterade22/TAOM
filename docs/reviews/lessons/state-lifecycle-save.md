@@ -1323,3 +1323,11 @@ A Marshal's Word fix made a march leave out a company with no units. `Spread` st
 - **Why missed:** the fix was small and its finding was clear, so its tests covered what it asked for: the march ends. They did not read the later consumer. The S1 and harness reviews recorded the same "a fix read less closely than new code" pattern.
 - **Prevent:** when a fix removes an input from a loop, grep every field that loop writes, and read each reader of those fields. Test the reader with a value that the removed input left behind. Prefer one membership source over a second list that must stay in step with it.
 - **Source:** [rca-marshals-word-m1-m2-2026-11-04.md](../rca-marshals-word-m1-m2-2026-11-04.md), rows 20, 33 and 45.
+
+### A cleanup keeps its debt until the effect is true (Seat of Seeing and Marshal's Word, 2026-11-04)
+
+`EndFight` cleared its flag before the hand-back so that a throw could not repeat, and the write that mattered came last, so a throw left the hero on the AI with nothing owed. Marshal's fault path called the drop written for the mission's end, so the callback flags stayed on every soldier while the mission went on.
+
+- **Why missed:** the normal path passed in the game, and the tests asserted flags, not the effect. Each teardown was written for one exit and reused for another.
+- **Prevent:** the write that matters runs in a `finally`. A bounded debt stays until the effect reads true, and the test asserts the effect with a fake that throws before its write. List each exit of a session (leave, fault in each tick, finish) and say what each owes the engine while the mission lives.
+- **Source:** [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) row 1, [rca-marshals-word-m3-m4-2026-11-04.md](../rca-marshals-word-m3-m4-2026-11-04.md) row 6.

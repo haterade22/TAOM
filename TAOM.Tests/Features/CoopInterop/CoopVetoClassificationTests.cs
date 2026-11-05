@@ -174,7 +174,7 @@ public class CoopVetoClassificationTests
             "Marshal's Word (build-spec 5.2): prefixes on the six OrderController order methods that skip vanilla only while this peer's " +
             "own queue key is down with the panel open, and only for the player's own controller (MarshalHooks.PlayerController). The " +
             "order is stored as a step and issued again later on the team's master controller, so it is delayed, and a step that cannot run is logged as dropped; " +
-            "no replicated campaign state is skipped. The session is off whenever GameNetwork.IsSessionActive, so a co-op peer never " +
+            "no replicated campaign state is skipped. The session is off whenever a network session is active (the engine's or a co-op one), so a co-op peer never " +
             "reaches the prefix with IsLive set, and every fault answers false so vanilla runs the order."),
         ["MarshalArrayPatch"] = new(CoopVeto.ReviewedSafe,
             "Marshal's Word (build-spec 6.1): replaces the layout arithmetic of OrderController.SimulateNewOrderWithPositionAndDirectionAux " +
@@ -188,6 +188,8 @@ public class CoopVetoClassificationTests
             "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips the equipment controller view's DropWeaponTick only while the player's own view is in the Seat, so the drop key (game key 22) does not drop a weapon from the air; otherwise it returns true. The tick reads this peer's input and acts on this peer's own main agent (the original ends in Agent.HandleDropWeapon, or on a client in a DropWeapon network message), and the Seat removes the press, not engine work. It also clears the view's pending press and hold time, which the view clears only in its else branch. The Seat is presentation in CoopSettingsRelevance."),
         ["Patch140_EquipmentViewEquipTick"] = new(CoopVeto.ReviewedSafe,
             "Seat of Seeing (build-spec 6.4): client-side view code. The prefix skips the equipment controller view's EquipWeaponTick only while the player's own view is in the Seat, so the equip key (game key 13) does not act from the air; otherwise it returns true. The tick reads this peer's input and acts on this peer's own main agent, and the Seat is presentation in CoopSettingsRelevance."),
+        ["Patch140_RangedSiegeInput"] = new(CoopVeto.ReviewedSafe,
+            "Seat of Seeing (build-spec 8.2): client-side view code. The prefix skips RangedSiegeWeaponView.HandleUserInput only while the hero fights on in the Seat (SeatPresence.HeroFightsOn, raised and lowered by this peer's own session from its own mission tick), and returns true otherwise. The method reads this peer's input, sets the view's custom camera when the pilot is the main agent, locks the main agent's look direction and gives the siege weapon its aim; it writes no campaign state. The hand-off is policy-denied in a network session, the engine's or a co-op one (SeatMissionPolicy.FightOn), so the gate never rises under co-op, and that is what keeps the weapon and look-lock writes out of a session."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +

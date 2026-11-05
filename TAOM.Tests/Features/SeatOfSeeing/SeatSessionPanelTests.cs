@@ -13,7 +13,7 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 [TestClass]
 public class SeatSessionPanelTests
 {
-    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true);
+    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true, TakeSoldier: true);
 
     private FakeSeatScreen _screen = null!;
     private FakeSeatHero _hero = null!;

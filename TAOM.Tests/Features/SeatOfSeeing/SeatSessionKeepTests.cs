@@ -15,7 +15,7 @@ public class SeatSessionKeepTests
 {
     private const float Eps = 0.01f;
     private const float Dt = 1f / 60f;
-    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true);
+    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true, TakeSoldier: true);
 
     private FakeSeatScreen _screen = null!;
     private FakeSeatHero _hero = null!;

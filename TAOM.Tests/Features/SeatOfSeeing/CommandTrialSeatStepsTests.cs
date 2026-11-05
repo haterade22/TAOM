@@ -65,7 +65,7 @@ public class CommandTrialSeatStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(StageTwo.Concat(StageThree).ToArray(), names.Skip(6).ToArray());
+        CollectionAssert.AreEqual(StageTwo.Concat(StageThree).ToArray(), names.Skip(6).Take(7).ToArray());
     }
 
     [TestMethod]
@@ -819,6 +819,8 @@ public class CommandTrialSeatStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        Assert.AreEqual("let_go_on_death", names.Last());
+        // The rows that kill come after the rows that need a living army; the hero's fall and the take close the table (section 12).
+        CollectionAssert.AreEqual(new[] { "hero_falls", "take_soldier" }, names.Skip(names.Count - 2).ToArray());
+        Assert.IsTrue(names.IndexOf("let_go_on_death") < names.IndexOf("fight_on"), "it kills a company with no hero in it, and the hand-off steps need only the hero's company");
     }
 }
