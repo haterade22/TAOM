@@ -47,8 +47,9 @@ internal sealed class MessengerEncyclopediaMixin : BaseViewModelMixin<Encycloped
         }
         catch
         {
-            // never let UI refresh throw
+            // never let UI refresh throw; the disabled button's hint now shows (#944), so give it a reason
             IsMessengerAvailable = false;
+            SendMessengerHint = _hintSystemUnavailable;
         }
     }
 

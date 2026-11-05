@@ -10,6 +10,8 @@ internal class MessengerEncyclopediaPrefabExtension : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Append;
 
+    // Vanilla's governor-button shape (SandBox TownManagement.xml:105-111, #944): Gauntlet never hovers a disabled
+    // widget, so the disabled-state hint is a sibling of the ButtonWidget inside a wrapper that stays enabled.
     [PrefabExtensionXmlDocument]
     public XmlDocument GetDocument()
     {
@@ -23,13 +25,17 @@ internal class MessengerEncyclopediaPrefabExtension : PrefabExtensionInsertPatch
             " MarginTop=\"10\"" +
             " LayoutImp.LayoutMethod=\"VerticalBottomToTop\">" +
             "<Children>" +
-            "<ButtonWidget" +
+            "<Widget" +
             " WidthSizePolicy=\"Fixed\"" +
             " HeightSizePolicy=\"Fixed\"" +
             " SuggestedWidth=\"227\"" +
             " SuggestedHeight=\"40\"" +
             " HorizontalAlignment=\"Center\"" +
-            " VerticalAlignment=\"Center\"" +
+            " VerticalAlignment=\"Center\">" +
+            "<Children>" +
+            "<ButtonWidget" +
+            " WidthSizePolicy=\"StretchToParent\"" +
+            " HeightSizePolicy=\"StretchToParent\"" +
             " IsEnabled=\"@IsMessengerAvailable\"" +
             " Command.Click=\"ExecuteSendMessenger\"" +
             " DoNotPassEventsToChildren=\"true\"" +
@@ -42,6 +48,8 @@ internal class MessengerEncyclopediaPrefabExtension : PrefabExtensionInsertPatch
             " Brush=\"Popup.PartySelection.Button.Text\"" +
             " VerticalAlignment=\"Center\"" +
             " HorizontalAlignment=\"Center\" />" +
+            "</Children>" +
+            "</ButtonWidget>" +
             "<HintWidget" +
             " WidthSizePolicy=\"StretchToParent\"" +
             " HeightSizePolicy=\"StretchToParent\"" +
@@ -50,7 +58,7 @@ internal class MessengerEncyclopediaPrefabExtension : PrefabExtensionInsertPatch
             " Command.HoverEnd=\"ExecuteEndHint\"" +
             " IsDisabled=\"true\" />" +
             "</Children>" +
-            "</ButtonWidget>" +
+            "</Widget>" +
             "</Children>" +
             "</ListPanel>");
         return doc;

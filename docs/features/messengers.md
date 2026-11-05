@@ -71,7 +71,7 @@ Group: **Messengers**
 
 | Setting | Type | Range | Default | Effect |
 |---------|------|-------|---------|--------|
-| `EnableMessengers` | bool | — | true | Master toggle. When off, the behavior is not registered and the encyclopedia button hides itself. **Requires restart to take effect** (Singleton lifetime). |
+| `EnableMessengers` | bool | n/a | true | Master toggle. When off, the behavior is not registered and the encyclopedia button is greyed out, and hovering it shows why. **Requires restart to take effect** (Singleton lifetime). |
 | `MessengerGoldCost` | int | 10–500 | 50 | Denar cost per dispatch. |
 | `MessengerTravelDays` | int | 1–10 | 3 | In-game days a messenger spends in transit. Speed scales to map size: `mapDiagonal / (24 * travelDays) * speedMultiplier`. |
 | `MessengerAccidents` | bool | — | true | Master toggle for the random ambush roll. |
@@ -134,13 +134,14 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 
 ## Tests
 
-55 unit tests across 3 files:
+Unit tests:
 
 - [TAOM.Tests/Features/Messengers/MessengerServiceTests.cs](../../TAOM.Tests/Features/Messengers/MessengerServiceTests.cs) — 26 tests covering all 11 `MessengerValidationResult` rejection paths, accident roll boundaries (p=0/1/disabled), position math edge cases (distance < / = / > speed; invalid target), speed calculation (zero/negative days clamping, multiplier).
 - [TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs](../../TAOM.Tests/Features/Messengers/MessengerStateStoreTests.cs) — 15 tests covering Add/Remove/Get/Contains/Clear, duplicate-id replacement, null/empty input, save roundtrip preserves all fields, malformed-on-load drops + warns.
 - [TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs](../../TAOM.Tests/Features/Messengers/MessengerConfigProviderTests.cs) — 14 tests covering valid JSON, missing file, malformed JSON, every validation rule (negative chance, >1.0 chance, zero/negative speed mult, absurd speed mult), boundary values, partial JSON merge, caching, info-vs-warning logging.
+- [TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs](../../TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs): the button's shape (#944). The button sits in an always-enabled wrapper that holds the one hint, so the reason for a greyed button shows on hover.
 
-The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSettingsProvider`, `MessengerRandomSource`, `MessengerIoC`) follow TAOM's "boundaries are not unit-tested" convention and are validated through manual game-testing (see GitHub issue #109 manual test plan).
+The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerSettingsProvider`, `MessengerRandomSource`, `MessengerIoC`) follow TAOM's "boundaries are not unit-tested" convention and are validated through manual game-testing (see GitHub issue #109 manual test plan).
 
 ## How to add a new validation rejection reason
 
@@ -168,6 +169,7 @@ The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSe
 
 ## Changelog
 
+- 2026-10-20: the Send Messenger hint for the disabled state now shows: the hint sits beside the button in an enabled wrapper, as vanilla's governor button does (#944).
 - 2026-05-13 — Wired Messengers into IoC + campaign starter (fixed encyclopedia hero-click NRE, #121) and added a wiring regression test (#191); fixed UI mixin notifications firing on self (#166) and per-campaign/arrival state-reset gaps (#123).
 - 2026-05-06 — Ported the LOTRAOM messenger system to TAOM (1.3.15): paid messenger dispatch from the encyclopedia/dialog, travel + arrival conversation routing, primitive-dict save, MCM + JSON tunables, 12-language localization (#109).
 
