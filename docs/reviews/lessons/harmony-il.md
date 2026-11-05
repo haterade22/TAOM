@@ -543,3 +543,17 @@ The Custom Battle troop postfix was narrowed to return only a troop vanilla's sl
 - **Why missed:** the filter was designed against the consumer that motivated it; the second caller sat in the same decompiled file and was never asked what it does with null.
 - **Prevent:** before changing what a postfix returns, list every caller of the patched method with what it does on each value you now return (null included), and write the narrowing as a function of the caller's state when they differ (here `vanillaHasPick`). One test per caller shape.
 - **Source:** `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md` part B (convergence pass).
+
+### Cost a guard's failure path as the loop it is, not as the once it feels like
+
+A guard is written for the case where it does nothing and is therefore costed for that case. Patch90's drain polled a set of body names with a 1 ms sleep for a 5 s budget and evaluated `pending.RemoveAll(name => Resolves(isResolved, name))` inside the loop; the lambda captures a parameter, so Roslyn allocates a delegate per evaluation, about five thousand across the budget on exactly the path the guard exists for. On the healthy path it is one allocation and invisible.
+- **Why missed:** the failure path was reasoned about as "five seconds once" rather than as five thousand iterations of a loop body, and the closure rule in the efficiency checklist names per-frame loops, which a `Thread.Sleep(1)` polling loop is in everything but name.
+- **Prevent:** when a patch has a bounded wait, write down the iteration count the budget implies at the sleep granularity, and read the loop body at that multiplier: delegates and closures hoisted before the loop, no allocation per pass, a try/catch per item only where a throw is expected and swallowing it is the design. The efficiency agent's per-frame closure check applies to any loop whose bound is time rather than count.
+- **Source:** `docs/reviews/rca-preload-body-guard-2026-09-15.md` finding 1, #601.
+
+### A caller-driven guard's coverage is the caller's coverage, so read each caller's gate before saying when the guard runs
+
+Patch90 prefixes `PreloadHelper.WaitForMeshesToBeLoaded`, which has six callers. Five call it once per mission from `OnSceneRenderingStarted`; `GauntletEducationScreen` calls it from `OnFrameTick`, and the feature doc described that as a per-frame caller. The screen gates the call behind its own `_startedRendering` latch, so the wait runs once per screen instance, and the character sets that later option picks preload into the same helper are never waited on by vanilla and so never guarded. The doc implied a coverage the guard cannot have.
+- **Why missed:** the caller list came from a grep of the decompile for the method name, answering "does the patch attach" and not "what does each caller do around the call". The lesson "grep every call site before documenting when a patch runs" was applied to the grep and not to the read.
+- **Prevent:** for every caller of a patched method, read the statement that makes the call and the condition that gates it, and describe the guard's coverage in those terms (once per mission, once per screen, every frame). A prefix guards exactly the calls that would have reached vanilla; anything vanilla does not call is outside the guard by construction and the doc should say so.
+- **Source:** `docs/reviews/rca-preload-body-guard-2026-09-15.md` finding 3, #601.

@@ -65,6 +65,7 @@ using TAOM.Features.CultureConversion;
 using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
+using TAOM.Features.PreloadBodyGuard;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.MenuLinkColors;
@@ -163,6 +164,7 @@ public static class IoC
         MissionDiagnosticIoC.RegisterMissionDiagnosticFeature(container);
         CrashReportIoC.RegisterCrashReportFeature(container);
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);
+        PreloadBodyGuardIoC.RegisterPreloadBodyGuardFeature(container);
         Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
         Features.AutoResolveDiagnostics.AutoResolveDiagnosticsIoC.RegisterAutoResolveDiagnosticsFeature(container);

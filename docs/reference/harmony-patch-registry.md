@@ -1021,6 +1021,12 @@ CharacterSelection face-generator action-set injection. The transpiler finds the
 
 ---
 
+## Patch90_PreloadBodyGuard
+
+**Target:** `PreloadHelper.WaitForMeshesToBeLoaded` (Prefix, returns `true`; receives `_uniqueDynamicPhysicsShapeName` by `____` injection)
+
+Runtime guard against the infinite mission load on a missing collision body (#601; mechanism #352, #599). Vanilla's wait is a do/while with no exit that counts, every pass, each registered body name that `PhysicsShape.GetFromResource(name, true)` returns null for, and null means "not loaded yet" and "no such body" alike. The prefix repairs the precondition instead of replacing the method: it polls only the body names with the same 1 ms sleep for a bounded 5 s budget (a healthy load resolves every name on the first pass and pays nothing measurable), removes what is still null from the set, logs each drop at ERROR as `[PreloadGuard]` with the repair command, and lets vanilla's loop run against a set that can now empty. `_uniqueMetaMeshes` is never touched and the prefix never returns `false`. The item whose body was dropped has no collision shape for that mission: a visible, logged defect in place of a frozen game. Six callers, all main thread: `MissionPreloadView` (campaign battles and sieges), `ArenaPreloadView` (tournaments; the player's kit is first in that set), `MissionCustomBattlePreloadView`, `MissionMultiplayerPreloadView`, `NavalShipsPreloadView`, `GauntletEducationScreen.OnFrameTick`. Applied in `OnSubModuleLoad` through `TryPatchCategory`, after the Patch61 save-load block and before Patch62 (the education screen and custom battle call the wait before any campaign initialises), own try/catch. On this line `BattleLoadPhaseBehavior` logs `BattlePlayable` about eleven frames before the wait runs, so an unguarded hang here left `BattlePlayable` as the last `[BattleLoad]` line. Decision logic lives in `PreloadBodyGuardService` (pure, 7 tests); `PreloadBodyGuardBindingTests` pins the private field's name and type on the installed engine so a rename un-injects as a red test, not as a silently unguarded load. Feature doc: [preload-body-guard.md](../features/preload-body-guard.md). **ACTIVE** (1.5.x 2026-09-15; ported to 1.4.x by WP108 on 2026-11-04, engine members re-verified on v1.4.8).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
