@@ -8,7 +8,7 @@ namespace TAOM.Tests.Features.RaceAge;
 // the Phase 7 audit (#179) flagged are exercisable without the sealed-Hero coupling.
 //
 // Full ADR-007 refactor (introduce IHeroAgeInfo adapter so the entire model is service-testable)
-// is tracked separately as #131. Until that lands, the early-exit guards
+// was deferred when #131 closed on 2026-05-14 and has no tracking issue yet. Until that lands, the early-exit guards
 // (IsImmortal / Spouse==null / Age out of fertility window) inside the override body remain
 // engine-coupled — covered indirectly here via the extracted helper's age-range branch.
 [TestClass]
@@ -189,5 +189,91 @@ public class TaomPregnancyModelTests
         Assert.AreNotEqual(ageAt44, ageAt44_5,
             "Fractional age must produce a distinct result from its int-truncated value " +
             "(if these match, the model is silently truncating Hero.Age — regression).");
+    }
+
+    // --- #628: the clan population brake must win over a race fertility bonus ---
+    //
+    // Pre-fix the modifier multiplied AFTER populationFactor, so an orc clan (x2) at 1.5x its cap
+    // still bred at vanilla's unbraked rate and orc clans sat at the 2*cap ceiling.
+
+    [TestMethod]
+    public void ComputeBaseChance_NpcClanPastCap_RaceBonusDropped()
+    {
+        // tier 0 -> cap 4. aliveLords 6 -> populationFactor = (8 - 6) / 4 = 0.5.
+        // Past the cap the bonus is clamped to 1: 1.2 * 0.12 * 0.5 * 1 = 0.072 (pre-fix 0.144).
+        var orc = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 6,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
+
+        Assert.AreEqual(0.072f, orc, 0.0005f);
+    }
+
+    [TestMethod]
+    public void ComputeBaseChance_NpcClanPastCap_BonusRaceNeverBeatsHumanRate()
+    {
+        var orc = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 25, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 2, clanTier: 1, aliveLords: 12,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 1.3f);
+        var human = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 25, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 2, clanTier: 1, aliveLords: 12,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 1f);
+
+        Assert.AreEqual(human, orc, 0.00001f,
+            "Past the clan cap a fertility bonus must not out-breed the human rate at the same fill.");
+    }
+
+    [TestMethod]
+    public void ComputeBaseChance_NpcClanAtCap_RaceBonusStillApplies()
+    {
+        // tier 0 -> cap 4. aliveLords 4 -> populationFactor = min(1, (8 - 4) / 4) = 1, brake not engaged.
+        // 1.2 * 0.12 * 1 * 2 = 0.288
+        var orc = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 4,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
+
+        Assert.AreEqual(0.288f, orc, 0.001f);
+    }
+
+    [TestMethod]
+    public void ComputeBaseChance_NpcClanOneLordPastCap_RaceBonusDropped()
+    {
+        // The exact edge: tier 0 -> cap 4. aliveLords 5 -> populationFactor = (8 - 5) / 4 = 0.75.
+        // One lord past the cap the bonus is already gone: 1.2 * 0.12 * 0.75 * 1 = 0.108 (bonus would give 0.216).
+        var orc = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 5,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
+
+        Assert.AreEqual(0.108f, orc, 0.0005f);
+    }
+
+    [TestMethod]
+    public void ComputeBaseChance_NpcClanPastCap_LowFertilityRaceKeepsPenalty()
+    {
+        // The clamp only caps a bonus; an elf's 0.15 still applies under the brake.
+        // tier 0, aliveLords 6 -> populationFactor 0.5. 1.2 * 0.12 * 0.5 * 0.15 = 0.0108
+        var elf = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 6,
+            playerOrSpouseInvolved: false, raceFertilityModifier: 0.15f);
+
+        Assert.AreEqual(0.0108f, elf, 0.0002f);
+    }
+
+    [TestMethod]
+    public void ComputeBaseChance_PlayerOrSpouseInvolved_RaceBonusClamped()
+    {
+        // The player's marriage skips the brake (vanilla), so it must not also take the race bonus:
+        // an orc player couple breeds at the vanilla rate. 1.2 * 0.12 * 1 * 1 = 0.144 (pre-fix 0.288)
+        var orcPlayer = TaomPregnancyModel.ComputeBaseChance(
+            heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
+            childCount: 0, clanTier: 0, aliveLords: 100,
+            playerOrSpouseInvolved: true, raceFertilityModifier: 2f);
+
+        Assert.AreEqual(0.144f, orcPlayer, 0.001f);
     }
 }
