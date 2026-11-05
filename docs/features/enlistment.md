@@ -303,9 +303,11 @@ The first shipped version never joined a single battle. Five separate defects, a
 alternative exists), `MapState.EnterMenuMode` postfix (recovery for ids written without
 SetNextMenu), 4× `LordConversationsCampaignBehavior` condition prefixes (suppress
 join-army/ally-thanks lines while enlisted; the clickable variant carries `out TextObject
-hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All six targets pinned by
+hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All seven targets pinned by
 `Patch66EnlistmentBindingTests` against the installed DLLs. The donor's
 `MapState.OnMapConversationOver` patch was replaced by `CampaignEvents.ConversationEnded`.
+Since the WP128 port the category also holds the
+`MapEventHelper.CanMainPartyLeaveBattleCommonCondition` postfix (#827), described below.
 
 ## The remediation arc (2026-08-07, batches 0-10)
 
@@ -1789,6 +1791,42 @@ event's settlement, not behind the trace toggle because it is rare:
 `[EnlistDiag] seeding the join from inside '<settlement id>' (event=<type>, sameFactionAsSettlement=<True|False>); ...`.
 `InsideSettlementJoinDiagnosticTests` pins its place (after the settlement read, before
 `RestartPlayerEncounter`, ungated). Ported from the 1.5.x line (#1019).
+
+## Fixes ported from the 1.5.x line (port148 WP128)
+
+These fixes reached the 1.4.x line in WP128 of the 2026-11-04 port programme. Engine facts were
+re-checked on v1.4.8. The review records are the `docs/reviews/rca-enlistment-*` files named in
+each entry; they describe the 1.5.x review and cite v1.5.5 lines.
+
+### No walking out of the commander's battle (#827)
+
+The `Patch66_Enlistment` postfix on `MapEventHelper.CanMainPartyLeaveBattleCommonCondition` hides
+vanilla 'Leave' and 'Abandon army' while the soldier is in `EnlistedBattle` and does not lead his
+side (`IEnlistmentMenuService.ShouldBlockBattleExit`, which starts from `BattleCommandPolicy`).
+On v1.4.8 exactly three `EncounterGameMenuBehavior` conditions read the predicate (`:1566`,
+`:1638`, `:1877`); `Patch66EnlistmentBindingTests` pins the set by IL scan. A safe-passage truce
+that greys out 'Attack' and 'Send troops' (`MenuHelper.CheckEnemyAttackableHonorably`) releases
+the exits, so the menu always keeps one. Review: `rca-enlistment-battle-exit-2026-10-18.md`.
+
+### A way out of the service menu after a discharge during load (#828)
+
+The wait menu's own condition is `args => true`; every service option gates itself on
+`IEnlistmentPlayerActionService.IsServing`, because v1.4.8 ANDs a wait menu's condition with each
+option's (`GameMenu.cs:158-168`). When nobody serves, the one `isLeave` option "Go on your way"
+(`LeaveAfterDischarge`) leaves the menu, into the town menu when the player stands in a town, and
+the board reads "Your service has ended." `EnlistmentServiceMenuWiringTests` pins the shape.
+Review: `rca-enlistment-discharged-menu-2026-10-19.md`.
+
+### The commander's village raids are not battles to join (#831), unless a lord relieves the village (#954)
+
+`VillageRaidReader.IsRaiding` (one adapter read shared by both commander snapshots and
+`IEncounterAdapter.IsPartyRaiding`) is true when the commander is the attacker in a raid, forced
+supplies or forced volunteers and no mobile lord party with healthy troops defends it.
+`VillageActionJoinPolicy.IsJoinableBattle` gates the assessment, the pump's join request and both
+stale-latch predicates, and `ServiceBattleService` refuses the join as a floor. The board shows
+"The column is raiding." A relief lord joins the running Raid event on its defender side (v1.4.8
+`StartBattleAction.cs:23-30`, `:113-115`), so that fight is joined. Reviews:
+`rca-enlistment-village-raids-2026-10-20.md`, `rca-enlistment-relief-lord-2026-10-20.md`.
 
 ## Interactions with the rest of TAOM
 
