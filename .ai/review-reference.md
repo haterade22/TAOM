@@ -162,6 +162,10 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - **A load-time engine method called at another time** (2026-11-02, hollow parent repair #1076, a Codex catch). At load a later system puts
   back what the method overwrites; `InitializeHeroCharacterOnAfterLoad` during a birth runs after `RacePersistenceService` has finished, so it
   replaced a restored race. List each field such a call writes, and who else writes that field, and in what order.
+- **Every syntax that guards a throwing getter** (2026-10-14, review follow-ups #792: a Codex miss a
+  later Claude docs audit caught). Codex showed the `PartyBase.MainParty` scan missed `!= null`, the
+  reversed and the `is` forms, but not `?.`; seven `PartyBase.MainParty?.` reads in two adapters
+  stayed. When a scan bans a guard on a getter that throws, list `?.` and `??` among the forms.
 
 **False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
 

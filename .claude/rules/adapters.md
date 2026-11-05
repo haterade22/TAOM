@@ -26,6 +26,8 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 **A hero's character can be hollow (MANDATORY before reading a raw character field).** `IsRegistered` is saved (v1.4.8 `MBObjectBase.cs:23-25`), so a hero can keep a `CharacterObject` that XML never reaches while XML builds a new twin of its id. `CharacterObject.Culture` answers from the hero (`CharacterObject.cs:258-272`) and hides a null raw culture until `BasicCharacterObject.FillFrom` copies it onto a clone (`BasicCharacterObject.cs:193-195`). Read the raw culture through `BasicCharacterObject` and the raw name through its field (`Name` is virtual, so a cast does not help), and before calling a repair done, trace every member the protected method reads after the first throw ([repair](../../docs/features/stale-character-repair.md), #1076).
 
+**`PartyBase.MainParty` is a computed getter that throws.** It returns null only without a campaign; with one it reads `Campaign.Current.MainParty.Party` (v1.4.8 `PartyBase.cs:208-218`), so it throws, `?.` included, while the stored main party is null. Check `Campaign.Current?.MainParty` and read `Campaign.Current?.MainParty?.Party`. `MainPartyNullCheckScanTests` fails a null comparison, `is null`, `??` or `?.` on the getter written directly or inside any number of its own parentheses, and passes a call argument (`Find (PartyBase.MainParty)?.X`); it cannot see a check through a local alias (`var p = PartyBase.MainParty; if (p == null)`), so review for that form, and it blanks comments but not strings, so a string holding the check fails it (#792).
+
 ## Testing
 - Adapters themselves are thin wrappers — test coverage via service tests that mock the adapter interface
 - Use `NSubstitute.Substitute.For<IXxxAdapter>()` in tests

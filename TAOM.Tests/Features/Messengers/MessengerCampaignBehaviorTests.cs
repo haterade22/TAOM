@@ -116,4 +116,18 @@ public class MessengerCampaignBehaviorTests
 
         Assert.IsInstanceOfType(behavior, typeof(CampaignBehaviorBase));
     }
+
+    [TestMethod]
+    public void IsPlayerAvailable_GuardsTheStoredMainPartyNotTheComputedGetter()
+    {
+        // PartyBase.MainParty (v1.4.8 PartyBase.cs:208-218) returns null without a campaign, but with one it
+        // returns Campaign.Current.MainParty.Party, which throws while Campaign.MainParty is null. A null check
+        // on it covers only the no-campaign case and throws in the one it is there for; the stored
+        // Campaign.MainParty is what can be null.
+        var src = RepoPaths.ReadSource("Main/Features/Messengers/MessengerCampaignBehavior.cs", stripComments: true);
+
+        StringAssert.Contains(src, "if (Campaign.Current?.MainParty == null) return false;");
+        Assert.IsFalse(src.Contains("PartyBase.MainParty == null"),
+            "PartyBase.MainParty throws while Campaign.MainParty is null, so a null check on it cannot return false there; check Campaign.Current?.MainParty");
+    }
 }

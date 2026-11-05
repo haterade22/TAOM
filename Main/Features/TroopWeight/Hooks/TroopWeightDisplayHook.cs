@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment;
@@ -235,7 +236,7 @@ public class TroopWeightDisplayHook :
     {
         try
         {
-            var party = PartyBase.MainParty;
+            var party = Campaign.Current?.MainParty?.Party;
             if (vm == null || party?.MemberRoster == null)
                 return;
 
