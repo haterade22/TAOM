@@ -817,6 +817,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 - [mesh-ref-validation.md](mesh-ref-validation.md) — the companion tool that confirms/eliminates the missing-`bo_`-mesh hypothesis offline + via `rgl_log`.
 - [mission-diagnostic.md](mission-diagnostic.md) — sibling diagnostic that dumps `MissionBehaviors`/`MissionLogics` on first tick (shares the same log file).
 - [crash-report.md](crash-report.md) — the bundle pipeline the watchdog reuses.
+- [texture-advice.md](texture-advice.md): the one-time memory advice at the first main menu; it reads the same GlobalMemoryStatusEx total as the [MemSample] session line.
 
 ## Changelog
 

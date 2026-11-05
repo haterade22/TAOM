@@ -20,5 +20,6 @@ internal static class FeatureModules
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),
         new Features.CheatScreenGuard.CheatScreenGuardModule(),
+        new Features.TextureAdvice.TextureAdviceModule(),
     };
 }

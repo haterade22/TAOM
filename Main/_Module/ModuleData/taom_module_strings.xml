@@ -2917,4 +2917,8 @@
 	<string id="taom_skeleton_buffer_warning" text="{=taom_skeleton_buffer_warning}This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
 	<!-- CheatScreenGuardService -->
 	<string id="taom_cheat_screen_guard_notice" text="{=taom_cheat_screen_guard_notice}TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
+	<!-- TextureAdviceAdapter -->
+	<string id="taom_texture_advice_title" text="{=taom_texture_advice_title}TAOM: memory advice" />
+	<string id="taom_texture_advice_body" text="{=taom_texture_advice_body}This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />
+	<string id="taom_texture_advice_ok" text="{=taom_texture_advice_ok}Understood" />
 </strings>
