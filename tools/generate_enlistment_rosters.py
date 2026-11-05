@@ -88,6 +88,10 @@ DEFAULT_GAME_ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
 RANKS = ['recruit', 'soldier', 'veteran', 'sergeant']
 
+# The marker --seed-missing writes above the rosters it appends. XML forbids a double hyphen
+# inside a comment, so it must not spell the flag.
+SEED_MARKER = '<!-- seeded by generate_enlistment_rosters.py (seed-missing) -->'
+
 # Mirrors TAOM.Features.Enlistment.Content.Domain.ServiceAssignment. The order here is this
 # file's output order and carries no meaning; the C# enum's ordinals are what persist.
 ASSIGNMENTS = ['infantry', 'archer', 'cavalry', 'support']
@@ -933,7 +937,7 @@ def main():
         if not new_blocks:
             print('\n--seed-missing: nothing to add (all roster ids already present).')
             return
-        insert = ('\n    <!-- seeded by generate_enlistment_rosters.py --seed-missing -->\n'
+        insert = (f'\n    {SEED_MARKER}\n'
                   + '\n'.join(new_blocks) + '\n\n</EquipmentRosters>')
         updated = existing.replace('</EquipmentRosters>', insert, 1)
         parse_written(updated)
