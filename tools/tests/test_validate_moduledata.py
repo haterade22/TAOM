@@ -1724,6 +1724,23 @@ class ExtraRefRootTests(unittest.TestCase):
                             for i in issues),
                         f"expected UNKNOWN_CULTURE for the TAOM_Map ref, got {[i.code for i in issues]}")
 
+    def test_vintage_line_names_version_and_newest_file_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "LOTRLOME_Armory"
+            _write(mod / "SubModule.xml", '<Module><Version value="v9.9.9" /></Module>')
+            _write(mod / "ModuleData" / "a.xml", "<x />")
+            os.utime(mod / "ModuleData" / "a.xml", (1767225600, 1767225600))
+            line = vm.module_vintage(mod / "ModuleData")
+        self.assertIn("LOTRLOME_Armory", line)
+        self.assertIn("v9.9.9", line)
+        self.assertIn("2026-01-01", line)
+
+    def test_vintage_line_says_unknown_when_the_version_cannot_be_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "M" / "ModuleData"
+            mod.mkdir(parents=True)
+            self.assertIn("version unknown", vm.module_vintage(mod))
+
 
 class ArmoryStructuralAssumptionTests(unittest.TestCase):
     """The Armory's schema checks silently do not run, and that is only safe today.
