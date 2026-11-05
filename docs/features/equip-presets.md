@@ -30,6 +30,7 @@ Three Harmony patches under `Patch33_EquipPresets` plus one campaign behavior + 
 
 - **`Patch33_GauntletInventoryScreen`** — Postfix on `OnInitialize` creates a `GauntletLayer` (z-order **1000**, above vanilla's 15) that hosts `PresetsOverlay.xml` + `PresetsOverlayVM`. Prefix on `OnFinalize` removes the layer and clears static state.
 - **`Patch33_SPInventoryVMRefresh`** — Postfix on `SPInventoryVM.RefreshValues` captures the live VM into `IInventoryScreenAdapter` so the VM can read active-hero / equipment-mode and refresh after mutation. IoC-resolved adapter cached statically (per `harmony-patches.md` "Reflection in hot paths" rule).
+- **Refresh after Load.** `InventoryLogic.AfterTransfer` updates only the item rows and the shown set's slots. After the transfers, `PresetsOverlayVM` calls `IInventoryScreenAdapter.RefreshActiveVM`, which runs the shared `InventoryVMAdapter.RefreshPanel`: the private `UpdateRightCharacter` (paper doll, armour, weight) and the private `RefreshInformationValues` (capacity, no-saddle warning, Done button), the pair vanilla runs when the shown outfit changes, then the public `ExecuteRemoveZeroCounts` for a stack whose last unit was equipped, as vanilla's `ProcessEquipItem` does last. `UpdateRightCharacter` also re-applies the faction colours to the doll, as the outfit toggle does. Quick Actions uses the same helper, so both features share one binding (#924).
 - **`EquipmentPresetCampaignBehavior`** — `SyncData("EquipPresets_HeroPresets")` round-trips the `Dictionary<heroStringId, List<HoNEquipmentPreset>>`. `OnGameLoaded` prunes orphaned hero entries (heroes that died/disappeared between sessions).
 
 ### Component Diagram
@@ -137,6 +138,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## Changelog
 
+- 2026-10-23: a preset Load refreshes the paper doll, armour, weight, capacity and Done button at once, and removes rows left at count 0 (#924). `RefreshActiveVM` called `RefreshValues`, which only resets labels.
 - 2026-05-19 — Fixed the Presets overlay button being a silent no-op by wiring `SetInputRestrictions()`/`ResetInputRestrictions()` on the z-order-1000 `GauntletLayer`.
 - 2026-05-13 — Lifted `IInventoryScreenAdapter.SetActive(SPInventoryVM?)` onto the interface (Phase 9b) so `Patch33_SPInventoryVMRefresh` resolves the interface without a concrete-type cast.
 - 2026-05-07 — Codex review fix pass (Patch33): routed the Load path through vanilla `InventoryLogic`/`TransferCommand`, fully wired IoC + Patch33 category + behavior, added empty-slot clearing, dead-equipment guard, slot-fit enforcement, and restored the 3 MCM properties.

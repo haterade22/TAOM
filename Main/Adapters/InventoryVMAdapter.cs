@@ -185,6 +185,29 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
         return commands.Count;
     }
 
+    /// <summary>
+    /// The panel refresh after a programmatic batch: the paper doll and the information values (the
+    /// pair vanilla runs when the shown outfit changes, :1645-1647), then the zero-count rows a
+    /// full-stack equip or sell leaves (<c>AfterTransfer</c> only sets their count, :3853-3856), which
+    /// vanilla's equip handler prunes last (<c>ProcessEquipItem</c>, :3482-3483). Shared with
+    /// <see cref="InventoryScreenAdapter.RefreshActiveVM"/> so EquipPresets and Quick Actions use one binding.
+    /// </summary>
+    internal static void RefreshPanel(SPInventoryVM vm, IModLogger logger, string tag)
+    {
+        try
+        {
+            UpdateRightCharacter?.Invoke(vm);      // paper doll, slots, armour, weight, can-use flags
+            RefreshInformationValues?.Invoke(vm);  // capacity, no-saddle warning, Done button
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"[{tag}] inventory panel refresh failed: {ex.Message}");
+        }
+
+        try { vm.ExecuteRemoveZeroCounts(); }
+        catch (Exception ex) { logger.LogError($"[{tag}] zero-count row prune failed: {ex.Message}"); }
+    }
+
     private static Action<SPInventoryVM>? BindPanelRefresh(string name)
     {
         try
