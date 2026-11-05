@@ -20,7 +20,8 @@ namespace TAOM.Core.Diagnostics;
 /// .NET SDK then appends <c>+{commit-sha}</c>, marked <c>.dirty</c> or <c>.nogit</c> by
 /// Directory.Build.props when it must, so the stamp is NOT at the end of the string. Both modules
 /// are produced by the same build, so their stamps should agree to within seconds; a gap of hours
-/// means a hand-copied module.
+/// means a hand-copied module. Equal clean commits are a pair whatever the time between the builds;
+/// the time tiers remain the fallback.
 /// </summary>
 /// <summary>How a pair of build stamps relates. Three tiers, because two of them are benign.</summary>
 public enum BuildPairVerdict
@@ -67,7 +68,8 @@ public static class BuildStampReport
     /// Renders a verdict as the tail of the startup line. Only <see cref="BuildPairVerdict.Mismatched"/>
     /// carries the word MISMATCH, which is what makes that word mean something when it appears.
     /// </summary>
-    public static string DescribeVerdict(BuildPairVerdict verdict, DateTime a, DateTime b)
+    public static string DescribeVerdict(BuildPairVerdict verdict, DateTime a, DateTime b,
+        string? mainCommit = null, string? depsCommit = null)
     {
         string gap = (a > b ? a - b : b - a).ToString(@"d\d\ hh\h\ mm\m", CultureInfo.InvariantCulture);
 
@@ -82,9 +84,11 @@ public static class BuildStampReport
                        "Rebuild both if the preview patches misbehave. Issue #371.)";
 
             case BuildPairVerdict.Mismatched:
-                return $" MISMATCH — built {gap} apart. These modules were not built together; " +
-                       "update BOTH from the same release or expect the preview patches to fail " +
-                       "(issue #371).";
+                string commits = mainCommit != null && depsCommit != null
+                    ? $" from different commits ({mainCommit}, {depsCommit})" : "";
+                return $" MISMATCH — built {gap} apart{commits}. These modules were not built together: install " +
+                       "BOTH from one release. If a preview patch below did not apply, this pairing is the likely " +
+                       "cause (issue #371).";
 
             // Explicit, so a future fourth tier cannot inherit the loudest wording by accident.
             // MISMATCH is an escalation signal; letting an unhandled value render as one is how a
@@ -128,6 +132,28 @@ public static class BuildStampReport
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out stamp);
     }
 
+    private static readonly System.Text.RegularExpressions.Regex CommitRx = new(
+        @"build\.\d{8}-\d{6}Z[+.](?<sha>[0-9a-fA-F]{40})(?<flag>\.(?:dirty|nogit))?",
+        System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+    /// <summary>
+    /// Extracts the commit from an <c>InformationalVersion</c>. <paramref name="flagged"/> is true
+    /// when the build marked its tree <c>.dirty</c> or <c>.nogit</c>, so the SHA proves nothing.
+    /// </summary>
+    public static bool TryParseCommit(string? informationalVersion, out string commit, out bool flagged)
+    {
+        commit = string.Empty;
+        flagged = false;
+        if (string.IsNullOrEmpty(informationalVersion)) return false;
+
+        var m = CommitRx.Match(informationalVersion);
+        if (!m.Success) return false;
+
+        commit = m.Groups["sha"].Value.ToLowerInvariant();
+        flagged = m.Groups["flag"].Success;
+        return true;
+    }
+
     /// <summary>
     /// Reads both assemblies' informational versions and reports. Returns the message so callers can
     /// route it to whatever logger they have; never throws.
@@ -148,7 +174,22 @@ public static class BuildStampReport
         string verdict;
         if (TryParseStamp(mainVer, out var mainStamp) && TryParseStamp(depsVer, out var depsStamp))
         {
-            verdict = DescribeVerdict(Classify(mainStamp, depsStamp), mainStamp, depsStamp);
+            bool mainHasCommit = TryParseCommit(mainVer, out var mainCommit, out var mainFlagged);
+            bool depsHasCommit = TryParseCommit(depsVer, out var depsCommit, out var depsFlagged);
+            bool bothHaveCommits = mainHasCommit && depsHasCommit;
+            bool sameCommit = bothHaveCommits && mainCommit == depsCommit;
+
+            if (sameCommit && !mainFlagged && !depsFlagged)
+            {
+                verdict = $" (pair OK: both built from {mainCommit.Substring(0, 8)})";
+            }
+            else
+            {
+                bool namesCommits = bothHaveCommits && !sameCommit;
+                verdict = DescribeVerdict(Classify(mainStamp, depsStamp), mainStamp, depsStamp,
+                    namesCommits ? mainCommit.Substring(0, 8) : null,
+                    namesCommits ? depsCommit.Substring(0, 8) : null);
+            }
         }
         else
         {

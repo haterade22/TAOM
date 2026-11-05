@@ -281,4 +281,75 @@ public class BuildStampReportTests
         Assert.IsTrue(m.Success, line);
         Assert.AreEqual("8df90444cc2f1e6d83bb95d2164ab764b4fcae65", m.Groups[1].Value);
     }
+
+    private const string E3Commit = "8df90444cc2f1e6d83bb95d2164ab764b4fcae65";
+
+    [TestMethod]
+    public void TryParseCommit_CleanStamp_ReturnsTheCommitAndNoFlag()
+    {
+        Assert.IsTrue(BuildStampReport.TryParseCommit(E3Taom, out var commit, out var flagged));
+        Assert.AreEqual(E3Commit, commit);
+        Assert.IsFalse(flagged);
+    }
+
+    [TestMethod]
+    public void TryParseCommit_DirtyOrNoGitFlag_IsFlagged()
+    {
+        foreach (var suffix in new[] { ".dirty", ".nogit" })
+        {
+            Assert.IsTrue(BuildStampReport.TryParseCommit(E3Taom + suffix, out var commit, out var flagged), suffix);
+            Assert.AreEqual(E3Commit, commit, suffix);
+            Assert.IsTrue(flagged, suffix);
+        }
+    }
+
+    [TestMethod]
+    public void TryParseCommit_NoCommit_ReturnsFalse()
+    {
+        foreach (var none in new[] { "build.20260923-184249Z+nogit", "build.20260801-143000Z", null, "2.0.0.0" })
+        {
+            Assert.IsFalse(BuildStampReport.TryParseCommit(none, out _, out _), none ?? "<null>");
+        }
+    }
+
+    [TestMethod]
+    public void TryParseCommit_OlderDotSeparator_Parses()
+    {
+        Assert.IsTrue(BuildStampReport.TryParseCommit(
+            "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d", out var commit, out var flagged));
+        Assert.AreEqual("46ce6436e1b538a7734a23713ec818a23afec93d", commit);
+        Assert.IsFalse(flagged);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_SameCleanCommit_IsPairedWhateverTheGap()
+    {
+        string deps = $"v0.1.0.0 build.20260914-032050Z+{E3Commit}";
+
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, deps, DebugTokens);
+
+        StringAssert.Contains(line, "(pair OK: both built from 8df90444)");
+        Assert.IsFalse(line.Contains("MISMATCH"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_DifferentCommitsDaysApart_IsMismatchNamingBothCommits()
+    {
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        StringAssert.Contains(line, " MISMATCH — built 16d 08h 46m apart from different commits (8df90444, 0c323437)");
+        Assert.IsFalse(line.Contains("expect the preview patches to fail"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_SameCommitButDirty_FallsBackToTheClock()
+    {
+        string taom = $"v2.0.0.0 build.20260930-120651Z+{E3Commit}.dirty";
+        string deps = $"v0.1.0.0 build.20260927-120651Z+{E3Commit}";
+
+        string line = BuildStampReport.BuildReportFromParts(taom, DebugTokens, deps, DebugTokens);
+
+        StringAssert.Contains(line, "MISMATCH");
+        Assert.IsFalse(line.Contains("from different commits"), line);
+    }
 }
