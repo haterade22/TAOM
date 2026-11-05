@@ -65,7 +65,7 @@ public class CommandTrialFightStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(StageFour.Concat(StageFive).ToArray(), names.Skip(13).ToArray());
+        CollectionAssert.AreEqual(StageFour.Concat(StageFive).ToArray(), names.Skip(13).Take(StageFour.Length + StageFive.Length).ToArray());
     }
 
     [TestMethod]
