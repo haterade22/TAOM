@@ -11,7 +11,7 @@ public static class QuartermasterAnswerPolicy
     public static QuartermasterAnswer For(EquipmentIssueResult result) => result switch
     {
         EquipmentIssueResult.Issued               => QuartermasterAnswer.Issued,
-        EquipmentIssueResult.AlreadyIssuedForRank => QuartermasterAnswer.AlreadyDrawn,
+        EquipmentIssueResult.AlreadyIssuedForTier => QuartermasterAnswer.AlreadyDrawn,
         EquipmentIssueResult.NoRosterFound        => QuartermasterAnswer.EmptyStores,
         EquipmentIssueResult.NoValidItems         => QuartermasterAnswer.EmptyStores,
         EquipmentIssueResult.PartyUnavailable     => QuartermasterAnswer.CannotLoad,

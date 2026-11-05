@@ -56,7 +56,7 @@ public static class EnlistmentRosterResolver
             if (string.IsNullOrEmpty(cultureId))
                 break;
 
-            var hit = ProbeRanks(
+            var hit = ProbeTiers(
                 r => EnlistmentRosterIds.Build(cultureId, assignmentStep, r), rank, rosterExists);
             if (hit != null)
                 return hit;
@@ -64,7 +64,7 @@ public static class EnlistmentRosterResolver
 
         foreach (var assignmentStep in AssignmentChain(assignment))
         {
-            var hit = ProbeRanks(
+            var hit = ProbeTiers(
                 r => EnlistmentRosterIds.BuildDefault(assignmentStep, r), rank, rosterExists);
             if (hit != null)
                 return hit;
@@ -89,7 +89,7 @@ public static class EnlistmentRosterResolver
             yield return ServiceAssignment.Infantry;
     }
 
-    private static string ProbeRanks(
+    private static string ProbeTiers(
         Func<EnlistmentKitTier, string> build, EnlistmentKitTier rank, Func<string, bool> rosterExists)
     {
         for (var r = (int)rank; r >= (int)EnlistmentKitTier.Recruit; r--)

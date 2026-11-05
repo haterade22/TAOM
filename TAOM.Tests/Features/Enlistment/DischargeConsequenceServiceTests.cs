@@ -325,7 +325,7 @@ public class DischargeConsequenceServiceTests
             Assert.AreEqual(0, _contentStore.Record.DeferredWages, $"({reason}) arrears");
             Assert.AreEqual(0, _contentStore.Record.ServiceXp, $"({reason}) xp");
             Assert.AreEqual(0, _contentStore.Record.IssuedEquipmentItemIds.Count, $"({reason}) kit ledger");
-            Assert.IsNull(_contentStore.Record.HighestIssuedEquipmentRank, $"({reason}) kit rank");
+            Assert.IsNull(_contentStore.Record.HighestIssuedKitTier, $"({reason}) kit rank");
         }
     }
 

@@ -24,9 +24,9 @@ public class PersistedEquipmentIssueLedgerTests
     [TestMethod]
     public void Fresh_NothingIssued()
     {
-        Assert.IsNull(_ledger.HighestIssuedRank);
+        Assert.IsNull(_ledger.HighestIssuedTier);
         Assert.AreEqual(0, _ledger.IssuedItemIds.Count);
-        Assert.IsFalse(_ledger.HasIssuedForRank(EnlistmentKitTier.Recruit));
+        Assert.IsFalse(_ledger.HasIssuedForTier(EnlistmentKitTier.Recruit));
     }
 
     [TestMethod]
@@ -34,9 +34,9 @@ public class PersistedEquipmentIssueLedgerTests
     {
         _ledger.RecordIssue(EnlistmentKitTier.Recruit, new[] { "sk_a", "sk_b", "sk_b" });
 
-        Assert.AreEqual(EnlistmentKitTier.Recruit, _ledger.HighestIssuedRank);
+        Assert.AreEqual(EnlistmentKitTier.Recruit, _ledger.HighestIssuedTier);
         Assert.AreEqual(3, _ledger.IssuedItemIds.Count, "duplicate instances preserved for the per-item reclaim");
-        Assert.IsTrue(_ledger.HasIssuedForRank(EnlistmentKitTier.Recruit));
+        Assert.IsTrue(_ledger.HasIssuedForTier(EnlistmentKitTier.Recruit));
     }
 
     [TestMethod]
@@ -44,10 +44,10 @@ public class PersistedEquipmentIssueLedgerTests
     {
         _ledger.RecordIssue(EnlistmentKitTier.Veteran, new[] { "sk_v" });
 
-        Assert.IsTrue(_ledger.HasIssuedForRank(EnlistmentKitTier.Recruit));
-        Assert.IsTrue(_ledger.HasIssuedForRank(EnlistmentKitTier.Soldier));
-        Assert.IsTrue(_ledger.HasIssuedForRank(EnlistmentKitTier.Veteran));
-        Assert.IsFalse(_ledger.HasIssuedForRank(EnlistmentKitTier.Sergeant));
+        Assert.IsTrue(_ledger.HasIssuedForTier(EnlistmentKitTier.Recruit));
+        Assert.IsTrue(_ledger.HasIssuedForTier(EnlistmentKitTier.Soldier));
+        Assert.IsTrue(_ledger.HasIssuedForTier(EnlistmentKitTier.Veteran));
+        Assert.IsFalse(_ledger.HasIssuedForTier(EnlistmentKitTier.Sergeant));
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class PersistedEquipmentIssueLedgerTests
         _ledger.RecordIssue(EnlistmentKitTier.Sergeant, new[] { "sk_s" });
         _ledger.RecordIssue(EnlistmentKitTier.Recruit, new[] { "sk_r" });
 
-        Assert.AreEqual(EnlistmentKitTier.Sergeant, _ledger.HighestIssuedRank);
+        Assert.AreEqual(EnlistmentKitTier.Sergeant, _ledger.HighestIssuedTier);
     }
 
     [TestMethod]
@@ -70,9 +70,9 @@ public class PersistedEquipmentIssueLedgerTests
         reloadedStore.Deserialize(section);
         var reloadedLedger = new PersistedEquipmentIssueLedger(reloadedStore);
 
-        Assert.AreEqual(EnlistmentKitTier.Soldier, reloadedLedger.HighestIssuedRank);
+        Assert.AreEqual(EnlistmentKitTier.Soldier, reloadedLedger.HighestIssuedTier);
         CollectionAssert.AreEqual(new[] { "sk_head", "sk_body" }, reloadedLedger.IssuedItemIds.ToArray());
-        Assert.IsTrue(reloadedLedger.HasIssuedForRank(EnlistmentKitTier.Soldier));
+        Assert.IsTrue(reloadedLedger.HasIssuedForTier(EnlistmentKitTier.Soldier));
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public class PersistedEquipmentIssueLedgerTests
         _ledger.RecordIssue(EnlistmentKitTier.Recruit, null);
         _ledger.RecordIssue(EnlistmentKitTier.Soldier, new string[0]);
 
-        Assert.AreEqual(EnlistmentKitTier.Soldier, _ledger.HighestIssuedRank);
+        Assert.AreEqual(EnlistmentKitTier.Soldier, _ledger.HighestIssuedTier);
         Assert.AreEqual(0, _ledger.IssuedItemIds.Count);
     }
 
@@ -103,7 +103,7 @@ public class PersistedEquipmentIssueLedgerTests
 
         _ledger.Reset();
 
-        Assert.IsNull(_ledger.HighestIssuedRank);
+        Assert.IsNull(_ledger.HighestIssuedTier);
         Assert.AreEqual(0, _ledger.IssuedItemIds.Count);
     }
 
@@ -114,15 +114,15 @@ public class PersistedEquipmentIssueLedgerTests
 
         _store.Clear(); // what the discharge consequence service does
 
-        Assert.IsNull(_ledger.HighestIssuedRank, "a new term starts with no kit drawn");
+        Assert.IsNull(_ledger.HighestIssuedTier, "a new term starts with no kit drawn");
     }
 
     [TestMethod]
     public void UndefinedRankOrdinalInSave_TreatedAsNothingIssued()
     {
-        _store.Record.HighestIssuedEquipmentRank = 99;
+        _store.Record.HighestIssuedKitTier = 99;
 
-        Assert.IsNull(_ledger.HighestIssuedRank);
-        Assert.IsFalse(_ledger.HasIssuedForRank(EnlistmentKitTier.Recruit));
+        Assert.IsNull(_ledger.HighestIssuedTier);
+        Assert.IsFalse(_ledger.HasIssuedForTier(EnlistmentKitTier.Recruit));
     }
 }

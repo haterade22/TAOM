@@ -26,7 +26,7 @@ public class QuartermasterAnswerPolicyTests
     [TestMethod]
     public void For_AlreadyIssuedForRank_ReturnsAlreadyDrawn() =>
         Assert.AreEqual(QuartermasterAnswer.AlreadyDrawn,
-            QuartermasterAnswerPolicy.For(EquipmentIssueResult.AlreadyIssuedForRank));
+            QuartermasterAnswerPolicy.For(EquipmentIssueResult.AlreadyIssuedForTier));
 
     [TestMethod]
     public void For_NoRosterFound_ReturnsEmptyStores() =>
@@ -59,8 +59,8 @@ public class QuartermasterAnswerPolicyTests
         var branch = src.Substring(start, end - start);
 
         StringAssert.Contains(branch, "_lastAnswer = QuartermasterAnswer.HostOnly;");
-        Assert.IsFalse(branch.Contains("IssueForRank"), "a co-op client must never reach the issuer");
-        Assert.IsTrue(src.IndexOf("IssueForRank", StringComparison.Ordinal) > end,
+        Assert.IsFalse(branch.Contains("IssueForTier"), "a co-op client must never reach the issuer");
+        Assert.IsTrue(src.IndexOf("IssueForTier", StringComparison.Ordinal) > end,
             "the issuer must be reached only after the client branch returns");
     }
 

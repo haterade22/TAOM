@@ -17,6 +17,6 @@ public interface IEnlistmentEquipmentService
 {
     /// <param name="cultureId">RUNTIME culture StringId of the commander's faction
     /// (vlandia/empire/aserai/khuzait/sturgia/battania for the XSLT cultures — never lore names).</param>
-    EquipmentIssueResult IssueForRank(
+    EquipmentIssueResult IssueForTier(
         string cultureId, ServiceAssignment assignment, EnlistmentKitTier rank);
 }

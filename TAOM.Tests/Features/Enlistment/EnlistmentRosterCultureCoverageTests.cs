@@ -46,7 +46,7 @@ public class EnlistmentRosterCultureCoverageTests
 
     /// <summary>
     /// Derived from production, not copied from it. A hard-coded list here would have carried the
-    /// comment "mirrors <c>EnlistmentRosterIds.RankToken</c>" while being free to drift from it —
+    /// comment "mirrors <c>EnlistmentRosterIds.TierToken</c>" while being free to drift from it —
     /// the exact defect this repo has now shipped three times (see
     /// <c>lessons/testing-qa.md</c>, "a comment is a claim"). Adding a fifth
     /// <see cref="EnlistmentKitTier"/> extends the coverage requirement automatically.
@@ -219,19 +219,19 @@ public class EnlistmentRosterCultureCoverageTests
     [TestMethod]
     public void EveryRank_MapsToItsOwnToken()
     {
-        // RankToken ends in `_ => "recruit"`, so a rank added without a case silently ALIASES the
+        // TierToken ends in `_ => "recruit"`, so a rank added without a case silently ALIASES the
         // recruit roster: the new rank looks covered, issues starting gear forever, and no other
         // test can see it because the id it asks for exists. Deriving Ranks above from the enum is
         // not enough on its own — this is the half that makes the derivation meaningful.
         var collisions = Ranks
-            .GroupBy(EnlistmentRosterIds.RankToken)
+            .GroupBy(EnlistmentRosterIds.TierToken)
             .Where(g => g.Count() > 1)
             .Select(g => $"'{g.Key}' <- {string.Join(", ", g)}")
             .ToList();
 
         Assert.AreEqual(0, collisions.Count,
             "Two EnlistmentKitTier values produce the same roster token, so one silently wears the "
-            + "other's kit. Add the missing case to EnlistmentRosterIds.RankToken:\n  "
+            + "other's kit. Add the missing case to EnlistmentRosterIds.TierToken:\n  "
             + string.Join("\n  ", collisions));
     }
 

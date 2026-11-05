@@ -11,12 +11,12 @@ namespace TAOM.Features.Enlistment.Equipment;
 /// </summary>
 public interface IEquipmentIssueLedger
 {
-    EnlistmentKitTier? HighestIssuedRank { get; }
+    EnlistmentKitTier? HighestIssuedTier { get; }
 
     /// <summary>One entry per issued item INSTANCE — the same id twice means two items.</summary>
     IReadOnlyList<string> IssuedItemIds { get; }
 
-    bool HasIssuedForRank(EnlistmentKitTier rank);
+    bool HasIssuedForTier(EnlistmentKitTier rank);
 
     void RecordIssue(EnlistmentKitTier rank, IReadOnlyList<string> itemIds);
 
