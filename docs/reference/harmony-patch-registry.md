@@ -182,9 +182,9 @@ Per-kingdom resource gating + transactional spending
 
 ## Patch27_CareerSystem
 
-**Target:** `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats`
+**Target:** `ViewModel.ExecuteCommand`
 
-Career screen opening + ability V-key activation (3 archetypes: Infantry/Ranged/Cavalry, 50 careers, XML-tunable)
+The career button's click handler on the character developer: closes the developer, then opens the career screen (#971)
 
 ## Patch28_SettlementGuards
 
