@@ -78,9 +78,17 @@ public static class Patch69_TournamentEndGuard
         // a real bracket-construction bug into a silently half-drawn screen with no report, which is
         // strictly worse than the crash. Same reasoning as PatchShield's ShouldSwallow, which only
         // eats the engine-drift trinity and rethrows everything else.
+        //
+        // This event can fire inside a mission tick (SandBox TournamentBehavior.OnMissionTick ->
+        // EndCurrentMatch -> TournamentEnd, v1.4.8 TournamentBehavior.cs:149-155 and :257-260), after
+        // Mission.OnTick cleared tickCompleted (Mission.cs:3740). A rethrow there lands on Patch37 at
+        // Module.OnApplicationTick, which swallows, so the agent tick that sets the flag again never
+        // starts; Patch91b restores the flag, at the cost of that frame's agent tick.
         if (!(__exception is NullReferenceException)) return __exception;
 
-        // The tournament screen survives with an incomplete winner panel.
+        // The tournament screen survives with an incomplete winner panel. That is all the swallowed NRE
+        // costs: the prize (TournamentBehavior.cs:247), the leaderboard entry (:248) and
+        // OnTournamentFinished (:256) all run before the event.
         return null;
     }
 }

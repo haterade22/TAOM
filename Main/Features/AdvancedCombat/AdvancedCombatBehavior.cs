@@ -30,6 +30,7 @@ public class AdvancedCombatBehavior : MissionLogic
     {
         // This is the main mission thread; every TAOM blow and creature action must run on it (#592).
         MissionThreadGuard.MarkMainThread();
+        SpatialGrid.Instance?.ApplyPendingRemovals();
 
         // Bone checks must tick every frame to catch short animation windows (0.5-0.7s)
         _boneCollisionService.TickBoneChecks(dt);

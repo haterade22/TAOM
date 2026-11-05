@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using BehaviorTreeWrapper.AbstractDecoratorsListeners;
 using BehaviorTrees;
+using TAOM;
+using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -47,8 +49,14 @@ public class BehaviorTreeMissionLogic : MissionLogic
     // Mission.OnAgentPanicked synchronously (CommonAIComponent.cs:119-135). Which thread a native
     // [MBCallback] such as Agent.OnAgentAlarmedStateChanged uses is not established, so every
     // callback asks (#595, Codex review 109).
-    private readonly DeferredCallbackQueue _deferred = new DeferredCallbackQueue();
-    private static readonly Action<string> ReportOffThread = message => BTRegister.Logger?.LogMessage(message);
+    // The report runs on the thread that raised the callback, so it goes to the file log (which locks),
+    // never to BTRegister.Logger: that can be BannerlordLogger, an on-screen message (#634).
+    private static readonly Action<string> ReportOffThread = message =>
+    {
+        try { IoC.Resolve<IModLogger>()?.LogWarning(message); }
+        catch { /* a report must never throw into an engine callback */ }
+    };
+    private readonly DeferredCallbackQueue _deferred = new DeferredCallbackQueue(ReportOffThread);
 
     /// <summary>Engine callbacks parked for the next mission tick.</summary>
     public int DeferredCount => _deferred.Count;
@@ -165,6 +173,13 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     // The replay lambda captures only `this`, so the main-thread path allocates nothing.
     private void Defer<T>(T args, Action<T> replay) => _deferred.Enqueue(() => replay(args));
+
+    /// <summary>
+    /// Runs <paramref name="action"/> now on the mission thread, else parks it behind the callbacks
+    /// already waiting, so a component's cleanup replays after this logic's own callbacks for the same
+    /// removal, the order the main thread would have used (#634).
+    /// </summary>
+    internal void RunOnMissionThread(string site, Action action) => _deferred.RunOrDefer(site, action);
 
     // Returns a SHARED cached list. Caller MUST iterate immediately and not
     // retain a reference past the next FindCalledListeners call. The synchronous

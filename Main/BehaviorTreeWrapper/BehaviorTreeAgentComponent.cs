@@ -33,7 +33,15 @@ public class BehaviorTreeAgentComponent : AgentComponent
         }
     }
 
-    public override void OnAgentRemoved()
+    // Mission.OnAgentRemoved calls this through Agent.OnRemove after every behavior's OnAgentRemoved,
+    // on whichever thread native raised the removal; a player's log caught one off the main thread (#634). The
+    // schedule list and tree map belong to the mission tick, so the cleanup queues behind the logic's
+    // own parked callbacks for this removal. No logic means no mission, and nothing left to dispose.
+    public override void OnAgentRemoved() =>
+        BehaviorTreeBannerlordWrapper.Instance.CurrentMissionLogic?.RunOnMissionThread(
+            "BehaviorTreeAgentComponent.OnAgentRemoved", Retire);
+
+    private void Retire()
     {
         BehaviorTreeBannerlordWrapper.Instance.CurrentMissionLogic?.Unschedule(this);
         BehaviorTreeBannerlordWrapper.Instance.DisposeTree(base.Agent);

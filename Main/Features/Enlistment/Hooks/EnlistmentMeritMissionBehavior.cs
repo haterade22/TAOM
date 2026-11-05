@@ -1,3 +1,4 @@
+using System.Threading;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -110,8 +111,10 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
     {
         if (!_active || affectorAgent == null || !affectorAgent.IsMainAgent)
             return;
+        // OnAgentRemoved is native's to place and was caught off the main thread (#634): two removals at
+        // once must not lose a kill.
         if (affectedAgent?.Team != null && affectorAgent.Team != null && affectedAgent.Team.IsEnemyOf(affectorAgent.Team))
-            _kills++;
+            Interlocked.Increment(ref _kills);
     }
 
     protected override void OnEndMission()

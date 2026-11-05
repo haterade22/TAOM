@@ -24,6 +24,9 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool ExitStallSamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableExitStallSampler ?? true;
 
+    public bool MissionTickStallSamplerEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableMissionTickStallSampler ?? true;
+
     public double StallWatchdogSeconds
     {
         get

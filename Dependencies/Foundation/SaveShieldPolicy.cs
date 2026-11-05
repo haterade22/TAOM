@@ -24,8 +24,15 @@ public static class SaveShieldPolicy
     /// session. Swallowing there produces a partially deserialised campaign that keeps running and
     /// looks fine; a host-authoritative co-op mod then replicates that half-built state to the
     /// other player. A loud load failure is much cheaper than two silently-corrupted saves.
-    /// MISSION-INIT keeps swallowing in every case — that fault is local and non-authoritative, so
-    /// rethrowing would only convert a recoverable broken battle into a CTD.
+    /// MISSION-INIT keeps swallowing in every case, co-op included. The fault is local and
+    /// non-authoritative, and a rethrow would not surface it: <c>Mission.SpawnTroop</c> runs inside
+    /// an <c>OnMissionTick</c> (the battle spawn logic's deployment and reinforcement checks), after
+    /// <c>Mission.OnTick</c> cleared <c>tickCompleted</c> (v1.4.8 <c>Mission.cs:3740</c>). The next
+    /// catcher above is Patch37 on <c>Module.OnApplicationTick</c>, which swallows, so the agent tick
+    /// that sets the flag again (<c>:3613</c>) never starts and the next frame's
+    /// <c>WaitTickCompletion</c> (<c>:3585-3591</c>) would wait forever. TAOM's Patch91b restores the
+    /// flag in that case, but a swallow here still costs one spawn where a rethrow costs a whole
+    /// agent tick.
     /// </summary>
     public static bool ShouldSwallow(string? category, bool coopActive, bool swallowDisabledByFlag)
     {

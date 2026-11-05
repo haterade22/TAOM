@@ -21,6 +21,13 @@ public class BattleLoadDiagnosticsSettingsProviderTests
     }
 
     [TestMethod]
+    public void MissionTickStallSamplerEnabled_NoMcmInstance_DefaultsTrue()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.IsTrue(sut.MissionTickStallSamplerEnabled);
+    }
+
+    [TestMethod]
     public void MemorySampleIntervalSeconds_NoMcmInstance_Defaults30()
     {
         var sut = new BattleLoadDiagnosticsSettingsProvider();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using TAOM.Features.AdvancedCombat;
 
 namespace BehaviorTreeWrapper;
 
@@ -14,6 +15,11 @@ namespace BehaviorTreeWrapper;
 public sealed class DeferredCallbackQueue
 {
     private readonly ConcurrentQueue<Action> _queue = new();
+    private readonly Action<string>? _report;
+
+    /// <param name="report">Where <see cref="RunOrDefer"/> reports a site's first off-thread call. It runs on
+    /// the calling thread, so it must be thread-safe: the file log, never an on-screen logger.</param>
+    public DeferredCallbackQueue(Action<string>? report = null) => _report = report;
 
     /// <summary>Callbacks waiting for the next drain.</summary>
     public int Count => _queue.Count;
@@ -22,6 +28,24 @@ public sealed class DeferredCallbackQueue
     {
         if (callback == null) throw new ArgumentNullException(nameof(callback));
         _queue.Enqueue(callback);
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> now on the main mission thread; anywhere else parks it for the
+    /// next drain and reports <paramref name="site"/> once through the queue's reporter. Returns true
+    /// when parked. <c>OnAgentRemoved</c> reaches behaviors and agent components off the main thread too:
+    /// a player's log caught it there on v1.4.8 (#634).
+    /// </summary>
+    public bool RunOrDefer(string site, Action action)
+    {
+        if (action == null) throw new ArgumentNullException(nameof(action));
+        if (MissionThreadGuard.NoteCall(site, _report))
+        {
+            _queue.Enqueue(action);
+            return true;
+        }
+        action();
+        return false;
     }
 
     /// <summary>
