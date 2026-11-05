@@ -172,6 +172,13 @@ _PRIV_MB_RE = re.compile(r"\bprivMB=(-?\d+)\b")
 #   [MemSample] [WARN LOW COMMIT HEADROOM headroomMB=N ]privMB=N wsMB=N heapMB=N
 #               sysCommitUsedMB=N sysCommitLimitMB=N availPhysMB=N memLoad=N%
 _MEM_TAG = "[MemSample]"
+# [Freeze] / [ShaderCache]: FreezeLog.cs and ShaderCacheState.cs (twin-pinned in the tests). Tokens
+# come only from the text before " last ": the status tail repeats shaders= and phase=.
+_FREEZE_TAG = "[Freeze]"
+_FREEZE_SAMPLE_RE = re.compile(r"\[Freeze\] main thread silent (\d+)s sample#(\d+) context=(\S+)")
+_FREEZE_RECOVERED_RE = re.compile(r"\[Freeze\] main thread recovered after about (\d+)s")
+_FREEZE_RGL_RE = re.compile(r"\brglCompiles=(\d+)")
+_SHADER_CACHE_RE = re.compile(r"\[ShaderCache\].*\brewrittenThisStart=(true|false|unknown)")
 _MEMSAMPLE_RE = re.compile(
     r"\[MemSample\]\s+(?:WARN LOW COMMIT HEADROOM headroomMB=(-?\d+)\s+)?"
     r"privMB=(-?\d+)\s+wsMB=(-?\d+)\s+heapMB=(-?\d+)\s+sysCommitUsedMB=(-?\d+)\s+"
@@ -401,6 +408,10 @@ class Timeline:
     # anchor for render-wait silence: [MemSample] runs on a timer thread and keeps writing
     # while the game thread is frozen (player log 2026-10-25, closed before the watchdog).
     last_ts: str | None = None
+    # [Freeze] and [ShaderCache] evidence; never phase events.
+    freeze_samples: list = field(default_factory=list)
+    freeze_recovered: list = field(default_factory=list)
+    shader_cache_rewritten: str | None = None
 
 
 @dataclass
@@ -417,6 +428,23 @@ class Verdict:
 # --------------------------------------------------------------------------- #
 # Parsing (pure over text — synthetic fixtures in the tests, no game install)  #
 # --------------------------------------------------------------------------- #
+def _parse_freeze_line(tl: Timeline, line: str, ts: str | None) -> None:
+    m = _FREEZE_SAMPLE_RE.search(line)
+    if m:
+        head = line.split(" last ", 1)[0]
+        rgl = _FREEZE_RGL_RE.search(head)
+        tl.freeze_samples.append({
+            "ts": ts, "silent_s": int(m.group(1)), "sample": int(m.group(2)),
+            "context": m.group(3),
+            "rgl_compiles": int(rgl.group(1)) if rgl else None,
+            "rgl_unavailable": "rgl=unavailable" in head,
+        })
+        return
+    m = _FREEZE_RECOVERED_RE.search(line)
+    if m:
+        tl.freeze_recovered.append({"ts": ts, "silent_s": int(m.group(1))})
+
+
 def parse_battle_load_log(text: str) -> Timeline:
     """Extract the ordered [BattleLoad] phase events + slot dumps + watchdog line.
 
@@ -440,6 +468,13 @@ def parse_battle_load_log(text: str) -> Timeline:
         ts = tm.group(1) if tm else None
         if ts:
             tl.last_ts = ts
+        if _FREEZE_TAG in line:
+            _parse_freeze_line(tl, line, ts)
+            continue
+        m = _SHADER_CACHE_RE.search(line)
+        if m:
+            tl.shader_cache_rewritten = m.group(1)
+            continue
         # [MemStation] screen anchors (#386 follow-up) ride the same log and are inert to
         # the phase timeline in exactly the same way as [MemSample] below. Kept in their own
         # list so an event-driven reading can never land in the periodic trend.
@@ -618,8 +653,36 @@ def _parse_scene(event: PhaseEvent) -> str | None:
     return m.group(1) if m else None
 
 
+def _freeze_evidence(tl: Timeline) -> dict | None:
+    """The [Freeze] lines of the load being triaged: stamped at or after the last mission start
+    and after its last WaitingForRender sample. None when there are none."""
+    start = _last_mission_start_index(tl.events)
+    start_ts = tl.events[start].ts if start is not None else None
+    last_wait = next((e for e in reversed(tl.events) if e.phase == "WaitingForRender"), None)
+    wait_ts = last_wait.ts if last_wait else None
+
+    def in_scope(line: dict) -> bool:
+        for anchor in (start_ts, wait_ts):
+            gap = _seconds_between(anchor, line["ts"])
+            if gap is not None and gap < 0:
+                return False
+        return True
+
+    samples = [s for s in tl.freeze_samples if in_scope(s)]
+    recovered = [r for r in tl.freeze_recovered if in_scope(r)]
+    if not samples and not recovered:
+        return None
+    longest = max(samples, key=lambda s: s["silent_s"]) if samples else None
+    return {
+        "samples": len(samples),
+        "max_silent_s": longest["silent_s"] if longest else None,
+        "rgl_compiles": longest["rgl_compiles"] if longest else None,
+        "recovered_after_s": recovered[-1]["silent_s"] if recovered else None,
+    }
+
+
 def _classify_render_wait(terminal: PhaseEvent, silent_s: int | None,
-                          silence_end: str) -> Verdict:
+                          silence_end: str, freeze: dict | None = None) -> Verdict:
     """A log ending on WaitingForRender: the mission loaded and is waiting on
     SceneView.ReadyToRender(). The shaders= token decides whether that is a working slow
     load or a real wedge, and an ABSENT token is neither (unmeasured, not zero)."""
@@ -652,6 +715,16 @@ def _classify_render_wait(terminal: PhaseEvent, silent_s: int | None,
             f"sample, and the shaders= count is frozen: the 1 Hz render-wait stream went "
             f"silent {silent_s}s before {silence_end}. The log alone cannot separate a "
             "slow cold compile from a main-thread wedge.")
+        compiles = freeze["rgl_compiles"] if freeze else None
+        if compiles is not None and compiles > 0:
+            v.summary += (f" TAOM's freeze sampler counted {compiles} compile_shader lines in the "
+                          "engine log during the silence: the engine was still compiling, a slow "
+                          "cold compile rather than a wedge.")
+        elif compiles == 0 and (freeze["max_silent_s"] or 0) >= 60:
+            v.summary += (f" TAOM's freeze sampler saw no compile_shader line reach the engine log "
+                          f"in {freeze['max_silent_s']}s of silence: the main thread is not "
+                          "compiling, which points to a wedge (next step: a hang dump, "
+                          "/native-crash-triage Phase 2b).")
         v.notes.append(
             "Next evidence: count compile_shader lines in the player's FULL "
             "rgl_log_<pid>.txt (not rgl_log_errors) during the silent window. Compiles "
@@ -755,7 +828,12 @@ def classify(tl: Timeline) -> Verdict:
             stuck_agent=agent)
 
     if ph == "WaitingForRender":
-        return _classify_render_wait(terminal, *_render_silence(tl))
+        v = _classify_render_wait(terminal, *_render_silence(tl), _freeze_evidence(tl))
+        if tl.shader_cache_rewritten == "true":
+            v.notes.append(
+                "The engine dropped or first built its runtime shader cache at this start "
+                "([ShaderCache] line), so this session's first battles compile cold.")
+        return v
 
     if ph == "FinishMissionLoadingDone":
         # Everything loaded — Mission.AfterStart returned, so the whole AgentEquip burst
@@ -1386,9 +1464,9 @@ def _format_timings(t: dict) -> list:
 _POST_LOAD_FREEZE_STEPS = [
     "The freeze matches the #634 shape: the [MemSample] timer thread stayed alive while the "
     "game thread stopped. See #634 and #776.",
-    "Builds with the battle-freeze sampler (#634) write [MissionStall] lines and builds with the "
-    "skeleton-buffer watch write [SkeletonBuffer] lines: read them for the last thing the game "
-    "thread did.",
+    "Builds with the battle-freeze sampler (#634) write [MissionStall] lines, builds with the "
+    "skeleton-buffer watch write [SkeletonBuffer] lines and builds with the main-thread freeze "
+    "sampler write [Freeze] lines: read them for the last thing the game thread did.",
     "Ask the player for a memory dump of the frozen process (Task Manager, right-click the "
     "game, Create memory dump file) before they close it.",
 ]
@@ -1675,6 +1753,8 @@ def main() -> int:
             "timings": timings,
             "post_load_freeze": freeze,
             "session_render_rate": session_render_rate(tl),
+            "freeze": _freeze_evidence(tl),
+            "shader_cache_rewritten": {"true": True, "false": False}.get(tl.shader_cache_rewritten),
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"\nWrote verdict to {args.json_out}", file=sys.stderr)

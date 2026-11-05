@@ -2348,5 +2348,117 @@ class SessionRenderRateTests(unittest.TestCase):
         self.assertIsNone(payload["session_render_rate"])
 
 
+# Twins of the C# pins (FreezeLogTests, ShaderCacheStateTests): one contract, two languages.
+PINNED_FREEZE_SAMPLE = (
+    "[Freeze] main thread silent 20s sample#2 context=battle-load shaders=2697 rglCompiles=31 "
+    "lastCompileAgoS=2 gc=3167/785/81 heapMB=466 last phase=WaitingForRender seq=40 "
+    "waitedMs=2259 shaders=2697")
+PINNED_FREEZE_RECOVERED = "[Freeze] main thread recovered after about 68s rglCompiles=1569"
+PINNED_SHADER_CACHE_REWRITTEN = (
+    "[ShaderCache] CoreShaders/D3D11 rewrittenThisStart=true mappingBytes=13 sacx=0 "
+    "mappingWrittenUtc=2026-11-04T10:00:03Z processStartUtc=2026-11-04T10:00:00Z")
+
+
+class FreezeEvidenceTests(unittest.TestCase):
+    """The [Freeze] lines carry the one thing the render-wait count cannot: the engine log's own
+    compile count across the silence, read off a timer thread. They settle compile versus wedge
+    when they can, and change nothing when they cannot."""
+
+    @staticmethod
+    def _rw(seq, ms, waited, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase=WaitingForRender "
+                             f"waitedMs={waited} shaders={shaders}", ts=ts)
+
+    @staticmethod
+    def _freeze(silent, sample, rgl, ts):
+        return _line("WARN", f"[Freeze] main thread silent {silent}s sample#{sample} "
+                             f"context=battle-load shaders=2704 {rgl} gc=1/1/1 heapMB=466 "
+                             "last phase=WaitingForRender seq=57 waitedMs=5305 shaders=2704", ts=ts)
+
+    def _ended_log(self, *tail):
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(55, 21113, 0, 2771, "2026-10-25 17:39:35"),
+            self._rw(57, 26417, 5305, 2704, "2026-10-25 17:39:40"),
+            *tail,
+            _mem(ts="2026-10-25 17:41:37"))
+
+    def _classify(self, text):
+        return tb.classify(tb.parse_battle_load_log(text))
+
+    def _json(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(text, encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                           capture_output=True, text=True)
+            return json.loads(out.read_text(encoding="utf-8"))
+
+    def test_freeze_sample_literal_parses(self):
+        tl = tb.parse_battle_load_log(_line("WARN", PINNED_FREEZE_SAMPLE))
+        s = tl.freeze_samples[0]
+        self.assertEqual((20, 2, "battle-load", 31, False),
+                         (s["silent_s"], s["sample"], s["context"], s["rgl_compiles"],
+                          s["rgl_unavailable"]))
+        self.assertEqual([], tl.events)
+
+    def test_freeze_recovered_literal_parses(self):
+        tl = tb.parse_battle_load_log(_line("INFO", PINNED_FREEZE_RECOVERED))
+        self.assertEqual(68, tl.freeze_recovered[0]["silent_s"])
+
+    def test_compiles_during_the_silence_read_as_a_slow_compile(self):
+        v = self._classify(self._ended_log(
+            self._freeze(80, 4, "rglCompiles=812", "2026-10-25 17:41:00")))
+        self.assertEqual("RENDER_WAIT", v.kind)
+        self.assertIn("812", v.summary)
+        self.assertIn("still compiling", v.summary)
+        self.assertNotIn("points to a wedge", v.summary)
+
+    def test_no_compiles_for_sixty_seconds_reads_as_a_wedge(self):
+        v = self._classify(self._ended_log(
+            self._freeze(40, 3, "rglCompiles=0", "2026-10-25 17:40:20"),
+            self._freeze(80, 4, "rglCompiles=0", "2026-10-25 17:41:00")))
+        self.assertIn("points to a wedge", v.summary)
+        self.assertIn("hang dump", v.summary)
+        self.assertIn("in 80s of silence", v.summary)
+
+    def test_rgl_unavailable_keeps_the_cannot_separate_wording(self):
+        v = self._classify(self._ended_log(
+            self._freeze(80, 4, "rgl=unavailable", "2026-10-25 17:41:00")))
+        self.assertIn("cannot separate", v.summary)
+        self.assertNotIn("points to a wedge", v.summary)
+        self.assertNotIn("still compiling", v.summary)
+
+    def test_freeze_lines_from_an_earlier_load_are_ignored(self):
+        earlier = self._freeze(80, 4, "rglCompiles=0", "2026-10-25 17:30:00")
+        tl = tb.parse_battle_load_log(_log(earlier) + self._ended_log())
+        v = tb.classify(tl)
+        self.assertNotIn("points to a wedge", v.summary)
+        self.assertIsNone(tb._freeze_evidence(tl))
+
+    def test_shader_cache_rewritten_this_start_adds_a_note(self):
+        text = _log(_line("INFO", PINNED_SHADER_CACHE_REWRITTEN)) + self._ended_log()
+        v = self._classify(text)
+        self.assertTrue(any("[ShaderCache]" in n for n in v.notes), v.notes)
+        v = self._classify(self._ended_log())
+        self.assertFalse(any("[ShaderCache]" in n for n in v.notes), v.notes)
+
+    def test_json_carries_freeze_and_shader_cache_blocks(self):
+        payload = self._json(
+            _log(_line("INFO", PINNED_SHADER_CACHE_REWRITTEN)) + self._ended_log(
+                self._freeze(40, 3, "rglCompiles=300", "2026-10-25 17:40:20"),
+                self._freeze(80, 4, "rglCompiles=812", "2026-10-25 17:41:00"),
+                _line("INFO", PINNED_FREEZE_RECOVERED, ts="2026-10-25 17:41:10")))
+        self.assertEqual({"samples": 2, "max_silent_s": 80, "rgl_compiles": 812,
+                          "recovered_after_s": 68}, payload["freeze"])
+        self.assertIs(True, payload["shader_cache_rewritten"])
+
+        payload = self._json(self._ended_log())
+        self.assertIsNone(payload["freeze"])
+        self.assertIsNone(payload["shader_cache_rewritten"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
