@@ -391,6 +391,69 @@ public class CareerPassiveServiceTests
         Assert.IsFalse(float.IsNaN(result.ResultNumber), "a cancelled frame must not poison the number");
     }
 
+    private void GivenHeroHealingPassive(float magnitude)
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_heal_p1", 10);
+        _registry.GetChoice("wb_heal_p1").Returns(new CareerChoiceDefinition(
+            id: "wb_heal_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
+            description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.HeroHealing, magnitude),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive,
+            description: "", iconSprite: "", passive: null, mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+    }
+
+    private int CareerPerkLines() => _logger.ReceivedCalls()
+        .Count(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo)
+            && ((string)c.GetArguments()[0]).StartsWith("[CareerPerks]"));
+
+    // HeroHealing runs twice per in-game hour for the main party and each upgrade row asks for
+    // TroopUpgradeCost as it builds: the event-scoped line is written once per distinct set of numbers.
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_SameNumbersWriteOneLine()
+    {
+        GivenHeroHealingPassive(0.10f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            var result = new ExplainedNumber(100f);
+            _service.ApplyFactor("hero1", ref result, PassiveEffectType.HeroHealing);
+            Assert.AreEqual(110f, result.ResultNumber, 0.01f, "the dedupe silences the line, never the factor");
+        }
+
+        Assert.AreEqual(1, CareerPerkLines());
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_DifferentNumbersWriteAnotherLine()
+    {
+        GivenHeroHealingPassive(0.10f);
+
+        var first = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref first, PassiveEffectType.HeroHealing);
+        var second = new ExplainedNumber(200f);
+        _service.ApplyFactor("hero1", ref second, PassiveEffectType.HeroHealing);
+
+        Assert.AreEqual(2, CareerPerkLines());
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedType_RefreshLogsAgain()
+    {
+        GivenHeroHealingPassive(0.10f);
+        var first = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref first, PassiveEffectType.HeroHealing);
+
+        _service.RefreshCache(_dataService, _registry);
+        var second = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref second, PassiveEffectType.HeroHealing);
+
+        Assert.AreEqual(2, CareerPerkLines());
+    }
+
     [TestMethod]
     public void ApplyFactor_NullHeroId_IsNoOp()
     {

@@ -25,9 +25,12 @@ public class CareerAgentStatService : ICareerAgentStatService
 
     // #613 [CareerPerks] diagnostics: the hero's own stat application is logged once per distinct
     // set of applied values (a stat update runs per spawn, mount change, weapon change and every
-    // arrow shot; the values only change when a buff lands or ends). Keyed by hero id; the two
-    // dictionaries hold one entry per career hero, i.e. one. The per-hit lines use a third table
-    // below, one entry per hit combination per mission.
+    // arrow shot; the values only change when a buff lands or ends). Keyed by hero id. This path runs
+    // for every hero agent in a campaign mission, and most have no career, so a hero with nothing
+    // applied gets no line and no entry until something has been applied: the "none" text only ever
+    // says that a buff ended. The per-hit lines use a third table below, one entry per hit
+    // combination per mission.
+    private const string NothingApplied = "none";
     private readonly Dictionary<string, string> _lastStatLog = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _lastMountLog = new Dictionary<string, string>();
     // A hero's stat update can arrive on the AI thread (a formation order writes Defensiveness)
@@ -87,7 +90,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         if (self != null) parts.Add("self buff " + DescribeBuff(self));
         var ally = CareerAbilityBuffTracker.GetAllyBuff(agentIndex);
         if (ally != null) parts.Add("ally buff " + DescribeBuff(ally));
-        LogOnChange(_lastStatLog, heroId, parts.Count == 0 ? "none" : string.Join(", ", parts),
+        LogOnChange(_lastStatLog, heroId, parts.Count == 0 ? NothingApplied : string.Join(", ", parts),
             $"[CareerPerks] agent stats for '{heroId}': ");
     }
 
@@ -154,7 +157,14 @@ public class CareerAgentStatService : ICareerAgentStatService
     {
         lock (_logGate)
         {
-            if (last.TryGetValue(heroId, out var previous) && previous == signature) return;
+            if (last.TryGetValue(heroId, out var previous))
+            {
+                if (previous == signature) return;
+            }
+            else if (signature == NothingApplied)
+            {
+                return;
+            }
             last[heroId] = signature;
         }
         _logger!.LogInfo(prefix + signature);
@@ -261,7 +271,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         if (self != null && (self.MountSpeedBonus != 0f || self.ChargeDamageBonus != 0f)) parts.Add("self buff " + DescribeBuff(self));
         var ally = riderAgentIndex.HasValue ? CareerAbilityBuffTracker.GetAllyBuff(riderAgentIndex.Value) : null;
         if (ally != null && (ally.MountSpeedBonus != 0f || ally.ChargeDamageBonus != 0f)) parts.Add("ally buff " + DescribeBuff(ally));
-        LogOnChange(_lastMountLog, riderHeroId, parts.Count == 0 ? "none" : string.Join(", ", parts),
+        LogOnChange(_lastMountLog, riderHeroId, parts.Count == 0 ? NothingApplied : string.Join(", ", parts),
             $"[CareerPerks] mount stats for rider '{riderHeroId}': ");
     }
 

@@ -240,6 +240,38 @@ public class CareerAgentStatServiceTests
         _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("SwingSpeed +5%")));
     }
 
+    // Careers are player-only, but this path runs for every hero agent in a campaign mission: a lord
+    // with no career must not write a durable line per mission that says "none".
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithNothingApplied_WritesNoLine()
+    {
+        _sut.ApplyAgentStatModifiers("lord1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ApplyMountStatModifiers_RiderWithNothingApplied_WritesNoLine()
+    {
+        _sut.ApplyMountStatModifiers("lord1", riderAgentIndex: 1, new AgentDrivenProperties());
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    // The "none" text still has a job: it is how the log says a buff ended.
+    [TestMethod]
+    public void ApplyAgentStatModifiers_BuffEnds_LogsNone()
+    {
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageBonus = 0.15f });
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        CareerAbilityBuffTracker.ClearAll();
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s => s.Contains("agent stats for 'hero1'")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.EndsWith("agent stats for 'hero1': none")));
+    }
+
     [TestMethod]
     public void ApplyAgentStatModifiers_ValuesChange_LogsAgain()
     {
@@ -259,6 +291,7 @@ public class CareerAgentStatServiceTests
         // The service is a singleton; without a reset a second battle with the same values would
         // log nothing at spawn, which is the re-test loop the feature doc recommends.
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.SwingSpeed).Returns(0.05f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
         _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, new AgentDrivenProperties());
         _sut.ApplyMountStatModifiers("hero1", riderAgentIndex: 1, new AgentDrivenProperties());
 
