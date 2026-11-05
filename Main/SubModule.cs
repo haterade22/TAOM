@@ -349,6 +349,39 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>().LogError($"[SaveLoad] init failed — save/load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
         }
 
+        // Patch89_MapLoadDiagnostics: a per-frame [MapLoad] heartbeat and lifecycle trace on the
+        // campaign map, written for the v1.5.0 map-load stall (the map screen is live and
+        // Campaign.RealTick is executing while the player sees a frozen loading screen, so a log
+        // that simply stops tells us nothing). Numbered 89 on the v1.5.x line: Patch66 belongs to
+        // Enlistment here. Own try/catch: a diagnostic must never be the thing that breaks the
+        // load it exists to explain.
+        try
+        {
+            var mapLoadLogger = IoC.Resolve<IModLogger>();
+            Features.MapLoadDiagnostics.Hooks.Campaign_RealTick_MapLoad_Patch.Initialize(
+                IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>(), mapLoadLogger);
+            Features.MapLoadDiagnostics.MapLoadTracer.Initialize(mapLoadLogger);
+            TryPatchCategory("Patch89_MapLoadDiagnostics");
+
+            // Lifecycle trace: state pushes/pops, loading-window raise/lower with caller chains,
+            // and the map state/screen seams. Each category applies separately because Harmony
+            // aborts a category at its first failing class, and a drifted engine binding here must
+            // not take the working heartbeat down with it.
+            foreach (var traceCategory in new[]
+            {
+                "Patch89_MapLoadDiagnostics_Lifecycle",
+                "Patch89_MapLoadDiagnostics_MapScreen",
+                "Patch89_MapLoadDiagnostics_SceneReady",
+            })
+            {
+                TryPatchCategory(traceCategory);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[MapLoad] init failed, map-load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Patch90_PreloadBodyGuard (#601): a collision-body name no loaded tpac ships spins
         // PreloadHelper.WaitForMeshesToBeLoaded forever on the first frame of any mission that
         // preloads a carrier (#352 twice, #599 the elf start). The prefix drains the names that
@@ -1238,6 +1271,8 @@ public class SubModule : MBSubModuleBase
         var influenceService = IoC.Resolve<IStartupInfluenceService>();
         var startupLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+        campaignStarter.AddBehavior(new Features.MapLoadDiagnostics.MapLoadDiagnosticsBehavior(
+            IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>()));
 
         var namedCompanionService = IoC.Resolve<INamedCompanionService>();
         campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));

@@ -68,6 +68,9 @@ Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only a
 
 **Build stamp:** `MBSaveLoad_GetSaveMetaData_Patch` writes `TAOM_Build` (assembly version + informational version) into every save's metadata via the upsert indexer — inert to the engine (MetaData serializes its whole dict to JSON; only known keys are read). Future saves self-identify their exact build in `ModuleCheck` and in `inspect_sav.py` output.
 
+From `GameInitializationFinished` to the map screen the `[MapLoad]` heartbeat and lifecycle trace take over:
+[map-load-diagnostics.md](map-load-diagnostics.md).
+
 ## Offline inspector — `tools/inspect_sav.py`
 
 `python tools/inspect_sav.py <path.sav> [--verify]` — stdlib-only. Dumps ApplicationVersion, CreationTime, character, `TAOM_Build`, module:version table. `--verify` inflates the raw-deflate data region and walks `GameData.Write`'s section layout: verdicts OK / TRUNCATED / corrupt with byte offsets. Exit codes: 0 ok, 1 unreadable metadata, 2 data-region failure.
