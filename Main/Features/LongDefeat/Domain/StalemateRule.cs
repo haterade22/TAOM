@@ -22,7 +22,7 @@ internal struct StalemateState
 
 /// <summary>
 /// After a quiet spell both sides charge; after a second quiet spell a handful of stragglers nobody reaches fall, and anything bigger
-/// is a stalemate. NoResult repeats every tick until the run ends.
+/// gets no result: SurvivalRun ends it as a loss when only the last few defenders stand, otherwise as a stalemate. NoResult repeats every tick until the run ends.
 /// </summary>
 internal static class StalemateRule
 {

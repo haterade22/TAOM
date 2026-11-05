@@ -53,6 +53,7 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 28 | MED | At 10x with a person driving, engine fast forward read each key press once per internal step, so use could start and stop in one frame | Sibling guard not copied | Vanilla allows it only for a dead player, and Fords forces 1x while controlling. The first draft took Fords' speed rule but not that guard. Repeat of row 1 | A fixed step for a person at 10x, with one tick per frame; a played check owed |
 | 29 | MED | Speed stayed up after the run ended, so a fight with no rules ran at 10x behind the end panel | State not cleared | The speed was tied to the mission's end, not the run's | `Session.Speed` reads 1 once the run has a result |
 | 30 | LOW | A HUD fault could leave 10x on, and the judge could pass `--speed 10` on a build that played at 1x | Gate proves less than it says | First read by the review | `Stop` runs first; the judge compares `maxSpeed` with the flag |
+| 31 | MED | The new last-defenders loss turned the `stale` row from FAIL to a skip on the very run that prompted it, and `[End]` said `DefendersDead` with a defender alive | Gate proves less than it says | The first draft changed the end reason and did not follow it to its consumers, though the rule that a reason means one fact was implicit in the comment | Lens 5 traced each consumer; `standing=` in the check, `defenders N` in `[End]`, a director test, corrected comments |
 
 ## Not applied, with the reason
 

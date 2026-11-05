@@ -144,9 +144,10 @@ public class LongDefeatChecksTests
     public void Stale_ClearedPasses_StrandedFailsOnlyForAStalemate()
     {
         Is(CheckResult.Pass, LongDefeatChecks.StaleCleared());
-        Is(CheckResult.Fail, LongDefeatChecks.StaleStranded(RunEndReason.Stalemate));
-        Is(CheckResult.Skip, LongDefeatChecks.StaleStranded(RunEndReason.DefendersDead));
-        Is(CheckResult.Skip, LongDefeatChecks.StaleStranded(RunEndReason.Abandoned));
+        Is(CheckResult.Fail, LongDefeatChecks.StaleStranded(RunEndReason.Stalemate, 40));
+        Is(CheckResult.Skip, LongDefeatChecks.StaleStranded(RunEndReason.DefendersDead, 1));
+        Is(CheckResult.Skip, LongDefeatChecks.StaleStranded(RunEndReason.Abandoned, 40));
+        StringAssert.Contains(LongDefeatChecks.StaleStranded(RunEndReason.DefendersDead, 1).Detail, "standing=1");
     }
 
     [TestMethod]

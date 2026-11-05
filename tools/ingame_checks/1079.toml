@@ -83,7 +83,7 @@ needs = "a wave that stalls and is charged"
 reached = ['\[Check\] id=taom\.long-defeat\.stale result=']
 pass = ['\[Check\] id=taom\.long-defeat\.stale result=pass cleared=true']
 fail = ['\[Check\] id=taom\.long-defeat\.stale result=fail']
-# A stalled wave is not guaranteed, so a session with none is NOT REACHED. Only a run that ended as a stalemate after a charge fails it.
+# A stalled wave is not guaranteed, so a session with none is NOT REACHED. Only a run that ended as a stalemate after a charge fails it; a loss on the last few defenders skips it and names who stood.
 absence = "not-reached"
 
 [[check]]

@@ -243,7 +243,9 @@ internal sealed partial class SurvivalRun
 
                 break;
             case StalemateAction.NoResult:
-                End(RunEndReason.Stalemate);
+                // The last few defenders nobody reaches have lost the run, as the attackers' last few lose their wave (Mike, 2026-11-04).
+                var lastFew = s.DefendersStanding <= _r.StragglerCount && s.DefendersStanding < s.AttackersStanding + QueueLeft;
+                End(lastFew ? RunEndReason.DefendersDead : RunEndReason.Stalemate);
                 break;
         }
     }

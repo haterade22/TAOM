@@ -643,7 +643,7 @@ public class SurvivalRunTests
     }
 
     [TestMethod]
-    public void Stalemate_ElevenAgainstTwoInAWaveOf110_EndsAsStalemateFellingNothing()
+    public void Stalemate_ElevenAgainstTwoInAWaveOf110_EndsAsALossFellingNothing()
     {
         var run = InFighting();
         run.Tick(Snap(attackers: 11, defenders: 2, dt: 60f));
@@ -651,9 +651,42 @@ public class SurvivalRunTests
 
         var fx = run.Tick(Snap(attackers: 11, defenders: 2, dt: 90f));
 
-        Assert.AreEqual(RunEndReason.Stalemate, run.Result!.Reason);
+        Assert.AreEqual(RunEndReason.DefendersDead, run.Result!.Reason);
         Assert.AreEqual(0, fx.FellAttackers);
-        Assert.AreEqual(before, run.Gold, "no bonus for a stalemate");
+        Assert.AreEqual(before, run.Gold, "no bonus for a lost run");
+    }
+
+    [TestMethod]
+    public void Stalemate_OneDefenderNobodyReaches_AgainstAWave_EndsAsALoss()
+    {
+        var run = InFighting();
+        run.Tick(Snap(attackers: 89, defenders: 1, dt: 180f));
+
+        run.Tick(Snap(attackers: 89, defenders: 1, dt: 90f));
+
+        Assert.AreEqual(RunEndReason.DefendersDead, run.Result!.Reason);
+    }
+
+    [TestMethod]
+    public void Stalemate_SixDefenders_OneAboveTheCount_StaysAStalemate()
+    {
+        var run = InFighting();
+        run.Tick(Snap(attackers: 11, defenders: 6, dt: 60f));
+
+        run.Tick(Snap(attackers: 11, defenders: 6, dt: 90f));
+
+        Assert.AreEqual(RunEndReason.Stalemate, run.Result!.Reason);
+    }
+
+    [TestMethod]
+    public void Stalemate_ThreeAgainstThree_NotOutnumbered_StaysAStalemate()
+    {
+        var run = InFighting();
+        run.Tick(Snap(attackers: 3, defenders: 3, dt: 60f));
+
+        run.Tick(Snap(attackers: 3, defenders: 3, dt: 90f));
+
+        Assert.AreEqual(RunEndReason.Stalemate, run.Result!.Reason);
     }
 
     [TestMethod]

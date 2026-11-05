@@ -93,11 +93,11 @@ internal static class LongDefeatChecks
 
     internal static CheckVerdict StaleCleared() => new(CheckResult.Pass, "cleared=true");
 
-    /// <summary>A charge that never led to a clear. Only a run that ended as a stalemate proves the charge failed; any other end is not its doing.</summary>
-    internal static CheckVerdict StaleStranded(RunEndReason reason) =>
+    /// <summary>A charge that never led to a clear. Only a run that ended as a stalemate fails; the last few defenders' loss is a real end, so it skips and names who stood, and that session can still read PASS from an earlier clear.</summary>
+    internal static CheckVerdict StaleStranded(RunEndReason reason, int standing) =>
         reason == RunEndReason.Stalemate
-            ? new CheckVerdict(CheckResult.Fail, "cleared=false end=Stalemate")
-            : new CheckVerdict(CheckResult.Skip, $"cleared=false end={reason}");
+            ? new CheckVerdict(CheckResult.Fail, $"cleared=false end=Stalemate standing={Num(standing)}")
+            : new CheckVerdict(CheckResult.Skip, $"cleared=false end={reason} standing={Num(standing)}");
 
     internal static CheckVerdict NoRout(RunStats s)
     {
