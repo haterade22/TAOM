@@ -101,6 +101,11 @@ read at capture time and apply live. `CrashReportSettings.SkeletonBufferGuard` i
 goes on that list with its reason, not on a flag alone, and no MCM setting can gate anything in
 `OnSubModuleLoad`.
 
+`BattleLoadDiagnosticsSettings.EnableTickProfiler` and `EnableHitchProbe` are on that list too (plan 117): each
+is read at the first game init, where its Harmony category (Patch97, Patch98) installs or is skipped, so
+turning it on needs a restart; turning it off applies from the next mission
+([mission-perf-heartbeat.md](mission-perf-heartbeat.md)).
+
 **Never flip a compiled default; rename the setting.** MCM persists per property and loads the file over the compiled default from then on, so a default moved under an unchanged name reaches fresh installs only. Rename the setting (comment why) and the new default reaches every player; the gate `python tools/check_mcm_default_flips.py` fails on a flip (#1017), unless it is allowlisted with a reason. The renamed setting's `HintText` tells the player their saved value was reset and to set their own again (`.claude/rules/csharp-architecture.md`, "Doc requirement"); the commit body is for us, the tooltip is what the player reads.
 
 **A JSON behind an MCM knob is dead.** `GlobalSettings<T>.Instance` is non-null whenever MCM is
