@@ -77,6 +77,8 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-192838 | wear 0.25 | Erebor v Gundabad | 1,389 / 3,535 | 2 / 7 | 53,238 / 29,212 | Erebor 1.17, Gundabad 0.75 | 4x. Erebor won at 2,026 s, 33.8 minutes. |
 | 20261104-194822 | wear 0.25 | Rivendell v Mordor | 325 / 3,086 | 0 / 7 | 75,454 / 18,801 | Rivendell 2.30, Mordor 0.33 | 4x. Rivendell won at 1,655 s, 27.6 minutes, and lost no tower. |
 | 20261104-195609 | wear 0.25 | Harad v Rohan | 2,443 / 2,783 | 2 / 3 | 25,851 / 20,739 | Harad 1.00, Rohan 0.94 | 4x, 45 minutes, no winner. No lane cleared, no keep touched. |
+| 20261104-204332 | `e5a37e8ee` | Dale v Gondor | 2,496 / 2,524 | 1 / 0 | 24,007 / 19,086 | Dale 1.00, Gondor 0.96 | 4x. Gondor won on time at 40 minutes, 6 towers to 5, hit points 0.809 to 0.792. |
+| 20261104-205632 | `e5a37e8ee` | Harad v Rohan | not read | 3 / 1 | not read | not read | 4x. Rohan won on time at 40 minutes, 5 towers to 3, hit points 0.838 to 0.680. |
 
 ## Findings and changes
 
@@ -234,13 +236,13 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, four matches at 4x, one per pair:** lopsided matches now end near the target. Erebor beat Gundabad at 33.8 minutes, where it took 39.2 at 0.15, and Rivendell beat Mordor at 27.6, where it took 39.9. Even matches still do not end: Dale v Gondor and Harad v Rohan have gold trades of about 1.0, lost 1 to 3 outer towers a side, took no inner tower, and cleared no lane in 45 minutes. No owner took a hit, and there was no crash and no FAIL row. **What limits match length now:** an even match loses towers in different lanes, and a keep unlocks only after a whole lane falls. More wear will not settle this, because the walls are already weak by then, so an even match needs its own rule. That is a design question for Mike.
 
-### Time limit (this change)
+### Time limit
 
 **Why:** Dale v Gondor and Harad v Rohan did not end in 45 minutes at wear 0.25, and more wear is unlikely to settle them.
 
 **Changed:** at minute 40 the side with more towers standing wins, then the larger share of hit points left. Mike's target is 30 to 40 minutes, so 40 is the latest a match should run. Lopsided matches still end by a fallen keep.
 
-**Result: not measured.**
+**Result, two even matches at 4x:** both ended at minute 40 with a winner, a score that matches the towers lost, the result panel's flow and a clean exit. No match has been played by a person, so how a win on points feels is still open.
 
 ## Open questions
 
