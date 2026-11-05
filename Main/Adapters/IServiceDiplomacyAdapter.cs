@@ -39,6 +39,17 @@ public interface IServiceDiplomacyAdapter
     /// </summary>
     bool DeclareWarOn(string factionId);
 
-    /// <summary>Make peace between the player's map faction and the given faction.</summary>
+    /// <summary>
+    /// Follow a war the commander's realm chose (#832): the same declaration with the engine's
+    /// DEFAULT reason, not the player's hostility. A war the realm picked is not the player's act, and
+    /// the hostility reason fails open quests from that faction where the default one cancels them.
+    /// True only when the war exists afterwards.
+    /// </summary>
+    bool FollowWarOn(string factionId);
+
+    /// <summary>
+    /// Make peace between the player's map faction and the given faction. True only when the war is
+    /// over afterwards: a prefix can veto the action, so a refused peace reports false (#832).
+    /// </summary>
     bool MakePeaceWith(string factionId);
 }

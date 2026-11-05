@@ -62,7 +62,11 @@ public sealed class ServiceDiplomacyAdapter : IServiceDiplomacyAdapter
         }
     }
 
-    public bool DeclareWarOn(string factionId)
+    public bool DeclareWarOn(string factionId) => Declare(factionId, byPlayer: true);
+
+    public bool FollowWarOn(string factionId) => Declare(factionId, byPlayer: false);
+
+    private bool Declare(string factionId, bool byPlayer)
     {
         try
         {
@@ -71,13 +75,20 @@ public sealed class ServiceDiplomacyAdapter : IServiceDiplomacyAdapter
             if (us == null || them == null || us == them || us.IsAtWarWith(them))
                 return false;
 
-            DeclareWarAction.ApplyByPlayerHostility(us, them);
-            _logger?.LogInfo($"[Enlistment] mirrored the commander's war with '{factionId}'");
-            return true;
+            if (byPlayer)
+                DeclareWarAction.ApplyByPlayerHostility(us, them);
+            else
+                DeclareWarAction.ApplyByDefault(us, them);
+            // A prefix (TAOM's alliance veto, DeclareWarAction_ApplyInternal_Patch, or another mod's) can skip the action, so
+            // report only a war that exists: the service records what actually landed.
+            var landed = us.IsAtWarWith(them);
+            if (landed)
+                _logger?.LogInfo($"[Enlistment] mirrored the commander's war with '{factionId}'");
+            return landed;
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment] DeclareWarOn('{factionId}') failed: {ex.Message}");
+            _logger?.LogError($"[Enlistment] DeclareWarOn('{factionId}', byPlayer={byPlayer}) failed: {ex.Message}");
             return false;
         }
     }
@@ -92,8 +103,11 @@ public sealed class ServiceDiplomacyAdapter : IServiceDiplomacyAdapter
                 return false;
 
             MakePeaceAction.Apply(us, them);
-            _logger?.LogInfo($"[Enlistment] service war with '{factionId}' ended on discharge");
-            return true;
+            // A prefix can skip the action, so report only a peace that landed (#832).
+            var landed = !us.IsAtWarWith(them);
+            if (landed)
+                _logger?.LogInfo($"[Enlistment] service war with '{factionId}' ended");
+            return landed;
         }
         catch (Exception ex)
         {

@@ -16,20 +16,26 @@ namespace TAOM.Tests.Features.Enlistment;
 [TestClass]
 public class ServiceDiplomacyServiceTests
 {
+    private IModLogger _logger = null!;
     private IEnlistmentStore _store = null!;
     private IServiceDiplomacyAdapter _diplomacy = null!;
+    private IPlayerContextAdapter _playerContext = null!;
     private ServiceDiplomacyService _sut = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        var logger = Substitute.For<IModLogger>();
+        _logger = Substitute.For<IModLogger>();
+        var logger = _logger;
         _store = new EnlistmentStore(logger);
         _diplomacy = Substitute.For<IServiceDiplomacyAdapter>();
         _diplomacy.DeclareWarOn(Arg.Any<string>()).Returns(true);
         _diplomacy.MakePeaceWith(Arg.Any<string>()).Returns(true);
         _diplomacy.GetPlayerFactionId().Returns("player_clan");
-        _sut = new ServiceDiplomacyService(_store, _diplomacy, logger);
+        _playerContext = Substitute.For<IPlayerContextAdapter>();
+        _playerContext.GetPlayerClanId().Returns("player_clan");
+        _diplomacy.FollowWarOn(Arg.Any<string>()).Returns(true);
+        _sut = new ServiceDiplomacyService(_store, _diplomacy, _playerContext, logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
@@ -60,7 +66,7 @@ public class ServiceDiplomacyServiceTests
     [TestMethod]
     public void ApplyServiceWars_PinsTheFactionThatDidTheDeclaring()
     {
-        _diplomacy.GetPlayerEnemies().Returns(R());
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
         _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("sturgia"));
 
         _sut.ApplyServiceWars("lord_1_1");
@@ -155,7 +161,7 @@ public class ServiceDiplomacyServiceTests
         // Only what actually landed goes in the mirror. Recording a refused declaration would leave
         // a promise to make peace with a faction we never fought — and that peace is a real,
         // unearned diplomatic gift at discharge.
-        _diplomacy.GetPlayerEnemies().Returns(R());
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
         _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("sturgia", "eliminated_faction"));
         _diplomacy.DeclareWarOn("eliminated_faction").Returns(false);
 
@@ -203,7 +209,7 @@ public class ServiceDiplomacyServiceTests
     {
         // Serve, discharge, serve again. The second oath must snapshot the world as it is THEN —
         // including any war the first term left standing because the player started it himself.
-        _diplomacy.GetPlayerEnemies().Returns(R());
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
         _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("sturgia"));
         _sut.ApplyServiceWars("lord_1_1");
         _sut.UnwindServiceWars();
@@ -214,5 +220,131 @@ public class ServiceDiplomacyServiceTests
 
         CollectionAssert.AreEqual(new List<string> { "vlandia" }, _store.Record.EnemiesAtOath);
         CollectionAssert.AreEqual(new List<string> { "battania" }, _store.Record.MirroredWars);
+    }
+
+    // ---- mid-term following (#832) ----
+
+    /// <summary>An independent player (his own clan is the oath identity) serving a lord of kingdom_c.</summary>
+    private void OathAsOwnClan(params string[] mirrored)
+    {
+        _store.Record.OathFactionId = "player_clan";
+        _store.Record.EnemiesAtOath = new List<string>();
+        _store.Record.MirroredWars = new List<string>(mirrored);
+    }
+
+    // ---- MirrorWarAtJoin ----
+
+    [TestMethod]
+    public void MirrorWarAtJoin_CommanderAtWar_DeclaresAndRecords()
+    {
+        OathAsOwnClan();
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
+
+        Assert.IsTrue(_sut.MirrorWarAtJoin("mordor"));
+
+        CollectionAssert.AreEqual(new List<string> { "mordor" }, _store.Record.MirroredWars);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_VassalIdentity_DeclaresNothing()
+    {
+        _store.Record.OathFactionId = "kingdom_p";
+        _diplomacy.GetPlayerFactionId().Returns("kingdom_p");
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+
+        Assert.IsFalse(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().FollowWarOn(default!);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_OathEnemy_IsNeverDeclared()
+    {
+        OathAsOwnClan();
+        _store.Record.EnemiesAtOath = new List<string> { "mordor" };
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+
+        Assert.IsFalse(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().FollowWarOn(default!);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_OathEnemyTheFightIsAlreadyOn_IsATrueNoOp()
+    {
+        // A pre-oath enemy the player is still at war with is not a refusal: nothing to top up.
+        OathAsOwnClan();
+        _store.Record.EnemiesAtOath = new List<string> { "mordor" };
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+        _diplomacy.GetPlayerEnemies().Returns(R("mordor"));
+
+        Assert.IsTrue(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().FollowWarOn(default!);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_AlreadyAtWar_IsATrueNoOp()
+    {
+        OathAsOwnClan("mordor");
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+        _diplomacy.GetPlayerEnemies().Returns(R("mordor"));
+
+        Assert.IsTrue(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().FollowWarOn(default!);
+        Assert.AreEqual(1, _store.Record.MirroredWars.Count);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_CommanderNotAtWarWithIt_ReturnsFalse()
+    {
+        OathAsOwnClan();
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("harad"));
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
+
+        Assert.IsFalse(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().FollowWarOn(default!);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_VetoedDeclaration_ReturnsFalseAndRecordsNothing()
+    {
+        OathAsOwnClan();
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("mordor"));
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
+        _diplomacy.FollowWarOn("mordor").Returns(false);
+
+        Assert.IsFalse(_sut.MirrorWarAtJoin("mordor"));
+
+        Assert.AreEqual(0, _store.Record.MirroredWars.Count);
+    }
+
+    [TestMethod]
+    public void MirrorWarAtJoin_VassalAlreadyAtWar_IsTrueAndDeclaresNothing()
+    {
+        // Already at war is the answer under any identity: no refusal to log at the join.
+        _store.Record.OathFactionId = "kingdom_p";
+        _diplomacy.GetPlayerFactionId().Returns("kingdom_p");
+        _diplomacy.GetPlayerEnemies().Returns(R("mordor"));
+
+        Assert.IsTrue(_sut.MirrorWarAtJoin("mordor"));
+
+        _diplomacy.DidNotReceiveWithAnyArgs().DeclareWarOn(default!);
+    }
+
+    [TestMethod]
+    public void ApplyServiceWars_ClearsAStaleMirrorFirst_AndRecordsEachLandedWar()
+    {
+        _store.Record.MirroredWars = new List<string> { "stale" };
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
+        _diplomacy.GetEnemiesOf("lord_1_1").Returns(R("sturgia", "vlandia"));
+        _diplomacy.DeclareWarOn("vlandia").Returns(false);
+
+        _sut.ApplyServiceWars("lord_1_1");
+
+        CollectionAssert.AreEqual(new List<string> { "sturgia" }, _store.Record.MirroredWars);
     }
 }

@@ -19,6 +19,7 @@ public class ServiceBattleServiceTests
     private ServiceAttachmentService _attachment = null!;
     private IGameMenuAdapter _gameMenu = null!;
     private IArmyMembershipAdapter _army = null!;
+    private IServiceDiplomacyService _diplomacy = null!;
     private ServiceBattleService _service = null!;
 
     [TestInitialize]
@@ -43,7 +44,10 @@ public class ServiceBattleServiceTests
         // Default: the player HAS the battle team-merge. FlushArmyLeaveAfterBattle gates on this,
         // so an unstubbed (false) default would make every deferred-detach test vacuously pass.
         _army.IsInArmy.Returns(true);
-        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _army, _logger);
+        _diplomacy = Substitute.For<IServiceDiplomacyService>();
+        _diplomacy.MirrorWarAtJoin(Arg.Any<string>()).Returns(true);
+        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _army, _diplomacy, _logger);
+        _encounter.GetOpposingLeaderFactionId(Arg.Any<string>()).Returns((string)null!);
 
         _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Defender);
         _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Defender).Returns(true);
@@ -130,6 +134,77 @@ public class ServiceBattleServiceTests
         _service.OnCommanderBattleStarted("lord_party_1");
 
         _encounter.Received(1).JoinBattle(PartyBattleSide.Attacker);
+    }
+
+    // ---- #832: top up a missing war before the join ----
+
+    [TestMethod]
+    public void BattleStarted_TopsUpTheWarBeforeJoining()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Received.InOrder(() =>
+        {
+            _diplomacy.MirrorWarAtJoin("mordor");
+            _encounter.JoinBattle(PartyBattleSide.Defender);
+        });
+    }
+
+    [TestMethod]
+    public void BattleStarted_RefusedTopUp_StillJoins()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.MirrorWarAtJoin("mordor").Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+    }
+
+    [TestMethod]
+    public void BattleStarted_EveryRefusedTopUpIsLogged()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.MirrorWarAtJoin("mordor").Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(m => m.Contains("war top-up refused") && m.Contains("mordor")));
+        _encounter.Received(2).JoinBattle(PartyBattleSide.Defender);
+    }
+
+    // ---- the commander's realm is at war with the player's own ----
+
+    [TestMethod]
+    public void BattleStarted_NoOpposingFaction_NoTopUp()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns((string)null!);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _diplomacy.DidNotReceiveWithAnyArgs().MirrorWarAtJoin(default!);
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+    }
+
+    [TestMethod]
+    public void BattleStarted_RaidFloorSkips_NoTopUp()
+    {
+        MakeEnlisted();
+        CommanderRaids();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _diplomacy.DidNotReceiveWithAnyArgs().MirrorWarAtJoin(default!);
     }
 
     [TestMethod]
