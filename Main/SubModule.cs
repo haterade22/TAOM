@@ -1799,6 +1799,15 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch91b_MissionTickRecovery");
         Features.MissionTickGuard.Hooks.MissionTickRecoveryWiring.VerifyAndArm(IoC.Resolve<IModLogger>());
 
+        // Patch98 hitch probe (default on) and Patch97 tick profiler (default off), plan 117: the probe brackets
+        // the frame's phases, scene scripts and spawns for [Hitch] and [HitchDetail]; the profiler adds per-type
+        // attribution. Installed here, once per process, by their MCM toggles: game init precedes every mission,
+        // so nothing that calls Mission.OnPreTick has run yet. The installers contain their own failures.
+        Features.MissionPerf.Hooks.MissionTickProfilerInstaller.InstallIfEnabled(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
+
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
         // game's main thread — the same thread the tournament-exit stall freezes — so this
         // is a valid capture point for the sampler's main-thread reference. (Verified against
@@ -2022,6 +2031,12 @@ public class SubModule : MBSubModuleBase
         // [MissionPerf] frame-time heartbeat every 5 s (plan 117): the in-mission frame-time record the
         // battle freeze and stutter reports lack. Self-gates on its Battle Load Diagnostics toggle.
         AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
+        // [PerfContext] once per mission; while the hitch probe or the tick profiler measures, a [TickProfile]
+        // window (with script, spawn and clip-loading lines) on the same 5 s clock as [MissionPerf].
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IGraphicsOptionsAdapter>(),
+            IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

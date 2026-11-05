@@ -39,6 +39,8 @@ public class SettingRequireRestartPostureTests
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
         [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
+        [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableTickProfiler)}"] = "Read at the first game init, where Patch97 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission)",
+        [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableHitchProbe)}"] = "Read at the first game init, where Patch98 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission while the tick profiler is off)",
         [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.SkeletonBufferGuard)}"] = "Read once, at the first main menu, where the guard rewrites 13 bytes at each of up to two sites in engine code or does not: the write is never undone, so turning it on or off needs a restart (docs/features/skeleton-buffer-guard.md)",
     };
 

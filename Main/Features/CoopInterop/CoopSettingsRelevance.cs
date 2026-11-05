@@ -75,6 +75,8 @@ public static class CoopSettingsRelevance
         "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
         // The [MissionPerf] frame-time heartbeat (plan 117): a log line, never a computation.
         "EnableMissionPerfHeartbeat",
+        // The Patch97 tick profiler and its two knobs, and the Patch98 hitch probe: log lines, never a computation.
+        "EnableTickProfiler", "TickProfilerTopN", "HitchThresholdMs", "EnableHitchProbe",
     };
 
     /// <summary>

@@ -149,6 +149,19 @@ public static class PatchShieldPolicy
         // PatchShieldAgentTickExclusionBindingTests walks the real target; PatchShieldPolicyTests pins it
         // without the game.
         "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
+        // The hitch probe's two kept targets (the 1.5.x line's decision D13, 2026-10-03; ported by plan 117). Since
+        // plan 034's finalizer change the shield costs little, so cost alone keeps no target off it: Mission.OnTick,
+        // Mission.OnPreTick and Mission.SpawnAgent stay shielded. These two stay off, for any owner's patch on them
+        // (the missing-API swallow and the strip of the offending patch are given up):
+        //  - Mission.WaitTickCompletion (v1.4.8 Mission.cs:3585-3591) runs once per frame on the main thread, and a
+        //    swallow there would skip its wait loop, so OnPreMissionTick would overlap the running agent tick.
+        //  - ManagedScriptHolder.TickComponents (ManagedScriptHolder.cs:240-267) runs once per ticking scene per
+        //    frame, on a thread native picks, and carries Patch97's attribution transpiler when the profiler is on;
+        //    it stays as built.
+        // Both stop a swallow only at their own method; the callers (OnPreTick for the wait) are shielded.
+        // HitchProbeBindingTests walks the real targets; PatchShieldPolicyTests pins the split without the game.
+        "TaleWorlds.MountAndBlade.Mission.WaitTickCompletion",
+        "TaleWorlds.Engine.ManagedScriptHolder.TickComponents",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

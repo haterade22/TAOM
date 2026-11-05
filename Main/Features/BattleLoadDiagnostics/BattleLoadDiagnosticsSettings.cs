@@ -69,4 +69,24 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Mission Frame-Time Heartbeat", Order = 0, RequireRestart = false,
         HintText = "Writes a [MissionPerf] line to the TAOM debug log every 5 seconds while a mission runs: frames, fps, average / p95 / max frame time in ms, agent and formation counts, garbage collections, and the engine's main-thread and render-thread busy times (mainMs, renderMs). This is the in-mission counterpart of [MemSample] and the measurement an AI or content change is judged against. Cost is one timestamp and one GetMainFps read per frame. Default ON.")]
     public bool EnableMissionPerfHeartbeat { get; set; } = true;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Tick Profiler", Order = 1, RequireRestart = true,
+        HintText = "Off by default. Adds per-type attribution to the hitch probe's lines: times every mission behaviour's tick, every behaviour's spawn callback and every scene script component by type, and lists the slowest. Installed once at game start: turning it on takes effect after a restart; turning it off stops it from the next mission.")]
+    public bool EnableTickProfiler { get; set; } = false;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Tick Profiler Top Behaviours", 1, 20, Order = 2, RequireRestart = false,
+        HintText = "How many mission behaviours each [TickProfile] and [TickSummary] line lists, slowest first. Default 8. Read at each mission start.")]
+    public int TickProfilerTopN { get; set; } = 8;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Hitch Threshold (ms)", 50, 2000, Order = 3, RequireRestart = false,
+        HintText = "A frame that takes this many milliseconds or more writes one [Hitch] line naming where the frame went, for the first 100 such frames of a mission; later ones are only counted. Below the battle's usual frame time, nearly every frame is a hitch. Default 250. Read at each mission start.")]
+    public int HitchThresholdMs { get; set; } = 250;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Hitch Probe", Order = 4, RequireRestart = true,
+        HintText = "On by default. Times the parts of every mission frame TAOM can see (the wait for the agent tick, the mission tick, the camera and render preparation, scene scripts, agent spawns) and checks whether an animation clip is loading from disk, so each frame slower than the hitch threshold writes a hitch line and a detail line saying where the time went. Its measured cost is written to the TAOM debug log. Installed once at game start: turning it on takes effect after a restart; turning it off stops measuring from the next mission while 'Enable Tick Profiler' is off (the profiler measures through the probe's patches).")]
+    public bool EnableHitchProbe { get; set; } = true;
 }
