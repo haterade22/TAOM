@@ -1,0 +1,331 @@
+P0|crash-robustne|issue-1064-supply-desertion-port|n1|c0/x1|rc3|ab78564e0
+P0|crash-robustne|issue-1076-hollow-parent-birth|n2|c0/x2|rc9|1165a00de de90a2451
+P0|crash-robustne|issue-824-bard-town-guard|n1|c0/x1|rc1|eed06b9c7
+P0|freeze-threadi|issue-634-offthread-callbacks|n1|c0/x1|rc2|f75288ebf
+P0|freeze-threadi|issue-701-battle-corpses|n1|c0/x1|rc1|c17541f2c
+P0|freeze-threadi|yotthani-stability-guards|n2|c0/x2|rc10|ecaa67d26 83ad1eab5
+P0|load-hang|issue-601-preload-body-guard|n1|c0/x1|rc2|fb8d73145
+P0|memory|issue-913-banner-sheet-compression|n2|c1/x1|rc0|8cdb11408 ab338de2d
+P1|architecture|enlistment-batch-842-845|n5|c1/x4|rc18|f21123c6a 388e89de0 218fa4053 a20b4d154 4bd8554a4
+P1|crash-robustne|main-party-getter-null-guard|n2|c0/x2|rc2|91f369984 dc1c37031
+P1|crash-robustne|nre-guard-audit-2026-10-27|n1|c0/x1|rc12|0002cb561
+P1|crash-robustne|plan-009-guarded-patch-category-apply|n8|c1/x7|rc8|45bcf80bd 9da9b5b92 bdf7d515c 4c728dac0 7912fdd8f b6cb6ff5d 7eae47044 27fd23bbb
+P1|data-integrity|issue-599-armory-ref-audit|n2|c1/x1|rc1|05bd0a730 ef6afeb67
+P1|data-integrity|issue-749-lindon-balance-tables|n1|c0/x1|rc0|0e75ec50a
+P1|diagnostics|battle-load-triage|n5|c0/x5|rc10|89374fc4f d99398f12 b9eabd712 76a395729 1581d4d0a
+P1|diagnostics|crash-report-rethrow-stack|n1|c0/x1|rc16|c79a58521
+P1|diagnostics|hero-race-session-reset|n2|c0/x2|rc1|eb6d18431 eb5cf0289
+P1|diagnostics|plan-006-crash-capture-boot-cost|n11|c4/x7|rc13|8bd44b924 1d94df9c4 9cfb91b15 fb52e619d 6fe83bcad 65b691b6a 707275290 42624b95b …
+P1|diagnostics|plan-028-mission-tick-profiler|n1|c0/x1|rc9|6eb2e1b90
+P1|diagnostics|plan-040-load-time-stamps|n1|c0/x1|rc10|346f3e093
+P1|diagnostics|plan-041-hitch-probe|n1|c0/x1|rc24|daba6f0a0
+P1|harness|harness-non-deploying-verify|n1|c1/x0|rc0|785b2703e
+P1|harness|issue-690-hook-registration-anchor|n2|c0/x2|rc2|7b342ed59 d01bddf10
+P1|load-hang|collision-body-gate|n2|c0/x2|rc6|332f2ac71 b23a27ef4
+P1|load-hang|issue-699-siege-dismount-custom-battle|n3|c0/x3|rc17|cfca3c5fd 9cb6d49e7 bb85e9284
+P1|localization-i|battlebalance-enlisted-survival-roll|n2|c0/x2|rc20|113d3483b 5d70714c4
+P1|localization-i|issue-1026-text-processors|n1|c0/x1|rc0|41aa2779b
+P1|perf-campaign|autoresolve-diagnostics-removal|n1|c0/x1|rc0|158408c73
+P1|perf-campaign|issue-740-butterlib-distance-matrix|n1|c0/x1|rc1|1325c36ea
+P1|perf-load-time|plan-007-patchshield-skip-callback-shims|n7|c1/x6|rc5|2a3f71b12 737929445 578ac7d61 31a31f16b 0bf2409e6 900920dca 88408869f
+P1|perf-load-time|plan-042-xml-merge-fast-path|n1|c0/x1|rc5|a27c6b338
+P1|perf-mission|plan-034-patchshield-per-call-cost|n1|c0/x1|rc5|5ee49d05f
+P1|shader|issue-751-shader-cache-keeper|n1|c0/x1|rc1|372773d1a
+P1|shared-feature|career-e1e3-review-fixes|n8|c2/x6|rc4|259ae2cba 01ca483e2 c74ad5aed 30cbcd465 c96a02a4b 86ef5c7af bc59806f0 4f5b412d7
+P1|shared-feature|careers-archetype-map-coverage|n1|c0/x1|rc36|b02467744
+P1|shared-feature|enlistment-merit-hero-attribution|n1|c0/x1|rc10|9304a4cb9
+P1|shared-feature|inventory-sweep-2026-10-23|n5|c0/x5|rc5|89e7af6c0 eb89a3e53 cd999f917 97426dcd0 399a7fe27
+P1|shared-feature|issue-1011-hero-race-dead-heroes|n2|c0/x2|rc2|f981629cd 0f7902684
+P1|shared-feature|issue-1015-siege-capture-credit|n1|c0/x1|rc1|ec2a3026f
+P1|shared-feature|issue-1017-mcm-renamed-defaults|n1|c0/x1|rc12|429713746
+P1|shared-feature|issue-1021-enlistment-encounter-exits|n1|c0/x1|rc4|90035a799
+P1|shared-feature|issue-611-career-mount-bonuses|n1|c0/x1|rc1|2b1d1ef96
+P1|shared-feature|issue-612-field-commission-races|n1|c0/x1|rc0|35007dbb8
+P1|shared-feature|issue-613-career-perk-wiring|n1|c0/x1|rc6|7ede923be
+P1|shared-feature|issue-628-race-fertility|n2|c0/x2|rc14|83bdad853 925db38d1
+P1|shared-feature|issue-706-english-overrides-only-english|n1|c0/x1|rc2|407b1e767
+P1|shared-feature|issue-748-stuck-battle-guard|n1|c0/x1|rc1|a913629cd
+P1|shared-feature|issue-764-wotr-session-reset|n3|c1/x2|rc0|2719e59e8 9ab3952a7 cf7486cba
+P1|shared-feature|issue-772-wotr-fullwar-declarations|n1|c0/x1|rc3|d1b9fd91a
+P1|shared-feature|issue-827-enlistment-battle-exit|n1|c0/x1|rc0|2d1e5f338
+P1|shared-feature|issue-828-enlistment-discharged-menu|n1|c0/x1|rc1|b24e8549e
+P1|shared-feature|issue-831-enlistment-raids|n2|c0/x2|rc9|7a912dcd5 c04ba3fe5
+P1|shared-feature|issue-832-enlistment-service-wars|n2|c0/x2|rc7|1559b3261 d4af27d3e
+P1|shared-feature|issue-835-enlistment-promotion-notice|n1|c0/x1|rc4|75e190abe
+P1|shared-feature|issue-886-castle-recruitment|n1|c0/x1|rc3|f83a63e57
+P1|shared-feature|issue-898-messenger-session-rules|n1|c0/x1|rc11|1dc0a8d7c
+P1|shared-feature|issue-917-quickactions-unequip|n1|c0/x1|rc2|1888b6f28
+P1|shared-feature|issue-918-castle-ai-recruit-toggle|n1|c0/x1|rc6|0d3f2bc88
+P1|shared-feature|issue-957-alignment-sides|n1|c0/x1|rc57|5e43518df
+P1|shared-feature|issue-993-994-banner-colors-refuge-rows|n1|c0/x1|rc4|365f2ecfe
+P1|shared-feature|plan-001-cross-campaign-resets|n3|c0/x3|rc2|4263535a1 8ea315052 0935533a6
+P1|shared-feature|plan-014-enlistment-session-scope|n9|c2/x7|rc11|6fb37c9f7 f6ac2d335 e99d705a3 74fb3d35e b9d18458e 41754a03e a67792c40 fd61757bf …
+P1|shared-feature|specialresources-map-bar-entry|n2|c1/x1|rc2|406dd739f 8e7d1f4cb
+P1|shared-feature|troopweight-garrison-patrol-penalty|n1|c0/x1|rc0|c2449a306
+P1|shared-feature|warg-late-spawn-formation|n1|c0/x1|rc6|726975a52
+P1|tests-ci|issue-606-dead-onbehaviorinitialize|n2|c0/x2|rc5|2a5363e90 fac17e05c
+P2|architecture|plan-018-composition-root|n6|c0/x6|rc18|a0db0558b 9ed3ee308 44045b348 fa0b24e13 ecbc2199e 0f3af9577
+P2|coop|issue-965-coop-safety-nets|n1|c0/x1|rc13|bd1ac8292
+P2|coop|issue-966-coop-player-attribution|n1|c0/x1|rc6|7f3636b2e
+P2|crash-robustne|issue-1063-feral-orcs-hideout-guard|n2|c0/x2|rc12|cd06da904 1ef7d1af6
+P2|crash-robustne|issue-792-mainparty-getter-reads|n5|c0/x5|rc5|e9854bbd0 186156808 2c09a4145 74bdd5eff 4f27b3bde
+P2|crash-robustne|issue-807-main-menu-step|n2|c0/x2|rc4|85c608963 2afea8878
+P2|crash-robustne|nre-containment-finalizers|n1|c0/x1|rc17|6ae924638
+P2|crash-robustne|wotr-syncdata-chunker-guard|n1|c0/x1|rc4|16a34027d
+P2|data-integrity|culture-xml-data-gates|n1|c0/x1|rc0|d28d9a7d3
+P2|data-integrity|custom-battle-scene-gate|n2|c1/x1|rc3|d96167efa babcb8335
+P2|data-integrity|faction-card-feat-gate|n2|c0/x2|rc0|e166d8c84 6553b8c70
+P2|data-integrity|gui-prefab-copy-drift|n2|c0/x2|rc3|fc932d4ca 7012783b3
+P2|data-integrity|issue-1018-loc-orphan-gate|n1|c0/x1|rc14|616cf12f1
+P2|data-integrity|issue-621-deep-review-xsd-gate|n1|c0/x1|rc2|fa8c06f82
+P2|data-integrity|issue-644-nazgul-race|n2|c0/x2|rc6|9804f67b9 437d59111
+P2|data-integrity|issue-729-item-slot-rejected|n1|c0/x1|rc2|2420508fb
+P2|data-integrity|issue-756-kingdom-policy-ids|n1|c0/x1|rc20|685db7e46
+P2|data-integrity|issue-757-wanderer-backstories|n1|c0/x1|rc2|9dd2f594f
+P2|data-integrity|issue-758-vanilla-wanderers|n1|c0/x1|rc3|546d1181f
+P2|data-integrity|issue-823-lord-banners|n1|c0/x1|rc1|736fa2fef
+P2|data-integrity|issue-949-faction-ref-validator|n2|c0/x2|rc5|ca92db878 2225939cd
+P2|data-integrity|issue-951-banner-icon-gate|n1|c0/x1|rc0|487e3d9a9
+P2|data-integrity|issue-983-mbproj-audit|n1|c0/x1|rc5|bc30b76da
+P2|data-integrity|plan-002-nan-infinity-guards|n3|c0/x3|rc1|78889a85c 968325896 8186cc9ca
+P2|data-integrity|tools-data-gates-validator-codes|n1|c0/x1|rc13|f1675c058
+P2|data-integrity|tools-validate-xml-schemas|n1|c0/x1|rc6|48d66b59a
+P2|data-integrity|ui-prefab-validation-gates|n4|c0/x4|rc7|62fb6bb1d 103636439 450332b74 abb718c2f
+P2|data-integrity|validator-item-registry-items-root|n1|c0/x1|rc2|1ebcf86a8
+P2|data-integrity|xslt-template-coverage-gate|n1|c0/x1|rc0|bc5b5d71d
+P2|dev-tools|engine-bump-v1.5.5-tools|n2|c0/x2|rc18|4f9985852 4e408e0e0
+P2|dev-tools|improve-run-pipeline|n15|c0/x15|rc9|5e5877bdf 218488f4e d648e00c0 e4c43e59e 1198881f0 1d1abd694 43db0b47a 989c87497 …
+P2|dev-tools|issue-1004-native-build-archive|n2|c0/x2|rc3|e1dffb138 2838b25c2
+P2|dev-tools|issue-1038-taom-src-short-names|n2|c0/x2|rc0|857734c64 f07d70a7c
+P2|dev-tools|issue-1047-banner-sheet-packing|n2|c0/x2|rc33|9985f2db3 b41de91e8
+P2|dev-tools|issue-1074-ingame-verdict-tool|n3|c0/x3|rc2|c5705474e 53e13cfe3 95647d13b
+P2|dev-tools|issue-692-creature-bandits|n1|c0/x1|rc10|d469914ab
+P2|dev-tools|issue-798-harad-repair|n1|c0/x1|rc10|44e9edd48
+P2|dev-tools|issue-930-clan-heraldry-eol|n1|c0/x1|rc0|b75fbab07
+P2|dev-tools|issue-950-lords-xslt-whitespace|n1|c0/x1|rc1|5e45d2782
+P2|dev-tools|issue-959-lord-generator-append-only|n1|c0/x1|rc2|9165a6727
+P2|dev-tools|issue-987-tool-followups|n1|c0/x1|rc8|09f3126a7
+P2|dev-tools|issue-997-native-build-match|n2|c0/x2|rc1|fc5408508 09030511a
+P2|dev-tools|map-tools-hardening|n3|c0/x3|rc27|244c15d27 87ffea9b2 af2b198e4
+P2|dev-tools|plan-005-security-hygiene|n4|c1/x3|rc0|6b34fd00f a0fa3cff2 01b970185 337372d84
+P2|dev-tools|plan-020-changelog-at-release|n7|c0/x7|rc3|ae85381dc c91bb95f8 30b54df75 ef5b7ff4e 6e4bfedb7 971d8e975 5b242cee6
+P2|dev-tools|plan-024-managed-debug-profile|n1|c0/x1|rc0|37ff41e4a
+P2|dev-tools|plan-029-perf-runs-parser|n1|c0/x1|rc2|67eff55cf
+P2|dev-tools|tools-api-snapshot-check|n1|c0/x1|rc0|4ab005dd1
+P2|dev-tools|tools-armory-mirror-default|n2|c0/x2|rc5|798e4d0bf 72cad16b1
+P2|dev-tools|tools-artist-port-safety|n2|c0/x2|rc20|a9f2d7eda 71fea53c8
+P2|dev-tools|tools-generator-marker-region|n3|c0/x3|rc5|f963c6188 c73cf2961 b409e6505
+P2|dev-tools|tools-graphify-code-graph|n1|c0/x1|rc3|e6745a492
+P2|dev-tools|tools-ingame-verdict|n1|c0/x1|rc0|c8d69e426
+P2|dev-tools|tools-lint-docs-commit-view|n1|c0/x1|rc5|35ff005dc
+P2|dev-tools|tools-mesh-name-check|n1|c0/x1|rc0|7bbe6f4de
+P2|dev-tools|tools-review-yield-provenance-loc|n1|c0/x1|rc2|69d2e8c0a
+P2|dev-tools|tools-taom-src|n2|c0/x2|rc6|97219836c f39b399b4
+P2|diagnostics|crashreport-mcm-settings-collector|n2|c0/x2|rc9|13fb30f9c a59a48bb6
+P2|diagnostics|issue-1071-outcome-log|n1|c0/x1|rc5|cb4eeaa3d
+P2|diagnostics|issue-1072-ingame-check-lines|n11|c0/x11|rc32|b4ad748f2 30a938689 0bc2a132f 852678f86 da5c87c23 0ab3dc35a 4e0c2a3b0 2d6934006 …
+P2|diagnostics|issue-1073-silent-catch-ratchet|n2|c0/x2|rc8|cd4fb3719 00fddd3c5
+P2|diagnostics|issue-481-log-engine-identity|n1|c0/x1|rc0|c80006994
+P2|diagnostics|issue-688-native-decompile|n2|c0/x2|rc31|719074072 d51e43028
+P2|diagnostics|issue-725-earlylog-flush|n1|c0/x1|rc0|d31026b5b
+P2|diagnostics|issue-809-camera-ms|n3|c0/x3|rc27|0273e2ea4 c76125773 fdee18f02
+P2|diagnostics|issue-840-enlistment-trace-default|n1|c0/x1|rc3|890fe29de
+P2|diagnostics|map-load-diagnostics|n1|c0/x1|rc1|502f7cde9
+P2|diagnostics|mission-perf|n1|c0/x1|rc2|5dfa8f4cb
+P2|diagnostics|mission-perf-heartbeat|n1|c0/x1|rc13|685c6a1e0
+P2|diagnostics|mission-start-guard|n1|c0/x1|rc3|649cc30ff
+P2|diagnostics|perf-plans-integration-fixups|n1|c0/x1|rc13|43ca92ee9
+P2|diagnostics|plan-012-loading-window-trace|n5|c1/x4|rc4|8028bf3df e6c03411d bce3c27f4 15e5475a4 a4492fa89
+P2|diagnostics|plan-036-anim-memory-probe|n1|c0/x1|rc5|a9f10688f
+P2|diagnostics|plan-039-map-frame-profiler|n1|c0/x1|rc10|f6bf0e588
+P2|diagnostics|troopweight-roster-loss-diag|n1|c0/x1|rc1|36d4dda14
+P2|docs-engine|adopt-mithrilforge|n1|c0/x1|rc1|991f415f4
+P2|docs-engine|docs-engine-mithrilforge-findings|n1|c0/x1|rc0|b5e1d0b3d
+P2|docs-process|docs-lessons-union-merge|n1|c0/x1|rc1|4b7e36250
+P2|docs-process|plan-016-repo-hygiene-mcp-pins|n5|c0/x5|rc1|470ee64e9 8a6388311 1ce8c370e 35f212c60 7d13adc36
+P2|harness|harness-claude-code-alignment|n1|c0/x1|rc1|b84dbaeb2
+P2|harness|harness-codex-effort|n1|c0/x1|rc0|ef9559b14
+P2|harness|harness-commit-subject-gate|n1|c0/x1|rc1|12d96adc1
+P2|harness|harness-config-protection|n1|c0/x1|rc1|88e805450
+P2|harness|harness-deep-review-risk-tier|n1|c0/x1|rc8|0a8d61a4e
+P2|harness|harness-ecc-rereview|n1|c0/x1|rc5|fdf9f38cb
+P2|harness|harness-git-commit-msg-hook|n1|c0/x1|rc0|0382d5d2a
+P2|harness|harness-githooks-commit-gates|n1|c0/x1|rc6|434d1d795
+P2|harness|harness-hang-triage|n1|c0/x1|rc0|9c6d4962b
+P2|harness|harness-improve-run-pipeline|n6|c0/x6|rc4|dc260635b 014e23022 d24aff340 ac1aa578b 56e9970fd 6c4b0981b
+P2|harness|harness-model-effort-routing|n2|c0/x2|rc0|fdec324f8 d0e4bc947
+P2|harness|harness-plugin-marketplace-checks|n1|c0/x1|rc2|c237c84e4
+P2|harness|harness-pstack-adoption|n5|c0/x5|rc5|2fb9d914a 88c0b6985 28de0dc7d bc7a7f0d9 21f2ba79d
+P2|harness|harness-pstack-marketplace-review|n2|c0/x2|rc7|ad3967222 a87bdc3a9
+P2|harness|harness-ralph-adoption|n4|c0/x4|rc6|4407fbc05 4d17aeab8 5eacdedc1 a7bbf3fe7
+P2|harness|harness-retro-tool|n5|c0/x5|rc2|78fe34c16 0985c9515 d94bddecb b6f0ec794 3f53e4623
+P2|harness|harness-rules-review-2026-11-03|n13|c1/x12|rc6|2992763f6 e653257a8 625e8fc53 452796db4 4fbfb7adc 250e1b321 9cfcadd07 683fd1331 …
+P2|harness|harness-skill-usage-audit|n2|c0/x2|rc5|8b1083127 d6b537092
+P2|harness|harness-upstream-review|n2|c0/x2|rc3|7e26d77fe 407570ece
+P2|harness|harness-upstream-watch|n1|c0/x1|rc2|37ff36922
+P2|harness|issue-1003-reviewer-rule-rereads|n1|c0/x1|rc0|9a2a8dae9
+P2|harness|issue-1012-statusline-usage|n2|c1/x1|rc0|2473fa80e 49bf3b115
+P2|harness|issue-1078-harness-usage|n3|c0/x3|rc0|2ca35d6e2 2c737d97c 6a54436c6
+P2|harness|issue-681-hook-herestring-hang|n1|c0/x1|rc1|143f0fa85
+P2|harness|issue-962-harness-retro|n4|c0/x4|rc4|c8a3ac9d9 6ce20f6ed 1c622732e ae7c4edbf
+P2|harness|issue-985-rtk-adoption|n4|c0/x4|rc4|caa7ac356 c64c78e72 549bf3902 6e59b4d6a
+P2|harness|plan-011-stop-reminders-trunk-guard|n5|c0/x5|rc1|43e6780e4 c80c4108c 65b405e42 18961c1ec 764ab0984
+P2|harness|plan-013-bash-hook-prefilter|n7|c1/x6|rc1|90141357d 787fd3663 b34d615a0 5dcef67ac 7aa658e3e 6514fdfe7 ee1929fa4
+P2|harness|plan-027-powershell-gate-coverage|n13|c1/x12|rc3|b23dc8999 e046bdf09 3a0614061 cfd3b48f6 2d7770b64 64b9f3a6c 747b6dae8 6fe4c8fe4 …
+P2|localization-i|issue-1007-loc-length-report|n1|c0/x1|rc0|df375d99e
+P2|localization-i|issue-572-name-localization|n1|c0/x1|rc0|303bf2a7d
+P2|localization-i|issue-919-harvest-blank-line|n1|c0/x1|rc0|337228885
+P2|localization-i|loc-english-only-vanilla-overrides|n1|c0/x1|rc19|8a4027110
+P2|localization-i|loc-translator-key-ownership|n1|c0/x1|rc41|4ceae903b
+P2|localization-i|localization-full-translation-run|n1|c0/x1|rc41|9e2a39f40
+P2|localization-i|localization-translate-seed-only|n1|c0/x1|rc1|c2c8afe42
+P2|memory|plan-038-battle-equipment-memory-audit|n1|c0/x1|rc0|3dac7ab5b
+P2|perf-campaign|issue-1019-enlistment-board-render|n1|c0/x1|rc13|943ab74c0
+P2|perf-campaign|plan-037-campaign-hot-paths|n1|c0/x1|rc2|423d948d8
+P2|perf-campaign|shadowfax-screen-open-speed|n11|c0/x11|rc48|ea7cce7bc 11aeb8aee 33c3bdf1a 3f8168228 3db115423 c32662872 22695bd01 579bb93f0 …
+P2|perf-mission|behavior-tree-framework-perf|n2|c0/x2|rc42|a498e357e 70320bbe1
+P2|perf-mission|plan-003-hot-path-resolve-caching|n4|c1/x3|rc2|7feca96be 02157b18b ab70555db cf6e06aa5
+P2|perf-mission|plan-015-warg-tick-costs|n10|c2/x8|rc13|87f9f862e b8b144635 e5f644da4 7577894d4 2420761ba fe8f30c7a 56eb4bc81 23f6f85bd …
+P2|perf-mission|plan-030-mission-diagnostics-diet|n1|c0/x1|rc12|e0ad0db76
+P2|perf-mission|plan-031-settings-reads-off-hot-paths|n2|c0/x2|rc19|74e9172d4 bb68eeca3
+P2|perf-mission|plan-032-worker-thread-formation-patch|n1|c0/x1|rc3|13f34c1cb
+P2|perf-mission|plan-033-creature-battle-allocations|n1|c0/x1|rc1|efe326242
+P2|release-packag|build-drop-gamepass|n1|c0/x1|rc5|e6ee8c998
+P2|release-packag|deps-butr-refresh|n1|c0/x1|rc0|6027ecfae
+P2|release-packag|plan-017-build-identity|n9|c2/x7|rc5|743ce2e1d 057628a2b 5d1b1bda1 ff84e1b88 db1a7166b d5033e4e8 9cedb92df 3c747f4fb …
+P2|release-packag|plan-035-release-shader-cache-check|n1|c0/x1|rc2|e4c2c159a
+P2|release-packag|release-packager-gates|n1|c0/x1|rc2|a4b5d6258
+P2|release-packag|yotthani-adoption-provenance|n1|c0/x1|rc1|eed20591a
+P2|shader|issue-752-shader-compile-notice|n1|c0/x1|rc2|82645b53f
+P2|shader|issue-916-bow-shader-sources|n1|c0/x1|rc12|84f0459bc
+P2|shared-feature|arena-troll-gear-prizes|n1|c0/x1|rc5|bc39f6e4d
+P2|shared-feature|career-active-effects-panel|n2|c0/x2|rc31|bce566059 23799be82
+P2|shared-feature|dread-aura-local|n4|c0/x4|rc2|efa32184b 0103a8271 f4f12a737 1e62adeb2
+P2|shared-feature|herorace-dwarf-portrait-offset|n1|c1/x0|rc0|6c26f003a
+P2|shared-feature|hill-troll-sprint-mixed|n1|c0/x1|rc27|30abf550b
+P2|shared-feature|issue-1014-enlistment-siege-wages|n1|c0/x1|rc16|b0625f0d1
+P2|shared-feature|issue-610-cavalry-knockdown|n1|c0/x1|rc3|3f75217dc
+P2|shared-feature|issue-788-custom-battle-combat|n1|c0/x1|rc21|b0154d86e
+P2|shared-feature|issue-789-fief-nav-button|n1|c0/x1|rc2|ca248d1b7
+P2|shared-feature|issue-829-quartermaster-answers|n2|c0/x2|rc0|1a132c727 01f02c3a0
+P2|shared-feature|issue-830-enlistment-sit-out|n1|c0/x1|rc10|1d9cc42f1
+P2|shared-feature|issue-839-enlistment-retinue-cost|n1|c0/x1|rc13|4666a254a
+P2|shared-feature|issue-841-enlistment-pump-clock|n1|c0/x1|rc6|069962aa4
+P2|shared-feature|issue-887-ai-recruit-trip-alignment|n1|c0/x1|rc3|93684c32c
+P2|shared-feature|issue-932-banner-bearer-cultures|n1|c0/x1|rc0|210943076
+P2|shared-feature|issue-937-tavern-specialities|n1|c0/x1|rc1|d39370059
+P2|shared-feature|issue-944-messenger-button-hint|n1|c1/x0|rc0|6647f8f57
+P2|shared-feature|issue-955-liege-titles|n1|c0/x1|rc1|30003668b
+P2|shared-feature|issue-970-battle-action-bar|n2|c0/x2|rc13|d96f349f1 40385aa5b
+P2|shared-feature|issue-989-messenger-button-brushes|n1|c0/x1|rc2|2c7f7fae9
+P2|shared-feature|review-130-config-list-entries|n1|c0/x1|rc1|b2e387db7
+P2|shared-feature|shader-precompile-repark|n1|c0/x1|rc8|25995dc91
+P2|shared-feature|ui-data-sweep-2026-10-23|n4|c0/x4|rc1|fee906345 645068836 bd457ee6e 60dbf6429
+P2|tests-ci|career-quest-owner-change|n1|c0/x1|rc2|180696430
+P2|tests-ci|harmony-binding-hasbody-gate|n1|c0/x1|rc0|197454e68
+P2|tests-ci|issue-1020-quality-gates|n1|c0/x1|rc2|affcee2ea
+P2|tests-ci|issue-806-native-pin-gate|n2|c0/x2|rc3|15e52d7af c286e2393
+P2|tests-ci|issue-858-prefab-insert-gate|n1|c0/x1|rc9|69b47d00b
+P2|tests-ci|issue-938-patch-number-gate|n1|c0/x1|rc0|6ddcc8f9b
+P2|tests-ci|plan-008-binding-gate-no-silent-skips|n6|c0/x6|rc8|8c89e042f 549afffde 2ca0805bc 37306bca3 aa59f68ed 1f5047572
+P2|tests-ci|prefab-binding-gates|n3|c0/x3|rc5|720e421fa 71484b8e4 8d5cfc623
+P2|tests-ci|tests-architecture-gates|n1|c0/x1|rc2|8caac7da5
+P2|tests-ci|tests-engine-data-store-fake|n1|c0/x1|rc5|ea8f2ad52
+P2|tests-ci|tests-gauntlet-stretch-cover-ratchet|n2|c0/x2|rc11|e6dbea3e0 d4fb51a50
+P2|tests-ci|tests-gauntlet-stretch-gate|n1|c0/x1|rc1|53a4e4e52
+P2|tests-ci|tests-reflection-site-labels|n1|c0/x1|rc1|ee19f1052
+P2|tests-ci|tests-viewmodel-mixin-binding-gate|n1|c0/x1|rc4|e7cdb2e96
+P2|tests-ci|tools-xsd-schema-gate|n2|c0/x2|rc2|4644bf493 c1ce78207
+P2|tests-ci|transpiler-site-binding-gate|n1|c0/x1|rc0|8b9f0a233
+P3|architecture|adr-003-partial-services|n1|c1/x0|rc0|583585818
+P3|architecture|issue-1016-enlistment-board|n1|c0/x1|rc18|5e7a0da6e
+P3|architecture|issue-737-combat-model-split|n1|c0/x1|rc5|f7e9bd0d2
+P3|architecture|issue-796-enlistment-dead-battle-rule|n1|c0/x1|rc5|3b848c411
+P3|architecture|issue-898-messenger-pricing|n1|c0/x1|rc5|464cbd375
+P3|architecture|issue-936-enlistment-rank-ladder|n2|c0/x2|rc16|5c5072dbc 5a8c73d26
+P3|architecture|plan-021-architecture-rule-amendments|n9|c2/x7|rc0|1cdf8eb02 9c29d7324 7d1b7a542 d4e6273a1 e809f258c b22edd473 16e45bf8e 6a2ce8cb3 …
+P3|architecture|plan-025-delete-unreachable-scaffolds|n3|c0/x3|rc1|032481cc6 76f22e111 97344cf59
+P3|architecture|plan-026-seam-decision-logic|n4|c0/x4|rc5|a39575410 12b1c2003 aeb04bc48 5685676e3
+P3|coop|issue-967-coop-mission-gating|n2|c0/x2|rc36|8ae036bc5 a4b8f7e21
+P3|dev-tools|armory-lod-pass|n1|c0/x1|rc2|e63128528
+P3|dev-tools|build-solution-dependencies|n1|c0/x1|rc1|1118bc2e8
+P3|dev-tools|dev-tools-tpactool-v051|n1|c0/x1|rc17|776054c0c
+P3|dev-tools|issue-616-spider-variants|n4|c0/x4|rc2|e1a940ac9 426f0dc88 5ccde2771 525f67fc9
+P3|dev-tools|issue-617-ranged-ladder|n1|c0/x1|rc5|8465cc984
+P3|dev-tools|issue-677-graphify-code-graph|n1|c0/x1|rc2|b8833474e
+P3|dev-tools|tools-cave-troll-clip-pipeline|n2|c0/x2|rc0|4f7ae42ef 3c5e57e71
+P3|dev-tools|tools-creature-fit|n1|c0/x1|rc1|a8fc5c848
+P3|dev-tools|tools-tripo-map-icon|n3|c0/x3|rc9|041808e5f 0daece880 a69cd39df
+P3|diagnostics|battle-load-triage-frozen-count|n1|c0/x1|rc0|0b74cc2dd
+P3|diagnostics|lostfooting-census|n1|c0/x1|rc7|639df895b
+P3|docs-engine|docs-arena-tournament-armour|n1|c0/x1|rc0|fe6619615
+P3|docs-engine|docs-armory-mirror-policy|n1|c0/x1|rc0|8af881f2b
+P3|docs-engine|docs-engine-formations-team-ai|n1|c0/x1|rc0|578770e03
+P3|docs-engine|docs-helmet-hair-beard-cover|n1|c0/x1|rc0|75b7b6661
+P3|docs-engine|docs-kit-animation-authoring|n1|c0/x1|rc0|2a9e8bc49
+P3|docs-engine|docs-lords-xml-merge|n1|c0/x1|rc0|369eb0306
+P3|docs-engine|docs-yotthani-adoption-oct29|n2|c0/x2|rc1|2ac85fbe7 ac1d8edbc
+P3|docs-engine|engine-daily-tick-on-load|n1|c0/x1|rc0|573dc155f
+P3|docs-engine|engine-fact-isinbeingstruck-band|n1|c0/x1|rc1|4520af802
+P3|docs-engine|feature-long-defeat|n1|c0/x1|rc5|985b0d54e
+P3|docs-engine|feature-longdefeat|n2|c0/x2|rc2|b54179389 44058ce4b
+P3|docs-engine|harness-destructible-stage-rule|n2|c0/x2|rc68|db8f7c10e c2c3a6f28
+P3|docs-engine|issue-407-patch69-comment|n1|c0/x1|rc1|2b6f6216c
+P3|docs-engine|issue-635-herorace-ctd-triage|n1|c0/x1|rc0|aed9dea8d
+P3|docs-engine|issue-793-daily-tick-repeat-after-load|n3|c0/x3|rc6|a66b5754a e8504a62b ae1a6b553
+P3|docs-engine|perf-programme-2026-10-02|n1|c0/x1|rc0|af990ca76
+P3|docs-engine|race-face-morph-docs|n1|c0/x1|rc0|0934f65d2
+P3|docs-engine|refuge-ai-pin-docs|n1|c1/x0|rc0|63630e8a0
+P3|docs-engine|yotthani-adopt-2026-10-15-docs|n5|c0/x5|rc0|2b8f5ff36 d690ff8d2 4d79eca85 7eac30153 0bb1f3cae
+P3|docs-engine|yotthani-adoption|n1|c0/x1|rc0|8dd76ddb3
+P3|docs-process|docs-adr-001-json-configs|n1|c0/x1|rc0|dc275dc4e
+P3|docs-process|docs-completion-workflow-issue-body|n1|c0/x1|rc2|4e7efe5a8
+P3|docs-process|docs-feature-doc-truth-pass-2026-11-03|n4|c0/x4|rc0|2e34cade1 20616aad3 8ce80c2ff 28b8f6282
+P3|docs-process|docs-lessons-git-index-hygiene|n1|c0/x1|rc0|fd2072a0a
+P3|docs-process|docs-release-process|n1|c0/x1|rc0|62157c7e7
+P3|docs-process|docs-stale-path-sweep-2026-11-03|n1|c0/x1|rc0|bb7da8ff4
+P3|docs-process|docs-truth-pass-2026-11|n6|c0/x6|rc1|3b1af2777 ff1fe1933 50e8dc7ae 66dd97536 24e52abb9 f4058993a
+P3|docs-process|engine-bump-v1.5.6|n2|c0/x2|rc0|04c3c4540 370b4bf2b
+P3|docs-process|git-multisession-safety|n1|c0/x1|rc0|385b7adf6
+P3|docs-process|harad-keyforce-port|n2|c0/x2|rc0|dde30a5b7 42693d9bd
+P3|docs-process|harness-context-mode-adoption|n1|c0/x1|rc0|9d327f43e
+P3|docs-process|issue-696-keyforce-art|n2|c1/x1|rc0|0aad0d941 df273ea24
+P3|docs-process|issue-765-review-records|n1|c0/x1|rc0|0b08eeeab
+P3|docs-process|issue-792-docs-audit|n3|c0/x3|rc0|2e2a422dc 86d3a774e 1a2da1e3e
+P3|docs-process|plan-022-oob-auto-assign|n1|c0/x1|rc0|66e3fd593
+P3|docs-process|plans-006-019-opus-audit|n1|c1/x0|rc0|7f02fc8d3
+P3|docs-process|process-outside-pr-review|n1|c0/x1|rc0|d08637c73
+P3|docs-process|readme-install-requirements|n1|c0/x1|rc0|c83352298
+P3|docs-process|yotthani-review-806-809|n2|c0/x2|rc0|33253ea9d b3fac3021
+P3|harness|feature-hard-questions|n1|c0/x1|rc1|f382ff6fd
+P3|harness|harness-builder-brief-template|n1|c1/x0|rc0|8c1305e20
+P3|harness|harness-dead-memory-lint|n1|c0/x1|rc2|2129f753c
+P3|harness|harness-deep-review-lenses|n2|c0/x2|rc0|ce7f8d6ba d3fc3c4d0
+P3|harness|harness-engine-bump-skill|n1|c0/x1|rc0|43fe5ebe8
+P3|harness|harness-prompt-audit|n1|c0/x1|rc0|9e9f04df4
+P3|harness|harness-provenance-rule|n1|c1/x0|rc0|1d88b8633
+P3|harness|harness-retro|n1|c0/x1|rc3|4358d1622
+P3|harness|harness-rule-writers-before-gates|n1|c1/x0|rc0|7c6d48628
+P3|harness|harness-statusline-panel|n1|c0/x1|rc0|dfd4cf9e0
+P3|harness|harness-writers-before-gates|n1|c0/x1|rc0|ed3bb65cc
+P3|harness|issue-621-deep-review-lenses|n1|c0/x1|rc0|099840f33
+P3|harness|issue-646-animalia-monstersize|n1|c0/x1|rc31|709649c3f
+P3|harness|issue-877-loremasters-line|n1|c1/x0|rc0|267834a2e
+P3|harness|plan-023-no-resetforunload|n1|c0/x1|rc0|636b50abf
+P3|localization-i|issue-1023-name-grammar-tags|n1|c0/x1|rc8|fd1cee10b
+P3|localization-i|loc-translator-expression-tags|n1|c0/x1|rc8|7abce5db9
+P3|localization-i|localization-gametext-gametypes|n1|c0/x1|rc2|e74ef3931
+P3|release-packag|engine-bump-v1.5.4|n1|c0/x1|rc29|9c310bc23
+P3|release-packag|issue-1010-ingame-ledger|n1|c0/x1|rc0|715530875
+P3|release-packag|module-manifest-dependency-order|n1|c0/x1|rc1|de385cab9
+P3|shared-feature|issue-615-creature-mount-retune|n1|c0/x1|rc0|f54581d6c
+P3|shared-feature|issue-971-career-click|n2|c0/x2|rc0|0761c01b7 7100f7d8d
+P3|tests-ci|armoury-mesh-ref-audit|n1|c0/x1|rc0|d5986f87f
+P3|tests-ci|issue-818-wotr-war-rule|n1|c0/x1|rc0|3fe86e22b
+P3|tests-ci|issue-921-coop-row-test|n2|c1/x1|rc0|5db856e05 175b149fd
+P3|tests-ci|plan-010-ci-hosted-windows|n1|c0/x1|rc14|e9b28e2ad
+P3|tests-ci|plan-010-ci-on-hosted-windows|n5|c0/x5|rc37|b8c000452 a4b90e4d2 2897fcca1 c139bc50d 2628c66c5
+P3|tests-ci|plan-010-refasm-nogame-gate|n1|c0/x1|rc10|8589a3384
+P3|tests-ci|plan-019-nullable-ratchet|n8|c2/x6|rc9|4d2a6c9ac 7ad7a3074 19ca72d3d 155e3ea57 de2881366 503b933ee bdc80a5a8 272ac1f06
+P3|tests-ci|prefab-binding-gate|n1|c0/x1|rc1|f48ef74dc
+P3|tests-ci|tests-repopaths-infra|n1|c0/x1|rc8|06252ae2c

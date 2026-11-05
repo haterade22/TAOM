@@ -1,0 +1,1395 @@
+[
+ {
+  "id": "101",
+  "file": "plans/101-baseline-sync.md",
+  "title": "Put the public 1.4.8 troop tree on the 1.4.x trunk and record the baseline every later plan uses",
+  "priority": "P1",
+  "effort": "S",
+  "risk": "MED",
+  "depends_on": [],
+  "parts": 3,
+  "creates": [
+   "Local bannerlord-1.4.5 = merge of 1b00d1acd and 8df90444c (merge tree 981c808820470f805e9ce6eda5b4f8ab1e7f5867), then a docs record commit, then the programme commit: the base every later WP worktree branches from",
+   "Branch port148/101-baseline-sync and the worktree root C:/Users/mikew/source/repos/taom-port/ (message files, logs and the hand-off record live beside the worktrees)",
+   "plans/README.md integrator section 'Baseline after WP101': build (0 errors, warnings count, one BHA0001), tests (expected 9154 total, 9151 passed, 3 skipped, 0 failed), validate_moduledata per-code counts with BROKEN_ITEM_REF before and after the merge, polearm gate, test_hooks.sh, Python tool tests, lint_docs summary, installed Armory and TAOM_Map versions",
+   "Committed programme record: plans/101-*.md to plans/144-*.md and plans/_audit/2026-11-04-port148/ including data/brief-workflow3-decisions.md (D1-D24)",
+   "docs/reference/development-machines.md: laptop 'Content modules' cell and a dated re-measured baseline paragraph",
+   "CLAUDE.md trap row renamed 'Two machines; laptop data has a baseline' (one byte shorter, points at the baseline)",
+   "Laptop environment: LOTRLOME_Armory = public 2026-09-29 build (precondition for WP103's ModuleData gate and every laptop data verdict)",
+   "CHANGELOG.md: the last two hand-written entries before WP102 retires the hand-edited changelog (D1)"
+  ],
+  "open_risks": [
+   "The public 2026-09-29 Armory's source on the laptop is UNVERIFIED (desktop channel folder path is lens-reported); until Part A is done Part B is a hard STOP under D20",
+   "The only test that reads the installed Armory (ShippedCultures_EveryBannerBearerReplacementWeaponIsOneHanded) may fail after the refresh if the public Armory retired or reshaped one of the 43 banner-bearer replacement weapons; the plan STOPs and routes it to the maintainer",
+   "BROKEN_ITEM_REF on the merged tree is expected near 0 (92a30ba42 measured 0 against the release modules) but cannot be measured until Part A; the validator, polearm gate, hook tests and tool tests have no prior laptop baseline, so their first numbers are recorded as found",
+   "plans/README.md's integrator section is written by the orchestrator after this plan; Part C handles both a present and an absent heading but cannot see its final format",
+   "The main checkout's state at execution time is unknown: another session's edit to any of the incoming paths blocks the fast-forward (STOP, never stash)",
+   "Commit hooks are inert on 1.4.x (top-level permissionDecision), so subject labels are self-checked with the plan's message-check script",
+   "Committing about 120 orchestrator-written files: the secret-pattern scan was clean on 2026-11-04, and Part C re-runs it on the staged set"
+  ]
+ },
+ {
+  "id": "102",
+  "file": "plans/102-changelog-at-release.md",
+  "title": "Adopt plan 020 on the 1.4.x line: the commit body is the changelog entry and /release generates CHANGELOG.md",
+  "priority": "P2",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "101"
+  ],
+  "parts": 1,
+  "creates": [
+   "tools/changelog_from_commits.py (blob 01614b4e4, identical to the 1.5.x tip): /release's CHANGELOG generator; --version vX.Y.Z accepts v2.4.0; --since defaults to git describe (v2.0.28 on 1.4.x)",
+   "tools/tests/test_changelog_from_commits.py (35 tests, blob 767f5b3db), including label parity with .claude/hooks/check-commit-subject-version.sh:158",
+   "docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md: the 1.4.x hand-written CHANGELOG moved unchanged (base blob)",
+   "CHANGELOG.md replaced by the generated-file header (blob 673908fd, no '## ' sections until the v2.4.0 /release)",
+   "AGENTS.md '## Documentation duty' section: the commit body is the changelog entry; never hand-edit CHANGELOG.md",
+   ".claude/settings.json without either CHANGELOG hook registration: 26 registrations across 9 events (PreToolUse Bash group holds 9 hooks); WP103 edits on top of this",
+   ".claude/hooks/check-changelog-changed.sh and .claude/hooks/check-changelog-updated.sh deleted (27 hook scripts remain); WP116 must not reintroduce them",
+   "tools/test_hooks.sh section 5b2: fails when a python-only gate (taom_pybin_degraded without jq) is not named in session-start.sh's degraded banner",
+   ".claude/hooks/session-start.sh degraded banner naming the five python-only gates by file name; the 'Latest CHANGELOG' block removed",
+   ".claude/skills/release/SKILL.md Phases 4-7 (generate section, release note from it, HEAD check, parent check, tag by SHA) and Phase 1 item 5 (version scheme)",
+   "docs/reference/release-process.md steps 5-8 (generator flow) and the 'Version numbers on the 1.4.x line' paragraph (D8: v2.4.0 next; never v2.0.29-v2.0.36 or v2.1.x); lines 1-74 keep their numbers",
+   "Convention for all later WPs: no plan stages CHANGELOG.md; commit bodies are the release notes"
+  ],
+  "open_risks": [
+   "The archive must be re-cut at merge if CHANGELOG.md changes on bannerlord-1.4.5 between the WP102 base and its merge (WP101 Part C inserts an entry before WP102 starts, which is fine; any later trunk edit needs the integrator recipe).",
+   "Pack notes written before D1 (WP115, WP116, WP138, WP143) still say to keep the 1.4.x CHANGELOG gates or hand-edit entries; their plan writers must follow D1 instead.",
+   "CLAUDE.md stays over its 46,000-byte on-disk budget (lint_docs --fail-on-drift exits 1 at baseline and after) until WP103 trims it; this plan only keeps it from growing (net minus one byte).",
+   "The first generated release section (v2.4.0) will be dominated by unlabelled commits (105 of 121 since v2.0.28 after WP101), so the release note needs a hand summary.",
+   "The 10 EndToEnd generator tests (temp git repos) were not run during planning (write ban); the 25 pure tests passed in memory on Python 3.14.7 against the 1.4.x subject gate.",
+   "The plan relies on the Edit tool matching old text in CRLF worktree copies (core.autocrlf=true), as 1.5.x plan 020 did; any old text not found exactly once is a STOP.",
+   "Plan 020's 1.5.x lessons, RCA and review records are not ported; if WP142 syncs those lessons it must reword or drop links into rca-changelog-at-release-2026-09-24.md.",
+   "Running Claude sessions keep calling the two deleted scripts until restarted."
+  ]
+ },
+ {
+  "id": "103",
+  "file": "plans/103-executor-safety-harness.md",
+  "title": "Make the 1.4.x hook gates decide, judge the right worktree, and never deploy from a documented command",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "102"
+  ],
+  "parts": 3,
+  "creates": [
+   ".claude/hooks/_shellwords.py (407570ece state; git-repo mode used by the gates; WP116 replaces it with its end state)",
+   ".claude/hooks/_pybin.sh: export PYTHONIOENCODING=utf-8, TAOM_HOOKS_DIR, taom_git_repo_dir, taom_deny_multi_repo, taom_is_project_repo",
+   ".githooks/commit-msg (434d1d795 state) and .gitattributes rule .githooks/* text eol=lf",
+   "tools/check_commit_msg.py and tools/tests/test_check_commit_msg.py",
+   "tools/lint_docs.py --drift-only flag (check-doc-config-drift.sh now calls it)",
+   "tools/tests/test_dotnet_commands_flagged.py (gates -p:ModuleId= in skills, rules, agents, docs/ai-includes, docs/modding, docs/reference, .ai, .agents, AGENTS.md, CLAUDE.md)",
+   "tools/tests/test_shellwords.py (407570ece, 83 tests)",
+   "tools/tests/test_lint_docs.py DriftOnlyTests",
+   ".claude/skills/review-codex/references/prompt-fixed.md (needed by WP138's 218488f4e)",
+   "tools/test_hooks.sh helper decision_of and sections 4b, 4e, 5c, 5c2, 5c3, 7b (with repository-reader rows), 7c, 7h, 7j, 7k",
+   "hookSpecificOutput output contract in every PreToolUse gate and check-freeze.sh; subject gate with AI-attribution refusal and repository-aware version read",
+   "validate-push.sh protects bannerlord-1.5.x",
+   ".claude/settings.json: anchored registrations, Bash|PowerShell git-gate group, permissions.deny Serena list, attribution block (maintainer-applied)",
+   "CLAUDE.md trimmed to about 45,350 bytes CRLF-equivalent (cap 46,000), with the pathspec-commit row and commit-msg/labelled-merge rule"
+  ],
+  "open_risks": [
+   "That Claude Code ignores a top-level permissionDecision was observed on the 1.5.x line (#647). On 1.4.x it is re-proved only by the maintainer's live check after merge",
+   "Whether git cherry-pick or git revert run the commit-msg hook is unverified; the procedure commits with git commit -F, which does run it",
+   "The #681 here-string hang has not been reproduced on this laptop (bash 5.3.9); 4e is the deterministic test",
+   "After merge, block-dangerous-git and block-broad-git-add asks stall unattended executors that use reset --hard, checkout --, restore, add -A and similar forms",
+   "The ModuleData gate will refuse every ModuleData commit on the laptop until WP101's Armory refresh (3,423 BROKEN_ITEM_REF). Its validator took 22.1 s against the 45 s inner bound",
+   "validate-push still judges only the first command line, and the gates read PowerShell commands as Bash text, until WP116 lands the per-line judge and taom_hook_command",
+   "Serena is unpinned on 1.4.x, so a new Serena edit tool is not denied automatically",
+   "CLAUDE.md headroom after WP103 is a few hundred bytes; WP142, WP143 and WP144 must trim as they add",
+   "test_dotnet_commands_flagged.py will flag unflagged commands that later ports bring into the gated folders. The fix is to add the flags",
+   "That an empty attribution.commit string hides the trailer is taken from 1.5.x usage; the docs only say 'change or hide'",
+   "The B2 git apply and the A2 cherry-pick were simulated on 1b00d1acd. WP102's planned edits do not overlap those hunks, but a different WP102 result is a STOP"
+  ]
+ },
+ {
+  "id": "104",
+  "file": "plans/104-guarded-patch-categories.md",
+  "title": "Apply every Harmony patch category through one guard, and give the wiring tests one honest source reader",
+  "priority": "P1",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "101"
+  ],
+  "parts": 2,
+  "creates": [
+   "Main/PatchCategoryApplier.cs: internal sealed class PatchCategoryApplier (TryApply(string), RecordSkippedClasses(IEnumerable<KeyValuePair<Type, Exception>>), TakeFailureSummary(TextObject))",
+   "Main/PatchCategoryIndex.cs: internal sealed class PatchCategoryIndex (static Build(Assembly), Apply(Harmony, string), SkippedClasses)",
+   "Main/SubModule.cs: field _patches, private bool TryPatchCategory(string category), private void ReportPatchFailures(TextObject phase, bool persistent = false); every category applied via TryPatchCategory",
+   "SubModule.cs anchors WP105 relies on: TryPatchCategory(\"Patch42_CastleRecruitment\") ends OnSubModuleLoad's batch; ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_startup}startup\"), persistent: true) inside the Patch55 one-shot; ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_game_init}game initialization\")) after Patch69_TournamentEndGuard; ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_mission_start}mission start\")) in the mission-time block",
+   "Source gate PatchCategoryApplierTests.MainSource_AppliesEveryPatchCategoryThroughTheGuardedHelper: no direct .PatchCategory( call allowed in Main/",
+   "TAOM.Tests/Infrastructure/RepoPaths.cs: RepoPath, ReadSource(path, stripComments), StripComments, MentionsOutsideComments, CodeRoots = { \"Main\" }, CSharpFiles(params string[])",
+   "TAOM.Tests/Infrastructure/RepoPathsTests.cs (already includes fa0b24e13's CRLF probe test; WP105 keeps ours)",
+   "TAOM.Tests/Infrastructure/PatchCategoryApplierTests.cs and PatchCategoryIndexTests.cs",
+   "GameModelOverrideBindingTests.ParkedModels dictionary and ParkedModels_AreRealModels_ThatSubModuleDoesNotRegister",
+   "LanguageDataXmlTests.AllTranslationFiles_StringRowOutsideRootStrings_IsNeverPresent gate",
+   "Localization keys taom_patch_apply_failed, taom_patch_apply_notice_title, taom_patch_apply_phase_startup, taom_patch_apply_phase_game_init, taom_patch_apply_phase_mission_start in English, all 12 language files (inside <strings>) and the 12 translation caches",
+   "25 wiring tests read Main/SubModule.cs and Main/IoC.cs through RepoPaths.ReadSource(..., stripComments: true) (a0db0558b)",
+   "Scoped #pragma warning disable/restore BHA0001 on Patch88_InitializeLordPartyPropertiesScope: the build has zero BHA warnings",
+   ".claude/skills/deep-review/SKILL.md check 9 greps TryPatchCategory"
+  ],
+  "open_risks": [
+   "Plan length is about 1,356 lines, above the 1,200 aim, because the SubModule transplant is spelled out edit by edit for a smaller executor",
+   "Step 4 is blocked if WP101's D20 Armory refresh is not recorded in plans/README.md (the commit touches ModuleData strings)",
+   "Comment-stripped reads in the 25 converted tests could expose another comment-only match on 1.4.x; a scan this session found only TaomPartyNavigationModel (handled by ParkedModels), and a failing converted test is a STOP",
+   "MSTest 3.1.1 data-row counting: totals assume each DataRow counts as a test; otherwise every total drops by 5",
+   "deep-review SKILL.md check 9 may have been edited by a harness-lane WP merged first; Step 6 then skips and reports",
+   "If WP103 made hooks real before WP104 commits, the ModuleData validation gate could block Step 4 on the laptop (STOP, never bypass)",
+   "Residuals not closed by plan 009: a non-category throw in the game-init batch still aborts it, and ManualPatchApplicator's harmony.Patch calls stay unguarded (verify report D4 G4)",
+   "No in-game evidence of the guard on v1.4.8; the notice text in 12 languages is the unreviewed 1.5.x AI first draft"
+  ]
+ },
+ {
+  "id": "105",
+  "file": "plans/105-composition-root.md",
+  "title": "Plan 105: Add the plan 018 feature-module runner and move WandererAllegiance into the first module",
+  "priority": "P2",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "104"
+  ],
+  "parts": 1,
+  "creates": [
+   "Main/Composition/TaomFeatureModule.cs (TAOM.Composition.TaomFeatureModule, ApplyPhase)",
+   "Main/Composition/FeatureDecls.cs (PatchCategoryDecl, CampaignBehaviorDecl, ModelTarget, GameModelDecl, MissionBehaviorDecl)",
+   "Main/Composition/ModuleRunner.cs (ModuleRunner: RegisterServices, InitializeStatics, RunPhase, RunCampaignStart, Run, TakeFaultSummary)",
+   "Main/Composition/FeatureModuleHooks.cs (FeatureModuleHooks.RunPhase/AddGameStartContent/AddMissionBehaviors/NoticeFor, FaultNotice)",
+   "Main/Composition/FeatureModules.cs (FeatureModules.All: the list later WPs append to)",
+   "TAOM.IoC.Modules and TAOM.IoC.Resolver (internal static members in Main/IoC.cs)",
+   "Six FeatureModuleHooks calls in Main/SubModule.cs at the ProcessLoad, MainMenu, game start, GameInit, FirstMission and mission-behavior anchors",
+   "Main/Features/WandererAllegiance/WandererAllegianceModule.cs (first module; WandererAllegianceIoC.RegisterWandererAllegianceFeature now takes IRegistrator)",
+   "TAOM.Tests/Composition/FeatureModulesTests.cs (double-wiring guards and kernel anchor tests; mission-behavior anchor is 'new AgentColorStoreCleanupBehavior(colorStore)')",
+   "TAOM.Tests/Composition/ModuleRunnerTests.cs and TAOM.Tests/Composition/FeatureModuleHooksTests.cs",
+   "docs/features/composition-root.md with section 'How to port a 1.5.x feature module onto 1.4.x' (the guide downstream WPs cite)"
+  ],
+  "open_risks": [
+   "The runner has never run in-game on v1.4.8; the pilot's campaign behavior moves after LotrIssueSuppression (verified order-free in code; in-game check owed)",
+   "The FeatureModulesTests kernel anchors copy WP104's localized ReportPatchFailures text verbatim. If WP104 landed different text, Step 0.4 STOPs and the integrator decides",
+   "FeatureModuleHooksTests is the first 1.4.x test to build a real CampaignGameStarter or BasicGameStarter or subscribe to OnShowInquiry. It passed on 1.5.x; it has not been run on the laptop",
+   "WP123 (e0ad0db76) and WP130 (d96f349f1) must re-anchor FeatureModulesTests' mission-behavior anchor. Their pack notes, written before D2, may still say to skip FeatureModulesTests",
+   "Fail-closed at campaign start (OwnsSaveData) is dormant and its in-game result is unverified (Patch37 finalizes Module.OnApplicationTick on 1.4.x); D2 makes any such module a STOP",
+   "Downstream packs (111, 112, 113, 117, 118) still carry pre-D2 classifier notes saying to hand-wire modules. Their writers must follow D2 and the porting guide instead",
+   "06252ae2c's one-line FeatureModulesTests speed-up is not ported by anyone: WP104 must skip it because the file does not exist there",
+   "The fault notices are literal English, not localized, as on the 1.5.x tip"
+  ]
+ },
+ {
+  "id": "106",
+  "file": "plans/106-offthread-and-tick-safety.md",
+  "title": "Park off-thread callback writes (#634) and recover the mission tick handshake safely",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "parts": 2,
+  "creates": [
+   "Main/Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs (category Patch91_MissionTickStall; Mission_TickAgentsAndTeamsImp_StallProbe_Patch, MissionState_TickMissionAux_StallProbe_Patch)",
+   "Main/Features/BattleLoadDiagnostics/MissionTickStallProbe.cs (AsyncAgentTick, MissionFrame)",
+   "Main/Features/BattleLoadDiagnostics/MissionTickStallWatchdog.cs",
+   "Main/Features/BattleLoadDiagnostics/ThreadStackCapture.cs (Capture, FormatFrames; reused by WP113)",
+   "IBattleLoadDiagnosticsSettingsProvider.MissionTickStallSamplerEnabled and BattleLoadDiagnosticsSettings.EnableMissionTickStallSampler (MCM 'Enable Battle Freeze Sampler', default ON)",
+   "DeferredCallbackQueue.RunOrDefer(string, Action) and DeferredCallbackQueue(Action<string>? report) constructor",
+   "BehaviorTreeMissionLogic.RunOnMissionThread(string, Action)",
+   "SpatialGrid.ApplyPendingRemovals() and SpatialGrid.PendingRemovalCount (WP124 must keep Remove parked)",
+   "CareerPerkMissionBehavior.EndAbilitiesForFallenHero(string) and private EndAbilitiesNow (WP129 adds #611/#613 lines there)",
+   "MountDespawnMissionBehavior.RecordKill, ForgetAgent, PendingCount",
+   "Main/Features/MissionTickGuard/TickHandshakeRecovery.cs (TickHandshakeRecovery, RecoveryDecision)",
+   "Main/Features/MissionTickGuard/Hooks/Patch91b_MissionTickRecovery.cs (category Patch91b_MissionTickRecovery; MissionTickRecoveryWiring.VerifyAndArm, Mission_OnTick_TickRecovery_Patch, Mission_TickAgentsAndTeamsAsync_LaunchMark_Patch)",
+   "TAOM.Tests/Features/BattleLoadDiagnostics/Patch91WiringTests.cs",
+   "TAOM.Tests/Features/MissionTickGuard/{TickHandshakeRecoveryTests,TickHandshakeRecoveryHarmonyTests,Patch91bMissionTickRecoveryBindingTests}.cs",
+   "docs/features/mission-tick-guard.md",
+   "docs/reviews/rca-offthread-agent-removed-2026-09-22.md",
+   "registry sections ## Patch91_MissionTickStall and ## Patch91b_MissionTickRecovery in docs/reference/harmony-patch-registry.md",
+   "harmony-patches.md thread-table row for [MBCallback(null, true)] callbacks (GetDefendCollisionResults path, MBRandom unlocked per D16)"
+  ],
+  "open_risks": [
+   "New finding, from code reading and not checked in game: PatchShieldPolicy.CompiledProtectedOwnerPrefixes holds 'TAOM' (PatchShieldPolicy.cs:25), but TAOM.dll's Harmony owner is 'com.taom.mod' (SubModule.cs:161). After any missing-API swallow on Mission.OnTick, PatchShield therefore strips Patch91b's prefix and Patch35's postfix. The recovery then stands down, which is safe but degraded. Handed to WP107.",
+   "Between the WP106 and WP107 merges, PatchShield can shield Patch91's TickAgentsAndTeamsImp target. A missing-API swallow there freezes exactly as today's Native2Managed bridge swallow does, so no new path opens. WP107 must add the ExcludedTargetMethods entry in the same merge that drops Mission_TickAgentsAndTeams from the bridge allowlist.",
+   "The handshake hazard has not been observed in game on either line. In-game check 0 can prove or refute it on v1.4.8.",
+   "A throw that recurs every frame skips every agent tick (degraded play, not a freeze). FREEZE-THREADING-01 fix (c) is deferred.",
+   "An exception on the agent-tick thread (route 2) is not recovered. Before WP107 the bridge swallows it and the game still freezes; after WP107 it reaches native, and that outcome is not verified.",
+   "If an earlier WP adds a setting, the settings census changes; Step A4 recomputes it and STOPs if the simulation-relevant count moves.",
+   "D7 assigns the bd1ac8292 lesson to this code WP, an exception to the rule that drops lessons hunks. WP142 must skip that entry when it syncs the lessons."
+  ]
+ },
+ {
+  "id": "107",
+  "file": "plans/107-crash-capture-and-patchshield.md",
+  "title": "Make crash capture thread-aware on 16 allowlisted shims, keep throw sites, and take PatchShield off the shims and the per-call lookup (plans 006, 007, 034)",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "106"
+  ],
+  "parts": 3,
+  "creates": [
+   "Dependencies/Foundation/RethrowStackPreserver.cs (RethrowStackPreserver.PreserveForRethrow, ThrowSiteDataKey 'TAOM.ThrowSite')",
+   "Dependencies/Foundation/ShieldCoverage.cs (ShieldCoverage: seen vs attached counts)",
+   "Dependencies/Foundation/LogRepeatLimiter.cs (LogRepeatLimiter)",
+   "DiagLog.TryLog",
+   "PatchShieldPolicy.ExcludedTargetNamespacePrefixes (gains ManagedCallbacks), IsExcludedTargetNamespace, ExcludedTargetMethods (single entry TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp), IsExcludedTargetMethod, FormatHotMethodSkip, FormatShieldPassSummary",
+   "PatchShield.ResolveShieldedOriginal, PatchShield.WriteRepeatCheckpoint (called from TAOM.Dependencies SubModule.OnBeforeMissionBehaviorInitialize), PatchShield.AttachedCount/SeenCount/UnresolvedOriginalCount",
+   "Main/Features/CrashReport/Hooks/Native2ManagedTargets.cs (Native2ManagedTargets.All with 16 entries, Native2ManagedTargets.Resolve)",
+   "Native2ManagedBridge.HandleOrPassThrough",
+   "AppDomainExceptionHook.MainThreadId and AppDomainExceptionHook.IsOffMainThread",
+   "ICrashReportService.HandleException(Exception, string, bool offMainThread = false)",
+   "CrashBundleThrottle.IsLoggedOccurrence (occurrences 1, 2, then powers of ten; consumed by WP109)",
+   "BattleLoadStallWatchdog.RequestStallBundle(ICrashReportService, string)",
+   "CustomAttacksUtils.ComposeSyntheticCombatLog (internal static)",
+   "Test helpers TAOM.Tests/Features/CrashReport/RecordingCrashService.cs (RecordingCrashService, ReadOnlyDataException) and RethrowProbe.cs",
+   "TAOM.Tests/Infrastructure/Dependencies/PatchShieldAgentTickExclusionBindingTests.cs",
+   "HarmonyPatchBindingTests.DiscoverPatchTypes and MergeSpec made internal static",
+   "docs/reviews/rca-shield-rethrow-stack-2026-09-22.md"
+  ],
+  "open_risks": [
+   "A managed throw in any of the 231 shims taken off capture (including the agent tick) now reaches native; whether it unwinds into a Patch37 finalizer, crashes, or leaves tickCompleted false and freezes is UNVERIFIED",
+   "A release that pairs a new TAOM.dll with a stale TAOM.Dependencies.dll throws TypeLoadException at the first capture (the public build already pairs a 2026-09-30 TAOM with a 2026-09-14 Dependencies, E3 line 2)",
+   "ResolveShieldedOriginal's stack-frame lookup never ran on Mono (Proton)",
+   "The watchdog bundle now records its Mission and Campaign sections as skipped, so stall triage relies on the STILL LOADING marker and the phase log",
+   "PatchShield still wraps Mission.OnTick and MissionState.TickMissionAux when anything patches them, and its strip removes TAOM's own (unprotected com.taom.mod) prefixes after a missing-API swallow",
+   "The A6.1 merge and the WP106 rule-bullet edit assume WP104's and WP106's documented text; drift there falls back to the stated resolution rules or STOP",
+   "The plan's 1.5.x pin is e45f6df2c; origin moved to ca1cba35f during planning (only a Patch141 exclusion entry and an unrelated rule paragraph touch these files)"
+  ]
+ },
+ {
+  "id": "108",
+  "file": "plans/108-missing-body-load-hang.md",
+  "title": "Guard the missing collision-body infinite wait (Patch90) and gate missing bodies and meshes at the desk",
+  "priority": "P0",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "parts": 2,
+  "creates": [
+   "Main/Features/PreloadBodyGuard/{IPreloadBodyGuardService,PreloadBodyGuardService,PreloadBodyGuardIoC}.cs and Hooks/PreloadHelper_WaitForMeshesToBeLoaded_Patch.cs (Harmony category Patch90_PreloadBodyGuard, hand-wired in Main/IoC.cs and Main/SubModule.cs before Patch62 via TryPatchCategory)",
+   "TAOM.Tests/Features/PreloadBodyGuard/PreloadBodyGuardServiceTests.cs (7) and PreloadBodyGuardBindingTests.cs (1); CoopVetoClassificationTests row PreloadHelper_WaitForMeshesToBeLoaded_Patch",
+   "tools/audit_armory_refs.py (05bd0a730 shape + loose-first tpac list + has_loose_tree, Summary.catalogue_checked) and tools/tests/test_audit_armory_refs.py (10 tests)",
+   "tools/validate_mesh_refs.py at the 7bbe6f4de end state: module_tpacs, loose-first tpac_paths_for_modules, CraftingPiece-aware _ITEM_OPEN_RE, find_mesh_name_owners, check_names, --check-name (1.4.x troll KNOWN_DEAD_MESHES kept unless B5 retires them)",
+   "tools/validate_moduledata.py: import re, BODY_CODE=MISSING_COLLISION_BODY, MESH_CODE=MISSING_VISUAL_MESH, BORROWED_BODY_CODE=COLLISION_BODY_BORROWED, _ART_MODULES, _loaded_tpacs, missing_collision_body_issues, borrowed_body_issues, _SHARED_BODY_BY_DESIGN, _kit, _twin_owner, both passes called from main()",
+   "tools/taom_schema.py: Validator.missing_ref_roots holds Paths",
+   "tools/tests/test_validate_moduledata.py: imports io/mock/redirect_*, _run_main helper, MissingCollisionBodyTests, CommitGateCoverageTests._named_codes/_unreached_passes/test_every_issue_pass_is_reached_from_main (163 tests)",
+   "tools/tests/test_collision_body_borrowed.py (14), tools/blender/add_collision_body.py and tools/tests/test_add_collision_body.py (9)",
+   ".claude/hooks/check-moduledata-validation.sh --code MISSING_COLLISION_BODY and --code COLLISION_BODY_BORROWED; .claude/rules/moduledata-validation.md rows for the three codes",
+   "docs/features/preload-body-guard.md, docs/features/armory-ref-audit.md, docs/reviews/rca-preload-body-guard-2026-09-15.md, docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md, harmony-patch-registry Patch90 section, two Patch90 lessons in docs/reviews/lessons/harmony-il.md",
+   "docs/audits/armory-ref-audit.md and its docs/audits/README.md row (only when Step B5 ran on the public Armory)"
+  ],
+  "open_risks": [
+   "The public 2026-09-29 Armory has never been checked on this line. If Step B4/B5 finds a missing or borrowed body, Part B is BLOCKED: the new gate would deny every later ModuleData commit until the Armory is fixed. The xml-data lens names 22 Gondor weapons and shields as the unverified candidates",
+   "D20 dependency: if the laptop Armory is still v2.0.26 when WP108 runs, Step B5 (report, allowlist decision) is deferred and body/mesh verdicts are void",
+   "Hook budget: WP103's planning measured the hook's validator command at 22.1 s on the laptop; the two new passes add roughly two extract_refs runs (about 3.5 s each on the desktop). If the warm total nears 45 s the hook asks instead of passing: report-only, owned by the harness lane",
+   "Cross-WP conflicts expected and documented: WP136 (fa8c06f82 SCHEMA_INVALID pass and its test imports meet this WP's validator insertions), WP137 (must skip 719074072's borrowed-body hunk), WP138 (d6b537092 docstring line in validate_mesh_refs.py), WP142/WP143 (bookkeeping rows left for them: tools/README, feature-map, INDEX, CLAUDE.md, /armory-audit skill, session-start drift line)",
+   "PreloadBodyGuardBindingTests must actually run (game assemblies loaded); an inconclusive result is an environment failure, not green",
+   "The guard drains collision-body names only; a mesh whose CheckResources never reaches zero still spins the same loop (native, unverified, no known trigger)",
+   "1.4.x BattleLoad comments and triage wording (MissionState_TickLoading_BattleLoad_Patch.cs:12-16, battle-load-diagnostics.md:94, harmony-patch-registry.md:316, triage_battle_load.py:1104-1113) wrongly attribute a polls=1 TickLoading stall to this wait; left to WP113",
+   "Plan length (1,599 lines) exceeds the 1,200-line aim because the doc and code edits are given as exact, dry-run-tested scripts so that a smaller executor model does not have to improvise"
+  ]
+ },
+ {
+  "id": "109",
+  "file": "plans/109-mission-start-and-skeleton-guards.md",
+  "title": "Survive mission-start throws (no endless reload) and guard the engine's per-frame skeleton buffers",
+  "priority": "P0",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "106",
+   "107"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/MissionPerf/TickProfilerTranspiler.cs (CallSwap, TickProfilerTranspiler.Rewrite; verbatim 1.5.x tip, WP117 reuses)",
+   "Main/Features/MissionPerf/TickProfileLines.cs (trimmed: StatusTag, BuildSiteCountWarning, BuildHelperMismatchWarning, BuildRewriteFault; WP117 replaces with the full file)",
+   "Main/Features/MissionPerf/AnimMemory/ClipBudgetSignature.cs and PeSectionTable.cs (WP117 reuses)",
+   "TAOM.Tests/Features/LoadTimeStamps/RecordingLogger.cs (byte-identical to 346f3e093; WP118's pick meets an identical file)",
+   "TAOM.Tests/Features/MissionPerf/AnimMemory/SyntheticNativeImage.cs and ClipBudgetSignatureInstalledBinaryTests.cs (v1.4.8 KnownBuilds row)",
+   "TAOM.Tests/Migration/NativePinGateTests.cs (tip shape; WP117 must not re-add)",
+   "Main/Features/MissionStartGuard/** with MissionStartGuardModule (category Patch103_MissionStartGuard, GameInit) and FeatureModules.All entry",
+   "Main/Features/SkeletonBuffer/** with SkeletonBufferModule (MainMenu install, watch mission behavior) and FeatureModules.All entry; TAOM.Tests/Features/SkeletonBuffer/SkeletonBufferInstalledBinaryTests.cs KnownBuilds v1.4.8 row",
+   "Main/Adapters/{I,}MissionStartGuardAdapter.cs, {I,}SkeletonBufferEngineAdapter.cs, {I,}SkeletonBufferMemoryAdapter.cs",
+   "Main/SubModule.cs: private void AddTaomMissionBehaviors(Mission mission) (new home of TAOM's mission wiring) and the BattleLoad closer in OnMissionBehaviorInitialize's finally",
+   "CrashReportSettings.SurviveMissionStartFailures, SkeletonBufferGuard, SkeletonBufferWatch, ThrowOnNextMissionAfterStart; CrashReportDevTriggerMissionBehavior.AfterStart",
+   "Strings taom_mission_start_guard_notice and taom_skeleton_buffer_warning in taom_module_strings.xml",
+   "VANILLATUNING PORTIONS section in Main/_Module/THIRD-PARTY-LICENSES.txt and the 'Yotthani VanillaTuning' provenance-register row and detail section (WP120 extends both)",
+   "docs/features/mission-start-guard.md, docs/features/skeleton-buffer-guard.md (with a 'Native layout (v1.4.8)' section), Patch103 section in harmony-patch-registry.md",
+   "engine-bump SKILL.md Phase 4 item 7 (native address pins) and the harmony-patches.md 'Prefix and finalizer pair' rule bullet"
+  ],
+  "open_risks": [
+   "Whether CrashReportSettings.Instance is non-null at the first main-menu phase on 1.4.x (otherwise the guard toggle is ignored and the guard installs by default): in-game check 2",
+   "Whether 1.4.8 battles ever reach the skeleton pool limit is unproven; neither mechanism is shown in E3/E4, so this WP may not fix the reported freezes",
+   "MissionStartGuardBindingTests and SkeletonBufferWiringTests read MCM attributes by type; expected to work as on 1.5.x (same compile-only MCM reference) but a runtime FileNotFoundException for MCMv5 is a STOP",
+   "Depends on exact WP104/WP105/WP107 shapes (RepoPaths.ReadSource, FeatureModuleHooks calls, PatchShieldPolicy exclusion API); Step 0.3 STOPs if any is absent",
+   "Until WP122 lands plan 008's runsettings, an unlisted engine build reads Skipped, not Failed, in the binding gate",
+   "With the guard off, a throw reloads the same mission and TAOM's behaviours are added twice (untested on either line)",
+   "Merge conflicts expected for the integrator in THIRD-PARTY-LICENSES.txt and provenance-register.md (WP115, WP120), FeatureModules.All and SubModule.cs (WP111, WP117, WP120), and the settings fingerprint counts",
+   "VanillaTuning's behaviour on v1.4.8 (and its stand-aside on the SkeletonBufferModule type) is unknown"
+  ]
+ },
+ {
+  "id": "110",
+  "file": "plans/110-war-of-the-ring-fixes.md",
+  "title": "Fix the War of the Ring: real Full War declarations, per-campaign reset, settings migration, honest victory",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "103",
+   "104"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Core/Persistence/SyncDataChunker.cs (SyncDataChunker.SyncChunks, Split, Join, Utf8ByteLength, MaxChunks, MaxChunkChars, EngineEntryByteLimit); deletes Main/Features/WarOfTheRingMomentum/MomentumSyncChunker.cs",
+   "TAOM.Tests/Infrastructure/EngineDataStore.cs (content of 1.5.x ea8f2ad52, citation v1.4.8; WP122 keeps it on add/add)",
+   "IWarOfTheRingService.ResetForNewSession(), ReconcileDeclaredWars(), DescribePhaseDays()",
+   "IAllianceAdapter.HasDeclaredWar(string, string); AllianceAdapter.DeclareWar guarded on the stored stance",
+   "WarOfTheRingBehavior constructor optional Func<float> elapsedDays; constructor resets the service",
+   "WarOfTheRingMomentumBehavior built with new per campaign in SubModule.RegisterDiplomacyAndConflict; its container registration removed; constructor resets the store",
+   "WarEventSnapshotAdapter.PlayerFought(MobileParty, PartyBase) internal static; constructor no longer takes IEnlistmentStateQuery",
+   "CareerQuest.CreditsSettlementCapture, PlayerFoughtOnCapturingSide, IsPlayersCapture (internal static)",
+   "RaidOutcomeSnapshot.VillageLooted",
+   "IMomentumQueryService.VictoryEnabled and VictoryLead",
+   "TaomSettings renames: WarPhase1TriggerDay, WarPhase2TriggerDay, AiLordPartyScale, AiLordPartyFlatBonus, AiGarrisonScale, AiPartyFoodRelief, AiPartyWageRelief, FieldCommissionOffersPerBattle, FieldCommissionMeritToPromote, EnableSmartCavalryCharge, EnableOobFormationPresets (also ICompanionTacticsSettingsProvider member), BanditPartiesPerHideoutCap, BanditStartingHideoutsPerFaction",
+   "tools/check_mcm_default_flips.py, tools/tests/test_check_mcm_default_flips.py, tools/mcm_default_flips_allowlist.json (4 entries; WP123 must delete the EnableEnlistmentDiagnostics entry when it ports 890fe29de)",
+   ".ai/verification.md and .ai/routing.json check id mcm-defaults; /release skill line running the gate",
+   "TAOM.Tests/Infrastructure/McmRenamedDefaultsTests.cs",
+   "Tests: TAOM.Tests/Features/Diplomacy/WarOfTheRingWiringTests.cs, WarOfTheRingBehaviorSessionResetTests.cs; TAOM.Tests/Features/WarOfTheRingMomentum/WarOfTheRingMomentumWiringTests.cs, WarOfTheRingMomentumBehaviorSessionResetTests.cs, WarOfTheRingMomentumBehaviorSyncDataTests.cs, WarOfTheRingMomentumSiegeGateTests.cs; TAOM.Tests/Core/Persistence/SyncDataChunkerTests.cs, SyncDataChunkerSyncTests.cs; TAOM.Tests/Features/Enlistment/AttributionAudit/EnlistedSiegeCreditTests.cs",
+   "Localization key taom_wotr_victory_lead (English presence rows in 12 languages)",
+   "docs/reviews/rca-wotr-session-reset-2026-10-08.md and docs/reviews/rca-wotr-phase2-wars-2026-10-08.md with 1.4.x port notes",
+   ".claude/rules/csharp-architecture.md: constructor-reset rule (9ab3952a7) and the MCM rename-never-flip doc requirement"
+  ],
+  "open_risks": [
+   "The report's actual trigger stays unproven without the reporter's taom_debug log; the plan closes all reachable code paths and makes the deciding log line diagnostic",
+   "Full War now declares real wars: vanilla asks non-Hostile permanent allies to join, so a ruler player may see several call-to-war prompts at the transition (in-game check 2)",
+   "Renaming 13 MCM settings resets any value a player customised; hints say so",
+   "C2's both-sides start rule means a side wiped out before Full War yields no momentum war instead of a Free elimination win (judged safer than an instant win when alignment data is broken)",
+   "The B1 gate prediction (13 FLIP, 4 ALLOWED, 19 tags) came from an in-memory replica of the tool; the real run is authoritative and STOPs on any difference",
+   "Enlisted siege credit relies on the main party being on the commander's siege map event side (#557 exists on 1.4.x; end to end unverified in game)",
+   "Test totals assume MSTest counts each DataRow; executors report per-class counts if totals differ",
+   "Main/SubModule.cs edits may textually conflict with other wave 1 WPs at integration time",
+   "The new popup label is English in all 12 languages until a paid /localize run"
+  ]
+ },
+ {
+  "id": "111",
+  "file": "plans/111-battle-freeze-mitigations.md",
+  "title": "Plan 111: Cap battle corpses, end AI battles stuck at N vs 0, and make mission behaviour setup run",
+  "priority": "P0 (Part A, #701); P1 (Parts B #748 and C #606/#699)",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "109"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Adapters/IGraphicsOptionsAdapter.cs and Main/Adapters/GraphicsOptionsAdapter.cs in the exact c17541f2c shape (WP117 cherry-picks 6eb2e1b90 and 685c6a1e0 onto it)",
+   "Main/Features/BattleCorpses/ (BattleCorpsesModule, BattleCorpsePolicy, BattleCorpseLimits, BattleSettingsAdvisor, BattleSettingsAdviceNotifier, IBattleCorpseSettingsProvider, BattleCorpseSettingsProvider, Hooks/BattleCorpseMissionBehavior)",
+   "TaomSettings MCM keys EnableBattleCorpseCleanup, BattleCorpseFadeSeconds, BattleCorpseCap, ShowBattleSettingsAdvice, ApplyRecommendedBattleSettingsAction (group Performance/Battle Corpses, GroupOrder 55); settings fingerprint counts +5 total / +3 simulation-relevant",
+   "Localization keys taom_bc_advice_title/body/apply/keep/done/failed in taom_module_strings.xml plus English seed rows in all 12 std_taom_module_strings_*.xml",
+   "docs/features/battle-corpses.md with the v1.4.8 native facts (setters 0x70C160/0x70C1B0, reset 0x5CF3C0, limiter 0x5D3A90, jump table 0x5D3BB4)",
+   "Main/Adapters/IStuckBattleAdapter.cs, IStuckBattleEventAdapter.cs, StuckBattleAdapter.cs, StuckBattleEventAdapter.cs",
+   "Main/Features/MapEventGuard/StuckBattleModule.cs, StuckBattleService.cs, StuckBattleSnapshot.cs, StuckBattleVerdict.cs, Hooks/StuckBattleCampaignBehavior.cs, Cheats/StuckBattleCheats.cs (console command taom.print_stuck_battles)",
+   "FeatureModules.All entries new Features.BattleCorpses.BattleCorpsesModule() and new Features.MapEventGuard.StuckBattleModule()",
+   "TAOM.Tests/Migration/MissionBehaviorLifecycleTests.cs (BindingVerification ratchet; KnownOverriders holds only CustomBattleTeamFixBehavior)",
+   "PlayerMountAdapter.HeroBattleEquipmentOf(BasicCharacterObject?) internal seam",
+   ".claude/rules/harmony-patches.md section 'MissionBehavior lifecycle for a behavior TAOM adds' (v1.4.8 lines) and .claude/rules/adapters.md 'campaign statics are computed getters too' paragraph (WP143 reconciles)",
+   "docs/reference/provenance-register.md row and section 'Stuck Battle Guard (UNCLEARED)'",
+   "docs/reviews/rca-battle-corpses-2026-10-01.md, rca-stuck-battle-guard-2026-10-06.md, rca-siege-dismount-custom-battle-2026-09-30.md (1.5.x records, linked from the feature docs)"
+  ],
+  "open_risks": [
+   "Siege Dismount runs for the first time on 1.4.x after Part C with its existing defaults (enabled, mode 3 Auto Remount): every campaign siege dismounts and later remounts the player; only the mounted-siege in-game check confirms it",
+   "The corpse cap and fade is a mitigation: 'corpses freeze the game' is a 1.5.x hypothesis; the native mechanism is verified on v1.4.8 but the freeze link is not",
+   "The native facts were read from the laptop's DLL only (14,185,944 bytes); the desktop install must be the same build, which Step 0 checks",
+   "The vanilla DestroyPartyAction quest-party rationale is UNVERIFIED on v1.4.8 (no detach found on its destroy path); the exclusion is kept as the safe side",
+   "The stuck-battle enlisted-commander skip relies on the hourly listener order (MbEvent runs the last-registered listener first) and on WP105 adding module behaviours after the hand-wired ones",
+   "Whether removing a corpse frees its agent slot is unknown until [MissionPerf] (WP117) exists",
+   "The advice notice reads in English in all languages until the WP135 translation run",
+   "A swept battle finishes through OnBattleWon like a natural win, so War of the Ring momentum and MapEventEnded listeners will see it"
+  ]
+ },
+ {
+  "id": "112",
+  "file": "plans/112-crash-robustness.md",
+  "title": "Port the crash and NRE guards 1.5.x added on shared code paths",
+  "priority": "P0",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "107"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Adapters/HeroCharacterStateAdapter.cs and IHeroCharacterStateAdapter.cs (IStaleCharacterAdapter.FindHollowHeroCharacters)",
+   "IStaleCharacterRepairService.ReportHollowHeroCharacters/RepairOffspringParent/ReportBirthAfterRepair; StaleCharacterRepairService.ParentRepairCheckId and BirthCompletedCheckId with private Check/Swallowed helpers writing the 1.5.x [Check]/[Swallowed] line format through IModLogger (WP139 swaps to IOutcomeLog and adds tools/ingame_checks/1076.toml)",
+   "Main/Features/StaleCharacterRepair/Hooks/Patch83_OffspringParentRepair.cs (HeroCreator.DeliverOffSpring prefix+finalizer in category Patch83_StaleCharacterRepair)",
+   "Main/Features/BardTownGuard/** (BardTownGuardModule, category Patch110_BardTownGuard, BardTownPickHook, BardTownTranspiler) plus one FeatureModules.All entry; docs/features/bard-town-guard.md",
+   "SupplyCaravanService.AddLandPath (internal static) and TAOM.Tests/Features/SupplyLines/SupplyNativeQueryTests.cs (WP118 adds the two IL-fingerprint tests)",
+   "TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionMapEventGateTests.cs (distinct from WP123's AlignmentDesertionBehaviorTests.cs)",
+   "Main/Composition/MainMenuStep.cs (MainMenuStep.Run) and TAOM.Tests/Composition/{MainMenuStepTests,SubModuleMainMenuHookTests}.cs",
+   "Main/Features/BanditManagement/HideoutClanGuard.cs and Hooks/Patch125_HideoutClanGuard.cs (category Patch125_HideoutClanGuard, applied in SubModule.cs beside Patch86)",
+   "TAOM.Tests/Features/BanditManagement/BanditHideoutLiveDataTests.cs (live TAOM/TAOM_Map pairing gate)",
+   "Narrowed guards: Patch69_TournamentEndGuard.Settle/ShouldSwallow, Agent_CheckToDropFlaggedItem_Guard_Patch.UseLogger, GauntletSceneNotification_OpenScene_Guard_Patch.UseLogger, Army_FindBestGatheringSettlementAndMoveTheLeader_Patch.ShouldContain/IsKnownDeadEnd with a Priority.Last __state prefix, NarrativeHorseGuardPatchHelper.CanSpawnMount and the CharacterCreationNarrativeStageView_SpawnNonHuman_Patch bool Prefix (WP139's cd4fb3719 edits the Patch49 and Patch20 files)",
+   "TAOM.Tests/Infrastructure/ContainmentFinalizerRethrowTests.cs, TAOM.Tests/Features/ArmyTargeting/Patch49GatheringNreRuleTests.cs, TAOM.Tests/Features/CharacterCreation/NarrativeMountSpawnGuardTests.cs",
+   "TAOM.Tests/Core/MainPartyNullCheckScanTests.cs (WP133's 1888b6f28 drops the PlayerEquipmentAdapter AliasedSites row)",
+   "TAOM.Tests/Features/CareerSystem/MutationParamsTests.cs; plan 002 closed in plans/README.md",
+   "Registry sections Patch110_BardTownGuard and Patch125_HideoutClanGuard; .claude/rules/adapters.md paragraphs on hollow characters and PartyBase.MainParty"
+  ],
+  "open_risks": [
+   "HeroCharacterStateAdapterTests and Patch83HooksHarmonyTests were tuned on v1.5.6 engine objects; a v1.4.8 behaviour difference makes them fail (plan STOPs instead of editing production)",
+   "WP107's plan did not exist at writing time: the RethrowStackPreserver signature is assumed from c79a58521 and checked in Step 0 (STOP if absent or different)",
+   "The Patch69 hand-merge depends on the exact comment lines WP106 adds; a different WP106 shape needs care at merge time",
+   "Expected test counts assume MSTest 3.1.1 expands each DataRow into its own result",
+   "The seven single-town cultures were measured on the laptop's 2026-09-07 TAOM_Map; the public build's TAOM_Map pairing is unknown",
+   "patch-targets.md stays stale until WP137 regenerates it; WP137's pack does not yet mention the .ai/verification.md api-snapshot row this plan defers to it",
+   "Part B adds more TAOM call sites into TAOM.Dependencies (RethrowStackPreserver); a release with a stale TAOM.Dependencies.dll (E3's BuildStamp MISMATCH) would fail at JIT of these finalizers",
+   "AiVisitSettlementBehavior claim in the Patch125 registry text is a 1.5.x reading, marked not re-checked on v1.4.8"
+  ]
+ },
+ {
+  "id": "113",
+  "file": "plans/113-shader-stall-and-freeze-watchdog.md",
+  "title": "Tell a slow shader compile from a wedge: honest triage, a main-thread freeze sampler, notices that claim only what they can see",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "106"
+  ],
+  "parts": 5,
+  "creates": [
+   "tools/triage_battle_load.py end state from 1.5.x (_render_silence, RENDER_WAIT_SILENCE_THRESHOLD_S, classify_post_load_freeze, stuck_at_zero) plus new session_render_rate and [Freeze]/[ShaderCache] parsing; JSON keys session_render_rate, freeze, shader_cache_rewritten",
+   "Main/Features/ShaderCompileNotice/{ShaderCompileNotice,ShaderCompileNoticeEntry,ShaderCompileNoticeTexts,ShaderCompileNoticeWindow,ShaderCompileProgress,ShaderCacheState,RenderWaitNoticeHost}.cs (ShaderCompileNoticeEntry.ActiveModuleIds, ShaderCompileNoticeWindow.DetailText)",
+   "Main/Features/BattleLoadDiagnostics/{MainThreadHeartbeat,MainThreadFreezeWatchdog,FreezeSamplePolicy,FreezeLog,RglLogLocator,IRglCompileTail,RglCompileTail,RenderWaitNotice,StallEvidenceReader,FreezeDumpPolicy,FreezeDumpWriter}.cs and Domain/StallEvidence.cs; StallMarkerInfo.Evidence",
+   "MainThreadHeartbeat.Instance.Beat() stamped in SubModule.OnApplicationTick (one shared per-frame heartbeat later WPs should reuse)",
+   "MCM settings EnableMainThreadFreezeSampler (default true) and WriteFreezeDump (default false); provider members MainThreadFreezeSamplerEnabled, FreezeDumpEnabled; BattleLoadDiagnosticsSettings fingerprint count +2",
+   "Log contracts (twin-pinned C#/Python): [Freeze] sample, recovered and started lines; [ShaderCache] CoreShaders/D3D11 rewrittenThisStart line; [ShaderNotice] lines",
+   "System.Windows.Forms and System.Drawing references in Main/TAOM.csproj",
+   "docs/features/shader-compile-notice.md; new sections in docs/features/battle-load-diagnostics.md (freeze sampler, render-wait notice, loading-screen guidance, optional dump); D4 record in docs/features/shader-precompilation.md",
+   "String keys taom_shader_notice_title_total/_title_count/_detail, taom_rw_notice_compiling_title/_compiling_detail/_stalled_title/_stalled_detail, taom_bld_stall_compiling/_stuck/_render_unknown"
+  ],
+  "open_risks": [
+   "WP106 may name or shape ThreadStackCapture, MissionTickStallProbe or the MissionTickStallSamplerEnabled setting differently from f75288ebf; the plan STOPs at A0 if the expected symbols are absent",
+   "That rgl_log_<n>.txt is named by the process id is UNVERIFIED on v1.4.8; the locator falls back to the newest non-errors log written since process start",
+   "Engine log flush latency is UNVERIFIED: a buffered rgl log could make the render-wait notice show 'no compiles' during a working compile (mitigated by the 60 s no-progress threshold and cautious wording)",
+   "Whether native keeps calling the managed tick while the game is minimized or unfocused is UNVERIFIED; if not, alt-tabs over 10 s would log [Freeze] lines and take stack samples (in-game check owed)",
+   "Thread.Suspend plus StackTrace on a main thread blocked in native code is expected to return <capture failed> or an empty stack, so [Freeze] stacks may not name the native frame; Part E's dump covers that only when a player opts in",
+   "The heap gate is calibrated on one player's log (E4); a save phase that allocates little for 10 s could still be sampled, with the small documented mid-GC suspend risk",
+   "OS windows over exclusive fullscreen may be invisible or could disturb focus (same owed check as the 1.5.x notice)",
+   "Settings-count hot spot: SettingsFingerprintTests and the two co-op docs are edited by many WPs; the executor must apply +1 to the live numbers per part",
+   "D4 keeps ShaderPrecompilation active with the known Order of Battle fallback hazard (FinishDeployment inside OnMissionTick) left open; WP144 records it as a fix item"
+  ]
+ },
+ {
+  "id": "114",
+  "file": "plans/114-save-growth-investigation.md",
+  "title": "Name what an in-game reload adds to every later save, with probes and a repro matrix, before any fix",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "104"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/SaveLoadDiagnostics/Domain/SaveLoadTokens.cs (SaveLoadTokens: LoadRequested, ProcessContext, SaveCollected, LoadCounts, RuntimeHost; PreviousCampaignState)",
+   "Main/Features/SaveLoadDiagnostics/Domain/BehaviorRecordStats.cs (public BehaviorRecordStats.Measure, BehaviorSaveSample, BehaviorSaveSummary)",
+   "Main/Features/SaveLoadDiagnostics/Domain/SaveGraphCensus.cs (SaveGraphCensus.Walk, FormatSummary, FormatTypeLines, FriendlyName)",
+   "Main/Features/SaveLoadDiagnostics/Hooks/SaveContext_CollectObjects_Patch.cs (category Patch61_SaveLoadDiagnostics_SaveGraph; SaveCollected + census)",
+   "Main/Features/SaveLoadDiagnostics/Hooks/LoadContext_Load_Patch.cs (category Patch61_SaveLoadDiagnostics_LoadCounts)",
+   "Main/Features/SaveLoadDiagnostics/Hooks/CampaignBehaviorDataStore_SaveBehaviorData_Size_Patch.cs (category Patch61_SaveLoadDiagnostics_BehaviorSize)",
+   "Main/Features/SaveLoadDiagnostics/Cheats/SaveCensusCheats.cs (console command taom.arm_save_census)",
+   "ISaveLoadDiagnosticsService members: BeginLoadAttempt(string, bool), LoadsThisProcess, InGameLoadsThisProcess, ProcessContext(), NoteGameEnded(object), RecordBehaviorSave(string, string, BehaviorRecordStats, double), ArmSaveCensus(), TakeSaveCensusRequest(out string)",
+   "SaveLoadPhase values Runtime, LoadCounts, SaveCollected, SaveBehaviorData, SaveCensus",
+   "ContainerLoadData_Fill_Patch and HeaderLoadData_Readers_Patch restructured into per-target nested site classes (Resolve/Report, constant Step names, no __originalMethod)",
+   "tools/diff_save_census.py and tools/tests/test_diff_save_census.py",
+   "docs/investigations/save-growth-2026-11.md (repro matrix and decision table; input to the follow-up fix plan)",
+   "TAOM.Tests/Features/RaceAge/ShippedFertilityConfigTests.cs",
+   "docs/reviews/rca-race-fertility-2026-09-19.md",
+   "TAOM.Tests/Features/SaveLoadDiagnostics/{SaveLoadTokensTests,BehaviorRecordStatsTests,SaveGrowthProbeWiringTests,SaveLoadHotFinalizerTests,SaveGraphCensusTests}.cs"
+  ],
+  "open_risks": [
+   "Census pass time and transient memory on a 2M+ object save are estimates (under 1 s), not measured",
+   "The #628 RED set (8 failing tests) is a planning-time reading of the tests against 1.4.x code and data, not a run",
+   "Same-paragraph merge conflict with WP110 in gamemodels-services.md, and #764 pointer wording depends on WP110/WP114 merge order",
+   "loadsThisProcess counts load attempts (a load cancelled at the module prompt included); prevCampaign=alive is only meaningful at GameLoaded/GameInitializationFinished and with gen2Since above 0",
+   "Where ButterLib exposes its Save System subsystem toggle on 1.4.8 is UNVERIFIED (optional repro cell 6)",
+   "Size of the LOAD-TIME-03 part 1 saving is UNVERIFIED (bounded estimate 0.5-2 s per load)",
+   "Whether Mono reports Environment.Version 4.0.30319.42000 like .NET Framework is UNVERIFIED; the FrameworkDescription token settles the host",
+   "Main/SubModule.cs is a hot single-owner file edited by most wave-1 WPs; integrator merges in README order",
+   "The referrer probe (ObjectSaveData/ContainerSaveData.GetChildObjects) is deferred; a follow-up must not patch them permanently because PatchShield adds a per-call finalizer"
+  ]
+ },
+ {
+  "id": "115",
+  "file": "plans/115-release-integrity.md",
+  "title": "Make a 1.4.x release reproducible: build identity, a gated packager, paired Dependencies, a pinned TAOM_Map",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "107",
+   "109"
+  ],
+  "parts": 3,
+  "creates": [
+   "Directory.Build.props target TaomStampWorkingTreeState (stamp suffix .dirty/.nogit/nogit; WP122 edits the props after it)",
+   "tools/package_release.py: --require-build, --game-root, require_build, read_build_stamp, check_build_stamp, stamps_dirty_trees, jit_optimization plus scene-sack/module-sack/JIT reports, is_module_sack, RETIRED_BINARIES/retired_binaries, test_troop_files, parse_shader_report/missing_armory_shaders, GAME_PASS_DIR/game_pass_bins, release_number_problem, tag_on_another_line, installed-manifest check (WP140 builds on it)",
+   "tools/ingame_ledger.py and tools/tests/test_ingame_ledger.py with the tag..HEAD issue filter (WP139 builds on it)",
+   "tools/check_release_pairing.py and tools/tests/test_check_release_pairing.py; tools/release_pins.json format (recorded by the maintainer)",
+   "Main/Core/Diagnostics/BuildStampReport.cs: EngineReport, internal ReadInformationalVersion, DescribeBuildConfiguration, ReadBuildConfiguration, BuildReportFromParts, TryParseCommit; [BuildStamp] line format with config=/jitOpt= tokens and commit-aware verdict (WP139 ingame_verdict, WP117 perf_runs parse it)",
+   "[Engine] and '[Shutdown] clean module unload' log lines in Main/SubModule.cs",
+   "IdentitySnapshot.TaomBuild field, LogTailSnapshot DiagLogPath/DiagLogTail, diag.log in crash bundles, manifest 'TAOM build:' line",
+   "FileLogger.DefaultRetainedLogs = 30",
+   "FailOnGamePassStagingInModule target in Main/TAOM.csproj and Dependencies/TAOM.Dependencies.csproj",
+   "/release Phase 8 'Build and package at the tag' and Phase 1 items 6-7 in .claude/skills/release/SKILL.md; release-process.md gate, pairing and prune text",
+   "Main/_Module/THIRD-PARTY-LICENSES.txt RUNTIME LIBRARIES block and HEIR OF NUMENOR section; DryIoc, Json.NET and Agent Reach provenance rows",
+   "TAOM.Tests BundledDependencyManifestTests.MainThirdPartyLicenses_NameTheShippedRuntimeLibraries"
+  ],
+  "open_risks": [
+   "Part B cannot start until the maintainer applies the Directory.Build.props target (M1); an unattended executor hands off at the Part A boundary",
+   "The Game Pass staging removal makes ./build.ps1 fail in any checkout that still holds Main/_Module/bin/Gaming.Desktop.x64_Shipping_Client (present on this laptop) until M2",
+   "check_release_pairing.py refuses the laptop TAOM_Map (all 15 VILLAGES rows missing, recruitment_pools/gondor.json names four of them); whether the public channel TAOM_Map has them is unverified (desktop), so the first v2.4.0 release may need map work before a pin can be recorded",
+   "The shader gate fails closed when the channel Armory ships no shader_compile_report.log; its presence in the public channel Armory is unverified (desktop); after WP101 swaps in the public Armory the laptop check may refuse",
+   "WP109's THIRD-PARTY-LICENSES.txt VanillaTuning section shape is unknown at planning time; C2 handles the two expected shapes and STOPs otherwise",
+   "C5 inserts release-doc text by anchors after WP102 renumbers Phase 1 and the release-process.md steps; drift from WP102's planned edits needs judgment",
+   "The 1.5.x claim that the engine compiles shaders only from the game folder's Shaders/Sources is UNVERIFIED on v1.4.8; B5 stays conservative (refuses any taom_ shader)",
+   "[Engine] line calls ModuleHelper in OnSubModuleLoad; correct ordering on v1.4.8 is unverified until the in-game check",
+   "Plan length is about 1,280 lines, slightly above the 1,200 target"
+  ]
+ },
+ {
+  "id": "116",
+  "file": "plans/116-hook-gate-end-state.md",
+  "title": "Transplant the 1.5.x git-gate end state (both shells, Python push judge, visible reminders, config and dangerous-git guards)",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "103"
+  ],
+  "parts": 3,
+  "creates": [
+   ".claude/hooks/_pushjudge.py (Judge class; force-push judge under a 3.0 s deadline)",
+   ".claude/hooks/_stop_reminder.sh (taom_stop_hook_active, taom_stop_block)",
+   ".claude/hooks/_shellwords.py at the 1.5.x 88e805450 end state (posix|segments|verdict|git-repo modes; to_posix, push_candidates, git_invocations, strip_heredocs, decode_ansi_c, expand_heredoc, read_payload, read_cwd); already written by WP103 in the expected case",
+   ".claude/hooks/_pybin.sh taom_hook_command (plus TAOM_HOOKS_DIR; keeps WP103's taom_git_repo_dir, taom_deny_multi_repo, taom_is_project_repo)",
+   "Every git gate reads its command via `taom_hook_command posix <gate>` and prefilters the raw payload on its own word; validate-push.sh calls `_shellwords.py verdict` with PROTECTED=(bannerlord-1.5.x bannerlord-1.4.5 main master)",
+   "settings.json registrations: mark-verification-run.sh on PostToolUse PowerShell and PostToolUseFailure Bash|PowerShell; validate-push at 10 s; suggest-compact, notify-test-results, notify-csharp-edit removed (25 registrations, 9 events expected)",
+   "tools/tests/test_pushjudge.py, tools/tests/test_audit_user_scope.py, ExternalLayoutTests in tools/tests/test_audit_skillspector.py",
+   "tools/test_hooks.sh sections 4c, 4d, 7a, 7d, 7e, 7g, 7i, 7l (pinned 1.5.x 7k relabelled 7l because WP103 owns 7k); 4e, 7c, 7h replaced by their 1.5.x end states",
+   "tools/audit_claude_config.py --external whole-tree vet, --user scope, EXIT_UNCHECKED=3, collect(root, external=False)",
+   "docs/reviews/adopt-ecc-2026-09-29.md (ECC adoption record with a 1.4.x header note)",
+   ".mcp.json without github, git, filesystem servers"
+  ],
+  "open_risks": [
+   "WP103 may execute differently from its plan file (reader placement, section labels, settings form); Step A0 checks P1-P12 and later-state blob comparisons gate this, with STOPs",
+   "tools/test_hooks.sh runtime on the laptop is UNVERIFIED (about 2,870 pinned lines; 7i sends 24 payloads up to 2 MB); timing rows may flake under load",
+   "Claude Code live behaviours (Stop block delivery, additionalContext, PowerShell payload shape, ask in bypass mode) were verified only on the 1.5.x line; maintainer live checks owed",
+   "Whether a timeout sets is_interrupt on PostToolUseFailure is UNVERIFIED upstream",
+   "test_pushjudge.py was pinned on git 2.55 per 1.5.x notes; this laptop runs git 2.54 (judge is static, low risk)",
+   "check-deep-review.sh will look for agent_type=deep-reviewer, an agent that only WP138 brings; until then it behaves as today (once per streak)",
+   "Removing the git and filesystem MCP servers changes the maintainer's tool habits; CLAUDE.md and mcp-servers.md are updated accordingly",
+   "Known carried-over gaps: push.default via --config-env/GIT_CONFIG_*, remote.<name>.push/mirror, git commit -n, git run via Start-Process/Invoke-Expression in PowerShell"
+  ]
+ },
+ {
+  "id": "117",
+  "file": "plans/117-frame-and-memory-instruments.md",
+  "title": "Measure frame time, hitches, map frames and clip memory on the 1.4.8 line",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "104",
+   "105",
+   "106",
+   "107",
+   "109",
+   "111"
+  ],
+  "parts": 2,
+  "creates": [
+   "plans/117-frame-and-memory-instruments.md",
+   "Main/Features/MissionPerf heartbeat: FrameStats.cs, MissionPerfLine.cs, Hooks/MissionPerfHeartbeatBehavior.cs",
+   "Main/Features/MissionPerf profiler and hitch probe: MissionTickProfilerInstaller, MissionTickProfilerBehavior, Patch97_MissionTickProfiler.cs, Patch97_MissionAttribution.cs with MissionAttributionInstaller, HitchProbeInstaller with Patch98_HitchProbe.cs, and the full TickProfileLines.cs, which replaces WP109's trimmed file",
+   "Main/Features/MissionPerf/AnimMemory: AnimMemoryProbeModule, AnimMemoryProbe, AnimMemorySession, AnimMemLine, IAnimClipMemoryProbe, Hooks/AnimMemoryProbeMissionBehavior. It reuses WP109's ClipBudgetSignature.cs and PeSectionTable.cs and does not re-add them.",
+   "Main/Features/MapPerf: MapFrameProfiler, MapProfileLines, MapSpeed, and Hooks/ MapFrameBoundary, MapFrameProfilerHooks, MapFrameProfilerInstaller (OnGameInitialized), MapProfilerTargets, MapSessionHooks (EndSession), Patch101_MapFrameProfiler, Patch101_MapFrameProfilerViews, TickEventListenerWalker",
+   "Main/Features/LostFooting: LostFootingModule, LostFootingService, LostFootingRules, the settings provider, Domain/*, Hooks/LostFootingMissionLogic, plus the new Hooks/LostFootingMissionGate.cs",
+   "Main/Adapters: IAnimationLoadingAdapter, AnimationLoadingAdapter, INativeModuleMemoryAdapter, NativeModuleMemoryAdapter, ILostFootingAdapter, LostFootingAdapter",
+   "ITimeControlAdapter.SimplifiedTimeControlMode and its TimeControlAdapter implementation",
+   "IGraphicsOptionsAdapter members FrameLimiterFps, VSyncOption, TextureQualityOption, ShadowmapResolutionOption, ParticleDetailOption",
+   "BattleLoadDiagnosticsSettings keys, with their provider members: EnableMissionPerfHeartbeat (on), EnableTickProfiler (off), TickProfilerTopN (8), EnableHitchProbe (on), HitchThresholdMs (250), EnableMapProfiler (off), EnableAnimMemoryProbe (on)",
+   "TaomSettings.LostFootingCensusEnabled (off; group Battle Tactics/Lost Footing)",
+   "PatchShieldPolicy.ExcludedTargetMethods entries: Mission.WaitTickCompletion, ManagedScriptHolder.TickComponents, Campaign.Tick, CampaignEvents.Tick",
+   "Harmony categories Patch97_MissionTickProfiler, Patch98_HitchProbe, Patch98_HitchProbe_Camera, Patch101_MapFrameProfiler, Patch101_MapFrameProfiler_Views",
+   "Two FeatureModules.All lines: AnimMemoryProbeModule and LostFootingModule",
+   "SubModule.cs anchors: the MissionTickProfilerBehavior line placed before BattleActionBarMissionView, the MapFrameProfilerInstaller.OnGameInitialized call before the once-per-process guard, and MapSessionHooks.EndSession(\"gameEnd\") in OnGameEnd",
+   "Main/Core/Diagnostics/IStampClock.cs and StopwatchStampClock.cs, copied from 346f3e093 only if absent",
+   "tools/perf_runs.py, tools/audit_battle_equipment_memory.py, and the loose-assets option in tools/audit_map_scene_memory.py",
+   "docs/features/mission-perf-heartbeat.md, docs/features/map-perf-profiler.md, docs/features/lost-footing.md, docs/reference/engine/mission-frame-threads-and-native-costs.md"
+  ],
+  "open_risks": [
+   "The clip-loading sample walks the engine's clip list from the main thread with no lock while a worker may be loading a clip. Its safety is UNVERIFIED on v1.4.8 (and on 1.5.x). A native fault would crash with no probe line first; in-game check 2 watches for it.",
+   "The heartbeat's busy-time and frame semantics have not been measured in game on v1.4.8; they stay UNVERIFIED until the in-game checks run.",
+   "The plan's test-count deltas (about 281, 113, 59 and 155 results) are counted from source; the executor records the real numbers.",
+   "WP118 (wave 2, lane B) edits the same settings, provider, relevance, PatchShieldPolicy and SubModule files and also adds IStampClock. Whichever branch merges second re-applies its edits and recounts.",
+   "Log volume with the hitch probe on is an estimate (2 to 4 INFO lines every 5 s besides the heartbeat); in-game check 3 counts it.",
+   "Mission start resolves IGraphicsOptionsAdapter, which WP111's BattleCorpsesModule registers. A registration fault there would throw inside OnMissionBehaviorInitialize, where WP109's start guard contains it.",
+   "The engine page's native RVAs are not re-derived for v1.4.8 (needs WP137's native_decompile.py), and patch-targets.md is not regenerated for Patch97, Patch98 and Patch101 (WP137).",
+   "The Ported-from trailers for 569f6750d (B3) and 346f3e093 (B4) cover partial takes owned by WP136 and WP118. A ledger built from trailers could misread them as fully ported; the commit bodies and maintenance notes say so.",
+   "The plan runs to 1,815 lines, above the 1,200-line aim, because it covers 14 commits with exact inline edits. A smaller-model executor has to keep its place across eight commits."
+  ]
+ },
+ {
+  "id": "118",
+  "file": "plans/118-campaign-load-time.md",
+  "title": "Plan 118: Cut campaign load time: load-time stamps, the one-document XML merge, ButterLib's Distance Matrix off",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "104",
+   "105",
+   "107",
+   "112"
+  ],
+  "parts": 5,
+  "creates": [
+   "Main/Core/Diagnostics/ShieldExclusionCheck.cs (internal static ShieldExclusionCheck.Problem(IReadOnlyList<(string Type, string Method)>[, Func<string,string,bool>]))",
+   "TAOM.Tests/Core/Diagnostics/ShieldExclusionCheckTests.cs",
+   "Main/Core/Diagnostics/IStampClock.cs and StopwatchStampClock.cs (needed by WP125 and WP139)",
+   "Main/Features/LoadTimeStamps/** incl. LoadTimeStampsModule (Patch100_LoadTimeStamps_LoadXml, Patch100_LoadTimeStamps_Lifecycle, ShieldTargets), LoadTimeStampsHooks.StartHook/Mark/End, LoadTimeStampLines",
+   "Main/Adapters/CampaignListenerAdapter.cs and ICampaignListenerAdapter.cs",
+   "PatchCategoryApplier.EndPhase(string) and WriteHeldCategoryLines(bool) plus the [PatchApply] totals",
+   "Seven PatchShieldPolicy.ExcludedTargetMethods entries: MBObjectManager.LoadXML, CreateMergedXmlFile, CampaignEventDispatcher.OnNewGameCreated/OnGameEarlyLoaded/OnGameLoaded/OnSessionStart/OnAfterSessionStart",
+   "BattleLoadDiagnosticsSettings.EnableLoadTimeStamps and IBattleLoadDiagnosticsSettingsProvider.LoadTimeStampsEnabled",
+   "Main/Features/XmlMerge/** incl. XmlMergeModule (Patch99_XmlMergeFastPath, ShieldTargets), XmlMergeService, XsltTransformCache; Main/Adapters/IXmlMergeEngineAdapter.cs and XmlMergeEngineAdapter.cs",
+   "TAOM.Tests/Migration/IlCallScanner.Fingerprint (needed by WP129 and WP139) and TAOM.Tests/Migration/IlFingerprintTests.cs",
+   "TAOM.Tests/Features/XmlMerge/** live harness (LiveMergeListBuilder with the players' default module order, LiveGateRules)",
+   "Two IL-fingerprint tests in TAOM.Tests/Features/SupplyLines/SupplyNativeQueryTests.cs",
+   "Main/Features/MapLoadDiagnostics/** (Patch89_MapLoadDiagnostics plus _Lifecycle, _MapScreen, _SceneReady; IMapLoadHeartbeatService, MapLoadTracer, LoadingWindowTraceGate, MapLoadDiagnosticsBehavior) and MapLoadDiagnosticsIoC wiring",
+   "Main/Features/ButterLibDistanceMatrix/** (ButterLibDistanceMatrixModule, DistanceMatrixSwitch) and Main/Adapters/ButterLibDistanceMatrixAdapter.cs",
+   "Main/Core/Logging/EarlyLogBridge.cs and the locked EarlyLog hand-over in Dependencies/EarlyLog.cs",
+   "Vendored BUTR stack: ButterLib 2.12.0 with Implementation.1.4.6-1.4.8, MBOptionScreen 5.12.3 v1.4.6-v1.4.8, NuGet Bannerlord.MCM 5.12.3 and UIExtenderEx 2.13.3 pins, stub v2.12.99.0",
+   "tools/complete_lords_xslt.py (append-only), tools/tests/test_complete_lords_xslt.py, regenerated tools/lords_inventory.csv",
+   "tools/tests/test_lords_xslt_indentation.py and the dedented lords.xslt (blob f2f180d05ddc816635087b27e070210502d9cb92)",
+   "Feature docs docs/features/load-time-stamps.md, xml-merge-fast-path.md, map-load-diagnostics.md, butter-lib-distance-matrix.md; registry sections Patch89, Patch99, Patch100"
+  ],
+  "open_risks": [
+   "In-game load saving of the fast path is unmeasured on any line; the planner's evidence for the gain is the 1.5.x offline/harness ratio only",
+   "The live harness may fail on the laptop's installed v1.4.8 module set (equivalence or the 50 percent bar); the plan then stops Part B and keeps Part A",
+   "MergeElements differs by four lines between v1.5.3 and v1.4.8 (contents of the difference UNVERIFIED); the fast path calls it rather than replacing it, and the harness is the proof",
+   "Step D1 restore needs nuget.org for Bannerlord.MCM 5.12.3 and UIExtenderEx 2.13.3 (not in the laptop cache)",
+   "ButterLib 2.12.0 Implementation.1.4.8's DistanceMatrixSubSystem shape is verified only by the binding test at execution (the 2.11.0 shape was checked in the dump)",
+   "The ordering claim that MCM applies its stored ButterLib toggle before TAOM's MainMenu phase comes from the 1.5.x module comment and module load order, not from reading MCM 5.12.3 code",
+   "Shared hot files with WP117 (same wave): settings census, CoopSettingsRelevance, the two co-op docs' totals, PatchShieldPolicy comments, SubModule.cs; the integrator recounts on merge",
+   "Step B2 depends on WP112 having extracted AddLandPath and created SupplyNativeQueryTests.cs (plan 112 says it does)",
+   "test_complete_lords_xslt ShippedFileTests could reveal vanilla lords missing from the 1.4.x lords.xslt; the plan stops rather than running --apply",
+   "The plan's test counts come from the 1.5.x files; small differences are reported, not treated as a STOP",
+   "Players running a mismatched TAOM/TAOM.Dependencies pair get the guard's safe path (no stamps, no fast path) until a paired release ships"
+  ]
+ },
+ {
+  "id": "119",
+  "file": "plans/119-memory-cross-campaign-resets.md",
+  "title": "Reset per-campaign state on every new campaign and find what a second game keeps (plans 001 and 014)",
+  "priority": "P1",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "105"
+  ],
+  "parts": 2,
+  "creates": [
+   "TAOM.Tests/Features/Enlistment/EnlistmentSessionResetTests.cs",
+   "TAOM.Tests/Features/Enlistment/EnlistmentStopEndTests.cs",
+   "TAOM.Tests/Features/SpecialResources/SpecialResourcesBehaviorSessionResetTests.cs",
+   "TAOM.Tests/Features/HeroRace/RacePersistenceWiringTests.cs",
+   "docs/investigations/second-game-retention-2026-11.md",
+   "IServiceAttachmentService.ResetForNewSession() and event ColumnLeftSettlement (IServiceAttachmentService.InvalidateCommanderCache removed)",
+   "IEnlistmentWaitMenuPresenter.ResetForNewSession() and OnStopEnded()",
+   "IArmyRhythmSnapshotService.ResetForNewSession() (replaces the uncalled Invalidate())",
+   "ServiceMaintenanceService constructor gains IEnlistmentWaitMenuPresenter and IArmyRhythmSnapshotService parameters",
+   "EnlistmentMaintenanceBehavior constructor gains IEnlistmentWaitMenuPresenter; internal OnPartyLeftSettlement(string)",
+   "EnlistmentBehavior.OnNewGameCreated internal; OnGameLoaded resets above the co-op gate and clears the store on a save with no Enlistment data",
+   "EnlistmentReconciler clears _lossAnnouncedFor on ResetForNewSession and on DischargeService.EnlistmentEnded",
+   "Main/SubModule.cs OnGameEnd line: IoC.Resolve<Features.Enlistment.IServiceMaintenanceService>()?.ResetSessionCaches();",
+   "SpecialResourcesBehavior.OnNewGameCreated internal, wipes storage without reading a hero; SyncData load reads into a null local",
+   "IRacePersistenceService.ResetForNewSession(); RacePersistenceService._isNewCampaign; RacePersistenceBehavior constructor calls ResetForNewSession()"
+  ],
+  "open_risks": [
+   "No build or test was run at planning time: compile and pass rely on blob equality (the 1.4.x Enlistment folder matches the 1.5.x pre-series state except EnlistmentMeritMissionBehavior.cs and one diagnostics test the series does not touch; adapter interfaces identical except IPlayerContextAdapter, which the tests only substitute)",
+   "The memory effect of the ports is unmeasured; on 1.5.x the managed retention persisted after them (V07), so MEMORY-05 stays open until the Part B procedure names the holder",
+   "Code reading shows the _lastSessionStarter field on EnlistmentBehavior, EnlistmentContentBehavior and MessengerCampaignBehavior (container singletons) keeps the finished campaign's CampaignGameStarter reachable at the main menu; how much it holds is unmeasured. Deliberately left for a follow-up after the measurement",
+   "Doc 3-way applies (enlistment.md, special-resources.md) could conflict if an earlier WP rewrote the same paragraphs; guidance: keep both sides, STOP on a paragraph both sides rewrote",
+   "PerfView and WinDbg availability on the laptop is unverified, and so is SOS support for !dumpheap -live on .NET Framework (the doc gives a !gcroot fallback)",
+   "The SpecialResources no-record load gap (a save older than the feature, loaded after another campaign) stays open on both lines; documented, deferred",
+   "WP126 must rename the GetAllAliveHeroRaces call this WP adapted when it ports f981629cd; on 1.4.x its pick lands after this WP's hunks (light context conflicts expected)"
+  ]
+ },
+ {
+  "id": "120",
+  "file": "plans/120-map-perf-and-vram.md",
+  "title": "Stop the cheat-mode inventory spike, advise 16 GB players on textures, cull hidden settlement nameplates and release the covered map view's render targets",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "109"
+  ],
+  "parts": 4,
+  "creates": [
+   "Main/Features/CheatScreenGuard/** (CheatScreenGuardModule, category Patch_CheatScreenGuard, CheatScreenGuardCalls, CheatScreenGuardSwaps, ICheatScreenGuardService, CheatScreen enum)",
+   "Main/Features/TextureAdvice/** (TextureAdviceModule at ApplyPhase.MainMenu, TextureAdviceRule.AdviseAtOrBelowMb = 17408, ITextureAdviceService)",
+   "Main/Features/NameplateCull/** (NameplateCullModule, category Patch104_NameplateCull, v1.4.8 hideout range per D22)",
+   "Main/Features/MapViewRelease/** (MapViewReleaseModule, MapViewReleaseLayerEvents on ScreenLayer.OnLayerActiveStateChanged)",
+   "Main/Adapters/{I,}TextureAdviceAdapter.cs, {I,}NameplateCullAdapter.cs, {I,}MapViewReleaseAdapter.cs",
+   "BattleLoadDiagnosticsSettings group 'Map Performance': CullHiddenNameplates (Order 1, default true), ReleaseMapViewMemory (2, true), MapViewReleaseInterval (3, 20), CheatModeListsAllItemsAndTroops (4, false)",
+   "CoopSettingsRelevance: CullHiddenNameplates/ReleaseMapViewMemory/MapViewReleaseInterval in Presentation, CheatModeListsAllItemsAndTroops in PlayerLocal",
+   "TAOM.Tests/Features/NameplateCull/NameplateCullSettingsProviderTests.cs (WP123 may fold it into CampaignHotPathSettingsProvidersTests)",
+   "TAOM.Tests/Features/{CheatScreenGuard,TextureAdvice,NameplateCull,MapViewRelease}/**",
+   "Strings taom_cheat_screen_guard_notice, taom_texture_advice_title, taom_texture_advice_body, taom_texture_advice_ok in taom_module_strings.xml (translations owed to WP135)",
+   "docs/features/{cheat-screen-guard,texture-advice,nameplate-cull,map-view-release}.md",
+   "Registry sections '## Patch104_NameplateCull' and '## Patch_CheatScreenGuard'; three NameplateCull reflection-site rows; patch-targets rows for the three new patch classes",
+   "THIRD-PARTY-LICENSES.txt VanillaTuning sentence and provenance-register row/section extended to NameplateCull and MapViewRelease",
+   "Log tags [CheatScreenGuard], [TextureAdvice], [NameplateCull], [MapViewRelease]; marker file Logs/taom-texture-advice.shown"
+  ],
+  "open_risks": [
+   "Part A changes vanilla cheat-mode behaviour by default: players who want the every-item/every-troop lists must turn the MCM setting on; the chat notice may be hidden behind the inventory screen (in-game check records it)",
+   "The cull and the map-view release ship on by default (keys shared with 1.5.x json2) but neither has been checked in game or measured on either line; the release calls the same ClearAll arguments that hung a second scene view in yotthani's 1.5.3 study (TAOM adds no scene view on 1.4.x)",
+   "On 1.4.x PatchShield's protected-owner prefix 'TAOM' does not match TAOM's Harmony id com.taom.mod, so a missing-API swallow strips TAOM's own patch on that method (vanilla runs); pre-existing, flagged for WP107's owner",
+   "FeatureModules.All, BattleLoadDiagnosticsSettings (Map Performance group shared with WP117's EnableMapProfiler), CoopSettingsRelevance and the fingerprint/doc counts conflict-prone with parallel wave-2 WPs (WP111, WP117)",
+   "The texture advice marker lives in the game's Logs folder (like the stall marker); clearing logs shows the popup once more; the popup queues with other first-menu notices (stall notice, WP111's battle-settings advice)",
+   "Re-pinned call lists depend on build 119303's SandBox.ViewModelCollection.dll; any other build fails the binding tests by design (STOP, do not edit pins to match)",
+   "Snapshot regeneration relies on the base snapshot reproducing (Step 0.7); otherwise rows are hand-edited and pre-existing drift is reported"
+  ]
+ },
+ {
+  "id": "121",
+  "file": "plans/121-texture-memory-diet.md",
+  "title": "Ship TAOM's banner atlases and loading sheets compressed, drop 39 dead sprite sheets, and let the v1.4.8 Modding Kit load TAOM",
+  "priority": "P1",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "101"
+  ],
+  "parts": 5,
+  "creates": [
+   "Dependencies/TAOM.Dependencies.csproj: new MSBuild target MirrorWin64ShippingClientToEditor (mirrors Modules/TAOM.Dependencies/bin/Win64_Shipping_Client into Win64_Shipping_wEditor on deploying builds)",
+   "Dependencies/Foundation/IncompatibleModDetector.cs: internal static bool IsEditorBin(string assemblyPath) and an early return in RunEarlyPhase",
+   "TAOM.Tests/Infrastructure/Dependencies/DependenciesEditorMirrorTests.cs",
+   "TAOM.Tests/Infrastructure/IncompatibleModDetectorTests.cs",
+   "tools/tests/test_taom_texture_formats.py (UI_FORMATS, atlas_problems, ui_problems, declared-sheet check, opt-in TAOM_PACK0 published-pack check)",
+   "Removal of Main/_Module/Assets/GauntletUI/ui_taom_bannericons_3..41_tex.tpac, Main/_Module/AssetSources/GauntletUI/ui_taom_bannericons_3..41.png and Main/_Module/Assets/BannerIcons/taom_banners_dunland_alpha_01_tex.tpac.ptemp",
+   "Kit-saved DXT1/DXT5 descriptors for the 33 Main/_Module/Assets/BannerIcons/*_tex.tpac and BC7 descriptors for ui_loading_1/_2 (Part C)",
+   "docs/reference/banner-icon-generation.md Step 4a import settings and copy-before-build rule; docs/features/gui-sprite-system.md gotcha row",
+   "Conditional (Part E): tools/check_map_vista.py and tools/tests/test_check_map_vista.py plus a tools/README.md row"
+  ],
+  "open_risks": [
+   "The v1.4.8 Kit's texture-type name that yields BC7 is UNVERIFIED; if none exists, B9 and C3 are skipped and recorded (D24 forbids a DXT5 fallback)",
+   "The RuntimeDataCache file naming rule (bytes 8 to 23 of the descriptor as a .NET Guid) comes from 1.5.x docs and is UNVERIFIED on v1.4.8; the laptop install has no RuntimeDataCache today",
+   "What the v1.4.8 Kit does on first opening a TAOM install with no RuntimeDataCache (compile everything or on demand) is UNVERIFIED; C0's tree comparison stops on any unexpected file it writes",
+   "Banner savings most likely land in GPU memory, not private bytes (D23); the memory record is not a gate",
+   "Hazard window between the Kit save and the WP121 merge: any deploying build from another tree reverts the descriptors over the new cache (blank sigils, Kit crash)",
+   "Other dev machines with an old 1.4.x RuntimeDataCache must delete the 35 cache entries before their first Kit start after deploying WP121",
+   "Part E needs a pinned 1.4.x TAOM_Map source tree and a v1.4.8 Kit on one machine; the desktop's live TAOM_Map carries 1.5.x ids, so Part E may be BLOCKED",
+   "Whether MSTest 3.1.1 reports each DataRow separately (C# total +8) or folds them (+3) is unverified; the plan accepts either with Failed 0",
+   "Players get nothing until the next release republishes pack0.tpac (Part D)"
+  ]
+ },
+ {
+  "id": "122",
+  "file": "plans/122-test-infrastructure-gates.md",
+  "title": "Plan 122: Make the engine-binding gates fail instead of skipping, bind like Harmony, and pin transpiler sites, patch numbers and repo quality",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "LOW for Parts A to C (tests, test helpers, docs and tool gates; no game code). MED for optional Part D (one line of single-owner Main/TAOM.csproj, nullable warnings become errors in Main/Features/Siege, two small Siege behaviour changes).",
+  "depends_on": [
+   "104",
+   "115"
+  ],
+  "parts": 4,
+  "creates": [
+   "TAOM.Tests/binding-gate.runsettings (MapInconclusiveToFailed, TreatNoTestsAsError; plus TAOM_RUN_BENCHMARKS=1 if WP118 merged first): the strict binding-gate command later WPs and /verify-bindings use",
+   "GameAssemblies.ResolveGameDir(string?, string?, string?) and GameAssemblies.BuiltGameFolder (TaomGameFolder assembly metadata in TAOM.Tests.csproj); the two native InstalledBinaryTests return to the 1.5.x LoadInstalled form",
+   "TAOM.Tests/Migration/HarmonyTargetResolver.cs: Check(Type), CheckBinding(MethodBase, MethodInfo, HarmonyPatchType?), ResolveOriginals(Type, List<string>), HasBody(MethodBase), Describe(MethodBase)",
+   "TAOM.Tests/Migration/HarmonyTargetResolverTests.cs (17 game-free tests, Harmony 2.4.2 internals pin)",
+   "HarmonyPatchBindingTests.ManualPatches list plus EveryManualPatch_BindsLikeHarmony and ManualPatchApplicator_EveryPatchClass_IsCheckedByTheGate (DiscoverPatchTypes and MergeSpec kept for WP107's Patch37TargetShapeTests)",
+   "TAOM.Tests/Migration/TranspilerSiteBindingTests.cs (9 BindingVerification tests; every later WP that adds a transpiler adds a test here)",
+   "TAOM.Tests/Migration/GameAssembliesResolutionTests.cs, TAOM.Tests/Migration/BindingGateRunSettingsTests.cs",
+   "ReflectionSiteBindingTests label gates EveryLineLabel_PointsAtALineThatNamesItsMember and EveryDataRow_HasAMatchingRowInTheCatalogue (Main and Dependencies roots); later WPs adding reflection rows must label the lookup line and add the catalogue row",
+   "TAOM.Tests/Composition/PatchCategoryNumberTests.cs (later WPs adding a patch category must add a ## registry heading; WP142 feature-map sync must keep it green)",
+   "TAOM.Tests/Migration/ViewModelMixinBindingTests.cs",
+   "TAOM.Tests/Infrastructure/EngineDataStore.cs (if WP110 did not already create it); WP119 session-reset tests should use it",
+   "TAOM.Tests/Infrastructure/BannedConstructsGateTests.cs",
+   "ruff.toml, tools/tests/test_python_lint_gate.py, tools/tests/test_claude_config_lint.py (ALLOWLIST_ROW = 1.4.x harness-facts row label; WP143 must change it when syncing that row), tools/tests/test_shell_lint_gate.py",
+   "Directory.Build.props NuGet audit properties (maintainer) and /verify Step 1b",
+   "Part D (optional): root .editorconfig ratchet block, Main/Features/Siege/.editorconfig, TAOM.Tests/Infrastructure/NullableRatchetGateTests.cs, TAOM.Tests/Features/Siege/SiegeCampGuardPatchTests.cs"
+  ],
+  "open_risks": [
+   "WP118 (same wave) skips a27c6b338's binding-gate.runsettings hunk citing D9 wrongly; if WP118 merges after WP122 without taking it, the strict gate fails its opt-in XmlMergeLiveEquivalenceTests harness. The plan handles the WP118-first order with a variant in A1 and flags the other order in Maintenance notes; the orchestrator should correct WP118's plan.",
+   "The strict gate may expose laptop data gaps (BindingVerification tests that read Inconclusive for missing install data); the plan lists them as environment gaps rather than editing tests, but the maintainer must judge them.",
+   "The new resolver could surface a real latent binding failure; D4 found none offline (229 + 7 + 1 OK), so the plan STOPs rather than changing production patches.",
+   "C2 and C3 cannot run until the maintainer installs Ruff and ShellCheck; ShellCheck findings in .claude/hooks or tools/test_hooks.sh block C3 and belong to the harness lane; Ruff may flag unknown 1.4.x tool scripts.",
+   "NuGet audit with NuGetAuditMode=all may flag a transitive high/critical advisory on the 1.4.x package set (unverified; restore not run in this read-only session).",
+   "Reflection-site label lines and registry headings may have moved under WPs 104 to 115; the plan trusts the tests' messages, with 1b00d1acd values as a guide.",
+   "Part D: Siege nullable-as-errors was proven on 1.5.x only; a CS86xx error on the 1.4.x TaomSiegeEventModel is a STOP.",
+   "The plan is 1,799 lines, over the 300 to 1,200 aim, because it inlines complete code for the new resolver, its fixtures and the transpiler-site tests."
+  ]
+ },
+ {
+  "id": "123",
+  "file": "plans/123-always-on-cost-cuts.md",
+  "title": "Cut always-on costs: no auto-resolve battle log, cheaper mission diagnostics, MCM settings read once",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "117"
+  ],
+  "parts": 4,
+  "creates": [
+   "TAOM.Tests/Infrastructure/CountingMcm.cs (internal CountingMcm: swaps MCM BaseSettingsProvider.Instance for counting tests)",
+   "TAOM.Tests/Infrastructure/HotPathSettingsProvidersTests.cs (mission hot-path provider gate; later WPs add rows)",
+   "TAOM.Tests/Features/CampaignHotPathSettingsProvidersTests.cs (campaign hot-path provider gate; WP122, WP125, WP131, WP133 edit it)",
+   "Main/Features/LocalizationOverride/IdSlice.cs (internal readonly struct IdSlice; WP135's 407b1e767 needs it)",
+   "Lazy private Settings accessor plus internal X(TaomSettings) test constructor on BattleBalance, CombatMechanics, BlowDiagnostics, CompanionTactics, DreadAura, MixedFormations, SiegePropDiagnostics, SmartCavalryAI, AlignmentDesertion, CaravanTrade, CastleRecruitment, FieldCommission, QuickActions, TimeAcceleration, Refuge, SupplyLines, Camp settings providers and static PartyIconScaleConfig",
+   "ITownRosterAdapter.GetItemCounts(Settlement, IReadOnlyList<string>) replacing GetItemCount; TownRosterAdapter.CountFailureLine",
+   "IAlignmentDesertionService.ShouldEvaluate(string, bool, bool); ICulturalFeatsService.NeedsMountedCount(ICultureFeatAdapter?)",
+   "IMissionDiagnosticService.TryMarkActionSetKey, LogActionSetCensusOpened, LogActionSetCensusClosed, LogCampaignDate; CampaignContextFormatter.DescribeBeforeClock and DateBeforeClock",
+   "TaomSettings.EnableEnlistmentTrace (replaces EnableEnlistmentDiagnostics, default false)",
+   "public static new X? Instance on TaomSettings, CrashReportSettings, BlowDiagnosticsSettings, BattleLoadDiagnosticsSettings (client form)",
+   "McmSettingsCollector: TAOM.dll-only gate, DeclaredOnly Instance, internal StringifyValue/ResolveInstance/ExtractSettingEntries",
+   "Main/Features/Refuge/Hooks/RefugeDamageHooks.cs with Reduce(IRefugeDefenseService?, in AttackInformation, float) and the mount branch (created if WP127 has not landed it)",
+   "Harmony category Patch_MainRosterLossDiag: TroopRoster_AddToCountsAtIndex_Patch, TroopRoster_SetElementNumber_Patch, MainRosterLossDiagnostics (TEMPORARY)",
+   "TAOM.Tests/Core/Logging/FileLoggerDurableWriteBenchmarkTests.cs (opt-in TAOM_RUN_BENCHMARKS benchmark)",
+   ".claude/rules/csharp-architecture.md Config Providers rule 8: hot-path providers cache MCM once and join the gates",
+   "Removed symbols later ports must not resurrect: AutoResolveDiagnostics feature, LogAutoResolvedBattles, LogAutoResolveTroopCensus, IMapEventBattleLogAdapter, ITroopCensusAdapter, IAgentColorStore/AgentColorStore, Patch35_Mission_OnTick, tools/analyze_battle_logs.py, ITownRosterAdapter.GetItemCount, TaomSettings.EnableEnlistmentDiagnostics"
+  ],
+  "open_risks": [
+   "WP110 is wave 1 but not a declared dependency; the plan uses whichever setting names the live TaomSettings declares (EnableSmartCavalryAI/EnableSmartCavalryCharge, EnableFormationPresets/EnableOobFormationPresets, two FieldCommission names), so conflict shapes in Steps B2 and C1 vary by merge order",
+   "WP127 and this WP are both wave 3 with no order; if WP127 lands after, its f7e9bd0d2 port meets an existing RefugeDamageHooks.cs and must keep the mount branch (RefugeDamageHooksTests will fail otherwise)",
+   "CountingMcm and the cached-provider tests need the MCMv5 runtime in the test host; baseline SettingsFingerprintTests already constructs TaomSettings, but a FileNotFoundException is a STOP",
+   "Expected unmerged-path lists come from simulations on 1b00d1acd; earlier WPs (104, 105, 106, 110, 117, 122) can add or remove conflicts, and the plan names the likely extras but any other path is a STOP",
+   "The D3 threshold (50 us per durable line on the laptop) is a judgment; players' disks under 80 to 96 percent memory load are unmeasured",
+   "RUNTIME-PERF-12's thread review of campaign models that run in the parallel party tick is not done here (UNVERIFIED which models read shared mutable state)",
+   "bb68eeca3 item 3 (lord-template roster XSLT) is not owned by any WP pack yet; the orchestrator must route it to WP134 or record it as rejected",
+   "The plan is about 1,250 lines, slightly over the 1,200 target, because four Parts carry inline code for the new work and the adapted tests"
+  ]
+ },
+ {
+  "id": "124",
+  "file": "plans/124-mission-hot-paths.md",
+  "title": "Make battle hot paths cheaper: a lock-free formation prefix, cheaper creature ticks and a capped tree walk",
+  "priority": "P2",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "106",
+   "123"
+  ],
+  "parts": 2,
+  "creates": [
+   "Main/Core/Collections/ReferenceIdentity.cs (TAOM.Core.Collections.ReferenceIdentity, taken from 30abf550b) and TAOM.Tests/Core/Collections/ReferenceIdentityTests.cs; WP130's 30abf550b port must not re-add them",
+   "Main/BehaviorTreeWrapper/CallbackSkipLedger.cs (BehaviorTreeWrapper.CallbackSkipLedger) and BehaviorTreeMissionLogic listener counts plus InfoLog seam",
+   "IFormationLayoutService.FindLaidOutFormation(object) and NoteFallback(Exception); FormationLayoutService.FallbackLine/FallbackSummaryLine; layouts in a reference-keyed ConcurrentDictionary",
+   "SpatialGrid helpers and seams: BuildCells, BuildCellsInto, CollectInRadius, RemoveFromCells, HeldAgents(), PositionOf/IsLive/InfoLog seams, BuildCount, (x, y) cell keys, dual reused maps, rebuild dormancy",
+   "BoneCheck.CheckBoneCollision(IAgentVisualsAdapter, Skeleton) and BoneCheck.CheckTargets; BoneCheckDuringAnimation single progress read and in-window skeleton fetch",
+   "Warg node constructors with injected services: PeriodicallyCheckIfCanAttackAnyone(IMissionAdapterFactory), CheckOnceIfCanAttackEnemy(IMissionAdapterFactory), WargAiControlledIsNotFacingEnemy(IMissionAdapterFactory), WargAttackTask(IMissionAdapterFactory, IWargAttackService); IAgentAdapter.IsWarg() removed",
+   "BehaviorTree.MaxNodeTransitionsPerRun (internal const 1000) and the capped RunTree with StopRunaway",
+   "Tree clocks on DateTime.UtcNow across SleepTask, WaitNSecondsTickDecorator and the ElephantLike, Spider and Warg cooldown/rage nodes",
+   "New tests: WargTickCostTests, WargTreeNodeInjectionTests, BoneCheckDuringAnimationTickTests, BoneCheckRangeGateTests, SpatialGridQueryTests, BehaviorTreeMissionLogicDispatchTests, CallbackSkipLedgerTests, CreatureTreeClockTests, SelectorListReuseTests, SpatialGridDormancyTests, SpatialGridReuseTests, SpatialGridWiringTests, BehaviorTreeRunawayCapTests, Patch30ThreadSafetyIlTests (plus additions to SpatialGridDebugServiceTests, BehaviorTreeAgentComponentThreadingTests, FormationLayoutServiceTests)"
+  ],
+  "open_risks": [
+   "Magnitude of the gains is unmeasured on both lines (E4 had no creature battle); WP117's instruments can measure it",
+   "The walk cap of 1,000 has not been measured against real creature trees; an in-game check confirms it never fires in normal play",
+   "Doc and rule-file conflicts depend on which earlier WPs edited mixed-formations.md, the registry and the two rule files; the plan says 'keep HEAD, add these exact lines', but WP127 (same wave) also edits both rule files",
+   "The A1 transplant uses path-limited git apply --3way instead of per-commit cherry-pick -n (justified by the orchestrator's 'squashed' note and the series' self-replacing commits); a reviewer may question the method",
+   "Documented behaviour differences: wind-up skeleton handling (#659), unheard off-thread callbacks dropped, grid rebuild dormancy, column queries between rebuilds, the walk cap",
+   "The grid still retains the last mission's surviving agents (1.5.x R18) until the next mission; out of scope",
+   "1.5.x moved to e65cfda37 during planning; newer feature commits (53cf195ac dire wolves, f2ee9a16f) touch WargConfig/AgentAdapter but were not classified by this run"
+  ]
+ },
+ {
+  "id": "125",
+  "file": "plans/125-campaign-ui-perf.md",
+  "title": "Open the campaign screens faster (Shadowfax screen-open series) and cut the enlistment board's render cost",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "117",
+   "118"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/ShadowfaxScreens/** (ShadowfaxScreensModule, IShadowfaxScreensSettingsProvider, ShadowfaxScreensSettingsProvider, Diagnostics/ScreenOpenTimer, ScreenOpenTiming, ScreenOpenWindow, Clan/Inventory/Party/Quests services, facades and 17 hook classes)",
+   "Patch categories Patch127_ShadowfaxClan (ClanFastOpenCalls.PatchCategory), Patch128_ShadowfaxInventory (ShadowfaxInventoryCalls.PatchCategory), Patch129_ShadowfaxParty (PartyFastOpenCalls.PatchCategory), Patch130_ShadowfaxQuests (QuestLogDeferCalls.Category)",
+   "FeatureModules.All entry new Features.ShadowfaxScreens.ShadowfaxScreensModule()",
+   "Main/Adapters/IQuestJournalAdapter.cs and QuestJournalAdapter.cs",
+   "BattleLoadDiagnosticsSettings 'Screen Performance' group: LogScreenOpenTimes, ClanFastOpen, InventoryFastOpen, PartyFastOpen, QuestLogFastOpen (excluded in CoopSettingsRelevance)",
+   "IServiceStatusTextWriter.IsStale and the flat board render in ServiceStatusTextWriter (text.ToString(), NEWLINE, _renderedLanguage); ServiceStatusService.RefreshIfChanged language re-push",
+   "EncounterAdapter.EnsureEncounterAgainst #1019 '[EnlistDiag] seeding the join from inside' INFO line",
+   "TAOM.Tests/Features/ShadowfaxScreens/** (19 files), TAOM.Tests/Features/Enlistment/ServiceStatusTextWriterRenderTests.cs, InsideSettlementJoinDiagnosticTests.cs",
+   "docs/features/shadowfax-screens.md; harmony-patch-registry sections ## Patch127_ShadowfaxClan to ## Patch130_ShadowfaxQuests; reflection-sites rows QuestItemVM.PopulateQuestLog and QuestsVM.SetSelectedItem; enlistment.md section 'Inside the raided village (#1019)'",
+   "Part C: category Patch101_MapFrameProfiler_Menu (MapFrameProfilerInstaller.MenuCategory), MapProfilerTargets.MenuTargets(), MapFrameProfilerHooks.RecordProbe, MapProfileLines.BuildMenuProbesLine/BuildMenuFailedLine, Main/Features/MapPerf/Hooks/Patch101_MapFrameProfilerMenu.cs, PatchShieldPolicy.ExcludedTargetMethods entry TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.GameMenuVM.OnFrameTick, TAOM.Tests/Features/MapPerf/MapProfilerTargetsTests.cs"
+  ],
+  "open_risks": [
+   "The four fast-open switches ship ON: in-game correctness on 1.4.x is unverified until the maintainer's checks; mitigated by soft-failing rewrites and binding/JIT tests against the installed v1.4.8 IL",
+   "The board render test renders a TextObject in the test host; 1.4.x test comments claim that needs a Module, while v1.4.8 MBTextManager statically sets an EnglishTextProcessor (MBTextManager.cs:32): if the test cannot render, the plan STOPs",
+   "WP117 and WP118 plans were not yet written when this plan was drafted: Part B STOPs if IStampClock/LoadTimeStampLines/FakeStampClock/RecordingLogger are missing, and Part C is skipped if the f6bf0e588 MapPerf anchors differ",
+   "When WP133 ports #993 (Patch23 recolours by rebuilding the code), the party portrait cache comment and premise must be re-checked (the 1.5.x merge text is the model)",
+   "WP128/WP132 later edit the same enlistment board files and must keep the flat render and IsStale check",
+   "Conditional edits depend on merge order: CampaignHotPathSettingsProvidersTests (WP123, same wave) and PatchCategoryNumberTests (WP122)",
+   "Test-count deltas depend on whether MSTest 3.1.1 reports each DataRow (Part B +224/+226) or each method (+215); the plan accepts either with Failed 0",
+   "Part C's PatchShieldPolicy change requires a release that ships TAOM and TAOM.Dependencies from one build (#371)"
+  ]
+ },
+ {
+  "id": "126",
+  "file": "plans/126-race-and-hero-fixes.md",
+  "title": "Plan 126: Keep every hero's race across a load, frame dwarf portraits, and gate character races against skins.xml",
+  "priority": "P1",
+  "effort": "S",
+  "risk": "LOW",
+  "depends_on": [
+   "105"
+  ],
+  "parts": 1,
+  "creates": [
+   "IHeroRosterAdapter.GetAllHeroRaces() replacing GetAllAliveHeroRaces() (Main/Adapters/IHeroRosterAdapter.cs); WP139's e4dbdf9c4, 40006d078 and 75c0c27a3 build on it",
+   "HeroRosterAdapter reading Hero.FindAll(_ => true) and Hero.FindFirst(h => h.StringId == id), verbatim from f981629cd including its #1011 comment (WP139 hunk context)",
+   "HeroRaceWiringTests.HeroRosterAdapter_ReadsEveryHeroCharacterThroughHeroFindAll (3 DataRows); WP139's e4dbdf9c4 inserts its HeroRosterAdapter_PassesIsAlive test after it",
+   "Six #1011 tests in TAOM.Tests/Features/HeroRace/RacePersistenceServiceTests.cs (CaptureHeroRaces_DeadHeroInRoster_StoresItsRace etc.)",
+   "CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace, RacesEmittedByXslt (internal) and RegisteredRaces with a BANNERLORD_GAME_DIR-first install lookup (DefaultGameDir constant); later data WPs must pass it, and WP133's 30003668b meets this file",
+   ".claude/rules/xslt.md paragraph documenting the race gate (WP143 reconciles the rules)",
+   "docs/features/hero-race.md #1011 paragraph, dependency/test lines and two changelog bullets"
+  ],
+  "open_risks": [
+   "Whether the public 2026-09-29 Armory's skins.xml registers every race 1.4.x data uses is UNVERIFIED from the laptop (the v2.0.26 copy does). If one is missing, the new gate fails and the plan STOPs, which would also mean a player-facing NPCCharacters load failure",
+   "Save time with dead heroes in _taom_heroRaceMap: the entries go into one dictionary container in v1.4.8 save code, but the effect on a long campaign is unmeasured (in-game check)",
+   "Ordering with WP119: plan 119 adapts its eb5cf0289 test line to GetAllAliveHeroRaces and expects WP126 to rename it, which Step 3.2 does. If an earlier WP takes the rename itself, WP126 STOPs for re-scoping",
+   "MSTest DataRow counting: the expected total is +14 if the three DataRow cases are listed separately, +12 if folded; Step 3.5 decides which",
+   "The lord_1_48_1/2/3 double definition remains on 1.4.x. The random-kit consequence is from 1.5.x research on v1.5.3 and is UNVERIFIED on v1.4.8; it needs a content decision (D13)",
+   "0f7902684's co-op module behaviour (SaveInterface.cs:109) stays unverified for any v1.4.8 co-op build; the plan deliberately asserts nothing about it (D7)",
+   "The Bash tool collapses double backslashes in command text (observed this session); the plan was purged of them, but an executor who hand-edits the scripts could hit it"
+  ]
+ },
+ {
+  "id": "127",
+  "file": "plans/127-architecture-refactors.md",
+  "title": "Land the 1.4.x-safe architecture refactors: seam decision logic, dead scaffolds, the damage-model split and the rule text that matches them",
+  "priority": "P3",
+  "effort": "M",
+  "risk": "LOW (behaviour-neutral, test-pinned; one MED seam: WP123 may change TaomCombatMechanicsModel.ApplyDamageReductions in the same wave, detected in Step B0)",
+  "depends_on": [
+   "105"
+  ],
+  "parts": 4,
+  "creates": [
+   "Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs: sealed class CombatMechanicsHooks(ICrushThroughService, IChargeKnockdownService, ICreatureCombatService, IShieldPenetrationService, ICombatMechanicsConfigProvider, ICombatMechanicsSettingsProvider) with CrushThrough, CleaveMomentum, CollisionReaction, IsUnstoppable, StaggerThreshold, ChargeKnockdown, PenetrationFlags, ShieldDamage, HorseChargePenetration; registered Reuse.Transient in CombatMechanicsIoC (WP130 can reuse it)",
+   "Main/Features/Refuge/Hooks/RefugeDamageHooks.cs: static RefugeDamageHooks.Reduce(IRefugeDefenseService?, IAgentOriginBase, float) in shape A, or the bb68eeca3 form with Reduce(IRefugeDefenseService?, in AttackInformation, float) in shape B (WP123's #741 port targets it)",
+   "TaomCombatMechanicsModel reduced to 85 lines, constructor (ICareerAgentStatService, CombatMechanicsHooks, IRefugeDefenseService = null)",
+   "TAOM.Tests/Infrastructure/CollisionDataFixture.cs (CollisionDataFixture.With)",
+   "TAOM.Tests/Features/CombatMechanics/CombatMechanicsHooksTests.cs, CombatMechanicsContainerWiringTests.cs, TAOM.Tests/Features/Refuge/RefugeDamageHooksTests.cs",
+   "CombatMechanicsModelInvariantsTests.ModelSource_StaysUnderTheEntryPointCeiling and ModelSource_HandsEachSeamItsOwnAgents",
+   "FortificationSearch.NearestDistance and SettlementSite (declared in CampService.cs), TAOM.Tests/Features/FieldCamp/FortificationSearchTests.cs, internal decision methods in CampService, RefugeService, WardenService, SupplyOrderService (WP144's 63630e8a0 applies on top)",
+   "ADR-007 'Protected-Virtual Boundary Seams' section, ADR-002/008 seam and conditional-interface amendments, ADR-003 'Amendment: partial services' (Part M; WP143's 250e1b321 builds on them)",
+   "Plan 021 rule text in .ai/review-reference.md, .claude/rules (csharp-architecture 'Interfaces that earn their file' row, csharp-patterns, harmony-patches, think-before-coding), feature-builder agent, new-feature, codex-verify, improve and deep-review skills (deep-review checks 1 and 6 carry the 1.5.x lens wording WP138 must keep), docs/ai-includes guides, lifecycle engine doc, CLAUDE.md one-liner",
+   "Helper script C:\\Users\\mikew\\source\\repos\\taom-port\\wp127-scripts\\wp127_edit.py (outside the repo; specs a1..m2)"
+  ],
+  "open_risks": [
+   "WP123 ordering: both WPs touch TaomCombatMechanicsModel.ApplyDamageReductions in wave 3; if they meet in a merge the integrator must resolve to shape B (documented in Maintenance notes)",
+   "Shape B depends on how WP123's plan (not yet written) lands the #741 fix inline; a form other than IsVictimAgentMount ? VictimRiderAgentOrigin : VictimAgentOrigin with BattleCombatant as PartyBase is a STOP",
+   "CLAUDE.md headroom after WP103 is a few hundred bytes; the +4-byte one-liner edit has a drop fallback if the doc gate fails on size",
+   "WP138 must carry the plan 021 wording into lenses/1-standards.md when it replaces the single deep-review SKILL.md",
+   "Lessons from 76f22e111, d4e6273a1, 12b1c2003 and f7e9bd0d2 are deferred to WP142's lessons sync; nothing else carries them",
+   "Test-count tripwires assume MSTest counts each DataRow as one test (planning counts follow that rule)",
+   "No in-game evidence on v1.4.8 yet for the split or plan 026's moved logic; unit and source tests only"
+  ]
+ },
+ {
+  "id": "128",
+  "file": "plans/128-enlistment-fixes-a.md",
+  "title": "Plan 128: Land the 1.5.x enlistment fixes for battle exits, raids, service wars, merit, grace promotion, encounter exits and duty text on the 1.4.x line",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "119"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/Enlistment/Hooks/MapEventHelperCanMainPartyLeaveBattlePatch.cs (Patch66_Enlistment postfix on Helpers.MapEventHelper.CanMainPartyLeaveBattleCommonCondition)",
+   "IEnlistmentMenuService.ShouldBlockBattleExit; IEncounterAdapter.IsAttackBarredByTruce, IsPartyRaiding, GetOpposingLeaderFactionId, IsJoinedBattleEncounter, ForgetEndedBattleResult",
+   "IEnlistmentPlayerActionService.IsServing and LeaveAfterDischarge; IServiceStatusTextWriter.WriteNotServing; service-menu option taom_enlist_menu_discharged_leave; wait-menu condition args => true",
+   "Main/Adapters/VillageRaidReader.cs; Main/Features/Enlistment/VillageActionJoinPolicy.cs; CommanderSnapshot.PartyIsRaiding and CommanderTickSnapshot.PartyIsRaiding; CommanderActivity.Raiding",
+   "IServiceDiplomacyService.MirrorWarAtJoin and ShouldSitOutAsVassal; IServiceDiplomacyAdapter.FollowWarOn (landed checks on declare and peace); ServiceWarPolicy.ShouldMirrorMidTerm; IPlayerContextAdapter.GetPlayerClanId; ServiceBattleService ctor takes IServiceDiplomacyService; ServiceDiplomacyService ctor (store, diplomacy, playerContext, logger)",
+   "EnlistmentMeritMissionBehavior keys kills and down state on CharacterObject.PlayerCharacter; EnlistmentBattlePayoutService refuses promotion in CommanderUnavailable",
+   "Main/Features/Enlistment/Content/Domain/DutyText.cs; DutyDefinition.Title/Success/Failure, DutyOptionSpec.Label, InteractiveDutyDefinition and IncidentDefinition Title/Body; ServiceStatusModel.ActiveDutyTitle (last ctor parameter on 1.4.x)",
+   "tools/harvest_duty_strings.py and tools/tests/test_harvest_duty_strings.py (tools/generate_enlistment_duty_strings.py deleted)",
+   "Signature changes: IArmyRhythmSnapshotService.GetSnapshot(double), IEnlistmentDailyService.RunDailyTick(double), IEnlistmentPlayerActionService.RequestDutyNow(double), EnlistmentConfigProvider() parameterless; removed ReputationDomain, TrustLedger, EquipmentPayoffCalculator, InMemoryEquipmentIssueLedger, EnlistmentStarted, Transitioned, WithdrawPetition, retired content-record keys",
+   "Tests: MapEventHelperCanMainPartyLeaveBattlePatchTests, EnlistmentServiceMenuWiringTests, VillageActionJoinPolicyTests, TAOM.Tests/Adapters/VillageRaidReaderTests (v1.4.8-adapted), MeritHeroAttributionWiringTests, ArmyRhythmSnapshotServiceTests, DutyTextTests",
+   "String keys taom_enlist_menu_discharged_leave, taom_enlist_wait_discharged, taom_enlist_act_raid with English placeholders in the 12 language files",
+   "docs/features/enlistment.md section 'Fixes ported from the 1.5.x line (port148 WP128)'; 8 docs/reviews/rca-enlistment-*.md records; Patch66 registry paragraph and patch-targets.md row"
+  ],
+  "open_risks": [
+   "Hand-merge-heavy steps (B1 trim, B2 placement, C3 re-derivation, C4 status-board and provider-test fixtures) depend on the exact tree left by WP119, WP125 and WP111; the plan covers both states but unlisted context conflicts are possible",
+   "Chronology inversion: WP132 must later apply 1d9cc42f1, 3b848c411, 5e7a0da6e, 4666a254a and the kit-tier renames on top of this WP (expected conflicts named in maintenance notes)",
+   "B5 relies on ownership rule R1b being inert on 1.4.x because EncounterAdapter.GetOwnership never passes isBattleEncounter",
+   "VillageRaidReaderTests stage private engine fields; adapted for v1.4.8 (_mapEventType, _sides) but unproven until run",
+   "P128-1 leaves the hourly war follow and crown-war release unported; an own-clan soldier whose lord's realm fights his own clan can still join such a battle (rare)",
+   "All gameplay effects are unit-tested only; eight in-game checks owed; the 90035a799 MCM hint text's 'within three in-game hours' wording is not measured on 1.4.x"
+  ]
+ },
+ {
+  "id": "129",
+  "file": "plans/129-career-fixes.md",
+  "title": "Port the career fixes: mount bonuses, typed perks, review follow-ups, promoted careers, screen and quest fixes",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/CareerSystem/Abilities/CareerAmmoApplier.cs",
+   "Main/Features/CareerSystem/Abilities/ActiveBuffsFormat.cs",
+   "Main/Features/CareerSystem/Diagnostics/CareerPerkConsumerMap.cs (IsFlat, Describe)",
+   "Main/Features/CareerSystem/Diagnostics/CareerPerkLogPolicy.cs",
+   "Main/Features/CareerSystem/Diagnostics/CareerPerkReport.cs",
+   "Main/Features/CareerSystem/Diagnostics/CareerPerkSnapshot.cs",
+   "Main/Features/DevConsole/Cheats/CareerPerkCheats.cs (console command taom.career_perks)",
+   "ICareerAgentStatService.ApplyMountStatModifiers, AmmoBonus, ResetDiagnostics (plus the hit tallies in CareerAgentStatService)",
+   "AttackTypeMask Cut/Pierce/Blunt and AttackTypeMaskMatch (Matches, ForHit, KindOf, TryParse)",
+   "TaomAgentStatCalculateModel.InitializeMissionEquipment override and optional IModLogger ctor parameter",
+   "CareerPerkMissionBehavior.OnRemoveBehavior and ctor parameter ICareerAgentStatService (OnAgentBuild removed)",
+   "Main/Adapters/IPartySizeCacheInvalidator.cs and PartySizeCacheInvalidator.cs, registered in IoC.RegisterCoreServices",
+   "CareerPassiveService ctor (IModLogger, IPartySizeCacheInvalidator); AiPartySizeSettingsWatcher ctor (IModLogger, IPartySizeCacheInvalidator) and HandleSettingsChanged",
+   "ISpecialResourceService.ScaleEarned; DailyResourceBreakdown.HasUpkeepDue; SpecialResourceEarnPolicy.PaysBattleCredit",
+   "CoopSessionPolicy.IsSinglePlayerAuthority (only if absent)",
+   "ICareerQuestService.IsFormerPlayerHeroQuest; CareerQuestService.NewQuestStringId; CareerQuestService ctor gains ICoopPresenceProvider, ICoopSessionProvider, IDedicatedServerProvider",
+   "CareerScreenVM.RootPerkDescription and HasRootPerk; CareerScreen.xml root perk TextWidget",
+   "TAOM.Tests/Migration/IlCallScanner.Fingerprint (only if WP118 has not landed it)",
+   "TAOM.Tests/Features/CareerSystem/CareerButtonClickTests.cs (WP139 extends it)",
+   "TAOM.Tests/Features/CareerSystem/CareerScreenPrefabBindingTests.cs",
+   "TAOM.Tests/Features/CareerSystem/{CareerMountBonusBindingTests,AttackTypeMaskTests,CareerPerkReportTests,CareerPerkMissionTeardownTests,CareerQuestWiringTests}.cs",
+   "TAOM.Tests/Features/SpecialResources/{SpecialResourceGainTests,SpecialResourcesWiringTests}.cs",
+   "docs/reviews/rca-career-mount-bonuses-2026-09-17.md (fresh), rca-career-perks-2026-09-17.md, rca-career-e1e3-2026-10-08.md, rca-field-commission-races-2026-09-17.md, rca-career-click-sound-971-2026-10-23.md, rca-career-quest-owner-change-2026-10-27.md (each with a 1.4.x port note)"
+  ],
+  "open_risks": [
+   "e0ad0db76's career half is adopted here although not in the pack; if WP123's writer ports it differently, Step A3's _hitTallies pre-check stops the executor",
+   "CareerPerkMissionBehavior.cs conflicts depend on WP106's exact hand-merge; the plan gives semantic edits plus grep checks rather than a byte-exact end state",
+   "Doc conflict resolution (special-resources.md in B6, career-quest-system.md in C4, possibly field-commission.md in C1) needs executor judgement within listed rules",
+   "Wave-4 merge hot spots: WP131 edits TaomPartySizeModel near the line B3 moves ApplyFlat in front of; WP130's b0154d86e sits beside TaomAgentApplyDamageModel, whose private HitMask A2 changes",
+   "InitializeMissionEquipment's ammo call has no try/catch (parity with 1.5.x), while the removed OnAgentBuild refill caught (#595)",
+   "Test totals assume MSTest counts each DataRow as a result; expected deltas +63/+117/+160 (159 when IsSinglePlayerAuthority already exists)",
+   "CareerScreenPrefabBindingTests' generic walk may expose a pre-existing 1.4.x binding defect (a static check found none); the plan STOPs rather than editing the prefab",
+   "Binding and IL tests need BANNERLORD_GAME_DIR so the game assemblies load; Inconclusive is treated as a STOP"
+  ]
+ },
+ {
+  "id": "131",
+  "file": "plans/131-campaign-fixes-messengers-recruitment.md",
+  "title": "Port the messenger, castle-recruitment, alignment-scoring and troop-weight fixes to 1.4.x",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "parts": 2,
+  "creates": [
+   "Main/Features/TroopWeight/TroopWeightPenaltyScope.cs",
+   "Main/Features/CastleRecruitment/CastleVolunteerScan.cs",
+   "Main/Features/CastleRecruitment/Hooks/CastleAiRecruitDispatcher.cs (replaces deleted Patch42_FillSettlements_Transpiler.cs and Patch42_HourlyTickParty_Postfix.cs)",
+   "CastleAiToggle.IsExcludedFromRecruitScoring (replaces IsCastleAndAiDisabled) and CastleAiTranspiler.SwapIsCastleGate(IEnumerable<CodeInstruction>, IModLogger?)",
+   "ICastleRecruitmentService.BlocksAiRecruitAtCastle(sellerInCastle, buyerIsPlayer)",
+   "TaomVolunteerModel constructor with ICastleRecruitmentService as sixth parameter (single construction site in Main/SubModule.cs)",
+   "TAOM.Tests/Migration/CastleRecruitmentEngineMirrorTests.cs (also holds the relocated castle transpiler-site test)",
+   "TAOM.Tests/Features/CastleRecruitment/CastleVolunteerScanTests.cs",
+   "Main/Features/AlignmentRecruitment/AlignmentRecruitmentModule.cs (category Patch114_AlignmentRecruitmentScoring) plus one FeatureModules.All line",
+   "Main/Features/AlignmentRecruitment/Hooks/Patch114_AiVolunteerEstimate_Postfix.cs",
+   "TAOM.Tests/Features/AlignmentRecruitment/AiVolunteerEstimateBindingTests.cs",
+   "Main/Features/Messengers/IMessengerConversationState.cs and MessengerConversationState.cs (+ MessengerConversationStateTests.cs)",
+   "Main/Features/Messengers/MessengerEntryPolicy.cs (+ MessengerEntryPolicyTests.cs)",
+   "Main/Features/Messengers/MessengerSessionRulesModule.cs (category Patch117_MessengerSessionRules) plus one FeatureModules.All line",
+   "Main/Features/Messengers/Hooks/MessengerSessionRulesPatch.cs (+ MessengerSessionRulesPatchTests.cs)",
+   "ServiceVocabulary.EnlistUnavailableReason(EnlistGateResult verdict, bool throughMessenger = false) and EnlistmentDialogBehavior.OfferIsTakeable(verdict, bool throughMessenger)",
+   "Localization key taom_enlist_not_by_messenger in taom_module_strings.xml and the 12 std_taom_module_strings_*.xml files",
+   "TAOM.Tests/Infrastructure/PrefabExtensionBrushTests.cs (scans Main/ via RepoPaths.CodeRoots; no GameDir member)",
+   "TAOM.Tests/Features/Messengers/MessengerEncyclopediaPrefabTests.cs",
+   "RCAs: docs/reviews/rca-castle-recruitment-seam-2026-10-18.md, rca-alignment-scoring-2026-10-23.md, rca-messengers-brushes-2026-10-24.md, rca-messenger-session-rules-2026-10-23.md",
+   "harmony-patch-registry.md sections Patch114_AlignmentRecruitmentScoring and Patch117_MessengerSessionRules"
+  ],
+  "open_risks": [
+   "WP122 may or may not have landed; if it has, its Patch42 TranspilerSiteBindingTests rows must be removed and the expected total (T0 + 32) shifts by that many.",
+   "D20: if the WP101 Armory baseline is not done (V0 above 0), the ModuleData commit hook denies the B5 commit and Part B stops.",
+   "API snapshot drift: patch-targets.md rows are regenerated or hand-edited; other WPs' rows may make -Check fail or need hand edits.",
+   "Merge contention with other wave-4 WPs in Main/Composition/FeatureModules.cs, Main/SubModule.cs and harmony-patch-registry.md.",
+   "EnlistmentContainerWiringTests may need more substitutes than the one IPlayerContextAdapter the plan adds if earlier WPs changed the enlistment graph.",
+   "B2 rename detection may not map the 1.5.x Client/ path onto Main/; the plan gives a fallback.",
+   "AI travel decisions, castle entry recruits, messenger conversation paths and the button look are not unit-testable; they stay unverified until the in-game checks run.",
+   "Deliberate behaviour changes need maintainer sign-off (foreign-castle targeting removed; companion-led player-clan parties blocked at castles; no #920 co-op stand-down under D7).",
+   "The plan is 1,676 lines, over the 1,200-line aim; it is split into two independently landable Parts instead.",
+   "Disclosure: during research one read-only helper script was written outside the repo at C:\\Users\\mikew\\AppData\\Local\\Temp\\claude\\e93d832d69f64e58\\c23ef2cf-9857-440b-b781-8a0a1ef27a3f\\scratchpad\\brushcheck.py (it only reads brush XML from the game install and the repo). No repo file other than the plan was written; no git refs, index or worktree changed; no build or test ran."
+  ]
+ },
+ {
+  "id": "133",
+  "file": "plans/133-campaign-fixes-inventory-ui.md",
+  "title": "Port the inventory, banner-colour, map-bar and campaign UI fixes to the 1.4.x line",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "105"
+  ],
+  "parts": 4,
+  "creates": [
+   "Main/Core/Validation/EnumNames.cs (EnumNames.TryParse<TEnum>, name-only enum parse; WP123 deferred hotkey rule relies on it)",
+   "Main/Adapters/MapMenuGate.cs (internal static MapMenuGate.IsMapClearForMenu())",
+   "InventoryVMAdapter.RefreshPanel and IInventoryVMAdapter.IsPanelRefreshBound (shared inventory panel refresh)",
+   "Main/Features/BannerColorPersistence/Hooks/ClanColoredCharacterCode.cs (ClanColoredCharacterCode.Recolor)",
+   "Main/Features/Refuge/Hooks/RefugeClanRowRefreshPatch.cs (Patch75_Refuge postfix on ClanPartyItemVM.UpdateProperties, Initialize(IRefugeBook))",
+   "Main/Features/TavernSpecialities/TavernSpecialitiesModule.cs and its Patch111_TavernSpecialities prefix class, listed last in FeatureModules.All",
+   "Main/Features/LiegeTitles/TaomCultureTags.cs (16 ConversationTag classes, StringId taom_culture_<culture>)",
+   "ItemPoolAdapter.IsMarketCandidate(string? stringId, bool notMerchandise)",
+   "tools/generate_new_faction_kingdoms.py upsert() replace-in-place plus tools/tests/test_generate_new_faction_kingdoms.py (WP136 f963c6188 needs it)",
+   "New English placeholder string keys for WP135: taom_tavern_drink_default, taom_tavern_food_default, taom_str_liege_title.<16 cultures>, taom_str_liege_title_female.<16 cultures>, taom_str_become_king_empire",
+   "docs/features/liege-titles.md and docs/features/tavern-specialities.md",
+   "docs/reviews/rca-quickactions-unequip-2026-10-19.md (ported RCA with v1.4.8 re-cites)",
+   "New tests: InventoryPanelRefreshBindingTests, InventoryPanelRefreshTests, SPInventoryVM_ArmorColor_PatchTests, EnumNamesTests, ClanColoredCharacterCodeTests, HookColorAssignmentGateTests, OrderOfBattleHeroItemVMPatchTests, RefugeClanRowDecisionTests, SpecialResourceMapBarMixinWiringTests, AffectRelativesGateTests, MapMenuGateWiringTests, MapMenuGateBindingTests, ItemPoolAdapterMerchandiseTests, TavernSpecialitiesBindingTests, TavernSpecialitiesWiringTests",
+   "Section '## Conversation tags' in .claude/rules/csharp-patterns.md; registry section '## Patch111_TavernSpecialities'"
+  ],
+  "open_risks": [
+   "TaomCultureTags: the ConversationManager constructor instantiates every ConversationTag subclass at each campaign start and load, so a non-instantiable or duplicate-id tag would break every campaign; only EveryTaomConversationTag_IsInstantiableAndUnique guards it before the in-game check",
+   "The Harmony retargets (Patch23 to the private UpdateCharacterArmorColor, the OrderOfBattleHeroItemVM(Agent) constructor through TargetMethods, the new UpdateProperties postfix) are proven only by binding tests until checked in game",
+   "D20: if the laptop Armory is still v2.0.26, Parts B to D cannot stage ModuleData and the WP stalls at Step 0.6",
+   "A4 subtracts 2 from MCM settings counts that other wave-4 WPs also change; the integrator must re-derive the numbers on merge",
+   "The 13 string files and harmony-patch-registry.md are shared with other WPs; merge order decides the conflicts",
+   "Binding-verification tests (TavernSpecialities, MapMenuGateBindingTests) report Inconclusive, not Passed, if the game assemblies are not found on the executor machine",
+   "The plan is 2,329 lines, over the 300 to 1,200 aim, because it carries full code, docs and commit text for a zero-context executor"
+  ]
+ },
+ {
+  "id": "134",
+  "file": "plans/134-campaign-data-defects.md",
+  "title": "Fix kingdom policy ids, Lindon's balance tables and alignment sides on 1.4.x, and gate shipped banner keys",
+  "priority": "P1",
+  "effort": "M",
+  "risk": "MED",
+  "depends_on": [
+   "101",
+   "104"
+  ],
+  "parts": 3,
+  "creates": [
+   "Main/Features/Execution/SideIds.cs (record SideIds(FactionId, CultureId), SideIds.None)",
+   "Main/Features/Execution/AlignmentServiceExtensions.cs (ResolveSide(this IAlignmentService, SideIds))",
+   "Main/Adapters/FactionSides.cs (internal static: Of(IFaction), OfHero(Hero), OfPlayer(); no OfCharacter)",
+   "IPlayerContextAdapter.GetPlayerSideIds() replacing GetPlayerCultureId()",
+   "ExecutionContext SideIds API: TrySet(SideIds, SideIds), GetVictim(), GetExecutor(), ResolveVictim(SideIds), ResolveExecutor(SideIds); ExecutionParticipant removed",
+   "IWandererAllegianceService.Evaluate(string?, string?, SideIds) and IPrisonerRecruitmentMoraleService.ShouldWaiveMoralePenalty(SideIds, string, string, bool)",
+   "TAOM.Tests/Features/Execution/SidePairScanTests.cs (TwoArgumentCallers allow-list = AlignmentServiceExtensions only; later ports must extend it)",
+   "TAOM.Tests/Adapters/FactionSidesTests.cs",
+   "TAOM.Tests/Core/KingdomPolicyIdsTests.cs (32 v1.4.8 policy ids)",
+   "TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs",
+   "TAOM.Tests/Features/BannerBearers/ShippedHeraldryBannerKeyTests.cs",
+   "TroopWeightLevelBandTests.EveryLindonTroop_WeighsTheSameAsItsRivendellTwin",
+   "Part C only: TAOM.Tests/Core/WandererBackstoryCoverageTests.cs"
+  ],
+  "open_risks": [
+   "The WP134 orchestrator note's reason for skipping #757 is factually wrong (9dd2f594f, 2026-10-08, predates Oaths of Service caed64ae1, 2026-10-20, and touches none of its files); D13's test is met. Part C is OFF until the orchestrator re-enables it. Plan 135 lists those wanderer rows as landed by WP134 but does not depend on them.",
+   "Plan 110 states WP134 refactors MomentumEnrollmentService.ResolveSide; this plan deliberately does not (binding note and V06), so that carve-out is moot.",
+   "How often the #957 mis-siding fires in a live 1.4.x campaign is UNVERIFIED: at start every Umbar/Shaghana/Abanissa clan carries its realm's culture; the bug needs a hero whose culture's side differs from his Neutral realm.",
+   "SidePairScanTests needs the game assemblies (BANNERLORD_GAME_DIR) and is Inconclusive without them; any 2-arg ResolveSide caller added by an earlier-merged WP makes it fail (STOP condition).",
+   "WP128 also edits IPlayerContextAdapter (adds GetPlayerClanId); either merge order works but the integrator should expect both members.",
+   "Test-count deltas assume MSTest reports each DataRow separately; Step 0 detects the folded case (+8 instead of +16 for Part A).",
+   "Lindon's weights and survival bonus are 1.5.x values copied as integrity from the Rivendell twins (no retune, D13); in-game feel is unverified.",
+   "docs/features/alignment-desertion.md:5 still lists Khand among Evil lords (out of scope, follow-up)."
+  ]
+ },
+ {
+  "id": "135",
+  "file": "plans/135-localization-fixes.md",
+  "title": "Fix the localization pipeline and the English overrides, then translate every wave-4 string once",
+  "priority": "P1",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "128",
+   "129",
+   "130",
+   "131",
+   "132",
+   "133",
+   "134"
+  ],
+  "parts": 4,
+  "creates": [
+   "Main/Adapters/ITextLocalizerAdapter.cs (ActiveLanguage only) and Main/Adapters/TextLocalizerAdapter.cs",
+   "Main/Features/LocalizationOverride/OverrideLanguageGate.cs; MBTextManager_GetLocalizedText_Patch.UseLanguageGate(OverrideLanguageGate?) test seam",
+   "tools/_loc_sources.py: TAOM_SOURCES (13 hand-kept rows + 4 generated name rows), OVERRIDE_SOURCE, VANILLA_ID_SHAPE",
+   "tools/translate_with_claude.py: key_owners, skip_ids_for, english_only_override_ids, override_ids_to_skip, EXPRESSION_TAG, main(argv), --seed-only, --max-entries cap of zero and negative refusal (a9f2d7eda/71fea53c8 hunks: WP141 must skip them)",
+   "tools/tests/test_translate_caps_and_seed.py (1.5.x e45f6df2c version; WP141 must not re-add)",
+   "tools/generate_name_localization_strings.py (four categories) with Main/_Module/ModuleData/taom_{troop,lord,clan,kingdom}_name_strings.xml and 48 Languages/<L>/std_taom_{troop,lord,clan,kingdom}_name_strings_<locale>.xml",
+   "tools/check_orphan_loc_rows.py, tools/loc_composed_families.json, tools/loc_orphan_allowlist.json",
+   "tools/loc_length_report.py and docs/reference/gauntlet-screen-checklist.md",
+   "tools/check_external_loc_coverage.py --processors-only with a local _parse_like_engine copy (WP136 may switch to the validate_xml_schemas import)",
+   "TAOM.Tests/Infrastructure/Localization/LocalizationKeyConsistencyTests.cs (RegisteredEnglish internal), VanillaLocalizationKeys.cs, VanillaKeyOverrideTests.cs, kept-vanilla-key-rows.txt, LanguageProcessorTests.cs",
+   "TAOM.Tests/Features/LocalizationOverride/OverrideLanguageGateTests.cs",
+   "Language manifests now declare name and text_processor for the eight processor languages; 17 LanguageFile rows per language",
+   "Optional Part D: tools/name_tags.py (TAGGED_LANGUAGES = IT), generate_name_tags.py, name_tag_inventory.py, translation_name_tags.json (IT only)"
+  ],
+  "open_risks": [
+   "Earlier-WP state is branched, not known: IdSlice from WP123, 113d3483b from WP132, 9dd2f594f hunks from WP134, DutyText.cs from WP128; A0 records each and the steps branch",
+   "Paid translation cost is unknown until C2's dry run; the cache seeding should cover most name keys (1,989 of 2,020 measured for DE, RU, BR at e45f6df2c)",
+   "The kept-vanilla-key list carries 1.5.x judgments made against v1.5.x vanilla translations; all 369 pairs exist on 1.4.x but v1.4.8 wording may differ slightly; in-game check owed",
+   "The helper's writing-system mirror matched the emulated 133 rows, but small differences from the C# rule may leave up to 20 hand fixes (STOP above that)",
+   "Emulated counts (about 4,600 data sites, 133 rows, 151 cache values, 819 C# sites) come from Python emulations on 1b00d1acd; wave-4 merges can shift them",
+   "Players keep reset grammar processors whenever TAOM_Map or the Armory loads after TAOM, until the maintainer's external edit ships in packages; BetterTime unverified",
+   "Clan names are saved (Clan.Name SaveableProperty 51): existing campaigns keep the shared Umbar key",
+   "The orphan gate does not scan the live TAOM_Map/Armory; mitigated by a read-only grep before each removal",
+   "Part D's 1.5.x tests are BR-heavy; adapting them to an IT-only table may need more than deleting BR methods (STOP, Part D optional)",
+   "The RequiresGame patch test runs in the normal suite on the laptop (no category filter on 1.4.x); a TypeInitializationException is a STOP"
+  ]
+ },
+ {
+  "id": "138",
+  "file": "plans/138-harness-review-pipeline.md",
+  "title": "Plan 138: Bring the 1.5.x review pipeline, harness measurement and model routing to the 1.4.x harness",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "116",
+   "136",
+   "137"
+  ],
+  "parts": 4,
+  "creates": [
+   ".claude/agents/deep-reviewer.md (check-deep-review.sh from WP116 looks for it)",
+   ".claude/skills/deep-review/lenses/{1-standards,2-engine-compat,3-efficiency,4-completeness,5-data-flow,6-design,7-xml,adversarial,tooling}.md and the tiered deep-review SKILL.md",
+   ".claude/rules/model-effort-selection.md and .claude/agents/{architect,fast-reader,implementer}.md",
+   ".claude/rules/data-scripts.md and docs/reference/moduledata-validator-codes.md (moduledata-validation.md split)",
+   ".claude/skills/harness-retro/SKILL.md, docs/ai-includes/harness-retro.md, tools/harness_retro.py (with default_slug derived per machine)",
+   ".claude/hooks/check-bash-length.sh (registered by maintainer step M1)",
+   ".claude/skills/improve/references/{dispatch-rules,execute-and-review,run-protocol}.md and .claude/skills/improve/workflows/{draft-issues,execute,fanout,plans,review}.js; closing-the-loop.md deleted",
+   "tools/check_public_text.py, tools/improve_ctl.py, tools/integrate_branch.py, tools/loop_progress.py, tools/worktree_audit.py, tools/check_provenance.py, tools/check_stale_loc_rows.py (only if tools/_loc_sources.py exists)",
+   "docs/ai-includes/perf-method.md",
+   "TAOM.Tests/Infrastructure/VerifyCanaryTests.cs and /verify Steps 2c, 5b, 5c",
+   "_shellwords.py 'commit-plan' mode; lint_docs.py check_feature_doc_verify_section, --also-new, --only-paths, git-diff-failed finding, _dash_base_resolves (exit 2), and --staged if WP136 did not add it",
+   "tools/test_hooks.sh sections 4f, 7l2, 7l3, 7n, 7o and the 3b frontmatter key allowlist (SKILL_KEYS, AGENT_KEYS)",
+   "harness-facts.md 'Tool and session behaviour' section",
+   "Shared hunks taken early that WP143 must skip: 2992763f6 (model rule first paragraph), 452796db4 and 4fbfb7adc (harness-retro skill and doc)"
+  ],
+  "open_risks": [
+   "B4 hand-ports five lint_docs.py changes onto a linter that never took the 1.5.x refactors; WP136 may or may not have added --staged and check_rca_followups (K2/K3).",
+   "tools/test_hooks.sh merges depend on the section shapes WP102, WP103 and WP116 left; new rows for 1.5.x-only sections are dropped or moved, which needs judgment.",
+   "Several adaptations are conditional on outputs of WP127, WP135, WP136, WP137 and WP141 that are not yet planned (K1-K13).",
+   "WP143 must skip the three shared hunks taken early and restore 099840f33's agent-teams.md 'Budget' pointer; WP141 must re-add graphify text if it ports graphify after this WP.",
+   "The audit_mbproj_registration.py half of 09f3126a7 is deferred: its 13-id requested table is v1.5.5-sourced, native rows are unverified on v1.4.8 and soln_worldmap_color_grades is absent from the v1.4.8 managed dump.",
+   "The ported 1.5.x harness-retro record keeps the HARNESS RETRO DUE banner showing in every session until a 1.4.x retro is committed.",
+   "Harness facts from 1.5.x records (Claude Code 2.1.288 to 2.1.301 behaviour) were re-verified this session only for the env-var rows; the rest carry their 1.5.x DOC/EMPIRICAL sources.",
+   "The plan is about 1,275 lines, slightly above the 1,200-line aim, because the WP holds 71 commits across 28 groups."
+  ]
+ },
+ {
+  "id": "140",
+  "file": "plans/140-gui-prefab-gates.md",
+  "title": "Gate TAOM's Gauntlet prefabs against the installed v1.4.8 game and drop the stale and identical copies",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "131",
+   "104",
+   "115"
+  ],
+  "parts": 4,
+  "creates": [
+   "TAOM.Tests/Migration/PrefabElementTypeBindingTests.cs (EveryPrefabElement_ResolvesToAWidgetTypeOrAPrefab)",
+   "TAOM.Tests/Migration/PrefabExtensionBindingTests.cs (EveryPrefabExtension_XPath_ResolvesAgainstTheWinningPrefab, with exact-case movie check)",
+   "TAOM.Tests/Migration/PrefabCloneWidgetReferenceTests.cs (ShadowPairs, AsTheEngineReadsIt, EveryShadowedVanillaWidgetReference_SurvivesInTheTaomClone, NoTaomPrefab_IsAnUnchangedCopyOfTheVanillaFileItShadows)",
+   "TAOM.Tests/Migration/PrefabAttributeNameBindingTests.cs (VanillaParityAllowlist recomputed for v1.4.8, PrefabAttributeResolver, ease-value checks)",
+   "TAOM.Tests/Infrastructure/PrefabInsertPositionTests.cs",
+   "TAOM.Tests/Infrastructure/PrefabHintParentGateTests.cs (TAOM assembly, floor 5)",
+   "TAOM.Tests/Infrastructure/GauntletStretchInCoverRatchetTests.cs (Known: MomentumView 5, CareerScreen 3, BattleActionBar 1, PreBuildCharacterSelection 1; floor scanned > 30)",
+   "TAOM.Tests/Features/Execution/PartyTupleVanillaParityTests.cs (guarded: passes when TAOM ships no tuple copy)",
+   "PrefabExtensionBrushTests.EveryGuiPrefabBrush_IsDeclaredByAModule and class PrefabBrushPropertyTests in TAOM.Tests/Infrastructure/PrefabExtensionBrushTests.cs",
+   "CareerEnergyBarPrefab.Index => 0 override",
+   "tools/package_release.py stale_module_files, REPO_MODULE_ROOTS, _BUILD_OUTPUT_PREFIX, _EDITOR_PACK and the require_build wiring (Part D); tools/tests/test_package_release.py TestStaleModuleFiles",
+   "New section '## GUI prefab gates' in .claude/rules/moduledata-validation.md; '## Gates that key on repo paths' in .claude/rules/tests.md; insert-position, Hover targets and full brush/attribute Gate lines in .claude/rules/gui-ui.md",
+   "Re-based Main/_Module/GUI/PreFabs/Party/PartyTroopManagerPopUp/PartyTroopManagerPopUp.xml (v1.4.8 vanilla plus TAOM's two edits); 19 prefab files deleted"
+  ],
+  "open_risks": [
+   "Expected RED outputs come from read-only Python replicas. The element, clone and attribute replicas are approximate, so the real first run may differ; the plan STOPs on any unlisted item",
+   "WP131 has no plan yet: the plan assumes it creates PrefabExtensionBrushTests.cs from 2c7f7fae9, scanning Main only, plus a gui-ui Gate line. Step 0 checks for the file and its methods",
+   "WP129 (CareerScreen.xml) and WP130 (BattleActionBar.xml) edit prefabs this plan gates. Ratchet counts may move; the plan accepts a live count only for a file an earlier WP changed",
+   "WP136 (8caac7da5) edits PrefabExtensionBrushTests.cs in the same wave; a merge overlap is likely trivial",
+   "Part D depends on WP115's exact packager shape. The CLI test needs TestRequireBuildCli._taom, which the plan 017 blob 9ca99437f lacks; it is skipped and reported if absent",
+   "Four post-anchor 1.5.x commits (498d07e08, ed3f911eb, 0385cc041, 95a348a60) change two ported gates. They are unclassified and not ported",
+   "Test-count delta of 37 assumes dotnet test reports each DataRow as one result",
+   "The pop-up re-base and nine brush repoints are player-visible and owe in-game checks; the 19 deletions need the deployed install pruned"
+  ]
+ },
+ {
+  "id": "143",
+  "file": "plans/143-harness-rules-sync.md",
+  "title": "Sync the 2026-11-03 rules review, the doc linter's commit view and the .githooks pre-commit gate onto the 1.4.x line",
+  "priority": "P2",
+  "effort": "L",
+  "risk": "MED",
+  "depends_on": [
+   "138",
+   "142"
+  ],
+  "parts": 6,
+  "creates": [
+   ".githooks/pre-commit",
+   ".githooks/pre-merge-commit",
+   ".claude/hooks/check-feedback-memory.sh",
+   ".claude/rules/config-providers.md",
+   "docs/reference/gui-prefab-clones.md",
+   "docs/features/commit-gates.md",
+   "docs/research/harmony-fork-feasibility.md",
+   "tools/tests/test_lint_rule_drift.py",
+   "tools/tests/test_githooks_pre_commit.py",
+   "tools/tests/test_feedback_memory_hook.py",
+   "tools/lint_docs.py: CommitView, commit_view, _cat_file_batch, _commit_text, check_dead_memory_refs, check_rule_symbols, check_unflagged_dotnet, DEAD_MEMORY_DIRS (incl. docs/reference/engine), DOTNET_FLAG_DIRS, rule_drift and adr_symbols report fields, entry() exit 3, --staged commit view, --clean-merge",
+   "tools/check_commit_msg.py: CLOSING_LIST rule and entry() exit 3",
+   ".claude/hooks/_shellwords.py bypass mode (block-no-verify reads git as bash does)",
+   ".claude/hooks/session-start.sh: main_checkout_name(), core.hooksPath note, MEMORY.md load-cap note",
+   "docs/reference/gamemodel-registry.md as the one GameModel catalogue with the 'TAOM has N GameModel overrides' claim",
+   "Deletions later WPs must not expect: .claude/agents/{debugger,error-detective,refactoring-specialist}.md, seven hooks (post-compact, pre-compact, check-deep-review, check-version-tagged, session-stop, mcp-health-check, mcp-health-mark), six docs/ai-includes guides (tdd-enforcement, security, decompiled-code-analysis, research-workflow, iterative-problem-solving, multi-approach-validation)"
+  ],
+  "open_risks": [
+   "WP138's plan was not written at planning time: lens files, deep-reviewer and implementer agents, check_public_text.py, the risk-tier table and the exact lint_docs.py shape are unknown, so many hunks are conditional on Step 0's P6 probe.",
+   "Part C's path-rule re-trim and the harness-facts.md row replacements are judgment-heavy hand edits; a dropped MANDATORY instruction would not be caught by any test.",
+   "The 71 1.5.x commits after e45f6df2c (block-no-verify.sh, check_commit_msg.py, .githooks/pre-commit, lint_docs.py and others) are unclassified and not in this plan.",
+   "With core.hooksPath set, .githooks/pre-commit refuses ModuleData commits on the laptop while its Armory is the old build (thousands of BROKEN_ITEM_REF reported in Workflow 2); D20's laptop Armory update must land first, as for the Claude gate.",
+   "check_unflagged_dotnet in lint_docs.py and WP103's test_dotnet_commands_flagged.py hold the same pattern; their DIRS lists must be kept equal.",
+   "CLAUDE.md byte headroom after WP103 is small; B2 and B3 additions rely on D1 and E3 deletions to stay under the 46,000-byte cap, with a STOP if they do not.",
+   "git apply --3way and cherry-pick on CRLF markdown under core.autocrlf=true may need the documented `git add` retry; lessons files must never be patched because WP142 set merge=union on them."
+  ]
+ }
+]

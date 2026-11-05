@@ -1,0 +1,1237 @@
+[
+ {
+  "id": "101",
+  "slug": "baseline-sync",
+  "wave": 0,
+  "lane": "gate",
+  "title": "Sync bannerlord-1.4.5 to origin, fold in the public #697 troop tree, record the baseline and decisions",
+  "pri": 9,
+  "groups": [],
+  "n_groups": 0,
+  "n_commits": 0,
+  "extra": [
+   "XML-DATA-02",
+   "XML-DATA-03",
+   "RELEASE-INTEGRITY-04",
+   "BHA0001 Patch88 analyzer warning (false positive per D4)"
+  ],
+  "depends_on": [],
+  "shared_groups": []
+ },
+ {
+  "id": "102",
+  "slug": "changelog-at-release",
+  "wave": 0,
+  "lane": "harness",
+  "title": "Adopt plan 020 on 1.4.x: the commit body is the changelog entry and /release generates CHANGELOG.md",
+  "pri": 2,
+  "groups": [
+   "plan-020-changelog-at-release"
+  ],
+  "n_groups": 1,
+  "n_commits": 7,
+  "extra": [
+   "RELEASE-INTEGRITY-09"
+  ],
+  "depends_on": [
+   "101"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "103",
+  "slug": "executor-safety-harness",
+  "wave": 0,
+  "lane": "harness",
+  "title": "Make the 1.4.x gates real and executor-safe: hook output contract, anchored paths, non-deploying commands, worktree-aware readers",
+  "pri": 1,
+  "groups": [
+   "issue-681-hook-herestring-hang",
+   "issue-690-hook-registration-anchor",
+   "harness-non-deploying-verify",
+   "harness-commit-subject-gate",
+   "git-multisession-safety",
+   "harness-upstream-review",
+   "harness-git-commit-msg-hook"
+  ],
+  "n_groups": 7,
+  "n_commits": 9,
+  "extra": [],
+  "depends_on": [
+   "102"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "104",
+  "slug": "guarded-patch-categories",
+  "wave": 0,
+  "lane": "code",
+  "title": "Apply every Harmony patch category through one guard (plan 009), add RepoPaths and the honest wiring reader",
+  "pri": 1,
+  "groups": [
+   "plan-009-guarded-patch-category-apply",
+   "tests-repopaths-infra"
+  ],
+  "n_groups": 2,
+  "n_commits": 9,
+  "extra": [
+   "LOAD-TIME-04"
+  ],
+  "depends_on": [
+   "101"
+  ],
+  "shared_groups": [
+   "plan-018-composition-root"
+  ]
+ },
+ {
+  "id": "105",
+  "slug": "composition-root",
+  "wave": 0,
+  "lane": "code",
+  "title": "Add the plan 018 feature-module runner (empty) and move WandererAllegiance into the first module",
+  "pri": 2,
+  "groups": [
+   "plan-018-composition-root"
+  ],
+  "n_groups": 1,
+  "n_commits": 6,
+  "extra": [],
+  "depends_on": [
+   "104"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "106",
+  "slug": "offthread-and-tick-safety",
+  "wave": 1,
+  "lane": "A",
+  "title": "Park off-thread callback writes (#634) and recover the mission tick handshake safely",
+  "pri": 0,
+  "groups": [
+   "issue-634-offthread-callbacks",
+   "issue-965-coop-safety-nets"
+  ],
+  "n_groups": 2,
+  "n_commits": 2,
+  "extra": [
+   "FREEZE-THREADING-01",
+   "FREEZE-THREADING-03",
+   "RUNTIME-PERF-04"
+  ],
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "107",
+  "slug": "crash-capture-and-patchshield",
+  "wave": 1,
+  "lane": "B",
+  "title": "Thread-aware crash capture, six allowlisted shims instead of 247, PatchShield without per-call lookups (plans 006, 007, 034)",
+  "pri": 1,
+  "groups": [
+   "crash-report-rethrow-stack",
+   "plan-007-patchshield-skip-callback-shims",
+   "plan-006-crash-capture-boot-cost",
+   "plan-034-patchshield-per-call-cost"
+  ],
+  "n_groups": 4,
+  "n_commits": 20,
+  "extra": [
+   "FREEZE-THREADING-05",
+   "RUNTIME-PERF-03",
+   "LOAD-TIME-03 (part 2: 5ee49d05f)",
+   "LOAD-TIME-06",
+   "RELEASE-INTEGRITY-07"
+  ],
+  "depends_on": [
+   "106"
+  ],
+  "shared_groups": [
+   "hill-troll-sprint-mixed"
+  ]
+ },
+ {
+  "id": "108",
+  "slug": "missing-body-load-hang",
+  "wave": 1,
+  "lane": "C",
+  "title": "Guard the missing collision-body infinite wait (Patch90) and gate missing bodies and meshes at the desk",
+  "pri": 0,
+  "groups": [
+   "issue-599-armory-ref-audit",
+   "issue-601-preload-body-guard",
+   "collision-body-gate",
+   "armoury-mesh-ref-audit",
+   "tools-mesh-name-check"
+  ],
+  "n_groups": 5,
+  "n_commits": 7,
+  "extra": [
+   "LOADING-HANG-02",
+   "XML-DATA-01",
+   "XML-DATA-06"
+  ],
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "109",
+  "slug": "mission-start-and-skeleton-guards",
+  "wave": 1,
+  "lane": "A",
+  "title": "Survive mission-start throws (no endless reload) and guard the engine's per-frame skeleton buffers",
+  "pri": 0,
+  "groups": [
+   "mission-start-guard",
+   "yotthani-stability-guards",
+   "issue-806-native-pin-gate"
+  ],
+  "n_groups": 3,
+  "n_commits": 5,
+  "extra": [
+   "LOADING-HANG-03",
+   "LOADING-HANG-06",
+   "FREEZE-THREADING-04",
+   "FREEZE-THREADING-07",
+   "RUNTIME-PERF-15"
+  ],
+  "depends_on": [
+   "106",
+   "107"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "110",
+  "slug": "war-of-the-ring-fixes",
+  "wave": 1,
+  "lane": "E",
+  "title": "Fix the War of the Ring: real Full War declarations, per-campaign reset, settings migration, honest victory",
+  "pri": 1,
+  "groups": [
+   "issue-764-wotr-session-reset",
+   "issue-772-wotr-fullwar-declarations",
+   "wotr-syncdata-chunker-guard",
+   "issue-818-wotr-war-rule",
+   "issue-1015-siege-capture-credit",
+   "issue-1017-mcm-renamed-defaults"
+  ],
+  "n_groups": 6,
+  "n_commits": 8,
+  "extra": [
+   "WOTR-01..10",
+   "SAVE-TIME-06"
+  ],
+  "depends_on": [
+   "103",
+   "104"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "111",
+  "slug": "battle-freeze-mitigations",
+  "wave": 1,
+  "lane": "A",
+  "title": "Cap battle corpses (#701), end AI battles stuck at N vs 0 (#748), make mission behaviour initialisation run",
+  "pri": 0,
+  "groups": [
+   "issue-606-dead-onbehaviorinitialize",
+   "issue-699-siege-dismount-custom-battle",
+   "issue-701-battle-corpses",
+   "issue-748-stuck-battle-guard"
+  ],
+  "n_groups": 4,
+  "n_commits": 7,
+  "extra": [
+   "LOADING-HANG-07",
+   "FREEZE-THREADING-08"
+  ],
+  "depends_on": [
+   "105",
+   "109"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "112",
+  "slug": "crash-robustness",
+  "wave": 1,
+  "lane": "D",
+  "title": "Port the crash and NRE guards 1.5.x added on shared code paths",
+  "pri": 0,
+  "groups": [
+   "plan-002-nan-infinity-guards",
+   "main-party-getter-null-guard",
+   "issue-792-mainparty-getter-reads",
+   "issue-807-main-menu-step",
+   "issue-824-bard-town-guard",
+   "nre-containment-finalizers",
+   "nre-guard-audit-2026-10-27",
+   "issue-1063-feral-orcs-hideout-guard",
+   "issue-1064-supply-desertion-port",
+   "issue-1076-hollow-parent-birth"
+  ],
+  "n_groups": 10,
+  "n_commits": 20,
+  "extra": [
+   "LOADING-HANG-08 (cd06da904 as a release gate)"
+  ],
+  "depends_on": [
+   "105",
+   "107"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "113",
+  "slug": "shader-stall-and-freeze-watchdog",
+  "wave": 1,
+  "lane": "C",
+  "title": "Tell a slow shader compile from a wedge: triage fixes, a main-thread heartbeat with stack capture, honest player notices",
+  "pri": 1,
+  "groups": [
+   "shader-precompile-repark",
+   "issue-751-shader-cache-keeper",
+   "issue-752-shader-compile-notice",
+   "battle-load-triage",
+   "issue-916-bow-shader-sources",
+   "battle-load-triage-frozen-count"
+  ],
+  "n_groups": 6,
+  "n_commits": 10,
+  "extra": [
+   "LOADING-HANG-01",
+   "LOADING-HANG-04",
+   "FREEZE-THREADING-02",
+   "FREEZE-THREADING-06",
+   "RUNTIME-PERF-01",
+   "#612 Warg-mount wedge lesson"
+  ],
+  "depends_on": [
+   "106"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "114",
+  "slug": "save-growth-investigation",
+  "wave": 1,
+  "lane": "E",
+  "title": "Name what an in-game reload adds to every later save, with probes and a repro matrix, before any fix",
+  "pri": 1,
+  "groups": [
+   "issue-628-race-fertility",
+   "engine-daily-tick-on-load",
+   "issue-793-daily-tick-repeat-after-load"
+  ],
+  "n_groups": 3,
+  "n_commits": 6,
+  "extra": [
+   "SAVE-TIME-01..05",
+   "SAVE-TIME-07",
+   "SAVE-TIME-08",
+   "SAVE-TIME-09",
+   "LOAD-TIME-02",
+   "LOAD-TIME-11",
+   "LOAD-TIME-03 (part 1: TAOM Patch61 finalizers)",
+   "MEMORY-05 (shared probe)"
+  ],
+  "depends_on": [
+   "104"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "115",
+  "slug": "release-integrity",
+  "wave": 1,
+  "lane": "B",
+  "title": "Make a 1.4.x release reproducible: build identity, a gated packager, paired Dependencies, a pinned TAOM_Map",
+  "pri": 2,
+  "groups": [
+   "issue-481-log-engine-identity",
+   "module-manifest-dependency-order",
+   "plan-017-build-identity",
+   "plan-035-release-shader-cache-check",
+   "engine-bump-v1.5.4",
+   "yotthani-adoption-provenance",
+   "release-packager-gates",
+   "build-drop-gamepass",
+   "issue-1010-ingame-ledger"
+  ],
+  "n_groups": 9,
+  "n_commits": 17,
+  "extra": [
+   "RELEASE-INTEGRITY-01",
+   "RELEASE-INTEGRITY-02",
+   "RELEASE-INTEGRITY-03",
+   "RELEASE-INTEGRITY-05",
+   "RELEASE-INTEGRITY-08",
+   "XML-DATA-04"
+  ],
+  "depends_on": [
+   "107",
+   "109"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "116",
+  "slug": "hook-gate-end-state",
+  "wave": 1,
+  "lane": "H",
+  "title": "Transplant the 1.5.x git-gate end state: prefilter, trunk guard, PowerShell coverage, config protection, dangerous-git arms",
+  "pri": 2,
+  "groups": [
+   "plan-013-bash-hook-prefilter",
+   "plan-011-stop-reminders-trunk-guard",
+   "plan-027-powershell-gate-coverage",
+   "harness-ecc-rereview",
+   "harness-config-protection",
+   "harness-upstream-watch"
+  ],
+  "n_groups": 6,
+  "n_commits": 28,
+  "extra": [],
+  "depends_on": [
+   "103"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "117",
+  "slug": "frame-and-memory-instruments",
+  "wave": 2,
+  "lane": "A",
+  "title": "Measure frame time, hitches, map frames and clip memory on 1.4.8 (MissionPerf, tick profiler, hitch probe, map profiler)",
+  "pri": 1,
+  "groups": [
+   "mission-perf",
+   "perf-programme-2026-10-02",
+   "plan-028-mission-tick-profiler",
+   "plan-039-map-frame-profiler",
+   "plan-041-hitch-probe",
+   "plan-036-anim-memory-probe",
+   "plan-029-perf-runs-parser",
+   "plan-038-battle-equipment-memory-audit",
+   "perf-plans-integration-fixups",
+   "issue-809-camera-ms",
+   "mission-perf-heartbeat",
+   "lostfooting-census"
+  ],
+  "n_groups": 12,
+  "n_commits": 14,
+  "extra": [
+   "RUNTIME-PERF-13",
+   "MEMORY-09"
+  ],
+  "depends_on": [
+   "106",
+   "107",
+   "109",
+   "111"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "118",
+  "slug": "campaign-load-time",
+  "wave": 2,
+  "lane": "B",
+  "title": "Cut campaign load time: load stamps, the one-document XML merge (plan 042), ButterLib's distance matrix off",
+  "pri": 1,
+  "groups": [
+   "map-load-diagnostics",
+   "deps-butr-refresh",
+   "plan-012-loading-window-trace",
+   "plan-040-load-time-stamps",
+   "plan-042-xml-merge-fast-path",
+   "issue-725-earlylog-flush",
+   "issue-740-butterlib-distance-matrix",
+   "issue-950-lords-xslt-whitespace",
+   "issue-959-lord-generator-append-only"
+  ],
+  "n_groups": 9,
+  "n_commits": 13,
+  "extra": [
+   "LOAD-TIME-01",
+   "LOAD-TIME-05",
+   "LOAD-TIME-07",
+   "LOAD-TIME-08",
+   "LOAD-TIME-09",
+   "LOAD-TIME-10",
+   "RELEASE-INTEGRITY-10",
+   "RUNTIME-PERF-11 (part A: ButterLib Distance Matrix)",
+   "SAVE-TIME-09"
+  ],
+  "depends_on": [
+   "104",
+   "107"
+  ],
+  "shared_groups": [
+   "issue-1064-supply-desertion-port"
+  ]
+ },
+ {
+  "id": "119",
+  "slug": "memory-cross-campaign-resets",
+  "wave": 2,
+  "lane": "C",
+  "title": "Reset per-campaign state on every new campaign and find what a second game keeps (plans 001 and 014)",
+  "pri": 1,
+  "groups": [
+   "plan-014-enlistment-session-scope",
+   "plan-001-cross-campaign-resets",
+   "hero-race-session-reset"
+  ],
+  "n_groups": 3,
+  "n_commits": 14,
+  "extra": [
+   "MEMORY-05"
+  ],
+  "depends_on": [
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "120",
+  "slug": "map-perf-and-vram",
+  "wave": 2,
+  "lane": "D",
+  "title": "Cull hidden settlement nameplates, release the map view's render targets, stop the cheat-mode inventory spike, advise on textures",
+  "pri": 9,
+  "groups": [],
+  "n_groups": 0,
+  "n_commits": 0,
+  "extra": [
+   "MEMORY-01",
+   "MEMORY-04",
+   "MEMORY-07",
+   "RUNTIME-PERF-11 (part B: nameplates)",
+   "RUNTIME-PERF-14"
+  ],
+  "depends_on": [
+   "109"
+  ],
+  "shared_groups": [
+   "yotthani-stability-guards"
+  ]
+ },
+ {
+  "id": "121",
+  "slug": "texture-memory-diet",
+  "wave": 2,
+  "lane": "kit",
+  "title": "Compress the 33 banner atlases (DXT1/DXT5) and drop dead sprite sheets via a v1.4.8 Kit re-import",
+  "pri": 0,
+  "groups": [
+   "issue-913-banner-sheet-compression",
+   "issue-1047-banner-sheet-packing"
+  ],
+  "n_groups": 2,
+  "n_commits": 4,
+  "extra": [
+   "MEMORY-02",
+   "MEMORY-03",
+   "MEMORY-06",
+   "MEMORY-08",
+   "MEMORY-10"
+  ],
+  "depends_on": [
+   "101"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "122",
+  "slug": "test-infrastructure-gates",
+  "wave": 2,
+  "lane": "E",
+  "title": "Binding gates that fail instead of skipping, patch-number and transpiler-site gates, engine data fakes",
+  "pri": 2,
+  "groups": [
+   "transpiler-site-binding-gate",
+   "harmony-binding-hasbody-gate",
+   "plan-008-binding-gate-no-silent-skips",
+   "plan-010-ci-on-hosted-windows",
+   "plan-019-nullable-ratchet",
+   "plan-010-ci-hosted-windows",
+   "tests-reflection-site-labels",
+   "tests-engine-data-store-fake",
+   "issue-938-patch-number-gate",
+   "tests-viewmodel-mixin-binding-gate",
+   "issue-1020-quality-gates",
+   "plan-010-refasm-nogame-gate"
+  ],
+  "n_groups": 12,
+  "n_commits": 28,
+  "extra": [],
+  "depends_on": [
+   "104",
+   "115"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "123",
+  "slug": "always-on-cost-cuts",
+  "wave": 3,
+  "lane": "A",
+  "title": "Cut always-on costs: auto-resolve log off, cheaper mission diagnostics, settings read once instead of per blow or tick",
+  "pri": 1,
+  "groups": [
+   "plan-003-hot-path-resolve-caching",
+   "plan-030-mission-diagnostics-diet",
+   "plan-031-settings-reads-off-hot-paths",
+   "plan-037-campaign-hot-paths",
+   "troopweight-roster-loss-diag",
+   "crashreport-mcm-settings-collector",
+   "issue-840-enlistment-trace-default",
+   "autoresolve-diagnostics-removal"
+  ],
+  "n_groups": 8,
+  "n_commits": 13,
+  "extra": [
+   "RUNTIME-PERF-06",
+   "RUNTIME-PERF-07",
+   "RUNTIME-PERF-08",
+   "RUNTIME-PERF-09",
+   "RUNTIME-PERF-12",
+   "RELEASE-INTEGRITY-06"
+  ],
+  "depends_on": [
+   "105",
+   "117"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "124",
+  "slug": "mission-hot-paths",
+  "wave": 3,
+  "lane": "B",
+  "title": "Cheaper battle hot paths: lock-free formation patch, warg and creature tick costs, behaviour-tree walks",
+  "pri": 2,
+  "groups": [
+   "plan-015-warg-tick-costs",
+   "plan-032-worker-thread-formation-patch",
+   "plan-033-creature-battle-allocations",
+   "behavior-tree-framework-perf"
+  ],
+  "n_groups": 4,
+  "n_commits": 14,
+  "extra": [
+   "RUNTIME-PERF-05",
+   "RUNTIME-PERF-10",
+   "FREEZE-THREADING-09"
+  ],
+  "depends_on": [
+   "106",
+   "123"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "125",
+  "slug": "campaign-ui-perf",
+  "wave": 3,
+  "lane": "C",
+  "title": "Open the campaign screens faster (Shadowfax screen-open series) and cut the enlistment board's render cost",
+  "pri": 2,
+  "groups": [
+   "issue-1019-enlistment-board-render",
+   "shadowfax-screen-open-speed"
+  ],
+  "n_groups": 2,
+  "n_commits": 12,
+  "extra": [],
+  "depends_on": [
+   "117",
+   "118"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "126",
+  "slug": "race-and-hero-fixes",
+  "wave": 3,
+  "lane": "D",
+  "title": "Hero race fixes: dead heroes, dwarf portrait offset, Nazgul race",
+  "pri": 1,
+  "groups": [
+   "issue-644-nazgul-race",
+   "herorace-dwarf-portrait-offset",
+   "issue-1011-hero-race-dead-heroes"
+  ],
+  "n_groups": 3,
+  "n_commits": 5,
+  "extra": [],
+  "depends_on": [
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "127",
+  "slug": "architecture-refactors",
+  "wave": 3,
+  "lane": "E",
+  "title": "Architecture refactors that hold on 1.4.x: plans 021, 025, 026, the combat model split, partial services",
+  "pri": 3,
+  "groups": [
+   "plan-025-delete-unreachable-scaffolds",
+   "plan-021-architecture-rule-amendments",
+   "plan-026-seam-decision-logic",
+   "issue-737-combat-model-split",
+   "adr-003-partial-services"
+  ],
+  "n_groups": 5,
+  "n_commits": 18,
+  "extra": [],
+  "depends_on": [
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "128",
+  "slug": "enlistment-fixes-a",
+  "wave": 4,
+  "lane": "A",
+  "title": "Enlistment fixes, part A: battle exits, raids, service wars, promotion notice, merit attribution",
+  "pri": 1,
+  "groups": [
+   "issue-827-enlistment-battle-exit",
+   "issue-828-enlistment-discharged-menu",
+   "issue-831-enlistment-raids",
+   "issue-832-enlistment-service-wars",
+   "enlistment-merit-hero-attribution",
+   "issue-835-enlistment-promotion-notice",
+   "enlistment-batch-842-845",
+   "issue-1021-enlistment-encounter-exits"
+  ],
+  "n_groups": 8,
+  "n_commits": 14,
+  "extra": [],
+  "depends_on": [
+   "105",
+   "119"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "129",
+  "slug": "career-fixes",
+  "wave": 4,
+  "lane": "B",
+  "title": "Career fixes: review follow-ups, unmapped promoted-culture careers, perk and mount wiring",
+  "pri": 1,
+  "groups": [
+   "issue-611-career-mount-bonuses",
+   "issue-613-career-perk-wiring",
+   "issue-612-field-commission-races",
+   "careers-archetype-map-coverage",
+   "career-e1e3-review-fixes",
+   "issue-971-career-click",
+   "career-quest-owner-change",
+   "career-active-effects-panel"
+  ],
+  "n_groups": 8,
+  "n_commits": 17,
+  "extra": [],
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "130",
+  "slug": "battle-creature-fixes",
+  "wave": 4,
+  "lane": "C",
+  "title": "Battle and creature fixes: banner bearers, cavalry knockdown, custom battle, warg spawn, action bar, Dunland formations",
+  "pri": 1,
+  "groups": [
+   "issue-610-cavalry-knockdown",
+   "issue-615-creature-mount-retune",
+   "hill-troll-sprint-mixed",
+   "issue-692-creature-bandits",
+   "issue-788-custom-battle-combat",
+   "dread-aura-local",
+   "issue-970-battle-action-bar",
+   "warg-late-spawn-formation"
+  ],
+  "n_groups": 8,
+  "n_commits": 12,
+  "extra": [],
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "131",
+  "slug": "campaign-fixes-messengers-recruitment",
+  "wave": 4,
+  "lane": "D",
+  "title": "Messenger, recruitment and troop-weight fixes",
+  "pri": 1,
+  "groups": [
+   "troopweight-garrison-patrol-penalty",
+   "issue-886-castle-recruitment",
+   "issue-944-messenger-button-hint",
+   "issue-918-castle-ai-recruit-toggle",
+   "issue-887-ai-recruit-trip-alignment",
+   "issue-898-messenger-session-rules",
+   "issue-989-messenger-button-brushes",
+   "issue-898-messenger-pricing"
+  ],
+  "n_groups": 8,
+  "n_commits": 8,
+  "extra": [],
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "132",
+  "slug": "enlistment-fixes-b",
+  "wave": 4,
+  "lane": "A",
+  "title": "Enlistment fixes, part B: siege wages, sit-out, retinue cost, pump clock, quartermaster, ranks, board",
+  "pri": 1,
+  "groups": [
+   "issue-829-quartermaster-answers",
+   "issue-936-enlistment-rank-ladder",
+   "issue-830-enlistment-sit-out",
+   "issue-839-enlistment-retinue-cost",
+   "issue-841-enlistment-pump-clock",
+   "battlebalance-enlisted-survival-roll",
+   "issue-1014-enlistment-siege-wages",
+   "issue-1016-enlistment-board",
+   "issue-796-enlistment-dead-battle-rule"
+  ],
+  "n_groups": 9,
+  "n_commits": 12,
+  "extra": [],
+  "depends_on": [
+   "128"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "133",
+  "slug": "campaign-fixes-inventory-ui",
+  "wave": 4,
+  "lane": "E",
+  "title": "Inventory, UI data, banner colour and other campaign UI fixes",
+  "pri": 1,
+  "groups": [
+   "review-130-config-list-entries",
+   "arena-troll-gear-prizes",
+   "issue-789-fief-nav-button",
+   "issue-917-quickactions-unequip",
+   "issue-937-tavern-specialities",
+   "issue-932-banner-bearer-cultures",
+   "issue-955-liege-titles",
+   "inventory-sweep-2026-10-23",
+   "ui-data-sweep-2026-10-23",
+   "specialresources-map-bar-entry",
+   "issue-993-994-banner-colors-refuge-rows"
+  ],
+  "n_groups": 11,
+  "n_commits": 19,
+  "extra": [],
+  "depends_on": [
+   "105"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "134",
+  "slug": "campaign-data-defects",
+  "wave": 4,
+  "lane": "F",
+  "title": "Data defects verified on 1.4.x: kingdom policy ids, wanderers, lord banners, alignment sides, Lindon tables",
+  "pri": 1,
+  "groups": [
+   "issue-749-lindon-balance-tables",
+   "issue-757-wanderer-backstories",
+   "issue-756-kingdom-policy-ids",
+   "issue-758-vanilla-wanderers",
+   "issue-823-lord-banners",
+   "issue-957-alignment-sides"
+  ],
+  "n_groups": 6,
+  "n_commits": 6,
+  "extra": [],
+  "depends_on": [
+   "101"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "135",
+  "slug": "localization-fixes",
+  "wave": 4,
+  "lane": "G",
+  "title": "Localization pipeline and English-override fixes, then one /localize pass for every wave-4 string",
+  "pri": 1,
+  "groups": [
+   "issue-572-name-localization",
+   "localization-gametext-gametypes",
+   "loc-translator-key-ownership",
+   "localization-full-translation-run",
+   "issue-706-english-overrides-only-english",
+   "issue-919-harvest-blank-line",
+   "issue-1007-loc-length-report",
+   "loc-translator-expression-tags",
+   "loc-english-only-vanilla-overrides",
+   "issue-1026-text-processors",
+   "issue-1023-name-grammar-tags",
+   "issue-1018-loc-orphan-gate",
+   "localization-translate-seed-only"
+  ],
+  "n_groups": 13,
+  "n_commits": 13,
+  "extra": [],
+  "depends_on": [
+   "128",
+   "129",
+   "130",
+   "131",
+   "132",
+   "133",
+   "134"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "136",
+  "slug": "data-integrity-gates",
+  "wave": 5,
+  "lane": "A",
+  "title": "Validator and test gates for XML schemas, data references, banners, factions and generated blocks",
+  "pri": 2,
+  "groups": [
+   "culture-xml-data-gates",
+   "xslt-template-coverage-gate",
+   "issue-621-deep-review-xsd-gate",
+   "validator-item-registry-items-root",
+   "custom-battle-scene-gate",
+   "faction-card-feat-gate",
+   "issue-949-faction-ref-validator",
+   "issue-951-banner-icon-gate",
+   "tools-validate-xml-schemas",
+   "tools-generator-marker-region",
+   "tools-xsd-schema-gate",
+   "issue-983-mbproj-audit",
+   "issue-729-item-slot-rejected",
+   "tests-architecture-gates",
+   "tools-data-gates-validator-codes"
+  ],
+  "n_groups": 15,
+  "n_commits": 21,
+  "extra": [
+   "XML-DATA-05",
+   "XML-DATA-07",
+   "XML-DATA-09",
+   "XML-DATA-10"
+  ],
+  "depends_on": [
+   "108",
+   "117",
+   "131",
+   "133"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "137",
+  "slug": "dev-tools-native-and-src",
+  "wave": 5,
+  "lane": "B",
+  "title": "Developer tools: taom-src per build, native build archive and match, native decompile, API snapshot, security hygiene",
+  "pri": 2,
+  "groups": [
+   "plan-005-security-hygiene",
+   "plan-024-managed-debug-profile",
+   "issue-688-native-decompile",
+   "harness-hang-triage",
+   "engine-bump-v1.5.5-tools",
+   "dev-tools-tpactool-v051",
+   "tools-api-snapshot-check",
+   "build-solution-dependencies",
+   "issue-997-native-build-match",
+   "issue-1004-native-build-archive",
+   "issue-1038-taom-src-short-names",
+   "tools-taom-src"
+  ],
+  "n_groups": 12,
+  "n_commits": 21,
+  "extra": [],
+  "depends_on": [
+   "103"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "138",
+  "slug": "harness-review-pipeline",
+  "wave": 5,
+  "lane": "C",
+  "title": "Harness: deep-review lenses, the /improve run pipeline, retro and usage tools, model and effort routing",
+  "pri": 2,
+  "groups": [
+   "harness-engine-bump-skill",
+   "improve-run-pipeline",
+   "harness-improve-run-pipeline",
+   "harness-codex-effort",
+   "harness-model-effort-routing",
+   "harness-skill-usage-audit",
+   "harness-claude-code-alignment",
+   "harness-prompt-audit",
+   "harness-builder-brief-template",
+   "feature-hard-questions",
+   "issue-962-harness-retro",
+   "harness-deep-review-risk-tier",
+   "issue-985-rtk-adoption",
+   "harness-retro-tool",
+   "harness-ralph-adoption",
+   "harness-pstack-adoption",
+   "harness-context-mode-adoption",
+   "issue-1003-reviewer-rule-rereads",
+   "harness-plugin-marketplace-checks",
+   "issue-987-tool-followups",
+   "issue-1012-statusline-usage",
+   "harness-pstack-marketplace-review",
+   "harness-statusline-panel",
+   "harness-deep-review-lenses",
+   "issue-1078-harness-usage",
+   "harness-retro",
+   "tools-review-yield-provenance-loc",
+   "issue-621-deep-review-lenses"
+  ],
+  "n_groups": 28,
+  "n_commits": 71,
+  "extra": [],
+  "depends_on": [
+   "116",
+   "136",
+   "137"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "139",
+  "slug": "in-game-verdict-programme",
+  "wave": 5,
+  "lane": "D",
+  "title": "In-game verdict programme: outcome log, check lines for ported fixes, the verdict tool, the silent-catch ratchet",
+  "pri": 2,
+  "groups": [
+   "tools-ingame-verdict",
+   "issue-1071-outcome-log",
+   "issue-1072-ingame-check-lines",
+   "issue-1074-ingame-verdict-tool",
+   "issue-1073-silent-catch-ratchet"
+  ],
+  "n_groups": 5,
+  "n_commits": 18,
+  "extra": [],
+  "depends_on": [
+   "118",
+   "126",
+   "129",
+   "130",
+   "131"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "140",
+  "slug": "gui-prefab-gates",
+  "wave": 5,
+  "lane": "E",
+  "title": "Gauntlet prefab gates: copy drift against v1.4.8 vanilla, insert positions, stretch-in-cover, bindings",
+  "pri": 2,
+  "groups": [
+   "prefab-binding-gates",
+   "prefab-binding-gate",
+   "issue-858-prefab-insert-gate",
+   "ui-prefab-validation-gates",
+   "gui-prefab-copy-drift",
+   "tests-gauntlet-stretch-cover-ratchet",
+   "tests-gauntlet-stretch-gate"
+  ],
+  "n_groups": 7,
+  "n_commits": 14,
+  "extra": [
+   "XML-DATA-08"
+  ],
+  "depends_on": [
+   "131"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "141",
+  "slug": "dev-tools-art-and-data",
+  "wave": 5,
+  "lane": "F",
+  "title": "Developer tools: Armory mirror, artist port safety, map and village tools, creature fit, graphify, ranged ladders",
+  "pri": 2,
+  "groups": [
+   "issue-616-spider-variants",
+   "tools-cave-troll-clip-pipeline",
+   "issue-617-ranged-ladder",
+   "armory-lod-pass",
+   "issue-677-graphify-code-graph",
+   "tools-creature-fit",
+   "issue-798-harad-repair",
+   "tools-artist-port-safety",
+   "tools-tripo-map-icon",
+   "issue-930-clan-heraldry-eol",
+   "tools-armory-mirror-default",
+   "tools-graphify-code-graph",
+   "map-tools-hardening"
+  ],
+  "n_groups": 13,
+  "n_commits": 23,
+  "extra": [],
+  "depends_on": [
+   "137"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "142",
+  "slug": "docs-process-sync",
+  "wave": 5,
+  "lane": "G",
+  "title": "Sync process docs, repo hygiene and MCP pins; then union-merge the lessons files",
+  "pri": 2,
+  "groups": [
+   "readme-install-requirements",
+   "plans-006-019-opus-audit",
+   "plan-022-oob-auto-assign",
+   "plan-016-repo-hygiene-mcp-pins",
+   "issue-696-keyforce-art",
+   "docs-release-process",
+   "issue-765-review-records",
+   "issue-792-docs-audit",
+   "harad-keyforce-port",
+   "yotthani-review-806-809",
+   "docs-lessons-union-merge",
+   "docs-completion-workflow-issue-body",
+   "docs-lessons-git-index-hygiene",
+   "docs-adr-001-json-configs",
+   "engine-bump-v1.5.6",
+   "process-outside-pr-review",
+   "docs-stale-path-sweep-2026-11-03",
+   "docs-feature-doc-truth-pass-2026-11-03",
+   "docs-truth-pass-2026-11"
+  ],
+  "n_groups": 19,
+  "n_commits": 37,
+  "extra": [],
+  "depends_on": [
+   "141"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "143",
+  "slug": "harness-rules-sync",
+  "wave": 5,
+  "lane": "H",
+  "title": "Sync the 2026-11-03 rules review, the lint_docs chain and the .githooks pre-commit gate, adapted for 1.4.x",
+  "pri": 2,
+  "groups": [
+   "issue-646-animalia-monstersize",
+   "plan-023-no-resetforunload",
+   "issue-921-coop-row-test",
+   "harness-rule-writers-before-gates",
+   "issue-877-loremasters-line",
+   "harness-writers-before-gates",
+   "harness-provenance-rule",
+   "harness-rules-review-2026-11-03",
+   "tools-lint-docs-commit-view",
+   "harness-githooks-commit-gates",
+   "harness-dead-memory-lint"
+  ],
+  "n_groups": 11,
+  "n_commits": 24,
+  "extra": [],
+  "depends_on": [
+   "138",
+   "142"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "144",
+  "slug": "docs-engine-sync",
+  "wave": 5,
+  "lane": "I",
+  "title": "Port engine-research docs whose claims hold on v1.4.8, re-verified claim by claim",
+  "pri": 2,
+  "groups": [
+   "docs-engine-formations-team-ai",
+   "docs-kit-animation-authoring",
+   "engine-fact-isinbeingstruck-band",
+   "issue-635-herorace-ctd-triage",
+   "race-face-morph-docs",
+   "adopt-mithrilforge",
+   "docs-armory-mirror-policy",
+   "docs-arena-tournament-armour",
+   "docs-helmet-hair-beard-cover",
+   "issue-407-patch69-comment",
+   "docs-engine-mithrilforge-findings",
+   "docs-lords-xml-merge",
+   "refuge-ai-pin-docs",
+   "yotthani-adopt-2026-10-15-docs",
+   "yotthani-adoption",
+   "docs-yotthani-adoption-oct29",
+   "harness-destructible-stage-rule",
+   "feature-long-defeat",
+   "feature-longdefeat"
+  ],
+  "n_groups": 19,
+  "n_commits": 26,
+  "extra": [],
+  "depends_on": [
+   "141"
+  ],
+  "shared_groups": []
+ },
+ {
+  "id": "145",
+  "slug": "late-followups",
+  "wave": 5,
+  "lane": "J",
+  "title": "Triage and port the 1.5.x commits newer than the planning pin",
+  "pri": 2,
+  "groups": [],
+  "n_groups": 0,
+  "n_commits": 0,
+  "extra": {},
+  "depends_on": [],
+  "shared_groups": []
+ }
+]

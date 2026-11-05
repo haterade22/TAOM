@@ -1,0 +1,329 @@
+# V05: off-thread collection writes and shared-RNG draws as a permanent battle freeze (1.4.x on v1.4.8)
+
+Run 2026-11-04-port148, verifier V05, adversarial stance. Read-only. Refs: origin/bannerlord-1.4.5 at 1b00d1acd
+(the "1.4.x tip"), origin/bannerlord-1.5.x at e45f6df2c. Engine: the v1.4.8 dump
+(`C:\Decompiled_Bannerlord\_categories_v1.4.8`, abbreviated DUMP below) and taom-src decompiles of the installed
+v1.4.8 DLLs (`C:\Users\mikew\.taom-src\v1.4.8\`, abbreviated TSRC). TSRC and DUMP agree line for line for every
+engine line cited here (checked: Mission.cs:1040, 3585, 3601, 3613, 3740, 4960, 6455-6456; MissionState.cs:201,
+212; MBFastRandom.cs:186-192; MBRandom.cs:32, 48). Unless a path says otherwise, `Mission.cs`, `Agent.cs`,
+`MissionState.cs`, `Formation.cs`, `LineFormation.cs` mean
+`DUMP\MountAndBlade\TaleWorlds.MountAndBlade\TaleWorlds.MountAndBlade\<file>`.
+
+Claims under test: deepdive/freeze-threading.md FREEZE-THREADING-01 and -03, deepdive/runtime-perf.md
+RUNTIME-PERF-04, batch 34 note 5(a), draft WP 107 ("lock shared RNG draws").
+
+## 0. Bottom line
+
+| # | Mechanism on 1.4.x | Verdict |
+|---|---|---|
+| A | TAOM `Dictionary` written from an off-thread engine callback (`trees`, `_pending`, `_deathTimes`, `_battleKills`) | **Permanent freeze possible in principle, reachability UNVERIFIED and weak.** The .NET Framework chain walk can loop forever, and a spinning agent-tick thread would wedge `WaitTickCompletion` with exactly the reported symptom. But every other accessor of these maps runs on the main thread at a time the engine's own frame order keeps apart from the agent tick, so a corrupting pair needs native to raise these callbacks from two threads at once. Under that same condition vanilla's own unlocked `_missilesDictionary.Add` (Mission.cs:4960) and `_activeAgents.Remove` (Mission.cs:3023) would corrupt first and far more often. No player log shows a concurrent pair. |
+| B | TAOM `List<T>` written off-thread (`_scheduled`, `_activeContexts`, SpatialGrid cells) | **Corruption or exception only; cannot spin.** On 1.4.x the exception is swallowed at the callback's own Native2Managed finalizer, so it cannot leave `tickCompleted` false. |
+| C | Non-collection writes (`_kills` int, Warg `CustomLookDir` Vec3, bools) | **Not reachable as a freeze.** Lost update or torn value. |
+| D | UI call from a worker (`OnScoreHit` notice; the 1.4.x tripwire's own on-screen report) | **UNVERIFIED outcome, not shown to spin.** Gauntlet state touched off-thread. |
+| E | Concurrent draws on the shared `MBRandom` (`Game.Current.RandomGenerator`, an `MBFastRandom` xorshift128) | **Not reachable as a freeze.** Races only duplicate, skip or jump draws. The only constant-output state is all-zero (proved below on the v1.4.8 update rule); reaching it needs at least two independent ~2^-32 coincidences inside about four draws, and even then the only engine loops that would spin are campaign-side or `SkipMatch`, not the battle tick. |
+| F | A TAOM shared `System.Random` drawn off-thread | **Not present on 1.4.x.** Relevant only to how any RNG fix is written (Microsoft: unsynchronised use makes it return 0). |
+
+Consequences for the plan: port f75288ebf (#634), but as defence in depth plus the `[MissionStall]` watchdog, not as
+"the fix for the player freezes"; keep the crush-roll RNG change out of the P0 package (optional P3, nothing on
+1.5.x to port). E3 is outside every mechanism here: no mission tick of any kind runs before `RenderIsReady()`
+(MissionState.cs:110-113, TSRC), so no agent tick, no combat callback and no defend collision existed in E3's
+silent window.
+
+## 1. Engine facts that frame the question (v1.4.8)
+
+**The handshake.** `Mission.OnTick` sets `tickCompleted = false` (Mission.cs:3740), runs every `OnMissionTick`
+(3741-3744) and only then starts the asynchronous agent tick (`TickAgentsAndTeamsAsync`, 3768-3775).
+`TickAgentsAndTeamsImp` (3601-3618) runs `TWParallel.For(... AgentTickMT)`, `Agent.Tick` for every agent, `Team.Tick`
+for every team, sets `tickCompleted = true` (3613) and then runs `AfterAsyncTickTick` (3614-3617). The next frame's
+`OnPreTick` calls `WaitTickCompletion()` first (3530-3532), which is `while (!tickCompleted) Thread.Sleep(1);`
+(3585-3591). Single-player battles take the async branch: `TickMissionAux(..., asyncAITick: true)`
+(MissionState.cs:201). So an agent-tick thread that never returns leaves the main thread sleeping in a 1 ms loop:
+low CPU on the main thread, one busy core if the stuck thread spins, audio threads unaffected.
+
+**What "multi-thread callable" means is not readable.** `MBCallback(string[] conditionals, bool isMultiThreadCallable)`
+(MBCallback.cs:7) only stores the flag (`DUMP\Engine\TaleWorlds.DotNet\TaleWorlds.DotNet\ManagedFromNativeCallback.cs:7-14`);
+no managed code reads it, and the generated stubs are identical with or without it, with no lock
+(`DUMP\MountAndBlade\TaleWorlds.MountAndBlade.AutoGenerated\ManagedCallbacks\CoreCallbacksGenerated.cs:792-799`
+versus 869-884). In MountAndBlade the flag is `true` only on `Agent.UpdateMountAgentCache` (Agent.cs:1813),
+`Agent.GetWeaponInaccuracy` (1842), `Mission.CanPhysicsCollideBetweenTwoEntities` (Mission.cs:2451),
+`OnFixedTick` (3519), `MissileCalculatePassbySoundParametersCallbackMT` (6026), `GetDefendCollisionResults` (6455)
+and Module XML builders. The callback that native runs on the async worker every frame,
+`Mission.TickAgentsAndTeams`, is marked `false` (Mission.cs:1818-1823). So `false` does not mean "main thread", and
+`true` most plausibly means "may run on several threads at once"; neither is provable from managed code.
+
+**Off-thread callbacks are real and routine.** E4:2265-2266 (20:32:56, `OnAgentShootMissile` thread 21,
+`OnAgentDismount` thread 22) and E4:2986 (20:42:35, `OnAgentPanicked` thread 20; main 17). The reporter fires once per
+site per process (`MissionThreadGuard.cs:22, 48-60` on the 1.4.x tip, static `_reportedSites`, cleared only by
+`ResetForTests`), so these lines prove "off the main thread at least once", not frequency or concurrency. They fall in
+the tournament on arena_aserai_a (playable E4:2153, normal exit E4:2297-2300) and the field battle on
+battle_terrain_biome_107 (playable E4:2862, normal exit E4:2988-2990). Both missions ended normally. Three thread ids
+in two missions cannot distinguish "the async job hops between pool threads" from "callbacks from parallel workers".
+
+**Vanilla writes unlocked collections in the same callbacks.** `Mission.OnAgentShootMissile` does
+`_missilesList.Add` and `_missilesDictionary.Add` (Mission.cs:4959-4960). `Mission.OnAgentRemoved` (2988-3030)
+runs `Team.DeactivateAgent` (2998), every behaviour (3005), `MainAgent = null` (3011), `_activeAgents.Remove` (3023)
+and `Agent.OnRemove` (3024). `Mission.OnAgentDeleted` does `_allAgents.Remove` (2983). Both removal callbacks are
+raised only from the native stubs (CoreCallbacksGenerated.cs:857, 875). If native ever raised one of these on two
+threads at once, or on a worker while the main thread ran managed mission code, vanilla's own maps and lists would be
+exposed exactly like TAOM's.
+
+**Teardown cannot overlap the agent tick.** `EndMission()` only sets `State.EndingNextFrame` (Mission.cs:4564-4571).
+The teardown `EndMissionInternal()` (4573-4605, which runs every behaviour's `OnEndMissionInternal`, hence
+`OnEndMission`) is called from `CheckMissionEnd` (4779-4818) at Mission.cs:3717, inside `Mission.OnTick`, after
+`OnPreTick` waited for the previous agent tick and before 3740; once the state is not `Continuing` the frame returns at
+3722-3725 without launching a new agent tick. This matters because `Dictionary.Clear()` racing a lookup is itself a
+spin route (section 3), and every TAOM `Clear()` on the maps below runs in this window.
+
+## 2. Census on the 1.4.x tip
+
+Method: every override of a mission or agent callback in `Main/` and `Dependencies/` (git grep over 40 callback
+names), every `AgentComponent` subclass (one: `BehaviorTreeAgentComponent`), every `AfterAsyncTickTick`,
+`OnFixedMissionTick` and `OnPreMissionTick` override (one, `AutonomousMovementPlayerController.cs:190`, main thread
+after the wait), every subscription to engine mission events (one, `Mission.OnMainAgentChanged`,
+AutonomousMovementPlayerController.cs:147, handler 180-188 writes bools only when `MainAgent != null`, so the removal
+path is a no-op), every Harmony target on Agent, Formation, Team, Mission and team-AI types, the mission GameModels
+and the services they call, and every `MBRandom` and `System.Random` use. All paths below are on origin/bannerlord-1.4.5.
+
+### 2a. Unsynchronised writers (the complete list)
+
+| # | Handler (raised by) | State written | Other accessors and when they run | Class |
+|---|---|---|---|---|
+| 1 | `BehaviorTreeAgentComponent.OnAgentRemoved` (BehaviorTreeAgentComponent.cs:36-40; via `Agent.OnRemove`, Mission.cs:3024; native `Mission_OnAgentRemoved`) | `BehaviorTreeMissionLogic._scheduled` List (`Unschedule`, BehaviorTreeMissionLogic.cs:95-100) and `trees` Dictionary<Agent,BehaviorTree> (`DisposeTree`, BehaviorTreeBannerlordWrapper.cs:82-86) | `OnMissionTick` snapshot of `_scheduled` (BTML :128-129); `trees` read only by `GetBehaviorTree` (Extensions.cs:8-14) from `FindCalledListeners` (BTML :179), which runs on the main thread because every BTML callback parks itself first (:159-164, 224-365); written by `AddBehaviorTree` at spawn (wrapper :60, 72); cleared in `OnEndMissionInternal` (BTML :372-376) | A (Dictionary) and B (List) |
+| 2 | `MountDespawnMissionBehavior.OnAgentRemoved` / `OnAgentDeleted` (MountDespawnMissionBehavior.cs:46-67, 69-81) | `_pending` Dictionary<int,Agent> (:25, :65, :79); `DeadMountDespawnService._deathTimes` Dictionary<int,float> (DeadMountDespawnService.cs:26, :50, :53) | `OnMissionTick` sweep (:83-110, `FadeOne` :130-131), `CollectDue` walk (service :64, removes :75-76); `OnEndMission` clears (:119-120, service :86). The service is a singleton reused across missions (service :82-85 comment) | A |
+| 3 | `FieldCommissionMissionLogic.OnAgentRemoved` -> `FieldCommissionMeritService.RegisterKill` (FieldCommissionMissionLogic.cs:32-56; service :78-85) | `_battleKills` Dictionary<string,int>, read-modify-write (service :83-84) | `BeginBattle` clears (:62) on `MapEventStarted`; `EndBattle` walks (:91, :113) on `MapEventEnded` (FieldCommissionBehavior.cs:49-50, 77-102): both outside the mission tick. Only a second concurrent `RegisterKill` can race it | A |
+| 4 | `CareerPerkMissionBehavior.OnAgentRemoved`, player falls (CareerPerkMissionBehavior.cs:167-200) | `_activeContexts.Clear()` List (:187); `ally.UpdateAgentProperties()` on other agents from this thread (:196) | `OnMissionTick` walks the list (:101-106); `OnEndMission` clears (:218) | B |
+| 5 | `CareerPerkMissionBehavior.OnScoreHit` (:149-165; thread of `OnScoreHit` not established) | `AbilityDamageAttributionReporter` bool (:19) and `InformationManager.DisplayMessage` (:41, :56), which invokes its UI subscribers synchronously on the calling thread (`DUMP\Core\TaleWorlds.Library\TaleWorlds.Library\InformationManager.cs:61-63`) | Gauntlet UI on the main thread | D |
+| 6 | `AdvancedCombatBehavior.OnAgentDeleted` -> `SpatialGrid.Remove` (AdvancedCombatBehavior.cs:71-76; SpatialGrid.cs:51-58) | `List<Agent>.Remove` on a cell (:56). The grid Dictionary itself is never mutated in place: `UpdateGrid` builds a new map and publishes it by one reference write (:31, :44) | `GetAgentsInRadius` from tree ticks (main thread, :82-112); rebuild from `OnMissionTick` (AdvancedCombatBehavior.cs:44) | B |
+| 7 | `EnlistmentMeritMissionBehavior.OnAgentRemoved` (:109-115) | `_kills++` (:114) | `OnEndMission` (:117-130) | C |
+| 8 | `WargMissionBehavior.OnAgentDismount` (WargMissionBehavior.cs:64-70; off-thread proven by E4:2266) | `MissionMainAgentController.CustomLookDir = Vec3.Zero` (WargRiderHandManager.cs:20-28) | `WargRiderHandManager.Tick` from the warg tick | C |
+| 9 | The tripwire's own report on 1.4.x: BTML `ReportOffThread` -> `BTRegister.Logger` (BTML :51) -> `BannerlordLogger.LogMessage` -> `InformationManager.DisplayMessage` (BannerlordLogger.cs:9-11), from the worker, once per site | Gauntlet UI | UI tick | D |
+| 10 | `TaomCombatMechanicsModel.BuildCrushThroughContext` on every `DecideCrushedThrough` (TaomCombatMechanicsModel.cs:81-86, 161-178) reached from the MT-callable `Mission.GetDefendCollisionResults` (Mission.cs:6455-6466 -> `MissionCombatMechanicsHelper.cs:311`) | one `MBRandom.RandomFloat` draw (:177), i.e. `Game.Current.RandomGenerator` | every other draw on the shared generator | E |
+
+The rows that write a **Dictionary** are 1, 2 and 3 only: three handlers, four maps.
+
+### 2b. Checked and synchronised or pure (no action)
+
+- `MixedFormationsMissionBehavior.OnAgentDeleted` (MixedFormationsMissionBehavior.cs:63-68) -> `FormationLayoutService.ForgetAgent`, under `_lock` (FormationLayoutService.cs:169-171). Missed by both lenses; safe.
+- `AdvancedCombatBehavior`'s `_adapterFactory.Evict` -> `AgentAdapterCache`, `lock (_gate)` in every member (AgentAdapterCache.cs:24-109).
+- `CareerPerkMissionBehavior.OnAgentDeleted` and the removal teardown's tracker calls -> `CareerAbilityBuffTracker`, one lock per method (CareerAbilityBuffTracker.cs:17-123).
+- Formation orders on `Team.Tick` and the worker pool: `Patch30` -> `FormationLayoutService` (locks :46-183); `Patch31`/`Patch31b` -> `CavalryChargeService` (locks :52-192); `Patch35` -> `TroopStanceManager` (locks :25-55).
+- `BehaviorComponent.OnBehaviorActivated` transpiler (Enlistment): pure string formatting.
+- `Agent.Die` and `Agent.HandleBlowAux` prefixes (Spider Patch47/48, BlowDiagnostics Patch63): predicates and file logging only; `BlowDiagnosticService` holds no collection.
+- `Agent.CheckToDropFlaggedItem` guard: pure (`DropFlaggedItemGuard.cs`).
+- Mission models (`TaomAgentApplyDamageModel`, `TaomAgentStatCalculateModel`, `TaomBattleBannerBearersModel`): no collections, locks or RNG in the model files; `CareerAgentStatService` reads `CareerPassiveService` (snapshot under `_lock`, CareerPassiveService.cs:18-117) and the locked buff tracker. `CareerAbilityService._abilities` and `CareerDataService._heroData` are touched only from main-thread code (mission tick, the `MissionAgentStatusCareerMixin` UI, campaign screens).
+- Crash and shield infrastructure: `PatchShield` and `SaveShield` write only under their locks (PatchShield.cs:167-217, 328-332; SaveShield.cs:216-223 for `_shielded`, 311-314 for `_recent` under `_recentLock`); `MissionThreadGuard` uses a `ConcurrentDictionary`; `DeferredCallbackQueue` a `ConcurrentQueue`. `CareerPassiveService` swaps fresh maps under `_lock` and readers capture the reference under it, then read an immutable snapshot (CareerPassiveService.cs:84-118).
+- `System.Random`: `BehaviorTreeAgentComponent.SharedRandom` (:12) is drawn only in the component constructor (:31), at spawn on the main thread; TroopProgression's `RandomProvider` is `[ThreadStatic]`; the others are campaign-side or local.
+- Off-thread `Origin?.OnAgentRemoved(Health)` (Agent.cs:5142) reaches map-event bookkeeping; TAOM patches nothing on that chain (only `Patch82` on `MapEvent.SimulateBattleSetup`, auto-resolve).
+
+## 3. .NET Framework collection behaviour (item 2)
+
+**Which runtime.** The installed `bin\Win64_Shipping_Client\Bannerlord.exe` carries a CLR header (RVA 0x2000, 72 bytes)
+and no native imports, metadata version `v4.0.30319`, `TargetFramework .NETFramework,Version=v4.7.2` (PE parse this
+session). It runs on the desktop .NET Framework 4.x CLR, whatever 4.x the player has (this laptop: NDP Release
+0x82405, a 4.8.1 build). E3:32 records `CLR: 4.0.30319.42000`, consistent with that. The bundled
+`mono-2.0-sgen.dll` serves the engine's native-hosted entry. The 1.4.x doc
+`docs/reference/bannerlord-engine-and-toolchain.md:186` still says managed code "runs on the Mono runtime"; 1.5.x
+corrected the row in af990ca76. The conclusions below do not depend on it, because Mono's corlib uses the same
+reference-source `Dictionary`, but the 1.4.x doc is wrong.
+
+**Dictionary<TKey,TValue>.** Installed mscorlib (`C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll`,
+decompiled with ilspycmd 9.1): `FindEntry`, `Insert` and `Remove` each walk
+`for (i = buckets[hash % buckets.Length]; i >= 0; i = entries[i].next)` with no iteration bound and no concurrent-use
+check. The reference source has the same loops (github.com/microsoft/referencesource, branch main,
+`mscorlib/system/collections/generic/dictionary.cs`: `FindEntry`, `Insert` header
+`for (int i = buckets[targetBucket]; i >= 0; i = entries[i].next)`, `Remove` header
+`for (int i = buckets[bucket]; i >= 0; last = i, i = entries[i].next)`). Two writers interleaving the free-list and
+bucket-head updates can leave a cycle in a `next` chain, after which every walk of that bucket on any thread spins
+forever. Microsoft's own later runtime confirms the failure mode in a comment at the guard it added
+(dotnet/runtime `src/libraries/System.Private.CoreLib/src/System/Collections/Generic/Dictionary.cs`, `FindValue`):
+"The chain of entries forms a loop; which means a concurrent update has happened. Break out of the loop and throw,
+rather than looping forever." That guard (`collisionCount > entries.Length`) does not exist in .NET Framework. The
+.NET Framework 4.7.2 API page's Thread Safety section: "A Dictionary<TKey,TValue> can support multiple readers
+concurrently, as long as the collection is not modified. ... To allow the collection to be accessed by multiple
+threads for reading and writing, you must implement your own synchronization."
+
+**A second spin route the lenses did not name: `Clear()` against a walker.** Installed `Dictionary.Clear()` sets every
+bucket to -1 and then `Array.Clear(entries, 0, count)`. A thread already inside a chain walk then reads
+`entries[i].next == 0`, lands on slot 0, whose `next` is also 0, and loops there until slot 0 is rewritten or its key
+happens to hash to 0 and equal `default(TKey)`. One `Clear` overlapping one lookup is enough, no second writer needed.
+On 1.4.x every `Clear()` on rows 1 and 2 runs in `EndMissionInternal` (section 1), and row 3's `Clear` runs on
+`MapEventStarted`, so the engine's frame order keeps this route closed today. Any new code that clears one of these
+maps from a view, UI tick or timer would open it.
+
+**HashSet<T>** (System.Core, installed GAC copy) walks `m_slots[i].next` the same way in `Contains` (decompile line
+363), `Remove` (401) and `AddIfNotPresent` (1021): same hazard. No TAOM `HashSet` is written off-thread on 1.4.x.
+
+**List<T>** has no chains. `Add` is `_items[_size++] = item` (decompile line 508-514) and every loop is bounded by
+`_size`. Concurrent use loses or duplicates elements, or throws (`IndexOutOfRangeException`,
+`ArgumentOutOfRangeException`, the enumerator's version check); it does not spin.
+
+**Can a List exception wedge the tick instead?** Not on 1.4.x. Rows 1, 2, 4 and 6 run inside `Mission_OnAgentRemoved`
+or `Mission_OnAgentDeleted`, raised only from their native stubs; 1.4.x puts the bridge finalizer on every static
+method of every `*CallbacksGenerated` type (Native2ManagedPatcher.cs, sweep loop; E4:4 "attached 247 Finalizer(s)"),
+and `HandleAndSwallow` returns null (CrashReportPatchHelper.cs:29-49). The exception ends at that stub; native carries
+on and `TickAgentsAndTeamsImp` still reaches line 3613. The cost is a half-finished vanilla removal (the rest of
+Mission.cs:3005-3030 skipped for that agent), not a freeze. Interaction to carry into WP 108: the 1.5.x plan 006
+allowlist keeps `Mission_OnAgentRemoved`, `Mission_OnAgentDeleted`, `Mission_OnAgentShootMissile` and
+`Mission_GetDefendCollisionResults` but not `Agent_OnDismount` (origin/bannerlord-1.5.x
+`Main/Features/CrashReport/Hooks/Native2ManagedTargets.cs:28-61`).
+
+## 4. f75288ebf (#634) and its follow-ups (item 3)
+
+f75288ebf (2026-09-22) adds `DeferredCallbackQueue.RunOrDefer(site, action)` (inline on the marked main thread, else
+enqueue and report once) and routes the writers through it; each queue owner calls `MissionThreadGuard.MarkMainThread()`
+and `Drain()` at the top of its own `OnMissionTick`. Mapping onto section 2a:
+
+| 1.4.x row | f75288ebf change | Status on 1.4.x tip vs f75288ebf^ |
+|---|---|---|
+| 1 | `OnAgentRemoved => CurrentMissionLogic?.RunOnMissionThread(site, Retire)`; BTML gets `RunOnMissionThread` and a file-log reporter | both files identical, applies cleanly |
+| 2 | `RecordKill` and `ForgetAgent` via the queue; main-thread forget drains first; `_deferred.Clear()` at mission end | identical, applies cleanly |
+| 3 | `lock (_battleKills)` around the read-modify-write (a concurrent map was rejected: `EndBattle` breaks ties by insertion order) | file drifted (+20 lines on the 1.5.x side): hand-merge the 3-line hunk |
+| 4, 5 | `EndAbilitiesForFallenHero`/`EndAbilitiesNow` and the `OnScoreHit` notice via the queue | file drifted (51 lines): 1.4.x keeps the Ammo `OnAgentBuild` and `_passives` that 1.5.x moved out, and lacks #611/#613. Hand-merge only the queue hunks |
+| 6 | `SpatialGrid.Remove` parks, `ApplyPendingRemovals()` from `AdvancedCombatBehavior.OnMissionTick` | identical, applies cleanly |
+| 7 | `Interlocked.Increment(ref _kills)` | identical |
+| 8 | dismount reset via the queue | identical |
+| 9 | reporter becomes `IoC.Resolve<IModLogger>()?.LogWarning`, wording changed to "expected" | identical |
+| 10 | not touched | see section 5 |
+| none | `SignatureAgentRoster` to `ConcurrentDictionary` | feature absent on 1.4.x: drop the hunk |
+
+Plus the diagnostic half: `Patch91_MissionTickStallProbes` (prefix and finalizer on
+`public void Mission.TickAgentsAndTeamsImp(float, bool)`, Mission.cs:3601, and on
+`private void MissionState.TickMissionAux(float, float, bool, bool)`, MissionState.cs:212, armed only while
+`Continuing`; both signatures confirmed on TSRC this session), `MissionTickStallProbe`, `MissionTickStallWatchdog`
+(`[MissionStall]` stacks at 10/20/40 s), `ThreadStackCapture`, the `ExitStallSampler` refactor, an MCM toggle and
+SubModule wiring. File status from `git diff --numstat origin/bannerlord-1.4.5 f75288ebf^`: 13 code files identical,
+5 drifted (`SubModule.cs` +175/-10, `CareerPerkMissionBehavior.cs` +11/-40, `FieldCommissionMeritService.cs` +20,
+`BattleLoadDiagnosticsSettings.cs` +5, `CoopSettingsRelevance.cs` +5), 4 new, 1 absent feature. Tests: 7 new files
+(`BehaviorTreeAgentComponentThreadingTests`, `SpatialGridRemovalTests`, `MissionTickStallWatchdogTests`,
+`ThreadStackCaptureTests`, `CareerPerkOffThreadTests`, `MountDespawnOffThreadTests`, `WargOffThreadTests`); 2 identical
+to the parent (`DeferredCallbackQueueTests`, `BattleLoadDiagnosticsSettingsProviderTests`); 2 drifted
+(`FieldCommissionMeritServiceTests` +17, `SettingsFingerprintTests` +4/-4).
+
+**Coverage verdict.** f75288ebf covers every unsynchronised 1.4.x writer in section 2a except row 10. Nothing in 2b
+needs it. No 1.4.x-only writer exists: the later `RunOrDefer` users on the 1.5.x tip are AnimationVariety, FordsOfWar,
+LongDefeat and RaceAbilities, none of which exists on 1.4.x (`git ls-tree`).
+
+**Follow-ups on 1.5.x after f75288ebf** (every commit touching its files): none changes the threading fix itself.
+- efe326242 (plan 033, perf): BTML skips argument building and parking when no tree listens (an unheard off-thread
+  event is now dropped), and SpatialGrid reuses its maps in place with a spare generation
+  (origin/bannerlord-1.5.x `SpatialGrid.cs:95-147`). The in-place `Clear()` (:143-147) is safe only because `Remove`
+  stays parked (:109-112) and an off-thread query never rebuilds (:196-209). A 1.4.x port of efe326242 must keep both.
+- e5f644da4, b8b144635 (SpatialGrid perf and refactor), fe8f30c7a and 87f9f862e (warg plan 015): perf only.
+- 6eb2e1b90: hooks the MissionPerf profiler into Patch91 (`MissionTickProfilerHooks`); needs the 1.5.x-only MissionPerf infrastructure.
+- a498e357e, 70320bbe1, a4b8f7e21, 8ae036bc5, c91380274, 9304a4cb9: 1.5.x features and co-op ownership.
+
+## 5. The shared generator (item 4)
+
+**What it is.** `MBRandom.RandomFloat => Random.NextFloat()` (MBRandom.cs:32), and `Random` is
+`Game.Current.RandomGenerator` when a game exists (:16-30). On TSRC `Game.RandomGenerator` is
+`[SaveableProperty(12)] internal MBFastRandom RandomGenerator` (TaleWorlds.Core.Game.cs:55-56); a null generator is
+repaired after load (:183-185), any other state is kept and saved. `MBFastRandom` holds four saveable `uint`s
+(MBFastRandom.cs:22-32) and updates them with no lock in Marsaglia's xor128 step (:186-193:
+`t = x ^ (x << 11); x = y; y = z; z = w; w = w ^ (w >> 19) ^ (t ^ (t >> 8))`).
+
+**Where draws can race.** TAOM row 10 draws on the MT-callable defend callback; vanilla's own
+`DecideCrushedThrough` draws nothing (`DUMP\Modules\SandBox\SandBox.GameComponents\SandboxAgentApplyDamageModel.cs:626-665`).
+Vanilla does draw inside off-thread callbacks too: `Mission.OnAgentRemoved` -> `Agent.OnRemove` -> `Formation = null`
+(Agent.cs:5148) -> `_formation.RemoveUnit` (Agent.cs:1126) -> `Arrangement.RemoveUnit` (Formation.cs:2174) ->
+`LineFormation.RemoveUnit(unit, fillInTheGap: true)` (LineFormation.cs:610-618) -> `FillInTheGapsOfFormationAfterRemove`
+-> `TryToKeepDepth` (:1059) -> `MBRandom.RandomInt(RankCount * 2)` (:786, conditional). So the shared generator is
+already drawn off the main thread by vanilla; TAOM adds draws on a path the engine declares multi-thread callable.
+
+**What a race can do, proved on the v1.4.8 update rule** (inline Python this session, nothing written to disk):
+- The step is linear over GF(2)^128. Its 128x128 matrix M satisfies M^(2^128-1) = I and M^((2^128-1)/p) != I for all
+  nine prime factors p of 2^128-1 (3, 5, 17, 257, 641, 65537, 274177, 6700417, 67280421310721; product checked), so M
+  has order exactly 2^128-1: every nonzero state lies on one cycle of that length. rank(M - I) = 128, so the only
+  fixed point is all-zero. A torn state is therefore either all-zero (outputs 0 for ever) or an ordinary point on the
+  full cycle (normal output from then on). There is no short cycle and no nonzero constant state.
+- Aligned 32-bit stores are atomic, so every word a race leaves holds either a copy of another word or a computed
+  `g(w_r) ^ h(x_r)`, where g(w) = w ^ (w >> 19) and h are bijections (rank 32 each) with g(0) = h(0) = 0. A computed
+  zero from nonzero reads needs g(w_r) = h(x_r): a ~2^-32 coincidence (rank(g ^ h) = 31, so exactly one nonzero value
+  v* also does it, itself a 2^-32 event).
+- Reaching the absorbing zero needs a first zero in w (a normal output, ~2^-32 per draw) and then a second coincidence
+  within the ~4 draws that zero stays in the state, because the step that first copies the zero into z started with a
+  nonzero x and writes a nonzero w, and after that w only returns to zero by coincidence. Order of magnitude, at an
+  ASSUMED 10^6 shared draws per second: about 2^64 / (4 x 10^6) s, roughly 1.5 x 10^5 years of play, before also
+  requiring a two-thread interleaving at that moment.
+- What races really do: two threads get the same number, an advance is lost, or the stream jumps elsewhere on the
+  cycle. Nondeterminism only.
+
+**Would anything spin if it did get stuck?** `MBFastRandom.Next()` loops while the output is `int.MaxValue`
+(:78-88); a zero generator returns 0, so it exits. `MBRandom.RandomFloatNormal` loops while `num4 >= 1f` with the
+counter bounding only the `num4 == 0` case (MBRandom.cs:34-51); with a zero generator `num4 = 2` for ever. Its
+callers are campaign-side (`DefaultPartyImpairmentModel.cs:19-51`, `MobilePartyAi.cs:1543`). The one
+"pick until different" loop in the dump is `TournamentFightMissionController.Simulate`
+(`DUMP\Modules\SandBox\SandBox.Tournaments.MissionLogics\TournamentFightMissionController.cs:474, 510-515`), reached
+from `SkipMatch` (:192-196) on the main thread. `TreeNodeTablut`'s loop is capped (:281-287). No TAOM loop on 1.4.x
+depends on a draw. None of these is the battle tick.
+
+**9f58c58de (1.5.x, 2026-10-15).** It moved only the 1.5.x-only career crush hold (`CareerTroopHooks`, #769 E10) to
+`lock (RollGate) return (float)HoldRandom.NextDouble();` and pinned it with
+`TheCrushHoldRoll_UsesItsOwnLockedGenerator_NeverTheEngineOne`. Its RCA row X1 (rca-career-e8e10-2026-10-14.md on that
+commit) defines the "reproduced corruption": two threads on one `MBFastRandom` instance made the state "diverge from a
+serial run while a locked run matched". That is the nondeterminism above, not a stuck state. It left the Combat
+Mechanics roll as a follow-up, and no 1.5.x commit did it: at the tip `CombatMechanicsHooks.cs:142` still draws
+`MBRandom.RandomFloat` (a second draw at :185 belongs to the 1.5.x-only shield bash). `git log --grep` over
+a4c6d7c30..origin/bannerlord-1.5.x for locked or per-thread generators finds only 9f58c58de.
+
+**System.Random, for any fix.** Microsoft's System.Random remarks, Thread safety: "If you don't ensure that the
+Random object is accessed in a thread-safe way, calls to methods that return random numbers return 0." So the fix
+pattern must be a private generator under a lock (as 9f58c58de does), never a shared unlocked `System.Random`.
+
+## 6. Verdicts (item 5)
+
+- A, Dictionary writers (rows 1-3): permanent freeze possible in principle; reachability UNVERIFIED, and the only
+  route left is native concurrency that would hit vanilla's own unlocked maps first. Port f75288ebf as defence in
+  depth; it removes the class from TAOM at low cost.
+- B, List writers (rows 1, 4, 6): corruption or exception only; swallowed per callback on 1.4.x; no wedge.
+- C (rows 7, 8): not reachable as a freeze.
+- D (rows 5, 9): off-thread UI, outcome UNVERIFIED, not a spin; f75288ebf parks row 5 and moves row 9 to the file log.
+- E (row 10 and vanilla's own draws): not reachable as a freeze; nondeterminism only.
+- F: not present.
+- Player freezes: E3 is outside all of these (no tick before `RenderIsReady`). E4's off-thread callbacks happened in
+  missions that ended normally. The #634 player freeze remains unexplained; its RCA (on f75288ebf,
+  `docs/reviews/rca-offthread-agent-removed-2026-09-22.md`) states the cause is "Not proven" and that no corrupting
+  pair was found.
+
+## 7. Ordered port list
+
+1. **f75288ebf, diagnostic half** (Patch91, probe, watchdog, `ThreadStackCapture`, `ExitStallSampler` refactor, MCM
+   toggle, SubModule wiring, settings fingerprint). Highest value here: the cause is unproven and this names the next
+   stuck frame. Blind to the render wait (FREEZE-THREADING-02).
+2. **f75288ebf, writer half** (rows 1-9). Independent of step 1; may be one commit or two. Land before or with WP 108
+   (plan 006), whose allowlist removes the `Agent_OnDismount` finalizer.
+3. **Optional, P3, NEW (nothing to port):** row 10 to a private locked generator. Determinism hygiene, not a freeze
+   fix; under the simplicity criterion the maintainer may reject it.
+4. **Doc fix:** the 1.4.x toolchain doc's Mono row (take the af990ca76 wording).
+5. Not for this topic: efe326242 (perf; keep the two invariants in section 4 if ported).
+
+## 8. Corrections to the lens reports
+
+- FREEZE-THREADING-03 "eight handlers write main-thread state": accurate as a census of unsynchronised writes, but
+  only three write a Dictionary; rows 5, 7 and 8 are a UI call, an int and a Vec3. It missed
+  `MixedFormationsMissionBehavior.OnAgentDeleted` (safe, locked) and the tripwire's own on-screen report (row 9).
+- RUNTIME-PERF-04 "six of the 25 battle behaviours ... write unlocked collections": Enlistment (int) and Warg (Vec3)
+  write no collection; `CareerPerkMissionBehavior.OnAgentDeleted` and the AdvancedCombat adapter evict are locked;
+  it omits the BT agent component (row 1), the one writer of two maps at once.
+- RUNTIME-PERF-04 "three different non-main threads, so callbacks arrive from the async tick AND from TWParallel
+  workers": not supported. The guard reports once per site, the three lines are in two missions, and ids cannot tell
+  a hopping async job from pool workers (the #634 RCA says the same).
+- FREEZE-THREADING-03 and RUNTIME-PERF-04 present the Dictionary spin as the likely #634 mechanism; neither notes
+  that vanilla writes unlocked maps and lists in the same callbacks (Mission.cs:2983, 3023, 4959-4960), which makes a
+  TAOM-only corruption the less likely outcome of any native concurrency.
+- Both lenses omit the `Clear()`-against-walker spin and the engine ordering that closes it (Mission.cs:3717-3725).
+- Batch 34 note 5(a) and draft WP 107 "lock shared RNG draws": the draw is real and on an MT-callable path, but
+  concurrent xorshift128 draws cannot plausibly reach a constant state, and nothing on 1.5.x moved this draw.
+- 1.4.x `docs/reference/bannerlord-engine-and-toolchain.md:186` (Mono): refuted by the installed `Bannerlord.exe` PE header.
+
+## 9. Open questions and what would settle them
+
+- Does native ever raise `OnAgentRemoved`, `OnAgentDeleted` or `OnAgentShootMissile` on two threads at once, or on a
+  worker while the main thread runs managed mission code? Settled by `[MissionStall]` stacks (step 1) or a process
+  dump of a frozen battle (`~*e !clrstack`, `~*k`): a thread inside `Dictionary.FindEntry`/`Insert`/`Remove` with the
+  main thread in `Mission.WaitTickCompletion` would confirm mechanism A.
+- Does v1.4.8 call `GetDefendCollisionResults` concurrently? The 1.5.x thread table cites an outside v1.5.3 source;
+  no TAOM log has caught it off the main thread. UNVERIFIED on 1.4.8.
+- What the Gauntlet message pipeline does when `DisplayMessage` runs on a worker (rows 5 and 9). UNVERIFIED.
+
+Recommended skills for the orchestrator: `/research` on `InformationManager.DisplayMessageInternal` subscribers before
+deciding row 5; `/verify-bindings` after porting Patch91; `/native-crash-triage` on any frozen-battle dump.

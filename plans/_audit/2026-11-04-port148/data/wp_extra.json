@@ -1,0 +1,852 @@
+{
+ "101": {
+  "wave": 0,
+  "depends_on": [],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/D4-patch88-and-binding-health.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Fast-forward the MAIN checkout's bannerlord-1.4.5 to origin/bannerlord-1.4.5 (1b00d1acd), then merge origin/fix/public-armory-ids-145 (92a30ba42, 10a52fb3d, 8df90444c); the only expected conflict is docs/reviews/lessons/data-content-cultures.md (keep both sides).",
+   "Expected after the merge: build OK, 9154 tests, 9151 passed, 3 skipped, 0 failed (measured by the orchestrator in a scratch export, 2026-11-04).",
+   "Leave the uncommitted .serena/project.yml and any stash alone; never pull --rebase with an autostash.",
+   "Maintainer step (environment): update the laptop's LOTRLOME_Armory install to the public 2026-09-29 Armory, then run python tools/validate_moduledata.py and record the BROKEN_ITEM_REF count as the laptop baseline (decision D20).",
+   "This WP precedes plan 020, so it follows the 1.4.x hand-edited CHANGELOG rule for its own commit.",
+   "Record in plans/README.md (the integrator's section) the measured baseline numbers that every later plan quotes."
+  ],
+  "shared_groups": [],
+  "lane": "gate"
+ },
+ "102": {
+  "wave": 0,
+  "depends_on": [
+   "101"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md"
+  ],
+  "notes": [
+   "Decision D1: ADOPT. Land before WP103 so the CHANGELOG gates are deleted rather than switched on by the output-contract fix.",
+   "Also take 9bfd0f411 (K2: tools/changelog_from_commits.py fix #1009) after ae85381dc, 6e4bfedb7, 971d8e975, 5b242cee6.",
+   "Version decision D8: the next 1.4.x release is v2.4.0 (3-part, accepted by the generator regexes unchanged); the tool must report the commits since v2.0.28.",
+   "settings.json edits (deleting the two CHANGELOG hook registrations) are the maintainer's: give the exact JSON diff."
+  ],
+  "shared_groups": [],
+  "lane": "harness"
+ },
+ "103": {
+  "wave": 0,
+  "depends_on": [
+   "102"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Core defect (D2): nine 1.4.x PreToolUse gates print a top-level permissionDecision that Claude Code ignores, so the subject, files-tracked, ModuleData, doc-drift, confirm and /freeze gates are inert today. Port the HARNESS hunk of c79a58521 (group crash-report-rethrow-stack; the crash half belongs to WP107): nested hookSpecificOutput, PYTHONIOENCODING=utf-8 in _pybin.sh, test_hooks 5c, harness-facts row.",
+   "Preconditions that the real gates would otherwise deny on, in the same WP: trim CLAUDE.md under its byte cap (lint_docs --fail-on-drift must exit 0), the laptop Armory refresh (WP101), and worktree-aware gate readers (12d96adc1, the reader half of 7e26d77fe/407570ece) because parallel executors commit from worktrees.",
+   "Take the 7j frontmatter check of d01bddf10 (its push-judge half goes to WP116) and only the -p:ModuleId= hunk of 1d1abd694 (group improve-run-pipeline, WP138), plus a sweep that adds -p:DisableModuleCopy=true -p:ModuleId= to every dotnet build/test line in skills, rules and docs.",
+   "Decision D3: deny Serena's edit tools (list in 7d13adc36) in .claude/settings.json; keep its read tools. Decision D19: widen the 10 git gates to matcher Bash|PowerShell. Add bannerlord-1.5.x to validate-push.sh protection. All settings.json edits: the maintainer applies an exact diff from the plan.",
+   "0382d5d2a .githooks/commit-msg: port; the maintainer runs git config core.hooksPath .githooks once.",
+   "Decision D18: do NOT add 4b7e36250's merge=union line here (deferred to WP142)."
+  ],
+  "shared_groups": [],
+  "lane": "harness"
+ },
+ "104": {
+  "wave": 0,
+  "depends_on": [
+   "101"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D1-plan-018-composition-root.md",
+   "plans/_audit/2026-11-04-port148/verify/D4-patch88-and-binding-health.md",
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Port plan 009 from its post-merge end state (998ae7e95; commits 45bcf80bd, 9da9b5b92, bdf7d515c, 4c728dac0, 7912fdd8f, b6cb6ff5d, 7eae47044, 27fd23bbb). Do not take 346f3e093 (WP118).",
+   "RepoPaths: take TAOM.Tests/Infrastructure/RepoPaths.cs with ReadSource/StripComments/MentionsOutsideComments and CodeRoots = { Main } (Client/ does not exist on 1.4.x); V03 says 35007dbb8's 22-line version lacks ReadSource: use the 4f27b3bde / 06252ae2c shape.",
+   "Take a0db0558b (plan 018 step 0, owned by group plan-018-composition-root): the test-only reader that closes a false pass on 1.4.x (GameModelOverrideBindingTests counts the commented TaomPartyNavigationModel AddModel); add ParkedModels.",
+   "D4 (Patch88): BHA0001 is a false positive (the analyzer cannot resolve nested types; LordPartyComponent.InitializationArgs.InitializeLordPartyProperties exists on v1.4.8); silence it with a scoped pragma on that one attribute."
+  ],
+  "shared_groups": [
+   "plan-018-composition-root"
+  ],
+  "lane": "code"
+ },
+ "105": {
+  "wave": 0,
+  "depends_on": [
+   "104"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D1-plan-018-composition-root.md"
+  ],
+  "notes": [
+   "Decision D2: ADOPT the infrastructure now. Port END STATES: Main/Composition from merge 1efdf2985, tests from 0f3af9577. Exclude RegisterCampaignObjects (8b015667f), ClientComposition/IClientComposition and every tip-only contract. a0db0558b is WP104's.",
+   "Follow D1's commit B and commit C exactly (anchors, six FeatureModuleHooks calls, two IoC lines, grep gates, T0 + 42 tests).",
+   "Add a reusable 'how to port a 1.5.x feature module onto 1.4.x' section to docs (the downstream WPs cite it)."
+  ],
+  "shared_groups": [],
+  "lane": "code"
+ },
+ "106": {
+  "wave": 1,
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V04-tick-handshake-and-start-swallow.md",
+   "plans/_audit/2026-11-04-port148/verify/V05-concurrent-collections-and-rng.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Priority P1, not P0 (V05): #634 is defence in depth; the freeze cause is unproven. Port the Patch91 / stall-watchdog half first.",
+   "Decision D17: add a LAUNCH-AWARE recovery on Mission.OnTick that restores tickCompleted only when this call launched no agent-tick job (V04 explains why the lens's unconditional restore is unsafe: Patch35's postfix can throw after TickAgentsAndTeamsAsync launched the job).",
+   "V04: porting Patch91 without 6eb2e1b90's PatchShield method exclusion adds a missing-API swallow inside the agent tick; coordinate with WP107 (it owns the exclusion mechanism).",
+   "Decision D16: do NOT add a locked RNG for TaomCombatMechanicsModel (V05: concurrent xorshift128 draws cannot plausibly reach a constant state; 1.5.x never moved the draw).",
+   "Group issue-965-coop-safety-nets: port only bd1ac8292's tickCompleted lesson and re-cited comments (decision D7 keeps co-op features out).",
+   "Player-facing: the MCM QA toggle 'Throw On Next Mission Tick' can freeze permanently on v1.4.8 (V04): make the recovery cover it, or document it.",
+   "K1/D16: do NOT add the locked RNG from 9f58c58de (decision D16). DO add a multi-thread callback row to .claude/rules/harmony-patches.md's thread table (v1.4.8 Mission.cs:6455-6456 GetDefendCollisionResults is [MBCallback(null, true)]; MBRandom.cs:22/:32; MBFastRandom.cs:23-32/:83) so future code on that path knows it runs off the main thread."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "107": {
+  "wave": 1,
+  "depends_on": [
+   "106"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V04-tick-handshake-and-start-swallow.md",
+   "plans/_audit/2026-11-04-port148/verify/V08-load-time.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Owner of Dependencies/ for the whole programme: RethrowStackPreserver.cs (crash half of c79a58521; its harness half is WP103), PatchShield.cs/PatchShieldPolicy.cs with the GENERIC ExcludedTargetMethods mechanism from 30abf550b (no Patch92 entries; that commit is group hill-troll-sprint-mixed in WP130) plus the Mission.TickAgentsAndTeamsImp entry from 6eb2e1b90.",
+   "Port plans 007 and 006 from post-merge end states (merges d90b4be31, 5f6a96d2e, then 88408869f). Re-verify the 16 allowlist names on the installed v1.4.8 DLLs.",
+   "V04: SaveShield's MISSION-INIT finalizer on MissionState.FinishMissionLoading (Dependencies/Foundation/SaveShield.cs) is the innermost swallower of mission-start throws on 1.4.x and logs only to Modules/TAOM.Dependencies/diag.log; keep that in mind for the allowlist trade-off (1d94df9c4 drops TAOM's swallow on some shims).",
+   "Every change under Dependencies/ reaches players only with a release that ships TAOM and TAOM.Dependencies from one build (#371); say so in Done criteria."
+  ],
+  "shared_groups": [
+   "hill-troll-sprint-mixed"
+  ],
+  "lane": "B"
+ },
+ "108": {
+  "wave": 1,
+  "depends_on": [
+   "103",
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V02-e3-wedge-or-compile.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "V02: the missing-body spin starts about 11 frames AFTER BattlePlayable (MissionScreen), so it fits 'froze just as the loading screen disappeared', not E3.",
+   "K2: also add the two Patch90 lessons from 1571c2f91 to docs/reviews/lessons/harmony-il.md.",
+   "Take 30abf550b's validate_mesh_refs loose-first hunk; b23a27ef4 and 7bbe6f4de; d5986f87f only if the public Armory dropped those troll items.",
+   "Regenerate any audit report against the PUBLIC Armory (refreshed laptop per D20, or the desktop); body and mesh verdicts from the old v2.0.26 laptop Armory are void."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "109": {
+  "wave": 1,
+  "depends_on": [
+   "106",
+   "107"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/V04-tick-handshake-and-start-swallow.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Port only the MissionStartGuard and SkeletonBuffer parts of ecaa67d26 here; NameplateCull and MapViewRelease go to WP120.",
+   "Decision D5: guard AND watch, both on by default; v1.4.8 KnownBuilds row from V03: [14185944] = (\"v1.4.8\", 0x88681, 0xD96D18, 0x886B4, 0x88475, 0x898F0); on any mismatch the guard self-disables and the watch reports. Native pin gate 15e52d7af + c286e2393 at tip with the v1.4.8 row (and fdee18f02's NativePinGateTests summary).",
+   "Bring the pinned helpers verbatim from origin/bannerlord-1.5.x (unchanged since ecaa67d26): MissionPerf/TickProfilerTranspiler.cs (trimmed TickProfileLines), MissionPerf/AnimMemory/ClipBudgetSignature.cs and PeSectionTable.cs; V03 lists further hidden prereqs (GameAssemblies 3-arg ResolveGameDir, RecordingLogger, SyntheticNativeImage, PatchShieldPolicy exclusion API, MIT text for THIRD-PARTY-LICENSES.txt).",
+   "V03: without plan 008's binding-gate runsettings (WP122) an unlisted engine build reads Skipped, not Failed; note it.",
+   "Provenance: yotthani VanillaTuning is MIT; keep the notice and the provenance-register row (.claude/rules/provenance.md)."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "110": {
+  "wave": 1,
+  "depends_on": [
+   "103",
+   "104"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V06-war-of-the-ring.md"
+  ],
+  "notes": [
+   "V06: chain-apply in order 2719e59e8, 9ab3952a7, d1b9fd91a, the momentum halves of 16a34027d and ec2a3026f, the provider hunk of 429713746; adapt ec2a3026f without IPlayerControlQuery (co-op stays out, D7).",
+   "New hardening 1.5.x lacks: empty-roster tie must not resolve as a Free win (WOTR-03), non-finite strength (WOTR-08), state surviving into a load with no momentum record (#773, WOTR-05), and the phase clock (WOTR-10) if cheap.",
+   "WOTR-04: keep realm-wide participation credit (deliberate, #375); fix the misleading MCM hint text instead, and show the absolute lead the decision uses (the documented runaway-momentum case).",
+   "Log line a player can send: '[Momentum] War of the Ring decided: FreeVictory (momentum X, threshold Y)'; make sure it stays.",
+   "Optional lead (batch notes): #774 raid counted twice; verify on 1.4.x before porting."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "111": {
+  "wave": 1,
+  "depends_on": [
+   "105",
+   "109"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/V04-tick-handshake-and-start-swallow.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "V04: on v1.4.8 AddMissionBehavior calls only OnCreated, so TAOM's OnBehaviorInitialize overrides on behaviours added in OnMissionBehaviorInitialize never run in a normal start (SiegeDismount is dead code on 1.4.x).",
+   "c17541f2c creates IGraphicsOptionsAdapter/GraphicsOptionsAdapter that WP117 extends; re-verify the native fade and cap numbers on v1.4.8 (they were read from v1.5.3).",
+   "Port 2a5363e90 (ratchet + rules) and fac17e05c + cfca3c5fd + bb85e9284 + 9cb6d49e7 together (K3)."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "112": {
+  "wave": 1,
+  "depends_on": [
+   "105",
+   "107"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "ab78564e0 (1.5.x port of PR #1064) vs 1b00d1acd (the 1.4.x PR itself): diff them and port only what the 1.4.x tip lacks; its two IL-fingerprint tests go to WP118 (they need IlCallScanner.Fingerprint from a27c6b338).",
+   "nre-containment-finalizers: take only 6ae924638's NRE-finalizer narrowing with 0002cb561; its AutoResolve hunk goes to WP123, its HeroRace hunk to WP119, its career-quest hunk to WP129.",
+   "1165a00de + de90a2451: swap IOutcomeLog for IModLogger (IOutcomeLog arrives only in WP139).",
+   "MainMenuStep (85c608963, 2afea8878) goes into Main/Composition (WP105 exists).",
+   "K2: add BanditHideoutLiveDataTests.EveryHideoutCultureBanditClan_OwnsALiveHideout from 0799af376 with cd06da904/1ef7d1af6 (game dir via GameAssemblies or BANNERLORD_GAME_DIR, Inconclusive when TAOM_Map is absent).",
+   "plan-002-nan-infinity-guards closes the 1.4.x TODO plan 002 (the TroopWeight half is already on 1.4.x as bee07b48)."
+  ],
+  "shared_groups": [],
+  "lane": "D"
+ },
+ "113": {
+  "wave": 1,
+  "depends_on": [
+   "106"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V02-e3-wedge-or-compile.md",
+   "plans/_audit/2026-11-04-port148/verify/D3-shader-cache-keeper.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "V02: E3 cannot be decided from the logs (E4's 68 s silent load completed). The 1.4.x watchdog cannot settle it because the shader count is published only by the blocked main thread. So the core new work is a heartbeat watchdog OFF the main thread (Managed.ApplicationTick-fed timestamp, a background checker that logs [Freeze] with main-thread stacks at 10/20/40/80 s, optional minidump) reusing ThreadStackCapture from f75288ebf (WP106).",
+   "D3: 82645b53f ShaderCompileNotice GO (P2; it covers only compiles before the main menu). ShaderCacheKeeper 372773d1a NO-GO (decision D11): record it as deferred with its gate. 84f0459bc NO-GO (decision D12).",
+   "Decision D4: keep ShaderPrecompilation active on 1.4.x unless your research shows 25995dc91's park reason applies on v1.4.8; check whether E3/E4's in-battle compiles are scene shaders (scene passes are OFF by default since #560) and whether the precompile walk ran in those sessions; record the decision. The banner-bearers model hunk of 25995dc91 goes to WP130.",
+   "A render-wait notice may only claim 'compiling' when it can tell a draining count from a frozen one (#612); the triage tool reports the frozen case when the gap to the watchdog line is 30 s or more (89374fc4f).",
+   "d99398f12: take only the triage hunk here; its package_release.py missing_armory_shaders gate goes to WP115.",
+   "Player-facing guidance from V02 (wait 5 minutes after an update or mod change, compile_shader lines in rgl_log, dump when stuck, lower Stall Threshold to 120) belongs in the feature doc."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "114": {
+  "wave": 1,
+  "depends_on": [
+   "104"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V01-save-growth.md",
+   "plans/_audit/2026-11-04-port148/verify/V07-memory.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "V01: each in-game load adds about 71,500 containers (85,000 to 90,000 objects) to every later save in that process; a first load in a fresh process adds nothing. 'Permanent' and 'per load' are NOT proven; the stale-XML-object candidate class is refuted for v1.4.8. Live hypotheses: SaveShield swallowing a load-callback fault on a second load; in-game load vs main-menu load.",
+   "Build the probes (memory tokens, loadsThisProcess, SaveContext object/container counts, per-behaviour SyncData sizes, an opt-in type census at save) and write the repro matrix (fresh-process load then save; in-game reload then save; main-menu reload then save; fresh-process load of a bloated save then save) for the maintainer to run in game.",
+   "STOP: no SAVE-TIME-01 fix in this WP; a follow-up plan is written once the census names the carrier.",
+   "issue-628-race-fertility: only the #628 commits (83bdad853, 925db38d1), not #626.",
+   "Docs: correct the daily-tick-on-load docs for v1.4.8 (573dc155f, a66b5754a, e8504a62b, ae1a6b553).",
+   "Server GC: do NOT recommend (V01: three runtime hosts, unknown on players' machines)."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "115": {
+  "wave": 1,
+  "depends_on": [
+   "107",
+   "109"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/V08-load-time.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Must merge before the first player release that contains any wave-1 work (#371 pairing: ship TAOM and TAOM.Dependencies from one build).",
+   "Decision D8: the next 1.4.x release is v2.4.0; the packager and release docs must refuse v2.0.29..v2.0.36 (1.5.x tags).",
+   "Take d99398f12's missing_armory_shaders gate hunk and 709649c3f's release pre-flight 5 hunk.",
+   "New: config= and jitOpt= tokens in the [BuildStamp] line (public DLLs are Debug builds with the JIT optimizer off; keep shipping Debug, it is the recorded policy, but make it visible).",
+   "New: an Armory and TAOM_Map pairing check: taom_body_length / 1.5.x Monster attributes in the Armory (decision D15: report as a pairing signal, never allowlist silently), live bandit dens (K2, 0799af376), the 15 VILLAGES rows (K2, 4b207f951), and the TAOM_Map package pin (desktop TAOM_Map after 2026-10-29 carries 1.5.x ids).",
+   "V08: a TAOM-side guard against a mismatched TAOM.Dependencies.dll (E3 shows a MISMATCH) is needed by WP118; the BuildStamp check lives here."
+  ],
+  "shared_groups": [],
+  "lane": "B"
+ },
+ "116": {
+  "wave": 1,
+  "depends_on": [
+   "103"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "One executor, serial, own worktree. End-state transplant (do not replay commits): validate-push.sh, _pushjudge.py, _shellwords.py, _pybin.sh helpers, gate scripts and PowerShell matchers, adapted (trunk bannerlord-1.4.5, v2.0.28, no CHANGELOG gates after WP102, Serena per D3).",
+   "Take the push-judge half of d01bddf10 and 30abf550b's config-protection normalisation hunk.",
+   "settings.json edits are the maintainer's (exact diff in the plan)."
+  ],
+  "shared_groups": [],
+  "lane": "H"
+ },
+ "117": {
+  "wave": 2,
+  "depends_on": [
+   "106",
+   "107",
+   "109",
+   "111"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Two parts: A mission-frame instruments (5dfa8f4cb extract, af990ca76 engine page re-verified on v1.4.8, 6eb2e1b90, daba6f0a0, camera trio minus NativePinGateTests, 67eff55cf, 685c6a1e0, 43ca92ee9); B map and memory instruments (f6bf0e588, a9f10688f minus the pinned helpers WP109 brought, 3dac7ab5b, 639df895b).",
+   "Reuse, never re-add, the helpers WP109 created (TickProfilerTranspiler.cs, ClipBudgetSignature.cs, PeSectionTable.cs, NativePinGateTests); ClipBudget v1.4.8 row from V03: (0x23AADF, 0x23AB04, 0xDA59B0, 0xB2BC9C).",
+   "Decide daba6f0a0's default (on or off) with a cost measurement."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "118": {
+  "wave": 2,
+  "depends_on": [
+   "104",
+   "107"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V08-load-time.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "V08: the v1.4.8 merge is quadratic exactly as plan 042 says (MBObjectManager.cs:966-982, :997-1010, :833-845). Port a27c6b338 only together with 346f3e093 and: the PatchShield method-level exclusion (mechanism from WP107), a TAOM-side guard for a mismatched TAOM.Dependencies.dll, the IlCallScanner.Fingerprint hunk, and a live-harness run on the v1.4.8 install. Plan 009 and 018 are NOT prerequisites of the merge itself.",
+   "Decision D14: DROP LOAD-TIME-07 (one generated NPCCharacters file): after plan 042 it saves under 0.5 s and the 1.5.x maintainer decided against a build-step merge.",
+   "502f7cde9 and plan 012 (8028bf3df, e6c03411d, bce3c27f4, 15e5475a4, a4492fa89) together.",
+   "ab78564e0's two IL-fingerprint tests (owned by WP112's group) land here.",
+   "6027ecfae (BUTR stack refresh) and every Dependencies change: paired release (#371); MCM and crash-report smoke test.",
+   "Before figures (V08): E1 window 27.2 s, NPCCharacters 15.10 s, TAOM's 42 files 11.80 s; E2 later loads 22.6 to 29.7 s; 12 loads in E2 spent 292.9 s in merge windows."
+  ],
+  "shared_groups": [
+   "issue-1064-supply-desertion-port"
+  ],
+  "lane": "B"
+ },
+ "119": {
+  "wave": 2,
+  "depends_on": [
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V07-memory.md",
+   "plans/_audit/2026-11-04-port148/verify/V01-save-growth.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Closes the 1.4.x TODO plan 001 (its CareerSystem half is already on 1.4.x as f4273639; port the SpecialResources half 4263535a1, 8ea315052, 0935533a6).",
+   "Plan 014 series (DECISIONS #28 lists it): a67792c40 adds one ResetSessionCaches line in the SubModule.cs OnGameEnd block.",
+   "Take 6ae924638's HeroRace _isNewCampaign hunk with eb5cf0289, and eb6d18431.",
+   "V07: these are correctness fixes; on 1.5.x the managed retention persisted after them. Add a heap-snapshot procedure (what to capture, how to compare) for MEMORY-05; share the probe with WP114."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "120": {
+  "wave": 2,
+  "depends_on": [
+   "109"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/V07-memory.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Take the NameplateCull and MapViewRelease parts of ecaa67d26 (group yotthani-stability-guards, owned by WP109).",
+   "Decision D22 (V03): NameplateCull does not port unchanged: v1.4.8 SettlementNameplateVM.RefreshDynamicProperties (SettlementNameplateVM.cs:500-509) takes a hideout's range from ISpottable.IsSpotted where the adapter mirrors v1.5.4's Settlement.IsVisible, and the binding test pins Settlement.get_FerryTarget, absent on v1.4.8.",
+   "MEMORY-01 (V07, Likely): with cheat mode on, opening the player's own inventory lists every ItemObject (about 5,166 rows); one E4 open added 2,352 MB of managed heap and froze the main thread 31 s. Design a guard after /research on InventoryScreenHelper.OpenInventoryPresentation (v1.4.8).",
+   "MEMORY-04: a one-time, dismissible advisor when total RAM is about 16 GB and texture quality is at the top setting (measured: top to minimum freed 2.3 GB on the map; one step down unmeasured: do not promise a number).",
+   "MapViewRelease: measure VRAM before claiming a saving (yotthani measured on 1.5.5)."
+  ],
+  "shared_groups": [
+   "yotthani-stability-guards"
+  ],
+  "lane": "D"
+ },
+ "121": {
+  "wave": 2,
+  "depends_on": [
+   "101"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V07-memory.md"
+  ],
+  "notes": [
+   "Decision D23 (V07): the 1.5.x commits change only 33 small descriptor files with identical inputs on both lines; players get the pixels from pack0.tpac, so the port is a v1.4.8 Modding Kit re-import and pack republish (the laptop Kit first needs the TAOM.Dependencies editor mirror). 19 sheets a campaign names become DXT1: 152 MiB instead of 1,216 MiB, probably VRAM, not private bytes. Never promise a private-memory saving.",
+   "9985f2db3's 39 dead sprite sheets can be deleted on their own (no realm-banner content); the player-facing saving is 39.6 MiB inside pack0 after a republish.",
+   "Decision D24: MEMORY-03 (BC7 UI sheets) conflicts with the 1.4.x rule that keeps ui_taom_bannericons_NN uncompressed (banner-icon-generation.md:81): compress only sheets that rule does not protect, with an in-game visual check.",
+   "MEMORY-06 (16K map vista) lives in the unversioned TAOM_Map: plan it as a desktop step with an in-repo gate (CLAUDE.md trap 'a fix in a dependency module')."
+  ],
+  "shared_groups": [],
+  "lane": "kit"
+ },
+ "122": {
+  "wave": 2,
+  "depends_on": [
+   "104",
+   "115"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D4-patch88-and-binding-health.md",
+   "plans/_audit/2026-11-04-port148/verify/V03-skeleton-buffer-v148.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Decision D9: do not re-add CI (ccef172ad removed it on both lines: 57 of 186 runs passed). Plan 010's CI commits and its RefAsm no-game gate (8589a3384) are recorded as skipped. Plan 019 (nullable ratchet) is an optional final part.",
+   "Plan 008's binding-gate runsettings (MapInconclusiveToFailed) makes an unlisted engine build fail the native pin gate instead of reading Skipped (V03).",
+   "D4: the binding gate's lookup rules differ from Harmony 2.4.2's and some manual patches are unguarded: include the stricter-gate work (D4 WP-C).",
+   "issue-1020 edits Directory.Build.props after WP115's plan 017 edits (maintainer applies Directory.Build.props diffs)."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "123": {
+  "wave": 3,
+  "depends_on": [
+   "105",
+   "117"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V05-concurrent-collections-and-rng.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Take 6ae924638's AutoResolve deletion hunk with 158408c73 (CoopSettingsRelevance -2 and fingerprint -2).",
+   "Closes the 1.4.x TODO plan 003.",
+   "Fix the [MissionDiag] DivideByZeroException seen in E3/E4 (E3:56, E4:55).",
+   "RUNTIME-PERF-09 (synchronous FileLogger flush on every line, on worker threads too): decide with a measurement; a bounded background writer is new work, keep it only if it measurably helps."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "124": {
+  "wave": 3,
+  "depends_on": [
+   "106",
+   "123"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V05-concurrent-collections-and-rng.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Plan 015 (DECISIONS #28) squashed after #634 (WP106).",
+   "New: cap BehaviorTree.RunTree's node walk (FREEZE-THREADING-09) with a test."
+  ],
+  "shared_groups": [],
+  "lane": "B"
+ },
+ "125": {
+  "wave": 3,
+  "depends_on": [
+   "117",
+   "118"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Decision D6: port the perf series as ONE squashed change at its net pre-merge state; do NOT port f48ef74dc's instant transitions (a UX change with no setting).",
+   "ea7cce7bc uses the 346f3e093 stamp clock (WP118); 943ab74c0's probe needs MapPerf (f6bf0e588, WP117)."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "126": {
+  "wave": 3,
+  "depends_on": [
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [],
+  "shared_groups": [],
+  "lane": "D"
+ },
+ "127": {
+  "wave": 3,
+  "depends_on": [
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D1-plan-018-composition-root.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "ADR and rule edits under docs/adrs/ are the maintainer's (config-protection); present exact diffs."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "128": {
+  "wave": 4,
+  "depends_on": [
+   "105",
+   "119"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "2d1e5f338 (issue-827) lands before issue-831's hunks that edit MapEventHelperCanMainPartyLeaveBattlePatch.cs."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "129": {
+  "wave": 4,
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Take 6ae924638's career-quest owner hunk with 180696430.",
+   "b02467744: only the archetype-map coverage for promoted cultures that exist on 1.4.x (Arthedain itself is OUT).",
+   "K1: 0761c01b7 (issue-971-career-click) calls IlCallScanner.Fingerprint (from a27c6b338, WP118). If WP118 has not merged, lift only a27c6b338's TAOM.Tests/Migration/IlCallScanner.cs Fingerprint hunk (+94 lines). STOP on CS0117: lift the helper, never rewrite the test.",
+   "K1: the Custom Battle damage model that b0154d86e builds must not copy the MBRandom draw (if b0154d86e is in your pack's scope; otherwise ignore)."
+  ],
+  "shared_groups": [],
+  "lane": "B"
+ },
+ "130": {
+  "wave": 4,
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "hill-troll-sprint-mixed (30abf550b): only the BannerBearers dropped-banner race gate stays here; its ExcludedTargetMethods hunk is WP107's, config-protection WP116's, validate_mesh_refs WP108's, crash-triage registers WP137's, lint regex WP143's.",
+   "Take 25995dc91's custom-battle banner-bearers model hunk (on BasicGameStarter).",
+   "Decision D13 / K2: apply 1641fb985's four Dunland default_group retags (troops_dunland.xml :1705 Infantry to Ranged; :2082, :2165, :2248 Cavalry to HorseArcher) on the merged tree; no skill restat."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "131": {
+  "wave": 4,
+  "depends_on": [
+   "105",
+   "123"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "93684c32c needs 423d948d8 (plan 037, WP123). 2c7f7fae9 creates PrefabExtensionBrushTests that WP140 needs."
+  ],
+  "shared_groups": [],
+  "lane": "D"
+ },
+ "132": {
+  "wave": 4,
+  "depends_on": [
+   "128"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "1d9cc42f1 needs f6ac2d335/b9d18458e/a67792c40/fd61757bf and 2d1e5f338 (WP119, WP128)."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "133": {
+  "wave": 4,
+  "depends_on": [
+   "105"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "specialresources-map-bar-entry needs fee906345 (#958, in ui-data-sweep-2026-10-23).",
+   "bd457ee6e (ui-data-sweep) is needed by WP136's f963c6188."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "134": {
+  "wave": 4,
+  "depends_on": [
+   "101"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/V06-war-of-the-ring.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Decision D13: port a data fix only when the defect is verified on 1.4.x data and the fix needs no OUT content. issue-756 port; issue-758 port the lords.xslt retag only if no TAOM culture is left with zero wanderer templates, else skip; issue-757 skip (built on Oaths of Service); issue-749 integrity only, no balance retune; issue-957 only the parts whose bug exists on 1.4.x (V06: all 22 shipped kingdom ids are mapped in alignment.json on 1.4.x)."
+  ],
+  "shared_groups": [],
+  "lane": "F"
+ },
+ "135": {
+  "wave": 4,
+  "depends_on": [
+   "128",
+   "129",
+   "130",
+   "131",
+   "132",
+   "133",
+   "134"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Runs last in wave 4: it regenerates and translates the 12 language files; earlier WPs add English rows only. Never re-translate 1.5.x-only strings.",
+   "A full translation run spends money (tools/translate_with_claude.py calls the Anthropic API): the maintainer authorizes it explicitly."
+  ],
+  "shared_groups": [],
+  "lane": "G"
+ },
+ "136": {
+  "wave": 5,
+  "depends_on": [
+   "108",
+   "117",
+   "131",
+   "133"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "tools/validate_moduledata.py is serial: WP108's collision pass first, then fa8c06f82's SCHEMA_INVALID hand-merged (tool half only; its lens half is WP138), later codes after.",
+   "K2: 569f6750d's tool-comment and rule-row rewording plus the uruk-hai skirt RCA (no hill_troll wording).",
+   "XML-DATA-02: the validator header prints each extra module's SubModule.xml Version and newest file date.",
+   "K1: 1ebcf86a8: its test test_item_registry_counts_only_items_documents calls vm.armour_acquisition_ref_issues, defined only by SKIP-FEATURE 04da4a0d0: drop that call and the armour_acquisition fixtures; use a non-Items fixture shaped like culture_marketplace_config.",
+   "K1: 8caac7da5 (tests-architecture-gates): ServiceSignatureGateTests uses TaomAssemblies.All (from a15563a3c, absent on 1.4.x): scan the TAOM assembly instead."
+  ],
+  "shared_groups": [],
+  "lane": "A"
+ },
+ "137": {
+  "wave": 5,
+  "depends_on": [
+   "103"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D4-patch88-and-binding-health.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "Take fe20eddff's taom-src docs (cache per game build) with 97219836c and 857734c64.",
+   "Take 30abf550b's native_crash_triage register-dump hunk.",
+   "D4 WP-D: refresh the stale API snapshot (6 classes missing) and fix the mis-catalogued reflection row.",
+   "Closes the 1.4.x TODO plan 005 (security hygiene) using the 1.5.x implementation.",
+   "Never vendor MCMv5.dll."
+  ],
+  "shared_groups": [],
+  "lane": "B"
+ },
+ "138": {
+  "wave": 5,
+  "depends_on": [
+   "116",
+   "136",
+   "137"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "One serial harness executor. End-state adaptation, not commit replay. Keep the 1.4.x skills the 1.5.x tip deleted unless each deletion is justified; graphify is not installed on the laptop.",
+   "Take fa8c06f82's lens half here (its tool half is WP136). The /improve pipeline assumed a generated CHANGELOG: fine after WP102.",
+   "Decision D10: plans are executed by ordinary sessions, not /improve execute; this WP is not on the critical path."
+  ],
+  "shared_groups": [],
+  "lane": "C"
+ },
+ "139": {
+  "wave": 5,
+  "depends_on": [
+   "118",
+   "126",
+   "129",
+   "130",
+   "131"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Order (batch 32): cb4eeaa3d, c8d69e426, per-feature check lines (only for base fixes that were ported), skill hooks, the swallowed-exception ratchet.",
+   "OutcomeLog needs IStampClock from 346f3e093 (WP118).",
+   "K1: lift 92839bc52's IlCallScanner.ExtractOpCodes hunk (+20 lines; applies cleanly on top of a27c6b338's Fingerprint hunk) before 0ab3dc35a, whose test calls both helpers.",
+   "K1: 852678f86: drop the VolunteerProductionService constructor parameter (1.4.x CastleRecruitmentService.cs:20 takes only the settings provider) and put a local 9-line TryFloorElapsedDays beside CastleRecruitObserver (from War Chronicle commits d340a725c/5ba8d6c82, which stay OUT)."
+  ],
+  "shared_groups": [],
+  "lane": "D"
+ },
+ "140": {
+  "wave": 5,
+  "depends_on": [
+   "131"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "K2: port PartyTupleVanillaParityTests.EachTupleCopy_MatchesVanilla_ApartFromTaomsTwoEdits (540848795); STOP if red on a clean tip.",
+   "62fb6bb1d needs PrefabExtensionBrushTests from 2c7f7fae9 (WP131); gui-prefab-copy-drift needs 450332b74; 8d5cfc623's test part only (prefab clone widget references).",
+   "K1: port 42148af4c's PrefabHintParentGateTests.cs (fails any in-code PrefabExtension HintWidget whose parent sets DoNotAcceptEvents=true; shipped three times incl. Messengers #898). Scan the TAOM assembly (not TAOM.Client) and lower the floor from 9 to 5 (CareerButtonPrefab, CareerEnergyBarPrefab, MessengerEncyclopediaPrefabExtension, SpecialResourcePrefab, TimeAccelerationPrefab). STOP if fewer than 5 are found."
+  ],
+  "shared_groups": [],
+  "lane": "E"
+ },
+ "141": {
+  "wave": 5,
+  "depends_on": [
+   "137"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md"
+  ],
+  "notes": [
+   "K2: 4b207f951's add_map_villages --check widening (no Village rows); b904e02a3's civilian-set skip in rebalance_troops.troop_weapon_classes. Never run any tool with --apply.",
+   "Tools for 1.5.x-only content stay out (keep only what serves data that exists on 1.4.x)."
+  ],
+  "shared_groups": [],
+  "lane": "F"
+ },
+ "142": {
+  "wave": 5,
+  "depends_on": [
+   "141"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Takes every remaining docs-process group (see the pack). Rewrite 1.5.x facts for 1.4.x; never import 1.5.x engine claims.",
+   "Decision D18: 4b7e36250's merge=union line for docs/reviews/lessons/*.md is the LAST step, after the lessons files are synced; never on CHANGELOG.md.",
+   "K1: 50e8dc7ae: skip its settlement-economy-food-prosperity.md hunk; the 1.4.x text at :149-153 is correct (TaomPartyHealingModel overrides only GetSurvivalChance and GetDailyHealingHpForHeroes)."
+  ],
+  "shared_groups": [],
+  "lane": "G"
+ },
+ "143": {
+  "wave": 5,
+  "depends_on": [
+   "138",
+   "142"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D2-harness-and-changelog.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Takes every remaining harness group (see the pack). Keep 1.4.x specifics: v2.0.28 subject rule, v1.4.8 engine facts, Serena read tools.",
+   "K2: rebuild the settlement-prefix line at .claude/rules/xml-data.md:37 from docs/modding/id-cheatsheet.md:94-114 (c625ada0f's shape).",
+   "Take 175b149fd's /issue duplicate-search step (co-op WP dissolved, D7) and 709649c3f's harness hunks except release pre-flight 5 (WP115)."
+  ],
+  "shared_groups": [],
+  "lane": "H"
+ },
+ "144": {
+  "wave": 5,
+  "depends_on": [
+   "141"
+  ],
+  "verify_reports": [
+   "plans/_audit/2026-11-04-port148/verify/D4-patch88-and-binding-health.md",
+   "plans/_audit/2026-11-04-port148/verify/K2-skip-other-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K3-wp-map-critic.md",
+   "plans/_audit/2026-11-04-port148/verify/K1-skip-feature-critic.md"
+  ],
+  "notes": [
+   "Takes every docs-engine group (see the pack). Re-cite every engine line to the v1.4.8 dump or taom-src; drop claims that do not hold.",
+   "Never carry '1.5.x MBGlobals.GetActionSet returns the default set' (v1.4.8 MBGlobals.cs:33-45 throws).",
+   "K2: 42e48bbe5's SetDoNotMakeNewDecisions lesson citing v1.4.8 MobilePartyAi.cs:486.",
+   "Fix docs/reference/bannerlord-engine-and-toolchain.md:186 ('managed code runs on Mono'): the installed Bannerlord.exe is a managed .NET Framework v4.7.2 exe, and v1.4.8 ships three hosts (V01, V05)."
+  ],
+  "shared_groups": [],
+  "lane": "I"
+ },
+ "145": {
+  "wave": 5,
+  "lane": "J",
+  "depends_on": [],
+  "notes": [],
+  "verify_reports": [],
+  "shared_groups": []
+ }
+}

@@ -4,6 +4,14 @@
 
 ## 2026-11-04
 
+### docs(plans): the 1.4.8 port programme is in git
+
+Plans 101 to 145 of the 2026-11-04 port programme, their index in `plans/README.md` and the planning
+record under `plans/_audit/2026-11-04-port148/` (decisions D1 to D25 in
+`data/brief-workflow3-decisions.md`). The index's integrator section holds the WP101 baseline that
+every later plan compares against; its data half is provisional on the installed v2.0.26 Armory (D25)
+and owed until the public Armory is installed.
+
 ### chore(sync): the trunk takes the public 1.4.8 troop tree, and the laptop gets a provisional data baseline
 
 `bannerlord-1.4.5` now holds the three commits of `fix/public-armory-ids-145` (#697), the branch the

@@ -1,0 +1,4 @@
+{
+ "issue-966-coop-player-attribution": "Decision D7: co-op features stay out of 1.4.x (co-op is not supported there); 7f3636b2e is co-op player attribution.",
+ "issue-967-coop-mission-gating": "Decision D7: co-op mission gating (8ae036bc5, a4b8f7e21) rests on the 1.5.x co-op mission premise."
+}
