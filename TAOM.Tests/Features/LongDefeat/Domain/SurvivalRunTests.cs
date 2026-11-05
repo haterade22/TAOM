@@ -519,6 +519,56 @@ public class SurvivalRunTests
         Assert.AreEqual(before + 200, run.Gold);
     }
 
+    // ---- Start wave (a test option) ----
+
+    [TestMethod]
+    public void StartWave_BeginsTheRunAtThatWaveNumber_WithNothingClearedYet()
+    {
+        var run = Begun(Plan(options: new RunOptions { StartWave = 12 }));
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        Assert.AreEqual(12, run.Wave);
+        Assert.AreEqual(0, run.WavesCleared);
+        Assert.AreEqual(12, fx.Select(f => f.StartWave).First(w => w != null)!.Wave);
+    }
+
+    [TestMethod]
+    public void StartWave_PaysTheBonusOfThatWave_AndNumbersTheStatsByIt()
+    {
+        var run = InFighting(Plan(options: new RunOptions { StartWave = 12, StopAfterWaves = 1 }, waveSpecs: new[] { new WaveSpec(10, new[] { T("orc", FormationSlot.Infantry, 1) }) }));
+        var before = run.Gold;
+
+        run.Tick(Snap(attackers: 0));
+
+        Assert.AreEqual(before + 150 + 50 * 12, run.Gold);
+        Assert.AreEqual(12, run.Stats.Waves.Single().Wave);
+        Assert.AreEqual(12, run.Result!.Wave);
+    }
+
+    [TestMethod]
+    public void StartWave_WithAWaveTarget_StopsAfterThatManyClears_NotAtThatWaveNumber()
+    {
+        var run = InFighting(Plan(options: new RunOptions { StartWave = 12, StopAfterWaves = 2 }, waveSpecs: new[] { new WaveSpec(10, new[] { T("orc", FormationSlot.Infantry, 1) }) }));
+        run.Tick(Snap(attackers: 0));
+        Assert.AreEqual(RunPhase.Intermission, run.Phase);
+
+        Assert.AreEqual(1, run.WavesCleared);
+        Assert.IsNull(run.Result);
+    }
+
+    [TestMethod]
+    public void StartWave_BelowOne_IsTheFirstWave()
+    {
+        var run = Begun(Plan(options: new RunOptions { StartWave = 0 }));
+        run.TryStartWave();
+
+        SpawnWave(run);
+
+        Assert.AreEqual(1, run.Wave);
+    }
+
     // ---- Loss ----
 
     [TestMethod]

@@ -7,7 +7,7 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>
 /// One Long Defeat run: preparation, then waves with an intermission between, until the defenders die, the keep falls, a fight
 /// stalls or the target is reached. Plain state, touched only on the main thread; the director turns each call's
-/// <see cref="RunEffects"/> into engine work. No random numbers: a wave is the same every run.
+/// <see cref="RunEffects"/> into engine work. Every random draw comes from <see cref="RunRandom"/> over the plan's seed (none yet).
 /// </summary>
 internal sealed partial class SurvivalRun
 {
@@ -59,11 +59,12 @@ internal sealed partial class SurvivalRun
         _r = plan.Rules;
         _purse = new Purse(plan.Shop.StartingGold);
         _left = _r.PreparationSeconds;
+        _wave = Math.Max(1, plan.Options.StartWave) - 1;
     }
 
     public RunPhase Phase => _phase;
 
-    /// <summary>0 in Preparation.</summary>
+    /// <summary>0 in Preparation of a board run; one less than <see cref="RunOptions.StartWave"/> otherwise.</summary>
     public int Wave => _wave;
 
     public int WavesCleared => _wavesCleared;

@@ -120,7 +120,7 @@ public class LongDefeatConfigCatalogTests
     public void BuildPlan_CarriesRulesBountiesAndOptions()
     {
         var catalog = Load(waves: Waves(rules: "'liveCap':200"));
-        var options = new RunOptions { StopAfterWaves = 2 };
+        var options = new RunOptions { StopAfterWaves = 2, Seed = 5UL };
 
         var plan = catalog.BuildPlan(catalog.Fortresses[0], options);
 
@@ -744,5 +744,53 @@ public class LongDefeatConfigCatalogTests
         var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), null, Shop(), _logger);
 
         Assert.AreEqual(RunRules.Default, catalog.Rules);
+    }
+
+    [TestMethod]
+    public void BalanceHash_IsSha256OfTheSixTextsJoinedInOrder_AMissingOneAsEmptyText()
+    {
+        var fortresses = Fortresses(Fortress());
+        var waves = Waves();
+        var shop = Shop();
+        var catalog = LongDefeatConfigCatalog.FromTexts(fortresses, waves, shop, _logger, affixes: "A\r\nB", boons: null, classes: "C");
+
+        var joined = string.Join("\n\0\n", new[] { fortresses, waves, shop, "A\nB", "", "C" });
+        var bytes = System.Security.Cryptography.SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(joined));
+
+        Assert.AreEqual(System.BitConverter.ToString(bytes, 0, 8).Replace("-", "").ToLowerInvariant(), catalog.BalanceHash);
+    }
+
+    [TestMethod]
+    public void BalanceHash_FollowsEachOfTheThreeNewFiles_AndMissingOnesJoinAsEmpty()
+    {
+        LongDefeatConfigCatalog With(string? affixes, string? boons, string? classes) =>
+            LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, affixes, boons, classes);
+
+        var none = With(null, null, null).BalanceHash;
+
+        Assert.AreEqual(none, With("", "", "").BalanceHash);
+        Assert.AreNotEqual(none, With("{}", null, null).BalanceHash);
+        Assert.AreNotEqual(none, With(null, "{}", null).BalanceHash);
+        Assert.AreNotEqual(none, With(null, null, "{}").BalanceHash);
+        Assert.AreNotEqual(With("{}", null, null).BalanceHash, With(null, "{}", null).BalanceHash, "the files hash in order, so the same text in another slot is another balance");
+        Assert.AreEqual(With("x\n", "y", "z").BalanceHash, With("x\r\n", "y", "z").BalanceHash, "line endings are normalized in the new files too");
+    }
+
+    [TestMethod]
+    public void FourTextOverload_StillLoads_WithTheThreeNewFilesMissing()
+    {
+        Assert.AreEqual(1, Load().Fortresses.Count);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void BuildPlan_GivesTheRunASeed_AndKeepsAGivenOne()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses.Single();
+
+        Assert.IsNotNull(catalog.BuildPlan(fortress, RunOptions.Default).Options.Seed, "no seed means the start time's ticks");
+        Assert.AreEqual(0UL, catalog.BuildPlan(fortress, new RunOptions { Seed = 0UL }).Options.Seed);
+        Assert.AreEqual(42UL, catalog.BuildPlan(fortress, new RunOptions { Seed = 42UL }).Options.Seed);
     }
 }

@@ -28,7 +28,7 @@ The mod stays offline: TAOM has no network code, and this adds none. A direct up
 | `schema` | 1 | Picks the rule set |
 | `fortress` | Fortress id | Picks the board |
 | `build` | The informational version of `TAOM.dll`, with its commit | Must be a released build |
-| `balance` | A hash of the three JSON files: join `fortresses.json`, `waves.json` and `shop.json`, in that order, with `\n\0\n`, after changing CRLF to LF. Take SHA-256 of the UTF-8 bytes, and write its first 8 bytes in lower hex | Must match that release, and picks the board |
+| `balance` | A hash of the six JSON files (schema 1 hashed the first three): join `fortresses.json`, `waves.json`, `shop.json`, `affixes.json`, `boons.json` and `classes.json`, in that order, with `\n\0\n`, after changing CRLF to LF. Take SHA-256 of the UTF-8 bytes, and write its first 8 bytes in lower hex | Must match that release, and picks the board |
 | `cheatMode` | `NativeConfig.CheatMode` at launch | Must be false |
 | `mods` | Active modules, as `<id> <version>`. These versions are the only record of the engine changeset, the Armory and `TAOM_Map` | Shown to moderators |
 | `autoplay`, `garrisonScale`, `targetWaves` | The run's options | Must be false, 1 and null: anything else is a test run |
@@ -40,7 +40,7 @@ The mod stays offline: TAOM has no network code, and this adds none. A direct up
 
 ## The server's rules
 
-The bot holds, for each released build, its commit, its `balance` and copies of all three JSON files, and it recomputes `balance` to prove those copies. The first rule that fails refuses the report and names itself. A rule marked **flag** does not refuse: it sends the entry to a moderator.
+The bot holds, for each released build, its commit, its `balance` and copies of all six JSON files, and it recomputes `balance` to prove those copies. The first rule that fails refuses the report and names itself. A rule marked **flag** does not refuse: it sends the entry to a moderator.
 
 All six reports on record pass rules 4 to 12, each against its own table. All six are autoplay runs, so rule 3 refuses them, and a passing fixture for the bot needs a hand-played run.
 
@@ -64,9 +64,35 @@ All six reports on record pass rules 4 to 12, each against its own table. All si
 - `waves[].lost`, the second rank key: zeroing it passes every rule, so only a clip of the end panel can prove it.
 - Cheat mode switched on after launch: the field is read once, at launch. Nobody has tested whether a player can do that mid-mission. A latch read per tick would close it, and it is Mike's call as a guard for a case nobody has seen.
 
+## Schema 2 (Phase 2)
+
+Phase 2 changes the arithmetic of six schema 1 rules, so its reports carry `schema` 2 ([phase2-plan.md](phase2-plan.md), section 7). Every schema 1 field keeps its name, type and meaning, so the end panel and rules 4 to 7 read a schema 2 file as written, and `waves[].kills`, `waves[].felled` and the top-level `kills` count roster soldiers only. A schema 1 reader refuses the file at its rule 1, which names itself. A schema 2 reader is a schema 1 reader plus the amendments below, in one code path. Slice 1 writes the fields at their empty values; each later slice fills its own and adds its rule.
+
+**New fields:** `seed` (the run's seed, a whole number from 0 to 2^53-1 (9007199254740991): the cap keeps every digit when a reader parses JSON numbers as doubles, as a JavaScript bot does, and rounds nothing), `class` (the class id; empty before the class slice), `startWave` and `startRerolls` (test options, 1 and 0 on a board run), `boons[]` (per pick: `pick`, `wave` offered, `offered`, `taken`, `takenBeforeWave`), `rerolls` (`earned`, `used`, `banked`), per wave `affixes`, `healthFactor`, `damageFactor`, `summoned`, `summonKills`, `summonFelled` and `commander` (null, or `troop`, `rank`, `steps`, `outcome`, `uses`), `gold.commander`, `gold.boon`, and `poison` (`doses`, `hits`, `damage`, `ownerMissing`, `withheld`).
+
+**Amended rules:**
+
+- Rule 2: `balance` joins six files in this order with the same separator and line-ending rule: `fortresses.json`, `waves.json`, `shop.json`, `affixes.json`, `boons.json`, `classes.json`. A missing file joins as empty text.
+- Rule 3: also `startWave` is 1 and `startRerolls` is 0, and `seed` is a whole number within the cap.
+- Rule 8: `gold.earned` equals the sum of five sources (the three above, `commander` and `boon`).
+- Rule 9: each wave bonus is multiplied by the wave-bonus factor in force at that clear, recomputed from `boons[]`.
+- Rule 10: the cap is multiplied by the horn factor.
+- Rule 11: the band is taken over roster and summon kills, over the tier-substituted mixes and the summon mixes of the waves played, times the bounty factor in force.
+
+**New rules** (each lands with its slice):
+
+- Rule 15: replay `seed` with the derivation below. Each row's `affixes` is the prefix of that wave's roll, its length from the boons taken before the wave began. Each pick's `offered` equals the draws given the boons taken before it, `taken` is one of the last three offered, and `rerolls.used` is at most `earned`, with the bank capped at 3.
+- Rule 16: `waves[].commander` is present exactly at multiples of the roster's `every`, with the configured troop and rank.
+- Rule 17: `summonKills + summonFelled == summoned` on every cleared row.
+- Rule 18 (**flag**): `poison.ownerMissing` is 0.
+
+**The derivation of a draw:** the game only ever arms or takes a seed up to the cap (a clock seed is masked into it), but `RunRandom.For(seed, stream, a, b)` itself accepts any 64-bit value, so its pinned vectors include 2^63-1. It starts SplitMix64 at `seed ^ (stream * 0x9E3779B97F4A7C15) ^ (a * 0xBF58476D1CE4E5B9) ^ (b * 0x94D049BB133111EB)`, all unchecked 64-bit, and `Below(n)` is `next() % n`. Streams: affixes `(1, wave, 0)`, boon offers `(2, pick, draw)`, the bot's class `(3, 0, 0)`. No floating point is used in a draw. The vectors in `RunRandomTests.cs` and `tools/tests/test_run_long_defeat.py` are the same rows, so the two implementations cannot drift apart while both suites pass.
+
+**What these rules cannot see, added:** whether the player picked the card the report names (the end-panel clip shows the boons), and the Cavalry remount, which the rules cannot see at all.
+
 ## The boards
 
-- **One board per fortress and per `balance`:** a change to the three JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
+- **One board per fortress and per `balance`:** a change to any of the six JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
 - **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it. The game's own "Best run" line ranks waves, then kills, so it can disagree with the board.
 - **A run at any speed counts (Mike, 2026-11-04).** `maxSpeed` above 1 needs no separate board, flag or refusal. The report still records it, so a board can show it. Four unattended runs at 10x cleared 5 waves once, against three of three at 1x, and Mike accepted that 10x may play harder.
 - **One entry per Discord account per board:** the best one shows.
@@ -94,4 +120,4 @@ A small separate repo holds the bot, because it is not part of the mod. A Discor
 2. The end panel names the report file and the defenders lost, with their `/localize` rows (built; no game run has shown them yet, and their translations are owed in #763).
 3. The bot and its tests: each rule gets a real report as its fixture and one edited copy that the rule must refuse.
 4. A dry run in a private channel: one person submits a real report, then an edited one.
-5. The first release with the mode gives the bot its commit, its `balance` and its three files, read from the packaged install, and the board opens.
+5. The first release with the mode gives the bot its commit, its `balance` and its six files, read from the packaged install, and the board opens.

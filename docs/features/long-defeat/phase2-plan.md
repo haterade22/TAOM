@@ -93,7 +93,7 @@ Every Phase 1 rule stands. `SurvivalRun` is touched only on the main thread; hit
 
 ### Randomness
 
-- Phase 1 had none. Phase 2 rolls affixes and boon offers from `RunOptions.Seed`, a `ulong`: arm key `seed` takes a decimal from 0 to 2^63-1 and refuses a negative; with none, the start time's ticks. The report carries it, so the bot can replay every roll.
+- Phase 1 had none. Phase 2 rolls affixes and boon offers from `RunOptions.Seed`, a `ulong`: arm key `seed` takes a decimal from 0 to 2^53-1 (the cap keeps every digit for a JavaScript reader of the report, which rounds a number above 2^53; review of Slice 1, 2026-11-05) and refuses a negative; with none, the start time's ticks masked into the cap. The report carries it, so the bot can replay every roll.
 - **Exact derivation** (the bot must match it): `For(seed, stream, a, b)` starts SplitMix64 at `seed ^ (stream * 0x9E3779B97F4A7C15) ^ (a * 0xBF58476D1CE4E5B9) ^ (b * 0x94D049BB133111EB)`, all unchecked `ulong`. `Below(n)` is `next() % n`. No floating point anywhere in a draw.
 - **Streams:** affixes `(1, wave, 0)`; boon offers `(2, pick, draw)`; the bot class `(3, 0, 0)`.
 - **Pinned vectors** in `RunRandomTests` and `test_run_long_defeat.py` alike: the first outputs of `For` for several tuples, the affix rolls of seed 1 at waves 5, 10 and 15, and one full offer and reroll sequence for seed 1 over the shipped pool. Matching raw outputs alone would not stop the two sides drifting.
@@ -394,7 +394,7 @@ Every text is a `TextObject("{=TAOM_LD_...}...")` in `LongDefeatHudText`. No new
 
 ## 6. Unattended path
 
-**New arm keys:** `class`, `seed` (0 to 2^63-1), `start_wave` (1 to 100: the run begins at that wave number; `wavesCleared` still starts at 0, so `start_wave=12` with `waves=4` stops after 4 clears), `start_rerolls` (0 to 3). The last three are test options the report records; a board run needs their defaults.
+**New arm keys:** `class`, `seed` (0 to 2^53-1), `start_wave` (1 to 100: the run begins at that wave number; `wavesCleared` still starts at 0, so `start_wave=12` with `waves=4` stops after 4 clears), `start_rerolls` (0 to 3). The last three are test options the report records; a board run needs their defaults.
 
 **The bot:** class from `class`, else from the seed; `ShopBot.Decide` answers an open pick before it buys. A Cavalry main agent is AI-driven like the others. **He may not ride home through the attackers:** a closed gate disables its navmesh for the defenders (`CastleGate.cs:596-602`), so an AI lord outside may have no path to his formation and hold outside until the home teleport (D6). The sally line logs his distance to his formation and the gate state.
 
@@ -448,7 +448,7 @@ Folding the fields into schema 1, as `maxSpeed` was, is decision D9.
 
 | Field | Meaning |
 |---|---|
-| `seed` | The run's seed, a decimal `ulong` |
+| `seed` | The run's seed, a whole number from 0 to 2^53-1 (the cap keeps every digit for a JavaScript reader; `RunRandom` itself still takes any `ulong`) |
 | `class` | The class id |
 | `startWave`, `startRerolls` | Test options; 1 and 0 on a board run |
 | `boons[]` | Per pick in order: `pick`, `wave` offered, `offered` (each draw's ids, rerolls included), `taken`, `takenBeforeWave` |
@@ -491,7 +491,7 @@ Order: pure domain and data first, then the shared models (both lines of the sta
 | 2 | implementer | Endless scale | `WavePlanTests` (factors at 1, 5 and the cap; tiers at steps 0 to 3; merge; chain end; `Expand(wave)` unchanged after the `Expand(count, mix)` split), catalog rows (culture after the prefix), shipped tiers and the four veteran bounties, `RunPlanTroopsTests`, `LongDefeatCombatHooksTests` | `--start-wave 11 --waves 2`: `scale` pass from a roster sample |
 | 3 | implementer | Affixes: roll, the four stat powers and `hide` | `AffixPlanTests` (schedule, cut, distinct, pinned rolls), `RunModifiersTests` (fresh `RaceAbilityEffects` per publish; mounted rows copy move speed), `LongDefeatStatHooksTests` (inert unarmed; rider resolved for a mount; riderless mount untouched; armour: null build data, a horse, a defender untouched), director apply-order test | `--start-wave 5 --waves 1 --seed N`: `affix`, `affix-effect` for the rolled power; a seed giving `hide` |
 | 4 | implementer | Boons A: picks, rerolls, war chest, fortress, `affixCount` | `BoonDeckTests` (owed at 3, 6, 9; earned at 5, 10, 15; cap 3; the weighted draw against pinned vectors; reroll exclusion and its fallback; troop pool eligibility), `GoldFactors`, `EffectiveRules`, `ShopBotTests`, session pick and reroll, VM and binding-name tests | `--waves 5 --garrison-scale 1.5`: `boon`, `reroll` at clear 3; `boons[]`, `gold.boon` |
-| 5 | implementer | Foot classes | `ClassPlanTests`, kit reader (`Item0` maps to `Weapon0`, a misfit refused), own-gear test, prompt and command tests, director (kit at begin and respawn), adapter pins (`.Equipment` before spawn, `NoHorses(true)`, position always with direction, `isPlayerSide` with the `PlayerTroop`) | `--class archer --waves 2`: `class` pass; Mike clicks the second question once |
+| 5 | implementer | Foot classes | `ClassPlanTests`, kit reader (`Item0` maps to `Weapon0`, a misfit refused), own-gear test, prompt and command tests, director (kit at begin and respawn), adapter pins (`.Equipment` before spawn, `NoHorses(true)`, position always with direction, `isPlayerSide` with the `PlayerTroop`) | `--class archer --waves 2`: `class` pass; Mike clicks the second question once. The class slice also adds `class` to the judge's armed report fields (`expected_class`, set per run in `arm_text_for`, so `--class all` expects the class that run armed), and `CLASSES` in `tools/run_long_defeat.py` must be read from, or tested against, `classes.json` |
 | 6 | implementer | Boons B: troop and class boons | `RunModifiersTests` (groups by `IsMounted` and `IsRanged`, player record only), director (takeover refreshes the new body and writes the player health; a pack bought after a health pick spawns with it; a respawn too; a second health boon multiplies only by its own factor) | `--waves 5 --seed N` whose first offer holds a troop boon: `boon` pass on a standing soldier and a later one |
 | 7 | implementer | Commanders and summons | `CommanderPlanTests` (steps 0 at waves 4 and 8 with health 1 and the summon unchanged; 1 at 16; `validRanks`), `CommanderClockTests` (first delay, one fire per tick, nothing after `Stop`), `LongDefeatAgentRegistryTests`, `SurvivalRun` roles (felled by identity, a commander that leaves alive, stalemate count with summons), director (commander through the queue), Legend `commanderCooldownPercent` | `--waves 5 --garrison-scale 1.5`: `commander` w4; `--start-wave 8 --waves 1`: `summon` |
 | 8 | implementer | Affixes: Hammer and Winged Terror | Director (hit points set at each wave start, factor 1 restores), `PulseMorale` arithmetic over the floor, `pushed_below` counted inside the call | Seeds giving `hammer` and `terror`: `affix-effect` pass; `[LongDefeat][Terror] pulse n= ms=` under 16 ms |
