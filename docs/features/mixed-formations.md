@@ -20,7 +20,7 @@ Three constraints:
 
 1. **Position calculation must run inside vanilla's `GetOrderPositionOfUnit`** — that's the single point in the engine where each unit's intended position is queried. Patch the method, prefix-skip vanilla when our layout produces a position, return `true` otherwise.
 2. **Apply only during `Hold` movement state** — during charge, the engine's free-form combat positioning dominates; trying to override would fight the engine. The original developer's `(int)GetMovementState() != 1` check is preserved (`MovementStateEnum.Hold = 1`).
-3. **Cache assignments per formation** — recomputing the slot grid for every unit on every position query would be O(N²) per formation per tick. Build the assignment once when the layout is set or the formation appears, then look up by `Agent.Index`.
+3. **Cache assignments per formation**: recomputing the slot grid for every unit on every position query would be O(N²) per formation per tick. Build the assignment once, lazily: setting or cycling a layout only drops the formation's cached assignment, and the next position query builds it, on whichever thread asks (Patch30 runs on the engine's worker threads). Then look up by `Agent.Index`.
 
 ### Solution Approach
 
@@ -81,7 +81,7 @@ The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002). The 
 | `Enable Mixed Formations` | bool | `true` | Master toggle. When off, formations use vanilla positioning. |
 | `Default Layout` | int 0–3 | `0` (InfFront) | Auto-applied to mixed formations during the per-second tick. 0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard |
 | `Cycle Layout Hotkey` | string | `"L"` | Bannerlord `InputKey` name. Pressing while a formation is selected cycles its layout; pressing while no formation is selected cycles all formations. |
-| `Mixed Formations Debug Mode` | bool | `false` | Show `[MixedFormations]` diagnostic messages on the in-game HUD. Off = file log only. |
+| `Mixed Formations Debug Mode` | bool | `false` | Gates two `LogDebug` lines (the auto-assigned default layout and the cycled layout), written to `Logs/taom_debug_*.log`. It prints nothing on the HUD; the cycle hotkey's yellow `[MixedFormations] Layout (...)` HUD message shows whatever this is set to. |
 
 ### Layout Modes
 
@@ -188,14 +188,14 @@ In-game golden path:
 Disable round-trip:
 
 1. MCM → set `Enable Mixed Formations = false` → reload campaign / re-enter battle.
-2. Confirm one `[MixedFormations] disabled via MCM — patches inert` line in `rgl_log.txt`.
+2. Confirm one `[MixedFormations] disabled via MCM — patches inert` line in the newest `Logs/taom_debug_*.log`.
 3. Order a mixed formation to hold — should use vanilla positioning (units intermixed by Index order).
 
 Debug-mode round-trip:
 
 1. MCM → set `Mixed Formations Debug Mode = true`.
 2. Trigger an auto-default-apply or a hotkey cycle.
-3. Confirm `[MixedFormations] auto-assigned default layout ...` and `[MixedFormations] cycled N formation(s) → ...` lines appear both in `rgl_log.txt` and on the in-game HUD with the `[MixedFormations]` prefix.
+3. Confirm `[MixedFormations] auto-assigned default layout ...` and `[MixedFormations] cycled N formation(s) → ...` lines appear in the newest `Logs/taom_debug_*.log` (they are `LogDebug` lines, so they never reach the HUD or `rgl_log.txt`). With the toggle off they are absent, while a hotkey cycle still prints its HUD message.
 
 ## Changelog
 
@@ -224,7 +224,7 @@ Debug-mode round-trip:
 ## GitHub Issue
 
 - **Issue:** #714 (perf: make the worker-thread formation patch lock-free for formations without a layout)
-- **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
+- **Status:** The port (2026-05-06) and the lock-free lookup for formations with no layout (`FindLaidOutFormation`, plan 032) are in the code. This file does not record whether #714 is closed or the in-game check done: run `gh issue view 714`.
 
 ---
 
