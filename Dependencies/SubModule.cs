@@ -203,7 +203,7 @@ public class SubModule : MBSubModuleBase
         }
 
         // DR3 Phase 4 C-series: install ALL the defensive shields here. Originally
-        // CollectAssemblyTypesShim + SubModuleConstructionGuard + RunEarlyPhase were
+        // CollectAssemblyTypesShim + RunEarlyPhase were
         // called from AliasStubSubModule.ctor, but observed 2026-05-27 — the launcher
         // never constructs AliasStubSubModule because the alias stub module folders
         // have no `bin/<platform>/TAOM.Dependencies.dll` (the DLL lives in TAOM.Dependencies's
@@ -228,8 +228,6 @@ public class SubModule : MBSubModuleBase
         try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → CollectAssemblyTypesShim.Install"); CollectAssemblyTypesShim.Install(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CollectAssemblyTypesShim.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] CollectAssemblyTypesShim.Install failed: {ex.Message}"); }
 
-        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → SubModuleConstructionGuard.Install"); SubModuleConstructionGuard.Install(); }
-        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "SubModuleConstructionGuard.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] SubModuleConstructionGuard.Install failed: {ex.Message}"); }
 
         try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → PatchShield.Install (pass 1)"); PatchShield.Install(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "PatchShield.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install failed: {ex.Message}"); }

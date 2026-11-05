@@ -157,6 +157,11 @@ public class ReflectionSiteBindingTests
     // A miss logs one warning per session launch and the hourly in-castle top-up stops; lords still recruit
     // on entry through vanilla's OnBeforeSettlementEntered.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.RecruitmentCampaignBehavior", "RecruitmentCampaignBehavior", "CheckRecruiting", "Method", "CastleAiRecruitDispatcher.cs:34")]
+    // --- Dependencies foundation probes, resolved by string through Type.GetMethod. A GetActiveModules
+    // miss sends IncompatibleModDetector to a directory scan but makes CoopPresence read co-op as absent;
+    // a FromParametersFile miss leaves the game version undetected.
+    [DataRow("TaleWorlds.ModuleManager.ModuleHelper", "ModuleHelper", "GetActiveModules", "Method", "IncompatibleModDetector.cs:210")]
+    [DataRow("TaleWorlds.Library.ApplicationVersion", "ApplicationVersion", "FromParametersFile", "Method", "VersionProbe.cs:78")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

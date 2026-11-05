@@ -107,7 +107,7 @@ below qualifies where that code's design came from.
 The defensive infrastructure classes in Dependencies/Foundation/
 (DiagLog, RuntimeLog, ReflectionUtils, VersionProbe, IncompatibleModDetector,
 PatchShield, SaveShield, FailureRecord, FailedModsCatalog,
-SubModuleConstructionGuard, CollectAssemblyTypesShim) are TAOM
+CollectAssemblyTypesShim) are TAOM
 re-implementations. Their design and behaviour were derived from reading the
 corresponding classes in BetaDeps.Foundation
 (https://www.nexusmods.com/mountandblade2bannerlord/mods/11274), which was used

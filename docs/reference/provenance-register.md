@@ -75,7 +75,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
 | TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
 | ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
-| BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,SubModuleConstructionGuard,CollectAssemblyTypesShim}.cs` `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
+| BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,CollectAssemblyTypesShim}.cs` (`SubModuleConstructionGuard.cs` removed 2026-11, plan 137) `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
@@ -89,6 +89,10 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
 
 | Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117) | cleared |
+| Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
+| Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
+| TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -162,6 +166,8 @@ Upstream: https://github.com/szszss/TpacTool · MIT.
 
 The `.tpac` binary format was reverse-engineered from decompiling `TpacTool.Lib.dll`. MIT permits
 this; the attribution is at [`docs/tools/spider-skeleton-tpac-tools.md:378`](../tools/spider-skeleton-tpac-tools.md).
+
+Since 2026-10-14 the PowerShell tpac tools load `TpacTool.Lib.dll` from ShortJake's fork, https://github.com/ShortJake/TpacTool (MIT, a fork of hunharibo/TpacTool), release v0.5.1, through `-TpacToolBin`. That is `interop-only`: the library is loaded at run time on the desktop, never shipped, and no code is derived from it.
 
 ### NVIDIA SkillSpector
 
@@ -479,6 +485,35 @@ hold (the module ends every stuck battle with no winner); an hourly in-game swee
 timer and on-screen warnings; the co-op stand-down, the quest-party exception and the enlisted-commander
 skip; and the service, adapters and tests. Nothing of the module ships. Clearing the row needs the
 author's terms.
+
+### Ghidra
+
+Upstream: https://github.com/NationalSecurityAgency/ghidra · Apache-2.0. Installed 2026-09-26 as
+12.1.4 at `E:\Tools\ghidra_12.1.4_PUBLIC`, with the PyGhidra 3.1.0 it bundles in a venv at
+`E:\Tools\ghidra-venv` (#688). `tools/native_decompile.py` drives the installed tool through
+PyGhidra's public API and copies no Ghidra code; PyGhidra's `api.py` and `core.py` were read only to
+choose the calls. Nothing from Ghidra ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry
+is owed. Remove with the two `E:\Tools` folders; the tool then exits 2 naming the setup doc. Adoption
+record: [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Hindsight
+
+Upstream: https://github.com/vectorize-io/hindsight · MIT. Evaluated on 2026-09-26 and rejected: it
+conflicts with ADR-011's rule that durable knowledge lives in the repository, and its Claude Code
+plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
+were read for the security pass; nothing was installed or ported. Record:
+[`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### rea
+
+Upstream: https://github.com/morluto/rea, `main` at `d361c53c5`, read on 2026-10-24 through the
+GitHub API only: nothing was cloned, installed or run. The cross-build function matching in
+`tools/native_build_match.py` follows the method rea's `docs/native-function-matching.md` describes
+(exact keys first, ambiguity kept, a missing counterpart reported as unknown, never as removed). Only
+that document was read, not rea's code, and the masking of x64 displacements is TAOM's own addition,
+so the derivation is a behavioural port of a documented method. The rule lines the 1.5.x line also took from it are not on this line. No rea text or
+code was copied, so no MIT notice is carried. Record:
+[`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md).
 
 ## Adding a row
 
