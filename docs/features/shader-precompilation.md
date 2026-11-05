@@ -123,6 +123,15 @@ The 1.4.6→1.4.7 engine bump broke the old headless walk. On 1.4.7 the precompi
 
 **Wiring gotcha (in-game-caught):** the guard was first added from `TaomShaderGameManager.OnLoadFinished` via `Mission.Current?.AddMissionBehavior`: that **silently no-op'd** because `Mission.Current` isn't the battle mission yet at `OnLoadFinished`. It never registered (absent from the mission behavior dump) and the NRE still fired. Adding mission behaviors to a freshly-opened mission must go through `OnMissionBehaviorInitialize` (the engine hands the mission in directly). See `docs/reviews/rca-shader-precompile-1.4.7-2026-07-11.md`. Neither fallback path had ever run in-game before #560: the 2026-07-11 run was warm-cache and advanced before deployment mattered (that RCA's finding 3).
 
+**Open fix item (plan 144, from the 1.5.x line's v1.5.5 check of 2026-10-15):** `ShaderPrecompilePlayerAgentGuard.OnMissionTick`
+calls `deployment.FinishDeployment()` (`ShaderPrecompilePlayerAgentGuard.cs:94`) from inside the mission's tick loop, and
+`FinishDeployment` ends with `RemoveMissionBehavior(this)` (v1.4.8 `DeploymentMissionController.cs:41-80`). The loop counts
+down by index over the live list (`Mission.cs:3741-3744`) and the removal shifts every later entry (`:4643-4660`), so if the
+controller sits below the guard's index the guard ticks twice that frame (the registration order was not checked). Move
+the call out of the tick: set a flag in `OnMissionTick` and finish deployment at the start of the next frame. The path is
+the Order of Battle fallback only and has not run in game since #560. Mechanism:
+[mission-and-missionbehavior-lifecycle.md](../reference/engine/mission-and-missionbehavior-lifecycle.md) "Removing a behaviour during `OnMissionTick`".
+
 ## v1.4.8 and the shader cache
 
 The v1.4.8 bump needed **no code change here** (TAOM compiles against v1.4.8 with 0 errors, `BindingVerification` 106/106: [`docs/migration/v1.4.8-impact.md`](../migration/v1.4.8-impact.md)), and the 2026-09-11 review re-verified every engine member the feature binds against the installed 1.4.8: the `InitialStateOption` constructor, `InquiryData`, `CustomBattleData`, `CustomBattleCombatant`, `Mission._initialPlayerAgent`, `DeploymentMissionController.FinishDeployment` and `TeamSetupOver`, and Patch21's string-bound `LoadingWindowViewModel.Update()`. Three v1.4.8 changelog items land on this feature anyway, none of them through the managed API:
