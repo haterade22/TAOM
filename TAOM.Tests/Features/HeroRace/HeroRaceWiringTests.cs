@@ -124,6 +124,32 @@ public class HeroRaceWiringTests
             + "categories are.");
     }
 
+    // #1011: SandBoxManager.InitializeCharactersAfterLoad resets the race of every not-ready,
+    // non-original character with a hero, including dead heroes the engine removed from
+    // DeadOrDisabledHeroes. Hero.FindAll is the one list that covers them all. An alive-only read
+    // saves nothing for those heroes and the encyclopedia and family tree show them with their origin character's race.
+    [TestMethod]
+    [DataRow("GetAllHeroRaces")]
+    [DataRow("GetHeroRace")]
+    [DataRow("SetHeroRace")]
+    public void HeroRosterAdapter_ReadsEveryHeroCharacterThroughHeroFindAll(string method)
+    {
+        var src = RepoPaths.ReadSource("Main/Adapters/HeroRosterAdapter.cs", stripComments: true);
+
+        var signatureAt = src.IndexOf(" " + method + "(", StringComparison.Ordinal);
+        Assert.IsTrue(signatureAt >= 0, method + " could not be located; this test needs updating.");
+
+        var nextMember = src.IndexOf("public ", signatureAt, StringComparison.Ordinal);
+        var body = nextMember < 0 ? src.Substring(signatureAt) : src.Substring(signatureAt, nextMember - signatureAt);
+
+        Assert.IsTrue(body.Contains("Hero.FindAll(") || body.Contains("Hero.FindFirst("),
+            method + " reads neither Hero.FindAll nor Hero.FindFirst, so dead heroes the engine unregistered lose their race.");
+        Assert.IsFalse(body.Contains("Hero.AllAliveHeroes"),
+            method + " reads Hero.AllAliveHeroes, which skips every dead or disabled hero.");
+        Assert.IsFalse(body.Contains("Hero.DeadOrDisabledHeroes"),
+            method + " reads Hero.DeadOrDisabledHeroes, which misses every living hero and any dead one the engine unregistered.");
+    }
+
     // #700: the Load Game save preview (BasicCharacterTableau) reads ActionIndexCache.act_inventory_idle
     // on the cold main menu, before the game-init repair. Patch55's prefix is the only repair that
     // reaches it, and only when it runs before the prefix's early return. Dropped or moved below the

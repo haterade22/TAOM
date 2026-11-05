@@ -67,7 +67,8 @@ public class RacePersistenceService : IRacePersistenceService
         _heroRaceMap = new Dictionary<string, int>();
         _raceNameLegend = string.Join(";", raceNames);
 
-        var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
+        // #1011: the roster holds alive AND dead or disabled heroes; the engine resets both on load.
+        var heroes = _heroRosterAdapter.GetAllHeroRaces();
         foreach (var hero in heroes)
         {
             // Phase 9b #130 P2 — capture ALL races including 0 (human). Pre-fix the `> 0` guard
@@ -106,7 +107,7 @@ public class RacePersistenceService : IRacePersistenceService
 
         var restoredCount = 0;
         var skippedInvalid = 0;
-        var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
+        var heroes = _heroRosterAdapter.GetAllHeroRaces();
         // Issue #330 — legend path: translate the saved index through the save-time name list to
         // the CURRENT id, so a skins.xml merge-order shift between save and load can't remap races.
         var legend = string.IsNullOrEmpty(_raceNameLegend) ? null : _raceNameLegend.Split(';');

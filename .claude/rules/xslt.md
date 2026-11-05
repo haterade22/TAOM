@@ -64,6 +64,12 @@ it cannot see an attribute that is not there. If you extend the stylesheet to bi
 extend that test's attribute list too. Contract:
 [`docs/features/culture-playability-wiring.md`](../../docs/features/culture-playability-wiring.md).
 
+A race a stylesheet spells (`xsl:attribute name="race"` or a literal `NPCCharacter race=`) is checked
+verbatim against the installed `skins.xml` races by
+`CultureRaceConsistencyTests.EveryCharacterRaceIsARealRegisteredRace`, because the engine indexes the
+name exactly and throws on an unknown one. It fails on a race computed at transform time, so spell a
+race as literal text.
+
 ## Identity Transform
 Every XSLT file must include the identity transform template to copy unmatched nodes:
 ```xml
