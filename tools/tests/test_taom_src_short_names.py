@@ -45,6 +45,17 @@ def version_dir(result):
     return Path(found.group(1).strip()) if found else None
 
 
+class ModuleOrder(unittest.TestCase):
+    def test_the_game_module_list_matches_the_body_diff_gate(self):
+        """A mod's copy of an engine assembly goes stale. Both tools must agree on which modules are the game's."""
+        ps1 = re.search(r"^\$VanillaModules = (.+)$", SCRIPT.read_text(encoding="utf-8"), flags=re.M)
+        self.assertIsNotNone(ps1, "taom-src.ps1 no longer declares $VanillaModules")
+        diff = (REPO / "tools" / "engine_body_diff.py").read_text(encoding="utf-8")
+        py = re.search(r"VANILLA_MODULES = frozenset\(\{(.+?)\}\)", diff, flags=re.S)
+        self.assertIsNotNone(py, "engine_body_diff.py no longer declares VANILLA_MODULES")
+        self.assertEqual(set(re.findall(r"'([^']+)'", ps1.group(1))), set(re.findall(r'"([^"]+)"', py.group(1))))
+
+
 @unittest.skipUnless(shutil.which("pwsh"), "needs pwsh")
 class AnUpdateThatKeepsTheVersion(unittest.TestCase):
     """Steam can replace every DLL and leave Version.xml alone. The old build's sources must not answer for the new one."""
