@@ -60,8 +60,8 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
 
         // The reconciler is a singleton and RegisterEvents runs once per campaign session, so
         // detach first — otherwise a second session double-subscribes and joins twice.
-        _reconciler.BattleJoinRequested -= OnBattleJoinRequested;
-        _reconciler.BattleJoinRequested += OnBattleJoinRequested;
+        _reconciler.BattleJoinRequested -= _maintenance.RequestBattleJoin;
+        _reconciler.BattleJoinRequested += _maintenance.RequestBattleJoin;
 
         // The pump raises the SAME event shape, so there remains exactly one hero-id -> party-id ->
         // TryJoinCommanderBattle implementation rather than two that can drift apart.
@@ -69,8 +69,8 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         _maintenance.BattleJoinRequested += OnBattleJoinRequested;
     }
 
-    // Hourly recovery path. The reconciler only knows the commander HERO id; the battle service
-    // works in party ids, so the conversion happens here at the boundary (ADR-002).
+    // The single sink for the pump and the reconciler (via RequestBattleJoin, which may defer a raid join).
+    // Hero id to party id happens here at the boundary (ADR-002); the battle service works in party ids.
     private void OnBattleJoinRequested(string commanderHeroId)
     {
         if (!_coopSession.IsAuthority || !_store.Record.IsEnlisted)

@@ -33,6 +33,13 @@ public readonly struct CommanderTickSnapshot
     /// </summary>
     public bool PartyIsRaiding { get; }
 
+    /// <summary>
+    /// True when the commander's map event is a raid (<c>MapEvent.IsRaid</c>), whoever is raiding. The engine
+    /// updates a raid even when it is the player's own event (<c>MapEventManager.Tick</c>), so a join into one
+    /// is deferred to the wait-menu frame (#954). A plain field read; false on a failed read.
+    /// </summary>
+    public bool PartyIsInRaidEvent { get; }
+
     public string PartySettlementId { get; }
 
     /// <summary>
@@ -65,7 +72,8 @@ public readonly struct CommanderTickSnapshot
         bool partyIsInMapEvent = false,
         string partySettlementId = null,
         int mapEventToken = 0,
-        bool partyIsRaiding = false)
+        bool partyIsRaiding = false,
+        bool partyIsInRaidEvent = false)
     {
         Exists = exists;
         IsAlive = isAlive;
@@ -74,6 +82,7 @@ public readonly struct CommanderTickSnapshot
         PartyIsActive = partyIsActive;
         PartyIsInMapEvent = partyIsInMapEvent;
         PartyIsRaiding = partyIsRaiding;
+        PartyIsInRaidEvent = partyIsInRaidEvent;
         PartySettlementId = partySettlementId;
         MapEventToken = mapEventToken;
     }
