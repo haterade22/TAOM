@@ -63,6 +63,11 @@ public class RacePersistenceBehaviorTests
         StringAssert.Contains(source, "CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => OnSessionLaunched())",
             "OnSessionLaunched must restore captured races so loaded heroes get their persisted race re-applied. " +
             "Without this subscription, every save-load reverts all heroes to vanilla race=0 (human).");
+
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/HeroRace/RacePersistenceBehavior.cs", stripComments: true),
+            "CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _service.ResetForNewCampaign())",
+            "A new game must reset the service: it clears the previous campaign's race map (#130 R1) and marks the campaign " +
+            "new, so the empty-map restore logs information instead of the pre-TAOM save warning.");
     }
 
     // --- Multiplayer field report 2026-08-03 §1 — session-launch capture ---

@@ -104,6 +104,50 @@ public class RacePersistenceServiceTests
         _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
     }
 
+    // A new campaign has no race data by design, so the empty map is not worth a warning there.
+    [TestMethod]
+    public void RestoreHeroRaces_NewCampaign_LogsInfoNotWarning()
+    {
+        _sut.ResetForNewCampaign();
+
+        _sut.RestoreHeroRaces();
+
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+        _logger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains("new campaign")));
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_LoadedSaveWithoutRaceData_Warns()
+    {
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+
+        _sut.RestoreHeroRaces();
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data")));
+    }
+
+    // A save with no RacePersistenceBehavior record: the engine calls SyncData only for a behavior the save holds a
+    // record for (CampaignBehaviorDataStore.LoadBehaviorData), so a pre-TAOM save reaches the restore with neither call.
+    [TestMethod]
+    public void RestoreHeroRaces_WithoutResetOrSync_Warns()
+    {
+        _sut.RestoreHeroRaces();
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data")));
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("new campaign")));
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_LoadAfterNewCampaignInSameProcess_Warns()
+    {
+        _sut.ResetForNewCampaign();
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+
+        _sut.RestoreHeroRaces();
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data")));
+    }
+
     [TestMethod]
     public void RestoreHeroRaces_RestoresRaceForCapturedHeroes()
     {

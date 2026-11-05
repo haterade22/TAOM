@@ -25,6 +25,9 @@ public class RacePersistenceService : IRacePersistenceService
     // Dictionary<string,string>, which failed to round-trip IDataStore at ~1000 entries (WotR
     // Momentum, 2026-07-03). Empty legend == pre-#330 save == legacy raw-int restore path.
     private string _raceNameLegend = "";
+    // Set by ResetForNewCampaign, cleared by a load: a new campaign's empty map is expected, so
+    // RestoreHeroRaces only warns about missing race data on a loaded save.
+    private bool _isNewCampaign;
 
     public int CapturedRaceCount => _heroRaceMap.Count;
 
@@ -92,12 +95,18 @@ public class RacePersistenceService : IRacePersistenceService
             _logger.LogInfo($"RacePersistenceService: ResetForNewCampaign clearing {_heroRaceMap.Count} stale race entries from prior campaign.");
         _heroRaceMap = new Dictionary<string, int>();
         _raceNameLegend = "";
+        _isNewCampaign = true;
     }
 
     public void RestoreHeroRaces()
     {
         if (_heroRaceMap.Count == 0)
         {
+            if (_isNewCampaign)
+            {
+                _logger.LogInfo("RacePersistenceService: new campaign, no race data to restore yet.");
+                return;
+            }
             _logger.LogWarning("RacePersistenceService: No saved race data found. " +
                 "This is expected on first load with a pre-TAOM save — heroes will use " +
                 "their XML-defined races. Race data will be captured on next save.");
@@ -175,6 +184,7 @@ public class RacePersistenceService : IRacePersistenceService
         {
             _heroRaceMap = new Dictionary<string, int>();
             _raceNameLegend = "";
+            _isNewCampaign = false;
         }
         dataStore.SyncData("_taom_heroRaceMap", ref _heroRaceMap);
         dataStore.SyncData("_taom_raceNameLegend", ref _raceNameLegend);
