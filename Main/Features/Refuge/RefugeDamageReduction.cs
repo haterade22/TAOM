@@ -4,8 +4,8 @@ namespace TAOM.Features.Refuge;
 
 /// <summary>
 /// THE composition contract for the refuge defender damage reduction, shared by its two consult
-/// sites (TaomCombatMechanicsModel.ApplyDamageReductions, real-time; TaomCombatSimulationModel
-/// .SimulateHit, auto-resolve): <b>a reduction r scales the FINAL damage by (1 - r).</b>
+/// sites (TaomCombatMechanicsModel.ApplyDamageReductions through Hooks.RefugeDamageHooks, real-time;
+/// TaomCombatSimulationModel.SimulateHit, auto-resolve): <b>a reduction r scales the FINAL damage by (1 - r).</b>
 ///
 /// <para>The float overload is that contract literally. The ExplainedNumber overload needs the
 /// factor translated, because ExplainedNumber composes factors against the BASE

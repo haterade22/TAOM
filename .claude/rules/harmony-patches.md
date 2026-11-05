@@ -144,7 +144,7 @@ returns does, and `AfterAsyncTickTick` runs after `tickCompleted` is set, so it 
 frame's `OnMissionTick`. A stuck agent tick freezes the game with no exception; Patch91's
 `[MissionStall]` line names the frame. An exception that leaves `Mission.OnTick` between the clear and the agent-tick launch would freeze it the same way; Patch91b restores the flag in that case only, never after a launch.
 
-`MBRandom.RandomFloat` on the defend-collision path draws from the shared `Game.Current.RandomGenerator` (`MBRandom.cs:22`, `:32`), an `MBFastRandom` whose four `uint` fields advance with no lock (`MBFastRandom.cs:22-32`, `XorShift` at `:186`). Concurrent draws only duplicate or skip values and cannot reach a stuck state, so the crush roll (`TaomCombatMechanicsModel.cs:177`) stays unlocked (port decision D16); any other write on that path takes a lock.
+`MBRandom.RandomFloat` on the defend-collision path draws from the shared `Game.Current.RandomGenerator` (`MBRandom.cs:22`, `:32`), an `MBFastRandom` whose four `uint` fields advance with no lock (`MBFastRandom.cs:22-32`, `XorShift` at `:186`). Concurrent draws only duplicate or skip values and cannot reach a stuck state, so the crush roll (`CombatMechanicsHooks.cs:122`) stays unlocked (port decision D16); any other write on that path takes a lock.
 
 A patch on a target in the last four rows may run concurrently with the first row. Its shared state
 takes a lock (`CavalryChargeService`, `TroopStanceManager` are the shape), or writes a concurrent collection

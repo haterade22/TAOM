@@ -1,6 +1,6 @@
 namespace TAOM.Features.CombatMechanics.Domain;
 
-// Boundary DTO for the crush-through decision. Built by TaomCombatMechanicsModel from the sealed
+// Boundary DTO for the crush-through decision. Built by CombatMechanicsHooks from the sealed
 // engine params (ADR-007); the service never sees Agent/WeaponComponentData.
 public readonly struct CrushThroughContext
 {

@@ -17,7 +17,7 @@ taom_fc_camp menu (a WAIT menu), index 4: "Establish a refuge here"
 refuge book (SyncData "_taomRefuges") -- RefugeData: tier, warden, build timestamps,
    PERSISTED militia bookkeeping (MilitiaAdded/MilitiaTroopId/MilitiaPreRallyCount)
 manage: taom_refuge_menu (vanilla party screen for garrison+prisoners, stash screen for goods)
-defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions (real-time)
+defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions (real-time, via RefugeDamageHooks)
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
    both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
    (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
