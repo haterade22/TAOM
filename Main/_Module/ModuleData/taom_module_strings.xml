@@ -2941,4 +2941,7 @@
 	<string id="taom_texture_advice_title" text="{=taom_texture_advice_title}TAOM: memory advice" />
 	<string id="taom_texture_advice_body" text="{=taom_texture_advice_body}This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />
 	<string id="taom_texture_advice_ok" text="{=taom_texture_advice_ok}Understood" />
+	<!-- TavernSpecialities -->
+	<string id="taom_tavern_drink_default" text="{=taom_tavern_drink_default}a mug of ale" />
+	<string id="taom_tavern_food_default" text="{=taom_tavern_food_default}a bowl of stew" />
 </strings>

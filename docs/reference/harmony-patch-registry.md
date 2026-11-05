@@ -1089,6 +1089,16 @@ Vanilla (`:650-651`) reads `.Name` of `Settlement.All.GetRandomElementWithPredic
 
 **Co-op.** A transpiler with no bool prefix, so `CoopVetoClassificationTests` needs no entry: the condition only builds conversation text and mutates no campaign state. Feature: [bard-town-guard.md](../features/bard-town-guard.md). #824 (ported 2026-11-04 from 1.5.x eed06b9c7). **ACTIVE**, not yet checked in game.
 
+## Patch111_TavernSpecialities
+
+**Target:** `private bool SandBox.CampaignBehaviors.TavernEmployeesCampaignBehavior.conversation_tavernmaid_offers_food_on_condition()` (v1.4.8 `:729-820`, no parameters, resolved by name with `AccessTools.Method`), one prefix class `TavernEmployeesCampaignBehavior_OffersFood_TavernSpecialities_Patch` in `Main/Features/TavernSpecialities/Hooks/`, category `Patch111_TavernSpecialities`, applied at GameInit by `TavernSpecialitiesModule` through the feature-module runner (`Main/Composition`). #937; the number matches the 1.5.x line.
+
+Vanilla sets the `DRINK` and `FOOD` text variables inside seven culture branches (`vlandia`, `empire`, `khuzait`, `aserai`, `sturgia`, `battania`, `nord`; each sets both) and nothing for any other culture, then returns true, so a TAOM town offered the previous town's dishes or the line with both names blank. The void prefix presets `DRINK` to a mug of ale and `FOOD` to a bowl of stew before vanilla runs; vanilla's branches overwrite both for exactly their ids, so no culture list is kept here. The strings carry the keys `taom_tavern_drink_default` and `taom_tavern_food_default`, registered in the module strings. `TavernSpecialitiesBindingTests` (`BindingVerification`) pin that the target resolves, that the class is a prefix with no postfix, and that the category applies and JIT-compiles.
+
+**Callers and thread:** the conversation condition delegate registered by the behavior, evaluated by the conversation system on the main thread at every conversation start that reaches the maid's offer line.
+
+**PatchShield and co-op.** PatchShield may wrap the method like any other patched non-TAOM method; its finalizer swallows only `MissingMethodException`, `MissingFieldException` and `TypeLoadException` (and strips the offending patches) and rethrows anything else. A void prefix, so `CoopVetoClassificationTests` needs no entry (it classifies bool prefixes only). Feature: [tavern-specialities.md](../features/tavern-specialities.md). **ACTIVE**, not yet checked in game.
+
 ## Patch125_HideoutClanGuard
 
 **Target:** two prefixes in `Main/Features/BanditManagement/Hooks/Patch125_HideoutClanGuard.cs`, category `Patch125_HideoutClanGuard`, applied in the standard batch beside Patch86 (`SubModule.cs`). (1) `private int BanditSpawnCampaignBehavior.GetInfestedHideoutCount(Clan banditFaction)`, resolved by name, injecting the private field `_hideouts` (`Dictionary<CultureObject, List<Hideout>>`, as `____hideouts`). (2) `public MobileParty BanditSpawnCampaignBehavior.AddBanditToHideout(Hideout hideoutComponent, PartyTemplateObject overridenPartyTemplate = null, bool isBanditBossParty = false)`. v1.4.8 (BanditSpawnCampaignBehavior.cs:490 and :312). #1063, 2026-10-29.
