@@ -147,7 +147,7 @@ GATES = (
          note="only the module sounds a voice binds; for the rest of module_sounds.xml, only duplicate names"),
     Gate("prefab-budget", "scenes, prefabs", ("*/scenes/*", "*.scene.xml", "*/sceneobj/*"),
          ("python", "tools/check_prefab_budget.py"), ("docs/modding/module-map.md",),
-         note="counts TAOM_Map only; sum all modules"),
+         note="sums every module; see --all-modules"),
 )
 
 
