@@ -19,10 +19,14 @@ Each test maps to one part of the contract (#599):
     dead item id / referenced delete, else 0
   - a clean run says so in words a reader can grep for
 """
+import io
 import os
 import sys
+import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -135,6 +139,53 @@ class ReportAndExitCode(unittest.TestCase):
         text = aa.render_report(s, when="2026-09-15", head="abc1234")
         self.assertIn("CLEAN, 1 warning", text)
         self.assertIn("DRIFT: x missing", text)
+
+
+class CookedInstallSkipsTheCatalogue(unittest.TestCase):
+    """The catalogue inventories a module's loose Assets/ tree only
+    (generate_armory_catalogue.build_rows). The public 1.4.8 release ships the Armory
+    cooked, so there every committed row would read as deleted: the audit must say the
+    drift was not checked, never call it breakage, and never regenerate the catalogue."""
+
+    def test_has_loose_tree_needs_a_tpac_under_assets(self):
+        with tempfile.TemporaryDirectory() as d:
+            mod = Path(d) / "LOTRLOME_Armory"
+            (mod / "AssetPackages").mkdir(parents=True)
+            (mod / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
+            self.assertFalse(aa.has_loose_tree(mod))
+            (mod / "Assets" / "weapons").mkdir(parents=True)
+            self.assertFalse(aa.has_loose_tree(mod))          # an empty Assets/ is not a tree
+            (mod / "Assets" / "weapons" / "bow_geo.tpac").write_bytes(b"x")
+            self.assertTrue(aa.has_loose_tree(mod))
+
+    def _skipped(self):
+        return aa.Summary(catalogue={"rename": [], "move": [], "delete": [], "moved_same_name": [], "new": []},
+                          issues=[], impact={}, dead_item_refs=[], generator_checks=[],
+                          unreferenced_new=[], catalogue_checked=False)
+
+    def test_report_says_the_catalogue_was_skipped_and_stays_clean(self):
+        s = self._skipped()
+        text = aa.render_report(s, when="2026-11-05", head="abc1234")
+        self.assertIn("SKIPPED", text)
+        self.assertIn("Assets/", text)
+        self.assertNotIn("RENAME:", text)                     # no counts that read as "nothing changed"
+        self.assertEqual(aa.exit_code(s), 0)
+
+    def test_regen_catalogue_is_refused_without_a_loose_tree(self):
+        s = self._skipped()
+        out, err = io.StringIO(), io.StringIO()
+        argv = ["audit_armory_refs.py", "--game", "", "--report", "-", "--regen-catalogue", "--no-generators"]
+        with tempfile.TemporaryDirectory() as d:
+            argv[2] = d
+            with mock.patch.object(aa, "build_summary", return_value=s):
+                with mock.patch.object(aa, "_git_head", return_value="abc1234"):
+                    with mock.patch.object(aa.subprocess, "run") as run:
+                        with mock.patch.object(sys, "argv", argv):
+                            with redirect_stdout(out), redirect_stderr(err):
+                                rc = aa.main()
+        self.assertEqual(rc, 0)
+        run.assert_not_called()
+        self.assertIn("refused", err.getvalue())
 
 
 if __name__ == "__main__":
