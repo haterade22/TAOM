@@ -25,15 +25,14 @@ public class ExecutionRelationServiceTests
 
         // Side resolution mirrors the shipped alignment.json: by kingdom id, by culture id, and for
         // the kingdom-less combinations the fix has to survive.
-        Side(PlayerKingdom, null, FactionSide.Free);
-        Side(AllyKingdom, null, FactionSide.Free);
-        Side("erebor", null, FactionSide.Free);
-        Side(VictimKingdom, null, FactionSide.Evil);
-        Side(VictimAllyKingdom, null, FactionSide.Evil);
-        Side(NeutralKingdom, null, FactionSide.Neutral);
-        Side(null, FreeCulture, FactionSide.Free);
+        Side(PlayerKingdom, "", FactionSide.Free);
+        Side(AllyKingdom, "", FactionSide.Free);
+        Side("erebor", "", FactionSide.Free);
+        Side(VictimKingdom, "", FactionSide.Evil);
+        Side(VictimAllyKingdom, "", FactionSide.Evil);
+        Side(NeutralKingdom, "", FactionSide.Neutral);
         Side("", FreeCulture, FactionSide.Free);
-        Side(null, EvilCulture, FactionSide.Evil);
+        Side("", EvilCulture, FactionSide.Evil);
         Side(PlayerKingdom, FreeCulture, FactionSide.Free);
         Side(AllyKingdom, FreeCulture, FactionSide.Free);
         Side("erebor", FreeCulture, FactionSide.Free);
@@ -60,31 +59,23 @@ public class ExecutionRelationServiceTests
     private static bool IsSame(FactionSide a, FactionSide b)
         => a != FactionSide.Neutral && b != FactionSide.Neutral && a == b;
 
-    private static ExecutionParticipant P(string kingdomId, string cultureId = null)
-        => new ExecutionParticipant(kingdomId, cultureId);
+    private static SideIds P(string kingdomId, string cultureId = "")
+        => new SideIds(kingdomId ?? "", cultureId ?? "");
 
     // ----- The player report: a kingdom-less executor must not cost his allies anything -----
 
     [TestMethod]
     public void GetRelationModifier_EmptyExecutorKingdomButFreeCulture_AllyEvaluatorTakesNoPenalty()
     {
-        // GetPlayerKingdomId() returns "" for an independent, mercenary or enlisted player. Before
-        // the culture fallback this fell through to the full vanilla penalty for every clan leader
-        // in the world, which is what bottomed allied Free Peoples lords out at the -100 clamp.
+        // An independent or enlisted player's pair is the player's own clan, which alignment.json does not list,
+        // so only the culture classifies (the test models the unlisted id as empty). Before the culture fallback
+        // this fell through to the full vanilla penalty for every clan leader in the world, which is what
+        // bottomed allied Free Peoples lords out at the -100 clamp.
         var result = _sut.GetRelationModifier(
             P("", FreeCulture), P(VictimKingdom, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
 
         Assert.AreEqual(0, result.RelationDelta);
         Assert.IsFalse(result.ShowNotification);
-    }
-
-    [TestMethod]
-    public void GetRelationModifier_NullExecutorKingdomButFreeCulture_AllyEvaluatorTakesNoPenalty()
-    {
-        var result = _sut.GetRelationModifier(
-            P(null, FreeCulture), P(VictimKingdom, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
-
-        Assert.AreEqual(0, result.RelationDelta);
     }
 
     [TestMethod]
@@ -103,7 +94,7 @@ public class ExecutionRelationServiceTests
     public void GetRelationModifier_VictimKingdomNulledByClanDestruction_AllyEvaluatorTakesNoPenalty()
     {
         var result = _sut.GetRelationModifier(
-            P(PlayerKingdom, FreeCulture), P(null, EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
+            P(PlayerKingdom, FreeCulture), P("", EvilCulture), P(AllyKingdom, FreeCulture), -60, true);
 
         Assert.AreEqual(0, result.RelationDelta);
     }
@@ -112,18 +103,18 @@ public class ExecutionRelationServiceTests
     public void GetRelationModifier_VictimKingdomNulledByClanDestruction_VictimsOwnSideStillPenalised()
     {
         var result = _sut.GetRelationModifier(
-            P(PlayerKingdom, FreeCulture), P(null, EvilCulture), P(VictimAllyKingdom, EvilCulture), -60, true);
+            P(PlayerKingdom, FreeCulture), P("", EvilCulture), P(VictimAllyKingdom, EvilCulture), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
     }
 
-    // ----- A minor or mercenary clan leader has no kingdom of his own -----
+    // ----- A minor clan leader serving no kingdom has none of its own -----
 
     [TestMethod]
     public void GetRelationModifier_EvaluatorHasNoKingdomButFreeCulture_TakesNoPenalty()
     {
         var result = _sut.GetRelationModifier(
-            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P(null, FreeCulture), -60, true);
+            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P("", FreeCulture), -60, true);
 
         Assert.AreEqual(0, result.RelationDelta);
     }
@@ -132,7 +123,7 @@ public class ExecutionRelationServiceTests
     public void GetRelationModifier_EvaluatorHasNoKingdomButEvilCulture_TakesVanillaPenalty()
     {
         var result = _sut.GetRelationModifier(
-            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P(null, EvilCulture), -60, true);
+            P(PlayerKingdom, FreeCulture), P(VictimKingdom, EvilCulture), P("", EvilCulture), -60, true);
 
         Assert.AreEqual(-60, result.RelationDelta);
     }

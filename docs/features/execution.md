@@ -55,18 +55,18 @@ Main/_Module/ModuleData/execution/alignment.json
                     |
       KillCharacterAction_ApplyInternal_Patch
         (Prefix snapshots victim + executor,
-         kingdom AND culture; Finalizer clears)
+         one SideIds pair each; Finalizer clears)
                     |
       TraitLevelingHelper_OnLordExecuted_Patch
         (Prefix reads the snapshot; skips the
          vanilla Honor penalty when cross-alignment)
 ```
 
-`ExecutionContext` holds thread-local kingdom **and** culture ids for both victim and executor, plus an explicit active flag (a hero legitimately has no kingdom, so the flag cannot be inferred from a null id). The outer Prefix on `ApplyInternal` populates it; the Finalizer clears it. Inside that scope, the inner Prefix on `OnLordExecuted` reads the snapshot and consults `IOnExecutionAction.ShouldApplyHonorPenalty(...)`. Returning `false` skips the vanilla Honor-XP loss.
+`ExecutionContext` holds a thread-local `SideIds` pair for the victim and one for the executor (each from `FactionSides.OfHero`: the clan's map faction with that faction's own culture), plus an explicit active flag (a hero legitimately has no kingdom, so the flag cannot be inferred from an empty id). The outer Prefix on `ApplyInternal` populates it; the Finalizer clears it. Inside that scope, the inner Prefix on `OnLordExecuted` reads the snapshot and consults `IOnExecutionAction.ShouldApplyHonorPenalty(...)`. Returning `false` skips the vanilla Honor-XP loss.
 
 The snapshot is taken at the top of `ApplyInternal` for a reason: the method destroys the victim's clan, which nulls `Clan.Kingdom`, before it fires the event that drives the relation pass. Full ordering in `alignment-aware-execution.md` (#556).
 
-`TaomExecutionRelationModel` overrides `GetRelationChangeForExecutingHero` and routes through `IExecutionRelationService.GetRelationModifier(executor, victim, evaluator, baseRelationChange, baseShowNotification)`, passing an `ExecutionParticipant` (kingdom id plus culture id) for each. Executor and victim come from the snapshot when a kill is in flight, live otherwise; the evaluator is always live. The service returns:
+`TaomExecutionRelationModel` overrides `GetRelationChangeForExecutingHero` and routes through `IExecutionRelationService.GetRelationModifier(executor, victim, evaluator, baseRelationChange, baseShowNotification)`, passing a `SideIds` pair (one entity's faction id and that entity's culture, from `FactionSides`) for each; the executor's live pair is `IPlayerContextAdapter.GetPlayerSideIds()`. Executor and victim come from the snapshot when a kill is in flight, live otherwise; the evaluator is always live. The service returns:
 - `0` for cross-alignment evaluators who share the executor's alignment
 - `baseRelationChange` for evaluators who share the victim's alignment
 - `baseRelationChange × 1.5` (kinslaying) when executor and victim share the same alignment
@@ -77,7 +77,7 @@ The snapshot is taken at the top of `ApplyInternal` for a reason: the method des
 
 A flat JSON object mapping a `StringId` to an alignment string. Keys are read as **both** kingdom ids
 and culture ids: `AlignmentService` uses one table for `GetKingdomSide` and `GetCultureSide`, and
-`ResolveSide(kingdomId, cultureId)` tries the kingdom first and falls back to the culture. An id that
+`ResolveSide(kingdomId, cultureId)` tries the kingdom first and falls back to the culture. Every caller passes one entity's pair (#957). An id that
 appears in neither role resolves Neutral, which is nobody's ally and everybody's enemy.
 
 | Field | Type | Description |
@@ -134,10 +134,10 @@ fallback to place a kingdom-less hero:
 | `Main/Features/Execution/IAlignmentConfigProvider.cs` | Config provider interface |
 | `Main/Features/Execution/FactionSide.cs` | Enum: `Free`, `Evil`, `Neutral` |
 | `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Honor-penalty decision hook: `ShouldApplyHonorPenalty` only |
-| `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionParticipant`, `ExecutionRelationResult`, relation contract |
+| `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionRelationResult`, relation contract (participants are `SideIds`) |
 | `Main/Features/Execution/ExecutionRelationService.cs` | Relation decision: side resolution, kinslaying, notification suppression |
 | `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | `IOnExecutionAction` implementation; consults `IAlignmentService` |
-| `Main/Features/Execution/Hooks/ExecutionContext.cs` | `ThreadLocal<string>` victim/executor kingdom-ID pair; bridges the outer-Prefix to the inner-Prefix |
+| `Main/Features/Execution/Hooks/ExecutionContext.cs` | `ThreadLocal<SideIds?>` victim/executor pairs; bridges the outer-Prefix to the inner-Prefix |
 | `Main/Features/Execution/Hooks/KillCharacterAction_ApplyInternal_Patch.cs` | Outer Harmony Prefix + Finalizer; sets / clears `ExecutionContext` |
 | `Main/Features/Execution/Hooks/TraitLevelingHelper_OnLordExecuted_Patch.cs` | Inner Harmony Prefix; skips vanilla Honor penalty when cross-alignment |
 | `Main/Features/Execution/Models/TaomExecutionRelationModel.cs` | `DefaultExecutionRelationModel` override; routes relation deltas through `IExecutionRelationService` |
@@ -152,13 +152,15 @@ fallback to place a kingdom-less hero:
 - `IPathService` (Core) — resolves the alignment.json path during config load
 - `IModLogger` (Core) — used by `AlignmentConfigProvider` for load diagnostics
 
-No `Adapter` interfaces — the feature operates entirely on kingdom `StringId` strings extracted at the patch entry point. The sealed types (`Hero`, `Clan`, `Kingdom`) are touched only in the patches and in the `TaomExecutionRelationModel` override body, both of which are entry-point classes per ADR-002 / ADR-007.
+The feature operates on `SideIds` pairs that `TAOM.Adapters.FactionSides` builds in the patches and the model override, the only places that touch `Hero`, `Clan` or `Kingdom` (entry points per ADR-002 / ADR-007); the model reads the player's pair through `IPlayerContextAdapter.GetPlayerSideIds()`.
 
 ## Tests
 
-- `TAOM.Tests/Features/Execution/AlignmentServiceTests.cs`: **35 tests**, kingdom- and culture-to-side mapping, `ResolveSide` precedence and fallback, both truth tables in their string and `FactionSide` forms, unknown-id behavior.
+- `TAOM.Tests/Features/Execution/AlignmentServiceTests.cs`: **36 tests**, kingdom- and culture-to-side mapping, `ResolveSide` precedence and fallback, both truth tables in their string and `FactionSide` forms, unknown-id behavior.
 - `TAOM.Tests/Features/Execution/ExecutionActionHookTests.cs`: **5 tests**, `ShouldApplyHonorPenalty` per alignment pairing, plus the kingdom-less executor and destroyed-victim-clan paths.
-- `TAOM.Tests/Features/Execution/ExecutionRelationServiceTests.cs`: **18 tests**, cross-alignment branching, kinslaying multiplier, notification suppression, and a kingdom-less participant in each of the three positions.
+- `TAOM.Tests/Features/Execution/ExecutionRelationServiceTests.cs`: **17 tests**, cross-alignment branching, kinslaying multiplier, notification suppression, and a kingdom-less participant in each of the three positions.
+- `TAOM.Tests/Adapters/FactionSidesTests.cs`: **7 tests**, the pair builders' null guards and source pins (a hero reads its clan's map faction, never `Hero.MapFaction`; the player pair needs a campaign).
+- `TAOM.Tests/Features/Execution/SidePairScanTests.cs`: **3 tests**, an IL scan of TAOM.dll: only the `ResolveSide(SideIds)` extension calls the two-argument `ResolveSide`, and only `FactionSides` builds a `SideIds`.
 - `TAOM.Tests/Features/Execution/ShippedMainCultureAlignmentCoverageTests.cs`: **3 tests**, every playable TAOM culture has an alignment entry and resolves to its declared side through the kingdom-less path.
 
 Manual Harmony Prefix + Finalizer wiring on `KillCharacterAction_ApplyInternal_Patch` and `TraitLevelingHelper_OnLordExecuted_Patch` is exercised via the live game; no unit-test coverage for the patch binding itself today. (Audit gap class — see issue #192 / #193 for the analogous wiring-regression-test pattern.)
@@ -189,6 +191,7 @@ If a new gameplay rule needs to gate on alignment (e.g., "different relation rul
 
 ## Changelog
 
+- 2026-11-05: #957 ported from 1.5.x `5e43518df`: every participant is one entity's `SideIds` pair; a Neutral realm's lord is no longer sided by his own culture.
 - 2026-05-14 — Phase 9b refactor (#147): extracted `IExecutionRelationService` returning `ExecutionRelationResult`, reduced `TaomExecutionRelationModel.GetRelationChangeForExecutingHero` to a single-call delegate, and replaced direct `Hero.MainHero.MapFaction.StringId` access with injected `IPlayerContextAdapter.GetPlayerKingdomId()`.
 - 2026-03-25 — Introduced the Alignment-Aware Execution system: new `Main/Features/Execution/` override, `TaomExecutionRelationModel`, Harmony patches on `KillCharacterAction.ApplyInternal` + `TraitLevelingHelper.OnLordExecuted`, `execution/alignment.json` (16 kingdoms → Free/Evil/Neutral), zero penalty for cross-alignment kills, 1.5× kinslaying penalties, and 28 tests.
 

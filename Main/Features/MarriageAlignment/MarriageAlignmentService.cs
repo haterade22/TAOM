@@ -10,7 +10,7 @@ namespace TAOM.Features.MarriageAlignment;
 /// <remarks>
 /// Deliberately does NOT call <see cref="IAlignmentService.AreEnemyAlignments"/>, whose Neutral
 /// semantics are inverted for this purpose: it returns true when either side is Neutral, so it
-/// treats Neutral as an enemy of everyone and would bar every Umbar, Shaghana, Abanissa and Dunland
+/// treats Neutral as an enemy of everyone and would bar every Umbar, Shaghana, Abanissa and Khand
 /// hero from marrying anybody. Here Neutral marries anyone, which matches how
 /// <c>RecruitmentAlignmentService</c> and three other features read the same table.
 /// <para>

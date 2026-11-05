@@ -4,7 +4,7 @@
 
 A Free-aligned hero cannot marry an Evil-aligned one. A lord of Gondor, Rohan, Dale, Erebor or the
 Elves will not wed a hero of Mordor, Isengard, Gundabad, Dol Guldur or any orc culture, and the
-reverse holds too. Neutral cultures (Umbar, Shaghana, Abanissa, Dunland) marry anyone.
+reverse holds too. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland (`empire`) is Evil.
 
 The rule keys on **culture**, and a companion Harmony transpiler narrows the AI's partner search so
 Free factions do not lose most of their marriages as a side effect.
@@ -141,7 +141,7 @@ entries to it.
 
 The service deliberately does **not** call `IAlignmentService.AreEnemyAlignments`, whose Neutral
 handling is inverted for this purpose: it returns `true` when either side is Neutral, so it treats
-Neutral as an enemy of everyone and would bar every Umbar, Shaghana, Abanissa and Dunland hero from
+Neutral as an enemy of everyone and would bar every Khand, Umbar, Shaghana and Abanissa hero from
 marrying anybody. Four other TAOM services refuse to call it for the same reason.
 
 `IsMarriageBlocked` is defined in terms of `AreCulturesCompatible` so the rule the model enforces
@@ -240,6 +240,7 @@ per ADR-008.
 
 ## Changelog
 
+- **2026-11-05** The MCM hint and the overview no longer call Dunland Neutral: `empire` is `evil` in `alignment.json` and the Neutral cultures are Khand (`battania`), Umbar, Shaghana and Abanissa (#957). Ported to 1.4.x from 1.5.x `5e43518df`.
 - **2026-09-06** Feature added. Issue #542.
 - **2026-09-06** 5-agent `/deep-review`, 0 HIGH. The candidate-pool cache moved out of the patch
   into `MarriageClanPoolCache` + `MarriageClanPoolStamp` (the stamp now keys on

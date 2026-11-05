@@ -938,7 +938,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Marriage Alignment", GroupOrder = 50)]
     [SettingPropertyBool("Enable Marriage Alignment Block", Order = 0, RequireRestart = false,
-        HintText = "When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Umbar, Shaghana, Abanissa, Dunland) marry anyone. When off, marriage is vanilla.")]
+        HintText = "When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland is Evil. When off, marriage is vanilla.")]
     public bool EnableMarriageAlignment { get; set; } = true;
 
     [SettingPropertyGroup("World/Marriage Alignment")]

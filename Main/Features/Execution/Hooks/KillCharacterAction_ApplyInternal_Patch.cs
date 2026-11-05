@@ -2,6 +2,7 @@ using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TAOM.Adapters;
 
 namespace TAOM.Features.Execution.Hooks;
 
@@ -28,11 +29,8 @@ public static class KillCharacterAction_ApplyInternal_Patch
 
         // Captured here, at the top of ApplyInternal, because the method destroys the victim's clan
         // (nulling Clan.Kingdom) before it fires OnHeroKilled, which is what drives the relation pass.
-        __state = ExecutionContext.TrySet(
-            victim?.Clan?.Kingdom?.StringId,
-            victim?.Culture?.StringId,
-            killer?.Clan?.Kingdom?.StringId,
-            killer?.Culture?.StringId);
+        // Each side is the hero's clan map faction with that faction's own culture, never the kingdom id zipped with the hero's own culture (#957).
+        __state = ExecutionContext.TrySet(FactionSides.OfHero(victim), FactionSides.OfHero(killer));
     }
 
     // ApplyInternal re-enters itself: destroying the victim's clan kills that clan's other heroes

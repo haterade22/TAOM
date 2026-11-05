@@ -1,6 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TAOM.Adapters;
 
 namespace TAOM.Features.PrisonerRecruitment.Models;
 
@@ -29,13 +30,14 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
     /// Clan/Kingdom/IFaction. Keep the static type as CharacterObject: its Culture property is
     /// declared `new`, shadowing BasicCharacterObject.Culture (which returns a BasicCultureObject).
     /// party.LeaderHero is null for garrisons, militia and caravans; those never waive.
+    /// The recruiter's side pair is the leader's clan map faction with that faction's culture (FactionSides.OfHero, #957); the leader's own culture feeds only the same-culture rule.
     /// </summary>
     public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
     {
         var leader = party?.LeaderHero;
 
         return _morale.ShouldWaiveMoralePenalty(
-                   leader?.Clan?.Kingdom?.StringId,
+                   FactionSides.OfHero(leader),
                    leader?.Culture?.StringId,
                    character?.Culture?.StringId,
                    leader == Hero.MainHero)

@@ -6,7 +6,7 @@ A wanderer will not take service across the Free/Evil line. When the player asks
 "I can use someone like you in my company", a Free-culture wanderer (Gondor, Rohan, the Elves,
 Erebor, Dale, Lindon) refuses a player who serves Sauron, and an Evil-culture wanderer (Mordor,
 Isengard, the orc kingdoms, Harad, Rhûn) refuses a player on the Free side. Neutral cultures
-(Umbar, Dunland, Shaghana, Abanissa) serve anyone, and a Neutral player is refused by nobody. The
+(Khand, Umbar, Shaghana, Abanissa) serve anyone, and a Neutral player is refused by nobody. The
 refusal is spoken in the dialogue and the conversation returns to the wanderer's menu; no gold moves.
 
 Two dialogue lines and a pure rule. No Harmony patch, no GameModel. Issue #575, reported as
@@ -87,39 +87,40 @@ dispatch LIFO, so whose `OnSessionLaunched` registers first is not something to 
 
 ### The rule
 
-`WandererAllegianceService.Evaluate(wandererHeroId, wandererCultureId, playerKingdomId, playerCultureId)`:
+`WandererAllegianceService.Evaluate(wandererHeroId, wandererCultureId, player)`, where `player` is the player clan's map faction id with that faction's culture (`FactionSides.OfPlayer()`):
 
 | Step | Result |
 |---|---|
 | Feature disabled | `Allowed` |
 | Scope is "named companions only" and the hero id is not in `named_companion_config.json` | `Allowed` |
 | Wanderer culture null or empty | `Allowed` (nobody's enemy; fail open to vanilla) |
-| `wandererSide = GetCultureSide(wandererCulture)`, `playerSide = ResolveSide(playerKingdom, playerCulture)` | |
+| `wandererSide = GetCultureSide(wandererCulture)`, `playerSide = ResolveSide(player)` | |
 | Either side Neutral, or both equal | `Allowed` |
 | Wanderer Free, player Evil | `RefusedByFreeWanderer` |
 | Wanderer Evil, player Free | `RefusedByEvilWanderer` |
 
-**Why culture for the wanderer and kingdom-first for the player.** A tavern wanderer has no clan
+**Why culture for the wanderer and the clan's map faction for the player.** A tavern wanderer has no clan
 and no kingdom; culture is the only side they carry, and it is what the lore rule is about. The
-player's side is the kingdom they serve: `IAlignmentService.ResolveSide` reads the kingdom first
-and falls back to the culture only when the kingdom is missing or Neutral, so a Gondor-born vassal
+player's side is the kingdom they serve: `IAlignmentService.ResolveSide` reads the map faction's id first
+and falls back to that faction's own culture only when the id is unlisted or Neutral, so a Gondor-born vassal
 or mercenary of Mordor is refused by a Gondor wanderer (`Clan.Kingdom` is set for mercenaries too,
-`ChangeKingdomAction.cs:65-68`). Kingdomless, the player clan's culture decides; the main hero's
-culture is the fallback for a clan with none.
+`ChangeKingdomAction.cs:65-68`). A player in a Neutral realm is Neutral whatever the player's own culture:
+the culture that backs the id up is the realm's, not the hero's (#957). Kingdomless, the player clan is its
+own map faction and the clan's culture decides.
 
 **Neutral semantics.** The service never calls `IAlignmentService.AreEnemyAlignments`: that
-predicate treats Neutral as everyone's enemy, which would bar every Umbar, Dunland, Shaghana and
+predicate treats Neutral as everyone's enemy, which would bar every Khand, Umbar, Shaghana and
 Abanissa wanderer from serving anybody. Here Neutral serves anyone, the same reading
 `MarriageAlignmentService` and `RecruitmentAlignmentService` give the table.
 
 **Where the ids come from.** The dialog behavior converts four engine values at the boundary and
-nothing deeper sees an engine type: `Hero.OneToOneConversationHero.StringId` and `.Culture.StringId`,
-`Clan.PlayerClan.Kingdom?.StringId`, `Clan.PlayerClan.Culture?.StringId ?? Hero.MainHero.Culture?.StringId`.
-`Hero.Culture` is a plain field and `Clan.Culture` an auto-property (neither can throw under `?.`; `Hero.MainHero` and `Clan.PlayerClan` are computed statics, which the try/catch covers), and `Hero.Culture` is set for XML heroes by
+nothing deeper sees an engine type: `Hero.OneToOneConversationHero.StringId` and `.Culture.StringId`, and the
+player's pair from `FactionSides.OfPlayer()` (`Clan.PlayerClan.MapFaction` with its culture).
+`Hero.Culture` is a plain field and `Clan.Culture` an auto-property (neither can throw under `?.`; `Hero.OneToOneConversationHero` and `Clan.PlayerClan` are computed statics, which the try/catch covers), and `Hero.Culture` is set for XML heroes by
 `SetInitialValuesFromCharacter` (`Hero.cs:2244`, reached from `Deserialize` via `SetCharacterObject`),
 so the named companions carry their XML cultures with no `CharacterObject` fallback needed. The
 values are read live on every render of the line, never cached, because Player Switcher changes
-`MainHero` and `PlayerClan` mid-session. A throw defers to vanilla hiring and logs an error; that is
+the player clan mid-session. A throw defers to vanilla hiring and logs an error; that is
 safe here because nothing has been mutated.
 
 ### Component Diagram
@@ -171,7 +172,7 @@ wanderer templates and all 7 on the 17 named companions are classified in `align
 | File | Purpose |
 |------|---------|
 | `Main/Features/WandererAllegiance/WandererAllegianceService.cs` | The pure verdict |
-| `Main/Features/WandererAllegiance/IWandererAllegianceService.cs` | Its interface (four string ids in, a verdict out) |
+| `Main/Features/WandererAllegiance/IWandererAllegianceService.cs` | Its interface (two wanderer ids and the player's SideIds pair in, a verdict out) |
 | `Main/Features/WandererAllegiance/WandererHireVerdict.cs`, `WandererAllegianceScope.cs` | The enums |
 | `Main/Features/WandererAllegiance/Hooks/WandererAllegianceDialogBehavior.cs` | The two dialogue lines and the boundary conversion |
 | `Main/Features/WandererAllegiance/WandererAllegianceConfig.cs`, `WandererAllegianceConfigProvider.cs` | JSON DTO and validating loader |
@@ -192,7 +193,7 @@ wanderer templates and all 7 on the 17 named companions are classified in `align
 
 `TAOM.Tests/Features/WandererAllegiance/`:
 
-- `WandererAllegianceServiceTests`: the nine side combinations (exactly two refuse, each with the right verdict), disabled, kingdom-first resolution (`ResolveSide` received, `GetCultureSide` not called for the player), `AreEnemyAlignments` never called, null wanderer culture, the named-companions-only scope (listed, unlisted, disabled entry, case, null id, list read once).
+- `WandererAllegianceServiceTests`: the nine side combinations (exactly two refuse, each with the right verdict), disabled, side-pair resolution (`ResolveSide` received for the player's `SideIds`, `GetCultureSide` not called for the player), the empty pair of a player outside a campaign reading Neutral, `AreEnemyAlignments` never called, null wanderer culture, the named-companions-only scope (listed, unlisted, disabled entry, case, null id, list read once).
 - `WandererAllegianceConfigProviderTests`: missing file, malformed JSON, empty object, JSON `null`, unknown and empty and null `scope`, case normalisation, caching, the shipped file.
 - `WandererAllegianceSettingsProviderTests`: MCM absent falls back to JSON for both fields, dropdown index mapping, the compiled dropdown default matches the shipped JSON.
 - `WandererCultureAlignmentCoverageTests`: every wanderer and named-companion culture is classified; gondor, mirkwood, erebor stay Free and isengard stays Evil.
