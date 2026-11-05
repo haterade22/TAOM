@@ -1133,6 +1133,35 @@ def build_skill_sets_xml() -> str:
     return '\n'.join(out)
 
 
+def _skill_set_rows(xml_text: str) -> dict:
+    """SkillSet id -> [(skill id, value)] in file order, for a --check comparison."""
+    import xml.etree.ElementTree as ET
+    return {s.get('id'): [(k.get('id'), k.get('value')) for k in s.findall('skill')]
+            for s in ET.fromstring(xml_text.encode('utf-8')).findall('SkillSet')}
+
+
+def check_skill_sets(path: Path = None) -> int:
+    """Read-only drift check: the generator's SkillSets against the committed file. Only the
+    order of the sets may differ (the sort is the generator's, not a fact about the data)."""
+    want = _skill_set_rows(build_skill_sets_xml())
+    path = path or LORD_SKILL_SETS
+    have = _skill_set_rows(path.read_text(encoding='utf-8-sig'))
+    only_gen = sorted(set(want) - set(have))
+    only_file = sorted(set(have) - set(want))
+    differ = sorted(i for i in set(want) & set(have) if want[i] != have[i])
+    if not (only_gen or only_file or differ):
+        print(f"OK: {len(want)} SkillSets in {path.name} match the generator")
+        return 0
+    print(f"DRIFT in {path.name}: a hand edit the generator does not know, "
+          f"or a generator change not applied.")
+    print("  Do not --apply before syncing the generator's canonical entries.")
+    for label, ids in (("only in the generator", only_gen), ("only in the file", only_file),
+                       ("different skill values", differ)):
+        if ids:
+            print(f"  {label} ({len(ids)}): {', '.join(ids[:20])}{' ...' if len(ids) > 20 else ''}")
+    return 1
+
+
 def update_skill_template_in_block(block: str, mode: str, new_template: str) -> str:
     """Replace the skill_template attribute value in an NPCCharacter block."""
     if mode == 'xml':
@@ -1270,7 +1299,13 @@ def main():
     ap.add_argument('--skillsets-only', action='store_true',
                     help='Only regenerate taom_lord_skill_sets.xml; skip lords.xml/xslt edits')
     ap.add_argument('--apply', action='store_true')
+    ap.add_argument('--check', action='store_true',
+                    help='Read-only: compare the generated SkillSets with taom_lord_skill_sets.xml '
+                         '(set order may differ); exit 1 on drift. Run before any --apply')
     args = ap.parse_args()
+
+    if args.check:
+        return check_skill_sets()
 
     bios = load_bios()
 

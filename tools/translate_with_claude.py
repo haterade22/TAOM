@@ -8,13 +8,13 @@ fallback chain (override -> cache -> LLM -> keep English).
 
 Usage:
     # Preview cost and counts (no API calls):
-    python tools/translate_with_claude.py --lang RU --dry-run
+    python tools/translate_with_claude.py --lang RU --module TAOM --dry-run
 
     # Pilot a small batch (50 entries):
     python tools/translate_with_claude.py --lang RU --module TAOM --max-entries 50 --apply
 
-    # Full run for a language (all 26 files):
-    python tools/translate_with_claude.py --lang RU --apply
+    # Full run for a language (all 26 files; `all` also writes the live Armory):
+    python tools/translate_with_claude.py --lang RU --module all --apply
 
     # Override files: tools/translation_overrides/<lang>.json (hand-curated, git-tracked)
     # Cache files:    tools/translation_cache/<lang>.json     (auto-written, git-tracked)
@@ -838,11 +838,12 @@ def estimate_cost(entry_count: int, provider: dict = None) -> float:
             + out_tokens / 1_000_000 * provider["price_out"])
 
 
-def main():
+def main(argv=None):
     p = argparse.ArgumentParser(description="TAOM AI Translation Tool")
     p.add_argument("--lang", required=True, choices=list(LANGUAGES.keys()),
                    help="Target language code")
-    p.add_argument("--module", default="all", choices=["TAOM", "TAOM_Map", "Armory", "all"])
+    p.add_argument("--module", required=True, choices=["TAOM", "TAOM_Map", "Armory", "all"],
+                   help="Which module to translate; `all` also writes the live Armory (#1056)")
     p.add_argument("--dry-run", action="store_true", help="Preview without writing")
     p.add_argument("--apply", action="store_true", help="Write translations and call API")
     p.add_argument("--max-entries", type=int, default=None, help="Cap API entries for testing")
@@ -861,7 +862,7 @@ def main():
                    help="Override input price per Mtok, for the printed estimate only")
     p.add_argument("--price-out", type=float, default=None,
                    help="Override output price per Mtok, for the printed estimate only")
-    args = p.parse_args()
+    args = p.parse_args(argv)
 
     if not args.dry_run and not args.apply:
         p.error("Specify either --dry-run or --apply")
