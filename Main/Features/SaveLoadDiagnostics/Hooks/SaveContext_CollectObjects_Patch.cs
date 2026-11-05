@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using HarmonyLib;
+using TaleWorlds.ObjectSystem;
 using TaleWorlds.SaveSystem.Save;
 using TAOM.Core.Logging;
 using TAOM.Features.SaveLoadDiagnostics.Domain;
@@ -22,6 +23,7 @@ public static class SaveContext_CollectObjects_Patch
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childObjects;
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childContainers;
     private static AccessTools.FieldRef<SaveContext, List<string>>? _strings;
+    private static Func<MBObjectBase, bool>? _isRegistered;
 
     // Binds the three private lists once (installed v1.4.8 SaveContext.cs:75, :79, :83). A field
     // that no longer exists is left null and its count is omitted from the line (never a fake 0).
@@ -32,6 +34,9 @@ public static class SaveContext_CollectObjects_Patch
         _childObjects = BindList<object>("_childObjects");
         _childContainers = BindList<object>("_childContainers");
         _strings = BindList<string>("_strings");
+        // Internal getter (MBObjectBase.cs:25). Left null if it moves: isRegistered then reads unknown.
+        try { _isRegistered = AccessTools.MethodDelegate<Func<MBObjectBase, bool>>(AccessTools.PropertyGetter(typeof(MBObjectBase), "IsRegistered")); }
+        catch { _isRegistered = null; }
     }
 
     // The no-argument overload: CollectObjects(object) also exists (SaveContext.cs:225).
@@ -65,8 +70,28 @@ public static class SaveContext_CollectObjects_Patch
             var strings = Read(_strings, __instance);
             svc.LogPhase(SaveLoadPhase.SaveCollected,
                 SaveLoadTokens.SaveCollected(objects?.Count, containers?.Count, strings?.Count, collectMs));
+
+            if (objects != null && containers != null && svc.TakeSaveCensusRequest(out var reason))
+                LogCensus(svc, objects, containers, reason);
         }
         catch { /* diagnostic only */ }
+    }
+
+    // The census is local, so nothing it counted outlives this call.
+    private static void LogCensus(ISaveLoadDiagnosticsService svc, List<object> objects, List<object> containers, string reason)
+    {
+        long start = Stopwatch.GetTimestamp();
+        var census = SaveGraphCensus.Walk(objects, containers, Describe);
+        long passMs = (Stopwatch.GetTimestamp() - start) * 1000 / Stopwatch.Frequency;
+        svc.LogPhase(SaveLoadPhase.SaveCensus, census.FormatSummary(reason, svc.LoadsThisProcess, passMs));
+        foreach (var line in census.FormatTypeLines())
+            svc.LogPhase(SaveLoadPhase.SaveCensus, line);
+    }
+
+    private static (uint Id, bool? IsRegistered)? Describe(object item)
+    {
+        if (item is not MBObjectBase engineObject) return null;
+        return (engineObject.Id.InternalValue, _isRegistered?.Invoke(engineObject));
     }
 
     private static List<T>? Read<T>(AccessTools.FieldRef<SaveContext, List<T>>? field, SaveContext context) =>

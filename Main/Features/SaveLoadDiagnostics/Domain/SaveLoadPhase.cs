@@ -52,4 +52,5 @@ public enum SaveLoadPhase
     LoadCounts,
     SaveCollected,
     SaveBehaviorData,
+    SaveCensus,
 }

@@ -32,6 +32,8 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
     private int _inGameLoadsThisProcess;
     private WeakReference? _endedCampaign;
     private int _gen2AtGameEnd;
+    private int _censusConsoleArmed;
+    private int _censusAfterReload;
     private readonly Dictionary<string, BehaviorSaveSample> _behaviorSamples = new Dictionary<string, BehaviorSaveSample>();
 
     public SaveLoadDiagnosticsService(IModLogger logger)
@@ -55,6 +57,7 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
     {
         int loads = Interlocked.Increment(ref _loadsThisProcess);
         int inGameLoads = inGame ? Interlocked.Increment(ref _inGameLoadsThisProcess) : Volatile.Read(ref _inGameLoadsThisProcess);
+        if (loads >= 2) Volatile.Write(ref _censusAfterReload, 1);
         BeginAttempt(SaveLoadPhase.LoadRequested, SaveLoadTokens.LoadRequested(saveName, inGame, loads, inGameLoads, SafeMemory()));
     }
 
@@ -74,6 +77,16 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
                 LogPhase(SaveLoadPhase.SaveBehaviorData, line);
         }
         catch { /* the diagnostic must never propagate */ }
+    }
+
+    public bool ArmSaveCensus() => Interlocked.Exchange(ref _censusConsoleArmed, 1) != 0;
+
+    public bool TakeSaveCensusRequest(out string reason)
+    {
+        bool console = Interlocked.Exchange(ref _censusConsoleArmed, 0) != 0;
+        bool afterReload = Interlocked.Exchange(ref _censusAfterReload, 0) != 0;
+        reason = console ? "console" : afterReload ? "afterReload" : string.Empty;
+        return console || afterReload;
     }
 
     public void RecordBehaviorSave(string behaviorId, string behaviorType, BehaviorRecordStats stats, double syncMs)

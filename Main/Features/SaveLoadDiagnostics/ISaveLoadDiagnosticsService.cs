@@ -49,4 +49,11 @@ public interface ISaveLoadDiagnosticsService
     // Stores one behavior's save record size. These run before SaveBegin (the engine's OnBeforeSave
     // pass), so BeginSaveAttempt writes the summary and clears them.
     void RecordBehaviorSave(string behaviorId, string behaviorType, BehaviorRecordStats stats, double syncMs);
+
+    // Asks for a type census on the next save. Returns the previous armed state.
+    bool ArmSaveCensus();
+
+    // True once per request: from the console (reason "console", which wins and clears both), or from
+    // any load that is not the first in the process (reason "afterReload").
+    bool TakeSaveCensusRequest(out string reason);
 }

@@ -136,4 +136,15 @@ public class SaveLoadDiagnosticsBindingTests
         Assert.AreEqual(typeof(Dictionary<string, object>), AccessTools.Field(record, "_records")?.FieldType,
             "BehaviorSaveData._records changed: per-behavior sizes would stop being recorded.");
     }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MBObjectBase_IsRegisteredGetter_ResolvesAgainstInstalledEngine()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        Assert.IsNotNull(AccessTools.PropertyGetter(typeof(TaleWorlds.ObjectSystem.MBObjectBase), "IsRegistered"),
+            "MBObjectBase.IsRegistered getter did not resolve: the census would stop counting unregistered copies.");
+    }
 }

@@ -382,4 +382,36 @@ public class SaveLoadDiagnosticsServiceTests
 
         StringAssert.Contains(lines[1], "behaviors=1 records=7 elements=8");
     }
+
+    // ---- save census request (plan 114) ----
+
+    [TestMethod]
+    public void TakeSaveCensusRequest_NothingArmed_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.TakeSaveCensusRequest(out _));
+    }
+
+    [TestMethod]
+    public void TakeSaveCensusRequest_AfterSecondLoad_ReturnsAfterReloadOnce()
+    {
+        _sut.BeginLoadAttempt("a", inGame: false);
+        Assert.IsFalse(_sut.TakeSaveCensusRequest(out _), "a first load in a process adds nothing, so no census");
+
+        _sut.BeginLoadAttempt("b", inGame: true);
+
+        Assert.IsTrue(_sut.TakeSaveCensusRequest(out var reason));
+        Assert.AreEqual("afterReload", reason);
+        Assert.IsFalse(_sut.TakeSaveCensusRequest(out _));
+    }
+
+    [TestMethod]
+    public void ArmSaveCensus_ReturnsPreviousState_AndTakeReturnsConsoleOnce()
+    {
+        Assert.IsFalse(_sut.ArmSaveCensus());
+        Assert.IsTrue(_sut.ArmSaveCensus());
+
+        Assert.IsTrue(_sut.TakeSaveCensusRequest(out var reason));
+        Assert.AreEqual("console", reason);
+        Assert.IsFalse(_sut.TakeSaveCensusRequest(out _));
+    }
 }
