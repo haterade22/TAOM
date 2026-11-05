@@ -9,10 +9,11 @@ namespace TAOM.Features.ShadowfaxScreens.Party.Hooks;
 /// <summary>
 /// The per-screen character-code cache. A hit sets __result and skips the whole GetCharacterCode body (vanilla computes
 /// the equipment code and the body properties itself there; CharacterCode.CreateFrom only builds the string from them);
-/// a miss runs vanilla and the postfix stores its result. Safe next to BannerColorPersistence: CharacterImageIdentifier
-/// reads only CharacterCode.Code, which CreateFrom builds (colours included) before Patch23's postfix sets Color1 and
-/// Color2, so those writes never change what renders and rows can share one code (the premise is pinned by
-/// PartyFastOpenBindingTests, covering CharacterImageIdentifier, CharacterImageIdentifierVM and UpgradeTargetVM). The key
+/// a miss runs vanilla and the postfix stores its result. Safe next to BannerColorPersistence: Patch23's postfix (applied
+/// earlier, same priority, so it runs first) replaces the result with a code rebuilt in the clan colours
+/// (ClanColoredCharacterCode.Recolor, #993), so the cache stores the recoloured code, and on a hit Recolor returns it
+/// unchanged. Nothing writes to a built code, so rows can share one (pinned by PartyFastOpenBindingTests, covering
+/// CharacterImageIdentifier, CharacterImageIdentifierVM and UpgradeTargetVM). The key
 /// is the character, the troop type and the side, which are the only inputs besides the screen's fixed owner parties.
 /// The pair links through __state.
 /// </summary>

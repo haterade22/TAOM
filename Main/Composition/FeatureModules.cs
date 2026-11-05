@@ -33,5 +33,6 @@ internal static class FeatureModules
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
         new Features.AlignmentRecruitment.AlignmentRecruitmentModule(),
         new Features.Messengers.MessengerSessionRulesModule(),
+        new Features.TavernSpecialities.TavernSpecialitiesModule(),
     };
 }

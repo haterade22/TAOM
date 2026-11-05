@@ -178,9 +178,9 @@ public class Patch75BindingTests
     // ---- Category pins (SubModule applies the category by string) ----
 
     [TestMethod]
-    public void BothPatches_CarryThePatch75Category()
+    public void AllPatches_CarryThePatch75Category()
     {
-        foreach (var patchType in new[] { typeof(RefugeClanScreenPatch), typeof(RefugeEncounterPatch) })
+        foreach (var patchType in new[] { typeof(RefugeClanScreenPatch), typeof(RefugeEncounterPatch), typeof(RefugeClanRowRefreshPatch) })
         {
             var attributes = patchType.GetCustomAttributes(typeof(HarmonyPatchCategory), inherit: false);
             Assert.AreEqual(1, attributes.Length, patchType.Name + " lost its HarmonyPatchCategory attribute.");

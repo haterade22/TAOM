@@ -38,9 +38,9 @@ public interface IInventoryScreenAdapter
     /// <summary>True when the inventory screen is in <c>EquipmentModes.Battle</c>.</summary>
     bool IsViewingBattleEquipment { get; }
 
-    /// <summary>Triggers <c>SPInventoryVM.RefreshValues</c> after equipment mutation so the UI
-    /// reflects the change. Vanilla <c>AfterTransfer</c> path also refreshes; this is a backup
-    /// for code paths that bypass <see cref="LoadEquipment"/>.</summary>
+    /// <summary>Re-syncs the open screen after <see cref="LoadEquipment"/>: the paper doll, armour,
+    /// weight, capacity, the no-saddle warning and the Done button, then removes rows left at count 0.
+    /// Vanilla <c>AfterTransfer</c> updates only the item rows and the shown set's slots.</summary>
     void RefreshActiveVM();
 
     /// <summary>Releases the captured VM. Called from the inventory screen's OnFinalize hook

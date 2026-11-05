@@ -58,9 +58,10 @@ public sealed class InventoryScreenAdapter : IInventoryScreenAdapter
 
     public void RefreshActiveVM()
     {
+        // RefreshValues only resets labels and hints (v1.4.8 SPInventoryVM.cs:3182); the transfers of a
+        // load need vanilla's equip refresh (#924).
         if (_active == null) return;
-        try { _active.RefreshValues(); }
-        catch (Exception ex) { _logger.LogError($"[EquipPresets] RefreshActiveVM failed: {ex.Message}"); }
+        InventoryVMAdapter.RefreshPanel(_active, _logger, "EquipPresets");
     }
 
     public LoadEquipmentResult LoadEquipment(IReadOnlyList<PresetSlotRequest> requests, bool civilian)

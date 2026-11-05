@@ -24,21 +24,6 @@ public sealed class InventoryItemAdapter : IInventoryItemAdapter
 
     public bool IsTransferable => _vm?.IsTransferable ?? false;
 
-    public bool IsEquipped
-    {
-        // SPItemVM.InventorySide is set to one of three Equipment values when the row
-        // represents a hero's equipped slot. The right-pane "player inventory" side is
-        // PlayerInventory; left side is OtherInventory.
-        get
-        {
-            if (_vm == null) return false;
-            var side = _vm.InventorySide;
-            return side == TaleWorlds.CampaignSystem.Inventory.InventoryLogic.InventorySide.BattleEquipment
-                || side == TaleWorlds.CampaignSystem.Inventory.InventoryLogic.InventorySide.CivilianEquipment
-                || side == TaleWorlds.CampaignSystem.Inventory.InventoryLogic.InventorySide.StealthEquipment;
-        }
-    }
-
     public bool IsHorse => _vm?.ItemRosterElement.EquipmentElement.Item?.IsMountable ?? false;
 
     public bool IsFood => _vm?.ItemRosterElement.EquipmentElement.Item?.IsFood ?? false;

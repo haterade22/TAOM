@@ -107,8 +107,8 @@ public static class CoopSettingsRelevance
     {
         "EnableQuickActions", "EnableInventorySearch", "QuickActionsShowConfirmation",
         "QuickActionsPlaySounds", "DamagedQualityDropdown", "DamagedThreshold",
-        "UseCustomThreshold", "SellDamagedEquipped", "ExcludeDamagedHorses",
-        "LowValueThreshold", "SellLowValueEquipped", "ExcludeLowValueFood",
+        "UseCustomThreshold", "ExcludeDamagedHorses",
+        "LowValueThreshold", "ExcludeLowValueFood",
         "ExcludeLowValueHorses", "ExcludeLowValueTradeGoods",
         "EnableEquipmentPresets", "MaxPresetsPerCharacter",
         // Whether YOUR client pops the shore-leave offer when the column halts. The pass it

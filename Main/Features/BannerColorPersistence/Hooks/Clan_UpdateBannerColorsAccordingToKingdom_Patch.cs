@@ -16,9 +16,9 @@ public static class Clan_UpdateBannerColorsAccordingToKingdom_Patch
 
     public static MethodBase TargetMethod()
     {
-        // Phase 9b #172 F3 — TaleWorlds private method. If a future patch renames the method,
-        // AccessTools.Method returns null and Harmony silently skips the patch — no warning, no
-        // log, drift guard goes inert. Surface the null case loudly.
+        // Phase 9b #172 F3: TaleWorlds private method. If a future patch renames it, AccessTools.Method
+        // returns null, Harmony 2.4.2 throws for this class and stops the category there
+        // (PatchCategoryApplier logs the failure). Name the missing method here so the log says why.
         var m = AccessTools.Method(typeof(Clan), "UpdateBannerColorsAccordingToKingdom");
         if (m == null)
             _logger?.LogWarning("[BannerDriftGuard] Clan.UpdateBannerColorsAccordingToKingdom not found — drift guard inactive. TaleWorlds may have renamed the method.");

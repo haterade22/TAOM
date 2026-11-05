@@ -44,7 +44,7 @@ Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
 Patch23_BannerColorPersistence (11 patches + 1 manual)
-  └── GetCharacterCode (×2), SPInventory, PartyVM, HeroVM, PartyCharacterVM,
+  └── GetCharacterCode (×2), SPInventoryVM.UpdateCharacterArmorColor, PartyVM, HeroVM, PartyCharacterVM,
       ClanPartyItemVM, Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
       BannerEditorView.OnTick (BannerPaste)
   └── MobilePartyVisual.AddCharacterToPartyIcon (manual reflection patch)
@@ -70,8 +70,10 @@ SubModule.OnGameInitializationFinished()
 
 - **Transpiler over Postfix for layer limit**: The transpiler inserts a `Brtrue_S` before `Ble_S` to skip the `RemoveRange` block entirely — zero allocations, zero string parsing, nothing to undo.
 - **Clan directly in SyncKingdomColors**: The `IBannerHeroAdapter.SyncKingdomColors` accepts `Clan` directly (not a string ID) to avoid LINQ enumeration at the adapter boundary.
-- **CharacterCode is mutable**: `CharacterCode.Color1`/`Color2` are settable properties on the class instance — all UI patches mutate the returned `__result` directly rather than creating a new instance (no `CreateFrom` roundtrip needed).
-- **MobilePartyVisual patched manually**: The target method is private with an 11-parameter signature including `in ActionIndexCache` params. Harmony's category system cannot auto-discover private methods; it's patched manually via `AccessTools` in `OnGameInitializationFinished`.
+- **CharacterCode is rebuilt, not mutated**: `CharacterCode.Code` is built at creation (private setter, v1.4.8 `CharacterCode.cs:18`) and is the only field the portrait identifier reads, so every UI patch takes `ref CharacterCode __result` and returns `ClanColoredCharacterCode.Recolor(__result, color1, color2)` (#993).
+- **Every hero is recoloured**: the portrait patches follow the feature's design and apply to every hero with a clan, AI lords included, so a portrait matches the clan colours his battlefield armour already shows.
+- **Inventory doll on its colour writer**: the inventory postfix sits on the private `SPInventoryVM.UpdateCharacterArmorColor`, the only vanilla repaint of the doll's colours after the screen is built. It runs through `UpdateRightCharacter`: opening the screen, the outfit toggle, Reset, a character switch, and TAOM's `InventoryVMAdapter.RefreshPanel` after an EquipPresets load and after every Quick Actions batch (sells and Unequip All). An ordinary equip refreshes the doll without it and writes no colour, so the clan colours stay. It skips stealth mode, where vanilla paints the outfit one fixed colour. The class keeps its old name, `SPInventoryVM_UpdateCurrentCharacterIfPossible_Patch`, because `Main/SubModule.cs` calls its `Initialize` (#973).
+- **MobilePartyVisual patched manually**: The target method is private with an 11-parameter signature including `in ActionIndexCache` params. It is patched by hand from `ManualPatchApplicator`, not through a category. (A category class can target a private method through `TargetMethod()`, as the inventory patch does.)
 
 ## Configuration
 
@@ -109,8 +111,10 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `Hooks/AgentVisuals_Create_Patch.cs` | Manual patch — disables color randomness when clan colors set |
 | `Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs` | Manual patch — conversation leader clan colors |
 | `Hooks/MapConversationTableau_SpawnOpponentBodyguard_Patch.cs` | Manual patch — conversation bodyguard clan colors |
-| `Hooks/OrderOfBattleHeroItemVM_RefreshInformation_Patch.cs` | Patch23 — pre-battle deployment screen colors |
-| `TAOM.Tests/Features/BannerColorPersistence/` | 5 test files, 29 test methods |
+| `Hooks/OrderOfBattleHeroItemVM_RefreshInformation_Patch.cs` | Patch23: pre-battle deployment screen colors; `TargetMethods()` hooks both `RefreshInformation` and the `(Agent)` constructor, because `OrderOfBattleVM` builds every hero through the constructor, which never calls `RefreshInformation` (#993) |
+| `Hooks/ClanColoredCharacterCode.cs` | `Recolor`: rebuilds a `CharacterCode` through the 8-argument `CreateFrom` so the colours land in `Code` (#993) |
+| `Hooks/SPInventoryVM_UpdateCurrentCharacterIfPossible_Patch.cs` | Patch23: inventory doll clan colours, a postfix on `SPInventoryVM.UpdateCharacterArmorColor` (the class name is historical, #973) |
+| `TAOM.Tests/Features/BannerColorPersistence/` | 9 test files, 45 test methods |
 
 ## Dependencies
 
@@ -131,11 +135,15 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `BannerTripletOrderingTests.cs` | banner triplet ordering |
 | `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | null service, disabled, null instance guards |
 | `Clan_UpdateBannerColor_PatchTests.cs` | null service, disabled, null instance guards |
+| `SPInventoryVM_ArmorColor_PatchTests.cs` | the inventory postfix's target, clan colours, the stealth guard both ways, colours not wanted (#973) |
+| `ClanColoredCharacterCodeTests.cs` | `Recolor` bakes colours into `Code`, keeps every other field, passes null, empty and already-coloured codes through; the party patch's `AppliesTo` and parameter names; the `CharacterCode` binding pin (#993) |
+| `OrderOfBattleHeroItemVMPatchTests.cs` | `TargetMethods()` resolves both `RefreshInformation` and the `(Agent)` constructor (#993) |
+| `HookColorAssignmentGateTests.cs` | source scan: no hook assigns `.Color1 =` or `.Color2 =` on a built code (#993) |
 
-5 files, 29 `[TestMethod]` as of 2026-11-05. Per-file counts are omitted deliberately: they drifted
+9 files, 45 `[TestMethod]` as of 2026-11-05. Per-file counts are omitted deliberately: they drifted
 for three months while the table still read "22 tests". Re-measure rather than quote.
 
-Harmony patches themselves are not unit-testable (require live game) per ADR-008.
+Most Harmony patches here are tested only through their services (ADR-008). A postfix whose inputs can be built bare is tested directly: `SPInventoryVM_ArmorColor_PatchTests` drives the inventory postfix on uninitialized engine objects.
 
 ## How-To
 
@@ -147,7 +155,7 @@ Set `"EnableDriftGuard": false` in `banner_color_config.json`.
 
 1. Identify the ViewModel method that calls `GetCharacterCode` or sets `ArmorColor1/2`
 2. Add a new Postfix patch in `Hooks/` with `[HarmonyPatchCategory("Patch23_BannerColorPersistence")]`
-3. Use `_heroAdapter.GetClanColorInfo(characterObject)` → `_service.ShouldUseClanColor(info)` → mutate `__result.Color1/2`
+3. Use `_heroAdapter.GetClanColorInfo(characterObject)` then `_service.ShouldUseClanColor(info)` then `__result = ClanColoredCharacterCode.Recolor(__result, info.Color1, info.Color2)` on a `ref CharacterCode __result` parameter; assigning `Color1`/`Color2` on a built code changes nothing visible.
 4. Add `Initialize(service, heroAdapter)` + static fields
 5. Register in SubModule `OnSubModuleLoad` Initialize calls
 
@@ -157,6 +165,8 @@ Open the Banner Editor in-game, copy another clan's banner code from the encyclo
 
 ## Changelog
 
+- 2026-11-05: portrait colours now render on the five `GetCharacterCode` screens (party, clan parties, `CampaignUIHelper`, `SandBoxUIHelper`, order of battle) (#993): `ClanColoredCharacterCode.Recolor` rebuilds the code through the 8-argument `CreateFrom`. The order-of-battle patch also hooks the `(Agent)` constructor, and the party-screen patch reads its own `type` and `side` arguments. Ported from the 1.5.x line by plan 133.
+- 2026-11-05: the inventory doll keeps the clan colours on every refresh, not only a character switch, and keeps vanilla's stealth colour in stealth mode (#973). The postfix moved from `UpdateCurrentCharacterIfPossible` to `UpdateCharacterArmorColor`. Ported from the 1.5.x line by plan 133.
 - 2026-05-14 — #187 `BannerTripletOrderingTests` (5 tests) verifying all 3 banner-triplet patches reference `IBannerColorService` + SubModule Initialize; #172 F2 scoped the Patch24 `UpdateBannerColorsAccordingToKingdom` Prefix to the player clan only (NPC clans get vanilla sync); #172 F3 added a `TargetMethod()` null-guard with logging.
 - 2026-04-06 — Adversarial-review fixes: fail-safe config defaults (`??true`→`??false`), unique-color RGB inversion, sentinel removal.
 - 2026-04-05 — Enhancement: deeper 3D battle + conversation color coverage (5 new patches + `AgentColorStore`, `AgentVisuals.Create` randomness disable, 2 `MapConversationTableau` patches, `OrderOfBattleHeroItemVM`; added `EnableAgentVisualColors`/`EnableConversationTableauColors` flags).

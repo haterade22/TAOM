@@ -196,8 +196,10 @@ mean the new realms open at peace with everyone who was there first. The mechani
 [kingdoms](kingdoms.md).
 
 Every insertion is wrapped in a marker pair by the script's `upsert` helper
-(`generate_new_faction_kingdoms.py:97-102`), so a re-run strips its own previous block instead of
-duplicating it. If you open `characters/clans.xml` and find `<!-- TAOM-NEWFACTIONS:goblin:BEGIN -->`
+(`generate_new_faction_kingdoms.py`), so a re-run replaces its own previous block where it stands instead
+of duplicating it, and refuses a file that holds two of its marker regions or a lone BEGIN or END (a copy
+of the rows without the exact markers is not caught: `validate_moduledata.py` `DUPLICATE_NPC_ID` catches a
+repeated lord, and nothing yet catches a repeated clan, hero or kingdom). If you open `characters/clans.xml` and find `<!-- TAOM-NEWFACTIONS:goblin:BEGIN -->`
 above a run of clans, that run is generated. Edit the script, not the block, or the next run throws
 your edit away.
 

@@ -102,7 +102,6 @@ public class MainPartyNullCheckScanTests
     }
 
     [DataTestMethod]
-    [DataRow("Main/Adapters/PlayerEquipmentAdapter.cs")]
     [DataRow("Main/Features/TroopWeight/Hooks/TroopWeightDisplayHook.cs")]
     [DataRow("Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs")]
     public void AliasedSites_ReadTheMainPartyThroughTheCampaign(string relativePath)

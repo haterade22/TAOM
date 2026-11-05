@@ -8,7 +8,6 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 
 namespace TAOM.Features.Refuge.Hooks;
 
@@ -17,18 +16,15 @@ namespace TAOM.Features.Refuge.Hooks;
 /// building, orphan-adopted) to the clan screen's Garrisons list, so refuges are visible and
 /// inspectable where a player expects standing garrisons -- a mid-raise refuge holding a deposited
 /// garrison must not vanish from clan management for the build window (source parity: the module
-/// appended all refuges unfiltered). Building rows carry a "(being raised)" name suffix.
+/// appended all refuges unfiltered). The row decoration (the "(being raised)" name suffix, the
+/// hidden wage slider and the honest zero wage line) is not applied here:
+/// <see cref="RefugeClanRowRefreshPatch"/> re-applies it on every <c>UpdateProperties</c>, including
+/// the one the row constructor triggers, so it survives the refreshes that used to wipe it (#994).
 ///
 /// <para>The row wiring reuses the VM's own private <c>OnPartySelection</c> (via a cached
 /// reflection handle, per the hot-path rule; a UI refresh is not hot, but the lookup still runs
 /// once, not per refresh) so selecting a refuge row behaves exactly like selecting a vanilla
-/// garrison. Expense-change and change-leader callbacks are no-ops, AND the wage panel is
-/// suppressed post-construction: the Garrison-typed ctor builds a live wage slider whose figure
-/// is never charged (DefaultClanFinanceModel processes neither WarPartyComponents nor
-/// OwnedCaravans for a refuge) and whose SetWagePaymentLimit falls through to the base
-/// PartyComponent silent no-op. <c>ShouldPartyHaveExpense = false</c> hides the slider (the 1.4.8
-/// ClanPartiesRightPanel.xml binds the panel's IsVisible to it) and unhides the static wage line,
-/// which is re-rendered to the honest figure: 0.</para>
+/// garrison. Expense-change and change-leader callbacks are no-ops.</para>
 ///
 /// <para>Whole body try/catch: a clan-screen refresh must never die on a refuge row; the failure
 /// mode is the row silently missing, which is the pre-patch state.</para>
@@ -77,29 +73,15 @@ public static class RefugeClanScreenPatch
                 var party = ResolveParty(refuge.PartyId);
                 if (party?.Party == null)
                     continue;
-                var existing = __instance.Garrisons.FirstOrDefault(row => row.Party == party.Party);
-                if (existing != null)
-                {
-                    // The engine's UpdateProperties (any RefreshValues, and repeat list
-                    // refreshes) recomposes PartyWageSubTitleText from the live TotalWage,
-                    // reverting the honest 0. Re-apply on every pass this postfix sees the row
-                    // (round-C finding: suppression must survive refresh, not just construction).
-                    SuppressWagePanel(existing);
+                if (__instance.Garrisons.Any(row => row.Party == party.Party))
                     continue;
-                }
 
+                // The constructor ends with RefreshValues, so RefugeClanRowRefreshPatch has already
+                // decorated the row (#994).
                 var row = new ClanPartyItemVM(
                     party.Party, onSelect, noop, noop,
                     ClanPartyItemVM.ClanPartyType.Garrison,
                     disbandBehavior, teleportationBehavior);
-                SuppressWagePanel(row);
-                if (refuge.Building)
-                {
-                    // A refresh (language change) re-runs UpdateProperties and reverts the name
-                    // to the plain party name; losing the suffix is benign.
-                    row.Name = new TextObject("{=taom_rf_clan_row_building}{NAME} (being raised)")
-                        .SetTextVariable("NAME", row.Name).ToString();
-                }
                 __instance.Garrisons.Add(row);
                 added = true;
             }
@@ -117,20 +99,6 @@ public static class RefugeClanScreenPatch
             // A refuge row is a convenience; the clan screen rendering vanilla-only is the safe
             // degradation, and the throw would otherwise take the whole screen refresh down.
         }
-    }
-
-    /// <summary>Removes the non-functional wage control the Garrison-typed ctor built: the
-    /// slider's SetWagePaymentLimit is a silent no-op for a RefugePartyComponent (base
-    /// PartyComponent swallows it) and the displayed TotalWage is never charged, so both were
-    /// pure misinformation. Hiding the panel unhides the static wage line, which is recomposed
-    /// to the honest 0 through the same GameTexts the engine's UpdateProperties uses.</summary>
-    private static void SuppressWagePanel(ClanPartyItemVM row)
-    {
-        row.ShouldPartyHaveExpense = false;
-        row.ExpenseItem = null;
-        GameTexts.SetVariable("LEFT", GameTexts.FindText("str_party_wage"));
-        GameTexts.SetVariable("RIGHT", 0);
-        row.PartyWageSubTitleText = GameTexts.FindText("str_LEFT_colon_RIGHT").ToString();
     }
 
     private static MobileParty? ResolveParty(string partyId)

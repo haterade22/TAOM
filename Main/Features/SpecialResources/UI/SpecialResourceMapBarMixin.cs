@@ -28,8 +28,6 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     private readonly HashSet<string> _tooltipFailuresLogged = new HashSet<string>(StringComparer.Ordinal);
 
     private MapInfoItemVM _resourceInfo;
-    private bool _itemAdded;
-    private bool _baseInitialized;
     private int _lastAmount = -1;
     private Domain.SpecialResource _lastResource;
     private string _lastKingdomId;
@@ -87,15 +85,20 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             _lastAmount = -1;
         }
 
+        var items = ViewModel?.SecondaryInfoItems;
         var resource = _lastResource;
-        if (resource == null) return;
-
-        // Add to SecondaryInfoItems once (works with vanilla MapInfoItemVM)
-        if (_baseInitialized && !_itemAdded && ViewModel is MapInfoVM mapInfo)
+        if (resource == null)
         {
-            mapInfo.SecondaryInfoItems.Add(_resourceInfo);
-            _itemAdded = true;
+            // No resource for this hero (#977): take the entry off the bar, or it keeps the old amount and icon.
+            // The Contains guard below adds it back if a resource returns; that comes with a kingdom or culture
+            // change, which resets _lastAmount, so the value refreshes too.
+            items?.Remove(_resourceInfo);
+            return;
         }
+
+        // Insert on the first refresh (#958): MapBarVM.Initialize runs it before the view loads, and the next one
+        // comes 2 s later (v1.4.8). Contains keeps it to one entry and re-adds it if CreateItems clears the list.
+        if (items != null && !items.Contains(_resourceInfo)) items.Add(_resourceInfo);
 
         var amount = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         var intAmount = (int)amount;
@@ -119,8 +122,6 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             _resourceInfo.HasWarning = warning;
             _lastWarning = warning;
         }
-
-        _baseInitialized = true;
     }
 
     private bool _lastWarning;
