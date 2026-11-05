@@ -146,6 +146,7 @@ public class BattleBalanceConfigCasualtyRatiosTests
     [DataRow("lothlorien", 0.5f)]
     [DataRow("erebor", 0.3f)]
     [DataRow("rivendell", 0.4f)]
+    [DataRow("lindon", 0.4f)]
     [DataRow("mordor", -0.2f)]
     [DataRow("gundabad", -0.1f)]
     [DataRow("dolguldur", -0.1f)]
