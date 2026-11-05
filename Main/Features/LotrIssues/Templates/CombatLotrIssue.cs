@@ -13,6 +13,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem.Quests;
 using TAOM.Features.LotrIssues.Domain;
 
 namespace TAOM.Features.LotrIssues.Templates;
@@ -232,7 +233,7 @@ public class CombatLotrIssueQuest : QuestBase
 
     private void OnHeroPrisonerTaken(PartyBase capturer, Hero prisoner)
     {
-        if (capturer != PartyBase.MainParty || prisoner == null || !prisoner.IsLord) return;
+        if (!CareerQuest.IsPlayersCapture(capturer, Campaign.Current?.MainParty?.Party, false) || prisoner == null || !prisoner.IsLord) return;
         var playerFaction = Hero.MainHero.MapFaction;
         if (playerFaction == null || prisoner.MapFaction == null || !prisoner.MapFaction.IsAtWarWith(playerFaction)) return;
         Bump();

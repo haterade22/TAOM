@@ -157,13 +157,34 @@ public class CareerQuest : QuestBase
     private void OnSettlementOwnerChanged(Settlement settlement, bool openToClaim, Hero newOwner, Hero oldOwner,
         Hero capturerHero, ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
     {
-        // Enlisted service (#375 attribution audit, MED): a siege the player assaults inside the
-        // commander's column is captured BY the commander — credit it, or the objective is frozen
-        // for the whole service term.
-        var credited = capturerHero == Hero.MainHero
-            || (EnlistQuery?.IsEnlisted == true && capturerHero?.StringId == EnlistQuery.CommanderHeroId);
+        var credited = CreditsSettlementCapture(capturerHero, Hero.MainHero, settlement, detail, Campaign.Current?.MainParty?.Party);
         if (!credited) return;
         Bump(CareerQuestObjectiveType.SettlementsCaptured, null);
+    }
+
+    internal static bool CreditsSettlementCapture(Hero capturerHero, Hero mainHero, Settlement settlement,
+        ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail, PartyBase player)
+        => capturerHero == mainHero
+           || (detail == ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.BySiege
+               && PlayerFoughtOnCapturingSide(settlement, player));
+
+    // True when the player's party is in the settlement's map event on the side opposite the settlement's
+    // own. The owner change is raised before MapEvent.FinalizeEventAux clears the sides, so both are set.
+    internal static bool PlayerFoughtOnCapturingSide(Settlement settlement, PartyBase player)
+    {
+        var settlementSide = settlement?.Party?.MapEventSide;
+        var playerSide = player?.MapEventSide;
+        return settlementSide != null && playerSide != null
+            && settlementSide != playerSide
+            && settlementSide.MapEvent != null && settlementSide.MapEvent == playerSide.MapEvent;
+    }
+
+    internal static bool IsPlayersCapture(PartyBase capturer, PartyBase player, bool isCommanderParty)
+    {
+        var captorSide = capturer?.MapEventSide;
+        if (captorSide != null)
+            return player?.MapEventSide == captorSide;
+        return (capturer != null && capturer == player) || isCommanderParty;
     }
 
     private void OnTournamentFinished(CharacterObject winner, MBReadOnlyList<CharacterObject> participants, Town town, ItemObject prize)
@@ -172,18 +193,18 @@ public class CareerQuest : QuestBase
         Bump(CareerQuestObjectiveType.TournamentsWon, null);
     }
 
-    // Defeat = capture in battle (NOT execute/kill). Fires when the player's party takes a lord
-    // prisoner; gated to ENEMY lords (at war), excluding allies / own-faction. Enlisted service
-    // (#375 attribution audit, MED): commander-party captures count, and the war check falls back
-    // to the capturer's faction for the kingdom-less freelancer.
+    // Defeat = capture in battle (NOT execute/kill). Fires when a party takes a lord prisoner; gated to
+    // ENEMY lords (at war), excluding allies / own-faction. MapEvent.CalculateAndCommitMapEventResults
+    // draws the captor by weighted chance among the winning parties, so the capture counts when the
+    // player's party is on the captor's side of that map event (#1015); outside a battle it counts when
+    // the captor is the player or, enlisted, the commander's party.
     private void OnHeroPrisonerTaken(PartyBase capturer, Hero prisoner)
     {
-        var playersCapture = capturer == PartyBase.MainParty
-            || (EnlistQuery?.IsEnlisted == true
-                && capturer?.MobileParty?.StringId != null
-                && EnlistQuery.IsCommanderParty(capturer.MobileParty.StringId));
-        if (!playersCapture || prisoner == null || !prisoner.IsLord) return;
-        var playerFaction = Hero.MainHero.MapFaction ?? capturer?.MapFaction;
+        var commanderParty = EnlistQuery?.IsEnlisted == true
+            && capturer?.MobileParty?.StringId != null
+            && EnlistQuery.IsCommanderParty(capturer.MobileParty.StringId);
+        if (!IsPlayersCapture(capturer, Campaign.Current?.MainParty?.Party, commanderParty) || prisoner == null || !prisoner.IsLord) return;
+        var playerFaction = Hero.MainHero.MapFaction;
         if (playerFaction == null || prisoner.MapFaction == null || !prisoner.MapFaction.IsAtWarWith(playerFaction)) return;
         Bump(CareerQuestObjectiveType.DefeatEnemyLords, null);
     }

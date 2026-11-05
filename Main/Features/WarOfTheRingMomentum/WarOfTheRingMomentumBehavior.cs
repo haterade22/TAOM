@@ -239,7 +239,9 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         // CO-OP: host-only — same shared-state reasoning as OnMapEventEnded.
         if (!_coopSession.IsAuthority) return;
 
-        if (!isWin || !_settings.MomentumEnabled)
+        // SiegeOutside is also reported with a win (a defender joining from outside the walls) and
+        // KingdomManager.SiegeCompleted captures nothing on it: the same set it transfers on.
+        if (!isWin || !CapturesSettlement(battleType) || !_settings.MomentumEnabled)
             return;
 
         var snapshot = _snapshotAdapter.FromSiege(settlement, capturerParty);
@@ -249,6 +251,11 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _eventService.ProcessSiege(snapshot, _stateStore.State, NowHours);
         _stateStore.NotifyMomentumChanged();
     }
+
+    private static bool CapturesSettlement(MapEvent.BattleTypes battleType)
+        => battleType == MapEvent.BattleTypes.Siege
+           || battleType == MapEvent.BattleTypes.SallyOut
+           || battleType == MapEvent.BattleTypes.BlockadeSallyOutBattle;
 
     private void OnRaidCompleted(BattleSideEnum winnerSide, RaidEventComponent component)
     {
