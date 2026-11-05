@@ -176,4 +176,20 @@ public class BattleLoadStallWatchdogTests
 
         Assert.AreEqual("shaders=412 churn-capped last phase=WaitingForRender", line);
     }
+
+    [TestMethod]
+    public void RequestStallBundle_CapturesOffTheMainThread_WithTheWatchdogOrigin()
+    {
+        // The watchdog polls from a thread-pool Timer, never the main thread, so its capture must take
+        // the reduced path (no Mission or Campaign reads, no inquiry) like every other off-main capture.
+        var service = new TAOM.Tests.Features.CrashReport.RecordingCrashService();
+
+        BattleLoadStallWatchdog.RequestStallBundle(service, "Mission load stalled >300s; last X");
+
+        Assert.AreEqual(1, service.Calls.Count);
+        Assert.AreEqual("BattleLoadStallWatchdog", service.Calls[0].Origin);
+        Assert.IsTrue(service.Calls[0].OffMainThread, "the watchdog never runs on the main thread");
+        Assert.IsInstanceOfType(service.Calls[0].Exception, typeof(BattleLoadStallException));
+        StringAssert.Contains(service.Calls[0].Exception.Message, "Mission load stalled");
+    }
 }

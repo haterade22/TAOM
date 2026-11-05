@@ -293,9 +293,9 @@ this bundle is the counter-evidence that un-parked the walk (#560, 2026-09-11).
 `BattleLoadStallWatchdog` runs on a **thread-pool `Timer`** (5 s poll) — it *must* be off the main thread, because a hang freezes the main thread and a main-thread timer could never fire. When the window has been open longer than the threshold (default 300 s / 5 min), it:
 
 1. **Guaranteed:** writes `[BattleLoad] WATCHDOG STILL LOADING after Ns — last <CurrentStatusLine>` via `IModLogger` (thread-safe queue).
-2. **Best-effort:** calls `ICrashReportService.HandleException(new BattleLoadStallException(...), "BattleLoadStallWatchdog")` to produce a full crash-bundle ZIP so the user can ship the log in one action. (Some collectors read live mission state from the background thread while the main thread is frozen and may return partial data — acceptable; the marker + flushed phase log are the primary signal.)
+2. **Best-effort:** calls `BattleLoadStallWatchdog.RequestStallBundle`, which passes `ICrashReportService.HandleException(new BattleLoadStallException(...), "BattleLoadStallWatchdog", offMainThread: true)` so the user can ship the log in one action. The capture runs on the timer thread, so it takes the service's reduced path: the bundle records its Mission and Campaign sections as skipped, and no inquiry opens (the service builds none off the main thread). The marker and the flushed phase log are the primary signal.
 
-The pure decision `BattleLoadStallWatchdog.ShouldFire(windowOpen, elapsed, threshold, alreadyFired)` is unit-tested; the timer/CrashReport plumbing is not (game-only).
+The pure decision `BattleLoadStallWatchdog.ShouldFire(windowOpen, elapsed, threshold, alreadyFired)` is unit-tested, and so is `RequestStallBundle` with its off-main flag; the timer is not (game-only).
 
 **Shader-compile deferral (2026-09-04).** Wall clock alone cannot separate "wedged" from "slow but
 progressing", which is how b18f3441 became a bundle. Past the threshold the watchdog asks a second
