@@ -43,6 +43,5 @@ public static class WargConfig
     public const int minDamageReceivedForRage = 10;
     public const double rageChance = 0.1;
     public const int maxDistanceFromWargToRollForRage = 20;
-    public const int minRageAttacks = 2;
-    public const int maxRageAttacks = 3;
+    public const int rageAttacks = 2;
 }

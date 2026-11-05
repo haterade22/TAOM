@@ -29,12 +29,12 @@ public class OnWargDied : BannerlordConstantEventListener, IBTBannerlordBase, IB
 
     public override void Notify(object[] data)
     {
-        Agent rider = Rider.GetValue();
+        // The stored rider's slot is checked there.
+        Agent rider = CleanIfEnemyDied.ValidStoredRider(Rider.GetValue());
         if (rider == null || rider.Health == 0) return;
 
-        if (rider.IsPlayerControlled)
-            FinishRageMode.Reset(Agent.GetValue());
-        else
-            CleanIfEnemyDied.ResetAiControlledAgent(rider, AgentsFormation.GetValue());
+        // Only an open rage holds anything to give back: a warg that never raged still has its rider from the first scan.
+        if (RageAttackStartTime.GetValue() != null) CleanIfEnemyDied.ResetAiControlledAgent(rider, AgentsFormation.GetValue());
+        if (rider.IsPlayerControlled) FinishRageMode.Reset(Agent.GetValue());
     }
 }
