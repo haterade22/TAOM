@@ -27,6 +27,15 @@ public interface ICareerQuestService
     bool IsTierUnlocked(int heroLevel, int tier, string heroId);
 
     /// <summary>
+    /// True when a running career quest belongs to a hero who is no longer the player's (an heir took
+    /// over after a death or retirement). Vanilla cancels every other quest then, but not a special quest,
+    /// and the stale one keeps reading the former hero's skill, so it is cancelled. False outside
+    /// single-player (a co-op session, a co-op mod TAOM cannot probe, a dedicated server), at session
+    /// launch while a co-op module is enabled, and for the lord's gear ladder, whose quests are not careers.
+    /// </summary>
+    bool IsFormerPlayerHeroQuest(string questDefId, string ownerHeroId, string mainHeroId, bool atSessionLaunch);
+
+    /// <summary>
     /// New progress for an objective given a freshly observed value. Count objectives accumulate
     /// (current + observed); threshold objectives bank the highest seen (max), so a later drop in
     /// gold/renown can't un-progress the quest.

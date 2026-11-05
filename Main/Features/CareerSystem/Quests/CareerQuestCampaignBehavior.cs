@@ -46,14 +46,15 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
         if (_declined == null) _declined = new Dictionary<string, string>();
     }
 
-    private void OnSessionLaunched(CampaignGameStarter starter) => TryOfferNext();
-    private void OnDailyTick() => TryOfferNext();
+    private void OnSessionLaunched(CampaignGameStarter starter) => TryOfferNext(atSessionLaunch: true);
+    private void OnDailyTick() => TryOfferNext(atSessionLaunch: false);
 
-    private void TryOfferNext()
+    private void TryOfferNext(bool atSessionLaunch)
     {
-        if (_offerPending) return;
         var hero = Hero.MainHero;
         if (hero == null) return;
+        CancelFormerPlayerHeroQuests(hero, atSessionLaunch);
+        if (_offerPending) return;
 
         var careerId = _dataService.GetCareerStringId(hero.StringId);
         if (string.IsNullOrEmpty(careerId)) return;
@@ -99,7 +100,8 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
         _offerPending = false;
         try
         {
-            var quest = new CareerQuest("taom_cq_" + def.Id, hero, def);
+            var questId = CareerQuestService.NewQuestStringId(def.Id, hero.StringId, (long)CampaignTime.Now.ToMilliseconds);
+            var quest = new CareerQuest(questId, hero, def);
             quest.StartQuest();
             _logger.LogInfo($"CareerQuest: started '{def.Id}' (tier {def.Tier}) for {hero.Name}");
         }
@@ -136,6 +138,34 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
                 return true;
         }
         return false;
+    }
+
+    // Runs before the offer, so a current hero who is eligible gets the quest in the same pass.
+    // Session launch covers a save in which an heir already took over.
+    private void CancelFormerPlayerHeroQuests(Hero mainHero, bool atSessionLaunch)
+    {
+        var qm = Campaign.Current?.QuestManager;
+        if (qm == null) return;
+        var stale = new List<CareerQuest>();
+        foreach (var q in qm.Quests)   // snapshot: a cancel removes the quest from this list
+        {
+            if (q is CareerQuest cq && cq.IsOngoing
+                && _questService.IsFormerPlayerHeroQuest(cq.CareerQuestDefId, cq.OwnerHeroStringId, mainHero.StringId, atSessionLaunch))
+                stale.Add(cq);
+        }
+        foreach (var cq in stale)
+        {
+            try
+            {
+                // Vanilla's own text and key for the quests it cancels on a player change (QuestManager.OnPlayerCharacterChanged).
+                cq.CompleteQuestWithCancel(new TextObject("{=bYdhYidf}The quest was canceled because your clan leader, who made the original agreement, is no longer head of the clan."));
+                _logger.LogInfo($"CareerQuest: cancelled '{cq.CareerQuestDefId}' of former player hero '{cq.OwnerHeroStringId}' (player hero is now {mainHero.StringId})");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"CareerQuest: failed to cancel '{cq.CareerQuestDefId}' of '{cq.OwnerHeroStringId}': {ex.Message}");
+            }
+        }
     }
 
     private bool IsDeclined(string heroId, string defId)

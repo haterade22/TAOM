@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.CareerSystem;
 
@@ -11,6 +12,9 @@ public class CareerQuestService : ICareerQuestService
     private readonly ICareerQuestConfigProvider _configProvider;
     private readonly ICareerRegistry _registry;
     private readonly ICareerDataService _dataService;
+    private readonly ICoopPresenceProvider _coopPresence;
+    private readonly ICoopSessionProvider _coopSession;
+    private readonly IDedicatedServerProvider _dedicated;
     private readonly IModLogger _logger;
 
     private Dictionary<string, CareerQuestDefinition> _byCareerTier;
@@ -20,11 +24,17 @@ public class CareerQuestService : ICareerQuestService
         ICareerQuestConfigProvider configProvider,
         ICareerRegistry registry,
         ICareerDataService dataService,
+        ICoopPresenceProvider coopPresence,
+        ICoopSessionProvider coopSession,
+        IDedicatedServerProvider dedicated,
         IModLogger logger)
     {
         _configProvider = configProvider;
         _registry = registry;
         _dataService = dataService;
+        _coopPresence = coopPresence;
+        _coopSession = coopSession;
+        _dedicated = dedicated;
         _logger = logger;
     }
 
@@ -49,6 +59,28 @@ public class CareerQuestService : ICareerQuestService
         if (_registry.IsTierAvailable(heroLevel, tier)) return true;
         return !string.IsNullOrEmpty(heroId) && _dataService.IsTierUnlocked(heroId, tier);
     }
+
+    public bool IsFormerPlayerHeroQuest(string questDefId, string ownerHeroId, string mainHeroId, bool atSessionLaunch)
+    {
+        // Single-player only: in a co-op session another human player's quest is legitimate, and on a
+        // dedicated server Hero.MainHero is the idle world-gen hero.
+        if (!CoopSessionPolicy.IsSinglePlayerAuthority(_coopSession, _dedicated)) return false;
+        // A joining client may not read its session as live yet at OnSessionLaunched (coop-compat-gap-ledger R1b),
+        // so session launch also skips while a co-op module is enabled; the next daily tick covers solo play.
+        if (atSessionLaunch && _coopPresence.IsCoopActive) return false;
+        if (string.IsNullOrEmpty(ownerHeroId) || string.IsNullOrEmpty(mainHeroId) || ownerHeroId == mainHeroId) return false;
+        // Only quests of a real career: the lord's gear ladder keeps each hero's quests on purpose.
+        var def = GetQuestById(questDefId);
+        return def != null && _registry.GetCareer(def.CareerId) != null;
+    }
+
+    /// <summary>
+    /// A StringId unique to one quest instance. The engine keys a quest's journal record by StringId
+    /// (<c>JournalLogEntry.IsRelatedTo</c>), so a quest offered again under a reused id would take over
+    /// the cancelled quest's record. Owner and start time keep two attempts apart.
+    /// </summary>
+    public static string NewQuestStringId(string questDefId, string ownerHeroId, long campaignMilliseconds)
+        => "taom_cq_" + questDefId + "_" + ownerHeroId + "_" + campaignMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
     public int ComputeProgress(CareerQuestObjectiveType type, int currentProgress, int observedValue)
     {

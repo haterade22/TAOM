@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using TAOM.Features.CoopInterop;
 
 namespace TAOM.Tests.Features.CoopInterop;
@@ -139,5 +140,28 @@ public class CoopSessionPolicyTests
     public void ShouldDeferToHost_CoopClient_Defers()
     {
         Assert.IsTrue(CoopSessionPolicy.ShouldDeferToHost(true, true, true, isServer: false));
+    }
+
+    // --- IsSinglePlayerAuthority: all 16 combinations of the four inputs -------------------------
+
+    [TestMethod]
+    public void IsSinglePlayerAuthority_AllSixteenCombinations_TrueOnlyWhenEveryTermClear()
+    {
+        foreach (var session in new[] { false, true })
+        foreach (var defer in new[] { false, true })
+        foreach (var dedicated in new[] { false, true })
+        foreach (var authority in new[] { false, true })
+        {
+            var coop = NSubstitute.Substitute.For<ICoopSessionProvider>();
+            coop.IsSessionActive.Returns(session);
+            coop.ShouldDeferToHost.Returns(defer);
+            coop.IsAuthority.Returns(authority);
+            var server = NSubstitute.Substitute.For<IDedicatedServerProvider>();
+            server.IsDedicatedServer.Returns(dedicated);
+
+            var expected = !session && !defer && !dedicated && authority;
+            Assert.AreEqual(expected, CoopSessionPolicy.IsSinglePlayerAuthority(coop, server),
+                $"session={session} defer={defer} dedicated={dedicated} authority={authority}");
+        }
     }
 }

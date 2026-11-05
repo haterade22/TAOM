@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Tests.Features.CareerSystem;
 
@@ -14,6 +15,9 @@ public class CareerQuestServiceTests
     private ICareerQuestConfigProvider _config;
     private ICareerRegistry _registry;
     private ICareerDataService _data;
+    private ICoopPresenceProvider _coop;
+    private ICoopSessionProvider _session;
+    private IDedicatedServerProvider _dedicated;
     private CareerQuestService _sut;
 
     private static CareerQuestObjectiveDefinition Obj(CareerQuestObjectiveType t, int target, string param = "")
@@ -34,7 +38,136 @@ public class CareerQuestServiceTests
         _config.LoadQuests().Returns(new List<CareerQuestDefinition>());
         _registry = Substitute.For<ICareerRegistry>();
         _data = Substitute.For<ICareerDataService>();
-        _sut = new CareerQuestService(_config, _registry, _data, Substitute.For<IModLogger>());
+        _coop = Substitute.For<ICoopPresenceProvider>();
+        _session = Substitute.For<ICoopSessionProvider>();
+        _session.IsAuthority.Returns(true);   // single-player: no session, authority
+        _dedicated = Substitute.For<IDedicatedServerProvider>();
+        _sut = new CareerQuestService(_config, _registry, _data, _coop, _session, _dedicated, Substitute.For<IModLogger>());
+    }
+
+    // ── IsFormerPlayerHeroQuest ──────────────────────────────────
+    // A career quest belongs to the hero who accepted it; after an heir takes over, vanilla cancels
+    // every quest but a special one, and the old hero's career quest polls the wrong skill forever.
+    // It is cancelled. The lord's gear ladder keeps per-hero quests on purpose.
+
+    private void GivenCareerQuest()
+    {
+        var q = Quest("captain_of_osgiliath_t2", "captain_of_osgiliath", 2,
+            new List<CareerQuestObjectiveDefinition> { Obj(CareerQuestObjectiveType.WinBattles, 15) });
+        var ladder = Quest("taom_lords_gear_hands", "taom_lords_gear_hands", 1,
+            new List<CareerQuestObjectiveDefinition> { Obj(CareerQuestObjectiveType.WinBattles, 10) });
+        _config.LoadQuests().Returns(new List<CareerQuestDefinition> { q, ladder });
+        _registry.GetCareer("captain_of_osgiliath").Returns(new CareerDefinition(
+            id: "captain_of_osgiliath", displayName: "", description: "", portraitSprite: "",
+            abilityTemplateId: "", minClanTier: 0, rootChoiceId: "",
+            eligibleCultureIds: new List<string>(), choiceGroupIds: new List<string>()));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_CareerQuestOfAnotherHero_ReturnsTrue()
+    {
+        GivenCareerQuest();
+        Assert.IsTrue(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", "main_hero", false));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_CareerQuestOfMainHero_ReturnsFalse()
+    {
+        GivenCareerQuest();
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "main_hero", "main_hero", false));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_LadderQuestOfAnotherHero_ReturnsFalse()
+    {
+        GivenCareerQuest();
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("taom_lords_gear_hands", "old_hero", "main_hero", false));
+    }
+
+    [DataTestMethod]
+    [DataRow("session")]
+    [DataRow("defer")]
+    [DataRow("dedicated")]
+    [DataRow("notauthority")]
+    public void IsFormerPlayerHeroQuest_NotSinglePlayer_ReturnsFalse(string why)
+    {
+        // In a co-op session another human player's quest is legitimate; on a dedicated server
+        // Hero.MainHero is the idle world-gen hero.
+        GivenCareerQuest();
+        switch (why)
+        {
+            case "session": _session.IsSessionActive.Returns(true); break;
+            case "defer": _session.ShouldDeferToHost.Returns(true); break;
+            case "dedicated": _dedicated.IsDedicatedServer.Returns(true); break;
+            default: _session.IsAuthority.Returns(false); break;
+        }
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", "main_hero", false));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_CoopModuleEnabledSoloDailyTick_ReturnsTrue()
+    {
+        // An enabled co-op module with no session is solo play: the stale quest is still cancelled.
+        GivenCareerQuest();
+        _coop.IsCoopActive.Returns(true);
+        Assert.IsTrue(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", "main_hero", false));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_CoopModuleEnabledAtSessionLaunch_ReturnsFalse()
+    {
+        // A joining client may not read its session as live yet at session launch (R1b).
+        GivenCareerQuest();
+        _coop.IsCoopActive.Returns(true);
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", "main_hero", true));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_NoCoopModuleAtSessionLaunch_ReturnsTrue()
+    {
+        GivenCareerQuest();
+        Assert.IsTrue(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", "main_hero", true));
+    }
+
+    // ── NewQuestStringId ─────────────────────────────────────────
+    // The engine keys a quest's journal record by StringId, so each offer needs its own id.
+
+    [TestMethod]
+    public void NewQuestStringId_AnotherOwner_DiffersFromTheCancelledQuest()
+    {
+        Assert.AreNotEqual(
+            CareerQuestService.NewQuestStringId("captain_of_osgiliath_t2", "old_hero", 1000),
+            CareerQuestService.NewQuestStringId("captain_of_osgiliath_t2", "main_hero", 1000));
+    }
+
+    [TestMethod]
+    public void NewQuestStringId_SameOwnerLaterAttempt_DiffersFromTheFirst()
+    {
+        Assert.AreNotEqual(
+            CareerQuestService.NewQuestStringId("captain_of_osgiliath_t2", "main_hero", 1000),
+            CareerQuestService.NewQuestStringId("captain_of_osgiliath_t2", "main_hero", 2000));
+    }
+
+    [TestMethod]
+    public void NewQuestStringId_KeepsTheCareerQuestPrefix()
+    {
+        Assert.AreEqual("taom_cq_captain_of_osgiliath_t2_main_hero_1000",
+            CareerQuestService.NewQuestStringId("captain_of_osgiliath_t2", "main_hero", 1000));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_UnknownDefinition_ReturnsFalse()
+    {
+        GivenCareerQuest();
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("removed_quest", "old_hero", "main_hero", false));
+    }
+
+    [TestMethod]
+    public void IsFormerPlayerHeroQuest_MissingOwnerOrMainHero_ReturnsFalse()
+    {
+        GivenCareerQuest();
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "", "main_hero", false));
+        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("captain_of_osgiliath_t2", "old_hero", null, false));
     }
 
     // ── GetQuestFor ──────────────────────────────────────────────
