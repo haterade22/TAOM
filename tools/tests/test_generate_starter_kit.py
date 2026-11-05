@@ -556,6 +556,28 @@ class TestVerifyExitCodes(unittest.TestCase):
             self.assertEqual(self._main(exc, "--verify"), 2, repr(exc))
 
 
+class TestLiveArmoryOnlyByDefault(unittest.TestCase):
+    """Sessions never touch the lotraom-assets mirror; it is checked or written only when named."""
+
+    def _verified_trees(self, *flags):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as mirror:
+            (Path(mirror) / "ModuleData").mkdir()
+            argv = ["generate_starter_kit.py", "--armory-path", tmp, "--quiet", "--verify", *flags]
+            with mock.patch.object(sys, "argv", argv), mock.patch("builtins.print"),                     mock.patch.object(gk, "DEFAULT_ASSET_REPO", Path(mirror)),                     mock.patch.object(gk, "build_plan", return_value=object()),                     mock.patch.object(gk, "verify_plan", return_value=[]) as verify:
+                self.assertEqual(gk.main(), 0)
+            return [Path(c.args[1]) for c in verify.call_args_list], Path(tmp), Path(mirror)
+
+    def test_without_asset_repo_only_the_live_armory_is_checked(self):
+        trees, live, _ = self._verified_trees()
+        self.assertEqual(trees, [live / "ModuleData"])
+
+    def test_naming_the_mirror_checks_it_too(self):
+        with tempfile.TemporaryDirectory() as named:
+            (Path(named) / "ModuleData").mkdir()
+            trees, live, _ = self._verified_trees("--asset-repo", named)
+        self.assertEqual(trees, [live / "ModuleData", Path(named) / "ModuleData"])
+
+
 class TestMissingArmory(unittest.TestCase):
     def _main(self, *flags):
         argv = ["generate_starter_kit.py", "--armory-path", str(Path(tempfile.gettempdir()) / "no_such_armory_xyz"), *flags]

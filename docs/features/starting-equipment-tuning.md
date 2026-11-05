@@ -85,8 +85,8 @@ Two stacked rosters build the player's kit at CC finalize (`Main/Features/Charac
 Named `starter_<donor_id>` (a trailing `_starter` on the donor is stripped first, so
 `gondor_steel_bow_starter` becomes `starter_gondor_steel_bow`), one per donor, 127 today across the two
 TAOM roster files: 39 crafted weapons, 38 plain weapons (bows, arrows, shields), 50 armour. They live in
-`LOTRLOME_items/<folder>/starter_kit.xml` in the live `LOTRLOME_Armory` module and the `lotraom-assets`
-mirror, keyed by the donor's `culture=` (vanilla cultures map to their TAOM folder, an item with no
+`LOTRLOME_items/<folder>/starter_kit.xml` in the live `LOTRLOME_Armory` module (the `lotraom-assets`
+mirror only with `--asset-repo`), keyed by the donor's `culture=` (vanilla cultures map to their TAOM folder, an item with no
 culture falls back to the folder its own file lives in, then to `mercenary`; every target must be a folder
 the Armory's `SubModule.xml` registers, or the file never loads). The 39 starter blades sit in a
 `<!-- TAOM-STARTER-KIT:START/END -->` block of `LOTRLOME_crafting_pieces.xml`, and each is registered in a
@@ -118,7 +118,7 @@ folder's `starter_armors.xml`, anchors Ranged 5, Cavalry 7, Infantry 9, from `ge
 
 | Tool | Purpose |
 |---|---|
-| `tools/generate_starter_kit.py` | Author the twins. Reads both TAOM roster files, indexes the Armory plus vanilla item and piece files, floors per class, writes the per-folder item files and the three marker blocks in the live Armory and the mirror. Dry run by default; `--apply`; `--verify` (exit 1 on any missing item, piece or registration: the reversion gate for the unversioned install); `--revert`; `--crafted-value` (0 lets the engine price crafted twins). Prints per clone the ratio, the class percentile and the resulting weapon tier. Aborts on a donor with no definition, a class with no anchor, a blade registered nowhere, a folder the Armory does not register. It also refuses to rewrite or revert a marker block holding another author's rows in any of the three files (the two stylesheets and the pieces file), computes and parses every new text before any write, and `--verify` exits 2 when it checked nothing (a missing Armory) or crashed, never 1. |
+| `tools/generate_starter_kit.py` | Author the twins. Reads both TAOM roster files, indexes the Armory plus vanilla item and piece files, floors per class, writes the per-folder item files and the three marker blocks in the live Armory (the mirror only with `--asset-repo`). Dry run by default; `--apply`; `--verify` (exit 1 on any missing item, piece or registration: the reversion gate for the unversioned install); `--revert`; `--crafted-value` (0 lets the engine price crafted twins). Prints per clone the ratio, the class percentile and the resulting weapon tier. Aborts on a donor with no definition, a class with no anchor, a blade registered nowhere, a folder the Armory does not register. It also refuses to rewrite or revert a marker block holding another author's rows in any of the three files (the two stylesheets and the pieces file), computes and parses every new text before any write, and `--verify` exits 2 when it checked nothing (a missing Armory) or crashed, never 1. |
 | `tools/wire_starter_kit_rosters.py` | Point the rosters at the twins: in-place `id=` substitution over the 256 + 78 player rosters (both sets, Horse and HorseHarness untouched), then write the vanilla override from the rewired career kit. Shares the id rule and the roster filter with the generator. |
 | `tools/generate_starter_armor.py`, `tools/wire_career_starter_armor.py` | The older career-layer armour pass (see above). |
 
@@ -132,7 +132,7 @@ reports every player roster slot as `BROKEN_ITEM_REF`, which is the backstop.
 - `python tools/audit_polearm_shield_parity.py`: a starter spear beside a shield resolves one-handed. Its
   `KNOWN_FAILURES` are keyed on the starter ids for the eight Mordor player rosters.
 - `python tools/check_external_xslt.py`: both modified stylesheets compile.
-- `python tools/generate_starter_kit.py --verify` on both Armory copies.
+- `python tools/generate_starter_kit.py --verify` on the live Armory (the `lotraom-assets` mirror only with `--asset-repo`).
 - Python: `tools/tests/test_generate_starter_kit.py` (38) and `test_wire_starter_kit_rosters.py` (10).
 - C#: `TAOM.Tests/Features/CharacterCreation/StarterKitCoverageTests.cs` pins that every weapon and armour
   slot in all three player roster files is a `starter_` item (no allowlist), that both sets are rewired,
@@ -187,7 +187,7 @@ an item folder loads as a duplicate item id.
 | `Main/_Module/ModuleData/equipmentsets/taom_char_creation_equipment.xml` | Culture-default rosters (in repo) |
 | `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` | Career-override rosters (in repo) |
 | `Main/_Module/ModuleData/equipmentsets/taom_player_start_vanilla_override.xml` | The six vanilla-mapped cultures' rosters, generated (in repo, registered in `SubModule.xml`) |
-| `LOTRLOME_Armory/.../LOTRLOME_items/<folder>/starter_kit.xml` | Starter item defs, generated (live install and `E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory`) |
+| `LOTRLOME_Armory/.../LOTRLOME_items/<folder>/starter_kit.xml` | Starter item defs, generated (live install; the `E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory` mirror only with `--asset-repo`) |
 | `LOTRLOME_Armory/.../LOTRLOME_crafting_pieces.xml`, `weapon_descriptions.xslt`, `crafting_templates.xslt` | Starter blades and their registrations, in marker blocks |
 | `LOTRLOME_Armory/.../LOTRLOME_items/<culture>/starter_armors.xml` | The older career-layer starter armour |
 
