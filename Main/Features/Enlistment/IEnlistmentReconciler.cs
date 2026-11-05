@@ -29,6 +29,6 @@ public interface IEnlistmentReconciler
     /// </summary>
     void ResetForNewSession();
 
-    /// <summary>Raised when the commander is fighting a map event the player has not joined. The battle layer subscribes.</summary>
+    /// <summary>Raised when the commander is fighting a map event the player has not joined. The maintenance service subscribes (<c>RequestBattleJoin</c>), which raises it to the battle layer.</summary>
     event Action<string> BattleJoinRequested;
 }

@@ -18,7 +18,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
 
     private readonly IEnlistmentContentStore _contentStore;
     private readonly IEnlistmentDailyService _daily;
-    private readonly IEnlistmentBattlePayoutService _battle;
+    private readonly EnlistmentBattlePayoutService _battle;
     private readonly IDischargeConsequenceService _consequences;
     private readonly Duties.IDutyOrchestrationService _duties;
     private readonly IDischargeService _discharge;
@@ -31,7 +31,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
     public EnlistmentContentBehavior(
         IEnlistmentContentStore contentStore,
         IEnlistmentDailyService daily,
-        IEnlistmentBattlePayoutService battle,
+        EnlistmentBattlePayoutService battle,
         IDischargeConsequenceService consequences,
         Duties.IDutyOrchestrationService duties,
         IDischargeService discharge,
@@ -69,16 +69,13 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
     {
         if (!_coopSession.IsAuthority || mapEvent == null || !mapEvent.IsPlayerMapEvent)
             return;
-        if (!_battle.PayOutBattle(mapEvent.WinningSide == mapEvent.PlayerSide))
+        // IsPlayerSimulation is set only by the 'Send troops' path (pinned by Patch66EnlistmentBindingTests).
+        if (!_battle.PayOutBattle(mapEvent.WinningSide == mapEvent.PlayerSide, mapEvent.IsPlayerSimulation))
             return;
 
-        var sampleBand = _battle.LastBandGradeKey;
-        if (!string.IsNullOrEmpty(sampleBand))
-        {
-            var text = new TextObject("{=taom_enlist_merit_toast}The sergeants noted your conduct: {GRADE}.");
-            text.SetTextVariable("GRADE", Presentation.ServiceVocabulary.GradeName(sampleBand));
-            InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
-        }
+        _announcer.AnnounceSatOut(_battle.LastSatOutReason);
+
+        _announcer.AnnounceMerit(_battle.LastBandGradeKey);
 
         if (_battle.LastBattlePromoted)
             _announcer.AnnouncePromotion(_battle.LastPromotedRank);

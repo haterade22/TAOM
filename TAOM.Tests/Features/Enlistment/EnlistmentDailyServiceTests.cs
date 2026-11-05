@@ -35,7 +35,7 @@ public class EnlistmentDailyServiceTests
         _rewards = Substitute.For<IServiceRewardService>();
         _rewards.PayDailyWage().Returns(new WageDecision { PaidFromCommander = 5 });
         _rhythm = Substitute.For<IArmyRhythmSnapshotService>();
-        _rhythm.GetSnapshot(Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
+        _rhythm.GetSnapshot().Returns(new ArmyRhythmSnapshot());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _promotion = new PromotionService(_contentStore, _config, _skillXp, _store, _logger);
         _world = Substitute.For<IDutyWorldAdapter>();
@@ -80,7 +80,7 @@ public class EnlistmentDailyServiceTests
     {
         // Priority-exclusive context XP — the donor stacked all four in one day.
         MakeEnlisted();
-        _rhythm.GetSnapshot(Arg.Any<double>())
+        _rhythm.GetSnapshot()
             .Returns(new ArmyRhythmSnapshot { SiegePressure = true, Naval = true, InArmy = true });
 
         _service.RunDailyTick(200.0);
@@ -132,11 +132,11 @@ public class EnlistmentDailyServiceTests
     [TestMethod]
     public void RankOrdinals_ContentAndEquipmentLaddersStayAligned()
     {
-        // The quartermaster maps (EnlistmentRank)(int)ServiceRank — pin the ordinal parity.
-        Assert.AreEqual((int)ServiceRank.Recruit, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Recruit);
-        Assert.AreEqual((int)ServiceRank.Soldier, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Soldier);
-        Assert.AreEqual((int)ServiceRank.Veteran, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Veteran);
-        Assert.AreEqual((int)ServiceRank.Sergeant, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Sergeant);
+        // The quartermaster maps (EnlistmentKitTier)(int)ServiceRank — pin the ordinal parity.
+        Assert.AreEqual((int)ServiceRank.Recruit, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Recruit);
+        Assert.AreEqual((int)ServiceRank.Soldier, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Soldier);
+        Assert.AreEqual((int)ServiceRank.Veteran, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Veteran);
+        Assert.AreEqual((int)ServiceRank.Sergeant, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Sergeant);
     }
 }
 
@@ -169,7 +169,7 @@ public class EnlistmentProvisioningTests
         var promotion = Substitute.For<IPromotionService>();
         promotion.EvaluateAndApply().Returns(new PromotionOutcome());
         var rhythm = Substitute.For<IArmyRhythmSnapshotService>();
-        rhythm.GetSnapshot(Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
+        rhythm.GetSnapshot().Returns(new ArmyRhythmSnapshot());
 
         _service = new EnlistmentDailyService(
             _store, _content, config, Substitute.For<IServiceRewardService>(), rhythm,

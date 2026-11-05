@@ -18,6 +18,9 @@
 	<string id="taom_enlist_promoted" text="{=taom_enlist_promoted}You have been promoted to {RANK}." />
 	<string id="taom_enlist_qm_issued" text="{=taom_enlist_qm_issued}See the quartermaster&#x27;s wagon — your kit is in your baggage." />
 	<string id="taom_enlist_qm_refused" text="{=taom_enlist_qm_refused}You have drawn your due for your rank already. Earn the next stripe first." />
+	<string id="taom_enlist_qm_refused_host" text="{=taom_enlist_qm_refused_host}Only the host&#x27;s quartermaster can issue kit in this campaign." />
+	<string id="taom_enlist_qm_refused_load" text="{=taom_enlist_qm_refused_load}Your kit cannot be loaded into your baggage just now. Ask me again later." />
+	<string id="taom_enlist_qm_refused_stores" text="{=taom_enlist_qm_refused_stores}The quartermaster has nothing in his stores for your company." />
 	<string id="taom_enlist_qm_request" text="{=taom_enlist_qm_request}I would draw my service kit from the quartermaster." />
 	<string id="taom_enlist_reassign" text="{=taom_enlist_reassign}I would take a different place in the line." />
 	<string id="taom_enlist_reassign_arc" text="{=taom_enlist_reassign_arc}I shoot better than I stab." />
@@ -263,5 +266,13 @@
 	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER}'s company is broken. He lives, but there is no banner left to march with. Hold to your oath and wait for him to raise another, or count your service at an end. If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed." />
 	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Hold to your oath" />
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Count your service ended" />
+	<!-- Leave it to the others (#830): encounter-menu tooltips and the battle-end line -->
+	<string id="taom_enlist_sitout_wounded_tip" text="{=taom_enlist_sitout_wounded_tip}You are wounded. The column fights on without you, and no one will hold it against you." />
+	<string id="taom_enlist_sitout_odds_tip" text="{=taom_enlist_sitout_odds_tip}Your side holds the field by a wide margin. You may stay back, but your commander will remember it." />
+	<string id="taom_enlist_sitout_refused_tip" text="{=taom_enlist_sitout_refused_tip}You serve in your commander's line. Take your place in the fight." />
+	<string id="taom_enlist_sitout_siege_tip" text="{=taom_enlist_sitout_siege_tip}A siege needs every soldier. Take your place in the assault." />
+	<string id="taom_enlist_sat_out_line" text="{=taom_enlist_sat_out_line}You stayed back while the column fought, and your share of the battle's due was cut." />
+	<string id="taom_enlist_sat_out_wounded_line" text="{=taom_enlist_sat_out_wounded_line}You were wounded and stayed back while the column fought." />
+	<string id="taom_enlist_sat_out_forced_line" text="{=taom_enlist_sat_out_forced_line}The column fought without you, and you had no way into the line." />
 
 </strings>

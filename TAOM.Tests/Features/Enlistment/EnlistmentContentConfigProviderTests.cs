@@ -47,6 +47,28 @@ public class EnlistmentContentConfigProviderTests
         File.WriteAllText(Path.Combine(_dir, "enlistment", "enlistment_duties.json"), json);
 
     [TestMethod]
+    public void GetConfig_CompiledDefaults_PassTheCanNeverBindCheck()
+    {
+        // An empty file leaves every compiled default in place. If the default maxOfferChance sat above
+        // the highest reachable offer chance, the provider's own check would warn that it can never bind.
+        WriteConfig("{}");
+
+        Provider().GetConfig();
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("can never bind")));
+    }
+
+    [TestMethod]
+    public void GetConfig_MaxOfferChanceAboveTheReachableMaximum_WarnsItCanNeverBind()
+    {
+        WriteConfig("{\"scheduler\":{\"maxOfferChance\":0.9}}");
+
+        Provider().GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("can never bind")));
+    }
+
+    [TestMethod]
     public void GetConfig_MissingFile_DefaultsWithWarning()
     {
         var config = Provider().GetConfig();
@@ -645,5 +667,130 @@ public class EnlistmentContentConfigProviderTests
         WriteDuties("{\"incidents\":[{\"id\":\"nan_chance\",\"chance\":\"NaN\",\"optionA\":{\"key\":\"a\",\"skillId\":\"Charm\",\"difficulty\":65},\"optionB\":{\"key\":\"b\",\"skillId\":\"Steward\",\"difficulty\":50}}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().Incidents.Count);
+    }
+
+    [TestMethod]
+    public void SitOutDefaults_AreTheApprovedValues()
+    {
+        var sitOut = EnlistmentContentConfigProvider.BuildDefaults().SitOut;
+
+        Assert.AreEqual(0.85f, sitOut.OverwhelmingShare);
+        Assert.AreEqual(1, sitOut.TrustCost);
+        Assert.AreEqual(0.5f, sitOut.BaseXpFactor);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_SitOut_EqualsTheCompiledDefaults()
+    {
+        var defaults = EnlistmentContentConfigProvider.BuildDefaults().SitOut;
+        var raw = JObject.Parse(File.ReadAllText(Path.Combine(
+            ShippedModuleDataPath(), "enlistment", "enlistment_config.json")));
+
+        var row = raw["sitOut"];
+        Assert.IsNotNull(row, "enlistment_config.json lost its sitOut section");
+        Assert.AreEqual(defaults.OverwhelmingShare, (float)row["overwhelmingShare"]);
+        Assert.AreEqual(defaults.TrustCost, (int)row["trustCost"]);
+        Assert.AreEqual(defaults.BaseXpFactor, (float)row["baseXpFactor"]);
+
+        var loaded = new EnlistmentContentConfigProvider(ShippedPaths(), _logger).GetConfig().SitOut;
+        Assert.AreEqual(defaults.OverwhelmingShare, loaded.OverwhelmingShare);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("sitOut")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NoSitOutSection_UsesTheDefaults()
+    {
+        WriteConfig("{\"progression\":{\"dailyLeadershipXp\":10}}");
+
+        var sitOut = Provider().GetConfig().SitOut;
+
+        Assert.AreEqual(0.85f, sitOut.OverwhelmingShare);
+        Assert.AreEqual(1, sitOut.TrustCost);
+        Assert.AreEqual(0.5f, sitOut.BaseXpFactor);
+    }
+
+    [TestMethod]
+    public void GetConfig_SitOutValidValues_AreKept()
+    {
+        WriteConfig("{\"sitOut\":{\"overwhelmingShare\":0.7,\"trustCost\":3,\"baseXpFactor\":0.25}}");
+
+        var sitOut = Provider().GetConfig().SitOut;
+
+        Assert.AreEqual(0.7f, sitOut.OverwhelmingShare);
+        Assert.AreEqual(3, sitOut.TrustCost);
+        Assert.AreEqual(0.25f, sitOut.BaseXpFactor);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("sitOut")));
+    }
+
+    [DataTestMethod]
+    [DataRow("\"NaN\"")]
+    [DataRow("\"Infinity\"")]
+    [DataRow("0.5")]
+    [DataRow("0.2")]
+    [DataRow("0")]
+    [DataRow("-0.9")]
+    [DataRow("1.01")]
+    public void GetConfig_SitOutShareNotFiniteOrOutOfRange_RevertsWithWarning(string value)
+    {
+        // The share must be a finite number in (0.5, 1]: at 0.5 or below the player's side would not
+        // be a clear favourite, and above 1 no battle could ever qualify.
+        WriteConfig("{\"sitOut\":{\"overwhelmingShare\":" + value + "}}");
+
+        var sitOut = Provider().GetConfig().SitOut;
+
+        Assert.AreEqual(0.85f, sitOut.OverwhelmingShare);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("sitOut.overwhelmingShare")));
+    }
+
+    [TestMethod]
+    public void GetConfig_SitOutShareExactlyOne_IsKept()
+    {
+        WriteConfig("{\"sitOut\":{\"overwhelmingShare\":1}}");
+
+        Assert.AreEqual(1f, Provider().GetConfig().SitOut.OverwhelmingShare);
+    }
+
+    [TestMethod]
+    public void GetConfig_SitOutNegativeTrustCost_Reverts()
+    {
+        WriteConfig("{\"sitOut\":{\"trustCost\":-2}}");
+
+        var sitOut = Provider().GetConfig().SitOut;
+
+        Assert.AreEqual(1, sitOut.TrustCost);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("sitOut.trustCost")));
+    }
+
+    [TestMethod]
+    public void GetConfig_SitOutZeroTrustCost_IsKept()
+    {
+        WriteConfig("{\"sitOut\":{\"trustCost\":0}}");
+
+        Assert.AreEqual(0, Provider().GetConfig().SitOut.TrustCost);
+    }
+
+    [DataTestMethod]
+    [DataRow("\"NaN\"")]
+    [DataRow("\"-Infinity\"")]
+    [DataRow("-0.1")]
+    [DataRow("1.5")]
+    public void GetConfig_SitOutBaseXpFactorNotFiniteOrOutOfRange_RevertsWithWarning(string value)
+    {
+        WriteConfig("{\"sitOut\":{\"baseXpFactor\":" + value + "}}");
+
+        var sitOut = Provider().GetConfig().SitOut;
+
+        Assert.AreEqual(0.5f, sitOut.BaseXpFactor);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("sitOut.baseXpFactor")));
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("1")]
+    public void GetConfig_SitOutBaseXpFactorAtTheEnds_IsKept(string value)
+    {
+        WriteConfig("{\"sitOut\":{\"baseXpFactor\":" + value + "}}");
+
+        Assert.AreEqual(float.Parse(value), Provider().GetConfig().SitOut.BaseXpFactor);
     }
 }

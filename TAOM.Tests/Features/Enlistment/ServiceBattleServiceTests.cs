@@ -644,8 +644,9 @@ public class ServiceBattleServiceTests
     [TestMethod]
     public void BattleEnded_EncounterStillOpen_LeavesBattleStateForLootFlow()
     {
-        // Loot/aftermath menus run inside the still-open encounter; flipping to Attached
-        // here would let the menu guard eat them. The reconciler completes the return.
+        // The encounter is still open (for the player's own event, MapEventEnded runs inside
+        // PlayerEncounter.Finish); flipping to Attached here would re-park mid-Finish. The
+        // reconciler completes the return.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         _encounter.HasCurrent.Returns(true);
 

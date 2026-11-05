@@ -24,10 +24,11 @@ public sealed class EnlistmentCoreConfig
     /// <summary>
     /// How long the player may sit in <c>EnlistedBattle</c> with an open battle-shaped encounter and
     /// no map event of his own before the reconciler treats it as a stuck latch and breaks it
-    /// (issue #551). One in-game hour: long enough that no loot or aftermath screen is still in
-    /// scope, short enough that a stuck player is not left there.
-    /// The same window times an <c>EnlistedAttached</c> soldier outside a settlement whose open encounter is a joined battle,
-    /// and releases an <c>EnlistedBattle</c> soldier inside a settlement without closing the encounter (#1021).
+    /// (issue #551). One in-game hour: a conservative margin (the loot and aftermath screens do not
+    /// have this shape), short enough that a stuck player is not left there. The same window times an
+    /// <c>EnlistedAttached</c> soldier outside a settlement whose open encounter is a joined battle,
+    /// and releases an <c>EnlistedBattle</c> soldier inside a settlement without closing the
+    /// encounter (#1021).
     ///
     /// A degenerate value (NaN, infinity, negative) falls back to the same default at the point of
     /// use rather than arming the recovery instantly.

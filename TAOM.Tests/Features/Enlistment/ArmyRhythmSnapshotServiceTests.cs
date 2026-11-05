@@ -5,6 +5,7 @@ using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -18,7 +19,7 @@ public class ArmyRhythmSnapshotServiceTests
         store.Record.Returns(new EnlistmentRecord { CommanderHeroId = "lord_1_1" });
         var adapter = Substitute.For<IArmyRhythmProbeAdapter>();
         adapter.Probe("lord_1_1").Returns(probe);
-        return new ArmyRhythmSnapshotService(store, adapter).GetSnapshot(10.0);
+        return new ArmyRhythmSnapshotService(store, adapter).GetSnapshot();
     }
 
     [TestMethod]
@@ -64,6 +65,45 @@ public class ArmyRhythmSnapshotServiceTests
         var snapshot = Snapshot(new ArmyRhythmProbe { InSettlement = inSettlement, InSiege = inSiege, EnemyPartyNearby = enemyNearby });
 
         Assert.AreEqual(expected, snapshot.QuietGarrison);
+    }
+
+    [TestMethod]
+    public void DefenderInABesiegedTown_MapsToSiegePressureAndNoQuietGarrison()
+    {
+        var snapshot = Snapshot(new ArmyRhythmProbe { InSiege = true, InSettlement = true });
+
+        Assert.IsTrue(snapshot.SiegePressure);
+        Assert.IsFalse(snapshot.QuietGarrison);
+    }
+
+    [TestMethod]
+    public void Probe_CountsASiegeOfTheCurrentSettlementAsInSiege()
+    {
+        // MobileParty.SiegeEvent is BesiegerCamp?.SiegeEvent, null for a defender: the settlement's own event covers him.
+        var src = RepoPaths.ReadSource("Main/Adapters/ArmyRhythmProbeAdapter.cs", stripComments: true);
+
+        StringAssert.Contains(src, "party.CurrentSettlement?.SiegeEvent != null");
+    }
+
+    [TestMethod]
+    public void GetSnapshot_ProbesTheCurrentCommanderOnEveryCall()
+    {
+        var record = new EnlistmentRecord { CommanderHeroId = "lord_1_1" };
+        var store = Substitute.For<IEnlistmentStore>();
+        store.Record.Returns(record);
+        var adapter = Substitute.For<IArmyRhythmProbeAdapter>();
+        adapter.Probe(Arg.Any<string>()).Returns(new ArmyRhythmProbe());
+        var sut = new ArmyRhythmSnapshotService(store, adapter);
+
+        sut.GetSnapshot();
+        record.CommanderHeroId = "lord_2_2";
+        sut.GetSnapshot();
+
+        Received.InOrder(() =>
+        {
+            adapter.Probe("lord_1_1");
+            adapter.Probe("lord_2_2");
+        });
     }
 
     [TestMethod]

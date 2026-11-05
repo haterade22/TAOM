@@ -35,14 +35,14 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
         _logger = logger;
     }
 
-    public EquipmentIssueResult IssueForRank(
-        string cultureId, ServiceAssignment assignment, EnlistmentRank rank)
+    public EquipmentIssueResult IssueForTier(
+        string cultureId, ServiceAssignment assignment, EnlistmentKitTier rank)
     {
-        if (_ledger.HasIssuedForRank(rank))
+        if (_ledger.HasIssuedForTier(rank))
         {
             _logger.LogInfo($"EnlistmentEquipmentService: rank {rank} already covered "
-                + $"(highest issued: {_ledger.HighestIssuedRank}) — skipping");
-            return EquipmentIssueResult.AlreadyIssuedForRank;
+                + $"(highest issued: {_ledger.HighestIssuedTier}) — skipping");
+            return EquipmentIssueResult.AlreadyIssuedForTier;
         }
 
         var rosterId = EnlistmentRosterResolver.Resolve(

@@ -80,6 +80,19 @@ public interface IEncounterAdapter
     bool IsAttackBarredByTruce { get; }
 
     /// <summary>
+    /// One flat read of what the sit-out policy needs (#830): wounded, whether vanilla's Attack is
+    /// available, siege assault or sally-out, and the player side's strength share. Each field is read in its
+    /// own try and is null when it could not be read, so one throw never blanks the rest.
+    /// </summary>
+    SitOutSnapshot GetSitOutSnapshot();
+
+    /// <summary>
+    /// True when the player's own map event already has a winner, so a menu refresh now is the
+    /// aftermath, not the click. False when there is no map event or the read fails.
+    /// </summary>
+    bool PlayerMapEventHasWinner { get; }
+
+    /// <summary>
     /// True when the given party's map event is still live enough to join. This is a MECHANICAL
     /// check only — it deliberately does NOT consult faction war state.
     ///

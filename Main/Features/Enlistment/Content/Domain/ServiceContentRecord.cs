@@ -35,8 +35,8 @@ public sealed class ServiceContentRecord
     public double? LastIncidentDay { get; set; }
     public List<string> RecentDutyIds { get; set; } = new List<string>();
 
-    /// <summary>Highest equipment rank already drawn (monotonic), or null. -1 sentinel on the wire.</summary>
-    public int? HighestIssuedEquipmentRank { get; set; }
+    /// <summary>Highest kit tier already drawn (monotonic; an <c>EnlistmentKitTier</c> ordinal, not a career rank), or null. Omitted from the serialized form when null; TryParse rejects negatives.</summary>
+    public int? HighestIssuedKitTier { get; set; }
 
     /// <summary>One entry per issued item INSTANCE (duplicates preserved for the per-item reclaim at discharge).</summary>
     public List<string> IssuedEquipmentItemIds { get; set; } = new List<string>();
@@ -57,7 +57,7 @@ public sealed class ServiceContentRecord
         LastOfferDay = null;
         LastIncidentDay = null;
         RecentDutyIds.Clear();
-        HighestIssuedEquipmentRank = null;
+        HighestIssuedKitTier = null;
         IssuedEquipmentItemIds.Clear();
     }
 
@@ -111,8 +111,9 @@ public sealed class ServiceContentRecord
         AddDay(parts, "incidentDay", LastIncidentDay);
         if (RecentDutyIds.Count > 0)
             parts.Add("recent=" + string.Join(",", RecentDutyIds));
-        if (HighestIssuedEquipmentRank.HasValue)
-            parts.Add("kitRank=" + HighestIssuedEquipmentRank.Value.ToString(inv));
+        // The key stays "kitRank" for save compatibility.
+        if (HighestIssuedKitTier.HasValue)
+            parts.Add("kitRank=" + HighestIssuedKitTier.Value.ToString(inv));
         if (IssuedEquipmentItemIds.Count > 0)
             parts.Add("kitItems=" + string.Join(",", IssuedEquipmentItemIds));
         return string.Join(";", parts);
@@ -161,11 +162,12 @@ public sealed class ServiceContentRecord
         if (map.TryGetValue("recent", out var recent) && !string.IsNullOrEmpty(recent))
             parsed.RecentDutyIds = recent.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList();
 
+        // The key stays "kitRank" for save compatibility.
         if (map.TryGetValue("kitRank", out var kitRank)
             && int.TryParse(kitRank, NumberStyles.Integer, CultureInfo.InvariantCulture, out var kitRankValue)
             && kitRankValue >= 0)
         {
-            parsed.HighestIssuedEquipmentRank = kitRankValue;
+            parsed.HighestIssuedKitTier = kitRankValue;
         }
 
         if (map.TryGetValue("kitItems", out var kitItems) && !string.IsNullOrEmpty(kitItems))
@@ -195,7 +197,7 @@ public sealed class ServiceContentRecord
         LastOfferDay = other.LastOfferDay;
         LastIncidentDay = other.LastIncidentDay;
         RecentDutyIds = new List<string>(other.RecentDutyIds ?? new List<string>());
-        HighestIssuedEquipmentRank = other.HighestIssuedEquipmentRank;
+        HighestIssuedKitTier = other.HighestIssuedKitTier;
         IssuedEquipmentItemIds = new List<string>(other.IssuedEquipmentItemIds ?? new List<string>());
     }
 

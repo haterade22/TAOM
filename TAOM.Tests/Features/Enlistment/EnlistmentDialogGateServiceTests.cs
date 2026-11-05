@@ -102,29 +102,29 @@ public class EnlistmentDialogGateServiceTests
     }
 
     [TestMethod]
-    public void CanRequestDischarge_EnlistedWithThisCommander_True()
+    public void IsServingUnder_EnlistedWithThisCommander_True()
     {
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1_1";
 
-        Assert.IsTrue(_gate.CanRequestDischargeFrom("lord_1_1"));
+        Assert.IsTrue(_gate.IsServingUnder("lord_1_1"));
     }
 
     [TestMethod]
-    public void CanRequestDischarge_DifferentLord_False()
+    public void IsServingUnder_DifferentLord_False()
     {
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1_1";
 
-        Assert.IsFalse(_gate.CanRequestDischargeFrom("lord_2_2"));
+        Assert.IsFalse(_gate.IsServingUnder("lord_2_2"));
     }
 
     [TestMethod]
-    public void CanRequestDischarge_NotEnlisted_False()
+    public void IsServingUnder_NotEnlisted_False()
     {
-        Assert.IsFalse(_gate.CanRequestDischargeFrom("lord_1_1"));
+        Assert.IsFalse(_gate.IsServingUnder("lord_1_1"));
     }
     [TestMethod]
     public void EvaluateReleaseRequest_CommanderUnavailable_GrantsEvenMidContract()

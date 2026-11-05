@@ -61,6 +61,9 @@ public sealed class CommanderSnapshot
 
     public bool HasParty => !string.IsNullOrEmpty(PartyId);
 
+    /// <summary>Alive, free, and belonging to an active party: the one fitness test for a commander an enlisted soldier can serve under.</summary>
+    public bool IsFit => Exists && IsAlive && !IsPrisoner && HasParty && PartyIsActive;
+
     public CommanderSnapshot(
         bool exists,
         bool isAlive = false,

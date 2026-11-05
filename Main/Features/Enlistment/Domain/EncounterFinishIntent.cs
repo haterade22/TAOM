@@ -58,22 +58,21 @@ public enum EncounterFinishIntent
 
     /// <summary>
     /// The player has been latched in <c>EnlistedBattle</c> with an open battle-shaped encounter and
-    /// no map event of his own for longer than any loot screen lasts. The ONLY intent that gets past
-    /// R1b, and the reason it can is duration.
+    /// no map event of his own for longer than any loot screen lasts. The only sweep intent that may
+    /// close a party encounter that is not the commander's, and the reason it can is duration.
     ///
     /// Issue #551. A join that lands and is then torn down in the same second leaves exactly this
-    /// shape, and three guards each refuse to move it, each of them correctly:
+    /// shape, and four guards each refuse to move it, each of them correctly:
     /// <c>ServiceMaintenanceService.TryBreakBattleLatch</c> returns on <c>HasPlayerEncounter</c>,
     /// <c>EnlistmentReconciler.SweepStrandedEncounter</c> returns on <c>commanderInMapEvent</c>, and
-    /// R1b defers every intent, <see cref="Discharge"/> included, because the encounter reads as a
-    /// battle. The player cannot move, cannot open any encounter, has no service menu, and nothing
-    /// in the mod will ever release him. In the reported session that ended in a CTD when the map
+    /// the policy skips every sweep intent, because the encountered party is the opposing leader
+    /// rather than the commander, and <c>ServiceBattleService.TryJoin</c> refuses every rejoin
+    /// because the state is not <c>EnlistedAttached</c>. The player cannot move, cannot open any
+    /// encounter, has no service menu, and nothing in the mod will ever release him. In the reported session that ended in a CTD when the map
     /// event he had been pulled out of ticked its own simulation.
     ///
-    /// R1b justifies itself on the loot window being short and every caller retrying. That is what
-    /// licenses this intent rather than contradicting it: the caller only reaches for it once the
-    /// shape has persisted past <c>EnlistmentCoreConfig.StaleBattleLatchDays</c>, so a real loot
-    /// screen is never in scope.
+    /// The loot and aftermath screens do not have this shape: the main party stays in its map event
+    /// through them. Duration is a conservative margin, not a loot-window guard.
     ///
     /// Since #1021 the caller also takes this intent for an <c>EnlistedAttached</c> soldier outside a
     /// settlement whose open encounter is a joined-battle orphan.

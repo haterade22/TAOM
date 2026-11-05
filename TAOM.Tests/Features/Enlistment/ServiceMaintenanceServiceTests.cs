@@ -27,7 +27,8 @@ public class ServiceMaintenanceServiceTests
     private IEncounterAdapter _encounter = null!;
     private IEnlistmentReconciler _reconciler = null!;
     private IEnlistmentWaitMenuPresenter _presenter = null!;
-    private IArmyRhythmSnapshotService _rhythm = null!;
+    private SitOutLedger _sitOutLedger = null!;
+    private BattleMeritAccumulator _accumulator = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -47,7 +48,8 @@ public class ServiceMaintenanceServiceTests
         _army = Substitute.For<IArmyMembershipAdapter>();
         _reconciler = Substitute.For<IEnlistmentReconciler>();
         _presenter = Substitute.For<IEnlistmentWaitMenuPresenter>();
-        _rhythm = Substitute.For<IArmyRhythmSnapshotService>();
+        _sitOutLedger = new SitOutLedger();
+        _accumulator = new BattleMeritAccumulator();
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         Encounter(none: true);
@@ -55,7 +57,7 @@ public class ServiceMaintenanceServiceTests
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
             _status, _army, _encounter, new EncounterOwnershipPolicy(),
-            _reconciler, _presenter, _rhythm, _logger);
+            _reconciler, _presenter, _sitOutLedger, _accumulator, _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -69,14 +71,17 @@ public class ServiceMaintenanceServiceTests
     }
 
     private void Commander(bool followable = true, bool inMapEvent = false, int token = 0,
-        bool raiding = false)
+        bool raiding = false, bool raidEvent = false)
     {
         _commander.GetTickSnapshot(Arg.Any<string>()).Returns(new CommanderTickSnapshot(
             exists: followable, isAlive: followable, isPrisoner: false,
             partyId: followable ? "lord_party_1" : null, partyIsActive: followable,
             partyIsInMapEvent: inMapEvent, mapEventToken: token,
-            partyIsRaiding: raiding));
+            partyIsRaiding: raiding, partyIsInRaidEvent: raidEvent));
     }
+
+    private void OnTheServiceWaitMenu(bool on = true) =>
+        _gameMenu.CurrentMenuId.Returns(on ? EnlistmentMenuService.ServiceWaitMenuId : "town");
 
     private void Presence(bool parked = true, bool inMapEvent = false, bool encounter = false,
         string settlementId = null)
@@ -132,13 +137,27 @@ public class ServiceMaintenanceServiceTests
     }
 
     [TestMethod]
+    public void ResetSessionCaches_AlsoDropsTheSitOutVerdictAndTheUnconsumedMeritSample()
+    {
+        // Both are singletons that outlive a campaign. A verdict left over from a previous world would
+        // mis-pay the first simulated battle of the next one, and an unconsumed sample would be paid
+        // to the wrong battle.
+        _sitOutLedger.Record(SitOutVerdict.OverwhelmingCost);
+        _accumulator.Submit(new MeritSample { Kills = 3 });
+
+        _pump.ResetSessionCaches();
+
+        Assert.AreEqual(SitOutVerdict.Unchanged, _sitOutLedger.Consume());
+        Assert.IsNull(_accumulator.Consume());
+    }
+
+    [TestMethod]
     public void ResetSessionCaches_AlsoDropsTheReconcilersStaleBattleLatchAnchor()
     {
         // Issue #551. The reconciler is Reuse.Singleton and its latch anchor is an ABSOLUTE campaign
         // day, so a campaign that ended while latched leaves it behind. Load a later save and the
-        // elapsed time is enormous: the recovery fires on the first latched tick and finishes what
-        // may be a live loot screen with no real waiting, which is the destructive Finish that R1b
-        // exists to prevent, committed by the safety net itself.
+        // elapsed time is enormous: the recovery fires on the first latched tick and finishes an
+        // encounter with no real waiting, which defeats the margin the threshold exists to give.
         //
         // Asserted separately from the army handle above so that deleting either wiring names which
         // one broke.
@@ -172,19 +191,18 @@ public class ServiceMaintenanceServiceTests
     }
 
     [TestMethod]
-    public void ResetSessionCaches_AlsoDropsTheDwellAnchorTheOfferLatchAndTheRhythmCache()
+    public void ResetSessionCaches_AlsoDropsTheDwellAnchorAndTheOfferLatch()
     {
-        // All three hold absolute campaign-hour state on singletons. Asserted here, on the one
+        // Both hold absolute campaign-hour state on singletons. Asserted here, on the one
         // reset point, so a new collaborator reset cannot be wired into a hook instead.
         _pump.ResetSessionCaches();
 
         _attachment.Received(1).ResetForNewSession();
         _presenter.Received(1).ResetForNewSession();
-        _rhythm.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void Pump_DoesNotResetTheDwellAnchorTheOfferLatchOrTheRhythmCache()
+    public void Pump_DoesNotResetTheDwellAnchorOrTheOfferLatch()
     {
         // Session resets only. Clearing the dwell anchor on an ordinary pump would bring back
         // the enter-and-leave strobe the dwell exists to stop.
@@ -194,7 +212,6 @@ public class ServiceMaintenanceServiceTests
 
         _attachment.DidNotReceive().ResetForNewSession();
         _presenter.DidNotReceive().ResetForNewSession();
-        _rhythm.DidNotReceive().ResetForNewSession();
     }
 
     // ---- gating -------------------------------------------------------------------------
@@ -218,6 +235,228 @@ public class ServiceMaintenanceServiceTests
 
         _attachment.Received(2).SyncPositionCached("lord_1_1", Arg.Any<string>());
         _commander.DidNotReceive().GetTickSnapshot(Arg.Any<string>());   // expensive tier not reached
+    }
+
+    // ---- a raid join waits for the wait-menu frame (#954 open risk 1, #841) ---------------------
+    // A join raised from TickEvent or the hourly tick runs before MapEventManager.Tick in the same frame, and
+    // raids update even when they are the player's own event, so one simulation session could run with the
+    // soldier inside. The wait-menu frame is the safe point: the join's switch to the encounter menu sets Stop.
+
+    [TestMethod]
+    public void RaidJoin_FromThePumpOnTheServiceWaitMenu_IsDeferredToTheNextMenuFrame()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        PumpExpensive();
+        Assert.AreEqual(0, raised, "not from the tick path");
+
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);   // time running: flush, no pump
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void RaidJoin_FromTheReconcilersPath_IsDeferredToo()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        _pump.RequestBattleJoin("lord_1_1");
+        Assert.AreEqual(0, raised);
+
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void FieldBattleJoin_IsNotDeferred()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: false);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        PumpExpensive();
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void RaidJoin_NotOnTheServiceWaitMenu_IsNotDeferred_SoNobodyIsStranded()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu(on: false);
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        PumpExpensive();
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void RaidJoin_PumpedFromTheMenuFrame_IsNotDeferred()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        _pump.OnWaitMenuFrame(0.0, Interval, 100.0);   // time stopped: the frame pumps, and it is the safe point
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void PendingRaidJoin_IsDropped_WhenTheEventEnds_TheCommanderLeaves_TheServiceEnds_OrTheSessionResets()
+    {
+        var scenarios = new System.Action[]
+        {
+            () => Commander(inMapEvent: true, token: 8, raidEvent: true),    // a different event now
+            () => Commander(inMapEvent: false, token: 0, raidEvent: false),  // the event ended
+            () => Commander(followable: false),                              // the commander left
+            () => _store.Record.State = EnlistmentState.NotEnlisted,         // the service ended
+            () => _pump.ResetSessionCaches(),                                // a new session
+        };
+        foreach (var change in scenarios)
+        {
+            Setup();
+            MakeEnlisted();
+            OnTheServiceWaitMenu();
+            Commander(inMapEvent: true, token: 7, raidEvent: true);
+            var raised = 0;
+            _pump.BattleJoinRequested += _ => raised++;
+            PumpExpensive();
+
+            change();
+            _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+
+            Assert.AreEqual(0, raised);
+        }
+    }
+
+    [TestMethod]
+    public void PendingRaidJoin_IsDropped_WhenThePlayerIsAlreadyInAMapEvent()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+        PumpExpensive();
+
+        Presence(inMapEvent: true);
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void PendingRaidJoin_IsDropped_WhenTheSoldierIsEnlistedButNoLongerAttached()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+        PumpExpensive();
+
+        _store.Record.State = EnlistmentState.EnlistedBattle;
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void PendingRaidJoin_IsDropped_WhenTheCommanderIsNotFollowableInTheSameRaid()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+        PumpExpensive();
+
+        _commander.GetTickSnapshot(Arg.Any<string>()).Returns(new CommanderTickSnapshot(
+            exists: true, isAlive: true, isPrisoner: true, partyId: "lord_party_1", partyIsActive: true,
+            partyIsInMapEvent: true, mapEventToken: 7, partyIsInRaidEvent: true));
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void PendingRaidJoin_IsPerformedOnce()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+        PumpExpensive();
+
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+        _pump.OnWaitMenuFrame(0.2, 0.016f, 100.0);
+
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void OnWaitMenuFrame_PumpsOnlyWhenTheCampaignDeltaIsExactlyZero()
+    {
+        MakeEnlisted();
+
+        _pump.OnWaitMenuFrame(0.2, Interval, 100.0);
+        _commander.DidNotReceive().GetTickSnapshot(Arg.Any<string>());
+
+        _pump.OnWaitMenuFrame(double.NaN, Interval, 100.0);
+        _commander.DidNotReceive().GetTickSnapshot(Arg.Any<string>());
+
+        _pump.OnWaitMenuFrame(0.0, Interval, 100.0);
+        _commander.Received(1).GetTickSnapshot("lord_1_1");
+    }
+
+    [TestMethod]
+    public void OnWaitMenuFrame_FlushesAPendingJoin_BeforeItPumps()
+    {
+        MakeEnlisted();
+        OnTheServiceWaitMenu();
+        Commander(inMapEvent: true, token: 7, raidEvent: true);
+        PumpExpensive();
+        var pumpedBeforeTheJoin = true;
+        _pump.BattleJoinRequested += _ =>
+            pumpedBeforeTheJoin = _attachment.ReceivedCalls().Count(c => c.GetMethodInfo().Name == "SyncPositionCached") > 1;
+
+        _pump.OnWaitMenuFrame(0.0, Interval, 100.0);
+
+        Assert.IsFalse(pumpedBeforeTheJoin, "the join is the first thing the frame does");
+    }
+
+    [TestMethod]
+    public void Pump_OneLargeStep_FiresEachTierOnce_AndCarriesNothing()
+    {
+        // Why the wait-menu hook needs no clamp of its own: both budgets reset to zero when a tier
+        // fires, so a post-stall step (alt-tab, load) can fire each tier at most once (#841).
+        MakeEnlisted();
+
+        _pump.Pump(30f, 100.0);
+
+        _commander.Received(1).GetTickSnapshot("lord_1_1");
+        _status.Received(1).RefreshIfChanged();
+
+        _pump.Pump(0.001f, 100.0);
+
+        _commander.Received(1).GetTickSnapshot("lord_1_1");
+        _status.Received(1).RefreshIfChanged();
     }
 
     [TestMethod]
@@ -272,7 +511,7 @@ public class ServiceMaintenanceServiceTests
     [TestMethod]
     public void Pump_BattleStateWithOpenEncounter_DoesNotDemote()
     {
-        // The loot/aftermath encounter is still open — demoting would re-park mid-battle.
+        // An encounter that outlived its map event is still open — demoting would re-park mid-battle.
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         Presence(parked: false, inMapEvent: false, encounter: true);
 

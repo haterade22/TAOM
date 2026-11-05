@@ -8,7 +8,7 @@ namespace TAOM.Features.Enlistment.Equipment;
 public enum EquipmentIssueResult
 {
     Issued,
-    AlreadyIssuedForRank,
+    AlreadyIssuedForTier,
     NoRosterFound,
     NoValidItems,
     PartyUnavailable,

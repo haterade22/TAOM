@@ -31,7 +31,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_ExactRosterExists_ReturnsExactId()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "gondor", ServiceAssignment.Archer, EnlistmentRank.Veteran,
+            "gondor", ServiceAssignment.Archer, EnlistmentKitTier.Veteran,
             Exists("enlist_gondor_archer_veteran"));
 
         Assert.AreEqual("enlist_gondor_archer_veteran", result);
@@ -48,7 +48,7 @@ public class EnlistmentRosterResolverTests
         };
 
         var result = EnlistmentRosterResolver.Resolve(
-            "vlandia", ServiceAssignment.Cavalry, EnlistmentRank.Sergeant, spy);
+            "vlandia", ServiceAssignment.Cavalry, EnlistmentKitTier.Sergeant, spy);
 
         Assert.AreEqual("enlist_vlandia_cavalry_sergeant", result);
         foreach (var id in queried)
@@ -59,7 +59,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_ExactMissing_FallsToNextLowerRank_KeepingTheAssignment()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "vlandia", ServiceAssignment.Archer, EnlistmentRank.Sergeant,
+            "vlandia", ServiceAssignment.Archer, EnlistmentKitTier.Sergeant,
             Exists("enlist_vlandia_archer_veteran"));
 
         Assert.AreEqual("enlist_vlandia_archer_veteran", result);
@@ -69,7 +69,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_DescendsFullRankChain_ToRecruit()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "vlandia", ServiceAssignment.Archer, EnlistmentRank.Sergeant,
+            "vlandia", ServiceAssignment.Archer, EnlistmentKitTier.Sergeant,
             Exists("enlist_vlandia_archer_recruit"));
 
         Assert.AreEqual("enlist_vlandia_archer_recruit", result);
@@ -81,7 +81,7 @@ public class EnlistmentRosterResolverTests
         // Rank is the innermost loop, so a lower-rank kit of the chosen role wins. A lesser
         // version of what you asked for is a smaller disappointment than the wrong thing.
         var result = EnlistmentRosterResolver.Resolve(
-            "gondor", ServiceAssignment.Cavalry, EnlistmentRank.Sergeant,
+            "gondor", ServiceAssignment.Cavalry, EnlistmentKitTier.Sergeant,
             Exists("enlist_gondor_cavalry_recruit", "enlist_gondor_infantry_sergeant"));
 
         Assert.AreEqual("enlist_gondor_cavalry_recruit", result);
@@ -92,7 +92,7 @@ public class EnlistmentRosterResolverTests
     {
         // goblin has no Cavalry-grouped troop, so enlist_goblin_cavalry_* is never authored.
         var result = EnlistmentRosterResolver.Resolve(
-            "goblin", ServiceAssignment.Cavalry, EnlistmentRank.Soldier,
+            "goblin", ServiceAssignment.Cavalry, EnlistmentKitTier.Soldier,
             Exists("enlist_goblin_infantry_soldier", "enlist_default_cavalry_soldier"));
 
         Assert.AreEqual("enlist_goblin_infantry_soldier", result,
@@ -106,7 +106,7 @@ public class EnlistmentRosterResolverTests
         // The sharp form of the ordering: the same culture at recruit still beats the correct
         // assignment from the neutral default at the requested rank.
         var result = EnlistmentRosterResolver.Resolve(
-            "mistymountainorcs", ServiceAssignment.Archer, EnlistmentRank.Sergeant,
+            "mistymountainorcs", ServiceAssignment.Archer, EnlistmentKitTier.Sergeant,
             Exists("enlist_mistymountainorcs_infantry_recruit", "enlist_default_archer_sergeant"));
 
         Assert.AreEqual("enlist_mistymountainorcs_infantry_recruit", result);
@@ -116,7 +116,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_CultureWithNoRosterAtAll_FallsToDefaultKeepingTheAssignment()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "unrostered_culture", ServiceAssignment.Archer, EnlistmentRank.Veteran,
+            "unrostered_culture", ServiceAssignment.Archer, EnlistmentKitTier.Veteran,
             Exists("enlist_default_infantry_veteran", "enlist_default_archer_veteran"));
 
         Assert.AreEqual("enlist_default_archer_veteran", result,
@@ -127,7 +127,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_DefaultCulture_FallsToInfantryWhenTheAssignmentIsAbsent()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "unrostered_culture", ServiceAssignment.Cavalry, EnlistmentRank.Soldier,
+            "unrostered_culture", ServiceAssignment.Cavalry, EnlistmentKitTier.Soldier,
             Exists("enlist_default_infantry_soldier"));
 
         Assert.AreEqual("enlist_default_infantry_soldier", result);
@@ -139,7 +139,7 @@ public class EnlistmentRosterResolverTests
         // lothlorien binds to the Rivendell tree (taom_spcultures.xml: basic_troop=
         // imladris_recruit), so enlist_lothlorien_* ships and must beat the default.
         var result = EnlistmentRosterResolver.Resolve(
-            "lothlorien", ServiceAssignment.Infantry, EnlistmentRank.Veteran,
+            "lothlorien", ServiceAssignment.Infantry, EnlistmentKitTier.Veteran,
             Exists("enlist_lothlorien_infantry_veteran", "enlist_default_infantry_veteran"));
 
         Assert.AreEqual("enlist_lothlorien_infantry_veteran", result);
@@ -151,7 +151,7 @@ public class EnlistmentRosterResolverTests
         // Khand's runtime id is battania (XSLT culture); it binds to the Rhun tree
         // (spcultures.xslt: basic_troop=loke_rim_initiate), so enlist_battania_* ships.
         var result = EnlistmentRosterResolver.Resolve(
-            "battania", ServiceAssignment.Infantry, EnlistmentRank.Recruit,
+            "battania", ServiceAssignment.Infantry, EnlistmentKitTier.Recruit,
             Exists("enlist_battania_infantry_recruit", "enlist_default_infantry_recruit"));
 
         Assert.AreEqual("enlist_battania_infantry_recruit", result);
@@ -166,7 +166,7 @@ public class EnlistmentRosterResolverTests
         Func<string, bool> spy = id => { queried.Add(id); return false; };
 
         EnlistmentRosterResolver.Resolve(
-            "gondor", ServiceAssignment.Infantry, EnlistmentRank.Sergeant, spy);
+            "gondor", ServiceAssignment.Infantry, EnlistmentKitTier.Sergeant, spy);
 
         CollectionAssert.AllItemsAreUnique(queried);
     }
@@ -184,7 +184,7 @@ public class EnlistmentRosterResolverTests
         Func<string, bool> spy = id => { queried.Add(id); return false; };
 
         EnlistmentRosterResolver.Resolve(
-            "gondor", (ServiceAssignment)99, EnlistmentRank.Sergeant, spy);
+            "gondor", (ServiceAssignment)99, EnlistmentKitTier.Sergeant, spy);
 
         CollectionAssert.AllItemsAreUnique(queried);
     }
@@ -193,7 +193,7 @@ public class EnlistmentRosterResolverTests
     public void Resolve_NothingExists_ReturnsNull()
     {
         var result = EnlistmentRosterResolver.Resolve(
-            "gondor", ServiceAssignment.Infantry, EnlistmentRank.Sergeant, _ => false);
+            "gondor", ServiceAssignment.Infantry, EnlistmentKitTier.Sergeant, _ => false);
 
         Assert.IsNull(result);
     }
@@ -209,7 +209,7 @@ public class EnlistmentRosterResolverTests
         };
 
         var result = EnlistmentRosterResolver.Resolve(
-            null, ServiceAssignment.Support, EnlistmentRank.Soldier, spy);
+            null, ServiceAssignment.Support, EnlistmentKitTier.Soldier, spy);
 
         Assert.AreEqual("enlist_default_support_soldier", result);
         foreach (var id in queried)
@@ -222,7 +222,7 @@ public class EnlistmentRosterResolverTests
     {
         Assert.ThrowsException<ArgumentNullException>(
             () => EnlistmentRosterResolver.Resolve(
-                "gondor", ServiceAssignment.Infantry, EnlistmentRank.Recruit, null));
+                "gondor", ServiceAssignment.Infantry, EnlistmentKitTier.Recruit, null));
     }
 
     [TestMethod]
@@ -232,7 +232,7 @@ public class EnlistmentRosterResolverTests
         // must not throw and must not silently take another assignment's kit. AssignmentToken
         // falls back to infantry, which is the one assignment every culture authors.
         var result = EnlistmentRosterResolver.Resolve(
-            "gondor", (ServiceAssignment)99, EnlistmentRank.Soldier,
+            "gondor", (ServiceAssignment)99, EnlistmentKitTier.Soldier,
             Exists("enlist_gondor_infantry_soldier"));
 
         Assert.AreEqual("enlist_gondor_infantry_soldier", result);

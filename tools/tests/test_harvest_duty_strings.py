@@ -168,6 +168,32 @@ class PlanTests(unittest.TestCase):
         new, _changed = h.plan({"taom_enlist_duty_forage_title": "to forage"}, xml)
         self.assertEqual(1, len(new))
 
+    def test_a_commented_out_row_is_not_registered(self):
+        commented = '\t<!-- <string id="taom_enlist_duty_forage_title" text="{=taom_enlist_duty_forage_title}to forage" /> -->\r\n'
+        xml = xml_with(commented + TITLE_ROW)
+        self.assertNotIn("taom_enlist_duty_forage_title", h.registered_rows(xml))
+        new, changed = h.plan({"taom_enlist_duty_forage_title": "to forage"}, xml)
+        self.assertEqual([("taom_enlist_duty_forage_title", "to forage")], new)
+        self.assertEqual([], changed)
+
+    def test_a_commented_out_row_is_never_the_one_apply_rewrites(self):
+        old = '<string id="k_title" text="{=k_title}old" />'
+        xml = xml_with("\t<!-- " + old + " -->\r\n\t" + old)
+        new, changed = h.plan({"k_title": "fresh"}, xml)
+        out = h.apply_plan(xml, new, changed)
+        self.assertIn("<!-- " + old + " -->", out)
+        self.assertIn('\t<string id="k_title" text="{=k_title}fresh" />', out)
+
+    def test_a_comment_on_the_same_line_as_a_rewritten_row_survives_apply(self):
+        old = '<string id="k_title" text="{=k_title}old" />'
+        for comment in ("<!-- note -->", "<!-- first line\r\n     second line -->"):
+            xml = xml_with("\t" + comment + " " + old)
+            new, changed = h.plan({"k_title": "fresh"}, xml)
+            out = h.apply_plan(xml, new, changed)
+            self.assertIn(comment, out)
+            self.assertIn('<string id="k_title" text="{=k_title}fresh" />', out)
+            self.assertNotIn("old", out.replace(comment, ""))
+
     def test_missing_results_names_each_unregistered_success_and_failure_row(self):
         xml = xml_with(RESULT_ROWS)
         self.assertEqual([], h.missing_results(["night_patrol"], xml))
@@ -296,6 +322,17 @@ class MainTests(unittest.TestCase):
             'text="{=taom_enlist_duty_night_patrol_failure}', 'text="{=taom_enlist_duty_night_patrol_success}')
         self.assertNotEqual(synced, copied)
         self.assertEqual(1, self.run_main(["--check"], DATA, copied)[0])
+
+    def test_two_live_rows_with_one_id_exit_2_in_every_mode_and_write_nothing(self):
+        stale = TITLE_ROW.replace("a road patrol", "stale")
+        dup = self.synced_xml().replace("</strings>", stale + "\r\n</strings>")
+        self.assertEqual(2, dup.count('id="taom_enlist_duty_road_patrol_title"'))
+        for mode in ("--dry-run", "--check", "--apply"):
+            self.assertEqual((2, dup), self.run_main([mode], DATA, dup), mode)
+
+    def test_a_commented_out_twin_is_not_a_duplicate(self):
+        twin = self.synced_xml().replace("</strings>", "<!-- " + TITLE_ROW.strip() + " -->\r\n</strings>")
+        self.assertEqual((0, twin), self.run_main(["--check"], DATA, twin))
 
     def test_a_section_that_is_not_a_list_exits_2_in_every_mode(self):
         for bad in (5, True, 0, "rows", {"id": "x"}):

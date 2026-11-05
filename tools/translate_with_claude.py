@@ -388,10 +388,13 @@ def save_cache(lang: str, cache: dict[str, str]) -> None:
 
 # ── Placeholder validation ─────────────────────────────────────────────────────
 
-# Variable placeholders: {ANYTHING_UPPER_DOTS}
-VAR_PATTERN = re.compile(r"\{[A-Z_][A-Z0-9_.]*\}")
+# Variable placeholders: {FIRSTNAME}, {RULER.NAME}, and the lowercase or mixed-case
+# engine tokens ({newline}, {InvasionScenarioFactionId}). `{=key}` ids and `{?...}`
+# conditionals do not match: `=` and `?` are outside the identifier class.
+VAR_PATTERN = re.compile(r"\{[A-Za-z_][A-Za-z0-9_.]*\}")
 # Conditional structures: {?VAR}...{?}...{\?} OR {?VAR}...{\?}
-CONDITIONAL_OPEN = re.compile(r"\{\?[A-Z_][A-Z0-9_.]*\}")
+# A head may be a name ({?PLURAL}) or an expression ({?DAYS>1}); {?} (the else) has no head and is not counted.
+CONDITIONAL_OPEN = re.compile(r"\{\?[^{}?]+\}")
 CONDITIONAL_MID = re.compile(r"\{\?\}")
 CONDITIONAL_CLOSE = re.compile(r"\{\\\?\}")
 

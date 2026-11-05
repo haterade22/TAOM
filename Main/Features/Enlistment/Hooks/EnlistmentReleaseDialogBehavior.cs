@@ -45,7 +45,7 @@ public class EnlistmentReleaseDialogBehavior : CampaignBehaviorBase
             "hero_main_options",
             "taom_enlist_discharge_answer",
             "{=taom_enlist_discharge}I ask to be released from your service.",
-            () => _gate.CanRequestDischargeFrom(PartnerId()),
+            () => _gate.IsServingUnder(PartnerId()),
             null,
             111);
 

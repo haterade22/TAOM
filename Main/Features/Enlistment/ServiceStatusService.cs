@@ -52,6 +52,7 @@ public class ServiceStatusService : IServiceStatusService
     private readonly IServiceStatusTextWriter _writer;
     private readonly IPromotionService _promotion;
     private readonly IEnlistmentContentConfigProvider _config;
+    private readonly IEnlistmentWagePreview _wagePreview;
 
     private ServiceStatusModel _last;
 
@@ -61,7 +62,8 @@ public class ServiceStatusService : IServiceStatusService
         ICommanderLordAdapter commander,
         IServiceStatusTextWriter writer,
         IPromotionService promotion,
-        IEnlistmentContentConfigProvider config)
+        IEnlistmentContentConfigProvider config,
+        IEnlistmentWagePreview wagePreview)
     {
         _store = store;
         _content = content;
@@ -69,6 +71,7 @@ public class ServiceStatusService : IServiceStatusService
         _writer = writer;
         _promotion = promotion;
         _config = config;
+        _wagePreview = wagePreview;
     }
 
     public ServiceStatusModel Build()
@@ -101,24 +104,12 @@ public class ServiceStatusService : IServiceStatusService
             deferredWages: content.DeferredWages,
             activeDutyId: content.ActiveDutyId,
             serviceXp: content.ServiceXp,
-            dailyWage: DailyWageFor(content.Rank),
+            // What service pays today, so 0 while the column is lost: the board must not promise unpaid wages.
+            dailyWage: _wagePreview.GetDailyWage(),
             nextRank: showLadder ? promotion.ToRank : (ServiceRank?)null,
             nextRequirementKey: showLadder ? promotion.MostBindingUnmetKey : null,
             nextRequirementTarget: showLadder ? promotion.MostBindingUnmetTarget : 0,
             activeDutyTitle: ActiveDutyTitle(content.ActiveDutyId));
-    }
-
-    /// <summary>
-    /// Today's wage, read from the same rank-indexed table <c>ServiceRewardService.PayDailyWage</c>
-    /// pays from — so the board cannot quote a number the player is not actually paid. Out-of-range
-    /// reads yield 0 rather than throwing; the config validator already pins the table at exactly
-    /// four non-negative entries, so this is a belt for a rank enum that outgrows its table.
-    /// </summary>
-    private int DailyWageFor(ServiceRank rank)
-    {
-        var table = _config?.GetConfig()?.Progression?.DailyWageByRank;
-        var index = (int)rank;
-        return table != null && index >= 0 && index < table.Count ? table[index] : 0;
     }
 
     /// <summary>The active field duty's title string: its loaded row's own, or the composed key with generic English when the row is gone; null when no duty is active.</summary>
