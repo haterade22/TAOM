@@ -255,3 +255,19 @@ blocks agents from `.claude/settings.json`, which WP102 Step 0 and WP103 Part C 
    115), and 127 onward. Plans 108, 126, 133 and 134 defer their item verdicts under rule 2.
 7. **On refresh:** when the public Armory is installed, re-run WP101 Step B7 and the deferred steps, and replace the
    provisional baseline with the measured one.
+
+## D26: the in-game test moves to the end (2026-11-05, maintainer's instruction)
+
+The maintainer said the in-game test happens at the end, so D25 rule 6 no longer holds 127 onward for that reason. D25
+otherwise stands, including the data rule (rule 2), the WP102 and WP103 waiver (rule 4) and the integration branch (rule 5).
+
+1. **Now runnable:** 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 139, 141, 144.
+2. **Still held:** 102, 103, 116 (settings), 115 (release choices), 121 (Modding Kit), 122 (depends on 115), and 138, 140,
+   142, 143, 145, which depend on those.
+3. **Partial is the expected outcome for some.** Where a step needs item, roster, equipment, troop or mesh data, or `.claude/`
+   work that needs WP102's or WP103's output, defer that step, list it, and land what does not depend on it. A dependency
+   on a held WP is waived only under D25 rule 4.
+4. **No paid calls.** `tools/translate_with_claude.py` and anything else that spends money is not run. Strings stay
+   registered and untranslated, and the translation pass is listed as owed.
+5. **Known plan misprediction.** A compile-RED step that predicts CS0122 for a private member in another assembly prints
+   CS1061 at that same member: Roslyn does not import private metadata. Treat that as matching and note it (WP119).
