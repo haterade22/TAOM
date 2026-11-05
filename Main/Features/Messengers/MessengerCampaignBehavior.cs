@@ -46,19 +46,22 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
     private CampaignGameStarter _lastSessionStarter;
     private bool _justLoadedFromSave;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IMessengerConversationState _conversation;
 
     public MessengerCampaignBehavior(
         IMessengerService service,
         IMessengerStateStore store,
         IMessengerSettingsProvider settings,
         IModLogger logger,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        IMessengerConversationState conversation)
     {
         _service = service;
         _store = store;
         _settings = settings;
         _logger = logger;
         _coopSession = coopSession;
+        _conversation = conversation;
     }
 
     // --- CampaignBehaviorBase ---
@@ -170,6 +173,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             _lastSessionStarter = starter;
             _dialogsRegistered = false;
             _processingArrivedMessenger = false;
+            _conversation.Close();
             _activeMessenger = null;
             _currentMission = null;
             _originalPosition = Vec2.Invalid;
@@ -387,6 +391,9 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         else
             targetParty = target.PartyBelongedTo?.Party ?? target.BornSettlement?.Party;
 
+        // A messenger conversation is indistinguishable from a visit by engine state (a real encounter, and the main
+        // party inside the target's settlement), so other features read this flag to tell them apart.
+        _conversation.Open();
         PlayerEncounter.Start();
         PlayerEncounter.Current.SetupFields(mainParty, targetParty ?? mainParty);
         Campaign.Current.CurrentConversationContext = ConversationContext.Default;
@@ -428,6 +435,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             _activeMessenger = null;
             _processingArrivedMessenger = false;
             _originalPosition = Vec2.Invalid;
+            _conversation.Close();
         }
     }
 
@@ -444,6 +452,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         _currentMission?.RemoveListener(this);
         _currentMission = null;
         _processingArrivedMessenger = false;
+        _conversation.Close();
 
         // Defer settlement cleanup by one tick — PlayerEncounter.Finish must not run inside OnEndMission
         CampaignEvents.TickEvent.AddNonSerializedListener(this, CleanUpSettlementEncounter);
