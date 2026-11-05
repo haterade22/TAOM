@@ -32,7 +32,7 @@ The mod stays offline: TAOM has no network code, and this adds none. A direct up
 | `cheatMode` | `NativeConfig.CheatMode` at launch | Must be false |
 | `mods` | Active modules, as `<id> <version>`. These versions are the only record of the engine changeset, the Armory and `TAOM_Map` | Shown to moderators |
 | `autoplay`, `garrisonScale`, `targetWaves` | The run's options | Must be false, 1 and null: anything else is a test run |
-| `maxSpeed` | The highest mission speed the run used: 1, 2, 4 or 10. It is added to schema 1 without a bump, because no released build writes schema 1 yet. A report with no `maxSpeed` predates the field and reads as 1 | Rule 13 scales by it. Whether a run above 1 counts on the board is open, see "The boards" |
+| `maxSpeed` | The highest mission speed the run used: 1, 2, 4 or 10. It is added to schema 1 without a bump, because no released build writes schema 1 yet. A report with no `maxSpeed` predates the field and reads as 1 | Rule 13 scales by it. A run at any speed counts on the board, see "The boards" |
 | `startedUtc`, `endedUtc` | Real time | The wave times must fit between them, scaled by `maxSpeed` |
 | `final` (always false on a board run, so never required), `reason`, `wave`, `wavesCleared`, `kills`, `fled`, `fleeingPeak`, `playerDeaths`, `wavesFelled` | The result | The score and the rules below |
 | `waves[]` | Per wave: `wave`, `kills`, `felled`, `lost`, `seconds` | The rules below |
@@ -68,7 +68,7 @@ All six reports on record pass rules 4 to 12, each against its own table. All si
 
 - **One board per fortress and per `balance`:** a change to the three JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
 - **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it. The game's own "Best run" line ranks waves, then kills, so it can disagree with the board.
-- **Open, Mike's call: whether a run with `maxSpeed` above 1 counts.** Options: it counts like any run; it counts on a separate board; it is flagged for a moderator; or it is refused. The code records the speed and decides nothing. Facts for the choice: speed is a mission clock change (2x and 4x lengthen each step up to 0.1 s, 10x is the engine's fast forward, with `Agent.Tick`, `Team.Tick` and `OnMissionTick` on the main thread in steps of up to 0.1 s and `Agent.TickParallel` still through `TWParallel.For` (`MissionState.cs:171-197`), or a fixed step of up to 0.1 s while a person drives), so a fast run is not the same fight as a 1x run, as Fords found for 10x ([balance-log.md](../fords-of-war/balance-log.md)). Nothing has measured the difference in this mode yet.
+- **A run at any speed counts (Mike, 2026-11-04).** `maxSpeed` above 1 needs no separate board, flag or refusal. The report still records it, so a board can show it. Four unattended runs at 10x cleared 5 waves once, against three of three at 1x, and Mike accepted that 10x may play harder.
 - **One entry per Discord account per board:** the best one shows.
 - **The top 10:** an entry shows as unverified until a moderator accepts a clip link. A clip must show the end panel of that run, with its waves, kills and defenders lost.
 - **Opening:** with the first release that holds the mode, once its balance settles. No released build exists yet, so rule 2 cannot pass today.
