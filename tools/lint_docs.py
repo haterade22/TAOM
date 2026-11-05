@@ -237,6 +237,7 @@ class LintReport:
     budget: list[tuple[Path, int, str, str]] = field(default_factory=list)
     model_registry: list[tuple[Path, int, str, str]] = field(default_factory=list)
     dashes: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    rca_followups: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -252,6 +253,7 @@ class LintReport:
             + len(self.budget)
             + len(self.model_registry)
             + len(self.dashes)
+            + len(self.rca_followups)
         )
 
 
@@ -1003,10 +1005,18 @@ def _git_out(*args: str) -> str | None:
 _HUNK_RE = re.compile(r"^@@ -\S+ \+(\d+)(?:,(\d+))? @@")
 
 
-def _changed_markdown_lines(base: str) -> dict[Path, set[int] | None]:
-    """Added line numbers per markdown file. None means 'the whole file is new'."""
+def _changed_markdown_lines(
+    base: str, staged: bool = False, pathspec: str = "*.md"
+) -> dict[Path, set[int] | None]:
+    """Added line numbers per file matching `pathspec`. None means 'the whole file is new'.
+
+    staged=True diffs the index against `base` (`git diff --cached`) and skips the untracked
+    listing: what a commit would record, not what is on disk. A file renamed into the pathspec
+    from outside it has no visible source, so it reads as new and is reported in full.
+    """
     changed: dict[Path, set[int] | None] = {}
-    diff = _git_out("-c", "core.quotePath=false", "diff", "-U0", base, "--", "*.md")
+    cached = ["--cached"] if staged else []
+    diff = _git_out("-c", "core.quotePath=false", "diff", *cached, "-U0", base, "--", pathspec)
     if diff:
         current: Path | None = None
         prev = ""
@@ -1032,8 +1042,8 @@ def _changed_markdown_lines(base: str) -> dict[Path, set[int] | None]:
                     if lines is not None:
                         lines.update(range(start, start + count))
             prev = line
-    untracked = _git_out(
-        "-c", "core.quotePath=false", "ls-files", "--others", "--exclude-standard", "--", "*.md"
+    untracked = None if staged else _git_out(
+        "-c", "core.quotePath=false", "ls-files", "--others", "--exclude-standard", "--", pathspec
     )
     if untracked:
         for name in untracked.splitlines():
@@ -1053,6 +1063,102 @@ def check_ai_dashes(base: str = "HEAD") -> list[tuple[Path, int, str, str]]:
         except Exception:
             continue
         findings.extend(scan_text_for_dashes(path, text, lines))
+    return findings
+
+
+# --- RCA FOLLOW-UP lines must cite an issue or a reason ---------------------
+#
+# A deferred finding written as a bare FOLLOW-UP is lost (#984): three times a
+# real defect sat in an RCA with no owner until an issue was filed. The uppercase
+# word is the project's marker for a deferral; lowercase "follow-up" is used
+# loosely and is ignored. Like the dash check, only NEW lines are reported.
+#
+# Matching runs on the line with inline code spans and link targets removed (as
+# the dash check does), so a passing mention in backticks is exempt and a link
+# anchor never counts as an issue. A link target that points at /issues/<n> is
+# kept for the issue match: a Markdown link to the issue is a citation.
+_FOLLOWUP_RE = re.compile(r"\bFOLLOW-UPS?\b")
+# A `#<number>` that is a real reference: not C#7, not an HTML entity (&#39;).
+_ISSUE_REF_RE = re.compile(r"(?<![\w&])#\d+\b|/issues/\d+\b")
+# `#<number>` after a label that numbers something else, and a hex colour.
+_NOT_AN_ISSUE_RE = re.compile(
+    r"\b(?:finding|crash|case|step|item|row|line)s?\s+#\d+\b|(?<![\w&])#[0-9a-fA-F]{6}\b",
+    re.IGNORECASE,
+)
+# The house phrasings: "no issue: <reason>", "no issue filed, <reason>", "no issues filed,
+# since <reason>", "no issue filed (public action)", "no issue filed from this review lead, since
+# <reason>", and the deep-review template's "none is filed because <reason>". Up to eight plain
+# words may sit between the phrase and its reason marker (`:` `;` `,` `(` because since); a
+# sentence end does not count as a marker, so "with no issue." stays bare. The marker must be
+# followed by text that is not a cell edge.
+_NO_ISSUE_RE = re.compile(
+    r"\b(?:no issues?(?: filed)?|none is filed)(?:\s+[^\s|.:;,()]+){0,8}?\s*"
+    r"(?:[:;,(]|\s(?:because|since)\b)\s*[^\s|)]",
+    re.IGNORECASE,
+)
+_ISSUE_LINK_TARGET_RE = re.compile(r"/issues/\d+\b")
+_RCA_PATHSPEC = "docs/reviews/rca-*.md"
+
+
+def _is_rca_doc(path: Path) -> bool:
+    return path.parent == REPO_ROOT / "docs" / "reviews" and path.name.startswith("rca-") \
+        and path.suffix == ".md"
+
+
+def _followup_has_owner(raw: str) -> bool:
+    prose = _INLINE_CODE_RE.sub(" ", raw)
+    # A link target is dropped, except an /issues/<n> inside it.
+    prose = _LINK_TARGET_RE.sub(
+        lambda m: " " + " ".join(_ISSUE_LINK_TARGET_RE.findall(m.group(0))) + " ", prose)
+    prose = _NOT_AN_ISSUE_RE.sub(" ", prose)
+    return bool(_ISSUE_REF_RE.search(prose) or _NO_ISSUE_RE.search(prose))
+
+
+def scan_text_for_followups(
+    path: Path, text: str, only_lines: set[int] | None = None
+) -> list[tuple[Path, int, str, str]]:
+    """Report FOLLOW-UP lines with neither an issue reference nor `no issue: <reason>`.
+
+    A table row is one line, so an issue in another cell satisfies it. Fenced blocks
+    are skipped by iter_lines_outside_code_fences; the whole file is walked even when
+    only_lines restricts what is reported, because an added line inside a code block is
+    only identifiable from the lines above it.
+    """
+    findings: list[tuple[Path, int, str, str]] = []
+    for lineno, raw in iter_lines_outside_code_fences(text):
+        if only_lines is not None and lineno not in only_lines:
+            continue
+        prose = _INLINE_CODE_RE.sub(" ", raw)
+        prose = _LINK_TARGET_RE.sub(" ", prose)
+        if not _FOLLOWUP_RE.search(prose):
+            continue
+        if _followup_has_owner(raw):
+            continue
+        findings.append((path, lineno, "followup-no-owner", raw.strip()[:120]))
+    return findings
+
+
+def check_rca_followups(base: str = "HEAD", staged: bool = False) -> list[tuple[Path, int, str, str]]:
+    """Bare FOLLOW-UP lines in the new lines of docs/reviews/rca-*.md. staged=True reads the
+    index (`git diff --cached`, `git show :<path>`) instead of the working tree."""
+    findings: list[tuple[Path, int, str, str]] = []
+    changed = _changed_markdown_lines(base, staged=staged, pathspec=_RCA_PATHSPEC)
+    for path, lines in sorted(changed.items(), key=lambda kv: str(kv[0])):
+        if not _is_rca_doc(path):
+            continue
+        if staged:
+            text = _git_out("show", f":{path.relative_to(REPO_ROOT).as_posix()}")
+            if text is None:
+                continue
+            text = text.lstrip("\ufeff")
+        else:
+            if not path.is_file():
+                continue
+            try:
+                text = path.read_text(encoding="utf-8-sig")
+            except Exception:
+                continue
+        findings.extend(scan_text_for_followups(path, text, lines))
     return findings
 
 
@@ -1080,6 +1186,7 @@ def format_report(report: LintReport, quick: bool) -> str:
         out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
         out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
         out.append(f"- Em/en dashes in newly written prose: **{len(report.dashes)}**")
+        out.append(f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -1186,6 +1293,16 @@ def format_report(report: LintReport, quick: bool) -> str:
             for f, lineno, kind, snippet in report.dashes:
                 out.append(f"- `{rel(f)}:{lineno}` — [{kind}] `{snippet}`")
             out.append("")
+        if report.rca_followups:
+            out.append("## RCA FOLLOW-UP lines with no issue or reason")
+            out.append("")
+            out.append("A deferred finding with no owner is lost (#984). Rule: a newly written "
+                       "`FOLLOW-UP` line in `docs/reviews/rca-*.md` must cite an issue (`#<number>`) "
+                       "or say `no issue:` and why. Only NEW lines are reported.")
+            out.append("")
+            for f, lineno, kind, snippet in report.rca_followups:
+                out.append(f"- `{rel(f)}:{lineno}` — [{kind}] `{snippet}`")
+            out.append("")
     if report.total == 0:
         out.append("**Clean — no findings.**")
         out.append("")
@@ -1204,11 +1321,16 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout (atomic via .tmp+rename)")
     ap.add_argument("--fail-on-dead", action="store_true", help="Exit 1 if any dead links found")
     ap.add_argument("--fail-on-drift", action="store_true",
-                    help="Exit 1 if any config-example drift OR version mismatch found (pre-commit gate)")
+                    help="Exit 1 on config-example drift, a version mismatch, or a newly written RCA "
+                         "FOLLOW-UP line with no issue or reason (pre-commit gate)")
+    ap.add_argument("--staged", action="store_true",
+                    help="Read the RCA FOLLOW-UP check's lines from the index, not the working "
+                         "tree: what a commit would record.")
     ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
     ap.add_argument("--dash-base", default="HEAD", metavar="REF",
-                    help="Base ref for the em/en dash check (default HEAD, i.e. uncommitted writing). "
-                         "Pass a branch point to scan a whole branch.")
+                    help="Base ref for the new-lines-only checks (em/en dashes, RCA FOLLOW-UP "
+                         "lines; default HEAD, i.e. uncommitted writing). Pass a branch point to "
+                         "scan a whole branch.")
     args = ap.parse_args(argv)
 
     files: list[Path] = []
@@ -1229,6 +1351,7 @@ def main(argv: list[str]) -> int:
         report.budget = check_claude_md_budget()
         report.model_registry = check_model_registry()
         report.dashes = check_ai_dashes(args.dash_base)
+        report.rca_followups = check_rca_followups(args.dash_base, staged=args.staged)
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
@@ -1244,6 +1367,7 @@ def main(argv: list[str]) -> int:
             f"claude_budget:     {len(report.budget)}",
             f"model_registry:    {len(report.model_registry)}",
             f"ai_dashes:         {len(report.dashes)}",
+            f"rca_followups:     {len(report.rca_followups)}",
             f"total_findings:    {report.total}",
             "---",
             "",
@@ -1271,6 +1395,7 @@ def main(argv: list[str]) -> int:
         report.config_drift
         or report.version_mismatches
         or (CLAUDE_MD_BUDGET_ENFORCE and gating_budget)
+        or report.rca_followups
     ):
         return 1
     return 0
