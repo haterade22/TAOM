@@ -154,17 +154,12 @@ being needed:
 
 ## Regeneration hazard
 
-`tools/complete_lords_xslt.py --apply` rewrites **only** `lords.xslt`; `characters/lords.xml` has
-no regeneration guard and is never at risk. Two things to know before running it:
-
-1. For an id where **vanilla says `is_female="true"` and TAOM wants male**, deleting the attribute
-   is not enough: the merge falls through to `elif vanilla_val is not None` and copies `true` back.
-   The id must also be in `GENDER_OVERRIDES` with value `None`. Where vanilla says `false` and TAOM
-   wants female, an explicit `<xsl:attribute>` survives on its own. `lord_4_6`, `lord_WE8_c`,
-   `lord_WE9_u` and `lord_WE9_u2` are in that table.
-2. `ATTR_ORDER` does not contain `race`, so `--apply` **silently deletes all ten `race` attributes**
-   from `lords.xslt`, Sauron's included. Only `ShippedUncapturableHeroesConfigTests` would notice,
-   and only for Sauron.
+`tools/complete_lords_xslt.py --apply` only inserts templates for vanilla lords `lords.xslt` lacks (#959; the contract is in
+[tools/README.md](../../tools/README.md)), so it never rewrites an existing template. A deleted `is_female` line on a
+vanilla-female id stays deleted, and the `race` attributes and `<Equipments>` blocks are safe. `characters/lords.xml` has no
+regenerator and is never at risk. Before #959 the same command rebuilt the whole file: it copied vanilla's `true` back over a
+deleted line unless the id sat in a `GENDER_OVERRIDES` table (since removed), and it dropped every `race` attribute and
+`<Equipments>` block.
 
 ## Save compatibility
 
