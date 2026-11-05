@@ -1,4 +1,3 @@
-using System;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Domain;
 
@@ -17,8 +16,6 @@ public class EnlistmentStateMachine : IEnlistmentStateMachine
 
     public EnlistmentState State => _store.Record.State;
 
-    public event Action<EnlistmentState, EnlistmentState> Transitioned;
-
     public bool CanTransition(EnlistmentState to) => EnlistmentTransitionTable.IsLegal(State, to);
 
     public bool TryTransition(EnlistmentState to)
@@ -31,7 +28,6 @@ public class EnlistmentStateMachine : IEnlistmentStateMachine
         }
 
         _store.Record.State = to;
-        Transitioned?.Invoke(from, to);
         return true;
     }
 }

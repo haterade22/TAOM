@@ -12,6 +12,7 @@ public class EnlistmentMenuService : IEnlistmentMenuService
 
     private readonly IEnlistmentStore _store;
     private readonly IMobilePartyAttachmentAdapter _attachment;
+    private readonly IEncounterAdapter _encounter;
     private readonly IModLogger _logger;
 
     // Built once in the ctor (singleton provider, process-stable config) — hot path.
@@ -22,10 +23,12 @@ public class EnlistmentMenuService : IEnlistmentMenuService
         IEnlistmentStore store,
         IEnlistmentConfigProvider config,
         IMobilePartyAttachmentAdapter attachment,
+        IEncounterAdapter encounter,
         IModLogger logger)
     {
         _store = store;
         _attachment = attachment;
+        _encounter = encounter;
         _logger = logger;
         _redirectIds = new HashSet<string>(
             config.GetConfig().RedirectMenuIds ?? new List<string>(), StringComparer.Ordinal);
@@ -39,6 +42,27 @@ public class EnlistmentMenuService : IEnlistmentMenuService
     /// </summary>
     public bool IsRedirectable(string menuId) =>
         !string.IsNullOrEmpty(menuId) && _redirectIds.Contains(menuId);
+
+    /// <summary>
+    /// Starts from the <see cref="BattleCommandPolicy"/> predicate (the command strip's) and then
+    /// releases the exits when a truce leaves the soldier no way forward. The state check comes first
+    /// so an ordinary battle menu refresh never reads the engine; the truce probe runs only when the
+    /// gate is about to block. No logging, the predicate runs per refresh.
+    /// </summary>
+    public bool ShouldBlockBattleExit()
+    {
+        var state = _store.Record.State;
+        if (state != EnlistmentState.EnlistedBattle)
+            return false;
+
+        var leads = _encounter.IsMainPartyLeadingItsBattleSide;
+        if (leads == null || !BattleCommandPolicy.ShouldStripPlayerCommand(state, leads.Value))
+            return false;
+
+        // Never hide the last exit: vanilla's honour check greys out Attack and Send troops under a
+        // safe-passage truce, and this menu is the only thing that advances the player's own map event.
+        return !_encounter.IsAttackBarredByTruce;
+    }
 
     public bool TryRedirectMenu(string requestedMenuId, out string redirectedMenuId)
     {

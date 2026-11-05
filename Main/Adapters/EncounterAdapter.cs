@@ -1,5 +1,8 @@
 using System;
+using Helpers;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -12,6 +15,8 @@ public sealed class EncounterAdapter : IEncounterAdapter
 {
     private readonly IModLogger _logger;
 
+    private bool _joinedBattleReadFailed;
+
     public EncounterAdapter(IModLogger logger)
     {
         _logger = logger;
@@ -20,6 +25,26 @@ public sealed class EncounterAdapter : IEncounterAdapter
     public bool HasCurrent => PlayerEncounter.Current != null;
 
     public bool IsInsideSettlement => PlayerEncounter.InsideSettlement;
+
+    public bool IsJoinedBattleEncounter
+    {
+        get
+        {
+            try
+            {
+                return PlayerEncounter.Current?.IsJoinedBattle == true;
+            }
+            catch (Exception ex)
+            {
+                if (!_joinedBattleReadFailed)
+                {
+                    _joinedBattleReadFailed = true;
+                    _logger?.LogError($"[Enlistment] IsJoinedBattleEncounter failed: {ex.Message}");
+                }
+                return false;
+            }
+        }
+    }
 
     public string EncounteredPartyId => PlayerEncounter.EncounteredMobileParty?.StringId;
 
@@ -43,6 +68,32 @@ public sealed class EncounterAdapter : IEncounterAdapter
         catch (Exception ex)
         {
             _logger?.LogError($"[Enlistment] GetPartyBattleSide('{partyId}') failed: {ex.Message}");
+            return null;
+        }
+    }
+
+    public bool IsPartyRaiding(string partyId)
+    {
+        try
+        {
+            return VillageRaidReader.IsRaiding(FindParty(partyId));
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] IsPartyRaiding('{partyId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public string GetOpposingLeaderFactionId(string partyId)
+    {
+        try
+        {
+            return FindParty(partyId)?.Party?.MapEventSide?.OtherSide?.LeaderParty?.MapFaction?.StringId;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] GetOpposingLeaderFactionId('{partyId}') failed: {ex.Message}");
             return null;
         }
     }
@@ -151,6 +202,26 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
+    public bool IsAttackBarredByTruce
+    {
+        get
+        {
+            try
+            {
+                // The cast picks the (MenuContext, TextObject) ctor; it only stores its arguments and
+                // IsEnabled defaults to true, so the probe stays enabled unless the check disables it.
+                var probe = new MenuCallbackArgs((MenuContext)null, null);
+                MenuHelper.CheckEnemyAttackableHonorably(probe);
+                return !probe.IsEnabled;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] IsAttackBarredByTruce failed: {ex.Message}");
+                return true;
+            }
+        }
+    }
+
     // Mechanical joinability only — see IEncounterAdapter for why MapEvent.CanPartyJoinBattle
     // must NOT be reinstated here.
     public bool IsCommanderBattleJoinable(string partyId, PartyBattleSide side)
@@ -208,13 +279,11 @@ public sealed class EncounterAdapter : IEncounterAdapter
             // Side LEADER parties, not the MapEventStarted arguments: leaders are PartyBase, so a
             // besieged settlement resolves. Going through MobileParty ids drops sieges silently.
             //
-            // PRECONDITION (verified against 1.4.7): passing two FOREIGN parties here — vanilla
-            // always passes MainParty as one of them — is only safe because
-            // MobileParty.MainParty.AttachedTo is null. PlayerEncounter.SetupFields picks
-            // _encounteredParty by excluding MainParty and MainParty.AttachedTo, so with
-            // AttachedTo set it could resolve to neither leader and EncounteredBattle would not
-            // match this event. Enlistment tracks the player via IsActive/IsVisible/position sync
-            // and ParkNear explicitly clears AttachedTo — if that ever changes, revisit this.
+            // Since #443 the main party may already be attached to the commander's army (the army merge
+            // in ServiceBattleService.TryJoin runs before EnsureEncounterAgainst). PlayerEncounter.SetupFields
+            // (v1.4.8 PlayerEncounter.cs:750) skips MainParty.AttachedTo, so the encountered party resolves
+            // to the other side's leader or its settlement (:763; for a raid, the village). The guard is
+            // the EncounteredBattle check below.
             var attackerLeader = mapEvent.AttackerSide?.LeaderParty;
             var defenderLeader = mapEvent.DefenderSide?.LeaderParty;
             if (attackerLeader == null || defenderLeader == null)
@@ -428,6 +497,24 @@ public sealed class EncounterAdapter : IEncounterAdapter
         if (settlement.IsCastle) return new CastleEncounter(settlement);
         if (settlement.IsHideout) return new HideoutEncounter(settlement);
         return null;
+    }
+
+    // Forgets the ended battle's result on a reused encounter (#1021); see IEncounterAdapter.
+    public void ForgetEndedBattleResult()
+    {
+        try
+        {
+            if (PlayerEncounter.Current == null || PlayerEncounter.Battle != null
+                || PlayerEncounter.CampaignBattleResult == null)
+                return;
+
+            PlayerEncounter.CampaignBattleResult = null;
+            _logger?.LogInfo("[Enlistment] cleared the last battle's result from the reused encounter (#1021)");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] ForgetEndedBattleResult failed: {ex.Message}");
+        }
     }
 
     // NO DEFAULT, deliberately. The engine's own default is TRUE; this once defaulted to false,

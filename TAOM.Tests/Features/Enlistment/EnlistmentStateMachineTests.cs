@@ -39,19 +39,6 @@ public class EnlistmentStateMachineTests
     }
 
     [TestMethod]
-    public void TryTransition_LegalEdge_RaisesTransitionedEventWithFromAndTo()
-    {
-        EnlistmentState? observedFrom = null;
-        EnlistmentState? observedTo = null;
-        _machine.Transitioned += (from, to) => { observedFrom = from; observedTo = to; };
-
-        _machine.TryTransition(EnlistmentState.PetitionPending);
-
-        Assert.AreEqual(EnlistmentState.NotEnlisted, observedFrom);
-        Assert.AreEqual(EnlistmentState.PetitionPending, observedTo);
-    }
-
-    [TestMethod]
     public void TryTransition_IllegalEdge_RejectsKeepsStateLogsWarning()
     {
         var result = _machine.TryTransition(EnlistmentState.EnlistedBattle);
@@ -59,17 +46,6 @@ public class EnlistmentStateMachineTests
         Assert.IsFalse(result);
         Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("NotEnlisted") && s.Contains("EnlistedBattle")));
-    }
-
-    [TestMethod]
-    public void TryTransition_IllegalEdge_DoesNotRaiseEvent()
-    {
-        var raised = false;
-        _machine.Transitioned += (_, _) => raised = true;
-
-        _machine.TryTransition(EnlistmentState.Discharging);
-
-        Assert.IsFalse(raised);
     }
 
     [TestMethod]

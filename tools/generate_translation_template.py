@@ -26,7 +26,7 @@ LANG_DIR = TAOM_BASE / "Languages"
 # and everything comes back from cache — but the correct order still saves a round trip:
 #
 #   1. register EVERY key in the source XML first (incl. generated ones, e.g.
-#      tools/generate_enlistment_duty_strings.py)
+#      tools/harvest_duty_strings.py)
 #   2. THEN run this generator
 #   3. THEN translate
 #

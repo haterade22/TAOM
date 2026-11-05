@@ -27,6 +27,8 @@ public class EnlistmentWaitMenuPresenterTests
     private IEnlistmentPlayerActionService _actions = null!;
     private IGameMenuAdapter _menuAdapter = null!;
     private IEnlistmentFeatureSettingsProvider _settings = null!;
+    private IServiceStatusService _status = null!;
+    private IServiceStatusTextWriter _writer = null!;
     private EnlistmentWaitMenuPresenter _sut;
 
     [TestInitialize]
@@ -49,9 +51,35 @@ public class EnlistmentWaitMenuPresenterTests
         _settings = Substitute.For<IEnlistmentFeatureSettingsProvider>();
         _settings.IsEnabled.Returns(true);
         _settings.OfferLeaveOnArrival.Returns(true);
+        _status = Substitute.For<IServiceStatusService>();
+        _writer = Substitute.For<IServiceStatusTextWriter>();
         _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop,
-            _actions, _menuAdapter, Substitute.For<IServiceStatusService>(), _settings,
+            _actions, _menuAdapter, _status, _writer, _settings,
             Substitute.For<IModLogger>());
+    }
+
+    // ---- A discharge during load leaves the saved wait menu up with nobody serving (#828) ----
+
+    [TestMethod]
+    public void RefreshWaitText_NotEnlisted_WritesTheNotServingText()
+    {
+        _actions.IsServing.Returns(false);
+
+        _sut.RefreshWaitText();
+
+        _writer.Received(1).WriteNotServing();
+        _status.DidNotReceive().RefreshIfChanged();
+    }
+
+    [TestMethod]
+    public void RefreshWaitText_Enlisted_DoesNotWriteTheNotServingText()
+    {
+        _actions.IsServing.Returns(true);
+
+        _sut.RefreshWaitText();
+
+        _writer.DidNotReceive().WriteNotServing();
+        _status.Received(1).RefreshIfChanged();
     }
 
     [TestMethod]

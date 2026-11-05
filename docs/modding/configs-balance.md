@@ -239,6 +239,10 @@ Three arrays: **13 `fieldDuties`, 11 `interactiveDuties`, 3 `incidents`**. <!-- 
 | Field | Type | Required | What it does |
 |---|---|---|---|
 | `id` | string | yes | Duty id, also the localization key stem |
+| `title` | string | yes | `{=taom_enlist_duty_<id>_title}English`; a row with no title, or a key that is not exactly this, is skipped with a warning |
+| `success` / `failure` | string | field duties | `{=taom_enlist_duty_<id>_success}English` (and `_failure`): the result line the toast shows; a field row missing either is skipped with a warning naming the field |
+| `body` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_body}English`; a row missing it is skipped with a warning |
+| `optionA.label` / `optionB.label` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_opta}English` (and `_optb`); a row missing either is skipped with a warning; registered by `tools/harvest_duty_strings.py` ([enlistment](../features/enlistment.md)) |
 | `difficulty` | int | yes | Target the check must reach |
 | `durationHours` | int | yes | How long the duty runs |
 | `supportSkills` | string[] | yes | The check uses the **better** of the two, never their sum |
@@ -246,7 +250,7 @@ Three arrays: **13 `fieldDuties`, 11 `interactiveDuties`, 3 `incidents`**. <!-- 
 | `gates.minTrust` | int | no | Standing floor |
 | `gates.assignmentAffinity` | string | no | Assignment the row prefers |
 | `gates.requiredContexts` | string[] | no | Situations the row needs |
-| `reportReward` / `failureReward` | object | yes | `serviceXp`, `gold`, `skillId`, `skillXp`, `trust`, `relation`, `repDomain`, `repAmount` |
+| `reportReward` / `failureReward` | object | no | `serviceXp`, `gold`, `skillId`, `skillXp`, `trust`, `relation`, `renown` |
 
 The check is `bestSkill + max(0, trust) * 2 + rank * 4 + Next(0..50) >= difficulty` (`SkillCheckService.cs:29, 51, 53-58`). The roll caps at 50, so a row whose difficulty exceeds the reachable total of the weakest player its own gates admit by more than 50 is impossible, not hard. Shipped difficulties run 40 to 76 and every one of the 13 field rows has `failureReward.trust` of 0. <!-- measured: python json scan of difficulty and failureReward.trust over fieldDuties in enlistment_duties.json 2026-09-05 --> `FieldDutyReachabilityTests` pins three floors on this file; adding a row that breaks one fails the suite ([enlistment](../features/enlistment.md)).
 

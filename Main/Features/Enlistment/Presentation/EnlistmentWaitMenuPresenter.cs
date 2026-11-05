@@ -16,7 +16,10 @@ namespace TAOM.Features.Enlistment.Presentation;
 /// </summary>
 public interface IEnlistmentWaitMenuPresenter
 {
-    /// <summary>Resolve the commander name once and push the wait text. Called from menu init only.</summary>
+    /// <summary>
+    /// Resolve the commander name once and push the wait text, or the "service has ended" text when
+    /// nobody is serving. Called from menu init only.
+    /// </summary>
     void RefreshWaitText();
 
     void ShowServiceStatus();
@@ -67,6 +70,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IServiceStatusService _status;
     private readonly IEnlistmentPlayerActionService _actions;
     private readonly IGameMenuAdapter _gameMenu;
+    private readonly IServiceStatusTextWriter _writer;
     private readonly IEnlistmentFeatureSettingsProvider _settings;
     private readonly IModLogger _logger;
 
@@ -93,6 +97,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         IEnlistmentPlayerActionService actions,
         IGameMenuAdapter gameMenu,
         IServiceStatusService status,
+        IServiceStatusTextWriter writer,
         IEnlistmentFeatureSettingsProvider settings,
         IModLogger logger)
     {
@@ -105,6 +110,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _actions = actions;
         _gameMenu = gameMenu;
         _status = status;
+        _writer = writer;
         _settings = settings;
         _logger = logger;
     }
@@ -116,6 +122,14 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     /// </summary>
     public void RefreshWaitText()
     {
+        // A discharge during load leaves this menu up with nobody serving. The board has nothing
+        // true to say then; the status service would also decline to write (it needs a record).
+        if (!_actions.IsServing)
+        {
+            _writer.WriteNotServing();
+            return;
+        }
+
         _status.Invalidate();
         _status.RefreshIfChanged();
     }

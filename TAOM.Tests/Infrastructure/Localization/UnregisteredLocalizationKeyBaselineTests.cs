@@ -50,7 +50,7 @@ public class UnregisteredLocalizationKeyBaselineTests
     /// data (<c>"{=taom_enlist_duty_" + duty.Id + "_title}"</c>), which have no closing brace before
     /// the quote. Those cannot be resolved statically at all and are guarded per-family instead —
     /// see <c>NarrativeStringRegistrationTests</c> and
-    /// <c>generate_enlistment_duty_strings.py</c>.
+    /// <c>harvest_duty_strings.py</c> (duty text comes from <c>enlistment_duties.json</c>).
     /// </summary>
     private static readonly Regex KeyLiteral =
         new Regex(@"\{\{?=(taom_[A-Za-z0-9_]+)\}", RegexOptions.Compiled);

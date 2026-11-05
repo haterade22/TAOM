@@ -77,8 +77,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
     /// </summary>
     private static List<MeritBand> DefaultMeritBands() => new List<MeritBand>
     {
-        new MeritBand { MinScore = 80, ServiceXp = 30, Gold = 20, Trust = 2, Renown = 3, RepDomain = ReputationDomain.Field, RepAmount = 2, GradeKey = "distinguished" },
-        new MeritBand { MinScore = 60, ServiceXp = 20, Gold = 10, Trust = 1, Renown = 2, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "strong" },
+        new MeritBand { MinScore = 80, ServiceXp = 30, Gold = 20, Trust = 2, Renown = 3, GradeKey = "distinguished" },
+        new MeritBand { MinScore = 60, ServiceXp = 20, Gold = 10, Trust = 1, Renown = 2, GradeKey = "strong" },
         // `strong` is the LOWEST band that pays standing, and moving that line down is not a tuning
         // choice. 40 is reachable without fighting: a maximum-kill walkout banks 45 (leftFieldPenalty
         // cancels the survival weight and nothing else), and a soldier who merely stands inside his
@@ -86,8 +86,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         // pays both of them. `MeritTrustFloorTests` pins the boundary against this file AND against
         // enlistment_config.json, which must carry the same values — an install without the file
         // would otherwise earn standing at a different rate.
-        new MeritBand { MinScore = 40, ServiceXp = 12, Gold = 5, Trust = 0, Renown = 1, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "solid" },
-        new MeritBand { MinScore = 0, ServiceXp = 4, Gold = 0, Trust = 0, Renown = 0, RepDomain = ReputationDomain.None, RepAmount = 0, GradeKey = "rough" },
+        new MeritBand { MinScore = 40, ServiceXp = 12, Gold = 5, Trust = 0, Renown = 1, GradeKey = "solid" },
+        new MeritBand { MinScore = 0, ServiceXp = 4, Gold = 0, Trust = 0, Renown = 0, GradeKey = "rough" },
     };
 
     private static List<PromotionRequirement> DefaultPromotions() => new List<PromotionRequirement>
@@ -318,7 +318,7 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             // directional bonus, so a sign flip does not merely shrink the reward — a negative band
             // eats into the flat win/loss base, and a good fight would pay LESS than a bad one.
             // Trust stays out on purpose: a band docking trust is a legitimate tuning choice.
-            if (band.MinScore < 0 || band.ServiceXp < 0 || band.Gold < 0 || band.RepAmount < 0 || band.Renown < 0)
+            if (band.MinScore < 0 || band.ServiceXp < 0 || band.Gold < 0 || band.Renown < 0)
                 return false;
             if (i > 0 && band.MinScore >= bands[i - 1].MinScore)
                 return false;
@@ -365,6 +365,10 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
                 || !RewardValid(duty.ReportReward) && Warn(duty.Id, "negative or unknown-skill reportReward", out reason)
                 || !RewardValid(duty.FailureReward) && Warn(duty.Id, "negative or unknown-skill failureReward", out reason)
                 || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason)
+                || DutyText.Problems(duty.Id,
+                    (duty.Title, DutyText.TitleSuffix, "title"),
+                    (duty.Success, DutyText.SuccessSuffix, "success"),
+                    (duty.Failure, DutyText.FailureSuffix, "failure")) is { } fieldTextProblem && Warn(duty.Id, fieldTextProblem, out reason)
                 // A row with no supportSkills would roll against skill 0 forever — silently
                 // unwinnable at any rank. SKIP it rather than ship a duty nobody can pass.
                 || (duty.SupportSkills == null || duty.SupportSkills.Count == 0) && Warn(duty.Id, "supportSkills is empty — the duty would roll against skill 0", out reason)
@@ -387,7 +391,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             if (RowInvalid(duty?.Id, seenIds, out var reason)
                 || !OptionValid(duty.OptionA) && Warn(duty.Id, OptionProblem(duty.OptionA), out reason)
                 || !OptionValid(duty.OptionB) && Warn(duty.Id, OptionProblem(duty.OptionB), out reason)
-                || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason))
+                || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason)
+                || PopupTextProblem(duty.Id, duty.Title, duty.Body, duty.OptionA, duty.OptionB) is { } textProblem && Warn(duty.Id, textProblem, out reason))
             {
                 _ = reason;
                 continue;
@@ -402,7 +407,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
                 || !FiniteFloatValidator.IsFiniteInRange(incident.Chance, 0f, 1f) && Warn(incident.Id, $"chance={incident.Chance} must be finite in [0,1]", out reason)
                 || !KnownIncidentEffects.Contains(incident.Effect ?? "") && Warn(incident.Id, $"unknown effect '{incident.Effect}'", out reason)
                 || !OptionValid(incident.OptionA) && Warn(incident.Id, OptionProblem(incident.OptionA), out reason)
-                || !OptionValid(incident.OptionB) && Warn(incident.Id, OptionProblem(incident.OptionB), out reason))
+                || !OptionValid(incident.OptionB) && Warn(incident.Id, OptionProblem(incident.OptionB), out reason)
+                || PopupTextProblem(incident.Id, incident.Title, incident.Body, incident.OptionA, incident.OptionB) is { } incidentTextProblem && Warn(incident.Id, incidentTextProblem, out reason))
             {
                 _ = reason;
                 continue;
@@ -442,7 +448,7 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
     {
         if (reward == null)
             return true;
-        if (reward.ServiceXp < 0 || reward.Gold < 0 || reward.SkillXp < 0 || reward.RepAmount < 0)
+        if (reward.ServiceXp < 0 || reward.Gold < 0 || reward.SkillXp < 0)
             return false;
         return string.IsNullOrEmpty(reward.SkillId) || KnownSkills.Contains(reward.SkillId);
     }
@@ -463,6 +469,14 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             ?? (gates.ExcludedContexts ?? new List<string>()).FirstOrDefault(c => !KnownContexts.Contains(c))
             ?? "";
     }
+
+    /// <summary>First problem with the popup text of an interactive duty or incident, or null when all four strings are well formed.</summary>
+    private static string PopupTextProblem(string id, string title, string body, DutyOptionSpec optionA, DutyOptionSpec optionB)
+        => DutyText.Problems(id,
+            (title, DutyText.TitleSuffix, "title"),
+            (body, DutyText.BodySuffix, "body"),
+            (optionA?.Label, DutyText.OptionASuffix, "optionA.label"),
+            (optionB?.Label, DutyText.OptionBSuffix, "optionB.label"));
 
     private bool OptionValid(DutyOptionSpec option)
     {

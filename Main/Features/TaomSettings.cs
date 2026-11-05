@@ -462,11 +462,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // the enlisted player is parked hidden and inactive next to their commander, and the code that
     // un-hides them is the same code this switch disables — so a plain "stop running" would strand
     // them invisible on the map with no menu and no way out. The reconciler therefore performs one
-    // honourable discharge on the next tick and hands the player back properly.
+    // honourable discharge and hands the player back properly: on the next hourly tick, or, when the
+    // player is in a battle, once that battle has ended (#1021).
 
     [SettingPropertyGroup("Enlistment", GroupOrder = 41)]
     [SettingPropertyBool("Enable Enlistment", Order = 0, RequireRestart = false,
-        HintText = "Serve as a soldier in a lord's party — enlist, take a rank, draw wages, follow the column into battle. Turn OFF to remove the feature: the option to enlist disappears, and if you are already serving you are released honourably (you keep your pay and your gear) rather than being left parked on the map. Takes effect immediately; no restart. Default ON.")]
+        HintText = "Serve as a soldier in a lord's party — enlist, take a rank, draw wages, follow the column into battle. Turn OFF to remove the feature: the option to enlist disappears, and if you are already serving you are released honourably (you keep your pay and your gear) rather than being left parked on the map. Takes effect within three in-game hours (in a battle, once it ends); no restart. Default ON.")]
     public bool EnableEnlistment { get; set; } = true;
 
     // --- Enlistment / Diagnostics ---

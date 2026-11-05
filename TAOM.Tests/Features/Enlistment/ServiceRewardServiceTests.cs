@@ -302,8 +302,6 @@ public class ServiceRewardServiceTests
             SkillXp = 15,
             Trust = 2,
             Relation = 1,
-            RepDomain = ReputationDomain.Field,
-            RepAmount = 3,
         }, "test");
 
         Assert.AreEqual(30, _contentStore.Record.ServiceXp);
@@ -311,7 +309,6 @@ public class ServiceRewardServiceTests
         _skillXp.Received(1).AddSkillXp("main_hero", "Scouting", 15);
         _commander.Received(1).ApplyPlayerRelation("lord_1_1", 1);
         Assert.AreEqual(2, _contentStore.Record.Trust);
-        Assert.AreEqual(3, _contentStore.Record.FieldRep);
     }
 
     [TestMethod]
@@ -329,6 +326,16 @@ public class ServiceRewardServiceTests
     public void Grant_Null_DoesNotThrow()
     {
         _service.Grant(null, "null");
+    }
+
+    [TestMethod]
+    public void AdjustTrust_ClampsAtConfiguredFloor()
+    {
+        _contentStore.Record.Trust = -9;
+
+        _service.AdjustTrust(-5);
+
+        Assert.AreEqual(-10, _contentStore.Record.Trust);
     }
 
     [TestMethod]

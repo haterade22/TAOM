@@ -11,7 +11,7 @@ rows. See #434.
 This harvests only keys whose default text can be read straight out of the source
 literal (`"{=taom_key}Default text"`, or the interpolated `$"{{=taom_key}}..."` form).
 Keys COMPOSED at runtime from data ids cannot be seen here at all and are generated
-per-family instead -- tools/generate_enlistment_duty_strings.py is the model.
+per-family instead -- tools/harvest_duty_strings.py is the model.
 
 Idempotent: a key already present in any ModuleData XML is skipped, so re-running
 after hand-tuning a row leaves the tuned text alone.

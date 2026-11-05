@@ -162,7 +162,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
             _logger?.LogInfo($"[Enlistment] the company surgeon tended the player (+{healing} HP; medicine {medicine}, resting {resting})");
     }
 
-    public DailySummary RunDailyTick(double nowDays, double hourOfDay)
+    public DailySummary RunDailyTick(double nowDays)
     {
         var summary = new DailySummary();
 
@@ -208,7 +208,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         if (tables.DailyLeadershipXp > 0)
             _skillXp.AddSkillXp(playerId, "Leadership", tables.DailyLeadershipXp);
 
-        var rhythm = _rhythm.GetSnapshot(nowDays, hourOfDay);
+        var rhythm = _rhythm.GetSnapshot(nowDays);
         var contextSkill = AssignmentSkills.ContextSkill(rhythm);
         var contextXp = AssignmentSkills.ContextXp(rhythm, tables);
         if (contextSkill != null && contextXp > 0)

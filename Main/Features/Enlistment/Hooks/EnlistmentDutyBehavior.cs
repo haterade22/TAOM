@@ -50,7 +50,7 @@ public class EnlistmentDutyBehavior : CampaignBehaviorBase
     {
         if (!_coopSession.IsAuthority)
             return;
-        _duties.DailyOfferTick(CampaignTime.Now.ToDays, CampaignTime.Now.CurrentHourInDay);
+        _duties.DailyOfferTick(CampaignTime.Now.ToDays);
     }
 
 }

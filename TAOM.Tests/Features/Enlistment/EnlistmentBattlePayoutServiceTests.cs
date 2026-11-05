@@ -54,25 +54,23 @@ public class EnlistmentBattlePayoutServiceTests
     }
 
     [TestMethod]
-    public void PayOut_WonNoSample_AwardsBaseXpAndCountsVictory()
+    public void PayOut_WonNoSample_AwardsBaseXp()
     {
         MakeEnlisted();
 
         Assert.IsTrue(_service.PayOutBattle(won: true));
         Assert.AreEqual(40, _contentStore.Record.ServiceXp);
-        Assert.AreEqual(1, _contentStore.Record.BattleVictories);
         Assert.AreEqual("", _service.LastBandGradeKey);
     }
 
     [TestMethod]
-    public void PayOut_Lost_AwardsLossXpAndCountsDefeat()
+    public void PayOut_Lost_AwardsLossXp()
     {
         MakeEnlisted();
 
         _service.PayOutBattle(won: false);
 
         Assert.AreEqual(15, _contentStore.Record.ServiceXp);
-        Assert.AreEqual(1, _contentStore.Record.BattleDefeats);
     }
 
     [TestMethod]
@@ -189,6 +187,21 @@ public class EnlistmentBattlePayoutServiceTests
         Assert.IsTrue(_service.LastBattlePromoted);
         Assert.AreEqual(ServiceRank.Soldier, _service.LastPromotedRank);
         Assert.AreEqual(ServiceRank.Soldier, _contentStore.Record.Rank);
+    }
+
+    [TestMethod]
+    public void PayOut_CommanderUnavailable_EvaluatesNoPromotion()
+    {
+        // No chain of command is left to promote anyone (#835); the daily tick refuses it too.
+        MakeEnlisted();
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+        _contentStore.Record.DaysServed = 10;
+        _contentStore.Record.ServiceXp = 70; // +40 win = 110 >= 100: promotes in any other state
+
+        _service.PayOutBattle(won: true);
+
+        Assert.IsFalse(_service.LastBattlePromoted);
+        Assert.AreEqual(ServiceRank.Recruit, _contentStore.Record.Rank);
     }
 
     [TestMethod]

@@ -79,6 +79,17 @@ public static class ServiceWarPolicy
         return result;
     }
 
+    /// <summary>
+    /// Mid-term mirroring is for a player whose OWN CLAN is the oath identity (Mike, 2026-10-20). The
+    /// pin must be set, still be the player's current faction, and be his clan: a vassal's faction is
+    /// his kingdom, and a mid-term mirror would move that whole kingdom's diplomacy. A vassal keeps the
+    /// oath-and-discharge behaviour only.
+    /// </summary>
+    public static bool ShouldMirrorMidTerm(string oathFactionId, string currentFactionId, string playerClanId)
+        => !string.IsNullOrEmpty(oathFactionId)
+           && string.Equals(oathFactionId, currentFactionId, System.StringComparison.Ordinal)
+           && string.Equals(currentFactionId, playerClanId, System.StringComparison.Ordinal);
+
     private static HashSet<string> ToSet(IEnumerable<string> ids)
     {
         var set = new HashSet<string>();

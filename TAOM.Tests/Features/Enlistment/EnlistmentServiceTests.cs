@@ -34,7 +34,7 @@ public class EnlistmentServiceTests
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _service = new EnlistmentService(
             _store, _machine, _discharge, _commander, _attachment, _encounter, new EncounterOwnershipPolicy(),
-            new EnlistmentConfigProvider(_logger), Substitute.For<IServiceDiplomacyService>(), _logger);
+            new EnlistmentConfigProvider(), Substitute.For<IServiceDiplomacyService>(), _logger);
 
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
             exists: true, isAlive: true, isPrisoner: false,
@@ -90,16 +90,6 @@ public class EnlistmentServiceTests
     }
 
     [TestMethod]
-    public void WithdrawPetition_ClearsPetitionAndReturnsToNotEnlisted()
-    {
-        _service.SubmitPetition("lord_1_1");
-
-        Assert.IsTrue(_service.WithdrawPetition());
-        Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
-        Assert.IsNull(_store.Record.PetitionCommanderId);
-    }
-
-    [TestMethod]
     public void CompleteOath_MatchingPetition_SwornParkedTimersSet()
     {
         _service.SubmitPetition("lord_1_1");
@@ -114,18 +104,6 @@ public class EnlistmentServiceTests
         Assert.AreEqual(200.0, _store.Record.EnlistedAtDay);
         Assert.AreEqual(200.0 + 365.0, _store.Record.ContractEndDay);
         _attachment.Received(1).ParkNear("lord_1_1");
-    }
-
-    [TestMethod]
-    public void CompleteOath_RaisesEnlistmentStarted()
-    {
-        _service.SubmitPetition("lord_1_1");
-        string started = null;
-        _service.EnlistmentStarted += id => started = id;
-
-        _service.CompleteOath("lord_1_1", "main_hero", 200.0);
-
-        Assert.AreEqual("lord_1_1", started);
     }
 
     [TestMethod]

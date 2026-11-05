@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment;
 
 /// <summary>
 /// Applies and unwinds the commander's wars for an enlisted player (field report 5). Decision lives
-/// in <see cref="ServiceWarPolicy"/>; this owns the two moments and the bookkeeping between them.
+/// in <see cref="ServiceWarPolicy"/>; this owns the three moments (the oath, the join-time top-up
+/// and the discharge unwind) and the bookkeeping between them.
 /// </summary>
 public interface IServiceDiplomacyService
 {
@@ -15,6 +17,20 @@ public interface IServiceDiplomacyService
 
     /// <summary>Make peace with exactly the factions the mirror created, and forget the mirror.</summary>
     void UnwindServiceWars();
+
+    /// <summary>
+    /// Top up a missing war before a join, under the oath rules. True when the player is at war with
+    /// the faction afterwards (already was, or the declaration landed). #832.
+    /// </summary>
+    bool MirrorWarAtJoin(string factionId);
+
+    /// <summary>
+    /// #960: a vassal (the player has a kingdom and mid-term mirroring does not apply to him) sits out
+    /// a battle against a faction his kingdom is not at war with, so choosing Attack never declares a
+    /// kingdom war on the commander's behalf. Fails open: an empty foe or an empty player-enemy read
+    /// (a failed read) is false.
+    /// </summary>
+    bool ShouldSitOutAsVassal(string foeFactionId);
 }
 
 /// <inheritdoc />
@@ -22,15 +38,18 @@ public sealed class ServiceDiplomacyService : IServiceDiplomacyService
 {
     private readonly IEnlistmentStore _store;
     private readonly IServiceDiplomacyAdapter _diplomacy;
+    private readonly IPlayerContextAdapter _playerContext;
     private readonly IModLogger _logger;
 
     public ServiceDiplomacyService(
         IEnlistmentStore store,
         IServiceDiplomacyAdapter diplomacy,
+        IPlayerContextAdapter playerContext,
         IModLogger logger)
     {
         _store = store;
         _diplomacy = diplomacy;
+        _playerContext = playerContext;
         _logger = logger;
     }
 
@@ -56,21 +75,84 @@ public sealed class ServiceDiplomacyService : IServiceDiplomacyService
         var toDeclare = ServiceWarPolicy.FactionsToDeclareWarOn(
             _diplomacy.GetEnemiesOf(commanderHeroId), enemiesAtOath);
 
+        // A stale entry from before this oath must not survive it.
+        record.MirroredWars = new List<string>();
         var declared = new List<string>();
         foreach (var factionId in toDeclare)
         {
             if (_diplomacy.DeclareWarOn(factionId))
+            {
                 declared.Add(factionId);
+                Record(record, factionId);
+            }
         }
 
         // Only what ACTUALLY landed goes in the mirror. A declaration the engine refused (eliminated
         // faction, already at war through another path) must not leave a promise to make peace with
         // something we never fought — that peace would be a real, unearned diplomatic gift.
-        record.MirroredWars = declared;
-
         _logger?.LogInfo(
             $"[Enlistment] service wars applied — mirrored {declared.Count} of {toDeclare.Count} " +
             $"(the player already held {enemiesAtOath.Count} of his own)");
+    }
+
+    public bool MirrorWarAtJoin(string factionId)
+    {
+        var record = _store.Record;
+        if (string.IsNullOrEmpty(factionId) || string.IsNullOrEmpty(record.CommanderHeroId))
+            return false;
+        // At war already is the answer under any identity: nothing to top up, nothing refused.
+        if (Contains(_diplomacy.GetPlayerEnemies(), factionId))
+            return true;
+        if (!MayMirrorMidTerm())
+            return false;
+        if (record.EnemiesAtOath != null && record.EnemiesAtOath.Contains(factionId))
+            return false;
+        if (!Contains(_diplomacy.GetEnemiesOf(record.CommanderHeroId), factionId))
+            return false;
+
+        // Default reason: the top-up only ever follows a war the commander's realm already chose.
+        if (!_diplomacy.FollowWarOn(factionId))
+            return false;
+        Record(record, factionId);
+        _logger?.LogInfo($"[Enlistment] topped up the war with '{factionId}' before a join");
+        return true;
+    }
+
+    public bool ShouldSitOutAsVassal(string foeFactionId)
+    {
+        var record = _store.Record;
+        if (string.IsNullOrEmpty(foeFactionId) || !record.IsEnlisted)
+            return false;
+        // With a kingdom the player's faction is the kingdom, so mid-term mirroring never applies.
+        if (string.IsNullOrEmpty(_playerContext.GetPlayerKingdomId()))
+            return false;
+
+        var playerEnemies = _diplomacy.GetPlayerEnemies();
+        if (playerEnemies == null || playerEnemies.Count == 0)
+            return false;
+        return !Contains(playerEnemies, foeFactionId);
+    }
+
+    private bool MayMirrorMidTerm() => ServiceWarPolicy.ShouldMirrorMidTerm(
+        _store.Record.OathFactionId, _diplomacy.GetPlayerFactionId(), _playerContext.GetPlayerClanId());
+
+    private static void Record(EnlistmentRecord record, string factionId)
+    {
+        record.MirroredWars ??= new List<string>();
+        if (!record.MirroredWars.Contains(factionId))
+            record.MirroredWars.Add(factionId);
+    }
+
+    private static bool Contains(IReadOnlyList<string> ids, string id)
+    {
+        if (ids == null)
+            return false;
+        for (var i = 0; i < ids.Count; i++)
+        {
+            if (ids[i] == id)
+                return true;
+        }
+        return false;
     }
 
     public void UnwindServiceWars()

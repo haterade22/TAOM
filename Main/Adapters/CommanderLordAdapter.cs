@@ -25,6 +25,7 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 return CommanderSnapshot.Missing;
 
             var party = hero.PartyBelongedTo;
+            var mapEvent = party?.MapEvent;
 
             // PartyBelongedToAsPrisoner, NOT PartyBelongedTo — a captured lord has no party at all,
             // which is exactly why every settlement field below reads null for him. Guarded on
@@ -37,7 +38,7 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 isPrisoner: hero.IsPrisoner,
                 partyId: party?.StringId,
                 partyIsActive: party?.IsActive ?? false,
-                partyIsInMapEvent: party?.MapEvent != null,
+                partyIsInMapEvent: mapEvent != null,
                 // ALL FOUR settlement fields come from the commander's own PARTY, never the
                 // hero. Hero.CurrentSettlement resolves through PartyBelongedTo, so once the
                 // commander joins an ARMY it reports the ARMY's settlement while his own
@@ -56,7 +57,8 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 captivitySettlementName: captivity?.Settlement?.Name?.ToString(),
                 cultureId: hero.Culture?.StringId,
                 factionId: hero.Clan?.MapFaction?.StringId,
-                name: hero.Name?.ToString());
+                name: hero.Name?.ToString(),
+                partyIsRaiding: VillageRaidReader.IsRaiding(party));
         }
         catch (Exception ex)
         {
@@ -96,15 +98,17 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 return CommanderTickSnapshot.Missing;
 
             var party = hero.PartyBelongedTo;
+            var mapEvent = party?.MapEvent;
             return new CommanderTickSnapshot(
                 exists: true,
                 isAlive: hero.IsAlive,
                 isPrisoner: hero.IsPrisoner,
                 partyId: party?.StringId,
                 partyIsActive: party?.IsActive ?? false,
-                partyIsInMapEvent: party?.MapEvent != null,
+                partyIsInMapEvent: mapEvent != null,
                 partySettlementId: party?.CurrentSettlement?.StringId,
-                mapEventToken: TokenFor(party?.MapEvent));
+                mapEventToken: TokenFor(mapEvent),
+                partyIsRaiding: VillageRaidReader.IsRaiding(party));
         }
         catch (Exception ex)
         {

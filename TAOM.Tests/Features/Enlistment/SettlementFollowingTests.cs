@@ -327,7 +327,7 @@ public class SettlementFollowingReconcilerTests
 
         _sut = new EnlistmentReconciler(
             _store, _machine, _attachment, _commander, discharge,
-            new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
+            new EnlistmentConfigProvider(), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(),
             Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
@@ -531,6 +531,41 @@ public class CommanderSettlementIdentityTests
                 $"{field} reads hero.CurrentSettlement — that resolves through PartyBelongedTo and " +
                 "reports the ARMY's settlement, which is what caused the follow/exit teleport thrash");
         }
+    }
+
+    /// <summary>
+    /// #831: both snapshot constructions fill the raiding flag through the one shared reader, so the
+    /// hourly and the pump views cannot drift apart.
+    /// </summary>
+    [TestMethod]
+    public void BothSnapshots_FillPartyIsRaidingThroughTheSharedReader()
+    {
+        var src = System.IO.File.ReadAllText("../../../../Main/Adapters/CommanderLordAdapter.cs");
+        foreach (var ctor in new[] { "new CommanderSnapshot(", "new CommanderTickSnapshot(" })
+        {
+            var call = src.Substring(src.IndexOf(ctor));
+            call = call.Substring(0, call.IndexOf(");"));
+            StringAssert.Contains(call, "VillageRaidReader.IsRaiding(", $"{ctor} must set partyIsRaiding from the shared reader");
+        }
+    }
+
+    /// <summary>
+    /// #954: the raid reader skips a raid only while no lord party with healthy troops defends it
+    /// (vanilla's EncounterManager lord-defender test). TAOM.Tests/Adapters/VillageRaidReaderTests stages the five shapes
+    /// against bare engine objects (it needs the game assemblies); this is the no-game check of the
+    /// source: the members it reads, and no LINQ, no lookup by id.
+    /// </summary>
+    [TestMethod]
+    public void VillageRaidReader_ReadsTheLordDefenderTest_WithoutLinqOrFind()
+    {
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Adapters/VillageRaidReader.cs", stripComments: true);
+        StringAssert.Contains(src, "IsMobile");
+        StringAssert.Contains(src, "IsLordParty");
+        StringAssert.Contains(src, "TotalHealthyCount");
+        StringAssert.Contains(src, "DefenderSide");
+        Assert.IsFalse(src.Contains("=>"),
+            "the pump-path reader must not use LINQ or LinQuick: every predicate needs a lambda, and WhereQ/AnyQ allocate");
+        Assert.IsFalse(src.Contains("Find"), "the pump-path reader must not look parties up by id");
     }
 
     /// <summary>

@@ -51,18 +51,45 @@ public class EnlistmentStateQueryTests
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1_1";
-        _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
-            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true));
+        _commander.GetPartyId("lord_1_1").Returns("lord_party_1");
 
         Assert.IsTrue(_query.IsCommanderParty("lord_party_1"));
         Assert.IsFalse(_query.IsCommanderParty("other_party"));
+        _commander.DidNotReceive().GetSnapshot(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void IsCommanderParty_CommanderHasNoParty_IsFalse()
+    {
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1_1";
+        _commander.GetPartyId("lord_1_1").Returns((string?)null);
+
+        Assert.IsFalse(_query.IsCommanderParty("lord_party_1"));
+    }
+
+    [TestMethod]
+    public void IsCommanderParty_EmptyPartyIdInput_IsFalseWithoutQueryingAdapter()
+    {
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1_1";
+        _commander.GetPartyId("lord_1_1").Returns((string?)null);
+
+        Assert.IsFalse(_query.IsCommanderParty(""));
+        Assert.IsFalse(_query.IsCommanderParty(null!));
+
+        _commander.DidNotReceiveWithAnyArgs().GetPartyId(default!);
     }
 
     [TestMethod]
     public void IsCommanderParty_NotEnlisted_NeverQueriesAdapter()
     {
-        _query.IsCommanderParty("lord_party_1");
+        _store.Record.CommanderHeroId = "lord_1_1";
 
-        _commander.DidNotReceive().GetSnapshot(Arg.Any<string>());
+        Assert.IsFalse(_query.IsCommanderParty("lord_party_1"));
+
+        _commander.DidNotReceiveWithAnyArgs().GetPartyId(default!);
     }
 }

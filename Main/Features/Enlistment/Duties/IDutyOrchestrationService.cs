@@ -25,13 +25,13 @@ public interface IDutyOrchestrationService
     void HourlyTick(double nowDays);
 
     /// <summary>Rolls an incident, else a duty offer, when no duty is active. No-op when not enlisted.</summary>
-    void DailyOfferTick(double nowDays, double hourOfDay);
+    void DailyOfferTick(double nowDays);
 
     /// <summary>
     /// Ask the commander for work now. Shares ONE offer path with <see cref="DailyOfferTick"/> and
     /// the same rotation cadence — asking cannot conjure work the rotation would not have given.
     /// </summary>
-    DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay);
+    DutyRequestResult RequestDutyNow(double nowDays);
 
     /// <summary>Clears any active duty artifact without reward/penalty — call from the discharge consequence.</summary>
     void CancelActiveDuty(string reason);

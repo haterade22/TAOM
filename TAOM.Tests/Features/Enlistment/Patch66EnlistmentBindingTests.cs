@@ -12,7 +12,9 @@ namespace TAOM.Tests.Features.Enlistment;
 /// nothing and the enlisted player becomes recruitable into a second army mid-service.
 /// Signature facts pinned here were verified against installed 1.4.7 (Phase 0.2):
 /// the clickable condition carries an <c>out TextObject hint</c> parameter, and the two
-/// ally-thanks conditions are PUBLIC while the join-army pair is private.
+/// ally-thanks conditions are PUBLIC while the join-army pair is private. Also pins the
+/// battle-exit postfix target (<c>MapEventHelper.CanMainPartyLeaveBattleCommonCondition</c>,
+/// public static bool) and its exact set of callers.
 /// </summary>
 [TestClass]
 public class Patch66EnlistmentBindingTests
@@ -42,6 +44,69 @@ public class Patch66EnlistmentBindingTests
         var parameters = method.GetParameters();
         Assert.AreEqual(1, parameters.Length, "SetNextMenu arity drifted — the `ref string name` prefix would not bind.");
         Assert.AreEqual("String", parameters[0].ParameterType.Name, "SetNextMenu no longer takes a string menu id.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CanMainPartyLeaveBattleCommonCondition_BindingResolves_PublicStaticParameterlessBool()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("Helpers.MapEventHelper");
+        Assert.IsNotNull(type, "Helpers.MapEventHelper did not resolve; the battle-exit postfix has no target.");
+
+        var method = AccessTools.Method(type, "CanMainPartyLeaveBattleCommonCondition");
+        Assert.IsNotNull(method, "CanMainPartyLeaveBattleCommonCondition did not resolve; 'Leave' and 'Abandon army' would reappear for an enlisted soldier.");
+        Assert.IsTrue(method.IsStatic, "CanMainPartyLeaveBattleCommonCondition is no longer static.");
+        Assert.IsTrue(method.IsPublic, "CanMainPartyLeaveBattleCommonCondition is no longer public (the patch uses nameof).");
+        Assert.AreEqual("Boolean", method.ReturnType.Name, "CanMainPartyLeaveBattleCommonCondition no longer returns bool.");
+        Assert.AreEqual(0, method.GetParameters().Length, "CanMainPartyLeaveBattleCommonCondition arity drifted.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
+    public void CanMainPartyLeaveBattleCommonCondition_Callers_AreExactlyTheThreeEncounterMenuConditions()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("Helpers.MapEventHelper");
+        Assert.IsNotNull(type, "Helpers.MapEventHelper did not resolve.");
+
+        // Scans TaleWorlds.CampaignSystem only (where all three known callers live); SandBox is not scanned.
+        var callers = IlCallScanner.FindCallers(type.Assembly,
+            m => m.Name == "CanMainPartyLeaveBattleCommonCondition" && m.DeclaringType == type,
+            out var unreadable, out var scanned);
+
+        Assert.AreEqual(0, unreadable.Count, "Unreadable bodies mean the caller set cannot be vouched for: " + string.Join("; ", unreadable));
+        Assert.IsTrue(scanned > 100, "The IL scan walked too few bodies: " + scanned);
+
+        const string menu = "TaleWorlds.CampaignSystem.CampaignBehaviors.EncounterGameMenuBehavior.";
+        CollectionAssert.AreEquivalent(
+            new[]
+            {
+                menu + "game_menu_encounter_leave_on_condition",
+                menu + "game_menu_encounter_abandon_army_on_condition",
+                menu + "game_menu_encounter_surrender_on_condition",
+            },
+            callers.Distinct().ToArray(),
+            "The caller set of CanMainPartyLeaveBattleCommonCondition changed: a new caller is a new exit to audit for enlisted service.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void BattleExitPostfix_IsRegisteredInTheEnlistmentCategory()
+    {
+        // A patch without its category attribute is dead code with no error, warning or log line.
+        var patch = typeof(TAOM.Features.Enlistment.Hooks.MapEventHelperCanMainPartyLeaveBattlePatch);
+
+        Assert.AreEqual(1, patch.GetCustomAttributes(typeof(HarmonyPatch), inherit: false).Length,
+            "The battle-exit postfix lost its [HarmonyPatch] target attribute.");
+
+        var categories = patch.GetCustomAttributes(typeof(HarmonyPatchCategory), inherit: false)
+            .Cast<HarmonyPatchCategory>()
+            .Select(c => c.info.category)
+            .ToList();
+        CollectionAssert.AreEqual(new[] { "Patch66_Enlistment" }, categories,
+            "The battle-exit postfix must carry exactly [HarmonyPatchCategory(\"Patch66_Enlistment\")] or SubModule's Patch66 call would not apply it.");
     }
 
     [TestMethod]

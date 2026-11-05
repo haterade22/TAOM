@@ -461,6 +461,12 @@
 
 	<string id="taom_fc_dismissed" text="{HERO_NAME} est retourné dans le rang en tant que {TROOP_NAME}." />
 
+	<string id="taom_enlist_menu_discharged_leave" text="Go on your way" />
+
+	<string id="taom_enlist_wait_discharged" text="Your service has ended." />
+
+	<string id="taom_enlist_act_raid" text="The column is raiding." />
+
   </strings>
 
 </base>

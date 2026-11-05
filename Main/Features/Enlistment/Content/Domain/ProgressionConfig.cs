@@ -32,8 +32,6 @@ public sealed class ProgressionTables
     public int BlockadeContextXp { get; set; } = 5;
     public int ArmyContextXp { get; set; } = 6;
 
-    public int TrainingSessionXp { get; set; } = 20;
-
     /// <summary>Battle-end kill XP line item: kills × per-kill, capped (replaces the donor's mid-mission per-kill path).</summary>
     public int XpPerKill { get; set; } = 25;
     public int KillXpCap { get; set; } = 10;

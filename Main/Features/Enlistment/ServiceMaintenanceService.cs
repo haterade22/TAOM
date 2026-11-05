@@ -284,13 +284,18 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
 
     /// <summary>
     /// The ONLY state transition this pump makes. Kept byte-identical to the reconciler's
-    /// staleness predicate — <c>Reconciler_AndPump_UseIdenticalStaleBattlePredicate</c> pins that.
+    /// staleness predicate — <c>Reconciler_AndPump_UseIdenticalStaleBattlePredicate</c> and
+    /// <c>Reconciler_AndPump_DemoteWhileTheCommanderRaids</c> pin that.
     /// </summary>
     private void TryBreakBattleLatch(EnlistmentRecord record, CommanderTickSnapshot commander, PlayerPresenceFlags presence)
     {
         if (record.State != EnlistmentState.EnlistedBattle)
             return;
-        if (presence.IsInMapEvent || commander.PartyIsInMapEvent || presence.HasPlayerEncounter)
+        // A raid the commander runs is no battle (#831): it must not hold the latch open. Identical to
+        // the reconciler's predicate, which EnlistmentPumpAuthorityTests pins.
+        var commanderInJoinableBattle = VillageActionJoinPolicy.IsJoinableBattle(
+            commander.PartyIsInMapEvent, commander.PartyIsRaiding);
+        if (presence.IsInMapEvent || commanderInJoinableBattle || presence.HasPlayerEncounter)
             return;
 
         // Nobody is in a battle and no encounter is open, yet we are latched in EnlistedBattle.
@@ -303,7 +308,9 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     {
         if (record.State != EnlistmentState.EnlistedAttached)
             return;
-        if (!commander.PartyIsInMapEvent || presence.IsInMapEvent)
+        if (!VillageActionJoinPolicy.IsJoinableBattle(
+                commander.PartyIsInMapEvent, commander.PartyIsRaiding)
+            || presence.IsInMapEvent)
             return;
         if (!commander.IsFollowable)
             return;
