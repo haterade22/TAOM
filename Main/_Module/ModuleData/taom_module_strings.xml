@@ -2944,4 +2944,174 @@
 	<!-- TavernSpecialities -->
 	<string id="taom_tavern_drink_default" text="{=taom_tavern_drink_default}a mug of ale" />
 	<string id="taom_tavern_food_default" text="{=taom_tavern_food_default}a bowl of stew" />
+
+	<!-- ============================================== -->
+	<!-- Liege titles for the TAOM-only kingdom cultures (#955). Each row carries its own   -->
+	<!-- taom_culture_<id> tag (Main/Features/LiegeTitles/TaomCultureTags.cs): the coronation -->
+	<!-- picks by id suffix, dialogs pick by tag, and an untagged row would win for every culture. -->
+	<!-- ============================================== -->
+
+	<string id="str_liege_title.abanissa" text="{=taom_str_liege_title.abanissa}Châjaphân of Âbanissa">
+		<tags>
+			<tag tag_name="taom_culture_abanissa" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.abanissa" text="{=taom_str_liege_title_female.abanissa}Châjaphân of Âbanissa">
+		<tags>
+			<tag tag_name="taom_culture_abanissa" />
+		</tags>
+	</string>
+	<string id="str_liege_title.bluecraig" text="{=taom_str_liege_title.bluecraig}Great Goblin of Blue Craig">
+		<tags>
+			<tag tag_name="taom_culture_bluecraig" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.bluecraig" text="{=taom_str_liege_title_female.bluecraig}Great Goblin of Blue Craig">
+		<tags>
+			<tag tag_name="taom_culture_bluecraig" />
+		</tags>
+	</string>
+	<string id="str_liege_title.dolguldur" text="{=taom_str_liege_title.dolguldur}Dread-Lord of Dol Guldur">
+		<tags>
+			<tag tag_name="taom_culture_dolguldur" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.dolguldur" text="{=taom_str_liege_title_female.dolguldur}Dread-Lady of Dol Guldur">
+		<tags>
+			<tag tag_name="taom_culture_dolguldur" />
+		</tags>
+	</string>
+	<string id="str_liege_title.erebor" text="{=taom_str_liege_title.erebor}King under the Mountain">
+		<tags>
+			<tag tag_name="taom_culture_erebor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.erebor" text="{=taom_str_liege_title_female.erebor}Queen under the Mountain">
+		<tags>
+			<tag tag_name="taom_culture_erebor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.gondor" text="{=taom_str_liege_title.gondor}Lord of Gondor">
+		<tags>
+			<tag tag_name="taom_culture_gondor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.gondor" text="{=taom_str_liege_title_female.gondor}Lady of Gondor">
+		<tags>
+			<tag tag_name="taom_culture_gondor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.goblin" text="{=taom_str_liege_title.goblin}Great Goblin of the High Pass">
+		<tags>
+			<tag tag_name="taom_culture_goblin" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.goblin" text="{=taom_str_liege_title_female.goblin}Great Goblin of the High Pass">
+		<tags>
+			<tag tag_name="taom_culture_goblin" />
+		</tags>
+	</string>
+	<string id="str_liege_title.gundabad" text="{=taom_str_liege_title.gundabad}Warlord of Gundabad">
+		<tags>
+			<tag tag_name="taom_culture_gundabad" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.gundabad" text="{=taom_str_liege_title_female.gundabad}Warlord of Gundabad">
+		<tags>
+			<tag tag_name="taom_culture_gundabad" />
+		</tags>
+	</string>
+	<string id="str_liege_title.isengard" text="{=taom_str_liege_title.isengard}Lord of Isengard">
+		<tags>
+			<tag tag_name="taom_culture_isengard" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.isengard" text="{=taom_str_liege_title_female.isengard}Lady of Isengard">
+		<tags>
+			<tag tag_name="taom_culture_isengard" />
+		</tags>
+	</string>
+	<string id="str_liege_title.lindon" text="{=taom_str_liege_title.lindon}Lord of the Havens">
+		<tags>
+			<tag tag_name="taom_culture_lindon" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.lindon" text="{=taom_str_liege_title_female.lindon}Lady of the Havens">
+		<tags>
+			<tag tag_name="taom_culture_lindon" />
+		</tags>
+	</string>
+	<string id="str_liege_title.lothlorien" text="{=taom_str_liege_title.lothlorien}Lord of the Galadhrim">
+		<tags>
+			<tag tag_name="taom_culture_lothlorien" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.lothlorien" text="{=taom_str_liege_title_female.lothlorien}Lady of the Galadhrim">
+		<tags>
+			<tag tag_name="taom_culture_lothlorien" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mirkwood" text="{=taom_str_liege_title.mirkwood}Elvenking of Mirkwood">
+		<tags>
+			<tag tag_name="taom_culture_mirkwood" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mirkwood" text="{=taom_str_liege_title_female.mirkwood}Elvenqueen of Mirkwood">
+		<tags>
+			<tag tag_name="taom_culture_mirkwood" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mistymountainorcs" text="{=taom_str_liege_title.mistymountainorcs}Warlord of the Misty Mountains">
+		<tags>
+			<tag tag_name="taom_culture_mistymountainorcs" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mistymountainorcs" text="{=taom_str_liege_title_female.mistymountainorcs}Warlord of the Misty Mountains">
+		<tags>
+			<tag tag_name="taom_culture_mistymountainorcs" />
+		</tags>
+	</string>
+	<string id="str_liege_title.mordor" text="{=taom_str_liege_title.mordor}Dark Lord of Mordor">
+		<tags>
+			<tag tag_name="taom_culture_mordor" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.mordor" text="{=taom_str_liege_title_female.mordor}Dark Lady of Mordor">
+		<tags>
+			<tag tag_name="taom_culture_mordor" />
+		</tags>
+	</string>
+	<string id="str_liege_title.rivendell" text="{=taom_str_liege_title.rivendell}Lord of Imladris">
+		<tags>
+			<tag tag_name="taom_culture_rivendell" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.rivendell" text="{=taom_str_liege_title_female.rivendell}Lady of Imladris">
+		<tags>
+			<tag tag_name="taom_culture_rivendell" />
+		</tags>
+	</string>
+	<string id="str_liege_title.shaghana" text="{=taom_str_liege_title.shaghana}Taskral of Shaghâna">
+		<tags>
+			<tag tag_name="taom_culture_shaghana" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.shaghana" text="{=taom_str_liege_title_female.shaghana}Taskral of Shaghâna">
+		<tags>
+			<tag tag_name="taom_culture_shaghana" />
+		</tags>
+	</string>
+	<string id="str_liege_title.umbar" text="{=taom_str_liege_title.umbar}Corsair King of Umbar">
+		<tags>
+			<tag tag_name="taom_culture_umbar" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.umbar" text="{=taom_str_liege_title_female.umbar}Corsair Queen of Umbar">
+		<tags>
+			<tag tag_name="taom_culture_umbar" />
+		</tags>
+	</string>
+
+	<!-- Dunland coronation (empire culture): the engine reads this line instead of a liege title -->
+	<string id="str_become_king_empire" text="{=taom_str_become_king_empire}On {DAY_OF_YEAR}, {YEAR}, {KING_NAME} was hailed as {?IS_KING_MALE}Brenin{?}Brenhines{\?} of Dunland." />
 </strings>

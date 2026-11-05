@@ -14,6 +14,9 @@
 	<xsl:template match="string[@id='str_culture_description.aserai']"/>
 	<xsl:template match="string[@id='str_culture_description.sturgia']"/>
 
+	<!-- Remove vanilla Dunland coronation line (Emperor of Calradia) -->
+	<xsl:template match="string[@id='str_become_king_empire']"/>
+
 	<!-- Remove vanilla culture rich names -->
 	<xsl:template match="string[@id='str_culture_rich_name.empire']"/>
 	<xsl:template match="string[@id='str_culture_rich_name.vlandia']"/>

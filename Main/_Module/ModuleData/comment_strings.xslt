@@ -200,12 +200,15 @@
 	<!-- ============================================================ -->
 	<!-- Liege titles - "I am Théoden, {LIEGE_TITLE}."                -->
 	<!--                                                              -->
-	<!-- The engine picks these by conversation tag (VlandianTag ->   -->
-	<!-- Culture.StringId == "vlandia"), NOT by kingdom name, so the  -->
-	<!-- Rohan rename in spkingdoms.xslt never reaches this line.     -->
-	<!-- Each template MUST re-emit node() - the vanilla <tags> child -->
-	<!-- is what selects the variation, and a tag-stripped one        -->
-	<!-- matches every culture at once.                               -->
+	<!-- Two lookups read these rows. The dialog path (ConversationManager. -->
+	<!-- FindMatchingTextOrNull) ignores the id suffix and selects by the   -->
+	<!-- <tags> child (VlandianTag -> Culture.StringId == "vlandia"), NOT   -->
+	<!-- by kingdom name, so the Rohan rename in spkingdoms.xslt never      -->
+	<!-- reaches this line; a tag-stripped row matches every culture at     -->
+	<!-- once, so each template MUST re-emit node(). The coronation title   -->
+	<!-- and other GameTexts.FindText(id, variation) callers select by the  -->
+	<!-- id suffix instead. The TAOM-only cultures get their rows, each  -->
+	<!-- with its own taom_culture_<id> tag, in taom_module_strings.xml.     -->
 	<!-- ============================================================ -->
 
 	<xsl:template match="string[@id='str_liege_title.empire']">

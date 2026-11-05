@@ -2674,5 +2674,38 @@
     <string id="taom_texture_advice_ok" text="Understood" />
     <string id="taom_tavern_drink_default" text="a mug of ale" />
     <string id="taom_tavern_food_default" text="a bowl of stew" />
+    <string id="taom_str_liege_title.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title_female.abanissa" text="Châjaphân of Âbanissa" />
+    <string id="taom_str_liege_title.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title_female.bluecraig" text="Great Goblin of Blue Craig" />
+    <string id="taom_str_liege_title.dolguldur" text="Dread-Lord of Dol Guldur" />
+    <string id="taom_str_liege_title_female.dolguldur" text="Dread-Lady of Dol Guldur" />
+    <string id="taom_str_liege_title.erebor" text="King under the Mountain" />
+    <string id="taom_str_liege_title_female.erebor" text="Queen under the Mountain" />
+    <string id="taom_str_liege_title.gondor" text="Lord of Gondor" />
+    <string id="taom_str_liege_title_female.gondor" text="Lady of Gondor" />
+    <string id="taom_str_liege_title.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title_female.goblin" text="Great Goblin of the High Pass" />
+    <string id="taom_str_liege_title.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title_female.gundabad" text="Warlord of Gundabad" />
+    <string id="taom_str_liege_title.isengard" text="Lord of Isengard" />
+    <string id="taom_str_liege_title_female.isengard" text="Lady of Isengard" />
+    <string id="taom_str_liege_title.lindon" text="Lord of the Havens" />
+    <string id="taom_str_liege_title_female.lindon" text="Lady of the Havens" />
+    <string id="taom_str_liege_title.lothlorien" text="Lord of the Galadhrim" />
+    <string id="taom_str_liege_title_female.lothlorien" text="Lady of the Galadhrim" />
+    <string id="taom_str_liege_title.mirkwood" text="Elvenking of Mirkwood" />
+    <string id="taom_str_liege_title_female.mirkwood" text="Elvenqueen of Mirkwood" />
+    <string id="taom_str_liege_title.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title_female.mistymountainorcs" text="Warlord of the Misty Mountains" />
+    <string id="taom_str_liege_title.mordor" text="Dark Lord of Mordor" />
+    <string id="taom_str_liege_title_female.mordor" text="Dark Lady of Mordor" />
+    <string id="taom_str_liege_title.rivendell" text="Lord of Imladris" />
+    <string id="taom_str_liege_title_female.rivendell" text="Lady of Imladris" />
+    <string id="taom_str_liege_title.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title_female.shaghana" text="Taskral of Shaghâna" />
+    <string id="taom_str_liege_title.umbar" text="Corsair King of Umbar" />
+    <string id="taom_str_liege_title_female.umbar" text="Corsair Queen of Umbar" />
+    <string id="taom_str_become_king_empire" text="On {DAY_OF_YEAR}, {YEAR}, {KING_NAME} was hailed as {?IS_KING_MALE}Brenin{?}Brenhines{\?} of Dunland." />
   </strings>
 </base>
