@@ -759,6 +759,12 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>()?.NoteGameEnded(endedCampaign);
         }
         catch { /* diagnostic is best-effort, never break OnGameEnd */ }
+
+        // [MapProfileSummary] for the campaign session that just ended (Patch101, plan 117; a no-op when the
+        // map profiler is not installed). An in-campaign load can skip OnGameEnd, so the profiler also closes a
+        // session when it sees a new campaign.
+        try { Features.MapPerf.Hooks.MapSessionHooks.EndSession("gameEnd"); }
+        catch { /* diagnostic is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -1418,6 +1424,17 @@ public class SubModule : MBSubModuleBase
         // [SaveLoad] campaign-launch memory stamp, BEFORE the once-per-process guard below so every
         // game init in the process gets one, not just the first.
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
+
+        // Patch101 map frame profiler (default off; docs/features/map-perf-profiler.md), plan 117: every game
+        // init, before the once-per-process guard, because a later game init only reports (restart needed, or
+        // the install failed). The installer applies its categories at most once per process and contains its
+        // own failures; the four services it takes are registered singletons.
+        Features.MapPerf.Hooks.MapFrameProfilerInstaller.OnGameInitialized(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeControlAdapter>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeAccelerationSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates

@@ -77,7 +77,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Mission Performance")]
     [SettingPropertyInteger("Tick Profiler Top Behaviours", 1, 20, Order = 2, RequireRestart = false,
-        HintText = "How many mission behaviours each [TickProfile] and [TickSummary] line lists, slowest first. Default 8. Read at each mission start.")]
+        HintText = "How many entries each [TickProfile] and [TickSummary] line lists (mission behaviours) and each [MapProfile] and [MapProfileSummary] line lists (map tick listeners and TAOM map views), slowest first. Default 8. Read at each mission start and each campaign session start.")]
     public int TickProfilerTopN { get; set; } = 8;
 
     [SettingPropertyGroup("Mission Performance")]
@@ -89,4 +89,9 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Hitch Probe", Order = 4, RequireRestart = true,
         HintText = "On by default. Times the parts of every mission frame TAOM can see (the wait for the agent tick, the mission tick, the camera and render preparation, scene scripts, agent spawns) and checks whether an animation clip is loading from disk, so each frame slower than the hitch threshold writes a hitch line and a detail line saying where the time went. Its measured cost is written to the TAOM debug log. Installed once at game start: turning it on takes effect after a restart; turning it off stops measuring from the next mission while 'Enable Tick Profiler' is off (the profiler measures through the probe's patches).")]
     public bool EnableHitchProbe { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,
+        HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
+    public bool EnableMapProfiler { get; set; } = false;
 }

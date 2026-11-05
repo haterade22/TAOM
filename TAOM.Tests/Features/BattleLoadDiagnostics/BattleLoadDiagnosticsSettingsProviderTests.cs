@@ -152,4 +152,12 @@ public class BattleLoadDiagnosticsSettingsProviderTests
         Assert.AreEqual(50d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(50d));
         Assert.AreEqual(2000d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(2000d));
     }
+
+    // The map profiler installs Harmony patches on the campaign map's per-frame methods, so its
+    // toggle fails CLOSED too.
+    [TestMethod]
+    public void MapProfilerEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        Assert.IsFalse(new BattleLoadDiagnosticsSettingsProvider().MapProfilerEnabled);
+    }
 }

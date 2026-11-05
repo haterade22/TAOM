@@ -77,6 +77,8 @@ public static class CoopSettingsRelevance
         "EnableMissionPerfHeartbeat",
         // The Patch97 tick profiler and its two knobs, and the Patch98 hitch probe: log lines, never a computation.
         "EnableTickProfiler", "TickProfilerTopN", "HitchThresholdMs", "EnableHitchProbe",
+        // The Patch101 campaign map profiler's toggle: log lines, never a computation.
+        "EnableMapProfiler",
     };
 
     /// <summary>

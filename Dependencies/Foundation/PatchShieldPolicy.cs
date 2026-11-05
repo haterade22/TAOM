@@ -162,6 +162,15 @@ public static class PatchShieldPolicy
         // HitchProbeBindingTests walks the real targets; PatchShieldPolicyTests pins the split without the game.
         "TaleWorlds.MountAndBlade.Mission.WaitTickCompletion",
         "TaleWorlds.Engine.ManagedScriptHolder.TickComponents",
+        // Per-frame campaign-map targets that only the Patch101 map profiler patches (plan 117, from the 1.5.x
+        // line's decision D13 option B, 2026-10-03). With the profiler off no TAOM patch is on them, but another
+        // mod's patch on them loses the shield all the same. Given up, for any owner: the swallow of a missing-API
+        // exception thrown anywhere inside them (the tick-event listeners, the periodic and hourly events of every
+        // mod's campaign behaviours); it unwinds to MapState.OnTick instead (docs/features/map-perf-profiler.md,
+        // "PatchShield"). MapState.OnTick, Campaign.RealTick and MapScreen.OnFrameTick keep the shield.
+        // MapFrameProfilerBindingTests walks the real targets in both directions.
+        "TaleWorlds.CampaignSystem.Campaign.Tick",
+        "TaleWorlds.CampaignSystem.CampaignEvents.Tick",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

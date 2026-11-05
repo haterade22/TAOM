@@ -45,7 +45,8 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     bool TickProfilerEnabled { get; }
 
     /// <summary>How many behaviours a [TickProfile] or [TickSummary] line lists (validated 1-20,
-    /// default 8); read at each mission start.</summary>
+    /// default 8); read at each mission start. It also sizes the [MapProfile] and [MapProfileSummary]
+    /// lists (map tick listeners and TAOM map views), read at each campaign session start.</summary>
     int TickProfilerTopN { get; }
 
     /// <summary>The frame time at or above which the profiler writes a [Hitch] line (validated
@@ -56,4 +57,11 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// installs Harmony patches; the compiled MCM default is true. Read once per process at the first game
     /// init, where Patch98 installs or is skipped, and at each mission start.</summary>
     bool HitchProbeEnabled { get; }
+
+    /// <summary>The Patch101 map profiler's toggle. Like the tick profiler's it fails CLOSED to false
+    /// when MCM is not ready, because it installs Harmony patches on the campaign map's per-frame methods.
+    /// Read at every game init (the first installs or skips Patch101, later ones only report) and at each
+    /// campaign session start: turning it on needs a restart, turning it off stops measuring from the next
+    /// campaign session (the patches stay).</summary>
+    bool MapProfilerEnabled { get; }
 }

@@ -181,8 +181,8 @@ the extra multiplier at the fast-forward one (`ClampExtra`); without it "extra" 
 | `Main/Features/TimeAcceleration/TaomTimeControlHotKeyCategory.cs` | `GameKeyContext` publishing the three rebindable keys; static `Register()` called from `SubModule.OnSubModuleLoad` |
 | `Main/Features/TimeAcceleration/IMapInputAdapter.cs` | Input abstraction (no TaleWorlds types), named per ACTION rather than per key |
 | `Main/Features/TimeAcceleration/MapInputAdapter.cs` | Wraps `MapScreen.Instance.Input`; resolves the bound `GameKey`s once, then reads their current binding each frame |
-| `Main/Features/TimeAcceleration/ITimeControlAdapter.cs` | Time control abstraction (no TaleWorlds types) |
-| `Main/Features/TimeAcceleration/TimeControlAdapter.cs` | Wraps `Campaign.Current` speed/mode/lock and the wait-menu flag |
+| `Main/Features/TimeAcceleration/ITimeControlAdapter.cs` | Time control abstraction (no TaleWorlds types); its read-only `SimplifiedTimeControlMode` is read by the map profiler ([map-perf-profiler.md](map-perf-profiler.md)), not by this feature |
+| `Main/Features/TimeAcceleration/TimeControlAdapter.cs` | Wraps `Campaign.Current` speed/mode/lock, `GetSimplifiedTimeControlMode()` and the wait-menu flag |
 | `Main/Features/TimeAcceleration/ITimeAccelerationSettingsProvider.cs` | Settings interface |
 | `Main/Features/TimeAcceleration/TimeAccelerationSettingsProvider.cs` | Reads `TaomSettings.Instance`; floors extra at fast |
 | `Main/Features/TimeAcceleration/TimeAccelerationIoC.cs` | DryIoc registration (4 singletons) |
@@ -223,6 +223,10 @@ the extra multiplier at the fast-forward one (`ClampExtra`); without it "extra" 
 - `TAOM.Tests/Features/TimeAcceleration/TaomTimeControlHotKeyCategoryTests.cs` carries 10 tests pinning the
   three engine contracts above (id floor, slot count, MainCategoryId), plus context type, GroupId,
   id uniqueness, the shipped defaults, and the null-`KeyboardKey` premise the adapter's guard relies on
+- `TAOM.Tests/Features/TimeAcceleration/TimeControlAdapterBindingTests.cs` carries 1 `BindingVerification`
+  test: the adapter's `SimplifiedTimeControlMode` getter calls `Campaign.GetSimplifiedTimeControlMode` and not
+  the raw `TimeControlMode`. The map profiler's speed tests fake the adapter, so this IL pin is the only check
+  on that line ([map-perf-profiler.md](map-perf-profiler.md))
 
 ## How to Add a New Key Binding
 
