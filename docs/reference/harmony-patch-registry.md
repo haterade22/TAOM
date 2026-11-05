@@ -514,9 +514,27 @@ Per-behavior SyncData attribution, BOTH directions. Load: the engine reads every
 
 ## Patch61_SaveLoadDiagnostics_ContainerFill
 
-**Target:** `ContainerLoadData.InitializeReaders` / `.FillCreatedObject` / `.Read` / `.FillObject` (internal engine type, bound via `AccessTools.TypeByName` + `TargetMethods()`; void Finalizer, `Priority.First`)
+**Target:** `ContainerLoadData.InitializeReaders` / `.FillCreatedObject` / `.Read` / `.FillObject` (internal engine type, bound via `AccessTools.TypeByName`; one site class per method with `Prepare()` + `TargetMethod()`; void Finalizer, `Priority.First`)
 
 The money hook for CONTAINER data — dictionaries and lists, which is where TAOM's growing SyncData surfaces live (`_taom_heroRaceMap`, `_taom_specialResources`, the career dicts). `LoadContext.Load` fills containers inline under TWParallel (NOT via `CreateLoadData`), so the object-side hook never sees these faults. `InitializeReaders` is included because it runs per container BEFORE the fill methods and its raw dictionary-indexer entry lookups are the FIRST throw site for a truncated/corrupted container chunk (review 2026-07-07 HIGH). The Finalizer stamps `kind=container step=<method> saveId/type/elements` from the once-cached `ContainerHeaderLoadData` property, then rethrows. Own category so drift here can't kill any other hook. See `docs/features/save-load-diagnostics.md`.
+
+## Patch61_SaveLoadDiagnostics_SaveGraph
+
+**Target:** `SaveContext.CollectObjects()` (private, the no-argument overload; main thread; Prefix + Postfix)
+
+Logs what a save is about to write (`phase=SaveCollected`: object, container and string counts plus the walk time). On the first save after a reload, or after `taom.arm_save_census`, it also logs a per-type census (`phase=SaveCensus`) to name what grows (plan 114); it changes nothing a save holds.
+
+## Patch61_SaveLoadDiagnostics_LoadCounts
+
+**Target:** `LoadContext.Load(LoadData, bool)` (Postfix)
+
+Logs what a load read from the save's header (`phase=LoadCounts`), so one log compares a save's counts with the next load's. The counts bind private fields by name, so a drifted field costs only its own token.
+
+## Patch61_SaveLoadDiagnostics_BehaviorSize
+
+**Target:** `CampaignBehaviorDataStore.SaveBehaviorData` (internal type; Prefix + Postfix; its own category beside the BehaviorData finalizer)
+
+Measures each campaign behavior's save record (records, collection elements, longest string, time) and hands it to the service, because this runs before `SaveManager.Save`. `SaveBegin` then writes the summary as `phase=SaveBehaviorData`.
 
 ## Patch62_MovieReleaseAvGuard
 

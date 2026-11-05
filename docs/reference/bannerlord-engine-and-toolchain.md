@@ -183,7 +183,7 @@ ilspycmd can't) + the PE **version resource** (PowerShell `(Get-Item).VersionInf
 
 | Dependency | What it proves |
 |---|---|
-| **`mono-2.0-sgen.dll`** | Bannerlord's managed code runs on the **Mono** runtime (sgen GC), hosted by the native engine — NOT CoreCLR/.NET Framework directly. |
+| **`mono-2.0-sgen.dll`** | Mono is linked into the engine (sgen GC), so the engine can host managed code on Mono. The import alone does not show which runtime players' managed code runs on: TAOM's `[SaveLoad] phase=Runtime` line (`framework=`) reports it per session. |
 | **`PhysX_64` + `PhysXCommon/Cooking/Foundation_64`** | The physics engine is **NVIDIA PhysX**. (So collision capsules, ragdoll, `body_capsule` in monsters.xml feed PhysX.) |
 | **`grCore` / `grGranite` / `grGraniteDX11`** | Texture streaming is **Granite** (Graphine virtual texturing). |
 | **`d3d11.dll` / `dxgi.dll` / `D3DCOMPILER_47`** | Renderer is **DirectX 11**. |

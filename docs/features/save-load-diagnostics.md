@@ -22,7 +22,7 @@ Multiple players reported "corrupted saves" (2026-07-07). Investigation mapped t
 
 Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only across the boundary, ADR-007) → `IModLogger` → `Logs/taom_debug_*.log`. `[SaveLoad]` stamps are INFO, and since 2026-07-16 `FileLogger` writes INFO/WARNING/ERROR **synchronously on the calling thread** — so the last stamp survives a frozen process *and* a hard crash. Before that it was queued to a background writer, which covered the freeze case but lost the queue on a crash (#350); this feature's whole premise is stamping the exact failing type/SaveId/chunk, so that durability is load-bearing, not incidental. DEBUG remains async and is still dropped by a hard crash — never read the last DEBUG line as the stopping point.
 
-**Four Harmony categories, all applied in `OnSubModuleLoad`** (loads fire from the main menu; the late `OnGameInitializationFinished` batch would miss the first load — Patch58 precedent):
+**Seven Harmony categories, all applied in `OnSubModuleLoad`** (loads fire from the main menu; the late `OnGameInitializationFinished` batch would miss the first load, Patch58 precedent):
 
 | Category | Hooks | Why split |
 |---|---|---|
@@ -30,12 +30,17 @@ Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only a
 | `Patch61_SaveLoadDiagnostics_ContainerFill` | `ContainerLoadData_Fill_Patch` (internal type) | Harmony aborts a category on the FIRST failing class, so each reflection-target hook gets its own category — one drifted internal type can't kill a sibling. Each category has its own try/catch in SubModule.cs, and every `TargetMethod(s)` logs the specific missing binding (Patch57 precedent). |
 | `Patch61_SaveLoadDiagnostics_BehaviorData` | `CampaignBehaviorDataStore_LoadBehaviorData_Patch` (internal type; covers `LoadBehaviorData` + `SaveBehaviorData`) | same |
 | `Patch61_SaveLoadDiagnostics_ArchiveParse` | `ArchiveDeserializer_LoadFrom_Patch` (internal type) | same |
+| `Patch61_SaveLoadDiagnostics_SaveGraph` | `SaveContext_CollectObjects_Patch` | own category per name-bound engine member |
+| `Patch61_SaveLoadDiagnostics_LoadCounts` | `LoadContext_Load_Patch` | own category per name-bound engine member |
+| `Patch61_SaveLoadDiagnostics_BehaviorSize` | `CampaignBehaviorDataStore_SaveBehaviorData_Size_Patch` | own category per name-bound engine member |
+
+`ContainerLoadData_Fill_Patch` and `HeaderLoadData_Readers_Patch` now hold one site class per target with a constant step name, so neither binds `__originalMethod` (plan 114, LOAD-TIME-03): that parameter costs a `MethodBase.GetMethodFromHandle` on every call, and these run on every container and header of every load. Their log lines did not change.
 
 **Invariant: diagnostics never alter engine behavior.** Every Finalizer is **void** — it reads `__exception` but cannot replace or swallow it, and Harmony keeps true-rethrow semantics (original stack preserved for downstream consumers like CrashReport). No Postfix writes `__result`; every hook body try/catch-swallows its own faults; the service swallows logger faults.
 
 **SaveShield interplay (review 2026-07-07 HIGH):** TAOM.Dependencies' SaveShield finalizes `SandBoxSaveHelper.TryLoadSave`, `MBSaveLoad.LoadSaveGameData`, both `SaveManager.Load` overloads, and `LoadResult.InitializeObjects/AfterInitializeObjects` at default priority and **swallows** exceptions (its recovery design). SaveShield installs earlier (TAOM.Dependencies loads before TAOM), so at equal priority its finalizers run first and Patch61 would see `__exception == null`. Every Patch61 Finalizer therefore carries `[HarmonyPriority(Priority.First)]` — it observes and logs the original exception, then SaveShield swallows exactly as before.
 
-**Thread model:** hooks fire on TWParallel load workers and the async save-writer thread. The service is lock-free (Interlocked seq + fault counter, ConcurrentDictionary dedup) and fault-throttled (20 fault lines per attempt, 50 distinct unknown SaveIds) so a systematically corrupt graph cannot flood the log.
+**Thread model:** hooks fire on TWParallel load workers and the async save-writer thread. The service's emit and fault paths are lock-free (Interlocked seq + fault counter, ConcurrentDictionary dedup; only the per-behavior save samples take a lock, from the main thread) and fault-throttled (20 fault lines per attempt, 50 distinct unknown SaveIds) so a systematically corrupt graph cannot flood the log.
 
 ## Log contract
 
@@ -43,7 +48,8 @@ Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only a
 
 | Phase | Emitted by | Means |
 |---|---|---|
-| `LoadRequested` | `SandBoxSaveHelper.TryLoadSave` Prefix | Load clicked; lifecycle reset |
+| `LoadRequested` | `SandBoxSaveHelper.TryLoadSave` Prefix | Load clicked; lifecycle reset. Carries `name=`, `inGame=` (a game was running), `loadsThisProcess=` (attempts, a load cancelled at the module prompt included), `inGameLoads=` and the memory tokens |
+| `LoadCounts` | `LoadContext.Load` Postfix | `objects= containers= strings=` as the load read them; a field that no longer binds is left out, and all three missing reads `counts=<unavailable>` |
 | `ModuleCheck` | same | Save identity: appVersion, created, character, `taomBuild`, full module:version list |
 | `GraphFault` | `LoadContext.CreateLoadData` / `ContainerLoadData.{InitializeReaders,FillCreatedObject,Read,FillObject}` / `HeaderLoadData_Readers` (`InitialieReaders` ×2 + `ContainerHeaderLoadData.CreateObject`) / `ArchiveDeserializer.LoadFrom` Finalizers | **The money stamp** — exact failing type, `SaveId.GetStringId()`, object idx / container step / header phase / raw chunk size + flattened exception chain + stack. `kind=` distinguishes object / container / objectHeader / containerHeader / archiveParse |
 | `UnknownSaveId` | `ObjectHeaderLoadData.CreateObject` / `ContainerHeaderLoadData.GetObjectTypeDefinition` Postfixes | Save carries a SaveId this build has no definition for (definer/build mismatch); deduped by `GetStringId()` |
@@ -51,10 +57,14 @@ Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only a
 | `LoadFault` | `SaveManager.Load` Finalizer/Postfix, `LoadResult.Initialize*` Finalizer | Uncaught exception (unreadable file / definer registration / metadata version), `LoadResult.Successful=false` (message says explicitly when NO interior stamp was captured), or a deferred `[LoadInitializationCallback]` throw |
 | `LoadFailed` | `MBSaveLoad.LoadSaveGameData` Postfix | Null LoadResult — the dialog is now on screen; cause is in the stamps above |
 | `LoadDataOk` / `ObjectsInitialized` / `AllBehaviorDataLoaded` | milestones | Deserialization / deferred init callbacks / behavior data completed. `ObjectsInitialized` matters: SaveShield swallows callback-phase exceptions into a silent half-load — a log ending at `LoadDataOk` with a `LoadFault step=InitializeObjects` stamp is that case |
-| `GameLoaded` / `GameInitializationFinished` | campaign launch (2026-09-12) | Stamped from the `MBSubModuleBase.OnGameLoaded` and `OnGameInitializationFinished` overrides in `SubModule.cs`, on the same seq/clock as the load attempt, with the process memory tokens as detail (`gc=… heapMB=… privMB=… wsMB=…`, shared with `[BattleLoad]` via `ProcessMemoryTokens`). Engine order for a saved campaign (installed v1.4.8 `Campaign.cs:1420-1452`): `GameLoaded` fires BEFORE `LoadBehaviorData`, so it brackets the behavior-data load from above; `GameInitializationFinished` fires at the end of `Campaign.OnInitialize`, after `AllBehaviorDataLoaded` and `RegisterEvents`, and is the stamp that bisects the window the first live memory run measured at 95 s and +2.7 GB with nothing in either log (the same window #509 saw stall for 10 minutes; this is the bisecting stamp that issue asked for). A new campaign never fires `OnGameLoaded` (it takes the `OnAfterCampaignStart` branch) and stamps `GameInitializationFinished` only, with no `LoadRequested` before it: its `seq`/`t` then continue from whatever attempt last ran in the process, or read `seq=1 t=+0ms` on a fresh one |
-| `SaveBegin` | `SaveManager.Save` Prefix | Save lifecycle reset |
+| `GameLoaded` / `GameInitializationFinished` | campaign launch (2026-09-12) | Stamped from the `MBSubModuleBase.OnGameLoaded` and `OnGameInitializationFinished` overrides in `SubModule.cs`, on the same seq/clock as the load attempt, with the process context as detail: `loadsThisProcess= inGameLoads= prevCampaign=` (`none`, `collected` or `alive`; plus `gen2Since=N` once a campaign has ended) and the memory tokens (`gc=… heapMB=… privMB=… wsMB=…`, shared with `[BattleLoad]` via `ProcessMemoryTokens`). Engine order for a saved campaign (installed v1.4.8 `Campaign.cs:1420-1452`): `GameLoaded` fires BEFORE `LoadBehaviorData`, so it brackets the behavior-data load from above; `GameInitializationFinished` fires at the end of `Campaign.OnInitialize`, after `AllBehaviorDataLoaded` and `RegisterEvents`, and is the stamp that bisects the window the first live memory run measured at 95 s and +2.7 GB with nothing in either log (the same window #509 saw stall for 10 minutes; this is the bisecting stamp that issue asked for). A new campaign never fires `OnGameLoaded` (it takes the `OnAfterCampaignStart` branch) and stamps `GameInitializationFinished` only, with no `LoadRequested` before it: its `seq`/`t` then continue from whatever attempt last ran in the process, or read `seq=1 t=+0ms` on a fresh one |
+| `SaveBegin` | `SaveManager.Save` Prefix | Save lifecycle reset. Carries `name=` and the process context |
+| `SaveBehaviorData` | `CampaignBehaviorDataStore.SaveBehaviorData` Prefix and Postfix, written right after `SaveBegin` | One summary line (`behaviors= records= elements= syncMs= maxStringBytes= slowest= slowestMs=`, with `maxStringBehavior=` when a string was seen), then a row for each behavior over 10,000 elements, 30,000 string bytes or 250 ms |
+| `SaveCollected` | `SaveContext.CollectObjects()` Prefix and Postfix | `objects= containers= strings= collectMs=`: what the save is about to write, right after the engine's object walk |
+| `SaveCensus` | the same Postfix | Per-type census on the first save after any load that is not the first in the process (`reason=afterReload`), or after `taom.arm_save_census` (`reason=console`). A summary line, then `obj n= type=` rows (with `unregistered= dupIds=` for engine objects) and `ctr n= elements= type=` rows. `tools/diff_save_census.py` compares two blocks |
+| `Runtime` | `Main/SubModule.cs`, once at module load | `framework= clr= serverGC= latency= is64Bit=`: which runtime host this session runs; an unreadable value prints `?` |
 | `SaveWriteFault` | `FileDriver.Save` Finalizer/Postfix | Write threw ON the async writer thread (#292 class), or non-Success `SaveResult` (disk full / antivirus / OneDrive lock) |
-| `SaveStatusFault` / `SaveCompleted` | `SaveOutput.PrintStatus` | Faulted-task AggregateException at `Game.OnSaveCompleted` (#292 signature) / terminal result + serialization errors |
+| `SaveStatusFault` / `SaveCompleted` | `SaveOutput.PrintStatus` | Faulted-task AggregateException at `Game.OnSaveCompleted` (#292 signature) / terminal result + serialization errors. `SaveCompleted` also carries the process context, stamped before the engine's own `Common.MemoryCleanupGC()` |
 
 **Build stamp:** `MBSaveLoad_GetSaveMetaData_Patch` writes `TAOM_Build` (assembly version + informational version) into every save's metadata via the upsert indexer — inert to the engine (MetaData serializes its whole dict to JSON; only known keys are read). Future saves self-identify their exact build in `ModuleCheck` and in `inspect_sav.py` output.
 
@@ -72,14 +82,19 @@ Triage split it gives without launching the game: **zero/garbage header** → sa
 |---|---|
 | `Main/Features/SaveLoadDiagnostics/Domain/SaveLoadPhase.cs` | Log-contract phase names (do not rename casually) |
 | `Main/Features/SaveLoadDiagnostics/SaveLoadDiagnosticsService.cs` | Lock-free emit/fault/dedup core |
-| `Main/Features/SaveLoadDiagnostics/Hooks/*.cs` | 12 thin hooks (see table above) |
-| `Main/SubModule.cs` (Patch61 block, `OnSubModuleLoad`) | Init + two-category application, fail-safe |
+| `Main/Features/SaveLoadDiagnostics/Domain/SaveLoadTokens.cs` | Pure formatting of the plan 114 tokens; an unknown value is `?` or left out |
+| `Main/Features/SaveLoadDiagnostics/Domain/BehaviorRecordStats.cs` | Size of one behavior's save record, and the `SaveBehaviorData` summary |
+| `Main/Features/SaveLoadDiagnostics/Domain/SaveGraphCensus.cs` | Per-type census of a save's object and container lists |
+| `Main/Features/SaveLoadDiagnostics/Cheats/SaveCensusCheats.cs` | `taom.arm_save_census` |
+| `Main/Features/SaveLoadDiagnostics/Hooks/*.cs` | 19 thin hook files (see table above) |
+| `Main/SubModule.cs` (Patch61 block, `OnSubModuleLoad`) | Init + per-category application, fail-safe |
 | `tools/inspect_sav.py` | Offline .sav triage |
-| `TAOM.Tests/Features/SaveLoadDiagnostics/SaveLoadDiagnosticsServiceTests.cs` | 17 service tests (format, throttle, dedup, flatten, parallel) |
+| `tools/diff_save_census.py` | Compares two `SaveCensus` blocks from one log |
+| `TAOM.Tests/Features/SaveLoadDiagnostics/SaveLoadDiagnosticsServiceTests.cs` | 31 service tests (format, throttle, dedup, flatten, parallel, process context, behavior samples, census request) |
 
 ## Tests
 
-Service: 20 tests (seq/reset semantics, Aggregate/TargetInvocation flattening incl. the composed Aggregate-wrapping-TIE production shape, stack line, 20-fault throttle + reset, `FaultCount` reset, unknown-SaveId dedup + 50-cap + reset, logger-throw resilience, 100-way parallel seq distinctness). Bindings: all 15 targets drift-guarded by `HarmonyPatchBindingTests` (via `TargetMethod(s)`), plus `SaveLoadDiagnosticsBindingTests` (4 tests) pinning what that suite can't see — the `ContainerHeaderLoadData` PROPERTY binding (a rename silently degrades container attribution to `<null>`), both `CampaignBehaviorDataStore` methods, `ArchiveDeserializer.LoadFrom(byte[])`, and `SaveId.GetStringId()`.
+Service: 31 tests (seq/reset semantics, Aggregate/TargetInvocation flattening incl. the composed Aggregate-wrapping-TIE production shape, stack line, 20-fault throttle + reset, `FaultCount` reset, unknown-SaveId dedup + 50-cap + reset, logger-throw resilience, 100-way parallel seq distinctness, load counters, the weak ended-campaign reference, behavior samples written after `SaveBegin`, census requests). Bindings: all targets drift-guarded by `HarmonyPatchBindingTests` (via `TargetMethod(s)`), plus `SaveLoadDiagnosticsBindingTests` (8 tests) pinning what that suite can't see: the `ContainerHeaderLoadData` PROPERTY binding (a rename silently degrades container attribution to `<null>`), both `CampaignBehaviorDataStore` methods and its record fields, `ArchiveDeserializer.LoadFrom(byte[])`, `SaveId.GetStringId()`, the `SaveContext` and `LoadContext` count fields, and the `MBObjectBase.IsRegistered` getter. Plan 114: `SaveLoadTokensTests` (8), `BehaviorRecordStatsTests` (4), `SaveGraphCensusTests` (7), `SaveGrowthProbeWiringTests` (6: `Main/SubModule.cs` wiring by source text), `SaveLoadHotFinalizerTests` (3).
 
 ## Known limitations
 
@@ -96,6 +111,10 @@ Service: 20 tests (seq/reset semantics, Aggregate/TargetInvocation flattening in
 ## Dependencies
 
 `IModLogger`/`FileLogger` (Main/Core/Logging). No MCM, no config, no SyncData of its own.
+
+## Save-growth probes (plan 114)
+
+`LoadCounts`, `SaveCollected`, `SaveBehaviorData`, `SaveCensus`, `Runtime` and the process-context tokens exist to name what an in-game reload adds to every later save. They change nothing a save holds. The census runs by itself once per reload and its cost on a 2 M object save is unmeasured. What is known, how to read the lines, the repro matrix and the decision table: [save-growth-2026-11.md](../investigations/save-growth-2026-11.md).
 
 ---
 
