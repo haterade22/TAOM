@@ -119,6 +119,19 @@ deployment plan and the weather model, which a mod can supply) still makes the e
 does a throw from a behaviour's `OnMissionScreenPreLoad`, which `MissionState.LoadMission` calls before `AfterStart`. Keeping every `AfterStart`
 throw-safe stays the rule: the guard saves the battle, not the behaviour's setup.
 
+**Never spawn an agent inside `AfterStart` (v1.4.8).** `Mission.AfterStart` runs every behaviour's
+`EarlyStart` and then every behaviour's `AfterStart` with `foreach` over `MissionBehaviors`, a
+`List<MissionBehavior>` (Mission.cs:1329, 3817-3826), and `AddMissionBehavior` appends to that same list
+(Mission.cs:4615-4617). An agent spawned inside the loop runs every agent-creation hook, and a hook
+(TAOM's or another mod's) that adds a behaviour on that spawn changes the list mid-loop, so the
+enumerator's next step throws. `MissionState.FinishMissionLoading` clears `_missionInitializing` before it
+calls `AfterStart` (MissionState.cs:335, 345), and `AfterStart` sets `State.Continuing` only on its last
+line (Mission.cs:3835), so the next `MissionState.OnTick` reaches `LoadMission` and `Mission.Initialize`
+again on the same mission object (MissionState.cs:89-96, 221-244). The engine also walks
+`MissionBehaviors` with `foreach` for `OnAgentCreated` (Mission.cs:4061) and `OnAgentBuild` (4344, 4358),
+so never spawn from a callback the engine dispatches with `foreach`; `OnMissionTick` is an index loop
+(3741-3744). Spawn on the first mission tick instead. Line numbers: the v1.4.8 dump (`_categories_v1.4.8`).
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**
