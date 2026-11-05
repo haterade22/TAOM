@@ -19,6 +19,19 @@ namespace TAOM.Tests.Features.BattleCorpses;
 [TestClass]
 public class BattleCorpsesWiringTests
 {
+    // The MCM button's last-resort catch is player-facing text: a literal reads in English in all 12 languages.
+    [TestMethod]
+    public void ApplyButtonFailureText_IsARegisteredKey()
+    {
+        var settings = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
+        StringAssert.Contains(settings, "{=taom_bc_apply_failed}");
+        Assert.IsFalse(settings.Contains("$\"[TAOM] Battle settings could not be applied"),
+            "The Apply button's failure text is a literal again.");
+
+        var strings = RepoPaths.ReadSource("Main/_Module/ModuleData/taom_module_strings.xml");
+        StringAssert.Contains(strings, "<string id=\"taom_bc_apply_failed\" text=\"{=taom_bc_apply_failed}");
+    }
+
     [TestMethod]
     public void FeatureModules_ListTheBattleCorpsesModuleOnce()
     {
