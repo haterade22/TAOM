@@ -94,7 +94,7 @@ class NorthmanSuccessorTests(unittest.TestCase):
             "fighter_gondor": "fighter_rohan"})
         self.assertEqual(cfg["lord_face"], "fighter_rohan")
         self.assertEqual(cfg["mercenaries"], ["testrealm_youth_merc"])
-        self.assertEqual(cfg["rosters_kept"], r"^testrealm_(bat_template_medium|civ_template_default)_[a-e]$")
+        self.assertEqual(cfg["rosters_kept"], r"^testrealm_(bat_template_medium|civ_template_default)_[a-d]$")
         self.assertNotIn("c", cfg)
         self.assertNotIn("elite", cfg)
 

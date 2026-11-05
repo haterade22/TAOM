@@ -33,6 +33,7 @@ public sealed class LongDefeatHudView : MissionView
     private GauntletMovieIdentifier? _hudMovie;
     private readonly LongDefeatPanelHost _panel = new(line => IoC.Resolve<IModLogger>()?.LogInfo(line));
     private readonly LongDefeatHudClock _clock = new();
+    private LongDefeatMissionSpeed? _speed;
     private bool _ordersChecked;
     private bool _failed;
 
@@ -63,6 +64,7 @@ public sealed class LongDefeatHudView : MissionView
             _vm.Tick(dt);
             _clock.Advance(dt);
             _panel.ReadKeys(Input, _vm);
+            _speed?.Apply(Mission, _session.Speed, dt);
             if (_clock.TakeRefresh())
                 _vm.Refresh();
 
@@ -90,6 +92,9 @@ public sealed class LongDefeatHudView : MissionView
         _hudLayer = new GauntletLayer("GauntletLayer", HudLayerOrder, false);
         _hudMovie = _hudLayer.LoadMovie("LongDefeatHud", _vm);
         MissionScreen.AddLayer(_hudLayer);
+        _speed = new LongDefeatMissionSpeed(IoC.Resolve<IModLogger>());
+        if (LongDefeatAutorunPlan.Resolve() is { Armed: true } plan)
+            _session!.SetSpeed(plan.Speed);
         _vm.Refresh();
         var panelLoaded = LongDefeatPanelHost.ProbeLoads(_hudLayer, _vm);
         var hudLoaded = _hudMovie.Movie?.IsLoaded == true;
@@ -113,6 +118,8 @@ public sealed class LongDefeatHudView : MissionView
     {
         try
         {
+            if (Mission != null)
+                LongDefeatMissionSpeed.Stop(Mission);
             _panel.Remove(MissionScreen);
             if (_hudLayer != null)
             {

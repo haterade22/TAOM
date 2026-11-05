@@ -30,6 +30,8 @@ public class WargAiControlledIsNotFacingEnemy : BTReturnFalseDecorator, IBTBanne
 
     public override bool Evaluate()
     {
+        // Selector.Prepare evaluates every child, and "enemy died" has just nulled a dead hitter. A throw here stops the tree for the battle.
+        if (AgentHitBy.GetValue() == null) return false;
         var agentHitByAdapter = _adapterFactory.GetAgentAdapter(AgentHitBy.GetValue());
         var agentAdapter = _adapterFactory.GetAgentAdapter(Agent.GetValue());
         return !agentHitByAdapter.IsAttackLikelyToHit(agentAdapter, 30, WargConfig.WargAttackRange);

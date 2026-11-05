@@ -23,6 +23,11 @@ import check_doc_graph_ratchet as ratchet  # noqa: E402
 class CompareTests(unittest.TestCase):
     BASE = {"orphans": 153, "components": 156}
 
+    def test_an_empty_corpus_is_a_problem_and_not_an_improvement(self):
+        problems = ratchet.compare({"orphans": 0, "components": 0}, self.BASE)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("no docs", problems[0])
+
     def test_equal_to_baseline_passes(self):
         self.assertEqual(ratchet.compare(dict(self.BASE), self.BASE), [])
 

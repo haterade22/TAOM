@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Arthedain troop tree and its nine soldier party templates.
+"""Generate the Arthedain troop tree and its seven soldier party templates.
 
 Writes:
   Main/_Module/ModuleData/troops/troops_arthedain.xml           (whole file, generated)
@@ -238,12 +238,6 @@ def party_templates():
             (p + "shieldman", 0, 15), (p + "ranger", 0, 15), (p + "outrider", 0, 13),
             (p + "citadel_guard", 0, 10), (p + "fornost_guard", 0, 8), (p + "veteran_ranger", 0, 8),
             (p + "lancer", 0, 8), (p + "veteran_citadel_guard", 0, 5)]),
-        ("kingdom_hero_party_mercenary_arthedain_template", [
-            (p + "spearman", 8, 16), (p + "ranger_of_the_north", 4, 8), (p + "shieldman", 4, 8),
-            (p + "ranger", 2, 4), (p + "outrider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_arthedain_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "ranger_of_the_north", 2, 4)]),
         ("militia_arthedain_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_arthedain_template_level_1", [

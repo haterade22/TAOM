@@ -1285,6 +1285,10 @@ def check_rule_symbols(adrs: bool = False,
             for path, lineno, name in hits if name in pending]
 
 
+# The empty override: a named module still deploys.
+_MODULE_ID_OFF_RE = re.compile(r"-p:ModuleId=(?![^\s`\"'|])")
+
+
 def check_unflagged_dotnet(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
     """`dotnet test|build` of a TAOM target with no `-p:ModuleId=` in the command, a command wrapped
     with a line continuation read whole: the post-build step deploys into a game install that may be
@@ -1300,7 +1304,7 @@ def check_unflagged_dotnet(commit: CommitView | None = None) -> list[tuple[Path,
                 j += 1
                 command = lines[j]
                 line += " " + command
-            if "ModuleId" not in line:
+            if not _MODULE_ID_OFF_RE.search(line.split(" #")[0]):
                 findings.append((path, i + 1, "unflagged-dotnet",
                                  "add -p:DisableModuleCopy=true -p:ModuleId= so the command does "
                                  "not deploy into the game install."))

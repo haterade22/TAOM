@@ -34,7 +34,7 @@ lines; its own change, listed on #980's close).
 ## Root-cause pattern: a deferred follow-up with no owner, three times
 
 The defect in #980 was found on 2026-10-04 (MS7-4), on 2026-10-06 (finding 11) and in the #848 review, and each time
-written as "FOLLOW-UP, not fixed here" with no issue. The commit that added a lessons bullet against exactly that
+written as "`FOLLOW-UP`, not fixed here" with no issue. The commit that added a lessons bullet against exactly that
 (`48d66b59a`, 2026-10-21) shipped an RCA that again left three items without an issue; #980 was filed two days later.
 A prose rule that fails three times needs a machine check: #984 adds one to `lint_docs.py` (a new `FOLLOW-UP` line in
 an RCA must cite an issue or a reason). This review filed its own follow-up the same day (#983).

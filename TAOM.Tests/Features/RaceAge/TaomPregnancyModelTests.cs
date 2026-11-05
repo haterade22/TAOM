@@ -1,19 +1,30 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TAOM.Features.RaceAge.Models;
+using TAOM.Features.RaceAge;
 
 namespace TAOM.Tests.Features.RaceAge;
 
-// Tests for the pure-math portion of TaomPregnancyModel.GetDailyChanceOfPregnancyForHero,
-// extracted to a static helper (TaomPregnancyModel.ComputeBaseChance) so the 5 branches
-// the Phase 7 audit (#179) flagged are exercisable without the sealed-Hero coupling.
-//
-// Full ADR-007 refactor (introduce IHeroAgeInfo adapter so the entire model is service-testable)
-// was deferred when #131 closed on 2026-05-14 and has no tracking issue yet. Until that lands, the early-exit guards
-// (IsImmortal / Spouse==null / Age out of fertility window) inside the override body remain
-// engine-coupled — covered indirectly here via the extracted helper's age-range branch.
+// Tests for the pure-math portion of the daily pregnancy chance, RaceAgeService.ComputeBaseChance.
+// The guards (immortal hero or spouse, fertility window) live in RaceAgeService.CanConceive
+// and are tested in RaceAgeServiceTests. TaomPregnancyModel keeps the Hero reads and the Virile perk,
+// which stay engine-coupled (sealed Hero, ExplainedNumber) and are not unit-tested.
 [TestClass]
 public class TaomPregnancyModelTests
 {
+    // The engine lets a clanless hero through (PregnancyCampaignBehavior.DailyTickHero), so an immortal or out-of-window hero must
+    // return before any Clan read. A negative chance must reach the Virile factor, not be floored. Hero is sealed: pinned in source.
+    [TestMethod]
+    public void GetDailyChance_ReadsTheClanOnlyAfterTheGuards_AndKeepsANegativeChance()
+    {
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/RaceAge/Models/TaomPregnancyModel.cs", stripComments: true);
+
+        var guard = src.IndexOf("_raceAgeService.CanConceive(", System.StringComparison.Ordinal);
+        var clan = src.IndexOf("hero.Clan", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(guard >= 0, "the guards are gone from the model");
+        Assert.IsTrue(clan > guard, "hero.Clan is read before the guards, so a clanless hero throws where it used to get 0");
+        Assert.IsFalse(src.Contains("baseChance <= 0f"), "a negative chance must reach the Virile factor as it did");
+    }
+
     // --- Age-factor branches (heroAge relative to comesOfAge .. fertilityEnd) ---
 
     [TestMethod]
@@ -21,7 +32,7 @@ public class TaomPregnancyModelTests
     {
         // ageFactor = 1.2 - (18 - 18) * declineRate = 1.2 (peak)
         // baseChance = 1.2 / 1 * 0.12 * 1 * 1.0 = 0.144
-        var result = TaomPregnancyModel.ComputeBaseChance(
+        var result = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -35,7 +46,7 @@ public class TaomPregnancyModelTests
         // declineRate = 1.08 / 27 = 0.04
         // ageFactor = 1.2 - (45 - 18) * 0.04 = 1.2 - 1.08 = 0.12
         // baseChance = 0.12 / 1 * 0.12 * 1 * 1.0 = 0.0144
-        var result = TaomPregnancyModel.ComputeBaseChance(
+        var result = RaceAgeService.ComputeBaseChance(
             heroAge: 45, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -48,7 +59,7 @@ public class TaomPregnancyModelTests
     {
         // fertilityEnd == comesOfAge => fertilityWindow=0 => declineRate = 0.04 fallback (not div-by-zero)
         // ageFactor = 1.2 - (50 - 50) * 0.04 = 1.2 (same age, no decline applied)
-        var result = TaomPregnancyModel.ComputeBaseChance(
+        var result = RaceAgeService.ComputeBaseChance(
             heroAge: 50, comesOfAge: 50, fertilityEnd: 50,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -63,7 +74,7 @@ public class TaomPregnancyModelTests
     {
         // childCount=1 -> effective=2 -> divisor 2*2 = 4
         // baseChance = 1.2 / 4 * 0.12 * 1 = 0.036
-        var result = TaomPregnancyModel.ComputeBaseChance(
+        var result = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 1, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -76,7 +87,7 @@ public class TaomPregnancyModelTests
     {
         // childCount=3 -> effective=4 -> divisor 4*4 = 16
         // baseChance = 1.2 / 16 * 0.12 * 1 = 0.009
-        var result = TaomPregnancyModel.ComputeBaseChance(
+        var result = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 3, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -90,7 +101,7 @@ public class TaomPregnancyModelTests
     public void ComputeBaseChance_PlayerOrSpouseInvolved_PopulationFactorIsOne()
     {
         // playerOrSpouseInvolved=true skips the clanCap throttle regardless of clan size.
-        var withPlayer = TaomPregnancyModel.ComputeBaseChance(
+        var withPlayer = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 100,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -107,7 +118,7 @@ public class TaomPregnancyModelTests
         // The model doesn't clamp negative (production matches: `Math.Min(1f, ...)`).
         // ageFactor=1.2, childDivisor=1, mult=0.12, populationFactor=-23
         // baseChance = 1.2 * 0.12 * -23 = -3.312
-        var npc = TaomPregnancyModel.ComputeBaseChance(
+        var npc = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 100,
             playerOrSpouseInvolved: false, raceFertilityModifier: 1f);
@@ -122,7 +133,7 @@ public class TaomPregnancyModelTests
     {
         // tier 2 -> clanCap = 4 + 4*2 = 12. aliveLords = 6:
         //   populationFactor = min(1, (24 - 6) / 12) = min(1, 1.5) = 1.0
-        var moderate = TaomPregnancyModel.ComputeBaseChance(
+        var moderate = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 2, aliveLords: 6,
             playerOrSpouseInvolved: false, raceFertilityModifier: 1f);
@@ -136,7 +147,7 @@ public class TaomPregnancyModelTests
     public void ComputeBaseChance_DwarvenFertilityHalf_HalvesResult()
     {
         // Race fertility modifier 0.5 (dwarves per RaceAgeService defaults).
-        var dwarven = TaomPregnancyModel.ComputeBaseChance(
+        var dwarven = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 0.5f);
@@ -148,7 +159,7 @@ public class TaomPregnancyModelTests
     public void ComputeBaseChance_ZeroFertility_ReturnsZero()
     {
         // Race fertility modifier 0 (e.g., wargs / non-reproducing race in config).
-        var sterile = TaomPregnancyModel.ComputeBaseChance(
+        var sterile = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 0f);
@@ -165,17 +176,17 @@ public class TaomPregnancyModelTests
         // pregnancy chance vs vanilla DefaultPregnancyModel (which uses Hero.Age as float).
         // This test pins float-precision behavior: age 44.5 must produce an ageFactor between
         // age 44 and age 45.
-        var ageAt44 = TaomPregnancyModel.ComputeBaseChance(
+        var ageAt44 = RaceAgeService.ComputeBaseChance(
             heroAge: 44f, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
 
-        var ageAt44_5 = TaomPregnancyModel.ComputeBaseChance(
+        var ageAt44_5 = RaceAgeService.ComputeBaseChance(
             heroAge: 44.5f, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
 
-        var ageAt45 = TaomPregnancyModel.ComputeBaseChance(
+        var ageAt45 = RaceAgeService.ComputeBaseChance(
             heroAge: 45f, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 0,
             playerOrSpouseInvolved: true, raceFertilityModifier: 1f);
@@ -201,7 +212,7 @@ public class TaomPregnancyModelTests
     {
         // tier 0 -> cap 4. aliveLords 6 -> populationFactor = (8 - 6) / 4 = 0.5.
         // Past the cap the bonus is clamped to 1: 1.2 * 0.12 * 0.5 * 1 = 0.072 (pre-fix 0.144).
-        var orc = TaomPregnancyModel.ComputeBaseChance(
+        var orc = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 6,
             playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
@@ -212,11 +223,11 @@ public class TaomPregnancyModelTests
     [TestMethod]
     public void ComputeBaseChance_NpcClanPastCap_BonusRaceNeverBeatsHumanRate()
     {
-        var orc = TaomPregnancyModel.ComputeBaseChance(
+        var orc = RaceAgeService.ComputeBaseChance(
             heroAge: 25, comesOfAge: 18, fertilityEnd: 45,
             childCount: 2, clanTier: 1, aliveLords: 12,
             playerOrSpouseInvolved: false, raceFertilityModifier: 1.3f);
-        var human = TaomPregnancyModel.ComputeBaseChance(
+        var human = RaceAgeService.ComputeBaseChance(
             heroAge: 25, comesOfAge: 18, fertilityEnd: 45,
             childCount: 2, clanTier: 1, aliveLords: 12,
             playerOrSpouseInvolved: false, raceFertilityModifier: 1f);
@@ -230,7 +241,7 @@ public class TaomPregnancyModelTests
     {
         // tier 0 -> cap 4. aliveLords 4 -> populationFactor = min(1, (8 - 4) / 4) = 1, brake not engaged.
         // 1.2 * 0.12 * 1 * 2 = 0.288
-        var orc = TaomPregnancyModel.ComputeBaseChance(
+        var orc = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 4,
             playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
@@ -243,7 +254,7 @@ public class TaomPregnancyModelTests
     {
         // The exact edge: tier 0 -> cap 4. aliveLords 5 -> populationFactor = (8 - 5) / 4 = 0.75.
         // One lord past the cap the bonus is already gone: 1.2 * 0.12 * 0.75 * 1 = 0.108 (bonus would give 0.216).
-        var orc = TaomPregnancyModel.ComputeBaseChance(
+        var orc = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 5,
             playerOrSpouseInvolved: false, raceFertilityModifier: 2f);
@@ -256,7 +267,7 @@ public class TaomPregnancyModelTests
     {
         // The clamp only caps a bonus; an elf's 0.15 still applies under the brake.
         // tier 0, aliveLords 6 -> populationFactor 0.5. 1.2 * 0.12 * 0.5 * 0.15 = 0.0108
-        var elf = TaomPregnancyModel.ComputeBaseChance(
+        var elf = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 6,
             playerOrSpouseInvolved: false, raceFertilityModifier: 0.15f);
@@ -269,7 +280,7 @@ public class TaomPregnancyModelTests
     {
         // The player's marriage skips the brake (vanilla), so it must not also take the race bonus:
         // an orc player couple breeds at the vanilla rate. 1.2 * 0.12 * 1 * 1 = 0.144 (pre-fix 0.288)
-        var orcPlayer = TaomPregnancyModel.ComputeBaseChance(
+        var orcPlayer = RaceAgeService.ComputeBaseChance(
             heroAge: 18, comesOfAge: 18, fertilityEnd: 45,
             childCount: 0, clanTier: 0, aliveLords: 100,
             playerOrSpouseInvolved: true, raceFertilityModifier: 2f);

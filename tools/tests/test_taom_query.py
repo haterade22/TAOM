@@ -67,6 +67,18 @@ class ModuleDataQueryTests(unittest.TestCase):
         names = {s["name"] for s in self.q.list_schemas()}
         self.assertIn("taom_npccharacter", names)
 
+    def test_find_references_line_numbers_survive_a_multi_line_comment(self):
+        # _read_fresh dropped a comment with its newlines, so every ref after one read too few lines.
+        _write(self.md / "characters" / "clans.xml",
+               '<Factions>\n  <!-- a comment\n       over three\n       lines -->\n'
+               '  <Faction id="clan_a" initial_home_settlement="Settlement.town_a1" />\n</Factions>\n')
+        r = self.q.find_references("Settlement.town_a1")
+        self.assertEqual([(x["file"], x["line"]) for x in r["references"]], [("characters/clans.xml", 5)])
+
+    def test_find_references_ignores_a_commented_out_ref(self):
+        _write(self.md / "a.xml", '<a>\n<!-- <x troop="NPCCharacter.hero_a" /> -->\n</a>\n')
+        self.assertEqual(self.q.find_references("NPCCharacter.hero_a")["count"], 0)
+
     def test_find_references_locates_refs_with_line(self):
         _write(self.md / "troops" / "troops_test.xml", """<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
@@ -86,6 +98,14 @@ class ModuleDataQueryTests(unittest.TestCase):
         # comment-stripped: a commented ref is not counted
         self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 0)
 
+    def test_find_references_reads_an_edit_made_after_the_last_query(self):
+        # The MCP server outlives an edit, so its queries must not read through the validator's cache.
+        path = self.md / "troops" / "troops_fresh.xml"
+        _write(path, '<NPCCharacters><NPCCharacter id="x" culture="Culture.gondor"/></NPCCharacters>\n')
+        self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 0)
+        _write(path, '<NPCCharacters><NPCCharacter id="x" culture="Culture.vlandia"/></NPCCharacters>\n')
+        self.assertEqual(self.q.find_references("Culture.vlandia")["count"], 1)
+
     def test_find_references_covers_faction_and_body_property_refs(self):
         # Both are REF_KINDS the validator checks; without their prefixes here a lookup
         # returned a confident 0 for an id that is referenced.
@@ -101,6 +121,11 @@ class ModuleDataQueryTests(unittest.TestCase):
         self.assertEqual((r["kind"], r["count"]), ("body_property", 1))
         self.assertEqual(self.q.find_references("clan_x")["count"], 1, "a bare id searches every prefix")
         self.assertEqual(self.q.find_references("BodyProperty.fighter_x")["count"], 1)
+
+    def test_find_references_covers_settlement_refs(self):
+        _write(self.md / "clans.xml", '<Factions><Faction id="c" initial_home_settlement="Settlement.town_x" /></Factions>\n')
+        r = self.q.find_references("Settlement.town_x")
+        self.assertEqual((r["kind"], r["count"]), ("settlement", 1))
 
     def test_party_template_exists(self):
         self.assertTrue(self.q.party_template_exists("good_template")["exists"])

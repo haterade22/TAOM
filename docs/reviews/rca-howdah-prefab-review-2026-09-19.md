@@ -147,7 +147,7 @@ two). Design: D2, D9, and the confirmation that the queue, the origin wrapper an
   chose to keep the plain armour working when he approved the item, and the item stays in the Armory for saves that
   hold one as loot.
 - Release the crew from `UsableMachine.OnMissionEnded` instead of the two per-tick polls (Design P6): research doc
-  step 2, FOLLOW-UP, and the crew smoke is what should settle it.
+  step 2, Follow-up closed 2026-11-04 (the polls stay: Mission.MissionEnded's setter loop is one pass at the transition, so a machine added later or a throw by an earlier object misses the override), and the crew smoke is what should settle it.
 - A reinforcement headroom guard before spawning four crew (Efficiency F3): the engine's agent cap is native and
   unverified; the A/B with `CrewSpawnEnabled` is the measurement to take first.
 - `TaomCombatMechanicsModel.VictimPartyId` reading `BattleCombatant as PartyBase` so refuge reduction reaches the crew:

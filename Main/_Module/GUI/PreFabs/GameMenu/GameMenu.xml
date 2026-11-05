@@ -2,7 +2,6 @@
   <Constants>
     <Constant Name="HingesTopBottomMargin" Value="280" />
     <Constant Name="Text.Width" Value="850" />
-    <Constant Name="InfoPanel.Width" Additive="!Text.Width" Value="50" />
     <Constant Name="SiegeMachine.Image.Dimension" Value="52" />
 
     <Constant Name="EncounterMode.Menu.Width" Value="493" />
@@ -17,10 +16,6 @@
     <VisualDefinition Name="Menu" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.65">
       <VisualState PositionXOffset="0" State="Default" />
       <VisualState PositionXOffset="-530" State="Disabled" />
-    </VisualDefinition>
-    <VisualDefinition Name="InfoPanel" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.45">
-      <VisualState SuggestedWidth="!InfoPanel.Width" SuggestedHeight="170" PositionXOffset="50" State="Default" />
-      <VisualState SuggestedWidth="!InfoPanel.Width" SuggestedHeight="0" PositionXOffset="50" State="Disabled" />
     </VisualDefinition>
   </VisualDefinitions>
   <Window>

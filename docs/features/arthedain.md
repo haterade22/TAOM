@@ -62,7 +62,7 @@ against Gondor's 150,000. The troops themselves are good: weakness is in numbers
 ### Component Diagram
 
 ```
-generate_arthedain_troops.py ---> troops_arthedain.xml + 9 party templates
+generate_arthedain_troops.py ---> troops_arthedain.xml + 7 party templates
 promote_borrowed_cultures.py ---> <Culture id="arthedain"> + npcs + rosters + strings
 add_map_fortifications.py    --\
 add_map_villages.py          ---> LIVE TAOM_Map settlements.xml (+ 12 loc files)
@@ -162,7 +162,7 @@ known-culture set in `CustomBattleCommandersProvider` (pinned to the playable cu
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Arthedain.cs` | volunteer pool (Levy 6, Dúnadan Youth 2) |
 | `Main/_Module/ModuleData/troops/troops_arthedain.xml` | generated troop tree |
 | `Main/_Module/ModuleData/characters/npcs_arthedain.xml` | notables and townsfolk |
-| `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_arthedain.xml` | the ten lord template rosters (`rosters_kept`; Gondor's named lords' kits are not cloned) |
+| `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_arthedain.xml` | the eight lord template rosters (`rosters_kept`; Gondor's named lords' kits are not cloned) |
 | live `TAOM_Map/ModuleData/settlements.xml` | the realm's 34 settlements (unversioned), the last rows of the file |
 
 ## Dependencies

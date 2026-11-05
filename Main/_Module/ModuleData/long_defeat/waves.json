@@ -5,7 +5,7 @@
     "waveBonusBase": 150, "waveBonusPerWave": 50,
     "spawnsPerTick": 8, "liveCap": 150, "garrisonCap": 220,
     "musterBatch": 20, "musterBatchSeconds": 4.0,
-    "quietSeconds": 60, "quietAnySeconds": 180, "strandedSeconds": 90, "stragglerShare": 0.10, "stragglerQuietSeconds": 20,
+    "quietSeconds": 60, "quietAnySeconds": 180, "strandedSeconds": 90, "stragglerShare": 0.10, "stragglerCount": 5, "stragglerSeconds": 60,
     "keepRadius": 12.0, "keepHeightBand": 4.0, "keepHoldSeconds": 45.0, "keepDecaySeconds": 90.0,
     "keepMinAttackers": 12, "keepDominance": 2.0,
     "restShare": 0.5

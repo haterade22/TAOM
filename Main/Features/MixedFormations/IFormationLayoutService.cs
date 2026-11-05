@@ -10,7 +10,8 @@ public interface IFormationLayoutService
     /// <summary>
     /// Compute the post-transform plane position for a unit, or <c>null</c> when the
     /// caller should fall through to vanilla positioning (feature disabled, formation
-    /// in non-Hold state, layout is Vanilla, formation has no valid order position).
+    /// in non-Hold state, layout is Vanilla, formation has no valid order position, or the
+    /// formation's representative is cavalry, which SmartCavalryAI (Patch31) owns).
     /// </summary>
     Vec2? ComputeUnitPlanePosition(IFormationAdapter formation, int agentIndex, bool agentIsRanged);
 

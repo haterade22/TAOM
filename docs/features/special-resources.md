@@ -4,7 +4,7 @@
 
 ## Overview
 
-Per-kingdom special resource system: 14 of the 18 kingdoms in `taom_spkingdoms.xml` have a secondary currency required to recruit and maintain elite troops (goblin, mistymountainorcs, bluecraig and lindon have none, and their heroes get no map-bar entry). 11 unique resources mapped to faction groups, with a shared balance within each group. Resources are earned through combat, displayed in the map bar, enforced in the party screen with pending transaction support, and trigger troop desertion when depleted.
+Per-kingdom special resource system: 17 of the 18 kingdoms in `taom_spkingdoms.xml` have a secondary currency required to recruit and maintain elite troops (lindon has none, and its heroes get no map-bar entry; goblin, mistymountainorcs and bluecraig joined War Spoils with the dire wolves, #1081). 11 unique resources mapped to faction groups, with a shared balance within each group. Resources are earned through combat, displayed in the map bar, enforced in the party screen with pending transaction support, and trigger troop desertion when depleted.
 
 ## Why This Exists
 
@@ -16,7 +16,7 @@ Per-kingdom special resource system: 14 of the 18 kingdoms in `taom_spkingdoms.x
 
 | Resource | Kingdoms | Theme |
 |----------|----------|-------|
-| War Spoils | Mordor, Isengard, Gundabad, Dol Guldur | Orc plunder from battles |
+| War Spoils | Mordor, Isengard, Gundabad, Dol Guldur, Goblin-town, Misty Mountain Orcs, Blue Craig | Orc plunder from battles |
 | Gems | Erebor, Ered Luin | Dwarven mining wealth |
 | Castar | Gondor, Arthedain, Cardolan, Rhudaur | Numenorean silver coin (the resource id stays `caster`) |
 | Marks | Rohan | Horse-lord currency |
@@ -77,7 +77,7 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_r
 ### Resource Definitions: `Main/_Module/ModuleData/special_resources/special_resources_config.xml`
 
 ```xml
-<!-- excerpt: the shipped row also lists gundabad and dolguldur as kingdom and culture -->
+<!-- excerpt: the shipped row also lists gundabad, dolguldur, goblin, mistymountainorcs and bluecraig as kingdom and culture -->
 <Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
   cap="10000" starting_amount="0" daily_per_town="0.2"
   per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
@@ -198,13 +198,13 @@ gain passive (the gain scales every source below); the battle payout is the base
 | Plunder | 0.3 | 10 | 16 | 14 | 3 | 4 | 10 |
 | War Banners | 0.5 | 12 | 6 | 16 | 1 | 6 | 5 |
 
-`troop_resource_costs.xml` holds 85 rows: 43 carry a `daily_upkeep` (the 8 Mordor uruk elites at 0.05
+`troop_resource_costs.xml` holds 92 rows (`grep -c "<Troop "`, 2026-11-04): 50 carry a `daily_upkeep` (among them the 3 dire wolf riders at 0.05, the 8 Mordor uruk elites at 0.05
 to 0.3, the 13 Black Numenoreans at 0.03 to 0.15 since the second halving of 2026-09-15 (#600; the
 2026-09-11 rescale to 0.05 to 0.3 shipped in v2.0.29), the 16 Gondor elites at level 41 and above at
 0.2 to 0.4 (#600, the Mordor band: L41 upgrade 4 / upkeep 0.2, L46 5 / 0.3, L51 6 / 0.4), the 3
 Ironpass rams at 0.1 to 0.25, and the 3 creatures: spider 1, elephant 10, Mumakil 500) and 42 are
 merchant-only Elite Emissary offers across Erebor and the Iron Hills, Dol Guldur, Isengard, Gundabad,
-Mirkwood, Rivendell, Rohan and Rhun (Gondor's eight offers carry upkeep too since #600). Only the 43
+Mirkwood, Rivendell, Rohan and Rhun (Gondor's eight offers carry upkeep too since #600). Only the 50
 count as upkeep troops for desertion. `TroopResourceCostDataTests` pins two shapes of this file: every
 Gondor troop at level 41 or above carries both an `upgrade_cost` and a `daily_upkeep`, and no tree
 troop's `daily_upkeep` exceeds 0.4 (the creatures are exempt), so the 1.0 to 3.0 class cannot return
@@ -268,7 +268,7 @@ question, not a defect, and the daily toast now makes it visible.
 | `Client/Features/SpecialResources/UI/EncyclopediaUnitBadgeMixin.cs` | UIExtenderEx mixin on `EncyclopediaUnitVM`: badge visibility, icon sprite, lazy tooltip (#590) |
 | `Main/_Module/GUI/PreFabs/Encyclopedia/EncyclopediaSubPages/EncyclopediaUnitTreeNodeItem.xml` | TAOM clone of the vanilla troop-tree node; carries the badge widget beside the tier and type icons |
 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` | 11 resource definitions |
-| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 85 cost rows: 43 with daily upkeep, 42 merchant-only emissary offers |
+| `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml` | 92 cost rows: 50 with daily upkeep, 42 merchant-only emissary offers |
 
 ## Dependencies
 

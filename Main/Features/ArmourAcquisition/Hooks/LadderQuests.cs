@@ -19,7 +19,7 @@ internal static class LadderQuests
     /// The owner's running quest with this definition id. Per owner, like the ladder's state: another hero's quest on
     /// the same rung (a former player hero's, after an heir took over) must not block this one, and two quests may
     /// share a definition id (the quest list is a plain list). The engine keys map markers and the journal record
-    /// (<c>JournalLogEntry.IsRelatedTo</c>) by quest StringId, so two quests started here share one journal entry.
+    /// (<c>JournalLogEntry.IsRelatedTo</c>) by quest StringId, so <see cref="Start"/> gives each quest its own.
     /// </summary>
     public static CareerQuest? Find(string questId, string ownerHeroId) =>
         Campaign.Current?.QuestManager?.Quests?.OfType<CareerQuest>().FirstOrDefault(q => q.IsOngoing
@@ -36,7 +36,8 @@ internal static class LadderQuests
         }
         try
         {
-            new CareerQuest("taom_cq_" + def.Id, Hero.MainHero, def).StartQuest();
+            var id = CareerQuestService.NewQuestStringId(def.Id, Hero.MainHero.StringId, (long)CampaignTime.Now.ToMilliseconds);
+            new CareerQuest(id, Hero.MainHero, def).StartQuest();
             logger.LogInfo($"[ArmourAcquisition] Ladder quest {questId} started for {Hero.MainHero.StringId}.");
             return true;
         }

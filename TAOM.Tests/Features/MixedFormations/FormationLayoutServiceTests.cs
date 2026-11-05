@@ -306,9 +306,26 @@ public class FormationLayoutServiceTests
     }
 
     [TestMethod]
+    public void ComputeUnitPlanePosition_CavalryGate_LogsOncePerFormationEachMission()
+    {
+        var cavalry = MakeFormation(8, 6);
+        cavalry.RepresentativeIsCavalry.Returns(true);
+        _sut.SetLayout(cavalry, FormationLayoutType.InfantryFrontRangedBack);
+
+        _sut.ComputeUnitPlanePosition(cavalry, agentIndex: 0, agentIsRanged: false);
+        _sut.ComputeUnitPlanePosition(cavalry, agentIndex: 1, agentIsRanged: false);
+        _logger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains("suspended")));
+
+        _sut.OnMissionEnd();
+        _sut.SetLayout(cavalry, FormationLayoutType.InfantryFrontRangedBack);
+        _sut.ComputeUnitPlanePosition(cavalry, agentIndex: 0, agentIsRanged: false);
+        _logger.Received(2).LogInfo(Arg.Is<string>(m => m.Contains("suspended")));
+    }
+
+    [TestMethod]
     public void IsMixedFormation_CavalryFormation_ReturnsFalse_HonoringSmartCavalryHandshake()
     {
-        // FormationLayoutService.cs:191 — `if (formation.RepresentativeIsCavalry) return false;`
+        // FormationLayoutService.IsMixedFormationInternal — `if (formation.RepresentativeIsCavalry) return false;`
         // Even a horse-archer formation that meets the 20%/≥5 ranged-minority threshold must NOT
         // be classified as mixed — SmartCavalryAI handles horse-archer behavior.
         var horseArchers = MakeFormation(8, 6); // would be mixed if not cavalry

@@ -18,6 +18,7 @@ rides on Rohan's mounts (every horse with a harness) and adds the horse-archer r
 """
 import dataclasses
 import os
+import re
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -32,6 +33,7 @@ import generate_dorwinion_troops as gdot  # noqa: E402
 import generate_eredluin_troops as gelt  # noqa: E402
 import generate_rhudaur_troops as grt  # noqa: E402
 import generate_southrhovanion_troops as gsrt  # noqa: E402
+import promote_borrowed_cultures as promo  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
 import realm_troops as rt  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
@@ -70,6 +72,10 @@ class RealmDesignTests(unittest.TestCase):
         # Dale's two-handed axe is dale_great_axe_a (TwoHandedAxe), with no _2h_ in the id.
         errors = self._probe_errors(["dale_great_axe_a", "wm_dale_shield_a06"])
         self.assertTrue(any("shield and a two-handed" in e for e in errors), errors)
+
+    def test_a_named_weapon_fails_the_self_check(self):
+        errors = self._probe_errors(["anduril", "sk_shield_round_a"])
+        self.assertTrue(any("NAMED_WEAPON_ON_TROOP" in e for e in errors), errors)
 
     def test_a_shield_with_a_one_handed_weapon_passes_that_rule(self):
         errors = self._probe_errors(["gondor_sword_a", "sk_shield_round_a"])
@@ -377,7 +383,7 @@ class RohanRealmTests(unittest.TestCase):
             if t.horse:
                 self.assertIn(t.group, ("Cavalry", "HorseArcher"), t.id)
 
-    def test_the_horse_archers_ride_and_shoot_from_the_ladder(self):
+    def test_the_horse_archers_ride_at_the_riding_band(self):
         archers = [t for t in built(gsrt) if t.role == "horsearcher"]
         self.assertEqual(len(archers), 3)
         for t in archers:
@@ -397,9 +403,37 @@ class RohanRealmTests(unittest.TestCase):
             self.assertIsNone(npc.get("race"), npc.get("id"))
             self.assertEqual(npc.find("face/face_key_template").get("value"), "BodyProperty.fighter_rohan")
 
-    def test_the_party_templates_are_the_nine_cardolan_names(self):
+    def test_the_party_templates_are_the_cardolan_names(self):
         wanted = {tid.replace("cardolan", "{c}") for tid, _ in gct.party_templates()}
         self.assertEqual({tid.replace(gsrt.CULTURE, "{c}") for tid, _ in gsrt.party_templates()}, wanted)
+
+
+class UnboundDataTests(unittest.TestCase):
+    """Only a clan's default_party_template binds a hero party template, and no TAOM clan names a mercenary or
+    outlaw one, so every realm that wrote them shipped dead data (rca-ered-luin-2026-10-27.md row 16). The
+    engine reads no such id by name: its one kingdom_hero_party literal is the caravan ambushers'."""
+
+    def test_no_realm_writes_a_mercenary_or_outlaw_template(self):
+        for module in GENERATORS:
+            ids = [tid for tid, _ in module.party_templates()]
+            self.assertEqual([tid for tid in ids if "_mercenary_" in tid or "_outlaw_" in tid], [], module.__name__)
+
+    def test_the_shipped_file_holds_no_mercenary_or_outlaw_template(self):
+        text = rt.PARTY.read_text(encoding="utf-8-sig")
+        self.assertEqual(re.findall(r'id="(kingdom_hero_party_(?:mercenary|outlaw)_[^"]+)"', text), [])
+
+    def test_no_promoted_realm_keeps_a_lord_roster_nothing_wears(self):
+        # generate_new_faction_kingdoms.py gives a clan's lords a, b, c, d by position, and these realms' clans
+        # hold at most four. Lindon's and Blue Craig's lords use equip="rivendell" and equip="goblin", so only
+        # their culture's _a row is read. A roster nothing wears carries no <Flags>, so no engine search reads it.
+        for name, cfg in promo.TARGETS.items():
+            pattern = cfg.get("rosters_kept")
+            self.assertTrue(pattern, f"{name} sets no rosters_kept, so a run would bring back rosters nothing wears")
+            last = "a" if name in ("lindon", "bluecraig") else "d"
+            for family in ("bat_template_medium", "civ_template_default"):
+                for letter in "abcde":
+                    keeps = self.assertRegex if letter <= last else self.assertNotRegex
+                    keeps(f"{name}_{family}_{letter}", pattern)
 
 
 class DwarfRealmOptionTests(unittest.TestCase):

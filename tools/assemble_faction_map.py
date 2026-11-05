@@ -7,19 +7,15 @@ locates each region on the map via template matching, then generates:
   - Renamed region PNGs (region_{id}.png) ready for deployment
   - Full-canvas PNGs (fullres/region_{id}_full.png)
   - regions.json with normalized bounding boxes
-  - factions.json migrated from old data
   - polygon_widgets.xml snippet for the UI
 
 Usage:
     python tools/assemble_faction_map.py
-WARNING (#1062 review, 2026-10-29): factions.json is maintained by hand. This tool's tables still
-disagree with it on other rows and its output drops the {=taom_faction_*_name} keys, so never copy
-its output over factions.json.
+factions.json is maintained by hand and this tool does not write it (#1062 review, 2026-10-29).
 """
 
 import json
 import os
-import shutil
 import sys
 from pathlib import Path
 
@@ -129,56 +125,6 @@ FILE_TO_REGION = {
     "Zigalnara":                      "kingdom_of_zigalnara",
 }
 
-# Region metadata: region_id -> (display_name, old_region_id, game_faction, playable, side)
-REGION_META = {
-    "high_kingdom_of_lindon":       ("High Kingdom of Lindon",       "elves_of_lindon",              "rivendell",  False, "free"),
-    "clans_of_forochel":            ("Clans of Forochel",            "orcs_of_forochel",             "",           False, "evil"),
-    "goblins_of_blue_craig":        ("Goblins of Blue Craig",        None,                           "",           False, "evil"),
-    "remnants_of_angmar":           ("Remnants of Angmar",           "realm_of_angmar",              "gundabad",   False, "evil"),
-    "kingdom_of_ered_mithrin":      ("Kingdom of Ered Mithrin",      None,                           "",           False, "neutral"),
-    "kingdom_of_arthedain":         ("Kingdom of Arthedain",         "kingdom_of_arthedain",         "vlandia",    False, "free"),
-    "kingdom_of_rhudaur":           ("Kingdom of Rhudaur",           "hill_men_of_rhudaur",          "battania",   False, "evil"),
-    "kingdom_of_ered_duin":         ("Kingdom of Ered Duin",         "dwarves_of_ered_luin",         "erebor",     False, "free"),
-    "kingdom_of_cardolan":          ("Kingdom of Cardolan",          "realm_of_cardolan",            "vlandia",    False, "free"),
-    "goblins_of_goblin_town":       ("Goblins of Goblin Town",       "orcs_of_the_misty_mountains",  "",           False, "evil"),
-    "overlordship_of_gundabad":     ("Overlordship of Gundabad",     "orcs_of_gundabad",             "gundabad",   True,  "evil"),
-    "kingdom_of_imladris":          ("Kingdom of Imladris",          "elves_of_rivendell",           "rivendell",  True,  "free"),
-    "kingdom_of_moria":             ("Kingdom of Moria",             None,                           "",           False, "evil"),
-    "anduin_vale":                  ("Anduin Vale",                  "vale_of_anduin",               "sturgia",    False, "free"),
-    "kingdom_of_lothlorien":        ("Kingdom of Lothlorien",        "elves_of_lothlorien",          "lothlorien", True,  "free"),
-    "wildmen_of_enedwaith":         ("Wildmen of Enedwaith",         "clans_of_enedwaith",           "battania",   False, "neutral"),
-    "clans_of_dunland":             ("Clans of Dunland",             "hill_men_of_dunland",          "battania",   True,  "evil"),
-    "dominion_of_isengard":         ("Dominion of Isengard",         "dominion_of_isengard",         "isengard",   True,  "evil"),
-    "kingdom_of_lasgalen":          ("Kingdom of Lasgalen",          "elves_of_mirkwood",            "mirkwood",   True,  "free"),
-    "kingdom_of_erebor":            ("Kingdom of Erebor",            "dwarves_of_erebor",            "erebor",     True,  "free"),
-    "kingdom_of_dale":              ("Kingdom of Dale",              "kingdom_of_dale",              "sturgia",    True,  "free"),
-    "kingdom_of_neldoreth":         ("Kingdom of Neldoreth",         "elves_of_neldoreth",           "mirkwood",   False, "free"),
-    "kingdom_of_angaladh":          ("Kingdom of Angaladh",          None,                           "",           False, "free"),
-    "overlordship_of_dol_guldur":   ("Overlordship of Dol Guldur",  "shadow_of_dol_guldur",         "dolguldur",  True,  "evil"),
-    "kingdom_of_dorwinion":         ("Kingdom of Dorwinion",         "realm_of_dorwinion",           "dorwinion",  False, "neutral"),
-    "kingdom_of_south_rhovanion":   ("Kingdom of South Rhovanion",   None,                           "southrhovanion", False, "neutral"),
-    "kingdom_of_rohan":             ("Kingdom of Rohan",             "kingdom_of_rohan",             "vlandia",    True,  "free"),
-    "clans_of_druwaith_iaur":       ("Clans of Druwaith Iaur",       None,                           "",           False, "neutral"),
-    "clans_of_andrast":             ("Clans of Andrast",             None,                           "",           False, "neutral"),
-    "stewardship_of_gondor":        ("Stewardship of Gondor",        "kingdom_of_gondor",            "gondor",     True,  "free"),
-    "dominion_of_mordor":           ("Dominion of Mordor",           "dark_lands_of_mordor",         "mordor",     True,  "evil"),
-    "golden_realm_of_rhun":         ("Golden-Realm of Rhun",         "easterlings_of_rhun",          "khuzait",    True,  "evil"),
-    "kingdom_of_zigalnara":         ("Kingdom of Zigalnara",         None,                           "",           False, "evil"),
-    "stronghold_of_narager":        ("Stronghold of Narager",        "orcs_of_narager",              "",           False, "evil"),
-    "khudorom_of_khand":            ("Khudorom of Khand",            "variags_of_khand",             "khuzait",    True,  "neutral"),
-    "stronghold_of_ered_gwaer":     ("Stronghold of Ered Gwaer",     "orcs_of_gwaer",                "",           False, "evil"),
-    "taskralan_of_harwan":          ("Taskralan of Harwan",          "tribes_of_harad",              "aserai",     True,  "evil"),
-    "havens_of_umbar":              ("Havens of Umbar",              "havens_of_umbar",              "umbar",      True,  "neutral"),
-    "taskralan_of_shaghana":        ("Taskralan of Shaghana",        None,                           "aserai",     False, "evil"),
-    "aru_thani_of_bellakar":        ("Aru-Thani of Bellakar",        "faithful_of_bellakar",         "aserai",     False, "free"),
-    "chajaphan_of_abanissa":        ("Chajaphan of Abanissa",        None,                           "",           False, "neutral"),
-    "nurunkhizdin":                 ("Nurunkhizdin",                 None,                           "erebor",     False, "neutral"),
-    "browlands":                    ("Browlands",                    None,                           "",           False, "neutral"),
-    "eregion":                      ("Eregion",                      None,                           "",           False, "neutral"),
-    "fangorn_forest":               ("Fangorn Forest",               "fangorn_forest",               "",           False, "neutral"),
-    "map_boundary":                 ("Map Boundary",                 None,                           "",           False, "neutral"),
-}
-
 
 def ncc_at(full_gray, region_gray, mask, x, y):
     """Compute masked normalized cross-correlation at a given position."""
@@ -276,14 +222,6 @@ def find_region_position_ncc(full_gray, region_arr, initial_pos=None, search_rad
                     best_pos_fine = (x, y)
 
         return best_pos_fine, best_score_fine
-
-
-def default_color_for_side(side):
-    return {
-        "free": "#4870B8FF",
-        "evil": "#604830FF",
-        "neutral": "#706838FF",
-    }.get(side, "#808080FF")
 
 
 def main():
@@ -419,50 +357,6 @@ def main():
         json.dump(regions_data, f, indent=2)
     print(f"\nWrote {len(regions_data)} regions to {regions_json_path}")
 
-    # Write factions.json (migrate from current deployed version, then old vanilla)
-    current_factions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "factions.json"
-    current_factions = {}
-    if current_factions_path.exists():
-        with open(current_factions_path, "r", encoding="utf-8") as f:
-            current_factions = json.load(f)
-
-    new_factions = {}
-    for region_id, (display_name, old_id, game_faction, playable, side) in REGION_META.items():
-        if region_id == "map_boundary":
-            continue  # decorative, not a faction
-        # First try to migrate from current factions (already has migrated data)
-        if region_id in current_factions:
-            entry = dict(current_factions[region_id])
-            # Update fields that may have changed
-            entry["name"] = display_name
-            entry["playable"] = playable
-            entry["game_faction"] = game_faction
-            entry["side"] = side
-        elif old_id and old_id in current_factions:
-            entry = dict(current_factions[old_id])
-            entry["name"] = display_name
-            entry["image"] = f"faction_{region_id}"
-            entry["playable"] = playable
-            entry["game_faction"] = game_faction
-            entry["side"] = side
-        else:
-            entry = {
-                "name": display_name,
-                "color": default_color_for_side(side),
-                "playable": playable,
-                "game_faction": game_faction,
-                "side": side,
-                "description": f"The {display_name}.",
-                "image": f"faction_{region_id}",
-                "traits": [],
-            }
-        new_factions[region_id] = entry
-
-    factions_json_path = output_path / "factions.json"
-    with open(factions_json_path, "w", encoding="utf-8") as f:
-        json.dump(new_factions, f, indent=2, ensure_ascii=False)
-    print(f"Wrote {len(new_factions)} factions to {factions_json_path}")
-
     # Write PolygonWidget XML snippet
     xml_lines = ['<!-- Generated PolygonWidget entries for new Factions map -->',
                  '<!-- Replace existing PolygonWidgets in CharacterCreationCultureStage.xml -->', '']
@@ -502,7 +396,7 @@ def main():
     print(f"  1. Review region positions in regions.json")
     print(f"  2. Copy deploy/*.png to Modules/TAOM/GUI/SpriteData/FactionMap/")
     print(f"  3. Copy deploy/fullres/*.png to Modules/TAOM/GUI/SpriteData/FactionMap/fullres/")
-    print(f"  4. Copy regions.json + factions.json to Main/_Module/ModuleData/factionmap/")
+    print(f"  4. Copy regions.json to Main/_Module/ModuleData/factionmap/")
     print(f"  5. Update CharacterCreationCultureStage.xml with polygon_widgets.xml")
     print(f"  6. Create faction_*.png and banner_*.png for new regions")
 

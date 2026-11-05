@@ -97,7 +97,7 @@ public class TroopCultureMapperTests
     [TestMethod]
     public void MapGarrison_RoleAbsentEntirely_KeepsTheTierAndChangesRole()
     {
-        // Goblin fields no cavalry the swap may use at any tier. Keeping tier 5 and becoming infantry
+        // A culture with no cavalry the swap may use at any tier. Keeping tier 5 and becoming infantry
         // preserves far more of the garrison's strength than dropping to a tier-1 rider would.
         var index = Index(Target,
             ("goblin_inf_t5", 5, TroopRole.Infantry),
@@ -112,7 +112,7 @@ public class TroopCultureMapperTests
     [TestMethod]
     public void MapGarrison_TheOnlyCavalryRidesACreatureMount_KeepsTheTierAsInfantry()
     {
-        // The goblin tree's only cavalry are its mountain spider riders (2026-09-29), and a creature-mount rider is
+        // A tree whose only cavalry are spider riders, as the goblin tree's were before #1081: a creature-mount rider is
         // never a garrison replacement (Mike): a captured tier-4 knight becomes tier-4 infantry, as before they existed.
         var index = new CultureTroopIndex(Target, new[]
         {

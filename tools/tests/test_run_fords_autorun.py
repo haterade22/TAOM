@@ -7,10 +7,12 @@ The launcher itself starts the real game and is not run here.
 """
 import json
 import os
+import shutil
 import struct
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 import zlib
 from pathlib import Path
@@ -844,6 +846,118 @@ class WaitAfterCrashTests(unittest.TestCase):
         said = []
         self.assertFalse(r.wait_after_crash(self.Proc([None]), 0, said.append))
         self.assertEqual([], said)
+
+
+class DumpCrashTests(unittest.TestCase):
+    """procdump v12.01 returns 0xFFFFFFFE for a dump it wrote and for a pid it never found, so the file decides."""
+
+    PROCDUMP_EXIT = 4294967294
+
+    def setUp(self):
+        self.folder = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, str(self.folder), True)
+
+    def fake_run(self, code, writes=None, calls=None):
+        def run(command, **kwargs):
+            if calls is not None:
+                calls.append((command, kwargs))
+            if writes is not None:
+                Path(command[-1]).write_bytes(writes)
+            return SimpleNamespace(returncode=code, stdout=None, stderr=None)
+        return run
+
+    def test_runs_procdump_with_the_pid_and_the_run_folder(self):
+        said, calls = [], []
+        r.dump_crash(4242, self.folder, said.append, run=self.fake_run(0, calls=calls), which=lambda name: "C:/tools/procdump.exe")
+        command, kwargs = calls[0]
+        self.assertEqual(["C:/tools/procdump.exe", "-accepteula", "-ma", "4242", str(self.folder / "crash.dmp")], command)
+        self.assertIn("timeout", kwargs)
+
+    def test_procdump_gets_no_pipe_and_writes_its_output_to_procdump_log(self):
+        # A pipe is inherited by procdump64.exe, and its UTF-16 text lands as NUL bytes in runner_log.txt.
+        calls = []
+        r.dump_crash(1, self.folder, lambda _: None, run=self.fake_run(0, calls=calls), which=lambda name: "procdump")
+        kwargs = calls[0][1]
+        self.assertNotIn("capture_output", kwargs)
+        self.assertNotEqual(subprocess.PIPE, kwargs.get("stdout"))
+        self.assertNotEqual(subprocess.PIPE, kwargs.get("stderr"))
+        self.assertTrue((self.folder / "procdump.log").is_file())
+
+    def test_a_missing_tool_is_reported_and_does_not_raise(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=mock.Mock(side_effect=AssertionError), which=lambda name: None)
+        self.assertIn("procdump", said[0])
+
+    def test_exit_0xFFFFFFFE_with_a_dump_file_is_written(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=self.fake_run(self.PROCDUMP_EXIT, writes=b"MDMP"), which=lambda name: "procdump")
+        self.assertEqual("crash dump written: " + str(self.folder / "crash.dmp"), said[-1])
+
+    def test_exit_0xFFFFFFFE_with_no_dump_file_is_failed(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=self.fake_run(self.PROCDUMP_EXIT), which=lambda name: "procdump")
+        self.assertIn("crash dump failed", said[-1])
+        self.assertNotIn("written", said[-1])
+
+    def test_exit_0_with_no_dump_file_is_failed(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=self.fake_run(0), which=lambda name: "procdump")
+        self.assertIn("crash dump failed", said[-1])
+
+    def test_an_empty_dump_file_is_failed(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=self.fake_run(self.PROCDUMP_EXIT, writes=b""), which=lambda name: "procdump")
+        self.assertIn("crash dump failed", said[-1])
+
+    def test_a_dump_file_with_a_nonzero_exit_is_still_written(self):
+        said = []
+        r.dump_crash(1, self.folder, said.append, run=self.fake_run(1, writes=b"MDMP"), which=lambda name: "procdump")
+        self.assertIn("crash dump written", said[-1])
+
+    def test_a_timeout_is_reported_and_does_not_raise(self):
+        said = []
+
+        def run(command, **kwargs):
+            raise subprocess.TimeoutExpired(command, 1)
+
+        r.dump_crash(1, self.folder, said.append, run=run, which=lambda name: "procdump")
+        self.assertIn("timed out", said[-1])
+
+    def test_an_unwritable_folder_is_reported_and_does_not_raise(self):
+        said = []
+        r.dump_crash(1, self.folder / "missing", said.append, run=mock.Mock(side_effect=AssertionError), which=lambda name: "procdump")
+        self.assertIn("crash dump failed", said[-1])
+
+    def test_a_child_that_holds_the_output_does_not_hold_up_the_timeout(self):
+        # procdump.exe spawns procdump64.exe, which inherits stdout. With a pipe, subprocess.run killed the parent and then waited on the child.
+        pid_file = self.folder / "child.pid"
+        parent = self.folder / "parent.py"
+        parent.write_text(
+            "import subprocess, sys, time\n"
+            "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'])\n"
+            f"open({str(pid_file)!r}, 'w').write(str(child.pid))\n"
+            "time.sleep(30)\n", encoding="utf-8")
+
+        def run(command, **kwargs):
+            return subprocess.run([sys.executable, str(parent)], **kwargs)
+
+        started = time.monotonic()
+        r.dump_crash(1, self.folder, lambda _: None, run=run, which=lambda name: "procdump", timeout=1)
+        elapsed = time.monotonic() - started
+        for _ in range(50):
+            if pid_file.is_file() and pid_file.read_text():
+                break
+            time.sleep(0.1)
+        child_pid = int(pid_file.read_text())
+
+        def kill_child():
+            try:
+                os.kill(child_pid, 9)
+            except OSError:
+                pass
+
+        self.addCleanup(kill_child)
+        self.assertLess(elapsed, 5)
 
 
 class ScreenshotConversionTests(unittest.TestCase):

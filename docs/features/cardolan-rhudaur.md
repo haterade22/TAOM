@@ -57,7 +57,7 @@ pair is Neutral. In this code `Natural` is an alliance tier, not "no stance".
 ### Component Diagram
 
 ```
-realm_troops.py <-- generate_{arthedain,cardolan,rhudaur}_troops.py --> troops_<c>.xml + 9 party templates
+realm_troops.py <-- generate_{arthedain,cardolan,rhudaur}_troops.py --> troops_<c>.xml + 7 party templates
 promote_borrowed_cultures.py --only <c> --> <Culture id="<c>"> + npcs + rosters + wanderers + strings
 add_map_fortifications.py / add_map_villages.py --> LIVE TAOM_Map settlements.xml (+ 12 loc files)
 generate_new_faction_kingdoms.py --only <c> --> Kingdom.<c>, clan_<c>_N, lord_CA*/lord_RH*

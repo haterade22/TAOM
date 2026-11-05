@@ -70,6 +70,7 @@ public class LongDefeatChecksTests
         Is(CheckResult.Fail, LongDefeatChecks.Muster(0, 7, 0, 0, 20));
         Is(CheckResult.Fail, LongDefeatChecks.Muster(0, 0, 1, 0, 20));
         Is(CheckResult.Fail, LongDefeatChecks.Muster(0, 0, 0, 1, 20));
+        Is(CheckResult.Fail, LongDefeatChecks.MusterPlaceLost(FormationSlot.Infantry));
     }
 
     [TestMethod]

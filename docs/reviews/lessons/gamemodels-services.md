@@ -1368,3 +1368,10 @@ shrink, so a row showed one hero and bought another.
   consumer reads it. A hook passes every identity attribute the rule could need (side as well as role). A list-row
   view model rebinds its identity on every refresh.
 - **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md) findings D1, D10, D15.
+
+### A call's arguments run before its guards
+
+`TaomPregnancyModel` moved its immortal and fertility guards into one service call, and the arguments of that call read `hero.Clan`. A clanless hero outside the window went from 0 to a throw. The extraction was described as behaviour-preserving, and its tests covered the service.
+- **Why missed:** moving a guard behind a call looks like moving text, but the order of reads changes. A sealed-type model has no unit seam to show it.
+- **Prevent:** when guards protect later reads of a sealed type, keep them in a call of their own (`CanConceive`) before the reads. Compare old and new for each input, the negative and null ones included, before you write "behaviour-preserving".
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) finding 7.

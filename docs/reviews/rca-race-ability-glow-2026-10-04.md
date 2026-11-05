@@ -58,7 +58,7 @@ weakness, one MEDIUM wasted refresh, the rest LOW. A separate research pass for 
 - **Completeness (4)** found G2 (as the MEDIUM), G3, G4, G13, G15. It does not decompile, so G1 was outside it.
 - **Data flow (5)** found G1, G2, G7, G14 and the G5 wording. Its trace of the death path confirmed the inline case.
 - **Design (6)** found G12 and joined G9 and G11. It proposed moving the `#RRGGBB` parser to `Main/Core/Validation`
-  to share it with Realm Borders: a FOLLOW-UP on code this change did not write.
+  to share it with Realm Borders: a Follow-up closed 2026-11-04 (c59a2b00c) on code this change did not write.
 - **XML (7)** found G1 and G2 by checking the burst name against the engine's load set.
 
 ## Applied, not applied, follow-up

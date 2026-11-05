@@ -156,8 +156,11 @@ public class ServiceSignatureGateTests
 
     private static bool InScope(Type type) =>
         !type.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false)
-        && (type.Name.EndsWith("Service", StringComparison.Ordinal)
-            || (type.IsInterface && type.Name.StartsWith("I", StringComparison.Ordinal) && type.Name.EndsWith("Adapter", StringComparison.Ordinal)));
+        && (ShortName(type).EndsWith("Service", StringComparison.Ordinal)
+            || (type.IsInterface && type.Name.StartsWith("I", StringComparison.Ordinal) && ShortName(type).EndsWith("Adapter", StringComparison.Ordinal)));
+
+    // Reflection names a generic type Name`1.
+    private static string ShortName(Type type) => type.Name.Split('`')[0];
 
     private static bool Visible(MethodBase m) => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly || m.IsFamilyAndAssembly;
 
@@ -208,6 +211,17 @@ public class ServiceSignatureGateTests
     }
 
     private static HashSet<string> LoadBaseline() => new(ReadBaselineLines(), StringComparer.Ordinal);
+
+    private sealed class PlantedGenericService<T> { }
+
+    private interface IPlantedGenericAdapter<T> { }
+
+    [TestMethod]
+    public void AGenericService_OrAdapter_IsInScope()
+    {
+        Assert.IsTrue(InScope(typeof(PlantedGenericService<>)), "reflection names it PlantedGenericService`1");
+        Assert.IsTrue(InScope(typeof(IPlantedGenericAdapter<>)), "reflection names it IPlantedGenericAdapter`1");
+    }
 
     // In-memory types: one *Service naming a TaleWorlds class in every position the gate reads, one clean *Service, one adapter.
     private static Assembly BuildPlantedAssembly()

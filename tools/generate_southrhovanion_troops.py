@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the South Rhovanion troop tree and its nine soldier party templates (#1062).
+"""Generate the South Rhovanion troop tree and its seven soldier party templates (#1062).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_southrhovanion.xml       (whole file, generated)
@@ -272,12 +272,6 @@ def party_templates():
             (p + "horse_scout", 0, 15), (p + "southwood_archer", 0, 13), (p + "lancer", 0, 13),
             (p + "ford_guard", 0, 10), (p + "horse_thane", 0, 8), (p + "horse_archer", 0, 8),
             (p + "southwood_marksman", 0, 8), (p + "rider_captain", 0, 5)]),
-        ("kingdom_hero_party_mercenary_southrhovanion_template", [
-            (p + "spearman", 8, 16), (p + "plains_bowman", 4, 8), (p + "ford_spearman", 4, 8),
-            (p + "southwood_archer", 2, 4), (p + "rider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_southrhovanion_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "plains_bowman", 2, 4)]),
         ("militia_southrhovanion_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_southrhovanion_template_level_1", [

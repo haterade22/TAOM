@@ -271,7 +271,7 @@ def changed_files(git) -> list:
 
 
 def _git(*args) -> str:
-    p = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    p = subprocess.run(["git", "-c", "core.quotepath=off", "-C", str(REPO), *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
     if p.returncode != 0:
         why = ((p.stderr or "").strip().splitlines() or [""])[0]
         raise RuntimeError(f"git {' '.join(args)} exited {p.returncode}: {why}")

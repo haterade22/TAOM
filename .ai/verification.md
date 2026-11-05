@@ -106,7 +106,7 @@ hashes, discovery totals and skips. Keep any private logs in ignored artifacts;
 redact before sharing. Never present manual inspections as process exit codes.
 
 Native, asset and in-game assertions require appropriate review evidence beyond
-these checks. There is no universal native/provenance/runtime test here, and no
+these checks. `provenance` checks the register's form, not intent. There is no universal native or runtime test here, and no
 new blanket gameplay smoke gate. Agree task-specific runtime expectations and
 document what static checks cannot establish.
 

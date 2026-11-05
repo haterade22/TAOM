@@ -93,9 +93,9 @@ Three runs at Helm's Deep and one at Minas Tirith, `E:\Temp\long-defeat-runs\`. 
 
 ## Follow-up
 
-FOLLOW-UP: `docs/reference/unattended-game-runs.md` says exit 0 needs a clean-unload line, and the runner only logs that line. no issue: pre-existing and outside this change; Phase 1 generalizes the runner and rewrites this page, so the correction lands there.
+Follow-up closed 2026-11-04 (c31a7ef69): `docs/reference/unattended-game-runs.md` says exit 0 needs a clean-unload line, and the runner only logs that line. no issue: pre-existing and outside this change; Phase 1 generalizes the runner and rewrites this page, so the correction lands there.
 
-FOLLOW-UP: `show_results` in `tools/run_fords_autorun.py` prints Fords labels over spike data. no issue: wording only, and Phase 1 replaces the wrapper with a general option on the runner.
+Follow-up closed 2026-11-04 (c31a7ef69): `show_results` in `tools/run_fords_autorun.py` prints Fords labels over spike data. no issue: wording only, and Phase 1 replaces the wrapper with a general option on the runner.
 
 FOLLOW-UP: S6, S9 and the rest of S7, plus the Phase 1 notes in [long-defeat.md](../features/long-defeat.md), are owed under #1079.
 

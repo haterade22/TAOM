@@ -34,6 +34,56 @@ public class WargMonsterIdTests
     }
 
     [TestMethod]
+    public void DireWolf_IsRecognised()
+    {
+        Assert.IsTrue(WargConfig.IsWargMonster("dire_wolf"),
+            "the dire wolf runs the warg tree and poses its rider on a skeleton of its own (#1081)");
+    }
+
+    [TestMethod]
+    [DataRow("warg")]
+    [DataRow("fell_warg")]
+    public void ImpactBoneIds_SkeletonWargMonster_ReturnsTheWargCone(string monsterId)
+    {
+        CollectionAssert.AreEqual(
+            new sbyte[] { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 },
+            WargConfig.ImpactBoneIds(monsterId),
+            "both Monsters share skeleton_warg, so they share its bone indices");
+    }
+
+    [TestMethod]
+    public void ImpactBoneIds_DireWolf_ReturnsTheWolfSkeletonsOwnBones()
+    {
+        // adod_wolf_armature_unused: Spine2, Head, Jaw, Tongue03, L Clavicle, L Hand, L Finger0,
+        // R Clavicle, R Hand, R Finger0. The warg's indices on this skeleton are an ear, eye bones, a
+        // lip and the paws, with no chest or jaw: lessons/animation-skeleton.md, "ITS OWN strike bones".
+        CollectionAssert.AreEqual(
+            new sbyte[] { 3, 5, 6, 9, 34, 37, 38, 39, 42, 43 },
+            WargConfig.ImpactBoneIds("dire_wolf"));
+    }
+
+    [TestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("Dire_Wolf")]
+    public void ImpactBoneIds_UnknownMonster_ReturnsTheWargCone(string monsterId)
+    {
+        CollectionAssert.AreEqual(
+            new sbyte[] { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 },
+            WargConfig.ImpactBoneIds(monsterId),
+            "only the dire wolf changes the set; anything else keeps the behaviour it had");
+    }
+
+    [TestMethod]
+    public void ImpactBoneIds_CalledTwice_ReturnsSeparateLists()
+    {
+        var first = WargConfig.ImpactBoneIds("dire_wolf");
+        first.Clear();
+        Assert.AreEqual(10, WargConfig.ImpactBoneIds("dire_wolf").Count,
+            "a caller that changes its list must not change the next caller's");
+    }
+
+    [TestMethod]
     public void NonWargMounts_AreNotRecognised()
     {
         Assert.IsFalse(WargConfig.IsWargMonster("horse"));
@@ -57,10 +107,10 @@ public class WargMonsterIdTests
     }
 
     [TestMethod]
-    public void BothFamilyMembers_ArePresentInTheSet()
+    public void EveryFamilyMember_IsPresentInTheSet()
     {
         CollectionAssert.AreEquivalent(
-            new[] { "warg", "fell_warg" },
+            new[] { "warg", "fell_warg", "dire_wolf" },
             WargConfig.WargMonsterIds.ToArray(),
             "a future edit dropping one of these would silently disable the bite behaviour tree");
     }

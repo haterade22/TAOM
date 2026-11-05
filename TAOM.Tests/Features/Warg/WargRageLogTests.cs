@@ -281,6 +281,7 @@ public class WargRageLogTests
         scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
 
         scene.Log.Watch();
+        scene.Now = 100.0;
         scene.Log.Watch();
 
         var c = scene.Log.Counts();
@@ -288,8 +289,10 @@ public class WargRageLogTests
         Assert.AreEqual(0, c.Open);
     }
 
+    // The reset can lag a dismount by a tree sleep or a tree wait on the wall clock, up to about 9 s, which is 90 mission seconds
+    // in a 10x run. Counting a rider stranded inside that lag closes his episode, so the real reset then finds nothing.
     [TestMethod]
-    public void Watch_OneLookOnFoot_IsNotStrandedYet_AndALateResetRestoresIt()
+    public void Watch_LooksOnFootInsideTheResetsLag_AreNotStranded_AndALateResetRestoresIt()
     {
         var scene = Scene.Create();
         var rider = Rider();
@@ -297,7 +300,11 @@ public class WargRageLogTests
         scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
 
         scene.Log.Watch();
-        Assert.AreEqual(0, scene.Log.Counts().Stranded, "the warg-death reset can reach the rider a tick after the dismount");
+        scene.Now = 1.0;
+        scene.Log.Watch();
+        scene.Now = 90.0;
+        scene.Log.Watch();
+        Assert.AreEqual(0, scene.Log.Counts().Stranded, "the reset can lag a dismount by 90 mission seconds at 10x");
         Assert.AreEqual(1, scene.Log.Counts().Open);
 
         scene.Log.Ended(rider, Form());
@@ -306,6 +313,28 @@ public class WargRageLogTests
         var c = scene.Log.Counts();
         Assert.AreEqual(0, c.Stranded);
         Assert.AreEqual(1, c.Restored);
+    }
+
+    [TestMethod]
+    public void Watch_ARiderWhoGetsAMountAgain_StartsTheStrandedClockOver()
+    {
+        var scene = Scene.Create();
+        scene.Log.Started(Rider(), false);
+        scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
+        scene.Log.Watch();
+
+        scene.Now = 90.0;
+        scene.View = new WargRageLog.RiderView(true, true, false, false, 0f, 0f, 0f);
+        scene.Log.Watch();
+
+        scene.Now = 91.0;
+        scene.View = new WargRageLog.RiderView(true, false, false, false, 0f, 0f, 0f);
+        scene.Log.Watch();
+        scene.Now = 150.0;
+        scene.Log.Watch();
+
+        Assert.AreEqual(0, scene.Log.Counts().Stranded);
+        Assert.AreEqual(1, scene.Log.Counts().Open);
     }
 
     [TestMethod]
@@ -345,7 +374,7 @@ public class WargRageLogTests
         var prepare = Regex.Replace(RepoPaths.ReadSource("Main/Features/Warg/BehaviorTreeElements/PrepareOnFirstCall.cs", stripComments: true), @"\s+", " ");
         var clean = Regex.Replace(RepoPaths.ReadSource("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs", stripComments: true), @"\s+", " ");
 
-        var started = prepare.IndexOf("WargRageLog.Active?.Started(rider, rider.Formation != null); rider.Formation = null;", StringComparison.Ordinal);
+        var started = prepare.IndexOf("WargRageLog.Active?.Started(rider, AgentsFormation.GetValue() != null); rider.Formation = null;", StringComparison.Ordinal);
         Assert.IsTrue(started >= 0, "the rage start is logged right before the formation is taken away");
         var ended = clean.IndexOf("ResetAiControlledAgent(Agent rider, Formation formation) { WargRageLog.Active?.Ended(rider, formation);", StringComparison.Ordinal);
         Assert.IsTrue(ended >= 0, "the reset logs first, before its early return");

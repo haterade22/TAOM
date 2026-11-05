@@ -272,8 +272,8 @@ do" for a module it never looked at.
 > `tools/translation_overrides/<lang>.json` and put the same text in the cache.
 
 The translator writes the translated rows into the language files itself (`write_back`), so the TAOM module needs no further
-step. `tools/rebuild_translation_files.py` rebuilds a language file from cache and overrides, but it keeps its own list of
-10 TAOM sources and no `key_owners`, and it overwrites a row corrected by hand: do not use it on the TAOM module. It does skip
+step. `tools/rebuild_translation_files.py` rebuilds a language file from cache and overrides, and it reads the same source table and
+`key_owners`, but a row with no cache entry falls back to English and it overwrites a row corrected by hand: never name `--module TAOM` for it (a run is a dry run until `--apply`, and `--module {TAOM,TAOM_Map,Armory}` is required). It does skip
 the English-only overrides of vanilla keys (see "Rewording a vanilla key: English only" below), as `--sync-ids` does.
 
 ### Option B — Manual translation from scratch

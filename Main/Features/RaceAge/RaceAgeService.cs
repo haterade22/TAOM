@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TAOM.Core.Domain;
 using TAOM.Features.RaceAge.Models;
@@ -37,6 +38,74 @@ public class RaceAgeService : IRaceAgeService
         var entry = GetEntry(raceId);
         if (entry.Immortal) return false;
         return currentAge > entry.MaxAge;
+    }
+
+    public bool CanConceive(int raceId, int spouseRaceId, float heroAge)
+    {
+        if (IsImmortal(raceId))
+            return false;
+
+        // The engine only ever passes the FEMALE to the pregnancy model
+        // (PregnancyCampaignBehavior.DailyTickHero gates on hero.IsFemale), so an immortal FATHER
+        // (Sauron, Saruman, a wraith) must be blocked via the spouse's race or his immortal flag
+        // never gates conception (#321).
+        if (IsImmortal(spouseRaceId))
+            return false;
+
+        return heroAge >= GetComesOfAge(raceId) && heroAge <= GetFertilityEndAge(raceId);
+    }
+
+    public float GetDailyPregnancyBaseChance(
+        int raceId, float heroAge, int childCount, int clanTier,
+        int aliveLords, bool playerOrSpouseInvolved)
+    {
+        return ComputeBaseChance(
+            heroAge: heroAge,
+            comesOfAge: GetComesOfAge(raceId),
+            fertilityEnd: GetFertilityEndAge(raceId),
+            childCount: childCount,
+            clanTier: clanTier,
+            aliveLords: aliveLords,
+            playerOrSpouseInvolved: playerOrSpouseInvolved,
+            raceFertilityModifier: GetFertilityModifier(raceId));
+    }
+
+    /// <summary>
+    /// Pure-math reimplementation of vanilla DefaultPregnancyModel with race-specific age bounds.
+    /// Vanilla hardcodes age 18-45; we replace with the race's comesOfAge..fertilityEnd window.
+    ///
+    /// Public static so its branches (the Phase 7 audit, #179) are testable without the service.
+    /// </summary>
+    public static float ComputeBaseChance(
+        float heroAge,
+        int comesOfAge,
+        int fertilityEnd,
+        int childCount,
+        int clanTier,
+        int aliveLords,
+        bool playerOrSpouseInvolved,
+        float raceFertilityModifier)
+    {
+        int fertilityWindow = fertilityEnd - comesOfAge;
+        float declineRate = fertilityWindow > 0 ? 1.08f / fertilityWindow : 0.04f;
+        float ageFactor = 1.2f - (heroAge - comesOfAge) * declineRate;
+
+        int effectiveChildCount = childCount + 1;
+        float clanCap = 4 + 4 * clanTier;
+        float populationFactor = !playerOrSpouseInvolved
+            ? Math.Min(1f, (2f * clanCap - aliveLords) / clanCap)
+            : 1f;
+
+        // #628: a race bonus applies only while the clan is at or under its cap. Past the cap the
+        // brake wins, and a player marriage (which skips the brake, as in vanilla) never takes the
+        // bonus either. A penalty (elves, dwarves) applies everywhere. Pre-fix, orc clans at x2 bred at
+        // the unbraked vanilla rate at 1.5x their cap and sat at the 2*cap ceiling.
+        bool bonusAllowed = !playerOrSpouseInvolved && aliveLords <= clanCap;
+        float effectiveModifier = bonusAllowed ? raceFertilityModifier : Math.Min(raceFertilityModifier, 1f);
+
+        float baseChance = ageFactor / (effectiveChildCount * effectiveChildCount) * 0.12f * populationFactor;
+        baseChance *= effectiveModifier;
+        return baseChance;
     }
 
     private RaceAgeEntry GetEntry(int raceId)

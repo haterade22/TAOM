@@ -280,12 +280,16 @@ scan_memory() {
     # stripped, then prefixed by `<drive>--` (e.g., `c--Users-mikew-source-repos-TAOM`).
     # Substring matching ("anything containing TAOM") is unreliable when the
     # machine has multiple projects whose paths share a substring (TAOM,
-    # TAOM-Online, taommod). Build the canonical slug instead.
-    local repo_native
+    # TAOM-Online, taommod). Build the canonical slug instead. It comes from the main checkout,
+    # because a session in a sibling worktree loads the main checkout's memory.
+    local main_root repo_native
+    main_root=$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    main_root=${main_root%/.git}
+    main_root=${main_root:-$REPO_ROOT}
     if command -v cygpath >/dev/null 2>&1; then
-        repo_native=$(cygpath -w "$REPO_ROOT" 2>/dev/null || echo "$REPO_ROOT")
+        repo_native=$(cygpath -w "$main_root" 2>/dev/null || echo "$main_root")
     else
-        repo_native="$REPO_ROOT"
+        repo_native="$main_root"
     fi
     # Lowercase the drive letter, strip the colon, replace separators with `-`.
     local slug
@@ -299,7 +303,7 @@ scan_memory() {
         # heuristic missed). This preserves behavior on platforms where the
         # canonical slug derivation doesn't match Claude Code's actual format.
         local fallback
-        fallback=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*$(basename "$REPO_ROOT")*/MEMORY.md" 2>/dev/null | head -1)
+        fallback=$(find "$mem_root" -maxdepth 3 -name MEMORY.md -path "*-$(basename "$main_root")/memory/MEMORY.md" 2>/dev/null | head -1)
         if [[ -n "$fallback" && -f "$fallback" ]]; then
             mem_file="$fallback"
             [[ $VERBOSE -eq 1 ]] && printf "  memory (slug %s not found; fell back to %s)\n" "$slug" "$mem_file"
@@ -341,9 +345,19 @@ for m in re.finditer(r"\]\(([^)\s]+)\)", text):
     if t and not re.match(r"[a-z]+:", t):
         targets.add(t)
 dead = sorted(t for t in targets if not (root / t).exists())
-linked = {(root / t).resolve() for t in targets if (root / t).exists()}
+# MEMORY.md stays small by linking an archive, so a card counts as linked through any file it reaches.
+linked, todo = set(), [(root / t).resolve() for t in targets if (root / t).exists()]
+while todo:
+    page = todo.pop()
+    if page in linked or page.suffix != ".md" or not page.is_file():
+        continue
+    linked.add(page)
+    for m in re.finditer(r"\]\(([^)\s]+)\)", page.read_text(encoding="utf-8", errors="replace")):
+        t = m.group(1).split("#")[0]
+        if t and not re.match(r"[a-z]+:", t) and (page.parent / t).exists():
+            todo.append((page.parent / t).resolve())
 orphans = sorted(str(p.relative_to(root)).replace("\\", "/") for p in root.rglob("*.md")
-                 if p.name != "MEMORY.md" and p.resolve() not in linked)
+                 if p.name != "MEMORY.md" and p.is_file() and p.resolve() not in linked)
 print("DEAD " + " ".join(dead))
 print("ORPHAN " + " ".join(orphans))
 PYEOF
@@ -351,8 +365,9 @@ PYEOF
     local dead orphans
     dead=$(printf '%s\n' "$linkcheck" | sed -n 's/^DEAD //p' | tr -d '\r')
     orphans=$(printf '%s\n' "$linkcheck" | sed -n 's/^ORPHAN //p' | tr -d '\r')
+    [[ -z "$linkcheck" ]] && ISSUES+=("MEMORY.md's links were NOT checked: the walker failed")
     [[ -n "$dead" ]] && ISSUES+=("MEMORY.md links files that do not exist: $dead")
-    [[ -n "$orphans" ]] && ISSUES+=("Memory files nothing in MEMORY.md links: $orphans")
+    [[ -n "$orphans" ]] && ISSUES+=("Memory files MEMORY.md does not reach, directly or through a file it links: $orphans")
 }
 
 scan_hooks() {

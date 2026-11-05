@@ -35,14 +35,14 @@ as an heir, which is not yet confirmed.
 | 3 | LOW (Codex P3; Agents 5 and 2) | The docs, interface comment and log said the quest "is offered again" with progress "from zero", and named Player Switcher as a cause. The offer follows the normal rules (the heir's own career, open tier, not declined), threshold objectives start from the heir's values, and Player Switcher never runs mid-campaign. | Claim wider than evidence | I wrote the docs from the investigation's hypothesis before tracing the producers of the state. | Fix: reworded in all three places. Lesson: name every producer of a state before documenting a fix for it. |
 | 4 | LOW (Agent 5) | The cancel passed no reason text; vanilla passes one for the same event. | Player feedback | Not compared with vanilla's own cancel. | Fix: vanilla's key and text `{=bYdhYidf}`, which the game already translates. |
 | 5 | LOW (Agent 2) | "The engine keys only map markers by id" was wrong in `LadderQuests.cs:21` and `lessons/state-lifecycle-save.md:910`. | Wrong engine claim in a lesson | The claim was never checked against the journal. | Fix: both corrected. |
-| 6 | LOW, latent (Agent 5) | `CareerRegistry` matches career ids case-sensitively while the quest lookups ignore case, so a `career_id` differing only in case would be offered but never cancelled. Today's data matches exactly. | Inconsistent comparers | Pre-existing comparer choice. | Not applied (no live case). FOLLOW-UP: no issue: a data test that each non-ladder `career_id` resolves exactly; raise with Mike. |
+| 6 | LOW, latent (Agent 5) | `CareerRegistry` matches career ids case-sensitively while the quest lookups ignore case, so a `career_id` differing only in case would be offered but never cancelled. Today's data matches exactly. | Inconsistent comparers | Pre-existing comparer choice. | Not applied (no live case). Follow-up closed 2026-11-04 (Mike: add it when a second such quest is written): a data test that each non-ladder `career_id` resolves exactly; raise with Mike. |
 
 Pre-existing, outside the change:
 
 - **Ladder start id.** `LadderQuests.cs:38` still starts every rung's quest as `"taom_cq_" + def.Id`, so
-  two heroes' quests on one rung share a journal record. FOLLOW-UP: no issue: filing waits for Mike's word.
+  two heroes' quests on one rung share a journal record. Follow-up closed 2026-11-04 (32aeb9e10): no issue: filing waits for Mike's word.
 - **An old hero's ladder quest stalls (Agent 5 F5).** Kills credit only the current hero's rung quest,
-  battles credit every running `CareerQuest`. FOLLOW-UP: no issue: filing waits for Mike's word.
+  battles credit every running `CareerQuest`. Follow-up closed 2026-11-04 (Mike, 95a348a60): the daily sweep now cancels it.
 - **One-day window (Agent 2).** Between the hero change and the next daily tick, the stale quest still
   counts the heir's battles and can complete for the former hero. Vanilla's immediate hook is
   `OnPlayerCharacterChangedEvent`. Left as is: at most one in-game day, and the sweep must exist anyway
@@ -83,6 +83,6 @@ traced.
   a rule that relies on a read has now missed twice. A gate test that fails a new
   `ICoopPresenceProvider.IsCoopActive` read in a service outside an allowlist (PatchShield install, UI
   registration, `PlayerPossessionService`, this session-launch term) would catch it at build time.
-  FOLLOW-UP: no issue: proposing the gate to Mike first.
+  Follow-up closed 2026-11-04 (53febe1a1): no issue: proposing the gate to Mike first.
 - Lesson appended to `lessons/campaign-mechanics.md` (presence gate, repeat) and
   `lessons/state-lifecycle-save.md` (quest StringId keys the journal).

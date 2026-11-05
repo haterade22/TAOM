@@ -20,7 +20,7 @@ dispatch was authorized) found no CRITICAL or HIGH, 2 MEDIUM and 4 LOW findings 
 | 5 | LOW | A comment edit joined two comment lines into one. | Edit slip | | Split back. |
 | 6 | LOW | The gate was not named in the GUI gate tables reviewers run, and two docs overstated or missed the change. | Gate not registered | CLAUDE.md asks for "the gate, then one line naming it". | Named in `moduledata-validation.md` and `gui-ui.md`; docs corrected. |
 
-FOLLOW-UP (no issue: filing one needs Mike's word): TAOM's own `GUI/PreFabs` name 9 brushes no loaded module
+Follow-up closed 2026-11-04 (62fb6bb1d) (no issue: filing one needs Mike's word): TAOM's own `GUI/PreFabs` name 9 brushes no loaded module
 defines (in `CareerSystem/CareerScreen.xml`, `PresetsOverlay.xml`, `BattleActionBar.xml`, `CustomBattle/ArmyComposition.xml`
 and the unused `EventXml.xml`), plus two vanilla-parity names. Extending the gate over `GUI/PreFabs` would turn it red on
 those, so it waits for its own change: fix or allowlist each name, and correct the stale count in `gui-ui.md`.

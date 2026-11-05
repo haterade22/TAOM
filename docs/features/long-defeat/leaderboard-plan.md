@@ -32,7 +32,8 @@ The mod stays offline: TAOM has no network code, and this adds none. A direct up
 | `cheatMode` | `NativeConfig.CheatMode` at launch | Must be false |
 | `mods` | Active modules, as `<id> <version>`. These versions are the only record of the engine changeset, the Armory and `TAOM_Map` | Shown to moderators |
 | `autoplay`, `garrisonScale`, `targetWaves` | The run's options | Must be false, 1 and null: anything else is a test run |
-| `startedUtc`, `endedUtc` | Real time | The wave times must fit between them |
+| `maxSpeed` | The highest mission speed the run used: 1, 2, 4 or 10. It is added to schema 1 without a bump, because no released build writes schema 1 yet. A report with no `maxSpeed` predates the field and reads as 1 | Rule 13 scales by it. Whether a run above 1 counts on the board is open, see "The boards" |
+| `startedUtc`, `endedUtc` | Real time | The wave times must fit between them, scaled by `maxSpeed` |
 | `final` (always false on a board run, so never required), `reason`, `wave`, `wavesCleared`, `kills`, `fled`, `fleeingPeak`, `playerDeaths`, `wavesFelled` | The result | The score and the rules below |
 | `waves[]` | Per wave: `wave`, `kills`, `felled`, `lost`, `seconds` | The rules below |
 | `gold` | `start`, `earned`, `spent`, `balance`, `bounty`, `waveBonus`, `earlyStart` | The rules below |
@@ -55,7 +56,7 @@ All six reports on record pass rules 4 to 12, each against its own table. All si
 10. `gold.earlyStart` is at most `earlyGoldCap * wave`.
 11. `gold.bounty` lies between `kills` times the lowest bounty in the waves played and `kills` times the highest. The waves played include the wave in progress, past the authored list they use its last mix, and a troop with no bounty pays 0. A report with no waves skips this rule.
 12. **Flag** a row whose `seconds` is under 120. The 19 cleared waves on record took 334 to 664 s, the first loss came 51 to 80 s into a wave, and 10 percent of a wave was left at 223 s at the earliest. All of that is autoplay and predates the straggler rule, so this stays a flag until human runs exist.
-13. The rows' seconds fit between `startedUtc` and `endedUtc` within a small tolerance, and the run ended no later than the upload plus a day, because `endedUtc` is the player's own clock. A scoreboard view in this mission would add fast-forward and break this rule.
+13. The sum of the rows' seconds is at most `(endedUtc - startedUtc) * maxSpeed` within a small tolerance, and the run ended no later than the upload plus a day, because `endedUtc` is the player's own clock. The rows' seconds are mission time, and the mission has its own speed control (1x, 2x, 4x, 10x), so at speed above 1 they exceed the wall time by up to that factor. `maxSpeed` is the player's own claim and only the clip of the end panel checks it: a report that says 1 and sums to more than the wall time fails, one that says 10 passes any sum up to ten times the wall time. A missing `maxSpeed` is 1.
 14. The file's SHA-256 is new, and so is its `fortress`, `startedUtc` and `endedUtc` together, because one added space gives a new hash.
 
 **What these rules cannot see:**
@@ -67,6 +68,7 @@ All six reports on record pass rules 4 to 12, each against its own table. All si
 
 - **One board per fortress and per `balance`:** a change to the three JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
 - **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it. The game's own "Best run" line ranks waves, then kills, so it can disagree with the board.
+- **Open, Mike's call: whether a run with `maxSpeed` above 1 counts.** Options: it counts like any run; it counts on a separate board; it is flagged for a moderator; or it is refused. The code records the speed and decides nothing. Facts for the choice: speed is a mission clock change (2x and 4x lengthen each step up to 0.1 s, 10x is the engine's fast forward, with `Agent.Tick`, `Team.Tick` and `OnMissionTick` on the main thread in steps of up to 0.1 s and `Agent.TickParallel` still through `TWParallel.For` (`MissionState.cs:171-197`), or a fixed step of up to 0.1 s while a person drives), so a fast run is not the same fight as a 1x run, as Fords found for 10x ([balance-log.md](../fords-of-war/balance-log.md)). Nothing has measured the difference in this mode yet.
 - **One entry per Discord account per board:** the best one shows.
 - **The top 10:** an entry shows as unverified until a moderator accepts a clip link. A clip must show the end panel of that run, with its waves, kills and defenders lost.
 - **Opening:** with the first release that holds the mode, once its balance settles. No released build exists yet, so rule 2 cannot pass today.

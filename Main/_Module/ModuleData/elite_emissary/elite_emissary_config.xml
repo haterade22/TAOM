@@ -4,7 +4,7 @@
      CultureOffers: keyed by the settlement's CURRENT OWNER culture (so conquest flips the offerings).
      Prices live in special_resources/troop_resource_costs.xml (merchant_cost); a troop listed here
      without a merchant_cost row is dropped + warned at load. Cultures that map to NO special resource
-     (goblin, mistymountainorcs) or have no L36+ elites (dale/sturgia, dunland/empire, umbar, khand/
+     (lindon), that carry no offers yet (goblin, mistymountainorcs, bluecraig: War Spoils since #1081) or have no L36+ elites (dale/sturgia, dunland/empire, umbar, khand/
      battania, lothlorien) are intentionally omitted — the option won't appear there.
      See docs/features/elite-emissary.md. -->
 <EliteEmissary enabled="true">

@@ -758,6 +758,10 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
 6. Build with the game closed and run the smoke test. `-p:DisableModuleCopy=true` alone does not stop
    the deploy into the game install; add `-p:ModuleId=` to skip all three copy targets
    ([agent-operating-manual.md](../ai-includes/agent-operating-manual.md) lines 49-51).
+7. **MCM bump**: re-check that `OverrideSettings`, `ResetSettings` and the options menu's preset path
+   still write into the one registered settings object. The hot-path settings providers cache that
+   reference and read through it (`HotPathSettingsProvidersTests`); a path that swaps in a new object
+   would leave them on the old values.
 
 Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter DependenciesPairing`, and for a ButterLib update also
 `--settings TAOM.Tests/binding-gate.runsettings --filter FullyQualifiedName~ButterLibDistanceMatrixBindingTests` (TAOM switches a ButterLib subsystem off by name, #740)

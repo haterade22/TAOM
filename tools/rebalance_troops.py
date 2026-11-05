@@ -62,6 +62,12 @@ SKIP_TROOP_IDS = {
     'harad_mumakil_rider',
     'goblin_spider_rider',   # the Dol Guldur Spider Rider skills, copied (2026-09-29)
     'goblin_spider_lord',
+    'goblin_wolf_runner',   # the dire wolf lines (#1081): hand-set, gated by the upgrade-regression checks
+    'goblin_dire_wolf_rider',
+    'goblin_wolf_lord',
+    'gundabad_wolf_runner',
+    'gundabad_dire_wolf_rider',
+    'gundabad_wolf_lord',
 }
 
 # Troops whose ONLY ranged option is a thrown weapon, so Throwing rather than Bow is their

@@ -122,7 +122,7 @@ Generate at 2x the widget size for sharpness — the engine downscales at runtim
 | Type | Filename | Registered Name (TAOMSpriteData.xml) |
 |------|----------|--------------------------------------|
 | Portrait | `career_{career_id}_portrait.png` | `CareerSystem\Portraits\career_{career_id}_portrait` |
-| Ability icon | `{ability_template_id}.png` | `CareerSystem\Abilities\{ability_template_id}` |
+| Ability icon | `{ability_template_id}.png` | `CareerSystem\Abilities\{ability_sprite, else ability_template_id}` |
 | Career button | `career_button_placeholder.png` | `CareerSystem\career_button_placeholder` |
 
 ### How to Add a Career Portrait
@@ -154,7 +154,7 @@ Generate at 2x the widget size for sharpness — the engine downscales at runtim
    </GenericSprite>
    ```
 5. Copy to game install and run sprite generator
-6. The VM constructs the path as `CareerSystem\Abilities\{ability_template_id}`
+6. The VM constructs the path as `CareerSystem\Abilities\{AbilitySprite}`: the career's `ability_sprite` attribute when set, else its `ability_template_id`. The 42 cloned careers set `ability_sprite` to their root source's template id and so show that icon; to give a clone its own, bake the PNG and delete that career's `ability_sprite`.
 
 ### Sprite Migration Checklist
 
@@ -187,7 +187,7 @@ Generate a landscape image. [Scene description]. Single warrior only. Art style:
 
 ### Current Portrait Status
 
-The art is not tied to the 91 careers one to one: new-faction careers reuse portraits. <!-- measured: ls of SpriteParts/ui_taom_career_system/CareerSystem/Portraits (21 PNGs) and .../Abilities (49 PNGs) 2026-11-04 --> `Portraits` holds 21 PNGs and `Abilities` holds 49, so 42 careers still lack an ability icon. The per-career split is in [gui-sprite-system.md](gui-sprite-system.md) "Sprites Needed".
+The art is not tied to the 91 careers one to one: new-faction careers reuse portraits. <!-- measured: ls of SpriteParts/ui_taom_career_system/CareerSystem/Portraits (21 PNGs) and .../Abilities (49 PNGs) 2026-11-04 --> `Portraits` holds 21 PNGs and `Abilities` holds 49, so 42 careers have no ability icon of their own: those clones name their root source's icon through `ability_sprite`. Portraits stay a gap under #1058. The per-career split is in [gui-sprite-system.md](gui-sprite-system.md) "Sprites Needed".
 
 ## Performance
 

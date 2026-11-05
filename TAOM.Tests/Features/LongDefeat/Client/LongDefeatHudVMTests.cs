@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Client.Features.LongDefeat;
 using TAOM.Features.LongDefeat;
@@ -46,6 +47,82 @@ public class LongDefeatHudVMTests
         Assert.IsFalse(vm.IsShopVisible, "the shop opens on B, not by itself");
         Assert.IsFalse(vm.IsEndVisible);
         Assert.IsFalse(vm.WantsPanel);
+    }
+
+    [TestMethod]
+    public void TheStrip_ShowsTheSpeed_AndTheKeyThatStepsIt()
+    {
+        var vm = Panel(out _);
+
+        Assert.AreEqual("Speed: 1x   M  Next speed", vm.SpeedText);
+        Assert.AreEqual("Game speed", vm.SpeedTitle);
+    }
+
+    [TestMethod]
+    public void CycleSpeed_StepsTheSession_AndTheStripFollows()
+    {
+        var vm = Panel(out var session);
+
+        vm.CycleSpeed();
+        Assert.AreEqual(2, session.Speed);
+        StringAssert.Contains(vm.SpeedText, "Speed: 2x");
+
+        vm.CycleSpeed();
+        vm.CycleSpeed();
+        Assert.AreEqual(10, session.Speed);
+        StringAssert.Contains(vm.SpeedText, "Speed: 10x");
+
+        vm.CycleSpeed();
+        Assert.AreEqual(1, session.Speed, "after 10x the key wraps to 1x");
+    }
+
+    [TestMethod]
+    public void TheSpeedButtons_AreTheFourLevels_WithTheCurrentOneMarked()
+    {
+        var vm = Panel(out _);
+
+        CollectionAssert.AreEqual(new[] { "1x", "2x", "4x", "10x" }, vm.Speeds.Select(s => s.Text).ToArray());
+        CollectionAssert.AreEqual(new[] { true, false, false, false }, vm.Speeds.Select(s => s.IsCurrent).ToArray());
+    }
+
+    [TestMethod]
+    public void ASpeedButton_SetsThatSpeed_AndTheMarkMoves()
+    {
+        var vm = Panel(out var session);
+
+        vm.Speeds[2].ExecuteSelect();
+
+        Assert.AreEqual(4, session.Speed);
+        CollectionAssert.AreEqual(new[] { false, false, true, false }, vm.Speeds.Select(s => s.IsCurrent).ToArray());
+        StringAssert.Contains(vm.SpeedText, "Speed: 4x");
+    }
+
+    [TestMethod]
+    public void TheMark_FollowsTheKeyToo_AndTheSpeedHoldsThroughAWave()
+    {
+        var vm = Panel(out var session);
+        vm.CycleSpeed();
+        vm.CycleSpeed();
+
+        _run.TryStartWave();
+        vm.Refresh();
+
+        Assert.AreEqual(4, session.Speed);
+        CollectionAssert.AreEqual(new[] { false, false, true, false }, vm.Speeds.Select(s => s.IsCurrent).ToArray());
+    }
+
+    [TestMethod]
+    public void ANewRun_ReadsAsOneX()
+    {
+        var vm = Panel(out var session);
+        vm.Speeds[3].ExecuteSelect();
+
+        session.Fill(NewRun(600));
+        vm.Refresh();
+
+        Assert.AreEqual(1, session.Speed);
+        StringAssert.Contains(vm.SpeedText, "Speed: 1x");
+        Assert.IsTrue(vm.Speeds[0].IsCurrent);
     }
 
     [TestMethod]

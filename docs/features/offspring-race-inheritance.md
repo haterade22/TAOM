@@ -6,23 +6,23 @@ TAOM uses same-sex parent race inheritance: male children inherit the father's r
 
 ## Why This Exists
 
-Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`. This is a soft assert — it only logs, never crashes or prevents execution. Since cross-race couples are expected in Middle-earth, this assert fires harmlessly and is ignored.
+Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.SilentAssert` that checks `mother.Race == father.Race`. This is a soft assert: it only logs (and breaks into an attached debugger), never crashes or prevents execution. Cross-race couples are expected in Middle-earth, so the assert would fire on every such birth. `DeliverOffSpring_RaceAssert_Patch` (`Main/Features/RaceAge/Hooks`) is a transpiler that NOPs the assert call, so it never runs; it is noise reduction, and the birth proceeds the same without it.
 
 ## Architecture
 
-**TaomHeroCreationModel** (GameModel override) overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic. The same model also overrides `GetCivilianEquipment`/`GetBattleEquipment` so an adult lord created at runtime wears a peer kit; that half belongs to [generated-lord-kits.md](generated-lord-kits.md).
+Vanilla's `DefaultHeroCreationModel.GetCharacterTemplateForOffspring` already provides the rule: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. TAOM overrides nothing for it; `TaomHeroCreationModel` used to restate the same two returns and no longer does. The model overrides only `GetCivilianEquipment`/`GetBattleEquipment`, so an adult lord created at runtime wears a peer kit; that half belongs to [generated-lord-kits.md](generated-lord-kits.md).
 
 ### Component Diagram
 
 ```
-TaomHeroCreationModel (GameModel)
+DefaultHeroCreationModel (vanilla GameModel)
   └─ GetCharacterTemplateForOffspring
         ├─ male child  → father.CharacterObject (father's race)
         └─ female child → mother.CharacterObject (mother's race)
               │
               ▼
 HeroCreator.DeliverOffSpring (vanilla, static)
-  └─ Debug.SilentAssert ← harmless soft assert, ignored
+  └─ Debug.SilentAssert ← NOPped by DeliverOffSpring_RaceAssert_Patch
               │
               ▼
   CreateHero(template) → CharacterObject.CreateFrom(parent)
@@ -35,11 +35,11 @@ HeroCreator.DeliverOffSpring (vanilla, static)
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/RaceAge/Models/TaomHeroCreationModel.cs` | GameModel — same-sex parent CharacterObject used as offspring template |
+| `Main/Features/RaceAge/Hooks/DeliverOffSpring_RaceAssert_Patch.cs` | Transpiler that silences vanilla's cross-race `SilentAssert` in `HeroCreator.DeliverOffSpring` |
 
 ## Integration
 
-- `TaomHeroCreationModel` registered in `SubModule.OnGameStart` via `campaignStarter.AddModel()`
+- `DeliverOffSpring_RaceAssert_Patch` is applied by `Patch13_RaceAge` in `SubModule`; the offspring template itself comes from vanilla's model
 
 ## Dependencies
 
@@ -47,7 +47,7 @@ HeroCreator.DeliverOffSpring (vanilla, static)
 
 ## Relationship to RaceAge Feature
 
-This is part of the broader RaceAge feature. The race inherited by offspring determines which age/fertility config applies to them from `race_age_config.json`. A child born to a Human father will have Human lifespan (85 years) and Human fertility rates, regardless of the mother's race.
+This is part of the broader RaceAge feature. The race inherited by offspring determines which age/fertility config applies to them from `race_age_config.json`. A child born to a Human father will have Human lifespan (`maxAge` 200 in `race_age_config.json`) and Human fertility rates, regardless of the mother's race.
 
 ## Face Generation Note
 

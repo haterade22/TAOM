@@ -236,9 +236,9 @@ clamp" taken to zero.
 - **Villagers are untouched, on purpose.** `villager_<culture>` is level 1, tier 0, 0.40 power, in a
   15-30 template, so a villager party is about 9 power and flees everything. It did in vanilla too.
   Villagers are meant to run from bandits; the smaller warbands are the whole benefit they need.
-- **Patrol, mercenary and outlaw templates** are out of scope; the 30 such
-  templates of the older cultures still carry the flat 50 from #315, and the 16 added for later
-  cultures cap at 4, 8 and 16.
+- **Patrol, mercenary and outlaw templates** were out of scope. The 46 mercenary and outlaw
+  templates (30 of the older cultures at the flat 50 from #315, 16 added for later cultures
+  capped at 4, 8 and 16) have since been removed, and `taom_partyTemplates.xml` holds none.
 - **SupplyLines is no longer coupled to these templates at all.** It used to build the
   player's supply caravans from `culture.CaravanPartyTemplates[0]`, so this retune took its
   escort from 20-29 troops to 60-70 and its provisioning cost with it (#549, found by the

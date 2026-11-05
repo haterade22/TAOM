@@ -64,13 +64,10 @@ def check(message, version):
 
 
 def commit_version():
-    """The <Version> the commit will carry: the staged SubModule.xml when it is staged, else the file."""
+    """The <Version> the commit will carry: the index's SubModule.xml, else the file."""
     text = ""
     try:
-        staged = subprocess.run(["git", "diff", "--cached", "--name-only", "--", SUBMODULE],
-                                capture_output=True, text=True, timeout=10).stdout
-        if staged.strip():
-            text = subprocess.run(["git", "show", ":" + SUBMODULE], capture_output=True, text=True, timeout=10).stdout
+        text = subprocess.run(["git", "show", ":" + SUBMODULE], capture_output=True, text=True, timeout=10).stdout
     except (OSError, subprocess.SubprocessError):
         text = ""
     if not text:

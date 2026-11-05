@@ -72,6 +72,9 @@ fi
 # (Settings.Local.json is the same file). tools/test_hooks.sh 7g holds every spelling.
 NORM_PATH=${FILE_PATH//\\//}
 NORM_PATH=${NORM_PATH,,}
+# docs/./adrs and docs/x/../adrs name the same file as docs/adrs.
+while [[ "$NORM_PATH" == */./* ]]; do NORM_PATH=${NORM_PATH//\/.\//\/}; done
+while [[ "$NORM_PATH" =~ ^(.*/)?[^/]+/\.\./(.*)$ ]]; do NORM_PATH="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"; done
 BASENAME=${FILE_PATH//\\//}
 BASENAME=${BASENAME##*/}
 

@@ -425,6 +425,17 @@ def master_village_bound(master_text, sid):
     return m.group(1) if m else None
 
 
+def master_scene_names(master_text, sid):
+    """Every scene_name* value written in the <Settlement id="sid"> row of settlements.xml, in file order; [] for an
+    absent or self-closing row."""
+    start = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'(?=[\s>/])[^>]*>', master_text)
+    if not start or start.group(0).endswith("/>"):
+        return []
+    end = master_text.find("</Settlement>", start.end())
+    block = master_text[start.end():end if end != -1 else len(master_text)]
+    return re.findall(r'\sscene_name(?:_\d+)?="([^"]*)"', block)
+
+
 def resolve_position(v, scene_text, master_text, k):
     """(posX, posY, source). source is 'scene' or 'PLACEHOLDER' (parent + offset for the k-th one)."""
     pos = scene_position(scene_text, v.id)
@@ -607,11 +618,30 @@ def insert_loc_rows(loc_text, anchor_id, rows):
     return loc_text[:at] + block + loc_text[at:]
 
 
-def check(villages, master_text, scene_text, loc_texts, tolerance=0.01):
+def live_scene_folders():
+    """Lowercased names of every SceneObj folder holding a scene.xscene, across the installed modules."""
+    import audit_scene_names
+    return audit_scene_names.all_scene_folders()
+
+
+def scene_findings(sid, scenes, scene_folders):
+    """One finding per scene name with no scene.xscene folder; a scene that is not there crashes the town or village
+    visit. `scene_folders` is live_scene_folders(); None skips the check (tests over synthetic text)."""
+    if scene_folders is None:
+        return []
+    return [f"{sid}: scene {s} has no scene.xscene in any module" for s in sorted(set(scenes)) if s.lower() not in scene_folders]
+
+
+def check(villages, master_text, scene_text, loc_texts, tolerance=0.01, scene_folders=None):
     """Findings (strings) for any table id whose data is missing, whose position drifted or whose name is taken,
-    or whose master culture or bound settlement differs from the table's."""
+    or whose master culture or bound settlement differs from the table's, or whose scene (the table's, or the one the
+    live row names) has no scene.xscene, or whose live row names a scene other than the table's."""
     findings = name_collisions([(v.id, v.name) for v in villages], master_text)
     for v in villages:
+        live_scenes = master_scene_names(master_text, v.id)
+        findings += scene_findings(v.id, [v.scene, *live_scenes], scene_folders)
+        findings += [f"{v.id}: settlements.xml names scene {s}, the table {v.scene}"
+                     for s in sorted(set(live_scenes)) if s.lower() != v.scene.lower()]
         pos = settlement_position(master_text, v.id)
         if not pos:
             findings.append(f"{v.id}: no <Settlement> row in settlements.xml")
@@ -671,7 +701,8 @@ def main():
         return 2
 
     if args.check:
-        findings = check(VILLAGES, master, scene, {lang: text for lang, (_, text) in locs.items()})
+        findings = check(VILLAGES, master, scene, {lang: text for lang, (_, text) in locs.items()},
+                         scene_folders=live_scene_folders())
         for f in findings:
             print("FAIL " + f)
         if findings:
@@ -696,6 +727,11 @@ def main():
     clashes = name_collisions([(v.id, v.name) for v in todo], master)
     if clashes:
         print("REFUSING: rename the row in VILLAGES first:\n  " + "\n  ".join(clashes), file=sys.stderr)
+        return 1
+    folders = live_scene_folders()
+    missing_scenes = [f for v in todo for f in scene_findings(v.id, [v.scene], folders)]
+    if missing_scenes:
+        print("REFUSING: fix the scene name in VILLAGES first:\n  " + "\n  ".join(missing_scenes), file=sys.stderr)
         return 1
     blocks, placeholders, per_parent = [], 0, {}
     print(f"Plan: +{len(todo)} village(s) ({len(VILLAGES) - len(todo)} already present), appended at the end")

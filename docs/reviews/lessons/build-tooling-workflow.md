@@ -4837,6 +4837,19 @@ The Seat's manifest started as `seat-of-seeing.toml`, with a change to `RepoMani
   read, not only on what came back.
 - **Source:** `docs/reviews/rca-rules-review-2026-11-03.md`, "Second review", findings A to D and G.
 
+### Run the whole tools suite at each work item, and prove a gate on a neighbour of its fault
+
+A scene refusal broke `test_live_map_writers_main` for hours, because each builder ran its own tool's tests. `dump_crash`'s tests faked `returncode=0`, so a real procdump, which exits 0xFFFFFFFE after a good dump, read as a failure. Three new gates passed with a fault one step from the one they were written for.
+- **Why missed:** scoped test runs read as verification, and each gate's red step used its own example.
+- **Prevent:** `python -m unittest discover -s tools/tests -t .` before each block leaves a worktree. Run an external tool once for real before you fake its result. After a gate's first red, try one other spelling of the fault (another attribute order, element text in place of an attribute, a sibling element).
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) findings 5, 11, 13, 14, 17, 19.
+
+### A last-resort path errs toward refusing
+
+`8afe46d39` stopped `block-no-verify`'s raw fallback from over-blocking a message that named a flag, and lost eight refusals, among them `bash -c`. That path runs only past the reader's limit, on a reader crash or on an overrun, so a false refusal costs one retry and a missed one skips a gate.
+- **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
+- **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) finding 18.
 ### An unattended wrapper binds its PASS to the build under test (Seat field trial, 2026-11-04)
 
 `tools/run_command_trial.py` judged the log's lines and never its `[BuildStamp]`, so a run of a stale deploy, or a log with no stamp, printed the normal PASS text. Deploying is a separate step, and three ordinary things leave an old build in place: a test run with `DisableModuleCopy`, F5 from another checkout, and a rerun after a fix with no rebuild. A `.dirty` stamp keeps its sha after any later edit, so the sha alone is not enough.
@@ -4857,3 +4870,11 @@ Steam moved the game from changeset 125053 to 125270 and kept the version string
 - **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
 - **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string: that is owed in [v1.5.6-impact.md](../../migration/v1.5.6-impact.md).
 - **Source:** [v1.5.6-impact.md](../../migration/v1.5.6-impact.md), "Hotfix: changeset 125270".
+
+### Break the asset before you trust a gate you wrote for it (dire wolves, 2026-11-04)
+
+`verify_mount_assets.py`, `gen_dire_wolf_anim_clips.ps1 -Verify` and the Blender report each printed success on the real wolf. A byte scan matched `x_trot` inside `x_trot_strafe`, so 8 of 40 clips could lose their tag or file; the gate exited 0 on no rows; `-Verify` passed with no masters on disk.
+
+- **Why missed:** the gates were treated as checks on the work, so they had no tests, and they only ever met a healthy mount.
+- **Prevent:** a gate gets a test that breaks each thing it guards, on the first commit. Match a resource by its exact item name, never by bytes. An exemption names the exact row it allows.
+- **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).

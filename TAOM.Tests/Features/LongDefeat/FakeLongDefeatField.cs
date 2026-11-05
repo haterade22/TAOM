@@ -82,6 +82,15 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public void BeginBatch(FormationSlot slot, int count, bool attackers) => Calls.Add($"Begin:{Side(attackers)}:{slot}:{count}");
 
+    /// <summary>Whether a recorded muster place has a navmesh; false makes <see cref="SetMusterFrame"/> refuse.</summary>
+    public bool MusterOk { get; set; } = true;
+
+    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame)
+    {
+        Calls.Add($"Muster:{slot}:{frame.X.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+        return MusterOk;
+    }
+
     public LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers)
     {
         Calls.Add($"Spawn:{Side(attackers)}:{batch.TroopId}:{batch.Count}");

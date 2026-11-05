@@ -14,14 +14,34 @@ public static class WargConfig
     /// <c>StringId == "warg"</c>, so any second
     /// warg-family Monster silently got neither, with no crash and no log line. The fell warg reuses
     /// skeleton_warg and as_warg but carries its own Monster for weight (which drives the
-    /// charge-knockdown model) and base hit points, so it has to be named here.
+    /// charge-knockdown model) and base hit points, so it has to be named here. The dire wolf
+    /// (#1081) binds the warg's action names on a skeleton of its own: see <see cref="ImpactBoneIds"/>.
     /// </summary>
     public static readonly IReadOnlyCollection<string> WargMonsterIds =
-        new[] { "warg", "fell_warg" };
+        new[] { "warg", "fell_warg", DireWolfMonsterId };
 
     /// <summary>Ordinal match, mirroring the equality this replaced. Monster ids are lowercase in XML.</summary>
     public static bool IsWargMonster(string monsterStringId) =>
         monsterStringId != null && WargMonsterIds.Contains(monsterStringId, StringComparer.Ordinal);
+
+    /// <summary>The dire wolf Monster's StringId, in LOTRLOME_Armory.</summary>
+    public const string DireWolfMonsterId = "dire_wolf";
+
+    /// <summary>
+    /// The bones that form the bite's impact cone, as indices into the Monster's own skeleton.
+    ///
+    /// skeleton_warg (49 bones, verified 2026-05-24 #219):
+    ///   17 Chest_M, 20 Head_M, 22 Jaw_M, 23 JawEnd_M, 32 Scapula_R, 36 Fingers1_R, 37 Fingers2_R,
+    ///   38 Scapula_L, 42 Fingers1_L, 43 Fingers2_L.
+    /// adod_wolf_armature_unused (57 bones, read from the tpac with tpac_skeleton_dump 2026-11-04):
+    ///   3 Spine2, 5 Head, 6 Jaw, 9 Tongue03, 34 L Clavicle, 37 L Hand, 38 L Finger0, 39 R Clavicle,
+    ///   42 R Hand, 43 R Finger0. The wolf has no jaw-end bone, so the tongue tip stands in for it.
+    /// A new list per call, because the caller owns it.
+    /// </summary>
+    public static List<sbyte> ImpactBoneIds(string monsterStringId) =>
+        string.Equals(monsterStringId, DireWolfMonsterId, StringComparison.Ordinal)
+            ? new List<sbyte> { 3, 5, 6, 9, 34, 37, 38, 39, 42, 43 }
+            : new List<sbyte> { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 };
 
     internal static float WargAttackRange = 1f;
     // 2026-05-24: restored to 20f to match the original LOTRAOM value. This was
@@ -43,6 +63,5 @@ public static class WargConfig
     public const int minDamageReceivedForRage = 10;
     public const double rageChance = 0.1;
     public const int maxDistanceFromWargToRollForRage = 20;
-    public const int minRageAttacks = 2;
-    public const int maxRageAttacks = 3;
+    public const int rageAttacks = 2;
 }

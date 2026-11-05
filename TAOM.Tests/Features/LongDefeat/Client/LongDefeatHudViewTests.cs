@@ -128,6 +128,61 @@ public class LongDefeatHudViewTests
     }
 
     [TestMethod]
+    public void TheSpeedKey_IsM_NeverTheChatKeyT_AndIsReadWithAPanelOpenToo()
+    {
+        var host = Host();
+
+        StringAssert.Contains(host, "InputKey.M");
+        StringAssert.Contains(host, "CycleSpeed()");
+        Assert.IsFalse(host.Contains("InputKey.T"), "GauntletChatLogView reads game key 6 (T) from the mission's scene layer, and a press opens the chat box");
+        Assert.IsTrue(host.IndexOf("InputKey.M", System.StringComparison.Ordinal) < host.IndexOf("InputKey.B", System.StringComparison.Ordinal),
+            "M is read before the early return that B and H sit behind while a panel is open");
+    }
+
+    [TestMethod]
+    public void TheView_AppliesTheSpeedEachTick_StopsItOnDetach_AndAnArmedRunStartsAtItsSpeed()
+    {
+        var view = View();
+
+        StringAssert.Contains(view, "LongDefeatMissionSpeed");
+        StringAssert.Contains(view, "_speed?.Apply(Mission, _session.Speed, dt)");
+        StringAssert.Contains(view, "LongDefeatMissionSpeed.Stop(Mission)");
+        StringAssert.Contains(view, "SetSpeed(plan.Speed)");
+    }
+
+    [TestMethod]
+    public void TryDetach_StopsTheSpeedFirst_BeforeAnyPanelWorkThatCouldThrow()
+    {
+        var view = View();
+        var detach = view.Substring(view.IndexOf("private void TryDetach", System.StringComparison.Ordinal));
+
+        Assert.IsTrue(detach.IndexOf("LongDefeatMissionSpeed.Stop(Mission)", System.StringComparison.Ordinal)
+            < detach.IndexOf("_panel.Remove(MissionScreen)", System.StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public void TheSpeedAdapter_AsksWhetherAPersonDrivesALiveMainAgent_AndUsesThePureFrameRule()
+    {
+        var adapter = RepoPaths.ReadSource("Main/Adapters/LongDefeatMissionSpeed.cs", stripComments: true);
+
+        StringAssert.Contains(adapter, "LongDefeatSpeedFrame.For(");
+        StringAssert.Contains(adapter, "MainAgent");
+        StringAssert.Contains(adapter, "IsPlayerControlled");
+    }
+
+    [TestMethod]
+    public void TheSpeedAdapter_ReusesTheFordsRule_LogsEachChange_AndStopsWhenTheMissionEnds()
+    {
+        var adapter = RepoPaths.ReadSource("Main/Adapters/LongDefeatMissionSpeed.cs", stripComments: true);
+
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatSpeedFrame.cs", stripComments: true), "FordsGameSpeed");
+        StringAssert.Contains(adapter, "[LongDefeat][Speed] speed=");
+        StringAssert.Contains(adapter, "!mission.MissionEnded");
+        StringAssert.Contains(adapter, "SetFastForwardingFromUI");
+        StringAssert.Contains(adapter, "FixedDeltaTimeMode");
+    }
+
+    [TestMethod]
     public void AnArmedRun_RefusesTheFocusLostEscapeMenu()
     {
         var source = View();

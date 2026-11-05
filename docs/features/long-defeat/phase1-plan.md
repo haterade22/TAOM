@@ -380,7 +380,7 @@ These numbers are a first guess, not a balance measure. Spike wave losses were 3
 | `keepHeightBand` | 1 to 20 | default |
 | `keepDominance` | 1 to 10 | default |
 | `restShare` (added after the plan, see the feature doc) | 0 to 1 | default |
-| `stragglerQuietSeconds` (added after the plan) | 1 to 3600 | default |
+| `stragglerCount`, `stragglerSeconds` (added after the plan) | 0 to 100, 1 to 3600 | default |
 | `keepMinAttackers` | 1 to 100 | default |
 | `countPerWave` | 0 to 100 | default |
 | `maxCount` | 101 to 1000 | default |
@@ -599,6 +599,7 @@ Then: `python tools/ingame_verdict.py --issue 1079 --sessions 4`.
   - the `muster` parser, with `fx`, `fy` normalized as in `StagedSiegeSceneCatalog.cs:348-356`;
   - `SetMusterFrame`, wrapping `Formation.SetPositioning` plus `AgentBuildData.SpawnsIntoOwnFormation(true)` (`AgentBuildData.cs:168`, `Mission.cs:3950-3954, :4243-4247`), so native slots still apply;
   - a fallback to batches if the point has no navmesh.
+  - **Shipped after Phase 1 (#1079):** the parser, `SetMusterFrame` and the fallback landed, with the point applied to every defender batch rather than only the first, since a formation's order position follows the AI, and the fallback is the scene's own frame.
 
 **Bought packs.** They spawn at the reinforcement frame. The old claim that packs of 12 or fewer fit that frame is withdrawn: the same run logged 24 of 24 on the point (log line 3188) and 2 of 16 (line 5206), and `docs/features/long-defeat.md` blames the live formation's shape. `shop` reports `on_point` and `overlap` and judges the count only, because a pile spreads by itself and fails nothing in the spike.
 

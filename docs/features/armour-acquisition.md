@@ -135,8 +135,9 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    hideout, a raid, a naval battle, a duel, a town's alley fight that starts a battle) and in no other (an
    arena, a tournament, a plain settlement scene, a custom battle); `LordsLadderBehavior` credits the
    tally to the owner's running rung quest through `CareerQuest.AddProgress` when the battle ends, then
-   rolls the lord's material find. A rung readies for the quest's owner (even after a Player Switcher
-   change) when its quest completes, or at once when the materials are handed over (which also completes
+   rolls the lord's material find. After a Player Switcher change, the next daily tick cancels the former
+   hero's rung quest, because it could never finish; the ladder state stays, so that hero can start the rung
+   again on a return. A rung readies for the quest's owner when its quest completes, or at once when the materials are handed over (which also completes
    a running quest); a rung with no piece to claim offers no hand-in. The claim offers the culture's lord
    pieces for the slot, else its single best elite piece there, else its best heavy one, else any
    culture's lord pieces for the slot; the weapon rung offers the culture's configured weapons that are

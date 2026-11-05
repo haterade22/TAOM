@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using TAOM.Core.Validation;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Features.LongDefeat.Autorun;
@@ -59,6 +60,9 @@ internal sealed class LongDefeatAutorunPlan
 
     public bool QuitWhenDone { get; internal init; }
 
+    /// <summary>The mission speed from the first frame: 1, 2, 4 or 10.</summary>
+    public int Speed { get; internal init; } = 1;
+
     internal static LongDefeatAutorunPlan Resolve() =>
         Resolve(Environment.GetEnvironmentVariable, File.Exists, path => File.ReadAllText(path, Encoding.UTF8));
 
@@ -93,7 +97,7 @@ internal sealed class LongDefeatAutorunPlan
     internal string Describe() =>
         "fortress=" + (Fortress ?? "-") + " waves=" + (Waves?.ToString(CultureInfo.InvariantCulture) ?? "-")
         + " garrison_scale=" + Num(GarrisonScale) + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
-        + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " expect=" + (Expect ?? "-") + " arm=" + ArmPath;
+        + " speed=" + Speed + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " expect=" + (Expect ?? "-") + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 
@@ -107,6 +111,7 @@ internal sealed class LongDefeatAutorunPlan
         var scale = 1f;
         double liveLimit = DefaultLiveLimitSeconds, wallLimit = DefaultWallLimitSeconds;
         var quit = false;
+        var speed = 1;
         var screenshots = new List<double>();
 
         foreach (var raw in text.TrimStart('\uFEFF').Split('\n'))
@@ -134,6 +139,7 @@ internal sealed class LongDefeatAutorunPlan
                 case "wall_limit_seconds": wallLimit = Seconds(key, value, wallLimit, warnings); break;
                 case "quit": quit = Flag(key, value, quit, warnings); break;
                 case "garrison_scale": scale = Scale(key, value, scale, warnings); break;
+                case "speed": speed = SpeedLevel(key, value, speed, warnings); break;
                 case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
@@ -145,7 +151,7 @@ internal sealed class LongDefeatAutorunPlan
         return new LongDefeatAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Fortress = fortress, Waves = waves, OutFolder = outFolder!, Expect = expect,
-            LiveLimitSeconds = liveLimit, WallLimitSeconds = wallLimit, QuitWhenDone = quit, GarrisonScale = scale, ScreenshotSeconds = screenshots,
+            LiveLimitSeconds = liveLimit, WallLimitSeconds = wallLimit, QuitWhenDone = quit, GarrisonScale = scale, ScreenshotSeconds = screenshots, Speed = speed,
         };
     }
 
@@ -186,6 +192,15 @@ internal sealed class LongDefeatAutorunPlan
             return scale;
 
         warnings.Add(key + "='" + value + "' is not a number from 0.01 to " + Num(MaxGarrisonScale) + "; using " + Num(fallback));
+        return fallback;
+    }
+
+    private static int SpeedLevel(string key, string value, int fallback, List<string> warnings)
+    {
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var speed) && FordsGameSpeed.IsLevel(speed))
+            return speed;
+
+        warnings.Add(key + "='" + value + "' is not 1, 2, 4 or 10; using " + fallback);
         return fallback;
     }
 

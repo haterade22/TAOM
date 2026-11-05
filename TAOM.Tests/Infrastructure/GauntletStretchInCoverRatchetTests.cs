@@ -14,7 +14,7 @@ namespace TAOM.Tests.Infrastructure;
 /// times (lessons/localization-ui.md, #866; Fords of War 2026-10-31, where three panel backgrounds covered the whole scene).
 /// This gate scans every prefab file under Main/_Module/GUI; prefab inserts built in C# with XmlDocument.LoadXml stay guarded by
 /// their own feature tests. Grid parents (GridLayout.UpdateCellSizes gives their children a fixed cell) and parents with a max
-/// size on the axis are exempt. The five older files below held the fault before this gate: their counts may only fall, and
+/// size on the axis are exempt. The older files below held the fault before this gate: their counts may only fall, and
 /// must be lowered here in the same change when they do. A new file, a higher count, a lower count or a stale entry fails.
 /// </summary>
 [TestClass]
@@ -26,10 +26,8 @@ public class GauntletStretchInCoverRatchetTests
     private static readonly Dictionary<string, int> Known = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Main/_Module/GUI/PreFabs/MomentumView/MomentumView.xml"] = 5,
-        ["Main/_Module/GUI/PreFabs/CareerSystem/CareerScreen.xml"] = 3,
         ["Main/_Module/GUI/PreFabs/BattleActionBar.xml"] = 1,
         ["Main/_Module/GUI/PreFabs/FacGen/PreBuildCharacterSelection.xml"] = 1,
-        ["Main/_Module/GUI/PreFabs/StagedSiege/StagedSiegeHud.xml"] = 1,
     };
 
     [TestMethod]

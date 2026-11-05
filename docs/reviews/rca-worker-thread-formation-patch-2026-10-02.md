@@ -121,7 +121,7 @@ the native callback `CoreManaged.Finalize` (`CoreManaged.cs:113-118`), the shutd
 `.claude/rules/harmony-patches.md` records. A search of the whole-assembly v1.5.3 and v1.5.2 decompiles finds no
 other caller. Decision 22 (Mike, 2026-09-24, `plans/_audit/2026-09-23-opus/DECISIONS.md`) records that nothing
 reloads TAOM in a process, and `.claude/rules/harmony-patches.md` says a new patch needs no `ResetForUnload()`;
-the review's own FOLLOW-UP bullet for this static is closed the same way. The fix would also need a line in
+the review's own `FOLLOW-UP` bullet for this static is closed the same way. The fix would also need a line in
 `Main/SubModule.cs`, which this pass may not edit. Should decision 22 ever reverse, the edit is
 `public static void ResetForUnload() => _service = null;` in `Patch30_FormationGetOrderPositionOfUnit` plus a call
 to it after the last `ResetForUnload()` call in `SubModule.OnSubModuleUnloaded` (`ResetForUnloadSweepTests`
@@ -137,5 +137,5 @@ stronger than its proof. Why missed: the docs were written from the tests' inten
 `lessons/testing-qa.md`.
 
 Codex's suspect table adds no defect beyond these: the evaluating pitch read on the worker and the slot cache built
-on whichever thread misses first are already in the review's findings and FOLLOW-UP list. Fresh review of this
-round's diff: owed.
+on whichever thread misses first are already in the review's findings and `FOLLOW-UP` list. Fresh review of this
+round's diff: done 2026-11-04 (rca-follow-ups-2026-11-04.md).

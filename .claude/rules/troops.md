@@ -14,7 +14,7 @@ Update ALL of the following (checklist):
 | Step | File(s) | What to do |
 |------|---------|------------|
 | 1. Define troops | `Main/_Module/ModuleData/troops/troops_{culture}.xml` | Add NPCCharacter with skills, equipment, upgrade_targets, race, culture |
-| 2. Party templates | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Add to ALL relevant templates for the culture (hero, patrol L1/L2/L3, outlaw, rebels, mercenary, vassal_reward, militia, villager, caravan, elite caravan). Twelve, see the table below |
+| 2. Party templates | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Add to ALL relevant templates for the culture (hero, patrol L1/L2/L3, rebels, vassal_reward, militia, villager, caravan, elite caravan). Ten, see the table below |
 | 3. Culture config | `Main/_Module/ModuleData/taom_spcultures.xml` **and** `spcultures.xslt` | Update `basic_troop` / `elite_basic_troop` if the entry point changed, and confirm every party template is BOUND. A retagged vanilla culture lives in the XSLT, not the XML, and inherits Calradia for anything its block does not name |
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
@@ -88,8 +88,6 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 |----------|---------|-------------------|
 | `kingdom_hero_party_{culture}_template` | Lord armies (culture default) | Full range T1-T9 |
 | `kingdom_hero_party_{culture}_{clan}_template` | Per-clan lord armies (what most named lords field) | Same range as the culture default |
-| `kingdom_hero_party_mercenary_{culture}_template` | Mercenary bands | Mid-tier professional |
-| `kingdom_hero_party_outlaw_{culture}_template` | Outlaw parties | Low-tier rabble |
 | `patrol_party_{culture}_template_level_1` | Weak patrols | Low-mid tier |
 | `patrol_party_{culture}_template_level_2` | Medium patrols | Mid tier |
 | `patrol_party_{culture}_template_level_3` | Elite patrols | High tier |
@@ -100,7 +98,7 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 | `caravan_template_{culture}` | Caravans | 1 armed trader + 5-10 guards + 1-5 veterans |
 | `elite_caravan_template_{culture}` | Elite caravans | 1 armed trader + 10-20 guards + 5-10 veterans |
 
-Twelve per-culture types, not nine.
+Ten per-culture types. Mercenary and outlaw templates are gone: no TAOM clan bound one.
 
 A clan template id is a convention: never compute one. Grep `characters/clans.xml`, `spclans.xslt` and `lord_party_templates/lord_party_templates.json` for its binding ([party-templates.md](../../docs/modding/party-templates.md)).
 

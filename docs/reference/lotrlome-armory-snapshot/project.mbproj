@@ -45,6 +45,7 @@
 	     ids is a plain concat, not a MergeElements pass. Ledger: docs/reference/lotrlome-warg-changes.md -->
 	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_warg.xml" type="monster" />
 	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_fell_warg.xml" type="monster" />
+	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_dire_wolf.xml" type="monster" />
 	<file id="soln_physics_materials" name="ModuleData/physics_materials.xml" type="physics_material" />
 	<file id="soln_collision_infos" name="ModuleData/CollisionInfos/LOTR/collision_infos_warg.xml" type="collision_infos" />
 </base>

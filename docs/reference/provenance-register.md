@@ -76,6 +76,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,CollectAssemblyTypesShim}.cs` (`SubModuleConstructionGuard.cs` removed 2026-10-09) `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | (removed 2026-10-05) `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | removed |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
+| AssertAutoIgnore (poheniks) | `AssertAutoIgnore` | UNKNOWN | behavioural-port | `tools/assert_auto_ignore.py` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` `TheOldRealms/TOR_Core` | GPL-3.0 | behavioural-port | `Main/Features/CreatureSiegeRole/**` | pending-license |
 | module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
@@ -476,6 +477,10 @@ ADOD_Beasts author, for use in TAOM**. Note what that covers and what it does no
 purchase, so the meshes and animations are on firm ground, while the behavioural port of the C#
 (trample, mount-lock, howdah) rests on the same relationship rather than on a separate written grant.
 Worth getting one line in writing from Artem covering the code as well as the art.
+
+The dire wolves (#1081) use the purchased wolf meshes, textures, skeleton and clip masters (`data-port`, Mike bought
+the pack). TAOM's clips carry warg flags on those masters, and no ADOD wolf code is taken
+([dire-wolf.md](../features/dire-wolf.md)).
 
 Since 2026-09-29 the elephant's visible body (`sk_elephant_basemesh_a`) and its six harnesses
 (`SK_Elephant_Armor_Variations`) are meshes KEYforce delivered, replacing ADOD_Beasts's `elephant_mesh` and armour;

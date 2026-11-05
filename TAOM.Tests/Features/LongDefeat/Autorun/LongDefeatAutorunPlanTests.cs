@@ -95,6 +95,35 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_Speed_DefaultsToOne_AndReadsEachLevel()
+    {
+        Assert.AreEqual(1, Resolve(Out).Speed);
+        foreach (var level in new[] { 1, 2, 4, 10 })
+        {
+            var plan = Resolve(Out + "speed=" + level + "\n");
+            Assert.AreEqual(level, plan.Speed);
+            Assert.AreEqual(0, plan.Warnings.Count, string.Join("; ", plan.Warnings));
+        }
+    }
+
+    [TestMethod]
+    public void Resolve_Speed_AnythingElseRevertsToOneWithOneWarning()
+    {
+        foreach (var bad in new[] { "3", "0", "-2", "20", "x", "2.5", "" })
+        {
+            var plan = Resolve(Out + "speed=" + bad + "\n");
+            Assert.AreEqual(1, plan.Speed, bad);
+            Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("speed")), bad);
+        }
+    }
+
+    [TestMethod]
+    public void Describe_NamesTheSpeed()
+    {
+        StringAssert.Contains(Resolve(Out + "speed=4\n").Describe(), " speed=4 ");
+    }
+
+    [TestMethod]
     public void Resolve_BadWaves_WarnAndPlayUntilLost()
     {
         foreach (var bad in new[] { "0", "-2", "x", "2.5", "" })

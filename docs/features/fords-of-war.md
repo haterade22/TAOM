@@ -224,7 +224,7 @@ per record. Names are camelCase.
 | `capture.secondsToCapture` | float | Seconds for one side alone to take a point | 20 |
 | `upgrades[]` | list | The army upgrade tracks. Each has `id`, `name`, `effect` (`MeleeDamage`, `MissileDamage`, `MeleeArmour`, `MissileArmour`, `SiegeDamage` or `Fortify`), `step` (the change per level) and `prices` (gold per level, one entry per level). A missing or empty list gives the shipped defaults | six tracks of three levels at 300, 600 and 1000; step 0.1 for melee damage, missile damage and fortify, 0.08 for the two armours, 0.15 for siegecraft |
 | `aiProfiles.<id>.decisionIntervalSeconds` | float | Seconds between AI decisions | easy 12, normal 8, hard 5 |
-| `aiProfiles.<id>.incomeMultiplier` | float | Applied to the AI slot's passive income only, not to bounties | easy 0.8, normal 1.0, hard 1.2 |
+| `aiProfiles.<id>.incomeMultiplier` | float | Applied to the AI slot's passive income only, not to bounties | easy 0.8, normal 1.0, hard 1.0 |
 | `aiProfiles.<id>.mistakeChance` | float | Chance the AI skips a decision | easy 0.25, normal 0.1, hard 0.0 |
 | `aiProfiles.<id>.heroReserveGold` | int | Gold the AI keeps beyond the price before it buys a hero, a buyback or a spare pack | easy 600, normal 800, hard 1000 |
 
@@ -287,7 +287,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Order cooldown 20 s | Setting the standing order again returns Ok and costs no cooldown |
 | Capture 12 m radius, 20 s, 60 gold per minute per point | Starting values |
 | Countdown 10 s | Seconds before the match goes live |
-| AI: easy 12 s, x0.8, 0.25, 600; normal 8 s, x1.0, 0.1, 800; hard 5 s, x1.2, 0.0, 1000 | Difficulty comes from decision speed, passive income, skipped decisions and hero reserve; the multiplier never touches bounties |
+| AI: easy 12 s, x0.8, 0.25, 600; normal 8 s, x1.0, 0.1, 800; hard 5 s, x1.0, 0.0, 1000 | Difficulty comes from decision speed, passive income, skipped decisions and hero reserve; the multiplier never touches bounties |
 
 **Layout options** (shipped default): `laneCount` 3, `laneSpread` 45, `waypointStep` 12, `towerFractions`
 0.36 and 0.2, `keepInset` 0.04.

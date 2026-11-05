@@ -48,7 +48,8 @@ public class CareerQuestServiceTests
     // ── IsFormerPlayerHeroQuest ──────────────────────────────────
     // A career quest belongs to the hero who accepted it; after an heir takes over, vanilla cancels
     // every quest but a special one, and the old hero's career quest polls the wrong skill forever.
-    // It is cancelled. The lord's gear ladder keeps per-hero quests on purpose.
+    // It is cancelled. A former hero's ladder quest goes too: kills credit only the current hero's rung
+    // quest, so it could never finish. The ladder's own state is not touched.
 
     private void GivenCareerQuest()
     {
@@ -78,10 +79,10 @@ public class CareerQuestServiceTests
     }
 
     [TestMethod]
-    public void IsFormerPlayerHeroQuest_LadderQuestOfAnotherHero_ReturnsFalse()
+    public void IsFormerPlayerHeroQuest_LadderQuestOfAnotherHero_ReturnsTrue()
     {
         GivenCareerQuest();
-        Assert.IsFalse(_sut.IsFormerPlayerHeroQuest("taom_lords_gear_hands", "old_hero", "main_hero", false));
+        Assert.IsTrue(_sut.IsFormerPlayerHeroQuest("taom_lords_gear_hands", "old_hero", "main_hero", false));
     }
 
     [DataTestMethod]

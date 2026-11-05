@@ -41,6 +41,25 @@
                         </ButtonWidget>
                       </ItemTemplate>
                     </ListPanel>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="8"
+                                Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#CCCCCCFF"
+                                Text="@SpeedTitle" DoNotAcceptEvents="true" />
+                    <ListPanel DataSource="{Speeds}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="4"
+                               StackLayout.LayoutMethod="HorizontalLeftToRight">
+                      <ItemTemplate>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="84" SuggestedHeight="40" MarginLeft="3" MarginRight="3"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteSelect">
+                          <Children>
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#E9B84AA0"
+                                    IsVisible="@IsCurrent" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                        Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                        Text="@Text" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="6"
                                 Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FF9A7AFF"
                                 Text="@NoticeText" DoNotAcceptEvents="true" />

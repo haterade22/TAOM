@@ -1303,6 +1303,12 @@ A stack names the first null, not the only one. The first repair for bundle `3fb
 - **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
 - **Source:** [rca-offspring-parent-culture-2026-11-02.md](../rca-offspring-parent-culture-2026-11-02.md).
 
+### List a state machine's whole lifecycle before you fix one of its orders
+
+The warg rage stores a rider and a formation, and four things can end it. A follow-up named one order, a rider who leaves a living warg, and its fix passed. A review then found a dead hitter that stopped the tree, a second rage that stored null, a rage with no enemy near that never closed, and a new rider who took the wrong formation. The re-review found that the fix for the last one was also wrong.
+- **Why missed:** the brief was the line, and the line named one order. Two game logs already held the tree exception, and nobody read them, because check 12 counted those rages as restored.
+- **Prevent:** before the first edit on a stored-state fix, write down each state, each event that can arrive in it and who owns the record. A record with one owner ends when its owner changes. Read the logs of the runs you have, not only the verdict line.
+- **Source:** [rca-follow-ups-2026-11-04.md](../rca-follow-ups-2026-11-04.md) findings 1 to 4.
 ### A guard on one caller leaves the other routes: put it on the write that does the harm
 
 The Seat of Seeing shuts vanilla's main agent controller while the player's view is off the hero, and the warg rage's `SwitchMainAgentController(false)` turns that controller back on. The first fix guarded the caller the review had named, a calm warg's death, with a flag that says a swap in ran. The re-review then found two more routes to the same harm: a rage that starts and ends between two screen ticks (fast time runs several mission ticks in one frame, so the Seat never sees it), and a rider who fell in a rage, took the Seat and then lost the warg. The flag also dropped a `Disable()` outside the Seat that nobody had asked to change. One test at the write, `if (!SeatPresence.IsSeated) baseController.Enable()`, closed all three and restored the old behaviour everywhere else.

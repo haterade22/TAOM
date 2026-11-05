@@ -87,4 +87,4 @@ None. The lessons below carry the rules.
 
 - FOLLOW-UP #1054: Creature Siege Role reads the stage (row 8), Phase 2.
 - FOLLOW-UP #763: paid translation of the staged siege keys (all 12 languages hold English seeds).
-- FOLLOW-UP no issue: `BattleActionBar.xml:4` carries the same dead root `DataSource` (row 7); pre-existing, outside this change, harmless at runtime; it goes with that feature's next edit.
+- Follow-up closed 2026-11-04 (258db5e73) no issue: `BattleActionBar.xml:4` carries the same dead root `DataSource` (row 7); pre-existing, outside this change, harmless at runtime; it goes with that feature's next edit.

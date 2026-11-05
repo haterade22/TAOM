@@ -239,6 +239,44 @@ class CliTests(unittest.TestCase):
     def _backups(self):
         return [f for f in os.listdir(self.tmp.name) if ".bak" in f]
 
+    def test_a_missing_tpac_is_one_error_line_not_a_traceback(self):
+        code, out = self._run("show", "--tpac", os.path.join(self.tmp.name, "absent.tpac"))
+        self.assertEqual(code, 2)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+        self.assertTrue(out.startswith("ERROR: "), out)
+
+    def _bad_tpac(self, data):
+        with open(self.tpac, "wb") as fh:
+            fh.write(data)
+        return self._run("show", "--tpac", self.tpac)
+
+    def test_a_file_that_is_not_a_tpac_is_one_error_line_not_a_traceback(self):
+        code, out = self._bad_tpac(b"this is not a tpac, only some text that is long enough to read a header from")
+        self.assertEqual(code, 2)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+        self.assertTrue(out.startswith("ERROR: "), out)
+        self.assertIn("not a tpac", out)
+
+    def test_a_tpac_cut_inside_its_header_is_one_error_line_not_a_traceback(self):
+        # struct.unpack_from runs past the end: struct.error
+        code, out = self._bad_tpac(_package()[:100])
+        self.assertEqual(code, 2)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+        self.assertTrue(out.startswith("ERROR: "), out)
+
+    def test_a_tpac_cut_inside_a_segment_is_one_error_line_not_a_traceback(self):
+        # the compressed skeleton data is cut: lz4 cannot decompress it
+        code, out = self._bad_tpac(_package()[:400])
+        self.assertEqual(code, 2)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+        self.assertTrue(out.startswith("ERROR: "), out)
+
+    def test_an_unknown_skeleton_name_is_one_error_line_not_a_traceback(self):
+        code, out = self._run("show", "--tpac", self.tpac, "--skeleton", "no_such_skeleton")
+        self.assertEqual(code, 2)
+        self.assertIn("no_such_skeleton", out)
+        self.assertEqual(len(out.strip().splitlines()), 1, out)
+
     def test_dry_run_writes_nothing(self):
         before = _read(self.tpac)
         code, out = self._run("patch", "--tpac", self.tpac, "--fit", self.fit)

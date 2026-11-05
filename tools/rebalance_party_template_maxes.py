@@ -13,15 +13,16 @@ It is NOT the party's steady-state size. `PartySizeLimit` still governs recruitm
 decay, so a party spawned above its limit bleeds back down. Pairing these numbers with a
 party-size-limit change is a separate, deliberate decision.
 
-Scope: every `kingdom_hero_party_..._template` EXCEPT the mercenary and outlaw variants.
-Those 34 sit at a flat max_value=50 and nothing in the repo binds them today, so they are
-left alone. That leaves 193 templates: 17 culture defaults plus 176 per-clan variants (the
+Scope: every `kingdom_hero_party_..._template` in TAOM's own file. The 2026-08-14 pass
+skipped 34 mercenary and outlaw variants that sat at a flat max_value=50 and that nothing
+bound; those have since been removed, so the file holds none and the script needs no
+exclusion. The pass covered 193 templates: 17 culture defaults plus 176 per-clan variants (the
 per-clan ones are what most named lords actually use, via `Clan.DefaultPartyTemplate`,
 bound in characters/clans.xml or spclans.xslt; the culture default is only the fallback for
 a clan that binds nothing). Per-clan ids are usually `<culture>_<clan>_<N>`, but do NOT key
 on the trailing digit: Gondor's 14 are `<culture>_<fief>` and have none, with the clan id
 absent entirely (clan_empire_west_9 -> kingdom_hero_party_gondor_blackroot_vale_template).
-The regex below matches on the mercenary/outlaw exclusion alone, so it covers both shapes.
+The regex below matches the shared prefix and suffix alone, so it covers both shapes.
 
 Method: min_value is never touched. Each stack's SPREAD (max - min) is scaled by the same
 factor so the template's max sum lands on the culture target, then rounding drift is
@@ -94,8 +95,8 @@ CULTURE_TARGETS = {
     "lindon": 150,
 }
 
-# `kingdom_hero_party_<rest>_template`, excluding the mercenary and outlaw variants.
-TEMPLATE_ID_RE = re.compile(r"^kingdom_hero_party_(?!mercenary_|outlaw_)(.+)_template$")
+# `kingdom_hero_party_<rest>_template`.
+TEMPLATE_ID_RE = re.compile(r"^kingdom_hero_party_(.+)_template$")
 
 TEMPLATE_OPEN_RE = re.compile(r'<MBPartyTemplate\s+id="([^"]+)"')
 TEMPLATE_CLOSE_RE = re.compile(r"</MBPartyTemplate>")

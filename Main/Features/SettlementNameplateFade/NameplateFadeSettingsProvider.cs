@@ -9,20 +9,18 @@ namespace TAOM.Features.SettlementNameplateFade;
 ///
 /// HOT PATH NOTE: each property is read up to once per frame per visible settlement nameplate
 /// (~3000 calls/sec on a populated map). The <c>TaomSettings.Instance</c> singleton accessor
-/// is cached in <see cref="_settings"/> at construction time to avoid 3× static-singleton
-/// dereferences per call. The cached reference still picks up live MCM edits because the
-/// values are read through the reference, not snapshotted.
+/// is cached in <see cref="_settings"/> on the first non-null read, not in the constructor (a
+/// resolve before MCM is up would pin the defaults), to avoid 3× static-singleton dereferences
+/// per call. The cached reference still picks up live MCM edits because the values are read
+/// through the reference, not snapshotted.
 /// </summary>
 public class NameplateFadeSettingsProvider : INameplateFadeSettingsProvider
 {
-    private readonly TaomSettings _settings;
+    private TaomSettings? _settings;
 
-    public NameplateFadeSettingsProvider()
-    {
-        _settings = TaomSettings.Instance;
-    }
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public bool Enabled => _settings?.EnableNameplateFade ?? true;
-    public float NearDistance => _settings?.NameplateFadeNearDistance ?? 80f;
-    public float FarDistance => _settings?.NameplateFadeFarDistance ?? 200f;
+    public bool Enabled => Settings?.EnableNameplateFade ?? true;
+    public float NearDistance => Settings?.NameplateFadeNearDistance ?? 80f;
+    public float FarDistance => Settings?.NameplateFadeFarDistance ?? 200f;
 }

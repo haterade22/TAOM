@@ -33,6 +33,15 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
   `spclans.xslt` strips with `<xsl:template match="Faction[@id='X']"/>` (the engine never loads
   those rows); `Faction.neutral` (the engine's clanless value for named companions) is allowed.
   XML only: the `faction` attributes `heroes.xslt` writes are not swept. (`BROKEN_FACTION_REF`, #949)
+- **An `<EquipmentSet id>` that names no roster** null-dereferences inside the NPCCharacters load, and the engine's
+  empty catch stops every character after it from loading, with no crash at the typo. The registry is every
+  `<EquipmentRoster id>` in TAOM, vanilla, the Armory and `TAOM_Map`, minus any an xslt strips by id; refs come from the
+  `.xml` files and TAOM's `.xslt` files, because `lords.xslt` binds rosters too. (`BROKEN_ROSTER_REF`)
+- **A `Settlement.X` reference to no settlement** (a clan's or kingdom's home, a village's `bound`) crosses from TAOM
+  into the unversioned `TAOM_Map`, so a pair of packages that disagree points it at nothing. The registry is the world the
+  game builds: `TAOM_Map`'s rows, since its `settlements.xslt` strips vanilla's. TAOM's two unregistered settlement files
+  are not read, and TAOM's `.xslt` files are, because `spclans.xslt` writes homes as element text. (`BROKEN_SETTLEMENT_REF`). `tools/check_release_pair.py` runs this code, `UNKNOWN_CULTURE`,
+  `BROKEN_FACTION_REF` and `LANDLESS_CULTURE` against a release channel, which holds no vanilla module.
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
@@ -856,8 +865,8 @@ someone authors a troop there. Worth an invariant test that fails loudly when it
 
 **`TAOM_Map` WAS the sharp gap, closed by #462.** Its ModuleData is now an `extra_ref_root`, so all
 44 files and their 1,012 `Culture.` refs are swept; the validator visits 685 files (259 repo, 382
-Armory, 44 TAOM_Map). What follows is the shape of the hole, kept because the registry asymmetry it
-describes is still true and still the reason the sweep matters. Exactly **two**
+Armory, 44 TAOM_Map). What follows is the shape of the hole as it stood then. Since 2026-11-04
+TAOM_Map also feeds the settlement and roster registries. Exactly **two**
 of the 45 XML and XSLT files in its `ModuleData` are ever opened (44 XML plus `settlements.xslt`;
 the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copies, three
 `DistanceCaches` outputs and `project.mbproj`), both inside `build_settled_cultures` and
@@ -878,9 +887,10 @@ gap is latent, not live.
 **Fixed in #462.** `build_extra_ref_roots()` in `validate_moduledata.py` now returns both modules
 from one `_EXTRA_REF_MODULES` tuple, and `ExtraRefRootTests` pins the contract in both directions,
 including an end-to-end case where a bogus `Culture.` id in a synthetic TAOM_Map root must raise
-`UNKNOWN_CULTURE`. The registry asymmetry above is unchanged: TAOM_Map is still the sole source of
-`settled_cultures` and still contributes to no other registry. What changed is that its refs are no
-longer taken on trust.
+`UNKNOWN_CULTURE`. The registry asymmetry above has narrowed since: TAOM_Map is still the sole source of
+`settled_cultures`, but `tools/taom_schema.py` now also reads it for the equipment-roster ids
+(`equipment_rosters`) and the world's settlement ids (`settlements`). What changed first is that its
+refs are no longer taken on trust.
 
 **XSLT is barely modelled anywhere.** `_SETTLEMENT_STRIP_RE` matches only an empty
 `<xsl:template match="Settlement"/>` or its empty-body form; the file is never parsed as XML and

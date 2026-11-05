@@ -150,7 +150,7 @@ on 2026-10-27 (backup `loc_settlements.xml.bak_nametags_20261027_214259` in the 
 | `tools/name_tags.py` | Applies the tags; `--lang`, `--target live-map`, `--apply`, `--allow-live-write` |
 | `tools/generate_name_tags.py` | Builds `tags` from the rules; `--write` (prunes retired ids), `--check`, `--list-undecided` |
 | `tools/name_tag_inventory.py` | The name keys by category and language; reconciles the live names with the cache |
-| `tools/rebuild_translation_files.py` | Has a tagging step (TAOM rows always, the TAOM_Map file only with `--allow-live-write`) but is stale for the TAOM module: do not run it there. It always rewrites the TAOM_Map file, so a run without the flag strips the tags; `--dry-run` writes nothing |
+| `tools/rebuild_translation_files.py` | Has a tagging step (TAOM rows always, the TAOM_Map file only with `--allow-live-write`) but is stale for the TAOM module: never name `--module TAOM`. It is a dry run until `--apply`, and `--module {TAOM,TAOM_Map,Armory}` is required (repeatable; none exits 2). With `--module TAOM_Map --apply` it rewrites the TAOM_Map file, so a run without the flag strips the tags |
 | `tools/translate_with_claude.py` | Tags cache and override fills in one write pass (repo files always, outside files with `--allow-live-write`); fresh model output is not tagged; `placeholders_match` counts the grammar tags, so a dropped or added one is rejected |
 | `tools/check_external_loc_coverage.py` | Reports the live file's tags (correct, missing, wrong, orphan); `--require-tags` makes a miss fail |
 | `tools/Apply-MapVillageNames.py`, `tools/add_map_villages.py`, `tools/rename_map_settlements.py` | Live-map writers: they keep or add the BR and IT tag of the names they write; the rename also renames the table id. `tools/add_map_fortifications.py` writes its names without a tag: run `generate_name_tags.py --write` and `name_tags.py --target live-map --apply --allow-live-write` after it |
@@ -261,7 +261,7 @@ tags. Re-apply with this procedure, on Mike's word:
 
 **Writers that strip or skip the tags.** The tags are only as durable as the last tool that wrote the file:
 
-- `tools/rebuild_translation_files.py` always rewrites the TAOM_Map `loc_settlements.xml`, and tags it only with
+- `tools/rebuild_translation_files.py --module TAOM_Map --apply` rewrites the TAOM_Map `loc_settlements.xml`, and tags it only with
   `--allow-live-write`. After the live apply, a run without the flag strips every tag.
 - `tools/translate_with_claude.py --module TAOM_Map` writes the same file and tags it only with `--allow-live-write`; when it
   writes a file outside the repo it prints the re-apply command of step 3.

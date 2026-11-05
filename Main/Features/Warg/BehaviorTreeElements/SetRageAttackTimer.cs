@@ -18,7 +18,8 @@ public class SetRageAttackTimer : BTTask, IBTWargBlackboard
 
     public override BTTaskStatus Execute()
     {
-        RageAttackStartTime.SetValue(DateTime.UtcNow);
+        // Once per rage: this task runs every pass, so setting it each time would make the 6 s timeout unreachable.
+        if (RageAttackStartTime.GetValue() == null) RageAttackStartTime.SetValue(DateTime.UtcNow);
         return BTTaskStatus.FinishedWithTrue;
     }
 }

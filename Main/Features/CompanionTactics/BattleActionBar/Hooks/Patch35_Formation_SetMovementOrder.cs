@@ -61,8 +61,8 @@ public static class Patch35_Formation_SetMovementOrder
                 _exceptionLogged = true;
                 try { IoC.Resolve<IModLogger>()?.LogError(
                     $"[CompanionTactics] Patch35 CancelStanceOnMove postfix failed: " +
-                    $"{ex.GetType().Name}: {ex.Message}. CancelStanceOnMove disabled for the rest " +
-                    $"of this session (one-shot log)."); }
+                    $"{ex.GetType().Name}: {ex.Message}. The postfix keeps running; only this " +
+                    $"log is one-shot."); }
                 catch { /* logger unavailable — keep silent fallback */ }
             }
         }

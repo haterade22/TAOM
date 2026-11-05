@@ -115,7 +115,7 @@ if printf '%s\n' "$STAGED" | grep -qE '^Main/_Module/ModuleData/.*\.(xml|xslt)$'
         --code COLLISION_BODY_BORROWED --code ITEM_SLOT_REJECTED \
         --code SCHEMA_INVALID --code ARMOUR_ACQUISITION_REF \
         --code CREATURE_GEAR_OBTAINABLE --code BROKEN_FACTION_REF \
-        --code TROOP_ID_REMOVED
+        --code TROOP_ID_REMOVED --code BROKEN_ROSTER_REF --code BROKEN_SETTLEMENT_REF
     run_gate "generate_career_kits --verify" 15 tools/generate_career_kits.py --verify
 fi
 

@@ -27,7 +27,7 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 17 | LOW | I started the second rehearsal with a 10-minute timeout, and the earlier long run had 90 minutes | Own process slip | I retyped the command and not its options | Stopped within a minute and restarted; nothing lost |
 | 18 | LOW | Two of my proof scripts read nothing and printed empty rows: a state regex anchored on a time that follows a date, and a test that read a lazy catalog before it loaded. The test failed for the wrong reason | Evidence not read | I took a red result as proof without reading its message | Read the failing line; proved the fixed test against the old order |
 | 20 | MED | Losses grew wave by wave on every table, and tuning the table alone did not help (`20261104-054852`). I suspected wounds, because nothing heals a surviving defender between waves. The measurement does not support that as the main cause: mean health was 84% to 91% before each rest (`20261104-071020`) | Hypothesis, then measured | The plan sold healing in Phase 3 and never asked what a wave does to survivors before that. I tuned the wave table twice before I asked what else carries over, and my first arrow idea was also wrong | `rules.restShare` and a line that measures the wound. The cause of the swings stays open, and the feature doc says so |
-| 21 | MED | A wave's end could wait 150 s on its last attackers, and Mike closed a run because 2 attackers stood far outside the walls with nothing moving | Felt only in play | The stalemate rule was judged by whether it cleared the wave, and every unattended run waits as long as it must. The per-wave waits were in the logs, and I did not read them as a player would | `stragglerQuietSeconds`: few quiet stragglers fall after 20 s, with no charge |
+| 21 | MED | A wave's end could wait 150 s on its last attackers, and Mike closed a run because 2 attackers stood far outside the walls with nothing moving | Felt only in play | The stalemate rule was judged by whether it cleared the wave, and every unattended run waits as long as it must. The per-wave waits were in the logs, and I did not read them as a player would | `stragglerCount` and `stragglerSeconds`, Mike's numbers: 5 or fewer attackers fall after 60 s, with no charge, and a death does not restart the clock. A first form with 20 s of quiet could be held open by a lone archer |
 | 19 | LOW | A fix for the standards rule put `DoNotAcceptEvents` on the modal shop panel's root, so a click on the dim background would reach lower layers. The checker read `EventManager` and `ScreenManager` and caught it before any run | Rule applied past its reason | The rule was written for HUD layers, and I passed it on without its scope. Native's `EscapeMenu.xml` has no such flag | Reverted on the seven containers; the host's comment names the reason |
 
 **The leaderboard's report fields (#1080), the same day.** Tier 1 lenses 5 and 2 read the diff and the plan, and ran the plan's rules on six real reports. They found no HIGH, and rules 4 to 12 held on all six.
@@ -39,7 +39,25 @@ Every row was read in the source or a run log before it was fixed. Severities ar
 | 24 | MED | The bot held only `waves.json`, though the roster and the starting gold come from the other two, and the plan gave no source for the released pair and no way to rederive the hash | Spec gap | One roster exists today, so the gap did not show | The bot holds all three and recomputes the hash; the pair comes from a report made on the packaged install |
 | 25 | LOW | Smaller items, each fixed: a director test that did not prove the wiring; dead null checks; a wrong reason for rule 6; rule 12 stale and too strict for autoplay data; rule 13 trusting the player's clock; rule 14 beaten by one added space; a routed attacker refusing an honest run; `mods` without the versions that record the engine changeset | Mixed | First read by the review | Fixed in the code or the plan |
 
+**The muster place, the same day.** Mike saw new defenders stuck on the terrace. Tier 1 lenses 5 and 2 and a partial run found no incompatibility, and soldiers on the wall stayed at their posts.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 26 | MED | New defenders spawned on a terrace and stuck there, and every check passed, because no check can see where a healthy spawn should be | Felt only in play | The plan cut the recorded place, and the `ok` lines judge height and navmesh only | Recorded points, and a failed check when a point is lost |
+| 27 | MED | The first draft's fallback only warned, so the terrace could return with a green judge, and the doc said no point shipped | Gate proves less than it says | The builder wrote the doc before the points landed, and the fallback copied the keep's quiet shape | `MusterPlaceLost`, `source=` in the check, a shipped-data test, corrected doc |
+
+**Speed controls, the same day.** Tier 1 lenses 5 and 2 found no signature break.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 28 | MED | At 10x with a person driving, engine fast forward read each key press once per internal step, so use could start and stop in one frame | Sibling guard not copied | Vanilla allows it only for a dead player, and Fords forces 1x while controlling. The first draft took Fords' speed rule but not that guard. Repeat of row 1 | A fixed step for a person at 10x, with one tick per frame; a played check owed |
+| 29 | MED | Speed stayed up after the run ended, so a fight with no rules ran at 10x behind the end panel | State not cleared | The speed was tied to the mission's end, not the run's | `Session.Speed` reads 1 once the run has a result |
+| 30 | LOW | A HUD fault could leave 10x on, and the judge could pass `--speed 10` on a build that played at 1x | Gate proves less than it says | First read by the review | `Stop` runs first; the judge compares `maxSpeed` with the flag |
+
 ## Not applied, with the reason
+
+- **Restoring a formation's place after a bought pack:** it matters only for a player's Advance order between waves, and no run has shown harm. The feature doc names it.
+- **Refusing a point recorded outside the walls:** only a person can record one, and a cavalry sally may want it later.
 
 - **A latch for cheat mode switched on mid-run:** nobody has tested whether a player can do that. A guard for an unseen case is Mike's call under `simplicity-criterion.md`, and the plan names the gap.
 - **The runner's report copy after a game closed by hand:** `run_fords_autorun.py` falls back to `fords_report_*`, so run `20261104-071020` left its report in `Logs`. Pre-existing and harmless to a verdict, because such a run already fails. no issue: nothing depends on the copy.

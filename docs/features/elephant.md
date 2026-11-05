@@ -243,7 +243,7 @@ per-tick random roll / fixed ~20 damage.
 | [`Main/Features/Elephant/HowdahCrewSpawner.cs`](../../Main/Features/Elephant/HowdahCrewSpawner.cs) + [`HowdahCrewAgentOrigin.cs`](../../Main/Features/Elephant/HowdahCrewAgentOrigin.cs) + [`HowdahHarness.cs`](../../Main/Features/Elephant/HowdahHarness.cs) | The howdah crew (#627): the spawner queues a crew from `OnAgentBuild` and spawns it from `OnMissionTick` onto the crew frames (the mahout's banner and colours, no horses, weapons wielded); each archer's origin books no casualty or XP against the mahout and reports the mahout's scoreboard party; `HowdahHarness` decides which harness gets the platform, and with it the crew (the three howdahs in `ElephantConfig.HowdahHarnessStringIds` since 2026-09-29). `CrewSpawnEnabled` parks the crew. |
 | [`Main/Features/Elephant/HowdahDiagnosticsReporter.cs`](../../Main/Features/Elephant/HowdahDiagnosticsReporter.cs) + `HowdahDiagnostics.cs`, `HowdahSampleClock.cs`, `HowdahRunStats.cs`, `HowdahDiagnosticsSettingsProvider.cs` | The howdah diagnostics log (#627): the reporter reads the engine on sample frames; the rest is pure and unit-tested. Gated by MCM `EnableHowdahDiagnostics`. See "Reading the howdah log". |
 | `LOTRLOME_Armory/Prefabs/taom_howdah_platform.xml` (snapshot: [`docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml`](../../docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml)) | The howdah platform prefab: one floor body (moveable and barrier), no rails, two crew frames. |
-| [`TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`](../../TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs) + `HowdahDiagnosticsTests.cs`, `HowdahSampleClockTests.cs`, `HowdahRunStatsTests.cs`, `HowdahDiagnosticsSettingsProviderTests.cs`, `HowdahCrewAgentOriginTests.cs`, `HowdahHarnessTests.cs`, `HowdahHarnessItemTests.cs` | The prefab's structure, name and location, live-copy parity; the diagnostics arithmetic; the toggle default. |
+| [`TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs`](../../TAOM.Tests/Features/Elephant/HowdahPrefabTests.cs) + `HowdahDiagnosticsTests.cs`, `HowdahSampleClockTests.cs`, `HowdahRunStatsTests.cs`, `HowdahDiagnosticsSettingsProviderTests.cs`, `HowdahCrewAgentOriginTests.cs`, `HowdahHarnessTests.cs`, `HowdahHarnessItemTests.cs` | The prefab's structure, name and location, live-copy parity; the diagnostics arithmetic; the cached toggle read. |
 | [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 24 tests (IsCreatureMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×10 — both kinds × min/max/midpoint/blocking boundaries + NaN/out-of-range roll clamps). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
 **1.4.5 adaptations vs ADOD_Beasts's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
@@ -405,8 +405,8 @@ Two crashes were encountered when deploying the elephant action-set self-contain
 
 ### Remaining seams (need the Modding Kit / Blender / you)
 
-1. **Monster + Item data** — **ready-to-drop files authored**: [`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml)
-   (copy to `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` + register in its SubModule.xml) and
+1. **Monster + Item data**: **reference copies authored**: [`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml)
+   (the live `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` differs from it in two attributes: the live file has `action_set="as_elephant"` and `monster_usage="elephant"`, the copy `as_war_elephant` and `war_elephant`, which need the TAOM-owned action set and usage first) and
    [`elephant/horse_item_taom_war_elephant.xml`](elephant/horse_item_taom_war_elephant.xml) (paste the `<Item>` into
    `LOTRAOM_horses.xml`). Both validated well-formed; the Monster id stays `taom_war_elephant` to match `ElephantConfig`.
    (Corrected one ADOD_Beasts 1.2.12-ism on the way: `bones_to_modify_on_sloping_ground_0` was `Spine2` — a bone our rig
@@ -800,7 +800,7 @@ not C#:
 
 `lotr_monster_elephant.xml` declares **0 of the 12 rein attributes** the engine reads, while being
 `Mountable="true"` (`family_type="10"`) — the repo snapshot at
-[`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml) matches the live file.
+[`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml) matches the live file apart from `action_set` and `monster_usage` (live: `as_elephant` and `elephant`; copy: `as_war_elephant` and `war_elephant`); the rein attributes are absent from both.
 Every vanilla `Mountable` monster carries all twelve: `horse`/`camel`/`mule` declare them and
 `horse_2` inherits them via `base_monster`. v1.4.8 fixed a "horse rein visual bug when a mounted
 agent died" — native, no managed diff, in a path that runs on **mounted-agent death**

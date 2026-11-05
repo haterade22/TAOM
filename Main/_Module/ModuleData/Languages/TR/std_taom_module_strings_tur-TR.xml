@@ -7510,6 +7510,9 @@
     <string id="taom_seat_mcm_fight_on_hint" text="While you are in the Seat in a battle, your hero fights on with the company, driven by the game's AI, and you get the controls back when you leave. It acts the next time you take the Seat. Not in an online session. Default: off." />
     <string id="taom_seat_mcm_take" text="Take a soldier after your hero falls" />
     <string id="taom_seat_mcm_take_hint" text="After your hero falls in a battle, the key Take this soldier (Delete unless rebound, under Options &gt; Keybindings &gt; Action) in the Seat takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Off, the key does nothing. Not in an online session. Default: on." />
+    <string id="TAOM_LD_Hud_Speed" text="Speed: {SPEED}x   M  Next speed" />
+    <string id="TAOM_LD_Hud_SpeedButton" text="{SPEED}x" />
+    <string id="TAOM_LD_Hud_SpeedTitle" text="Game speed" />
   </strings>
 
 </base>

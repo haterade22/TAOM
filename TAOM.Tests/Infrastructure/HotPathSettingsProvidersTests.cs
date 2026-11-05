@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features;
 using TAOM.Features.AnimationVariety;
+using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
@@ -27,6 +28,8 @@ using TAOM.Features.Refuge;
 using TAOM.Features.MarshalsWord;
 using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SiegePropDiagnostics;
+using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.SignatureStrikes;
 using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SmartCavalryAI;
@@ -78,6 +81,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(AnimVarietyProbeSettingsProvider))]
     [DataRow(typeof(FellFoesSettingsProvider))]
     [DataRow(typeof(LostFootingSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     [DataRow(typeof(SeatSettingsProvider))]
     [DataRow(typeof(MarshalSettingsProvider))]
     // #746: static, read per hit against a creature bandit. It has no instance to construct, so the counting
@@ -207,6 +213,15 @@ public class HotPathSettingsProvidersTests
         // Lost Footing census: read on every tick while a battle runs.
         [typeof(LostFootingSettingsProvider)] = (() => new LostFootingSettingsProvider(),
             nameof(ILostFootingSettingsProvider.CensusEnabled), nameof(TaomSettings.LostFootingCensus), () => new TaomSettings()),
+        // Settlement nameplate fade: read per frame per visible plate.
+        [typeof(NameplateFadeSettingsProvider)] = (() => new NameplateFadeSettingsProvider(),
+            nameof(INameplateFadeSettingsProvider.Enabled), nameof(TaomSettings.EnableNameplateFade), () => new TaomSettings()),
+        // Battle balance: read per casualty and per roster row in every party strength sum.
+        [typeof(BattleBalanceSettingsProvider)] = (() => new BattleBalanceSettingsProvider(),
+            nameof(IBattleBalanceSettingsProvider.EnableCustomTroopPower), nameof(TaomSettings.EnableCustomTroopPower), () => new TaomSettings()),
+        // Settlement nameplate relation colours: read per frame per plate.
+        [typeof(NameplateRelationSettingsProvider)] = (() => new NameplateRelationSettingsProvider(null),
+            nameof(INameplateRelationSettingsProvider.ColorsEnabled), nameof(TaomSettings.EnableNameplateRelationColors), () => new TaomSettings()),
         // Seat of Seeing: read every mission screen frame (the view asks whether the Seat is on and whether a battle begins in it).
         [typeof(SeatSettingsProvider)] = (() => new SeatSettingsProvider(),
             nameof(ISeatSettingsProvider.Enabled), nameof(TaomSettings.SeatEnabled), () => new TaomSettings()),
@@ -238,6 +253,9 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(AnimVarietyProbeSettingsProvider))]
     [DataRow(typeof(FellFoesSettingsProvider))]
     [DataRow(typeof(LostFootingSettingsProvider))]
+    [DataRow(typeof(NameplateFadeSettingsProvider))]
+    [DataRow(typeof(BattleBalanceSettingsProvider))]
+    [DataRow(typeof(NameplateRelationSettingsProvider))]
     [DataRow(typeof(SeatSettingsProvider))]
     [DataRow(typeof(MarshalSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)

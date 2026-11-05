@@ -18,7 +18,7 @@
 | 8 | LOW | Comments understated what is stripped (SandBox noble teen templates) and gave the wrong reason for keeping Khand's child templates. | Docs accuracy | Written from intent, not from the transform's measured output. | Fixed in the stylesheet comment and the feature doc. |
 | 9 | LOW | Feature doc, feature-map row, both GameModel catalogues, the RaceAge doc and the `/xslt-check` mapping were missing or stale. | Process | Documentation duty deferred to "after review". | Fixed; `lint_docs.py` reports 0 missing docs and 0 registry drift. |
 | 10 | LOW | Each pick built signatures for every lord of every culture, and the gate ran after the scan. | Efficiency | Written for correctness first. | Fixed: prefilter to the request; `Wants` runs before the scan. |
-| 11 | LOW | `validate_xml_schemas.py` prints "NOT REGISTERED" for an XSLT-only stylesheet the engine does apply. | Tooling | Pre-existing. | FOLLOW-UP, not fixed here. Fixed in 48d66b59a (2026-10-21). |
+| 11 | LOW | `validate_xml_schemas.py` prints "NOT REGISTERED" for an XSLT-only stylesheet the engine does apply. | Tooling | Pre-existing. | `FOLLOW-UP`, not fixed here. Fixed in 48d66b59a (2026-10-21). |
 
 ## Root-cause pattern
 
@@ -32,5 +32,5 @@ The lenses ran after the code was written and caught all three; nothing in the b
 
 - Existing saves keep the gear their lords already rolled (the engine only picks at creation and role changes).
 - A culture, race and sex with no shared kit falls back to the `taom_*` template, which can be another race's armour in a mixed culture.
-- `TaomHeroCreationModel` still restates vanilla's offspring rule (Design FOLLOW-UP; deleting it changes the RaceAge doc's stated intent).
+- `TaomHeroCreationModel` still restates vanilla's offspring rule (Design Follow-up closed 2026-11-04 (7983854e7); deleting it changes the RaceAge doc's stated intent).
 - Every new test was written before its fix, but the RED run was masked: another session's uncommitted `CountingMcm.cs` broke the test build at that moment, so the new tests' failure was never observed. They pass now.

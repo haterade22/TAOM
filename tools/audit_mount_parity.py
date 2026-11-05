@@ -11,6 +11,8 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
   F. chariot vs VANILLA HORSE — the chariot is a ridden vehicle with no behaviour tree, so its
      reference class is the horse, not the warg. Sections A-E are baselined on the spider and
      deliberately do not cover it.
+  G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set;
+     checks the inheritance and the three action sets that chain over the horse's.
 
 Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
 "AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
@@ -48,6 +50,7 @@ FILES = {
         "elephant": LOTR + r"\Monsters\LOTR\lotr_monster_elephant.xml",
         # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil).
         "mumakil":  LOTR + r"\Monsters\LOTR\lotr_monster_mumakil.xml",
+        "dire_wolf": LOTR + r"\Monsters\LOTR\lotr_monster_dire_wolf.xml",
         "horse":    NATIVE + r"\monsters.xml",
     },
     "usage": {
@@ -56,6 +59,8 @@ FILES = {
         "elephant": (LOTR + r"\monster_usage_sets.xml", "elephant"),
         # Mûmakil reuses the elephant usage set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\monster_usage_sets.xml", "elephant"),
+        # The dire wolf shares the warg's usage set and action names on its own skeleton (#1081).
+        "dire_wolf": (LOTR + r"\monster_usage_sets.xml", "warg"),
         "horse":    (NATIVE + r"\monster_usage_sets.xml", "horse"),
     },
     "action_types": [
@@ -68,6 +73,7 @@ FILES = {
         "elephant": (LOTR + r"\action_sets.xml", "as_elephant"),
         # Mûmakil reuses the elephant action set verbatim (same skeleton/clips) — parity by construction.
         "mumakil":  (LOTR + r"\action_sets.xml", "as_elephant"),
+        "dire_wolf": (LOTR + r"\action_sets.xml", "as_dire_wolf"),
     },
     "rider_partials": {
         "spider (LOTRLOME)": LOTR + r"\action_sets.xml",
@@ -75,7 +81,7 @@ FILES = {
     },
 }
 
-MOUNTS = ["spider", "warg", "elephant", "mumakil"]
+MOUNTS = ["spider", "warg", "elephant", "mumakil", "dire_wolf"]
 
 # The mounts --strict holds to a total usage set: the creatures a behaviour tree steers, which turn
 # mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
@@ -108,11 +114,16 @@ def parse(path):
 
 
 # ---------- A. Monster attributes ----------
-MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "mumakil": "taom_mumakil", "horse": "horse"}
+MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "mumakil": "taom_mumakil",
+               "dire_wolf": "dire_wolf", "horse": "horse"}
 
 
 def monster_elem(name):
-    root = parse(FILES["monster"][name])
+    path = FILES["monster"][name]
+    if not os.path.isfile(path):
+        print("  [FAIL] %s: Monster file not found: %s" % (name, path))
+        return None
+    root = parse(path)
     want = MONSTER_IDS[name]
     for m in root.iter("Monster"):
         if m.get("id") == want:
@@ -510,10 +521,60 @@ def section_f(types):
         print(f"      deployed but never referenced ({len(orphans)}): {', '.join(orphans)}")
 
 
+# ---------- G. war ram vs vanilla horse ----------
+RAM = {
+    "monster": (LOTR + r"\Monsters\LOTR\lotr_monster_war_ram.xml", "taom_war_ram"),
+    "action_sets": LOTR + r"\action_sets.xml",
+}
+# The three sets the engine looks up for a mount (mission, map, town and village), each over the horse's.
+RAM_SET_BASES = (("as_war_ram", "as_horse"), ("as_war_ram_map", "as_horse_map"),
+                 ("as_war_ram_town_and_village", "as_horse_town_and_village"))
+
+
+def ram_gaps(monster, action_sets, types):
+    """Where the war ram stops being the vanilla horse it is built on, as printable lines (empty = none).
+
+    `action_sets` maps an action_set id to its element. The ram inherits the horse's usage set through
+    base_monster, and monster_usage="horse" is what hands a dwarf rider his act_horse_* rows."""
+    if monster is None:
+        return ["Monster taom_war_ram not found"]
+    gaps = []
+    if monster.get("base_monster") != "horse":
+        gaps.append(f'base_monster is "{monster.get("base_monster")}", not "horse": the horse surface is not inherited')
+    if monster.get("monster_usage") not in (None, "horse"):
+        gaps.append(f'monster_usage is "{monster.get("monster_usage")}": the dwarf rider needs the horse usage set')
+    for set_id, base in RAM_SET_BASES:
+        el = action_sets.get(set_id)
+        if el is None:
+            gaps.append(f"{set_id} is not defined")
+        elif el.get("base_set") != base:
+            gaps.append(f'{set_id} has base_set "{el.get("base_set")}", not "{base}"')
+    if types.get("act_war_ram_butt") != "actt_kick":
+        gaps.append(f'act_war_ram_butt is typed "{types.get("act_war_ram_butt", "<UNDECLARED>")}", not "actt_kick"')
+    return gaps
+
+
+def section_g(types):
+    """Prints section G and returns its gaps, which --strict counts: data_gates.py reads only the exit code."""
+    print("=" * 72)
+    print("G. WAR RAM vs VANILLA HORSE (horse-skeleton reskin, the horse usage set is inherited)")
+    # A missing file is a gap (ram_gaps names the absent Monster and sets), not a traceback.
+    monster = elem_by_id(RAM["monster"][0], "Monster", RAM["monster"][1]) if os.path.isfile(RAM["monster"][0]) else None
+    wanted = {s for s, _ in RAM_SET_BASES}
+    sets = ({e.get("id"): e for e in parse(RAM["action_sets"]).iter("action_set") if e.get("id") in wanted}
+            if os.path.isfile(RAM["action_sets"]) else {})
+    gaps = ram_gaps(monster, sets, types)
+    for g in gaps:
+        print(f"      {g}   <-- REVIEW")
+    if not gaps:
+        print("      Monster inherits the horse, its three action sets chain over the horse's, head-butt typed actt_kick")
+    return gaps
+
+
 def main():
     ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables")
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, or the war ram (section G) has a gap")
     args = ap.parse_args()
     if not os.path.isdir(LOTR):
         print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
@@ -526,7 +587,8 @@ def main():
     section_d(types)
     section_e()
     section_f(types)
-    failed = section_strict() if args.strict else 0
+    ram_gaps_found = section_g(types)
+    failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
     return 1 if failed else 0

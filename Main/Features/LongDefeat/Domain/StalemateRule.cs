@@ -16,6 +16,7 @@ internal readonly record struct StalemateDecision(StalemateAction Action, int Co
 internal struct StalemateState
 {
     public float Quiet;
+    public float Stragglers;
     public bool Charging;
 }
 
@@ -31,6 +32,19 @@ internal static class StalemateRule
         if (!(dt > 0f) || float.IsInfinity(dt))
             return default;
 
+        // The last few may never climb and nobody goes out to them, and a death must not restart this clock, or a lone archer who keeps killing holds the wave open.
+        if (attackers > 0 && attackers <= r.StragglerCount && attackers < defenders && r.StragglerSeconds > 0f)
+        {
+            state.Stragglers += dt;
+            if (state.Stragglers < r.StragglerSeconds)
+                return default;
+
+            state.Stragglers = 0f;
+            state.Quiet = 0f;
+            return new StalemateDecision(StalemateAction.FellStragglers, attackers);
+        }
+
+        state.Stragglers = 0f;
         if (lossThisTick)
         {
             state.Quiet = 0f;
@@ -38,12 +52,6 @@ internal static class StalemateRule
         }
 
         state.Quiet += dt;
-        if (attackers > 0 && attackers <= r.StragglerShare * waveCount && attackers < defenders && state.Quiet >= r.StragglerQuietSeconds)
-        {
-            state.Quiet = 0f;
-            return new StalemateDecision(StalemateAction.FellStragglers, attackers);
-        }
-
         if (state.Charging)
         {
             if (!(state.Quiet >= r.StrandedSeconds) || attackers <= 0)

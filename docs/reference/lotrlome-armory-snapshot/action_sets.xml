@@ -67184,6 +67184,160 @@
 	<action_set id="as_wildmesh_moose_town_and_village" skeleton="horse_skeleton" base_set="as_horse_town_and_village" />
 	<action_set id="as_wildmesh_moose_map" skeleton="horse_skeleton" base_set="as_horse_map" />
 	<!-- ============================== /WILDMESH3D MOUNTS ============================== -->
+	<!-- ============================== DIRE WOLF (#1081) ==============================
+	     Derived from the warg sets by tools/apply_dire_wolf_armory.py: same actions, wolf clips, wolf skeleton. -->
+	<action_set id="as_dire_wolf" skeleton="adod_wolf_armature_unused" movement_system="quadrupedal">
+		<!-- Warg - Special attacks -->
+		<action type="act_warg_attack_stand" animation="dire_wolf_attack_stand" />
+		<action type="act_warg_attack_running" animation="dire_wolf_attack_running" />
+
+		<!-- Warg - Basic actions -->
+		<action type="act_warg_rear" animation="dire_wolf_taunt" />
+		<action type="act_warg_rear_damaged" animation="dire_wolf_rear_damaged" />
+		<action type="act_warg_dash" animation="dire_wolf_dash" />
+		<action type="act_warg_kick" animation="dire_wolf_idle" />
+		<action type="act_warg_quick_stop" animation="dire_wolf_quick_stop" />
+		<action type="act_warg_quick_stop_when_fast" animation="dire_wolf_quick_stop" />
+		<action type="act_warg_gallop_acceleration_head" animation="dire_wolf_idle" />
+		<action type="act_warg_hit_object" animation="dire_wolf_run_collide" />
+		<action type="act_warg_hit_object_while_falling" animation="dire_wolf_run_collide" />
+		<action type="act_warg_jump_start" animation="dire_wolf_dash" />
+
+		<!-- Warg - monster_usage_upper_body_movements -->
+		<action type="act_warg_turn_right_head" animation="dire_wolf_walk_turn_right_head" />
+		<action type="act_warg_turn_left_head" animation="dire_wolf_walk_turn_left_head" />
+		<action type="act_warg_walk_turn_right_head" animation="dire_wolf_walk_turn_right_head" />
+		<action type="act_warg_walk_turn_left_head" animation="dire_wolf_walk_turn_left_head" />
+		<action type="act_warg_trot_turn_right_head" animation="dire_wolf_trot_r" />
+		<action type="act_warg_trot_turn_left_head" animation="dire_wolf_trot_l" />
+		<action type="act_warg_canter_turn_right_head" animation="dire_wolf_canter_r" />
+		<action type="act_warg_canter_turn_left_head" animation="dire_wolf_canter_l" />
+		<action type="act_warg_gallop_turn_right_head" animation="dire_wolf_gallop_turn_right_head" />
+		<action type="act_warg_gallop_turn_left_head" animation="dire_wolf_gallop_turn_left_head" />
+		<action type="act_warg_stand_1" animation="dire_wolf_idle" alternative_group="warg_stand_alternative_group" />
+		<action type="act_warg_stand_2" animation="dire_wolf_idle_2" alternative_group="warg_stand_alternative_group" />
+		<action type="act_warg_idle_1" animation="dire_wolf_idle" alternative_group="idle_warg" />
+		<action type="act_warg_idle_2" animation="dire_wolf_idle_2" alternative_group="idle_warg" />
+
+		<!-- Warg - monster_usage_movements -->
+		<action type="act_warg_turn_right" animation="dire_wolf_strafe_right_faster" />
+		<action type="act_warg_turn_left" animation="dire_wolf_strafe_left_faster" />
+		<action type="act_warg_backward_walk_stand" animation="dire_wolf_walkbackfast_straight" />
+		<action type="act_warg_backward_walk" animation="dire_wolf_walkbackfast_straight" />
+		<action type="act_warg_backward_walk_strafe_right" animation="dire_wolf_walkbackfast" />
+		<action type="act_warg_backward_walk_strafe_left" animation="dire_wolf_walkbackfast" />
+		<action type="act_warg_strafe_right" animation="dire_wolf_strafe_right_faster" />
+		<action type="act_warg_strafe_left" animation="dire_wolf_strafe_left_faster" />
+		<action type="act_warg_stand_for_movement_data" animation="dire_wolf_stand_for_movement_data" />
+		<action type="act_warg_forward_walk" animation="dire_wolf_walkfast" />
+		<action type="act_warg_forward_walk_strafe_right" animation="dire_wolf_walk_strafe" />
+		<action type="act_warg_forward_walk_strafe_left" animation="dire_wolf_walk_strafe" />
+		<action type="act_warg_forward_walk_stand" animation="dire_wolf_walkfast" />
+		<action type="act_warg_forward_trot" animation="dire_wolf_trot" />
+		<action type="act_warg_forward_trot_strafe_right" animation="dire_wolf_trot_strafe" />
+		<action type="act_warg_forward_trot_strafe_left" animation="dire_wolf_trot_strafe" />
+		<action type="act_warg_forward_trot_stand" animation="dire_wolf_trot_stand" />
+		<action type="act_warg_forward_canter" animation="dire_wolf_canter" />
+		<!--<action type="act_horse_forward_canter" animation="dire_wolf_canter" />-->
+		<action type="act_warg_forward_canter_strafe_right" animation="dire_wolf_canter_strafe" />
+		<action type="act_warg_forward_canter_strafe_left" animation="dire_wolf_canter_strafe" />
+		<action type="act_warg_forward_canter_stand" animation="dire_wolf_canter_stand" />
+		<action type="act_warg_forward_gallop_right_foot" animation="dire_wolf_forward_gallop_left_foot" />
+		<action type="act_warg_forward_gallop_right_foot_strafe_right" animation="dire_wolf_forward_gallop_left_foot_strafe" />
+		<action type="act_warg_forward_gallop_right_foot_strafe_left" animation="dire_wolf_forward_gallop_left_foot_strafe" />
+		<action type="act_warg_forward_gallop_right_foot_stand" animation="dire_wolf_forward_gallop_left_foot_stand" />
+		<action type="act_warg_forward_gallop_left_foot" animation="dire_wolf_forward_gallop_left_foot" />
+		<action type="act_warg_forward_gallop_left_foot_strafe_right" animation="dire_wolf_forward_gallop_left_foot_strafe" />
+		<action type="act_warg_forward_gallop_left_foot_strafe_left" animation="dire_wolf_forward_gallop_left_foot_strafe" />
+		<action type="act_warg_forward_gallop_left_foot_stand" animation="dire_wolf_forward_gallop_left_foot_stand" />
+
+		<!-- Warg - monster_usage_jumps -->
+		<action type="act_warg_jump_forward" animation="dire_wolf_jump_forward" />
+		<action type="act_warg_jump_forward_loop" animation="dire_wolf_jump_forward_loop" />
+		<action type="act_warg_jump_forward_end" animation="dire_wolf_jump_forward_end" />
+		<action type="act_warg_jump_forward_end_hard" animation="dire_wolf_jump_forward_end" />
+		<action type="act_warg_jump_high" animation="dire_wolf_jump_forward" />
+		<action type="act_warg_jump_high_loop" animation="dire_wolf_jump_forward_loop" />
+		<action type="act_warg_jump_high_end" animation="dire_wolf_jump_forward_end" />
+		<action type="act_warg_jump_high_end_hard" animation="dire_wolf_jump_forward_end" />
+
+		<!-- Warg - monster_usage_falls -->
+		<action type="act_warg_fall_right" animation="dire_wolf_death_right_side" />
+		<action type="act_warg_fall_left" animation="dire_wolf_death_left_side" />
+		<action type="act_warg_fall_right_continue" animation="dire_wolf_death_right_side_continue" />
+		<action type="act_warg_fall_left_continue" animation="dire_wolf_death_left_side_continue" />
+		<action type="act_warg_fall_roll" animation="dire_wolf_death_right_side" />
+		<action type="act_warg_fall_roll_continue" animation="dire_wolf_death_right_side_continue" />
+		<action type="act_warg_fall_backwards" animation="dire_wolf_death_right_side" />
+		<action type="act_warg_fall_backwards_continue" animation="dire_wolf_death_right_side_continue" />
+		<action type="act_warg_fall_slow_right" animation="dire_wolf_death_right_side" />
+		<action type="act_warg_fall_slow_right_continue" animation="dire_wolf_death_right_side_continue" />
+		<action type="act_warg_fall_slow_left" animation="dire_wolf_death_left_side" />
+		<action type="act_warg_fall_slow_left_continue" animation="dire_wolf_death_left_side_continue" />
+
+		<!-- Warg - monster_usage_strikes -->
+		<action type="act_warg_strike_back" animation="dire_wolf_rear_damaged" />
+		<action type="act_warg_strike_back_while_moving" animation="dire_wolf_gallop_turn_right_head" />
+		<action type="act_warg_strike_front" animation="dire_wolf_rear_damaged" />
+		<action type="act_warg_strike_front_while_moving" animation="dire_wolf_gallop_turn_right_head" />
+
+		<!-- Warg - Misc -->
+		<action type="act_horse_forward_canter" animation="dire_wolf_idle" />
+		<action type="act_hero_mount_idle_horse" animation="dire_wolf_idle" />
+		<action type="act_horse_conversation_start" animation="dire_wolf_idle" />
+		<action type="act_inventory_idle_start" animation="dire_wolf_idle" />
+		<action type="act_inventory_idle" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_1" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_2" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_3" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_4" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_5" animation="dire_wolf_idle" />
+		<action type="act_horse_story_background_6" animation="dire_wolf_idle" />
+		<action type="act_pose_troop_cavalry_lance" animation="dire_wolf_idle" />
+		<action type="act_aserai_mp_beduin_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_aserai_mp_mamluke_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_battania_mp_mounted_warrior_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_battania_mp_mounted_warrior_mount_idle_perks" animation="dire_wolf_idle" />
+		<action type="act_vlandia_mp_vanguard_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_vlandia_mp_vanguard_mount_idle_smallshieldperk" animation="dire_wolf_idle" />
+		<action type="act_vlandia_mp_knight_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_empire_mp_courser_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_empire_mp_courser_mount_smallshieldperk_idle" animation="dire_wolf_idle" />
+		<action type="act_empire_mp_cataphract_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_khuzait_mp_lancer_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_khuzait_mp_lancer_mount_idle_shieldperk" animation="dire_wolf_idle" />
+		<action type="act_khuzait_mp_nomad_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_khuzait_mp_nomad_mount_idle_maceperk" animation="dire_wolf_idle" />
+		<action type="act_khuzait_mp_mounted_archer_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_sturgia_mp_raider_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_sturgia_mp_raider_mount_shieldperk_idle" animation="dire_wolf_idle" />
+		<action type="act_sturgia_mp_druzhina_mount_idle" animation="dire_wolf_idle" />
+		<action type="act_sturgia_mp_druzhina_idle_largeshieldperk" animation="dire_wolf_idle" />
+	</action_set>
+	<action_set id="as_dire_wolf_town_and_village" skeleton="adod_wolf_armature_unused" base_set="as_dire_wolf">
+		<action type="act_warg_stand_1" animation="dire_wolf_idle" />
+	</action_set>
+	<action_set id="as_dire_wolf_map" skeleton="adod_wolf_armature_unused" base_set="as_dire_wolf">
+		<action type="act_map_mount_attack_1h" animation="dire_wolf_attack_stand" />
+		<action type="act_map_mount_attack_spear" animation="dire_wolf_attack_stand" />
+		<action type="act_map_mount_attack_swing" animation="dire_wolf_attack_stand" />
+		<action type="act_map_mount_attack_unarmed" animation="dire_wolf_attack_stand" />
+		<action type="act_conversation_normal_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_normal_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_normal2_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_normal2_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_closed_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_closed_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_closed2_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_closed2_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_confident_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_confident_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_confident2_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_confident2_loop" animation="dire_wolf_idle" />
+		<action type="act_conversation_hip_start" animation="dire_wolf_idle" />
+		<action type="act_conversation_hip_loop" animation="dire_wolf_idle" />
+	</action_set>
+	<!-- ============================== /DIRE WOLF ============================== -->
 	<!-- ============================== /WARG ============================== -->
 
 	<!-- TAOM-CIVILIAN-COVERAGE:START (generated by tools/generate_race_civilian_action_sets.py) -->

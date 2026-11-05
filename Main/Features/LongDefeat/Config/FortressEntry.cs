@@ -21,4 +21,5 @@ internal sealed record FortressEntry(
     IReadOnlyList<GarrisonRow> Garrison,
     WavePlan Waves,
     ShopPlan Shop,
-    KeepPoint? Keep);
+    KeepPoint? Keep,
+    MusterPoints? Muster);

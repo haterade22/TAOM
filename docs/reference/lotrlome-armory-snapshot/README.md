@@ -711,7 +711,7 @@ CNs `loc_mordor.xml` the 12 ids `aom_sk_md_num_{arc,inf}_bracer_{med,heavy,elite
 CNs `loc_LOTRAOM_weapons.xml` `aom_sm_md_num_bow_a_name`; RU `loc_gondor.xml`
 `aom_sk_gd_ano_cav_helmet_heavy_b_name`; TAOM_Map `loc_settlements.xml` `Settlements.Settlement.name.castle_village_G4_1`
 in CNs, CNt, JP, KO and RU, and in RU `Settlements.Settlement.name.castle_EW8` and `=Settlements.Settlement.text.town_EW5`.
-Do not use `rebuild_translation_files.py` for this: it rewrites every repo language file. **Gates:** `python tools/check_external_loc_coverage.py`
+Do not use `rebuild_translation_files.py` for this: with `--module TAOM` it rewrites every repo language file. **Gates:** `python tools/check_external_loc_coverage.py`
 catches a row that fell back to English; `LanguageTextIntegrityTests.NoCachedTranslation_MixesWritingSystems` keeps
 the cache free of wrong-script words, so a replay cannot bring the CNs damage back.
 
@@ -784,6 +784,8 @@ regular weapons were installed (#805, lotraom-assets `db981663`): his `[Harad] r
 in the one-handed sword description and 11 spear pieces in three polearm descriptions, plus the same 11 spear pieces
 added to `TwoHandedPolearm_Couchable`, which his commit left out. The previous copy was byte-identical to the live
 `weapon_descriptions.xslt.bak-keyforce-harad-20261015-140734`.
+
+2026-11-04: `action_sets.xml` and `project.mbproj` refreshed by a byte copy of the live files after the dire wolf writer (#1081, [ledger](../lotrlome-dire-wolf-changes.md)). Each previous copy was byte-identical to its live `.bak-direwolf-20261104-120720`.
 
 Earlier on 2026-10-15: `action_sets.xml` refreshed by a byte copy of the live file after the WildMesh3D sets (#794): the
 previous copy was byte-identical to the live `action_sets.xml.bak-wildmesh-20261014`, and the live file differed from

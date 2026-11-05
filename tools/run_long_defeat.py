@@ -2,6 +2,7 @@
 """Run The Long Defeat (#1079) in the real game with nobody at the keyboard, and judge its [Check] lines.
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
+                                      [--speed 1|2|4|10]
                                       [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
@@ -39,6 +40,7 @@ RUNS_ROOT = r"E:\Temp\long-defeat-runs"
 DEFAULT_WALL_LIMIT = 3900
 DEFAULT_LIVE_LIMIT = 3600
 LOSE_GARRISON_SCALE = 0.2
+SPEED_LEVELS = (1, 2, 4, 10)
 
 CHECK_PREFIX = "taom.long-defeat."
 
@@ -69,6 +71,8 @@ FORDS_HANDLE_DIALOGS = runner.handle_dialogs
 # [BuildStamp] must carry (a stale deploy otherwise passes on the old build's lines).
 target_waves = None
 tree_head = None
+# The --speed the run was armed with, or None: the report's maxSpeed must equal it, or the arm key never took effect.
+expected_speed = None
 
 
 def check_pattern(name, result):
@@ -92,6 +96,8 @@ def judge(done, report_json, log_text=None):
         return 1, f"reason={reason or '?'} (wanted {' or '.join(accepted)}){note}"
     if report_json is None:
         return 1, f"reason={reason} but the JSON report could not be read"
+    if expected_speed is not None and report_json.get("maxSpeed") != expected_speed:
+        return 1, f"armed with --speed {expected_speed} but the report's maxSpeed={report_json.get('maxSpeed')!r}: the speed never took effect"
     if not lose:
         if report_json.get("final") is not True:
             return 1, "the JSON report is not final"
@@ -123,7 +129,8 @@ def judge(done, report_json, log_text=None):
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
     felled = report_json.get("wavesFelled", 0)
-    return 0, (f"build {build}, reason={reason}, {report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
+    speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
+    return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
                f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers")
 
 
@@ -192,6 +199,8 @@ def build_parser():
     parser.add_argument("--live-limit", type=runner.positive_seconds, default=DEFAULT_LIVE_LIMIT,
                         help=f"mission seconds before the run is ended (default {DEFAULT_LIVE_LIMIT})")
     parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
+    parser.add_argument("--speed", type=int, choices=SPEED_LEVELS,
+                        help="the mission speed from the first frame (default 1); live seconds and the report's wave seconds stay mission seconds, so 10 ends a run in about a tenth of the wall time")
     return parser
 
 
@@ -199,14 +208,31 @@ def arm_pairs(known, out, wall_limit):
     scale = known.garrison_scale if known.garrison_scale is not None else (LOSE_GARRISON_SCALE if known.lose else None)
     return [("fortress", known.fortress), ("waves", known.waves), ("garrison_scale", scale), ("expect", "lost" if known.lose else None),
             ("live_limit_seconds", known.live_limit), ("wall_limit_seconds", wall_limit), ("screenshots", known.screenshots),
-            ("out", out), ("quit", 1)]
+            ("speed", known.speed), ("out", out), ("quit", 1)]
+
+
+def show_results(done_text, log_copy, report_json, say):
+    """The Fords printer labels verdict rows this feature does not write: print what the judge reads instead."""
+    print(f"---- {DONE_FILE} ----\n" + done_text.strip())
+    if report_json is not None:
+        print("---- report (final=%s, reason=%s, wavesCleared=%s) ----" % (report_json.get("final"), report_json.get("reason"), report_json.get("wavesCleared")))
+    if log_copy is not None:
+        text = log_copy.read_text(encoding="utf-8", errors="replace")
+        print("---- [Check] lines of the log ----")
+        for line in text.splitlines():
+            if "[Check] id=" + CHECK_PREFIX in line:
+                print(line)
+        stamp = [line for line in text.splitlines() if "[BuildStamp]" in line]
+        print(stamp[0] if stamp else "no [BuildStamp] line")
+        say("clean module unload line: " + ("present" if "[Shutdown] clean module unload" in text else "ABSENT"))
 
 
 def main(argv=None):
-    global target_waves, tree_head
+    global target_waves, tree_head, expected_speed
     parser = build_parser()
     known, rest = parser.parse_known_args(argv)
     target_waves = known.waves
+    expected_speed = known.speed
     tree_head = tree_head_sha()
     if tree_head is None:
         print("cannot read this tree's HEAD with git, so a run could not be matched to its build")
@@ -224,6 +250,7 @@ def main(argv=None):
     runner.arm_text_for = arm_text_for
     runner.judge = judge
     runner.handle_dialogs = handle_dialogs
+    runner.show_results = show_results
     return runner.main(rest)
 
 

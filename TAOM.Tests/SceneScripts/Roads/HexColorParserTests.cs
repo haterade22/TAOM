@@ -127,4 +127,27 @@ public class HexColorParserTests
 
         Assert.AreEqual(0xFF0000FFu, result, "Packed ARGB: (A=FF<<24)|(R=00<<16)|(G=00<<8)|B=FF");
     }
+
+    [TestMethod]
+    public void TryParseRgb_SixDigitsAnyCase_ReturnsOpaqueRgb()
+    {
+        bool ok = HexColorParser.TryParseRgb("#e03a2e", out uint result);
+
+        Assert.IsTrue(ok);
+        Assert.AreEqual(0xFFE03A2Eu, result);
+    }
+
+    [DataTestMethod]
+    [DataRow("#FFB0231B", DisplayName = "eight digits")]
+    [DataRow("#3F76B ", DisplayName = "trailing space")]
+    [DataRow("#3F76B", DisplayName = "five digits")]
+    [DataRow("#+F76B1", DisplayName = "sign inside the digits")]
+    [DataRow("E03A2E", DisplayName = "no hash")]
+    [DataRow("", DisplayName = "empty")]
+    [DataRow(null, DisplayName = "null")]
+    public void TryParseRgb_NotExactlyHashAndSixHexDigits_IsRefused(string text)
+    {
+        Assert.IsFalse(HexColorParser.TryParseRgb(text, out uint result));
+        Assert.AreEqual(0u, result);
+    }
 }

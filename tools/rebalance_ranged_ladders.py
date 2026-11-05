@@ -3,7 +3,8 @@
 and rewrite the rosters onto it (#582, per-tier and ranked since #617).
 
 READ-ONLY by default. Writes tools/reports/ranged-ladders/{REPORT.md,REPORT.html,ranged-ladders.json}
-and the tracked copy docs/reference/ranged-troops.html (the reports dir is gitignored).
+(the reports dir is gitignored). The tracked copy docs/reference/ranged-troops.html is written only
+with `--docs-html <path>` or on `--apply`, since the rosters change then.
 `--apply` rewrites the launcher slots AND the Bow or Crossbow skill of the ladder troops in
 Main/_Module/ModuleData/troops/troops_*.xml.
 
@@ -623,8 +624,9 @@ def main(argv=None):
                     help="TAOM ModuleData root holding troops/")
     ap.add_argument("--spec", default=str(rl.DEFAULT_SPEC), help="the ladder spec (default %(default)s)")
     ap.add_argument("--report-dir", default=str(REPORT_DIR), help="where REPORT.md, REPORT.html and the JSON go")
-    ap.add_argument("--docs-html", default=str(DOCS_HTML),
-                    help="the tracked copy of REPORT.html (default %(default)s); '-' skips it")
+    ap.add_argument("--docs-html", default=None,
+                    help=f"write the tracked copy of REPORT.html here; default: {DOCS_HTML} on --apply, "
+                         "no copy on a dry run; '-' skips it")
     ap.add_argument("--apply", action="store_true", help="rewrite the troop rosters onto the grid")
     ap.add_argument("--stdout", action="store_true", help="print the summary after writing")
     args = ap.parse_args(argv)
@@ -701,9 +703,10 @@ def main(argv=None):
     html = render_html(ctx)
     with open(os.path.join(args.report_dir, REPORT_HTML), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(html)
-    if args.docs_html != "-":
-        os.makedirs(os.path.dirname(args.docs_html), exist_ok=True)
-        with open(args.docs_html, "w", encoding="utf-8", newline="\n") as fh:
+    docs_html = args.docs_html or (str(DOCS_HTML) if args.apply else "-")
+    if docs_html != "-":
+        os.makedirs(os.path.dirname(docs_html) or ".", exist_ok=True)  # a bare file name has no folder to make
+        with open(docs_html, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(html)
     print(f"Launchers: {len(launchers)}. Ranged troops: "
           f"{sum(1 for t in troops.values() if rl.troop_launchers(t, launchers))}. "

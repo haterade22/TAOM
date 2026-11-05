@@ -470,10 +470,20 @@ def master_name(master_text, sid):
     return m.group(1) if m else None
 
 
-def check(forts, master_text, scene_text, loc_texts, villages=(), released=frozenset()):
+def fort_scenes(f):
+    """Every scene name fort_block writes for this row, as the Location rows name them."""
+    st = STYLE.get(f.culture)
+    if st is None:
+        return [f.scene]
+    town_only = [] if f.kind == "castle" else [st["arena"], st["tavern"], st["house"]]
+    return [f.scene, *st["keep"], st["dungeon"], *town_only]
+
+
+def check(forts, master_text, scene_text, loc_texts, villages=(), released=frozenset(), scene_folders=None):
     findings = amv.save_order_findings(master_text, batch_ids(forts, villages, released))
     findings += amv.name_collisions([(f.id, f.name) for f in forts], master_text)
     for f in forts:
+        findings += amv.scene_findings(f.id, [*fort_scenes(f), *amv.master_scene_names(master_text, f.id)], scene_folders)
         pos = amv.settlement_position(master_text, f.id)
         if not pos:
             findings.append(f"{f.id}: no <Settlement> row in settlements.xml")
@@ -523,7 +533,7 @@ def main():
     loc_texts = {lang: text for lang, (_, text) in locs.items()}
 
     if args.check:
-        findings = check(FORTS, master, scene, loc_texts, amv.VILLAGES, RELEASED)
+        findings = check(FORTS, master, scene, loc_texts, amv.VILLAGES, RELEASED, scene_folders=amv.live_scene_folders())
         for f in findings:
             print("FAIL " + f)
         if findings:
@@ -558,6 +568,8 @@ def main():
         blocks.append((f, fort_block(f, pos, gate, nl)))
         print(f"  {f.id:12} {f.name:18} {f.kind:6} owner {f.owner:17} at {pos[0]}, {pos[1]}  gate {gate[0]:.3f}, {gate[1]:.3f}  {f.scene}")
     errors += amv.name_collisions([(f.id, f.name) for f in todo], master)
+    folders = amv.live_scene_folders()
+    errors += [e for f in todo for e in amv.scene_findings(f.id, fort_scenes(f), folders)]
     if errors:
         print("REFUSING:\n  " + "\n  ".join(errors), file=sys.stderr)
         return 1

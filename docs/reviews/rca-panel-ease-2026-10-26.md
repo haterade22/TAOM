@@ -18,7 +18,7 @@ changed nothing. They also found 3 LOW findings. All were fixed in the same sess
 | 4 | LOW | The issue and the test summary called the character selection screen TAOM-only and gave an ease census that counted TAOM's deployed prefabs (lens 7). | Claim from a quick count | The census ran over every module, TAOM included. | Corrected on the issue; the summary sentence removed. |
 
 **Not applied:** lens 5 found three more definitions no widget names (`GameMenu.xml` `InfoPanel`, `PartyScreen.xml`
-`FormationListPanel` and `FormationSeperator`, whose widgets are commented out). FOLLOW-UP (no issue: older than this
+`FormationListPanel` and `FormationSeperator`, whose widgets are commented out). Follow-up closed 2026-11-04 (498d07e08) (no issue: older than this
 change and each needs a trace of PrefabExtensions that could name it; Mike's word to file): delete them, and consider a
 gate that fails a `VisualDefinition` no widget in its prefab names.
 

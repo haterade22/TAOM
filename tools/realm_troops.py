@@ -302,6 +302,13 @@ def troops_xml(realm, troops, nl):
     return nl.join(head) + nl + body + nl + "</NPCCharacters>" + nl
 
 
+@functools.lru_cache(maxsize=1)
+def named_weapon_ids():
+    """The hero weapon ids in armour_acquisition_config.xml's <NamedWeapons>: never a troop's gear."""
+    config = ET.parse(MD / "armour_acquisition" / "armour_acquisition_config.xml").getroot()
+    return frozenset(i.get("id") for i in config.findall("NamedWeapons/Item"))
+
+
 def self_check(party_templates, troops):
     """Structural invariants the validator would otherwise report after the fact."""
     ids = [tr.id for tr in troops]
@@ -325,6 +332,8 @@ def self_check(party_templates, troops):
             errors.append(f"{tr.id}: no Body armour (MISSING_BODY_ARMOUR)")
         if tr.realm and tr.realm.race == "dwarf" and (tr.horse or tr.group in ("Cavalry", "HorseArcher")):
             errors.append(f"{tr.id}: a mounted dwarf (MOUNTED_DWARF)")
+        for w in sorted(set(ra + rb) & named_weapon_ids()):
+            errors.append(f"{tr.id}: carries named weapon {w} (NAMED_WEAPON_ON_TROOP)")
         shields = any("shield" in w for w in ra + rb)
         twohanders = any(re.search(r"greatsword|poleaxe|great_axe|_2h_", w) for w in ra + rb)
         if shields and twohanders:

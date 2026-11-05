@@ -30,7 +30,7 @@ Git hands a hook the final index (a temporary one for a path commit) with the wo
 | `commit-msg` | every commit | `tools/check_commit_msg.py`: the versioned subject, its length, no AI attribution, one closing keyword per issue | the message, and the `<Version>` of the tree being committed |
 | `pre-commit`, `pre-merge-commit` | every commit | a file under `.claude/` that gitignore keeps out | the work tree |
 | | a surface `lint_docs` reads is staged | `tools/lint_docs.py --drift-only --staged`, about 1 s | the tree the commit records |
-| | ModuleData XML or XSLT is staged | `tools/validate_moduledata.py` with the listed codes, and `tools/generate_career_kits.py --verify`, 22 s together | **the working tree** |
+| | ModuleData XML or XSLT is staged | `tools/validate_moduledata.py` with the listed codes, and `tools/generate_career_kits.py --verify`, about 12 s together (2026-11-04) | **the working tree** |
 
 The list of validator codes in the hook equals the list in the Claude gate, and `tools/tests/test_githooks_pre_commit.py` holds them equal.
 

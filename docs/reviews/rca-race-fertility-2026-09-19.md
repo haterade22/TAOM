@@ -9,7 +9,7 @@ extended to the three orc cultures added after it was written (`goblin`, `mistym
 two waves (Standards, Engine compatibility, Data flow, Efficiency; then Completeness, Design) as
 `deep-reviewer`. No CRITICAL, no HIGH. Every confirmed finding was LOW: stale or overstated docs, a
 miscounted CHANGELOG, test robustness, and one dead tracking pointer. All were fixed in the same session
-except the ADR-007 extraction, which stays FOLLOW-UP.
+except the ADR-007 extraction, which stays Follow-up closed 2026-11-04 (79d90c08f, 174a7e898).
 
 ## The bug itself
 
@@ -24,7 +24,7 @@ except the ADR-007 extraction, which stays FOLLOW-UP.
 | # | Lens | Sev | Finding | Category | Why missed | Fix and prevention |
 |---|---|---|---|---|---|---|
 | 1 | Standards | LOW | `TaomPregnancyModel.cs` and the test header said the ADR-007 extraction "is tracked separately as #131"; #131 closed 2026-05-14 deferring it, and no open issue tracks it | Dead tracking pointer | The comment was true when written; closing an issue does not revisit the comments that cite it | Both comments now say #131 closed without the extraction and nothing tracks it. FOLLOW-UP: a successor issue, recommended to Mike (not filed here: `/issue` is user-invoked) |
-| 2 | Standards, Efficiency, Design | LOW | The new test carried its own repo-root walker and a third regex parser of `cultures.json`, which silently drops an entry whose keys are reordered | Duplicated helper, reuse-before-write | Copied from `CultureRaceConsistencyTests`, whose "no JSON library" justification is stale | Test now uses `RepoPaths.RepoPath` and the production `CultureCreationDataProvider.LoadCultures()`. The same swap in `CultureRaceConsistencyTests` is FOLLOW-UP (pre-existing code) |
+| 2 | Standards, Efficiency, Design | LOW | The new test carried its own repo-root walker and a third regex parser of `cultures.json`, which silently drops an entry whose keys are reordered | Duplicated helper, reuse-before-write | Copied from `CultureRaceConsistencyTests`, whose "no JSON library" justification is stale | Test now uses `RepoPaths.RepoPath` and the production `CultureCreationDataProvider.LoadCultures()`. The same swap in `CultureRaceConsistencyTests` is Follow-up closed 2026-11-04 (834e0703c) (pre-existing code) |
 | 3 | Standards, Engine, Completeness | LOW | CHANGELOG said "Seven causes" over five bullets and "All seven failed before the fix" over eleven tests | Unverified count in an artifact | The entry was written from the RED run's failure count, not by recounting the list it summarised | Rewritten: seven numbered causes; "7 of the first 11 failed ... 4 boundary pins"; the two review-added tests named as post-fix |
 | 4 | Standards, Completeness | LOW | "under its cap" in the comment, doc and CHANGELOG where the gate is at-or-under | Prose looser than the code | The at-cap boundary test existed; the prose was not checked against it | "at or under" everywhere; the gate itself now reads `aliveLords <= clanCap` (Design proposal A) |
 | 5 | Data flow | LOW | Docs promised "a new orc kingdom fails the test until it is excluded"; that holds only if the culture is in `cultures.json` | Overstated guarantee | The derivation's input was not questioned against the runtime key (the clan's `Culture.StringId`) | Docs state the condition. A derivation from `lords.xml` was considered and rejected as more parsing than the risk warrants today (all 22 cultures agree, per the Data flow trace) |
@@ -57,7 +57,7 @@ duplicate id). Its LOW findings, all fixed:
 
 It also reported that the #628 work had already landed: Mike's joint commit `83bdad85` (2026-09-19 10:46)
 holds the code, tests, data, docs and CHANGELOG entry, pushed. This RCA, the two lesson entries and the
-convergence fixes above follow in the next joint commit. The ADR-007 extraction stays FOLLOW-UP (item 1).
+convergence fixes above follow in the next joint commit. The ADR-007 extraction stays Follow-up closed 2026-11-04 (79d90c08f, 174a7e898) (item 1).
 
 ## Root-cause pattern
 

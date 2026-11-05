@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Rhudaur troop tree and its nine soldier party templates (#978).
+"""Generate the Rhudaur troop tree and its seven soldier party templates (#978).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_rhudaur.xml             (whole file, generated)
@@ -206,12 +206,6 @@ def party_templates():
             (p + "veteran_axeman", 0, 15), (p + "ranger", 0, 15), (p + "hill_rider", 0, 13),
             (p + "guard", 0, 10), (p + "fell_warden", 0, 8), (p + "veteran_ranger", 0, 8),
             (p + "veteran_guard", 0, 8), (p + "guard_captain", 0, 5)]),
-        ("kingdom_hero_party_mercenary_rhudaur_template", [
-            (p + "hill_spearman", 8, 16), (p + "angle_ranger", 4, 8), (p + "axeman", 4, 8),
-            (p + "ranger", 2, 4), (p + "hill_rider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_rhudaur_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "angle_ranger", 2, 4)]),
         ("militia_rhudaur_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_rhudaur_template_level_1", [

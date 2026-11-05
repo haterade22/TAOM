@@ -162,7 +162,7 @@ Required attributes:
 | `settlement_patrol_template_level_3` | `PartyTemplate.patrol_party_harad_template_level_3` | Strong, Guard House level 3 |
 
 Every value above was a vanilla Calradian id or a non-existent one until 2026-08-12. Harad is used as
-the worked example because it is a complete TAOM culture with all twelve templates; substitute
+the worked example because it is a complete TAOM culture with all ten templates; substitute
 whichever culture yours is adjacent to. Leaving the three patrol rows as "existing template" is how
 they got left unbound in the first place, so they now name real ids. Full contract, including the
 two crash surfaces and the caravan two-edit rule:
@@ -508,7 +508,7 @@ town-owning cultures shipped fielding Calradians (fixed 2026-08-12).
 |----------|-------------|-----|
 | Basic troop | The nearest TAOM culture | `basic_troop="NPCCharacter.harad_reg_levy"` in culture |
 | Militia troops | The nearest TAOM culture | `melee_militia_troop="NPCCharacter.harad_militia_spearman"` |
-| Party templates | Another TAOM culture's twelve | `default_party_template="PartyTemplate.kingdom_hero_party_harad_template"`, and bind ALL of them: see the [party-template binding contract](culture-playability-wiring.md) |
+| Party templates | Another TAOM culture's ten | `default_party_template="PartyTemplate.kingdom_hero_party_harad_template"`, and bind ALL of them: see the [party-template binding contract](culture-playability-wiring.md) |
 | Crowd NPCs | The nearest TAOM culture | `guard="NPCCharacter.guard_harad"` etc. in culture attributes |
 | Equipment sets | Any existing culture's sets | `<EquipmentSet id="harad_bat_template_medium_a" />` in lord `<Equipments>` |
 

@@ -40,6 +40,18 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_CarriesTheHighestSpeedOfTheRun_AndOneWhenNoneIsGiven()
+    {
+        var result = new RunResult(RunEndReason.DefendersDead, 2, 1, 80);
+
+        var fast = JObject.Parse(LongDefeatRunReport.Build("helms", RunOptions.Default, RunProvenance.Unknown, result, new RunStats(), new Purse(600),
+            Started, Started.AddMinutes(40), 10));
+
+        Assert.AreEqual(10, (int)fast["maxSpeed"]!);
+        Assert.AreEqual(1, (int)Build(result, new RunStats(), new Purse(600))["maxSpeed"]!);
+    }
+
+    [TestMethod]
     public void Build_APlayersRun_ReadsAsCleanWithNoTarget()
     {
         var report = Build(new RunResult(RunEndReason.DefendersDead, 2, 1, 80), new RunStats(), new Purse(600));

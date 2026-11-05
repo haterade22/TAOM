@@ -104,6 +104,7 @@ predicate.
   ROLE do I hold in this session*, and the two are independent — a client-hosted session's host holds
   the authority role while being an ordinary game client, and must keep earning and deciding
   normally. Do not fold it into the role predicates; ask the process question separately.
+- **Gate:** `CoopPresenceReadGateTests` fails a presence read (`.IsCoopActive`, `CoopPresence.IsActive`) in any file not on its allowlist.
 - **Source:** `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (Codex pass: 4 HIGH, of which
   the presence/session confusion accounted for two plus the LOW); fourth predicate added from the
   2026-08-03 multiplayer field report (commit c3ee2e22)

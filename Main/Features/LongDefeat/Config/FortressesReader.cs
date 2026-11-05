@@ -9,6 +9,7 @@ namespace TAOM.Features.LongDefeat;
 /// fortresses.json: a fortress is skipped (one warning naming it) when it lacks an id, scene, either culture or the player troop,
 /// repeats an earlier id, names a roster or shop that did not load, or has no valid garrison row. A bad garrison row is skipped.
 /// A bad <c>keep</c> block is dropped with one warning and the fortress stays, since the director then uses the scene's own frame.
+/// A bad <c>muster</c> block is dropped the same way, whole, and defenders then spawn at the scene's own frames.
 /// </summary>
 internal static class FortressesReader
 {
@@ -101,7 +102,7 @@ internal static class FortressesReader
 
         seen.Add(id);
         return new FortressEntry(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, defender, attacker, player, garrison, roster, shop,
-            ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s));
+            ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s), ReadMuster(o["muster"], id, s));
     }
 
     private static bool IsSceneName(string scene)
@@ -181,5 +182,58 @@ internal static class FortressesReader
         }
 
         return new KeepPoint(axes[0], axes[1], axes[2], radius);
+    }
+
+    // The block LongDefeatRecorder.Export writes: {"foot": {x,y,z,fx,fy}, "archers": {...}}, each point optional. One bad value reverts the whole block with one warning.
+    private static MusterPoints? ReadMuster(JToken? token, string fortress, LongDefeatConfigScope s)
+    {
+        if (token == null || token.Type == JTokenType.Null)
+            return null;
+
+        var label = $"fortress '{fortress}' muster";
+        if (!(token is JObject o))
+        {
+            s.Warn($"{label} is not an object; defenders use the scene's own frames");
+            return null;
+        }
+
+        if (!TryReadMusterFrame(o["foot"], label + ".foot", s, out var foot) || !TryReadMusterFrame(o["archers"], label + ".archers", s, out var archers))
+            return null;
+
+        return foot == null && archers == null ? null : new MusterPoints(foot, archers);
+    }
+
+    // True with a null frame when the point is absent; false after one warning when it is present and bad.
+    private static bool TryReadMusterFrame(JToken? token, string label, LongDefeatConfigScope s, out MusterFrame? frame)
+    {
+        frame = null;
+        if (token == null || token.Type == JTokenType.Null)
+            return true;
+
+        if (!(token is JObject o))
+        {
+            s.Warn($"{label} is not an object; defenders use the scene's own frames");
+            return false;
+        }
+
+        var values = new float[5];
+        var names = new[] { "x", "y", "z", "fx", "fy" };
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (!LongDefeatConfigScope.TryFloat(o[names[i]], -MaxCoordinate, MaxCoordinate, out values[i], out var why))
+            {
+                s.Warn($"{label}.{names[i]} {why}; defenders use the scene's own frames");
+                return false;
+            }
+        }
+
+        if (!MusterFrame.TryCreate(values[0], values[1], values[2], values[3], values[4], out var made))
+        {
+            s.Warn($"{label}.fx and fy do not give a ground direction (a length between 0.5 and 1.5 is expected); defenders use the scene's own frames");
+            return false;
+        }
+
+        frame = made;
+        return true;
     }
 }

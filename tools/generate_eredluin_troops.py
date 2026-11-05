@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Ered Luin troop tree and its nine soldier party templates.
+"""Generate the Ered Luin troop tree and its seven soldier party templates.
 
 Writes:
   Main/_Module/ModuleData/troops/troops_eredluin.xml            (whole file, generated)
@@ -270,12 +270,6 @@ def party_templates():
             (p + "hall_warden", 0, 10), (p + "mattock_warrior", 0, 8), (p + "broadbeam_shieldguard", 0, 8),
             (p + "firebeard_arbalester", 0, 8), (p + "veteran_hall_warden", 0, 5), (p + "gatewarden", 0, 4),
             (p + "firebeard_marksman", 0, 3)]),
-        ("kingdom_hero_party_mercenary_eredluin_template", [
-            (p + "axeman", 8, 16), (p + "bowman", 4, 8), (p + "hearthguard", 4, 8),
-            (p + "veteran_bowman", 2, 4), (p + "hewer", 2, 4)]),
-        ("kingdom_hero_party_outlaw_eredluin_template", [
-            (p + "delver", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "bowman", 2, 4)]),
         ("militia_eredluin_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_eredluin_template_level_1", [

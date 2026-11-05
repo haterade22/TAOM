@@ -279,7 +279,7 @@ The diamond grid of #388, not the earlier expandable pip panels. The prefab decl
 CareerScreenVM
 ├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription
 ├── @HasCareer, @CareerPortraitSprite (CareerSystem\Portraits\<portrait_sprite>)
-├── @AbilityName, @AbilitySpriteName (CareerSystem\Abilities\<ability template id>), @HasAbilitySprite
+├── @AbilityName, @AbilitySpriteName (CareerSystem\Abilities\<ability_sprite, else ability template id>), @HasAbilitySprite
 ├── @FreeCareerPointsText ("Free Points: 5"), @NextPointText, @HasNextPoint
 ├── @ShowRetrain, @CanRetrain, @RetrainText, ExecuteRetrain()
 ├── @Tier1/2/3Label, @Tier2/3Locked, @Tier2/3RequirementText
@@ -354,7 +354,7 @@ The hover tooltip shows:
 | Sprite ID | Size | Count | Used By |
 |-----------|------|-------|---------|
 | `career_{id}_portrait` | 800x400 | 21 PNGs (`ls` of `SpriteParts/ui_taom_career_system/CareerSystem/Portraits`), used by 46 of the 91 careers (counted 2026-11-04) because new-faction careers reuse portraits; 45 careers have none | CareerScreen header bar |
-| `{career_id}_ability` | 256x256 | 49 baked (named effect-icon set from 2026-07-07; see career-system.md); the 21 new-faction careers still need one | CareerScreen header bar ability icon |
+| `{career_id}_ability` | 256x256 | 49 baked (named effect-icon set from 2026-07-07; see career-system.md); the 42 cloned careers name their root source's icon through `ability_sprite` until their own PNG is baked and the attribute deleted | CareerScreen header bar ability icon |
 | `taom_{resource}_icon` | 45x45 | 8 remaining | Map bar resource icons |
 
 The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom/SpecialResources/`. The remaining 8 resources need icons generated (ComfyUI at `E:\ComfyUI_windows_portable_nvidia`).

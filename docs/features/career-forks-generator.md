@@ -119,8 +119,9 @@ The option `name` appears in the review table only. A description, name or kingd
 career's `EligibleCultures`. The row's `resource_id` is not read: it is documentation only, and
 `SpecialResourceService` charges every cost-row troop in the party in the player's own resolved
 resource. An upkeep row whose troop is found in neither folder (or has no `culture`) is an error.
-Kingdoms with no resource in the data (Lindon, Goblin-town, the Misty Mountain Orcs, Blue Craig)
-resolve to none, so they cannot use a `SpecialResource*` type.
+A kingdom with no resource in the data (Lindon) resolves to none, so it cannot use a
+`SpecialResource*` type. Goblin-town, the Misty Mountain Orcs and Blue Craig resolve to War Spoils
+since #1081.
 
 A set that is missing, empty or names a type the enum lacks is an error (exit 2), never an empty
 pass. `_rules.json` holds only the numbers and the rules that are not in C#; a type it names that

@@ -12,7 +12,7 @@ internal static class LongDefeatRunReport
     private const int Schema = 1;
 
     internal static string Build(string fortressId, RunOptions options, RunProvenance provenance, RunResult result, RunStats stats, Purse purse,
-        DateTime startedUtc, DateTime endedUtc)
+        DateTime startedUtc, DateTime endedUtc, int maxSpeed = 1)
     {
         var report = new JObject
         {
@@ -24,6 +24,7 @@ internal static class LongDefeatRunReport
             ["mods"] = new JArray(provenance.Mods),
             ["autoplay"] = options.Autoplay,
             ["garrisonScale"] = options.GarrisonScale,
+            ["maxSpeed"] = maxSpeed,
             ["targetWaves"] = options.StopAfterWaves is int target ? new JValue(target) : JValue.CreateNull(),
             ["startedUtc"] = startedUtc.ToString("o", CultureInfo.InvariantCulture),
             ["endedUtc"] = endedUtc.ToString("o", CultureInfo.InvariantCulture),

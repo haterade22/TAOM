@@ -407,23 +407,23 @@ the one filename-bound case from the section above: name your culture file anyth
 **Takes effect:** full game restart
 **Code:** No code changes needed
 
-## Stage 12. The twelve party templates
+## Stage 12. The ten party templates
 
 Nothing spawns without them. Villagers, caravans, militia, patrols, rebels, bandits and every lord
 party come from `MBPartyTemplate` entries, and the culture binds them by attribute. TAOM's
-`taom_partyTemplates.xml` holds 383 templates, 21 of them named for erebor.
-<!-- measured: grep -c "<MBPartyTemplate " Main/_Module/ModuleData/taom_partyTemplates.xml; grep -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | wc -l 2026-09-05 -->
+`taom_partyTemplates.xml` holds 464 templates, 20 of them named for erebor.
+<!-- measured: grep -c "<MBPartyTemplate " Main/_Module/ModuleData/taom_partyTemplates.xml; grep -o '<MBPartyTemplate id="[^"]*erebor[^"]*"' Main/_Module/ModuleData/taom_partyTemplates.xml | wc -l 2026-11-04 -->
 
 An unbound template is silent: the culture just fields Calradians. A null or empty one is a crash in
-vanilla `SpawnPatrolParty` or `SpawnCaravan`. Which twelve a culture needs is row 13 of the
+vanilla `SpawnPatrolParty` or `SpawnCaravan`. Which ten a culture needs is row 13 of the
 playability checklist in [culture-playability-wiring](../features/culture-playability-wiring.md); the
 binding contract and the min/max semantics are in [party-templates](party-templates.md) and
 [party-template-sizing](../reference/party-template-sizing.md).
 
 **Check:** `dotnet test TAOM.Tests --filter CulturePartyTemplate -p:DisableModuleCopy=true -p:ModuleId=`
-proves TAOM's twelve bindings, not yours: the fixture walks up the tree for `Main/_Module/ModuleData`
+proves TAOM's ten bindings, not yours: the fixture walks up the tree for `Main/_Module/ModuleData`
 and there is no way to point it elsewhere (`TAOM.Tests/Core/CultureDataFixture.cs:56-64`). For your
-module, read the twelve binding attributes off your `<Culture>` block against the list in
+module, read the ten binding attributes off your `<Culture>` block against the list in
 [party-templates](party-templates.md) and confirm each id exists in your template file.
 **Takes effect:** full game restart
 **Code:** No code changes needed
@@ -550,7 +550,7 @@ Erebor is one culture built the whole way up; every id below existed before the 
 | 9 | troop tree | `erebor_reg_miner` up to `erebor_noble` | `Main/_Module/ModuleData/troops/troops_erebor.xml` |
 | 10 | rosters | `taom_equipment_sets_erebor` | `Main/_Module/ModuleData/equipmentsets/` |
 | 11 | culture | `erebor` | `Main/_Module/ModuleData/taom_spcultures.xml` |
-| 12 | party templates | 21 ids containing `erebor` | `Main/_Module/ModuleData/taom_partyTemplates.xml` |
+| 12 | party templates | 20 ids containing `erebor` | `Main/_Module/ModuleData/taom_partyTemplates.xml` |
 | 14 | clan and lord pair | `clan_erebor_1`, `lord_E1_1` | `characters/clans.xml`, `characters/lords.xml`, `characters/heroes.xml` |
 | 15 | kingdom | `erebor` | `Main/_Module/ModuleData/taom_spkingdoms.xml` |
 | 16 | settlements | `town_E1` and the other E-prefixed ids | `TAOM_Map/ModuleData/settlements.xml` |

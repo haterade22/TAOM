@@ -74,7 +74,7 @@ public class LongDefeatDirectorTests
     }
 
     private static Rig NewRig(RunOptions? options = null, RunRules? rules = null, int gold = 600, KeepPoint? keep = null,
-        LongDefeatRunRecords? records = null, RunProvenance? provenance = null)
+        LongDefeatRunRecords? records = null, RunProvenance? provenance = null, MusterPoints? muster = null)
     {
         var rig = new Rig();
         var waves = new WavePlan(
@@ -99,6 +99,7 @@ public class LongDefeatDirectorTests
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
             Keep = keep,
+            Muster = muster,
             Provenance = provenance ?? RunProvenance.Unknown,
         };
         rig.Director = new LongDefeatDirector(plan, rig.Field, rig.Session, rig.Log, rig.Outcomes, "m1", records);
@@ -268,6 +269,89 @@ public class LongDefeatDirectorTests
         Assert.AreEqual(1, rig.Field.Count("Place:def:Ranged"));
         Assert.AreEqual(1, rig.Field.Count("Begin:def:Infantry:10"), "the muster's second batch: " + string.Join(",", rig.Calls));
         Assert.AreEqual(1, rig.Field.Count("Begin:def:Infantry:12"), "the bought pack");
+    }
+
+    private static readonly MusterPoints BothPoints = new(new MusterFrame(11f, 0f, 0f, 0f, 1f), new MusterFrame(22f, 0f, 0f, 0f, 1f));
+
+    private static int DefenderBatches(Rig rig, string slot) => rig.Field.Count($"Place:def:{slot}") + rig.Field.Count($"Begin:def:{slot}");
+
+    [TestMethod]
+    public void MusterPoint_EveryDefenderBatchOfTheClassGoesThere_RightAfterItOpens()
+    {
+        var rig = NewRig(rules: LongPrep(), muster: BothPoints);
+        rig.Director.Start();
+        Assert.AreEqual(BuyResult.Ok, rig.Session.TryBuy("militia"));
+        Assert.AreEqual(BuyResult.Ok, rig.Session.TryBuy("yeomen"));
+        rig.Tick(5f);
+
+        Assert.IsTrue(DefenderBatches(rig, "Infantry") >= 3, "garrison, a second muster batch and the pack: " + string.Join(",", rig.Calls));
+        Assert.AreEqual(DefenderBatches(rig, "Infantry"), rig.Field.Count("Muster:Infantry:11"));
+        Assert.AreEqual(DefenderBatches(rig, "Ranged"), rig.Field.Count("Muster:Ranged:22"));
+        Assert.AreEqual(0, rig.Field.Count("Muster:Infantry:22") + rig.Field.Count("Muster:Ranged:11"), "each class has its own place");
+        for (var i = 0; i < rig.Calls.Count; i++)
+        {
+            if (rig.Calls[i].StartsWith("Muster:", StringComparison.Ordinal))
+                Assert.IsTrue(rig.Calls[i - 1].StartsWith("Place:def:", StringComparison.Ordinal) || rig.Calls[i - 1].StartsWith("Begin:def:", StringComparison.Ordinal), rig.Calls[i - 1]);
+        }
+    }
+
+    [TestMethod]
+    public void MusterPoint_AttackerBatchesNeverUseIt()
+    {
+        var rig = NewRig(muster: BothPoints);
+        rig.Director.Start();
+        rig.PumpUntil(() => rig.Calls.Contains("Refresh"));
+
+        Assert.IsTrue(rig.Field.Count("Place:att:Infantry") + rig.Field.Count("Begin:att:Infantry") > 0, "the wave spawned");
+        for (var i = 0; i < rig.Calls.Count; i++)
+        {
+            if (rig.Calls[i].StartsWith("Place:att:", StringComparison.Ordinal) || rig.Calls[i].StartsWith("Begin:att:", StringComparison.Ordinal))
+                Assert.IsFalse(rig.Calls[i + 1].StartsWith("Muster:", StringComparison.Ordinal), rig.Calls[i]);
+        }
+
+        var defenderBatches = DefenderBatches(rig, "Infantry") + DefenderBatches(rig, "Ranged");
+        Assert.AreEqual(defenderBatches, rig.Field.Count("Muster:"), "one call per defender batch and none for the attackers");
+    }
+
+    [TestMethod]
+    public void MusterPoint_OnlyFootRecorded_LeavesTheArchersOnTheSceneFrame()
+    {
+        var rig = NewRig(muster: new MusterPoints(new MusterFrame(11f, 0f, 0f, 0f, 1f), null));
+        rig.Director.Start();
+
+        Assert.IsTrue(rig.Field.Count("Muster:Infantry:11") > 0);
+        Assert.AreEqual(0, rig.Field.Count("Muster:Ranged"));
+    }
+
+    [TestMethod]
+    public void NoMusterBlock_NeverAsksTheFieldForAMusterFrame_AndSpawnsAsBefore()
+    {
+        var rig = NewRig(rules: LongPrep());
+        rig.Director.Start();
+        rig.Session.TryBuy("militia");
+        rig.PumpUntil(() => rig.Field.Count("Begin:def:Infantry:12") > 0);
+
+        Assert.AreEqual(0, rig.Field.Count("Muster:"));
+        Assert.AreEqual(1, rig.Field.Count("Place:def:Infantry"));
+        Assert.AreEqual(1, rig.Field.Count("Place:def:Ranged"));
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains("no navmesh")));
+    }
+
+    [TestMethod]
+    public void MusterPoint_WithNoNavmesh_WarnsOnceAndTheClassKeepsTheSceneFrame()
+    {
+        var rig = NewRig(rules: LongPrep(), muster: BothPoints);
+        rig.Field.MusterOk = false;
+        rig.Director.Start();
+        rig.Session.TryBuy("militia");
+        rig.Tick(5f);
+
+        Assert.IsTrue(DefenderBatches(rig, "Infantry") >= 3, "the run goes on spawning: " + string.Join(",", rig.Calls));
+        Assert.AreEqual(1, rig.Field.Count("Muster:Infantry"), "asked once, then left alone");
+        Assert.AreEqual(1, rig.Field.Count("Muster:Ranged"));
+        Assert.AreEqual(2, rig.Outcomes.Lines.Count(l => l.StartsWith("fail " + LongDefeatChecks.MusterId + " ")), "a lost point must fail the run's verdict");
+        Assert.AreEqual(2, rig.Log.Lines.Count(l => l.Contains("no navmesh")), "one warning per class: " + string.Join("\n", rig.Log.Lines));
+        Assert.AreEqual(1, rig.Field.Count("Place:def:Infantry"));
     }
 
     [TestMethod]
@@ -481,6 +565,19 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void TheReport_NamesTheHighestSpeedTheSessionHeldInTheRun()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Session.SetSpeed(4);
+        rig.Session.SetSpeed(2);
+
+        rig.Director.Shutdown();
+
+        Assert.AreEqual(4, (int)JObject.Parse(rig.Director.ReportText)["maxSpeed"]!);
+    }
+
+    [TestMethod]
     public void Removal_ThatIsNotAKillOrKnockOut_ChangesNothing()
     {
         var rig = NewRig();
@@ -646,7 +743,7 @@ public class LongDefeatDirectorTests
     [TestMethod]
     public void Stalemate_ChargesThenFellsTheStragglers_AndTheWaveClearsAsAStaleOne()
     {
-        var rig = NewRig(rules: new RunRules { StragglerQuietSeconds = 3600f });
+        var rig = NewRig(rules: new RunRules { StragglerCount = 0 });
         rig.StartAndSpawnWave();
         rig.KillAttackers(105);
         rig.Field.AttackersStanding = 5;

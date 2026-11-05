@@ -24,6 +24,9 @@ internal sealed class WargRageLog
     private const int MaxOpen = 100;
     private const int MaxLogged = 25;
     private const float NotReturnedSeconds = 60f;
+    // The reset can lag a dismount by a tree sleep or wait on the wall clock, up to about 9 s: 90 mission seconds in a 10x run. Counting
+    // a rider stranded inside that lag would close his episode, and the real reset would then find nothing.
+    private const float StrandedAfterSeconds = 100f;
     private const float MinReturnDistance = 15f;
     private const float ReturnMargin = 5f;
 
@@ -238,12 +241,9 @@ internal sealed class WargRageLog
         }
         else if (!view.HasMount && !view.HasFormation)
         {
-            // The warg-death reset can reach the rider a tick after the dismount, so only a second look in a row counts.
-            if (!episode.OnFootOnce)
-            {
-                episode.OnFootOnce = true;
+            episode.OnFootSince ??= _clock();
+            if (_clock() - episode.OnFootSince.Value < StrandedAfterSeconds)
                 return;
-            }
 
             _stranded++;
             closed.Add(rider);
@@ -251,7 +251,7 @@ internal sealed class WargRageLog
         }
         else
         {
-            episode.OnFootOnce = false;
+            episode.OnFootSince = null;
         }
     }
 
@@ -326,6 +326,6 @@ internal sealed class WargRageLog
         public object? Formation { get; set; }
         public bool Restored { get; set; }
         public double RestoredAt { get; set; }
-        public bool OnFootOnce { get; set; }
+        public double? OnFootSince { get; set; }
     }
 }

@@ -639,7 +639,8 @@ pristine files; the first patch landed at 20:14. Across six sessions the assert 
 mode, not by file contents: three editor-mode runs asserted, three full-game runs of the same assets
 loaded cleanly, one running through to MapScreen. **There is a pre-existing editor-only
 `rglBuffer.cpp:899` assert on the untouched LOTRLOME_Armory asset set**, still unexplained, and it
-is not a usable pass/fail signal for asset work. Use a game launch for that.
+is not a usable pass/fail signal for asset work. Use a game launch for that. An assert that
+`tools/assert_auto_ignore.py` ignored is no pass either; the tool's output lists what it ignored.
 
 ## 14. The submesh tags and cloth flag, restored the same way (2026-08-31)
 

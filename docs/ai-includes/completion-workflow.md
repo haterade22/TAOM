@@ -74,7 +74,9 @@ Before closing out a feature or fix, run this sequence. `/ship` runs it for you.
 4. Re-review a fix only as `/deep-review` "Fix-loop guidance" says.
 5. `/verify` again: the final build and tests pass.
 6. Close out: close the GitHub issue with full details, write or update `docs/features/<name>.md`, and
-   write the commit body as the changelog entry (`/release` generates `CHANGELOG.md`).
+   write the commit body as the changelog entry (`/release` generates `CHANGELOG.md`). List each fact the
+   change makes false and grep the docs for that fact's words and numbers, not only the feature's names
+   ([lesson](../reviews/lessons/misc.md), "Sweep docs for the facts a change alters").
 
 The issue exists before the closing commit: open it when the work starts, reference it in commit
 messages, and close it with the final commit. No hook enforces this.

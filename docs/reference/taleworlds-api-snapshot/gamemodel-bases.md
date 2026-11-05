@@ -231,7 +231,6 @@ Models: 69. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultHeroCreationModel`
 
 - `Equipment GetBattleEquipment(Hero hero)`
-- `CharacterObject GetCharacterTemplateForOffspring(Hero mother, Hero father, Boolean isOffspringFemale)`
 - `Equipment GetCivilianEquipment(Hero hero)`
 
 ## TaomInformationRestrictionModel : DefaultInformationRestrictionModel

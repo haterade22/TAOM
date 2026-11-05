@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Dorwinion troop tree and its nine soldier party templates (#1062).
+"""Generate the Dorwinion troop tree and its seven soldier party templates (#1062).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_dorwinion.xml            (whole file, generated)
@@ -227,12 +227,6 @@ def party_templates():
             (p + "redwater_guard", 0, 15), (p + "vintner_archer", 0, 13), (p + "vineholm_retainer", 0, 13),
             (p + "river_cavalier", 0, 10), (p + "veteran_redwater_guard", 0, 8), (p + "redwater_archer", 0, 8),
             (p + "vineholm_sergeant", 0, 8), (p + "vine_warden", 0, 5)]),
-        ("kingdom_hero_party_mercenary_dorwinion_template", [
-            (p + "spearman", 8, 16), (p + "vintner_bowman", 4, 8), (p + "river_spearman", 4, 8),
-            (p + "vintner_archer", 2, 4), (p + "river_rider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_dorwinion_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "vintner_bowman", 2, 4)]),
         ("militia_dorwinion_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_dorwinion_template_level_1", [

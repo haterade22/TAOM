@@ -28,7 +28,10 @@ public class PeriodicallyCheckIfCanAttackAnyone : WaitNSecondsTickDecorator, IBT
     public override bool Evaluate()
     {
         Agent warg = Agent.GetValue();
-        BattleSideEnum wargSide = warg.RiderAgent?.Team.Side ?? warg.Team.Side;
+        // A mount has no Team, and the rider can leave while the rage selector waits on this decorator.
+        Team team = warg.RiderAgent?.Team ?? warg.Team;
+        if (team == null) return false;
+        BattleSideEnum wargSide = team.Side;
         SpatialGrid.Instance.GetNearAliveAgentsInRange(10, warg, _scratch);
         // Looked up once, at the first candidate: a scan with no candidate pays no cache lookup.
         IAgentAdapter wargAdapter = null;
@@ -71,8 +74,10 @@ public class CheckOnceIfCanAttackEnemy : BTReturnFalseDecorator, IBTBannerlordBa
     public override bool Evaluate()
     {
         Agent warg = Agent.GetValue();
+        Team team = warg.RiderAgent?.Team ?? warg.Team;
+        if (team == null) return false;
+        BattleSideEnum wargSide = team.Side;
         SpatialGrid.Instance.GetNearAliveAgentsInRange(10, warg, _scratch);
-        BattleSideEnum wargSide = warg.RiderAgent?.Team.Side ?? warg.Team.Side;
         // Looked up once, at the first candidate: a scan with no candidate pays no cache lookup.
         IAgentAdapter wargAdapter = null;
         foreach (Agent agent in _scratch)

@@ -58,19 +58,6 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<EquipmentRoster id="southrhovanion_bat_template_medium_e" culture="Culture.southrhovanion">
-		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
-			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
-			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
-			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
-			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
-			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
 	<!-- ==================== ROHAN LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="southrhovanion_civ_template_default_a" culture="Culture.southrhovanion">
@@ -118,19 +105,6 @@
 	<EquipmentRoster id="southrhovanion_civ_template_default_d" culture="Culture.southrhovanion">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_5_t5" />
-			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
-			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
-			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />
-			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
-			<Equipment slot="Leg" id="Item.roh_nbl_bts" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
-		</EquipmentSet>
-	</EquipmentRoster>
-
-	<EquipmentRoster id="southrhovanion_civ_template_default_e" culture="Culture.southrhovanion">
-		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
 			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
 			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
 			<Equipment slot="Cape" id="Item.roh_nbl_gorg_tst_6" />

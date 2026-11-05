@@ -81,8 +81,9 @@ public class CoopMissionSeamPinTests
     {
         var src = Source("Main/Features/Warg/BehaviorTreeElements/OnWargDied.cs");
         var notify = Member(src, "public override void Notify(object[] data)");
-        CheckPrecedes(notify, Owned + "rider)", "FinishRageMode.Reset", "OnWargDied");
-        CheckPrecedes(notify, Owned + "rider)", "CleanIfEnemyDied.ResetAiControlledAgent", "OnWargDied");
+        // ValidStoredRider holds the ownership test, pinned in WargRageFormationTests.
+        CheckPrecedes(notify, "CleanIfEnemyDied.ValidStoredRider(", "FinishRageMode.Reset", "OnWargDied");
+        CheckPrecedes(notify, "CleanIfEnemyDied.ValidStoredRider(", "CleanIfEnemyDied.ResetAiControlledAgent", "OnWargDied");
     }
 
     [TestMethod]

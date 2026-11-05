@@ -5,6 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
+using TAOM.Features.CharacterCreation;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Core;
 
@@ -28,36 +33,18 @@ namespace TAOM.Tests.Core;
 [TestCategory("LiveInstall")]
 public class CultureRaceConsistencyTests
 {
-    private static string FindRepoRoot()
+    /// <summary>culture_id -> allowed races, read through the production loader the game uses.</summary>
+    private static Dictionary<string, List<string>> AllowedRaces()
     {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
-    }
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(RepoPaths.RepoPath("Main", "_Module", "ModuleData"));
+        var cultures = new CultureCreationDataProvider(paths, Substitute.For<IModLogger>()).LoadCultures();
 
-    /// <summary>culture_id -> allowed races, parsed straight from the shipped JSON.</summary>
-    private static Dictionary<string, List<string>> AllowedRaces(string root)
-    {
-        var path = Path.Combine(root, "Main", "_Module", "ModuleData", "charactercreation", "cultures.json");
-        Assert.IsTrue(File.Exists(path), $"cultures.json not found at {path}");
-
-        var text = File.ReadAllText(path);
         var result = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        foreach (var culture in cultures)
+            result[culture.CultureId] = culture.Races.ToList();
 
-        // Deliberately regex rather than a JSON dependency: the test project has no JSON library
-        // reference and the shape here is stable and simple.
-        foreach (Match m in Regex.Matches(
-            text,
-            @"""culture_id""\s*:\s*""(?<id>[^""]+)""\s*,\s*""races""\s*:\s*\[(?<races>[^\]]*)\]",
-            RegexOptions.Singleline))
-        {
-            var races = Regex.Matches(m.Groups["races"].Value, @"""([^""]+)""")
-                .Cast<Match>().Select(r => r.Groups[1].Value).ToList();
-            result[m.Groups["id"].Value] = races;
-        }
-
-        Assert.IsTrue(result.Count > 0, "parsed no cultures from cultures.json; the file shape changed");
+        Assert.IsTrue(result.Count > 0, "cultures.json parsed no cultures; the file moved or its shape changed");
         return result;
     }
 
@@ -88,8 +75,8 @@ public class CultureRaceConsistencyTests
     [TestMethod]
     public void EveryLordRaceIsOfferedByItsOwnCulture()
     {
-        var root = FindRepoRoot();
-        var allowed = AllowedRaces(root);
+        var root = RepoPaths.RepoPath();
+        var allowed = AllowedRaces();
         var used = LordRaces(root);
 
         var problems = new List<string>();
@@ -168,14 +155,14 @@ public class CultureRaceConsistencyTests
     }
 
     private static (string source, (List<string> Races, List<string> Unverifiable) scan)[] StylesheetRaceScans() =>
-        Directory.EnumerateFiles(Path.Combine(FindRepoRoot(), "Main", "_Module", "ModuleData"), "*.xslt", SearchOption.AllDirectories)
+        Directory.EnumerateFiles(RepoPaths.RepoPath("Main", "_Module", "ModuleData"), "*.xslt", SearchOption.AllDirectories)
             .Select(f => (source: Path.GetFileName(f), scan: RacesEmittedByXslt(File.ReadAllText(f))))
             .ToArray();
 
     private static (string source, string race)[] CharacterRaces(
         (string source, (List<string> Races, List<string> Unverifiable) scan)[] scans)
     {
-        var moduleData = Path.Combine(FindRepoRoot(), "Main", "_Module", "ModuleData");
+        var moduleData = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
 
         var used = Directory.EnumerateFiles(moduleData, "*.xml", SearchOption.AllDirectories)
             .SelectMany(f => Regex.Matches(File.ReadAllText(f), @"<NPCCharacter\b[^>]*?\brace=""([^""]+)""")
@@ -217,7 +204,7 @@ public class CultureRaceConsistencyTests
                 sets.Add((string)s.Attribute("id")!);
 
         var races = new HashSet<string>(CharacterRaces(StylesheetRaceScans()).Select(u => u.race), StringComparer.Ordinal);
-        foreach (var culture in AllowedRaces(FindRepoRoot()))
+        foreach (var culture in AllowedRaces())
             races.UnionWith(culture.Value);
 
         Assert.IsTrue(races.Count >= 10, $"found only {races.Count} races; the scan shape changed");
@@ -336,7 +323,7 @@ public class CultureRaceConsistencyTests
         // would silently produce a filter entry that matches no race.
         var registered = RegisteredRaces();
 
-        var unknown = AllowedRaces(FindRepoRoot())
+        var unknown = AllowedRaces()
             .SelectMany(c => c.Value.Select(r => (culture: c.Key, race: r)))
             .Where(x => !registered.Contains(x.race))
             .Select(x => $"{x.culture} -> '{x.race}'")

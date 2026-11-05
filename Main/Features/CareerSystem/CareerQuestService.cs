@@ -69,9 +69,9 @@ public class CareerQuestService : ICareerQuestService
         // so session launch also skips while a co-op module is enabled; the next daily tick covers solo play.
         if (atSessionLaunch && _coopPresence.IsCoopActive) return false;
         if (string.IsNullOrEmpty(ownerHeroId) || string.IsNullOrEmpty(mainHeroId) || ownerHeroId == mainHeroId) return false;
-        // Only quests of a real career: the lord's gear ladder keeps each hero's quests on purpose.
-        var def = GetQuestById(questDefId);
-        return def != null && _registry.GetCareer(def.CareerId) != null;
+        // The lord's gear ladder's too: kills credit only the current hero's rung quest, so a former hero's could
+        // never finish. A cancel changes no ladder state, so that hero can start the rung again on a return.
+        return GetQuestById(questDefId) != null;
     }
 
     /// <summary>

@@ -224,6 +224,8 @@
         <upgrade_targets>
             <upgrade_target
                 id="NPCCharacter.goblin_lurker" />
+            <upgrade_target
+                id="NPCCharacter.goblin_wolf_runner" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -966,6 +968,248 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
               <equipment slot="Horse" id="Item.spider_mount_mountain_a2" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="goblin_wolf_runner"
+        race="goblin"
+        default_group="Cavalry"
+        level="16"
+        name="{=aom_goblin_wolf_runner_name}[Goblin] Wolf Runner"
+        occupation="Soldier"
+        culture="Culture.goblin">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="75" />
+            <skill
+                id="Riding"
+                value="60" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="55" />
+            <skill
+                id="Bow"
+                value="40" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.goblin_dire_wolf_rider" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_brown" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="goblin_dire_wolf_rider"
+        race="goblin"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_goblin_dire_wolf_rider_name}[Goblin] Dire Wolf Rider"
+        occupation="Soldier"
+        culture="Culture.goblin">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="80" />
+            <skill
+                id="Riding"
+                value="100" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="80" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.goblin_wolf_lord" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_brown" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="goblin_wolf_lord"
+        race="goblin"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_goblin_wolf_lord_name}[Goblin] Dire Wolf Lord"
+        occupation="Soldier"
+        culture="Culture.goblin">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="130" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="40" />
+            <skill
+                id="Polearm"
+                value="110" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_brown" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_sword_a04" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+              <equipment slot="Horse" id="Item.dire_wolf_black" />
+              <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"

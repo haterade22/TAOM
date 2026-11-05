@@ -63,7 +63,7 @@ realms. No war on day one.
 ### Component Diagram
 
 ```
-realm_troops.py <-- generate_eredluin_troops.py --> troops_eredluin.xml + 9 party templates
+realm_troops.py <-- generate_eredluin_troops.py --> troops_eredluin.xml + 7 party templates
 ranged_ladders.json ("erebor" line claims eredluin) --> Erebor's ladder bows and crossbows
 promote_borrowed_cultures.py --only eredluin --> <Culture id="eredluin"> + npcs + rosters + wanderers + strings
 add_map_fortifications.py / add_map_villages.py --> LIVE TAOM_Map settlements.xml (+ 12 loc files)
@@ -442,14 +442,11 @@ Restart Bannerlord fully, then start a new campaign.
 - No art was made for Ered Luin: its faction card shows the dwarf-hall image the Ered Duin
   placeholder carried (`GUI/SpriteData/FactionMap/faction_kingdom_of_ered_duin.png`, which
   `FactionImageWidget` loads by the card's `image`).
-- The three careers show no ability icon and the Firebeard Arbalester no portrait: `CareerScreenVM`
-  builds the icon name from the ability template id, and `TAOMSpriteData.xml` registers no sprite for
-  the cloned templates or for `career_crossbow_master_portrait`. Pre-existing for all 30 cloned
-  careers; a follow-up.
-- Dead data, the same shape in every generated realm: nothing binds
-  `kingdom_hero_party_mercenary_eredluin_template` or `kingdom_hero_party_outlaw_eredluin_template`,
-  and no lord uses the `_e` lord rosters (`eredluin_bat_template_medium_e`,
-  `eredluin_civ_template_default_e`). A cleanup for all realms together.
+- The three careers draw their root source's ability icon, not one of their own: each sets
+  `ability_sprite` in `taom_careers.xml`, and `CareerScreenVM` builds the icon name from it (else from
+  the ability template id). To give a clone its own icon, bake the PNG and delete that career's
+  `ability_sprite`. The Firebeard Arbalester still has no portrait, because `TAOMSpriteData.xml`
+  registers no sprite for `career_crossbow_master_portrait`; portraits stay a gap under #1058.
 - The six age-8 education tutors (`child_education_templates_stage_2_page_0_branch_0_eredluin` to
   `_5`) have no `race` and render as humans in human clothes, cloned from Erebor's identical gap. The
   fix is an engine-side patch that passes the race through the education screen, not data.

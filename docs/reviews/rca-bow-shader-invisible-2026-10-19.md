@@ -38,7 +38,7 @@ code, the installed v1.5.5 DLLs (ilspycmd), the native engine (Ghidra) or a prob
 | 10 | LOW | Module names and the `taom_` prefix compared case-sensitively | Inconsistent with the packager's DLL check | Not tested | Casefolded; tests |
 | 11 | LOW | The service's listing-failure branch had no test; a missing or empty module folder read as success | Coverage gap | No RED run was recorded for the first version | Tests added; a missing source folder is now a failure |
 | 12 | LOW | The copy also ran on a dedicated server | Missing gate | The sibling notice's server gate was not mirrored | The feature module skips the copy on a dedicated server |
-| 13 | LOW | `harvest_literal_loc_keys.py` adds one more blank line before `</strings>` on every run (pre-existing since `76c82cb63`) | Tool defect | Earlier harvests were trimmed by hand | FOLLOW-UP: fix the insert, add a test for the tool |
+| 13 | LOW | `harvest_literal_loc_keys.py` adds one more blank line before `</strings>` on every run (pre-existing since `76c82cb63`) | Tool defect | Earlier harvests were trimmed by hand | Follow-up closed 2026-11-04 (337228885): fix the insert, add a test for the tool |
 
 ## Root-cause pattern: a gate that checks a stand-in
 

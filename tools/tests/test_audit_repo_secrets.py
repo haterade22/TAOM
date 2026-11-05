@@ -22,6 +22,8 @@ import audit_claude_config as audit  # noqa: E402
 # Shaped like the real thing, matches the rule, is not a credential.
 ANTHROPIC_SHAPED = "sk-" + "ant-" + "api03-AbCdEfGhIjKlMnOpQrStUvWx"
 AWS_SHAPED = "AK" + "IA" + "QRSTUVWX1234ABCD"
+# The NuGet.config key that holds a feed password in the clear (three vendored tarballs carried one).
+NUGET_CLEARTEXT_KEY = "Clear" + "TextPassword"
 
 
 class TrackedPathRuleTests(unittest.TestCase):
@@ -96,6 +98,47 @@ class RepoSecretScanTests(unittest.TestCase):
     def test_finds_a_key_in_a_csharp_file(self):
         res = self._run({"Main/Svc.cs": 'const string K = "' + AWS_SHAPED + '";\n'})
         self.assertEqual([f.rule for f in res.findings], ["secret-aws"])
+
+    def test_finds_a_nuget_cleartext_password(self):
+        line = '<add key="' + NUGET_CLEARTEXT_KEY + '" value="Zx9qLm2pR7vK4nB8" />\n'
+        res = self._run({"vendor/NuGet.config": line})
+        self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+        self.assertEqual(res.findings[0].line, 1)
+
+    def test_finds_a_nuget_password_written_value_first(self):
+        line = '<add value="Zx9qLm2pR7vK4nB8" key="' + NUGET_CLEARTEXT_KEY + '" />\n'
+        res = self._run({"vendor/NuGet.config": line})
+        self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+
+    def test_finds_a_nuget_password_whose_value_holds_a_newline(self):
+        for line in ('<add key="' + NUGET_CLEARTEXT_KEY + '" value="Zx9qLm2\npR7vK4nB8" />\n',
+                     '<add value="Zx9qLm2\npR7vK4nB8" key="' + NUGET_CLEARTEXT_KEY + '" />\n'):
+            res = self._run({"vendor/NuGet.config": line})
+            self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"], line)
+
+    def test_finds_a_nuget_password_split_across_lines(self):
+        key_first = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="Zx9qLm2pR7vK4nB8" />\n'
+        value_first = '<configuration>\n<add\n  value="Zx9qLm2pR7vK4nB8"\n  key="' + NUGET_CLEARTEXT_KEY + '" />\n'
+        for name, text, line in (("key first", key_first, 1), ("value first", value_first, 3)):
+            with self.subTest(name):
+                res = self._run({"vendor/NuGet.config": text})
+                self.assertEqual([f.rule for f in res.findings], ["secret-nuget-cleartext"])
+                self.assertEqual(res.findings[0].line, line)
+                self.assertNotIn("Zx9qLm2pR7vK4nB8", res.findings[0].snippet)
+
+    def test_a_split_nuget_placeholder_is_silent(self):
+        text = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="<your feed PAT>" />\n'
+        self.assertEqual(self._run({"docs/plan.md": text}).findings, [])
+
+    def test_audit_allow_on_either_split_line_suppresses_it(self):
+        text = '<add key="' + NUGET_CLEARTEXT_KEY + '"\n     value="Zx9qLm2pR7vK4nB8" /> audit-allow: secret-nuget-cleartext\n'
+        res = self._run({"docs/plan.md": text})
+        self.assertEqual(res.findings, [])
+        self.assertEqual(len(res.suppressed), 1)
+
+    def test_a_nuget_placeholder_value_is_silent(self):
+        line = '<add key="' + NUGET_CLEARTEXT_KEY + '" value="<your feed PAT>" />\n'
+        self.assertEqual(self._run({"docs/plan.md": line}).findings, [])
 
     def test_masks_the_value_it_reports(self):
         res = self._run({"a.py": 'k = "' + ANTHROPIC_SHAPED + '"\n'})

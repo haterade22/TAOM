@@ -14,9 +14,12 @@ count, every vertex group's weight sum and every bone's rest matrix. The source 
 
   blender-launcher.exe -b -P tools/blender/fbx_remap_materials.py -- --fbx <file.fbx> --map lotr_troll_head=base_body_olog [--apply]
 
-Without --apply it writes the remapped FBX beside the source as `<stem>.matremap.fbx` and changes nothing else.
+Without --apply it writes the remapped FBX to a temp folder (its path is `remapped_fbx` in the report) and leaves the
+source FBX alone. It always writes `<file>.matremap.json` beside the source (and `.matremap_error.log` on a crash).
+With --apply, when nothing differs, it also backs the source up and moves the remapped FBX over it, so `remapped_fbx`
+then names the source file: the temp folder is gone.
 """
-import bpy, json, os, shutil, sys, traceback, argparse
+import bpy, json, os, shutil, sys, tempfile, traceback, argparse
 
 
 def _import(path):
@@ -73,7 +76,9 @@ def main():
     report["slots_changed"] = changed
     if not changed:
         raise RuntimeError("no slot uses any of %s" % sorted(mapping))
-    out = stem + ".matremap.fbx"
+    out_dir = tempfile.mkdtemp(prefix="matremap_")
+    out = os.path.join(out_dir, os.path.basename(stem) + ".matremap.fbx")
+    report["remapped_fbx"] = out
     for o in bpy.data.objects:
         o.select_set(o in objs and o.type in ("ARMATURE", "MESH"))
     bpy.context.view_layer.objects.active = next(o for o in objs if o.type == "ARMATURE")
@@ -118,6 +123,8 @@ def main():
         if not os.path.exists(args.fbx + ".bak-matremap"):
             shutil.copy2(args.fbx, args.fbx + ".bak-matremap")
         shutil.move(out, args.fbx)
+        os.rmdir(out_dir)
+        report["remapped_fbx"] = args.fbx  # the temp path no longer exists
         report["applied"] = True
     with open(stem + ".matremap.json", "w") as fh:
         json.dump(report, fh, indent=1)

@@ -43,12 +43,17 @@ Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColorsAccordingToKingdom — Prefix, skip when enabled
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
-Patch23_BannerColorPersistence (11 patches + 1 manual transpiler)
+Patch23_BannerColorPersistence (the category patches; count them with
+`grep -l 'HarmonyPatchCategory("Patch23_BannerColorPersistence")' Main/Features/BannerColorPersistence/Hooks/*.cs`)
   └── GetCharacterCode (×2), SPInventoryVM.UpdateCharacterArmorColor, PartyVM, HeroVM, PartyCharacterVM,
-      ClanPartyItemVM, Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
-      BannerEditorView.OnTick (BannerPaste)
+      Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
+      BannerEditorView.OnTick (BannerPaste), OrderOfBattleHeroItemVM (pre-battle deployment)
+
+Applied by hand from ManualPatchApplicator (no category)
   └── SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual (manual transpiler, v1.5.x;
       was a Postfix on MobilePartyVisual.AddCharacterToPartyIcon until v1.5.0 dropped its colour parameters)
+  └── AgentVisuals.Create (prefix), MapConversationTableau.SpawnOpponentLeader and
+      SpawnOpponentBodyguardCharacter (postfixes)
       └── IBannerHeroAdapter → extracts ClanColorInfo from CharacterObject/Hero/Clan boundary
 ```
 
@@ -59,7 +64,7 @@ SubModule.OnSubModuleLoad()
     ├── Banner_TryGetBannerDataFromCode_Transpiler.Initialize(config, logger)
     ├── Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize(service)
     ├── Clan_UpdateBannerColor_Patch.Initialize(service, heroAdapter)
-    └── [12 UI patches].Initialize(service, heroAdapter)
+    └── the UI, spawn and conversation patches' Initialize(service, heroAdapter)
 
 SubModule.OnGameInitializationFinished()
     ├── TryPatchCategory("Patch23_BannerColorPersistence")

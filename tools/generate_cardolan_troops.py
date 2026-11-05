@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Cardolan troop tree and its nine soldier party templates (#978).
+"""Generate the Cardolan troop tree and its seven soldier party templates (#978).
 
 Writes:
   Main/_Module/ModuleData/troops/troops_cardolan.xml            (whole file, generated)
@@ -195,12 +195,6 @@ def party_templates():
             (p + "barrow_guard", 0, 15), (p + "minhiriath_bowman", 0, 13), (p + "lancer", 0, 13),
             (p + "veteran_barrow_guard", 0, 10), (p + "veteran_bowman", 0, 8), (p + "knight", 0, 8),
             (p + "warden", 0, 8), (p + "knight_captain", 0, 5)]),
-        ("kingdom_hero_party_mercenary_cardolan_template", [
-            (p + "spearman", 8, 16), (p + "bowman", 4, 8), (p + "river_spearman", 4, 8),
-            (p + "minhiriath_bowman", 2, 4), (p + "rider", 2, 4)]),
-        ("kingdom_hero_party_outlaw_cardolan_template", [
-            (p + "levy", 8, 16), (p + "militia_spearman", 4, 8), (p + "militia_archer", 4, 8),
-            (p + "bowman", 2, 4)]),
         ("militia_cardolan_template", [
             (p + "militia_spearman", 1, 1), (p + "militia_archer", 1, 1)]),
         ("patrol_party_cardolan_template_level_1", [
