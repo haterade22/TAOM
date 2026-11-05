@@ -76,6 +76,14 @@ public class BattleActionBarInputTests
     }
 
     [TestMethod]
+    public void TheMovieRoot_CarriesNoDataSource()
+    {
+        var root = Prefab.Element("Window")!.Elements().First();
+
+        Assert.IsNull(root.Attribute("DataSource"), "GauntletMovie.LoadMovie reads no DataSource on the root view");
+    }
+
+    [TestMethod]
     public void Prefab_HasNoHotkeyBadge()
     {
         Assert.IsFalse(File.ReadAllText(Path.Combine(RepoRoot, @"Main\_Module\GUI\PreFabs\BattleActionBar.xml")).Contains("Hotkey"));
