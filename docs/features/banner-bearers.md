@@ -89,11 +89,12 @@ MixedFormations Patch30 falls through for `unit.Banner != null`
 |---|---|
 | [Main/IoC.cs](../../Main/IoC.cs) | `BannerBearersIoC.RegisterBannerBearersFeature(container)` — both services `Reuse.Singleton` |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `OnGameStart` | `campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(...))` |
+| [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterCustomBattleModels` (called from `OnGameStart`, `BasicGameStarter` only) | `basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(...))`: Custom Battle and the editor's test battle |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `OnMissionBehaviorInitialize` | `AddTaomBehavior(new BannerBearerAssignmentMissionLogic())` — unconditional, gates internally |
 
 `MissionGameModels` resolves the slot in its constructor via `GameModelsManager.GetGameModel<T>()`, which iterates **backwards** — last registered wins. TAOM's `OnGameStart` runs after SandBox's `InitializeGameStarter`, so TAOM's model wins. This is the same seam `TaomCombatMechanicsModel` (`AgentApplyDamageModel`) already uses.
 
-**Campaign-only.** Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter` and is unaffected.
+**Custom Battle gets the race gate only.** Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so the campaign model never runs there. `TaomCustomBattleBannerBearersModel` subclasses Custom Battle's model and adds only the race gate (see "Race gate" below); the bearer count, the infantry-only gate and the culture banners stay campaign-only.
 
 ### Why subclass `SandboxBattleBannerBearersModel` rather than decorate `MBGameModel.BaseModel`
 
@@ -163,6 +164,8 @@ TAOM ships zero banner items of its own; custom LOTR meshes can be added later a
 
 `cave_troll`, `hill_troll`, `nazghul`, `saruman`, `sauron` never carry a standard. Trolls are beasts; the named races are heroes anyway (`!IsHero` already excludes them) and are listed belt-and-braces. This mirrors the cave-troll guard exclusion in [#346](https://github.com/haterade22/TAOM/issues/346).
 
+The gate holds in Custom Battle too. `TaomBattleBannerBearersModel` goes on the campaign starter only, and Custom Battle builds `CustomBattleBannerBearersModel` off a `BasicGameStarter`, so before this change the vanilla gate alone ran there. `TaomCustomBattleBannerBearersModel` (registered in `SubModule.RegisterCustomBattleModels`) adds only this race gate, on both `CanAgentBecomeBannerBearer` and `CanAgentPickUpAnyBanner`; its bearer count, tiers and formation rules stay vanilla.
+
 The gate covers a dropped banner as well as a new bearer. `BannerBearerLogic.FindBestSearcherForBanner` sends the nearest formation member that passes `CanAgentPickUpAnyBanner` to fetch a banner lying on the ground, and never asks `CanAgentBecomeBannerBearer` (v1.4.8 `BannerBearerLogic.cs:349-369`). SandBox's `CanAgentPickUpAnyBanner` checks only `IsHuman` (the humanoid flag), an empty banner slot, scripted-movement availability, no panic and no important combat action (`SandboxBattleBannerBearersModel.cs:43-54`), so a troll could pick one up. The model therefore overrides it as `base.CanAgentPickUpAnyBanner(agent) && _service.PassesRaceGate(race)`. `BannerBearerService.PassesRaceGate` folds the master toggle (disabled returns `true`, vanilla parity) and otherwise defers to `IsRaceAllowed`. A missing character reads as race `-1`, which fails closed while the feature is on.
 
 A second pickup path never asks the gate, and only the troll kits keep it shut. `HumanAIComponent.ItemPickupTick` walks an agent to a nearby dropped item, and `DefaultItemPickupModel` scores the agent's own formation banner at 120 (`GetItemScoreForAgent`, v1.4.8 `DefaultItemPickupModel.cs:14-16`) and accepts it into an empty slot (`IsItemAvailableForAgent`, `:76-77`) without calling `CanAgentPickUpAnyBanner`. The tick runs only for an agent `IsAgentEquipmentSuitableForPickUpAvailability` passes (`:82-101`): one that lost the shield it spawned with, one holding a consumable stack at half or less, or a banner searcher, which the gate above already filtered. No troll kit carries a shield or a consumable on 1.4.x (`troops_mordor.xml`: the `cave_troll`'s maces and spear, one weapon per roster; TAOM's 1.4.x ModuleData has no hill troll troop). **A troll kit that gains a shield or throwables (any consumable, arrows included) reopens this path**; that change needs a race check on the item pickup as well.
@@ -205,7 +208,7 @@ The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gund
 
 ## Testing
 
-103 tests: `TAOM.Tests/Features/BannerBearers/`.
+107 tests: `TAOM.Tests/Features/BannerBearers/`.
 
 | File | Covers |
 |---|---|
@@ -224,7 +227,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 
 - Field battle, both sides, 2+ cultures → bearers present **and moving** (watch a bearer specifically — this is the freeze check).
 - **An orc/dwarf/elf formation's bearer is still an orc/dwarf/elf.** The headline requirement.
-- No troll ever raises a banner or picks up a dropped one.
+- No troll ever raises a banner or picks up a dropped one, in the campaign or in Custom Battle.
 - Reinforcement wave → new bearers spawn, no freeze. **Post-#360:** bearers carry a 1H sidearm + banner; no `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` (an anomaly line names the drop mechanism — either outcome is signal, record it in the RCA).
 - Feature toggled OFF + a vanilla hero-captain-armed formation loses its bearer mid-battle → a replacement bearer still spawns (Patch63 vanilla-parity check, deep-review Flow-4).
 - Player Order-of-Battle deploy → finish → bearers unpause with everyone else.
@@ -234,7 +237,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 - A looter / `sea_raiders` warband → **no banner at all** (the fail-closed default).
 - **MixedFormations enabled + banners** → bearers stand in the engine's banner positions, not scattered through the ranks (verifies the Patch30 fall-through).
 - A mixed-culture allied army → each formation flies its **majority** culture's standard.
-- Shader-precompile walk → no NRE, no hang.
+- Shader-precompile walk (its hidden battles are Custom Battles, so the Custom Battle model runs there) → no NRE, no hang.
 - Master toggle off → identical to pre-feature behaviour.
 
 ## Gotchas
