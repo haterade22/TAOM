@@ -71,7 +71,8 @@ public class TaomPregnancyModel : DefaultPregnancyModel
     ///
     /// Extracted as a public static helper so the 5 branches the Phase 7 audit (#179) flagged can be
     /// unit-tested without the sealed-Hero coupling. Full ADR-007 refactor (introduce IHeroAgeInfo
-    /// adapter and move this into IRaceAgeService) is tracked separately as #131.
+    /// adapter and move this into IRaceAgeService) was deferred when #131 closed on 2026-05-14 and
+    /// has no tracking issue yet.
     /// </summary>
     public static float ComputeBaseChance(
         float heroAge,
@@ -93,8 +94,15 @@ public class TaomPregnancyModel : DefaultPregnancyModel
             ? Math.Min(1f, (2f * clanCap - aliveLords) / clanCap)
             : 1f;
 
+        // #628: a race bonus applies only while the clan is at or under its cap. Past the cap the
+        // brake wins, and a player marriage (which skips the brake, as in vanilla) never takes the
+        // bonus either. A penalty (elves, dwarves) applies everywhere. Pre-fix, orc clans at x2 bred at
+        // the unbraked vanilla rate at 1.5x their cap and sat at the 2*cap ceiling.
+        bool bonusAllowed = !playerOrSpouseInvolved && aliveLords <= clanCap;
+        float effectiveModifier = bonusAllowed ? raceFertilityModifier : Math.Min(raceFertilityModifier, 1f);
+
         float baseChance = ageFactor / (effectiveChildCount * effectiveChildCount) * 0.12f * populationFactor;
-        baseChance *= raceFertilityModifier;
+        baseChance *= effectiveModifier;
         return baseChance;
     }
 }

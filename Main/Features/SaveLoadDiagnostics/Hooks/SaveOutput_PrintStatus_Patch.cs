@@ -43,7 +43,7 @@ public static class SaveOutput_PrintStatus_Patch
             var errors = __instance.Errors;
             if (__instance.Result == TaleWorlds.Library.SaveResult.Success && (errors == null || errors.Length == 0))
             {
-                svc.LogPhase(SaveLoadPhase.SaveCompleted, "result=Success");
+                svc.LogPhase(SaveLoadPhase.SaveCompleted, "result=Success " + svc.ProcessContext());
                 return;
             }
 
@@ -57,7 +57,7 @@ public static class SaveOutput_PrintStatus_Patch
                 }
             }
             svc.LogFault(SaveLoadPhase.SaveCompleted,
-                $"result={__instance.Result} errors=[{sb}]", null);
+                $"result={__instance.Result} errors=[{sb}] {svc.ProcessContext()}", null);
         }
         catch { /* diagnostic only */ }
     }

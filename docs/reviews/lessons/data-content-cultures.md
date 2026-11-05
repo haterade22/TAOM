@@ -771,6 +771,7 @@ shifted the ordering and two clan rosters immediately picked up `goblin_fighter_
 - **Why missed:** absence of the bug in output was mistaken for absence of the bug. A latent filter gap in a seeded, order-sensitive generator produces clean output until an unrelated input change perturbs the order.
 - **Prevent:** when a generator has an exclusion list, check it against the definitive list of things that should be excluded rather than against its current output. Here the authoritative list already existed in a test: `VolunteerRecruitmentServiceTests.IsIntentionallyUnrecruited` names `_militia_`, `_boss` and `_merc`, and the tool knew about only one of the three.
 - **Source:** the 2026-08-29 goblin tree merge, caught by `generate_clan_heraldry.py`'s own drift gate refusing to regenerate.
+- **Second instance (#628, 2026-09-19):** `initial_child_generation.json` `excluded_cultures` listed the four orc cultures that existed when it was written; `goblin`, `mistymountainorcs` and `bluecraig` came later and were never added, so every one of their clans started the campaign topped up with children. Now gated both ways by `ShippedFertilityConfigTests`: the orc cultures are derived from `cultures.json` and must all be excluded, and every excluded id must name a real culture. `docs/reviews/rca-race-fertility-2026-09-19.md` item B.
 
 ### A name substring stood in for a binding, and the one false positive was the worst troop in the game
 `rebalance_troops.is_militia` decided militia by name (`militia` plus spearman/archer/veteran).

@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using HarmonyLib;
+using TaleWorlds.ObjectSystem;
+using TaleWorlds.SaveSystem.Save;
+using TAOM.Core.Logging;
+using TAOM.Features.SaveLoadDiagnostics.Domain;
+
+namespace TAOM.Features.SaveLoadDiagnostics.Hooks;
+
+// What a save is about to write (plan 114, SAVE-TIME-01). The engine walks the object graph here;
+// these counts are the same figures rgl reports as [GameData.Write] ObjectData/ContainerData Length,
+// now next to loadsThisProcess so a reload's growth shows in one log. Observe only.
+[HarmonyPatchCategory(Category)]
+public static class SaveContext_CollectObjects_Patch
+{
+    internal const string Category = "Patch61_SaveLoadDiagnostics_SaveGraph";
+
+    private static ISaveLoadDiagnosticsService? _service;
+    private static IModLogger? _logger;
+    private static AccessTools.FieldRef<SaveContext, List<object>>? _childObjects;
+    private static AccessTools.FieldRef<SaveContext, List<object>>? _childContainers;
+    private static Func<MBObjectBase, bool>? _isRegistered;
+
+    // Binds the two private lists once (installed v1.4.8 SaveContext.cs:75, :79). A field that no
+    // longer exists is left null and its count is omitted from the line (never a fake 0).
+    public static void Initialize(ISaveLoadDiagnosticsService service, IModLogger logger)
+    {
+        _service = service;
+        _logger = logger;
+        _childObjects = BindList<object>("_childObjects");
+        _childContainers = BindList<object>("_childContainers");
+        // Internal getter (MBObjectBase.cs:25). Left null if it moves: isRegistered then reads unknown.
+        try { _isRegistered = AccessTools.MethodDelegate<Func<MBObjectBase, bool>>(AccessTools.PropertyGetter(typeof(MBObjectBase), "IsRegistered")); }
+        catch { _isRegistered = null; }
+    }
+
+    // The no-argument overload: CollectObjects(object) also exists (SaveContext.cs:225).
+    internal static MethodBase? ResolveTarget() =>
+        AccessTools.Method(typeof(SaveContext), "CollectObjects", Type.EmptyTypes);
+
+    [HarmonyTargetMethod]
+    public static MethodBase? TargetMethod()
+    {
+        var target = ResolveTarget();
+        if (target == null)
+            _logger?.LogWarning("[SaveLoad] SaveContext.CollectObjects() not found: SaveCollected lines not applied (engine drift?)");
+        return target;
+    }
+
+    [HarmonyPrefix]
+    public static void Prefix(out long __state) => __state = Stopwatch.GetTimestamp();
+
+    // Runs on the main thread inside SaveContext.Save, after the object walk and before
+    // CollectSaveDatas (SaveContext.cs:342-346), so both lists are complete and stable here. The
+    // string list is not: CollectSaveDatas fills it (:491, :505), so strings= stays off this line.
+    [HarmonyPostfix]
+    public static void Postfix(SaveContext __instance, long __state)
+    {
+        var svc = _service;
+        if (svc == null) return;
+        try
+        {
+            long collectMs = (Stopwatch.GetTimestamp() - __state) * 1000 / Stopwatch.Frequency;
+            var objects = Read(_childObjects, __instance);
+            var containers = Read(_childContainers, __instance);
+            svc.LogPhase(SaveLoadPhase.SaveCollected,
+                SaveLoadTokens.SaveCollected(objects?.Count, containers?.Count, strings: null, collectMs));
+
+            if (objects != null && containers != null && svc.TakeSaveCensusRequest(out var reason))
+                LogCensus(svc, objects, containers, reason);
+        }
+        catch { /* diagnostic only */ }
+    }
+
+    // The census is local, so nothing it counted outlives this call.
+    private static void LogCensus(ISaveLoadDiagnosticsService svc, List<object> objects, List<object> containers, string reason)
+    {
+        long start = Stopwatch.GetTimestamp();
+        var census = SaveGraphCensus.Walk(objects, containers, Describe);
+        long passMs = (Stopwatch.GetTimestamp() - start) * 1000 / Stopwatch.Frequency;
+        svc.LogPhase(SaveLoadPhase.SaveCensus, census.FormatSummary(reason, svc.LoadsThisProcess, passMs));
+        foreach (var line in census.FormatTypeLines())
+            svc.LogPhase(SaveLoadPhase.SaveCensus, line);
+    }
+
+    private static (uint Id, bool? IsRegistered)? Describe(object item)
+    {
+        if (item is not MBObjectBase engineObject) return null;
+        return (engineObject.Id.InternalValue, _isRegistered?.Invoke(engineObject));
+    }
+
+    private static List<T>? Read<T>(AccessTools.FieldRef<SaveContext, List<T>>? field, SaveContext context) =>
+        field == null ? null : field(context);
+
+    private static AccessTools.FieldRef<SaveContext, List<T>>? BindList<T>(string name)
+    {
+        try
+        {
+            return AccessTools.FieldRefAccess<SaveContext, List<T>>(name);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"[SaveLoad] SaveContext.{name} not bound: its count is left out of SaveCollected ({ex.GetType().Name})");
+            return null;
+        }
+    }
+}

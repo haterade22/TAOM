@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using HarmonyLib;
 using SandBox;
+using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
 using TAOM.Features.SaveLoadDiagnostics.Domain;
 
@@ -27,7 +28,9 @@ public static class SandBoxSaveHelper_TryLoadSave_Patch
         if (svc == null) return;
         try
         {
-            svc.BeginLoadAttempt(saveInfo?.Name ?? "<null>");
+            // A non-null Game.Current means the player loaded from inside a running game; Game.Destroy
+            // sets it null (installed v1.4.8 Game.cs:246-263), so the main menu reads null.
+            svc.BeginLoadAttempt(saveInfo?.Name ?? "<null>", Game.Current != null);
 
             var meta = saveInfo?.MetaData;
             if (meta == null)

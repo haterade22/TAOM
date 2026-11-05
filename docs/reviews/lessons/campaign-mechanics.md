@@ -467,3 +467,21 @@ Addendum, same review: the fix above keyed four new consumers on `EnlistmentStat
 - **Why missed:** the justifying comment reasoned from the Ironpass rams, whose pooled rung is the L16 herder that CLIMBS into the gated breaker, and generalised that to "L41+ is upgrade-only"; the new test asserted the cost the author had added (`upgrade_cost > 0`) rather than a cost on every acquisition path; nobody grepped the pools for the 16 ids.
 - **Prevent:** when gating a troop, enumerate its acquisition paths (upgrade, notable pick, emissary, prisoner, vassal reward, party template) and price each that should cost; a pooled troop pairs `recruit_cost` with `upgrade_cost`, priced at the rung (the upgrade cost), because the same attribute is charged per unit on ungated prisoner recruits (#563). `EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost` (`TroopResourceCostDataTests`) unions `AllPooledTroopIds()` with every `recruitment_pools/*.json` and fails on a pooled upkeep row without one. A comment that says "covers every path" is a claim about paths the author has not listed.
 - **Source:** deep review of #600, `docs/reviews/rca-gondor-castar-costs-2026-09-15.md` finding 1; agents 2 and 5 found it independently from the installed decompile.
+
+### A multiplier applied after a vanilla brake cancels the brake; decide which one wins
+`TaomPregnancyModel.ComputeBaseChance` reproduced vanilla's pregnancy chance, clan population brake included (`min(1, (2*cap - aliveLords)/cap)`), then multiplied by the race `fertilityMod`. At x2 an orc clan at 1.5x its cap (brake 0.5) bred at exactly vanilla's unbraked rate, so orc clans ran to the `2*cap` ceiling and stayed there (#628). Nothing errored; the numbers only looked generous.
+- **Why missed:** "vanilla formula, then times the race factor" reads as a neutral composition. A brake that works by scaling toward zero is undone by any factor above 1 over half its range, and nobody asked what the multiplier did to it.
+- **Prevent:** when a TAOM factor multiplies a vanilla result that already contains a limiter (a cap, a population brake, a clamp), decide which one wins and encode it. Here a bonus above 1.0 applies only when an NPC clan is at or under its cap (`aliveLords <= clanCap`); past it the modifier is clamped to 1, and a penalty below 1.0 applies everywhere. Pin the property as a test ("a bonus race never out-breeds the human rate at the same fill"), not only point values.
+- **Source:** #628, `docs/reviews/rca-race-fertility-2026-09-19.md` item A.
+
+### A clan that changes kingdom moves its fiefs with no owner-change event
+`ChangeKingdomAction` join, defection (`JoinKingdomByDefection`) and create set `clan.Kingdom` (v1.4.8
+`ChangeKingdomAction.cs:65`), and every leave detail, rebellion (`LeaveWithRebellion`) included, sets it to null
+(`:76`). The clan keeps its settlements, so each fief's map faction changes without
+`OnSettlementOwnerChangedEvent`. Only a plain `LeaveKingdom` hands the fiefs over through
+`ChangeOwnerOfSettlementAction` (`:95-98`); every detail raises `OnClanChangedKingdom` (`:161`).
+- **Why missed:** a design that takes one engine event as the ownership signal misses these moves (found by the
+  1.5.x War Chronicle review, finding C02).
+- **Prevent:** treat the owner event as a fast path, and re-check the owner of every watched settlement in the
+  daily step, or also listen to `OnClanChangedKingdom`.
+- **Source:** 1.5.x `e8504a62b` (fixed there in `7e8451555`); re-checked on the installed v1.4.8 DLLs.

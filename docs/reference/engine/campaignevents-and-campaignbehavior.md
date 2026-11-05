@@ -41,7 +41,8 @@ The **`IMbEvent` interface (IMbEvent.cs:5-30) exposes only:**
 
 **There is NO `RemoveNonSerializedListener`** (confirmed v1.4.5). So you can add + clear-all-for-owner, but not
 remove a single listener. The campaign's `CampaignEventDispatcher` holds the listener lists and fires each event
-(e.g. `DailyTickEvent` fired once per campaign day).
+(e.g. `DailyTickEvent`, once per campaign day, except that a load can repeat the save's day:
+[campaign-tick-time-and-party-ai.md](campaign-tick-time-and-party-ai.md)).
 
 ### Lifecycle
 ```
