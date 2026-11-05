@@ -599,6 +599,8 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 | `CheatModeListsAllItemsAndTroops` | `false` | Map Performance. With cheat mode on, show vanilla's every-item inventory and every-troop party lists (gigabytes of memory); off keeps the normal screens ([cheat-screen-guard.md](cheat-screen-guard.md)). Live. |
 | `CullHiddenNameplates` | `true` | Map Performance. Skips hidden settlement nameplates that cannot become visible this frame ([nameplate-cull.md](nameplate-cull.md)). Live. |
+| `ReleaseMapViewMemory` | `true` | Map Performance. Every Nth cover of the campaign map releases the map view's render targets on its return ([map-view-release.md](map-view-release.md)). Live. |
+| `MapViewReleaseInterval` | `20` | Map Performance. N for the row above, 1 to 1000. Live. |
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 

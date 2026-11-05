@@ -22,5 +22,6 @@ internal static class FeatureModules
         new Features.CheatScreenGuard.CheatScreenGuardModule(),
         new Features.TextureAdvice.TextureAdviceModule(),
         new Features.NameplateCull.NameplateCullModule(),
+        new Features.MapViewRelease.MapViewReleaseModule(),
     };
 }

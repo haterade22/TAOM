@@ -116,9 +116,9 @@ VANILLATUNING PORTIONS  --  inside TAOM.dll
 
 TAOM.dll contains code adapted from VanillaTuning by yotthani, with TAOM's changes:
 the mission-start guard, the skeleton-buffer guard and watch (whose first-pool
-machine code block is his) and the settlement nameplate cull (sources:
-Main/Features/MissionStartGuard/, SkeletonBuffer/ and NameplateCull/, and their
-adapters in Main/Adapters/, in the TAOM repository).
+machine code block is his), the settlement nameplate cull and the map-view release
+(sources: Main/Features/MissionStartGuard/, SkeletonBuffer/, NameplateCull/ and
+MapViewRelease/, and their adapters in Main/Adapters/, in the TAOM repository).
 
 Copyright (c) 2026 yotthani
 Licensed under the MIT License:

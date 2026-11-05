@@ -122,6 +122,9 @@ public static class CoopSettingsRelevance
         // Campaign map performance (Battle Load Diagnostics page, Map Performance): whether hidden settlement
         // nameplates are skipped each frame (Patch104). It changes what this client draws, never the campaign.
         "CullHiddenNameplates",
+        // Whether a covered campaign map releases its render targets and how often (MapViewRelease, a layer-event
+        // handler, no patch): this client's graphics memory, never the campaign.
+        "ReleaseMapViewMemory", "MapViewReleaseInterval",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
