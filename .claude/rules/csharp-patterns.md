@@ -77,3 +77,4 @@ TAOM uses manual `List<CodeInstruction>` iteration. Harmony 2.4.2 (Bannerlord 1.
 - Sealed types crossing service boundaries (use adapters)
 - Regular null checks on computed TaleWorlds properties (use `?.` — see adapters.md)
 - Multiple responsibilities in one service (split it)
+- A local fear effect that drains morale below 0.01 with nothing said: each rout spreads a morale loss to up to 10 allies, from the whole formation when fewer stand within 4 m. Floor the morale, or say in the feature doc that its routs spread ([lesson](../../docs/reviews/lessons/adapters-taleworlds-api.md))
