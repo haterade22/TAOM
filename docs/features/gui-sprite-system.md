@@ -383,7 +383,7 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 1. Create a `PrefabExtensionInsertPatch` class with `[PrefabExtension("TargetPrefab", "xpath")]`
 2. Return XML from `GetDocument()` with `@PropertyName` bindings
 3. Create a `BaseViewModelMixin<TargetVM>` with `[DataSourceProperty]` for each binding
-4. **Do NOT add to collection properties** (SecondaryInfoItems, etc.) — use bound properties + prefab injection
+4. **Prefer bound properties plus prefab injection** to adding items to a vanilla collection property (`SecondaryInfoItems` and others), which `.claude/rules/gui-ui.md` discourages on ownership grounds. If an item must go into such a list, add it on every refresh behind a `Contains` check, never skip the first refresh, and remove it when it no longer applies, as `SpecialResourceMapBarMixin` does (#958, #977)
 
 ### Debug UI bindings
 1. Check Bannerlord's `rgl_log.txt` for Gauntlet binding errors
