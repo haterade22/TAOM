@@ -201,13 +201,14 @@ The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gund
 
 ## Testing
 
-74 tests: `TAOM.Tests/Features/BannerBearers/`.
+83 tests: `TAOM.Tests/Features/BannerBearers/`.
 
 | File | Covers |
 |---|---|
 | `BannerBearerServiceTests.cs` (42) | Density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**; **infantry-only gate** (Infantry allowed by default, Ranged/Cavalry/HorseArcher not, configurable, case-insensitive, empty/null/unknown handling, disabled → nothing). |
 | `BannerBearerConfigProviderTests.cs` (19) | Missing file, malformed JSON, full parse, `ObjectCreationHandling.Replace` on both collections, one test per validation rule, summary-warning behaviour, `Lazy<T>` caching; **`AllowedFormationGroups` validation** (valid parse, unknown dropped + warned, all-invalid/empty/null revert to Infantry). |
 | `ShippedBannerBearerConfigTests.cs` (13) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item; **allows infantry only**. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**. |
+| `ShippedHeraldryBannerKeyTests.cs` (9) | Every shipped `banner_key` in `characters/clans.xml` (145), `taom_spkingdoms.xml` (14), `spclans.xslt` (72) and `spkingdoms.xslt` (8) is a non-zero whole multiple of ten integers, the native banner tableau's precondition on the engine's captain-banner path (`GeneralsAndCaptainsAssignmentLogic.cs:262-264`), plus five rule rows. Counts measured 2026-11-04. |
 
 The GameModel and MissionLogic are entry points (ADR-008: not unit tested — they delegate).
 
