@@ -310,8 +310,8 @@ Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects. A `SpecialR
 ```
 SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM, hooks "Refresh")
 ├── Creates MapInfoItemVM("special_resource", GetTooltipProperties)
-├── Adds to SecondaryInfoItems once (_baseInitialized guard)
-├── Updates Value, IntValue, HasWarning per frame
+├── Adds to SecondaryInfoItems on the first refresh, guarded by Contains (#958)
+├── Updates Value, IntValue, HasWarning on every refresh (every 0.2 s)
 └── GetTooltipProperties() → rich tooltip with tier, daily change, earning rates
 
 SpecialResourceIconPrefab (PrefabExtension on MapBar)
@@ -319,7 +319,7 @@ SpecialResourceIconPrefab (PrefabExtension on MapBar)
     with SpecialResourceSpriteWidget (dynamic icon loading)
 ```
 
-**Critical:** The mixin MUST hook `"Refresh"` (per-frame), NOT `"RefreshValues"` (one-time init).
+**Critical:** The mixin MUST hook `"Refresh"` (the map bar's timed refresh), NOT `"RefreshValues"` (one-time init).
 
 ### Tooltip Content
 
