@@ -9,6 +9,7 @@ Patches: 249. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | Patch class | Engine target |
 |---|---|
 | `TAOM.Features.AdvancedCombat.Hooks.Agent_CheckToDropFlaggedItem_Guard_Patch` | `TaleWorlds.MountAndBlade.Agent.Void CheckToDropFlaggedItem()` |
+| `TAOM.Features.AlignmentRecruitment.Hooks.Patch114_AiVolunteerEstimate_Postfix` | `TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors.AiVisitSettlementBehavior.ValueTuple`2 GetApproximateVolunteersCanBeRecruitedDataFromSettlement(Hero hero, Settlement settlement)` |
 | `TAOM.Features.Arena.Hooks.GauntletMovie_Release_AvGuard_Patch` | `TaleWorlds.GauntletUI.Data.GauntletMovie.Void Release()` |
 | `TAOM.Features.Arena.Hooks.Patch46_TournamentDwarfDismount` | `SandBox.Tournaments.MissionLogics.TournamentFightMissionController.Void PrepareForMatch()` |
 | `TAOM.Features.Arena.Hooks.Patch60_TournamentExitMovieRelease` | `SandBox.GauntletUI.Missions.MissionGauntletTournamentView.Void OnMissionScreenFinalize()` |

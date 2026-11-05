@@ -31,5 +31,6 @@ internal static class FeatureModules
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
         new Features.LostFooting.LostFootingModule(),
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
+        new Features.AlignmentRecruitment.AlignmentRecruitmentModule(),
     };
 }

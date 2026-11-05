@@ -78,6 +78,7 @@ Patch42_CastleRecruitment (AI scoring):
 | `Main/Features/CastleRecruitment/CastleRecruitmentService.cs` | Pure logic: occupation distribution, slot probability curve, toggles, `BlocksAiRecruitAtCastle` |
 | `Main/Features/TroopProgression/Models/TaomVolunteerModel.cs` | `MaximumIndexHeroCanRecruitFromHero` consults `BlocksAiRecruitAtCastle` before the alignment rule (#918) |
 | `Main/Features/CastleRecruitment/CastleRecruitmentIoC.cs` | DryIoc registration |
+| `Main/Features/AlignmentRecruitment/Hooks/Patch114_AiVolunteerEstimate_Postfix.cs` | Zeroes the same vanilla AI recruit estimate for an alignment-blocked pair (see [alignment-recruitment.md](alignment-recruitment.md), #887) |
 | `Main/Features/CastleRecruitment/Hooks/CastleRecruitmentBehavior.cs` | Thin event router: menu, population trigger, hourly recruit listener, issue suppression |
 | `Main/Features/CastleRecruitment/Hooks/CastleNotableMaintainer.cs` | Engine glue: spawn + volunteer fill |
 | `Main/Features/CastleRecruitment/Hooks/CastleAiRecruitDispatcher.cs` | Engine glue: binds `CheckRecruiting` once, replays vanilla's guards, recruits in a castle |

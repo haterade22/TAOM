@@ -47,7 +47,8 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// (checked first, #918: an AI lord buying from a castle notable gets -1 while AI castle recruitment
     /// is off, on entry and hourly alike) and <see cref="IRecruitmentAlignmentService.IsRecruitmentBlocked"/>.
     /// The player's own hero is never blocked by the castle rule; companion-led clan parties count as AI
-    /// lords. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
+    /// lords. <c>Patch114_AiVolunteerEstimate_Postfix</c> (#887) is the twin that extracts the same keys for AI trip
+    /// scoring; change both together. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
     /// </summary>
     public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
     {

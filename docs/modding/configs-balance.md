@@ -223,10 +223,10 @@ The six MCM-exposed fields are the ones a pack author cannot rely on. The two JS
 
 | Field | Type | Shipped | Legal values | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `enabled` | bool | `true` | either | Master toggle | `RecruitmentAlignmentConfigProvider.cs:36` |
+| `enabled` | bool | `true` | either | Master toggle | `RecruitmentAlignmentConfigProvider.cs:59` |
 | `mode` | string | `Symmetric` | `Symmetric` or `GoodRejectsEvil`, case-insensitive | Anything else reverts to `Symmetric` with a warning | `RecruitmentAlignmentConfigProvider.cs:68-78` |
-| `applyToAi` | bool | `true` | either | Gate AI lords | `alignment-recruitment.md:47` |
-| `applyToPlayer` | bool | `true` | either | Gate the player | `alignment-recruitment.md:48` |
+| `applyToAi` | bool | `true` | either | Gate AI lords | `RecruitmentAlignmentConfigProvider.cs:61` |
+| `applyToPlayer` | bool | `true` | either | Gate the player | `RecruitmentAlignmentConfigProvider.cs:62` |
 
 All four are exposed under the MCM group "World/Recruitment Alignment", so all four are subject to the precedence warning above. The alignment data itself lives in `execution/alignment.json`, which has **24 keys and mixes kingdom ids with culture ids** (`gondor`, `mordor`, `goblin`, `lindon` and five more are cultures; `empire_w`, `khuzait`, `battania` and the rest are kingdoms). <!-- measured: python json key listing over execution/alignment.json 2026-09-05 --> Two feature docs call it a kingdom-id map. It is not, and adding a faction means checking which of the two you are adding. That file belongs to [Faction and world configs](configs-factions-and-world.md).
 
