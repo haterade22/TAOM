@@ -190,10 +190,11 @@ set names it in a **verb slot or table** (which means the engine fires it too); 
      declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount, and
      `Agent.Mount` refuses a mount whose channel-0 type is `Rear`. The mount would go unmountable
      mid-fight.
-  2. The replacement `act_horse_strike_front` is typed `actt_mount_strike`
-     (`ActionCodeType.MountStrike = 52`), which sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the
-     band `Agent.IsInBeingStruckAction` reads as BEING STRUCK. The clips are named
-     `horse_hit_from_front`/`_back`. The creature flinches as though hit while you emit damage.
+  2. The replacement `act_horse_strike_front` plays the horse's hit reaction (clips
+     `horse_hit_from_front`/`_back`), so the creature flinches as though hit while you emit damage.
+     Its type, `actt_mount_strike` (`ActionCodeType.MountStrike = 52`), is NOT the cause: corrected
+     2026-09-18, `Agent.IsInBeingStruckAction` tests the half-open `MBMath.IsBetween(type, 48, 52)`,
+     so it reads 48 to 51 as being struck (v1.4.8 `Agent.cs:1338-1348`).
 - **The fact underneath both:** **vanilla horses have no attack animation at all.** They deal damage by
   charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack table.
   The horse rig's only genuinely offensive action is `act_horse_kick` (`actt_kick`,

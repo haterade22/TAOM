@@ -339,10 +339,11 @@ Two concrete failures, both on the horse rig:
 **refuses a mount whose channel-0 action type is `Rear`**. Bind your creature's attack to it and the
 creature goes unmountable in the middle of a fight.
 
-**`act_horse_strike_front` and `_back` are typed `actt_mount_strike`,** which sits inside the band
-`Agent.IsInBeingStruckAction` reads as **being struck**. The underlying clips are literally named
+**`act_horse_strike_front` and `_back` play hit reactions.** The underlying clips are literally named
 `horse_hit_from_front` and `horse_hit_from_back`. Bind an attack to those and the creature flinches
-as though it has been hit, at the exact moment it deals damage.
+as though it has been hit, at the exact moment it deals damage. Their type, `actt_mount_strike`, is
+harmless on its own: `Agent.IsInBeingStruckAction` reads types 48 to 51 as being struck, and
+`actt_mount_strike` is 52.
 
 !!! note "The fact underneath both"
     **Vanilla horses have no attack animation at all.** They deal damage by charge collision. So

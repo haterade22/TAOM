@@ -33,9 +33,9 @@ inherited `monster_usage` set names it in a verb slot or table, and whether the 
 on that type. The ram got this wrong twice. The vanilla horse rig has **no attack animation at
 all** (horses damage by charge collision, so `monster_usage_strikes` is a hit-REACTION table);
 its only offensive action is `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`).
-`act_horse_rear` is `actt_rear` and blocks `Agent.Mount`; `act_horse_strike_front` is
-`actt_mount_strike = 52`, inside the `48..52` band `Agent.IsInBeingStruckAction` reads as being
-struck. Worked example: [docs/features/war-ram.md](../../../docs/features/war-ram.md).
+`act_horse_rear` is `actt_rear` and blocks `Agent.Mount`; `act_horse_strike_front` plays the
+horse's hit-reaction clip (its type, `actt_mount_strike = 52`, is outside the half-open `48..51` band
+`Agent.IsInBeingStruckAction` reads as being struck). Worked example: [docs/features/war-ram.md](../../../docs/features/war-ram.md).
 
 ## Phase order (each gated before the next)
 

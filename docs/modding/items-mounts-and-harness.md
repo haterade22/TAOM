@@ -477,7 +477,7 @@ Code: No code changes needed unless a feature names the id. The war ram's is pin
 - **A reskin inherits the donor's behaviour, not just its look.** The inherited `monster_usage`
   means the engine fires the donor's actions on your creature. On the horse rig, `act_horse_rear` is
   typed `actt_rear` and `Agent.Mount` refuses a mount whose current action type is Rear, and
-  `act_horse_strike_front` and `_back` sit in the band the engine reads as BEING struck. Vanilla
+  `act_horse_strike_front` and `_back` play the horse's hit-reaction clips. Vanilla
   horses have no attack animation at all; their only offensive action is `act_horse_kick`
   ([custom_creature_xml](../community/bannerlordmodding-lt/guides/custom_creature_xml.md), lines
   326-366).

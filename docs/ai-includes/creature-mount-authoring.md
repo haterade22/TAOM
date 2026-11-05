@@ -63,7 +63,7 @@ The war ram got this wrong **twice**, the second time while fixing the first:
 | Action | Type | Why it was wrong |
 |---|---|---|
 | `act_horse_rear` | `actt_rear` (`ActionCodeType.Rear = 47`) | The inherited `horse` usage set declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount. Worse, `Agent.Mount` reads `mountAgent.GetCurrentActionType(0) == ActionCodeType.Rear` and **refuses the mount while true**, so forcing it each cooldown made the ram briefly unmountable in combat |
-| `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | Sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the band `Agent.IsInBeingStruckAction` treats as **being struck**. The clips are named `horse_hit_from_front` / `_back`. The creature flinches as though hit while you emit damage |
+| `act_horse_strike_front` / `_back` | `actt_mount_strike` (`ActionCodeType.MountStrike = 52`) | The clips are the horse's hit reactions, `horse_hit_from_front` / `_back`: the creature flinches as though hit while you emit damage. The TYPE is harmless: `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads 48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52) (v1.4.8 `Agent.cs:1338-1348`; the warg's `actt_mount_strike` attacks play) |
 
 **The fact underneath both: the vanilla horse rig has no attack animation at all.** Horses deal damage
 through charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack
