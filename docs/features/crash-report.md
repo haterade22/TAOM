@@ -105,6 +105,7 @@ Settings live on a dedicated MCM page **TAOM — Crash Report** (separate from t
 | Bundle | Write Crash Bundle ZIP | true | Produces `Logs/taom_crash_*.zip`. Set false if you only want the log line. |
 | QA — Dev Triggers | Throw On Next Mission Tick | false | Throws `TaomDevTriggerException` on the next `MissionLogic.OnMissionTick`. Auto-resets. |
 | QA — Dev Triggers | Throw On Next Application Tick | false | Throws `TaomDevTriggerException` on the next `Module.OnApplicationTick`. Auto-resets. Works on the main menu (no mission needed). |
+| `QA — Dev Triggers` | Throw On Next Mission AfterStart | false | Throws `TaomDevTriggerException` from a TAOM behaviour's `AfterStart` on the next mission start (#699's shape). Auto-resets before it throws. With "Survive Mission Start Failures" on, the mission starts and one message shows; with it off, the throw escapes and the engine loads the mission again (TAOM.Dependencies' SaveShield swallows it, with one line in its `diag.log`). Needs Enable Crash Capture on. |
 
 ## Data captured (sections in `report.txt`)
 
