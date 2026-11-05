@@ -82,10 +82,11 @@ Each language dir follows the same 3-file pattern.
 |------|---------|
 | `Main/_Module/ModuleData/taom_module_strings.xml` | Source of 596 English strings with `taom_str_*` keys |
 | `Main/_Module/ModuleData/taom_wanderer_strings.xml` | Source of 1,177 English strings with `aom_*` keys |
-| `Main/_Module/ModuleData/Languages/language_data.xml` | English anchor — required for engine discovery |
-| `Main/_Module/ModuleData/Languages/{LANG}/language_data.xml` | Per-language manifest listing translation files |
+| `Main/_Module/ModuleData/Languages/language_data.xml` | English anchor, required for engine discovery; carries `name="English"` and Native's English `text_processor` |
+| `Main/_Module/ModuleData/Languages/{LANG}/language_data.xml` | Per-language manifest listing translation files; carries `name` and Native's `text_processor` where Native declares one |
 | `Main/_Module/ModuleData/Languages/{LANG}/std_taom_*.xml` | Community translation files (stub templates) |
 | `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` | Structural contract tests |
+| `TAOM.Tests/Infrastructure/Localization/LanguageProcessorTests.cs` | Every TAOM `language_data.xml` with a `name` carries Native's `text_processor` (#1026) |
 
 ## Dependencies
 
@@ -94,6 +95,8 @@ Each language dir follows the same 3-file pattern.
 - Discovery is automatic — no registration in `SubModule.xml` or C# needed for `Languages/` files
 
 ## Tests
+
+`TAOM.Tests/Infrastructure/Localization/LanguageProcessorTests.cs`: each TAOM `language_data.xml` (the English root and 12 languages) declares the `name` and `text_processor` Native declares for its id, checked against a pinned table and against the installed Native (#1026). The live TAOM_Map and Armory files are outside the repo: `tools/check_external_loc_coverage.py --processors-only` checks those.
 
 `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` — 15 structural contract tests:
 
@@ -142,13 +145,14 @@ Bannerlord must already support the language natively (it must have an entry in 
 2. Create `Languages/PT/language_data.xml` with the correct language ID from the vanilla file:
    ```xml
    <?xml version="1.0" encoding="utf-8"?>
-   <LanguageData id="[id from vanilla]">
+   <LanguageData id="[id from vanilla]" name="[name from vanilla]" text_processor="[vanilla's text_processor]">
      <LanguageFile xml_path="PT/std_taom_module_strings_[locale].xml" />
      <LanguageFile xml_path="PT/std_taom_wanderer_strings_[locale].xml" />
    </LanguageData>
    ```
+   Give `name` and `text_processor` only where Native's `language_data.xml` declares a processor for that id; a `name` without the processor resets the language to a default that prints no grammar tokens.
 3. Create the two stub translation files following the pattern in any existing language dir
-4. Add the new dir name to `SupportedLanguageDirs` in `LanguageDataXmlTests.cs`
+4. Add the new dir name to `SupportedLanguageDirs` in `LanguageDataXmlTests.cs`, and to `AllTaomDirs` and (when Native declares a processor) `NativeProcessorByTaomDir` in `LanguageProcessorTests.cs`
 5. Run tests to confirm structure is correct
 
 ### What strings are NOT translatable through this system
