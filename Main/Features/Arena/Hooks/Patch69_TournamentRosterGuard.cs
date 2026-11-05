@@ -31,18 +31,11 @@ namespace TAOM.Features.Arena.Hooks;
 /// replacement is the culture's elite/basic troop — the same filler vanilla itself uses in the tail
 /// of <c>GetParticipantCharacters</c>.
 ///
-/// **This runs on every call, not once per tournament.** `GetParticipantCharacters` has four call
-/// sites — `CreateParticipants` (the one that matters), `GetAllPossibleParticipants`, and
-/// `GetMenuText` + `GetTournamentPrize`, both reached from the arena join menu's on_init. So the
-/// clean-roster line is DEBUG (it would otherwise emit a durable, synchronously-flushed INFO on
-/// every menu open); an actual substitution stays WARNING, because it is rare and is the thing a
-/// future crash bundle needs to name.
-///
-/// Two accepted consequences of patching a method the menu also calls: `GetMenuText`'s
-/// "{NOBLE_COUNT} lords are competing" and `GetTournamentPrize`'s reward-tier gate both count
-/// `p.IsHero`, so substituting a hero shifts each by one. Both are arguably *more* correct — a
-/// substituted hero genuinely does not compete — but they are behaviour changes, recorded here
-/// rather than discovered later.
+/// It runs on every read of the roster, not once per tournament (no caller is per-frame), so every
+/// reader gets the substitute: the join menus' lord count, the prize tier, the off-screen
+/// <c>TournamentManager.ResolveTournament</c> and the <c>TournamentFinished</c> list. A clean roster
+/// is silent; a substitution logs WARNING. The callers and each consequence:
+/// <c>docs/reference/harmony-patch-registry.md</c>, "Patch69_TournamentRosterGuard".
 ///
 /// Decision logic lives in <see cref="ITournamentRosterGuardService"/>; this patch is a thin
 /// boundary (ADR-002/007). Lazy service resolve mirrors Patch46.
