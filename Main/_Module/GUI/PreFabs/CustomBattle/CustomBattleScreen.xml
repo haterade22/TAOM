@@ -38,13 +38,13 @@
   <Variables>
   </Variables>
   <VisualDefinitions>
-    <VisualDefinition Name="LeftMenu" EaseIn="true" TransitionDuration="0.45">
+    <VisualDefinition Name="LeftMenu" TransitionDuration="0.45">
       <VisualState PositionXOffset="0" State="Default" />
     </VisualDefinition>
-    <VisualDefinition Name="RightMenu" EaseIn="true" TransitionDuration="0.45">
+    <VisualDefinition Name="RightMenu" TransitionDuration="0.45">
       <VisualState PositionXOffset="0" State="Default" />
     </VisualDefinition>
-    <VisualDefinition Name="CenterMenu" EaseIn="true" TransitionDuration="0.45">
+    <VisualDefinition Name="CenterMenu" TransitionDuration="0.45">
       <VisualState PositionYOffset="0" State="Default" />
     </VisualDefinition>
   </VisualDefinitions>

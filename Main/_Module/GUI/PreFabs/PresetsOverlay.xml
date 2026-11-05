@@ -17,8 +17,7 @@
             Brush="ButtonBrush1"
             Command.Click="ExecuteOpenPresets"
             IsEnabled="true"
-            DoNotPassEventsToChildren="true"
-            AcceptEvents="true">
+            DoNotPassEventsToChildren="true">
           <Children>
             <TextWidget
                 WidthSizePolicy="StretchToParent"

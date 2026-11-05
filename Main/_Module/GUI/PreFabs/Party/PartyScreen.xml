@@ -504,10 +504,10 @@
 
             <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!PartyNameLabel.Height" SuggestedWidth="380" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="25" MarginRight="210" MarginTop="2" Brush="Party.Text.Name" Brush.FontSize="28" Text="@MainPartyNameLbl"/>
 
-            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Right" MarginTop="10" StackLayout.LayoutImp="HorizontalLeftToRight" MarginRight="65">
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Right" MarginTop="10" MarginRight="65">
               <Children>
                 
-                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutImp="HorizontalLeftToRight">
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
                   <Children>
 
                     <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsHidden="@IsUpgradePopUpDisabled">
@@ -541,7 +541,7 @@
                   </Children>
                 </ListPanel>
 
-                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutImp="HorizontalLeftToRight" >
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" >
                   <Children>
                     
                     <!--Open Recruit Troops Popup Button-->

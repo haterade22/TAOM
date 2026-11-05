@@ -15,7 +15,7 @@
 	<Window>
 		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
 			<Children>
-				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" Brush="Frame1Canvas">
+				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Canvas">
 					<Children>
 
 						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1100" SuggestedHeight="900" Brush="Frame1.Border" IsEnabled="true">

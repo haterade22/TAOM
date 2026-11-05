@@ -44,7 +44,7 @@
         </ListPanel>
       
 
-        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="694" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="General\CharacterCreation\character_creation_panel" VerticalAlinment="Center" DoNotUseCustomScaleAndChildren="true">
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="694" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="General\CharacterCreation\character_creation_panel" DoNotUseCustomScaleAndChildren="true">
           <Children>
 
             <!--Title-->
