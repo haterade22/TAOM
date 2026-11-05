@@ -54,4 +54,9 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyInteger("Sample Interval (seconds)", 10, 120, Order = 1, RequireRestart = false,
         HintText = "Seconds between [MemSample] lines. Default 30s (~120 lines per hour of play). Takes effect on the next sample — no restart needed.")]
     public int MemorySampleIntervalSeconds { get; set; } = 30;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Cheat Mode Lists All Items And Troops", Order = 4, RequireRestart = false,
+        HintText = "Vanilla cheat mode (cheat_mode = 1 in engine_config.txt, which TAOM's taom.* console commands need) makes your own inventory list every item in the game and the party screen every troop. With TAOM's thousands of items that list takes gigabytes of memory and can freeze the game for many seconds on a 16 GB machine. Off: with cheat mode on, both screens open as they do without it. On: the vanilla cheat lists. Takes effect at the next screen open. Default OFF.")]
+    public bool CheatModeListsAllItemsAndTroops { get; set; } = false;
 }

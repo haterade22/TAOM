@@ -19,5 +19,6 @@ internal static class FeatureModules
         new Features.BardTownGuard.BardTownGuardModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),
+        new Features.CheatScreenGuard.CheatScreenGuardModule(),
     };
 }

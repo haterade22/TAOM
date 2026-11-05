@@ -1085,6 +1085,16 @@ Threads: main thread only. Tests: `MissionStartGuardBindingTests` (real IL: each
 
 Shared deferred category for `Formation.SetMovementOrder(MovementOrder)` postfixes. Applied once from `OnMissionBehaviorInitialize` (one-shot static guard) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime` — null in `OnSubModuleLoad`/`OnGameInitializationFinished`. Currently houses Patch31_SmartCavalryAI's charge handler (prefix + postfix), its Patch31b sibling on `Formation.SetTargetFormation` (kept in the same category so the pair applies together), and Patch35_CompanionTactics' `CancelStanceOnMove` postfix. **Any future patch with `MovementOrder` in its postfix signature must use this category.**
 
+## Patch_CheatScreenGuard
+
+**Targets:** `private static void Helpers.InventoryScreenHelper.OpenInventoryPresentation(TextObject leftRosterName, Action doneLogicExtrasDelegate = null)` (v1.4.8, taom-src `InventoryScreenHelper.cs:174-196`) and `public static void Helpers.PartyScreenHelper.OpenScreenAsNormal()` (`PartyScreenHelper.cs:185-195`). Two classes in `Main/Features/CheatScreenGuard/Hooks/`, category `Patch_CheatScreenGuard` (no number: a 1.4.x-only feature), declared by `CheatScreenGuardModule` and applied at `ApplyPhase.GameInit`: one transpiler and one void `[HarmonyCleanup]` each.
+
+Cheat-screen guard (1.4.x only, MEMORY-01). With `Game.CheatMode` on (`Game.cs:67`, through `MBGameManager` to `NativeConfig.CheatMode`), the inventory opener adds every `ItemObject` (`:177-187`) and the party opener routes to `OpenScreenAsCheat`. Each reads `Game.get_CheatMode` exactly once in the installed IL. The transpiler (`TickProfilerTranspiler.Rewrite`, soft-failing) swaps that read for `CheatScreenGuardCalls.InventoryCheatMode(Game)` or `PartyCheatMode(Game)`, which return the real flag when it is off and otherwise the MCM setting "Cheat Mode Lists All Items And Troops" (default off). Any other site count leaves the method vanilla and the install line says which gate is off. Callers: the map buttons, the navigation bar and the mission I and P keys (v1.4.8 dump `SandBox__SandBox.View.cs:5104`, `:5126`, `:16025`, `:16036`, `:22497`, `:22504`).
+
+**Co-op.** Transpilers only, no bool prefix, so `CoopVetoClassificationTests` needs no entry; the setting is player-local in `CoopSettingsRelevance`.
+
+Threads: main thread (screen opens). Tests: `CheatScreenGuardBindingTests`, `CheatScreenGuardCallsTests`, `CheatScreenGuardServiceTests`, `CheatScreenGuardModuleTests`. Feature: [cheat-screen-guard.md](../features/cheat-screen-guard.md). **ACTIVE**, not yet checked in game.
+
 ## Late_ActionSetOverride
 
 **Target:** `ActionSetCode.GenerateActionSetNameWithSuffix` (Prefix)

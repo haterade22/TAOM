@@ -102,6 +102,9 @@ public static class CoopSettingsRelevance
         // offers is host-gated in EnlistmentWaitMenuPresenter.OfferTownLeave, so two peers
         // disagreeing about the prompt cannot make them simulate differently (#512).
         "OfferLeaveOnArrival",
+        // Whether YOUR cheat-mode inventory and party screens list every item and troop (CheatScreenGuard). Cheat mode
+        // is per install and the player acts on the list; the co-op layer replicates what was taken, not the screen.
+        "CheatModeListsAllItemsAndTroops",
     };
 
     /// <summary>Presentation, and the clock BT already owns.</summary>

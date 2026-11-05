@@ -2915,4 +2915,6 @@
 	<string id="taom_mission_start_guard_notice" text="{=taom_mission_start_guard_notice}{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
 	<!-- SkeletonBufferEngineAdapter -->
 	<string id="taom_skeleton_buffer_warning" text="{=taom_skeleton_buffer_warning}This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
+	<!-- CheatScreenGuardService -->
+	<string id="taom_cheat_screen_guard_notice" text="{=taom_cheat_screen_guard_notice}TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
 </strings>
