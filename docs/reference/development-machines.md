@@ -30,6 +30,7 @@ letter into new code.
 | `GHIDRA_INSTALL_DIR` | Windows user env var, desktop only | `tools/native_decompile.py` and PyGhidra (see "Ghidra" below) |
 | `TAOM_GHIDRA_PYTHON` | optional; unset on the desktop | `tools/native_decompile.py`: the interpreter that has PyGhidra, default `E:\Tools\ghidra-venv\Scripts\python.exe` |
 | `TAOM_GHIDRA_PROJECTS` | Windows user env var on the laptop; the desktop uses the default | `tools/native_decompile.py`, `native_build_match.py` and `native_archive.py`: the folder for Ghidra projects, engine-method maps and matcher indexes, default `E:\ghidra\TAOM` |
+| `TAOM_NATIVE_ARCHIVE` | Windows user env var on the laptop (for example `C:\Decompiled_Bannerlord\_native`) | `tools/native_archive.py`: the native DLL archive, default `E:\Decompiled_Bannerlord\_native` |
 
 **Three things ignore all of that** and need the path passed by hand:
 

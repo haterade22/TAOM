@@ -120,6 +120,7 @@ desktop's `E:\ghidra\TAOM` and the laptop has no E: drive.
 | `tools/native_decompile.py` | the tool: modes, cache key, venv re-run, Ghidra backend, seeding, report |
 | `tools/native_engine_methods.py` | the engine-method map: enum parse, registration sweep, join, cache |
 | `tools/native_crash_triage.py` | prints the `native_decompile.py` line after naming a site |
+| `tools/native_build_match.py` | carries an RVA from an archived older build to the one being decompiled ([native-build-match.md](native-build-match.md)) |
 | `.claude/skills/native-crash-triage/SKILL.md`, `.claude/skills/research/SKILL.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it |
 | `tools/tests/test_native_decompile.py`, `tools/tests/test_native_engine_methods.py` | unit tests plus opt-in integration tests |
 

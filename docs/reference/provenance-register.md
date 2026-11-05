@@ -91,6 +91,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -499,6 +500,17 @@ conflicts with ADR-011's rule that durable knowledge lives in the repository, an
 plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
 were read for the security pass; nothing was installed or ported. Record:
 [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### rea
+
+Upstream: https://github.com/morluto/rea, `main` at `d361c53c5`, read on 2026-10-24 through the
+GitHub API only: nothing was cloned, installed or run. The cross-build function matching in
+`tools/native_build_match.py` follows the method rea's `docs/native-function-matching.md` describes
+(exact keys first, ambiguity kept, a missing counterpart reported as unknown, never as removed). Only
+that document was read, not rea's code, and the masking of x64 displacements is TAOM's own addition,
+so the derivation is a behavioural port of a documented method. The rule lines the 1.5.x line also took from it are not on this line. No rea text or
+code was copied, so no MIT notice is carried. Record:
+[`docs/reviews/adopt-rea-2026-10-24.md`](../reviews/adopt-rea-2026-10-24.md).
 
 ## Adding a row
 
