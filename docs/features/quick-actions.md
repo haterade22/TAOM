@@ -137,7 +137,7 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 - **Thread-static bypass for "Sell All (Vanilla)"** — `Patch34_SellAllItemsMenu` (Prefix) holds a `[ThreadStatic] _bypassQuickActions` flag. The "Sell All (Vanilla)" menu option sets the flag and re-enters `__instance.ExecuteSellAllItems()`; the Prefix sees the flag set and returns `true`, so the player gets the unmodified vanilla `TransferAll(false)` behavior (including its zero-count-cleanup logic). This supersedes the "manual replication of vanilla bulk-sell" described under Solution Approach item 2.
 - **Full-stack sells** — `TrySellItem` (in `InventoryVMAdapter`) sets `SPItemVM.TransactionCount = StackAmount` before invoking the sell. Vanilla `ProcessSellItem` reads `item.TransactionCount` (default 1), so without this every batch action sold exactly one unit per stack.
 - **Unequip All routes through `InventoryLogic.TransferCommand`:** `TryUnequipAllPlayerSlots` applies one `TransferCommand` per occupied slot of the main hero's battle and civilian sets through the open screen's `InventoryLogic.AddTransferCommands`. Vanilla `AfterTransfer` updates the rows and the shown set's slots as each command lands, and Cancel or Reset can undo it. `AfterTransfer` does not touch the paper doll, armour, weight, capacity, the no-saddle warning or the Done button. Vanilla's single-transfer handlers refresh those with the private `RefreshInformationValues`, but a batch defeats that: `AfterTransfer` clears the equipment dirty flag on every command, so the doll is skipped when the last command moved nothing. `RefreshDisplay` therefore runs `UpdateRightCharacter` then `RefreshInformationValues` (the pair vanilla runs when the shown outfit or character changes) through cached open delegates, then the public `ExecuteRemoveZeroCounts`, which vanilla's `ProcessEquipItem` runs last. The shared helper is `InventoryVMAdapter.RefreshPanel`, which EquipPresets also uses after a Load (#924). The prune matters for batch sells: `TrySellItem` passes `cameFromTradeData: true`, which skips vanilla's own prune, so a sold-out row stayed at count 0 until #926. With no screen or no logic the method returns 0 and changes nothing. Until #917 the service called a direct-write path instead, so the open screen stayed stale; that path is gone.
-- **Stealth set and the hero on screen:** Unequip All strips the main hero's battle and civilian sets, as the menu promises, even when a companion is shown, and it leaves the v1.5.5 stealth set alone.
+- **Stealth set and the hero on screen:** Unequip All strips the main hero's battle and civilian sets, as the menu promises, even when a companion is shown, and it leaves the stealth set alone.
 - **Port verification baseline** — the removal of the 8-probe (right-pane item list) + 5-probe (`SPItemVM` sell method) reflection chains was verified against the v1.3.15 installed DLLs at port time.
 
 ## Changelog
@@ -151,7 +151,8 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 ## GitHub Issue
 
 - **Issues:** #114 (port, closed), #146 (search toggle, closed), #917 (Unequip All left the open screen stale)
-- **Status:** #917 fixed in code; in-game check owed (Unequip All with the inventory open, then Reset and Cancel)
+- **Issues (2026-10-23):** #925 (the "include equipped" options never acted; removed), #926 (batch sells left sold-out rows at count 0)
+- **Status:** #917, #925 and #926 fixed in code; in-game checks owed (label `triage-needs-ingame`): Unequip All with the inventory open, then Reset and Cancel; Sell Low Value on a full stack; the two options gone from MCM
 
 ---
 

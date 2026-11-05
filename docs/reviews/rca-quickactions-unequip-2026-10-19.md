@@ -38,14 +38,14 @@ outfit or character changes.
 
 ## Follow-ups (pre-existing code, not in this change)
 
-- EquipPresets has the same stale panel: `InventoryScreenAdapter` calls `AddTransferCommands`, then
-  `RefreshValues` (labels only). It can reuse the same bound pair.
-- `SellDamagedEquipped` and `SellLowValueEquipped` can never act: `GetRightPaneItems` returns only
+- DONE (#924, `89e7af6c0`): EquipPresets had the same stale panel: `InventoryScreenAdapter` called
+  `AddTransferCommands`, then `RefreshValues` (labels only). It now reuses the pair through `RefreshPanel`.
+- DONE (#925, `cd999f917`, both options removed): `SellDamagedEquipped` and `SellLowValueEquipped` could never act: `GetRightPaneItems` returns only
   player-inventory rows, so `IsEquipped` is never true there. Rated HIGH under the dead-setting rubric.
-- Batch sells pass `cameFromTradeData: true`, which skips vanilla's `ExecuteRemoveZeroCounts`, so
-  sold-out rows can linger with a count of 0.
+- DONE (#926, `eb89a3e53`): batch sells pass `cameFromTradeData: true`, which skips vanilla's
+  `ExecuteRemoveZeroCounts`, so sold-out rows lingered with a count of 0. `RefreshPanel` now prunes them.
 - `QuickActionsService` builds TaleWorlds inquiry types and calls `InformationManager` directly
   (ADR-007 static-call form), and its menu text is not localized.
 - `FinalizeSell`'s `isUnequip` parameter is never read.
 
-Each needs its own issue on Mike's word.
+The two items not marked DONE each need their own issue on Mike's word.

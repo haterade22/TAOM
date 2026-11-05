@@ -16,8 +16,9 @@ namespace TAOM.Features.EquipPresets.Hooks;
 /// Patch number 33 — verified free at port time (CLAUDE.md table tops out at Patch30; QuickActions
 /// took 34, FiefManagement took 36; Patch31 = SmartCavalryAI).
 ///
-/// Performance: <c>RefreshValues</c> fires often while the inventory screen is open (every
-/// transaction tick). Adapter + logger references are lazy-cached statically per
+/// Performance: <c>RefreshValues</c> fires when the VM is built (v1.4.8 SPInventoryVM.cs:3163);
+/// GauntletInventoryScreen never calls it, and TAOM stopped calling it after a Load in #924, so it
+/// is not a hot path. Adapter + logger references are lazy-cached statically per
 /// <c>.claude/rules/harmony-patches.md</c> "Reflection in hot paths" / "IoC.Resolve in Hot Paths"
 /// guidance. The static cache survives across screens; the resolved singletons themselves are
 /// process-lived so caching is safe.

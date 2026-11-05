@@ -110,6 +110,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 - `TAOM.Tests/Features/EquipPresets/HoNEquipmentPresetTests.cs` — 7 tests verifying default values, null-safety on item-ref ctor, AND `[SaveableProperty]` indexes (1..6 for the preset, 1..3 for the item-ref). Index numbers are part of the save format — these tests are the regression gate against accidental renumbering.
 - `TAOM.Tests/Features/EquipPresets/PresetSaveableTypeDefinerTests.cs` — 3 tests: BaseId matches the constant, BaseId is unique across all TAOM SaveableTypeDefiners, ctor is exception-free.
 - `TAOM.Tests/Features/EquipPresets/EquipPresetsSettingsProviderTests.cs` — 2 tests: range constants are coherent, default fits the [min, max] window.
+- `TAOM.Tests/Adapters/InventoryPanelRefreshTests.cs`: 2 tests (game assemblies) that `RefreshActiveVM` and Quick Actions' `RefreshDisplay` remove rows left at count 0 (#924, #926). The paper doll and stats calls cannot run on a bare VM; `InventoryPanelRefreshBindingTests` and two `ReflectionSiteBindingTests` rows pin their binding.
 
 ## How to Add a New Setting
 
@@ -126,7 +127,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## Performance
 
-- `Patch33_SPInventoryVMRefresh.Postfix` fires on every `RefreshValues` (often while inventory is open). The IoC-resolved `IInventoryScreenAdapter` and `IModLogger` are lazy-cached statically (`??=` pattern) per `.claude/rules/harmony-patches.md` "Reflection in hot paths" / "IoC.Resolve in Hot Paths" guidance.
+- `Patch33_SPInventoryVMRefresh.Postfix` fires on every `RefreshValues`, which the `SPInventoryVM` constructor calls (v1.4.8 `:3163`); the inventory screen never calls it again, and the Load path stopped calling it in #924. The IoC-resolved `IInventoryScreenAdapter` and `IModLogger` are lazy-cached statically (`??=` pattern) per `.claude/rules/harmony-patches.md` "Reflection in hot paths" / "IoC.Resolve in Hot Paths" guidance.
 - `InventoryScreenAdapter` caches the `SPInventoryVM._currentCharacter` `FieldInfo` as a static readonly field at type-init.
 - Save/Load are user-triggered (rare); no per-frame allocation budget concerns there.
 
@@ -145,7 +146,8 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## GitHub Issue
 
-To be opened on session close.
+- **Issues:** #924 (Load left the paper doll and stats stale). The May 2026 port and its fixes predate this section.
+- **Status:** #924 fixed in code; in-game check owed (label `triage-needs-ingame`): load a preset with the inventory open, and load one that equips the last item of a stack.
 
 ---
 
