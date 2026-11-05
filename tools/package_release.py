@@ -358,6 +358,22 @@ def missing_armory_shaders(plans, game_root: Path) -> tuple:
     return [f"  {shader}: {len(usage[shader])} materials" for shader in sorted(usage)], problems
 
 
+# The 1.5.x line's tags. Decision D8: the 1.4.x line numbers its releases v2.4.x instead.
+FIVE_X_RELEASES = frozenset(f"v2.0.{n}" for n in range(29, 37))
+
+
+def release_number_problem(version) -> str | None:
+    """Why `version` cannot be a 1.4.x release number, else None."""
+    if not version:
+        return "no version recorded"
+    if not re.fullmatch(r"v\d+\.\d+\.\d+", version):
+        return (f"{version} is not a three-part vX.Y.Z (a hand-typed fourth part, like v2.0.29.5, "
+                "is in no commit)")
+    if version in FIVE_X_RELEASES:
+        return f"{version} is a 1.5.x release number (decision D8: the 1.4.x line uses v2.4.x)"
+    return None
+
+
 def _gb(n: int) -> float:
     return round(n / (1024 ** 3), 2)
 

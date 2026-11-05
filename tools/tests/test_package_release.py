@@ -672,5 +672,25 @@ class TestGamePassBinIsRefused(unittest.TestCase):
             self.assertNotIn("Gaming.Desktop", r.stdout + r.stderr)
 
 
+class TestReleaseNumber(unittest.TestCase):
+    """Decision D8: a 1.4.x release number is never a 1.5.x tag and never has a fourth part."""
+
+    def test_the_1_5_x_tags_are_refused(self):
+        for n in range(29, 37):
+            problem = pr.release_number_problem(f"v2.0.{n}")
+            self.assertIsNotNone(problem, n)
+            self.assertIn("1.5.x", problem)
+
+    def test_a_fourth_part_is_refused(self):
+        self.assertIn("three-part", pr.release_number_problem("v2.0.29.5"))
+
+    def test_the_1_4_x_numbers_pass(self):
+        for version in ("v2.0.28", "v2.4.0", "v2.4.11"):
+            self.assertIsNone(pr.release_number_problem(version), version)
+
+    def test_no_version_is_a_problem(self):
+        self.assertIsNotNone(pr.release_number_problem(None))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
