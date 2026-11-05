@@ -431,6 +431,8 @@ VAR_PATTERN = re.compile(r"\{[A-Za-z_][A-Za-z0-9_.]*\}")
 CONDITIONAL_OPEN = re.compile(r"\{\?[^{}?]+\}")
 CONDITIONAL_MID = re.compile(r"\{\?\}")
 CONDITIONAL_CLOSE = re.compile(r"\{\\\?\}")
+# Conversation animation tags ([ib:closed] body pose, [if:convo_angry] face; rb/rf the reactions), counted per exact tag.
+EXPRESSION_TAG = re.compile(r"\[(?:ib|if|rb|rf):[^\]]*\]")
 
 
 def extract_placeholders(text: str) -> dict[str, int]:
@@ -441,11 +443,13 @@ def extract_placeholders(text: str) -> dict[str, int]:
     counts["__cond_open__"] = len(CONDITIONAL_OPEN.findall(text))
     counts["__cond_mid__"] = len(CONDITIONAL_MID.findall(text))
     counts["__cond_close__"] = len(CONDITIONAL_CLOSE.findall(text))
+    for m in EXPRESSION_TAG.findall(text):
+        counts[m] = counts.get(m, 0) + 1
     return counts
 
 
 def placeholders_match(english: str, translated: str) -> tuple[bool, str]:
-    """Return (ok, reason) — checks variable + conditional preservation."""
+    """Return (ok, reason): checks variable, conditional and animation-tag preservation."""
     e = extract_placeholders(english)
     t = extract_placeholders(translated)
     if e != t:
@@ -469,7 +473,7 @@ CRITICAL RULES — VIOLATIONS BREAK THE GAME:
 
 2. Gender/conditional structures like {{?RULER.GENDER}}Lady{{?}}Lord{{\\?}} MUST be preserved structurally. Translate only the inner words ("Lady"/"Lord"), keeping the {{?VAR}}, {{?}}, and {{\\?}} tokens EXACTLY as in the input.
 
-3. Bracket prefixes like [Gondor], [Mordor] in equipment names are culture tags — keep the brackets and either keep the inner word or transliterate it appropriately for your language's conventions.
+3. Bracket prefixes like [Gondor], [Mordor] in equipment names are culture tags: keep the brackets and either keep the inner word or transliterate it appropriately for your language's conventions. Exception: expression tags in square brackets, such as [ib:closed] or [rf:convo_bemused], are copied exactly, untranslated and in place.
 
 4. Tolkien proper nouns (place names, character names, faction names) should follow established translations in your language's published Tolkien editions. If unsure, transliterate phonetically rather than invent.
 
@@ -477,7 +481,7 @@ CRITICAL RULES — VIOLATIONS BREAK THE GAME:
 
 6. Never add commentary, never translate to a different language, never refuse — if a string can't be translated cleanly, transliterate or copy English as a last resort.
 
-7. Do not include internal or system XML tags in your response.
+7. Do not include internal or system XML tags in your response. Exception: expression tags in square brackets, such as [ib:closed], are part of the text: copy them exactly, untranslated and in place.
 
 OUTPUT FORMAT:
 You MUST respond with ONLY a JSON object, no other text. Schema:
