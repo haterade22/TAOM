@@ -298,3 +298,16 @@ authorize a push, tag, release or paid call. D25 and D26 otherwise stand.
    confirms that. `Patch37_CrashReport` is a marker class with no `[HarmonyPatch]`, so that row of the six-class grep expects 0.
 8. **Still held:** 102, 103, 116, 138, 142, 143, 145, WP108 B4 and what needs it in WP136, WP127 Parts C and M. Each waits on the
    protected files or on those WPs. Nothing here routes around the guard.
+
+## D28: WP122's GA-SAME token (2026-11-05)
+
+`eb12746d1` removed the words `TaleWorlds.Engine's PathReuseCache` from one comment in `TAOM.Tests/Migration/GameAssemblies.cs`, so
+Step 0's GA-SAME check fails. That is the file's whole drift from `7f02fc8d3` (checked with `git diff`), and it is not a dependency
+problem. Rulings:
+
+1. GA-SAME is waived for that one comment line only. Any other difference in the file is still a STOP.
+2. Step A1.2 item 1 applies the series diff instead of overwriting the file:
+   `git diff 7f02fc8d3 1f5047572 -- TAOM.Tests/Migration/GameAssemblies.cs | git apply`. An overwrite would bring back a comment
+   naming a type this line deleted.
+3. `git grep PathReuseCache` over `TAOM.Tests` and `Main` should not gain a hit from this WP. The plan's Maintenance note about
+   WP127 deleting that row is already satisfied.
