@@ -21,7 +21,10 @@ defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
    both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
    (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
-   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors)
+   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors).
+   Real-time finds the victim's party through its origin's BattleCombatant (a SimpleAgentOrigin hero's own party
+   included); a mount has no origin of its own, so a mount hit counts for its rider's party: a defender's horse shares the
+   refuge, and a riderless mount gets nothing (#741).
 overlay/menus: RefugeCampContributor : ICampOverlayContributor (FieldCamp's seam; the source
    assigned three mutable static delegates instead)
 clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition)
@@ -152,6 +155,7 @@ disagrees.
 | `Hooks/RefugeCampaignBehavior.cs` + `RefugeMenuController.cs` | Events, SyncData, menus, index-4 insertions |
 | `Hooks/RefugeCampContributor.cs` | Overlay caption/blocked-reason/status through FieldCamp's seam |
 | `Hooks/RefugeClanScreenPatch.cs` + `RefugeEncounterPatch.cs` | Patch75 |
+| `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin's `BattleCombatant` (a mount's from its rider's), then `RefugeDamageReduction` (#741) |
 
 ## Traps
 

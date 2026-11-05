@@ -6,7 +6,6 @@ using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Domain;
 using TAOM.Features.Refuge;
-using TaleWorlds.CampaignSystem.AgentOrigins;
 using TaleWorlds.CampaignSystem.Party;
 
 namespace TAOM.Features.CombatMechanics.Models;
@@ -59,23 +58,9 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     {
         var result = base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage);
 
-        var reduction = _refugeDefense?.DefenderDamageReduction(VictimPartyId(attackInformation.VictimAgentOrigin)) ?? 0f;
-        // Shared composition contract (RefugeDamageReduction): (1 - r) on the final damage; the
-        // auto-resolve site applies the identical contract. NaN/out-of-range applies nothing.
-        result = RefugeDamageReduction.Apply(result, reduction);
+        result = Features.Refuge.Hooks.RefugeDamageHooks.Reduce(_refugeDefense, in attackInformation, result);
 
         return result;
-    }
-
-    private static string VictimPartyId(TaleWorlds.Core.IAgentOriginBase origin)
-    {
-        var party = origin switch
-        {
-            PartyAgentOrigin p => p.Party,
-            PartyGroupAgentOrigin g => g.Party,
-            _ => null,
-        };
-        return party?.MobileParty?.StringId;
     }
 
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)
