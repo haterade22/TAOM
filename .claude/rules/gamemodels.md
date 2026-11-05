@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 49 GameModel overrides (48 registered + 1 abstract base). All follow the same pattern.
+TAOM has 50 GameModel overrides (49 registered + 1 abstract base). All follow the same pattern.
 
 ## Pattern
 
@@ -59,7 +59,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (49 total: 48 registered + 1 abstract base)
+## Existing Overrides (50 total: 49 registered + 1 abstract base)
 
 | Model | Base | Feature |
 |-------|------|---------|
@@ -107,6 +107,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | `Execution` |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
 | `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract** — career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` |
+| `TaomCustomBattleDamageModel` | `CustomAgentApplyDamageModel` | `CombatMechanics` (Custom Battle) |
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | `PrisonerRecruitment` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` (SandBox) | `BannerBearers` |
 | `TaomCustomBattleBannerBearersModel` | `CustomBattleBannerBearersModel` | `BannerBearers` (Custom Battle) |

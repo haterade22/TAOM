@@ -1293,7 +1293,7 @@ public class SubModule : MBSubModuleBase
     /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game type has added its own
     /// models (v1.4.8 CustomGame.OnInitialize: InitializeGameModels, then GameManager.OnGameStart), so a model added now
     /// is the one MissionGameModels resolves (GameModelsManager.GetGameModel returns the last one added). Mirrored: the
-    /// banner bearers' race gate. Every other TAOM model stays campaign-only. The feature-module step
+    /// banner bearers' race gate and the Combat Mechanics damage rules (TaomCustomBattleDamageModel). Every other TAOM model stays campaign-only. The feature-module step
     /// (FeatureModuleHooks.AddGameStartContent) runs after this one, so no module may add a model for a slot filled here.
     /// </summary>
     private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
@@ -1303,6 +1303,10 @@ public class SubModule : MBSubModuleBase
         // BannerBearers: trolls never carry or fetch a standard, in Custom Battle too (race gate only).
         basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
+        // CombatMechanics (#788): the damage rules run in Custom Battle too, through the facade the campaign model calls.
+        // The twin extends the engine's Custom Battle base, never SandBox's (a mounted hit would throw outside a campaign).
+        basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(
+            IoC.Resolve<Features.CombatMechanics.Hooks.CombatMechanicsHooks>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
