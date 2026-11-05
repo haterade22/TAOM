@@ -6,6 +6,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Models;
+using TAOM.Tests.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Tests.Features.Diplomacy;
@@ -96,7 +97,7 @@ public class WarOfTheRingBehaviorSessionResetTests
         var campaignA = NewBehavior(service);
         service.CheckPhaseTransition(45f);
         service.EndWar(WarOutcome.EvilVictory);
-        var store = new FakeDataStore();
+        var store = new EngineDataStore();
         campaignA.SyncData(store);
 
         store.Loading = true;
@@ -176,34 +177,6 @@ public class WarOfTheRingBehaviorSessionResetTests
 
         _service.Received(1).CheckPhaseTransition(45f);
         _service.DidNotReceive().ReconcileDeclaredWars();
-    }
-
-    /// <summary>
-    /// Mirrors the engine's behavior data store (v1.4.8 CampaignBehaviorDataStore.BehaviorSaveData.SyncData, CampaignBehaviorDataStore.cs:26-39): a load of a missing
-    /// key returns false and leaves the ref unchanged; a save records what it is handed.
-    /// </summary>
-    private sealed class FakeDataStore : IDataStore
-    {
-        private readonly Dictionary<string, object?> _data = new();
-
-        public bool Loading { get; set; }
-
-        public bool IsSaving => !Loading;
-
-        public bool IsLoading => Loading;
-
-        public bool SyncData<T>(string key, ref T data)
-        {
-            if (Loading)
-            {
-                if (!_data.TryGetValue(key, out var stored))
-                    return false;
-                data = (T)stored!;
-                return true;
-            }
-            _data[key] = data;
-            return true;
-        }
     }
 
     // WOTR-06: every load names the phase days in use and their source.

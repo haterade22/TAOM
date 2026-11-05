@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.CareerSystem;
 
@@ -66,7 +67,7 @@ public class CareerPersistenceTests
         var savedChoices = new Dictionary<string, string>();
         var savedTiers = new Dictionary<string, string>();
 
-        var saveStore = new FakeDataStore();
+        var saveStore = new EngineDataStore();
         _behavior.SyncData(saveStore);
 
         // Get what was saved
@@ -81,10 +82,10 @@ public class CareerPersistenceTests
         // Simulate loading into a fresh service
         var freshService = new CareerDataService();
         var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
-        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
-        loadStore.SetData("_taom_careerIds", savedCareerIds);
-        loadStore.SetData("_taom_careerChoices", savedChoices);
-        loadStore.SetData("_taom_careerTiers", savedTiers);
+        var loadStore = new EngineDataStore { Loading = true };
+        loadStore.Seed("_taom_careerIds", savedCareerIds);
+        loadStore.Seed("_taom_careerChoices", savedChoices);
+        loadStore.Seed("_taom_careerTiers", savedTiers);
         loadBehavior.SyncData(loadStore);
 
         // Assert round-trip
@@ -96,17 +97,17 @@ public class CareerPersistenceTests
     [TestMethod]
     public void SyncData_EmptyData_DoesNotCrash()
     {
-        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
+        var loadStore = new EngineDataStore { Loading = true };
         _behavior.SyncData(loadStore);
 
         Assert.IsFalse(_dataService.HasCareer("hero1"));
     }
 
     [TestMethod]
-    public void SyncData_PreFeatureSave_GracefullyLoadsEmpty()
+    public void SyncData_LoadWithoutTheKeys_GracefullyLoadsEmpty()
     {
-        // Simulate loading a save that has no career data — engine leaves the ref untouched.
-        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
+        // Record present but the career keys missing: the engine returns false and leaves each ref untouched.
+        var loadStore = new EngineDataStore { Loading = true };
 
         _behavior.SyncData(loadStore);
 
@@ -122,15 +123,15 @@ public class CareerPersistenceTests
         _dataService.SetCareer("hero2", "ranger");
         _dataService.TryAddChoice("hero2", "ranger_root", 10);
 
-        var store = new FakeDataStore();
+        var store = new EngineDataStore();
         _behavior.SyncData(store);
 
         var freshService = new CareerDataService();
         var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
-        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
-        loadStore.SetData("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
-        loadStore.SetData("_taom_careerChoices", store.GetSaved<Dictionary<string, string>>("_taom_careerChoices"));
-        loadStore.SetData("_taom_careerTiers", store.GetSaved<Dictionary<string, string>>("_taom_careerTiers"));
+        var loadStore = new EngineDataStore { Loading = true };
+        loadStore.Seed("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
+        loadStore.Seed("_taom_careerChoices", store.GetSaved<Dictionary<string, string>>("_taom_careerChoices"));
+        loadStore.Seed("_taom_careerTiers", store.GetSaved<Dictionary<string, string>>("_taom_careerTiers"));
         loadBehavior.SyncData(loadStore);
 
         Assert.AreEqual("warboss", freshService.GetCareerStringId("hero1"));
@@ -154,7 +155,7 @@ public class CareerPersistenceTests
         var preCareer = _dataService.GetCareerStringId("hero1");
         var preChoiceCount = _dataService.GetChoiceCount("hero1");
 
-        var saveStore = new FakeDataStore();
+        var saveStore = new EngineDataStore();
         _behavior.SyncData(saveStore);
 
         Assert.AreSame(preReference, _dataService.GetAllData(),
@@ -170,7 +171,7 @@ public class CareerPersistenceTests
         _dataService.SetFlag("hero1", "captain_proven");
         _dataService.SetFlag("hero1", "ithilien_oath");
 
-        var store = new FakeDataStore();
+        var store = new EngineDataStore();
         _behavior.SyncData(store);
 
         var savedFlags = store.GetSaved<Dictionary<string, string>>("_taom_careerFlags");
@@ -178,61 +179,12 @@ public class CareerPersistenceTests
 
         var freshService = new CareerDataService();
         var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
-        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
-        loadStore.SetData("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
-        loadStore.SetData("_taom_careerFlags", savedFlags);
+        var loadStore = new EngineDataStore { Loading = true };
+        loadStore.Seed("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
+        loadStore.Seed("_taom_careerFlags", savedFlags);
         loadBehavior.SyncData(loadStore);
 
         Assert.IsTrue(freshService.HasFlag("hero1", "captain_proven"));
         Assert.IsTrue(freshService.HasFlag("hero1", "ithilien_oath"));
-    }
-
-    /// <summary>
-    /// Fake IDataStore that captures saved values and replays them on load.
-    /// Only supports Dictionary&lt;string, string&gt; — enforcing the primitive-only constraint.
-    /// Phase 9b #128 — `IsSaving`/`IsLoading` are now toggleable. Defaults match the historical
-    /// behavior (IsSaving=true) since the original SyncData implementation didn't gate on this.
-    /// New tests that exercise the load path explicitly set <see cref="Mode"/> = Loading.
-    /// </summary>
-    private class FakeDataStore : IDataStore
-    {
-        public enum StoreMode { Saving, Loading }
-
-        private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
-
-        public StoreMode Mode { get; set; } = StoreMode.Saving;
-
-        public bool SyncData<T>(string key, ref T data)
-        {
-            if (Mode == StoreMode.Loading)
-            {
-                if (_data.TryGetValue(key, out var stored))
-                {
-                    data = (T)stored;
-                    return true;
-                }
-                // Loading + no stored value: data stays unchanged (matches engine behavior).
-                return false;
-            }
-
-            // Saving path: store what was passed.
-            if (data != null)
-                _data[key] = data;
-
-            return true;
-        }
-
-        public T GetSaved<T>(string key)
-        {
-            return _data.TryGetValue(key, out var v) ? (T)v : default;
-        }
-
-        public void SetData<T>(string key, T value)
-        {
-            _data[key] = value;
-        }
-
-        public bool IsSaving => Mode == StoreMode.Saving;
-        public bool IsLoading => Mode == StoreMode.Loading;
     }
 }
