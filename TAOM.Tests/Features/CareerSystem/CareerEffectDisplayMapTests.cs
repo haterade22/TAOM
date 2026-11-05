@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CareerSystem.UI;
+using TAOM.Features.CareerSystem.Diagnostics;
 
 namespace TAOM.Tests.Features.CareerSystem;
 
@@ -56,6 +57,27 @@ public class CareerEffectDisplayMapTests
     {
         Assert.AreEqual("+25 max health", CareerEffectDisplayMap.Format(PassiveEffectType.Health, 25f));
         Assert.AreEqual("+4 party size", CareerEffectDisplayMap.Format(PassiveEffectType.PartySize, 4f));
+    }
+
+    // #769 display fix (ported): both are FRACTIONS at runtime (CareerAgentStatService multiplies the
+    // mount's base health by 1 + mountHealth; TaomInventoryCapacityModel feeds ApplyFactor), so a flat
+    // reading rounded a 0.10 pick to 0 and printed nothing.
+    [TestMethod]
+    public void Format_MountHealthAndInventoryCapacity_RenderAsPercent()
+    {
+        Assert.AreEqual("+10% mount health", CareerEffectDisplayMap.Format(PassiveEffectType.MountHealth, 0.10f));
+        Assert.AreEqual("+15% inventory capacity", CareerEffectDisplayMap.Format(PassiveEffectType.InventoryCapacity, 0.15f));
+    }
+
+    // The panel and the perk report must agree on which types are counts.
+    [TestMethod]
+    public void Format_FlatTypes_AreExactlyThePerkReportsCountTypes()
+    {
+        foreach (PassiveEffectType type in System.Enum.GetValues(typeof(PassiveEffectType)))
+        {
+            var line = CareerEffectDisplayMap.Format(type, 2f);
+            Assert.AreEqual(!CareerPerkConsumerMap.IsFlat(type), line.Contains("%"), $"{type}: '{line}'");
+        }
     }
 
     [TestMethod]

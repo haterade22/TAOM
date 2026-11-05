@@ -16,7 +16,7 @@ namespace TAOM.Features.CareerSystem.UI;
 /// silhouettes that tint and scale cleanly, and they are already baked.
 ///
 /// Percent-vs-flat is keyed on effect TYPE, never on magnitude size: TAOM authors Damage /
-/// Ammo / MovementSpeed as fractions (0.05) and Health / PartySize as counts (25, 4), so a
+/// Ammo / MovementSpeed as fractions (0.05) and Health / PartySize / CompanionLimit as counts (25, 4); MountHealth and InventoryCapacity are fractions too, so a
 /// size heuristic misreads both a 1.0 fraction (100%) and a +1 count.
 /// </summary>
 public static class CareerEffectDisplayMap
@@ -29,8 +29,6 @@ public static class CareerEffectDisplayMap
         PassiveEffectType.Health,
         PassiveEffectType.PartySize,
         PassiveEffectType.CompanionLimit,
-        PassiveEffectType.InventoryCapacity,
-        PassiveEffectType.MountHealth,
     };
 
     private static readonly Dictionary<PassiveEffectType, string> Icons = new Dictionary<PassiveEffectType, string>
