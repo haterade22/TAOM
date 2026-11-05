@@ -76,11 +76,7 @@ ARMORY_GLOBS = ("*/lotrlome_armory/moduledata/*","*/lotrlome_items/*.xml", "*/cr
 MAP_GLOBS = ("*/taom_map/moduledata/*",)
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
-FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
-# Globs tested against the file name alone: `*banner*` on a full path matches the install folder
-# "Mount & Blade II Bannerlord", so every named live file would select banner-sheets.
-NAME_GLOBS = ("*banner*",)
 
 # Order matters where an author has to act in order: names are registered before loc coverage is read.
 GATES = (
@@ -125,6 +121,11 @@ GATES = (
          note="--strict gates the BT-driven mounts in STRICT_MOUNTS; the report itself always exits 0"),
     Gate("map-villages", "TAOM_Map settlements", MAP_GLOBS,
          ("python", "tools/add_map_villages.py", "--check"), ("docs/reference/taom-map-settlement-naming.md",)),
+    Gate("banner-rdc", "banner icon Kit imports", ("*/bannericons/*",),
+         ("python", "tools/check_rdc_entries.py", "--module", "{taom_module}", "--under", "BannerIcons", "--types", "tex"),
+         ("docs/reference/banner-icon-generation.md",)),
+    Gate("rdc-entries", "tpac packages", ("*.tpac",), ("python", "tools/check_rdc_entries.py"),
+         ("docs/reference/banner-icon-generation.md",), note="a listed package needs a Modding Kit save"),
     Gate("gui-tests", "GUI prefabs, PrefabExtension XML, sprite data",
          ("*/gauntletui/*", "*/prefabs/*.xml", "*prefabextension*", "*spritedata.xml"),
          _dotnet("PrefabExtensionBrushTests"),
@@ -157,8 +158,7 @@ def norm(path: str) -> str:
 
 def matches(gate: Gate, path: str) -> bool:
     p = norm(path)
-    name = p.rsplit("/", 1)[-1]
-    return any(fnmatch.fnmatch(name if g in NAME_GLOBS else p, g) for g in gate.globs)
+    return any(fnmatch.fnmatch(p, g) for g in gate.globs)
 
 
 def select(gates, paths, all_mode: bool = False) -> list:

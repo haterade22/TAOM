@@ -61,7 +61,7 @@ class TableTests(unittest.TestCase):
             ("generate_starter_kit.py", "--verify"),
             ("audit_armory_refs.py",),
             ("check_external_loc_coverage.py",), ("check_generator_item_refs.py",),
-            ("validate_xml_schemas.py",), ("check_external_xslt.py",),
+            ("validate_xml_schemas.py",), ("check_external_xslt.py",), ("check_rdc_entries.py",),
         ]
         cmds = [(g.cmd[1].rsplit("/", 1)[-1],) + g.cmd[2:] for g in dg.GATES if g.cmd and g.cmd[0] == "python"]
         for want in wanted:
