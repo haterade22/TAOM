@@ -208,7 +208,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         if (tables.DailyLeadershipXp > 0)
             _skillXp.AddSkillXp(playerId, "Leadership", tables.DailyLeadershipXp);
 
-        var rhythm = _rhythm.GetSnapshot(nowDays);
+        var rhythm = _rhythm.GetSnapshot();
         var contextSkill = AssignmentSkills.ContextSkill(rhythm);
         var contextXp = AssignmentSkills.ContextXp(rhythm, tables);
         if (contextSkill != null && contextXp > 0)

@@ -78,7 +78,7 @@ public sealed class SchedulerConfig
     public int GuaranteedOfferDaysQuiet { get; set; } = 7;
     public int GuaranteedOfferDaysPressure { get; set; } = 4;
     public float BaseOfferChance { get; set; } = 0.06f;
-    public float MaxOfferChance { get; set; } = 0.45f;
+    public float MaxOfferChance { get; set; } = 0.4f;
 
     /// <summary>Same duty type not re-offered within this many days unless under pressure.</summary>
     public int AntiRepeatDays { get; set; } = 5;

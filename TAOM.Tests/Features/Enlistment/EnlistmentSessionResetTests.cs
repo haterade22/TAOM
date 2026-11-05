@@ -16,11 +16,10 @@ namespace TAOM.Tests.Features.Enlistment;
 /// <summary>
 /// Session scope for the Enlistment singletons (csharp-architecture.md, "Singleton Services Holding
 /// Per-Campaign State MUST Have a Session-Reset Story"). Every service here is Reuse.Singleton and
-/// outlives the campaign. Three kinds of per-session value are covered. The dwell anchor and the
+/// outlives the campaign. Two kinds of per-session value are covered. The dwell anchor and the
 /// offer cooldown hold absolute campaign hours: loading an earlier save, or starting a new
 /// campaign, runs the clock backwards, and a stamp left in the future reads as "a moment ago" until
-/// the new clock catches up with it. The rhythm snapshot is keyed on an equal hour stamp, so its
-/// hazard is a reload inside the same campaign hour serving the previous world's snapshot. The
+/// the new clock catches up with it. The
 /// adapter's cached commander MobileParty is a handle matched by StringId, which a later campaign
 /// can reissue. The hook tests pin that the load, new-campaign and game-end edges reach the one
 /// reset point, and that a load of a save with no Enlistment data starts from an empty record.
@@ -131,28 +130,6 @@ public class EnlistmentSessionResetTests
         sut.OfferTownLeave("town_EW1", 1030.0);
 
         AssertOffersShown(inquiry, 2);
-    }
-
-    // ---- army-rhythm snapshot (ArmyRhythmSnapshotService) --------------------------------------
-
-    [TestMethod]
-    public void RhythmReset_ForcesAFreshProbe_InTheSameCampaignHour()
-    {
-        // A quick reload inside the same campaign hour would otherwise serve the pre-load world.
-        var store = Substitute.For<IEnlistmentStore>();
-        store.Record.Returns(new EnlistmentRecord());
-        var probe = Substitute.For<IArmyRhythmProbeAdapter>();
-        probe.Probe(Arg.Any<string>()).Returns(new ArmyRhythmProbe());
-        var sut = new ArmyRhythmSnapshotService(store, probe);
-
-        sut.GetSnapshot(10.0);
-        sut.GetSnapshot(10.0);
-        probe.Received(1).Probe(Arg.Any<string>());
-
-        sut.ResetForNewSession();
-        sut.GetSnapshot(10.0);
-
-        probe.Received(2).Probe(Arg.Any<string>());
     }
 
     // ---- the lifecycle hooks (EnlistmentBehavior) ----------------------------------------------

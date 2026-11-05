@@ -74,7 +74,8 @@ public sealed class MenuLinkStyleRewriter : IMenuLinkStyleRewriter
         // the memo key is the menu STRING while the answer depends on the linked objects' CULTURE
         // — and the menu text is identical before and after a culture conversion or a load of a
         // different save. That returned a stale colour with nothing to indicate it. The setter runs
-        // once per menu open, so re-resolving costs one regex pass and a handful of object lookups.
+        // every frame (GameMenuVM.OnFrameTick sets ContextText each frame while the menu text has
+        // no attributes), so the cost is one regex pass and a handful of object lookups per frame.
         if (!_tracedFirstPass) _trace = new List<string>();
 
         try

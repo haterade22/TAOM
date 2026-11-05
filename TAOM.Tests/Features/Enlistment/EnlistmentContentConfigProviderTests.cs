@@ -47,6 +47,28 @@ public class EnlistmentContentConfigProviderTests
         File.WriteAllText(Path.Combine(_dir, "enlistment", "enlistment_duties.json"), json);
 
     [TestMethod]
+    public void GetConfig_CompiledDefaults_PassTheCanNeverBindCheck()
+    {
+        // An empty file leaves every compiled default in place. If the default maxOfferChance sat above
+        // the highest reachable offer chance, the provider's own check would warn that it can never bind.
+        WriteConfig("{}");
+
+        Provider().GetConfig();
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("can never bind")));
+    }
+
+    [TestMethod]
+    public void GetConfig_MaxOfferChanceAboveTheReachableMaximum_WarnsItCanNeverBind()
+    {
+        WriteConfig("{\"scheduler\":{\"maxOfferChance\":0.9}}");
+
+        Provider().GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("can never bind")));
+    }
+
+    [TestMethod]
     public void GetConfig_MissingFile_DefaultsWithWarning()
     {
         var config = Provider().GetConfig();

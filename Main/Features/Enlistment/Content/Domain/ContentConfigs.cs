@@ -39,8 +39,7 @@ public sealed class EnlistmentDutiesConfig
 }
 
 /// <summary>
-/// World snapshot for the duty scheduler. At most one probe per game hour (the cache key); called
-/// by the daily service tick, the daily duty offer and a duty request.
+/// World snapshot for the duty scheduler.
 /// Pure data; the snapshot service owns the engine reads.
 /// </summary>
 public sealed class ArmyRhythmSnapshot

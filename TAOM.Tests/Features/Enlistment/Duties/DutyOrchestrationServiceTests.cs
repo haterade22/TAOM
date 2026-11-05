@@ -35,7 +35,7 @@ public class DutyOrchestrationServiceTests
         _config.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
         _config.GetDuties().Returns(new EnlistmentDutiesConfig());
         _rhythm = Substitute.For<IArmyRhythmSnapshotService>();
-        _rhythm.GetSnapshot(Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
+        _rhythm.GetSnapshot().Returns(new ArmyRhythmSnapshot());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _rotation = Substitute.For<IDutyRotationPolicy>();
         _selector = Substitute.For<IDutySelector>();

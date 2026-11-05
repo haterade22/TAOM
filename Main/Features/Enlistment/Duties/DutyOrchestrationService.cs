@@ -75,7 +75,7 @@ public class DutyOrchestrationService : IDutyOrchestrationService
 
         if (_rotation.ShouldRollIncident(scheduler, record.DaysServed, nowDays, record.LastIncidentDay))
         {
-            var rhythm = _rhythm.GetSnapshot(nowDays);
+            var rhythm = _rhythm.GetSnapshot();
             var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
             var progress = record.ToProgressSnapshot(leadership);
             var incident = _selector.SelectIncident(_config.GetDuties().Incidents, progress, rhythm);
@@ -129,7 +129,7 @@ public class DutyOrchestrationService : IDutyOrchestrationService
     {
         var record = _contentStore.Record;
         var config = _config.GetConfig();
-        var rhythm = _rhythm.GetSnapshot(nowDays);
+        var rhythm = _rhythm.GetSnapshot();
         var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
         var progress = record.ToProgressSnapshot(leadership);
         var pressure = rhythm.SiegePressure || rhythm.Naval || rhythm.Blockade || rhythm.PreBattle;

@@ -1,6 +1,6 @@
 namespace TAOM.Adapters;
 
-/// <summary>Raw world facts for one army-rhythm evaluation. At most one probe per game hour (the cache key); called by the daily service tick, the daily duty offer and a duty request.</summary>
+/// <summary>Raw world facts for one army-rhythm evaluation. One fresh probe per call; called by the daily service tick, the daily duty offer and a duty request.</summary>
 public sealed class ArmyRhythmProbe
 {
     public bool InArmy { get; set; }
