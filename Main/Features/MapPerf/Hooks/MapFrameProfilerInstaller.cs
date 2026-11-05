@@ -13,7 +13,7 @@ namespace TAOM.Features.MapPerf.Hooks;
 /// <summary>
 /// Installs Patch101 at most once per process. Called on EVERY <c>OnGameInitializationFinished</c>, before
 /// SubModule's once-per-process guard: the first call reads "Enable Map Profiler" and, off, logs one line and
-/// applies nothing; on, it binds the listener walk, applies both categories, verifies each of the six core
+/// applies nothing; on, it binds the listener walk, applies its categories (core, views, menu probes), verifies each of the six core
 /// targets is patched, creates the profiler only when the core category applied and nothing is missing, and
 /// logs one install line (plus one warning per degraded part, and the not-installed warning when it failed).
 /// It also hands <see cref="MapSessionHooks.LostHooks"/> the same patched check, so the session hooks can look
@@ -25,6 +25,7 @@ internal static class MapFrameProfilerInstaller
 {
     internal const string Category = "Patch101_MapFrameProfiler";
     internal const string ViewsCategory = "Patch101_MapFrameProfiler_Views";
+    internal const string MenuCategory = "Patch101_MapFrameProfiler_Menu";
 
     private static bool _attempted;
     private static bool _offAtFirst;
@@ -61,6 +62,7 @@ internal static class MapFrameProfilerInstaller
 
             var core = tryPatchCategory(Category);
             var views = tryPatchCategory(ViewsCategory);
+            ApplyMenuProbes(logger, tryPatchCategory, isPatched);
             var missing = MapProfilerTargets.UnpatchedCore(isPatched);
             var viewTargets = MapProfilerTargets.MapViewTargets();
             var viewsPatched = viewTargets.Count(isPatched);
@@ -83,6 +85,20 @@ internal static class MapFrameProfilerInstaller
             MapFrameProfilerHooks.Profiler = null;
             try { logger.LogError(MapProfileLines.BuildInstallFault(ex)); }
             catch { /* diagnostic only */ }
+        }
+    }
+
+    private static void ApplyMenuProbes(IModLogger logger, Func<string, bool> tryPatchCategory, Func<MethodBase, bool> isPatched)
+    {
+        try
+        {
+            tryPatchCategory(MenuCategory);
+            var targets = MapProfilerTargets.MenuTargets();
+            logger.LogInfo(MapProfileLines.BuildMenuProbesLine(targets.Count(t => t != null && isPatched(t)), targets.Count));
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(MapProfileLines.BuildMenuFailedLine(ex));
         }
     }
 

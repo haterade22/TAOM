@@ -6,6 +6,7 @@ using HarmonyLib;
 using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameState;
+using TAOM.Features.Enlistment;
 using TAOM.Features.MissionPerf;
 
 namespace TAOM.Features.MapPerf.Hooks;
@@ -42,6 +43,19 @@ internal static class MapProfilerTargets
         AccessTools.Method(typeof(MapScreen), "OnFrameTick", new[] { typeof(float) }),
         AccessTools.Method(typeof(global::TAOM.SubModule), "OnApplicationTick", new[] { typeof(float) }),
     };
+
+    /// <summary>The menu probe targets (#1019): <c>GameMenuVM.OnFrameTick()</c>, the <c>ContextText</c> setter and <c>ServiceStatusService.RefreshIfChanged()</c>; null where one does not resolve.</summary>
+    internal static IReadOnlyList<MethodBase?> MenuTargets()
+    {
+        // Found by name, as on the 1.5.x line, so this class never names the view-model assembly in a signature.
+        var menu = Type.GetType("TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.GameMenuVM, TaleWorlds.CampaignSystem.ViewModelCollection", false);
+        return new MethodBase?[]
+        {
+            menu == null ? null : AccessTools.Method(menu, "OnFrameTick", Type.EmptyTypes),
+            menu == null ? null : AccessTools.PropertySetter(menu, "ContextText"),
+            AccessTools.Method(typeof(ServiceStatusService), nameof(ServiceStatusService.RefreshIfChanged), Type.EmptyTypes),
+        };
+    }
 
     /// <summary>The names of the core targets that do not resolve or that <paramref name="isPatched"/> rejects, in
     /// <see cref="CoreTargetNames"/> order: what the install line calls missing, and what the session hooks look

@@ -66,6 +66,20 @@ public class MapProfileLinesTests
     }
 
     [TestMethod]
+    public void BuildMenuProbesLine_MatchesThePinnedLiteral()
+    {
+        Assert.AreEqual("[MapProfiler] menu probes: 3/3 patched", MapProfileLines.BuildMenuProbesLine(3, 3));
+        Assert.AreEqual("[MapProfiler] menu probes: 1/3 patched", MapProfileLines.BuildMenuProbesLine(1, 3));
+    }
+
+    [TestMethod]
+    public void BuildMenuFailedLine_QuotesTheMessageWithoutSquareBrackets()
+    {
+        Assert.AreEqual("[MapProfiler] menu probes failed, the profiler stays installed without them: InvalidOperationException: (x)",
+            MapProfileLines.BuildMenuFailedLine(new InvalidOperationException("[x]")));
+    }
+
+    [TestMethod]
     public void BuildInstallLine_MissingTargets_NamesThem()
     {
         var line = MapProfileLines.BuildInstallLine(false, true, 4, 6,
@@ -135,6 +149,8 @@ public class MapProfileLinesTests
         MapProfileLines.BuildWalkerUnboundLine("x"),
         MapProfileLines.BuildTickEventVanillaLine(0),
         MapProfileLines.BuildViewsShortLine(1, 3),
+        MapProfileLines.BuildMenuProbesLine(2, 3),
+        MapProfileLines.BuildMenuFailedLine(new InvalidOperationException("[x]")),
         MapProfileLines.BuildSessionStartLine(1, 8, 4, 8),
         MapProfileLines.BuildSessionOffLine(1),
         MapProfileLines.BuildNoFramesLine(1, "gameEnd"),
@@ -171,6 +187,8 @@ public class MapProfileLinesTests
             "[MapProfiler] TickEvent listener walk not bound (x); tickEventMs still times the whole dispatch, but no listener is attributed and taomMs leaves the TAOM listeners out",
             "[MapProfiler] CampaignEvents.Tick left vanilla (sites 0/1); tickEventMs reads 0, no listener is attributed, and the dispatch stays inside campaignTickMs",
             "[MapProfiler] 1 of 3 TAOM map view overrides patched; the others run unattributed inside mapScreenMs",
+            "[MapProfiler] menu probes: 2/3 patched",
+            "[MapProfiler] menu probes failed, the profiler stays installed without them: InvalidOperationException: (x)",
             "[MapProfiler] session 1: measuring, top 8 entries per line, a window line every 5 s of wall clock while the map ticks, speed classes FF up to 4x, FF2 up to 8x, FF3 above",
             "[MapProfiler] session 1: not measuring, 'Enable Map Profiler' is off in MCM; the patches stay installed and only call through until a restart",
             "[MapProfiler] session 1 end (gameEnd): no frame closed while measuring, so no summary",

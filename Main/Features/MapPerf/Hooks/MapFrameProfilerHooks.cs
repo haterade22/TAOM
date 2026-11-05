@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
@@ -62,6 +63,18 @@ public static class MapFrameProfilerHooks
         var elapsed = Stopwatch.GetTimestamp() - start.Ticks;
         profiler.RecordEntry(profiler.Entries.SlotFor(instance.GetType()), elapsed,
             AllocationCounter.ReadOrZero() - start.Alloc, taomOwned: true);
+    }
+
+    /// <summary>A menu probe (#1019): one entry keyed by <paramref name="key"/>, counted in taomMs only when <paramref name="taomOwned"/>.</summary>
+    internal static void RecordProbe(Type key, ProbeStamp start, bool taomOwned)
+    {
+        if (start.Ticks == 0)
+            return;
+        var profiler = Profiler;
+        if (profiler == null)
+            return;
+        var elapsed = Stopwatch.GetTimestamp() - start.Ticks;
+        profiler.RecordEntry(profiler.Entries.SlotFor(key), elapsed, AllocationCounter.ReadOrZero() - start.Alloc, taomOwned);
     }
 
     /// <summary>Replaces CampaignEvents.Tick's <c>callvirt MbEvent&lt;float&gt;::Invoke(float)</c> (Patch101

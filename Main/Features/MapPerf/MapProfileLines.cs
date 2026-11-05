@@ -116,6 +116,14 @@ public static class MapProfileLines
         StatusTag + " " + Int(patched) + " of " + Int(found)
         + " TAOM map view overrides patched; the others run unattributed inside mapScreenMs";
 
+    /// <summary>The menu probes (#1019): how many of the three menu targets carry a profiler patch.</summary>
+    public static string BuildMenuProbesLine(int patched, int total) =>
+        StatusTag + " menu probes: " + Int(patched) + "/" + Int(total) + " patched";
+
+    /// <summary>Applying the menu probes threw; the rest of the profiler is unaffected.</summary>
+    public static string BuildMenuFailedLine(Exception ex) =>
+        StatusTag + " menu probes failed, the profiler stays installed without them: " + ex.GetType().Name + ": " + Quote(ex.Message);
+
     /// <summary>Required Patch101 hooks found unpatched at a session start, a window start or a measuring session's end
     /// (PatchShield strips a swallowed throw's method by owner, and the profiler's owner is not protected): one line
     /// naming every one of them.</summary>

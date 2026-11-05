@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,6 +9,7 @@ using NSubstitute;
 using TaleWorlds.CampaignSystem;
 using TAOM.Core.Logging;
 using TAOM.Dependencies.Foundation;
+using TAOM.Features.Enlistment;
 using TAOM.Features.MapPerf.Hooks;
 using TAOM.Features.MissionPerf;
 using TAOM.Tests.Migration;
@@ -18,9 +20,10 @@ namespace TAOM.Tests.Features.MapPerf;
 /// Drift guard for Patch101. Its transpiler is fail-safe (a missing site leaves <c>CampaignEvents.Tick</c>
 /// vanilla with one warning) and its listener walk copies vanilla <c>MbEvent&lt;T&gt;.InvokeList</c>, so an
 /// engine bump that moves the call site or changes the loop would silently attribute nothing or change the
-/// dispatch; these read the REAL installed IL. The two PatchShield walks pin decision D13 (option B, the
-/// maintainer, 2026-10-03): the two engine targets only this profiler patches stay off PatchShield's per-call
-/// finalizer, and the three that other TAOM patches use for every player stay under it.
+/// dispatch; these read the REAL installed IL. The PatchShield walks pin decision D13 (option B, the
+/// maintainer, 2026-10-03): the three engine targets only this profiler patches (Campaign.Tick, CampaignEvents.Tick,
+/// GameMenuVM.OnFrameTick) stay off PatchShield's per-call finalizer, and the four that other TAOM patches use for every player
+/// stay under it.
 /// </summary>
 [TestClass]
 public class MapFrameProfilerBindingTests
@@ -173,14 +176,55 @@ public class MapFrameProfilerBindingTests
                 view + ".OnMapScreenUpdate is missing from the targets.");
     }
 
-    // Campaign.Tick and CampaignEvents.Tick carry no TAOM patch but Patch101, so excluding them changes nothing for
-    // a player with the profiler off.
+    // The menu probes (#1019): a Patch101 sub-category, installed only with the toggle on, whose patch classes carry the
+    // suffix IsPatchedByThisProfiler looks for and bracket their target (prefix first, postfix last).
+    [TestMethod]
+    public void MenuProbes_AreASubCategory_WithTheProfilerSuffix_AndTheBracketPriorities()
+    {
+        var patches = new[]
+        {
+            typeof(GameMenuVM_OnFrameTick_MapProfiler_Patch), typeof(GameMenuVM_ContextText_MapProfiler_Patch),
+            typeof(ServiceStatusService_RefreshIfChanged_MapProfiler_Patch),
+        };
+
+        Assert.AreEqual("Patch101_MapFrameProfiler_Menu", MapFrameProfilerInstaller.MenuCategory);
+        foreach (var patch in patches)
+        {
+            Assert.IsTrue(patch.Name.EndsWith("_MapProfiler_Patch", StringComparison.Ordinal), patch.Name);
+            Assert.AreEqual(MapFrameProfilerInstaller.MenuCategory, patch.GetCustomAttribute<HarmonyPatchCategory>()!.info.category, patch.Name);
+            Assert.AreEqual(Priority.First, patch.GetMethod("Prefix")!.GetCustomAttribute<HarmonyPriority>()!.info.priority, patch.Name);
+            Assert.AreEqual(Priority.Last, patch.GetMethod("Postfix")!.GetCustomAttribute<HarmonyPriority>()!.info.priority, patch.Name);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MenuProbes_EachPatchResolvesItsOwnMethod()
+    {
+        RequireGame();
+        var expected = new[]
+        {
+            (typeof(GameMenuVM_OnFrameTick_MapProfiler_Patch), "OnFrameTick"),
+            (typeof(GameMenuVM_ContextText_MapProfiler_Patch), "set_ContextText"),
+            (typeof(ServiceStatusService_RefreshIfChanged_MapProfiler_Patch), "RefreshIfChanged"),
+        };
+
+        foreach (var (patch, name) in expected)
+        {
+            var target = TargetOf(patch);
+            Assert.IsNotNull(target, patch.Name + " has no resolvable target.");
+            Assert.AreEqual(name, target.Name, patch.Name);
+        }
+    }
+
+    // Campaign.Tick, CampaignEvents.Tick and GameMenuVM.OnFrameTick carry no TAOM patch but Patch101, so excluding them changes nothing for
+    // a player with the profiler off as far as TAOM's own patches go; another mod's patch on one of them loses the shield either way.
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void ProfilerOnlyTargets_AreOnPatchShieldsExclusionList()
     {
         RequireGame();
-        foreach (var patch in new[] { typeof(Campaign_Tick_MapProfiler_Patch), typeof(CampaignEvents_Tick_MapProfiler_Patch) })
+        foreach (var patch in new[] { typeof(Campaign_Tick_MapProfiler_Patch), typeof(CampaignEvents_Tick_MapProfiler_Patch), typeof(GameMenuVM_OnFrameTick_MapProfiler_Patch) })
         {
             var target = TargetOf(patch);
             Assert.IsNotNull(target, patch.Name + " has no resolvable target.");
@@ -188,6 +232,37 @@ public class MapFrameProfilerBindingTests
                 $"{target.DeclaringType?.FullName}.{target.Name} must be in PatchShieldPolicy.ExcludedTargetMethods");
         }
     }
+
+    // The reverse of the walk above: "carries no TAOM patch but Patch101" is the reason the exclusions change nothing for a
+    // player with the profiler off, so a second TAOM patch class on one of the three targets would break it silently.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ProfilerOnlyTargets_AreSharedWithNoOtherTaomPatchClass()
+    {
+        RequireGame();
+        var profilerOnly = new[] { typeof(Campaign_Tick_MapProfiler_Patch), typeof(CampaignEvents_Tick_MapProfiler_Patch), typeof(GameMenuVM_OnFrameTick_MapProfiler_Patch) }
+            .Select(p => Key(TargetOf(p)))
+            .ToHashSet();
+        Assert.AreEqual(3, profilerOnly.Count);
+
+        // AccessTools.GetTypesFromAssembly is the enumeration Harmony's PatchCategory uses.
+        var assemblies = new[] { typeof(MapFrameProfilerInstaller).Assembly };
+        var offenders = new List<string>();
+        foreach (var type in assemblies.SelectMany(AccessTools.GetTypesFromAssembly))
+        {
+            if (!type.GetCustomAttributes<HarmonyPatch>().Any() || type.Name.EndsWith("_MapProfiler_Patch", StringComparison.Ordinal))
+                continue;
+            MethodBase target;
+            try { target = TargetOf(type); }
+            catch (Exception) { continue; }
+            if (target != null && profilerOnly.Contains(Key(target)))
+                offenders.Add(type.FullName);
+        }
+
+        Assert.AreEqual(0, offenders.Count, "Another TAOM patch class targets a profiler-only method: " + string.Join(", ", offenders));
+    }
+
+    private static string Key(MethodBase method) => method.DeclaringType?.FullName + "." + method.Name;
 
     // Decision D13 (option B, the maintainer, 2026-10-03): MapState.OnTick (Patch43), Campaign.RealTick (Patch89)
     // and MapScreen.OnFrameTick (Patch36, Patch89) are patched for every player, so they keep PatchShield's
@@ -201,6 +276,7 @@ public class MapFrameProfilerBindingTests
                  {
                      typeof(MapState_OnTick_MapProfiler_Patch), typeof(Campaign_RealTick_MapProfiler_Patch),
                      typeof(MapScreen_OnFrameTick_MapProfiler_Patch),
+                     typeof(GameMenuVM_ContextText_MapProfiler_Patch),
                  })
         {
             var target = TargetOf(patch);
