@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using HarmonyLib;
 
@@ -36,7 +38,7 @@ public static class PatchShield
     private const string HarmonyId = "TAOM.Dependencies.Foundation.PatchShield";
     private const string DisableFlagName = "patchshield-disabled.flag";
 
-    private static readonly HashSet<MethodBase> _shielded = new();
+    private static readonly ShieldCoverage _coverage = new();
     private static readonly HashSet<string> _unpatched = new();
     private static readonly HashSet<string> _withheld = new();
     private static readonly object _lock = new();
@@ -47,40 +49,32 @@ public static class PatchShield
     // prefixes from coop-modules.txt — union only, so a bad config edit can never unprotect the
     // BUTR/MCM stack. Built once per unpatch attempt in TryUnpatchOffendingPatches.
 
-    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
-    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
-    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
-    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
-    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
-    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
-    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
-    // frozen exit (+8,276 gen0 GCs, invariant across sessions — stack-sampled proof in
-    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
-    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
-    private static readonly string[] ExcludedTargetNamespacePrefixes =
-    {
-        "TaleWorlds.GauntletUI",
-        "TaleWorlds.TwoDimension",
-        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
-        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
-        // campaign map) lives here and was silently paying the shield tax every frame.
-        // Same rationale as above: hot widget/view layer, shield value nil.
-        "TaleWorlds.MountAndBlade.GauntletUI",
-    };
+    // The target exclusion lists live in PatchShieldPolicy: by namespace
+    // (ExcludedTargetNamespacePrefixes, #331, plan 007) and by declaring-type+method
+    // (ExcludedTargetMethods: members whose namespace is not excluded as a whole).
 
     private static bool IsExcludedTarget(MethodBase method)
     {
         try
         {
-            var ns = method.DeclaringType?.Namespace ?? string.Empty;
-            foreach (var prefix in ExcludedTargetNamespacePrefixes)
-            {
-                if (ns.StartsWith(prefix, StringComparison.Ordinal))
-                    return true;
-            }
+            return PatchShieldPolicy.IsExcludedTargetNamespace(method.DeclaringType?.Namespace)
+                || PatchShieldPolicy.IsExcludedTargetMethod(method.DeclaringType?.FullName, method.Name);
         }
-        catch { /* fail open — an unreadable type just gets shielded as before */ }
-        return false;
+        catch { return false; /* fail open: an unreadable type just gets shielded as before */ }
+    }
+
+    // One diag.log reason line per patched method skipped by name (ExcludedTargetMethods), once per
+    // process: the caller has just recorded the method as seen. The namespace exclusions stay counted
+    // only; they cover whole layers, and their rationale is in PatchShieldPolicy.
+    private static void LogHotMethodSkip(MethodBase method)
+    {
+        try
+        {
+            var type = method.DeclaringType?.FullName;
+            if (!PatchShieldPolicy.IsExcludedTargetMethod(type, method.Name)) return;
+            DiagLog.Log(Tag, PatchShieldPolicy.FormatHotMethodSkip(type, method.Name, Harmony.GetPatchInfo(method)?.Owners));
+        }
+        catch { /* diagnostic only */ }
     }
 
     private static readonly Dictionary<string, int> _ownerCounts =
@@ -98,7 +92,27 @@ public static class PatchShield
     // summary prints it.
     private static long _rethrown;
 
-    public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
+    // Exceptions whose shielded method ResolveShieldedOriginal could not name (plan 034). The first
+    // miss is logged in full, once; the session summary prints the count when it is not zero.
+    private static long _unresolvedOriginal;
+    private static int _unresolvedOriginalLogged;
+
+    // Swallow lines already written this process, with how often each repeated (maintainer decision D16). A throw
+    // the shield swallows but cannot cure comes back on every call, and its line used to be written every time.
+    // Examples, not a complete list: a lookup miss, an owner on the protected list, a strip withheld under co-op,
+    // a throw from the shielded method's own body or from a method it calls (no strip reaches that), and a target
+    // already rescued once (each target is, once per process). The first occurrence of a line goes out in full, and
+    // a write that failed is tried again by the next occurrence. Repeats are counted: the running count is written
+    // by WriteRepeatCheckpoint when a mission starts (a count whose write failed goes out again at the next one), and
+    // the total by WriteSessionSummary at a clean shutdown. The table holds 256 distinct lines (a line includes the
+    // exception message); a line past that is written in full every time, never dropped.
+    private static readonly LogRepeatLimiter _swallowLines = new(capacity: 256);
+
+    /// <summary>Methods carrying PatchShield's finalizer.</summary>
+    public static int AttachedCount { get { lock (_lock) return _coverage.AttachedCount; } }
+
+    /// <summary>Patched methods the passes examined and decided on, skipped ones included.</summary>
+    public static int SeenCount { get { lock (_lock) return _coverage.SeenCount; } }
     public static int UnpatchedCount { get { lock (_lock) return _unpatched.Count; } }
 
     /// <summary>Targets where the rescue unpatch was suppressed because a co-op module is active.</summary>
@@ -109,6 +123,9 @@ public static class PatchShield
     public static long SwallowedOther => Interlocked.Read(ref _swallowedOther);
     public static long SwallowedTotal => SwallowedMissingMethod + SwallowedMissingField + SwallowedTypeLoad + SwallowedOther;
     public static long RethrownCount => Interlocked.Read(ref _rethrown);
+
+    /// <summary>Times <see cref="ResolveShieldedOriginal"/> could not name the shielded method.</summary>
+    public static long UnresolvedOriginalCount => Interlocked.Read(ref _unresolvedOriginal);
 
     public static bool IsDisabled()
     {
@@ -135,9 +152,10 @@ public static class PatchShield
             DiagLog.Log(Tag, coopActive
                 // Player-reported 2026-08-02: this is a frame-rate fix, not a safety change. Coop's
                 // AutoSync transpiles every declared method of 43 campaign types, and shielding that
-                // surface makes every one of them pay the __originalMethod binding tax per call —
-                // the same mechanism as the #331 tournament freeze. Rationale + what it gives up:
-                // PatchShieldPolicy.ShouldInstall.
+                // surface made every one of them pay for the __originalMethod parameter the finalizer
+                // took until plan 034, on every call, the same mechanism as the #331 tournament freeze.
+                // The finalizer now takes only __exception; the skip stands as decided. Rationale +
+                // what it gives up: PatchShieldPolicy.ShouldInstall.
                 ? $"co-op module(s) active ({string.Join(", ", CoopPresence.ActiveCoopModuleIds)}) — " +
                   "PatchShield install skipped (finalizer tax on Coop's AutoSync surface)"
                 : "patchshield-disabled.flag present — PatchShield install skipped");
@@ -159,6 +177,7 @@ public static class PatchShield
                 return;
             }
 
+            var stopwatch = Stopwatch.StartNew();
             List<MethodBase> patched;
             try
             {
@@ -170,13 +189,13 @@ public static class PatchShield
                 return;
             }
 
-            int added = 0, skipped = 0, alreadyShielded = 0;
+            int added = 0, skipped = 0, alreadySeen = 0, seenTotal, attachedTotal;
             lock (_lock)
             {
                 foreach (var method in patched)
                 {
                     if (method == null) { skipped++; continue; }
-                    if (_shielded.Contains(method)) { alreadyShielded++; continue; }
+                    if (_coverage.HasSeen(method)) { alreadySeen++; continue; }
 
                     // Don't shield our own methods.
                     try
@@ -184,20 +203,24 @@ public static class PatchShield
                         var declAsm = method.DeclaringType?.Assembly.GetName().Name ?? string.Empty;
                         if (declAsm.StartsWith("TAOM", StringComparison.OrdinalIgnoreCase))
                         {
-                            _shielded.Add(method);
+                            _coverage.RecordSkipped(method);
                             skipped++;
                             continue;
                         }
                     }
                     catch { }
 
-                    // Never shield hot UI-layer targets — a per-call __originalMethod
-                    // finalizer on the Gauntlet prefab system froze tournament exits for
-                    // ~107s (#331 round 2). See ExcludedTargetNamespacePrefixes.
+                    // Never shield the excluded targets: the Gauntlet/2D UI (#331 round 2: a
+                    // per-call __originalMethod finalizer froze tournament exits for ~107s), the
+                    // engine's ManagedCallbacks boundary, whose callback shims Native2Managed crash
+                    // capture already wraps (plan 007), and the methods on ExcludedTargetMethods. See
+                    // PatchShieldPolicy.ExcludedTargetNamespacePrefixes and ExcludedTargetMethods; the
+                    // skip applies to every owner, so another mod's patch on those targets is unshielded too.
                     if (IsExcludedTarget(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
+                        LogHotMethodSkip(method);
                         continue;
                     }
 
@@ -209,7 +232,7 @@ public static class PatchShield
                     // broader exception set on those methods, so we add nothing by shielding them.
                     if (SaveShield.IsShielding(method))
                     {
-                        _shielded.Add(method);
+                        _coverage.RecordSkipped(method);
                         skipped++;
                         continue;
                     }
@@ -221,7 +244,7 @@ public static class PatchShield
                         var finalizer = isVoid ? voidFinalizer : resultFinalizer;
                         harmony.Patch(method, prefix: null, postfix: null, transpiler: null,
                             finalizer: new HarmonyMethod(finalizer));
-                        _shielded.Add(method);
+                        _coverage.RecordAttached(method);
                         added++;
                     }
                     catch (Exception ex)
@@ -230,11 +253,16 @@ public static class PatchShield
                         DiagLog.LogCaught(Tag, $"shielding {method.DeclaringType?.FullName}.{method.Name}", ex);
                     }
                 }
+
+                seenTotal = _coverage.SeenCount;
+                attachedTotal = _coverage.AttachedCount;
             }
 
-            if (added > 0 || alreadyShielded == 0)
+            if (added > 0 || alreadySeen == 0)
             {
-                DiagLog.Log(Tag, $"shield pass: +{added} new, {alreadyShielded} already-shielded, {skipped} skipped (total: {_shielded.Count})");
+                DiagLog.Log(Tag, PatchShieldPolicy.FormatShieldPassSummary(
+                    added: added, alreadySeen: alreadySeen, skipped: skipped,
+                    seenTotal: seenTotal, attachedTotal: attachedTotal, elapsedMs: stopwatch.ElapsedMilliseconds));
             }
         }
         catch (Exception ex)
@@ -249,18 +277,23 @@ public static class PatchShield
     /// returning the ORIGINAL exception (Harmony Finalizer convention).
     ///
     /// Harmony calls this on EVERY call of the patched method, with a null exception when
-    /// nothing threw, so the no-exception path must stay one null check.
+    /// nothing threw, so the no-exception path must stay one null check. It takes no
+    /// <c>__originalMethod</c>: that parameter makes Harmony's wrapper call
+    /// <c>MethodBase.GetMethodFromHandle</c> on every call (plan 034 measured about 63 ns), and the
+    /// shielded method is needed only after a throw, where <see cref="ResolveShieldedOriginal"/> finds it.
     /// </summary>
-    private static Exception? ShieldFinalizerVoid(MethodBase __originalMethod, Exception __exception)
+    private static Exception? ShieldFinalizerVoid(Exception __exception)
     {
-        if (__exception == null || ShouldSwallow(__originalMethod, __exception)) return null;
+        if (__exception == null) return null;
+        var originalMethod = ResolveShieldedOriginal(typeof(PatchShield));
+        if (ShouldSwallow(originalMethod, __exception)) return null;
 
         // Harmony rethrows a returned exception with `throw` (this finalizer returns a value, so
         // the wrapper never uses `rethrow`), which would replace its stack trace with the frames
         // from this method outward (player bundle 2d446100: a childbirth failure reported as five
         // frames ending at MapState.OnTick_Patch2).
         Interlocked.Increment(ref _rethrown);
-        return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
+        return RethrowStackPreserver.PreserveForRethrow(__exception, originalMethod);
     }
 
     /// <summary>
@@ -268,17 +301,102 @@ public static class PatchShield
     /// returns its zero/default value when we swallow because we don't have access
     /// to <c>__result</c> in a Finalizer (Harmony quirk). Acceptable trade-off:
     /// the caller gets a "stub" return value, which is far better than a crash.
+    /// It takes no <c>__originalMethod</c>, for the reason given on <see cref="ShieldFinalizerVoid"/>.
     /// </summary>
-    private static Exception? ShieldFinalizerWithResult(MethodBase __originalMethod, Exception __exception)
+    private static Exception? ShieldFinalizerWithResult(Exception __exception)
     {
-        if (__exception == null || ShouldSwallow(__originalMethod, __exception)) return null;
+        if (__exception == null) return null;
+        var originalMethod = ResolveShieldedOriginal(typeof(PatchShield));
+        if (ShouldSwallow(originalMethod, __exception)) return null;
 
         // Same rethrow as ShieldFinalizerVoid; see there.
         Interlocked.Increment(ref _rethrown);
-        return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);
+        return RethrowStackPreserver.PreserveForRethrow(__exception, originalMethod);
     }
 
-    private static bool ShouldSwallow(MethodBase originalMethod, Exception exception)
+    /// <summary>
+    /// The shielded method whose Harmony replacement called the finalizer that calls this, or null.
+    /// Call it directly from the finalizer and pass the finalizer's declaring type. It skips the frames
+    /// of that type (the finalizer itself, unless the JIT inlined it into the replacement), and the frame
+    /// of a replacement Harmony maps back to that type (another mod's patch on the finalizer runs its body
+    /// there), then judges exactly one frame, the next one: the replacement running the finalizer. It
+    /// returns that frame's original when Harmony maps it back
+    /// (<see cref="Harmony.GetOriginalMethodFromStackframe"/>), and otherwise null. It never climbs further,
+    /// because an outer shielded method on the same stack is the wrong method, and the swallow path would
+    /// unpatch it. Exception path only: a stack walk costs far more than a call, and the finalizers reach
+    /// this only after a throw. The callers already handle null (the log names "?.?", nothing is
+    /// unpatched, and the rethrow marker says "an unknown method"). A null result is counted, and the
+    /// first one is logged with its reason. Never throws.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    internal static MethodBase? ResolveShieldedOriginal(Type finalizerType)
+    {
+        string reason;
+        try
+        {
+            reason = "no frame above the finalizer";
+            var frames = new StackTrace(1, false).GetFrames();
+            if (frames == null) reason = "the stack trace had no frames";
+            else
+            {
+                foreach (var frame in frames)
+                {
+                    if (frame == null) { reason = "a frame reported no method"; break; }
+                    var method = frame.GetMethod();
+                    if (method?.DeclaringType == finalizerType) continue;   // the calling finalizer's own frame
+                    // A frame with no method still goes to Harmony, which maps such frames by address on Mono.
+                    var original = Harmony.GetOriginalMethodFromStackframe(frame);
+                    // Still the finalizer's own frame: another mod's patch on the finalizer runs its body inside
+                    // a replacement that Harmony maps back to the finalizer. The next frame is the one judged.
+                    if (original?.DeclaringType == finalizerType) continue;
+                    if (original != null && !ReferenceEquals(original, method)) return original;
+                    // The judged frame is not a replacement Harmony maps: stop here, never climb.
+                    reason = method == null
+                        ? "a frame reported no method"
+                        : $"the calling frame {Describe(method)} is not a replacement this Harmony copy maps";
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Fail open: a null original degrades the log line and the unpatch, never the swallow.
+            reason = $"the stack walk threw {ex.GetType().Name}: {ex.Message}";
+        }
+
+        Interlocked.Increment(ref _unresolvedOriginal);
+        // Once per session, but a write that did not land does not use the once up: the next miss tries again.
+        if (Interlocked.Exchange(ref _unresolvedOriginalLogged, 1) == 0 && !DiagLog.TryLog(Tag, FormatUnresolvedOriginal(reason)))
+            Volatile.Write(ref _unresolvedOriginalLogged, 0);
+        return null;
+    }
+
+    /// <summary>The diag.log line for the first time <see cref="ResolveShieldedOriginal"/> finds nothing.</summary>
+    internal static string FormatUnresolvedOriginal(string reason) =>
+        $"could not tell which shielded method an exception crossed ({reason}): the shield still swallows or " +
+        "rethrows it as before, but its log line names '?.?', nothing is unpatched for it and its rethrow marker " +
+        "says 'an unknown method'. Logged once per session; the session summary counts every miss.";
+
+    /// <summary>
+    /// The session summary's line for a swallow line that repeated: the line itself, then how many occurrences were
+    /// counted instead of written (maintainer decision D16). That is the repeats after the one written in full, plus
+    /// any whose write failed; when no write of the line landed it is every occurrence, and this line is then the only
+    /// copy of its text in the log.
+    /// </summary>
+    internal static string FormatRepeatedSwallow(string line, long repeats) =>
+        $"{line} (and {repeats} more this session, counted instead of logged)";
+
+    /// <summary>
+    /// The line <see cref="WriteRepeatCheckpoint"/> writes for a swallow line that repeated: like
+    /// <see cref="FormatRepeatedSwallow"/>, but the count is a running total, because the session is not over.
+    /// </summary>
+    internal static string FormatRepeatedSwallowSoFar(string line, long repeats) =>
+        $"{line} (and {repeats} more so far this session, counted instead of logged)";
+
+    private static string Describe(MethodBase method) =>
+        method.DeclaringType == null ? method.Name : method.DeclaringType.FullName + "." + method.Name;
+
+    private static bool ShouldSwallow(MethodBase? originalMethod, Exception exception)
     {
         if (exception == null) return false;
 
@@ -306,7 +424,7 @@ public static class PatchShield
             {
                 var owner = originalMethod?.DeclaringType?.FullName ?? "?";
                 var name = originalMethod?.Name ?? "?";
-                DiagLog.Log(Tag, $"swallowed {ex.GetType().Name} from a patch on {owner}.{name}: {ex.Message}");
+                WriteSwallowLine($"swallowed {ex.GetType().Name} from a patch on {owner}.{name}: {ex.Message}");
             }
             catch { }
 
@@ -320,7 +438,20 @@ public static class PatchShield
         return false;
     }
 
-    private static void TryUnpatchOffendingPatches(MethodBase originalMethod, Exception ex)
+    /// <summary>
+    /// Writes a swallow line the first time it appears, and again on a later occurrence if that write did not land
+    /// (<see cref="DiagLog.TryLog"/> says; DiagLog swallows its own failures), so a transient I/O fault cannot keep
+    /// the line out of the log for the whole session. Every other occurrence is counted by <see cref="_swallowLines"/>.
+    /// </summary>
+    private static void WriteSwallowLine(string line)
+    {
+        if (!_swallowLines.ShouldWrite(line)) return;
+        var written = false;
+        try { written = DiagLog.TryLog(Tag, line); }
+        finally { _swallowLines.WriteFinished(line, written); }
+    }
+
+    private static void TryUnpatchOffendingPatches(MethodBase? originalMethod, Exception ex)
     {
         if (originalMethod == null) return;
 
@@ -419,7 +550,34 @@ public static class PatchShield
     }
 
     /// <summary>
-    /// Writes a one-line summary of swallow stats. Wire to AppDomain.ProcessExit.
+    /// Writes the running count of each swallow line that repeated since the last report
+    /// (<see cref="FormatRepeatedSwallowSoFar"/>), and nothing for a line whose count did not change. The summary
+    /// below runs only at a clean managed shutdown, so a session that crashes would otherwise keep the first line of
+    /// each swallow and lose its count (maintainer decision D6: aggregate, never drop). A count whose write did not
+    /// land (<see cref="DiagLog.TryLog"/> says) is not a report: the line goes back to the limiter, so the next
+    /// checkpoint writes its running total again. The caller picks the boundary:
+    /// <c>SubModule.OnBeforeMissionBehaviorInitialize</c> calls it at the start of every mission. Never throws.
+    /// </summary>
+    public static void WriteRepeatCheckpoint()
+    {
+        try
+        {
+            foreach (var repeated in _swallowLines.TakeUnreported())
+            {
+                if (!DiagLog.TryLog(Tag, FormatRepeatedSwallowSoFar(repeated.Key, repeated.Value)))
+                    _swallowLines.Unreport(repeated.Key);
+            }
+        }
+        catch (Exception ex)
+        {
+            DiagLog.LogCaught(Tag, "WriteRepeatCheckpoint", ex);
+        }
+    }
+
+    /// <summary>
+    /// Writes a one-line summary of swallow stats, then one line for each swallow line that repeated, with its total
+    /// (<see cref="FormatRepeatedSwallow"/>), whether or not <see cref="WriteRepeatCheckpoint"/> reported it earlier.
+    /// Wire to AppDomain.ProcessExit.
     /// </summary>
     public static void WriteSessionSummary()
     {
@@ -435,14 +593,21 @@ public static class PatchShield
                 }
             }
             var withheld = WithheldCount;
+            var unresolved = UnresolvedOriginalCount;
             DiagLog.Log(Tag,
-                $"SESSION SUMMARY: shielded {ShieldedCount} method(s), unpatched {UnpatchedCount} target(s)" +
+                $"SESSION SUMMARY: shielded {AttachedCount} of {SeenCount} patched method(s) seen, unpatched {UnpatchedCount} target(s)" +
                 (withheld > 0 ? $", withheld {withheld} target(s) (co-op active)" : string.Empty) + ", " +
                 $"swallowed {SwallowedTotal} exception(s) " +
                 $"(MissingMethod {SwallowedMissingMethod}, MissingField {SwallowedMissingField}, " +
                 $"TypeLoad {SwallowedTypeLoad}, other {SwallowedOther}), " +
-                $"rethrew {RethrownCount} with the stack preserved. " +
+                $"rethrew {RethrownCount} with the stack preserved" +
+                (unresolved > 0 ? $"; the shielded method was unknown {unresolved} time(s)" : string.Empty) + ". " +
                 $"Top unpatched owner: {topOwner}.");
+
+            // The total of each count. WriteSwallowLine wrote each of these lines in full once, except a line whose
+            // every write failed: this line is then its only copy.
+            foreach (var repeated in _swallowLines.Repeated())
+                DiagLog.Log(Tag, FormatRepeatedSwallow(repeated.Key, repeated.Value));
         }
         catch (Exception ex)
         {

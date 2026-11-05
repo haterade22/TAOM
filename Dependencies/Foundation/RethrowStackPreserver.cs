@@ -35,8 +35,8 @@ namespace TAOM.Dependencies.Foundation;
 /// though the text is intact. Harmony runs a method's finalizers highest priority first, then in
 /// the order they were added, so anything that reads frames from a finalizer on the same method must
 /// run before PatchShield's. The crash reporter's Patch37 finalizers outrank it at 800 (pinned by
-/// <c>CrashReporterFinalizers_OutrankPatchShield</c>); its Native2Managed bridge finalizers are at
-/// the default priority and run first only because they are added before PatchShield's pass 2.
+/// <c>CrashReporterFinalizers_OutrankPatchShield</c>); its Native2Managed bridge finalizers share no
+/// method with PatchShield, whose pass 2 skips the <c>ManagedCallbacks</c> namespace (plan 007).
 /// </summary>
 public static class RethrowStackPreserver
 {
@@ -54,10 +54,16 @@ public static class RethrowStackPreserver
     private static readonly FieldInfo? StackTraceStringField = ExceptionField("_stackTraceString");
 
     /// <param name="exception">The exception the finalizer is about to return.</param>
-    /// <param name="rethrowSite">The patched (original) method whose wrapper will rethrow it.</param>
+    /// <param name="rethrowSite">
+    /// The patched (original) method whose wrapper will rethrow it, or null, which the marker line reports as
+    /// "an unknown method". A finalizer that takes <c>__originalMethod</c> to supply it (SaveShield does) makes
+    /// Harmony's wrapper call <c>MethodBase.GetMethodFromHandle</c> on every call of the patched method, so a
+    /// finalizer on a hot target passes null, or finds the method only after the throw, as PatchShield does
+    /// (<see cref="PatchShield.ResolveShieldedOriginal"/>, plan 034).
+    /// </param>
     /// <returns>
     /// <paramref name="exception"/> itself, so a finalizer can write
-    /// <c>return RethrowStackPreserver.PreserveForRethrow(__exception, __originalMethod);</c>.
+    /// <c>return RethrowStackPreserver.PreserveForRethrow(__exception, rethrowSite);</c>.
     /// Never a wrapper: the type a caller above the shield catches must not change.
     /// </returns>
     public static Exception? PreserveForRethrow(Exception? exception, MethodBase? rethrowSite)
