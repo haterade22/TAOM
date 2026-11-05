@@ -88,6 +88,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani VanillaTuning | `VanillaTuning` `HoN/VanillaTuning` | MIT, (c) 2026 yotthani (`HoN/VanillaTuning/LICENSE`, since `1b9ce3ba`, 2026-10-07) | verbatim-port | `Main/Features/MissionStartGuard/**`; its adapter `Main/Adapters/{I,}MissionStartGuardAdapter.cs`; its tests `TAOM.Tests/Features/MissionStartGuard/**`; `Main/Features/SkeletonBuffer/**`, its adapters `Main/Adapters/{I,}SkeletonBufferMemoryAdapter.cs` `Main/Adapters/{I,}SkeletonBufferEngineAdapter.cs`, its tests `TAOM.Tests/Features/SkeletonBuffer/**`; `Main/Features/NameplateCull/**`, its adapter `Main/Adapters/{I,}NameplateCullAdapter.cs`, its tests `TAOM.Tests/Features/NameplateCull/**`; `Main/Features/MapViewRelease/**`, its adapter `Main/Adapters/{I,}MapViewReleaseAdapter.cs`, its tests `TAOM.Tests/Features/MapViewRelease/**` | cleared |
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
 
+| Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117) | cleared |
+
 <!-- provenance-register-end -->
 
 TAOM's own and predecessor modules. The checker skips these entirely.

@@ -25,6 +25,9 @@ public class TimeControlAdapter : ITimeControlAdapter
         set { if (Campaign.Current != null) Campaign.Current.TimeControlMode = (CampaignTimeControlMode)value; }
     }
 
+    public int SimplifiedTimeControlMode =>
+        (int)(Campaign.Current?.GetSimplifiedTimeControlMode() ?? CampaignTimeControlMode.Stop);
+
     public void SetTimeSpeed(int mode)
     {
         Campaign.Current?.SetTimeSpeed(mode);

@@ -183,7 +183,7 @@ ilspycmd can't) + the PE **version resource** (PowerShell `(Get-Item).VersionInf
 
 | Dependency | What it proves |
 |---|---|
-| **`mono-2.0-sgen.dll`** | Mono is linked into the engine (sgen GC), so the engine can host managed code on Mono. The import alone does not show which runtime players' managed code runs on: TAOM's `[SaveLoad] phase=Runtime` line (`framework=`) reports it per session. |
+| **`mono-2.0-sgen.dll`** | The native engine can host **Mono** (sgen GC) through its `WotsMainNative` entry; the import proves only that Mono is linked. v1.4.8 ships three hosts: `Bannerlord.exe` and the launcher are managed .NET Framework executables, `Launcher.Native.exe` starts the bundled .NET 6 CoreCLR, and `WotsMainNative` starts Mono. The tick profiler's `[PerfContext]` line logs `clr=` (6.0.x means CoreCLR); see [mission-frame-threads-and-native-costs.md](engine/mission-frame-threads-and-native-costs.md), section 2. |
 | **`PhysX_64` + `PhysXCommon/Cooking/Foundation_64`** | The physics engine is **NVIDIA PhysX**. (So collision capsules, ragdoll, `body_capsule` in monsters.xml feed PhysX.) |
 | **`grCore` / `grGranite` / `grGraniteDX11`** | Texture streaming is **Granite** (Graphine virtual texturing). |
 | **`d3d11.dll` / `dxgi.dll` / `D3DCOMPILER_47`** | Renderer is **DirectX 11**. |

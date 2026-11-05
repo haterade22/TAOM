@@ -75,6 +75,16 @@ public static class CoopSettingsRelevance
         "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
         // The load-time stamps' detail toggle: log lines, never a computation.
         "EnableLoadTimeStamps",
+        // The [MissionPerf] frame-time heartbeat (plan 117): a log line, never a computation.
+        "EnableMissionPerfHeartbeat",
+        // The Patch97 tick profiler and its two knobs, and the Patch98 hitch probe: log lines, never a computation.
+        "EnableTickProfiler", "TickProfilerTopN", "HitchThresholdMs", "EnableHitchProbe",
+        // The Patch101 campaign map profiler's toggle: log lines, never a computation.
+        "EnableMapProfiler",
+        // The [AnimMem] clip memory probe; it reads, never changes, the engine.
+        "EnableAnimMemoryProbe",
+        // Lost Footing (docs/features/lost-footing.md): the census writes [LostFooting] lines and reads the battle, never changes it.
+        "LostFootingCensusEnabled",
     };
 
     /// <summary>

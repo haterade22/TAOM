@@ -89,4 +89,39 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Load-Time Stamps", Order = 0, RequireRestart = false,
         HintText = "Writes the detailed load-time lines to the TAOM debug log: one [PatchApply] line per Harmony patch group with its apply time (written at game initialization), [LoadPhase] steps of TAOM's game start and game initialization, and [Lifecycle] lines timing every campaign handler of a new game, a loaded save and the session start (a line for each handler taking 10 ms or more, and a total per event). The per-type [LoadXml] lines, the patch phase totals and one [Lifecycle] dispatch line per campaign dispatch are always written. Costs a few microseconds per handler while a campaign loads and nothing during play. Default OFF.")]
     public bool EnableLoadTimeStamps { get; set; } = false;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Mission Frame-Time Heartbeat", Order = 0, RequireRestart = false,
+        HintText = "Writes a [MissionPerf] line to the TAOM debug log every 5 seconds while a mission runs: frames, fps, average / p95 / max frame time in ms, agent and formation counts, garbage collections, and the engine's main-thread and render-thread busy times (mainMs, renderMs). This is the in-mission counterpart of [MemSample] and the measurement an AI or content change is judged against. Cost is one timestamp and one GetMainFps read per frame. Default ON.")]
+    public bool EnableMissionPerfHeartbeat { get; set; } = true;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Tick Profiler", Order = 1, RequireRestart = true,
+        HintText = "Off by default. Adds per-type attribution to the hitch probe's lines: times every mission behaviour's tick, every behaviour's spawn callback and every scene script component by type, and lists the slowest. Installed once at game start: turning it on takes effect after a restart; turning it off stops it from the next mission.")]
+    public bool EnableTickProfiler { get; set; } = false;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Tick Profiler Top Behaviours", 1, 20, Order = 2, RequireRestart = false,
+        HintText = "How many entries each [TickProfile] and [TickSummary] line lists (mission behaviours) and each [MapProfile] and [MapProfileSummary] line lists (map tick listeners and TAOM map views), slowest first. Default 8. Read at each mission start and each campaign session start.")]
+    public int TickProfilerTopN { get; set; } = 8;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Hitch Threshold (ms)", 50, 2000, Order = 3, RequireRestart = false,
+        HintText = "A frame that takes this many milliseconds or more writes one [Hitch] line naming where the frame went, for the first 100 such frames of a mission; later ones are only counted. Below the battle's usual frame time, nearly every frame is a hitch. Default 250. Read at each mission start.")]
+    public int HitchThresholdMs { get; set; } = 250;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Hitch Probe", Order = 4, RequireRestart = true,
+        HintText = "On by default. Times the parts of every mission frame TAOM can see (the wait for the agent tick, the mission tick, the camera and render preparation, scene scripts, agent spawns) and checks whether an animation clip is loading from disk, so each frame slower than the hitch threshold writes a hitch line and a detail line saying where the time went. Its measured cost is written to the TAOM debug log. Installed once at game start: turning it on takes effect after a restart; turning it off stops measuring from the next mission while 'Enable Tick Profiler' is off (the profiler measures through the probe's patches).")]
+    public bool EnableHitchProbe { get; set; } = true;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Animation Clip Memory Probe", Order = 10, RequireRestart = false,
+        HintText = "Writes an [AnimMem] line to the TAOM debug log every 5 seconds while a mission runs: how much on-demand animation clip data the engine holds against its 12 MiB budget, whether a clip is loading from disk at the moment of a sample, and how often the total fell between one-second samples (a sign that clips were evicted), plus a summary when the mission ends. Read-only: it finds the two engine values once per game session by a signature check, then once a second reads the clip byte total and asks the engine whether a clip is loading; if the check fails on this game version it turns itself off and says why in the log. Takes effect at the next mission start. Default ON.")]
+    public bool EnableAnimMemoryProbe { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,
+        HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
+    public bool EnableMapProfiler { get; set; } = false;
 }

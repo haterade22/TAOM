@@ -799,6 +799,12 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>()?.NoteGameEnded(endedCampaign);
         }
         catch { /* diagnostic is best-effort, never break OnGameEnd */ }
+
+        // [MapProfileSummary] for the campaign session that just ended (Patch101, plan 117; a no-op when the
+        // map profiler is not installed). An in-campaign load can skip OnGameEnd, so the profiler also closes a
+        // session when it sees a new campaign.
+        try { Features.MapPerf.Hooks.MapSessionHooks.EndSession("gameEnd"); }
+        catch { /* diagnostic is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -1477,6 +1483,17 @@ public class SubModule : MBSubModuleBase
         // CustomGame.OnInitialize call this after their XML loads. The hook never throws.
         Features.XmlMerge.Hooks.MBObjectManager_CreateMergedXmlFile_Patch.LogWindowSummary(game?.GameType?.GameTypeStringId);
 
+        // Patch101 map frame profiler (default off; docs/features/map-perf-profiler.md), plan 117: every game
+        // init, before the once-per-process guard, because a later game init only reports (restart needed, or
+        // the install failed). The installer applies its categories at most once per process and contains its
+        // own failures; the four services it takes are registered singletons.
+        Features.MapPerf.Hooks.MapFrameProfilerInstaller.OnGameInitialized(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeControlAdapter>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeAccelerationSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
+
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
         // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent
@@ -1858,6 +1875,15 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch91b_MissionTickRecovery");
         Features.MissionTickGuard.Hooks.MissionTickRecoveryWiring.VerifyAndArm(IoC.Resolve<IModLogger>());
 
+        // Patch98 hitch probe (default on) and Patch97 tick profiler (default off), plan 117: the probe brackets
+        // the frame's phases, scene scripts and spawns for [Hitch] and [HitchDetail]; the profiler adds per-type
+        // attribution. Installed here, once per process, by their MCM toggles: game init precedes every mission,
+        // so nothing that calls Mission.OnPreTick has run yet. The installers contain their own failures.
+        Features.MissionPerf.Hooks.MissionTickProfilerInstaller.InstallIfEnabled(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
+
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
         // game's main thread — the same thread the tournament-exit stall freezes — so this
         // is a valid capture point for the sampler's main-thread reference. (Verified against
@@ -2085,6 +2111,15 @@ public class SubModule : MBSubModuleBase
         // OnBehaviorInitialize. No AddModel counterpart: the aura drives CommonAIComponent morale
         // directly and CALLS the registered BattleMoraleModel rather than overriding it.
         AddTaomBehavior(new Features.DreadAura.Hooks.DreadAuraMissionLogic());
+        // [MissionPerf] frame-time heartbeat every 5 s (plan 117): the in-mission frame-time record the
+        // battle freeze and stutter reports lack. Self-gates on its Battle Load Diagnostics toggle.
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
+        // [PerfContext] once per mission; while the hitch probe or the tick profiler measures, a [TickProfile]
+        // window (with script, spawn and clip-loading lines) on the same 5 s clock as [MissionPerf].
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IGraphicsOptionsAdapter>(),
+            IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
