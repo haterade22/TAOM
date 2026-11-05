@@ -85,6 +85,28 @@ class ExtractRefsTests(unittest.TestCase):
         # culture derived from folder.
         self.assertEqual(by_attr["mesh"].culture, "gondor")
 
+    def test_crafting_piece_owns_its_refs(self):
+        """A <CraftingPiece> owns its mesh and its <BladeData body_name> the way an <Item>
+        does. Before #633 every piece ref carried item_id "", so a consumer pairing a body with
+        its owner's mesh by id collapsed all 313 piece bodies onto one key."""
+        xml = (
+            '<CraftingPieces>\n'                                                  # 1
+            '  <CraftingPiece id="blade_a" mesh="sm_kit_blade_a">\n'              # 2
+            '    <BuildData piece_tier="1" />\n'                                  # 3
+            '    <BladeData body_name="bo_sm_kit_blade_a" />\n'                   # 4
+            '  </CraftingPiece>\n'                                                # 5
+            '  <CraftingPiece id="blade_b" mesh="sm_kit_blade_b">\n'              # 6
+            '    <BladeData body_name="bo_sm_other_blade" />\n'                   # 7
+            '  </CraftingPiece>\n'                                                # 8
+            '</CraftingPieces>\n'                                                 # 9
+        )
+        refs = vm.extract_refs_from_text(xml, "LOTRLOME_crafting_pieces.xml")
+        owners = {(r.name, r.attr): r.item_id for r in refs}
+        self.assertEqual(owners[("sm_kit_blade_a", "mesh")], "blade_a")
+        self.assertEqual(owners[("bo_sm_kit_blade_a", "body_name")], "blade_a")
+        self.assertEqual(owners[("sm_kit_blade_b", "mesh")], "blade_b")
+        self.assertEqual(owners[("bo_sm_other_blade", "body_name")], "blade_b")
+
     def test_excludes_three_false_positive_attrs(self):
         xml = (
             '<Item id="x" mesh="real_mesh" mesh_maturity_type="Teenager" '
@@ -257,7 +279,28 @@ class TierBTests(unittest.TestCase):
 class KnownDeadMeshTests(unittest.TestCase):
     """The allowlist exists so an accepted decision stops failing the gate. It
     must never turn into a blanket mute: exact names only, and it has to speak
-    up when its own reason expires."""
+    up when its own reason expires.
+
+    These tests own their fixture allowlist rather than reading the production one.
+    They used the real troll entries until 2026-09-22, when that art returned and the
+    allowlist emptied, which failed three of them: a mechanics test that depends on
+    live data breaks whenever a legitimate data decision changes."""
+
+    FIXTURE = {
+        "fixture_dead_mesh":
+            "2026-01-01: synthetic fixture for the allowlist mechanics tests. Long "
+            "enough to satisfy the reason-length rule, and it carries a date.",
+    }
+
+    def setUp(self):
+        self._saved = dict(vm.KNOWN_DEAD_MESHES)
+        vm.KNOWN_DEAD_MESHES.clear()
+        vm.KNOWN_DEAD_MESHES.update(self.FIXTURE)
+        self.addCleanup(self._restore)
+
+    def _restore(self):
+        vm.KNOWN_DEAD_MESHES.clear()
+        vm.KNOWN_DEAD_MESHES.update(self._saved)
 
     def _refs(self, mesh_name, item_id="it"):
         xml = f'<Item id="{item_id}" mesh="{mesh_name}" />\n'
@@ -267,7 +310,7 @@ class KnownDeadMeshTests(unittest.TestCase):
         return vm.PresentSet(metameshes=set(names), tpac_paths=["fake.tpac"])
 
     def test_allowlisted_dead_mesh_warns_instead_of_erroring(self):
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
         codes = _codes(issues)
         self.assertIn("KNOWN_DEAD_MESH", codes)
@@ -278,42 +321,36 @@ class KnownDeadMeshTests(unittest.TestCase):
         self.assertNotIn("STALE_DEAD_MESH_ALLOWLIST", codes)
         known = [i for i in issues if i.code == "KNOWN_DEAD_MESH"][0]
         self.assertEqual(known.severity, vm.Severity.WARNING)
-        self.assertIn("cave_troll", known.message, "the reason must reach the report")
-
-    def test_every_allowlist_entry_states_a_reason_and_a_date(self):
-        self.assertTrue(vm.KNOWN_DEAD_MESHES, "allowlist should not be empty here")
-        for name, reason in vm.KNOWN_DEAD_MESHES.items():
-            self.assertRegex(reason, r"\d{4}-\d{2}-\d{2}",
-                             f"{name} needs a decision date")
-            self.assertGreater(len(reason), 40, f"{name} needs a real reason")
+        self.assertIn("synthetic fixture", known.message,
+                      "the reason must reach the report")
 
     def test_allowlist_is_exact_names_not_prefixes(self):
         # A NEW dead mesh in an allowlisted family must still be an error.
-        refs = self._refs("lotr_troll_greaves")
+        refs = self._refs("fixture_dead_mesh_greaves")
         issues = vm.classify(refs, self._present("other"), rgl=None, scan_bodies=False)
         codes = _codes(issues)
         self.assertIn("MISSING_MESH", codes)
         self.assertNotIn("KNOWN_DEAD_MESH", codes)
 
     def test_allowlist_entry_flagged_stale_when_art_returns(self):
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         present = self._present(*vm.KNOWN_DEAD_MESHES)   # all art back
         issues = vm.classify(refs, present, rgl=None, scan_bodies=False,
                              check_allowlist=True)
         stale = [i for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"]
         self.assertTrue(stale, "art returning must retire the entry")
-        self.assertIn("lotr_troll_armor", {i.entry_id for i in stale})
+        self.assertIn("fixture_dead_mesh", {i.entry_id for i in stale})
 
     def test_allowlist_entry_flagged_stale_when_nothing_references_it(self):
         refs = self._refs("something_else")
         issues = vm.classify(refs, self._present("something_else"),
                              rgl=None, scan_bodies=False, check_allowlist=True)
         stale = {i.entry_id for i in issues if i.code == "STALE_DEAD_MESH_ALLOWLIST"}
-        self.assertEqual(stale, set(vm.KNOWN_DEAD_MESHES))
+        self.assertEqual(stale, set(self.FIXTURE))
 
     def test_unparsed_pack_still_wins_over_the_allowlist(self):
         # Degraded evidence must not be dressed up as an accepted decision.
-        refs = self._refs("lotr_troll_armor")
+        refs = self._refs("fixture_dead_mesh")
         present = vm.PresentSet(metameshes={"other"}, tpac_paths=["a.tpac"],
                                 unparsed=[("a.tpac", "bad seg_count")])
         codes = _codes(vm.classify(refs, present, rgl=None, scan_bodies=False))
@@ -321,10 +358,24 @@ class KnownDeadMeshTests(unittest.TestCase):
         self.assertNotIn("KNOWN_DEAD_MESH", codes)
 
 
+class KnownDeadMeshProductionDataTests(unittest.TestCase):
+    """Shape rules for whatever the SHIPPED allowlist actually holds. Deliberately
+    separate from the mechanics tests above, which patch the dict: this one must read
+    the real thing. An empty allowlist is a valid, healthy state (it means no art is
+    accepted-missing right now), so emptiness is not asserted either way."""
+
+    def test_every_allowlist_entry_states_a_reason_and_a_date(self):
+        for name, reason in vm.KNOWN_DEAD_MESHES.items():
+            self.assertRegex(reason, r"\d{4}-\d{2}-\d{2}",
+                             f"{name} needs a decision date")
+            self.assertGreater(len(reason), 40, f"{name} needs a real reason")
+
+
 class TpacModuleFallbackTests(unittest.TestCase):
-    """A module with no cooked packs must fall back to Assets/, not vanish from
-    the present-set. LOTRLOME_Armory has been in that state since v2.0.23, and
-    without the fallback every mesh it owns read as MISSING."""
+    """Which tree each module contributes: the loose Assets/ tree the engine loads
+    whenever it has one, the cooked AssetPackages/ only for a module without one
+    (Native), and a module with neither announced, never silently dropped (every
+    mesh it owns would read as MISSING)."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -336,23 +387,33 @@ class TpacModuleFallbackTests(unittest.TestCase):
         m.mkdir(parents=True, exist_ok=True)
         return m
 
-    def test_cooked_packs_are_preferred_when_present(self):
-        m = self._module("Cooked")
+    def test_loose_assets_win_when_both_trees_exist(self):
+        # The engine loads Assets/ over a cooked tree it also has (rgl_log "Loading packages
+        # $BASE/Modules/LOTRLOME_Armory/Assets..." after the 2026-09-26 cook), so a cooked pack
+        # is stale evidence: it hid a new hammer and would pass art deleted from Assets/.
+        m = self._module("Both")
         (m / "AssetPackages").mkdir()
         (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
         (m / "Assets" / "sub").mkdir(parents=True)
         (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Both"])]
+        self.assertEqual(got, ["loose.tpac"])
+
+    def test_cooked_packs_serve_a_module_with_no_loose_tree(self):
+        m = self._module("Cooked")
+        (m / "AssetPackages").mkdir()
+        (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Cooked"])]
         self.assertEqual(got, ["pack0.tpac"])
 
-    def test_falls_back_to_loose_assets_when_no_cooked_tree(self):
+    def test_a_module_with_only_a_loose_tree_uses_it(self):
         m = self._module("Loose")
         (m / "Assets" / "sub").mkdir(parents=True)
         (m / "Assets" / "sub" / "loose.tpac").write_bytes(b"x")
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Loose"])]
         self.assertEqual(got, ["loose.tpac"])
 
-    def test_empty_cooked_dir_still_falls_back(self):
+    def test_an_empty_cooked_dir_does_not_hide_the_loose_tree(self):
         m = self._module("EmptyCooked")
         (m / "AssetPackages").mkdir()
         (m / "Assets").mkdir()
@@ -360,9 +421,39 @@ class TpacModuleFallbackTests(unittest.TestCase):
         got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["EmptyCooked"])]
         self.assertEqual(got, ["loose.tpac"])
 
+    def test_an_assets_folder_holding_no_tpac_leaves_the_cooked_packs(self):
+        # NavalDLC's layout: an Assets/ folder with no packages, the packages cooked
+        m = self._module("Naval")
+        (m / "Assets").mkdir()
+        (m / "Assets" / "readme.txt").write_bytes(b"x")
+        (m / "AssetPackages").mkdir()
+        (m / "AssetPackages" / "pack0.tpac").write_bytes(b"x")
+        got = [p.name for p in vm.tpac_paths_for_modules(self.game, ["Naval"])]
+        self.assertEqual(got, ["pack0.tpac"])
+
+    def test_module_tpacs_keeps_the_callers_path(self):
+        # validate_moduledata passes its own Modules path; rebuilding "<parent>/Modules" from it once dropped a
+        # lowercase "modules" spelling out of the borrowed-body pass
+        mods = self.game / "mods"
+        (mods / "LOTRLOME_Armory" / "Assets").mkdir(parents=True)
+        (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")
+        got = vm.module_tpacs(mods / "LOTRLOME_Armory", "LOTRLOME_Armory")
+        self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
+
     def test_module_with_no_tpac_at_all_contributes_nothing(self):
         self._module("Bare")
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Bare"]), [])
+
+    def test_a_module_with_neither_tree_is_announced_once_per_process(self):
+        import contextlib
+        import io
+        self._module("Silent")
+        vm._WARNED_EMPTY_MODULES.discard("Silent")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            vm.tpac_paths_for_modules(self.game, ["Silent"])
+            vm.tpac_paths_for_modules(self.game, ["Silent"])
+        self.assertEqual(err.getvalue().count("'Silent' contributes no .tpac"), 1)
 
     def test_missing_module_is_not_an_error(self):
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])
@@ -827,6 +918,60 @@ class CliTests(unittest.TestCase):
         r1 = subprocess.run(base + ["--warnings-as-errors"],
                             capture_output=True, text=True)
         self.assertEqual(r1.returncode, 1, r1.stdout + r1.stderr)
+
+
+# --------------------------------------------------------------------------- #
+# --check-name: is a new mesh name free in every package of every module?      #
+# --------------------------------------------------------------------------- #
+class CheckNameTests(unittest.TestCase):
+    """A new prop's name must be free in BOTH trees of every module: a name that clashes in a
+    module's loose Assets/ or in its AssetPackages/ can shadow or be shadowed, whichever tree the
+    engine picks. The engine lowercases a requested name, so the match ignores case."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.game = Path(self._tmp.name)
+        self.loose = self.game / "Modules" / "ModA" / "Assets" / "props" / "a_geo.tpac"
+        self.cooked = self.game / "Modules" / "ModB" / "AssetPackages" / "pack0.tpac"
+        for path in (self.loose, self.cooked):
+            path.parent.mkdir(parents=True)
+            path.write_bytes(TpacBinaryParseTests._build_one_metamesh_tpac("taom_prop_a"))
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_reports_every_package_in_both_trees_that_holds_the_name(self):
+        owners, unparsed = vm.find_mesh_name_owners(self.game, ["taom_prop_a", "taom_free"])
+        self.assertEqual(sorted(owners["taom_prop_a"]), sorted([str(self.loose), str(self.cooked)]))
+        self.assertEqual(owners["taom_free"], [])
+        self.assertEqual(unparsed, [])
+
+    def test_the_match_ignores_case(self):
+        owners, _ = vm.find_mesh_name_owners(self.game, ["TAOM_Prop_A"])
+        self.assertEqual(len(owners["TAOM_Prop_A"]), 2)
+
+    def _run(self, *names):
+        cmd = [sys.executable, str(TOOL), "--game", str(self.game)]
+        for n in names:
+            cmd += ["--check-name", n]
+        return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+
+    def test_cli_exits_0_for_a_free_name_and_1_for_a_clash(self):
+        free = self._run("taom_free")
+        self.assertEqual(free.returncode, 0, free.stdout + free.stderr)
+        self.assertIn("taom_free", free.stdout)
+        clash = self._run("taom_free", "taom_prop_a")
+        self.assertEqual(clash.returncode, 1, clash.stdout + clash.stderr)
+        self.assertIn(str(self.cooked), clash.stdout)
+
+    def test_an_unreadable_package_makes_a_free_answer_unverified(self):
+        # A package the scanner cannot read might hold the name, so "free" cannot be claimed.
+        bad = self.game / "Modules" / "ModC" / "AssetPackages" / "broken.tpac"
+        bad.parent.mkdir(parents=True)
+        bad.write_bytes(b"not a tpac at all")
+        result = self._run("taom_free")
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("broken.tpac", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

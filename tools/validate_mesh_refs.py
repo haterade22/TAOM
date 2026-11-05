@@ -60,6 +60,12 @@ Usage:
   python tools/validate_mesh_refs.py --items <dir> --tpac-modules LOTRLOME_Armory Native SandBoxCore
   python tools/validate_mesh_refs.py --json report.json --code MISSING_BODY
   python tools/validate_mesh_refs.py --unreferenced --prefix sk_gd_   (per-culture reverse audit)
+  python tools/validate_mesh_refs.py --check-name taom_camp_orc_a     (is a NEW mesh name free?)
+
+--check-name skips the audit and scans every module's loose Assets/ and AssetPackages/ alike
+(case ignored; the engine lowercases a requested name): exit 0 free, 1 taken (the holding
+packages are listed), 2 when a package could not be read and "free" cannot be claimed. Run it
+before naming a new mesh.
 
 Exit code (mirrors validate_moduledata.py): 1 if any ERROR (or any WARNING with
 --warnings-as-errors), 2 if an input path is bad, else 0.
@@ -89,7 +95,8 @@ DEFAULT_GAME = Path(
 # body-aware the whole time, just pointed one directory too narrow.
 DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
 # Shared meshes live outside the Armory (Native/SandBoxCore), so the present-set
-# is the UNION across these modules' AssetPackages.
+# is the UNION across these modules' packages (each module's loose Assets/ tree,
+# else its AssetPackages/: tpac_paths_for_modules).
 DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 
@@ -207,7 +214,10 @@ def _lineno(text: str, pos: int) -> int:
     return text.count("\n", 0, pos) + 1
 
 
-_ITEM_OPEN_RE = re.compile(r"<(?:Item|CraftedItem)\b")
+# A <CraftingPiece> owns its <BladeData body_name> the way an <Item> owns its body_name. Without
+# it every piece ref in LOTRLOME_crafting_pieces.xml carried item_id "" and any consumer that
+# pairs a body with its item's mesh by id collapsed all 313 piece bodies onto one key (#633).
+_ITEM_OPEN_RE = re.compile(r"<(?:Item|CraftedItem|CraftingPiece)\b")
 _ITEM_ID_RE = re.compile(r'\bid="([^"]+)"')
 # Definitions/refs inside XML comments must never be extracted (a commented item
 # example would otherwise look like a real ref). Mirrors taom_schema._COMMENT_RE.
@@ -235,8 +245,8 @@ def _culture_from_path(rel: str) -> str:
 
 
 def _entry_id_by_line(text: str) -> dict:
-    """Best-effort map line-number -> owning <Item>/<CraftedItem> id. Handles
-    multi-line element opens (item attributes can span lines)."""
+    """Best-effort map line-number -> owning <Item>/<CraftedItem>/<CraftingPiece> id.
+    Handles multi-line element opens (item attributes can span lines)."""
     result = {}
     current = ""
     awaiting = False
@@ -419,45 +429,105 @@ class PresentSet:
         return not self.unparsed
 
 
+_WARNED_EMPTY_MODULES: set = set()
+
+
+def module_tpacs(mod_dir: Path, name: str) -> list:
+    """The *.tpac of one module folder, as tpac_paths_for_modules chooses them, under the path the caller gave
+    (never rebuilt from another spelling of Modules/; validate_moduledata's borrowed-body pass lists the Armory
+    this way)."""
+    mod_dir = Path(mod_dir)
+    loose = sorted((mod_dir / "Assets").rglob("*.tpac"))
+    if loose:
+        return loose
+    cooked = sorted((mod_dir / "AssetPackages").glob("*.tpac"))
+    if not cooked and mod_dir.exists() and name not in _WARNED_EMPTY_MODULES:
+        _WARNED_EMPTY_MODULES.add(name)
+        print(f"WARNING: module {name!r} contributes no .tpac at all (neither "
+              f"AssetPackages/ nor Assets/), so every mesh it owns reads "
+              f"as MISSING.", file=sys.stderr)
+    return cooked
+
+
 def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
-    """All *.tpac for each module m, preferring the cooked packs.
+    """All *.tpac the engine can load for each module m: the loose tree when it has one.
 
-    A module normally ships cooked `AssetPackages/*.tpac` and the running game
-    loads those. Some modules ship no cooked tree at all and are loaded from the
-    loose authoring tree instead: `LOTRLOME_Armory` is in that state as of
-    v2.0.23 (0 cooked packs, 4,364 loose ones), and so are `SandBoxCore` and
-    `SandBox`.
+    The engine loads a module's loose `Assets/**/*.tpac` in preference to a
+    cooked `AssetPackages/` tree it also ships; its own log names the tree
+    (`Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`, and the same
+    for TAOM_Map and TAOM, which carry both; docs/reference/armory-guide.md
+    "Two asset trees"). The Armory gained a cooked tree on 2026-09-26 and the
+    game still logged `Assets`. Scanning the cooked packs instead hid art added
+    since the cook (the hill troll hammer read as MISSING) and would pass art
+    deleted from `Assets/` that a stale pack still holds, the #352 hang.
 
-    Without a fallback, a named module that contributes zero packs silently
-    drops out of the present-set and every mesh it owns reads as MISSING. With
-    the default module list that is two modules of three, which turns a real run
-    into thousands of false positives. That failure mode is indistinguishable
-    from catastrophe, so it gets ignored, which is worse than an error.
-
-    So: fall back to `Assets/**/*.tpac`, and say so loudly. Preferring the
-    cooked tree keeps the documented "art deleted from Assets/ keeps shipping
-    from a stale pack" trap observable wherever a cooked tree still exists.
+    So: the loose tree, and the cooked packs only for a module with no loose
+    tree (Native). A named module that contributes neither is announced, once
+    per process, never dropped silently: every mesh it owns would read as
+    MISSING. "Can load": the engine also skips a package that has no
+    RuntimeDataCache entry (tools/check_rdc_entries.py lists those), and this
+    list still counts it.
     """
     game_dir = Path(game_dir)
     out = []
     for m in modules:
-        mod = game_dir / "Modules" / m
-        cooked = sorted((mod / "AssetPackages").glob("*.tpac"))
-        if cooked:
-            out.extend(cooked)
-            continue
-        loose = sorted((mod / "Assets").rglob("*.tpac"))
-        if loose:
-            print(f"WARNING: module {m!r} ships no cooked AssetPackages/*.tpac. "
-                  f"Falling back to {len(loose):,} loose Assets/**/*.tpac. The "
-                  f"stale-pack trap cannot be observed for this module.",
-                  file=sys.stderr)
-            out.extend(loose)
-        elif mod.exists():
-            print(f"WARNING: module {m!r} contributes no .tpac at all (neither "
-                  f"AssetPackages/ nor Assets/), so every mesh it owns reads "
-                  f"as MISSING.", file=sys.stderr)
+        out.extend(module_tpacs(game_dir / "Modules" / m, m))
     return out
+
+
+def find_mesh_name_owners(game_dir: Path, names: list) -> tuple:
+    """For a NEW mesh name: which packages already hold it, in BOTH trees of EVERY module.
+
+    Unlike tpac_paths_for_modules this reads a module's loose `Assets/**` and its `AssetPackages/`
+    alike: a clash in either can shadow or be shadowed, whichever tree the engine picks, and a
+    prop may be delivered through either. The engine lowercases a requested name, so the match
+    ignores case.
+
+    Returns ({name: [package paths]}, [(path, error) for packages that could not be read]).
+    """
+    modules = Path(game_dir) / "Modules"
+    paths = []
+    for mod in sorted(p for p in modules.iterdir() if p.is_dir()) if modules.is_dir() else []:
+        paths.extend(sorted((mod / "Assets").rglob("*.tpac")))
+        paths.extend(sorted((mod / "AssetPackages").glob("*.tpac")))
+    wanted = {n.lower(): n for n in names}
+    owners = {n: [] for n in names}
+    unparsed = []
+    for p in paths:
+        res = scan_tpac_metameshes(p)
+        if not res.parsed_ok:
+            unparsed.append((res.path, res.error))
+        for held in res.metamesh_names:
+            if held.lower() in wanted:
+                owners[wanted[held.lower()]].append(res.path)
+    return owners, unparsed
+
+
+def check_names(game_dir: Path, names: list) -> int:
+    """--check-name: 0 when every name is free, 1 when any is taken, 2 when a free answer
+    cannot be trusted because a package could not be read."""
+    if not (Path(game_dir) / "Modules").is_dir():
+        print(f"ERROR: no Modules folder under {game_dir}; nothing was checked", file=sys.stderr)
+        return 2
+    owners, unparsed = find_mesh_name_owners(game_dir, names)
+    taken = False
+    for name in names:
+        if owners[name]:
+            taken = True
+            print(f"TAKEN {name}: {len(owners[name])} package(s)")
+            for path in owners[name]:
+                print(f"  {path}")
+        else:
+            print(f"FREE  {name}")
+    if taken:
+        return 1
+    if unparsed:
+        print(f"UNVERIFIED: {len(unparsed)} package(s) could not be read, so a name reported free "
+              f"may still be held there:")
+        for path, err in unparsed:
+            print(f"  {path}: {err}")
+        return 2
+    return 0
 
 
 def build_present_set(tpac_paths: list) -> PresentSet:
@@ -1062,10 +1132,11 @@ def main() -> int:
     ap.add_argument("--items", default=str(DEFAULT_ITEMS),
                     help="Root dir of item XML to scan (default: LOTRLOME_items)")
     ap.add_argument("--game", default=str(DEFAULT_GAME),
-                    help="Bannerlord install dir (for --tpac-modules AssetPackages)")
+                    help="Bannerlord install dir (for the --tpac-modules packages)")
     ap.add_argument("--tpac-modules", nargs="+", default=DEFAULT_TPAC_MODULES,
-                    help="Module names whose AssetPackages/*.tpac form the "
-                         "present-set (default: LOTRLOME_Armory Native SandBoxCore)")
+                    help="Module names whose packages form the present-set: each "
+                         "module's loose Assets/**/*.tpac, else its AssetPackages/*.tpac "
+                         "(default: LOTRLOME_Armory Native SandBoxCore)")
     ap.add_argument("--rgl-log", default=None,
                     help="Path to an rgl_log[_errors].txt for Tier A (default: "
                          "auto-discover the newest under the ProgramData logs dir)")
@@ -1091,10 +1162,17 @@ def main() -> int:
                          "set is never filtered.")
     ap.add_argument("--warnings-as-errors", action="store_true",
                     help="Exit non-zero if any WARNING is found, not just ERROR")
+    ap.add_argument("--check-name", action="append", default=None, metavar="NAME",
+                    help="Instead of the audit: is this new mesh name free in every package of "
+                         "every module, loose Assets/ and AssetPackages/ alike (repeatable; case "
+                         "is ignored). Exit 0 free, 1 taken, 2 unverified")
     args = ap.parse_args()
 
     items_root = Path(args.items)
     game_dir = Path(args.game)
+
+    if args.check_name:
+        return check_names(game_dir, args.check_name)
 
     if not items_root.exists():
         print(f"ERROR: item XML root not found: {items_root}", file=sys.stderr)
@@ -1133,7 +1211,7 @@ def main() -> int:
     if not args.no_tier_b:
         if not game_dir.exists():
             print(f"WARNING: game dir not found: {game_dir} — Tier B/C skipped "
-                  f"(need AssetPackages). Ref extraction + Tier A still run.",
+                  f"(need the modules' packages). Ref extraction + Tier A still run.",
                   file=sys.stderr)
         else:
             tpac_paths = tpac_paths_for_modules(game_dir, args.tpac_modules)
