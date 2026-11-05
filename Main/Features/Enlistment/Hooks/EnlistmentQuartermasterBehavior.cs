@@ -107,7 +107,7 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
         // Culture read at issuance time from the commander — never cached.
         var cultureId = _commander.GetCultureId(_store.Record.CommanderHeroId);
         var assignment = _contentStore.Record.Assignment;
-        var rank = (EnlistmentRank)(int)_contentStore.Record.Rank;
+        var rank = (EnlistmentKitTier)(int)_contentStore.Record.Rank;
         var result = _equipment.IssueForRank(cultureId, assignment, rank);
         _lastAnswer = QuartermasterAnswerPolicy.For(result);
         _logger?.LogInfo($"[Enlistment] quartermaster issue: {result} "

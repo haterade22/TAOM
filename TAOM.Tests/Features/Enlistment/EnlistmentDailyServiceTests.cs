@@ -132,11 +132,11 @@ public class EnlistmentDailyServiceTests
     [TestMethod]
     public void RankOrdinals_ContentAndEquipmentLaddersStayAligned()
     {
-        // The quartermaster maps (EnlistmentRank)(int)ServiceRank — pin the ordinal parity.
-        Assert.AreEqual((int)ServiceRank.Recruit, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Recruit);
-        Assert.AreEqual((int)ServiceRank.Soldier, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Soldier);
-        Assert.AreEqual((int)ServiceRank.Veteran, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Veteran);
-        Assert.AreEqual((int)ServiceRank.Sergeant, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Sergeant);
+        // The quartermaster maps (EnlistmentKitTier)(int)ServiceRank — pin the ordinal parity.
+        Assert.AreEqual((int)ServiceRank.Recruit, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Recruit);
+        Assert.AreEqual((int)ServiceRank.Soldier, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Soldier);
+        Assert.AreEqual((int)ServiceRank.Veteran, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Veteran);
+        Assert.AreEqual((int)ServiceRank.Sergeant, (int)TAOM.Features.Enlistment.Equipment.EnlistmentKitTier.Sergeant);
     }
 }
 

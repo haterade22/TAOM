@@ -45,7 +45,7 @@ public static class EnlistmentRosterResolver
     public static string Resolve(
         string cultureId,
         ServiceAssignment assignment,
-        EnlistmentRank rank,
+        EnlistmentKitTier rank,
         Func<string, bool> rosterExists)
     {
         if (rosterExists == null)
@@ -90,11 +90,11 @@ public static class EnlistmentRosterResolver
     }
 
     private static string ProbeRanks(
-        Func<EnlistmentRank, string> build, EnlistmentRank rank, Func<string, bool> rosterExists)
+        Func<EnlistmentKitTier, string> build, EnlistmentKitTier rank, Func<string, bool> rosterExists)
     {
-        for (var r = (int)rank; r >= (int)EnlistmentRank.Recruit; r--)
+        for (var r = (int)rank; r >= (int)EnlistmentKitTier.Recruit; r--)
         {
-            var id = build((EnlistmentRank)r);
+            var id = build((EnlistmentKitTier)r);
             if (rosterExists(id))
                 return id;
         }

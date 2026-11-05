@@ -19,7 +19,7 @@ public class PersistedEquipmentIssueLedger : IEquipmentIssueLedger
         _contentStore = contentStore;
     }
 
-    public EnlistmentRank? HighestIssuedRank
+    public EnlistmentKitTier? HighestIssuedRank
     {
         get
         {
@@ -27,22 +27,22 @@ public class PersistedEquipmentIssueLedger : IEquipmentIssueLedger
             if (!raw.HasValue)
                 return null;
             // Defensive: a hand-edited save could carry a rank ordinal we don't define.
-            return System.Enum.IsDefined(typeof(EnlistmentRank), raw.Value)
-                ? (EnlistmentRank?)raw.Value
+            return System.Enum.IsDefined(typeof(EnlistmentKitTier), raw.Value)
+                ? (EnlistmentKitTier?)raw.Value
                 : null;
         }
     }
 
     public IReadOnlyList<string> IssuedItemIds => _contentStore.Record.IssuedEquipmentItemIds;
 
-    public bool HasIssuedForRank(EnlistmentRank rank)
+    public bool HasIssuedForRank(EnlistmentKitTier rank)
     {
         var highest = HighestIssuedRank;
         // Monotonic: covering a rank covers everything below it, so a demotion never re-issues.
         return highest.HasValue && (int)highest.Value >= (int)rank;
     }
 
-    public void RecordIssue(EnlistmentRank rank, IReadOnlyList<string> itemIds)
+    public void RecordIssue(EnlistmentKitTier rank, IReadOnlyList<string> itemIds)
     {
         var record = _contentStore.Record;
         var highest = HighestIssuedRank;

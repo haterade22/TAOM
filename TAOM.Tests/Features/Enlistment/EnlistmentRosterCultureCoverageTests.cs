@@ -49,10 +49,10 @@ public class EnlistmentRosterCultureCoverageTests
     /// comment "mirrors <c>EnlistmentRosterIds.RankToken</c>" while being free to drift from it —
     /// the exact defect this repo has now shipped three times (see
     /// <c>lessons/testing-qa.md</c>, "a comment is a claim"). Adding a fifth
-    /// <see cref="EnlistmentRank"/> extends the coverage requirement automatically.
+    /// <see cref="EnlistmentKitTier"/> extends the coverage requirement automatically.
     /// </summary>
-    private static readonly EnlistmentRank[] Ranks =
-        Enum.GetValues(typeof(EnlistmentRank)).Cast<EnlistmentRank>().ToArray();
+    private static readonly EnlistmentKitTier[] Ranks =
+        Enum.GetValues(typeof(EnlistmentKitTier)).Cast<EnlistmentKitTier>().ToArray();
 
     /// <summary>Same derivation, one axis over: a fifth assignment extends coverage by itself.</summary>
     private static readonly ServiceAssignment[] Assignments =
@@ -116,7 +116,7 @@ public class EnlistmentRosterCultureCoverageTests
 
     /// <summary>Resolve through the shipped roster ids using the production chain.</summary>
     private static string? Resolve(HashSet<string> rosters, string culture,
-        ServiceAssignment assignment, EnlistmentRank rank)
+        ServiceAssignment assignment, EnlistmentKitTier rank)
         => EnlistmentRosterResolver.Resolve(culture, assignment, rank, rosters.Contains);
 
     [TestMethod]
@@ -230,7 +230,7 @@ public class EnlistmentRosterCultureCoverageTests
             .ToList();
 
         Assert.AreEqual(0, collisions.Count,
-            "Two EnlistmentRank values produce the same roster token, so one silently wears the "
+            "Two EnlistmentKitTier values produce the same roster token, so one silently wears the "
             + "other's kit. Add the missing case to EnlistmentRosterIds.RankToken:\n  "
             + string.Join("\n  ", collisions));
     }

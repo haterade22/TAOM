@@ -78,7 +78,7 @@ public class DischargeConsequenceServiceTests
 
     private void IssueKit(params string[] itemIds)
     {
-        _ledger.RecordIssue(EnlistmentRank.Recruit, itemIds);
+        _ledger.RecordIssue(EnlistmentKitTier.Recruit, itemIds);
     }
 
     // ---------------------------------------------------------------- arrears

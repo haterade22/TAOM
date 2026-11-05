@@ -36,7 +36,7 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
     }
 
     public EquipmentIssueResult IssueForRank(
-        string cultureId, ServiceAssignment assignment, EnlistmentRank rank)
+        string cultureId, ServiceAssignment assignment, EnlistmentKitTier rank)
     {
         if (_ledger.HasIssuedForRank(rank))
         {

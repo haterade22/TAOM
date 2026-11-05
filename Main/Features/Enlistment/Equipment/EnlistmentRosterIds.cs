@@ -19,18 +19,18 @@ namespace TAOM.Features.Enlistment.Equipment;
 /// </summary>
 public static class EnlistmentRosterIds
 {
-    public static string Build(string cultureId, ServiceAssignment assignment, EnlistmentRank rank)
+    public static string Build(string cultureId, ServiceAssignment assignment, EnlistmentKitTier rank)
         => $"enlist_{cultureId}_{AssignmentToken(assignment)}_{RankToken(rank)}";
 
-    public static string BuildDefault(ServiceAssignment assignment, EnlistmentRank rank)
+    public static string BuildDefault(ServiceAssignment assignment, EnlistmentKitTier rank)
         => $"enlist_default_{AssignmentToken(assignment)}_{RankToken(rank)}";
 
-    public static string RankToken(EnlistmentRank rank) => rank switch
+    public static string RankToken(EnlistmentKitTier rank) => rank switch
     {
-        EnlistmentRank.Recruit  => "recruit",
-        EnlistmentRank.Soldier  => "soldier",
-        EnlistmentRank.Veteran  => "veteran",
-        EnlistmentRank.Sergeant => "sergeant",
+        EnlistmentKitTier.Recruit  => "recruit",
+        EnlistmentKitTier.Soldier  => "soldier",
+        EnlistmentKitTier.Veteran  => "veteran",
+        EnlistmentKitTier.Sergeant => "sergeant",
         _                       => "recruit",
     };
 
