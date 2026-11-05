@@ -16,7 +16,7 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 |------|------------|
 | [`reflection-sites.md`](./reflection-sites.md) | Authoritative catalogue of every reflection touchpoint, grouped by gated / runtime-dynamic / internal. Data source for `ReflectionSiteBindingTests`. |
 | [`gamemodel-bases.md`](./gamemodel-bases.md) | Auto-generated: each `Taom*Model`, its `Default*Model` base, and the exact v1.4.8 signature of every overridden method. |
-| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each of the 220 `[HarmonyPatch]` / `TargetMethod` classes and the engine method it patches, resolved as Harmony resolves it. |
+| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each `[HarmonyPatch]` / `TargetMethod` class and the engine method it patches, resolved through HarmonyLib `AccessTools` (which also searches base types). The file's `Patches:` header holds the current count. A `TargetMethods()` class is recorded by its first target only. |
 | [`../../../tools/snapshot_api_surface.ps1`](../../../tools/snapshot_api_surface.ps1) | Regenerates the two auto-generated files from the installed DLLs. Auto-derives the type list from `TAOM.dll`. |
 
 > **The generator is PowerShell 7 only, and now says so.** It uses the null-coalescing `??` operator
@@ -38,9 +38,9 @@ Runs under `dotnet test` — no game launch. TAOM.Tests references the installed
 
 | Test class | Covers | Granularity |
 |------------|--------|-------------|
-| `HarmonyPatchBindingTests` | All 220 `[HarmonyPatch]` / `TargetMethod` targets, resolved as Harmony does at `PatchAll`. | one assertion accumulating all failures |
-| `GameModelOverrideBindingTests` | All 46 GameModels: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override`. | 2 tests |
-| `ReflectionSiteBindingTests` | The 32 auxiliary static-engine reflection members from `reflection-sites.md` Category B. | one `[DataRow]` per site |
+| `HarmonyPatchBindingTests` | Every `[HarmonyPatch]` / `TargetMethod` target, resolved with HarmonyLib `AccessTools` (base types searched; Harmony itself resolves the declared type only) (count: the `patch-targets.md` header). | one assertion accumulating all failures |
+| `GameModelOverrideBindingTests` | Every GameModel (count: the `gamemodel-bases.md` header): registered with `AddModel`, overrides at least one base virtual, no shadow without `override`. | 2 tests |
+| `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members from `reflection-sites.md` Category B, one `[DataRow]` each. | one `[DataRow]` per site |
 
 ```bash
 dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"
@@ -65,7 +65,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 - After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test --filter "TestCategory=BindingVerification"`.
 - When you add a reflection site against an engine member: add a row to `reflection-sites.md` Category B **and** a `[DataRow]` to `ReflectionSiteBindingTests`.
-- CI/local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce).
+- Local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce; it ignores the backlinks footer and prints up to 20 differing lines).
 
 ## External references
 

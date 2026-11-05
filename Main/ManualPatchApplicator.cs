@@ -10,8 +10,9 @@ namespace TAOM;
 /// <summary>
 /// Applies the Harmony patches that target PRIVATE engine methods and therefore cannot use
 /// <c>[HarmonyPatch]</c> attribute binding + <c>PatchCategory</c>: each resolves its target via
-/// <c>AccessTools</c> at apply time and fail-safes with a logged warning (vanilla behavior) when the
-/// engine method has moved. Extracted verbatim from <c>SubModule.OnGameInitializationFinished</c>
+/// <c>AccessTools</c> at apply time and, when the target is not found, logs a warning and keeps
+/// vanilla behaviour. An exception thrown by <c>harmony.Patch</c> itself is not caught here; it
+/// propagates to the caller. Extracted verbatim from <c>SubModule.OnGameInitializationFinished</c>
 /// (ADR-002); called once per process from that same callback, order unchanged.
 /// </summary>
 internal static class ManualPatchApplicator
