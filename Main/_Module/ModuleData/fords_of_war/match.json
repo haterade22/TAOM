@@ -1,5 +1,6 @@
 {
   "countdownSeconds": 10,
+  "timeLimitMinutes": 40,
   "economy": {
     "startingGold": 600,
     "incomePerMinute": 120,

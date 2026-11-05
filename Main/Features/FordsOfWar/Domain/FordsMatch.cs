@@ -31,6 +31,9 @@ internal sealed partial class FordsMatch
     private readonly TowerAssaultLimit _assaultLimit;
     private readonly TowerWear _wear;
     private bool _wearAnnounced;
+    private readonly float _timeLimitMinutes;
+    private bool _timeWarned;
+    private bool _endedOnTime;
     private readonly UpgradeBook _upgrades;
     private readonly PoisonRules _poison = new();
     private readonly TowerRegen _regen;
@@ -71,6 +74,7 @@ internal sealed partial class FordsMatch
         _slots = slots;
 
         _clock = new MatchClock(config.CountdownSeconds);
+        _timeLimitMinutes = config.TimeLimitMinutes;
         _ledger = new GoldLedger(config.Economy, slots.Select(s => s.Id));
         _bounty = new BountyRules(config.Economy);
         var feats = factions.ToDictionary(f => f.Key, f => f.Value.FeatsOrNone);
@@ -133,6 +137,9 @@ internal sealed partial class FordsMatch
 
         Observe(snapshot);
         AnnounceWear();
+        if (TimeIsUp())
+            return Finish(effects);
+
         PayPassiveIncome(dt);
         foreach (var deck in _decks.Values)
             deck.Tick(dt);
@@ -145,6 +152,30 @@ internal sealed partial class FordsMatch
         RunAi();
         IssueLaneCommands(effects);
         return Finish(effects);
+    }
+
+    private bool TimeIsUp()
+    {
+        if (!(_timeLimitMinutes > 0f))
+            return false;
+
+        if (!_timeWarned && _clock.Minute >= _timeLimitMinutes - TimeVictory.WarningMinutes)
+        {
+            _timeWarned = true;
+            if (_clock.Minute < _timeLimitMinutes)
+                _pendingEvents.Add(new MatchEvent(MatchEventKind.TimeRunningOut, MatchSide.West, string.Empty, 0));
+        }
+
+        if (_clock.Minute < _timeLimitMinutes)
+            return false;
+
+        var west = _chain.Standing(MatchSide.West);
+        var east = _chain.Standing(MatchSide.East);
+        _winner = TimeVictory.Winner(_chain);
+        _endedOnTime = true;
+        _pendingEvents.Add(new MatchEvent(MatchEventKind.TimeUp, _winner.Value, $"west={west.Towers}/{west.HitPointShare:0.000} east={east.Towers}/{east.HitPointShare:0.000}", 0));
+        _clock.End();
+        return true;
     }
 
     private void AnnounceWear()

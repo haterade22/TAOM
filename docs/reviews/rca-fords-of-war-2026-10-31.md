@@ -217,7 +217,7 @@ feature's own record, so none of them applied).
 
 Follow-up closed 2026-11-04 (17b071c7a, 7a21239dc, 4a7b7164d; the in-game check is owed): a warg rider who leaves a living warg mid-rage never gets his formation back; check 12 now reports it as `stranded` (no issue: creating an issue needs the maintainer's word).
 Follow-up closed 2026-11-04 (Mike: leave it, check 8 names the tower if it happens): after a lane loses its towers, its hold point before the keep can sit inside a neighbouring lane's inner tower range on maps with 300 to 500 m between the bases; check 8 now names the tower (no issue: creating an issue needs the maintainer's word).
-Follow-up closed 2026-11-04 (08e1422ae): the AI commander rebuilds its full read model every tick and uses it once every 5 to 12 s (pre-existing; no issue: creating an issue needs the maintainer's word).
+Follow-up closed 2026-11-04 (9ea4ffd44): the AI commander rebuilds its full read model every tick and uses it once every 5 to 12 s (pre-existing; no issue: creating an issue needs the maintainer's word).
 FOLLOW-UP: the Fords verdict rows move onto the shared `[Check]` line, whose API (#1071) landed on trunk while this change was in review (#1069).
 
 UNVERIFIED until the first game run: whether the engine's `MissileTotalDamage` equals the volley item's thrust
@@ -405,6 +405,6 @@ the tower entity origin, and the tower geometry does not explain the gap.
 
 FOLLOW-UP: the existing in-reach AttackTower branch still fires by lane arc at any distance, and lane leads drift into a neighbouring lane's area in about two thirds of mid-field samples (no issue: the maintainer chose no GitHub issues for Fords of War).
 Follow-up closed 2026-11-04 (Mike: reopen if a big fight goes over budget): `UnitsNear` runs about 12 times per mission frame and the own-side calls go through LINQ `NextTargetOf`; measure before optimising (no issue: the maintainer chose no GitHub issues for Fords of War).
-Follow-up closed 2026-11-04 (08e1422ae): check 9's ladder does not split tower blows by attacker class, so a ranged lane's damage cannot be told from melee contact (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-04 (9ea4ffd44): check 9's ladder does not split tower blows by attacker class, so a ranged lane's damage cannot be told from melee contact (no issue: the maintainer chose no GitHub issues for Fords of War).
 Follow-up closed 2026-11-04 (Mike, set to 1.0 in 95a348a60): the hard AI profile's `incomeMultiplier` 1.2 gives the AI more gold than a human commander, which the maintainer's design (same shop, no extra powers) does not allow for; the maintainer decides (no issue: the maintainer chose no GitHub issues for Fords of War).
 Follow-up closed 2026-11-04 (Mike: an even AI match need not end in a keep; judge length with a human side): with the siege rule and `lanes.assaultThreshold` 70, a 45-minute AI match brought one outer tower to 1,750 of 8,000 hit points but felled none, and West (Gondor) never sieged; why one faction cannot win the ground at a tower, and whether an AI-against-AI match should reach a keep at all, stay open (no issue: the maintainer chose no GitHub issues for Fords of War).

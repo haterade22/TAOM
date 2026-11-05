@@ -7609,6 +7609,10 @@
     <string id="TAOM_LD_Hud_SpeedButton" text="{SPEED}x" />
     <string id="TAOM_LD_Hud_SpeedTitle" text="Game speed" />
     <string id="TAOM_FOW_Hud_KeysHintFull" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   L speed   P fight as the soldier at the pointer   WASD pan   Q E turn   wheel zoom" />
+    <string id="TAOM_FOW_Feed_TimeRunningOut" text="Five minutes remain. The side with the most towers standing will then win." />
+    <string id="TAOM_FOW_Feed_TimeUp" text="Time is up." />
+    <string id="TAOM_FOW_Result_TimeVictoryText" text="Time ran out, and you hold more of the field." />
+    <string id="TAOM_FOW_Result_TimeDefeatText" text="Time ran out, and the enemy holds more of the field." />
   </strings>
 
 </base>

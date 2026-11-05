@@ -182,8 +182,10 @@ internal static class FordsHudText
     internal static string ResultTitle(bool won) =>
         won ? new TextObject("{=TAOM_FOW_Result_Victory}Victory!").ToString() : new TextObject("{=TAOM_FOW_Result_Defeat}Defeat").ToString();
 
-    internal static string ResultText(bool won) =>
-        won ? new TextObject("{=TAOM_FOW_Result_VictoryText}The enemy keep has fallen.").ToString()
+    internal static string ResultText(bool won, bool onTime) =>
+        onTime ? (won ? new TextObject("{=TAOM_FOW_Result_TimeVictoryText}Time ran out, and you hold more of the field.").ToString()
+                : new TextObject("{=TAOM_FOW_Result_TimeDefeatText}Time ran out, and the enemy holds more of the field.").ToString())
+        : won ? new TextObject("{=TAOM_FOW_Result_VictoryText}The enemy keep has fallen.").ToString()
             : new TextObject("{=TAOM_FOW_Result_DefeatText}Your keep has fallen.").ToString();
 
     internal static string ResultButton() => new TextObject("{=TAOM_FOW_Result_Button}Return to the main menu").ToString();
@@ -194,6 +196,10 @@ internal static class FordsHudText
         var mine = e.Side == own;
         switch (e.Kind)
         {
+            case MatchEventKind.TimeRunningOut:
+                return new TextObject("{=TAOM_FOW_Feed_TimeRunningOut}Five minutes remain. The side with the most towers standing will then win.").ToString();
+            case MatchEventKind.TimeUp:
+                return new TextObject("{=TAOM_FOW_Feed_TimeUp}Time is up.").ToString();
             case MatchEventKind.WallsWeaken:
                 return new TextObject("{=TAOM_FOW_Feed_WallsWeaken}The siege drags on: every tower and keep now weakens by the minute.").ToString();
             case MatchEventKind.TowerDestroyed:

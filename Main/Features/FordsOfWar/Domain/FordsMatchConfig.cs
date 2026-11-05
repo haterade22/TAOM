@@ -8,7 +8,7 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// </summary>
 internal sealed record FordsMatchConfig(FordsEconomyConfig Economy, FordsWaveConfig Waves,
     FordsTowerConfig Towers, FordsHeroConfig Heroes, FordsLaneConfig Lanes, FordsCaptureConfig Capture,
-    IReadOnlyDictionary<string, FordsAiProfile> AiProfiles, float CountdownSeconds, IReadOnlyList<UpgradeTrack>? Upgrades = null)
+    IReadOnlyDictionary<string, FordsAiProfile> AiProfiles, float CountdownSeconds, IReadOnlyList<UpgradeTrack>? Upgrades = null, float TimeLimitMinutes = 40f)
 {
     private static readonly int[] UpgradePrices = { 300, 600, 1000 };
 

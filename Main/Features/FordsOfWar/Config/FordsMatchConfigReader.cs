@@ -31,7 +31,8 @@ internal static class FordsMatchConfigReader
             ReadCapture(s.Group(root, "capture", ""), d.Capture, s),
             ReadAiProfiles(s.Group(root, "aiProfiles", ""), d.AiProfiles, s),
             s.Float(root, "", "countdownSeconds", d.CountdownSeconds, 0f, 300f),
-            FordsUpgradesReader.Read(root["upgrades"], d.UpgradesOrDefault, s));
+            FordsUpgradesReader.Read(root["upgrades"], d.UpgradesOrDefault, s),
+            s.Float(root, "", "timeLimitMinutes", d.TimeLimitMinutes, 0f, 600f));
     }
 
     private static FordsEconomyConfig ReadEconomy(JObject? g, FordsEconomyConfig d, FordsConfigScope s) => new(

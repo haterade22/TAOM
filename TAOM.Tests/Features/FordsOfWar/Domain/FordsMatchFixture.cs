@@ -28,6 +28,7 @@ internal static class FordsMatchFixture
         var config = d with
         {
             CountdownSeconds = 0f,
+            TimeLimitMinutes = 0f,
             Economy = d.Economy with { StartingGold = 1000, IncomePerMinute = 0 },
             Waves = d.Waves with { FreeWaveIntervalSeconds = 0f, MaxSpawnsPerTick = 1000 },
             Heroes = d.Heroes with { FreeArrivalSeconds = 0f },

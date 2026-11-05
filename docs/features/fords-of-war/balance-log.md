@@ -234,6 +234,14 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, four matches at 4x, one per pair:** lopsided matches now end near the target. Erebor beat Gundabad at 33.8 minutes, where it took 39.2 at 0.15, and Rivendell beat Mordor at 27.6, where it took 39.9. Even matches still do not end: Dale v Gondor and Harad v Rohan have gold trades of about 1.0, lost 1 to 3 outer towers a side, took no inner tower, and cleared no lane in 45 minutes. No owner took a hit, and there was no crash and no FAIL row. **What limits match length now:** an even match loses towers in different lanes, and a keep unlocks only after a whole lane falls. More wear will not settle this, because the walls are already weak by then, so an even match needs its own rule. That is a design question for Mike.
 
+### Time limit (this change)
+
+**Why:** Dale v Gondor and Harad v Rohan did not end in 45 minutes at wear 0.25, and more wear is unlikely to settle them.
+
+**Changed:** at minute 40 the side with more towers standing wins, then the larger share of hit points left. Mike's target is 30 to 40 minutes, so 40 is the latest a match should run. Lopsided matches still end by a fallen keep.
+
+**Result: not measured.**
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
