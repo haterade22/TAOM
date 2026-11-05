@@ -19,6 +19,12 @@ internal sealed class FakeLongDefeatEffects : ILongDefeatEffectsAdapter
 
     public int Reads { get; private set; }
 
+    /// <summary>The property lists the director asked ReadStats for, in order.</summary>
+    public List<IReadOnlyList<string>> StatsAsked { get; } = new();
+
+    /// <summary>What a stat read answers; no attacker by default.</summary>
+    public Func<IReadOnlyList<string>, LdStatSample> StatsFor { get; set; } = _ => LdStatSample.None;
+
     /// <summary>What a scale read answers: a standing attacker at the factor, 40 blows amplified.</summary>
     public Func<int, LdScaleSample> SampleFor { get; set; } = _ => new LdScaleSample("orc", 110f, 100f, 40);
 
@@ -26,6 +32,13 @@ internal sealed class FakeLongDefeatEffects : ILongDefeatEffectsAdapter
     {
         Published.Add(table);
         _calls.Add("Publish:" + table.AttackerDamage.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    public LdStatSample ReadStats(IReadOnlyList<string> stats)
+    {
+        StatsAsked.Add(stats);
+        _calls.Add("ReadStats");
+        return StatsFor(stats);
     }
 
     public LdScaleSample ReadScale()

@@ -4,6 +4,7 @@
 Run:  python -m unittest tools.tests.test_run_long_defeat
 """
 import io
+import json
 import os
 import re
 import sys
@@ -53,9 +54,17 @@ def log_of(names, waves, stamp=None):
     return "\n".join(rows + READ_BACK_LINES)
 
 
-FULL_LOG = log_of(ld.REQUIRED_CHECKS, 5)
+# A run that clears 5 waves reached wave 5, which carries an affix, so it also owes the affix check (ld.AFFIX_FROM_CLEARS), and a report row with
+# a power the game reads back owes an affix-effect line too.
+STANDARD = ld.REQUIRED_CHECKS + ("affix", "affix-effect")
+FULL_LOG = log_of(STANDARD, 5)
 LOSE_LOG = log_of(ld.LOSE_CHECKS, 0)
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
+def wave_row(wave, seed=7, **more):
+    """A wave row of a schema 2 report with the affixes the game would roll for it: the scheduled count of the shipped schedule, drawn from the seed."""
+    return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)), **more}
+
+
 REPORT = {"schema": 2, "seed": 7, "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1}
 BLOCK = "[2026-11-04 09:59:59] [ERROR] [CrashReport] swallowed during the mission load"
 
@@ -130,13 +139,13 @@ class JudgeTests(unittest.TestCase):
         self.assertIn(f"build {HEAD[:9]},", why)
 
     def test_a_dirty_stamp_on_this_trees_head_passes_and_says_dirty(self):
-        code, why = ld.judge(FINAL, REPORT, log_of(ld.REQUIRED_CHECKS, 5, stamp_line(dirty=True)))
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, stamp_line(dirty=True)))
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {HEAD[:9]}.dirty", why)
 
     def test_a_stale_deploy_fails_naming_both_builds(self):
         old = "f" * 40
-        code, why = ld.judge(FINAL, REPORT, log_of(ld.REQUIRED_CHECKS, 5, stamp_line(old)))
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, stamp_line(old)))
         self.assertEqual(code, 1)
         self.assertIn(old[:9], why)
         self.assertIn(HEAD[:9], why)
@@ -152,14 +161,14 @@ class JudgeTests(unittest.TestCase):
 
     def test_fewer_wave_pass_lines_than_waves_cleared_fails(self):
         # The manifest asks for 5 wave lines; one line beside wavesCleared=5 passed the judge.
-        code, why = ld.judge(FINAL, REPORT, log_of(ld.REQUIRED_CHECKS, 4))
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 4))
         self.assertEqual(code, 1)
         self.assertIn("4 wave pass lines", why)
 
     def test_the_wave_lines_are_counted_against_what_the_report_cleared(self):
         ld.target_waves = 2
-        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=2), log_of(ld.REQUIRED_CHECKS, 2))[0], 0)
-        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=3), log_of(ld.REQUIRED_CHECKS, 2))[0], 1)
+        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=2), log_of(STANDARD, 2))[0], 0)
+        self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=3), log_of(STANDARD, 2))[0], 1)
 
     def test_no_done_file_fails(self):
         self.assertEqual(ld.judge(None, REPORT, FULL_LOG), (1, "no done file"))
@@ -186,7 +195,7 @@ class JudgeTests(unittest.TestCase):
         # At a target of 1, True would pass a bare comparison (True == 1), so only the type test can fail it.
         ld.target_waves = 1
         for bad in (None, "5", True):
-            self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=bad), log_of(ld.REQUIRED_CHECKS, 1))[0], 1, repr(bad))
+            self.assertEqual(ld.judge(FINAL, dict(REPORT, wavesCleared=bad), log_of(STANDARD, 1))[0], 1, repr(bad))
 
     def test_no_log_or_an_empty_log_fails(self):
         self.assertEqual(ld.judge(FINAL, REPORT, None)[0], 1)
@@ -504,7 +513,7 @@ class ManifestTests(unittest.TestCase):
         lines = self.fixture_lines()
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
-            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale"):
+            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -766,6 +775,224 @@ class SharedVectorTests(unittest.TestCase):
         self.assertEqual(2 ** 53 - 1, ld.MAX_SEED)
 
 
+PINNED_ROLLS = [
+    # (seed, wave, the roll at the shipped schedule): the same rows as AffixPlanTests.cs, taken from an independent implementation.
+    (1, 5, ["discipline"]),
+    (1, 10, ["discipline", "drums"]),
+    (1, 15, ["lash", "eye", "hide"]),
+    (12345, 40, ["hide", "discipline", "lash"]),
+    (7, 5, ["discipline"]),
+    (0, 15, ["drums", "hide", "discipline"]),
+]
+
+
+class AffixReplayTests(unittest.TestCase):
+    """The bot replays the game's affix roll from the report's seed: both suites pin the same rows, so neither side can drift alone."""
+
+    def test_the_python_roll_gives_the_pinned_powers(self):
+        schedule = ld.shipped_affix_schedule()
+        for seed, wave, expected in PINNED_ROLLS:
+            self.assertEqual(expected, ld.affix_roll(seed, wave, ld.affix_count(schedule, wave)), (seed, wave))
+
+    def test_every_pinned_roll_is_also_pinned_in_the_csharp_test(self):
+        csharp = (REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Domain" / "AffixPlanTests.cs").read_text(encoding="utf-8")
+        for seed, wave, expected in PINNED_ROLLS:
+            self.assertIn(f'[DataRow({seed}UL, {wave}, "{",".join(expected)}")]', csharp, (seed, wave))
+
+    def test_the_power_ids_are_the_games_in_the_games_order(self):
+        game = source("Domain", "AffixPlan.cs")
+        found = re.search(r"Ids \{ get; \} = new\[\] \{ ([^}]*) \}", game)
+        self.assertIsNotNone(found)
+        names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
+        self.assertEqual(list(ld.AFFIX_IDS), [names[part.strip()] for part in found.group(1).split(",")])
+
+    def test_the_rolled_pool_is_the_games_and_holds_only_powers_with_an_effect(self):
+        game = source("Domain", "AffixPlan.cs")
+        found = re.search(r"Pool \{ get; \} = new\[\] \{ ([^}]*) \}", game)
+        self.assertIsNotNone(found)
+        names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
+        self.assertEqual(list(ld.AFFIX_POOL), [names[part.strip()] for part in found.group(1).split(",")])
+        self.assertEqual(["lash", "drums", "eye", "discipline", "hide"], list(ld.AFFIX_POOL), "Slices 8 and 9 add hammer, terror and blades here")
+        self.assertEqual([i for i in ld.AFFIX_IDS if i in ld.AFFIX_POOL], list(ld.AFFIX_POOL), "the pool keeps the order of the eight")
+        self.assertTrue(set(ld.AFFIX_EFFECT_IDS) <= set(ld.AFFIX_POOL), "an effect line is only owed for a power that can roll")
+
+    def test_a_shorter_roll_is_a_prefix_of_a_longer_one(self):
+        for seed in range(20):
+            full = ld.affix_roll(seed, 20, 8)
+            self.assertEqual(sorted(full), sorted(ld.AFFIX_POOL), "a roll of more than the pool holds is the whole pool")
+            for count in range(len(ld.AFFIX_POOL) + 1):
+                self.assertEqual(full[:count], ld.affix_roll(seed, 20, count), (seed, count))
+
+    def test_no_seed_rolls_a_power_that_does_nothing_yet(self):
+        for seed in range(200):
+            for wave in (5, 10, 15, 40):
+                self.assertFalse({"hammer", "terror", "blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
+
+    def test_the_schedule_is_the_shipped_files(self):
+        self.assertEqual(((5, 1), (10, 2), (15, 3)), ld.shipped_affix_schedule())
+        self.assertEqual(ld.AFFIX_DEFAULT_SCHEDULE, ld.shipped_affix_schedule())
+        self.assertEqual([0, 0, 1, 1, 2, 2, 3, 3], [ld.affix_count(ld.shipped_affix_schedule(), w) for w in (1, 4, 5, 9, 10, 14, 15, 40)])
+
+    def schedule_of(self, text, raw=None):
+        """What shipped_affix_schedule reads from a scratch affixes.json holding this text (or these raw bytes)."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "affixes.json"
+            path.write_bytes(raw if raw is not None else text.encode("utf-8"))
+            with mock.patch.object(ld, "AFFIX_FILE", path):
+                return ld.shipped_affix_schedule()
+
+    def test_a_missing_file_or_one_that_is_not_a_json_object_rolls_nothing_as_the_game_reads_it(self):
+        with mock.patch.object(ld, "AFFIX_FILE", Path(tempfile.gettempdir()) / "no-such-affixes.json"):
+            self.assertEqual((), ld.shipped_affix_schedule())
+        for text in ("", "not json", "[1, 2]", "5"):
+            self.assertEqual((), self.schedule_of(text), text)
+
+    def test_an_absent_or_malformed_schedule_is_the_shipped_default_as_the_game_reads_it(self):
+        # Each row mirrors a branch of AffixesReader.ReadSchedule (and LongDefeatConfigScope.TryInt: a string, a float or a boolean is not a whole number).
+        for text in ('{}', '{"schedule": null}', '{"schedule": "5"}', '{"schedule": {"fromWave": 5, "count": 1}}',
+                     '{"schedule": [{"fromWave": 10, "count": 2}, {"fromWave": 5, "count": 1}]}',
+                     '{"schedule": [{"fromWave": 5, "count": 1}, {"fromWave": 5, "count": 2}]}',
+                     '{"schedule": [{"fromWave": "5", "count": 1}]}', '{"schedule": [{"fromWave": 5.7, "count": 1}]}',
+                     '{"schedule": [{"fromWave": 5.0, "count": 1}]}', '{"schedule": [{"fromWave": true, "count": 1}]}',
+                     '{"schedule": [{"fromWave": 5, "count": 9}]}', '{"schedule": [{"fromWave": 0, "count": 1}]}',
+                     '{"schedule": [{"fromWave": 1001, "count": 1}]}', '{"schedule": [{"fromWave": 5}]}', '{"schedule": [5]}',
+                     '{"schedule": [{"fromWave": Infinity, "count": 1}]}'):
+            self.assertEqual(ld.AFFIX_DEFAULT_SCHEDULE, self.schedule_of(text), text)
+
+    def test_an_empty_schedule_stays_empty_as_the_game_reads_it(self):
+        self.assertEqual((), self.schedule_of('{"schedule": []}'))
+
+    def test_a_good_schedule_is_read_row_for_row_and_a_bom_is_skipped(self):
+        text = '{"schedule": [{"fromWave": 3, "count": 0}, {"fromWave": 7, "count": 2}]}'
+        self.assertEqual(((3, 0), (7, 2)), self.schedule_of(text))
+        self.assertEqual(((3, 0), (7, 2)), self.schedule_of(None, raw=b"\xef\xbb\xbf" + text.encode("utf-8")))
+
+    def test_the_shipped_json_holds_the_eight_ids(self):
+        shipped = json.loads(ld.AFFIX_FILE.read_text(encoding="utf-8"))
+        self.assertEqual(sorted(ld.AFFIX_IDS), sorted(shipped["powers"]))
+
+
+class AffixJudgeTests(unittest.TestCase):
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, cleared=5, rows=None, **more):
+        return {**REPORT, "wavesCleared": cleared, "waves": [wave_row(w) for w in range(1, cleared + 1)] if rows is None else rows, **more}
+
+    def test_a_run_that_cleared_five_waves_owes_the_affix_check(self):
+        report = self.report(cleared=5)
+        code, why = ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 5))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.affix", why)
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0)
+
+    def test_a_run_that_stopped_at_the_clear_of_wave_four_never_started_wave_five_and_owes_none(self):
+        # The plan says "4 or more clears", which would fail a --waves 4 run: the check is written when a wave with affixes starts.
+        ld.target_waves = 4
+        self.assertEqual(ld.AFFIX_FROM_CLEARS, 5)
+        self.assertEqual(ld.judge(FINAL, self.report(cleared=4), log_of(ld.REQUIRED_CHECKS, 4))[0], 0)
+
+    def test_a_report_showing_a_wave_with_affixes_owes_the_check_whatever_it_cleared(self):
+        # --start-wave 5 --waves 1: one clear, but the wave carried an affix.
+        ld.target_waves = 1
+        report = self.report(cleared=1, rows=[wave_row(5)], startWave=5)
+        ld.expected_report = {"startWave": 5}
+        code, why = ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 1))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.affix", why)
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 1))[0], 0)
+
+    def test_a_run_before_wave_five_owes_none(self):
+        ld.target_waves = 1
+        report = self.report(cleared=1, rows=[wave_row(2)])
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 1))[0], 0)
+
+    def test_a_lose_run_is_not_asked_for_it(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(cleared=4), "final": False}
+        self.assertEqual(ld.judge(lost, report, LOSE_LOG)[0], 0)
+
+    def test_the_deep_run_lists_it_already(self):
+        self.assertIn("affix", ld.DEEP_CHECKS)
+
+    def test_affixes_that_replay_from_the_seed_pass(self):
+        for seed in (0, 1, 7, 2 ** 53 - 1):
+            ld.expected_report = {"seed": seed}
+            report = self.report(cleared=15, seed=seed, rows=[wave_row(w, seed) for w in range(1, 16)])
+            ld.target_waves = 15
+            self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 15))[0], 0, seed)
+
+    def test_affixes_that_do_not_replay_fail_naming_the_wave_and_the_roll(self):
+        ld.target_waves = 5
+        rows = [wave_row(w) for w in range(1, 6)]
+        wrong = [{**row, "affixes": ["lash"]} if row["wave"] == 5 else row for row in rows]
+        self.assertEqual(["discipline"], rows[4]["affixes"], "seed 7 rolls discipline at wave 5")
+        code, why = ld.judge(FINAL, self.report(rows=wrong), FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("wave 5", why)
+        self.assertIn("lash", why)
+        self.assertIn("discipline", why)
+
+    def test_a_wave_that_lost_its_affixes_or_gained_one_fails(self):
+        rows = [wave_row(w) for w in range(1, 6)]
+        for bad in ([], ["discipline", "lash"]):
+            changed = rows[:4] + [{**rows[4], "affixes": bad}]
+            self.assertEqual(ld.judge(FINAL, self.report(rows=changed), FULL_LOG)[0], 1, bad)
+        early = rows[:1] + [{**rows[1], "affixes": ["discipline"]}] + rows[2:]
+        self.assertEqual(ld.judge(FINAL, self.report(rows=early), FULL_LOG)[0], 1, "wave 2 carries none")
+
+    def test_a_row_with_no_affixes_list_fails(self):
+        rows = [wave_row(w) for w in range(1, 6)]
+        rows[2] = {"wave": 3}
+        code, why = ld.judge(FINAL, self.report(rows=rows), FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("no affixes list", why)
+
+    def test_a_non_empty_boons_list_does_not_excuse_a_short_row(self):
+        rows = [wave_row(w) for w in range(1, 6)]
+        rows[4] = {**rows[4], "affixes": []}
+        self.assertEqual(ld.judge(FINAL, self.report(rows=rows), FULL_LOG)[0], 1)
+        self.assertEqual(ld.judge(FINAL, self.report(rows=rows, boons=[{"pick": 1}]), FULL_LOG)[0], 1)
+
+    def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
+        without = log_of(ld.REQUIRED_CHECKS + ("affix",), 5)
+        # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
+        seeds = {"discipline": 0, "hide": 2, "lash": 3, "eye": 8, "drums": 9}
+        for power, seed in seeds.items():
+            report = self.report(seed=seed, rows=[wave_row(w, seed) for w in range(1, 6)])
+            self.assertEqual([power], report["waves"][4]["affixes"])
+            code, why = ld.judge(FINAL, report, without)
+            self.assertEqual(code, 1, power)
+            self.assertIn("taom.long-defeat.affix-effect", why)
+            self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0, power)
+        self.assertEqual(sorted(seeds), sorted(ld.AFFIX_EFFECT_IDS))
+
+    def test_the_effect_line_may_be_a_pass_or_a_skip_but_a_fail_fails_the_run(self):
+        base = log_of(ld.REQUIRED_CHECKS + ("affix",), 5)
+        line = "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} power=hide troop=x"
+        self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("pass"))[0], 0)
+        self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("skip"))[0], 0, "an unarmoured soldier cannot show hide: still read")
+        self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("fail"))[0], 1)
+
+    def test_a_row_with_no_effect_power_owes_no_effect_line(self):
+        self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer", "eye"]}]}))
+
+    def test_a_report_with_no_wave_rows_has_nothing_to_replay(self):
+        self.assertIsNone(ld.affix_problem({"seed": 7}))
+        self.assertIsNone(ld.affix_problem({"seed": 7, "waves": "x"}))
+        self.assertIsNone(ld.affix_problem({"seed": True, "waves": []}))
+        self.assertFalse(ld.reached_affixes({"waves": "x"}))
+        self.assertFalse(ld.reached_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
+        self.assertTrue(ld.reached_affixes({"waves": [{"affixes": ["hide"]}]}))
+
+
 class PhaseTwoJudgeTests(unittest.TestCase):
 
     def setUp(self):
@@ -802,7 +1029,7 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 0}, FULL_LOG)[0], 0)
 
     def test_an_owner_missing_above_zero_fails_and_zero_passes(self):
-        zero = FULL_LOG + "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=blades owner_missing=0 withheld=2"
+        zero = FULL_LOG + "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=hide owner_missing=0 withheld=2"
         self.assertEqual(ld.judge(FINAL, REPORT, zero)[0], 0)
         for count in ("1", "3", "12"):
             code, why = ld.judge(FINAL, REPORT, zero.replace("owner_missing=0", "owner_missing=" + count))
@@ -819,36 +1046,36 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.sally", why)
         self.assertIn("taom.long-defeat.sally-return", why)
-        full = log_of(ld.REQUIRED_CHECKS + ("sally", "sally-return"), 5)
+        full = log_of(STANDARD + ("sally", "sally-return"), 5)
         self.assertEqual(ld.judge(FINAL, report, full)[0], 0)
-        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("sally",), 5))[0], 1)
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("sally",), 5))[0], 1)
 
     def test_another_class_asks_nothing_extra(self):
         for name in ("", "archer", "sword_and_board", None):
             self.assertEqual(ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[0], 0, repr(name))
 
     def test_a_run_that_played_past_the_authored_list_owes_the_scale_check(self):
-        report = {**REPORT, "waves": [{"wave": 10, "healthFactor": 1.0}, {"wave": 11, "healthFactor": 1.05}]}
+        report = {**REPORT, "waves": [wave_row(10, healthFactor=1.0), wave_row(11, healthFactor=1.05)]}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
-        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("scale",), 5))[0], 0)
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("scale",), 5))[0], 0)
 
     def test_a_damage_factor_alone_also_owes_the_scale_check(self):
         # The game's own rule (a wave is scaled when health, damage or the tier steps moved) also holds for a roster whose health line is flat.
-        report = {**REPORT, "waves": [{"wave": 11, "healthFactor": 1.0, "damageFactor": 1.03}]}
+        report = {**REPORT, "waves": [wave_row(11, healthFactor=1.0, damageFactor=1.03)]}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
 
     def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
-        for waves in (None, [], [{"wave": 1, "healthFactor": 1.0}], [{"wave": 1}], [{"wave": 1, "healthFactor": True}],
-                      [{"wave": 1, "healthFactor": "2"}], ["x"], "waves"):
+        for waves in (None, [], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
+                      [wave_row(1, healthFactor="2")], ["x"], "waves"):
             self.assertEqual(ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)[0], 0, repr(waves))
 
     def test_the_deep_run_lists_scale_once(self):
-        report = {**REPORT, "waves": [{"wave": 12, "healthFactor": 1.1}]}
-        self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave",), 5))[0], 0)
+        report = {**REPORT, "waves": [wave_row(12, healthFactor=1.1)]}
+        self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave", "affix-effect"), 5))[0], 0)
         self.assertEqual(ld.DEEP_CHECKS.count("scale"), 1)
 
     def test_every_run_must_report_start_wave_one_unless_it_armed_another(self):
@@ -944,8 +1171,8 @@ class DeepJudgeTests(unittest.TestCase):
         self.assertIn("final", why)
 
     def test_the_deep_ids_are_owned_by_a_checks_class_or_named_as_not_built_yet(self):
-        # Slices 3, 5 and 7 add these ids to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2).
-        not_built_yet = {"class", "commander", "affix"}
+        # Slices 5 and 7 add these ids to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2, affix in Slice 3).
+        not_built_yet = {"class", "commander"}
         checks = source("Diagnostics", "LongDefeatChecks.cs") + (REPO / "Client" / "Features" / "LongDefeat" / "LongDefeatClientChecks.cs").read_text(encoding="utf-8")
         for name in ld.DEEP_CHECKS:
             owned = f'"taom.long-defeat.{name}"' in checks

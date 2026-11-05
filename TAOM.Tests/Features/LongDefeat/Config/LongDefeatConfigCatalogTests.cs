@@ -42,8 +42,11 @@ public class LongDefeatConfigCatalogTests
     private static string Shop(string offers = Offer, string gold = "600") =>
         "{'shops':{'sh':{'startingGold':" + gold + ",'offers':[" + offers + "]}}}";
 
+    // affixes.json is read when a plan is built, so a fixture that builds one carries the file; its own tests are in LongDefeatAffixesReaderTests.
+    private const string Affixes = "{'names':{'isengard':{'lash':'{=A1}L','drums':'{=A2}D','blades':'{=A3}B','eye':'{=A4}E','discipline':'{=A5}I','hide':'{=A6}H','terror':'{=A7}T','hammer':'{=A8}M'}}}";
+
     private LongDefeatConfigCatalog Load(string? fortresses = null, string? waves = null, string? shop = null) =>
-        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger);
+        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger, Affixes);
 
     private void AssertOneWarningNaming(string file, string key) =>
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains(file) && m.Contains(key)));

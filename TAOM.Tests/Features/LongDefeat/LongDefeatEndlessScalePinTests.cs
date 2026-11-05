@@ -78,6 +78,19 @@ public class LongDefeatEndlessScalePinTests
     }
 
     [TestMethod]
+    public void TheStatReadBack_SeedsTheScratchWithTheAgentsArmourEncumbrance_BeforeTheBaseline()
+    {
+        // CustomBattleAgentStatCalculateModel.cs:190 reads ArmorEncumbrance from the property object, and only InitializeAgentStats (:22) writes it, so a
+        // fresh scratch gives every armoured soldier a drums baseline as if it wore nothing and the check fails on a working affix.
+        var source = RepoPaths.ReadSource(EffectsAdapter, stripComments: true);
+        var read = BodyOf(source, "public LdStatSample ReadStats(");
+
+        var seed = read.IndexOf("{ ArmorEncumbrance = agent.AgentDrivenProperties.ArmorEncumbrance }", StringComparison.Ordinal);
+        var baseline = read.IndexOf("LongDefeatStatHooks.Baseline(", StringComparison.Ordinal);
+        Assert.IsTrue(seed >= 0 && baseline > seed, "the scratch takes the agent's encumbrance before the model computes the baseline");
+    }
+
+    [TestMethod]
     public void TheMissionLogic_BuildsTheEffectsAdapterOnItsOwnMission_SoTheDamageFactorHasAReader()
     {
         var source = RepoPaths.ReadSource("Main/Features/LongDefeat/Hooks/LongDefeatMissionLogic.cs", stripComments: true);

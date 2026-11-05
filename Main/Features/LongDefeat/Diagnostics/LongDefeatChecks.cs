@@ -39,6 +39,8 @@ internal static class LongDefeatChecks
     internal const string BestRunId = "taom.long-defeat.best-run";
     internal const string MenuId = "taom.long-defeat.menu";
     internal const string ScaleId = "taom.long-defeat.scale";
+    internal const string AffixId = "taom.long-defeat.affix";
+    internal const string AffixEffectId = "taom.long-defeat.affix-effect";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;

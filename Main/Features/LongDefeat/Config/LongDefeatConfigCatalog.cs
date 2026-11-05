@@ -12,8 +12,8 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
-/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c> and <c>shop.json</c>, read once per process, and the owner of
-/// the <c>balance</c> hash over those three and <c>affixes.json</c>, <c>boons.json</c> and <c>classes.json</c> (their readers arrive with their
+/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c>, <c>shop.json</c> and <c>affixes.json</c>, read once per process,
+/// and the owner of the <c>balance</c> hash over those four and <c>boons.json</c> and <c>classes.json</c> (their readers arrive with their
 /// slices). The load never throws, because a faulted <see cref="Lazy{T}"/> rethrows forever.
 /// </summary>
 internal sealed class LongDefeatConfigCatalog
@@ -26,8 +26,11 @@ internal sealed class LongDefeatConfigCatalog
     private const string BoonsFile = "boons.json";
     private const string ClassesFile = "classes.json";
 
+    private readonly IModLogger _logger;
     private readonly Lazy<string> _balance;
     private readonly Lazy<WavesConfig> _waves;
+    private readonly Lazy<AffixesConfig> _affixes;
+    private readonly HashSet<string> _unnamedCultures = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lazy<IReadOnlyDictionary<string, ShopPlan>> _shops;
     private readonly Lazy<IReadOnlyList<FortressEntry>> _fortresses;
 
@@ -38,12 +41,15 @@ internal sealed class LongDefeatConfigCatalog
 
     private LongDefeatConfigCatalog(IModLogger logger, Func<string, string?> readFile)
     {
+        _logger = logger;
         var texts = new ConcurrentDictionary<string, string?>();
         string? read(string name) => texts.GetOrAdd(name, readFile);
         _balance = new Lazy<string>(() => HashOf(read(FortressesFile), read(WavesFile), read(ShopFile),
             read(AffixesFile), read(BoonsFile), read(ClassesFile)));
         _waves = new Lazy<WavesConfig>(() => Guard(logger, WavesFile, WavesConfig.Empty,
             s => WavesReader.Read(read(WavesFile), s)));
+        _affixes = new Lazy<AffixesConfig>(() => Guard(logger, AffixesFile, AffixesConfig.None,
+            s => AffixesReader.Read(read(AffixesFile), s)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
             new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s)));
         _fortresses = new Lazy<IReadOnlyList<FortressEntry>>(() => Guard<IReadOnlyList<FortressEntry>>(logger, FortressesFile,
@@ -99,7 +105,16 @@ internal sealed class LongDefeatConfigCatalog
 
     /// <summary>The plan for one run. The options leave here with a seed: the one given, else the start time's ticks.</summary>
     public RunPlan BuildPlan(FortressEntry fortress, RunOptions options) =>
-        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options.Seeded(DateTime.UtcNow.Ticks)) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster };
+        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options.Seeded(DateTime.UtcNow.Ticks)) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster, Affixes = AffixesFor(fortress.AttackerCulture) };
+
+    /// <summary>The affixes with the names of one attacker culture. A culture the file has no table for shows its powers as their ids, with one warning per culture.</summary>
+    private AffixPlan AffixesFor(string culture)
+    {
+        var config = _affixes.Value;
+        if (config.Schedule.Count > 0 && !config.HasNames(culture) && _unnamedCultures.Add(culture))
+            _logger.LogWarning($"LongDefeatConfigCatalog: {AffixesFile}: no 'names.{culture}' table; that culture's affixes show as their power ids");
+        return config.For(culture);
+    }
 
     private static T Guard<T>(IModLogger logger, string file, T fallback, Func<LongDefeatConfigScope, T> load)
     {

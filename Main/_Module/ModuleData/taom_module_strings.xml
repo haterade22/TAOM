@@ -4603,6 +4603,22 @@
 	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
+	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
+	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
+	<string id="TAOM_LD_Affix_Isengard_Eye" text="{=TAOM_LD_Affix_Isengard_Eye}The Seeing Stone" />
+	<string id="TAOM_LD_Affix_Isengard_Hammer" text="{=TAOM_LD_Affix_Isengard_Hammer}Engines of Orthanc" />
+	<string id="TAOM_LD_Affix_Isengard_Hide" text="{=TAOM_LD_Affix_Isengard_Hide}Orthanc Plate" />
+	<string id="TAOM_LD_Affix_Isengard_Lash" text="{=TAOM_LD_Affix_Isengard_Lash}The White Hand's Whip" />
+	<string id="TAOM_LD_Affix_Isengard_Terror" text="{=TAOM_LD_Affix_Isengard_Terror}Crebain from Dunland" />
+	<string id="TAOM_LD_Affix_Mordor_Blades" text="{=TAOM_LD_Affix_Mordor_Blades}Morgul Blades" />
+	<string id="TAOM_LD_Affix_Mordor_Discipline" text="{=TAOM_LD_Affix_Mordor_Discipline}Iron Discipline" />
+	<string id="TAOM_LD_Affix_Mordor_Drums" text="{=TAOM_LD_Affix_Mordor_Drums}Drums in the Deep" />
+	<string id="TAOM_LD_Affix_Mordor_Eye" text="{=TAOM_LD_Affix_Mordor_Eye}The Lidless Eye" />
+	<string id="TAOM_LD_Affix_Mordor_Hammer" text="{=TAOM_LD_Affix_Mordor_Hammer}Hammer of the Underworld" />
+	<string id="TAOM_LD_Affix_Mordor_Hide" text="{=TAOM_LD_Affix_Mordor_Hide}Troll-Hide" />
+	<string id="TAOM_LD_Affix_Mordor_Lash" text="{=TAOM_LD_Affix_Mordor_Lash}The Overseer's Lash" />
+	<string id="TAOM_LD_Affix_Mordor_Terror" text="{=TAOM_LD_Affix_Mordor_Terror}Winged Terror" />
 	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
 	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_End_DefendersDead" text="{=TAOM_LD_End_DefendersDead}The garrison has fallen" />
@@ -4615,6 +4631,7 @@
 	<string id="TAOM_LD_End_TargetReached" text="{=TAOM_LD_End_TargetReached}The fortress held" />
 	<string id="TAOM_LD_End_Waves" text="{=TAOM_LD_End_Waves}Waves cleared: {WAVES}" />
 	<string id="TAOM_LD_Fortress_Helms" text="{=TAOM_LD_Fortress_Helms}Helm's Deep" />
+	<string id="TAOM_LD_Hud_Affixes" text="{=TAOM_LD_Hud_Affixes}Affixes: {NAMES}" />
 	<string id="TAOM_LD_Hud_Attackers" text="{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}" />
 	<string id="TAOM_LD_Hud_Close" text="{=TAOM_LD_Hud_Close}Close" />
 	<string id="TAOM_LD_Hud_Defenders" text="{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}" />
@@ -4624,6 +4641,8 @@
 	<string id="TAOM_LD_Hud_Horn" text="{=TAOM_LD_Hud_Horn}Sound the horn: start the wave now for bonus gold" />
 	<string id="TAOM_LD_Hud_Keep" text="{=TAOM_LD_Hud_Keep}The keep is under attack" />
 	<string id="TAOM_LD_Hud_Leave" text="{=TAOM_LD_Hud_Leave}Return to the main menu" />
+	<string id="TAOM_LD_Hud_NextAffixes" text="{=TAOM_LD_Hud_NextAffixes}Next wave: {NAMES}" />
+	<string id="TAOM_LD_Hud_NextScale" text="{=TAOM_LD_Hud_NextScale}Next wave attackers: health {HEALTH}%, damage {DAMAGE}%" />
 	<string id="TAOM_LD_Hud_PackSize" text="{=TAOM_LD_Hud_PackSize}Pack of {SIZE}" />
 	<string id="TAOM_LD_Hud_Preparation" text="{=TAOM_LD_Hud_Preparation}Preparation" />
 	<string id="TAOM_LD_Hud_Price" text="{=TAOM_LD_Hud_Price}{PRICE} gold" />

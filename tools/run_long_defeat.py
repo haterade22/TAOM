@@ -20,6 +20,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
+A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
 collection. It changes the arm variable, the done and status files, the arm text and the judge, and presses Cancel on the Helm's Deep
@@ -27,6 +28,7 @@ terrain shader dialog before the Fords dialog handling. The standing permission 
 """
 import argparse
 import itertools
+import json
 import re
 import subprocess
 import sys
@@ -71,6 +73,20 @@ MAX_SEED = 2 ** 53 - 1
 
 # A --deep run starts at wave 12 and ends final or lost: a general, two then three affixes and the endless factors (phase2-plan.md section 6).
 DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
+
+# The affixes (phase2-plan.md section 2): eight powers in the game's fixed order, of which AFFIX_POOL are rolled so far. A wave writes the affix check when it
+# starts, so wave 5 (the first with an affix) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
+# affixes, owes it. The plan's "4 or more clears" would fail a --waves 4 run, which stops at the clear of wave 4 and never starts wave 5.
+AFFIX_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
+# The powers with an effect in the game (AffixPlan.Pool): hammer, terror and blades join in Slices 8 and 9, when each one's effect lands.
+AFFIX_POOL = ("lash", "drums", "eye", "discipline", "hide")
+AFFIX_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "affixes.json"
+AFFIX_DEFAULT_SCHEDULE = ((5, 1), (10, 2), (15, 3))
+AFFIX_FROM_CLEARS = 5
+AFFIX_CHECK = "affix"
+# A cleared wave that rolled one of these has written an affix-effect line (pass, or skip for a soldier that could not show it): a run with none never read the effect back.
+AFFIX_EFFECT_CHECK = "affix-effect"
+AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide")
 
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
@@ -131,6 +147,87 @@ class SplitMix64:
         return 0 if n <= 0 else draw % n
 
 
+def affix_roll(seed, wave, count):
+    """The game's AffixPlan.Roll: a partial Fisher-Yates over AFFIX_POOL drawn from stream 1 at (wave, 0), so a shorter roll is a prefix of a longer one.
+    The vectors in test_run_long_defeat.py are pinned in AffixPlanTests.cs too."""
+    gen = SplitMix64(seed, 1, wave, 0)
+    ids = list(AFFIX_POOL)
+    for i in range(min(count, len(ids))):
+        j = i + gen.below(len(ids) - i)
+        ids[i], ids[j] = ids[j], ids[i]
+    return ids[:max(count, 0)]
+
+
+def _whole(value, low, high):
+    return isinstance(value, int) and not isinstance(value, bool) and low <= value <= high
+
+
+def shipped_affix_schedule():
+    """The (fromWave, count) rows of this tree's affixes.json, read by the rules of the game's AffixesReader.ReadSchedule: no file or no JSON object means
+    no affixes (); no "schedule" key, a schedule that is not a list, a row that is not a whole fromWave of 1 to 1000 and a whole count of 0 to 8, or a
+    fromWave that does not rise means the shipped default; an empty list stays empty."""
+    try:
+        root = json.loads(AFFIX_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return ()
+    if not isinstance(root, dict):
+        return ()
+    rows = root.get("schedule")
+    if not isinstance(rows, list):
+        return AFFIX_DEFAULT_SCHEDULE
+    stages = []
+    for row in rows:
+        from_wave, count = (row.get("fromWave"), row.get("count")) if isinstance(row, dict) else (None, None)
+        if not _whole(from_wave, 1, 1000) or not _whole(count, 0, 8) or (stages and from_wave <= stages[-1][0]):
+            return AFFIX_DEFAULT_SCHEDULE
+        stages.append((from_wave, count))
+    return tuple(stages)
+
+
+def affix_count(schedule, wave):
+    """How many affixes a wave rolls: the count of the last schedule row at or below it, 0 before the first."""
+    count = 0
+    for from_wave, rows in schedule:
+        if from_wave <= wave:
+            count = rows
+    return count
+
+
+def affix_problem(report_json):
+    """None when every wave row's affixes are the replayed roll of the report's seed, else what is wrong. A report with no wave rows has nothing to replay.
+    The Legend boon that cuts a roll (Slice 4) will key its allowance on the wave it was taken."""
+    rows = report_json.get("waves")
+    seed = report_json.get("seed")
+    if not isinstance(rows, list) or isinstance(seed, bool) or not isinstance(seed, int):
+        return None
+    schedule = shipped_affix_schedule()
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("wave"), int) or isinstance(row.get("wave"), bool):
+            continue
+        wave = row["wave"]
+        got = row.get("affixes")
+        if not isinstance(got, list):
+            return f"wave {wave} has no affixes list"
+        scheduled = affix_count(schedule, wave)
+        roll = affix_roll(seed, wave, scheduled)
+        if got != roll:
+            return f"wave {wave} reports affixes {got}, but seed {seed} rolls {roll} for a schedule of {scheduled}"
+    return None
+
+
+def reached_affixes(report_json):
+    """True when a wave row of the report carried an affix: that wave wrote the affix check."""
+    rows = report_json.get("waves")
+    return isinstance(rows, list) and any(isinstance(row, dict) and isinstance(row.get("affixes"), list) and row["affixes"] for row in rows)
+
+
+def reached_effect_affixes(report_json):
+    """True when a wave row of the report carried a power whose effect the game reads back (AFFIX_EFFECT_IDS): that wave wrote an affix-effect line."""
+    rows = report_json.get("waves")
+    return isinstance(rows, list) and any(
+        isinstance(row, dict) and isinstance(row.get("affixes"), list) and any(a in AFFIX_EFFECT_IDS for a in row["affixes"]) for row in rows)
+
+
 def reached_endless(report_json):
     """True when a wave row of the report took a health or damage factor above 1: the run played a wave past the authored list."""
     waves = report_json.get("waves")
@@ -180,6 +277,9 @@ def judge(done, report_json, log_text=None):
     seed = report_json.get("seed")
     if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed <= MAX_SEED:
         return 1, f"the report's seed is {seed!r}, wanted a whole number from 0 to {MAX_SEED}"
+    mismatch = affix_problem(report_json)
+    if mismatch:
+        return 1, f"the report's affixes do not replay from its seed: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -209,7 +309,13 @@ def judge(done, report_json, log_text=None):
     required = required + tuple(name for name in CLASS_CHECKS.get(report_json.get("class"), ()) if name not in required)
     if reached_endless(report_json) and SCALE_CHECK not in required:
         required = required + (SCALE_CHECK,)
+    cleared_waves = report_json.get("wavesCleared")
+    owes_affix = reached_affixes(report_json) or (isinstance(cleared_waves, int) and not isinstance(cleared_waves, bool) and cleared_waves >= AFFIX_FROM_CLEARS)
+    if not lose and owes_affix and AFFIX_CHECK not in required:
+        required = required + (AFFIX_CHECK,)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
+    if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
+        missing.append(AFFIX_EFFECT_CHECK)
     if missing:
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing)
     unread = [line for line in READ_BACK if line not in log_text]

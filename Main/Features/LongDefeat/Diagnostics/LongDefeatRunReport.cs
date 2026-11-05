@@ -51,7 +51,7 @@ internal static class LongDefeatRunReport
                 ["felled"] = w.Felled,
                 ["lost"] = w.Lost,
                 ["seconds"] = w.Seconds,
-                ["affixes"] = new JArray(),
+                ["affixes"] = new JArray(w.Affixes),
                 ["healthFactor"] = w.HealthFactor,
                 ["damageFactor"] = w.DamageFactor,
                 ["summoned"] = 0,

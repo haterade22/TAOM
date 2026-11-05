@@ -233,4 +233,59 @@ public class LongDefeatShippedConfigTests
         Assert.AreEqual("fow_urukhai_veterancrossbowman", scale.Tiers["fow_urukhai_crossbowman"]);
         Assert.AreEqual(10, waves.Authored.Count);
     }
+
+    [TestMethod]
+    public void ShippedAffixes_LoadWithNoWarning_WithTheApprovedScheduleAndEveryNumberSet()
+    {
+        var (catalog, logger) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Affixes;
+
+        Assert.AreEqual((0, 1, 1, 2, 2, 3, 3), (plan.CountFor(4), plan.CountFor(5), plan.CountFor(9), plan.CountFor(10), plan.CountFor(14), plan.CountFor(15), plan.CountFor(40)));
+        foreach (var power in AffixPlan.Ids)
+            foreach (var key in AffixPlan.Keys[power])
+                Assert.AreNotEqual(0f, plan.Value(power, key), power + "." + key + " reads as 0: missing from the file or refused");
+        Assert.AreEqual(-30f, plan.Value("eye", "aimErrorPercent"), "negative aim error is better aim");
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_EveryFortressesAttackerCulture_HasAllEightNames()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var plan = catalog.BuildPlan(f, RunOptions.Default).Affixes;
+            var unnamed = AffixPlan.Ids.Where(id => plan.NameOf(id) == null).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), unnamed, f.Id + " (" + f.AttackerCulture + ") lacks names for " + string.Join(", ", unnamed));
+        }
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_TheMordorTableIsComplete_SoPhaseFiveNeedsNoNewNames()
+    {
+        var root = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "affixes.json")));
+        var mordor = (Newtonsoft.Json.Linq.JObject)root["names"]!["mordor"]!;
+
+        CollectionAssert.AreEquivalent(AffixPlan.Ids.ToList(), mordor.Properties().Select(p => p.Name).ToList());
+        Assert.AreEqual("{=TAOM_LD_Affix_Mordor_Terror}Winged Terror", (string?)mordor["terror"]);
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_EveryNameKeyIsRegisteredWithTheSameDefault()
+    {
+        var rows = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var root = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "affixes.json")));
+
+        var names = root["names"]!.Children<Newtonsoft.Json.Linq.JProperty>().SelectMany(c => ((Newtonsoft.Json.Linq.JObject)c.Value).Properties()).Select(p => (string)p.Value!).ToList();
+
+        Assert.AreEqual(16, names.Count);
+        foreach (var raw in names)
+        {
+            var key = raw.Substring(2, raw.IndexOf('}') - 2);
+            Assert.IsTrue(rows.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
+            Assert.AreEqual(raw, registered, key);
+        }
+    }
 }

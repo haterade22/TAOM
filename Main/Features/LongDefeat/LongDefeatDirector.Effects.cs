@@ -45,6 +45,7 @@ internal sealed partial class LongDefeatDirector
         {
             _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged{ScaleText(start)}");
             BeginScaleWatch(start);
+            BeginAffixes(start.Wave);
         }
 
         foreach (var batch in fx.AttackerBatches)
@@ -54,6 +55,7 @@ internal sealed partial class LongDefeatDirector
         {
             _field.RefreshAttackerTactic();
             SampleScaleAtSpawn();
+            ReadAffixEffects();
         }
 
         if (fx.OrderCharge)

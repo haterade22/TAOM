@@ -3,6 +3,7 @@ using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
+using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -42,6 +43,8 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
         base.InitializeAgentStats(agent, spawnEquipment, agentDrivenProperties, agentBuildData);
         if (_chargeDamage != null)
             MountChargeDamageApplier.Apply(agent, agentDrivenProperties, _chargeDamage);
+        // The Long Defeat's hide affix raises an attacker's armour once, here at spawn; inert outside its armed mission.
+        LongDefeatStatHooks.InitializeArmour(agent, agentDrivenProperties, agentBuildData);
     }
 
     public override void UpdateAgentStats(Agent agent, AgentDrivenProperties agentDrivenProperties)
@@ -51,6 +54,8 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
         StandWeaponFavor.Apply(agent, agentDrivenProperties, _aggression.StandPolearmFavor);
         // Race Abilities: the same post-pass as the campaign slot, so a Custom Battle shows the live ability.
         RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
+        // Long Defeat: the wave's stat affixes, applied on top of the abilities' result; inert outside its armed mission.
+        LongDefeatStatHooks.UpdateStats(agent, agentDrivenProperties);
     }
 
     // Race Abilities: a live ability's knockdown, knock-back and dismount resistance, as in the campaign slot.

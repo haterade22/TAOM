@@ -7878,6 +7878,25 @@
     <string id="TAOM_FOW_Result_TimeVictoryText" text="Time ran out, and you hold more of the field." />
     <string id="TAOM_FOW_Result_TimeDefeatText" text="Time ran out, and the enemy holds more of the field." />
     <string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="Its strongest soldiers come only in small packs of three." />
+    <string id="TAOM_LD_Affix_Isengard_Blades" text="Fouled Blades" />
+    <string id="TAOM_LD_Affix_Isengard_Discipline" text="Bred for War" />
+    <string id="TAOM_LD_Affix_Isengard_Drums" text="War Drums of Orthanc" />
+    <string id="TAOM_LD_Affix_Isengard_Eye" text="The Seeing Stone" />
+    <string id="TAOM_LD_Affix_Isengard_Hammer" text="Engines of Orthanc" />
+    <string id="TAOM_LD_Affix_Isengard_Hide" text="Orthanc Plate" />
+    <string id="TAOM_LD_Affix_Isengard_Lash" text="The White Hand's Whip" />
+    <string id="TAOM_LD_Affix_Isengard_Terror" text="Crebain from Dunland" />
+    <string id="TAOM_LD_Affix_Mordor_Blades" text="Morgul Blades" />
+    <string id="TAOM_LD_Affix_Mordor_Discipline" text="Iron Discipline" />
+    <string id="TAOM_LD_Affix_Mordor_Drums" text="Drums in the Deep" />
+    <string id="TAOM_LD_Affix_Mordor_Eye" text="The Lidless Eye" />
+    <string id="TAOM_LD_Affix_Mordor_Hammer" text="Hammer of the Underworld" />
+    <string id="TAOM_LD_Affix_Mordor_Hide" text="Troll-Hide" />
+    <string id="TAOM_LD_Affix_Mordor_Lash" text="The Overseer's Lash" />
+    <string id="TAOM_LD_Affix_Mordor_Terror" text="Winged Terror" />
+    <string id="TAOM_LD_Hud_Affixes" text="Affixes: {NAMES}" />
+    <string id="TAOM_LD_Hud_NextAffixes" text="Next wave: {NAMES}" />
+    <string id="TAOM_LD_Hud_NextScale" text="Next wave attackers: health {HEALTH}%, damage {DAMAGE}%" />
   </strings>
 
 </base>

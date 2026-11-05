@@ -44,6 +44,7 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         base.AfterStart();
         LongDefeatMorale.Arm(Mission);
         LongDefeatCombatHooks.Arm(Mission);
+        LongDefeatStatHooks.Arm(Mission);
         _host.MarkStartDue();
     }
 
@@ -85,6 +86,7 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     {
         LongDefeatMorale.Disarm(Mission);
         LongDefeatCombatHooks.Disarm(Mission);
+        LongDefeatStatHooks.Disarm(Mission);
         _host.ShutDown();
     }
 }

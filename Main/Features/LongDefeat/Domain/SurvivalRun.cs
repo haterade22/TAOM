@@ -190,19 +190,30 @@ internal sealed partial class SurvivalRun
             End(RunEndReason.Abandoned);
     }
 
-    public RunView GetView() => new(
-        _phase,
-        _wave,
-        _wavesCleared,
-        _purse.Balance,
-        BetweenWaves ? Math.Max(0f, _left) : 0f,
-        _lastDefenders,
-        PendingDefenders,
-        _lastAttackers,
-        _keep,
-        _plan.Shop.Offers,
-        _bought[(int)FormationSlot.Infantry],
-        _bought[(int)FormationSlot.Ranged]);
+    public RunView GetView()
+    {
+        // The next wave's preview is shown only between waves, so a wave in progress (most of a run) builds none of it.
+        var next = BetweenWaves ? NextSpec : null;
+        return new(
+            _phase,
+            _wave,
+            _wavesCleared,
+            _purse.Balance,
+            BetweenWaves ? Math.Max(0f, _left) : 0f,
+            _lastDefenders,
+            PendingDefenders,
+            _lastAttackers,
+            _keep,
+            _plan.Shop.Offers,
+            _bought[(int)FormationSlot.Infantry],
+            _bought[(int)FormationSlot.Ranged])
+        {
+            WaveAffixes = WaveLabels,
+            NextAffixes = next != null ? _plan.Affixes.Labels(NextAffixes) : Array.Empty<AffixLabel>(),
+            NextHealthFactor = next?.HealthFactor ?? 1f,
+            NextDamageFactor = next?.DamageFactor ?? 1f,
+        };
+    }
 
     private void RunWave(RunSnapshot s, bool loss, RunEffects fx)
     {
@@ -259,6 +270,7 @@ internal sealed partial class SurvivalRun
         _phase = RunPhase.Wave;
         _left = 0f;
         _waveInit = true;
+        _waveAffixes = _plan.Affixes.Roll(Seed, _wave);
     }
 
     private void InitWave(RunSnapshot s, RunEffects fx)
@@ -281,7 +293,7 @@ internal sealed partial class SurvivalRun
         _waveFelled = 0;
         _stale = default;
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
-        fx.PublishStats = new LdStatTable(_damageFactor);
+        fx.PublishStats = RunModifiers.StatTable(_plan.Affixes, _waveAffixes, _damageFactor);
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
@@ -323,7 +335,7 @@ internal sealed partial class SurvivalRun
     {
         var bonus = _r.WaveBonusBase + _r.WaveBonusPerWave * _wave;
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor);
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes);
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
         if (_stale.Charging)

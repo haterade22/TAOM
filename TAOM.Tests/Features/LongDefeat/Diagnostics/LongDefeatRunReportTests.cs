@@ -180,6 +180,19 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_AWaveThatCarriedAffixes_ReportsTheirPowerIdsInOrder()
+    {
+        var stats = new RunStats();
+        stats.CloseWave(10, 100f, 0, 1f, 1f, new[] { "drums", "terror" });
+        stats.CloseWave(11, 100f, 0);
+
+        var waves = ((JArray)Build(new RunResult(RunEndReason.TargetReached, 11, 2, 0), stats, new Purse(600))["waves"]!).Cast<JObject>().ToList();
+
+        CollectionAssert.AreEqual(new[] { "drums", "terror" }, ((JArray)waves[0]["affixes"]!).Select(a => (string)a!).ToArray());
+        Assert.AreEqual(0, ((JArray)waves[1]["affixes"]!).Count, "a wave with none still carries the field, empty");
+    }
+
+    [TestMethod]
     public void Build_SchemaOneFieldsKeepTheirNamesAndMeaning()
     {
         var report = Build(new RunResult(RunEndReason.TargetReached, 1, 1, 0), new RunStats(), new Purse(600));

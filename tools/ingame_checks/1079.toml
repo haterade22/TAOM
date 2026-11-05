@@ -169,6 +169,27 @@ fail = ['\[Check\] id=taom\.long-defeat\.scale result=fail']
 # An authored wave writes nothing, so a session that never passed wave 10 reads NOT REACHED. A run that ended before the wave's first batch closed writes nothing either.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.affix"
+needs = "a wave that carries affixes (wave 5 or later: --start-wave 5 --waves 1 --seed N)"
+reached = ['\[Check\] id=taom\.long-defeat\.affix result=']
+pass = ['\[Check\] id=taom\.long-defeat\.affix result=pass w=[0-9]+ count=[0-9]+ scheduled=[0-9]+ powers=']
+fail = ['\[Check\] id=taom\.long-defeat\.affix result=fail']
+# Written by LongDefeatDirector.Affixes.cs when a wave that rolls affixes starts, key w=<N>: as many powers as the schedule gives the wave (0 before wave 5, 1 from 5, 2 from 10, 3 from 15), each a known power,
+# none twice, and each named in the attacker culture's table of affixes.json. A wave with none writes nothing, so a session that never reached wave 5 reads NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.affix-effect"
+needs = "a wave whose roll holds a stat power or hide: at wave 5 seed 0 rolls discipline, 2 hide, 3 lash, 8 eye, 9 drums"
+reached = ['\[Check\] id=taom\.long-defeat\.affix-effect result=']
+pass = ['\[Check\] id=taom\.long-defeat\.affix-effect result=pass power=[a-z]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.affix-effect result=fail']
+# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs). One standing human attacker with no live race ability is read
+# through the effects adapter: each driven property the power changes against the stat model's own answer for the same agent with the affixes left out, within 1% (armour against the spawn equipment's sums, since
+# the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood. hammer, terror and blades are not rolled, so they have no line, until Slices 8 and 9 switch each one on.
+absence = "not-reached"
+
 [[human]]
 claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"
 
@@ -198,3 +219,6 @@ claim = "Leave on the end panel returns to the main menu"
 
 [[human]]
 claim = "the Escape exit returns to the main menu and the report still lands"
+
+[[human]]
+claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"

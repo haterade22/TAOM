@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Localization;
 
@@ -55,6 +57,35 @@ internal static class LongDefeatHudText
                 return string.Empty;
         }
     }
+
+    /// <summary>The HUD strip's affix line: the wave's affixes during a wave, the next wave's (with its attackers' raised health and damage) between waves.</summary>
+    internal static string AffixLine(RunView view)
+    {
+        switch (view.Phase)
+        {
+            case RunPhase.Wave:
+                return view.WaveAffixes.Count == 0
+                    ? string.Empty
+                    : new TextObject("{=TAOM_LD_Hud_Affixes}Affixes: {NAMES}").SetTextVariable("NAMES", AffixNames(view.WaveAffixes)).ToString();
+            case RunPhase.Preparation:
+            case RunPhase.Intermission:
+                var parts = new List<string>();
+                if (view.NextAffixes.Count > 0)
+                    parts.Add(new TextObject("{=TAOM_LD_Hud_NextAffixes}Next wave: {NAMES}").SetTextVariable("NAMES", AffixNames(view.NextAffixes)).ToString());
+                if (IsRaised(view.NextHealthFactor) || IsRaised(view.NextDamageFactor))
+                    parts.Add(new TextObject("{=TAOM_LD_Hud_NextScale}Next wave attackers: health {HEALTH}%, damage {DAMAGE}%")
+                        .SetTextVariable("HEALTH", Percent(view.NextHealthFactor)).SetTextVariable("DAMAGE", Percent(view.NextDamageFactor)).ToString());
+                return string.Join("   ", parts);
+            default:
+                return string.Empty;
+        }
+    }
+
+    private static string AffixNames(IReadOnlyList<AffixLabel> affixes) => string.Join(", ", affixes.Select(a => new TextObject(a.Name).ToString()));
+
+    private static bool IsRaised(float factor) => factor > 1.0005f && !float.IsInfinity(factor);
+
+    private static int Percent(float factor) => IsRaised(factor) ? (int)Math.Round(factor * 100f) : 100;
 
     internal static string OfferName(string configName) => new TextObject(configName).ToString();
 

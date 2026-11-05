@@ -82,7 +82,7 @@ Phase 2 changes the arithmetic of six schema 1 rules, so its reports carry `sche
 
 **New rules** (each lands with its slice):
 
-- Rule 15: replay `seed` with the derivation below. Each row's `affixes` is the prefix of that wave's roll, its length from the boons taken before the wave began. Each pick's `offered` equals the draws given the boons taken before it, `taken` is one of the last three offered, and `rerolls.used` is at most `earned`, with the bank capped at 3.
+- Rule 15: replay `seed` with the derivation below. Each row's `affixes` is the prefix of that wave's roll, its length from the boons taken before the wave began. Each pick's `offered` equals the draws given the boons taken before it, `taken` is one of the last three offered, and `rerolls.used` is at most `earned`, with the bank capped at 3. The affix half is live from Slice 3: a row's `affixes` holds the power ids the wave carried (the whole roll, until a boon can cut it), the roll is the partial Fisher-Yates over the eight ids in the fixed order `lash, drums, eye, discipline, hide, hammer, terror, blades` (for i from 0, `j = i + Below(8 - i)`, swap; as many draws as the schedule gives the wave), drawn from stream 1 at `(wave, 0)`, and the schedule is the `schedule` of `affixes.json`. Its vectors are pinned in `AffixPlanTests.cs` and `tools/tests/test_run_long_defeat.py`.
 - Rule 16: `waves[].commander` is present exactly at multiples of the roster's `every`, with the configured troop and rank.
 - Rule 17: `summonKills + summonFelled == summoned` on every cleared row.
 - Rule 18 (**flag**): `poison.ownerMissing` is 0.

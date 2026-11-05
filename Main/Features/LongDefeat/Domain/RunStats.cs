@@ -4,8 +4,11 @@ using System.Linq;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
-/// <summary>What one cleared wave cost and earned. <c>Felled</c> is attackers the stalemate rule removed, which pay no bounty. The factors are the health and damage its attackers took (1 inside the authored list).</summary>
-internal sealed record WaveStats(int Wave, int Kills, int Felled, int Lost, float Seconds, float HealthFactor = 1f, float DamageFactor = 1f);
+/// <summary>What one cleared wave cost and earned. <c>Felled</c> is attackers the stalemate rule removed, which pay no bounty. The factors are the health and damage its attackers took (1 inside the authored list), and <c>Affixes</c> the power ids it carried.</summary>
+internal sealed record WaveStats(int Wave, int Kills, int Felled, int Lost, float Seconds, float HealthFactor = 1f, float DamageFactor = 1f)
+{
+    public IReadOnlyList<string> Affixes { get; init; } = Array.Empty<string>();
+}
 
 /// <summary>Per-wave and total counts for the report and its checks.</summary>
 internal sealed class RunStats
@@ -40,9 +43,9 @@ internal sealed class RunStats
     /// <summary>The engine's own fleeing flag fires no callback, so the run also keeps the most attackers seen running at once.</summary>
     public void ObserveFleeing(int fleeingNow) => FleeingPeak = Math.Max(FleeingPeak, fleeingNow);
 
-    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f)
+    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f, IReadOnlyList<string>? affixes = null)
     {
-        _waves.Add(new WaveStats(wave, _kills, felled, _lost, seconds, healthFactor, damageFactor));
+        _waves.Add(new WaveStats(wave, _kills, felled, _lost, seconds, healthFactor, damageFactor) { Affixes = affixes ?? Array.Empty<string>() });
         _kills = 0;
         _lost = 0;
     }

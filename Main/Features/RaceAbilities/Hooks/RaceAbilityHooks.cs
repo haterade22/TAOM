@@ -86,6 +86,10 @@ public static class RaceAbilityHooks
     public static bool IsShruggingOff(Agent victim)
         => Runtime?.StateOf(victim)?.CurrentEffects?.ShrugOffBlows == true;
 
+    // Long Defeat's affix read-back wants a soldier whose stats no race ability is moving.
+    public static bool HasLiveAbility(Agent agent)
+        => Runtime?.StateOf(agent)?.CurrentEffects != null;
+
     // Morale models: while a morale floor is live the soldier cannot panic at all.
     public static bool HoldsNerve(Agent agent)
     {
