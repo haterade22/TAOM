@@ -31,7 +31,7 @@ public static class ClanPartyItemVM_GetCharacterCode_Patch
         if (info == null) return;
         if (!(_service?.ShouldUseClanColor(info.Value) ?? false)) return;
 
-        __result.Color1 = info.Value.Color1;
-        __result.Color2 = info.Value.Color2;
+        // Code is built at creation (#993): rebuild it so the colours reach the portrait.
+        __result = ClanColoredCharacterCode.Recolor(__result, info.Value.Color1, info.Value.Color2);
     }
 }

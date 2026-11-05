@@ -30,6 +30,7 @@ public static class RefugeIoC
     {
         var refugeService = container.Resolve<IRefugeService>();
         RefugeClanScreenPatch.Initialize(refugeService);
+        RefugeClanRowRefreshPatch.Initialize(container.Resolve<IRefugeBook>());
         RefugeEncounterPatch.Initialize(
             refugeService,
             container.Resolve<TAOM.Features.Enlistment.IEnlistmentStateQuery>(),

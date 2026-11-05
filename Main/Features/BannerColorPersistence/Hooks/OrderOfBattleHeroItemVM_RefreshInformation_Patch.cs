@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using TAOM.Adapters;
 using TaleWorlds.CampaignSystem;
@@ -8,7 +10,7 @@ using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 
 namespace TAOM.Features.BannerColorPersistence.Hooks;
 
-[HarmonyPatch(typeof(OrderOfBattleHeroItemVM), nameof(OrderOfBattleHeroItemVM.RefreshInformation))]
+[HarmonyPatch]
 [HarmonyPatchCategory("Patch23_BannerColorPersistence")]
 public static class OrderOfBattleHeroItemVM_RefreshInformation_Patch
 {
@@ -19,6 +21,14 @@ public static class OrderOfBattleHeroItemVM_RefreshInformation_Patch
     {
         _service = service;
         _heroAdapter = heroAdapter;
+    }
+
+    // OrderOfBattleVM builds every hero with `new OrderOfBattleHeroItemVM(Agent)`, whose constructor
+    // sets ImageIdentifier itself and never calls RefreshInformation, so both are targets (#993).
+    public static IEnumerable<MethodBase> TargetMethods()
+    {
+        yield return AccessTools.Method(typeof(OrderOfBattleHeroItemVM), nameof(OrderOfBattleHeroItemVM.RefreshInformation));
+        yield return AccessTools.Constructor(typeof(OrderOfBattleHeroItemVM), new[] { typeof(Agent) });
     }
 
     [HarmonyPostfix]
@@ -33,11 +43,10 @@ public static class OrderOfBattleHeroItemVM_RefreshInformation_Patch
         var info = _heroAdapter?.GetClanColorInfo(character);
         if (info == null || !(_service?.ShouldUseClanColor(info.Value) ?? false)) return;
 
-        // RefreshInformation creates CharacterCode.CreateFrom(Agent.Character) — bypass CampaignUIHelper
-        // Rebuild the ImageIdentifier with correct clan colors
-        var code = CharacterCode.CreateFrom(__instance.Agent.Character);
-        code.Color1 = info.Value.Color1;
-        code.Color2 = info.Value.Color2;
+        // Both targets build CharacterCode.CreateFrom(Agent.Character), bypassing CampaignUIHelper:
+        // rebuild the ImageIdentifier with the clan colors
+        var code = ClanColoredCharacterCode.Recolor(
+            CharacterCode.CreateFrom(__instance.Agent.Character), info.Value.Color1, info.Value.Color2);
         __instance.ImageIdentifier = new CharacterImageIdentifierVM(code);
     }
 }

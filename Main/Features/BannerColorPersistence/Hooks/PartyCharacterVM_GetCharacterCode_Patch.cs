@@ -2,6 +2,7 @@ using System.Reflection;
 using HarmonyLib;
 using TAOM.Adapters;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Core;
 
@@ -28,18 +29,23 @@ public static class PartyCharacterVM_GetCharacterCode_Patch
                 typeof(TaleWorlds.CampaignSystem.Party.PartyScreenLogic.PartyRosterSide)
             });
 
+    // `PartyCharacterVM` sets `IsPrisoner` (:1103) only after the `Troop` assignment (:1099) has run
+    // `GetCharacterCode`, so the old prisoner check always read false; the postfix reads type and side
+    // from the arguments (#993).
+    internal static bool AppliesTo(PartyScreenLogic.TroopType type, PartyScreenLogic.PartyRosterSide side) =>
+        type != PartyScreenLogic.TroopType.Prisoner && (int)side == 1;
+
     [HarmonyPostfix]
-    public static void Postfix(PartyCharacterVM __instance, ref CharacterCode __result)
+    public static void Postfix(ref CharacterCode __result, PartyScreenLogic.TroopType type, PartyScreenLogic.PartyRosterSide side)
     {
         if (__result == null) return;
         if (!(_service?.IsEnabled() ?? false)) return;
-        if (__instance.IsPrisoner) return;
-        if ((int)__instance.Side != 1) return;
+        if (!AppliesTo(type, side)) return;
 
         var clan = Clan.PlayerClan;
         if (clan == null) return;
 
-        __result.Color1 = clan.Color;
-        __result.Color2 = clan.Color2;
+        // Code is built at creation (#993): rebuild it so the colours reach the portrait.
+        __result = ClanColoredCharacterCode.Recolor(__result, clan.Color, clan.Color2);
     }
 }

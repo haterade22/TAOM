@@ -19,14 +19,14 @@ public static class SandBoxUIHelper_GetCharacterCode_Patch
     }
 
     [HarmonyPostfix]
-    public static void Postfix(CharacterCode __result, TaleWorlds.CampaignSystem.CharacterObject character)
+    public static void Postfix(ref CharacterCode __result, TaleWorlds.CampaignSystem.CharacterObject character)
     {
         if (__result == null) return;
         var info = _heroAdapter?.GetClanColorInfo(character);
         if (info == null) return;
         if (!(_service?.ShouldUseClanColor(info.Value) ?? false)) return;
 
-        __result.Color1 = info.Value.Color1;
-        __result.Color2 = info.Value.Color2;
+        // Code is built at creation (#993): rebuild it so the colours reach the portrait.
+        __result = ClanColoredCharacterCode.Recolor(__result, info.Value.Color1, info.Value.Color2);
     }
 }

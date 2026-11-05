@@ -162,6 +162,8 @@ Border proximity floor for priority-list targets
 
 **Inventory doll (#973):** the `SPInventoryVM` postfix targets the private `UpdateCharacterArmorColor()` (v1.4.8 `:4421`), the vanilla repaint of the doll's colours that every `UpdateRightCharacter` call reaches (open, outfit toggle, Reset, character switch, TAOM's `InventoryVMAdapter.RefreshPanel`). It skips stealth mode when the shown set is a stealth set, as vanilla does. Until #973 it targeted `UpdateCurrentCharacterIfPossible`, and the class keeps that name because `SubModule.cs` calls its `Initialize`.
 
+**GetCharacterCode postfixes (#993):** the five portrait postfixes (`CampaignUIHelper`, `SandBoxUIHelper`, `ClanPartyItemVM`, `PartyCharacterVM`, and the `OrderOfBattleHeroItemVM` rebuild, which targets both `RefreshInformation` and the `(Agent)` constructor via `TargetMethods()` because `OrderOfBattleVM` builds every hero through the constructor, v1.4.8 `OrderOfBattleVM.cs:746`, `OrderOfBattleHeroItemVM.cs:275`) return the result through `ClanColoredCharacterCode.Recolor`, which rebuilds the `CharacterCode` via the 8-argument `CreateFrom` (v1.4.8 `CharacterCode.cs:87`). `CharacterCode.Code` is built at creation and has a private setter (`:18`), and the portrait identifier reads only `Code`, so assigning `Color1/Color2` afterwards never reached the renderer. `PartyCharacterVM` sets `IsPrisoner` (`:1103`) only after the `Troop` assignment (`:1099`) has run `GetCharacterCode`, so the old prisoner check always read false; the postfix reads type and side from the arguments.
+
 UI colour persistence, 3D battle and conversation. NOT player-only: the `Mission.SpawnAgent` prefix rewrites `ClothingColor1/2` from the spawning party's LEADER's clan for every party in the mission, reading `clan.Color`/`clan.Color2` with no `MapFaction` hop, so battlefield armour follows the CLAN and not the kingdom. It runs after `Mission.SpawnTroop` has set the team colours, so it is the last writer. See `docs/features/clan-heraldry.md`
 
 ## Patch24_BannerDriftGuard
@@ -775,11 +777,11 @@ Injects a camp-type icon (lookout monocular, ambush, camp) above the player's pa
 
 ## Patch75_Refuge
 
-**Targets:** `ClanPartiesVM.RefreshPartiesList()` (public, Postfix) + `PlayerEncounter.DoMeeting()` (public static, Prefix). Two patch classes, one category.
+**Targets:** `ClanPartiesVM.RefreshPartiesList()` (public, Postfix) + `ClanPartyItemVM.UpdateProperties()` (public, Postfix, #994) + `PlayerEncounter.DoMeeting()` (public static, Prefix). Three patch classes, one category.
 
-**Feature:** Refuge, `Main/Features/Refuge/Hooks/RefugeClanScreenPatch.cs` + `RefugeEncounterPatch.cs`. **Status:** ACTIVE.
+**Feature:** Refuge, `Main/Features/Refuge/Hooks/RefugeClanScreenPatch.cs` + `RefugeClanRowRefreshPatch.cs` + `RefugeEncounterPatch.cs`. **Status:** ACTIVE.
 
-The clan-screen postfix appends ready refuges to the Garrisons list as `ClanPartyItemVM` rows (selection wired via AccessTools to the private `OnPartySelection`). The encounter prefix is click-to-manage: when the LOCAL player meets their own ready refuge, the meeting conversation is swapped for the refuge menu (`return false`); suppressed while enlisted, because Enlistment owns encounter policy (INV-D1). Co-op disposition: ReviewedSafe (player-local UI redirect, no shared mutation skipped; `CoopVetoClassificationTests`).
+The clan-screen postfix appends every refuge (ready, building, orphan-adopted) to the Garrisons list as `ClanPartyItemVM` rows (selection wired via AccessTools to the private `OnPartySelection`). The `UpdateProperties` postfix re-applies the refuge row decoration (hidden wage slider, the static wage line at 0, the "(being raised)" suffix on a building refuge) after every refresh, because vanilla's `UpdateProperties` resets `Name` and the wage line (v1.4.8 `ClanPartyItemVM.cs:1147`, `:1161`); it shares that method with Patch17's TroopWeight postfix and touches different fields. The encounter prefix is click-to-manage: when the LOCAL player meets their own ready refuge, the meeting conversation is swapped for the refuge menu (`return false`); suppressed while enlisted, because Enlistment owns encounter policy (INV-D1). Co-op disposition: ReviewedSafe (player-local UI redirect, no shared mutation skipped; `CoopVetoClassificationTests`).
 
 **What is deliberately NOT here:** the source module's two combat patches (`SimulateHit`, `ApplyDamageReductions`). Both targets are TAOM-owned model slots, so the defender damage reduction rides the model chain instead: `TaomCombatMechanicsModel.ApplyDamageReductions` (real-time) and `TaomCombatSimulationModel.SimulateHit` (auto-resolve), both consulting `IRefugeDefenseService`. One decision, two consumers, no Harmony ordering accident.
 

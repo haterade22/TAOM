@@ -49,6 +49,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…SelectorVM`1` | `_selectedItem` | field | `FaceGenRaceSelectorRebuilder.cs:212` | Selector reset trick |
 | `…SelectorVM`1` | `_onChange` | field | `FaceGenRaceSelectorRebuilder.cs:213`, `CommanderSelectorRebuilder.cs:21` | Selector callback rewire |
 | `…CustomBattle.CustomBattleSideVM` | `OnCultureSelection` | method | `CustomBattleSideVM_Constructor_Patch.cs:23` | CustomBattles faction injection |
+| `…ViewModelCollection.ClanManagement.Categories.ClanPartiesVM` | `OnPartySelection` | method (private) | `RefugeClanScreenPatch.cs:41` | Refuge clan screen: a refuge row's selection handler is the VM's own. Missing: the method handle is null and the postfix adds no refuge rows |
 | `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:55` | AdvancedCombat custom attacks |
 | `TaleWorlds.MountAndBlade.Mission` | `WaitTickCompletion` | method | `MissionTickProfilerInstaller.cs:31,54` | Patch97 tick profiler: the wait's open delegate and its call-site swap |
 | `TaleWorlds.Engine.ScriptComponentBehavior` | `OnTick` | method (protected internal virtual) | `MissionAttributionInstaller.cs:35,66` | Patch97 attribution (plan 041): the script tick's open delegate and its call-site swap. Missing: one WARNING, per-component script attribution off, the script totals stay |
