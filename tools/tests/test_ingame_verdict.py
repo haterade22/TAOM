@@ -336,6 +336,17 @@ class RepoManifestGateTests(unittest.TestCase):
                                 f"#{m.issue} names [Check] id={check_id}, which no .cs file under Main "
                                 "holds as a string literal outside a comment")
 
+    def test_970_names_the_attach_and_stance_checks(self):
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "970.toml", 970)
+        self.assertEqual([c.id for c in m.checks], ["taom.battle-action-bar.attach", "taom.battle-action-bar.stance"])
+        self.assertEqual(iv.named_check_ids(m), {"taom.battle-action-bar.attach", "taom.battle-action-bar.stance"})
+        attach = m.checks[0]
+        self.assertEqual(attach.absence, "not-reached")
+        # [BattleLoad] lines need their own player toggle, so a scope on them would leave sessions NOT REACHED.
+        self.assertIsNone(attach.scope)
+        # "layer attached" is also written when the movie did not load, so it cannot pass the check.
+        self.assertFalse([p for p in attach.passes if "layer attached" in p.pattern])
+
     def test_every_fixed_in_is_a_commit_in_this_clone(self):
         rc, shallow = iv.run_command(["git", "-C", str(REPO), "rev-parse", "--is-shallow-repository"])
         if rc != 0:
