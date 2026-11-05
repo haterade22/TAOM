@@ -5,6 +5,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
+using TAOM.Features.Messengers;
 
 namespace TAOM.Features.Enlistment.Hooks;
 
@@ -22,6 +23,7 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
     private readonly IEnlistmentService _service;
     private readonly IPlayerPartyAdapter _playerParty;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IMessengerConversationState _messenger;
     private readonly IModLogger _logger;
 
     public EnlistmentDialogBehavior(
@@ -29,12 +31,14 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
         IEnlistmentService service,
         IPlayerPartyAdapter playerParty,
         ICoopSessionProvider coopSession,
+        IMessengerConversationState messenger,
         IModLogger logger)
     {
         _gate = gate;
         _service = service;
         _playerParty = playerParty;
         _coopSession = coopSession;
+        _messenger = messenger;
         _logger = logger;
     }
 
@@ -107,8 +111,9 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
     public static bool ShowsOfferFor(EnlistGateResult verdict) =>
         verdict == EnlistGateResult.Ok || verdict == EnlistGateResult.AtWarWithYourKingdom;
 
-    /// <summary>Only a clean Ok is takeable; any other shown verdict renders greyed.</summary>
-    public static bool OfferIsTakeable(EnlistGateResult verdict) => verdict == EnlistGateResult.Ok;
+    /// <summary>Only a clean Ok is takeable, and never through a messenger (#898: the oath would teleport the player).</summary>
+    public static bool OfferIsTakeable(EnlistGateResult verdict, bool throughMessenger) =>
+        verdict == EnlistGateResult.Ok && !throughMessenger;
 
     private bool OfferIsVisible() => ShowsOfferFor(_gate.CanEnlistWith(PartnerId()));
 
@@ -117,13 +122,14 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
     private bool OfferIsClickable(out TextObject? explanation)
     {
         var verdict = _gate.CanEnlistWith(PartnerId());
-        if (OfferIsTakeable(verdict))
+        var throughMessenger = _messenger.IsOpen;
+        if (OfferIsTakeable(verdict, throughMessenger))
         {
             explanation = null;
             return true;
         }
 
-        explanation = Presentation.ServiceVocabulary.EnlistUnavailableReason(verdict);
+        explanation = Presentation.ServiceVocabulary.EnlistUnavailableReason(verdict, throughMessenger);
         return false;
     }
 

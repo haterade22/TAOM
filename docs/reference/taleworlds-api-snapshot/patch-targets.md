@@ -175,6 +175,7 @@ Patches: 249. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.MarriageAlignment.Hooks.Patch81_MarriageClanDraw` | `TaleWorlds.CampaignSystem.CampaignBehaviors.RomanceCampaignBehavior.Void CheckNpcMarriages(Clan consideringClan)` |
 | `TAOM.Features.Mcm.Hooks.Patch41_McmLayoutFix` | `Bannerlord.UIExtenderEx.ResourceManager.WidgetFactoryManager.Void CreateAndRegister(String name, XmlDocument xmlDocument)` |
 | `TAOM.Features.MenuLinkColors.Hooks.Patch64_MenuLinkColors` | `TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.GameMenuVM.Void set_ContextText(String value)` |
+| `TAOM.Features.Messengers.Hooks.MessengerSessionRulesPatch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior.Boolean conversation_lord_join_army_on_condition()` |
 | `TAOM.Features.MissionStartGuard.Hooks.Mission_AfterStart_MissionStartGuard_Patch` | `TaleWorlds.MountAndBlade.Mission.Void AfterStart()` |
 | `TAOM.Features.MixedFormations.Hooks.Patch30_FormationGetOrderPositionOfUnit` | `TaleWorlds.MountAndBlade.Formation.WorldPosition GetOrderPositionOfUnit(Agent unit)` |
 | `TAOM.Features.NameplateCull.Hooks.SettlementNameplatesVM_Update_NameplateCull_Patch` | `SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM.Void Update()` |

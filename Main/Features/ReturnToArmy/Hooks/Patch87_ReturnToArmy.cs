@@ -28,17 +28,14 @@ namespace TAOM.Features.ReturnToArmy.Hooks;
 /// only a party that is marching at the leader.
 ///
 /// HOW A PLAYER GETS THERE. A Player Switcher takeover inherits the lord's <c>Army</c> untouched,
-/// and a lord marching to join an army is exactly this state. Vanilla reaches it on its own through
-/// the "we will wait for other parties around X, then follow us" line
-/// (<c>LordConversationsCampaignBehavior</c> :3510-3514). <c>PlayerEncounter.Init</c> (:715-718)
+/// and a lord marching to join an army is exactly this state. <c>PlayerEncounter.Init</c> (:715-718)
 /// then enters any non-hostile settlement immediately, so the town menu is reachable on foot.
 ///
 /// THE FIX replicates vanilla's own "Leave" (<c>game_menu_settlement_leave_on_consequence</c>,
 /// :1054-1068) for that one row: gate position, <c>LeaveSettlement</c>, <c>Finish</c>,
 /// <c>SetMoveModeHold</c>, autosave signal. Its <c>AttachedParties</c> loop is consciously dropped:
 /// parties attach to the LEADER, and the leader is never offered this option. The player stays in
-/// the army (no <c>Army</c> write) and is free on the map; vanilla's "follow us" already leaves the
-/// march to him. Every other row runs vanilla untouched.
+/// the army (no <c>Army</c> write) and is free on the map; the army's own march is left to him. Every other row runs vanilla untouched.
 ///
 /// ERROR PATHS. Up to and including the gate-position write, a throw defers to vanilla: nothing
 /// vanilla reads has changed, the old wait menu is a dead end but not a crash, and the error is

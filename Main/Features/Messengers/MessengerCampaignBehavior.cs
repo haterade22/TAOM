@@ -20,8 +20,8 @@ namespace TAOM.Features.Messengers;
 // TAOM boundary class (ADR-002 / ADR-007). Touches sealed TaleWorlds types directly because that is what
 // the boundary is for — engine-coupled concerns (mission listener, encounter routing, dialog tree, settlement
 // vs field handling, position restore) cannot move into a non-boundary class without inventing a redundant
-// abstraction layer. ALL pure-logic decisions delegate to IMessengerService (validation, accident roll,
-// position math, speed calc). Save data flows through IMessengerStateStore (store owns serialization format).
+// abstraction layer. ALL pure-logic decisions delegate to IMessengerService or MessengerEntryPolicy (validation, accident roll,
+// position math, speed calc, entry route). Save data flows through IMessengerStateStore (store owns serialization format).
 // Codex review #34 flagged this as "fat boundary"; deep-review's standards agent independently confirmed
 // the structure is compliant — the line count comes from genuine engine-coupled orchestration, not from
 // hidden business logic.
@@ -182,9 +182,9 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         }
 
         // Phase 9b #123 — `_justLoadedFromSave` MUST clear unconditionally, not inside the
-        // `if (starter != _lastSessionStarter)` gate. Same-process save → load → save → load gives
-        // the SAME starter on the 2nd load, so the gate is false and the flag stayed stuck-on,
-        // misleading any future consumer of the flag.
+        // `if (starter != _lastSessionStarter)` gate. Every campaign gets a new starter in v1.4.8
+        // (Campaign.OnInitialize, Campaign.cs:1383), so the gate is true on each load; clearing here keeps the flag from
+        // staying set if a future engine reuses a starter, which would mislead any consumer of the flag.
         _justLoadedFromSave = false;
 
         if (!_dialogsRegistered)
@@ -394,49 +394,79 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         // A messenger conversation is indistinguishable from a visit by engine state (a real encounter, and the main
         // party inside the target's settlement), so other features read this flag to tell them apart.
         _conversation.Open();
-        PlayerEncounter.Start();
-        PlayerEncounter.Current.SetupFields(mainParty, targetParty ?? mainParty);
-        Campaign.Current.CurrentConversationContext = ConversationContext.Default;
-
-        if (currentSettlement != null)
+        try
         {
-            _originalPosition = Hero.MainHero.GetMapPoint().Position.ToVec2();
-            PlayerEncounter.EnterSettlement();
+            PlayerEncounter.Start();
+            PlayerEncounter.Current.SetupFields(mainParty, targetParty ?? mainParty);
+            Campaign.Current.CurrentConversationContext = ConversationContext.Default;
 
-            var targetLocation = LocationComplex.Current.GetLocationOfCharacter(target);
-            var playerLocation = LocationComplex.Current.GetLocationOfCharacter(Hero.MainHero);
+            if (currentSettlement != null && !WouldAttachToArmy(currentSettlement))
+            {
+                _originalPosition = Hero.MainHero.GetMapPoint().Position.ToVec2();
+                PlayerEncounter.EnterSettlement();
 
-            CampaignEventDispatcher.Instance.OnPlayerStartTalkFromMenu(target);
-            _currentMission = (Mission)PlayerEncounter.LocationEncounter.CreateAndOpenMissionController(
-                targetLocation, playerLocation, target.CharacterObject, null);
-        }
-        else
-        {
-            _originalPosition = Vec2.Invalid;
-            _currentMission = (Mission)Campaign.Current.CampaignMissionManager.OpenConversationMission(
-                new ConversationCharacterData(Hero.MainHero.CharacterObject, mainParty, true, false, false, false, false, false),
-                new ConversationCharacterData(target.CharacterObject, targetParty, true, false, false, false, false, false),
-                "", "");
-        }
+                var targetLocation = LocationComplex.Current.GetLocationOfCharacter(target);
+                var playerLocation = LocationComplex.Current.GetLocationOfCharacter(Hero.MainHero);
 
-        // Phase 9b #123 P1 — null-guard `_currentMission`. If OpenConversationMission returns null,
-        // AddListener no-ops → OnEndMission never fires → `_processingArrivedMessenger` stays stuck
-        // true forever → all future arrived-messenger processing silently blocked for the session.
-        if (_currentMission != null)
-        {
-            _currentMission.AddListener(this);
+                CampaignEventDispatcher.Instance.OnPlayerStartTalkFromMenu(target);
+                _currentMission = (Mission)PlayerEncounter.LocationEncounter.CreateAndOpenMissionController(
+                    targetLocation, playerLocation, target.CharacterObject, null);
+            }
+            else
+            {
+                _originalPosition = Vec2.Invalid;
+                _currentMission = (Mission)Campaign.Current.CampaignMissionManager.OpenConversationMission(
+                    new ConversationCharacterData(Hero.MainHero.CharacterObject, mainParty, true, false, false, false, false, false),
+                    new ConversationCharacterData(target.CharacterObject, targetParty, true, false, false, false, false, false),
+                    "", "");
+            }
+
+            // Phase 9b #123 P1: null-guard `_currentMission`. If OpenConversationMission returns null,
+            // AddListener no-ops → OnEndMission never fires → `_processingArrivedMessenger` stays stuck
+            // true forever → all future arrived-messenger processing silently blocked for the session.
+            if (_currentMission != null)
+            {
+                _currentMission.AddListener(this);
+            }
+            else
+            {
+                _logger.LogWarning($"Messengers: OpenConversationMission returned null for target '{target?.StringId}'. " +
+                    "Resetting processing flag + dropping messenger from store to recover.");
+                AbortConversation();
+            }
         }
-        else
+        catch
         {
-            _logger.LogWarning($"Messengers: OpenConversationMission returned null for target '{target?.StringId}'. " +
-                "Resetting processing flag + dropping messenger from store to recover.");
-            if (_activeMessenger != null)
-                _store.Remove(_activeMessenger.TargetHeroId);
-            _activeMessenger = null;
-            _processingArrivedMessenger = false;
-            _originalPosition = Vec2.Invalid;
-            _conversation.Close();
+            AbortConversation();
+            throw;
         }
+    }
+
+    // One recovery for every way the conversation can fail to open (null mission, or a throw after Open): the flag, the
+    // processing latch, the active messenger and the store entry must not outlive a conversation that never started.
+    private void AbortConversation()
+    {
+        if (_activeMessenger != null)
+            _store.Remove(_activeMessenger.TargetHeroId);
+        _activeMessenger = null;
+        _processingArrivedMessenger = false;
+        _conversation.Close();
+        // The same cleanup a finished conversation uses: it finishes the encounter and puts the party back at
+        // _originalPosition, which is why that is kept here.
+        CampaignEvents.TickEvent.AddNonSerializedListener(this, CleanUpSettlementEncounter);
+    }
+
+    // Mirrors EnterSettlementAction.ApplyForParty (v1.4.8 :71-75): entering the town would attach a main party that
+    // sits in an army it does not lead, and PlayerEncounter.Finish never leaves the town for an attached party.
+    private static bool WouldAttachToArmy(Settlement settlement)
+    {
+        var main = MobileParty.MainParty;
+        var army = main?.Army;
+        return MessengerEntryPolicy.WouldAttachToArmy(
+            army != null,
+            army != null && army.LeaderParty == main,
+            army?.LeaderParty?.CurrentSettlement == settlement,
+            main?.AttachedTo != null);
     }
 
     // --- IMissionListener ---
