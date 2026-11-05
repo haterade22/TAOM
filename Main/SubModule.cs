@@ -611,7 +611,6 @@ public class SubModule : MBSubModuleBase
         PartyVM_RefreshCurrentCharacterInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         HeroViewModel_FillFrom_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
-        ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
