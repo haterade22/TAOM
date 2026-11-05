@@ -10,6 +10,10 @@ namespace TAOM.Features.BlowDiagnostics;
 // stops names the fatal blow (victim race, blow flags, damage type).
 public sealed class BlowDiagnosticsSettings : AttributeGlobalSettings<BlowDiagnosticsSettings>
 {
+    // Declared here so the crash collector, which reads only an Instance the class declares itself (#982), finds
+    // TAOM's settings. Forwards to MCM's own; name the base explicitly: a bare Instance here would recurse.
+    public static new BlowDiagnosticsSettings? Instance => GlobalSettings<BlowDiagnosticsSettings>.Instance;
+
     public override string Id => "TAOM.BlowDiagnostics";
     public override string DisplayName => "TAOM — Blow Diagnostics";
     public override string FolderName => "TAOM";

@@ -53,7 +53,7 @@ TAOM.Features.CompanionTactics/
 │   ├── UI/OOBButtonsVM                                   (Save/Load/Delete inquiry chain)
 │   ├── Models/HoNFormationPreset                          ([SaveableField] BaseId 726900601 / class 101)
 │   ├── Models/FormationPresetSaveableTypeDefiner
-│   └── Hooks/                                             (5 Harmony patches)
+│   └── Hooks/                                             (4 Harmony patches)
 │       FormationPresetCampaignBehavior                   (try/catch SyncData → degrade to empty on collision)
 │
 └── BattleActionBar/                ← per-mission context bar
@@ -120,7 +120,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | File | Purpose |
 |------|---------|
 | `Main/Features/CompanionTactics/CompanionTacticsIoC.cs` | DryIoc registrations (all `Reuse.Singleton`) |
-| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Reads `TaomSettings.Instance` directly (no reflection) |
+| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Caches `TaomSettings.Instance` on its first non-null read and reads through it, so MCM edits apply live (no reflection) |
 | `Main/Features/CompanionTactics/Roles/CompanionRoleService.cs` | 11-role classifier with hero-StringId-keyed cache + equipment fingerprint signature |
 | `Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs` | Cached `PropertyInfo` mutations of vanilla VMs' Name + tooltip cache |
 | `Main/Features/CompanionTactics/Roles/Hooks/Patch35_*.cs` | 3 Harmony postfixes + 1 manual patch (private GetCaptainTooltip) |
@@ -129,7 +129,6 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `Main/Features/CompanionTactics/FormationPresets/Models/FormationPresetSaveableTypeDefiner.cs` | BaseId 726900601, class 101 |
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
-| `Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs` | **HOT PATH** — toggle check + lazy-cached service call, zero allocations |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
@@ -142,7 +141,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Dependencies
 
-- `ICompanionTacticsSettingsProvider` — typed read from `TaomSettings.Instance` (testable seam).
+- `ICompanionTacticsSettingsProvider`: typed read through a cached `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
 - `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
 - TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
@@ -158,7 +157,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `FormationPresets/FormationPresetServiceTests.cs` — 14 tests; SaveResult.LimitReached path; missing-hero pruning on load; OnGameLoaded; OnMissionEnd state reset; SaveableType round-trip.
 - `FormationPresets/HeroAutoAssignerTests.cs` — 7 tests; each role → expected formation slot scoring; ScoreHeroForFormation null safety.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
-- `SharedMovementOrderPostfixTests.cs` — 5 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
+- `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
 ## How to add a new combat role
 
@@ -172,7 +171,6 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Performance
 
-- `Patch35_Mission_OnTick` is on the engine-tick hot path (every frame). Body is: lazy-cached `??=` settings provider read + early-return; **zero allocations, no LINQ, no closures**. Per AGENTS.md "Per-tick allocations" rule.
 - `OOBOverlayService` caches `FieldInfo` once via `EnsureInitialized()`; no reflection in subsequent ticks.
 - `RoleTooltipDecorator` caches `PropertyInfo` / `FieldInfo` in readonly fields at construction; no reflection in postfix bodies.
 - `CompanionRoleService._cache` keyed by Hero StringId + 64-bit equipment signature; cache miss recomputes role and updates entry. **Note: cache is never explicitly cleared on hero death/removal** — see "Known limitations" below.

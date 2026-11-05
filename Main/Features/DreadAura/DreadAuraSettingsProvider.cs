@@ -25,15 +25,23 @@ public sealed class DreadAuraSettingsProvider : IDreadAuraSettingsProvider
 
     private readonly DreadAuraConfig _defaults;
 
+    // Read every frame by DreadAuraMissionLogic (through DreadAuraService.IsEnabled): cached on the first
+    // non-null read, read through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public DreadAuraSettingsProvider(IDreadAuraConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    public bool IsEnabled => TaomSettings.Instance?.EnableDreadAura ?? _defaults.Enabled;
+    internal DreadAuraSettingsProvider(IDreadAuraConfigProvider configProvider, TaomSettings settings)
+        : this(configProvider) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableDreadAura ?? _defaults.Enabled;
 
     public float Radius
-        => SettingClamp.Clamp(TaomSettings.Instance?.DreadAuraRadius, DefaultRadius, MinRadius, MaxRadius);
+        => SettingClamp.Clamp(Settings?.DreadAuraRadius, DefaultRadius, MinRadius, MaxRadius);
 
     // JSON only — no MCM knob, so no clamp beyond what the config provider already validated
     // (including the innerRadius <= radius ordering invariant).
@@ -41,9 +49,9 @@ public sealed class DreadAuraSettingsProvider : IDreadAuraSettingsProvider
 
     public float MoralePerSecond
         => SettingClamp.Clamp(
-            TaomSettings.Instance?.DreadAuraMoralePerSecond, DefaultMoralePerSecond, 0f, MaxMoralePerSecond);
+            Settings?.DreadAuraMoralePerSecond, DefaultMoralePerSecond, 0f, MaxMoralePerSecond);
 
-    public bool AffectsPlayerTroops => TaomSettings.Instance?.DreadAuraAffectsPlayerTroops ?? true;
+    public bool AffectsPlayerTroops => Settings?.DreadAuraAffectsPlayerTroops ?? true;
 
     private float DefaultRadius => _defaults.Profile?.Radius ?? new DreadProfileConfig().Radius;
 

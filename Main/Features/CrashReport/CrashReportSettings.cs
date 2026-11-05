@@ -9,6 +9,10 @@ namespace TAOM.Features.CrashReport;
 // specific sections.
 public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSettings>
 {
+    // Declared here so the crash collector, which reads only an Instance the class declares itself (#982), finds
+    // TAOM's settings. Forwards to MCM's own; name the base explicitly: a bare Instance here would recurse.
+    public static new CrashReportSettings? Instance => GlobalSettings<CrashReportSettings>.Instance;
+
     public override string Id => "TAOM.CrashReport";
     public override string DisplayName => "TAOM — Crash Report";
     public override string FolderName => "TAOM";

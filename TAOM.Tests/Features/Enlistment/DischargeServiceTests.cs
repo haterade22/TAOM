@@ -386,7 +386,7 @@ public class DischargeServiceTests
 
     // ---- Always-on discharge diagnostics: NEVER gated by the [EnlistDiag] volume toggle -----
     // These two lines were entirely unpinned before the toggle work. They must stay reachable
-    // with EnableEnlistmentDiagnostics OFF, because they are the only signal that a discharge
+    // with EnableEnlistmentTrace OFF, because they are the only signal that a discharge
     // broke the save. DischargeService takes no IEnlistmentDiagnosticsSettingsProvider at all,
     // which is what makes that structural rather than a matter of discipline — if someone ever
     // adds one, these tests are the tripwire.

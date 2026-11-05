@@ -21,16 +21,12 @@ namespace TAOM.Tests.Features.Enlistment;
 /// self-heal for anyone who turns the toggle off. Group B1 exists to make that mistake impossible
 /// to ship: each of those tests runs with the toggle OFF and asserts a MUTATION still happens.
 ///
-/// NOTE ON THE DEFAULT: the toggle is ON again as of 2026-08-28
-/// (`TaomSettings.EnableEnlistmentDiagnostics = true`, provider `?? true`), temporarily, while the
-/// #520 standing and rank loop is verified in play. It was OFF from 2026-08-09 when #375 closed.
+/// NOTE ON THE DEFAULT: the toggle ships OFF (`TaomSettings.EnableEnlistmentTrace = false`, provider
+/// `?? false`, renamed from `EnableEnlistmentDiagnostics` in #840 because a saved value of the old id would have kept it on).
 ///
-/// That does NOT make these tests stale, and the reason matters: they assert the OFF path, which is
-/// the path of every player who turns the toggle off in the settings UI, and of every existing
-/// install whose persisted TAOM.json already carries `false` (MCM loads the json over the compiled
-/// default, so most testers are on the OFF path regardless of what this ships as). Group B1 exists
-/// so a naive `if (!enabled) return;` cannot disable the enlistment self-heal for those players.
-/// Do not "correct" the substitute to true.
+/// These tests assert the OFF path, which is now the path of every player at the shipped default.
+/// Group B1 exists so a naive `if (!enabled) return;` cannot disable the enlistment self-heal for
+/// them. Do not "correct" the substitute to true.
 /// </summary>
 [TestClass]
 public class EnlistmentDiagnosticsGateTests

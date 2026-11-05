@@ -576,9 +576,7 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
-        var agentColorStore = IoC.Resolve<IAgentColorStore>();
-        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
-        Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
+        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
@@ -1386,9 +1384,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>()));
         // Rolls the town-gold ledger onto a fresh day and clears it between campaigns (#317 follow-up).
         campaignStarter.AddBehavior(IoC.Resolve<Features.EconomyDiagnostics.EconomyDiagnosticsBehavior>());
-        // Records one raw record per completed map battle so auto-resolve balance can be tuned
-        // against real armies rather than party templates. Gated by MCM; one line per battle.
-        campaignStarter.AddBehavior(IoC.Resolve<Features.AutoResolveDiagnostics.AutoResolveDiagnosticsBehavior>());
 
         // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
         // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
@@ -1474,6 +1469,11 @@ public class SubModule : MBSubModuleBase
         // [SaveLoad] campaign-launch memory stamp, BEFORE the once-per-process guard below so every
         // game init in the process gets one, not just the first.
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
+
+        // [MissionDiag] the campaign date, once per game init: the clock exists by now (v1.4.8 Campaign.cs:1394
+        // runs before :1452); the session snapshot at OnGameStart is too early to read it.
+        try { IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>()?.LogCampaignDate(); }
+        catch { /* diagnostic is best-effort, never break a load */ }
         hookStamp?.Mark("save_load_stamp");
         Features.LoadTimeStamps.LoadTimeStampsHooks.LogLoadXmlSummary();
         hookStamp?.End();
@@ -1610,6 +1610,10 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch15_BannerLayerLimit");
         TryPatchCategory("Patch16_AtmospherePersistence");
         TryPatchCategory("Patch17_TroopWeight");
+        // TEMPORARY: logs the caller of every non-hero removal from the main party roster (player report
+        // 2026-10-17, troops vanished after an emissary purchase). Remove when that loss is root-caused.
+        TroopRoster_AddToCountsAtIndex_Patch.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch_MainRosterLossDiag");
         TryPatchCategory("Patch23_BannerColorPersistence");
         TryPatchCategory("Patch24_BannerDriftGuard");
         TryPatchCategory("Patch39_BanditPartySize");
@@ -2121,10 +2125,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
-
-        var colorStore = IoC.Resolve<IAgentColorStore>();
-        if (colorStore != null)
-            AddTaomBehavior(new AgentColorStoreCleanupBehavior(colorStore));
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
         // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).

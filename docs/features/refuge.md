@@ -21,7 +21,10 @@ defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
    both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
    (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
-   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors)
+   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors).
+   Real-time finds the victim's party through its origin's BattleCombatant (a SimpleAgentOrigin hero's own party
+   included); a mount has no origin of its own, so a mount hit counts for its rider's party: a defender's horse shares the
+   refuge, and a riderless mount gets nothing (#741).
 overlay/menus: RefugeCampContributor : ICampOverlayContributor (FieldCamp's seam; the source
    assigned three mutable static delegates instead)
 clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition)
@@ -57,6 +60,14 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   `MapEventSide.HandleMapEventEnd` AFTER `OnMapEventEnded` dispatched; the behavior listens to
   `CampaignEvents.MobilePartyDestroyed` and drops the row, cap slot and visuals immediately with a
   player message (the warden stays a clan companion and is logged, never silently orphaned).
+- **No refuge, no walk.** The two map-event listeners return before walking a battle's parties when
+  the book holds no refuge (`AllRefuges.Count == 0`); `RefugeService` ignores ids it does not hold, so
+  this changes no outcome (plan 037). `RefugeCampaignBehaviorTests` stages a battle with a refuge party in
+  it (bare engine objects): with a refuge in the book each listener passes that party's id to the service,
+  with none it dispatches nothing for the same battle, so an inverted or dropped guard fails. The walk
+  itself cannot be observed (it swallows its exceptions and reads plain members), so an IL-order test per
+  listener pins that the book is read before the battle is walked, and a guard moved below the walk fails
+  it. It pins call order, not control flow.
 - **Session reset.** `RefugeCampaignBehavior` marks the session synced only when SyncData runs in
   loading mode; `OnSessionLaunched` calls `RefugeService.ResetForNewSession()` when it did not
   (fresh campaign, or a pre-feature save), so the process-lifetime singleton cannot leak campaign
@@ -103,7 +114,9 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 
 ## Configuration
 
-MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider`, all
+MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider` (which takes the MCM
+object once and reads through it, since the defence bonuses are read on every hit against a ready refuge's defenders,
+#745; `HotPathSettingsProvidersTests`), all
 coop simulation-relevant: master toggle, found/upgrade costs (2000/5000), build hours (6), hard cap
 (3, live limit min(1 + clanTier/2, cap)), manage range (4), town distances (16/26), defence bonuses
 (0.20/0.35), militia base/max (6/40), raids toggle + range (off/6). Toggle off stops founding,
@@ -142,6 +155,7 @@ disagrees.
 | `Hooks/RefugeCampaignBehavior.cs` + `RefugeMenuController.cs` | Events, SyncData, menus, index-4 insertions |
 | `Hooks/RefugeCampContributor.cs` | Overlay caption/blocked-reason/status through FieldCamp's seam |
 | `Hooks/RefugeClanScreenPatch.cs` + `RefugeEncounterPatch.cs` | Patch75 |
+| `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin's `BattleCombatant` (a mount's from its rider's), then `RefugeDamageReduction` (#741) |
 
 ## Traps
 

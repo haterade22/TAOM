@@ -22,7 +22,6 @@ Patches: 229. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.BanditManagement.Hooks.Patch86_HideoutAmbushBossFight` | `SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController.Void SpawnRemainingTroopsForBossFight(List`1 spawnFrames, Int32 spawnCount)` |
 | `TAOM.Features.BanditManagement.Hooks.Patch86_HideoutAssaultBossFight` | `Helpers.MapEventHelper.FlattenedTroopRoster GetPriorityListForHideoutMission(List`1 partyList, ref Int32 firstPhaseTroopCount)` |
 | `TAOM.Features.BannerBearers.Hooks.BannerBearerLogic_SpawnBannerBearer_Patch` | `TaleWorlds.MountAndBlade.BannerBearerLogic.Agent SpawnBannerBearer(IAgentOriginBase troopOrigin, Boolean isPlayerSide, Formation formation, Boolean spawnWithHorse, Boolean isReinforcement, Int32 formationTroopCount, Int32 formationTroopIndex, Boolean isAlarmed, Boolean wieldInitialWeapons, Nullable`1 initialPosition, Nullable`1 initialDirection, String specialActionSetSuffix, Boolean useTroopClassForSpawn)` |
-| `TAOM.Features.BannerColorPersistence.Hooks.Agent_EquipItemsFromSpawnEquipment_Patch` | `TaleWorlds.MountAndBlade.Agent.Void EquipItemsFromSpawnEquipment(Boolean neededBatchedItems, Boolean prepareImmediately, Boolean useFaceCache, Int32 faceCacheID)` |
 | `TAOM.Features.BannerColorPersistence.Hooks.AgentVisuals_Create_Patch` | `TaleWorlds.MountAndBlade.View.AgentVisuals.AgentVisuals Create(AgentVisualsData data, String name, Boolean isRandomProgress, Boolean needBatchedVersionForWeaponMeshes, Boolean forceUseFaceCache)` |
 | `TAOM.Features.BannerColorPersistence.Hooks.Banner_GetFirstIconColor_Patch` | `TaleWorlds.Core.Banner.UInt32 GetFirstIconColor()` |
 | `TAOM.Features.BannerColorPersistence.Hooks.Banner_TryGetBannerDataFromCode_Transpiler` | `TaleWorlds.Core.Banner.Boolean TryGetBannerDataFromCode(String bannerCode, ref List`1 bannerDataList)` |
@@ -91,7 +90,6 @@ Patches: 229. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.CheatScreenGuard.Hooks.InventoryScreenHelper_OpenInventoryPresentation_CheatScreenGuard_Patch` | `Helpers.InventoryScreenHelper.Void OpenInventoryPresentation(TextObject leftRosterName, Action doneLogicExtrasDelegate)` |
 | `TAOM.Features.CheatScreenGuard.Hooks.PartyScreenHelper_OpenScreenAsNormal_CheatScreenGuard_Patch` | `Helpers.PartyScreenHelper.Void OpenScreenAsNormal()` |
 | `TAOM.Features.CompanionTactics.BattleActionBar.Hooks.Patch35_Formation_SetMovementOrder` | `TaleWorlds.MountAndBlade.Formation.Void SetMovementOrder(MovementOrder input)` |
-| `TAOM.Features.CompanionTactics.FormationPresets.Hooks.Patch35_Mission_OnTick` | `TaleWorlds.MountAndBlade.Mission.Void OnTick(Single dt, Single realDt, Boolean updateCamera, Boolean doAsyncAITick)` |
 | `TAOM.Features.CompanionTactics.FormationPresets.Hooks.Patch35_OOBUIHandler_Finalize` | `TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler.Void OnMissionScreenFinalize()` |
 | `TAOM.Features.CompanionTactics.FormationPresets.Hooks.Patch35_OOBUIHandler_Tick` | `TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler.Void OnMissionScreenTick(Single dt)` |
 | `TAOM.Features.CompanionTactics.FormationPresets.Hooks.Patch35_OrderOfBattleVM_Ctor` | `TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleVM.void .ctor()` |
@@ -227,6 +225,8 @@ Patches: 229. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.Spider.Hooks.Agent_HandleBlowAux_SpiderDismountGuard_Patch` | `TaleWorlds.MountAndBlade.Agent.Void HandleBlowAux(ref Blow b)` |
 | `TAOM.Features.StaleCharacterRepair.Hooks.Patch83_StaleCharacterRepair` | `TaleWorlds.ObjectSystem.MBObjectManager.Void PreAfterLoad()` |
 | `TAOM.Features.SupplyLines.Hooks.SupplyCaravanEncounterPatch` | `TaleWorlds.CampaignSystem.Encounters.PlayerEncounter.Void DoMeeting()` |
+| `TAOM.Features.TroopWeight.Diagnostics.TroopRoster_AddToCountsAtIndex_Patch` | `TaleWorlds.CampaignSystem.Roster.TroopRoster.Int32 AddToCountsAtIndex(Int32 index, Int32 countChange, Int32 woundedCountChange, Int32 xpChange, Boolean removeDepleted)` |
+| `TAOM.Features.TroopWeight.Diagnostics.TroopRoster_SetElementNumber_Patch` | `TaleWorlds.CampaignSystem.Roster.TroopRoster.Void SetElementNumber(Int32 index, Int32 number)` |
 | `TAOM.Features.TroopWeight.Hooks.CampaignUIHelper_GetMainPartyHealthTooltip_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.CampaignUIHelper.List`1 GetMainPartyHealthTooltip()` |
 | `TAOM.Features.TroopWeight.Hooks.ClanPartyItemVM_UpdateProperties_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.ClanPartyItemVM.Void UpdateProperties()` |
 | `TAOM.Features.TroopWeight.Hooks.PartyCharacterVM_RefreshValues_Patch` | `TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM.Void RefreshValues()` |

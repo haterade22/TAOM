@@ -16,5 +16,5 @@ public interface IRefugeDefenseService
     /// 0.20 for a refuge, 0.35 for a stronghold, 0 when the party is not a ready refuge.
     /// Hot path (per hit / per sim tick): dictionary probe only, no allocation, null-tolerant.
     /// </summary>
-    float DefenderDamageReduction(string partyStringId);
+    float DefenderDamageReduction(string? partyStringId);
 }

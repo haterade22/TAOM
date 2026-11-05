@@ -64,7 +64,7 @@ public class CreatureCombatService : ICreatureCombatService
     {
         // NaN guard: a NaN momentum must never replace the base model's value — NaN × factor is
         // NaN, which would then defeat the > 0f cooperation guard downstream.
-        if (!_settings.CreatureCleaveEnabled || !isColliderAgent || float.IsNaN(originalMomentum))
+        if (!isColliderAgent || float.IsNaN(originalMomentum) || !_settings.CreatureCleaveEnabled)
             return null;
 
         if (attackerMonsterId == null || !_cleaveMonsterIds.Contains(attackerMonsterId))
@@ -79,7 +79,7 @@ public class CreatureCombatService : ICreatureCombatService
         // so NaN fails the gate — the `<= 0f` form lets NaN through (NaN comparisons are all
         // false), the NaN-gate bug class that has shipped three times before (csharp-architecture
         // "Config Providers MUST Validate" rule 4). Scalar guards run before any string work.
-        if (!_settings.CreatureCleaveEnabled || !isColliderAgent || !(momentumRemaining > 0f) || inflictedDamage <= 0)
+        if (!isColliderAgent || !(momentumRemaining > 0f) || inflictedDamage <= 0 || !_settings.CreatureCleaveEnabled)
             return false;
 
         return attackerMonsterId != null && _cleaveMonsterIds.Contains(attackerMonsterId);
@@ -87,7 +87,7 @@ public class CreatureCombatService : ICreatureCombatService
 
     public bool IsUnstoppable(string victimMonsterId, int inflictedDamage)
     {
-        if (!_settings.CreatureUnstoppableEnabled || victimMonsterId == null)
+        if (victimMonsterId == null || !_settings.CreatureUnstoppableEnabled)
             return false;
 
         return _unstoppableDamageThresholds.TryGetValue(victimMonsterId, out var threshold)

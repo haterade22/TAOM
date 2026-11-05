@@ -15,8 +15,10 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
     private readonly IRaceManager _raceManager;
     private readonly IModLogger _logger;
 
+    private const float ActionSetWindowSeconds = 5f;
+
     private bool _missionStartLogged;
-    private float _actionSetWindowSecondsLeft = 5f;
+    private float _actionSetWindowSecondsLeft = ActionSetWindowSeconds;
 
     public MissionDiagnosticBehavior(IMissionDiagnosticService service, IRaceManager raceManager, IModLogger logger)
     {
@@ -35,13 +37,17 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
             _missionStartLogged = true;
             _service.ResetForNewMission();
             DumpMissionStart();
+            _service.LogActionSetCensusOpened(ActionSetWindowSeconds);
         }
 
-        // Action-set capture window: 5s of agent observation, then disable.
+        // Action-set capture window: 5s of agent observation, then disable. The summary is
+        // written once, when the window runs out or a failed capture closes it.
         if (_actionSetWindowSecondsLeft > 0f)
         {
             _actionSetWindowSecondsLeft -= dt;
             CaptureActionSetsFromAgents();
+            // A positive requirement, so a NaN frame time closes the window with its summary (NaN <= 0 is false).
+            if (!(_actionSetWindowSecondsLeft > 0f)) _service.LogActionSetCensusClosed();
         }
     }
 
@@ -76,17 +82,24 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
             foreach (var agent in mission.Agents)
             {
                 if (agent == null) continue;
+                // Cheap pre-filter with no string marshal: MBActionSet.GetHashCode() is its engine index, and
+                // race id plus sex select the race name and sex the service keys its line on. Only a combination
+                // not yet seen this mission reads the names below.
+                var actionSet = agent.ActionSet;
+                var character = agent.Character;
+                var raceId = character?.Race ?? -1;
+                var isFemale = character?.IsFemale ?? false;
+                if (!_service.TryMarkActionSetKey(actionSet.GetHashCode(), raceId, isFemale)) continue;
+
                 // GetName() returns the engine-side string id (e.g. "as_human_warrior").
-                var actionSetName = agent.ActionSet.GetName();
-                var raceId = agent.Character?.Race ?? -1;
+                var actionSetName = actionSet.GetName();
                 var raceName = raceId >= 0 ? (_raceManager.GetRaceNameFromId(raceId) ?? $"id={raceId}") : "<none>";
                 var agentName = agent.Name ?? "<unnamed>";
                 // Character id + Monster id turn "a dwarf is running as_human_warrior" into an
                 // actionable line. TAOM's GenerateActionSetNameWithSuffix prefix emits exactly
                 // "as_human<suffix>" when the Monster is null, so a null monster here IS the
                 // explanation — without it the census names a symptom and nothing else.
-                var isFemale = agent.Character?.IsFemale ?? false;
-                var characterId = agent.Character?.StringId;
+                var characterId = character?.StringId;
                 var monsterId = agent.Monster?.StringId;
                 _service.LogActionSetSeen(actionSetName, raceName, isFemale, agentName, characterId, monsterId);
             }
@@ -101,8 +114,10 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
     public override void OnEndMissionInternal()
     {
         // Reset window flag for the next mission. The service-level dedup set
-        // also resets via ResetForNewMission on the next OnMissionTick.
+        // also resets via ResetForNewMission on the next OnMissionTick. A mission shorter
+        // than the window still gets its census summary.
+        if (_missionStartLogged && _actionSetWindowSecondsLeft > 0f) _service.LogActionSetCensusClosed();
         _missionStartLogged = false;
-        _actionSetWindowSecondsLeft = 5f;
+        _actionSetWindowSecondsLeft = ActionSetWindowSeconds;
     }
 }

@@ -43,7 +43,7 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 | 4f | `WaitingForRender` | `MissionState_OnTick_RenderWait_Patch` (**Postfix**) | `MissionState.OnTick(float)` (**protected**): one call per frame the mission is loaded but not yet ticking, i.e. while `Handler.RenderIsReady()` is false. Throttled to 1 Hz in the service; carries `waitedMs=` and the live `shaders=` count |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
 
-All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phases 4 and 5 coexist with the pre-existing prefixes on the same methods (`Patch16_AtmospherePersistence` on `Mission.Initialize`, `Patch23_BannerColorPersistence` on `EquipItemsFromSpawnEquipment`) — Harmony runs all of them.
+All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phase 4 coexists with the pre-existing `Patch16_AtmospherePersistence` prefix on `Mission.Initialize`; Harmony runs both.
 
 #### Why 2b–2d and 4b–4c exist (the 2026-07-16 blind window)
 
@@ -904,6 +904,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 - The blind-window stamps add ~5 lines per load, plus one `TaomBehaviorAdded` per TAOM behavior (~11–15). All fire once per mission load; none is per-frame.
 - **Synchronous INFO is paid on the game thread, and the honest figure is not "a few hundred lines".** Phase 5 emits INFO *per spawning agent*, so a large battle turns ~1000 stamps into game-thread flushes, each also draining the DEBUG queued behind it — during the equip burst the game thread ends up writing most of the log. Budget: ~15 ms across a multi-second load that already does native scene I/O. It is the same total work as before, on a different thread, and it holds **only** because `Flush()` lands in the OS page cache (which a dying process does not lose) — `WriteThrough` would turn each flush into a physical disk write and is deliberately not used. This is load-time, behind a loading screen, and it is the exact window the instrument exists to survive; making those lines async again would reopen #350.
 - Lock contention is bounded by **one `Drain()` batch** (queue depth × per-line write), *not* by the writer's 50 ms poll — the `Thread.Sleep(50)` sits in `ProcessQueue`, outside `Drain()`'s lock, so a durable write can never block on it. (A review agent claimed a 50 ms stall; it conflated the wake interval with lock-hold time. See the RCA.)
+- **Measured 2026-11-05 on the maintainer's laptop (WP123): a durable INFO line costs 3.8 us on the calling thread, 8.0 us when four threads log at once, and a DEBUG line 0.4 us. A 1,602-line arena load burst therefore costs about 6 ms. The synchronous INFO path stays: a background writer would save at most that much per large load and would lose the last lines before a native crash (#350). Re-measure: TAOM_RUN_BENCHMARKS=1 and FileLoggerDurableWriteBenchmarkTests.**
 
 ## Related
 

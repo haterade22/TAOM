@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -28,6 +29,15 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
     private CultureMarketplaceMaintenanceService NewSut() =>
         new(_poolService, _townAdapter);
 
+    // The service counts every guaranteed item in one roster walk (ITownRosterAdapter.GetItemCounts);
+    // this stubs that walk from (id, count) pairs, 0 for any id not listed.
+    private void StubCounts(params (string Id, int Count)[] counts)
+    {
+        var table = counts.ToDictionary(c => c.Id, c => c.Count);
+        _townAdapter.GetItemCounts(Arg.Any<TaleWorlds.CampaignSystem.Settlements.Settlement>(), Arg.Any<IReadOnlyList<string>>())
+            .Returns(ci => ((IReadOnlyList<string>)ci[1]).Select(id => table.TryGetValue(id, out var n) ? n : 0).ToArray());
+    }
+
     private void SetupSingleWargRouted(string cultureId, int minStock)
     {
         var routed = new List<RoutedItem>
@@ -41,7 +51,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
     public void EnsureGuaranteedStock_TownHasZero_TopsUpToMinStock()
     {
         SetupSingleWargRouted("isengard", minStock: 1);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(0);
+        StubCounts(("warg_brown", 0));
         _townAdapter.AddItem(null, "warg_brown", 1).Returns(true);
 
         var added = NewSut().EnsureGuaranteedStock(null, "isengard");
@@ -54,7 +64,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
     public void EnsureGuaranteedStock_TownAlreadyHasFloor_NoOp()
     {
         SetupSingleWargRouted("isengard", minStock: 1);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(1);
+        StubCounts(("warg_brown", 1));
 
         var added = NewSut().EnsureGuaranteedStock(null, "isengard");
 
@@ -66,7 +76,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
     public void EnsureGuaranteedStock_TownAboveFloor_NoOp()
     {
         SetupSingleWargRouted("isengard", minStock: 1);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(5);
+        StubCounts(("warg_brown", 5));
 
         Assert.AreEqual(0, NewSut().EnsureGuaranteedStock(null, "isengard"));
         _townAdapter.DidNotReceive().AddItem(Arg.Any<TaleWorlds.CampaignSystem.Settlements.Settlement>(), Arg.Any<string>(), Arg.Any<int>());
@@ -78,7 +88,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
         SetupSingleWargRouted("isengard", minStock: 0);
 
         Assert.AreEqual(0, NewSut().EnsureGuaranteedStock(null, "isengard"));
-        _townAdapter.DidNotReceive().GetItemCount(Arg.Any<TaleWorlds.CampaignSystem.Settlements.Settlement>(), Arg.Any<string>());
+        _townAdapter.DidNotReceive().GetItemCounts(Arg.Any<TaleWorlds.CampaignSystem.Settlements.Settlement>(), Arg.Any<IReadOnlyList<string>>());
     }
 
     [TestMethod]
@@ -89,7 +99,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
             new("warg_brown", new List<string> { "isengard" }, 3),
         };
         _poolService.GetRoutedItemsForCulture("isengard").Returns(routed);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(1);
+        StubCounts(("warg_brown", 1));
         _townAdapter.AddItem(null, "warg_brown", 2).Returns(true);
 
         var added = NewSut().EnsureGuaranteedStock(null, "isengard");
@@ -108,9 +118,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
             new("warg_dark",   new List<string> { "isengard" }, 1),
         };
         _poolService.GetRoutedItemsForCulture("isengard").Returns(routed);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(0);
-        _townAdapter.GetItemCount(null, "warg_saddle").Returns(1);
-        _townAdapter.GetItemCount(null, "warg_dark").Returns(0);
+        StubCounts(("warg_brown", 0), ("warg_saddle", 1), ("warg_dark", 0));
         _townAdapter.AddItem(null, "warg_brown", 1).Returns(true);
         _townAdapter.AddItem(null, "warg_dark", 1).Returns(true);
 
@@ -134,7 +142,7 @@ public class CultureMarketplaceMaintenanceServiceGuaranteedStockTests
     public void EnsureGuaranteedStock_AddItemReturnsFalse_DoesNotCountAsAdded()
     {
         SetupSingleWargRouted("isengard", minStock: 1);
-        _townAdapter.GetItemCount(null, "warg_brown").Returns(0);
+        StubCounts(("warg_brown", 0));
         _townAdapter.AddItem(null, "warg_brown", 1).Returns(false);
 
         Assert.AreEqual(0, NewSut().EnsureGuaranteedStock(null, "isengard"));

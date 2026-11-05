@@ -6,9 +6,9 @@ namespace TAOM.Features.Enlistment;
 /// did NOT resolve" line. Nothing else in the feature consults it, so do not assume an absent
 /// <c>[EnlistDiag]</c> line was gated — most of them are not.
 ///
-/// OFF BY DEFAULT since 2026-08-09. The implementation resolves a missing MCM setting with
+/// OFF BY DEFAULT (#840; on from 2026-08-28, v2.0.24 through v2.0.28). The implementation resolves a missing MCM setting with
 /// <c>?? false</c>, and that fallback must always agree with the compiled default in
-/// <c>TaomSettings.EnableEnlistmentDiagnostics</c>, or MCM-absent behaviour would silently differ
+/// <c>TaomSettings.EnableEnlistmentTrace</c>, or MCM-absent behaviour would silently differ
 /// from MCM-present-at-default behaviour. Both are pinned by tests; flip them together or not at all.
 ///
 /// MCM-absent is not hypothetical. A settings file written before the enlistment keys existed

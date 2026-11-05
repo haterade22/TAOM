@@ -23,32 +23,18 @@ public class AlignmentDesertionService : IAlignmentDesertionService
 
     public bool IsEnabled => _settings.IsEnabled;
 
+    public bool ShouldEvaluate(string ownerKingdomId, bool isPlayerOwned, bool isGarrison)
+        => TryGetPurge(ownerKingdomId, isPlayerOwned, isGarrison, out _, out _);
+
     public IReadOnlyList<TroopDesertionResult> CalculateDesertion(
         string ownerKingdomId, bool isPlayerOwned, bool isGarrison, IReadOnlyList<DesertionTroopInfo> troops)
     {
         var result = new List<TroopDesertionResult>();
 
-        if (!_settings.IsEnabled || troops == null || troops.Count == 0)
+        if (troops == null || troops.Count == 0)
             return result;
-
-        // Owner gate (player / AI).
-        if (isPlayerOwned && !_settings.ApplyToPlayer) return result;
-        if (!isPlayerOwned && !_settings.ApplyToAi) return result;
-
-        // Location gate (parties / garrisons).
-        if (isGarrison && !_settings.ApplyToGarrisons) return result;
-        if (!isGarrison && !_settings.ApplyToParties) return result;
-
-        var ownerSide = _alignment.GetKingdomSide(ownerKingdomId);
-        // Neutral-aligned (Umbar/Shaghana/Abanissa), independent, or kingdomless owners never purge.
-        // NOTE: a mercenary clan keeps Clan.Kingdom set to its employer, so it resolves to the
-        // employer's side and DOES purge opposed troops -- it is not exempt here. (Codex #2.)
-        if (ownerSide == FactionSide.Neutral) return result;
-
-        var rate = _settings.Rate;
-        // Rate 0 = no desertion. The master toggle is the off switch, but a 0% slider must also mean
-        // "none" -- without this the min-1 floor below would still shed 1 per opposed type. (Codex #3.)
-        if (rate <= 0f) return result;
+        if (!TryGetPurge(ownerKingdomId, isPlayerOwned, isGarrison, out var ownerSide, out var rate))
+            return result;
 
         foreach (var troop in troops)
         {
@@ -65,5 +51,34 @@ public class AlignmentDesertionService : IAlignmentDesertionService
         }
 
         return result;
+    }
+
+    /// <summary>The roster-independent gates, in the order CalculateDesertion always applied them.</summary>
+    private bool TryGetPurge(string ownerKingdomId, bool isPlayerOwned, bool isGarrison, out FactionSide ownerSide, out float rate)
+    {
+        ownerSide = FactionSide.Neutral;
+        rate = 0f;
+        if (!_settings.IsEnabled) return false;
+
+        // Owner gate (player / AI).
+        if (isPlayerOwned && !_settings.ApplyToPlayer) return false;
+        if (!isPlayerOwned && !_settings.ApplyToAi) return false;
+
+        // Location gate (parties / garrisons).
+        if (isGarrison && !_settings.ApplyToGarrisons) return false;
+        if (!isGarrison && !_settings.ApplyToParties) return false;
+
+        ownerSide = _alignment.GetKingdomSide(ownerKingdomId);
+        // Neutral-aligned (Umbar/Shaghana/Abanissa), independent, or kingdomless owners never purge.
+        // NOTE: a mercenary clan keeps Clan.Kingdom set to its employer, so it resolves to the
+        // employer's side and DOES purge opposed troops -- it is not exempt here. (Codex #2.)
+        if (ownerSide == FactionSide.Neutral) return false;
+
+        rate = _settings.Rate;
+        // Rate 0 = no desertion. The master toggle is the off switch, but a 0% slider must also mean
+        // "none" -- without this the min-1 floor below would still shed 1 per opposed type. (Codex #3.)
+        // Parity: written as !(rate <= 0f) on purpose, so a NaN rate proceeds exactly as the original
+        // `if (rate <= 0f) return result;` let it (pinned by ShouldEvaluate_NaNRate_IsTrue_ParityWithTheOriginalGate).
+        return !(rate <= 0f);
     }
 }

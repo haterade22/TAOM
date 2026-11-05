@@ -205,17 +205,17 @@ A missing file means all defaults and no exclusions, which is not the same as th
 
 | Field | Type | Shipped | Legal range | MCM | Read at (file:line) |
 |---|---|---|---|---|---|
-| `enabled` | bool | `true` | either | yes | `FieldCommissionSettingsProvider.cs:87` |
+| `enabled` | bool | `true` | either | yes | `FieldCommissionSettingsProvider.cs:100` |
 | `ratioThreshold` | float | 1.3 | finite and at least 0; 0 means never eligible | yes | `FieldCommissionConfigProvider.cs:89` |
 | `meritPerKill` | int | 1 | at least 1 | yes | `FieldCommissionConfigProvider.cs:96` |
 | `meritThreshold` | int | 32 | at least 1 | yes | `FieldCommissionConfigProvider.cs:103` |
 | `retainerAllowance` | int | 0 | at least 0 | yes | `FieldCommissionConfigProvider.cs:117` |
 | `maxOffersPerBattle` | int | 2 | at least 1 | yes | `FieldCommissionConfigProvider.cs:126` |
 | `skillPointsPerLevel` | int | 5 | at least 1 | no, JSON only | `FieldCommissionConfigProvider.cs:110` |
-| `diagnostics` | bool | `false` | either | yes | `FieldCommissionSettingsProvider.cs:104` |
+| `diagnostics` | bool | `false` | either | yes | `FieldCommissionSettingsProvider.cs:117` |
 | `allowedRaceNames` | string[] | human, dwarf, elf | blank entries dropped | no, JSON only | `FieldCommissionConfigProvider.cs:133, 143` |
 
-The six MCM-exposed fields are the ones a pack author cannot rely on. The two JSON-only fields are carried through the merge by reference so a merge cannot re-admit a race the author excluded (`FieldCommissionSettingsProvider.cs:108-109`).
+The six MCM-exposed fields are the ones a pack author cannot rely on. The two JSON-only fields are carried through the merge by reference so a merge cannot re-admit a race the author excluded (`FieldCommissionSettingsProvider.cs:121-122`).
 
 ### recruitment_alignment_config.json
 

@@ -348,8 +348,7 @@ Two consequences worth being deliberate about:
 
 - **Auto-resolve does not see the aura.** `TaomCombatSimulationModel` and
   `DefaultMilitaryPowerModel` govern auto-resolve and know nothing about dread, so fighting a
-  wraith manually is harsher than auto-resolving one. This is also a new confound for the
-  `AutoResolveDiagnostics` census (#430), which compares manual and auto-resolved outcomes.
+  wraith manually is harsher than auto-resolving one.
 - **No campaign-map effect.** Deferred, see below.
 - **No visual effect.** The audible cue is `SkinVoiceManager.VoiceType.Fear`, which falls silent
   rather than erroring for a race with no clip bound.

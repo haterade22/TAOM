@@ -11,32 +11,43 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
 {
     private readonly CombatMechanicsConfig _defaults;
 
+    // HOT PATH: read per melee blow (crush-through, cleave, stagger, shield penetration) and per mount stat update.
+    // Resolving TaomSettings.Instance walks MCM's settings containers, so the reference is cached on its first non-null
+    // read and read THROUGH, never snapshotted: MCM edits its one registered instance in place (reset and presets copy
+    // values into it), so live MCM edits still apply. Lazy, not in the constructor, so a resolve before MCM is up cannot
+    // pin the JSON fallbacks. Same contract as BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public CombatMechanicsSettingsProvider(ICombatMechanicsConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    private bool MasterEnabled => TaomSettings.Instance?.EnableCombatMechanics ?? _defaults.Enabled;
+    internal CombatMechanicsSettingsProvider(ICombatMechanicsConfigProvider configProvider, TaomSettings settings)
+        : this(configProvider) => _settings = settings;
 
-    public bool SkillCrushThroughEnabled => MasterEnabled && (TaomSettings.Instance?.EnableSkillCrushThrough ?? _defaults.CrushThrough.SkillBasedEnabled);
+    private bool MasterEnabled => Settings?.EnableCombatMechanics ?? _defaults.Enabled;
 
-    public bool MonsterCrushThroughEnabled => MasterEnabled && (TaomSettings.Instance?.EnableMonsterCrushThrough ?? _defaults.CrushThrough.MonsterAutoCrushEnabled);
+    public bool SkillCrushThroughEnabled => MasterEnabled && (Settings?.EnableSkillCrushThrough ?? _defaults.CrushThrough.SkillBasedEnabled);
 
-    public bool OrcShieldCrushEnabled => MasterEnabled && (TaomSettings.Instance?.EnableOrcShieldCrush ?? _defaults.CrushThrough.OrcShieldCrushEnabled);
+    public bool MonsterCrushThroughEnabled => MasterEnabled && (Settings?.EnableMonsterCrushThrough ?? _defaults.CrushThrough.MonsterAutoCrushEnabled);
 
-    public bool CreatureCleaveEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCreatureCleave ?? _defaults.Creatures.CleaveEnabled);
+    public bool OrcShieldCrushEnabled => MasterEnabled && (Settings?.EnableOrcShieldCrush ?? _defaults.CrushThrough.OrcShieldCrushEnabled);
 
-    public bool CreatureUnstoppableEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCreatureUnstoppable ?? _defaults.Creatures.UnstoppableEnabled);
+    public bool CreatureCleaveEnabled => MasterEnabled && (Settings?.EnableCreatureCleave ?? _defaults.Creatures.CleaveEnabled);
 
-    public bool ChargeKnockdownEnabled => MasterEnabled && (TaomSettings.Instance?.EnableChargeKnockdown ?? _defaults.ChargeKnockdown.Enabled);
+    public bool CreatureUnstoppableEnabled => MasterEnabled && (Settings?.EnableCreatureUnstoppable ?? _defaults.Creatures.UnstoppableEnabled);
 
-    public bool ShieldPenetrationEnabled => MasterEnabled && (TaomSettings.Instance?.EnableShieldPenetration ?? _defaults.ShieldPenetration.Enabled);
+    public bool ChargeKnockdownEnabled => MasterEnabled && (Settings?.EnableChargeKnockdown ?? _defaults.ChargeKnockdown.Enabled);
+
+    public bool ShieldPenetrationEnabled => MasterEnabled && (Settings?.EnableShieldPenetration ?? _defaults.ShieldPenetration.Enabled);
 
     // No JSON sibling — the race table itself is the JSON side; this is a pure MCM kill switch.
-    public bool RaceCombatModifiersEnabled => MasterEnabled && (TaomSettings.Instance?.EnableRaceCombatModifiers ?? true);
+    public bool RaceCombatModifiersEnabled => MasterEnabled && (Settings?.EnableRaceCombatModifiers ?? true);
 
     public float CrushThroughMaxChance
-        => SettingClamp.Clamp(TaomSettings.Instance?.CrushThroughMaxChance, _defaults.CrushThrough.MaxSkillChance, 0f, 1f);
+        => SettingClamp.Clamp(Settings?.CrushThroughMaxChance, _defaults.CrushThrough.MaxSkillChance, 0f, 1f);
 
     // MCM slider is an int [2,30]; without MCM the provider-validated JSON float applies as-is.
     // The slider floor is the validated NeutralWeightRatio: a below-neutral auto-knockdown ratio
@@ -46,7 +57,7 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     {
         get
         {
-            var mcm = TaomSettings.Instance?.ChargeAutoKnockdownWeightRatio;
+            var mcm = Settings?.ChargeAutoKnockdownWeightRatio;
             if (!mcm.HasValue)
                 return _defaults.ChargeKnockdown.AutoKnockdownWeightRatio;
 

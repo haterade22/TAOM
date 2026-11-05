@@ -11,7 +11,6 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // no matching Ok = the freeze, and the dumped slots name the suspect item (look for
 // bo=<null> / shieldBo=<null>). Double-gated on IsEnabled + the loading window so it is a
 // two-bool no-op outside the initial-load window (reinforcement waves are not logged).
-// Coexists with Patch23_BannerColorPersistence's prefix on the same method.
 [HarmonyPatch(typeof(Agent), nameof(Agent.EquipItemsFromSpawnEquipment))]
 [HarmonyPatchCategory("Patch43_BattleLoadDiagnostics")]
 public static class Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch
