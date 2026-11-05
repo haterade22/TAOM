@@ -1866,6 +1866,20 @@ assault is fought (`PlayerEncounter.cs:1860-1866`, `:1287-1295`). A feature-off 
 until the battle ends. This relies on ownership rule R1b being inert on 1.4.x; WP132 ports its
 deletion (`3b848c411`). Review: `rca-enlistment-encounter-exits-2026-10-26.md`.
 
+### The #842 to #845 batch
+
+`IsCommanderParty` compares the commander's party id through `GetPartyId` (#842). The army-rhythm
+probe reads only what duties use, and the unused hour parameter is gone (#843). Dead data is
+removed: battle and tournament counters, duty failures, the four reputation scores and
+`TrustLedger`, two unused events, petition withdrawal, `EquipmentPayoffCalculator` and the
+in-memory ledger; old saves load because `ServiceContentRecord.TryParse` ignores unknown keys
+(#844). Duty words live in `enlistment_duties.json` as `{=key}English` strings, `DutyText` owns
+the key formula, and `tools/harvest_duty_strings.py --check` proves the registry is in step; v1.4.8
+shows English inline text and never reads string files for English (`LocalizedTextManager.cs:235`)
+(#845). Reviews: `rca-enlistment-dead-surface-2026-10-26.md`, `rca-enlistment-duty-text-2026-10-26.md`.
+
+**Owed in-game checks (WP128).** See `plans/128-enlistment-fixes-a.md`, "In-game checks owed".
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
@@ -2009,7 +2023,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
   English-only.
 
   The **97 runtime-built duty keys** are the reason
-  `tools/generate_enlistment_duty_strings.py` exists: `InteractiveDutyPresenter` and
+  `tools/harvest_duty_strings.py` exists, and their English lives in `enlistment_duties.json`:
+  `InteractiveDutyPresenter` and
   `ServiceStatusTextWriter` assemble ids as `taom_enlist_duty_<row id>_<suffix>` at runtime, so a
   literal `{=key}` grep — the discovery mechanism `/localize` relies on — finds none of them. The
   generator enumerates them from the data rows instead. 84 are the 14 interactive-duty/incident
