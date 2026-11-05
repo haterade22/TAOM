@@ -35,7 +35,7 @@ public class DutyOrchestrationServiceTests
         _config.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
         _config.GetDuties().Returns(new EnlistmentDutiesConfig());
         _rhythm = Substitute.For<IArmyRhythmSnapshotService>();
-        _rhythm.GetSnapshot(Arg.Any<double>(), Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
+        _rhythm.GetSnapshot(Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _rotation = Substitute.For<IDutyRotationPolicy>();
         _selector = Substitute.For<IDutySelector>();
@@ -76,7 +76,7 @@ public class DutyOrchestrationServiceTests
     {
         _store.Record.State = EnlistmentState.NotEnlisted;
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _rotation.DidNotReceiveWithAnyArgs().ShouldRollIncident(default, default, default, default);
     }
@@ -86,7 +86,7 @@ public class DutyOrchestrationServiceTests
     {
         _contentStore.Record.ActiveDutyId = "recon_sweep";
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _rotation.DidNotReceiveWithAnyArgs().ShouldRollIncident(default, default, default, default);
         _rotation.DidNotReceiveWithAnyArgs().ShouldOfferDuty(default, default, default, default, default, default);
@@ -99,7 +99,7 @@ public class DutyOrchestrationServiceTests
         _rotation.ShouldRollIncident(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(true);
         _selector.SelectIncident(Arg.Any<IReadOnlyList<IncidentDefinition>>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>()).Returns(incident);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _presenter.Received(1).PresentIncident(incident, Arg.Any<ServiceProgressSnapshot>(), 0);
         _rotation.DidNotReceiveWithAnyArgs().ShouldOfferDuty(default, default, default, default, default, default);
@@ -113,7 +113,7 @@ public class DutyOrchestrationServiceTests
         _selector.SelectIncident(Arg.Any<IReadOnlyList<IncidentDefinition>>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>()).Returns((IncidentDefinition)null);
         _rotation.ShouldOfferDuty(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _rotation.Received(1).ShouldOfferDuty(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<double>(), Arg.Any<double?>());
         Assert.AreEqual(100.0, _contentStore.Record.LastIncidentDay, "cadence-day still stamped even when no incident matched");
@@ -125,7 +125,7 @@ public class DutyOrchestrationServiceTests
         _rotation.ShouldRollIncident(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
         _rotation.ShouldOfferDuty(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _selector.DidNotReceiveWithAnyArgs().SelectIncident(default, default, default);
         Assert.IsNull(_contentStore.Record.LastIncidentDay);
@@ -137,7 +137,7 @@ public class DutyOrchestrationServiceTests
         _rotation.ShouldRollIncident(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
         _rotation.ShouldOfferDuty(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _selector.DidNotReceiveWithAnyArgs().SelectOffer(default, default, default, default, default);
         Assert.IsNull(_contentStore.Record.LastOfferDay);
@@ -151,7 +151,7 @@ public class DutyOrchestrationServiceTests
         _selector.SelectOffer(Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>())
             .Returns(DutyOfferSelection.None);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         Assert.IsNull(_contentStore.Record.LastOfferDay);
         _runtime.DidNotReceiveWithAnyArgs().Start(default, default);
@@ -166,7 +166,7 @@ public class DutyOrchestrationServiceTests
         _selector.SelectOffer(Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>())
             .Returns(new DutyOfferSelection { FieldDuty = duty });
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _runtime.Received(1).Start(duty, 100.0);
         Assert.AreEqual(100.0, _contentStore.Record.LastOfferDay);
@@ -182,7 +182,7 @@ public class DutyOrchestrationServiceTests
         _selector.SelectOffer(Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>())
             .Returns(new DutyOfferSelection { InteractiveDuty = duty });
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         _presenter.Received(1).PresentInteractiveDuty(duty, Arg.Any<ServiceProgressSnapshot>(), 0);
         CollectionAssert.Contains(_contentStore.Record.RecentDutyIds, "night_patrol");
@@ -199,7 +199,7 @@ public class DutyOrchestrationServiceTests
         _selector.SelectOffer(Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>())
             .Returns(new DutyOfferSelection { FieldDuty = duty });
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
 
         Assert.AreEqual(5, _contentStore.Record.RecentDutyIds.Count);
         CollectionAssert.DoesNotContain(_contentStore.Record.RecentDutyIds, "a", "oldest entry evicted");
@@ -237,7 +237,7 @@ public class DutyOrchestrationServiceTests
     {
         _store.Record.State = EnlistmentState.NotEnlisted;
 
-        Assert.AreEqual(DutyRequestResult.NotEnlisted, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.NotEnlisted, _service.RequestDutyNow(100.0));
         _selector.DidNotReceiveWithAnyArgs().SelectOffer(default, default, default, default, default);
     }
 
@@ -246,7 +246,7 @@ public class DutyOrchestrationServiceTests
     {
         _contentStore.Record.ActiveDutyId = "recon_sweep";
 
-        Assert.AreEqual(DutyRequestResult.AlreadyOnDuty, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.AlreadyOnDuty, _service.RequestDutyNow(100.0));
         _selector.DidNotReceiveWithAnyArgs().SelectOffer(default, default, default, default, default);
     }
 
@@ -257,7 +257,7 @@ public class DutyOrchestrationServiceTests
         // whole point of sharing ONE cadence rather than adding a second cooldown.
         OfferReady(DutyOfferSelection.None, rotationAllows: false);
 
-        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0));
         _runtime.DidNotReceiveWithAnyArgs().Start(default, default);
         Assert.IsNull(_contentStore.Record.LastOfferDay);
     }
@@ -269,7 +269,7 @@ public class DutyOrchestrationServiceTests
         OfferReady(new DutyOfferSelection { FieldDuty = duty });
         _runtime.Start(duty, 100.0).Returns(true);
 
-        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0));
         _runtime.Received(1).Start(duty, 100.0);
         CollectionAssert.Contains(_contentStore.Record.RecentDutyIds, "recon_sweep");
     }
@@ -284,7 +284,7 @@ public class DutyOrchestrationServiceTests
         OfferReady(new DutyOfferSelection { FieldDuty = duty });
         _runtime.Start(duty, 100.0).Returns(false);
 
-        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0));
     }
 
     [TestMethod]
@@ -293,7 +293,7 @@ public class DutyOrchestrationServiceTests
         var duty = new InteractiveDutyDefinition { Id = "quartermaster_count" };
         OfferReady(new DutyOfferSelection { InteractiveDuty = duty });
 
-        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0, 12.0));
+        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0));
         _presenter.Received(1).PresentInteractiveDuty(duty, Arg.Any<ServiceProgressSnapshot>(), Arg.Any<int>());
     }
 
@@ -307,10 +307,10 @@ public class DutyOrchestrationServiceTests
         OfferReady(new DutyOfferSelection { FieldDuty = duty });
         _runtime.Start(duty, Arg.Any<double>()).Returns(true);
 
-        _service.DailyOfferTick(100.0, 12.0);
+        _service.DailyOfferTick(100.0);
         _contentStore.Record.ActiveDutyId = null;
         _contentStore.Record.LastOfferDay = null;
-        _service.RequestDutyNow(100.0, 12.0);
+        _service.RequestDutyNow(100.0);
 
         _rotation.Received(2).ShouldOfferDuty(
             Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(),

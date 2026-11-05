@@ -28,23 +28,13 @@ public sealed class EnlistmentDutiesConfig
 /// </summary>
 public sealed class ArmyRhythmSnapshot
 {
-    public ServicePhase Phase { get; set; }
     public bool InArmy { get; set; }
     public bool SiegePressure { get; set; }
     public bool Naval { get; set; }
     public bool Blockade { get; set; }
-    public bool LowSupplies { get; set; }
-    public bool RecoveryState { get; set; }
     public bool QuietGarrison { get; set; }
     public bool Marching { get; set; }
     public bool PreBattle { get; set; }
-
-    /// <summary>Faction-level war check (the donor's party-scan version was effectively always true).</summary>
-    public bool ActiveCampaign { get; set; }
-
-    public bool HighScrutiny { get; set; }
-    public int WoundedCount { get; set; }
-    public int RecruitCount { get; set; }
 }
 
 /// <summary>Progress counters the promotion evaluator + scheduler read (a view over the content store section).</summary>

@@ -131,10 +131,10 @@ public class EnlistmentPlayerActionServiceTests
     [TestMethod]
     public void RequestDutyNow_DelegatesToTheOneOfferPath()
     {
-        _duties.RequestDutyNow(10.0, 12.0).Returns(DutyRequestResult.DutyAssigned);
+        _duties.RequestDutyNow(10.0).Returns(DutyRequestResult.DutyAssigned);
 
-        Assert.AreEqual(DutyRequestResult.DutyAssigned, _sut.RequestDutyNow(10.0, 12.0));
-        _duties.Received(1).RequestDutyNow(10.0, 12.0);
+        Assert.AreEqual(DutyRequestResult.DutyAssigned, _sut.RequestDutyNow(10.0));
+        _duties.Received(1).RequestDutyNow(10.0);
     }
 
     // ---- Shore leave: the pass hands the player a VANILLA settlement menu (issue #510) --------

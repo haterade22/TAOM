@@ -6,7 +6,6 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Content;
-using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Hooks;
 using TAOM.Features.Enlistment.Presentation;
@@ -142,18 +141,16 @@ public class EnlistmentSessionResetTests
         // A quick reload inside the same campaign hour would otherwise serve the pre-load world.
         var store = Substitute.For<IEnlistmentStore>();
         store.Record.Returns(new EnlistmentRecord());
-        var content = Substitute.For<IEnlistmentContentStore>();
-        content.Record.Returns(new ServiceContentRecord());
         var probe = Substitute.For<IArmyRhythmProbeAdapter>();
         probe.Probe(Arg.Any<string>()).Returns(new ArmyRhythmProbe());
-        var sut = new ArmyRhythmSnapshotService(store, content, probe);
+        var sut = new ArmyRhythmSnapshotService(store, probe);
 
-        sut.GetSnapshot(10.0, 12.0);
-        sut.GetSnapshot(10.0, 12.0);
+        sut.GetSnapshot(10.0);
+        sut.GetSnapshot(10.0);
         probe.Received(1).Probe(Arg.Any<string>());
 
         sut.ResetForNewSession();
-        sut.GetSnapshot(10.0, 12.0);
+        sut.GetSnapshot(10.0);
 
         probe.Received(2).Probe(Arg.Any<string>());
     }

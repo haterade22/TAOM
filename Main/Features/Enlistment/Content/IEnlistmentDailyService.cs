@@ -25,5 +25,5 @@ public sealed class DailySummary
 /// </summary>
 public interface IEnlistmentDailyService
 {
-    DailySummary RunDailyTick(double nowDays, double hourOfDay);
+    DailySummary RunDailyTick(double nowDays);
 }

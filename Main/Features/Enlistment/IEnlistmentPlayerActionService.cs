@@ -48,7 +48,7 @@ public interface IEnlistmentPlayerActionService
     TalkToCommanderResult TalkToCommander();
 
     /// <summary>Ask the commander for work now. Shares one offer path with the daily tick.</summary>
-    DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay);
+    DutyRequestResult RequestDutyNow(double nowDays);
 
     /// <summary>
     /// May the player be offered shore leave right now (field report 1)? Pure gate — safe to call

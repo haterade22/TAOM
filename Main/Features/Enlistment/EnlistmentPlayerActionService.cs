@@ -91,12 +91,12 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     /// presenting reward-bearing inquiries and mutating the content record — so a client
     /// running it locally would fork shared campaign state.
     /// </summary>
-    public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay)
+    public DutyRequestResult RequestDutyNow(double nowDays)
     {
         if (!_coopSession.IsAuthority)
             return DutyRequestResult.NoWorkAvailable;
 
-        return _duties.RequestDutyNow(nowDays, hourOfDay);
+        return _duties.RequestDutyNow(nowDays);
     }
 
     public bool CanTakeTownLeave()

@@ -57,7 +57,7 @@ public class DutyOrchestrationService : IDutyOrchestrationService
     private bool IsAvailableForOrders()
         => _store.Record.State == EnlistmentState.EnlistedAttached;
 
-    public void DailyOfferTick(double nowDays, double hourOfDay)
+    public void DailyOfferTick(double nowDays)
     {
         // NOT IsEnlisted. That predicate deliberately spans five states including
         // EnlistedPlayerCaptive and CommanderUnavailable — a prisoner would be offered camp work,
@@ -72,13 +72,12 @@ public class DutyOrchestrationService : IDutyOrchestrationService
 
         var config = _config.GetConfig();
         var scheduler = config.Scheduler;
-        var rhythm = _rhythm.GetSnapshot(nowDays, hourOfDay);
-        var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
-        var progress = record.ToProgressSnapshot(leadership);
-        var pressure = rhythm.SiegePressure || rhythm.Naval || rhythm.Blockade || rhythm.PreBattle;
 
         if (_rotation.ShouldRollIncident(scheduler, record.DaysServed, nowDays, record.LastIncidentDay))
         {
+            var rhythm = _rhythm.GetSnapshot(nowDays);
+            var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
+            var progress = record.ToProgressSnapshot(leadership);
             var incident = _selector.SelectIncident(_config.GetDuties().Incidents, progress, rhythm);
             record.LastIncidentDay = nowDays;
             if (incident != null)
@@ -88,7 +87,7 @@ public class DutyOrchestrationService : IDutyOrchestrationService
             }
         }
 
-        TryOffer(nowDays, hourOfDay);
+        TryOffer(nowDays);
     }
 
     /// <summary>
@@ -97,7 +96,7 @@ public class DutyOrchestrationService : IDutyOrchestrationService
     /// cooldown: asking is free, but the commander only has work when the rotation says so.
     /// A separate cooldown here would let a player farm duties by spamming the menu option.
     /// </summary>
-    public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay)
+    public DutyRequestResult RequestDutyNow(double nowDays)
     {
         // IsAvailableForOrders, not IsEnlisted — the SAME predicate DailyOfferTick uses, and for
         // the reason written above it: IsEnlisted spans five states including
@@ -119,18 +118,18 @@ public class DutyOrchestrationService : IDutyOrchestrationService
         if (_contentStore.Record.HasActiveDuty)
             return DutyRequestResult.AlreadyOnDuty;
 
-        return TryOffer(nowDays, hourOfDay);
+        return TryOffer(nowDays);
     }
 
     /// <summary>
     /// The one offer path. Both the daily tick and an explicit request land here, so a change to
     /// how duties are chosen cannot apply to one caller and not the other.
     /// </summary>
-    private DutyRequestResult TryOffer(double nowDays, double hourOfDay)
+    private DutyRequestResult TryOffer(double nowDays)
     {
         var record = _contentStore.Record;
         var config = _config.GetConfig();
-        var rhythm = _rhythm.GetSnapshot(nowDays, hourOfDay);
+        var rhythm = _rhythm.GetSnapshot(nowDays);
         var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
         var progress = record.ToProgressSnapshot(leadership);
         var pressure = rhythm.SiegePressure || rhythm.Naval || rhythm.Blockade || rhythm.PreBattle;

@@ -27,12 +27,3 @@ public enum ReputationDomain
     Command = 3,
     Siege = 4,
 }
-
-/// <summary>Time-of-day phase for the army-rhythm scheduler.</summary>
-public enum ServicePhase
-{
-    Night = 0,
-    Dawn = 1,
-    Midday = 2,
-    Dusk = 3,
-}

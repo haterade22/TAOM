@@ -73,7 +73,7 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
             "{=taom_enlist_menu_duty}Ask your sergeant for work",
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Manage; return _actions.IsServing; },
             _ => _presenter.ReportDutyRequest(
-                _actions.RequestDutyNow(CampaignTime.Now.ToDays, CampaignTime.Now.GetHourOfDay)),
+                _actions.RequestDutyNow(CampaignTime.Now.ToDays)),
             false, 2);
 
         // Shore leave (field report 1). Shown only where there is a town to walk into, and this one
