@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Localization;
 
@@ -53,6 +55,107 @@ internal static class LongDefeatHudText
                 return new TextObject("{=TAOM_LD_Hud_HintWave}Hold the walls. The shop opens between waves.").ToString();
             default:
                 return string.Empty;
+        }
+    }
+
+    /// <summary>The hint line: the phase's own, and between waves a pointer to the open boon pick, since the panel never opens by itself for one.</summary>
+    internal static string Hint(RunView view)
+    {
+        var hint = Hint(view.Phase);
+        return view.ShopOpen && view.BoonOffer.Count > 0
+            ? hint + "   " + new TextObject("{=TAOM_LD_Hud_BoonAwaits}A boon awaits: press B").ToString()
+            : hint;
+    }
+
+    /// <summary>The HUD strip's affix line: the wave's affixes during a wave, the next wave's (with its attackers' raised health and damage) between waves.</summary>
+    internal static string AffixLine(RunView view)
+    {
+        switch (view.Phase)
+        {
+            case RunPhase.Wave:
+                return view.WaveAffixes.Count == 0
+                    ? string.Empty
+                    : new TextObject("{=TAOM_LD_Hud_Affixes}Affixes: {NAMES}").SetTextVariable("NAMES", AffixNames(view.WaveAffixes)).ToString();
+            case RunPhase.Preparation:
+            case RunPhase.Intermission:
+                var parts = new List<string>();
+                if (view.NextAffixes.Count > 0)
+                    parts.Add(new TextObject("{=TAOM_LD_Hud_NextAffixes}Next wave: {NAMES}").SetTextVariable("NAMES", AffixNames(view.NextAffixes)).ToString());
+                if (IsRaised(view.NextHealthFactor) || IsRaised(view.NextDamageFactor))
+                    parts.Add(new TextObject("{=TAOM_LD_Hud_NextScale}Next wave attackers: health {HEALTH}%, damage {DAMAGE}%")
+                        .SetTextVariable("HEALTH", Percent(view.NextHealthFactor)).SetTextVariable("DAMAGE", Percent(view.NextDamageFactor)).ToString());
+                return string.Join("   ", parts);
+            default:
+                return string.Empty;
+        }
+    }
+
+    private static string AffixNames(IReadOnlyList<AffixLabel> affixes) => string.Join(", ", affixes.Select(a => new TextObject(a.Name).ToString()));
+
+    private static bool IsRaised(float factor) => factor > 1.0005f && !float.IsInfinity(factor);
+
+    private static int Percent(float factor) => IsRaised(factor) ? (int)Math.Round(factor * 100f) : 100;
+
+    internal static string PickTitle() => new TextObject("{=TAOM_LD_Hud_PickTitle}Choose a boon").ToString();
+
+    internal static string Reroll(int banked) => new TextObject("{=TAOM_LD_Hud_Reroll}Reroll ({COUNT})").SetTextVariable("COUNT", banked).ToString();
+
+    internal static string BoonOffered() => new TextObject("{=TAOM_LD_Notice_BoonOffered}A boon is on offer: press B.").ToString();
+
+    internal static string Category(BoonCategory category)
+    {
+        switch (category)
+        {
+            case BoonCategory.Class:
+                return new TextObject("{=TAOM_LD_Hud_CategoryClass}Class").ToString();
+            case BoonCategory.Infantry:
+                return new TextObject("{=TAOM_LD_Hud_CategoryInfantry}Infantry").ToString();
+            case BoonCategory.Archers:
+                return new TextObject("{=TAOM_LD_Hud_CategoryArchers}Archers").ToString();
+            case BoonCategory.Cavalry:
+                return new TextObject("{=TAOM_LD_Hud_CategoryCavalry}Cavalry").ToString();
+            case BoonCategory.Fortress:
+                return new TextObject("{=TAOM_LD_Hud_CategoryFortress}Fortress").ToString();
+            case BoonCategory.WarChest:
+                return new TextObject("{=TAOM_LD_Hud_CategoryWarChest}War chest").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Hud_CategoryLegend}Legend").ToString();
+        }
+    }
+
+    /// <summary>The refusal line for a boon the run turned down; empty for Ok.</summary>
+    internal static string Refusal(PickResult result)
+    {
+        switch (result)
+        {
+            case PickResult.Ok:
+                return string.Empty;
+            case PickResult.NotOpen:
+                return new TextObject("{=TAOM_LD_Notice_BoonClosed}A boon is taken between waves.").ToString();
+            case PickResult.NoOffer:
+                return new TextObject("{=TAOM_LD_Notice_NoBoon}No boon awaits.").ToString();
+            case PickResult.NotOffered:
+                return new TextObject("{=TAOM_LD_Notice_BoonNotOffered}That boon is not on offer.").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
+        }
+    }
+
+    /// <summary>The refusal line for a reroll the run turned down; empty for Ok.</summary>
+    internal static string Refusal(RerollResult result)
+    {
+        switch (result)
+        {
+            case RerollResult.Ok:
+                return string.Empty;
+            case RerollResult.NotOpen:
+                return new TextObject("{=TAOM_LD_Notice_BoonClosed}A boon is taken between waves.").ToString();
+            case RerollResult.NoOffer:
+                return new TextObject("{=TAOM_LD_Notice_NoBoon}No boon awaits.").ToString();
+            case RerollResult.NoReroll:
+                return new TextObject("{=TAOM_LD_Notice_NoReroll}No reroll is banked.").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
         }
     }
 
@@ -121,10 +224,13 @@ internal static class LongDefeatHudText
         }
     }
 
-    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves) =>
+    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves, IReadOnlyList<BoonCard>? boons = null) =>
         new TextObject("{=TAOM_LD_End_Waves}Waves cleared: {WAVES}").SetTextVariable("WAVES", wavesCleared).ToString() + "\n" +
         new TextObject("{=TAOM_LD_End_Kills}Kills: {KILLS}").SetTextVariable("KILLS", kills).ToString() + "\n" +
-        new TextObject("{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}").SetTextVariable("LOST", lostInClearedWaves).ToString();
+        new TextObject("{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}").SetTextVariable("LOST", lostInClearedWaves).ToString() +
+        (boons == null || boons.Count == 0
+            ? string.Empty
+            : "\n" + new TextObject("{=TAOM_LD_End_Boons}Boons: {NAMES}").SetTextVariable("NAMES", string.Join(", ", boons.Select(b => OfferName(b.Name)))).ToString());
 
     internal static string ReportFile(string fileName) =>
         new TextObject("{=TAOM_LD_End_Report}Report file, in bin/Win64_Shipping_Client/Logs:").ToString() + "\n" + fileName;

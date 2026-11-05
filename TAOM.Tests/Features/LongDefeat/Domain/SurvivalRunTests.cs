@@ -14,7 +14,7 @@ public class SurvivalRunTests
     private static WaveTroop T(string id, FormationSlot slot, int weight) => new(id, slot, weight);
 
     private static RunPlan Plan(RunRules? rules = null, RunOptions? options = null, GarrisonRow[]? garrison = null, int gold = 600,
-        WaveSpec[]? waveSpecs = null)
+        WaveSpec[]? waveSpecs = null, EndlessScale? endless = null)
     {
         var waves = new WavePlan(
             waveSpecs ?? new[]
@@ -22,7 +22,8 @@ public class SurvivalRunTests
                 new WaveSpec(110, new[] { T("orc", FormationSlot.Infantry, 75), T("skirm", FormationSlot.Ranged, 25) }),
                 new WaveSpec(120, new[] { T("orc", FormationSlot.Infantry, 50), T("skirm", FormationSlot.Ranged, 50) }),
             },
-            new WaveScaling(10, 300));
+            new WaveScaling(10, 300),
+            endless);
         var shop = new ShopPlan(gold, new[]
         {
             new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180),
@@ -517,6 +518,56 @@ public class SurvivalRunTests
         Assert.IsTrue(run.Result.IsFinal);
         Assert.AreEqual(1, run.Result.WavesCleared);
         Assert.AreEqual(before + 200, run.Gold);
+    }
+
+    // ---- Start wave (a test option) ----
+
+    [TestMethod]
+    public void StartWave_BeginsTheRunAtThatWaveNumber_WithNothingClearedYet()
+    {
+        var run = Begun(Plan(options: new RunOptions { StartWave = 12 }));
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        Assert.AreEqual(12, run.Wave);
+        Assert.AreEqual(0, run.WavesCleared);
+        Assert.AreEqual(12, fx.Select(f => f.StartWave).First(w => w != null)!.Wave);
+    }
+
+    [TestMethod]
+    public void StartWave_PaysTheBonusOfThatWave_AndNumbersTheStatsByIt()
+    {
+        var run = InFighting(Plan(options: new RunOptions { StartWave = 12, StopAfterWaves = 1 }, waveSpecs: new[] { new WaveSpec(10, new[] { T("orc", FormationSlot.Infantry, 1) }) }));
+        var before = run.Gold;
+
+        run.Tick(Snap(attackers: 0));
+
+        Assert.AreEqual(before + 150 + 50 * 12, run.Gold);
+        Assert.AreEqual(12, run.Stats.Waves.Single().Wave);
+        Assert.AreEqual(12, run.Result!.Wave);
+    }
+
+    [TestMethod]
+    public void StartWave_WithAWaveTarget_StopsAfterThatManyClears_NotAtThatWaveNumber()
+    {
+        var run = InFighting(Plan(options: new RunOptions { StartWave = 12, StopAfterWaves = 2 }, waveSpecs: new[] { new WaveSpec(10, new[] { T("orc", FormationSlot.Infantry, 1) }) }));
+        run.Tick(Snap(attackers: 0));
+        Assert.AreEqual(RunPhase.Intermission, run.Phase);
+
+        Assert.AreEqual(1, run.WavesCleared);
+        Assert.IsNull(run.Result);
+    }
+
+    [TestMethod]
+    public void StartWave_BelowOne_IsTheFirstWave()
+    {
+        var run = Begun(Plan(options: new RunOptions { StartWave = 0 }));
+        run.TryStartWave();
+
+        SpawnWave(run);
+
+        Assert.AreEqual(1, run.Wave);
     }
 
     // ---- Loss ----
@@ -1079,5 +1130,104 @@ public class SurvivalRunTests
 
         var view = run.GetView();
         Assert.AreEqual((2, 1), (view.FootBought, view.RangedBought));
+    }
+
+    // ---- Endless scale ----
+
+    private static readonly EndlessScale Growth = new(0.05f, 0.03f, 3f, 3, new Dictionary<string, string> { ["orc"] = "orc2" });
+
+    private static WaveSpec[] OneWave() => new[] { new WaveSpec(110, new[] { T("orc", FormationSlot.Infantry, 75), T("skirm", FormationSlot.Ranged, 25) }) };
+
+    private static RunPlan Scaled(int startWave, int? stopAfter = null) =>
+        Plan(options: new RunOptions { StartWave = startWave, StopAfterWaves = stopAfter }, waveSpecs: OneWave(), endless: Growth);
+
+    [TestMethod]
+    public void Endless_WavePastTheList_CarriesItsHealthFactorOnEveryAttackerBatch()
+    {
+        var run = Begun(Scaled(startWave: 3));
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        var batches = fx.SelectMany(f => f.AttackerBatches).ToList();
+        Assert.IsTrue(batches.Count > 0);
+        Assert.IsTrue(batches.All(b => Math.Abs(b.HealthFactor - 1.10f) < 1e-5f), "every attacker of the wave takes the health factor");
+        CollectionAssert.AreEquivalent(new[] { "orc", "skirm" }, batches.Select(b => b.TroopId).Distinct().ToArray());
+    }
+
+    [TestMethod]
+    public void Endless_WavePastTheList_PublishesTheDamageFactorWithTheStartOfTheWave()
+    {
+        var run = Begun(Scaled(startWave: 3));
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        var published = fx.Where(f => f.PublishStats != null).ToList();
+        Assert.AreEqual(1, published.Count, "once, with the effect that starts the wave");
+        Assert.AreSame(published[0], fx.Single(f => f.StartWave != null));
+        Assert.AreEqual(1.06f, published[0].PublishStats!.AttackerDamage, 1e-5f);
+    }
+
+    [TestMethod]
+    public void Endless_AnAuthoredWave_PublishesFactorOne_SoALaterWaveNeverInheritsTheLast()
+    {
+        var run = Begun(Plan());
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        var start = fx.Single(f => f.StartWave != null);
+        Assert.AreEqual(1f, start.PublishStats!.AttackerDamage);
+        Assert.IsNotNull(start.StartWave);
+        Assert.IsTrue(fx.SelectMany(f => f.AttackerBatches).All(b => b.HealthFactor == 1f));
+    }
+
+    [TestMethod]
+    public void Endless_TierStep_SpawnsTheSteppedTroop_ButTheWaveCountStaysThePhase1Line()
+    {
+        var run = Begun(Scaled(startWave: 4));
+        run.TryStartWave();
+
+        var fx = SpawnWave(run);
+
+        var batches = fx.SelectMany(f => f.AttackerBatches).ToList();
+        CollectionAssert.AreEquivalent(new[] { "orc2", "skirm" }, batches.Select(b => b.TroopId).Distinct().ToArray());
+        Assert.IsTrue(batches.All(b => Math.Abs(b.HealthFactor - 1.15f) < 1e-5f));
+    }
+
+    [TestMethod]
+    public void Endless_DefenderBatches_AreNeverScaled()
+    {
+        var run = new SurvivalRun(Scaled(startWave: 12));
+
+        var fx = run.Begin();
+
+        Assert.IsTrue(fx.DefenderBatches.Count > 0);
+        Assert.IsTrue(fx.DefenderBatches.All(b => b.HealthFactor == 1f));
+        run.TryBuy("militia");
+        Assert.IsTrue(run.Tick(Snap(dt: 1f)).DefenderBatches.All(b => b.HealthFactor == 1f), "a bought pack takes no attacker factor");
+    }
+
+    [TestMethod]
+    public void Endless_ClearedWave_KeepsItsFactorsForTheReport()
+    {
+        var run = InFighting(Scaled(startWave: 3, stopAfter: 1));
+
+        run.Tick(Snap(attackers: 0));
+
+        var row = run.Stats.Waves.Single();
+        Assert.AreEqual(1.10f, row.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.06f, row.DamageFactor, 1e-5f);
+    }
+
+    [TestMethod]
+    public void Endless_ClearedAuthoredWave_KeepsFactorsOne()
+    {
+        var run = InFighting(Plan(options: new RunOptions { StopAfterWaves = 1 }));
+
+        run.Tick(Snap(attackers: 0));
+
+        Assert.AreEqual((1f, 1f), (run.Stats.Waves.Single().HealthFactor, run.Stats.Waves.Single().DamageFactor));
     }
 }

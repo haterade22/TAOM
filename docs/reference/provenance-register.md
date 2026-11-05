@@ -118,6 +118,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); a suggested-skills field for the since-removed `/context-save`; see detail | cleared |
 | pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
 | claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
+| Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
 
 <!-- provenance-register-end -->
 

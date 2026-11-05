@@ -26,13 +26,18 @@ internal sealed class WavesConfig
 
 /// <summary>
 /// waves.json: a bad rule number keeps its default; a wave with a bad count or weight is skipped, a mix row with a bad class or no
-/// troop is skipped; a roster with no valid wave is dropped (the fortress naming it is then skipped). A troop a wave uses with no
-/// bounty pays nothing, with one warning.
+/// troop is skipped; a roster with no valid wave is dropped (the fortress naming it is then skipped). A troop a wave or a tier link
+/// reaches with no bounty pays nothing, with one warning. A bad growth number keeps its default; a tier link that is not text, points
+/// at its own troop, joins two known classes or closes a cycle is skipped.
 /// </summary>
 internal static class WavesReader
 {
     private const int DefaultCountPerWave = 10;
     private const int DefaultMaxCount = 300;
+    private const float DefaultHealthPerWave = 0.05f;
+    private const float DefaultDamagePerWave = 0.03f;
+    private const float DefaultMaxFactor = 3.0f;
+    private const int DefaultTierEveryWaves = 3;
 
     public static WavesConfig Read(string? text, LongDefeatConfigScope s)
     {
@@ -139,9 +144,14 @@ internal static class WavesReader
         }
 
         var scaling = s.Group(roster, "scaling", label);
+        var scalingPath = label + ".scaling";
         var scale = new WaveScaling(
-            s.Int(scaling, label + ".scaling", "countPerWave", DefaultCountPerWave, 0, 100),
-            s.Int(scaling, label + ".scaling", "maxCount", DefaultMaxCount, 101, 1000));
+            s.Int(scaling, scalingPath, "countPerWave", DefaultCountPerWave, 0, 100),
+            s.Int(scaling, scalingPath, "maxCount", DefaultMaxCount, 101, 1000));
+        var healthPerWave = s.Float(scaling, scalingPath, "healthPerWave", DefaultHealthPerWave, 0f, 1f);
+        var damagePerWave = s.Float(scaling, scalingPath, "damagePerWave", DefaultDamagePerWave, 0f, 1f);
+        var maxFactor = s.Float(scaling, scalingPath, "maxFactor", DefaultMaxFactor, 1f, 10f);
+        var tierEveryWaves = s.Int(scaling, scalingPath, "tierEveryWaves", DefaultTierEveryWaves, 1, 50);
 
         var waves = new List<WaveSpec>();
         if (roster["waves"] is JArray array)
@@ -160,10 +170,61 @@ internal static class WavesReader
         }
 
         if (waves.Count > 0)
-            return new WavePlan(waves, scale);
+            return new WavePlan(waves, scale, new EndlessScale(healthPerWave, damagePerWave, maxFactor, tierEveryWaves, ReadTiers(roster, label, waves, s)));
 
         s.Warn($"'{label}' has no valid wave; roster skipped");
         return null;
+    }
+
+    /// <summary>
+    /// The tier chain: troop id to the troop it becomes one step up. The reader sees only this file, so it judges what the file shows: a target
+    /// that is text, no link to the same troop, no cycle, and no link between two troops this roster's own waves give different classes. That
+    /// both troops exist, share a culture and rise in level is the shipped-data tests' and the launcher's check.
+    /// </summary>
+    private static IReadOnlyDictionary<string, string> ReadTiers(JObject roster, string label, IReadOnlyList<WaveSpec> waves, LongDefeatConfigScope s)
+    {
+        var chain = new Dictionary<string, string>(StringComparer.Ordinal);
+        var block = s.Group(roster, "tiers", label);
+        if (block == null)
+            return chain;
+
+        var slots = new Dictionary<string, FormationSlot>(StringComparer.Ordinal);
+        foreach (var troop in waves.SelectMany(w => w.Mix))
+            if (!slots.ContainsKey(troop.TroopId))
+                slots[troop.TroopId] = troop.Slot;
+
+        foreach (var link in block.Properties())
+        {
+            var from = link.Name;
+            var path = $"{label}.tiers.{from}";
+            var to = LongDefeatConfigScope.Text(link.Value);
+            if (to == null)
+                s.Warn($"'{path}' is not a troop id; link skipped");
+            else if (to == from)
+                s.Warn($"'{path}' links the troop to itself; link skipped");
+            else if (slots.TryGetValue(from, out var a) && slots.TryGetValue(to, out var b) && a != b)
+                s.Warn($"'{path}' joins a {a} troop to a {b} troop; link skipped");
+            else if (ClosesCycle(chain, from, to))
+                s.Warn($"'{path}' closes a cycle through '{to}'; link skipped");
+            else
+                chain[from] = to;
+        }
+
+        return chain;
+    }
+
+    // Adding from -> to makes a cycle when the chain already leads from "to" back to "from".
+    private static bool ClosesCycle(IReadOnlyDictionary<string, string> chain, string from, string to)
+    {
+        var at = to;
+        for (var i = 0; i <= chain.Count && at != from; i++)
+        {
+            if (!chain.TryGetValue(at, out var next))
+                return false;
+            at = next;
+        }
+
+        return at == from;
     }
 
     private static WaveSpec? ReadWave(JObject? wave, string label, LongDefeatConfigScope s)
@@ -225,10 +286,10 @@ internal static class WavesReader
         var warned = new HashSet<string>(StringComparer.Ordinal);
         foreach (var roster in rosters)
         {
-            foreach (var troop in roster.Authored.SelectMany(w => w.Mix))
+            foreach (var troop in roster.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)).Concat(roster.Endless.Targets))
             {
-                if (!bounties.ContainsKey(troop.TroopId) && warned.Add(troop.TroopId))
-                    s.Warn($"'bounties' has no entry for '{troop.TroopId}'; it pays 0");
+                if (!bounties.ContainsKey(troop) && warned.Add(troop))
+                    s.Warn($"'bounties' has no entry for '{troop}'; it pays 0");
             }
         }
     }

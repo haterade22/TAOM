@@ -124,6 +124,22 @@ public class LongDefeatBindingTests
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }
 
+    // The endless scale (Slice 2): the health write after spawn, the character maximum it is read against, the blow the damage factor scales,
+    // and the damage model seam it rides.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheEndlessScaleMembers_StillResolve()
+    {
+        foreach (var name in new[] { "BaseHealthLimit", "HealthLimit", "Health" })
+            Assert.IsNotNull(Property(typeof(Agent), name, typeof(float)).GetSetMethod(), $"Agent.{name} lost its public setter");
+        Method(typeof(BasicCharacterObject), "MaxHitPoints", typeof(int));
+        Property(typeof(Team), "ActiveAgents", typeof(MBReadOnlyList<Agent>));
+        Field(typeof(AttackInformation), "AttackerAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "IsAttackerAgentMount", typeof(bool));
+        Method(typeof(TaleWorlds.MountAndBlade.ComponentInterfaces.AgentApplyDamageModel), "ApplyDamageAmplifications", typeof(float),
+            typeof(AttackInformation).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float));
+    }
+
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheSiegeEngineMembers_StillResolve()
@@ -161,6 +177,42 @@ public class LongDefeatBindingTests
         Method(typeof(MissionBehavior), "OnAgentRemoved", typeof(void), typeof(Agent), typeof(Agent), typeof(AgentState), typeof(KillingBlow));
         Method(typeof(MissionBehavior), "AfterStart", typeof(void));
         Assert.AreEqual(1, typeof(IBattlePowerCalculationLogic).GetMethods().Count(m => m.Name == "GetTotalTeamPower"), "the team power interface changed");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheAffixStatMembers_StillResolve()
+    {
+        // The stat and armour hooks and the read-back (LongDefeatStatHooks, LongDefeatEffectsAdapter.ReadStats).
+        Property(typeof(Agent), "RiderAgent", typeof(Agent));
+        Property(typeof(Agent), "IsMount", typeof(bool));
+        Property(typeof(Agent), "IsHuman", typeof(bool));
+        Property(typeof(Agent), "Mission", typeof(Mission));
+        Property(typeof(Agent), "Team", typeof(Team));
+        Property(typeof(Agent), "SpawnEquipment", typeof(Equipment));
+        Method(typeof(Agent), "GetAgentDrivenPropertyValue", typeof(float), typeof(DrivenProperty));
+        Method(typeof(Agent), "UpdateAgentProperties", typeof(void));
+        Method(typeof(AgentDrivenProperties), "GetStat", typeof(float), typeof(DrivenProperty));
+        Property(typeof(Agent), "AgentDrivenProperties", typeof(AgentDrivenProperties));
+        Property(typeof(AgentDrivenProperties), "ArmorEncumbrance", typeof(float));
+        Property(typeof(AgentBuildData), "AgentTeam", typeof(Team));
+        Method(typeof(AgentStatCalculateModel), "UpdateAgentStats", typeof(void), typeof(Agent), typeof(AgentDrivenProperties));
+        Method(typeof(AgentStatCalculateModel), "InitializeAgentStats", typeof(void), typeof(Agent), typeof(Equipment), typeof(AgentDrivenProperties), typeof(AgentBuildData));
+        Property(typeof(MissionGameModels), "AgentStatCalculateModel", typeof(AgentStatCalculateModel));
+        foreach (var armour in new[] { "GetHeadArmorSum", "GetHumanBodyArmorSum", "GetLegArmorSum", "GetArmArmorSum" })
+            Method(typeof(Equipment), armour, typeof(float));
+        foreach (var stat in new[]
+                 {
+                     "SwingSpeedMultiplier", "AIAttackOnDecideChance", "MaxSpeedMultiplier", "CombatMaxSpeedMultiplier", "TopSpeedReachDuration", "AiShooterError",
+                     "ThrustOrRangedReadySpeedMultiplier", "ReloadSpeed", "MissileSpeedMultiplier", "AIBlockOnDecideAbility", "AIParryOnDecideAbility",
+                     "ArmorHead", "ArmorTorso", "ArmorLegs", "ArmorArms", "MountSpeed",
+                 })
+            Assert.IsTrue(Enum.IsDefined(typeof(DrivenProperty), stat), "DrivenProperty." + stat + " no longer resolves");
+        foreach (var armour in new[] { "ArmorHead", "ArmorTorso", "ArmorLegs", "ArmorArms" })
+            Property(typeof(AgentDrivenProperties), armour, typeof(float));
+        // The hook tests build bare agents by writing these private fields.
+        Assert.IsNotNull(typeof(Agent).GetField("_flagsPointer", AnyMember), "Agent._flagsPointer: the bare-agent fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(Agent).GetField("_cachedRiderAgent", AnyMember), "Agent._cachedRiderAgent: the bare-agent fixture no longer matches the engine");
     }
 
     private static PropertyInfo Property(Type type, string name, Type expected)

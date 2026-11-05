@@ -261,7 +261,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         int far = 0, offMesh = 0, onPoint = 0;
         for (var i = 0; i < batch.Count; i++)
         {
-            var at = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false, mustered).Position;
+            var agent = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false, mustered);
+            ScaleHealth(agent, batch.HealthFactor);
+            var at = agent.Position;
             points.Add(Point(at));
             if (frame is not { } f)
                 continue;
@@ -274,6 +276,19 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         }
 
         return new LdSpawnReport(points, far, offMesh, onPoint);
+    }
+
+    // BaseHealthLimit and HealthLimit have public setters (Agent.cs:911, :915) and the engine's own horse spawn writes the same three values
+    // (Mission.cs:4607-4609). In a Custom Game spawn the only other writer is the Character setter (Agent.cs:1438-1439), which ran before SpawnAgent returned,
+    // so this write stands. Written to the base as well, so nothing that recomputes the limit from it undoes the factor.
+    private static void ScaleHealth(Agent agent, float factor)
+    {
+        if (factor == 1f)
+            return;
+
+        agent.BaseHealthLimit *= factor;
+        agent.HealthLimit = agent.BaseHealthLimit;
+        agent.Health = agent.HealthLimit;
     }
 
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,

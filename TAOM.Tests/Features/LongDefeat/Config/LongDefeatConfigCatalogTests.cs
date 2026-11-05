@@ -35,14 +35,21 @@ public class LongDefeatConfigCatalogTests
     private static string Fortresses(params string[] entries) => "{'fortresses':[" + string.Join(",", entries) + "]}";
 
     private static string Waves(string rules = "", string waves = Wave, string scaling = "'countPerWave':10,'maxCount':300",
-        string bounties = "'a_inf':4,'a_arc':6") =>
-        "{'rules':{" + rules + "},'bounties':{" + bounties + "},'rosters':{'r':{'scaling':{" + scaling + "},'waves':[" + waves + "]}}}";
+        string bounties = "'a_inf':4,'a_arc':6", string tiers = "") =>
+        "{'rules':{" + rules + "},'bounties':{" + bounties + "},'rosters':{'r':{'scaling':{" + scaling + "}," +
+        (tiers.Length == 0 ? "" : "'tiers':" + tiers + ",") + "'waves':[" + waves + "]}}}";
 
     private static string Shop(string offers = Offer, string gold = "600") =>
         "{'shops':{'sh':{'startingGold':" + gold + ",'offers':[" + offers + "]}}}";
 
+    // affixes.json is read when a plan is built, so a fixture that builds one carries the file; its own tests are in LongDefeatAffixesReaderTests.
+    private const string Affixes = "{'names':{'isengard':{'lash':'{=A1}L','drums':'{=A2}D','blades':'{=A3}B','eye':'{=A4}E','discipline':'{=A5}I','hide':'{=A6}H','terror':'{=A7}T','hammer':'{=A8}M'}}}";
+
+    // boons.json is read when a plan is built too (its own tests are in LongDefeatBoonsReaderTests): an empty pool loads clean.
+    private const string Boons = "{'boons':[]}";
+
     private LongDefeatConfigCatalog Load(string? fortresses = null, string? waves = null, string? shop = null) =>
-        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger);
+        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger, Affixes, Boons);
 
     private void AssertOneWarningNaming(string file, string key) =>
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains(file) && m.Contains(key)));
@@ -120,7 +127,7 @@ public class LongDefeatConfigCatalogTests
     public void BuildPlan_CarriesRulesBountiesAndOptions()
     {
         var catalog = Load(waves: Waves(rules: "'liveCap':200"));
-        var options = new RunOptions { StopAfterWaves = 2 };
+        var options = new RunOptions { StopAfterWaves = 2, Seed = 5UL };
 
         var plan = catalog.BuildPlan(catalog.Fortresses[0], options);
 
@@ -166,6 +173,147 @@ public class LongDefeatConfigCatalogTests
         else
             Assert.AreEqual(300, waves.ForWave(100).Count, "default maxCount 300");
         AssertOneWarningNaming("waves.json", key);
+    }
+
+    // ---- Endless scale: the growth numbers and the tier chain ----
+
+    private WavePlan Roster(string? scaling = null, string? tiers = null, string bounties = "'a_inf':4,'a_arc':6,'b_inf':8,'c_inf':12") =>
+        Load(waves: Waves(scaling: scaling ?? "'countPerWave':10,'maxCount':300", tiers: tiers ?? "", bounties: bounties)).Fortresses.Single().Waves;
+
+    [TestMethod]
+    public void Endless_NoGrowthKeys_TakeTheShippedDefaults_AndNoTiersChangeNoTroop()
+    {
+        var waves = Roster();
+
+        var spec = waves.ForWave(4);
+
+        Assert.AreEqual(1.15f, spec.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.09f, spec.DamageFactor, 1e-5f);
+        Assert.AreEqual(1, spec.TierSteps);
+        CollectionAssert.AreEqual(new[] { "a_inf", "a_arc" }, spec.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(3f, waves.ForWave(500).HealthFactor);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Endless_EveryGrowthKey_ReadsItsValue_AndTheTiersChain()
+    {
+        var waves = Roster("'countPerWave':10,'maxCount':300,'healthPerWave':0.1,'damagePerWave':0.2,'maxFactor':2.5,'tierEveryWaves':2",
+            "{'a_inf':'b_inf','b_inf':'c_inf'}");
+
+        var third = waves.ForWave(3);
+        var fifth = waves.ForWave(5);
+
+        Assert.AreEqual(1.2f, third.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.4f, third.DamageFactor, 1e-5f);
+        Assert.AreEqual(1, third.TierSteps);
+        CollectionAssert.AreEqual(new[] { "b_inf", "a_arc" }, third.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(1.4f, fifth.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.8f, fifth.DamageFactor, 1e-5f);
+        Assert.AreEqual(2, fifth.TierSteps);
+        CollectionAssert.AreEqual(new[] { "c_inf", "a_arc" }, fifth.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(2.5f, waves.ForWave(500).DamageFactor, "maxFactor caps both lines");
+        CollectionAssert.AreEquivalent(new[] { "b_inf", "c_inf" }, waves.Endless.Targets.ToArray());
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [DataTestMethod]
+    [DataRow("'healthPerWave':1.5", "healthPerWave")]
+    [DataRow("'healthPerWave':-0.1", "healthPerWave")]
+    [DataRow("'healthPerWave':NaN", "healthPerWave")]
+    [DataRow("'healthPerWave':'fast'", "healthPerWave")]
+    [DataRow("'damagePerWave':1.01", "damagePerWave")]
+    [DataRow("'damagePerWave':Infinity", "damagePerWave")]
+    [DataRow("'maxFactor':0.9", "maxFactor")]
+    [DataRow("'maxFactor':10.5", "maxFactor")]
+    [DataRow("'maxFactor':NaN", "maxFactor")]
+    public void Endless_BadGrowthNumber_KeepsTheDefaultWithOneWarning(string bad, string key)
+    {
+        var spec = Roster("'countPerWave':10,'maxCount':300," + bad).ForWave(2);
+
+        Assert.AreEqual(1.05f, spec.HealthFactor, 1e-5f, "the default 0.05 a wave");
+        Assert.AreEqual(1.03f, spec.DamageFactor, 1e-5f, "the default 0.03 a wave");
+        AssertOneWarningNaming("waves.json", key);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("51")]
+    [DataRow("1.5")]
+    [DataRow("NaN")]
+    public void Endless_BadTierEveryWaves_KeepsTheDefaultOfThree_WithOneWarning(string bad)
+    {
+        var waves = Roster("'countPerWave':10,'maxCount':300,'tierEveryWaves':" + bad, "{'a_inf':'b_inf'}");
+
+        Assert.AreEqual(0, waves.ForWave(3).TierSteps, "extra 2 over every 3 is no step");
+        Assert.AreEqual(1, waves.ForWave(4).TierSteps, "extra 3 over every 3 is one");
+        AssertOneWarningNaming("waves.json", "tierEveryWaves");
+    }
+
+    [TestMethod]
+    public void Endless_ACapAtOne_HoldsBothLinesAtOne()
+    {
+        var spec = Roster("'countPerWave':10,'maxCount':300,'healthPerWave':1,'maxFactor':1").ForWave(40);
+
+        Assert.AreEqual(1f, spec.HealthFactor);
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkToItself_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'a_inf','a_arc':'b_inf'}");
+
+        CollectionAssert.AreEqual(new[] { "b_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkThatClosesACycle_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'b_inf','b_inf':'c_inf','c_inf':'a_inf'}");
+
+        CollectionAssert.AreEquivalent(new[] { "b_inf", "c_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "tiers.c_inf");
+        Assert.AreEqual("c_inf", waves.Endless.Advance("a_inf", 50), "the chain a to b to c ends where the cycle was refused");
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkBetweenTwoKnownClasses_ThatDiffer_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'a_arc'}");
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [DataTestMethod]
+    [DataRow("{'a_inf':7}")]
+    [DataRow("{'a_inf':''}")]
+    [DataRow("{'a_inf':null}")]
+    public void Tiers_ANonTextTarget_IsSkippedWithOneWarning(string tiers)
+    {
+        var waves = Roster(tiers: tiers);
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [TestMethod]
+    public void Tiers_NotAnObject_IsDroppedWithOneWarning()
+    {
+        var waves = Roster(tiers: "['a_inf']");
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers");
+    }
+
+    [TestMethod]
+    public void Tiers_ATargetWithNoBounty_PaysNothing_WithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'b_inf'}", bounties: "'a_inf':4,'a_arc':6");
+
+        CollectionAssert.AreEqual(new[] { "b_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "b_inf");
     }
 
     [TestMethod]
@@ -744,5 +892,53 @@ public class LongDefeatConfigCatalogTests
         var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), null, Shop(), _logger);
 
         Assert.AreEqual(RunRules.Default, catalog.Rules);
+    }
+
+    [TestMethod]
+    public void BalanceHash_IsSha256OfTheSixTextsJoinedInOrder_AMissingOneAsEmptyText()
+    {
+        var fortresses = Fortresses(Fortress());
+        var waves = Waves();
+        var shop = Shop();
+        var catalog = LongDefeatConfigCatalog.FromTexts(fortresses, waves, shop, _logger, affixes: "A\r\nB", boons: null, classes: "C");
+
+        var joined = string.Join("\n\0\n", new[] { fortresses, waves, shop, "A\nB", "", "C" });
+        var bytes = System.Security.Cryptography.SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(joined));
+
+        Assert.AreEqual(System.BitConverter.ToString(bytes, 0, 8).Replace("-", "").ToLowerInvariant(), catalog.BalanceHash);
+    }
+
+    [TestMethod]
+    public void BalanceHash_FollowsEachOfTheThreeNewFiles_AndMissingOnesJoinAsEmpty()
+    {
+        LongDefeatConfigCatalog With(string? affixes, string? boons, string? classes) =>
+            LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, affixes, boons, classes);
+
+        var none = With(null, null, null).BalanceHash;
+
+        Assert.AreEqual(none, With("", "", "").BalanceHash);
+        Assert.AreNotEqual(none, With("{}", null, null).BalanceHash);
+        Assert.AreNotEqual(none, With(null, "{}", null).BalanceHash);
+        Assert.AreNotEqual(none, With(null, null, "{}").BalanceHash);
+        Assert.AreNotEqual(With("{}", null, null).BalanceHash, With(null, "{}", null).BalanceHash, "the files hash in order, so the same text in another slot is another balance");
+        Assert.AreEqual(With("x\n", "y", "z").BalanceHash, With("x\r\n", "y", "z").BalanceHash, "line endings are normalized in the new files too");
+    }
+
+    [TestMethod]
+    public void FourTextOverload_StillLoads_WithTheThreeNewFilesMissing()
+    {
+        Assert.AreEqual(1, Load().Fortresses.Count);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void BuildPlan_GivesTheRunASeed_AndKeepsAGivenOne()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses.Single();
+
+        Assert.IsNotNull(catalog.BuildPlan(fortress, RunOptions.Default).Options.Seed, "no seed means the start time's ticks");
+        Assert.AreEqual(0UL, catalog.BuildPlan(fortress, new RunOptions { Seed = 0UL }).Options.Seed);
+        Assert.AreEqual(42UL, catalog.BuildPlan(fortress, new RunOptions { Seed = 42UL }).Options.Seed);
     }
 }

@@ -105,11 +105,15 @@ public class LongDefeatMissionLogicTests
         var source = RepoPaths.ReadSource(LogicPath, stripComments: true);
 
         StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatMorale.Arm(Mission)");
+        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatCombatHooks.Arm(Mission)");
+        StringAssert.Contains(BodyOf(source, "override void AfterStart"), "LongDefeatStatHooks.Arm(Mission)");
         foreach (var exit in new[] { "OnEndMission", "OnRemoveBehavior" })
             StringAssert.Contains(BodyOf(source, "override void " + exit), "TearDown()", exit + " does not tear down");
 
         var tearDown = BodyOf(source, "private void TearDown()");
         StringAssert.Contains(tearDown, "LongDefeatMorale.Disarm(Mission)");
+        StringAssert.Contains(tearDown, "LongDefeatCombatHooks.Disarm(Mission)");
+        StringAssert.Contains(tearDown, "LongDefeatStatHooks.Disarm(Mission)");
         StringAssert.Contains(tearDown, "_host.ShutDown()");
     }
 

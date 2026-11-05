@@ -23,6 +23,7 @@ internal sealed class LongDefeatRunHost
     private readonly ILongDefeatMenuAdapter _menu;
     private readonly string _missionKey;
     private readonly Func<ILongDefeatBattlefieldAdapter> _fieldFactory;
+    private readonly Func<ILongDefeatEffectsAdapter>? _effectsFactory;
     private readonly LongDefeatRunRecords? _records;
     private LongDefeatDirector? _director;
     private bool _startDue;
@@ -31,7 +32,8 @@ internal sealed class LongDefeatRunHost
 
     /// <param name="missionKey">One value per mission (the launcher counts them): the outcome log latches each check line once per id, result and key for the whole process.</param>
     public LongDefeatRunHost(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, ILongDefeatMenuAdapter menu,
-        string missionKey, Func<ILongDefeatBattlefieldAdapter> fieldFactory, LongDefeatRunRecords? records = null)
+        string missionKey, Func<ILongDefeatBattlefieldAdapter> fieldFactory, LongDefeatRunRecords? records = null,
+        Func<ILongDefeatEffectsAdapter>? effectsFactory = null)
     {
         _plan = plan;
         _session = session;
@@ -40,6 +42,7 @@ internal sealed class LongDefeatRunHost
         _menu = menu;
         _missionKey = missionKey;
         _fieldFactory = fieldFactory;
+        _effectsFactory = effectsFactory;
         _records = records;
     }
 
@@ -87,7 +90,7 @@ internal sealed class LongDefeatRunHost
 
     private void StartRun()
     {
-        var director = new LongDefeatDirector(_plan, _fieldFactory(), _session, _logger, _outcomes, _missionKey, _records);
+        var director = new LongDefeatDirector(_plan, _fieldFactory(), _session, _logger, _outcomes, _missionKey, _records, _effectsFactory?.Invoke());
         _director = director;
         if (director.Start())
             return;

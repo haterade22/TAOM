@@ -25,6 +25,8 @@ internal sealed class LongDefeatAutorunPlan
     internal const double DefaultLiveLimitSeconds = 3600.0;
     internal const double DefaultWallLimitSeconds = 3900.0;
     private const float MaxGarrisonScale = 10f;
+    private const int MaxStartWave = 100;
+    private const int MaxStartRerolls = 3;
 
     public bool Armed { get; internal init; }
 
@@ -42,6 +44,18 @@ internal sealed class LongDefeatAutorunPlan
     public int? Waves { get; internal init; }
 
     public float GarrisonScale { get; internal init; } = 1f;
+
+    /// <summary>The seed every roll derives from, 0 to 2^53-1; null takes the start time's ticks.</summary>
+    public ulong? Seed { get; internal init; }
+
+    /// <summary>A test option, 1 to 100: the run begins at this wave number.</summary>
+    public int StartWave { get; internal init; } = 1;
+
+    /// <summary>A test option, 0 to 3: boon rerolls in the bank at the start.</summary>
+    public int StartRerolls { get; internal init; }
+
+    /// <summary>The class id the run asks for. Read and echoed only: the class slice gives it meaning, so an unknown id is not judged here.</summary>
+    public string? Class { get; internal init; }
 
     /// <summary>What the launcher expects ("lost" for a run built to lose); the game only echoes it into the done file.</summary>
     public string? Expect { get; internal init; }
@@ -91,12 +105,13 @@ internal sealed class LongDefeatAutorunPlan
 
     /// <summary>The setup the driver hands the start path. The out folder doubles as the records folder, so an unattended run never touches the player's best run.</summary>
     internal LongDefeatSetup ToSetup(string fortressId) =>
-        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale }, OutFolder);
+        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls }, OutFolder);
 
     /// <summary>One line for the log: the choices the run will use.</summary>
     internal string Describe() =>
         "fortress=" + (Fortress ?? "-") + " waves=" + (Waves?.ToString(CultureInfo.InvariantCulture) ?? "-")
-        + " garrison_scale=" + Num(GarrisonScale) + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
+        + " garrison_scale=" + Num(GarrisonScale) + " class=" + (Class ?? "-") + " seed=" + (Seed?.ToString(CultureInfo.InvariantCulture) ?? "-")
+        + " start_wave=" + StartWave + " start_rerolls=" + StartRerolls + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
         + " speed=" + Speed + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " expect=" + (Expect ?? "-") + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
@@ -109,6 +124,10 @@ internal sealed class LongDefeatAutorunPlan
         string? fortress = null, expect = null, outFolder = null;
         int? waves = null;
         var scale = 1f;
+        string? className = null;
+        ulong? seed = null;
+        var startWave = 1;
+        var startRerolls = 0;
         double liveLimit = DefaultLiveLimitSeconds, wallLimit = DefaultWallLimitSeconds;
         var quit = false;
         var speed = 1;
@@ -140,6 +159,10 @@ internal sealed class LongDefeatAutorunPlan
                 case "quit": quit = Flag(key, value, quit, warnings); break;
                 case "garrison_scale": scale = Scale(key, value, scale, warnings); break;
                 case "speed": speed = SpeedLevel(key, value, speed, warnings); break;
+                case "class": className = value.Length == 0 ? null : value; break;
+                case "seed": seed = SeedValue(key, value, warnings); break;
+                case "start_wave": startWave = IntInRange(key, value, 1, MaxStartWave, startWave, warnings); break;
+                case "start_rerolls": startRerolls = IntInRange(key, value, 0, MaxStartRerolls, startRerolls, warnings); break;
                 case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
@@ -152,6 +175,7 @@ internal sealed class LongDefeatAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Fortress = fortress, Waves = waves, OutFolder = outFolder!, Expect = expect,
             LiveLimitSeconds = liveLimit, WallLimitSeconds = wallLimit, QuitWhenDone = quit, GarrisonScale = scale, ScreenshotSeconds = screenshots, Speed = speed,
+            Seed = seed, StartWave = startWave, StartRerolls = startRerolls, Class = className,
         };
     }
 
@@ -201,6 +225,25 @@ internal sealed class LongDefeatAutorunPlan
             return speed;
 
         warnings.Add(key + "='" + value + "' is not 1, 2, 4 or 10; using " + fallback);
+        return fallback;
+    }
+
+    /// <summary>A decimal from 0 to 2^53-1 (so a JavaScript reader of the report keeps every digit). A sign, a point, a hex prefix or a larger number is refused, and the run takes the clock's ticks instead.</summary>
+    private static ulong? SeedValue(string key, string value, List<string> warnings)
+    {
+        if (ulong.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var seed) && seed <= RunOptions.MaxSeed)
+            return seed;
+
+        warnings.Add(key + "='" + value + "' is not a whole number from 0 to 9007199254740991; the run takes the start time's ticks");
+        return null;
+    }
+
+    private static int IntInRange(string key, string value, int min, int max, int fallback, List<string> warnings)
+    {
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) && number >= min && number <= max)
+            return number;
+
+        warnings.Add(key + "='" + value + "' is not a whole number from " + min + " to " + max + "; using " + fallback);
         return fallback;
     }
 

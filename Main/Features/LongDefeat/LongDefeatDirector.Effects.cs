@@ -21,6 +21,10 @@ internal sealed partial class LongDefeatDirector
     /// <summary>Turns what the run decided into adapter calls, in the order the engine needs.</summary>
     private void Apply(RunEffects fx)
     {
+        // First, before any soldier of the wave exists: the wave's published numbers are read when a soldier is built or struck.
+        if (fx.PublishStats is { } stats)
+            _effects?.PublishStats(stats);
+
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
         var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
@@ -38,12 +42,22 @@ internal sealed partial class LongDefeatDirector
             _field.FinishInitialSpawn();
 
         if (fx.StartWave is { } start)
-            _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged");
+        {
+            _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged{ScaleText(start)}");
+            BeginScaleWatch(start);
+            BeginAffixes(start.Wave);
+        }
+
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
 
         if (fx.RefreshAttackerTactic)
+        {
             _field.RefreshAttackerTactic();
+            SampleScaleAtSpawn();
+            ReadAffixEffects();
+        }
+
         if (fx.OrderCharge)
             _field.OrderCharge();
         if (fx.RestoreDefenderTactic)
@@ -147,7 +161,7 @@ internal sealed partial class LongDefeatDirector
             return;
         }
 
-        var offer = _plan.Shop.Offers.FirstOrDefault(o => o.TroopId == b.TroopId && o.PackSize == b.Count);
+        var offer = _plan.Shop.Offers.FirstOrDefault(o => o.TroopId == b.TroopId && o.PackSize + _run.Rules.PackBonus == b.Count);
         var key = offer?.Id ?? b.TroopId;
         _logger.LogInfo($"{Tag}[Shop] pack {key} count={report.Spawned} of {b.Count} on_point={report.OnPoint} overlap={overlap}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.ShopId, key, LongDefeatChecks.Shop(b.Count, report.Spawned, report.OnPoint, overlap));
@@ -169,7 +183,13 @@ internal sealed partial class LongDefeatDirector
                 break;
             case RunEventKind.Horn:
                 LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EarlyStartId, "w" + e.Wave,
-                    LongDefeatChecks.EarlyStart(_run.LastHornSecondsLeft, _run.LastHornBonus, _plan.Rules));
+                    LongDefeatChecks.EarlyStart(_run.LastHornSecondsLeft, _run.LastHornBonus, _plan.Rules, _run.Factors.EarlyGold));
+                break;
+            case RunEventKind.BoonOffered:
+            case RunEventKind.BoonLapsed:
+            case RunEventKind.BoonTaken:
+            case RunEventKind.Rerolled:
+                OnBoonEvent(e);
                 break;
             case RunEventKind.WaveCleared:
                 OnWaveCleared(e);
@@ -179,6 +199,7 @@ internal sealed partial class LongDefeatDirector
 
     private void OnWaveCleared(RunEvent e)
     {
+        FlushScale();
         var stats = _run.Stats.Waves.LastOrDefault(w => w.Wave == e.Wave);
         if (stats != null)
         {
@@ -214,11 +235,12 @@ internal sealed partial class LongDefeatDirector
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed);
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
+        FlushScale();
     }
 
     private bool WriteReport()

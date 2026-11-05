@@ -7750,6 +7750,73 @@
     <string id="TAOM_FOW_Result_TimeVictoryText" text="Time ran out, and you hold more of the field." />
     <string id="TAOM_FOW_Result_TimeDefeatText" text="Time ran out, and the enemy holds more of the field." />
     <string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="Its strongest soldiers come only in small packs of three." />
+    <string id="TAOM_LD_Affix_Isengard_Blades" text="Fouled Blades" />
+    <string id="TAOM_LD_Affix_Isengard_Discipline" text="Bred for War" />
+    <string id="TAOM_LD_Affix_Isengard_Drums" text="War Drums of Orthanc" />
+    <string id="TAOM_LD_Affix_Isengard_Eye" text="The Seeing Stone" />
+    <string id="TAOM_LD_Affix_Isengard_Hammer" text="Engines of Orthanc" />
+    <string id="TAOM_LD_Affix_Isengard_Hide" text="Orthanc Plate" />
+    <string id="TAOM_LD_Affix_Isengard_Lash" text="The White Hand's Whip" />
+    <string id="TAOM_LD_Affix_Isengard_Terror" text="Crebain from Dunland" />
+    <string id="TAOM_LD_Affix_Mordor_Blades" text="Morgul Blades" />
+    <string id="TAOM_LD_Affix_Mordor_Discipline" text="Iron Discipline" />
+    <string id="TAOM_LD_Affix_Mordor_Drums" text="Drums in the Deep" />
+    <string id="TAOM_LD_Affix_Mordor_Eye" text="The Lidless Eye" />
+    <string id="TAOM_LD_Affix_Mordor_Hammer" text="Hammer of the Underworld" />
+    <string id="TAOM_LD_Affix_Mordor_Hide" text="Troll-Hide" />
+    <string id="TAOM_LD_Affix_Mordor_Lash" text="The Overseer's Lash" />
+    <string id="TAOM_LD_Affix_Mordor_Terror" text="Winged Terror" />
+    <string id="TAOM_LD_Hud_Affixes" text="Affixes: {NAMES}" />
+    <string id="TAOM_LD_Hud_NextAffixes" text="Next wave: {NAMES}" />
+    <string id="TAOM_LD_Hud_NextScale" text="Next wave attackers: health {HEALTH}%, damage {DAMAGE}%" />
+    <string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="Refuge of the Inner Keep" />
+    <string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="Every intermission is 15 seconds shorter." />
+    <string id="TAOM_LD_Boon_GlitteringCavesRefuge_Text" text="The keep can hold 30 more defenders." />
+    <string id="TAOM_LD_Boon_GranaryStores" text="Stores of the Granary" />
+    <string id="TAOM_LD_Boon_GranaryStores_Text" text="Every cleared wave pays 35 percent more gold." />
+    <string id="TAOM_LD_Boon_HagglerOfEdoras" text="The Haggler of Edoras" />
+    <string id="TAOM_LD_Boon_HagglerOfEdoras_Drawback" text="The horn pays half as much." />
+    <string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="Every pack costs 20 percent less." />
+    <string id="TAOM_LD_Boon_HealersOfTheHold" text="Healers of the Hold" />
+    <string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="After each wave your defenders mend a further quarter of the health they lost." />
+    <string id="TAOM_LD_Boon_HornblowersBargain" text="The Hornblower's Bargain" />
+    <string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="Every pack costs 10 percent more." />
+    <string id="TAOM_LD_Boon_HornblowersBargain_Text" text="The horn pays twice as much for the time it skips." />
+    <string id="TAOM_LD_Boon_LightOfThePhial" text="The Light of the Phial" />
+    <string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="Every pack costs 25 percent more." />
+    <string id="TAOM_LD_Boon_LightOfThePhial_Text" text="Every wave carries one affix fewer." />
+    <string id="TAOM_LD_Boon_RiddermarkLevy" text="Levy of the Riddermark" />
+    <string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
+    <string id="TAOM_LD_Boon_RidersAtDawn" text="Riders at Dawn" />
+    <string id="TAOM_LD_Boon_RidersAtDawn_Drawback" text="The keep holds 40 fewer defenders." />
+    <string id="TAOM_LD_Boon_RidersAtDawn_Text" text="Every wave carries two affixes fewer." />
+    <string id="TAOM_LD_Boon_StoutHeartsAtTheGate" text="Stout Hearts at the Gate" />
+    <string id="TAOM_LD_Boon_StoutHeartsAtTheGate_Drawback" text="Every kill pays 10 percent less." />
+    <string id="TAOM_LD_Boon_StoutHeartsAtTheGate_Text" text="The keep takes 40 percent longer to fall." />
+    <string id="TAOM_LD_Boon_TheLongWatch" text="The Long Watch" />
+    <string id="TAOM_LD_Boon_TheLongWatch_Text" text="Every intermission lasts 30 seconds longer." />
+    <string id="TAOM_LD_Boon_WainsOfTheWestfold" text="Wains of the Westfold" />
+    <string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="Every pack costs 10 percent more." />
+    <string id="TAOM_LD_Boon_WainsOfTheWestfold_Text" text="Every pack brings 3 more soldiers." />
+    <string id="TAOM_LD_Boon_WeregildOfTheMark" text="Weregild of the Mark" />
+    <string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="Wave bonuses are 15 percent smaller." />
+    <string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="Every foe you cut down pays 30 percent more gold." />
+    <string id="TAOM_LD_End_Boons" text="Boons: {NAMES}" />
+    <string id="TAOM_LD_Hud_BoonAwaits" text="A boon awaits: press B" />
+    <string id="TAOM_LD_Hud_CategoryArchers" text="Archers" />
+    <string id="TAOM_LD_Hud_CategoryCavalry" text="Cavalry" />
+    <string id="TAOM_LD_Hud_CategoryClass" text="Class" />
+    <string id="TAOM_LD_Hud_CategoryFortress" text="Fortress" />
+    <string id="TAOM_LD_Hud_CategoryInfantry" text="Infantry" />
+    <string id="TAOM_LD_Hud_CategoryLegend" text="Legend" />
+    <string id="TAOM_LD_Hud_CategoryWarChest" text="War chest" />
+    <string id="TAOM_LD_Hud_PickTitle" text="Choose a boon" />
+    <string id="TAOM_LD_Hud_Reroll" text="Reroll ({COUNT})" />
+    <string id="TAOM_LD_Notice_BoonClosed" text="A boon is taken between waves." />
+    <string id="TAOM_LD_Notice_BoonNotOffered" text="That boon is not on offer." />
+    <string id="TAOM_LD_Notice_BoonOffered" text="A boon is on offer: press B." />
+    <string id="TAOM_LD_Notice_NoBoon" text="No boon awaits." />
+    <string id="TAOM_LD_Notice_NoReroll" text="No reroll is banked." />
   </strings>
 
 </base>

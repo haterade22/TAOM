@@ -17,6 +17,24 @@ internal enum BuyResult
     RunOver,
 }
 
+internal enum PickResult
+{
+    Ok,
+    NotOpen,
+    NoOffer,
+    NotOffered,
+    RunOver,
+}
+
+internal enum RerollResult
+{
+    Ok,
+    NotOpen,
+    NoOffer,
+    NoReroll,
+    RunOver,
+}
+
 internal enum StartResult
 {
     Ok,

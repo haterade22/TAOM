@@ -46,6 +46,7 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>
     /// Spawns the batch's soldiers into the open batch of their formation with no position, so the engine's own layout slots apply,
     /// and reads where each landed in the same call. After a successful <see cref="SetMusterFrame"/> the read-back judges against that place.
+    /// Each soldier's health is multiplied by <see cref="SoldierBatch.HealthFactor"/> after it spawns.
     /// </summary>
     LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers);
 

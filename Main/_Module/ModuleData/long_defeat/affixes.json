@@ -1,0 +1,27 @@
+{
+  "schedule": [ { "fromWave": 5, "count": 1 }, { "fromWave": 10, "count": 2 }, { "fromWave": 15, "count": 3 } ],
+  "powers": {
+    "lash": { "swingSpeedPercent": 15, "attackEagernessPercent": 25 },
+    "drums": { "moveSpeedPercent": 12, "accelerationPercent": 25 },
+    "eye": { "aimErrorPercent": -30, "drawSpeedPercent": 15, "reloadSpeedPercent": 15, "missileSpeedPercent": 10 },
+    "discipline": { "blockAbilityPercent": 25, "parryAbilityPercent": 25 },
+    "hide": { "armourPercent": 30 },
+    "hammer": { "engineHitPointsPercent": 50 },
+    "terror": { "radius": 8.0, "pulseSeconds": 2.0, "amount": 3.0, "floor": 35.0 },
+    "blades": { "poisonPerSecond": 2.0, "poisonSeconds": 6.0 }
+  },
+  "names": {
+    "mordor": {
+      "lash": "{=TAOM_LD_Affix_Mordor_Lash}The Overseer's Lash", "drums": "{=TAOM_LD_Affix_Mordor_Drums}Drums in the Deep",
+      "blades": "{=TAOM_LD_Affix_Mordor_Blades}Morgul Blades", "eye": "{=TAOM_LD_Affix_Mordor_Eye}The Lidless Eye",
+      "discipline": "{=TAOM_LD_Affix_Mordor_Discipline}Iron Discipline", "hide": "{=TAOM_LD_Affix_Mordor_Hide}Troll-Hide",
+      "terror": "{=TAOM_LD_Affix_Mordor_Terror}Winged Terror", "hammer": "{=TAOM_LD_Affix_Mordor_Hammer}Hammer of the Underworld"
+    },
+    "isengard": {
+      "lash": "{=TAOM_LD_Affix_Isengard_Lash}The White Hand's Whip", "drums": "{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc",
+      "blades": "{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades", "eye": "{=TAOM_LD_Affix_Isengard_Eye}The Seeing Stone",
+      "discipline": "{=TAOM_LD_Affix_Isengard_Discipline}Bred for War", "hide": "{=TAOM_LD_Affix_Isengard_Hide}Orthanc Plate",
+      "terror": "{=TAOM_LD_Affix_Isengard_Terror}Crebain from Dunland", "hammer": "{=TAOM_LD_Affix_Isengard_Hammer}Engines of Orthanc"
+    }
+  }
+}

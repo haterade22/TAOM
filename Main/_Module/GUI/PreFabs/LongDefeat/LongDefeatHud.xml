@@ -57,6 +57,12 @@
           </Children>
         </ListPanel>
 
+        <!-- The affix line: the running wave's affixes, or between waves the next wave's and its factors. Under the notice, over the hint. -->
+        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="126"
+                    Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#E9B84AFF"
+                    Text="@AffixText" DoNotAcceptEvents="true" />
+
         <!-- The last refusal. -->
         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                     HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="96"

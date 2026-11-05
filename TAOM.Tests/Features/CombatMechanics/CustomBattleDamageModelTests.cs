@@ -56,7 +56,7 @@ public class CustomBattleDamageModelTests
     private static readonly Dictionary<string, string> ExpectedCallOrder = new()
     {
         ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage,FordsUpgradeHooks.Reduce",
-        ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage,FordsUpgradeHooks.Amplify",
+        ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage,FordsUpgradeHooks.Amplify,LongDefeatCombatHooks.Amplify",
         ["ApplyDamageScaling"] = "base,CreatureSiegeHooks.ScaleGateDamage",
         ["DecideCrushedThrough"] = "RaceAbilityHooks.CrushVerdict,CombatMechanicsHooks.CrushThrough,base",
         ["CalculateRemainingMomentum"] = "CombatMechanicsHooks.CleaveMomentum,base",
@@ -80,11 +80,12 @@ public class CustomBattleDamageModelTests
         "TaomAgentApplyDamageModel.get_AgentStatService",
     };
 
-    // Only the twin makes these: Fords of War is a Custom Game mode, so its army upgrades can never run in a campaign.
+    // Only the twin makes these: Fords of War and The Long Defeat are Custom Game modes, so their upgrades and wave damage can never run in a campaign.
     private static readonly HashSet<string> TwinOnly = new(StringComparer.Ordinal)
     {
         "FordsUpgradeHooks.Amplify",
         "FordsUpgradeHooks.Reduce",
+        "LongDefeatCombatHooks.Amplify",
     };
 
     private static bool _gameLoaded;
@@ -141,6 +142,7 @@ public class CustomBattleDamageModelTests
     [DataRow("ApplyDamageReductions", "RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result)")]
     [DataRow("ApplyDamageAmplifications", "RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,")]
     [DataRow("ApplyDamageAmplifications", "base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage)")]
+    [DataRow("ApplyDamageAmplifications", "LongDefeatCombatHooks.Amplify(in attackInformation, in collisionData, FordsUpgradeHooks.Amplify(")]
     [DataRow("ApplyDamageScaling", "CreatureSiegeHooks.ScaleGateDamage(in attackInformation, in collisionData,")]
     [DataRow("ApplyDamageScaling", "base.ApplyDamageScaling(in attackInformation, in collisionData, baseDamage)")]
     [DataRow("DecideCrushedThrough", "RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsageHit)")]

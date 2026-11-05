@@ -1059,7 +1059,7 @@ public class LongDefeatDirectorTests
         var ended = DateTime.Parse(report["endedUtc"]!.ToString(Newtonsoft.Json.Formatting.None).Trim('"'), null, System.Globalization.DateTimeStyles.RoundtripKind);
         Assert.AreEqual(DateTimeKind.Utc, started.Kind);
         Assert.IsTrue(before <= started && started <= ended && ended <= DateTime.UtcNow);
-        Assert.AreEqual(1, (int)report["schema"]!);
+        Assert.AreEqual(2, (int)report["schema"]!);
     }
 
     private static void ClearOneWave(Rig rig)

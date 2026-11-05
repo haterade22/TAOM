@@ -31,4 +31,7 @@ internal sealed record RunRules
 
     /// <summary>The share of a standing defender's missing health regained at each clear: nothing else heals a soldier between waves.</summary>
     public float RestShare { get; init; } = 0.5f;
+
+    /// <summary>Soldiers added to every pack bought. Not in <c>waves.json</c>: only a boon sets it, in the run's effective rules.</summary>
+    public int PackBonus { get; init; }
 }

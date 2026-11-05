@@ -24,6 +24,8 @@ executes it.
 **Transparency:** before delegating, write one line naming the choice and why:
 `→ fast-reader (Haiku/low): repo-wide search`.
 
+**Standing word (Mike, 2026-11-05):** pick each spawn's model and effort yourself, without asking. That is the explicit ask the Agent tool's `effort` parameter needs; the `deep-reviewer` rule below still holds.
+
 **Mechanics:** an agent definition sets `model:` and `effort:`; a spawn overrides them with the
 Agent tool's `model` and `effort` parameters. Never pass `model` to `deep-reviewer`, and pass its
 `effort` only as `/deep-review`'s tier rule says. Built-in

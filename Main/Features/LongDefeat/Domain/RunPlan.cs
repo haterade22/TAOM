@@ -30,4 +30,10 @@ internal sealed record RunPlan(
     public MusterPoints? Muster { get; init; }
 
     public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
+
+    /// <summary>The affix schedule, numbers and the fortress's attacker culture names. <see cref="AffixPlan.None"/>: no wave carries an affix.</summary>
+    public AffixPlan Affixes { get; init; } = AffixPlan.None;
+
+    /// <summary>The boons a pick can offer. <see cref="BoonPlan.None"/>: every pick lapses.</summary>
+    public BoonPlan Boons { get; init; } = BoonPlan.None;
 }

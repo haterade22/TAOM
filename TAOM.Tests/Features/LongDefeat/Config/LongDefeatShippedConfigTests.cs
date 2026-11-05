@@ -148,4 +148,227 @@ public class LongDefeatShippedConfigTests
             CollectionAssert.AreEqual(Array.Empty<string>(), unpaid, string.Join(", ", unpaid));
         }
     }
+
+    private static IEnumerable<(FortressEntry Fortress, string From, string To)> Links() =>
+        Load().Catalog.Fortresses.SelectMany(f => f.Waves.Endless.Tiers.Select(l => (f, l.Key, l.Value)));
+
+    [TestMethod]
+    public void ShippedFiles_EveryTierLink_GoesUpOneLevel_InsideOneClassAndTheAttackerCulture()
+    {
+        var troops = Troops();
+        var links = Links().ToList();
+
+        Assert.IsTrue(links.Count >= 10, "helms ships its tier chain");
+        var wrong = new List<string>();
+        foreach (var (fortress, from, to) in links)
+        {
+            if (!troops.TryGetValue(from, out var a) || !troops.TryGetValue(to, out var b))
+            {
+                wrong.Add($"{from} to {to}: a troop is not in fords_troops.xml");
+                continue;
+            }
+
+            if (Culture(a) != fortress.AttackerCulture || Culture(b) != fortress.AttackerCulture)
+                wrong.Add($"{from} to {to}: not the {fortress.AttackerCulture} culture");
+            if ((string?)a.Attribute("default_group") != (string?)b.Attribute("default_group"))
+                wrong.Add($"{from} to {to}: the class changes");
+            if (!((int)b.Attribute("level")! > (int)a.Attribute("level")!))
+                wrong.Add($"{from} to {to}: the level does not rise");
+        }
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), wrong, string.Join("; ", wrong));
+    }
+
+    [TestMethod]
+    public void ShippedFiles_EveryReachableAttackerTroop_HasABounty_AndATierTargetPaysAtLeastWhatItsSourcePays()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var bounties = catalog.BuildPlan(f, RunOptions.Default).Bounties;
+            var reachable = f.Waves.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)).Concat(f.Waves.Endless.Targets).Distinct().ToList();
+            var unpaid = reachable.Where(id => !bounties.ContainsKey(id)).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), unpaid, string.Join(", ", unpaid));
+            foreach (var link in f.Waves.Endless.Tiers)
+                Assert.IsTrue(bounties[link.Value] >= bounties[link.Key], $"{link.Value} pays {bounties[link.Value]}, less than {link.Key} ({bounties[link.Key]})");
+        }
+    }
+
+    [TestMethod]
+    public void ShippedFiles_TheFourVeteranTroopsAStepOrASummonCanReach_PayABounty()
+    {
+        var (catalog, _) = Load();
+        var bounties = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Bounties;
+
+        foreach (var id in new[] { "fow_urukhai_veteranspearman", "fow_urukhai_veteranpikeman", "fow_urukhai_veteraninfantry", "fow_urukhai_veterancrossbowman" })
+            Assert.IsTrue(bounties.TryGetValue(id, out var gold) && gold > 0, id + " has no bounty");
+    }
+
+    [TestMethod]
+    public void ShippedFiles_AllTroopIds_HoldsEveryTierTarget_SoALaunchChecksThemBeforeTheRun()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var ids = RunPlanTroops.AllTroopIds(catalog.BuildPlan(f, RunOptions.Default));
+            var missing = f.Waves.Endless.Targets.Where(id => !ids.Contains(id)).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), missing, string.Join(", ", missing));
+            foreach (var row in Rows(f))
+                CollectionAssert.Contains(ids.ToList(), row.Troop);
+        }
+    }
+
+    [TestMethod]
+    public void ShippedFiles_TheEndlessGrowth_IsTheFirstGuessOfTheApprovedPlan()
+    {
+        var (catalog, _) = Load();
+        var waves = catalog.Fortresses.Single(f => f.Id == "helms").Waves;
+
+        var scale = waves.Endless;
+
+        Assert.AreEqual((0.05f, 0.03f, 3.0f, 3), (scale.HealthPerWave, scale.DamagePerWave, scale.MaxFactor, scale.TierEveryWaves));
+        Assert.AreEqual("fow_urukhai_warrior", scale.Tiers["fow_urukhai_fighter"]);
+        Assert.AreEqual("fow_urukhai_veterancrossbowman", scale.Tiers["fow_urukhai_crossbowman"]);
+        Assert.AreEqual(10, waves.Authored.Count);
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_LoadWithNoWarning_WithTheApprovedScheduleAndEveryNumberSet()
+    {
+        var (catalog, logger) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Affixes;
+
+        Assert.AreEqual((0, 1, 1, 2, 2, 3, 3), (plan.CountFor(4), plan.CountFor(5), plan.CountFor(9), plan.CountFor(10), plan.CountFor(14), plan.CountFor(15), plan.CountFor(40)));
+        foreach (var power in AffixPlan.Ids)
+            foreach (var key in AffixPlan.Keys[power])
+                Assert.AreNotEqual(0f, plan.Value(power, key), power + "." + key + " reads as 0: missing from the file or refused");
+        Assert.AreEqual(-30f, plan.Value("eye", "aimErrorPercent"), "negative aim error is better aim");
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_EveryFortressesAttackerCulture_HasAllEightNames()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var plan = catalog.BuildPlan(f, RunOptions.Default).Affixes;
+            var unnamed = AffixPlan.Ids.Where(id => plan.NameOf(id) == null).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), unnamed, f.Id + " (" + f.AttackerCulture + ") lacks names for " + string.Join(", ", unnamed));
+        }
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_TheMordorTableIsComplete_SoPhaseFiveNeedsNoNewNames()
+    {
+        var root = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "affixes.json")));
+        var mordor = (Newtonsoft.Json.Linq.JObject)root["names"]!["mordor"]!;
+
+        CollectionAssert.AreEquivalent(AffixPlan.Ids.ToList(), mordor.Properties().Select(p => p.Name).ToList());
+        Assert.AreEqual("{=TAOM_LD_Affix_Mordor_Terror}Winged Terror", (string?)mordor["terror"]);
+    }
+
+    [TestMethod]
+    public void ShippedAffixes_EveryNameKeyIsRegisteredWithTheSameDefault()
+    {
+        var rows = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var root = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "affixes.json")));
+
+        var names = root["names"]!.Children<Newtonsoft.Json.Linq.JProperty>().SelectMany(c => ((Newtonsoft.Json.Linq.JObject)c.Value).Properties()).Select(p => (string)p.Value!).ToList();
+
+        Assert.AreEqual(16, names.Count);
+        foreach (var raw in names)
+        {
+            var key = raw.Substring(2, raw.IndexOf('}') - 2);
+            Assert.IsTrue(rows.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
+            Assert.AreEqual(raw, registered, key);
+        }
+    }
+
+    private static string BoonsText() => File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "boons.json"));
+
+    private static string Pascal(string snake) => string.Concat(snake.Split('_').Select(w => char.ToUpperInvariant(w[0]) + w.Substring(1)));
+
+    [TestMethod]
+    public void ShippedBoons_LoadWithNoWarning_AndNoRowWasSkipped()
+    {
+        var (catalog, logger) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var inFile = Newtonsoft.Json.Linq.JObject.Parse(BoonsText())["boons"]!.Count();
+
+        Assert.AreEqual(inFile, plan.Rows.Count, "a row the reader refused is missing from the pool");
+        logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("boons.json")));
+    }
+
+    [TestMethod]
+    public void ShippedBoons_SoFarHoldEnoughRowsToShowThreeCards_PerPoolThisSliceBuilds()
+    {
+        var (catalog, _) = Load();
+        var rows = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows;
+
+        Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.WarChest) >= 3, "war chest rows");
+        Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Fortress) >= 3, "fortress rows");
+        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
+        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Legend).All(r => r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "this slice's Legend rows cut affixes");
+        Assert.IsTrue(rows.Any(r => r.HasDrawback), "some boons carry a real drawback");
+    }
+
+    [TestMethod]
+    public void ShippedBoons_EveryNameTextAndDrawbackKey_IsTheRowsOwn_AndRegisteredWithTheSameDefault()
+    {
+        var strings = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var (catalog, _) = Load();
+        var rows = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows;
+
+        foreach (var row in rows)
+        {
+            var key = "TAOM_LD_Boon_" + Pascal(row.Id);
+            Assert.IsTrue(row.Name.StartsWith("{=" + key + "}", StringComparison.Ordinal), row.Id + " name key");
+            Assert.IsTrue(row.Text.StartsWith("{=" + key + "_Text}", StringComparison.Ordinal), row.Id + " text key");
+            var raws = new List<(string Key, string Raw)> { (key, row.Name), (key + "_Text", row.Text) };
+            if (row.HasDrawback)
+            {
+                Assert.IsTrue(row.DrawbackText.StartsWith("{=" + key + "_Drawback}", StringComparison.Ordinal), row.Id + " drawback key");
+                raws.Add((key + "_Drawback", row.DrawbackText));
+            }
+
+            foreach (var (k, raw) in raws)
+            {
+                Assert.IsTrue(strings.TryGetValue(k, out var registered), k + " is not in taom_module_strings.xml");
+                Assert.AreEqual(raw, registered, k);
+            }
+        }
+    }
+
+    [TestMethod]
+    public void ShippedBoons_TheFirstOffersOfSeedOne_ArePinned_ToTheSameVectorsAsThePythonReplay()
+    {
+        var (catalog, _) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var deck = new BoonDeck(plan, 1UL, 2);
+        for (var n = 1; n <= 3; n++)
+            deck.Cleared(n, n);
+        deck.TryReroll();
+        deck.TryReroll();
+
+        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's twelve rows; the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
+        CollectionAssert.AreEqual(new[] { "granary_stores", "glittering_caves_refuge", "weregild_of_the_mark" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "granary_stores", "weregild_of_the_mark", "healers_of_the_hold" }, deck.Picks[0].Draws[2].Ids.ToArray());
+
+        // Reroll twice again from a fresh deck, take the first card of draw 1, and the second pick is drawn over the eleven rows left.
+        var second = new BoonDeck(plan, 1UL, 1);
+        for (var n = 1; n <= 3; n++)
+            second.Cleared(n, n);
+        second.TryReroll();
+        second.TryPick("stout_hearts_at_the_gate", 3, 4);
+        for (var n = 4; n <= 6; n++)
+            second.Cleared(n, n);
+        CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
+    }
 }

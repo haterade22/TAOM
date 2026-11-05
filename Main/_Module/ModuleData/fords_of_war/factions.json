@@ -266,25 +266,25 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_mordor_orc_fighter", "count": 10 },
-            { "troop": "fow_mordor_orc_impaler", "count": 4 },
-            { "troop": "fow_mordor_orc_hunter", "count": 3 }
+            { "troop": "fow_mordor_orc_fighter", "count": 15 },
+            { "troop": "fow_mordor_orc_impaler", "count": 6 },
+            { "troop": "fow_mordor_orc_hunter", "count": 4 }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_mordor_orc_warrior", "count": 10 },
-            { "troop": "fow_mordor_orc_impaler", "count": 4 },
-            { "troop": "fow_mordor_orc_hunter", "count": 3 }
+            { "troop": "fow_mordor_orc_warrior", "count": 15 },
+            { "troop": "fow_mordor_orc_impaler", "count": 6 },
+            { "troop": "fow_mordor_orc_hunter", "count": 4 }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_mordor_orc_warrior", "count": 10 },
-            { "troop": "fow_morannon_spearman", "count": 4 },
-            { "troop": "fow_mordor_orc_scout", "count": 3 }
+            { "troop": "fow_mordor_orc_warrior", "count": 15 },
+            { "troop": "fow_morannon_spearman", "count": 6 },
+            { "troop": "fow_mordor_orc_scout", "count": 4 }
           ]
         }
       ]

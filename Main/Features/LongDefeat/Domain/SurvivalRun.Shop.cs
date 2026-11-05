@@ -19,7 +19,7 @@ internal sealed partial class SurvivalRun
         if (!BetweenWaves)
             return BuyResult.NotOpen;
 
-        var offer = _plan.Shop.Offers.FirstOrDefault(o => o.Id == offerId);
+        var offer = _shop.FirstOrDefault(o => o.Id == offerId);
         if (offer == null)
             return BuyResult.UnknownOffer;
         if (offer.Price > _purse.Balance)
@@ -44,8 +44,8 @@ internal sealed partial class SurvivalRun
             return StartResult.NotOpen;
 
         LastHornSecondsLeft = _left;
-        var raw = Math.Ceiling(Math.Max(0f, _left) * (double)_r.EarlyGoldPerSecond);
-        LastHornBonus = raw > 0d ? (int)Math.Min(_r.EarlyGoldCap, raw) : 0;
+        var raw = Math.Ceiling(Math.Max(0f, _left) * (double)_r.EarlyGoldPerSecond * _factors.EarlyGold);
+        LastHornBonus = raw > 0d ? (int)Math.Min(GoldFactors.Apply(_r.EarlyGoldCap, _factors.EarlyGold), raw) : 0;
         _purse.Earn(PurseSource.EarlyStart, LastHornBonus);
         _pendingEvents.Add(new RunEvent(RunEventKind.Horn, _wave + 1, "gold=" + LastHornBonus));
         BeginWave();

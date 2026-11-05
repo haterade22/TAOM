@@ -55,3 +55,29 @@ internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId);
 
 /// <summary>A rest between waves: how many defenders it reached, and their mean health as a share of their limit, before and after.</summary>
 internal readonly record struct LdRest(int Count, float MeanBefore, float MeanAfter);
+
+/// <summary>
+/// One standing attacker as the effects adapter read it: its troop, its health limit, the maximum its character gives it (their ratio is the
+/// health factor in force), and how many blows the damage factor has raised since the wave's factor was published. An empty <c>TroopId</c> means no attacker stood.
+/// </summary>
+internal readonly record struct LdScaleSample(string TroopId, float HealthLimit, float CharacterMax, long AmplifiedBlows)
+{
+    public bool HasAgent => TroopId.Length > 0;
+
+    /// <summary>The health limit over the character's maximum; NaN when the maximum is not positive.</summary>
+    public float Ratio => CharacterMax > 0f ? HealthLimit / CharacterMax : float.NaN;
+}
+
+/// <summary>One driven property of a sampled attacker: what the engine holds now, and what the stat model gives the same agent with the affixes left out.</summary>
+internal readonly record struct LdStatReading(string Stat, float Base, float Actual);
+
+/// <summary>
+/// One standing human attacker with no live race ability, read for the affix proof: its troop and one reading per property asked for. An empty
+/// <c>TroopId</c> means no such attacker stood.
+/// </summary>
+internal sealed record LdStatSample(string TroopId, IReadOnlyList<LdStatReading> Readings)
+{
+    public static LdStatSample None { get; } = new("", System.Array.Empty<LdStatReading>());
+
+    public bool HasAgent => TroopId.Length > 0;
+}

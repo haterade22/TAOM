@@ -4,6 +4,10 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
 
+## How balance is decided
+
+Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. A balance change starts a new round.
+
 ## Matches
 
 | Run | Build | West v East | Units lost | Towers lost | Tower damage dealt | Gold trade | Notes |
@@ -256,6 +260,14 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 **Changed:** Rivendell `waveInterval` 1.5 to 2, Mirkwood none to 1.5, Dol Guldur `income` 0.85 to 1. Its stated weakness is now that its strongest soldiers come only in packs of three.
 
 **Result, one match per pair:** Dol Guldur improved: it lost at 28.6 minutes where it lost at 20.4, with 5,915 tower damage against 2,015, though it still takes no tower. Slower free waves barely moved the elves: Rivendell's win moved from 38.3 to 38.1 minutes with a trade of 2.56 against 2.34, and Mirkwood's from 30.9 to 31.6 minutes, losing a tower where it lost none. So free wave timing is not what makes elves strong, and both ended with over 5,000 gold unspent. The next lever is their fighting quality, not their numbers. One match per pair is a direction and not proof.
+
+### Mordor's swarm (this change)
+
+**Why:** Mike, 2026-11-05: Rivendell's stats, armour and weapons are so good that only numbers can beat them, like a swarm. Mordor already outnumbered Rivendell 3 to 1 and lost 4,670 units to 351. Its cap was not the limit: its lane cap is 190, and it peaked at 123 and averaged 77 to 99 a lane, with 205 gold left. Too few orcs arrived at once.
+
+**Changed:** every Mordor free wave is 1.5 times as large, so Mordor sends the largest free waves of any faction. Elves keep their quality.
+
+**Result: not measured.**
 
 ## Open questions
 

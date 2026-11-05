@@ -221,4 +221,123 @@ public class LongDefeatAutorunPlanTests
         StringAssert.Contains(text, "quit=1");
         StringAssert.Contains(text, "out=E:\\x");
     }
+
+    [TestMethod]
+    public void Resolve_PhaseTwoKeys_DefaultToABoardRun()
+    {
+        var plan = Resolve(Out);
+
+        Assert.IsNull(plan.Seed);
+        Assert.AreEqual(1, plan.StartWave);
+        Assert.AreEqual(0, plan.StartRerolls);
+        Assert.IsNull(plan.Class);
+    }
+
+    [TestMethod]
+    public void Resolve_ReadsSeedStartWaveStartRerollsAndClass()
+    {
+        var plan = Resolve(Out + "seed=12345\nstart_wave=12\nstart_rerolls=2\nclass=archer\n");
+
+        Assert.AreEqual(12345UL, plan.Seed);
+        Assert.AreEqual(12, plan.StartWave);
+        Assert.AreEqual(2, plan.StartRerolls);
+        Assert.AreEqual("archer", plan.Class);
+        Assert.AreEqual(0, plan.Warnings.Count);
+    }
+
+    [DataTestMethod]
+    [DataRow("0", 0UL)]
+    [DataRow("9007199254740991", 9007199254740991UL)]
+    public void Resolve_Seed_TakesZeroToTwoToTheFiftyThirdMinusOne(string value, ulong expected)
+    {
+        Assert.AreEqual(expected, Resolve(Out + "seed=" + value + "\n").Seed);
+    }
+
+    [DataTestMethod]
+    [DataRow("-1")]
+    [DataRow("-0")]
+    [DataRow("9007199254740992")]
+    [DataRow("9223372036854775807")]
+    [DataRow("9223372036854775808")]
+    [DataRow("18446744073709551615")]
+    [DataRow("99999999999999999999999")]
+    [DataRow("1.5")]
+    [DataRow("0x10")]
+    [DataRow("abc")]
+    [DataRow("")]
+    public void Resolve_Seed_ANegativeOrOutOfRangeOrNonDecimalValueIsRefusedWithOneWarning(string value)
+    {
+        var plan = Resolve(Out + "seed=" + value + "\n");
+
+        Assert.IsNull(plan.Seed, "no seed means the start time's ticks");
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("seed")));
+    }
+
+    [DataTestMethod]
+    [DataRow("1", 1)]
+    [DataRow("100", 100)]
+    public void Resolve_StartWave_TakesOneToOneHundred(string value, int expected)
+    {
+        Assert.AreEqual(expected, Resolve(Out + "start_wave=" + value + "\n").StartWave);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("101")]
+    [DataRow("-3")]
+    [DataRow("x")]
+    public void Resolve_StartWave_OutOfRangeKeepsWaveOneWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "start_wave=" + value + "\n");
+
+        Assert.AreEqual(1, plan.StartWave);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("start_wave")));
+    }
+
+    [DataTestMethod]
+    [DataRow("0", 0)]
+    [DataRow("3", 3)]
+    public void Resolve_StartRerolls_TakesZeroToThree(string value, int expected)
+    {
+        Assert.AreEqual(expected, Resolve(Out + "start_rerolls=" + value + "\n").StartRerolls);
+    }
+
+    [DataTestMethod]
+    [DataRow("4")]
+    [DataRow("-1")]
+    [DataRow("many")]
+    public void Resolve_StartRerolls_OutOfRangeKeepsZeroWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "start_rerolls=" + value + "\n");
+
+        Assert.AreEqual(0, plan.StartRerolls);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("start_rerolls")));
+    }
+
+    [TestMethod]
+    public void ToSetup_CarriesTheSeedTheStartWaveAndTheRerolls()
+    {
+        var options = Resolve(Out + "seed=7\nstart_wave=12\nstart_rerolls=1\n").ToSetup("helms").Options;
+
+        Assert.AreEqual(7UL, options.Seed);
+        Assert.AreEqual(12, options.StartWave);
+        Assert.AreEqual(1, options.StartRerolls);
+    }
+
+    [TestMethod]
+    public void ToSetup_WithNoSeed_LeavesItForTheLauncherToTakeFromTheClock()
+    {
+        Assert.IsNull(Resolve(Out).ToSetup("helms").Options.Seed);
+    }
+
+    [TestMethod]
+    public void Describe_NamesTheSeedStartWaveAndRerolls()
+    {
+        var text = Resolve(Out + "seed=7\nstart_wave=3\nstart_rerolls=1\nclass=archer\n").Describe();
+
+        StringAssert.Contains(text, "seed=7");
+        StringAssert.Contains(text, "start_wave=3");
+        StringAssert.Contains(text, "start_rerolls=1");
+        StringAssert.Contains(text, "class=archer");
+    }
 }

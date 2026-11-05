@@ -27,7 +27,8 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         string missionKey, LongDefeatRunRecords? records = null)
     {
         _missionTime = () => Mission.CurrentTime;
-        _host = new LongDefeatRunHost(plan, session, logger, outcomes, menu, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger), records);
+        _host = new LongDefeatRunHost(plan, session, logger, outcomes, menu, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger), records,
+            () => new LongDefeatEffectsAdapter(Mission));
     }
 
     public float GetTotalTeamPower(Team team) => TeamPower;
@@ -42,6 +43,8 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     {
         base.AfterStart();
         LongDefeatMorale.Arm(Mission);
+        LongDefeatCombatHooks.Arm(Mission);
+        LongDefeatStatHooks.Arm(Mission);
         _host.MarkStartDue();
     }
 
@@ -82,6 +85,8 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
     private void TearDown()
     {
         LongDefeatMorale.Disarm(Mission);
+        LongDefeatCombatHooks.Disarm(Mission);
+        LongDefeatStatHooks.Disarm(Mission);
         _host.ShutDown();
     }
 }

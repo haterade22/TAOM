@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TaleWorlds.Library;
 using TAOM.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Domain;
@@ -29,12 +30,18 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private float _keepFillWidth;
     private bool _isKeepVisible;
     private string _hintText = string.Empty;
+    private string _affixText = string.Empty;
     private string _speedText = string.Empty;
     private string _speedTitle = string.Empty;
     private string _noticeText = string.Empty;
     private bool _isShopVisible;
     private string _shopTitle = string.Empty;
     private string _hornText = string.Empty;
+    private string _pickTitle = string.Empty;
+    private string _rerollText = string.Empty;
+    private bool _isPickVisible;
+    private bool _canReroll;
+    private string _offerKey = string.Empty;
     private string _closeText = string.Empty;
     private bool _isEndVisible;
     private string _endTitle = string.Empty;
@@ -48,6 +55,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         _session = session;
         _leave = leave;
         Offers = new MBBindingList<LongDefeatOfferVM>();
+        Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
         foreach (var level in LongDefeatSession.SpeedLevels)
             Speeds.Add(new LongDefeatSpeedVM(level, SelectSpeed));
@@ -83,6 +91,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     public string HintText { get => _hintText; private set => Set(ref _hintText, value, nameof(HintText)); }
 
     [DataSourceProperty]
+    public string AffixText { get => _affixText; private set => Set(ref _affixText, value, nameof(AffixText)); }
+
+    [DataSourceProperty]
     public string SpeedText { get => _speedText; private set => Set(ref _speedText, value, nameof(SpeedText)); }
 
     [DataSourceProperty]
@@ -108,6 +119,21 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public MBBindingList<LongDefeatOfferVM> Offers { get; }
+
+    [DataSourceProperty]
+    public bool IsPickVisible { get => _isPickVisible; private set => Set(ref _isPickVisible, value, nameof(IsPickVisible)); }
+
+    [DataSourceProperty]
+    public string PickTitle { get => _pickTitle; private set => Set(ref _pickTitle, value, nameof(PickTitle)); }
+
+    [DataSourceProperty]
+    public string RerollText { get => _rerollText; private set => Set(ref _rerollText, value, nameof(RerollText)); }
+
+    [DataSourceProperty]
+    public bool CanReroll { get => _canReroll; private set => Set(ref _canReroll, value, nameof(CanReroll)); }
+
+    [DataSourceProperty]
+    public MBBindingList<LongDefeatBoonVM> Boons { get; }
 
     [DataSourceProperty]
     public bool IsEndVisible { get => _isEndVisible; private set => Set(ref _isEndVisible, value, nameof(IsEndVisible)); }
@@ -139,6 +165,12 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     }
 
     public void ExecuteLeave() => _leave();
+
+    public void ExecuteReroll()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryReroll()));
+        Refresh();
+    }
 
     /// <summary>Width of the keep bar's fill for a progress of 0 to 1. A positive requirement, so a NaN reads as empty.</summary>
     internal static float KeepWidth(float progress) => progress > 0f ? Math.Min(progress, 1f) * KeepTrackWidth : 0f;
@@ -210,11 +242,13 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             ApplyOffers(view);
         }
 
+        ApplyBoons(view);
+
         IsEndVisible = result != null && !_endDismissed;
         if (result != null)
         {
             EndTitle = LongDefeatHudText.EndTitle(result.Reason);
-            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves);
+            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves, _session.BoonsTaken);
             ReportText = _session.ReportPath is { } path ? LongDefeatHudText.ReportFile(System.IO.Path.GetFileName(path)) : string.Empty;
             BestText = _session.Best is { } best ? LongDefeatHudText.Best(best.Waves, best.Kills) : LongDefeatHudText.NoBest();
             LeaveText = LongDefeatHudText.Leave();
@@ -228,7 +262,8 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         GoldText = LongDefeatHudText.Gold(view.Gold);
         AttackersText = LongDefeatHudText.Attackers(view.AttackersStanding);
         DefendersText = LongDefeatHudText.Defenders(view.DefendersStanding + view.DefendersPending);
-        HintText = LongDefeatHudText.Hint(view.Phase);
+        HintText = LongDefeatHudText.Hint(view);
+        AffixText = LongDefeatHudText.AffixLine(view);
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;
@@ -253,6 +288,57 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
         for (var i = 0; i < view.Offers.Count; i++)
             Offers[i].Update(view.Offers[i], view.Gold);
+    }
+
+    /// <summary>The pick group shows with the open shop while a pick is open. An offer seen for the first time raises a notice, because the panel never opens by itself for it.</summary>
+    private void ApplyBoons(RunView? view)
+    {
+        var offer = view?.BoonOffer ?? Array.Empty<BoonCard>();
+        var key = string.Join(",", offer.Select(c => c.Id));
+        if (key != _offerKey)
+        {
+            var first = _offerKey.Length == 0;
+            _offerKey = key;
+            if (first && key.Length > 0 && view!.ShopOpen)
+                Notify(LongDefeatHudText.BoonOffered());
+        }
+
+        IsPickVisible = _shopWanted && offer.Count > 0;
+        if (!IsPickVisible)
+        {
+            if (Boons.Count > 0)
+                Boons.Clear();
+            return;
+        }
+
+        PickTitle = LongDefeatHudText.PickTitle();
+        RerollText = LongDefeatHudText.Reroll(view!.Rerolls);
+        CanReroll = view.Rerolls > 0;
+        if (Boons.Count != offer.Count)
+        {
+            Boons.Clear();
+            for (var i = 0; i < offer.Count; i++)
+                Boons.Add(new LongDefeatBoonVM(PickBoon));
+        }
+
+        for (var i = 0; i < offer.Count; i++)
+            Boons[i].Update(offer[i]);
+    }
+
+    private void PickBoon(string boonId)
+    {
+        var result = _session.TryPickBoon(boonId);
+        if (result == PickResult.Ok)
+        {
+            NoticeText = string.Empty;
+            _noticeLeft = 0f;
+        }
+        else
+        {
+            Notify(LongDefeatHudText.Refusal(result));
+        }
+
+        Refresh();
     }
 
     private void Buy(string offerId)

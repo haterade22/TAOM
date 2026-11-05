@@ -5,12 +5,27 @@ internal sealed record RunOptions
 {
     public static RunOptions Default { get; } = new();
 
+    /// <summary>The largest seed, 2^53-1: a JavaScript reader (the leaderboard bot may be one) keeps every digit of a number up to there and rounds above it.</summary>
+    public const ulong MaxSeed = (1UL << 53) - 1;
+
     /// <summary>The run ends as TargetReached when this many waves are cleared; null plays until it is lost.</summary>
     public int? StopAfterWaves { get; init; }
 
     public bool Autoplay { get; init; }
 
     public float GarrisonScale { get; init; } = 1f;
+
+    /// <summary>The seed every roll of the run derives from (see <see cref="RunRandom"/>), 0 to <see cref="MaxSeed"/> (2^53-1). Null until <see cref="Seeded"/> takes the start time's ticks.</summary>
+    public ulong? Seed { get; init; }
+
+    /// <summary>A test option: the run begins at this wave number. <c>WavesCleared</c> still starts at 0, so <c>StopAfterWaves</c> counts clears, not wave numbers. A board run needs 1.</summary>
+    public int StartWave { get; init; } = 1;
+
+    /// <summary>A test option: boon rerolls in the bank at the start, 0 to 3. A board run needs 0.</summary>
+    public int StartRerolls { get; init; }
+
+    /// <summary>These options with a seed: the one given, else the start time's ticks (0 is a valid seed, so only null takes the clock).</summary>
+    public RunOptions Seeded(long startTicks) => Seed != null ? this : this with { Seed = (ulong)startTicks & MaxSeed };
 
     /// <summary>One garrison row's soldier count under <see cref="GarrisonScale"/>, at least 1. A scale that is not a positive finite number leaves the count as it is.</summary>
     public int ScaledCount(int count)
