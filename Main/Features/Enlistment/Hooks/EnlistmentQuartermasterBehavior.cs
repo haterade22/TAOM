@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Conversation;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -26,7 +27,7 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
     private readonly ICoopSessionProvider _coopSession;
     private readonly IModLogger _logger;
 
-    private EquipmentIssueResult _lastResult;
+    private QuartermasterAnswer _lastAnswer;
 
     public EnlistmentQuartermasterBehavior(
         IEnlistmentStore store,
@@ -64,23 +65,33 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
             OnKitRequested,
             112);
 
-        starter.AddDialogLine(
-            "taom_enlist_qm_issued",
-            "taom_enlist_qm_answer",
-            "close_window",
+        // One line per conditioned answer (#829), all at 112.
+        AddAnswer("taom_enlist_qm_issued",
             "{=taom_enlist_qm_issued}See the quartermaster's wagon — your kit is in your baggage.",
-            () => _lastResult == EquipmentIssueResult.Issued,
-            null,
-            112);
+            () => _lastAnswer == QuartermasterAnswer.Issued);
+        AddAnswer("taom_enlist_qm_refused",
+            "{=taom_enlist_qm_refused}You have drawn your due for your rank already. Earn the next stripe first.",
+            () => _lastAnswer == QuartermasterAnswer.AlreadyDrawn);
+        AddAnswer("taom_enlist_qm_refused_stores",
+            "{=taom_enlist_qm_refused_stores}The quartermaster has nothing in his stores for your company.",
+            () => _lastAnswer == QuartermasterAnswer.EmptyStores);
+        AddAnswer("taom_enlist_qm_refused_host",
+            "{=taom_enlist_qm_refused_host}Only the host's quartermaster can issue kit in this campaign.",
+            () => _lastAnswer == QuartermasterAnswer.HostOnly);
 
+        // CannotLoad is the one reply with no condition; it sits below the conditioned lines, so it
+        // also answers any answer that has no line of its own.
         starter.AddDialogLine(
-            "taom_enlist_qm_refused",
+            "taom_enlist_qm_refused_load",
             "taom_enlist_qm_answer",
             "close_window",
-            "{=taom_enlist_qm_refused}You have drawn your due for your rank already. Earn the next stripe first.",
+            "{=taom_enlist_qm_refused_load}Your kit cannot be loaded into your baggage just now. Ask me again later.",
             null,
             null,
-            111);
+            100);
+
+        void AddAnswer(string id, string text, ConversationSentence.OnConditionDelegate condition) =>
+            starter.AddDialogLine(id, "taom_enlist_qm_answer", "close_window", text, condition, null, 112);
     }
 
     private static string PartnerId() => Hero.OneToOneConversationHero?.StringId;
@@ -89,7 +100,7 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
     {
         if (!_coopSession.IsAuthority)
         {
-            _lastResult = EquipmentIssueResult.PartyUnavailable;
+            _lastAnswer = QuartermasterAnswer.HostOnly;
             return;
         }
 
@@ -97,8 +108,9 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
         var cultureId = _commander.GetCultureId(_store.Record.CommanderHeroId);
         var assignment = _contentStore.Record.Assignment;
         var rank = (EnlistmentRank)(int)_contentStore.Record.Rank;
-        _lastResult = _equipment.IssueForRank(cultureId, assignment, rank);
-        _logger?.LogInfo($"[Enlistment] quartermaster issue: {_lastResult} "
+        var result = _equipment.IssueForRank(cultureId, assignment, rank);
+        _lastAnswer = QuartermasterAnswerPolicy.For(result);
+        _logger?.LogInfo($"[Enlistment] quartermaster issue: {result} "
             + $"(culture={cultureId}, assignment={assignment}, rank={rank})");
     }
 }

@@ -18,6 +18,9 @@
 	<string id="taom_enlist_promoted" text="{=taom_enlist_promoted}You have been promoted to {RANK}." />
 	<string id="taom_enlist_qm_issued" text="{=taom_enlist_qm_issued}See the quartermaster&#x27;s wagon — your kit is in your baggage." />
 	<string id="taom_enlist_qm_refused" text="{=taom_enlist_qm_refused}You have drawn your due for your rank already. Earn the next stripe first." />
+	<string id="taom_enlist_qm_refused_host" text="{=taom_enlist_qm_refused_host}Only the host&#x27;s quartermaster can issue kit in this campaign." />
+	<string id="taom_enlist_qm_refused_load" text="{=taom_enlist_qm_refused_load}Your kit cannot be loaded into your baggage just now. Ask me again later." />
+	<string id="taom_enlist_qm_refused_stores" text="{=taom_enlist_qm_refused_stores}The quartermaster has nothing in his stores for your company." />
 	<string id="taom_enlist_qm_request" text="{=taom_enlist_qm_request}I would draw my service kit from the quartermaster." />
 	<string id="taom_enlist_reassign" text="{=taom_enlist_reassign}I would take a different place in the line." />
 	<string id="taom_enlist_reassign_arc" text="{=taom_enlist_reassign_arc}I shoot better than I stab." />

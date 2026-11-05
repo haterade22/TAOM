@@ -467,6 +467,12 @@
 
 	<string id="taom_enlist_act_raid" text="The column is raiding." />
 
+	<string id="taom_enlist_qm_refused_host" text="Only the host's quartermaster can issue kit in this campaign." />
+
+	<string id="taom_enlist_qm_refused_load" text="Your kit cannot be loaded into your baggage just now. Ask me again later." />
+
+	<string id="taom_enlist_qm_refused_stores" text="The quartermaster has nothing in his stores for your company." />
+
   </strings>
 
 </base>
