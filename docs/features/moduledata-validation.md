@@ -570,6 +570,9 @@ python tools/validate_moduledata.py --code BROKEN_ITEM_REF --json report.json --
 
 # On a machine without the game install (item/troop/party checks auto-skip)
 python tools/validate_moduledata.py --game-modules /nonexistent
+
+# Every gate that reads the changed files, with PASS, FAIL or NOT RUN for each (--all, --list, --with-tests)
+python tools/data_gates.py
 ```
 
 **To add a new check:** prefer adding it to a schema (`enums`, or a new `special_rules` handler registered in `KNOWN_SPECIAL_RULES` + a `_*_rule` method). New cross-reference prefixes go in `REF_KINDS`. Add a test for the new issue code (positive + negative) — the suite is expected to cover every code the engine can emit.

@@ -132,6 +132,15 @@ Full matrix, per-kind ref counts and the named gaps:
 [docs/features/moduledata-validation.md](../../docs/features/moduledata-validation.md)
 "Module coverage at a glance".
 
+## Gate per file kind
+
+Run `python tools/data_gates.py` before committing. It runs the gates for the files git shows as changed,
+plus any live Armory or `TAOM_Map` file you name on the command line (git cannot see those), and prints
+PASS, FAIL or NOT RUN for each with the doc to read first. `--all` runs every gate; `--list` prints the
+kind table; `--with-tests` adds the dotnet rows. A gate that cannot run (no install, no lxml, SKIPPED, a
+dotnet row without `--with-tests`) has not passed. The table is `GATES` in
+`tools/data_gates.py`: register a new gate there once.
+
 ## Discipline
 
 - **Schemas are the source of truth.** Field types, enums, cross-ref targets, and the civilian rule live in `tools/schemas/*.json` — add new fields/enums there, never hardcode them in Python.
