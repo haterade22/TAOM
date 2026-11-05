@@ -16,7 +16,7 @@ namespace TAOM.Tests.Features.MarshalsWord;
 /// <summary>
 /// Pins the engine contracts that decide whether Marshal's Word's keys are rebindable at all, the way the Seat's category test does: a wrong id
 /// mislabels the Options row, a small slot count throws on construction, a wrong main category hides the key, and a context registered on a
-/// layer throws on an id above 115. The two held keys are the contract's accepted exception to the scene-layer collision rule (section 3).
+/// layer throws on an id above 115. The held keys are the contract's accepted exception to the scene-layer collision rule (section 3).
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]
@@ -30,18 +30,57 @@ public class TaomMarshalHotKeyCategoryTests
     private GameKey[] RegisteredKeys => _sut.RegisteredGameKeys.Where(k => k != null).ToArray();
 
     [TestMethod]
-    public void Ctor_RegistersExactlyTheQueueAndKeepWidthsKeys_AtIds540And542()
+    public void Ctor_RegistersExactlyTheFiveKeys_AtIds540To544()
     {
         Assert.AreEqual(540, TaomMarshalHotKeyCategory.QueueKeyId);
+        Assert.AreEqual(541, TaomMarshalHotKeyCategory.MarkKeyId);
         Assert.AreEqual(542, TaomMarshalHotKeyCategory.KeepWidthsKeyId);
-        CollectionAssert.AreEqual(new[] { 540, 542 }, RegisteredKeys.Select(k => k.Id).ToArray());
+        Assert.AreEqual(543, TaomMarshalHotKeyCategory.FireModeKeyId);
+        Assert.AreEqual(544, TaomMarshalHotKeyCategory.WordKeyId);
+        CollectionAssert.AreEqual(new[] { 540, 541, 542, 543, 544 }, RegisteredKeys.Select(k => k.Id).ToArray());
     }
 
     [TestMethod]
-    public void Defaults_AreLeftShiftAndLeftAlt_TheHeldModifiersOfSection3()
+    public void Defaults_AreTheContractsKeys_TheHeldModifiersAndTheTwoPressedKeys()
     {
         Assert.AreEqual(InputKey.LeftShift, RegisteredKeys.Single(k => k.Id == 540).KeyboardKey.InputKey);
+        Assert.AreEqual(InputKey.LeftControl, RegisteredKeys.Single(k => k.Id == 541).KeyboardKey.InputKey);
         Assert.AreEqual(InputKey.LeftAlt, RegisteredKeys.Single(k => k.Id == 542).KeyboardKey.InputKey);
+        Assert.AreEqual(InputKey.Comma, RegisteredKeys.Single(k => k.Id == 543).KeyboardKey.InputKey);
+        Assert.AreEqual(InputKey.M, RegisteredKeys.Single(k => k.Id == 544).KeyboardKey.InputKey);
+    }
+
+    [TestMethod]
+    public void EveryPressedDefault_IsUnboundInTheCategoriesTheMissionSceneLayerReads()
+    {
+        // The Seat's rule (contract section 3): a pressed key's default stays clear of every key the scene layer reads, or one press acts twice.
+        // The held keys are the accepted exception, so only 543 and 544 loop here. GenericPanelGameKeyCategory is left out for the Seat's reason.
+        var categories = new GameKeyContext[]
+        {
+            new GenericGameKeyContext(),
+            new GenericCampaignPanelsGameKeyCategory(),
+            new ScoreboardHotKeyCategory(),
+            new CombatHotKeyCategory(),
+            new TaleWorlds.Engine.InputSystem.CheatsHotKeyCategory(),
+            new MissionOrderHotkeyCategory(),
+            new ChatLogHotKeyCategory(),
+        };
+
+        foreach (var category in categories)
+        {
+            var bound = category.RegisteredGameKeys.Where(k => k?.KeyboardKey != null).Select(k => k.KeyboardKey.InputKey)
+                .Concat(category.RegisteredHotKeys.SelectMany(h => h.Keys.Where(k => k != null).Select(k => k.InputKey))).ToList();
+            foreach (var key in RegisteredKeys.Where(k => k.Id == 543 || k.Id == 544))
+                CollectionAssert.DoesNotContain(bound, key.KeyboardKey.InputKey, category.GetType().Name + " already binds the default of key " + key.Id);
+        }
+    }
+
+    [TestMethod]
+    public void TheDefaults_AreDistinctFromEachOther()
+    {
+        var keys = RegisteredKeys.Select(k => k.KeyboardKey.InputKey).ToList();
+
+        Assert.AreEqual(keys.Count, keys.Distinct().Count());
     }
 
     [TestMethod]
@@ -127,7 +166,7 @@ public class TaomMarshalHotKeyCategoryTests
         var path = RepoPaths.RepoPath("Main", "_Module", "ModuleData", "global_strings.xml");
         var rows = XDocument.Load(path).Root!.Elements("string").ToList();
 
-        foreach (var id in new[] { 540, 542 })
+        foreach (var id in new[] { 540, 541, 542, 543, 544 })
         {
             var row = rows.Single(e => (string)e.Attribute("id")! == "str_key_name.TaomMarshalHotKeyCategory_" + id);
             StringAssert.EndsWith((string)row.Attribute("text")!, "(TAOM)");
@@ -141,7 +180,10 @@ public class TaomMarshalHotKeyCategoryTests
         var keys = new MarshalHotKeys();
 
         Assert.AreEqual(InputKey.Invalid, keys.Queue);
+        Assert.AreEqual(InputKey.Invalid, keys.Mark);
         Assert.AreEqual(InputKey.Invalid, keys.KeepWidths);
+        Assert.AreEqual(InputKey.Invalid, keys.FireMode);
+        Assert.AreEqual(InputKey.Invalid, keys.Word);
         Assert.AreEqual(InputKey.Invalid, keys.Queue, "a miss latches; a second read gives the same answer");
     }
 }

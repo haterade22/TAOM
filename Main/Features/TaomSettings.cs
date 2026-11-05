@@ -2960,7 +2960,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off.")]
     public bool SeatKeepPanelOpen { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultKeepPanelOpen;
 
-    // --- Marshal's Word (docs/features/marshals-word.md, stages M1 and M2) ---
+    // --- Marshal's Word (docs/features/marshals-word.md) ---
 
     [SettingPropertyGroup("Marshal's Word", GroupOrder = 83)]
     [SettingPropertyBool("{=taom_marshal_mcm_enabled}Enable Marshal's Word", Order = 0, RequireRestart = false,
@@ -2976,4 +2976,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_marshal_mcm_arrive_together}Arrive Together", Order = 2, RequireRestart = false,
         HintText = "{=taom_marshal_mcm_arrive_together_hint}Companies ordered to move together as one body walk at paces that bring them to their places at the same time: the nearer ones slow down. Needs Keep the Array. Default: on.")]
     public bool MarshalArriveTogether { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultArriveTogether;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_outlines}Outlines", Order = 3, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on.")]
+    public bool MarshalOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;
 }

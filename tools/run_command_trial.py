@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Run the field trial of the Seat of Seeing (build-spec section 12) in the real game with nobody at the keyboard.
+"""Run the field trial of the Seat of Seeing and Marshal's Word (build-spec section 12) in the real game with nobody at the keyboard.
 
 Run:  python tools/run_command_trial.py [--scene battle_terrain_a] [--live-limit S] [--steps enter,fly,...]
                                         [--require-idle-minutes N] [--keep-on-crash S] [--dry-run]
@@ -11,14 +11,19 @@ controls in order, and writes one line per step:
     [SeatTrial] step=<name> result=<PASS|FAIL> <facts>
 
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
-no failed Seat check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's line for a trial or
-Seat site count) and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
+no failed Seat or Marshal's Word check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
+line for a trial or Seat site count), no [ERROR] line of Marshal's Word (a hotkey registration that failed, a session that could not start, a patch
+class of its category that failed or was skipped, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
 is judged: the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
 clean without), and no uncommitted file under the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
 the edited file is still uncommitted (docs/features/seat-of-seeing.md names the cases only a content hash in the stamp could close),
 and the PASS text names the build that was judged and the [Session] swallowed counts. Exit 1 is any failure, including a preflight refusal or an unreadable git; exit
 2 is a bad argument; a --dry-run that exits 0 only means the preflight passed. A person still looks at the hud_*.png pictures the run
 saves.
+
+A run with no --steps arms every step, the Seat's and Marshal's Word's together, in ONE battle. The Seat's steps fit that battle; Marshal's Word's do not
+all fit it, because the battle runs out of time and soldiers before the volley and mark steps (docs/features/marshals-word.md, "How to verify in game",
+lists the subsets). Run each Marshal's Word subset with its own --steps list, one battle each.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and
 log collection. It only changes the arm variable, the done and status files, the arm text and the judge. The standing permission
@@ -63,16 +68,36 @@ SEAT_STEPS = (
     "keep_to_company",
     "let_go_on_death",
 )
-STEPS = SEAT_STEPS
+# The step names of Main/Features/MarshalsWord/Domain/MarshalTrialRows.cs, in its order.
+MARSHAL_STEPS = (
+    "queue_two_moves",
+    "direct_order_clears",
+    "array_keeps_offsets",
+    "arrive_together",
+    "volley_holds",
+    "volley_looses",
+    "mark_keeps_order",
+    "outline_clears",
+)
+STEPS = SEAT_STEPS + MARSHAL_STEPS
 
 STEP_LINE = re.compile(r"\[SeatTrial\] step=(\w+) result=(PASS|FAIL)\b")
 SEAT_CHECK_FAIL = re.compile(r"\bid=(taom\.seat-of-seeing\.[a-z0-9.-]+) result=fail\b")
+MARSHAL_CHECK_FAIL = re.compile(r"\bid=(taom\.marshals-word\.[a-z0-9.-]+) result=fail\b")
 # An [ERROR] line of the Seat or its trial (stage S2 onward): a fault, a failed start or a script failure; a Seat patch that failed to apply
 # or was skipped (Harmony stops a category at its first failing class, so one line is ten patches off: Main/PatchCategoryApplier.cs); the
 # thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost and SeatHeroAdapter). The
 # hot key failure is logged at LogError for the same reason. Another feature's patch or guard line does not fail this run.
 SEAT_ERROR = re.compile(
     r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter)\.\w+ ran off the main mission thread)")
+# An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, and a session that could not
+# start); the category Patch141 that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
+# namespace that was skipped (the applier writes the class's full name, which holds no "Patch141_"); and the thread guard's line for one of its
+# adapters' native writes. Its fault and its array fault also write a failed check line, which MARSHAL_CHECK_FAIL reads.
+MARSHAL_ERROR = re.compile(
+    r"\] \[ERROR\] (?:\[MarshalsWord\]"
+    r"|\[PatchApply\] (?:\S*Patch141_\S*|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)"
+    r"|\[TAOM\] Marshal(?:Order|Fire|Outline)Adapter\.\w+ ran off the main mission thread)")
 SESSION_SUMMARY = re.compile(r"\[Session\] summary reason=\S+ .*?\bswallowed=(\d+) shield_swallowed=(\d+)(?:.*?\berrors=(\d+))?")
 SESSION_SITE = re.compile(r"\[Session\] swallowed feature=(\S+) site=(\S+) n=(\d+)")
 BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.(\d{8}-\d{6})Z\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)")
@@ -162,13 +187,14 @@ def judge(done, report_json, log_text=None, steps=STEPS):
     if stale is not None:
         return 1, "the game ran a build that is not this checkout: " + stale
 
+    lines = log_text.splitlines()
     results = {}
-    for line in log_text.splitlines():
+    for line in lines:
         match = STEP_LINE.search(line)
         if match:
             results.setdefault(match.group(1), []).append(match.group(2))
     failed = sorted({step for step, seen in results.items() if "FAIL" in seen})
-    other_fails = [line.strip() for line in log_text.splitlines() if "result=FAIL" in line and not STEP_LINE.search(line)]
+    other_fails = [line.strip() for line in lines if "result=FAIL" in line and not STEP_LINE.search(line)]
     if failed or other_fails:
         named = ", ".join(failed + [line[:120] for line in other_fails])
         return 1, f"FAIL lines: {named}"
@@ -178,17 +204,17 @@ def judge(done, report_json, log_text=None, steps=STEPS):
     block = runner.crash_report_line(log_text, None)
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
-    faults = sorted({match.group(1) for match in map(SEAT_CHECK_FAIL.search, log_text.splitlines()) if match})
+    faults = sorted({match.group(1) for pattern in (SEAT_CHECK_FAIL, MARSHAL_CHECK_FAIL) for match in map(pattern.search, lines) if match})
     if faults:
-        return 1, "a Seat check line failed: " + ", ".join(faults)
-    errors = [line.strip() for line in log_text.splitlines() if SEAT_ERROR.search(line)]
+        return 1, "a Seat or Marshal's Word check line failed: " + ", ".join(faults)
+    errors = [line.strip() for line in lines if SEAT_ERROR.search(line) or MARSHAL_ERROR.search(line)]
     if errors:
-        return 1, f"{len(errors)} [ERROR] line(s) of the Seat or its trial in the log, the first: " + errors[0][:200]
+        return 1, f"{len(errors)} [ERROR] line(s) of the Seat, Marshal's Word or the trial in the log, the first: " + errors[0][:200]
     if UNLOAD_LINE not in log_text:
         return 1, "reason=final but the TAOM log has no clean module unload line"
     stamp = BUILD_STAMP.search(log_text)
     build = f"{stamp.group(2)[:9]}{stamp.group(3) or ''} built {stamp.group(1)} UTC"
-    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat check, no Seat [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
+    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat or Marshal's Word check, no Seat or Marshal's Word [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
 
 
 def normalised_steps(text):

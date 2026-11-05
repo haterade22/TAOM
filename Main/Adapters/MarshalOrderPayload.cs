@@ -39,6 +39,12 @@ internal sealed class MarshalOrderPayload
 
     internal Formation? Target { get; }
 
+    /// <summary>A mark step: starting it sets each member's target company and issues no order.</summary>
+    internal bool IsMark => _call == MarshalCall.Mark;
+
+    /// <summary>The player's charge or advance on an enemy company, the one call a held mark key turns into a mark (build-spec 8.1).</summary>
+    internal bool CanMark => _call == MarshalCall.Formation && Target != null && (Type == OrderType.Charge || Type == OrderType.Advance);
+
     internal IOrderable? Orderable { get; }
 
     /// <summary>
@@ -48,6 +54,9 @@ internal sealed class MarshalOrderPayload
     internal bool KeepWidths { get; }
 
     internal static MarshalOrderPayload ForOrder(OrderType type) => new(MarshalCall.Order, type, EndFor(MarshalCall.Order, type));
+
+    /// <summary>The order a change to a word mode also gives the company, so the new mode does not look broken behind an old hold-fire order (build-spec 7.2).</summary>
+    internal static MarshalOrderPayload FireAtWill() => ForOrder(OrderType.FireAtWill);
 
     /// <summary>An order that carries an agent (FollowMe): never queued, so the payload only lets the capture count a decline.</summary>
     internal static MarshalOrderPayload ForAgent(OrderType type) => new(MarshalCall.Agent, type, null);
@@ -60,6 +69,9 @@ internal sealed class MarshalOrderPayload
 
     internal static MarshalOrderPayload ForTwoPositions(OrderType type, WorldPosition first, WorldPosition second) =>
         new(MarshalCall.TwoPositions, type, EndFor(MarshalCall.TwoPositions, type), first, second, keepWidths: MarshalHooks.KeepWidthsHeld);
+
+    /// <summary>The mark that a charge or advance on this company turns into, kept as a queue step: it ends at once and orders nothing.</summary>
+    internal static MarshalOrderPayload ForMark(Formation target) => new(MarshalCall.Mark, OrderType.Charge, StepEnd.AtOnce, target: target);
 
     /// <summary>The order type is what the orderable gives the player's side now, as <c>SetOrderWithOrderableObject</c> asks it (OrderController.cs:1010).</summary>
     internal static MarshalOrderPayload ForOrderable(IOrderable orderable, BattleSideEnum side)
@@ -162,7 +174,7 @@ internal sealed class MarshalOrderPayload
                 controller.SetOrderWithOrderableObject(Orderable!);
                 break;
             default:
-                throw new InvalidOperationException("a " + _call + " order is never queued");
+                throw new InvalidOperationException("a " + _call + " is never issued on a controller");
         }
     }
 

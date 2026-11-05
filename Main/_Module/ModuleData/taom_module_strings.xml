@@ -4647,5 +4647,13 @@
 	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
 	<string id="TAOM_LD_StartFailed" text="{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- MarshalScreenAdapter -->
+	<string id="taom_marshal_fire_free" text="{=taom_marshal_fire_free}The archers fire at will." />
+	<string id="taom_marshal_fire_on_word" text="{=taom_marshal_fire_on_word}The archers draw and hold until you give the word, or for 14 seconds at most." />
+	<string id="taom_marshal_word_given" text="{=taom_marshal_word_given}The word is given." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_marshal_mcm_outlines" text="{=taom_marshal_mcm_outlines}Outlines" />
+	<string id="taom_marshal_mcm_outlines_hint" text="{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on." />
 
 </strings>

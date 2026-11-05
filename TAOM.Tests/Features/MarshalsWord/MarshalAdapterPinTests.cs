@@ -44,6 +44,16 @@ public class MarshalAdapterPinTests
     }
 
     [TestMethod]
+    public void ReadMarks_ACompanyOnChargeAdvanceOrChargeToTarget_IsNotSampled_BecauseVanillaKeepsATargetWithThemAndNothingJudgesThem()
+    {
+        // OrderController.cs:812-824 sets a target with a Charge or an Advance and MovementOrder.cs:684-685 applies one with ChargeToTarget; the target stays until the
+        // next movement order (Formation.cs:734). Such a company is a mark by accident, so the walk and its native reads (one per soldier) and the line are spent on none.
+        var read = Member(OrderAdapter, "public IReadOnlyList<MarkSample> ReadMarks(");
+
+        StringAssert.Contains(read, "if (order == MovementOrder.MovementOrderEnum.Charge || order == MovementOrder.MovementOrderEnum.Advance || order == MovementOrder.MovementOrderEnum.ChargeToTarget) continue; _sampled = 0;");
+    }
+
+    [TestMethod]
     public void ReadMarch_AnEmptiedCompany_LeavesTheMarch_BecauseTheTeamNoLongerTicksIt()
     {
         // Team.cs:616-622 ticks a formation only while CountOfUnits > 0, so an emptied company keeps its last position and a stale ETA.
@@ -167,7 +177,7 @@ public class MarshalAdapterPinTests
         // 6.2: a second order during a walk keeps the array the player last ordered, because the order point stands for the place while it holds one.
         StringAssert.Contains(Member(ArrayLayout, "private static Vec2 PlaceOf("),
             "f.OrderPositionIsValid && f.GetReadonlyMovementOrderReference().MovementState == MovementOrder.MovementStateEnum.Hold ? f.OrderPosition : f.CurrentPosition;");
-        StringAssert.Contains(Member(ArrayLayout, "private static ArrayCompany Read("), "var place = PlaceOf(f);");
+        StringAssert.Contains(Member(ArrayLayout, "internal static ArrayCompany Read("), "var place = PlaceOf(f);");
     }
 
     [TestMethod]

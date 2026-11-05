@@ -12,27 +12,31 @@ namespace TAOM.Features.MarshalsWord;
 internal sealed class MarshalHotKeys
 {
     private GameKey? _queue;
+    private GameKey? _mark;
     private GameKey? _keepWidths;
+    private GameKey? _fireMode;
+    private GameKey? _word;
     private bool _resolved;
 
     /// <summary>The key bound to "Give the order in turn", or <see cref="InputKey.Invalid"/>.</summary>
-    public InputKey Queue
-    {
-        get
-        {
-            Resolve();
-            return _queue?.KeyboardKey?.InputKey ?? InputKey.Invalid;
-        }
-    }
+    public InputKey Queue => Read(ref _queue);
+
+    /// <summary>The key bound to "Mark, do not move", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey Mark => Read(ref _mark);
 
     /// <summary>The key bound to "Keep the widths", or <see cref="InputKey.Invalid"/>.</summary>
-    public InputKey KeepWidths
+    public InputKey KeepWidths => Read(ref _keepWidths);
+
+    /// <summary>The key bound to "Change the archers' fire", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey FireMode => Read(ref _fireMode);
+
+    /// <summary>The key bound to "Give the word", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey Word => Read(ref _word);
+
+    private InputKey Read(ref GameKey? key)
     {
-        get
-        {
-            Resolve();
-            return _keepWidths?.KeyboardKey?.InputKey ?? InputKey.Invalid;
-        }
+        Resolve();
+        return key?.KeyboardKey?.InputKey ?? InputKey.Invalid;
     }
 
     private void Resolve()
@@ -46,7 +50,10 @@ internal sealed class MarshalHotKeys
             if (category.GameKeyCategoryId != TaomMarshalHotKeyCategory.CategoryId)
                 continue;
             _queue = category.GetGameKey(TaomMarshalHotKeyCategory.QueueKeyId);
+            _mark = category.GetGameKey(TaomMarshalHotKeyCategory.MarkKeyId);
             _keepWidths = category.GetGameKey(TaomMarshalHotKeyCategory.KeepWidthsKeyId);
+            _fireMode = category.GetGameKey(TaomMarshalHotKeyCategory.FireModeKeyId);
+            _word = category.GetGameKey(TaomMarshalHotKeyCategory.WordKeyId);
             break;
         }
 

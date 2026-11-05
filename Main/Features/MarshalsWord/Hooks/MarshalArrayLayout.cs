@@ -67,7 +67,8 @@ internal static class MarshalArrayLayout
     private static bool IsOurs(Formation f, Team? playerTeam) =>
         f.Team == playerTeam && !(f.IsAIControlled && f.PlayerOwner == null) && f.CountOfUnitsWithoutDetachedOnes > 0;
 
-    private static ArrayCompany Read(Formation f)
+    /// <summary>One company as the solver sees it, read on the main thread; the field trial plans its drags from the same reading.</summary>
+    internal static ArrayCompany Read(Formation f)
     {
         var place = PlaceOf(f);
         return new ArrayCompany(f.Index, place.x, place.y, f.Width, f.MinimumWidth, f.MaximumWidth, f.Depth, f.CountOfUnitsWithoutDetachedOnes,

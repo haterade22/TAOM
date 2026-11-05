@@ -34,13 +34,19 @@
 	<string id="str_key_name.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide}Hide the interface (TAOM)" />
 	<string id="str_key_description.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide_desc}In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
 
-	<!-- Marshal's Word (docs/features/marshals-word.md), under Options > Keybindings > Action because the keys are held in a
+	<!-- Marshal's Word (docs/features/marshals-word.md), under Options > Keybindings > Action because the keys are used in a
 	     mission. Same numbering rule as above: the trailing number is the game key id, kept in step with
 	     TaomMarshalHotKeyCategory. -->
 	<string id="str_key_name.TaomMarshalHotKeyCategory_540" text="{=taom_key_marshal_queue}Give the Order in Turn (TAOM)" />
 	<string id="str_key_description.TaomMarshalHotKeyCategory_540" text="{=taom_key_marshal_queue_desc}Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
+	<string id="str_key_name.TaomMarshalHotKeyCategory_541" text="{=taom_key_marshal_mark}Mark, Do Not Move (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_541" text="{=taom_key_marshal_mark_desc}Hold while you order a charge on an enemy company with the order panel open, and your company marks it as its target and keeps its own movement order. A mark steers archers and other ranged soldiers; soldiers fighting hand to hand choose their own foe. Defaults to Left Ctrl." />
 	<string id="str_key_name.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths}Keep the Widths (TAOM)" />
 	<string id="str_key_description.TaomMarshalHotKeyCategory_542" text="{=taom_key_marshal_widths_desc}Hold while you drag a line for several companies with the order panel open, and they turn as one body without stretching. Defaults to Left Alt." />
+	<string id="str_key_name.TaomMarshalHotKeyCategory_543" text="{=taom_key_marshal_fire}Change the Archers' Fire (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_543" text="{=taom_key_marshal_fire_desc}Press with a company selected to switch its archers between firing at will and drawing their bows to hold until your word, or for 14 seconds at most. Defaults to Comma." />
+	<string id="str_key_name.TaomMarshalHotKeyCategory_544" text="{=taom_key_marshal_word}Give the Word (TAOM)" />
+	<string id="str_key_description.TaomMarshalHotKeyCategory_544" text="{=taom_key_marshal_word_desc}Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
 
 	<!-- Realm Borders (#698), under Options > Keybindings > Campaign Map. Same numbering rule as
 	     above: the trailing number is the game key id, kept in step with

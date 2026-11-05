@@ -1,4 +1,4 @@
-# In-game checks for the Seat of Seeing (stages S1 to S3) and Marshal's Word (stages M1 and M2), one draft manifest for both features because one held
+# In-game checks for the Seat of Seeing (stages S1 to S3) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
 # issue covers them (Seat contract, Deviations row 8). Read by tools/ingame_verdict.py. The Seat's lines come first; Marshal's Word's checks begin
 # at the comment "Marshal's Word, stages M1" below.
 #
@@ -16,7 +16,7 @@
 #
 # DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
 issue = 0
-title = "Seat of Seeing S1 to S3 and Marshal's Word M1 and M2: the camera lifts off the hero, points, keeps to a target and glides back, orders queue, companies keep the array"
+title = "Seat of Seeing S1 to S3 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target and glides back, orders queue, companies keep the array, archers loose on the word, a company marks its target"
 fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
 logs = ["taom"]
 
@@ -153,7 +153,10 @@ pass = ['\[Check\] id=taom\.marshals-word\.captured result=pass mission=[0-9]+ k
 fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[MarshalsWord\] Marshal.s Word could not start',
+  '\[MarshalsWord\] Marshal.s Word failed',
+  '\[MarshalsWord\] the array layout failed',
   '\[MarshalsWord\] hotkey registration failed',
+  '\[PatchApply\] (?:\S*Patch141_\S*|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)',
 ]
 # A full queue needs twelve captures first, so its log already holds a pass line and this check passes. A session that never went live
 # (Enable off, or a mission it does not run in) writes one skip line with reason=setting-off or reason=mission-refused: NOT REACHED, with that reason.
@@ -259,6 +262,82 @@ fail = [
 # change of the player's team writes a skip line with its reason (reordered, emptied, patience, invalid, replaced, setting-off, team-changed):
 # also NOT REACHED. This row cannot
 # judge a march whose near company stopped short of the slack: it counts as arriving at the end of the march, however long ago it stopped.
+absence = "not-reached"
+
+# Stages M3 and M4. The archers' lines come from MarshalFireDriver.cs and the mark lines from MarshalQueueDriver.cs and MarshalMarkWatch.cs,
+# through IOutcomeLog, with the ids in MarshalChecks.cs. The plain [Marshal] lines (word, fire, mark) are the evidence a person reads; the
+# check lines are the verdicts. Stage M3 is built with Massed held back: key 543 cycles free and on-word only.
+
+[[check]]
+id = "taom.marshals-word.fire"
+needs = "select a company of archers and press Change the Archers' Fire (default Comma): it goes to on-word, and a second press returns it to free. A company under AI control is skipped with a reason"
+reached = ['\[Check\] id=taom\.marshals-word\.fire result=pass']
+pass = [
+  '\[Check\] id=taom\.marshals-word\.fire result=pass mission=[0-9]+ mode=OnWord company=[0-9]+$',
+  '\[Check\] id=taom\.marshals-word\.fire result=pass mission=[0-9]+ mode=Free company=[0-9]+$',
+]
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# The check needs both modes, so one press alone (the way into the on-word mode) reads NOT REACHED: a second press must bring the company back to free.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.word"
+needs = "put a company of archers on the word, wait until some hold a drawn bow, and press Give the Word (default M). A company on free or under AI control is skipped with a reason"
+reached = ['\[Check\] id=taom\.marshals-word\.fire result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.word result=pass mission=[0-9]+ company=[0-9]+ holding=([5-9]|[1-9][0-9]+)$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# A word given with fewer than five holding judges no release window (MarshalTuning.VolleyMinHolding), so it proves nothing about the release: NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.volley-hold"
+needs = "archers on the word with an enemy in range, left for five seconds with no word while at least five of them hold a drawn bow: at most one shot in twenty of the holding may leave"
+reached = ['\[Check\] id=taom\.marshals-word\.volley-hold result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.volley-hold result=pass mission=[0-9]+ company=[0-9]+ holding=[0-9]+ shots=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.volley-hold result=fail',
+]
+# holding is the smallest count of the window and shots counts the arrows that left while a soldier held. A fail means the bow did not stay drawn:
+# the stage stops there (build-spec 7), and the cause is one of the three native beliefs of 7.1. Fewer than five holding judges nothing: NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.volley-release"
+needs = "after the hold check, press Give the Word with at least five archers holding: at least 70 percent of them loose within 1.3 seconds"
+reached = ['\[Check\] id=taom\.marshals-word\.volley-release result=(pass|fail)']
+pass = ['\[Check\] id=taom\.marshals-word\.volley-release result=pass mission=[0-9]+ company=[0-9]+ holding=[0-9]+ shots=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.volley-release result=fail',
+]
+# shots counts the arrows that left in the two seconds after a release, from the word to the end of the window (the pass runs four times a
+# second of mission time, so a shot up to a quarter second late can still count). A word with fewer than five holding judges nothing.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.mark"
+needs = "select a company, open the order panel, hold Mark, Do Not Move (default Left Ctrl) and order a charge on an enemy company: the company keeps its movement order and takes the enemy as its target"
+reached = ['\[Check\] id=taom\.marshals-word\.mark result=(pass|skip)']
+pass = ['\[Check\] id=taom\.marshals-word\.mark result=pass mission=[0-9]+ companies=[0-9]+$']
+fail = ['\[Check\] id=taom\.marshals-word\.fault result=fail']
+# A skip line (reason=not-applied) means no selected company took the mark at the next tick; a click that finds no company under the player's control is
+# declined with a reason on the declined check and runs as a charge.
+absence = "not-reached"
+
+[[check]]
+id = "taom.marshals-word.mark-effect"
+needs = "mark an enemy company for a ranged company on Stop, and leave the mark for at least three seconds with at least three soldiers that have a target: at least half of those aim at the marked company"
+reached = ['\[Check\] id=taom\.marshals-word\.mark result=pass']
+pass = ['\[Check\] id=taom\.marshals-word\.mark-effect result=pass mission=[0-9]+ company=[0-9]+ target=[0-9]+ context=RangedOnStop onTarget=[0-9]+ of=[0-9]+$']
+fail = [
+  '\[Check\] id=taom\.marshals-word\.fault result=fail',
+  '\[Check\] id=taom\.marshals-word\.mark-effect result=fail',
+]
+# One battle reaches this row: the field trial's mark_keeps_order step marks an enemy company for the archers on Stop. Only that case is judged. A melee
+# company on a Move read onTarget=1 of=20 (run 20261104-185456) and is not judged any more: soldiers in hand to hand choose their own foe (build-spec
+# Deviations row 19). A company on Charge, Advance or ChargeToTarget holds a target vanilla gave it and is neither sampled nor logged. A company with any
+# other order, or fewer than three soldiers with a target, is logged on the [Marshal] mark line and not judged. A fail stops the stage (build-spec 8.1).
 absence = "not-reached"
 
 [[human]]
@@ -403,7 +482,7 @@ claim = "holding Left Shift zooms the hero's camera (game key 24) and Left Alt s
 claim = "Options > Keybindings > Action shows the rows \"Give the Order in Turn (TAOM)\" with Left Shift and \"Keep the Widths (TAOM)\" with Left Alt, and no ERROR text"
 
 [[human]]
-claim = "the MCM group \"Marshal's Word\" renders Enable Marshal's Word, Keep the Array and Arrive Together, and with Enable off the new behaviour does not act from the next battle on (a battle already running keeps it)"
+claim = "the MCM group \"Marshal's Word\" renders Enable Marshal's Word, Keep the Array, Arrive Together and Outlines (with its hint), and with Enable off the new behaviour does not act from the next battle on (a battle already running keeps it)"
 
 [[human]]
 claim = "with the game language set to Russian, Marshal's Word's messages, key rows and settings show the English seeds, with no raw key such as taom_marshal_queue_full"
@@ -434,3 +513,36 @@ claim = "on a siege, a drag along a wall with two companies keeps the array and 
 
 [[human]]
 claim = "a scripted order issued while Left Shift is held and the panel is open (a hideout ambush's own charge) is queued instead of run, which the feature doc accepts"
+
+[[human]]
+claim = "the three new keys appear under Options > Keybindings > Action with the names Mark, Do Not Move (Left Ctrl), Change the Archers' Fire (Comma) and Give the Word (M), each with its description and no ERROR text, and a rebind of each takes effect"
+
+[[human]]
+claim = "archers on the word draw their bows and keep them drawn (the bows look drawn in the picture and no arrow leaves) until the word, and then loose together over a fraction of a second, not on one tick; before the word they do not walk away from the line"
+
+[[human]]
+claim = "an archer with an enemy within about seven metres fights as the AI would, also on the word, and a company the player delegates to the AI, or whose hero fell, goes back to firing at will with no one left to give the word"
+
+[[human]]
+claim = "a company of archers told to hold fire stays silent on the word, and giving it fire at will or changing the mode again makes it answer the word; the culture doctrine's own volley control on an AI company is not disturbed by this key"
+
+[[human]]
+claim = "with Left Ctrl held and the panel open, a left click on an enemy company marks it without moving the company, and an order given afterwards moves it while the mark stands only until the next movement order; with Left Shift also held the mark waits its turn in the queue"
+
+[[human]]
+claim = "a marked enemy company draws fire from a ranged company on Stop; the log's mark lines show onTarget and of, and the mark-effect check reads PASS or the stage stops"
+
+[[human]]
+claim = "a mark given to a melee company keeps its movement order and is harmless: its soldiers in hand to hand choose their own foe, the log writes the company's mark line, and the mark-effect check does not judge it"
+
+[[human]]
+claim = "a queued Move on a cavalry company that is running its smart charge cycle after a mark cancels the cycle, and the player's mark wins over the cycle's own target (Patch31b re-points the cycle at the marked company)"
+
+[[human]]
+claim = "the gold outline on the soldiers of the selected companies and the red outline on a marked or charged enemy company show while the panel is open or the show-indicators key (default Left Alt) is held, and every outline is gone at once when the panel closes or the Outlines setting goes off; a banner bearer or a soldier with a race ability glow keeps one outline or the other, not both"
+
+[[human]]
+claim = "a mark given by a left click on an enemy company, with the order panel opened by toggle, marks the company, then the panel shuts as it does in the base game and the held keys disarm; the red outline shows with Left Alt held or when the panel is opened again. A panel opened by hold stays open after the click"
+
+[[human]]
+claim = "a company of throwers (javelins or throwing axes) put on the word holds the drawn throw for up to 14 seconds or looses it at the word, as archers do, and nothing else about it changes"

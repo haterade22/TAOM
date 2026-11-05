@@ -9,8 +9,9 @@ namespace TAOM.Features.MarshalsWord.Hooks;
 
 /// <summary>
 /// Patch141 (docs/features/marshals-word.md, build-spec 5.2): one prefix on each of the six public virtual methods through which a player
-/// order reaches <c>OrderController</c>. While the queue key is down with the order panel open, an order of the player's own controller
-/// that is on the allow list is stored as a step and vanilla does not run it. Everything else returns true at the first test. The
+/// order reaches <c>OrderController</c>. While the queue key or the mark key is down with the order panel open, an order of the player's own
+/// controller that is on the allow list is stored as a step (queue key), or a charge on an enemy company is stored as a mark (mark key), and
+/// vanilla does not run it. Everything else returns true at the first test. The
 /// prefixes only read (they run in the screen tick); the step starts later, in <c>OnMissionTick</c>. The registry section holds the callers.
 /// </summary>
 [HarmonyPatch]
@@ -18,7 +19,7 @@ namespace TAOM.Features.MarshalsWord.Hooks;
 public static class MarshalOrderCapturePatch
 {
     private static bool Armed(OrderController instance) =>
-        MarshalHooks.IsLive && MarshalHooks.QueueArmed && instance == MarshalHooks.PlayerController;
+        MarshalHooks.IsLive && (MarshalHooks.QueueArmed || MarshalHooks.MarkArmed) && instance == MarshalHooks.PlayerController;
 
     private static bool Offer(MarshalOrderPayload? payload) => payload != null && MarshalHooks.TryCapture(payload);
 

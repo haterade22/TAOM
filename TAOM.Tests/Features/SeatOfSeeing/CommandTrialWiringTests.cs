@@ -17,6 +17,7 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 public class CommandTrialWiringTests
 {
     private const string TrialFolder = "Client/Features/SeatOfSeeing/Trial/";
+    private const string MarshalTrialFolder = "Client/Features/MarshalsWord/Trial/";
 
     private static string View() => RepoPaths.ReadSource("Client/Features/SeatOfSeeing/SeatView.cs", stripComments: true);
 
@@ -29,13 +30,17 @@ public class CommandTrialWiringTests
         return Regex.Replace(next < 0 ? code.Substring(start) : code.Substring(start, next - start), @"\s+", " ");
     }
 
+    // Each feature keeps its rows, handlers and host members in its own files of one partial class (build-spec section 12), so a gate reads both folders.
     private static string[] TrialFiles() =>
-        Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "SeatOfSeeing", "Trial"), "*.cs");
+        Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "SeatOfSeeing", "Trial"), "*.cs")
+            .Concat(Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "MarshalsWord", "Trial"), "*.cs")).ToArray();
+
+    private static string FolderOf(string file) => file.Replace('\\', '/').Contains("/MarshalsWord/") ? MarshalTrialFolder : TrialFolder;
 
     private static string TrialSource(string pattern) =>
         string.Join("\n", TrialFiles()
             .Where(f => Regex.IsMatch(Path.GetFileName(f), pattern))
-            .Select(f => RepoPaths.ReadSource(TrialFolder + Path.GetFileName(f), stripComments: true)));
+            .Select(f => RepoPaths.ReadSource(FolderOf(f) + Path.GetFileName(f), stripComments: true)));
 
     // ---- The view ----
 
@@ -136,7 +141,7 @@ public class CommandTrialWiringTests
         // TAOM.Client declares no records or init accessors (its csproj), and the trial adds no view of its own.
         foreach (var file in TrialFiles())
         {
-            var code = RepoPaths.ReadSource(TrialFolder + Path.GetFileName(file), stripComments: true);
+            var code = RepoPaths.ReadSource(FolderOf(file) + Path.GetFileName(file), stripComments: true);
             Assert.IsFalse(Regex.IsMatch(code, @"\brecord\b"), file);
             Assert.IsFalse(Regex.IsMatch(code, @"\binit\s*;"), file);
             Assert.IsFalse(code.Contains("[DefaultView"), file);
@@ -165,9 +170,12 @@ public class CommandTrialWiringTests
     {
         var writers = HostWriters(TrialSource("^CommandTrialHost"));
 
-        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel" })
+        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "MarshalSelect", "MarshalMoveTo",
+            "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
+        foreach (var held in new[] { "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalPressFire", "MarshalPressWord" })
+            CollectionAssert.DoesNotContain(writers, held, "a held or pressed key sets a view flag the screen tick reads, and writes no agent, formation or mission flag");
         CollectionAssert.DoesNotContain(writers, "ProbeFocus");
     }
 
@@ -181,6 +189,16 @@ public class CommandTrialWiringTests
         "GroundHeight", "FinishDeployment", "Screenshot", "PressSeatKey", "PressPending", "SetInput", "State", "Frames", "GlideBegan", "Faulted",
         "PressHide", "PanelOpen", "MouseVisible", "UiHidden", "WindowFocused", "MoveCursorTo", "ProbeFocus", "Said", "LastSaid", "PressKeep",
         "Keeping", "KeepsChosen", "DistanceToKept", "ChooseSoldier", "AimAtChosen", "ViewForward", "ChooseCompany", "NoteWrite", "WatchFocus",
+        // The Marshal's Word members below read the chosen companies, the session's counters or its own tables, or store a ground point: read in CommandTrialHost.Marshal.cs, none writes an agent, a formation or a mission flag.
+        "MarshalViewOfMission", "MarshalSessionOfMission", "PlayerController", "MarshalLive", "MarshalFaulted", "MarshalChooseCompanies", "MarshalChooseArchers",
+        "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalQueueArmed", "MarshalMarkArmed", "MarshalWidthsArmed", "MarshalPlanPoint",
+        "MarshalPlanFrontDrag", "MarshalPlanArrivalDrag", "MarshalDistanceToPoint", "MarshalOffset", "MarshalInLine", "MarshalSpeed",
+        "MarshalQueuedSteps", "MarshalStepsFinished", "MarshalStepsByPatience", "MarshalArraysSolved", "MarshalMarchConclusion", "MarshalMarchesConcluded",
+        "MarshalChooseEnemy", "MarshalMarkedEnemy", "MarshalOrderName", "MarshalMarkRead", "MarshalPressFire", "MarshalPressWord", "MarshalFireMode",
+        "MarshalHolding", "MarshalHoldVerdict", "MarshalReleaseVerdict", "MarshalOutlinesPainted", "ArrayCompaniesOfChosen", "GroundPosition",
+        "MarshalReleaseKeys", "MarshalSettled", "MarshalAhead", "MarshalOrderedOffset", "MarshalStepsCaptured", "MarshalStepsByArrival",
+        "MarshalOrderPoint", "MarshalEnemyDistance", "MarshalMarkJudged", "MarshalChooseNearestEnemy", "MarshalPlanApproach", "MarshalWatchBegin",
+        "MarshalWatchEnd", "MarshalWatchShots", "MarshalWatchShooters", "MarshalAside", "MarshalIdle", "CensusOfChosen",
     };
 
     private static string[] Unclassified(string host, IEnumerable<string> writeNothing) =>
@@ -194,7 +212,8 @@ public class CommandTrialWiringTests
         CollectionAssert.AreEqual(Array.Empty<string>(), Unclassified(host, HostMembersThatWriteNothing),
             "a new host member is a write until a person says otherwise: add it to HostMembersThatWriteNothing after reading it");
         Assert.IsFalse(Regex.IsMatch(host, @"\bset\s*[{=;]"), "no host property writes");
-        CollectionAssert.IsSubsetOf(HostMembersThatWriteNothing, HostMembers(host).Keys.ToList(), "a name on the list that no longer exists is a stale entry");
+        CollectionAssert.IsSubsetOf(HostMembersThatWriteNothing, HostMembers(host).Keys.ToList(),
+            "a name on the list that no longer exists is a stale entry: " + string.Join(", ", HostMembersThatWriteNothing.Except(HostMembers(host).Keys)));
     }
 
     [TestMethod]
@@ -325,7 +344,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=";
+        const string Write = @"\.KillAgentCheat\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {

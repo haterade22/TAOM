@@ -38,6 +38,7 @@ internal sealed partial class CommandTrialScript
     static CommandTrialScript()
     {
         SeatSteps(Handlers);
+        MarshalSteps(Handlers);
     }
 
     internal CommandTrialScript(ICommandTrialHost host, IReadOnlyList<SeatTrialStep> steps, IModLogger logger, Action<string> finished,
@@ -131,6 +132,8 @@ internal sealed partial class CommandTrialScript
             verdict = Verdict.Failed("reason=timeout waiting=" + verdict.Text);
         if (!verdict.Done)
             return;
+        // A step that ends, by a verdict or by a failure deep inside a wait, leaves no key held for the next one.
+        _host.MarshalReleaseKeys();
         if (!verdict.Pass)
             ReleaseAfterFailure();
 

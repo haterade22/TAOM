@@ -65,7 +65,7 @@ public class CommandTrialSeatStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(StageTwo.Concat(StageThree).ToArray(), names.Skip(6).ToArray());
+        CollectionAssert.AreEqual(StageTwo.Concat(StageThree).ToArray(), names.Skip(6).Take(StageTwo.Length + StageThree.Length).ToArray());
     }
 
     [TestMethod]
@@ -815,9 +815,9 @@ public class CommandTrialSeatStepsTests
     }
 
     [TestMethod]
-    public void TheKillSteps_AreTheLastRows_SoAnEarlierRowNeverMeetsADeadBattle()
+    public void TheKillSteps_AreTheLastSeatRows_SoAnEarlierSeatRowNeverMeetsADeadBattle()
     {
-        var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
+        var names = SeatTrialRows.Rows.Select(s => s.Name).ToList();
 
         Assert.AreEqual("let_go_on_death", names.Last());
     }

@@ -4,7 +4,7 @@ using TAOM.Features.MarshalsWord;
 
 namespace TAOM.Tests.Features.MarshalsWord;
 
-/// <summary>The three MCM values of stages M1 and M2 (build-spec section 4): their compiled defaults and that the provider reads through to the settings object.</summary>
+/// <summary>The four MCM values (build-spec section 4): their compiled defaults and that the provider reads through to the settings object.</summary>
 [TestClass]
 [TestCategory("RequiresGame")]
 public class MarshalSettingsProviderTests
@@ -15,6 +15,7 @@ public class MarshalSettingsProviderTests
         Assert.IsTrue(MarshalSettingsProvider.DefaultEnabled);
         Assert.IsTrue(MarshalSettingsProvider.DefaultKeepArray);
         Assert.IsTrue(MarshalSettingsProvider.DefaultArriveTogether);
+        Assert.IsTrue(MarshalSettingsProvider.DefaultOutlines);
     }
 
     [TestMethod]
@@ -25,17 +26,19 @@ public class MarshalSettingsProviderTests
         Assert.AreEqual(MarshalSettingsProvider.DefaultEnabled, settings.MarshalEnabled);
         Assert.AreEqual(MarshalSettingsProvider.DefaultKeepArray, settings.MarshalKeepArray);
         Assert.AreEqual(MarshalSettingsProvider.DefaultArriveTogether, settings.MarshalArriveTogether);
+        Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, settings.MarshalOutlines);
     }
 
     [TestMethod]
     public void EachValue_ReadsThroughToItsOwnProperty()
     {
-        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false };
+        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false, MarshalOutlines = false };
         var sut = new MarshalSettingsProvider(settings);
 
         Assert.IsFalse(sut.Enabled);
         Assert.IsTrue(sut.KeepArray);
         Assert.IsFalse(sut.ArriveTogether);
+        Assert.IsFalse(sut.Outlines);
 
         settings.MarshalKeepArray = false;
         Assert.IsFalse(sut.KeepArray, "the provider keeps the settings object, not a copy of a value");
@@ -50,5 +53,6 @@ public class MarshalSettingsProviderTests
         Assert.AreEqual(MarshalSettingsProvider.DefaultEnabled, sut.Enabled);
         Assert.AreEqual(MarshalSettingsProvider.DefaultKeepArray, sut.KeepArray);
         Assert.AreEqual(MarshalSettingsProvider.DefaultArriveTogether, sut.ArriveTogether);
+        Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, sut.Outlines);
     }
 }

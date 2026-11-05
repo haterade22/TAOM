@@ -21,8 +21,15 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
     private readonly IModLogger _logger;
     private Mission? _mission;
     private OrderController? _controller;
+    private Formation? _aimedAt;
+    private int _sampled;
+    private int _onTarget;
+    private int _of;
 
     public MarshalOrderAdapter(IModLogger logger) => _logger = logger;
+
+    /// <summary>The number the queue and the table know a company by: <c>Formation.Index</c>, a field of the player's team.</summary>
+    internal static int CompanyOf(Formation formation) => formation.Index;
 
     public event Action<IReadOnlyList<int>>? DirectOrder;
 
@@ -50,6 +57,15 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
         if (_controller != null)
             _controller.OnOrderIssued -= OnOrderIssued;
         _controller = null;
+    }
+
+    public bool PlayerCommands
+    {
+        get
+        {
+            var team = Mission.Current?.PlayerTeam;
+            return team != null && (team.IsPlayerGeneral || team.IsPlayerSergeant);
+        }
     }
 
     public IReadOnlyList<int> SelectedCompanies()
@@ -120,6 +136,9 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
             return false;
 
         var order = (MarshalOrderPayload)payload;
+        if (order.IsMark)
+            return Mark(companies, order.Target!);
+
         // The array prefix reads the widths key, and a queued drag must lay out with the key its player held (6.2). Main thread only: the
         // screen tick that writes the key and the mission tick that runs this are never concurrent.
         var keptWidths = MarshalHooks.KeepWidthsHeld;
@@ -145,6 +164,64 @@ internal sealed class MarshalOrderAdapter : IMarshalOrderAdapter
             MarshalHooks.KeepWidthsHeld = keptWidths;
             master.ClearSelectedFormations();
         }
+    }
+
+    // SetTargetFormation writes the target index of every soldier (Formation.cs:240-249) and moves no order, so a mark is the one thing a
+    // charge does that this keeps. Patch31b re-points a running cavalry cycle from its postfix.
+    private bool Mark(IReadOnlyList<int> companies, Formation target)
+    {
+        var marked = false;
+        foreach (var company in companies)
+        {
+            var formation = FormationOf(company);
+            if (formation == null || formation.CountOfUnits == 0 || formation.IsAIControlled)
+                continue;
+            MissionThreadGuard.NoteCall("MarshalOrderAdapter.Mark", _logger.LogError);
+            formation.SetTargetFormation(target);
+            marked = true;
+        }
+
+        return marked;
+    }
+
+    public IReadOnlyList<MarkSample> ReadMarks()
+    {
+        var formations = Mission.Current?.PlayerTeam?.FormationsIncludingSpecialAndEmpty;
+        if (formations == null)
+            return Array.Empty<MarkSample>();
+        var samples = new List<MarkSample>();
+        foreach (var formation in formations)
+        {
+            var target = formation.TargetFormation;
+            if (target == null || formation.CountOfUnits == 0)
+                continue;
+            var order = formation.GetReadonlyMovementOrderReference().OrderEnum;
+            if (order == MovementOrder.MovementOrderEnum.Charge || order == MovementOrder.MovementOrderEnum.Advance || order == MovementOrder.MovementOrderEnum.ChargeToTarget)
+                continue;
+            _sampled = 0;
+            _onTarget = 0;
+            _of = 0;
+            _aimedAt = target;
+            formation.ApplyActionOnEachUnit(Sample);
+            var context = MarshalMarkRules.ContextOf(formation.QuerySystem.IsRangedFormationReadOnly, order == MovementOrder.MovementOrderEnum.Stop);
+            samples.Add(new MarkSample(formation.Index, target.Index, _onTarget, _of, context));
+        }
+
+        return samples;
+    }
+
+    // At most MarkSampleMax soldiers; one native read each.
+    private void Sample(Agent agent)
+    {
+        if (_sampled >= MarshalTuning.MarkSampleMax || !agent.IsHuman)
+            return;
+        _sampled++;
+        var aim = agent.GetTargetAgent();
+        if (aim == null)
+            return;
+        _of++;
+        if ((aim.RiderAgent ?? aim).Formation == _aimedAt)
+            _onTarget++;
     }
 
     public bool TryPoint(object payload, out float x, out float y, out float z) => ((MarshalOrderPayload)payload).TryPoint(out x, out y, out z);

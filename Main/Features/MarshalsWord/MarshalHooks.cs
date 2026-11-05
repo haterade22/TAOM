@@ -14,6 +14,7 @@ internal static class MarshalHooks
 {
     private static volatile bool _isLive;
     private static volatile bool _queueArmed;
+    private static volatile bool _markArmed;
     private static volatile bool _keepWidthsHeld;
     private static volatile bool _keepArray;
     private static volatile bool _arriveTogether;
@@ -27,6 +28,9 @@ internal static class MarshalHooks
 
     /// <summary>Key 540 is down and the order panel is open (written once a frame by the session).</summary>
     internal static bool QueueArmed => _queueArmed;
+
+    /// <summary>Key 541 is down and the order panel is open (written once a frame by the session).</summary>
+    internal static bool MarkArmed => _markArmed;
 
     /// <summary>
     /// Key 542 is down and the order panel is open. Written by the screen tick, and borrowed for the length of one queued order, which carries
@@ -60,14 +64,16 @@ internal static class MarshalHooks
     {
         _arrayFaulted = false;
         _paces = null;
+        MarshalFireTable.Begin();
         _sink = sink;
         _isLive = true;
     }
 
     /// <summary>Written together once a frame by the session, from the keys and the settings.</summary>
-    internal static void Arm(bool queue, bool keepWidths, bool keepArray, bool arriveTogether)
+    internal static void Arm(bool queue, bool keepWidths, bool keepArray, bool arriveTogether, bool mark = false)
     {
         _queueArmed = queue;
+        _markArmed = mark;
         _keepWidthsHeld = keepWidths;
         _keepArray = keepArray;
         _arriveTogether = arriveTogether;
@@ -95,11 +101,13 @@ internal static class MarshalHooks
     {
         _isLive = false;
         _queueArmed = false;
+        _markArmed = false;
         _keepWidthsHeld = false;
         _keepArray = false;
         _arriveTogether = false;
         _playerController = null;
         _sink = null;
         _paces = null;
+        MarshalFireTable.Clear();
     }
 }

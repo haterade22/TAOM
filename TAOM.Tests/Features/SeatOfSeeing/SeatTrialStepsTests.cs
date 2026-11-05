@@ -22,9 +22,9 @@ public class SeatTrialStepsTests
     }
 
     [TestMethod]
-    public void All_IsTheJoinOfEachFeaturesRowList_SoFarTheSeatsOnly()
+    public void All_IsTheJoinOfEachFeaturesRowList_TheSeatsThenMarshalsWord()
     {
-        CollectionAssert.AreEqual(SeatTrialRows.Rows.ToArray(), SeatTrialSteps.All.ToArray());
+        CollectionAssert.AreEqual(SeatTrialRows.Rows.Concat(TAOM.Features.MarshalsWord.Domain.MarshalTrialRows.Rows).ToArray(), SeatTrialSteps.All.ToArray());
     }
 
     [TestMethod]

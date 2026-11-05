@@ -28,6 +28,8 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
     {
         registrator.Register<IMarshalSettingsProvider, MarshalSettingsProvider>(Reuse.Singleton);
         registrator.Register<IMarshalOrderAdapter, MarshalOrderAdapter>(Reuse.Transient);
+        registrator.Register<IMarshalFireAdapter, MarshalFireAdapter>(Reuse.Transient);
+        registrator.Register<IMarshalOutlineAdapter<TaleWorlds.MountAndBlade.Agent>, MarshalOutlineAdapter>(Reuse.Transient);
         registrator.Register<MarshalHotKeys>(Reuse.Singleton);
     }
 
@@ -45,7 +47,7 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
         }
         catch (Exception ex)
         {
-            resolver.Resolve<IModLogger>().LogWarning(
+            resolver.Resolve<IModLogger>().LogError(
                 $"[MarshalsWord] hotkey registration failed, the Marshal's Word keys stay unbound: {ex.GetType().Name}: {ex.Message}");
         }
     }

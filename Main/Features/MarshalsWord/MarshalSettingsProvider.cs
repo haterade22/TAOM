@@ -9,6 +9,7 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     internal const bool DefaultEnabled = true;
     internal const bool DefaultKeepArray = true;
     internal const bool DefaultArriveTogether = true;
+    internal const bool DefaultOutlines = true;
 
     private TaomSettings? _settings;
 
@@ -23,4 +24,6 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     public bool KeepArray => Settings?.MarshalKeepArray ?? DefaultKeepArray;
 
     public bool ArriveTogether => Settings?.MarshalArriveTogether ?? DefaultArriveTogether;
+
+    public bool Outlines => Settings?.MarshalOutlines ?? DefaultOutlines;
 }

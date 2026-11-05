@@ -123,6 +123,7 @@ internal sealed partial class CommandTrialWorld
 
     private void Frame(float dt)
     {
+        MarshalFrame(dt);
         ResolveStageTwoAndThree();
         if (State == SeatState.Rising)
         {

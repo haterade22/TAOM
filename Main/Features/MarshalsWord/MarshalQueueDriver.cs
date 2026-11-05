@@ -17,9 +17,12 @@ internal sealed class MarshalQueueDriver
     private readonly IMarshalOrderAdapter _orders;
     private readonly IOutcomeLog _outcomes;
     private readonly string _key;
+    private readonly List<(IReadOnlyList<int> Companies, object Payload)> _marks = new();
     private double _nextPass = double.NegativeInfinity;
     private int _finished;
     private int _endedByPatience;
+    private int _endedByArrival;
+    private int _captured;
 
     internal MarshalQueueDriver(IMarshalOrderAdapter orders, IOutcomeLog outcomes, string missionKey)
     {
@@ -29,6 +32,18 @@ internal sealed class MarshalQueueDriver
     }
 
     internal MarshalOrderQueue Queue { get; } = new();
+
+    /// <summary>Steps whose last member left, for the patience share and the field trial.</summary>
+    internal int Finished => _finished;
+
+    /// <summary>Of those, the steps that patience ended.</summary>
+    internal int EndedByPatience => _endedByPatience;
+
+    /// <summary>Of those, the steps that ended with <c>reason=arrival</c>.</summary>
+    internal int EndedByArrival => _endedByArrival;
+
+    /// <summary>Steps the capture stored (a mark waiting its turn is a step too), for the field trial.</summary>
+    internal int Captured => _captured;
 
     /// <summary>Stores the selected companies' order as a step, or says why not (5.2). <paramref name="end"/> is null for an order off the allow list.</summary>
     internal CaptureResult Capture(StepEnd? end, object payload, string kind)
@@ -51,7 +66,26 @@ internal sealed class MarshalQueueDriver
 
         var needsWaitTest = selected.Any(c => Queue.CountOf(c) == 0);
         Queue.Enqueue(selected, end.Value, payload, needsWaitTest);
+        _captured++;
         _outcomes.Pass(MarshalChecks.CapturedId, _key + ":" + kind, "mission=" + _key + " kind=" + kind + " companies=" + Count(selected.Count));
+        return CaptureResult.Queued;
+    }
+
+    /// <summary>
+    /// A held mark key turned the player's charge on an enemy company into a mark (8.1): one request for every selected company under the
+    /// player's control, applied at the next pass because the setter writes native state per soldier. Vanilla runs the order when no such
+    /// company exists, so the click is not swallowed.
+    /// </summary>
+    internal CaptureResult CaptureMark(object markPayload)
+    {
+        if (_orders.IsDeployment)
+            return Decline("deployment");
+        var selected = _orders.SelectedCompanies();
+        var companies = selected.Where(_orders.IsControllable).ToList();
+        if (companies.Count == 0)
+            return Decline(selected.Count == 0 ? "none-selected" : "ai-controlled");
+
+        _marks.Add((companies, markPayload));
         return CaptureResult.Queued;
     }
 
@@ -69,6 +103,7 @@ internal sealed class MarshalQueueDriver
     /// <summary>Each stored company number named a formation of the old team (5.3, rule 6).</summary>
     internal void OnPlayerTeamChanged()
     {
+        _marks.Clear();
         var steps = Queue.TotalSteps;
         Queue.ClearAll();
         _outcomes.Skip(MarshalChecks.ClearedId, _key + ":team", "mission=" + _key + " reason=team-changed steps=" + Count(steps));
@@ -77,6 +112,7 @@ internal sealed class MarshalQueueDriver
     /// <summary>One slow pass: drop the companies that left, test the walks, start what is ready, finish what is done.</summary>
     internal void Pass()
     {
+        ApplyMarks();
         var now = _orders.Now;
         if (now < _nextPass)
             return;
@@ -93,6 +129,21 @@ internal sealed class MarshalQueueDriver
             FinishRunning(now);
             if (Queue.Version == before)
                 break;
+        }
+    }
+
+    private void ApplyMarks()
+    {
+        if (_marks.Count == 0)
+            return;
+        var requests = _marks.ToList();
+        _marks.Clear();
+        foreach (var (companies, payload) in requests)
+        {
+            if (_orders.Issue(companies, payload))
+                _outcomes.Pass(MarshalChecks.MarkId, _key, "mission=" + _key + " companies=" + Count(companies.Count));
+            else
+                _outcomes.Skip(MarshalChecks.MarkId, _key + ":not-applied", "mission=" + _key + " reason=not-applied");
         }
     }
 
@@ -213,6 +264,8 @@ internal sealed class MarshalQueueDriver
         _finished++;
         if (reason == "patience")
             _endedByPatience++;
+        else if (reason == "arrival")
+            _endedByArrival++;
         Judge();
     }
 

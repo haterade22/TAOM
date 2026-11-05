@@ -31,5 +31,11 @@
     <string id="taom_key_seat_keep_desc" text="In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
     <string id="taom_key_seat_hide" text="Hide the interface (TAOM)" />
     <string id="taom_key_seat_hide_desc" text="In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
+    <string id="taom_key_marshal_mark" text="Mark, Do Not Move (TAOM)" />
+    <string id="taom_key_marshal_mark_desc" text="Hold while you order a charge on an enemy company with the order panel open, and your company marks it as its target and keeps its own movement order. A mark steers archers and other ranged soldiers; soldiers fighting hand to hand choose their own foe. Defaults to Left Ctrl." />
+    <string id="taom_key_marshal_fire" text="Change the Archers' Fire (TAOM)" />
+    <string id="taom_key_marshal_fire_desc" text="Press with a company selected to switch its archers between firing at will and drawing their bows to hold until your word, or for 14 seconds at most. Defaults to Comma." />
+    <string id="taom_key_marshal_word" text="Give the Word (TAOM)" />
+    <string id="taom_key_marshal_word_desc" text="Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
   </strings>
 </base>

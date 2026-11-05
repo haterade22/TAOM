@@ -25,6 +25,9 @@ REPO = Path(__file__).resolve().parents[2]
 TRIAL_SOURCE = REPO / "Client" / "Features" / "SeatOfSeeing" / "Trial"
 DOMAIN_SOURCE = REPO / "Main" / "Features" / "SeatOfSeeing" / "Domain"
 STEPS_SOURCE = DOMAIN_SOURCE / "SeatTrialRows.cs"
+MARSHAL_DOMAIN_SOURCE = REPO / "Main" / "Features" / "MarshalsWord" / "Domain"
+MARSHAL_STEPS_SOURCE = MARSHAL_DOMAIN_SOURCE / "MarshalTrialRows.cs"
+MARSHAL_TRIAL_SOURCE = REPO / "Client" / "Features" / "MarshalsWord" / "Trial"
 
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
 HEAD = "1735f2add88c0aa640afe3a1cdbb2dfa88b0dddc"
@@ -227,8 +230,115 @@ class JudgeTests(unittest.TestCase):
         """The same real lines judged against the whole table: the seven steps of stages S2 and S3 have no line, so the run fails."""
         code, why = judge(FINAL, None, "\n".join(REAL_RUN_LINES), changed={"Main/a.cs": datetime(2026, 11, 4, 10, 0, 0)})
         self.assertEqual(code, 1)
-        for step in trial.SEAT_STEPS[6:]:
+        for step in trial.STEPS[6:]:
             self.assertIn(step, why)
+
+
+class MarshalJudgeTests(unittest.TestCase):
+    """The judge reads Marshal's Word's own failure lines, as it reads the Seat's: a failed check line, a Patch141 apply failure and the thread guard."""
+
+    def test_a_failed_marshal_check_line_fails_the_run_and_names_the_check(self):
+        check = "[2026-11-04 10:01:04] [WARNING] [Check] id=taom.marshals-word.volley-hold result=fail mission=1 company=1 holding=6 shots=3"
+        code, why = judge(FINAL, None, full_log(extra=(check,)))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.marshals-word.volley-hold", why)
+
+    def test_the_fault_check_of_marshals_word_fails_the_run(self):
+        check = "[2026-11-04 10:01:04] [INFO] [Check] id=taom.marshals-word.fault result=fail mission=1 error=NullReferenceException"
+        code, why = judge(FINAL, None, full_log(extra=(check,)))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.marshals-word.fault", why)
+
+    def test_a_passing_marshal_check_line_and_a_skip_line_are_not_failures(self):
+        for result in ("pass", "skip"):
+            check = f"[2026-11-04 10:01:04] [INFO] [Check] id=taom.marshals-word.march-spread result={result} mission=1"
+            self.assertEqual(judge(FINAL, None, full_log(extra=(check,)))[0], 0, result)
+
+    def test_both_features_failed_checks_are_named_together(self):
+        seat = "[2026-11-04 10:01:04] [INFO] [Check] id=taom.seat-of-seeing.fault result=fail mission=1"
+        marshal = "[2026-11-04 10:01:05] [INFO] [Check] id=taom.marshals-word.fault result=fail mission=1"
+        code, why = judge(FINAL, None, full_log(extra=(seat, marshal)))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.seat-of-seeing.fault", why)
+        self.assertIn("taom.marshals-word.fault", why)
+
+    def test_a_patch141_apply_failure_fails_the_run(self):
+        error = "[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch141_MarshalsWord FAILED (Harmony stops a category at its first failing class)"
+        code, why = judge(FINAL, None, full_log(extra=(error,)))
+        self.assertEqual(code, 1)
+        self.assertIn("Patch141_MarshalsWord", why)
+
+    def test_every_patch_class_of_the_marshal_category_that_the_applier_skips_fails_the_run(self):
+        """The applier writes a skipped class by its full name. The classes of the category are named for what they patch and hold no Patch141_, so the
+        names are read out of the source and each is judged as the applier would write it."""
+        hooks = REPO / "Main" / "Features" / "MarshalsWord" / "Hooks"
+        classes = [match.group(1) for path in hooks.glob("*.cs") for match in re.finditer(
+            r"HarmonyPatchCategory\(MarshalsWordModule\.PatchCategory\)\]\s*public static class (\w+)", path.read_text(encoding="utf-8"))]
+        self.assertTrue(classes, "the source names the category's classes")
+        for name in classes:
+            line = f"[2026-11-04 10:00:05] [ERROR] [PatchApply] TAOM.Features.MarshalsWord.Hooks.{name} SKIPPED (its attributes cannot be read, so its patches are off)"
+            code, why = judge(FINAL, None, full_log(extra=(line,)))
+            self.assertEqual(code, 1, name)
+            self.assertIn(name, why)
+
+    def test_the_category_failure_and_a_class_skip_are_read_at_the_error_level_only(self):
+        for text in ("Patch141_MarshalsWord FAILED (x)", "TAOM.Features.MarshalsWord.Hooks.MarshalPacePatch SKIPPED (x)"):
+            self.assertIsNotNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:05] [ERROR] [PatchApply] {text}"), text)
+            for level in ("WARNING", "INFO"):
+                self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:05] [{level}] [PatchApply] {text}"), (level, text))
+
+    def test_a_hotkey_registration_failure_of_marshals_word_fails_the_run(self):
+        """Every step presses by method and an unregistered key reads as not pressed, so only this line tells a run that the Marshal keys are dead."""
+        text = "[MarshalsWord] hotkey registration failed, the Marshal's Word keys stay unbound: ArgumentOutOfRangeException: Index was out of range."
+        code, why = judge(FINAL, None, full_log(extra=[f"[2026-11-04 10:00:30] [ERROR] {text}"]))
+        self.assertEqual(code, 1)
+        self.assertIn("hotkey registration failed", why)
+
+    def test_the_line_the_module_writes_for_that_failure_is_at_the_error_level_the_scan_reads(self):
+        module = (REPO / "Main" / "Features" / "MarshalsWord" / "MarshalsWordModule.cs").read_text(encoding="utf-8")
+        catch = module[module.index("catch (Exception ex)"):]
+        self.assertIn("LogError(", catch.split("hotkey registration failed")[0], "a warning here would pass a run whose keys are unbound")
+        self.assertNotIn("LogWarning", catch.split("hotkey registration failed")[0])
+
+    def test_a_session_that_could_not_start_fails_the_run(self):
+        line = "[2026-11-04 10:00:40] [ERROR] [MarshalsWord] Marshal's Word could not start for this mission: System.InvalidOperationException: x"
+        code, why = judge(FINAL, None, full_log(extra=[line]))
+        self.assertEqual(code, 1)
+        self.assertIn("could not start", why)
+
+    def test_the_marshal_error_scan_needs_the_error_level_before_the_tag(self):
+        text = "[MarshalsWord] hotkey registration failed, the keys stay unbound"
+        self.assertIsNotNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:30] [ERROR] {text}"))
+        for level in ("WARNING", "INFO"):
+            self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:30] [{level}] {text}"), level)
+        self.assertIsNone(trial.MARSHAL_ERROR.search("[2026-11-04 10:00:30] [INFO] [PatchApply] category applied max_category=Patch141_MarshalsWord"))
+        self.assertIsNone(trial.MARSHAL_ERROR.search("[2026-11-04 10:01:30] [MarshalsWord] [ERROR] wrong order"))
+
+    def test_the_thread_guards_line_for_a_marshal_site_fails_the_run(self):
+        for site in ("MarshalOrderAdapter.Issue", "MarshalOrderAdapter.Mark", "MarshalFireAdapter.Sweep", "MarshalOutlineAdapter.Paint"):
+            error = f"[2026-11-04 10:00:05] [ERROR] [TAOM] {site} ran off the main mission thread (thread 7, main 1)"
+            code, why = judge(FINAL, None, full_log(extra=(error,)))
+            self.assertEqual(code, 1, site)
+            self.assertIn(site, why)
+
+    def test_another_features_patch_failure_does_not_fail_the_run(self):
+        error = "[2026-11-04 10:00:05] [ERROR] [PatchApply] Patch99_Other FAILED (x)"
+        self.assertEqual(judge(FINAL, None, full_log(extra=(error,)))[0], 0)
+
+    def test_a_marshal_step_without_its_line_is_missing_by_name(self):
+        code, why = judge(FINAL, None, full_log(skip=("arrive_together",)))
+        self.assertEqual(code, 1)
+        self.assertIn("arrive_together", why)
+
+    def test_a_marshal_step_fail_line_fails_the_run_and_names_the_step(self):
+        code, why = judge(FINAL, None, full_log(extra=(fail_line("queue_two_moves", "captured=0 first_at=nan"),)))
+        self.assertEqual(code, 1)
+        self.assertIn("queue_two_moves", why)
+
+    def test_only_the_armed_marshal_steps_are_required(self):
+        steps = trial.MARSHAL_STEPS[:2]
+        log = "\n".join([CLEAN_STAMP_LINE] + [pass_line(step) for step in steps] + [UNLOAD_LINE])
+        self.assertEqual(judge(FINAL, None, log, steps=steps)[0], 0)
 
 
 class SeatErrorLineTests(unittest.TestCase):
@@ -588,8 +698,52 @@ class SourceTieTests(unittest.TestCase):
         self.assertIn('NoteCall("SeatHeroAdapter.StandFast", _logger.LogError)', hero)
         self.assertIn('MissionThreadGuard.NoteCall(site, _logger.LogError)', host)
 
-    def test_every_step_is_a_features_steps_so_far_the_seats(self):
-        self.assertEqual(trial.STEPS, trial.SEAT_STEPS)
+    def test_every_step_is_a_features_steps_the_seats_then_marshals_word(self):
+        self.assertEqual(trial.STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS)
+        self.assertEqual(len(set(trial.STEPS)), len(trial.STEPS), "no step name is shared by two features")
+
+    def test_the_docstring_points_at_the_heading_of_the_feature_doc_that_lists_the_subsets(self):
+        heading = "How to verify in game"
+        self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
+        self.assertIn("## " + heading, (REPO / "docs" / "features" / "marshals-word.md").read_text(encoding="utf-8"))
+
+    def test_the_marshal_steps_are_the_marshal_row_lists_names_in_order(self):
+        source = MARSHAL_STEPS_SOURCE.read_text(encoding="utf-8")
+        self.assertEqual(tuple(re.findall(r'new SeatTrialStep\(\s*"(\w+)"', source)), trial.MARSHAL_STEPS)
+
+    def test_every_marshal_step_has_a_handler_in_the_marshal_script_file(self):
+        script = (MARSHAL_TRIAL_SOURCE / "CommandTrialScript.Marshal.cs").read_text(encoding="utf-8")
+        registered = tuple(re.findall(r'into\["(\w+)"\] = ', script))
+        self.assertEqual(registered, trial.MARSHAL_STEPS)
+
+    def test_the_marshal_fault_scan_matches_every_check_id_marshals_word_writes_and_the_line_the_log_writes(self):
+        source = (MARSHAL_DOMAIN_SOURCE / "MarshalChecks.cs").read_text(encoding="utf-8")
+        ids = re.findall(r'"(taom\.marshals-word\.[a-z0-9.-]+)"', source)
+        self.assertIn("taom.marshals-word.fault", ids)
+        self.assertIn("taom.marshals-word.volley-release", ids)
+        for check in ids:
+            self.assertTrue(trial.MARSHAL_CHECK_FAIL.search(f"[Check] id={check} result=fail mission=1"), check)
+        self.assertFalse(trial.MARSHAL_CHECK_FAIL.search("[Check] id=taom.marshals-word.fault result=pass mission=1"))
+        self.assertFalse(trial.MARSHAL_CHECK_FAIL.search("[Check] id=taom.seat-of-seeing.fault result=fail mission=1"))
+
+    def test_the_marshal_patch_failure_line_is_the_one_the_applier_writes_for_the_modules_category(self):
+        applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
+        module = (REPO / "Main" / "Features" / "MarshalsWord" / "MarshalsWordModule.cs").read_text(encoding="utf-8")
+        category = re.search(r'PatchCategory = "(Patch141_\w+)"', module)
+        self.assertIsNotNone(category)
+        template = re.search(r'\$"(\[PatchApply\] \{category\} FAILED \()', applier)
+        self.assertIsNotNone(template)
+        line = "[2026-11-04 10:00:05] [ERROR] " + template.group(1).replace("{category}", category.group(1))
+        self.assertTrue(trial.MARSHAL_ERROR.search(line), line)
+
+    def test_the_marshal_thread_guard_sites_are_the_ones_the_adapters_pass(self):
+        guard = (REPO / "Main" / "Features" / "AdvancedCombat" / "MissionThreadGuard.cs").read_text(encoding="utf-8")
+        self.assertIn("ran off the main mission thread", guard)
+        for adapter, site in (("MarshalOrderAdapter", "MarshalOrderAdapter.Issue"), ("MarshalOrderAdapter", "MarshalOrderAdapter.Mark"),
+                              ("MarshalFireAdapter", "MarshalFireAdapter.Sweep"), ("MarshalOutlineAdapter", "MarshalOutlineAdapter.Paint")):
+            source = (REPO / "Main" / "Adapters" / f"{adapter}.cs").read_text(encoding="utf-8")
+            self.assertIn(f'NoteCall("{site}", _logger.LogError)', source)
+            self.assertTrue(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:05] [ERROR] [TAOM] {site} ran off the main mission thread"), site)
 
     def test_the_line_shape_is_the_one_the_game_writes(self):
         source = (DOMAIN_SOURCE / "SeatTrialRules.cs").read_text(encoding="utf-8")

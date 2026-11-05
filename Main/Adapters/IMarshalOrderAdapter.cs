@@ -30,6 +30,9 @@ internal interface IMarshalOrderAdapter
     /// <summary>Unsubscribes and forgets its own controller. It does not write the patches' controller: the owner's <c>MarshalHooks.Clear</c> does. Safe to repeat; makes no native call.</summary>
     void Detach();
 
+    /// <summary>The player's team is commanded by the player: <c>IsPlayerGeneral || IsPlayerSergeant</c>, the question the order panel asks before it opens.</summary>
+    bool PlayerCommands { get; }
+
     /// <summary>The companies the player has selected on the panel.</summary>
     IReadOnlyList<int> SelectedCompanies();
 
@@ -54,7 +57,10 @@ internal interface IMarshalOrderAdapter
     /// <summary>The company's cached movement speed, in metres a second.</summary>
     double Speed(int company);
 
-    /// <summary>Selects the companies on the master controller, issues the payload's order and clears the selection. False when none could be selected.</summary>
+    /// <summary>
+    /// Selects the companies on the master controller, issues the payload's order and clears the selection. False when none could be selected.
+    /// A mark payload selects nothing and issues nothing: it sets each member's target company, and is false when no member took it.
+    /// </summary>
     bool Issue(IReadOnlyList<int> companies, object payload);
 
     /// <summary>The ground point a payload orders toward, for the flag that shows the road; false when it has none.</summary>
@@ -65,6 +71,9 @@ internal interface IMarshalOrderAdapter
     /// the AI reports a shift of <c>float.MaxValue</c>.
     /// </summary>
     IReadOnlyList<MarchLeg> ReadMarch(IReadOnlyList<MarchTarget> targets);
+
+    /// <summary>One read per player company that has a target company: the soldiers that aim at it, for the mark-effect check (build-spec 8.1).</summary>
+    IReadOnlyList<MarkSample> ReadMarks();
 
     /// <summary>Publishes the paces to the speed postfix with one reference write; an empty list clears it.</summary>
     void PublishPaces(IReadOnlyList<MarchPace> paces);

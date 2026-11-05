@@ -5,4 +5,7 @@ internal enum MarshalMessage
 {
     QueueFull,
     Faulted,
+    FireFree,
+    FireOnWord,
+    WordGiven,
 }

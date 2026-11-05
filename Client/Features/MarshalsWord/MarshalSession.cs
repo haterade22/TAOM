@@ -18,6 +18,7 @@ internal sealed class MarshalSession : IMarshalHookSink
     private const float FlagRefreshSeconds = 0.25f;
 
     private readonly IMarshalOrderAdapter _orders;
+    private readonly IMarshalOutlines _outlines;
     private readonly IMarshalScreenAdapter _screen;
     private readonly IMarshalSettingsProvider _settings;
     private readonly Func<bool> _mayRun;
@@ -26,6 +27,8 @@ internal sealed class MarshalSession : IMarshalHookSink
     private readonly string _key;
     private readonly MarshalQueueDriver _queue;
     private readonly MarshalMarchDriver _march;
+    private readonly MarshalFireDriver _fire;
+    private readonly MarshalMarkWatch _marks;
 
     private bool _answerYes;
     private bool _live;
@@ -33,14 +36,18 @@ internal sealed class MarshalSession : IMarshalHookSink
     private bool _flagsShown;
     private int _flagVersion = -1;
     private float _flagDue;
+    private bool _showOutlines;
+
+    private bool _agentCleanupOwed;
 
     // Raised from an engine callback that may not run on the thread that reads it, so it is one volatile bool.
     private volatile bool _decisionDue = true;
 
-    internal MarshalSession(IMarshalOrderAdapter orders, IMarshalScreenAdapter screen, IMarshalSettingsProvider settings, Func<bool> mayRun,
-        IOutcomeLog outcomes, IModLogger logger, string missionKey)
+    internal MarshalSession(IMarshalOrderAdapter orders, IMarshalFireAdapter fire, IMarshalOutlines outlines, IMarshalScreenAdapter screen,
+        IMarshalSettingsProvider settings, Func<bool> mayRun, IOutcomeLog outcomes, IModLogger logger, string missionKey)
     {
         _orders = orders;
+        _outlines = outlines;
         _screen = screen;
         _settings = settings;
         _mayRun = mayRun;
@@ -49,6 +56,8 @@ internal sealed class MarshalSession : IMarshalHookSink
         _key = missionKey;
         _queue = new MarshalQueueDriver(orders, outcomes, missionKey);
         _march = new MarshalMarchDriver(orders, outcomes, missionKey);
+        _fire = new MarshalFireDriver(orders, fire, outcomes, logger, _screen.Say, missionKey);
+        _marks = new MarshalMarkWatch(orders, outcomes, logger, missionKey);
     }
 
     internal bool IsLive => _live;
@@ -56,6 +65,33 @@ internal sealed class MarshalSession : IMarshalHookSink
     internal bool Faulted { get; private set; }
 
     internal MarshalOrderQueue Queue => _queue.Queue;
+
+    /// <summary>Field trial: the archers' driver, for the verdicts it judged and the companies' holding counts.</summary>
+    internal MarshalFireDriver Fire => _fire;
+
+    /// <summary>Field trial: the queue driver's counters of finished steps, of steps that patience ended and of steps that ended by arrival.</summary>
+    internal (int Finished, int ByPatience, int ByArrival) StepsFinished => (_queue.Finished, _queue.EndedByPatience, _queue.EndedByArrival);
+
+    /// <summary>Field trial: steps the capture stored.</summary>
+    internal int StepsCaptured => _queue.Captured;
+
+    /// <summary>Field trial: how the latest march ended, or "none" when none has.</summary>
+    internal string MarchConclusion => _march.Conclusion;
+
+    /// <summary>Field trial: how many marches have ended.</summary>
+    internal int MarchesConcluded => _march.Concluded;
+
+    /// <summary>Field trial: array commits the takeover laid out (a click or a drag), counted by the commit and not the preview.</summary>
+    internal int ArraysSolved { get; private set; }
+
+    /// <summary>Field trial: the latest mark-effect read of a company, or null.</summary>
+    internal MarkSample? MarkReadOf(int company) => _marks.LatestOf(company);
+
+    /// <summary>Field trial: the latest mark-effect verdict of a company, the one its check line carries, or null.</summary>
+    internal MarkVerdict? MarkJudgedOf(int company) => _marks.JudgedOf(company);
+
+    /// <summary>Field trial: units that wear an outline this session painted.</summary>
+    internal int OutlinesPainted => _outlines.PaintedCount;
 
     /// <summary>The mission changed mode. The kind of mission depends on the mode, so the answer is asked again until it is yes (section 2).</summary>
     internal void OnModeChange() => _decisionDue = true;
@@ -70,7 +106,13 @@ internal sealed class MarshalSession : IMarshalHookSink
             return;
         try
         {
-            MarshalHooks.Arm(input.QueueKeyDown && input.PanelOpen, input.WidthsKeyDown && input.PanelOpen, _settings.KeepArray, _settings.ArriveTogether);
+            MarshalHooks.Arm(input.QueueKeyDown && input.PanelOpen, input.WidthsKeyDown && input.PanelOpen, _settings.KeepArray, _settings.ArriveTogether,
+                input.MarkKeyDown && input.PanelOpen);
+            _showOutlines = _settings.Outlines && (input.PanelOpen || input.IndicatorsDown);
+            if (input.FirePressed)
+                _fire.PressFire();
+            if (input.WordPressed)
+                _fire.PressWord();
             RefreshFlags(input);
         }
         catch (Exception ex)
@@ -79,9 +121,11 @@ internal sealed class MarshalSession : IMarshalHookSink
         }
     }
 
-    /// <summary>From <c>OnMissionTick</c>: goes live when the answer is yes, then runs the queue pass and the march pass (section 2).</summary>
+    /// <summary>From <c>OnMissionTick</c>: pays what a fault owes, goes live when the answer is yes, then runs the queue, march, archers', mark and outline passes (section 2).</summary>
     internal void OnMissionTick()
     {
+        if (_agentCleanupOwed)
+            PayAgentCleanup();
         if (_finished || Faulted)
             return;
         try
@@ -92,10 +136,14 @@ internal sealed class MarshalSession : IMarshalHookSink
                 return;
             _queue.Pass();
             _march.Pass(MarshalHooks.ArriveTogether);
+            _fire.Pass();
+            _marks.Pass();
+            _outlines.Pass(_orders.Now, _showOutlines);
         }
         catch (Exception ex)
         {
             Fault(ex);
+            PayAgentCleanup();
         }
     }
 
@@ -109,6 +157,10 @@ internal sealed class MarshalSession : IMarshalHookSink
             return false;
         try
         {
+            if (MarshalHooks.MarkArmed && payload.CanMark)
+                return CaptureMark(payload);
+            if (!MarshalHooks.QueueArmed && MarshalHooks.MarkArmed)
+                return false;
             var result = _queue.Capture(payload.End, payload, payload.Describe());
             if (result == CaptureResult.Full)
                 _screen.Say(MarshalMessage.QueueFull);
@@ -121,10 +173,22 @@ internal sealed class MarshalSession : IMarshalHookSink
         }
     }
 
+    private bool CaptureMark(MarshalOrderPayload payload)
+    {
+        var mark = MarshalOrderPayload.ForMark(payload.Target!);
+        var result = MarshalHooks.QueueArmed ? _queue.Capture(StepEnd.AtOnce, mark, mark.Describe()) : _queue.CaptureMark(mark);
+        if (result == CaptureResult.Declined && MarshalHooks.QueueArmed)
+            result = _queue.CaptureMark(mark);
+        if (result == CaptureResult.Full)
+            _screen.Say(MarshalMessage.QueueFull);
+        return result != CaptureResult.Declined;
+    }
+
     public void ArraySolved(bool click, int companies)
     {
         if (!_live)
             return;
+        ArraysSolved++;
         var kind = click ? "click" : "drag";
         _outcomes.Pass(MarshalChecks.ArrayId, _key + ":" + kind,
             "mission=" + _key + " kind=" + kind + " companies=" + companies.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -142,13 +206,14 @@ internal sealed class MarshalSession : IMarshalHookSink
             _march.Request(targets);
     }
 
-    /// <summary>Both teardown paths call this: it unsubscribes, clears the statics and drops the flags, and makes no native call.</summary>
+    /// <summary>Both teardown paths call this: it unsubscribes, clears the statics and drops the flags, and makes no native call; whatever a fault still owed is forgotten with the mission.</summary>
     internal void Finish()
     {
         if (_finished)
             return;
         _finished = true;
         _live = false;
+        _agentCleanupOwed = false;
         Teardown();
     }
 
@@ -189,6 +254,8 @@ internal sealed class MarshalSession : IMarshalHookSink
     {
         _queue.OnPlayerTeamChanged();
         _march.OnPlayerTeamChanged();
+        _fire.OnPlayerTeamChanged();
+        _marks.OnPlayerTeamChanged();
     }
 
     private void RefreshFlags(MarshalScreenInput input)
@@ -228,9 +295,8 @@ internal sealed class MarshalSession : IMarshalHookSink
             return;
         Faulted = true;
         _live = false;
-        // A fault comes with the mission still running, so the flags shown at that moment would stand in the scene until it ends. The finish
-        // makes no native call (the scene may be gone by then); a fault is the one teardown that can still reach it.
         Swallow(_screen.HideFlags);
+        _agentCleanupOwed = true;
         Swallow(Teardown);
         Swallow(() => _logger.LogError($"[MarshalsWord] Marshal's Word failed and is off for this mission, orders run as in the base game: {ex}"));
         Swallow(() => _outcomes.Fail(MarshalChecks.FaultId, _key, "mission=" + _key + " error=" + ex.GetType().Name));
@@ -247,9 +313,28 @@ internal sealed class MarshalSession : IMarshalHookSink
             _orders.Detach();
         });
         if (owner)
+        {
+            Swallow(_fire.Summarize);
             MarshalHooks.Clear();
+        }
+
+        if (!_agentCleanupOwed)
+        {
+            Swallow(_fire.Drop);
+            Swallow(_outlines.Drop);
+        }
 
         Swallow(_screen.DropFlags);
+    }
+
+    /// <summary>What a fault owes the soldiers: every contour cleared and every callback flag turned off. The finish makes no native call, because the scene may be gone by then.</summary>
+    private void PayAgentCleanup()
+    {
+        _agentCleanupOwed = false;
+        Swallow(_outlines.ClearAll);
+        Swallow(_outlines.Drop);
+        Swallow(_fire.ReleaseAll);
+        Swallow(_fire.Drop);
     }
 
     private void Swallow(Action action)

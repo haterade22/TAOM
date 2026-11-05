@@ -1361,7 +1361,15 @@ class MarshalsWordManifestTests(unittest.TestCase):
     ARRAY = PREFIX + "array"
     MARCH = PREFIX + "march"
     SPREAD = PREFIX + "march-spread"
-    ALL = [CAPTURED, STARTED, FINISHED, PATIENCE, CLEARED, DECLINED, ARRAY, MARCH, SPREAD]
+    FIRE = PREFIX + "fire"
+    WORD = PREFIX + "word"
+    HOLD = PREFIX + "volley-hold"
+    RELEASE = PREFIX + "volley-release"
+    MARK = PREFIX + "mark"
+    EFFECT = PREFIX + "mark-effect"
+    STAGE_TWO = [CAPTURED, STARTED, FINISHED, PATIENCE, CLEARED, DECLINED, ARRAY, MARCH, SPREAD]
+    NEW = [FIRE, WORD, HOLD, RELEASE, MARK, EFFECT]
+    ALL = STAGE_TWO + NEW
 
     def setUp(self):
         self.t = Tree(self)
@@ -1377,7 +1385,7 @@ class MarshalsWordManifestTests(unittest.TestCase):
     def check(self, check_id):
         return next(c for c in self.manifest().checks if c.id == check_id)
 
-    def test_the_manifest_names_the_nine_checks_the_session_writes_after_the_seats_ten(self):
+    def test_the_manifest_names_the_fifteen_checks_the_session_writes_after_the_seats_ten_in_stage_order(self):
         ids = [c.id for c in self.manifest().checks]
         self.assertEqual(ids[len(SeatOfSeeingManifestTests.ALL):], self.ALL)
         # The fault id is named by every fail list, and has no check of its own: it must stay at zero. The set is exact.
@@ -1387,6 +1395,20 @@ class MarshalsWordManifestTests(unittest.TestCase):
         for check_id in self.ALL:
             with self.subTest(check_id=check_id):
                 self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
+
+    def test_every_error_line_the_feature_writes_at_its_fixed_prefix_fails_the_captured_check(self):
+        folders = [REPO / "Main" / "Features" / "MarshalsWord", REPO / "Client" / "Features" / "MarshalsWord"]
+        files = [path for folder in folders for path in folder.rglob("*.cs")]
+        files += [path for adapters in (REPO / "Main" / "Adapters", REPO / "Client" / "Adapters") for path in adapters.glob("Marshal*.cs")]
+        written = []
+        for path in files:
+            written += re.findall(r'LogError\(\s*\$?"(\[MarshalsWord\][^"]*)"', path.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(written), 4, "the scan found the lines the feature writes: " + repr(written))
+        fails = self.check(self.CAPTURED).fails
+        for text in written:
+            line = "[2026-11-04 14:00:00] [ERROR] " + re.sub(r"\{[^}]*\}", "x", text)
+            with self.subTest(line=line):
+                self.assertTrue(any(pattern.search(line) for pattern in fails), "no fail pattern of the captured check matches: " + line)
 
     def test_a_full_session_passes_every_check(self):
         code, out, _ = self.judge("marshal_full_pass.txt")
@@ -1398,12 +1420,85 @@ class MarshalsWordManifestTests(unittest.TestCase):
     def test_a_latched_fault_fails_every_check_it_can_reach(self):
         code, out, _ = self.judge("marshal_fault.txt")
         self.assertEqual(code, 1, out)
-        for check_id in (self.CAPTURED, self.STARTED, self.FINISHED, self.PATIENCE, self.CLEARED, self.DECLINED, self.ARRAY, self.MARCH, self.SPREAD):
+        for check_id in self.ALL:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "FAIL", out)
 
+    def test_a_hold_that_lets_arrows_go_fails_the_hold_check_and_only_it(self):
+        code, out, _ = self.judge("marshal_volley_hold_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.HOLD), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.RELEASE), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.FIRE), "PASS", out)
+
+    def test_a_word_that_looses_too_few_fails_the_release_check_and_leaves_the_hold_check_passing(self):
+        code, out, _ = self.judge("marshal_volley_release_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RELEASE), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.HOLD), "PASS", out)
+        self.assertEqual(verdict_of(out, self.WORD), "PASS", out)
+
+    def test_a_marked_ranged_company_that_draws_no_aim_fails_the_effect_check(self):
+        code, out, _ = self.judge("marshal_mark_effect_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.EFFECT), "FAIL", out)
+        self.assertEqual(verdict_of(out, self.MARK), "PASS", out)
+
+    def test_the_effect_check_passes_on_the_ranged_case_alone_so_one_battle_reaches_it(self):
+        code, out, _ = self.judge("marshal_mark_effect_ranged_pass.txt")
+        self.assertEqual(code, 4, out)  # the other checks of this one-battle log are not reached
+        self.assertEqual(verdict_of(out, self.EFFECT), "PASS", out)
+
+    def test_the_effect_check_names_one_context_and_no_melee_case(self):
+        passes = [p.pattern for p in self.check(self.EFFECT).passes]
+        self.assertEqual(len(passes), 1)
+        self.assertIn("context=RangedOnStop", passes[0])
+        self.assertNotIn("MeleeOnMove", (TOOLS / "ingame_checks" / self.NAME).read_text(encoding="utf-8"))
+
+    def test_the_skip_lines_of_the_new_keys_read_not_reached_with_their_reason(self):
+        code, out, _ = self.judge("marshal_m3_m4_skips.txt")
+        self.assertEqual(code, 4, out)
+        for check_id, reason in ((self.FIRE, "reason=ai-controlled"), (self.WORD, "reason=mode-free"), (self.MARK, "reason=not-applied")):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
+                self.assertIn(reason, out)
+
+    def test_the_word_checks_reached_line_is_the_fire_pass_and_not_its_skip(self):
+        pattern = self.check(self.WORD).reached[0]
+        self.assertTrue(pattern.search("[Check] id=taom.marshals-word.fire result=pass mission=1 mode=OnWord company=1"))
+        self.assertFalse(pattern.search("[Check] id=taom.marshals-word.fire result=skip mission=1 reason=ai-controlled"))
+
+    def test_the_hold_and_release_passes_name_their_numbers_so_a_report_shows_holding_and_shots(self):
+        for check_id in (self.HOLD, self.RELEASE):
+            with self.subTest(check_id=check_id):
+                pattern = self.check(check_id).passes[0].pattern
+                self.assertIn("holding=[0-9]+", pattern)
+                self.assertIn("shots=[0-9]+", pattern)
+
+    def test_one_press_of_the_fire_key_is_not_a_round_trip_and_reads_not_reached(self):
+        code, out, _ = self.judge("marshal_fire_one_press.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIRE), "NOT REACHED", out)
+        self.assertIn("mode=Free", out)
+
+    def test_a_word_given_with_nobody_holding_is_not_a_pass(self):
+        code, out, _ = self.judge("marshal_word_nobody_holding.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIRE), "PASS", out)
+        self.assertEqual(verdict_of(out, self.WORD), "NOT REACHED", out)
+
+    def test_the_word_pattern_takes_five_or_more_holding_and_nothing_under(self):
+        pattern = self.check(self.WORD).passes[0]
+        line = "[Check] id=taom.marshals-word.word result=pass mission=1 company=1 holding=%s"
+        for holding in ("5", "6", "12", "40"):
+            with self.subTest(holding=holding):
+                self.assertTrue(pattern.search(line % holding))
+        for holding in ("0", "4", "05"):
+            with self.subTest(holding=holding):
+                self.assertFalse(pattern.search(line % holding))
+
     def test_each_failure_line_of_the_feature_fails_the_capture_check(self):
-        for fixture in ("marshal_could_not_start.txt", "marshal_hotkey_failed.txt"):
+        for fixture in ("marshal_could_not_start.txt", "marshal_hotkey_failed.txt", "marshal_patch_failed.txt", "marshal_patch_skipped.txt"):
             with self.subTest(fixture=fixture):
                 self.t = Tree(self)
                 self.t.real_manifest(self.NAME)

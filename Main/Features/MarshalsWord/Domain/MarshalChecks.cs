@@ -3,7 +3,7 @@ using System;
 namespace TAOM.Features.MarshalsWord.Domain;
 
 /// <summary>
-/// The in-game check ids of Marshal's Word stages M1 and M2, read by tools/ingame_checks/0.toml (the draft manifest shared with the Seat of
+/// The in-game check ids of Marshal's Word, read by tools/ingame_checks/0.toml (the draft manifest shared with the Seat of
 /// Seeing), and the two rules that turn a trend into a verdict (build-spec 5.6 and 6.5). The session writes the lines; a later stage adds its ids.
 /// </summary>
 internal static class MarshalChecks
@@ -19,6 +19,16 @@ internal static class MarshalChecks
     internal const string MarchId = "taom.marshals-word.march";
     internal const string SpreadId = "taom.marshals-word.march-spread";
     internal const string FaultId = "taom.marshals-word.fault";
+    internal const string FireId = "taom.marshals-word.fire";
+    internal const string WordId = "taom.marshals-word.word";
+    internal const string VolleyHoldId = "taom.marshals-word.volley-hold";
+    internal const string VolleyReleaseId = "taom.marshals-word.volley-release";
+    internal const string MarkId = "taom.marshals-word.mark";
+    internal const string MarkEffectId = "taom.marshals-word.mark-effect";
+
+    /// <summary>Hot-path counters of the archers' callback: one increment per Hold and one per Release, no string and no I/O.</summary>
+    internal const string HoldCounterId = "taom.marshals-word.fire-hold";
+    internal const string ReleaseCounterId = "taom.marshals-word.fire-release";
 
     /// <summary>Hot-path counter of preview solves: one increment per preview, at most 30 a second with the mouse held, no string and no I/O.</summary>
     internal const string PreviewCounterId = "taom.marshals-word.array-preview";

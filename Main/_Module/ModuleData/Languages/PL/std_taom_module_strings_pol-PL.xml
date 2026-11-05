@@ -7515,6 +7515,11 @@
     <string id="TAOM_FOW_Hud_ControlTaken" text="You fight as {NAME}. Press P to go back to the battlefield view." />
     <string id="TAOM_FOW_Hud_ControlFell" text="{NAME} has fallen. You are back at the battlefield view." />
     <string id="TAOM_FOW_Hud_ControlNone" text="None of your soldiers stands near the pointer." />
+    <string id="taom_marshal_fire_free" text="The archers fire at will." />
+    <string id="taom_marshal_fire_on_word" text="The archers draw and hold until you give the word, or for 14 seconds at most." />
+    <string id="taom_marshal_word_given" text="The word is given." />
+    <string id="taom_marshal_mcm_outlines" text="Outlines" />
+    <string id="taom_marshal_mcm_outlines_hint" text="While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on." />
   </strings>
 
 </base>

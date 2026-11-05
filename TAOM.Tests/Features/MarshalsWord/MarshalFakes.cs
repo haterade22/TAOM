@@ -42,6 +42,12 @@ internal sealed class FakeMarshalOrders : IMarshalOrderAdapter
 
     public bool IsDeployment { get; set; }
 
+    public bool PlayerCommands { get; set; } = true;
+
+    internal IReadOnlyList<MarkSample> Marks { get; set; } = Array.Empty<MarkSample>();
+
+    public IReadOnlyList<MarkSample> ReadMarks() => Marks;
+
     public event Action<IReadOnlyList<int>>? DirectOrder;
 
     public event Action? PlayerTeamChanged;
@@ -155,6 +161,8 @@ internal sealed class FakeMarshalSettings : IMarshalSettingsProvider
     public bool KeepArray { get; set; } = true;
 
     public bool ArriveTogether { get; set; } = true;
+
+    public bool Outlines { get; set; } = true;
 }
 
 /// <summary>
@@ -171,4 +179,54 @@ internal static class TestPositions
         state.SetValue(boxed, System.Enum.Parse(state.FieldType, "Valid"));
         return (WorldPosition)boxed;
     }
+}
+
+/// <summary>The archers' side of the engine as a test sets it: the census each sweep answers, and what was swept.</summary>
+internal sealed class FakeMarshalFire : IMarshalFireAdapter
+{
+    internal readonly List<int[]> Swept = new();
+    internal readonly Dictionary<int, FireCensus> Census = new();
+    internal int Dropped;
+    internal int Released;
+    internal System.Exception? ReleaseThrows;
+
+    public bool HasTouched { get; set; }
+
+    public IReadOnlyList<FireCensus> Sweep(IReadOnlyList<int> ruled)
+    {
+        Swept.Add(ruled.ToArray());
+        HasTouched = ruled.Count > 0;
+        return ruled.Select(c => Census.TryGetValue(c, out var census) ? census : new FireCensus(c, 0, 0)).ToList();
+    }
+
+    public void ReleaseAll()
+    {
+        Released++;
+        if (ReleaseThrows != null)
+            throw ReleaseThrows;
+    }
+
+    public void Drop() => Dropped++;
+}
+
+/// <summary>The session's view of the outlines: how many are painted, and the shows it was told.</summary>
+internal sealed class FakeMarshalOutlines : IMarshalOutlines
+{
+    internal readonly List<bool> Shows = new();
+    internal int Cleared;
+    internal int Dropped;
+    internal System.Exception? ClearThrows;
+
+    public int PaintedCount { get; set; }
+
+    public void Pass(double now, bool show) => Shows.Add(show);
+
+    public void ClearAll()
+    {
+        Cleared++;
+        if (ClearThrows != null)
+            throw ClearThrows;
+    }
+
+    public void Drop() => Dropped++;
 }

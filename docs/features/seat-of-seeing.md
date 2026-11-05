@@ -393,7 +393,7 @@ It feeds the flight input itself, so it leaves the engine's input reads, the loo
 
 Unit tests cannot show that a camera flies over a real battle. The field trial (contract section 12) is a script inside the game: it
 opens one real custom battle with nobody at the keyboard, presses the Seat's own controls in order, and writes one log line per fact.
-It runs thirteen steps: stage S1's six, and seven for stages S2 and S3. Each later stage adds its steps as rows. Its history is below, run by run.
+It runs thirteen steps: stage S1's six, and seven for stages S2 and S3. Each later stage adds its steps as rows, and Marshal's Word adds eight of its own after the Seat's, in its own files (`Main/Features/MarshalsWord/Domain/MarshalTrialRows.cs`, and `Client/Features/MarshalsWord/Trial/` for the script, the host and the interface); [marshals-word.md](marshals-word.md) lists them. The wrapper's `STEPS` joins the Seat's tuple and Marshal's. Its history is below, run by run.
 
 **The first run** (2026-11-04, build `1735f2add.dirty`, folder `E:\Temp\command-trial-runs\20261104-031119`) passed all six steps and
 exited 0. It took 14.8 mission seconds and 50 s of wall time including the load, ran at about 84 frames a second with 272 agents (251
@@ -416,8 +416,11 @@ and logged `frames=239`, `moved=59.7 expected=59.7`. Both logs hold `checks_fail
 ```
 ./build.ps1
 python tools/run_command_trial.py --dry-run
-python tools/run_command_trial.py
+python tools/run_command_trial.py --steps refuse_in_deployment,enter,fly,hero_stands,leave_glide,reenter_keeps_height,cursor_with_panel,focus_follows_cursor,keep_panel_reopens,hide_bars_restored,keep_to_soldier,keep_to_company,let_go_on_death
 ```
+
+A run with no `--steps` also arms Marshal's Word's steps in the same battle, which they do not all fit; their subsets are in
+[marshals-word.md](marshals-word.md).
 
 `--dry-run` prints the arm file, the idle state and the preflight and starts nothing. A subset is `--steps enter,fly` (the game refuses
 a step chosen without one it needs, and the done file then says `start_refused`). Of the Fords runner's flags these apply:

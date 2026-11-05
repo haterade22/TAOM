@@ -46,8 +46,12 @@ public class MarshalSessionTests
     [TestCleanup]
     public void Cleanup() => MarshalHooks.Clear();
 
+    internal FakeMarshalFire Fire { get; } = new();
+
+    internal FakeMarshalOutlines Outlines { get; } = new();
+
     private MarshalSession NewSession(FakeMarshalOrders orders, FakeMarshalScreen screen) =>
-        new(orders, screen, _settings, () =>
+        new(orders, Fire, Outlines, screen, _settings, () =>
         {
             _mayRunCalls++;
             return _mayRun;
@@ -293,7 +297,7 @@ public class MarshalSessionTests
     {
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
-        var session = new MarshalSession(broken, _screen, _settings, () => true, _log, _logger, "8");
+        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "8");
         session.OnMissionTick();
         Assert.IsTrue(session.IsLive);
 
@@ -369,12 +373,205 @@ public class MarshalSessionTests
     }
 
     [TestMethod]
+    public void AFault_InTheScreenTick_WritesNoContour_AndTheNextMissionTickPaysTheClearOnce()
+    {
+        // Build-spec section 2: the screen tick writes only TAOM fields, and the fault path may hide flags, nothing more. A contour is an agent write.
+        var settings = Substitute.For<IMarshalSettingsProvider>();
+        settings.Enabled.Returns(true);
+        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "11");
+        session.OnMissionTick();
+        Assert.IsTrue(session.IsLive);
+        settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
+
+        session.OnScreenTick(Frame());
+
+        Assert.IsTrue(session.Faulted);
+        Assert.AreEqual(0, Outlines.Cleared, "no contour is written from the screen tick");
+        Assert.AreEqual(0, Outlines.Dropped, "the dictionary is what remembers who wears a contour, so it stays until the clear");
+        session.OnMissionTick();
+        Assert.AreEqual(1, Outlines.Cleared);
+        Assert.AreEqual(1, Outlines.Dropped);
+        session.OnMissionTick();
+        Assert.AreEqual(1, Outlines.Cleared, "owed once");
+    }
+
+    [TestMethod]
+    public void AFault_InTheCapture_WritesNoContour_AndTheNextMissionTickPaysTheClear()
+    {
+        var broken = Substitute.For<IMarshalOrderAdapter>();
+        broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
+        var session = new MarshalSession(broken, new FakeMarshalFire(), Outlines, _screen, _settings, () => true, _log, _logger, "12");
+        session.OnMissionTick();
+        Assert.IsTrue(session.IsLive);
+
+        var captured = session.TryCapture(Move());
+
+        Assert.IsFalse(captured);
+        Assert.IsTrue(session.Faulted);
+        Assert.AreEqual(0, Outlines.Cleared, "the capture runs in the screen tick");
+        session.OnMissionTick();
+        Assert.AreEqual(1, Outlines.Cleared);
+        Assert.AreEqual(1, Outlines.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_InTheScreenTick_ThenTheFinishBeforeAnyMissionTick_IsSilent_ItOnlyDropsTheDictionary()
+    {
+        var settings = Substitute.For<IMarshalSettingsProvider>();
+        settings.Enabled.Returns(true);
+        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "13");
+        session.OnMissionTick();
+        settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
+        session.OnScreenTick(Frame());
+
+        session.Finish();
+        session.OnMissionTick();
+
+        Assert.AreEqual(0, Outlines.Cleared, "the finish makes no native call, and nothing is owed after it");
+        Assert.AreEqual(1, Outlines.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_InTheScreenTick_TurnsNoCallbackOff_AndTheNextMissionTickPaysTheFireReleaseOnce()
+    {
+        // The release is an agent write, so a fault in the screen tick owes it to the next mission tick, as the contour clear is owed.
+        var settings = Substitute.For<IMarshalSettingsProvider>();
+        settings.Enabled.Returns(true);
+        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "14");
+        session.OnMissionTick();
+        settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
+
+        session.OnScreenTick(Frame());
+
+        Assert.IsTrue(session.Faulted);
+        Assert.AreEqual(0, Fire.Released, "no callback is turned off from the screen tick");
+        Assert.AreEqual(0, Fire.Dropped, "the adapter's set is what remembers who holds the callback, so it stays until the release");
+        session.OnMissionTick();
+        Assert.AreEqual(1, Fire.Released);
+        Assert.AreEqual(1, Fire.Dropped);
+        session.OnMissionTick();
+        Assert.AreEqual(1, Fire.Released, "owed once");
+    }
+
+    [TestMethod]
+    public void AFault_InTheCapture_OwesTheFireReleaseToo()
+    {
+        var broken = Substitute.For<IMarshalOrderAdapter>();
+        broken.SelectedCompanies().Returns(_ => throw new InvalidOperationException("selection broke"));
+        var session = new MarshalSession(broken, Fire, Outlines, _screen, _settings, () => true, _log, _logger, "15");
+        session.OnMissionTick();
+
+        session.TryCapture(Move());
+
+        Assert.IsTrue(session.Faulted);
+        Assert.AreEqual(0, Fire.Released, "the capture runs in the screen tick");
+        session.OnMissionTick();
+        Assert.AreEqual(1, Fire.Released);
+    }
+
+    [TestMethod]
+    public void AFault_InTheMissionTick_TurnsTheCallbacksOffAtOnce_ThenDrops()
+    {
+        GoLive();
+        _orders.FailOnNow = new InvalidOperationException("boom");
+
+        _session.OnMissionTick();
+
+        Assert.IsTrue(_session.Faulted);
+        Assert.AreEqual(1, Fire.Released, "the mission tick may write agents, so nothing is owed");
+        Assert.AreEqual(1, Fire.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_InTheScreenTick_ThenTheFinishBeforeAnyMissionTick_TurnsNothingOff_ItOnlyDrops()
+    {
+        var settings = Substitute.For<IMarshalSettingsProvider>();
+        settings.Enabled.Returns(true);
+        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, "16");
+        session.OnMissionTick();
+        settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
+        session.OnScreenTick(Frame());
+
+        session.Finish();
+        session.OnMissionTick();
+
+        Assert.AreEqual(0, Fire.Released, "the finish makes no native call, and nothing is owed after it");
+        Assert.AreEqual(1, Fire.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_WhenTheFireReleaseThrows_TheOutlineClearAndTheDropsStillRun()
+    {
+        Fire.ReleaseThrows = new InvalidOperationException("slot gone");
+        GoLive();
+        _orders.FailOnNow = new InvalidOperationException("boom");
+
+        _session.OnMissionTick();
+
+        Assert.AreEqual(1, Outlines.Cleared);
+        Assert.AreEqual(1, Fire.Dropped);
+        Assert.AreEqual(1, Outlines.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_InTheScreenTick_WhenTheOwedReleaseThrows_NothingEscapesTheTick_AndTheDropRuns()
+    {
+        var session = ASessionFaultedInTheScreenTick("17");
+        Fire.ReleaseThrows = new InvalidOperationException("slot gone");
+
+        session.OnMissionTick();
+
+        Assert.AreEqual(1, Fire.Released);
+        Assert.AreEqual(1, Fire.Dropped, "the throw does not stop the drop");
+        Assert.AreEqual(1, Outlines.Cleared);
+    }
+
+    [TestMethod]
+    public void AFault_InTheScreenTick_WhenTheOwedClearThrows_TheReleaseIsStillPaid()
+    {
+        var session = ASessionFaultedInTheScreenTick("18");
+        Outlines.ClearThrows = new InvalidOperationException("contour gone");
+
+        session.OnMissionTick();
+
+        Assert.AreEqual(1, Outlines.Cleared);
+        Assert.AreEqual(1, Outlines.Dropped, "the throw does not stop the drop");
+        Assert.AreEqual(1, Fire.Released, "the fire release is paid whatever the contour clear did");
+        Assert.AreEqual(1, Fire.Dropped);
+    }
+
+    [TestMethod]
+    public void AFault_InTheMissionTick_WhenTheOutlineClearThrows_TheReleaseIsStillPaid()
+    {
+        Outlines.ClearThrows = new InvalidOperationException("contour gone");
+        GoLive();
+        _orders.FailOnNow = new InvalidOperationException("boom");
+
+        _session.OnMissionTick();
+
+        Assert.AreEqual(1, Fire.Released);
+        Assert.AreEqual(1, Fire.Dropped);
+    }
+
+    private MarshalSession ASessionFaultedInTheScreenTick(string key)
+    {
+        var settings = Substitute.For<IMarshalSettingsProvider>();
+        settings.Enabled.Returns(true);
+        var session = new MarshalSession(_orders, Fire, Outlines, _screen, settings, () => true, _log, _logger, key);
+        session.OnMissionTick();
+        settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
+        session.OnScreenTick(Frame());
+        Assert.IsTrue(session.Faulted);
+        return session;
+    }
+
+    [TestMethod]
     public void OnScreenTick_AThrowWhileArming_LatchesTheFeatureOffToo()
     {
         var settings = Substitute.For<IMarshalSettingsProvider>();
         settings.Enabled.Returns(true);
         settings.KeepArray.Returns(_ => throw new InvalidOperationException("settings broke"));
-        var session = new MarshalSession(_orders, _screen, settings, () => true, _log, _logger, "9");
+        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, settings, () => true, _log, _logger, "9");
         session.OnMissionTick();
 
         session.OnScreenTick(Frame());
@@ -406,7 +603,7 @@ public class MarshalSessionTests
         var broken = Substitute.For<IMarshalOrderAdapter>();
         broken.When(o => o.Detach()).Do(_ => throw new InvalidOperationException("detach broke"));
         broken.Now.Returns(_ => throw new InvalidOperationException("boom"));
-        var session = new MarshalSession(broken, _screen, _settings, () => true, _log, _logger, "10");
+        var session = new MarshalSession(broken, new FakeMarshalFire(), new FakeMarshalOutlines(), _screen, _settings, () => true, _log, _logger, "10");
         session.OnMissionTick();
 
         Assert.IsTrue(session.Faulted);
@@ -711,4 +908,245 @@ public class MarshalSessionTests
 
     private void CollectionAssertSaid(MarshalMessage message) =>
         Assert.IsTrue(_screen.Said.Contains(message), "expected the message " + message + " but got " + string.Join(",", _screen.Said));
+
+    // ---- stage M3 and M4: the pressed keys, the mark and the outlines ----
+
+    private static MarshalScreenInput Keys(bool mark = false, bool queue = false, bool panel = true, bool indicators = false, bool fire = false,
+        bool word = false) => new(queue, false, panel, 0f, mark, indicators, fire, word);
+
+    private static MarshalOrderPayload ChargeOnACompany() =>
+        MarshalOrderPayload.ForFormation(OrderType.Charge, (Formation)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Formation)));
+
+    [TestMethod]
+    public void OnScreenTick_TheMarkKeyDownWithThePanelOpen_ArmsTheMark_AndWithItClosedArmsNothing()
+    {
+        GoLive();
+
+        _session.OnScreenTick(Keys(mark: true));
+        Assert.IsTrue(MarshalHooks.MarkArmed);
+
+        _session.OnScreenTick(Keys(mark: true, panel: false));
+        Assert.IsFalse(MarshalHooks.MarkArmed);
+    }
+
+    [TestMethod]
+    public void OnScreenTick_AFirePress_ChangesNothingUntilTheNextMissionTick()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+
+        _session.OnScreenTick(Keys(fire: true));
+        Assert.AreEqual(FireMode.Free, MarshalFireTable.ModeOf(1), "the screen tick only stores the press");
+
+        _session.OnMissionTick();
+        Assert.AreEqual(FireMode.OnWord, MarshalFireTable.ModeOf(1));
+        CollectionAssert.AreEqual(new[] { MarshalMessage.FireOnWord }, _screen.Said);
+    }
+
+    [TestMethod]
+    public void OnScreenTick_AWordPress_GivesTheWordAtTheNextMissionTick()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+        _session.OnScreenTick(Keys(fire: true));
+        _session.OnMissionTick();
+        _orders.Now = 2.0;
+
+        _session.OnScreenTick(Keys(word: true));
+        _session.OnMissionTick();
+
+        Assert.AreEqual(2.0, MarshalFireTable.WordTimeOf(1));
+    }
+
+    [TestMethod]
+    public void OnMissionTick_PassesTheOutlinesWhetherTheyShouldShow_FromThePanelOrTheIndicatorsKey()
+    {
+        GoLive();
+
+        _session.OnScreenTick(Keys(panel: true));
+        _session.OnMissionTick();
+        _session.OnScreenTick(Keys(panel: false, indicators: true));
+        _session.OnMissionTick();
+        _session.OnScreenTick(Keys(panel: false));
+        _session.OnMissionTick();
+
+        CollectionAssert.AreEqual(new[] { true, true, false }, Outlines.Shows.Skip(Outlines.Shows.Count - 3).ToArray());
+    }
+
+    // The outlines as the real service plans them, over an adapter that records each paint and clear.
+    private sealed class RecordingOutlineAdapter : IMarshalOutlineAdapter<int>
+    {
+        internal readonly System.Collections.Generic.Dictionary<int, uint> Wanted = new();
+        internal readonly System.Collections.Generic.List<(int Unit, uint? Colour)> Painted = new();
+
+        public void ReadWanted(System.Collections.Generic.Dictionary<int, uint> into)
+        {
+            foreach (var pair in Wanted)
+                into[pair.Key] = pair.Value;
+        }
+
+        public void Paint(int unit, uint? colour) => Painted.Add((unit, colour));
+    }
+
+    [TestMethod]
+    public void OnMissionTick_TheOutlinesSettingFlippedOffInABattle_ClearsEverythingPaintedInOnePass_WithThePanelStillOpen()
+    {
+        // Build-spec 8.2: "A test covers the panel closing and the setting going off in a battle." The panel test is in MarshalMarkAndOutlineTests.
+        var adapter = new RecordingOutlineAdapter
+        {
+            Wanted = { [1] = MarshalTuning.SelectedOutline, [2] = MarshalTuning.SelectedOutline, [3] = MarshalTuning.MarkedOutline },
+        };
+        var service = new MarshalOutlineService<int>(adapter);
+        var session = new MarshalSession(_orders, Fire, service, _screen, _settings, () => true, _log, _logger, "14");
+        session.OnMissionTick();
+        _orders.Now = 1.0;
+        session.OnScreenTick(Keys(panel: true));
+        session.OnMissionTick();
+        Assert.AreEqual(3, service.PaintedCount, "painted while the setting holds and the panel is open");
+        adapter.Painted.Clear();
+
+        _settings.Outlines = false;
+        _orders.Now = 1.25;
+        session.OnScreenTick(Keys(panel: true));
+        session.OnMissionTick();
+
+        Assert.AreEqual(0, service.PaintedCount, "one mission tick after the flip, nothing is left painted");
+        CollectionAssert.AreEquivalent(new[] { (1, (uint?)null), (2, (uint?)null), (3, (uint?)null) }, adapter.Painted);
+        Assert.IsTrue(MarshalHooks.IsLive, "turning the setting off hides the outlines and leaves the rest of the feature running");
+    }
+
+    [TestMethod]
+    public void OnMissionTick_TheOutlinesSettingOff_NeverShows_EvenWithThePanelOpen()
+    {
+        _settings.Outlines = false;
+        GoLive();
+
+        _session.OnScreenTick(Keys(panel: true, indicators: true));
+        _session.OnMissionTick();
+
+        Assert.IsFalse(Outlines.Shows.Last());
+    }
+
+    [TestMethod]
+    public void TryCapture_TheMarkKeyAlone_AndAnOrderThatIsNotACharge_AnswersNotQueued_SoVanillaRunsIt()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+        _session.OnScreenTick(Keys(mark: true));
+
+        var captured = _session.TryCapture(Move());
+
+        Assert.IsFalse(captured);
+        Assert.AreEqual(0, _session.Queue.TotalSteps);
+    }
+
+    [TestMethod]
+    public void TryCapture_TheMarkKeyAndAChargeOnACompany_StoresAMark_AppliedAtTheNextMissionTick_WithNoQueueStep()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+        _session.OnScreenTick(Keys(mark: true));
+
+        var captured = _session.TryCapture(ChargeOnACompany());
+        _session.OnMissionTick();
+
+        Assert.IsTrue(captured, "vanilla must not run the charge");
+        Assert.AreEqual(0, _session.Queue.TotalSteps);
+        Assert.IsTrue(((MarshalOrderPayload)_orders.Issued.Single().Payload).IsMark);
+        CollectionAssert.AreEqual(new[] { 1 }, _orders.Issued.Single().Companies);
+    }
+
+    [TestMethod]
+    public void TryCapture_TheMarkKeyAndAChargeWithNoCompanyUnderTheirControl_AnswersNotQueued_SoTheClickIsNotSwallowed()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+        _orders.Lost.Add(1);
+        _session.OnScreenTick(Keys(mark: true));
+
+        Assert.IsFalse(_session.TryCapture(ChargeOnACompany()));
+    }
+
+    [TestMethod]
+    public void TryCapture_BothKeys_QueuesAMarkStepThatEndsAtOnce_AndIssuesNothingYet()
+    {
+        GoLive();
+        _orders.Selected.Add(1);
+        _session.OnScreenTick(Keys(mark: true, queue: true));
+
+        var captured = _session.TryCapture(ChargeOnACompany());
+
+        Assert.IsTrue(captured);
+        Assert.AreEqual(1, _session.Queue.StepsOf(1).Count);
+        Assert.AreEqual(StepEnd.AtOnce, _session.Queue.StepsOf(1)[0].End);
+        Assert.IsTrue(((MarshalOrderPayload)_session.Queue.StepsOf(1)[0].Payload!).IsMark);
+        Assert.AreEqual(0, _orders.Issued.Count);
+    }
+
+    [TestMethod]
+    public void ArraySolved_CountsEachCommit()
+    {
+        GoLive();
+
+        _session.ArraySolved(click: true, companies: 2);
+        _session.ArraySolved(click: false, companies: 2);
+
+        Assert.AreEqual(2, _session.ArraysSolved);
+    }
+
+    [TestMethod]
+    public void OnMissionTick_AThrowInThePass_ClearsTheOutlinesBeforeTheTeardown()
+    {
+        GoLive();
+
+        _orders.FailOnNow = new InvalidOperationException("boom");
+        _session.OnMissionTick();
+
+        Assert.AreEqual(1, Outlines.Cleared);
+        Assert.AreEqual(1, Outlines.Dropped);
+        Assert.AreEqual(1, Fire.Dropped);
+    }
+
+    [TestMethod]
+    public void Finish_DropsTheOutlinesAndTheSoldiersWithNoNativeClear_AndTwiceIsTheSame()
+    {
+        GoLive();
+
+        _session.Finish();
+        _session.Finish();
+
+        Assert.AreEqual(0, Outlines.Cleared, "the finish makes no native call");
+        Assert.AreEqual(1, Outlines.Dropped);
+        Assert.AreEqual(1, Fire.Dropped);
+        Assert.AreEqual(FireMode.Free, MarshalFireTable.ModeOf(1));
+    }
+
+    [TestMethod]
+    public void Finish_OfASessionThatDoesNotOwnTheHooks_LeavesTheNextMissionsFireTableAlone()
+    {
+        GoLive();
+        var next = NewSession(new FakeMarshalOrders(), new FakeMarshalScreen());
+        next.OnMissionTick();
+        MarshalFireTable.SetMode(2, FireMode.OnWord);
+
+        _session.Finish();
+
+        Assert.AreEqual(FireMode.OnWord, MarshalFireTable.ModeOf(2));
+    }
+
+    [TestMethod]
+    public void TryCapture_BothKeysAndOneSelectedCompanyUnderTheAi_StillMarksTheOthers_SoTheMarkNeverFallsBackToACharge()
+    {
+        GoLive();
+        _orders.Selected.AddRange(new[] { 1, 2 });
+        _orders.Lost.Add(2);
+        _session.OnScreenTick(Keys(mark: true, queue: true));
+
+        var captured = _session.TryCapture(ChargeOnACompany());
+        _session.OnMissionTick();
+
+        Assert.IsTrue(captured, "the queue declines an AI-controlled selection, and the mark still must not run vanilla's charge");
+        Assert.AreEqual(0, _session.Queue.TotalSteps);
+        CollectionAssert.AreEqual(new[] { 1 }, _orders.Issued.Single().Companies);
+    }
 }

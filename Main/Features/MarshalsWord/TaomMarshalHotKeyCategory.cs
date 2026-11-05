@@ -5,9 +5,10 @@ namespace TAOM.Features.MarshalsWord;
 
 /// <summary>
 /// Registers Marshal's Word's keys as native, rebindable game keys, so they appear in Options > Keybindings under "Action" beside the
-/// vanilla combat keys, built the way <c>TaomSeatHotKeyCategory</c> is. Stages M1 and M2 declare two held keys: "Give the order in turn"
-/// (540, default Left Shift) and "Keep the widths" (542, default Left Alt). The ids come from build-spec section 3; 541 (mark) and 543 to
-/// 545 (the pressed keys) join with their stages, and each stage raises <see cref="RegisteredSlotCount"/>.
+/// vanilla combat keys, built the way <c>TaomSeatHotKeyCategory</c> is. Three keys are held: "Give the order in turn" (540, default Left
+/// Shift), "Mark, do not move" (541, default Left Ctrl) and "Keep the widths" (542, default Left Alt). Two are pressed: "Change the archers'
+/// fire" (543, default Comma) and "Give the word" (544, default M). The ids come from build-spec section 3; 545 (hold the line) joins with its
+/// stage, and each stage raises <see cref="RegisteredSlotCount"/>.
 ///
 /// <b>Never register this context on a layer.</b> <c>InputContext.RegisterHotKeyCategory</c> sizes its slot list from the first category
 /// on that layer (116 entries), so an id of 540 would throw. The view holds the <see cref="GameKey"/> reference
@@ -21,19 +22,25 @@ public sealed class TaomMarshalHotKeyCategory : GameKeyContext
     // GameKeyOptionVM builds a key's localization id from ((GameKeyDefinition)Id).ToString(): at or above 116 the enum renders as the bare
     // number, giving str_key_name.TaomMarshalHotKeyCategory_540.
     public const int QueueKeyId = 540;
+    public const int MarkKeyId = 541;
     public const int KeepWidthsKeyId = 542;
+    public const int FireModeKeyId = 543;
+    public const int WordKeyId = 544;
 
     // RegisterGameKey is an INDEXED write into a list the ctor pre-fills with this many nulls, so this must stay greater than the largest
     // id above or construction throws ArgumentOutOfRangeException. Raise it with each stage's key.
-    private const int RegisteredSlotCount = KeepWidthsKeyId + 1;
+    private const int RegisteredSlotCount = WordKeyId + 1;
 
     public TaomMarshalHotKeyCategory()
         : base(CategoryId, RegisteredSlotCount, GameKeyContextType.Default)
     {
-        // Left Shift is also game key 24 (Zoom) and Left Alt game key 5 (ShowIndicators); both are read only while the order panel is open
-        // and the feature doc names the side effects (build-spec section 3).
+        // The held keys are read only while the order panel is open, and the feature doc names their vanilla side effects (build-spec section 3).
+        // Comma and M are in none of the eight categories the mission's scene layer reads.
         RegisterGameKey(new GameKey(QueueKeyId, "TaomMarshalQueue", CategoryId, InputKey.LeftShift, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(MarkKeyId, "TaomMarshalMark", CategoryId, InputKey.LeftControl, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(KeepWidthsKeyId, "TaomMarshalKeepWidths", CategoryId, InputKey.LeftAlt, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(FireModeKeyId, "TaomMarshalFireMode", CategoryId, InputKey.Comma, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(WordKeyId, "TaomMarshalWord", CategoryId, InputKey.M, GameKeyMainCategories.ActionCategory));
     }
 
     /// <summary>

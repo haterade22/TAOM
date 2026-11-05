@@ -65,6 +65,9 @@ internal sealed class MarshalScreenAdapter : IMarshalScreenAdapter
     private static TextObject TextFor(MarshalMessage message) => message switch
     {
         MarshalMessage.QueueFull => new TextObject("{=taom_marshal_queue_full}A selected company already has twelve orders waiting. The order was not given."),
+        MarshalMessage.FireFree => new TextObject("{=taom_marshal_fire_free}The archers fire at will."),
+        MarshalMessage.FireOnWord => new TextObject("{=taom_marshal_fire_on_word}The archers draw and hold until you give the word, or for 14 seconds at most."),
+        MarshalMessage.WordGiven => new TextObject("{=taom_marshal_word_given}The word is given."),
         _ => new TextObject("{=taom_marshal_fault}Marshal's Word failed and is off until this scene ends. Your orders work as before."),
     };
 }

@@ -361,7 +361,7 @@ public class MarshalsWordChecksRenderTests
     {
         var screen = new FakeMarshalScreen();
         var settings = new FakeMarshalSettings();
-        var session = new MarshalSession(_orders, screen, settings, () => true, _log, _logger, "1");
+        var session = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), screen, settings, () => true, _log, _logger, "1");
         session.OnMissionTick();
         session.ArraySolved(click: true, companies: 2);
         session.ArraySolved(click: false, companies: 2);
@@ -388,7 +388,7 @@ public class MarshalsWordChecksRenderTests
         Assert.IsTrue(Fixture("marshal_fault.txt").Any(l => l.EndsWith("] [ERROR] " + prefix, StringComparison.Ordinal)));
 
         Fresh();
-        var off = new MarshalSession(_orders, screen, new FakeMarshalSettings { Enabled = false }, () => true, _log, _logger, "1");
+        var off = new MarshalSession(_orders, new FakeMarshalFire(), new FakeMarshalOutlines(), screen, new FakeMarshalSettings { Enabled = false }, () => true, _log, _logger, "1");
         off.OnMissionTick();
 
         var skip = "[Check] id=taom.marshals-word.captured result=skip mission=1 reason=setting-off";
@@ -410,7 +410,7 @@ public class MarshalsWordChecksRenderTests
 
     [DataTestMethod]
     [DataRow("marshal_could_not_start.txt", "Client/Features/MarshalsWord/MarshalView.cs", "[MarshalsWord] Marshal's Word could not start for this mission", "ERROR", "Word could not start")]
-    [DataRow("marshal_hotkey_failed.txt", "Main/Features/MarshalsWord/MarshalsWordModule.cs", "[MarshalsWord] hotkey registration failed", "WARNING", "hotkey registration failed")]
+    [DataRow("marshal_hotkey_failed.txt", "Main/Features/MarshalsWord/MarshalsWordModule.cs", "[MarshalsWord] hotkey registration failed", "ERROR", "hotkey registration failed")]
     public void TheFeaturesOwnFailureLines_AreInTheCode_TheFixtures_AndTheCaptureChecksFailList(string fixture, string source, string prefix, string level, string manifestFragment)
     {
         StringAssert.Contains(ReadSource(source, stripComments: true), prefix, source);
@@ -437,6 +437,195 @@ public class MarshalsWordChecksRenderTests
         Assert.AreEqual("Position:Move", MarshalOrderPayload.ForPosition(OrderType.Move, default).Describe());
         Assert.AreEqual("Order:Charge", MarshalOrderPayload.ForOrder(OrderType.Charge).Describe());
         Assert.AreEqual("TwoPositions:MoveToLineSegment", MarshalOrderPayload.ForTwoPositions(OrderType.MoveToLineSegment, default, default).Describe());
+    }
+
+    // ---- stages M3 and M4: the archers' and the mark's lines ----
+
+    private MarshalFireDriver FireDriver(FakeMarshalFire fire)
+    {
+        MarshalFireTable.Begin();
+        return new MarshalFireDriver(_orders, fire, _log, _logger, _ => { }, "1");
+    }
+
+    private void FirePass(MarshalFireDriver driver, double now)
+    {
+        _orders.Now = now;
+        driver.Pass();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheKeys_AreTheFireAndWordLinesOfTheFixtures()
+    {
+        var fire = new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 6) } };
+        var driver = FireDriver(fire);
+        _orders.Selected.Add(1);
+        driver.PressFire();
+        FirePass(driver, 1.0);
+        FirePass(driver, 2.0);
+        driver.PressWord();
+        FirePass(driver, 2.25);
+        driver.PressFire();
+        FirePass(driver, 3.0);
+
+        var lines = new[]
+        {
+            "[Check] id=taom.marshals-word.fire result=pass mission=1 mode=OnWord company=1",
+            "[Check] id=taom.marshals-word.word result=pass mission=1 company=1 holding=6",
+            "[Check] id=taom.marshals-word.fire result=pass mission=1 mode=Free company=1",
+        };
+        CollectionAssert.AreEqual(lines, CheckLines());
+        AssertInFixture("marshal_full_pass.txt", lines);
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheSkips_AreTheOnesTheSkipFixtureHolds()
+    {
+        var driver = FireDriver(new FakeMarshalFire());
+        _orders.Selected.Add(1);
+        _orders.Lost.Add(1);
+        driver.PressFire();
+        FirePass(driver, 1.0);
+        _orders.Lost.Clear();
+        driver.PressWord();
+        FirePass(driver, 2.0);
+
+        var lines = new[]
+        {
+            "[Check] id=taom.marshals-word.fire result=skip mission=1 reason=ai-controlled company=1",
+            "[Check] id=taom.marshals-word.word result=skip mission=1 reason=mode-free company=1",
+        };
+        CollectionAssert.AreEqual(lines, CheckLines());
+        AssertInFixture("marshal_m3_m4_skips.txt", lines);
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheHoldWindow_ArePassAndFailAsTheFixturesHoldThem()
+    {
+        var fire = new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 6) } };
+        var driver = FireDriver(fire);
+        _orders.Selected.Add(1);
+        driver.PressFire();
+        FirePass(driver, 1.0);
+        for (var t = 1.25; t <= 7.0; t += 0.25)
+            FirePass(driver, t);
+        var pass = "[Check] id=taom.marshals-word.volley-hold result=pass mission=1 company=1 holding=6 shots=0";
+        Assert.IsTrue(CheckLines().Contains(pass), string.Join("\n", CheckLines()));
+        AssertInFixture("marshal_full_pass.txt", pass);
+
+        Fresh();
+        fire = new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 10) } };
+        driver = FireDriver(fire);
+        _orders.Selected.Add(1);
+        driver.PressFire();
+        FirePass(driver, 1.0);
+        FirePass(driver, 2.0);
+        MarshalFireTable.Count(1, ShotKind.WhileHolding);
+        MarshalFireTable.Count(1, ShotKind.WhileHolding);
+        for (var t = 2.25; t <= 8.0; t += 0.25)
+            FirePass(driver, t);
+        var fail = "[Check] id=taom.marshals-word.volley-hold result=fail mission=1 company=1 holding=10 shots=2";
+        Assert.IsTrue(CheckLines().Contains(fail), string.Join("\n", CheckLines()));
+        AssertInFixture("marshal_volley_hold_fail.txt", fail);
+        MarshalFireTable.Clear();
+    }
+
+    [TestMethod]
+    public void RenderedLines_ForTheReleaseWindow_ArePassAndFailAsTheFixturesHoldThem()
+    {
+        foreach (var (loosed, expected, fixture) in new[]
+                 {
+                     (8, "[Check] id=taom.marshals-word.volley-release result=pass mission=1 company=1 holding=10 shots=8", "marshal_full_pass.txt"),
+                     (1, "[Check] id=taom.marshals-word.volley-release result=fail mission=1 company=1 holding=10 shots=1", "marshal_volley_release_fail.txt"),
+                 })
+        {
+            Fresh();
+            var driver = FireDriver(new FakeMarshalFire { Census = { [1] = new FireCensus(1, 0, 10) } });
+            _orders.Selected.Add(1);
+            driver.PressFire();
+            FirePass(driver, 1.0);
+            FirePass(driver, 2.0);
+            driver.PressWord();
+            FirePass(driver, 2.25);
+            for (var i = 0; i < loosed; i++)
+                MarshalFireTable.Count(1, ShotKind.AfterWord);
+            for (var t = 2.5; t <= 4.0; t += 0.25)
+                FirePass(driver, t);
+
+            Assert.IsTrue(CheckLines().Contains(expected), string.Join("\n", CheckLines()));
+            AssertInFixture(fixture, expected);
+            MarshalFireTable.Clear();
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void RenderedLines_ForAMark_AndItsEffect_AreTheOnesTheFixturesHold()
+    {
+        var mark = MarshalOrderPayload.ForMark((Formation)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Formation)));
+        _orders.Selected.Add(1);
+        _queue.CaptureMark(mark);
+        _orders.Now = 1.0;
+        _queue.Pass();
+        var watch = new MarshalMarkWatch(_orders, _log, _logger, "1");
+        _orders.Marks = new[] { new MarkSample(2, 6, 5, 8, MarkContext.RangedOnStop) };
+        _orders.Now = 1.0;
+        watch.Pass();
+        _orders.Now = 4.0;
+        watch.Pass();
+
+        var lines = new[]
+        {
+            "[Check] id=taom.marshals-word.mark result=pass mission=1 companies=1",
+            "[Check] id=taom.marshals-word.mark-effect result=pass mission=1 company=2 target=6 context=RangedOnStop onTarget=5 of=8",
+        };
+        CollectionAssert.AreEqual(lines, CheckLines());
+        AssertInFixture("marshal_full_pass.txt", lines);
+
+        Fresh();
+        var failing = new MarshalMarkWatch(_orders, _log, _logger, "1");
+        _orders.Marks = new[] { new MarkSample(2, 6, 2, 8, MarkContext.RangedOnStop) };
+        _orders.Now = 1.0;
+        failing.Pass();
+        _orders.Now = 4.0;
+        failing.Pass();
+        var fail = "[Check] id=taom.marshals-word.mark-effect result=fail mission=1 company=2 target=6 context=RangedOnStop onTarget=2 of=8";
+        CollectionAssert.AreEqual(new[] { fail }, CheckLines());
+        AssertInFixture("marshal_mark_effect_fail.txt", fail);
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void RenderedLine_ForAMarkNoMemberTook_IsTheNotAppliedSkip()
+    {
+        var mark = MarshalOrderPayload.ForMark((Formation)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Formation)));
+        _orders.Selected.Add(1);
+        _orders.IssueResult = false;
+        _queue.CaptureMark(mark);
+
+        _orders.Now = 1.0;
+        _queue.Pass();
+
+        var skip = "[Check] id=taom.marshals-word.mark result=skip mission=1 reason=not-applied";
+        CollectionAssert.AreEqual(new[] { skip }, CheckLines());
+        AssertInFixture("marshal_m3_m4_skips.txt", skip);
+    }
+
+    [TestMethod]
+    public void TheNewCheckIds_AreValid_AndTheManifestNamesEachOfThem()
+    {
+        var toml = string.Join("\n", Toml());
+        foreach (var id in new[]
+                 {
+                     MarshalChecks.FireId, MarshalChecks.WordId, MarshalChecks.VolleyHoldId, MarshalChecks.VolleyReleaseId, MarshalChecks.MarkId,
+                     MarshalChecks.MarkEffectId, MarshalChecks.HoldCounterId, MarshalChecks.ReleaseCounterId,
+                 })
+        {
+            Assert.IsTrue(OutcomeLog.IsValidId(id), id);
+            if (!id.Contains("fire-"))
+                StringAssert.Contains(toml, "id = \"" + id + "\"", id);
+        }
     }
 
     private static string[] Toml() => File.ReadAllLines(RepoPath("tools", "ingame_checks", "0.toml"));

@@ -30,6 +30,12 @@ internal sealed class MarshalMarchDriver
 
     internal bool IsMarching => _march != null;
 
+    /// <summary>How the latest march ended: pass, fail, no-test, or the skip line's reason; "none" before any march has ended.</summary>
+    internal string Conclusion { get; private set; } = "none";
+
+    /// <summary>How many marches have ended, so the field trial can tell a new conclusion from an old one that reads the same.</summary>
+    internal int Concluded { get; private set; }
+
     /// <summary>An array commit of two or more companies. Stored for the next pass: the commit can run in the screen tick.</summary>
     internal void Request(IReadOnlyList<MarchTarget> targets)
     {
@@ -111,14 +117,22 @@ internal sealed class MarshalMarchDriver
             + " shortest=" + shortest.ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
         if (!MarshalChecks.SpreadProvesPace(longest, shortest))
         {
+            Record("no-test");
             _outcomes.Skip(MarshalChecks.SpreadId, _key + ":no-test", detail + " reason=no-test");
             return;
         }
 
-        if (MarshalChecks.SpreadPasses(spread, longest, shortest))
+        Record(MarshalChecks.SpreadPasses(spread, longest, shortest) ? "pass" : "fail");
+        if (Conclusion == "pass")
             _outcomes.Pass(MarshalChecks.SpreadId, _key, detail);
         else
             _outcomes.Fail(MarshalChecks.SpreadId, _key, detail);
+    }
+
+    private void Record(string how)
+    {
+        Conclusion = how;
+        Concluded++;
     }
 
     /// <summary>Clears the paces and forgets the march, with no log line.</summary>
@@ -132,6 +146,7 @@ internal sealed class MarshalMarchDriver
     private void End(string why)
     {
         Stop();
+        Record(why);
         _outcomes.Skip(MarshalChecks.SpreadId, _key + ":" + why, "mission=" + _key + " reason=" + why);
     }
 }

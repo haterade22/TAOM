@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.MarshalsWord.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -10,7 +11,7 @@ internal sealed record SeatTrialStep(string Name, IReadOnlyList<string> Requires
 /// <summary>The field trial's steps in the order they run, joined from each feature's row list, and the choice of a subset.</summary>
 internal static class SeatTrialSteps
 {
-    internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows;
+    internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
 
     /// <summary>The steps to run in the table's order (null or blank is every step), or false with <paramref name="error"/> naming an unknown step or a missing requirement and <paramref name="steps"/> empty.</summary>
     internal static bool TryChoose(string? list, out IReadOnlyList<SeatTrialStep> steps, out string error)
