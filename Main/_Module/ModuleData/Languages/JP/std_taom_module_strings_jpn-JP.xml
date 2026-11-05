@@ -1200,7 +1200,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="単一の要衝拠点" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="ローハンとファンゴルンに囲まれている" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="軍隊影響力コスト-60%(冥王の意志)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="部隊規模上限+10%(サウロンの大軍)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="部隊規模上限+20%(サウロンの大軍)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% 鍛冶効率(闇の鍛冶)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="ヌアンの穀物生産+20%(ヌアンの農地)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="略奪ダメージ+25%(サウロンの怒り)" />

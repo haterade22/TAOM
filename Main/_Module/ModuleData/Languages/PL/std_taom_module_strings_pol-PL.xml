@@ -1207,7 +1207,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Jedna osada w wąskim gardle" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Otoczony przez Rohan i Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% kosztu wpływu na armie (Wola Czarnego Władcy)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% limitu wielkości drużyny (Hordy Saurona)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% limitu wielkości drużyny (Hordy Saurona)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% wydajności kowalstwa (Mroczne kowalstwo)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% produkcji zboża w Nurnie (Pola Nurnu)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% obrażeń od grabieży (Gniew Saurona)" />

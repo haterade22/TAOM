@@ -1558,7 +1558,7 @@
 	<string id="taom_faction_dominion_of_isengard_weakness_1" text="{=taom_faction_dominion_of_isengard_weakness_1}Single chokepoint settlement" />
 	<string id="taom_faction_dominion_of_isengard_weakness_2" text="{=taom_faction_dominion_of_isengard_weakness_2}Surrounded by Rohan and Fangorn" />
 	<string id="taom_faction_dominion_of_mordor_bonus_0" text="{=taom_faction_dominion_of_mordor_bonus_0}-60% army influence cost (The Dark Lord's Will)" />
-	<string id="taom_faction_dominion_of_mordor_bonus_1" text="{=taom_faction_dominion_of_mordor_bonus_1}+10% party size limit (Sauron's Hordes)" />
+	<string id="taom_faction_dominion_of_mordor_bonus_1" text="{=taom_faction_dominion_of_mordor_bonus_1}+20% party size limit (Sauron's Hordes)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_10" text="{=taom_faction_dominion_of_mordor_bonus_10}+15% smithing efficiency (Dark Smithing)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_2" text="{=taom_faction_dominion_of_mordor_bonus_2}+20% Nurn grain production (Nurn Farmlands)" />
 	<string id="taom_faction_dominion_of_mordor_bonus_3" text="{=taom_faction_dominion_of_mordor_bonus_3}+25% raid damage (Sauron's Wrath)" />
@@ -1667,7 +1667,7 @@
 	<string id="taom_faction_golden_realm_of_rhun_bonus_4" text="{=taom_faction_golden_realm_of_rhun_bonus_4}-20% town tax income (Khuzait, inherited)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_5" text="{=taom_faction_golden_realm_of_rhun_bonus_5}-0.5 settlement loyalty per day (Easterling Tribute)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_6" text="{=taom_faction_golden_realm_of_rhun_bonus_6}+15% raid damage (Steppe Raider Doctrine)" />
-	<string id="taom_faction_golden_realm_of_rhun_desc" text="{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host party size. Heavy cavalry that arrives in numbers and tribute." />
+	<string id="taom_faction_golden_realm_of_rhun_desc" text="{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host +5% party size. Heavy cavalry that arrives in numbers and tribute." />
 	<string id="taom_faction_golden_realm_of_rhun_name" text="{=taom_faction_golden_realm_of_rhun_name}Golden-Realm of Rhun" />
 	<string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="{=taom_faction_golden_realm_of_rhun_perk_0_desc}+10% party speed on steppe — riders of the Sea of Rhun cross the plain fast." />
 	<string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="{=taom_faction_golden_realm_of_rhun_perk_0_name}Easterling Outriders" />
@@ -2173,7 +2173,7 @@
 	<string id="taom_faction_taskralan_of_harwan_bonus_6" text="{=taom_faction_taskralan_of_harwan_bonus_6}-15% party food consumption (Desert Endurance)" />
 	<string id="taom_faction_taskralan_of_harwan_bonus_7" text="{=taom_faction_taskralan_of_harwan_bonus_7}+15% raid damage (Far Harad Savagery)" />
 	<string id="taom_faction_taskralan_of_harwan_bonus_8" text="{=taom_faction_taskralan_of_harwan_bonus_8}+15% army influence cost (Divided Tribes)" />
-	<string id="taom_faction_taskralan_of_harwan_desc" text="{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add party size on top of the inherited caravan economy. Mumakil rule the southern plains." />
+	<string id="taom_faction_taskralan_of_harwan_desc" text="{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add +5% party size on top of the inherited caravan economy. Mumakil rule the southern plains." />
 	<string id="taom_faction_taskralan_of_harwan_name" text="{=taom_faction_taskralan_of_harwan_name}Taskralan of Harwan" />
 	<string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="{=taom_faction_taskralan_of_harwan_perk_0_desc}+10% party speed on desert — born to burning sands." />
 	<string id="taom_faction_taskralan_of_harwan_perk_0_name" text="{=taom_faction_taskralan_of_harwan_perk_0_name}Sons of the Sun" />

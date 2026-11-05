@@ -374,4 +374,28 @@ public class TaomCulturalFeatsDefinitionTests
         }
         throw new InvalidOperationException("repo root (.git) not found from " + AppDomain.CurrentDomain.BaseDirectory);
     }
+
+    /// <summary>
+    /// The EffectBonus literal of <c>field.Initialize(...)</c> in the production source, as a decimal
+    /// (0.05 for <c>0.05f</c>). The unit harness cannot run InitializeAll, so the source is the record.
+    /// </summary>
+    internal static decimal ProductionEffectBonus(string field)
+    {
+        var source = File.ReadAllText(LocateSource("Main/Features/CulturalFeats/TaomCulturalFeats.cs"));
+        var body = ReadInitializeArgs(source, field);
+        Assert.IsNotNull(body, $"{field}: no Initialize(...) call found");
+        var m = Regex.Match(body, @", (?<v>-?\d+(?:\.\d+)?)f, isPositiveEffect:");
+        Assert.IsTrue(m.Success, $"{field}: no EffectBonus literal in Initialize(...)");
+        return decimal.Parse(m.Groups["v"].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static string NormalizeWhitespace(string s) => Regex.Replace(s, @"\s+", " ");
+
+    /// <summary>The whitespace-collapsed argument list of <c>field.Initialize(...)</c>, or null.</summary>
+    private static string ReadInitializeArgs(string source, string field)
+    {
+        var m = Regex.Match(
+            source, Regex.Escape(field) + @"\.Initialize\((?<body>.*?)\);", RegexOptions.Singleline);
+        return m.Success ? NormalizeWhitespace(m.Groups["body"].Value) : null;
+    }
 }

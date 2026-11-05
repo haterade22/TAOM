@@ -1202,7 +1202,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Единственное поселение в узком месте" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Окружен Роханом и Фангорном" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% к затратам влияния на армию (воля Темного Властелина)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% к лимиту размера отряда (Орды Саурона)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% к лимиту размера отряда (Орды Саурона)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% эффективность кузнечного дела (Темная Ковка)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% к производству зерна в Нурне (Нурнские фермы)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% к урону от набегов (Гнев Саурона)" />

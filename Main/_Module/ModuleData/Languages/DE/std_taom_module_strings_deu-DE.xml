@@ -1246,7 +1246,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Einzelne Siedlung als Engpass" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Umgeben von Rohan und Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% Einflusskosten für Armeen (Der Wille des Dunklen Herrschers)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% Gruppengröße (Saurons Horden)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% Gruppengröße (Saurons Horden)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% Schmiedeeffizienz (Dunkle Schmiedekunst)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% Getreideproduktion in Nurn (Ackerland von Nurn)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% Plünderungsschaden (Saurons Zorn)" />

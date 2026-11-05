@@ -1198,7 +1198,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Asentamiento de un solo punto de estrangulamiento" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Rodeado por Rohan y Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% costo de influencia de ejército (La Voluntad del Señor Oscuro)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% límite de tamaño de grupo (Hordas de Sauron)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% límite de tamaño de grupo (Hordas de Sauron)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% eficiencia de herrería (Herrería Oscura)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% producción de grano de Nurn (Granjas de Nurn)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% daño de saqueo (Ira de Sauron)" />
