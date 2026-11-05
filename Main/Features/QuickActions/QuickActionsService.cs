@@ -259,7 +259,6 @@ public sealed class QuickActionsService : IQuickActionsService
         if (item == null) return false;
         if (item.IsLocked) return false;
         if (!item.IsTransferable) return false;
-        if (item.IsEquipped && !_settings.SellDamagedEquipped) return false;
         if (item.IsHorse && _settings.ExcludeDamagedHorses) return false;
         // Pristine threshold (0f) is reserved as a sentinel — never matches; user must pick a real preset.
         if (threshold >= 0f) return false;
@@ -272,7 +271,6 @@ public sealed class QuickActionsService : IQuickActionsService
         if (item == null) return false;
         if (item.IsLocked) return false;
         if (!item.IsTransferable) return false;
-        if (item.IsEquipped && !_settings.SellLowValueEquipped) return false;
         if (item.IsHorse && _settings.ExcludeLowValueHorses) return false;
         if (item.IsFood && _settings.ExcludeLowValueFood) return false;
         if (item.IsTradeGood && _settings.ExcludeLowValueTradeGoods) return false;

@@ -31,10 +31,8 @@ public class QuickActionsServiceTests
         _settings.DamagedPreset.Returns(DamagedQualityPreset.Moderate);
         _settings.CustomDamagedThreshold.Returns(-0.20f);
         _settings.UseCustomThreshold.Returns(false);
-        _settings.SellDamagedEquipped.Returns(false);
         _settings.ExcludeDamagedHorses.Returns(true);
         _settings.LowValueThreshold.Returns(100);
-        _settings.SellLowValueEquipped.Returns(false);
         _settings.ExcludeLowValueFood.Returns(true);
         _settings.ExcludeLowValueHorses.Returns(true);
         _settings.ExcludeLowValueTradeGoods.Returns(false);
@@ -54,7 +52,6 @@ public class QuickActionsServiceTests
         int value = 200,
         bool isLocked = false,
         bool isTransferable = true,
-        bool isEquipped = false,
         bool isHorse = false,
         bool isFood = false,
         bool isTradeGood = false,
@@ -66,7 +63,6 @@ public class QuickActionsServiceTests
         item.ItemValue.Returns(value);
         item.IsLocked.Returns(isLocked);
         item.IsTransferable.Returns(isTransferable);
-        item.IsEquipped.Returns(isEquipped);
         item.IsHorse.Returns(isHorse);
         item.IsFood.Returns(isFood);
         item.IsTradeGood.Returns(isTradeGood);
@@ -138,31 +134,6 @@ public class QuickActionsServiceTests
         _sut.SellAllDamaged();
 
         _inventory.DidNotReceive().TrySellItem(qi);
-    }
-
-    [TestMethod]
-    public void SellAllDamaged_EquippedItem_NotSoldWhenSellEquippedFalse()
-    {
-        _settings.SellDamagedEquipped.Returns(false);
-        var equipped = MakeItem(modifier: 0.6f, isEquipped: true);
-        SetItems(equipped);
-
-        _sut.SellAllDamaged();
-
-        _inventory.DidNotReceive().TrySellItem(equipped);
-    }
-
-    [TestMethod]
-    public void SellAllDamaged_EquippedItem_SoldWhenSellEquippedTrue()
-    {
-        _settings.SellDamagedEquipped.Returns(true);
-        var equipped = MakeItem(modifier: 0.6f, isEquipped: true);
-        SetItems(equipped);
-
-        var result = _sut.SellAllDamaged();
-
-        Assert.AreEqual(1, result.ItemsAffected);
-        _inventory.Received(1).TrySellItem(equipped);
     }
 
     [TestMethod]
@@ -265,29 +236,6 @@ public class QuickActionsServiceTests
         _sut.SellAllLowValue();
 
         _inventory.DidNotReceive().TrySellItem(locked);
-    }
-
-    [TestMethod]
-    public void SellAllLowValue_EquippedItem_NotSoldWhenSellEquippedFalse()
-    {
-        var equipped = MakeItem(value: 50, isEquipped: true);
-        SetItems(equipped);
-
-        _sut.SellAllLowValue();
-
-        _inventory.DidNotReceive().TrySellItem(equipped);
-    }
-
-    [TestMethod]
-    public void SellAllLowValue_EquippedItem_SoldWhenSellEquippedTrue()
-    {
-        _settings.SellLowValueEquipped.Returns(true);
-        var equipped = MakeItem(value: 50, isEquipped: true);
-        SetItems(equipped);
-
-        _sut.SellAllLowValue();
-
-        _inventory.Received(1).TrySellItem(equipped);
     }
 
     [TestMethod]

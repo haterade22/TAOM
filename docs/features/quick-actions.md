@@ -52,7 +52,7 @@ ExecuteRemoveZeroCounts
 
 ### MCM: TAOM → Inventory / Quick Actions
 
-14 settings across 4 groups. All settings live in `TaomSettings.cs` and are surfaced via `IQuickActionsSettingsProvider`.
+13 settings across 4 groups. All settings live in `TaomSettings.cs` and are surfaced via `IQuickActionsSettingsProvider`.
 
 | Group | Setting | Default | Purpose |
 |-------|---------|---------|---------|
@@ -61,10 +61,8 @@ ExecuteRemoveZeroCounts
 | Sell Damaged | DamagedQualityDropdown | Moderate (-20%) | Threshold preset (Pristine/Slight/Moderate/Heavy). |
 | Sell Damaged | DamagedThreshold | -0.20 | Custom threshold (when UseCustomThreshold = true). |
 | Sell Damaged | UseCustomThreshold | false | Switch between dropdown and custom value. |
-| Sell Damaged | SellDamagedEquipped | false | Include equipped items. |
 | Sell Damaged | ExcludeDamagedHorses | true | Skip mounts. |
 | Sell Low Value | LowValueThreshold | 100 | Denars cutoff (≤ sells). |
-| Sell Low Value | SellLowValueEquipped | false | Include equipped items. |
 | Sell Low Value | ExcludeLowValueFood | true | Skip food. |
 | Sell Low Value | ExcludeLowValueHorses | true | Skip mounts. |
 | Sell Low Value | ExcludeLowValueTradeGoods | false | Skip trade goods (cloth, fur, salt). |
@@ -102,13 +100,13 @@ ExecuteRemoveZeroCounts
 
 ## Tests
 
-- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 38 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable, equipped × 2 toggles), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917), menu options enumeration. The confirmation dialog is not covered: it calls `InformationManager` directly.
+- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 34 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917), menu options enumeration. The confirmation dialog is not covered: it calls `InformationManager` directly.
 - `TAOM.Tests/Features/QuickActions/InventoryPanelRefreshBindingTests.cs`: 1 binding test (game assemblies) that the two private `SPInventoryVM` refresh methods bind; their `ReflectionSiteBindingTests` rows pin the names.
 - `TAOM.Tests/Adapters/InventoryPanelRefreshTests.cs`: 2 tests (game assemblies) that `RefreshDisplay` and EquipPresets' `RefreshActiveVM` remove rows left at count 0 (#924, #926).
 - `TAOM.Tests/Features/QuickActions/InventorySearchCampaignBehaviorTests.cs` — 7 tests covering: default-true on construct, `OnTick` MCM reconciliation in both directions, `OnNewGameCreated` seed (true + false), `OnGameLoaded` reconcile when MCM disagrees.
 - `TAOM.Tests/Features/QuickActions/DamagedQualityPresetTests.cs` — 9 tests covering: preset → threshold (4 presets), dropdown index → preset (4 valid + out-of-range fallback to Moderate).
 
-Total: 55 QuickActions tests, plus the 2 shared panel refresh tests.
+Total: 51 QuickActions tests, plus the 2 shared panel refresh tests.
 
 ## How To: Add a New Quick Action
 
@@ -144,6 +142,7 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 
 ## Changelog
 
+- 2026-10-23: removed the two "Include equipped" options from Sell Damaged and Sell Low Value (#925). They never had an effect: the sells take their rows from the player's inventory list, which holds no equipped item. Quick sells never sell equipped gear; Unequip All first, then sell, does the same job.
 - 2026-10-23: Sell Damaged and Sell Low Value remove a sold-out row at once instead of leaving it at count 0 (#926).
 - 2026-10-19: Unequip All goes through the open screen's inventory transfers and then refreshes the paper doll, armour, weight and capacity, so the screen shows the result at once and Cancel can undo it (#917). The unused direct-write fallback is removed.
 - 2026-05-13 — Fixed the `IsSearchAvailable` per-save contract (#146): added a `_persistedVersion` SyncData tag so the search toggle survives reload while a mid-game MCM change still takes effect, instead of unconditional per-tick overwrite.

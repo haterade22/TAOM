@@ -652,10 +652,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool UseCustomThreshold { get; set; } = false;
 
     [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
-    [SettingPropertyBool("Sell Damaged Equipped", Order = 3, RequireRestart = false, HintText = "Include items currently equipped on heroes.")]
-    public bool SellDamagedEquipped { get; set; } = false;
-
-    [SettingPropertyGroup("Inventory/Quick Actions/Sell Damaged")]
     [SettingPropertyBool("Exclude Damaged Horses", Order = 4, RequireRestart = false, HintText = "Skip horses/mounts when selling damaged. Default: true.")]
     public bool ExcludeDamagedHorses { get; set; } = true;
 
@@ -663,10 +659,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("Low Value Threshold (denars)", 1, 10000, Order = 0, RequireRestart = false,
         HintText = "Items at or below this denars value are sold. Default: 100.")]
     public int LowValueThreshold { get; set; } = 100;
-
-    [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
-    [SettingPropertyBool("Sell Low Value Equipped", Order = 1, RequireRestart = false, HintText = "Include items currently equipped. Default: false.")]
-    public bool SellLowValueEquipped { get; set; } = false;
 
     [SettingPropertyGroup("Inventory/Quick Actions/Sell Low Value")]
     [SettingPropertyBool("Exclude Low Value Food", Order = 2, RequireRestart = false, HintText = "Skip food items. Default: true.")]

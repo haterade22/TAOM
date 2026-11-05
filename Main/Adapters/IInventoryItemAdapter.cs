@@ -11,7 +11,6 @@ public interface IInventoryItemAdapter
     int ItemValue { get; }
     bool IsLocked { get; }
     bool IsTransferable { get; }
-    bool IsEquipped { get; }
     bool IsHorse { get; }
     bool IsFood { get; }
     bool IsTradeGood { get; }
