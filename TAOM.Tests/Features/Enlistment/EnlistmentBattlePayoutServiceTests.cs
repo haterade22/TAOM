@@ -192,6 +192,21 @@ public class EnlistmentBattlePayoutServiceTests
     }
 
     [TestMethod]
+    public void PayOut_CommanderUnavailable_EvaluatesNoPromotion()
+    {
+        // No chain of command is left to promote anyone (#835); the daily tick refuses it too.
+        MakeEnlisted();
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+        _contentStore.Record.DaysServed = 10;
+        _contentStore.Record.ServiceXp = 70; // +40 win = 110 >= 100: promotes in any other state
+
+        _service.PayOutBattle(won: true);
+
+        Assert.IsFalse(_service.LastBattlePromoted);
+        Assert.AreEqual(ServiceRank.Recruit, _contentStore.Record.Rank);
+    }
+
+    [TestMethod]
     public void PayOut_BelowThreshold_NoPromotion()
     {
         MakeEnlisted();
