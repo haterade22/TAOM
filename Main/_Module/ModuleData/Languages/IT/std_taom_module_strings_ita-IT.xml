@@ -2652,5 +2652,11 @@
     <string id="taom_patch_apply_phase_mission_start" text="l'inizio della missione" />
     <string id="taom_mission_start_guard_notice" text="{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
     <string id="taom_skeleton_buffer_warning" text="This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
+    <string id="taom_bc_advice_title" text="TAOM: battle performance settings" />
+    <string id="taom_bc_advice_body" text="Your {RAGDOLLS} or {CORPSES} option is set higher than TAOM recommends. Players have reported freezes in large battles at high values, and lowering these two options stopped them. Recommended: {RAGDOLLS} 5, {CORPSES} {LOW}. A setting already lower is kept. Apply now? You can change them back at any time in Options, {PERFORMANCE}. This notice can be turned off in Mod Options, TAOM, Performance." />
+    <string id="taom_bc_advice_apply" text="Apply" />
+    <string id="taom_bc_advice_keep" text="Keep mine" />
+    <string id="taom_bc_advice_done" text="Battle settings saved." />
+    <string id="taom_bc_advice_failed" text="Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
   </strings>
 </base>

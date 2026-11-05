@@ -4,7 +4,8 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.MountDespawn.Hooks;
 
 /// <summary>
-/// Decides whether dead mounts may be retired in a given mission. Its own type so the
+/// Decides whether dead mounts may be retired in a given mission. Also BattleCorpses' allowlist (#701):
+/// a change here changes which battles get the corpse fade time and cap. Its own type so the
 /// MissionBehavior stays a thin entry point (ADR-002) and so the allowlist is testable in isolation.
 ///
 /// Structure copied from <c>TAOM.Features.DreadAura.Hooks.DreadMissionGate</c>, with one deliberate
