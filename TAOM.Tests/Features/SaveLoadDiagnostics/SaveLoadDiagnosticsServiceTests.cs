@@ -346,4 +346,40 @@ public class SaveLoadDiagnosticsServiceTests
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void NoteEndedCampaignThatNothingElseHolds(SaveLoadDiagnosticsService sut) =>
         sut.NoteGameEnded(new object());
+
+    // ---- per-behavior SyncData sizes (plan 114) ----
+
+    [TestMethod]
+    public void RecordBehaviorSave_IsWrittenAfterSaveBegin_ThenCleared()
+    {
+        var lines = new System.Collections.Generic.List<string>();
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(ci => lines.Add(ci.Arg<string>()));
+        _sut.RecordBehaviorSave("a", "T.A", new BehaviorRecordStats(1, 2, 3, "k"), 1.0);
+        _sut.RecordBehaviorSave("b", "T.B", new BehaviorRecordStats(1, 2, 3, "k"), 1.0);
+
+        _sut.BeginSaveAttempt("first");
+
+        Assert.AreEqual(2, lines.Count);
+        StringAssert.Contains(lines[0], "phase=SaveBegin");
+        StringAssert.Contains(lines[1], "phase=SaveBehaviorData behaviors=2");
+
+        lines.Clear();
+        _sut.BeginSaveAttempt("second");
+
+        Assert.AreEqual(1, lines.Count);
+        StringAssert.Contains(lines[0], "phase=SaveBegin");
+    }
+
+    [TestMethod]
+    public void RecordBehaviorSave_SameBehaviorTwice_KeepsTheLatest()
+    {
+        var lines = new System.Collections.Generic.List<string>();
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(ci => lines.Add(ci.Arg<string>()));
+        _sut.RecordBehaviorSave("a", "T.A", new BehaviorRecordStats(1, 2, 3, "k"), 1.0);
+        _sut.RecordBehaviorSave("a", "T.A", new BehaviorRecordStats(7, 8, 9, "k"), 1.0);
+
+        _sut.BeginSaveAttempt("x");
+
+        StringAssert.Contains(lines[1], "behaviors=1 records=7 elements=8");
+    }
 }

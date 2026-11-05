@@ -45,4 +45,8 @@ public interface ISaveLoadDiagnosticsService
     // Remembers, weakly, the campaign that just ended, so a later line can say whether it was freed.
     // Takes object because a service never touches a sealed engine type (ADR-007).
     void NoteGameEnded(object endedCampaign);
+
+    // Stores one behavior's save record size. These run before SaveBegin (the engine's OnBeforeSave
+    // pass), so BeginSaveAttempt writes the summary and clears them.
+    void RecordBehaviorSave(string behaviorId, string behaviorType, BehaviorRecordStats stats, double syncMs);
 }

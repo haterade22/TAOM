@@ -51,4 +51,5 @@ public enum SaveLoadPhase
     Runtime,
     LoadCounts,
     SaveCollected,
+    SaveBehaviorData,
 }

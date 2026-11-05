@@ -44,6 +44,14 @@ public class SaveGrowthProbeWiringTests
         StringAssert.Contains(source, "LoadContext_Load_Patch.Initialize(");
     }
 
+    [TestMethod]
+    public void SubModule_AppliesAndInitializesTheBehaviorSizeHook()
+    {
+        var source = SubModuleSource();
+        StringAssert.Contains(source, "\"Patch61_SaveLoadDiagnostics_BehaviorSize\",");
+        StringAssert.Contains(source, "CampaignBehaviorDataStore_SaveBehaviorData_Size_Patch.Initialize(");
+    }
+
     // A typo on either side is a dead patch with no error.
     [TestMethod]
     public void CountHookCategoryAttributes_MatchTheStringsSubModuleApplies()

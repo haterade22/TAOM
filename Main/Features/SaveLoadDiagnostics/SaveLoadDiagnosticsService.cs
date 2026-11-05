@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -31,6 +32,7 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
     private int _inGameLoadsThisProcess;
     private WeakReference? _endedCampaign;
     private int _gen2AtGameEnd;
+    private readonly Dictionary<string, BehaviorSaveSample> _behaviorSamples = new Dictionary<string, BehaviorSaveSample>();
 
     public SaveLoadDiagnosticsService(IModLogger logger)
         : this(logger, BattleLoadDiagnostics.ProcessMemoryTokens.Format, () => GC.CollectionCount(2)) { }
@@ -56,8 +58,33 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
         BeginAttempt(SaveLoadPhase.LoadRequested, SaveLoadTokens.LoadRequested(saveName, inGame, loads, inGameLoads, SafeMemory()));
     }
 
-    public void BeginSaveAttempt(string saveName) =>
+    public void BeginSaveAttempt(string saveName)
+    {
         BeginAttempt(SaveLoadPhase.SaveBegin, $"name='{saveName}' {ProcessContext()}");
+        try
+        {
+            BehaviorSaveSample[] samples;
+            lock (_behaviorSamples)
+            {
+                samples = new BehaviorSaveSample[_behaviorSamples.Count];
+                _behaviorSamples.Values.CopyTo(samples, 0);
+                _behaviorSamples.Clear();
+            }
+            foreach (var line in BehaviorSaveSummary.Format(samples))
+                LogPhase(SaveLoadPhase.SaveBehaviorData, line);
+        }
+        catch { /* the diagnostic must never propagate */ }
+    }
+
+    public void RecordBehaviorSave(string behaviorId, string behaviorType, BehaviorRecordStats stats, double syncMs)
+    {
+        try
+        {
+            lock (_behaviorSamples)
+                _behaviorSamples[behaviorId] = new BehaviorSaveSample(behaviorId, behaviorType, stats, syncMs);
+        }
+        catch { /* the diagnostic must never propagate */ }
+    }
 
     public string ProcessContext()
     {

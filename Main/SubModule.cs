@@ -329,6 +329,7 @@ public class SubModule : MBSubModuleBase
             // Plan 114 save-growth probes, each in its own category so a drifted member costs only itself.
             Features.SaveLoadDiagnostics.Hooks.SaveContext_CollectObjects_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.LoadContext_Load_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorDataStore_SaveBehaviorData_Size_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             TryPatchCategory("Patch61_SaveLoadDiagnostics");
             foreach (var category in new[]
             {
@@ -337,6 +338,7 @@ public class SubModule : MBSubModuleBase
                 "Patch61_SaveLoadDiagnostics_ArchiveParse",
                 "Patch61_SaveLoadDiagnostics_SaveGraph",
                 "Patch61_SaveLoadDiagnostics_LoadCounts",
+                "Patch61_SaveLoadDiagnostics_BehaviorSize",
             })
             {
                 TryPatchCategory(category);

@@ -119,4 +119,21 @@ public class SaveLoadDiagnosticsBindingTests
             Assert.AreEqual(typeof(int), AccessTools.Field(type, name)?.FieldType,
                 $"LoadContext.{name} changed: its count would disappear from LoadCounts.");
     }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CampaignBehaviorDataStore_RecordFields_ResolveAgainstInstalledEngine()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var store = CampaignBehaviorDataStore_LoadBehaviorData_Patch.ResolveStoreType();
+        Assert.IsNotNull(store, "CampaignBehaviorDataStore did not resolve.");
+        Assert.IsNotNull(AccessTools.Field(store, "_behaviorDict"),
+            "CampaignBehaviorDataStore._behaviorDict did not resolve: per-behavior sizes would stop being recorded.");
+        var record = AccessTools.Inner(store, "BehaviorSaveData");
+        Assert.IsNotNull(record, "CampaignBehaviorDataStore.BehaviorSaveData did not resolve.");
+        Assert.AreEqual(typeof(Dictionary<string, object>), AccessTools.Field(record, "_records")?.FieldType,
+            "BehaviorSaveData._records changed: per-behavior sizes would stop being recorded.");
+    }
 }
