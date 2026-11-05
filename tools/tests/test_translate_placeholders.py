@@ -1,4 +1,4 @@
-"""Placeholder preservation check: lowercase engine tokens such as {newline}."""
+"""Placeholder preservation check: lowercase engine tokens such as {newline}, and conversation animation tags such as [ib:closed]."""
 
 import os
 import sys
@@ -39,6 +39,29 @@ class PlaceholderTests(unittest.TestCase):
         self.assertEqual(counts["__cond_open__"], 1)
         ok, _ = twc.placeholders_match(r"{?DAYS>1}days{?}day{\?}", r"days{?}day{\?}")
         self.assertFalse(ok)
+
+    def test_dropped_expression_tag_is_rejected(self):
+        ok, why = twc.placeholders_match("Go on.[ib:closed][rf:convo_bemused]", "Geh weiter.[rf:convo_bemused]")
+        self.assertFalse(ok)
+        self.assertIn("[ib:closed]", why)
+
+    def test_changed_expression_tag_is_rejected(self):
+        ok, _ = twc.placeholders_match("Go on.[ib:closed]", "Geh weiter.[ib:geschlossen]")
+        self.assertFalse(ok)
+
+    def test_kept_expression_tags_pass(self):
+        ok, _ = twc.placeholders_match("Go on.[ib:closed][if:convo_angry]", "Geh weiter.[ib:closed][if:convo_angry]")
+        self.assertTrue(ok)
+
+    def test_moved_expression_tag_passes(self):
+        # The tags are counted, not positioned: a language may need one at another point of the sentence.
+        ok, _ = twc.placeholders_match("Go on.[ib:closed] Quickly.", "[ib:closed]Geh weiter. Schnell.")
+        self.assertTrue(ok)
+
+    def test_culture_tag_is_not_an_expression_tag(self):
+        counts = twc.extract_placeholders("[Gondor] Sword [rb:x]")
+        self.assertNotIn("[Gondor]", counts)
+        self.assertEqual(counts["[rb:x]"], 1)
 
 
 if __name__ == "__main__":

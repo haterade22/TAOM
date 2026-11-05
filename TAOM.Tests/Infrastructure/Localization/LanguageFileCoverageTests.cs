@@ -25,11 +25,18 @@ namespace TAOM.Tests.Infrastructure.Localization;
 /// identically — perfect English, eleven silently untranslated languages, green suite.
 ///
 /// Deliberately a PRESENCE check, not an "is actually translated" check. Some rows legitimately
-/// carry English: proper nouns, and the four vanilla-derived strings with nested gender
-/// conditionals that fail placeholder validation on every uncached language and fall back by
-/// design (see <c>docs/localization/TRANSLATOR_GUIDE.md</c>). Asserting difference-from-English
+/// carry English: proper nouns, and rows that fail placeholder validation on an uncached language
+/// and fall back by design (see <c>docs/localization/TRANSLATOR_GUIDE.md</c>). The four vanilla-derived
+/// strings with nested gender conditionals (<c>uc4M4bhG</c>, <c>qa4FlTWS</c>, <c>uiY3ds0Z</c>,
+/// <c>V097rA1v</c>) are English-only overrides now and need no row. Asserting difference-from-English
 /// would report those forever, and a check that reports mostly noise gets ignored — the same
 /// failure mode that let #434 sit for two years.
+///
+/// One exception: a <c>{=KEY}</c> key of <c>taom_module_strings.xml</c> with the 8-character shape of a vanilla id
+/// is an English-only override (<c>LocalizationOverrideLoader</c>), and a language row for it would replace
+/// vanilla's curated translation (<c>VanillaKeyOverrideTests</c>). It is not required. The rule needs no game
+/// install and is the one <c>translate_with_claude.english_only_override_ids</c> applies;
+/// <c>VanillaKeyOverrideTests.ModuleStrings_VanillaShape_MatchesTheInstall</c> checks it against the install.
 /// </summary>
 [TestClass]
 public class LanguageFileCoverageTests
@@ -108,6 +115,21 @@ public class LanguageFileCoverageTests
         return keys;
     }
 
+    /// <summary>The English-only overrides: the vanilla-shaped keys of the file <c>LocalizationOverrideLoader</c> reads.</summary>
+    private static HashSet<string> LoadEnglishOnlyOverrideKeys()
+    {
+        var keys = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var row in StringRows(Path.Combine(ModuleDataPath, "taom_module_strings.xml")))
+        {
+            var key = TranslationKey(row);
+            if (VanillaLocalizationKeys.HasVanillaShape(key))
+            {
+                keys.Add(key);
+            }
+        }
+        return keys;
+    }
+
     /// <summary>
     /// Every id one language declares, unioned across its files. Union rather than per-file,
     /// because the engine folds all language XMLs into a single dictionary — which file a row
@@ -134,6 +156,7 @@ public class LanguageFileCoverageTests
     public void EveryLanguage_DeclaresARowForEveryEnglishKey()
     {
         var english = LoadEnglishKeys();
+        english.ExceptWith(LoadEnglishOnlyOverrideKeys());
         var failures = new List<string>();
 
         foreach (var lang in SupportedLanguageDirs)

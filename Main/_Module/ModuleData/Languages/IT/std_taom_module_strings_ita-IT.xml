@@ -293,12 +293,6 @@
     <string id="taom_force_vol_peace" text="Mentre tenti di forzare i notabili a darti delle reclute, alcuni residenti si radunano per resisterti. Combatterli causerà una guerra con {KINGDOM}." />
     <string id="taom_raid_noresist_peace" text="Sei giunto a {SETTLEMENT} per saccheggiarla. Non incontri alcuna resistenza. Saccheggiare questo villaggio causerà una guerra con {KINGDOM}." />
     <string id="taom_encounter_peace" text="Hai incontrato {PARTY}. Combatterli causerà una guerra con {KINGDOM}." />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK} ha formato un'alleanza con {KINGDOM2_LINK}." />
-    <string id="1rbg3Hz2" text="{FACTION_1} e {FACTION_2} non sono più nemici." />
-    <string id="2BVDp7Tg" text="{KINGDOM} cesserà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="Lbs2bNlg" text="{KINGDOM} inizierà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="jnYwiCAz" text="{KINGDOM} continuerà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="faUooB7V" text="{KINGDOM} non sarà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="TauRjAud" text="{NAME} di {FACTION}" />
     <string id="2mVZORaE" text="un servitore di {FACTION_NAME}" />
     <string id="6d4ZTvGv" text="{LORD.NAME} è {TITLE} di {FACTION_NAME} e capo di {CLAN_NAME}, {CLAN_DESCRIPTION} del reame. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
@@ -359,133 +353,74 @@
     <string id="taom_str_adjective_for_culture.shaghana" text="Shaghâni" />
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
-    <string id="0aXG8dvJ" text="Fai pace con {KINGDOM_NAME}. Nessun tributo sarà pagato." />
-    <string id="0CsbbwtN" text="Chiama {CALLED_KINGDOM} in Guerra Contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
     <string id="0nhqJewP" text="{RULER.NAME} di {KINGDOM} concede {SETTLEMENT} a {LEADER.NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} con il sostegno del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} può essere forte, ma le loro terre sono ricche e mature per essere conquistate." />
     <string id="1o8vgwTf" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="1V8f9vRM" text="Un messaggero recante un'offerta di alleanza da {PROPOSER_KINGDOM} è giunto alla corte del vostro reame." />
-    <string id="21yUheIy" text="{KINGDOM_NAME} fu creato nel {CREATION_YEAR} da {RULER.NAME}, un {CULTURE_ADJECTIVE} signore della guerra in ascesa." />
     <string id="22LCyCoA" text="Posso offrire al vostro reame {GOLD}{GOLD_ICON} per dichiarare guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="2b1xZGaQ" text="Fai pace con {KINGDOM_NAME}. Il nostro regno pagherà {TRIBUTE_AMOUNT} di tributo giornaliero per {TRIBUTE_DURATION} giorni." />
-    <string id="2KaXj3Qa" text="Le devastazioni di {NEARBY_ENEMY_FACTION} hanno costretto molti contadini ad abbandonare le loro case. Coloro che possiedono terre di solito vi ritornano, ma molti dei più poveri cercano un nuovo luogo dove vivere. Parli con alcuni accampati alla periferia del tuo villaggio. Non c'è terra per loro. Sembrano desiderosi di lavorare come affittuari, ma c'è sempre la possibilità di tensioni con le famiglie più consolidate del villaggio." />
     <string id="4fXpOe4N" text="Giunge un messaggero da {CLAN_NAME}. Detengono {CAPTIVE_HERO.NAME} e richiedono {GOLD_AMOUNT}{GOLD_ICON} come riscatto." />
-    <string id="4GgfFDWG" text="Fare pace con {KINGDOM_NAME}" />
     <string id="4JSzHkpt" text="Come {?IS_FEMALE}regina{?}re{\?}, devi decidere se dichiarare guerra a {KINGDOM_NAME}" />
     <string id="4z1t75be" text="{FIRSTNAME} di {CLAN_NAME}" />
     <string id="5bBAOHmC" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="5bza9sDs" text="Mi dispiace molto sentirlo. Non troverete datori di lavoro migliori di {FACTION_NAME}, state certi." />
     <string id="5DdbkWLu" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}, con il {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
-    <string id="5pOKmHsf" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno della metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} ha occupato le nostre terre ancestrali e opprime i nostri consanguinei." />
     <string id="7ouzFASf" text="Giunge un messaggero, recante un messaggio da {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ella{?}Egli{\?} osserva la vostra crescente reputazione e chiede se considerereste di giurare come vassallo di {OFFERED_KINGDOM_NAME}. Dovreste parlare di persona se siete interessati." />
     <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM} con il sostegno del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="940TwBPs" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} nonostante le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}." />
-    <string id="aE7OQDMS" text="Forma alleanza con {KINGDOM_NAME}." />
     <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM}, con il {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
-    <string id="AGdmoIUc" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione è andata contro il parere del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="amdgO9Hr" text="Sono {CONVERSATION_HERO.FIRSTNAME}. Sono un umile seguace della compagnia nota come {FACTION_NAME}, che {DIVINITY} ha scelto per portare il loro messaggio in questa presente Era." />
     <string id="aQAI99d4" text="Dichiarare Guerra a {KINGDOM_NAME}" />
     <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di non fare pace con {KINGDOM}, con il {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
-    <string id="AwCnrOan" text="Come {RULER_NAME_AND_TITLE}, devi decidere se {CALLED_KINGDOM} sarà chiamato in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="AWm7Kb9Y" text="{RULER.NAME} ha deciso di non chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno della metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="awoeb3br" text="{FACTION_LEADER} deciderà se {KINGDOM_CONSIDERING_PEACE_NAME} farà pace con {KINGDOM_NAME}. Puoi scegliere la tua posizione riguardo a questa decisione." />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} ha fatto pace con {ENEMYFACTION_INFORMALNAME}. Il tuo accordo con {QUEST_GIVER.LINK} è stato annullato." />
     <string id="az3K3j4C" text="In questo momento siamo più forti di {ENEMY_KINGDOM_INFORMAL_NAME}. Dovremmo colpire finché possiamo." />
-    <string id="B818zx3W" text="Il tuo clan è in guerra con fazioni con cui {KINGDOM} è in pace." />
-    <string id="bjEN2OzZ" text="Come risultato delle tue intenzioni ostili verso un villaggio neutrale, {KINGDOM} ti dichiara guerra." />
     <string id="Bk3Wqy5j" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="BlVjIlZF" text="{FACTION_LEADER} deciderà se {KINGDOM_CONSIDERING_PEACE_NAME} farà pace con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} come tributo per {TRIBUTE_DURATION} giorni. Puoi scegliere la tua posizione riguardo a questa decisione." />
-    <string id="bMCZ5rWQ" text="{RULER.NAME} ha deciso di non chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="bR7MIkFi" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="bXN2fbcv" text="I tuoi uomini trattano i residenti di {SETTLEMENT_NAME} come sudditi ribelli di {SETTLEMENT_CULTURE_NAME} piuttosto che come nemici, e li trattano relativamente bene." />
-    <string id="bYmc9fi3" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="Cf0amFBD" text="Accettare la chiamata alle armi di {CALLING_KINGDOM} contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
     <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM} con il sostegno del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="CrzFdo2H" text="Sì. Riguarda la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Dobbiamo impegnare parte delle loro forze. Una forza relativamente piccola che si muova rapidamente attraverso le loro terre e saccheggi i loro villaggi con successo dovrebbe essere una buona distrazione. I loro signori dovranno inseguire i razziatori e non potranno minacciarci altrove. Sembri essere {?PLAYER.GENDER}la guerriera{?}l'uomo{\?} giusto per il compito. Che ne dici? Avrai la mia gratitudine e sarai ben ricompensato se avrai successo." />
     <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM}." />
-    <string id="d6KbdIWg" text=" A causa delle tue intenzioni ostili verso un villaggio neutrale, {MERCENARY_KINGDOM} termina il suo contratto con te, e {KINGDOM} ti dichiara guerra." />
     <string id="dCDBqYsh" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="dDsJyerw" text="Chiamare {CALLED_KINGDOM} alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="dEsIQDo3" text="È tempo di chiamare il nostro alleato {CALLED_KINGDOM} alla guerra!" />
     <string id="dov3iRlt" text="{ENEMY_RULER.NAME} di {ENEMY_KINGDOM_INFORMAL_NAME} è vile e pericoloso. Dobbiamo occuparci di {?ENEMY_RULER.GENDER}lei{?}lui{\?} prima che sia troppo tardi." />
     <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM} nonostante l'opposizione del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="dPOOmYGQ" text="Pensi che i signori e i guerrieri di {KINGDOM} restino a guardare quando il loro popolo viene rapito? Faresti meglio a lasciarci andare!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} fu creato nell'anno {CREATION_YEAR} da {RULER.NAME}, capo di un gruppo di ribelli {CULTURE_ADJECTIVE}." />
-    <string id="eAhgrwkZ" text="Come {RULER_NAME_AND_TITLE}, devi decidere se formare un'alleanza con {KINGDOM_NAME}." />
-    <string id="eEmFbQet" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="efTah9rk" text="Non ho l'autorità per fare pace a nome di {ENEMY_INFORMAL_NAME}. Il nostro consiglio dovrebbe decidere se offrire la pace e quali saranno i termini." />
     <string id="eiGl6XBr" text="Votare se rispondere alla chiamata alle armi di {CALLING_KINGDOM} contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="EqevKYZD" text="Come {RULER_NAME_AND_TITLE}, devi decidere se {CALLED_KINGDOM} verrà chiamato alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}" />
     <string id="eTylgLCc" text="È arrivato un corriere da {KINGDOM_NAME}. Ti offrono un'alleanza. Il tuo regno voterà se accettare l'offerta." />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM} non è più in guerra con {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="fcuUcjYV" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="FNCq25P1" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="FuNbouTu" text="È arrivato un corriere da {KINGDOM_NAME}. Chiamano il tuo regno alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Il tuo regno voterà se accettare l'offerta." />
     <string id="G3qGLAeQ" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM} contro il volere del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="gf2Lje7o" text="{RULER.NAME} ha deciso di non chiamare {CALLED_KINGDOM} alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, al comando di un esercito di {QUEST_GIVER_FACTION}, ti ha detto che hanno bisogno di rifornimenti alimentari per la loro prossima campagna militare. {?QUEST_GIVER.GENDER}Lei{?}Egli{\?} voleva che tu consegnassi {GRAIN_AMOUNT} sacchi di grano e, sebbene non sia necessario, fornire {LIVESTOCK_AMOUNT} capi di bestiame e {WINE_AMOUNT} barili di vino, {?QUEST_GIVER.GENDER}lei{?}egli{\?} lo apprezzerebbe." />
     <string id="Gj5d9y2g" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM}." />
     <string id="gNf0ALKw" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. Il tuo regno voterà se accettare l'offerta." />
     <string id="h5eTEYON" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM}." />
     <string id="h9bWTLgK" text="È tempo di unirci ai nostri alleati, {KINGDOM_NAME}, nella loro guerra." />
     <string id="IB1xsVEr" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. I tuoi vassalli hanno lasciato la decisione a te." />
-    <string id="INfHUqxT" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME}." />
     <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha scelto di non fare pace con {KINGDOM} nonostante le obiezioni del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="iOmgCFDI" text="Votare per formare un'alleanza con {KINGDOM_NAME}." />
-    <string id="ItueKmqd" text="Il tuo clan è ora in guerra con {QUEST_GIVER_SETTLEMENT_FACTION}. Il tuo contratto con {QUEST_GIVER.LINK} è annullato." />
-    <string id="izwKmH2I" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="jaioXYDc" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} nonostante l'opposizione del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JJQ0Hp4m" text="È arrivato un corriere da {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagherà {GOLD_AMOUNT} {GOLD_ICON} in tributo ogni giorno per porre fine alla guerra tra i vostri regni. I vostri vassalli hanno lasciato la decisione a voi." />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} è attualmente più potente di noi. Abbiamo bisogno di tempo per rafforzare le nostre forze." />
     <string id="JQligd8z" text="Il consiglio di {KINGDOM} ha scelto {KING.NAME} come nuovo sovrano." />
-    <string id="JY717hPW" text="Non ho l'autorità per fare pace a nome di {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} e il {?ENEMY_RULER.GENDER}suo{?}suo{\?} consiglio dovrebbero decidere se offrire la pace e quali saranno i termini." />
     <string id="K5w135N9" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione è stata presa contro il consiglio del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="KFHj7ckm" text="Come sovrano, devi decidere se fare pace con {KINGDOM_NAME}" />
-    <string id="KlATZEbb" text="Formazione di un'Alleanza con {KINGDOM_NAME}." />
     <string id="KSrNutEO" text="{FACTION_LEADER} deciderà se dichiarare guerra a {KINGDOM_NAME}. Puoi scegliere la tua posizione riguardo questa decisione." />
     <string id="Ktpia7Pa" text="{RULER.NAME} di {KINGDOM} concede {SETTLEMENT} a {LEADER.NAME} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="l5H9x7Lo" text="{RULER.NAME} di {KINGDOM} concede {SETTLEMENT} a {LEADER.NAME}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="L802I9W2" text="Sì, mi unirò a {FACTION_NAME}." />
     <string id="L81DPSom" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}." />
     <string id="Lalj0T1i" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="lseJ70y0" text="Il tuo regno è in guerra con {KINGDOM_NAME}." />
-    <string id="LVX2x6Jf" text="Vorrei terminare il mio contratto con {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} deciderà se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puoi scegliere la tua posizione riguardo questa decisione." />
     <string id="m6OVl6Dg" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="mfYzCeGR" text="{CHARACTER.NAME} era {TITLE} di {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
     <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha scelto di non fare pace con {KINGDOM} con il supporto del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, un{?QUEST_GIVER.GENDER}a dama{?} signore{\?} di {CLAN}, vuole che un giovane membro del clan venga addestrato nelle arti della guerra." />
     <string id="mvkKP6OE" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM}." />
-    <string id="MYIgSsfk" text="{RULER.NAME} ha deciso di non chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione è andata contro il consiglio del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="n4I3pWOn" text="Come sovrano, devi decidere se fare pace con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} come tributo per {TRIBUTE_DURATION} giorni." />
     <string id="Nd0Vhkxn" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono la pace se accetti di pagare un tributo giornaliero di {GOLD_AMOUNT} {GOLD_ICON}. I tuoi vassalli hanno lasciato la decisione a te." />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM} è già in guerra con {KINGDOM_NAME}." />
-    <string id="NjPMRWbW" text="Fai pace con {KINGDOM_NAME}. Il nostro regno riceverà {TRIBUTE_AMOUNT} di tributo giornaliero per {TRIBUTE_DURATION} giorni." />
-    <string id="nkvT88r2" text="Non hai abbastanza denaro per chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="NuYzgBZB" text="Stai andando troppo oltre. {KINGDOM} non sopporterà la distruzione delle sue carovane." />
-    <string id="o4IxXHnB" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME}." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK} non è più il capo di {CLAN_NAME}. {NEW_LEADER.LINK} ha assunto il controllo come sovrano del clan." />
     <string id="O9XpB5Ah" text="Come sovrano, devi decidere se stipulare un accordo commerciale con {KINGDOM}" />
     <string id="oAw74q3r" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
     <string id="Oe1NdVLe" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="Oi20UrO2" text="La nostra guerra con {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} sta andando abbastanza bene. Ma c'è chi dice che non abbiamo abbastanza da mostrare per tutto il sangue e l'argento che abbiamo speso. Una chiara vittoria in questa fase farebbe molto bene. Penso che mi piacerebbe vedere il nostro vessillo sventolare dalle torri di {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="Sì. Si tratta della guerra con {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Dobbiamo impegnare alcune delle loro forze, e il modo più semplice sarebbe razziare i loro villaggi. È un affare crudele e sarà duro per la gente comune, ma i loro signori dovranno inseguire i razziatori e questo impedirà loro di fare lo stesso a noi. Se ti assumi questo compito, ti ricompenserò se avrai successo." />
     <string id="Ouj6eSWC" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il supporto di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="PneX4Ayw" text="Un corriere che porta un'offerta di chiamata alla guerra da {KINGDOM_NAME} contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} è arrivato alla corte del tuo regno." />
     <string id="PP7KD7OC" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="PutoRsWp" text="Arriva un corriere da {CLAN_NAME}. Ti offrono {GOLD_AMOUNT}{GOLD_ICON} come riscatto se libererai {CAPTIVE_HERO.NAME}." />
-    <string id="q9DnHVcZ" text="Non è nel nostro interesse unirci a {KINGDOM_NAME} nella loro guerra." />
     <string id="qa4FlTWS" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="qgN9o2ip" text="È tempo di chiamare il nostro alleato {KINGDOM_NAME} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Il tuo regno voterà se proporre loro un accordo di chiamata alle armi." />
-    <string id="qN3x2usk" text="Vota se chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="R0bJS0pn" text="Fai pace con {OTHER_FACTION}" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER} deciderà se {CALLED_KINGDOM} sarà chiamato in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}. Puoi scegliere la tua posizione su questa decisione." />
     <string id="rd229FYG" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM} con il sostegno di metà del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="rJIuQ0hc" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM} contro le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
@@ -502,21 +437,15 @@
     <string id="uWdj1X2c" text="{CHARACTER.NAME} era un membro di {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
     <string id="V097rA1v" text="{LORD.FIRSTNAME} è a capo di {CLAN_NAME}, un nuovo clan emergente. {?LORD.GENDER}Lei{?}Lui{\?} sta ancora costruendo la {?LORD.GENDER}sua{?}sua{\?} reputazione." />
     <string id="vf2pb7Ts" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER} deciderà se {KINGDOM} firmerà un accordo commerciale con {OTHER_KINGDOM}. Puoi scegliere la tua posizione riguardo a questa decisione." />
-    <string id="VWoHoUin" text="Non ci sarà pace tra noi e {ENEMY_INFORMAL_NAME}, non più di quanto il lupo faccia pace con la pecora." />
-    <string id="wijL0mTy" text="{FACTION_LEADER} deciderà se verrà formata un'alleanza con {KINGDOM_NAME}. Puoi scegliere la tua posizione riguardo a questa decisione." />
     <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha scelto di non fare pace con {KINGDOM}." />
     <string id="xAuejv91" text="{RULER.NAME} di {KINGDOM} ha deciso di non fare pace con {OTHER_KINGDOM}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM} nonostante i desideri del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="XbYCVCbR" text="Ci opponiamo a chiamare il nostro alleato {CALLED_KINGDOM} in guerra." />
-    <string id="xhK4zMec" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="xKev8i5B" text="La chiamata che {CALLING_KINGDOM_LINK} ha emesso a {CALLED_KINGDOM_LINK}, per entrare in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, è terminata." />
     <string id="xM97H0oR" text="Vota per dichiarare guerra a {KINGDOM_NAME}." />
     <string id="yBL3TzXw" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="yUYNlQhU" text="Bene, farò scrivere ai miei uomini un semplice contratto. A nome di {KINGDOM_FORMAL_NAME}, ti do il benvenuto. Possa tu usare bene la tua spada contro i nostri nemici." />
     <string id="Zckbdm4Z" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="zd9sawl9" text="Sei già alleato con {KINGDOM_NAME}." />
-    <string id="zXuo0Wbj" text="Firmare un accordo commerciale con {KINGDOM}" />
     <string id="ZZ1oLfEq" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="taom_shaghana_name" text="Shaghâna" />
     <string id="taom_shaghana_short_name" text="Shaghâna" />
@@ -2042,23 +1971,6 @@
     <string id="taom_str_adjective_for_culture.goblin" text="Goblin" />
     <string id="taom_str_player_father_name.goblin" text="Narzuk" />
     <string id="taom_str_player_mother_name.goblin" text="Borlia" />
-    <string id="taom_bandit_goblin_name" text="Razziatori Goblin" />
-    <string id="taom_bandit_goblin_m1" text="Bolg" />
-    <string id="taom_bandit_goblin_m2" text="Yazneg" />
-    <string id="taom_bandit_goblin_m3" text="Fimbul" />
-    <string id="taom_bandit_goblin_m4" text="Narzug" />
-    <string id="taom_bandit_goblin_m5" text="Gorbag" />
-    <string id="taom_bandit_goblin_m6" text="Mauhûr" />
-    <string id="taom_bandit_goblin_m7" text="Snaga" />
-    <string id="taom_bandit_goblin_m8" text="Ufthak" />
-    <string id="taom_bandit_goblin_m9" text="Radbug" />
-    <string id="taom_bandit_goblin_m10" text="Lugdush" />
-    <string id="taom_bandit_goblin_f1" text="Skarra" />
-    <string id="taom_bandit_goblin_f2" text="Vorga" />
-    <string id="taom_bandit_goblin_f3" text="Mazra" />
-    <string id="taom_bandit_goblin_f4" text="Grishta" />
-    <string id="taom_bandit_goblin_f5" text="Narzga" />
-    <string id="taom_hideout_desc_goblin" text="Sotto le rocce dell'Alto Passo trovi una tana fetida di goblin scavata in profondità nella roccia nuda." />
     <string id="taom_str_faction_official.mistymountainorcs" text="un capotribù delle Montagne Nebbiose" />
     <string id="taom_str_faction_official.mistymountainorcs_f" text="una capotribù delle Montagne Nebbiose" />
     <string id="taom_str_faction_ruler.mistymountainorcs" text="Signore della Guerra" />
@@ -2076,30 +1988,11 @@
     <string id="taom_str_adjective_for_culture.mistymountainorcs" text="Orco" />
     <string id="taom_str_player_father_name.mistymountainorcs" text="Narzuk" />
     <string id="taom_str_player_mother_name.mistymountainorcs" text="Borlia" />
-    <string id="taom_bandit_mistymountainorcs_name" text="Predoni Orcheschi" />
-    <string id="taom_bandit_mistymountainorcs_m1" text="Bolg" />
-    <string id="taom_bandit_mistymountainorcs_m2" text="Yazneg" />
-    <string id="taom_bandit_mistymountainorcs_m3" text="Fimbul" />
-    <string id="taom_bandit_mistymountainorcs_m4" text="Narzug" />
-    <string id="taom_bandit_mistymountainorcs_m5" text="Gorbag" />
-    <string id="taom_bandit_mistymountainorcs_m6" text="Mauhûr" />
-    <string id="taom_bandit_mistymountainorcs_m7" text="Snaga" />
-    <string id="taom_bandit_mistymountainorcs_m8" text="Ufthak" />
-    <string id="taom_bandit_mistymountainorcs_m9" text="Radbug" />
-    <string id="taom_bandit_mistymountainorcs_m10" text="Lugdush" />
-    <string id="taom_bandit_mistymountainorcs_f1" text="Skarra" />
-    <string id="taom_bandit_mistymountainorcs_f2" text="Vorga" />
-    <string id="taom_bandit_mistymountainorcs_f3" text="Mazra" />
-    <string id="taom_bandit_mistymountainorcs_f4" text="Grishta" />
-    <string id="taom_bandit_mistymountainorcs_f5" text="Narzga" />
-    <string id="taom_hideout_desc_mistymountainorcs" text="Sotto le rocce delle Montagne Nebbiose trovi una tana fetida di orchi scavata nella roccia nuda." />
     <string id="taom_bld_stall_title" text="TAOM: il caricamento dell'ultima battaglia potrebbe non essere terminato" />
     <string id="taom_bld_stall_dismiss" text="Chiudi" />
     <string id="taom_bld_stall_openfolder" text="Apri cartella log" />
     <string id="taom_settlement_food_adjustment" text="Cibo dell'insediamento (TAOM)" />
     <string id="taom_recruit_needs_resource" text="Richiede {AMOUNT} {RESOURCE}" />
-    <string id="LjUhEJxz" text="Carovana di {OWNER.NAME}" />
-    <string id="l4pRw7pO" text="Carovana Armata di {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} truppe hanno disertato — rifiutano di servire un signore dell'allineamento opposto." />
     <string id="taom_troop_weight_size" text="Truppe pesanti" />
     <string id="taom_troop_weight_tag" text="{NAME} ×{MULT}" />

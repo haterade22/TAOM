@@ -283,6 +283,11 @@
   <string id="taom_lotr_issue_fallback_accept" text="{=taom_lotr_issue_fallback_accept}How can I help?" />
   <string id="taom_lotr_issue_fallback_expl" text="{=taom_lotr_issue_fallback_expl}Bring us {COUNT} {ITEM} and we will be saved." />
   <string id="taom_lotr_issue_fallback_soln" text="{=taom_lotr_issue_fallback_soln}I will bring what you need." />
+  <string id="taom_lotr_issue_combat_fallback_desc" text="{=taom_lotr_issue_combat_fallback_desc}A foe must be dealt with." />
+  <string id="taom_lotr_issue_combat_fallback_brief" text="{=taom_lotr_issue_combat_fallback_brief}We are beset by enemies, traveller." />
+  <string id="taom_lotr_issue_combat_fallback_accept" text="{=taom_lotr_issue_combat_fallback_accept}What needs doing?" />
+  <string id="taom_lotr_issue_pers_fallback_desc" text="{=taom_lotr_issue_pers_fallback_desc}Someone needs captives delivered." />
+  <string id="taom_lotr_issue_pers_fallback_brief" text="{=taom_lotr_issue_pers_fallback_brief}I have need of strong backs, traveller." />
   <string id="taom_lotr_issue_common_accepted" text="{=taom_lotr_issue_common_accepted}Bring {COUNT} {ITEM} to {QUEST_SETTLEMENT}." />
   <string id="taom_lotr_issue_common_ready" text="{=taom_lotr_issue_common_ready}You have enough to complete the task. Return to {QUEST_SETTLEMENT} to hand it over." />
   <string id="taom_lotr_issue_common_cancel" text="{=taom_lotr_issue_common_cancel}The agreement has been cancelled." />

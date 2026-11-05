@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="A coluna não pode mais dar conta de {AMOUNT}{GOLD_ICON} do seu soldo atrasado." />
     <string id="taom_enlist_wage_paid" text="Soldo recebido: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Soldo de serviço" />
-    <string id="taom_enlist_wait_text" text="Você serve na companhia de {COMMANDER}. A coluna avança no ritmo do seu comandante." />
 
     <string id="taom_enlist_welcome" text="Bem-vindo à coluna, soldado. Entre em forma." />
 

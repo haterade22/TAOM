@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from _gamedir import ensure_exists, game_modules
+from translate_with_claude import override_ids_to_skip
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
@@ -149,9 +150,14 @@ def rebuild_language(lang):
             continue
         src_map = parse_source_with_keys(src_path)
         tgt_path = taom_target_dir / tgt_name
+        # A vanilla key TAOM rewords in English only gets no language row (VanillaKeyOverrideTests),
+        # unless the file already holds one.
+        english_only = override_ids_to_skip(src_path, tgt_path)
         ordered = []
         stats = {"override": 0, "cache": 0, "english_fallback": 0}
         for sid, english in src_map.items():
+            if sid in english_only:
+                continue
             text, source = resolve(sid, english)
             ordered.append((sid, text))
             stats[source] += 1

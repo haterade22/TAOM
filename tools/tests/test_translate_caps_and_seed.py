@@ -18,6 +18,7 @@ from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import _gamedir  # noqa: E402
 import translate_with_claude as twc  # noqa: E402
 
 
@@ -116,6 +117,25 @@ class SeedOnly(_Tree):
         self.assertEqual(0, code)
         self.assertEqual(before, self.target.read_bytes())
         self.assertIn("to seed", out)
+
+    # Ported from the career forks branch (its RCA rca-career-forks-generator-2026-10-15.md): TAOM_Map has no seed pass, so a
+    # seed-only run there would exit 0 having done nothing.
+    def test_seed_only_taom_map_is_refused(self):
+        before = self.target.read_bytes()
+        code, _ = _run(["--lang", "DE", "--module", "TAOM_Map", "--sync-ids", "--seed-only", "--apply"])
+        self.assertEqual(2, code)
+        self.assertEqual(before, self.target.read_bytes())
+
+    # A sync that includes the Armory needs the install before it writes the TAOM rows, or it writes them and then fails.
+    def test_sync_ids_all_or_armory_with_a_missing_install_exits_2_and_writes_nothing(self):
+        before = self.target.read_bytes()
+        missing = str(Path(self._tmp.name) / "no-such-install")
+        for module in ("all", "Armory"):
+            with self.subTest(module=module), mock.patch.dict(os.environ, {_gamedir.ENV_VAR: missing}):
+                os.environ.pop(_gamedir.MODULES_ENV_VAR, None)
+                code, _ = _run(["--lang", "DE", "--module", module, "--sync-ids", "--seed-only", "--apply"])
+                self.assertEqual(2, code)
+                self.assertEqual(before, self.target.read_bytes())
 
 
 if __name__ == "__main__":

@@ -10,6 +10,9 @@ paths:
 
 # GUI / UI / Sprite Rules
 
+A new or changed screen also passes the [Gauntlet screen checklist](../../docs/reference/gauntlet-screen-checklist.md)
+in game: empty, many and long-text states, disabled reasons, a way out, consistency with vanilla.
+
 ## Sprite AND Brush References (MANDATORY)
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:

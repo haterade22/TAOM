@@ -36,7 +36,6 @@
 	<string id="taom_enlist_wage_paid" text="{=taom_enlist_wage_paid}Wages received: {AMOUNT}{GOLD_ICON}" />
 	<string id="taom_enlist_wage_line" text="{=taom_enlist_wage_line}Service wages" />
 	<string id="taom_enlist_wait_discharged" text="{=taom_enlist_wait_discharged}Your service has ended." />
-	<string id="taom_enlist_wait_text" text="{=taom_enlist_wait_text}You serve in {COMMANDER}&#x27;s company. The column moves at your commander&#x27;s pace." />
 	<string id="taom_enlist_welcome" text="{=taom_enlist_welcome}Welcome to the column, soldier. Fall in." />
 
 	<!-- FieldCommission (#376): promotion offer, no-room deferral, rename -->

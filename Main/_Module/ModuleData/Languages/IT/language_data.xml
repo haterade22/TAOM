@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LanguageData id="Italiano">
+<LanguageData id="Italiano" name="Italiano" text_processor="TaleWorlds.Localization.TextProcessor.LanguageProcessors.ItalianTextProcessor">
   <LanguageFile xml_path="IT/std_taom_module_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_wanderer_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_named_companion_strings_ita-IT.xml" />
@@ -13,4 +13,8 @@
   <LanguageFile xml_path="IT/std_taom_enlistment_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_keybind_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_player_switcher_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_troop_name_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_lord_name_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_clan_name_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_kingdom_name_strings_ita-IT.xml" />
 </LanguageData>
