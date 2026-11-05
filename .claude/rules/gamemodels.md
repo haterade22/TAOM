@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 50 GameModel overrides (49 registered + 1 abstract base). All follow the same pattern.
+TAOM has 49 GameModel overrides (48 registered + 1 abstract base). All follow the same pattern.
 
 ## Pattern
 
@@ -100,7 +100,6 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomTournamentModel` | `DefaultTournamentModel` | `Arena` |
 | `TaomAgeModel` | `DefaultAgeModel` | `RaceAge` |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | `RaceAge` |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | `RaceAge` |
 | `TaomAllianceModel` | `DefaultAllianceModel` | `Diplomacy` |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | `Diplomacy` |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |

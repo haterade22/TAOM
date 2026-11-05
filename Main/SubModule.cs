@@ -611,7 +611,6 @@ public class SubModule : MBSubModuleBase
         PartyVM_RefreshCurrentCharacterInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         HeroViewModel_FillFrom_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
-        ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
@@ -1135,7 +1134,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
-        campaignStarter.AddModel(new TaomHeroCreationModel());
 
         // TaomMarriageModel is the mod's ONLY MarriageModel and carries two rules, because the
         // engine resolves exactly one model per type — a second AddModel would silently shadow one

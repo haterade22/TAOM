@@ -8,7 +8,7 @@ namespace TAOM.Tests.Features.Warg;
 /// rider's own build), so the tree's blackboard captures a null formation for every warg spawned after the first scan. The rage
 /// start must store the rider's live formation before it clears it, or <c>CleanIfEnemyDied</c> and <c>OnWargDied</c> write the
 /// stored null back and the rider never rejoins its formation. Agent is sealed, so the behaviour itself has no unit seam; this pins
-/// the order in the source and the in-game check is owed (plan 130, In-game checks).
+/// the order in the source and the in-game check is owed (plan 145, In-game checks).
 /// A warg that dies without raging never reaches the rage start, so its stored formation is still null and the reset must not write
 /// that null over the rider's own formation; this is pinned in source for the same reason (Agent is sealed).
 /// </summary>
@@ -40,4 +40,225 @@ public class WargRageFormationTests
         Assert.IsTrue(guard >= 0, "the reset writes the formation without a null check, so a warg that died without raging unsets its rider's formation");
         Assert.IsTrue(guard < write, "the null check must come before the write");
     }
+
+    // A rider who leaves a living warg mid-rage is no longer its RiderAgent, so the reset must find him through the rider the
+    // rage start stored, or his formation is never given back. Agent is sealed: pinned in source.
+    [TestMethod]
+    public void PrepareOnFirstCall_AiBranch_StoresTheRiderBesideTheFormation()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/Warg/BehaviorTreeElements/PrepareOnFirstCall.cs", stripComments: true);
+
+        var store = src.IndexOf("Rider.SetValue(rider)", System.StringComparison.Ordinal);
+        var clear = src.IndexOf("rider.Formation = null", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(store >= 0, "the rage start never stores the rider, so a warg he leaves cannot find him");
+        Assert.IsTrue(store < clear, "the rider must be stored before his formation is cleared");
+    }
+
+    // A hit in the second after a rage's last attack starts the next rage before the first has closed. The rider has no
+    // formation by then, so a plain store would write null over the real one and he would never rejoin.
+    [TestMethod]
+    public void PrepareOnFirstCall_ASecondRageOnTheSameRider_KeepsTheFormationTheFirstStored()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/PrepareOnFirstCall.cs");
+
+        var guard = src.IndexOf("if (rider.Formation != null || !ReferenceEquals(Rider.GetValue(), rider))", System.StringComparison.Ordinal);
+        var store = src.IndexOf("AgentsFormation.SetValue(rider.Formation)", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(guard >= 0, "the store has no guard, so a second rage overwrites the real formation with null");
+        Assert.IsTrue(guard < store, "the guard must come before the store");
+    }
+
+    // A rage that took the player's controller stores no formation. The no-rider branch and the warg-death listener need
+    // the rider to know whose rage it is.
+    [TestMethod]
+    public void PrepareOnFirstCall_PlayerBranch_StoresTheRider()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/PrepareOnFirstCall.cs");
+
+        var swap = src.IndexOf("SwitchMainAgentController(true)", System.StringComparison.Ordinal);
+        var store = src.IndexOf("Rider.SetValue(", System.StringComparison.Ordinal);
+        var elseBranch = src.IndexOf("else {", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(swap >= 0 && elseBranch > swap, "the player branch moved");
+        Assert.IsTrue(store > swap && store < elseBranch, "the player branch must store the rider too");
+    }
+
+    [TestMethod]
+    public void CleanIfEnemyDied_GivesTheFormationBackThroughTheStoredRider()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
+
+        StringAssert.Contains(src, "if (ShouldClose())");
+        StringAssert.Contains(src, "FirstAttack.SetValue(false);");
+        StringAssert.Contains(src, "GiveFormationBack(warg, Rider.GetValue(), AgentsFormation.GetValue())");
+    }
+
+    // The formation is the stored rider's. A rider who took his place keeps his own: CloseRageOnNewRider runs before the
+    // rage clears anything on him.
+    [TestMethod]
+    public void GiveFormationBack_TheStoredRiderGetsIt_AndAReplacementOnlyLosesTheScriptedMove()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
+        var start = src.IndexOf("static void GiveFormationBack(", System.StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "GiveFormationBack is gone");
+        var body = src.Substring(start);
+
+        var owner = body.IndexOf("ValidStoredRider(stored)", System.StringComparison.Ordinal);
+        var reset = body.IndexOf("ResetAiControlledAgent(owner, formation)", System.StringComparison.Ordinal);
+        var replacement = body.IndexOf("live != owner) ResetAiControlledAgent(live, null)", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(owner >= 0, "the stored rider is no longer read");
+        Assert.IsTrue(reset > owner, "the stored rider must get his formation back");
+        Assert.IsTrue(replacement > reset, "a replacement rider must keep his own formation");
+    }
+
+    [TestMethod]
+    public void ValidStoredRider_NeedsTheSlotsOccupant()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
+        var start = src.IndexOf("static Agent ValidStoredRider(", System.StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "ValidStoredRider is gone");
+        var body = src.Substring(start);
+
+        StringAssert.Contains(body, "AgentSlotIdentity.IsCurrentOccupant(stored)", "a handle held across frames must be checked against the slot (agent indices recycle)");
+    }
+
+    // Agent.OnFleeing clears a panicked rider's formation on purpose. Writing it back makes him ride away inside it.
+    [TestMethod]
+    public void ResetAiControlledAgent_LeavesAFleeingRiderOutOfTheFormation()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
+
+        var guard = src.IndexOf("!rider.IsRunningAway", System.StringComparison.Ordinal);
+        var write = src.IndexOf("rider.Formation = formation", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(guard >= 0, "a fleeing rider is written back into the formation");
+        Assert.IsTrue(guard < write, "the guard must come before the write");
+    }
+
+    // With no enemy within 60 m the "no enemy close" branch wins every pass, so "enter rage mode", which holds the only
+    // other close, never runs: the rider keeps no formation until an enemy returns.
+    [TestMethod]
+    public void WargBehaviorTree_NoEnemyClose_ClosesAnOpenRageBeforeItSleeps()
+    {
+        var src = Squash("Main/Features/Warg/WargBehaviorTree.cs");
+
+        StringAssert.Contains(src, "AddSequence(\"no enemy close\", new NoEnemyCloseDecorator()) .AddTask(new CloseOpenRage()) .AddTask(new SleepTask(");
+    }
+
+    [TestMethod]
+    public void CloseOpenRage_ClosesOnlyAnOpenRage()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CloseOpenRage.cs");
+
+        StringAssert.Contains(src, ": CleanIfEnemyDied");
+        StringAssert.Contains(src, "ShouldClose() => RageAttackStartTime.GetValue() != null;");
+    }
+
+    // A rage belongs to the rider it started on. A new rider closes it before anything clears his formation, and before a
+    // second start could overwrite the first rider's record.
+    [TestMethod]
+    public void CloseRageOnNewRider_ClosesAnOpenRageWhoseRiderChanged()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CloseRageOnNewRider.cs");
+
+        StringAssert.Contains(src, ": CleanIfEnemyDied");
+        StringAssert.Contains(src, "RageAttackStartTime.GetValue() != null && Agent.GetValue().RiderAgent != Rider.GetValue()");
+    }
+
+    [DataTestMethod]
+    [DataRow("player controlled", "IsPlayerControlledDecorator")]
+    [DataRow("non player controlled", "IsAiControlledDecorator")]
+    public void WargBehaviorTree_EachRageBranch_ChecksTheRiderBeforeItStores(string branch, string decorator)
+    {
+        var src = Squash("Main/Features/Warg/WargBehaviorTree.cs");
+
+        StringAssert.Contains(src, $"AddSequence(\"{branch}\", new {decorator}()) .AddTask(new CloseRageOnNewRider()) .AddTask(new PrepareOnFirstCall())");
+    }
+
+    // A rider long gone, or a warg that never raged, holds nothing to give back: the stored formation is stale or null,
+    // and the handle may be a recycled slot.
+    [TestMethod]
+    public void OnWargDied_ChecksTheSlot_AndGivesBackOnlyWhileARageIsOpen()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/OnWargDied.cs");
+
+        var slot = src.IndexOf("CleanIfEnemyDied.ValidStoredRider(Rider.GetValue())", System.StringComparison.Ordinal);
+        var open = src.IndexOf("if (RageAttackStartTime.GetValue() != null) CleanIfEnemyDied.ResetAiControlledAgent(rider, AgentsFormation.GetValue());", System.StringComparison.Ordinal);
+        var player = src.IndexOf("if (rider.IsPlayerControlled) FinishRageMode.Reset(", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(slot >= 0, "a stored handle must be checked against the slot (agent indices recycle)");
+        Assert.IsTrue(open > slot, "a warg with no open rage must not touch its old rider");
+        Assert.IsTrue(player > open, "a player whose warg dies mid-rage gets his formation back too, so these are two separate tests");
+    }
+
+    [TestMethod]
+    public void WargBehaviorTree_NoRiderBranch_RestoresARiderWhoLeftMidRage()
+    {
+        var src = Squash("Main/Features/Warg/WargBehaviorTree.cs");
+
+        StringAssert.Contains(src, "AddSequence(\"no rider\", new HasNoRiderDecorator()) .AddTask(new RestoreDismountedRider()) .AddTask(new SleepTask(");
+    }
+
+    [TestMethod]
+    public void RestoreDismountedRider_ClosesAnOpenRage_ButLeavesOneHoldingThePlayersController()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/RestoreDismountedRider.cs");
+
+        StringAssert.Contains(src, ": CleanIfEnemyDied");
+        var open = src.IndexOf("if (RageAttackStartTime.GetValue() == null) return false;", System.StringComparison.Ordinal);
+        var answer = src.IndexOf("return rider == null || !rider.IsPlayerControlled || AgentsFormation.GetValue() != null;", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(open >= 0, "a warg that never raged must not touch its old rider");
+        Assert.IsTrue(answer > open, "only a player's rage with no stored formation stays open");
+    }
+
+    // A closed rage clears what it stored. Otherwise a later warg death reaches the reset with a rider who may have moved
+    // to another formation or another warg, and a handle whose slot may be recycled.
+    [TestMethod]
+    public void ClosingARage_ClearsTheStoredFormationAndRider_AfterGivingItBack()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/CleanIfEnemyDied.cs");
+
+        var reset = src.IndexOf("GiveFormationBack(warg,", System.StringComparison.Ordinal);
+        var formation = src.IndexOf("AgentsFormation.SetValue(null)", System.StringComparison.Ordinal);
+        var rider = src.IndexOf("Rider.SetValue(null)", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(reset >= 0, "the reset call moved");
+        Assert.IsTrue(formation > reset, "a later warg death would move the rider back to the formation this rage stored");
+        Assert.IsTrue(rider > reset, "a later warg death would cancel scripted movement on a rider who left long ago");
+    }
+
+    // A puppet is neither Agent.Main nor AI controlled, so it takes the fallback. That must close the first rider's rage
+    // before it clears the timer, or no later close sees a rage to end.
+    [TestMethod]
+    public void TheFallbackBranch_ClosesARageOfAnotherRiderBeforeItClearsTheTimer()
+    {
+        var src = Squash("Main/Features/Warg/WargBehaviorTree.cs");
+
+        StringAssert.Contains(src, ".AddSequence(\"another peer's rider\") .AddTask(new CloseRageOnNewRider()) .AddTask(new ResetRageAttackTimer()) .Up()");
+    }
+
+    // The 6 s timeout means six seconds with no attack, so a chase ends. The timer starts once and an attack restarts it.
+    [TestMethod]
+    public void TheRageTimer_StartsOnceAndOnlyAnAttackRestartsIt()
+    {
+        var timer = Squash("Main/Features/Warg/BehaviorTreeElements/SetRageAttackTimer.cs");
+        var attack = Squash("Main/Features/Warg/BehaviorTreeElements/WargAttackTask.cs");
+
+        StringAssert.Contains(timer, "if (RageAttackStartTime.GetValue() == null) RageAttackStartTime.SetValue(DateTime.UtcNow);");
+        StringAssert.Contains(attack, "if (RageAttackStartTime.GetValue() != null) RageAttackStartTime.SetValue(System.DateTime.UtcNow);");
+    }
+
+    [TestMethod]
+    public void ARage_HasTheConfiguredAttacksWithNoRoll()
+    {
+        var src = Squash("Main/Features/Warg/BehaviorTreeElements/WargTryToGoRage.cs");
+
+        StringAssert.Contains(src, "RageAttackAmount.SetValue(WargConfig.rageAttacks);");
+    }
+
+    private static string Squash(string path) =>
+        System.Text.RegularExpressions.Regex.Replace(RepoPaths.ReadSource(path, stripComments: true), @"\s+", " ");
 }

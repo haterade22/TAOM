@@ -43,9 +43,9 @@ Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColorsAccordingToKingdom — Prefix, skip when enabled
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
-Patch23_BannerColorPersistence (11 patches + 1 manual)
+Patch23_BannerColorPersistence (10 patches + 1 manual)
   └── GetCharacterCode (×2), SPInventoryVM.UpdateCharacterArmorColor, PartyVM, HeroVM, PartyCharacterVM,
-      ClanPartyItemVM, Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
+      Mission.SpawnAgent, NotificationHelper, Banner.GetFirstIconColor,
       BannerEditorView.OnTick (BannerPaste)
   └── MobilePartyVisual.AddCharacterToPartyIcon (manual reflection patch)
       └── IBannerHeroAdapter → extracts ClanColorInfo from CharacterObject/Hero/Clan boundary

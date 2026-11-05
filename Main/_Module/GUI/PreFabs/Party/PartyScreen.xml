@@ -42,7 +42,6 @@
     <Constant Name="Party.Formation.Item.Width" BrushLayer="Default" BrushName="Party.Formation.Item" BrushValueType="Width" />
     <Constant Name="Party.Formation.Item.Height" BrushLayer="Default" BrushName="Party.Formation.Item" BrushValueType="Height" />
 
-    <Constant Name="Party.Formation.Seperator.Width" BrushLayer="Default" BrushName="Party.Formation.Seperator" BrushValueType="Width" />
     <Constant Name="Party.Formation.Seperator.Height" BrushLayer="Default" BrushName="Party.Formation.Seperator" BrushValueType="Height" />
 
     <Constant Name="TransferAllButton.Margin" Value="5" />
@@ -58,7 +57,6 @@
     <Constant Name="FormationListPanel.MarginTop" Value="13" />
     <Constant Name="FormationListPanel.Height" Value="522" />
     <Constant Name="FormationClipRect.Height" Additive="!FormationListPanel.MarginTop" Value="!FormationListPanel.Height" />
-    <Constant Name="FormationListPanel.NegativeHeight" MultiplyResult="-1" Value="!FormationListPanel.Height" />
 
     <Constant Name="UpgradeIcon.Background.Width" BrushLayer="Default" BrushName="Party.TroopTuple.UpgradeIcon.Background" BrushValueType="Width" />
     <Constant Name="UpgradeIcon.Background.Height" BrushLayer="Default" BrushName="Party.TroopTuple.UpgradeIcon.Background" BrushValueType="Height" />
@@ -81,16 +79,6 @@
     <VisualDefinition Name="BottomMenu" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.45">
       <VisualState PositionYOffset="6" State="Default" />
       <VisualState PositionYOffset="100" State="Opened" />
-    </VisualDefinition>
-    <VisualDefinition Name="FormationListPanel" TransitionDuration="0.2">
-      <VisualState PositionYOffset="!FormationListPanel.NegativeHeight" State="Default" />
-      <VisualState PositionYOffset="!FormationListPanel.NegativeHeight" State="Closed" />
-      <VisualState PositionYOffset="0" State="Opened" />
-    </VisualDefinition>
-    <VisualDefinition Name="FormationSeperator" TransitionDuration="0.01">
-      <VisualState SuggestedWidth="0" State="Default" />
-      <VisualState SuggestedWidth="26" State="Closed" />
-      <VisualState SuggestedWidth="!Party.Formation.Seperator.Width" State="Opened" />
     </VisualDefinition>
     <VisualDefinition Name="Toggle" TransitionDuration="0.045">
       <VisualState SuggestedWidth="!PartyToggle.Width" State="Default" />

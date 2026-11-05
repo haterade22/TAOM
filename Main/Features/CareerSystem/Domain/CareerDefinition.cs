@@ -9,6 +9,13 @@ public sealed class CareerDefinition
     public string Description { get; }
     public string PortraitSprite { get; }
     public string AbilityTemplateId { get; }
+
+    /// <summary>
+    /// The sprite id under CareerSystem\Abilities that draws this career's ability icon: the
+    /// ability_sprite attribute when the XML sets one, else the ability template id. A career
+    /// cloned from another sets it to the source's template id and so shows the source's icon.
+    /// </summary>
+    public string AbilitySprite { get; }
     public int MinClanTier { get; }
     public string RootChoiceId { get; }
     public IReadOnlyList<string> EligibleCultureIds { get; }
@@ -43,13 +50,15 @@ public sealed class CareerDefinition
         string rank1Name = "",
         string rank2Name = "",
         string rank3Name = "",
-        string keystoneIcon = "")
+        string keystoneIcon = "",
+        string abilitySprite = "")
     {
         Id = id;
         DisplayName = displayName;
         Description = description;
         PortraitSprite = portraitSprite;
         AbilityTemplateId = abilityTemplateId;
+        AbilitySprite = string.IsNullOrEmpty(abilitySprite) ? abilityTemplateId : abilitySprite;
         MinClanTier = minClanTier;
         RootChoiceId = rootChoiceId;
         EligibleCultureIds = eligibleCultureIds ?? new List<string>();

@@ -38,8 +38,7 @@ public class WargTryToGoRage : BannerlordConstantEventListener, IBTBannerlordBas
             && affectorAgent.Position.Distance(Agent.GetValue().Position) < WargConfig.maxDistanceFromWargToRollForRage
             && _random.NextDouble() <= WargConfig.rageChance)
         {
-            int amountOfAttacks = _random.Next(WargConfig.minRageAttacks, WargConfig.maxRageAttacks);
-            RageAttackAmount.SetValue(amountOfAttacks);
+            RageAttackAmount.SetValue(WargConfig.rageAttacks);
             AgentHitBy.SetValue(affectorAgent);
             FirstAttack.SetValue(true);
         }

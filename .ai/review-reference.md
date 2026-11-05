@@ -411,7 +411,6 @@ public class TaomFooModel : DefaultFooModel
 | `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + prize pools |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults |
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision rules |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | LOTR faction relationships |

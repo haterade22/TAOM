@@ -1,13 +1,14 @@
 using BehaviorTrees;
 using BehaviorTrees.Nodes;
 using BehaviorTreeWrapper.BlackBoardClasses;
+using TAOM.Features.AdvancedCombat;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
 using System;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
 
-public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IBTInFormation
+public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IBTInFormation, IBTMountBase
 {
     BTBlackboardValue<Agent> _agent;
     BTBlackboardValue<Agent> _agentHitBy;
@@ -15,34 +16,62 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
     BTBlackboardValue<DateTime?> _rageAttackStartTime;
     BTBlackboardValue<bool> _firstAttack;
     BTBlackboardValue<Formation> _agentsFormation;
+    BTBlackboardValue<Agent> _rider;
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
     public BTBlackboardValue<Agent> AgentHitBy { get => _agentHitBy; set => _agentHitBy = value; }
     public BTBlackboardValue<int> RageAttackAmount { get => _rageAttackAmount; set => _rageAttackAmount = value; }
     public BTBlackboardValue<DateTime?> RageAttackStartTime { get => _rageAttackStartTime; set => _rageAttackStartTime = value; }
     public BTBlackboardValue<bool> FirstAttack { get => _firstAttack; set => _firstAttack = value; }
     public BTBlackboardValue<Formation> AgentsFormation { get => _agentsFormation; set => _agentsFormation = value; }
+    public BTBlackboardValue<Agent> Rider { get => _rider; set => _rider = value; }
 
     public override BTTaskStatus Execute()
     {
-        if (AgentHitBy.GetValue() == null || AgentHitBy.GetValue().Health <= 0 || RageAttackAmount.GetValue() == 0)
+        if (ShouldClose())
         {
             RageAttackStartTime.SetValue(null);
             RageAttackAmount.SetValue(0);
             AgentHitBy.SetValue(null);
+            FirstAttack.SetValue(false);
 
-            if (Agent.GetValue().IsPlayerControlled)
-                FinishRageMode.Reset(Agent.GetValue());
-            else ResetAiControlledAgent(Agent.GetValue()?.RiderAgent, AgentsFormation.GetValue());
+            Agent warg = Agent.GetValue();
+            if (warg.IsPlayerControlled)
+                FinishRageMode.Reset(warg);
+            else
+                GiveFormationBack(warg, Rider.GetValue(), AgentsFormation.GetValue());
+            // Given back: a later warg death must not move him back to it from wherever he is by then.
+            AgentsFormation.SetValue(null);
+            Rider.SetValue(null);
         }
         return BTTaskStatus.FinishedWithTrue;
     }
 
-    // A warg that dies without raging never stored a formation (the tree is built before its rider), so a null here means
-    // "nothing to restore": the rider keeps the formation he still has.
+    protected virtual bool ShouldClose() =>
+        AgentHitBy.GetValue() == null || AgentHitBy.GetValue().Health <= 0 || RageAttackAmount.GetValue() == 0;
+
+    // The formation is the stored rider's, so he gets it back even when he has left the warg. A rider who took his place lost
+    // nothing (CloseRageOnNewRider runs before the rage clears anything on him), so he keeps his own.
+    public static void GiveFormationBack(Agent warg, Agent stored, Formation formation)
+    {
+        Agent owner = ValidStoredRider(stored);
+        if (owner != null) ResetAiControlledAgent(owner, formation);
+        Agent live = warg?.RiderAgent;
+        if (live != null && live != owner) ResetAiControlledAgent(live, null);
+    }
+
+    // The stored handle is held across frames, so it must still be the slot's occupant.
+    public static Agent ValidStoredRider(Agent stored)
+    {
+        if (stored == null || !AgentSlotIdentity.IsCurrentOccupant(stored)) return null;
+        return stored;
+    }
+
+    // A null formation means "nothing to restore": the rider keeps the one he has. A panicked rider stays out of it, because
+    // Agent.OnFleeing cleared his on purpose.
     public static void ResetAiControlledAgent(Agent rider, Formation formation)
     {
         if (rider == null || rider.State != TaleWorlds.Core.AgentState.Active) return;
-        if (formation != null) rider.Formation = formation;
+        if (formation != null && !rider.IsRunningAway) rider.Formation = formation;
         rider.DisableScriptedMovement();
     }
 }
