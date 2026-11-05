@@ -2911,4 +2911,9 @@
 	<string id="taom_patch_apply_notice_title" text="{=taom_patch_apply_notice_title}TAOM" />
 	<string id="taom_patch_apply_phase_game_init" text="{=taom_patch_apply_phase_game_init}game initialization" />
 	<string id="taom_patch_apply_phase_mission_start" text="{=taom_patch_apply_phase_mission_start}mission start" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- ShaderCompileNotice -->
+	<string id="taom_shader_notice_title_total" text="{=taom_shader_notice_title_total}Compiling shaders: {COUNT} of about {TOTAL}" />
+	<string id="taom_shader_notice_title_count" text="{=taom_shader_notice_title_count}Compiling shaders: {COUNT}" />
+	<string id="taom_shader_notice_detail" text="{=taom_shader_notice_detail}The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
 </strings>

@@ -65,6 +65,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` | cleared |
 | Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
+| Yotthani VanillaTuning (shader-compile-notice) | `VanillaTuning` `HoN/VanillaTuning` `ShaderCompileNotice` | UNKNOWN (no licence file in `HoN/VanillaTuning`; shared with the maintainer by its author) | behavioural-port | `Main/Features/ShaderCompileNotice/**` | uncleared |
 | LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` `Main/Features/HeroRace/**` | cleared |
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/_Module/Prefabs/taom_howdah_agent.xml` | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
@@ -246,6 +247,17 @@ same LOTRAOM feature (`TAOM_RacePortraits`, also maintainer-commissioned) was co
 this one; its decompiled source was read while wiring up Patch72, so that patch is a
 behavioural port rather than clean-room. The module itself was not adopted. Its `cave_troll`
 avatar offsets were imported as data.
+
+### Yotthani VanillaTuning (shader-compile-notice)
+
+`HoN/VanillaTuning/Integration/ShaderCompileNotice.cs` (with its wiring in `VanillaTuningSubModule.cs`,
+`vanillatuning.xml` and `TuningConfig.cs`) was read on 2026-10-06 at commit `5bcffde3`. The folder has no licence file,
+so the terms are `UNKNOWN`. TAOM's `ShaderCompileNotice` reproduces its behaviour (a window on its own thread that
+counts `compile_shader` lines in the engine's log, shown from 10 compiles, owned by the game window and never
+activated, a remembered total, BelowNormal priority meanwhile) and was written anew in TAOM's structure: a tested
+pure counter, a WinForms `ApplicationContext` and timer instead of a sleep loop, texts localized on the game thread,
+a dedicated-server and VanillaTuning stand-down. Because the source was read, the row is `behavioural-port`, not
+`clean-room`. A licence line from yotthani would clear it.
 
 ### ADOD_Beasts, BehaviorTrees
 

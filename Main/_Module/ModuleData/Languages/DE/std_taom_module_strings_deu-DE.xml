@@ -2650,5 +2650,8 @@
     <string id="taom_patch_apply_notice_title" text="TAOM" />
     <string id="taom_patch_apply_phase_game_init" text="der Spielinitialisierung" />
     <string id="taom_patch_apply_phase_mission_start" text="des Missionsbeginns" />
+    <string id="taom_shader_notice_title_total" text="Compiling shaders: {COUNT} of about {TOTAL}" />
+    <string id="taom_shader_notice_title_count" text="Compiling shaders: {COUNT}" />
+    <string id="taom_shader_notice_detail" text="The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
   </strings>
 </base>
