@@ -115,6 +115,20 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // First, because the engine starts compiling its shaders about six seconds after TAOM loads
+        // (docs/features/shader-compile-notice.md); stopped at the first main menu.
+        try
+        {
+            Features.ShaderCompileNotice.ShaderCompileNoticeEntry.Start(
+                IoC.Resolve<IModLogger>(),
+                IoC.Resolve<TAOM.Features.CoopInterop.IDedicatedServerProvider>().IsDedicatedServer);
+        }
+        catch { /* the notice must never stop the mod loading */ }
+
+        // D3: the engine rewrites shader_mapping.bin when it drops its cache at startup, so one line
+        // here says in every log whether this session started cold.
+        try { Features.ShaderCompileNotice.ShaderCacheState.Log(IoC.Resolve<IModLogger>()); } catch { }
+
         // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
         // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
         // application and renders every character in bind pose — a failure that previously left no
@@ -556,6 +570,8 @@ public class SubModule : MBSubModuleBase
     protected override void OnBeforeInitialModuleScreenSetAsRoot()
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
+        // Only sets a volatile flag, so it cannot throw.
+        Features.ShaderCompileNotice.ShaderCompileNoticeEntry.Stop();
         // The engine calls this hook for every module with no try, and calls it again on every tick while
         // no state is active (v1.4.8 Module.cs:500-509, :750-759); Patch37 can swallow the throw, so one
         // throw would re-run every module's hook each tick (#807). CustomizeMenu goes through
@@ -626,6 +642,10 @@ public class SubModule : MBSubModuleBase
         // MemoryStationSamplerTests.Start_CalledTwice_SubscribesOnlyOnce.
         try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryStationSampler>().Start(); }
         catch { /* never block the main menu over a diagnostic */ }
+
+        // Main thread (the heartbeat binds it); idempotent, because this hook fires on every return
+        // to the main menu.
+        try { IoC.Resolve<Features.BattleLoadDiagnostics.MainThreadFreezeWatchdog>().Start(); } catch { /* never block the main menu over a diagnostic */ }
 
         // No heap release on screen pop, on purpose: GameStateManager.OnPopState and OnPushState
         // already end with Common.MemoryCleanupGC() (installed v1.4.8, GameStateManager.cs:278/306),
@@ -2043,6 +2063,9 @@ public class SubModule : MBSubModuleBase
 
     protected override void OnApplicationTick(float dt)
     {
+        // Once per managed frame: Module.OnApplicationTick reaches it from both native tick entries.
+        Features.BattleLoadDiagnostics.MainThreadHeartbeat.Instance.Beat();
+
         _timeAccelerationService?.OnTick();
 
         // Shader pre-compilation walk: tick the runner every frame (responsive state transitions),

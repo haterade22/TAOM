@@ -27,6 +27,12 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool MissionTickStallSamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableMissionTickStallSampler ?? true;
 
+    public bool MainThreadFreezeSamplerEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableMainThreadFreezeSampler ?? true;
+
+    public bool FreezeDumpEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.WriteFreezeDump ?? false;
+
     public double StallWatchdogSeconds
     {
         get

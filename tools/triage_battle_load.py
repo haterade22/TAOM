@@ -26,7 +26,12 @@ VERDICT classes (the phase the log ENDS on discriminates the hang)
   RENDER_WAIT         ends at WaitingForRender — everything loaded and the mission is
                       held at the native SceneView.ReadyToRender gate. A shaders= count
                       that is FALLING means a cold shader cache (a slow load, not a
-                      hang); a frozen count is the wedge.
+                      hang); a frozen count is the wedge. If the 1 Hz stream went
+                      silent for 30 s or more before the watchdog line (or, when
+                      no watchdog line is stamped at or after the last sample,
+                      before the log's last stamped line), the count is frozen
+                      whatever the earlier samples did, and the log cannot
+                      separate a slow compile from a main-thread wedge.
   SCENE               ends at MissionInitialize / BattleSceneSelected /
                       MissionInitializeDone / FinishMissionLoadingBegin /
                       WaitingForSceneLoad — froze during mission construction before any
@@ -51,6 +56,16 @@ This is additive decoration only: the verdict lattice, kinds, and exit codes are
 untouched. For logs without [MemSample] lines the report text is byte-identical;
 the --json payload always carries a `memory` key (null when no samples), so JSON
 output for old logs differs by exactly that one key.
+
+The same samples also drive a "Post-load freeze check": after the LAST BattlePlayable, with no
+mission-end line (`CareerSystem: Mission ended`, `[WarRam] Mission end:`) and no later mission
+start, a log that ENDS on 3 or more periodic [MemSample] lines with identical heapMB means the
+game thread stopped while the sampler's timer thread kept writing (the #634 shape; see also
+#776). Same additive contract: the verdict stays COMPLETED and the exit code 0; a flagged log
+gets one report section and its COMPLETED "look elsewhere" next step is replaced by the
+freeze guidance; an unflagged log's report text is byte-identical; the --json payload always
+carries a `post_load_freeze` key (null when not flagged, else first_flat_ts,
+seconds_after_playable, heap_mb, samples), so JSON output for old logs gains exactly that key.
 
 The same log also carries `[MemStation]` screen-transition anchors (one line per screen
 open and close) when the memory sampler is on. They give a "Memory by station" report
@@ -87,6 +102,7 @@ import re
 import sys
 import zipfile
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 # Import the mesh-ref validator's rgl parser (sibling tool). Inserting the script
@@ -156,6 +172,13 @@ _PRIV_MB_RE = re.compile(r"\bprivMB=(-?\d+)\b")
 #   [MemSample] [WARN LOW COMMIT HEADROOM headroomMB=N ]privMB=N wsMB=N heapMB=N
 #               sysCommitUsedMB=N sysCommitLimitMB=N availPhysMB=N memLoad=N%
 _MEM_TAG = "[MemSample]"
+# [Freeze] / [ShaderCache]: FreezeLog.cs and ShaderCacheState.cs (twin-pinned in the tests). Tokens
+# come only from the text before " last ": the status tail repeats shaders= and phase=.
+_FREEZE_TAG = "[Freeze]"
+_FREEZE_SAMPLE_RE = re.compile(r"\[Freeze\] main thread silent (\d+)s sample#(\d+) context=(\S+)")
+_FREEZE_RECOVERED_RE = re.compile(r"\[Freeze\] main thread recovered after about (\d+)s")
+_FREEZE_RGL_RE = re.compile(r"\brglCompiles=(\d+)")
+_SHADER_CACHE_RE = re.compile(r"\[ShaderCache\].*\brewrittenThisStart=(true|false|unknown)")
 _MEMSAMPLE_RE = re.compile(
     r"\[MemSample\]\s+(?:WARN LOW COMMIT HEADROOM headroomMB=(-?\d+)\s+)?"
     r"privMB=(-?\d+)\s+wsMB=(-?\d+)\s+heapMB=(-?\d+)\s+sysCommitUsedMB=(-?\d+)\s+"
@@ -181,6 +204,7 @@ _MEMSTATION_RE = re.compile(
     r"sysCommitLimitMB=(-?\d+)\s+availPhysMB=(-?\d+)\s+memLoad=(-?\d+)%")
 # Capture the FileLogger timestamp (same shape _PREFIX_RE strips) for sample ts.
 _TS_RE = re.compile(r"^\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d)\]")
+_TS_ANY_RE = re.compile(r"\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d)\]")
 
 # Low-commit-headroom thresholds. Single source of truth is the C# sampler:
 # Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs (WarnHeadroomFloorMb,
@@ -188,6 +212,14 @@ _TS_RE = re.compile(r"^\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d)\]")
 # has no triage-side mirror). Keep these numerically identical to that class.
 MEM_WARN_HEADROOM_FLOOR_MB = 2048
 MEM_WARN_HEADROOM_PERCENT = 10
+
+# Mission-end lines seen in real logs (not [BattleLoad] phases). Either one after the last
+# BattlePlayable means the mission ended normally, so a flat heapMB tail is not a freeze.
+_MISSION_END_MARKERS = ("CareerSystem: Mission ended", "[WarRam] Mission end:")
+
+# A flat heapMB run this long at the end of the log reads as a stopped game thread. The
+# [MemSample] timer thread logs every 30 s regardless, so 3 samples is about 60 s of no change.
+POST_LOAD_FLAT_SAMPLES_MIN = 3
 
 NULL = "<null>"
 HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQUIP",
@@ -199,6 +231,11 @@ HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQ
 # means "not observed", not "zero".
 _WAITED_MS_RE = re.compile(r"\bwaitedMs=(\d+)\b")
 _SHADERS_RE = re.compile(r"\bshaders=(\d+)\b")
+
+# The service emits WaitingForRender once per render-wait frame at 1 Hz
+# (BattleLoadDiagnosticsService.RenderWaitEmitIntervalMs = 1000), so a working wait never
+# leaves a gap near this long after its last sample; 30 s of silence is 30 missed emits.
+RENDER_WAIT_SILENCE_THRESHOLD_S = 30
 
 # Terminal phases that mean "mission construction, before any agent equipped". The two
 # 2026-08-07 additions belong here and NOT in the PRE_SCENE fall-through: a log ending at
@@ -297,6 +334,9 @@ class PhaseEvent:
     phase: str
     detail: str
     slots: list = field(default_factory=list)
+    # FileLogger wall-clock stamp of the line (None on a bare line); t=+ms is not comparable
+    # with the watchdog line, which carries no t=+.
+    ts: str | None = None
 
 
 @dataclass
@@ -307,6 +347,9 @@ class Watchdog:
     # The `shaders=N` / `churn-capped` tokens the line carried, or "" for an older log that
     # predates them. Absent is absent: never rendered as a fabricated shaders=0.
     tokens: str = ""
+    ts: str | None = None
+    # Phase events parsed before this line: breaks a same-second tie with a sample by file order.
+    n_events: int | None = None
 
 
 @dataclass
@@ -322,6 +365,9 @@ class MemSample:
     avail_phys_mb: int
     mem_load: int
     warned: bool = False
+    # How many [BattleLoad] phase events preceded this line, so a sample can be ordered
+    # against a phase event (the second-resolution ts cannot).
+    n_events: int = 0
 
     @property
     def headroom_mb(self) -> int:
@@ -355,6 +401,17 @@ class Timeline:
     # readings and would corrupt the periodic trend's first/peak/last.
     mem_stations: list = field(default_factory=list)
     mem_station_resets: int = 0
+    # Phase-event count at each mission-end line (_MISSION_END_MARKERS), for the post-load
+    # freeze check. Kept apart from events: these lines are not [BattleLoad] phases.
+    mission_end_marks: list = field(default_factory=list)
+    # Leading stamp of the newest line of ANY kind. With no watchdog line it is the second
+    # anchor for render-wait silence: [MemSample] runs on a timer thread and keeps writing
+    # while the game thread is frozen (player log 2026-10-25, closed before the watchdog).
+    last_ts: str | None = None
+    # [Freeze] and [ShaderCache] evidence; never phase events.
+    freeze_samples: list = field(default_factory=list)
+    freeze_recovered: list = field(default_factory=list)
+    shader_cache_rewritten: str | None = None
 
 
 @dataclass
@@ -371,6 +428,23 @@ class Verdict:
 # --------------------------------------------------------------------------- #
 # Parsing (pure over text — synthetic fixtures in the tests, no game install)  #
 # --------------------------------------------------------------------------- #
+def _parse_freeze_line(tl: Timeline, line: str, ts: str | None) -> None:
+    m = _FREEZE_SAMPLE_RE.search(line)
+    if m:
+        head = line.split(" last ", 1)[0]
+        rgl = _FREEZE_RGL_RE.search(head)
+        tl.freeze_samples.append({
+            "ts": ts, "silent_s": int(m.group(1)), "sample": int(m.group(2)),
+            "context": m.group(3),
+            "rgl_compiles": int(rgl.group(1)) if rgl else None,
+            "rgl_unavailable": "rgl=unavailable" in head,
+        })
+        return
+    m = _FREEZE_RECOVERED_RE.search(line)
+    if m:
+        tl.freeze_recovered.append({"ts": ts, "silent_s": int(m.group(1))})
+
+
 def parse_battle_load_log(text: str) -> Timeline:
     """Extract the ordered [BattleLoad] phase events + slot dumps + watchdog line.
 
@@ -390,6 +464,17 @@ def parse_battle_load_log(text: str) -> Timeline:
     collecting = None  # loadout id whose block is currently being read, if any
     for raw in text.splitlines():
         line = _PREFIX_RE.sub("", raw)
+        tm = _TS_RE.match(raw)
+        ts = tm.group(1) if tm else None
+        if ts:
+            tl.last_ts = ts
+        if _FREEZE_TAG in line:
+            _parse_freeze_line(tl, line, ts)
+            continue
+        m = _SHADER_CACHE_RE.search(line)
+        if m:
+            tl.shader_cache_rewritten = m.group(1)
+            continue
         # [MemStation] screen anchors (#386 follow-up) ride the same log and are inert to
         # the phase timeline in exactly the same way as [MemSample] below. Kept in their own
         # list so an event-driven reading can never land in the periodic trend.
@@ -401,15 +486,13 @@ def parse_battle_load_log(text: str) -> Timeline:
                 # spans a discontinuity.
                 tl.mem_station_resets += 1
                 tl.mem_stations.append(MemStation(
-                    ts=(_TS_RE.match(raw).group(1) if _TS_RE.match(raw) else None),
-                    kind="reset", screen="", priv_mb=0, ws_mb=0, heap_mb=0,
+                    ts=ts, kind="reset", screen="", priv_mb=0, ws_mb=0, heap_mb=0,
                     commit_used_mb=0, commit_limit_mb=0, avail_phys_mb=0, mem_load=0))
                 continue
             m = _MEMSTATION_RE.search(line)
             if m:
-                tm = _TS_RE.match(raw)
                 tl.mem_stations.append(MemStation(
-                    ts=tm.group(1) if tm else None,
+                    ts=ts,
                     kind=m.group(1), screen=m.group(2),
                     priv_mb=int(m.group(3)), ws_mb=int(m.group(4)),
                     heap_mb=int(m.group(5)), commit_used_mb=int(m.group(6)),
@@ -421,13 +504,13 @@ def parse_battle_load_log(text: str) -> Timeline:
         if _MEM_TAG in line:
             m = _MEMSAMPLE_RE.search(line)
             if m:
-                tm = _TS_RE.match(raw)
                 sample = MemSample(
-                    ts=tm.group(1) if tm else None,
+                    ts=ts,
                     priv_mb=int(m.group(2)), ws_mb=int(m.group(3)),
                     heap_mb=int(m.group(4)), commit_used_mb=int(m.group(5)),
                     commit_limit_mb=int(m.group(6)), avail_phys_mb=int(m.group(7)),
-                    mem_load=int(m.group(8)), warned=m.group(1) is not None)
+                    mem_load=int(m.group(8)), warned=m.group(1) is not None,
+                    n_events=len(tl.events))
                 tl.mem_samples.append(sample)
                 if sample.warned:
                     tl.mem_warned = True
@@ -436,6 +519,9 @@ def parse_battle_load_log(text: str) -> Timeline:
                 if m:
                     tl.mem_session = {"total_phys_mb": int(m.group(1)),
                                       "commit_limit_mb": int(m.group(2))}
+            continue
+        if any(marker in line for marker in _MISSION_END_MARKERS):
+            tl.mission_end_marks.append(len(tl.events))
             continue
         if _TAG not in line:
             continue
@@ -449,7 +535,7 @@ def parse_battle_load_log(text: str) -> Timeline:
                 elapsed_seconds=int(m.group(1)),
                 last_phase=sm.group(1) if sm else "",
                 last_detail=(sm.group(3).strip() if sm else status.strip()),
-                tokens=tokens)
+                tokens=tokens, ts=_raw_ts(raw), n_events=len(tl.events))
             continue
 
         m = _SLOT_RE.search(line)
@@ -468,7 +554,7 @@ def parse_battle_load_log(text: str) -> Timeline:
             if phase == "MissionInitialize":
                 loadouts.clear()
             event = PhaseEvent(seq=int(m.group(1)), ms=int(m.group(2)),
-                               phase=phase, detail=m.group(4).strip())
+                               phase=phase, detail=m.group(4).strip(), ts=_raw_ts(raw))
             tl.events.append(event)
 
             collecting = None
@@ -481,6 +567,65 @@ def parse_battle_load_log(text: str) -> Timeline:
                 else:
                     collecting = lid                   # this agent carries the block
     return tl
+
+
+def _raw_ts(raw: str) -> str | None:
+    """Wall-clock stamp of a [BattleLoad] line. The crash report re-dumps the log tail behind
+    its own `[ts] [LEVEL] [CrashReport]` prefix, so the LAST stamp before the tag is the
+    original line's, not the dump's (otherwise every echoed line reads as written at crash time)."""
+    cut = raw.find(_TAG)
+    stamps = _TS_ANY_RE.findall(raw[:cut] if cut >= 0 else raw)
+    return stamps[-1] if stamps else None
+
+
+def _first_copy_index(events: list, event: PhaseEvent) -> int:
+    """Index of the first event with this event's seq, phase and stamp. A crash report echoes
+    the log tail after the watchdog line, and the parser reads each echo as a new event that
+    keeps its original stamp, so the terminal event can be a later copy of the original."""
+    key = (event.seq, event.phase, event.ts)
+    return next(i for i, e in enumerate(events) if (e.seq, e.phase, e.ts) == key)
+
+
+def _mission_watchdog(tl: Timeline) -> Watchdog | None:
+    """The watchdog line when it belongs to the last load: stamped at or after that load's
+    mission-start marker. The parser keeps the newest watchdog line of the whole log and
+    the watchdog fires once per loading window, so the line can be an earlier load's. Stamps,
+    not file positions, because a crash report echoes earlier lines after the watchdog line.
+    Without a mission-start marker or a stamp, the line is kept, as before."""
+    wd = tl.watchdog
+    start = _last_mission_start_index(tl.events)
+    if wd is None or start is None:
+        return wd
+    gap = _seconds_between(tl.events[start].ts, wd.ts)
+    return None if gap is not None and gap < 0 else wd
+
+
+def _render_silence(tl: Timeline) -> tuple[int | None, str]:
+    """(seconds, anchor) for the render-wait silence. The seconds run from the last
+    WaitingForRender line to the anchor, when the log's last phase is that sample and the gap
+    reaches RENDER_WAIT_SILENCE_THRESHOLD_S; else None (not silent, or a stamp is missing;
+    never zero).
+
+    The anchor is the watchdog line only when it comes after that sample: a later stamp, or the
+    same second and later in the file. The watchdog fires once per loading window, so the
+    newest watchdog line in the log can belong to an earlier load, or to a long scene load
+    earlier in this one; then, as with no watchdog line at all, the anchor is the newest
+    stamped line of any kind."""
+    last = tl.events[-1] if tl.events else None
+    wd = tl.watchdog
+    wd_gap = _seconds_between(last.ts if last else None, wd.ts) if wd else None
+    if wd_gap == 0 and wd.n_events is not None:
+        wd_after = wd.n_events > _first_copy_index(tl.events, last)
+    else:
+        wd_after = wd_gap is None or wd_gap >= 0
+    if wd is not None and wd_after:
+        end_ts, anchor = wd.ts, "the watchdog fired"
+    else:
+        end_ts, anchor = tl.last_ts, "the log ended"
+    if last is None or last.phase != "WaitingForRender":
+        return None, anchor
+    gap = _seconds_between(last.ts, end_ts)
+    return (gap if gap is not None and gap >= RENDER_WAIT_SILENCE_THRESHOLD_S else None), anchor
 
 
 def _loadout_id(detail: str):
@@ -508,7 +653,36 @@ def _parse_scene(event: PhaseEvent) -> str | None:
     return m.group(1) if m else None
 
 
-def _classify_render_wait(terminal: PhaseEvent) -> Verdict:
+def _freeze_evidence(tl: Timeline) -> dict | None:
+    """The [Freeze] lines of the load being triaged: stamped at or after the last mission start
+    and after its last WaitingForRender sample. None when there are none."""
+    start = _last_mission_start_index(tl.events)
+    start_ts = tl.events[start].ts if start is not None else None
+    last_wait = next((e for e in reversed(tl.events) if e.phase == "WaitingForRender"), None)
+    wait_ts = last_wait.ts if last_wait else None
+
+    def in_scope(line: dict) -> bool:
+        for anchor in (start_ts, wait_ts):
+            gap = _seconds_between(anchor, line["ts"])
+            if gap is not None and gap < 0:
+                return False
+        return True
+
+    samples = [s for s in tl.freeze_samples if in_scope(s)]
+    recovered = [r for r in tl.freeze_recovered if in_scope(r)]
+    if not samples and not recovered:
+        return None
+    longest = max(samples, key=lambda s: s["silent_s"]) if samples else None
+    return {
+        "samples": len(samples),
+        "max_silent_s": longest["silent_s"] if longest else None,
+        "rgl_compiles": longest["rgl_compiles"] if longest else None,
+        "recovered_after_s": recovered[-1]["silent_s"] if recovered else None,
+    }
+
+
+def _classify_render_wait(terminal: PhaseEvent, silent_s: int | None,
+                          silence_end: str, freeze: dict | None = None) -> Verdict:
     """A log ending on WaitingForRender: the mission loaded and is waiting on
     SceneView.ReadyToRender(). The shaders= token decides whether that is a working slow
     load or a real wedge, and an ABSENT token is neither (unmeasured, not zero)."""
@@ -528,6 +702,39 @@ def _classify_render_wait(terminal: PhaseEvent) -> Verdict:
             "An absent shaders= token means the native "
             "Utilities.GetNumberOfShaderCompilationsInProgress() call threw. Check the "
             "top of the log for '[PatchApply] Patch43_BattleLoadDiagnostics FAILED'.")
+        return v
+
+    if shaders > 0 and silent_s is not None:
+        # The count may have fallen across the logged samples, but the 1 Hz stream then stopped
+        # while the log went on (the watchdog line, or lines from other threads): no render-wait
+        # frame ran, so the published count is frozen and "falling" proves nothing about a drain.
+        v = Verdict(
+            "RENDER_WAIT",
+            f"The mission loaded but is held at the SceneView.ReadyToRender gate"
+            + waited_part + f" with {shaders} shader compilations in flight at the last "
+            f"sample, and the shaders= count is frozen: the 1 Hz render-wait stream went "
+            f"silent {silent_s}s before {silence_end}. The log alone cannot separate a "
+            "slow cold compile from a main-thread wedge.")
+        compiles = freeze["rgl_compiles"] if freeze else None
+        if compiles is not None and compiles > 0:
+            v.summary += (f" TAOM's freeze sampler counted {compiles} compile_shader lines in the "
+                          "engine log during the silence: the engine was still compiling, a slow "
+                          "cold compile rather than a wedge.")
+        elif compiles == 0 and (freeze["max_silent_s"] or 0) >= 60:
+            v.summary += (f" TAOM's freeze sampler saw no compile_shader line reach the engine log "
+                          f"in {freeze['max_silent_s']}s of silence: the main thread is not "
+                          "compiling, which points to a wedge (next step: a hang dump, "
+                          "/native-crash-triage Phase 2b).")
+        v.notes.append(
+            "Next evidence: count compile_shader lines in the player's FULL "
+            "rgl_log_<pid>.txt (not rgl_log_errors) during the silent window. Compiles "
+            "still landing means a cold cache; none means the main thread wedged, and the "
+            "next step is a hang dump (/native-crash-triage Phase 2b).")
+        v.notes.append(
+            "Why the falling samples mislead: the WaitingForRender line is written on "
+            "render-wait frames, at most once a second (one per frame when frames run "
+            "slower). Silence after the last sample means no render-wait frame began, "
+            "whatever the earlier counts did.")
         return v
 
     if shaders > 0:
@@ -621,7 +828,12 @@ def classify(tl: Timeline) -> Verdict:
             stuck_agent=agent)
 
     if ph == "WaitingForRender":
-        return _classify_render_wait(terminal)
+        v = _classify_render_wait(terminal, *_render_silence(tl), _freeze_evidence(tl))
+        if tl.shader_cache_rewritten == "true":
+            v.notes.append(
+                "The engine dropped or first built its runtime shader cache at this start "
+                "([ShaderCache] line), so this session's first battles compile cold.")
+        return v
 
     if ph == "FinishMissionLoadingDone":
         # Everything loaded — Mission.AfterStart returned, so the whole AgentEquip burst
@@ -809,6 +1021,82 @@ def classify_stations(tl: Timeline) -> dict | None:
     }
 
 
+def _seconds_between(start_ts: str | None, end_ts: str | None) -> int | None:
+    """Whole seconds from start_ts to end_ts, or None when either stamp is missing or
+    unparseable (unmeasured, never zero)."""
+    if not start_ts or not end_ts:
+        return None
+    try:
+        gap = (datetime.fromisoformat(end_ts.replace(" ", "T"))
+               - datetime.fromisoformat(start_ts.replace(" ", "T"))).total_seconds()
+    except ValueError:
+        return None
+    return int(gap)
+
+
+def classify_post_load_freeze(tl: Timeline) -> dict | None:
+    """Detect a game thread that stopped AFTER the battle loaded (#634 shape): the log has a
+    BattlePlayable, nothing ended the mission after it, and the log ends on a run of
+    POST_LOAD_FLAT_SAMPLES_MIN or more periodic [MemSample] lines with identical heapMB. The
+    sampler runs on a timer thread, so it keeps writing while the game thread is stopped and
+    the managed heap stops moving. None when not flagged. Additive decoration only: never
+    touches the verdict lattice, kinds, or exit codes."""
+    playable = None
+    for i, e in enumerate(tl.events):
+        if e.phase == "BattlePlayable":
+            playable = i
+    if playable is None:
+        return None
+    # A later mission start means the mission is over, whatever the samples say.
+    if any(e.phase in _MISSION_START_PHASES for e in tl.events[playable + 1:]):
+        return None
+    if any(n > playable for n in tl.mission_end_marks):
+        return None
+
+    after = [s for s in tl.mem_samples if s.n_events > playable]
+    run = 0
+    for s in reversed(after):
+        if s.heap_mb != after[-1].heap_mb:
+            break
+        run += 1
+    if run < POST_LOAD_FLAT_SAMPLES_MIN:
+        return None
+    first = after[-run]
+    return {
+        "first_flat_ts": first.ts,
+        "seconds_after_playable": _seconds_between(tl.events[playable].ts, first.ts),
+        "heap_mb": first.heap_mb,
+        "samples": run,
+    }
+
+
+def session_render_rate(tl: Timeline) -> dict | None:
+    """The most recent earlier load in this log whose render-wait stream went silent and came back
+    with a lower count: {shaders (the drop), seconds (the gap), per_second}. A measured rate for
+    this machine and session, used only as a labelled heuristic beside a later stalled load; it
+    never changes a verdict or an exit code. None when the log holds no such pair."""
+    start = _last_mission_start_index(tl.events)
+    if start is None:
+        return None
+    rate = None
+    prev = None
+    for e in tl.events[:start]:
+        if e.phase in _MISSION_START_PHASES:
+            prev = None
+            continue
+        if e.phase != "WaitingForRender":
+            continue
+        if prev is not None:
+            before, after = _SHADERS_RE.search(prev.detail), _SHADERS_RE.search(e.detail)
+            gap = _seconds_between(prev.ts, e.ts)
+            if before and after and gap is not None and gap >= RENDER_WAIT_SILENCE_THRESHOLD_S:
+                drop = int(before.group(1)) - int(after.group(1))
+                if drop > 0:
+                    rate = {"shaders": drop, "seconds": gap, "per_second": round(drop / gap, 1)}
+        prev = e
+    return rate
+
+
 def _last_mission_segment(events: list) -> list:
     """Events from the LAST MissionInitialize onward — the load actually being triaged.
 
@@ -939,6 +1227,7 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
                      (_SHADERS_RE.search(e.detail) for e in render) if m]
     waited = [int(m.group(1)) for m in
               (_WAITED_MS_RE.search(e.detail) for e in render) if m]
+    silent_s, silence_end = _render_silence(tl)
     render_wait = {
         "samples": len(render),
         "shaders_first": shader_counts[0] if shader_counts else None,
@@ -946,6 +1235,15 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
         "shaders_peak": max(shader_counts) if shader_counts else None,
         "draining": (len(shader_counts) > 1 and shader_counts[-1] < shader_counts[0]) or None,
         "waited_ms_last": waited[-1] if waited else None,
+        # Seconds the 1 Hz stream was silent before its anchor (the watchdog line or the end of
+        # the log, see _render_silence) and that anchor; both None when it was not silent.
+        "silent_s": silent_s,
+        "silence_end": silence_end if silent_s is not None else None,
+        # The log ends in the render wait with nothing compiling: the verdict's real-wedge case,
+        # so the timing line must not call the fall to 0 a drain or a slow compile.
+        "stuck_at_zero": (tl.events[-1].phase == "WaitingForRender"
+                          and bool(shader_counts) and shader_counts[-1] == 0),
+        "session_rate": session_render_rate(tl),
     } if render else None
 
     return {
@@ -1031,11 +1329,15 @@ _NEXT_STEPS = {
         "Compare a working player's log: did theirs reach BattlePlayable on the same scene?",
     ],
     "RENDER_WAIT": [
-        "Read the shaders= series in the WaitingForRender lines FIRST: falling means the "
-        "load was working and the player simply waited less than it needed.",
+        "Read the shaders= series in the WaitingForRender lines FIRST: falling while the "
+        "lines keep coming (one per second) means the load was working and the player "
+        "simply waited less than it needed; a stream that stopped 30 s or more before a "
+        "later line (the watchdog line, or the log's last stamped line when no watchdog "
+        "line follows the samples) is the frozen case (see the notes).",
         "Confirm against the player's rgl_log for the same window: count compile_shader "
         "lines and 'Missing shader from sack' misses.",
-        "A cold shader cache is the cause, not the scene. It is refilled from scratch "
+        "When the count falls with the stream intact, a cold shader cache is the cause, "
+        "not the scene. It is refilled from scratch "
         "whenever the module list changes (v1.4.8 deletes the local cache) — see "
         "docs/features/shader-precompilation.md.",
     ],
@@ -1100,8 +1402,7 @@ def _format_timings(t: dict) -> list:
             # polls=1 there means the thread was blocked INSIDE frame 1. A heartbeat is
             # emitted FROM INSIDE a TickLoading frame, so polls=1 there means frame 1 had not
             # even arrived yet when the threshold elapsed: the block was BEFORE the frame.
-            # Printing the first reading for the second case sends the reader to #352 for a
-            # stall that is nowhere near WaitForMeshesToBeLoaded.
+            # Printing the first reading for the second case names the wrong place.
             if t.get("wait_incomplete"):
                 out.append("  polls=1 on a heartbeat — the FIRST TickLoading frame had not "
                            "arrived yet when the threshold elapsed, so the block is BEFORE "
@@ -1109,9 +1410,9 @@ def _format_timings(t: dict) -> list:
                            "what runs between Mission.Initialize returning and the first "
                            "TickLoading frame.")
             else:
-                out.append("  polls=1 with a large wait — the main thread BLOCKED inside one "
-                           "frame (a native spin, the #352 WaitForMeshesToBeLoaded shape), "
-                           "not async streaming.")
+                out.append("  polls=1 with a large wait: the main thread BLOCKED inside one frame, not async streaming. "
+                           "This is not the #352 wait: v1.4.8's WaitForMeshesToBeLoaded runs after loading, once "
+                           "rendering starts.")
         if t["wait_ms"] is None:
             out.append("  waitMs was omitted by the game (MissionInitializeDone not "
                        "observed) — it is unmeasured, not zero.")
@@ -1124,6 +1425,18 @@ def _format_timings(t: dict) -> list:
         if r["shaders_peak"] is None:
             out.append("  shaders= was omitted by the game (the native count could not be "
                        "read) — it is unmeasured, not zero.")
+        elif r.get("stuck_at_zero"):
+            out.append(f"  shaders {r['shaders_first']} -> {r['shaders_last']} (peak "
+                       f"{r['shaders_peak']}) — nothing is compiling at the last sample, so "
+                       "the render gate is held by something other than shader compilation "
+                       "(see the verdict).")
+        elif r.get("silent_s") is not None:
+            out.append(f"  shaders {r['shaders_first']} -> {r['shaders_last']} (peak "
+                       f"{r['shaders_peak']}) — the count is frozen at the last sample and "
+                       f"the 1 Hz render-wait stream went silent {r['silent_s']}s before "
+                       f"{r['silence_end']}, so the fall across these samples does not show a "
+                       "drain. The log alone cannot separate a slow cold compile from a "
+                       "main-thread wedge.")
         elif r["draining"]:
             out.append(f"  shaders {r['shaders_first']} -> {r['shaders_last']} (peak "
                        f"{r['shaders_peak']}) — the compile queue is DRAINING, so this is "
@@ -1133,14 +1446,35 @@ def _format_timings(t: dict) -> list:
                        f"{r['shaders_peak']}) — the count is not falling. A frozen "
                        "non-zero count is a wedge; a flat 0 means the gate is held by "
                        "something other than shader compilation.")
+        rate = r.get("session_rate")
+        if rate and r.get("silent_s") is not None and r["shaders_last"]:
+            # From the unrounded rate: the rounded per_second would move the estimate by a second.
+            estimate = round(r["shaders_last"] * rate["seconds"] / rate["shaders"])
+            out.append(f"  Same-session rate (heuristic): an earlier load in this log cleared "
+                       f"{rate['shaders']} shaders across a {rate['seconds']}s render-wait "
+                       f"silence ({rate['per_second']}/s). At that rate the "
+                       f"{r['shaders_last']} pending here need about {estimate}s; this load "
+                       f"has been silent {r['silent_s']}s.")
     out.append("  privMB at MemStats markers: "
                + " ".join(f"{k}={'?' if v is None else v}"
                           for k, v in t["priv_mb"].items()))
     return out
 
 
+_POST_LOAD_FREEZE_STEPS = [
+    "The freeze matches the #634 shape: the [MemSample] timer thread stayed alive while the "
+    "game thread stopped. See #634 and #776.",
+    "Builds with the battle-freeze sampler (#634) write [MissionStall] lines, builds with the "
+    "skeleton-buffer watch write [SkeletonBuffer] lines and builds with the main-thread freeze "
+    "sampler write [Freeze] lines: read them for the last thing the game thread did.",
+    "Ask the player for a memory dump of the frozen process (Task Manager, right-click the "
+    "game, Create memory dump file) before they close it.",
+]
+
+
 def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
-                  timings: dict | None = None, stations: dict | None = None) -> str:
+                  timings: dict | None = None, stations: dict | None = None,
+                  freeze: dict | None = None) -> str:
     out = []
     out.append("=== BATTLE LOAD TRIAGE ===")
     out.append("")
@@ -1172,13 +1506,14 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
     if timings is not None:
         out.extend(_format_timings(timings))
 
-    if tl.watchdog:
+    wd = _mission_watchdog(tl)
+    if wd:
         out.append("")
-        out.append(f"Stall watchdog fired after {tl.watchdog.elapsed_seconds}s — "
-                   f"last phase={tl.watchdog.last_phase} {tl.watchdog.last_detail}".rstrip())
-        if tl.watchdog.tokens:
-            out.append(f"  reading at fire: {tl.watchdog.tokens}")
-            if "churn-capped" in tl.watchdog.tokens:
+        out.append(f"Stall watchdog fired after {wd.elapsed_seconds}s — "
+                   f"last phase={wd.last_phase} {wd.last_detail}".rstrip())
+        if wd.tokens:
+            out.append(f"  reading at fire: {wd.tokens}")
+            if "churn-capped" in wd.tokens:
                 out.append("  churn-capped: the compile queue was STILL MOVING when the "
                            "watchdog fired, and was capped for never draining. Treat as a "
                            "cold shader cache on slow hardware, not a frozen compiler.")
@@ -1251,6 +1586,17 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
                        "so construction cost is NOT included; a screen that allocates on open and "
                        "keeps it reads ~0, and one that frees on close reads negative.")
 
+    if freeze is None:
+        freeze = classify_post_load_freeze(tl)
+    if freeze:
+        after = (f" ({freeze['seconds_after_playable']} s after BattlePlayable)"
+                 if freeze["seconds_after_playable"] is not None else "")
+        out.append("")
+        out.append("Post-load freeze check:")
+        out.append(f"  game thread likely frozen from {freeze['first_flat_ts'] or '?'}{after}, "
+                   f"heapMB={freeze['heap_mb']} flat across {freeze['samples']} samples "
+                   "to the end of the log")
+
     if verdict.suspect_names:
         out.append("")
         out.append("Suspect assets (declared on the stuck agent): "
@@ -1268,7 +1614,9 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
 
     out.append("")
     out.append("Next steps:")
-    for s in _NEXT_STEPS.get(verdict.kind, []):
+    steps = (_POST_LOAD_FREEZE_STEPS if freeze and verdict.kind == "COMPLETED"
+             else _NEXT_STEPS.get(verdict.kind, []))
+    for s in steps:
         out.append(f"  - {s}")
 
     return "\n".join(out)
@@ -1385,8 +1733,9 @@ def main() -> int:
     mem = classify_memory(tl, floor_mb=floor_mb)
     timings = classify_phase_timings(tl)
     stations = classify_stations(tl)
+    freeze = classify_post_load_freeze(tl)
 
-    print(format_report(verdict, tl, rgl, mem, timings, stations))
+    print(format_report(verdict, tl, rgl, mem, timings, stations, freeze))
 
     if args.json_out:
         payload = {
@@ -1398,10 +1747,14 @@ def main() -> int:
             "confirmed_assets": verdict.confirmed_assets,
             "notes": verdict.notes,
             "terminal_phase": tl.events[-1].phase if tl.events else None,
-            "watchdog_fired": tl.watchdog is not None,
+            "watchdog_fired": _mission_watchdog(tl) is not None,
             "memory": mem,
             "stations": stations,
             "timings": timings,
+            "post_load_freeze": freeze,
+            "session_render_rate": session_render_rate(tl),
+            "freeze": _freeze_evidence(tl),
+            "shader_cache_rewritten": {"true": True, "false": False}.get(tl.shader_cache_rewritten),
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"\nWrote verdict to {args.json_out}", file=sys.stderr)

@@ -1687,6 +1687,286 @@ class RenderWaitTests(unittest.TestCase):
         self.assertTrue(any("COLD SHADER CACHE" in n for n in v.notes))
 
 
+class RenderWaitSilenceTests(unittest.TestCase):
+    """The WaitingForRender line is emitted once per second on every render-wait frame
+    (RenderWaitEmitIntervalMs = 1000), so a working cold-cache wait writes a line per second.
+    Player bundle 2026-10-18: two samples (3128 -> 3066), then 290 s of silence, then a
+    watchdog that only fires on a count unchanged for 60 s. A two-sample falling count is
+    not 'draining' there: the count is frozen and the stream went silent."""
+
+    @staticmethod
+    def _rw(seq, ms, waited, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase=WaitingForRender "
+                             f"waitedMs={waited} shaders={shaders}", ts=ts)
+
+    @staticmethod
+    def _wd(ts, shaders=3066):
+        return _line("ERROR", "[BattleLoad] WATCHDOG STILL LOADING after 303s — "
+                              f"shaders={shaders} last phase=WaitingForRender seq=40 "
+                              f"waitedMs=6154 shaders={shaders}", ts=ts)
+
+    def _silent_log(self):
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(39, 5595, 1, 3128, "2026-10-18 20:40:28"),
+            self._rw(40, 11748, 6154, 3066, "2026-10-18 20:40:35"),
+            _mem(ts="2026-10-18 20:41:00"),
+            self._wd("2026-10-18 20:45:28"))
+
+    def _continuing_log(self):
+        # Samples run right up to the watchdog line: the same falling count, but alive.
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(39, 5595, 1, 3128, "2026-10-18 20:45:20"),
+            self._rw(40, 11748, 6154, 3066, "2026-10-18 20:45:27"),
+            self._wd("2026-10-18 20:45:28"))
+
+    def test_silent_stream_before_watchdog_is_not_called_draining(self):
+        text = self._silent_log()
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        report = tb.format_report(v, tl, None)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertNotIn("DRAINING", report)
+        self.assertNotIn("slow load", report)
+        self.assertIn("frozen", v.summary)
+        self.assertIn("went silent", report)
+        self.assertIn("293s before the watchdog fired", report)
+        self.assertIn("compile_shader", report)
+        self.assertIn("rgl_log_<pid>.txt", report)
+        self.assertIn("Phase 2b", report)
+
+    def test_silence_gap_is_derived_from_log_timestamps(self):
+        tl = tb.parse_battle_load_log(self._silent_log())
+        r = tb.classify_phase_timings(tl)["render_wait"]
+
+        self.assertEqual(293, r["silent_s"])
+
+    def test_crash_report_echo_lines_keep_their_original_timestamp(self):
+        # The crash report re-dumps the log tail behind its own prefix; the echo must not
+        # make the last sample look like it was written at crash time.
+        echo_rw = _line("ERROR", "[CrashReport]   [2026-10-18 20:40:35] [INFO] [BattleLoad] "
+                                 "seq=40 t=+11748ms phase=WaitingForRender waitedMs=6154 "
+                                 "shaders=3066", ts="2026-10-18 20:45:29")
+        tl = tb.parse_battle_load_log(self._silent_log() + echo_rw + "\n")
+
+        self.assertEqual(293, tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+
+    def _ended_log(self, tail_ts):
+        # Player log 2026-10-25: three samples, no watchdog (the game was closed about 2 min
+        # into the freeze), and [MemSample] kept writing from its timer thread until the end.
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(55, 21113, 0, 2771, "2026-10-25 17:39:35"),
+            self._rw(56, 24748, 3636, 2737, "2026-10-25 17:39:39"),
+            self._rw(57, 26417, 5305, 2704, "2026-10-25 17:39:40"),
+            _mem(ts=tail_ts))
+
+    def test_silent_stream_before_the_log_ends_is_not_called_draining(self):
+        text = self._ended_log("2026-10-25 17:41:37")
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        report = tb.format_report(v, tl, None)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertNotIn("DRAINING", report)
+        self.assertIn("frozen", v.summary)
+        self.assertIn("117s before the log ended", v.summary)
+        self.assertIn("117s before the log ended", report)
+        self.assertNotIn("watchdog fired", report)
+        self.assertNotIn("two samples", report)
+        self.assertEqual(117, tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+
+    def test_silence_runs_to_the_last_stamped_line_of_any_kind(self):
+        text = self._ended_log("2026-10-25 17:40:07") + _line(
+            "WARNING", "[CrashReport] off-main-thread capture; UI inquiry skipped to avoid "
+                       "render-thread invocation", ts="2026-10-25 17:41:37") + "\n"
+        tl = tb.parse_battle_load_log(text)
+
+        self.assertEqual(117, tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+
+    def _assert_silent_to_log_end(self, text):
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        report = tb.format_report(v, tl, None)
+
+        self.assertIn("117s before the log ended", v.summary)
+        self.assertNotIn("DRAINING", report)
+        self.assertEqual(117, tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+
+    def test_watchdog_from_earlier_in_the_same_load_is_not_the_anchor(self):
+        # The watchdog fires once per loading window. A scene load past 300 s fires it before
+        # the render wait, and a later freeze in the same load writes no second line. Only the
+        # stamps are read here, so the t= values stay those of the player log.
+        self._assert_silent_to_log_end(_log(
+            _init(), _init_done(),
+            _line("ERROR", "[BattleLoad] WATCHDOG STILL LOADING after 303s — shaders=0 "
+                           "last phase=WaitingForSceneLoad seq=8", ts="2026-10-25 17:39:20"),
+            _finish_begin(), _after_start_begin(), _after_start_done(), _finish_done(),
+            self._rw(55, 21113, 0, 2771, "2026-10-25 17:39:35"),
+            self._rw(56, 24748, 3636, 2737, "2026-10-25 17:39:39"),
+            self._rw(57, 26417, 5305, 2704, "2026-10-25 17:39:40"),
+            _mem(ts="2026-10-25 17:41:37")))
+
+    def test_watchdog_from_an_earlier_mission_is_not_the_anchor(self):
+        self._assert_silent_to_log_end(_log(
+            _init(seq=1, ms=1000), self._wd("2026-10-25 17:20:00"), _playable(),
+            self._ended_log("2026-10-25 17:41:37")))
+
+    def _tie_log(self, watchdog_first):
+        # The watchdog line and the last sample share one stamp; only file order tells them apart.
+        wd = self._wd("2026-10-25 17:39:40")
+        last = self._rw(57, 26417, 5305, 2704, "2026-10-25 17:39:40")
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(55, 21113, 0, 2771, "2026-10-25 17:39:35"),
+            self._rw(56, 24748, 3636, 2737, "2026-10-25 17:39:39"),
+            *((wd, last) if watchdog_first else (last, wd)),
+            _mem(ts="2026-10-25 17:41:37"))
+
+    def test_same_second_watchdog_before_the_last_sample_is_not_the_anchor(self):
+        self._assert_silent_to_log_end(self._tie_log(watchdog_first=True))
+
+    def test_same_second_watchdog_after_the_last_sample_is_the_anchor(self):
+        tl = tb.parse_battle_load_log(self._tie_log(watchdog_first=False))
+
+        self.assertEqual((None, "the watchdog fired"), tb._render_silence(tl))
+
+    def test_same_second_tie_reads_the_original_sample_not_its_crash_report_echo(self):
+        # The watchdog's bundle echoes the log tail after the watchdog line; the echoed sample
+        # is parsed as a new event, so file order must come from the first copy.
+        echo = _line("ERROR", "[CrashReport]   [2026-10-25 17:39:40] [INFO] [BattleLoad] "
+                              "seq=57 t=+26417ms phase=WaitingForRender waitedMs=5305 "
+                              "shaders=2704", ts="2026-10-25 17:41:37")
+        tl = tb.parse_battle_load_log(self._tie_log(watchdog_first=False) + echo + "\n")
+
+        self.assertEqual((None, "the watchdog fired"), tb._render_silence(tl))
+
+    def test_log_ending_soon_after_the_last_sample_keeps_the_draining_message(self):
+        tl = tb.parse_battle_load_log(self._ended_log("2026-10-25 17:39:50"))
+
+        self.assertIsNone(tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+        self.assertIn("COLD SHADER CACHE", tb.classify(tl).summary)
+
+    def test_continuing_stream_keeps_the_draining_message(self):
+        text = self._continuing_log()
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        report = tb.format_report(v, tl, None)
+
+        self.assertEqual(v.kind, "RENDER_WAIT")
+        self.assertIn("COLD SHADER CACHE", v.summary)
+        self.assertIn("DRAINING", report)
+        self.assertNotIn("went silent", report)
+        self.assertIsNone(tb.classify_phase_timings(tl)["render_wait"]["silent_s"])
+
+    def test_no_watchdog_and_no_later_line_keeps_the_draining_message(self):
+        text = _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(39, 5595, 1, 3128, "2026-10-18 20:40:28"),
+            self._rw(40, 11748, 6154, 3066, "2026-10-18 20:40:35"))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("DRAINING", report)
+        self.assertNotIn("went silent", report)
+
+
+class WatchdogScopeTests(unittest.TestCase):
+    """The report and the JSON describe the LAST load. The parser keeps the newest watchdog line
+    of the whole log, and the watchdog fires once per loading window, so an earlier load's line
+    (with its churn-capped advice) must not appear under a later load's verdict (#1025)."""
+
+    @staticmethod
+    def _mission_start(seq, scene, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+1000ms phase=MissionInitialize "
+                             f"scene='{scene}'", ts=ts)
+
+    def _two_loads(self, second_load_watchdog=False):
+        tail = ([_line("ERROR", "[BattleLoad] WATCHDOG STILL LOADING after 303s — shaders=0 "
+                                "last phase=WaitingForSceneLoad seq=6", ts="2026-10-25 17:44:00")]
+                if second_load_watchdog else [])
+        return _log(
+            self._mission_start(1, "battle_terrain_b", "2026-10-25 17:00:00"),
+            _line("ERROR", "[BattleLoad] WATCHDOG STILL LOADING after 900s — shaders=412 "
+                           "churn-capped last phase=WaitingForRender seq=5", ts="2026-10-25 17:15:00"),
+            _line("INFO", "[BattleLoad] seq=99 t=+8000ms phase=BattlePlayable "
+                          "scene='battle_terrain_b' agents=120", ts="2026-10-25 17:16:00"),
+            self._mission_start(4, "battle_terrain_031", "2026-10-25 17:39:00"),
+            *tail)
+
+    def test_earlier_loads_watchdog_is_not_reported_under_the_last_load(self):
+        tl = tb.parse_battle_load_log(self._two_loads())
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIsNone(tb._mission_watchdog(tl))
+        self.assertNotIn("Stall watchdog fired", report)
+        self.assertNotIn("STILL MOVING", report)
+
+    def test_the_last_loads_own_watchdog_is_still_reported(self):
+        tl = tb.parse_battle_load_log(self._two_loads(second_load_watchdog=True))
+        report = tb.format_report(tb.classify(tl), tl, None)
+
+        self.assertIn("Stall watchdog fired after 303s", report)
+        self.assertNotIn("STILL MOVING", report)
+
+    def test_cli_json_watchdog_fired_reads_the_last_load(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(self._two_loads(), encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                               capture_output=True, text=True)
+            payload = json.loads(out.read_text(encoding="utf-8"))
+
+        self.assertFalse(payload["watchdog_fired"], r.stdout + r.stderr)
+
+
+class ZeroCountTimingTests(unittest.TestCase):
+    """A load that ends in the render wait with shaders=0 has nothing compiling: the verdict
+    calls it a real wedge, so the timing line must not call it draining or a slow compile."""
+
+    @staticmethod
+    def _rw(seq, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{seq * 1000}ms phase=WaitingForRender "
+                             f"waitedMs={seq} shaders={shaders}", ts=ts)
+
+    def _report(self, *tail):
+        text = _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(20, 40, "2026-10-25 17:39:35"),
+            self._rw(21, 20, "2026-10-25 17:39:36"),
+            self._rw(22, 0, "2026-10-25 17:39:37"),
+            *tail)
+        tl = tb.parse_battle_load_log(text)
+        return tb.format_report(tb.classify(tl), tl, None)
+
+    def test_count_ending_at_zero_is_not_called_draining(self):
+        report = self._report()
+
+        self.assertIn("NOTHING compiling", report)
+        self.assertIn("nothing is compiling", report)
+        self.assertNotIn("DRAINING", report)
+
+    def test_count_ending_at_zero_then_silence_is_not_called_a_slow_compile(self):
+        report = self._report(_mem(ts="2026-10-25 17:41:04"))
+
+        self.assertIn("nothing is compiling", report)
+        self.assertNotIn("cannot separate a slow cold compile", report)
+
+    def test_completed_load_keeps_its_timing_line(self):
+        report = self._report(_playable())
+
+        self.assertNotIn("nothing is compiling", report)
+
+
 class MultiMissionScopeTests(unittest.TestCase):
     """A session log holds several missions. An earlier one that completed must not mask a
     final load that stalled: the b18f3441 bundle reported COMPLETED and "the battle-load
@@ -1865,6 +2145,319 @@ class VerdictTimingsAgreementTests(unittest.TestCase):
         # SECOND mission (the first would be 3000-2000 = 1000ms).
         b2 = next(b for b in t["buckets"] if b["name"] == "bucket2")
         self.assertEqual(4000, b2["ms"])
+
+
+# --------------------------------------------------------------------------- #
+# Post-load freeze check: BattlePlayable, then a flat [MemSample] heapMB tail   #
+# --------------------------------------------------------------------------- #
+def _playable_at(ts):
+    return _line("INFO", "[BattleLoad] seq=99 t=+8000ms phase=BattlePlayable "
+                         "scene='battle_terrain_b' agents=120", ts=ts)
+
+
+def _mem_at(ts, heap):
+    return _mem(heap=heap, ts=ts)
+
+
+_MISSION_ENDED = "CareerSystem: Mission ended — clearing abilities"
+
+
+class PostLoadFreezeTests(unittest.TestCase):
+    def _flat_tail(self, k=3, heap=614):
+        return [_mem_at(f"2026-06-17 12:0{i}:00", heap) for i in range(1, k + 1)]
+
+    def _freeze(self, *lines):
+        return tb.classify_post_load_freeze(tb.parse_battle_load_log(_log(*lines)))
+
+    def test_flat_tail_after_playable_is_flagged(self):
+        f = self._freeze(_mem_session(), _mission_init(), _playable_at("2026-06-17 12:00:00"),
+                         _mem_at("2026-06-17 12:00:30", 500), *self._flat_tail(3))
+        self.assertIsNotNone(f)
+        self.assertEqual("2026-06-17 12:01:00", f["first_flat_ts"])
+        self.assertEqual(60, f["seconds_after_playable"])
+        self.assertEqual(614, f["heap_mb"])
+        self.assertEqual(3, f["samples"])
+
+    def test_non_sample_lines_inside_the_run_do_not_break_it(self):
+        flat = self._flat_tail(3)
+        f = self._freeze(_playable_at("2026-06-17 12:00:00"), flat[0],
+                         _line("INFO", "[Something] unrelated"), flat[1],
+                         _mem_session(), flat[2])
+        self.assertEqual(3, f["samples"])
+
+    def test_varying_tail_is_not_flagged(self):
+        self.assertIsNone(self._freeze(
+            _playable_at("2026-06-17 12:00:00"),
+            _mem_at("2026-06-17 12:01:00", 600), _mem_at("2026-06-17 12:02:00", 601),
+            _mem_at("2026-06-17 12:03:00", 602)))
+
+    def test_run_broken_by_a_different_last_sample_is_not_flagged(self):
+        self.assertIsNone(self._freeze(
+            _playable_at("2026-06-17 12:00:00"), *self._flat_tail(3),
+            _mem_at("2026-06-17 12:05:00", 700)))
+
+    def test_flat_samples_only_before_playable_are_not_flagged(self):
+        self.assertIsNone(self._freeze(
+            _mission_init(), *self._flat_tail(4), _playable_at("2026-06-17 12:10:00")))
+
+    def test_flat_run_must_start_after_playable(self):
+        # Two flat samples before BattlePlayable plus one after is 1 post-load sample, not 3.
+        before = self._flat_tail(2)
+        self.assertIsNone(self._freeze(
+            *before, _playable_at("2026-06-17 12:03:00"),
+            _mem_at("2026-06-17 12:04:00", 614)))
+
+    def test_mission_end_line_after_flat_run_is_not_flagged(self):
+        for end in (_line("INFO", _MISSION_ENDED, ts="2026-06-17 12:09:00"),
+                    _line("INFO", "[WarRam] Mission end: 0 rams", ts="2026-06-17 12:09:00")):
+            with self.subTest(end=end[:40]):
+                self.assertIsNone(self._freeze(
+                    _playable_at("2026-06-17 12:00:00"), *self._flat_tail(3), end))
+
+    def test_later_encounter_start_is_not_flagged(self):
+        self.assertIsNone(self._freeze(
+            _playable_at("2026-06-17 12:00:00"), *self._flat_tail(3), _encounter()))
+
+    def test_fewer_than_three_flat_samples_is_not_flagged(self):
+        self.assertIsNone(self._freeze(_playable_at("2026-06-17 12:00:00"),
+                                       *self._flat_tail(2)))
+
+    def test_uses_the_last_playable(self):
+        f = self._freeze(_playable_at("2026-06-17 11:00:00"), *self._flat_tail(3),
+                         _encounter(), _playable_at("2026-06-17 12:00:30"),
+                         _mem_at("2026-06-17 12:01:00", 700))
+        self.assertIsNone(f)
+
+    def test_report_replaces_the_completed_next_step_when_flagged(self):
+        text = _log(_mission_init(), _playable_at("2026-06-17 12:00:00"), *self._flat_tail(3))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertIn("Post-load freeze check:", report)
+        self.assertIn("game thread likely frozen from 2026-06-17 12:01:00 "
+                      "(60 s after BattlePlayable), heapMB=614 flat across 3 samples "
+                      "to the end of the log", report)
+        self.assertIn("#634", report)
+        self.assertIn("#776", report)
+        self.assertIn("[MissionStall]", report)
+        self.assertIn("[SkeletonBuffer]", report)
+        self.assertIn("memory dump", report)
+        self.assertNotIn("battle-load path is clean", report)
+
+    def test_report_is_unchanged_when_not_flagged(self):
+        text = _log(_mission_init(), _playable_at("2026-06-17 12:00:00"),
+                    _mem_at("2026-06-17 12:01:00", 600), _mem_at("2026-06-17 12:02:00", 601))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertNotIn("Post-load freeze check", report)
+        self.assertIn("The battle-load path is clean.", report)
+
+    def test_verdict_and_exit_code_stay_completed(self):
+        tl = tb.parse_battle_load_log(_log(
+            _playable_at("2026-06-17 12:00:00"), *self._flat_tail(3)))
+        self.assertEqual("COMPLETED", tb.classify(tl).kind)
+
+
+class PostLoadFreezeCliTests(unittest.TestCase):
+    def _json(self, *lines):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(*lines), encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            return json.loads(out.read_text(encoding="utf-8"))
+
+    def test_json_key_is_null_when_not_flagged(self):
+        payload = self._json(_mission_init(), _playable())
+        self.assertIn("post_load_freeze", payload)
+        self.assertIsNone(payload["post_load_freeze"])
+
+    def test_json_carries_the_freeze_object_when_flagged(self):
+        payload = self._json(
+            _playable_at("2026-06-17 12:00:00"),
+            *[_mem_at(f"2026-06-17 12:0{i}:00", 614) for i in (1, 2, 3)])
+        self.assertEqual({"first_flat_ts": "2026-06-17 12:01:00",
+                          "seconds_after_playable": 60, "heap_mb": 614, "samples": 3},
+                         payload["post_load_freeze"])
+        self.assertEqual("COMPLETED", payload["kind"])
+
+
+class SessionRenderRateTests(unittest.TestCase):
+    """V02's rule 1: an earlier render wait in the same log whose 1 Hz stream went silent and came
+    back lower is a measured rate for this machine (player log E4, 2026-11-01: 1569 to 0 across
+    69 s). A later stalled load is printed against it as a heuristic, never as a verdict."""
+
+    @staticmethod
+    def _rw(seq, ms, waited, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase=WaitingForRender "
+                             f"waitedMs={waited} shaders={shaders}", ts=ts)
+
+    def _second_load(self):
+        return (
+            _init(seq=1600, ms=107600), _init_done(seq=1601, ms=108000),
+            _finish_begin(seq=1602, ms=110000), _after_start_begin(seq=1603, ms=110500),
+            _after_start_done(seq=1604, ms=111000), _finish_done(seq=1639, ms=111326),
+            self._rw(1640, 111327, 1, 806, "2026-11-01 20:48:25"),
+            _mem(ts="2026-11-01 20:51:51"))
+
+    def _first_load(self, first_ts="2026-11-01 20:21:20", second_ts="2026-11-01 20:22:29"):
+        return (
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(1715, 88359, 1, 1569, first_ts),
+            _mem(ts="2026-11-01 20:21:49"),
+            self._rw(1716, 156648, 68290, 0, second_ts),
+            _playable_at("2026-11-01 20:22:30"))
+
+    def _report(self, text):
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        return v, tb.format_report(v, tl, None, None, tb.classify_phase_timings(tl))
+
+    def _json(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(text, encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                           capture_output=True, text=True)
+            return json.loads(out.read_text(encoding="utf-8"))
+
+    def test_session_rate_line_compares_a_stalled_load_with_an_earlier_blocked_compile(self):
+        v, report = self._report(_log(*self._first_load(), *self._second_load()))
+        self.assertEqual("RENDER_WAIT", v.kind)
+        for token in ("heuristic", "1569", "69s", "about 35s", "206s"):
+            self.assertIn(token, report)
+
+    def test_no_session_rate_without_an_earlier_silent_drain(self):
+        _, report = self._report(_log(*self._second_load()))
+        self.assertNotIn("heuristic", report)
+
+    def test_short_gap_between_samples_is_not_a_session_rate(self):
+        _, report = self._report(_log(
+            *self._first_load(second_ts="2026-11-01 20:21:40"), *self._second_load()))
+        self.assertNotIn("heuristic", report)
+
+    def test_json_carries_session_render_rate(self):
+        payload = self._json(_log(*self._first_load(), *self._second_load()))
+        self.assertEqual(1569, payload["session_render_rate"]["shaders"])
+        self.assertEqual(69, payload["session_render_rate"]["seconds"])
+        payload = self._json(_log(*self._second_load()))
+        self.assertIn("session_render_rate", payload)
+        self.assertIsNone(payload["session_render_rate"])
+
+
+# Twins of the C# pins (FreezeLogTests, ShaderCacheStateTests): one contract, two languages.
+PINNED_FREEZE_SAMPLE = (
+    "[Freeze] main thread silent 20s sample#2 context=battle-load shaders=2697 rglCompiles=31 "
+    "lastCompileAgoS=2 gc=3167/785/81 heapMB=466 last phase=WaitingForRender seq=40 "
+    "waitedMs=2259 shaders=2697")
+PINNED_FREEZE_RECOVERED = "[Freeze] main thread recovered after about 68s rglCompiles=1569"
+PINNED_SHADER_CACHE_REWRITTEN = (
+    "[ShaderCache] CoreShaders/D3D11 rewrittenThisStart=true mappingBytes=13 sacx=0 "
+    "mappingWrittenUtc=2026-11-04T10:00:03Z processStartUtc=2026-11-04T10:00:00Z")
+
+
+class FreezeEvidenceTests(unittest.TestCase):
+    """The [Freeze] lines carry the one thing the render-wait count cannot: the engine log's own
+    compile count across the silence, read off a timer thread. They settle compile versus wedge
+    when they can, and change nothing when they cannot."""
+
+    @staticmethod
+    def _rw(seq, ms, waited, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase=WaitingForRender "
+                             f"waitedMs={waited} shaders={shaders}", ts=ts)
+
+    @staticmethod
+    def _freeze(silent, sample, rgl, ts):
+        return _line("WARN", f"[Freeze] main thread silent {silent}s sample#{sample} "
+                             f"context=battle-load shaders=2704 {rgl} gc=1/1/1 heapMB=466 "
+                             "last phase=WaitingForRender seq=57 waitedMs=5305 shaders=2704", ts=ts)
+
+    def _ended_log(self, *tail):
+        return _log(
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(55, 21113, 0, 2771, "2026-10-25 17:39:35"),
+            self._rw(57, 26417, 5305, 2704, "2026-10-25 17:39:40"),
+            *tail,
+            _mem(ts="2026-10-25 17:41:37"))
+
+    def _classify(self, text):
+        return tb.classify(tb.parse_battle_load_log(text))
+
+    def _json(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(text, encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                           capture_output=True, text=True)
+            return json.loads(out.read_text(encoding="utf-8"))
+
+    def test_freeze_sample_literal_parses(self):
+        tl = tb.parse_battle_load_log(_line("WARN", PINNED_FREEZE_SAMPLE))
+        s = tl.freeze_samples[0]
+        self.assertEqual((20, 2, "battle-load", 31, False),
+                         (s["silent_s"], s["sample"], s["context"], s["rgl_compiles"],
+                          s["rgl_unavailable"]))
+        self.assertEqual([], tl.events)
+
+    def test_freeze_recovered_literal_parses(self):
+        tl = tb.parse_battle_load_log(_line("INFO", PINNED_FREEZE_RECOVERED))
+        self.assertEqual(68, tl.freeze_recovered[0]["silent_s"])
+
+    def test_compiles_during_the_silence_read_as_a_slow_compile(self):
+        v = self._classify(self._ended_log(
+            self._freeze(80, 4, "rglCompiles=812", "2026-10-25 17:41:00")))
+        self.assertEqual("RENDER_WAIT", v.kind)
+        self.assertIn("812", v.summary)
+        self.assertIn("still compiling", v.summary)
+        self.assertNotIn("points to a wedge", v.summary)
+
+    def test_no_compiles_for_sixty_seconds_reads_as_a_wedge(self):
+        v = self._classify(self._ended_log(
+            self._freeze(40, 3, "rglCompiles=0", "2026-10-25 17:40:20"),
+            self._freeze(80, 4, "rglCompiles=0", "2026-10-25 17:41:00")))
+        self.assertIn("points to a wedge", v.summary)
+        self.assertIn("hang dump", v.summary)
+        self.assertIn("in 80s of silence", v.summary)
+
+    def test_rgl_unavailable_keeps_the_cannot_separate_wording(self):
+        v = self._classify(self._ended_log(
+            self._freeze(80, 4, "rgl=unavailable", "2026-10-25 17:41:00")))
+        self.assertIn("cannot separate", v.summary)
+        self.assertNotIn("points to a wedge", v.summary)
+        self.assertNotIn("still compiling", v.summary)
+
+    def test_freeze_lines_from_an_earlier_load_are_ignored(self):
+        earlier = self._freeze(80, 4, "rglCompiles=0", "2026-10-25 17:30:00")
+        tl = tb.parse_battle_load_log(_log(earlier) + self._ended_log())
+        v = tb.classify(tl)
+        self.assertNotIn("points to a wedge", v.summary)
+        self.assertIsNone(tb._freeze_evidence(tl))
+
+    def test_shader_cache_rewritten_this_start_adds_a_note(self):
+        text = _log(_line("INFO", PINNED_SHADER_CACHE_REWRITTEN)) + self._ended_log()
+        v = self._classify(text)
+        self.assertTrue(any("[ShaderCache]" in n for n in v.notes), v.notes)
+        v = self._classify(self._ended_log())
+        self.assertFalse(any("[ShaderCache]" in n for n in v.notes), v.notes)
+
+    def test_json_carries_freeze_and_shader_cache_blocks(self):
+        payload = self._json(
+            _log(_line("INFO", PINNED_SHADER_CACHE_REWRITTEN)) + self._ended_log(
+                self._freeze(40, 3, "rglCompiles=300", "2026-10-25 17:40:20"),
+                self._freeze(80, 4, "rglCompiles=812", "2026-10-25 17:41:00"),
+                _line("INFO", PINNED_FREEZE_RECOVERED, ts="2026-10-25 17:41:10")))
+        self.assertEqual({"samples": 2, "max_silent_s": 80, "rgl_compiles": 812,
+                          "recovered_after_s": 68}, payload["freeze"])
+        self.assertIs(True, payload["shader_cache_rewritten"])
+
+        payload = self._json(self._ended_log())
+        self.assertIsNone(payload["freeze"])
+        self.assertIsNone(payload["shader_cache_rewritten"])
 
 
 if __name__ == "__main__":

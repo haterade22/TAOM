@@ -26,4 +26,7 @@ public sealed class StallMarkerInfo
     // current session's log; that's a different, newer file.)
     public string LogFilePath { get; }
     public string MarkerPath { get; }
+
+    // What the prior log says the load was doing; null when the log could not be read.
+    public StallEvidence? Evidence { get; internal set; }
 }

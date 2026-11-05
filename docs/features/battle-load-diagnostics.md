@@ -91,7 +91,7 @@ on the `FinishMissionLoadingBegin` line. Reading that pair is the whole point:
 
 | Reading | Meaning |
 |---|---|
-| `polls=1`, `waitMs` large | the block was **inside one frame** — a blocking native spin, the #352 `WaitForMeshesToBeLoaded` shape. Not "async waiting": a stalled main thread |
+| `polls=1`, `waitMs` large | the block was **inside one frame**: a stalled main thread, not async waiting. It is not the #352 `WaitForMeshesToBeLoaded` wait, which on v1.4.8 runs from `OnSceneRenderingStarted` after loading has finished |
 | `polls` ≈ `waitMs`/16 | genuine multi-frame async streaming at ~60 fps; the main thread is healthy and the engine waits on disk / worker threads |
 | `polls` ≫ 1 but `waitMs`/`polls` ≫ 16 ms | frames are running but each is long — per-frame work inside the load |
 | **`polls=0`** | **the `TickLoading` binding FAILED.** It does *not* mean "there was no wait." Pinned by `Patch43LoadPhaseBindingTests` |
@@ -122,7 +122,7 @@ only to "somewhere in a 30-second window".
   parses both lines with one regex.
 
 **The tokens are the same; the reading is not.** `FinishMissionLoadingBegin` is written after the
-wait ENDED, so `polls=1` there means the thread blocked INSIDE frame 1, the #352 shape. The
+wait ENDED, so `polls=1` there means the thread blocked INSIDE frame 1, not the #352 wait. The
 heartbeat is emitted FROM INSIDE a `TickLoading` frame, so `polls=1` there means frame 1 had not
 arrived when the threshold elapsed: the block is BEFORE the loop. Opposite locations, and the first
 cut of this feature printed the wrong one. `triage_battle_load.py` branches on its
@@ -277,9 +277,16 @@ of which only 108 had compiled by `FinishMissionLoadingDone`.
 
 Two things came out of it:
 
-- **`WaitingForRender` (phase 4f)** stamps that window at 1 Hz with `waitedMs=` and the live
-  `shaders=` count. Read the series, not one line: a count trending **down** is a working load; a
-  count that stops changing is the wedge.
+- **`WaitingForRender` (phase 4f)** stamps that window with `waitedMs=` and the `shaders=` count. The
+  line is written at most once a second, on render-wait frames, and its count is published only by
+  the main thread. While frames run, a falling count is a working load. Once the stream goes silent
+  the count is frozen with the blocked thread and proves nothing either way (public 1.4.8 bundle of
+  2026-10-18: 3128 then 3066, then about 290 s of silence; E4 of 2026-11-01: 68 s of silence across a
+  load that then completed). Only the engine's `compile_shader` lines in the full
+  `rgl_log_<pid>.txt` tell a slow compile from a wedge. One public 1.4.8 report (#612, 2026-10-19)
+  says every large battle loaded again after the player swapped an elf hero's Warg mount for a horse;
+  that is a player-reported cure, not a proven mechanism, and the 2026-11-01 Harad party had no
+  creature mount.
 - **The watchdog now asks whether the queue is moving** before it fires (below).
 
 Cause, not symptom: the shader cache is what makes this rare or constant, and v1.4.8 deletes the
@@ -393,6 +400,53 @@ A new tick resets the episode. The watchdog also stands down while the exit wind
 A thread stopped inside native code is suspended only at its next managed safe point, so a stack can come back as `<capture failed: ...>`; the line still names the probe, the seconds and the thread. A stall inside a TWParallel worker shows the agent tick waiting in `TWParallel.For`, not the worker.
 
 Its sibling Patch91b ([mission-tick-guard.md](mission-tick-guard.md)) recovers the handshake when an exception leaves `Mission.OnTick` before the agent tick starts; this sampler photographs what it cannot recover, such as a stuck agent tick.
+
+### The main-thread freeze sampler (`MainThreadFreezeWatchdog`, `[Freeze]`)
+
+The render-wait count cannot tell a slow compile from a wedge because only the main thread publishes it, and the 300 s watchdog reads that frozen number. This sampler fills the gap with evidence a timer thread can read by itself, from 10 s of silence, anywhere in the game (map, menus, loading screens).
+
+**Heartbeat.** `SubModule.OnApplicationTick` stamps `MainThreadHeartbeat` as its first statement. v1.4.8 has two native tick entries, `Managed.ApplicationTick` and `Managed.ApplicationTickLight`; both reach `CoreManaged` then `Module.OnApplicationTick` then every submodule, so a prefix on `ApplicationTick` alone would miss the light ticks. No Harmony patch is involved.
+
+**Thresholds.** A 1 s timer reads the beat. A poll that sees a new beat ends the episode (one `recovered` line if the episode logged anything) and is the only thing that ends one. Otherwise it evaluates one sample at each of 10, 20, 40 and 80 s of silence, each once per episode.
+
+| Stand-down | Effect |
+|---|---|
+| Shader pre-compilation walk active (`BattleLoadStallWatchdog.SuppressStallDetection`) | Logs nothing |
+| Exit sampler armed (`ExitWindowOpenedUtcTicks != 0`) | Logs nothing; `ExitStallSampler` owns the thread |
+| Mission frame in flight (`MissionTickStallProbe.MissionFrame`) | The line, no stack; `[MissionStall]` samples that thread |
+| Managed heap moving | One stack-less line at the 40 s threshold only, nothing at 10 and 20 |
+
+**Heap gate.** No thread is suspended while managed code is busy, such as a save or a load. The heap counts as moving at 3 or more gen0 collections AND 0.3 or more per second, over the window since the previous threshold (the window restarts after every threshold). Calibrated on player log E4: 2 collections across the 69 s blocked wait (0.03/s), 7,098 across 1,625 s of normal play (4.4/s).
+
+**Evidence.** Every line carries the context (`battle-load`, `mission-frame`, `other`), the last published shader count when the load window is open, the engine log's `compile_shader` count since the last frame, the memory tokens and the last BattleLoad status. An unmeasured value is omitted, never written as zero. The pinned literals, parsed by the triage tool:
+
+```
+[Freeze] main thread silent 20s sample#2 context=battle-load shaders=2697 rglCompiles=31 lastCompileAgoS=2 gc=3167/785/81 heapMB=466 last phase=WaitingForRender seq=40 waitedMs=2259 shaders=2697
+[Freeze] main thread recovered after about 68s rglCompiles=1569
+```
+
+The second line of a sample is the stack, or one of: `<no managed frames: ...>` and `<capture failed: ...>`, which both mean the thread is in native code (a thread stopped there is suspended only at its next managed safe point); `<stack not sampled: ...>` for the two stack-less cases. `rglCompiles` comes from a file tail of the engine log (`rgl=unavailable` when it cannot be read) and may lag if the engine buffers its log (UNVERIFIED). The native counter is never called from this thread.
+
+The `[ShaderCache]` line at startup says whether the engine dropped its runtime cache at this start: see [shader-compile-notice.md](shader-compile-notice.md).
+
+**Known blind spot.** The beat runs after `GlobalGameStateManager.OnTick` and `GameManagerBase.Current.OnTick` in `Module.OnApplicationTick` (v1.4.8 `Module.cs:512`, `:519`, `:523`), and Patch37's finalizer on `Module.OnApplicationTick` swallows a throw from those ticks. A frame whose game tick throws skips the beat, so a throw repeated every frame reads as silence while frames still run. The `[CrashReport]` capture lines in the same log tell the two apart.
+
+### Optional freeze dump
+
+A Task Manager dump is a full dump, about the game's memory use (9 to 11 GB in the 2026-11-01 logs), and a frozen player rarely takes one. MCM "Write Memory Dump On Freeze" (`WriteFreezeDump`, default off) makes the freeze sampler write a thread-stacks-only minidump itself, a few MB, which names the native frame. It fires at the 80 s threshold with the heap flat and no `compile_shader` line in the last 30 s, once per game session; never during the pre-compilation walk or the exit window; a mission frame in flight does not stop it. The file is `taom_freeze_<date>_<time>_pid<pid>.dmp` in the folder of the TAOM debug log, and the log gets `[Freeze] memory dump written: <path> (<n> MB)` or `[Freeze] memory dump failed: <error>`. To read one: WinDbg `~*k`, then `python tools/native_crash_triage.py --rva 0x<offset>` for a frame in `TaleWorlds.Native.dll`. The call shape comes from the shipped `Bannerlord.ButterLib.dll`.
+
+### The render-wait notice
+
+A window over the loading screen while a battle sits at the render gate, published by the freeze watchdog on every silent poll (`RenderWaitNoticeDecider`, `RenderWaitNoticeHost`). The honesty rule is binding: it says "compiling" only while `compile_shader` lines are arriving in the engine log, and it never uses the main thread's shader count as progress, because that count freezes with the thread (#612).
+
+| Reading | The window |
+|---|---|
+| Not in a render wait, the pre-compilation walk running, the engine log unavailable, or under 5 s of silence | Hidden |
+| A compile line within the last 20 s | "Preparing the battle: N shaders compiled" |
+| 60 s or more of silence and of no compile | "Still loading: no shader compiles for N s" |
+| Anything between | Hidden |
+
+A new frame hides it; the window closes after Hidden has held for 2 s and its thread exits. It needs the master "Enable Battle Load Diagnostics" toggle, because it reads the load window that toggle opens, and the freeze sampler's own switch. It stays off on a dedicated server and with VanillaTuning, as the startup notice does ([shader-compile-notice.md](shader-compile-notice.md)). It never touches the engine or the process priority. Owed in game: the window over borderless and exclusive fullscreen (the game must not lose focus or minimize), and the engine log's flush latency, which decides how quickly "compiling" appears.
 
 ### Session-wide memory telemetry (`[MemSample]`, #386)
 
@@ -593,6 +647,8 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `StallWatchdogSeconds` | `300` | Seconds of load before flagging a stall (range 10–600; NaN/range-guarded in the provider). Default is 5 min because large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry; 45 s false-positived on them. |
 | `EnableExitStallSampler` | `true` | The exit-stall stack sampler (#331 round 2) — the only diagnostics component that suspends the main thread; its own kill switch, separate from the master toggle. |
 | `EnableMissionTickStallSampler` | `true` | The battle-freeze sampler (#634): photographs an agent tick or mission frame stuck for 10s or more as `[MissionStall]`. Never arms on a teardown frame and stands down during the exit window. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
+| `EnableMainThreadFreezeSampler` | `true` | The main-thread freeze sampler: `[Freeze]` lines at 10/20/40/80 s without a finished frame, anywhere in the game. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
+| `WriteFreezeDump` | `false` | "Write Memory Dump On Freeze": one thread-stacks minidump per session at 80 s of silence with a flat heap and no recent compile. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 
@@ -616,6 +672,11 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/MissionTickStallProbe.cs` / `MissionTickStallWatchdog.cs` | Battle-freeze sampler (#634): in-flight probes for the two ticks, 1 s timer, pure `ShouldSample` at 10/20/40 s |
 | `Main/Features/BattleLoadDiagnostics/ThreadStackCapture.cs` | Suspend, walk and resume a thread, shared by both stack samplers |
+| `Main/Features/BattleLoadDiagnostics/MainThreadHeartbeat.cs` / `MainThreadFreezeWatchdog.cs` | Main-thread freeze sampler: the per-frame stamp and the 1 s timer that writes `[Freeze]` |
+| `Main/Features/BattleLoadDiagnostics/FreezeSamplePolicy.cs` / `FreezeLog.cs` | Pure thresholds, stand-downs and heap gate; the pinned line formats |
+| `Main/Features/BattleLoadDiagnostics/RenderWaitNotice.cs`, `Main/Features/ShaderCompileNotice/RenderWaitNoticeHost.cs` / `RenderWaitNoticeTexts.cs` | The render-wait notice: the pure decider, its window thread, its texts |
+| `Main/Features/BattleLoadDiagnostics/FreezeDumpPolicy.cs` / `FreezeDumpWriter.cs` | The opt-in freeze dump: when it may fire, and the `MiniDumpWriteDump` call |
+| `Main/Features/BattleLoadDiagnostics/RglLogLocator.cs` / `IRglCompileTail.cs` / `RglCompileTail.cs` | Finds this process's full engine log and counts `compile_shader` lines by file tail |
 | `Main/Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs` | Prefix + finalizer on `Mission.TickAgentsAndTeamsImp` and `MissionState.TickMissionAux` (the latter armed only while `Continuing`). With these two the `Hooks/` folder holds 21 `[HarmonyPatch]` classes (counted 2026-09-22), so the "17" in the row above is stale |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats`, `GpuMemorySplit` DTOs |
@@ -666,6 +727,10 @@ OUTERMOST gate.
 
 `TAOM.Tests/Features/BattleLoadDiagnostics/` (307 tests as of 2026-09-22, all green; the 211 quoted here earlier was stale; 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests); see *Crash-durability caveat*:
 
+- `RenderWaitNoticeDeciderTests` (9): one test per reading of the honesty rule.
+- `FreezeDumpPolicyTests` (8) and `FreezeDumpWriterTests` (1): when the opt-in dump fires, its file name.
+- `StallEvidenceTests` (6): the next-session notice's reading of the prior log, with `[Freeze]` lines built by `FreezeLog` so the contract stays one.
+- `MainThreadFreezeWatchdogTests` (18), `MainThreadHeartbeatTests` (3), `FreezeSamplePolicyTests` (6), `FreezeLogTests` (4), `RglLogLocatorTests` (4) and `RglCompileTailTests` (6): the 10/20/40/80 s schedule, one `recovered` line, every stand-down, the heap gate with the E4 calibration, the pinned literals, the engine-log tail.
 - `MissionTickStallWatchdogTests` (13) and `ThreadStackCaptureTests` (3), #634: the 10/20/40 s schedule, episode reset, one stack per thread (a nested same-thread tick is photographed once, as the frame), both threads photographed when the agent tick is stuck on its own, the exit-window stand-down, master-toggle independence, a throwing capture still reported, `Start()` idempotent, the probe's thread record, and the capture's null and dead-thread guards and line format.
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
@@ -690,6 +755,8 @@ A hang freezes the **main thread**, so no in-the-moment dialog can render and th
 - **phase 6 / mission end** (`BattleLoadPhaseBehavior`) deletes it once the load reaches a tick;
 - the **next session's main menu** (`SubModule.OnBeforeInitialModuleScreenSetAsRoot`) calls `TryConsumeStaleMarker()` — a *surviving* marker means the previous load never finished, so `StallReportNotifier` shows a soft `ShowInquiry` ("last battle load may not have finished") with an **Open log folder** button pointing at the prior session's log.
 
+**The notice says what the last load was doing.** `TryConsumeStaleMarker` reads the last 256 KB of the prior log (`StallEvidenceReader`, `StallEvidence.Parse`), scoped to the lines after the last `MissionInitialize`, and adds ` evidence=<Kind>` to its WARNING line. A `[Freeze]` line counts only when no phase line follows it. With the last phase `WaitingForRender`: `rglCompiles` above 0 is `Compiling` ("still being prepared"), `rglCompiles=0` at 60 s or more of silence is `Stuck` ("had stopped loading"), anything else is `RenderWaitUnknown` ("the log cannot tell"). Any other phase adds no sentence and the message is unchanged. The main-thread shader count never decides this.
+
 This complements the watchdog: the watchdog fires for a player who **waits** past the threshold; the marker catches the (more common) player who **force-quits** the hang long before that. The marker lives in `Logs/` alongside `taom_debug_*.log` and the crash bundle, so one folder has everything. Wording is soft because a benign Alt-F4 during a load also leaves a marker — a low-harm false positive.
 
 ## How-To
@@ -707,7 +774,7 @@ python tools/triage_battle_load.py <taom_debug_*.log> --rgl-log <rgl_log_errors_
 python tools/triage_battle_load.py --bundle <taom_crash_*.zip>
 ```
 
-Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items), `EQUIPMENT_CONFIRMED` (+ the rgl_log's `get_object failed for body:` matches a suspect — reuses `validate_mesh_refs.parse_rgl_text`), `POST_EQUIP` (ends at `AgentEquipOk` **or `FinishMissionLoadingDone`** — everything equipped and the first `OnMissionTick` never came → not equipment), `SCENE` (ends at `MissionInitialize` / `BattleSceneSelected` / **`MissionInitializeDone`** / **`FinishMissionLoadingBegin`** — froze during mission construction before any agent equipped → code), `PRE_SCENE` (froze before scene selection → code), `COMPLETED`, `UNKNOWN` (diagnostics were off). Exit code is 1 for any diagnosed hang, 0 for COMPLETED/UNKNOWN, 2 for a bad path. Tests: `tools/tests/test_triage_battle_load.py`. The player-facing collection path (which files to ask for) is `.github/ISSUE_TEMPLATE/battle-load-hang.md`.
+Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items), `EQUIPMENT_CONFIRMED` (+ the rgl_log's `get_object failed for body:` matches a suspect; reuses `validate_mesh_refs.parse_rgl_text`), `POST_EQUIP` (ends at `AgentEquipOk` **or `FinishMissionLoadingDone`**: everything equipped and the first `OnMissionTick` never came → not equipment), `SCENE` (ends at `MissionInitialize` / `BattleSceneSelected` / **`MissionInitializeDone`** / **`FinishMissionLoadingBegin`**: froze during mission construction before any agent equipped → code), `PRE_SCENE` (froze before scene selection → code), `RENDER_WAIT` (ends at `WaitingForRender`, held at the `SceneView.ReadyToRender` gate; a `shaders=` count that falls while the 1 Hz lines keep coming is a cold shader cache, and when that stream went silent 30 s or more before the watchdog line (or, when no watchdog line is stamped at or after the last sample, before the log's last stamped line of any kind, #1025) the count is frozen: the verdict says so and that the log alone cannot separate a slow compile from a main-thread wedge, then points at the `compile_shader` lines in the full `rgl_log_<pid>.txt` and a hang dump), `COMPLETED`, `UNKNOWN` (diagnostics were off). The `Stall watchdog fired` section and the JSON's `watchdog_fired` cover only a watchdog line stamped at or after the last load's mission-start marker, so an earlier load's line is not shown under a later load's verdict. Exit code is 1 for any diagnosed hang, 0 for COMPLETED/UNKNOWN, 2 for a bad path. Tests: `tools/tests/test_triage_battle_load.py`. The player-facing collection path (which files to ask for) is `.github/ISSUE_TEMPLATE/battle-load-hang.md`. After the last `BattlePlayable`, a log that ends on 3 or more `[MemSample]` lines with a flat `heapMB` also gets a "Post-load freeze check" section; the verdict stays `COMPLETED`. When an earlier load in the same log went silent and came back with a lower count, a render-wait report adds a line labelled "Same-session rate (heuristic)"; it is decoration only and never changes a verdict.
 
 > **The three 2026-08-07 markers are load-bearing for the verdict, not just the timing.** Before they were mapped, `classify()` knew only `MissionInitialize`/`BattleSceneSelected` as `SCENE` and let every other phase fall through to `PRE_SCENE` — so a log that died in the native async load wait was reported as *"froze very early … before scene selection"*, pointing triage at the opposite end of the lifecycle.
 
@@ -746,6 +813,28 @@ that survives across chained missions in one process (the clock is `IsRunning`-g
 mission inherits the first's origin): read **gaps between consecutive lines**, never the absolute.
 
 **Crash-durability caveat.** `[BattleLoad]`/`[SaveLoad]` lines are INFO and, since 2026-07-16, written synchronously — so the last INFO line is a true record of how far execution got. `[DEBUG]` lines are still async and a hard crash drops whatever is queued, so **do not read the last DEBUG line as the stopping point**. Before that change every level was async, which is why the Nan Angren log could not be localized: `MissionInitialize` might have been reached and merely never written.
+
+### When a battle sits on the loading screen
+
+- Last BattleLoad line `WaitingForRender` and no `BattlePlayable`: the load is held at the render
+  gate, compiling or wedged. `BattlePlayable` present and the game froze as the loading screen
+  dropped: suspect a missing collision body (`rgl_log_errors_<pid>.txt`: `get_object failed for body:`).
+- To tell compile from wedge while stuck, open the newest
+  `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_<pid>.txt`: new `compile_shader:` lines
+  with fresh timestamps mean it is compiling. A warm cache logs none.
+- Wait at least 5 minutes on a first battle after a game update or a change to the set of active mods
+  (v1.4.8 deletes its runtime shader cache then; reordering alone does not). Observed stalls ran from
+  68 s (E4) to about 305 s (b18f3441).
+- For a report, lower MCM "Stall Threshold (seconds)" to about 120 so the watchdog writes a bundle (its
+  `STILL LOADING` wording does not mean wedged). While frozen, create a dump file of Bannerlord.exe in
+  Task Manager (Details tab, right-click). The file is about as large as the game's memory use, so keep
+  it and offer it.
+- A hero on a TAOM creature mount: swapping it for a horse is a cheap test backed by one report (#612),
+  not a fix to promise.
+- Battle size, corpse and ragdoll settings cannot help before `BattlePlayable`: no agent exists yet, and
+  the preload covers every troop of every involved party.
+- Optional warm-up: the main-menu "Pre-compile Shaders" walk prepays character shaders (20 to 70 minutes
+  cold).
 
 ### Add a new lifecycle phase
 
@@ -817,6 +906,11 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-11-04 (1.4.x, WP113): opt-in memory dump of a frozen game.
+- 2026-11-04 (1.4.x, WP113): next-session stall notice says what the last load was doing, from the prior log (LOADING-HANG-04).
+- 2026-11-04 (1.4.x, WP113): render-wait notice that says "compiling" only while the engine log shows compiles.
+- 2026-11-04 (1.4.x, WP113): main-thread heartbeat and `[Freeze]` sampler, with the engine log's `compile_shader` count in every line.
+- 2026-11-04 (1.4.x port, WP113): triage end state from 1.5.x (#1025): a silent render-wait stream is a frozen count, not a drain; session-rate heuristic; render-wait guidance for players.
 - 2026-09-22 ([#634](https://github.com/haterade22/TAOM/issues/634)): **Battle-freeze sampler.** Patch91 probes bracket the agent tick and the main thread's mission frame (`MissionState.TickMissionAux`, armed only while `Continuing`); `MissionTickStallWatchdog` logs each stuck thread's stack once per threshold as `[MissionStall]` at 10/20/40 s. The stack capture moved out of `ExitStallSampler` into `ThreadStackCapture`, with output unchanged. Written for a player freeze whose log held nothing past the last `[MemSample]`. RCA `rca-offthread-agent-removed-2026-09-22.md`.
 - 2026-09-12: **The probe splits mesh from texture, the save-load phases carry memory, and a
   heap release was built and removed.** `taom.print_memory` now reports

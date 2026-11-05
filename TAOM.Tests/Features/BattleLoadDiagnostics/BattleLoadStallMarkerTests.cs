@@ -104,6 +104,30 @@ public class BattleLoadStallMarkerTests
     }
 
     [TestMethod]
+    public void TryConsumeStaleMarker_ReadsEvidenceFromThePriorLog()
+    {
+        string priorLog = Path.Combine(Path.GetTempPath(), "taom_bld_prior_log_" + Guid.NewGuid().ToString("N") + ".log");
+        try
+        {
+            File.WriteAllText(priorLog,
+                "[2026-11-01 20:48:25] [INFO] [BattleLoad] seq=1 t=+1ms phase=MissionInitialize \n"
+                + "[2026-11-01 20:48:26] [INFO] [BattleLoad] seq=2 t=+2ms phase=WaitingForRender waitedMs=1 shaders=806\n"
+                + "[2026-11-01 20:49:46] [WARN] [Freeze] main thread silent 80s sample#4 context=battle-load rglCompiles=812 gc=1/1/1 heapMB=1 last phase=WaitingForRender seq=2\n");
+            File.WriteAllText(_markerPath, BattleLoadStallMarker.Format("scene", DateTime.UtcNow, priorLog));
+
+            var info = _sut.TryConsumeStaleMarker();
+
+            Assert.IsNotNull(info?.Evidence);
+            Assert.AreEqual(TAOM.Features.BattleLoadDiagnostics.Domain.StallEvidenceKind.Compiling, info!.Evidence!.Classify());
+            _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("evidence=Compiling")));
+        }
+        finally
+        {
+            try { File.Delete(priorLog); } catch (IOException) { }
+        }
+    }
+
+    [TestMethod]
     public void TryConsume_NoMarkerFile_ReturnsNull()
         => Assert.IsNull(_sut.TryConsumeStaleMarker());
 

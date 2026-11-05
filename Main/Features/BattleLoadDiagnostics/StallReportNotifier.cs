@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using TaleWorlds.Library;
@@ -45,6 +46,8 @@ public static class StallReportNotifier
         var sb = new StringBuilder();
         sb.AppendLine("A battle or scene load in your previous session did not finish "
                       + "(the game was closed while still loading).");
+        string evidence = EvidenceSentence(info.Evidence);
+        if (evidence.Length > 0) sb.AppendLine(evidence);
         sb.AppendLine();
         if (!string.IsNullOrEmpty(info.SceneName))
             sb.AppendLine($"Scene: {info.SceneName}");
@@ -54,6 +57,24 @@ public static class StallReportNotifier
         sb.AppendLine("If you hit an endless loading screen, please attach that log to a "
                       + "bug report — it tells us exactly where the load stalled.");
         return sb.ToString();
+    }
+
+    // Claims only what the prior log shows. Main thread, at the main menu.
+    private static string EvidenceSentence(StallEvidence? evidence)
+    {
+        switch (evidence?.Classify() ?? StallEvidenceKind.None)
+        {
+            case StallEvidenceKind.Compiling:
+                return new TextObject("{=taom_bld_stall_compiling}The battle was still being prepared: the game's own log shows {COUNT} shader compiles after the loading screen stopped updating. The first battle after a game update or a change to your mods can take several minutes. Next time, give it at least 5 minutes before closing the game.")
+                    .SetTextVariable("COUNT", (evidence!.FreezeRglCompiles ?? 0).ToString(CultureInfo.CurrentCulture)).ToString();
+            case StallEvidenceKind.Stuck:
+                return new TextObject("{=taom_bld_stall_stuck}The battle had stopped loading: the game's own log shows no shader compiles in the last {SECONDS} seconds before the game was closed. Please attach the log below to a bug report.")
+                    .SetTextVariable("SECONDS", (evidence!.FreezeSilentSeconds ?? 0).ToString(CultureInfo.CurrentCulture)).ToString();
+            case StallEvidenceKind.RenderWaitUnknown:
+                return new TextObject("{=taom_bld_stall_render_unknown}The battle was waiting for its graphics to be prepared. After a game update or a change to your mods this can take several minutes, but the log cannot tell whether it was still working. If it happens again, wait 5 minutes before closing the game.").ToString();
+            default:
+                return string.Empty;
+        }
     }
 
     private static string? SafeFolder(string? logPath)

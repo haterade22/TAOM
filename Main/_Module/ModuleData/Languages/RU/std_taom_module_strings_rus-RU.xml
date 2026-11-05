@@ -2652,5 +2652,15 @@
     <string id="taom_patch_apply_phase_mission_start" text="начала миссии" />
     <string id="taom_mission_start_guard_notice" text="{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
     <string id="taom_skeleton_buffer_warning" text="This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
+    <string id="taom_shader_notice_title_total" text="Compiling shaders: {COUNT} of about {TOTAL}" />
+    <string id="taom_shader_notice_title_count" text="Compiling shaders: {COUNT}" />
+    <string id="taom_shader_notice_detail" text="The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
+    <string id="taom_rw_notice_compiling_title" text="Preparing the battle: {COUNT} shaders compiled" />
+    <string id="taom_rw_notice_compiling_detail" text="The game is compiling this battle's shaders. It is not frozen. The first battle after a game update or a change to your mods can take several minutes." />
+    <string id="taom_rw_notice_stalled_title" text="Still loading: no shader compiles for {SECONDS} s" />
+    <string id="taom_rw_notice_stalled_detail" text="The game's own log shows no progress. If nothing changes for 5 minutes the game may be stuck: create a dump file of Bannerlord.exe in Task Manager and send your TAOM logs." />
+    <string id="taom_bld_stall_compiling" text="The battle was still being prepared: the game's own log shows {COUNT} shader compiles after the loading screen stopped updating. The first battle after a game update or a change to your mods can take several minutes. Next time, give it at least 5 minutes before closing the game." />
+    <string id="taom_bld_stall_stuck" text="The battle had stopped loading: the game's own log shows no shader compiles in the last {SECONDS} seconds before the game was closed. Please attach the log below to a bug report." />
+    <string id="taom_bld_stall_render_unknown" text="The battle was waiting for its graphics to be prepared. After a game update or a change to your mods this can take several minutes, but the log cannot tell whether it was still working. If it happens again, wait 5 minutes before closing the game." />
   </strings>
 </base>
