@@ -992,6 +992,33 @@ def classify_post_load_freeze(tl: Timeline) -> dict | None:
     }
 
 
+def session_render_rate(tl: Timeline) -> dict | None:
+    """The most recent earlier load in this log whose render-wait stream went silent and came back
+    with a lower count: {shaders (the drop), seconds (the gap), per_second}. A measured rate for
+    this machine and session, used only as a labelled heuristic beside a later stalled load; it
+    never changes a verdict or an exit code. None when the log holds no such pair."""
+    start = _last_mission_start_index(tl.events)
+    if start is None:
+        return None
+    rate = None
+    prev = None
+    for e in tl.events[:start]:
+        if e.phase in _MISSION_START_PHASES:
+            prev = None
+            continue
+        if e.phase != "WaitingForRender":
+            continue
+        if prev is not None:
+            before, after = _SHADERS_RE.search(prev.detail), _SHADERS_RE.search(e.detail)
+            gap = _seconds_between(prev.ts, e.ts)
+            if before and after and gap is not None and gap >= RENDER_WAIT_SILENCE_THRESHOLD_S:
+                drop = int(before.group(1)) - int(after.group(1))
+                if drop > 0:
+                    rate = {"shaders": drop, "seconds": gap, "per_second": round(drop / gap, 1)}
+        prev = e
+    return rate
+
+
 def _last_mission_segment(events: list) -> list:
     """Events from the LAST MissionInitialize onward — the load actually being triaged.
 
@@ -1138,6 +1165,7 @@ def classify_phase_timings(tl: Timeline) -> dict | None:
         # so the timing line must not call the fall to 0 a drain or a slow compile.
         "stuck_at_zero": (tl.events[-1].phase == "WaitingForRender"
                           and bool(shader_counts) and shader_counts[-1] == 0),
+        "session_rate": session_render_rate(tl),
     } if render else None
 
     return {
@@ -1341,6 +1369,15 @@ def _format_timings(t: dict) -> list:
                        f"{r['shaders_peak']}) — the count is not falling. A frozen "
                        "non-zero count is a wedge; a flat 0 means the gate is held by "
                        "something other than shader compilation.")
+        rate = r.get("session_rate")
+        if rate and r.get("silent_s") is not None and r["shaders_last"]:
+            # From the unrounded rate: the rounded per_second would move the estimate by a second.
+            estimate = round(r["shaders_last"] * rate["seconds"] / rate["shaders"])
+            out.append(f"  Same-session rate (heuristic): an earlier load in this log cleared "
+                       f"{rate['shaders']} shaders across a {rate['seconds']}s render-wait "
+                       f"silence ({rate['per_second']}/s). At that rate the "
+                       f"{r['shaders_last']} pending here need about {estimate}s; this load "
+                       f"has been silent {r['silent_s']}s.")
     out.append("  privMB at MemStats markers: "
                + " ".join(f"{k}={'?' if v is None else v}"
                           for k, v in t["priv_mb"].items()))
@@ -1638,6 +1675,7 @@ def main() -> int:
             "stations": stations,
             "timings": timings,
             "post_load_freeze": freeze,
+            "session_render_rate": session_render_rate(tl),
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"\nWrote verdict to {args.json_out}", file=sys.stderr)

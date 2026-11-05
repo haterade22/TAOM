@@ -2283,5 +2283,70 @@ class PostLoadFreezeCliTests(unittest.TestCase):
         self.assertEqual("COMPLETED", payload["kind"])
 
 
+class SessionRenderRateTests(unittest.TestCase):
+    """V02's rule 1: an earlier render wait in the same log whose 1 Hz stream went silent and came
+    back lower is a measured rate for this machine (player log E4, 2026-11-01: 1569 to 0 across
+    69 s). A later stalled load is printed against it as a heuristic, never as a verdict."""
+
+    @staticmethod
+    def _rw(seq, ms, waited, shaders, ts):
+        return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase=WaitingForRender "
+                             f"waitedMs={waited} shaders={shaders}", ts=ts)
+
+    def _second_load(self):
+        return (
+            _init(seq=1600, ms=107600), _init_done(seq=1601, ms=108000),
+            _finish_begin(seq=1602, ms=110000), _after_start_begin(seq=1603, ms=110500),
+            _after_start_done(seq=1604, ms=111000), _finish_done(seq=1639, ms=111326),
+            self._rw(1640, 111327, 1, 806, "2026-11-01 20:48:25"),
+            _mem(ts="2026-11-01 20:51:51"))
+
+    def _first_load(self, first_ts="2026-11-01 20:21:20", second_ts="2026-11-01 20:22:29"):
+        return (
+            _init(), _init_done(), _finish_begin(), _after_start_begin(),
+            _after_start_done(), _finish_done(),
+            self._rw(1715, 88359, 1, 1569, first_ts),
+            _mem(ts="2026-11-01 20:21:49"),
+            self._rw(1716, 156648, 68290, 0, second_ts),
+            _playable_at("2026-11-01 20:22:30"))
+
+    def _report(self, text):
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        return v, tb.format_report(v, tl, None, None, tb.classify_phase_timings(tl))
+
+    def _json(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(text, encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            subprocess.run([sys.executable, str(TOOL), str(p), "--json", str(out)],
+                           capture_output=True, text=True)
+            return json.loads(out.read_text(encoding="utf-8"))
+
+    def test_session_rate_line_compares_a_stalled_load_with_an_earlier_blocked_compile(self):
+        v, report = self._report(_log(*self._first_load(), *self._second_load()))
+        self.assertEqual("RENDER_WAIT", v.kind)
+        for token in ("heuristic", "1569", "69s", "about 35s", "206s"):
+            self.assertIn(token, report)
+
+    def test_no_session_rate_without_an_earlier_silent_drain(self):
+        _, report = self._report(_log(*self._second_load()))
+        self.assertNotIn("heuristic", report)
+
+    def test_short_gap_between_samples_is_not_a_session_rate(self):
+        _, report = self._report(_log(
+            *self._first_load(second_ts="2026-11-01 20:21:40"), *self._second_load()))
+        self.assertNotIn("heuristic", report)
+
+    def test_json_carries_session_render_rate(self):
+        payload = self._json(_log(*self._first_load(), *self._second_load()))
+        self.assertEqual(1569, payload["session_render_rate"]["shaders"])
+        self.assertEqual(69, payload["session_render_rate"]["seconds"])
+        payload = self._json(_log(*self._second_load()))
+        self.assertIn("session_render_rate", payload)
+        self.assertIsNone(payload["session_render_rate"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
