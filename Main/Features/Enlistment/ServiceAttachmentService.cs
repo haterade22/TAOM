@@ -124,7 +124,8 @@ public class ServiceAttachmentService : IServiceAttachmentService
         // to join, so it falls through to the march rules (no BattleJoinRequired, no retry budget).
         // "No pending flag" holds for Assess and the pump; OnPartyJoinedRunningMapEvent still arms
         // PendingCommanderAttachment when the commander starts a raid, and that flag is inert because
-        // its only reader sits behind the joinable gate (ServiceMaintenanceService.TryRequestBattleJoin).
+        // its only reader sits behind the joinable gate (ServiceMaintenanceService.TryRequestBattleJoin);
+        // that holds only while the raid stays uncontested, since a relief lord (#954) opens the gate.
         // On the defender side a raid is a real fight and still joins.
         if (VillageActionJoinPolicy.IsJoinableBattle(
                 commander.PartyIsInMapEvent, commander.PartyIsRaiding))

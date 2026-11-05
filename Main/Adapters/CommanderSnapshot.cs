@@ -15,7 +15,8 @@ public sealed class CommanderSnapshot
     public bool PartyIsInMapEvent { get; }
 
     /// <summary>
-    /// True when the commander is the aggressor in a raid, forced supplies or forced volunteers (#831).
+    /// True when the commander is the aggressor in a raid, forced supplies or forced volunteers (#831)
+    /// and no lord party with healthy troops defends it (#954).
     /// A soldier does not join those; a failed read is false, which joins.
     /// </summary>
     public bool PartyIsRaiding { get; }

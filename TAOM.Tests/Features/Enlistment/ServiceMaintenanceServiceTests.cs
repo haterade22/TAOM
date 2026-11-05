@@ -314,6 +314,24 @@ public class ServiceMaintenanceServiceTests
     }
 
     [TestMethod]
+    public void Pump_RaidFlagClearsOnTheSameEventToken_RaisesTheJoin()
+    {
+        // #954: no MapEventStarted fires when a lord joins the running raid, so the pump must pick
+        // the flip up on the token it already saw.
+        MakeEnlisted();
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        Commander(followable: true, inMapEvent: true, token: 7, raiding: true);
+        PumpExpensive();
+        Assert.AreEqual(0, raised);
+
+        Commander(followable: true, inMapEvent: true, token: 7, raiding: false);
+        PumpExpensive();
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
     public void Pump_CommanderInABattleThatIsNotARaid_StillRaisesTheJoin()
     {
         MakeEnlisted();

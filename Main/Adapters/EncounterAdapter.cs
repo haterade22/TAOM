@@ -244,13 +244,11 @@ public sealed class EncounterAdapter : IEncounterAdapter
             // Side LEADER parties, not the MapEventStarted arguments: leaders are PartyBase, so a
             // besieged settlement resolves. Going through MobileParty ids drops sieges silently.
             //
-            // PRECONDITION (verified against 1.4.7): passing two FOREIGN parties here — vanilla
-            // always passes MainParty as one of them — is only safe because
-            // MobileParty.MainParty.AttachedTo is null. PlayerEncounter.SetupFields picks
-            // _encounteredParty by excluding MainParty and MainParty.AttachedTo, so with
-            // AttachedTo set it could resolve to neither leader and EncounteredBattle would not
-            // match this event. Enlistment tracks the player via IsActive/IsVisible/position sync
-            // and ParkNear explicitly clears AttachedTo — if that ever changes, revisit this.
+            // Since #443 the main party may already be attached to the commander's army (the army merge
+            // in ServiceBattleService.TryJoin runs before EnsureEncounterAgainst). PlayerEncounter.SetupFields
+            // (v1.4.8 PlayerEncounter.cs:750) skips MainParty.AttachedTo, so the encountered party resolves
+            // to the other side's leader or its settlement (:763; for a raid, the village). The guard is
+            // the EncounteredBattle check below.
             var attackerLeader = mapEvent.AttackerSide?.LeaderParty;
             var defenderLeader = mapEvent.DefenderSide?.LeaderParty;
             if (attackerLeader == null || defenderLeader == null)

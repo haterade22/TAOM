@@ -11,7 +11,9 @@ namespace TAOM.Features.Enlistment;
 ///
 /// ONLY THE AGGRESSOR SKIPS: the adapter's <c>VillageRaidReader</c> reports true only for a
 /// commander on the attacker side, so a commander fighting off a raid on his own village still
-/// joins. Militia fights inside a raid are NOT joined: the militia sits on the defender side of the
+/// joins. The one exception is a lord who relieves the village (#954): while a lord party with
+/// healthy troops defends the raid, the reader reports false and the soldier joins that fight.
+/// Militia fights inside a raid are NOT joined: the militia sits on the defender side of the
 /// raid event. When it resists, that event ends as the militia falls, and the raider opens a second
 /// raid event that does the looting; both are raids the commander leads, so neither is joined.
 /// Sieges, sally-outs and field battles are never village actions and always join.

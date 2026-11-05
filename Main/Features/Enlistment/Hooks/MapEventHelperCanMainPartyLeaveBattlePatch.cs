@@ -26,8 +26,8 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// Not closed here: the <c>join_encounter</c> menu's abandon option (TAOM joins directly and does
 /// not reach that menu), the <c>raiding_village</c> menu's 'Leave Army', 'Abandon Army' and 'End
 /// Raiding' options (#831: a raid the commander runs is no longer joined, so they are reachable only
-/// in the army-attached edge case, where 'Abandon Army' ends the commander's whole raid, and when the
-/// raid read fails open), and the encounter menu's sally-out 'Return to {SETTLEMENT}'
+/// in the army-attached edge case, where 'Abandon Army' ends the commander's whole raid, when the
+/// raid read fails open, and possibly after a relief battle (#954, docs/features/enlistment.md)), and the encounter menu's sally-out 'Return to {SETTLEMENT}'
 /// option (likely unreachable: attacker joins leave a besieged settlement first).
 ///
 /// The postfix only turns true into false. The verdict lives in

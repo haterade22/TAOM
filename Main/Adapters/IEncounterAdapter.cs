@@ -33,7 +33,8 @@ public interface IEncounterAdapter
     bool IsPartyInMapEvent(string partyId);
 
     /// <summary>
-    /// True when the given party is the aggressor in a raid, forced supplies or forced volunteers. Read
+    /// True when the given party is the aggressor in a raid, forced supplies or forced volunteers and no
+    /// lord party with healthy troops defends it (#954). Read
     /// through the same <c>VillageRaidReader</c> as the commander snapshots so the join floor and the
     /// snapshots cannot disagree. False on a failed read, which joins (#831).
     /// </summary>
