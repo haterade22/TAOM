@@ -2,6 +2,25 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-11-04
+
+### chore(sync): the trunk takes the public 1.4.8 troop tree, and the laptop gets a provisional data baseline
+
+`bannerlord-1.4.5` now holds the three commits of `fix/public-armory-ids-145` (#697), the branch the
+public 1.4.8 build was cut from, merged onto `origin/bannerlord-1.4.5` at 1b00d1acd. Before the merge
+the trunk's troop files named 156 item ids the public troop tree had dropped, 76 of them retired
+ladder bows, so a release cut from the trunk would have shipped archers without bows. The merge keeps
+1b00d1acd's Uruk-Hai Champion and Berserker skirt fix and leaves out the `.serena/project.yml` churn of
+10a52fb3d.
+
+The laptop's `LOTRLOME_Armory` is still the v2.0.26 copy of 2026-09-07: the public Armory is not on
+this machine, so under decision D25 the data half of this baseline is provisional and stays owed until
+it is installed. On v2.0.26 `validate_moduledata.py` reports 3768 `BROKEN_ITEM_REF` on the merged trunk
+and 3423 on 1b00d1acd. That Armory defines no `ladder_` items and the merged tree names 123 of them, so
+neither number says what the merge does against the public Armory. Build and tests on the merged trunk:
+9154 tests, 9151 passed, 3 skipped, 0 failed. `docs/reference/development-machines.md` and the CLAUDE.md
+"Two machines" row record the provisional laptop state.
+
 ## 2026-09-30
 
 ### fix(data): the 1.4.8 public release takes the 1.5.x troop tree for the new Armory (#697)

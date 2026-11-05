@@ -12,7 +12,7 @@ fact is usually a fact about that machine only.
 | Game | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord` | `C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord` |
 | Decompile dump | `E:\Decompiled_Bannerlord\` | `C:\Decompiled_Bannerlord\` |
 | LOTRAOM asset drop | `E:\LOTRAOMAssets\LOTRAOM_Jan_1_Patreon\` | not present |
-| Content modules | complete | incomplete, see the warning below |
+| Content modules | complete | cooked installs, no loose `Assets/`; see the baseline below |
 
 Neither machine is wrong. The desktop is where a claim about content gets settled, because it is
 the only one holding all of it.
@@ -52,6 +52,13 @@ floor. The repo can be perfectly correct and still produce that report.
 Measured on the laptop on 2026-09-06: 6,894 `BROKEN_ITEM_REF`, 414 `LANDLESS_CULTURE` and 90
 `SETTLEMENT_ECONOMY_FLOOR`, with `TAOM_Map\ModuleData` holding no `settlements.xml` at all. None of
 it was a repo defect.
+
+Re-measured on the laptop on 2026-11-04 with `LOTRLOME_Armory` still at `v2.0.26` (2026-09-07), the
+public Armory not yet installed, and `TAOM_Map` at `v2.0.27`: on the merged `bannerlord-1.4.5` tree
+`validate_moduledata.py` reported 3768 errors, 3768 of them `BROKEN_ITEM_REF`, 120 warnings and 0
+`LANDLESS_CULTURE`. That run is a PROVISIONAL laptop baseline (decision D25 of the 2026-11-04 port
+programme; per-code counts in `plans/README.md`): the data half is owed until the public Armory is
+installed, and no item verdict rests on it. A laptop result above it still deserves a look.
 
 Before believing a content failure, check that the module it points into is actually populated. The
 cheap version is a file count under `Modules\<name>\ModuleData`; a handful of files where there
