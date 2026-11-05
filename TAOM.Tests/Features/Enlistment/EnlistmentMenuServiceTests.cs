@@ -21,7 +21,7 @@ public class EnlistmentMenuServiceTests
         _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(_logger);
         _encounter = Substitute.For<IEncounterAdapter>();
-        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), Substitute.For<IMobilePartyAttachmentAdapter>(), _encounter, _logger);
+        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(), Substitute.For<IMobilePartyAttachmentAdapter>(), _encounter, _logger);
     }
 
     [TestMethod]

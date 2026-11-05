@@ -54,25 +54,23 @@ public class EnlistmentBattlePayoutServiceTests
     }
 
     [TestMethod]
-    public void PayOut_WonNoSample_AwardsBaseXpAndCountsVictory()
+    public void PayOut_WonNoSample_AwardsBaseXp()
     {
         MakeEnlisted();
 
         Assert.IsTrue(_service.PayOutBattle(won: true));
         Assert.AreEqual(40, _contentStore.Record.ServiceXp);
-        Assert.AreEqual(1, _contentStore.Record.BattleVictories);
         Assert.AreEqual("", _service.LastBandGradeKey);
     }
 
     [TestMethod]
-    public void PayOut_Lost_AwardsLossXpAndCountsDefeat()
+    public void PayOut_Lost_AwardsLossXp()
     {
         MakeEnlisted();
 
         _service.PayOutBattle(won: false);
 
         Assert.AreEqual(15, _contentStore.Record.ServiceXp);
-        Assert.AreEqual(1, _contentStore.Record.BattleDefeats);
     }
 
     [TestMethod]

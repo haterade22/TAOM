@@ -1,21 +1,12 @@
-using TAOM.Core.Logging;
-
 namespace TAOM.Features.Enlistment;
 
 /// <summary>
-/// Compiled defaults for the core loop. The content phase replaces the body with the
-/// JSON-loading + per-field validation pattern (CultureConversionConfigProvider): every
-/// numeric range-checked, floats NaN/Inf-guarded, per-field revert-to-default + warning.
-/// The interface seam is final; only the source of values changes.
+/// Compiled defaults for the core loop. Nothing here is read from JSON: the tunable content
+/// settings live in <c>EnlistmentContentConfigProvider</c>.
 /// </summary>
 public sealed class EnlistmentConfigProvider : IEnlistmentConfigProvider
 {
     private readonly EnlistmentCoreConfig _config = new EnlistmentCoreConfig();
-
-    public EnlistmentConfigProvider(IModLogger logger)
-    {
-        _ = logger; // reserved for the JSON-validation phase
-    }
 
     public EnlistmentCoreConfig GetConfig() => _config;
 }

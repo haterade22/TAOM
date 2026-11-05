@@ -287,38 +287,6 @@ public class EnlistmentContentPureLogicTests
         Assert.IsTrue(check.Passes(10, 70, trust: 0, rankBonus: 0, difficulty: 70));
     }
 
-    // ---- TrustLedger ----
-
-    [TestMethod]
-    public void Trust_ClampsBothEnds()
-    {
-        var config = new SchedulerConfig();
-
-        Assert.AreEqual(20, TrustLedger.AdjustTrust(19, 5, config));
-        Assert.AreEqual(-10, TrustLedger.AdjustTrust(-9, -5, config));
-    }
-
-    [TestMethod]
-    public void Reputation_ClampsZeroToMax()
-    {
-        var config = new SchedulerConfig();
-        var record = new ServiceContentRecord { FieldRep = 49 };
-
-        TrustLedger.ApplyReputation(record, ReputationDomain.Field, 5, config);
-        Assert.AreEqual(50, record.FieldRep);
-
-        TrustLedger.ApplyReputation(record, ReputationDomain.Field, -60, config);
-        Assert.AreEqual(0, record.FieldRep);
-    }
-
-    [TestMethod]
-    public void Reputation_DominantDomain_TiesGoToFirstHighest()
-    {
-        var record = new ServiceContentRecord { FieldRep = 3, CommandRep = 7, SiegeRep = 7 };
-
-        Assert.AreEqual(ReputationDomain.Command, TrustLedger.DominantDomain(record));
-    }
-
     // ---- ServiceContentRecord round-trip ----
 
     [TestMethod]
@@ -331,16 +299,8 @@ public class EnlistmentContentPureLogicTests
             ServiceXp = 512,
             DaysServed = 40,
             DutySuccesses = 4,
-            DutyFailures = 1,
             Trust = 12,
-            FieldRep = 9,
-            LogisticsRep = 2,
-            CommandRep = 5,
-            SiegeRep = 1,
             DeferredWages = 22,
-            BattleVictories = 11,
-            BattleDefeats = 3,
-            TournamentWins = 1,
             LastAssignmentSwapDay = 210.5,
             ActiveDutyId = "bandit_hunt",
             ActiveDutyTargetPartyId = "taom_enlist_duty_ab12",
@@ -357,6 +317,25 @@ public class EnlistmentContentPureLogicTests
         Assert.AreEqual("bandit_hunt", parsed.ActiveDutyId);
         Assert.AreEqual(216.0, parsed.ActiveDutyDeadlineDay);
         CollectionAssert.AreEqual(new List<string> { "road_patrol", "forage" }, parsed.RecentDutyIds);
+    }
+
+    [TestMethod]
+    public void ContentRecord_SaveWithRetiredKeys_StillLoads()
+    {
+        const string old = "rank=2;assignment=1;xp=512;days=40;trust=12;dutyFails=1;repF=9;repL=2;repC=5;repS=1;"
+            + "arrears=22;wins=11;losses=3;tourneys=1;dutyId=bandit_hunt;dutyFood=40;dutyDeadline=216";
+
+        Assert.IsTrue(ServiceContentRecord.TryParse(old, out var parsed));
+        Assert.AreEqual(ServiceRank.Veteran, parsed.Rank);
+        Assert.AreEqual(512, parsed.ServiceXp);
+        Assert.AreEqual(12, parsed.Trust);
+        Assert.AreEqual(22, parsed.DeferredWages);
+        Assert.AreEqual("bandit_hunt", parsed.ActiveDutyId);
+        Assert.AreEqual(216.0, parsed.ActiveDutyDeadlineDay);
+
+        var rewritten = parsed.Serialize();
+        foreach (var key in new[] { "dutyFails=", "repF=", "repL=", "repC=", "repS=", "wins=", "losses=", "tourneys=", "dutyFood=" })
+            Assert.IsFalse(rewritten.Contains(key), key + " must not be written any more");
     }
 
     [TestMethod]

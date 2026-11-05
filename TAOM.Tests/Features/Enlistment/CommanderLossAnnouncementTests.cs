@@ -67,7 +67,7 @@ public class CommanderLossAnnouncementTests
 
         _sut = new EnlistmentReconciler(
             _store, machine, attachment, _commander, discharge,
-            new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
+            new EnlistmentConfigProvider(), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             EnlistmentTestDoubles.FeatureOn(), _inquiry,
             Substitute.For<IArmyMembershipAdapter>(), _logger);

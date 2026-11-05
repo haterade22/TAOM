@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Equipment;
 
@@ -24,7 +25,7 @@ public class EnlistmentEquipmentServiceTests
     private IEquipmentRosterCatalogAdapter _catalog = null!;
     private IPartyItemRosterAdapter _partyItems = null!;
     private IItemPoolAdapter _itemPool = null!;
-    private InMemoryEquipmentIssueLedger _ledger = null!;
+    private PersistedEquipmentIssueLedger _ledger = null!;
     private IModLogger _logger = null!;
     private EnlistmentEquipmentService _service = null!;
 
@@ -34,7 +35,7 @@ public class EnlistmentEquipmentServiceTests
         _catalog = Substitute.For<IEquipmentRosterCatalogAdapter>();
         _partyItems = Substitute.For<IPartyItemRosterAdapter>();
         _itemPool = Substitute.For<IItemPoolAdapter>();
-        _ledger = new InMemoryEquipmentIssueLedger();
+        _ledger = new PersistedEquipmentIssueLedger(new EnlistmentContentStore(Substitute.For<IModLogger>()));
         _logger = Substitute.For<IModLogger>();
         _service = new EnlistmentEquipmentService(_catalog, _partyItems, _itemPool, _ledger, _logger);
 

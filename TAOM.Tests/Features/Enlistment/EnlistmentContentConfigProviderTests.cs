@@ -56,6 +56,41 @@ public class EnlistmentContentConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_RetiredKeys_LoadWithoutWarning()
+    {
+        WriteConfig("{ \"progression\": { \"dailyLeadershipXp\": 11, \"trainingSessionXp\": 20 }, "
+            + "\"scheduler\": { \"reputationMax\": 50 }, "
+            + "\"meritBands\": [ { \"minScore\": 60, \"serviceXp\": 20, \"repDomain\": \"Field\", \"repAmount\": 1, \"gradeKey\": \"strong\" }, "
+            + "{ \"minScore\": 0, \"serviceXp\": 4, \"repDomain\": \"None\", \"repAmount\": 0, \"gradeKey\": \"rough\" } ] }");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(11, config.Progression.DailyLeadershipXp);
+        Assert.AreEqual("strong", config.MeritBands[0].GradeKey);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s =>
+            s.Contains("trainingSessionXp") || s.Contains("reputationMax") || s.Contains("repDomain") || s.Contains("repAmount")));
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetDuties_RetiredRewardKeys_LoadWithoutWarning()
+    {
+        WriteDuties("{\"incidents\":[{\"id\":\"pay_delay\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\","
+            + "\"gates\":{\"minRank\":\"Recruit\"},"
+            + "\"optionA\":{\"key\":\"press_claim\",\"skillId\":\"Charm\",\"difficulty\":65,"
+            + "\"successReward\":{\"serviceXp\":20,\"trust\":-1,\"repDomain\":\"Command\",\"repAmount\":2}},"
+            + "\"optionB\":{\"key\":\"wait_it_out\",\"skillId\":\"Steward\",\"difficulty\":50,"
+            + "\"successReward\":{\"serviceXp\":16,\"trust\":1}}}]}");
+
+        var duties = Provider().GetDuties();
+
+        Assert.AreEqual(1, duties.Incidents.Count);
+        Assert.AreEqual(20, duties.Incidents[0].OptionA.SuccessReward.ServiceXp);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    [TestMethod]
     public void GetConfig_MalformedJson_DefaultsWithError()
     {
         WriteConfig("{ not json !!!");

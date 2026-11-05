@@ -60,19 +60,15 @@ public sealed class MeritBand
     /// more than a bad one without turning battles into a renown farm.</summary>
     public int Renown { get; set; }
 
-    public ReputationDomain RepDomain { get; set; } = ReputationDomain.Field;
-    public int RepAmount { get; set; }
-
     /// <summary>Loc key suffix for the band's grade line (taom_enlist_merit_grade_{key}).</summary>
     public string GradeKey { get; set; } = "";
 }
 
-/// <summary>Trust + reputation clamps and duty-offer cadence (the army-rhythm scheduler's knobs).</summary>
+/// <summary>Trust clamps and duty-offer cadence (the army-rhythm scheduler's knobs).</summary>
 public sealed class SchedulerConfig
 {
     public int TrustMin { get; set; } = -10;
     public int TrustMax { get; set; } = 20;
-    public int ReputationMax { get; set; } = 50;
 
     public int MinDaysBeforeFirstOffer { get; set; } = 3;
     public int OfferCooldownDaysQuiet { get; set; } = 4;

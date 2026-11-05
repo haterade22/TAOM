@@ -327,7 +327,7 @@ public class SettlementFollowingReconcilerTests
 
         _sut = new EnlistmentReconciler(
             _store, _machine, _attachment, _commander, discharge,
-            new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
+            new EnlistmentConfigProvider(), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(),
             Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),

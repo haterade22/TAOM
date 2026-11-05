@@ -1,4 +1,3 @@
-using System;
 using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment;
@@ -6,7 +5,7 @@ namespace TAOM.Features.Enlistment;
 /// <summary>
 /// Sole authority over <see cref="EnlistmentState"/> mutation. Every state change in the
 /// feature flows through <see cref="TryTransition"/>; illegal edges are rejected and
-/// logged, never applied. Consumers react via <see cref="Transitioned"/>.
+/// logged, never applied.
 /// </summary>
 public interface IEnlistmentStateMachine
 {
@@ -16,7 +15,4 @@ public interface IEnlistmentStateMachine
 
     /// <summary>Apply a legal transition. Returns false (state unchanged, warning logged) on an illegal edge.</summary>
     bool TryTransition(EnlistmentState to);
-
-    /// <summary>Raised after a successful transition with (from, to).</summary>
-    event Action<EnlistmentState, EnlistmentState> Transitioned;
 }

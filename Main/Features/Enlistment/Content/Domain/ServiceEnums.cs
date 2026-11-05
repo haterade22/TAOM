@@ -17,13 +17,3 @@ public enum ServiceAssignment
     Cavalry = 2,
     Support = 3,
 }
-
-/// <summary>Commander-reputation domains (donor's four, enum-typed instead of strings).</summary>
-public enum ReputationDomain
-{
-    None = 0,
-    Field = 1,
-    Logistics = 2,
-    Command = 3,
-    Siege = 4,
-}

@@ -10,9 +10,7 @@
         "skillId": "Scouting",
         "skillXp": 20,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 10,
@@ -36,9 +34,7 @@
         "skillId": "Riding",
         "skillXp": 20,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 12,
@@ -65,9 +61,7 @@
         "skillId": "Tactics",
         "skillXp": 20,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 12,
@@ -91,9 +85,7 @@
         "skillId": "Leadership",
         "skillXp": 15,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Command",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 13,
@@ -117,9 +109,7 @@
         "skillId": "Athletics",
         "skillXp": 15,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 1
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 11,
@@ -143,9 +133,7 @@
         "skillId": "Scouting",
         "skillXp": 25,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 13,
@@ -173,9 +161,7 @@
         "skillId": "Charm",
         "skillXp": 15,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Logistics",
-        "repAmount": 1
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 11,
@@ -199,9 +185,7 @@
         "skillId": "Charm",
         "skillXp": 20,
         "trust": 2,
-        "relation": 3,
-        "repDomain": "Command",
-        "repAmount": 2
+        "relation": 3
       },
       "failureReward": {
         "serviceXp": 14,
@@ -226,9 +210,7 @@
         "skillId": "Riding",
         "skillXp": 20,
         "trust": 3,
-        "relation": 3,
-        "repDomain": "Command",
-        "repAmount": 2
+        "relation": 3
       },
       "failureReward": {
         "serviceXp": 15,
@@ -253,9 +235,7 @@
         "skillId": "Steward",
         "skillXp": 25,
         "trust": 2,
-        "relation": 2,
-        "repDomain": "Logistics",
-        "repAmount": 2
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 11,
@@ -279,9 +259,7 @@
         "skillId": "Steward",
         "skillXp": 20,
         "trust": 1,
-        "relation": 1,
-        "repDomain": "Logistics",
-        "repAmount": 2
+        "relation": 1
       },
       "failureReward": {
         "serviceXp": 10,
@@ -308,9 +286,7 @@
         "skillId": "Tactics",
         "skillXp": 25,
         "trust": 3,
-        "relation": 2,
-        "repDomain": "Field",
-        "repAmount": 3
+        "relation": 2
       },
       "failureReward": {
         "serviceXp": 16,
@@ -333,9 +309,7 @@
         "skillId": "Athletics",
         "skillXp": 10,
         "trust": 1,
-        "relation": 1,
-        "repDomain": "Field",
-        "repAmount": 1
+        "relation": 1
       },
       "failureReward": {
         "serviceXp": 8,
@@ -368,9 +342,7 @@
           "gold": 20,
           "skillId": "Scouting",
           "skillXp": 20,
-          "trust": 2,
-          "repDomain": "Field",
-          "repAmount": 1
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 8
@@ -406,9 +378,7 @@
           "gold": 24,
           "skillId": "Medicine",
           "skillXp": 30,
-          "trust": 2,
-          "repDomain": "Logistics",
-          "repAmount": 1
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -446,9 +416,7 @@
           "gold": 26,
           "skillId": "Leadership",
           "skillXp": 25,
-          "trust": 2,
-          "repDomain": "Command",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -487,9 +455,7 @@
           "gold": 22,
           "skillId": "Steward",
           "skillXp": 20,
-          "trust": 2,
-          "repDomain": "Logistics",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 8
@@ -528,9 +494,7 @@
           "gold": 24,
           "skillId": "Engineering",
           "skillXp": 30,
-          "trust": 2,
-          "repDomain": "Siege",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -545,9 +509,7 @@
           "gold": 16,
           "skillId": "Steward",
           "skillXp": 15,
-          "trust": 1,
-          "repDomain": "Logistics",
-          "repAmount": 1
+          "trust": 1
         },
         "failureReward": {
           "serviceXp": 8
@@ -571,9 +533,7 @@
           "gold": 18,
           "skillId": "Scouting",
           "skillXp": 18,
-          "trust": 2,
-          "repDomain": "Field",
-          "repAmount": 1
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 8
@@ -608,9 +568,7 @@
           "gold": 26,
           "skillId": "Steward",
           "skillXp": 30,
-          "trust": 2,
-          "repDomain": "Logistics",
-          "repAmount": 3
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -625,9 +583,7 @@
           "gold": 30,
           "skillId": "Trade",
           "skillXp": 25,
-          "trust": 1,
-          "repDomain": "Logistics",
-          "repAmount": 2
+          "trust": 1
         },
         "failureReward": {
           "serviceXp": 8
@@ -650,9 +606,7 @@
           "gold": 34,
           "skillId": "Leadership",
           "skillXp": 30,
-          "trust": 3,
-          "repDomain": "Command",
-          "repAmount": 3
+          "trust": 3
         },
         "failureReward": {
           "serviceXp": 12
@@ -667,9 +621,7 @@
           "gold": 24,
           "skillId": "Tactics",
           "skillXp": 25,
-          "trust": 2,
-          "repDomain": "Command",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -692,9 +644,7 @@
           "gold": 36,
           "skillId": "Steward",
           "skillXp": 35,
-          "trust": 3,
-          "repDomain": "Logistics",
-          "repAmount": 3
+          "trust": 3
         },
         "failureReward": {
           "serviceXp": 12
@@ -709,9 +659,7 @@
           "gold": 30,
           "skillId": "Trade",
           "skillXp": 25,
-          "trust": 2,
-          "repDomain": "Logistics",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -734,9 +682,7 @@
           "gold": 36,
           "skillId": "Tactics",
           "skillXp": 35,
-          "trust": 3,
-          "repDomain": "Command",
-          "repAmount": 3
+          "trust": 3
         },
         "failureReward": {
           "serviceXp": 12
@@ -751,9 +697,7 @@
           "gold": 24,
           "skillId": "Leadership",
           "skillXp": 25,
-          "trust": 2,
-          "repDomain": "Command",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -777,9 +721,7 @@
           "gold": 44,
           "skillId": "Tactics",
           "skillXp": 40,
-          "trust": 3,
-          "repDomain": "Command",
-          "repAmount": 3
+          "trust": 3
         },
         "failureReward": {
           "serviceXp": 14
@@ -794,9 +736,7 @@
           "gold": 30,
           "skillId": "Charm",
           "skillXp": 30,
-          "trust": 2,
-          "repDomain": "Command",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 10
@@ -818,9 +758,7 @@
         "difficulty": 65,
         "successReward": {
           "serviceXp": 20,
-          "trust": -1,
-          "repDomain": "Command",
-          "repAmount": 1
+          "trust": -1
         },
         "failureReward": {
           "trust": -1
@@ -852,9 +790,7 @@
         "successReward": {
           "serviceXp": 22,
           "trust": 2,
-          "relation": 1,
-          "repDomain": "Logistics",
-          "repAmount": 1
+          "relation": 1
         },
         "failureReward": {
           "serviceXp": 6
@@ -869,9 +805,7 @@
           "gold": 10,
           "skillId": "Scouting",
           "skillXp": 15,
-          "trust": 1,
-          "repDomain": "Logistics",
-          "repAmount": 1
+          "trust": 1
         },
         "failureReward": {
           "serviceXp": 6,
@@ -891,9 +825,7 @@
         "difficulty": 64,
         "successReward": {
           "serviceXp": 26,
-          "trust": 2,
-          "repDomain": "Command",
-          "repAmount": 2
+          "trust": 2
         },
         "failureReward": {
           "serviceXp": 6,

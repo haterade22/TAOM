@@ -98,11 +98,10 @@ public class InteractiveDutyPresenterTests
 
         _rewards.Received(1).Grant(duty.OptionA.SuccessReward, "duty:night_patrol:walk_rounds");
         Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.AreEqual(0, _contentStore.Record.DutyFailures);
     }
 
     [TestMethod]
-    public void OptionB_SkillCheckFails_GrantsFailureRewardAndIncrementsFailures()
+    public void OptionB_SkillCheckFails_GrantsFailureReward()
     {
         var duty = Duty();
         _skillCheck.Passes(Arg.Any<int>(), Arg.Any<int?>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>()).Returns(false);
@@ -111,7 +110,6 @@ public class InteractiveDutyPresenterTests
         _capturedOptionB();
 
         _rewards.Received(1).Grant(duty.OptionB.FailureReward, "duty:night_patrol:double_watch");
-        Assert.AreEqual(1, _contentStore.Record.DutyFailures);
     }
 
     [TestMethod]

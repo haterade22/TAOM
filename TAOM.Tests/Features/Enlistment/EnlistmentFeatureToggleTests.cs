@@ -50,7 +50,7 @@ public class EnlistmentFeatureToggleTests
 
         _reconciler = new EnlistmentReconciler(
             _store, new EnlistmentStateMachine(store, logger), _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(logger), _encounter,
+            new EnlistmentConfigProvider(), _encounter,
             new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             _feature, Substitute.For<IInquiryAdapter>(),
             Substitute.For<IArmyMembershipAdapter>(), logger);

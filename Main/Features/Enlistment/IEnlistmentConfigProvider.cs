@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace TAOM.Features.Enlistment;
 
-/// <summary>Core enlistment tunables. JSON-backed loading + validation lands with the content phase; until then compiled defaults.</summary>
+/// <summary>Core enlistment tunables: compiled defaults, never read from JSON (tunable content settings belong to <c>EnlistmentContentConfigProvider</c>).</summary>
 public sealed class EnlistmentCoreConfig
 {
     public double ContractDays { get; set; } = 365.0;

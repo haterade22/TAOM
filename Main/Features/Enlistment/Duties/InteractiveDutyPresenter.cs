@@ -148,8 +148,6 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         var record = _contentStore.Record;
         if (passed)
             record.DutySuccesses++;
-        else
-            record.DutyFailures++;
 
         return passed;
     }

@@ -75,9 +75,6 @@ public class ServiceRewardService : IServiceRewardService, IEnlistmentWagePrevie
         if (reward.Renown > 0)
             _renown.AddClanRenown(playerId, reward.Renown);
 
-        if (reward.RepDomain != ReputationDomain.None && reward.RepAmount != 0)
-            ApplyReputation(reward.RepDomain, reward.RepAmount);
-
         _logger?.LogDebug($"[Enlistment] reward '{sourceLabel}': xp={reward.ServiceXp} gold={reward.Gold} skill={reward.SkillId}/{reward.SkillXp} trust={reward.Trust} renown={reward.Renown}");
     }
 
@@ -172,11 +169,7 @@ public class ServiceRewardService : IServiceRewardService, IEnlistmentWagePrevie
     public void AdjustTrust(int delta)
     {
         var record = _contentStore.Record;
-        record.Trust = TrustLedger.AdjustTrust(record.Trust, delta, _config.GetConfig().Scheduler);
-    }
-
-    public void ApplyReputation(ReputationDomain domain, int amount)
-    {
-        TrustLedger.ApplyReputation(_contentStore.Record, domain, amount, _config.GetConfig().Scheduler);
+        var scheduler = _config.GetConfig().Scheduler;
+        record.Trust = System.Math.Max(scheduler.TrustMin, System.Math.Min(scheduler.TrustMax, record.Trust + delta));
     }
 }

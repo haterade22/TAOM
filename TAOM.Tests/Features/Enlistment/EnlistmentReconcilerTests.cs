@@ -46,7 +46,7 @@ public class EnlistmentReconcilerTests
         _encounter = Substitute.For<IEncounterAdapter>();
         _army = Substitute.For<IArmyMembershipAdapter>();
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
+            new EnlistmentConfigProvider(), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
             EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _army, _logger);
     }
 

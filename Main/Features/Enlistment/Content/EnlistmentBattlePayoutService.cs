@@ -65,11 +65,6 @@ public class EnlistmentBattlePayoutService : IEnlistmentBattlePayoutService
         var config = _config.GetConfig();
         var tables = config.Progression;
 
-        if (won)
-            record.BattleVictories++;
-        else
-            record.BattleDefeats++;
-
         record.ServiceXp += won ? tables.BattleWinXp : tables.BattleLossXp;
 
         var bandRenown = 0;
@@ -99,8 +94,6 @@ public class EnlistmentBattlePayoutService : IEnlistmentBattlePayoutService
                     ServiceXp = band.ServiceXp,
                     Gold = band.Gold,
                     Trust = sample.LeftTheField ? 0 : band.Trust,
-                    RepDomain = band.RepDomain,
-                    RepAmount = band.RepAmount,
                 }, $"merit-{band.GradeKey}");
                 LastBandGradeKey = band.GradeKey;
                 bandRenown = band.Renown;

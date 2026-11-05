@@ -303,7 +303,6 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         else
         {
             _rewards.Grant(duty.FailureReward, "duty-failed:" + duty.Id);
-            record.DutyFailures++;
         }
 
         // SELF-CONTAINED (#436). The result names the duty as well as the outcome, so it reads on

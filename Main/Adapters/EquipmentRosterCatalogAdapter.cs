@@ -72,19 +72,4 @@ public sealed class EquipmentRosterCatalogAdapter : IEquipmentRosterCatalogAdapt
             return EmptyItemIds;
         }
     }
-
-    public int GetItemValue(string itemId)
-    {
-        if (string.IsNullOrEmpty(itemId))
-            return 0;
-        try
-        {
-            return MBObjectManager.Instance?.GetObject<ItemObject>(itemId)?.Value ?? 0;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"EquipmentRosterCatalogAdapter: GetItemValue('{itemId}') failed: {ex.Message}");
-            return 0;
-        }
-    }
 }
