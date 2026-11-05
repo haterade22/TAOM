@@ -589,6 +589,12 @@ series tip copy is their exact sum.
 
 Method: `git checkout 9ca99437fc3879c9a981d8430ff8d44873c209a0 tools/package_release.py tools/tests/test_package_release.py`.
 
+> **Do not use that checkout now (integrator note, 2026-11-05).** B4 to B7 landed before B2, so it would silently
+> remove their gates and tests. After M1, three-way merge each file with base `1b00d1acd`, ours HEAD and theirs
+> `9ca99437f` (`git merge-file`), keep both sides of each conflict, drop `Gaming.Desktop` from `TestRequireBuildCli`
+> and `Game Pass` from the `SHIPPED_DLLS` comment, then run the B2 verifies and B3. The STOP condition's
+> `git diff 1b00d1acd` check on the two tool files now prints by design; this note answers it for B2.
+
 Adds `--require-build REV`: reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll`
 (the Win64 client copy must exist), casefolds module names, and refuses a stamp that is `.dirty`,
 `nogit` or `.nogit`, names another commit, or is unreadable; a requested module missing from `--source`;

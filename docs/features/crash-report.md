@@ -20,6 +20,7 @@ After CrashReport, every crash produces a structured `Logs/taom_debug_*.log` ent
 - `report.json` — machine-parseable equivalent
 - `taom_debug.log` — current session's TAOM log
 - `rgl_log.txt` — current session's TaleWorlds RGL log
+- `diag.log`: TAOM.Dependencies' log, carrying PatchShield's swallowed `MissingMethod` / `MissingField` / `TypeLoad` exceptions (the engine-mismatch signature) when the path resolves
 - `manifest.txt` — file inventory + size + SHA1
 
 Players upload one ZIP, we reproduce locally without playing twenty questions.
@@ -115,7 +116,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 
 | Section | Source |
 |---|---|
-| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, language code |
+| Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, TAOM build stamp (`InformationalVersion`: build time, commit SHA, `.dirty` or `nogit` flag; also in `manifest.txt`), language code |
 | Exception | Type, message, source, HResult, target site, stack trace, `Exception.Data` dictionary, full inner chain (≤10 deep) |
 | Stack Frames | Per-frame method, declaring type/assembly, file/line (when PDB present), IL offset |
 | Harmony Correlation | Patches affecting **every** frame in the stack, plus full inventory (every patched method grouped by owner). Harmony replacement frames (`Foo_PatchN`) are resolved back to their original method via `Harmony.GetOriginalMethodFromStackframe` before the patch lookup — without this every patched frame printed `(no patches)`, exactly the frames that matter (#339, fixed 2026-07-13) |
@@ -132,7 +133,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | OS | Description, version, 64-bit flag, CPU count, architecture, locale, CLR version |
 | AppDomain & Environment | Friendly name, base dir, trust flag, env vars matching `BANNERLORD_* / TAOM_* / DOTNET_* / STEAM_*` |
 | Performance | Last N frame deltas (ms), avg, FPS — currently empty ring buffer (v1 doesn't wire the frame-time hook; reserved for v2) |
-| Logs | TAOM debug log path + tail, RGL log path + tail (best-effort from `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\rgl_log_*.txt`) |
+| Logs | TAOM debug log path + tail, RGL log path + tail (newest across `%ProgramData%\Mount and Blade II Bannerlord\logs\` and the `Documents` equivalent, probed in that order), TAOM.Dependencies `diag.log` path + tail |
 | Collector failures | Per-section reason if any collector threw |
 
 ### The memory verdict (#385 follow-up)
@@ -327,6 +328,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
 ## Changelog
 
+- 2026-11-05: **Added the TAOM build stamp to the Identity section** (port of plan 017, #658). `report.txt` prints a `Build:` line, `manifest.txt` a `TAOM build:` line and `report.json` gains `TaomBuild`: the assembly's `InformationalVersion`, which names the commit and carries `.dirty` or `nogit` when the build could not prove a clean tree. `TaomVersion` alone is shared by every commit since the last version bump.
 - 2026-11-05: TAOM's settings appear in bundles (the four classes declare their own `Instance`); third-party settings classes are not read (#982); dropdowns show their selected value. `McmSettingsCollector.Collect` enumerates only TAOM's own assembly, and `ResolveInstance` looks up only an `Instance` the class declares itself (`DeclaredOnly`) as a second guard. The `DiscoveryType` row is removed from the listing. Ported by WP123.
 - 2026-11-04: **Ported to the 1.4.x line** (Bannerlord v1.4.8, port148 WP107): plan 006 and the shield rethrow fix. The 2026-09-24 entries below describe the 1.5.x change set this port carries.
 - 2026-11-04: **Ported plans 007 and 034 to the 1.4.x line**: PatchShield skips the `ManagedCallbacks` shims, and its finalizer finds the shielded method only after a throw.

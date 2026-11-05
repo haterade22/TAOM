@@ -28,7 +28,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -397,6 +397,299 @@ class TestCli(unittest.TestCase):
                      "--allow-unknown")
             self.assertEqual(r.returncode, 2)
             self.assertIn("not empty", (r.stderr + r.stdout).lower())
+
+
+class TestRetiredBinaries(unittest.TestCase):
+    """A binary the repo stopped shipping survives in the install, its _wEditor/_Server mirrors and
+    every channel folder, because deploys never delete. The packager is the gate every release
+    passes, in --dry-run too, so it must refuse rather than quietly copy or exclude."""
+
+    def test_dry_run_refuses_a_retired_binary_and_names_it(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_wEditor/BehaviorTrees.dll", 16)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM/bin/Win64_Shipping_wEditor/BehaviorTrees.dll", r.stderr)
+
+    def test_real_run_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll", 16)
+            dest = Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--modules", "TAOM",
+                     "--allow-unknown")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("BehaviorTreeWrapper.dll", r.stderr)
+            self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_match_is_case_insensitive_and_limited_to_bin(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Gaming.Desktop.x64_Shipping_Client/BehaviorTreeWrapper.DLL", 16)
+            _write(src, "TAOM/ModuleData/behaviortrees.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.retired_binaries([plan]),
+                             ["TAOM/bin/Gaming.Desktop.x64_Shipping_Client/BehaviorTreeWrapper.DLL"])
+
+    def test_the_1_4_x_vendored_natives_are_not_retired(self):
+        # MinHook and NativeSkinFixes are retired on 1.5.x only; the 1.4.x allowlist still ships them.
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_Client/MinHook.x64.dll", 16)
+            _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll", 16)
+            self.assertEqual(pr.retired_binaries([pr.plan_module(src / "TAOM")]), [])
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 0, r.stderr)
+
+    def test_no_retired_name_is_tracked_in_the_repo(self):
+        # A retired name coming back into a tracked _Module/bin would be refused at every release.
+        repo = Path(__file__).resolve().parents[2]
+        try:
+            r = subprocess.run(["git", "ls-files", "*/_Module/bin/*"], cwd=repo,
+                               capture_output=True, text=True)
+        except OSError:
+            self.skipTest("git unavailable")
+        if r.returncode != 0:
+            self.skipTest("git unavailable")
+        tracked = {PurePosixPath(p).name.casefold() for p in r.stdout.splitlines()
+                   if (repo / p).exists()}
+        self.assertFalse(tracked & pr.RETIRED_BINARIES, sorted(tracked & pr.RETIRED_BINARIES))
+
+
+def _write_text(root: Path, rel: str, text: str):
+    p = root / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text, encoding="utf-8")
+
+
+_RIDER = ('<NPCCharacters>\n  <NPCCharacter\n      id="taom_test_wildmesh_boar_rider"\n'
+          '      name="{=taom_test_wildmesh_boar_rider}[Test] War Boar Rider" />\n</NPCCharacters>\n')
+
+
+class TestTestTroops(unittest.TestCase):
+    """Custom-Battle test troops (`taom_test_*`) leave the repo before a release (/release pre-flight 5),
+    but a channel package is cut from the install, where deploys never delete: the v2.0.35 testing
+    package shipped five WildMesh test riders that way (rca-wildmesh-rider-removal-2026-10-18.md).
+    The packager refuses them like a retired binary, in --dry-run too."""
+
+    def test_dry_run_refuses_a_test_troop_and_names_its_file(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write_text(src, "TAOM/ModuleData/test_riders/wildmesh.xml", _RIDER)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM/ModuleData/test_riders/wildmesh.xml", r.stderr)
+
+    def test_real_run_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write_text(src, "TAOM/ModuleData/test.xslt", '<x id = "taom_test_a"/>')
+            dest = Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--modules", "TAOM",
+                     "--allow-unknown")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM/ModuleData/test.xslt", r.stderr)
+            self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_only_a_shipped_moduledata_definition_counts(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            # a definition in a shipped ModuleData XML: refused
+            _write_text(src, "TAOM/ModuleData/test_riders/wildmesh.xml", _RIDER)
+            # a mention that defines nothing, a non-ModuleData file and an excluded backup: not refused
+            _write_text(src, "TAOM/ModuleData/strings.xml", '<string id="x" text="{=taom_test_a}A" />')
+            _write_text(src, "TAOM/GUI/Prefabs/p.xml", '<w id="taom_test_b" />')
+            _write_text(src, "TAOM/ModuleData/old.xml.bak-20261018", _RIDER)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.test_troop_files([plan]), ["TAOM/ModuleData/test_riders/wildmesh.xml"])
+
+    def test_the_repo_module_ships_none(self):
+        # Pre-flight 5's grep, held by the gate's own matcher on the shipped tree.
+        repo = Path(__file__).resolve().parents[2]
+        plan = pr.plan_module(repo / "Main" / "_Module")
+        self.assertEqual(pr.test_troop_files([plan]), [])
+
+
+_SHADER_REPORT = (
+    "Shader Compile Report -- Module: LOTRLOME_Armory\n"
+    "MetaMesh        Material        Shader        Variants\n"
+    "------------    ------------    ----------    --------\n"
+    "am_body         am_body         pbr_metallic      1664\n"
+    "a_mesh_name_filling_its_whole_column_width am_cape pbr_metallic 6\n"
+    "am_cape_b       am_cape_b       cloth_shader        30\n"
+    "\n"
+    "Total variants: 1700\n"
+)
+
+
+class TestArmoryShaderSources(unittest.TestCase):
+    """Decision D12: the 1.4.x line installs no shader sources, so a material naming a taom_ shader,
+    or a native shader with no .rs in the game's Shaders/Sources, renders invisible for every player.
+    The packager refuses in --dry-run too, and refuses when it cannot check (fail closed)."""
+
+    def _armory(self, td, report=_SHADER_REPORT):
+        src = _fixture(Path(td))
+        _write(src, "LOTRLOME_Armory/SubModule.xml", 10)
+        if report is not None:
+            _write_text(src, "LOTRLOME_Armory/Shaders/D3D11/shader_compile_report.log", report)
+        return src
+
+    def _sources(self, root, *shaders):
+        for shader in shaders:
+            _write(Path(root), f"Shaders/Sources/{shader}.rs", 1)
+
+    def _dry(self, td, src, *extra):
+        return _run("--source", str(src), "--dest", str(Path(td) / "out"),
+                    "--modules", "LOTRLOME_Armory", "--dry-run", *extra)
+
+    def test_every_row_is_read_and_the_total_checked(self):
+        # A mesh name that fills its column leaves one space before the material: a split on runs
+        # of two spaces skipped 168 rows of the real report, including this row's material.
+        usage, problem = pr.parse_shader_report(_SHADER_REPORT)
+        self.assertIsNone(problem)
+        self.assertEqual(usage, {"pbr_metallic": ["am_body", "am_cape"], "cloth_shader": ["am_cape_b"]})
+
+    def test_a_report_whose_rows_do_not_add_up_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, _SHADER_REPORT.replace("Total variants: 1700", "Total variants: 1701"))
+            self._sources(td, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("Total variants", r.stderr)
+
+    def test_native_shaders_with_sources_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            self._sources(td, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("shader sources OK", r.stdout)
+
+    def test_a_taom_shader_is_refused_wherever_its_source_sits(self):
+        report = _SHADER_REPORT.replace("cloth_shader", "taom_deformer_longbow")
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report)
+            self._sources(td, "pbr_metallic", "taom_deformer_longbow")
+            _write(src, "TAOM/Shaders/Sources/taom_deformer_longbow.rs", 1)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("taom_deformer_longbow", r.stderr)
+            self.assertIn("D12", r.stderr)
+
+    def test_a_native_shader_with_no_source_is_refused_and_names_its_materials(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            self._sources(td, "pbr_metallic")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("cloth_shader", r.stderr)
+            self.assertIn("am_cape_b", r.stderr)
+            self.assertNotIn("pbr_metallic", r.stderr)
+
+    def test_a_missing_report_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report=None)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("ships no Shaders/D3D11/shader_compile_report.log", r.stderr)
+
+    def test_an_unplanned_armory_is_not_checked(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report=None)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertNotIn("shader sources", r.stdout + r.stderr)
+
+    def test_game_root_points_the_native_check_at_another_folder(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            game = Path(td) / "elsewhere"
+            self._sources(game, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src, "--game-root", str(game))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("shader sources OK", r.stdout)
+
+    def test_a_missing_sources_folder_says_to_pass_game_root(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("--game-root", r.stderr)
+
+
+class TestGamePassBinIsRefused(unittest.TestCase):
+    """Game Pass is not supported (maintainer, 2026-10-22). An existing install or channel folder keeps
+    the old bin/Gaming.Desktop.x64_Shipping_Client/ folder (an old TAOM.dll and BehaviorTreeWrapper.dll
+    among its files). Leaving it out of the copy would only stop it being gated, so it is refused
+    like a retired binary, dry runs included."""
+
+    GP = "bin/Gaming.Desktop.x64_Shipping_Client/"
+
+    def test_other_bins_still_ship(self):
+        self.assertEqual(pr.classify("bin/Win64_Shipping_Client/TAOM.dll").action, pr.COPY)
+
+    def test_game_pass_bins_names_the_folder(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "TAOM.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.game_pass_bins([plan]), ["TAOM/bin/Gaming.Desktop.x64_Shipping_Client"])
+
+    def test_a_dry_run_refuses_and_names_the_fix(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "TAOM.dll", 16)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("Game Pass is not supported", r.stderr)
+            self.assertIn("TAOM/bin/Gaming.Desktop.x64_Shipping_Client", r.stderr)
+            self.assertIn("_Module/bin", r.stderr)
+
+    def test_a_real_run_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "BehaviorTreeWrapper.dll", 16)
+            dest = Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--modules", "TAOM", "--allow-unknown")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_a_module_without_the_folder_prints_no_game_pass_message(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.game_pass_bins([plan]), [])
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertNotIn("Game Pass", r.stdout + r.stderr)
+            self.assertNotIn("Gaming.Desktop", r.stdout + r.stderr)
+
+
+class TestReleaseNumber(unittest.TestCase):
+    """Decision D8: a 1.4.x release number is never a 1.5.x tag and never has a fourth part."""
+
+    def test_the_1_5_x_tags_are_refused(self):
+        for n in range(29, 37):
+            problem = pr.release_number_problem(f"v2.0.{n}")
+            self.assertIsNotNone(problem, n)
+            self.assertIn("1.5.x", problem)
+
+    def test_a_fourth_part_is_refused(self):
+        self.assertIn("three-part", pr.release_number_problem("v2.0.29.5"))
+
+    def test_the_1_4_x_numbers_pass(self):
+        for version in ("v2.0.28", "v2.4.0", "v2.4.11"):
+            self.assertIsNone(pr.release_number_problem(version), version)
+
+    def test_no_version_is_a_problem(self):
+        self.assertIsNotNone(pr.release_number_problem(None))
 
 
 if __name__ == "__main__":

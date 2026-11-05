@@ -6,4 +6,5 @@ public sealed record IdentitySnapshot(
     string TaomVersion,
     string TaomDllSha1,
     string OriginatingPatchTarget,
-    string LanguageCode);
+    string LanguageCode,
+    string TaomBuild);

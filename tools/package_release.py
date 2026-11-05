@@ -31,7 +31,11 @@ Usage:
       --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies --allow-unknown
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
 
-Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination.
+Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination /
+            retired binaries in the source (RETIRED_BINARIES, dry runs included) / a Game Pass bin
+            (dry runs included) / a shipped
+            ModuleData file defining a taom_test_ id / an Armory shader with no source players
+            have, or an Armory shader report that cannot be checked (all dry runs included).
 """
 from __future__ import annotations
 
@@ -79,6 +83,18 @@ RUNTIME_STATE_FILES = frozenset({"diag.log", "last-good-modlist.txt", "failed-mo
 # would block the run.
 RDC_DIR_PREFIX = "RuntimeDataCache"
 NATIVE_DEBUG_EXT = frozenset({".pdb", ".exp", ".lib"})
+
+# Binaries an earlier build shipped and the repo has since deleted: inlined into TAOM.dll on
+# 2026-05-24. Deploys never delete, so the install, its _wEditor/_Server mirrors and a channel
+# folder built from it keep them. The run refuses (dry runs included) until they are pruned.
+# Compared case-insensitively by file name. MinHook.x64.dll and TAOM.NativeSkinFixes.dll stay
+# allowed on the 1.4.x line: they are its vendored allowlist.
+RETIRED_BINARIES = frozenset({"behaviortrees.dll", "behaviortreewrapper.dll"})
+
+# Game Pass is not supported (maintainer, 2026-10-22): nothing stages or deploys this bin any more.
+# An install or channel folder built earlier keeps the old folder, with an old TAOM.dll in it. Leaving
+# it out of the copy would only stop it being gated, so the run refuses (dry runs included).
+GAME_PASS_DIR = "Gaming.Desktop.x64_Shipping_Client"
 
 # Backup sidecars the tools under tools/ leave beside the live file (tools/README.md "XML I/O
 # convention"). The suffix sits AFTER the real extension, and the dated, topic-tagged forms are
@@ -244,6 +260,120 @@ def execute(plan: ModulePlan, dest_root: Path) -> int:
     return n
 
 
+def retired_binaries(plans) -> list:
+    """<module>/<rel> of every RETIRED_BINARIES file under a planned module's bin/."""
+    return [f"{p.name}/{rel}" for p in plans for rel, _size in p._copy_list
+            if rel.split("/", 1)[0] == "bin"
+            and PurePosixPath(rel).name.casefold() in RETIRED_BINARIES]
+
+
+def game_pass_bins(plans) -> list:
+    """<module>/bin/Gaming.Desktop.x64_Shipping_Client of every planned module that has the folder."""
+    return [f"{p.name}/bin/{GAME_PASS_DIR}" for p in plans if (p.root / "bin" / GAME_PASS_DIR).is_dir()]
+
+
+# A Custom-Battle test troop DEFINED by id; a {=taom_test_x} name key alone defines nothing.
+_TEST_TROOP_ID_RE = re.compile(rb'\bid\s*=\s*"taom_test_')
+
+
+def test_troop_files(plans) -> list:
+    """<module>/<rel> of every shipped ModuleData .xml or .xslt that defines a taom_test_ id. A
+    channel package is cut from the install, where deploys never delete, so a grep of the repo
+    cannot vouch for it: the v2.0.35 testing package shipped five test riders that way."""
+    found = []
+    for p in plans:
+        for rel, _size in p._copy_list:
+            if rel.split("/", 1)[0] != "ModuleData" or not rel.casefold().endswith((".xml", ".xslt")):
+                continue
+            try:
+                data = (p.root / rel).read_bytes()
+            except OSError:
+                continue
+            if _TEST_TROOP_ID_RE.search(data):
+                found.append(f"{p.name}/{rel}")
+    return found
+
+
+ARMORY_MODULE = "LOTRLOME_Armory"
+SHADER_REPORT = "Shaders/D3D11/shader_compile_report.log"
+# Right-anchored: a mesh name that fills its column leaves one space before the material, so a
+# split on runs of two spaces skips those rows (168 of the laptop's 49,746).
+_REPORT_ROW = re.compile(r"^(?P<mesh>.*\S)\s+(?P<material>\S+)\s+(?P<shader>\S+)\s+(?P<variants>\d+)\s*$")
+_REPORT_TOTAL = re.compile(r"^Total variants:\s*(\d+)\s*$")
+
+
+def parse_shader_report(text: str) -> tuple:
+    """(usage, problem): {shader: sorted materials} from a shader_compile_report.log, and why the
+    rows cannot be trusted (no trailer, or row variants that do not sum to it), else None."""
+    usage: dict = {}
+    variants = 0
+    total = None
+    for line in text.splitlines():
+        trailer = _REPORT_TOTAL.match(line)
+        if trailer:
+            total = int(trailer.group(1))
+            continue
+        row = _REPORT_ROW.match(line)
+        if row:
+            usage.setdefault(row["shader"], set()).add(row["material"])
+            variants += int(row["variants"])
+    usage = {shader: sorted(mats) for shader, mats in usage.items()}
+    if total is None:
+        return usage, "has no Total variants: trailer"
+    if total != variants:
+        return usage, f"rows sum to {variants} variants but its Total variants: trailer says {total}"
+    return usage, None
+
+
+def missing_armory_shaders(plans, game_root: Path) -> tuple:
+    """(info_lines, problems) for the Armory's shaders (decision D12). The 1.4.x line installs no
+    shader sources, so any taom_ shader is a gap wherever an .rs file sits; a native shader needs
+    <game_root>/Shaders/Sources/<shader>.rs. Fails closed: what cannot be checked is a problem."""
+    armory = next((p for p in plans if p.name.casefold() == ARMORY_MODULE.casefold()), None)
+    if armory is None:
+        return [], []
+    report = armory.root / SHADER_REPORT
+    try:
+        text = report.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], [f"{ARMORY_MODULE} ships no {SHADER_REPORT}, so its shaders cannot be checked"]
+    usage, problem = parse_shader_report(text)
+    if problem:
+        return [], [f"{ARMORY_MODULE}/{SHADER_REPORT} {problem}"]
+
+    problems = []
+    sources = game_root / "Shaders" / "Sources"
+    native = sorted(s for s in usage if not s.startswith("taom_"))
+    if native and not sources.is_dir():
+        problems.append(f"no {sources} to check the Armory's native shaders against; "
+                        "pass --game-root <the game folder>")
+    for shader in sorted(usage):
+        mats = usage[shader]
+        named = f"{shader}: {', '.join(mats[:6])}{f' (+{len(mats) - 6} more)' if len(mats) > 6 else ''}"
+        if shader.startswith("taom_"):
+            problems.append(f"{named} (a taom_ shader; the 1.4.x line installs no shader sources, "
+                            "decision D12)")
+        elif sources.is_dir() and not (sources / f"{shader}.rs").is_file():
+            problems.append(f"{named} (no {shader}.rs in {sources})")
+    return [f"  {shader}: {len(usage[shader])} materials" for shader in sorted(usage)], problems
+
+
+# The 1.5.x line's tags. Decision D8: the 1.4.x line numbers its releases v2.4.x instead.
+FIVE_X_RELEASES = frozenset(f"v2.0.{n}" for n in range(29, 37))
+
+
+def release_number_problem(version) -> str | None:
+    """Why `version` cannot be a 1.4.x release number, else None."""
+    if not version:
+        return "no version recorded"
+    if not re.fullmatch(r"v\d+\.\d+\.\d+", version):
+        return (f"{version} is not a three-part vX.Y.Z (a hand-typed fourth part, like v2.0.29.5, "
+                "is in no commit)")
+    if version in FIVE_X_RELEASES:
+        return f"{version} is a 1.5.x release number (decision D8: the 1.4.x line uses v2.4.x)"
+    return None
+
+
 def _gb(n: int) -> float:
     return round(n / (1024 ** 3), 2)
 
@@ -309,6 +439,9 @@ def main(argv=None) -> int:
                     help="proceed even though unrecognised entries were found (they are still not copied)")
     ap.add_argument("--dry-run", action="store_true", help="report only; writes nothing")
     ap.add_argument("--json", metavar="PATH", help="write the manifest as JSON")
+    ap.add_argument("--game-root", metavar="PATH", default=None,
+                    help="game folder whose Shaders/Sources the Armory's native shaders need "
+                         "(default: the parent of --source)")
     args = ap.parse_args(argv)
 
     src = Path(args.source)
@@ -343,6 +476,43 @@ def main(argv=None) -> int:
                 print(f"  {p.name}/{rel}")
             if len(p.unknown) > 20:
                 print(f"  ... and {len(p.unknown) - 20} more in {p.name}")
+
+    retired = retired_binaries(plans)
+    if retired:
+        print("\nERROR: retired binaries in the source; delete them there (install bin folders or "
+              "the channel folder) and re-run:", file=sys.stderr)
+        for rel in retired:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    game_pass = game_pass_bins(plans)
+    if game_pass:
+        print("\nERROR: Game Pass is not supported, but the source holds a Game Pass bin (an old "
+              "TAOM.dll and more). Delete the folder from the install or the channel folder, and from any "
+              "old checkout's _Module/bin/ staging, then re-run:", file=sys.stderr)
+        for rel in game_pass:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    test_troops = test_troop_files(plans)
+    if test_troops:
+        print("\nERROR: Custom-Battle test troops (taom_test_ ids) in the source; delete these files "
+              "there (the install, or the channel folder) and redeploy before packaging:", file=sys.stderr)
+        for rel in test_troops:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    game_root = Path(args.game_root) if args.game_root else src.parent
+    shader_info, shader_problems = missing_armory_shaders(plans, game_root)
+    if shader_problems:
+        print("", file=sys.stderr)
+        for problem in shader_problems:
+            print(f"ERROR: shader sources: {problem}", file=sys.stderr)
+        return 2
+    if shader_info:
+        print("\nshader sources OK:")
+        for line in shader_info:
+            print(line)
 
     if args.json:
         manifest = {

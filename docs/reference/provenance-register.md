@@ -62,7 +62,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
 | BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll`; TAOM's own reflection calls `Disable()` on two ButterLib subsystems (interop-only): `Main/Features/CrashReport/Adapters/ButterLibExceptionHandlerAdapter.cs` `Main/Adapters/ButterLibDistanceMatrixAdapter.cs` | cleared |
-| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` | cleared |
+| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` and TAOM's own copy of `System.Runtime.CompilerServices.Unsafe.dll`, which the build writes into the install's `Modules/TAOM/bin/<platform>/` | cleared |
+| DryIoc (Maksim Volkau) | `DryIoc` `DryIoc.dll` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 4.8.8; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-11-05 | cleared |
+| Json.NET (James Newton-King) | `Newtonsoft.Json` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 13.0.3; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-11-05 | cleared |
 | Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
 | Yotthani VanillaTuning (shader-compile-notice) | `VanillaTuning` `HoN/VanillaTuning` `ShaderCompileNotice` | UNKNOWN (no licence file in `HoN/VanillaTuning`; shared with the maintainer by its author) | behavioural-port | `Main/Features/ShaderCompileNotice/**` | uncleared |
@@ -71,9 +73,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
-| external developer drop | `Features_fixed` | UNKNOWN | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | uncleared |
+| Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
-| TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
+| Yotthani TransferbuttonMenu | `TransferbuttonMenu` `HoN/TransferbuttonMenu` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | behavioural-port | `Main/Features/QuickActions/**` | cleared |
 | ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
 | BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,CollectAssemblyTypesShim}.cs` (`SubModuleConstructionGuard.cs` removed 2026-11, plan 137) `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
@@ -93,6 +95,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
 | TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
+| Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and `/release` Phase 1 (owed in-game checks) and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -313,14 +316,17 @@ than `n/a`. The reasoning recorded at the time was that BannerlordCoop is a publ
 shipping generated sources in plaintext and carries no policy forbidding it, unlike BT. That
 reasoning is worth confirming against the project's actual licence rather than left as an inference.
 
-### external developer drop, `Downloads/Features_fixed/` (UNCLEARED)
+### Yotthani HoN mods, the external developer drop `Downloads/Features_fixed/`
 
 Seven features were ported from a drop of decompiled C# supplied by an external developer:
 SiegeDismount, MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets,
 CompanionTactics. Planning record: [`docs/archive/feature-port-prompts/README.md`](../archive/feature-port-prompts/README.md).
 
-No license, grant, or terms are recorded anywhere in the repo. Several sites declare the derivation as
-verbatim rather than behavioural:
+Until 2026-10-09 no license, grant, or terms were recorded anywhere in the repo. On 2026-10-09 the maintainer
+stated: "Yotthani made everything MIT." That covers this code. `yotthani/bannerlord` has no root licence file yet
+(only `HoN/VanillaTuning` and `HoN/ShaderCacheKeeper` carry one), so yotthani is asked to add one. Several sites
+declare the derivation as verbatim rather than behavioural, which MIT allows with the notice now in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`:
 
 - `Main/Features/CompanionTactics/Roles/Models/CombatRole.cs:5` says "Ported verbatim from the original developer's drop"
 - `Main/Features/EquipPresets/Models/HoNEquipmentPreset.cs:7` says "Mirrors the decompiled-source shape verbatim"
@@ -330,8 +336,9 @@ Two artefacts carry the donor's identity into TAOM's own public surface: the `Ho
 (`HoNFormationPreset`, `HoNEquipmentPreset`, `HoNPresetItemReference`) and the deliberate reuse of the
 donor's TaleWorlds SaveSystem `BaseId 726900601` so its saves import.
 
-**To resolve:** check the drop folder itself for a LICENSE or README, then obtain written terms from
-the developer who supplied it.
+**Resolved 2026-10-09** by the maintainer's statement above; the MIT notice is in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`. **Still owed:** a root `LICENSE` in `yotthani/bannerlord`, asked of
+yotthani. The drop folder itself is gone.
 
 ### TAOM_Promoted / RF_Promoted (UNCLEARED)
 
@@ -340,10 +347,13 @@ as a "TAOM native rewrite of the `TAOM_Promoted` ('RF_Promoted') donor mod". `Do
 records "Ported from the donor mod's `FindUpgradedDescendantInParty`". No terms recorded. Distinct from
 the `Features_fixed` drop.
 
-### TransferbuttonMenu (UNCLEARED)
+### TransferbuttonMenu
 
 `Main/Features/QuickActions/**` is declared at [`docs/features/quick-actions.md:5`](../features/quick-actions.md)
-as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms recorded.
+as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms were recorded until 2026-10-09. The module is yotthani's:
+`yotthani/bannerlord` holds it as `HoN/TransferbuttonMenu`, with the same settings and actions (Sell Damaged, Sell
+Low Value, Unequip), compared on 2026-10-08. The maintainer's statement of 2026-10-09 in the section above (MIT)
+clears it too; its notice is the HoN section of `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 
 ### ServeAsSoldier (UNCLEARED)
 
