@@ -25,6 +25,7 @@ public class ServiceStatusServiceTests
     private ICommanderLordAdapter _commander;
     private IServiceStatusTextWriter _writer;
     private IEnlistmentContentConfigProvider _config;
+    private IEnlistmentWagePreview _wagePreview;
     private IHeroSkillXpAdapter _skillXp;
     private PromotionService _promotion;
     private ServiceStatusService _sut;
@@ -39,6 +40,10 @@ public class ServiceStatusServiceTests
         _writer = Substitute.For<IServiceStatusTextWriter>();
         _config = Substitute.For<IEnlistmentContentConfigProvider>();
         _config.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
+        // What service pays today: the rank's table wage, as ServiceRewardService.GetDailyWage answers it.
+        _wagePreview = Substitute.For<IEnlistmentWagePreview>();
+        _wagePreview.GetDailyWage().Returns(_ => WagePolicy.DailyWageForRank(
+            (int)_content.Record.Rank, EnlistmentContentConfigProvider.BuildDefaults().Progression.DailyWageByRank));
         _config.GetDuties().Returns(new EnlistmentDutiesConfig());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
 
@@ -52,7 +57,7 @@ public class ServiceStatusServiceTests
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1";
 
-        _sut = new ServiceStatusService(_store, _content, _commander, _writer, _promotion, _config);
+        _sut = new ServiceStatusService(_store, _content, _commander, _writer, _promotion, _config, _wagePreview);
     }
 
     private void Commander(
@@ -167,6 +172,15 @@ public class ServiceStatusServiceTests
         _content.Record.Rank = ServiceRank.Veteran;
 
         Assert.AreEqual(14, _sut.Build().DailyWage);
+    }
+
+    [TestMethod]
+    public void Build_DailyWage_IsWhatServicePaysToday_NotTheRanksTableWage()
+    {
+        _content.Record.Rank = ServiceRank.Sergeant;
+        _wagePreview.GetDailyWage().Returns(0);
+
+        Assert.AreEqual(0, _sut.Build().DailyWage, "while the column is lost nothing is paid, and the board must not promise it");
     }
 
     [TestMethod]

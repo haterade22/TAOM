@@ -13,6 +13,7 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.UI;
 public sealed class ActionButtonVM : ViewModel
 {
     private readonly Action _executeAction;
+    private readonly Action _onExecuted;
     private bool _isActive;
 
     [DataSourceProperty]
@@ -20,9 +21,6 @@ public sealed class ActionButtonVM : ViewModel
 
     [DataSourceProperty]
     public string DisplayText { get; }
-
-    [DataSourceProperty]
-    public string Hotkey { get; }
 
     [DataSourceProperty]
     public string CategoryColor { get; }
@@ -45,23 +43,24 @@ public sealed class ActionButtonVM : ViewModel
         }
     }
 
-    public ActionButtonVM(BattleAction action)
+    public ActionButtonVM(BattleAction action, Action onExecuted = null)
     {
         ActionId = action.Id;
         DisplayText = action.Label;
-        Hotkey = action.Hotkey;
         CategoryColor = MapCategoryColor(action.Category);
         MappedStance = MapStance(action.Id);
         _executeAction = action.Execute;
+        _onExecuted = onExecuted;
     }
 
     public void ExecuteAction()
     {
-        // Don't self-toggle IsActive. The parent VM re-syncs from ITroopStanceManager via
-        // SyncActiveFromStance(formationIndex) immediately after invoking the action callback,
-        // and again on the next refresh tick. This keeps the button in sync with stance state
-        // even when an external path (Patch35_Formation_SetMovementOrder) clears the stance.
+        // Don't self-toggle IsActive. The parent VM re-syncs from ITroopStanceManager (the onExecuted
+        // callback) immediately after the action runs, and again on the next refresh tick. This keeps the
+        // button in sync with stance state even when an external path (Patch35_Formation_SetMovementOrder)
+        // clears the stance.
         _executeAction?.Invoke();
+        _onExecuted?.Invoke();
     }
 
     /// <summary>Map an action button's id to the stance the button toggles. Returns

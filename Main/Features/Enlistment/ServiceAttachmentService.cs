@@ -63,9 +63,10 @@ public class ServiceAttachmentService : IServiceAttachmentService
 
         // THE PRESENCE HOLD (#577). A live PlayerEncounter in EnlistedBattle is the battle itself,
         // its loot and aftermath window, or the join gap between EnsureEncounterAgainst and
-        // JoinBattle. The aftermath window is the trap: MapEventSide.Clear() nulls
-        // MainParty.MapEvent BEFORE the encounter closes, so it reads as "no battle anywhere" to
-        // every rule below and used to fall through to AttachRequired. A park clears AttachedTo,
+        // JoinBattle. The trap is any moment with the encounter open and the party in no map event
+        // yet or any more: the join gap, and the inside of `PlayerEncounter.Finish` after
+        // `FinalizeEvent` (where #577's reconcile ran, raised by our own army leave). That reads as
+        // "no battle anywhere" to every rule below and used to fall through to AttachRequired. A park clears AttachedTo,
         // which pulls an active party off its MapEventSide (MobileParty.SetAttachedToInternal),
         // and "Send troops" then indexes BattleSimulation.SelectedTroops[-1]. The engine owns the
         // party until the encounter closes, exactly as it does in captivity.
@@ -82,11 +83,7 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (state == EnlistmentState.EnlistedBattle && player.HasPlayerEncounter)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.BattleEncounterOpen);
 
-        // IsPrisoner is checked explicitly even though a captured hero's PartyBelongedTo
-        // goes null in practice — the engine correlation is not guaranteed by contract,
-        // and this keeps the fitness criteria identical to IsCommanderFit/ReconcileGrace.
-        if (commander == null || !commander.Exists || !commander.IsAlive || commander.IsPrisoner
-            || !commander.HasParty || !commander.PartyIsActive)
+        if (commander == null || !commander.IsFit)
         {
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing);
         }

@@ -38,8 +38,7 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
             return EnlistGateResult.UnderMercenaryContract;
 
         var snapshot = _commander.GetSnapshot(partnerHeroId);
-        if (!snapshot.Exists || !snapshot.IsAlive || snapshot.IsPrisoner
-            || !snapshot.HasParty || !snapshot.PartyIsActive)
+        if (!snapshot.IsFit)
         {
             return EnlistGateResult.CommanderUnavailable;
         }
@@ -55,7 +54,7 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
         return EnlistGateResult.Ok;
     }
 
-    public bool CanRequestDischargeFrom(string partnerHeroId)
+    public bool IsServingUnder(string partnerHeroId)
     {
         return _store.Record.IsEnlisted
             && !string.IsNullOrEmpty(partnerHeroId)

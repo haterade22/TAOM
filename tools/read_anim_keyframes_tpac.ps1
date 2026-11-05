@@ -28,7 +28,7 @@ param(
   # started; the horse rig lives in EmAssetPackages\pack_horse_customrig for the war ram's charge
   # clips, so the path had to stop being hardcoded. Relative to $NativeDir.
   [string]$SkeletonPackage = "EmAssetPackages\human\human.tpac",
-  [string]$TpacToolBin = "E:\Bannerlord_Art\TpacTool_0.4.0\TpacTool\bin",
+  [string]$TpacToolBin = "E:\Release_v0.5.1\bin",
   [string]$NativeDir   = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\Native"
 )
 $ErrorActionPreference = "Stop"

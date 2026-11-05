@@ -31,4 +31,13 @@ public interface IEnlistmentMenuService
     /// leaves the latched state (#827).
     /// </summary>
     bool ShouldBlockBattleExit();
+
+    /// <summary>
+    /// What the encounter menu's 'Send troops' option should do for this soldier (#830). Gated exactly
+    /// like <see cref="ShouldBlockBattleExit"/>: <see cref="SitOutVerdict.Unchanged"/> unless he is in
+    /// the commander's battle and does not lead his side, with no snapshot read outside that gate. The
+    /// verdict is also recorded in <see cref="SitOutLedger"/> for the battle-end payout, on every path
+    /// except while the player's map event already has a winner.
+    /// </summary>
+    SitOutVerdict EvaluateSitOut();
 }

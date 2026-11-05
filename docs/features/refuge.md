@@ -84,7 +84,9 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 - **An upgrading refuge is not ready** (defence, militia, raids, manage all drop until the rebuild
   finishes). Deliberate difference from the source, pinned by tests.
 - **AI re-pinned on load** (`SetMoveModeHold` + `SetDoNotMakeNewDecisions`): the source pinned only
-  at spawn, so refuges could wander after a reload.
+  at spawn. The engine saves the pin (`MobilePartyAi.DoNotMakeNewDecisions` is
+  `[SaveableProperty(11)]`) and a refuge is never unpinned, so the load pin is an idempotent belt for
+  a party whose founding pin threw or an orphan adopted from an older save.
 - **Raids ship OFF** (experimental in the source, same default here).
 - **A refuge never disbands; warden death orphan-adopts.** Vanilla starts its disband flow itself
   when a party leader dies with no other hero in the roster (1.4.8 `KillCharacterAction.MakeDead`:

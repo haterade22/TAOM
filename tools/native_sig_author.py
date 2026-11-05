@@ -11,6 +11,7 @@ scene). All of these are engine-version-specific; a single wrong value corrupts
 memory. This tool lets us locate the functions and PROVE each offset against the
 installed binary offline (no IDA/Ghidra, no game running), so only verified
 values ship.
+To carry an RVA from one engine build to another, use tools/native_build_match.py.
 
 Capabilities:
   * PE load (pefile): image base, section map, RVA<->file-offset.

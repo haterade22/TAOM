@@ -20,6 +20,7 @@ The `Agent` class is sealed (cannot subclass). Warg AI must run alongside the ex
 
 - **BehaviorTreeAgentComponent** (TAOM-inlined at `Main/BehaviorTreeWrapper/`, was vendored `BehaviorTreeWrapper.dll` until 2026-05-24) — attached to each warg `Agent` via `AddComponent`, manually ticked by `WargMissionBehavior.OnMissionTick`
 - **AutonomousMovementPlayerController** — `[DefaultView]` MissionView that takes over player movement during rage mode
+- **One controller instance per mission.** The engine builds it from `[DefaultView]` when the mission opens, before `MissionScreen.OnMissionAfterStarting` registers the views, so it ticks and finalizes. SubModule adds none: a MissionView added in `Mission.AfterStart` is never registered with the screen (#970), and the second instance it used to add leaked its `EarlyStart` handlers.
 - **SpatialGrid** — O(1) cell-based spatial partitioning for enemy proximity queries
 - **CustomAttacksUtils** — reflection-based `Mission.RegisterBlow` access for programmatic damage
 
@@ -54,23 +55,24 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 |----------|-------|-------------|
 | `WargAttackRange` | 1.0f | Attack hit range |
 | `SleepAfterAttack` | 3 | Seconds idle after non-rage attack |
+| `TargetDetectionRange` | 20f | Target scan radius (m) |
 | `MaxSpeedDamage` | 20 | Maximum speed-based damage component |
 | `MaxBaseDamage` | 40 | Maximum base damage component |
-| `SpeedForMaxDamage` | 8.0f | Velocity for max speed damage |
+| `SpeedForMaxDamage` | 20f | Velocity (m/s) for max speed damage |
 | `DamageToFlinch` | 10 | Damage threshold for flinch animation |
-| `DamageToFall` | 20 | Damage threshold for fall animation |
+| `DamageToFall` | 40 | Damage threshold for fall animation |
 | `rageChance` | 0.1 | 10% chance to enter rage on hit |
 | `minDamageReceivedForRage` | 10 | Minimum damage to trigger rage roll |
 | `minRageAttacks` | 2 | Minimum attacks in rage mode |
 | `maxRageAttacks` | 3 | Maximum attacks in rage mode |
-| `maxDistanceFromWargToRollForRage` | 10.0f | Max distance from attacker for rage |
+| `maxDistanceFromWargToRollForRage` | 20 | Max distance from attacker for rage |
 
 ### Rage Mode Flow
 
 1. Warg takes >10 damage from enemy within 10 units
 2. 10% chance to enter rage (2-3 attacks)
 3. Player: loses control, sees "Your warg entered into a rage" message
-4. AI: rider leaves formation, warg navigates to enemy
+4. AI: rider leaves formation (its live formation is stored first and restored when the rage ends or the warg dies; a warg spawned after the first scan used to store null), warg navigates to enemy
 5. Warg attacks, decrementing rage counter
 6. On completion/timeout (6s)/enemy death: control returns
 

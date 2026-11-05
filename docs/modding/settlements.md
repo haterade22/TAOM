@@ -335,7 +335,7 @@ Check: `python tools/validate_moduledata.py --code LANDLESS_CULTURE`
 Takes effect: next save load
 Code: No code changes needed
 
-**3. Rename a settlement.** Change the fallback text after `{=KEY}` in `name=` and the matching `text=` row in all 12 `loc_settlements.xml`. **Never change the `id`.** [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) does all 13 files in one pass and preserves the file's UTF-8 and CRLF bytes. The idiom table per region prefix is in [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md).
+**3. Rename a settlement.** Change the fallback text after `{=KEY}` in `name=` and the matching `text=` row in all 12 `loc_settlements.xml`. **Never change the `id`.** [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) does all 13 files in one pass and preserves the file's UTF-8 and CRLF bytes. It writes only the ids whose English changed, runs dry until `--apply`, refuses a name another settlement already carries, and removes each renamed id from `tools/translation_cache/<lang>.json` so the next translator run cannot write the old name back. The idiom table per region prefix is in [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md).
 
 Check: `python tools/check_external_loc_coverage.py`
 Takes effect: next save load

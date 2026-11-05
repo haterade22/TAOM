@@ -31,8 +31,27 @@ public interface IServiceMaintenanceService
     event Action<string> BattleJoinRequested;
 
     /// <summary>
-    /// Advance the loop. <paramref name="dt"/> is real seconds since this source last pumped;
-    /// sources share one budget so adding a second cannot double the work rate.
+    /// A request to join the commander's battle, from the hourly reconciler (#954). A join into a RAID is deferred
+    /// to the next wait-menu frame when it is not already inside one and the service wait menu is current: a join
+    /// raised from a tick runs before <c>MapEventManager.Tick</c> in the same frame, which updates a raid even
+    /// when it is the player's own event, so a simulation session could run with the soldier inside. Every other
+    /// join, and any join off the service wait menu, is raised at once (the battle-start edge too, by design: see
+    /// docs/features/enlistment.md, #954 open risk 1).
+    /// </summary>
+    void RequestBattleJoin(string commanderHeroId);
+
+    /// <summary>
+    /// The wait-menu frame: performs a deferred raid join (the safe point: the join's switch to the encounter menu
+    /// sets Stop), then pumps with <paramref name="realElapsedSeconds"/> only when
+    /// <paramref name="campaignDeltaSeconds"/> is exactly zero, meaning no campaign time passed since the previous
+    /// wait-menu frame (while time runs, <c>TickEvent</c> already pumps the frame).
+    /// </summary>
+    void OnWaitMenuFrame(double campaignDeltaSeconds, float realElapsedSeconds, double nowHours);
+
+    /// <summary>
+    /// Advance the loop. <paramref name="dt"/> is the campaign tick's delta from the map source; from the
+    /// wait-menu source it is real seconds since the previous wait-menu frame (that clock restarts every frame). The sources share one budget, and the wait-menu tick only feeds it while campaign
+    /// time is stopped.
     /// <paramref name="nowHours"/> is campaign hours, supplied by the boundary behaviour — the
     /// same clock the hourly reconciler uses (it passes days; the shared retry budget is stored in
     /// HOURS and the reconciler converts, pinned by a test so the two can never disagree).

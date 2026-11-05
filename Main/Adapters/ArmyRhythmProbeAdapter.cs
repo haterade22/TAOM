@@ -29,7 +29,8 @@ public sealed class ArmyRhythmProbeAdapter : IArmyRhythmProbeAdapter
                 return probe;
 
             probe.InArmy = party.Army != null;
-            probe.InSiege = party.SiegeEvent != null;
+            // MobileParty.SiegeEvent is the besieger's camp event: null for a defender inside the town.
+            probe.InSiege = party.SiegeEvent != null || party.CurrentSettlement?.SiegeEvent != null;
             probe.AtSea = party.IsCurrentlyAtSea;
             probe.Blockade = probe.InSiege && probe.AtSea;
             probe.InSettlement = party.CurrentSettlement != null;

@@ -1,7 +1,8 @@
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -10,25 +11,32 @@ using TAOM.Features.CompanionTactics.BattleActionBar.UI;
 namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 
 /// <summary>
-/// MissionView that owns the BattleActionBar GauntletLayer lifecycle. Field battles only
-/// (gated on <c>Mission.Mode == Battle &amp;&amp; !IsSiegeBattle</c>). Refreshes the action
-/// bar VM at most twice per second based on the player's selected formation.
+/// MissionView that owns the BattleActionBar GauntletLayer lifecycle. Built by the engine as a
+/// <c>[DefaultView]</c> in every mission with a screen (MissionScreen.OnMissionAfterStarting registers it), because a
+/// view TAOM adds in OnMissionBehaviorInitialize is never registered and never ticks (#970). Attaches in field
+/// battles (<c>Mission.IsFieldBattle</c>) on the first screen tick once the mode is Battle: the mode is Deployment at
+/// screen init (DeploymentHandler.AfterStart). The layer takes mouse buttons and nothing else, so the cursor stays
+/// hidden and attack, block and the camera keep working. Parked (#970): with the cursor hidden the engine pins it to
+/// the screen centre, so a button can be clicked only while another view shows a cursor (the Esc menu); the stances
+/// change nothing in battle, so the setting is off by default. Refreshes the action bar VM at most twice per second
+/// based on the player's selected formation. Turning the setting off mid-battle removes the layer.
 /// </summary>
+[DefaultView]
 public sealed class BattleActionBarMissionView : MissionView
 {
     private const float RefreshIntervalSec = 0.5f;
-    private const int MaxHotkeys = 9;
 
-    private ICompanionTacticsSettingsProvider _settings;
-    private IBattleActionBarService _service;
-    private ITroopStanceManager _stances;
-    private IModLogger _logger;
+    private ICompanionTacticsSettingsProvider? _settings;
+    private IBattleActionBarService? _service;
+    private ITroopStanceManager? _stances;
+    private IModLogger? _logger;
 
-    private GauntletLayer _layer;
-    private BattleActionBarVM _vm;
+    private GauntletLayer? _layer;
+    private GauntletMovieIdentifier? _movie;
+    private BattleActionBarVM? _vm;
     private bool _isInitialized;
+    private bool _attachAttempted;
     private float _refreshAccumulator;
-    private Formation _lastFormation;
 
     public override void OnMissionScreenInitialize()
     {
@@ -38,27 +46,28 @@ public sealed class BattleActionBarMissionView : MissionView
         _stances = IoC.Resolve<ITroopStanceManager>();
         _logger = IoC.Resolve<IModLogger>();
 
-        if (_settings == null || !_settings.EnableBattleActionBar)
+        if (Mission.IsFieldBattle)
         {
-            _logger?.LogInfo("[BattleActionBar] disabled via MCM — patches inert");
-            return;
+            _logger?.LogInfo($"[BattleActionBar] screen init: MissionScreen={(MissionScreen != null ? "set" : "NULL")} mode={Mission.Mode} enabled={_settings?.ShowBattleActionBar}");
         }
-        if (!IsFieldBattle())
-        {
-            return;
-        }
+    }
+
+    private void TryAttachLayer()
+    {
+        if (_service == null || _stances == null) return;
 
         try
         {
+            // A mission that ended without EndMission leaves its stances behind.
+            _stances.ClearAllStances();
             _vm = new BattleActionBarVM(_service, _stances);
             _layer = new GauntletLayer("GauntletLayer", 100, false);
-            // Required: without InputRestrictions the layer renders but never registers with the
-            // MissionScreen's input dispatcher — mouse clicks on the action-bar buttons silently
-            // fall through. The hotkey path via HandleHotkeyInput continues to work either way
-            // (it polls Mission.InputManager directly), which is why this latent bug was masked
-            // until #225. Same fix class as #202 / d141304.
-            _layer.InputRestrictions.SetInputRestrictions();
-            _layer.LoadMovie("BattleActionBar", _vm);
+            // Mouse buttons only. The parameterless restriction call shows the
+            // cursor and takes all input, which stops MissionMainAgentController's attack and block (it runs
+            // only while the mouse is hidden) and turns the camera into an edge scroll. Without any restriction
+            // the layer never registers with the MissionScreen's input dispatcher and clicks fall through.
+            _layer.InputRestrictions.SetInputRestrictions(false, InputUsageMask.MouseButtons);
+            _movie = _layer.LoadMovie("BattleActionBar", _vm);
             MissionScreen.AddLayer(_layer);
             _isInitialized = true;
             _logger?.LogInfo("[BattleActionBar] mission init — layer attached");
@@ -72,8 +81,24 @@ public sealed class BattleActionBarMissionView : MissionView
     public override void OnMissionScreenTick(float dt)
     {
         base.OnMissionScreenTick(dt);
-        if (!_isInitialized || _vm == null) return;
-        if (_settings == null || !_settings.EnableBattleActionBar) return;
+        if (_settings == null) return;
+        if (!_settings.ShowBattleActionBar)
+        {
+            // Turned off mid-battle: hide the bar, drop the layer and its input restrictions. Turning it back
+            // on attaches once more (the attach guard is _isInitialized, so a layer is never added twice).
+            if (_isInitialized) DetachLayer();
+            _attachAttempted = false;
+            return;
+        }
+        if (!_isInitialized)
+        {
+            // Mode is Deployment at screen init in a field battle (DeploymentHandler.cs:41): attach on the first Battle tick.
+            if (_attachAttempted || !ShouldAttach(true, Mission.IsFieldBattle, Mission.Mode)) return;
+            _attachAttempted = true;
+            TryAttachLayer();
+            if (!_isInitialized) return;
+        }
+        if (_vm == null) return;
 
         _refreshAccumulator += dt;
         if (_refreshAccumulator >= RefreshIntervalSec)
@@ -81,30 +106,36 @@ public sealed class BattleActionBarMissionView : MissionView
             _refreshAccumulator = 0f;
             RefreshFromSelectedFormation();
         }
-
-        HandleHotkeyInput();
     }
 
     public override void OnMissionScreenFinalize()
     {
         if (_isInitialized)
         {
-            try
-            {
-                _stances?.ClearAllStances();
-                if (_layer != null)
-                {
-                    _layer.InputRestrictions.ResetInputRestrictions();
-                    MissionScreen?.RemoveLayer(_layer);
-                }
-            }
-            catch (System.Exception ex) { _logger?.LogWarning($"[BattleActionBar] cleanup: {ex.Message}"); }
-            _vm?.OnFinalize();
-            _vm = null;
-            _layer = null;
-            _isInitialized = false;
+            _stances?.ClearAllStances();
+            DetachLayer();
         }
         base.OnMissionScreenFinalize();
+    }
+
+    private void DetachLayer()
+    {
+        try
+        {
+            if (_vm != null) _vm.IsVisible = false;
+            if (_layer != null)
+            {
+                if (_movie != null) _layer.ReleaseMovie(_movie);
+                _layer.InputRestrictions.ResetInputRestrictions();
+                MissionScreen?.RemoveLayer(_layer);
+            }
+        }
+        catch (System.Exception ex) { _logger?.LogWarning($"[BattleActionBar] cleanup: {ex.Message}"); }
+        _vm?.OnFinalize();
+        _vm = null;
+        _layer = null;
+        _movie = null;
+        _isInitialized = false;
     }
 
     private void RefreshFromSelectedFormation()
@@ -115,54 +146,15 @@ public sealed class BattleActionBarMissionView : MissionView
         var formation = (selected != null && selected.Count > 0) ? selected[0] : null;
 
         // P3-1 fix (Codex review #36, 2026-05-06): the original code short-circuited when
-        // formation == _lastFormation, which prevented the bar from picking up external
+        // the formation matched the previous one, which prevented the bar from picking up external
         // stance changes (Patch35_Formation_SetMovementOrder cleared the stance but the
         // visible button stayed highlighted). Lift the short-circuit; on same-formation
         // refresh we still rebuild buttons + re-sync IsActive from the stance manager,
         // which is cheap (≤9 buttons) and runs at most twice per second.
-        _lastFormation = formation;
         var adapter = formation != null ? new FormationAdapter(formation) : null;
-        _vm.UpdateForFormation(formation, adapter);
+        _vm!.UpdateForFormation(formation, adapter);
     }
 
-    private void HandleHotkeyInput()
-    {
-        if (Mission.Current?.InputManager == null) return;
-
-        for (var i = 1; i <= MaxHotkeys; i++)
-        {
-            var key = NumKey(i);
-            if (key == InputKey.Invalid) continue;
-            if (Mission.Current.InputManager.IsKeyPressed(key))
-            {
-                var button = _vm?.TryGetActionByHotkeyIndex(i);
-                button?.ExecuteAction();
-                // After the action mutates stance state, re-derive each button's IsActive
-                // so the visible highlight matches the stance manager (P3-1).
-                _vm?.SyncActiveFromStance();
-            }
-        }
-    }
-
-    private static InputKey NumKey(int index) => index switch
-    {
-        1 => InputKey.D1,
-        2 => InputKey.D2,
-        3 => InputKey.D3,
-        4 => InputKey.D4,
-        5 => InputKey.D5,
-        6 => InputKey.D6,
-        7 => InputKey.D7,
-        8 => InputKey.D8,
-        9 => InputKey.D9,
-        _ => InputKey.Invalid,
-    };
-
-    private static bool IsFieldBattle()
-    {
-        var mission = Mission.Current;
-        if (mission == null) return false;
-        if (mission.Mode != MissionMode.Battle) return false;
-        return !mission.IsSiegeBattle;
-    }
+    internal static bool ShouldAttach(bool enabled, bool isFieldBattle, MissionMode mode) =>
+        enabled && isFieldBattle && mode == MissionMode.Battle;
 }

@@ -42,7 +42,7 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
             "hero_main_options",
             "taom_enlist_reassign_pick",
             "{=taom_enlist_reassign}I would take a different place in the line.",
-            () => _gate.CanRequestDischargeFrom(Hero.OneToOneConversationHero?.StringId),
+            () => _gate.IsServingUnder(Hero.OneToOneConversationHero?.StringId),
             null,
             109,
             ReassignIsClickable);

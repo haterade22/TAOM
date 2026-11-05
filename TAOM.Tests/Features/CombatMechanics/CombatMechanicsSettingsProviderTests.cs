@@ -36,7 +36,7 @@ public class CombatMechanicsSettingsProviderTests
         var settings = new TaomSettings();
         var json = new ChargeKnockdownConfig();
 
-        Assert.AreEqual((int)json.AutoKnockdownWeightRatio, settings.ChargeAutoKnockdownWeightRatio);
+        Assert.AreEqual((int)json.AutoKnockdownWeightRatio, settings.ChargeAutoKnockdownRatio);
     }
 
     [TestMethod]
@@ -76,7 +76,7 @@ public class CombatMechanicsSettingsProviderTests
             (s => s.EnableShieldPenetration = true, p => p.ShieldPenetrationEnabled, true),
             (s => s.EnableRaceCombatModifiers = false, p => p.RaceCombatModifiersEnabled, false),
             (s => s.CrushThroughMaxChance = 0.25f, p => p.CrushThroughMaxChance, 0.25f),
-            (s => s.ChargeAutoKnockdownWeightRatio = 10, p => p.ChargeAutoKnockdownWeightRatio, 10f),
+            (s => s.ChargeAutoKnockdownRatio = 10, p => p.ChargeAutoKnockdownWeightRatio, 10f),
         };
 
         for (int i = 0; i < rows.Length; i++)
@@ -134,5 +134,24 @@ public class CombatMechanicsSettingsProviderTests
         Assert.IsFalse(sut.ChargeKnockdownEnabled, nameof(sut.ChargeKnockdownEnabled));
         Assert.IsFalse(sut.ShieldPenetrationEnabled, nameof(sut.ShieldPenetrationEnabled));
         Assert.IsFalse(sut.RaceCombatModifiersEnabled, nameof(sut.RaceCombatModifiersEnabled));
+    }
+
+    // The parity default moved 8 to 6 under a new MCM name, so no TAOM.json saved before keeps 8; the MCM and
+    // compiled JSON defaults must agree.
+    [TestMethod]
+    public void McmDefault_ChargeAutoKnockdownRatio_MatchesTheCompiledJsonDefault()
+    {
+        Assert.AreEqual(6, new TaomSettings().ChargeAutoKnockdownRatio);
+        Assert.AreEqual((int)new ChargeKnockdownConfig().AutoKnockdownWeightRatio, new TaomSettings().ChargeAutoKnockdownRatio);
+    }
+
+    [TestMethod]
+    public void Mcm_ChargeAutoKnockdownRatio_IsTheValueTheProviderReturns()
+    {
+        var config = Substitute.For<ICombatMechanicsConfigProvider>();
+        config.GetConfig().Returns(new CombatMechanicsConfig());
+        var sut = new CombatMechanicsSettingsProvider(config, new TaomSettings { ChargeAutoKnockdownRatio = 10 });
+
+        Assert.AreEqual(10f, sut.ChargeAutoKnockdownWeightRatio, 0.0001f);
     }
 }

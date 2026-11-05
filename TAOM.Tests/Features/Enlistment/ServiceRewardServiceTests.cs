@@ -197,6 +197,22 @@ public class ServiceRewardServiceTests
     }
 
     [TestMethod]
+    public void PayDailyWage_ArrearsAboveCap_TodaysWageIsPaidFirstAndNothingForfeits()
+    {
+        // A mid-term table or cap change left 1000 banked against a 140 cap (14 days x 10). The
+        // commander delivers exactly today's 10: that is the wage, so the debt stays 1000.
+        _configValue.Progression.DailyWageByRank[0] = 10;
+        _configValue.WagePolicy.MaxDeferredWageDays = 14;
+        _contentStore.Record.DeferredWages = 1000;
+        _goldTransfer.TransferToPlayer("lord_1_1", Arg.Any<int>()).Returns(call => System.Math.Min(call.ArgAt<int>(1), 10));
+
+        var decision = _service.PayDailyWage();
+
+        Assert.AreEqual(1000, _contentStore.Record.DeferredWages);
+        Assert.AreEqual(0, decision.Forfeited);
+    }
+
+    [TestMethod]
     public void PayDailyWage_CapReached_LogsTheForfeitedGold()
     {
         // The real defect: the clamp destroyed the player's back pay in total silence. Roughly

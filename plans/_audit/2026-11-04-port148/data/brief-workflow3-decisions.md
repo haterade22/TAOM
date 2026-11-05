@@ -271,3 +271,30 @@ otherwise stands, including the data rule (rule 2), the WP102 and WP103 waiver (
    registered and untranslated, and the translation pass is listed as owed.
 5. **Known plan misprediction.** A compile-RED step that predicts CS0122 for a private member in another assembly prints
    CS1061 at that same member: Roslyn does not import private metadata. Treat that as matching and note it (WP119).
+
+## D27: the delegated run (2026-11-05, maintainer's instruction)
+
+The maintainer delegated the remaining choices: "Proceed with all of your best recommendations." This covers plan choices
+and STOP rulings. It does not lift `config-protection.sh` (`.claude/settings*.json`, `Directory.Build.props`, `docs/adrs`) or
+authorize a push, tag, release or paid call. D25 and D26 otherwise stand.
+
+1. **WP136.** The `placeholder` commit and its revert were dropped by rebase; the tree is unchanged. A0 is read as scoped:
+   what needs WP108 B4 stays deferred and the rest lands. A4 lands: every feat value stays, and the Rhun and Harwan cards are
+   reworded to state the percent their feats already give (no number is invented; language rows that cannot be updated
+   without a paid call are listed as owed). E1 lands without `PrefabSpriteTests`: all 19 unknown sprites sit in `ROTsprite.xml`,
+   `EventXml.xml`, `mainmenuHUD.xml` and `PoppyHUD.xml`, dead files WP140 deletes, so the test lands with WP140. E2 lands.
+   E3 stays the maintainer's.
+2. **WP115.** Part A lands. B1 is the maintainer's (M1), so later steps land only where they do not depend on its target. M2
+   and M3 stay the maintainer's.
+3. **WP121.** Part A lands, plus any of Part C that does not need Part B's Kit output. B, D and E stay the maintainer's.
+4. **WP122.** Step 0's B1 token is waived because B1 is deferred. C4 waits for M2. C2 and C3 stop individually if Ruff or
+   ShellCheck is absent. Part D is not run: it is optional, edits `Main/TAOM.csproj` and changes two Siege behaviours with no
+   in-game test behind them yet.
+5. **WP139 and WP140** run. A Step 0 token that only WP102 or WP103 supplies is waived under D25 rule 4; `.claude/` hunks are
+   deferred and listed. WP140 also takes `PrefabSpriteTests` (see 1).
+6. **WP130 Step F3 lands.** Four `default_group` tags are not a reference, so D25 rule 2 allows them.
+7. **WP137 Part D lands last.** The two "gone" rows are not gone if their targets appear under the nested classes
+   `ContainerLoadData_Fill_Patch+InitializeReadersSite` and `HeaderLoadData_Readers_Patch+ObjectHeaderReadersSite`; the executor
+   confirms that. `Patch37_CrashReport` is a marker class with no `[HarmonyPatch]`, so that row of the six-class grep expects 0.
+8. **Still held:** 102, 103, 116, 138, 142, 143, 145, WP108 B4 and what needs it in WP136, WP127 Parts C and M. Each waits on the
+   protected files or on those WPs. Nothing here routes around the guard.

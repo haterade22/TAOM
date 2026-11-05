@@ -27,6 +27,14 @@ different bugs that looked like one:
   `sk_dwarf_underwear_female_a`) — no managed exception, therefore no crash bundle at all. Fixed
   separately (#403); gate: `python tools/validate_mesh_refs.py --no-rgl-log`.
 
+**Corrected 2026-11-04 (plan 144, from the 1.5.x line's decode of 2026-09-26):** the crash's faulting address
+(`0x24C`, 98 x 6) decodes to the static face morph over `sk_dwarf_bm_f1_head.eye`, a face part with no morph channels
+(#385); the underwear name was a second, real defect. What stopped the crashes was the 2026-08-11 stopgap
+(`dccbb9a3b`, on this line) that moved the adult woman onto the male base meshes (`sm_dwarf_basemesh_a1_*`); the
+laptop's installed Armory (2026-09-07) is in that state. The 1.5.x line restored her own meshes in the shared live
+Armory on 2026-09-26, which a 1.4.x release carries only if it pairs with a newer Armory (in-game check 4).
+[race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md).
+
 The data sweep that preceded the fix is worth not repeating: every `<NPCCharacter>` in the load order
 (5,166 across TAOM, TAOM_Map, SandBoxCore, SandBox, Native, LOTRLOME_Armory) carries a `culture=`
 attribute except two multiplayer-only entries; `as_dwarf_*` action sets are at 90/90 parity with
@@ -62,9 +70,9 @@ delegate. Investigation: [investigation-dunland-tournament-ctd-2026-08-02.md](..
 
 ## Why This Exists
 
-- **Vanilla behavior:** [DefaultTournamentModel](E:\Decompiled_Bannerlord\Campaign\TaleWorlds.CampaignSystem\TaleWorlds\CampaignSystem\GameComponents\DefaultTournamentModel.cs) returns participant-agnostic armor — every participant in a town tournament wears the host culture's kit regardless of their own. Reward items come from a global pool with no cultural filtering. And the tournament *weapon* templates (`CultureObject.TournamentTeamTemplatesFor{One,Two,Four}Participant`, or the `tournament_template_empire_*` fallback) include mounted loadouts, so some participants are spawned on horseback.
+- **Vanilla behavior:** `DefaultTournamentModel.GetParticipantArmor` (v1.4.8, taom-src `DefaultTournamentModel.cs:86-93`) dresses fighters two ways, by mission mode. A tournament match runs in `MissionMode.Tournament` (`TournamentBehavior.StartMatch` sets it, `TournamentBehavior.cs:166`, before the controller copies the armour in `AddRandomClothes`, `TournamentFightMissionController.cs:358`), so every fighter keeps the armour of his own `RandomBattleEquipment`. An arena practice fight runs in any other mode, and there every fighter, the player included, wears the practice kit of the host settlement's map-faction culture (`gear_practice_dummy_<culture>`, else the empire's), whatever his own culture or race. Reward items come from a global pool with no cultural filtering. And the tournament *weapon* templates (`CultureObject.TournamentTeamTemplatesFor{One,Two,Four}Participant`, or the `tournament_template_empire_*` fallback) include mounted loadouts, so some participants are spawned on horseback.
 - **TAOM requirement:** TAOM ships per-race skeletons (dwarves, elves, hobbits) via [hero-race.md](hero-race.md). (a) Human armor on a dwarf skeleton clips through the body. (b) A **mounted** dwarf is worse: the dwarf's custom rider bone is misaligned, so the dwarf model spawns *inside* the horse — the same defect the `EyeHeightAdjustmentHook` eye-height workaround exists for. Each culture also has LOTR-themed weapon/armor families that tournament rewards should reflect.
-- **Without this feature:** armor clipping during tournaments + thematic wrong-faction reward items + **dwarves visibly stuck inside horses** when their loadout rolls a mounted template.
+- **Without this feature:** armour clipping in arena practice fights (every race in the host's kit), thematic wrong-faction reward items, and **dwarves visibly stuck inside horses** when their loadout rolls a mounted template. Tournament matches would not clip: vanilla keeps each fighter's own armour there.
 
 ## Architecture
 
@@ -72,7 +80,7 @@ delegate. Investigation: [investigation-dunland-tournament-ctd-2026-08-02.md](..
 
 ### Design Challenge
 
-`DefaultTournamentModel.GetParticipantArmor` takes a `CharacterObject` but returns a single `Equipment` built from the host town's culture — no per-participant resolution. **The mount is a separate problem entirely:** `GetParticipantArmor` only governs armor/clothing (slots 5–9). The horse (slot 10) comes from a *different* path — `TournamentFightMissionController.PrepareForMatch` clones the culture weapon template into each `participant.MatchEquipment`, and `AddRandomClothes` (which calls `GetParticipantArmor`) copies only slots 5–9 on top. So overriding `GetParticipantArmor` can never remove a horse — that required a separate Harmony patch (Patch46).
+`DefaultTournamentModel.GetParticipantArmor` resolves armour per participant only in a tournament match (his own `RandomBattleEquipment`); in an arena practice fight it returns the host faction's practice kit for everyone. TAOM's override drops that mode check and always returns the fighter's own culture's practice kit. So in practice fights each race keeps kit made for its skeleton, and in tournament matches fighters wear their culture's practice kit instead of their own battle armour. **The mount is a separate problem entirely:** `GetParticipantArmor` only governs armor/clothing (slots 5 to 9). The horse (slot 10) comes from a *different* path: `TournamentFightMissionController.PrepareForMatch` clones the culture weapon template into each `participant.MatchEquipment`, and `AddRandomClothes` (which calls `GetParticipantArmor`) copies only slots 5 to 9 on top. So overriding `GetParticipantArmor` can never remove a horse; that required a separate Harmony patch (Patch46).
 
 ### Solution Approach
 
@@ -82,7 +90,7 @@ Two extension points, both delegating to `ITournamentService`:
 
 | Override | Delegates to | Behavior |
 |---|---|---|
-| `GetParticipantArmor(CharacterObject)` | `ResolveDummyId` | Resolves a `gear_practice_dummy_<culture>` NPC by the participant's culture, returns its `RandomBattleEquipment`; falls through to base if not found. |
+| `GetParticipantArmor(CharacterObject)` | `ResolveDummyId` | Resolves a `gear_practice_dummy_<culture>` NPC by the participant's culture, returns its `RandomBattleEquipment`; falls through to base if not found. Applies in every mission mode, where vanilla keeps a tournament fighter's own armour and gives practice fighters the host's kit. |
 | `GetRegularRewardItems(Town, …)` | `BuildPrizePool` | Prize pool from `Items.All` filtered to town culture, Tierf ∈ [2, 4), excluding non-merchandise / non-weapon-armor / horses. Falls through to base if empty. |
 | `GetEliteRewardItems(Town, …)` | `BuildPrizePool` | Same builder, Tierf ∈ [4, ∞). |
 | `GetTournamentStartChance(Town)` | `CalculateStartChance` | Boundary computes lord count; service maps it: 0→0%, 1→45%, 2→75%, 3→90%, 4+→100%. Returns 0% if the town is under siege or outside a campaign. |
@@ -219,6 +227,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Changelog
 
+- 2026-11-04 (plan 144): corrected what vanilla's `GetParticipantArmor` does (v1.4.8 `DefaultTournamentModel.cs:86-93`). The doc said every tournament fighter wears the host culture's kit; vanilla does that only in arena practice fights, and a tournament fighter keeps his own armour (the `MissionMode.Tournament` check). TAOM's override applies in both, so in tournaments it swaps each fighter's own armour for his culture's practice kit. Found on the 1.5.x line on 2026-10-05; the vanilla code is the same on v1.4.8.
 - 2026-09-06: Arena practice characters rendered as toddlers. 46 `NPCCharacter` entries across ten cultures had no `<face>`, so the engine gave them body properties with age 0 and picked the toddler skin. Added the missing `face_key_template` to each and `CharacterFaceCoverageTests` as the gate. Data only, no code change.
 - 2026-06-09 — Patch46 dwarf dismount added (`fix(arena)`, #277): postfix on `PrepareForMatch` clears Horse/HorseHarness for dwarf participants so they never spawn inside the mount; same-day hotfix corrected the injected `_match` field from three underscores to four (`____match`) after it crashed every campaign load.
 - 2026-05-14 — Phase 9b: decision logic extracted from `TaomTournamentModel` into `ITournamentService` (`CalculateStartChance`/`CalculateEndChance`/`BuildPrizePool`/`ResolveDummyId`), registered via new `ArenaIoC`; model is now a thin boundary (#137).

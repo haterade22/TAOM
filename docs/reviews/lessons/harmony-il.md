@@ -306,6 +306,23 @@ patch in it, not just the offending method.
 
 ---
 
+### A patch's class doc states its claim and points to the registry; it never copies the caller list (2026-10-05)
+Patch69's class doc and its registry entry each carried their own list of the target's callers. They drifted to
+different wrong counts (four and three; there are six), and a rewrite that copied the corrected list back into the
+comment was incomplete again within the hour.
+- **Why missed:** a long class summary looked like the place to record the patch's reasoning, though
+  `harmony-patches.md` makes the registry entry that place and requires reading it before editing the patch.
+- **Prevent:** keep the class doc to the claim a reader needs at the call site and one pointer to the registry
+  section; the caller list, history and accepted consequences live only in the registry. Quote engine text only with
+  its `{=key}`.
+- **Source:** 1.5.x `docs/reviews/rca-patch69-comment-2026-10-05.md` findings 1 and 2 (not on this line); plan 144.
+
+### A Harmony patch method never lives on a closed generic type or in a `DynamicMethod` (yotthani, 2026-10-04)
+yotthani's PerfProbe gave each timing probe its own closed generic class (`Slot<T>`, the type argument spelling the probe id). Harmony 2.4.2 records a patch method as module plus metadata token and re-resolves it whenever another patch lands on the same target; the token carries no type arguments, so it came back as the open generic type's method, and every later patch on a probed method threw `InvalidProgramException` in `PatchFunctions.UpdateWrapper`. In game three of his patches switched themselves off for the session (each logged only as "OFF after error: InvalidProgramException" in his own log), the map measurement never started, and his watchdog ended the game after 12.5 minutes.
+- **Why missed:** the bench test put one patch on each target, so the re-resolution that a second patch triggers never ran.
+- **Prevent:** declare patch methods on ordinary non-generic types (a generated class per probe works; a closed generic or a `DynamicMethod` does not), and test a patch together with a foreign patch on the same target, in both orders. Rule text: [submodule-lifecycle-and-harmony.md](../../reference/engine/submodule-lifecycle-and-harmony.md) "Harmony mechanics".
+- **Source:** 1.5.x yotthani, MithrilForge `docs/engine/perf.md`, PerfProbe section of 2026-10-04, in game on v1.5.3 with Harmony 2.4.2 (not on this line); plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

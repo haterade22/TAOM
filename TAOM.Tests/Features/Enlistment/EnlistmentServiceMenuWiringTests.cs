@@ -18,6 +18,31 @@ public class EnlistmentServiceMenuWiringTests
     private const string OptionsPath = "Main/Features/Enlistment/Presentation/EnlistmentWaitMenuOptions.cs";
     private const string DischargedExitId = "taom_enlist_menu_discharged_leave";
 
+    [TestMethod]
+    public void OnWaitMenuTick_Source_MakesOneMaintenanceCall_AndRestartsItsClockEveryFrame()
+    {
+        // #841: while time runs, TickEvent already pumps this frame; a second feed would fill the shared budget twice.
+        var src = RepoPaths.ReadSource(BehaviorPath, stripComments: true);
+        var tick = src.Substring(src.IndexOf("void OnWaitMenuTick", StringComparison.Ordinal));
+        tick = tick.Substring(0, tick.IndexOf("void OnConversationEnded", StringComparison.Ordinal));
+
+        StringAssert.Contains(tick, "_waitMenuClock.Restart();");
+        StringAssert.Contains(tick, "_maintenance.OnWaitMenuFrame(dt.ToSeconds, elapsed, CampaignTime.Now.ToHours);");
+        Assert.AreEqual(1, src.Split(new[] { "_maintenance." }, StringSplitOptions.None).Length - 1,
+            "the hook has exactly one maintenance call; the zero-delta rule and the deferred raid join live in the service");
+        Assert.IsFalse(src.Contains("WaitMenuPumpPolicy"));
+    }
+
+    [TestMethod]
+    public void BattleBehavior_SubscribesTheReconcilersJoinRequest_ToTheMaintenanceGuard()
+    {
+        // #954: a revert to OnBattleJoinRequested would bypass the raid deferral for the hourly path.
+        var src = RepoPaths.ReadSource("Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs", stripComments: true);
+        StringAssert.Contains(src, "_reconciler.BattleJoinRequested += _maintenance.RequestBattleJoin;");
+        StringAssert.Contains(src, "_reconciler.BattleJoinRequested -= _maintenance.RequestBattleJoin;");
+        Assert.IsFalse(src.Contains("_reconciler.BattleJoinRequested += OnBattleJoinRequested"));
+    }
+
     private static string[] OptionBlocks()
     {
         var src = RepoPaths.ReadSource(OptionsPath, stripComments: true);

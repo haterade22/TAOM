@@ -33,7 +33,7 @@ public sealed class BattleActionBarService : IBattleActionBarService
     public IReadOnlyList<BattleAction> GetActionsForFormation(IFormationAdapter formation)
     {
         if (formation == null) return Array.Empty<BattleAction>();
-        if (!_settings.EnableBattleActionBar) return Array.Empty<BattleAction>();
+        if (!_settings.ShowBattleActionBar) return Array.Empty<BattleAction>();
 
         var composition = _analyzer.Analyze(formation);
         var formationIndex = formation.FormationIndex;
@@ -48,15 +48,15 @@ public sealed class BattleActionBarService : IBattleActionBarService
         if (composition.HasRanged)
         {
             actions.Add(new BattleAction(
-                "action_hold_fire", "Hold Fire", "1", ActionCategory.Ranged,
+                "action_hold_fire", "Hold Fire", ActionCategory.Ranged,
                 () => { /* Display-only; ranged firing-order API not exposed in v1.3.15. */ }));
             actions.Add(new BattleAction(
-                "action_free_fire", "Free Fire", "2", ActionCategory.Ranged,
+                "action_free_fire", "Free Fire", ActionCategory.Ranged,
                 () => { /* Display-only. */ }));
             if (_settings.EnableVolleyFire)
             {
                 actions.Add(new BattleAction(
-                    "action_volley", "Volley Fire", "3", ActionCategory.Ranged,
+                    "action_volley", "Volley Fire", ActionCategory.Ranged,
                     () => { /* Display-only. */ }));
             }
         }
@@ -64,33 +64,39 @@ public sealed class BattleActionBarService : IBattleActionBarService
         if (composition.HasPolearm)
         {
             actions.Add(new BattleAction(
-                "action_brace", "Brace for Cavalry", "4", ActionCategory.Polearm,
-                () => _stances.SetStance(formationIndex, TroopStance.BracedForCavalry)));
+                "action_brace", "Brace for Cavalry", ActionCategory.Polearm,
+                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.BracedForCavalry))));
             actions.Add(new BattleAction(
-                "action_pike_wall", "Pike Wall", "5", ActionCategory.Polearm,
-                () => _stances.SetStance(formationIndex, TroopStance.PikeWall)));
+                "action_pike_wall", "Pike Wall", ActionCategory.Polearm,
+                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.PikeWall))));
         }
 
         if (composition.HasShields)
         {
             actions.Add(new BattleAction(
-                "action_shield_wall", "Shield Wall", "6", ActionCategory.Shield,
+                "action_shield_wall", "Shield Wall", ActionCategory.Shield,
                 () => { /* Display-only. */ }));
             actions.Add(new BattleAction(
-                "action_testudo", "Testudo", "7", ActionCategory.Shield,
-                () => _stances.SetStance(formationIndex, TroopStance.Testudo)));
+                "action_testudo", "Testudo", ActionCategory.Shield,
+                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.Testudo))));
         }
 
         if (composition.HasCavalry)
         {
             actions.Add(new BattleAction(
-                "action_charge", "Line Charge", "8", ActionCategory.Cavalry,
-                () => _stances.SetStance(formationIndex, TroopStance.LineCharge)));
+                "action_charge", "Line Charge", ActionCategory.Cavalry,
+                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.LineCharge))));
             actions.Add(new BattleAction(
-                "action_skirmish", "Skirmish", "9", ActionCategory.Cavalry,
-                () => _stances.SetStance(formationIndex, TroopStance.Skirmish)));
+                "action_skirmish", "Skirmish", ActionCategory.Cavalry,
+                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.Skirmish))));
         }
 
         return actions;
+    }
+
+    // A click can arrive after the setting turned off mid-battle; record nothing then.
+    private void Guarded(Action record)
+    {
+        if (_settings.ShowBattleActionBar) record();
     }
 }

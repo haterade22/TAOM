@@ -29,12 +29,12 @@ public sealed class EncounterOwnershipPolicy : IEncounterOwnershipPolicy
         if (snapshot.PlayerInMapEvent)
             return EncounterFinishVerdict.DeferPlayerOwnBattle;
 
-        // R1c — the stale battle latch, and the ONLY inversion of R1b (issue #551). It sits below
-        // R1, which still makes a battle the player is actually fighting untouchable, and above R1b,
-        // which is the rule being inverted. The caller has already established that this shape has
-        // outlasted any loot screen; the settlement precondition is checked here rather than trusted
-        // from the caller, exactly as R2c does, because the caller reads that fact from a snapshot
-        // taken earlier in the same tick.
+        // R1c, the stale battle latch (issue #551). It sits below R1, which keeps a battle the player
+        // is actually fighting untouchable, and above R2 to R4, which would skip this encounter: after
+        // a join its encountered party is the opposing side's leader (`PlayerEncounter.JoinBattleInternal`),
+        // or a settlement. The caller has already waited out `StaleBattleLatchDays` of this shape; the
+        // settlement precondition is checked here rather than trusted from the caller, exactly as R2c
+        // does, because the caller reads that fact from a snapshot taken earlier in the same tick.
         //
         // Conversation still wins: finishing mid-dialogue drops the player out of their own
         // conversation, and the next tick retries.
@@ -44,22 +44,6 @@ public sealed class EncounterOwnershipPolicy : IEncounterOwnershipPolicy
                 ? EncounterFinishVerdict.SkipConversationInProgress
                 : EncounterFinishVerdict.Finish;
         }
-
-        // R1b — the same protection, one moment later, and R1 alone does not give it.
-        // `MapEventSide.Clear()` nulls `MainParty.MapEvent` BEFORE the encounter closes, so the loot
-        // and aftermath menus run inside a still-open encounter that reads as "no battle anywhere".
-        // R1 has already passed by then. Finishing in that window tears down the player's own loot
-        // screen and forces `TimeControlMode.Stop` + `GameMenu.ExitToLast()`.
-        //
-        // Universal on purpose, discharge included: handing the player back interactable is urgent,
-        // but not more urgent than not deleting the battle result they are reading. The window is
-        // short and every caller retries.
-        //
-        // EnlistmentReconciler's `noBattleAnywhere` and ServiceBattleService.OnCommanderBattleEnded
-        // already encode this belief by treating an open encounter as "battle still live". This is
-        // that belief moved into the one place that is supposed to own the decision.
-        if (snapshot.IsBattleEncounter)
-            return EncounterFinishVerdict.DeferPlayerOwnBattle;
 
         // Discharge outranks the remaining rules: service is ending and the player must come back
         // interactable. Leaving an encounter live here is the save-breaker — EncounterManager

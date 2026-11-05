@@ -54,8 +54,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
             return TalkToCommanderResult.InBattle;
 
         var commander = _commander.GetSnapshot(record.CommanderHeroId);
-        if (commander == null || !commander.Exists || !commander.IsAlive
-            || commander.IsPrisoner || !commander.HasParty || !commander.PartyIsActive)
+        if (commander == null || !commander.IsFit)
         {
             return TalkToCommanderResult.CommanderUnavailable;
         }

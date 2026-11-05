@@ -199,6 +199,21 @@ class ClampTests(unittest.TestCase):
         self.assertEqual(fx.find_regressions(troops, self.items, set()), [])
         self.assertEqual(fx.plan_fixes(troops, self.items, set()), [])
 
+    def test_a_file_that_would_not_parse_leaves_every_file_unwritten(self):
+        # Review 2026-09-18 (#617): the parse check ran per file inside the write loop, so a bad
+        # file late in the batch left the earlier ones written and the roster half-applied.
+        good = self.md / "troops" / "troops_a.xml"
+        bad = self.md / "troops" / "troops_b.xml"
+        block = _npc("t", 16, [], [{"Head": "helm_light_a"}])
+        good.write_text("<NPCCharacters>" + block + "\n</NPCCharacters>\n", encoding="utf-8")
+        bad.write_text("<NPCCharacters>" + block + "\n</NPCCharacters>\n<stray>\n", encoding="utf-8")
+        before = good.read_bytes(), bad.read_bytes()
+        changes = [{"file": str(p), "troop": "t", "slot": "Head", "old": "helm_light_a",
+                    "new": "helm_heavy_a"} for p in (good, bad)]
+        with self.assertRaises(RuntimeError):
+            fx.write_changes(changes)
+        self.assertEqual((good.read_bytes(), bad.read_bytes()), before)
+
     def test_a_self_closing_set_in_the_block_is_left_alone_and_does_not_swallow_the_next(self):
         # Review 2026-09-04: without the /> alternation a self-closing civilian-template reference
         # matched on its own ">" and ran forward to an unrelated close tag.

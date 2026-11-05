@@ -57,12 +57,12 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     {
         get
         {
-            var mcm = Settings?.ChargeAutoKnockdownWeightRatio;
+            var mcm = Settings?.ChargeAutoKnockdownRatio;
             if (!mcm.HasValue)
                 return _defaults.ChargeKnockdown.AutoKnockdownWeightRatio;
 
             var neutralFloor = Math.Max(2, (int)Math.Ceiling(_defaults.ChargeKnockdown.NeutralWeightRatio));
-            return SettingClamp.Clamp(mcm.Value, 8, neutralFloor, 30);
+            return SettingClamp.Clamp(mcm.Value, 6, neutralFloor, 30);
         }
     }
 }

@@ -34,6 +34,10 @@ param(
   [string]$GameBin = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin"
 )
 
+# ilspycmd writes UTF-8; a pipe read in the console code page turned non-ASCII letters into '?'.
+# Setting the encoding throws when no console is attached, which must not stop the run.
+try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
+
 if (-not (Get-Command ilspycmd -ErrorAction SilentlyContinue)) {
   Write-Error "ilspycmd not found on PATH. Install: dotnet tool install -g ilspycmd"; exit 1
 }

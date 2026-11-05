@@ -80,6 +80,55 @@ space (Phase 5) is because `MBObjectBase` objects are referenced by `MBGUID` (th
 - New saveable validation: TAOM has no engine-level guard against base-id collision — discipline is on the author +
   the memory. There's no validator for this (unlike moduledata refs).
 
+## Performance: what a save costs [yotthani]
+
+**On the 1.4.x line (plan 144):** these are yotthani's measurements of a 145,000 to 152,000 object save on 1.5.3, not
+re-measured on v1.4.8. The 1.4.8 player saves in the port audit spent 34 to 1,034 s in the Containers phase alone
+(plan 114), so do not read these figures as the 1.4.x cost. The mechanisms below are the same on v1.4.8:
+`Game.OnSaveCompleted` calls `Common.MemoryCleanupGC()` (`Game.cs:216-224`), and `SaveContext` walks objects and
+containers on parallel workers (`SaveContext.cs:137`, `:157`, `:372`, `:398`), which is why string ids depend on worker
+order. Server GC is NOT advised on this line: v1.4.8 ships three runtime hosts, the players' host is unknown, and it
+costs 1.4 to 1.7 GB of private memory on machines already at 80 to 88 % memory load (plan 114, V01).
+
+Measured by yotthani in game and on an offline save bench (MithrilForge `docs/engine/perf.md`, sections K2 and
+`save-no-forced-gc`, v1.5.3, 2026-10-02 to 2026-10-04; v1.5.4: not re-checked). One save of 145,000 to 152,000
+objects.
+- **`SaveContext.Save` takes 2.6 to 2.9 s**, all of it a frozen frame. It allocates about 1.72 GB to write about
+  106 MB, and under the default workstation GC 66 to 72 % of that time is collections; the work alone is about
+  0.5 s.
+- **Server GC brings a save to about 1.05 s** in game (8 heaps, at about 1.5 GB more RAM), but the GC mode is
+  fixed at runtime start: it can be set only in the starting exe's `.exe.config` (for BLSE,
+  `Bannerlord.BLSE.Launcher.exe.config`), never by a mod. In a large battle (Black Gate, 500 against 500, 03.10.,
+  measured in game) it cost no FPS (differences within plus or minus 4 %, inside the spread of hand-played runs) and
+  halved the GC stall (7.6 to 9.5 ms a second down to 3.8 to 5.2), with private RAM 1.4 to 1.7 GB higher
+  (`perf.md`@0a2f4761 lines 1090-1112; one run per state, v1.5.3).
+- **The workstation variants were no help.** The same save work under non-concurrent workstation GC took 2.8 to
+  4.4 s with pauses of 2.2 to 3.9 s (the longest 1.2 s), worse than the default concurrent mode's 2.3 to 3.5 s; only
+  server GC reached 0.5 to 0.95 s (`perf.md` lines 1026-1032, same save work with only the runtime configuration
+  changed, v1.5.3).
+- **The hitch after a save is vanilla's forced collection:** `Game.OnSaveCompleted` calls
+  `Common.MemoryCleanupGC()`, a blocking collection: 313 and 286 ms about a second after the save under server
+  GC; under workstation GC, Gen-2 collections of 835 and 872 ms came 5 to 6 s after an instrumented save, likely
+  the same call. Removing it is worse: the runtime collects the same garbage later, longer (535 ms) and with
+  about 2 GB more RAM in between. Vanilla's other forced collections on game state changes are in
+  [battle-load-diagnostics.md](../../features/battle-load-diagnostics.md) (`OnPushState`, `OnPopState`).
+- **A faster rewrite measured offline was slower in the game** [yotthani, MithrilForge
+  `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Saving: allocation volume and a
+  blocking collect", measured, game 1.5.5 per the header, timings mostly 1.5.3 and 1.5.4]: "A rewrite of the hot
+  paths was byte-identical and 23-35 % faster in an offline bench, but slower inside the game (cause not found); we
+  dropped it." The source gives no reason, so TAOM draws one conclusion only: a save-path rewrite needs an in-game
+  measurement before its offline result is believed (TAOM's reading). The same section also says "Skipping or
+  deferring the final collect moved the pause to later."
+- **Save bytes are not deterministic:** string ids depend on the order the parallel workers reach
+  `AddOrGetStringId`, so two saves of one state differ. Compare a save-path patch in sequential mode or after a
+  load, never byte for byte.
+- **A save loaded offline without its load callbacks gives every `TextObject` a hash of 0.** v1.4.8 `TextObject.GetHashCode`
+  returns `_internalId` (`TextObject.cs:264-267`); the private constructor sets 0 (`:64-69`), and only the public
+  constructor and the `[LoadInitializationCallback]` assign a fresh id (`:71-76`, `:164-168`). Offline, with no
+  callback, the save's object dictionary therefore degenerates (`CollectObjects` 3.5 s instead of 0.2 s, yotthani). In
+  game, distinct instances hash apart and only `GetEmpty()` instances share id 0 (V01 of the port audit corrects
+  the claim that equal-content `TextObject`s collapse in a save).
+
 ## The native boundary
 The save *serializer* is largely managed (`TaleWorlds.SaveSystem` — `IDataStore`, `TypeDefinition`,
 `DefinitionContext`); it walks tagged fields + registered types and writes the save blob. The objects it serializes

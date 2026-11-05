@@ -108,7 +108,8 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 partyIsInMapEvent: mapEvent != null,
                 partySettlementId: party?.CurrentSettlement?.StringId,
                 mapEventToken: TokenFor(mapEvent),
-                partyIsRaiding: VillageRaidReader.IsRaiding(party));
+                partyIsRaiding: VillageRaidReader.IsRaiding(party),
+                partyIsInRaidEvent: mapEvent?.IsRaid ?? false);
         }
         catch (Exception ex)
         {

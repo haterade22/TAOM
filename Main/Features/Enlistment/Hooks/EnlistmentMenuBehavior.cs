@@ -11,15 +11,15 @@ namespace TAOM.Features.Enlistment.Hooks;
 
 /// <summary>
 /// Thin registration behavior (ADR-002) for the service wait menu. The engine ticks the
-/// wait menu itself — that tick drives the parked position sync (throttled; no per-frame
-/// allocation, text is refreshed only on menu init via the presenter). Menu-guard policy
-/// lives in <see cref="IEnlistmentMenuService"/>; terminal decisions stay with the hourly
-/// reconciler. Stateless (no SyncData).
+/// wait menu itself — while campaign time is stopped that tick drives the whole pump (the pump also refreshes
+/// the board every 2 budget seconds; no per-frame allocation, wait text is built on menu init via the
+/// presenter). Menu-guard policy lives in <see cref="IEnlistmentMenuService"/>; terminal decisions stay
+/// with the hourly reconciler. Stateless (no SyncData).
 /// </summary>
 public class EnlistmentMenuBehavior : CampaignBehaviorBase
 {
     /// <summary>
-    /// REAL elapsed time between wait-menu frames, measured rather than assumed.
+    /// REAL elapsed time between wait-menu frames, measured rather than assumed; it feeds the pump only while time is stopped.
     ///
     /// This used to feed the pump a constant 1/30s per callback. But the wait-menu tick is a
     /// FRAME tick (GameMenuManager.OnFrameTick -> GameMenu.RunOnTick), so at 144 fps it fabricated
@@ -29,9 +29,6 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     /// dependent, which is the one thing a real-time budget must not be.
     /// </summary>
     private readonly System.Diagnostics.Stopwatch _waitMenuClock = System.Diagnostics.Stopwatch.StartNew();
-
-    /// <summary>Largest real-time step one wait-menu frame may contribute, so a stall cannot burst the budget.</summary>
-    private const float MaxWaitMenuStepSeconds = 0.5f;
 
     private readonly IEnlistmentStore _store;
     private readonly IServiceAttachmentService _attachment;
@@ -117,22 +114,16 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
     private void OnWaitMenuTick(MenuCallbackArgs args, CampaignTime dt)
     {
-        // Second source for the SAME pump, sharing its budget — adding it cannot double the work
-        // rate. It exists because CampaignEvents.TickEvent is gated on `_dt > 0f` and the menu
-        // system sets TimeControlMode = Stop, so while the player sits on the wait menu the
-        // campaign tick can be silent. The pump owns the throttle now; this behaviour owns none.
+        // Every wait-menu frame (#841): first performs a raid join held from the campaign tick (this frame runs
+        // before time advances), then pumps only while campaign time is stopped (TickEvent is silent then, and a
+        // load lands here stopped). While time runs TickEvent already pumps. The pump owns the throttle.
         if (!_coopSession.IsAuthority)
             return;
 
         var elapsed = (float)_waitMenuClock.Elapsed.TotalSeconds;
         _waitMenuClock.Restart();
 
-        // Clamp: a frame after a long stall (alt-tab, load) would otherwise dump seconds of budget
-        // in at once and fire every tier on the same pass.
-        if (elapsed > MaxWaitMenuStepSeconds)
-            elapsed = MaxWaitMenuStepSeconds;
-
-        _maintenance.Pump(elapsed, CampaignTime.Now.ToHours);
+        _maintenance.OnWaitMenuFrame(dt.ToSeconds, elapsed, CampaignTime.Now.ToHours);
     }
 
     private void OnConversationEnded(IEnumerable<CharacterObject> characters)

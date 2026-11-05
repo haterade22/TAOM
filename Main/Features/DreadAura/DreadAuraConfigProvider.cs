@@ -32,11 +32,11 @@ public sealed class DreadAuraConfigProvider : IDreadAuraConfigProvider
         ObjectCreationHandling = ObjectCreationHandling.Replace,
     };
 
-    // Above ~30 m a battlefield aura stops being a hazard you can walk around. This is a design
-    // ceiling, not an engine one: Mission.GetNearbyEnemyAgents is pure native paging with no
-    // proximity-map fallback, so there is nothing here to degrade (that hazard belongs to
-    // AgentProximityMap.BeginSearch, which this feature does not use).
-    private const float MaxRadius = 30f;
+    // An engine ceiling: Mission.GetNearbyEnemyAgents pages through native
+    // IMBMission.GetNearbyAgentsAux, which searches the proximity grid up to 15 m (the value
+    // ProximityMapMaxSearchRadius returns on v1.5.5) and walks every agent in the mission beyond
+    // that, on every pulse. AgentProximityMap.BeginSearch switches at the same 15 m.
+    private const float MaxRadius = 15f;
 
     // A pulse faster than 0.1s buys nothing (drain integrates over elapsed time either way) and
     // multiplies the static-locked proximity query. Slower than 5s and the aura visibly stutters.

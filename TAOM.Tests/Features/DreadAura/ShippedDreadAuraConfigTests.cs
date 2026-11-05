@@ -10,6 +10,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.DreadAura;
 using TAOM.Features.NazgulFamily;
+using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Tests.Features.DreadAura;
 
@@ -107,14 +108,22 @@ public class ShippedDreadAuraConfigTests
     public void ShippedConfig_BalanceValuesMatchTheDocumentedTable()
     {
         // These four numbers are the balance contract in docs/features/dread-aura.md and the
-        // golden rout times in DreadAuraServiceTests. Changing one here without the other two
-        // leaves three sources of truth disagreeing.
+        // golden time-to-floor table in DreadAuraServiceTests. Changing one here without the other
+        // two leaves three sources of truth disagreeing.
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
-        Assert.AreEqual(4f, config.Profile.InnerRadius, 0.001f);
+        Assert.AreEqual(5f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(2f, config.Profile.InnerRadius, 0.001f);
         Assert.AreEqual(5f, config.Profile.MoralePerSecond, 0.001f);
-        Assert.AreEqual(0f, config.Profile.MoraleFloor, 0.001f);
+        Assert.AreEqual(10f, config.Profile.MoraleFloor, 0.001f);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_AuraAloneNeverRouts()
+    {
+        // The engine panics a target below MoraleThresholdForPanicking (0.01). A shipped floor above
+        // that means the aura weakens troops but leaves the rout to combat.
+        Assert.IsTrue(_sut.GetConfig().Profile.MoraleFloor > CommonAIComponent.MoraleThresholdForPanicking);
     }
 
     [TestMethod]

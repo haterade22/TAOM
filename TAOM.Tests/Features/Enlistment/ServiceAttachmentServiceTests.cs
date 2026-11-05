@@ -308,11 +308,12 @@ public class ServiceAttachmentServiceTests
 
     // ---- The presence hold while a battle encounter is live (#577) ----------------------------
     //
-    // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window
-    // (MapEventSide.Clear() nulls MainParty.MapEvent BEFORE the encounter closes, so the window
-    // reads as "no battle anywhere"), or the join gap between EnsureEncounterAgainst and
-    // JoinBattle. Nothing may move the party there: a park clears AttachedTo, which pulls the
-    // party off its MapEventSide, and "Send troops" then indexes SelectedTroops[-1].
+    // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window,
+    // or the join gap between EnsureEncounterAgainst and JoinBattle. The trap is any moment with
+    // the encounter open and the party in no map event yet or any more: the join gap, and the
+    // inside of PlayerEncounter.Finish after FinalizeEvent. That reads as "no battle anywhere".
+    // Nothing may move the party there: a park clears AttachedTo, which pulls the party off its
+    // MapEventSide, and "Send troops" then indexes SelectedTroops[-1].
 
     [TestMethod]
     public void Assess_EnlistedBattle_LiveEncounter_HoldsPresence()

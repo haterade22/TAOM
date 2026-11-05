@@ -171,10 +171,12 @@ headbutt, because vanilla horses have no attack animation at all: they damage by
   set declares `rear_action="act_horse_rear"`, so the engine fires it on a damaged mount, and
   `Agent.Mount` refuses a mount whose channel-0 action is `Rear`. Forcing it every cooldown would have
   made the ram briefly **unmountable mid-fight**, on the one mount built to be player-rideable.
-- **`act_horse_strike_front`/`_back`** are typed `actt_mount_strike` (`ActionCodeType.MountStrike = 52`),
-  inside the `StrikeBegin = 48 .. StrikeEnd = 52` band that `Agent.IsInBeingStruckAction` reads as
-  **being struck**. The clips are named `horse_hit_from_front`/`_back`. The ram would have flinched as
-  though hit while we emitted damage.
+- **`act_horse_strike_front`/`_back`** play the horse's hit reactions (`horse_hit_from_front`/`_back`), so
+  the ram would have flinched as though hit while we emitted damage. Their type, `actt_mount_strike`
+  (`ActionCodeType.MountStrike = 52`), is not the problem (corrected 2026-09-18 on the 1.5.x line):
+  `Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, 48, 52)`, which is half-open, so it reads
+  48 to 51 (`StrikeLight` .. `StrikeKnockBack`) as being struck and NOT `MountStrike` (52) (v1.4.8
+  `Agent.cs:1338-1348`, `MBMath.cs:295-302`). The warg's `actt_mount_strike` attacks play for that reason.
 
 `act_horse_kick` (`actt_kick`, `ActionCodeType.Kick = 28`) sits outside both bands and is the rig's
 only genuinely offensive action. It reads as a buck rather than a head strike: an accepted compromise,

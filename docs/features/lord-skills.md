@@ -17,7 +17,7 @@ Lore-driven skill values + personality traits for every TAOM adult lord across a
 Two engine quirks made the obvious approach (just edit `<skills>` blocks) fail:
 
 1. **Hero NPCCharacters ignore explicit `<skills>` blocks** — only `skill_template="SkillSet.X"` is honored at hero generation. Hand-editing `<skills>` is dead code.
-2. **Same-ID NPCs across additive XML sources resolve by load order** — `characters/lords.xml` loads AFTER `lords.xslt`-transformed vanilla per SubModule.xml, so the XSLT overrides for the 11 lord_1_X_Y IDs that exist in both files are shadowed by `lords.xml`. Hand-editing the XSLT for those IDs is also dead code.
+2. **Same-ID NPCs across additive XML sources merge per attribute and child**: `characters/lords.xml` loads AFTER `lords.xslt`-transformed vanilla per SubModule.xml, so for the 11 lord_1_X_Y IDs that exist in both files `lords.xml` wins what it redeclares, the XSLT copy supplies the rest, and `Equipments` sets union.
 
 ### Solution Approach
 

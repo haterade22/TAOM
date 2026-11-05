@@ -46,7 +46,7 @@ public class DreadAuraSettingsProviderTests
         var rows = new (Action<TaomSettings> Edit, Func<DreadAuraSettingsProvider, object> Get, object Expected)[]
         {
             (s => s.EnableDreadAura = false, p => p.IsEnabled, false),
-            (s => s.DreadAuraRadius = 20f, p => p.Radius, 20f),
+            (s => s.DreadAuraCloseRadius = 12f, p => p.Radius, 12f),
             (s => s.DreadAuraMoralePerSecond = 8f, p => p.MoralePerSecond, 8f),
             (s => s.DreadAuraAffectsPlayerTroops = false, p => p.AffectsPlayerTroops, false),
         };
@@ -62,5 +62,28 @@ public class DreadAuraSettingsProviderTests
 
             Assert.AreEqual(rows[i].Expected, rows[i].Get(sut), "row " + i);
         }
+    }
+
+    // With MCM loaded, the MCM value is the one in play, so its compiled default must match the
+    // compiled JSON default; otherwise a player gets a different aura than the docs describe.
+    [TestMethod]
+    public void McmDefaults_MatchTheCompiledProfileDefaults()
+    {
+        var mcm = new TaomSettings();
+        var profile = new DreadProfileConfig();
+
+        Assert.AreEqual(profile.Radius, mcm.DreadAuraCloseRadius, 0.0001f);
+        Assert.AreEqual(profile.MoralePerSecond, mcm.DreadAuraMoralePerSecond, 0.0001f);
+    }
+
+    // Above 15 m the engine's native proximity search (IMBMission.GetNearbyAgentsAux) stops using
+    // its grid and checks every agent in the mission, so a hand-edited TAOM.json value is clamped.
+    [TestMethod]
+    public void Radius_McmAboveTheEngineGridLimit_ClampsTo15()
+    {
+        var mcm = new TaomSettings { DreadAuraCloseRadius = 20f };
+        var sut = new DreadAuraSettingsProvider(ConfigReturning(new DreadAuraConfig()), mcm);
+
+        Assert.AreEqual(15f, sut.Radius, 0.0001f);
     }
 }

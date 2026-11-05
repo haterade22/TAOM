@@ -93,8 +93,8 @@ And the folder manifest, `Languages/<LANG>/language_data.xml`.
 | `name` | string | no | keeps whatever another module set | The title shown in the Options language dropdown. | `LanguageData.cs:91` |
 | `subtitle_extension` | string | no | keeps whatever another module set | Suffix used to find subtitle files. | `LanguageData.cs:96` |
 | `supported_iso` | comma list | no | union stays as-is | ISO codes that select this language. `IsValid` is `SupportedIsoCodes.Length != 0`, so at least one module must supply them. TAOM's do not; `Native` does. | `LanguageData.cs:101` |
-| `text_processor` | string | no | keeps whatever another module set | Assembly-qualified text processor. Read but only assigned when `name` is non-empty, so a file that sets `text_processor` without `name` sets nothing. | `LanguageData.cs:107` |
-| `under_development` | bool | no | false | Hides the language from the normal dropdown. | `LanguageData.cs:112` |
+| `text_processor` | string | no | the default processor, when `name` is non-empty | Namespace-qualified class name of the text processor; it resolves only because the classes live in `TaleWorlds.Localization`. Assigned whenever `name` is non-empty, so a later file with `name` and no `text_processor` resets the language to the default processor; give every file with a `name` the processor Native declares. A file with `text_processor` and no `name` sets nothing. | `LanguageData.cs:107` |
+| `under_development` | bool | no | true (the constructor, `LanguageData.cs:39`) | Hides the language from the normal dropdown. | `LanguageData.cs:112` |
 | `xml_path` | string | yes on a child | the child is ignored | Module-relative path of one translation file. | `LanguageData.cs:127,135` |
 
 ## Child elements

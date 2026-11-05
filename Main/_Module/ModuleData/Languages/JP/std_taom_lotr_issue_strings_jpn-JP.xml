@@ -314,5 +314,10 @@
     <string id="taom_lotr_issue_combat_task_tourney" text="トーナメントで勝利せよ ({COUNT})" />
     <string id="taom_lotr_issue_combat_task_defeat" text="略奪者を撃退せよ ({COUNT})" />
     <string id="taom_lotr_issue_combat_timeout" text="期限内に脅威を排除できなかった。" />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="A foe must be dealt with." />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="We are beset by enemies, traveller." />
+    <string id="taom_lotr_issue_combat_fallback_accept" text="What needs doing?" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="Someone needs captives delivered." />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="I have need of strong backs, traveller." />
   </strings>
 </base>

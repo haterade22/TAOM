@@ -10,8 +10,9 @@ namespace TAOM.Features.DreadAura.Hooks;
 ///
 /// <c>SubModule.OnMissionBehaviorInitialize</c> fires for EVERY mission: conversations, town
 /// walkarounds, arenas, tournaments, hideouts, custom battles, multiplayer, and the headless
-/// shader-precompilation walk. A wraith entrant draining a tournament would rout the other
-/// entrants inside an arena that has no retreat position, which is the failure family TAOM
+/// shader-precompilation walk. A wraith entrant draining a tournament could rout the other entrants
+/// (at moraleFloor 0; at the shipped floor it would only weaken them) inside an arena that has no
+/// retreat position, which is the failure family TAOM
 /// already carries an RCA and a dedicated patch category for
 /// (<c>docs/reviews/rca-tournament-exit-hang-2026-07-06.md</c>).
 /// </summary>

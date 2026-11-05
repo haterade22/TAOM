@@ -67,7 +67,6 @@
     <string id="taom_enlist_wage_forfeited" text="Die Kolonne kann {AMOUNT}{GOLD_ICON} deines ausstehenden Solds nicht mehr aufbringen." />
     <string id="taom_enlist_wage_paid" text="Sold erhalten: {AMOUNT}{GOLD_ICON}" />
     <string id="taom_enlist_wage_line" text="Dienstsold" />
-    <string id="taom_enlist_wait_text" text="Ihr dient in der Schar von {COMMANDER}. Die Kolonne zieht im Tempo Eures Befehlshabers." />
 
     <string id="taom_enlist_welcome" text="Willkommen in der Kolonne, Soldat. Antreten." />
 
@@ -466,6 +465,26 @@
 	<string id="taom_enlist_wait_discharged" text="Your service has ended." />
 
 	<string id="taom_enlist_act_raid" text="The column is raiding." />
+
+	<string id="taom_enlist_qm_refused_host" text="Only the host's quartermaster can issue kit in this campaign." />
+
+	<string id="taom_enlist_qm_refused_load" text="Your kit cannot be loaded into your baggage just now. Ask me again later." />
+
+	<string id="taom_enlist_qm_refused_stores" text="The quartermaster has nothing in his stores for your company." />
+
+	<string id="taom_enlist_sitout_wounded_tip" text="You are wounded. The column fights on without you, and no one will hold it against you." />
+
+	<string id="taom_enlist_sitout_odds_tip" text="Your side holds the field by a wide margin. You may stay back, but your commander will remember it." />
+
+	<string id="taom_enlist_sitout_refused_tip" text="You serve in your commander's line. Take your place in the fight." />
+
+	<string id="taom_enlist_sitout_siege_tip" text="A siege needs every soldier. Take your place in the assault." />
+
+	<string id="taom_enlist_sat_out_line" text="You stayed back while the column fought, and your share of the battle's due was cut." />
+
+	<string id="taom_enlist_sat_out_wounded_line" text="You were wounded and stayed back while the column fought." />
+
+	<string id="taom_enlist_sat_out_forced_line" text="The column fought without you, and you had no way into the line." />
 
   </strings>
 

@@ -9,7 +9,7 @@ An archer's reach is its launcher's missile_speed (tools/ranged_ladder.py). The 
 every (line, band) cell an exact speed, and no existing bow happens to sit on it, so every
 cell is a generated item. Existing bows stay untouched for lords, the player and the shops.
 
-WHAT IT WRITES (live Armory and, when present, the lotraom-assets mirror)
+WHAT IT WRITES (the live Armory; the lotraom-assets mirror too only with --asset-repo)
 -------------------------------------------------------------------------
   LOTRLOME_items/<folder>/ranged_ladder.xml   one generated file per line folder
   Languages/loc_<folder>.xml                  one marker block of English name rows, so
@@ -35,7 +35,7 @@ so an unregistered `folder` in the spec is an error, not a warning.
 USAGE
 -----
     python tools/generate_ranged_ladder_items.py             # dry run: the plan
-    python tools/generate_ranged_ladder_items.py --apply     # write to the Armory (+ mirror)
+    python tools/generate_ranged_ladder_items.py --apply     # write to the live Armory
     python tools/generate_ranged_ladder_items.py --verify    # exit 1 if any file drifted
     python tools/generate_ranged_ladder_items.py --revert    # remove every generated file
 """
@@ -297,8 +297,9 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--game-modules", default=rb.DEFAULT_GAME_MODULES,
                     help=".../Mount & Blade II Bannerlord/Modules (the live Armory and vanilla donors)")
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO),
-                    help="the lotraom-assets LOTRLOME_Armory mirror; skipped with a warning when absent")
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also update this lotraom-assets LOTRLOME_Armory mirror (e.g. {DEFAULT_ASSET_REPO}); "
+                         "off by default, and skipped with a warning when absent")
     ap.add_argument("--spec", default=str(rl.DEFAULT_SPEC))
     ap.add_argument("--moduledata", default=str(rl.MODULEDATA_DIR),
                     help="TAOM ModuleData root, only to check the spec's files tokens against troops/")
@@ -313,12 +314,13 @@ def main(argv=None) -> int:
     if not armory_md.is_dir():
         print(f"ERROR: LOTRLOME_Armory not found under {game_modules}; pass --game-modules. Nothing was written.")
         return 2
-    mirror_md = Path(args.asset_repo) / "ModuleData"
     trees = [("armory", armory_md)]
-    if mirror_md.is_dir():
-        trees.append(("mirror", mirror_md))
-    else:
-        print(f"WARNING: assets mirror not found at {args.asset_repo}; only the live Armory is touched")
+    if args.asset_repo is not None:
+        mirror_md = Path(args.asset_repo) / "ModuleData"
+        if mirror_md.is_dir():
+            trees.append(("mirror", mirror_md))
+        else:
+            print(f"WARNING: assets mirror not found at {args.asset_repo}; only the live Armory is touched")
 
     if args.revert:
         for label, md in trees:

@@ -270,9 +270,10 @@ public class ServiceBattleService : IServiceBattleService
         if (_store.Record.State != EnlistmentState.EnlistedBattle)
             return;
 
-        // Loot/aftermath menus run inside the still-open encounter; flipping to Attached
-        // now would let the menu guard eat them. The reconciler and wait-menu init close
-        // the loop once the encounter is gone.
+        // The encounter is still open here. For the player's own event MapEventEnded runs inside
+        // PlayerEncounter.Finish, after the loot screens close and before the encounter is cleared,
+        // so flipping to Attached now would re-park the party in the middle of Finish. The
+        // reconciler and wait-menu init close the loop once the encounter is gone.
         if (_encounter.HasCurrent)
             return;
 

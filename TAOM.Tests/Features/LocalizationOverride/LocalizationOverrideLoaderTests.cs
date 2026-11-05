@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.LocalizationOverride;
+using TAOM.Tests.Core;
+using TAOM.Tests.Infrastructure.Localization;
 
 namespace TAOM.Tests.Features.LocalizationOverride;
 
@@ -107,5 +110,25 @@ public class LocalizationOverrideLoaderTests
 
         // Assert
         Assert.AreEqual(0, overrides.Count);
+    }
+
+    [TestMethod]
+    public void ParseOverridesFromFile_ShippedModuleStrings_YieldsTheVanillaKeyOverrides()
+    {
+        // The English rows of taom_module_strings.xml are the whole feature for the vanilla keys that carry no
+        // language row (VanillaKeyOverrideTests): losing one silently restores vanilla's English. Losing a
+        // convoy registration row is worse without NavalDLC: on the installed v1.4.8 only that module declares the GameText ids
+        // str_convoy_party_name and str_armed_convoy_party_name (the two translation keys, LjUhEJxz and l4pRw7pO, are vanilla's).
+
+        // Arrange + Act
+        var overrides = LocalizationOverrideLoader.ParseOverridesFromFile(
+            Path.Combine(CultureDataFixture.ModuleDataPath(), "taom_module_strings.xml"));
+        var vanillaShaped = overrides.Keys.Where(VanillaLocalizationKeys.HasVanillaShape).ToList();
+
+        // Assert
+        Assert.IsTrue(vanillaShaped.Count >= 181,
+            $"Only {vanillaShaped.Count} vanilla-shaped overrides load from the shipped file; 181 ship.");
+        Assert.AreEqual("Call {CALLED_KINGDOM} to War Against {KINGDOM_TO_CALL_TO_WAR_AGAINST}", overrides["0CsbbwtN"]);
+        CollectionAssert.IsSubsetOf(new[] { "LjUhEJxz", "l4pRw7pO" }, overrides.Keys.ToList());
     }
 }

@@ -10,23 +10,25 @@ namespace TAOM.Features.Enlistment;
 /// ownership contract against the hourly reconciler and for where this pump structurally cannot
 /// reach.
 ///
-/// Two sources share ONE budget (campaign tick and the wait-menu tick), so adding the second
-/// source cannot double the work rate. Each pass has two tiers:
+/// Two sources share ONE budget: the campaign tick, and the wait-menu tick only while campaign time is
+/// stopped, so a running wait menu is not fed twice. Each pass has two tiers:
 ///   CHEAP  — every pass: position sync, using a cached party handle (zero lookups on the steady path).
 ///   EXPENSIVE — throttled: one <c>Find&lt;Hero&gt;</c> via <c>GetTickSnapshot</c>, then the
 ///               battle-latch, join-request and menu invariants.
 /// </summary>
 public class ServiceMaintenanceService : IServiceMaintenanceService
 {
-    /// <summary>Real seconds between expensive passes. The donor ran its whole loop at this rate.</summary>
+    /// <summary>
+    /// Budget between expensive passes: the campaign tick's delta while time runs (0.25 = 18 campaign minutes
+    /// at any speed), real seconds on a stopped wait menu. Real rates per speed: docs/features/enlistment.md (#841).
+    /// </summary>
     private const float MaintenanceIntervalSeconds = 0.25f;
 
     /// <summary>
-    /// How often the wait-menu status board is rebuilt. Much slower than the maintenance tier
-    /// because it uses the EXPENSIVE commander read (GetSnapshot renders Name and walks Culture /
-    /// Clan.MapFaction / CurrentSettlement) — forbidden at 4 Hz, harmless at 0.5 Hz, and the
-    /// underlying facts (in a town, in a battle, promoted) change on a scale of campaign minutes.
-    /// The push itself is additionally gated on the model actually differing.
+    /// Budget between status board rebuilds, in the same units. Much slower than the maintenance tier because it
+    /// uses the EXPENSIVE commander read (GetSnapshot renders Name and walks Culture / Clan.MapFaction /
+    /// CurrentSettlement). It exceeds 4 Hz from a fast-forward multiplier above 32 (equal at 32), which is accepted
+    /// and older than #841. The push is additionally gated on the model actually differing.
     /// </summary>
     private const float StatusIntervalSeconds = 2f;
 
@@ -49,7 +51,9 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IEnlistmentReconciler _reconciler;
     // For ResetSessionCaches only: a service never calls presentation (popups stay presenter-side).
     private readonly Presentation.IEnlistmentWaitMenuPresenter _presenter;
-    private readonly Content.IArmyRhythmSnapshotService _rhythm;
+    // Singletons holding per-battle state that must not leak into the next campaign (#830).
+    private readonly SitOutLedger _sitOutLedger;
+    private readonly Content.IBattleMeritAccumulator _meritAccumulator;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -57,6 +61,11 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private int _menuFailures;
     private string _cachedCommanderPartyId;
     private int _lastJoinRequestedForMapEventToken;
+
+    // A raid join waiting for the wait-menu frame (#954), identified by the commander and his map event token.
+    private string _pendingRaidJoinHeroId;
+    private int _pendingRaidJoinToken;
+    private bool _inMenuFrame;
 
     public ServiceMaintenanceService(
         IEnlistmentStore store,
@@ -71,7 +80,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IEncounterOwnershipPolicy ownership,
         IEnlistmentReconciler reconciler,
         Presentation.IEnlistmentWaitMenuPresenter presenter,
-        Content.IArmyRhythmSnapshotService rhythm,
+        SitOutLedger sitOutLedger,
+        Content.IBattleMeritAccumulator meritAccumulator,
         IModLogger logger)
     {
         _store = store;
@@ -86,17 +96,43 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _ownership = ownership;
         _reconciler = reconciler;
         _presenter = presenter;
-        _rhythm = rhythm;
+        _sitOutLedger = sitOutLedger;
+        _meritAccumulator = meritAccumulator;
         _logger = logger;
     }
 
     public event Action<string> BattleJoinRequested;
 
+    public void OnWaitMenuFrame(double campaignDeltaSeconds, float realElapsedSeconds, double nowHours)
+    {
+        _inMenuFrame = true;
+        try
+        {
+            FlushPendingRaidJoin();
+            if (campaignDeltaSeconds == 0.0)
+                Pump(realElapsedSeconds, nowHours);
+        }
+        finally
+        {
+            _inMenuFrame = false;
+        }
+    }
+
+    public void RequestBattleJoin(string commanderHeroId)
+    {
+        // One extra Find<Hero> on a join request only, never per frame.
+        var commander = _commander.GetTickSnapshot(commanderHeroId);
+        RequestJoin(commanderHeroId, commander.PartyIsInRaidEvent, commander.MapEventToken);
+    }
+
     public void Pump(float dt, double nowHours)
     {
         var record = _store.Record;
         if (!record.IsEnlisted)
+        {
+            _pendingRaidJoinHeroId = null;
             return;
+        }
 
         // BRACES ARE LOAD-BEARING. Both accumulators must sit INSIDE the guard: NaN propagates
         // through every subsequent addition and every comparison against it is false, so one
@@ -228,6 +264,12 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// </summary>
     public void ResetSessionCaches()
     {
+        // A verdict or an unconsumed merit sample from the previous world would be paid to the first
+        // battle of the next one.
+        _sitOutLedger?.Consume();
+        _pendingRaidJoinHeroId = null;   // a raid join waiting from the previous world
+        _meritAccumulator?.Consume();
+
         _cachedCommanderPartyId = null;
         _lastJoinRequestedForMapEventToken = 0;
         _menuFailures = 0;
@@ -246,7 +288,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // The reconciler is a singleton too, and its stale-battle-latch anchor is an absolute
         // campaign day (#551). A campaign that ended WHILE latched leaves that anchor behind; load a
         // later save and the elapsed time is enormous, so the recovery fires on the first latched
-        // tick and finishes a live loot screen with no real waiting. Dropped here for the same
+        // tick and finishes an encounter with no real waiting. Dropped here for the same
         // reason the army handle is, rather than being wired separately into a lifecycle hook.
         // The same reset re-arms the commander-loss modal's shown-once latch (#656).
         _reconciler?.ResetForNewSession();
@@ -259,10 +301,6 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // cached commander MobileParty (the StringId hazard in the summary above).
         _attachment.ResetForNewSession();
         _presenter?.ResetForNewSession();
-
-        // The rhythm snapshot is keyed on an equal hour stamp, not an elapsed time: its hazard is
-        // a reload inside the same campaign hour serving the previous world's snapshot.
-        _rhythm?.ResetForNewSession();
     }
 
     public void OnPartyJoinedRunningMapEvent(string partyId)
@@ -335,13 +373,55 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         record.NextAttachRetryAtHours = nowHours + AttachRetryIntervalHours;
 
         _logger?.LogInfo($"[EnlistDiag] maintenance BattleJoinRequested for '{record.CommanderHeroId}' (battle token {commander.MapEventToken})");
+        RequestJoin(record.CommanderHeroId, commander.PartyIsInRaidEvent, commander.MapEventToken);
+    }
+
+    /// <summary>
+    /// Raise the join now, or keep one pending join for the next wait-menu frame. Only a raid is deferred, and
+    /// only from outside the menu frame while the service wait menu is current: anywhere else nobody is
+    /// stranded by joining at once (field battles and siege assaults are skipped by MapEventManager.Tick from
+    /// the moment the player joins).
+    /// </summary>
+    private void RequestJoin(string commanderHeroId, bool raidEvent, int mapEventToken)
+    {
+        if (raidEvent && !_inMenuFrame && _gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+        {
+            _pendingRaidJoinHeroId = commanderHeroId;
+            _pendingRaidJoinToken = mapEventToken;
+            _logger?.LogInfo($"[EnlistDiag] join into a raid deferred to the wait-menu frame (battle token {mapEventToken})");
+            return;
+        }
+        RaiseJoin(commanderHeroId);
+    }
+
+    /// <summary>Perform the pending raid join if it is still true: same event, commander still followable, nobody inside yet.</summary>
+    private void FlushPendingRaidJoin()
+    {
+        var heroId = _pendingRaidJoinHeroId;
+        if (heroId == null)
+            return;
+        _pendingRaidJoinHeroId = null;
+
+        var record = _store.Record;
+        if (!record.IsEnlisted || record.State != EnlistmentState.EnlistedAttached)
+            return;
+        var commander = _commander.GetTickSnapshot(heroId);
+        if (!commander.PartyIsInRaidEvent || commander.MapEventToken != _pendingRaidJoinToken || !commander.IsFollowable)
+            return;
+        if (_attachment.GetPresenceFlags().IsInMapEvent)
+            return;
+        RaiseJoin(heroId);
+    }
+
+    private void RaiseJoin(string commanderHeroId)
+    {
         try
         {
-            BattleJoinRequested?.Invoke(record.CommanderHeroId);
+            BattleJoinRequested?.Invoke(commanderHeroId);
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[EnlistDiag] maintenance BattleJoinRequested subscriber threw: {ex.Message}");
+            _logger?.LogError($"[Enlistment] BattleJoinRequested subscriber threw: {ex.Message}");
         }
     }
 

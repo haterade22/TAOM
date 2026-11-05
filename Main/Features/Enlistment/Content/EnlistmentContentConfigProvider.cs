@@ -240,6 +240,22 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             rejected = true;
         }
 
+        if (config.SitOut == null)
+            config.SitOut = new SitOutConfig();
+        if (!FiniteFloatValidator.IsFiniteInRange(config.SitOut.OverwhelmingShare, 0.5f, 1f) || config.SitOut.OverwhelmingShare <= 0.5f)
+        {
+            _logger.LogWarning($"EnlistmentContentConfigProvider: sitOut.overwhelmingShare={config.SitOut.OverwhelmingShare} must be finite in (0.5,1], reverting to {defaults.SitOut.OverwhelmingShare}");
+            config.SitOut.OverwhelmingShare = defaults.SitOut.OverwhelmingShare;
+            rejected = true;
+        }
+        rejected |= RevertIfNegative(() => config.SitOut.TrustCost, v => config.SitOut.TrustCost = v, defaults.SitOut.TrustCost, "sitOut.trustCost");
+        if (!FiniteFloatValidator.IsFiniteInRange(config.SitOut.BaseXpFactor, 0f, 1f))
+        {
+            _logger.LogWarning($"EnlistmentContentConfigProvider: sitOut.baseXpFactor={config.SitOut.BaseXpFactor} must be finite in [0,1], reverting to {defaults.SitOut.BaseXpFactor}");
+            config.SitOut.BaseXpFactor = defaults.SitOut.BaseXpFactor;
+            rejected = true;
+        }
+
         if (!IsValidPromotionLadder(config.Promotions))
         {
             _logger.LogWarning("EnlistmentContentConfigProvider: promotions must be exactly 3 entries (Soldier/Veteran/Sergeant) with strictly increasing days+XP and non-negative fields, reverting to the default ladder");

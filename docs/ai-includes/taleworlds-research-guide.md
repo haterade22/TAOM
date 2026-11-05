@@ -83,8 +83,8 @@ for client/tool discovery.
 
 ### Targeted source helper
 
-The repository [source helper](../../tools/taom-src.ps1) takes a fully qualified
-type and locates its assembly across the selected game bin and module bins:
+The repository [source helper](../../tools/taom-src.ps1) takes a short or fully
+qualified type name and locates its assembly across the selected game bin and module bins:
 
 ```powershell
 pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty
@@ -93,7 +93,7 @@ pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty
 Read the returned file, and check the selected assembly and game version before
 using it as evidence. The helper prefers an available `BANNERLORD_OVERRIDE_DIR`
 over `BANNERLORD_GAME_DIR`; inspect its output rather than assuming which install
-was selected. It writes a versioned cache under the user's `.taom-src` directory.
+was selected. It writes a cache per game build under the user's `.taom-src` directory.
 That may need permission outside a workspace-only sandbox. Do not automatically
 invoke `clean` or `remove`, or broaden permissions after a denied cache write.
 
@@ -134,6 +134,30 @@ before authorizing their scope. Keep proprietary output outside Git and external
 review packets. Check actual coverage, skipped directories, errors and version
 fingerprints after a refresh; file count alone does not prove a complete or
 current dump. Recheck the installed DLL after a game update.
+
+### Native engine code (`TaleWorlds.Native.dll`)
+
+The managed decompile ends where a method calls the engine: an `[EngineMethod("x")]`
+member of an engine interface, `MBAPI.IMB*` (MountAndBlade),
+`EngineApplicationInterface.I*` (Engine) or `LibraryApplicationInterface.I*`
+(DotNet). Animation playback, action and monster-usage tables, physics and native
+agent AI routines (`Agent_ai::`) run natively, and data such as action sets is parsed
+there too. Do not describe that behaviour from naming; decompile it with
+[native_decompile.py](../../tools/native_decompile.py):
+
+- `--engine-method <name>`: what a managed engine call does. It accepts the C# name
+  (`IMBAgent.GetCurrentActionType`, namespace-qualified or not), the engine name
+  (`get_current_action_type`, `MBAgent.get_current_action_type`), the enum member and
+  the `IMono_MBAgent::` assert form. The name resolves through the engine's id
+  registration: the shipping build keeps almost none of the names as strings.
+- `--string <text>`: the native code using an XML attribute, a source-file path
+  (`monster_usage.cpp`) or an assert text, each function decompiled.
+- `--rva <offset>`: a known address, such as a crash site.
+
+The output is Ghidra pseudo-C. Treat it as evidence of what that binary does, cite
+the RVA with the engine version, and re-derive it after an engine bump: native
+addresses move between builds. Setup and limits:
+[ghidra-native-decompile.md](../features/ghidra-native-decompile.md).
 
 ---
 

@@ -142,7 +142,8 @@ public class ServiceRewardService : IServiceRewardService, IEnlistmentWagePrevie
         // SHRINK — a demotion, a retuned dailyWageByRank, even a rank whose wage is 0 — and a
         // bare Min() would have wiped the whole standing debt on the next tick. Floor it at
         // whatever is left of yesterday's debt.
-        var alreadyBanked = System.Math.Max(0, priorArrears - delivered);
+        var arrearsReleased = System.Math.Max(0, delivered - wage);
+        var alreadyBanked = System.Math.Max(0, priorArrears - arrearsReleased);
         var carried = System.Math.Min(stillOwed, System.Math.Max(arrearsCap, alreadyBanked));
         var forfeited = stillOwed - carried;
         record.DeferredWages = carried;
@@ -156,12 +157,13 @@ public class ServiceRewardService : IServiceRewardService, IEnlistmentWagePrevie
                 + $"(owed {stillOwed}, cap {arrearsCap} = {config.WagePolicy.MaxDeferredWageDays} days x {wage}/day)");
 
         // Report what actually happened, not what was planned.
+        var paidToday = System.Math.Min(delivered, wage);
         return new WageDecision
         {
-            PaidFromCommander = config.WagePolicy.PayFromCommanderGold ? System.Math.Min(delivered, wage) : 0,
-            Minted = config.WagePolicy.PayFromCommanderGold ? 0 : System.Math.Min(delivered, wage),
-            ArrearsReleased = System.Math.Max(0, delivered - System.Math.Min(delivered, wage)),
-            NewlyDeferred = System.Math.Max(0, wage - System.Math.Min(delivered, wage)),
+            PaidFromCommander = config.WagePolicy.PayFromCommanderGold ? paidToday : 0,
+            Minted = config.WagePolicy.PayFromCommanderGold ? 0 : paidToday,
+            ArrearsReleased = arrearsReleased,
+            NewlyDeferred = System.Math.Max(0, wage - paidToday),
             Forfeited = forfeited,
         };
     }

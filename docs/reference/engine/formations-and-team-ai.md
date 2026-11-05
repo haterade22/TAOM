@@ -32,8 +32,12 @@ One group of agents. Key surface:
   arrangement grid (skirmishing, using a machine, etc.).
 
 ### `Team : IMissionTeam` (Team.cs:12)
-One side. `Side` (`BattleSideEnum` Attacker/Defender, :30); **`FormationsIncludingEmpty`** (`MBList<Formation>(8)` —
-always 8 slots by `FormationClass`, :34/:268); **`TeamAI`** (`TeamAIComponent`, :38); `GeneralsFormation`/
+One side. `Side` (`BattleSideEnum` Attacker/Defender, :30); **`FormationsIncludingEmpty`** (`MBList<Formation>(8)`, always 8 slots by `FormationClass`, :34/:268) and
+**`FormationsIncludingSpecialAndEmpty`** (10: the same eight plus General (8) and Bodyguard (9), :36/:267; the list the
+engine's own enemy walks use, `Formation.CacheClosestEnemyFormation` (`Formation.cs:1361-1371`) and `TeamQuerySystem`
+(`:190`, `:234`, `:291`), and the one a TAOM scan of ENEMY formations must use too, since
+`GeneralsAndCaptainsAssignmentLogic` fills the general and bodyguard formations in an ordinary field battle
+(`SandBoxMissions.cs:746`, `:855`); own-team splits and snapshots stay on the eight); **`TeamAI`** (`TeamAIComponent`, :38); `GeneralsFormation`/
 `BodyGuardFormation` (:112/:114). `GetFormation(FormationClass)` (:613); `AddTeamAI(...)` (:447).
 **Friend/foe:** `IsEnemyOf(otherTeam)` (:629) and **`IsFriendOf(otherTeam) => !MBTeam.IsEnemyOf(...)`** (:634) — both
 delegate to the **native `MBTeam`**.
@@ -48,6 +52,47 @@ The side's AI. Holds `_availableTactics` (`List<TacticComponent>`, :36) + `_curr
 the **max-weight tactic** (`MaxBy(weight × 1.5 sticky-bonus-if-current)`, :301) and that tactic drives
 per-formation **`BehaviorComponent`**s, which call `Formation.SetMovementOrder`/etc. `AddTacticOption` (:129),
 `StrategicArea`s (:54).
+
+### The tactic layer on v1.4.8 (plan 144)
+
+Adapted from the 1.5.x line's v1.5.3 table (`5dfa8f4cb`, `578770e03`); every row re-read on the installed v1.4.8
+with taom-src or the dump.
+
+| Fact | Where (v1.4.8) |
+|---|---|
+| Field battles: every team gets `new TeamAIGeneral(mission, team)`; tactic options are registered per team by the side's best commander Tactics skill (`Charge`; >= 20 `FullScaleAttack` plus defender `DefensiveEngagement`/`DefensiveLine` or attacker `RangedHarrassmentOffensive`; >= 50 `FrontalCavalryCharge` plus defender `DefensiveRing`/`HoldChokePoint` or attacker `CoordinatedRetreat`), then `QuerySystem.Expire()` and `ResetTactic()` | `MissionCombatantsLogic.cs:100`, `:152-177`, `:218-219` |
+| The team decides every 5 s: `MaxBy(GetTacticWeight() * (current ? 1.5 : 1))`, and a switch happens only when the new weight beats 1.5 x the current tactic's; with no enemy formation left it forces `TacticCharge` | `TeamAIComponent.cs:206`, `:276-290`, `:301`, `:316-321` |
+| `_availableTactics` is a private readonly `List` with no getter; `Team.AddTacticOption`, `RemoveTacticOption(Type)`, `ClearTacticOptions` and `ResetTactic` are public forwarders; `Team.AddTeamAI` is public and replaces the component | `TeamAIComponent.cs:36`, `:131-141`; `Team.cs:415-447` |
+| A tactic's weight is `protected internal virtual float GetTacticWeight()`; the base exposes protected `_mainInfantry` and its siblings, `AssignTacticFormations1121`, `ManageFormationCounts(int, int, int, int)` and public static `SetDefaultBehaviorWeights` | `TacticComponent.cs:26`, `:475`, `:520`, `:581`, `:589` |
+| The defensive tactics return 0 unless `IsDefenseApplicable`; `TacticDefensiveRing` builds a runtime `TacticalPosition` (public constructor) for an insurmountable region; `TeamAIComponent.TacticalPositions` is a public mutable list | `TeamAIComponent.cs:50`, `:66`, `:215-247`; `TacticDefensiveRing.cs:117`, `:180`; `TacticalPosition.cs:105` |
+| `FormationAI` ticks every 0.5 s, staggered per team; the winning behaviour is `GetAIWeight() * WeightFactor`, the running one boosted by a factor that holds 2.0, then slides to 1.2 over the last 5 s of its 10 s preserve window; orders apply only if `IsAIControlled`; `SetBehaviorWeight<T>` throws `MBException` for an unregistered T | `FormationAI.cs:63`, `:112-116`, `:130`, `:138`, `:179-182`, `:245`, `:286` |
+| `TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime` registers 24 single-player field behaviours per formation on its first unit (from `Formation.AddUnit`); a formation filled by a split gets them too, because `TransferUnitsAux` and `TransferUnitsWithPriorityFunction` set `Agent.Formation`, whose setter calls `AddUnit` | `TeamAIGeneral.cs:57-85`; `Formation.cs:2112`, `:2158`, `:1988`/`:2048`, `:2490`/`:2505`; `Agent.cs:1098`, `:1142` |
+| THREAD: `Team.Tick` runs inside `Mission.TickAgentsAndTeamsImp`, the agent-tick job (async in single player, see the thread table in `.claude/rules/harmony-patches.md`), before `tickCompleted = true`, and gates on `Mission.AllowAiTicking`, which `DeploymentMissionController` holds false through deployment | `Mission.cs:3601-3613`; `Team.cs:573-579`; `DeploymentMissionController.cs:31`, `:75` |
+| `MissionCombatantsLogic.GetAllCombatants()` and the static `SupportsAllyTeamOnPlayerSide(...)` are public | `MissionCombatantsLogic.cs:228`, `:261` |
+| `Mission.GetAgentTroopClass_Override` (a public event, consulted first) is subscribed by vanilla controllers outside field battles (hideouts, alley fights); TAOM does not subscribe it on this line. The 1.5.x line's "unsubscribed in vanilla" is wrong on v1.4.8 | `Mission.cs:1555`, `:2541-2543`; `HideoutMissionController.cs:441`, `HideoutAmbushMissionController.cs:155`, `AlleyFightMissionHandler.cs:34` |
+
+### Morale: casualty shock (v1.4.8, plan 144)
+
+Re-derived on the 1.5.x line from v1.5.5 (`d690ff8d2`) and re-read on v1.4.8 (the dump; `SandboxBattleMoraleModel`
+through taom-src). Morale is per agent, never per formation.
+
+| Constant | Value | Source (v1.4.8) |
+|---|---|---|
+| Radius of the shock around a casualty or a panicking soldier | 4 m | `AgentMoraleInteractionLogic.cs:12`, passed at `:53` and `:64` |
+| Soldiers that lose morale, and soldiers that gain it | at most 10 each | `:14-16` |
+| Who loses | up to 10 random friends of the casualty within the radius, topped up from the casualty's own formation when fewer than 10 | `:81-84` |
+| Who gains | the killer if AI-controlled, human and an enemy, then random enemies of the casualty within the radius | `:86-93` |
+| Per-soldier change | the model's maximum divided by `max(1, MoraleResistance)` | `CustomBattleMoraleModel.cs:72-75` |
+| Weapon factor k for a kill | 0.75 melee, 0.5 ranged, 0.25 area-of-effect or multiple-penetration, then x1.25 with both Burning and MultiplePenetration | `CustomBattleMoraleModel.cs:20-31`; taom-src `SandboxBattleMoraleModel.CalculateMaxMoraleChangeDueToAgentIncapacitated` |
+| Gain for the killer's side | `battleImportance * 3 * k` | `CustomBattleMoraleModel.cs:34`; `SandboxBattleMoraleModel.CalculateMaxMoraleChangeDueToAgentIncapacitated` |
+| Loss for the casualty's side | `battleImportance * 4 * k * casualtiesFactor` | `CustomBattleMoraleModel.cs:35`; `SandboxBattleMoraleModel.CalculateMaxMoraleChangeDueToAgentIncapacitated` |
+| `casualtiesFactor` | `1 + 2 * (share of the side already removed)` | `CustomBattleMoraleModel.cs:87-98` |
+| A panic | friends lose `battleImportance * casualtiesFactor * 1.1`, enemies gain `battleImportance * 2` | `CustomBattleMoraleModel.cs:51-57` |
+
+**The break cascade** [yotthani, measured on v1.5.5 with TAOM 2.0.34, MithrilForge `docs/engine/battle-behaviour-measured.md`
+lines 94-95; not re-measured on v1.4.8]: a side starts to break at about 54 % of its strongest number (range 42 to
+65 %), then goes from 50 % to 10 % in 3 to 14 s in small battles, a cascade of single panics, not formations
+turning. The Dread Aura's morale constants are in [dread-aura.md](../../features/dread-aura.md).
 
 ### Agent ↔ Formation ↔ Detachment (Agent.cs)
 **`Agent.Formation`** setter (Agent.cs:1098) (de)registers the agent with the formation + recomputes its

@@ -12,13 +12,18 @@ verbatim -- so Minas Morgul sold "Hired Pike". This script:
 Leaf copies matter: the engine randomly walks UpgradeTargets from whatever root it draws, so an
 upgrade target would let the offer drift back onto a normal Soldier line troop.
 
-Idempotent -- rerunning skips copies that already exist. Invariants pinned by
+Dry run by default; pass --apply to write. Every new text is parsed before any file is written, and
+only files whose bytes changed are written. Idempotent -- rerunning skips copies that already
+exist. Invariants pinned by
 TAOM.Tests/Features/TroopProgression/TavernMercenaryDataTests.cs.
 """
 
 from __future__ import annotations
 
+import argparse
 import re
+import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 MODULE_DATA = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
@@ -58,9 +63,9 @@ PICKS: dict[str, list[tuple[str, str, str]]] = {
         ("gundabad_scout", "gundabad", "[Gundabad] Hired Scout"),
     ],
     "goblin": [("goblin_fighter", "goblin", "[Goblin] Hired Goblin Raider")],
-    "mistymountainorcs": [
-        ("mistymountainorcs_fighter", "mistymountainorcs", "[Misty Mountains] Hired Orc Raider"),
-    ],
+    # troops_mistymountainorcs.xml is gone (f577bd547): the culture fields the goblin tree and
+    # taom_spcultures.xml binds its tavern to goblin_fighter_merc, the same copy goblin uses.
+    "mistymountainorcs": [("goblin_fighter", "goblin", "[Goblin] Hired Goblin Raider")],
     "dolguldur": [("dg_orc_scout", "dolguldur", "[Dol Guldur] Hired Orc Scout")],
     "umbar": [("umbar_elite", "umbar", "[Umbar] Hired Adûnaim Recruits")],
     "shaghana": [("harad_noble", "harad", "[Harad] Hired Youngblood of the Serpent")],
@@ -121,10 +126,8 @@ def make_mercenary_copy(block: str, source_id: str, hired_name: str) -> str:
     return copy
 
 
-def append_copies(stem: str, entries: list[tuple[str, str]]) -> int:
-    """entries: [(source id, hired name)] -> append merc copies to troops_<stem>.xml."""
-    path = TROOPS_DIR / f"troops_{stem}.xml"
-    xml = read(path)
+def plan_copies(xml: str, entries: list[tuple[str, str]]) -> tuple[str, int]:
+    """entries: [(source id, hired name)] -> (troops file text with the missing merc copies, count)."""
     new_blocks = []
 
     for source_id, hired_name in entries:
@@ -133,20 +136,20 @@ def append_copies(stem: str, entries: list[tuple[str, str]]) -> int:
         new_blocks.append(make_mercenary_copy(find_troop_block(xml, source_id), source_id, hired_name))
 
     if not new_blocks:
-        return 0
+        return xml, 0
 
     closing = xml.rindex("</NPCCharacters>")
     addition = BANNER + "\n" + "\n\n".join(new_blocks) + "\n\n"
-    write(path, xml[:closing] + normalize_newlines(addition, xml) + xml[closing:])
-    return len(new_blocks)
+    return xml[:closing] + normalize_newlines(addition, xml) + xml[closing:], len(new_blocks)
 
 
-def repoint_cultures() -> int:
-    xml = read(SPCULTURES)
+def plan_repoint(xml: str) -> tuple[str, int]:
+    """Returns (spcultures text with every picked culture repointed, blocks changed)."""
     culture_pattern = re.compile(r'<Culture\s+id="(?P<id>[^"]+)"')
     changed = 0
 
-    for match in list(culture_pattern.finditer(xml)):
+    # Last to first: a replacement changes the text's length, so later match offsets would go stale.
+    for match in reversed(list(culture_pattern.finditer(xml))):
         culture_id = match.group("id")
         if culture_id not in PICKS:
             continue
@@ -177,11 +180,22 @@ def repoint_cultures() -> int:
         xml = xml[:start] + replacement + xml[stop:]
         changed += 1
 
-    write(SPCULTURES, xml)
-    return changed
+    return xml, changed
 
 
-def main() -> None:
+def check_parses(path: Path, text: str) -> None:
+    try:
+        ET.fromstring(text.encode("utf-8"))
+    except ET.ParseError as exc:
+        raise SystemExit(f"{path.name}: generated text does not parse ({exc}); nothing written")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument("--apply", action="store_true",
+                        help="write the changed files (default is a dry run)")
+    args = parser.parse_args(argv)
+
     by_file: dict[str, list[tuple[str, str]]] = {}
     for picks in PICKS.values():
         for source_id, stem, hired_name in picks:
@@ -189,15 +203,34 @@ def main() -> None:
             if (source_id, hired_name) not in entries:
                 entries.append((source_id, hired_name))
 
+    # Build and parse every new text first: a missing source troop or a malformed result
+    # exits here, before any file is touched.
+    pending: list[tuple[Path, str, str]] = []
     total = 0
     for stem, entries in sorted(by_file.items()):
-        added = append_copies(stem, entries)
+        path = TROOPS_DIR / f"troops_{stem}.xml"
+        old = read(path)
+        new, added = plan_copies(old, entries)
         total += added
         print(f"troops_{stem}.xml: +{added} mercenary copies")
+        pending.append((path, old, new))
 
-    print(f"{total} mercenary troops added")
-    print(f"{repoint_cultures()} culture <basic_mercenary_troops> blocks repointed")
+    old = read(SPCULTURES)
+    new, repointed = plan_repoint(old)
+    pending.append((SPCULTURES, old, new))
+    print(f"{total} mercenary troops to add")
+    print(f"{repointed} culture <basic_mercenary_troops> blocks to repoint")
+
+    changed = [(path, new) for path, old, new in pending if new != old]
+    for path, new in changed:
+        check_parses(path, new)
+
+    if args.apply:
+        for path, new in changed:
+            write(path, new)
+    print(f"{len(changed)} files changed" + ("" if args.apply else " (dry run, pass --apply to write)"))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -57,6 +57,11 @@
     "incidentMinDaysServed": 7,
     "incidentCooldownDays": 3
   },
+  "sitOut": {
+    "overwhelmingShare": 0.85,
+    "trustCost": 1,
+    "baseXpFactor": 0.5
+  },
   "promotions": [
     { "toRank": "Soldier", "minDaysServed": 7, "minServiceXp": 100, "minLeadershipSkill": 0, "minDutySuccesses": 0, "minTrust": -10 },
     { "toRank": "Veteran", "minDaysServed": 25, "minServiceXp": 350, "minLeadershipSkill": 20, "minDutySuccesses": 2, "minTrust": 0 },

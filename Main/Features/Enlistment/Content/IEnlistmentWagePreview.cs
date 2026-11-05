@@ -22,7 +22,7 @@ namespace TAOM.Features.Enlistment.Content;
 public interface IEnlistmentWagePreview
 {
     /// <summary>
-    /// Nominal daily wage for the player's current rank, or 0 when not enlisted.
+    /// The rank's daily wage when a wage is due today, otherwise 0: not enlisted, or the column is lost (CommanderUnavailable).
     ///
     /// Nominal — what the contract owes — rather than what the commander can actually afford today.
     /// A projection that swung with a lord's purse would be unreadable, and the shortfall already

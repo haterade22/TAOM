@@ -31,7 +31,8 @@ MODES AND EXIT CODES (every mode: 0 ok, 1 drift, 2 error)
 
 An error is a malformed or missing input file, a duty section that is not a list, text that is not
 exactly `{=KEY}English`, no string read at all, output that would not parse as XML, a file that cannot
-be written, and (for --apply) a row id whose shared `_success`/`_failure` rows are not registered yet.
+be written, a key the tool reads that two live XML rows register (a commented-out row is ignored),
+and (for --apply) a row id whose shared `_success`/`_failure` rows are not registered yet.
 Register those two rows by hand first, then run --apply.
 
 A changed English rewrites a registered row, which makes its 12 translations stale. The report lists
@@ -149,9 +150,33 @@ def collect(data) -> tuple[dict[str, str], list[str], list[str]]:
     return strings, ids, problems
 
 
+COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def mask_comments(xml: str) -> str:
+    """The XML with every `<!-- ... -->` span blanked to `#` of equal length (line breaks kept), so a
+    commented-out row never matches, every byte position still lines up with the original, and the
+    `[ \\t]*` prefix of a row pattern can never run across a comment."""
+    return COMMENT_RE.sub(lambda m: re.sub(r"[^\r\n]", "#", m.group(0)), xml)
+
+
 def registered_rows(xml: str) -> dict[str, str]:
-    """id -> decoded text attribute. Anchored to `<string id=` so an id named in a comment never counts."""
-    return {html.unescape(m.group(1)): html.unescape(m.group(2)) for m in ROW_RE.finditer(xml)}
+    """id -> decoded text attribute of the LIVE rows. Anchored to `<string id=` and blind to comments,
+    so an id named in a comment, or a row commented out, never counts. With a repeated id the last row
+    wins here; `duplicate_ids` is what refuses that file."""
+    return {html.unescape(m.group(1)): html.unescape(m.group(2)) for m in ROW_RE.finditer(mask_comments(xml))}
+
+
+def duplicate_ids(xml: str, keys: Iterable[str]) -> list[str]:
+    """The keys among `keys` that two or more live rows register. The tool reads the last of them and
+    rewrites the first, so it refuses such a file rather than guess which one the game loads."""
+    wanted = set(keys)
+    seen: dict[str, int] = {}
+    for m in ROW_RE.finditer(mask_comments(xml)):
+        key = html.unescape(m.group(1))
+        if key in wanted:
+            seen[key] = seen.get(key, 0) + 1
+    return sorted(k for k, n in seen.items() if n > 1)
 
 
 def plan(strings: dict[str, str], xml: str) -> tuple[list[tuple[str, str]], list[tuple[str, str, str]]]:
@@ -183,9 +208,11 @@ def apply_plan(xml: str, new: list[tuple[str, str]], changed: list[tuple[str, st
     for key, _old, wanted in changed:
         row = f'\t<string id="{xml_escape(key)}" text="{xml_escape(wanted)}" />'
         pattern = re.compile(r'[ \t]*<string\s+id="' + re.escape(xml_escape(key)) + r'"\s+text="[^"]*"\s*/>')
-        xml, count = pattern.subn(lambda _m: row, xml, count=1)
-        if count != 1:
+        # Match on the comment-blanked copy (same length, same positions), splice into the real text.
+        hit = pattern.search(mask_comments(xml))
+        if not hit:
             raise ValueError(f"could not rewrite the row for {key}")
+        xml = xml[:hit.start()] + row + xml[hit.end():]
     if new:
         block = nl.join(
             f'\t<string id="{xml_escape(k)}" text="{xml_escape("{=" + k + "}" + v)}" />' for k, v in new)
@@ -237,6 +264,14 @@ def run(args: argparse.Namespace) -> int:
         print("ERROR: the duty text in enlistment_duties.json is malformed:")
         for p in problems:
             print(f"  - {p}")
+        return 2
+
+    result_keys = [f"taom_enlist_duty_{i}_{s}" for i in ids for s in RESULT_SUFFIXES]
+    twins = duplicate_ids(xml, list(strings) + result_keys)
+    if twins:
+        print("ERROR: the strings XML registers these keys on more than one live row (nothing written):")
+        for key in twins:
+            print(f"  - {key}")
         return 2
 
     new, changed = plan(strings, xml)

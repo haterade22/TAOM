@@ -87,37 +87,52 @@ TAOM's own gate requires `HasMeleeWeapon` + `IsSwing`). The 8 orc javelin carrie
 berserkers with a javelin in a secondary slot, so they keep their crush on the mace swing and lose
 nothing at range.
 
+`GetDefendCollisionResults` is an engine callback marked `[MBCallback(null, true)]` (multi-thread callable; v1.4.8
+`Mission.cs:6454-6456`), so `DecideCrushedThrough` (`MissionCombatMechanicsHelper.cs:311`) may run off the main thread;
+yotthani's v1.5.3 decompile shows native calling it from inside the parallel melee sweep (not re-traced on v1.4.8). The
+crush path logs nothing per call and reads only state built at construction, apart from the crush roll's draw on the
+engine's shared generator (`randomRoll: MBRandom.RandomFloat` in `CombatMechanicsHooks`), which the port programme
+keeps (decision D16: concurrent draws cannot plausibly leave that generator stuck). Keep anything added to the path
+read-only (the thread table in `.claude/rules/harmony-patches.md`).
+
 **Existing players keep their own MCM value.** MCM merges over JSON per read
 (`CombatMechanicsSettingsProvider.ShieldPenetrationEnabled`), so a profile that saved "Shield Penetration" as on stays on.
 The empty grant lists are the second line of defence: `IsGranted` matches nothing, so the mechanic is
 inert even with a stale toggle. Pinned by
 `ShieldPenetrationServiceTests.ShippedDefaults_MechanicToggledOn_StillGrantsNothingAndLeavesShieldDamageAlone`.
 
-### Charge knockdown formula (v1)
+### Charge knockdown formula (v2, #610)
 
 ```
 speedRef    = charger Monster relative_speed_limit_for_charge if sane, else 4.3 (Native horse)
 speedFactor = clamp01(chargeVelocity / speedRef)
 weightRatio = (chargerWeight + riderWeight) / max(victimWeight, 1)        // Monster.Weight from monsters.xml
-Branch A: weightRatio ≥ 8 && speedFactor ≥ 0.4                → knock down (ignores the 0.7-dot gate)
+Branch A: weightRatio >= auto (MCM ChargeAutoKnockdownRatio, default 6) && speedFactor >= 0.4 -> knock down (ignores the 0.7-dot gate)
 Branch B: requires BlowFlags.KnockBack (0.7-dot parity);
-          pen = 0.4 × clamp(weightRatio / 6.0, 0.25, 2.5) × speedFactor
+          pen = 0.4 × clamp(weightRatio / 6.0, 1.0, 2.5) × speedFactor
           knock down iff damage ≥ maxHealth × max(0, knockDownRes × raceResist − pen)
 ```
 
-Calibration: neutral 6.0 = Native (horse 400 + rider 80)/human 80 → horse-vs-man ≈ vanilla; mûmakil (9999) vs man ≈ ratio 125 → Branch A; horse vs troll (160) = ratio 3 → penetration halved; dwarf `raceResist` 2.5. Branch B's `false` is an owned verdict — deliberately stricter than vanilla for light chargers. `ChargeKnockdownContext` is the designated extension point for the planned future factors (collision angle, tiers, perks, attacker race).
+Calibration (v2, #610, ported from the 1.5.x line): neutral 6.0 is Native horse 400 + rider 80 over a human 80, so an ordinary horse against a man meets vanilla's rule. The v1 floor of 0.25 scaled the penetration down for every victim heavier than the charger; the 1.5.x line measured that a horse-vs-orc knockdown then needed 30 to 52 damage on hits that deal 5 to 15. v2: `minPenetrationFactor` 1.0, so the weight term never pushes a light charger below vanilla (lighter victims keep the bonus up to 2.5x); `autoKnockdownWeightRatio` 6, so a full-speed horse and man contact floors a man from any angle; the race rows do the resisting: `cave_troll` and `hill_troll` 4.0 (a threshold near 200 damage, above any horse; a mumak is Branch A), `dwarf` 2.5, `sauron` 3.0, and `uruk_hai` no longer 1.25. Vanilla for reference (v1.4.8 `MissionCombatMechanicsHelper.cs:54-59`, `:74-90`, `:336-340`): a horse charge knocks back only on a head-on contact (dot product at least 0.7) and knocks down only then, when damage >= maxHP x max(0, knockdown resistance - 0.4). Branch B's `false` is still an owned verdict; `ChargeKnockdownContext` stays the extension point for future factors.
+
+### Custom Battle
+
+Custom Battle (and the editor's test battle) installs the engine's `CustomAgentApplyDamageModel` on a `BasicGameStarter` (v1.4.8 `CustomGame.InitializeGameModels`). The campaign model derives from `SandboxAgentApplyDamageModel`, whose `ApplyDamageReductions` reads `DefaultSkillEffects.MountedWeaponDamagePenalty` for a mounted attacker through `Campaign.Current` (v1.4.8 `SandboxAgentApplyDamageModel.cs:509-512`), null outside a campaign. So Custom Battle gets a twin, `TaomCustomBattleDamageModel` on the Custom Battle base, registered from `SubModule.RegisterCustomBattleModels`. It makes the campaign model's `CombatMechanicsHooks` calls in the same order; `CustomBattleDamageModelTests` fails when the campaign model gains an override or a hook call the twin lacks. Campaign-only by design: the career damage passives (they read heroes) and the Refuge reduction (it reads the defender's party). The MCM toggles apply in both modes.
+
+Where the Custom Battle base answers differently (v1.4.8 `CustomAgentApplyDamageModel.cs`), the same delegate lands on a different number: crush-through falls back to a stricter base that needs a `CanCrushThrough` weapon (`:115-133`); the stagger threshold is the flat managed parameter (`:257-261`); shield damage is multiplied by 1.25 before the runtime correction (`:294-305`); the missile flags start with no perk grant (`:111-113`). Custom Battle results measured before this change are pre-#788 baselines.
 
 ## Configuration
 
 `Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json` — per-mechanic enables, all curve constants, creature id lists, unstoppable damage thresholds, shield-pen item/class lists, and the `raceModifiers` table (keyed by race NAME, `raceage/race_age_config.json` precedent). Validated by `CombatMechanicsConfigProvider` (`FiniteFloatValidator` before every range check; ordering invariants; unknown `weaponClasses` entries skipped via `Enum.TryParse<WeaponClass>`; revert-to-default + summary warning). Deserialized with `ObjectCreationHandling.Replace` so JSON lists/dicts replace compiled defaults instead of append-merging. **Reload scope: full application restart** (Singleton provider).
 
-MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggles + `CrushThroughMaxChance` slider + `ChargeAutoKnockdownWeightRatio` slider. MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
+MCM: "Combat Mechanics" group (GroupOrder 24): master + 8 per-mechanic toggles + `CrushThroughMaxChance` slider + `ChargeAutoKnockdownRatio` slider (renamed from `ChargeAutoKnockdownWeightRatio` when its default moved from 8 to 6, so the 6 reaches saved settings). MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
 
 ## Key Files
 
 | File | Purpose |
 |---|---|
 | `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 10 overrides, each base plus one call per feature; under ADR-002's 150 lines (`CombatMechanicsModelInvariantsTests` pins the exact set, the ceiling and which agent reaches which seam) |
+| `Main/Features/CombatMechanics/Models/TaomCustomBattleDamageModel.cs` | Custom Battle's twin (#788) on `CustomAgentApplyDamageModel`: the nine 1.4.x Combat Mechanics overrides, no career passives, no Refuge; pinned by `CustomBattleDamageModelTests` |
 | `Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs` | The model's boundary to the four services, one method per seam, with the context builders and primitive extractors (#737) |
 | `Main/Features/CombatMechanics/CrushThroughService.cs` | Skill CTB curve + monster auto-CTB + orc shield-CTB |
 | `Main/Features/CombatMechanics/ChargeKnockdownService.cs` | Weight-driven two-branch charge knockdown |

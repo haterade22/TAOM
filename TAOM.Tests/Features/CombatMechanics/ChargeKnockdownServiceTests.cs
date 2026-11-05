@@ -185,20 +185,62 @@ public class ChargeKnockdownServiceTests
     }
 
     [TestMethod]
-    public void DecideChargeKnockdown_HeavierVictim_ScaledPenetrationFlipsVerdict()
+    public void DecideChargeKnockdown_HeavierVictim_KeepsVanillaParity()
     {
-        // vs man: ratio 6.0 → pen 0.4 → threshold ≈ 20 → damage 25 knocks down.
-        // vs troll (160): ratio 3.0 → clamp(3/6) = 0.5 → pen 0.2 → threshold ≈ 40 → stays up.
-        var vsMan = Context(victimWeight: 80, inflictedDamage: 25f);
-        var vsTroll = Context(victimWeight: 160, inflictedDamage: 25f);
+        // #610: with the shipped floor of 1.0 the weight term never scales the penetration below vanilla.
+        // vs man: ratio 6.0 -> pen 0.4 -> threshold 20 -> damage 25 floors him. vs an uruk (160): ratio 3.0 ->
+        // clamp(0.5, floor 1.0) = 1.0 -> pen 0.4 -> the same 20. With the old floor of 0.25 the uruk needed 40.
+        var manResult = _sut.DecideChargeKnockdown(Context(victimWeight: 80, inflictedDamage: 25f));
+        var urukResult = _sut.DecideChargeKnockdown(Context(victimWeight: 160, inflictedDamage: 25f));
 
-        var manResult = _sut.DecideChargeKnockdown(vsMan);
-        var trollResult = _sut.DecideChargeKnockdown(vsTroll);
+        Assert.IsTrue(manResult.HasValue && manResult.Value);
+        Assert.IsTrue(urukResult.HasValue && urukResult.Value);
+    }
 
-        Assert.IsTrue(manResult.HasValue);
-        Assert.IsTrue(manResult.Value);
-        Assert.IsTrue(trollResult.HasValue);
-        Assert.IsFalse(trollResult.Value);
+    [TestMethod]
+    public void DecideChargeKnockdown_MinFactorBelowOne_ShrinksPenetrationForHeavyVictims()
+    {
+        _config.ChargeKnockdown.MinPenetrationFactor = 0.25f;   // the pre-#610 floor: uruk pen 0.2 -> needs 40
+        var vsUruk = CreateSut().DecideChargeKnockdown(Context(victimWeight: 160, inflictedDamage: 25f));
+
+        Assert.IsTrue(vsUruk.HasValue);
+        Assert.IsFalse(vsUruk.Value);
+    }
+
+    [TestMethod]
+    public void DecideChargeKnockdown_AutoRatioSix_FloorsHorseAndManVsManFromAnyAngle()
+    {
+        // Horse 400 + rider 80 over man 80 is exactly 6.0: a full-speed contact is Branch A and never asks the 0.7-dot flag.
+        _settings.ChargeAutoKnockdownWeightRatio.Returns(6f);
+
+        var result = _sut.DecideChargeKnockdown(Context(inflictedDamage: 1f, hasKnockBackFlag: false));
+
+        Assert.IsTrue(result.HasValue && result.Value);
+    }
+
+    [TestMethod]
+    public void DecideChargeKnockdown_TrollRaceRow_StaysUpAtParityPenetration()
+    {
+        // Trolls share weight 160 with uruks, so the race row must hold them: 100 * (0.6 * 4 - 0.4) = 200.
+        _raceModifiers.Resolve(7).Returns(new RaceCombatModifiers { KnockdownResistanceMultiplier = 4f });
+
+        var result = _sut.DecideChargeKnockdown(Context(victimRaceId: 7, victimWeight: 160, inflictedDamage: 100f));
+
+        Assert.IsTrue(result.HasValue);
+        Assert.IsFalse(result.Value);
+    }
+
+    [TestMethod]
+    public void DecideChargeKnockdown_WeightTermAboveMax_ClampsToTheJsonMaxPenetrationFactor()
+    {
+        // Branch B only. Ratio 480 / 20 = 24 is 4x neutral; the max of 2.5 caps it: pen 0.1 * 2.5 = 0.25,
+        // threshold 100 * (0.6 - 0.25) = 35. Unclamped it would be 0.4 and 30 damage would floor him.
+        _settings.ChargeAutoKnockdownWeightRatio.Returns(30f);
+        _config.ChargeKnockdown.HorseChargePenetration = 0.1f;
+        var sut = CreateSut();
+
+        Assert.IsFalse(sut.DecideChargeKnockdown(Context(victimWeight: 20, inflictedDamage: 30f))!.Value);
+        Assert.IsTrue(sut.DecideChargeKnockdown(Context(victimWeight: 20, inflictedDamage: 36f))!.Value);
     }
 
     [TestMethod]

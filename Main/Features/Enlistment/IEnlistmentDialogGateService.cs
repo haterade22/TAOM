@@ -14,15 +14,16 @@ public enum EnlistGateResult
 }
 
 /// <summary>
-/// Eligibility gates for the enlist/discharge dialog lines. Pure decisions over the
-/// store + adapters; the dialog behavior only renders the verdicts.
+/// Eligibility gates for the enlistment dialog lines (enlist, kit, reassignment, release) and the
+/// service menu's release option. Pure decisions over the store and adapters; callers only render
+/// the verdicts.
 /// </summary>
 public interface IEnlistmentDialogGateService
 {
     EnlistGateResult CanEnlistWith(string partnerHeroId);
 
-    /// <summary>True when the conversation partner is the player's current commander.</summary>
-    bool CanRequestDischargeFrom(string partnerHeroId);
+    /// <summary>True when the player serves under this conversation partner.</summary>
+    bool IsServingUnder(string partnerHeroId);
 
     /// <summary>
     /// The reason recorded for a leave the commander GRANTS. Always an honourable player
