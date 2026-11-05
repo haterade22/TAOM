@@ -35,6 +35,13 @@ public class BattleLoadDiagnosticsSettingsProviderTests
     }
 
     [TestMethod]
+    public void FreezeDumpEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.IsFalse(sut.FreezeDumpEnabled);
+    }
+
+    [TestMethod]
     public void MemorySampleIntervalSeconds_NoMcmInstance_Defaults30()
     {
         var sut = new BattleLoadDiagnosticsSettingsProvider();

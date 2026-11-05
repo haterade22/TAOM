@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using TAOM.Core.Logging;
 
@@ -35,6 +36,7 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
     private Episode? _episode;
     private int _gcRef;
     private long _gcRefTicks;
+    private bool _dumpAttempted; // the singleton lives for the process, so this is once per process
 
     // One stretch of silence: the beat it started from and what it has logged.
     private sealed class Episode
@@ -86,6 +88,11 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
     /// <summary>The stack source; tests swap it for a fake that suspends nothing.</summary>
     internal Func<Thread, string> DescribeStack { get; set; } =
         thread => FormatStack(ThreadStackCapture.Capture(thread));
+
+    internal delegate bool TryWriteDump(string directory, out string pathOrError);
+
+    /// <summary>The dump source; tests swap it for a fake that writes nothing.</summary>
+    internal TryWriteDump WriteDump { get; set; } = FreezeDumpWriter.TryWrite;
 
     internal static string FormatStack(StackTrace stack)
         => stack.FrameCount == 0 ? FreezeLog.NoManagedFrames : ThreadStackCapture.FormatFrames(stack);
@@ -165,20 +172,59 @@ public sealed class MainThreadFreezeWatchdog : IDisposable
         _gcRef = gen0Now;
         _gcRefTicks = now;
 
-        if (action == FreezeSampleAction.None) return;
+        // Independent of the sample action; the line, when there is one, goes first.
+        bool writeDump = FreezeDumpPolicy.ShouldWrite(_settings.FreezeDumpEnabled, _dumpAttempted, index, standDown,
+            heapMoving, _tail.Available, _tail.SecondsSinceLastCompile(now));
 
+        if (action != FreezeSampleAction.None) LogSample(action, standDown, index, silent, gcDelta, window, main, now);
+        if (writeDump) WriteDumpOnce();
+    }
+
+    private void LogSample(FreezeSampleAction action, FreezeStandDown standDown, int index, double silent, int gcDelta, double window, Thread? main, long now)
+    {
         string second = standDown == FreezeStandDown.MissionFrame ? FreezeLog.NotSampledMissionFrame
             : action == FreezeSampleAction.LogWithoutStack ? FreezeLog.NotSampledHeapMoving(gcDelta, (int)window)
             : Describe(main);
         if (action == FreezeSampleAction.LogWithoutStack && standDown == FreezeStandDown.None)
-            _episode.HeapLineLogged = true;
-        _episode.LinesLogged++;
+            _episode!.HeapLineLogged = true;
+        _episode!.LinesLogged++;
 
         _logger.LogWarning(
             FreezeLog.FormatSample((int)silent, index + 1, Context(), ShadersIfWindowOpen(),
                 _tail.Available, _tail.CompilesSinceFresh, LastCompileAgo(now), ProcessMemoryTokens.Format(),
                 _service.CurrentStatusLine)
             + "\n" + second);
+    }
+
+    private void WriteDumpOnce()
+    {
+        _dumpAttempted = true;
+        string directory = DumpDirectory();
+        _logger.LogInfo(WriteDump(directory, out string pathOrError)
+            ? $"{FreezeLog.Tag} memory dump written: {pathOrError} ({FileMegabytes(pathOrError)} MB)"
+            : $"{FreezeLog.Tag} memory dump failed: {pathOrError}");
+    }
+
+    private string DumpDirectory()
+    {
+        try
+        {
+            string? log = _logger.LogFilePath;
+            string? folder = string.IsNullOrEmpty(log) ? null : Path.GetDirectoryName(Path.GetFullPath(log));
+            if (!string.IsNullOrEmpty(folder)) return folder!;
+        }
+        catch (Exception)
+        {
+            // fall through to the default folder
+        }
+
+        return "Logs";
+    }
+
+    private static long FileMegabytes(string path)
+    {
+        try { return new FileInfo(path).Length / (1024 * 1024); }
+        catch (Exception) { return 0L; }
     }
 
     // A notice failure never stops the sampling.

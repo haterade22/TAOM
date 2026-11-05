@@ -431,6 +431,10 @@ The `[ShaderCache]` line at startup says whether the engine dropped its runtime 
 
 **Known blind spot.** The beat runs after `GlobalGameStateManager.OnTick` and `GameManagerBase.Current.OnTick` in `Module.OnApplicationTick` (v1.4.8 `Module.cs:512`, `:519`, `:523`), and Patch37's finalizer on `Module.OnApplicationTick` swallows a throw from those ticks. A frame whose game tick throws skips the beat, so a throw repeated every frame reads as silence while frames still run. The `[CrashReport]` capture lines in the same log tell the two apart.
 
+### Optional freeze dump
+
+A Task Manager dump is a full dump, about the game's memory use (9 to 11 GB in the 2026-11-01 logs), and a frozen player rarely takes one. MCM "Write Memory Dump On Freeze" (`WriteFreezeDump`, default off) makes the freeze sampler write a thread-stacks-only minidump itself, a few MB, which names the native frame. It fires at the 80 s threshold with the heap flat and no `compile_shader` line in the last 30 s, once per game session; never during the pre-compilation walk or the exit window; a mission frame in flight does not stop it. The file is `taom_freeze_<date>_<time>_pid<pid>.dmp` in the folder of the TAOM debug log, and the log gets `[Freeze] memory dump written: <path> (<n> MB)` or `[Freeze] memory dump failed: <error>`. To read one: WinDbg `~*k`, then `python tools/native_crash_triage.py --rva 0x<offset>` for a frame in `TaleWorlds.Native.dll`. The call shape comes from the shipped `Bannerlord.ButterLib.dll`.
+
 ### The render-wait notice
 
 A window over the loading screen while a battle sits at the render gate, published by the freeze watchdog on every silent poll (`RenderWaitNoticeDecider`, `RenderWaitNoticeHost`). The honesty rule is binding: it says "compiling" only while `compile_shader` lines are arriving in the engine log, and it never uses the main thread's shader count as progress, because that count freezes with the thread (#612).
@@ -644,6 +648,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `EnableExitStallSampler` | `true` | The exit-stall stack sampler (#331 round 2) — the only diagnostics component that suspends the main thread; its own kill switch, separate from the master toggle. |
 | `EnableMissionTickStallSampler` | `true` | The battle-freeze sampler (#634): photographs an agent tick or mission frame stuck for 10s or more as `[MissionStall]`. Never arms on a teardown frame and stands down during the exit window. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMainThreadFreezeSampler` | `true` | The main-thread freeze sampler: `[Freeze]` lines at 10/20/40/80 s without a finished frame, anywhere in the game. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
+| `WriteFreezeDump` | `false` | "Write Memory Dump On Freeze": one thread-stacks minidump per session at 80 s of silence with a flat heap and no recent compile. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 
@@ -670,6 +675,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/MainThreadHeartbeat.cs` / `MainThreadFreezeWatchdog.cs` | Main-thread freeze sampler: the per-frame stamp and the 1 s timer that writes `[Freeze]` |
 | `Main/Features/BattleLoadDiagnostics/FreezeSamplePolicy.cs` / `FreezeLog.cs` | Pure thresholds, stand-downs and heap gate; the pinned line formats |
 | `Main/Features/BattleLoadDiagnostics/RenderWaitNotice.cs`, `Main/Features/ShaderCompileNotice/RenderWaitNoticeHost.cs` / `RenderWaitNoticeTexts.cs` | The render-wait notice: the pure decider, its window thread, its texts |
+| `Main/Features/BattleLoadDiagnostics/FreezeDumpPolicy.cs` / `FreezeDumpWriter.cs` | The opt-in freeze dump: when it may fire, and the `MiniDumpWriteDump` call |
 | `Main/Features/BattleLoadDiagnostics/RglLogLocator.cs` / `IRglCompileTail.cs` / `RglCompileTail.cs` | Finds this process's full engine log and counts `compile_shader` lines by file tail |
 | `Main/Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs` | Prefix + finalizer on `Mission.TickAgentsAndTeamsImp` and `MissionState.TickMissionAux` (the latter armed only while `Continuing`). With these two the `Hooks/` folder holds 21 `[HarmonyPatch]` classes (counted 2026-09-22), so the "17" in the row above is stale |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
@@ -718,8 +724,9 @@ OUTERMOST gate.
 `TAOM.Tests/Features/BattleLoadDiagnostics/` (307 tests as of 2026-09-22, all green; the 211 quoted here earlier was stale; 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests); see *Crash-durability caveat*:
 
 - `RenderWaitNoticeDeciderTests` (9): one test per reading of the honesty rule.
+- `FreezeDumpPolicyTests` (8) and `FreezeDumpWriterTests` (1): when the opt-in dump fires, its file name.
 - `StallEvidenceTests` (6): the next-session notice's reading of the prior log, with `[Freeze]` lines built by `FreezeLog` so the contract stays one.
-- `MainThreadFreezeWatchdogTests` (16), `MainThreadHeartbeatTests` (3), `FreezeSamplePolicyTests` (6), `FreezeLogTests` (4), `RglLogLocatorTests` (4) and `RglCompileTailTests` (6): the 10/20/40/80 s schedule, one `recovered` line, every stand-down, the heap gate with the E4 calibration, the pinned literals, the engine-log tail.
+- `MainThreadFreezeWatchdogTests` (18), `MainThreadHeartbeatTests` (3), `FreezeSamplePolicyTests` (6), `FreezeLogTests` (4), `RglLogLocatorTests` (4) and `RglCompileTailTests` (6): the 10/20/40/80 s schedule, one `recovered` line, every stand-down, the heap gate with the E4 calibration, the pinned literals, the engine-log tail.
 - `MissionTickStallWatchdogTests` (13) and `ThreadStackCaptureTests` (3), #634: the 10/20/40 s schedule, episode reset, one stack per thread (a nested same-thread tick is photographed once, as the frame), both threads photographed when the agent tick is stuck on its own, the exit-window stand-down, master-toggle independence, a throwing capture still reported, `Start()` idempotent, the probe's thread record, and the capture's null and dead-thread guards and line format.
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
@@ -895,6 +902,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-11-04 (1.4.x, WP113): opt-in memory dump of a frozen game.
 - 2026-11-04 (1.4.x, WP113): next-session stall notice says what the last load was doing, from the prior log (LOADING-HANG-04).
 - 2026-11-04 (1.4.x, WP113): render-wait notice that says "compiling" only while the engine log shows compiles.
 - 2026-11-04 (1.4.x, WP113): main-thread heartbeat and `[Freeze]` sampler, with the engine log's `compile_shader` count in every line.

@@ -252,6 +252,47 @@ public class MainThreadFreezeWatchdogTests
     }
 
     [TestMethod]
+    public void FreezeDumpEnabled_WritesOnceAtEightySeconds()
+    {
+        _settings.FreezeDumpEnabled.Returns(true);
+        int writes = 0;
+        _sut.WriteDump = (string directory, out string pathOrError) =>
+        {
+            writes++;
+            pathOrError = @"C:\nowhere\taom_freeze.dmp";
+            return true;
+        };
+        BeatAndSeeIt();
+
+        foreach (double s in new[] { 10d, 20d, 40d, 80d, 160d }) _sut.Poll(At(s));
+        _heartbeat.BeatAt(At(200));
+        _sut.Poll(At(200.5));
+        _heartbeat.BeatAt(At(201));
+        _sut.Poll(At(201.5));
+        foreach (double s in new[] { 211d, 221d, 241d, 281d }) _sut.Poll(At(s));
+
+        Assert.AreEqual(1, writes, "one dump per process");
+        Assert.IsTrue(_infos.Any(l => l.StartsWith(@"[Freeze] memory dump written: C:\nowhere\taom_freeze.dmp (")), string.Join("|", _infos));
+    }
+
+    [TestMethod]
+    public void FreezeDumpOff_WritesNothing()
+    {
+        int writes = 0;
+        _sut.WriteDump = (string directory, out string pathOrError) =>
+        {
+            writes++;
+            pathOrError = "";
+            return true;
+        };
+        BeatAndSeeIt();
+
+        foreach (double s in new[] { 10d, 20d, 40d, 80d }) _sut.Poll(At(s));
+
+        Assert.AreEqual(0, writes);
+    }
+
+    [TestMethod]
     public void RglCompilesSinceLastFrame_AppearInTheLine()
     {
         _tail.CompilesSinceFresh.Returns(31);

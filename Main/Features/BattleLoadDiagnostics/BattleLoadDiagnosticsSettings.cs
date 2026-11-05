@@ -50,6 +50,11 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
         HintText = "If the game finishes no frame for 10 seconds anywhere (map, menus, loading screens), writes a [Freeze] line to the TAOM debug log at +10/+20/+40/+80 s with the number of shaders the engine compiled meanwhile, and photographs the main thread's call stack when that is safe. It never runs while the game is responsive, stands aside during a mission exit and the shader pre-compilation walk, and skips the stack while the game is busy saving or loading. Default ON.")]
     public bool EnableMainThreadFreezeSampler { get; set; } = true;
 
+    [SettingPropertyGroup("Exit Stall Sampler")]
+    [SettingPropertyBool("Write Memory Dump On Freeze", Order = 3, RequireRestart = false,
+        HintText = "When the game has finished no frame for 80 seconds and the engine log shows no shader compiling, writes one small memory dump (thread stacks only, a few MB) to the TAOM Logs folder for a bug report. One per game session. Off by default: turn it on when asked to help with a freeze report.")]
+    public bool WriteFreezeDump { get; set; } = false;
+
     [SettingPropertyGroup("Memory Sampler")]
     [SettingPropertyBool("Enable Memory Sampler", Order = 0, RequireRestart = false,
         HintText = "Writes memory telemetry to the TAOM debug log: a periodic [MemSample] line (process private/working-set MB, managed heap, system commit use/limit, available RAM), a one-shot WARN when system commit headroom runs low, and a [MemStation] line each time a screen opens or closes so growth can be attributed to a screen. This ONE switch governs all three. Independent of the master Battle Load Diagnostics toggle: this is session-wide crash forensics, not battle-load phase logging. Default ON.")]

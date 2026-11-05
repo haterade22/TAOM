@@ -30,6 +30,9 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool MainThreadFreezeSamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableMainThreadFreezeSampler ?? true;
 
+    public bool FreezeDumpEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.WriteFreezeDump ?? false;
+
     public double StallWatchdogSeconds
     {
         get
