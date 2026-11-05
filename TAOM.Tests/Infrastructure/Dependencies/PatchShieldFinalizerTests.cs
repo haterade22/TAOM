@@ -37,6 +37,7 @@ public class PatchShieldFinalizerTests
     {
         [MethodImpl(MethodImplOptions.NoInlining)] public static void SwallowVoid() { }
         [MethodImpl(MethodImplOptions.NoInlining)] public static int SwallowWithResult() => 7;
+        [MethodImpl(MethodImplOptions.NoInlining)] public static int SwallowPostfixWithResult() => 7;
         [MethodImpl(MethodImplOptions.NoInlining)] public static void RethrowVoid() => throw new InvalidOperationException("034 rethrow");
         [MethodImpl(MethodImplOptions.NoInlining)] public static int RethrowWithResult() => throw new InvalidOperationException("034 rethrow");
         [MethodImpl(MethodImplOptions.NoInlining)] public static void InnerShielded() => throw new InvalidOperationException("034 nested");
@@ -141,8 +142,12 @@ public class PatchShieldFinalizerTests
         _foreign.Patch(Target(nameof(Targets.SwallowVoid)), prefix: prefix);
         _foreign.Patch(Target(nameof(Targets.SwallowWithResult)), prefix: prefix);
 
+        _foreign.Patch(Target(nameof(Targets.SwallowPostfixWithResult)),
+            postfix: new HarmonyMethod(AccessTools.Method(typeof(ForeignPatches), nameof(ForeignPatches.ThrowMissingMethod))));
+
         Shield(nameof(Targets.SwallowVoid), "ShieldFinalizerVoid");
         Shield(nameof(Targets.SwallowWithResult), "ShieldFinalizerWithResult");
+        Shield(nameof(Targets.SwallowPostfixWithResult), "ShieldFinalizerWithResult");
         Shield(nameof(Targets.RethrowVoid), "ShieldFinalizerVoid");
         Shield(nameof(Targets.RethrowWithResult), "ShieldFinalizerWithResult");
         Shield(nameof(Targets.InnerShielded), "ShieldFinalizerVoid");
@@ -263,6 +268,18 @@ public class PatchShieldFinalizerTests
 
         Assert.IsInstanceOfType(ex, typeof(InvalidOperationException));
         StringAssert.Contains(ex.StackTrace, Marker(nameof(Targets.RethrowVoid)));
+    }
+
+    [TestMethod]
+    public void ShieldFinalizerWithResult_ForeignPostfixThrowsMissingMethod_KeepsTheOriginalsValue()
+    {
+        ForeignPatches.NextMessage = "plan034-" + Guid.NewGuid().ToString("N");
+        long swallowedBefore = PatchShield.SwallowedMissingMethod;
+
+        var result = Targets.SwallowPostfixWithResult();
+
+        Assert.AreEqual(1L, PatchShield.SwallowedMissingMethod - swallowedBefore, "the postfix faulted and the fault was swallowed");
+        Assert.AreEqual(7, result, "a fault in a postfix leaves the original's own value in the result local");
     }
 
     [TestMethod]
