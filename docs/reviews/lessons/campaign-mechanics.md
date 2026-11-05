@@ -473,3 +473,15 @@ Addendum, same review: the fix above keyed four new consumers on `EnlistmentStat
 - **Why missed:** "vanilla formula, then times the race factor" reads as a neutral composition. A brake that works by scaling toward zero is undone by any factor above 1 over half its range, and nobody asked what the multiplier did to it.
 - **Prevent:** when a TAOM factor multiplies a vanilla result that already contains a limiter (a cap, a population brake, a clamp), decide which one wins and encode it. Here a bonus above 1.0 applies only when an NPC clan is at or under its cap (`aliveLords <= clanCap`); past it the modifier is clamped to 1, and a penalty below 1.0 applies everywhere. Pin the property as a test ("a bonus race never out-breeds the human rate at the same fill"), not only point values.
 - **Source:** #628, `docs/reviews/rca-race-fertility-2026-09-19.md` item A.
+
+### A clan that changes kingdom moves its fiefs with no owner-change event
+`ChangeKingdomAction` join, defection (`JoinKingdomByDefection`) and create set `clan.Kingdom` (v1.4.8
+`ChangeKingdomAction.cs:65`), and every leave detail, rebellion (`LeaveWithRebellion`) included, sets it to null
+(`:76`). The clan keeps its settlements, so each fief's map faction changes without
+`OnSettlementOwnerChangedEvent`. Only a plain `LeaveKingdom` hands the fiefs over through
+`ChangeOwnerOfSettlementAction` (`:95-98`); every detail raises `OnClanChangedKingdom` (`:161`).
+- **Why missed:** a design that takes one engine event as the ownership signal misses these moves (found by the
+  1.5.x War Chronicle review, finding C02).
+- **Prevent:** treat the owner event as a fast path, and re-check the owner of every watched settlement in the
+  daily step, or also listen to `OnClanChangedKingdom`.
+- **Source:** 1.5.x `e8504a62b` (fixed there in `7e8451555`); re-checked on the installed v1.4.8 DLLs.

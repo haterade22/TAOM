@@ -18,6 +18,19 @@ periodic event to an exact tick multiple of `CampaignStartTime` on both new-game
 `CampaignTime.Days(1f)` is bit-exact at 864,000,000 ticks, so Day 30/44 carries no fractional-drift
 risk that Day 2/14 did not.
 
+**Correction (found on the 1.5.x line 2026-10-14; re-checked on v1.4.8 2026-11-04):** the load half
+of that claim is wrong. On a load, `Campaign.CreateCampaignEvents` (v1.4.8 `Campaign.cs:1002-1026`,
+run from `OnDataLoadFinished` at `:724`) sets the daily event's initial wait to the elapsed part of the
+current day, not to the rest of it (`:1004-1010`), and `MBCampaignEvent` sets `NextTriggerTime` to now
+plus that wait (`MBCampaignEvent.cs:32`). A save made at fraction f of elapsed day S next ticks at
+S + 2f, so the daily event leaves the elapsed-day boundary after a load part way through a day, and a
+save made in the first half of elapsed day S ticks day S a second time. Elapsed days start at
+`CampaignStartTime` (09:00 on vanilla's calendar clock, `DefaultCampaignTimeModel.cs:7`), not at
+midnight. The new-game half holds: a new campaign starts its clock at `CampaignStartTime`
+(`Campaign.cs:1402`) and waits one whole day. The 1.4.x War of the Ring daily handlers
+(`WarOfTheRingBehavior.cs:38`, `WarOfTheRingMomentumBehavior.cs:83`) have no once-per-day guard;
+whether each is safe to run twice for one day is not audited yet (#793).
+
 The mistake was in **how** the retune avoided a collision it had already noticed. `PhaseConfig`'s
 own default is `TriggerDay = 30`, so `Phase1` and `Phase2` both defaulted to 30 — equal days. The
 retune fixed that by giving `Phase2` a distinct compiled default of 44 and wrote a comment

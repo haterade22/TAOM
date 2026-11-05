@@ -747,3 +747,16 @@ KEYforce's Gondor drop deleted `gondor_ring_peasant`, a Glanhir volunteer since 
 - **Why missed:** a save-compat decision is scoped to the branch it was made on, but nothing records it next to the data, so a port carries the deletion without the reasoning.
 - **Prevent:** keep a retired troop's row, hidden (`is_hidden_encyclopedia="true"`) and in no pool, and list it in `RetiredSaveCompatTroops` (`VolunteerRecruitmentServiceTests`), which fails the build if the row disappears and exempts it from the reachability test. Delete a row only on a branch nobody has saves for, or once #670 gives Patch83 a seam that runs before the unregister.
 - **Source:** `docs/reviews/rca-public-armory-ids-2026-09-30.md` finding 3; #670; #697.
+
+### After a load, the daily tick can repeat the save's own day: guard once-a-day work by day (#793)
+On every load, v1.4.8 `Campaign.CreateCampaignEvents` (`Campaign.cs:1004-1010`, run from `OnDataLoadFinished` at
+`:724`) sets the daily event's first wait to the part of the current day already elapsed, and `MBCampaignEvent`
+schedules it at now plus that wait (`MBCampaignEvent.cs:32`). A save made a fraction f into elapsed day S next ticks
+at S + 2f. So a save in the first half of an elapsed day (09:00 to 21:00 on vanilla's calendar clock, since elapsed
+days start at `CampaignStartTime`) runs day S's daily handlers twice, and repeated reloads can skip a day.
+- **Why missed:** `rca-wotr-phase-ordering-2026-07-30.md`, checked against v1.4.7, said the event re-aligns on
+  load (corrected on this line 2026-11-04).
+- **Prevent:** a daily handler that must not run twice records the last elapsed day it ran, saves it with its
+  state, and skips a repeat. Describe the boundary in elapsed days, never in calendar hours. TAOM's daily
+  listeners are not audited yet (#793).
+- **Source:** #793; found on the 1.5.x line (`e8504a62b`), re-checked on the installed v1.4.8 DLLs.
