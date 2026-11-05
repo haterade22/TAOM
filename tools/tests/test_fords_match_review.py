@@ -170,6 +170,10 @@ class FindingTests(unittest.TestCase):
     def test_a_normal_match_says_nothing_about_speed(self):
         self.assertNotIn("SPEED", text(r.findings(facts())))
 
+    def test_a_win_on_time_names_the_winner_and_no_keep(self):
+        found = text(r.findings(facts(winner="East", keep_fell=None, mt=2400.0)))
+        self.assertIn("won on time at 2400 s", found)
+
     def test_a_fallen_keep_names_the_winner(self):
         found = text(r.findings(facts(winner="East", keep_fell=2000.0, mt=2000.0)))
         self.assertIn("RESULT: mordor won at 2000 s", found)

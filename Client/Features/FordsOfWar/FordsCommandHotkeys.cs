@@ -34,7 +34,7 @@ internal static class FordsCommandHotkeys
 
         if (input.IsKeyPressed(InputKey.U))
             vm.ToggleUpgrades();
-        if (input.IsKeyPressed(InputKey.T))
+        if (input.IsKeyPressed(InputKey.L))
             vm.CycleSpeed();
         if (input.IsKeyPressed(InputKey.H))
             vm.FieldFirstAffordableHero();

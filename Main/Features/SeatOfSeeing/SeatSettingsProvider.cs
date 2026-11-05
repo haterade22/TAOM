@@ -23,6 +23,9 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>On: it acts only after the hero has fallen, in a battle, and only on the key.</summary>
     internal const bool DefaultTakeSoldierAfterFall = true;
 
+    /// <summary>Off by default: a player who never asks sees vanilla behaviour (build-spec section 1).</summary>
+    internal const bool DefaultRiseWithPanel = false;
+
     private TaomSettings? _settings;
 
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
@@ -42,4 +45,6 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     public bool HeroFightsOn => Settings?.SeatHeroFightsOn ?? DefaultHeroFightsOn;
 
     public bool TakeSoldierAfterFall => Settings?.SeatTakeSoldierAfterFall ?? DefaultTakeSoldierAfterFall;
+
+    public bool RiseWithPanel => Settings?.SeatRiseWithPanel ?? DefaultRiseWithPanel;
 }

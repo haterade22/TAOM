@@ -235,6 +235,15 @@ public class FordsClientWiringTests
         Assert.IsFalse(Source("FordsCommandHotkeys.cs").Contains("InputKey.P"), "the panel's table must leave the control key alone");
     }
 
+    [DataTestMethod]
+    [DataRow("InputKey.T")]
+    [DataRow("InputKey.Y")]
+    [DataRow("InputKey.Enter")]
+    public void ThePanelsKeyTable_LeavesTheChatKeysAlone(string chatKey)
+    {
+        Assert.IsFalse(Source("FordsCommandHotkeys.cs").Contains(chatKey), "GauntletChatLogView reads the scene layer's input, so this key would also open the chat box");
+    }
+
     [TestMethod]
     public void TheCameraView_StandsAsideWhileASoldierIsControlled()
     {

@@ -29,9 +29,9 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
 
     private float _heroDrift;
 
-    private Vec3f HeroCamera => new(Hero.X, Hero.Y - 3f, Hero.Z + 2f);
+    private Vec3f HeroCamera => new(Hero.X + _heroDrift, Hero.Y - 3f, Hero.Z + 2f);
 
-    public float MissionTime => ClockFailsFrom.HasValue && Time >= ClockFailsFrom.Value ? throw new InvalidOperationException("the clock failed") : Time;
+    public float MissionTime => ClockFailsFrom.HasValue && Time >= ClockFailsFrom.Value ? throw new InvalidOperationException("the clock failed") : _timeOn ? MissionClock : Time;
 
     public bool InDeployment => Deployment;
 
@@ -43,7 +43,7 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
 
     public Vec3f? HeroPosition() => HeroGone ? null : new Vec3f(Hero.X + _heroDrift, Hero.Y, Hero.Z);
 
-    public Vec3f? ViewPosition() => View;
+    public Vec3f? ViewPosition() => new Vec3f(View.X, View.Y, View.Z + LiftOfTheCamera);
 
     public float GroundHeight(float x, float y) => GroundZ;
 
@@ -84,12 +84,17 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
         }
     }
 
-    internal void Run(CommandTrialScript script, float seconds, float dt = 1f / 60f)
+    internal void Run(CommandTrialScript script, float seconds, float dt = 1f / 60f) => Run(script, seconds, new[] { dt });
+
+    /// <summary>Runs frames whose lengths repeat the cycle in order: the uneven frames of a machine that stutters.</summary>
+    internal void Run(CommandTrialScript script, float seconds, float[] frameCycle)
     {
         var end = Time + seconds;
-        while (Time < end && !script.IsDone)
+        for (var frame = 0; Time < end && !script.IsDone; frame++)
         {
+            var dt = frameCycle[frame % frameCycle.Length];
             Time += dt;
+            AdvanceMissionClock(dt);
             ScreenTick(script, dt);
             MissionTick(script, dt);
         }

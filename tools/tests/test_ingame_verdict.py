@@ -1111,11 +1111,14 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
     LET_GO = "taom.seat-of-seeing.let-go"
     FIGHT_ON = "taom.seat-of-seeing.fight-on"
     TAKE = "taom.seat-of-seeing.take"
+    TIME = "taom.seat-of-seeing.time"
+    RISE = "taom.seat-of-seeing.rise"
     STAGE_ONE = (ENTER, FRAMES, LEAVE, GLIDE)
     NEW = (CURSOR, FOCUS, REOPENED, HIDE, KEEP, LET_GO)
     STAGE_FOUR_FIVE = (FIGHT_ON, TAKE)
+    STAGE_SIX_SEVEN = (TIME, RISE)
     EARLIER = STAGE_ONE + NEW
-    ALL = EARLIER + STAGE_FOUR_FIVE
+    ALL = EARLIER + STAGE_FOUR_FIVE + STAGE_SIX_SEVEN
 
     def setUp(self):
         self.t = Tree(self)
@@ -1131,7 +1134,7 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
     def check(self, check_id):
         return next(c for c in self.manifest().checks if c.id == check_id)
 
-    def test_it_names_the_twelve_checks_the_session_writes(self):
+    def test_it_names_the_checks_the_session_writes(self):
         ids = list(self.ALL)
         # The manifest is shared with Marshal's Word, whose checks follow the Seat's.
         self.assertEqual([c.id for c in self.manifest().checks][:len(ids)], ids)
@@ -1140,25 +1143,25 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         named = {i for i in iv.named_check_ids(self.manifest()) if i.startswith("taom.seat-of-seeing.")}
         self.assertEqual(named, set(ids) | {"taom.seat-of-seeing.fault"})
 
-    def test_a_full_visit_of_stage_one_passes_its_four_checks_and_leaves_the_eight_later_ones_not_reached(self):
+    def test_a_full_visit_of_stage_one_passes_its_four_checks_and_leaves_the_later_ones_not_reached(self):
         code, out, _ = self.judge("seat_visit_pass.txt")
         self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
         for check_id in self.STAGE_ONE:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
-        for check_id in self.NEW + self.STAGE_FOUR_FIVE:
+        for check_id in self.NEW + self.STAGE_FOUR_FIVE + self.STAGE_SIX_SEVEN:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
         self.assertIn("the career ability key and the perspective toggle (game key 27) still act from the Seat", out)
 
-    def test_a_full_visit_of_stages_two_to_five_passes_every_check(self):
+    def test_a_full_visit_of_stages_two_to_seven_passes_every_check(self):
         code, out, _ = self.judge("seat_panel_visit_pass.txt")
         self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
         for check_id in self.ALL:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
 
-    def test_a_latched_fault_fails_all_twelve_checks(self):
+    def test_a_latched_fault_fails_every_check(self):
         code, out, _ = self.judge("seat_fault.txt")
         self.assertEqual(code, 1, out)
         for check_id in self.ALL:
@@ -1346,6 +1349,62 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
             with self.subTest(check_id=check_id):
                 self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
 
+    def test_a_visit_with_a_level_step_only_reaches_the_time_check_and_does_not_pass_it(self):
+        code, out, _ = self.judge("seat_time_level_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.TIME), "NOT REACHED", out)
+        self.assertIn("event=stay", out)
+
+    def test_refused_time_keys_read_not_reached_and_say_why(self):
+        code, out, _ = self.judge("seat_time_skips.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.TIME), "NOT REACHED", out)
+        # The verdict prints the first skip line it finds; the other two reasons are in the fixture to be read as skips and not as failures.
+        self.assertIn("skipped: mission=1 reason=denied", out)
+        self.assertNotRegex(out, r"(?m)^\s*FAIL\s")  # A verdict line: the shared manifest's needs text says FAIL too
+
+    def test_a_cancel_that_left_mission_time_on_fails_the_time_check_and_exits_1(self):
+        code, out, _ = self.judge("seat_time_cancel_failed.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.TIME), "FAIL", out)
+        self.assertIn("reason=cancel-failed", out)
+
+    def test_the_time_pass_patterns_need_a_level_a_stay_and_a_resume_and_no_level_the_ladder_lacks(self):
+        level, stay, resume = self.check(self.TIME).passes
+        line = "[Check] id=taom.seat-of-seeing.time result=pass mission=3 level=%s event=%s"
+        for name in ("0.25", "0.5", "1", "2", "4", "10"):
+            with self.subTest(level=name):
+                self.assertTrue(level.search(line % (name, "level")))
+        self.assertTrue(stay.search(line % ("1", "stay")))
+        self.assertTrue(resume.search(line % ("1", "resume")))
+        for bad_level in ("3", "0.3", "100", "2x"):
+            with self.subTest(bad_level=bad_level):
+                self.assertFalse(level.search(line % (bad_level, "level")))
+        for event, pattern in (("stay", level), ("level", stay), ("resume", stay), ("stay", resume), ("level-and-more", level)):
+            with self.subTest(event=event):
+                self.assertFalse(pattern.search(line % ("1", event)))
+
+    def test_the_rise_pattern_takes_only_the_two_heights_and_a_mission_without_a_lift_is_not_reached(self):
+        (height,) = self.check(self.RISE).passes
+        line = "[Check] id=taom.seat-of-seeing.rise result=pass mission=3 height=%s"
+        self.assertTrue(height.search(line % "7.0"))
+        self.assertTrue(height.search(line % "3.0"))
+        for bad in ("0.0", "5.0", "7", "7.0-and-more", "17.0"):
+            with self.subTest(height=bad):
+                self.assertFalse(height.search(line % bad))
+        code, out, _ = self.judge("seat_visit_pass.txt")
+        self.assertEqual(verdict_of(out, self.RISE), "NOT REACHED", out)
+
+    def test_the_time_and_rise_human_rows_ask_what_only_a_person_can_see(self):
+        claims = list(self.manifest().human)
+        for fragment in ("step mission time through 0.25, 0.5, 1, 2, 4 and 10", "under a pause the Seat's view still flies",
+                         "level 10 outside the Seat with a living hero stops at 4", "the battle has its own speed control",
+                         "any slow time, fast time or pause they made ends at the next press of a time key", "lifts the view over the ranks",
+                         "the target lock key starts no lock", "under a gatehouse or a roof the view rises through it",
+                         "Quicken time (TAOM) with Page Up", "the first F after the Seat's level 10 writes true and changes nothing"):
+            with self.subTest(fragment=fragment):
+                self.assertTrue(any(fragment in c for c in claims), fragment)
+
     def test_a_visit_of_the_hand_off_passes_fight_on_and_leaves_take_not_reached(self):
         code, out, _ = self.judge("seat_fight_visit_pass.txt")
         self.assertEqual(code, 4, out)
@@ -1444,9 +1503,21 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         for line in (r"\[SeatOfSeeing\] the Seat could not start", r"\[SeatOfSeeing\] hotkey registration failed",
                      r"\[SeatOfSeeing\] order ray failed", r"\[SeatOfSeeing\] expected exactly one Agent\.IsPlayerControlled read",
                      r"\[Check\] id=taom\.seat-of-seeing\.enter result=fail",
-                     r"\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)"):
+                     r"\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)",
+                     r"\[ERROR\] \[TAOM\] Seat(?:Hero|Screen)Adapter\.\w+ ran off the main mission thread"):
             with self.subTest(line=line):
                 self.assertIn(line, fails)
+
+    def test_the_seats_thread_guard_line_fails_the_enter_check_and_another_features_guard_line_does_not(self):
+        patterns = self.check(self.ENTER).fails
+        tail = " ran off the main mission thread (thread 7, main 1). An engine callback here is parked for the next mission tick, which is expected; a TAOM blow, creature tree or grid read here is a regression (#592, #595, #634)."
+        for site in ("SeatScreenAdapter.SetPanelLift", "SeatScreenAdapter.ApplyFastTime", "SeatHeroAdapter.StandFast"):
+            with self.subTest(site=site):
+                self.assertTrue(any(p.search("[2026-11-04 10:00:05] [ERROR] [TAOM] " + site + tail) for p in patterns), site)
+        for other in ("MarshalOrderAdapter.QueueFlag", "FordsMissionAdapter.Apply", "SeatScreen.NotAnAdapter"):
+            with self.subTest(other=other):
+                self.assertFalse(any(p.search("[2026-11-04 10:00:05] [ERROR] [TAOM] " + other + tail) for p in patterns), other)
+        self.assertFalse(any(p.search("[2026-11-04 10:00:05] [INFO] [TAOM] SeatScreenAdapter.SetPanelLift" + tail) for p in patterns), "only an [ERROR] line counts")
 
     def test_a_seat_patch_that_failed_or_was_skipped_fails_the_enter_check_and_another_features_does_not(self):
         patterns = self.check(self.ENTER).fails

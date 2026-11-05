@@ -49,8 +49,8 @@ internal interface ISeatScreenAdapter
     /// </summary>
     bool BeginGlide();
 
-    /// <summary>Shows one of the Seat's messages to the player.</summary>
-    void Say(SeatMessage message);
+    /// <summary>Shows one of the Seat's messages to the player. <paramref name="argument"/> fills the message's variable (the mission time level).</summary>
+    void Say(SeatMessage message, string? argument = null);
 
     /// <summary>The order panel is open: the engine's plain <c>Mission.IsOrderMenuOpen</c> (build-spec 6.1).</summary>
     bool IsPanelOpen();
@@ -109,4 +109,34 @@ internal interface ISeatScreenAdapter
 
     /// <summary>Takes the nearest eligible soldier of the kept company, else the one at the pointer, for the player (build-spec section 9), from the mission tick only.</summary>
     SeatTakeResult TryTake();
+
+    /// <summary>The engine's fast forward flag, its fixed step, the pause, and whether the Seat's request is held (build-spec section 10).</summary>
+    SeatTimeState ReadTime();
+
+    /// <summary>Applies a level of 2, 4 or 10 through <c>FordsMissionSpeed</c> (null logger): 2 and 4 write the fixed step of this frame, 10 raises the engine's fast forward flag.</summary>
+    void ApplyFastTime(int level, float realDt);
+
+    /// <summary>Fast forward off and the fixed step off.</summary>
+    void StopFastTime();
+
+    /// <summary>Adds the Seat's time speed request. Adding does not replace, so the caller removes a held one first.</summary>
+    void AddSlowRequest(float factor);
+
+    /// <summary>Removes the Seat's request. Removing an absent id throws (<c>Mission.RemoveTimeSpeedRequest</c>), so the caller reads <see cref="ReadTime"/> first.</summary>
+    void RemoveSlowRequest();
+
+    /// <summary>Writes <c>MissionState.Paused</c>.</summary>
+    void SetPaused(bool paused);
+
+    /// <summary>Another view runs the mission's clock every frame (the Long Defeat HUD), so fast time would be written back at once.</summary>
+    bool ClockOwnedElsewhere();
+
+    /// <summary>The order panel is open, the view is first person, and the mission is in Battle mode: three field reads, once a screen tick.</summary>
+    SeatRiseRead ReadRise();
+
+    /// <summary>How high the panel lifts the view in this mission: the field height, the siege height, or none.</summary>
+    float LiftHeight();
+
+    /// <summary>Writes the camera target's offset: <c>(0, 0, metres)</c>, and exactly <c>Vec3.Zero</c> for zero.</summary>
+    void SetPanelLift(float metres);
 }

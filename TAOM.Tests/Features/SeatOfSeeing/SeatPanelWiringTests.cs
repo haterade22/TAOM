@@ -26,8 +26,8 @@ public class SeatPanelWiringTests
     {
         var view = Flat(Source("Client/Features/SeatOfSeeing/SeatView.cs"));
 
-        Assert.AreEqual(1, Regex.Matches(view, @"_moreKeys\?\.Tick\(Input\);").Count);
-        Assert.IsTrue(view.IndexOf("_moreKeys?.Tick(Input);", System.StringComparison.Ordinal) < view.IndexOf("_session.OnScreenTick(pressed);", System.StringComparison.Ordinal),
+        Assert.AreEqual(1, Regex.Matches(view, @"_moreKeys\?\.Tick\(Input, dt\);").Count);
+        Assert.IsTrue(view.IndexOf("_moreKeys?.Tick(Input, dt);", System.StringComparison.Ordinal) < view.IndexOf("_session.OnScreenTick(pressed);", System.StringComparison.Ordinal),
             "a press stored by the key reader is seen by the same tick's session");
         StringAssert.Contains(view, "_moreKeys = new SeatKeys(_keys, session);");
         StringAssert.Contains(view, "_moreKeys = null;");
@@ -48,8 +48,15 @@ public class SeatPanelWiringTests
         var keys = Flat(Source("Client/Features/SeatOfSeeing/SeatKeys.cs"));
 
         StringAssert.Contains(keys, "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && input.IsKeyPressed(key)");
-        // Key 532 is tested only while the state is not Off; keys 531 and 536 only while Seated (build-spec 6.0).
+        // Key 532 is tested only while the state is not Off; keys 531 and 536 only while Seated (build-spec 6.0). The three time keys come first and are tested in every state.
         StringAssert.Contains(keys, "if (state == SeatState.Off) return; if (Pressed(_keys.TakeThisSoldier, input)) _session.PressTake(); if (state != SeatState.Seated) return; if (Pressed(_keys.HideTheInterface, input))");
+        StringAssert.Contains(keys, "if (Pressed(_keys.QuickenTime, input)) _session.PressTime(SeatTimeKey.Quicken); if (Pressed(_keys.SlowTime, input)) _session.PressTime(SeatTimeKey.Slow); if (Pressed(_keys.StayTime, input)) _session.PressTime(SeatTimeKey.Stay); _session.OnFrameTick(dt);");
+        Assert.IsTrue(keys.IndexOf("_keys.StayTime", System.StringComparison.Ordinal) < keys.IndexOf("var state = _session.State;", System.StringComparison.Ordinal),
+            "the time keys are tested before the state test that returns for Off");
+        Assert.AreEqual(1, Regex.Matches(keys, @"_keys\.QuickenTime").Count);
+        Assert.AreEqual(1, Regex.Matches(keys, @"_keys\.SlowTime").Count);
+        Assert.AreEqual(1, Regex.Matches(keys, @"_keys\.StayTime").Count);
+        Assert.IsFalse(Regex.IsMatch(keys, @"IsKeyPressed\(_keys\.(Quicken|Slow|Stay)Time"), "every time key goes through Pressed, which tests the static input first");
         StringAssert.Contains(keys, "if (Pressed(_keys.KeepTo, input))");
         StringAssert.Contains(keys, "_session.PressHide();");
         StringAssert.Contains(keys, "_session.PressKeep();");

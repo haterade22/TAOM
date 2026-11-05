@@ -164,7 +164,9 @@ def _health_findings(facts):
 
 def _balance_findings(facts):
     found = []
-    if facts.get("winner"):
+    if facts.get("winner") and facts["keep_fell"] is None:
+        found.append(f"RESULT: {_name(facts, facts['winner'])} won on time at {facts['mt']:.0f} s")
+    elif facts.get("winner"):
         late_enough = facts["keep_fell"] >= TARGET_MATCH_SECONDS
         found.append(f"RESULT: {_name(facts, facts['winner'])} won at {facts['keep_fell']:.0f} s" + ("" if late_enough else ", under the 30-minute target"))
     values = _side_values(facts)

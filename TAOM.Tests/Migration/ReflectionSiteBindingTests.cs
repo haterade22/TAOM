@@ -136,9 +136,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:30")]
     // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
-    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:49")]
+    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:50")]
     // --- Seat of Seeing (S2): keep the order panel open reaches the panel's view model through the handler's protected _dataSource. Missing: the reopen cannot run, and the session writes a fail line on taom.seat-of-seeing.panel-reopened.
-    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "_dataSource", "Field", "SeatScreenAdapter.cs:53")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "_dataSource", "Field", "SeatScreenAdapter.cs:54")]
     // --- Seat of Seeing (S2), the field trial only: the focus step reads the handler's reference point (MissionFormationTargetSelectionHandler.cs:36) to see that the pointer reached it. Missing: the step reads NaN and fails.
     [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionFormationTargetSelectionHandler", "MissionFormationTargetSelectionHandler", "_centerOfScreen", "Field", "CommandTrialHost.Seat.cs:23, Patch140_FormationFocusPoint.cs:23")]
     // --- Seat of Seeing (S4): the order panel's transpiler finds the one read of Agent.IsPlayerControlled by its getter, and the classifier asks a view type whether it declares UpdateOverridenCamera. Each is a compile-checked nameof of a public member; a miss fails safe.

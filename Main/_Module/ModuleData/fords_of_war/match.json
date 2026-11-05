@@ -1,5 +1,6 @@
 {
   "countdownSeconds": 10,
+  "timeLimitMinutes": 40,
   "economy": {
     "startingGold": 600,
     "incomePerMinute": 120,
@@ -34,7 +35,7 @@
     "thrustFloorFactor": 0.2,
     "assaultDamagePerSecond": 50,
     "wearStartMinutes": 15,
-    "wearPerMinute": 0.15
+    "wearPerMinute": 0.25
   },
   "heroes": {
     "maxAlivePerSide": 2,

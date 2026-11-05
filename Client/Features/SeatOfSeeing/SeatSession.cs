@@ -19,6 +19,8 @@ internal sealed class SeatSession
     private readonly IModLogger _logger;
     private readonly string _key;
     private readonly OutcomeCounter _frameCounter;
+    private readonly SeatTimeControl _time;
+    private readonly SeatRiseControl _rise;
 
     private SeatFlight _flight;
     private SeatFlight? _last;
@@ -47,6 +49,7 @@ internal sealed class SeatSession
     private float _lastRetreatCheck = float.NaN;
     private bool _takeOwed;
     private bool _fallSaid;
+    private bool _riseBroken;
 
     // Set from the engine's callbacks (a mode change, a main agent change), which may not run on the thread that reads them.
     private volatile bool _deploymentEnded;
@@ -63,6 +66,8 @@ internal sealed class SeatSession
         _logger = logger;
         _key = missionKey;
         _frameCounter = outcomes.Counter(SeatChecks.FrameCounterId);
+        _time = new SeatTimeControl(screen, hero, settings, permissions, outcomes, missionKey);
+        _rise = new SeatRiseControl(screen, settings, permissions, outcomes, missionKey);
     }
 
     internal SeatState State { get; private set; }
@@ -77,6 +82,52 @@ internal sealed class SeatSession
 
     /// <summary>True when the latest leave armed the engine's return glide.</summary>
     internal bool GlideBegan { get; private set; }
+
+    /// <summary>The mission time level now: 0.25, 0.5, 1, 2, 4 or 10; the field trial reads it.</summary>
+    internal float TimeLevel => SeatTimeLadder.Level(_time.Index);
+
+    /// <summary>A time key (build-spec section 10), from the screen tick. A faulted session ignores it.</summary>
+    internal void PressTime(SeatTimeKey key)
+    {
+        if (Faulted)
+            return;
+        try
+        {
+            _time.Press(key, State != SeatState.Off);
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    /// <summary>Once per real frame, in any state and ahead of any fault return: the per-frame rule of mission time, then the lift of the view.</summary>
+    internal void OnFrameTick(float dt)
+    {
+        try
+        {
+            _time.OnFrame(dt);
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+
+        if (_riseBroken)
+            return;
+        try
+        {
+            _rise.OnTick(dt, State != SeatState.Off);
+        }
+        catch (Exception ex)
+        {
+            _riseBroken = true;
+            Fault(ex);
+        }
+    }
+
+    /// <summary>Puts mission time back to normal without a word: the field trial's release after a failed step.</summary>
+    internal void ResetTime() => _time.Cancel();
 
     /// <summary>Once per real frame, from <c>OnMissionScreenTick</c>. A frame with no key and no stored deployment edge reads no setting and no fact.</summary>
     internal void OnScreenTick(bool keyPressed)
@@ -259,6 +310,8 @@ internal sealed class SeatSession
             Fault(ex);
         }
 
+        // Fast forward is a process-global byte (Mission.cs:1268-1279), so the cancel sits outside the test of the state and after the try.
+        _time.Cancel();
         _handBackOwed = false;
         Swallow(() => SeatPresence.SetHeroFightsOn(false));
     }
@@ -424,6 +477,7 @@ internal sealed class SeatSession
         {
             case SeatTakeOutcome.Taken:
                 _fallSaid = false;
+                _time.OnTake();
                 _outcomes.Pass(SeatChecks.TakeId, _key + ":" + result.Kind, "mission=" + _key + " kind=" + result.Kind + " formations="
                     + result.Formations.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 break;
@@ -691,6 +745,7 @@ internal sealed class SeatSession
         _frames = 0;
         _panelWasOpen = false;
 
+        _rise.Zero();
         _controllerShut = true;
         _screen.SetHeroController(false);
         _standFastOwed = true;
@@ -727,6 +782,8 @@ internal sealed class SeatSession
             _outcomes.Pass(SeatChecks.GlideId, _key, "mission=" + _key + " elevation=set");
         if (glide && !began)
             _outcomes.Skip(SeatChecks.GlideId, _key, "mission=" + _key + " reason=no-agent");
+        if (reason != "finish")
+            _time.OnLeave();
     }
 
     private void ReleaseController()
@@ -770,6 +827,8 @@ internal sealed class SeatSession
         State = SeatState.Off;
         Cleanup(latching: true);
         Swallow(() => SeatPresence.SetHeroFightsOn(false));
+        Swallow(_time.Cancel);
+        Swallow(_rise.Zero);
 
         Swallow(() => _logger.LogError($"[SeatOfSeeing] the Seat failed and is off for this mission, the hero's own camera restored: {ex}"));
         Swallow(() => _outcomes.Fail(SeatChecks.FaultId, _key, "mission=" + _key + " error=" + ex.GetType().Name));

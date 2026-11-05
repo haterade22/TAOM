@@ -24,6 +24,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.Elephant;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.Mumakil;
 using TAOM.Features.SeatOfSeeing.Domain;
 using TAOM.Features.SeatOfSeeing.Hooks;
@@ -63,12 +64,16 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private GauntletLayer? _cursorLayer;
     private Agent? _keptAgent;
     private Formation? _keptFormation;
+    private readonly FordsMissionSpeed _clock = new(null);
+    private readonly FordsGameSpeed _clockLevel = new();
+    private readonly Action<string> _report;
 
     internal SeatScreenAdapter(MissionScreen screen, Mission mission, IModLogger logger)
     {
         _screen = screen;
         _mission = mission;
         _logger = logger;
+        _report = logger.LogError;
     }
 
     public SeatEngineFacts ReadFacts()
@@ -208,11 +213,11 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         return true;
     }
 
-    public void Say(SeatMessage message)
+    public void Say(SeatMessage message, string? argument = null)
     {
         Said++;
         LastSaid = message;
-        InformationManager.DisplayMessage(new InformationMessage(TextFor(message).ToString()));
+        InformationManager.DisplayMessage(new InformationMessage(TextFor(message, argument).ToString()));
     }
 
     /// <summary>How many messages the Seat has shown in this mission, for the field trial's facts.</summary>
@@ -441,6 +446,61 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         return handed;
     }
 
+    public SeatTimeState ReadTime()
+    {
+        var state = MissionState.Current;
+        return new SeatTimeState(_mission.IsFastForward, _mission.FixedDeltaTimeMode, state != null && state.Paused,
+            _mission.GetRequestedTimeSpeed(SeatTimeLadder.RequestId, out _));
+    }
+
+    // FordsMissionSpeed sets the flag only when it differs (Mission.cs:1268-1279 writes one global byte through native, IMBMission_OnFastForwardStateChanged
+    // at 0x6F9E90, which ignores its mission argument), and stops once the mission has ended, as the engine itself does (Mission.cs:3728-3731).
+    public void ApplyFastTime(int level, float realDt)
+    {
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.ApplyFastTime", _report);
+        _clockLevel.Set(level);
+        _clock.Apply(_mission, _clockLevel, realDt);
+    }
+
+    public void StopFastTime()
+    {
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.StopFastTime", _report);
+        FordsMissionSpeed.Stop(_mission);
+    }
+
+    public void AddSlowRequest(float factor)
+    {
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.AddSlowRequest", _report);
+        _mission.AddTimeSpeedRequest(new Mission.TimeSpeedRequest(factor, SeatTimeLadder.RequestId));
+    }
+
+    public void RemoveSlowRequest()
+    {
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.RemoveSlowRequest", _report);
+        _mission.RemoveTimeSpeedRequest(SeatTimeLadder.RequestId);
+    }
+
+    public void SetPaused(bool paused)
+    {
+        var state = MissionState.Current;
+        if (state != null)
+            state.Paused = paused;
+    }
+
+    public bool ClockOwnedElsewhere() => _mission.GetMissionBehavior<LongDefeatMissionLogic>() != null;
+
+    public SeatRiseRead ReadRise() => new(_mission.IsOrderMenuOpen, _mission.CameraIsFirstPerson, _mission.Mode == MissionMode.Battle);
+
+    public float LiftHeight() => SeatPanelLift.HeightFor(_mission.IsFieldBattle, _mission.IsSiegeBattle || _mission.IsSallyOutBattle);
+
+    // Mission.SetCustomCameraTargetLocalOffset (Mission.cs:2025) is added to the view's target in third person only (MissionScreen.cs:1483). The target
+    // lock tests the offset for exact zero (MissionMainAgentController.cs:868-876, Vec3.cs:199-207), so a zero is Vec3.Zero and never a small leftover.
+    public void SetPanelLift(float metres)
+    {
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.SetPanelLift", _report);
+        _mission.SetCustomCameraTargetLocalOffset(metres == 0f ? Vec3.Zero : new Vec3(0f, 0f, metres, -1f));
+    }
+
     /// <summary>The field trial's check that the kept soldier is the one it aimed at: a reference, never an agent index.</summary>
     internal bool KeepsAgent(Agent agent) => ReferenceEquals(_keptAgent, agent);
 
@@ -448,7 +508,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     internal bool MouseVisible => _screen.MouseVisible;
 
-    private static TextObject TextFor(SeatMessage message) => message switch
+    private static TextObject TextFor(SeatMessage message, string? argument) => message switch
     {
         SeatMessage.FirstEntry => new TextObject("{=taom_seat_first_entry}Press the Seat key to leave the Seat."),
         SeatMessage.OtherView => new TextObject("{=taom_seat_other_view}You cannot take the Seat from this view."),
@@ -459,6 +519,10 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         SeatMessage.TakeNobody => new TextObject("{=taom_seat_take_nobody}There is nobody there to take."),
         SeatMessage.TakeRefused => new TextObject("{=taom_seat_take_refused}You cannot take that soldier."),
         SeatMessage.TakeHeroAlive => new TextObject("{=taom_seat_take_hero_alive}You can take a soldier only after the one you fight as has fallen."),
+        SeatMessage.TimeLevel => new TextObject("{=taom_seat_time_level}Mission time: {LEVEL}x").SetTextVariable("LEVEL", argument ?? ""),
+        SeatMessage.TimeStayed => new TextObject("{=taom_seat_time_stayed}The battle is paused. Press Stay time (Home unless rebound) again to go on."),
+        SeatMessage.TimeResumed => new TextObject("{=taom_seat_time_resumed}The battle goes on."),
+        SeatMessage.TimeOtherClock => new TextObject("{=taom_seat_time_other_clock}This battle has its own speed control."),
         _ => new TextObject("{=taom_seat_fault}The Seat of Seeing failed and is off until this scene ends. Your own view is back."),
     };
 }

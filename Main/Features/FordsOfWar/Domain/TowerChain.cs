@@ -95,6 +95,29 @@ internal sealed class TowerChain
     public bool LaneLost(MatchSide owner, int lane) =>
         !_states.Values.Any(s => s.Slot.Kind == TowerKind.Tower && s.Slot.Owner == owner && s.Slot.Lane == lane && !s.Destroyed);
 
+    /// <summary>A side's towers standing (keep excluded), and the share of all its hit points left (keep included).</summary>
+    public (int Towers, float HitPointShare) Standing(MatchSide owner)
+    {
+        var towers = 0;
+        long left = 0;
+        long max = 0;
+        foreach (var state in _states.Values)
+        {
+            if (state.Slot.Owner != owner)
+                continue;
+
+            max += state.MaxHitPoints;
+            if (state.Destroyed)
+                continue;
+
+            left += state.HitPoints;
+            if (state.Slot.Kind == TowerKind.Tower)
+                towers++;
+        }
+
+        return (towers, max > 0 ? (float)left / max : 0f);
+    }
+
     /// <summary>The standing towers (keeps excluded) of a side in a lane, outermost first.</summary>
     public IReadOnlyList<TowerSlot> AliveTowers(MatchSide owner, int lane) =>
         _states.Values

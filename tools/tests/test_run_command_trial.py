@@ -227,7 +227,7 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual(tuple(names), S1_STEPS)
 
     def test_a_log_of_stage_one_alone_misses_every_later_step_by_name(self):
-        """The same real lines judged against the whole table: the twelve steps of stages S2 to S5 have no line, so the run fails."""
+        """The same real lines judged against the whole table: every later step has no line, so the run fails."""
         code, why = judge(FINAL, None, "\n".join(REAL_RUN_LINES), changed={"Main/a.cs": datetime(2026, 11, 4, 10, 0, 0)})
         self.assertEqual(code, 1)
         for step in trial.STEPS[6:]:
@@ -689,6 +689,24 @@ class SourceTieTests(unittest.TestCase):
         source = STEPS_SOURCE.read_text(encoding="utf-8")
         self.assertEqual(tuple(re.findall(r'new SeatTrialStep\(\s*"(\w+)"', source)), trial.SEAT_STEPS)
 
+    def test_every_thread_guard_site_of_the_seat_is_one_the_judge_reads(self):
+        """A site that the regex does not name would write its line and fail no run. The sites are read out of the code, and a known one proves the scan."""
+        files = [REPO / "Client" / "Adapters" / "SeatScreenAdapter.cs", REPO / "Main" / "Adapters" / "SeatHeroAdapter.cs", *sorted(TRIAL_SOURCE.glob("CommandTrialHost*.cs"))]
+        sites = set()
+        for path in files:
+            source = path.read_text(encoding="utf-8")
+            sites.update(re.findall(r'NoteCall\("([\w.]+)"', source))
+            sites.update(re.findall(r'NoteWrite\("([\w.]+)"', source))
+        for known in ("SeatScreenAdapter.TryTake", "SeatHeroAdapter.StandFast", "CommandTrialHost.Kill"):
+            self.assertIn(known, sites, "the scan found a site it must find")
+        for added in ("SeatScreenAdapter.ApplyFastTime", "SeatScreenAdapter.StopFastTime", "SeatScreenAdapter.AddSlowRequest",
+                      "SeatScreenAdapter.RemoveSlowRequest", "SeatScreenAdapter.SetPanelLift"):
+            self.assertIn(added, sites, "stages S6 and S7 guard each native write they make")
+        for site in sorted(sites):
+            with self.subTest(site=site):
+                line = f"[2026-11-04 10:00:05] [ERROR] [TAOM] {site} ran off the main mission thread (thread 7, main 1). An engine callback here is parked"
+                self.assertTrue(trial.SEAT_ERROR.search(line))
+
     def test_the_patch_failure_lines_are_the_ones_the_applier_and_the_module_write(self):
         applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
         module = (REPO / "Main" / "Features" / "SeatOfSeeing" / "SeatOfSeeingModule.cs").read_text(encoding="utf-8")
@@ -1053,6 +1071,11 @@ class ArgumentTests(unittest.TestCase):
         self.assertIn("--wall-limit moves only the runner's own deadline", epilog)
         self.assertIn("--west", epilog)
         self.assertIn("100000", epilog)
+
+    def test_the_live_limit_is_in_real_seconds_because_the_games_clock_is_real_time(self):
+        action = next(a for a in trial.build_parser()._actions if "--live-limit" in a.option_strings)
+        self.assertIn("real seconds", action.help)
+        self.assertNotIn("mission seconds", action.help, "at level 10 a mission second is a tenth of a real one")
 
     def test_the_steps_are_normalised_to_the_tables_order_and_names(self):
         # "fly" and "cursor_with_panel" are in the table's order and the reverse of the alphabetical one, so a sorting mutant is seen.

@@ -391,6 +391,8 @@ internal sealed partial class FordsRunReport
                     if (stream != null && stream.CurrentAttackTarget == towerId)
                     {
                         stream.TowerBlows++;
+                        if (cls == TowerBlowClass.Melee)
+                            stream.MeleeTowerBlows++;
                         if (reason == TowerDamageReason.Applied)
                             stream.AppliedBlows++;
                     }

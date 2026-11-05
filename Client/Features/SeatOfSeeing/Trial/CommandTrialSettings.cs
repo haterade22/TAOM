@@ -23,4 +23,7 @@ internal sealed class CommandTrialSettings : ISeatSettingsProvider
     public bool HeroFightsOn { get; set; }
 
     public bool TakeSoldierAfterFall => true;
+
+    // The lift of the hero's view is a setting that defaults off, and rise_with_panel cannot pass without it.
+    public bool RiseWithPanel => true;
 }

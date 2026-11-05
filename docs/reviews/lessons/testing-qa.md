@@ -2556,3 +2556,11 @@ The Seat's review found that a failed patch and a failed key registration passed
 - **Why missed:** the fix lived in the Seat's tests. The Marshal contract was written before it, and its regex copied the old shape.
 - **Prevent:** feed the judge the feature's real failure lines, taken from source by a sweep test, never a made-up name. When a review finds a class of bug in one feature, grep the sibling that shares the tool in the same pass.
 - **Source:** [rca-marshals-word-m3-m4-2026-11-04.md](../rca-marshals-word-m3-m4-2026-11-04.md) rows 1, 2 and 9, [rca-seat-of-seeing-s4-s5-2026-11-04.md](../rca-seat-of-seeing-s4-s5-2026-11-04.md) row 2.
+
+### A fix for another writer's state needs a step that plays the other writer
+
+A session test against a hand copy of the engine rule stays green when the real write changes, and a trial step on the feature's own route cannot reach the case. For state with several writers, add one host member that writes as the other writer, read the combined state in the game, and pin the engine writes the fix rests on.
+
+- **Why missed:** the Seat's fake restated `FordsMissionSpeed.Set`, and the stand-in's `PressTime` did not run `SeatTimeControl`, so no test could fail on the path the HIGH's fix changed.
+- **Prevent:** before you close a fix for a HIGH, name the test or step that fails when the engine write it rests on changes.
+- **Source:** [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md), row 5

@@ -33,6 +33,12 @@
 	<string id="str_key_description.TaomSeatHotKeyCategory_531" text="{=taom_key_seat_keep_desc}In the Seat, keeps the view on the soldier at the middle of the screen, or under the cursor while one shows, or on the company you have selected in the order panel, and orbits it. Press it again, or fly, to let go. Defaults to Insert." />
 	<string id="str_key_name.TaomSeatHotKeyCategory_532" text="{=taom_key_seat_take_soldier}Take this soldier (TAOM)" />
 	<string id="str_key_description.TaomSeatHotKeyCategory_532" text="{=taom_key_seat_take_soldier_desc}In the Seat, after your hero has fallen in a battle, takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Defaults to Delete." />
+	<string id="str_key_name.TaomSeatHotKeyCategory_533" text="{=taom_key_seat_quicken}Quicken time (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_533" text="{=taom_key_seat_quicken_desc}In a battle, steps mission time up one level: 0.25, 0.5, 1, 2, 4 and 10. Level 10 needs the Seat up or nobody left for you to fight as. It works from the Seat or from your hero's eyes, in single player only. Defaults to Page Up." />
+	<string id="str_key_name.TaomSeatHotKeyCategory_534" text="{=taom_key_seat_slow}Slow time (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_534" text="{=taom_key_seat_slow_desc}In a battle, steps mission time down one level, to a quarter of normal speed at the lowest. Defaults to Page Down." />
+	<string id="str_key_name.TaomSeatHotKeyCategory_535" text="{=taom_key_seat_stay}Stay time (TAOM)" />
+	<string id="str_key_description.TaomSeatHotKeyCategory_535" text="{=taom_key_seat_stay_desc}In a battle, cancels fast time and pauses the mission; press it again to go on. The Seat's view still flies while the battle is paused. Defaults to Home." />
 	<string id="str_key_name.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide}Hide the interface (TAOM)" />
 	<string id="str_key_description.TaomSeatHotKeyCategory_536" text="{=taom_key_seat_hide_desc}In the Seat, hides the whole interface for a clean view. Press it again to bring the interface back; it also comes back when you open the order panel. Defaults to End." />
 

@@ -60,7 +60,7 @@ public class CommandTrialWiringTests
     {
         var tick = Member("public override void OnMissionScreenTick(float dt)");
 
-        StringAssert.Contains(tick, "var pressed = _seatKeyPressed; _seatKeyPressed = false; _moreKeys?.Tick(Input); _session.OnScreenTick(pressed);");
+        StringAssert.Contains(tick, "var pressed = _seatKeyPressed; _seatKeyPressed = false; _moreKeys?.Tick(Input, dt); _session.OnScreenTick(pressed);");
     }
 
     [TestMethod]
@@ -202,7 +202,7 @@ public class CommandTrialWiringTests
     {
         var writers = HostWriters(TrialSource("^CommandTrialHost"));
 
-        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero",
+        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero", "SetOtherFastForward",
             "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy", "MarshalSplitInfantry", "MarshalMoveOneRider", "MarshalOrderSquare", "MarshalKillOne" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
@@ -242,6 +242,9 @@ public class CommandTrialWiringTests
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
         "TookFromKeptCompany", "ReadHandOver",
+        // Stages S6 and S7: a time key goes through the session method the real key calls from the screen tick (as vanilla's scoreboard key and the
+        // order panel's time request do), the reads change nothing, and ReleaseTime is the same session call run after a failed step.
+        "PressTime", "TimeLevel", "ReadTimeState", "OtherTimeRequest", "ReleaseTime", "ThirdPerson", "LiftHeight", "CameraTargetOffset",
     };
 
     private static string[] Unclassified(string host, IEnumerable<string> writeNothing) =>
@@ -387,7 +390,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(";
+        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(|\.SetFastForwardingFromUI\(";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {

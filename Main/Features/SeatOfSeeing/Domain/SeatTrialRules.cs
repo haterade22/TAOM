@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -85,6 +86,82 @@ internal static class SeatTrialRules
     /// this long is a fault.
     /// </summary>
     internal const float FallWaitSeconds = 3f;
+
+    /// <summary>Real seconds the view flies under a pause, and the most the mission clock may move in them.</summary>
+    internal const float PauseWindowSeconds = 1.5f;
+
+    internal const float PausedClockLimit = 0.05f;
+
+    /// <summary>Real seconds a time level is held before its ratio is measured, and the window the ratio is measured over.</summary>
+    internal const float TimeSettleSeconds = 0.3f;
+
+    internal const float TimeWindowSeconds = 2f;
+
+    /// <summary>A measured ratio of mission seconds to real seconds matches its expectation within this share of it.</summary>
+    internal const float RatioTolerance = 0.25f;
+
+    /// <summary>The ratio level 0.5 must read.</summary>
+    internal const float SlowTarget = 0.5f;
+
+    /// <summary>Level 10 is the engine's fast forward: it must read more than this.</summary>
+    internal const float FastForwardRatioFloor = 5f;
+
+    /// <summary>The ratio of the engine's fast forward with no fixed step and no request: nine more steps of the frame, then the frame itself (MissionState.cs:173, 196).</summary>
+    internal const float FastForwardTarget = 10f;
+
+    /// <summary>Real seconds a step waits for the Seat to answer another writer's flag, and for its level to fall when the flag does.</summary>
+    internal const float AdoptWaitSeconds = 1f;
+
+    /// <summary>Real seconds the view settles after leaving the Seat, and after the panel opens or closes, before the camera is read.</summary>
+    internal const float RiseSettleSeconds = 1f;
+
+    /// <summary>The panel's lift must show at least this share of its height in the camera's Z.</summary>
+    internal const float LiftShare = 0.5f;
+
+    /// <summary>The view is back within this many metres of where it was once the panel has closed.</summary>
+    internal const float SankBackMetres = 1f;
+
+    /// <summary>The ids of the engine's own time speed requests (the radial menu, the equip wheel, the order panel, the cheat key): a ratio measured with one held is not the Seat's.</summary>
+    internal static readonly int[] EngineRequestIds = { 813, 624, 864, 1121 };
+
+    /// <summary>The mission clock stood still: it moved less than <see cref="PausedClockLimit"/> in the window. A reading that is not a number proves nothing.</summary>
+    internal static bool PausedMissionStood(float missionSeconds) => IsReal(missionSeconds) && missionSeconds < PausedClockLimit;
+
+    /// <summary>Mission seconds over real seconds read half, within <see cref="RatioTolerance"/> of it.</summary>
+    internal static bool SlowRatio(float ratio) => RatioMatches(ratio, SlowTarget);
+
+    /// <summary>The mission seconds one frame of <paramref name="frameSeconds"/> holds at a level: the fixed step of <c>FordsGameSpeed.Frame</c>, and none at 1 or 10.</summary>
+    internal static float FixedStepSeconds(int level, float frameSeconds)
+    {
+        if (!IsReal(frameSeconds))
+            return 0f;
+        var speed = new FordsGameSpeed();
+        speed.Set(level);
+        return speed.Frame(frameSeconds).FixedStep;
+    }
+
+    /// <summary>A clock still at normal speed would miss the expected ratio by more than <see cref="RatioTolerance"/>; a low frame rate caps the step until 2 and 4 read as 1.</summary>
+    internal static bool CanTellFromNormal(float expectedRatio) => IsReal(expectedRatio) && expectedRatio > 0f && !RatioMatches(1f, expectedRatio);
+
+    /// <summary>
+    /// At 2 and 4 the ratio matches the expected ratio, the capped steps the frames held over the window, within <see cref="RatioTolerance"/> of it; at 10 it is
+    /// above <see cref="FastForwardRatioFloor"/>. An expected ratio that is not a positive number proves nothing.
+    /// </summary>
+    internal static bool FastRatio(int level, float ratio, float expectedRatio) =>
+        level >= 10 ? IsReal(ratio) && ratio > FastForwardRatioFloor : RatioMatches(ratio, expectedRatio);
+
+    /// <summary>Another writer's fast forward reads <see cref="FastForwardTarget"/> within <see cref="RatioTolerance"/>: a fixed step of 2 or 4 left on would read 20 or 40, and a request of 0.5 would read 5.</summary>
+    internal static bool AdoptedRatio(float ratio) => RatioMatches(ratio, FastForwardTarget);
+
+    /// <summary>The camera rose at least <see cref="LiftShare"/> of the lift height above where it stood before the panel opened; no height proves nothing.</summary>
+    internal static bool LiftSeen(float before, float after, float height) =>
+        IsReal(before) && IsReal(after) && IsReal(height) && height > 0f && after - before >= LiftShare * height;
+
+    /// <summary>The camera is within <see cref="SankBackMetres"/> of where it stood before the panel opened.</summary>
+    internal static bool SankBack(float before, float after) => IsReal(before) && IsReal(after) && Math.Abs(after - before) <= SankBackMetres;
+
+    /// <summary>The camera target offset is exactly zero on all three axes; the target lock tests it for exact zero, so a small leftover is a failure.</summary>
+    internal static bool ExactlyZero(float x, float y, float z) => IsReal(x) && IsReal(y) && IsReal(z) && x == 0f && y == 0f && z == 0f;
 
     /// <summary>The morale write took effect: a hero with a morale component reads between 0 and <see cref="MoraleFloor"/>; no component reads -1, and a value that is not a number proves nothing.</summary>
     internal static bool AtMoraleFloor(float morale) => IsReal(morale) && morale >= 0f && morale <= MoraleFloor;
@@ -190,6 +267,9 @@ internal static class SeatTrialRules
 
     private static bool Within(float expected, float actual) =>
         IsReal(expected) && IsReal(actual) && Math.Abs(expected - actual) <= PixelToleranceUnits;
+
+    private static bool RatioMatches(float ratio, float expected) =>
+        IsReal(ratio) && IsReal(expected) && expected > 0f && Math.Abs(ratio - expected) <= RatioTolerance * expected;
 
     private static bool IsReal(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
 }

@@ -77,7 +77,7 @@ public sealed class SeatView : MissionView
 
             var pressed = _seatKeyPressed;
             _seatKeyPressed = false;
-            _moreKeys?.Tick(Input);
+            _moreKeys?.Tick(Input, dt);
             _session.OnScreenTick(pressed);
         }
 

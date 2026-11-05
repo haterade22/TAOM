@@ -60,6 +60,13 @@ internal sealed partial class CommandTrialScript
         into["back_to_stand"] = s => s.BackToStand();
         into["hero_falls"] = s => s.HeroFalls();
         into["take_soldier"] = s => s.TakeSoldier();
+        into["pause_flies"] = s => s.PauseFlies();
+        into["slow"] = s => s.SlowTime();
+        into["fast"] = s => s.FastTime();
+        into["adopt_flag"] = s => s.AdoptFlag();
+        into["speed_cleared"] = s => s.SpeedCleared();
+        into["rise_with_panel"] = s => s.RiseWithPanel();
+        into["sink_on_close"] = s => s.SinkOnClose();
     }
 
     private IEnumerable<Verdict> Refuse()
@@ -601,33 +608,35 @@ internal sealed partial class CommandTrialScript
     private float _standSpeed = float.NaN;
     private int _ownedBeforeFall;
 
+    private IEnumerable<Verdict> LeaveIfUp()
+    {
+        _host.SetInput(NoInput);
+        if (_host.State == SeatState.Off)
+            yield break;
+
+        _host.PressSeatKey();
+        var pressedAt = _now;
+        while (_host.PressPending)
+            yield return _now - pressedAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken") : Verdict.Waiting("press-taken");
+        if (_host.State != SeatState.Off)
+            yield return Verdict.Failed("reason=still-seated state=" + _host.State);
+    }
+
     // Leaves the Seat if it is up, sets the trial's fight value, waits for the mission tick to hand the hero back, and enters again, so the
     // Seat reads the setting at a new entry. A failed verdict ends the step, and nothing after it runs.
     private IEnumerable<Verdict> ReEnter(bool fightOn)
     {
         _host.SetFightOn(fightOn);
-        _host.SetInput(NoInput);
-        if (_host.State != SeatState.Off)
-        {
-            _host.PressSeatKey();
-            var pressedAt = _now;
-            while (_host.PressPending)
-                yield return _now - pressedAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken") : Verdict.Waiting("press-taken");
-            if (_host.State != SeatState.Off)
-                yield return Verdict.Failed("reason=still-seated state=" + _host.State);
-        }
+        foreach (var verdict in LeaveIfUp())
+            yield return verdict;
 
         var leftAt = _now;
         while (_now - leftAt < LeaveSettleSeconds)
             yield return Verdict.Waiting("hand-back");
         _playerAfterLeave = _host.HeroIsPlayerControlled && !_host.FightGateUp;
 
-        _host.PressSeatKey();
-        var enteredAt = _now;
-        while (_host.PressPending)
-            yield return _now - enteredAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken") : Verdict.Waiting("press-taken");
-        while (_host.State != SeatState.Seated)
-            yield return _host.State == SeatState.Off ? Verdict.Failed("reason=not-entered state=Off") : Verdict.Waiting("seated");
+        foreach (var verdict in TakeTheSeatAgain("state=Off"))
+            yield return verdict;
     }
 
     private IEnumerable<Verdict> WaitForTheHandOff()
@@ -852,5 +861,333 @@ internal sealed partial class CommandTrialScript
             + " messages=" + said.ToString(CultureInfo.InvariantCulture) + " panel=" + Bit(panelOpen) + Standing();
         var pass = took && SeatTrialRules.CommandHandedOver(_ownedBeforeFall, reading) && panelOpen && Seated && !_host.Faulted;
         yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    // ---- Stages S6 and S7: mission time, and the lift of the view with the order panel ----
+
+    private const float LevelEpsilon = 0.001f;
+    private const int FastForwardLevel = 10;
+
+    private float _ratio = float.NaN;
+    private float _expectedRatio = float.NaN;
+    private float _meanFrame = float.NaN;
+    private float _riseBefore = float.NaN;
+
+    private bool TryReachLevel(float target)
+    {
+        for (var i = 0; i < 8 && Math.Abs(_host.TimeLevel - target) > LevelEpsilon; i++)
+            _host.PressTime(_host.TimeLevel < target ? SeatTimeKey.Quicken : SeatTimeKey.Slow);
+        return Math.Abs(_host.TimeLevel - target) <= LevelEpsilon;
+    }
+
+    private static string LevelText(float level) => level.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private Verdict LevelNotReached(float target) =>
+        Verdict.Failed("reason=level-not-reached want=" + LevelText(target) + " have=" + LevelText(_host.TimeLevel) + Standing());
+
+    // Each wait is one screen tick, and the mission tick before it ran that frame's step, so the capped steps of the frames between the two clock
+    // reads add up to the mission time the level should give. A level of 1 or 10 holds no fixed step and expects none.
+    private IEnumerable<Verdict> MeasureRatio(int fixedStepLevel)
+    {
+        var clockFrom = _host.MissionTime;
+        var startedAt = _now;
+        var last = _now;
+        var frames = 0;
+        var expectedSeconds = 0f;
+        while (_now - startedAt < SeatTrialRules.TimeWindowSeconds)
+        {
+            frames++;
+            yield return Verdict.Waiting("ratio-window");
+            expectedSeconds += SeatTrialRules.FixedStepSeconds(fixedStepLevel, _now - last);
+            last = _now;
+        }
+
+        var seconds = _now - startedAt;
+        _ratio = (_host.MissionTime - clockFrom) / seconds;
+        _expectedRatio = expectedSeconds / seconds;
+        _meanFrame = frames > 0 ? seconds / frames : float.NaN;
+    }
+
+    private IEnumerable<Verdict> SettleAtALevel()
+    {
+        var settleAt = _now;
+        while (_now - settleAt < SeatTrialRules.TimeSettleSeconds)
+            yield return Verdict.Waiting("settle");
+    }
+
+    private IEnumerable<Verdict> PauseFlies()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+        var at = _host.ViewPosition();
+        if (at == null)
+            yield return Verdict.Failed("reason=no-view");
+
+        var startAt = at!.Value;
+        var forward = _host.ViewForward();
+        var height = HeightAboveGround(startAt);
+        _host.PressTime(SeatTimeKey.Stay);
+        var paused = _host.ReadTimeState().Paused;
+        var clockFrom = _host.MissionTime;
+        _host.SetInput(FlyForward);
+        var startedAt = _now;
+        while (_now - startedAt < SeatTrialRules.PauseWindowSeconds)
+            yield return Verdict.Waiting("paused-flight");
+
+        _host.SetInput(NoInput);
+        var clockMoved = _host.MissionTime - clockFrom;
+        var end = _host.ViewPosition();
+        var seconds = _now - startedAt;
+        var moved = end == null ? float.NaN : startAt.Distance2D(end.Value);
+        var expected = SeatCameraMath.PanSpeed(height) * seconds;
+        var dot = end == null || forward == null ? float.NaN
+            : SeatTrialRules.ForwardDot(end.Value.X - startAt.X, end.Value.Y - startAt.Y, forward.Value.X, forward.Value.Y);
+        _host.PressTime(SeatTimeKey.Stay);
+        var resumed = !_host.ReadTimeState().Paused;
+
+        var facts = "paused=" + Bit(paused) + " mission_seconds=" + Num(clockMoved) + " moved=" + Num(moved) + " expected=" + Num(expected) + " dot=" + Num(dot)
+            + " resumed=" + Bit(resumed) + Standing();
+        var pass = paused && SeatTrialRules.PausedMissionStood(clockMoved) && SeatTrialRules.FlewExpected(expected, moved) && SeatTrialRules.FlewForward(dot)
+            && resumed && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> SlowTime()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+        if (_host.OtherTimeRequest)
+            yield return Verdict.Failed("reason=other-request" + Standing());
+
+        _host.PressTime(SeatTimeKey.Slow);
+        var level = _host.TimeLevel;
+        var state = _host.ReadTimeState();
+        foreach (var verdict in SettleAtALevel())
+            yield return verdict;
+        foreach (var verdict in MeasureRatio(1))
+            yield return verdict;
+
+        var others = _host.OtherTimeRequest;
+        var ratio = _ratio;
+        TryReachLevel(1f);
+        var facts = "level=" + LevelText(level) + " ratio=" + Num(ratio) + " request=" + Bit(state.SlowRequest) + " others=" + Bit(others) + " fast_forward=" + Bit(state.FastForward)
+            + " fixed_step=" + Bit(state.FixedStep) + " paused=" + Bit(state.Paused) + Standing();
+        var pass = Math.Abs(level - SeatTrialRules.SlowTarget) <= LevelEpsilon && SeatTrialRules.SlowRatio(ratio) && state.SlowRequest && !others
+            && !state.FastForward && !state.FixedStep && !state.Paused && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> FastTime()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+        if (_host.OtherTimeRequest)
+            yield return Verdict.Failed("reason=other-request" + Standing());
+
+        var facts = "";
+        var pass = true;
+        foreach (var level in new[] { 2, 4, 10 })
+        {
+            if (!TryReachLevel(level))
+                yield return LevelNotReached(level);
+            foreach (var verdict in SettleAtALevel())
+                yield return verdict;
+            foreach (var verdict in MeasureRatio(level))
+                yield return verdict;
+
+            var state = _host.ReadTimeState();
+            var name = level.ToString(CultureInfo.InvariantCulture);
+            var fastForward = level == FastForwardLevel;
+            if (!fastForward && !SeatTrialRules.CanTellFromNormal(_expectedRatio))
+                yield return Verdict.Failed("reason=level-indistinguishable level=" + name + " expected=" + Num(_expectedRatio) + " frame_ms=" + Num(_meanFrame * 1000f) + Standing());
+
+            facts += "ratio" + name + "=" + Num(_ratio) + " fixed_step" + name + "=" + Bit(state.FixedStep) + " fast_forward" + name + "=" + Bit(state.FastForward) + " ";
+            if (!fastForward)
+                facts += "expected" + name + "=" + Num(_expectedRatio) + " frame" + name + "_ms=" + Num(_meanFrame * 1000f) + " ";
+            pass &= SeatTrialRules.FastRatio(level, _ratio, _expectedRatio) && state.FixedStep != fastForward && state.FastForward == fastForward;
+        }
+
+        TryReachLevel(1f);
+        facts += "others=" + Bit(_host.OtherTimeRequest) + Standing();
+        yield return pass && Seated && !_host.Faulted ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private bool HoldsWhatTheirFlagMakesWrong()
+    {
+        var state = _host.ReadTimeState();
+        return state.FixedStep || state.SlowRequest;
+    }
+
+    private IEnumerable<Verdict> AdoptFlag()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+        if (_host.OtherTimeRequest)
+            yield return Verdict.Failed("reason=other-request" + Standing());
+
+        var facts = "";
+        var pass = true;
+        foreach (var start in new[] { 4f, 0.5f })
+        {
+            var name = start > 1f ? "four" : "half";
+            if (!TryReachLevel(start))
+                yield return LevelNotReached(start);
+            foreach (var verdict in SettleAtALevel())
+                yield return verdict;
+
+            yield return Verdict.InMissionTick;
+            _host.SetOtherFastForward(true);
+            var raisedAt = _now;
+            while (HoldsWhatTheirFlagMakesWrong() && _now - raisedAt < SeatTrialRules.AdoptWaitSeconds)
+                yield return Verdict.Waiting("adopt");
+
+            var held = _host.ReadTimeState();
+            foreach (var verdict in MeasureRatio(FastForwardLevel))
+                yield return verdict;
+
+            yield return Verdict.InMissionTick;
+            _host.SetOtherFastForward(false);
+            var loweredAt = _now;
+            while (Math.Abs(_host.TimeLevel - 1f) > LevelEpsilon && _now - loweredAt < SeatTrialRules.AdoptWaitSeconds)
+                yield return Verdict.Waiting("adopt-ends");
+
+            var levelAfter = _host.TimeLevel;
+            facts += "fixed_step_" + name + "=" + Bit(held.FixedStep) + " request_" + name + "=" + Bit(held.SlowRequest) + " flag_" + name + "=" + Bit(held.FastForward)
+                + " ratio_" + name + "=" + Num(_ratio) + " level_after_" + name + "=" + LevelText(levelAfter) + " ";
+            pass &= !held.FixedStep && !held.SlowRequest && held.FastForward && SeatTrialRules.AdoptedRatio(_ratio) && Math.Abs(levelAfter - 1f) <= LevelEpsilon;
+        }
+
+        facts += Standing().TrimStart();
+        yield return pass && Seated && !_host.Faulted ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> SpeedCleared()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+
+        if (!TryReachLevel(10f))
+            yield return LevelNotReached(10f);
+        var fastForwardBefore = _host.ReadTimeState().FastForward;
+        _host.PressTime(SeatTimeKey.Stay);
+        var afterPause = _host.ReadTimeState();
+        _host.PressTime(SeatTimeKey.Stay);
+        var resumed = !_host.ReadTimeState().Paused;
+
+        if (!TryReachLevel(4f))
+            yield return LevelNotReached(4f);
+        foreach (var verdict in SettleAtALevel())
+            yield return verdict;
+        var fixedBefore = _host.ReadTimeState().FixedStep;
+        if (!TryReachLevel(0.5f))
+            yield return LevelNotReached(0.5f);
+        var slow = _host.ReadTimeState();
+        if (!TryReachLevel(1f))
+            yield return LevelNotReached(1f);
+        var end = _host.ReadTimeState();
+
+        var facts = "fast_forward_before=" + Bit(fastForwardBefore) + " fast_forward_after=" + Bit(afterPause.FastForward) + " fixed_step_after=" + Bit(afterPause.FixedStep)
+            + " paused=" + Bit(afterPause.Paused) + " resumed=" + Bit(resumed) + " fixed_step_before=" + Bit(fixedBefore) + " fixed_step_slow=" + Bit(slow.FixedStep)
+            + " request_slow=" + Bit(slow.SlowRequest) + " request_end=" + Bit(end.SlowRequest) + " clean_end=" + Bit(end.IsClean(otherClock: false)) + Standing();
+        var pass = fastForwardBefore && !afterPause.FastForward && !afterPause.FixedStep && afterPause.Paused && resumed && fixedBefore && !slow.FixedStep
+            && slow.SlowRequest && !end.SlowRequest && end.IsClean(otherClock: false) && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> LeaveForTheHero()
+    {
+        foreach (var verdict in LeaveIfUp())
+            yield return verdict;
+
+        var leftAt = _now;
+        while (true)
+        {
+            var view = _host.ViewPosition();
+            var hero = _host.HeroPosition();
+            var near = view != null && hero != null && SeatTrialRules.NearHero(view.Value.Distance(hero.Value));
+            if (near && _now - leftAt >= SeatTrialRules.RiseSettleSeconds)
+                yield break;
+            if (_now - leftAt > SeatTrialRules.GlideWindowSeconds + SeatTrialRules.RiseSettleSeconds)
+                yield return Verdict.Failed("reason=never-near");
+            yield return Verdict.Waiting("glide-rest");
+        }
+    }
+
+    private IEnumerable<Verdict> RiseWithPanel()
+    {
+        _riseBefore = float.NaN;
+        foreach (var verdict in LeaveForTheHero())
+            yield return verdict;
+        if (!_host.ThirdPerson)
+            yield return Verdict.Failed("reason=first-person");
+        var height = _host.LiftHeight();
+        if (!(height > 0f))
+            yield return Verdict.Failed("reason=no-lift-height height=" + Num(height));
+
+        var before = _host.ViewPosition();
+        if (before == null)
+            yield return Verdict.Failed("reason=no-view");
+        _riseBefore = before!.Value.Z;
+
+        yield return Verdict.InMissionTick;
+        var opened = _host.OpenPanel();
+        var openedAt = _now;
+        while (_now - openedAt < SeatTrialRules.RiseSettleSeconds)
+            yield return Verdict.Waiting("lift");
+
+        var after = _host.ViewPosition();
+        var afterZ = after == null ? float.NaN : after.Value.Z;
+        var panelOpen = opened && _host.PanelOpen;
+        var facts = "before=" + Num(_riseBefore) + " after=" + Num(afterZ) + " rise=" + Num(afterZ - _riseBefore) + " height=" + Num(height) + " third=" + Bit(_host.ThirdPerson)
+            + " panel=" + Bit(panelOpen) + " state=" + _host.State + " faulted=" + Bit(_host.Faulted);
+        var pass = _host.State == SeatState.Off && _host.ThirdPerson && panelOpen && SeatTrialRules.LiftSeen(_riseBefore, afterZ, height) && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> SinkOnClose()
+    {
+        if (float.IsNaN(_riseBefore))
+            yield return Verdict.Failed("reason=no-rise-reading");
+        if (!_host.PanelOpen)
+            yield return Verdict.Failed("reason=panel-not-open");
+
+        yield return Verdict.InMissionTick;
+        _host.ClosePanel(asPlayer: true);
+        var closedAt = _now;
+        while (_now - closedAt < SeatTrialRules.RiseSettleSeconds)
+            yield return Verdict.Waiting("sink");
+
+        var after = _host.ViewPosition();
+        var afterZ = after == null ? float.NaN : after.Value.Z;
+        var offset = _host.CameraTargetOffset();
+        var panelOpen = _host.PanelOpen;
+        var facts = "before=" + Num(_riseBefore) + " after=" + Num(afterZ) + " offset_z=" + offset.Z.ToString("R", CultureInfo.InvariantCulture) + " panel=" + Bit(panelOpen)
+            + " state=" + _host.State + " faulted=" + Bit(_host.Faulted);
+        var pass = _host.State == SeatState.Off && !panelOpen && SeatTrialRules.SankBack(_riseBefore, afterZ) && SeatTrialRules.ExactlyZero(offset.X, offset.Y, offset.Z)
+            && !_host.Faulted;
+
+        foreach (var verdict in TakeTheSeatAgain(facts))
+            yield return verdict;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> TakeTheSeatAgain(string facts)
+    {
+        _host.PressSeatKey();
+        var pressedAt = _now;
+        while (_host.PressPending)
+            yield return _now - pressedAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken " + facts) : Verdict.Waiting("press-taken");
+        while (_host.State != SeatState.Seated)
+            yield return _host.State == SeatState.Off ? Verdict.Failed("reason=not-entered " + facts) : Verdict.Waiting("seated");
     }
 }

@@ -67,6 +67,7 @@ public class FordsGameSpeedTests
         speed.Set(10);
 
         Assert.AreEqual((true, 0f), speed.Frame(0.01f));
+        Assert.AreEqual((true, 0f), speed.Frame(0f), "the Seat writes level 10 with no frame time to turn its fixed step off, and the step must still read none");
     }
 
     [TestMethod]

@@ -149,6 +149,7 @@ internal sealed partial class CommandTrialScript
     private void ReleaseAfterFailure()
     {
         _host.SetInput(NoInput);
+        _host.ReleaseTime();
         if (_host.PanelOpen)
             _host.ClosePanel(asPlayer: true);
     }

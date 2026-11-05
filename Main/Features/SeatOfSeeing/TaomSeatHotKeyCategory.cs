@@ -5,8 +5,8 @@ namespace TAOM.Features.SeatOfSeeing;
 
 /// <summary>
 /// Registers the Seat's keys as native, rebindable game keys, so they appear in Options > Keybindings under "Action" beside the
-/// vanilla combat keys, built the way <c>TaomCareerHotKeyCategory</c> is. Stages S1 to S5 declare "Take the Seat" (default Q), "Keep to
-/// this soldier or company" (Insert), "Take this soldier" (Delete) and "Hide the interface" (End). The ids start at 530 (build-spec
+/// vanilla combat keys, built the way <c>TaomCareerHotKeyCategory</c> is. Stages S1 to S6 declare "Take the Seat" (default Q), "Keep to
+/// this soldier or company" (Insert), "Take this soldier" (Delete), "Quicken time" (PageUp), "Slow time" (PageDown), "Stay time" (Home) and "Hide the interface" (End). The ids start at 530 (build-spec
 /// section 3); the later stages add theirs to this table.
 ///
 /// <b>Never register this context on a layer.</b> <c>InputContext.RegisterHotKeyCategory</c> sizes its slot list
@@ -24,6 +24,9 @@ public sealed class TaomSeatHotKeyCategory : GameKeyContext
     public const int TakeTheSeatKeyId = 530;
     public const int KeepToKeyId = 531;
     public const int TakeThisSoldierKeyId = 532;
+    public const int QuickenTimeKeyId = 533;
+    public const int SlowTimeKeyId = 534;
+    public const int StayTimeKeyId = 535;
     public const int HideTheInterfaceKeyId = 536;
 
     // RegisterGameKey is an INDEXED write into a list the ctor pre-fills with this many nulls, so this must stay greater than the
@@ -44,6 +47,15 @@ public sealed class TaomSeatHotKeyCategory : GameKeyContext
         RegisterGameKey(new GameKey(
             TakeThisSoldierKeyId, "TaomSeatTakeSoldier", CategoryId,
             InputKey.Delete, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(
+            QuickenTimeKeyId, "TaomSeatQuicken", CategoryId,
+            InputKey.PageUp, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(
+            SlowTimeKeyId, "TaomSeatSlow", CategoryId,
+            InputKey.PageDown, GameKeyMainCategories.ActionCategory));
+        RegisterGameKey(new GameKey(
+            StayTimeKeyId, "TaomSeatStay", CategoryId,
+            InputKey.Home, GameKeyMainCategories.ActionCategory));
         RegisterGameKey(new GameKey(
             HideTheInterfaceKeyId, "TaomSeatHide", CategoryId,
             InputKey.End, GameKeyMainCategories.ActionCategory));

@@ -65,7 +65,9 @@ public class CommandTrialFightStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(StageFour.Concat(StageFive).ToArray(), names.Skip(13).Take(StageFour.Length + StageFive.Length).ToArray());
+        var fightRows = StageFour.Concat(StageFive).ToList();
+        CollectionAssert.AreEqual(fightRows, names.Where(fightRows.Contains).ToList(), "stage six and seven rows sit between the hand-off steps and the fall");
+        Assert.AreEqual(13, names.IndexOf("fight_on"));
     }
 
     [TestMethod]
@@ -155,6 +157,18 @@ public class CommandTrialFightStepsTests
     }
 
     // ---- fight_on: each conjunct alone ----
+
+    [TestMethod]
+    public void FightOn_WhenTheEntryPressIsNotTaken_FailsWithThatReasonAndTheStateTheLeaveLeft()
+    {
+        _world.IgnorePressesFrom = 3;
+
+        Run("fight_on");
+
+        var line = Line("fight_on");
+        StringAssert.Contains(line, "result=FAIL reason=press-not-taken state=Off", line);
+        Assert.AreEqual(3, _world.Presses, "the entry, the leave and the entry that was not taken");
+    }
 
     [TestMethod]
     public void FightOn_WhenTheHeroIsNeverHandedOver_FailsOnTheController()
