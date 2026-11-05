@@ -23,10 +23,11 @@ public class RacePersistenceBehavior : CampaignBehaviorBase
     /// <summary>
     /// Restore the persisted races, then re-capture them.
     ///
-    /// The capture half exists for save transfers that never raise <c>OnBeforeSaveEvent</c> — a co-op
-    /// host handing its world to a joining client does exactly that (multiplayer field report
-    /// 2026-08-03 §1), so without capturing here the race map is empty at serialization time and the
-    /// joiner receives a world with no race data at all.
+    /// The capture half was added because a co-op host handing its world to a joining client was
+    /// believed to skip <c>OnBeforeSaveEvent</c> (multiplayer field report 2026-08-03 §1), which would
+    /// leave the race map empty at serialization time. A 1.5.x review (#1022) read the co-op module
+    /// transfer save raising it (SaveInterface.cs:109); that was not re-checked for a v1.4.8 co-op
+    /// build, so this capture stays as a backup for any transfer path that skips the event.
     ///
     /// ORDER IS LOAD-BEARING and is pinned by a test: capturing BEFORE the restore would snapshot the
     /// pre-restore state — every hero at whatever race the raw XML gave them — and write that over the
