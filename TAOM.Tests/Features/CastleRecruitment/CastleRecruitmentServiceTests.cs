@@ -20,6 +20,43 @@ public class CastleRecruitmentServiceTests
         _sut = new CastleRecruitmentService(_settings);
     }
 
+    // --- BlocksAiRecruitAtCastle (#918) ---
+
+    [TestMethod]
+    public void BlocksAiRecruitAtCastle_NonCastleSellerAiOff_False()
+    {
+        _settings.IsAiEnabled.Returns(false);
+        Assert.IsFalse(_sut.BlocksAiRecruitAtCastle(sellerInCastle: false, buyerIsPlayer: false));
+    }
+
+    [TestMethod]
+    public void BlocksAiRecruitAtCastle_PlayerBuyerAiOff_False()
+    {
+        _settings.IsAiEnabled.Returns(false);
+        Assert.IsFalse(_sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: true));
+    }
+
+    [TestMethod]
+    public void BlocksAiRecruitAtCastle_AiBuyerAtCastleAiOff_True()
+    {
+        _settings.IsAiEnabled.Returns(false);
+        Assert.IsTrue(_sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false));
+    }
+
+    [TestMethod]
+    public void BlocksAiRecruitAtCastle_AiBuyerAtCastleMasterOff_True()
+    {
+        _settings.IsEnabled.Returns(false);
+        _settings.IsAiEnabled.Returns(true);
+        Assert.IsTrue(_sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false));
+    }
+
+    [TestMethod]
+    public void BlocksAiRecruitAtCastle_AiBuyerAtCastleBothOn_False()
+    {
+        Assert.IsFalse(_sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false));
+    }
+
     // --- IsEnabled / IsAiEnabled gating ---
 
     [TestMethod]

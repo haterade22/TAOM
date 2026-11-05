@@ -1067,7 +1067,7 @@ public class SubModule : MBSubModuleBase
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
-        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment, IoC.Resolve<ICastleRecruitmentService>()));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
         // faction or alignment side (Isengard taking on Mordor/Gundabad/Dunland troops). Vanilla

@@ -6,6 +6,7 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Features.CastleRecruitment.Hooks;
@@ -15,11 +16,12 @@ using TAOM.Core.Logging;
 namespace TAOM.Tests.Migration;
 
 /// <summary>
-/// Pins three vanilla facts the castle recruitment code relies on, so an engine bump that changes one
+/// Pins four vanilla facts the castle recruitment code relies on, so an engine bump that changes one
 /// goes red instead of silently skewing the feature: the private <c>CheckRecruiting</c> still binds to the
 /// dispatcher's delegate shape, <c>RecruitmentCampaignBehavior.HourlyTickParty</c> still skips castles, and
-/// <c>GetApproximateVolunteersCanBeRecruitedDataFromSettlement</c> still counts 4 and 2 slots. The
-/// dispatcher's copy of the outer party guard and the siege filter is not pinned.
+/// <c>GetApproximateVolunteersCanBeRecruitedDataFromSettlement</c> still counts 4 and 2 slots, and the private
+/// <c>RecruitVolunteersFromNotable</c> still asks the volunteer model. The dispatcher's copy of the outer party
+/// guard and the siege filter are not pinned.
 /// Each test reads the installed engine IL or signature, with no campaign.
 /// </summary>
 [TestClass]
@@ -83,6 +85,27 @@ public class CastleRecruitmentEngineMirrorTests
             "The volunteer estimate no longer loads the constant 4. Re-check CastleVolunteerScan.OwnFactionSlotCount.");
         Assert.IsTrue(il.Any(ci => ci.opcode == OpCodes.Ldc_I4_2),
             "The volunteer estimate no longer loads the constant 2. Re-check CastleVolunteerScan.OwnFactionSlotCount.");
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RecruitVolunteersFromNotable_StillAsksTheVolunteerModel_InInstalledEngine()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");
+
+        var target = AccessTools.Method(typeof(RecruitmentCampaignBehavior), "RecruitVolunteersFromNotable", new[] { typeof(MobileParty), typeof(Settlement) });
+        Assert.IsNotNull(target, "RecruitmentCampaignBehavior.RecruitVolunteersFromNotable(MobileParty, Settlement) did not resolve.");
+
+        var il = PatchProcessor.GetOriginalInstructions(target!).ToList();
+
+        Assert.IsTrue(
+            il.Any(ci => (ci.opcode == OpCodes.Call || ci.opcode == OpCodes.Callvirt)
+                && ci.operand is MethodInfo mi && mi.Name == nameof(VolunteerModel.MaximumIndexHeroCanRecruitFromHero)
+                && mi.DeclaringType == typeof(VolunteerModel)),
+            "RecruitVolunteersFromNotable no longer calls VolunteerModel.MaximumIndexHeroCanRecruitFromHero. "
+            + "TaomVolunteerModel's castle and alignment rules (#918) block AI lord recruits only through this call; "
+            + "if it moved, re-check where AI lords take volunteers.");
     }
 
     private static bool CallsGetter(System.Collections.Generic.IEnumerable<CodeInstruction> il, string property)

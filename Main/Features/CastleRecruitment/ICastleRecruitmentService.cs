@@ -14,6 +14,13 @@ public interface ICastleRecruitmentService
     /// <summary>AI castle recruitment toggle, already AND-ed with the master toggle.</summary>
     bool IsAiEnabled { get; }
 
+    /// <summary>True when an AI lord must not recruit from this notable: the seller stands in a castle,
+    /// the buyer is not the player, and AI castle recruitment is off (the master toggle is folded into
+    /// <see cref="IsAiEnabled"/>). The one chokepoint for every AI lord recruit from a castle notable,
+    /// on entry through vanilla's OnBeforeSettlementEntered and hourly through CastleAiRecruitDispatcher.
+    /// Garrisons are out of scope: they use MaximumIndexGarrisonCanRecruitFromHero.</summary>
+    bool BlocksAiRecruitAtCastle(bool sellerInCastle, bool buyerIsPlayer);
+
     /// <summary>Target notable headcount per castle, distributed round-robin across the four
     /// castle-safe occupations. e.g. 3 → {GangLeader:1, Headman:1, Merchant:1};
     /// 5 → {GangLeader:2, Headman:1, Merchant:1, Artisan:1}.</summary>

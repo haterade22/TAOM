@@ -73,3 +73,29 @@ a GameModel override.
 ## Feedback memories to codify
 
 None. The lessons below carry the rules; no harness or memory change is needed.
+
+## Addendum 2026-10-20: the #918 and #920 follow-ups
+
+Both follow-ups above were fixed on the maintainer's word and reviewed with six lenses (`fix-` wave, against
+`f83a63e57`). No HIGH; one MEDIUM and the rest LOW, all fixed before commit.
+
+- **Finding 5 closed (#918).** `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` now asks
+  `ICastleRecruitmentService.BlocksAiRecruitAtCastle` and returns -1 for an AI lord buying from a castle notable while
+  AI castle recruitment (or the master toggle) is off. That one call covers the entry recruit and the hourly recruit.
+  Garrisons keep their daily recruit: they use `MaximumIndexGarrisonCanRecruitFromHero`, and the MCM hint scopes the
+  toggle to AI lord parties. Companion-led parties of the player's clan count as AI lords, as they already did.
+- **Finding 14 reframed (#920).** The premise was wrong for BannerlordCoop. Its own `CheckRecruiting` prefix
+  (`DisableRecruitmentCampaignBehavior`, `!mobileParty.IsPlayerParty()`) refuses every player-controlled party, and a
+  Harmony prefix runs for TAOM's bound delegate as for any other call. The hourly castle recruit still stands down while
+  a co-op session is live, and while a co-op mod TAOM cannot probe is enabled, to match BannerlordCoop's own
+  shutdown of vanilla's hourly recruit during a live session and as cover for mods TAOM cannot read. After a session
+  ends, BannerlordCoop keeps its patch and TAOM's castle recruit resumes (a Known Limitation). Recruiting on entry is
+  unaffected.
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| A1 | MED | The model override gained an inline `if`, which gamemodels.md rule 4 forbids; #737 ruled the same shape a defect. | The orchestrator's fix brief prescribed the `if` verbatim, and the implementer followed the brief. | Collapsed to one expression. New lesson in `lessons/gamemodels-services.md`: code in a brief is held to the rules. |
+| A2 | LOW | Issue #920, the dispatcher comment and three doc lines claimed a remote player's gold was at risk under BannerlordCoop. | The convergence pass marked the claim `[Likely]`; it went into an issue without reading the co-op mod's patches on the method TAOM calls. | Reworded everywhere and #920 corrected. New lesson in `lessons/campaign-mechanics.md`. |
+| A3 | LOW | "Stands down during a session" understated the reach: `ShouldDeferToHost` is true whenever an unprobeable co-op mod is enabled, solo play included. | The wording followed the issue, not `CoopSessionPolicy`'s truth table. | Reworded; the trade-off is stated in the docs and the commit body. |
+| A4 | LOW | The vanilla fact #918 rests on (`RecruitVolunteersFromNotable` asks `MaximumIndexHeroCanRecruitFromHero`) was not pinned. | The mirror tests pinned only the facts the first change relied on. | Fourth test in `CastleRecruitmentEngineMirrorTests`. |
+| A5 | LOW | Docs: the model gate missing from the castle doc's architecture, "the player's own recruiting" (it is the player's own party), the feature-map and gamemodels rule rows, an imprecise base-model claim in `alignment-recruitment.md`, a cost claim in the dispatcher comment, duplicated reads in the model. | Doc sweep followed the issue's file list. | Fixed. No new rule. |
