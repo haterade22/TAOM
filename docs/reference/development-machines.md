@@ -93,7 +93,7 @@ Known gaps on the laptop, both deliberate:
 
 ## Ghidra, desktop only (installed 2026-09-26, #688)
 
-`tools/native_decompile.py` needs all of this; the procedure it serves is `/native-crash-triage`.
+`tools/native_decompile.py` needs all of this; the procedure it serves is `/native-crash-triage`, once the plan 137 skill edits land.
 
 | Piece | Where | Why it is set up this way |
 |---|---|---|

@@ -948,7 +948,8 @@ def _spawn_detached(cmd: list, log: Path) -> int:
 
 def _refresh_detached(args) -> int:
     """Start `refresh` as a detached child and return at once (the SessionStart hook's call).
-    Every reason not to start is printed and exits 0: it is advice, never a failure."""
+    A reason not to start is printed and exits 0: it is advice, never a failure. The exceptions are
+    environment faults, which exit 3: a bad output root, or no graphify on PATH."""
     started = time.monotonic()
     out = out_root()
     try:

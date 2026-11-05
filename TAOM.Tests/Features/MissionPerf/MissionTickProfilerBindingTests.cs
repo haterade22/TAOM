@@ -169,7 +169,7 @@ public class MissionTickProfilerBindingTests
         CollectionAssert.AreEqual(new[] { hook.PatchMethod.DeclaringType?.FullName + "." + hook.PatchMethod.Name }, callers);
     }
 
-    // CreatureBanditsWiringTests.TargetOf.
+    // The method the patch class targets: its TargetMethod, else its [HarmonyPatch] attributes.
     private static MethodBase TargetOf(Type patch)
     {
         var byName = AccessTools.Method(patch, "TargetMethod");

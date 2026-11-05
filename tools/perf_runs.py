@@ -97,7 +97,7 @@ the menu goes on the header, and the [MemSample] lines of the new game's load on
 holds no [MemSample] lines). A row keeps what its
 game wrote up to the line that ends it, the teardown included. A log with none of these lines has no
 boundary, and a mission keeps every line after its start, as before (the trace first shipped in
-v2.0.29, and the 1.4.5 branch has none). A mod that loaded module XML during a mission would end
+v2.0.29 on the 1.5.x line, and plan 118 ported it here, so a build before that merge has none). A mod that loaded module XML during a mission would end
 that mission's row at that line.
 
 NO SILENT SKIP. The report opens with one header per log (path, size, lines, missions, lines of a

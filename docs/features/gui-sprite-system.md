@@ -38,8 +38,7 @@ GUI/
 ├── Fonts/                            ← Custom fonts
 ├── Prefabs/                          ← Gauntlet XML UI layouts
 │   └── CareerSystem/
-│       ├── CareerScreen.xml          ← Main career screen prefab
-│       └── AbilityHUD.xml            ← Battle HUD for active ability
+│       └── CareerScreen.xml          ← Main career screen prefab
 ├── SpriteData/                       ← Compiled sprite sheets (auto-generated)
 │   └── FactionMap/                   ← ⚠ NOT sprites — loose PNGs, see the trap below
 ├── SpriteParts/                      ← Source PNGs (organized by category)
@@ -297,7 +296,7 @@ Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `Charac
 
 ### Ability HUD in Battle
 
-`AbilityHUD.xml` displayed via `CareerPerkMissionBehavior` on a `GauntletLayer("CareerAbilityHUD", 50)`. Shows charge percentage and ready state via `CareerAbilityHudVM`.
+The old standalone panel is gone (#382). The battle ability display is `CareerEnergyBarPrefab`, injected into Native's `AgentStatus` prefab: see [career-system.md](career-system.md), "#382 energy bar".
 
 ## Special Resource Map Bar
 
@@ -349,7 +348,6 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 | File | Purpose |
 |------|---------|
 | `Main/_Module/GUI/PreFabs/CareerSystem/CareerScreen.xml` | Career screen layout |
-| `Main/_Module/GUI/PreFabs/CareerSystem/AbilityHUD.xml` | Battle ability HUD |
 | `Main/_Module/GUI/TAOMSpriteData.xml` | Sprite category declaration |
 | `Main/Features/CareerSystem/UI/GauntletCareerScreen.cs` | Screen creation + lifecycle |
 | `Main/Features/CareerSystem/UI/CareerScreenVM.cs` | Career screen ViewModel (root) |

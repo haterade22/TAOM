@@ -60,7 +60,8 @@
     pwsh tools/check_engine_member_refs.ps1 -Dll 'E:\LOTRAOM_Releases\testing\Modules\*\bin\Win64_Shipping_Client\*.dll'
 
 .NOTES
-    Used by .claude/skills/engine-bump/SKILL.md Phase 1 step 5. Run a fresh build as the negative
+    Used by .claude/skills/engine-bump/SKILL.md Phase 1 step 5 once the plan 137 skill edits land;
+    until then run it by hand after an engine bump. Run a fresh build as the negative
     control (it must report 0 unresolved).
 #>
 [CmdletBinding()]

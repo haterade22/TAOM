@@ -49,7 +49,7 @@ together. A reflection type written with a leading ellipsis is matched by suffix
 declared on the listed type is looked up along the decompiled base chain (first indexed class
 base, up to depth 10, same namespace preferred) and the declaring type is reported.
 
-Procedure: .claude/skills/engine-bump/SKILL.md Phase 3.
+Procedure: .claude/skills/engine-bump/SKILL.md Phase 3, once the plan 137 skill edits land.
 """
 from __future__ import annotations
 

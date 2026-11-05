@@ -274,7 +274,7 @@ public class BuildStampReportTests
     [TestMethod]
     public void BuildReportFromParts_StillMatchesTheVerdictToolPattern()
     {
-        // The pattern tools/ingame_verdict.py uses on 1.5.x; WP139 ports that tool.
+        // The pattern tools/ingame_verdict.py uses (tools/ingame_verdict.py:94).
         string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
 
         var m = Regex.Match(line, @"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)");

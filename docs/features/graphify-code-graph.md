@@ -182,7 +182,7 @@ prints a `NOTE:` and exits 0.
 `graphify_taom: background refresh started (pid N, log <path>).` It prints its reason and starts
 nothing when the graph is fresh, another refresh holds the lock, `TAOM_GRAPHIFY_AUTOREFRESH=0`, a
 Bannerlord process is running, or that check (`tasklist`, 1.5 s limit) timed out or failed. Every
-such case exits 0. `.claude/hooks/session-start.sh` calls it when `status` reports STALE and prints
+such case exits 0. A bad output root, or no graphify on PATH, exits 3. `.claude/hooks/session-start.sh` calls it when `status` reports STALE and prints
 its one line, so a stale graph rebuilds while the session starts. The log is moved to
 `autorefresh.log.1` once it passes 1 MB.
 
@@ -205,8 +205,12 @@ accurate at build time. Staleness is the risk. A stale query now prints, on stde
 appear in the answer, then one line with the total count and the refresh command. A stale answer
 exits as before (graphify's own code). Treat any STALE line as "refresh or confirm by hand".
 
-**On another machine.** Set `TAOM_GRAPHIFY_OUT` to a local folder. Without graphify on PATH every
-verb exits 3 and the workflow steps record UNCHECKED rather than silently skipping.
+**On another machine.** Set `TAOM_GRAPHIFY_OUT` to a local folder. Without graphify on PATH, `refresh`
+exits 3; its `--if-stale` and `--detach` forms exit 0 first when the graph is already fresh. `status`
+needs no graphify: it exits 0, 1 or 2, and 3 only when staleness cannot be checked. `report` exits 2
+while no graph exists. The queries and `tests` look for the graph first, so they exit 2 with no graph
+and 3 with a graph but no graphify. The workflow steps, once they land, record UNCHECKED on any of
+these rather than silently skipping.
 
 ## Performance
 

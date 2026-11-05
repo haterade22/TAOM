@@ -3,8 +3,9 @@
 
 Why: a closed issue whose code shipped without anyone seeing it work in game keeps the
 `triage-needs-ingame` label, but nothing tells the testers which of a release's changes those
-are. `/release` runs this in Phase 1 (the count) and Phase 5 (the testers' checklist). It never
-blocks a release: the exit code is 0 however many checks are owed.
+are. Once the `/release` edits land, it runs this in Phase 1 (the count) and Phase 5 (the testers'
+checklist); until then run it by hand. It never blocks a release: the exit code is 0 however many
+checks are owed.
 
 Usage:
     python tools/ingame_ledger.py [--since TAG] [--format text|md] [--count]

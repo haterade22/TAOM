@@ -20,7 +20,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
 {
     /// <summary>
     /// Budget between expensive passes: the campaign tick's delta while time runs (0.25 = 18 campaign minutes
-    /// at any speed), real seconds on a stopped wait menu. Real rates per speed: docs/features/enlistment.md (#841).
+    /// at any speed), real seconds on a stopped wait menu. The clock arithmetic: docs/features/enlistment.md, "The service upkeep runs once a frame" (#841).
     /// </summary>
     private const float MaintenanceIntervalSeconds = 0.25f;
 

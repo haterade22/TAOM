@@ -36,7 +36,7 @@ public interface IServiceMaintenanceService
     /// raised from a tick runs before <c>MapEventManager.Tick</c> in the same frame, which updates a raid even
     /// when it is the player's own event, so a simulation session could run with the soldier inside. Every other
     /// join, and any join off the service wait menu, is raised at once (the battle-start edge too, by design: see
-    /// docs/features/enlistment.md, #954 open risk 1).
+    /// docs/features/enlistment.md, "The service upkeep runs once a frame").
     /// </summary>
     void RequestBattleJoin(string commanderHeroId);
 

@@ -110,7 +110,7 @@ DEFAULT_GAME_DIR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_MODULE_LABEL = "Main/_Module/ModuleData/project.mbproj"
 
-# The modules TAOM's own data surface spans (docs/ai-includes/orientation.md, "Three modules").
+# The modules TAOM's own data surface spans (CLAUDE.md Traps, "Three-module data surface").
 # Anything else installed is somebody else's module and is only audited under --all.
 TAOM_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory")
 
