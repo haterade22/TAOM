@@ -1703,7 +1703,7 @@
 
     <NPCCharacter
         id="dunland_raven_noble_son"
-        default_group="Infantry"
+        default_group="Ranged"
         level="11"
         is_basic_troop="true"
         name="{=aom_dunland_raven_noble_son_name}[Dunland] Cigfran-lûth Hunter"
@@ -2080,7 +2080,7 @@
 
     <NPCCharacter
         id="dunland_falcon_archer"
-        default_group="Cavalry"
+        default_group="HorseArcher"
         level="21"
         name="{=aom_dunland_falcon_archer_name}[Dunland] Hebog-lûth Scout"
         occupation="Soldier"
@@ -2163,7 +2163,7 @@
 
     <NPCCharacter
         id="dunland_falcon_wildrider"
-        default_group="Cavalry"
+        default_group="HorseArcher"
         level="26"
         name="{=aom_dunland_falcon_wildrider_name}[Dunland] Hebog-lûth Horse Archer"
         occupation="Soldier"
@@ -2246,7 +2246,7 @@
 
     <NPCCharacter
         id="dunland_falcon_noble_horse_archer"
-        default_group="Cavalry"
+        default_group="HorseArcher"
         level="31"
         name="{=aom_dunland_falcon_noble_horse_archer_name}[Dunland] Hebog-lûth Noble Horse Archer"
         occupation="Soldier"
