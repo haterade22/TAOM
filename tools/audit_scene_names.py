@@ -14,6 +14,7 @@ Outputs:
 """
 from __future__ import annotations
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from _gamedir import game_dir
 
@@ -33,6 +34,20 @@ SETTLEMENT_FILES = {
 # scene_name_1/_2/_3="X". A bare scene_name= regex misses the interior-level slots
 # (this is why the 36 sturgia_castle_keep_a_l1_interior refs went unaudited).
 SCENE_RE = re.compile(r'scene_name(?:_\d+)?="([^"]+)"')
+
+
+def registers_settlements(module_dir: Path) -> bool:
+    """True when the module's SubModule.xml registers a `Settlements` XmlName, so the engine loads its
+    settlements file. A row can span several lines, so this parses. A missing manifest is False; a
+    damaged one is True, so a damaged manifest never hides a suspect."""
+    manifest = Path(module_dir) / "SubModule.xml"
+    if not manifest.is_file():
+        return False
+    try:
+        root = ET.parse(manifest).getroot()
+    except ET.ParseError:
+        return True
+    return any(name.get("id") == "Settlements" for name in root.iter("XmlName"))
 
 
 def scenes_in(path: Path) -> dict[str, list[str]]:
@@ -81,9 +96,14 @@ def main() -> None:
     editdata = all_sceneeditdata()
     print(f"On-disk SceneObj folders: {len(folders)} | SceneEditData (WIP): {len(editdata)} (case-insensitive)\n")
 
-    refs = {label: scenes_in(p) for label, p in SETTLEMENT_FILES.items()}
-    for label, d in refs.items():
-        print(f"{label}: {len(d)} distinct scene_names referenced ({SETTLEMENT_FILES[label]})")
+    refs = {}
+    for label, p in SETTLEMENT_FILES.items():
+        if registers_settlements(p.parent.parent):
+            refs[label] = scenes_in(p)
+            print(f"{label}: {len(refs[label])} distinct scene_names referenced ({p})")
+        else:
+            refs[label] = {}
+            print(f"{label}: skipped, its module registers no Settlements (the engine never loads this file)")
     print()
 
     vanilla = set(refs["vanilla_SandBox"]) | set(refs["vanilla_NavalDLC"])

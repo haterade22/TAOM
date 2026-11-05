@@ -530,6 +530,8 @@ check as a live-install gate. **Add a script to `GENERATORS` when it writes item
 ModuleData.** A one-off swap map names retired ids on its FROM side by design and does not belong
 there.
 
+Expected noise in a player's rgl log, not a data defect: `Unable to find particle system with name ...` (vanilla names), `Unable to find item to add dependency` while Native's packages register (UNVERIFIED without a vanilla-only log).
+
 ## Key Files
 
 | File | Purpose |
