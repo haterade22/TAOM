@@ -37,7 +37,7 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
                 InformationManager.DisplayMessage(new InformationMessage("Your warg entered into a rage, you lost control!"));
                 WargMissionBehavior.SwitchMainAgentController(true);
                 AutonomousMovementPlayerController noMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
-                noMovementController.TargetAgent = AgentHitBy.GetValue();
+                if (noMovementController != null) noMovementController.TargetAgent = AgentHitBy.GetValue();
             }
             else
             {

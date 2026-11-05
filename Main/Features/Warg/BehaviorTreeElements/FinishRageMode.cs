@@ -35,6 +35,6 @@ public class FinishRageMode : BTTask, IBTWargBlackboard
         }
         WargMissionBehavior.SwitchMainAgentController(false);
         AutonomousMovementPlayerController noMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
-        noMovementController.TargetAgent = null;
+        if (noMovementController != null) noMovementController.TargetAgent = null;
     }
 }
