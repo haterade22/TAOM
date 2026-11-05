@@ -1979,7 +1979,8 @@ public class SubModule : MBSubModuleBase
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
-        // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
+        // ManualPatchApplicator (ADR-002); apply order unchanged. Each one is contained on its own: a missing
+        // target logs a warning, a throw logs a [PatchApply] error (ManualPatchApplicator.TryPatch).
         ManualPatchApplicator.ApplyAll(_harmony);
         onceStamp?.Mark("manual_patches");
 
