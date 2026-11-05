@@ -19,5 +19,6 @@ internal static class FeatureModules
         new Features.BardTownGuard.BardTownGuardModule(),
         new Features.LoadTimeStamps.LoadTimeStampsModule(),
         new Features.XmlMerge.XmlMergeModule(),
+        new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
     };
 }
