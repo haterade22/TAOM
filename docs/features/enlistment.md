@@ -303,7 +303,7 @@ The first shipped version never joined a single battle. Five separate defects, a
 alternative exists), `MapState.EnterMenuMode` postfix (recovery for ids written without
 SetNextMenu), 4× `LordConversationsCampaignBehavior` condition prefixes (suppress
 join-army/ally-thanks lines while enlisted; the clickable variant carries `out TextObject
-hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All seven targets pinned by
+hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All eight targets pinned by
 `Patch66EnlistmentBindingTests` against the installed DLLs. The donor's
 `MapState.OnMapConversationOver` patch was replaced by `CampaignEvents.ConversationEnded`.
 Since the WP128 port the category also holds the
@@ -1911,6 +1911,55 @@ say tier: `IssueForTier`, `HasIssuedForTier`, `HighestIssuedTier`, `TierToken`,
 `AlreadyIssuedForTier`, `ServiceContentRecord.HighestIssuedKitTier`. The save key stays `kitRank`,
 pinned by `KitTierSaveKeyTests`, so old saves keep their kit ledger. The 1.5.x seven-rank ladder
 that prompted the rename is not ported.
+
+### Soldiers fight their commander's battles (#830)
+
+A `Patch66_Enlistment` postfix on the encounter menu's private
+`EncounterGameMenuBehavior.game_menu_encounter_order_attack_on_condition` (v1.4.8 `:1919`, the
+"Send troops" or "Leave it to the others" option) asks `IEnlistmentMenuService.EvaluateSitOut()`
+while the soldier is in `EnlistedBattle` and does not lead his side. The pure `SitOutPolicy`
+decides: wounded stays free; an unavailable Attack keeps the option open; a siege assault or
+sally-out refuses; any other battle refuses unless his side holds at least
+`sitOut.overwhelmingShare` (0.85) of the strength on the field, which allows it at a cost. The
+postfix only narrows: it never hides the option, never re-enables one vanilla disabled, and every
+refusal leaves Attack enabled. `IEncounterAdapter.GetSitOutSnapshot` probes vanilla's Attack with
+`MenuHelper.CheckEnemyAttackableHonorably` then `EncounterAttackCondition` on a throwaway
+`MenuCallbackArgs` (both write only to the args, `MenuHelper.cs:452`, `:182`) and reads the share
+with the read-only `MapEvent.GetStrengthsRelativeToParty` (`MapEvent.cs:1456`). The verdict goes
+to `SitOutLedger`. At `MapEventEnded` the payout reads `MapEvent.IsPlayerSimulation`, which on
+v1.4.8 only the `BattleSimulation` constructor sets, and only `PlayerEncounter.InitSimulation`
+builds one, called only from `MenuHelper` (`MenuHelper.cs:576`). A battle sat out with an allowed
+verdict pays no renown; at overwhelming odds it also pays `sitOut.baseXpFactor` (half) of the base
+XP and costs `sitOut.trustCost` (1) trust. `Patch66EnlistmentBindingTests` pins the target and, by
+IL scan of TaleWorlds.CampaignSystem, the setter and constructor caller sets. Review:
+`rca-enlistment-sit-out-2026-10-19.md`.
+
+### The board's daily pay is what service pays today (#839, partial)
+
+`ServiceStatusService` reads the board's daily pay from `IEnlistmentWagePreview.GetDailyWage()`
+(`ServiceRewardService`), which is 0 while the column is lost (`CommanderUnavailable`), the number
+the clan finance tooltip already uses. The 1.5.x retinue-cost line on the oath and the board is
+not ported.
+
+### The service upkeep runs once a frame (#841)
+
+Two clocks feed `ServiceMaintenanceService.Pump`: the campaign `TickEvent` and the service wait
+menu's tick. v1.4.8 ticks a wait menu before the campaign in the same frame (`MapState.OnTick`,
+`MapState.cs:156-160`) and hands it the campaign time since its previous frame
+(`GameMenu.RunOnTick`, `GameMenu.cs:224-232`). The wait menu now feeds the pump only when that
+delta is zero, which means time is stopped (`OnWaitMenuFrame`), so a running menu is no longer
+pumped twice per frame. While time runs the budget is the campaign tick's delta (0.25 is 18
+campaign minutes: `Campaign.cs:873-874` advances 4320 campaign seconds per delta unit); on a
+stopped menu it is real seconds. A raid join raised from the campaign tick while the service wait
+menu is open waits for the next wait-menu frame (`RequestJoin`, `FlushPendingRaidJoin`), because
+`Campaign.Tick` runs `MapEventManager.Tick` right after the tick dispatch (`Campaign.cs:958-962`)
+and that updates a raid even when it is the player's own event (`MapEventManager.cs:59-61`), while
+a join from the wait-menu frame switches menus, which stops time (`GameMenu.cs:335-337`,
+`:358-360`) before the campaign tick runs. Field battles, sieges and joins away from the service
+menu happen at once. The hourly reconciler's join request takes the same path
+(`IServiceMaintenanceService.RequestBattleJoin`). The "within 250 ms" and "real-time service pump"
+wording earlier in this doc predates #841. Review:
+`rca-enlistment-trace-and-pump-clock-2026-10-24.md`.
 
 ## Interactions with the rest of TAOM
 
