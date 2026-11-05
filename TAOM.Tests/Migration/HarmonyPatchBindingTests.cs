@@ -4,22 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TAOM.Tests.Migration;
 
 /// <summary>
-/// Binding-verification gate for every Harmony patch in TAOM. Enumerates all <c>[HarmonyPatch]</c>
-/// types in the TAOM assembly and resolves each one's target method against the *installed*
-/// Bannerlord engine — exactly the resolution Harmony performs when it applies the patch at game
-/// load. A renamed / moved / re-signatured engine method makes the resolution return null, which is
-/// a silent no-op (or crash) in-game but a red test here.
+/// Binding-verification gate for every Harmony patch in TAOM. Enumerates the patch classes in the TAOM
+/// assembly and resolves and binds each one exactly as Lib.Harmony 2.4.2 applies it (through
+/// HarmonyTargetResolver) against the *installed* Bannerlord engine, plus the patches
+/// ManualPatchApplicator applies by hand. A renamed, moved or re-signatured engine member is a patch
+/// Harmony refuses or applies to nothing in game, and a red test here.
 ///
 /// This is the offline-checkable portion of the migration S6 smoke-test gate
-/// (docs/migration/TRACKING.md S4 row "Runtime binding verification — ⏳ S6 smoke test"). It runs
-/// under `dotnet test` with no game launch because TAOM.Tests references the v1.4.5 TaleWorlds DLLs
-/// and pre-loads the SandBox/CustomBattle/StoryMode module assemblies (see GameAssemblies).
+/// (docs/migration/TRACKING.md S4 row "Runtime binding verification"). It runs under `dotnet test` with
+/// no game launch because TAOM.Tests references the installed TaleWorlds DLLs and pre-loads the
+/// SandBox/CustomBattle/StoryMode module assemblies (see GameAssemblies).
 /// </summary>
 [TestClass]
 public class HarmonyPatchBindingTests
@@ -55,8 +56,8 @@ public class HarmonyPatchBindingTests
         {
             try
             {
-                var (ok, detail) = ResolveTarget(t);
-                if (!ok) failures.Add($"  {t.FullName}\n      → {detail}");
+                foreach (var problem in HarmonyTargetResolver.Check(t))
+                    failures.Add($"  {t.FullName}\n      -> {problem}");
             }
             catch (Exception ex)
             {
@@ -68,12 +69,63 @@ public class HarmonyPatchBindingTests
         if (failures.Count > 0)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"{failures.Count} of {patchTypes.Count} Harmony patches did not bind against the installed v1.4.5 engine.");
-            sb.AppendLine("Each is a patch that would silently fail (or crash) at game load:");
+            sb.AppendLine($"{failures.Count} problem(s) across {patchTypes.Count} Harmony patch classes against the installed engine.");
+            sb.AppendLine("Each is a patch Harmony would refuse (or apply to nothing) when its category applies:");
             sb.AppendLine();
             foreach (var f in failures) sb.AppendLine(f);
             Assert.Fail(sb.ToString());
         }
+    }
+
+    // Patches ManualPatchApplicator applies with harmony.Patch from a class the discovery cannot find (no [HarmonyPatch],
+    // no TargetMethod). Keep in step with Main/ManualPatchApplicator.cs; the source gate below fails when that file
+    // names a patch class neither the discovery nor this list covers.
+    private static readonly (string Target, string Method, Type PatchClass, string PatchMethod, HarmonyPatchType Kind)[] ManualPatches =
+    {
+        ("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "GetCaptainTooltip",
+            typeof(TAOM.Features.CompanionTactics.Roles.Hooks.Patch35_OOBHeroItem_GetCaptainTooltip), "Postfix", HarmonyPatchType.Postfix),
+    };
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void EveryManualPatch_BindsLikeHarmony()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var failures = new List<string>();
+        foreach (var (target, method, patchClass, patchMethod, kind) in ManualPatches)
+        {
+            // Resolved exactly as ManualPatchApplicator resolves it.
+            var original = AccessTools.Method(AccessTools.TypeByName(target), method);
+            var patch = AccessTools.Method(patchClass, patchMethod);
+            if (original == null) { failures.Add($"{target}.{method} did not resolve against the installed engine"); continue; }
+            if (patch == null) { failures.Add($"{patchClass.FullName}.{patchMethod} not found"); continue; }
+            failures.AddRange(HarmonyTargetResolver.CheckBinding(original, patch, kind).Select(p => $"{patchClass.Name}: {p}"));
+        }
+
+        Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ManualPatchApplicator_EveryPatchClass_IsCheckedByTheGate()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var source = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/ManualPatchApplicator.cs", stripComments: true);
+        var named = Regex.Matches(source, @"new\s+HarmonyMethod\(\s*typeof\(([\w.]+)\)").Cast<Match>()
+            .Select(m => m.Groups[1].Value.Split('.').Last()).Distinct().ToList();
+        Assert.IsTrue(named.Count >= 8, $"Only {named.Count} patch classes found in ManualPatchApplicator.cs; the scan broke, it did not pass.");
+
+        var covered = new HashSet<string>(DiscoverPatchTypes(out _).Select(t => t.Name));
+        covered.UnionWith(ManualPatches.Select(m => m.PatchClass.Name));
+        var missing = named.Where(n => !covered.Contains(n)).ToList();
+
+        Assert.AreEqual(0, missing.Count,
+            "ManualPatchApplicator applies patch classes this gate never checks: " + string.Join(", ", missing)
+            + ". Give the class a TargetMethod() or add a ManualPatches row.");
     }
 
     // --- discovery ---
@@ -101,66 +153,7 @@ public class HarmonyPatchBindingTests
     private static bool HasStaticTargetMember(Type t, string name) =>
         t.GetMethod(name, StaticParameterless, binder: null, types: Type.EmptyTypes, modifiers: null) != null;
 
-    // --- resolution (mirrors Harmony's own target discovery) ---
-
-    private static (bool ok, string detail) ResolveTarget(Type patchType)
-    {
-        // 1. TargetMethods() — multi-target patches.
-        var tms = patchType.GetMethod("TargetMethods", StaticParameterless, null, Type.EmptyTypes, null);
-        if (tms != null)
-        {
-            if (!(tms.Invoke(null, null) is IEnumerable seq))
-                return (false, "TargetMethods() returned null");
-            var items = seq.Cast<object>().ToList();
-            if (items.Count == 0) return (false, "TargetMethods() returned an empty sequence");
-            if (items.Any(x => x == null)) return (false, "TargetMethods() contained a null entry (unresolved target)");
-            return (true, $"TargetMethods() → {items.Count} target(s)");
-        }
-
-        // 2. TargetMethod() — single explicit target (private methods, types resolved by name, etc.)
-        var tm = patchType.GetMethod("TargetMethod", StaticParameterless, null, Type.EmptyTypes, null);
-        if (tm != null)
-        {
-            if (!(tm.Invoke(null, null) is MethodBase mb))
-                return (false, "TargetMethod() returned null — target not found in the installed engine");
-            return (true, $"TargetMethod() → {Describe(mb)}");
-        }
-
-        // 3. Attribute-based — merge all [HarmonyPatch] specs on the type + its methods.
-        var (declaringType, methodName, methodType, argTypes) = MergeSpec(patchType);
-        if (declaringType == null)
-            return (false, "indeterminate — no declaringType in any [HarmonyPatch] and no TargetMethod()");
-
-        var mt = methodType ?? MethodType.Normal;
-        MethodBase resolved;
-        switch (mt)
-        {
-            case MethodType.Normal:
-                if (methodName == null)
-                    return (false, $"indeterminate — declaringType {declaringType.FullName} set but no methodName/methodType");
-                resolved = AccessTools.Method(declaringType, methodName, argTypes);
-                break;
-            case MethodType.Getter:
-                resolved = AccessTools.PropertyGetter(declaringType, methodName);
-                break;
-            case MethodType.Setter:
-                resolved = AccessTools.PropertySetter(declaringType, methodName);
-                break;
-            case MethodType.Constructor:
-                resolved = AccessTools.Constructor(declaringType, argTypes);
-                break;
-            case MethodType.StaticConstructor:
-                resolved = AccessTools.Constructor(declaringType, argTypes, searchForStatic: true);
-                break;
-            default:
-                return (true, $"skipped — MethodType.{mt} not statically verified");
-        }
-
-        return resolved == null
-            ? (false, $"{declaringType.FullName}.{methodName} ({mt}) did not resolve against the installed engine")
-            : (true, $"{mt} → {Describe(resolved)}");
-    }
-
+    // One merged spec per class, for Patch37TargetShapeTests. The gate resolves per patch method through HarmonyTargetResolver.
     internal static (Type declaringType, string methodName, MethodType? methodType, Type[] argTypes) MergeSpec(Type patchType)
     {
         var infos = new List<HarmonyMethod>();
@@ -190,7 +183,4 @@ public class HarmonyPatchBindingTests
 
         return (declaringType, methodName, methodType, argTypes);
     }
-
-    private static string Describe(MethodBase mb) =>
-        $"{mb.DeclaringType?.FullName}.{mb.Name}({string.Join(", ", mb.GetParameters().Select(p => p.ParameterType.Name))})";
 }

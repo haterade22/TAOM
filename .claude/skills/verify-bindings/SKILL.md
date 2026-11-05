@@ -32,8 +32,8 @@ Re-verify that TAOM's engine touchpoints still bind against the **installed** Ba
 dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
-Three test classes under `TAOM.Tests/Migration/`:
-- `HarmonyPatchBindingTests` — every `[HarmonyPatch]` / `TargetMethod` target resolves as Harmony resolves it.
+The test classes under `TAOM.Tests/Migration/`:
+- `HarmonyPatchBindingTests`: every patch class resolved and bound the way Lib.Harmony 2.4.2 applies it (`HarmonyTargetResolver`: the attribute target on the declared type, or `TargetMethod`/`TargetMethods`; each prefix, postfix and finalizer parameter; a body to patch), plus the patches `ManualPatchApplicator` applies by hand.
 - `GameModelOverrideBindingTests` — every `Taom*Model` is registered in `SubModule.cs`, overrides ≥1 base virtual, and doesn't shadow a base virtual without `override`.
 - `ReflectionSiteBindingTests` — each catalogued auxiliary reflection member resolves.
 
@@ -44,7 +44,11 @@ A red gate is an environment gap or a real finding. `Assert.Inconclusive failed.
 | Failure message | Root cause | Fix |
 |---|---|---|
 | `Only N [HarmonyPatch] types discovered` / `Only N GameModel subclasses discovered` | the game loaded but TAOM's types failed to load against it: a stale build, or a test-time variable naming a different install than the build used | rebuild (no `--no-build`), check the variables against the build's install, then `/investigate` with the loader exceptions |
-| `AmbiguousMatchException` on a patch | name-only `[HarmonyPatch]` on a method overloaded anywhere in the type hierarchy | pin argument types: `[HarmonyPatch(typeof(X), "M", new[] { typeof(...) })]` (the documented HarmonyLib way) |
+| `AmbiguousMatchException` on a patch | a name-only [HarmonyPatch] on a method with two overloads declared on the named type | pin argument types: `[HarmonyPatch(typeof(X), "M", new[] { typeof(...) })]` (the documented HarmonyLib way) |
+| `Undefined target method` | the target is declared only on a base type, or the engine removed it (Harmony looks up the declared type only) | name the declaring type in `[HarmonyPatch]`, or `/research` the member and retarget |
+| `has no body` | the target became abstract or extern; the work moved into overrides | patch the concrete overrides (`TargetMethods`) |
+| `Parameter "x" not found` / `injects field` / `Cannot get result from void method` / `no parameter at index` / `cannot assign` | a patch parameter no longer binds: the engine renamed a parameter or field, or changed the return type | read the original with `pwsh tools/taom-src.ps1 path <Type>` and fix the patch parameter |
+| `ManualPatchApplicator applies patch classes this gate never checks` | a new hand-applied patch | give the class a `TargetMethod()` or add a `ManualPatches` row in `HarmonyPatchBindingTests` |
 | target/member `did not resolve` / `not found` | engine renamed/moved/removed the member in this version | `/research` the new signature, update the patch / adapter / GameModel; if a reflection site, update both `reflection-sites.md` and the `[DataRow]` |
 | GameModel `never AddModel'd` | a `Taom*Model` compiles but isn't registered | add `campaignStarter.AddModel(new TaomXModel(...))` in `Main/SubModule.cs` |
 
