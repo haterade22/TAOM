@@ -23,7 +23,7 @@
             <TextWidget
                 WidthSizePolicy="StretchToParent"
                 HeightSizePolicy="StretchToParent"
-                Brush="ButtonBrush1.Text"
+                Brush="Popup.Button.Text"
                 Text="@ButtonText"
                 DoNotAcceptEvents="true"
                 HorizontalAlignment="Center"

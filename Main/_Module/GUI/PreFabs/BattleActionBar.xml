@@ -18,7 +18,7 @@
             <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                         HorizontalAlignment="Center" VerticalAlignment="Top"
                         MarginTop="-25"
-                        Brush="Popup.Text.Small" Brush.FontSize="12"
+                        Brush="Tooltip.Text" Brush.FontSize="12"
                         Brush.FontColor="#FFD700FF" Text="@FormationName" DoNotAcceptEvents="true" />
             
             <!-- Action Buttons Container -->
@@ -42,7 +42,7 @@
                     <!-- Button Text -->
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Text.Small" Brush.FontSize="10"
+                                Brush="Tooltip.Text" Brush.FontSize="10"
                                 Brush.FontColor="#FFFFFFFF" Text="@DisplayText" />
                   </Children>
                 </ButtonWidget>

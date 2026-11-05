@@ -10,14 +10,15 @@ using static TAOM.Tests.Infrastructure.RepoPaths;
 namespace TAOM.Tests.Infrastructure;
 
 /// <summary>
-/// A brush-typed attribute (<c>Brush</c>, <c>IconBrush</c>, ...) in a PrefabExtension's injected XML must name a brush the
-/// engine loads for TAOM's module set. Gauntlet resolves an unknown name to the default brush without an error, so the
-/// widget just draws unstyled (#989: the Messengers button named two brushes no module defines). The names are read from
-/// every C# source under Main/ (RepoPaths.CodeRoots) that declares a PrefabExtension; bindings (<c>{</c>), <c>@</c> values and
-/// Gauntlet <c>!Constant</c> / <c>*Parameter</c> references are skipped.
-/// The engine loads the top-level GUI/Brushes/*.xml of each module in the SubModule.xml DependedModule order, keyed by file
-/// name so a later module's file of the same name replaces an earlier one, and TAOM's own folder last. A brush from a module
-/// TAOM does not depend on (NavalDLC) is therefore not declared. Inconclusive without the install.
+/// A brush-typed attribute (<c>Brush</c>, <c>IconBrush</c>, ...) in a PrefabExtension's injected XML or in a TAOM GUI/PreFabs
+/// file, and a GUI prefab's <c>Constant BrushName</c>, must name a brush the engine loads for TAOM's module set. Gauntlet
+/// resolves an unknown name to the default brush without an error, so the widget just draws unstyled (#989: the Messengers
+/// button named two brushes no module defines). PrefabExtension names are read from every C# source under Main/ that
+/// declares one; GUI prefabs are parsed as XML (comments ignored, any quoting). Bindings (<c>{</c>), <c>@</c> values and
+/// Gauntlet <c>!Constant</c> / <c>*Parameter</c> references are skipped. The engine loads the top-level GUI/Brushes/*.xml of
+/// each module in launcher order, keyed by file name so a later module's file of the same name replaces an earlier one, and
+/// TAOM's own folder last (v1.4.8 UIResourceManager.cs:117-122). The test models that with TAOM's DependedModule list followed
+/// by TAOM. A brush from a module TAOM does not depend on (NavalDLC) is therefore not declared. Inconclusive without the install.
 /// </summary>
 [TestClass]
 [TestCategory("LiveInstall")]
@@ -83,6 +84,69 @@ public class PrefabExtensionBrushTests
         Assert.IsTrue(declared.Contains("Popup.Button.Base"), "a Native brush must be declared");
         Assert.IsFalse(declared.Contains("Naval.Map.Party.Nameplate.Ship.Banner.Frame"),
             "a NavalDLC-only brush must not count: TAOM does not depend on NavalDLC");
+    }
+
+    // Values a GUI prefab may carry that are not a brush defined by a module.
+    private static readonly HashSet<string> AllowedNonDeclaredNames = new HashSet<string>(StringComparer.Ordinal)
+    {
+        // Empty on 1.4.x: no v1.4.8 vanilla prefab names a brush outside TAOM's module set (1.5.x lists a NavalDLC
+        // ship-banner frame here, which only v1.5.3 vanilla prefabs carry).
+    };
+
+    // PartyUpgradeButtonWidget.MarinerTroopBrush is a BrushWidget that takes the Id of a child widget
+    // (PartyUpgradeButtonWidget.cs:58), so that attribute holds a widget Id, not a brush name.
+    private const string WidgetIdAttribute = "MarinerTroopBrush";
+
+    private static bool IsLiteral(string value) =>
+        value.Length > 0 && "{@!*".IndexOf(value[0]) < 0;
+
+    private static IEnumerable<string> PrefabBrushValues(XDocument doc)
+    {
+        foreach (var element in doc.Descendants())
+        {
+            foreach (var attribute in element.Attributes())
+                if (attribute.Name.LocalName.EndsWith("Brush", StringComparison.Ordinal)
+                    && attribute.Name.LocalName != WidgetIdAttribute && IsLiteral(attribute.Value))
+                    yield return attribute.Value;
+            if (element.Name.LocalName == "Constant")
+            {
+                var brushName = (string?)element.Attribute("BrushName");
+                if (brushName != null && IsLiteral(brushName))
+                    yield return brushName;
+            }
+        }
+    }
+
+    [TestMethod]
+    public void EveryGuiPrefabBrush_IsDeclaredByAModule()
+    {
+        var declared = DeclaredBrushes();
+        var unknown = new SortedSet<string>(StringComparer.Ordinal);
+        var prefabs = RepoPath("Main", "_Module", "GUI", "PreFabs");
+        var repoDir = RepoPath();
+
+        var used = 0;
+        var constantBrushNames = 0;
+        foreach (var file in Directory.EnumerateFiles(prefabs, "*.xml", SearchOption.AllDirectories))
+        {
+            var doc = XDocument.Load(file);
+            constantBrushNames += doc.Descendants()
+                .Count(e => e.Name.LocalName == "Constant" && e.Attribute("BrushName") != null);
+            foreach (var name in PrefabBrushValues(doc))
+            {
+                used++;
+                if (!declared.Contains(name) && !AllowedNonDeclaredNames.Contains(name))
+                    unknown.Add($"{name}  ({file.Substring(repoDir.Length).TrimStart(Path.DirectorySeparatorChar)})");
+            }
+        }
+
+        Assert.IsTrue(used > 0, "No brush value found in any GUI prefab; the scan is broken.");
+        Assert.IsTrue(constantBrushNames > 0,
+            "No Constant BrushName found in any GUI prefab; the Constant scan is broken or the prefabs no longer use them.");
+        Console.WriteLine($"GUI prefab brush values checked: {used}; Constant BrushName elements: {constantBrushNames}");
+        Assert.AreEqual(0, unknown.Count,
+            "These GUI prefab brushes are not loaded by the engine for TAOM's module set, so Gauntlet draws the "
+            + "widget with the default brush: " + Environment.NewLine + string.Join(Environment.NewLine, unknown));
     }
 
     [TestMethod]

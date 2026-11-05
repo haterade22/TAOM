@@ -86,20 +86,20 @@
 
             <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="338" SuggestedHeight="42" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" Locked="false" MaxValueInt="@MaxArmySize" MinValueInt="@MinArmySize" ValueInt="@ArmySize" IsDisabled="false" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" IsDiscrete="true" DoNotUpdateHandleSize="true">
               <Children>
-                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="362" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Header.Frame"/>
-                <ImageWidget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" VerticalAlignment="Center" Brush="SPCharacterDeveloper.Statistics.Fill" ClipContents="true" UpdateChildrenStates="true">
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="362" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.Slider.Canvas"/>
+                <ImageWidget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" VerticalAlignment="Center" Brush="CustomBattle.Slider.Fill" ClipContents="true" UpdateChildrenStates="true">
                   <Children>
-                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="SPCharacterDeveloper.Statistics.Fill"/>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CustomBattle.Slider.Fill"/>
                   </Children>
                 </ImageWidget>
-                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Header.Frame"/>
-                <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="ButtonBrush1" DoNotAcceptEvents="true" GamepadNavigationIndex="0"/>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CustomBattle.Slider.Frame"/>
+                <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CustomBattle.Slider.Handle" DoNotAcceptEvents="true" GamepadNavigationIndex="0"/>
               </Children>
             </SliderWidget>
 
-            <IntegerInputTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="Clan.TextInput" IntText="@ArmySize" MaxInt="@MaxArmySize" MinInt="@MinArmySize" EnableClamp="true" ClipContents="false" IsDisabled="false" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" MaxLength="4" GamepadNavigationIndex="1">
+            <IntegerInputTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="CustomBattle.SliderValue.Text" IntText="@ArmySize" MaxInt="@MaxArmySize" MinInt="@MinArmySize" EnableClamp="true" ClipContents="false" IsDisabled="false" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" MaxLength="4" GamepadNavigationIndex="1">
               <Children>
-                <BrushWidget  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TextBox.Background" ClipContents="false"/>
+                <BrushWidget  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CustomBattle.SliderValue.Input" ClipContents="false"/>
               </Children>
             </IntegerInputTextWidget>
 

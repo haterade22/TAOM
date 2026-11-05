@@ -121,7 +121,7 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 
 ## How to Extend the Overlay UI
 
-1. Edit `Main/_Module/GUI/Prefabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `ButtonBrush1.Text`, etc.) — no custom sprites are registered for this feature.
+1. Edit `Main/_Module/GUI/Prefabs/PresetsOverlay.xml`. **Use only vanilla brushes** (`ButtonBrush1`, `Popup.Button.Text`, etc.); no custom sprites are registered for this feature.
 2. Add the corresponding `[DataSourceProperty]` and parameterless command method to `PresetsOverlayVM`.
 3. Bindings use `@PropertyName` for text and `Command.Click="MethodName"` for click handlers.
 
