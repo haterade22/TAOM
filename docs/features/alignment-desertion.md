@@ -174,6 +174,8 @@ The normal daily rule resumes after the event. This follows native desertion's
 roster boundary; it is not a general fix for every stuck battle in #750.
 See [validation evidence](../audits/legacy-campaign-fixes-2026-10-29.md).
 
+`AlignmentDesertionMapEventGateTests` pins it: a party or garrison in a map event returns before the owner read (four runs).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

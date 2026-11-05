@@ -245,6 +245,10 @@ public class CoopVetoClassificationTests
             "Same no-horse NRE guard for the adult menu. Local CC preview only."),
         ["CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Patch"] = new(CoopVeto.ReviewedSafe,
             "Same no-horse NRE guard for the age-selection menu. Local CC preview only."),
+        ["CharacterCreationNarrativeStageView_SpawnNonHuman_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Skips spawning a narrative-menu mount preview entity when vanilla would throw on a missing " +
+            "spawn point, item, horse monster or mount key (NRE guard audit 2026-10-27). The skipped body " +
+            "builds a local scene entity in the CC view; no campaign object involved."),
         ["TrySwitchToNextMenu_Patch"] = new(CoopVeto.ReviewedSafe,
             "Advances the CC narrative menu when SelectedOptions has no entry for the current menu " +
             "(vanilla throws KeyNotFoundException for custom cultures with no valid option). Reads " +

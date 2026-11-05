@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.CareerSystem.Mutations;
 
@@ -16,6 +17,7 @@ public class MutationParams
     {
         if (!_params.TryGetValue(key, out var val)) return defaultValue;
         return float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var result)
+            && FiniteFloatValidator.IsFinite(result)
             ? result : defaultValue;
     }
 

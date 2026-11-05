@@ -36,10 +36,13 @@ Bannerlord's initial menu options are managed by `Module.CurrentModule` as a lis
 1. `InitialStateOption`'s constructor calls `IsDisabledAndReason()` immediately as a validation side effect — the original delegate must be preserved when overriding
 2. `OnBeforeInitialModuleScreenSetAsRoot()` fires on **every** main menu visit (including returning from a game), so any `AddInitialStateOption` call must be guarded against duplication
 3. A **headless dedicated server** sets that screen root thousands of times per boot with StoryMode and SandBox not loaded, so both options miss on every single call — one reported server log carried 4,803 MainMenuCustomizer lines. A miss there is expected, not an error
+4. The engine calls that hook for every module with no try, and calls it again on every tick while a throw leaves no active state (v1.4.8 `Module.cs` 500-509 and 750-759). A throw from the customizer would therefore re-run every module's hook each tick, so the step never rethrows (#807)
 
 ### Solution Approach
 
 Override `MBSubModuleBase.OnBeforeInitialModuleScreenSetAsRoot()` — fires after all module options are registered, before the UI renders. The `MainMenuCustomizerService` overrides options via the adapter on each visit (idempotent). The Pre-compile Shaders option uses a null-guard to add only once.
+
+Constraint 4 is answered by `MainMenuStep.Run` (`Main/Composition/MainMenuStep.cs`): the hook runs `CustomizeMenu` through it, it catches everything and returns false instead of throwing, and it is not latched, so the next call runs the step again (`CustomizeMenu` is idempotent). On a failure it writes one `[MainMenuStep]` WARNING per step name per process, carrying the full exception with its stack; later failures of the same step are not logged. When it fails, the player sees no notice, and depending on which call threw, vanilla "New Campaign" stays visible or "Sandbox" keeps its vanilla label, so the log line is the only record.
 
 Constraint 3 is answered by deduping the **logging only** — the customization still runs on every call, because the engine can rebuild the initial-state options between screen-root sets and skipping the work would silently drop the rename on a real client. That reasoning is pinned by `CustomizeMenu_ManyCalls_StillAppliesEveryTime`.
 
@@ -48,15 +51,17 @@ Constraint 3 is answered by deduping the **logging only** — the customization 
 ```
 SubModule.OnBeforeInitialModuleScreenSetAsRoot()  [fires every menu visit]
     │
-    ├── IMainMenuCustomizerService.CustomizeMenu()  [idempotent overrides, runs every call]
+    ├── MainMenuStep.Run("menu customization", ...)  [catches everything, never rethrows, one WARNING per step per process]
     │       │
-    │       ├── IModuleMenuAdapter
-    │       │       HideOption("StoryModeNewGame")   → bool  (false = no such option registered)
-    │       │       RenameOption("SandBoxNewGame")   → bool  (false = no such option registered)
-    │       │
-    │       └── logging deduped by the SERVICE, not the adapter
-    │               false → warn once per option id      (HashSet<string> _reportedMisses)
-    │               both true → "applied" once per session (_appliedLogged)
+    │       └── IMainMenuCustomizerService.CustomizeMenu()  [idempotent overrides, runs every call]
+    │               │
+    │               ├── IModuleMenuAdapter
+    │               │       HideOption("StoryModeNewGame")   → bool  (false = no such option registered)
+    │               │       RenameOption("SandBoxNewGame")   → bool  (false = no such option registered)
+    │               │
+    │               └── logging deduped by the SERVICE, not the adapter
+    │                       false → warn once per option id      (HashSet<string> _reportedMisses)
+    │                       both true → "applied" once per session (_appliedLogged)
     │
     └── if GetInitialStateOptionWithId("TaomPrecompileShaders") == null  [guard]
             → AddInitialStateOption("TaomPrecompileShaders", ...)
@@ -86,7 +91,8 @@ No configuration file. Option IDs and the rename text are hardcoded — these ar
 | `Main/Features/MainMenuCustomizer/IModuleMenuAdapter.cs` | Adapter interface — `HideOption` / `RenameOption`, both returning `bool` |
 | `Main/Features/MainMenuCustomizer/ModuleMenuAdapter.cs` | Wraps `Module.CurrentModule` TW API. **Logger-free by design** — a miss is returned as `false` for the caller to dedupe. Re-adding a logger here reintroduces the headless log flood |
 | `Main/Features/MainMenuCustomizer/MainMenuCustomizerIoC.cs` | DryIoc registration |
-| `Main/SubModule.cs` | Entry point — `OnBeforeInitialModuleScreenSetAsRoot` override + shaders guard |
+| `Main/Composition/MainMenuStep.cs` | `MainMenuStep.Run`: runs one step of the hook, never throws into the engine, logs the `[MainMenuStep]` WARNING once per step name per process with the full exception |
+| `Main/SubModule.cs` | Entry point: `OnBeforeInitialModuleScreenSetAsRoot` override (runs `CustomizeMenu` through `MainMenuStep.Run`) + shaders guard |
 
 ## Dependencies
 
@@ -104,6 +110,9 @@ No configuration file. Option IDs and the rename text are hardcoded — these ar
   - `CustomizeMenu_ManyCalls_StillAppliesEveryTime` — the work is never skipped, only the logging
   - `CustomizeMenu_ManyCalls_LogsAppliedOnce` — one applied line per session
   - `CustomizeMenu_OptionAppearsLater_WarnsOnceThenLogsApplied` — a client whose menu opens before StoryMode finishes registering: first pass warns, a later pass succeeds, and the success is still reported
+
+- `TAOM.Tests/Composition/MainMenuStepTests.cs`: 10 tests on `MainMenuStep.Run`: success returns true and logs nothing; a throwing step returns false and is not rethrown; one WARNING names the step and carries the full exception with its stack; the same step logs once, two steps once each; a step that throws then succeeds runs on every call; a null logger, a throwing logger factory and a throwing logger never turn into a hook throw
+- `TAOM.Tests/Composition/SubModuleMainMenuHookTests.cs`: 1 test, `OnBeforeInitialModuleScreenSetAsRoot_MenuCustomization_RunsInsideAMainMenuStep`, pins that the hook reaches `CustomizeMenu` only through `MainMenuStep.Run`
 
 Note: `ModuleMenuAdapter` is not unit tested — it wraps `Module.CurrentModule` (TaleWorlds static state) which requires a live game runtime. That untestability is why the log-or-not decision lives in the service rather than the adapter.
 
@@ -130,6 +139,7 @@ The `HideOption` and `RenameOption` calls are idempotent — safe to call on eve
 
 ## Changelog
 
+- 2026-11-04: `CustomizeMenu` now runs through `MainMenuStep.Run` (ported from 1.5.x 2afea8878, #807), so a throw from it can no longer escape the hook; the engine re-runs every module's hook each tick while a throw leaves no active state (#807). One `[MainMenuStep]` WARNING with the full exception per step name per process.
 - 2026-08-03 — Fix: deduped the headless log flood (4,803 lines in one dedicated-server boot log). `IModuleMenuAdapter.HideOption`/`RenameOption` now return `bool` instead of logging; the service warns once per missing option id and logs "applied" once per session. No issue filed.
 - 2026-04-29 — Localized the "Enter The Age Of Men" label: `MainMenuCustomizerService.cs` now wraps the rename text with `{=taom_main_menu_new_game}` (#96).
 - 2026-04-04 — Fix: restored "Saved Games" and "Continue Campaign" (only `StoryModeNewGame` stays hidden) and guarded the duplicate "Pre-compile Shaders" entry with a `GetInitialStateOptionWithId` null-check (#55).
@@ -139,6 +149,7 @@ The `HideOption` and `RenameOption` calls are idempotent — safe to call on eve
 
 - **Issue:** #55 — Main menu: hide Campaign, rename Sandbox to "Enter The Age Of Men"
 - **Status:** Closed
+- **Issue:** #807 (2026-10-15): the hook must not throw into the engine.
 
 ---
 

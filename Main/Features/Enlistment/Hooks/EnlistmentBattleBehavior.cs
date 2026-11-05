@@ -242,14 +242,15 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     }
 
     /// <summary>
-    /// Reference comparison against <c>PartyBase.MainParty</c> rather than a StringId match: the
-    /// enumeration is a boundary read of a sealed engine type (ADR-007), and identity is exactly
+    /// Reference comparison against the main party's <c>PartyBase</c> rather than a StringId match:
+    /// the enumeration is a boundary read of a sealed engine type (ADR-007), and identity is exactly
     /// the question. A settlement <c>PartyBase</c> has no MobileParty, so an id-based check would
-    /// have to special-case it.
+    /// have to special-case it. Read through the stored main party: the computed
+    /// <c>PartyBase.MainParty</c> throws while it is null, so its null check would never return.
     /// </summary>
     private static bool IsMainPartyIn(MapEvent mapEvent)
     {
-        var main = PartyBase.MainParty;
+        var main = Campaign.Current?.MainParty?.Party;
         if (main == null)
             return false;
 

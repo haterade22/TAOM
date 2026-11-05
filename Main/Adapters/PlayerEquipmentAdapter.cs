@@ -1,6 +1,5 @@
 using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
@@ -13,7 +12,7 @@ public sealed class PlayerEquipmentAdapter : IPlayerEquipmentAdapter
     {
         var hero = Hero.MainHero;
         if (hero == null) return 0;
-        var party = PartyBase.MainParty;
+        var party = Campaign.Current?.MainParty?.Party;
         var roster = party?.ItemRoster;
         if (roster == null) return 0;
 

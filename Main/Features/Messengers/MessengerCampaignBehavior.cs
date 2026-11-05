@@ -604,7 +604,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
 
     private static bool IsPlayerAvailable()
     {
-        if (PartyBase.MainParty == null) return false;
+        if (Campaign.Current?.MainParty == null) return false;
         if (PlayerEncounter.Current != null) return false;
         if (GameStateManager.Current?.ActiveState is MapState mapState && !mapState.AtMenu) return true;
         return false;

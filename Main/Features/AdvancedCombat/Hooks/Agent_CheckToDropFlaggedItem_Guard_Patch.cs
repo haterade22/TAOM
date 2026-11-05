@@ -1,5 +1,7 @@
 using System;
 using HarmonyLib;
+using TAOM.Core.Logging;
+using TAOM.Dependencies.Foundation;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -46,17 +48,19 @@ namespace TAOM.Features.AdvancedCombat.Hooks;
 /// damage lands earlier in <c>HandleBlow</c>. What it cost was a throw + stack unwind per bite
 /// inside <c>OnMissionTick</c>, and a debugger break on every warg engagement.
 ///
-/// The Finalizer is KEPT: Harmony 2.4.2 opens its exception block before the prefix chain, so the
-/// generated try/catch genuinely wraps the Prefix, the original and any postfix — it still covers
-/// an unanticipated NRE shape. Be precise about its reach, though: it swallows ONLY
-/// <see cref="NullReferenceException"/>. The wielded-index getters are unsafe raw pointer
-/// dereferences and <c>Agent.Clear</c> zeroes those pointers without nulling <c>Equipment</c>, so
-/// a torn-down agent faults with an <see cref="AccessViolationException"/> instead. AVs ARE
-/// catchable in this process (the launcher config sets <c>legacyCorruptedStateExceptionsPolicy</c>
-/// — see Patch62), but this filter deliberately rethrows them, because an AV is a corrupted-state
-/// signal that should reach the crash reporter rather than be silently absorbed. That exposure is
-/// identical in unpatched vanilla, whose first statement is the same <c>GetAgentFlags()</c> read.
-/// Mirrors the Patch47/48 vanilla-crash-guard pattern.
+/// The Finalizer is KEPT, and it no longer hides what it catches. Since the Prefix skips both vanilla
+/// null states, any NRE it sees is not the vanilla one: it comes from <c>DropItem</c>, the missile
+/// callbacks or another mod's patch (Harmony 2.4.2 opens its try block before the prefixes). Every TAOM
+/// synthetic-blow route already catches before <c>OnMissionTick</c> (<c>BehaviorTree.RunTree</c>,
+/// <c>WargAttackService</c>, <c>SpiderAttackService</c>), but at a
+/// cost: <c>RunTree</c>'s catch stops that creature's tree for the rest of the mission. The Finalizer
+/// absorbs such an NRE at <c>OnAgentHit</c>'s last statement without that cost, on vanilla's mount,
+/// dismount and hit paths too, and logs the first one per process at WARNING with its stack (NRE guard
+/// audit 2026-10-27; Mike chose keep-and-log over delete). It swallows ONLY
+/// <see cref="NullReferenceException"/>; anything else goes back with its throw site kept. A torn-down
+/// agent faults with an <see cref="AccessViolationException"/> in the wielded-index getters (unsafe
+/// raw pointer reads; <c>Agent.Clear</c> zeroes them without nulling <c>Equipment</c>); this filter
+/// rethrows it, and on the TAOM routes the catches above then absorb it, as they would in vanilla.
 ///
 /// Engine parity: this method's body is byte-identical v1.4.5 → v1.4.8 (only line numbers moved).
 /// Decision logic lives in <see cref="DropFlaggedItemGuard"/> so it is unit-testable (ADR-008).
@@ -93,7 +97,42 @@ public static class Agent_CheckToDropFlaggedItem_Guard_Patch
         return !wouldThrow;
     }
 
+    private static IModLogger _logger;
+    private static int _reported;
+
+    // TAOM.Tests sets the logger; at runtime it resolves lazily from IoC on the first swallow.
+    internal static void UseLogger(IModLogger logger)
+    {
+        _logger = logger;
+        _reported = 0;
+    }
+
     [HarmonyFinalizer]
     public static Exception Finalizer(Exception __exception)
-        => __exception is NullReferenceException ? null : __exception;
+    {
+        if (!(__exception is NullReferenceException))
+            return RethrowStackPreserver.PreserveForRethrow(__exception, null);
+
+        ReportFirst(__exception);
+        return null;
+    }
+
+    // Once per process: the target runs on every hit, mount and dismount, and callbacks can arrive off
+    // the main thread, so the gate is an interlocked flag.
+    private static void ReportFirst(Exception exception)
+    {
+        if (System.Threading.Interlocked.Exchange(ref _reported, 1) != 0) return;
+        try
+        {
+            _logger ??= IoC.Resolve<IModLogger>();
+            _logger?.LogWarning(
+                "[AdvancedCombat] Patch50 swallowed an NRE in Agent.CheckToDropFlaggedItem that is not the " +
+                "vanilla null state its prefix prevents (first one this session; later ones are not logged): " +
+                exception);
+        }
+        catch
+        {
+            // A failed log line must never undo the swallow.
+        }
+    }
 }

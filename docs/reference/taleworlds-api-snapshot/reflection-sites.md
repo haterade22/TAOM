@@ -30,6 +30,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 
 | Engine type | Member | Kind | Source site | What it drives |
 |---|---|---|---|---|
+| `TaleWorlds.CampaignSystem.CharacterObject` | `_originCharacter` | field | `HeroCharacterStateAdapter.cs:13` | StaleCharacterRepair: a hollow parent takes its registered XML twin as origin |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_currentCharacter` | field | `InventoryScreenAdapter.cs:29` | EquipPresets active hero |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_inventoryLogic` | field | `InventoryScreenAdapter.cs:32` | EquipPresets transfer commands |
 | `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:57` | CompanionTactics OOB overlay attach |
@@ -38,6 +39,8 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:41` | Companion role tooltip cache bust |
 | `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `SubModule.cs:503` (manual patch) | Captain tooltip role hint |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_selectedRace` | field | `FaceGenRaceSelectorRebuilder.cs:208` | CC culture-restricted race dropdown |
+| `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView` | `SpawnNonHumanNarrativeMenuCharacter` | method | `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153` | Patch20 narrative mount guard: the `TargetMethod` of its prefix |
+| `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView` | `_characterScene` | field | `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157` | Patch20 narrative mount guard: injected as `____characterScene` to find the spawn point |
 | `…Core.ViewModelCollection.Selector.SelectorVM`1` | `_selectedIndex` | field | `FaceGenRaceSelectorRebuilder.cs:211` | Selector reset trick (no-op-setter bypass) |
 | `…SelectorVM`1` | `_selectedItem` | field | `FaceGenRaceSelectorRebuilder.cs:212` | Selector reset trick |
 | `…SelectorVM`1` | `_onChange` | field | `FaceGenRaceSelectorRebuilder.cs:213`, `CommanderSelectorRebuilder.cs:21` | Selector callback rewire |
@@ -71,6 +74,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_characterRefreshEnabled` | field (private) | `BodyGeneratorPreviewSink.cs` | Player Switcher (#514). `Refresh` early-returns unless set, and the aborted call leaves it false, so the repair must re-arm it |
 | `SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController` | `_allEnemyTroops` | field (private, `List<IAgentOriginBase>`) | `Patch86_HideoutAmbushBossFight.cs` | Hideout boss fight (#564). The sneak-in route's unspawned enemy list; the prefix trims it to the N highest levels. Injected as `____allEnemyTroops` |
 | `…HideoutAmbushMissionController` | `_overriddenHideoutBossAgentOrigin` | field (private, `IAgentOriginBase`) | `Patch86_HideoutAmbushBossFight.cs` | Hideout boss fight (#564). Non-null when a boss spawns from his own origin; decides whether a zero bodyguard count must keep one troop for `SelectBossAgent` |
+| `TaleWorlds.CampaignSystem.CampaignBehaviors.BanditSpawnCampaignBehavior` | `_hideouts` | field (private, `Dictionary<CultureObject, List<Hideout>>`) | `Patch125_HideoutClanGuard.cs` | Clan and hideout pairing guard (#1063). The prefix on `GetInfestedHideoutCount` checks the clan's culture has an entry before vanilla's unguarded indexer. Injected as `____hideouts` |
 | `…HideoutAmbushMissionController` | `_allEnemyTroopTypesCache` | field (private, `List<IAgentOriginBase>`) | `Patch86_HideoutAmbushBossFight.cs` | Hideout boss fight (#564). Vanilla pads from it (`GetNewRandomEnemyTroop` derefs `GetRandomElement` on it), so the prefix only asks for padding when it is non-empty |
 | `TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.KingdomDecisionsVM` | `_examinedDecisionsSinceInit` | field (private, `List<KingdomDecision>`) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547). Seams A and C record a withdrawn ballot here so `OnFrameTick` stops offering it |
 | `…KingdomDecisionsVM` | `_shouldCheckForDecision` | property (private) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547). Re-armed after a withdrawal; vanilla's own bail-out leaves it false for the session |

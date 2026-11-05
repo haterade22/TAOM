@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 
 namespace TAOM.Features.CharacterCreation.Hooks;
 
@@ -129,10 +130,17 @@ public static class CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Pa
 }
 
 /// <summary>
-/// Fallback Finalizer for SpawnNonHumanNarrativeMenuCharacter. Suppresses NRE/ANE
-/// when horse data is invalid. Applied at Patch20 time — may silently fail if
-/// SandBox.GauntletUI isn't loaded yet. The primary defense is RemoveHorseCharacters
-/// in the prefix guards above; this is belt-and-suspenders.
+/// Backstop for SpawnNonHumanNarrativeMenuCharacter; the primary defense is RemoveHorseCharacters in
+/// the prefix guards above. Vanilla reads the spawn-point entity, both item ids, the horse's
+/// <c>HorseComponent.Monster</c>, that monster's <c>ActionSetCode</c> (a dictionary key in
+/// <c>MBGlobals.GetActionSet</c>) and <c>MountCreationKey</c> with no null check (v1.4.8 :204-215),
+/// and creates the mount entity (:208) before the spawn-point read throws. This prefix skips the
+/// spawn when any of those is missing, so the menu loop moves on to the next character. It replaced
+/// a finalizer that swallowed every NRE in the method, a foreign one included, and left the
+/// half-built entity in the scene (NRE guard audit 2026-10-27). Skipping also skips vanilla's
+/// <c>ClearMountEntities()</c> (:203), which matters only with two non-human characters in one menu.
+/// Applied at Patch20 time. A null TargetMethod (SandBox.GauntletUI not loaded) fails loudly: Harmony 2.4.2
+/// throws, and PatchCategoryIndex leaves the rest of Patch20 unpatched; TryApply logs it.
 /// </summary>
 [HarmonyPatch]
 [HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
@@ -145,28 +153,34 @@ public static class CharacterCreationNarrativeStageView_SpawnNonHuman_Patch
         return type == null ? null : AccessTools.DeclaredMethod(type, "SpawnNonHumanNarrativeMenuCharacter");
     }
 
-    [HarmonyFinalizer]
-    static Exception Finalizer(Exception __exception)
+    [HarmonyPrefix]
+    static bool Prefix(NarrativeMenuCharacter character, Scene ____characterScene)
     {
-        if (__exception == null) return null;
-        // Phase 9b #163 — keep the specific ArgumentNullException(ParamName="key") swallow because
-        // that's a known TaleWorlds bug for missing horse keys. But the bare NullReferenceException
-        // swallow was masking arbitrary NREs from unrelated code paths. Log every NRE before
-        // suppressing so real bugs surface in diagnostic builds even if the finalizer keeps the
-        // game running. Specific known-good case still returns null (suppress); generic NRE now
-        // logs + suppresses so the bug is observable.
-        if (__exception is ArgumentNullException ane && ane.ParamName == "key")
-            return null;
-        if (__exception is NullReferenceException)
+        try
         {
-            try { IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning(
-                $"[CharacterCreation] SpawnNonHumanNarrativeMenuCharacter NRE suppressed: {__exception.Message}. " +
-                $"Stack: {__exception.StackTrace?.Split('\n')[0]?.Trim()}. " +
-                $"If this fires repeatedly, the primary RemoveHorseCharacters defense may have a gap."); }
-            catch { /* logger unavailable — suppress silently as before */ }
-            return null;
+            var item = character?.Item1Id == null ? null : Game.Current?.ObjectManager?.GetObject<ItemObject>(character.Item1Id);
+            var canSpawn = NarrativeHorseGuardPatchHelper.CanSpawnMount(
+                spawnPointFound: character != null && ____characterScene?.FindEntityWithTag(character.SpawnPointEntityId) != null,
+                item1Id: character?.Item1Id,
+                item2Id: character?.Item2Id,
+                actionSetCode: item?.HorseComponent?.Monster?.ActionSetCode,
+                mountKey: character?.MountCreationKey);
+            if (!canSpawn)
+            {
+                try
+                {
+                    IoC.Resolve<TAOM.Core.Logging.IModLogger>()?.LogWarning(
+                        $"[CharacterCreation] skipped spawning narrative mount '{character?.StringId}': its spawn point, " +
+                        $"item ids, horse action set or mount key is missing (item1='{character?.Item1Id}').");
+                }
+                catch { /* logger unavailable: the skip stands */ }
+            }
+            return canSpawn;
         }
-        return __exception;
+        catch
+        {
+            return true; // could not read the state: vanilla decides, as without this patch
+        }
     }
 }
 
@@ -248,6 +262,14 @@ internal static class NarrativeHorseGuardPatchHelper
             return occupationType;
         return "guard";
     }
+
+    /// <summary>
+    /// The values vanilla SpawnNonHumanNarrativeMenuCharacter uses without a null check. A null id or
+    /// action-set code throws <c>ArgumentNullException("key")</c> from a dictionary lookup; the action-set
+    /// code is null when the horse item, its HorseComponent or its Monster is missing too.
+    /// </summary>
+    internal static bool CanSpawnMount(bool spawnPointFound, string item1Id, string item2Id, string actionSetCode, object mountKey) =>
+        spawnPointFound && item1Id != null && item2Id != null && actionSetCode != null && mountKey != null;
 
     internal static void RemoveHorseCharacters(CharacterCreationManager manager)
     {

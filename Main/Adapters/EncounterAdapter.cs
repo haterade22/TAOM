@@ -83,7 +83,7 @@ public sealed class EncounterAdapter : IEncounterAdapter
         catch (Exception ex) { readFailed = true; _logger?.LogError($"[Enlistment] GetOwnership: EncounteredMobileParty threw: {ex.Message}"); }
 
         bool playerInMapEvent;
-        try { playerInMapEvent = PartyBase.MainParty?.MapEvent != null; }
+        try { playerInMapEvent = Campaign.Current?.MainParty?.Party?.MapEvent != null; }
         catch (Exception ex) { readFailed = true; playerInMapEvent = false; _logger?.LogError($"[Enlistment] GetOwnership: MainParty.MapEvent threw: {ex.Message}"); }
 
         bool insideSettlement;
@@ -121,7 +121,7 @@ public sealed class EncounterAdapter : IEncounterAdapter
         {
             try
             {
-                return PartyBase.MainParty?.MapEvent != null;
+                return Campaign.Current?.MainParty?.Party?.MapEvent != null;
             }
             catch (Exception ex)
             {
@@ -137,10 +137,11 @@ public sealed class EncounterAdapter : IEncounterAdapter
         {
             try
             {
-                var mapEvent = PartyBase.MainParty?.MapEvent;
+                var mainParty = Campaign.Current?.MainParty?.Party;
+                var mapEvent = mainParty?.MapEvent;
                 if (mapEvent == null)
                     return null;
-                return mapEvent.GetLeaderParty(mapEvent.PlayerSide) == PartyBase.MainParty;
+                return mapEvent.GetLeaderParty(mapEvent.PlayerSide) == mainParty;
             }
             catch (Exception ex)
             {

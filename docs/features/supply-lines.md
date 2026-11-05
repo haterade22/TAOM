@@ -335,6 +335,11 @@ switch costs. Arrow placement checks the live scene's terrain heightmap before
 querying it, falling back to land collision height when no heightmap exists.
 See [reproductions and validation limits](../audits/legacy-campaign-fixes-2026-10-29.md).
 
+`AddLandPath` skips the native query when either endpoint face is invalid (face -1, off the
+land navmesh), as vanilla `MobileParty.ComputePath` checks both positions (v1.4.8
+`MobileParty.cs:3693-3698`); such a route takes the straight two-point line. `SupplyNativeQueryTests`
+drives `AddLandPath` with a fake `IMapScene`.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

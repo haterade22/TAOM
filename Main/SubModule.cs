@@ -460,9 +460,10 @@ public class SubModule : MBSubModuleBase
         ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
 
         TryPatchCategory("Patch22_ArmyTargeting");
-        // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
-        // which NREs (Army.cs:726 settlement.GatePosition / 659 Kingdom.Settlements, v1.4.6) when a
-        // besieger army can't resolve a gathering fortification — a map-tick CTD on siege start.
+        // Patch49: Finalizer (with a state-setting prefix) guarding vanilla
+        // Army.FindBestGatheringSettlementAndMoveTheLeader, which NREs (v1.4.8 Army.cs:726
+        // settlement.GatePosition / :659 Kingdom.Settlements) when a besieger army can't resolve a
+        // gathering fortification: a map-tick CTD on siege start. It contains only those two dead ends.
         // No TAOM patch is on the stack; aggressive Patch22 targeting just makes it more reachable.
         // Crash report 2026-06-17. See the patch's doc-comment.
         TryPatchCategory("Patch49_ArmyGatheringNreGuard");
@@ -555,7 +556,12 @@ public class SubModule : MBSubModuleBase
     protected override void OnBeforeInitialModuleScreenSetAsRoot()
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
-        IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
+        // The engine calls this hook for every module with no try, and calls it again on every tick while
+        // no state is active (v1.4.8 Module.cs:500-509, :750-759); Patch37 can swallow the throw, so one
+        // throw would re-run every module's hook each tick (#807). CustomizeMenu goes through
+        // MainMenuStep.Run (one WARNING, never rethrows) and is safe to repeat. SubModuleMainMenuHookTests
+        // pins this shape.
+        MainMenuStep.Run("menu customization", () => IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu(), MainMenuLogger);
 
         // Patch55_BasicTableauRaceGuard — MUST be applied HERE, not in OnGameInitializationFinished.
         // The Save/Load hero preview (BasicCharacterTableau) renders on the COLD main menu, before any
@@ -694,6 +700,8 @@ public class SubModule : MBSubModuleBase
                 isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
         }
     }
+
+    private static IModLogger? MainMenuLogger() => IoC.Resolve<IModLogger>();
 
     public override void OnGameEnd(Game game)
     {
@@ -1518,6 +1526,12 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.Initialize(
             IoC.Resolve<IModLogger>(), () => IoC.Resolve<IHideoutBossFightService>());
         TryPatchCategory("Patch86_HideoutBossFight");
+        // Patch125 (#1063): a bandit clan ships in TAOM and the hideouts of its culture in TAOM_Map, so
+        // either can load alone. Guards GetInfestedHideoutCount (a clan with no den of its culture: the
+        // new-game throw) and AddBanditToHideout (a den with no clan: an old save, the Gold Rush
+        // incident). Applied in this batch beside Patch86, the batch Patch65 and Patch88 rely on for
+        // the new-game dispatch.
+        TryPatchCategory("Patch125_HideoutClanGuard");
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
         TryPatchCategory("Patch64_MenuLinkColors");

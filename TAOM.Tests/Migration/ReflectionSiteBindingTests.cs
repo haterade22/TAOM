@@ -36,6 +36,8 @@ public class ReflectionSiteBindingTests
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
+    // --- A hollow parent takes its registered XML twin as origin (HeroCharacterStateAdapter.cs, #1076) ---
+    [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "_originCharacter", "Field", "HeroCharacterStateAdapter.cs:13")]
     // --- CompanionTactics formation-preset overlay (OOBOverlayService.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_isActive", "Field", "OOBOverlayService.cs:57")]
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_dataSource", "Field", "OOBOverlayService.cs:58")]
@@ -43,6 +45,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "SubModule.cs:503 (manual patch)")]
+    // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
+    [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:153 (TargetMethod)")]
+    [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:157 (____characterScene)")]
     // --- CharacterCreation race selector (FaceGenRaceSelectorRebuilder.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_selectedRace", "Field", "FaceGenRaceSelectorRebuilder.cs:208")]
     // --- SelectorVM<T> backing fields (FaceGen + CustomBattles commander selector) ---
@@ -103,6 +108,7 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroops", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_overriddenHideoutBossAgentOrigin", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroopTypesCache", "Field", "Patch86_HideoutAmbushBossFight.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.BanditSpawnCampaignBehavior", "BanditSpawnCampaignBehavior", "_hideouts", "Field", "Patch125_HideoutClanGuard.cs (____hideouts)")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

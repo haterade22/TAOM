@@ -1,5 +1,5 @@
 using System;
-using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
@@ -26,7 +26,7 @@ public sealed class PartyItemRosterAdapter : IPartyItemRosterAdapter
     {
         try
         {
-            return PartyBase.MainParty?.ItemRoster != null;
+            return Campaign.Current?.MainParty?.Party?.ItemRoster != null;
         }
         catch (Exception ex)
         {
@@ -41,7 +41,7 @@ public sealed class PartyItemRosterAdapter : IPartyItemRosterAdapter
             return false;
         try
         {
-            var roster = PartyBase.MainParty?.ItemRoster;
+            var roster = Campaign.Current?.MainParty?.Party?.ItemRoster;
             var item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
             if (roster == null || item == null)
                 return false;
@@ -63,7 +63,7 @@ public sealed class PartyItemRosterAdapter : IPartyItemRosterAdapter
             return 0;
         try
         {
-            var roster = PartyBase.MainParty?.ItemRoster;
+            var roster = Campaign.Current?.MainParty?.Party?.ItemRoster;
             var item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
             if (roster == null || item == null)
                 return 0;
@@ -85,7 +85,7 @@ public sealed class PartyItemRosterAdapter : IPartyItemRosterAdapter
             return 0;
         try
         {
-            var roster = PartyBase.MainParty?.ItemRoster;
+            var roster = Campaign.Current?.MainParty?.Party?.ItemRoster;
             var item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
             if (roster == null || item == null)
                 return 0;
