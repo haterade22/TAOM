@@ -79,6 +79,9 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-195609 | wear 0.25 | Harad v Rohan | 2,443 / 2,783 | 2 / 3 | 25,851 / 20,739 | Harad 1.00, Rohan 0.94 | 4x, 45 minutes, no winner. No lane cleared, no keep touched. |
 | 20261104-204332 | `e5a37e8ee` | Dale v Gondor | 2,496 / 2,524 | 1 / 0 | 24,007 / 19,086 | Dale 1.00, Gondor 0.96 | 4x. Gondor won on time at 40 minutes, 6 towers to 5, hit points 0.809 to 0.792. |
 | 20261104-205632 | `e5a37e8ee` | Harad v Rohan | not read | 3 / 1 | not read | not read | 4x. Rohan won on time at 40 minutes, 5 towers to 3, hit points 0.838 to 0.680. |
+| 20261104-221949 | `a04b08fb9` | Rivendell v Mordor | 351 / 4,670 | 4 / 7 | 75,926 / 43,886 | Rivendell 2.56, Mordor 0.34 | 4x. Rivendell won at 2,288 s, 38.1 minutes, 7,333 gold unspent. |
+| 20261104-223017 | `a04b08fb9` | Mirkwood v Gondor | 495 / 1,617 | 1 / 6 | 106,935 / 16,279 | Mirkwood 1.45, Gondor 0.56 | 4x. Mirkwood won at 1,893 s, 31.6 minutes, 5,585 gold unspent. |
+| 20261104-223905 | `a04b08fb9` | Dol Guldur v Erebor | 1,512 / 1,061 | 6 / 0 | 5,915 / 77,565 | Dol Guldur 0.69, Erebor 1.27 | 4x. Erebor won at 1,715 s, 28.6 minutes. Check 12 failed. |
 
 ## Findings and changes
 
@@ -244,7 +247,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, two even matches at 4x:** both ended at minute 40 with a winner, a score that matches the towers lost, the result panel's flow and a clean exit. No match has been played by a person, so how a win on points feels is still open.
 
-### The night survey: elves' free waves and Dol Guldur (this change)
+### The night survey: elves' free waves and Dol Guldur
 
 **Survey on `0ae71a7ae`, six matches at 4x, one per pair:** every match ended by minute 40, with no owner hit. Rivendell beat Mordor at 38.3 minutes (gold trade 2.34 to 0.38). Erebor beat Dol Guldur at 20.4 minutes, 7 towers to 0, tower damage 76,585 to 2,015 (trade 1.35 to 0.62). Isengard beat Rohan on time, 3 towers to 2, with a trade of 0.65 to 1.43. Mirkwood beat Gondor at 30.9 minutes, 7 towers to 0, with 8,447 gold unspent. Umbar v Easterlings went to Easterlings on time. Dale beat Gundabad at 37.8 minutes. Check 8 failed in the Dol Guldur match.
 
@@ -252,7 +255,7 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Changed:** Rivendell `waveInterval` 1.5 to 2, Mirkwood none to 1.5, Dol Guldur `income` 0.85 to 1. Its stated weakness is now that its strongest soldiers come only in packs of three.
 
-**Result: not measured.**
+**Result, one match per pair:** Dol Guldur improved: it lost at 28.6 minutes where it lost at 20.4, with 5,915 tower damage against 2,015, though it still takes no tower. Slower free waves barely moved the elves: Rivendell's win moved from 38.3 to 38.1 minutes with a trade of 2.56 against 2.34, and Mirkwood's from 30.9 to 31.6 minutes, losing a tower where it lost none. So free wave timing is not what makes elves strong, and both ended with over 5,000 gold unspent. The next lever is their fighting quality, not their numbers. One match per pair is a direction and not proof.
 
 ## Open questions
 
