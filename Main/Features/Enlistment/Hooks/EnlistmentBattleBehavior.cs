@@ -206,12 +206,12 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     /// already left leaves that field at its saved value — null on a campaign with no earlier
     /// player-participating siege — and the aftermath menu then dereferences it on its first line.
     /// Patch84 stops the crash. This line records the state THIS handler saw, and its value is that
-    /// it is written BEFORE <c>OnCommanderBattleEnded</c> runs on the next line: campaign-event
-    /// listeners are LIFO (<c>MbEvent.AddNonSerializedListener</c> head-inserts), so THIS handler
-    /// runs ahead of vanilla's siege-aftermath one, and the <c>LeaveArmy</c> inside
-    /// <c>OnCommanderBattleEnded</c> is what removes the main party from the event's side before
-    /// vanilla ever reads it. A `mainPartyInvolved=True` here followed by Patch84 reporting a null
-    /// besiegerParty is that sequence, captured from both ends.
+    /// it is written ahead of vanilla's siege-aftermath handler: campaign-event listeners are LIFO
+    /// (<c>MbEvent.AddNonSerializedListener</c> head-inserts), so THIS handler runs first. The
+    /// <c>LeaveArmy</c> that removes the main party from the event's side is no longer in
+    /// <c>OnCommanderBattleEnded</c> (#557): <c>FlushArmyLeaveAfterBattle</c> runs it from
+    /// Patch85, after vanilla has read the side. A `mainPartyInvolved=False` here on a won siege
+    /// followed by Patch84 reporting a null besiegerParty means the party left the side early.
     ///
     /// SIEGE ONLY, and cheap terms first. This method runs for EVERY map event ending anywhere in
     /// the world while enlisted, which was several per second in the #551 session, so the diagnostic

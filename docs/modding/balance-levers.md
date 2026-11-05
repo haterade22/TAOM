@@ -245,7 +245,7 @@ Contributor 4 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - 
 
 The 4.0 and 10.0 tiers are undocumented in every feature doc. They exist, and nothing says what they were sized against.
 
-**MCM only.** Seven knobs under the "AI Party Size" group are the biggest party-size lever in the mod, and none of them is reachable from any file. All five numeric ones ship at vanilla: `AiLordPartySizeFactor` 1.0, `AiLordPartySizeFlatBonus` 0, `AiGarrisonSizeFactor` 1.0, `AiFoodConsumptionRelief` 0, `AiWageRelief` 0 (`Main/Features/AiPartySize/AiPartySizeService.cs:67-77`, declared at `Main/Features/TaomSettings.cs:40-79`). The reason there is no JSON twin is written down in [`ai-party-size.md:171-176`](../features/ai-party-size.md): two surfaces for one value have to enforce the same invariants at both or they drift.
+**MCM only.** Seven knobs under the "AI Party Size" group are the biggest party-size lever in the mod, and none of them is reachable from any file. All five numeric ones ship at vanilla: `AiLordPartyScale` 1.0, `AiLordPartyFlatBonus` 0, `AiGarrisonScale` 1.0, `AiPartyFoodRelief` 0, `AiPartyWageRelief` 0 (`Main/Features/AiPartySize/AiPartySizeService.cs:67-77`, declared at `Main/Features/TaomSettings.cs:40-79`). The reason there is no JSON twin is written down in [`ai-party-size.md:171-176`](../features/ai-party-size.md): two surfaces for one value have to enforce the same invariants at both or they drift.
 
 ## Lever 5: settlement economy
 

@@ -146,7 +146,7 @@ All knobs live in MCM under **Battle Tactics / Smart Cavalry** (GroupOrder 22). 
 
 | MCM key | Type | Range / Default | Effect |
 |---------|------|-----------------|--------|
-| `EnableSmartCavalryAI` | bool | false | Master toggle. Off = vanilla. Turning it off mid-cycle hands any running cycle back to a vanilla Charge on the next tick. |
+| `EnableSmartCavalryCharge` | bool | false | Master toggle. Off = vanilla. Renamed from `EnableSmartCavalryAI` in #1017 so the off default reaches saved settings. Turning it off mid-cycle hands any running cycle back to a vanilla Charge on the next tick. |
 | `SmartCavalryAvoidFriendlies` | bool | true | Reroute around friendly non-cavalry formations on the charge line, and nudge riders away from friendly infantry within 3 m (player-commanded formations only). |
 | `SmartCavalryChargeStrictness` | float [0..1] | 0.7 | Alignment tolerance for Forming and Reforming: mean slot distance under `2 + 8*(1-s)` metres. |
 | `SmartCavalryReformDistance` | float [10..80] m | 25 | Metres past the enemy's plane where the riders pull up and reform. |
@@ -158,7 +158,7 @@ All knobs live in MCM under **Battle Tactics / Smart Cavalry** (GroupOrder 22). 
 
 | Setting | Consumer |
 |---------|----------|
-| `EnableSmartCavalryAI` | `Patch31` postfix, `SmartCavalryAIMissionBehavior.OnMissionTick`, `CavalryChargeService.HandleChargeOrder` and `.Tick` (the disabled-mid-cycle hand-off) |
+| `EnableSmartCavalryCharge` | `Patch31` postfix, `SmartCavalryAIMissionBehavior.OnMissionTick`, `CavalryChargeService.HandleChargeOrder` and `.Tick` (the disabled-mid-cycle hand-off) |
 | `SmartCavalryAvoidFriendlies` | `CavalryChargeService.HandleChargeOrder` (path planner) and `SmartCavalryAIMissionBehavior.OnMissionTick` (collision avoidance) |
 | `SmartCavalryChargeStrictness` | `CavalryChargeService.UpdateForming` and `UpdateReforming` |
 | `SmartCavalryReformDistance` | `CavalryChargeService.UpdateCharging` (contact) |

@@ -106,7 +106,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `EnableOOBRoleDisplay` | true | Show role indicators on OOB hero items + captain tooltips. |
 | `CompanionRolesDebug` | false | HUD diagnostics. |
 | **Formation Presets (Group 28)** | | |
-| `EnableFormationPresets` | **false** | Save/load OOB hero-to-formation assignments per campaign. **Off by default — WIP (loading a preset is not yet wired); opt in to try it.** |
+| `EnableOobFormationPresets` (renamed from `EnableFormationPresets` in #1017) | **false** | Save/load OOB hero-to-formation assignments per campaign. **Off by default: WIP (loading a preset is not yet wired); opt in to try it.** |
 | `MaxFormationPresets` | 10 (1–20) | Save attempts beyond this are refused with a warning ("Preset limit reached. Delete one before saving."). |
 | `FormationPresetsDebug` | false | HUD diagnostics. |
 | **Battle Action Bar (Group 29)** | | |
@@ -181,7 +181,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Known limitations
 
-- **FormationPresets is WIP and ships off by default (`EnableFormationPresets = false`).** Saving a preset works, but loading one back is not yet wired (the Load path is a stub). The toggle was flipped to off after a save-corruption CTD (see below); opt in via MCM "Battle Tactics/Formation Presets" to try the save side.
+- **FormationPresets is WIP and ships off by default (`EnableOobFormationPresets = false`).** Saving a preset works, but loading one back is not yet wired (the Load path is a stub). The toggle was flipped to off after a save-corruption CTD (see below); opt in via MCM "Battle Tactics/Formation Presets" to try the save side.
 - **History — DateTime save-corruption CTD (fixed 2026-06-21).** `HoNFormationPreset` used to carry a `[SaveableField(3)] DateTime _createdAt`. `System.DateTime` is not a TaleWorlds-serializable type, so once a preset was persisted, **every** campaign save crashed: the engine left a null serialized buffer that NRE'd in `GameData.Write` on the async save thread → `AggregateException` CTD (crash bundle `taom_crash_20260621_200427_8754f009`). The field was vestigial; it was removed (id 3 retired) and pinned by `HoNFormationPresetSerializationTests`. **Player recovery:** because the save *write* failed, no post-preset save file ever completed, so a player's last valid save predates the preset — loading any existing save and continuing works (self-healing, no migration). The `try/catch` in `SyncData` did **not** and **cannot** catch this class of bug: byte serialization runs later on the `AsyncFileSaveDriver` background thread, outside that block. The fix belongs in the saveable model (keep every `[SaveableField]` serializable), not in a behavior-level catch.
 - **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed by the engine and is deferred to a follow-up feature.
 - **`CompanionRoleService._cache` does not evict dead heroes.** Cache is keyed by Hero.StringId. When a hero dies or is removed mid-campaign, the cache entry leaks for the rest of the session. The leak is bounded (one entry per Hero ever inspected) and small — a pathological 1000-hero campaign leaks ~50KB. A follow-up could subscribe to `OnHeroKilled` to evict, but it's not blocking.

@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="기세 세부사항" />
     <string id="taom_wotr_total_stats_header" text="전체 통계" />
     <string id="taom_wotr_total" text="총계: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="승리한 전투" />
     <string id="taom_wotr_villages_raided" text="약탈한 마을" />
     <string id="taom_wotr_fiefs_captured" text="점령한 영지" />

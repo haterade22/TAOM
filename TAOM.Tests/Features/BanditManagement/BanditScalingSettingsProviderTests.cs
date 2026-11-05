@@ -39,8 +39,8 @@ public class BanditScalingSettingsProviderTests
         var settings = new TaomSettings();
         var provider = Provider();
         Assert.AreEqual(settings.BanditMaxHideoutsPerFaction, provider.MaxHideoutsPerFactionCap);
-        Assert.AreEqual(settings.BanditMaxPartiesPerHideout, provider.MaxPartiesPerHideoutCap);
-        Assert.AreEqual(settings.BanditInitialHideoutsPerFaction, provider.InitialHideoutsPerFaction);
+        Assert.AreEqual(settings.BanditPartiesPerHideoutCap, provider.MaxPartiesPerHideoutCap);
+        Assert.AreEqual(settings.BanditStartingHideoutsPerFaction, provider.InitialHideoutsPerFaction);
     }
 
     [TestMethod]
@@ -49,8 +49,8 @@ public class BanditScalingSettingsProviderTests
         // 8 bandit factions x 14 initial hideouts put 112 on a fresh map (vanilla 6 x 7 = 42), and
         // a parties-per-hideout cap of 3 equalled vanilla's base, so Density Curve could not move it.
         var settings = new TaomSettings();
-        Assert.AreEqual(7, settings.BanditInitialHideoutsPerFaction, "vanilla per faction; 56 total across 8 factions");
-        Assert.AreEqual(6, settings.BanditMaxPartiesPerHideout, "above vanilla's 3 so the curve has room");
+        Assert.AreEqual(7, settings.BanditStartingHideoutsPerFaction, "vanilla per faction; 56 total across 8 factions");
+        Assert.AreEqual(6, settings.BanditPartiesPerHideoutCap, "above vanilla's 3 so the curve has room");
     }
 
     [TestMethod]

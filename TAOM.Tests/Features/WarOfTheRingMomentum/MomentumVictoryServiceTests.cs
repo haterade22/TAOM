@@ -229,4 +229,57 @@ public class MomentumVictoryServiceTests
 
         Assert.IsTrue(stateWasFrozenWhenEndWarRan);
     }
+
+    // ---- WOTR-03: elimination needs a survivor; the decided line names the rule ----
+
+    private void EmptyBothRosters()
+    {
+        _state.Free.RemoveKingdom("empire_w");
+        _state.Free.RemoveKingdom("vlandia");
+        _state.Evil.RemoveKingdom("empire_s");
+    }
+
+    [TestMethod]
+    public void CheckAndApplyVictory_BothRostersEmpty_DecidesNothing()
+    {
+        EmptyBothRosters();
+
+        Assert.AreEqual(WarOutcome.None, _sut.CheckAndApplyVictory(_state));
+        _wotrService.DidNotReceive().EndWar(Arg.Any<WarOutcome>());
+    }
+
+    [TestMethod]
+    public void CheckAndApplyVictory_BothRostersEmptyPastThreshold_DecidesNothing()
+    {
+        EmptyBothRosters();
+        SetInternalMomentum(600);
+
+        Assert.AreEqual(WarOutcome.None, _sut.CheckAndApplyVictory(_state));
+        _wotrService.DidNotReceive().EndWar(Arg.Any<WarOutcome>());
+    }
+
+    [TestMethod]
+    public void CheckAndApplyVictory_Elimination_LogsTheRuleRostersAndGate()
+    {
+        _state.Evil.RemoveKingdom("empire_s");
+        _settings.MinimumPlayerEventsForVictory.Returns(5);
+
+        _sut.CheckAndApplyVictory(_state);
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(m =>
+            m.StartsWith("[Momentum] War of the Ring decided: FreeVictory (momentum 0, threshold 500)")
+            && m.Contains("by elimination") && m.Contains("Free 2, Evil 0") && m.Contains("player gate on, minimum 5")));
+    }
+
+    [TestMethod]
+    public void CheckAndApplyVictory_Threshold_LogsTheThresholdRule()
+    {
+        SetInternalMomentum(500);
+
+        _sut.CheckAndApplyVictory(_state);
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(m =>
+            m.StartsWith("[Momentum] War of the Ring decided: FreeVictory (momentum 500, threshold 500)")
+            && m.Contains("by threshold")));
+    }
 }

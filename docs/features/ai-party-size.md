@@ -152,9 +152,7 @@ The bounds are compile-time constants, not MCM knobs. They guard a mechanism a p
 two more sliders would be two more numbers nobody tunes.
 
 **An existing install does not inherit a changed default.** MCM writes a compiled default only when
-the key is absent from its settings json, so every install that ran v2.0.24 or earlier still has
-`AiFoodConsumptionRelief = 0.9` persisted and is running the pre-rework composition until this ships.
-Going neutral in v2.0.26 fixed fresh installs only. This is the reason the rework was worth doing
+the key is absent from its settings json, so every install that ran v2.0.24 or earlier kept `AiFoodConsumptionRelief = 0.9` persisted and ran the pre-rework composition. Going neutral in v2.0.26 fixed fresh installs only; #1017 then renamed the five numeric settings (`AiLordPartyScale`, `AiLordPartyFlatBonus`, `AiGarrisonScale`, `AiPartyFoodRelief`, `AiPartyWageRelief`) so the neutral defaults reach every install. This is the reason the rework was worth doing
 rather than treating the neutral default as the fix.
 
 ### Seeing it in game
@@ -203,8 +201,7 @@ them as its MCM-absent fallbacks, so the number exists once.
 
 **Changing the compiled default does not move an existing install.** MCM applies a default only when
 the key is absent from its json, and every install that has run v2.0.23 already persists
-`AiLordPartySizeFactor` and `AiLordPartySizeFlatBonus`. Existing players keep the old values until
-they move the sliders themselves. Same persistence trap CLAUDE.md records for ShaderPrecompilation.
+`AiLordPartySizeFactor` and `AiLordPartySizeFlatBonus`. Those players kept the old values until #1017 renamed the settings (`AiLordPartyScale`, `AiLordPartyFlatBonus`), which reset them. Same persistence trap CLAUDE.md records for ShaderPrecompilation.
 
 ### Raising the knobs: the siege coupling
 

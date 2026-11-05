@@ -553,12 +553,12 @@ public class AiPartySizeShippedDefaultsTests
     [TestMethod]
     public void McmFactorDefault_IsTheServiceFallback()
         => Assert.AreEqual(AiPartySizeService.DefaultLordFactor,
-            new TaomSettings().AiLordPartySizeFactor, Tolerance);
+            new TaomSettings().AiLordPartyScale, Tolerance);
 
     [TestMethod]
     public void McmFlatBonusDefault_IsTheServiceFallback()
         => Assert.AreEqual(AiPartySizeService.DefaultLordFlatBonus,
-            new TaomSettings().AiLordPartySizeFlatBonus, Tolerance);
+            new TaomSettings().AiLordPartyFlatBonus, Tolerance);
 
     // Both knobs sit inside their own MCM slider range, so a default can never present as a value
     // the player is not allowed to dial back to.
@@ -578,7 +578,7 @@ public class AiPartySizeShippedDefaultsTests
     [TestMethod]
     public void McmGarrisonDefault_IsTheServiceFallback()
         => Assert.AreEqual(AiPartySizeService.DefaultGarrisonFactor,
-            new TaomSettings().AiGarrisonSizeFactor, Tolerance);
+            new TaomSettings().AiGarrisonScale, Tolerance);
 
     // Ships neutral: at 1.0 and 0 the feature contributes nothing to a lord party's limit, so the
     // out-of-box game is vanilla and a player opts in through MCM. If either of these moves off its
@@ -598,8 +598,8 @@ public class AiPartySizeShippedDefaultsTests
     {
         var settings = new TaomSettings();
 
-        Assert.AreEqual(AiPartySizeService.DefaultFoodRelief, settings.AiFoodConsumptionRelief, Tolerance);
-        Assert.AreEqual(AiPartySizeService.DefaultWageRelief, settings.AiWageRelief, Tolerance);
+        Assert.AreEqual(AiPartySizeService.DefaultFoodRelief, settings.AiPartyFoodRelief, Tolerance);
+        Assert.AreEqual(AiPartySizeService.DefaultWageRelief, settings.AiPartyWageRelief, Tolerance);
     }
 
     // The whole point of shipping neutral: every knob at its default must leave the vanilla number

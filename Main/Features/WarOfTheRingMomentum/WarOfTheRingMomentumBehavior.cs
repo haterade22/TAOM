@@ -12,6 +12,7 @@ using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
 using TAOM.Core.Logging;
+using TAOM.Core.Persistence;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Models;
 
@@ -36,9 +37,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     private readonly IModLogger _logger;
 
     // Persisted as the serialized momentum JSON split across N SyncData strings, one count
-    // key + N chunk keys (see MomentumSyncChunker). A single string was fatal: the engine's
+    // key + N chunk keys (see SyncDataChunker). A single string was fatal: the engine's
     // ArchiveSerializer writes each archive entry's length as (short)Data.Length, so any
-    // SyncData string > 32,767 UTF-8 bytes corrupts the save AT WRITE TIME — a developed
+    // SyncData string > 32,763 UTF-8 bytes (a short length of 4 plus the bytes, v1.4.8
+    // SaveContext.SaveStringTo) corrupts the save AT WRITE TIME — a developed
     // campaign's momentum log crosses that around day ~50 and every save after is unloadable
     // (the v2.0.9 "A problem occured while trying to load the saved game." reports). Chunking
     // caps every synced string below the engine limit regardless of log size — no data
@@ -47,7 +49,6 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     // kingdoms re-enroll + momentum re-accrues on the next daily tick).
     private const string CountKey = "_taom_wotr_momentum_v3_count";
     private const string ChunkKeyPrefix = "_taom_wotr_momentum_v3_";
-    private List<string> _chunks = new();
     private readonly ICoopSessionProvider _coopSession;
 
     public WarOfTheRingMomentumBehavior(
@@ -72,13 +73,18 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _uiService = uiService;
         _logger = logger;
         _coopSession = coopSession;
+        // #773: the momentum store is a process-lifetime singleton and this behavior is built with new in
+        // every campaign's OnGameStart (SubModule), before any campaign event and before a load's SyncData.
+        // Resetting here means a new campaign, or a load of a save with no momentum record (the engine then
+        // never calls SyncData), never sees the previous campaign's war. Same pattern as
+        // WarOfTheRingBehavior (#764).
+        _stateStore.ResetForNewGame();
     }
 
     private static double NowHours => CampaignTime.Now.ToHours;
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _stateStore.ResetForNewGame());
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
@@ -100,31 +106,14 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
-        if (dataStore.IsSaving)
-            _chunks = MomentumSyncChunker.Split(BuildSavePayload(_stateStore));
-
-        // Sync the chunk count first, then that many chunk keys. On load the count comes from
-        // the save (absent → 0 → fresh state, the one-time _v2→_v3 migration reset). Every
-        // chunk string is < the engine's 32,767-byte entry limit, so no entry can corrupt.
-        int count = _chunks.Count;
-        dataStore.SyncData(CountKey, ref count);
-
+        // The chunk count, then that many chunk keys, each under the engine's 32,763-byte string limit.
+        // On load an absent count is 0 and an out-of-range one is ignored with a warning: both load
+        // fresh state (the absent case is also the one-time _v2 to _v3 migration reset).
+        var chunks = SyncDataChunker.SyncChunks(
+            dataStore, CountKey, ChunkKeyPrefix,
+            dataStore.IsSaving ? SyncDataChunker.Split(BuildSavePayload(_stateStore)) : null, _logger, "[Momentum]");
         if (dataStore.IsLoading)
-        {
-            _chunks = new List<string>(count);
-            for (int i = 0; i < count; i++)
-                _chunks.Add(string.Empty);
-        }
-
-        for (int i = 0; i < count; i++)
-        {
-            var chunk = _chunks[i];
-            dataStore.SyncData(ChunkKeyPrefix + i, ref chunk);
-            _chunks[i] = chunk ?? string.Empty;
-        }
-
-        if (dataStore.IsLoading)
-            _stateStore.Deserialize(ParsePersisted(MomentumSyncChunker.Join(_chunks)));
+            _stateStore.Deserialize(ParsePersisted(SyncDataChunker.Join(chunks)));
     }
 
     private Dictionary<string, string> ParsePersisted(string json)
@@ -255,7 +244,9 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         // CO-OP: host-only — same shared-state reasoning as OnMapEventEnded.
         if (!_coopSession.IsAuthority) return;
 
-        if (!isWin || !_settings.MomentumEnabled)
+        // SiegeOutside is also reported with a win (a defender joining from outside the walls) and
+        // KingdomManager.SiegeCompleted captures nothing on it: the same set it transfers on.
+        if (!isWin || !CapturesSettlement(battleType) || !_settings.MomentumEnabled)
             return;
 
         var snapshot = _snapshotAdapter.FromSiege(settlement, capturerParty);
@@ -265,6 +256,11 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _eventService.ProcessSiege(snapshot, _stateStore.State, NowHours);
         _stateStore.NotifyMomentumChanged();
     }
+
+    private static bool CapturesSettlement(MapEvent.BattleTypes battleType)
+        => battleType == MapEvent.BattleTypes.Siege
+           || battleType == MapEvent.BattleTypes.SallyOut
+           || battleType == MapEvent.BattleTypes.BlockadeSallyOutBattle;
 
     private void OnRaidCompleted(BattleSideEnum winnerSide, RaidEventComponent component)
     {

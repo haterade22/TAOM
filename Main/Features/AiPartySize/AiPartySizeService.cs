@@ -132,8 +132,8 @@ public class AiPartySizeService : IAiPartySizeService
 
         ApplyPartySizeScaling(
             ref limit,
-            settings?.AiLordPartySizeFactor ?? DefaultLordFactor,
-            settings?.AiLordPartySizeFlatBonus ?? DefaultLordFlatBonus,
+            settings?.AiLordPartyScale ?? DefaultLordFactor,
+            settings?.AiLordPartyFlatBonus ?? DefaultLordFlatBonus,
             LordHostText);
     }
 
@@ -157,7 +157,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsEnabled())
             return;
 
-        ApplyPartySizeScaling(ref limit, TaomSettings.Instance?.AiGarrisonSizeFactor ?? DefaultGarrisonFactor, 0f, GarrisonText);
+        ApplyPartySizeScaling(ref limit, TaomSettings.Instance?.AiGarrisonScale ?? DefaultGarrisonFactor, 0f, GarrisonText);
     }
 
     public void ApplyAiFoodRelief(MobileParty party, ref ExplainedNumber consumption)
@@ -168,7 +168,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref consumption, TaomSettings.Instance?.AiFoodConsumptionRelief ?? DefaultFoodRelief, ForageText);
+        ApplyRelief(ref consumption, TaomSettings.Instance?.AiPartyFoodRelief ?? DefaultFoodRelief, ForageText);
     }
 
     public void ApplyAiWageRelief(MobileParty party, ref ExplainedNumber wage)
@@ -179,7 +179,7 @@ public class AiPartySizeService : IAiPartySizeService
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
-        ApplyRelief(ref wage, TaomSettings.Instance?.AiWageRelief ?? DefaultWageRelief, LevyText);
+        ApplyRelief(ref wage, TaomSettings.Instance?.AiPartyWageRelief ?? DefaultWageRelief, LevyText);
     }
 
     private static bool IsEnabled() => TaomSettings.Instance?.EnableAiPartyScaling ?? true;

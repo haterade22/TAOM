@@ -13,6 +13,7 @@ public class WarOfTheRingService : IWarOfTheRingService
     private readonly ITaomSettingsProvider _settingsProvider;
     private readonly IModLogger _logger;
     private readonly WarOfTheRingConfig _config;
+    private readonly HashSet<string> _warnedSkippedWars = new HashSet<string>(StringComparer.Ordinal);
 
     public WarPhase CurrentPhase { get; private set; } = WarPhase.Peace;
     public bool IsWarOfTheRingActive => CurrentPhase == WarPhase.FullWar;
@@ -44,6 +45,14 @@ public class WarOfTheRingService : IWarOfTheRingService
     {
         CurrentPhase = phase;
         _logger.LogInfo($"War of the Ring: Phase restored from save → {phase}");
+    }
+
+    // #764: the service outlives the campaign, and a brand-new game never loads SyncData.
+    public void ResetForNewSession()
+    {
+        CurrentPhase = WarPhase.Peace;
+        Outcome = WarOutcome.None;
+        _logger.LogInfo("War of the Ring: phase reset to Peace at campaign start; a load restores the saved phase next");
     }
 
     public WarOfTheRingService(
@@ -103,7 +112,7 @@ public class WarOfTheRingService : IWarOfTheRingService
     // the TestMode pair, and the compiled defaults. Dual-surface rule, csharp-architecture.md.
     private (int phase1Day, int phase2Day) GetEffectivePhaseDays()
     {
-        var (phase1Day, phase2Day) = GetRawPhaseDays();
+        var (phase1Day, phase2Day, _) = GetRawPhaseDays();
 
         phase1Day = Math.Max(1, phase1Day);
         phase2Day = Math.Max(phase1Day + 1, phase2Day);
@@ -111,54 +120,102 @@ public class WarOfTheRingService : IWarOfTheRingService
         return (phase1Day, phase2Day);
     }
 
-    private (int phase1Day, int phase2Day) GetRawPhaseDays()
+    private (int phase1Day, int phase2Day, string source) GetRawPhaseDays()
     {
         if (_settingsProvider.IsAvailable && _settingsProvider.TestMode)
-            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day, "MCM Test Mode");
 
         if (_config.TestMode.Enabled)
-            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day, "war_of_the_ring.json test mode");
 
         if (_settingsProvider.IsAvailable)
-            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay);
+            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay, "MCM");
 
-        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
+        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay, "war_of_the_ring.json");
     }
 
+    public string DescribePhaseDays()
+    {
+        var (phase1Day, phase2Day) = GetEffectivePhaseDays();
+        var description = $"{phase1Day}/{phase2Day} from {GetRawPhaseDays().source}";
+        return GetEffectiveEnabled() ? description : description + " (War of the Ring disabled)";
+    }
+
+    // #772: the phase turns first so that vanilla's OnWarDeclared listeners already treat every
+    // Hostile pair as constantly at war: the ally filter in AllianceCampaignBehavior.OnWarDeclared
+    // then calls no ally into a war this loop is about to declare. It also keeps TAOM's peace gates
+    // live while KingdomDecisionProposalBehavior re-checks pending decisions. The declarations
+    // guard on HasDeclaredWar (the real stance), so each one still runs under FullWar.
     private void TransitionToPhase(WarPhase newPhase)
     {
         _logger.LogInfo($"War of the Ring: Transitioning to {newPhase}");
+
         CurrentPhase = newPhase;
 
         switch (newPhase)
         {
             case WarPhase.IsengardWar:
-                DeclareConfiguredWars(_config.Phase1.Wars);
+                DeclareConfiguredWars(_config.Phase1.Wars, null);
                 break;
             case WarPhase.FullWar:
-                DeclareConfiguredWars(_config.Phase2.Wars);
-                if (_config.Phase2.AutoWarBetweenHostileTiers)
-                {
-                    DeclareHostileTierWars();
-                }
+                DeclareFullWarWars(null);
                 break;
         }
     }
 
-    private void DeclareConfiguredWars(List<WarDeclaration> wars)
+    private int DeclareFullWarWars(Func<string, string, bool> eligible)
     {
-        foreach (var war in wars)
+        int declared = DeclareConfiguredWars(_config.Phase2.Wars, eligible);
+        if (_config.Phase2.AutoWarBetweenHostileTiers)
         {
-            if (!_allianceAdapter.AreAtWar(war.Attacker, war.Defender))
-            {
-                _logger.LogInfo($"War of the Ring: {war.Attacker} declares war on {war.Defender}");
-                _allianceAdapter.DeclareWar(war.Attacker, war.Defender);
-            }
+            declared += DeclareHostileTierWars(eligible);
+        }
+        return declared;
+    }
+
+    // #772: in FullWar, declares every Phase 2 / Hostile-pair war whose stored stance is not War
+    // (idempotent). Only pairs the model calls at war (ShouldBlockPeace) are declared: a peace made
+    // legitimately, or with blockPeaceBetweenHostileTiers off, is never undone by a reload.
+    public void ReconcileDeclaredWars()
+    {
+        if (CurrentPhase != WarPhase.FullWar) return;
+        if (!GetEffectiveEnabled()) return;
+
+        int declared = DeclareFullWarWars(ShouldBlockPeace);
+        if (declared > 0)
+        {
+            _logger.LogInfo($"War of the Ring: declared {declared} missing Full War wars (#772)");
         }
     }
 
-    private void DeclareHostileTierWars()
+    // eligible == null means every pair (a phase transition); the reconcile passes ShouldBlockPeace.
+    private int DeclareConfiguredWars(List<WarDeclaration> wars, Func<string, string, bool> eligible)
     {
+        int declared = 0;
+        var live = new HashSet<string>(_allianceAdapter.GetAllKingdomIds());
+        foreach (var war in wars)
+        {
+            // An eliminated or unknown kingdom keeps no stance link, so HasDeclaredWar stays false
+            // and the declaration would be retried and counted on every load.
+            if (!live.Contains(war.Attacker) || !live.Contains(war.Defender))
+            {
+                WarnSkippedOnce(war);
+                continue;
+            }
+            if (eligible != null && !eligible(war.Attacker, war.Defender)) continue;
+
+            if (!_allianceAdapter.HasDeclaredWar(war.Attacker, war.Defender)
+                && TryDeclareWar(war.Attacker, war.Defender, ""))
+            {
+                declared++;
+            }
+        }
+        return declared;
+    }
+
+    private int DeclareHostileTierWars(Func<string, string, bool> eligible)
+    {
+        int declared = 0;
         var kingdoms = _allianceAdapter.GetAllKingdomIds();
         for (int i = 0; i < kingdoms.Count; i++)
         {
@@ -168,12 +225,38 @@ public class WarOfTheRingService : IWarOfTheRingService
                 var b = kingdoms[j];
 
                 if (_diplomacyService.GetRelationshipTier(a, b) == AllianceTier.Hostile
-                    && !_allianceAdapter.AreAtWar(a, b))
+                    && (eligible == null || eligible(a, b))
+                    && !_allianceAdapter.HasDeclaredWar(a, b)
+                    && TryDeclareWar(a, b, " (hostile tier)"))
                 {
-                    _logger.LogInfo($"War of the Ring: {a} declares war on {b} (hostile tier)");
-                    _allianceAdapter.DeclareWar(a, b);
+                    declared++;
                 }
             }
         }
+        return declared;
+    }
+
+    // #772 Codex R3: the provider cannot see the live kingdoms, so a misspelt id ("rohan") reaches
+    // here. Named once per process, not on every load; an eliminated kingdom is named the same way.
+    private void WarnSkippedOnce(WarDeclaration war)
+    {
+        if (_warnedSkippedWars.Add(war.Attacker + " -> " + war.Defender))
+        {
+            _logger.LogWarning($"War of the Ring: scripted war {war.Attacker} -> {war.Defender} skipped: a kingdom id is unknown or eliminated (check war_of_the_ring.json)");
+        }
+    }
+
+    // Counts only a war the stance confirms after the call: DeclareWar does nothing for an unknown
+    // kingdom, and TAOM's own DeclareWarAction veto (IsWarAllowed) can refuse a pair.
+    private bool TryDeclareWar(string a, string b, string suffix)
+    {
+        _allianceAdapter.DeclareWar(a, b);
+        if (_allianceAdapter.HasDeclaredWar(a, b))
+        {
+            _logger.LogInfo($"War of the Ring: {a} declares war on {b}{suffix}");
+            return true;
+        }
+        _logger.LogWarning($"War of the Ring: war {a} -> {b} had no effect (unknown kingdom, or vetoed by IsWarAllowed)");
+        return false;
     }
 }

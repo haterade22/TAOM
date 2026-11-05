@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TAOM.Features.WarOfTheRingMomentum;
+using TAOM.Core.Persistence;
 using TAOM.Features.WarOfTheRingMomentum.Cheats;
 
 namespace TAOM.Tests.Features.WarOfTheRingMomentum;
@@ -10,19 +10,19 @@ namespace TAOM.Tests.Features.WarOfTheRingMomentum;
 ///
 /// Why this command exists: the engine's `ArchiveSerializer.SerializeEntry` writes each entry's
 /// length as `(short)Data.Length`, so a single SyncData string over ~32 KB is written with a wrong
-/// length and corrupts the save at write time. `MomentumSyncChunker` keeps every chunk under the cap,
+/// length and corrupts the save at write time. `SyncDataChunker` keeps every chunk under the cap,
 /// but confirming that today means playing a campaign to roughly day 50 with active wars and then
 /// saving. The command reads the same number in one line.
 ///
 /// The `WOULD CORRUPT` branch is unreachable by construction right now (10,000 chars × 3 bytes
 /// worst-case = 30,000 &lt; 32,763). That is exactly why it is pinned: a future bump to
-/// <see cref="MomentumSyncChunker.MaxChunkChars"/> is the change that makes it reachable, and this
+/// <see cref="SyncDataChunker.MaxChunkChars"/> is the change that makes it reachable, and this
 /// test is what turns that into a red build instead of a corrupted save.
 /// </summary>
 [TestClass]
 public class MomentumCheatsFormatTests
 {
-    private static IReadOnlyList<string> Chunk(string payload) => MomentumSyncChunker.Split(payload);
+    private static IReadOnlyList<string> Chunk(string payload) => SyncDataChunker.Split(payload);
 
     [TestMethod]
     public void FormatPayloadReport_EmptyPayload_ReportsZeroChunksAndDoesNotClaimCorruption()
@@ -42,7 +42,7 @@ public class MomentumCheatsFormatTests
     [TestMethod]
     public void FormatPayloadReport_PayloadAtChunkLimit_ReportsOneChunk()
     {
-        var payload = new string('a', MomentumSyncChunker.MaxChunkChars);
+        var payload = new string('a', SyncDataChunker.MaxChunkChars);
 
         var report = MomentumCheats.FormatPayloadReport(3, payload, Chunk(payload));
 
@@ -53,7 +53,7 @@ public class MomentumCheatsFormatTests
     [TestMethod]
     public void FormatPayloadReport_PayloadOneOverChunkLimit_ReportsTwoChunks()
     {
-        var payload = new string('a', MomentumSyncChunker.MaxChunkChars + 1);
+        var payload = new string('a', SyncDataChunker.MaxChunkChars + 1);
 
         var report = MomentumCheats.FormatPayloadReport(3, payload, Chunk(payload));
 
@@ -68,7 +68,7 @@ public class MomentumCheatsFormatTests
     [TestMethod]
     public void FormatPayloadReport_ChunkOverEngineEntryLimit_ReportsWouldCorruptAndNamesTheChunk()
     {
-        var oversized = new string('a', MomentumSyncChunker.EngineEntryByteLimit + 1);
+        var oversized = new string('a', SyncDataChunker.EngineEntryByteLimit + 1);
         var chunks = new List<string> { "small", oversized };
 
         var report = MomentumCheats.FormatPayloadReport(2, "small" + oversized, chunks);

@@ -346,9 +346,9 @@ public class FieldCommissionSettingsProviderTests
         AssertPairedDefault(settings, json, "EnableFieldCommission { get; set; } = true;", "\"enabled\": true");
         AssertPairedDefault(settings, json, "FieldCommissionRatioThreshold { get; set; } = 1.3f;", "\"ratioThreshold\": 1.3");
         AssertPairedDefault(settings, json, "FieldCommissionMeritPerKill { get; set; } = 1;", "\"meritPerKill\": 1");
-        AssertPairedDefault(settings, json, "FieldCommissionMeritThreshold { get; set; } = 32;", "\"meritThreshold\": 32");
+        AssertPairedDefault(settings, json, "FieldCommissionMeritToPromote { get; set; } = 32;", "\"meritThreshold\": 32");
         AssertPairedDefault(settings, json, "FieldCommissionRetainerAllowance { get; set; } = 0;", "\"retainerAllowance\": 0");
-        AssertPairedDefault(settings, json, "FieldCommissionMaxOffersPerBattle { get; set; } = 2;", "\"maxOffersPerBattle\": 2");
+        AssertPairedDefault(settings, json, "FieldCommissionOffersPerBattle { get; set; } = 2;", "\"maxOffersPerBattle\": 2");
         AssertPairedDefault(settings, json, "EnableFieldCommissionDiagnostics { get; set; } = false;", "\"diagnostics\": false");
     }
 

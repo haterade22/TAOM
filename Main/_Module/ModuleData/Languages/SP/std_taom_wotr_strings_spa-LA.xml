@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Desglose de Impulso" />
     <string id="taom_wotr_total_stats_header" text="Estadísticas Totales" />
     <string id="taom_wotr_total" text="Total: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Batallas Ganadas" />
     <string id="taom_wotr_villages_raided" text="Aldeas Saqueadas" />
     <string id="taom_wotr_fiefs_captured" text="Feudos Capturados" />

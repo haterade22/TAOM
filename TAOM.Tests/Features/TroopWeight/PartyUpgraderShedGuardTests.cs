@@ -10,7 +10,7 @@ namespace TAOM.Tests.Features.TroopWeight;
 /// `MobileParty.All`, so without the guard the postfix reaches garrisons, militia and bandit parties
 /// and `PlanShed` removes their entire overflow in a single tick.
 ///
-/// The guard matters more since 2026-09-01, when `AiGarrisonSizeFactor` dropped from 3.0 to 1.0.
+/// The guard matters more since 2026-09-01, when `AiGarrisonScale` dropped from 3.0 to 1.0.
 /// Lowering a garrison's cap to a third is only survivable because the shed cannot see garrisons at
 /// all: `GarrisonPartyComponent` overrides `PartyOwner` but NOT `Leader`, so `PartyComponent.Leader`
 /// keeps its base `=> null` and `PartyBase.LeaderHero` is null for every garrison. Vanilla desertion

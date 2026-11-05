@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Rozkład impetu" />
     <string id="taom_wotr_total_stats_header" text="Statystyki ogólne" />
     <string id="taom_wotr_total" text="Razem: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Wygrane bitwy" />
     <string id="taom_wotr_villages_raided" text="Splądrowane wioski" />
     <string id="taom_wotr_fiefs_captured" text="Zdobyte lenna" />

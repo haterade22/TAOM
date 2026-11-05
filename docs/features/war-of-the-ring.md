@@ -28,7 +28,7 @@ At the configured day (default: 30), the system declares war:
 - **Isengard** → **Rohan** (vlandia)
 - **Dunland** (empire) → **Rohan** (vlandia)
 
-This mirrors the lore — Saruman's assault on Rohan is the opening salvo of the War of the Ring.
+This mirrors the lore: Saruman's assault on Rohan is the opening salvo of the War of the Ring.
 
 ### Phase 2: The Full War
 
@@ -36,6 +36,12 @@ At the configured day (default: 44), the system:
 1. Iterates all kingdom pairs from `diplomacy.json` that have `Hostile` tier
 2. Declares war between any hostile pair not already at war
 3. Activates permanent peace blocking
+
+The phase turns to Full War first, so that vanilla's `OnWarDeclared` listeners already treat every Hostile pair as constantly at war: the ally filter in `AllianceCampaignBehavior.OnWarDeclared` then calls no ally into a war the loop is about to declare, and TAOM's peace gates stay live while `KingdomDecisionProposalBehavior` re-checks pending decisions. The declarations guard on the stored stance (`IAllianceAdapter.HasDeclaredWar`) rather than `AreAtWar`, which goes through the model and would report every Hostile pair as already at war, so each pair still gets its `DeclareWarAction`, its `OnWarDeclared` event and a rebuilt at-war list. On the host, every session launch runs `ReconcileDeclaredWars` before the phase check (`WarOfTheRingBehavior.OnSessionLaunched`). It returns at once unless the phase is Full War and the War of the Ring is enabled. In Full War it walks the Phase 2 wars again (the `phase2.wars` list, plus every Hostile pair when `autoWarBetweenHostileTiers` is on) and declares only a pair whose stored stance is neutral and that the model calls at war (`ShouldBlockPeace`), so a legitimate peace, or a run with `blockPeaceBetweenHostileTiers` off, is never undone. A save that reached Full War before #772 gets its undeclared wars at its first launch, and later launches find nothing to declare (#772). A scripted war in `phase1.wars` or `phase2.wars` that names an unknown or eliminated kingdom is skipped, with one warning per process naming the pair; the other entries still declare, and the reconcile neither declares nor counts it.
+
+**Limits of the repair.** It cannot declare a Hostile pair that had no stored stance when Full War began: the engine creates that link as War from `IsAtConstantWar`, either on the reconcile's own read or earlier during vanilla's daily tribute pass, so the pair stays at war with no event and no war start date. In practice this means a campaign started on the stale Full War phase of #764. While War of the Ring is disabled the repair waits until the first session launch after it is re-enabled; meanwhile the model, the peace blocks and momentum enrollment keep treating the save as Full War, and only the stance link and the war-declared notices are missing. With `blockPeaceBetweenHostileTiers` on and `autoWarBetweenHostileTiers` off (not the shipped setting), Hostile pairs are at constant war in the model with no declared stance from the Phase 2 transition onward; that predates #772 and the reconcile does not repair it.
+
+When Phase 2 declares its wars, vanilla's alliance logic asks each Permanent ally that is not itself Hostile with the enemy to join (for example Harad into Mordor's wars). A repaired Full War save shows the encyclopedia history entries and map notices of those wars, dated at the load day, but no chat line for them: the repair runs in `OnSessionLaunched`, and vanilla turns chat notices on, and registers `KingdomManager`'s war listener (a kingdom aggressiveness increase that nothing in v1.4.8 reads outside its own updates, KingdomManager.cs:94-121 and AllianceCampaignBehavior.cs:645), only after the session-launch listeners have run (`Campaign.OnSessionStart`). Both are known, accepted behaviours pending the maintainer's review.
 
 **What gets blocked:** Any pair with `Hostile` relationship tier cannot make peace. This includes Gondor-Mordor, Rohan-Isengard, Erebor-Gundabad, all Elven kingdoms vs all evil kingdoms, etc.
 
@@ -163,12 +169,16 @@ war_of_the_ring.json     TaomSettings (MCM)
 Phase escalation is driven by elapsed campaign days, so it survives save/load without migration. Each campaign tick:
 1. Calculates elapsed campaign days via `CampaignStartTime.ElapsedDaysUntilNow` (engine-provided, survives save/load)
 2. Compares against phase thresholds (from MCM or JSON config)
-3. Declares wars only for pairs not already at war (`AreAtWar` guard)
+3. Declares wars only for pairs not already at war (`HasDeclaredWar` guard: the real stance, not the model-aware `AreAtWar`; #772)
 4. Peace blocking checks elapsed time in real-time
 
-`WarOfTheRingBehavior.SyncData` persists two ints: `WarOfTheRing_CurrentPhase` (Phase 9b #129 — so past-Phase2 saves don't replay transitions) and `WarOfTheRing_Outcome` (WotR-momentum #327 — the victor once the war ends). Both are additive keys; older saves lacking them load as `Peace` / `None` (vanilla `SyncData` returns false on a missing key without overwriting the ref). The elapsed-time computation still drives escalation; the persisted phase just avoids re-firing transitions on load.
+`WarOfTheRingBehavior.SyncData` persists two ints: `WarOfTheRing_CurrentPhase` (Phase 9b #129, so past-Phase2 saves don't replay transitions) and `WarOfTheRing_Outcome` (WotR-momentum #327: the victor once the war ends). Both are additive keys; older saves lacking them load as `Peace` / `None` (vanilla `SyncData` returns false on a missing key without overwriting the ref). The elapsed-time computation still drives escalation; the persisted phase just avoids re-firing transitions on load. `ReconcileDeclaredWars` re-runs the declarations, not the transition, on every host session launch.
+
+A new campaign in the same process now starts from a reset service (#764). `WarOfTheRingBehavior` is built fresh in every campaign's `OnGameStart`, before any campaign event and before a load's `SyncData`, and its constructor calls `ResetForNewSession()`; a load then restores the saved phase and outcome in `SyncData`. The service is a process-lifetime singleton and `SyncData` never runs in loading mode for a brand-new game, so before the fix a second campaign inherited the previous phase and outcome: stuck at FullWar it never declared the Phase 1 and 2 wars, and at WarEnded `EndWar` was a no-op. The reset cannot live in `OnSessionLaunched`, because two readers get there first. Campaign-event listeners run newest-first, so the momentum behavior, added after this one, runs its own session-launch code before ours; and vanilla caches each kingdom's at-war list in `OnNewGameCreated`, which the engine dispatches before `OnSessionLaunched`. The reset also cannot live in `RegisterEvents`: on a load that runs after `SyncData` and would wipe the restored phase. `WarOfTheRingWiringTests` pins that SubModule builds the behavior inline as `AddBehavior`'s argument, exactly once, and that no other production file constructs or registers it, since a cached or container-singleton instance would reset only once per process. The fix prevents new cases only: a save already written by an affected campaign keeps the phase it saved.
 
 Benefits: MCM config changes take effect immediately on next tick. No save migration needed (new keys default safely).
+
+Every load logs the phase days in use and their source: the `[WarOfTheRing] Session launched` line ends `phase days 30/44 from MCM` (or `MCM Test Mode`, `war_of_the_ring.json test mode`, `war_of_the_ring.json`), plus `(War of the Ring disabled)` when the feature is off. The "Loaded War of the Ring config" line prints the JSON pair only.
 
 ### Phases
 
@@ -194,7 +204,7 @@ MCM settings are accessed through an injected `ITaomSettingsProvider` interface 
 | `Main/Features/Diplomacy/WarOfTheRingConfigProvider.cs` | JSON loader |
 | `Main/Features/Diplomacy/ITaomSettingsProvider.cs` | MCM settings interface (testable) |
 | `Main/Features/Diplomacy/TaomSettingsProvider.cs` | MCM settings implementation |
-| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer (uses CampaignStartTime) |
+| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer (uses CampaignStartTime); its constructor resets the singleton service for each campaign (#764); on session launch (host only) it calls `ReconcileDeclaredWars`, which declares any Full War wars an older save never declared, then rechecks the phase (#772) |
 | `Main/Features/Diplomacy/Hooks/IOnPeaceAction.cs` | Peace hook interface |
 | `Main/Features/Diplomacy/Hooks/PeaceActionHook.cs` | Hook implementation |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony safety net |
@@ -218,10 +228,12 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 
 ## Tests
 
-- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs` — 31 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, and the day-ordering clamp across all four sources
-- `TAOM.Tests/Features/Diplomacy/WarOfTheRingConfigProviderTests.cs` — 12 tests, one per `ValidateConfig` rule (phase + test-mode ordering, sub-config nulls, missing file, malformed JSON)
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs`: 64 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, the day-ordering clamp across all four sources, the session reset (#764), and the real-stance guard and `ReconcileDeclaredWars` (#772), including the game-like `AreAtWar` stub, the MCM enable toggle and the declaration-had-no-effect log
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorSessionResetTests.cs`: 9 tests pinning the constructor reset, the host session launch calling the repair before the phase check, the daily tick, a save-then-load round trip that restores a non-default phase and outcome, a save without the keys, a new campaign after a WarEnded campaign, a save pass doing neither, and the co-op client gate on `OnSessionLaunched` (no phase check, no reconcile)
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingWiringTests.cs`: 7 source-text tests pinning that SubModule builds the behavior inline as `AddBehavior`'s argument exactly once, that no other production file constructs or registers it, and that the predicate rejects cached, static, duplicated and container-resolved shapes (untagged)
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingConfigProviderTests.cs`: 18 tests, one per `ValidateConfig` rule (phase + test-mode ordering, sub-config nulls, scripted wars lists: null list, null entry, self pair, blank id, valid pairs kept; missing file, malformed JSON)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingShippedConfigTests.cs` — 6 tests pinning the shipped `war_of_the_ring.json`, so a doc/code drift in the shipped days fails the suite rather than waiting for a review
-- `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs` — 3 tests for hook behavior
+- `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs`: 5 tests for hook behavior
 
 The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — every test pinned `IsAvailable = false` in `Setup()`. When adding a test here, check which of the four day sources it actually exercises.
 
@@ -229,9 +241,12 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 
 1. Set `testMode.enabled = true` in `war_of_the_ring.json` (or enable Test Mode in MCM) — otherwise the phases sit at Day 30 / Day 44
 2. Start a new campaign
-3. Phase 1 triggers on Day 1 — check Rohan is at war with Isengard and Dunland
-4. Phase 2 triggers on Day 3 — check all hostile pairs are at war, peace proposals blocked
+3. Phase 1 triggers on Day 1: check that Rohan is at war with Isengard and Dunland
+4. Phase 2 triggers on Day 3. On Day 2, open Gondor's encyclopedia page: Mordor is not in its Wars list. On Day 3 the chat shows '<ruler> of Gondor declares war on Mordor' (the order of the two kingdoms can be reversed), and both kingdoms' encyclopedia History gains that entry. Expect one such line for every Hostile pair still at peace on Day 2. The Phase 1 pairs (Isengard and Dunland against Rohan) and any war already declared get no new line. After Day 3 the Wars list proves nothing, because the constant-war model shows every Hostile pair at war with or without a real declaration (#772). Peace proposals between Hostile pairs are blocked.
 5. Verify Harad/Umbar/Khand can still make peace with each other (Rhun cannot — it's a Dark Power)
+6. Second campaign in one process (#764): play past the Phase 2 day, exit to the main menu without closing the game, and start a new campaign. The log shows "phase reset to Peace at campaign start", then the Phase 1 wars on day 1, and the War of the Ring meter stays hidden until Full War.
+7. Older Full War save (#772): with test mode on, play past Day 3 on a build without the fix (v2.0.28 and earlier have the old code) and save. Load that save on this build. The log shows 'War of the Ring: declared N missing Full War wars (#772)' once, and each kingdom's encyclopedia History lists the declarations; the chat shows no line for them, which is expected (Phase 2 above). Save and reload: the line must not appear again. The first load proves the host-only call in `OnSessionLaunched` runs. The quiet second load proves `AllianceAdapter.DeclareWar` wrote the real stance; the old model-aware guard would skip the declaration and log the line on every load.
+8. Every load logs the phase days and their source: `[WarOfTheRing] Session launched` ends `phase days 30/44 from MCM` or the real source.
 
 ## How to Add New War Phases
 
@@ -278,6 +293,13 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-10-08: Phase 2 now really declares the Hostile-pair wars (#772). The phase turns first and the guard reads the real stance (`HasDeclaredWar`), because the constant-war model had made every pair look already at war and skipped them all; the phase-first order keeps vanilla's call-to-war logic from pulling allies into wars the loop is about to declare. `ReconcileDeclaredWars` declares, at session launch, the Hostile-pair wars that a Full War save still stores as neutral.
+- 2026-10-08: A new campaign in the same process no longer inherits the previous campaign's phase and outcome: `WarOfTheRingBehavior`'s constructor calls `WarOfTheRingService.ResetForNewSession()` before any campaign event can read the service (#764).
 - 2026-07-30 — Phase defaults retuned to Day 30 (Isengard/Dunland attack Rohan) / Day 44 (full War of the Ring), set at all four sources (shipped JSON, MCM defaults, `TaomSettingsProvider` fallbacks, `WarOfTheRingConfig` compiled defaults). `GetEffectivePhaseDays` now clamps `phase2 > phase1 >= 1` for every source — previously only the JSON pair was validated (strictly-`<`, so equal days passed) while the MCM sliders were unvalidated, and an equal or inverted pair ran both transitions in one tick with `IsengardWar` never observable. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`.
 - 2026-05-22 — WotR phase defaults retuned to Day 2 (Phase 1) / Day 14 (Phase 2); `testMode` tightened to 1/3; phase state persists via `SyncData` (`WarOfTheRing_CurrentPhase`).
 - 2026-05-13 — Phase 9b: `WarOfTheRingService.CurrentPhase` now persisted (no per-load transition replay); `WarOfTheRingConfigProvider` gains null-literal JSON fallback + semantic TriggerDay validation (closes #129).
+
+## GitHub Issue
+
+- **Issues:** #764 (a new campaign inherited the previous phase) and #772 (Phase 2 declared no Hostile-pair war), both closed with `triage-needs-ingame`: steps 6 and 7 of "How to Test In-Game" are owed.
+- **Status:** Active

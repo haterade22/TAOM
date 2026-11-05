@@ -47,13 +47,26 @@ public class AllianceAdapter : IAllianceAdapter
         return kingdomA.IsAtWarWith(kingdomB);
     }
 
+    public bool HasDeclaredWar(string kingdomAId, string kingdomBId)
+    {
+        var kingdomA = FindKingdom(kingdomAId);
+        var kingdomB = FindKingdom(kingdomBId);
+        if (kingdomA == null || kingdomB == null) return false;
+        // Mirrors FactionManager.IsAtWarAgainstFaction: no stance link is created (or read) for a
+        // kingdom against itself or for an eliminated kingdom.
+        if (kingdomA == kingdomB || kingdomA.IsEliminated || kingdomB.IsEliminated) return false;
+
+        return kingdomA.GetStanceWith(kingdomB)?.IsAtWar == true;
+    }
+
     public void DeclareWar(string kingdomAId, string kingdomBId)
     {
         var kingdomA = FindKingdom(kingdomAId);
         var kingdomB = FindKingdom(kingdomBId);
         if (kingdomA == null || kingdomB == null) return;
+        if (kingdomA == kingdomB) return;
 
-        if (!kingdomA.IsAtWarWith(kingdomB))
+        if (kingdomA.GetStanceWith(kingdomB)?.IsAtWar != true)
         {
             DeclareWarAction.ApplyByDefault(kingdomA, kingdomB);
         }

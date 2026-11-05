@@ -26,6 +26,16 @@ public interface IMomentumQueryService
 
     int VictoryThreshold { get; }
 
+    /// <summary>The MCM "Enable Victory" option: the popup shows <see cref="VictoryLead"/> only when it is on.</summary>
+    bool VictoryEnabled { get; }
+
+    /// <summary>
+    /// The lead the victory check compares with <see cref="VictoryThreshold"/>, in displayed units, rounded,
+    /// positive = Free ahead. Absolute, unlike <see cref="SliderValue"/>, so a long war can reach the
+    /// threshold with the bar near the centre (WOTR-04).
+    /// </summary>
+    int VictoryLead { get; }
+
     IReadOnlyList<string> GetKingdomIds(MomentumSide side);
     IReadOnlyList<MomentumEvent> GetEvents(MomentumSide side, MomentumActionType type);
     MomentumTotalStats GetTotalStats(MomentumSide side);

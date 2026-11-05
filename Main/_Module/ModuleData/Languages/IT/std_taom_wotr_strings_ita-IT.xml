@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Dettaglio Slancio" />
     <string id="taom_wotr_total_stats_header" text="Statistiche Totali" />
     <string id="taom_wotr_total" text="Totale: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Battaglie Vinte" />
     <string id="taom_wotr_villages_raided" text="Villaggi Saccheggiati" />
     <string id="taom_wotr_fiefs_captured" text="Feudi Conquistati" />

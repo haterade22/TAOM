@@ -91,7 +91,7 @@ Any provider or boundary class that exposes user-editable values must validate s
 
 **Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
 
-**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process: changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime. When a compiled MCM default CHANGES, the setting's own `HintText` says that an existing `TAOM.json` keeps the old value until the group is reset: MCM persists per property, so the new default reaches fresh installs only, and the tooltip is the surface the player reads (RCA `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`, second occurrence on one group).
+**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process: changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime. Never flip a compiled MCM default under an unchanged name: MCM persists per property and loads the saved value over the default, so the new value would reach fresh installs only. Rename the setting (comment why) and the new default reaches every player; `python tools/check_mcm_default_flips.py` checks it (#1017). The renamed setting's `HintText` tells the player their saved value was reset to the new default and to set their own again (RCA `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`).
 
 ## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story (MANDATORY)
 
@@ -99,22 +99,30 @@ TAOM services are `Reuse.Singleton`: they live for the PROCESS, not the campaign
 owns campaign data (an order book, a camp dictionary, a party-tracker cache) has two lifecycle
 holes that SyncData does not cover:
 
-1. **A brand-new campaign never calls `LoadFrom`.** The engine invokes a behavior's `SyncData` only
-   when a save record exists, so campaign B inherits campaign A's dictionaries, and B's first save
-   then PERSISTS A's state into B. (Shipped as 2 CRITICALs in the camps port, found independently
-   by two reviews.)
+1. **A brand-new campaign never calls `LoadFrom`.** The engine calls a behavior's `SyncData` in
+   loading mode only when a save record exists, so campaign B inherits campaign A's dictionaries, and
+   B's first save then PERSISTS A's state into B. (Shipped as 2 CRITICALs in the camps port, found
+   independently by two reviews.)
 2. **A loaded save has NEW engine objects under the old ids.** Any transient cache keyed by id but
    holding object references (MobileParty trackers, widget maps), and any absolute clock, latch or
    shown-flag, silently goes stale on load and drives ghosts or disables its mechanism.
 
-**Rule:** every singleton holding per-campaign state exposes `ResetForNewSession()`; its behavior
-tracks whether `SyncData` LOADED this session and calls the reset from `OnSessionLaunched` when it
-did not. `LoadFrom` additionally clears every transient cache/clock/latch. Both paths get tests
-(`*SessionResetTests`). When reviewing, walk a second campaign in one process and a
-load-with-same-ids explicitly.
+**Rule:** every singleton holding per-campaign state exposes `ResetForNewSession()`, and the reset
+runs before anything can read the state: in the constructor of a behavior that `SubModule.OnGameStart`
+builds with `new` in every campaign. `OnGameStart` precedes `LoadBehaviorData` and every campaign
+event, so a load's `SyncData` then restores its record over the reset, and a save without one stays
+reset. Pin the `new` with a source-text test (`WarOfTheRingWiringTests`): a container-singleton
+behavior is constructed once per process. Never reset persisted state from `OnSessionLaunched` or
+`OnNewGameCreated` (listeners run newest-first, so a behavior added later reads it first) or from
+`RegisterEvents` (on a load it runs after `LoadBehaviorData`). A transient cache that nothing reads
+before `OnSessionLaunched` may still reset there. `LoadFrom` additionally clears every transient
+cache/clock/latch. Both paths get tests (`*SessionResetTests`). When reviewing, walk a second
+campaign in one process and a load-with-same-ids explicitly.
 
 **Why:** `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 1. The singleton-service precedent
-(config stores) made process lifetime look safe; campaign data is a different animal.
+(config stores) made process lifetime look safe; campaign data is a different animal. The
+`OnSessionLaunched` reset this rule first prescribed ran after the momentum behavior had already
+read the stale War of the Ring phase (#764, `docs/reviews/rca-wotr-session-reset-2026-10-08.md`).
 
 ## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY — the runtime sibling of the config rule above)
 

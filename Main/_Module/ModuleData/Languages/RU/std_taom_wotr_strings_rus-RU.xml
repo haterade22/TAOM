@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Разбивка по импульсу" />
     <string id="taom_wotr_total_stats_header" text="Общая статистика" />
     <string id="taom_wotr_total" text="Всего: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Выиграно битв" />
     <string id="taom_wotr_villages_raided" text="Разграблено деревень" />
     <string id="taom_wotr_fiefs_captured" text="Захвачено владений" />

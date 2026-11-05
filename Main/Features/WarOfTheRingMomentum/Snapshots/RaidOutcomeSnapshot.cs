@@ -11,6 +11,13 @@ public class RaidOutcomeSnapshot
 {
     public bool AttackerVictory { get; set; }
 
+    /// <summary>
+    /// True when the raid looted the village. v1.4.8 RaidEventComponent.OnBeforeFinalize sets Looted or
+    /// Normal before it raises RaidCompleted and reports the attacker as winner for a won militia fight
+    /// too (RaidEventComponent.cs:128-138), so AttackerVictory alone counted a resisted raid twice (#774).
+    /// </summary>
+    public bool VillageLooted { get; set; }
+
     /// <summary>Raider leader party MapFaction StringId; null when unresolvable.</summary>
     public string AttackerFactionId { get; set; }
 

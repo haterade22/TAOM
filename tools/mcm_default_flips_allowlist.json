@@ -1,0 +1,22 @@
+{
+  "TaomSettings.CultureConversionHoldDays": {
+    "from": "45",
+    "to": "1",
+    "reason": "b8a7c9cb9 (#333, first tag v2.0.13) moved the default 45 to 1; 45 was only ever saved on v2.0.7 to v2.0.10. A rename would convert every pending fief at once at the next check, so those few saved values are left alone."
+  },
+  "TaomSettings.EnableEnlistmentDiagnostics": {
+    "from": "false",
+    "to": "true",
+    "reason": "39b0b3ce7 (v2.0.24) turned the enlistment trace on temporarily; a value saved on v2.0.20 to v2.0.22 keeps it off, which is the intended shipping state. WP123 ports 890fe29de, which renames the setting and ships it off again: delete this entry then, the gate reports it as stale."
+  },
+  "TaomSettings.EnableNativeSkinFixes": {
+    "from": "true",
+    "to": "false",
+    "reason": "NativeSkinFixes is parked and disabled at the wiring level: the install branch in SubModule.OnSubModuleLoad is commented out, so nothing reads the setting and a value saved on v2.0.9 or v2.0.10 does nothing."
+  },
+  "TaomSettings.EnableShieldPenetration": {
+    "from": "true",
+    "to": "false",
+    "reason": "ae57fba08 (#320, v2.0.24) turned javelin shield penetration off with empty grant lists in combat_mechanics_config.json (shieldPenetration.weaponClasses and itemIds are []), so a saved true grants nothing."
+  }
+}

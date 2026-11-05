@@ -175,10 +175,10 @@ need a full application restart**. The MCM knobs below do not — they are re-re
 | Property | Range | Default | JSON field it overrides |
 |----------|-------|---------|-------------------------|
 | `EnableFieldCommission` | bool | `true` | `enabled` |
-| `FieldCommissionMaxOffersPerBattle` | 1–20 | `2` | `maxOffersPerBattle` |
+| `FieldCommissionOffersPerBattle` | 1 to 20 | `2` | `maxOffersPerBattle` |
 | `FieldCommissionRatioThreshold` | 0.1–3.0 | `1.3` | `ratioThreshold` |
 | `FieldCommissionMeritPerKill` | 1–10 | `1` | `meritPerKill` |
-| `FieldCommissionMeritThreshold` | 1–100 | `32` | `meritThreshold` |
+| `FieldCommissionMeritToPromote` | 1 to 100 | `32` | `meritThreshold` |
 | `FieldCommissionRetainerAllowance` | 0–10 | `0` | `retainerAllowance` |
 
 `skillPointsPerLevel` and `allowedRaceNames` stay JSON-only (advanced / pack-author territory).

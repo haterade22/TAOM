@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Schwungaufschlüsselung" />
     <string id="taom_wotr_total_stats_header" text="Gesamtstatistiken" />
     <string id="taom_wotr_total" text="Gesamt: {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Gewonnene Schlachten" />
     <string id="taom_wotr_villages_raided" text="Geplünderte Dörfer" />
     <string id="taom_wotr_fiefs_captured" text="Eroberte Lehen" />

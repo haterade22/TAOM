@@ -20,16 +20,13 @@ namespace TAOM.Adapters;
 public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
 {
     private readonly IPlayerContextAdapter _playerContext;
-    private readonly Features.Enlistment.IEnlistmentStateQuery _enlistment;
     private readonly IModLogger _logger;
 
     public WarEventSnapshotAdapter(
         IPlayerContextAdapter playerContext,
-        Features.Enlistment.IEnlistmentStateQuery enlistment,
         IModLogger logger)
     {
         _playerContext = playerContext;
-        _enlistment = enlistment;
         _logger = logger;
     }
 
@@ -85,16 +82,8 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
             return new SiegeOutcomeSnapshot
             {
                 CaptorFactionId = faction?.StringId,
-                // Same participation test as FromMapEvent above, which this was inconsistent with:
-                // sieges counted ONLY when the player's own party was the captor, so taking a fief
-                // inside an ally's army — the normal way a vassal captures anything — recorded no
-                // player event at all. That gap is the War of the Ring victory requirement quietly
-                // failing to advance, and it predates multiplayer (field report 2026-08-03 §9.4
-                // found the multiplayer half of the same shortfall). The enlisted clause covers the
-                // kingdom-less freelancer assaulting inside the commander's column — without it the
-                // WotR victory gate starves for the whole service term (#375 attribution audit, HIGH).
                 PlayerInvolved = IsPlayerRelated(capturerParty?.Party, _playerContext.GetPlayerKingdomId())
-                                 || (_enlistment.IsEnlisted && _enlistment.IsCommanderParty(capturerParty?.StringId)),
+                                 || PlayerFought(capturerParty, Campaign.Current?.MainParty?.Party),
                 CaptorFactionName = faction?.Name?.ToString() ?? "",
                 CaptorLeaderName = capturerParty?.LeaderHero?.Name?.ToString() ?? "",
                 SettlementName = settlement?.Name?.ToString() ?? "",
@@ -107,6 +96,19 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
         }
     }
 
+    // #1015: the capturer is the leader of the side that won (AttackerSide.LeaderParty after an assault,
+    // DefenderSide.LeaderParty after a failed sally-out), so credit follows the player's own party being
+    // on that side, whatever it is led by. The sides are still populated here: v1.4.8 raises
+    // SiegeCompleted inside MapEvent.FinalizeEventAux (MapEvent.cs:2093 and :2115) before
+    // MapEventSide.HandleMapEventEnd clears each party's side (MapEvent.cs:2158, MapEventSide.cs:434).
+    // 1.4.x has no co-op player-control query, so the player's party is the local main party, passed in
+    // so the rule is testable without a campaign (MobileParty.IsMainParty throws without one).
+    internal static bool PlayerFought(MobileParty capturerParty, PartyBase player)
+    {
+        var playerSide = player?.MapEventSide;
+        return playerSide != null && playerSide == capturerParty?.Party?.MapEventSide;
+    }
+
     public RaidOutcomeSnapshot FromRaid(BattleSideEnum winnerSide, RaidEventComponent component)
     {
         try
@@ -116,6 +118,7 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
             return new RaidOutcomeSnapshot
             {
                 AttackerVictory = winnerSide == BattleSideEnum.Attacker,
+                VillageLooted = component?.MapEventSettlement?.Village?.VillageState == Village.VillageStates.Looted,
                 AttackerFactionId = faction?.StringId,
                 AttackerPartyName = attackerParty?.Name?.ToString() ?? "",
                 AttackerFactionName = faction?.Name?.ToString() ?? "",

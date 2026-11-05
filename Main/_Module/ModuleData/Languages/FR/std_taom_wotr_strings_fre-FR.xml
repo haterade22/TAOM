@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="Détail de l'élan" />
     <string id="taom_wotr_total_stats_header" text="Statistiques totales" />
     <string id="taom_wotr_total" text="Total : {MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="Batailles gagnées" />
     <string id="taom_wotr_villages_raided" text="Villages pillés" />
     <string id="taom_wotr_fiefs_captured" text="Fiefs capturés" />

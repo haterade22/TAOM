@@ -380,6 +380,7 @@ public class MomentumEventServiceTests
         var raid = new RaidOutcomeSnapshot
         {
             AttackerVictory = true,
+            VillageLooted = true,
             AttackerFactionId = "isengard",
             AttackerPartyName = "Uruk warband",
             AttackerFactionName = "Isengard",
@@ -390,6 +391,18 @@ public class MomentumEventServiceTests
 
         Assert.AreEqual(20000, _state.Evil.SideMomentum);
         Assert.AreEqual(1, _state.Evil.TotalStats.TotalVillagesRaided);
+    }
+
+    // #774: the engine reports a won militia fight as a raid win before the village is looted.
+    [TestMethod]
+    public void ProcessRaid_AttackerWonTheMilitiaFightButDidNotLoot_NoChange()
+    {
+        var raid = new RaidOutcomeSnapshot { AttackerVictory = true, VillageLooted = false, AttackerFactionId = "isengard" };
+
+        _sut.ProcessRaid(raid, _state, 300.0);
+
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+        Assert.AreEqual(0, _state.Evil.TotalStats.TotalVillagesRaided);
     }
 
     [TestMethod]
@@ -521,5 +534,34 @@ public class MomentumEventServiceTests
         _sut.ProcessDailyTick(_state, 100.0);
 
         Assert.AreEqual(0, _state.Free.SideMomentum);
+    }
+
+    // ---- WOTR-08: a realm strength that is not a finite positive number scores nothing ----
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(-5f)]
+    public void ProcessBattle_LoserStrengthNotFinitePositive_ScoresNoBattleMomentum(float strength)
+    {
+        _strengthAdapter.GetTotalStrength(Arg.Any<string>()).Returns(strength);
+
+        _sut.ProcessBattle(ValidBattle(), _state, 100.0);
+
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+    }
+
+    [TestMethod]
+    public void ProcessDailyTick_SideStrengthNaN_AwardsNoStrengthMomentum()
+    {
+        _config.Events.MaxStrengthMomentum = 100;
+        _strengthAdapter.GetTotalStrength("empire_w").Returns(float.NaN);
+        _strengthAdapter.GetTotalStrength("vlandia").Returns(1000f);
+        _strengthAdapter.GetTotalStrength("empire_s").Returns(1000f);
+        _strengthAdapter.GetTotalStrength("isengard").Returns(1000f);
+
+        _sut.ProcessDailyTick(_state, 100.0);
+
+        Assert.AreEqual(0, _state.Free.SideMomentum);
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
     }
 }

@@ -1714,8 +1714,19 @@ silently pays them nothing. `SpecialResources` hit this before enlistment existe
 `MapEvent.PlayerSide == WinningSide` participation. The #375 audit swept every remaining
 `CareerPassiveHero.ResolveId` / `LeaderHero == MainHero` site and fixed three more: enlisted
 sieges now advance the War of the Ring victory gate (`WarEventSnapshotAdapter.FromSiege`), and
-commander-party captures credit the `DefeatEnemyLords` and `SettlementsCaptured` career-quest
-objectives. **Before adding any new leader-keyed reward, ask what it does during someone else's
+captures credit the `DefeatEnemyLords` and `SettlementsCaptured` career-quest objectives.
+Since #1015 the career quest credits side membership for every player, enlisted or not;
+momentum adds the side rule to its kingdom test, so a vassal is still credited for any capture by
+his own realm. The capturer is
+the leader of the side that won (`AttackerSide.LeaderParty` after an assault,
+`DefenderSide.LeaderParty` after a failed sally-out), so a soldier whose commander fights inside
+another lord's army is credited, and one who sat out a commander-led siege is not. A prisoner
+is drawn by weighted chance among the winning parties, so `DefeatEnemyLords` credits the player
+when his party is on the captor's side of that map event, and falls back to "the captor is the
+player or the commander's party" for a capture outside a battle. The sides are still populated
+when these fire (v1.4.8 raises `SiegeCompleted` inside `MapEvent.FinalizeEventAux`, `MapEvent.cs:2093` and `:2115`, before `MapEventSide.HandleMapEventEnd` clears them at `:2158`). `KingdomManager.SiegeCompleted` runs before the momentum
+listener and none of its steps clears the sides, so a future listener that moves the player out
+of the event would zero the credit. **Before adding any new leader-keyed reward, ask what it does during someone else's
 siege.** Consumers read enlisted state through `IEnlistmentStateQuery` (cross-feature seam;
 FieldCommission and the Patch36 F6 gate use it too).
 

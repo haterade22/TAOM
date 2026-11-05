@@ -52,7 +52,8 @@ public class MomentumSideData
 
     public void AddEvent(MomentumEvent momentumEvent)
     {
-        if (momentumEvent == null) return;
+        // WOTR-08: config event values are validated to [0, MaxIntValue]; a negative value can only come from a poisoned cast.
+        if (momentumEvent == null || momentumEvent.Value < 0) return;
 
         var queue = _events[momentumEvent.Type];
         // LOTRAOM parity: trim at cap withOUT subtracting the trimmed value — its

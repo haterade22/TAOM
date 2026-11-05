@@ -44,7 +44,7 @@ public static class AiPartySizeCheats
                 return "AI party scaling is disabled in MCM, so the relief never runs for any party. "
                      + "Nothing here would tell you about the relief itself.";
 
-            float relief = settings?.AiFoodConsumptionRelief ?? AiPartySizeService.DefaultFoodRelief;
+            float relief = settings?.AiPartyFoodRelief ?? AiPartySizeService.DefaultFoodRelief;
             var rows = Collect();
 
             return AiFoodReliefReport.Summarize(rows, relief)

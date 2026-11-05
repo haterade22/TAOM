@@ -21,7 +21,7 @@ public class MomentumWarState
     public WarOutcome Victor { get; private set; } = WarOutcome.None;
 
     /// <summary>Signed momentum: positive = Free ahead, negative = Evil ahead.</summary>
-    public float InternalMomentum => (Free.SideMomentum - Evil.SideMomentum) / (float)MomentumScale;
+    public float InternalMomentum => ((long)Free.SideMomentum - Evil.SideMomentum) / (float)MomentumScale;
 
     public MomentumSideData GetSide(MomentumSide side)
     {

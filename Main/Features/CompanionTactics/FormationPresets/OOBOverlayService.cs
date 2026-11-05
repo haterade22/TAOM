@@ -67,7 +67,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
     {
         EnsureInitialized();
         if (_inertMode || handler == null) return;
-        if (!_settings.EnableFormationPresets)
+        if (!_settings.EnableOobFormationPresets)
         {
             // Toggle flipped to off mid-mission — guarantee detach.
             if (_wasActive) Detach();
