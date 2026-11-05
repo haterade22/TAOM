@@ -1035,6 +1035,16 @@ MCM toggle "Enable Battle Freeze Sampler", default ON, independent of the master
 
 Tick-handshake recovery (port decision D17). `Mission.OnTick` clears `tickCompleted` (`:3740`), runs every `OnMissionTick` and only then starts the agent tick (`:3768-3775`); only the agent tick sets the flag again (`:3613`) and the next frame's `OnPreTick` spins in `WaitTickCompletion` (`:3585-3591`). Every catcher above that window swallows on 1.4.x, so one exception out of an `OnMissionTick` froze the game. The prefix records whether the flag was set at entry (`__state`); the launch finalizer marks the agent-tick launch; the `OnTick` finalizer sets the flag back only when the call threw, began with the flag set, launched no agent tick and left it false, then logs a throttled `[TickRecovery]` ERROR. The exception still reaches Patch37. `MissionTickRecoveryWiring.VerifyAndArm`, called right after `TryPatchCategory` in the game-init batch (after Patch91, once per process), arms only when both patches are in `Harmony.GetPatchInfo` and the field resolved; otherwise it logs `[TickRecovery] off` and stays inert. PatchShield wraps both targets from a process's second game start and runs after the recovery. Feature: [mission-tick-guard.md](../features/mission-tick-guard.md). **ACTIVE** (ported 2026-11-04).
 
+## Patch110_BardTownGuard
+
+**Target:** `private bool SandBox.CampaignBehaviors.TavernEmployeesCampaignBehavior.conversation_talk_bard_on_condition()` (v1.4.8 `TavernEmployeesCampaignBehavior.cs:641-665`, no parameters, resolved by name with `AccessTools.Method`), one transpiler class `TavernEmployeesCampaignBehavior_BardCondition_BardTownGuard_Patch` in `Main/Features/BardTownGuard/Hooks/`, category `Patch110_BardTownGuard`, declared by `BardTownGuardModule` and applied at GameInit by the feature-module runner.
+
+Vanilla (`:650-651`) reads `.Name` of `Settlement.All.GetRandomElementWithPredicate(town of the same culture, not the current one)`, which is null in a town whose culture owns no other town, so the condition throws. The transpiler rewrites that one call in place to `BardTownPickHook.PickTown` (same signature): the engine's pick first, then the same engine pick over every other town, else the current settlement. Exactly one engine call must match; any other count returns the original stream with one warning. The lyrics are not touched. `BardTownGuardBindingTests` (`BindingVerification`) pin the site against the installed SandBox.dll and the JIT-compiled replacement.
+
+**Callers and thread:** the condition of the `talk_bard` start line (`:463`), main thread; only a musician reaches the pick.
+
+**Co-op.** A transpiler with no bool prefix, so `CoopVetoClassificationTests` needs no entry: the condition only builds conversation text and mutates no campaign state. Feature: [bard-town-guard.md](../features/bard-town-guard.md). #824 (ported 2026-11-04 from 1.5.x eed06b9c7). **ACTIVE**, not yet checked in game.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)
