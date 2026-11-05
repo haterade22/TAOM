@@ -69,6 +69,10 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-075542 | wall wear | Dale v Gondor | 2,834 / 2,721 | 4 / 1 | 24,550 / 36,511 | Gondor 1.0 | 4x, 45 minutes, engine changeset 125270. No keep touched. |
 | 20261104-080805 | wall wear | Erebor v Gundabad | 2,187 / 5,788 | 1 / 6 | 40,502 / 19,840 | Erebor 1.1 | 4x, 45 minutes. All 6 towers down by 1,641 s, then 80 damage to the keep in 18 minutes. Check 12 failed. |
 | 20261104-082014 | wall wear | Rivendell v Mordor | 436 / 4,992 | 3 / 7 | 75,788 / 29,099 | Rivendell 2.6 | 4x. Rivendell won at 2,375 s, 39.6 minutes. 13 hero blows did 13,821 of the keep's damage. |
+| 20261104-174534 | `dec65baec` | Gondor v Mordor | 476 / 1,098 | 0 / 0 | 8 / 8,964 | not read | Tower and soldier control check, 690 s. Speed changes make it no balance sample. |
+| 20261104-175254 | `dec65baec` | Dale v Gondor | 2,764 / 2,742 | 3 / 0 | 20,752 / 27,365 | Dale 0.95, Gondor 0.97 | 4x, 45 minutes, no winner. No keep touched. |
+| 20261104-180503 | `dec65baec` | Erebor v Gundabad | 1,490 / 3,942 | 3 / 7 | 56,724 / 27,813 | Erebor 1.14, Gundabad 0.83 | 4x. Erebor won at 2,350 s, 39.2 minutes. 425 blows did 12,631 to the keep. |
+| 20261104-181557 | `dec65baec` | Rivendell v Mordor | 456 / 4,622 | 4 / 7 | 77,614 / 45,525 | Rivendell 2.45, Mordor 0.29 | 4x. Rivendell won at 2,396 s, 39.9 minutes. |
 
 ## Findings and changes
 
@@ -202,13 +206,13 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 A check of free waves also shows how far the hordes stand apart: by level and count per minute, Mordor scores 414 and Gundabad 396, and most factions 90 to 165. Dol Guldur's 105 is near its peers, so its waves alone do not explain its weak fights.
 
-### Towers with no bowmen (this change)
+### Towers with no bowmen
 
 **Why:** Mike, 2026-11-04: archers aim at the invulnerable bowmen on a tower, which wastes their time. Native target scans do not test invulnerability, so his report fits the code. The size is smaller than it looks in play: over the 20 newest reports, 1,376 missiles reached a bowman against about 108,000 other registered missile hits (1.3%), and 12 of the 20 had none. The reports cannot count shots aimed at a bowman. Melee blows on bowmen are 0 in every report since 2026-11-02.
 
 **Changed:** a hidden owner on a neutral team fires each tower's volley, and every third volley leads with a rock. Starting values, unmeasured: thrust 30, every third volley. Tower shots no longer wear shields, and a tower arrow that hits its own side registers a blow of 0 damage.
 
-**Result: not measured.** Read in the first run: `GunnerBlowsRanged` near 0, check 11 still in range, no own-side damage, kills per tower per minute, and whether a person sees the rock.
+**Result, four matches on `dec65baec`:** no crash and no FAIL row. No missile or blow reached a hidden owner in any of them, and all 12 owners held their spots. In the three long matches the towers launched 8,619 missiles and 739 hits were seen, 8.6%, against 9.2% in the 20 matches before, so a volley hits about as often. Check 10 passed on own towers. **Still not measured:** whether a person sees and hears the rock, what its hits do, and own-side unit damage directly.
 
 ### Lost lanes
 
@@ -216,12 +220,12 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Changed:** a lane whose towers have all fallen starts no new free wave for its owner (`TowerChain.LaneLost`, `WaveScheduler.Tick`). A free wave that already started still spawns its remaining units, and a bought pack still comes, so a comeback stays possible. The lane's timer keeps running, so a free wave could start again only if the lane held a standing tower, which no rule gives back today.
 
-**Result: not measured.** Four matches of up to 45 minutes at 4x were queued to measure it: Dale v Gondor, Erebor v Gundabad, Rivendell v Mordor and Harad v Rohan. They have not run, because Mike asked for the push first on 2026-11-04, and he plays next. Read those four against the 30-minute target before tuning the wear numbers again.
+**Result, three matches of 45 minutes at 4x:** the rule does what it was for. Erebor v Gundabad stalled before, with all six towers down and 80 damage to the keep in 18 minutes. Now the last lane cleared at 2,030 s and the keep fell at 2,350 s, 320 s later, to 425 blows with 2,641 unit-seconds of contact, so attackers do reach it. Rivendell v Mordor cleared its last lane at 2,216 s and the keep fell at 2,396 s. Dale v Gondor still has no winner at 45 minutes: East kept all its towers and West lost 3. Harad v Rohan did not run. Both wins came at about 40 minutes, so the target of 30 is not met.
 
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.
-- **Reaching the keep:** see "Wall wear" and "Lost lanes" above. This is what limits match length, and the lost lane rule has not been measured against it.
+- **Reaching the keep:** see "Wall wear" and "Lost lanes" above. Attackers now reach a keep once its lanes clear. What limits match length now is how late the first towers fall, at about 25 minutes in those wins.
 - **Check 8 on Rivendell's middle lane:** it failed in `193518` and `011218`, both times with a held Mordor lane 1 in the fire of `tower_west_1_0`, and the lane's front stood closer than its hold point (mean 54 m, hold point 82.5 m). The cause is not known.
 - **Check 12, a raging warg's return:** `20261104-002531` was the first match of these to see a rage at all, and that rider was not back in its formation within 60 mission seconds. One sample at 4x.
 - **Harad and creature calls:** Harad lost 3 towers and took none against Easterlings. Creature calls return little of their gold in every faction that has them (0.14 to 0.28), though their kills per body are the highest of any role.
