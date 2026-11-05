@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using TaleWorlds.Library;
 using TAOM.Features.DevConsole;
+using TAOM.Core.Persistence;
 
 namespace TAOM.Features.WarOfTheRingMomentum.Cheats;
 
@@ -13,7 +14,7 @@ namespace TAOM.Features.WarOfTheRingMomentum.Cheats;
 /// Why it exists: `ArchiveSerializer.SerializeEntry` writes each archive entry's length as
 /// `(short)Data.Length`, so any single SyncData string over the int16 ceiling is written with a wrong
 /// length and corrupts the save AT WRITE TIME — unloadable next launch.
-/// <see cref="MomentumSyncChunker"/> keeps every chunk under the cap, but verifying that today costs
+/// <see cref="SyncDataChunker"/> keeps every chunk under the cap, but verifying that today costs
 /// hours: a campaign has to reach roughly day 50 with active wars before the log crosses the
 /// threshold, and the failure only shows on the next load. This reads the same number on demand.
 ///
@@ -41,7 +42,7 @@ public static class MomentumCheats
             // the save serialization ever gained settings, and this command would then cheerfully
             // report headroom for a payload shape the save no longer writes.
             var payload = WarOfTheRingMomentumBehavior.BuildSavePayload(store);
-            var chunks = MomentumSyncChunker.Split(payload);
+            var chunks = SyncDataChunker.Split(payload);
 
             var report = FormatPayloadReport(state?.Count ?? 0, payload, chunks);
 
@@ -59,28 +60,28 @@ public static class MomentumCheats
         payload = payload ?? string.Empty;
         chunks = chunks ?? new List<string>();
 
-        var totalBytes = MomentumSyncChunker.Utf8ByteLength(payload);
+        var totalBytes = SyncDataChunker.Utf8ByteLength(payload);
         var largestBytes = 0;
         var offendingChunk = -1;
 
         for (var i = 0; i < chunks.Count; i++)
         {
-            var bytes = MomentumSyncChunker.Utf8ByteLength(chunks[i] ?? string.Empty);
+            var bytes = SyncDataChunker.Utf8ByteLength(chunks[i] ?? string.Empty);
             if (bytes > largestBytes) largestBytes = bytes;
-            if (offendingChunk < 0 && bytes > MomentumSyncChunker.EngineEntryByteLimit) offendingChunk = i + 1;
+            if (offendingChunk < 0 && bytes > SyncDataChunker.EngineEntryByteLimit) offendingChunk = i + 1;
         }
 
         var sb = new StringBuilder();
         sb.AppendLine($"[Momentum] payload: {keyCount} keys, {payload.Length:N0} chars, {totalBytes:N0} bytes");
         sb.AppendLine(
-            $"[Momentum] chunks: {chunks.Count} (cap {MomentumSyncChunker.MaxChunkChars:N0} chars) | "
-            + $"largest {largestBytes:N0} bytes | engine limit {MomentumSyncChunker.EngineEntryByteLimit:N0} | "
-            + $"headroom {MomentumSyncChunker.EngineEntryByteLimit - largestBytes:N0} bytes");
+            $"[Momentum] chunks: {chunks.Count} (cap {SyncDataChunker.MaxChunkChars:N0} chars) | "
+            + $"largest {largestBytes:N0} bytes | engine limit {SyncDataChunker.EngineEntryByteLimit:N0} | "
+            + $"headroom {SyncDataChunker.EngineEntryByteLimit - largestBytes:N0} bytes");
 
         if (offendingChunk > 0)
             sb.Append(
                 $"[Momentum] status: WOULD CORRUPT — chunk {offendingChunk} is {largestBytes:N0} bytes "
-                + $"(> {MomentumSyncChunker.EngineEntryByteLimit:N0}). Saving now would write a truncated "
+                + $"(> {SyncDataChunker.EngineEntryByteLimit:N0}). Saving now would write a truncated "
                 + "int16 length and produce an unloadable save.");
         else
             sb.Append("[Momentum] status: OK (every chunk is under the engine entry limit)");
@@ -98,7 +99,7 @@ public static class MomentumCheats
             return "[Momentum] no keys in the momentum state.";
 
         var ranked = state
-            .Select(kv => new { kv.Key, Bytes = MomentumSyncChunker.Utf8ByteLength(kv.Value ?? string.Empty) })
+            .Select(kv => new { kv.Key, Bytes = SyncDataChunker.Utf8ByteLength(kv.Value ?? string.Empty) })
             .OrderByDescending(x => x.Bytes)
             .ThenBy(x => x.Key)
             .ToList();

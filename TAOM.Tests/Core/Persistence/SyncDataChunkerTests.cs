@@ -6,10 +6,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Newtonsoft.Json;
 using TAOM.Core.Logging;
+using TAOM.Core.Persistence;
 using TAOM.Features.WarOfTheRingMomentum;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
-namespace TAOM.Tests.Features.WarOfTheRingMomentum;
+namespace TAOM.Tests.Core.Persistence;
 
 /// <summary>
 /// Regression guard for the v2.0.9 save-corruption bug: the momentum log serialized as a
@@ -18,7 +19,7 @@ namespace TAOM.Tests.Features.WarOfTheRingMomentum;
 /// The chunker splits the JSON so every synced string stays under the limit.
 /// </summary>
 [TestClass]
-public class MomentumSyncChunkerTests
+public class SyncDataChunkerTests
 {
     // ---- Split/Join round trip ----
 
@@ -26,28 +27,28 @@ public class MomentumSyncChunkerTests
     public void SplitJoin_ArbitraryString_RoundTrips()
     {
         var original = string.Concat(Enumerable.Range(0, 55000).Select(i => (char)('a' + i % 26)));
-        var chunks = MomentumSyncChunker.Split(original);
-        Assert.AreEqual(original, MomentumSyncChunker.Join(chunks));
+        var chunks = SyncDataChunker.Split(original);
+        Assert.AreEqual(original, SyncDataChunker.Join(chunks));
     }
 
     [TestMethod]
     public void Split_EmptyOrNull_ReturnsNoChunks()
     {
-        Assert.AreEqual(0, MomentumSyncChunker.Split("").Count);
-        Assert.AreEqual(0, MomentumSyncChunker.Split(null).Count);
+        Assert.AreEqual(0, SyncDataChunker.Split("").Count);
+        Assert.AreEqual(0, SyncDataChunker.Split(null).Count);
     }
 
     [TestMethod]
     public void Join_EmptyList_ReturnsEmptyString()
     {
-        Assert.AreEqual(string.Empty, MomentumSyncChunker.Join(new List<string>()));
-        Assert.AreEqual(string.Empty, MomentumSyncChunker.Join(null));
+        Assert.AreEqual(string.Empty, SyncDataChunker.Join(new List<string>()));
+        Assert.AreEqual(string.Empty, SyncDataChunker.Join(null));
     }
 
     [TestMethod]
     public void Split_StringUnderCap_ReturnsSingleChunk()
     {
-        var chunks = MomentumSyncChunker.Split("short payload");
+        var chunks = SyncDataChunker.Split("short payload");
         Assert.AreEqual(1, chunks.Count);
         Assert.AreEqual("short payload", chunks[0]);
     }
@@ -56,9 +57,9 @@ public class MomentumSyncChunkerTests
     public void Split_EveryChunk_StaysUnderEngineByteLimit()
     {
         var original = string.Concat(Enumerable.Range(0, 100000).Select(i => (char)('a' + i % 26)));
-        foreach (var chunk in MomentumSyncChunker.Split(original))
-            Assert.IsTrue(MomentumSyncChunker.Utf8ByteLength(chunk) <= MomentumSyncChunker.EngineEntryByteLimit,
-                $"chunk was {MomentumSyncChunker.Utf8ByteLength(chunk)} bytes — exceeds the engine entry limit");
+        foreach (var chunk in SyncDataChunker.Split(original))
+            Assert.IsTrue(SyncDataChunker.Utf8ByteLength(chunk) <= SyncDataChunker.EngineEntryByteLimit,
+                $"chunk was {SyncDataChunker.Utf8ByteLength(chunk)} bytes — exceeds the engine entry limit");
     }
 
     [TestMethod]
@@ -67,10 +68,10 @@ public class MomentumSyncChunkerTests
         // Worst-case-ish: 3-byte UTF-8 chars (each 1 UTF-16 code unit). MaxChunkChars is sized
         // so even this can't exceed the byte limit.
         var original = new string('中', 40000);   // CJK, 3 bytes each in UTF-8
-        var chunks = MomentumSyncChunker.Split(original);
-        Assert.AreEqual(original, MomentumSyncChunker.Join(chunks));
+        var chunks = SyncDataChunker.Split(original);
+        Assert.AreEqual(original, SyncDataChunker.Join(chunks));
         foreach (var chunk in chunks)
-            Assert.IsTrue(MomentumSyncChunker.Utf8ByteLength(chunk) <= MomentumSyncChunker.EngineEntryByteLimit);
+            Assert.IsTrue(SyncDataChunker.Utf8ByteLength(chunk) <= SyncDataChunker.EngineEntryByteLimit);
     }
 
     // ---- The actual corruption condition, end to end ----
@@ -94,18 +95,18 @@ public class MomentumSyncChunkerTests
         }
 
         var json = JsonConvert.SerializeObject(store.Serialize());
-        Assert.IsTrue(Encoding.UTF8.GetByteCount(json) > MomentumSyncChunker.EngineEntryByteLimit,
+        Assert.IsTrue(Encoding.UTF8.GetByteCount(json) > SyncDataChunker.EngineEntryByteLimit,
             "the realistic max log must exceed the engine limit as one string — that is the bug being guarded");
 
-        var chunks = MomentumSyncChunker.Split(json);
+        var chunks = SyncDataChunker.Split(json);
         Assert.IsTrue(chunks.Count > 1, "an over-limit payload must split into more than one chunk");
         foreach (var chunk in chunks)
-            Assert.IsTrue(MomentumSyncChunker.Utf8ByteLength(chunk) <= MomentumSyncChunker.EngineEntryByteLimit);
+            Assert.IsTrue(SyncDataChunker.Utf8ByteLength(chunk) <= SyncDataChunker.EngineEntryByteLimit);
 
         // And the split is lossless — the store round-trips through chunk-join.
         var rehydrated = new MomentumStateStore(Substitute.For<IModLogger>());
         rehydrated.Deserialize(JsonConvert.DeserializeObject<Dictionary<string, string>>(
-            MomentumSyncChunker.Join(chunks)));
+            SyncDataChunker.Join(chunks)));
         Assert.AreEqual(store.State.Free.SideMomentum, rehydrated.State.Free.SideMomentum);
         Assert.AreEqual(store.State.Evil.SideMomentum, rehydrated.State.Evil.SideMomentum);
     }
