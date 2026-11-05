@@ -20,7 +20,7 @@ stalled workflow journal is [`_audit/harvest.py`](_audit/harvest.py).
 | [002](002-nan-infinity-config-guards.md) | Reject NaN/Infinity in TroopWeight + Career-mutation config loaders | P1 | S | bug | — | DONE (2026-11-05: TroopWeight half bee07b487, mutation half e83ebbeee) |
 | [004](004-live-town-scene-crashes.md) | Fix 3 LIVE town-center scene crashes (Isengard / Helm's Deep / Calembel) | P1 | S (remap) / L (author) | data / crash | — | DONE (2026-06-13, applied to live module + backup) |
 | [005](005-security-hygiene.md) | Scrub vendored credential + pin MCP servers + close faction_map subprocess injection | P1 (scrub) / P2 | S | security | — | TODO (moved to WP137 Part E; the MCP pins to WP142) |
-| [003](003-hot-path-resolve-and-grid-caching.md) | Cache hot-path IoC/MCM resolves + fix 2s SpatialGrid staleness | P2 | S each | perf | — | TODO (moved to WP123 and WP124) |
+| [003](003-hot-path-resolve-and-grid-caching.md) | Cache hot-path IoC/MCM resolves + fix 2s SpatialGrid staleness | P2 | S each | perf | - | DONE: WP123 ported PERF-04, WP124 PERF-07; PERF-03 obsolete; PERF-01 not ported |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)
 

@@ -17,7 +17,7 @@ Diagnostics page, default off), the log also gets one line per patch group, the 
 game-start and game-initialization hooks, and the time of every campaign handler of those
 dispatches. What loads, and in what order, is unchanged.
 
-Refs: plan 040 (`plans/040-load-time-stamps.md`), #722.
+Refs: plan 040 (`plans/040-load-time-stamps.md` on the 1.5.x line), #722.
 
 ## Why This Exists
 

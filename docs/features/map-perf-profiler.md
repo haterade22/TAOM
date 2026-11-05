@@ -25,7 +25,7 @@ one `Invoke` of the tick event), `MapState.OnTick` (`MapState.cs:144`, whose `On
 
 - **Observation:** on the maintainer's desktop a new campaign ran at 7 to 8 fps in fast-forward while
   lords and villagers spawned in, with `Campaign.RealTick` averaging 20 ms per frame
-  (`docs/migration/v1.5.2-impact.md`, the "Time running" row of the v1.5.2 evidence table). RealTick
+  (`docs/migration/v1.5.2-impact.md` on the 1.5.x line, the "Time running" row of the v1.5.2 evidence table). RealTick
   explains about 20 of each frame's ~130 ms.
 - **The gap:** the `[MapLoad]` heartbeat ([map-load-diagnostics.md](map-load-diagnostics.md)) writes
   `fps` and `tickMs` (the mean `Campaign.RealTick` time) every 5 s; it cannot split the rest of the frame
@@ -364,7 +364,7 @@ Patch89) are patched for every player and keep the shield they had before this f
 off sees no change. `MapFrameProfilerBindingTests.ProfilerOnlyTargets_AreOnPatchShieldsExclusionList` and
 `SharedMapTargets_StayUnderPatchShield` walk the real targets. PatchShield writes one `not shielding ...` diag.log line
 per excluded method it skips. The per-target analysis of option A is in
-`docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md`.
+`docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md` on the 1.5.x line.
 
 PatchShield attaches a finalizer to every method patched at the time of a pass (pass 1 in the Dependencies module's
 `OnSubModuleLoad`, pass 2 at the end of every game initialisation). Patch89 applies in `OnSubModuleLoad`, so pass 2 of the

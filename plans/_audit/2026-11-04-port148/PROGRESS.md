@@ -48,6 +48,11 @@ plans. Anything newer than `4d1a9105a` is recorded in the README as not classifi
 The maintainer asked for execution to proceed overnight. WP101 runs on the `v2.0.26` Armory with a provisional data
 baseline; later WPs land on local `port148/overnight`. See D25 in `data/brief-workflow3-decisions.md`.
 
+## Overnight result (2026-11-05)
+
+Nineteen WPs merged on `port148/overnight`: 104 to 114, 117 to 120, 123 to 126 (108 PARTIAL). Trunk unmoved, nothing pushed, nothing run in
+the game. Per-WP results, deferred items and in-game checks: [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md). D25's holds still apply.
+
 ## State at the end of planning
 
 Planning is finished; execution starts with WP101. No plan has been executed: conflict lists come from simulation against

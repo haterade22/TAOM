@@ -314,7 +314,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **183 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 183 are in
-  `TaomSettings`. The 83 excluded (total minus relevant) are instrumentation, player-local inventory convenience,
+  `TaomSettings`. The 88 excluded (total minus relevant) are instrumentation, player-local inventory convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
