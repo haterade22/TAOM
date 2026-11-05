@@ -11,6 +11,12 @@ namespace TAOM.Dependencies;
 public static class EarlyLog
 {
     private static readonly ConcurrentQueue<(string Level, string Message, DateTime Time)> _buffer = new();
+
+    // Guards the hand-over. A writer's "no target yet, so enqueue" and DrainTo's "buffer empty, so publish
+    // the target" must not interleave: a line enqueued after the last dequeue but before the publish would
+    // sit in the buffer for the rest of the process. It is never held while a logger runs, so a logger that
+    // logs again (or triggers an AssemblyResolve that does) cannot deadlock on it.
+    private static readonly object _gate = new();
     private static Action<string, string>? _drainTarget;
 
     public static void Info(string message) => Write("INFO", message);
@@ -19,23 +25,38 @@ public static class EarlyLog
 
     private static void Write(string level, string message)
     {
-        if (_drainTarget != null)
+        Action<string, string>? target;
+        lock (_gate)
         {
-            _drainTarget(level, message);
-            return;
+            target = _drainTarget;
+            if (target == null)
+            {
+                _buffer.Enqueue((level, message, DateTime.Now));
+                return;
+            }
         }
-        _buffer.Enqueue((level, message, DateTime.Now));
+        target(level, message);
     }
 
     /// <summary>
     /// Called by Main's SubModule after FileLogger is created.
     /// Flushes all buffered messages and routes future calls directly to the logger.
+    /// A line logged while the flush runs queues behind the older ones, so the log keeps the order the
+    /// lines were written in and none is left behind.
     /// </summary>
     public static void DrainTo(Action<string, string> logger)
     {
-        _drainTarget = logger;
-        while (_buffer.TryDequeue(out var entry))
+        while (true)
         {
+            (string Level, string Message, DateTime Time) entry;
+            lock (_gate)
+            {
+                if (!_buffer.TryDequeue(out entry))
+                {
+                    _drainTarget = logger;
+                    return;
+                }
+            }
             logger(entry.Level, $"[buffered {entry.Time:HH:mm:ss}] {entry.Message}");
         }
     }
