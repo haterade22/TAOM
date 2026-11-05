@@ -311,3 +311,16 @@ problem. Rulings:
    naming a type this line deleted.
 3. `git grep PathReuseCache` over `TAOM.Tests` and `Main` should not gain a hit from this WP. The plan's Maintenance note about
    WP127 deleting that row is already satisfied.
+
+## D29: WP145 Parts A to D run now (2026-11-05)
+
+D27 rule 8 held WP145 whole. The plan's "Parts and their prerequisites" table lands each part independently, and the WPs named for
+Parts A, B, C and D are all merged, so that hold was too wide.
+
+1. **Run:** Parts A, B, C and D, one commit series on one branch. The plan's prechecks still gate each part: a failed precheck stops
+   that part, not the others.
+2. **Still held:** Part E (needs WP108 B4, WP138, WP143), Part F (WP116, WP138, WP143), and Part G (WP142, WP144's follow-ups and the
+   docs step need Parts B to F). Any Part G step is left out of this run.
+3. **Issue.** The issue Part A asks for does not exist and agents do not create issues, so Part A's bodies carry no `Refs` line and the
+   issue stays owed.
+4. **Commits newer than `4d1a9105a`** remain out of this plan's scope. They are classified separately.
