@@ -326,6 +326,7 @@ Written for a content author editing the XML without writing C#: attribute table
 - [modding/module-dependencies.md](modding/module-dependencies.md): the libraries module: Harmony, UIExtenderEx, MCM, and the version pairing that renders characters in bind pose when stale
 - [modding/items-armor.md](modding/items-armor.md): armour items: the ItemObject and ArmorComponent tables, cover flags, modifier groups, price
 - [reference/helmet-hair-beard-cover.md](reference/helmet-hair-beard-cover.md): what each helmet `hair_cover_type` and `beard_cover_type` value looks like, with pictures, and how to change one in the Armory
+- [reference/race-face-and-hand-morphs.md](reference/race-face-and-hand-morphs.md): race face and hand morph channels, the static face morph crash (divide the faulting address by 6 to name the mesh), read on v1.5.3 and v1.4.7
 - [modding/items-weapons-and-crafting.md](modding/items-weapons-and-crafting.md): crafted weapons, crafting pieces, weapon descriptions, and the first-match usage rule
 - [modding/items-shields.md](modding/items-shields.md): shields: grip, block arc, the offhand bone each grip requires, and the collision body
 - [modding/items-mounts-and-harness.md](modding/items-mounts-and-harness.md): the data side of a mount: Horse item, harness family_type, the Monster row, reskin vs bespoke

@@ -27,6 +27,14 @@ different bugs that looked like one:
   `sk_dwarf_underwear_female_a`) — no managed exception, therefore no crash bundle at all. Fixed
   separately (#403); gate: `python tools/validate_mesh_refs.py --no-rgl-log`.
 
+**Corrected 2026-11-04 (plan 144, from the 1.5.x line's decode of 2026-09-26):** the crash's faulting address
+(`0x24C`, 98 x 6) decodes to the static face morph over `sk_dwarf_bm_f1_head.eye`, a face part with no morph channels
+(#385); the underwear name was a second, real defect. What stopped the crashes was the 2026-08-11 stopgap
+(`dccbb9a3b`, on this line) that moved the adult woman onto the male base meshes (`sm_dwarf_basemesh_a1_*`); the
+laptop's installed Armory (2026-09-07) is in that state. The 1.5.x line restored her own meshes in the shared live
+Armory on 2026-09-26, which a 1.4.x release carries only if it pairs with a newer Armory (in-game check 4).
+[race-face-and-hand-morphs.md](../reference/race-face-and-hand-morphs.md).
+
 The data sweep that preceded the fix is worth not repeating: every `<NPCCharacter>` in the load order
 (5,166 across TAOM, TAOM_Map, SandBoxCore, SandBox, Native, LOTRLOME_Armory) carries a `culture=`
 attribute except two multiplayer-only entries; `as_dwarf_*` action sets are at 90/90 parity with

@@ -204,6 +204,12 @@ python tools/validate_mesh_refs.py --no-rgl-log
 Verified both ways on 2026-08-07: **red** on the pre-fix backup (`MISSING_MESH … skins.xml:1780`),
 **green** afterwards — 0 errors across the whole Armory ModuleData (items, crafting pieces, skins).
 
+**Correction (2026-11-04, plan 144): the `+0x58232C` crash (v1.4.7) with faulting address `0x24C` was not the
+underwear.** #385's decode reads `0x24C` as 98 x 6, a row of the static face morph over a mesh with no morph buffer,
+and 98 is the vertex count of `sk_dwarf_bm_f1_head.eye`. The underwear fix above stays. The 2026-08-11 stopgap
+(`dccbb9a3b`) moved the adult woman onto `sm_dwarf_basemesh_a1_*`, which is what stopped the crashes
+([race-face-and-hand-morphs.md](../race-face-and-hand-morphs.md)).
+
 ### Two dwarf-skin divergences from vanilla that are NOT defects
 
 Checked against `Native/ModuleData/skins.xml` on 2026-08-07 while validating the fix above. Both look
