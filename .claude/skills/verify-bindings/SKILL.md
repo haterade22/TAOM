@@ -36,6 +36,7 @@ The test classes under `TAOM.Tests/Migration/`:
 - `HarmonyPatchBindingTests`: every patch class resolved and bound the way Lib.Harmony 2.4.2 applies it (`HarmonyTargetResolver`: the attribute target on the declared type, or `TargetMethod`/`TargetMethods`; each prefix, postfix and finalizer parameter; a body to patch), plus the patches `ManualPatchApplicator` applies by hand.
 - `GameModelOverrideBindingTests` — every `Taom*Model` is registered in `SubModule.cs`, overrides ≥1 base virtual, and doesn't shadow a base virtual without `override`.
 - `ReflectionSiteBindingTests` — each catalogued auxiliary reflection member resolves.
+- `TranspilerSiteBindingTests`: the transpilers it lists, run over the installed engine's IL, still find their sites.
 
 ## Step 2 — Interpret a failure (do NOT just rerun)
 
@@ -50,6 +51,7 @@ A red gate is an environment gap or a real finding. `Assert.Inconclusive failed.
 | `Parameter "x" not found` / `injects field` / `Cannot get result from void method` / `no parameter at index` / `cannot assign` | a patch parameter no longer binds: the engine renamed a parameter or field, or changed the return type | read the original with `pwsh tools/taom-src.ps1 path <Type>` and fix the patch parameter |
 | `ManualPatchApplicator applies patch classes this gate never checks` | a new hand-applied patch | give the class a `TargetMethod()` or add a `ManualPatches` row in `HarmonyPatchBindingTests` |
 | target/member `did not resolve` / `not found` | engine renamed/moved/removed the member in this version | `/research` the new signature, update the patch / adapter / GameModel; if a reflection site, update both `reflection-sites.md` and the `[DataRow]` |
+| a `TranspilerSiteBindingTests` count is off | the engine IL moved under a fail-safe transpiler, so the feature silently stopped | read the new IL, re-anchor the transpiler, then set the count from the new site (cite its line) |
 | GameModel `never AddModel'd` | a `Taom*Model` compiles but isn't registered | add `campaignStarter.AddModel(new TaomXModel(...))` in `Main/SubModule.cs` |
 
 If the fix needs an unknown TaleWorlds signature, hand off to `/research` first. If it's a deeper "why did this break" question, use `/investigate`.

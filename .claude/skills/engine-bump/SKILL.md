@@ -88,7 +88,7 @@ NATIVE-internal; 1.4.8 moved 8 of 56 base-bin assemblies, 3 of those by build nu
 
 ## Phase 4 — Re-verify TAOM against the new engine
 
-1. **`/verify-bindings`** — every Harmony patch / GameModel / reflection site. Two things about the
+1. **`/verify-bindings`**: every Harmony patch / GameModel / reflection site / transpiler site (`TranspilerSiteBindingTests`). Two things about the
    snapshot half (`pwsh tools/snapshot_api_surface.ps1`): it reads `TAOM.dll` out of
    `TAOM.Tests/bin/{Debug,Release}/net472` and **throws if TAOM.Tests has not been built**, so build
    first; and `-Check` reports **DRIFT against the committed files by design** — the generator emits

@@ -41,6 +41,7 @@ Runs under `dotnet test` — no game launch. TAOM.Tests references the installed
 | `HarmonyPatchBindingTests` | Every patch class, resolved and bound the way Lib.Harmony 2.4.2 applies it (`HarmonyTargetResolver`: declared type only, each patch parameter, a body to patch), plus the patches `ManualPatchApplicator` applies by hand (count: the `patch-targets.md` header). | one assertion accumulating all failures |
 | `GameModelOverrideBindingTests` | Every GameModel (count: the `gamemodel-bases.md` header): registered with `AddModel`, overrides at least one base virtual, no shadow without `override`. | 2 tests |
 | `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members from `reflection-sites.md` Category B, one `[DataRow]` each. | one `[DataRow]` per site |
+| `TranspilerSiteBindingTests` | The transpilers it lists, run over the installed IL, still find their sites (the disabled Patch15's site is still absent). | one test per listed transpiler |
 
 ```bash
 dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
