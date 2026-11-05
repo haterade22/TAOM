@@ -293,6 +293,7 @@ Three consequences that are easy to get backwards:
 
 - **Neither packages folder matters on a dev install.** The editor reads `Assets/`, and so does the
   game. Deleting `AssetPackages` locally costs nothing; Publish Module regenerates it.
+  The corollary: a hand-written package dropped into `AssetPackages/` is not read on a dev install that has a loose `Assets/` tree, and Publish Module does not carry it into a release unless it is in the module's assets. Whether TAOM's four MithrilForge camp props render on the 1.4.8 build is an open in-game check ([tpac-static-prop-authoring.md](tpac-static-prop-authoring.md)).
 - **A creature with no entry in either packages folder is in its normal pre-release state, not
   broken.** On 2026-08-29 an invisible warg was misattributed to exactly this, on a correlation
   across six creatures whose failing side had two samples and one of them, the war ram, had never
