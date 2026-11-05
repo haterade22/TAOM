@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.BattleLoadDiagnostics;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.BattleLoadDiagnostics;
 
@@ -104,7 +105,7 @@ public class ExitStallDisarmTests
         // two closers at the source level: SubModule.OnGameEnd (quit-to-menu; Game.Destroy's
         // only menu-path caller is MBInitialScreenBase.OnInitialize) and the TryLoadSave
         // prefix (quit-to-load; precedes any teardown of the old Game by construction).
-        var subModule = File.ReadAllText(FromRepoRoot("Main/SubModule.cs"));
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(subModule, "SandBoxSaveHelper_TryLoadSave_DisarmPatch.Initialize",
             "The quit-to-load disarm patch is no longer wired from SubModule — the sampler can " +
             "again ride into the next campaign's LoadXML (#425 HIGH).");

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.CoopInterop;
 
@@ -77,7 +78,7 @@ public class ResetForUnloadSweepTests
         Assert.AreNotEqual(0, declaring.Count,
             "scan found no ResetForUnload declarations at all — the regex is broken, not the codebase.");
 
-        var subModule = File.ReadAllText(Path.Combine(mainDir, "SubModule.cs"));
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         var start = subModule.IndexOf("OnSubModuleUnloaded", System.StringComparison.Ordinal);
         Assert.AreNotEqual(-1, start, "SubModule.OnSubModuleUnloaded not found.");
         var sweep = subModule.Substring(start);

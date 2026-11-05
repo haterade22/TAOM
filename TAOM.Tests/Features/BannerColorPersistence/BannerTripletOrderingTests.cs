@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.BannerColorPersistence;
 
@@ -54,7 +55,7 @@ public class BannerTripletOrderingTests
     public void AllThreePatches_RegisterViaSubModule_InOrder()
     {
         // Verify SubModule.cs calls Initialize on all three patches.
-        var src = File.ReadAllText(Path.Combine(FindRepoRoot(), "Main", "SubModule.cs"));
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(src, "Clan_UpdateBannerColor_Patch.Initialize");
         StringAssert.Contains(src, "Clan_UpdateBannerColorsAccordingToKingdom_Patch.Initialize");
         StringAssert.Contains(src, "SPInventoryVM_UpdateCurrentCharacterIfPossible_Patch.Initialize");

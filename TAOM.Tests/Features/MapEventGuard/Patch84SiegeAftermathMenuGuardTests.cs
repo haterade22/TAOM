@@ -3,6 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.MapEventGuard.Hooks;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.MapEventGuard;
@@ -198,24 +199,13 @@ public class Patch84SiegeAftermathMenuGuardTests
                 $"{patch.Name} lost its [HarmonyPatchCategory] — SubModule's PatchCategory call would apply nothing.");
         }
 
-        var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
-
-        var source = File.ReadAllText(subModule);
-        StringAssert.Contains(source, "_harmony.PatchCategory(\"Patch84_SiegeAftermathMenuGuard\")",
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        StringAssert.Contains(source, "TryPatchCategory(\"Patch84_SiegeAftermathMenuGuard\")",
             "SubModule.cs no longer applies Patch84_SiegeAftermathMenuGuard — the patch is dead code.");
 
         // The binding is resolved in Initialize, and without that call IsReady is false forever,
         // which makes both prefixes defer to vanilla and the crash returns.
         StringAssert.Contains(source, "Patch84_SiegeAftermathMenuGuard.Initialize(",
             "SubModule.cs no longer initialises Patch84 — IsReady stays false and both prefixes defer to vanilla.");
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

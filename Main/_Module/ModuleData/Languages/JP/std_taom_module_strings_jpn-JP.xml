@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="1日あたりの維持費" />
     <string id="taom_res_badge_emissary" text="精鋭使節の価格" />
     <string id="taom_res_badge_paid_in" text="昇進、徴募、維持費はあなた自身の{RESOURCE}で支払われます" />
+    <string id="taom_patch_apply_failed" text="TAOM: {PHASE}にパッチグループの適用に失敗しました: {GROUPS}。これらのグループの一部の修正は今回のセッションでは無効です。原因はTAOMのログに記録されています。" />
+    <string id="taom_patch_apply_phase_startup" text="起動時" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="ゲーム初期化時" />
+    <string id="taom_patch_apply_phase_mission_start" text="ミッション開始時" />
   </strings>
 </base>

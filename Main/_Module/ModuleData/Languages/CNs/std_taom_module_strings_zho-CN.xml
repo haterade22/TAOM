@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="每日维护" />
     <string id="taom_res_badge_emissary" text="精锐使者价格" />
     <string id="taom_res_badge_paid_in" text="升级、招募与维护均以你自己的 {RESOURCE} 支付" />
+    <string id="taom_patch_apply_failed" text="TAOM：在{PHASE}期间，以下补丁组应用失败：{GROUPS}。本次游戏中这些组内的部分修复将不会生效；具体原因请查看 TAOM 日志。" />
+    <string id="taom_patch_apply_phase_startup" text="启动" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="游戏初始化" />
+    <string id="taom_patch_apply_phase_mission_start" text="任务开始" />
   </strings>
 </base>

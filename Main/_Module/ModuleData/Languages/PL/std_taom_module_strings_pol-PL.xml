@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="Utrzymanie dziennie" />
     <string id="taom_res_badge_emissary" text="Cena Elitarnego Emisariusza" />
     <string id="taom_res_badge_paid_in" text="Ulepszenia, rekruci i utrzymanie opłacane są twoim własnym zasobem: {RESOURCE}" />
+    <string id="taom_patch_apply_failed" text="TAOM: nie udało się zastosować grup poprawek podczas {PHASE}: {GROUPS}. Niektóre poprawki z tych grup są wyłączone w tej sesji; przyczynę podaje dziennik TAOM." />
+    <string id="taom_patch_apply_phase_startup" text="uruchamiania" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="inicjalizacji gry" />
+    <string id="taom_patch_apply_phase_mission_start" text="rozpoczęcia misji" />
   </strings>
 </base>

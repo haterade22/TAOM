@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.CompanionTactics;
 
@@ -53,10 +54,7 @@ public class SharedMovementOrderPostfixTests
         // Phase 9b — MovementOrder.cctor reads Mission.Current.CurrentTime; null during
         // OnSubModuleLoad → crashes JIT prep with NRE. The shared category MUST be applied via
         // OnMissionBehaviorInitialize with a one-shot guard. Verify the comment + apply site.
-        var repoRoot = FindRepoRoot();
-        var path = Path.Combine(repoRoot, "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(path), $"SubModule.cs missing: {path}");
-        var src = File.ReadAllText(path);
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(src, "Patch_MissionTime_SetMovementOrder",
             "SubModule.cs must reference the shared category");
         StringAssert.Contains(src, "_missionTimePatchesApplied",

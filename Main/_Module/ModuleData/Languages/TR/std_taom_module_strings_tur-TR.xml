@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="Günlük idame" />
     <string id="taom_res_badge_emissary" text="Seçkin Elçi bedeli" />
     <string id="taom_res_badge_paid_in" text="Yükseltmeler, askerler ve idame kendi {RESOURCE} kaynağınızdan ödenir" />
+    <string id="taom_patch_apply_failed" text="TAOM: {PHASE} sırasında şu yama grupları uygulanamadı: {GROUPS}. Bu gruplardaki bazı düzeltmeler bu oturumda devre dışı; nedeni TAOM günlüğünde belirtiliyor." />
+    <string id="taom_patch_apply_phase_startup" text="başlangıç" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="oyun başlatma" />
+    <string id="taom_patch_apply_phase_mission_start" text="görev başlangıcı" />
   </strings>
 </base>

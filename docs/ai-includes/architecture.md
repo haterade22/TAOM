@@ -292,6 +292,8 @@ Main/
 ├── _Module/                     # shipped payload: ModuleData, Prefabs, GUI, SubModule.xml
 ├── IoC.cs                       # single-owner DI composition root
 ├── ManualPatchApplicator.cs
+├── PatchCategoryApplier.cs      # guarded apply of one Harmony patch category
+├── PatchCategoryIndex.cs        # category index built class by class (#653)
 └── SubModule.cs                 # single-owner engine entry point
 
 TAOM.Tests/

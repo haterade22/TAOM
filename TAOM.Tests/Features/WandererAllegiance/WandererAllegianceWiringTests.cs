@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.WandererAllegiance;
 
@@ -33,7 +34,7 @@ public class WandererAllegianceWiringTests
     [TestMethod]
     public void IoC_RegistersTheFeature()
     {
-        var src = ReadSource("Main", "IoC.cs");
+        var src = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(src, "WandererAllegianceIoC.RegisterWandererAllegianceFeature(container)",
             "Main/IoC.cs no longer registers WandererAllegiance; SubModule's Resolve would throw at campaign start.");
@@ -53,7 +54,7 @@ public class WandererAllegianceWiringTests
     [TestMethod]
     public void SubModule_AddsTheDialogBehavior()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "WandererAllegianceDialogBehavior>()",
             "SubModule.cs no longer adds WandererAllegianceDialogBehavior; the refusal lines are never registered.");

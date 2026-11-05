@@ -8,6 +8,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.TroopProgression;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.SettlementGuards;
 
@@ -33,9 +34,7 @@ public class SettlementGuardsWiringTests
     [TestMethod]
     public void MainIoCConfigure_IncludesSettlementGuardsFeatureRegistration()
     {
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs not found — run from repo root or check working directory");
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(iocSource, "SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);",
             "Main/IoC.cs::Configure must call SettlementGuardsIoC.RegisterSettlementGuardsFeature(container). " +
@@ -46,9 +45,7 @@ public class SettlementGuardsWiringTests
     [TestMethod]
     public void MainSubModule_InvokesManualPatchApplicator()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         // The manual-patch block was extracted to ManualPatchApplicator (ADR-002); the entry point
         // must still invoke it or NO manual patch (SettlementGuards, BannerColor visuals,

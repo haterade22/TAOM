@@ -6,6 +6,7 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.MountDespawn;
 using TAOM.Features.MountDespawn.Hooks;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.MountDespawn;
 
@@ -20,9 +21,7 @@ public class MountDespawnWiringTests
     [TestMethod]
     public void MainIoCConfigure_IncludesMountDespawnFeatureRegistration()
     {
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs not found — run from repo root or check working directory");
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(iocSource, "MountDespawnIoC.RegisterMountDespawnFeature(container);",
             "Main/IoC.cs::Configure must call MountDespawnIoC.RegisterMountDespawnFeature(container). " +
@@ -32,9 +31,7 @@ public class MountDespawnWiringTests
     [TestMethod]
     public void MainSubModule_AddsMountDespawnMissionBehaviorOnMissionInit()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(subModuleSource, "new Features.MountDespawn.Hooks.MountDespawnMissionBehavior(",
             "Main/SubModule.cs must register MountDespawnMissionBehavior via AddTaomBehavior(...) from " +
@@ -68,18 +65,5 @@ public class MountDespawnWiringTests
     public void MissionGate_NullMission_IsNotEligible()
     {
         Assert.IsFalse(MountDespawnMissionGate.IsEligible(null));
-    }
-
-    private static string ReadProjectSource(params string[] relativeParts)
-    {
-        var dir = Directory.GetCurrentDirectory();
-        while (dir != null)
-        {
-            var candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
-            if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-        return null;
     }
 }

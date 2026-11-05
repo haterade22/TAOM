@@ -2645,5 +2645,10 @@
     <string id="taom_res_badge_upkeep" text="Содержание в день" />
     <string id="taom_res_badge_emissary" text="Цена элитного эмиссара" />
     <string id="taom_res_badge_paid_in" text="Улучшения, вербовка и содержание оплачиваются вашим ресурсом «{RESOURCE}»" />
+    <string id="taom_patch_apply_failed" text="TAOM: не удалось применить группы патчей на этапе {PHASE}: {GROUPS}. Некоторые исправления из этих групп отключены в текущей сессии; причина указана в журнале TAOM." />
+    <string id="taom_patch_apply_phase_startup" text="запуска" />
+    <string id="taom_patch_apply_notice_title" text="TAOM" />
+    <string id="taom_patch_apply_phase_game_init" text="инициализации игры" />
+    <string id="taom_patch_apply_phase_mission_start" text="начала миссии" />
   </strings>
 </base>
