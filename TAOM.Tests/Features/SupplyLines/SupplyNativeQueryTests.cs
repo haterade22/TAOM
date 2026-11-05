@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem.Map;
 using TaleWorlds.Library;
 using TAOM.Features.SupplyLines;
+using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.SupplyLines;
 
@@ -74,5 +77,58 @@ public class SupplyNativeQueryTests
             .ReturnsForAnyArgs(call => { call.ArgAt<NavigationPath>(5).Size = size; return found; });
 
         Assert.AreEqual(0, Run(scene, Valid, Valid).Count);
+    }
+
+    private static string[] FingerprintOf(System.Type type, string name, BindingFlags flags)
+    {
+        var method = type.GetMethod(name, flags);
+        Assert.IsNotNull(method, type.Name + "." + name);
+        return IlCallScanner.Fingerprint(method, method!.GetMethodBody().GetILAsByteArray()).ToArray();
+    }
+
+    private static int IndexOf(string[] tokens, string fragment)
+    {
+        int index = System.Array.FindIndex(tokens, t => t.Contains(fragment));
+        Assert.IsTrue(index >= 0, "IL contains " + fragment);
+        return index;
+    }
+
+    // The caller reads the land rules from the active models and hands them to AddLandPath. Order only, so
+    // caching a value in a local still passes; dropping or replacing a model read fails.
+    [TestMethod]
+    public void ComputeNavPathPoints_ReadsTheActiveModelsLandRules_ForAddLandPath()
+    {
+        var tokens = FingerprintOf(typeof(SupplyCaravanService), "ComputeNavPathPoints", BindingFlags.NonPublic | BindingFlags.Static);
+
+        int excluded = IndexOf(tokens, "PartyNavigationModel::GetInvalidTerrainTypesForNavigationType(");
+        int toSea = IndexOf(tokens, "MapDistanceModel::get_RegionSwitchCostFromLandToSea()");
+        int toLand = IndexOf(tokens, "MapDistanceModel::get_RegionSwitchCostFromSeaToLand()");
+        int query = IndexOf(tokens, "SupplyCaravanService::AddLandPath(");
+
+        Assert.AreEqual("ldc.i4 1", tokens[excluded - 1], "exclusions are asked for NavigationType.Default (1)");
+        Assert.IsTrue(excluded < toSea && toSea < toLand && toLand < query,
+            "exclusions, land-to-sea, then sea-to-land are read before AddLandPath, matching its parameter order");
+        Assert.IsFalse(tokens.Any(t => t.Contains("GetPathBetweenAIFaces(")), "the native query runs only inside AddLandPath");
+    }
+
+    // Scene is sealed and native, so this pins the shape of the 1.4.x fallback: the heightmap read decides a branch
+    // before the one terrain query, and the fallback asks the same scene for its collision height with
+    // SandBox.MapScene.GetHeightAtPoint's land mask (BodyFlags.Moveable | BodyFlags.OnlyCollideWithRaycast = 144).
+    [TestMethod]
+    public void SyncArrows_BranchesOnTheHeightmap_BeforeTheTerrainQuery_AndFallsBackToTheSceneCollisionHeight()
+    {
+        var tokens = FingerprintOf(typeof(SupplyRouteVisualService), "SyncArrows", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        int check = IndexOf(tokens, "Scene::get_HasTerrainHeightmap()");
+        int terrain = IndexOf(tokens, "Scene::GetTerrainHeightAndNormal(");
+        int fallback = IndexOf(tokens, "Scene::GetHeightAtPoint(");
+
+        Assert.IsTrue(check < terrain && terrain < fallback, "check, terrain query, then the fallback");
+        Assert.IsTrue(Enumerable.Range(check + 1, terrain - check - 1).Any(i => tokens[i] == "brtrue" || tokens[i] == "brfalse"),
+            "a conditional branch between the heightmap read and the terrain query");
+        Assert.AreEqual("ldc.i4 144", tokens[fallback - 1], "the fallback passes the land mask Moveable | OnlyCollideWithRaycast");
+        Assert.IsFalse(tokens.Any(t => t.Contains("IMapScene::GetTerrainHeightAndNormal(")),
+            "the unguarded map-wrapper terrain query is not called");
+        Assert.AreEqual(1, tokens.Count(t => t.Contains("GetTerrainHeightAndNormal(")), "one terrain query, behind the check");
     }
 }
