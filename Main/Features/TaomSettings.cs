@@ -1087,10 +1087,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Ceiling for the skill-based crush-through chance, reached at a huge skill gap with a full-momentum swing. Default 50%.")]
     public float CrushThroughMaxChance { get; set; } = 0.5f;
 
+    // Renamed from ChargeAutoKnockdownWeightRatio when the knockdown parity port (#610) moved its default from 8 to
+    // 6: MCM loads the saved value by name, so under the old name every TAOM.json saved before kept 8. Never rename
+    // it back; files not yet re-saved still hold ChargeAutoKnockdownWeightRatio = 8.
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyInteger("Auto-Knockdown Weight Ratio", 2, 30, Order = 10, RequireRestart = false,
-        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
-    public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
+        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down, from any angle, regardless of resistance (mumakil vs man is ~125, horse + man vs man exactly 6). Default 6, so a full-speed horse contact floors a man; raise it to 7 or 8 to keep that for heavier chargers only. Values below the neutral weight ratio (6) are treated as the neutral ratio. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int ChargeAutoKnockdownRatio { get; set; } = 6;
 
     // --- Aura of Dread ---
 

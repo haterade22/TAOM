@@ -50,7 +50,7 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         Assert.AreEqual(4, c.Creatures.CleaveMonsterIds.Count);
-        Assert.AreEqual(5, c.RaceModifiers.Count);
+        Assert.AreEqual(7, c.RaceModifiers.Count);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 
@@ -88,7 +88,7 @@ public class CombatMechanicsConfigProviderTests
         var c = _sut.GetConfig();
 
         Assert.AreEqual(25f, c.CrushThrough.ExtraCrushThroughEnergyThreshold, 0.0001f);
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Failed to parse")));
     }
 
@@ -127,7 +127,7 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6, c.CrushThrough.MonsterCrushMonsterIds.Count);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
-        Assert.AreEqual(5, c.RaceModifiers.Count);
+        Assert.AreEqual(7, c.RaceModifiers.Count);
     }
 
     [TestMethod]
@@ -201,7 +201,7 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("autoKnockdownWeightRatio")));
     }
@@ -214,7 +214,7 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(8f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
+        Assert.AreEqual(6f, c.ChargeKnockdown.AutoKnockdownWeightRatio, 0.0001f);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("neutralWeightRatio")));
     }
@@ -226,7 +226,7 @@ public class CombatMechanicsConfigProviderTests
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(0.25f, c.ChargeKnockdown.MinPenetrationFactor, 0.0001f);
+        Assert.AreEqual(1f, c.ChargeKnockdown.MinPenetrationFactor, 0.0001f);
         Assert.AreEqual(2.5f, c.ChargeKnockdown.MaxPenetrationFactor, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("minPenetrationFactor")));
     }
