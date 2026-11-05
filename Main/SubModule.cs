@@ -309,6 +309,8 @@ public class SubModule : MBSubModuleBase
         {
             var saveLoadDiagnostics = IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>();
             var saveLoadLogger = IoC.Resolve<IModLogger>();
+            saveLoadDiagnostics.LogPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.Runtime,
+                Features.SaveLoadDiagnostics.Domain.SaveLoadTokens.RuntimeHost());
             Features.SaveLoadDiagnostics.Hooks.SandBoxSaveHelper_TryLoadSave_Patch.Initialize(saveLoadDiagnostics);
             Features.SaveLoadDiagnostics.Hooks.MBSaveLoad_LoadSaveGameData_Patch.Initialize(saveLoadDiagnostics);
             Features.SaveLoadDiagnostics.Hooks.SaveManager_Load_Patch.Initialize(saveLoadDiagnostics);
@@ -693,6 +695,15 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.ArmyTargeting.ITargetScoreContextFactory>()?.Reset();
         }
         catch { /* teardown is best-effort, never break OnGameEnd */ }
+
+        // Plan 114 (MEMORY-05): remember, weakly, the campaign that just ended, so the next load's
+        // GameLoaded/GameInitializationFinished stamps and later saves can say whether it was freed.
+        try
+        {
+            if (game?.GameType is Campaign endedCampaign)
+                IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>()?.NoteGameEnded(endedCampaign);
+        }
+        catch { /* diagnostic is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -779,8 +790,8 @@ public class SubModule : MBSubModuleBase
     {
         try
         {
-            IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>()
-                .LogPhase(phase, Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
+            var saveLoad = IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>();
+            saveLoad.LogPhase(phase, saveLoad.ProcessContext());
         }
         catch { /* never fail a load over a diagnostic */ }
     }

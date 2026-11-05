@@ -20,22 +20,68 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
     private const int InnerExceptionCap = 5;
 
     private readonly IModLogger _logger;
+    private readonly Func<string> _memoryTokens;
+    private readonly Func<int> _gen2Count;
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private readonly ConcurrentDictionary<string, byte> _unknownIds = new ConcurrentDictionary<string, byte>();
 
     private int _seq;
     private int _faultCount;
+    private int _loadsThisProcess;
+    private int _inGameLoadsThisProcess;
+    private WeakReference? _endedCampaign;
+    private int _gen2AtGameEnd;
 
     public SaveLoadDiagnosticsService(IModLogger logger)
+        : this(logger, BattleLoadDiagnostics.ProcessMemoryTokens.Format, () => GC.CollectionCount(2)) { }
+
+    // Test seam. Internal so DryIoc sees a single public constructor (MemoryStationSampler precedent).
+    internal SaveLoadDiagnosticsService(IModLogger logger, Func<string> memoryTokens, Func<int> gen2Count)
     {
         _logger = logger;
+        _memoryTokens = memoryTokens;
+        _gen2Count = gen2Count;
     }
 
     public int FaultCount => Volatile.Read(ref _faultCount);
 
-    public void BeginLoadAttempt(string saveName) => BeginAttempt(SaveLoadPhase.LoadRequested, saveName);
+    public int LoadsThisProcess => Volatile.Read(ref _loadsThisProcess);
 
-    public void BeginSaveAttempt(string saveName) => BeginAttempt(SaveLoadPhase.SaveBegin, saveName);
+    public int InGameLoadsThisProcess => Volatile.Read(ref _inGameLoadsThisProcess);
+
+    public void BeginLoadAttempt(string saveName, bool inGame)
+    {
+        int loads = Interlocked.Increment(ref _loadsThisProcess);
+        int inGameLoads = inGame ? Interlocked.Increment(ref _inGameLoadsThisProcess) : Volatile.Read(ref _inGameLoadsThisProcess);
+        BeginAttempt(SaveLoadPhase.LoadRequested, SaveLoadTokens.LoadRequested(saveName, inGame, loads, inGameLoads, SafeMemory()));
+    }
+
+    public void BeginSaveAttempt(string saveName) =>
+        BeginAttempt(SaveLoadPhase.SaveBegin, $"name='{saveName}' {ProcessContext()}");
+
+    public string ProcessContext()
+    {
+        try
+        {
+            var handle = Volatile.Read(ref _endedCampaign);
+            var state = handle == null ? PreviousCampaignState.None
+                : handle.IsAlive ? PreviousCampaignState.Alive : PreviousCampaignState.Collected;
+            int gen2Since = handle == null ? 0 : _gen2Count() - Volatile.Read(ref _gen2AtGameEnd);
+            return SaveLoadTokens.ProcessContext(LoadsThisProcess, InGameLoadsThisProcess, state, gen2Since, SafeMemory());
+        }
+        catch { return string.Empty; }
+    }
+
+    public void NoteGameEnded(object endedCampaign)
+    {
+        try
+        {
+            if (endedCampaign == null) return;
+            Volatile.Write(ref _gen2AtGameEnd, _gen2Count());
+            Volatile.Write(ref _endedCampaign, new WeakReference(endedCampaign));
+        }
+        catch { /* the diagnostic must never propagate */ }
+    }
 
     public void LogPhase(SaveLoadPhase phase, string detail)
     {
@@ -77,7 +123,7 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
         catch { /* the diagnostic must never propagate */ }
     }
 
-    private void BeginAttempt(SaveLoadPhase phase, string saveName)
+    private void BeginAttempt(SaveLoadPhase phase, string detail)
     {
         try
         {
@@ -85,7 +131,7 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
             Interlocked.Exchange(ref _faultCount, 0);
             _unknownIds.Clear();
             _stopwatch.Restart();
-            _logger.LogInfo(Stamp(phase, $"name='{saveName}'"));
+            _logger.LogInfo(Stamp(phase, detail));
         }
         catch { /* the diagnostic must never propagate */ }
     }
@@ -147,6 +193,12 @@ public sealed class SaveLoadDiagnosticsService : ISaveLoadDiagnosticsService
             for (var deeper = cause.InnerException; deeper != null; deeper = deeper.InnerException)
                 sb.Append(" <- ").Append(deeper.GetType().Name).Append(": ").Append(deeper.Message);
         }
+    }
+
+    private string SafeMemory()
+    {
+        try { return _memoryTokens(); }
+        catch { return string.Empty; }
     }
 
     private void SafeWarn(string message)

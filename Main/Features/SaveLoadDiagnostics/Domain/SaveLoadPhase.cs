@@ -43,4 +43,10 @@ public enum SaveLoadPhase
     SaveWriteFault,
     SaveStatusFault,
     SaveCompleted,
+
+    // Save-growth probes (plan 114): Runtime is one line at module load naming the .NET runtime and
+    // GC mode; LoadCounts is what a load read (LoadContext.Load); SaveCollected is what a save is about
+    // to write, right after the engine's object walk; SaveBehaviorData is the per-behavior SyncData
+    // size summary from the save's OnBeforeSave pass; SaveCensus is the per-type census.
+    Runtime,
 }

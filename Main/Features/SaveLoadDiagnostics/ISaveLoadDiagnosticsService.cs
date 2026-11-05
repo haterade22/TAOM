@@ -8,8 +8,9 @@ namespace TAOM.Features.SaveLoadDiagnostics;
 // concurrently from TWParallel load workers and the async save-writer thread.
 public interface ISaveLoadDiagnosticsService
 {
-    // Resets seq/clock/fault-throttle/unknown-id dedup, then stamps LoadRequested.
-    void BeginLoadAttempt(string saveName);
+    // Resets seq/clock/fault-throttle/unknown-id dedup, then stamps LoadRequested. inGame says the
+    // player loaded from inside a running game, the suspect path for save growth (plan 114).
+    void BeginLoadAttempt(string saveName, bool inGame);
 
     // Resets the same lifecycle state, then stamps SaveBegin.
     void BeginSaveAttempt(string saveName);
@@ -30,4 +31,18 @@ public interface ISaveLoadDiagnosticsService
     // message: zero interior stamps means the failure happened in an unhooked parse phase,
     // not "see GraphFault stamps above" pointing at stamps that don't exist.
     int FaultCount { get; }
+
+    // Load attempts this process, a load cancelled at the module prompt included.
+    int LoadsThisProcess { get; }
+
+    // The subset of LoadsThisProcess that started inside a running game.
+    int InGameLoadsThisProcess { get; }
+
+    // Loads so far, whether the campaign before the last load was freed, and process memory: the
+    // tokens that let one log line be read without the lines before it.
+    string ProcessContext();
+
+    // Remembers, weakly, the campaign that just ended, so a later line can say whether it was freed.
+    // Takes object because a service never touches a sealed engine type (ADR-007).
+    void NoteGameEnded(object endedCampaign);
 }

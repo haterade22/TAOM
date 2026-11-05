@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,7 +32,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void BeginLoadAttempt_EmitsLoadRequested_WithNameAndSeq1()
     {
-        _sut.BeginLoadAttempt("save007");
+        _sut.BeginLoadAttempt("save007", inGame: false);
         _logger.Received().LogInfo(Arg.Is<string>(s =>
             s.Contains("[SaveLoad]") && s.Contains("seq=1") &&
             s.Contains("phase=LoadRequested") && s.Contains("name='save007'")));
@@ -51,7 +52,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void LogPhase_CampaignLaunchPhases_CarryProcessMemoryTokensOnTheLoadAttemptClock()
     {
-        _sut.BeginLoadAttempt("save010");
+        _sut.BeginLoadAttempt("save010", inGame: false);
 
         _sut.LogPhase(SaveLoadPhase.GameLoaded, TAOM.Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
         _sut.LogPhase(SaveLoadPhase.GameInitializationFinished, TAOM.Features.BattleLoadDiagnostics.ProcessMemoryTokens.Format());
@@ -65,7 +66,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void LogPhase_SecondCall_IncrementsSeq()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.LogPhase(SaveLoadPhase.LoadDataOk, "x=1");
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("seq=2") && s.Contains("phase=LoadDataOk")));
     }
@@ -73,11 +74,11 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void BeginLoadAttempt_AfterPriorEmits_ResetsSeqTo1()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.LogPhase(SaveLoadPhase.LoadDataOk, string.Empty);
         _logger.ClearReceivedCalls();
 
-        _sut.BeginLoadAttempt("save002");
+        _sut.BeginLoadAttempt("save002", inGame: false);
 
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("seq=1") && s.Contains("name='save002'")));
     }
@@ -85,7 +86,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void LogPhase_ContainsElapsedTimestamp()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.LogPhase(SaveLoadPhase.LoadDataOk, string.Empty);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("t=+") && s.Contains("ms")));
     }
@@ -155,20 +156,20 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void FaultCount_TracksFaults_AndResetsOnNextAttempt()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         Assert.AreEqual(0, _sut.FaultCount);
         _sut.LogFault(SaveLoadPhase.GraphFault, "x", null);
         _sut.LogFault(SaveLoadPhase.GraphFault, "y", null);
         Assert.AreEqual(2, _sut.FaultCount);
 
-        _sut.BeginLoadAttempt("save002");
+        _sut.BeginLoadAttempt("save002", inGame: false);
         Assert.AreEqual(0, _sut.FaultCount);
     }
 
     [TestMethod]
     public void MarkUnknownSaveId_BeyondCap_StopsLogging()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         for (int i = 0; i < 60; i++)
             _sut.MarkUnknownSaveId("object", $"id-{i}");
 
@@ -179,7 +180,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void LogFault_BeyondThrottleCap_SuppressesFurtherFaults()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         for (int i = 0; i < 25; i++)
             _sut.LogFault(SaveLoadPhase.GraphFault, $"i={i}", null);
 
@@ -191,12 +192,12 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void LogFault_ThrottleResets_OnNextAttempt()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         for (int i = 0; i < 25; i++)
             _sut.LogFault(SaveLoadPhase.GraphFault, $"i={i}", null);
         _logger.ClearReceivedCalls();
 
-        _sut.BeginLoadAttempt("save002");
+        _sut.BeginLoadAttempt("save002", inGame: false);
         _sut.LogFault(SaveLoadPhase.GraphFault, "fresh", null);
 
         _logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("fresh")));
@@ -207,7 +208,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void MarkUnknownSaveId_SameIdTwice_LogsOnce()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.MarkUnknownSaveId("object", "726900801:101");
         _sut.MarkUnknownSaveId("object", "726900801:101");
 
@@ -218,7 +219,7 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void MarkUnknownSaveId_DistinctIds_LogsEach()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.MarkUnknownSaveId("object", "id-A");
         _sut.MarkUnknownSaveId("container", "id-A");
         _sut.MarkUnknownSaveId("object", "id-B");
@@ -229,11 +230,11 @@ public class SaveLoadDiagnosticsServiceTests
     [TestMethod]
     public void MarkUnknownSaveId_AfterNextAttempt_LogsAgain()
     {
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.MarkUnknownSaveId("object", "id-A");
         _logger.ClearReceivedCalls();
 
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         _sut.MarkUnknownSaveId("object", "id-A");
 
         _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("id-A")));
@@ -262,7 +263,7 @@ public class SaveLoadDiagnosticsServiceTests
         var lines = new ConcurrentBag<string>();
         _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(ci => lines.Add(ci.Arg<string>()));
 
-        _sut.BeginLoadAttempt("save001");
+        _sut.BeginLoadAttempt("save001", inGame: false);
         Parallel.For(0, 100, i => _sut.LogPhase(SaveLoadPhase.GraphFault, $"i={i}"));
 
         var seqs = lines
@@ -273,4 +274,76 @@ public class SaveLoadDiagnosticsServiceTests
         Assert.AreEqual(101, seqs.Count);           // Begin + 100 phases
         Assert.AreEqual(101, seqs.Distinct().Count());
     }
+
+    // ---- process context (plan 114) ----
+
+    private SaveLoadDiagnosticsService SeamedSut() =>
+        new SaveLoadDiagnosticsService(_logger, () => "gc=1/2/3", () => 7);
+
+    [TestMethod]
+    public void BeginLoadAttempt_InGame_CountsLoadAndInGameLoad()
+    {
+        var sut = SeamedSut();
+
+        sut.BeginLoadAttempt("a", inGame: false);
+        sut.BeginLoadAttempt("b", inGame: true);
+
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=LoadRequested name='b' inGame=true loadsThisProcess=2 inGameLoads=1 gc=1/2/3")));
+        Assert.AreEqual(2, sut.LoadsThisProcess);
+        Assert.AreEqual(1, sut.InGameLoadsThisProcess);
+    }
+
+    [TestMethod]
+    public void BeginLoadAttempt_FromMenu_CountsLoadOnly()
+    {
+        var sut = SeamedSut();
+
+        sut.BeginLoadAttempt("a", inGame: false);
+
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=LoadRequested name='a' inGame=false loadsThisProcess=1 inGameLoads=0")));
+        Assert.AreEqual(1, sut.LoadsThisProcess);
+        Assert.AreEqual(0, sut.InGameLoadsThisProcess);
+    }
+
+    [TestMethod]
+    public void BeginSaveAttempt_StampsProcessContextAfterTheName()
+    {
+        var sut = SeamedSut();
+
+        sut.BeginSaveAttempt("x");
+
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=SaveBegin name='x' loadsThisProcess=")));
+    }
+
+    [TestMethod]
+    public void NoteGameEnded_ObjectCollected_ProcessContextSaysCollected()
+    {
+        var sut = SeamedSut();
+
+        NoteEndedCampaignThatNothingElseHolds(sut);
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        StringAssert.Contains(sut.ProcessContext(), "prevCampaign=collected gen2Since=0");
+    }
+
+    [TestMethod]
+    public void NoteGameEnded_ObjectStillReferenced_ProcessContextSaysAlive()
+    {
+        var sut = SeamedSut();
+        var held = new object();
+
+        sut.NoteGameEnded(held);
+        GC.Collect();
+
+        StringAssert.Contains(sut.ProcessContext(), "prevCampaign=alive");
+        GC.KeepAlive(held);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void NoteEndedCampaignThatNothingElseHolds(SaveLoadDiagnosticsService sut) =>
+        sut.NoteGameEnded(new object());
 }
