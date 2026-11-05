@@ -58,6 +58,9 @@ public static class CoopSettingsRelevance
         "EquipPresetsDebug", "QuickActionsDebug",
         "EnableBattleLoadDiagnostics", "EnableBlowDiagnostics", "EnableCrashCapture",
         "EnableNativeToManagedCapture", "SuspendButterLibHandler", "WriteCrashBundle",
+        // Whether a throw out of a mission start call is survived (Patch103): crash containment, filed here with
+        // EnableCrashCapture and EnableNativeToManagedCapture, which also change what runs after an exception.
+        "SurviveMissionStartFailures",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
         "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",

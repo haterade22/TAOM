@@ -84,6 +84,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
+| Yotthani VanillaTuning | `VanillaTuning` `HoN/VanillaTuning` | MIT, (c) 2026 yotthani (`HoN/VanillaTuning/LICENSE`, since `1b9ce3ba`, 2026-10-07) | behavioural-port | `Main/Features/MissionStartGuard/**`; its adapter `Main/Adapters/{I,}MissionStartGuardAdapter.cs`; its tests `TAOM.Tests/Features/MissionStartGuard/**` | cleared |
 
 <!-- provenance-register-end -->
 
@@ -422,6 +423,12 @@ naming thirteen files that do. TOR_Core is a separate source, referenced for eng
 (`docs/features/dev-console.md:106`), and derives nothing.
 
 ---
+
+### Yotthani VanillaTuning
+
+yotthani's `HoN/VanillaTuning` carries an MIT licence (recorded on the 1.5.x line: added in its `1b9ce3ba`, 2026-10-07). The 1.5.x line adapted four of its patches on 2026-10-08 (adoption record `docs/reviews/adopt-yotthani-2026-10-08.md` on `origin/bannerlord-1.5.x`); the 1.4.x line ports them through plans 109 and 120.
+
+`Main/Features/MissionStartGuard/**` adapts its `mission-start-guard`: the idea (a start method that throws no longer leaves the mission loading for ever) and the finalizer's report are his; TAOM wraps the six start calls of `Mission.AfterStart` with one transpiler instead of patching each behaviour type, so the code is TAOM's own in structure. The MIT notice is in `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 
 ## Adding a row
 

@@ -31,6 +31,11 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
         HintText = "Logs and survives exceptions thrown inside a short list of native-to-managed callbacks (screen early, late and input ticks, scene-script ticks, thumbnail and tableau rendering, and mission combat callbacks for hits, blocks, missiles, charges, falls and agent removal) instead of crashing. When off, those exceptions pass straight through. Takes effect immediately. Default ON.")]
     public bool EnableNativeToManagedCapture { get; set; } = true;
 
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Survive Mission Start Failures", Order = 3, RequireRestart = false,
+        HintText = "When a mission behavior, a module's mission-start callback or a mission object throws in one of the six start calls of Mission.AfterStart while a mission is loading, log it, show a short message, cut that call short and let the mission start, instead of the game loading the mission again every frame for ever. A throw elsewhere in the load, such as a behavior's OnMissionScreenPreLoad, is not covered. Enable Crash Capture does not affect this setting. When off, the guard lets the exception pass through untouched. Takes effect immediately. Default ON.")]
+    public bool SurviveMissionStartFailures { get; set; } = true;
+
     // --- Bundle ---
 
     [SettingPropertyGroup("Bundle")]

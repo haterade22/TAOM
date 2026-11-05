@@ -2911,4 +2911,6 @@
 	<string id="taom_patch_apply_notice_title" text="{=taom_patch_apply_notice_title}TAOM" />
 	<string id="taom_patch_apply_phase_game_init" text="{=taom_patch_apply_phase_game_init}game initialization" />
 	<string id="taom_patch_apply_phase_mission_start" text="{=taom_patch_apply_phase_mission_start}mission start" />
+	<!-- MissionStartGuardAdapter -->
+	<string id="taom_mission_start_guard_notice" text="{=taom_mission_start_guard_notice}{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
 </strings>
