@@ -199,10 +199,11 @@ public class CareerConfigProvider : ICareerConfigProvider
             {
                 try
                 {
+                    var groupId = groupEl.Attribute("id")?.Value ?? "";
                     var choiceIds = new List<string>();
                     foreach (var choiceEl in groupEl.Elements("Choice"))
                     {
-                        var choice = ParseChoice(choiceEl);
+                        var choice = ParseChoice(choiceEl, groupId);
                         if (choice != null)
                         {
                             _choices.Add(choice);
@@ -211,7 +212,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                     }
 
                     var group = new CareerChoiceGroupDefinition(
-                        id: groupEl.Attribute("id")?.Value ?? "",
+                        id: groupId,
                         careerId: groupEl.Attribute("career_id")?.Value ?? "",
                         tier: ParseInt(groupEl, "tier", 1),
                         choiceIds: choiceIds,
@@ -231,10 +232,19 @@ public class CareerConfigProvider : ICareerConfigProvider
         }
     }
 
-    private CareerChoiceDefinition ParseChoice(XElement el)
+    // Membership is the nesting only (#766): groupId is the enclosing <ChoiceGroup> id, and
+    // a root <Choice> passes "". A group_id attribute is never read for membership; a non-empty one
+    // is a stale authoring leftover, so it is logged and ignored.
+    private CareerChoiceDefinition ParseChoice(XElement el, string groupId = "")
     {
         try
         {
+            var declared = el.Attribute("group_id")?.Value ?? "";
+            if (declared.Length > 0)
+                _logger.LogWarning(
+                    $"CareerConfig: choice '{el.Attribute("id")?.Value}' carries group_id '{declared}'; " +
+                    "ignored; membership is the enclosing ChoiceGroup.");
+
             PassiveEffect passive = null;
             // Two authoring schemas exist: a direct singular child <PassiveEffect ... magnitude=.../>
             // and a plural wrapper <PassiveEffects><PassiveEffect ... value=.../></PassiveEffects>.
@@ -286,7 +296,7 @@ public class CareerConfigProvider : ICareerConfigProvider
 
             return new CareerChoiceDefinition(
                 id: el.Attribute("id")?.Value ?? "",
-                groupId: el.Attribute("group_id")?.Value ?? "",
+                groupId: groupId,
                 type: ParseEnum<ChoiceType>(el, "type", ChoiceType.Passive),
                 description: el.Attribute("description")?.Value ?? "",
                 iconSprite: el.Attribute("icon_sprite")?.Value ?? "",

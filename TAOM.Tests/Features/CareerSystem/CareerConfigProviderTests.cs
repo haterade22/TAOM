@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -153,6 +154,72 @@ public class CareerConfigProviderTests
         Assert.AreEqual("warboss", groups[0].CareerId);
         Assert.AreEqual(1, groups[0].Tier);
         Assert.AreEqual(2, groups[0].ChoiceIds.Count);
+    }
+
+    // -- #766: a choice inside a <ChoiceGroup> takes the group's id as its GroupId --
+
+    [TestMethod]
+    public void LoadChoices_ChoicesInsideGroupWithoutGroupIdAttribute_TakeTheGroupsId()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""g1"" career_id=""warboss"" tier=""1"">
+    <Choice id=""g1_key"" type=""Keystone"" description=""Keystone"" icon_sprite=""icon"" />
+    <Choice id=""g1_p1"" type=""Passive"" description=""Passive 1"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual(2, choices.Count);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_key").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_p1").GroupId);
+    }
+
+    [TestMethod]
+    public void LoadChoices_NestedChoiceWithGroupIdAttribute_UsesParentIdAndWarns()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""g1"" career_id=""warboss"" tier=""1"">
+    <Choice id=""g1_odd"" group_id=""other"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+    <Choice id=""g1_same"" group_id=""g1"" type=""Passive"" description=""y"" icon_sprite=""icon"" />
+    <Choice id=""g1_empty"" group_id="""" type=""Passive"" description=""z"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_odd").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_same").GroupId);
+        Assert.AreEqual("g1", choices.First(c => c.Id == "g1_empty").GroupId);
+        _logger.Received(1).LogWarning(Arg.Is<string>(
+            s => s.Contains("g1_odd") && s.Contains("other") && s.Contains("ignored; membership is the enclosing ChoiceGroup")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("g1_same")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("g1_empty")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_RootChoiceWithGroupIdAttribute_HasEmptyGroupIdAndWarns()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""root_empty"" group_id="""" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+  <Choice id=""root_absent"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+  <Choice id=""root_set"" group_id=""declared"" type=""Passive"" description=""x"" icon_sprite=""icon"" />
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual("", choices.First(c => c.Id == "root_empty").GroupId);
+        Assert.AreEqual("", choices.First(c => c.Id == "root_absent").GroupId);
+        Assert.AreEqual("", choices.First(c => c.Id == "root_set").GroupId);
+        _logger.Received(1).LogWarning(Arg.Is<string>(
+            s => s.Contains("root_set") && s.Contains("declared") && s.Contains("ignored; membership is the enclosing ChoiceGroup")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("root_empty") || s.Contains("root_absent")));
     }
 
     [TestMethod]
