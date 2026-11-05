@@ -10,7 +10,11 @@ of 2026-11-05.
 - **Tier 1** (a GameModel seam, mission ticks, engine calls). First wave: Lens 5 Data flow, Lens 2 Engine compatibility,
   Lens 7 XML and the Tooling lens. Second wave, after the Tooling lens's HIGH: Lens 3 Efficiency, Lens 4 Completeness and
   Lens 6 Design on the round robin tool, plus one convergence pass on the applied fixes.
-- **Codex did not run.** Tier 1 calls for it, and the session had told Mike that paid runs stay off while he is away. It is owed.
+- **Codex ran later the same day on Mike's word** (`ultra`, range `c834915e9..6d2c51de9`; prompt and raw output in the main
+  checkout's untracked `docs/reviews/raw/codex-prereview-fords-day-2026-11-05.*`). Two MEDIUM, both fixed with tests: deaths in the
+  result window entered the troop tally the round robin reads as the gold trade (now left out for `KillCredit.AfterEnd`), and the
+  round robin counted a match whose speed changed during play (now it needs exactly one `[Speed] speed=4` line). It refuted a thread
+  race and any result change after the end, and read the native crash as a target index of -1, as the crash triage did.
 - **Result:** 0 CRITICAL, 2 HIGH (one in the first wave, one in the convergence pass), 9 MEDIUM, about 20 LOW, 0 API
   incompatibilities. Every confirmed finding is fixed except those under "Not applied".
 - **Proof:** the full `/verify` on the final tree (see the commit bodies), plus mutation checks: each counting rule of the round
@@ -74,3 +78,28 @@ of 2026-11-05.
 - `state-lifecycle-save.md`: a new end path lists every hook still installed through the end window.
 - `build-tooling-workflow.md`: the counting function of a tool that decides what counts gets temp-tree and mutation tests on its
   first commit (repeat of the dire wolf lesson of 2026-11-04).
+
+## Addendum: the review of the Codex fixes (2026-11-05, afternoon)
+
+Tier 1 on the fix diff: Lens 5 Data flow, Lens 2 Engine compatibility, the Tooling lens, and a Codex `xhigh` pass. Codex
+confirmed its two findings closed. Applied:
+
+- **The engine dump copy (`974e60bb2`) missed the full dump** (Codex R1, Tooling F1, proved by replay of the real watchdog logs):
+  the Watchdog writes the dump twice and lets the game die right after the second pass, and a size rule needing two equal sightings
+  saw that size once. Now the game's `watchdog_log_<pid>.txt` names the dump and its `Starting Crash Uploader` line says when to copy,
+  which also ties the dump to this game's pid (Tooling F3). A failed copy is said once with the path to copy by hand (Tooling F2).
+- **A diagnostic counter of soldiers targeting a faded mount was dropped** (Lens 2 F1, Codex R2): `Agent.FadeOut` routs the agent
+  first, and the rout resets each soldier's target and flag, so the fade cannot leave the stale target and the counter could show
+  nothing. The crash paragraph in the feature doc now says so and names the open candidate: the delete of a dead agent.
+- **Test strength** (Lens 5 6, Tooling F5): the after-end scenario test proves its path ran; a single 10x `[Speed]` line is a case.
+- **The speed pattern is anchored** to `[FordsOfWar][Speed]` (Lens 5 8), and the counting rule is written where decisions are read
+  (Lens 5 9), with the real cause of the one changed speed: a soldier taken with P runs the match at 1x.
+- **The gold-trade window** is stated in the balance log (Lens 5 3).
+
+Not applied:
+
+- **Hero seconds run to the mission close** while kills stop at the winner (Lens 5 4): it moves only the review tool's hero rows,
+  not anything the round robin counts.
+- **A same-side death credits the killer's troop** in the tally (Lens 5 5): no report of nine has one.
+- **"Soldiers never target a riderless mount"** in the patch registry rests on addresses from before changeset 125270 (Lens 2 F2):
+  pre-existing text in another feature's entry.

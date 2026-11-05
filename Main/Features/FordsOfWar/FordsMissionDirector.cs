@@ -286,7 +286,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (record != null && credit is { } paid)
             {
                 _report.Death(record.Side, paid);
-                TallyDeath(victim, killer, record.Value);
+                // The tally is the match's trade: a death in the result window changes no result, so it stays out (Codex, 2026-11-05).
+                if (paid != KillCredit.AfterEnd)
+                    TallyDeath(victim, killer, record.Value);
             }
         });
     }
