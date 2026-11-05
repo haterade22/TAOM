@@ -111,7 +111,9 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 
 ## Configuration
 
-MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider`, all
+MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider` (which takes the MCM
+object once and reads through it, since the defence bonuses are read on every hit against a ready refuge's defenders,
+#745; `HotPathSettingsProvidersTests`), all
 coop simulation-relevant: master toggle, found/upgrade costs (2000/5000), build hours (6), hard cap
 (3, live limit min(1 + clanTier/2, cap)), manage range (4), town distances (16/26), defence bonuses
 (0.20/0.35), militia base/max (6/40), raids toggle + range (off/6). Toggle off stops founding,

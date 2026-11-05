@@ -1119,7 +1119,7 @@ Settlement nameplate cull (ported from the 1.5.x line, #777; adapted from yottha
 
 **PatchShield and co-op.** `Update` is on no PatchShield exclusion list, so the shield's finalizer attaches from a process's second game start. TAOM's Harmony id `com.taom.mod` does not match the protected owner prefix `TAOM` (`PatchShieldPolicy.IsProtectedOwner` is a prefix match), so after a missing-API swallow on `Update` the shield strips this prefix and vanilla runs: the safe outcome. A bool prefix, so `CoopVetoClassificationTests` carries a ReviewedSafe entry (client-side UI, no campaign state); the toggle is presentation in `CoopSettingsRelevance`.
 
-Threads: the prefix, `UpdateCulled` and `RefreshBindValues` on the main thread; `UpdateNameplateMT` on the `TWParallel` pool as in vanilla. Tests: `NameplateCullBindingTests`, `NameplateCullRuleTests`, `NameplateCullServiceTests`, `NameplateCullLinesTests`, `NameplateCullHookTests`, `NameplateCullPrefixOrderTests`, `NameplateCullModuleTests`, `NameplateCullSettingsProviderTests`. Feature: [nameplate-cull.md](../features/nameplate-cull.md). **ACTIVE**, not yet measured or checked in game on either line.
+Threads: the prefix, `UpdateCulled` and `RefreshBindValues` on the main thread; `UpdateNameplateMT` on the `TWParallel` pool as in vanilla. Tests: `NameplateCullBindingTests`, `NameplateCullRuleTests`, `NameplateCullServiceTests`, `NameplateCullLinesTests`, `NameplateCullHookTests`, `NameplateCullPrefixOrderTests`, `NameplateCullModuleTests`, `CampaignHotPathSettingsProvidersTests`. Feature: [nameplate-cull.md](../features/nameplate-cull.md). **ACTIVE**, not yet measured or checked in game on either line.
 
 ## Patch97_MissionTickProfiler
 

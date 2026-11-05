@@ -75,7 +75,7 @@ ships) skips TAOM's prefix, and the other way round: its wrapper emits a `runOri
 On the 1.5.x line yotthani's VanillaTuning v0.1.1 switches its own `nameplate-cull` off when `TAOM.Features.NameplateCull.NameplateCullModule` is loaded (code read there, game 1.5.5); whether VanillaTuning runs on v1.4.8 is not known. Keep the module's full type name.
 
 The toggle is read every map frame through `NameplateCullSettingsProvider`, which caches the MCM settings reference;
-`NameplateCullSettingsProviderTests` pins that it reads through that reference (1.4.x has no hot-path IL gate until WP123 brings one).
+the provider is in the hot-path settings gate (`CampaignHotPathSettingsProvidersTests`), so a regression to a per-frame `Instance` lookup fails a test.
 
 ### Component Diagram
 
@@ -140,7 +140,7 @@ exception when the cull switches itself off for the rest of this game launch.
   (so a new engine step fails a test), the constants of `IsVisible` and the park point of `RefreshPosition`, that only
   the `IsInRange` setter registers a plate's events, that `Initialize` reports a cull whose Patch104 is not attached,
   PatchShield's reach and the MCM attribute. The two settings-provider pins live in the untagged
-  `NameplateCullSettingsProviderTests`, so a no-game run executes them.
+  `CampaignHotPathSettingsProvidersTests`, so a no-game run executes them.
 - Mutations (2026-10-08, run with the skeleton buffer's after the review found a RED step skipped): a dropped `!` in
   the prefix and a renamed `__instance` parameter each failed the expected tests.
 
@@ -164,6 +164,7 @@ the plates left. Not measured in TAOM yet.
 
 - 2026-10-08: added, adapted from yotthani's VanillaTuning `nameplate-cull`; two conditions added to the upstream rule.
 - 2026-11-04: ported to the 1.4.x line by plan 120 (v1.4.8 hideout range, re-pinned call lists, the settings-provider pins in their own class).
+- 2026-11-05: WP123 moved the settings-provider pins into the campaign hot-path gate.
 
 ## GitHub Issue
 

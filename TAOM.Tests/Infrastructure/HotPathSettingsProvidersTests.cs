@@ -9,12 +9,14 @@ using MCM.Abstractions.Base.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features;
+using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CompanionTactics;
 using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Domain;
 using TAOM.Features.MixedFormations;
+using TAOM.Features.Refuge;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Tests.Migration;
@@ -56,6 +58,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(DreadAuraSettingsProvider))]
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(RefugeSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetGetMethod(true);
@@ -78,6 +81,7 @@ public class HotPathSettingsProvidersTests
     [DataTestMethod]
     [DataRow(typeof(TaomSettings))]
     [DataRow(typeof(BlowDiagnosticsSettings))]
+    [DataRow(typeof(BattleLoadDiagnosticsSettings))]
     public void CachedSettingsClasses_AreMcmGlobalSettings(Type settings)
     {
         Assert.IsTrue(typeof(GlobalSettings).IsAssignableFrom(settings),
@@ -94,6 +98,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(IDreadAuraSettingsProvider), typeof(DreadAuraSettingsProvider))]
     [DataRow(typeof(ISmartCavalryAISettingsProvider), typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(ISiegePropDiagnosticsSettingsProvider), typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(IRefugeSettingsProvider), typeof(RefugeSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -137,6 +142,9 @@ public class HotPathSettingsProvidersTests
             nameof(ISmartCavalryAISettingsProvider.IsEnabled), nameof(TaomSettings.EnableSmartCavalryCharge), () => new TaomSettings()),
         [typeof(SiegePropDiagnosticsSettingsProvider)] = (() => new SiegePropDiagnosticsSettingsProvider(),
             nameof(ISiegePropDiagnosticsSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSiegePropDiagnostics), () => new TaomSettings()),
+        // #745: read per hit on a refuge's defenders, real-time and auto-resolve.
+        [typeof(RefugeSettingsProvider)] = (() => new RefugeSettingsProvider(),
+            nameof(IRefugeSettingsProvider.Enabled), nameof(TaomSettings.EnableRefuges), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -153,6 +161,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(DreadAuraSettingsProvider))]
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(RefugeSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];
