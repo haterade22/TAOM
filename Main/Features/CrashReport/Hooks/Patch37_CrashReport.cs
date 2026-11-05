@@ -1,30 +1,32 @@
 using System;
 using HarmonyLib;
 using TaleWorlds.DotNet;
-using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.ScreenSystem;
 
 namespace TAOM.Features.CrashReport.Hooks;
 
-// Patch37_CrashReport category — 9 Harmony Finalizers on TaleWorlds lifecycle methods,
-// PLUS one dev-trigger Postfix (CrashReportApplicationTickTrigger in DevTriggers/),
-// PLUS reflection-attached Finalizers on every *CallbacksGenerated method via
-// Native2ManagedPatcher (run-time, hundreds of methods). All share this category so
-// `_harmony.UnpatchCategory("Patch37_CrashReport")` would detach the lot in one call.
+// Patch37_CrashReport category: 5 Harmony Finalizers on TaleWorlds lifecycle methods,
+// PLUS one dev-trigger Postfix (CrashReportApplicationTickTrigger in DevTriggers/).
+// Native2ManagedPatcher separately attaches the same kind of Finalizer, by hand with
+// harmony.Patch, to the short callback-shim allowlist in Native2ManagedTargets.
+//
+// Every target here must be non-virtual (or a sealed override). A Finalizer on a base
+// virtual never runs for an override, which is a different method: four such targets
+// (MissionBehavior.OnMissionTick, MBSubModuleBase.OnSubModuleLoad,
+// MissionView.OnMissionScreenTick, ScriptComponentBehavior.OnTick) could never fire and
+// were removed on 2026-09-24. Patch37TargetShapeTests enforces the rule.
 //
 // A Finalizer that returns null swallows the exception (game continues); returning
 // the exception lets it bubble. We always swallow (caller decision in helper).
 //
-// Priority 800 matches BetterExceptionWindow's published value — keeps us at the
+// Priority 800 matches BetterExceptionWindow's published value, which keeps us at the
 // same priority tier so when both are installed, the "first runs last" Finalizer
 // ordering produces deterministic behaviour. The service's TrySuspend on BUTR's
 // handler should make co-existence rare in practice.
 //
-// MUST register FIRST in SubModule.OnSubModuleLoad to maximise coverage of
-// other mods' OnSubModuleLoad throws. See docs/features/crash-report.md for the
-// chicken-and-egg caveat.
+// Registered first in SubModule.OnSubModuleLoad; see the comment there and
+// docs/features/crash-report.md.
 // Marker class for the Patch37_CrashReport category. No [HarmonyPatch] attribute —
 // the category attribute is applied directly to each Finalizer class below.
 [HarmonyPatchCategory("Patch37_CrashReport")]
@@ -42,15 +44,6 @@ public static class ManagedApplicationTickFinalizer
         => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.DotNet.Managed.ApplicationTick");
 }
 
-[HarmonyPatch(typeof(ScriptComponentBehavior), "OnTick")]
-[HarmonyPatchCategory("Patch37_CrashReport")]
-public static class ScriptComponentBehaviorOnTickFinalizer
-{
-    [HarmonyPriority(800)]
-    private static Exception? Finalizer(Exception __exception)
-        => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.Engine.ScriptComponentBehavior.OnTick");
-}
-
 [HarmonyPatch(typeof(Module), "OnApplicationTick")]
 [HarmonyPatchCategory("Patch37_CrashReport")]
 public static class ModuleOnApplicationTickFinalizer
@@ -58,15 +51,6 @@ public static class ModuleOnApplicationTickFinalizer
     [HarmonyPriority(800)]
     private static Exception? Finalizer(Exception __exception)
         => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.MountAndBlade.Module.OnApplicationTick");
-}
-
-[HarmonyPatch(typeof(MissionView), "OnMissionScreenTick")]
-[HarmonyPatchCategory("Patch37_CrashReport")]
-public static class MissionViewOnMissionScreenTickFinalizer
-{
-    [HarmonyPriority(800)]
-    private static Exception? Finalizer(Exception __exception)
-        => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.MountAndBlade.View.MissionViews.MissionView.OnMissionScreenTick");
 }
 
 [HarmonyPatch(typeof(ScreenManager), "Tick")]
@@ -99,22 +83,4 @@ public static class MissionTickFinalizer
     [HarmonyPriority(800)]
     private static Exception? Finalizer(Exception __exception)
         => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.MountAndBlade.Mission.Tick");
-}
-
-[HarmonyPatch(typeof(MissionBehavior), "OnMissionTick")]
-[HarmonyPatchCategory("Patch37_CrashReport")]
-public static class MissionBehaviorOnMissionTickFinalizer
-{
-    [HarmonyPriority(800)]
-    private static Exception? Finalizer(Exception __exception)
-        => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.MountAndBlade.MissionBehavior.OnMissionTick");
-}
-
-[HarmonyPatch(typeof(MBSubModuleBase), "OnSubModuleLoad")]
-[HarmonyPatchCategory("Patch37_CrashReport")]
-public static class MBSubModuleBaseOnSubModuleLoadFinalizer
-{
-    [HarmonyPriority(800)]
-    private static Exception? Finalizer(Exception __exception)
-        => CrashReportPatchHelper.HandleAndSwallow(__exception, "TaleWorlds.MountAndBlade.MBSubModuleBase.OnSubModuleLoad");
 }

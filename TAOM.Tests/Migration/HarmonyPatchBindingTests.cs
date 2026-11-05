@@ -77,7 +77,8 @@ public class HarmonyPatchBindingTests
 
     // --- discovery ---
 
-    private static List<Type> DiscoverPatchTypes(out int typesFailedToLoad)
+    // Shared with Patch37TargetShapeTests so the suite derives a patch target one way only.
+    internal static List<Type> DiscoverPatchTypes(out int typesFailedToLoad)
     {
         Type[] all;
         try { all = TaomAssembly.GetTypes(); typesFailedToLoad = 0; }
@@ -159,7 +160,7 @@ public class HarmonyPatchBindingTests
             : (true, $"{mt} → {Describe(resolved)}");
     }
 
-    private static (Type declaringType, string methodName, MethodType? methodType, Type[] argTypes) MergeSpec(Type patchType)
+    internal static (Type declaringType, string methodName, MethodType? methodType, Type[] argTypes) MergeSpec(Type patchType)
     {
         var infos = new List<HarmonyMethod>();
 
