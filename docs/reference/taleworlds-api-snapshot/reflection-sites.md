@@ -57,7 +57,6 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:21` | Banner paste refresh |
 | `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:71` | SpecialResources transactional spend |
 | `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:31` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |
-| `TaleWorlds.Engine.PathReuseCache` | `_store` | field | `PersistentPathCache.cs:149` | EditorCacheRebuild path-cache extract |
 | `…Map.DistanceCache.NavigationCache`1` | `_settlementToSettlementDistanceWithLandRatio` | field | `NavigationCacheAdapter.cs:71` | Distance cache rebuild |
 | `…NavigationCache`1` | `_fortificationNeighbors` | field | `NavigationCacheAdapter.cs:73` | Neighbor cache |
 | `…NavigationCache`1` | `_navigationType` | property | `NavigationCacheAdapter.cs:76` | Nav type (property, not field, in v1.4.5) |
@@ -112,6 +111,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestItemVM` | `PopulateQuestLog` | method (private) | `QuestJournalAdapter.cs:30` | Quest Log Fast Open (#854). Cached once at `Bind` and replayed per journal entry to build a deferred finished quest when it is selected. Missing: `Bind` returns a reason, the install line is a warning, and vanilla builds every quest at open |
 | `TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestsVM` | `SetSelectedItem` | method (private) | `QuestJournalAdapter.cs:39` | Quest Log Fast Open (#854). Looked up by name for the attached-patch check (`Bind`, and again on every open). Missing: the `SetSelectedItem` patch reads as not attached, `Bind` returns a reason and no open defers |
 
+Status (2026-11-05): the `PathReuseCache._store` row (added in `41258657`) is removed together with the unwired path-reuse scaffold it covered (1.5.x plan 025, ported). It was never engine reflection: no installed engine assembly defines a `PathReuseCache` type, and the row passed only through the simple-name fallback, which found TAOM's own class. The scaffold is in `6a80bac6`; if it is ever restored, its `_store` self-reflection belongs in Category D, not in this gate.
 Status (2026-11-04): NameplateCull (Patch104) adds three private field rows; they resolve against installed v1.4.8 (ReflectionSiteBindingTests 58/58).
 Status (2026-11-04): MissionStartGuard (Patch103) adds six method rows; they resolve against installed v1.4.8 (ReflectionSiteBindingTests 51/51).
 Status (2026-11-04, 1.4.x): XmlMerge adds one row (MBObjectManager.CreateDocumentFromXmlFile); it resolves against installed v1.4.8.
