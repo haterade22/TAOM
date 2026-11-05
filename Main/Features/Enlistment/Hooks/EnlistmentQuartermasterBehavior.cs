@@ -61,7 +61,7 @@ public class EnlistmentQuartermasterBehavior : CampaignBehaviorBase
             "hero_main_options",
             "taom_enlist_qm_answer",
             "{=taom_enlist_qm_request}I would draw my service kit from the quartermaster.",
-            () => _gate.CanRequestDischargeFrom(PartnerId()),
+            () => _gate.IsServingUnder(PartnerId()),
             OnKitRequested,
             112);
 

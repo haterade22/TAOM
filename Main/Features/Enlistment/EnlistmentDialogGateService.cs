@@ -55,7 +55,7 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
         return EnlistGateResult.Ok;
     }
 
-    public bool CanRequestDischargeFrom(string partnerHeroId)
+    public bool IsServingUnder(string partnerHeroId)
     {
         return _store.Record.IsEnlisted
             && !string.IsNullOrEmpty(partnerHeroId)

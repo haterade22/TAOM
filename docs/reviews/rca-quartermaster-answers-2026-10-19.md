@@ -29,10 +29,10 @@ would still have passed.
 | F8 | LOW (Engine, Data flow, Standards) | Comments and docs said the fallback answers "a future result"; a new result maps to cannot load through the policy default. | Wording | The fallback's purpose was described from intent. | Reworded to "an answer without its own line". |
 | F9 | LOW (Completeness) | The owed check named `/localize` (already run) instead of the paid translation run, and omitted why the cannot-load case has no manual recipe. | Doc accuracy | Copied from the earlier template. | Reworded. |
 
-Follow-ups, outside this change: rename `IEnlistmentDialogGateService.CanRequestDischargeFrom` to
-`IsServingUnder` (it gates the kit and reassignment lines too, not only discharge); at the top rank
-(Sergeant) "Earn the next stripe first" promises a rank that does not exist, which belongs with the
-promotion feedback in #835 (changing it resets 12 translations). #835 still lists a refusal bullet this
+Follow-ups, outside this change: the rename of `IEnlistmentDialogGateService`'s discharge-named
+check to `IsServingUnder`, since done (it gates the kit and reassignment lines too, not only
+discharge); at the top rank (Sergeant) "Earn the next stripe first" promises a rank that does not
+exist, which the seven-rank ladder (#936) fixes with a top-tier answer. #835 still lists a refusal bullet this
 change completes.
 
 ## Convergence pass
