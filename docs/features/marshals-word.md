@@ -413,6 +413,9 @@ cannot execute, each with its engine line), `MarshalTrialRulesM5Tests`, `Command
    - **The runs of 2026-11-05 on trunk `3392f15cb`** (07:59 to 08:11, the Marshal work merged with the Seat's S6 and S7, deployed by the first step). All seven steps read PASS, with a clean unload and
      `swallowed=0` in each. The counts of every run listed above, this one included, were taken with the steer's direction and the trend's baseline read from `Agent.Frame.origin`, while the hold read's slot distance read `Agent.Position`; the build that follows reads all three from
      `Agent.Position` (Deviations rows 36 and 45), so the closer and farther counts of those runs and of the next may differ for that reason.
+   - **The runs of 2026-11-05 on the build of `786df77b9`** (13:34 to 13:43, the hold-the-line driver of its own and the review fixes, one battle per step). The four hold steps read PASS, each with `restored=1`
+     (or `flag_off_after=0`), a clean unload and `swallowed=0`. These are the first runs with all three reads on `Agent.Position` and with the trend counted only for soldiers in the line. In `hold_line_proof` the first
+     control went quiet (`hold-line` skip `control=3 controlBlows=8 reason=no-control`), and the driver then took company 1, the busiest company of the window it had just judged, which passed at `controlBlows=51` (Deviations row 44). Row 50 named these four steps as owed; they ran here.
 
      | Folder under `E:\Temp\command-trial-runs` | Step | Result | The numbers |
      |---|---|---|---|
@@ -439,6 +442,10 @@ cannot execute, each with its engine line), `MarshalTrialRulesM5Tests`, `Command
      | `20261105-080806` | `square_side_kept` | PASS | `before=5.3 chosen=8.4 side0=8.4 side1=8.4 placed=39 laid_out=0` |
      | `20261105-080857` | `volley_massed` | PASS | `massed_holding=31 eligible=39 stale=0 loosed=31 of=31` |
      | `20261105-081049` | `spacing_one_rider` | PASS | `riders=1 units=41 significant=0 driver=Infantry`, infantry spacing `maxDistance=0.80` |
+     | `20261105-133440` | `hold_line_proof` | PASS | `driver=pass flag_off=10 held_blows=0 control_blows=51 peak_near=104 restored=1 steered=34 closer=14 farther=4`; the first control skipped `no-control` at `controlBlows=8` |
+     | `20261105-133728` | `hold_line_slot` | PASS | `qualified=30 far=24 max=5.9 wounded=6 samples=45 clamps=1178 steered=56 closer=25 farther=2 slot_failed=0 restored=1` |
+     | `20261105-134004` | `hold_line_strike` | PASS | `flag_off_before=39 wounded=4 settled=3 flag_on=3 blows_after=2 driver_strike=1 restored=1` |
+     | `20261105-134235` | `hold_line_flag` | PASS | `flag_off_before=39 flag_off_after=0 restored_in=0.3` |
 
 10. Massed fire: put a company of archers on Massed fire (press Comma twice) with an enemy in range. The bows are drawn and held; once most of the archers who can
     still shoot hold, the word is given by itself and the volley follows a fraction of a second apart. The log shows `[Marshal] massed company= holding= eligible= stale=` and the

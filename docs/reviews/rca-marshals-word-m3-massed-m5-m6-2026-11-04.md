@@ -35,14 +35,27 @@ Rows 1 and 11 share a second cause: text written from the plan's intent. The cla
 - **Codex:** it found the cleanup faults in row 9, which no Claude lens raised, and row 10's purity read. It had no game evidence, so it could not see row 4.
 - **Lens 2:** it found the icon chain (row 2) and rated it MED, and it listed 10 text lines as wrong. It left the callback's input frame and thread as not proved. One `native_decompile.py` run showed only the setter of the callback flag, so both stay UNVERIFIED.
 
-## Second wave (no HIGH, items owed)
+## Second wave (no HIGH)
 
-The second wave ran Standards, Efficiency, Completeness and Design at `effort: "high"`. It found no HIGH, so no third wave follows. Its sixteen decisions (W1 to W16) are not in this commit: the maintainer asked to commit and push first. The one with a possible effect on proof is W1: the trend's baseline reads `Agent.Frame.origin` and the steering reads `Agent.Position`, and nothing shows the two are the same point (Completeness item 2, UNVERIFIED). The counts of the runs in this RCA used that read.
+The second wave ran Standards, Efficiency, Completeness and Design at `effort: "high"`. It found no HIGH, so no third wave followed. The one decision with a possible effect on proof was W1: the trend's baseline read `Agent.Frame.origin` and the steering read `Agent.Position`. Lens 2 then showed that native stores the two apart, so W1 put both reads on `Agent.Position` (Deviations rows 36 and 45). The counts of the runs before `786df77b9` used the old reads.
 
-- FOLLOW-UP (no issue: maintainer waived issues for this work): apply W1 to W16 from the second wave.
-- FOLLOW-UP (no issue: maintainer waived issues for this work): a separate hold-the-line driver out of `MarshalFireDriver` (Standards S3). The trade-off is the test fixtures that build the driver; the maintainer decides.
-- FOLLOW-UP (no issue: maintainer waived issues for this work): move the fire table's engine reads into `MarshalView` or the adapter (Standards S4).
+The sixteen decisions W1 to W16, with the separate hold-the-line driver (Standards S3, as W17) and the move of the engine reads out of the fire table (Standards S4, as W18), are applied in `786df77b9`. That closes the three items this section left open.
+
+## Review of the second fix round (2026-11-05)
+
+The fix round was reviewed by seven lenses with three skeptics per finding and a critic, and by Codex at `high`. 31 findings survived the skeptics (1 MEDIUM, 30 LOW), and Codex reported 2 MEDIUM and 1 LOW. All are fixed in `786df77b9`, and an independent checker read the fixes.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 13 | MED (Codex 1; lens 5 at LOW) | A soldier who left the line still added to the trend's closer and farther counts, while `loose=` counted only soldiers in the line | One read with two membership rules | Row 38 moved `loose=` to the line and no test asked the same of the trend | `SlotTrendCount.Read` counts only `inTheLine`, and drops the open interval of a soldier who leaves it. Test first (Deviations row 46) |
+| 14 | MED (lens 6) | After a quiet window the control was picked again by blows of the whole mission, which never fall, so the quiet company could be chosen again | A ranking on a total that cannot decrease | Row 37 fixed the re-pick but kept the old ranking source | `HoldRun` keeps a snapshot of each company's blows at the baseline, and the re-pick takes the busiest company of the window just judged. The run `20261105-133440` shows it (Deviations row 44) |
+| 15 | MED (Codex 2) | `hold_line_slot` and `hold_line_strike` could pass when the soldiers' attack flags did not come back after the lift | A cleanup with no verdict | Only `hold_line_flag` read the flags back | Both steps fail `flag-not-restored` after `RestoreWaitSeconds` and print `restored=`. Tests on a host whose flags stay off (Deviations row 48) |
+| 16 | LOW (30 lens items; Codex 3) | A press on a held company did not write its last slot line; a dead stand-aside fact; text that still said the control is "chosen once"; a pass pattern that accepted fewer steered reads than the check needs; assertions that could not fail; cost items | Small gaps after a large move | The move of the hold into its own driver changed many call sites at once | Applied. One method ends a hold (row 47); the `hold-slot` pattern needs `steered=` of 5 or more; each weak assertion was shown to fail once |
+
+**Root cause of rows 13 to 15:** a rule changed in one place and not in its twin. Rows 13 and 14 each finished half of an earlier row (38 and 37), and row 15 is row 9's cleanup with no reader in two of the three steps that use it. The lesson below names the check: when a row corrects one reader of a rule, search for the other readers in the same change.
+
+**Game proof:** the four hold steps ran on the build of `786df77b9` (`20261105-133440` to `20261105-134235`) and passed, each with its flags restored. The runs are in [marshals-word.md](../features/marshals-word.md).
 
 ## Feedback memories to codify
 
-None. The lesson below carries the rule.
+None. The lessons in `docs/reviews/lessons/testing-qa.md` carry the rules.
