@@ -124,7 +124,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | Campaign | UniqueGameId, time, hero (level/clan/kingdom/gold/renown/influence/race), party (size/wounded/prisoners/morale/food/tier histogram), current settlement or map position, recent CampaignEvents ring buffer |
 | Mission | Scene, mode, time-of-day, teams (alive/total per team), player formations (count/orders), player agent (health/pos/mount/wielded item) |
 | TAOM State | Career, special resources, cultural feats, revolt tuning, active messengers — populated when feature adapters are wired (v1 ships with stubs; subsystems can register state providers later) |
-| MCM Settings | Reflected snapshot of every `AttributeGlobalSettings` / `AttributePerCampaignSettings` provider (TAOM + third-party) |
+| MCM Settings | Reflected snapshot of TAOM's own MCM settings classes: the four that declare their own static `Instance`. The collector reads only settings classes from TAOM's own assembly, so a third-party settings class is skipped by design: its constructor, `Instance` getter and property getters never run inside crash handling, and none of its free-text values are copied into an uploaded bundle; the module list already names every mod and version. Known limitation: TAOM's own `Instance` getters still ask MCM, and when MCM has no TAOM settings registered it can consult the external settings providers other mods registered with it. A dropdown shows its selected value, and MCM's `DiscoveryType` metadata is not listed |
 | Process | Working set, private bytes, GC totals + gen 0/1/2 counts, thread count, uptime, throwing-thread id+name+bg+apartment |
 | System Memory | Process priv/ws/heap **plus** system commit used/limit, headroom + %, available/total physical, memLoad %, and a MEMORY PRESSURE verdict. Rendered `(unavailable)` wholesale when the reader fails, never as zeros |
 | GPU | Per adapter: name, driver version, driver date, VRAM, video processor (via WMI `Win32_VideoController`) |
@@ -225,6 +225,7 @@ No new third-party dependencies.
 - `CrashReportPatchHelperTests`: `HandleAndSwallow` with the service unreachable hands back the same instance, which keeps its throw site across that `throw`; with a reachable service it swallows and passes the origin; when the service throws it hands back the original with its throw site; re-entered from inside the service it hands the inner exception back without capturing it; with no exception it returns null
 - `CrashBundleThrottleTests`: dedup, session cap and cooldown admission, and the 1, 2, 10, 100 suppression-log cadence
 - `PlainTextCrashReportRendererTests`: all 19 sections render, signature in header, inner exception chain, collector failures, and the "last segment only" note under both frame sections exactly when `TAOM.ThrowSite` is present
+- [`McmSettingsCollectorTests`](../../TAOM.Tests/Features/CrashReport/McmSettingsCollectorTests.cs) (8): `Collect` skips a foreign-assembly class that declares its own `Instance` and runs none of its code (`Collect_SkipsAForeignClassThatDeclaresItsOwnInstance_AndRunsNoCode`) and lists TAOM's settings (`Collect_ListsTaomSettings`); a dropdown renders as its selected value, not its type name, and a dropdown whose selection is out of range renders a marker in parentheses instead of throwing; `ResolveInstance`, the `DeclaredOnly` second guard, skips a class that declares no `Instance` and runs none of its code (its constructor flag stays false), takes a class's own hiding `Instance` over the base, and resolves `TaomSettings` without throwing; the entry list omits `DiscoveryType`
 
 Components NOT unit-tested (per ADR-008 + the plan's "Not-tested:" trailer policy):
 
@@ -232,7 +233,7 @@ Components NOT unit-tested (per ADR-008 + the plan's "Not-tested:" trailer polic
 - The live Native2Managed attach: only the `attached N of M` launch log line checks it; no trigger throws inside a callback shim, so the native toggle's pass-through has no in-game check
 - `CrashReportService.HandleException` composition — depends on 14 collectors, each touching TaleWorlds APIs; integration-only
 - TaleWorlds-facing collectors (`Modules`, `Assemblies`, `Campaign`, `Mission`, `Process`, `Gpu`, `Logs`) — best-effort with try/catch on every field; failure surfaces in `CollectorFailures` section
-- MCM settings reflection collector — reflection over loaded third-party assemblies, hard to fixture
+- MCM settings reflection collector: `McmSettingsCollectorTests` covers value rendering, `Instance` resolution and the ownership gate through `Collect()` (a foreign class is skipped, TAOM's settings are listed); the live MCM provider path in a running game is not unit-tested
 - `CrashNotifier` — `InformationManager.ShowInquiry` requires a running engine
 - `ButterLibExceptionHandlerAdapter` — reflection wrapper, exercised by integration
 
@@ -287,7 +288,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 - **Steady-state cost: small, not zero.** Harmony runs a finalizer on every call of its target (with a null `__exception` on success, which returns at once), and the patched method becomes a replacement wrapped in try/catch. The combat callbacks run once per hit, block, missile or agent removal; that cost is unmeasured. PatchShield adds nothing to it: plan 007 put `ManagedCallbacks` on its exclusion list (`PatchShieldPolicy.ExcludedTargetNamespacePrefixes`), so its pass 2 attaches no finalizer to a shim. Before that, and until plan 034 on every other target, a shield finalizer took `__originalMethod`, so Harmony's wrapper called `MethodBase.GetMethodFromHandle` (a reflection-cache lookup that allocates and takes a lock) on every call, per hit for the combat entries ([lessons/harmony-il.md](../reviews/lessons/harmony-il.md), #331).
 - **Suppression log cadence trades recency for volume.** A throw that recurs every frame logs its 1000th occurrence after about 17 s at 60 fps and its 10,000th after about 3 minutes, so before a later hard crash the last suppression line can be minutes old. The bundle (occurrence 1) and the lines at 2, 10 and 100 remain.
 - **WMI for GPU info** runs once per captured crash (not per tick). ~50ms typical.
-- **MCM reflection collector** scans every loaded assembly for `AttributeGlobalSettings<>` derivatives — runs once per captured crash. ~10ms typical.
+- **MCM reflection collector** scans TAOM's own assembly for `AttributeGlobalSettings<>` derivatives and reads only the classes that declare their own `Instance`; it runs once per captured crash.
 
 ## Risks & Known Limitations
 
@@ -326,6 +327,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
 ## Changelog
 
+- 2026-11-05: TAOM's settings appear in bundles (the four classes declare their own `Instance`); third-party settings classes are not read (#982); dropdowns show their selected value. `McmSettingsCollector.Collect` enumerates only TAOM's own assembly, and `ResolveInstance` looks up only an `Instance` the class declares itself (`DeclaredOnly`) as a second guard. The `DiscoveryType` row is removed from the listing. Ported by WP123.
 - 2026-11-04: **Ported to the 1.4.x line** (Bannerlord v1.4.8, port148 WP107): plan 006 and the shield rethrow fix. The 2026-09-24 entries below describe the 1.5.x change set this port carries.
 - 2026-11-04: **Ported plans 007 and 034 to the 1.4.x line**: PatchShield skips the `ManagedCallbacks` shims, and its finalizer finds the shielded method only after a throw.
 - 2026-09-24: **Boot cost and dead finalizers** (plan 006). The Native2Managed sweep patched all 247 `*CallbacksGenerated` methods and cost 29 to 33 s of every launch on the maintainer's desktop (0 to 1 s on player machines); it is now an allowlist of six shims (`Native2ManagedTargets`) and logs its attach time. Four Patch37 finalizers on empty base virtuals were deleted. Both MCM toggles are read at capture time (the `OnSubModuleLoad` gate always saw a null MCM instance) and no longer ask for a restart. Suppression log lines for a recurring crash are written at occurrences 1, 2, 10, 100 and so on.

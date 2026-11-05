@@ -10,6 +10,10 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // disable it.
 public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<BattleLoadDiagnosticsSettings>
 {
+    // Declared here so the crash collector, which reads only an Instance the class declares itself (#982), finds
+    // TAOM's settings. Forwards to MCM's own; name the base explicitly: a bare Instance here would recurse.
+    public static new BattleLoadDiagnosticsSettings? Instance => GlobalSettings<BattleLoadDiagnosticsSettings>.Instance;
+
     public override string Id => "TAOM.BattleLoadDiagnostics";
     public override string DisplayName => "TAOM — Battle Load Diagnostics";
     public override string FolderName => "TAOM";

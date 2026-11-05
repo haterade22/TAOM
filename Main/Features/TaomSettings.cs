@@ -10,6 +10,10 @@ namespace TAOM.Features;
 
 public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 {
+    // Declared here so the crash collector, which reads only an Instance the class declares itself (#982), finds
+    // TAOM's settings. Forwards to MCM's own; name the base explicitly: a bare Instance here would recurse.
+    public static new TaomSettings? Instance => GlobalSettings<TaomSettings>.Instance;
+
     public override string Id => "TAOM";
     public override string DisplayName => "TAOM - Tales From the Age of Men";
     public override string FolderName => "TAOM";
