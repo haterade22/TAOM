@@ -26,6 +26,9 @@ public class CastleRecruitmentService : ICastleRecruitmentService
 
     public bool IsAiEnabled => _settings.IsEnabled && _settings.IsAiEnabled;
 
+    public bool BlocksAiRecruitAtCastle(bool sellerInCastle, bool buyerIsPlayer)
+        => sellerInCastle && !buyerIsPlayer && !IsAiEnabled;
+
     public IReadOnlyDictionary<CastleNotableOccupation, int> GetOccupationTargets()
     {
         var dict = new Dictionary<CastleNotableOccupation, int>();

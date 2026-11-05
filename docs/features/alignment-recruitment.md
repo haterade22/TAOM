@@ -14,7 +14,7 @@ LOTR's factions have a hard moral axis the base game's recruitment doesn't model
 The engine's recruiter-aware gate is **per-notable**, not per-troop. The only method that sees both the recruiter and the recruitment source is `VolunteerModel.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation)`, which returns a recruitable-slot *index cap* (it never sees the individual volunteer `CharacterObject`). Both the player recruit UI (`RecruitVolunteerTroopVM.CanBeRecruited` via `HeroHelper.HeroCanRecruitFromHero`) and AI lords (`RecruitmentCampaignBehavior.RecruitVolunteersFromNotable`) clamp to this cap.
 
 ### Solution
-Override `MaximumIndexHeroCanRecruitFromHero` in TAOM's existing `TaomVolunteerModel`. Returning **`-1`** is the engine's own "recruit nothing from this notable" signal (it already returns -1 for negative relation / being at war), so a single override blocks both the player UI and AI in one place — no Harmony patch, no `OnTroopRecruited` undo.
+Override `MaximumIndexHeroCanRecruitFromHero` in TAOM's existing `TaomVolunteerModel`. Returning **`-1`** is the engine's own "recruit nothing from this notable" signal (the base model can already return -1, when a negative relation and a war stack), so a single override blocks both the player UI and AI in one place, with no `OnTroopRecruited` undo. The one Harmony patch is only for AI trip scoring (see "AI trip scoring" below). The same override also applies the castle recruitment AI toggle (#918), checked before the alignment rule: an AI lord recruiting from a castle notable gets -1 while that toggle is off (see [castle-recruitment.md](castle-recruitment.md)).
 
 Alignment is keyed by **kingdom StringId**, reusing the existing `IAlignmentService.GetKingdomSide` (the same lookup the Execution and Diplomacy features use), backed by `execution/alignment.json`. Both sides are resolved to a kingdom StringId:
 - **Recruiter** ← `buyerHero.Clan.Kingdom.StringId` (the kingdom the recruiter serves).
@@ -28,6 +28,10 @@ TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero   ← boundary: extract ki
 IRecruitmentAlignmentService.IsRecruitmentBlocked        ← pure: alignment predicate (no TaleWorlds types)
         │ uses
 IAlignmentService.GetKingdomSide  +  IRecruitmentAlignmentSettingsProvider (MCM over JSON)
+
+Patch114_AiVolunteerEstimate_Postfix                     ← boundary: AI trip scoring, same keys, zeroes the estimate
+        │ calls
+IRecruitmentAlignmentService.IsRecruitmentBlocked
 ```
 
 ### Block predicate
@@ -37,6 +41,14 @@ IAlignmentService.GetKingdomSide  +  IRecruitmentAlignmentSettingsProvider (MCM 
 - Neutral on either side never blocks; disabled never blocks; if "Apply To AI Lords" is off, AI recruiters never block; if "Apply To Player" is off, the player never blocks. The player and AI gates are independent — you can keep AI gated while exempting yourself, or the reverse.
 
 Note: the service deliberately does **not** call `IAlignmentService.AreEnemyAlignments`, whose Neutral semantics are inverted for this purpose (it treats Neutral as an enemy of everyone).
+
+## AI trip scoring
+
+**Why:** `AiVisitSettlementBehavior.GetApproximateVolunteersCanBeRecruitedDataFromSettlement(Hero, Settlement)` (private, v1.4.8 `AiVisitSettlementBehavior.cs:406`) counts a settlement's filled volunteer slots with no alignment check. The model override above blocks the recruit itself, so an AI lord could plan a trip to a town it can never recruit in. It matters for a kingdom lord far from home scanning foreign towns and villages within half a day, and for a landless kingdom falling back to its initial home. Vanilla already filters settlements of factions at war with the lord's, except villages for a landless kingdom, whose fallback candidates are villages. It shows most while Free and Evil kingdoms are at peace: until the War of the Ring declares their wars (Isengard and Dunland on Rohan at day 30, Full War at day 44, see [war-of-the-ring.md](war-of-the-ring.md)), and always with War of the Ring off.
+
+**The postfix (Patch114, #887):** `Patch114_AiVolunteerEstimate_Postfix` runs after the estimate. It returns at once for a null service, a zero count, or a null hero or settlement. The own-faction check comes next and skips the key reads: a settlement of the lord's own map faction never blocks, and it is most of the calls. Otherwise it extracts the same keys as the model (recruiter `hero.Clan.Kingdom.StringId`, source `settlement.MapFaction.StringId`, player flag `hero == Hero.MainHero`) and asks `IRecruitmentAlignmentService.IsRecruitmentBlocked`. On a block the result becomes `(0, 0f)`. The master and "Apply To AI Lords" toggles apply through the service, so with them off the estimate is vanilla's. A throw is caught and logged once.
+
+**What it does not change:** only the recruit estimate. Food and trade visits to the same settlement keep vanilla's score floor, so the lord can still go there for those. No MCM setting and no player-facing text. Category `Patch114_AlignmentRecruitmentScoring`, applied at ProcessLoad by `AlignmentRecruitmentModule`. Notes: [harmony-patch-registry.md](../reference/harmony-patch-registry.md). Related: [castle-recruitment.md](castle-recruitment.md) (same vanilla estimate, castle slot counts).
 
 ## Configuration
 
@@ -48,7 +60,7 @@ Note: the service deliberately does **not** call `IAlignmentService.AreEnemyAlig
 | | `applyToPlayer` | `true` | When false, the player recruits unrestricted (AI lords are still gated if `applyToAi`). |
 | MCM "World/Recruitment Alignment" | Enable Recruitment Alignment Block / Only Good Rejects Evil / Apply To Player / Apply To AI Lords | as above | MCM overrides JSON at runtime (`Reuse.Singleton` — JSON edits need a process restart; MCM is live). The player and AI toggles are independent; the master toggle off disables the feature for everyone. |
 
-Alignment data itself lives in `execution/alignment.json` (shared with Execution + Diplomacy) — 22 kingdom StringIds, no changes needed for this feature.
+Alignment data itself lives in `execution/alignment.json` (shared with Execution + Diplomacy): 24 keys (kingdom ids and culture ids; see [configs-balance.md](../modding/configs-balance.md)), no changes needed for this feature.
 
 ## Key Files
 
@@ -60,26 +72,32 @@ Alignment data itself lives in `execution/alignment.json` (shared with Execution
 | `Main/Features/AlignmentRecruitment/RecruitmentAlignmentSettingsProvider.cs` | Merges MCM over JSON defaults. |
 | `Main/Features/AlignmentRecruitment/RecruitmentAlignmentIoC.cs` | `Reuse.Singleton` registrations (wired from `Main/IoC.cs`). |
 | `Main/Features/TroopProgression/Models/TaomVolunteerModel.cs` | The `MaximumIndexHeroCanRecruitFromHero` override (added to the existing model). |
+| `Main/Features/AlignmentRecruitment/AlignmentRecruitmentModule.cs` | Feature module: hands the service to the patch, declares the ProcessLoad category. |
+| `Main/Features/AlignmentRecruitment/Hooks/Patch114_AiVolunteerEstimate_Postfix.cs` | The postfix on the AI volunteer estimate. |
 | `Main/SubModule.cs` | Threads `IRecruitmentAlignmentService` into the `TaomVolunteerModel` construction. |
-| `Main/Features/TaomSettings.cs` | The 3 MCM knobs (group "World/Recruitment Alignment", GroupOrder 36). |
+| `Main/Features/TaomSettings.cs` | The 4 MCM knobs (group "World/Recruitment Alignment", GroupOrder 36). |
 | `Main/_Module/ModuleData/recruitment_alignment/recruitment_alignment_config.json` | Default config. |
 
 ## Dependencies
 
 - `IAlignmentService` (Execution feature) + `execution/alignment.json`.
 - The vanilla `VolunteerModel` recruitment chokepoint (player UI + AI both honor `MaximumIndexHeroCanRecruitFromHero`).
+- The vanilla `AiVisitSettlementBehavior.GetApproximateVolunteersCanBeRecruitedDataFromSettlement` estimate, the second engine seam (the postfix's target, called from the private `AiHourlyTick`).
 
 ## Tests
 
 `TAOM.Tests/Features/AlignmentRecruitment/`:
 - `RecruitmentAlignmentServiceTests` — one case per (recruiterSide × sourceSide) cell under both modes, plus master-toggle, the player-vs-AI × applyToAi branches, and null-id-resolves-Neutral. (20 cases)
 - `RecruitmentAlignmentConfigProviderTests` — valid/case-insensitive/unknown `mode`, missing file, malformed JSON, empty object, caching. (8 cases)
+- `AiVolunteerEstimateBindingTests` (BindingVerification, three tests): the target resolves with `(Hero, Settlement)` and a `(int, float)` return; the category applies exactly one postfix on a scratch Harmony instance and the JIT accepts it; the IL of the private `AiHourlyTick` still calls the estimate, so the postfix is not inert.
+- `AlignmentRecruitmentWiringTests`: the module is listed once, named, not parked, owns no save data, declares its one ProcessLoad category, the hook carries that category and a postfix, no behavior or model, and `InitializeStatics` runs on a container.
+- `CampaignHotPathSettingsProvidersTests` (`TAOM.Tests/Features/`): the `RecruitmentAlignmentSettingsProvider` row proves only the lazy `Settings` accessor reads the MCM instance.
 
 The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validated in-game, not unit-tested.
 
 ## How-To
 
-**MCM is authoritative in-game; JSON is the compiled default.** `RecruitmentAlignmentSettingsProvider` reads `TaomSettings.Instance?.X ?? jsonDefault`, and `TaomSettings.Instance` is non-null whenever MCM is loaded (i.e. always, in a normal game). So the MCM toggles win at runtime; the JSON file only supplies the value used in unit tests and during the early-startup window before MCM initializes. This matches every other TAOM settings provider (e.g. `CastleRecruitmentSettingsProvider`). **To change behavior in a running game, use the MCM panel** — editing the JSON alone will not take effect because the hardcoded MCM defaults shadow it.
+**MCM is authoritative in-game; JSON is the compiled default.** `RecruitmentAlignmentSettingsProvider` reads `Settings?.X ?? jsonDefault` through a lazily cached `TaomSettings` accessor (the same as `CastleRecruitmentSettingsProvider`), and `TaomSettings.Instance` is non-null whenever MCM is loaded (i.e. always, in a normal game). So the MCM toggles win at runtime; the JSON file only supplies the value used in unit tests and during the early-startup window before MCM initializes. This matches every other TAOM settings provider (e.g. `CastleRecruitmentSettingsProvider`). **To change behavior in a running game, use the MCM panel**; editing the JSON alone will not take effect because the hardcoded MCM defaults shadow it.
 
 **Restrict to "good rejects evil" only** — toggle "Only Good Rejects Evil" in MCM (the JSON `"mode": "GoodRejectsEvil"` sets the compiled default for tests / pre-MCM startup). Evil lords may then recruit anywhere.
 
@@ -96,7 +114,7 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 - `isPlayer` is `buyerHero == Hero.MainHero` (matching vanilla's own MainHero special-casing in this model). A player-clan party led by a **companion** (not the main hero) is therefore treated as an AI recruiter and follows the "Apply To AI Lords" toggle — intentional, since the engine routes such parties through the AI recruitment path with `mobileParty.LeaderHero`.
 - Recruiter alignment uses `buyerHero.Clan.Kingdom.StringId`. This is equivalent to the engine's own `Hero.MapFaction` (= `Clan.Kingdom ?? Clan`) for alignment purposes: a hero serving a kingdom (vassal or mercenary — mercenary service sets `Clan.Kingdom`) resolves to that kingdom; a clanless/independent hero resolves to Neutral either way.
 - Player UX: blocked notables show greyed-out volunteers (the same visual vanilla uses for negative relation). A custom "won't serve you" tooltip is a possible follow-up (would need a `RecruitVolunteerTroopVM` UI postfix).
-- Garrison auto-recruit and AI map-recruit are inherently same-kingdom and never trigger the gate.
+- Garrison auto-recruit is inherently same-kingdom and never triggers the gate. AI lords do recruit abroad; see "AI trip scoring".
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
@@ -106,6 +124,7 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 ## Changelog
 
 - 2026-06-17 — Initial feature: alignment-gated recruitment via a single `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` `-1` override (no Harmony); kingdom-StringId alignment through `IAlignmentService` / `execution/alignment.json`; Symmetric/GoodRejectsEvil modes + independent player/AI MCM toggles ("World/Recruitment Alignment", GroupOrder 36) + JSON config; 34 unit tests. Issue #286.
+- 2026-10-23: AI trip scoring. Patch114 postfix zeroes the AI volunteer estimate for a blocked pair, so lords stop planning recruiting trips the model would block. Issue #887.
 
 ---
 

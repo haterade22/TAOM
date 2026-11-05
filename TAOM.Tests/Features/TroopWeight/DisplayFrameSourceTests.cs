@@ -81,6 +81,59 @@ public class DisplayFrameSourceTests
             + "penalty subtraction. A tooltip query must not be able to write the shed planner's budget.");
     }
 
+    private const string ScopeCheck = "TroopWeightPenaltyScope.PaysSizePenalty(party)";
+
+    [TestMethod]
+    public void PenaltyScope_ExemptsGarrisonsAndPatrols()
+    {
+        var src = Read("Main", "Features", "TroopWeight", "TroopWeightPenaltyScope.cs");
+
+        // Vanilla GetPartyMemberSizeLimit routes exactly these two to a settlement-derived limit, and nothing TAOM
+        // runs trims either (the shed needs a LeaderHero). Deflated by weight, garrisons deserted every day and
+        // patrols sat over their limit under vanilla's over-limit speed factor.
+        StringAssert.Contains(src, "IsGarrison", "The penalty scope must exempt garrisons.");
+        StringAssert.Contains(src, "IsPatrolParty", "The penalty scope must exempt patrol parties.");
+    }
+
+    [TestMethod]
+    public void WeightPenalty_ExemptParty_ReturnsBeforeItCachesOrSubtracts()
+    {
+        var src = Read("Main", "Features", "TroopWeight", "TroopWeightService.cs");
+
+        int method = src.IndexOf("public void ApplyPartySizeWeightPenalty(", StringComparison.Ordinal);
+        Assert.AreNotEqual(-1, method, "ApplyPartySizeWeightPenalty not found");
+        int gate = src.IndexOf("if (!" + ScopeCheck + ")", method, StringComparison.Ordinal);
+        int cache = src.IndexOf("_lastBaseLimit.GetOrCreateValue", method, StringComparison.Ordinal);
+        int subtract = src.IndexOf("SubtractResultFramePenalty(ref limit", method, StringComparison.Ordinal);
+
+        Assert.AreNotEqual(-1, gate,
+            "ApplyPartySizeWeightPenalty must return for a party outside TroopWeightPenaltyScope (garrisons and "
+            + "patrols). Vanilla desertion removes a quarter of a garrison's excess over PartySizeLimit every day, so "
+            + "a weight-deflated garrison limit makes elite garrisons desert while lords refill them.");
+        Assert.AreNotEqual(-1, cache, "ApplyPartySizeWeightPenalty must cache the true base limit");
+        Assert.AreNotEqual(-1, subtract, "ApplyPartySizeWeightPenalty must subtract the result-frame penalty");
+        Assert.IsTrue(gate < cache && gate < subtract,
+            "The scope early-out must precede the _lastBaseLimit cache write and the penalty subtraction.");
+    }
+
+    [TestMethod]
+    public void DisplayFrames_ExemptParty_KeepVanillaText()
+    {
+        var src = Read("Main", "Features", "TroopWeight", "Hooks", "TroopWeightDisplayHook.cs");
+
+        // A party that pays no penalty has an unweighted limit, so a weighted numerator over it would be a lie
+        // ("600/400" for a garrison 100 under its real cap). Both shared frames check the same scope.
+        foreach (var head in new[] { "private (int Used, int Limit)? Frame(", "private (string Label, bool IsOverCapacity)? BuildLabel(" })
+        {
+            int start = src.IndexOf(head, StringComparison.Ordinal);
+            Assert.AreNotEqual(-1, start, head + " not found");
+            int next = src.IndexOf("\n    }", start, StringComparison.Ordinal);
+            Assert.AreNotEqual(-1, next, head + " has no end");
+            StringAssert.Contains(src.Substring(start, next - start), ScopeCheck,
+                head + " must return null (vanilla's text) for a party outside TroopWeightPenaltyScope.");
+        }
+    }
+
     [TestMethod]
     public void DisplayHook_DoesNotRewriteHeadcountRows()
     {

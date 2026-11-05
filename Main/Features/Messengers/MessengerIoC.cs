@@ -11,6 +11,7 @@ public static class MessengerIoC
         container.Register<IMessengerStateStore, MessengerStateStore>(Reuse.Singleton);
         container.Register<IMessengerRandomSource, MessengerRandomSource>(Reuse.Singleton);
         container.Register<IMessengerService, MessengerService>(Reuse.Singleton);
+        container.Register<IMessengerConversationState, MessengerConversationState>(Reuse.Singleton);
         container.Register<MessengerCampaignBehavior>(Reuse.Singleton);
     }
 }

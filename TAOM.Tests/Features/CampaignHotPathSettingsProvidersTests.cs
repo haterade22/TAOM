@@ -7,6 +7,7 @@ using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features;
 using TAOM.Features.AlignmentDesertion;
+using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.CaravanTrade;
 using TAOM.Features.CastleRecruitment;
@@ -63,6 +64,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(NameplateCullSettingsProvider))]
     // Shadowfax Screens: read on every screen open and by each screen's timer points, from the Battle Load Diagnostics page.
     [DataRow(typeof(ShadowfaxScreensSettingsProvider))]
+    // #887: read per foreign candidate per AI lord think (Patch114) and per notable per party-hour (TaomVolunteerModel).
+    [DataRow(typeof(RecruitmentAlignmentSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)

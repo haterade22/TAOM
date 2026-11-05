@@ -159,8 +159,8 @@ verbatim, so a hired troop is mechanically identical to its source.
 
 None in C#. The feature depends on data already owned by `TroopProgression` (recruitment-pool weights)
 and on vanilla `RecruitmentCampaignBehavior` / `RecruitmentAgentSpawnBehavior` being unpatched by TAOM
-— `Patch42` postfixes `HourlyTickParty` in the same class for castle recruitment but does not touch the
-mercenary path.
+(CastleRecruitment's `HourlyTickPartyEvent` listener calls vanilla `CheckRecruiting` for AI lords in a castle
+but does not touch the mercenary path).
 
 ## Tests
 

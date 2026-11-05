@@ -38,7 +38,7 @@ MapEventManager.Tick();                                      // advance active M
 _campaignPeriodicEventManager.TickPartialHourlyAi();         // STAGGERED party-AI ticks
 ```
 `CampaignEventDispatcher.HourlyTickParty(mobileParty)` (CampaignEventDispatcher.cs:1251) fans each party's hourly tick
-out to every event receiver (:1256) — this is the dispatch TAOM's CastleRecruitment Patch42 postfixes.
+out to every event receiver (:1256); this is the dispatch TAOM's CastleRecruitment listens to (a `HourlyTickPartyEvent` listener).
 
 ### Party AI — `MobilePartyAi` (MobilePartyAi.cs:17)
 `Ai.Tick(dt)` (:311): if **`DefaultBehaviorNeedsUpdate`** (:101) → recompute. `CheckPartyNeedsUpdate` (:468) scores
@@ -67,11 +67,13 @@ is a lazy recompute: parties only re-decide when something changed, not every fr
 
 ## TAOM relevance + gotchas
 - **Every TAOM periodic behavior is driven here** (Phase 9): CultureConversion daily completion, CastleRecruitment
-  daily maintenance + `HourlyTickParty` postfix, CultureMarketplace `DailyTickSettlement`, SpecialResources,
+  daily maintenance + `HourlyTickPartyEvent` listener, CultureMarketplace `DailyTickSettlement`, SpecialResources,
   BanditManagement — all fire on this clock crossing day/hour boundaries.
-- **CastleRecruitment Patch42** sits exactly on this loop: a postfix on `RecruitmentCampaignBehavior.HourlyTickParty`
-  (the per-party hourly dispatch, :1256) + transpilers on `AiVisitSettlementBehavior.AiHourlyTick` (the party-AI
-  decision that routes AI lords to settlements — the `MobilePartyAi` loop).
+- **CastleRecruitment** sits exactly on this loop: a `HourlyTickPartyEvent` listener in `CastleRecruitmentBehavior`
+  (the per-party hourly dispatch, :1256; it invokes vanilla's private `CheckRecruiting` for AI parties in a castle)
+  and the Patch42 transpiler on `AiVisitSettlementBehavior.AiHourlyTick` (the party-AI decision that routes AI lords
+  to settlements, raised by AiPartyThinkBehavior on TickPartialHourlyAiEvent, every 6 hours by default, 1 or 3 for
+  armies and rethinks).
 - **`CampaignTime` is the unit for all TAOM deadlines**: Messengers travel days, Siege-defense deadline,
   CultureConversion `RequiredHoldDays`. Build with `CampaignTime.Now + CampaignTime.Days(n)`, compare via operators —
   **never raw `_numTicks`**. It's a `struct` (cheap by-value).

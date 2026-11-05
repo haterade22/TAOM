@@ -9,6 +9,7 @@ Patches: 249. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | Patch class | Engine target |
 |---|---|
 | `TAOM.Features.AdvancedCombat.Hooks.Agent_CheckToDropFlaggedItem_Guard_Patch` | `TaleWorlds.MountAndBlade.Agent.Void CheckToDropFlaggedItem()` |
+| `TAOM.Features.AlignmentRecruitment.Hooks.Patch114_AiVolunteerEstimate_Postfix` | `TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors.AiVisitSettlementBehavior.ValueTuple`2 GetApproximateVolunteersCanBeRecruitedDataFromSettlement(Hero hero, Settlement settlement)` |
 | `TAOM.Features.Arena.Hooks.GauntletMovie_Release_AvGuard_Patch` | `TaleWorlds.GauntletUI.Data.GauntletMovie.Void Release()` |
 | `TAOM.Features.Arena.Hooks.Patch46_TournamentDwarfDismount` | `SandBox.Tournaments.MissionLogics.TournamentFightMissionController.Void PrepareForMatch()` |
 | `TAOM.Features.Arena.Hooks.Patch60_TournamentExitMovieRelease` | `SandBox.GauntletUI.Missions.MissionGauntletTournamentView.Void OnMissionScreenFinalize()` |
@@ -73,8 +74,6 @@ Patches: 249. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.CaravanTrade.Hooks.CaravansCampaignBehavior_GetTradeScoreForTown_Patch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior.Single GetTradeScoreForTown(MobileParty caravanParty, Town town, CampaignTime lastHomeVisitTimeOfCaravan, Single caravanFullness, Boolean distanceCut, ref NavigationType bestNavigationType, ref Boolean isTargetingPort)` |
 | `TAOM.Features.CareerSystem.Hooks.Patch27_CareerSystem.ViewModel_ExecuteCommand_CareerScreen_Patch` | `TaleWorlds.Library.ViewModel.Void ExecuteCommand(String commandName, Object[] parameters)` |
 | `TAOM.Features.CastleRecruitment.Hooks.Patch42_AiHourlyTick_Transpiler` | `TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors.AiVisitSettlementBehavior.Void AiHourlyTick(MobileParty mobileParty, PartyThinkParams p)` |
-| `TAOM.Features.CastleRecruitment.Hooks.Patch42_FillSettlements_Transpiler` | `TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors.AiVisitSettlementBehavior.Void FillSettlementsToVisitWithDistancesAsDays(MobileParty mobileParty, List`1 listToFill)` |
-| `TAOM.Features.CastleRecruitment.Hooks.Patch42_HourlyTickParty_Postfix` | `TaleWorlds.CampaignSystem.CampaignBehaviors.RecruitmentCampaignBehavior.Void HourlyTickParty(MobileParty mobileParty)` |
 | `TAOM.Features.CharacterCreation.Hooks.CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.CharacterCreationCampaignBehavior.Void AgeSelectionAdultOptionOnSelect(CharacterCreationManager characterCreationManager)` |
 | `TAOM.Features.CharacterCreation.Hooks.CharacterCreationCampaignBehavior_GetAdultMenuArgs_Patch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.CharacterCreationCampaignBehavior.List`1 GetAdultMenuNarrativeMenuCharacterArgs(CultureObject culture, String occupationType, CharacterCreationManager characterCreationManager)` |
 | `TAOM.Features.CharacterCreation.Hooks.CharacterCreationCampaignBehavior_GetAgeSelectionMenuArgs_Patch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.CharacterCreationCampaignBehavior.List`1 GetAgeSelectionMenuNarrativeMenuCharacterArgs(CultureObject culture, String occupationType, CharacterCreationManager characterCreationManager)` |
@@ -176,6 +175,7 @@ Patches: 249. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.MarriageAlignment.Hooks.Patch81_MarriageClanDraw` | `TaleWorlds.CampaignSystem.CampaignBehaviors.RomanceCampaignBehavior.Void CheckNpcMarriages(Clan consideringClan)` |
 | `TAOM.Features.Mcm.Hooks.Patch41_McmLayoutFix` | `Bannerlord.UIExtenderEx.ResourceManager.WidgetFactoryManager.Void CreateAndRegister(String name, XmlDocument xmlDocument)` |
 | `TAOM.Features.MenuLinkColors.Hooks.Patch64_MenuLinkColors` | `TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.GameMenuVM.Void set_ContextText(String value)` |
+| `TAOM.Features.Messengers.Hooks.MessengerSessionRulesPatch` | `TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior.Boolean conversation_lord_join_army_on_condition()` |
 | `TAOM.Features.MissionStartGuard.Hooks.Mission_AfterStart_MissionStartGuard_Patch` | `TaleWorlds.MountAndBlade.Mission.Void AfterStart()` |
 | `TAOM.Features.MixedFormations.Hooks.Patch30_FormationGetOrderPositionOfUnit` | `TaleWorlds.MountAndBlade.Formation.WorldPosition GetOrderPositionOfUnit(Agent unit)` |
 | `TAOM.Features.NameplateCull.Hooks.SettlementNameplatesVM_Update_NameplateCull_Patch` | `SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM.Void Update()` |

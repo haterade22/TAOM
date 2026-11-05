@@ -112,7 +112,8 @@ public class MessengerCampaignBehaviorTests
             Substitute.For<IMessengerStateStore>(),
             Substitute.For<IMessengerSettingsProvider>(),
             Substitute.For<IModLogger>(),
-            Substitute.For<ICoopSessionProvider>());
+            Substitute.For<ICoopSessionProvider>(),
+            Substitute.For<IMessengerConversationState>());
 
         Assert.IsInstanceOfType(behavior, typeof(CampaignBehaviorBase));
     }

@@ -77,7 +77,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomPartyNavigationModel` | `DefaultPartyNavigationModel` | `NavalTravel` — **not registered**; the `AddModel` call in `SubModule.cs` is commented out, so these overrides do not run |
 | `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `TroopProgression` |
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | `CulturalFeats` |
-| `TaomVolunteerModel` | `DefaultVolunteerModel` | `TroopProgression` |
+| `TaomVolunteerModel` | `DefaultVolunteerModel` | `TroopProgression` (+ `AlignmentRecruitment`, `CastleRecruitment`) |
 | `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | `CulturalFeats` |
 | `TaomPartySpeedModel` | `DefaultPartySpeedCalculatingModel` | `CulturalFeats` |
 | `TaomSettlementProsperityModel` | `DefaultSettlementProsperityModel` | `CulturalFeats` |

@@ -21,6 +21,24 @@ namespace TAOM.Tests.Features.Enlistment;
 public class ServiceVocabularyTests
 {
     [TestMethod]
+    public void EnlistUnavailableReason_OkThroughAMessenger_ExplainsTheMessenger()
+    {
+        var hint = ServiceVocabulary.EnlistUnavailableReason(EnlistGateResult.Ok, throughMessenger: true);
+
+        StringAssert.Contains(hint.Value, "{=taom_enlist_not_by_messenger}");
+    }
+
+    [DataTestMethod]
+    [DataRow(EnlistGateResult.AtWarWithYourKingdom, "{=taom_enlist_no_at_war}")]
+    [DataRow(EnlistGateResult.CommanderUnavailable, "{=taom_enlist_no_generic}")]
+    public void EnlistUnavailableReason_AnyOtherVerdictThroughAMessenger_KeepsItsOwnReason(EnlistGateResult verdict, string key)
+    {
+        var hint = ServiceVocabulary.EnlistUnavailableReason(verdict, throughMessenger: true);
+
+        StringAssert.Contains(hint.Value, key);
+    }
+
+    [TestMethod]
     public void EnlistUnavailableReason_AtWarWithYourKingdom_NamesTheWarSpecifically()
     {
         var hint = ServiceVocabulary.EnlistUnavailableReason(EnlistGateResult.AtWarWithYourKingdom);
