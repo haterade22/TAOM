@@ -465,6 +465,8 @@
 
 	<string id="taom_enlist_wait_discharged" text="Your service has ended." />
 
+	<string id="taom_enlist_act_raid" text="The column is raiding." />
+
   </strings>
 
 </base>

@@ -68,12 +68,14 @@ public class ServiceMaintenanceServiceTests
         _store.Record.CommanderHeroId = "lord_1_1";
     }
 
-    private void Commander(bool followable = true, bool inMapEvent = false, int token = 0)
+    private void Commander(bool followable = true, bool inMapEvent = false, int token = 0,
+        bool raiding = false)
     {
         _commander.GetTickSnapshot(Arg.Any<string>()).Returns(new CommanderTickSnapshot(
             exists: followable, isAlive: followable, isPrisoner: false,
             partyId: followable ? "lord_party_1" : null, partyIsActive: followable,
-            partyIsInMapEvent: inMapEvent, mapEventToken: token));
+            partyIsInMapEvent: inMapEvent, mapEventToken: token,
+            partyIsRaiding: raiding));
     }
 
     private void Presence(bool parked = true, bool inMapEvent = false, bool encounter = false,
@@ -293,6 +295,35 @@ public class ServiceMaintenanceServiceTests
 
         Assert.AreEqual("lord_1_1", requested);
         Assert.IsTrue(_store.Record.PendingCommanderAttachment);
+    }
+
+    [TestMethod]
+    public void Pump_CommanderRaiding_DoesNotRaiseOrArmTheRetry()
+    {
+        // #831: a village raid is not a battle to join.
+        MakeEnlisted();
+        Commander(followable: true, inMapEvent: true, token: 7, raiding: true);
+        var raised = 0;
+        _pump.BattleJoinRequested += _ => raised++;
+
+        PumpExpensive();
+
+        Assert.AreEqual(0, raised);
+        Assert.IsFalse(_store.Record.PendingCommanderAttachment);
+        Assert.IsNull(_store.Record.NextAttachRetryAtHours);
+    }
+
+    [TestMethod]
+    public void Pump_CommanderInABattleThatIsNotARaid_StillRaisesTheJoin()
+    {
+        MakeEnlisted();
+        Commander(followable: true, inMapEvent: true, token: 7, raiding: false);
+        string requested = null;
+        _pump.BattleJoinRequested += id => requested = id;
+
+        PumpExpensive();
+
+        Assert.AreEqual("lord_1_1", requested);
     }
 
     [TestMethod]

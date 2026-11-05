@@ -33,6 +33,13 @@ public interface IEncounterAdapter
     bool IsPartyInMapEvent(string partyId);
 
     /// <summary>
+    /// True when the given party is the aggressor in a raid, forced supplies or forced volunteers. Read
+    /// through the same <c>VillageRaidReader</c> as the commander snapshots so the join floor and the
+    /// snapshots cannot disagree. False on a failed read, which joins (#831).
+    /// </summary>
+    bool IsPartyRaiding(string partyId);
+
+    /// <summary>
     /// True when the main party is genuinely inside a map event. This is the ground truth for
     /// "did the join actually land" — <see cref="JoinBattle"/> cannot be trusted on its own
     /// because the engine's JoinBattleInternal silently no-ops when EncounteredBattle is null.

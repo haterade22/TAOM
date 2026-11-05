@@ -534,6 +534,22 @@ public class CommanderSettlementIdentityTests
     }
 
     /// <summary>
+    /// #831: both snapshot constructions fill the raiding flag through the one shared reader, so the
+    /// hourly and the pump views cannot drift apart.
+    /// </summary>
+    [TestMethod]
+    public void BothSnapshots_FillPartyIsRaidingThroughTheSharedReader()
+    {
+        var src = System.IO.File.ReadAllText("../../../../Main/Adapters/CommanderLordAdapter.cs");
+        foreach (var ctor in new[] { "new CommanderSnapshot(", "new CommanderTickSnapshot(" })
+        {
+            var call = src.Substring(src.IndexOf(ctor));
+            call = call.Substring(0, call.IndexOf(");"));
+            StringAssert.Contains(call, "VillageRaidReader.IsRaiding(", $"{ctor} must set partyIsRaiding from the shared reader");
+        }
+    }
+
+    /// <summary>
     /// Assess compares the two ids with ordinal equality, so a snapshot that disagrees with itself
     /// produces SettlementExitRequired for the settlement it just told us to enter.
     /// </summary>

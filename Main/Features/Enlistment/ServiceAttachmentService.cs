@@ -120,7 +120,14 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (playerIsSomewhere && !sameSettlement && !onTownLeave)
             return new AttachmentAssessment(AttachmentStatus.SettlementExitRequired);
 
-        if (commander.PartyIsInMapEvent)
+        // #831: a raid, forced supplies or forced volunteers the commander is running is not a battle
+        // to join, so it falls through to the march rules (no BattleJoinRequired, no retry budget).
+        // "No pending flag" holds for Assess and the pump; OnPartyJoinedRunningMapEvent still arms
+        // PendingCommanderAttachment when the commander starts a raid, and that flag is inert because
+        // its only reader sits behind the joinable gate (ServiceMaintenanceService.TryRequestBattleJoin).
+        // On the defender side a raid is a real fight and still joins.
+        if (VillageActionJoinPolicy.IsJoinableBattle(
+                commander.PartyIsInMapEvent, commander.PartyIsRaiding))
         {
             // Same-event verification is the battle service's job; here "player is in some
             // map event" while the commander fights means there is nothing to attach.
@@ -129,6 +136,8 @@ public class ServiceAttachmentService : IServiceAttachmentService
                 : new AttachmentAssessment(AttachmentStatus.BattleJoinRequired);
         }
 
+        // This verdict also covers the commander's own raid (#831) when the player is in some other map
+        // event; the reconciler takes no action on it (EnlistmentReconciler, PlayerInForeignMapEvent case).
         if (player.IsInMapEvent)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.PlayerInForeignMapEvent);
 

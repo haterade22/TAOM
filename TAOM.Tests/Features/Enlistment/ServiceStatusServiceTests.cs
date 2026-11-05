@@ -56,11 +56,13 @@ public class ServiceStatusServiceTests
 
     private void Commander(
         bool inMapEvent = false, bool besieging = false,
-        string settlementId = null, string settlementName = null, bool alive = true)
+        string settlementId = null, string settlementName = null, bool alive = true,
+        bool raiding = false)
     {
         _commander.GetSnapshot("lord_1").Returns(new CommanderSnapshot(
             exists: true, isAlive: alive, partyId: "lord_party", partyIsActive: true,
             partyIsInMapEvent: inMapEvent, partyIsBesieging: besieging,
+            partyIsRaiding: raiding,
             partyIsInSettlement: !string.IsNullOrEmpty(settlementId),
             settlementId: settlementId, settlementName: settlementName,
             name: "Boromir"));
@@ -110,6 +112,16 @@ public class ServiceStatusServiceTests
         // the player needs.
         Commander(inMapEvent: true, besieging: true, settlementId: "town_ES1", settlementName: "Minas Tirith");
         Assert.AreEqual(CommanderActivity.InBattle, _sut.Build().Activity);
+    }
+
+    [DataTestMethod]
+    [DataRow(true, CommanderActivity.Raiding, DisplayName = "raiding -> Raiding")]
+    [DataRow(false, CommanderActivity.InBattle, DisplayName = "in a battle, not raiding -> InBattle")]
+    public void Build_RaidingOutranksBattle(bool raiding, CommanderActivity expected)
+    {
+        // #831: a column raiding a village is not "engaged"; a commander in any other battle still is.
+        Commander(inMapEvent: true, raiding: raiding);
+        Assert.AreEqual(expected, _sut.Build().Activity);
     }
 
     [TestMethod]

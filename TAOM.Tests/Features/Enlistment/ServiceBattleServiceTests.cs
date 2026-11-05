@@ -74,6 +74,64 @@ public class ServiceBattleServiceTests
         _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
     }
 
+    // ---- #831: village hostile actions are not battles to join ------------------------------
+
+    private void CommanderRaids()
+    {
+        _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Attacker);
+        _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Attacker).Returns(true);
+        _encounter.JoinBattle(PartyBattleSide.Attacker).Returns(true);
+        _encounter.IsPartyRaiding("lord_party_1").Returns(true);
+    }
+
+    [TestMethod]
+    public void BattleStarted_CommanderRaiding_SkipsWithNoTransitionJoinOrArmyChange()
+    {
+        MakeEnlisted();
+        CommanderRaids();
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
+        _encounter.DidNotReceive().EnsureEncounterAgainst(Arg.Any<string>());
+        _army.DidNotReceive().JoinCommanderArmy(Arg.Any<string>());
+        _army.DidNotReceive().LeaveArmy();
+        _partyAdapter.DidNotReceive().RestorePresence();
+        _gameMenu.DidNotReceive().EnsureMenuOpen(Arg.Any<string>());
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("commander raiding: not a battle to join")));
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void BattleStarted_CommanderRaiding_ButPlayerAlreadyInAMapEvent_StillJoins()
+    {
+        // The propagation edge: the player is already in a map event (any event), so the floor must
+        // not strand the existing join.
+        MakeEnlisted();
+        CommanderRaids();
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Attacker);
+    }
+
+    [TestMethod]
+    public void BattleStarted_CommanderNotRaiding_Joins()
+    {
+        MakeEnlisted();
+        CommanderRaids();
+        _encounter.IsPartyRaiding("lord_party_1").Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Attacker);
+    }
+
     [TestMethod]
     public void BattleStarted_TransitionsToBattleBeforeMenuWork()
     {

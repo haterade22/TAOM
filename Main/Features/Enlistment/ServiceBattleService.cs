@@ -69,6 +69,17 @@ public class ServiceBattleService : IServiceBattleService
         if (!_encounter.IsCommanderBattleJoinable(commanderPartyId, side.Value))
             return;
 
+        // FLOOR for #831, beneath Assess and the pump: a raid, forced supplies or forced volunteers
+        // the commander runs is not a battle to join. No transition, no join and no rollback (nothing
+        // was started), and no failure log. A player already in a map event (any event, which covers
+        // the propagation edge into the commander's own) falls through to the existing join path, which
+        // must not be stranded half-way.
+        if (!_encounter.IsMainPartyInMapEvent && _encounter.IsPartyRaiding(commanderPartyId))
+        {
+            _logger?.LogInfo($"[Enlistment] commander raiding: not a battle to join ({trigger})");
+            return;
+        }
+
         // Ordering is load-bearing and mirrors the donor's proven sequence:
         //   state (redirect-exempt) -> presence -> position -> encounter -> join -> menu.
         // Presence must be restored BEFORE any encounter work: the engine skips inactive parties

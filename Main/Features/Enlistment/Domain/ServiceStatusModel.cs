@@ -11,6 +11,7 @@ public enum CommanderActivity
     InBattle = 2,
     Besieging = 3,
     Unavailable = 4,
+    Raiding = 5,
 }
 
 /// <summary>

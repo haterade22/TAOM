@@ -552,7 +552,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (noBattleAnywhere && _army?.IsInArmy == true)
             _army.LeaveArmy();
 
-        if (record.State == EnlistmentState.EnlistedBattle && noBattleAnywhere)
+        // The latch demotes on the same predicate as the pump (#831): a village action the commander
+        // runs is no battle the soldier is in, so it must not hold EnlistedBattle open. The army-leave
+        // sweep above keeps the broader predicate on purpose.
+        var noJoinableBattleAnywhere = !presence.IsInMapEvent
+            && !VillageActionJoinPolicy.IsJoinableBattle(
+                snapshot.PartyIsInMapEvent, snapshot.PartyIsRaiding)
+            && !_encounter.HasCurrent;
+        if (record.State == EnlistmentState.EnlistedBattle && noJoinableBattleAnywhere)
             _machine.TryTransition(EnlistmentState.EnlistedAttached);
 
         var assessment = _attachment.Assess(record.State, snapshot, presence, record.OnTownLeave);
@@ -579,7 +586,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
                 $" | player: {presence.Describe()}" +
                 $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
-                $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner} settlement={snapshot.SettlementId ?? "-"}");
+                $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} raiding={snapshot.PartyIsRaiding} prisoner={snapshot.IsPrisoner} settlement={snapshot.SettlementId ?? "-"}");
 
         // Self-heal a stranded conversation encounter. Out of any map event there is no legitimate
         // reason for a live PlayerEncounter: the oath conversation's encounter should have been

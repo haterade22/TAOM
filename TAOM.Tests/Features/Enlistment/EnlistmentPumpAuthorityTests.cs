@@ -76,12 +76,33 @@ public class EnlistmentPumpAuthorityTests
     [DataRow(true, true, false, false, DisplayName = "player + commander -> keep")]
     public void Reconciler_AndPump_UseIdenticalStaleBattlePredicate(
         bool playerInMapEvent, bool commanderInMapEvent, bool encounterOpen, bool expectDemote)
+        => AssertIdenticalStaleBattleDecision(
+            playerInMapEvent, commanderInMapEvent, encounterOpen, false, expectDemote);
+
+    /// <summary>
+    /// #831: a commander raiding a village (aggressor) is in a map event the soldier does not
+    /// join, so it must not hold a stale latch open. Both predicates demote; a defender-side raid
+    /// is a battle the soldier joins, so it keeps the latch.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(false, false, true, true, DisplayName = "commander raiding -> demote")]
+    [DataRow(false, false, false, false, DisplayName = "commander in a battle, not raiding -> keep")]
+    [DataRow(true, false, true, false, DisplayName = "raiding but player in map event -> keep")]
+    [DataRow(false, true, true, false, DisplayName = "raiding but encounter open -> keep")]
+    public void Reconciler_AndPump_DemoteWhileTheCommanderRaids(
+        bool playerInMapEvent, bool encounterOpen, bool commanderRaiding, bool expectDemote)
+        => AssertIdenticalStaleBattleDecision(
+            playerInMapEvent, true, encounterOpen, commanderRaiding, expectDemote);
+
+    private void AssertIdenticalStaleBattleDecision(
+        bool playerInMapEvent, bool commanderInMapEvent, bool encounterOpen,
+        bool commanderRaiding, bool expectDemote)
     {
         // --- pump ---
         _store.Record.State = EnlistmentState.EnlistedBattle;
         _commander.GetTickSnapshot(Arg.Any<string>()).Returns(new CommanderTickSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
-            partyIsInMapEvent: commanderInMapEvent));
+            partyIsInMapEvent: commanderInMapEvent, partyIsRaiding: commanderRaiding));
         _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
             mainPartyExists: true, isInMapEvent: playerInMapEvent, hasPlayerEncounter: encounterOpen));
 
@@ -92,7 +113,7 @@ public class EnlistmentPumpAuthorityTests
         _store.Record.State = EnlistmentState.EnlistedBattle;
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
-            partyIsInMapEvent: commanderInMapEvent));
+            partyIsInMapEvent: commanderInMapEvent, partyIsRaiding: commanderRaiding));
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isInMapEvent: playerInMapEvent, hasPlayerEncounter: encounterOpen));
         _encounter.HasCurrent.Returns(encounterOpen);

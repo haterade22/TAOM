@@ -25,6 +25,13 @@ public readonly struct CommanderTickSnapshot
     public string PartyId { get; }
     public bool PartyIsActive { get; }
     public bool PartyIsInMapEvent { get; }
+
+    /// <summary>
+    /// True when the commander is the aggressor in a raid, forced supplies or forced volunteers (#831).
+    /// A soldier does not join those; a failed read is false, which joins.
+    /// </summary>
+    public bool PartyIsRaiding { get; }
+
     public string PartySettlementId { get; }
 
     /// <summary>
@@ -56,7 +63,8 @@ public readonly struct CommanderTickSnapshot
         bool partyIsActive = false,
         bool partyIsInMapEvent = false,
         string partySettlementId = null,
-        int mapEventToken = 0)
+        int mapEventToken = 0,
+        bool partyIsRaiding = false)
     {
         Exists = exists;
         IsAlive = isAlive;
@@ -64,6 +72,7 @@ public readonly struct CommanderTickSnapshot
         PartyId = partyId;
         PartyIsActive = partyIsActive;
         PartyIsInMapEvent = partyIsInMapEvent;
+        PartyIsRaiding = partyIsRaiding;
         PartySettlementId = partySettlementId;
         MapEventToken = mapEventToken;
     }

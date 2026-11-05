@@ -13,6 +13,13 @@ public sealed class CommanderSnapshot
     public string PartyId { get; }
     public bool PartyIsActive { get; }
     public bool PartyIsInMapEvent { get; }
+
+    /// <summary>
+    /// True when the commander is the aggressor in a raid, forced supplies or forced volunteers (#831).
+    /// A soldier does not join those; a failed read is false, which joins.
+    /// </summary>
+    public bool PartyIsRaiding { get; }
+
     public bool PartyIsInSettlement { get; }
     public string SettlementId { get; }
 
@@ -70,7 +77,8 @@ public sealed class CommanderSnapshot
         string captivitySettlementName = null,
         string cultureId = null,
         string factionId = null,
-        string name = null)
+        string name = null,
+        bool partyIsRaiding = false)
     {
         Exists = exists;
         IsAlive = isAlive;
@@ -80,6 +88,7 @@ public sealed class CommanderSnapshot
         PartyId = partyId;
         PartyIsActive = partyIsActive;
         PartyIsInMapEvent = partyIsInMapEvent;
+        PartyIsRaiding = partyIsRaiding;
         PartyIsInSettlement = partyIsInSettlement;
         SettlementId = settlementId;
         SettlementName = settlementName;

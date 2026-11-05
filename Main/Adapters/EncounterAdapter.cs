@@ -50,6 +50,19 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
+    public bool IsPartyRaiding(string partyId)
+    {
+        try
+        {
+            return VillageRaidReader.IsRaiding(FindParty(partyId));
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] IsPartyRaiding('{partyId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
     public bool IsPartyInMapEvent(string partyId)
     {
         try

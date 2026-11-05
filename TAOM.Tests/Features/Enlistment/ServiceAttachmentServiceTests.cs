@@ -20,12 +20,15 @@ public class ServiceAttachmentServiceTests
         _service = new ServiceAttachmentService(_attachment, Substitute.For<IGameMenuAdapter>(), Substitute.For<IModLogger>());
     }
 
-    private static CommanderSnapshot HealthyCommander(bool inMapEvent = false, bool inSettlement = false)
+    private static CommanderSnapshot HealthyCommander(
+        bool inMapEvent = false, bool inSettlement = false,
+        bool raiding = false)
     {
         return new CommanderSnapshot(
             exists: true, isAlive: true, isPrisoner: false,
             partyId: "lord_party_1", partyIsActive: true,
             partyIsInMapEvent: inMapEvent, partyIsInSettlement: inSettlement,
+            partyIsRaiding: raiding,
             cultureId: "gondor", name: "Lord Test");
     }
 
@@ -117,6 +120,45 @@ public class ServiceAttachmentServiceTests
             EnlistmentState.EnlistedAttached, HealthyCommander(inMapEvent: true), Player(parked: true), onTownLeave: false);
 
         Assert.AreEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderRaiding_FallsThroughToTheMarchRules()
+    {
+        // #831: a village hostile action is not a battle to join, so no BattleJoinRequired (and with
+        // it no retry budget and no pending flag). The soldier is parked and the column marches.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: true),
+            Player(parked: true), onTownLeave: false);
+
+        Assert.AreNotEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+        Assert.AreEqual(AttachmentStatus.Attached, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderInABattleThatIsNotARaid_StillRaisesTheJoin()
+    {
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: false),
+            Player(parked: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.BattleJoinRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_CommanderRaidingWhilePlayerInAnotherMapEvent_IsBlockedAsForeign()
+    {
+        // #831: the raid is not a battle to join, so a player already in some map event reaches the
+        // foreign-event verdict. The reconciler takes no action on it.
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached,
+            HealthyCommander(inMapEvent: true, raiding: true),
+            Player(parked: false, inMapEvent: true), onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.Blocked, result.Status);
+        Assert.AreEqual(AttachmentBlockReason.PlayerInForeignMapEvent, result.BlockReason);
     }
 
     [TestMethod]

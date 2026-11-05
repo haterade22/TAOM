@@ -68,6 +68,7 @@
 	<string id="taom_enlist_act_battle" text="{=taom_enlist_act_battle}{COMMANDER} is engaged. Hold your place in the line." />
 	<string id="taom_enlist_act_lost" text="{=taom_enlist_act_lost}You have lost the column. Await word of your commander." />
 	<string id="taom_enlist_act_march" text="{=taom_enlist_act_march}You march with {COMMANDER}&#x27;s company, at your commander&#x27;s pace." />
+	<string id="taom_enlist_act_raid" text="{=taom_enlist_act_raid}The column is raiding." />
 	<string id="taom_enlist_act_settlement" text="{=taom_enlist_act_settlement}The column rests inside {SETTLEMENT}." />
 	<string id="taom_enlist_act_siege" text="{=taom_enlist_act_siege}You are camped before the walls with {COMMANDER}&#x27;s company." />
 	<string id="taom_enlist_arrival_title" text="{=taom_enlist_arrival_title}The column halts" />
