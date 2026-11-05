@@ -14,7 +14,7 @@ Replaces the inventory screen's "Sell All" button with a multi-action menu offer
 
 ### Design Challenge
 
-The original 1.2.x module used heavy reflection (8 probes for the right-pane item list, 5 probes for `SPItemVM`'s sell method) because v1.2.x had non-public field/method names that drifted across patches. **Those members are all public in the current API** (`SPInventoryVM.RightItemListVM`, `SPItemVM.ProcessSellItem`, `IsSearchAvailable`, `ExecuteSellAllItems`) — verified via `ilspycmd` against the installed `TaleWorlds.CampaignSystem.ViewModelCollection.dll`. The TAOM port uses direct property access, with the reflection chain removed entirely.
+The original 1.2.x module used heavy reflection (8 probes for the right-pane item list, 5 probes for `SPItemVM`'s sell method) because v1.2.x had non-public field/method names that drifted across patches. **Those members are all public in the current API** (`SPInventoryVM.RightItemListVM`, `SPItemVM.ProcessSellItem`, `IsSearchAvailable`, `ExecuteSellAllItems`), verified via `ilspycmd` against the installed `TaleWorlds.CampaignSystem.ViewModelCollection.dll`. The TAOM port uses direct property access, with the reflection chain removed entirely; since #917 the panel refresh after Unequip All binds two private `SPInventoryVM` methods once (see Migrated notes).
 
 A second concern was the "shared adapter for QuickActions + EquipPresets" requirement: both features access the same `SPInventoryVM`, and duplicating reflection across two features is the bug the original module had. This port introduces `IInventoryVMAdapter` that captures the active VM via a Postfix on `SPInventoryVM`'s constructor — a single source of truth that `EquipPresets` (feature #6) will reuse.
 
@@ -36,13 +36,15 @@ SPInventoryVM (vanilla)
     |
     v
 QuickActionsService (filter + sell + unequip)
-   |          |              |
-   v          v              v
-IInventoryVMAdapter   IPlayerEquipmentAdapter   IQuickActionsAudioPlayer
-   |                        |                            |
-   v                        v                            v
-SPInventoryVM         Hero.MainHero / ItemRoster   SoundEvent.PlaySound2D
+   |                                    |
+   v                                    v
+IInventoryVMAdapter                 IQuickActionsAudioPlayer
+   |                                    |
+   v                                    v
+SPInventoryVM                       SoundEvent.PlaySound2D
 SPItemVM.ProcessSellItem
+InventoryLogic.AddTransferCommands
+UpdateRightCharacter + RefreshInformationValues (private, bound once)
 ```
 
 ## Configuration
@@ -89,23 +91,22 @@ SPItemVM.ProcessSellItem
 | `Main/Features/QuickActions/Hooks/InventorySearchCampaignBehavior.cs` | SyncData + MCM reconcile |
 | `Main/Adapters/IInventoryVMAdapter.cs` + impl | Active-VM wrapper (load-bearing for EquipPresets) |
 | `Main/Adapters/IInventoryItemAdapter.cs` + impl | Per-item wrapper (preserves `EquipmentElement`) |
-| `Main/Adapters/IPlayerEquipmentAdapter.cs` + impl | Extended with `TryUnequipAllPlayerSlots` |
 
 ## Dependencies
 
 - `IInventoryVMAdapter` (Adapters) — wraps `SPInventoryVM`. Captured via constructor Postfix.
 - `IInventoryItemAdapter` (Adapters) — wraps `SPItemVM`. Carries opaque `UnderlyingVm` so the sell delegate gets the full `EquipmentElement` (preserves `ItemModifier`).
-- `IPlayerEquipmentAdapter` (Adapters) — extended with per-slot strip + deposit using the `(EquipmentElement, int)` modifier-preserving overload of `ItemRoster.AddToCounts`.
 - `IQuickActionsAudioPlayer` (Audio) — wraps `SoundEvent.PlaySound2D("event:/ui/transfer")`.
 - `IModLogger` (Core/Logging) — diagnostic + error logging.
 
 ## Tests
 
-- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs` — 34 tests covering: skip-guard exhaustion (every filter exclusion, locked, non-transferable, equipped × 2 toggles), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), confirmation flow, audio invocation, refresh-on-success, no-inventory-active fallback, menu options enumeration.
+- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 38 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable, equipped × 2 toggles), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917), menu options enumeration. The confirmation dialog is not covered: it calls `InformationManager` directly.
+- `TAOM.Tests/Features/QuickActions/InventoryPanelRefreshBindingTests.cs`: 1 binding test (game assemblies) that the two private `SPInventoryVM` refresh methods bind; their `ReflectionSiteBindingTests` rows pin the names.
 - `TAOM.Tests/Features/QuickActions/InventorySearchCampaignBehaviorTests.cs` — 7 tests covering: default-true on construct, `OnTick` MCM reconciliation in both directions, `OnNewGameCreated` seed (true + false), `OnGameLoaded` reconcile when MCM disagrees.
 - `TAOM.Tests/Features/QuickActions/DamagedQualityPresetTests.cs` — 9 tests covering: preset → threshold (4 presets), dropdown index → preset (4 valid + out-of-range fallback to Moderate).
 
-Total: 50 QuickActions tests, all green.
+Total: 55 QuickActions tests.
 
 ## How To: Add a New Quick Action
 
@@ -127,6 +128,7 @@ Update the `SellEvent` / `UnequipEvent` constants in `QuickActionsAudioPlayer.cs
 - Patch34 is a UI-driven entry point; "Sell All" is pressed at most a few times per market visit. Allocating a `MultiSelectionInquiryData` with 4 elements per click is fine; no caching needed.
 - The filter loop iterates `RightItemListVM` (typically <100 items). No reflection on the hot path — direct property reads only. No allocation per item beyond the adapter wrappers (one `InventoryItemAdapter` per right-pane item per click).
 - `InventoryVMAdapter` is a singleton; the active-VM reference is replaced on each inventory open via the constructor Postfix.
+- Unequip All sends up to 24 transfer commands (12 slots in two sets), and vanilla runs its `AfterTransfer` once per command. That is the price of going through `InventoryLogic`, and it stays below what vanilla's own Sell All costs. The panel refresh afterwards runs once per click and costs about one vanilla outfit toggle.
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 
@@ -134,18 +136,20 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 
 - **Thread-static bypass for "Sell All (Vanilla)"** — `Patch34_SellAllItemsMenu` (Prefix) holds a `[ThreadStatic] _bypassQuickActions` flag. The "Sell All (Vanilla)" menu option sets the flag and re-enters `__instance.ExecuteSellAllItems()`; the Prefix sees the flag set and returns `true`, so the player gets the unmodified vanilla `TransferAll(false)` behavior (including its zero-count-cleanup logic). This supersedes the "manual replication of vanilla bulk-sell" described under Solution Approach item 2.
 - **Full-stack sells** — `TrySellItem` (in `InventoryVMAdapter`) sets `SPItemVM.TransactionCount = StackAmount` before invoking the sell. Vanilla `ProcessSellItem` reads `item.TransactionCount` (default 1), so without this every batch action sold exactly one unit per stack.
-- **Unequip All routes through `InventoryLogic.TransferCommand`** — `TryUnequipAllPlayerSlots` builds `TransferCommand`s and submits them via `InventoryLogic.AddTransferCommands` when an inventory screen is open, so vanilla `AfterTransfer` rebuilds `RightItemListVM` and the equipment-slot `SPItemVM`s. Direct mutation of `Hero.BattleEquipment` + `ItemRoster.AddToCounts` left the UI showing stale empty rows; the `IPlayerEquipmentAdapter` direct-mutation path described under Dependencies remains only as a defensive fallback when no inventory screen is active.
+- **Unequip All routes through `InventoryLogic.TransferCommand`:** `TryUnequipAllPlayerSlots` applies one `TransferCommand` per occupied slot of the main hero's battle and civilian sets through the open screen's `InventoryLogic.AddTransferCommands`. Vanilla `AfterTransfer` updates the rows and the shown set's slots as each command lands, and Cancel or Reset can undo it. `AfterTransfer` does not touch the paper doll, armour, weight, capacity, the no-saddle warning or the Done button. Vanilla's single-transfer handlers refresh those with the private `RefreshInformationValues`, but a batch defeats that: `AfterTransfer` clears the equipment dirty flag on every command, so the doll is skipped when the last command moved nothing. `RefreshDisplay` therefore runs `UpdateRightCharacter` then `RefreshInformationValues` (the pair vanilla runs when the shown outfit or character changes) through cached open delegates. With no screen or no logic the method returns 0 and changes nothing. Until #917 the service called a direct-write path instead, so the open screen stayed stale; that path is gone.
+- **Stealth set and the hero on screen:** Unequip All strips the main hero's battle and civilian sets, as the menu promises, even when a companion is shown, and it leaves the v1.5.5 stealth set alone.
 - **Port verification baseline** — the removal of the 8-probe (right-pane item list) + 5-probe (`SPItemVM` sell method) reflection chains was verified against the v1.3.15 installed DLLs at port time.
 
 ## Changelog
 
+- 2026-10-19: Unequip All goes through the open screen's inventory transfers and then refreshes the paper doll, armour, weight and capacity, so the screen shows the result at once and Cancel can undo it (#917). The unused direct-write fallback is removed.
 - 2026-05-13 — Fixed the `IsSearchAvailable` per-save contract (#146): added a `_persistedVersion` SyncData tag so the search toggle survives reload while a mid-game MCM change still takes effect, instead of unconditional per-tick overwrite.
 - 2026-05-06 — Ported QuickActions from the external `TransferbuttonMenu` module into `Main/Features/` (Patch34): four Harmony patches on `SPInventoryVM`, the 4-option "Sell All" menu, per-save inventory-search toggle, 15 MCM settings, 53 tests.
 
 ## GitHub Issue
 
-- **Issue:** _to be created with closing commit_
-- **Status:** Open (in-game verification pending)
+- **Issues:** #114 (port, closed), #146 (search toggle, closed), #917 (Unequip All left the open screen stale)
+- **Status:** #917 fixed in code; in-game check owed (Unequip All with the inventory open, then Reset and Cancel)
 
 ---
 

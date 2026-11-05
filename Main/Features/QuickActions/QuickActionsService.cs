@@ -14,20 +14,17 @@ public sealed class QuickActionsService : IQuickActionsService
 {
     private readonly IQuickActionsSettingsProvider _settings;
     private readonly IInventoryVMAdapter _inventory;
-    private readonly IPlayerEquipmentAdapter _equipment;
     private readonly IQuickActionsAudioPlayer _audio;
     private readonly IModLogger _logger;
 
     public QuickActionsService(
         IQuickActionsSettingsProvider settings,
         IInventoryVMAdapter inventory,
-        IPlayerEquipmentAdapter equipment,
         IQuickActionsAudioPlayer audio,
         IModLogger logger)
     {
         _settings = settings;
         _inventory = inventory;
-        _equipment = equipment;
         _audio = audio;
         _logger = logger;
     }
@@ -206,7 +203,10 @@ public sealed class QuickActionsService : IQuickActionsService
         int affected;
         try
         {
-            affected = _equipment.TryUnequipAllPlayerSlots();
+            // One InventoryLogic transfer per slot, applied at once: vanilla's AfterTransfer updates
+            // the rows and the shown set's slots as each lands, and RefreshDisplay below re-syncs
+            // the paper doll, armour, weight and capacity (#917).
+            affected = _inventory.TryUnequipAllPlayerSlots();
         }
         catch (Exception ex)
         {
@@ -217,7 +217,6 @@ public sealed class QuickActionsService : IQuickActionsService
         if (affected <= 0)
             return QuickActionResult.Empty(QuickActionStatus.NothingMatched);
 
-        // Refresh so the inventory display picks up the items deposited into the roster.
         try { _inventory.RefreshDisplay(); }
         catch (Exception ex) { _logger.LogError($"[QuickActions] post-unequip refresh failed: {ex.Message}"); }
 

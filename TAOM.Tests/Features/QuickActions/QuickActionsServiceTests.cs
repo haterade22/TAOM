@@ -14,7 +14,6 @@ public class QuickActionsServiceTests
 {
     private IQuickActionsSettingsProvider _settings = null!;
     private IInventoryVMAdapter _inventory = null!;
-    private IPlayerEquipmentAdapter _equipment = null!;
     private IQuickActionsAudioPlayer _audio = null!;
     private IModLogger _logger = null!;
     private QuickActionsService _sut = null!;
@@ -24,7 +23,6 @@ public class QuickActionsServiceTests
     {
         _settings = Substitute.For<IQuickActionsSettingsProvider>();
         _inventory = Substitute.For<IInventoryVMAdapter>();
-        _equipment = Substitute.For<IPlayerEquipmentAdapter>();
         _audio = Substitute.For<IQuickActionsAudioPlayer>();
         _logger = Substitute.For<IModLogger>();
 
@@ -48,7 +46,7 @@ public class QuickActionsServiceTests
         _inventory.IsAvailable.Returns(true);
         _inventory.TrySellItem(Arg.Any<IInventoryItemAdapter>()).Returns(true);
 
-        _sut = new QuickActionsService(_settings, _inventory, _equipment, _audio, _logger);
+        _sut = new QuickActionsService(_settings, _inventory, _audio, _logger);
     }
 
     private static IInventoryItemAdapter MakeItem(
@@ -373,13 +371,17 @@ public class QuickActionsServiceTests
 
     // ===== UnequipAll =====
 
+    // #917: Unequip All must go through the inventory adapter, whose InventoryLogic transfer
+    // commands make vanilla's AfterTransfer rebuild the open screen. The direct-write adapter
+    // left the slots and lists stale.
     [TestMethod]
-    public void UnequipAll_DelegatesToEquipmentAdapter_ReturnsCount()
+    public void UnequipAll_RoutesThroughInventoryAdapter_ReturnsCount()
     {
-        _equipment.TryUnequipAllPlayerSlots().Returns(7);
+        _inventory.TryUnequipAllPlayerSlots().Returns(7);
 
         var result = _sut.UnequipAll();
 
+        _inventory.Received(1).TryUnequipAllPlayerSlots();
         Assert.AreEqual(QuickActionStatus.Success, result.Status);
         Assert.AreEqual(7, result.ItemsAffected);
     }
@@ -387,7 +389,7 @@ public class QuickActionsServiceTests
     [TestMethod]
     public void UnequipAll_NothingEquipped_ReturnsNothingMatched()
     {
-        _equipment.TryUnequipAllPlayerSlots().Returns(0);
+        _inventory.TryUnequipAllPlayerSlots().Returns(0);
 
         var result = _sut.UnequipAll();
 
@@ -395,9 +397,19 @@ public class QuickActionsServiceTests
     }
 
     [TestMethod]
+    public void UnequipAll_AdapterThrows_ReturnsFailed()
+    {
+        _inventory.TryUnequipAllPlayerSlots().Returns(_ => throw new System.InvalidOperationException("boom"));
+
+        var result = _sut.UnequipAll();
+
+        Assert.AreEqual(QuickActionStatus.Failed, result.Status);
+    }
+
+    [TestMethod]
     public void UnequipAll_RefreshesInventoryDisplay_AfterStripping()
     {
-        _equipment.TryUnequipAllPlayerSlots().Returns(3);
+        _inventory.TryUnequipAllPlayerSlots().Returns(3);
 
         _sut.UnequipAll();
 
@@ -431,7 +443,7 @@ public class QuickActionsServiceTests
     [TestMethod]
     public void UnequipAll_OnSuccess_PlaysUnequipSound_WhenPlaySoundsTrue()
     {
-        _equipment.TryUnequipAllPlayerSlots().Returns(2);
+        _inventory.TryUnequipAllPlayerSlots().Returns(2);
 
         _sut.UnequipAll();
 

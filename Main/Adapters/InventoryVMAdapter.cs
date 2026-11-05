@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HarmonyLib;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Inventory;
@@ -18,15 +19,25 @@ namespace TAOM.Adapters;
 /// </summary>
 public sealed class InventoryVMAdapter : IInventoryVMAdapter
 {
-    private readonly IPlayerEquipmentAdapter _playerEquipment;
+    // SPInventoryVM.UpdateRightCharacter() (v1.4.8 :4377) and RefreshInformationValues() (:3968)
+    // are private. Vanilla's single-transfer handlers follow with RefreshInformationValues (:3494),
+    // which a batch defeats: AfterTransfer clears the equipment dirty flag on every command (:3840),
+    // so the doll is skipped when the last command moved nothing. So RefreshDisplay runs the pair
+    // vanilla runs when the shown outfit or character changes (:1645-1647, :4314-4315); neither
+    // runs inside AddTransferCommands. Null after engine drift: the transfers still land and the
+    // panel catches up at the next vanilla refresh.
+    private static readonly Action<SPInventoryVM>? UpdateRightCharacter = BindPanelRefresh("UpdateRightCharacter");
+    private static readonly Action<SPInventoryVM>? RefreshInformationValues = BindPanelRefresh("RefreshInformationValues");
+
     private readonly IModLogger _logger;
     private SPInventoryVM? _active;
 
-    public InventoryVMAdapter(IPlayerEquipmentAdapter playerEquipment, IModLogger logger)
+    public InventoryVMAdapter(IModLogger logger)
     {
-        _playerEquipment = playerEquipment;
         _logger = logger;
     }
+
+    internal static bool IsPanelRefreshBound => UpdateRightCharacter != null && RefreshInformationValues != null;
 
     /// <summary>Called from <c>Patch34_SPInventoryVMCapture</c>.</summary>
     public void SetActive(SPInventoryVM? vm)
@@ -100,14 +111,16 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
 
     public void RefreshDisplay()
     {
-        if (_active == null) return;
+        var active = _active;
+        if (active == null) return;
         try
         {
-            _active.RefreshValues();
+            UpdateRightCharacter?.Invoke(active);      // paper doll, slots, armour, weight, can-use flags
+            RefreshInformationValues?.Invoke(active);  // capacity, no-saddle warning, Done button
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[QuickActions] RefreshValues failed: {ex.Message}");
+            _logger.LogError($"[QuickActions] inventory panel refresh failed: {ex.Message}");
         }
     }
 
@@ -123,53 +136,29 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
 
     public int TryUnequipAllPlayerSlots()
     {
-        // When an inventory screen is open, route unequip through InventoryLogic.TransferCommand.
-        // Vanilla AfterTransfer rebuilds RightItemListVM and the equipment-slot SPItemVMs in
-        // response. Without this, direct mutation of Hero.BattleEquipment + ItemRoster.AddToCounts
-        // left the UI showing stale empty rows.
-        //
-        // Codex review #37 first pass used reflection on SPInventoryVM._inventoryLogic /
-        // _currentCharacter — which BUTR.Harmony.Analyzer (BHA0001) flagged because it scans
-        // typeof(X).GetField(name) calls. Replaced with the documented public path:
-        //   InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic
-        // and Hero.MainHero.CharacterObject for the active character. The "active character" in
-        // QuickActions' Unequip All is always the player main hero per the menu's user-visible
-        // promise, so reading SPInventoryVM._currentCharacter (which can roam to other party
-        // heroes) was actually wrong — the public path is also semantically more correct.
-        if (_active != null && TryUnequipViaInventoryLogic(out var unitsTransferred))
-            return unitsTransferred;
-
-        // Fallback: direct mutation. Used when no inventory screen is active (this code
-        // path is technically unreachable today because UnequipAll is only invoked from
-        // the open-inventory menu, but keep it as defensive belt-and-suspenders).
-        return _playerEquipment.TryUnequipAllPlayerSlots();
-    }
-
-    private bool TryUnequipViaInventoryLogic(out int unitsTransferred)
-    {
-        unitsTransferred = 0;
-        if (_active == null) return false;
-
+        // Only through the open screen's InventoryLogic, so vanilla AfterTransfer updates the rows
+        // and slots and Cancel or Reset can undo it (#917). The target is the main hero, not the
+        // character on screen, because the menu promises the player's own gear. The logic comes
+        // from the public InventoryScreenHelper path; reflection on SPInventoryVM._inventoryLogic
+        // was flagged by BUTR.Harmony.Analyzer (BHA0001) in Codex review #37.
+        if (_active == null) return 0;
         var logic = InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic;
         if (logic == null)
         {
-            _logger.LogWarning("[QuickActions] InventoryScreenHelper.GetActiveInventoryState returned null logic — falling back to direct mutation");
-            return false;
+            _logger.LogWarning("[QuickActions] no active InventoryLogic: Unequip All skipped");
+            return 0;
         }
 
         var hero = Hero.MainHero;
-        if (hero == null) return false;
-        var character = hero.CharacterObject;
-        if (character == null) return false;
+        var character = hero?.CharacterObject;
+        if (hero == null || character == null) return 0;
 
-        unitsTransferred += BuildAndApplyUnequipCommands(
-            logic, character, hero.BattleEquipment, InventoryLogic.InventorySide.BattleEquipment,
-            Campaign.Current?.DeadBattleEquipment);
-        unitsTransferred += BuildAndApplyUnequipCommands(
-            logic, character, hero.CivilianEquipment, InventoryLogic.InventorySide.CivilianEquipment,
-            Campaign.Current?.DeadCivilianEquipment);
-
-        return true;
+        return BuildAndApplyUnequipCommands(
+                   logic, character, hero.BattleEquipment, InventoryLogic.InventorySide.BattleEquipment,
+                   Campaign.Current?.DeadBattleEquipment)
+             + BuildAndApplyUnequipCommands(
+                   logic, character, hero.CivilianEquipment, InventoryLogic.InventorySide.CivilianEquipment,
+                   Campaign.Current?.DeadCivilianEquipment);
     }
 
     private static int BuildAndApplyUnequipCommands(
@@ -183,8 +172,10 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
             var element = equipment[i];
             if (element.IsEmpty) continue;
             var roster = new ItemRosterElement(element, 1);
-            // Source side carries the EquipmentIndex so vanilla knows which slot to clear.
-            // EquipmentIndex.None on the destination = drop into the inventory roster.
+            // The source side and index name the slot. InventoryLogic itself never empties it: the
+            // subscribed SPInventoryVM.AfterTransfer does (SPInventoryVM.cs:4195), so this route is
+            // only correct against the logic the open screen listens to. The destination index is
+            // ignored for PlayerInventory (InventoryLogic.cs:890, :922).
             commands.Add(TransferCommand.Transfer(
                 1, fromSide, InventoryLogic.InventorySide.PlayerInventory,
                 roster, i, EquipmentIndex.None, character));
@@ -192,5 +183,18 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
         if (commands.Count == 0) return 0;
         logic.AddTransferCommands(commands);
         return commands.Count;
+    }
+
+    private static Action<SPInventoryVM>? BindPanelRefresh(string name)
+    {
+        try
+        {
+            var method = AccessTools.Method(typeof(SPInventoryVM), name, Type.EmptyTypes);
+            return method == null ? null : AccessTools.MethodDelegate<Action<SPInventoryVM>>(method);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }

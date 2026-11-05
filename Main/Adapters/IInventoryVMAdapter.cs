@@ -22,7 +22,11 @@ public interface IInventoryVMAdapter
     /// </summary>
     bool TrySellItem(IInventoryItemAdapter item);
 
-    /// <summary>Refreshes the active VM's display (item list rebuild) after a batch operation.</summary>
+    /// <summary>
+    /// Re-syncs the open screen after a batch transfer: the paper doll, slots, armour and weight,
+    /// then capacity, the no-saddle warning and the Done button. Vanilla's own transfer handlers do
+    /// this themselves; programmatic transfers do not. No-op when no VM is active.
+    /// </summary>
     void RefreshDisplay();
 
     /// <summary>
@@ -32,9 +36,10 @@ public interface IInventoryVMAdapter
     bool IsSearchAvailable { get; set; }
 
     /// <summary>
-    /// Unequips every slot of <c>Hero.MainHero.BattleEquipment</c> and <c>CivilianEquipment</c>,
-    /// depositing items (with modifier preserved) into the main party's <c>ItemRoster</c>.
-    /// Returns the count of slots that had items.
+    /// Unequips every slot of <c>Hero.MainHero.BattleEquipment</c> and <c>CivilianEquipment</c>
+    /// through the open screen's <c>InventoryLogic</c> (one transfer per slot, modifier kept), so
+    /// Cancel and Reset can undo it. Returns the count of slots that had items; 0 when no screen
+    /// or no logic is active. Call <see cref="RefreshDisplay"/> afterwards.
     /// </summary>
     int TryUnequipAllPlayerSlots();
 }
