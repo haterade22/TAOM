@@ -22,6 +22,11 @@ namespace TAOM.Features.Enlistment;
 /// So the fix is cadence plus varying content — NOT the <c>MenuContext.GameMenu.GetText()</c>
 /// plumbing an earlier design called for. That change would have been real code aimed at a bug this
 /// menu does not have.
+///
+/// Since #1019 the board itself is rendered to a plain string once per push, so the per-frame re-render
+/// resolves one variable instead of the whole nested board. The price is that the pushed text no longer
+/// follows a language switch by itself: <see cref="RefreshIfChanged"/> also writes again when the writer
+/// reports the board is in a language other than the active one.
 /// </summary>
 public interface IServiceStatusService
 {
@@ -29,8 +34,9 @@ public interface IServiceStatusService
     ServiceStatusModel Build();
 
     /// <summary>
-    /// Rebuild and push the menu text if anything changed. Cheap on the unchanged path — one
-    /// snapshot read and a value comparison, no allocation of a TextObject.
+    /// Rebuild and push the menu text if anything changed, or if the board was last rendered in another
+    /// language. Cheap on the unchanged path: one snapshot read, a value comparison and a language check,
+    /// no allocation of a TextObject.
     /// </summary>
     bool RefreshIfChanged();
 
@@ -137,7 +143,7 @@ public class ServiceStatusService : IServiceStatusService
         var current = Build();
         if (current == null)
             return false;
-        if (current.Equals(_last))
+        if (current.Equals(_last) && !_writer.IsStale)
             return false;
 
         _last = current;

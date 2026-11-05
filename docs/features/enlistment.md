@@ -377,7 +377,7 @@ gate is precisely the one that failed. Recorded in `docs/reviews/lessons/testing
 | Surface | Owner | Notes |
 |---|---|---|
 | Service wait menu + its four options | `Presentation/EnlistmentWaitMenuOptions.cs` | **Every option is `isLeave: false`, and that is load-bearing.** `GameMenu.RunMenuOptionConsequence` calls `EndWait()` BEFORE the consequence for an `isLeave` option on a wait menu, which sets `IsWaitActive = false` and `TimeControlMode = Stop` — tearing down the tick that drives the position sync before the consequence runs. It also makes the option a candidate for the Escape slot. |
-| Live status board | `ServiceStatusService` + `Presentation/ServiceStatusTextWriter.cs` | Rebuilt on the pump's 2 s budget, pushed only when the model differs. **The value equality IS the throttle**, so a field omitted from `Equals` is a status line that never updates — one `DataRow` per field guards it. |
+| Live status board | `ServiceStatusService` + `Presentation/ServiceStatusTextWriter.cs` | Rebuilt on the pump's 2 s budget, pushed only when the model differs, or when the board was rendered in another language than the active one (#1019). **The value equality IS the throttle**, so a field omitted from `Equals` is a status line that never updates; one `DataRow` per field guards it. The board is rendered to a plain string once per push (`SetTextVariable(name, text.ToString())`), not handed to the menu as a nested `TextObject`, because `GameMenuVM.IsMenuTextChanged` reports a text with no attributes as changed on every frame (v1.4.8 `GameMenuVM.cs:522`). |
 | "Speak with your commander" | `EnlistmentPlayerActionService` + `IMapConversationAdapter` | The adapter carries the game-state guard itself: `ConversationManager.OpenMapConversation` opens with `(GameStateManager.Current?.ActiveState as MapState).OnMapConversationStarts(...)` — an `as` cast dereferenced with no null check, so it throws when the state manager is null, the state stack is empty, OR the active state is anything else. `CampaignMapConversation.OpenConversation` adds a fourth route via `Campaign.Current`. |
 | "Ask your sergeant for work" | `DutyOrchestrationService.RequestDutyNow` | Shares ONE offer path with the daily tick and the same rotation cadence, so asking cannot conjure work the rotation would not have given. Host-only. |
 | Release / desertion | `Presentation/EnlistmentWaitMenuPresenter` + `Hooks/EnlistmentReleaseDialogBehavior` | Keyed to `MinimumServiceDays` (21), deliberately NOT `ContractDays` (365) — see below. |
@@ -1772,6 +1772,23 @@ ScreenManager.Update` over the same eight frames — so the 20:28:25 `IndexOutOf
 bundle that would have named the corruption, was suppressed as a duplicate of the 20:23:58
 `NullReferenceException`. The chain was reconstructable only because the raw `rgl_log.txt` rode along
 in the surviving bundle. The signature now includes the inner chain (#552).
+
+## Inside the raided village (#1019)
+
+A raid can reach the village the soldier stands in while his commander is inside it. TAOM's
+battle-start join (`EnlistmentBattleBehavior.OnMapEventStarted` to `ServiceBattleService.TryJoin`)
+then seeds an encounter through `IEncounterAdapter.EnsureEncounterAgainst` while the main party's
+`CurrentSettlement` is the raided village. On v1.4.8 `StartBattleAction.ApplyInternal` interrupts a
+player encounter when the main party is inside a settlement and the event is not a sally-out
+(`StartBattleAction.cs:32-35`); `PlayerEncounter.InterruptEncounter` then leaves the battle and opens
+vanilla's `encounter_interrupted` menu (`PlayerEncounter.cs:2016-2024`). Which menu the player then
+sees on this line, and what its options do, has not been observed in a game.
+
+`EnsureEncounterAgainst` therefore writes one INFO line when it seeds a join from inside the map
+event's settlement, not behind the trace toggle because it is rare:
+`[EnlistDiag] seeding the join from inside '<settlement id>' (event=<type>, sameFactionAsSettlement=<True|False>); ...`.
+`InsideSettlementJoinDiagnosticTests` pins its place (after the settlement read, before
+`RestartPlayerEncounter`, ungated). Ported from the 1.5.x line (#1019).
 
 ## Interactions with the rest of TAOM
 
