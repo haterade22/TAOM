@@ -40,6 +40,11 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
         HintText = "If a mission exit stalls past 15s, briefly suspends the game's main thread (at +15/+30/+60s) to photograph its call stack into the TAOM debug log — this is what root-caused the tournament-exit freeze (#331). Tiny residual risk: a suspension landing mid-GC can freeze the game harder than the stall itself. Turn OFF to keep the other diagnostics without any thread suspension. Default ON.")]
     public bool EnableExitStallSampler { get; set; } = true;
 
+    [SettingPropertyGroup("Exit Stall Sampler")]
+    [SettingPropertyBool("Enable Battle Freeze Sampler", Order = 1, RequireRestart = false,
+        HintText = "If a battle frame stops for 10s (the agent AI tick or the main mission frame never finishes: the game freezes with no crash), briefly suspends the stuck thread at +10/+20/+40s to photograph its call stack into the TAOM debug log as [MissionStall]. It never runs while the game is responsive, and never while a mission is ending or exiting (the exit sampler above covers that). Independent of the master Battle Load Diagnostics toggle: this is crash forensics, not load logging. Same tiny residual risk as the exit sampler. Default ON.")]
+    public bool EnableMissionTickStallSampler { get; set; } = true;
+
     [SettingPropertyGroup("Memory Sampler")]
     [SettingPropertyBool("Enable Memory Sampler", Order = 0, RequireRestart = false,
         HintText = "Writes memory telemetry to the TAOM debug log: a periodic [MemSample] line (process private/working-set MB, managed heap, system commit use/limit, available RAM), a one-shot WARN when system commit headroom runs low, and a [MemStation] line each time a screen opens or closes so growth can be attributed to a screen. This ONE switch governs all three. Independent of the master Battle Load Diagnostics toggle: this is session-wide crash forensics, not battle-load phase logging. Default ON.")]

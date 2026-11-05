@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using BehaviorTreeWrapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.AdvancedCombat;
 
 namespace TAOM.Tests.BehaviorTreeWrapper;
 
@@ -98,5 +99,80 @@ public class DeferredCallbackQueueTests
         Assert.AreEqual(100, ran);
         Assert.AreEqual(Thread.CurrentThread.ManagedThreadId, ranOn);
         Assert.AreNotEqual(producerThread, ranOn);
+    }
+
+    // --- RunOrDefer: the one thread decision every off-thread writer shares (#634) ---
+
+    [TestMethod]
+    public void RunOrDefer_OnTheMarkedMainThread_RunsInlineAndQueuesNothing()
+    {
+        MissionThreadGuard.ResetForTests();
+        try
+        {
+            MissionThreadGuard.MarkMainThread();
+            var queue = new DeferredCallbackQueue(_ => Assert.Fail("main thread must not report"));
+            int ran = 0;
+
+            bool deferred = queue.RunOrDefer("test.site", () => ran++);
+
+            Assert.IsFalse(deferred);
+            Assert.AreEqual(1, ran);
+            Assert.AreEqual(0, queue.Count);
+        }
+        finally { MissionThreadGuard.ResetForTests(); }
+    }
+
+    [TestMethod]
+    public void RunOrDefer_BeforeAnyMark_RunsInline()
+    {
+        MissionThreadGuard.ResetForTests();
+        var queue = new DeferredCallbackQueue();
+        int ran = 0;
+
+        bool deferred = queue.RunOrDefer("test.site", () => ran++);
+
+        Assert.IsFalse(deferred);
+        Assert.AreEqual(1, ran);
+    }
+
+    [TestMethod]
+    public void RunOrDefer_OffTheMainThread_ParksTheActionForTheNextDrainAndReportsOnce()
+    {
+        MissionThreadGuard.ResetForTests();
+        try
+        {
+            MissionThreadGuard.MarkMainThread();
+            var reports = new List<string>();
+            var queue = new DeferredCallbackQueue(reports.Add);
+            int ranOn = -1;
+            bool firstDeferred = false, secondDeferred = false;
+
+            var worker = new Thread(() =>
+            {
+                firstDeferred = queue.RunOrDefer("test.site", () => ranOn = Thread.CurrentThread.ManagedThreadId);
+                secondDeferred = queue.RunOrDefer("test.site", () => { });
+            });
+            worker.Start();
+            worker.Join();
+
+            Assert.IsTrue(firstDeferred);
+            Assert.IsTrue(secondDeferred);
+            Assert.AreEqual(-1, ranOn, "nothing runs on the worker");
+            Assert.AreEqual(2, queue.Count);
+            Assert.AreEqual(1, reports.Count, "one report per site");
+            StringAssert.Contains(reports[0], "test.site");
+
+            Assert.AreEqual(2, queue.Drain());
+            Assert.AreEqual(Thread.CurrentThread.ManagedThreadId, ranOn);
+        }
+        finally { MissionThreadGuard.ResetForTests(); }
+    }
+
+    [TestMethod]
+    public void RunOrDefer_NullAction_Throws()
+    {
+        var queue = new DeferredCallbackQueue();
+
+        Assert.ThrowsException<ArgumentNullException>(() => queue.RunOrDefer("test.site", null));
     }
 }

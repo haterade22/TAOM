@@ -121,46 +121,22 @@ public sealed class ExitStallSampler : IDisposable
             return;
         }
 
-        StackTrace? stack = null;
-        Exception? captureError = null;
-        // Thread.Suspend/Resume + StackTrace(Thread,bool) are obsolete-as-WARNING on net472
-        // (present in both the reference assemblies and the runtime — verified empirically,
-        // round-2 compat review) — the canonical in-process sampling pattern for a stalled
-        // thread, acceptable for this diagnostics-only path. NOTHING between Suspend and
-        // Resume may log or otherwise allocate beyond the walk itself — Resume first, then
-        // report (Codex round-2 P3: logging inside the suspended window widens the
-        // suspend-mid-GC deadlock risk the class header documents).
-#pragma warning disable CS0618
-        thread.Suspend();
+        StackTrace stack;
         try
         {
-            stack = new StackTrace(thread, needFileInfo: false);
+            stack = ThreadStackCapture.Capture(thread);
         }
         catch (Exception ex)
         {
-            captureError = ex;
+            _logger.LogWarning($"{Tag} sample#{sampleIndex} capture failed: {ex.GetType().Name}: {ex.Message}");
+            return;
         }
-        finally
-        {
-            try { thread.Resume(); }
-            catch { /* resume must never throw out */ }
-        }
-#pragma warning restore CS0618
 
-        if (captureError != null)
-            _logger.LogWarning($"{Tag} sample#{sampleIndex} capture failed: {captureError.GetType().Name}: {captureError.Message}");
-
-        if (stack == null) return;
-
-        // Format AFTER resume — keep the suspended window as small as possible.
+        // Format AFTER resume: keep the suspended window as small as possible.
         var sb = new StringBuilder(2048);
         sb.Append($"{Tag} sample#{sampleIndex} at +{elapsedSeconds:F0}s into exit stall — main thread ({stack.FrameCount} frames):");
-        for (int i = 0; i < stack.FrameCount; i++)
-        {
-            var method = stack.GetFrame(i)?.GetMethod();
-            sb.Append("\n    at ");
-            sb.Append(method == null ? "<unknown>" : $"{method.DeclaringType?.FullName}.{method.Name}");
-        }
+        if (stack.FrameCount > 0)
+            sb.Append('\n').Append(ThreadStackCapture.FormatFrames(stack));
         _logger.LogError(sb.ToString());
     }
 

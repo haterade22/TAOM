@@ -1001,6 +1001,16 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch beside Patch65, for the same reason: the new-game dispatch (`OnNewGameCreatedPartialFollowUpEvent` to `TrySpawnHeroesAndParties(isNewGame: true)`) runs after `Campaign.OnInitialize`, and a lazier hook would leave the new-game roster on the clan binding. `Patch88LordPartyTemplateTests` (12) pins the getter, both targets with their parameter NAMES (Harmony binds `hero` and `owner` by name), that both vanilla bodies still call the getter, every engine member the postfix body references, the category literal on all three classes, the three `SubModule.cs` lines, call presence in the postfix and both scopes, finalizer transparency and `ResetForUnload`. Not pinned offline: that Harmony hands `__state` from a prefix to a finalizer, which is on the in-game list. See `docs/features/lord-party-templates.md`.
 
+## Patch91_MissionTickStall
+
+**Target:** `Mission.TickAgentsAndTeamsImp(float, bool)` and `MissionState.TickMissionAux(float, float, bool, bool)` (private, bound by name with argument types). Prefix + void finalizer on each; signatures identical on v1.4.8 and v1.5.3.
+
+Battle-freeze probes (#634). A player's battle froze with the heap flat, no exception and no crash report. That is the shape of an asynchronous agent tick that never finishes: the next frame's `[MBCallback] Mission.OnPreTick` spins in `WaitTickCompletion` (`while (!tickCompleted) Thread.Sleep(1)`) before any `OnPreMissionTick`. The agent-tick prefix records the calling thread and a UTC timestamp in `MissionTickStallProbe.AsyncAgentTick`. The frame prefix does the same in `MissionTickStallProbe.MissionFrame`, but only while `CurrentMission.CurrentState == Continuing`: a teardown frame (`CheckMissionEnd` -> `EndMissionInternal` inside `Mission.OnTick`) is not a frozen battle. Each void finalizer clears its probe; Harmony 2.4.2's `MethodCreator` rethrows the original exception after a void finalizer, so a tick that throws never reads as in flight.
+
+`MissionTickStallWatchdog` polls the probes from a 1 s timer. For a tick in flight past 10/20/40 s it suspends that thread and logs its managed stack as a `[MissionStall]` ERROR, one stack per thread (an agent tick inline inside the frame in fast-forward is covered by the frame's sample). The capture is shared with `ExitStallSampler` through `ThreadStackCapture`. It stands down while the mission-exit window is open, so two samplers never suspend one thread. A stack in the agent tick is the stuck work; a stack in the frame shows the main thread, waiting in `WaitTickCompletion` or stuck in a callback or `OnMissionTick`. Composes with `Patch35_Mission_OnTick` (postfix on `Mission.OnTick`, which runs inside the frame probe) and Patch37's finalizer on `Mission.Tick`.
+
+MCM toggle "Enable Battle Freeze Sampler", default ON, independent of the master diagnostics toggle. Applied in `OnGameInitializationFinished` beside Patch43, inside the once-per-process guard, through `TryPatchCategory`. Cost per healthy frame: two `DateTime.UtcNow` reads, one `CurrentState` read and six volatile writes. **ACTIVE** (ported 2026-11-04).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

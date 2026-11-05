@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using TaleWorlds.Core;
+using BehaviorTreeWrapper;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 
 namespace TAOM.Features.MountDespawn.Hooks;
 
@@ -28,6 +30,10 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
     // object owns. Capped at MaxFadesPerSweep, so it stops reallocating after the first sweep.
     private readonly List<int> _dueScratch = new();
 
+    // Kill records and forgets that arrived off the main thread (OnAgentRemoved and OnAgentDeleted are
+    // native's to place, and a v1.4.8 player log caught them off it, #634), replayed from OnMissionTick.
+    private readonly DeferredCallbackQueue _deferred;
+
     private float _accumulator;
     private int _fadedThisMission;
 
@@ -41,7 +47,11 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _deferred = new DeferredCallbackQueue(message => _logger.LogWarning(message));
     }
+
+    /// <summary>Killed mounts waiting to be faded.</summary>
+    internal int PendingCount => _pending.Count;
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
@@ -62,9 +72,16 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
         var mission = Mission.Current;
         if (!MountDespawnMissionGate.IsEligible(mission)) return;
 
-        _pending[affectedAgent.Index] = affectedAgent;
-        _service.OnMountKilled(affectedAgent.Index, mission.CurrentTime);
+        RecordKill(affectedAgent, affectedAgent.Index, mission.CurrentTime);
     }
+
+    // Off the main thread the record keeps the death time it was raised with, so the delay does not stretch.
+    internal void RecordKill(Agent mount, int index, float missionTime) =>
+        _deferred.RunOrDefer("MountDespawnMissionBehavior.OnAgentRemoved", () =>
+        {
+            _pending[index] = mount;
+            _service.OnMountKilled(index, missionTime);
+        });
 
     public override void OnAgentDeleted(Agent affectedAgent)
     {
@@ -75,7 +92,24 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
         // handle here is what makes index reuse safe: deletion always precedes an index being handed
         // to a new agent, and a deleted agent's property getters dereference native pointers that
         // Agent.Clear() has already zeroed.
-        var index = affectedAgent.Index;
+        ForgetAgent(affectedAgent.Index);
+    }
+
+    // A parked kill lands before its own forget, never after (#592): queue order off the main thread,
+    // a drain first on it.
+    internal void ForgetAgent(int index)
+    {
+        if (!MissionThreadGuard.IsOnMainThread)
+        {
+            _deferred.RunOrDefer("MountDespawnMissionBehavior.OnAgentDeleted", () => ForgetNow(index));
+            return;
+        }
+        _deferred.Drain();
+        ForgetNow(index);
+    }
+
+    private void ForgetNow(int index)
+    {
         _pending.Remove(index);
         _service.Forget(index);
     }
@@ -83,6 +117,8 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
     public override void OnMissionTick(float dt)
     {
         base.OnMissionTick(dt);
+        MissionThreadGuard.MarkMainThread();
+        _deferred.Drain();
 
         if (_pending.Count == 0) return;
 
@@ -100,7 +136,9 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
 
         // Copy before iterating. CollectDue hands back the service's own reused buffer, and FadeOut
         // can drive Mission.OnAgentDeleted synchronously; nothing on that path re-enters CollectDue
-        // today, but that is an invariant spread across two files with nothing enforcing it. The
+        // today, but that is an invariant spread across two files with nothing enforcing it. That
+        // callback's ForgetAgent can also drain parked kills into _pending mid-sweep, which is safe:
+        // the sweep walks _dueScratch, never _pending. The
         // copy is at most 8 ints into a list that never reallocates after the first sweep, so the
         // insurance is free.
         _dueScratch.Clear();
@@ -116,6 +154,7 @@ public sealed class MountDespawnMissionBehavior : MissionBehavior
         if (_fadedThisMission > 0)
             _logger.LogInfo($"[MountDespawn] retired {_fadedThisMission} dead mount(s) this mission");
 
+        _deferred.Clear();
         _pending.Clear();
         _service.OnMissionEnd();
         _accumulator = 0f;

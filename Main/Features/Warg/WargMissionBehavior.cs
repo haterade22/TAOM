@@ -33,10 +33,13 @@ public class WargMissionBehavior : MissionLogic
     // See issue #219.
     private const float GridUpdateInterval = 0.1f;
 
+    private readonly DeferredCallbackQueue _deferred;
+
     public WargMissionBehavior()
     {
         _boneCollisionService = IoC.Resolve<IBoneCollisionService>();
         _logger = IoC.Resolve<IModLogger>();
+        _deferred = new DeferredCallbackQueue(message => _logger.LogWarning(message));
     }
 
     private void Initialize()
@@ -61,18 +64,22 @@ public class WargMissionBehavior : MissionLogic
         _logger.LogInfo("[Warg] Initialized");
     }
 
+    // A v1.4.8 player log caught OnAgentDismount off the main thread (#634); the look direction it resets
+    // is the one WargRiderHandManager.Tick writes from this behavior's mission tick, so the reset waits
+    // for that tick.
     public override void OnAgentDismount(Agent agent)
     {
         if (agent == Agent.Main)
-        {
-            WargRiderHandManager.OnMainAgentDismount();
-        }
+            _deferred.RunOrDefer("WargMissionBehavior.OnAgentDismount", () => WargRiderHandManager.OnMainAgentDismount());
     }
 
     public override void OnMissionTick(float dt)
     {
         try
         {
+            MissionThreadGuard.MarkMainThread();
+            _deferred.Drain();
+
             if (!_initialized)
                 Initialize();
 

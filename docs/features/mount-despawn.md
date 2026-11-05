@@ -89,6 +89,16 @@ roll and harness return), `BattleAgentLogic`, `CasualtyHandler`, `AgentVictoryLo
 even starts. A grep of the whole `Campaign` category for `MountAgent` returns zero hits: campaign
 horse loot comes from troop `Equipment`, never from agents.
 
+### Which thread records a kill (#634)
+
+`OnAgentRemoved` is raised by native on the thread native chooses, and a v1.4.8 player log caught it off
+the main thread, which owns `_pending` and the service's death times. The behaviour records a
+kill through `DeferredCallbackQueue.RunOrDefer`: inline on the main thread, and parked with its own death
+time for the next `OnMissionTick` anywhere else, so the despawn delay does not stretch. `ForgetAgent`
+(from `OnAgentDeleted`) drains parked records before it forgets on the main thread, and queues behind
+them off it. A deleted index can never land in `_pending` after its deletion, because the engine hands
+that index to the next agent it builds (#592). `MountDespawnOffThreadTests` pins every ordering.
+
 ### Known consequence, accepted
 
 Corpses occupy agent slots. `DefaultBattleMissionAgentSpawnLogic.NumberOfAgents` is
@@ -132,7 +142,12 @@ player-facing in-game text (so no `/localize` run).
 
 ## Tests
 
-`TAOM.Tests/Features/MountDespawn/`, 26 tests.
+`TAOM.Tests/Features/MountDespawn/`, 32 tests (counted 2026-09-22).
+
+- `MountDespawnOffThreadTests` (#634) pins every thread ordering: a record on the main thread lands at once, one
+  off it waits for the next mission tick with its own death time, a forget on the main thread drains parked
+  records first, a forget off it queues behind them, the behavior marks the main thread itself, and mission
+  end drops parked records.
 
 - `DeadMountDespawnServiceTests` covers timing boundaries, `Forget`, both disabled paths, the
   per-sweep budget and its remainder, session reset, and the non-finite cases for both mission time
@@ -150,6 +165,8 @@ allocates nothing (the due list is a reused buffer). It never walks `Mission.All
 ## Changelog
 
 2026-09-03: shipped. Deep review the same day: 4 findings fixed, 3 rejected, RCA at `docs/reviews/rca-mount-despawn-2026-09-03.md`.
+
+2026-09-22 ([#634](https://github.com/haterade22/TAOM/issues/634)): kill records and forgets that arrive off the main thread are parked for the next mission tick. RCA `docs/reviews/rca-offthread-agent-removed-2026-09-22.md`.
 
 ## GitHub Issue
 

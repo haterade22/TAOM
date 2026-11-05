@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BehaviorTreeWrapper;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -22,6 +23,12 @@ public class SpatialGrid
 
     private static readonly Action<string> ReportOffThread =
         message => Debug.Print(message, 0, Debug.DebugColor.Red);
+
+    // Removals raised off the main thread (OnAgentDeleted is native's to place, #634), applied from the
+    // mission tick by ApplyPendingRemovals so only that tick ever edits a cell list.
+    private static readonly Action<string> ReportParkedRemoval =
+        message => Debug.Print(message, 0, Debug.DebugColor.Yellow);
+    private readonly DeferredCallbackQueue _pendingRemovals = new(ReportParkedRemoval);
 
     public void UpdateGrid(List<Agent> agents)
     {
@@ -51,6 +58,16 @@ public class SpatialGrid
     public void Remove(Agent agent)
     {
         if (agent == null) return;
+        _pendingRemovals.RunOrDefer("SpatialGrid.Remove", () => RemoveNow(agent));
+    }
+
+    /// <summary>Applies removals parked off the main thread. Call from the mission tick.</summary>
+    public void ApplyPendingRemovals() => _pendingRemovals.Drain();
+
+    internal int PendingRemovalCount => _pendingRemovals.Count;
+
+    private void RemoveNow(Agent agent)
+    {
         foreach (List<Agent> cell in _grid.Values)
         {
             if (cell.Remove(agent)) return;

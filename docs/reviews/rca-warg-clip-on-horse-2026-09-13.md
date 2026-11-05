@@ -22,8 +22,9 @@ Two mechanisms, both TAOM's:
    army because a deleted agent's `Team` is null.
 2. **The wrong thread.** Single-player ticks agents on an asynchronous AI thread, and TAOM's creature
    trees ran inside that tick. The spider's tree registered blows from it, which runs the engine's
-   whole hit pipeline and TAOM's own tree-logic collections on that thread while the main thread's
-   agent-removed callbacks write the same collections. Every creature tree read `SpatialGrid` from
+   whole hit pipeline and TAOM's own tree-logic collections on that thread while the engine's
+   agent-removed callbacks (raised on the thread native chooses; corrected 2026-09-22, #634) write the
+   same collections. Every creature tree read `SpatialGrid` from
    it while the main thread rebuilt the grid in place every two seconds, and the warg's tree called
    the native `SetActionChannel` and appended to the bone-check list from it. An unsynchronised
    dictionary read racing a
@@ -134,8 +135,10 @@ reporting a dead attacker.
 - The main thread's next `OnPreTick` (`[MBCallback]`, `Mission.cs:3529-3533`) spins in
   `WaitTickCompletion` (`:3585-3590`, `Thread.Sleep(1)` loop) until the flag is set.
 - `Mission.OnAgentRemoved` and `OnAgentDeleted` are `[MBCallback]`s (`Mission.cs:2971,2989`)
-  entered from native combat processing on the main thread, during the window in which the async
-  tick runs. `Mission.OnAgentHit` (`:5600-5616`), `OnAgentRemoved` (`:2990-3029`) and
+  entered from native combat processing. **Corrected 2026-09-22 (#634):** this RCA said "on the main
+  thread", which no managed code proves; a v1.4.8 player log caught `OnAgentRemoved` on a worker
+  thread, and vanilla's own unlocked handlers show native serialises it with `Agent.Tick`, not with
+  the main thread. See `docs/reviews/rca-offthread-agent-removed-2026-09-22.md`. `Mission.OnAgentHit` (`:5600-5616`), `OnAgentRemoved` (`:2990-3029`) and
   `Mission.SpawnAgent`'s `OnAgentBuild` loop (`:4358-4361`) iterate `MissionBehaviors` with no
   catch: an exception from one behavior skips every later one and propagates toward native.
 - `CommonAIComponent.OnTick` runs inside `Agent.Tick` on the asynchronous thread and calls `Panic()`
@@ -153,7 +156,7 @@ one managed caller of `RegisterBlow` is the drowning check in `Mission.OnTick` (
 the main thread; nothing vanilla registers a blow from the agent tick. `BehaviorTreeMissionLogic` keeps
 `trees` (a `Dictionary<Agent, BehaviorTree>`), `actions` and a shared `_tempMatched` scratch list
 with a comment that assumes single-threaded dispatch; `OnAgentHit` on the async thread reads them,
-`OnAgentRemoved` -> `DisposeTree` -> `trees.Remove` on the main thread writes them. The last line
+`OnAgentRemoved` -> `DisposeTree` -> `trees.Remove` on the main thread writes them (corrected 2026-09-22, #634: on whichever thread native raised the removal; see the correction above). The last line
 of the second freeze is that removal.
 
 The warg is not a control. Its bite damage is applied by the bone check inside
