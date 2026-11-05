@@ -20,7 +20,7 @@ public class FormationPresetServiceTests
     {
         _settings = Substitute.For<ICompanionTacticsSettingsProvider>();
         _settings.MaxFormationPresets.Returns(10);
-        _settings.EnableFormationPresets.Returns(true);
+        _settings.EnableOobFormationPresets.Returns(true);
         _settings.FormationPresetsDebug.Returns(false);
 
         _logger = Substitute.For<IModLogger>();

@@ -64,8 +64,8 @@ A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** beco
 | Surface | Vanilla | TAOM scaling target |
 |---|---|---|
 | Hideouts per bandit faction (max) | 9 max | Up to `BanditMaxHideoutsPerFaction` (default 100 → physical hideout count binds first) |
-| **Initial hideouts per faction (new game)** | 7 | `BanditInitialHideoutsPerFaction` (default 7 since #559; 14 before) |
-| Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 6 since #559; the old default of 3 equalled vanilla and pinned it there) |
+| **Initial hideouts per faction (new game)** | 7 | `BanditStartingHideoutsPerFaction` (default 7 since #559; 14 before; renamed in #1017 so the 7 reaches saved settings) |
+| Bandit parties per hideout | 3 max | Up to `BanditPartiesPerHideoutCap` (renamed in #1017 so the 6 reaches saved settings; default 6 since #559; the old default of 3 equalled vanilla and pinned it there) |
 | Min parties to infest a hideout | 2 | `MinPartiesToInfest` (constant 1: hideouts go active/visible sooner) |
 | Troops in hideout first fight | `11 × (2 + PlayerProgress)` | × `BossFightCurve` |
 | Troops in hideout boss fight | `1 + 5 × (1 + PlayerProgress)` (boss + 5..10) | **Not scaled.** Exactly `1 + Hideout Boss Bodyguards` (boss + 4 by default) on both routes, independent of the master toggle (#564, see below) |
@@ -257,7 +257,7 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 - `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` — Harmony Postfix. Coexists peacefully with [TaomPartySizeModel](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs) (which overrides `GetPartyMemberSizeLimit` only).
 - `Helpers.MapEventHelper.GetPriorityListForHideoutMission`: Harmony Prefix, skip original (Patch86, assault route). Public static, single caller `SandBoxMissions.OpenHideoutBattleMission`.
 - `SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController.SpawnRemainingTroopsForBossFight`: Harmony Prefix, original still runs (Patch86, sneak-in route). Private instance method in SandBox.dll; three private fields injected (`_allEnemyTroops`, `_overriddenHideoutBossAgentOrigin`, `_allEnemyTroopTypesCache`), pinned by `ReflectionSiteBindingTests`.
-- `TaomSettings` (MCM): 8 properties in the `World/Bandit Scaling` group (`BanditInitialHideoutsPerFaction` added 2026-05-29, `BanditHideoutBossBodyguards` added by #564).
+- `TaomSettings` (MCM): 8 properties in the `World/Bandit Scaling` group (`BanditStartingHideoutsPerFaction` (first `BanditInitialHideoutsPerFaction`) added 2026-05-29, `BanditHideoutBossBodyguards` added by #564).
 - Existing TAOM culture troop XMLs — pulls raider-tier T1–T4 troops by ID; no new troop authoring.
 - `taom_partyTemplates.xml`: 16 templates (8 raider + 8 boss, one pair per bandit culture).
 

@@ -13,6 +13,7 @@ untrusted PR code on the personal self-hosted workstation.
 | `python-tests` | `python -m unittest discover -s tools/tests -t .` |
 | `managed-build` | After an authorized `dotnet restore TAOM.sln`: `dotnet build TAOM.sln -c Release --no-restore -p:DisableModuleCopy=true -p:ModuleId=` |
 | `managed-tests` | Only after the above solution build at this SHA: `dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal` |
+| `mcm-defaults` | `python tools/check_mcm_default_flips.py`: exit 1 when an MCM setting's default changed under an unchanged name since any release tag reachable from HEAD (rename it, or allowlist `Class.Name` with from, to and reason; a stale entry fails). |
 | `moduledata` | `python tools/validate_moduledata.py` with the actual game and required external module roots available. Record roots, versions and skipped-check output. |
 | `hook-contract` | `bash tools/test_hooks.sh` under an available Bash. On Windows select Git Bash explicitly if `bash` otherwise resolves to an unavailable WSL distribution. |
 

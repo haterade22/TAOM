@@ -118,8 +118,8 @@ public sealed class FieldCommissionSettingsProvider : IFieldCommissionConfigProv
         TaomSettings.Instance?.EnableFieldCommission,
         TaomSettings.Instance?.FieldCommissionRatioThreshold,
         TaomSettings.Instance?.FieldCommissionMeritPerKill,
-        TaomSettings.Instance?.FieldCommissionMeritThreshold,
+        TaomSettings.Instance?.FieldCommissionMeritToPromote,
         TaomSettings.Instance?.FieldCommissionRetainerAllowance,
-        TaomSettings.Instance?.FieldCommissionMaxOffersPerBattle,
+        TaomSettings.Instance?.FieldCommissionOffersPerBattle,
         TaomSettings.Instance?.EnableFieldCommissionDiagnostics);
 }

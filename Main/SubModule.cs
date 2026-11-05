@@ -1188,7 +1188,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IFiefManagementSettingsProvider>()));
 
         // CompanionTactics (Patch35) — FormationPresets persistence behavior. Registered
-        // unconditionally so SyncData round-trips even when EnableFormationPresets is OFF.
+        // unconditionally so SyncData round-trips even when EnableOobFormationPresets is OFF.
         campaignStarter.AddBehavior(new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(
             IoC.Resolve<Features.CompanionTactics.FormationPresets.IFormationPresetService>(),
             IoC.Resolve<IModLogger>()));

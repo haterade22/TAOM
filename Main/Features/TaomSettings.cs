@@ -53,30 +53,40 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on.")]
     public bool EnableAiPartyScaling { get; set; } = true;
 
+    // Renamed from AiLordPartySizeFactor (#1017): its default went 5 to 1 in cd5a6f5e8 (v2.0.26) under the same name,
+    // and MCM loads the saved value by name, so an install that saved settings on v2.0.24 or v2.0.25 kept 5.
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1, RequireRestart = false,
-        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla, which is the default: this feature ships neutral and you opt in. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect.")]
-    public float AiLordPartySizeFactor { get; set; } = AiPartySizeService.DefaultLordFactor;
+        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla, which is the default: this feature ships neutral and you opt in. Raise this and the Flat Bonus together: the bonus is added after the multiplier, so moving one alone shifts the total by less than you expect. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public float AiLordPartyScale { get; set; } = AiPartySizeService.DefaultLordFactor;
 
+    // Renamed from AiLordPartySizeFlatBonus (#1017): its default went 150 to 0 in cd5a6f5e8 (v2.0.26) under the same name,
+    // and MCM loads the saved value by name, so an install that saved settings on v2.0.24 or v2.0.25 kept 150.
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2, RequireRestart = false,
-        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 0.")]
-    public float AiLordPartySizeFlatBonus { get; set; } = AiPartySizeService.DefaultLordFlatBonus;
+        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 0. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public float AiLordPartyFlatBonus { get; set; } = AiPartySizeService.DefaultLordFlatBonus;
 
+    // Renamed from AiGarrisonSizeFactor (#1017): its default went 3 to 1 in cd5a6f5e8 (v2.0.26) under the same name,
+    // and MCM loads the saved value by name, so an install that saved settings on v2.0.24 or v2.0.25 kept 3.
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3, RequireRestart = false,
-        HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla, which is the default. IMPORTANT: raise this only alongside the AI Lord multiplier above. Vanilla refuses to even target a settlement when the attacker is under twice the defender's strength, and that strength counts garrison AND militia, so a high garrison multiplier with vanilla-sized lord parties stops AI sieges happening at all.")]
-    public float AiGarrisonSizeFactor { get; set; } = AiPartySizeService.DefaultGarrisonFactor;
+        HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla, which is the default. IMPORTANT: raise this only alongside the AI Lord multiplier above. Vanilla refuses to even target a settlement when the attacker is under twice the defender's strength, and that strength counts garrison AND militia, so a high garrison multiplier with vanilla-sized lord parties stops AI sieges happening at all. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public float AiGarrisonScale { get; set; } = AiPartySizeService.DefaultGarrisonFactor;
 
+    // Renamed from AiFoodConsumptionRelief (#1017): its default went 0.9 to 0 in cd5a6f5e8 (v2.0.26) under the same name,
+    // and MCM loads the saved value by name, so an install that saved settings on v2.0.24 or v2.0.25 kept 0.9.
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Food Relief", 0.0f, 0.95f, "#0.00", Order = 4, RequireRestart = false,
-        HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier: at vanilla party sizes nothing starves.")]
-    public float AiFoodConsumptionRelief { get; set; } = AiPartySizeService.DefaultFoodRelief;
+        HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier: at vanilla party sizes nothing starves. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public float AiPartyFoodRelief { get; set; } = AiPartySizeService.DefaultFoodRelief;
 
+    // Renamed from AiWageRelief (#1017): its default went 0.9 to 0 in cd5a6f5e8 (v2.0.26) under the same name,
+    // and MCM loads the saved value by name, so an install that saved settings on v2.0.24 or v2.0.25 kept 0.9.
     [SettingPropertyGroup("AI Party Size")]
     [SettingPropertyFloatingInteger("AI Wage Relief", 0.0f, 0.95f, "#0.00", Order = 5, RequireRestart = false,
-        HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier.")]
-    public float AiWageRelief { get; set; } = AiPartySizeService.DefaultWageRelief;
+        HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla, which is the default. Only worth raising if you have raised the AI Lord multiplier. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public float AiPartyWageRelief { get; set; } = AiPartySizeService.DefaultWageRelief;
 
     // Resolved by SelectedIndex, so the option ORDER here is load-bearing and must stay in step with
     // PlayerClanScalingMode. Only party size crosses to the player: the food and wage relief stay
@@ -196,15 +206,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When enabled, a scripted war will escalate between Free Peoples and Dark Powers.")]
     public bool WarOfTheRingEnabled { get; set; } = true;
 
+    // Renamed from Phase1TriggerDay (#1017): its default went 2 to 30 in e273cd23f (v2.0.15) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.13 or earlier kept 2.
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 1 Start Day", 1, 365, Order = 1, RequireRestart = false,
-        HintText = "Days after campaign start when Isengard and Dunland attack Rohan. Default 30.")]
-    public int Phase1TriggerDay { get; set; } = 30;
+        HintText = "Days after campaign start when Isengard and Dunland attack Rohan. Default 30. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int WarPhase1TriggerDay { get; set; } = 30;
 
+    // Renamed from Phase2TriggerDay (#1017): its default went 14 to 44 in e273cd23f (v2.0.15) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.13 or earlier kept 14.
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 2 Start Day", 1, 365, Order = 2, RequireRestart = false,
-        HintText = "Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 44.")]
-    public int Phase2TriggerDay { get; set; } = 44;
+        HintText = "Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 44. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int WarPhase2TriggerDay { get; set; } = 44;
 
     [SettingPropertyGroup("War of the Ring/Test Mode")]
     [SettingPropertyBool("Enable Test Mode", Order = 0, RequireRestart = false,
@@ -533,10 +547,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Soldiers who do the killing in a hard-won battle can be promoted into named companions. Turn OFF to stop it entirely: no merit is earned, no promotion is ever offered. Companions you already promoted stay exactly as they are, and banked merit is kept in case you turn it back on. Takes effect immediately; no restart. Default ON.")]
     public bool EnableFieldCommission { get; set; } = true;
 
+    // Renamed from FieldCommissionMaxOffersPerBattle (#1017): its default went 1 to 2 in 14160f0a4 (v2.0.21) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.20 kept 1.
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Offers Per Battle", 1, 20, Order = 1, RequireRestart = false,
-        HintText = "The most promotion prompts a single won battle may raise. Each prompt pauses the game, so a large number after a large battle means a long queue of dialogs. Merit above the cap is not lost — it carries to the next battle. Default: 2.")]
-    public int FieldCommissionMaxOffersPerBattle { get; set; } = 2;
+        HintText = "The most promotion prompts a single won battle may raise. Each prompt pauses the game, so a large number after a large battle means a long queue of dialogs. Merit above the cap is not lost — it carries to the next battle. Default: 2. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int FieldCommissionOffersPerBattle { get; set; } = 2;
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyFloatingInteger("Fair-Fight Ratio", 0.1f, 3.0f, "#0.00", Order = 2, RequireRestart = false,
@@ -548,10 +564,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Merit a troop type banks for each enemy its soldiers kill in a qualifying battle. Higher = faster promotions. Default: 1.")]
     public int FieldCommissionMeritPerKill { get; set; } = 1;
 
+    // Renamed from FieldCommissionMeritThreshold (#1017): its default went 8 to 32 in 14160f0a4 (v2.0.21) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.20 kept 8.
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Merit To Promote", 1, 100, Order = 4, RequireRestart = false,
-        HintText = "Merit a troop type must bank before it earns a promotion offer. Note merit is pooled per troop TYPE, not per soldier — a large stack of one type reaches the bar faster than a small one. Higher = rarer promotions. Default: 32.")]
-    public int FieldCommissionMeritThreshold { get; set; } = 32;
+        HintText = "Merit a troop type must bank before it earns a promotion offer. Note merit is pooled per troop TYPE, not per soldier — a large stack of one type reaches the bar faster than a small one. Higher = rarer promotions. Default: 32. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int FieldCommissionMeritToPromote { get; set; } = 32;
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Companions Over The Limit", 0, 10, Order = 5, RequireRestart = false,
@@ -711,10 +729,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Battle Tactics / Smart Cavalry ---
 
+    // Renamed from EnableSmartCavalryAI (#1017): it was switched off in 625396dde (v2.0.7) while war-elephant
+    // interaction is tuned, but a saved "on" (v2.0.0 to v2.0.5) survived under the same name.
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry", GroupOrder = 22)]
     [SettingPropertyBool("Enable Smart Cavalry AI", Order = 0, RequireRestart = false,
-        HintText = "Master toggle. When off, cavalry uses vanilla charge logic. When on, the player's cavalry formations execute coordinated line charges with passthrough + reform behavior. Default OFF while war-elephant interaction is being tuned.")]
-    public bool EnableSmartCavalryAI { get; set; } = false;
+        HintText = "Master toggle. When off, cavalry uses vanilla charge logic. When on, the player's cavalry formations execute coordinated line charges with passthrough + reform behavior. Default OFF while war-elephant interaction is being tuned. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public bool EnableSmartCavalryCharge { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
     [SettingPropertyBool("Enable Friendly Collision Avoidance", Order = 1, RequireRestart = false,
@@ -780,10 +800,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Battle Tactics / Formation Presets ---
 
+    // Renamed from EnableFormationPresets (#1017): it was switched off in 53a8cfc21 (v2.0.8) while loading a
+    // preset is unwired, but a saved "on" (v2.0.0 to v2.0.7) survived under the same name.
     [SettingPropertyGroup("Battle Tactics/Formation Presets", GroupOrder = 28)]
     [SettingPropertyBool("Enable Formation Presets", Order = 0, RequireRestart = false,
-        HintText = "Save/load named OOB hero-to-formation assignments per campaign. Work-in-progress (loading a preset is not yet wired) — off by default; opt in to try it.")]
-    public bool EnableFormationPresets { get; set; } = false;
+        HintText = "Save/load named OOB hero-to-formation assignments per campaign. Work-in-progress (loading a preset is not yet wired) — off by default; opt in to try it. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public bool EnableOobFormationPresets { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Formation Presets")]
     [SettingPropertyInteger("Max Formation Presets", 1, 20, Order = 1, RequireRestart = false,
@@ -846,15 +868,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Hard cap on hideouts per bandit faction regardless of scaling curve. Vanilla = 9. Default: 100 (effectively the physical hideout count per faction).")]
     public int BanditMaxHideoutsPerFaction { get; set; } = 100;
 
+    // Renamed from BanditMaxPartiesPerHideout (#1017): its default went 3 to 6 in 2652fe2f1 (#559, after the v2.0.28 tag) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.4 to v2.0.28 kept 3.
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Max Parties Per Hideout Cap", 1, 20, Order = 5, RequireRestart = false,
-        HintText = "Hard cap on bandit parties per hideout regardless of scaling curve. Vanilla = 3, which is also the floor: a cap at or below 3 pins the value at vanilla and the Density Curve cannot move it. Default: 6. Played an earlier build? MCM has already saved its default of 3 in your TAOM.json, so reset this group to defaults to pick up 6.")]
-    public int BanditMaxPartiesPerHideout { get; set; } = 6;
+        HintText = "Hard cap on bandit parties per hideout regardless of scaling curve. Vanilla = 3, which is also the floor: a cap at or below 3 pins the value at vanilla and the Density Curve cannot move it. Default: 6. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int BanditPartiesPerHideoutCap { get; set; } = 6;
 
+    // Renamed from BanditInitialHideoutsPerFaction (#1017): its default went 14 to 7 in 2652fe2f1 (#559, after the v2.0.28 tag) under the same name,
+    // and MCM loads the saved value by name, so a TAOM.json saved on v2.0.4 to v2.0.28 kept 14.
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Initial Hideouts Per Faction", 1, 30, Order = 6, RequireRestart = false,
-        HintText = "Hideouts each bandit faction starts with on a NEW campaign; read once at world-gen, so changing it does nothing to a campaign already in progress. TAOM has 8 bandit factions, so this is a per-faction target, x8 on the map, bounded by each faction's physical hideout count (three have only 10). Vanilla = 7. Default: 7. Earlier builds shipped 14, up to 100 hideouts on a fresh map against vanilla's 35; if you played one, MCM has already saved 14 in your TAOM.json and only a reset of this group to defaults picks up 7.")]
-    public int BanditInitialHideoutsPerFaction { get; set; } = 7;
+        HintText = "Hideouts each bandit faction starts with on a NEW campaign; read once at world-gen, so changing it does nothing to a campaign already in progress. TAOM has 8 bandit factions, so this is a per-faction target, x8 on the map, bounded by each faction's physical hideout count (three have only 10). Vanilla = 7. Default: 7. A value saved by an earlier TAOM version was reset to this default; if you had chosen your own, set it again.")]
+    public int BanditStartingHideoutsPerFaction { get; set; } = 7;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Hideout Boss Bodyguards", 0, 10, Order = 7, RequireRestart = false,

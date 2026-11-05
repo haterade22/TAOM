@@ -167,7 +167,7 @@ Controls the scripted war escalation:
   "testMode": { "enabled": false, "phase1Day": 1, "phase2Day": 3 }
 }
 ```
-Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the full War of the Ring) on day 44. MCM overrides `phase1TriggerDay` and `phase2TriggerDay` at runtime and carries the same defaults.
+Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the full War of the Ring) on day 44. MCM overrides these at runtime through `WarPhase1TriggerDay` and `WarPhase2TriggerDay` (renamed in #1017 so the 30 and 44 reach saved settings) and carries the same defaults.
 
 ### MCM Settings (`TaomSettings`)
 | Setting | Default | Description |

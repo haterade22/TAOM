@@ -28,7 +28,7 @@ public static class Patch35_Mission_OnTick
             catch { return; }
         }
         if (_settings == null) return;
-        if (!_settings.EnableFormationPresets) return;
+        if (!_settings.EnableOobFormationPresets) return;
 
         // Body intentionally empty for now: hotkey-driven preset I/O moved to UI buttons.
         // Future per-tick work (e.g., a stance-decay timer) lives in a service method

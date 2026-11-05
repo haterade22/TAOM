@@ -99,11 +99,7 @@ crash-capture patches install; off is live, on needs a launch, and their hints s
 whose consumer really does bind at process start goes on that list with its reason, not on a flag
 alone.
 
-**A moved compiled default reaches fresh `TAOM.json` files only.** MCM persists per property and loads
-the file over the compiled default from then on, so an existing install keeps the old value until the
-player resets the group. The setting's own `HintText` says so when a default moves
-(`.claude/rules/csharp-architecture.md`, "Doc requirement"); the CHANGELOG is for us, the tooltip is
-what the player reads.
+**Never flip a compiled default; rename the setting.** MCM persists per property and loads the file over the compiled default from then on, so a default moved under an unchanged name reaches fresh installs only. Rename the setting (comment why) and the new default reaches every player; the gate `python tools/check_mcm_default_flips.py` fails on a flip (#1017), unless it is allowlisted with a reason. The renamed setting's `HintText` tells the player their saved value was reset and to set their own again (`.claude/rules/csharp-architecture.md`, "Doc requirement"); the commit body is for us, the tooltip is what the player reads.
 
 **A JSON behind an MCM knob is dead.** `GlobalSettings<T>.Instance` is non-null whenever MCM is
 loaded, UI opened or not, so a `SettingClamp.Clamp(TaomSettings.Instance?.X, jsonValue, ...)`

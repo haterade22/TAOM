@@ -5,7 +5,7 @@ namespace TAOM.Features.SmartCavalryAI;
 
 public sealed class SmartCavalryAISettingsProvider : ISmartCavalryAISettingsProvider
 {
-    public bool IsEnabled => TaomSettings.Instance?.EnableSmartCavalryAI ?? false;
+    public bool IsEnabled => TaomSettings.Instance?.EnableSmartCavalryCharge ?? false;
 
     public bool AvoidFriendlies => TaomSettings.Instance?.SmartCavalryAvoidFriendlies ?? true;
 

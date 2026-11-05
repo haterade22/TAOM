@@ -10,7 +10,7 @@ public interface ICompanionTacticsSettingsProvider
     bool EnableOOBRoleDisplay { get; }
     bool CompanionRolesDebug { get; }
 
-    bool EnableFormationPresets { get; }
+    bool EnableOobFormationPresets { get; }
     int MaxFormationPresets { get; }
     bool FormationPresetsDebug { get; }
 

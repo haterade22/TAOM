@@ -40,6 +40,8 @@ ship: `.bak` breaks the Cloudflare distribution. If it reports any, run it again
 list before applying: a sidecar with no live sibling is a sole copy, not a backup, and the script
 aborts if more turn up than `-MaxOrphans`. Detail: `docs/reference/module-backup-sweep.md`.
 
+Then `python tools/check_mcm_default_flips.py`. It must exit 0: a changed MCM default under an unchanged name reaches no player who saved settings (rename it, or allowlist it with a reason).
+
 ## Phase 3 — Bump the version fields
 
 | File | Field | When |
