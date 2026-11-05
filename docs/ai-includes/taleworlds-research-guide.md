@@ -83,8 +83,8 @@ for client/tool discovery.
 
 ### Targeted source helper
 
-The repository [source helper](../../tools/taom-src.ps1) takes a fully qualified
-type and locates its assembly across the selected game bin and module bins:
+The repository [source helper](../../tools/taom-src.ps1) takes a short or fully
+qualified type name and locates its assembly across the selected game bin and module bins:
 
 ```powershell
 pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty
@@ -93,7 +93,7 @@ pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.Party.MobileParty
 Read the returned file, and check the selected assembly and game version before
 using it as evidence. The helper prefers an available `BANNERLORD_OVERRIDE_DIR`
 over `BANNERLORD_GAME_DIR`; inspect its output rather than assuming which install
-was selected. It writes a versioned cache under the user's `.taom-src` directory.
+was selected. It writes a cache per game build under the user's `.taom-src` directory.
 That may need permission outside a workspace-only sandbox. Do not automatically
 invoke `clean` or `remove`, or broaden permissions after a denied cache write.
 
