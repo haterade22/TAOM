@@ -18,7 +18,7 @@ Vanilla `TownManagementVM` (in `TaleWorlds.CampaignSystem.ViewModelCollection.Ga
 
 ### Solution Approach
 
-1. **F6 hotkey** — `Patch36_MapScreenF6` adds a `Postfix` on `SandBox.View.Map.MapScreen.OnFrameTick`. Guards: `EnableFiefManagement` setting, `ActiveState is MapState`, `__instance.IsInMenu == false` (rejects vanilla settlement menus that layer on top of MapScreen), `IsKeyPressed(F6)`. Activates the menu and shows the "no fiefs" message at the boundary — the service stays query-only.
+1. **F6 hotkey**: `Patch36_MapScreenF6` adds a `Postfix` on `SandBox.View.Map.MapScreen.OnFrameTick`. Guards, in order: the `EnableFiefManagement` setting, `IsKeyPressed(F6)`, the shared map-menu gate `MapMenuGate.IsMapClearForMenu()` (vanilla `MapScreen.OnFrameTick`'s modal set plus the escape menu, a live menu context and `CampaignUIHelper.GetMapScreenActionIsEnabledWithReason`; the field camp's Make camp query uses the same gate), and not enlisted-attached. Activates the menu and shows the "no fiefs" message at the boundary; the service stays query-only.
 2. **Game menu** — `FiefHubCampaignBehavior.OnSessionLaunched` registers a `fief_hub` menu UNCONDITIONALLY (regardless of `EnableFiefManagement`) via `CampaignGameStarter.AddGameMenu`. Four options: Previous fief / Next fief / Manage / Leave. Each option's condition lambda checks `EnableFiefManagement` live so MCM toggles take effect immediately at runtime. Manage uses `manager.CreateState<FiefManagementGameState>()` + `state.Initialize(settlement)` + `manager.PushState(state)` — the `CreateState` path is what triggers `GameStateScreenManager.OnCreateState` → `CreateScreen`. (Codex review #38 caught the original `new + PushState` path bypassing all of this — see `feedback_gamestate_creation_pattern.md`.)
 3. **Screen substitution** — `Patch36_GameStateScreenManager` adds a `Prefix` on `TaleWorlds.MountAndBlade.View.Screens.GameStateScreenManager.CreateScreen`. When the pushed state is `FiefManagementGameState`, substitutes our `GauntletFiefManagementScreen` and skips the vanilla call.
 4. **Reflection swap (lifetime = screen lifetime)** — `IRemoteFiefSettlementSwapper` reflects on `MobileParty._currentSettlement` (a private `[SaveableField]`). The screen swaps the field to the target fief in `OnInitialize`, constructs `TownManagementVM`, and KEEPS the swap active until `OnFinalize`. This is necessary because vanilla child VMs (`TownManagementReserveControlVM.ExecuteConfirm`, `SettlementGovernorSelectionItemVM.OnGovernorChosen`) read `Settlement.CurrentSettlement.Town` at click time — NOT cached at construction. Safe because `IsMenuState=true` stops campaign time, so no other code runs while the swap is active. Layer setup mirrors vanilla `SandBox.GauntletUI.Menu.GauntletMenuTownManagementView`. (Codex review #38 caught the original swap-construct-restore-immediately pattern — see `feedback_static_singleton_swap_runtime_audit.md`.)
@@ -81,6 +81,7 @@ The trade-off: with the toggle off, you can't view stats remotely either. The cl
 | `Main/Features/FiefManagement/UI/FiefManagementNavItemVM.cs` | Optional nav-bar VM (F6 indicator) |
 | `Main/Features/FiefManagement/Hooks/FiefHubCampaignBehavior.cs` | Registers `fief_hub` menu; owns `_selectedIndex` and resets on new game / load |
 | `Main/Features/FiefManagement/Hooks/Patch36_MapScreenF6.cs` | F6 hotkey Postfix on `MapScreen.OnFrameTick` |
+| `Main/Adapters/MapMenuGate.cs` | The one map-menu gate F6 and the field camp's Make camp query share |
 | `Main/Features/FiefManagement/Hooks/Patch36_GameStateScreenManager.cs` | Prefix on `GameStateScreenManager.CreateScreen` substituting our screen |
 | `Main/Adapters/ISettlementOwnershipAdapter.cs` + impl | `Settlement.All` filter by `OwnerClan == Clan.PlayerClan`; current-settlement check by string id |
 | `Main/Adapters/IMapScreenInputAdapter.cs` + impl | Wraps `Input.IsKeyPressed(InputKey.F6)` for testability |
@@ -105,6 +106,7 @@ The trade-off: with the toggle off, you can't view stats remotely either. The cl
 
 ## Tests
 
+- `TAOM.Tests/Features/FiefManagement/MapMenuGateWiringTests.cs`: 5 source pins (the modal list lives only in `MapMenuGate.cs`, both consumers delegate, the full guard set and its order, F6 tests the key first and keeps the enlisted-attached refusal); `TAOM.Tests/Migration/MapMenuGateBindingTests.cs`: the vanilla helper's shape.
 - `TAOM.Tests/Features/FiefManagement/FiefHubServiceTests.cs` — 22 tests:
   - `GetOrderedFiefs`: empty / sort (towns first) / alphabetical-within-class / null-skip
   - `Count`: empty / 3 fiefs
@@ -147,6 +149,7 @@ The hotkey is currently hard-coded as `InputKey.F6` in `MapScreenInputAdapter.Is
 
 ## Changelog
 
+- 2026-11-05: F6 and the field camp's Make camp share one map-menu gate that also refuses during the escape menu, a menu context and vanilla's map-action refusals (prisoner, raft, mission, encounter). Taken from the 1.5.x #789 change without its Fiefs button (plan 133).
 - 2026-05-14 — F6 fast-path: `FiefHubService.Count` now delegates to `ISettlementOwnershipAdapter.GetPlayerOwnedFiefCount()` (iterates the cached `Clan.PlayerClan.Settlements`) instead of building a `FiefSummary` list off `Settlement.All`; closes deferred #143 (+5 tests).
 - 2026-05-13 — Swap restore safety + presenter reset: `RemoteFiefSettlementSwapper.Restore` uses the party ref captured at `Swap` time (no longer leaves `_currentSettlement` pointing at a remote fief), and `FiefHubMenuPresenter.Reset()` clears all 4 stateful fields to drop stale cross-campaign state; partial #143.
 - 2026-05-13 — Behavior-callback test coverage: added `FiefHubCampaignBehaviorTests.cs` (7 tests covering presenter-reset delegation, SyncData, and event/menu wiring); closes #177.
