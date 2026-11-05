@@ -113,7 +113,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         // class as vanilla's per-refresh CalculateClanGoldChange: one roster walk of dictionary lookups.
         var breakdown = _service.GetDailyBreakdown(hero.StringId, kingdomId, cultureId,
             PartyUpkeepReader.CountOwnedTowns(hero), PartyUpkeepReader.Collect(hero.PartyBelongedTo, _config));
-        var warning = breakdown.UpkeepLines.Count > 0 && amount + breakdown.Net <= 0f;
+        var warning = breakdown.HasUpkeepDue && amount + breakdown.Net <= 0f;
         if (warning != _lastWarning)
         {
             _resourceInfo.HasWarning = warning;
@@ -223,7 +223,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             result.Add(new TooltipProperty(Label("{=taom_res_tt_depleted_in}Depleted in"),
                 new TextObject("{=taom_res_tt_days}{DAYS} days").SetTextVariable("DAYS", daysLeft.Value).ToString(), 0));
         }
-        else if (amount <= 0f && breakdown.UpkeepLines.Count > 0 && breakdown.Net <= 0f)
+        else if (amount <= 0f && breakdown.HasUpkeepDue && breakdown.Net <= 0f)
         {
             // The tick adds the net BEFORE it tests the balance, so at zero with income covering upkeep
             // nothing deserts; the notice shows only when the icon is red for the same reason, and it
@@ -236,10 +236,11 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false,
             TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
-        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_battle}Per battle"), "+" + Amount(resource.PerBattleVictoryBase), 0));
-        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_raid}Per raid"), "+" + Amount(resource.PerRaid), 0));
-        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_siege}Per siege"), "+" + Amount(resource.PerSiegeVictory), 0));
-        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_prisoner}Per prisoner"), "+" + Amount(resource.PerPrisoner), 0));
+        // Each row is the base after the career gain (#767). Per battle is the base at an enemy ratio of 1.
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_battle}Per battle"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerBattleVictoryBase)), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_raid}Per raid"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerRaid)), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_siege}Per siege"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerSiegeVictory)), 0));
+        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_prisoner}Per prisoner"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerPrisoner)), 0));
 
         return result;
     }

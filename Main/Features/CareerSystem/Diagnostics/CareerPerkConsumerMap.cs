@@ -42,7 +42,7 @@ public static class CareerPerkConsumerMap
             case PassiveEffectType.InventoryCapacity: return "TaomInventoryCapacityModel; probe below (Career line)";
             case PassiveEffectType.RenownGain: return "TaomBattleRewardModel.CalculateRenownGain at battle end; [CareerPerks] event line";
             case PassiveEffectType.SmithingCostReduction: return "TaomSmithingModel energy costs; [CareerPerks] event line";
-            case PassiveEffectType.SpecialResourceGain: return "SpecialResourceService daily gain";
+            case PassiveEffectType.SpecialResourceGain: return "SpecialResourceService.ScaleEarned on every earning source (daily, battle, raid, siege, prisoners, tournament, hideout)";
             case PassiveEffectType.SpecialResourceUpkeepModifier: return "SpecialResourceService upkeep";
             case PassiveEffectType.SpecialResourceUpgradeCostModifier: return "SpecialResourceService upgrade cost";
             case PassiveEffectType.BuffDuration: return "reserved, deliberately unconsumed";

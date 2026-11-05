@@ -400,4 +400,38 @@ public class SpecialResourceBreakdownTests
         Assert.AreEqual(0f, _service.ChargeRecruitCost("hero1", "empire_s", null, "mordor_uruk_captain", 2));
         _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
     }
+
+    // A configured per-unit upkeep that is not finite or not above zero is not an upkeep row. The config
+    // provider already turns NaN and Infinity into its 0 default, so these pin the service's own gate.
+    private static readonly float[] UnusableUpkeep =
+        { float.NaN, float.PositiveInfinity, float.NegativeInfinity, 0f, -0.3f };
+
+    [TestMethod]
+    public void GetDailyBreakdown_UnusableConfiguredUpkeep_GivesNoLineAndNoUpkeep()
+    {
+        foreach (var configured in UnusableUpkeep)
+        {
+            CostRow("mordor_uruk_darkblade", dailyUpkeep: configured);
+            var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 10) };
+
+            var breakdown = _service.GetDailyBreakdown("hero1", "empire_s", null, 0, troops);
+
+            Assert.AreEqual(0, breakdown.UpkeepLines.Count, $"configured {configured}");
+            Assert.AreEqual(0f, breakdown.Upkeep, $"configured {configured}");
+        }
+    }
+
+    [TestMethod]
+    public void CalculateDesertion_UnusableConfiguredUpkeep_DoesNotDesert()
+    {
+        foreach (var configured in UnusableUpkeep)
+        {
+            CostRow("mordor_uruk_darkblade", dailyUpkeep: configured);
+            var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_darkblade", 10) };
+
+            var result = _service.CalculateDesertion("hero1", "empire_s", null, troops);
+
+            Assert.AreEqual(0, result.Count, $"configured {configured}");
+        }
+    }
 }
