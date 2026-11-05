@@ -83,11 +83,21 @@ public class ServiceBattleService : IServiceBattleService
             return;
         }
 
+        var foe = _encounter.GetOpposingLeaderFactionId(commanderPartyId);
+
+        // A VASSAL SITS OUT a battle his kingdom is not at war in (#960): choosing Attack there would
+        // declare a kingdom-wide war on the commander's behalf (BeHostileAction), which discharge never
+        // unwinds. No transition, no join. Same carve-out as the other floors, and it fails open.
+        if (!_encounter.IsMainPartyInMapEvent && !string.IsNullOrEmpty(foe) && _diplomacy.ShouldSitOutAsVassal(foe))
+        {
+            _logger?.LogInfo($"[Enlistment] the player's kingdom is not at war with '{foe}': sitting this battle out ({trigger})");
+            return;
+        }
+
         // TOP UP A MISSING WAR before joining (#832), under the oath rules (own-clan identity only).
         // The encounter menu would otherwise declare it as an untracked war discharge never unwinds.
         // A refusal is logged and the join goes ahead anyway: a war check never refuses a join, and
         // CanPartyJoinBattle stays unused (see IEncounterAdapter).
-        var foe = _encounter.GetOpposingLeaderFactionId(commanderPartyId);
         if (!string.IsNullOrEmpty(foe) && !_diplomacy.MirrorWarAtJoin(foe))
             _logger?.LogInfo($"[Enlistment] war top-up refused for '{foe}' (commander party '{commanderPartyId}'); joining anyway");
 

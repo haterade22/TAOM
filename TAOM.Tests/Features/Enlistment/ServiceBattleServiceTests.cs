@@ -180,7 +180,80 @@ public class ServiceBattleServiceTests
         _encounter.Received(2).JoinBattle(PartyBattleSide.Defender);
     }
 
-    // ---- the commander's realm is at war with the player's own ----
+    // ---- #960: a vassal sits out a battle his kingdom is not at war in ----
+
+    [TestMethod]
+    public void BattleStarted_VassalSitOut_DoesNotTransitionOrJoin()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.ShouldSitOutAsVassal("mordor").Returns(true);
+        _diplomacy.MirrorWarAtJoin("mordor").Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("sitting this battle out") && m.Contains("mordor")));
+        _diplomacy.DidNotReceiveWithAnyArgs().MirrorWarAtJoin(default!);
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("joining anyway")));
+    }
+
+    [TestMethod]
+    public void HourlyRecovery_VassalSitOut_DoesNotJoin()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.ShouldSitOutAsVassal("mordor").Returns(true);
+        _diplomacy.MirrorWarAtJoin("mordor").Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(false);
+
+        _service.TryJoinCommanderBattle("lord_party_1");
+
+        _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _diplomacy.DidNotReceiveWithAnyArgs().MirrorWarAtJoin(default!);
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("joining anyway")));
+    }
+
+    [TestMethod]
+    public void BattleStarted_NoVassalSitOut_Joins()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.ShouldSitOutAsVassal("mordor").Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+    }
+
+    [TestMethod]
+    public void BattleStarted_VassalSitOut_ButPlayerAlreadyInAMapEvent_FallsThrough()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns("mordor");
+        _diplomacy.ShouldSitOutAsVassal("mordor").Returns(true);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+    }
+
+    [TestMethod]
+    public void BattleStarted_EmptyFoeRead_JoinsWithoutAskingTheSitOut()
+    {
+        MakeEnlisted();
+        _encounter.GetOpposingLeaderFactionId("lord_party_1").Returns((string)null!);
+        _diplomacy.ShouldSitOutAsVassal(Arg.Any<string>()).Returns(true);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _diplomacy.DidNotReceiveWithAnyArgs().ShouldSitOutAsVassal(default!);
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+    }
 
     [TestMethod]
     public void BattleStarted_NoOpposingFaction_NoTopUp()

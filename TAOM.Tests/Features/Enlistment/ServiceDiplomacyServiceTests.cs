@@ -347,4 +347,61 @@ public class ServiceDiplomacyServiceTests
 
         CollectionAssert.AreEqual(new List<string> { "sturgia" }, _store.Record.MirroredWars);
     }
+
+    // ---- ShouldSitOutAsVassal (#960) ----
+
+    private void Vassal()
+    {
+        _store.Record.OathFactionId = "kingdom_p";
+        _diplomacy.GetPlayerFactionId().Returns("kingdom_p");
+        _playerContext.GetPlayerKingdomId().Returns("kingdom_p");
+        _diplomacy.GetPlayerEnemies().Returns(R("looters", "harad"));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_KingdomNotAtWarWithTheFoe_True()
+    {
+        Vassal();
+        Assert.IsTrue(_sut.ShouldSitOutAsVassal("mordor"));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_KingdomAtWarWithTheFoe_False()
+    {
+        Vassal();
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal("harad"));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_OwnClanIdentity_False()
+    {
+        OathAsOwnClan();
+        _playerContext.GetPlayerKingdomId().Returns((string)null!);
+        _diplomacy.GetPlayerEnemies().Returns(R("looters"));
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal("mordor"));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_EmptyPlayerEnemyRead_FailsOpen()
+    {
+        Vassal();
+        _diplomacy.GetPlayerEnemies().Returns(R());
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal("mordor"));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_EmptyFoe_False()
+    {
+        Vassal();
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal(""));
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal(null!));
+    }
+
+    [TestMethod]
+    public void ShouldSitOutAsVassal_NotEnlisted_False()
+    {
+        Vassal();
+        _store.Record.State = EnlistmentState.NotEnlisted;
+        Assert.IsFalse(_sut.ShouldSitOutAsVassal("mordor"));
+    }
 }
