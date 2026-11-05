@@ -225,7 +225,7 @@ public class ShippedFordsConfigTests
         static IEnumerable<float> RiderWeights(JToken faction) =>
             faction["units"]!.Where(u => (string?)u["role"] == "Cavalry").Select(u => (float)u["eliteWeight"]!);
 
-        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w < 1f), "every Rohan rider pack is below the full price for its level");
+        Assert.IsTrue(RiderWeights(factions["rohan"]!).All(w => w <= 0.5f), "every Rohan rider pack costs at most half the full price for its level (Mike, 2026-11-05)");
         var cheapestElsewhere = factions.Properties().Where(p => p.Name != "rohan").SelectMany(p => RiderWeights(p.Value)).Min();
         Assert.IsTrue(RiderWeights(factions["rohan"]!).Max() < cheapestElsewhere, "no other faction's riders are as cheap for their level");
     }
