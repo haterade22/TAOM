@@ -72,6 +72,16 @@ random vanilla lines with lip-sync all the time. The log already in hand contrad
   likely kind to be wrong (`csharp-architecture.md` "Lookup Functions With Fallbacks").
 - **Source:** issue #635 (correction comment); `docs/features/kingdom-voices.md` "Dialogue voice-over", corrected 2026-09-22.
 
+### A doc batch written beside the code is re-read against the reviewed code before it ships (2026-10-15)
+The yotthani review's docs batch was written in its own worktree while the code items went through review. Two of its
+sentences described the designs: the lifecycle reference said every step of the main-menu hook runs through the guard
+and that a test pins that shape, and the coexistence section promised a control test for an unknown name. The review
+had narrowed the guard to one call and deleted the control test as redundant.
+- **Why missed:** the batch's sources were the design files, and nothing tied it to the review's fix list.
+- **Prevent:** before a docs batch merges, grep it for every type, test and file name the code review changed or
+  deleted, and re-read each sentence that names one against the committed code.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-review-2026-10-15.md`, second review S12, Completeness lens (not on this line); plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
