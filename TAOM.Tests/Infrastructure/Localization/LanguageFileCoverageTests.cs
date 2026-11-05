@@ -159,6 +159,8 @@ public class LanguageFileCoverageTests
             "render English in-game no matter what a translator does, because the translator " +
             "substitutes by id and has nowhere to write.\n" +
             string.Join("\n", failures) +
-            "\n\nFix: python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply");
+            "\n\nFix (free, seeds the English rows only): python tools/translate_with_claude.py " +
+            "--lang <L> --module TAOM --sync-ids --seed-only --apply\n" +
+            "Translating the seeded rows is a separate paid run.");
     }
 }

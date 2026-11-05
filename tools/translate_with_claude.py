@@ -838,17 +838,21 @@ def estimate_cost(entry_count: int, provider: dict = None) -> float:
             + out_tokens / 1_000_000 * provider["price_out"])
 
 
-def main():
+def main(argv=None):
     p = argparse.ArgumentParser(description="TAOM AI Translation Tool")
     p.add_argument("--lang", required=True, choices=list(LANGUAGES.keys()),
                    help="Target language code")
     p.add_argument("--module", default="all", choices=["TAOM", "TAOM_Map", "Armory", "all"])
     p.add_argument("--dry-run", action="store_true", help="Preview without writing")
     p.add_argument("--apply", action="store_true", help="Write translations and call API")
-    p.add_argument("--max-entries", type=int, default=None, help="Cap API entries for testing")
+    p.add_argument("--max-entries", type=int, default=None,
+                   help="Cap API entries for testing; 0 is a cap of zero (no provider call)")
     p.add_argument("--sync-ids", action="store_true",
                    help="Seed per-language TAOM files with any {=KEY} the English source declares "
                         "but they lack, so translations for those keys have somewhere to land")
+    p.add_argument("--seed-only", action="store_true",
+                   help="With --sync-ids: seed the missing ids and stop, before discovering or "
+                        "translating anything (free; translation is a separate paid run)")
     p.add_argument("--batch", action="store_true",
                    help="Submit via the Batches API at 50%% price (async, up to 24h; "
                         "worth it for bulk runs, not for a handful of entries)")
@@ -861,10 +865,14 @@ def main():
                    help="Override input price per Mtok, for the printed estimate only")
     p.add_argument("--price-out", type=float, default=None,
                    help="Override output price per Mtok, for the printed estimate only")
-    args = p.parse_args()
+    args = p.parse_args(argv)
 
     if not args.dry_run and not args.apply:
         p.error("Specify either --dry-run or --apply")
+    if args.seed_only and not args.sync_ids:
+        p.error("--seed-only is only valid with --sync-ids")
+    if args.max_entries is not None and args.max_entries < 0:
+        p.error("--max-entries must be 0 or more")  # a negative slice would send all but one entry to the provider
 
     provider = resolve_provider(args.provider, args.model, args.price_in, args.price_out)
     if args.batch and not provider["batch"]:
@@ -909,6 +917,8 @@ def main():
             else:
                 print(f"  WARNING: Armory sync skipped, not found: {target_dir}", file=sys.stderr)
         print(f"  Ids {chr(0x77)}ould-be-seeded: {seeded}" if args.dry_run else f"  Ids seeded: {seeded}")
+        if args.seed_only:
+            return 0
 
     entries = discover_entries(lang, args.module)
     print(f"\n  Untranslated entries discovered: {len(entries)}")
@@ -927,7 +937,7 @@ def main():
     print(f"    from cache:     {len(via_cache)}")
     print(f"    needs LLM:      {len(need_llm)}")
 
-    if args.max_entries and len(need_llm) > args.max_entries:
+    if args.max_entries is not None and len(need_llm) > args.max_entries:
         print(f"  --max-entries cap applied: {args.max_entries}/{len(need_llm)} LLM entries")
         need_llm = need_llm[:args.max_entries]
 
