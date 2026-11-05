@@ -1,7 +1,9 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.MissionDiagnostic;
+using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.MissionDiagnostic;
 
@@ -95,5 +97,25 @@ public class MissionDiagnosticServiceTests
         _sut.LogActionSetCensusClosed();
 
         _logger.Received(1).LogInfo("[MissionDiag] ActionSet census closed: agentChecks=0 newKeys=0 lines=0");
+    }
+
+    [TestMethod]
+    public void LogCampaignDate_NoCampaign_WritesNothing()
+    {
+        _sut.LogCampaignDate();
+
+        _logger.DidNotReceiveWithAnyArgs().LogInfo(default!);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void LogSessionSnapshot_DescribesTheCampaign_WithoutReadingTheClock()
+    {
+        var method = typeof(MissionDiagnosticService).GetMethod(nameof(MissionDiagnosticService.LogSessionSnapshot))!;
+        var calls = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody()!.GetILAsByteArray()).ToList();
+
+        Assert.IsTrue(calls.Any(m => m.Name == "DescribeBeforeClock"), "the session line uses DescribeBeforeClock");
+        Assert.IsFalse(calls.Any(m => m.Name == "LogCampaignContext" || m.Name == "ReadCampaignTime"),
+            "the session snapshot runs before CampaignTime.Initialize and must not read the clock");
     }
 }

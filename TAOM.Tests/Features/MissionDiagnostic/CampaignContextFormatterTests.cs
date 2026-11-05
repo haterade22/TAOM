@@ -70,4 +70,22 @@ public class CampaignContextFormatterTests
 
         Assert.AreEqual("<time unavailable>, <no hero>", line);
     }
+
+    // The session snapshot runs at SubModule.OnGameStart, before v1.4.8 Campaign.OnInitialize calls
+    // CampaignTime.Initialize() (Campaign.cs:1391, 1394), so it never reads the clock (WP123).
+    [TestMethod]
+    public void DescribeBeforeClock_NamesWhereTheDateIsLogged_AndKeepsTheHero()
+    {
+        var line = CampaignContextFormatter.DescribeBeforeClock(() => "MainHero='Drel'");
+
+        Assert.AreEqual("date=<logged at game init>, MainHero='Drel'", line);
+    }
+
+    [TestMethod]
+    public void DescribeBeforeClock_HeroReaderThrows_StillOneLine()
+    {
+        var line = CampaignContextFormatter.DescribeBeforeClock(() => throw new NullReferenceException());
+
+        Assert.AreEqual("date=<logged at game init>, <hero read failed: NullReferenceException>", line);
+    }
 }

@@ -34,6 +34,9 @@ public interface IMissionDiagnosticService
     void LogActionSetCensusOpened(float windowSeconds);
     void LogActionSetCensusClosed();
 
+    // Logs the in-game date and hero once the clock exists; called from SubModule.OnGameInitializationFinished.
+    void LogCampaignDate();
+
     // Resets per-mission state (both action-set dedup sets and the census check count).
     void ResetForNewMission();
 }

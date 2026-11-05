@@ -25,7 +25,7 @@ The diagnostic needs to run *after* vanilla and all other mods have added their 
 
 For 5 seconds after mission start, the same behavior scans `Mission.Agents` and logs every unique `(actionSetName, raceName, sex)` combination seen. Each agent is first checked on an integer key (the action set's engine index, the race id and the sex, `TryMarkActionSetKey`); only a combination not yet seen this mission reads the action set name, the race name and the agent name, so the window costs three managed reads and one native index read per agent per frame. The window logs one header when it opens and one summary when it closes (see "How to Read the Output").
 
-A separate `LogSessionSnapshot()` call (driven by an `OnSessionLaunched` boundary registered in `SubModule`) dumps OS, CLR, Bannerlord version, every active module, every loaded BUTR/MCM/Harmony assembly with its version, and a campaign-context line if a save is loaded. All collection reads are independently guarded — `Campaign.Current.GameStarted` can be `false` mid-init even when `Campaign.Current` is non-null.
+A separate `LogSessionSnapshot()` call (called from `SubModule.OnGameStart`) dumps OS, CLR, Bannerlord version, every active module, every loaded BUTR/MCM/Harmony assembly with its version, and a campaign-context line if a save is loaded. All collection reads are independently guarded — `Campaign.Current.GameStarted` can be `false` mid-init even when `Campaign.Current` is non-null. The session line reads `Campaign: date=<logged at game init>, MainHero=...` because the clock is not initialised at `OnGameStart`, and `LogCampaignDate` writes `[MissionDiag] Campaign at game init: now=<date>, MainHero=...` from `OnGameInitializationFinished` on a loaded save.
 
 ### Component Diagram
 
@@ -54,7 +54,7 @@ No config. The diagnostic always runs — its overhead is bounded (single per-mi
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/MissionDiagnostic/IMissionDiagnosticService.cs` | Service interface, 7 methods: `LogSessionSnapshot`, `LogMissionStartSnapshot`, `LogActionSetSeen`, `TryMarkActionSetKey`, `LogActionSetCensusOpened`, `LogActionSetCensusClosed`, `ResetForNewMission` |
+| `Main/Features/MissionDiagnostic/IMissionDiagnosticService.cs` | Service interface, 8 methods: `LogSessionSnapshot`, `LogCampaignDate`, `LogMissionStartSnapshot`, `LogActionSetSeen`, `TryMarkActionSetKey`, `LogActionSetCensusOpened`, `LogActionSetCensusClosed`, `ResetForNewMission` |
 | `Main/Features/MissionDiagnostic/MissionDiagnosticService.cs` | Singleton implementation. Holds the two action-set dedup sets (the integer key and the logged line's string key), the census totals + `_sessionLogged` once-only guard. All `IModLogger.LogXxx` calls live here. |
 | `Main/Features/MissionDiagnostic/MissionDiagnosticIoC.cs` | DryIoc registration — `IMissionDiagnosticService → MissionDiagnosticService` as `Reuse.Singleton` |
 | `Main/Features/MissionDiagnostic/Hooks/MissionDiagnosticBehavior.cs` | `MissionLogic` boundary. **Inherits `MissionLogic` deliberately**, not just `MissionBehavior` — otherwise this feature would be the bug it's designed to catch. First-tick gate via `_missionStartLogged`. 5-second action-set window via `_actionSetWindowSecondsLeft`. |

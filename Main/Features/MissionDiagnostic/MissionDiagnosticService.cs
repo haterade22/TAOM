@@ -54,17 +54,12 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
             foreach (var n in loaded)
                 _logger.LogInfo($"[MissionDiag]   {n.Name} v{n.Version}");
 
-            // Save-game context if a campaign is active. Each subfield is independently
-            // guarded — OnGameStart runs before CampaignTime model is ready, so reading
-            // CampaignTime.Now there NREs even when Campaign.Current is non-null.
-            // The time half routinely fails HERE and that is expected: the snapshot runs before
-            // Campaign.Models is built, so CampaignTime.ToString() hits GetYear, which divides by
-            // a still-zero TimeTicksPerYear. The hero half survives on its own, and
-            // LogMissionStartSnapshot repeats the line once models are up -- that is where the
-            // date actually lands. On a save-load Campaign.GameStarted is ALREADY true here, so
-            // the guard below does not protect this call (see CampaignContextFormatter).
+            // Save-game context if a campaign is active. The snapshot runs at OnGameStart, before
+            // CampaignTime.Initialize() (on a save load Campaign.GameStarted is already true here),
+            // so it never reads the clock: the date is logged by LogCampaignDate at game init and
+            // by every mission start (see CampaignContextFormatter).
             if (Campaign.Current != null && Campaign.Current.GameStarted)
-                LogCampaignContext();
+                _logger.LogInfo($"[MissionDiag] Campaign: {CampaignContextFormatter.DescribeBeforeClock(ReadMainHero)}");
             else
                 _logger.LogInfo("[MissionDiag] Campaign: not active or not started yet at snapshot time");
             _logger.LogInfo("[MissionDiag] === /Session snapshot ===");
@@ -72,6 +67,19 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
         catch (Exception ex)
         {
             _logger.LogWarning($"[MissionDiag] LogSessionSnapshot failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    public void LogCampaignDate()
+    {
+        try
+        {
+            if (Campaign.Current == null || !Campaign.Current.GameStarted) return;
+            _logger.LogInfo($"[MissionDiag] Campaign at game init: {CampaignContextFormatter.Describe(ReadCampaignTime, ReadMainHero)}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[MissionDiag] LogCampaignDate failed: {ex.GetType().Name}: {ex.Message}");
         }
     }
 

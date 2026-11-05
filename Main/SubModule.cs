@@ -1469,6 +1469,11 @@ public class SubModule : MBSubModuleBase
         // [SaveLoad] campaign-launch memory stamp, BEFORE the once-per-process guard below so every
         // game init in the process gets one, not just the first.
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
+
+        // [MissionDiag] the campaign date, once per game init: the clock exists by now (v1.4.8 Campaign.cs:1394
+        // runs before :1452); the session snapshot at OnGameStart is too early to read it.
+        try { IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>()?.LogCampaignDate(); }
+        catch { /* diagnostic is best-effort, never break a load */ }
         hookStamp?.Mark("save_load_stamp");
         Features.LoadTimeStamps.LoadTimeStampsHooks.LogLoadXmlSummary();
         hookStamp?.End();

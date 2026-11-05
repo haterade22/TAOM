@@ -22,6 +22,13 @@ public static class CampaignContextFormatter
     public static string Describe(Func<string> readTime, Func<string> readHero) =>
         $"{Read(readTime, "time", "<time unavailable>")}, {Read(readHero, "hero", "<no hero>")}";
 
+    // The session snapshot runs before CampaignTime.Initialize() (v1.4.8 Campaign.cs:1391, 1394): it names
+    // where the date is logged instead of reading a clock that would divide by zero.
+    public const string DateBeforeClock = "date=<logged at game init>";
+
+    public static string DescribeBeforeClock(Func<string> readHero) =>
+        $"{DateBeforeClock}, {Read(readHero, "hero", "<no hero>")}";
+
     private static string Read(Func<string> reader, string label, string fallback)
     {
         if (reader == null) return fallback;
