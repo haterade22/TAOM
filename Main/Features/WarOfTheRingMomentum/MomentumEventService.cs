@@ -1,5 +1,6 @@
 using System;
 using TAOM.Adapters;
+using TAOM.Core.Validation;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 using TAOM.Features.WarOfTheRingMomentum.Models;
 using TAOM.Features.WarOfTheRingMomentum.Snapshots;
@@ -160,7 +161,7 @@ public class MomentumEventService : IMomentumEventService
         float freeStrength = GetSideStrength(state.Free);
         float evilStrength = GetSideStrength(state.Evil);
 
-        if (freeStrength == 0f || evilStrength == 0f)
+        if (!(FiniteFloatValidator.IsFinite(freeStrength) && freeStrength > 0f && FiniteFloatValidator.IsFinite(evilStrength) && evilStrength > 0f))
             return;
 
         bool freeIsStronger = freeStrength > evilStrength;
@@ -195,7 +196,8 @@ public class MomentumEventService : IMomentumEventService
     private int CalculateBattleMomentum(MomentumWarState state, string loserKingdomId, int casualties, bool playerInvolved)
     {
         float loserSideStrength = GetSideStrength(state.GetSide(SideOf(state, loserKingdomId)));
-        if (loserSideStrength == 0f)
+        // WOTR-08: positive requirement, so NaN fails; (int)Math.Round(NaN) is int.MinValue on net472/x64.
+        if (!(FiniteFloatValidator.IsFinite(loserSideStrength) && loserSideStrength > 0f))
             return 0;
 
         // ×100 at full precision — this is the "battle precision" the ×100 store exists for.

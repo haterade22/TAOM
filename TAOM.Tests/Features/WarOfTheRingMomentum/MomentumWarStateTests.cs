@@ -107,4 +107,14 @@ public class MomentumWarStateTests
         Assert.IsFalse(_sut.DoesKingdomTakePart(null));
         Assert.IsFalse(_sut.DoesKingdomTakePart(""));
     }
+
+    // WOTR-08: the lead is computed in long, so two large side totals cannot overflow it.
+    [TestMethod]
+    public void InternalMomentum_SidesNearTheIntLimits_DoesNotOverflow()
+    {
+        _sut.Free.EditMomentum(2_000_000_000);
+        _sut.Evil.EditMomentum(-2_000_000_000);
+
+        Assert.AreEqual(40_000_000f, _sut.InternalMomentum, 1f);
+    }
 }

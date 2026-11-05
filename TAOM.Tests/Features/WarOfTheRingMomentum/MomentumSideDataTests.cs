@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
@@ -209,5 +210,15 @@ public class MomentumSideDataTests
     {
         _sut.RestoreMomentum(1234);
         Assert.AreEqual(1234, _sut.SideMomentum);
+    }
+
+    // WOTR-08: a negative event value can only come from a poisoned cast.
+    [TestMethod]
+    public void AddEvent_NegativeValue_IsRefused()
+    {
+        _sut.AddEvent(new MomentumEvent(-5, "poisoned", MomentumActionType.BattleWon, 10.0));
+
+        Assert.AreEqual(0, _sut.SideMomentum);
+        Assert.AreEqual(0, _sut.GetEvents(MomentumActionType.BattleWon).Count());
     }
 }

@@ -522,4 +522,33 @@ public class MomentumEventServiceTests
 
         Assert.AreEqual(0, _state.Free.SideMomentum);
     }
+
+    // ---- WOTR-08: a realm strength that is not a finite positive number scores nothing ----
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(-5f)]
+    public void ProcessBattle_LoserStrengthNotFinitePositive_ScoresNoBattleMomentum(float strength)
+    {
+        _strengthAdapter.GetTotalStrength(Arg.Any<string>()).Returns(strength);
+
+        _sut.ProcessBattle(ValidBattle(), _state, 100.0);
+
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+    }
+
+    [TestMethod]
+    public void ProcessDailyTick_SideStrengthNaN_AwardsNoStrengthMomentum()
+    {
+        _config.Events.MaxStrengthMomentum = 100;
+        _strengthAdapter.GetTotalStrength("empire_w").Returns(float.NaN);
+        _strengthAdapter.GetTotalStrength("vlandia").Returns(1000f);
+        _strengthAdapter.GetTotalStrength("empire_s").Returns(1000f);
+        _strengthAdapter.GetTotalStrength("isengard").Returns(1000f);
+
+        _sut.ProcessDailyTick(_state, 100.0);
+
+        Assert.AreEqual(0, _state.Free.SideMomentum);
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+    }
 }
