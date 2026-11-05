@@ -83,6 +83,46 @@ public class PrefabSpriteTests
         Assert.AreEqual(0, ExtensionSpriteValues("\"<W Sprite=\\\"@Bound\\\" Sprite=\\\"{Binding}\\\" />\"").Count());
     }
 
+    // Vanilla's own brushes name sprites no module it loads defines, on layers its screens never show (naval art, the old map bar).
+    // A TAOM copy of such a brush inherits them, so only a name no game brush holds is TAOM's own mistake.
+    private static HashSet<string> SpritesTheGamesOwnBrushesName()
+    {
+        var repoBrushes = Path.GetFullPath(RepoPath("Main", "_Module", "GUI", "Brushes"));
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var dir in PrefabExtensionBrushTests.ModuleFolders("GUI", "Brushes"))
+        {
+            if (string.Equals(Path.GetFullPath(dir), repoBrushes, StringComparison.OrdinalIgnoreCase))
+                continue;
+            foreach (var file in Directory.EnumerateFiles(dir, "*.xml", SearchOption.AllDirectories))
+                names.UnionWith(PrefabSpriteValues(XDocument.Load(file)));
+        }
+
+        return names;
+    }
+
+    [TestMethod]
+    public void EveryBrushSprite_ResolvesOrIsNamedByTheGamesOwnBrushes()
+    {
+        var known = KnownSprites();
+        var vanilla = SpritesTheGamesOwnBrushesName();
+        Assert.IsTrue(vanilla.Count >= 100, $"Only {vanilla.Count} sprites found in the game's brushes; the scan is broken.");
+
+        var repoDir = RepoPath();
+        var unknown = new SortedSet<string>(StringComparer.Ordinal);
+        var used = 0;
+        foreach (var file in Directory.EnumerateFiles(RepoPath("Main", "_Module", "GUI", "Brushes"), "*.xml", SearchOption.AllDirectories))
+            foreach (var name in PrefabSpriteValues(XDocument.Load(file)))
+            {
+                used++;
+                if (!known.Contains(name) && !vanilla.Contains(name))
+                    unknown.Add($"{name}  ({file.Substring(repoDir.Length).TrimStart(Path.DirectorySeparatorChar)})");
+            }
+
+        Assert.IsTrue(used >= 100, $"Only {used} sprite values found in TAOM's brushes; the scan is broken.");
+        Assert.AreEqual(0, unknown.Count,
+            "A brush names a sprite no module defines and no game brush names, so that layer draws nothing:\n" + string.Join("\n", unknown));
+    }
+
     [TestMethod]
     public void EveryGuiPrefabSprite_IsRegistered()
     {
