@@ -21,5 +21,6 @@ internal static class FeatureModules
         new Features.SkeletonBuffer.SkeletonBufferModule(),
         new Features.CheatScreenGuard.CheatScreenGuardModule(),
         new Features.TextureAdvice.TextureAdviceModule(),
+        new Features.NameplateCull.NameplateCullModule(),
     };
 }

@@ -117,6 +117,11 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "EarlyStart", "Method", "MissionStartGuardSwaps.cs:26,32")]
     [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "AfterStart", "Method", "MissionStartGuardSwaps.cs:27,32")]
     [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "AfterMissionStart", "Method", "MissionStartGuardSwaps.cs:28,32")]
+    // --- NameplateCull (Patch104): the three private fields the adapter binds with AccessTools.FieldRefAccess.
+    // A miss makes Initialize return a reason, the cull stays off and the vanilla nameplate update runs (one WARNING line).
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM", "SettlementNameplatesVM", "_mapCamera", "Field", "NameplateCullAdapter.cs:49")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_bindIsVisibleOnMap", "Field", "NameplateCullAdapter.cs:50")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_worldPos", "Field", "NameplateCullAdapter.cs:51")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

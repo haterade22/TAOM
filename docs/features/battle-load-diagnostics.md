@@ -598,6 +598,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 | `CheatModeListsAllItemsAndTroops` | `false` | Map Performance. With cheat mode on, show vanilla's every-item inventory and every-troop party lists (gigabytes of memory); off keeps the normal screens ([cheat-screen-guard.md](cheat-screen-guard.md)). Live. |
+| `CullHiddenNameplates` | `true` | Map Performance. Skips hidden settlement nameplates that cannot become visible this frame ([nameplate-cull.md](nameplate-cull.md)). Live. |
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 

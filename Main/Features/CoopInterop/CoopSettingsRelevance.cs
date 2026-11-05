@@ -119,6 +119,9 @@ public static class CoopSettingsRelevance
         "EnableNativeSkinFixes",
         // The skeleton buffer guard: where the engine writes a frame's skeleton data when a pool is full; never what is simulated.
         "SkeletonBufferGuard",
+        // Campaign map performance (Battle Load Diagnostics page, Map Performance): whether hidden settlement
+        // nameplates are skipped each frame (Patch104). It changes what this client draws, never the campaign.
+        "CullHiddenNameplates",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
