@@ -1,0 +1,9 @@
+13:58:46.955  ========================================================
+13:58:46.955    Bannerlord Coop  —  Dedicated Server
+13:58:46.960  server is READY when you see:  [DedicatedServer] SERVING
+14:05:07.965  [DedicatedServer] SERVING â€” coop server up, waiting for clients
+14:08:24.682  [DedicatedServer] player connecting: peer 0 from 127.0.0.1
+14:08:36.215  [DedicatedServer] player disconnected: peer 0 (RemoteConnectionClose)
+14:10:41.946  [DedicatedServer] player connecting: peer 0 from 127.0.0.1
+14:13:22.701  @unknown_modul[DedicatedServer] player entered the campaign: peer 0
+14:22:03.244  [DedicatedServer] player disconnected: peer 0 (RemoteConnectionClose)

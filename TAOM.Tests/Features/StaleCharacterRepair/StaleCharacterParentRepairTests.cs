@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -20,6 +19,7 @@ public class StaleCharacterParentRepairTests
 {
     private IStaleCharacterAdapter _adapter = null!;
     private IModLogger _logger = null!;
+    private IOutcomeLog _outcomes = null!;
     private StaleCharacterRepairService _sut = null!;
 
     [TestInitialize]
@@ -27,10 +27,9 @@ public class StaleCharacterParentRepairTests
     {
         _adapter = Substitute.For<IStaleCharacterAdapter>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new StaleCharacterRepairService(_adapter, _logger);
+        _outcomes = Substitute.For<IOutcomeLog>();
+        _sut = new StaleCharacterRepairService(_adapter, _logger, _outcomes);
     }
-
-    private static string CheckLine(string id, string result, string detail) => $"[Check] id={id} result={result} {detail}";
 
     private static IHeroCharacterStateAdapter Parent(string id, bool hollow, bool repaired = true)
     {
@@ -50,8 +49,8 @@ public class StaleCharacterParentRepairTests
     [TestMethod]
     public void CheckIds_EachId_IsValidForTheVerdictReader()
     {
-        Assert.IsTrue(Regex.IsMatch(StaleCharacterRepairService.ParentRepairCheckId, @"^[a-z0-9]+(\.[a-z0-9-]+)+$"));
-        Assert.IsTrue(Regex.IsMatch(StaleCharacterRepairService.BirthCompletedCheckId, @"^[a-z0-9]+(\.[a-z0-9-]+)+$"));
+        Assert.IsTrue(OutcomeLog.IsValidId(StaleCharacterRepairService.ParentRepairCheckId));
+        Assert.IsTrue(OutcomeLog.IsValidId(StaleCharacterRepairService.BirthCompletedCheckId));
     }
 
     // ---- the repair at the birth ---- //
@@ -63,7 +62,8 @@ public class StaleCharacterParentRepairTests
         Assert.IsTrue(_sut.RepairOffspringParent(parent));
 
         parent.Received(1).TryRepairCharacter();
-        _logger.Received(1).LogInfo(CheckLine(StaleCharacterRepairService.ParentRepairCheckId, "pass", "hero=lord_MM15_6 original=True"));
+        _outcomes.Received(1).Pass(StaleCharacterRepairService.ParentRepairCheckId, "lord_MM15_6",
+            "hero=lord_MM15_6 original=True");
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public class StaleCharacterParentRepairTests
 
         _sut.RepairOffspringParent(parent);
 
-        _logger.Received(1).LogInfo(CheckLine(StaleCharacterRepairService.ParentRepairCheckId, "pass", "hero=lord_x original=True"));
+        _outcomes.Received(1).Pass(StaleCharacterRepairService.ParentRepairCheckId, "lord_x", "hero=lord_x original=True");
     }
 
     [TestMethod]
@@ -90,7 +90,7 @@ public class StaleCharacterParentRepairTests
         Assert.IsFalse(_sut.RepairOffspringParent(parent));
 
         parent.DidNotReceive().TryRepairCharacter();
-        Assert.AreEqual(0, _logger.ReceivedCalls().Count(), "every healthy birth runs this seam");
+        Assert.AreEqual(0, _outcomes.ReceivedCalls().Count(), "every healthy birth runs this seam");
         Assert.AreEqual(0, Warnings().Count());
     }
 
@@ -99,8 +99,9 @@ public class StaleCharacterParentRepairTests
     {
         Assert.IsFalse(_sut.RepairOffspringParent(Parent("lord_x", hollow: true, repaired: false)));
 
-        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.StartsWith("[Check] id=" + StaleCharacterRepairService.ParentRepairCheckId + " result=fail ") && m.Contains("hero=lord_x")));
-        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains(" result=pass")));
+        _outcomes.Received(1).Fail(StaleCharacterRepairService.ParentRepairCheckId, "lord_x",
+            Arg.Is<string>(d => d.Contains("hero=lord_x")));
+        _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]
@@ -111,8 +112,10 @@ public class StaleCharacterParentRepairTests
 
         Assert.IsFalse(_sut.RepairOffspringParent(parent), "a true here forges the proof path");
 
-        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.StartsWith("[Swallowed] feature=StaleCharacterRepair site=RepairOffspringParent first=InvalidOperationException")));
-        _logger.Received(1).LogWarning(CheckLine(StaleCharacterRepairService.ParentRepairCheckId, "fail", "hero=lord_x threw=InvalidOperationException"));
+        _outcomes.Received(1).Swallowed("StaleCharacterRepair", "RepairOffspringParent",
+            Arg.Any<InvalidOperationException>());
+        _outcomes.Received(1).Fail(StaleCharacterRepairService.ParentRepairCheckId, "lord_x",
+            "hero=lord_x threw=InvalidOperationException");
     }
 
     [TestMethod]
@@ -124,8 +127,9 @@ public class StaleCharacterParentRepairTests
         Assert.IsTrue(_sut.RepairOffspringParent(parent));
 
         parent.Received(1).TryRepairCharacter();
-        _logger.Received(1).LogInfo(CheckLine(StaleCharacterRepairService.ParentRepairCheckId, "pass", "hero=lord_x state=unavailable"));
-        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.StartsWith("[Swallowed] feature=StaleCharacterRepair site=DescribeState first=InvalidOperationException")));
+        _outcomes.Received(1).Pass(StaleCharacterRepairService.ParentRepairCheckId, "lord_x",
+            "hero=lord_x state=unavailable");
+        _outcomes.Received(1).Swallowed("StaleCharacterRepair", "DescribeState", Arg.Any<InvalidOperationException>());
     }
 
     // ---- the line that says whether the birth finished ---- //
@@ -134,8 +138,8 @@ public class StaleCharacterParentRepairTests
     {
         _sut.ReportBirthAfterRepair("hero_77", null!);
 
-        _logger.Received(1).LogInfo(CheckLine(StaleCharacterRepairService.BirthCompletedCheckId, "pass", "child=hero_77"));
-        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains(" result=fail")));
+        _outcomes.Received(1).Pass(StaleCharacterRepairService.BirthCompletedCheckId, "hero_77", "child=hero_77");
+        _outcomes.DidNotReceive().Fail(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]
@@ -143,8 +147,9 @@ public class StaleCharacterParentRepairTests
     {
         _sut.ReportBirthAfterRepair(null!, new NullReferenceException());
 
-        _logger.Received(1).LogWarning(CheckLine(StaleCharacterRepairService.BirthCompletedCheckId, "fail", "threw=NullReferenceException"));
-        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains(" result=pass")));
+        _outcomes.Received(1).Fail(StaleCharacterRepairService.BirthCompletedCheckId, string.Empty,
+            "threw=NullReferenceException");
+        _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [TestMethod]
@@ -153,8 +158,8 @@ public class StaleCharacterParentRepairTests
         // PatchShield can swallow a missing-API exception before this Finalizer runs, and the target then returns null.
         _sut.ReportBirthAfterRepair(null!, null!);
 
-        _logger.Received(1).LogWarning(CheckLine(StaleCharacterRepairService.BirthCompletedCheckId, "fail", "threw=none"));
-        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains(" result=pass")));
+        _outcomes.Received(1).Fail(StaleCharacterRepairService.BirthCompletedCheckId, string.Empty, "threw=none");
+        _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     // ---- the census at load ---- //
@@ -176,7 +181,7 @@ public class StaleCharacterParentRepairTests
 
         _sut.ReportHollowHeroCharacters();
 
-        var line = Warnings().Single(w => w.Contains("census:"));
+        var line = Warnings().Single();
         StringAssert.Contains(line, "1 hero(es)");
         StringAssert.Contains(line, "hero=lord_MM15_6 original=True");
         parent.DidNotReceive().TryRepairCharacter();
@@ -192,7 +197,7 @@ public class StaleCharacterParentRepairTests
 
         _sut.ReportHollowHeroCharacters();
 
-        var line = Warnings().Single(w => w.Contains("census:"));
+        var line = Warnings().Single();
         StringAssert.Contains(line, "hero=lord_bad state=unavailable");
         StringAssert.Contains(line, "hero=lord_good original=True");
     }
@@ -206,7 +211,7 @@ public class StaleCharacterParentRepairTests
 
         _sut.ReportHollowHeroCharacters();
 
-        var line = Warnings().Single(w => w.Contains("census:"));
+        var line = Warnings().Single();
         StringAssert.Contains(line, (StaleCharacterRepairService.MaxNamedIds + 5) + " hero(es)");
         Assert.IsFalse(line.Contains("hero=lord_" + StaleCharacterRepairService.MaxNamedIds + " "));
     }
@@ -218,6 +223,7 @@ public class StaleCharacterParentRepairTests
 
         _sut.ReportHollowHeroCharacters();
 
-        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.StartsWith("[Swallowed] feature=StaleCharacterRepair site=ReportHollowHeroCharacters first=InvalidOperationException")));
+        _outcomes.Received(1).Swallowed("StaleCharacterRepair", "ReportHollowHeroCharacters",
+            Arg.Any<InvalidOperationException>());
     }
 }

@@ -1,0 +1,11 @@
+# Fixture: min = 2 over the whole session (no scope).
+issue = 9005
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.fixture.two-attaches"
+needs = "two field battles with the bar on"
+reached = ['\[BattleActionBar\] screen init: MissionScreen=set .*enabled=True']
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']
+min = 2

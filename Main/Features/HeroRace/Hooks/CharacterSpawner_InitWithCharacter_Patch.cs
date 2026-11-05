@@ -2,6 +2,7 @@ using HarmonyLib;
 using System;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.View.Scripts;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.HeroRace.Hooks;
 
@@ -23,8 +24,9 @@ public class CharacterSpawner_InitWithCharacter_Patch
             service.InitWithCharacter(__instance, characterCode, useBodyProperties);
             return false;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Outcomes.Swallowed("HeroRace", "CharacterSpawner_InitWithCharacter_Patch.Prefix", ex);
             return true;
         }
     }

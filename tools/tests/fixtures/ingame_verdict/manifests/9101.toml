@@ -1,0 +1,8 @@
+# Fixture: a pattern that is not a regex.
+issue = 9101
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.fixture.broken"
+pass = ['\[BattleActionBar\] (unclosed']

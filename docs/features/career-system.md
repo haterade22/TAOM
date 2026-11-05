@@ -521,6 +521,10 @@ When the player picks "I wish to discuss my career path" on any companion (under
 
 **Switch contract:** `ICareerSwitchService.SwitchCareer(heroStringId, hero, newCareerId)` clears old career + choices + tier unlocks + flags, sets the new career, adds the new root choice, refreshes the passive cache. `CanSwitch` rejects same-career switches at the boundary (`hero.StringId → _dataService.GetCareerStringId → ordinal-ignore-case == newCareerStringId`).
 
+## In-game check lines (#971)
+
+The career button's click writes `[Check] id=taom.career-screen.open` from the Patch27 postfix: `result=pass source=button` when `ScreenManager.TopScreen` is the career screen after `OpenCareerScreen` returns, `result=fail source=button reason=not-on-top` when it is not (no main hero), and `reason=<exception type>`, the innermost exception type that reaches the catch, when the close or the open throws, after which the exception is rethrown as before. A throw in the screen's constructor leaves `GameStateScreenManager.CreateScreen` wrapped by `Activator.CreateInstance` and registers nothing, so the reason is the innermost type; only a state with no screen type registers a null listener, and `GameState.HandleInitialize` then throws a `NullReferenceException`. The end of `GauntletCareerScreen.OnInitialize` writes `[Check] id=taom.career-screen.init result=pass mode=normal` (or `mode=switch` for the dialogue's picker). Both go through the `Outcomes` facade, and the ids are consts in `CareerScreenChecks.cs`. `python tools/ingame_verdict.py --issue 971` reads them with `tools/ingame_checks/971.toml`, which counts only `mode=normal`.
+
 ## Campaign lifecycle: when a career may be assigned, and the repair pass
 
 Three rules hold this feature's state together. Breaking any one of them shows up to the player as

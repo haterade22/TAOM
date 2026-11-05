@@ -218,6 +218,7 @@ until the next scan.
 | `StaleCharacterParentRepairTests` | the census and the birth repair: healthy silence, each outcome, a throwing adapter, a throwing `DescribeState`, the state from before the write, the birth line |
 | `HeroCharacterStateAdapterTests` | the gate, each repair branch, the census facts and the engine's real copy, on objects built with no constructor, as a save builds them |
 | `Patch83HooksHarmonyTests` | the Prefix and Finalizer pair through real Harmony on the real target, a finished birth, a thrown birth, and the load postfix's order |
+| `HollowParent1076Tests` (`tools/tests/test_ingame_verdict.py`) | the real manifest against fixture logs: a finished birth, a throw, a throw on a second birth, a killed process, a healthy game |
 | `Patch83StaleCharacterRepairBindingTests` | the birth target and its parameter names, `_originCharacter`, the target and its arity, all four reflected members and their types, `MBCharacterSkills`/`MBBodyProperty` construction, `RegisterPresumedObject`, the category string, and the presence of `ResetForUnload` |
 
 The binding suite matters more than usual because **every** binding here fails quietly. A renamed
@@ -280,14 +281,15 @@ the field, step 5 is an inference from the frames, and what first made this save
 The check `taom.stale-character.parent-repair` writes `pass` or `fail`, with the state from before the write. The
 repair runs before the birth, so its line proves nothing about the birth: the Finalizer writes
 `taom.stale-character.parent-birth` as `pass` or `fail` by how the birth ended, and a fail wins over another birth's pass
-in the `[Check]` lines in `taom_debug_*.log` (`tools/ingame_checks/1076.toml` arrives with WP139). A repair with neither line means the process died inside the birth, which is a FAIL.
+in the `[Check]` lines in `taom_debug_*.log` (`tools/ingame_checks/1076.toml`, read by
+`python tools/ingame_verdict.py --issue 1076`; see [in-game verdicts](ingame-verdicts.md)). A repair with neither line means the process died inside the birth, which is a FAIL.
 
 ## Verification not yet done
 
 **The parent-repair repair (bundle `3fbdc0c5`, #1076)** has unit and binding tests only. The player's save is not
 available (Mike, 2026-11-02). The proof needs an affected game, or the state built by hand from the RCA's steps: expect
 no crash at the birth, the census line, and the `parent-repair` and `parent-birth` lines: the `[Check]` lines in
-`taom_debug_*.log` (`tools/ingame_checks/1076.toml` arrives with WP139). A healthy game writes none of them.
+`taom_debug_*.log` (`tools/ingame_checks/1076.toml`). A healthy game writes none of them.
 
 **The original repair (bundle `065939b6`):**
 

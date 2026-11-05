@@ -1,0 +1,4 @@
+[2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-30 13:07:23] [INFO] [Session] summary reason=heartbeat uptime_s=600 checks_pass=0 checks_fail=0 swallowed=3 shield_swallowed=0 checks_skip=0 errors=2 dropped=0
+[2026-10-30 13:07:23] [INFO] [Session] swallowed feature=Enlistment site=GameMenuManagerSetNextMenuPatch n=3 first=NullReferenceException
+[2026-10-30 13:20:02] [WARNING] [Swallowed] feature=CompanionTactics site=OOBOverlayService.Refresh first=InvalidOperationException. This line is logged once per site and the [Session] summary counts the repeats. Root cause: System.InvalidOperationException: Sequence contains no elements

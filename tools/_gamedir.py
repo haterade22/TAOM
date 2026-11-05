@@ -27,6 +27,8 @@ from pathlib import Path
 
 ENV_VAR = "BANNERLORD_GAME_DIR"
 MODULES_ENV_VAR = "BANNERLORD_GAME_MODULES"
+# The install root the tools fall back to when neither variable is set (one machine's path; see game_dir).
+DEFAULT_GAME_ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
 
 def game_dir(default):

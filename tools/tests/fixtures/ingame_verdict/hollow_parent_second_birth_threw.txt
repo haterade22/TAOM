@@ -1,0 +1,5 @@
+[2026-11-02 11:42:07] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-11-02 11:44:00] [INFO] [Check] id=taom.stale-character.parent-repair result=pass hero=lord_A character=lord_A original=True
+[2026-11-02 11:44:00] [INFO] [Check] id=taom.stale-character.parent-birth result=pass child=CharacterObject_9001
+[2026-11-02 11:46:56] [INFO] [Check] id=taom.stale-character.parent-repair result=pass hero=lord_B character=lord_B original=True
+[2026-11-02 11:46:56] [INFO] [Check] id=taom.stale-character.parent-birth result=fail threw=NullReferenceException

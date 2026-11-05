@@ -49,7 +49,7 @@ public static class EncounterGameMenuOrderAttackConditionPatch
             {
                 _faultLogged = true;
                 try { IoC.Resolve<IModLogger>().LogError($"[Enlistment] game_menu_encounter_order_attack_on_condition postfix failed (failing open): {ex.Message}"); }
-                catch { /* fail open: never break the encounter menu */ }
+                catch { /* swallow-ok: the logger itself threw; the postfix still fails open */ }
             }
         }
     }
