@@ -58,7 +58,6 @@ DEFAULT_IDLE_MINUTES = 10.0
 LAUNCH_SETTINGS = Path(__file__).resolve().parent.parent / "Main" / "Properties" / "launchSettings.json"
 RUNS_ROOT = r"E:\Temp\fords-runs"
 LOGS_DIR = r"C:\ProgramData\Mount and Blade II Bannerlord\logs"
-CRASHES_DIR = r"C:\ProgramData\Mount and Blade II Bannerlord\crashes"
 DONE_FILE = "fords_autorun_done.txt"
 STATUS_FILE = "fords_autorun_status.txt"
 DEFAULT_WALL_LIMIT_SECONDS = 2400.0
@@ -678,25 +677,34 @@ def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time, on_pol
             on_poll()
 
 
-def save_engine_dump(crashes_dir, started, target, seen, say):
-    """Copies the newest crashes/<stamp>/dump.dmp written since the run started to target, once its size held still between two calls.
-    Returns True when target holds it. The crash uploader deletes the whole crashes folder when a person sends the report (2026-11-05),
-    so the copy must happen while the launcher waits. seen maps a dump path to the size the last call saw."""
+DUMP_CREATED = re.compile(r"^Dump file created at (.+?\.dmp)\.?\s*$", re.M)
+UPLOADER_STARTED = "Starting Crash Uploader"
+
+
+def save_engine_dump(watchdog_log, target, state, say):
+    """Copies the engine's dump of this game to target and returns True when target holds it. The game's own watchdog_log_<pid>.txt names
+    the dump and decides when: the Watchdog writes it twice (a stack-only pass, then the full one) at the same path, then writes "Starting
+    Crash Uploader" and lets the game die, and the uploader deletes the whole crashes folder when a person sends the report (2026-11-05).
+    A dump that is gone or cannot be copied is said once, naming the file to copy by hand. state keeps what this run has done."""
+    if state.get("saved"):
+        return True
     try:
-        dumps = [(p, p.stat()) for p in Path(crashes_dir).glob("*/dump.dmp")]
-        dumps = [(p, st) for p, st in dumps if st.st_mtime >= started and st.st_size > 0]
-        if not dumps:
-            return False
-        newest, stat = max(dumps, key=lambda item: item[1].st_mtime)
-        if seen.get(newest) != stat.st_size:
-            seen[newest] = stat.st_size
-            return False
-        if Path(target).is_file() and Path(target).stat().st_size == stat.st_size:
-            return True
-        shutil.copy2(newest, target)
+        text = Path(watchdog_log).read_text(encoding="utf-8", errors="replace")
     except OSError:
         return False
-    say(f"engine crash dump saved: {target} ({stat.st_size:,} bytes, from {newest})")
+    found = DUMP_CREATED.findall(text)
+    if not found or UPLOADER_STARTED not in text:
+        return False
+    source = Path(found[-1])
+    try:
+        shutil.copy2(source, target)
+    except OSError as error:
+        if not state.get("failed"):
+            state["failed"] = True
+            say(f"engine crash dump not copied ({type(error).__name__}: {error}); copy {source} by hand before sending the report")
+        return False
+    state["saved"] = True
+    say(f"engine crash dump saved: {target} ({Path(target).stat().st_size:,} bytes, from {source})")
     return True
 
 
@@ -837,9 +845,9 @@ def run_once(args, game, modules):
     reason = safe_watch(proc, folder, wall_limit, say)
     say("watch ended: " + reason)
     if reason.startswith("crash"):
-        seen = {}
+        dump_state = {}
         wait_after_crash(proc, args.keep_on_crash, say,
-                         on_poll=lambda: save_engine_dump(CRASHES_DIR, started, folder / "engine_dump.dmp", seen, say))
+                         on_poll=lambda: save_engine_dump(Path(LOGS_DIR) / f"watchdog_log_{proc.pid}.txt", folder / "engine_dump.dmp", dump_state, say))
         if proc.poll() is None:
             dump_crash(proc.pid, folder, say)
     if reason == "done":

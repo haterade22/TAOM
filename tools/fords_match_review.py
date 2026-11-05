@@ -44,7 +44,7 @@ GOLD = re.compile(r"\[Balance\] side=(\w+) slot=\d+ (earned=\d+ spent=\d+ left=\
 POISON = re.compile(r"\[Balance\] poison side=(\w+) doses=(\d+) damage=(\d+)")
 UPGRADE = re.compile(r"\[Upgrade\] side=(\w+) track=(?:\{=[^}]*\})?(.+?) price=\d+")
 HOUSEKEEP = re.compile(r"\[Housekeep\] .*?wargsRemoved=(\d+) .*?riderlessOthersPeak=(\S+)")
-SPEED = re.compile(r"\[Speed\] speed=(\d+)")
+SPEED = re.compile(r"\[FordsOfWar\]\[Speed\] speed=(\d+)")
 
 
 def parse_log(text):

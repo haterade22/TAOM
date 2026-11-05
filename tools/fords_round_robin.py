@@ -13,7 +13,7 @@ its scheduled West and East order. A run with no winner did not finish (the game
 trade is the gold value of the units its own troops killed, divided by what it lost; kills with no known killer, such as
 tower volleys, count for neither side. A troop id both factions field counts for neither. The schedule and the troop tables
 come from the factions.json the build committed (git show), and only a 4x match with both sides AI and no control check
-counts. It reads the run folders under E:/Temp/fords-runs through tools/fords_match_review.py.
+counts, whose log holds exactly one [FordsOfWar][Speed] speed=4 line (a second one means the speed changed during play). It reads the run folders under E:/Temp/fords-runs through tools/fords_match_review.py.
 """
 import argparse
 import json
@@ -102,7 +102,7 @@ def _skip(folder, why):
 def results_for(build, pairs, runs_root=RUNS_ROOT, factions_path=review.FACTIONS):
     """The newest finished run of each scheduled pair, in its scheduled West and East order, whose report names that clean build.
     A run with no winner did not finish (the game always names one) and does not count; neither does a run that was not a
-    4x match with both sides AI and no control check. Folders of other builds are skipped silently; a folder of this build that
+    4x match with both sides AI and no control check, or whose log does not hold exactly one 4x [Speed] line. Folders of other builds are skipped silently; a folder of this build that
     cannot be read or is left out is named on stderr."""
     scheduled = {tuple(p) for p in pairs}
     newest = {}
@@ -125,6 +125,9 @@ def results_for(build, pairs, runs_root=RUNS_ROOT, factions_path=review.FACTIONS
             _skip(folder, "only the East side was AI (no west_ai=1 in arm.txt)")
         elif facts["arm"].get("speed") != str(review.BALANCE_SPEED):
             _skip(folder, f"speed was {facts['arm'].get('speed', 'unset')}, not {review.BALANCE_SPEED}")
+        elif facts.get("speed_changes") != 1 or facts["speed"] != review.BALANCE_SPEED:
+            # A clean match logs one [Speed] line, at the start; more means someone changed the speed during play (Codex, 2026-11-05).
+            _skip(folder, f"the logged speed was not one {review.BALANCE_SPEED}x line ({facts.get('speed_changes', 0)} [Speed] line(s), up to {facts['speed']}x)")
         elif "control_check" in facts["arm"]:
             _skip(folder, "a control check ran in it")
         elif (facts["west"], facts["east"]) not in scheduled:
