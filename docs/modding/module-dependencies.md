@@ -725,7 +725,7 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
 9. Add the four stubs under `Stubs/<Id>/_Module/SubModule.xml` and the `DeployTAOMDependenciesStubs`
    target (`Dependencies/TAOM.Dependencies.csproj:90-103`), knowing the deployed depth problem
    described above.
-10. Copy `BundledDependencyManifestTests.cs` (9 tests), `DependenciesPairingTests.cs` (2) and
+10. Copy `BundledDependencyManifestTests.cs` (10 tests), `DependenciesPairingTests.cs` (2) and
     `AssemblyRedirectListTests.cs` (5) and point them at your paths; they assert relationships
     between declarations, never version literals (`BundledDependencyManifestTests.cs:20-22`).
     <!-- measured: rg -c '\[TestMethod\]' over the three test files 2026-09-05 -->
@@ -890,7 +890,7 @@ All measured 2026-09-05 from the repo at its current commit and the live install
 | 13 | `!` allow patterns at `.gitignore:52-64` | `sed -n '52,64p' .gitignore \| rg -c '^!'` |
 | 16 | `.cs` files in `Dependencies/Foundation/` | `ls Dependencies/Foundation/*.cs \| wc -l` |
 | 17 | simple names in `RedirectedSimpleNames` | `sed -n '39,98p' Dependencies/SubModule.cs \| rg -c '^\s*"[^"]+",'` |
-| 9 / 2 / 5 | `[TestMethod]` in `BundledDependencyManifestTests` / `DependenciesPairingTests` / `AssemblyRedirectListTests` | `rg -c '\[TestMethod\]' <file>` |
+| 10 / 2 / 5 | `[TestMethod]` in `BundledDependencyManifestTests` / `DependenciesPairingTests` / `AssemblyRedirectListTests` | `rg -c '\[TestMethod\]' <file>` |
 | 2.11.0.0, 5.12.1.0, 1.0.1.50, 14.0.0.99 | FileVersion of `Bannerlord.ButterLib.dll`, `MCM.UI.Adapter.MCMv5.dll`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`, `BUTR.CrashReport.dll` | `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion` |
 | 2.4.2.0, 2.13.2.0, 5.12.1.0 | FileVersion of the live `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` | same, over the live `bin/Win64_Shipping_Client` |
 | 4.0.4.1 / 4.0.1.1 | assembly version of `System.Runtime.CompilerServices.Unsafe.dll` (repo and live) / vendored `System.Memory.dll` | `[Reflection.AssemblyName]::GetAssemblyName(<dll>).Version` |

@@ -166,6 +166,56 @@ public class FactionMapDataTests
         }
     }
 
+    /// <summary>
+    /// The faction card (character-creation culture stage, faction screen) quotes each party-size
+    /// bonus as a number typed into factions.json, while the game applies the culture feat in
+    /// TaomCulturalFeats.cs. Nothing tied the two together until Mordor's card kept +10% after its
+    /// feat moved to +20%. Every "+N% party size" in a faction's text must equal
+    /// the production feat's EffectBonus.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow("goblins_of_goblin_town", "_goblinPartySize")]
+    [DataRow("goblins_of_blue_craig", "_bluecraigPartySize")]
+    [DataRow("kingdom_of_moria", "_mistyMountainOrcsPartySize")]
+    [DataRow("dominion_of_isengard", "_isengardPartySize")]
+    [DataRow("overlordship_of_gundabad", "_gundabadPartySize")]
+    [DataRow("overlordship_of_dol_guldur", "_dolguldurPartySize")]
+    [DataRow("dominion_of_mordor", "_mordorPartySize")]
+    [DataRow("stewardship_of_gondor", "_gondorPartySize")]
+    [DataRow("khudorom_of_khand", "_khandPartySize")]
+    [DataRow("golden_realm_of_rhun", "_rhunPartySize")]
+    [DataRow("taskralan_of_harwan", "_haradPartySize")]
+    [DataRow("clans_of_dunland", "_dunlandPartySize")]
+    public void FactionCard_PartySizePercent_MatchesProductionFeat(string factionKey, string featField)
+    {
+        var faction = LoadFactions()[factionKey] as JObject;
+        Assert.IsNotNull(faction, $"faction key '{factionKey}' missing from factions.json");
+
+        var expected = TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests
+            .ProductionEffectBonus(featField) * 100m;
+
+        var quoted = new List<decimal>();
+        foreach (var text in EnumerateStrings(faction))
+        {
+            var found = PartySizePercentRegex.Matches(text).Cast<Match>()
+                .Select(m => decimal.Parse(m.Groups["n"].Value, System.Globalization.CultureInfo.InvariantCulture))
+                .ToList();
+            var mentions = Regex.Matches(text, "party size", RegexOptions.IgnoreCase).Count;
+            Assert.AreEqual(mentions, found.Count,
+                $"'{factionKey}': a party-size mention without a '+N%' prefix, which this gate cannot read: '{text}'");
+            quoted.AddRange(found);
+        }
+
+        Assert.IsTrue(quoted.Count > 0,
+            $"'{factionKey}' quotes no party-size percentage; remove the row or the mapping to {featField}");
+        foreach (var percent in quoted)
+            Assert.AreEqual(expected, percent,
+                $"'{factionKey}' card says +{percent}% party size but {featField} is +{expected}%");
+    }
+
+    private static readonly Regex PartySizePercentRegex = new(
+        @"\+(?<n>\d+(?:\.\d+)?)% party size", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private static IEnumerable<string> EnumerateStrings(JToken node)
     {
         switch (node)

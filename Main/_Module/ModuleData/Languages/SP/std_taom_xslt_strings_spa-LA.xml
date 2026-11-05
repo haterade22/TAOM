@@ -1103,7 +1103,6 @@
     <string id="TAOM_hero_1_24" text="Amrothos, hijo menor de Imrahil, aún es joven pero ya muestra el espíritu marcial y carácter noble de su familia." />
     <string id="TAOM_hero_1_44" text="Nemos es un capitán de la Guardia de la Torre, jurado para proteger al Senescal." />
     <string id="TAOM_hero_1_9" text="Imrahil II, Príncipe de Dol Amroth, es el caballero más grande de Gondor. Su linaje lleva sangre élfica, y se dice que es el señor más hermoso de todo el reino. Sus Caballeros del Cisne son legendarios en toda la Tierra Media." />
-    <string id="TAOM_hero_1_9_5" text="Lothwen, Princesa de Dol Amroth, ha estado junto a Imrahil durante décadas de servicio a Gondor. Es conocida por su gracia y sabiduría silenciosa." />
     <string id="TAOM_hero_1_10" text="Aranel, esposa de Elphir, es una dama noble de Gondor conocida por su dignidad y mente aguda." />
     <string id="TAOM_hero_1_35" text="Erchirion, segundo hijo de Imrahil, sirve como caballero de Dol Amroth. Audaz en batalla y leal a su casa, cabalga con los Caballeros del Cisne de su padre." />
     <string id="TAOM_hero_1_25" text="Elphir, hijo mayor de Imrahil, es heredero de Dol Amroth. Comanda a los Caballeros del Cisne con precisión marcial y lleva el porte noble de su padre." />
@@ -1125,7 +1124,6 @@
     <string id="TAOM_hero_1_57_1" text="Calathiel, esposa de Caldamir, es una joven noble de Lossarnach." />
     <string id="TAOM_hero_1_57_2" text="Imloth es hija de Baranor, aprendiendo los caminos de la nobleza de Gondor en los valles de Lossarnach." />
     <string id="TAOM_hero_1_52" text="Hirluin el Hermoso, Señor de Pinnath Gelin, lidera a sus guerreros vestidos de verde desde las colinas de Gondor. Es conocido por su valor y lealtad al Senescal." />
-    <string id="TAOM_hero_1_52_4" text="Nauriel, esposa de Hirluin, es la Señora de Pinnath Gelin, conocida por su firmeza y cuidado del pueblo de las colinas verdes." />
     <string id="TAOM_hero_1_52_1" text="Anariel, hija de Hirluin, ha crecido entre los guerreros de Pinnath Gelin y puede defenderse en batalla." />
     <string id="TAOM_hero_1_52_2" text="Barandor, hijo de Hirluin, entrena para un día liderar a los guerreros de Pinnath Gelin. Cabalga con la compañía vestida de verde de su padre." />
     <string id="TAOM_hero_1_62" text="Oromar, esposo de Anariel, se unió a la casa de Halboronionath mediante su matrimonio. Sirve fielmente al Señor de Pinnath Gelin." />
@@ -1134,7 +1132,6 @@
     <string id="TAOM_hero_1_73" text="Narmir, hermano menor de Angbor, sirve en la defensa de Lamedon. Comparte el coraje de su hermano aunque no aún su experiencia." />
     <string id="TAOM_hero_1_73_1" text="Belwen, esposa de Angbor, permanece firmemente junto a su esposo en la defensa de Lamedon." />
     <string id="TAOM_hero_1_71" text="Golasgil, Señor de Anfalas, comanda la extensa costa contra las incursiones de los Corsarios. Es un curtido señor marino que ha defendido las costas de Gondor durante décadas." />
-    <string id="TAOM_hero_1_71_1" text="Laswen, esposa de Golasgil, supervisa los asentamientos costeros de Anfalas mientras su esposo custodia las rutas marítimas." />
     <string id="TAOM_hero_WE8_c" text="Pelendur, hijo de Golasgil, está siendo entrenado para defender algún día la costa de Anfalas como lo ha hecho su padre." />
     <string id="TAOM_hero_WE8_u" text="Barandil, hermano de Golasgil, sirve como capitán de la guardia costera de Anfalas." />
     <string id="TAOM_hero_WE9_l" text="Duinhir, Señor de Morthond, lidera a sus arqueros desde el Valle de la Raíz Negra hacia la defensa de Gondor. Es un comandante severo y capaz." />

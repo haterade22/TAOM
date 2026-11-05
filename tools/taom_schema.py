@@ -916,9 +916,12 @@ class Validator:
     #
     # Two questions, deliberately at different severities:
     #
-    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Measured
-    #   repo-wide at exactly 3 troops, all three intentional, so the allowlist
-    #   below is the whole of the known debt and a new one is a real regression.
+    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Every troop that
+    #   does so on purpose is in the allowlist below (dg_goblin_slave), so it is the
+    #   whole of the known debt and a new one is a real regression. The Uruk-hai
+    #   champion and berserker stay listed although their Body item is now the
+    #   berserker skirt: it leaves the torso bare (covers_body=false), and the armour
+    #   comparisons below leave out their Body and Cape.
     #
     #   INCONSISTENT_ARMOUR_SLOT (warning) -- a slot filled in some battle sets
     #   and empty in others. `.claude/rules/troops.md`: the engine draws each
@@ -1343,7 +1346,9 @@ class Validator:
     #
     # Item values come from the install (Armory + vanilla), so the check is skipped, never
     # faked, when the registry could not be built. Bare-chested-by-design troops are compared
-    # without Body and Cape (their skirt sits in the Cape slot as the chest stand-in), and
+    # without Body and Cape (the Uruk-hai champion and berserker wear a skirt in Body and no Cape,
+    # so neither a parent's pauldron nor a child's plate below the skirt's 89 armour reads as a
+    # regression), and
     # militia-to-militia edges are exempt exactly as they are for skills.
     _EQUIPMENT_ELEM_RE = re.compile(r"<equipment\b[^>]*?/>")
 
@@ -1690,7 +1695,15 @@ def _read_stripped(xml: Path) -> str:
     return _COMMENT_RE.sub("", text)
 
 
-def _scan(roots, pattern, want_files=False):
+# The first element of a document (after the declaration and comments): the kind of file it is.
+_DOC_ROOT_RE = re.compile(r"<(?![?!])([A-Za-z_][\w.\-]*)")
+# Item definitions come only from documents the engine loads as items. A feature config that quotes
+# ids in <Item id="..."> rows (the culture marketplace blacklist) would otherwise define its own ids,
+# and no gate could ever fail on them.
+_ITEM_DOC_ROOTS = frozenset({"Items"})
+
+
+def _scan(roots, pattern, want_files=False, doc_roots=None):
     found = set()
     files = defaultdict(list)
     for root in roots:
@@ -1699,6 +1712,10 @@ def _scan(roots, pattern, want_files=False):
             continue
         for xml in root.rglob("*.xml"):
             text = _read_stripped(xml)
+            if doc_roots is not None:
+                first = _DOC_ROOT_RE.search(text)
+                if first is None or first.group(1) not in doc_roots:
+                    continue
             for m in pattern.finditer(text):
                 found.add(m.group(1))
                 if want_files:
@@ -2185,7 +2202,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
                             ("NavalDLC", "naval_bodyproperties.xml")):
             bodyprop_files.append(game_modules / name / "ModuleData" / fname)
 
-    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True)
+    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)

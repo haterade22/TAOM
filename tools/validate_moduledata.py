@@ -42,6 +42,8 @@ import argparse
 import json
 import os
 import sys
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -132,6 +134,19 @@ def generator_item_ref_issues(items: set) -> list:
     return issues
 
 
+def module_vintage(root) -> str:
+    """`<module>: <Version> (newest ModuleData file <date>)`. A stale copy reads exactly like a repo
+    defect (XML-DATA-02), so every sweep says what it swept. Never raises: this is a header."""
+    root = Path(root)
+    try:
+        version = ET.parse(root.parent / "SubModule.xml").getroot().find("Version").get("value")
+    except (OSError, ET.ParseError, ValueError, AttributeError):
+        version = "version unknown"
+    newest = max((p.stat().st_mtime for p in root.rglob("*.xml")), default=None)
+    stamp = datetime.fromtimestamp(newest, timezone.utc).date().isoformat() if newest else "no files"
+    return f"{root.parent.name}: {version} (newest ModuleData file {stamp})"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -180,7 +195,7 @@ def main() -> int:
 
     validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
     for root in validator.extra_ref_roots:
-        print(f"Also sweeping refs in: {root}", file=sys.stderr)
+        print(f"Also sweeping refs in: {root} [{module_vintage(root)}]", file=sys.stderr)
     # Never let a vanished root pass as a clean run. Silence here would revert the
     # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
     # 33 dangling refs the engine reported on 2026-08-02.

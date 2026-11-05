@@ -13,12 +13,14 @@ Covers the two checks added for the v1.4.7-bump deep-review finding:
 Each test builds a SYNTHETIC repo tree in a tempdir and points lint_docs's REPO_ROOT /
 DOCS_DIR at it, so the checks are exercised independently of the real repo contents.
 """
+import io
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -628,6 +630,296 @@ class AiDashGitScopeTests(unittest.TestCase):
     def test_a_repo_with_no_commits_fails_open(self):
         _write(self.root / "docs" / "a.md", "# a\n")
         self.assertIsInstance(ld.check_ai_dashes(), list)
+
+
+class _GitRepo(unittest.TestCase):
+    """A throwaway git repository that stands in for REPO_ROOT, for the checks that read git."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self._orig_root = ld.REPO_ROOT
+        ld.REPO_ROOT = self.root
+        self._git("init", "-q")
+
+    def tearDown(self):
+        ld.REPO_ROOT = self._orig_root
+        self._tmp.cleanup()
+
+    def _git(self, *args):
+        subprocess.run(
+            ["git", "-C", str(self.root), "-c", "user.email=t@t", "-c", "user.name=t", *args],
+            capture_output=True, text=True, check=True,
+        )
+
+    def _commit(self, msg="c"):
+        self._git("add", "-A")
+        self._git("commit", "-q", "-m", msg)
+
+
+class RcaFollowUpScannerTests(unittest.TestCase):
+    """scan_text_for_followups: an uppercase FOLLOW-UP needs an issue or a reason.
+
+    One case per shape of a line. The matching is on the text with inline code spans and link
+    targets removed, so a passing mention in backticks is exempt and an anchor never counts
+    as an issue.
+    """
+
+    P = Path("docs/reviews/rca-sample-2026-10-23.md")
+
+    def _flagged(self, text, only_lines=None):
+        return [n for _p, n, _k, _t in ld.scan_text_for_followups(self.P, text, only_lines)]
+
+    def _bare(self, line):
+        self.assertEqual(self._flagged(line + "\n"), [1], line)
+
+    def _owned(self, line):
+        self.assertEqual(self._flagged(line + "\n"), [], line)
+
+    def test_a_cited_issue_passes(self):
+        self._owned("MS7-4 FOLLOW-UP #983 tracked.")
+
+    def test_an_issue_url_passes(self):
+        self._owned("FOLLOW-UP https://github.com/o/r/issues/983 tracks it.")
+
+    def test_a_markdown_link_to_an_issue_passes(self):
+        self._owned("FOLLOW-UP [tracked](https://github.com/o/r/issues/983).")
+
+    def test_a_stated_reason_passes(self):
+        self._owned("FOLLOW-UP, no issue: a test-only refactor.")
+
+    def test_the_house_phrasings_pass(self):
+        self._owned("FOLLOW-UP (pre-existing code; no issue filed, because filing is public).")
+        self._owned("FOLLOW-UP (pre-existing code, no issues filed, since it needs a word).")
+        self._owned("FOLLOW-UP no issue filed: the code is not ours.")
+        self._owned("FOLLOW-UP pre-existing; none is filed because it is public.")
+
+    def test_a_reason_may_follow_a_few_words_after_the_phrase(self):
+        """The hook's deny text says to state why none is filed; these are how that reads."""
+        self._owned("FOLLOW-UP no issue filed here because filing is public.")
+        self._owned("FOLLOW-UP No issue filed (public action).")
+        self._owned("FOLLOW-UP no issue filed; Mike files issues.")
+        self._owned("FOLLOW-UP no issue filed from this review lead, since filing is public.")
+        self._owned("FOLLOW-UP no issue filed by me, standing rule 11.")
+
+    def test_a_sentence_end_after_no_issue_is_still_bare(self):
+        self._bare("FOLLOW-UP, no issue.")
+        self._bare("FOLLOW-UP, with no issue.")
+        self._bare("FOLLOW-UP, no issue filed.")
+        self._bare("FOLLOW-UP, no issue filed (")
+        self._bare("FOLLOW-UP no issue there. Later, we revisit it.")
+
+    def test_a_reason_marker_far_from_the_phrase_is_not_its_reason(self):
+        self._bare("FOLLOW-UP no issue at all has been raised for this one yet, sadly")
+
+    def test_a_bare_follow_up_is_flagged(self):
+        self._bare("FOLLOW-UP later.")
+
+    def test_no_issue_with_nothing_after_it_is_flagged(self):
+        self._bare("FOLLOW-UP, no issue:")
+        self._bare("FOLLOW-UP, no issue filed")
+        self._bare("FOLLOW-UP, no issue")
+
+    def test_an_empty_reason_in_a_table_cell_is_flagged(self):
+        self._bare("| 11 | FOLLOW-UP, no issue: | later |")
+
+    def test_lowercase_follow_up_is_ignored(self):
+        self._owned("A follow-up would help.")
+
+    def test_the_plural_is_a_follow_up_too(self):
+        self._bare("FOLLOW-UPS: the two below.")
+
+    def test_a_backticked_mention_is_exempt(self):
+        self._owned("Each deferral is a `FOLLOW-UP` line in the RCA.")
+        self._owned("Run ``FOLLOW-UP`` through the linter.")
+
+    def test_an_issue_inside_a_code_span_is_an_example_not_a_citation(self):
+        self._bare("FOLLOW-UP write it as `#983` once filed.")
+
+    def test_a_follow_up_outside_the_code_span_is_still_checked(self):
+        self._bare("The `rca` template says FOLLOW-UP and nothing else.")
+
+    def test_a_link_anchor_is_not_an_issue(self):
+        self._bare("FOLLOW-UP see [the notes](#3-details).")
+
+    def test_a_hex_colour_is_not_an_issue(self):
+        self._bare("FOLLOW-UP recolour the bar to #123456.")
+
+    def test_a_numbered_label_is_not_an_issue(self):
+        self._bare("FOLLOW-UP finding #2 is deferred.")
+        self._bare("FOLLOW-UP the Crash #3 path.")
+        self._bare("FOLLOW-UP Step #4, row #5, line #6, item #7, case #8.")
+        self._owned("FOLLOW-UP finding #2 is tracked in #983.")
+
+    def test_a_language_name_or_entity_is_not_an_issue(self):
+        self._bare("FOLLOW-UP port it to C#7.")
+        self._bare("FOLLOW-UP the quote &#39;x&#39;.")
+
+    def test_a_table_row_with_the_issue_in_another_cell_passes(self):
+        self._owned("| 11 | HIGH | bug | FOLLOW-UP | #980 |")
+
+    def test_a_table_row_without_any_issue_is_flagged(self):
+        self._bare("| 11 | HIGH | bug | FOLLOW-UP | none |")
+
+    def test_a_follow_up_inside_a_fenced_block_is_ignored(self):
+        self.assertEqual(self._flagged("```\nFOLLOW-UP bare\n```\n"), [])
+        self.assertEqual(self._flagged("~~~\nFOLLOW-UP bare\n~~~\n"), [])
+
+    def test_an_indented_fence_in_a_list_item_is_ignored(self):
+        self.assertEqual(self._flagged("- item\n\n  ```\n  FOLLOW-UP bare\n  ```\n"), [])
+
+    def test_prose_after_a_closed_fence_is_checked(self):
+        self.assertEqual(self._flagged("```\ncode\n```\nFOLLOW-UP bare\n"), [4])
+
+    def test_only_lines_restricts_the_scan(self):
+        text = "FOLLOW-UP old bare.\nFOLLOW-UP new bare.\n"
+        self.assertEqual(self._flagged(text, {2}), [2])
+
+    def test_the_finding_names_the_kind_and_the_line(self):
+        found = ld.scan_text_for_followups(self.P, "ok\nFOLLOW-UP later.\n")
+        self.assertEqual([(self.P, 2, "followup-no-owner", "FOLLOW-UP later.")], found)
+
+
+class RcaFollowUpGateTests(_GitRepo):
+    """check_rca_followups: only the new lines of a docs/reviews/rca-*.md, found through git.
+
+    Working-tree mode reads the file on disk (git diff -U0 plus untracked); staged mode reads
+    the index, which is what a commit would record.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.rca = self.root / "docs" / "reviews" / "rca-sample-2026-10-23.md"
+
+    def _found(self, body, path=None):
+        _write(path or self.rca, "# rca\n" + body)
+        return [(f.name, n) for f, n, _k, _t in ld.check_rca_followups()]
+
+    def _staged(self):
+        return [(f.name, n) for f, n, _k, _t in ld.check_rca_followups(staged=True)]
+
+    def test_a_bare_follow_up_is_flagged_with_file_and_line(self):
+        found = self._found("ok line\nFOLLOW-UP later.\n")
+        self.assertEqual(found, [(self.rca.name, 3)])
+
+    def test_a_non_rca_doc_is_ignored(self):
+        other = self.root / "docs" / "reviews" / "notes.md"
+        self.assertEqual(self._found("FOLLOW-UP bare.\n", other), [])
+
+    def test_an_old_unchanged_line_is_ignored_and_only_the_new_one_flagged(self):
+        _write(self.rca, "# rca\nFOLLOW-UP old bare.\n")
+        self._commit()
+        self.assertEqual(ld.check_rca_followups(), [], "committed lines are invisible")
+        _write(self.rca, "# rca\nFOLLOW-UP old bare.\nFOLLOW-UP new bare.\n")
+        found = ld.check_rca_followups()
+        self.assertEqual([(f.name, n) for f, n, _k, _t in found], [(self.rca.name, 3)])
+
+    def test_an_edited_legacy_line_is_new_and_must_be_fixed(self):
+        _write(self.rca, "# rca\nFOLLOW-UP old bare.\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP old bare, reworded.\n")
+        self.assertEqual([(self.rca.name, 2)], [(f.name, n) for f, n, _k, _t in ld.check_rca_followups()])
+
+    def test_a_staged_bare_line_is_reported_even_when_the_working_copy_is_fixed(self):
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\nFOLLOW-UP new bare.\n")
+        self._git("add", "-A")
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\nFOLLOW-UP new, tracked in #983.\n")
+        self.assertEqual(ld.check_rca_followups(), [], "the working copy is clean")
+        self.assertEqual(self._staged(), [(self.rca.name, 3)], "the index is not")
+
+    def test_the_staged_diff_is_the_index_against_the_base_not_the_working_tree(self):
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\nFOLLOW-UP staged bare.\n")
+        self._git("add", "-A")
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\n")  # the working copy is back at HEAD
+        self.assertEqual(ld.check_rca_followups(), [])
+        self.assertEqual(self._staged(), [(self.rca.name, 3)])
+
+    def test_staged_mode_lists_no_untracked_file(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP untracked bare.\n")
+        self.assertIn(self.rca, ld._changed_markdown_lines("HEAD", pathspec="docs/reviews/rca-*.md"))
+        self.assertEqual({}, ld._changed_markdown_lines("HEAD", staged=True, pathspec="docs/reviews/rca-*.md"))
+
+    def test_an_unstaged_bare_line_is_not_reported_in_staged_mode(self):
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\nFOLLOW-UP unstaged bare.\n")
+        self.assertEqual(self._staged(), [])
+        self.assertEqual(len(ld.check_rca_followups()), 1, "working-tree mode still sees it")
+
+    def test_an_untracked_rca_is_not_reported_in_staged_mode(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP untracked bare.\n")
+        self.assertEqual(self._staged(), [])
+        self.assertEqual(len(ld.check_rca_followups()), 1)
+
+    def test_a_new_staged_rca_is_scanned_in_full(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP staged bare.\n")
+        self._git("add", "-A")
+        self.assertEqual(self._staged(), [(self.rca.name, 2)])
+
+    def test_a_file_renamed_into_an_rca_is_scanned_in_full(self):
+        notes = self.root / "docs" / "reviews" / "notes.md"
+        _write(notes, "# notes\nFOLLOW-UP old bare.\n")
+        self._commit()
+        self._git("mv", "docs/reviews/notes.md", "docs/reviews/rca-sample-2026-10-23.md")
+        self.assertEqual(self._staged(), [(self.rca.name, 2)], "flagged in full: nothing is old here")
+
+    def test_a_staged_non_rca_doc_is_ignored(self):
+        _write(self.root / "docs" / "reviews" / "notes.md", "# notes\nFOLLOW-UP bare.\n")
+        self._git("add", "-A")
+        self.assertEqual(self._staged(), [])
+
+    def test_a_staged_deletion_is_not_an_error(self):
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\n")
+        self._commit()
+        self._git("rm", "-q", "docs/reviews/rca-sample-2026-10-23.md")
+        self.assertEqual(self._staged(), [])
+
+    def _gate(self, *argv):
+        with mock.patch.object(ld, "DOC_ROOTS", [self.root / "docs"]), \
+                mock.patch.object(ld, "check_claude_md_budget", return_value=[]), \
+                mock.patch.object(ld, "check_version_consistency", return_value=[]), \
+                mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            return ld.main(list(argv)), out.getvalue()
+
+    def test_a_flagged_line_fails_the_drift_gate_and_is_reported(self):
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\n")
+        self.assertEqual(self._gate("--fail-on-drift")[0], 0)
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\n")
+        rc, out = self._gate("--fail-on-drift")
+        self.assertEqual(rc, 1)
+        self.assertIn("rca-sample-2026-10-23.md:2", out)
+        self.assertIn("RCA FOLLOW-UP lines with no issue or reason (new lines only): **1**", out)
+
+    def test_the_report_section_header_is_pinned(self):
+        """This header is what a blocked commit shows for a bare FOLLOW-UP once the commit hook
+        quotes it, so it must not drift."""
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\n")
+        out = self._gate("--fail-on-drift")[1]
+        self.assertIn("\n## RCA FOLLOW-UP lines with no issue or reason\n", out)
+
+    def test_drift_only_gates_on_it_too(self):
+        _write(self.rca, "# rca\nFOLLOW-UP bare.\n")
+        self.assertEqual(self._gate("--fail-on-drift")[0], 1)
+
+    def test_drift_only_staged_gates_on_the_index_not_the_working_copy(self):
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\n")
+        self._commit()
+        _write(self.rca, "# rca\nFOLLOW-UP ok #1.\nFOLLOW-UP bare.\n")
+        self.assertEqual(self._gate("--fail-on-drift", "--staged")[0], 0, "nothing staged")
+        self._git("add", "-A")
+        rc, out = self._gate("--fail-on-drift", "--staged")
+        self.assertEqual(rc, 1)
+        self.assertIn("rca-sample-2026-10-23.md:3", out)
 
 
 if __name__ == "__main__":

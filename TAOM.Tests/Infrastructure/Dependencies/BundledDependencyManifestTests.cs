@@ -300,6 +300,32 @@ public class BundledDependencyManifestTests
         }
     }
 
+    /// <summary>
+    /// The #371 pairing: Main's <c>DependedModuleMetadata</c> for TAOM.Dependencies must carry the exact version of the
+    /// Dependencies module. BUTR and BLSE launchers read that metadata; a mismatch lets a new TAOM load against an old
+    /// Dependencies, the Harmony and UIExtenderEx types fail at the member level, and every character renders in bind
+    /// pose. The release skill runs this test by name after it bumps both files.
+    /// </summary>
+    [TestMethod]
+    public void DependenciesPairing_MainMetadataEqualsDependenciesVersion()
+    {
+        var metadata = XDocument.Load(MainSubModule).Descendants("DependedModuleMetadata")
+            .Where(e => (string?)e.Attribute("id") == "TAOM.Dependencies").ToList();
+        Assert.AreEqual(1, metadata.Count, "Expected exactly one <DependedModuleMetadata id=\"TAOM.Dependencies\"> in " + MainSubModule);
+
+        var dependenciesManifest = Path.Combine(RepoRoot, @"Dependencies\_Module\SubModule.xml");
+        var version = XDocument.Load(dependenciesManifest).Root!.Element("Version");
+        Assert.IsNotNull(version, "Dependencies/_Module/SubModule.xml has no <Version>.");
+
+        var pinned = (string?)metadata[0].Attribute("version");
+        var actual = (string?)version!.Attribute("value");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(pinned) || string.IsNullOrWhiteSpace(actual),
+            "Both versions must be set: Main metadata '" + pinned + "', Dependencies <Version> '" + actual + "'.");
+        Assert.AreEqual(actual, pinned,
+            "Main/_Module/SubModule.xml pins TAOM.Dependencies at '" + pinned + "' but Dependencies/_Module/SubModule.xml is '"
+            + actual + "' (#371). Set both to the release version.");
+    }
+
     /// <summary>Minimal reader for the `[modules]` section — mirrors CoopModuleList's format.</summary>
     private static List<string> ReadCoopModulesSection(string path)
     {

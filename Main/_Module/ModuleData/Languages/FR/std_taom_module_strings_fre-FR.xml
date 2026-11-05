@@ -1223,7 +1223,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Un seul point de passage fortifié" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Encerclé par le Rohan et Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% coût d'influence d'armée (La Volonté du Seigneur Ténébreux)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% limite de taille d'armée (Les Hordes de Sauron)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% limite de taille d'armée (Les Hordes de Sauron)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% d'efficacité de forge (Forgeage Sombre)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% production de grain de Nurn (Terres Agricoles de Nurn)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% dégâts de raid (Colère de Sauron)" />

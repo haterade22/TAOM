@@ -1042,7 +1042,7 @@
     ],
     "bonuses": [
       {"text": "{=taom_faction_dominion_of_mordor_bonus_0}-60% army influence cost (The Dark Lord's Will)", "positive": true},
-      {"text": "{=taom_faction_dominion_of_mordor_bonus_1}+10% party size limit (Sauron's Hordes)", "positive": true},
+      {"text": "{=taom_faction_dominion_of_mordor_bonus_1}+20% party size limit (Sauron's Hordes)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_2}+20% Nurn grain production (Nurn Farmlands)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_3}+25% raid damage (Sauron's Wrath)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_4}+10% party speed at night (Creatures of the Dark)", "positive": true},
@@ -1083,7 +1083,7 @@
     "playable": true,
     "game_faction": "khuzait",
     "side": "evil",
-    "description": "{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host party size. Heavy cavalry that arrives in numbers and tribute.",
+    "description": "{=taom_faction_golden_realm_of_rhun_desc}The Easterlings of the eastern plains. Inherited Khuzait cavalry traditions paired with TAOM's Easterling Outriders steppe speed and Easterling Host +5% party size. Heavy cavalry that arrives in numbers and tribute.",
     "image": "faction_golden_realm_of_rhun",
     "traits": [
       "{=taom_faction_golden_realm_of_rhun_trait_0}Easterling Warriors",
@@ -1213,7 +1213,7 @@
     "playable": true,
     "game_faction": "aserai",
     "side": "evil",
-    "description": "{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add party size on top of the inherited caravan economy. Mumakil rule the southern plains.",
+    "description": "{=taom_faction_taskralan_of_harwan_desc}The Haradrim of Harwan, sons of the sun. Aserai desert resilience inherited; TAOM's Sons of the Sun add +10% party speed on desert; Haradrim Warbands add +5% party size on top of the inherited caravan economy. Mumakil rule the southern plains.",
     "image": "faction_taskralan_of_harwan",
     "traits": [
       "{=taom_faction_taskralan_of_harwan_trait_0}Mumakil War Beasts",

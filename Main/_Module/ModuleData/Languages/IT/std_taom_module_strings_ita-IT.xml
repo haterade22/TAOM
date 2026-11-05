@@ -1306,7 +1306,7 @@
     <string id="taom_faction_dominion_of_isengard_weakness_1" text="Unico insediamento collo di bottiglia" />
     <string id="taom_faction_dominion_of_isengard_weakness_2" text="Circondato da Rohan e Fangorn" />
     <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% costo influenza armata (La Volontà del Signore Oscuro)" />
-    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% limite dimensione gruppo (Le Orde di Sauron)" />
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+20% limite dimensione gruppo (Le Orde di Sauron)" />
     <string id="taom_faction_dominion_of_mordor_bonus_10" text="+15% efficienza forgiatura (Forgiatura Oscura)" />
     <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% produzione di grano di Nurn (Terre Coltivate di Nurn)" />
     <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% danno da razzia (L'Ira di Sauron)" />

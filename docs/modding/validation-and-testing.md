@@ -82,7 +82,7 @@ hand edits, so land a repo-side validator gate with any fix.
 | `python tools/audit_scene_names.py` | every settlement and hideout `scene_name` resolves to a SceneObj folder | whether the scene is playable |
 | `python tools/audit_battle_scenes.py` | every Scene id in `sp_battle_scenes.xml` still exists on disk | which scene a given fight will pick |
 | `python tools/audit_siege_props.py` | per town and castle, how many siege resupply props are genuinely usable | siege AI behaviour |
-| `python tools/check_prefab_budget.py` | `TAOM_Map/Prefabs` against the engine's 131,072 load-queue cap | every other module's prefabs, which share that one global queue |
+| `python tools/check_prefab_budget.py` | the sum of every installed module's `Prefabs` folder against the Modding Kit's 131,072 load-queue cap | a machine without NavalDLC sums lower, so its margin is not the one a machine with NavalDLC has |
 | `python tools/analyze_settlement_prosperity.py` | starting prosperity, live map against vanilla, with flat-cluster flags | the economy after day one |
 | `python tools/dump_settlement_buildings.py` | per-fief starting building levels from the live map | levels players reach later |
 | `python tools/analyze_war_theaters.py` | which kingdoms have no enemy inside their march radius | real pathing distance; its numbers are straight-line estimates |
@@ -158,7 +158,7 @@ A green exit is not the same claim in every tool.
 | `validate_moduledata.py` | 1 on any ERROR, 0 when clean, 2 on bad input. Warnings do not change the code |
 | `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md:56`) |
 | `audit_polearm_shield_parity.py` | 1 on a polearm violation, WARN on two-handers, and SKIP at exit 0 when there is no game install |
-| `check_prefab_budget.py` | prints `OK` while the real cross-module total sits near the cap, because it counts `TAOM_Map/Prefabs` alone |
+| `check_prefab_budget.py` | sums every module: 0 under 120,000, 1 above that (a WARN, and the honest result on a machine near the cap), 2 at or over the cap or on a bad path. `--dir` counts one folder only |
 | `audit_action_set_parity.py` | non-zero on either failure class, so it is safe to chain |
 | `triage_battle_load.py` | 1 for any diagnosed hang, 0 for COMPLETED or UNKNOWN, 2 for a bad path. UNKNOWN means diagnostics were off, not that the load was fine |
 | `Settlement-Breakdown.ps1` | exits 2 when the file is missing |

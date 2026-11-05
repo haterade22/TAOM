@@ -766,6 +766,24 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertIn("fighter_empire", regs.body_properties)
         self.assertNotIn("fighter_umbar", regs.body_properties)
 
+    def test_item_registry_counts_only_items_documents(self):
+        # A config that quotes item ids in <Item id> rows must not define them, or no gate can fail on them.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "w.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <CraftedItem id="real_sword" crafting_template="OneHandedSword" />\n</Items>\n')
+        _write(self.md / "taom_spcultures.xml",
+               '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n</SPCultures>\n')
+        _write(self.md / "culture_marketplace" / "culture_marketplace_config.xml",
+               '<?xml version="1.0"?>\n<CultureMarketplaceConfig>\n  <Blacklist><Item id="retired_helm" /></Blacklist>\n</CultureMarketplaceConfig>\n')
+        _write(self.md / "own_items.xml",
+               '<?xml version="1.0"?>\n<!-- TAOM\'s own items -->\n<Items>\n  <Item id="taom_own" Type="Goods" />\n</Items>\n')
+
+        regs = ts.build_registries(self.md, modules)
+
+        self.assertIn("real_sword", regs.items)
+        self.assertIn("taom_own", regs.items, "TAOM's own <Items> file still defines its items")
+        self.assertNotIn("retired_helm", regs.items, "a config row quoting an id is not a definition")
+
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",
                '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n  <!-- <Culture id="ghost_example" /> -->\n</SPCultures>\n')
@@ -1706,6 +1724,23 @@ class ExtraRefRootTests(unittest.TestCase):
                             for i in issues),
                         f"expected UNKNOWN_CULTURE for the TAOM_Map ref, got {[i.code for i in issues]}")
 
+    def test_vintage_line_names_version_and_newest_file_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "LOTRLOME_Armory"
+            _write(mod / "SubModule.xml", '<Module><Version value="v9.9.9" /></Module>')
+            _write(mod / "ModuleData" / "a.xml", "<x />")
+            os.utime(mod / "ModuleData" / "a.xml", (1767225600, 1767225600))
+            line = vm.module_vintage(mod / "ModuleData")
+        self.assertIn("LOTRLOME_Armory", line)
+        self.assertIn("v9.9.9", line)
+        self.assertIn("2026-01-01", line)
+
+    def test_vintage_line_says_unknown_when_the_version_cannot_be_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mod = Path(tmp) / "M" / "ModuleData"
+            mod.mkdir(parents=True)
+            self.assertIn("version unknown", vm.module_vintage(mod))
+
 
 class ArmoryStructuralAssumptionTests(unittest.TestCase):
     """The Armory's schema checks silently do not run, and that is only safe today.
@@ -1809,8 +1844,8 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
     def test_bodyless_by_design_troops_are_allowlisted(self):
-        """The three bare-chested troops that ship deliberately. Removing an id
-        from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
+        """Every troop on _BODYLESS_BY_DESIGN is bare-chested on purpose. Removing
+        an id from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
         self._write_troop("urukhai_berserker",
                           '<EquipmentRoster><equipment slot="Leg" id="Item.good_mail" />'
                           "</EquipmentRoster>")

@@ -27,26 +27,38 @@ public class PrefabExtensionBrushTests
     private static readonly Regex BrushLiteral = new Regex(
         "\\b[A-Za-z]*Brush\\s*=\\s*(?:\\\\\"|\"\"|\")([^\"\\\\{@!*][^\"\\\\]*)", RegexOptions.Compiled);
 
-    private static HashSet<string> DeclaredBrushes()
+    internal static string GameDir()
     {
         string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
-        string game = string.IsNullOrWhiteSpace(env) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env;
+        return string.IsNullOrWhiteSpace(env) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env;
+    }
+
+    /// <summary>
+    /// The existing <c>under</c> folder of each module TAOM depends on, in <c>SubModule.xml</c> order, then TAOM's own, which
+    /// the engine loads last. Both the brush and the sprite gate read their module set from here. Inconclusive without the install.
+    /// </summary>
+    internal static IEnumerable<string> ModuleFolders(params string[] under)
+    {
+        var game = GameDir();
         var modules = Path.Combine(game, "Modules");
         if (!Directory.Exists(modules))
             Assert.Inconclusive($"No Modules folder under {game}; the install is missing.");
 
-        var dependedIds = XDocument.Load(RepoPath("Main", "_Module", "SubModule.xml"))
+        return XDocument.Load(RepoPath("Main", "_Module", "SubModule.xml"))
             .Descendants("DependedModule")
             .Select(e => (string?)e.Attribute("Id"))
             .Where(id => !string.IsNullOrEmpty(id))
-            .Select(id => id!);
+            .Select(id => Path.Combine(new[] { modules, id! }.Concat(under).ToArray()))
+            .Append(RepoPath(new[] { "Main", "_Module" }.Concat(under).ToArray()))
+            .Where(Directory.Exists)
+            .ToList();
+    }
 
+    private static HashSet<string> DeclaredBrushes()
+    {
         // File name -> path: a later module's top-level file of the same name replaces an earlier one.
         var files = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var dirs = dependedIds.Select(id => Path.Combine(modules, id, "GUI", "Brushes"))
-            .Append(RepoPath("Main", "_Module", "GUI", "Brushes"))
-            .Where(Directory.Exists);
-        foreach (var dir in dirs)
+        foreach (var dir in ModuleFolders("GUI", "Brushes"))
             foreach (var file in Directory.EnumerateFiles(dir, "*.xml", SearchOption.TopDirectoryOnly))
                 files[Path.GetFileName(file)] = file;
 
@@ -60,7 +72,7 @@ public class PrefabExtensionBrushTests
             }
 
         if (names.Count < 100)
-            Assert.Inconclusive($"Only {names.Count} brushes found under {game}; the install is missing or partial.");
+            Assert.Inconclusive($"Only {names.Count} brushes found under {GameDir()}; the install is missing or partial.");
         return names;
     }
 
