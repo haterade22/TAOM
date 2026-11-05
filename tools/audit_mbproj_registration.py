@@ -2,12 +2,12 @@
 """Audit every module's `project.mbproj` for registrations the engine silently ignores or throws on.
 
 The engine loads a `<file>` row of `project.mbproj` in two independent ways
-(managed half verified on v1.4.8, MBObjectManager.cs:920-946 and the callers listed; NATIVE_BY_TYPE comes from v1.5.5 disassembly of FUN_180719810 and is UNVERIFIED on v1.4.8, whose native DLL holds all thirteen strings):
+(managed half verified on v1.4.8, native half v1.5.5 disassembly and UNVERIFIED on v1.4.8):
 
   Managed, by `id`. `MBObjectManager.GetMergedXmlForNative(id)` walks `XmlResource.MbprojXmls`
   and keeps the entries whose `Id` matches EXACTLY. It is reached only from the requesters
-  below. An invented id matches nothing, no file is read and nothing is logged: the row looks
-  like registration and is inert.
+  listed in `REQUESTED_IDS`. An invented id matches nothing, no file is read and nothing is
+  logged: the row looks like registration and is inert.
   Native, by `type`. Native's loader asks for thirteen kinds of file by `type` (`NATIVE_BY_TYPE`,
   the callers of `FUN_180719810`), reads each matching row's `name` and never its `id`, so a
   row of one of those types loads whatever its id is (TAOM's own `soln_module_sound` row loads
@@ -15,15 +15,15 @@ The engine loads a `<file>` row of `project.mbproj` in two independent ways
   and `action_type` are not among the thirteen: a row of those types is loaded only through its
   id.
 
-The set of ids the requesters ask for is not a Python constant here. It is the eight ids of
-`Module.CreateProcessed*XMLForNative`,
-`soln_soundtrack` (`MBMusicManager` reads `MbprojXmls` for it directly; the row's name is
-ignored and the music loads from `<module>/Music/soundtrack.xml`) and five ids native code
-requests by `"soln_" + xmlType`: `soln_movement_sets`, `soln_full_movement_sets`,
-`soln_bone_body_types`, `soln_monster_usage_sets`, `soln_item_usage_sets`. `MANAGED_IDS` holds the
-managed ones and the audit takes the `soln_*` ids of the vanilla Native project.mbproj as a
-STAND-IN for the native ones: it is a superset in practice, not the exact set native asks for.
-Switching to the exact list is follow-up work.
+The ids the requesters ask for are an exact table, `REQUESTED_IDS` (14), with the source of each id
+in the dict value: the eight `Module.CreateProcessed*XMLForNative` ids, `soln_soundtrack`
+(`MBMusicManager` reads `MbprojXmls` for it directly; the row's name is ignored and the music loads
+from `<module>/Music/soundtrack.xml`) and the five ids native code requests through
+`CreateProcessedModuleDataXMLForNative` (`"soln_" + xmlType`): `soln_movement_sets`,
+`soln_full_movement_sets`, `soln_bone_body_types`, `soln_monster_usage_sets` and
+`soln_item_usage_sets`. Native's own project.mbproj is not
+read: vanilla also registers ids (`soln_monsters`, `soln_strings`, `soln_particle_systems` ...)
+that nothing requests.
 
 That is not hypothetical. The giant spider shipped `soln_spider_*` ids in 2026-06, its
 action_sets and monster_usage_set never loaded, `GetMonsterUsageIndex("spider")` returned
@@ -36,26 +36,36 @@ therefore never reached the engine while `action_sets.xml` bound them 221 times.
 This is the regression gate for that class. `LOTRLOME_Armory` is a separate, untracked
 module, so a reinstall silently reverts the fix; run this to find out.
 
-The file is parsed as XML the way the engine reads it (decoded text, the declared encoding
-ignored; `validate_xml_schemas._parse_like_engine`), so attribute order does not matter.
+Files are read the way the engine reads them: `XmlResource` opens a project.mbproj with
+`new StreamReader(path)` (XmlResource.cs:121), so the text is UTF-8 unless a byte order mark says
+otherwise, the declared encoding is ignored, and a UTF-16 file with no mark is not well-formed
+(`validate_xml_schemas._parse_like_engine`). Attribute order does not matter.
 
 Checks:
   BAD-FILE   the file does not parse, its root is not `<base>`, or a `<file>` row has no `id` or
              no `name`: `XmlResource.GetMbprojxmls` throws at startup. Also an action_types.xml
              or action_sets.xml that does not parse  (ERROR)
   DEAD-ID    an id nothing requests AND a `type` outside `NATIVE_BY_TYPE` (a row with no `type`
-             counts as having none)  -> the file never loads  (ERROR)
+             counts as having none)  -> the row loads nothing; the file may still load another
+             way (SubModule.xml, a fixed path native opens itself)  (ERROR)
+  INERT-ROW  the same row, but its `type` has a managed twin (`MANAGED_TWIN`: monster ->
+             `Monsters`, item_modifier -> `ItemModifiers`) and the module's SubModule.xml registers
+             its file through an `<XmlName>` with exactly that id: the file loads that way and
+             the row is read by nothing  (WARN). Any other XmlName id is not requested by
+             anything, so it does not make the row inert.
   UNDECLARED an `<action type=>` bound in action_sets.xml, declared nowhere (ERROR)
   MERGE-RISK a duplicated id that HAS an XSD  -> takes the MergeElements path  (WARN)
   MISSING    a `<file name=>` that is not on disk  (WARN)
+  DEPLOYED-DIFFERS  TAOM only: the deployed Modules/TAOM project.mbproj is not the repo's  (WARN)
 
 Load-bearing test: `NativeTypeTable.test_spider_era_rows_are_dead` replays the six rows that
 were dead (their `type` was action_set, action_type, monster or monster_usage_set, all
 vanilla types). Never widen `NATIVE_BY_TYPE` to the types vanilla's own project.mbproj uses.
 
-Not checked: the exact set of native-requested ids (the stand-in above), that a `type` row's
-`name` is a file native can parse, other native readers of `project.mbproj`, and `<file>` rows
-outside `<base>`.
+Not checked: that a `type` row's `name` is a file native can parse, other native readers of
+`project.mbproj`, and `<file>` rows outside `<base>`. A module's SubModule.xml is read with
+ElementTree, not the engine's reader, and native's own project.mbproj reader is modelled only by the
+managed one (`XmlResource.GetMbprojxmls`).
 
 MISSING is only a warning because vanilla itself ships four of them (`strings.xml`,
 `skeletons.xml`, `tags.xml`, `clothing_materials.xml` are all registered in Native's
@@ -65,15 +75,23 @@ is not evidence of a defect.
 
 Scope defaults to the three modules TAOM's data surface actually spans: this repo's own
 module, `TAOM_Map` and `LOTRLOME_Armory`. Third-party modules have their own undeclared
-actions and are not TAOM's to fix; sweep them with `--all` when you want the wider picture.
+actions and are not TAOM's to fix; sweep them with `--all` when you want the wider picture. `--all`
+skips the game's official modules (SubModule.xml `ModuleType` Official or OfficialOptional), which ship
+rows nothing requests, and prints one note naming them; `--module Native` still audits one.
+"TAOM" is audited from this repo's `Main/_Module/ModuleData/project.mbproj`, the file authors edit
+and the gate table names, not from the deployed `Modules/TAOM` copy; the output says so, and the
+deployed copy is compared and a difference is a warning.
 
 MERGE-RISK is the elephant "Crash #3" class and is a WARNING, not an error: duplicating an
-id is legitimate and common (three `soln_monsters` rows ship today). It is only dangerous
-when an XSD exists for that id, because `MergeTwoXmls` then calls `MergeElements`, which
-indexes a dictionary built from the schema with a raw `[...]` lookup and throws
-`KeyNotFoundException` on any element XPath the schema does not carry.
+id is legitimate and common. It is only dangerous when an XSD exists for that id, because
+`MergeTwoXmls` then calls `MergeElements`, which indexes a dictionary built from the schema with
+a raw `[...]` lookup and throws `KeyNotFoundException` on any element XPath the schema does not
+carry.
 
-Read-only. Exits 1 if any ERROR is found beyond the recorded baseline.
+Read-only. Exit codes: 0 clean (warnings allowed); 1 an ERROR was found; 2 nothing, or not enough,
+could be audited: no Modules folder, a named module that is absent or has no project.mbproj, no
+module with a project.mbproj in scope, or a Native `action_types.xml` that a module's
+`action_sets.xml` needs and that is missing or unreadable. A partial run never reads as clean.
 """
 from __future__ import annotations
 
@@ -81,41 +99,56 @@ import argparse
 import os
 import sys
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from validate_xml_schemas import _parse_like_engine, mbproj_rows  # noqa: E402
+from validate_xml_schemas import _key, _parse_like_engine, _registrations, mbproj_rows  # noqa: E402
 
 DEFAULT_GAME_DIR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+
+# This repo's root, where "TAOM" is audited from (Main/_Module). A tools/ script's parent.
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_MODULE_LABEL = "Main/_Module/ModuleData/project.mbproj"
 
 # The modules TAOM's own data surface spans (docs/ai-includes/orientation.md, "Three modules").
 # Anything else installed is somebody else's module and is only audited under --all.
 TAOM_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory")
 
-# What the engine can read from a project.mbproj row
-# (managed half verified on v1.4.8, MBObjectManager.cs:920-946 and the callers listed; NATIVE_BY_TYPE comes from v1.5.5 disassembly of FUN_180719810 and is UNVERIFIED on v1.4.8, whose native DLL holds all thirteen strings).
-#
-# MANAGED_IDS: ids a managed caller asks GetMergedXmlForNative for by exact string.
-#   Module.CreateProcessed*XMLForNative: skins, item_holsters, action_sets, action_types,
-#   animations, voice_definitions, sound_event_data, sound_parameter_data
-#   (TaleWorlds.MountAndBlade.Module, the decompile's Module.cs).
-#   (TaleWorlds.MountAndBlade.View.Scripts.MapColorGradeManager, TaleWorlds.MountAndBlade.View.dll).
-#   MBMusicManager reads XmlResource.MbprojXmls for soln_soundtrack directly (the row's name is
-#   ignored; the music loads from <module>/Music/soundtrack.xml).
-# The five ids native code requests by "soln_" + xmlType (soln_movement_sets,
-# soln_full_movement_sets, soln_bone_body_types, soln_monster_usage_sets, soln_item_usage_sets)
-# are not listed: audit_module takes the `soln_*` ids of the vanilla Native project.mbproj as a
-# stand-in for them. It is a stand-in, not the exact set native requests (switching: #987).
-MANAGED_IDS = {
-    "soln_skins",
-    "soln_item_holsters",
-    "soln_action_sets",
-    "soln_action_types",
-    "soln_animations",
-    "soln_voice_definitions",
-    "soln_sound_event_data",
-    "soln_sound_parameter_data",
-    "soln_soundtrack",
+# The ids a project.mbproj `<file id>` row can be read by (managed half verified on v1.4.8, native half v1.5.5 disassembly and UNVERIFIED on v1.4.8),
+# each with its source. A row
+# whose id is not here, and whose `type` is not in NATIVE_BY_TYPE, is read by nothing.
+# Managed requesters ask MBObjectManager.GetMergedXmlForNative for the id by exact string; native
+# code asks Module.CreateProcessedModuleDataXMLForNative(xmlType), which prefixes "soln_".
+REQUESTED_IDS = {
+    "soln_skins": "Module.CreateProcessedSkinsXMLForNative (TaleWorlds.MountAndBlade.Module, Module.cs:1363)",
+    "soln_item_holsters": "Module.CreateProcessedItemHolstersXMLForNative (Module.cs:1375)",
+    "soln_action_sets": "Module.CreateProcessedActionSetsXMLForNative (Module.cs:1387)",
+    "soln_action_types": "Module.CreateProcessedActionTypesXMLForNative (Module.cs:1416)",
+    # 1.5.x dropped these two on v1.5.5 native-slot evidence, not read on v1.4.8, so they stay here.
+    "soln_animations": "Module.CreateProcessedAnimationsXMLForNative (Module.cs:1427)",
+    "soln_sound_event_data": "Module.CreateProcessedSoundEventDataXMLForNative (Module.cs:1479)",
+    "soln_voice_definitions": "Module.CreateProcessedVoiceDefinitionsXMLForNative (Module.cs:1447)",
+    "soln_sound_parameter_data": "Module.CreateProcessedSoundParamsXMLForNative (Module.cs:1490)",
+    # MBMusicManager walks XmlResource.MbprojXmls itself; the row's name is ignored and the music
+    # loads from <module>/Music/soundtrack.xml.
+    "soln_soundtrack": "MBMusicManager (MBMusicManager.cs:345) reads XmlResource.MbprojXmls for it directly",
+    "soln_movement_sets": "native FUN_18058a480 requests 'movement_sets' through "
+                          "Module.CreateProcessedModuleDataXMLForNative (Module.cs:1501)",
+    "soln_full_movement_sets": "native FUN_18058a480 requests 'full_movement_sets' through "
+                               "Module.CreateProcessedModuleDataXMLForNative (Module.cs:1501)",
+    "soln_bone_body_types": "native FUN_18058a480 requests 'bone_body_types' through "
+                            "Module.CreateProcessedModuleDataXMLForNative (Module.cs:1501)",
+    "soln_monster_usage_sets": "native FUN_18058a480 requests 'monster_usage_sets' through "
+                               "Module.CreateProcessedModuleDataXMLForNative (Module.cs:1501)",
+    "soln_item_usage_sets": "native FUN_18058a480 requests 'item_usage_sets' through "
+                            "Module.CreateProcessedModuleDataXMLForNative (Module.cs:1501)",
 }
+
+# Row types whose file the engine also loads by a SubModule.xml `<XmlName>` with this exact,
+# case-sensitive id (Game.cs:437 `LoadXML("Monsters")`, :439 `LoadXML("ItemModifiers")`, through
+# MBObjectManager.GetMergedXmlForManaged). Only an XmlName with that id makes such a row inert; an
+# XmlName with any other id is loaded only if something requests it.
+MANAGED_TWIN = {"monster": "Monsters", "item_modifier": "ItemModifiers"}
 
 # NATIVE_BY_TYPE: the row `type` values native's loader requests by type. Source: the 14 callers
 # of FUN_180719810 (TaleWorlds.Native.dll), which select the rows of a `type` and read each
@@ -146,10 +179,15 @@ UNDECLARED_BASELINE = {
 }
 
 
+class AuditUnavailable(Exception):
+    """Something the audit needs cannot be read, so a verdict would be a guess (exit 2)."""
+
+
 def action_attrs(path: str, attr: str) -> tuple[list[str], list[str]]:
     """(values, problems) of the `attr` attribute of every <action> element of an action XML
     file, in document order, read as XML in any attribute order (a commented-out row is not an
-    element). A file that is absent has neither; one that does not parse is a problem."""
+    element). A file that is absent has neither; one that does not parse is a problem. The file
+    is read as the engine reads it, so a Latin-1 byte is a replacement character, not an error."""
     if not os.path.exists(path):
         return [], []
     try:
@@ -159,19 +197,48 @@ def action_attrs(path: str, attr: str) -> tuple[list[str], list[str]]:
     return [e.get(attr) for e in root.iter("action") if e.get(attr)], []
 
 
-def vanilla_ids(game_dir: str) -> set[str]:
-    """The `soln_*` ids of Native's own project.mbproj: the stand-in for the ids native
-    requests by `"soln_" + xmlType`."""
-    native = os.path.join(game_dir, "Modules", "Native", "ModuleData", "project.mbproj")
-    return {i for i, _, _ in mbproj_rows(native)[0] if i.startswith("soln_")}
+def native_action_types(game_dir: str) -> set[str]:
+    """The action names Native's own action_types.xml declares. AuditUnavailable when it is absent or
+    does not parse: every action a module binds from the engine would then read as undeclared."""
+    path = os.path.join(game_dir, "Modules", "Native", "ModuleData", "action_types.xml")
+    if not os.path.exists(path):
+        raise AuditUnavailable(f"Native's action_types.xml is not at {path}; the UNDECLARED check "
+                               f"needs it, so nothing was audited.")
+    declared, bad = action_attrs(path, "name")
+    if bad:
+        raise AuditUnavailable(f"Native's action_types.xml cannot be read: {bad[0]} The UNDECLARED "
+                               f"check needs it, so nothing was audited.")
+    return set(declared)
 
 
-def audit_module(module_dir: str, game_dir: str, vanilla: set[str]) -> list[tuple[str, str]]:
-    """Return (severity, message) pairs for one module. Severity is ERROR or WARN. `vanilla` is
-    the stand-in for the ids native requests; the managed requesters and the thirteen native
-    types are added here."""
-    requested = vanilla | MANAGED_IDS
-    name = os.path.basename(module_dir.rstrip("\\/"))
+def submodule_registered(module_dir: str) -> dict[str, list[tuple[str, str]]]:
+    """{file key: [(xml id, registered path), ...]} for every file this module's SubModule.xml
+    registers through an <XmlName> (validate_xml_schemas' registration walk). Empty when SubModule.xml
+    is absent or unreadable: the rows are then judged on their own."""
+    try:
+        rows, _ = _registrations(Path(module_dir))
+    except (OSError, ET.ParseError, ValueError, LookupError):
+        return {}
+    registered: dict[str, list[tuple[str, str]]] = {}
+    for xml_id, rel, files, _ in rows:
+        for p in files:
+            registered.setdefault(_key(p), []).append((xml_id, rel))
+    return registered
+
+
+def _dead_id_hint(twin: str | None) -> str:
+    """What to do about a DEAD-ID row; twin is the XmlName id its `type` loads by, when it has one."""
+    if twin:
+        return (f"Register the file with\n             <XmlName id=\"{twin}\"> in SubModule.xml, "
+                f"or fold its content into the standard-id file.")
+    return "Fold its content into the\n             standard-id file, or register it where its manager asks for it."
+
+
+def audit_module(module_dir: str, game_dir: str, name: str | None = None) -> list[tuple[str, str]]:
+    """Return (severity, message) pairs for one module. Severity is ERROR or WARN. `name` labels the
+    findings and keys UNDECLARED_BASELINE (default: the folder name). Raises AuditUnavailable when an
+    action_sets.xml needs Native's action_types.xml and it cannot be read."""
+    name = name or os.path.basename(module_dir.rstrip("\\/"))
     mbproj = os.path.join(module_dir, "ModuleData", "project.mbproj")
     if not os.path.exists(mbproj):
         return []
@@ -181,21 +248,36 @@ def audit_module(module_dir: str, game_dir: str, vanilla: set[str]) -> list[tupl
     for problem in problems:
         findings.append(("ERROR", f"{'BAD-FILE':<11}{problem}"))
 
+    registered = submodule_registered(module_dir)
     seen: dict[str, int] = {}
     for file_id, rel, file_type in rows:
         seen[file_id] = seen.get(file_id, 0) + 1
+        target = os.path.join(module_dir, rel.lstrip("/\\").replace("/", os.sep))
 
-        if file_id not in requested and file_type not in NATIVE_BY_TYPE:
-            findings.append((
-                "ERROR",
-                f"{'DEAD-ID':<11}{file_id}\n"
-                f"             -> {rel}\n"
-                f"             nothing requests this id and native does not read\n"
-                f"             type={file_type!r}, so the file never loads.\n"
-                f"             Fold its content into the standard-id file instead.",
-            ))
+        if file_id not in REQUESTED_IDS and file_type not in NATIVE_BY_TYPE:
+            twin = MANAGED_TWIN.get(file_type)
+            through = next((r for r in registered.get(_key(target), []) if r[0] == twin), None)
+            if through:
+                findings.append((
+                    "WARN",
+                    f"{'INERT-ROW':<11}{file_id}\n"
+                    f"             -> {rel}\n"
+                    f"             nothing requests this id and native does not read\n"
+                    f"             type={file_type!r}, so the row is read by nothing. The file still\n"
+                    f"             loads: SubModule.xml registers it as <XmlName id={through[0]!r}\n"
+                    f"             path={through[1]!r}>, the id the engine loads {file_type} files by.\n"
+                    f"             Harmless; it only reads as registration.",
+                ))
+            else:
+                findings.append((
+                    "ERROR",
+                    f"{'DEAD-ID':<11}{file_id}\n"
+                    f"             -> {rel}\n"
+                    f"             nothing requests this id and native does not read\n"
+                    f"             type={file_type!r} by row; the file may still load another way\n"
+                    f"             (SubModule.xml, a fixed path native opens itself). {_dead_id_hint(twin)}",
+                ))
 
-        target = os.path.join(module_dir, rel.replace("/", os.sep))
         if not os.path.exists(target):
             findings.append(("WARN", f"{'MISSING':<11}{file_id} -> {rel} is not on disk"))
 
@@ -210,14 +292,12 @@ def audit_module(module_dir: str, game_dir: str, vanilla: set[str]) -> list[tupl
 
     sets_path = os.path.join(module_dir, "ModuleData", "action_sets.xml")
     if os.path.exists(sets_path):
-        native_types = os.path.join(game_dir, "Modules", "Native", "ModuleData", "action_types.xml")
         own_types = os.path.join(module_dir, "ModuleData", "action_types.xml")
-        available: set[str] = set()
+        available = native_action_types(game_dir)
         parse_problems: list[str] = []
-        for types_path in (own_types, native_types):
-            declared, bad = action_attrs(types_path, "name")
-            available.update(declared)
-            parse_problems += bad
+        declared, bad = action_attrs(own_types, "name")
+        available.update(declared)
+        parse_problems += bad
         bound, bad = action_attrs(sets_path, "type")
         parse_problems += bad
         for problem in parse_problems:
@@ -234,7 +314,29 @@ def audit_module(module_dir: str, game_dir: str, vanilla: set[str]) -> list[tupl
     return [(sev, f"[{name}] {msg}") for sev, msg in findings]
 
 
+def is_official(module_dir: str) -> bool:
+    """Whether the module's SubModule.xml says `<ModuleType value="Official">` or `OfficialOptional`
+    (Native, SandBox, SandBoxCore, StoryMode, CustomBattle, BirthAndDeath, Multiplayer, NavalDLC).
+    Read from the install, not a list, so a new official module needs no edit here."""
+    try:
+        node = ET.parse(os.path.join(module_dir, "SubModule.xml")).getroot().find("ModuleType")
+    except (OSError, ET.ParseError, ValueError, LookupError):
+        return False
+    return node is not None and (node.get("value") or "").strip() in ("Official", "OfficialOptional")
+
+
+def _read_bytes(path: str) -> bytes | None:
+    try:
+        with open(path, "rb") as handle:
+            return handle.read()
+    except OSError:
+        return None
+
+
 def main() -> int:
+    for stream in (sys.stdout, sys.stderr):  # a finding that names a decoded byte must not crash the run
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="backslashreplace")
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--game-dir",
@@ -245,43 +347,81 @@ def main() -> int:
     parser.add_argument(
         "--all",
         action="store_true",
-        help="audit every installed module, not just TAOM's three (noisy: other mods have their own gaps)",
+        help="audit every installed module, not just TAOM's three (official modules are skipped; other mods have their own gaps)",
     )
     args = parser.parse_args()
 
     modules_dir = os.path.join(args.game_dir, "Modules")
     if not os.path.isdir(modules_dir):
         print(f"Bannerlord Modules directory not found: {modules_dir}")
-        print("Set $BANNERLORD_GAME_DIR or pass --game-dir. Skipping (not a failure).")
-        return 0
-
-    vanilla = vanilla_ids(args.game_dir)
-    if not vanilla:
-        print("Could not read Native/ModuleData/project.mbproj; cannot establish the id vocabulary.")
-        return 0
-    print(f"Requested ids: {len(vanilla | MANAGED_IDS)} ({len(vanilla)} soln_* ids of Native's "
-          f"project.mbproj as a stand-in for the ids native requests, plus the managed requesters), "
+        print("Set $BANNERLORD_GAME_DIR or pass --game-dir. Nothing was audited.")
+        return 2
+    print(f"Requested ids: {len(REQUESTED_IDS)} (v1.4.8 managed ids plus five native ids, UNVERIFIED), "
           f"{len(NATIVE_BY_TYPE)} native types\n")
 
+    named = bool(args.module)
     if args.module:
         names = [args.module]
     elif args.all:
         names = sorted(os.listdir(modules_dir))
+        official = [n for n in names if is_official(os.path.join(modules_dir, n))]
+        names = [n for n in names if n not in official]
+        if official:
+            print(f"Skipped official modules (ModuleType Official in SubModule.xml; they ship rows nothing "
+                  f"requests and are not TAOM's to fix): {', '.join(official)}\n")
     else:
         names = list(TAOM_MODULES)
         print(f"Scope: {', '.join(names)}  (use --all to sweep every installed module)\n")
+
     findings: list[tuple[str, str]] = []
     audited = 0
+    not_audited: list[str] = []
     for entry in names:
-        path = os.path.join(modules_dir, entry)
-        if not os.path.isdir(path):
+        deployed = os.path.join(modules_dir, entry)
+        path, label = deployed, entry
+        if entry == "TAOM":
+            path = os.path.join(REPO_ROOT, "Main", "_Module")
+        mbproj = os.path.join(path, "ModuleData", "project.mbproj")
+        if not os.path.exists(mbproj):
+            shown = REPO_MODULE_LABEL if entry == "TAOM" else mbproj
+            if named:
+                missing = entry != "TAOM" and not os.path.isdir(path)
+                what = "is not installed" if missing else f"has no {shown}"
+                print(f"Module {entry!r} {what}. Nothing was audited.")
+                return 2
+            if args.all and entry != "TAOM":
+                continue  # most installed modules register nothing this way
+            print(f"Skipped {entry}: no project.mbproj at {shown}")
+            not_audited.append(entry)
             continue
-        if os.path.exists(os.path.join(path, "ModuleData", "project.mbproj")):
-            audited += 1
-        findings.extend(audit_module(path, args.game_dir, vanilla))
+        audited += 1
+        if entry == "TAOM":
+            deployed_mbproj = os.path.join(deployed, "ModuleData", "project.mbproj")
+            other = _read_bytes(deployed_mbproj)
+            note = f"audited the repo's {REPO_MODULE_LABEL} (the file authors edit); "
+            if other is None:
+                note += "the deployed Modules/TAOM copy is not deployed"
+            elif other == _read_bytes(mbproj):
+                note += "the deployed Modules/TAOM copy is identical"
+            else:
+                note += "the deployed Modules/TAOM copy differs"
+                findings.append(("WARN", f"[TAOM] {'DEPLOYED-DIFFERS':<11}{deployed_mbproj}\n"
+                                         f"             is not the repo's {REPO_MODULE_LABEL}: the\n"
+                                         f"             audit judged the repo copy; build to deploy it."))
+            print(f"TAOM: {note}\n")
+        try:
+            findings.extend(audit_module(path, args.game_dir, label))
+        except AuditUnavailable as exc:
+            print(f"ERROR: {exc}")
+            return 2
+
+    if audited == 0:
+        print("No module with a ModuleData/project.mbproj was found in scope, so nothing was audited.")
+        return 2
 
     errors = [m for sev, m in findings if sev == "ERROR"]
     warns = [m for sev, m in findings if sev == "WARN"]
+    partial = bool(not_audited) and not args.all
 
     for message in warns:
         print(f"WARN  {message}")
@@ -293,12 +433,17 @@ def main() -> int:
         print()
 
     print(f"{audited} module(s) with a project.mbproj audited: {len(errors)} error(s), {len(warns)} warning(s)")
+    if partial:
+        print(f"Not audited: {', '.join(not_audited)} (no project.mbproj in the default scope)")
     if errors:
         print("\nA dead id is not a load-order problem and produces no engine error;")
         print("a BAD-FILE makes the engine throw at startup.")
         print("Ledger for the 2026-08-28 fix: docs/reference/lotrlome-soln-id-fix.md")
         return 1
-    print("No silently-ignored registrations.")
+    if partial:
+        return 2
+    print("No silently-ignored registrations." if not any("INERT-ROW" in w for w in warns)
+          else "No dead registrations (the INERT-ROW warnings above are read by nothing but load through SubModule.xml).")
     return 0
 
 
