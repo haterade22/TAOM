@@ -143,6 +143,7 @@ FORMULA_TEXT = ("block formats: sum over mips of ceil(w/4)*ceil(h/4)*block bytes
                 "mip; cubemaps multiply by 6")
 
 PACK_TREES = ("AssetPackages", "EmAssetPackages")
+LOOSE_TREE = "Assets"
 SCENE_BINARY_FILES = ("flora.bin", "terrain.bin", "navmesh.bin", "flowmap.dds", "scene.xscene")
 ATMOSPHERE_TEXTURE_KEYS = ("skybox_background_texture_name", "skybox_sun_texture_name",
                            "lens_flare_dirt_texture_name", "lens_flare_star_texture_name")
@@ -269,6 +270,16 @@ def iter_tpac_items(path, module: str):
                            name, item_guid, meta, segments)
 
 
+def has_loose_tree(module_dir) -> bool:
+    """True when the module ships a loose `Assets` tree holding at least one tpac. The engine then loads that
+    tree and not the module's cooked packs (docs/reference/armory-guide.md "Two asset trees": its log names
+    `Assets` for TAOM and TAOM_Map, which ship both trees, and art imported after the last cook renders at
+    once); a module with no loose tpac, Native for one, loads its packs. tools/validate_mesh_refs.module_tpacs
+    makes the same choice."""
+    tree = Path(module_dir) / LOOSE_TREE
+    return tree.is_dir() and any(p.is_file() and p.suffix.lower() == ".tpac" for p in tree.rglob("*"))
+
+
 class AssetIndex:
     """(kind, lowercase name) -> the item that supplies it, modules in priority order.
 
@@ -283,18 +294,32 @@ class AssetIndex:
         self.packs: list = []
         self.errors: list = []
         self.counts: collections.Counter = collections.Counter()
+        self.skipped_trees: list = []   # (module, tree): a cooked tree not read, its module's loose tree won
 
-    def add_module(self, module: str, module_dir) -> None:
+    def add_module(self, module: str, module_dir, trees=PACK_TREES) -> None:
         """Index `AssetPackages/*.tpac`, then `EmAssetPackages/**/*.tpac`, of one module.
 
         Native ships both trees. Its `AssetPackages` hold a stub of about 175 KB for 3,256
         textures whose full mip chains sit only under `EmAssetPackages` (28 GB, 1,038 packs,
         measured 2026-09-12); TAOM_Map ships no `EmAssetPackages` at all. Pack labels are
         relative to the module folder so the two trees stay distinguishable.
+        A loose `Assets` tree is read only when asked (`trees` naming it). A module that has
+        one then reads only that tree, as the engine does: the cooked trees it also ships are
+        not read (they are listed in `skipped_trees`), so the loose copy of a name wins and a
+        name only a cooked tree holds does not exist, by name or by guid. A module with no
+        loose tpac keeps its pack trees. Loose metameshes carry edit data (5f98413d) and almost
+        never render buffers (97f81dbb), and loose textures carry no pixel segment, so their
+        bytes come from the header formula; a texture whose header the decoder rejects
+        (metadata version 2: 115 of the live Armory's 2,595 loose textures, measured
+        2026-10-03) has no size and counts 0 bytes.
         """
         module_dir = Path(module_dir)
+        if LOOSE_TREE in trees and has_loose_tree(module_dir):
+            self.skipped_trees.extend((module, sub) for sub in trees
+                                      if sub != LOOSE_TREE and (module_dir / sub).is_dir())
+            trees = (LOOSE_TREE,)
         found = False
-        for sub in PACK_TREES:
+        for sub in trees:
             tree = module_dir / sub
             if not tree.is_dir():
                 continue
@@ -310,7 +335,7 @@ class AssetIndex:
                 except (OSError, ValueError, struct.error) as exc:
                     self.errors.append((module, label, f"{type(exc).__name__}: {exc}"))
         if not found:
-            self.errors.append((module, str(module_dir), "no AssetPackages or EmAssetPackages directory"))
+            self.errors.append((module, str(module_dir), f"no {' or '.join(trees)} directory"))
 
     def add_item(self, item: TpacItem) -> None:
         if item.kind == "other":
@@ -808,14 +833,15 @@ def _texture_row(item: TpacItem, index: AssetIndex, referenced_by: str) -> dict:
     return row
 
 
-def build_manifest(game_modules, scene_dir, modules=DEFAULT_MODULES, extra_flora_kinds=()) -> Manifest:
+def build_manifest(game_modules, scene_dir, modules=DEFAULT_MODULES, extra_flora_kinds=(),
+                   trees=PACK_TREES) -> Manifest:
     game_modules = Path(game_modules)
     scene_dir = Path(scene_dir)
     modules = list(modules)
 
     index = AssetIndex()
     for module in modules:
-        index.add_module(module, game_modules / module)
+        index.add_module(module, game_modules / module, trees=trees)
 
     prefabs = PrefabIndex()
     for module in modules:
@@ -833,6 +859,8 @@ def build_manifest(game_modules, scene_dir, modules=DEFAULT_MODULES, extra_flora
 
     m = Manifest(str(scene_dir), modules, index, scene, references, flora_bin, flora_kinds, prefabs)
     m.warnings.extend(f"{mod}/{pack}: {err}" for mod, pack, err in index.errors)
+    m.reference_notes.extend(f"{mod}/{tree} not read: the module's loose Assets tree is loaded instead, as the "
+                             f"engine does" for mod, tree in index.skipped_trees)
     m.warnings.extend(f"prefab {mod}/{f}: {err}" for mod, f, err in prefabs.parse_errors)
     if not flora_bin.walk_ok:
         m.warnings.append("flora.bin did not walk cleanly to EOF; per-kind counts are partial")
@@ -947,7 +975,8 @@ def build_manifest(game_modules, scene_dir, modules=DEFAULT_MODULES, extra_flora
         seg_a_total = item.seg_bytes(SEG_MESH_A)
         seg_b_total = item.seg_bytes(SEG_MESH_B)
         flags = []
-        if seg_a_total > 1_000_000 and seg_a_total > 10 * seg_b_total:
+        # a loose Assets mesh ships no runtime stream at all, so the ratio says nothing there
+        if seg_a_total > 1_000_000 and seg_a_total > 10 * seg_b_total and not item.pack.startswith("Assets/"):
             flags.append("EDITOR_STREAM_BLOAT")
         m.mesh_rows.append({
             "name": item.name, "module": item.module, "pack": item.pack,
@@ -1187,8 +1216,10 @@ def summary_lines(m: Manifest, top: int = 20) -> list:
     lines = []
     idx = m.index
     lines.append(f"scene: {m.scene_dir}")
+    trees = ("the trees the engine loads (a module's loose Assets tree, else its pack trees)"
+             if any(p[1].startswith("Assets/") for p in idx.packs) else "both pack trees")
     lines.append(f"modules (priority order): {', '.join(m.modules)}; packs indexed: {len(idx.packs)}; "
-                 f"item records seen across both pack trees: "
+                 f"item records seen across {trees}: "
                  + ", ".join(f"{mod} {kind} {n}" for (mod, kind), n in sorted(idx.counts.items())))
     er = m.scene.entity_refs
     lines.append(f"scene entities: {er.entities}; prefab instances: {sum(er.prefabs.values())} of "
@@ -1285,7 +1316,10 @@ def write_report(m: Manifest, path, top: int = 50) -> None:
              "is not determined here, so `total bytes` sums both plus the small table segment and the summary "
              "carries each as a breakdown. `largest` counts are (unique positions, faces, split vertices) of the "
              "record with the most faces. EDITOR_STREAM_BLOAT marks a mesh whose editor segment is more than "
-             "10x its runtime segment.")
+             "10x its runtime segment."
+             + (" Meshes from a loose Assets tree are never flagged: they ship editor geometry and almost "
+                "never a runtime segment, so the ratio says nothing about them."
+                if any(p[1].startswith("Assets/") for p in m.index.packs) else ""))
     L.append("")
     L.append("| name | module | pack | records | largest positions | largest faces | editor seg | runtime seg | total bytes | flags | scene direct | via prefabs | flora kind instances |")
     L.append("|---|---|---|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|")
@@ -1356,6 +1390,13 @@ def main(argv=None) -> int:
     ap.add_argument("--report", default=None, help="Markdown report path (default <out-dir>/map-scene-memory.md)")
     ap.add_argument("--tsv-dir", default=None, help="TSV folder (default <out-dir>)")
     ap.add_argument("--top", type=int, default=50, help="rows in the top-N tables")
+    ap.add_argument("--loose-assets", action="store_true",
+                    help="read each module's loose Assets tree instead of its pack trees when it has one, "
+                         "as the engine does (a module with no loose tpac keeps its packs); loose "
+                         "metameshes carry edit data and almost never render buffers, and loose "
+                         "textures carry no pixel segment, so their bytes come from the header formula "
+                         "(a header the decoder rejects counts 0 bytes, flagged HEADER_UNDECODED); "
+                         "loose meshes are never flagged EDITOR_STREAM_BLOAT")
     args = ap.parse_args(argv)
 
     game_root = Path(args.game_dir)
@@ -1371,7 +1412,8 @@ def main(argv=None) -> int:
         target.mkdir(parents=True, exist_ok=True)
 
     modules = [x.strip() for x in args.modules.split(",") if x.strip()]
-    manifest = build_manifest(game_modules, scene_dir, modules, args.flora_kinds)
+    trees = PACK_TREES + ("Assets",) if args.loose_assets else PACK_TREES
+    manifest = build_manifest(game_modules, scene_dir, modules, args.flora_kinds, trees=trees)
     written = write_tsvs(manifest, tsv_dir)
     write_report(manifest, report, top=args.top)
     print("\n".join(summary_lines(manifest, top=20)))
