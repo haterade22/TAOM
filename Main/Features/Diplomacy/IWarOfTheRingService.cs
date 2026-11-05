@@ -20,4 +20,7 @@ public interface IWarOfTheRingService
     void SetOutcomeFromSave(WarOutcome outcome);
     // #764: every campaign start, new or loaded, resets phase and outcome before SyncData restores a save.
     void ResetForNewSession();
+    // #772: in FullWar, declares every Phase 2 / Hostile-pair war whose stored stance is not War (idempotent).
+    // A pair first linked during Full War is already stored as War and is skipped.
+    void ReconcileDeclaredWars();
 }

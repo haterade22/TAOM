@@ -149,6 +149,84 @@ public class WarOfTheRingConfigProviderTests
         Assert.IsTrue(config.Phase2.TriggerDay > config.Phase1.TriggerDay);
     }
 
+    // ---- Scripted wars lists (#772 review F05, F20) ----
+
+    [TestMethod]
+    public void LoadConfig_NullPhase1Wars_DefaultsToEmptyAndWarns()
+    {
+        WriteConfig(@"{ ""phase1"": { ""triggerDay"": 30, ""wars"": null } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.IsNotNull(config.Phase1.Wars);
+        Assert.AreEqual(0, config.Phase1.Wars.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Phase1") && m.Contains("wars")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_NullPhase2Wars_DefaultsToEmptyAndWarns()
+    {
+        WriteConfig(@"{ ""phase2"": { ""triggerDay"": 45, ""wars"": null } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.IsNotNull(config.Phase2.Wars);
+        Assert.AreEqual(0, config.Phase2.Wars.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Phase2") && m.Contains("wars")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_NullWarEntry_IsDroppedAndWarns()
+    {
+        WriteConfig(@"{ ""phase2"": { ""triggerDay"": 45, ""wars"": [ { ""attacker"": ""gondor"", ""defender"": ""mordor"" },, { ""attacker"": ""rohan"", ""defender"": ""isengard"" } ] } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(2, config.Phase2.Wars.Count);
+        Assert.AreEqual("gondor", config.Phase2.Wars[0].Attacker);
+        Assert.AreEqual("rohan", config.Phase2.Wars[1].Attacker);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Phase2") && m.Contains("null")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_SelfPairWar_IsDroppedAndWarns()
+    {
+        WriteConfig(@"{ ""phase1"": { ""triggerDay"": 30, ""wars"": [ { ""attacker"": ""gondor"", ""defender"": ""gondor"" }, { ""attacker"": ""rohan"", ""defender"": ""isengard"" } ] } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(1, config.Phase1.Wars.Count);
+        Assert.AreEqual("rohan", config.Phase1.Wars[0].Attacker);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Phase1") && m.Contains("gondor")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_WarWithEmptyOrBlankId_IsDroppedAndWarns()
+    {
+        WriteConfig(@"{ ""phase2"": { ""triggerDay"": 45, ""wars"": [ { ""attacker"": """", ""defender"": ""mordor"" }, { ""attacker"": ""gondor"", ""defender"": ""  "" }, { ""attacker"": ""rohan"", ""defender"": ""isengard"" } ] } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(1, config.Phase2.Wars.Count);
+        Assert.AreEqual("rohan", config.Phase2.Wars[0].Attacker);
+        _logger.Received(2).LogWarning(Arg.Is<string>(m => m.Contains("Phase2") && m.Contains("blank")));
+    }
+
+    [TestMethod]
+    public void LoadConfig_ValidWars_AreKeptUnchanged()
+    {
+        WriteConfig(@"{ ""phase1"": { ""triggerDay"": 30, ""wars"": [ { ""attacker"": ""isengard"", ""defender"": ""vlandia"" } ] }, ""phase2"": { ""triggerDay"": 45, ""wars"": [ { ""attacker"": ""gondor"", ""defender"": ""mordor"" } ] } }");
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(1, config.Phase1.Wars.Count);
+        Assert.AreEqual("isengard", config.Phase1.Wars[0].Attacker);
+        Assert.AreEqual("vlandia", config.Phase1.Wars[0].Defender);
+        Assert.AreEqual(1, config.Phase2.Wars.Count);
+        Assert.AreEqual("mordor", config.Phase2.Wars[0].Defender);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("wars") || m.Contains("war ")));
+    }
+
     [TestMethod]
     public void LoadConfig_NullLiteralJson_ReturnsOrderedDefaults()
     {

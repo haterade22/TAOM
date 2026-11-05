@@ -110,7 +110,7 @@ public class WarOfTheRingServiceTests
     [TestMethod]
     public void CheckPhaseTransition_Phase1_SkipsAlreadyAtWar()
     {
-        _allianceAdapter.AreAtWar("isengard", "vlandia").Returns(true);
+        _allianceAdapter.HasDeclaredWar("isengard", "vlandia").Returns(true);
         CreateSut();
         _sut.CheckPhaseTransition(30f);
 
@@ -210,8 +210,8 @@ public class WarOfTheRingServiceTests
     [TestMethod]
     public void CheckPhaseTransition_CalledMultipleTimes_DoesNotRedeclareWar()
     {
-        _allianceAdapter.AreAtWar("isengard", "vlandia").Returns(false, true);
-        _allianceAdapter.AreAtWar("empire", "vlandia").Returns(false, true);
+        _allianceAdapter.HasDeclaredWar("isengard", "vlandia").Returns(false, true);
+        _allianceAdapter.HasDeclaredWar("empire", "vlandia").Returns(false, true);
         CreateSut();
 
         _sut.CheckPhaseTransition(30f);
@@ -488,5 +488,368 @@ public class WarOfTheRingServiceTests
 
         _sut.CheckPhaseTransition(4f);
         Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    // ---- #772: Phase 2 never declared the Hostile-pair wars ----
+    // The real AreAtWar answers through the diplomacy model: once the phase is FullWar, every Hostile
+    // pair reads "at war" before any stance exists. The guards must read the real stance instead
+    // (HasDeclaredWar), and the phase turns first so vanilla's OnWarDeclared listeners already treat
+    // every Hostile pair as constantly at war. The HasDeclaredWar fakes stand for an existing neutral
+    // link; a pair with no link at all would also read true in the game (see IAllianceAdapter).
+
+    private void UseHostilePairs(params (string a, string b)[] hostile)
+    {
+        _diplomacyService.GetRelationshipTier(Arg.Any<string>(), Arg.Any<string>()).Returns(AllianceTier.Neutral);
+        foreach (var (a, b) in hostile)
+            _diplomacyService.GetRelationshipTier(a, b).Returns(AllianceTier.Hostile);
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "empire_w", "empire_s", "aserai", "gundabad", "erebor" });
+        MakeAreAtWarAnswerLikeTheGame();
+    }
+
+    private void MakeAreAtWarAnswerLikeTheGame()
+    {
+        _allianceAdapter.AreAtWar(Arg.Any<string>(), Arg.Any<string>()).Returns(ci =>
+            _sut.CurrentPhase == WarPhase.FullWar
+            && _diplomacyService.GetRelationshipTier(ci.ArgAt<string>(0), ci.ArgAt<string>(1)) == AllianceTier.Hostile);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_Phase2WhenModelReportsHostilePairsAtWar_StillDeclaresThem()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+
+        _sut.CheckPhaseTransition(45f);
+
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_Phase2_DeclaresAfterThePhaseTurnsToFullWar()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+        var phaseAtDeclaration = WarPhase.WarEnded;
+        _allianceAdapter.When(a => a.DeclareWar("empire_w", "empire_s")).Do(_ => phaseAtDeclaration = _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(45f);
+
+        Assert.AreEqual(WarPhase.FullWar, phaseAtDeclaration);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_Phase2BlockPeaceOff_StillDeclaresHostileAndListedWars()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.BlockPeaceBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "erebor" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+
+        _sut.CheckPhaseTransition(45f);
+
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+        _allianceAdapter.Received(1).DeclareWar("gundabad", "erebor");
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_Phase2_SkipsPairAlreadyDeclared()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(true);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(45f);
+
+        _allianceAdapter.DidNotReceive().DeclareWar("empire_w", "empire_s");
+    }
+
+    // ---- #772: ReconcileDeclaredWars repairs saves already at FullWar ----
+
+    private void CreateSutAtFullWar()
+    {
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.FullWar);
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarUndeclaredHostilePair_DeclaresIt()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarAlreadyDeclaredPair_SkipsIt()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(true);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarNonHostilePair_SkipsIt()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar("empire_w", "aserai");
+        _allianceAdapter.DidNotReceive().DeclareWar("empire_s", "aserai");
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarAutoWarOff_DeclaresOnlyConfiguredPhase2Wars()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.AutoWarBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "erebor" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("empire_w", "empire_s"), ("gundabad", "erebor"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.Received(1).DeclareWar("gundabad", "erebor");
+        _allianceAdapter.DidNotReceive().DeclareWar("empire_w", "empire_s");
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_BlockPeaceOff_HostilePairAtPeace_DoesNotDeclare()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.BlockPeaceBetweenHostileTiers = false;
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_NonHostilePhase2WarAtPeace_DoesNotDeclare()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.AutoWarBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "erebor" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_Phase2WarNamesEliminatedKingdom_DoesNotDeclareOrLog()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.AutoWarBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "erebor" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("gundabad", "erebor"));
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "gundabad", "aserai" });
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("#772")));
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_Phase2WarNamesUnknownKingdom_DoesNotDeclareOrLog()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.AutoWarBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "nowhere" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("gundabad", "nowhere"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("#772")));
+    }
+
+    // #772 Codex R3: a misspelt kingdom id ("rohan" for vlandia) passes the provider, which cannot
+    // see the live kingdoms, so the service names it, once per process rather than on every load.
+    [TestMethod]
+    public void ReconcileDeclaredWars_Phase2WarNamesUnknownKingdom_WarnsOncePerProcess()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase2.AutoWarBetweenHostileTiers = false;
+        config.Phase2.Wars = new List<WarDeclaration> { new WarDeclaration { Attacker = "gundabad", Defender = "rohan" } };
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("gundabad", "rohan"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+        _sut.ReconcileDeclaredWars();
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m =>
+            m.Contains("gundabad -> rohan") && m.Contains("war_of_the_ring.json")));
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_Phase1WarNamesUnknownKingdom_WarnsAndStillDeclaresTheOthers()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase1.Wars.Add(new WarDeclaration { Attacker = "isengard", Defender = "rohan" });
+        _configProvider.LoadConfig().Returns(config);
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "isengard", "empire", "vlandia" });
+        CreateSut();
+
+        _sut.CheckPhaseTransition(30f);
+
+        _allianceAdapter.Received(1).DeclareWar("isengard", "vlandia");
+        _allianceAdapter.Received(1).DeclareWar("empire", "vlandia");
+        _allianceAdapter.DidNotReceive().DeclareWar("isengard", "rohan");
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("isengard -> rohan")));
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_DeclarationHasNoEffect_LogsNoCountAndWarns()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(false);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("#772")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("empire_w") && m.Contains("empire_s")));
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarMcmToggleOff_DoesNothing()
+    {
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(false);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarMcmToggleOnJsonOff_DeclaresMissingWars()
+    {
+        var config = CreateDefaultConfig();
+        config.Enabled = false;
+        _configProvider.LoadConfig().Returns(config);
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(true);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_FullWarDisabled_DoesNothing()
+    {
+        var config = CreateDefaultConfig();
+        config.Enabled = false;
+        _configProvider.LoadConfig().Returns(config);
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_Peace_DoesNothing()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_IsengardWar_DoesNothing()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.IsengardWar);
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_WarEnded_DoesNothing()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.WarEnded);
+
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.DidNotReceive().DeclareWar(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_CalledTwice_DeclaresOnce()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        var declared = false;
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(_ => declared);
+        _allianceAdapter.When(a => a.DeclareWar("empire_w", "empire_s")).Do(_ => declared = true);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+        _sut.ReconcileDeclaredWars();
+
+        _allianceAdapter.Received(1).DeclareWar("empire_w", "empire_s");
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_DeclaredSome_LogsTheCount()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(false, true);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("declared 1 missing Full War wars (#772)")));
+    }
+
+    [TestMethod]
+    public void ReconcileDeclaredWars_NothingMissing_LogsNoCount()
+    {
+        UseHostilePairs(("empire_w", "empire_s"));
+        _allianceAdapter.HasDeclaredWar("empire_w", "empire_s").Returns(true);
+        CreateSutAtFullWar();
+
+        _sut.ReconcileDeclaredWars();
+
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("#772")));
     }
 }

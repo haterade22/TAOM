@@ -54,11 +54,12 @@ DiplomacyBehavior --> IDiplomacyService.EstablishInitialAlliances
                                |
                          IAllianceAdapter (StartAlliance, AreAllied)
 
-CampaignEvents.DailyTickEvent
+CampaignEvents.DailyTickEvent, CampaignEvents.OnSessionLaunchedEvent (host only)
         |
-WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition
+WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition (both events)
+                     --> IWarOfTheRingService.ReconcileDeclaredWars (session launch only, runs only in FullWar, idempotent, #772)
                                   |
-                            IAllianceAdapter (DeclareWar, AreAtWar)
+                            IAllianceAdapter (HasDeclaredWar, DeclareWar, GetAllKingdomIds)
                             IDiplomacyService.GetRelationshipTier
 
 Harmony Patch11_Diplomacy
@@ -216,7 +217,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `Main/_Module/ModuleData/diplomacy/war_of_the_ring.json` | War of the Ring phase config |
 
 ## Dependencies
-- `IAllianceAdapter` — wraps `AllianceCampaignBehavior`, `StanceLink`, `Kingdom` (sealed TaleWorlds types); provides `AreAllied`, `StartAlliance`, `AreAtWar`, `DeclareWar`, `MakePeace`, `GetAllKingdomIds`
+- `IAllianceAdapter`: wraps `AllianceCampaignBehavior`, `StanceLink`, `Kingdom` (sealed TaleWorlds types); provides `AreAllied`, `StartAlliance`, `AreAtWar`, `HasDeclaredWar` (reads the stored stance link, ignoring `IsAtConstantWar` and the shallow stance), `DeclareWar`, `MakePeace`, `GetAllKingdomIds`, `GetKingdomCultureId`
 - `IDiplomacyConfigProvider` — loads diplomacy.json
 - `IWarOfTheRingConfigProvider` — loads war_of_the_ring.json
 - `ITaomSettingsProvider` — wraps `TaomSettings` MCM

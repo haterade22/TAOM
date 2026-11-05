@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
@@ -54,6 +55,12 @@ public class WarOfTheRingConfigProvider : IWarOfTheRingConfigProvider
         if (config.Phase2 == null) config.Phase2 = new PhaseConfig { TriggerDay = 365 };
         if (config.TestMode == null) config.TestMode = new TestModeConfig();
 
+        // #772 review: the service walks these lists on every host load at Full War, so a null list
+        // or entry would throw out of OnSessionLaunched, and a self or blank pair would be counted
+        // as a declaration that never happened.
+        ValidateWars("Phase1", config.Phase1);
+        ValidateWars("Phase2", config.Phase2);
+
         if (config.Phase1.TriggerDay < 1)
         {
             _logger.LogWarning($"WarOfTheRing config: Phase1.TriggerDay ({config.Phase1.TriggerDay}) < 1; reverting to 1.");
@@ -80,5 +87,37 @@ public class WarOfTheRingConfigProvider : IWarOfTheRingConfigProvider
             _logger.LogWarning($"WarOfTheRing config: TestMode.Phase2Day ({config.TestMode.Phase2Day}) must be after TestMode.Phase1Day ({config.TestMode.Phase1Day}); reverting to {config.TestMode.Phase1Day + 1}.");
             config.TestMode.Phase2Day = config.TestMode.Phase1Day + 1;
         }
+    }
+
+    private void ValidateWars(string phaseName, PhaseConfig phase)
+    {
+        if (phase.Wars == null)
+        {
+            _logger.LogWarning($"WarOfTheRing config: {phaseName}.wars is null; using an empty list.");
+            phase.Wars = new List<WarDeclaration>();
+            return;
+        }
+
+        var kept = new List<WarDeclaration>();
+        foreach (var war in phase.Wars)
+        {
+            if (war == null)
+            {
+                _logger.LogWarning($"WarOfTheRing config: {phaseName}.wars has a null entry; dropping it.");
+            }
+            else if (string.IsNullOrWhiteSpace(war.Attacker) || string.IsNullOrWhiteSpace(war.Defender))
+            {
+                _logger.LogWarning($"WarOfTheRing config: {phaseName}.wars war '{war.Attacker}' -> '{war.Defender}' has a blank attacker or defender; dropping it.");
+            }
+            else if (string.Equals(war.Attacker, war.Defender, StringComparison.Ordinal))
+            {
+                _logger.LogWarning($"WarOfTheRing config: {phaseName}.wars war {war.Attacker} -> {war.Defender} is a self pair; dropping it.");
+            }
+            else
+            {
+                kept.Add(war);
+            }
+        }
+        phase.Wars = kept;
     }
 }
