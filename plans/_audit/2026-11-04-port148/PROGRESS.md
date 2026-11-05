@@ -51,7 +51,13 @@ baseline; later WPs land on local `port148/overnight`. See D25 in `data/brief-wo
 ## Overnight result (2026-11-05)
 
 Nineteen WPs merged on `port148/overnight`: 104 to 114, 117 to 120, 123 to 126 (108 PARTIAL). Trunk unmoved, nothing pushed, nothing run in
-the game. Per-WP results, deferred items and in-game checks: [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md). D25's holds still apply.
+the game. Per-WP results, deferred items and in-game checks: [`OVERNIGHT-REPORT.md`](OVERNIGHT-REPORT.md). D25's holds applied at that point.
+
+## After the overnight result (2026-11-05)
+
+D26, D27 and D29 released most of those holds. `port148/overnight` went on to 40 `merge WP` subjects on its first-parent history
+since `1ab48c21d`. Still held: 102, 103, 116, 138, 142 and 143 whole, and WP108 Step B4, WP127 Parts C and M and WP145 Parts E to G.
+The status column of [`plans/README.md`](../../README.md) is the record, and nothing has been pushed or run in the game.
 
 ## State at the end of planning
 
