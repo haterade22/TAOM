@@ -155,6 +155,7 @@ The first cut of the `ActionIndexCache` repair retried from `CharacterSpawnerSer
   clip to it. Note also that `CharacterTableau` / `CharacterSpawner` / `BodyGeneratorView` live in
   `Modules/Native/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.View.dll`, which is **absent
   from the `E:\Decompiled_Bannerlord` dump** — decompile that DLL directly with `ilspycmd`.
+- **Guard the index first (a second way `GetAnimationName` returns garbage, 2026-10-13).** `IMBActionSet.GetAnimationName` with `ActionIndex` -1 reads outside its table, so the Prevent step above must never pass an unbound `ActionIndexCache`. This is a second cause beside the poisoned-static case in "An engine type with an EXPLICIT static cctor ..." above, which returns a garbage name for a valid index. yotthani's DualWield probe asked for an idle horse's channel-0 action (-1: an idle horse has none) once a second; the engine's lookup is unchecked (`TaleWorlds.Native` 1.5.5: `+0x58fde0` returns the dword before the table, `+0x6DF93F` indexes with it), giving a garbage name on most battle starts and an access violation on the others (5 crashes in 12 starts of one test preset). (yotthani, `yotthani/bannerlord` commit `fc45bc48`, 2026-10-13, v1.5.5, native disassembly plus a first-chance fault record in an unattended run; TAOM has not re-checked the two offsets.) TAOM's `TableauDiagnostics.cs` already guards it (`action.Index < 0` at lines 270 and 287); keep that guard when touching those helpers.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
 
 ### A character's meshes live on the SKELETON, not on the entity's MetaMesh components
@@ -190,10 +191,11 @@ set names it in a **verb slot or table** (which means the engine fires it too); 
      declares `rear_action="act_horse_rear"`, so the engine fires it on every damaged mount, and
      `Agent.Mount` refuses a mount whose channel-0 type is `Rear`. The mount would go unmountable
      mid-fight.
-  2. The replacement `act_horse_strike_front` is typed `actt_mount_strike`
-     (`ActionCodeType.MountStrike = 52`), which sits inside `StrikeBegin = 48 .. StrikeEnd = 52`, the
-     band `Agent.IsInBeingStruckAction` reads as BEING STRUCK. The clips are named
-     `horse_hit_from_front`/`_back`. The creature flinches as though hit while you emit damage.
+  2. The replacement `act_horse_strike_front` plays the horse's hit reaction (clips
+     `horse_hit_from_front`/`_back`), so the creature flinches as though hit while you emit damage.
+     Its type, `actt_mount_strike` (`ActionCodeType.MountStrike = 52`), is NOT the cause: corrected
+     2026-09-18, `Agent.IsInBeingStruckAction` tests the half-open `MBMath.IsBetween(type, 48, 52)`,
+     so it reads 48 to 51 as being struck (v1.4.8 `Agent.cs:1338-1348`).
 - **The fact underneath both:** **vanilla horses have no attack animation at all.** They deal damage by
   charge collision, so `monster_usage_strikes` is the mount's hit-REACTION table, not an attack table.
   The horse rig's only genuinely offensive action is `act_horse_kick` (`actt_kick`,

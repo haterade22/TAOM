@@ -96,7 +96,8 @@ public sealed class RefugePrisoner
 /// source's transient dictionary baked militia into the garrison across a mid-battle save) and
 /// stand-down removes min(recorded, present - pre-rally baseline) so a player-garrisoned stack of
 /// the militia's own troop type survives its casualties; OnGameLoaded
-/// re-pins the party AI (the source only pinned at spawn, so refuges wandered after reload) and
+/// re-pins the party AI (the source only pinned at spawn; the engine saves the pin, so this is an
+/// idempotent belt for a failed or missing pin) and
 /// logs both reconcile directions; the warden is never killed (see IWardenService).</para>
 ///
 /// <para>Campaign statics (parties, gold, distances, militia rosters, raids, messages) sit behind
@@ -677,8 +678,10 @@ public class RefugeService : IRefugeService, IRefugeBook
                 };
                 _logger.LogWarning($"[Refuge] party '{partyId}' had no book row on load; adopted un-established.");
             }
-            // Re-pin the AI on EVERY refuge party. The source pinned only at spawn;
-            // SetDoNotMakeNewDecisions is not persisted, so loaded refuges wandered off.
+            // Re-pin the AI on EVERY refuge party. The engine saves the pin itself
+            // (MobilePartyAi.DoNotMakeNewDecisions is [SaveableProperty(11)]), and a refuge is
+            // never unpinned, so this is an idempotent belt: it re-asserts the hold and pins a
+            // party whose founding pin threw or an orphan adopted from an older save.
             PinRefugePartyAi(partyId);
             // Belt for a save written inside the engine's 1-day disband-wait window (or by a
             // pre-fix build): DisbandPartyCampaignBehavior persists its waiting queue, and a

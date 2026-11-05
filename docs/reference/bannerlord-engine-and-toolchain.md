@@ -194,7 +194,7 @@ ilspycmd can't) + the PE **version resource** (PowerShell `(Get-Item).VersionInf
 the **managed↔native bootstrap**: `WotsMain` / `WotsMainNative` / `WotsMainNativeCoreCLR` / `create_game_application`
 / `get_ftdn_managed_interface` / `pass_managed_initialize_method_pointer` / `pass_managed_library_callback_method_pointers`
 / `pass_controller_methods`. These `pass_managed_*` exports are the mechanism behind the `[EngineMethod]` bridge in
-§4 — the engine receives managed method pointers at startup, then calls back into Mono. (No per-API named exports
+§4: the engine receives managed method pointers at startup, then calls back into managed code, whichever runtime hosts it (see the `mono-2.0-sgen.dll` row). (No per-API named exports
 like `get_animation_flags` — those are dispatched through the callback table, not exported symbols, which is why
 the engine's per-feature logic isn't visible as exports.)
 
@@ -271,8 +271,10 @@ art source (.fbx, textures)
   reverse-engineered — a `tpac_clip_flags.py` tool is a TODO there).
 - **Animation clip flags** are baked here (set in the Animation Clip Inspector) — see the dedicated
   [clip-flags reference](bannerlord-animation-clip-flags.md). They are NOT in `action_types.xml`.
-- The **skeleton** lives inside a `*_geo.tpac` (e.g. LOTRLOME's `elephant_harad_armor_01_geo.tpac` carries
-  `elephant_skeleton`); animation **clips** are skeleton-relative (bind by skeleton name).
+- The **skeleton** lives inside a `*_geo.tpac` (in the loose Armory tree, LOTRLOME's `adod_elephant_geo.tpac` carries
+  `elephant_skeleton`; `elephant_harad_armor_01_geo.tpac`, named here until plan 144, is a 416-byte stub, per the
+  1.5.x line's check of the desktop's loose Armory on 2026-09-29; a cooked install packs both into `pack*.tpac`);
+  animation **clips** are skeleton-relative (bind by skeleton name).
 
 ### 6.1 The four asset folders, and who each one is for
 
@@ -291,6 +293,7 @@ Three consequences that are easy to get backwards:
 
 - **Neither packages folder matters on a dev install.** The editor reads `Assets/`, and so does the
   game. Deleting `AssetPackages` locally costs nothing; Publish Module regenerates it.
+  The corollary: a hand-written package dropped into `AssetPackages/` is not read on a dev install that has a loose `Assets/` tree, and Publish Module does not carry it into a release unless it is in the module's assets. Whether TAOM's four MithrilForge camp props render on the 1.4.8 build is an open in-game check ([tpac-static-prop-authoring.md](tpac-static-prop-authoring.md)).
 - **A creature with no entry in either packages folder is in its normal pre-release state, not
   broken.** On 2026-08-29 an invisible warg was misattributed to exactly this, on a correlation
   across six creatures whose failing side had two samples and one of them, the war ram, had never

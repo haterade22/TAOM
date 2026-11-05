@@ -270,6 +270,32 @@ window open in the very writer whose fix was meant to close it.
   as needing the same balance/data checks the original assignment needed.
 - **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings C2 and C3.
 
+### A fake that returns 0 hides its seam, and a passing run says nothing past its last wave (Long Defeat, 2026-11-04)
+
+Phase 1's keep rule had full domain tests, yet swapping the attacker and defender counts in the director stayed green, because the fake returned 0 for both. A felled soldier raised no removal in the fake, although the engine raises one, so the no-gold rule ran only by assumption. The first judge passed on hand-written log lines. And run `20261104-033424` passed at 2 waves while the keep was out of reach and the wave table was too steep for wave 4, because the verdict never asked.
+
+- **Why missed:** each slice was tested alone, and the domain tests were good enough to look complete. The fake was written by the builder of the code it stands in for.
+- **Prevent:** a fake's field that the production code reads must be settable, with one test that moves it. When a fake stands in for an engine event, it raises what the engine raises. Fixtures for a judge come from a real run's log, verbatim. After a passing run, read the numbers the plan said would answer a risk, and run once past the target.
+- **Source:** 1.5.x `docs/reviews/rca-long-defeat-phase1-2026-11-04.md`, rows 5, 8, 9, 15 and 16 (not on this line); plan 144.
+
+### A bench win on a save-path patch is not a game win: measure it in game before it ships (yotthani, 2026-10-04)
+yotthani's `save-fast` patch cut allocation and was byte-identical to vanilla on an offline save bench, 23 % faster under workstation GC and 35 % under server GC. In game the same patch made `SaveContext.Save` about 2.7 times slower (3.2 s and 2.8 s against 1.04 s and 1.08 s, with 1.8 GB more allocated). Re-running the bench with the game's Harmony 2.4.2, ButterLib's save-system patches, the timing probes and server GC still showed a win, and the cause was never found; the remaining differences are the engine's native parallel driver and fully initialised objects. The patch was dropped.
+- **Why missed:** byte equality and a bench timing were read as proof of both correctness and speed; the bench ran the save through the CLR thread pool, not the engine's worker threads, with objects loaded without their load callbacks.
+- **Prevent:** a performance patch on the save path, or on any path the engine runs through its own parallel driver, counts as verified only after an in-game measurement against the same session without it. State the bench and the game figures separately in the commit body.
+- **Source:** 1.5.x yotthani, MithrilForge `docs/engine/perf.md`, `save-fast` sections of 2026-10-04, in game on v1.5.3 (not on this line); plan 144.
+
+### A single value from one session is not a finding: re-measure with your own points before you report it to a third party (yotthani perf.md, 2026-10-18)
+Yotthani's `perf.md` closes an audit of TAOM's auto-resolve logging with a lesson: the "up to 15 ms per battle end" from a 3 October session was "not reproduced" on re-measurement (old measuring points, single calls, wall time per call includes every pause that falls inside, such as GC and file system), and the branch prepared to report it stayed empty ("Kein Änderungsvorschlag, keine Meldung zu diesem Punkt"). The source words it: "ein Einzelwert aus einer Sitzung ist kein Befund; vor einer Meldung an Dritte mit eigenen Messpunkten nachmessen" (a single value from one session is not a finding; before a report to third parties, re-measure with your own measuring points). The same file's `war-score-cache` case taught the same thing.
+- **Why missed:** a number from one session reads as a result once it is written down, and wall time around a call silently includes pauses that belong to nobody's code.
+- **Prevent:** before TAOM states a cost (in a doc, an issue, or a message to another mod's author), measure it again with a probe placed on the exact call, in a second session, and say which run the figure comes from. A restated upstream figure stays tagged with its single-session scope.
+- **Source:** 1.5.x MithrilForge `docs/engine/perf.md`@d09f44a4 (a pinned `yotthani/MithrilForge` head), the last bullet before the heading "Grafikoptionen auf der Karte", line 1452 (not on this line); plan 144.
+
+### Check that a test lever took effect before counting the run (yotthani deploy test, 2026-10-17)
+Yotthani's `deploy=` test switch teleported a defender's infantry onto a choke point. It fired at 0.5 s, while the mission was still in `MissionMode.Deployment`, where `Mission.IsFormationUnitPositionAvailableMT` refuses unit positions outside the deployment area and the formation order moves nobody. Thirty battles (15 and 16 October) ran with the switch on and were declared "do not count: the soldiers were mostly not moved"; a conclusion drawn from them was retracted. The evaluation had taken the target as the defender's start, so it could not see that nothing moved. The fix: wait until the mission has left deployment, and log a `deployed` event one second later with the body's distance to the target.
+- **Why missed:** the harness measured the outcome (who won) and never the intermediate state the lever was meant to create (where the soldiers stood).
+- **Prevent:** every experimental lever logs its own effect (here the distance of the formation to the target a second later) and a run counts only if the lever is seen to have taken effect. A switch that can fail silently gets that check before the first batch, not after thirty runs.
+- **Source:** 1.5.x MithrilForge `docs/engine/battle-behaviour-measured.md`@d09f44a4 section 6, summarised in 1.5.x `formations-and-team-ai.md` "Retraction" (not on this line); plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

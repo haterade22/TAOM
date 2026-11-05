@@ -87,6 +87,14 @@ TAOM's own gate requires `HasMeleeWeapon` + `IsSwing`). The 8 orc javelin carrie
 berserkers with a javelin in a secondary slot, so they keep their crush on the mace swing and lose
 nothing at range.
 
+`GetDefendCollisionResults` is an engine callback marked `[MBCallback(null, true)]` (multi-thread callable; v1.4.8
+`Mission.cs:6454-6456`), so `DecideCrushedThrough` (`MissionCombatMechanicsHelper.cs:311`) may run off the main thread;
+yotthani's v1.5.3 decompile shows native calling it from inside the parallel melee sweep (not re-traced on v1.4.8). The
+crush path logs nothing per call and reads only state built at construction, apart from the crush roll's draw on the
+engine's shared generator (`randomRoll: MBRandom.RandomFloat` in `CombatMechanicsHooks`), which the port programme
+keeps (decision D16: concurrent draws cannot plausibly leave that generator stuck). Keep anything added to the path
+read-only (the thread table in `.claude/rules/harmony-patches.md`).
+
 **Existing players keep their own MCM value.** MCM merges over JSON per read
 (`CombatMechanicsSettingsProvider.ShieldPenetrationEnabled`), so a profile that saved "Shield Penetration" as on stays on.
 The empty grant lists are the second line of defence: `IsGranted` matches nothing, so the mechanic is

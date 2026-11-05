@@ -173,7 +173,7 @@ Code: No code changes needed.
 
 1. Find who points where: `rg -n 'skill_template="SkillSet.taom_lord_skills"' Main/_Module/ModuleData/`.
 2. Change the attribute value on the `<NPCCharacter>` in `Main/_Module/ModuleData/characters/lords.xml`, or the matching `<xsl:attribute>` in `Main/_Module/ModuleData/lords.xslt`. Keep the `SkillSet.` prefix.
-3. If the character exists in both files, `characters/lords.xml` is the one the engine uses: it loads second and last-loaded wins among additive sources with the same id ([lord skills](../features/lord-skills.md) line 20).
+3. If the character exists in both files, the engine merges the two definitions: `characters/lords.xml` loads second and wins every attribute it redeclares, so its `skill_template` (if it states one) is the one used, while the XSLT copy still supplies what the row omits ([lord skills](../features/lord-skills.md) line 20). Grep both files for the id first.
 4. For a culture-wide swap onto a variant set, use `python tools/repoint_evil_lord_skillsets.py` (dry run by default, `--apply` to write) rather than re-running the generator per culture. The live XML carries hand-tuned assignments the generator cannot reproduce ([tools README](../../tools/README.md) line 137).
 
 Check: `rg -c 'skill_template="SkillSet\.' Main/_Module/ModuleData/characters/lords.xml` before and after, and confirm the count is unchanged.

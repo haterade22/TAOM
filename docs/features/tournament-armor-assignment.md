@@ -8,15 +8,15 @@
 
 ## Why This Exists
 
-- **Vanilla behavior:** `DefaultTournamentModel.GetParticipantArmor` ignores the `participant` parameter entirely. All 16 participants — heroes, lords, and filler troops — receive armor from `gear_practice_dummy_{settlement.MapFaction.Culture.StringId}`.
+- **Vanilla behavior:** `DefaultTournamentModel.GetParticipantArmor` (v1.4.8, taom-src `DefaultTournamentModel.cs:86-93`) checks the mission mode. In a tournament match (`MissionMode.Tournament`) it returns the participant's own `RandomBattleEquipment`, so every fighter keeps his own armour. In an arena practice fight (any other mode) it ignores the participant and returns `gear_practice_dummy_{Settlement.CurrentSettlement.MapFaction.Culture.StringId}` (else `gear_practice_dummy_empire`), so every fighter, the player included, wears the host faction's practice kit.
 - **TAOM requirement:** TAOM has 13+ cultures with race-specific character skeletons (dwarves, elves, orcs). Armor is modeled to fit specific skeletons. Applying dwarf chainmail to a human skeleton, or human armor to a dwarf, produces visible clipping and scaling glitches.
-- **Without this feature:** Any tournament in a non-human settlement (Erebor, Gundabad, Mordor, Isengard, Dol Guldur) visually breaks for visiting human lords/heroes.
+- **Without this feature:** an arena practice fight in a non-human settlement (Erebor, Gundabad, Mordor, Isengard, Dol Guldur) dresses a human player in kit made for another skeleton, and the reverse in a human town. Tournament matches would not clip: vanilla keeps each fighter's own armour there.
 
 ## Architecture
 
 ### Design Challenge
 
-The vanilla method completely discards participant identity — it only cares about which settlement is hosting. For **armor**, there is no race check anywhere in the equipment pipeline (`TournamentFightMissionController.AddRandomClothes`, `FightTournamentGame.GetParticipantCharacters`, etc.) — TAOM keys armor on the participant's *culture* instead. (For **mounts** — a separate concern — TAOM now *does* do a race check: `Patch46_TournamentDwarfDismount` strips the horse from dwarf participants in `PrepareForMatch`, because the mount comes from the culture weapon template, not from `GetParticipantArmor`. See [arena.md](arena.md).)
+Outside a tournament match the vanilla method discards participant identity and only cares which faction hosts; in a match it hands back the participant's own armour. TAOM's override drops the mode check, so practice fights and tournament matches both dress each fighter in his own culture's practice kit (in a match that replaces his own armour). For **armor**, there is no race check anywhere in the equipment pipeline (`TournamentFightMissionController.AddRandomClothes`, `FightTournamentGame.GetParticipantCharacters`, etc.); TAOM keys armor on the participant's *culture* instead. (For **mounts**, a separate concern, TAOM now *does* do a race check: `Patch46_TournamentDwarfDismount` strips the horse from dwarf participants in `PrepareForMatch`, because the mount comes from the culture weapon template, not from `GetParticipantArmor`. See [arena.md](arena.md).)
 
 ### Solution Approach
 
@@ -32,9 +32,9 @@ TaomTournamentModel.GetParticipantArmor(participant)
         ├─ gear_practice_dummy_{participant.Culture}  ← try participant's own culture
         |     found → return RandomBattleEquipment
         |
-        └─ base.GetParticipantArmor(participant)      ← vanilla fallback
-              ├─ gear_practice_dummy_{settlement.Culture}
-              └─ gear_practice_dummy_empire
+        └─ base.GetParticipantArmor(participant)      ← vanilla fallback (no such dummy)
+              ├─ tournament match: participant.RandomBattleEquipment
+              └─ practice fight:   gear_practice_dummy_{host MapFaction.Culture}, else _empire
 ```
 
 ## Configuration
@@ -101,7 +101,7 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 | `Main/Features/Arena/TournamentService.cs` | Decision logic: `ResolveDummyId`, `BuildPrizePool`, start/end-chance, `ShouldDismountInTournament` |
 | `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` | 21 unit tests (`ResolveDummyId` fallback chain, start/end chance, `ShouldDismountInTournament`) |
 | `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 7 unit tests (tier-constant invariants on the model) |
-| `Main/SubModule.cs:385` | Registration: `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
+| `Main/SubModule.cs:1178` | Registration: `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
 | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | `gear_practice_dummy_*` entries per culture |
 
 ## Dependencies
@@ -122,6 +122,7 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 
 ## Changelog
 
+- 2026-11-04 (plan 144): corrected the vanilla behaviour this doc was built on. `GetParticipantArmor` gives every fighter the host faction's kit only in arena practice fights; in a tournament match each fighter keeps his own armour (v1.4.8 `DefaultTournamentModel.cs:86-93`). So TAOM's override fixes cross-race clipping in practice fights, and in tournament matches it swaps each fighter's own armour for his culture's practice kit. Registration line updated.
 - 2026-09-06: Gave all 46 faceless arena practice characters a `<face>` block across ten cultures (dale, dunland, gondor, harad, isengard, khand, lothlorien, mordor, rhun, rohan). Without one the engine builds their `MBBodyProperty` from `default(BodyProperties)`, whose age is 0, and renders them on the toddler skin: players reported "Practice Fighter" and "Gear Dummy" fighting in the arena as children. Added `CharacterFaceCoverageTests` as the gate.
 - 2026-06-09 — Fixed the Patch46 dwarf-dismount postfix crashing every campaign load (`____match` underscore-count fix for the private `_match` field); corrected the stale Phase-9b-#137 architecture notes in this doc + `arena.md`.
 - 2026-06-09 — Added `Patch46_TournamentDwarfDismount` postfix on `PrepareForMatch` to clear the Horse/HorseHarness slots for dwarf participants (mount comes from the culture weapon template, not `GetParticipantArmor`) so dwarves no longer spawn inside the horse mesh (#277).

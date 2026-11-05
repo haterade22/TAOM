@@ -123,6 +123,15 @@ The 1.4.6→1.4.7 engine bump broke the old headless walk. On 1.4.7 the precompi
 
 **Wiring gotcha (in-game-caught):** the guard was first added from `TaomShaderGameManager.OnLoadFinished` via `Mission.Current?.AddMissionBehavior`: that **silently no-op'd** because `Mission.Current` isn't the battle mission yet at `OnLoadFinished`. It never registered (absent from the mission behavior dump) and the NRE still fired. Adding mission behaviors to a freshly-opened mission must go through `OnMissionBehaviorInitialize` (the engine hands the mission in directly). See `docs/reviews/rca-shader-precompile-1.4.7-2026-07-11.md`. Neither fallback path had ever run in-game before #560: the 2026-07-11 run was warm-cache and advanced before deployment mattered (that RCA's finding 3).
 
+**Open fix item (plan 144, from the 1.5.x line's v1.5.5 check of 2026-10-15):** `ShaderPrecompilePlayerAgentGuard.OnMissionTick`
+calls `deployment.FinishDeployment()` (`ShaderPrecompilePlayerAgentGuard.cs:94`) from inside the mission's tick loop, and
+`FinishDeployment` ends with `RemoveMissionBehavior(this)` (v1.4.8 `DeploymentMissionController.cs:41-80`). The loop counts
+down by index over the live list (`Mission.cs:3741-3744`) and the removal shifts every later entry (`:4643-4660`), so if the
+controller sits below the guard's index the guard ticks twice that frame (the registration order was not checked). Move
+the call out of the tick: set a flag in `OnMissionTick` and finish deployment at the start of the next frame. The path is
+the Order of Battle fallback only and has not run in game since #560. Mechanism:
+[mission-and-missionbehavior-lifecycle.md](../reference/engine/mission-and-missionbehavior-lifecycle.md) "Removing a behaviour during `OnMissionTick`".
+
 ## v1.4.8 and the shader cache
 
 The v1.4.8 bump needed **no code change here** (TAOM compiles against v1.4.8 with 0 errors, `BindingVerification` 106/106: [`docs/migration/v1.4.8-impact.md`](../migration/v1.4.8-impact.md)), and the 2026-09-11 review re-verified every engine member the feature binds against the installed 1.4.8: the `InitialStateOption` constructor, `InquiryData`, `CustomBattleData`, `CustomBattleCombatant`, `Mission._initialPlayerAgent`, `DeploymentMissionController.FinishDeployment` and `TeamSetupOver`, and Patch21's string-bound `LoadingWindowViewModel.Update()`. Three v1.4.8 changelog items land on this feature anyway, none of them through the managed API:
@@ -133,6 +142,14 @@ The v1.4.8 bump needed **no code change here** (TAOM compiles against v1.4.8 wit
 
 (1) is the one that bites, because of *where* this feature's product lives. Every TAOM `_forceatmo` scene ships **header-only**, which `precompile_scenes.txt:4` already states as the premise and which was re-measured against the live install on 2026-08-10: across the 43 scene folders under `<game>\Modules\TAOM_Map\SceneObj\*\ShaderCache\D3D11\` (excluding `Backups\`) there are **43** `terrain_shaders_header_data.bin` and **zero** `compressed_shader_cache.sack`, against **406** per-scene sacks under `Native` / `SandBox` / `SandBoxCore` / `StoryMode`. So the walk writes nothing per-scene; its entire output is entries in the player's **local** shader cache, exactly what (1) now deletes.
 
+**Shaders built on first use after a graphics change** [yotthani, MithrilForge
+`docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Loading and start", in-game
+observation in one siege, game 1.5.5 per the header, not re-measured by TAOM on 1.5.6 or v1.4.8]: "After a graphics setting
+change, shaders built on first use in the same frame gave 150-290 ms frames in a siege." The same note lists
+"Missing shader from sack: pbr_metallic_shadowmap" (also `pbr_metallic`, `pbr_metallic_gbuffer`,
+`hair_shader_aniso`, `bow_deformer_shadowmap`) about 108 times per session. For TAOM this suggests changing
+graphics options on the map and not in a siege, and a precompile walk run under one set of graphics options may leave shaders that another setting needs to build on first use (TAOM's reading, UNVERIFIED).
+
 ### The "run once" text was wrong; fixed 2026-09-11
 
 Until #560 both copies of `{=taom_precompile_hint}` told the player the walk was a one-time job ("Run once after installing TAOM."), and the two copies did not even match. Under v1.4.8, enabling NavalDLC or toggling any mod discards the work (a reorder does not: the engine sorts the module ids before comparing them). TAOM writes no completion sentinel that could notice (`ShaderPrecompileCrashGuard` persists exactly two files, `Logs/shader-precompile-inflight.marker` and `Logs/shader-precompile-crashed-scenes.txt`; completion exists solely in-session as the `WALK COMPLETE` status and log line).
@@ -142,6 +159,21 @@ Both copies now read: "Pre-compiles every troop and equipment shader so first ba
 ### (3) is an opportunity, per-scene sacks instead of a player-side walk
 
 A publish system that compiles terrain shaders is a candidate path to shipping real per-scene `compressed_shader_cache.sack` files, which would retire the #287 class outright rather than paying for it with the player's time. It runs into **[#448](https://github.com/haterade22/TAOM/issues/448)** first: reading the version dword at offset 4 of all 490 sacks in the install on 2026-08-10, the **486** the v1.4.8 update wrote carry `0x0783` while all three TAOM-side module sacks (`TAOM/`, `TAOM_Map/`, `LOTRLOME_Armory/Shaders/D3D11/`) still carry `0x0782`. Whether v1.4.8 accepts `0x0782`, ignores it, or routes it into (2)'s corrupted-cache fallback is unverified, that is what #448 tracks.
+
+## Unattended game runs: two leftovers after a kill (yotthani)
+
+A cold walk takes 20 to 70 minutes, so anyone who drives it from a script (a cold-cache walk) may
+kill a hung game. Yotthani learned two consequences while running probe games unattended (in game;
+`RealmUI/Probe/run_probe.ps1`@2ff002be lines 124-151 and `docs/realm-ui/feasibility.md`@2ff002be lines 206-214;
+on the night of 2026-10-03/04, on Bannerlord 1.5.3 (`feasibility.md` line 3); TAOM has not
+reproduced either):
+
+- A killed game leaves TaleWorlds' `Watchdog.exe` behind, which keeps the dead process in the task list, so a
+  "is the game running" check keeps answering yes. The script ends the watchdog whose command line carries the
+  killed process id.
+- A killed game leaves `safely_exited = 0` in `Documents\Mount and Blade II Bannerlord\Configs\engine_config.txt`,
+  and the next start stops at a Safe Mode window, where an unattended run waits until its timeout. The script
+  puts the flag back to 1 when it had to kill the game (or the game crashed).
 
 ## Configuration
 

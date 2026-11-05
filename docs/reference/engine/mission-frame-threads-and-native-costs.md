@@ -169,6 +169,18 @@ Consequences for TAOM code:
   `MaxNumberOfAgentsForMission / 2` because a mounted soldier takes two slots, riderless horses included.
   For TAOM, wargs, elk, mumakil and horses each hold a slot, and corpses hold theirs until deleted, so a
   creature-heavy battle reaches the cap with fewer combatants than the slider suggests.
+- **Soldiers held in reserve near the limit hung the battle start** [yotthani, MithrilForge
+  `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Other native observations", game
+  1.5.5 per the file header, "most timings were taken on 1.5.3 and 1.5.4", in-game observation, no native
+  analysis]. The source says "battles hung in native code when soldiers were held in reserve near the limit: 1999 at
+  once with 1 in reserve froze at the start, 1750 with 249 in reserve at the first losses. Without reserves 1500 and
+  1750 ran through." UNVERIFIED by TAOM: the cause is not given and no native path was read. (TAOM's reading: these
+  counts exceed the vanilla spawn cap of `MaxNumberOfAgentsForMission / 2` troops, so they come from a modded spawn
+  path; TAOM has no grep hit for the case.)
+- **Log volume at a mass spawn** [yotthani, same file and section, observation in one scene, build not stated for
+  this item]: "At the start of one battle scene the engine wrote 242,272 lines (45.8 MB) of 'Possible spawn or
+  teleport problem ... Too many physics contacts between agents' in one moment." The source gives no cause and no
+  second scene. [yotthani] The message string is present in the v1.4.8 native DLL (byte search, 2026-11-04).
 
 ## 4. Nearby-agent queries
 

@@ -91,12 +91,13 @@ public static class WarRamConfig
     //     and Agent.Mount refuses a mount whose channel-0 type is Rear. Forcing it every cooldown
     //     would have made the ram briefly UNMOUNTABLE mid-fight, on the one TAOM mount that is
     //     deliberately player-rideable (there is a shipping ram_rider career for it).
-    //   * act_horse_strike_front / _back are typed actt_mount_strike (ActionCodeType.MountStrike = 52).
-    //     That sits inside StrikeBegin = 48 .. StrikeEnd = 52, the band Agent.IsInBeingStruckAction
-    //     treats as BEING STRUCK. The clips are named horse_hit_from_front / _back accordingly. Playing
-    //     one makes the ram flinch as though hit while we emit damage.
+    //   * act_horse_strike_front / _back play the horse's HIT REACTIONS (clips horse_hit_from_front /
+    //     _back), so playing one makes the ram flinch as though hit while we emit damage. Their type,
+    //     actt_mount_strike (ActionCodeType.MountStrike = 52), is harmless: Agent.IsInBeingStruckAction
+    //     tests MBMath.IsBetween(type, 48, 52), which is half-open, so it reads 48 .. 51 as being struck
+    //     and not 52 (v1.4.8 Agent.cs:1338-1348, MBMath.cs:295-302).
     //
-    // act_horse_kick is typed actt_kick (ActionCodeType.Kick = 28): outside the being-struck band and
+    // act_horse_kick is typed actt_kick (ActionCodeType.Kick = 28): outside the 48 .. 51 being-struck band and
     // outside Rear, so it is the horse rig's only real offensive action. It reads as a buck or kick
     // rather than a head strike, which is a deliberate accepted compromise: a correct kick would
     // mean authoring a clip in Blender plus the Modding Kit and reopening the whole animation pipeline

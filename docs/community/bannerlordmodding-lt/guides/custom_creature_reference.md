@@ -163,7 +163,8 @@ The engine's own classification constants, which is what makes the
 | `ActionCodeType.MountStrike` | 52 |
 | `StrikeEnd` | 52 |
 
-Anything in `StrikeBegin .. StrikeEnd` is read by `Agent.IsInBeingStruckAction` as **being struck**.
+`Agent.IsInBeingStruckAction` reads types from `StrikeBegin` up to but not including `StrikeEnd` (48 to
+51) as **being struck**: `MBMath.IsBetween` is half-open, so `MountStrike` (52) is not included.
 
 ## The `.tpac` container format
 

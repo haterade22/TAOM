@@ -189,6 +189,21 @@ A memo keyed on a service method's *input* is only correct if that input determi
 - **Prevent:** when a comment, doc, or agent report cites a precedent, sibling, or "existing pattern" as justification, open the cited file before relying on it — the same evidence-over-claims discipline applied to review findings. When writing such a comment, cite the specific file and member you actually read.
 - **Source:** WotR phase-day deep review 2026-07-30. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`
 
+### Describe a vanilla model method from every branch, mode checks included (Arena, 2026-10-05)
+`arena.md` and `tournament-armor-assignment.md` said vanilla `DefaultTournamentModel.GetParticipantArmor` dresses
+every tournament fighter in the host culture's kit. It does that only when the campaign mission is not in
+`MissionMode.Tournament`, which means arena practice fights; in a tournament match it returns the fighter's own
+`RandomBattleEquipment`, because `TournamentBehavior.StartMatch` sets the mode before the armour is copied. The claim
+stood from 2026-03-31 to 2026-10-05, became the feature's stated reason to exist, and was found only by the 1.5.x line's v1.5.4 compatibility check (the vanilla code is the same on v1.4.8, `DefaultTournamentModel.cs:86-93`). Since TAOM's override drops the mode check, it also replaces every tournament fighter's own armour
+with his culture's practice kit, a side effect nobody had chosen.
+- **Why missed:** the first branch of the method was read as the whole method; the mode check sits in the `if` and
+  the doc quoted only what the `if` returns. Later reviews checked TAOM's override against the doc, never the doc
+  against the decompile.
+- **Prevent:** when a doc states what a vanilla method returns, quote its branch conditions (mode, null and
+  settlement checks) and name which callers reach which branch, with the mission mode each caller runs in. An
+  override that removes a vanilla branch says so in its doc, with what it changes in each.
+- **Source:** the 1.5.x line's v1.5.4 compatibility check, 2026-10-05; plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

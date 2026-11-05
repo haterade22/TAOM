@@ -222,7 +222,36 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 
 **Scope / residual.** `Main/Features/HeroRace/Hooks/GauntletSceneNotification_OpenScene_Guard_Patch.cs` (three patch classes: the OpenScene Finalizer, the OnTick deferred-close Postfix, the InitializeWithAgentVisuals diagnostic Prefix). The one remaining live-only check is the deferred-close path — verify in-game that after an aborted become-king cinematic the campaign map still accepts input and the next scene-notification still displays. Known minor residual (engine-side, not fixable from a patch): the `PopupSceneSpawnPoint` that crashed throws before it's added to `_sceneCharacterScripts`, so its half-built `AgentVisuals` isn't `Reset()` during teardown — a bounded one-per-abort managed-reference leak reclaimed at scene `ClearAll()`. Fallback if the deferred close ever proves insufficient: suppress the offending notification up front via a `MBInformationManager.ShowSceneNotification` Prefix (deterministic, but loses those cinematics). Adversarially reviewed by 5 agents (0 HIGH; the deferred-close gap above was the one real finding, now fixed).
 
+## Open: Map-Conversation CTD With a Voiced Elf Speaker (#635, 2026-09-22)
+
+**Status: investigation only, no code, root cause unproven.** A player (1.4.8, v2.0.28) opened a map
+conversation with the elf wanderer Thyrell from Rivendell's tavern-district menu. They clicked his name,
+opened his encyclopedia page, went back, and the game died silently. No TAOM log line, no crash window.
+The two logs put the crash between 19:45:15 and 19:45:45, after the encyclopedia page had rendered him
+cleanly.
+
+**Why it may belong to this feature.** `MapConversationTableau` is a **fifth raw custom-race render path**, after the
+four listed above. TAOM does not guard it. The only TAOM patches on it are the BannerColorPersistence
+`SpawnOpponentLeader`/`SpawnOpponentBodyguardCharacter` postfixes, which call `AgentVisuals.Refresh`
+again on the custom-race visual. Engine lifecycle, lip-sync path and the latent `OnTick` NRE are
+written up in
+[gauntletui-viewmodel-screen.md](../reference/engine/gauntletui-viewmodel-screen.md) "Map conversation + encyclopedia".
+
+**What is and is not established.**
+- The silent death points to a native fault. TAOM's `Native2ManagedPatcher` finalizers log and swallow
+  a managed throw on the callback shims instead of letting it crash.
+- The conversation played a voiced line with Rhubarb lip-sync on the elf head. That is **not rare**:
+  an empty TAOM accent class falls through to any vanilla voice
+  ([kingdom-voices.md](kingdom-voices.md)), so custom-race heads are lip-synced routinely in keeps
+  and map encounters. On its own it is a weak suspect.
+- What stands out is the combination: a conversation started from a menu, a voice clip ending, and the
+  encyclopedia's map-state idle and return.
+
+**Next step.** Live repro with `procdump -ma -e` attached (paths in #635), then `/native-crash-triage` on the dump.
+No guard is to be written until a dump names the faulting frame.
+
 ## Changelog
+- 2026-09-22: #635 opened: silent CTD after an encyclopedia round trip during a voiced map conversation with an elf wanderer. Investigation only (section above); `MapConversationTableau` recorded as the fifth, unguarded custom-race render path.
 - 2026-11-04: the session-launch capture is described as a backup for a save transfer that skips `OnBeforeSaveEvent` (port of 1.5.x `0f7902684`, #1022, without its co-op module findings, which were not re-checked for a v1.4.8 co-op build). Comments and docs only.
 - 2026-11-04: #1011 (port of 1.5.x `f981629cd`), dead and disabled heroes are saved and restored. The engine resets their race from the origin character on load just as it does for living heroes, but the roster adapter only read `Hero.AllAliveHeroes`. `GetAllAliveHeroRaces` is now `GetAllHeroRaces`. Heroes who died before this fix keep the reverted race.
 - 2026-11-04: #1035 (port of the 1.5.x fix), `RacePersistenceBehavior`'s constructor calls `ResetForNewSession()`, so a save with no record for the behavior (the engine then skips its `SyncData`) no longer inherits the previous campaign's race map in the same process. A new game also logs an information line instead of the pre-TAOM save warning.

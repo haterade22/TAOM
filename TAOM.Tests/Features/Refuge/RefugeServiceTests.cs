@@ -1832,7 +1832,7 @@ public class RefugeServiceTests
         _sut.OnGameLoaded();
 
         CollectionAssert.AreEquivalent(new[] { "r1", "r2" }, _sut.Pinned,
-            "the source only pinned at spawn, so loaded refuges wandered");
+            "pinned at spawn and re-pinned on load; the engine saves the pin, so the load pin is a belt for a failed founding pin or an adopted orphan");
     }
 
     [TestMethod]

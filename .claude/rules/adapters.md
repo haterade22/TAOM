@@ -58,3 +58,12 @@ evicts on `OnAgentDeleted`, and `AgentAdapter.IsActive()` requires `AgentSlotIde
 Do not add an index-keyed cache beside it, do not hold an `IAgentAdapter` across frames without
 re-asking `IsActive()`, and route every `SetActionChannel` through the clip-exists guard so a clip
 requested on the wrong monster is a TAOM log line, not a native warning of unknown consequence.
+
+## A destructible's shown stage must only move forward (MANDATORY)
+
+Never raise a damaged `DestructableComponent`'s `HitPoint` (a heal, regeneration) unless the adapter has set
+`OnCalculateDestructionStateIndex` to keep the shown stage from moving backward: the engine does not, so a smaller heal
+steps the object back to an earlier model, and one that lifts `HitPoint` above the first line sets stage 0, where the
+engine reads `_destructionStates[-1]` after hiding the model and the object stays invisible and unhittable (v1.4.8
+`DestructableComponent.cs:399-412`, `:498`; [engine note](../../docs/reference/engine/usable-machines.md); found on the
+1.5.x line, 2026-10-31).

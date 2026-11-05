@@ -31,6 +31,9 @@ Bones = { HeadLookDirection, SpineLower/Upper, NeckRoot, Pelvis, R/LUpperArm,
           FallBlowDamage, TerrainDecal0/1, ragdoll bones, ... }                      // the bone-index map
 Biped = { ragdoll stationary-check bones, foot-IK bones, ... }
 ```
+
+**Step size and gait speed.** The step size sets the speed up to which the engine lengthens the stride before it quickens the step, about 3.4 m/s times the step size. `CreateAgentSkeleton` uses 1.0; with 1.0 a figure at 4.5 m/s took 0.66 s per cycle against 0.83 s for real soldiers, and 1.3 matched them. (yotthani, `yotthani/bannerlord` `HoN/PerfProbe/Integration/CrowdProxy.cs`@784fef93 lines 899-903, probe of 11.10.2026 on an agent-less figure; engine version not stated in the source; the "about" is upstream's.) Not re-measured on v1.4.8.
+
 So `AnimationSystemData` = **action set + monster usage + speed limits + step size + the full bone-index map**.
 
 - `ActionSetCode` (the `action_set="…"` attribute, e.g. `as_spider`/`as_elephant`/`as_adod_wolf`) is read from

@@ -77,7 +77,7 @@ When two agents or two review passes disagree on a TaleWorlds API signature, re-
 - **Source:** memory/feedback_codex_caught_api_misread.md (Codex review #34, 2026-05-06)
 
 ### A shared cache keyed by `object.GetHashCode()` cross-contaminates instances — key by identity (`ConditionalWeakTable`)
-A process-wide cache keyed on `partyBase.GetHashCode()` (or any sealed-type instance's hashcode) is unsafe: `object.GetHashCode()` is not unique per instance, so two different entities can collide and read each other's cached value. If the cache-validity key is *also* non-unique across instances (e.g. `MemberRoster.VersionNo`, which many parties share), the collision produces silent cross-instance value bleed. Use `ConditionalWeakTable<TInstance, TBox>` — reference-keyed (no collision), GC-evicting (no unbounded growth), internally synchronized (safe off the main thread).
+A process-wide cache keyed on `partyBase.GetHashCode()` (or any sealed-type instance's hashcode) is unsafe: `object.GetHashCode()` is not unique per instance, so two different entities can collide and read each other's cached value. If the cache-validity key is *also* non-unique across instances (e.g. `MemberRoster.VersionNo`, which many parties share), the collision produces silent cross-instance value bleed. Use `ConditionalWeakTable<TInstance, TBox>`: reference-keyed (no collision), GC-evicting (no unbounded growth), internally synchronized (safe off the main thread, but not free there: on .NET Framework every lookup takes a lock, and yotthani measured 845 lookups a frame on about 18 worker threads at 7.5 ms of CPU per frame, MithrilForge `docs/engine/perf.md`, nameplate section of 2026-10-03, v1.5.3; decide on the main thread and hand workers a plain array when the lookup sits in a parallel loop). This line runs on the .NET Framework CLR (a 1.4.8 player log records `CLR: 4.0.30319.42000`).
 - **Why missed:** the two TroopWeight count-getter hooks shipped a `Dictionary<int GetHashCode(), …>` cache in 2026-03; the sibling display path was migrated to `ConditionalWeakTable` in the 2026-06-07 phantom-wounded RCA, which explicitly flagged the count hooks as "a latent leak, not urgent" (preventive action #2) — and the back-port was never done. It manifested as a plausible-but-wrong lead in the campaign-map "200↔20" flicker investigation (it was a real defect, just not that symptom's cause).
 - **Prevent:** never key a cross-entity cache on `GetHashCode()`. When caching per-sealed-instance, reach for `ConditionalWeakTable` first (TAOM already uses it in `TroopWeightService._healthCache`). Extract the cache to a shared, generic, unit-testable helper (`WeightedCountCache<TKey>`) and pin the isolation with a colliding-hashcode test double.
 - **Source:** troop-count-display investigation (2026-07-11); `docs/features/troop-weight-system.md` Performance section; RCA `rca-troopweight-phantom-wounded-2026-06-07.md` §2.
@@ -179,6 +179,40 @@ attribute is authoritative for one kind of character and inert for the other.
   resulting gate: `MOUNTED_DWARF` in `docs/features/moduledata-validation.md`.
 
 ---
+
+### Never drive a one-way engine state backward through a setter that allows it (Fords of War towers, 2026-10-31)
+On the 1.5.x line, Fords of War tower regeneration raised `DestructableComponent.HitPoint` on a damaged tower. The engine derives the shown
+damage stage from `HitPoint` on every hit (`CalculateNextDestructionLevel`) (v1.4.8 `DestructableComponent.cs:399-412`, the read at `:498`), so a healed tower computed stage 0 and
+`ReplaceEntityWithBrokenEntity` read `_destructionStates[-1]` after it had hidden the model and turned its physics
+off. The exception was swallowed and the tower stayed invisible and unhittable.
+- **Why missed:** the setter is public and takes any value, so the adapter treated `HitPoint` as plain data. The
+  stage swap is one-way (debris is detached and thrown), which only the method bodies show. This is the EFFECT form
+  of this file's member-name lesson, the third time in this feature (RCA rows D2, D6).
+- **Prevent:** before a TAOM write raises or resets an engine value, read every engine method that reads it and
+  name the state it drives; if that state only moves one way, use the engine's own hook (here the public
+  `OnCalculateDestructionStateIndex`, which `CastleGate` uses) or do not write. Rule: `.claude/rules/adapters.md`
+  "A destructible's shown stage must only move forward".
+- **Source:** 1.5.x `docs/reviews/rca-fords-of-war-2026-10-31.md`, night addendum, row R2 (not on this line); plan 144.
+
+### The engine's gates ignore visibility, so read a scene's hidden gates before you trust a siege lane
+
+`TeamAISiegeComponent` takes `InnerGate` and `OuterGate` by tag from all active gates, with no visibility check, and a hidden `CastleGate` returns from `OnTick`, so it never opens (taom-src `TeamAISiegeComponent.cs:54-57`, `:184`; `CastleGate.cs:609-622`; `BehaviorAssaultWalls.cs:122`). On the 1.5.x line a Helm's Deep scene hid an inner gate at height 32.5. The Middle lane therefore stays closed, and `BehaviorAssaultWalls` stays in `AttackEntity` with soldiers standing at a gate that nothing draws. I had filtered hidden gates out of my own log line, which hid the cause, and I told a reader the cause was constant team power.
+
+- **Why missed:** the log filter came from a correct wish, to show only real gates. The false reason sounded right, and it did remove the other ways out.
+- **Reach (the 1.5.x line's scan of the desktop's live `TAOM_Map`, 2026-11-04; not re-scanned on this laptop, in-game check 3):** 5 of the 30 scenes with castle gate prefabs hide an inner gate: `taom_rohan_castle_helms_deep_forceatmo` and `taom_gondor_castle_001_forceatmo` have no other inner gate, and `taom_gondor_castle_002_forceatmo`, `taom_gondor_castle_003_forceatmo` and `taom_gondor_town_lossarnach_forceatmo` have a second, visible one. Nobody has checked what a campaign siege does on these scenes.
+- **Prevent:** before a siege feature trusts a scene, list every `CastleGate` in it with its visibility and tag. Log what the engine uses, not only what the player sees. Do not delete a hidden inner gate: a null `InnerGate` throws in `BehaviorAssaultWalls`.
+- **Source:** 1.5.x `docs/reviews/rca-long-defeat-spike-2026-11-03.md`, rows 31 and 37 (not on this line); plan 144.
+
+### `SetDoNotMakeNewDecisions(true)` does not stop a party's own initiative everywhere (#870)
+v1.4.8 `MobilePartyAi.GetBehaviors` (from `:477`) applies the initiative result despite the flag when the best
+initiative target is in a map event at, or besieging, the party's `TargetSettlement` (`MobilePartyAi.cs:486`; it then needs a score above 1,
+`:488`). On the 1.5.x line a pinned Fire and Tribute host attacked a friend this way. On this line `SupplyCaravanService.PinAi`
+and `RefugeService` pin parties with the flag; a supply caravan whose destination is besieged can therefore take initiative
+despite its pin (UNVERIFIED in game; a refuge holds position, so its `TargetSettlement` is probably null).
+- **Why missed:** "makes no new decisions" was taken from the pin call without reading the branch that consumes the flag.
+- **Prevent:** before relying on `DoNotMakeNewDecisions` to silence a party, read `MobilePartyAi.GetBehaviors`; a rule about a
+  pair of parties in a `MobilePartyAIModel` checks both directions.
+- **Source:** 1.5.x `docs/reviews/rca-fire-and-tribute-own-side-2026-10-27.md` finding 4 (not on this line); plan 144.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
