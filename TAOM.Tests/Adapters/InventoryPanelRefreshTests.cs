@@ -40,4 +40,18 @@ public class InventoryPanelRefreshTests
         CollectionAssert.DoesNotContain(vm.RightItemListVM, soldOut,
             "A preset load that equips the last unit of a stack must not leave its row at count 0.");
     }
+
+    [TestMethod]
+    public void RefreshDisplay_AfterBatchSell_RemovesZeroCountRows()
+    {
+        // TrySellItem passes cameFromTradeData: true, which skips vanilla's prune (:3565-3568).
+        var vm = VmWithSoldOutRow(out var soldOut);
+        var adapter = new InventoryVMAdapter(Substitute.For<IModLogger>());
+        adapter.SetActive(vm);
+
+        adapter.RefreshDisplay();
+
+        CollectionAssert.DoesNotContain(vm.RightItemListVM, soldOut,
+            "A Quick Actions batch sell of a whole stack must not leave its row at count 0.");
+    }
 }

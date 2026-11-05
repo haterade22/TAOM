@@ -24,8 +24,9 @@ public interface IInventoryVMAdapter
 
     /// <summary>
     /// Re-syncs the open screen after a batch transfer: the paper doll, slots, armour and weight,
-    /// then capacity, the no-saddle warning and the Done button. Vanilla's own transfer handlers do
-    /// this themselves; programmatic transfers do not. No-op when no VM is active.
+    /// then capacity, the no-saddle warning and the Done button, then removes rows left at count 0.
+    /// Vanilla's own transfer handlers do this themselves; programmatic transfers do not. No-op when
+    /// no VM is active.
     /// </summary>
     void RefreshDisplay();
 

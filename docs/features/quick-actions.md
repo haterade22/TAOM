@@ -45,6 +45,7 @@ SPInventoryVM                       SoundEvent.PlaySound2D
 SPItemVM.ProcessSellItem
 InventoryLogic.AddTransferCommands
 UpdateRightCharacter + RefreshInformationValues (private, bound once)
+ExecuteRemoveZeroCounts
 ```
 
 ## Configuration
@@ -103,10 +104,11 @@ UpdateRightCharacter + RefreshInformationValues (private, bound once)
 
 - `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 38 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable, equipped × 2 toggles), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917), menu options enumeration. The confirmation dialog is not covered: it calls `InformationManager` directly.
 - `TAOM.Tests/Features/QuickActions/InventoryPanelRefreshBindingTests.cs`: 1 binding test (game assemblies) that the two private `SPInventoryVM` refresh methods bind; their `ReflectionSiteBindingTests` rows pin the names.
+- `TAOM.Tests/Adapters/InventoryPanelRefreshTests.cs`: 2 tests (game assemblies) that `RefreshDisplay` and EquipPresets' `RefreshActiveVM` remove rows left at count 0 (#924, #926).
 - `TAOM.Tests/Features/QuickActions/InventorySearchCampaignBehaviorTests.cs` — 7 tests covering: default-true on construct, `OnTick` MCM reconciliation in both directions, `OnNewGameCreated` seed (true + false), `OnGameLoaded` reconcile when MCM disagrees.
 - `TAOM.Tests/Features/QuickActions/DamagedQualityPresetTests.cs` — 9 tests covering: preset → threshold (4 presets), dropdown index → preset (4 valid + out-of-range fallback to Moderate).
 
-Total: 55 QuickActions tests.
+Total: 55 QuickActions tests, plus the 2 shared panel refresh tests.
 
 ## How To: Add a New Quick Action
 
@@ -136,12 +138,13 @@ Claims from the CLAUDE.md Key Paths row, verified against the current source (`M
 
 - **Thread-static bypass for "Sell All (Vanilla)"** — `Patch34_SellAllItemsMenu` (Prefix) holds a `[ThreadStatic] _bypassQuickActions` flag. The "Sell All (Vanilla)" menu option sets the flag and re-enters `__instance.ExecuteSellAllItems()`; the Prefix sees the flag set and returns `true`, so the player gets the unmodified vanilla `TransferAll(false)` behavior (including its zero-count-cleanup logic). This supersedes the "manual replication of vanilla bulk-sell" described under Solution Approach item 2.
 - **Full-stack sells** — `TrySellItem` (in `InventoryVMAdapter`) sets `SPItemVM.TransactionCount = StackAmount` before invoking the sell. Vanilla `ProcessSellItem` reads `item.TransactionCount` (default 1), so without this every batch action sold exactly one unit per stack.
-- **Unequip All routes through `InventoryLogic.TransferCommand`:** `TryUnequipAllPlayerSlots` applies one `TransferCommand` per occupied slot of the main hero's battle and civilian sets through the open screen's `InventoryLogic.AddTransferCommands`. Vanilla `AfterTransfer` updates the rows and the shown set's slots as each command lands, and Cancel or Reset can undo it. `AfterTransfer` does not touch the paper doll, armour, weight, capacity, the no-saddle warning or the Done button. Vanilla's single-transfer handlers refresh those with the private `RefreshInformationValues`, but a batch defeats that: `AfterTransfer` clears the equipment dirty flag on every command, so the doll is skipped when the last command moved nothing. `RefreshDisplay` therefore runs `UpdateRightCharacter` then `RefreshInformationValues` (the pair vanilla runs when the shown outfit or character changes) through cached open delegates. With no screen or no logic the method returns 0 and changes nothing. Until #917 the service called a direct-write path instead, so the open screen stayed stale; that path is gone.
+- **Unequip All routes through `InventoryLogic.TransferCommand`:** `TryUnequipAllPlayerSlots` applies one `TransferCommand` per occupied slot of the main hero's battle and civilian sets through the open screen's `InventoryLogic.AddTransferCommands`. Vanilla `AfterTransfer` updates the rows and the shown set's slots as each command lands, and Cancel or Reset can undo it. `AfterTransfer` does not touch the paper doll, armour, weight, capacity, the no-saddle warning or the Done button. Vanilla's single-transfer handlers refresh those with the private `RefreshInformationValues`, but a batch defeats that: `AfterTransfer` clears the equipment dirty flag on every command, so the doll is skipped when the last command moved nothing. `RefreshDisplay` therefore runs `UpdateRightCharacter` then `RefreshInformationValues` (the pair vanilla runs when the shown outfit or character changes) through cached open delegates, then the public `ExecuteRemoveZeroCounts`, which vanilla's `ProcessEquipItem` runs last. The shared helper is `InventoryVMAdapter.RefreshPanel`, which EquipPresets also uses after a Load (#924). The prune matters for batch sells: `TrySellItem` passes `cameFromTradeData: true`, which skips vanilla's own prune, so a sold-out row stayed at count 0 until #926. With no screen or no logic the method returns 0 and changes nothing. Until #917 the service called a direct-write path instead, so the open screen stayed stale; that path is gone.
 - **Stealth set and the hero on screen:** Unequip All strips the main hero's battle and civilian sets, as the menu promises, even when a companion is shown, and it leaves the v1.5.5 stealth set alone.
 - **Port verification baseline** — the removal of the 8-probe (right-pane item list) + 5-probe (`SPItemVM` sell method) reflection chains was verified against the v1.3.15 installed DLLs at port time.
 
 ## Changelog
 
+- 2026-10-23: Sell Damaged and Sell Low Value remove a sold-out row at once instead of leaving it at count 0 (#926).
 - 2026-10-19: Unequip All goes through the open screen's inventory transfers and then refreshes the paper doll, armour, weight and capacity, so the screen shows the result at once and Cancel can undo it (#917). The unused direct-write fallback is removed.
 - 2026-05-13 — Fixed the `IsSearchAvailable` per-save contract (#146): added a `_persistedVersion` SyncData tag so the search toggle survives reload while a mid-game MCM change still takes effect, instead of unconditional per-tick overwrite.
 - 2026-05-06 — Ported QuickActions from the external `TransferbuttonMenu` module into `Main/Features/` (Patch34): four Harmony patches on `SPInventoryVM`, the 4-option "Sell All" menu, per-save inventory-search toggle, 15 MCM settings, 53 tests.

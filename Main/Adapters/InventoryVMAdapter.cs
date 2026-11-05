@@ -111,17 +111,11 @@ public sealed class InventoryVMAdapter : IInventoryVMAdapter
 
     public void RefreshDisplay()
     {
+        // Also prunes the rows a full-stack sell leaves at count 0: TrySellItem passes
+        // cameFromTradeData: true, which skips vanilla's own prune (:3565-3568, #926).
         var active = _active;
         if (active == null) return;
-        try
-        {
-            UpdateRightCharacter?.Invoke(active);      // paper doll, slots, armour, weight, can-use flags
-            RefreshInformationValues?.Invoke(active);  // capacity, no-saddle warning, Done button
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"[QuickActions] inventory panel refresh failed: {ex.Message}");
-        }
+        RefreshPanel(active, _logger, "QuickActions");
     }
 
     public bool IsSearchAvailable
