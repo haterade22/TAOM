@@ -82,11 +82,7 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (state == EnlistmentState.EnlistedBattle && player.HasPlayerEncounter)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.BattleEncounterOpen);
 
-        // IsPrisoner is checked explicitly even though a captured hero's PartyBelongedTo
-        // goes null in practice — the engine correlation is not guaranteed by contract,
-        // and this keeps the fitness criteria identical to IsCommanderFit/ReconcileGrace.
-        if (commander == null || !commander.Exists || !commander.IsAlive || commander.IsPrisoner
-            || !commander.HasParty || !commander.PartyIsActive)
+        if (commander == null || !commander.IsFit)
         {
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing);
         }

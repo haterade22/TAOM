@@ -38,8 +38,7 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
             return EnlistGateResult.UnderMercenaryContract;
 
         var snapshot = _commander.GetSnapshot(partnerHeroId);
-        if (!snapshot.Exists || !snapshot.IsAlive || snapshot.IsPrisoner
-            || !snapshot.HasParty || !snapshot.PartyIsActive)
+        if (!snapshot.IsFit)
         {
             return EnlistGateResult.CommanderUnavailable;
         }

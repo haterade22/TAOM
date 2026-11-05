@@ -140,8 +140,7 @@ public static class EnlistmentRescueCheats
             // knows about the grace period and the discharge.
             var commander = IoC.Resolve<ICommanderLordAdapter>();
             var snapshot = record.CommanderHeroId == null ? null : commander?.GetSnapshot(record.CommanderHeroId);
-            var commanderFit = snapshot != null && snapshot.Exists && snapshot.IsAlive
-                && !snapshot.IsPrisoner && snapshot.PartyIsActive;
+            var commanderFit = snapshot?.IsFit == true;
 
             if (commanderFit)
             {

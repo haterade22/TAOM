@@ -383,7 +383,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             return;
         }
 
-        if (snapshot.HasParty && snapshot.PartyIsActive && !snapshot.IsPrisoner)
+        if (snapshot.IsFit)
         {
             record.GraceEndsAtDay = null;
 
