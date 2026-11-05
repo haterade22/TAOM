@@ -22,18 +22,16 @@ public static class SaveContext_CollectObjects_Patch
     private static IModLogger? _logger;
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childObjects;
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childContainers;
-    private static AccessTools.FieldRef<SaveContext, List<string>>? _strings;
     private static Func<MBObjectBase, bool>? _isRegistered;
 
-    // Binds the three private lists once (installed v1.4.8 SaveContext.cs:75, :79, :83). A field
-    // that no longer exists is left null and its count is omitted from the line (never a fake 0).
+    // Binds the two private lists once (installed v1.4.8 SaveContext.cs:75, :79). A field that no
+    // longer exists is left null and its count is omitted from the line (never a fake 0).
     public static void Initialize(ISaveLoadDiagnosticsService service, IModLogger logger)
     {
         _service = service;
         _logger = logger;
         _childObjects = BindList<object>("_childObjects");
         _childContainers = BindList<object>("_childContainers");
-        _strings = BindList<string>("_strings");
         // Internal getter (MBObjectBase.cs:25). Left null if it moves: isRegistered then reads unknown.
         try { _isRegistered = AccessTools.MethodDelegate<Func<MBObjectBase, bool>>(AccessTools.PropertyGetter(typeof(MBObjectBase), "IsRegistered")); }
         catch { _isRegistered = null; }
@@ -56,7 +54,8 @@ public static class SaveContext_CollectObjects_Patch
     public static void Prefix(out long __state) => __state = Stopwatch.GetTimestamp();
 
     // Runs on the main thread inside SaveContext.Save, after the object walk and before
-    // CollectSaveDatas (SaveContext.cs:342-346), so the lists are complete and stable here.
+    // CollectSaveDatas (SaveContext.cs:342-346), so both lists are complete and stable here. The
+    // string list is not: CollectSaveDatas fills it (:491, :505), so strings= stays off this line.
     [HarmonyPostfix]
     public static void Postfix(SaveContext __instance, long __state)
     {
@@ -67,9 +66,8 @@ public static class SaveContext_CollectObjects_Patch
             long collectMs = (Stopwatch.GetTimestamp() - __state) * 1000 / Stopwatch.Frequency;
             var objects = Read(_childObjects, __instance);
             var containers = Read(_childContainers, __instance);
-            var strings = Read(_strings, __instance);
             svc.LogPhase(SaveLoadPhase.SaveCollected,
-                SaveLoadTokens.SaveCollected(objects?.Count, containers?.Count, strings?.Count, collectMs));
+                SaveLoadTokens.SaveCollected(objects?.Count, containers?.Count, strings: null, collectMs));
 
             if (objects != null && containers != null && svc.TakeSaveCensusRequest(out var reason))
                 LogCensus(svc, objects, containers, reason);

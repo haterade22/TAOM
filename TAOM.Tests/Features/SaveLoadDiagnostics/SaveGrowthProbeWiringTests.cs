@@ -52,6 +52,15 @@ public class SaveGrowthProbeWiringTests
         StringAssert.Contains(source, "CampaignBehaviorDataStore_SaveBehaviorData_Size_Patch.Initialize(");
     }
 
+    // The engine fills SaveContext._strings later, inside CollectSaveDatas (installed v1.4.8 SaveContext.cs:346,
+    // :491, :505), so at this postfix the list is always empty and strings= would be a made-up 0.
+    [TestMethod]
+    public void SaveCollected_DoesNotReadTheStringList_TheEngineFillsItLater()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/SaveLoadDiagnostics/Hooks/SaveContext_CollectObjects_Patch.cs", stripComments: true);
+        Assert.IsFalse(source.Contains("_strings"), "SaveCollected must leave strings= out: _strings is still empty after CollectObjects().");
+    }
+
     // A typo on either side is a dead patch with no error.
     [TestMethod]
     public void CountHookCategoryAttributes_MatchTheStringsSubModuleApplies()

@@ -98,8 +98,6 @@ public class SaveLoadDiagnosticsBindingTests
             "SaveContext._childObjects changed: objects= would disappear from SaveCollected.");
         Assert.AreEqual(typeof(List<object>), AccessTools.Field(type, "_childContainers")?.FieldType,
             "SaveContext._childContainers changed: containers= would disappear from SaveCollected.");
-        Assert.AreEqual(typeof(List<string>), AccessTools.Field(type, "_strings")?.FieldType,
-            "SaveContext._strings changed: strings= would disappear from SaveCollected.");
     }
 
     [TestMethod]
