@@ -1,22 +1,46 @@
 using System;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CrashReport.Domain;
 using TAOM.Features.CrashReport.Rendering;
 
 namespace TAOM.Tests.Features.CrashReport;
 
-// Pure manifest-building tests only — no disk I/O, no ZIP. The manifest is what a triager reads
-// first, so an OOM-shaped crash has to be visible there without unzipping report.txt.
+/// <summary>
+/// Two halves. The manifest half is pure (no disk, no ZIP): the manifest is what a triager reads
+/// first, so an OOM-shaped crash has to be visible there without unzipping report.txt. The bundle
+/// half pins what actually lands in the ZIP players upload: a file the collector gathers but the
+/// writer drops is, in practice, a file that does not exist.
+/// </summary>
 [TestClass]
 public class CrashBundleWriterTests
 {
+    private string _dir = string.Empty;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _dir = Path.Combine(Path.GetTempPath(), "TAOM_Bundle_" + Path.GetRandomFileName());
+        Directory.CreateDirectory(_dir);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        try { Directory.Delete(_dir, true); } catch { }
+    }
+
+    // ---- manifest (pure) ----
+
     [TestMethod]
     public void BuildManifest_SystemMemoryPresent_CarriesMemoryVerdictLine()
     {
         var ctx = MakeContext(new SystemMemorySnapshot(
             PrivateMb: 4211, WorkingSetMb: 3900, ManagedHeapMb: 654,
             SysCommitUsedMb: 29847, SysCommitLimitMb: 31646,
-            AvailPhysMb: 310, TotalPhysMb: 16296, MemLoadPercent: 97));
+            AvailPhysMb: 310, TotalPhysMb: 16296, MemLoadPercent: 97), EmptyLogs());
 
         var manifest = CrashBundleWriter.BuildManifest(ctx, "report", "{}");
 
@@ -27,7 +51,7 @@ public class CrashBundleWriterTests
     [TestMethod]
     public void BuildManifest_SystemMemoryNull_OmitsMemoryLine()
     {
-        var manifest = CrashBundleWriter.BuildManifest(MakeContext(null), "report", "{}");
+        var manifest = CrashBundleWriter.BuildManifest(MakeContext(null, EmptyLogs()), "report", "{}");
 
         Assert.IsFalse(manifest.Contains("Memory:"), manifest);
         // The rest of the manifest is unaffected.
@@ -35,12 +59,73 @@ public class CrashBundleWriterTests
         StringAssert.Contains(manifest, "Signature: deadbeef");
     }
 
-    private static ExceptionContext MakeContext(SystemMemorySnapshot? memory)
+    // ---- the ZIP (#481: diag.log travels with the bundle) ----
+
+    [TestMethod]
+    public void Write_WithDiagLogPath_PutsDiagLogInTheZip()
+    {
+        var diag = Path.Combine(_dir, "diag.log");
+        File.WriteAllText(diag, "PatchShield swallowed TypeLoadException from a patch on Foo.Bar");
+
+        var ctx = MakeContext(null, new LogTailSnapshot(null, Array.Empty<string>(), null, Array.Empty<string>(), diag, new[] { "tail" }));
+        var zipPath = new CrashBundleWriter().Write(ctx, "report", "{}", _dir);
+
+        Assert.IsNotNull(zipPath);
+        CollectionAssert.Contains(EntryNames(zipPath!), "diag.log",
+            "the engine-mismatch evidence has to travel in the bundle players actually upload");
+        StringAssert.Contains(ReadEntry(zipPath!, "diag.log"), "TypeLoadException");
+    }
+
+    [TestMethod]
+    public void Write_WithDiagLogPath_NamesItsSourceInTheManifest()
+    {
+        var diag = Path.Combine(_dir, "diag.log");
+        File.WriteAllText(diag, "diag contents");
+
+        var ctx = MakeContext(null, new LogTailSnapshot(null, Array.Empty<string>(), null, Array.Empty<string>(), diag, Array.Empty<string>()));
+        var zipPath = new CrashBundleWriter().Write(ctx, "report", "{}", _dir);
+
+        StringAssert.Contains(ReadEntry(zipPath!, "manifest.txt"), "diag.log",
+            "the manifest is the inventory a triager reads first");
+    }
+
+    [TestMethod]
+    public void Write_WithNoDiagLog_StillWritesTheRestOfTheBundle()
+    {
+        var ctx = MakeContext(null, EmptyLogs());
+        var zipPath = new CrashBundleWriter().Write(ctx, "report", "{}", _dir);
+
+        Assert.IsNotNull(zipPath);
+        var names = EntryNames(zipPath!);
+        CollectionAssert.Contains(names, "report.txt");
+        CollectionAssert.Contains(names, "manifest.txt");
+        CollectionAssert.DoesNotContain(names, "diag.log", "an absent diag.log must not produce an empty entry");
+    }
+
+    // ---- helpers ----
+
+    private static LogTailSnapshot EmptyLogs() =>
+        new LogTailSnapshot(null, Array.Empty<string>(), null, Array.Empty<string>(), null, Array.Empty<string>());
+
+    private static string[] EntryNames(string zipPath)
+    {
+        using var zip = ZipFile.OpenRead(zipPath);
+        return zip.Entries.Select(e => e.FullName).ToArray();
+    }
+
+    private static string ReadEntry(string zipPath, string entry)
+    {
+        using var zip = ZipFile.OpenRead(zipPath);
+        using var sr = new StreamReader(zip.GetEntry(entry)!.Open());
+        return sr.ReadToEnd();
+    }
+
+    private static ExceptionContext MakeContext(SystemMemorySnapshot? memory, LogTailSnapshot logs)
     {
         return new ExceptionContext(
-            CapturedAtUtc: DateTime.UtcNow,
+            CapturedAtUtc: new DateTime(2026, 8, 19, 19, 4, 50, DateTimeKind.Utc),
             CrashSignature: "deadbeef",
-            Identity: new IdentitySnapshot("v1.4.8", "1.4.8.x", "v2.0.23", "sha1", "Some.Origin", "en-US"),
+            Identity: new IdentitySnapshot("v1.5.2", "1.5.2.x", "v2.0.28", "sha1", "Some.Origin", "en-US"),
             Exception: null,
             StackFrames: Array.Empty<StackFrameSnapshot>(),
             Harmony: new HarmonyCorrelationSnapshot(Array.Empty<StackFramePatchInfo>(), Array.Empty<HarmonyOwnerSummary>(), 0),
@@ -58,7 +143,7 @@ public class CrashBundleWriterTests
             AppDomain: new AppDomainSnapshot("Test", "C:\\test", null, true),
             EnvVars: Array.Empty<EnvVarEntry>(),
             Performance: new FrameTimingSnapshot(Array.Empty<float>(), 0d, 0d, 0),
-            Logs: new LogTailSnapshot(null, Array.Empty<string>(), null, Array.Empty<string>()),
+            Logs: logs,
             CollectorFailures: Array.Empty<CollectorFailure>());
     }
 }
