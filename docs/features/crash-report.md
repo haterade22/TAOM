@@ -101,9 +101,13 @@ Settings live on a dedicated MCM page **TAOM — Crash Report** (separate from t
 | Master | Enable Crash Capture | true | Master toggle. When off, the AppDomain hook does nothing, and every Patch37 finalizer hands exceptions back uncaptured, with the throw site recorded (`RethrowStackPreserver`), so Harmony's rethrow keeps it with or without PatchShield. A later finalizer on the same method, such as ButterLib's BetterExceptionWindow finalizer on four of the Patch37 targets, then sees the exception without its live frames. Live: the patches are always installed. |
 | Master | Suspend BUTR Exception Handler | true | On first capture, calls ButterLib's `Disable()`. |
 | Master | Enable Native-to-Managed Capture | true | When off, the allowlisted callback-shim finalizers hand exceptions back uncaptured, with the throw site recorded (`RethrowStackPreserver`). Live: the shims are always patched. |
+| Master | Survive Mission Start Failures | true | A behaviour, submodule or mission object that throws in one of the six start calls of `Mission.AfterStart` is logged, its call is cut short, and the mission starts, instead of the engine loading the mission again for ever ([mission-start-guard.md](mission-start-guard.md), Patch103). Independent of Enable Crash Capture. Live: read when an exception arrives. |
+| Master | Skeleton Buffer Guard | true | Bounds-checks both of the engine's per-frame skeleton pools, so a crowded battle no longer freezes when either fills ([skeleton-buffer-guard.md](skeleton-buffer-guard.md)). Restart: installed once at the first main menu. |
+| Master | Skeleton Buffer Watch | true | Logs each mission's peak fill of both skeleton pools ([skeleton-buffer-guard.md](skeleton-buffer-guard.md)). Live: read at each mission start. |
 | Bundle | Write Crash Bundle ZIP | true | Produces `Logs/taom_crash_*.zip`. Set false if you only want the log line. |
 | QA — Dev Triggers | Throw On Next Mission Tick | false | Throws `TaomDevTriggerException` on the next `MissionLogic.OnMissionTick`. Auto-resets. |
 | QA — Dev Triggers | Throw On Next Application Tick | false | Throws `TaomDevTriggerException` on the next `Module.OnApplicationTick`. Auto-resets. Works on the main menu (no mission needed). |
+| `QA — Dev Triggers` | Throw On Next Mission AfterStart | false | Throws `TaomDevTriggerException` from a TAOM behaviour's `AfterStart` on the next mission start (#699's shape). Auto-resets before it throws. With "Survive Mission Start Failures" on, the mission starts and one message shows; with it off, the throw escapes and the engine loads the mission again (TAOM.Dependencies' SaveShield swallows it, with one line in its `diag.log`). Needs Enable Crash Capture on. |
 
 ## Data captured (sections in `report.txt`)
 

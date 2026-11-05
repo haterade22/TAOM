@@ -7,7 +7,7 @@ namespace TAOM.Composition;
 /// SubModule.cs, and every module here runs after most of them in each phase. Four hand-wired blocks
 /// still follow the module call: the main-menu work after the once-only MainMenu block,
 /// ManualPatchApplicator.ApplyAll and the co-op Harmony census after the GameInit phase, and the
-/// kernel tail of OnMissionBehaviorInitialize (MissionDiagnostic, BattleLoadPhase, the CrashReport dev trigger and
+/// kernel tail of OnMissionBehaviorInitialize (MissionDiagnostic, the CrashReport dev trigger and
 /// CareerPerkMissionBehavior) after the mission behaviors. Append; when a module must
 /// precede another, say why on its line and pin it with an index test in FeatureModulesTests.
 /// </summary>
@@ -17,5 +17,7 @@ internal static class FeatureModules
     {
         new Features.WandererAllegiance.WandererAllegianceModule(),
         new Features.BardTownGuard.BardTownGuardModule(),
+        new Features.MissionStartGuard.MissionStartGuardModule(),
+        new Features.SkeletonBuffer.SkeletonBufferModule(),
     };
 }

@@ -1067,6 +1067,18 @@ Vanilla (`:650-651`) reads `.Name` of `Settlement.All.GetRandomElementWithPredic
 
 **Tests:** `HideoutClanGuardTests` (the decisions), `Patch125HideoutClanGuardBindingTests` (targets, parameter names, the field's type), `BanditHideoutLiveDataTests` (the live pairing check). **ACTIVE**, not yet checked in game. Feature: [bandit-management.md](../features/bandit-management.md).
 
+## Patch103_MissionStartGuard
+
+**Target:** `public void Mission.AfterStart()` (v1.4.8, taom-src `Mission.cs:3799-3836`; non-virtual, no parameters), one class `Mission_AfterStart_MissionStartGuard_Patch` in `Main/Features/MissionStartGuard/Hooks/`, category `Patch103_MissionStartGuard`, declared by `MissionStartGuardModule` and applied at `ApplyPhase.GameInit` by the feature-module runner: a transpiler, a void prefix (`object __instance`, `out bool __state`, `Priority.First`), a void finalizer (`Exception __exception`, `bool __state`, `Priority.First`) and a void `[HarmonyCleanup]` method (`Exception ex`).
+
+Mission-start guard (ported from the 1.5.x line, #775; adapted from yotthani's VanillaTuning `mission-start-guard`, MIT). `Mission.AfterStart` sets `CurrentState = Continuing` last (`:3835`); `MissionState.FinishMissionLoading` clears `_missionInitializing` (`MissionState.cs:335`) before calling it (`:345`), so a throw from any start call leaves the mission `Initializing` and `TickLoading` (`:221`) runs `LoadMission` and `AfterStart` again, for ever. On 1.4.x TAOM.Dependencies' SaveShield swallows that throw at `FinishMissionLoading` (MISSION-INIT) and logs only to its `diag.log`. The transpiler (`TickProfilerTranspiler.Rewrite`, soft-failing) swaps the six `callvirt` sites (`:3807`, `:3811`, `:3815`, `:3819`, `:3825`, `:3829`) for same-named static helpers on `MissionStartGuardCalls` (a `try` with an exception filter); any other site count leaves the method vanilla and the install line says `OFF: wrapped N of 6`. Not wrapped: the spawn-path selector and deployment plan (`:3821-3822`), the weather model (`:3831-3834`) and a behaviour's `OnMissionScreenPreLoad` (`MissionState.LoadMission`).
+
+**PatchShield and Patch43.** Patch43 (`Mission_AfterStart_BattleLoad_Patch`, prefix and postfix) also patches the method, so PatchShield shields it from a process's second game start. The guard's finalizer runs first and only observes. PatchShield unpatches an owner's prefix, postfix and transpiler after a swallow, never its finalizers, so the prefix is the canary: it hands the finalizer `__state = true`, and the finalizer writes one WARNING per process when that flag is false or the live swap count is not 6.
+
+**Co-op.** A void prefix only, so `CoopVetoClassificationTests` needs no entry; the toggle is instrumentation in `CoopSettingsRelevance`.
+
+Threads: main thread only. Tests: `MissionStartGuardBindingTests` (real IL: each call once, six swaps, the class applied to the real method), `MissionStartGuardServiceTests`, `MissionStartGuardCallsTests`, `MissionStartGuardHookTests`, `MissionStartGuardCanaryTests`, `MissionStartGuardModuleTests`. Feature: [mission-start-guard.md](../features/mission-start-guard.md). **ACTIVE**, not yet checked in game (CrashReport's "Throw On Next Mission AfterStart" is the check).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

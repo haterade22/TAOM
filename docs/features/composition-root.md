@@ -71,7 +71,7 @@ startup fault has to wait for an inquiry at the first main menu.
 | Game start | `FeatureModuleHooks.AddGameStartContent(gameStarterObject)` | end of `OnGameStart`, outside the `CampaignGameStarter` branch |
 | GameInit | `FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory)` | `OnGameInitializationFinished`, after `Patch69_TournamentEndGuard`, before the game-init patch report |
 | FirstMission | `FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory)` | once-only mission-time block of `OnMissionBehaviorInitialize`, before the mission-start patch report |
-| Mission start | `FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior)` | `OnMissionBehaviorInitialize`, after the feature behaviors, before the kernel tail (MissionDiagnostic, BattleLoadPhase, the CrashReport dev trigger, CareerPerk) |
+| Mission start | `FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior)` | `OnMissionBehaviorInitialize`, after the feature behaviors, before the kernel tail (MissionDiagnostic, the CrashReport dev trigger, CareerPerk) |
 
 A module therefore runs after every hand-wired feature of the same hook. Categories go through
 `TryPatchCategory` (`Main/PatchCategoryApplier.cs`): a failed category is the applier's to log

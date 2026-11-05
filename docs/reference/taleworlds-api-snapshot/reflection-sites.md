@@ -81,7 +81,14 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…Decisions.ItemTypes.DecisionItemBaseVM` | `_decision` | field (protected readonly) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547, #550). Names the ballot a window was built for; seam D matches it against the `RefreshWith` argument |
 | `…DecisionItemBaseVM` | `_onDecisionOver` | field (private readonly, `Action`) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547). Seam B's close path on a CANCELLED election, where `ExecuteDone` would NRE |
 | `…DecisionItemBaseVM` | `ExecuteDone` | method (protected) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#550). Seam D runs vanilla's own close on a window whose election concluded inside the view model's constructor; safe there because `_chosenOutcome` is set |
+| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnBeforeMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:23,32` | MissionStartGuard (Patch103). One of six start calls the transpiler swaps for a same-named helper, found by `AccessTools.Method`. Missing: the fit check rejects the null target and `Mission.AfterStart` stays vanilla (`OFF: wrapped 0 of 6`) |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `OnBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:24,32` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:25,32` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `EarlyStart` | method (public virtual) | `MissionStartGuardSwaps.cs:26,32` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `AfterStart` | method (public virtual) | `MissionStartGuardSwaps.cs:27,32` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionObject` | `AfterMissionStart` | method (public virtual) | `MissionStartGuardSwaps.cs:28,32` | MissionStartGuard. As above |
 
+Status (2026-11-04): MissionStartGuard (Patch103) adds six method rows; they resolve against installed v1.4.8 (ReflectionSiteBindingTests 51/51).
 Status (2026-09-15): Patch80 seam D (#550) adds `DecisionItemBaseVM.ExecuteDone`, and the four members `KingdomVoteDeadlockBinding` has cached since #547 are catalogued at the same time; they had only ever been pinned by `Patch80KingdomVoteDeadlockBindingTests`. All five resolve against installed v1.5.3.
 Status (2026-09-11): Hideout boss fight (#564) adds three `HideoutAmbushMissionController` field rows, all three injected by `Patch86_HideoutAmbushBossFight` and pinned by the `ReflectionSiteBindingTests` rows plus a field-TYPE assertion in `Patch86HideoutBossFightBindingTests`; **all resolve against installed v1.4.8** (`BindingVerification` filtered run green, see the CHANGELOG entry).
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**

@@ -5,6 +5,7 @@ Scope: this file covers everything redistributed inside the TAOM module that is
 NOT TAOM's own work. That is three things: the compiled binaries under
 _Module/bin/, the audio under _Module/ModuleSounds/, and the fonts under
 _Module/GUI/Fonts/. Each is listed below.
+It also covers the parts of TAOM.dll adapted from yotthani's VanillaTuning (MIT).
 
 TAOM's own art, 3D and 2D assets, world map, and game data are NOT covered here.
 They are original TAOM work licensed under CC BY-NC-SA 4.0; see LICENSE-CONTENT.md
@@ -111,7 +112,39 @@ this engine version. It links MinHook, above.
 
 ----
 
-TAOM.dll and the remaining binaries built by this project are original TAOM work,
-licensed under the MIT License.
+VANILLATUNING PORTIONS  --  inside TAOM.dll
+
+TAOM.dll contains code adapted from VanillaTuning by yotthani, with TAOM's changes:
+the mission-start guard and the skeleton-buffer guard and watch, whose
+first-pool machine code block is his (sources: Main/Features/MissionStartGuard/ and
+SkeletonBuffer/, and their adapters in Main/Adapters/, in the TAOM repository).
+
+Copyright (c) 2026 yotthani
+Licensed under the MIT License:
+
+The MIT License (MIT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+----
+
+TAOM.dll, apart from the VanillaTuning portions named above,
+and the remaining binaries built by this project are original TAOM work, licensed under the MIT License.
 
 Copyright (c) 2026 TAOM project contributors.

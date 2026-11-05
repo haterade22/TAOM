@@ -91,13 +91,13 @@ reverts it. 166 settings shipped in that state until #559; the player report tha
 [bandit-management.md](bandit-management.md).
 
 `TAOM.Tests/Features/Mcm/SettingRequireRestartPostureTests.cs` reflects over the four settings
-classes and fails on any value attribute without the flag. One is allowlisted by `Class.Property`
+classes and fails on any value attribute without the flag. Two are allowlisted by `Class.Property`
 with a reason: `TaomSettings.EnableNativeSkinFixes` (parked; its consumer is commented out, so no
 value of the flag is honest). The two CrashReport toggles sat on that list until 2026-09-24 on the
 belief that `SubModule.OnSubModuleLoad` read them to decide whether to install the crash patches. It
 never could: `GlobalSettings<T>.Instance` is null until MCM's own
 `OnBeforeInitialModuleScreenSetAsRoot`, so the read always took its `?? true` fallback. Both are now
-read at capture time and apply live. A new setting whose consumer really does bind at process start
+read at capture time and apply live. `CrashReportSettings.SkeletonBufferGuard` is allowlisted too: it is read once, at the first main menu, because the guard writes engine code once ([skeleton-buffer-guard.md](skeleton-buffer-guard.md)). A new setting whose consumer really does bind at process start
 goes on that list with its reason, not on a flag alone, and no MCM setting can gate anything in
 `OnSubModuleLoad`.
 
