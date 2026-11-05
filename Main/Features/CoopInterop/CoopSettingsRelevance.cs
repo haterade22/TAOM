@@ -60,7 +60,7 @@ public static class CoopSettingsRelevance
         "EnableNativeToManagedCapture", "SuspendButterLibHandler", "WriteCrashBundle",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
         "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
-        "EnableExitStallSampler", "EnableMissionTickStallSampler",
+        "EnableExitStallSampler", "EnableMissionTickStallSampler", "EnableMainThreadFreezeSampler",
         "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick",
         // Each is read by exactly one *DiagnosticsSettingsProvider whose only job is gating a
         // trace — [EnlistDiag] and [FieldCommission] respectively. Their feature switches

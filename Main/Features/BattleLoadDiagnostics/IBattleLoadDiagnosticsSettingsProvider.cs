@@ -18,6 +18,10 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// tick or asynchronous agent tick stuck for 10s or more.</summary>
     bool MissionTickStallSamplerEnabled { get; }
 
+    /// <summary>Independent gate for the main-thread freeze sampler: [Freeze] lines after 10s or more
+    /// without a finished frame, anywhere in the game.</summary>
+    bool MainThreadFreezeSamplerEnabled { get; }
+
     /// <summary>Independent gate for ALL session-wide memory telemetry: the periodic
     /// [MemSample] lines and low-headroom WARN (#386) AND the [MemStation] screen-transition
     /// anchors that ride the same switch. Deliberately NOT tied to the master

@@ -629,6 +629,10 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryStationSampler>().Start(); }
         catch { /* never block the main menu over a diagnostic */ }
 
+        // Main thread (the heartbeat binds it); idempotent, because this hook fires on every return
+        // to the main menu.
+        try { IoC.Resolve<Features.BattleLoadDiagnostics.MainThreadFreezeWatchdog>().Start(); } catch { /* never block the main menu over a diagnostic */ }
+
         // No heap release on screen pop, on purpose: GameStateManager.OnPopState and OnPushState
         // already end with Common.MemoryCleanupGC() (installed v1.4.8, GameStateManager.cs:278/306),
         // and the inventory/party/character screens close through PopState. A release built here on
@@ -2005,6 +2009,9 @@ public class SubModule : MBSubModuleBase
 
     protected override void OnApplicationTick(float dt)
     {
+        // Once per managed frame: Module.OnApplicationTick reaches it from both native tick entries.
+        Features.BattleLoadDiagnostics.MainThreadHeartbeat.Instance.Beat();
+
         _timeAccelerationService?.OnTick();
 
         // Shader pre-compilation walk: tick the runner every frame (responsive state transitions),

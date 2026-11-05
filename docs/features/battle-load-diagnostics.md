@@ -401,6 +401,36 @@ A thread stopped inside native code is suspended only at its next managed safe p
 
 Its sibling Patch91b ([mission-tick-guard.md](mission-tick-guard.md)) recovers the handshake when an exception leaves `Mission.OnTick` before the agent tick starts; this sampler photographs what it cannot recover, such as a stuck agent tick.
 
+### The main-thread freeze sampler (`MainThreadFreezeWatchdog`, `[Freeze]`)
+
+The render-wait count cannot tell a slow compile from a wedge because only the main thread publishes it, and the 300 s watchdog reads that frozen number. This sampler fills the gap with evidence a timer thread can read by itself, from 10 s of silence, anywhere in the game (map, menus, loading screens).
+
+**Heartbeat.** `SubModule.OnApplicationTick` stamps `MainThreadHeartbeat` as its first statement. v1.4.8 has two native tick entries, `Managed.ApplicationTick` and `Managed.ApplicationTickLight`; both reach `CoreManaged` then `Module.OnApplicationTick` then every submodule, so a prefix on `ApplicationTick` alone would miss the light ticks. No Harmony patch is involved.
+
+**Thresholds.** A 1 s timer reads the beat. A poll that sees a new beat ends the episode (one `recovered` line if the episode logged anything) and is the only thing that ends one. Otherwise it evaluates one sample at each of 10, 20, 40 and 80 s of silence, each once per episode.
+
+| Stand-down | Effect |
+|---|---|
+| Shader pre-compilation walk active (`BattleLoadStallWatchdog.SuppressStallDetection`) | Logs nothing |
+| Exit sampler armed (`ExitWindowOpenedUtcTicks != 0`) | Logs nothing; `ExitStallSampler` owns the thread |
+| Mission frame in flight (`MissionTickStallProbe.MissionFrame`) | The line, no stack; `[MissionStall]` samples that thread |
+| Managed heap moving | One stack-less line at the 40 s threshold only, nothing at 10 and 20 |
+
+**Heap gate.** No thread is suspended while managed code is busy, such as a save or a load. The heap counts as moving at 3 or more gen0 collections AND 0.3 or more per second, over the window since the previous threshold (the window restarts after every threshold). Calibrated on player log E4: 2 collections across the 69 s blocked wait (0.03/s), 7,098 across 1,625 s of normal play (4.4/s).
+
+**Evidence.** Every line carries the context (`battle-load`, `mission-frame`, `other`), the last published shader count when the load window is open, the engine log's `compile_shader` count since the last frame, the memory tokens and the last BattleLoad status. An unmeasured value is omitted, never written as zero. The pinned literals, parsed by the triage tool:
+
+```
+[Freeze] main thread silent 20s sample#2 context=battle-load shaders=2697 rglCompiles=31 lastCompileAgoS=2 gc=3167/785/81 heapMB=466 last phase=WaitingForRender seq=40 waitedMs=2259 shaders=2697
+[Freeze] main thread recovered after about 68s rglCompiles=1569
+```
+
+The second line of a sample is the stack, or one of: `<no managed frames: ...>` and `<capture failed: ...>`, which both mean the thread is in native code (a thread stopped there is suspended only at its next managed safe point); `<stack not sampled: ...>` for the two stack-less cases. `rglCompiles` comes from a file tail of the engine log (`rgl=unavailable` when it cannot be read) and may lag if the engine buffers its log (UNVERIFIED). The native counter is never called from this thread.
+
+The `[ShaderCache]` line at startup says whether the engine dropped its runtime cache at this start: see [shader-compile-notice.md](shader-compile-notice.md).
+
+**Known blind spot.** The beat runs after `GlobalGameStateManager.OnTick` and `GameManagerBase.Current.OnTick` in `Module.OnApplicationTick` (v1.4.8 `Module.cs:512`, `:519`, `:523`), and Patch37's finalizer on `Module.OnApplicationTick` swallows a throw from those ticks. A frame whose game tick throws skips the beat, so a throw repeated every frame reads as silence while frames still run. The `[CrashReport]` capture lines in the same log tell the two apart.
+
 ### Session-wide memory telemetry (`[MemSample]`, #386)
 
 A native OOM CTD leaves no managed culprit: the commit allocation that fails is far from the leak that caused it, the AV lands on an engine worker thread the CrashReport finalizer cannot see, and the only artifact guaranteed to survive is the log written durably before death (#385: attributing a 20.3 GB-commit facegen CTD required parsing the 1.3 GB dump by hand). `MemoryPressureSampler` writes a periodic `[MemSample]` line so the tail of any crash log shows the memory trajectory, plus a one-shot WARN when system commit headroom runs low. Same construction as the stall watchdog: thread-pool `Timer` (5 s poll), `Interlocked` reentrancy guard (ExitStallSampler precedent), swallow-and-warn callback, pure static decision seams unit-tested per ADR-008.
@@ -600,6 +630,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `StallWatchdogSeconds` | `300` | Seconds of load before flagging a stall (range 10–600; NaN/range-guarded in the provider). Default is 5 min because large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry; 45 s false-positived on them. |
 | `EnableExitStallSampler` | `true` | The exit-stall stack sampler (#331 round 2) — the only diagnostics component that suspends the main thread; its own kill switch, separate from the master toggle. |
 | `EnableMissionTickStallSampler` | `true` | The battle-freeze sampler (#634): photographs an agent tick or mission frame stuck for 10s or more as `[MissionStall]`. Never arms on a teardown frame and stands down during the exit window. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
+| `EnableMainThreadFreezeSampler` | `true` | The main-thread freeze sampler: `[Freeze]` lines at 10/20/40/80 s without a finished frame, anywhere in the game. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
 
@@ -623,6 +654,9 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/MissionTickStallProbe.cs` / `MissionTickStallWatchdog.cs` | Battle-freeze sampler (#634): in-flight probes for the two ticks, 1 s timer, pure `ShouldSample` at 10/20/40 s |
 | `Main/Features/BattleLoadDiagnostics/ThreadStackCapture.cs` | Suspend, walk and resume a thread, shared by both stack samplers |
+| `Main/Features/BattleLoadDiagnostics/MainThreadHeartbeat.cs` / `MainThreadFreezeWatchdog.cs` | Main-thread freeze sampler: the per-frame stamp and the 1 s timer that writes `[Freeze]` |
+| `Main/Features/BattleLoadDiagnostics/FreezeSamplePolicy.cs` / `FreezeLog.cs` | Pure thresholds, stand-downs and heap gate; the pinned line formats |
+| `Main/Features/BattleLoadDiagnostics/RglLogLocator.cs` / `IRglCompileTail.cs` / `RglCompileTail.cs` | Finds this process's full engine log and counts `compile_shader` lines by file tail |
 | `Main/Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs` | Prefix + finalizer on `Mission.TickAgentsAndTeamsImp` and `MissionState.TickMissionAux` (the latter armed only while `Continuing`). With these two the `Hooks/` folder holds 21 `[HarmonyPatch]` classes (counted 2026-09-22), so the "17" in the row above is stale |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats`, `GpuMemorySplit` DTOs |
@@ -669,6 +703,7 @@ OUTERMOST gate.
 
 `TAOM.Tests/Features/BattleLoadDiagnostics/` (307 tests as of 2026-09-22, all green; the 211 quoted here earlier was stale; 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests); see *Crash-durability caveat*:
 
+- `MainThreadFreezeWatchdogTests` (14), `MainThreadHeartbeatTests` (3), `FreezeSamplePolicyTests` (6), `FreezeLogTests` (4), `RglLogLocatorTests` (4) and `RglCompileTailTests` (6): the 10/20/40/80 s schedule, one `recovered` line, every stand-down, the heap gate with the E4 calibration, the pinned literals, the engine-log tail.
 - `MissionTickStallWatchdogTests` (13) and `ThreadStackCaptureTests` (3), #634: the 10/20/40 s schedule, episode reset, one stack per thread (a nested same-thread tick is photographed once, as the frame), both threads photographed when the agent tick is stuck on its own, the exit-window stand-down, master-toggle independence, a throwing capture still reported, `Start()` idempotent, the probe's thread record, and the capture's null and dead-thread guards and line format.
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
@@ -842,6 +877,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 
 ## Changelog
 
+- 2026-11-04 (1.4.x, WP113): main-thread heartbeat and `[Freeze]` sampler, with the engine log's `compile_shader` count in every line.
 - 2026-11-04 (1.4.x port, WP113): triage end state from 1.5.x (#1025): a silent render-wait stream is a frozen count, not a drain; session-rate heuristic; render-wait guidance for players.
 - 2026-09-22 ([#634](https://github.com/haterade22/TAOM/issues/634)): **Battle-freeze sampler.** Patch91 probes bracket the agent tick and the main thread's mission frame (`MissionState.TickMissionAux`, armed only while `Continuing`); `MissionTickStallWatchdog` logs each stuck thread's stack once per threshold as `[MissionStall]` at 10/20/40 s. The stack capture moved out of `ExitStallSampler` into `ThreadStackCapture`, with output unchanged. Written for a player freeze whose log held nothing past the last `[MemSample]`. RCA `rca-offthread-agent-removed-2026-09-22.md`.
 - 2026-09-12: **The probe splits mesh from texture, the save-load phases carry memory, and a
