@@ -37,7 +37,6 @@
 | `TaomTournamentModel` | `DefaultTournamentModel` | Per-participant culture armor + culture-specific prize pools (Tierf-based) for regular and elite rewards |
 | `TaomAgeModel` | `DefaultAgeModel` | Race-appropriate lifespans (elven immortality, dwarf/hobbit aging) |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | Race-appropriate pregnancy durations |
-| `TaomHeroCreationModel` | `DefaultHeroCreationModel` | Race-aware hero creation defaults |
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints on alliance formation |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision permission rules |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | Custom diplomacy logic for LOTR faction relationships |

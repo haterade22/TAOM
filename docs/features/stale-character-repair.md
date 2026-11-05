@@ -239,7 +239,7 @@ whose raw `BasicCharacterObject._culture` is null. Nothing shows it while the ch
 | # | Where | What it does |
 |---|---|---|
 | 1 | `PregnancyCampaignBehavior.CheckOffspringToDeliver` | calls `HeroCreator.DeliverOffSpring` |
-| 2 | `HeroCreator.cs:265` and `:288` | `CreateHero` clones the template, which `TaomHeroCreationModel` makes the same-sex parent's character, through `CharacterObject.CreateFrom` |
+| 2 | `HeroCreator.cs:265` and `:288` | `CreateHero` clones the template, which vanilla's `DefaultHeroCreationModel` makes the same-sex parent's character, through `CharacterObject.CreateFrom` |
 | 3 | `BasicCharacterObject.cs:193-195` | `FillFrom` copies the raw `_culture` onto the clone |
 | 4 | `Hero.cs:1238-1239`, `:2256` | `SetInitialValuesFromCharacter` reads `StealthEquipments` before `HeroObject` is set |
 | 5 | `CharacterObject.cs:144` | `Culture.DefaultBattleEquipmentRoster` on a null culture throws |
@@ -273,7 +273,7 @@ the field, step 5 is an inference from the frames, and what first made this save
 
   The repair runs at the point of use because what first made the character hollow is unverified, so the repair must
   not depend on it, and this saved-field write runs only where the game would crash. Both parents are repaired because either can be the template
-  (`TaomHeroCreationModel.GetCharacterTemplateForOffspring` returns the mother's character for a
+  (vanilla's `DefaultHeroCreationModel.GetCharacterTemplateForOffspring` returns the mother's character for a
   girl and the father's for a boy). Once proof
   exists that hollow characters occur only at load, a repair in the census walk could replace the Prefix and heal every
   read (#1076).

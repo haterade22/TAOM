@@ -1135,7 +1135,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
-        campaignStarter.AddModel(new TaomHeroCreationModel());
 
         // TaomMarriageModel is the mod's ONLY MarriageModel and carries two rules, because the
         // engine resolves exactly one model per type — a second AddModel would silently shadow one
