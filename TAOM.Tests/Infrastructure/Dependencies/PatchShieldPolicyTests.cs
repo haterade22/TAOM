@@ -1,15 +1,19 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Tests.Infrastructure.Dependencies;
 
 /// <summary>
-/// Pins PatchShield's two decisions that a co-op session depends on.
+/// Pins PatchShield's two decisions that a co-op session depends on, plus its hot-layer target
+/// exclusion list (#331, plan 007) and the shield-pass log line.
 ///
 /// PatchShield itself is static and Harmony-bound, so it cannot be exercised in the test host.
-/// The two decisions that actually matter were extracted into pure predicates in
+/// The decisions that actually matter were extracted into pure predicates in
 /// <see cref="PatchShieldPolicy"/>; the Harmony plumbing stays a thin entry point.
 ///
 /// The unpatch gate is the highest-severity item in the co-op work. PatchShield's rescue path
@@ -124,9 +128,11 @@ public class PatchShieldPolicyTests
     // --- ShouldInstall: full flag x coop truth table ---------------------------------------------
     //
     // Player-reported 2026-08-02: shielding BannerlordCoop's AutoSync surface collapsed frame rate.
-    // Every declared method of 43 campaign types gets a finalizer that binds __originalMethod, so
-    // Harmony's wrapper pays GetMethodFromHandle + try/catch per call — the #331 mechanism, on the
-    // campaign hot path. These four rows pin the gate so it cannot regress in either direction.
+    // Every declared method of 43 campaign types got a finalizer that took __originalMethod until
+    // plan 034, so Harmony's wrapper paid a GetMethodFromHandle per call (the #331 mechanism) on the
+    // campaign hot path. The finalizer now takes only __exception (a stand-in finalizer of that shape added
+    // about 3.5 ns per call in plan 034's Debug benchmark, 5.4 against 1.9 ns); the gate stands as decided.
+    // These four rows pin it so it cannot regress in either direction.
 
     [TestMethod]
     public void ShouldInstall_NoCoopNoFlag_ReturnsTrue()
@@ -164,5 +170,177 @@ public class PatchShieldPolicyTests
         // per-call tax. Under co-op both are now false, by different mechanisms.
         Assert.IsFalse(PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive: true));
         Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: true, disabledByFlag: false));
+    }
+
+    // --- IsExcludedTargetNamespace: the hot-layer exclusion list ---------------------------------
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_GauntletAndTwoDimensionLayers_ReturnsTrue()
+    {
+        foreach (var ns in new[]
+                 {
+                     "TaleWorlds.GauntletUI",
+                     "TaleWorlds.GauntletUI.PrefabSystem",
+                     "TaleWorlds.TwoDimension",
+                     "TaleWorlds.MountAndBlade.GauntletUI.Widgets",
+                 })
+        {
+            Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetNamespace(ns), $"'{ns}' must be excluded (#331)");
+        }
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_GameplayNamespaces_ReturnsFalse()
+    {
+        // The list is not co-op-scoped: widening it to gameplay code would drop the shield in solo play.
+        foreach (var ns in new[] { "TaleWorlds.CampaignSystem", "TaleWorlds.MountAndBlade", "SandBox", "TaleWorlds.Core" })
+        {
+            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(ns), $"'{ns}' must stay shielded");
+        }
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_NullOrEmpty_ReturnsFalse()
+    {
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(string.Empty));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetNamespace_ManagedCallbacksShims_ReturnsTrue()
+    {
+        // Native2ManagedPatcher (Main/Features/CrashReport/Hooks) puts a crash-capture finalizer on
+        // every static method of ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated (247 in
+        // v1.4.8 before the plan 006 allowlist). Re-shielding them cost about 46 s of the first game start's loading screen on a
+        // machine paying about 186 ms per Harmony.Patch, for no practical rescue: the known patches
+        // there are TAOM's finalizers and ButterLib's blank transpilers (a protected owner).
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetNamespace("ManagedCallbacks"));
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue()
+    {
+        // The string test above cannot see an engine bump that moves the shims out of
+        // ManagedCallbacks: the exclusion would silently stop matching and the ~247 Harmony.Patch
+        // calls would return to the first loading screen. Select the types the way
+        // Native2ManagedPatcher does (*CallbacksGenerated in these three assemblies) and check each.
+        foreach (var asmName in new[] { "TaleWorlds.MountAndBlade.AutoGenerated", "TaleWorlds.Engine.AutoGenerated", "TaleWorlds.DotNet.AutoGenerated" })
+        {
+            Assembly asm;
+            try { asm = Assembly.Load(asmName); }
+            catch (Exception ex) { Assert.Inconclusive($"{asmName} not loadable in the test host: {ex.GetType().Name}"); return; }
+
+            Type[] types;
+            try { types = asm.GetTypes(); }
+            catch (ReflectionTypeLoadException tle) { types = tle.Types.Where(t => t != null).ToArray(); }
+
+            var shims = types.Where(t => t.Name.EndsWith("CallbacksGenerated", StringComparison.Ordinal)).ToList();
+            Assert.AreNotEqual(0, shims.Count, $"{asmName}: no *CallbacksGenerated type; re-check Native2ManagedPatcher's selector");
+            foreach (var t in shims)
+            {
+                Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetNamespace(t.Namespace), $"{t.FullName} would be re-shielded by PatchShield pass 2");
+            }
+        }
+    }
+
+    // --- IsExcludedTargetMethod: the method-level exclusion list ----------------------------------
+    // One entry on this line: the agent tick. PatchShieldAgentTickExclusionBindingTests walks the
+    // installed engine's real target; the cases below need no game.
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_AnotherFormationMethod_ReturnsFalse()
+    {
+        // The exclusion is per-method, not per-type: an unlisted method stays shielded.
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", "SetMovementOrder"));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_NullOrEmptyParts_ReturnsFalse()
+    {
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, "get_UnitDiameter"));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, null));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(string.Empty, "get_UnitDiameter"));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", string.Empty));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_AgentTick_ReturnsTrue()
+    {
+        // A swallow at the agent tick would skip `tickCompleted = true` (v1.4.8 Mission.cs:3613), and the
+        // next WaitTickCompletion (Mission.cs:3585-3591, no timeout) would spin forever.
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp"));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_MissionOnTickOnPreTickAndSpawnAgent_ReturnFalse()
+    {
+        // Only the agent tick is excluded; a foreign patch on these keeps the shield.
+        foreach (var name in new[] { "OnTick", "OnPreTick", "SpawnAgent" })
+        {
+            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", name),
+                $"Mission.{name} must stay shielded");
+        }
+    }
+
+    // --- FormatHotMethodSkip: the once-per-method diag.log reason line ----------------------------
+
+    [TestMethod]
+    public void FormatHotMethodSkip_NamesTheTargetItsOwnersAndWhatIsGivenUp()
+        => Assert.AreEqual(
+            "not shielding TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp (ExcludedTargetMethods, a hot target), patched by com.taom.mod, other.mod: "
+            + "a MissingMethod, MissingField or TypeLoad exception from a patch on it is not swallowed, and that patch is not stripped",
+            PatchShieldPolicy.FormatHotMethodSkip("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp", new[] { "com.taom.mod", "other.mod" }));
+
+    [TestMethod]
+    public void FormatHotMethodSkip_NoOwnersKnown_SaysUnknown()
+        => StringAssert.Contains(
+            PatchShieldPolicy.FormatHotMethodSkip("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp", null),
+            "(ExcludedTargetMethods, a hot target), patched by unknown: ");
+
+    // --- FormatShieldPassSummary: the diag.log shield-pass line ----------------------------------
+
+    [TestMethod]
+    public void FormatShieldPassSummary_WithAttaches_AppendsElapsedAndPerAttach()
+    {
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadySeen: 46, skipped: 19, seenTotal: 437, attachedTotal: 399, elapsedMs: 69300);
+
+        // Seen and attached are separate counts: a pass decides on far more methods than it
+        // shields (TAOM's own, the excluded hot layers, SaveShield's targets). The layout is the
+        // one docs/migration/dr3-maintenance.md shows.
+        StringAssert.StartsWith(line, "shield pass: +372 new, 46 already-seen, 19 skipped (seen: 437, attached: 399)");
+        StringAssert.Contains(line, "in 69300 ms");
+        StringAssert.Contains(line, "186.3 ms/attach");
+    }
+
+    [TestMethod]
+    public void FormatShieldPassSummary_NoAttaches_DoesNotDivideByZero()
+    {
+        // The only zero-attach line PatchShield logs is a first pass that attached nothing
+        // (PatchShield.Install logs when added > 0 || alreadySeen == 0).
+        var line = PatchShieldPolicy.FormatShieldPassSummary(added: 0, alreadySeen: 0, skipped: 16, seenTotal: 16, attachedTotal: 0, elapsedMs: 3);
+
+        StringAssert.Contains(line, "(seen: 16, attached: 0)");
+        StringAssert.Contains(line, "in 3 ms");
+        StringAssert.EndsWith(line, "(no new attaches)");
+        Assert.IsFalse(line.Contains("ms/attach"), line);
+        Assert.IsFalse(line.Contains("NaN") || line.Contains("Infinity") || line.Contains("∞"), line);
+    }
+
+    [TestMethod]
+    public void FormatShieldPassSummary_CommaDecimalCulture_UsesInvariantDecimalPoint()
+    {
+        var saved = Thread.CurrentThread.CurrentCulture;
+        try
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+            var line = PatchShieldPolicy.FormatShieldPassSummary(added: 372, alreadySeen: 46, skipped: 19, seenTotal: 437, attachedTotal: 399, elapsedMs: 69300);
+            StringAssert.Contains(line, "186.3 ms/attach");
+        }
+        finally
+        {
+            Thread.CurrentThread.CurrentCulture = saved;
+        }
     }
 }

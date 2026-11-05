@@ -13,9 +13,9 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 //      (IModLogger's queue is thread-safe and flushed by its own background thread), then
 //   2. best-effort triggers the CrashReport bundle so the user can ship the log in one
 //      action.
-// Some CrashReport collectors read live mission state; from this thread while the main
-// thread is frozen they may return partial data — that's acceptable, the marker + the
-// already-flushed phase log are the primary signal and the bundle is a bonus.
+// The bundle request tells CrashReportService it runs off the main thread, so the Mission and
+// Campaign collectors are skipped and no inquiry opens; the marker and the already-flushed phase
+// log are the primary signal and the bundle is a bonus.
 public sealed class BattleLoadStallWatchdog : IDisposable
 {
     private const string Tag = "[BattleLoad]";
@@ -186,11 +186,10 @@ public sealed class BattleLoadStallWatchdog : IDisposable
             {
                 try
                 {
-                    var zip = _crashReport.HandleException(
-                        new BattleLoadStallException(
-                            $"Mission load stalled >{elapsed:F0}s; {FormatShaderToken(shaders)}" +
-                            $"{FormatChurnToken(action)}last {_service.CurrentStatusLine}"),
-                        "BattleLoadStallWatchdog");
+                    var zip = RequestStallBundle(
+                        _crashReport,
+                        $"Mission load stalled >{elapsed:F0}s; {FormatShaderToken(shaders)}" +
+                        $"{FormatChurnToken(action)}last {_service.CurrentStatusLine}");
                     if (!string.IsNullOrEmpty(zip))
                         _logger.LogError($"{Tag} WATCHDOG bundle written: {zip}");
                 }
@@ -220,6 +219,12 @@ public sealed class BattleLoadStallWatchdog : IDisposable
     // decision that produced it.
     internal static string FormatChurnToken(StallAction action) =>
         action == StallAction.FireChurnCapped ? "churn-capped " : string.Empty;
+
+    // The watchdog polls from a thread-pool Timer, never the main thread, so its capture takes the
+    // service's reduced path: no Mission or Campaign collector reads live engine state from this
+    // thread and no inquiry is built off the UI thread, the rule for every off-main capture.
+    internal static string? RequestStallBundle(ICrashReportService crashReport, string message)
+        => crashReport.HandleException(new BattleLoadStallException(message), "BattleLoadStallWatchdog", offMainThread: true);
 
     public void Dispose()
     {

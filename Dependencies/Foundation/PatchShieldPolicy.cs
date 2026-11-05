@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace TAOM.Dependencies.Foundation;
 
 /// <summary>
-/// The two pure decisions behind <see cref="PatchShield"/>'s rescue path, extracted so they can be
-/// tested without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
+/// The pure decisions behind <see cref="PatchShield"/> (which targets to skip, which owners never
+/// to unpatch, when to install, and the shield-pass log line), extracted so they can be tested
+/// without Harmony or a running game. PatchShield keeps the plumbing; this keeps the policy.
 /// </summary>
 public static class PatchShieldPolicy
 {
@@ -62,6 +64,135 @@ public static class PatchShieldPolicy
         "CoopAutoRegistryFactory",
     };
 
+    // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
+    // Until plan 034 the shield finalizer took __originalMethod, so Harmony's generated wrapper paid
+    // a MethodBase.GetMethodFromHandle on EVERY CALL, inside the try/catch any finalizer adds (about
+    // 63 ns per call more than a finalizer without it, 1,145 ns with threads contending, and 241 bytes
+    // allocated; measured on .NET Framework 4.8.1 with Harmony 2.4.2, plan 034). The finalizer now
+    // takes only __exception. Plan 034's benchmark, with a stand-in finalizer of that shape on a trivial
+    // patched method, measured 5.4 ns per call in a Debug build (what players run) against 1.9 ns with
+    // the postfix alone: about 3.5 ns more (1.3 against 0.7 ns optimized). The shipped finalizers were
+    // not benchmarked themselves. This exclusion was decided under the old cost and stands. The
+    // Gauntlet prefab system contains per-widget-recursion methods that
+    // UIExtenderEx patches (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
+    // a tournament's accumulated template tree calls them ~2 MILLION times at release,
+    // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
+    // frozen exit (+8,276 gen0 GCs, invariant across sessions; stack-sampled proof in
+    // docs/reviews/rca-tournament-exit-hang-2026-07-06.md round 2). Shield value there
+    // is nil anyway: the only patcher of that layer is BUTR's own UIExtenderEx.
+    public static readonly IReadOnlyList<string> ExcludedTargetNamespacePrefixes = new[]
+    {
+        "TaleWorlds.GauntletUI",
+        "TaleWorlds.TwoDimension",
+        // Round-2 compat review (2026-07-10): TAOM's own Patch38 target
+        // (SettlementNameplateWidget.DetermineTargetAlphaValue, ~3000 calls/sec on the
+        // campaign map) lives here and was silently paying the shield tax every frame.
+        // Same rationale as above: hot widget/view layer, shield value nil.
+        "TaleWorlds.MountAndBlade.GauntletUI",
+        // Plan 007 (2026-09-23, measured from diag.log): the engine's native-to-managed callback
+        // shims, ManagedCallbacks.{Library,Core,Engine}CallbacksGenerated. TAOM's own
+        // Native2ManagedPatcher wraps the 16 allowlisted shims (plan 006, Native2ManagedTargets) with
+        // a finalizer that, on its normal path, swallows the exception
+        // (CrashReportPatchHelper.HandleAndSwallow). When capture is off, on re-entry, or when the
+        // crash service is unresolved or throws, it hands the exception back with its throw site
+        // kept (HandBack, RethrowStackPreserver). The other 231 shims carry no TAOM finalizer, so
+        // on those nothing swallows the missing-API trinity.
+        // Shielding them again cost one Harmony.Patch each at the first game start (about 46 s of a
+        // 69 s pass 2 on a machine paying 186 ms per Patch) and stacked an __originalMethod wrapper
+        // on engine callback hot paths: the #331 hot-layer rationale. Rescue value is nil in
+        // practice: the known patches on the shims are TAOM's finalizers and ButterLib BEW's blank
+        // transpilers on three tick shims (a protected owner); a third-party prefix, postfix or
+        // transpiler on a shim loses the rescue.
+        // The prefix is the whole namespace, not only the three shims: it also holds the engine's
+        // 78 managed-to-native ScriptingInterfaceOf* wrappers plus CallbackManager and
+        // ScriptingInterfaceObjects (87 classes in v1.4.8), which Native2Managed does NOT wrap.
+        // They are excluded on the #331 per-call rationale alone, so a third-party patch on one of
+        // them gets no shield. PatchShieldPolicyTests pins the shim half against the installed DLLs.
+        "ManagedCallbacks",
+    };
+
+    /// <summary>Whether a patch target's declaring namespace is on the hot-layer exclusion list (ordinal prefix match).</summary>
+    public static bool IsExcludedTargetNamespace(string? targetNamespace)
+    {
+        if (string.IsNullOrEmpty(targetNamespace)) return false;
+        foreach (var prefix in ExcludedTargetNamespacePrefixes)
+        {
+            if (targetNamespace!.StartsWith(prefix, StringComparison.Ordinal)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Method-level exclusion list: "&lt;FullTypeName&gt;.&lt;MethodName&gt;" entries for engine members whose
+    /// namespace is not excluded as a whole but which PatchShield's finalizer must not wrap, either for what a
+    /// swallow there would break or, in an entry a later change adds, for the per-call cost on a hot target.
+    /// One entry covers every overload of its name. PatchShield skips an excluded method for every owner, so a
+    /// third-party patch on one of these methods also loses the rescue; PatchShield writes one diag.log line per
+    /// skipped method (<see cref="FormatHotMethodSkip"/>). Each entry names the test that walks its real target
+    /// through <see cref="IsExcludedTargetMethod"/>.
+    /// </summary>
+    public static readonly IReadOnlyList<string> ExcludedTargetMethods = new[]
+    {
+        // Mission.TickAgentsAndTeamsImp carries Patch91's stall-probe bracket for every player. With a shield
+        // finalizer on it, a swallowed missing-API exception from the agent or team ticks would skip
+        // `tickCompleted = true` (v1.4.8 Mission.cs:3613), and the next WaitTickCompletion (Mission.cs:3585-3591,
+        // no timeout) would spin forever; excluded, the exception leaves the method instead. On the
+        // asynchronous call it reaches the native job thread through the generated shim
+        // Mission_TickAgentsAndTeams, which carries no TAOM finalizer since the plan 006 allowlist (what native
+        // does then is UNVERIFIED); on the inline call (fast-forward passes asyncAITick false,
+        // MissionState.cs:178-196) it reaches Mission.OnTick. Given up, for any owner's patch on it: the
+        // missing-API swallow and the strip of the offending patch.
+        // Mission.OnTick and Mission.OnPreTick are deliberately NOT listed: a throw that leaves OnTick after it
+        // clears tickCompleted (Mission.cs:3740) and before the agent tick sets it again hangs the next frame
+        // whichever way this list reads. The launch-aware tick recovery on Mission.OnTick (decision D17 of the
+        // 2026-11-04 port programme) is the remedy for that, not an exclusion.
+        // PatchShieldAgentTickExclusionBindingTests walks the real target; PatchShieldPolicyTests pins it
+        // without the game.
+        "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
+    };
+
+    /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>
+    public static bool IsExcludedTargetMethod(string? declaringType, string? name)
+    {
+        if (string.IsNullOrEmpty(declaringType) || string.IsNullOrEmpty(name)) return false;
+        var key = declaringType + "." + name;
+        foreach (var entry in ExcludedTargetMethods)
+        {
+            if (string.Equals(entry, key, StringComparison.Ordinal)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// The diag.log reason line PatchShield writes once per process for each patched method it skips
+    /// because it is on <see cref="ExcludedTargetMethods"/>: which method, whose patches sit on it, and
+    /// what the skip gives up.
+    /// </summary>
+    public static string FormatHotMethodSkip(string? declaringType, string? name, IEnumerable<string>? owners)
+    {
+        var ownerList = owners == null ? string.Empty : string.Join(", ", owners.Where(o => !string.IsNullOrEmpty(o)));
+        return "not shielding " + declaringType + "." + name + " (ExcludedTargetMethods, a hot target), patched by "
+            + (ownerList.Length == 0 ? "unknown" : ownerList)
+            + ": a MissingMethod, MissingField or TypeLoad exception from a patch on it is not swallowed, and that patch is not stripped";
+    }
+
+    /// <summary>
+    /// The diag.log line for one shield pass. "seen" counts every method the passes so far decided on,
+    /// skipped ones included; "attached" counts the methods carrying PatchShield's finalizer, the
+    /// real coverage (they were one conflated "total" before 2026-09-24). The timing
+    /// suffix exists because diag.log ships in every crash bundle, and the per-attach cost of
+    /// Harmony.Patch is not stable: one desktop has logged both about 5 to 10 ms and about 186 ms per
+    /// attach (diag.log, 2026-06 to 2026-09), a 30x swing that decides whether a pass costs about a
+    /// second or tens of seconds of a player's loading screen.
+    /// </summary>
+    public static string FormatShieldPassSummary(int added, int alreadySeen, int skipped, int seenTotal, int attachedTotal, long elapsedMs)
+    {
+        var line = $"shield pass: +{added} new, {alreadySeen} already-seen, {skipped} skipped (seen: {seenTotal}, attached: {attachedTotal}) in {elapsedMs} ms";
+        return added > 0
+            ? line + " (" + ((double)elapsedMs / added).ToString("F1", CultureInfo.InvariantCulture) + " ms/attach)"
+            : line + " (no new attaches)";
+    }
+
     /// <summary>
     /// Unions the compiled defaults with any extra prefixes from <c>coop-modules.txt</c>. Union
     /// only, and blank entries are dropped: the config file must be incapable of REMOVING a
@@ -112,16 +243,24 @@ public static class PatchShieldPolicy
     /// <summary>
     /// Should PatchShield install at all?
     ///
-    /// NO under co-op, and this is a PERFORMANCE decision, not a correctness one. A shield finalizer
-    /// binds <c>__originalMethod</c>, so Harmony's generated wrapper pays a
-    /// <c>MethodBase.GetMethodFromHandle</c> plus a try/catch on EVERY CALL (~50 µs). That tax is
-    /// what turned a millisecond tournament teardown into a measured 104–109 s freeze in #331, and
+    /// NO under co-op, and this is a PERFORMANCE decision, not a correctness one. Until plan 034 the
+    /// shield finalizer took <c>__originalMethod</c>, so Harmony's generated wrapper paid a
+    /// <c>MethodBase.GetMethodFromHandle</c> on EVERY CALL, inside the try/catch any finalizer adds (about
+    /// 63 ns per call more than a finalizer without it, 1,145 ns with threads contending, and 241 bytes
+    /// allocated; measured on .NET Framework 4.8.1 with Harmony 2.4.2, plan 034). That binding is what
+    /// turned a millisecond tournament teardown into a measured 104 to 109 s freeze in #331 (its per-call
+    /// time alone cannot explain the stall; see the plan 034 lesson in harmony-il.md), and
     /// co-op amplifies it far harder: BannerlordCoop's AutoSync transpiles every declared method and
     /// constructor of 43 campaign types (<c>MobileParty</c>, <c>Hero</c>, <c>Settlement</c>,
     /// <c>Clan</c>, <c>PartyBase</c>…), and those are the campaign hot path. Coop's <c>PatchAll</c>
     /// runs on connect, BEFORE TAOM's <c>OnGameInitializationFinished</c> pass, so pass 2 shields
     /// that entire surface. A player traced a co-op frame-rate collapse to exactly this, which
-    /// answers the open question the 2026-08-01 deep review raised and could not measure.
+    /// answers the open question the 2026-08-01 deep review raised and could not measure. Plan 034
+    /// removed the parameter: the finalizer now takes only <c>__exception</c>. Its benchmark, with a
+    /// stand-in finalizer of that shape on a trivial patched method, measured 5.4 ns per call in a Debug
+    /// build (what players run) against 1.9 ns with the postfix alone, about 3.5 ns more (1.3 against
+    /// 0.7 ns optimized); the shipped finalizers were not benchmarked themselves. This skip was decided
+    /// under the old cost and stands; whether to revisit it is a separate decision.
     ///
     /// Extending <c>ExcludedTargetNamespacePrefixes</c> instead would have been wrong: adding
     /// <c>TaleWorlds.CampaignSystem</c> there excludes nearly everything TAOM shields IN SOLO PLAY

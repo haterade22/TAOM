@@ -81,4 +81,15 @@ public sealed class CrashBundleThrottle
             return new CrashBundleAdmission(CrashBundleDecision.WriteBundle, count);
         }
     }
+
+    // Which occurrences of a suppressed signature get a log line: 1 and 2, then every power of
+    // ten. A throw that recurs every frame otherwise writes one line per frame into the log
+    // that the next bundle tails.
+    public static bool IsLoggedOccurrence(int occurrence)
+    {
+        if (occurrence < 1) return false;
+        if (occurrence <= 2) return true;
+        while (occurrence % 10 == 0) occurrence /= 10;
+        return occurrence == 1;
+    }
 }

@@ -75,7 +75,7 @@ public sealed class CrashReportService : ICrashReportService
         _throttle = throttle;
     }
 
-    public string? HandleException(Exception exception, string originatingPatchTarget)
+    public string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false)
     {
         if (_handling) return null;  // re-entry guard — never recurse
         _handling = true;
@@ -91,13 +91,13 @@ public sealed class CrashReportService : ICrashReportService
                 try { _butterLib.TrySuspend(); } catch { }
             }
 
-            // Dedup chokepoint. The capture sources (9 per-tick Harmony Finalizers, the
-            // AppDomain hook, the battle-load watchdog, native callback shims) all funnel
-            // here, so a crash that recurs every frame would otherwise write a fresh bundle
-            // each tick — re-zipping an ever-growing taom_debug.log. Compute the cheap
+            // Dedup chokepoint. The capture sources (5 per-tick Harmony Finalizers, the
+            // AppDomain hook, the battle-load watchdog, the allowlisted native callback shims)
+            // all funnel here, so a crash that recurs every frame would otherwise write a fresh
+            // bundle each tick, re-zipping an ever-growing taom_debug.log. Compute the cheap
             // signature (reads the frozen stack only; no engine collectors) and let the
-            // throttle decide. On suppression: one log line, no ComposeContext / bundle /
-            // notify — this kills both the disk spam and the growing-log feedback loop.
+            // throttle decide. On suppression: a log line at occurrences 1, 2, 10, 100 and so on,
+            // no ComposeContext, bundle or notify, which kills the disk spam and the log feedback loop.
             var earlyStack = StackFrameSnapshotBuilder.FromException(exception);
             // The Exception overload, matching ComposeContext below. Both sites MUST derive the
             // identity the same way or a bundle is admitted under one signature and filed under
@@ -107,19 +107,21 @@ public sealed class CrashReportService : ICrashReportService
             var admission = _throttle.Admit(earlySignature);
             if (admission.Decision != CrashBundleDecision.WriteBundle)
             {
-                _logger.LogError(
-                    $"[CrashReport] {admission.Decision} {CrashSignatureCalculator.Short(earlySignature)} " +
-                    $"({exception?.GetType().Name ?? "(unknown)"} @ {originatingPatchTarget}) " +
-                    $"occurrence #{admission.Occurrence} — bundle suppressed");
+                if (CrashBundleThrottle.IsLoggedOccurrence(admission.Occurrence))
+                {
+                    _logger.LogError(
+                        $"[CrashReport] {admission.Decision} {CrashSignatureCalculator.Short(earlySignature)} " +
+                        $"({exception?.GetType().Name ?? "(unknown)"} @ {originatingPatchTarget}) " +
+                        $"occurrence #{admission.Occurrence}, bundle suppressed (logged at 1, 2, 10, 100, ...)");
+                }
                 return null;
             }
 
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).
-            // AppDomainExceptionHook tags off-main-thread exceptions on `ex.Data`; when set,
-            // skip Mission/Campaign reads (not thread-safe) and skip the UI inquiry (vanilla
-            // ShowInquiry invokes subscribers synchronously — unsafe from worker threads).
-            bool offMainThread = IsOffMainThread(exception);
-
+            // AppDomainExceptionHook and Native2ManagedBridge pass offMainThread when the throw
+            // arrived on another thread; then skip Mission/Campaign reads (not thread-safe) and
+            // skip the UI inquiry (vanilla ShowInquiry invokes subscribers synchronously, which is
+            // unsafe from worker threads).
             var failures = new List<CollectorFailure>();
             var context = ComposeContext(exception, originatingPatchTarget, failures, offMainThread);
 
@@ -156,18 +158,6 @@ public sealed class CrashReportService : ICrashReportService
         {
             _handling = false;
         }
-    }
-
-    private static bool IsOffMainThread(Exception ex)
-    {
-        try
-        {
-            return ex?.Data != null
-                && ex.Data.Contains(Hooks.AppDomainExceptionHook.OffMainThreadDataKey)
-                && ex.Data[Hooks.AppDomainExceptionHook.OffMainThreadDataKey] is bool b
-                && b;
-        }
-        catch { return false; }
     }
 
     private ExceptionContext ComposeContext(Exception exception, string originatingPatchTarget, List<CollectorFailure> failures, bool offMainThread)

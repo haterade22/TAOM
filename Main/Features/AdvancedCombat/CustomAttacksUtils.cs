@@ -176,13 +176,12 @@ public class CustomAttacksUtils
         // part is already hardcoded to BoneBodyPartType.Abdomen below, and damage/knockdown/death never read
         // BoneIndex. (mainHandItemBoneIndex is the ATTACKER's own bone, unaffected by victim teardown.)
         sbyte mainHandItemBoneIndex = attacker.Monster.MainHandItemBoneIndex;
-        // The 3 positional ints below map to (affectorWeaponSlotOrMissileIndex,
-        // StrikeType, DamageType). DamageType MUST match blow.DamageType — vanilla's
-        // combat-log message generator reads the collision data's DamageType, not the
-        // Blow's, so a mismatch makes hits read "Blunt" in the in-game log even when
-        // the Blow correctly says Pierce. LOTRAOM had this set to `2` (Blunt), which
-        // was a long-standing bug that only became visible once warg bites started
-        // landing reliably (post-cc9e0c4). See plan file 2026-05-27.
+        // The 3 positional ints below map to (affectorWeaponSlotOrMissileIndex, StrikeType, DamageType), and
+        // DamageType matches blow.DamageType (LOTRAOM had `2`, Blunt; plan file 2026-05-27). The combat log does not
+        // read it: vanilla copies the collision type into CombatLogData.DamageType inside
+        // MissionCombatMechanicsHelper.GetAttackCollisionResults (v1.4.8 :192), which a synthetic blow never runs,
+        // and the CombatLogData constructor sets Blunt (CombatLogData.cs:385). ComposeSyntheticCombatLog sets the
+        // log's type after the constructor.
         AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(
             false, false, false, true, false, false, false, false, false, false, false, false,
             CombatCollisionResult.StrikeAgent,
@@ -203,9 +202,51 @@ public class CustomAttacksUtils
             Vec3.Up
         );
 
-        CombatLogData combatLogData = new(false, attacker.IsHuman, attacker.IsMine, attacker.RiderAgent != null, attacker.RiderAgent != null && attacker.RiderAgent.IsMine, attacker.IsMount, victim.IsHuman, victim.IsMine, victim.Health <= 0f, victim.RiderAgent != null, victim.RiderAgent != null && victim.RiderAgent.IsMine, victim.IsMount, null, victim.RiderAgent == victim, knockDown, false, 0f);
+        CombatLogData combatLogData = ComposeSyntheticCombatLog(
+            attackerIsHuman: attacker.IsHuman, attackerIsMine: attacker.IsMine,
+            attackerHasRider: attacker.RiderAgent != null,
+            attackerRiderIsMine: attacker.RiderAgent != null && attacker.RiderAgent.IsMine,
+            attackerIsMount: attacker.IsMount, victimIsHuman: victim.IsHuman, victimIsMine: victim.IsMine,
+            victimIsDead: victim.Health <= 0f, victimHasRider: victim.RiderAgent != null,
+            victimRiderIsMine: victim.RiderAgent != null && victim.RiderAgent.IsMine,
+            victimIsMount: victim.IsMount, victimRiderIsAttacker: victim.RiderAgent == attacker);
         MissionWeapon weapon = MissionWeapon.Invalid;
         RegisterBlow(attacker, victim, WeakGameEntity.Invalid, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
+    }
+
+    // The combat-log record for a blow TakeDamage registers directly. Named arguments, because fifteen of
+    // the constructor's parameters are bools read by position: crushedThrough prints "crushed through"
+    // (v1.4.8 CombatLogData.cs:185) and used to receive knockDown, so every creature knockdown the player saw
+    // read as a broken guard; the rider check compared the victim with itself where vanilla compares the
+    // victim's rider with the attacker (Mission.cs:6462). The constructor sets DamageType to Blunt
+    // (CombatLogData.cs:385) and only GetAttackCollisionResults copies the real type in
+    // (MissionCombatMechanicsHelper.cs:192), which a synthetic blow never runs. Pure; pinned by
+    // CustomAttacksUtilsTests.
+    internal static CombatLogData ComposeSyntheticCombatLog(
+        bool attackerIsHuman, bool attackerIsMine, bool attackerHasRider, bool attackerRiderIsMine, bool attackerIsMount,
+        bool victimIsHuman, bool victimIsMine, bool victimIsDead, bool victimHasRider, bool victimRiderIsMine,
+        bool victimIsMount, bool victimRiderIsAttacker)
+    {
+        var log = new CombatLogData(
+            isVictimAgentSameAsAttackerAgent: false,
+            isAttackerAgentHuman: attackerIsHuman,
+            isAttackerAgentMine: attackerIsMine,
+            doesAttackerAgentHaveRiderAgent: attackerHasRider,
+            isAttackerAgentRiderAgentMine: attackerRiderIsMine,
+            isAttackerAgentMount: attackerIsMount,
+            isVictimAgentHuman: victimIsHuman,
+            isVictimAgentMine: victimIsMine,
+            isVictimAgentDead: victimIsDead,
+            doesVictimAgentHaveRiderAgent: victimHasRider,
+            isVictimAgentRiderAgentIsMine: victimRiderIsMine,
+            isVictimAgentMount: victimIsMount,
+            missionObjectHit: null,
+            isVictimRiderAgentSameAsAttackerAgent: victimRiderIsAttacker,
+            crushedThrough: false,
+            chamber: false,
+            distance: 0f);
+        log.DamageType = DamageTypes.Pierce;
+        return log;
     }
 
     private static long _nonFiniteBlowSkips;

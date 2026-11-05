@@ -87,4 +87,30 @@ public class CustomAttacksUtilsTests
         // BaseMagnitude is a physical intensity; negative is nonsensical and must be rejected.
         Assert.IsFalse(CustomAttacksUtils.IsBlowGeometrySafe(FinitePos, FiniteDir, -1f));
     }
+
+    // TakeDamage registers a blow directly. v1.4.8: the CombatLogData constructor sets DamageType = Blunt
+    // (CombatLogData.cs:385) and only MissionCombatMechanicsHelper.GetAttackCollisionResults copies the real
+    // type in (:192), which a synthetic blow never runs; crushedThrough prints "crushed through" (:185).
+    private static TaleWorlds.MountAndBlade.CombatLogData Compose(bool victimRiderIsAttacker = false, bool victimIsDead = false)
+        => CustomAttacksUtils.ComposeSyntheticCombatLog(
+            attackerIsHuman: false, attackerIsMine: false, attackerHasRider: true, attackerRiderIsMine: true,
+            attackerIsMount: true, victimIsHuman: true, victimIsMine: false, victimIsDead: victimIsDead,
+            victimHasRider: false, victimRiderIsMine: false, victimIsMount: false,
+            victimRiderIsAttacker: victimRiderIsAttacker);
+
+    [TestMethod]
+    public void ComposeSyntheticCombatLog_NeverReportsACrushThrough()
+        => Assert.IsFalse(Compose().CrushedThrough, "a synthetic blow never breaks a guard; a knockdown is not a crush-through");
+
+    [TestMethod]
+    public void ComposeSyntheticCombatLog_LogsPierce_NotTheConstructorsBlunt()
+        => Assert.AreEqual(TaleWorlds.Core.DamageTypes.Pierce, Compose().DamageType);
+
+    [TestMethod]
+    public void ComposeSyntheticCombatLog_PassesTheRiderComparisonAndTheVictimsDeath()
+    {
+        Assert.IsTrue(Compose(victimRiderIsAttacker: true).IsVictimRiderAgentSameAsAttackerAgent);
+        Assert.IsFalse(Compose(victimRiderIsAttacker: false).IsVictimRiderAgentSameAsAttackerAgent);
+        Assert.IsTrue(Compose(victimIsDead: true).IsFatalDamage);
+    }
 }
