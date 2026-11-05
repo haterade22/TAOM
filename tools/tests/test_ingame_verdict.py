@@ -1109,9 +1109,13 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
     HIDE = "taom.seat-of-seeing.hide"
     KEEP = "taom.seat-of-seeing.keep"
     LET_GO = "taom.seat-of-seeing.let-go"
+    FIGHT_ON = "taom.seat-of-seeing.fight-on"
+    TAKE = "taom.seat-of-seeing.take"
     STAGE_ONE = (ENTER, FRAMES, LEAVE, GLIDE)
     NEW = (CURSOR, FOCUS, REOPENED, HIDE, KEEP, LET_GO)
-    ALL = STAGE_ONE + NEW
+    STAGE_FOUR_FIVE = (FIGHT_ON, TAKE)
+    EARLIER = STAGE_ONE + NEW
+    ALL = EARLIER + STAGE_FOUR_FIVE
 
     def setUp(self):
         self.t = Tree(self)
@@ -1127,7 +1131,7 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
     def check(self, check_id):
         return next(c for c in self.manifest().checks if c.id == check_id)
 
-    def test_it_names_the_ten_checks_the_session_writes(self):
+    def test_it_names_the_twelve_checks_the_session_writes(self):
         ids = list(self.ALL)
         # The manifest is shared with Marshal's Word, whose checks follow the Seat's.
         self.assertEqual([c.id for c in self.manifest().checks][:len(ids)], ids)
@@ -1136,25 +1140,25 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         named = {i for i in iv.named_check_ids(self.manifest()) if i.startswith("taom.seat-of-seeing.")}
         self.assertEqual(named, set(ids) | {"taom.seat-of-seeing.fault"})
 
-    def test_a_full_visit_of_stage_one_passes_its_four_checks_and_leaves_the_six_later_ones_not_reached(self):
+    def test_a_full_visit_of_stage_one_passes_its_four_checks_and_leaves_the_eight_later_ones_not_reached(self):
         code, out, _ = self.judge("seat_visit_pass.txt")
         self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
         for check_id in self.STAGE_ONE:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
-        for check_id in self.NEW:
+        for check_id in self.NEW + self.STAGE_FOUR_FIVE:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
         self.assertIn("the career ability key and the perspective toggle (game key 27) still act from the Seat", out)
 
-    def test_a_full_visit_of_stages_two_and_three_passes_every_check(self):
+    def test_a_full_visit_of_stages_two_to_five_passes_every_check(self):
         code, out, _ = self.judge("seat_panel_visit_pass.txt")
         self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
         for check_id in self.ALL:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
 
-    def test_a_latched_fault_fails_all_ten_checks(self):
+    def test_a_latched_fault_fails_all_twelve_checks(self):
         code, out, _ = self.judge("seat_fault.txt")
         self.assertEqual(code, 1, out)
         for check_id in self.ALL:
@@ -1283,13 +1287,32 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
                 self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
 
     def test_each_failure_line_of_the_feature_fails_the_enter_check(self):
-        for fixture in ("seat_could_not_start.txt", "seat_hotkey_failed.txt", "seat_order_ray_failed.txt", "seat_enter_failed.txt", "seat_patch_failed.txt"):
+        for fixture in ("seat_could_not_start.txt", "seat_hotkey_failed.txt", "seat_order_ray_failed.txt", "seat_enter_failed.txt", "seat_patch_failed.txt",
+                        "seat_order_panel_anchor.txt"):
             with self.subTest(fixture=fixture):
                 self.t = Tree(self)
                 self.t.real_manifest(self.NAME)
                 code, out, _ = self.judge(fixture)
                 self.assertEqual(code, 1, out)
                 self.assertEqual(verdict_of(out, self.ENTER), "FAIL", out)
+
+    def test_the_order_panel_line_fails_the_hand_off_check_too(self):
+        code, out, _ = self.judge("seat_order_panel_anchor.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "FAIL", out)
+
+    def test_every_error_line_the_feature_writes_at_a_fixed_prefix_fails_the_enter_check(self):
+        """A new LogError of the Seat that no fail pattern names would read PASS under --issue 0 while the trial judge fails the run."""
+        found = []
+        for root in (REPO / "Client/Features/SeatOfSeeing", REPO / "Main/Features/SeatOfSeeing"):
+            for path in root.rglob("*.cs"):
+                found += re.findall(r'LogError\(\s*\$?"(\[SeatOfSeeing\] [^"{:]+)', path.read_text(encoding="utf-8"))
+        found = [line for line in found if "the Seat failed" not in line]  # the fault line has its own check
+        self.assertGreaterEqual(len(found), 4, found)
+        fails = self.check(self.ENTER).fails
+        for line in found:
+            with self.subTest(line=line):
+                self.assertTrue(any(p.search(line) for p in fails), line)
 
     def test_a_session_of_refused_key_presses_is_not_reached_and_says_why(self):
         code, out, _ = self.judge("seat_skips_only.txt")
@@ -1323,10 +1346,104 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
             with self.subTest(check_id=check_id):
                 self.assertIn(fault, [p.pattern for p in self.check(check_id).fails])
 
+    def test_a_visit_of_the_hand_off_passes_fight_on_and_leaves_take_not_reached(self):
+        code, out, _ = self.judge("seat_fight_visit_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "PASS", out)
+        self.assertEqual(verdict_of(out, self.TAKE), "NOT REACHED", out)
+
+    def test_a_visit_of_the_hand_off_and_a_take_passes_both_checks(self):
+        code, out, _ = self.judge("seat_take_visit_pass.txt")
+        self.assertEqual(code, 4, out)  # Marshal's Word's checks, in the same manifest, are not reached in a Seat-only session
+        for check_id in self.STAGE_FOUR_FIVE:
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_a_hand_off_with_no_hand_back_is_reached_and_not_passed(self):
+        """The mission ended inside the stay: Finish writes no agent and no end line, so the round trip is not proved."""
+        code, out, _ = self.judge("seat_fight_no_end.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "NOT REACHED", out)
+        self.assertIn("event=end", out)
+
+    def test_a_refused_hand_off_reads_not_reached_with_its_reason(self):
+        code, out, _ = self.judge("seat_fight_refused.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=refused why=not-player", out)
+        self.assertNotRegex(out, r"(?m)^\s*FAIL\s")  # A verdict line: the shared manifest's needs text says FAIL too
+
+    def test_a_throw_from_the_hand_off_fails_the_check_and_exits_1(self):
+        code, out, _ = self.judge("seat_fight_throw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "FAIL", out)
+
+    def test_a_take_that_handed_over_no_formation_is_reached_and_not_passed(self):
+        code, out, _ = self.judge("seat_take_no_command.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.TAKE), "NOT REACHED", out)
+        self.assertIn("formations=[1-9]", out)
+
+    def test_a_hero_who_fell_while_handed_is_reached_with_no_end_line_and_the_reason_is_not_printed(self):
+        code, out, _ = self.judge("seat_fight_fell.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.FIGHT_ON), "NOT REACHED", out)
+        self.assertIn("event=end", out)
+        self.assertNotIn("reason=fell", out)
+
+    def test_refused_takes_read_not_reached_and_say_why(self):
+        code, out, _ = self.judge("seat_take_skips.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.TAKE), "NOT REACHED", out)
+        self.assertIn("skipped: mission=1 reason=nobody", out)
+
+    def test_the_fight_on_pass_patterns_need_the_begin_and_the_end_and_take_no_other_event(self):
+        begin, end = self.check(self.FIGHT_ON).passes
+        line = "[Check] id=taom.seat-of-seeing.fight-on result=pass mission=3 event=%s"
+        self.assertTrue(begin.search(line % "begin"))
+        self.assertTrue(end.search(line % "end"))
+        for other in ("retreat-stopped", "fell", "begin-and-more"):
+            with self.subTest(event=other):
+                self.assertFalse(begin.search(line % other))
+                self.assertFalse(end.search(line % other))
+        self.assertFalse(begin.search("[Check] id=taom.seat-of-seeing.fight-on result=skip mission=3 event=begin"))
+
+    def test_the_take_pass_pattern_takes_each_kind_and_at_least_one_formation(self):
+        pattern = self.check(self.TAKE).passes[0]
+        line = "[Check] id=taom.seat-of-seeing.take result=pass mission=3 kind=%s formations=%s"
+        for kind in ("Soldier", "Hero"):
+            for count in ("1", "3", "12"):
+                with self.subTest(kind=kind, count=count):
+                    self.assertTrue(pattern.search(line % (kind, count)))
+        self.assertFalse(pattern.search(line % ("Soldier", "0")), "a take that handed nothing over proves no hand-over")
+        self.assertFalse(pattern.search(line % ("Horse", "3")))
+        self.assertFalse(pattern.search("[Check] id=taom.seat-of-seeing.take result=pass mission=3 kind=Soldier"), "a line with no formation count")
+
+    def test_the_hand_off_and_take_rows_are_named_and_the_human_rows_ask_what_only_a_person_can_see(self):
+        claims = list(self.manifest().human)
+        for fragment in ("fighting inside his company", "leaving the Seat with the hero fighting on gives the controls back", "where an AI hero stands",
+                         "a hero on a ladder or in a ladder queue", "outside the mission boundary", "one message names the Take this soldier key",
+                         "Take this soldier (TAOM)", "keeps the orders: every company the fallen hero owned", "quit text reads Retreat",
+                         "vanilla Kick key", "in a campaign field battle (the one check owed beyond the custom battle)", "refused with one message",
+                         "a hero of another party is refused (reason=hero)", "a soldier on the allied team is refused (reason=other-team)",
+                         "a plain soldier of a party under the player's command or in his army", "Cannot issue order while dead.",
+                         "a howdah or mumak crew member, a soldier who belongs to no formation"):
+            with self.subTest(fragment=fragment):
+                self.assertTrue(any(fragment in c for c in claims), fragment)
+
+    def test_the_seats_checks_come_before_marshals_word_and_its_rows_stay_in_order(self):
+        ids = [c.id for c in self.manifest().checks]
+        seat = [i for i, c in enumerate(ids) if c.startswith("taom.seat-of-seeing.")]
+        marshal = [i for i, c in enumerate(ids) if c.startswith("taom.marshals-word.")]
+        self.assertEqual(seat, list(range(len(seat))))
+        self.assertGreater(min(marshal), max(seat))
+        self.assertEqual(ids[:len(self.ALL)], list(self.ALL))
+
     def test_the_enter_fail_list_names_the_features_own_failure_lines(self):
         fails = [p.pattern for p in self.check(self.ENTER).fails]
         for line in (r"\[SeatOfSeeing\] the Seat could not start", r"\[SeatOfSeeing\] hotkey registration failed",
-                     r"\[SeatOfSeeing\] order ray failed", r"\[Check\] id=taom\.seat-of-seeing\.enter result=fail",
+                     r"\[SeatOfSeeing\] order ray failed", r"\[SeatOfSeeing\] expected exactly one Agent\.IsPlayerControlled read",
+                     r"\[Check\] id=taom\.seat-of-seeing\.enter result=fail",
                      r"\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)"):
             with self.subTest(line=line):
                 self.assertIn(line, fails)
@@ -1346,7 +1463,7 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
 
 class MarshalsWordManifestTests(unittest.TestCase):
     """The Marshal's Word checks of the shared draft manifest. The fixtures render the [Check] lines the session and the two drivers write
-    through IOutcomeLog (MarshalChecks.cs holds the ids). A session with no Seat lines leaves the Seat's four checks NOT REACHED, so a
+    through IOutcomeLog (MarshalChecks.cs holds the ids). A session with no Seat lines leaves the Seat's checks NOT REACHED, so a
     run of these fixtures exits 4 unless a check fails."""
 
     NAME, ISSUE = SeatOfSeeingManifestTests.NAME, SeatOfSeeingManifestTests.ISSUE  # the manifest is shared, and so is its rename

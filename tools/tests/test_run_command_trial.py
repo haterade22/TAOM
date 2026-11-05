@@ -44,7 +44,7 @@ OLDER_CHANGE = {"Main/a.cs": datetime(2026, 11, 4, 9, 0, 0)}
 # The steps that run had: stage S1's six, the first six names of the table. Its lines are a stage S1 run, so it is judged against these.
 S1_STEPS = trial.SEAT_STEPS[:6]
 
-# The newest real run (E:/Temp/command-trial-runs/20261104-042903), copied from its log: the build stamp, the six step lines and the unload line.
+# A real run (E:/Temp/command-trial-runs/20261104-042903), copied from its log: the build stamp, the six step lines and the unload line.
 REAL_RUN_LINES = (
     "[2026-11-04 04:29:13] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261104-102854Z+1735f2add88c0aa640afe3a1cdbb2dfa88b0dddc.dirty "
     "TAOM.Dependencies=v0.1.0.0 build.20261104-102854Z+1735f2add88c0aa640afe3a1cdbb2dfa88b0dddc.dirty (pair OK)",
@@ -227,7 +227,7 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual(tuple(names), S1_STEPS)
 
     def test_a_log_of_stage_one_alone_misses_every_later_step_by_name(self):
-        """The same real lines judged against the whole table: the seven steps of stages S2 and S3 have no line, so the run fails."""
+        """The same real lines judged against the whole table: the twelve steps of stages S2 to S5 have no line, so the run fails."""
         code, why = judge(FINAL, None, "\n".join(REAL_RUN_LINES), changed={"Main/a.cs": datetime(2026, 11, 4, 10, 0, 0)})
         self.assertEqual(code, 1)
         for step in trial.STEPS[6:]:
@@ -397,7 +397,8 @@ class SeatErrorLineTests(unittest.TestCase):
 
     def test_the_thread_guards_line_for_a_trial_or_seat_site_fails_the_run(self):
         tail = " (thread 9, main 1). An engine callback here is parked for the next mission tick, which is expected; a TAOM blow is a regression."
-        for site in ("CommandTrialHost.Kill", "CommandTrialHost.SelectChosenCompany", "SeatHeroAdapter.StandFast"):
+        for site in ("CommandTrialHost.Kill", "CommandTrialHost.SelectChosenCompany", "SeatHeroAdapter.StandFast", "SeatHeroAdapter.BeginFighting",
+                     "SeatScreenAdapter.TryTake"):
             with self.subTest(site=site):
                 line = f"[2026-11-04 10:01:31] [ERROR] [TAOM] {site} ran off the main mission thread" + tail
                 code, why = judge(FINAL, None, full_log(extra=[line]))
@@ -696,6 +697,9 @@ class SourceTieTests(unittest.TestCase):
         host = (TRIAL_SOURCE / "CommandTrialHost.Seat.cs").read_text(encoding="utf-8")
         hero = (REPO / "Main" / "Adapters" / "SeatHeroAdapter.cs").read_text(encoding="utf-8")
         self.assertIn('NoteCall("SeatHeroAdapter.StandFast", _logger.LogError)', hero)
+        self.assertIn('NoteCall("SeatHeroAdapter.BeginFighting", _logger.LogError)', hero)
+        screen = (REPO / "Client" / "Adapters" / "SeatScreenAdapter.cs").read_text(encoding="utf-8")
+        self.assertIn('NoteCall("SeatScreenAdapter.TryTake", _logger.LogError)', screen)
         self.assertIn('MissionThreadGuard.NoteCall(site, _logger.LogError)', host)
 
     def test_every_step_is_a_features_steps_the_seats_then_marshals_word(self):

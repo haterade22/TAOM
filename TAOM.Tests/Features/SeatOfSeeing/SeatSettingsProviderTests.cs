@@ -23,6 +23,8 @@ public class SeatSettingsProviderTests
         Assert.IsFalse(sut.BeginBattlesInSeat);
         Assert.IsTrue(sut.CursorWithPanel, "the pointer is the point of stage S2");
         Assert.IsFalse(sut.KeepPanelOpen, "a player who never asks sees vanilla behaviour");
+        Assert.IsFalse(sut.HeroFightsOn, "the hand-off stays off until a run in the game proves it (build-spec section 8)");
+        Assert.IsTrue(sut.TakeSoldierAfterFall, "it acts only after the fall, in a battle, on its own key");
     }
 
     [TestMethod]
@@ -34,6 +36,10 @@ public class SeatSettingsProviderTests
         Assert.AreEqual(SeatSettingsProvider.DefaultBeginBattlesInSeat, settings.BeginBattlesInSeat);
         Assert.AreEqual(SeatSettingsProvider.DefaultCursorWithPanel, settings.SeatCursorWithPanel);
         Assert.AreEqual(SeatSettingsProvider.DefaultKeepPanelOpen, settings.SeatKeepPanelOpen);
+        Assert.AreEqual(SeatSettingsProvider.DefaultHeroFightsOn, settings.SeatHeroFightsOn);
+        Assert.AreEqual(SeatSettingsProvider.DefaultTakeSoldierAfterFall, settings.SeatTakeSoldierAfterFall);
+        Assert.IsFalse(SeatSettingsProvider.DefaultHeroFightsOn, "a default is never flipped under an unchanged name once it ships");
+        Assert.IsTrue(SeatSettingsProvider.DefaultTakeSoldierAfterFall);
         Assert.IsTrue(SeatSettingsProvider.DefaultCursorWithPanel);
         Assert.IsFalse(SeatSettingsProvider.DefaultKeepPanelOpen);
         Assert.IsTrue(SeatSettingsProvider.DefaultEnabled);
@@ -43,7 +49,8 @@ public class SeatSettingsProviderTests
     [TestMethod]
     public void SavedValues_AreRead()
     {
-        var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true };
+        var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true,
+            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false };
 
         var sut = new SeatSettingsProvider(settings);
 
@@ -51,6 +58,8 @@ public class SeatSettingsProviderTests
         Assert.IsTrue(sut.BeginBattlesInSeat);
         Assert.IsFalse(sut.CursorWithPanel);
         Assert.IsTrue(sut.KeepPanelOpen);
+        Assert.IsTrue(sut.HeroFightsOn);
+        Assert.IsFalse(sut.TakeSoldierAfterFall);
     }
 
     [TestMethod]
@@ -93,6 +102,8 @@ public class SeatSettingsProviderTests
     [DataRow(nameof(TaomSettings.BeginBattlesInSeat))]
     [DataRow(nameof(TaomSettings.SeatCursorWithPanel))]
     [DataRow(nameof(TaomSettings.SeatKeepPanelOpen))]
+    [DataRow(nameof(TaomSettings.SeatHeroFightsOn))]
+    [DataRow(nameof(TaomSettings.SeatTakeSoldierAfterFall))]
     public void EachSetting_SitsInTheSeatGroup_NeedsNoRestart_AndStatesItsDefault(string name)
     {
         var property = typeof(TaomSettings).GetProperty(name)!;

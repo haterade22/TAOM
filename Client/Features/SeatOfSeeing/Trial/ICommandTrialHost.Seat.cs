@@ -87,4 +87,49 @@ internal partial interface ICommandTrialHost
 
     /// <summary>Kills every unit of the chosen company through <c>Mission.KillAgentCheat</c>. An agent write: call it after the in-mission-tick marker.</summary>
     void KillChosenCompany();
+
+    /// <summary>Sets the trial's own value of "Your hero fights on in the Seat", in memory only.</summary>
+    void SetFightOn(bool fightOn);
+
+    /// <summary>The Seat's gate for an AI main agent is up.</summary>
+    bool FightGateUp { get; }
+
+    /// <summary>The main agent is active and its controller is the AI's.</summary>
+    bool HeroOnAi { get; }
+
+    /// <summary>The main agent is retreating (<c>Agent.IsRetreating</c>).</summary>
+    bool HeroRetreating { get; }
+
+    /// <summary>The main agent's morale component says he has panicked.</summary>
+    bool HeroPanicked { get; }
+
+    /// <summary>The main agent's morale, or NaN with none.</summary>
+    float HeroMorale { get; }
+
+    /// <summary>The hero can die: not immortal, not invulnerable, and the mission does not disable dying.</summary>
+    bool HeroMortal { get; }
+
+    /// <summary>Gives the hero's own company the Charge order; a formation write, called after the in-mission-tick marker.</summary>
+    void ChargeHeroFormation();
+
+    /// <summary>Gives the hero's own company the Stop order; a formation write, called after the in-mission-tick marker.</summary>
+    void StopHeroFormation();
+
+    /// <summary>Writes a morale on the main agent; an agent write, called after the in-mission-tick marker.</summary>
+    void WriteHeroMorale(float morale);
+
+    /// <summary>Kills the main agent through <c>Mission.KillAgentCheat</c>; an agent write, called after the in-mission-tick marker.</summary>
+    void KillHero();
+
+    /// <summary>How many formations of the player team the main agent owns (<c>Formation.PlayerOwner</c>).</summary>
+    int FormationsOwnedByHero();
+
+    /// <summary>The key to take a soldier, through the session method the real key calls.</summary>
+    void PressTake();
+
+    /// <summary>The main agent belongs to the company the step chose and kept (a reference, never an index).</summary>
+    bool TookFromKeptCompany { get; }
+
+    /// <summary>Who owns the player team's formations and order controller now.</summary>
+    SeatHandOverReading ReadHandOver();
 }

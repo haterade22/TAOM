@@ -22,8 +22,11 @@ internal static class CommandTrialRun
 
     internal static void Arm(CommandTrialOptions options) => Options = options;
 
+    /// <summary>The trial's own settings of the latest mission, which a step changes through the host; null until a mission asks for them.</summary>
+    internal static CommandTrialSettings? TrialSettings { get; private set; }
+
     /// <summary>The settings a mission's session gets: the trial's own when armed, else the plain provider itself.</summary>
-    internal static ISeatSettingsProvider Settings(ISeatSettingsProvider plain) => IsArmed ? new CommandTrialSettings() : plain;
+    internal static ISeatSettingsProvider Settings(ISeatSettingsProvider plain) => IsArmed ? TrialSettings = new CommandTrialSettings() : plain;
 
     internal static void Finish(string reason) => Outcome ??= reason;
 
@@ -63,5 +66,6 @@ internal static class CommandTrialRun
         Options = null;
         Outcome = null;
         Step = "none";
+        TrialSettings = null;
     }
 }

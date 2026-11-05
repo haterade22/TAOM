@@ -17,7 +17,7 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 public class SeatSessionTests
 {
     private const float Eps = 0.001f;
-    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true);
+    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true, TakeSoldier: true);
     private static readonly SeatPermissions Denied = default;
 
     private FakeSeatScreen _screen = null!;

@@ -7,6 +7,7 @@ using TAOM.Adapters;
 using TAOM.Client.Adapters;
 using TAOM.Client.Features.SeatOfSeeing.Trial;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Domain;
 
@@ -43,13 +44,16 @@ public sealed class SeatView : MissionView
                 return;
 
             _keys = IoC.Resolve<SeatHotKeys>();
+            var coop = IoC.Resolve<ICoopSessionProvider>();
             var mission = Mission;
-            SeatPermissions? permissions = null;
-            // Read the first time it is asked (5.6): every view is built by then, so the foreign-camera walk sees them all.
-            SeatPermissions Permissions() => permissions ??= SeatMissionPolicy.Decide(SeatMissionClassifier.ReadFacts(mission, logger));
+            bool? foreignCamera = null;
+            // The walk for another mod's camera is read the first time it is asked (5.6): every view is built by then. The kind is read fresh
+            // each time, because Mission.Mode changes it (section 4).
+            SeatPermissions Permissions() => SeatMissionPolicy.Decide(
+                SeatMissionClassifier.ReadFacts(mission, coop, foreignCamera ??= SeatMissionClassifier.ForeignCameraOwns(mission, logger)));
 
             var serial = (++_missionSerial).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var screen = new SeatScreenAdapter(MissionScreen, mission);
+            var screen = new SeatScreenAdapter(MissionScreen, mission, logger);
             var session = _session = new SeatSession(screen, IoC.Resolve<ISeatHeroAdapter>(),
                 CommandTrialRun.Settings(IoC.Resolve<ISeatSettingsProvider>()), Permissions, IoC.Resolve<IOutcomeLog>(), logger, serial);
             _moreKeys = new SeatKeys(_keys, session);

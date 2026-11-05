@@ -67,6 +67,13 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
     internal Exception? UiThrows;
     internal Exception? KeepThrows;
 
+    // Stage S4 and S5: the real clock, and the take of a soldier.
+    internal float Real;
+    internal int RealReads;
+    internal SeatTakeResult TakeResult = SeatTakeResult.Taken(SeatTakeKind.Soldier, 2);
+    internal int TakeCalls;
+    internal Exception? TakeThrows;
+
     public SeatEngineFacts ReadFacts()
     {
         FactsReads++;
@@ -203,6 +210,20 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
     public SeatTargetRead ReadKept() => Kept;
 
     public void Unkeep() => Unkeeps++;
+
+    public float RealSeconds()
+    {
+        RealReads++;
+        return Real;
+    }
+
+    public SeatTakeResult TryTake()
+    {
+        TakeCalls++;
+        if (TakeThrows != null)
+            throw TakeThrows;
+        return TakeResult;
+    }
 }
 
 internal sealed class FakeSeatHero : ISeatHeroAdapter
@@ -210,11 +231,63 @@ internal sealed class FakeSeatHero : ISeatHeroAdapter
     internal int StandFasts;
     internal Exception? StandFastThrows;
 
+    // Stage S4: the hand-off. The fake keeps the controller the way the engine does: Begin makes the hero the AI's unless it refuses, End makes him the player's.
+    internal SeatFightRefusal BeginResult = SeatFightRefusal.None;
+    internal Exception? BeginThrows;
+    internal Exception? EndThrows;
+    /// <summary>How many hand-backs throw before the hero's controller is written; the rest write it.</summary>
+    internal int EndThrowsTimes = int.MaxValue;
+    internal bool Active = true;
+    internal bool OnAi;
+    internal bool RetreatPending;
+    internal int Begins;
+    internal int Ends;
+    internal int RetreatStops;
+    internal int OnAiReads;
+    internal readonly List<string> Calls = new();
+
     public void StandFast()
     {
         if (StandFastThrows != null)
             throw StandFastThrows;
         StandFasts++;
+    }
+
+    public SeatFightRefusal BeginFighting()
+    {
+        Calls.Add("begin");
+        if (BeginThrows != null)
+            throw BeginThrows;
+        Begins++;
+        if (BeginResult == SeatFightRefusal.None)
+            OnAi = true;
+        return BeginResult;
+    }
+
+    public void EndFighting()
+    {
+        Calls.Add("end");
+        if (EndThrows != null && EndThrowsTimes-- > 0)
+            throw EndThrows;
+        Ends++;
+        OnAi = false;
+    }
+
+    public bool HeroActive() => Active;
+
+    public bool HeroOnAi()
+    {
+        OnAiReads++;
+        return Active && OnAi;
+    }
+
+    public bool StopHeroRetreat()
+    {
+        if (!RetreatPending)
+            return false;
+        RetreatPending = false;
+        RetreatStops++;
+        return true;
     }
 }
 
@@ -226,6 +299,8 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
     private bool _beginBattlesInSeat;
     private bool _cursorWithPanel = true;
     private bool _keepPanelOpen;
+    private bool _heroFightsOn;
+    private bool _takeSoldierAfterFall = true;
 
     public bool Enabled
     {
@@ -265,6 +340,26 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
             return _keepPanelOpen;
         }
         set => _keepPanelOpen = value;
+    }
+
+    public bool HeroFightsOn
+    {
+        get
+        {
+            Reads++;
+            return _heroFightsOn;
+        }
+        set => _heroFightsOn = value;
+    }
+
+    public bool TakeSoldierAfterFall
+    {
+        get
+        {
+            Reads++;
+            return _takeSoldierAfterFall;
+        }
+        set => _takeSoldierAfterFall = value;
     }
 }
 

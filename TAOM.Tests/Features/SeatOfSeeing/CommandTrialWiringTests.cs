@@ -170,8 +170,8 @@ public class CommandTrialWiringTests
     {
         var writers = HostWriters(TrialSource("^CommandTrialHost"));
 
-        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "MarshalSelect", "MarshalMoveTo",
-            "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy" })
+        foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero",
+            "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
         foreach (var held in new[] { "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalPressFire", "MarshalPressWord" })
@@ -199,6 +199,9 @@ public class CommandTrialWiringTests
         "MarshalReleaseKeys", "MarshalSettled", "MarshalAhead", "MarshalOrderedOffset", "MarshalStepsCaptured", "MarshalStepsByArrival",
         "MarshalOrderPoint", "MarshalEnemyDistance", "MarshalMarkJudged", "MarshalChooseNearestEnemy", "MarshalPlanApproach", "MarshalWatchBegin",
         "MarshalWatchEnd", "MarshalWatchShots", "MarshalWatchShooters", "MarshalAside", "MarshalIdle", "CensusOfChosen",
+        // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
+        "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
+        "TookFromKeptCompany", "ReadHandOver",
     };
 
     private static string[] Unclassified(string host, IEnumerable<string> writeNothing) =>
@@ -220,16 +223,16 @@ public class CommandTrialWiringTests
     public void TheMarkerGate_FailsAHostMemberNobodyClassified()
     {
         const string host = FakeHost + @"
-        public void SetMorale(Agent agent, float value) { agent.SetMorale(value); }
+        public void SetHealth(Agent agent, float value) { agent.Health = value; }
         void Helper() { }
         public T Pick<T>(T value) => value;
         public float Speed { get; set; }";
 
-        CollectionAssert.AreEqual(new[] { "Helper", "Pick", "SetMorale", "Speed" }, Unclassified(host, new[] { "Look" }),
+        CollectionAssert.AreEqual(new[] { "Helper", "Pick", "SetHealth", "Speed" }, Unclassified(host, new[] { "Look" }),
             "a verb the writer list does not know, a member with no access modifier, a generic one and a property are all unclassified");
-        CollectionAssert.AreEqual(new[] { "Helper", "Pick", "SetMorale", "Speed" }, Unclassified(host, new[] { "Look", "KillIt", "Kill" }),
+        CollectionAssert.AreEqual(new[] { "Helper", "Pick", "SetHealth", "Speed" }, Unclassified(host, new[] { "Look", "KillIt", "Kill" }),
             "a writer needs no entry");
-        CollectionAssert.AreEqual(Array.Empty<string>(), Unclassified(host, new[] { "Look", "SetMorale", "Helper", "Pick", "Speed" }));
+        CollectionAssert.AreEqual(Array.Empty<string>(), Unclassified(host, new[] { "Look", "SetHealth", "Helper", "Pick", "Speed" }));
         Assert.IsTrue(Regex.IsMatch(host, @"\bset\s*[{=;]"), "and the property's setter is what the set check finds");
     }
 
@@ -344,7 +347,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(";
+        const string Write = @"\.KillAgentCheat\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {

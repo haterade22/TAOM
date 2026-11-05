@@ -18,7 +18,12 @@ internal sealed class SeatKeys
 
     internal void Tick(IInputContext input)
     {
-        if (_session.State != SeatState.Seated)
+        var state = _session.State;
+        if (state == SeatState.Off)
+            return;
+        if (Pressed(_keys.TakeThisSoldier, input))
+            _session.PressTake();
+        if (state != SeatState.Seated)
             return;
         if (Pressed(_keys.HideTheInterface, input))
             _session.PressHide();

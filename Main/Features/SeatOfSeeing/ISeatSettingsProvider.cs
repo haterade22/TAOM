@@ -1,6 +1,6 @@
 namespace TAOM.Features.SeatOfSeeing;
 
-/// <summary>The MCM values behind the Seat of Seeing (S1: the switch and the battle-start option; S2: the cursor and the panel).</summary>
+/// <summary>The MCM values behind the Seat of Seeing.</summary>
 internal interface ISeatSettingsProvider
 {
     /// <summary>The Seat key acts. Off, the key does nothing and a Seat that is up comes down.</summary>
@@ -14,4 +14,10 @@ internal interface ISeatSettingsProvider
 
     /// <summary>While seated, the order panel reopens after an order.</summary>
     bool KeepPanelOpen { get; }
+
+    /// <summary>While seated, in a mission that allows it, the hero is handed to the AI and fights on inside his formation.</summary>
+    bool HeroFightsOn { get; }
+
+    /// <summary>After the hero falls, a key in the Seat takes the soldier at the pointer.</summary>
+    bool TakeSoldierAfterFall { get; }
 }

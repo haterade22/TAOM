@@ -103,4 +103,10 @@ internal interface ISeatScreenAdapter
 
     /// <summary>Drops the kept target.</summary>
     void Unkeep();
+
+    /// <summary>Real seconds since the application started (<c>Time.ApplicationTime</c>): it runs under a pause and does not stretch with mission time.</summary>
+    float RealSeconds();
+
+    /// <summary>Takes the nearest eligible soldier of the kept company, else the one at the pointer, for the player (build-spec section 9), from the mission tick only.</summary>
+    SeatTakeResult TryTake();
 }

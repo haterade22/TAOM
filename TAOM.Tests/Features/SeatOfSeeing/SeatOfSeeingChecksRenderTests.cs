@@ -23,7 +23,7 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 public class SeatOfSeeingChecksRenderTests
 {
     private const string Fixtures = "ingame_verdict";
-    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true);
+    private static readonly SeatPermissions Allowed = new(Camera: true, FightOn: true, Orders: true, Time: true, TakeSoldier: true);
 
     private IModLogger _logger = null!;
     private FakeSeatScreen _screen = null!;
@@ -44,7 +44,11 @@ public class SeatOfSeeingChecksRenderTests
     }
 
     [TestCleanup]
-    public void Cleanup() => SeatPresence.Set(false);
+    public void Cleanup()
+    {
+        SeatPresence.Set(false);
+        SeatPresence.SetHeroFightsOn(false);
+    }
 
     private void Key(bool enabled = true, SeatPermissions? permissions = null)
     {
@@ -74,7 +78,8 @@ public class SeatOfSeeingChecksRenderTests
     public void CheckIds_AreValid()
     {
         foreach (var id in new[] { SeatChecks.EnterId, SeatChecks.LeaveId, SeatChecks.FramesId, SeatChecks.GlideId, SeatChecks.FaultId, SeatChecks.FrameCounterId,
-                     SeatChecks.CursorId, SeatChecks.FocusId, SeatChecks.PanelReopenedId, SeatChecks.HideId, SeatChecks.KeepId, SeatChecks.LetGoId })
+                     SeatChecks.CursorId, SeatChecks.FocusId, SeatChecks.PanelReopenedId, SeatChecks.HideId, SeatChecks.KeepId, SeatChecks.LetGoId,
+                     SeatChecks.FightOnId, SeatChecks.TakeId })
             Assert.IsTrue(OutcomeLog.IsValidId(id), id);
     }
 
@@ -125,6 +130,88 @@ public class SeatOfSeeingChecksRenderTests
         AssertInFixture("seat_panel_reopen_site_missing.txt", visit[0]);
         AssertInFixture("seat_hide_stuck.txt", visit[0], visit[4]);
         AssertInFixture("seat_keep_and_flight.txt", visit[0]);
+    }
+
+    [TestMethod]
+    public void RenderedLines_OfTheHandOffTheFallAndATake_AreTheOnesTheManifestAndFixturesRead()
+    {
+        SeatPresence.SetHeroFightsOn(false);
+        _settings.HeroFightsOn = true;
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnMissionTick();
+        _hero.RetreatPending = true;
+        _sut.OnMissionTick();
+        Key();
+        _sut.OnMissionTick();
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnMissionTick();
+        _hero.Active = false;
+        _sut.OnMissionTick();
+        _screen.TakeResult = SeatTakeResult.Taken(SeatTakeKind.Soldier, 3);
+        _sut.PressTake();
+        _sut.OnMissionTick();
+
+        var lines = CheckLines().Where(l => l.Contains("fight-on") || l.Contains(".take ")).ToArray();
+        var expected = new[]
+        {
+            "[Check] id=taom.seat-of-seeing.fight-on result=pass mission=1 event=begin",
+            "[Check] id=taom.seat-of-seeing.fight-on result=pass mission=1 event=retreat-stopped",
+            "[Check] id=taom.seat-of-seeing.fight-on result=pass mission=1 event=end",
+            "[Check] id=taom.seat-of-seeing.take result=pass mission=1 kind=Soldier formations=3",
+        };
+        CollectionAssert.AreEqual(expected, lines.Where(l => !l.Contains("result=skip")).ToArray());
+        CollectionAssert.Contains(lines, "[Check] id=taom.seat-of-seeing.fight-on result=skip mission=1 reason=fell");
+        AssertInFixture("seat_take_visit_pass.txt", expected[0], expected[1], expected[2], expected[3], "[Check] id=taom.seat-of-seeing.fight-on result=skip mission=1 reason=fell");
+        AssertInFixture("seat_panel_visit_pass.txt", expected[0], expected[2], expected[3]);
+        AssertInFixture("seat_fight_visit_pass.txt", expected[0], expected[1], expected[2]);
+        AssertInFixture("seat_fight_no_end.txt", expected[0]);
+    }
+
+    [TestMethod]
+    public void RenderedLines_OfARefusedHandOffATakeThatFindsNobodyAndAThrow_AreTheOnesTheFixturesRead()
+    {
+        _settings.HeroFightsOn = true;
+        _hero.BeginResult = SeatFightRefusal.NotPlayerControlled;
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnMissionTick();
+        _screen.TakeResult = SeatTakeResult.Nobody();
+        _sut.PressTake();
+        _sut.OnMissionTick();
+        _screen.TakeResult = SeatTakeResult.Refused(SeatTakeRefusal.Wounded);
+        _sut.PressTake();
+        _sut.OnMissionTick();
+        _screen.TakeResult = SeatTakeResult.Taken(SeatTakeKind.Hero, 0);
+        _sut.PressTake();
+        _sut.OnMissionTick();
+
+        var refused = "[Check] id=taom.seat-of-seeing.fight-on result=skip mission=1 reason=refused why=not-player";
+        var nobody = "[Check] id=taom.seat-of-seeing.take result=skip mission=1 reason=nobody";
+        var wounded = "[Check] id=taom.seat-of-seeing.take result=skip mission=1 reason=wounded";
+        var noCommand = "[Check] id=taom.seat-of-seeing.take result=pass mission=1 kind=Hero formations=0";
+        CollectionAssert.IsSubsetOf(new[] { refused, nobody, wounded, noCommand }, CheckLines());
+        AssertInFixture("seat_fight_refused.txt", refused);
+        AssertInFixture("seat_take_skips.txt", nobody, wounded);
+        AssertInFixture("seat_take_no_command.txt", noCommand);
+
+        // A throw from the hand-off writes the fail line.
+        SeatPresence.Set(false);
+        SeatPresence.SetHeroFightsOn(false);
+        Setup();
+        _settings.HeroFightsOn = true;
+        _hero.BeginThrows = new InvalidOperationException("boom");
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _sut.OnMissionTick();
+        var thrown = "[Check] id=taom.seat-of-seeing.fight-on result=fail mission=1 error=InvalidOperationException";
+        CollectionAssert.Contains(CheckLines(), thrown);
+        AssertInFixture("seat_fight_throw.txt", thrown);
     }
 
     [TestMethod]
@@ -317,6 +404,7 @@ public class SeatOfSeeingChecksRenderTests
     [DataRow("seat_could_not_start.txt", "Client/Features/SeatOfSeeing/SeatView.cs", "[SeatOfSeeing] the Seat could not start")]
     [DataRow("seat_hotkey_failed.txt", "Main/Features/SeatOfSeeing/SeatOfSeeingModule.cs", "[SeatOfSeeing] hotkey registration failed")]
     [DataRow("seat_order_ray_failed.txt", "Client/Features/SeatOfSeeing/Hooks/Patch140_OrderFlagGetCollidedEntity.cs", "[SeatOfSeeing] order ray failed")]
+    [DataRow("seat_order_panel_anchor.txt", "Client/Features/SeatOfSeeing/Hooks/SeatOrderPanelGate.cs", "[SeatOfSeeing] expected exactly one Agent.IsPlayerControlled read")]
     public void TheFeaturesOwnFailureLines_AreInTheCode_AndInTheFixtures(string fixture, string source, string prefix)
     {
         var code = ReadSource(source, stripComments: true);

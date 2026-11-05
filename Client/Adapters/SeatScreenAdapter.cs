@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.GauntletUI;
@@ -18,8 +20,11 @@ using TaleWorlds.ScreenSystem;
 using TAOM.Adapters;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Client.Features.SeatOfSeeing;
+using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Elephant;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Features.Mumakil;
 using TAOM.Features.SeatOfSeeing.Domain;
 using TAOM.Features.SeatOfSeeing.Hooks;
 
@@ -51,6 +56,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     private readonly MissionScreen _screen;
     private readonly Mission _mission;
+    private readonly IModLogger _logger;
     private MissionMainAgentController? _controller;
     private IAutonomousMovementController? _rage;
     private GauntletOrderUIHandler? _orderHandler;
@@ -58,10 +64,11 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private Agent? _keptAgent;
     private Formation? _keptFormation;
 
-    internal SeatScreenAdapter(MissionScreen screen, Mission mission)
+    internal SeatScreenAdapter(MissionScreen screen, Mission mission, IModLogger logger)
     {
         _screen = screen;
         _mission = mission;
+        _logger = logger;
     }
 
     public SeatEngineFacts ReadFacts()
@@ -344,6 +351,96 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         _keptFormation = null;
     }
 
+    public float RealSeconds() => Time.ApplicationTime;
+
+    public SeatTakeResult TryTake()
+    {
+        // The main agent must be null. A living hero does not leave the body, so two player units never exist in one formation
+        // (ColumnFormation.SwitchUnitLocationsWithBackMostUnit loops on that state through Formation.TryRelocatePlayerUnit).
+        if (_mission.MainAgent != null)
+            return SeatTakeResult.HeroAlive();
+
+        var refusal = SeatTakeRefusal.None;
+        var soldier = _keptFormation != null ? NearestOfKeptCompany() : SoldierAtPointerToTake(out refusal);
+        if (soldier == null)
+            return refusal != SeatTakeRefusal.None ? SeatTakeResult.Refused(refusal) : SeatTakeResult.Nobody();
+
+        MissionThreadGuard.NoteCall("SeatScreenAdapter.TryTake", _logger.LogError);
+        var kind = soldier.Character != null && soldier.Character.IsHero ? SeatTakeKind.Hero : SeatTakeKind.Soldier;
+        _mission.TakeControlOfAgent(soldier);
+        return SeatTakeResult.Taken(kind, HandOverTheCommand(soldier));
+    }
+
+    private Agent? SoldierAtPointerToTake(out SeatTakeRefusal refusal)
+    {
+        refusal = SeatTakeRefusal.None;
+        var soldier = SoldierAtPointer();
+        if (soldier == null)
+            return null;
+
+        refusal = SeatTakeRule.Check(TakeFacts(soldier));
+        return refusal == SeatTakeRefusal.None ? soldier : null;
+    }
+
+    // The nearest eligible unit of the kept company to the point the view orbits, by the pure rule.
+    private Agent? NearestOfKeptCompany()
+    {
+        var kept = ReadKept();
+        if (kept.Gone || _keptFormation == null)
+            return null;
+
+        var units = new List<Agent>();
+        _keptFormation.ApplyActionOnEachUnit(units.Add);
+        var candidates = new List<SeatTakeCandidate>(units.Count);
+        foreach (var unit in units)
+        {
+            var distance = (unit.Position - new Vec3(kept.X, kept.Y, kept.Z)).LengthSquared;
+            candidates.Add(new SeatTakeCandidate(distance, SeatTakeRule.Check(TakeFacts(unit))));
+        }
+
+        var index = SeatTakeRule.Nearest(candidates);
+        return index >= 0 ? units[index] : null;
+    }
+
+    private SeatSoldierFacts TakeFacts(Agent agent)
+    {
+        var occupant = AgentSlotIdentity.IsCurrentOccupant(agent) && agent.IsActive();
+        var hero = agent.Character != null && agent.Character.IsHero;
+
+        // A hero is playable only in a campaign, when his origin is the player's own party; with no campaign every hero is refused,
+        // as the engine's own take refuses them (Mission.cs:6395). Never PartyBase.MainParty: it throws without a stored main party.
+        var party = Campaign.Current?.MainParty?.Party;
+        var ownParty = hero && party != null && ReferenceEquals(agent.Origin?.BattleCombatant, party);
+        return new SeatSoldierFacts(agent.IsHuman, occupant, agent.Team != null && agent.Team == _mission.PlayerTeam, agent.IsUsingGameObject,
+            agent.IsRetreating(), agent.IsFadingOut(), agent.Health / agent.HealthLimit, hero, ownParty,
+            agent.Origin is HowdahCrewAgentOrigin or MumakilCrewAgentOrigin, agent.Formation != null);
+    }
+
+    // Vanilla sets the owner only at the start (AssignPlayerRoleInTeamMissionController.cs:54-62), and the setter takes the formation off the AI
+    // (Formation.cs:283-294), which undoes Team.DelegateCommandToAI. PlayerOwner survives the fall, so a formation whose owner is gone is found
+    // by asking the owner, with the slot check that a deleted agent's handle needs.
+    private int HandOverTheCommand(Agent owner)
+    {
+        var team = _mission.PlayerTeam;
+        if (team == null)
+            return 0;
+
+        var handed = 0;
+        foreach (var formation in team.FormationsIncludingEmpty)
+        {
+            var previous = formation.PlayerOwner;
+            if (previous == null || (AgentSlotIdentity.IsCurrentOccupant(previous) && previous.IsActive()))
+                continue;
+            formation.PlayerOwner = owner;
+            handed++;
+        }
+
+        var controller = team.PlayerOrderController;
+        if (controller != null)
+            controller.Owner = owner;
+        return handed;
+    }
+
     /// <summary>The field trial's check that the kept soldier is the one it aimed at: a reference, never an agent index.</summary>
     internal bool KeepsAgent(Agent agent) => ReferenceEquals(_keptAgent, agent);
 
@@ -353,11 +450,15 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     private static TextObject TextFor(SeatMessage message) => message switch
     {
-        SeatMessage.FirstEntry => new TextObject("{=taom_seat_first_entry}Press the Seat key to return to your hero."),
+        SeatMessage.FirstEntry => new TextObject("{=taom_seat_first_entry}Press the Seat key to leave the Seat."),
         SeatMessage.OtherView => new TextObject("{=taom_seat_other_view}You cannot take the Seat from this view."),
         SeatMessage.RageHolds => new TextObject("{=taom_seat_rage}You cannot take the Seat while the rage holds you."),
         SeatMessage.KeepNobody => new TextObject("{=taom_seat_keep_nobody}There is nobody there to keep to."),
         SeatMessage.KeepGone => new TextObject("{=taom_seat_keep_gone}The one you were keeping to is gone."),
+        SeatMessage.HeroFell => new TextObject("{=taom_seat_hero_fell}Your hero has fallen. Press Take this soldier (Delete unless rebound) to take a soldier."),
+        SeatMessage.TakeNobody => new TextObject("{=taom_seat_take_nobody}There is nobody there to take."),
+        SeatMessage.TakeRefused => new TextObject("{=taom_seat_take_refused}You cannot take that soldier."),
+        SeatMessage.TakeHeroAlive => new TextObject("{=taom_seat_take_hero_alive}You can take a soldier only after the one you fight as has fallen."),
         _ => new TextObject("{=taom_seat_fault}The Seat of Seeing failed and is off until this scene ends. Your own view is back."),
     };
 }

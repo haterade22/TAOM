@@ -8,6 +8,9 @@ namespace TAOM.Features.SeatOfSeeing.Domain;
 internal readonly record struct SeatFocusReading(float PixelX, float PixelY, float WantedX, float WantedY, float ExpectedX, float ExpectedY,
     float FieldX, float FieldY, string Focused);
 
+/// <summary>What the take step read after the take: whether the player team's order controller names the new main agent, how many formations he owns, and how many of those the AI still runs.</summary>
+internal readonly record struct SeatHandOverReading(bool ControllerOwnerIsMain, int OwnedByMain, int StillAi);
+
 /// <summary>
 /// The numbers and judgments the field trial's passes rest on (build-spec section 12), with no engine type so a test pins each one.
 /// The client's script measures; these decide.
@@ -61,6 +64,40 @@ internal static class SeatTrialRules
 
     /// <summary>The camera may stand this far from the orbit distance on either side, from a target that moves.</summary>
     internal const float KeptToleranceMetres = 2f;
+
+    /// <summary>Real seconds the trial waits for the hero to be on the AI after the entry, and then lets him fight on in his charging company.</summary>
+    internal const float HandOffWaitSeconds = 3f;
+
+    internal const float FightWindowSeconds = 5f;
+
+    /// <summary>Real seconds after the trial writes a morale of 0 on the handed hero before it reads whether he panicked or retreated.</summary>
+    internal const float MoraleWindowSeconds = 2.5f;
+
+    /// <summary>The most a hero reads right after the trial wrote a morale of 0: the engine pins a refused zero at this value (CommonAIComponent.cs:57-61).</summary>
+    internal const float MoraleFloor = 0.01f;
+
+    /// <summary>The handed hero in a charging company moves more than this many metres in the window; a hero who stands in place moves less.</summary>
+    internal const float FoughtOnMetres = 1f;
+
+    /// <summary>
+    /// Real seconds <c>hero_falls</c> waits after the kill for the Seat's reaction: the engine clears the main agent inside the kill, and the Seat
+    /// lowers the gate and says the fall at its next mission tick (a few milliseconds at game speed). A gate that is still up, or no message, after
+    /// this long is a fault.
+    /// </summary>
+    internal const float FallWaitSeconds = 3f;
+
+    /// <summary>The morale write took effect: a hero with a morale component reads between 0 and <see cref="MoraleFloor"/>; no component reads -1, and a value that is not a number proves nothing.</summary>
+    internal static bool AtMoraleFloor(float morale) => IsReal(morale) && morale >= 0f && morale <= MoraleFloor;
+
+    /// <summary>The handed hero fought: he moved more than <see cref="FoughtOnMetres"/>.</summary>
+    internal static bool FoughtOn(float moved) => IsReal(moved) && moved > FoughtOnMetres;
+
+    /// <summary>
+    /// The take handed the command over: the controller names the new agent, he owns exactly the formations the fallen hero owned (and there was
+    /// at least one), and the AI runs none of them.
+    /// </summary>
+    internal static bool CommandHandedOver(int ownedBefore, SeatHandOverReading after) =>
+        after.ControllerOwnerIsMain && ownedBefore > 0 && after.OwnedByMain == ownedBefore && after.StillAi == 0;
 
     /// <summary>The handler's point may differ from the pointer function's by this many pixels, and the cursor from the pixel asked for.</summary>
     internal const float PixelToleranceUnits = 2f;

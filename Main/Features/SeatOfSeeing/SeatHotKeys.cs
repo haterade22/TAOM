@@ -15,6 +15,7 @@ internal sealed class SeatHotKeys
     private GameKey? _takeTheSeat;
     private GameKey? _keepTo;
     private GameKey? _hideTheInterface;
+    private GameKey? _takeThisSoldier;
     private bool _resolved;
 
     /// <summary>The key bound to "Take the Seat", or <see cref="InputKey.Invalid"/>.</summary>
@@ -25,6 +26,9 @@ internal sealed class SeatHotKeys
 
     /// <summary>The key bound to "Hide the interface", or <see cref="InputKey.Invalid"/>.</summary>
     public InputKey HideTheInterface => Bound(ref _hideTheInterface);
+
+    /// <summary>The key bound to "Take this soldier", or <see cref="InputKey.Invalid"/>.</summary>
+    public InputKey TakeThisSoldier => Bound(ref _takeThisSoldier);
 
     private InputKey Bound(ref GameKey? key)
     {
@@ -45,6 +49,7 @@ internal sealed class SeatHotKeys
             _takeTheSeat = category.GetGameKey(TaomSeatHotKeyCategory.TakeTheSeatKeyId);
             _keepTo = category.GetGameKey(TaomSeatHotKeyCategory.KeepToKeyId);
             _hideTheInterface = category.GetGameKey(TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
+            _takeThisSoldier = category.GetGameKey(TaomSeatHotKeyCategory.TakeThisSoldierKeyId);
             break;
         }
 

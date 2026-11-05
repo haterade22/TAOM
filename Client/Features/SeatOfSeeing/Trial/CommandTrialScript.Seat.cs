@@ -55,6 +55,11 @@ internal sealed partial class CommandTrialScript
         into["keep_to_soldier"] = s => s.KeepToSoldier();
         into["keep_to_company"] = s => s.KeepToCompany();
         into["let_go_on_death"] = s => s.LetGoOnDeath();
+        into["fight_on"] = s => s.FightOn();
+        into["morale_held"] = s => s.MoraleHeld();
+        into["back_to_stand"] = s => s.BackToStand();
+        into["hero_falls"] = s => s.HeroFalls();
+        into["take_soldier"] = s => s.TakeSoldier();
     }
 
     private IEnumerable<Verdict> Refuse()
@@ -583,6 +588,269 @@ internal sealed partial class CommandTrialScript
             + " company_gone=" + Bit(companyGone) + " company_messages=" + companySaid.ToString(CultureInfo.InvariantCulture)
             + " company_message=" + Bit(companyMessage) + Standing();
         var pass = soldierGone && soldierSaid == 1 && soldierMessage && opened && companyKept && companyGone && companySaid == 1 && companyMessage && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    // ---- Stage S4: the hero fights on ----
+
+    private const float LeaveSettleSeconds = 0.3f;
+    private const float StandSettleSeconds = 1f;
+    private const float CompanyStopSeconds = 2f;
+
+    private bool _playerAfterLeave;
+    private float _standSpeed = float.NaN;
+    private int _ownedBeforeFall;
+
+    // Leaves the Seat if it is up, sets the trial's fight value, waits for the mission tick to hand the hero back, and enters again, so the
+    // Seat reads the setting at a new entry. A failed verdict ends the step, and nothing after it runs.
+    private IEnumerable<Verdict> ReEnter(bool fightOn)
+    {
+        _host.SetFightOn(fightOn);
+        _host.SetInput(NoInput);
+        if (_host.State != SeatState.Off)
+        {
+            _host.PressSeatKey();
+            var pressedAt = _now;
+            while (_host.PressPending)
+                yield return _now - pressedAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken") : Verdict.Waiting("press-taken");
+            if (_host.State != SeatState.Off)
+                yield return Verdict.Failed("reason=still-seated state=" + _host.State);
+        }
+
+        var leftAt = _now;
+        while (_now - leftAt < LeaveSettleSeconds)
+            yield return Verdict.Waiting("hand-back");
+        _playerAfterLeave = _host.HeroIsPlayerControlled && !_host.FightGateUp;
+
+        _host.PressSeatKey();
+        var enteredAt = _now;
+        while (_host.PressPending)
+            yield return _now - enteredAt > PressTakenSeconds ? Verdict.Failed("reason=press-not-taken") : Verdict.Waiting("press-taken");
+        while (_host.State != SeatState.Seated)
+            yield return _host.State == SeatState.Off ? Verdict.Failed("reason=not-entered state=Off") : Verdict.Waiting("seated");
+    }
+
+    private IEnumerable<Verdict> WaitForTheHandOff()
+    {
+        var waitedAt = _now;
+        while (!_host.HeroOnAi && _now - waitedAt < SeatTrialRules.HandOffWaitSeconds)
+            yield return Verdict.Waiting("hand-off");
+        if (!_host.HeroOnAi)
+            yield return Verdict.Failed("reason=not-handed controller=" + (_host.HeroIsPlayerControlled ? "Player" : "other") + " gate=" + Bit(_host.FightGateUp) + Standing());
+    }
+
+    private IEnumerable<Verdict> FightOn()
+    {
+        if (!Seated)
+            yield return NotSeated();
+
+        foreach (var verdict in ReEnter(fightOn: true))
+            yield return verdict;
+        foreach (var verdict in WaitForTheHandOff())
+            yield return verdict;
+
+        var start = _host.HeroPosition();
+        yield return Verdict.InMissionTick;
+        _host.ChargeHeroFormation();
+        var chargedAt = _now;
+        while (_now - chargedAt < SeatTrialRules.FightWindowSeconds)
+            yield return Verdict.Waiting("fight");
+
+        var end = _host.HeroPosition();
+        var moved = start == null || end == null ? float.NaN : start.Value.Distance2D(end.Value);
+        var onAi = _host.HeroOnAi;
+        var retreating = _host.HeroRetreating;
+        var panicked = _host.HeroPanicked;
+
+        yield return Verdict.InMissionTick;
+        var opened = _host.OpenPanel();
+        var openedAt = _now;
+        while (_now - openedAt < PanelSettleSeconds)
+            yield return Verdict.Waiting("panel-seen");
+
+        var panelOpen = opened && _host.PanelOpen;
+        yield return Verdict.InMissionTick;
+        _host.ClosePanel(asPlayer: true);
+
+        var facts = "controller=" + (onAi ? "AI" : "other") + " moved=" + Num(moved) + " retreating=" + Bit(retreating) + " panicked=" + Bit(panicked)
+            + " gate=" + Bit(_host.FightGateUp) + " panel=" + Bit(panelOpen) + Standing();
+        var pass = onAi && SeatTrialRules.FoughtOn(moved) && !retreating && !panicked && _host.FightGateUp && panelOpen && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> MoraleHeld()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (!_host.HeroOnAi)
+            yield return Verdict.Failed("reason=not-handed gate=" + Bit(_host.FightGateUp));
+
+        yield return Verdict.InMissionTick;
+        _host.WriteHeroMorale(0f);
+        var written = _host.HeroMorale;
+        if (!SeatTrialRules.AtMoraleFloor(written))
+            yield return Verdict.Failed("reason=morale-not-written written=" + Num(written) + Standing());
+
+        var wroteAt = _now;
+        while (_now - wroteAt < SeatTrialRules.MoraleWindowSeconds)
+            yield return Verdict.Waiting("morale");
+
+        var onAi = _host.HeroOnAi;
+        var panicked = _host.HeroPanicked;
+        var retreating = _host.HeroRetreating;
+        var facts = "controller=" + (onAi ? "AI" : "other") + " panicked=" + Bit(panicked) + " retreating=" + Bit(retreating) + " written=" + Num(written) + " morale=" + Num(_host.HeroMorale)
+            + " seconds=" + Num(_now - wroteAt) + Standing();
+        yield return onAi && !panicked && !retreating && Seated && !_host.Faulted ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private IEnumerable<Verdict> MeasureHeroSpeed()
+    {
+        if (_heroAt == null)
+            yield return Verdict.Failed("reason=no-hero");
+
+        var heroStart = _heroAt!.Value;
+        var fromTime = _heroTime;
+        var startedAt = _now;
+        while (_now - startedAt < SeatTrialRules.HeroWindowSeconds)
+        {
+            yield return Verdict.Waiting("hero-window");
+            if (_heroAt == null)
+                yield return Verdict.Failed("reason=no-hero");
+        }
+
+        _standSpeed = heroStart.Distance2D(_heroAt!.Value) / (_heroTime - fromTime);
+    }
+
+    private IEnumerable<Verdict> BackToStand()
+    {
+        if (!Seated)
+            yield return NotSeated();
+
+        yield return Verdict.InMissionTick;
+        _host.StopHeroFormation();
+        var stoppedAt = _now;
+        while (_now - stoppedAt < CompanyStopSeconds)
+            yield return Verdict.Waiting("company-stops");
+
+        foreach (var verdict in MeasureHeroSpeed())
+            yield return verdict;
+        var before = _standSpeed;
+        if (!SeatTrialRules.HeroStood(before))
+            yield return Verdict.Failed("reason=ground-not-quiet before=" + Num(before) + Standing());
+
+        foreach (var verdict in ReEnter(fightOn: false))
+            yield return verdict;
+        var gateDown = !_host.FightGateUp;
+
+        var settledAt = _now;
+        while (_now - settledAt < StandSettleSeconds)
+            yield return Verdict.Waiting("settle");
+
+        foreach (var verdict in MeasureHeroSpeed())
+            yield return verdict;
+        var speed = _standSpeed;
+        var player = _host.HeroIsPlayerControlled;
+        var facts = "after_leave=" + (_playerAfterLeave ? "Player" : "other") + " controller=" + (player ? "Player" : "other") + " gate=" + Bit(!gateDown)
+            + " before=" + Num(before) + " speed=" + Num(speed) + Standing();
+        yield return _playerAfterLeave && player && gateDown && SeatTrialRules.HeroStood(speed) && Seated && !_host.Faulted ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    // ---- Stage S5: take a soldier after the fall ----
+
+    private IEnumerable<Verdict> KeepToALargeCompany()
+    {
+        yield return Verdict.InMissionTick;
+        if (_host.ChooseCompany(largest: true) == 0)
+            yield return Verdict.Failed("reason=no-company");
+
+        _host.SelectChosenCompany();
+        var opened = _host.OpenPanel();
+        var openedAt = _now;
+        while (_now - openedAt < PanelSettleSeconds)
+            yield return Verdict.Waiting("panel-seen");
+
+        _host.PressKeep();
+        var pressedAt = _now;
+        while (_host.Keeping == SeatKeepKind.None && _now - pressedAt < SeatTrialRules.ShortWaitSeconds)
+            yield return Verdict.Waiting("keep-taken");
+        if (_host.Keeping != SeatKeepKind.Company)
+            yield return Verdict.Failed("reason=not-kept opened=" + Bit(opened) + " said=" + _host.Said.ToString(CultureInfo.InvariantCulture) + Standing());
+
+        yield return Verdict.InMissionTick;
+        _host.ClosePanel(asPlayer: true);
+    }
+
+    private IEnumerable<Verdict> HeroFalls()
+    {
+        if (!Seated)
+            yield return NotSeated();
+
+        foreach (var verdict in ReEnter(fightOn: true))
+            yield return verdict;
+        foreach (var verdict in WaitForTheHandOff())
+            yield return verdict;
+        if (!_host.HeroMortal)
+            yield return Verdict.Failed("reason=hero-immortal");
+
+        foreach (var verdict in KeepToALargeCompany())
+            yield return verdict;
+        var kept = _host.Keeping;
+
+        _ownedBeforeFall = _host.FormationsOwnedByHero();
+        var saidBefore = _host.Said;
+        yield return Verdict.InMissionTick;
+        _host.KillHero();
+        var killedAt = _now;
+        // The engine clears the main agent inside the kill, and the Seat lowers the gate and says the fall at its next mission tick, so a read
+        // that follows the kill sees the gate still up. The step waits for the Seat's reaction, within a named limit, and judges what it finds then.
+        while (!FallSeen(saidBefore) && _now - killedAt < SeatTrialRules.FallWaitSeconds)
+            yield return Verdict.Waiting("fall");
+
+        var waited = _now - killedAt;
+        var said = _host.Said - saidBefore;
+        var fell = _host.LastSaid == SeatMessage.HeroFell;
+        var facts = "main_null=" + Bit(!_host.HeroAlive) + " gate=" + Bit(_host.FightGateUp) + " owned=" + _ownedBeforeFall.ToString(CultureInfo.InvariantCulture)
+            + " kept=" + kept + " messages=" + said.ToString(CultureInfo.InvariantCulture) + " message_fell=" + Bit(fell) + " waited=" + Num(waited) + Standing();
+        var pass = !_host.HeroAlive && !_host.FightGateUp && _ownedBeforeFall > 0 && said == 1 && fell && Seated && !_host.Faulted;
+        yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    // The hero is gone, the Seat lowered the gate, and it has said something since the kill.
+    private bool FallSeen(int saidBefore) => !_host.HeroAlive && !_host.FightGateUp && _host.Said > saidBefore;
+
+    private IEnumerable<Verdict> TakeSoldier()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        if (_host.HeroAlive)
+            yield return Verdict.Failed("reason=hero-alive");
+        if (_host.Keeping != SeatKeepKind.Company)
+            yield return Verdict.Failed("reason=no-kept-company kept=" + _host.Keeping);
+
+        var saidBefore = _host.Said;
+        _host.PressTake();
+        var pressedAt = _now;
+        while (!_host.HeroAlive && _now - pressedAt < SeatTrialRules.ShortWaitSeconds)
+            yield return Verdict.Waiting("take");
+
+        var took = _host.HeroAlive && _host.TookFromKeptCompany;
+        var reading = _host.ReadHandOver();
+        var said = _host.Said - saidBefore;
+
+        yield return Verdict.InMissionTick;
+        var opened = _host.OpenPanel();
+        var openedAt = _now;
+        while (_now - openedAt < PanelSettleSeconds)
+            yield return Verdict.Waiting("panel-seen");
+
+        var panelOpen = opened && _host.PanelOpen;
+        yield return Verdict.InMissionTick;
+        _host.ClosePanel(asPlayer: true);
+
+        var facts = "took=" + Bit(took) + " controller_owner=" + Bit(reading.ControllerOwnerIsMain) + " owned_before=" + _ownedBeforeFall.ToString(CultureInfo.InvariantCulture)
+            + " owned_after=" + reading.OwnedByMain.ToString(CultureInfo.InvariantCulture) + " still_ai=" + reading.StillAi.ToString(CultureInfo.InvariantCulture)
+            + " messages=" + said.ToString(CultureInfo.InvariantCulture) + " panel=" + Bit(panelOpen) + Standing();
+        var pass = took && SeatTrialRules.CommandHandedOver(_ownedBeforeFall, reading) && panelOpen && Seated && !_host.Faulted;
         yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
     }
 }

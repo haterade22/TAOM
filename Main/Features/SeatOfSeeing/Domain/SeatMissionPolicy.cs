@@ -12,13 +12,13 @@ internal enum SeatMissionKind
 }
 
 /// <summary>
-/// The facts <see cref="SeatMissionPolicy"/> decides from. <paramref name="NetworkSession"/> is <c>GameNetwork.IsSessionActive</c>;
-/// <paramref name="ForeignCamera"/> is true when another mod's view owns the camera (build-spec 5.6).
+/// The facts <see cref="SeatMissionPolicy"/> decides from. <paramref name="NetworkSession"/> is true for the engine's network session or a
+/// live co-op session; <paramref name="ForeignCamera"/> is true when another mod's view owns the camera (build-spec 5.6).
 /// </summary>
 internal readonly record struct SeatMissionFacts(SeatMissionKind Kind, bool NetworkSession, bool ForeignCamera);
 
-/// <summary>What the Seat may do in a mission. The default value allows nothing.</summary>
-internal readonly record struct SeatPermissions(bool Camera, bool FightOn, bool Orders, bool Time);
+/// <summary>What the Seat may do in a mission; the default allows nothing.</summary>
+internal readonly record struct SeatPermissions(bool Camera, bool FightOn, bool Orders, bool Time, bool TakeSoldier);
 
 /// <summary>
 /// One pure function decides what the Seat may do in a mission, and everything else asks it (build-spec section 4). A battle
@@ -36,6 +36,6 @@ internal static class SeatMissionPolicy
         var battle = facts.Kind == SeatMissionKind.Battle;
         var orders = battle || facts.Kind == SeatMissionKind.Hideout;
         var singlePlayer = !facts.NetworkSession;
-        return new SeatPermissions(Camera: true, FightOn: battle && singlePlayer, Orders: orders, Time: orders && singlePlayer);
+        return new SeatPermissions(Camera: true, FightOn: battle && singlePlayer, Orders: orders, Time: orders && singlePlayer, TakeSoldier: battle && singlePlayer);
     }
 }

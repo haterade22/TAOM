@@ -1,4 +1,4 @@
-# In-game checks for the Seat of Seeing (stages S1 to S3) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
+# In-game checks for the Seat of Seeing (stages S1 to S5) and Marshal's Word (stages M1 to M4, M3 without Massed), one draft manifest for both features because one held
 # issue covers them (Seat contract, Deviations row 8). Read by tools/ingame_verdict.py. The Seat's lines come first; Marshal's Word's checks begin
 # at the comment "Marshal's Word, stages M1" below.
 #
@@ -7,8 +7,10 @@
 # Main/Features/SeatOfSeeing/Domain/SeatChecks.cs. Stages S2 and S3 add cursor (the first cursor of a mission), focus (the formation focus
 # patch put the pointer in the handler's field), panel-reopened (keep the panel open reopened it, or the view model could not be reached),
 # hide (the interface hidden, and restored with its reason) and keep and let-go (keeping to a soldier or a company, and letting go).
+# Stage S4 adds fight-on (the hero handed to the AI on the first mission tick of a stay, and handed back on the first one after the leave) and
+# stage S5 adds take (a soldier taken after the fall, with the number of formations the command was handed over for).
 # A [PatchApply] line for a Patch140 class that failed or was skipped fails the enter check too: Harmony stops a category at its first failing
-# class, so one such line is up to ten Seat patches off, and five of them are proved only by a press.
+# class, so one such line can leave every later Seat patch off, and some of them are proved only by a press.
 # Stage S1: enter and leave from the state changes (a refused key press writes an enter skip line,
 # and a leave names its reason), frames once a Seat has owned 60 frames, glide when the return glide is armed (a fail line when the
 # CameraElevation setter is missing, a skip line when there is no agent to follow), and fault when the latch fires. The hot-path counter
@@ -16,7 +18,7 @@
 #
 # DRAFT: no GitHub issue yet, so the file is 0.toml with issue = 0. --issue 0 reads it, --owed never reaches it, and --post stops at gh. When the issue exists, rename to <issue>.toml and set issue.
 issue = 0
-title = "Seat of Seeing S1 to S3 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target and glides back, orders queue, companies keep the array, archers loose on the word, a company marks its target"
+title = "Seat of Seeing S1 to S5 and Marshal's Word M1 to M4: the camera lifts off the hero, points, keeps to a target, glides back, the hero fights on and a soldier can be taken, orders queue, companies keep the array, archers loose on the word, a company marks its target"
 fixed_in = "7a4c4c00c"   # on trunk before the feature: the manifest ships with the emitter
 logs = ["taom"]
 
@@ -31,11 +33,12 @@ fail = [
   '\[SeatOfSeeing\] the Seat could not start',
   '\[SeatOfSeeing\] hotkey registration failed',
   '\[SeatOfSeeing\] order ray failed',
+  '\[SeatOfSeeing\] expected exactly one Agent\.IsPlayerControlled read',
   '\[PatchApply\] \S*Patch140_\S* (?:FAILED|SKIPPED)',
 ]
 # A latched fault anywhere in the session fails the entry check too: the fault line must stay at zero, and so must the lines of the
-# feature's own failures (the view could not start, the key could not register, the order ray threw, a Seat patch did not apply). A refused
-# key press writes a skip line, which reads NOT REACHED with its reason.
+# feature's own failures (the view could not start, the key could not register, the order ray threw, the order panel's transpiler found
+# no single read to swap, a Seat patch did not apply). A refused key press writes a skip line, which reads NOT REACHED with its reason.
 absence = "not-reached"
 
 [[check]]
@@ -133,6 +136,38 @@ pass = ['\[Check\] id=taom\.seat-of-seeing\.let-go result=pass mission=[0-9]+ re
 fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
 # A let-go with reason=leave only says that the Seat was left with a target kept, which the key, flight and death routes (the three reasons
 # above) do not prove, so it reads reached and not passed.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.fight-on"
+needs = "in a battle with \"Your hero fights on in the Seat\" on, take the Seat and leave it again: the hero is handed to the AI on the first mission tick of the stay and handed back on the first one after the leave"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.fight-on result=pass mission=[0-9]+ event=begin$']
+pass = [
+  '\[Check\] id=taom\.seat-of-seeing\.fight-on result=pass mission=[0-9]+ event=begin$',
+  '\[Check\] id=taom\.seat-of-seeing\.fight-on result=pass mission=[0-9]+ event=end$',
+]
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.fight-on result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+  '\[SeatOfSeeing\] expected exactly one Agent\.IsPlayerControlled read',
+]
+# A refused hand-off (the mission was ending, there was no hero, or an AI already drove him) names its reason on a skip line and reads NOT
+# REACHED with it. A hero who fell while handed, and a mission that ended inside the stay, have a begin line: they read reached with no end
+# line, and the reason is not printed (the log's skip line holds it). A throw from either call writes the fail line and latches the Seat
+# off, and a hand-back that failed all of its tries writes a second fail line.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.take"
+needs = "after the hero has fallen in a battle, press Take this soldier (Delete unless rebound) in the Seat with a soldier at the middle of the screen, or with a company kept"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.take result=pass']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.take result=pass mission=[0-9]+ kind=(Soldier|Hero) formations=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# Every refusal writes a skip line with its reason (denied, setting-off, hero-alive, nobody and the soldier's own: other-team, using-object,
+# retreating, fading-out, platform-crew, no-formation, hero, wounded). A soldier the pointer ray cannot reach (not human, not active) is
+# nobody, and so is a kept company whose every unit is refused: neither writes the soldier's own reason. A take that handed over no formation
+# (formations=0) reached the take and did not pass: a hero who commanded nothing is a legitimate take, so it reads NOT REACHED and the human
+# row decides.
 absence = "not-reached"
 
 # ---- Marshal's Word, stages M1 (orders in turn) and M2 (keep the array) ----
@@ -463,6 +498,44 @@ claim = "a first-person hero who holds a block or a swing at entry stops, and th
 
 [[human]]
 claim = "the hero stands under real movement keys: with the Seat up, WASD, the mouse buttons and the use key move or do nothing to the hero (a trial cannot press real keys, so hero_stands only observes the hero's speed)"
+
+# ---- Stages S4 and S5: what only a person can see ----
+
+[[human]]
+claim = "with \"Your hero fights on in the Seat\" on, taking the Seat in a field battle leaves the hero fighting inside his company (he does not stand still, he does not rout when his morale is low, and a Retreat order given to his company does not make him retreat), and the order panel opens from the Seat"
+
+[[human]]
+claim = "leaving the Seat with the hero fighting on gives the controls back within a frame or two: he stops, the glide returns to him, and WASD and the mouse work, with no second hero and no horse hunting on foot"
+
+[[human]]
+claim = "where an AI hero stands in his company: he fights in the ranks (or stays at the back rank, which Formation.TryRelocatePlayerUnit may do because IsPlayerUnit stays true), and the log's fight_on line states the distance he moved"
+
+[[human]]
+claim = "in a siege, with the hero fighting on: a hero on a ladder or in a ladder queue, and a hero manning an engine, neither crash nor take the camera from the Seat (an engine pilot makes RangedSiegeWeaponView set CustomCamera unless the patch skips it), and leaving the Seat on a ladder returns the controls with no error; a Player unit that stays listed by the ladder queue until it leaves the zone is the named limit"
+
+[[human]]
+claim = "a hero left outside the mission boundary while the Seat is up (fighting on or standing fast) is not retreated from the battle after ten seconds, and gets a fresh ten seconds after the leave"
+
+[[human]]
+claim = "a hero who falls while fighting on: the Seat stays up, one message names the Take this soldier key, and the hand-off and its patches stop serving (the order panel says \"Cannot issue order while dead.\")"
+
+[[human]]
+claim = "Options > Keybindings > Action shows the row \"Take this soldier (TAOM)\" with the key Delete and no ERROR text, and a press of Delete in a text field of the options does not take a soldier"
+
+[[human]]
+claim = "taking a soldier after the fall: the soldier at the middle of the screen (the cursor is not used after a fall, and no mark shows the centre) becomes the player, stands fast while the Seat is up, plays normally after the leave, and keeps the orders: every company the fallen hero owned obeys the player's panel"
+
+[[human]]
+claim = "after a take, the escape menu's quit text reads Retreat and the score screen is not marked as over (the Seat touches no scoreboard state), and in a custom battle the Tactics share and the battle's end behave as with a plain soldier"
+
+[[human]]
+claim = "the vanilla Kick key still takes a soldier in a custom battle or a campaign field battle with deployment when the Seat is not up, and from the Seat it takes nothing (Mission.CanTakeControlOfAgent answers false while seated); the prompt on that key may show disabled"
+
+[[human]]
+claim = "in a campaign field battle (the one check owed beyond the custom battle): after a take, the fallen hero's wounds and the soldier's experience reach the party as for any soldier, a hero of the player's party can be taken and the Tactics share goes to him, a hero of another party is refused (reason=hero), a soldier on the allied team is refused (reason=other-team), and a plain soldier of a party under the player's command or in his army stands on the player's team and can be taken, as in vanilla's take"
+
+[[human]]
+claim = "a soldier who is retreating, using an engine, wounded below a quarter of his health, a howdah or mumak crew member, a soldier who belongs to no formation or an enemy is refused with one message and a skip line with the reason"
 
 # ---- Marshal's Word, stages M1 and M2: what only a person can see ----
 

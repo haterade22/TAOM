@@ -21,5 +21,10 @@ internal static class SeatTrialRows
         new SeatTrialStep("keep_to_soldier", new[] { "enter" }, 25f),
         new SeatTrialStep("keep_to_company", new[] { "enter" }, 20f),
         new SeatTrialStep("let_go_on_death", new[] { "enter" }, 30f),
+        new SeatTrialStep("fight_on", new[] { "enter" }, 40f),
+        new SeatTrialStep("morale_held", new[] { "fight_on" }, 12f),
+        new SeatTrialStep("back_to_stand", new[] { "fight_on" }, 30f),
+        new SeatTrialStep("hero_falls", new[] { "enter" }, 30f),
+        new SeatTrialStep("take_soldier", new[] { "hero_falls" }, 30f),
     };
 }

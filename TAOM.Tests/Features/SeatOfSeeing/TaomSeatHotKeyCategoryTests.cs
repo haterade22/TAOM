@@ -33,9 +33,10 @@ public class TaomSeatHotKeyCategoryTests
     {
         Assert.AreEqual(530, TaomSeatHotKeyCategory.TakeTheSeatKeyId);
         Assert.AreEqual(531, TaomSeatHotKeyCategory.KeepToKeyId);
+        Assert.AreEqual(532, TaomSeatHotKeyCategory.TakeThisSoldierKeyId);
         Assert.AreEqual(536, TaomSeatHotKeyCategory.HideTheInterfaceKeyId);
-        CollectionAssert.AreEqual(new[] { 530, 531, 536 }, RegisteredKeys.Select(k => k.Id).ToArray(),
-            "keys 532 to 535 belong to stages S5 and S6 and are not registered before them");
+        CollectionAssert.AreEqual(new[] { 530, 531, 532, 536 }, RegisteredKeys.Select(k => k.Id).ToArray(),
+            "keys 533 to 535 belong to stage S6 and are not registered before it");
     }
 
     [TestMethod]
@@ -45,6 +46,7 @@ public class TaomSeatHotKeyCategoryTests
 
         Assert.AreEqual(InputKey.Q, defaults[530]);
         Assert.AreEqual(InputKey.Insert, defaults[531]);
+        Assert.AreEqual(InputKey.Delete, defaults[532]);
         Assert.AreEqual(InputKey.End, defaults[536]);
     }
 
@@ -102,7 +104,8 @@ public class TaomSeatHotKeyCategoryTests
             TaomRealmBordersHotKeyCategory.ToggleBordersKeyId, TaomRealmBordersHotKeyCategory.CycleMapModeKeyId,
         };
 
-        foreach (var id in new[] { TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomSeatHotKeyCategory.KeepToKeyId, TaomSeatHotKeyCategory.HideTheInterfaceKeyId })
+        foreach (var id in new[] { TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomSeatHotKeyCategory.KeepToKeyId, TaomSeatHotKeyCategory.TakeThisSoldierKeyId,
+                     TaomSeatHotKeyCategory.HideTheInterfaceKeyId })
             CollectionAssert.DoesNotContain(others, id);
     }
 
@@ -159,7 +162,7 @@ public class TaomSeatHotKeyCategoryTests
         var path = RepoPaths.RepoPath("Main", "_Module", "ModuleData", "global_strings.xml");
         var rows = XDocument.Load(path).Root!.Elements("string").ToList();
 
-        Assert.IsTrue(RegisteredKeys.Count() >= 3, "the keys of stages S1 to S3 are 530, 531 and 536");
+        Assert.IsTrue(RegisteredKeys.Count() >= 4, "the keys of stages S1 to S5 are 530, 531, 532 and 536");
         foreach (var key in RegisteredKeys)
         {
             var id = "str_key_name." + TaomSeatHotKeyCategory.CategoryId + "_" + key.Id;
@@ -177,6 +180,7 @@ public class TaomSeatHotKeyCategoryTests
         Assert.AreEqual(InputKey.Invalid, keys.TakeTheSeat);
         Assert.AreEqual(InputKey.Invalid, keys.TakeTheSeat, "a miss latches; a second read gives the same answer");
         Assert.AreEqual(InputKey.Invalid, keys.KeepTo);
+        Assert.AreEqual(InputKey.Invalid, keys.TakeThisSoldier);
         Assert.AreEqual(InputKey.Invalid, keys.HideTheInterface);
     }
 }

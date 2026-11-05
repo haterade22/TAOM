@@ -40,6 +40,13 @@ internal sealed class SeatSession
     private bool _panelWasOpen;
     private bool _keepOwed;
     private SeatCloseSignals _previousSignals;
+    private bool _fightChosen;
+    private bool _handed;
+    private bool _handBackOwed;
+    private int _handBackTries;
+    private float _lastRetreatCheck = float.NaN;
+    private bool _takeOwed;
+    private bool _fallSaid;
 
     // Set from the engine's callbacks (a mode change, a main agent change), which may not run on the thread that reads them.
     private volatile bool _deploymentEnded;
@@ -144,6 +151,7 @@ internal sealed class SeatSession
     /// </summary>
     internal void OnMissionTick()
     {
+        FightTick();
         if (Faulted)
             return;
         try
@@ -152,6 +160,7 @@ internal sealed class SeatSession
             {
                 _standFastOwed = false;
                 _hero.StandFast();
+                NoteTheFall();
             }
 
             if (_keepOwed)
@@ -159,6 +168,13 @@ internal sealed class SeatSession
                 _keepOwed = false;
                 if (State == SeatState.Seated && !_screen.ReadFacts().PhotoMode)
                     KeepPress();
+            }
+
+            if (_takeOwed)
+            {
+                _takeOwed = false;
+                if (State != SeatState.Off && !_screen.ReadFacts().PhotoMode)
+                    TakePress();
             }
         }
         catch (Exception ex)
@@ -176,6 +192,22 @@ internal sealed class SeatSession
         {
             if (!_screen.ReadFacts().PhotoMode)
                 _keepOwed = true;
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    /// <summary>The key to take a soldier after the fall, stored for the next mission tick and dropped in photo mode.</summary>
+    internal void PressTake()
+    {
+        if (State == SeatState.Off)
+            return;
+        try
+        {
+            if (!_screen.ReadFacts().PhotoMode)
+                _takeOwed = true;
         }
         catch (Exception ex)
         {
@@ -226,7 +258,192 @@ internal sealed class SeatSession
         {
             Fault(ex);
         }
+
+        _handBackOwed = false;
+        Swallow(() => SeatPresence.SetHeroFightsOn(false));
     }
+
+    private void FightTick()
+    {
+        if (!_handed && !_fightChosen && !_handBackOwed)
+            return;
+        try
+        {
+            if (_handBackOwed)
+            {
+                RetryHandBack();
+                return;
+            }
+
+            if (_handed && !_hero.HeroOnAi())
+            {
+                HeroFell();
+                return;
+            }
+
+            switch (SeatFightRule.Owed(SeatFightRule.Wanted(State, Faulted, _fightChosen), _handed))
+            {
+                case SeatFightAction.Begin:
+                    BeginFight();
+                    break;
+                case SeatFightAction.End:
+                    EndFight();
+                    break;
+                default:
+                    if (_handed)
+                        CheckForRetreat();
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            _fightChosen = false;
+            Swallow(() => _outcomes.Fail(SeatChecks.FightOnId, _key + ":throw", "mission=" + _key + " error=" + ex.GetType().Name));
+            Fault(ex);
+        }
+    }
+
+    private void BeginFight()
+    {
+        var refusal = _hero.BeginFighting();
+        if (refusal != SeatFightRefusal.None)
+        {
+            _fightChosen = false;
+            var why = SeatFightRule.Reason(refusal);
+            _outcomes.Skip(SeatChecks.FightOnId, _key + ":refused-" + why, "mission=" + _key + " reason=refused why=" + why);
+            return;
+        }
+
+        _handed = true;
+        _lastRetreatCheck = float.NaN;
+        SeatPresence.SetHeroFightsOn(true);
+        _outcomes.Pass(SeatChecks.FightOnId, _key + ":begin", "mission=" + _key + " event=begin");
+    }
+
+    private void EndFight()
+    {
+        _handed = false;
+        _handBackOwed = true;
+        _handBackTries = 0;
+        HandBackOnce();
+    }
+
+    private void HandBackOnce()
+    {
+        _handBackTries++;
+        try
+        {
+            _hero.EndFighting();
+        }
+        finally
+        {
+            SeatPresence.SetHeroFightsOn(false);
+        }
+
+        _handBackOwed = false;
+        _outcomes.Pass(SeatChecks.FightOnId, _key + ":end", "mission=" + _key + " event=end");
+    }
+
+    private void RetryHandBack()
+    {
+        if (!_hero.HeroOnAi())
+        {
+            _handBackOwed = false;
+            return;
+        }
+
+        try
+        {
+            HandBackOnce();
+        }
+        catch (Exception ex)
+        {
+            if (_handBackTries >= SeatFightRule.HandBackTries)
+                GiveUpOnHandBack(ex);
+            else
+                _outcomes.Swallowed("SeatOfSeeing", "HandBackRetry", ex);
+        }
+    }
+
+    private void GiveUpOnHandBack(Exception ex)
+    {
+        _handBackOwed = false;
+        Swallow(() => _outcomes.Fail(SeatChecks.FightOnId, _key + ":hand-back-failed", "mission=" + _key + " reason=hand-back-failed tries="
+            + _handBackTries.ToString(System.Globalization.CultureInfo.InvariantCulture) + " error=" + ex.GetType().Name));
+    }
+
+    private void HeroFell()
+    {
+        _handed = false;
+        _fightChosen = false;
+        SeatPresence.SetHeroFightsOn(false);
+        _outcomes.Skip(SeatChecks.FightOnId, _key + ":fell", "mission=" + _key + " reason=fell");
+    }
+
+    // A Retreat order or a rout would retreat the handed hero as it retreats every AI unit of his company, and a rout wounds a hero.
+    private void CheckForRetreat()
+    {
+        var now = _screen.RealSeconds();
+        if (!SeatFightRule.RetreatCheckDue(now, _lastRetreatCheck))
+            return;
+        _lastRetreatCheck = now;
+        if (_hero.StopHeroRetreat())
+            _outcomes.Pass(SeatChecks.FightOnId, _key + ":retreat-stopped", "mission=" + _key + " event=retreat-stopped");
+    }
+
+    private void NoteTheFall()
+    {
+        if (_hero.HeroActive())
+        {
+            _fallSaid = false;
+            return;
+        }
+
+        if (_fallSaid || !_permissions().TakeSoldier || !_settings.TakeSoldierAfterFall)
+            return;
+        _fallSaid = true;
+        _screen.Say(SeatMessage.HeroFell);
+    }
+
+    private void TakePress()
+    {
+        if (!_permissions().TakeSoldier)
+        {
+            SkipTake("denied");
+            return;
+        }
+
+        if (!_settings.TakeSoldierAfterFall)
+        {
+            SkipTake("setting-off");
+            return;
+        }
+
+        var result = _screen.TryTake();
+        switch (result.Outcome)
+        {
+            case SeatTakeOutcome.Taken:
+                _fallSaid = false;
+                _outcomes.Pass(SeatChecks.TakeId, _key + ":" + result.Kind, "mission=" + _key + " kind=" + result.Kind + " formations="
+                    + result.Formations.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                break;
+            case SeatTakeOutcome.HeroAlive:
+                SkipTake("hero-alive");
+                _screen.Say(SeatMessage.TakeHeroAlive);
+                break;
+            case SeatTakeOutcome.Nobody:
+                SkipTake("nobody");
+                _screen.Say(SeatMessage.TakeNobody);
+                break;
+            default:
+                SkipTake(SeatTakeRule.Reason(result.Refusal));
+                _screen.Say(SeatMessage.TakeRefused);
+                break;
+        }
+    }
+
+    private void SkipTake(string reason) =>
+        _outcomes.Skip(SeatChecks.TakeId, _key + ":" + reason, "mission=" + _key + " reason=" + reason);
 
     private void WhileOff(bool keyPressed, bool deploymentEnded)
     {
@@ -477,7 +694,9 @@ internal sealed class SeatSession
         _controllerShut = true;
         _screen.SetHeroController(false);
         _standFastOwed = true;
-        SeatPresence.Set(true);
+        var fightOn = _permissions().FightOn;
+        _fightChosen = fightOn && _settings.HeroFightsOn;
+        SeatPresence.Set(true, holdsBoundary: fightOn);
         State = blend ? SeatState.Rising : SeatState.Seated;
 
         if (!_firstEntryShown)
@@ -550,6 +769,7 @@ internal sealed class SeatSession
         Faulted = true;
         State = SeatState.Off;
         Cleanup(latching: true);
+        Swallow(() => SeatPresence.SetHeroFightsOn(false));
 
         Swallow(() => _logger.LogError($"[SeatOfSeeing] the Seat failed and is off for this mission, the hero's own camera restored: {ex}"));
         Swallow(() => _outcomes.Fail(SeatChecks.FaultId, _key, "mission=" + _key + " error=" + ex.GetType().Name));

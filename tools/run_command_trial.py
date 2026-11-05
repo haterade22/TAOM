@@ -67,6 +67,11 @@ SEAT_STEPS = (
     "keep_to_soldier",
     "keep_to_company",
     "let_go_on_death",
+    "fight_on",
+    "morale_held",
+    "back_to_stand",
+    "hero_falls",
+    "take_soldier",
 )
 # The step names of Main/Features/MarshalsWord/Domain/MarshalTrialRows.cs, in its order.
 MARSHAL_STEPS = (
@@ -85,11 +90,11 @@ STEP_LINE = re.compile(r"\[SeatTrial\] step=(\w+) result=(PASS|FAIL)\b")
 SEAT_CHECK_FAIL = re.compile(r"\bid=(taom\.seat-of-seeing\.[a-z0-9.-]+) result=fail\b")
 MARSHAL_CHECK_FAIL = re.compile(r"\bid=(taom\.marshals-word\.[a-z0-9.-]+) result=fail\b")
 # An [ERROR] line of the Seat or its trial (stage S2 onward): a fault, a failed start or a script failure; a Seat patch that failed to apply
-# or was skipped (Harmony stops a category at its first failing class, so one line is ten patches off: Main/PatchCategoryApplier.cs); the
-# thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost and SeatHeroAdapter). The
+# or was skipped (Harmony stops a category at its first failing class, so one line can leave every later patch of it off: Main/PatchCategoryApplier.cs); the
+# thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost, SeatHeroAdapter and SeatScreenAdapter). The
 # hot key failure is logged at LogError for the same reason. Another feature's patch or guard line does not fail this run.
 SEAT_ERROR = re.compile(
-    r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter)\.\w+ ran off the main mission thread)")
+    r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter|SeatScreenAdapter)\.\w+ ran off the main mission thread)")
 # An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, and a session that could not
 # start); the category Patch141 that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
 # namespace that was skipped (the applier writes the class's full name, which holds no "Patch141_"); and the thread guard's line for one of its

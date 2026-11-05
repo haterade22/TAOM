@@ -2,6 +2,7 @@ using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
+using TAOM.Features.SeatOfSeeing;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CultureDoctrine.Models;
@@ -23,9 +24,10 @@ public class TaomCustomBattleMoraleModel : CustomBattleMoraleModel
     }
 
     // Creature Bandits (#692): a creature bandit never panics, whatever its morale. Race Abilities: nor does a
-    // soldier while his ability holds a morale floor. A Long Defeat attacker never panics either (#1079).
+    // soldier while his ability holds a morale floor. A Long Defeat attacker never panics either (#1079). Nor does the hero while he fights
+    // on in the Seat of Seeing.
     public override bool CanPanicDueToMorale(Agent agent)
-        => !LongDefeatMorale.HoldsAttacker(agent) && !CreatureBanditAgents.RefusesMoralePanic(agent)
+        => !SeatPresence.RefusesPanic(agent.IsMainAgent) && !LongDefeatMorale.HoldsAttacker(agent) && !CreatureBanditAgents.RefusesMoralePanic(agent)
            && !RaceAbilityHooks.HoldsNerve(agent) && base.CanPanicDueToMorale(agent) && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
 
     public override float GetEffectiveInitialMorale(Agent agent, float baseMorale)

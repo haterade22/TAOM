@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
@@ -10,6 +11,7 @@ using TaleWorlds.ScreenSystem;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
@@ -202,6 +204,77 @@ internal sealed partial class CommandTrialHost
         _chosenFormation.ApplyActionOnEachUnit(units.Add);
         foreach (var unit in units)
             Kill(unit);
+    }
+
+    public void SetFightOn(bool fightOn)
+    {
+        var settings = CommandTrialRun.TrialSettings;
+        if (settings != null)
+            settings.HeroFightsOn = fightOn;
+    }
+
+    public bool FightGateUp => SeatPresence.HeroFightsOn;
+
+    public bool HeroOnAi => _mission.MainAgent != null && _mission.MainAgent.IsActive() && _mission.MainAgent.Controller == AgentControllerType.AI;
+
+    public bool HeroRetreating => _mission.MainAgent != null && _mission.MainAgent.IsRetreating();
+
+    public bool HeroPanicked => _mission.MainAgent?.CommonAIComponent?.IsPanicked == true;
+
+    public float HeroMorale => _mission.MainAgent == null ? float.NaN : _mission.MainAgent.GetMorale();
+
+    public bool HeroMortal => _mission.MainAgent != null && !_mission.DisableDying && _mission.MainAgent.CurrentMortalityState == Agent.MortalityState.Mortal;
+
+    public void ChargeHeroFormation()
+    {
+        NoteWrite("CommandTrialHost.ChargeHeroFormation");
+        _mission.MainAgent?.Formation?.SetMovementOrder(MovementOrder.MovementOrderCharge);
+    }
+
+    public void StopHeroFormation()
+    {
+        NoteWrite("CommandTrialHost.StopHeroFormation");
+        _mission.MainAgent?.Formation?.SetMovementOrder(MovementOrder.MovementOrderStop);
+    }
+
+    public void WriteHeroMorale(float morale)
+    {
+        NoteWrite("CommandTrialHost.WriteHeroMorale");
+        _mission.MainAgent?.SetMorale(morale);
+    }
+
+    public void KillHero()
+    {
+        if (_mission.MainAgent != null)
+            Kill(_mission.MainAgent);
+    }
+
+    public int FormationsOwnedByHero() => ReadHandOver(_mission.MainAgent).OwnedByMain;
+
+    public void PressTake() => _session.PressTake();
+
+    public bool TookFromKeptCompany => _chosenFormation != null && _mission.MainAgent != null && ReferenceEquals(_mission.MainAgent.Formation, _chosenFormation);
+
+    public SeatHandOverReading ReadHandOver() => ReadHandOver(_mission.MainAgent);
+
+    private SeatHandOverReading ReadHandOver(Agent? main)
+    {
+        var team = _mission.PlayerTeam;
+        if (main == null || team == null)
+            return new SeatHandOverReading(false, 0, 0);
+
+        var owned = 0;
+        var stillAi = 0;
+        foreach (var formation in team.FormationsIncludingEmpty)
+        {
+            if (formation.PlayerOwner != main)
+                continue;
+            owned++;
+            if (formation.IsAIControlled)
+                stillAi++;
+        }
+
+        return new SeatHandOverReading(ReferenceEquals(team.PlayerOrderController?.Owner, main), owned, stillAi);
     }
 
     private void Kill(Agent agent)

@@ -22,7 +22,7 @@
     <string id="taom_key_realm_borders_mode" text="Kartenmodus der Reichsgrenzen (TAOM)" />
     <string id="taom_key_realm_borders_mode_desc" text="Schaltet die Reichsgrenzen zwischen den Reichen, den Freien Völkern gegen den Schatten und deinen Verbündeten und Feinden um. Standard: G." />
     <string id="taom_key_seat_take" text="Take the Seat (TAOM)" />
-    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up. Defaults to Q." />
+    <string id="taom_key_seat_take_desc" text="Lifts your view off your hero so you can fly over the field, and brings it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Defaults to Q." />
     <string id="taom_key_marshal_queue" text="Give the Order in Turn (TAOM)" />
     <string id="taom_key_marshal_queue_desc" text="Hold while you give an order with the order panel open, and the company carries it out after its current orders. Defaults to Left Shift." />
     <string id="taom_key_marshal_widths" text="Keep the Widths (TAOM)" />
@@ -37,5 +37,7 @@
     <string id="taom_key_marshal_fire_desc" text="Press with a company selected to switch its archers between firing at will and drawing their bows to hold until your word, or for 14 seconds at most. Defaults to Comma." />
     <string id="taom_key_marshal_word" text="Give the Word (TAOM)" />
     <string id="taom_key_marshal_word_desc" text="Press with a company selected, and its archers who hold a drawn bow loose together. Defaults to M." />
+    <string id="taom_key_seat_take_soldier" text="Take this soldier (TAOM)" />
+    <string id="taom_key_seat_take_soldier_desc" text="In the Seat, after your hero has fallen in a battle, takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Defaults to Delete." />
   </strings>
 </base>

@@ -101,6 +101,7 @@ internal sealed partial class CommandTrialWorld
                 return;
             }
 
+            _fightChosen = FightOnSetting;
             State = BlendSeconds <= 0f ? SeatState.Seated : SeatState.Rising;
             SeatedAt = State == SeatState.Seated ? Time : SeatedAt;
             _blend = 0f;
@@ -125,6 +126,7 @@ internal sealed partial class CommandTrialWorld
     {
         MarshalFrame(dt);
         ResolveStageTwoAndThree();
+        ResolveStageFourAndFive();
         if (State == SeatState.Rising)
         {
             _blend += dt;
@@ -215,6 +217,8 @@ internal sealed partial class CommandTrialWorld
         if (PanelSiteMissing)
             return false;
         Faulted |= FaultMidStep;
+        if ((_heroOnAi && !PanelOpensForAiHero) || (_taken && PanelClosedForTheTakenSoldier))
+            return true;
         _panelIsOpen = true;
         _everOpened = true;
         _closeRequested = false;
@@ -414,6 +418,205 @@ internal sealed partial class CommandTrialWorld
             for (var i = 0; i < says; i++)
                 Say((wasCompany ? CompanyDeathSaysTheWrongThing : DeathSaysTheWrongThing) ? SeatMessage.KeepNobody : SeatMessage.KeepGone);
         }
+    }
+
+    // ---- Stage S4 and S5: the hero fights on, falls, and a soldier is taken ----
+
+    internal bool FightOnSetting;
+    internal bool HandsTheHero = true;
+    internal bool HandsTheHeroBack = true;
+    internal bool HeroFightsForReal = true;
+    internal bool MoraleMakesHimPanic;
+    internal bool MoraleMakesHimRetreat;
+    /// <summary>The write of the morale reaches no component, as when the hero is not on the AI: he keeps the morale he had.</summary>
+    internal bool MoraleWriteIsIgnored;
+    internal bool PanicsOnHandOff;
+    internal bool RetreatsOnHandOff;
+    internal bool HandOffRaisesGate = true;
+    internal bool GateStaysUpAfterHandBack;
+    /// <summary>The company ignores the Stop order and goes on moving, as a company in the middle of a charge may.</summary>
+    internal bool CompanyIgnoresTheStop;
+    /// <summary>How fast the hero walks once he is the player's again, after having been on the AI.</summary>
+    internal float DriftAfterHandBackPerSecond;
+    internal int TakePresses;
+    internal SeatKeepKind? KeepingAtTheTake;
+    /// <summary>Presses of the Seat key made before the company was told to stop.</summary>
+    internal int PressesWhenStopped = -1;
+    internal bool TheFallEndsTheKeep;
+    internal bool PanelClosedForTheTakenSoldier;
+    internal float? DropsTheHandOffAfter;
+    /// <summary>Seconds after the leave before the hero is handed back; 0 hands him back on the first mission tick.</summary>
+    internal float HandBackDelaySeconds;
+    internal bool PanelOpensForAiHero = true;
+    internal bool HeroCanDie = true;
+    internal bool FallLowersTheGate = true;
+    /// <summary>Real seconds after the kill before the Seat reacts (gate, message). The engine clears the main agent in the kill and the Seat sees that at its next mission tick, so 0 is that tick, never the kill's own.</summary>
+    internal float FallReactionSeconds;
+    internal int FallSays = 1;
+    internal bool FallSaysTheWrongThing;
+    internal int OwnedFormations = 3;
+    internal bool TakeWorks = true;
+    internal bool FaultOnTake;
+    internal bool TakesTheWrongSoldier;
+    internal bool TakeHandsTheCommand = true;
+    internal bool TakeLeavesOneFormationOnTheAi;
+    internal bool TakeHandsTheController = true;
+    internal int TakeHandsOver = -1;
+    internal readonly List<string> FightWrites = new();
+
+    private bool _fightChosen;
+    private bool _heroOnAi;
+    private bool _handedOnce;
+    private bool _gate;
+    private bool _charged;
+    private bool _moraleWritten;
+    private bool _takePressed;
+    private bool _heroDead;
+    private bool _fallSeen;
+    private float _fallAt;
+    private bool _taken;
+    private float _handOffAt = float.NaN;
+    private float _unwantedSince = float.NaN;
+
+    public void SetFightOn(bool fightOn)
+    {
+        FightOnSetting = fightOn;
+        Faulted |= FaultMidStep;
+    }
+
+    public bool FightGateUp => _gate;
+
+    public bool HeroOnAi => _heroOnAi;
+
+    public bool HeroRetreating { get; private set; }
+
+    public bool HeroPanicked { get; private set; }
+
+    public float HeroMorale => HeroPresent ? (_moraleWritten ? 0.01f : 50f) : float.NaN;
+
+    public bool HeroMortal => HeroCanDie;
+
+    private float FightDrift => _heroOnAi && _charged && HeroFightsForReal ? 3f : 0f;
+
+    private float AfterHandBackDrift => _handedOnce && !_heroOnAi && HeroPresent ? DriftAfterHandBackPerSecond : 0f;
+
+    public void ChargeHeroFormation()
+    {
+        Note("charge");
+        _charged = true;
+    }
+
+    public void StopHeroFormation()
+    {
+        Note("stop-formation");
+        PressesWhenStopped = Presses;
+        if (!CompanyIgnoresTheStop)
+            _charged = false;
+    }
+
+    public void WriteHeroMorale(float morale)
+    {
+        Note("morale");
+        _moraleWritten = !MoraleWriteIsIgnored;
+        if (_heroOnAi)
+        {
+            HeroPanicked |= MoraleMakesHimPanic;
+            HeroRetreating |= MoraleMakesHimRetreat;
+        }
+    }
+
+    public void KillHero()
+    {
+        Note("kill-hero");
+        Kills.Add("hero");
+        // The engine removes the agent and clears the main agent inside the kill (Mission.cs:3021), before the Seat's next mission tick runs.
+        _heroDead = true;
+        if (TheFallEndsTheKeep)
+            Keeping = SeatKeepKind.None;
+        _fallSeen = false;
+        _fallAt = Time + FallReactionSeconds;
+        HeroPresent = false;
+        _heroOnAi = false;
+    }
+
+    public int FormationsOwnedByHero() => HeroPresent ? OwnedFormations : 0;
+
+    public void PressTake()
+    {
+        TakePresses++;
+        KeepingAtTheTake = Keeping;
+        _takePressed = true;
+        Faulted |= FaultOnTake;
+    }
+
+    public bool TookFromKeptCompany => _taken && !TakesTheWrongSoldier;
+
+    public SeatHandOverReading ReadHandOver()
+    {
+        if (!_taken)
+            return new SeatHandOverReading(false, 0, 0);
+        var owned = TakeHandsOver >= 0 ? TakeHandsOver : TakeHandsTheCommand ? OwnedFormations : 0;
+        return new SeatHandOverReading(TakeHandsTheController, owned, TakeLeavesOneFormationOnTheAi && owned > 0 ? 1 : 0);
+    }
+
+    // The mission tick: the hand-off compares what is wanted with what was done (the Seat's own rule), the hero falls, and a pressed take acts.
+    private void ResolveStageFourAndFive()
+    {
+        var wanted = State != SeatState.Off && !Faulted && _fightChosen;
+        if (_heroDead && !_fallSeen)
+        {
+            if (Time >= _fallAt)
+            {
+                _fallSeen = true;
+                if (FallLowersTheGate)
+                    _gate = false;
+                if (State == SeatState.Seated)
+                    for (var i = 0; i < FallSays; i++)
+                        Say(FallSaysTheWrongThing ? SeatMessage.TakeNobody : SeatMessage.HeroFell);
+            }
+        }
+        else if (HeroPresent)
+        {
+            if (wanted && !_heroOnAi && HandsTheHero)
+            {
+                _heroOnAi = true;
+                _handedOnce = true;
+                _gate = HandOffRaisesGate;
+                _handOffAt = Time;
+                HeroPanicked |= PanicsOnHandOff;
+                HeroRetreating |= RetreatsOnHandOff;
+            }
+            else if (!wanted && _heroOnAi && HandsTheHeroBack && UnwantedLongEnough())
+            {
+                _unwantedSince = float.NaN;
+                _heroOnAi = false;
+                _gate = GateStaysUpAfterHandBack;
+                _charged = false;
+            }
+            else if (_heroOnAi && DropsTheHandOffAfter.HasValue && Time - _handOffAt >= DropsTheHandOffAfter.Value)
+            {
+                _heroOnAi = false;
+                HandsTheHero = false;
+            }
+        }
+
+        if (_takePressed)
+        {
+            _takePressed = false;
+            if (!HeroPresent && TakeWorks && State != SeatState.Off)
+            {
+                HeroPresent = true;
+                _heroDead = false;
+                _taken = true;
+            }
+        }
+    }
+
+    private bool UnwantedLongEnough()
+    {
+        if (float.IsNaN(_unwantedSince))
+            _unwantedSince = Time;
+        return Time - _unwantedSince >= HandBackDelaySeconds;
     }
 
     private void Note(string write)

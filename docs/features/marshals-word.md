@@ -46,7 +46,7 @@ reads the three held keys only with the order panel open, and the two pressed ke
 the mission tick, the shot callback and the mode change.
 
 - **Going live** (`MarshalSession`): at the first mission tick, and after each mode change until the answer is yes, it asks
-  `MarshalEnabled`, then `SeatMissionPolicy` (a Battle or Hideout kind with no foreign camera) and `GameNetwork.IsSessionActive`. While the
+  `MarshalEnabled`, then `SeatMissionPolicy` (a Battle or Hideout kind with no foreign camera) and the network fact (`GameNetwork.IsSessionActive` or a live co-op session, `SeatMissionClassifier.InNetworkSession`). While the
   answer is yes and there is no player team yet, each tick tests the team. Once live it stays live unless the fault latch ends it.
 - **The fault latch:** the screen tick, the mission tick and the capture each run in one try. A throw clears `MarshalHooks`, writes one
   `fault` fail line, shows one message, and a capture then answers "not queued", so vanilla runs the order. The screen tick and the capture write
@@ -307,7 +307,7 @@ with its engine line), `MarshalsWordWiringTests` (the Domain gate, the module, t
 
 ## Co-op: the four questions
 
-Marshal's Word is off whenever `GameNetwork.IsSessionActive`, so the answers are short. The archers' component, the shot table and the outline
+Marshal's Word is off whenever a network session is active (the engine's flag or a live co-op session, `SeatMissionClassifier.InNetworkSession`), so the answers are short. The archers' component, the shot table and the outline
 paint are created only by a live session, so they follow the same answers. **Presence** (`IsCoopActive`): the patches are applied
 for every player, and each returns at its first test unless the session is live, which it never is in a session. **Session and role:** no
 session means the local machine owns the whole simulation; a session stops the feature before it begins. **Dedicated server:** no screen, so no

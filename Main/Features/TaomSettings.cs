@@ -2942,7 +2942,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Seat of Seeing", GroupOrder = 82)]
     [SettingPropertyBool("{=taom_seat_mcm_enabled}Enable the Seat of Seeing", Order = 0, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up. Off, the key does nothing. Default: on.")]
+        HintText = "{=taom_seat_mcm_enabled_hint}Lets one key (Take the Seat, default Q, rebindable under Keybindings > Action) lift your view off the hero so you can fly over the field, and bring it back with a short glide. Your hero stands fast while you are up, or fights on if that setting is on. Off, the key does nothing. Default: on.")]
     public bool SeatEnabled { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEnabled;
 
     [SettingPropertyGroup("Seat of Seeing")]
@@ -2959,6 +2959,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_seat_mcm_keep_panel}Keep the order panel open", Order = 3, RequireRestart = false,
         HintText = "{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off.")]
     public bool SeatKeepPanelOpen { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultKeepPanelOpen;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_fight_on}Your hero fights on in the Seat", Order = 4, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_fight_on_hint}While you are in the Seat in a battle, your hero fights on with the company, driven by the game's AI, and you get the controls back when you leave. It acts the next time you take the Seat. Not in an online session. Default: off.")]
+    public bool SeatHeroFightsOn { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultHeroFightsOn;
+
+    [SettingPropertyGroup("Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_take}Take a soldier after your hero falls", Order = 5, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_take_hint}After your hero falls in a battle, the key Take this soldier (Delete unless rebound, under Options > Keybindings > Action) in the Seat takes the soldier at the middle of the screen, or the nearest one of the company you keep to, who then carries your orders. Off, the key does nothing. Not in an online session. Default: on.")]
+    public bool SeatTakeSoldierAfterFall { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultTakeSoldierAfterFall;
 
     // --- Marshal's Word (docs/features/marshals-word.md) ---
 

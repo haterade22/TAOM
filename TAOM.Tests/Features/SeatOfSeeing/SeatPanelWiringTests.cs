@@ -48,7 +48,8 @@ public class SeatPanelWiringTests
         var keys = Flat(Source("Client/Features/SeatOfSeeing/SeatKeys.cs"));
 
         StringAssert.Contains(keys, "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && input.IsKeyPressed(key)");
-        StringAssert.Contains(keys, "if (_session.State != SeatState.Seated) return; if (Pressed(_keys.HideTheInterface, input))");
+        // Key 532 is tested only while the state is not Off; keys 531 and 536 only while Seated (build-spec 6.0).
+        StringAssert.Contains(keys, "if (state == SeatState.Off) return; if (Pressed(_keys.TakeThisSoldier, input)) _session.PressTake(); if (state != SeatState.Seated) return; if (Pressed(_keys.HideTheInterface, input))");
         StringAssert.Contains(keys, "if (Pressed(_keys.KeepTo, input))");
         StringAssert.Contains(keys, "_session.PressHide();");
         StringAssert.Contains(keys, "_session.PressKeep();");

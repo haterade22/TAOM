@@ -39,7 +39,7 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
 
     public bool HeroAlive => HeroPresent;
 
-    public bool HeroIsPlayerControlled => HeroPlayerControlled;
+    public bool HeroIsPlayerControlled => HeroPlayerControlled && !_heroOnAi;
 
     public Vec3f? HeroPosition() => HeroGone ? null : new Vec3f(Hero.X + _heroDrift, Hero.Y, Hero.Z);
 
@@ -72,7 +72,7 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
     internal void MissionTick(CommandTrialScript script, float dt)
     {
         Frame(dt);
-        _heroDrift += HeroDriftPerSecond * dt;
+        _heroDrift += (HeroDriftPerSecond + FightDrift + AfterHandBackDrift) * dt;
         InMissionTick = true;
         try
         {
