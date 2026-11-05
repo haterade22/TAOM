@@ -744,9 +744,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_L1_1': dict(archetype='elf_queen',   # Galadriel — Ring-bearer, ancient Noldor; max-tier
-                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=366,Roguery=260,Charm=325,Leadership=397,Trade=260,Steward=415,Medicine=305,Engineering=260)),
+                skills=dict(OneHanded=390,TwoHanded=350,Polearm=340,Bow=380,Crossbow=260,Throwing=300,Riding=360,Athletics=330,Crafting=260,Scouting=320,Tactics=366,Roguery=260,Charm=340,Leadership=397,Trade=260,Steward=415,Medicine=330,Engineering=260)),  # combat above the T9 troops (KEYforce 2026-11-05)
             'lord_L1_2': dict(archetype='elf_king',    # Celeborn — Lord of Lothlórien, ancient Sindar
-                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=311,Roguery=250,Charm=250,Leadership=362,Trade=250,Steward=350,Medicine=250,Engineering=250)),
+                skills=dict(OneHanded=360,TwoHanded=360,Polearm=390,Bow=380,Crossbow=260,Throwing=300,Riding=380,Athletics=330,Crafting=250,Scouting=300,Tactics=340,Roguery=250,Charm=280,Leadership=380,Trade=250,Steward=350,Medicine=280,Engineering=250)),  # mounted glaive + bow, above the T9 troops (KEYforce 2026-11-05)
             # 2026-07-02 lord expansion (tools/author_elf_lords.py) — archetype pins so a
             # future regen reproduces the authored non-default assignments:
             'lord_L2_2': dict(archetype='elf_lord'),   # Thandirion — Warden-captain, owner of clan_lothlorien_2

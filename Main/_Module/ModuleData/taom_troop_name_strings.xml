@@ -581,6 +581,9 @@
 	<string id="aom_gondor_tol_vet_crossbowman_name" text="{=aom_gondor_tol_vet_crossbowman_name}[Gondor] Tolfalas Veteran Crossbowman" />
 	<string id="aom_gundabad_archer_name" text="{=aom_gundabad_archer_name}[Gundabad] Archer" />
 	<string id="aom_gundabad_berserker_name" text="{=aom_gundabad_berserker_name}[Gundabad] Pale Uruk Bone Breaker" />
+	<string id="aom_gundabad_blackshield_infantry_name" text="{=aom_gundabad_blackshield_infantry_name}[Gundabad] Blackshield Infantry" />
+	<string id="aom_gundabad_blackshield_spearman_name" text="{=aom_gundabad_blackshield_spearman_name}[Gundabad] Blackshield Spearman" />
+	<string id="aom_gundabad_blackshield_wolf_rider_name" text="{=aom_gundabad_blackshield_wolf_rider_name}[Gundabad] Blackshield Wolf Rider" />
 	<string id="aom_gundabad_bolgs_ironfang_name" text="{=aom_gundabad_bolgs_ironfang_name}[Gundabad] Bolg's Ironfang" />
 	<string id="aom_gundabad_brute_name" text="{=aom_gundabad_brute_name}[Gundabad] Pale Uruk Ravager" />
 	<string id="aom_gundabad_chosen_of_tharzog_name" text="{=aom_gundabad_chosen_of_tharzog_name}[Gundabad] Pale Uruk Mountain Guard" />
@@ -596,6 +599,16 @@
 	<string id="aom_gundabad_scout_name" text="{=aom_gundabad_scout_name}[Gundabad] Scout" />
 	<string id="aom_gundabad_sentry_name" text="{=aom_gundabad_sentry_name}[Gundabad] Sentry" />
 	<string id="aom_gundabad_snaga_name" text="{=aom_gundabad_snaga_name}[Gundabad] Pale Uruk Warrior" />
+	<string id="aom_gundabad_snow_archer_name" text="{=aom_gundabad_snow_archer_name}[Gundabad] Snow Orc Archer" />
+	<string id="aom_gundabad_snow_huntsman_name" text="{=aom_gundabad_snow_huntsman_name}[Gundabad] Snow Orc Huntsman" />
+	<string id="aom_gundabad_snow_marauder_name" text="{=aom_gundabad_snow_marauder_name}[Gundabad] Snow Orc Marauder" />
+	<string id="aom_gundabad_snow_reaver_name" text="{=aom_gundabad_snow_reaver_name}[Gundabad] Snow Orc Reaver" />
+	<string id="aom_gundabad_snow_recruit_name" text="{=aom_gundabad_snow_recruit_name}[Gundabad] Snow Orc Recruit" />
+	<string id="aom_gundabad_snow_savage_name" text="{=aom_gundabad_snow_savage_name}[Gundabad] Snow Orc Savage" />
+	<string id="aom_gundabad_snow_skirmisher_name" text="{=aom_gundabad_snow_skirmisher_name}[Gundabad] Snow Orc Skirmisher" />
+	<string id="aom_gundabad_snow_spearman_name" text="{=aom_gundabad_snow_spearman_name}[Gundabad] Snow Orc Spearman" />
+	<string id="aom_gundabad_snow_warrior_name" text="{=aom_gundabad_snow_warrior_name}[Gundabad] Snow Orc Warrior" />
+	<string id="aom_gundabad_snow_wolf_rider_name" text="{=aom_gundabad_snow_wolf_rider_name}[Gundabad] Snow Orc Wolf Rider" />
 	<string id="aom_gundabad_spear_warrior_name" text="{=aom_gundabad_spear_warrior_name}[Gundabad] Pale Uruk Spearman" />
 	<string id="aom_gundabad_sword_warrior_name" text="{=aom_gundabad_sword_warrior_name}[Gundabad] Pale Uruk Mauler" />
 	<string id="aom_gundabad_tracker_name" text="{=aom_gundabad_tracker_name}[Gundabad] Pale Uruk Fang Rider" />
@@ -762,6 +775,34 @@
 	<string id="aom_loke_rim_maceman_name" text="{=aom_loke_rim_maceman_name}[Rhûn] Loke-Rim Maceman" />
 	<string id="aom_loke_rim_marksman_name" text="{=aom_loke_rim_marksman_name}[Rhûn] Loke-Rim Marksman" />
 	<string id="aom_loke_rim_shieldguard_name" text="{=aom_loke_rim_shieldguard_name}[Rhûn] Loke-Rim Shieldguard" />
+	<string id="aom_lorien_archer_name" text="{=aom_lorien_archer_name}[Lothlórien] Lórien Archer" />
+	<string id="aom_lorien_bowman_name" text="{=aom_lorien_bowman_name}[Lothlórien] Lórien Bowman" />
+	<string id="aom_lorien_gl_archer_name" text="{=aom_lorien_gl_archer_name}[Lothlórien] Galadhrim Archer" />
+	<string id="aom_lorien_gl_bladeguard_name" text="{=aom_lorien_gl_bladeguard_name}[Lothlórien] Galadhrim Bladeguard" />
+	<string id="aom_lorien_gl_blademaster_name" text="{=aom_lorien_gl_blademaster_name}[Lothlórien] Galadhrim Blademaster" />
+	<string id="aom_lorien_gl_bowmaster_name" text="{=aom_lorien_gl_bowmaster_name}[Lothlórien] Galadhrim Bowmaster" />
+	<string id="aom_lorien_gl_highblade_name" text="{=aom_lorien_gl_highblade_name}[Lothlórien] Galadhrim Highblade" />
+	<string id="aom_lorien_gl_infantry_name" text="{=aom_lorien_gl_infantry_name}[Lothlórien] Galadhrim Infantry" />
+	<string id="aom_lorien_gl_mallorn_defender_name" text="{=aom_lorien_gl_mallorn_defender_name}[Lothlórien] Mallorn Defender" />
+	<string id="aom_lorien_gl_marksman_name" text="{=aom_lorien_gl_marksman_name}[Lothlórien] Galadhrim Marksman" />
+	<string id="aom_lorien_gl_sentinel_name" text="{=aom_lorien_gl_sentinel_name}[Lothlórien] Galadhrim Sentinel" />
+	<string id="aom_lorien_gl_warrior_name" text="{=aom_lorien_gl_warrior_name}[Lothlórien] Galadhrim Warrior" />
+	<string id="aom_lorien_infantry_name" text="{=aom_lorien_infantry_name}[Lothlórien] Lórien Infantry" />
+	<string id="aom_lorien_lancer_name" text="{=aom_lorien_lancer_name}[Lothlórien] Lórien Lancer" />
+	<string id="aom_lorien_longbowman_name" text="{=aom_lorien_longbowman_name}[Lothlórien] Lórien Longbowman" />
+	<string id="aom_lorien_mw_ambusher_name" text="{=aom_lorien_mw_ambusher_name}[Lothlórien] Marchwarden Ambusher" />
+	<string id="aom_lorien_mw_archer_name" text="{=aom_lorien_mw_archer_name}[Lothlórien] Marchwarden Archer" />
+	<string id="aom_lorien_mw_dawnrider_name" text="{=aom_lorien_mw_dawnrider_name}[Lothlórien] Marchwarden Dawnrider" />
+	<string id="aom_lorien_mw_high_ranger_name" text="{=aom_lorien_mw_high_ranger_name}[Lothlórien] Marchwarden High Ranger" />
+	<string id="aom_lorien_mw_outrider_name" text="{=aom_lorien_mw_outrider_name}[Lothlórien] Marchwarden Outrider" />
+	<string id="aom_lorien_mw_ranger_name" text="{=aom_lorien_mw_ranger_name}[Lothlórien] Marchwarden Ranger" />
+	<string id="aom_lorien_mw_sentry_name" text="{=aom_lorien_mw_sentry_name}[Lothlórien] Marchwarden Sentry" />
+	<string id="aom_lorien_mw_skirmisher_name" text="{=aom_lorien_mw_skirmisher_name}[Lothlórien] Marchwarden Skirmisher" />
+	<string id="aom_lorien_mw_waystalker_name" text="{=aom_lorien_mw_waystalker_name}[Lothlórien] Marchwarden Waystalker" />
+	<string id="aom_lorien_rider_name" text="{=aom_lorien_rider_name}[Lothlórien] Lórien Rider" />
+	<string id="aom_lorien_scout_name" text="{=aom_lorien_scout_name}[Lothlórien] Lórien Scout" />
+	<string id="aom_lorien_spearman_name" text="{=aom_lorien_spearman_name}[Lothlórien] Lórien Spearman" />
+	<string id="aom_lorien_warden_name" text="{=aom_lorien_warden_name}[Lothlórien] Lórien Warden" />
 	<string id="aom_merc_dg_orc_scout_name" text="{=aom_merc_dg_orc_scout_name}[Dol Guldur] Hired Orc Scout" />
 	<string id="aom_merc_erebor_oathsworn_name" text="{=aom_merc_erebor_oathsworn_name}[Erebor] Hired Oathsworn" />
 	<string id="aom_merc_goblin_fighter_name" text="{=aom_merc_goblin_fighter_name}[Goblin] Hired Goblin Raider" />
@@ -774,6 +815,7 @@
 	<string id="aom_merc_harad_redserp_noble_name" text="{=aom_merc_harad_redserp_noble_name}[Shaghana] Hired Red Serpent Noble" />
 	<string id="aom_merc_imladris_bowman_name" text="{=aom_merc_imladris_bowman_name}[Rivendell] Hired Imladris Bowman" />
 	<string id="aom_merc_lindon_noble_name" text="{=aom_merc_lindon_noble_name}[Lindon] Hired Noble" />
+	<string id="aom_merc_lorien_mw_sentry_name" text="{=aom_merc_lorien_mw_sentry_name}[Lothlórien] Hired Marchwarden Sentry" />
 	<string id="aom_merc_mirkwood_recruit_name" text="{=aom_merc_mirkwood_recruit_name}[Mirkwood] Hired Silvan Levy" />
 	<string id="aom_merc_mordor_orc_hunter_name" text="{=aom_merc_mordor_orc_hunter_name}[Mordor] Hired Orc Hunter" />
 	<string id="aom_merc_mordor_orc_impaler_name" text="{=aom_merc_mordor_orc_impaler_name}[Mordor] Hired Orc Impaler" />

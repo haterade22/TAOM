@@ -6,7 +6,7 @@
     "vlandia":    ["lord_4_1", "lord_4_3_1", "lord_4_7", "lord_4_3_2", "lord_4_16", "lord_4_6", "lord_4_28"],
     "mirkwood":   ["lord_M1_1", "lord_M1_11"],
     "rivendell":  ["lord_R1_1", "lord_R2_1", "lord_R1_3", "lord_R1_4"],
-    "lothlorien": ["lord_L1_1", "lord_L1_2"],
+    "lothlorien": ["lord_L1_1", "lord_L1_2", "lord_L2_2"],
     "isengard":   ["lord_I1_0", "lord_I1_1", "lord_I4_1", "lord_I2_1", "lord_I2_3", "lord_I3_1"],
     "erebor":     ["lord_E1_1", "lord_E1_2", "lord_E1_5"],
     "aserai":     ["harad_lord_infantry", "harad_lord_cavalry", "harad_lord_archer"],

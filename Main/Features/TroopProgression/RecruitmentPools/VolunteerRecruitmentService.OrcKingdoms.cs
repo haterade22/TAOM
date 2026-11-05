@@ -9,9 +9,23 @@ namespace TAOM.Features.TroopProgression;
 // clan > culture (troops.md).
 public partial class VolunteerRecruitmentService
 {
+    // --- Gundabad Settlement + Clan Mappings ---
+    // The Snow Orcs (troops_gundabad_snow.xml, T1 Recruit -> T5 Blackshields) are regional: they
+    // muster at Mount Gram and fill the Grishûk clan (clan_gundabad_6). Everywhere else Gundabad
+    // falls back to the culture pool below.
+    private static void InitializeGundabadSettlements()
+    {
+        AddSettlement("town_G2", ("gundabad_snow_recruit", 6), ("gundabad_snaga", 3));
+    }
+
+    private static void InitializeGundabadClans()
+    {
+        AddClan("clan_gundabad_6", ("gundabad_snow_recruit", 5), ("gundabad_snaga", 2));
+    }
+
     // --- Gundabad Culture Fallback ---
-    // Settlements/clans absent — Gundabad in TAOM is hostile faction; volunteer recruitment
-    // falls back to culture pool. Per #212 KEYforce troop revamp (Pale Uruk T2–T8).
+    // Hostile faction; volunteer recruitment falls back to the culture pool outside Mount Gram
+    // and the Grishûk clan. Per #212 KEYforce troop revamp (Pale Uruk T2–T8).
     private static void InitializeGundabadCulture()
     {
         CultureMap["gundabad"] = new List<VolunteerChance>
@@ -24,7 +38,8 @@ public partial class VolunteerRecruitmentService
             // from the melee snaga root, so they never appeared in recruitment. Add their entry
             // troops directly. Hunter is the archer-line entry (2); scout the rarer mounted line (1).
             new VolunteerChance("gundabad_hunter", 2),  // archer line entry
-            new VolunteerChance("gundabad_scout", 1)    // horse-archer line entry
+            new VolunteerChance("gundabad_scout", 1),   // horse-archer line entry
+            new VolunteerChance("gundabad_snow_recruit", 2)  // Snow Orc tree entry, away from Mount Gram
         };
     }
 
