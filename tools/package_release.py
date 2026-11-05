@@ -33,7 +33,8 @@ Usage:
 
 Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination /
             retired binaries in the source (RETIRED_BINARIES, dry runs included) / a shipped
-            ModuleData file defining a taom_test_ id (dry runs included).
+            ModuleData file defining a taom_test_ id / an Armory shader with no source players
+            have, or an Armory shader report that cannot be checked (all dry runs included).
 """
 from __future__ import annotations
 
@@ -282,6 +283,70 @@ def test_troop_files(plans) -> list:
     return found
 
 
+ARMORY_MODULE = "LOTRLOME_Armory"
+SHADER_REPORT = "Shaders/D3D11/shader_compile_report.log"
+# Right-anchored: a mesh name that fills its column leaves one space before the material, so a
+# split on runs of two spaces skips those rows (168 of the laptop's 49,746).
+_REPORT_ROW = re.compile(r"^(?P<mesh>.*\S)\s+(?P<material>\S+)\s+(?P<shader>\S+)\s+(?P<variants>\d+)\s*$")
+_REPORT_TOTAL = re.compile(r"^Total variants:\s*(\d+)\s*$")
+
+
+def parse_shader_report(text: str) -> tuple:
+    """(usage, problem): {shader: sorted materials} from a shader_compile_report.log, and why the
+    rows cannot be trusted (no trailer, or row variants that do not sum to it), else None."""
+    usage: dict = {}
+    variants = 0
+    total = None
+    for line in text.splitlines():
+        trailer = _REPORT_TOTAL.match(line)
+        if trailer:
+            total = int(trailer.group(1))
+            continue
+        row = _REPORT_ROW.match(line)
+        if row:
+            usage.setdefault(row["shader"], set()).add(row["material"])
+            variants += int(row["variants"])
+    usage = {shader: sorted(mats) for shader, mats in usage.items()}
+    if total is None:
+        return usage, "has no Total variants: trailer"
+    if total != variants:
+        return usage, f"rows sum to {variants} variants but its Total variants: trailer says {total}"
+    return usage, None
+
+
+def missing_armory_shaders(plans, game_root: Path) -> tuple:
+    """(info_lines, problems) for the Armory's shaders (decision D12). The 1.4.x line installs no
+    shader sources, so any taom_ shader is a gap wherever an .rs file sits; a native shader needs
+    <game_root>/Shaders/Sources/<shader>.rs. Fails closed: what cannot be checked is a problem."""
+    armory = next((p for p in plans if p.name.casefold() == ARMORY_MODULE.casefold()), None)
+    if armory is None:
+        return [], []
+    report = armory.root / SHADER_REPORT
+    try:
+        text = report.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], [f"{ARMORY_MODULE} ships no {SHADER_REPORT}, so its shaders cannot be checked"]
+    usage, problem = parse_shader_report(text)
+    if problem:
+        return [], [f"{ARMORY_MODULE}/{SHADER_REPORT} {problem}"]
+
+    problems = []
+    sources = game_root / "Shaders" / "Sources"
+    native = sorted(s for s in usage if not s.startswith("taom_"))
+    if native and not sources.is_dir():
+        problems.append(f"no {sources} to check the Armory's native shaders against; "
+                        "pass --game-root <the game folder>")
+    for shader in sorted(usage):
+        mats = usage[shader]
+        named = f"{shader}: {', '.join(mats[:6])}{f' (+{len(mats) - 6} more)' if len(mats) > 6 else ''}"
+        if shader.startswith("taom_"):
+            problems.append(f"{named} (a taom_ shader; the 1.4.x line installs no shader sources, "
+                            "decision D12)")
+        elif sources.is_dir() and not (sources / f"{shader}.rs").is_file():
+            problems.append(f"{named} (no {shader}.rs in {sources})")
+    return [f"  {shader}: {len(usage[shader])} materials" for shader in sorted(usage)], problems
+
+
 def _gb(n: int) -> float:
     return round(n / (1024 ** 3), 2)
 
@@ -347,6 +412,9 @@ def main(argv=None) -> int:
                     help="proceed even though unrecognised entries were found (they are still not copied)")
     ap.add_argument("--dry-run", action="store_true", help="report only; writes nothing")
     ap.add_argument("--json", metavar="PATH", help="write the manifest as JSON")
+    ap.add_argument("--game-root", metavar="PATH", default=None,
+                    help="game folder whose Shaders/Sources the Armory's native shaders need "
+                         "(default: the parent of --source)")
     args = ap.parse_args(argv)
 
     src = Path(args.source)
@@ -397,6 +465,18 @@ def main(argv=None) -> int:
         for rel in test_troops:
             print(f"  {rel}", file=sys.stderr)
         return 2
+
+    game_root = Path(args.game_root) if args.game_root else src.parent
+    shader_info, shader_problems = missing_armory_shaders(plans, game_root)
+    if shader_problems:
+        print("", file=sys.stderr)
+        for problem in shader_problems:
+            print(f"ERROR: shader sources: {problem}", file=sys.stderr)
+        return 2
+    if shader_info:
+        print("\nshader sources OK:")
+        for line in shader_info:
+            print(line)
 
     if args.json:
         manifest = {

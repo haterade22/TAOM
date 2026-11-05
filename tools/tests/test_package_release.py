@@ -514,5 +514,113 @@ class TestTestTroops(unittest.TestCase):
         self.assertEqual(pr.test_troop_files([plan]), [])
 
 
+_SHADER_REPORT = (
+    "Shader Compile Report -- Module: LOTRLOME_Armory\n"
+    "MetaMesh        Material        Shader        Variants\n"
+    "------------    ------------    ----------    --------\n"
+    "am_body         am_body         pbr_metallic      1664\n"
+    "a_mesh_name_filling_its_whole_column_width am_cape pbr_metallic 6\n"
+    "am_cape_b       am_cape_b       cloth_shader        30\n"
+    "\n"
+    "Total variants: 1700\n"
+)
+
+
+class TestArmoryShaderSources(unittest.TestCase):
+    """Decision D12: the 1.4.x line installs no shader sources, so a material naming a taom_ shader,
+    or a native shader with no .rs in the game's Shaders/Sources, renders invisible for every player.
+    The packager refuses in --dry-run too, and refuses when it cannot check (fail closed)."""
+
+    def _armory(self, td, report=_SHADER_REPORT):
+        src = _fixture(Path(td))
+        _write(src, "LOTRLOME_Armory/SubModule.xml", 10)
+        if report is not None:
+            _write_text(src, "LOTRLOME_Armory/Shaders/D3D11/shader_compile_report.log", report)
+        return src
+
+    def _sources(self, root, *shaders):
+        for shader in shaders:
+            _write(Path(root), f"Shaders/Sources/{shader}.rs", 1)
+
+    def _dry(self, td, src, *extra):
+        return _run("--source", str(src), "--dest", str(Path(td) / "out"),
+                    "--modules", "LOTRLOME_Armory", "--dry-run", *extra)
+
+    def test_every_row_is_read_and_the_total_checked(self):
+        # A mesh name that fills its column leaves one space before the material: a split on runs
+        # of two spaces skipped 168 rows of the real report, including this row's material.
+        usage, problem = pr.parse_shader_report(_SHADER_REPORT)
+        self.assertIsNone(problem)
+        self.assertEqual(usage, {"pbr_metallic": ["am_body", "am_cape"], "cloth_shader": ["am_cape_b"]})
+
+    def test_a_report_whose_rows_do_not_add_up_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, _SHADER_REPORT.replace("Total variants: 1700", "Total variants: 1701"))
+            self._sources(td, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("Total variants", r.stderr)
+
+    def test_native_shaders_with_sources_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            self._sources(td, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("shader sources OK", r.stdout)
+
+    def test_a_taom_shader_is_refused_wherever_its_source_sits(self):
+        report = _SHADER_REPORT.replace("cloth_shader", "taom_deformer_longbow")
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report)
+            self._sources(td, "pbr_metallic", "taom_deformer_longbow")
+            _write(src, "TAOM/Shaders/Sources/taom_deformer_longbow.rs", 1)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("taom_deformer_longbow", r.stderr)
+            self.assertIn("D12", r.stderr)
+
+    def test_a_native_shader_with_no_source_is_refused_and_names_its_materials(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            self._sources(td, "pbr_metallic")
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("cloth_shader", r.stderr)
+            self.assertIn("am_cape_b", r.stderr)
+            self.assertNotIn("pbr_metallic", r.stderr)
+
+    def test_a_missing_report_is_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report=None)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("ships no Shaders/D3D11/shader_compile_report.log", r.stderr)
+
+    def test_an_unplanned_armory_is_not_checked(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td, report=None)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertNotIn("shader sources", r.stdout + r.stderr)
+
+    def test_game_root_points_the_native_check_at_another_folder(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            game = Path(td) / "elsewhere"
+            self._sources(game, "pbr_metallic", "cloth_shader")
+            r = self._dry(td, src, "--game-root", str(game))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("shader sources OK", r.stdout)
+
+    def test_a_missing_sources_folder_says_to_pass_game_root(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = self._armory(td)
+            r = self._dry(td, src)
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("--game-root", r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
