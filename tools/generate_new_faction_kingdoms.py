@@ -95,10 +95,23 @@ def get_block(text, pattern):
 
 
 def upsert(text, close_tag, payload, marker):
-    text = re.sub(r'[ \t]*<!-- ' + re.escape(marker) + r':BEGIN -->.*?<!-- ' + re.escape(marker) + r':END -->\n',
-                  '', text, flags=re.DOTALL)
+    # Replace an existing block where it stands (#947): re-appending it moved it below any block or rows
+    # added after it (heroes.xml keeps hand-authored heroes after the lindon block). Only an absent block goes
+    # before the closing tag. A second region or a lone BEGIN or END is refused: the engine loads the later row of a repeated id, so a stale copy
+    # must fail.
+    if close_tag not in text:
+        raise RuntimeError(f"{marker}: closing tag {close_tag} not found")
+    begin, end = f"<!-- {marker}:BEGIN -->", f"<!-- {marker}:END -->"
+    block = f"  {begin}\n{payload}  {end}\n"
+    pattern = r"[ \t]*" + re.escape(begin) + r".*?" + re.escape(end) + r"\n?"
+    begins, ends = text.count(begin), text.count(end)
+    text, found = re.subn(pattern, lambda _: block, text, flags=re.DOTALL)
+    if not (found == begins == ends <= 1):
+        raise RuntimeError(f"{marker} before {close_tag}: {begins} BEGIN and {ends} END marker(s), "
+                           f"{found} complete region(s); expected at most one")
+    if found:
+        return text
     idx = text.rfind(close_tag)
-    block = f"  <!-- {marker}:BEGIN -->\n{payload}  <!-- {marker}:END -->\n"
     return text[:idx] + block + text[idx:]
 
 
