@@ -244,6 +244,16 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, two even matches at 4x:** both ended at minute 40 with a winner, a score that matches the towers lost, the result panel's flow and a clean exit. No match has been played by a person, so how a win on points feels is still open.
 
+### The night survey: elves' free waves and Dol Guldur (this change)
+
+**Survey on `0ae71a7ae`, six matches at 4x, one per pair:** every match ended by minute 40, with no owner hit. Rivendell beat Mordor at 38.3 minutes (gold trade 2.34 to 0.38). Erebor beat Dol Guldur at 20.4 minutes, 7 towers to 0, tower damage 76,585 to 2,015 (trade 1.35 to 0.62). Isengard beat Rohan on time, 3 towers to 2, with a trade of 0.65 to 1.43. Mirkwood beat Gondor at 30.9 minutes, 7 towers to 0, with 8,447 gold unspent. Umbar v Easterlings went to Easterlings on time. Dale beat Gundabad at 37.8 minutes. Check 8 failed in the Dol Guldur match.
+
+**Why:** elves win through free troops, so a price would not touch them: 72% of Mirkwood's units came free, and a Rivendell free bowman killed 19.6 times its value. Dol Guldur is the weakest faction and also carried a 15% income penalty.
+
+**Changed:** Rivendell `waveInterval` 1.5 to 2, Mirkwood none to 1.5, Dol Guldur `income` 0.85 to 1. Its stated weakness is now that its strongest soldiers come only in packs of three.
+
+**Result: not measured.**
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.

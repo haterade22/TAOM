@@ -7339,7 +7339,6 @@
 
     <string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="Call a spider or a fell warg every 45 seconds." />
 
-    <string id="TAOM_FOW_Trait_DolGuldur_Poor" text="15% less income." />
 
     <string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="The Shadow: enemy towers fire a quarter slower." />
 
@@ -7521,6 +7520,7 @@
     <string id="TAOM_FOW_Feed_TimeUp" text="Time is up." />
     <string id="TAOM_FOW_Result_TimeVictoryText" text="Time ran out, and you hold more of the field." />
     <string id="TAOM_FOW_Result_TimeDefeatText" text="Time ran out, and the enemy holds more of the field." />
+    <string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="Its strongest soldiers come only in small packs of three." />
   </strings>
 
 </base>

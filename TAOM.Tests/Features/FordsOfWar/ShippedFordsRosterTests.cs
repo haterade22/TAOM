@@ -377,7 +377,7 @@ public class ShippedFordsRosterTests
         var mordor = Shipped("mordor");
 
         Assert.IsTrue(rivendell.FreeWaves.All(w => w.Units.Sum(u => u.Count) == 3), "evidence: 2027 orcs fell to Rivendell's free waves");
-        Assert.AreEqual(1.5f, rivendell.FeatsOrNone.WaveInterval);
+        Assert.AreEqual(2f, rivendell.FeatsOrNone.WaveInterval);
         CollectionAssert.DoesNotContain(mordor.FreeWaves.SelectMany(w => w.Units).Select(u => u.TroopId).ToList(), "fow_mordor_orc_recruit", "an L1 orc's blow does nothing to armour");
         Assert.AreEqual("fow_mordor_orc_fighter", mordor.Units.Single(o => o.OfferId == "orc_rabble").TroopId);
     }

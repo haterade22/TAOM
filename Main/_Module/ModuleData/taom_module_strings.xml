@@ -4529,7 +4529,7 @@
 	<string id="TAOM_FOW_Trait_Dale_Bows" text="{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer." />
 	<string id="TAOM_FOW_Trait_Dale_Melee" text="{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds." />
-	<string id="TAOM_FOW_Trait_DolGuldur_Poor" text="{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income." />
+	<string id="TAOM_FOW_Trait_DolGuldur_FewStrong" text="{=TAOM_FOW_Trait_DolGuldur_FewStrong}Its strongest soldiers come only in small packs of three." />
 	<string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower." />
 	<string id="TAOM_FOW_Trait_Easterlings_Army" text="{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army." />
 	<string id="TAOM_FOW_Trait_Easterlings_Discipline" text="{=TAOM_FOW_Trait_Easterlings_Discipline}Discipline: new orders are ready twice as fast." />
