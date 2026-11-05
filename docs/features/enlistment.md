@@ -1828,6 +1828,44 @@ stale-latch predicates, and `ServiceBattleService` refuses the join as a floor. 
 `StartBattleAction.cs:23-30`, `:113-115`), so that fight is joined. Reviews:
 `rca-enlistment-village-raids-2026-10-20.md`, `rca-enlistment-relief-lord-2026-10-20.md`.
 
+### A joined battle starts no private war (#832, join-time part only)
+
+Before a join, `ServiceBattleService` asks `IServiceDiplomacyService.MirrorWarAtJoin` for the
+faction of the opposing side's leader (`IEncounterAdapter.GetOpposingLeaderFactionId`). For a
+soldier whose oath identity is his own clan (`ServiceWarPolicy.ShouldMirrorMidTerm`), a war his
+lord's realm fights and he does not is declared first with the default reason
+(`IServiceDiplomacyAdapter.FollowWarOn`; v1.4.8 cancels rather than fails quests for a war the
+player did not cause, `QuestHelper.cs:138-151`) and recorded in `MirroredWars`, so discharge
+unwinds it. Declarations and peace report success only when they landed (TAOM's alliance veto
+can skip them). Not ported from 1.5.x: the hourly mid-term war follow and the release when the
+lord's realm goes to war with the player's own (plan 128 decision P128-1).
+
+### Vassals sit out battles their kingdom is not at war in (#960)
+
+A soldier whose clan serves a kingdom sits out a commander's battle against a faction his kingdom
+is not at war with (`ShouldSitOutAsVassal`), because 'Attack' there would declare a kingdom-wide
+war (v1.4.8 `BeHostileAction.cs:187-197`). Review: `rca-enlistment-vassal-sit-out-2026-10-21.md`.
+
+### Merit is the hero's (#834) and the grace state promotes no one (#835)
+
+`EnlistmentMeritMissionBehavior` counts a kill only when `affectorAgent.Character` is
+`CharacterObject.PlayerCharacter` and treats a controlled non-hero soldier as the hero being
+down (v1.4.8 `Mission.CanTakeControlOfAgent` needs a non-hero, `Mission.cs:6332-6336`).
+`EnlistmentBattlePayoutService` evaluates no promotion in `CommanderUnavailable`, matching the
+daily tick. The 1.5.x personal spoils and promotion notice are not ported.
+
+### No battle encounter is left without a way out (#1021)
+
+A landed join whose `encounter` menu fails to open stays in the battle (the game opens the menu).
+`BreakStaleBattleLatch` also times an `EnlistedAttached` soldier outside a settlement whose open
+encounter is a joined battle (`IEncounterAdapter.IsJoinedBattleEncounter`), and releases an
+`EnlistedBattle` soldier inside a settlement without finishing the encounter, because a finish
+there teleports or walks out an unmerged party (v1.4.8 `PlayerEncounter.cs:1082-1093`). The next
+join forgets a reused encounter's old result (`ForgetEndedBattleResult`) so a defender's next
+assault is fought (`PlayerEncounter.cs:1860-1866`, `:1287-1295`). A feature-off discharge waits
+until the battle ends. This relies on ownership rule R1b being inert on 1.4.x; WP132 ports its
+deletion (`3b848c411`). Review: `rca-enlistment-encounter-exits-2026-10-26.md`.
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
