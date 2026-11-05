@@ -2913,4 +2913,6 @@
 	<string id="taom_patch_apply_phase_mission_start" text="{=taom_patch_apply_phase_mission_start}mission start" />
 	<!-- MissionStartGuardAdapter -->
 	<string id="taom_mission_start_guard_notice" text="{=taom_mission_start_guard_notice}{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
+	<!-- SkeletonBufferEngineAdapter -->
+	<string id="taom_skeleton_buffer_warning" text="{=taom_skeleton_buffer_warning}This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
 </strings>

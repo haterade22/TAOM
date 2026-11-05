@@ -36,6 +36,16 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
         HintText = "When a mission behavior, a module's mission-start callback or a mission object throws in one of the six start calls of Mission.AfterStart while a mission is loading, log it, show a short message, cut that call short and let the mission start, instead of the game loading the mission again every frame for ever. A throw elsewhere in the load, such as a behavior's OnMissionScreenPreLoad, is not covered. Enable Crash Capture does not affect this setting. When off, the guard lets the exception pass through untouched. Takes effect immediately. Default ON.")]
     public bool SurviveMissionStartFailures { get; set; } = true;
 
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Skeleton Buffer Guard", Order = 4, RequireRestart = true,
+        HintText = "The engine reserves room for the skeletons drawn in each frame in two per-frame buffers (65,536 and 262,144 entries) and never checks that the next one fits; one skeleton too many (about 2,340 in view for the first buffer) freezes the battle for good. When on, TAOM bounds-checks both buffers by rewriting 13 bytes of the engine at launch at each one, so a skeleton that would not fit is drawn from that buffer's first slots instead (its bones may look wrong for that frame). TAOM installs each check only where the exact engine bytes are found exactly once: a build that only moves the function is still patched, and a changed build gets nothing written. It also writes nothing for a buffer another module already guards, and guards the other one regardless. Takes effect at the next launch. Default ON.")]
+    public bool SkeletonBufferGuard { get; set; } = true;
+
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Skeleton Buffer Watch", Order = 5, RequireRestart = false,
+        HintText = "Reads how full those two buffers get during every mission, not only battles, and writes the peaks to the log when the mission ends, with how many times each guard had to step in. If nothing guards the first buffer, also shows one warning at 90 percent full. Takes effect at the start of the next mission. Default ON.")]
+    public bool SkeletonBufferWatch { get; set; } = true;
+
     // --- Bundle ---
 
     [SettingPropertyGroup("Bundle")]

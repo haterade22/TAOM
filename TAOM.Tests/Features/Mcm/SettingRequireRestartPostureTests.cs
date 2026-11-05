@@ -28,6 +28,7 @@ namespace TAOM.Tests.Features.Mcm;
 /// MCM setting can gate anything in OnSubModuleLoad: <c>GlobalSettings&lt;T&gt;.Instance</c> is null
 /// until MCM's own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles
 /// left this list on 2026-09-24 and are read at capture time instead.
+/// <c>CrashReportSettings.SkeletonBufferGuard</c> is allowlisted too: it is read once, at the first main menu, because the guard writes engine code once.
 ///
 /// MCMv5.dll is a runtime-only dependency of the test project, so the attribute is read by name
 /// rather than by type, the same way MCM's own <c>BasePropertyDefinitionWrapper</c> reads it.
@@ -38,6 +39,7 @@ public class SettingRequireRestartPostureTests
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
         [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
+        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.SkeletonBufferGuard)}"] = "Read once, at the first main menu, where the guard rewrites 13 bytes at each of up to two sites in engine code or does not: the write is never undone, so turning it on or off needs a restart (docs/features/skeleton-buffer-guard.md)",
     };
 
     private static readonly Type[] SettingsClasses =

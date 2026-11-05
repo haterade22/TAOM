@@ -61,6 +61,8 @@ public static class CoopSettingsRelevance
         // Whether a throw out of a mission start call is survived (Patch103): crash containment, filed here with
         // EnableCrashCapture and EnableNativeToManagedCapture, which also change what runs after an exception.
         "SurviveMissionStartFailures",
+        // The skeleton buffer watch (docs/features/skeleton-buffer-guard.md): a log line and one on-screen warning.
+        "SkeletonBufferWatch",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
         "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",
@@ -112,6 +114,8 @@ public static class CoopSettingsRelevance
         "NameplateNeutralPlateOpacity", "NameplateRelationPlateOpacity",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
         "EnableNativeSkinFixes",
+        // The skeleton buffer guard: where the engine writes a frame's skeleton data when a pool is full; never what is simulated.
+        "SkeletonBufferGuard",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",

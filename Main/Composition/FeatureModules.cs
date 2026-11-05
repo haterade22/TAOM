@@ -17,5 +17,6 @@ internal static class FeatureModules
     {
         new Features.WandererAllegiance.WandererAllegianceModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
+        new Features.SkeletonBuffer.SkeletonBufferModule(),
     };
 }
