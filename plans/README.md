@@ -138,7 +138,7 @@ the trunk. Item and roster data is deferred; WPs 102, 103, 115, 116, 121, 122 an
 | [102](102-changelog-at-release.md) | Adopt plan 020 on the 1.4.x line: the commit body is the changelog entry and /release generates CHANGELOG.md | 0 / harness | P2 | M | MED | 101 | TODO |
 | [103](103-executor-safety-harness.md) | Make the 1.4.x hook gates decide, judge the right worktree, and never deploy from a documented command | 0 / harness | P1 | L | MED | 102 | TODO |
 | [104](104-guarded-patch-categories.md) | Apply every Harmony patch category through one guard, and give the wiring tests one honest source reader | 0 / code | P1 | M | MED | 101 | DONE (2026-11-05, overnight, e179ae138) |
-| [105](105-composition-root.md) | Add the plan 018 feature-module runner and move WandererAllegiance into the first module | 0 / code | P2 | M | MED | 104 | TODO |
+| [105](105-composition-root.md) | Add the plan 018 feature-module runner and move WandererAllegiance into the first module | 0 / code | P2 | M | MED | 104 | DONE (2026-11-05, overnight, 983bdf8f3) |
 | [106](106-offthread-and-tick-safety.md) | Park off-thread callback writes (#634) and recover the mission tick handshake safely | 1 / A | P1 | L | MED | 103, 105 | TODO |
 | [107](107-crash-capture-and-patchshield.md) | Make crash capture thread-aware on 16 allowlisted shims, keep throw sites, and take PatchShield off the shims and the per-call lookup (plans 006, 007, 034) | 1 / B | P1 | L | MED | 101, 102, 103, 104, 105, 106 | TODO |
 | [108](108-missing-body-load-hang.md) | Guard the missing collision-body infinite wait (Patch90) and gate missing bodies and meshes at the desk | 1 / C | P0 | M | MED | 103, 105 | TODO |
@@ -288,6 +288,7 @@ Merge notes the plans leave to the integrator:
 - **`docs/features/map-perf-profiler.md`.** After both WP117 and WP120 merge, apply the rows WP120 lists for it.
 
 - 2026-11-05, WP104, merge e179ae138cdc7467e3c36271332c578a1714079b: tests 9190 total, 9187 passed, 3 skipped, 0 failed (baseline 9154 plus the plan's 36). Baseline moved: build exit 0, 0 errors, 2358 warnings (was 2251), BHA0001 gone (0 BHA lines); clean merge; ModuleData strings only, validator still BROKEN_ITEM_REF 3768 (provisional, D25). Deferred: Step 6 (deep-review check 9) is not on the branch, its precondition grep prints 5 lines on the merged tree, not the plan's 4; the `ManualPatchApplicator` guard and old-spelling docs stay with later WPs.
+- 2026-11-05, WP105, merge 983bdf8f31e963641ff8332e1920cd7de42b74a8: tests 9225 total, 9222 passed, 3 skipped, 0 failed (9190 plus the plan's 35; the optional CRLF test was not added). Baseline moved: test count only; build exit 0, 0 errors, 2358 warnings (unchanged), 0 BHA lines; clean merge, no conflicts. Deferred: the composition root ADR (maintainer, `/new-adr`; D2 is the decision of record); the plan's in-game checks are owed.
 
 ### Baseline after WP101 (measured 2026-11-04 on the laptop)
 
