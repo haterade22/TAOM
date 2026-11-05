@@ -31,7 +31,9 @@ Usage:
       --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies --allow-unknown
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
 
-Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination.
+Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination /
+            retired binaries in the source (RETIRED_BINARIES, dry runs included) / a shipped
+            ModuleData file defining a taom_test_ id (dry runs included).
 """
 from __future__ import annotations
 
@@ -79,6 +81,13 @@ RUNTIME_STATE_FILES = frozenset({"diag.log", "last-good-modlist.txt", "failed-mo
 # would block the run.
 RDC_DIR_PREFIX = "RuntimeDataCache"
 NATIVE_DEBUG_EXT = frozenset({".pdb", ".exp", ".lib"})
+
+# Binaries an earlier build shipped and the repo has since deleted: inlined into TAOM.dll on
+# 2026-05-24. Deploys never delete, so the install, its _wEditor/_Server mirrors and a channel
+# folder built from it keep them. The run refuses (dry runs included) until they are pruned.
+# Compared case-insensitively by file name. MinHook.x64.dll and TAOM.NativeSkinFixes.dll stay
+# allowed on the 1.4.x line: they are its vendored allowlist.
+RETIRED_BINARIES = frozenset({"behaviortrees.dll", "behaviortreewrapper.dll"})
 
 # Backup sidecars the tools under tools/ leave beside the live file (tools/README.md "XML I/O
 # convention"). The suffix sits AFTER the real extension, and the dated, topic-tagged forms are
@@ -244,6 +253,35 @@ def execute(plan: ModulePlan, dest_root: Path) -> int:
     return n
 
 
+def retired_binaries(plans) -> list:
+    """<module>/<rel> of every RETIRED_BINARIES file under a planned module's bin/."""
+    return [f"{p.name}/{rel}" for p in plans for rel, _size in p._copy_list
+            if rel.split("/", 1)[0] == "bin"
+            and PurePosixPath(rel).name.casefold() in RETIRED_BINARIES]
+
+
+# A Custom-Battle test troop DEFINED by id; a {=taom_test_x} name key alone defines nothing.
+_TEST_TROOP_ID_RE = re.compile(rb'\bid\s*=\s*"taom_test_')
+
+
+def test_troop_files(plans) -> list:
+    """<module>/<rel> of every shipped ModuleData .xml or .xslt that defines a taom_test_ id. A
+    channel package is cut from the install, where deploys never delete, so a grep of the repo
+    cannot vouch for it: the v2.0.35 testing package shipped five test riders that way."""
+    found = []
+    for p in plans:
+        for rel, _size in p._copy_list:
+            if rel.split("/", 1)[0] != "ModuleData" or not rel.casefold().endswith((".xml", ".xslt")):
+                continue
+            try:
+                data = (p.root / rel).read_bytes()
+            except OSError:
+                continue
+            if _TEST_TROOP_ID_RE.search(data):
+                found.append(f"{p.name}/{rel}")
+    return found
+
+
 def _gb(n: int) -> float:
     return round(n / (1024 ** 3), 2)
 
@@ -343,6 +381,22 @@ def main(argv=None) -> int:
                 print(f"  {p.name}/{rel}")
             if len(p.unknown) > 20:
                 print(f"  ... and {len(p.unknown) - 20} more in {p.name}")
+
+    retired = retired_binaries(plans)
+    if retired:
+        print("\nERROR: retired binaries in the source; delete them there (install bin folders or "
+              "the channel folder) and re-run:", file=sys.stderr)
+        for rel in retired:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    test_troops = test_troop_files(plans)
+    if test_troops:
+        print("\nERROR: Custom-Battle test troops (taom_test_ ids) in the source; delete these files "
+              "there (the install, or the channel folder) and redeploy before packaging:", file=sys.stderr)
+        for rel in test_troops:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
 
     if args.json:
         manifest = {
