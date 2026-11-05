@@ -54,7 +54,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from _gamedir import ensure_exists, game_modules
-from _loc_sources import TAOM_SOURCES
+from _loc_sources import OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: F401
 
 
 # ── Configuration ──────────────────────────────────────────────────────────────
@@ -315,13 +315,40 @@ def key_owners(sources: list[Path]) -> dict[str, Path]:
     return owners
 
 
+
+
+def english_only_override_ids(source: Path) -> set:
+    """Vanilla keys TAOM rewords in English only: a `{=KEY}` row of taom_module_strings.xml whose key is
+    an 8-character vanilla id (`taom_*`, `TAOM_*` and `aom_*` keys are TAOM's own and are translated).
+
+    LocalizationOverrideLoader applies these rows in English alone (Patch25_LocalizationOverride); every
+    other language keeps vanilla's curated row. A TAOM language row for such a key replaces that row and
+    drops its grammar tokens (VanillaKeyOverrideTests), so --sync-ids must not seed one and the
+    translator must not fill one, except the pairs in kept-vanilla-key-rows.txt, which keep TAOM's
+    row and are still filled. VanillaKeyOverrideTests checks exact membership against the install;
+    this shape check needs no game, and LanguageFileCoverageTests applies the same rule."""
+    if source.name != OVERRIDE_SOURCE:
+        return set()
+    return {k for k in _parse_string_xml(source, strip_keys=True) if VANILLA_ID_SHAPE.fullmatch(k)}
+
+
+def override_ids_to_skip(source: Path, target: Path) -> set:
+    """The English-only override ids a writer must leave out of `target`: every override id of `source`
+    except a row the target already holds (such a row is kept, as in skip_ids_for). Every writer of TAOM
+    language rows uses this one definition: skip_ids_for, rebuild_translation_files and
+    generate_translation_template."""
+    return english_only_override_ids(source) - set(_parse_string_xml(target, strip_keys=False))
+
+
 def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> set:
     """Keys the TAOM pass must neither seed into nor translate for `target`: those another English
-    source owns, and those another file of the same language already carries, EXCEPT any row the
-    target itself holds. The engine reads a language as the union of its files (so do
-    LanguageFileCoverageTests), so a second row is never missing coverage, only a later-loading copy
-    that can drift; but a row the target already has is always diffed, or keys declared by two
-    sources (42 module/xslt pairs) would be skipped by both passes and never translated again.
+    source owns, English-only vanilla overrides (override_ids_to_skip), and those another file of
+    the same language already carries, EXCEPT any row the target itself holds.
+
+    The engine reads a language as the union of its files (so do LanguageFileCoverageTests), so a
+    second row is never missing coverage, only a later-loading copy that can drift; but a row the
+    target already has is always diffed, or keys declared by two sources (42 module/xslt pairs)
+    would be skipped by both passes and never translated again.
 
     A sibling file that exists but does not parse raises: read as empty, its keys would look absent
     and --sync-ids would seed duplicates of them."""
@@ -329,11 +356,11 @@ def skip_ids_for(source: Path, target: Path, owners: dict, lang_dir: Path) -> se
     for other in lang_dir.glob("std_taom_*.xml"):
         if other != target:
             try:
-                ET.parse(other)
+                tree = ET.parse(other)
             except ET.ParseError as exc:
                 raise SystemExit(f"{other} does not parse ({exc}); fix it before a translator run")
-            elsewhere.update(_parse_string_xml(other, strip_keys=False))
-    return elsewhere - set(_parse_string_xml(target, strip_keys=False))
+            elsewhere.update(el.get("id", "") for el in tree.iter("string") if el.get("id", ""))
+    return (elsewhere - set(_parse_string_xml(target, strip_keys=False))) | override_ids_to_skip(source, target)
 
 
 def _diff_files(source: Path, target: Path, skip_ids=frozenset()) -> list[Entry]:

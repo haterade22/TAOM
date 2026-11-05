@@ -49,6 +49,10 @@ Until #706 the prefix applied in every language. For a non-English player that h
 - **One INFO line per switch**, written when a lookup first sees the new language and never again for it, into TAOM's own log (`Logs/taom_debug_<timestamp>.log`): `[LocalizationOverride] Text language 'Deutsch' is not English: ...` when the language changes to a non-English one, and `[LocalizationOverride] Text language is English again: the English string overrides apply` when it changes back to English from one. A session that starts in English writes neither, since nothing was off before it. The only state is the last language seen, held in one interlocked field because a text can resolve on any thread; `NoteLanguageChange` is that latch step, internal so a test can call it directly. The logger is resolved from the container inside that rare path, and a logger that cannot be resolved costs one failed attempt, never a failed lookup.
 - **Left to vanilla:** a language with no row for an id shows the call site's inline English, as vanilla does for every other string, and no longer gets TAOM's override as a stand-in. None of today's twelve languages is in that state for the 313 ids.
 
+### English-only rewordings keep the game's translation
+
+TAOM rewords 181 vanilla texts in English only. Any language row for one of those ids would replace the game's curated translation, so `taom_module_strings.xml` holds the English and the language files hold no row, with 369 exceptions listed in `TAOM.Tests/Infrastructure/Localization/kept-vanilla-key-rows.txt`, where the game's row would read wrong with TAOM's names. Removing the rest deleted 1,803 language rows on the 1.4.x line. `VanillaKeyOverrideTests` gates it against the installed modules, and the translator, the template writer and `rebuild_translation_files.py` leave these keys out. v1.4.8 still declares `bjEN2OzZ` and `d6KbdIWg`, so those two rows stay in the English file.
+
 ### Component Diagram
 
 ```

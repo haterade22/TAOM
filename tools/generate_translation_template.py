@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from _loc_sources import TAOM_SOURCES
+from translate_with_claude import override_ids_to_skip
 
 # Force UTF-8 stdout so printing a non-Latin language tag (简体中文, 한국어, Русский, ...) doesn't
 # crash on Windows' default cp1252 console encoding. Mirrors translate_with_claude.py's header
@@ -134,7 +135,10 @@ def process_language(lang_code, dry_run):
         target_filename = filename_template.format(locale=locale)
         target_path = lang_path / target_filename
 
-        entries = extract_entries(source_path)
+        # A vanilla key TAOM rewords in English only gets no language row (VanillaKeyOverrideTests),
+        # unless the file already holds one.
+        english_only = override_ids_to_skip(source_path, target_path)
+        entries = [(k, v) for k, v in extract_entries(source_path) if k not in english_only]
         total += len(entries)
         print(f"    {source_path.name} -> {target_filename} ({len(entries)} entries)")
 

@@ -353,6 +353,85 @@ class KeyOwnershipTests(unittest.TestCase):
             self.assertEqual(owners["own"], second)
 
 
+class EnglishOnlyOverrideTests(unittest.TestCase):
+    """A vanilla key TAOM rewords is an English-only override (LocalizationOverrideLoader reads the non-taom_ rows
+    of taom_module_strings.xml, Patch25 applies them in English). A language row would replace vanilla's curated
+    translation, so --sync-ids must not seed one and the translator must not fill one."""
+
+    SRC = ('<strings>'
+           '<string id="s1" text="{=0CsbbwtN}Call {KINGDOM} to War" />'
+           '<string id="s2" text="{=taom_own_key}Own" />'
+           '<string id="s3" text="{=TAOM_beni_zilal_name}Beni" />'
+           '<string id="s4" text="{=aom_ab_notable_0}Notable" />'
+           '<string id="s5" text="{=LjUhEJxz}Caravan of {OWNER.NAME}" />'
+           '</strings>')
+
+    def _setup(self, d, name="taom_module_strings.xml", target_rows=""):
+        d = Path(d)
+        src = d / name
+        src.write_text(self.SRC, encoding="utf-8")
+        lang = d / "DE"
+        lang.mkdir()
+        tgt = lang / "std_taom_module_strings_deu-DE.xml"
+        tgt.write_text("<base><strings>\n" + target_rows + "</strings></base>", encoding="utf-8")
+        return src, tgt, lang
+
+    def test_only_vanilla_shaped_ids_of_the_module_file_are_overrides(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, _, _ = self._setup(d)
+            self.assertEqual(t.english_only_override_ids(src), {"0CsbbwtN", "LjUhEJxz"})
+
+    def test_other_english_sources_have_no_overrides(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, _, _ = self._setup(d, name="taom_xslt_strings.xml")
+            self.assertEqual(t.english_only_override_ids(src), set())
+
+    def test_sync_ids_seeds_taom_keys_and_not_the_override(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d, target_rows='<string id="LjUhEJxz" text="Karawane" />\n')
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            added = t.sync_missing_ids(src, tgt, skip_ids=skip)
+            self.assertEqual(sorted(added), ["TAOM_beni_zilal_name", "aom_ab_notable_0", "taom_own_key"])
+            self.assertNotIn("0CsbbwtN", t._parse_string_xml(tgt, strip_keys=False))
+
+    def test_translator_does_not_discover_the_override(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d)
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            ids = {e.string_id for e in t._diff_files(src, tgt, skip_ids=skip)}
+            self.assertNotIn("0CsbbwtN", ids)
+            self.assertIn("taom_own_key", ids)
+
+    def test_a_longer_or_newline_padded_id_is_not_an_override(self):
+        # The shape is an exact match: nine characters, or eight plus a newline, are TAOM keys.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src = Path(d) / "taom_module_strings.xml"
+            src.write_text('<strings><string id="a" text="{=0CsbbwtNx}Nine" />'
+                           '<string id="b" text="{=0CsbbwtN&#10;}Newline" /></strings>', encoding="utf-8")
+            self.assertEqual(t.english_only_override_ids(src), set())
+
+    def test_a_sibling_file_that_does_not_parse_stops_the_run(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d)
+            (lang / "std_taom_xslt_strings_deu-DE.xml").write_text("<base><strings>", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+
+    def test_a_row_the_language_file_already_holds_is_still_examined(self):
+        # A row the language file already holds is diffed, as for any other key.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, tgt, lang = self._setup(d, target_rows='<string id="LjUhEJxz" text="Caravan of {OWNER.NAME}" />\n')
+            skip = t.skip_ids_for(src, tgt, t.key_owners([src]), lang)
+            self.assertNotIn("LjUhEJxz", skip)
+
+
 class ShippedKeyCoverageTests(unittest.TestCase):
     """Over the shipped tree: every key a TAOM English source declares is examined by at least one discovery pass
     in every language. A key its owner's pass skips (another file carries it) and no other source declares is
@@ -367,6 +446,7 @@ class ShippedKeyCoverageTests(unittest.TestCase):
             lang_dir = t.TAOM_LANG_DIR / lang
             hidden = set(owners)
             for _, src, template in sources:
+                hidden -= t.english_only_override_ids(src)   # English-only overrides carry no language row on purpose
                 skip = t.skip_ids_for(src, lang_dir / template.format(locale=locale), owners, lang_dir)
                 hidden -= set(t._parse_string_xml(src, strip_keys=True)) - skip
             if hidden:

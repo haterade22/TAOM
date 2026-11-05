@@ -11,6 +11,8 @@ one; taom_module_strings.xml and taom_xslt_strings.xml share 42 keys.
 No side effects on import, so any tool or test may import it.
 """
 
+import re
+
 TAOM_SOURCES = [
     ("taom_module_strings.xml",                      "std_taom_module_strings_{locale}.xml"),
     ("global_strings.xml",                           "std_taom_keybind_strings_{locale}.xml"),
@@ -31,3 +33,7 @@ TAOM_SOURCES = [
     ("taom_clan_name_strings.xml",                    "std_taom_clan_name_strings_{locale}.xml"),
     ("taom_kingdom_name_strings.xml",                 "std_taom_kingdom_name_strings_{locale}.xml"),
 ]
+
+# Where LocalizationOverrideLoader reads its English-only overrides, and the shape of a vanilla key.
+OVERRIDE_SOURCE = "taom_module_strings.xml"
+VANILLA_ID_SHAPE = re.compile(r"[0-9A-Za-z]{8}")

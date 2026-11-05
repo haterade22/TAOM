@@ -324,6 +324,10 @@ than paying for a pass that would produce twelve slightly different renderings o
 
 A key two English sources declare belongs to the first one in `tools/_loc_sources.py`: the translator seeds and translates it only in that source's language file, and it does not seed a key another file of the language already carries. A row the target file already holds is still diffed.
 
+### English-only overrides
+
+An 8-character vanilla id in `taom_module_strings.xml` is a rewording for English players (181 today). Give it no language row: the game's own translation shows. The 369 rows that stay are listed in `kept-vanilla-key-rows.txt`, each with its reason; 1,803 rows were removed on the 1.4.x line. The tools skip these keys. To change the meaning in every language, give the text a TAOM key instead.
+
 ## Adding Canonical Translations to Overrides
 
 If you want certain key terms translated consistently (e.g., always render "Strider" as "Бродяжник" in Russian), add them to `tools/translation_overrides/<lang>.json`:
