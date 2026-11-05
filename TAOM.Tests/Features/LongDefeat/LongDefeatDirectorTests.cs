@@ -810,6 +810,21 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void Stalemate_ChargeWithOneDefenderLeft_EndsAsALoss_SkipsStale_AndNamesWhoStood()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Field.AttackersStanding = 30;
+        rig.Field.Defenders = 1;
+
+        rig.PumpUntil(() => rig.Director.Result != null, dt: 30f, limit: 60);
+
+        Assert.AreEqual(RunEndReason.DefendersDead, rig.Director.Result!.Reason);
+        Assert.IsFalse(rig.Outcomes.Lines.Any(l => l.StartsWith("fail " + LongDefeatChecks.StaleId + " ")));
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[End]") && l.Contains("defenders 1")));
+    }
+
+    [TestMethod]
     public void Shutdown_AbandonsTheRun_ClearsTheSessionAndKeepsTheResult()
     {
         var rig = NewRig();

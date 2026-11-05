@@ -211,14 +211,14 @@ internal sealed partial class LongDefeatDirector
 
         _finished = true;
         if (_chargedWave != 0)
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason));
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
         ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed);
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);
-        _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling");
+        _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
     }
 
     private bool WriteReport()
