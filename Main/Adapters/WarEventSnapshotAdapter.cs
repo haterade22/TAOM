@@ -118,6 +118,7 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
             return new RaidOutcomeSnapshot
             {
                 AttackerVictory = winnerSide == BattleSideEnum.Attacker,
+                VillageLooted = component?.MapEventSettlement?.Village?.VillageState == Village.VillageStates.Looted,
                 AttackerFactionId = faction?.StringId,
                 AttackerPartyName = attackerParty?.Name?.ToString() ?? "",
                 AttackerFactionName = faction?.Name?.ToString() ?? "",

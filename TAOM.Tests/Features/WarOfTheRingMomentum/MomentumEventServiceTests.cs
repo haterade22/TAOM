@@ -380,6 +380,7 @@ public class MomentumEventServiceTests
         var raid = new RaidOutcomeSnapshot
         {
             AttackerVictory = true,
+            VillageLooted = true,
             AttackerFactionId = "isengard",
             AttackerPartyName = "Uruk warband",
             AttackerFactionName = "Isengard",
@@ -390,6 +391,18 @@ public class MomentumEventServiceTests
 
         Assert.AreEqual(20000, _state.Evil.SideMomentum);
         Assert.AreEqual(1, _state.Evil.TotalStats.TotalVillagesRaided);
+    }
+
+    // #774: the engine reports a won militia fight as a raid win before the village is looted.
+    [TestMethod]
+    public void ProcessRaid_AttackerWonTheMilitiaFightButDidNotLoot_NoChange()
+    {
+        var raid = new RaidOutcomeSnapshot { AttackerVictory = true, VillageLooted = false, AttackerFactionId = "isengard" };
+
+        _sut.ProcessRaid(raid, _state, 300.0);
+
+        Assert.AreEqual(0, _state.Evil.SideMomentum);
+        Assert.AreEqual(0, _state.Evil.TotalStats.TotalVillagesRaided);
     }
 
     [TestMethod]

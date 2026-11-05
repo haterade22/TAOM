@@ -111,7 +111,7 @@ public class MomentumEventService : IMomentumEventService
 
     public void ProcessRaid(RaidOutcomeSnapshot raid, MomentumWarState state, double nowHours)
     {
-        if (raid == null || !state.HasWarStarted || state.HasWarEnded || !raid.AttackerVictory)
+        if (raid == null || !state.HasWarStarted || state.HasWarEnded || !raid.AttackerVictory || !raid.VillageLooted)
             return;
         if (string.IsNullOrEmpty(raid.AttackerFactionId) || !state.DoesKingdomTakePart(raid.AttackerFactionId))
             return;
