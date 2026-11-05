@@ -127,9 +127,9 @@ class SelectionTests(unittest.TestCase):
     def test_the_troop_id_baseline_selects_moduledata(self):
         self.assertIn("moduledata", _ids(dg.select(dg.GATES, ["tools/shipped_troop_ids.txt"])))
 
-    def test_a_prefab_selects_the_sprite_test(self):
+    def test_a_prefab_selects_the_brush_test(self):
         selected = dg.select(dg.GATES, ["Main/_Module/GUI/PreFabs/X.xml"])
-        self.assertTrue(any("PrefabSpriteTests" in " ".join(g.cmd) for g in selected))
+        self.assertTrue(any("PrefabExtensionBrushTests" in " ".join(g.cmd) for g in selected))
 
     def test_a_deleted_path_is_dropped_from_the_file_list_but_still_selects(self):
         g = next(g for g in dg.GATES if g.id == "xml-schemas")

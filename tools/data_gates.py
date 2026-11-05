@@ -127,12 +127,12 @@ GATES = (
          ("python", "tools/add_map_villages.py", "--check"), ("docs/reference/taom-map-settlement-naming.md",)),
     Gate("gui-tests", "GUI prefabs, PrefabExtension XML, sprite data",
          ("*/gauntletui/*", "*/prefabs/*.xml", "*prefabextension*", "*spritedata.xml"),
-         _dotnet("PrefabExtensionBrushTests", "PrefabSpriteTests"),
+         _dotnet("PrefabExtensionBrushTests"),
          (".claude/rules/gui-ui.md",), dotnet=True),
     Gate("gui-manual", "GUI prefabs, PrefabExtension XML", ("*/gauntletui/*", "*/prefabs/*.xml", "*prefabextension*"),
          (), (".claude/rules/gui-ui.md",),
-         manual="read each GetSprite(\"X\") name in C# against TAOMSpriteData.xml (PrefabSpriteTests gates a literal "
-                "Sprite=\"X\" in a prefab, not a C# call), and check that every Command.* handler resolves to a TAOM "
+         manual="read each GetSprite(\"X\") name in C# and each literal Sprite=\"X\" in a prefab against TAOMSpriteData.xml, "
+                "and check that every Command.* handler resolves to a TAOM "
                 "method with the right parameter count"),
     Gate("loc-coverage", "language files, {=KEY} text", LANG_GLOBS + ARMORY_GLOBS,
          ("python", "tools/check_external_loc_coverage.py"), ("docs/reference/localization-map.md",),
