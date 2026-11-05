@@ -61,11 +61,11 @@ public class DreadAuraConfig
 public class DreadProfileConfig
 {
     /// <summary>Outer radius in metres. Drain falls to zero here.</summary>
-    public float Radius { get; set; } = 12f;
+    public float Radius { get; set; } = 5f;
 
     /// <summary>Radius within which drain is at full rate. Between this and <see cref="Radius"/>
     /// the rate falls off linearly.</summary>
-    public float InnerRadius { get; set; } = 4f;
+    public float InnerRadius { get; set; } = 2f;
 
     /// <summary>Morale drained per second at full rate, BEFORE vanilla's tier/hero resistance
     /// divisor and the per-race resist multiplier.
@@ -75,8 +75,8 @@ public class DreadProfileConfig
     /// a target without ever routing it. That break-even is the resist mechanic, not a defect.</summary>
     public float MoralePerSecond { get; set; } = 5f;
 
-    /// <summary>Morale below which the aura will not push a target. 0 means the aura alone can
-    /// drive an agent to the engine's 0.01 panic threshold and rout it, which is the shipped
-    /// behaviour. Raise it to make dread soften troops while leaving the kill to combat.</summary>
-    public float MoraleFloor { get; set; }
+    /// <summary>Morale below which the aura will not push a target. The shipped 10 keeps the aura
+    /// from routing anyone by itself (the engine panics below 0.01). 0 lets the aura alone rout a troop,
+    /// and each rout costs up to 10 allies morale, across the formation when 4 m holds fewer.</summary>
+    public float MoraleFloor { get; set; } = 10f;
 }

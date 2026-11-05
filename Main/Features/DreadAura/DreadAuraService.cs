@@ -59,7 +59,7 @@ public sealed class DreadAuraService : IDreadAuraService
         if (!FiniteFloatValidator.IsFinite(context.CurrentMorale))
             return 0f;
 
-        var floor = _config.Profile?.MoraleFloor ?? 0f;
+        var floor = _config.Profile?.MoraleFloor ?? new DreadProfileConfig().MoraleFloor;
         if (!FiniteFloatValidator.IsFinite(floor))
             return 0f;
 

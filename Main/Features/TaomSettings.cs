@@ -1096,22 +1096,25 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Aura of Dread", GroupOrder = 34)]
     [SettingPropertyBool("Enable Aura of Dread", Order = 0, RequireRestart = false,
-        HintText = "Nazgul and Sauron drain the morale of nearby enemy troops, breaking formations that stand too close for too long. Takes effect immediately, but morale already drained is not restored when you switch it off.")]
+        HintText = "Nazgul and Sauron drain the morale of enemy troops right beside them. The aura weakens them so they break sooner in the fighting, but it never routs anyone by itself. Takes effect immediately, but morale already drained is not restored when you switch it off.")]
     public bool EnableDreadAura { get; set; } = true;
 
+    // Renamed from DreadAuraRadius on 2026-10-15, when the default dropped from 12 to 5: MCM keeps a
+    // saved value per property name, so the old name would have kept every existing 12. Never rename
+    // it back, because settings files not yet re-saved still hold DreadAuraRadius = 12.
     [SettingPropertyGroup("Aura of Dread")]
-    [SettingPropertyFloatingInteger("Dread Radius", 4f, 30f, "#0", Order = 1, RequireRestart = false,
-        HintText = "Metres over which a wraith projects dread. Full strength within the inner radius from dread_aura_config.json (default 4m), falling to nothing at this distance. Default 12. Values above 30 are refused because the engine's proximity search degrades to a full agent scan.")]
-    public float DreadAuraRadius { get; set; } = 12f;
+    [SettingPropertyFloatingInteger("Dread Radius", 4f, 15f, "#0", Order = 1, RequireRestart = false,
+        HintText = "Metres over which a wraith projects dread. Full strength within the inner radius from dread_aura_config.json (default 2m), falling to nothing at this distance. Default 5. The ceiling is 15: beyond 15 m the engine's proximity search stops using its grid and checks every agent on the field, on every pulse.")]
+    public float DreadAuraCloseRadius { get; set; } = 5f;
 
     [SettingPropertyGroup("Aura of Dread")]
     [SettingPropertyFloatingInteger("Morale Drained Per Second", 0f, 20f, "#0.0", Order = 2, RequireRestart = false,
-        HintText = "Morale per second drained at full strength, before the target's tier/hero resistance and its racial resistance. At the default 5.0 a tier-3 human breaks after about 28 seconds of contact, a tier-6 elite about 49, and an elven hero never. Below about 1.0 the engine's own morale recovery outpaces the drain and nothing ever routs.")]
+        HintText = "Morale per second drained at full strength, before the target's tier/hero resistance and its racial resistance. The aura stops at a morale floor of 10 (dread_aura_config.json), so it never routs anyone by itself. At the default 5.0, in an even fight, a tier-3 human reaches the floor after about 22 seconds of contact, a tier-6 elite about 37, and an elven hero of level 16 or more never. Below about 1.0 the engine's own morale recovery outpaces the drain.")]
     public float DreadAuraMoralePerSecond { get; set; } = 5f;
 
     [SettingPropertyGroup("Aura of Dread")]
     [SettingPropertyBool("Affects Your Own Troops", Order = 3, RequireRestart = false,
-        HintText = "When off, troops on your team are immune and dread only touches the AI. Leave it on and an enemy wraith can rout your soldiers, and routed troops are LOST from your party, not merely shaken. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
+        HintText = "When off, your team is immune and dread only touches the AI. Left on, an enemy wraith weakens your soldiers so they rout sooner in combat, and routed troops are LOST from your party. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
     public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
 
     // --- World / Uncapturable Heroes ---

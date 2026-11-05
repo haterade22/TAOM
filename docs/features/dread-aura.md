@@ -2,10 +2,11 @@
 
 ## Overview
 
-The Nazgûl and Sauron drain the morale of enemy troops standing near them on the battlefield.
-Hold a line in front of a Ringwraith and it breaks: morale falls, the front rank panics, and
-vanilla's own contagion carries the rout outward. Elves and dwarves resist, veterans and heroes
-resist, and an elven hero never breaks at all.
+The Nazgûl and Sauron drain the morale of enemy troops right beside them on the battlefield.
+The aura weakens the troops in contact with a Ringwraith, and it never routs them by itself:
+morale stops at a floor of 10, and combat finishes them. Elves and dwarves resist, veterans and
+heroes resist, and an elven hero of level 16 or more never reaches the floor at all. See "Why the
+aura does not rout by itself (2026-10-15)" for the reason.
 
 Battle scale only. There is no campaign-map effect, by decision (see "Out of scope").
 
@@ -84,39 +85,84 @@ D_eff = moralePerSecond
       × raceResist[targetRace]                // elf 0.4, dwarf 0.5, otherwise 1.0
 ```
 
-`CharacterObject.GetMoraleResistance()` is `(IsHero ? 1.5 : 1) * (0.5 * tier + 1)`.
+`CharacterObject.GetMoraleResistance()` is `(IsHero ? 1.5 : 1) * (0.5 * n + 1)`, where `n` is the
+tier, or `Level / 4 + 1` for a hero (v1.5.5 `CharacterObject.cs:619-623`).
 
 The engine regenerates morale at **+0.4/sec** up to **half** a troop's starting morale
 (`CommonAIComponent.OnTickParallel`). Above that ceiling there is no pushback at all; below it the
 drain must beat 0.4/sec or the target parks at the ceiling forever.
 
 ```
-t_rout = R / D_eff  +  R / (D_eff − 0.4)      where R = half of initial morale (about 24.75)
-                                              valid only for D_eff > 0.4
+t_floor = R / D_eff  +  (R - F) / (D_eff - 0.4)   where R = half of initial morale (about 24.75)
+                                                  and F = moraleFloor (10); valid only for D_eff > 0.4
 ```
 
-At the shipped `moralePerSecond = 5.0`, inside the inner radius:
+Initial morale is `35 + RandomInt(30)` plus every agent component's `GetMoraleAddition()` (in a
+campaign battle, the party's morale and the side's strength share), then the morale model (perks,
+traits and TAOM's culture doctrine), clamped to [15, 100] (v1.5.5 `CommonAIComponent.InitializeMorale`).
+The table uses the mean 49.5, which is an even fight at party morale 50. A party at morale 80 starts
+near 64.5, so R is about 32 and a tier-3 troop takes about 30 s to reach the floor.
 
-| Target | resistance | D_eff | time to rout |
+At the shipped `moralePerSecond = 5.0` and `moraleFloor = 10`, inside the inner radius (2 m):
+
+| Target | resistance | D_eff | time to reach the floor of 10 |
 |---|---|---|---|
-| Tier-1 levy | 1.5 | 3.33 | **16 s** |
-| Tier-3 line infantry | 2.5 | 2.00 | **28 s** |
-| Tier-6 elite | 4.0 | 1.25 | **49 s** |
-| Tier-3 elf | 2.5 × 0.4 | 0.80 | **93 s** |
-| Tier-5 dwarf | 3.5 × 0.5 | 0.71 | **113 s** |
-| Tier-6 elf hero | 6.0 × 0.4 | **0.33** | **never** |
+| Tier-1 levy | 1.5 | 3.33 | **12.5 s** |
+| Tier-3 line infantry | 2.5 | 2.00 | **21.75 s** |
+| Tier-6 elite | 4.0 | 1.25 | **37.25 s** |
+| Tier-3 elf | 2.5 × 0.4 | 0.80 | **67.5 s** |
+| Tier-5 dwarf | 3.5 × 0.5 | 0.71 | **81.25 s** |
+| Elf hero, level 16 to 19 | 5.25 × 0.4 | **0.38** | **never** |
+| Elf hero, level 20 to 23 | 6.0 × 0.4 | **0.33** | **never** |
 
-The last row is the point. **Elven heroes are immune to the Witch-King by arithmetic**, with no
-special case anywhere in the code: their effective drain falls below the engine's own regeneration
-rate. That `D_eff > 0.4` break-even *is* the resistance mechanic, not a defect in it.
+The target then sits on the floor for as long as it stays in contact; the engine's regeneration
+lifts it a little and the aura pushes it back down, so it never goes lower and never panics.
 
-A 12 m radius covers most of a shieldwall at once, so "28 seconds" reads in play as the whole front
-rank going together rather than as a trickle of individuals.
+The last two rows still hold. **Elven heroes of level 16 or more are untouched by the Witch-King by
+arithmetic**, with no special case anywhere in the code: their effective drain falls below the
+engine's own regeneration rate, so they never get near the floor. A lower-level elven hero does
+reach it, slowly (resistance 4.5 at levels 12 to 15 gives 0.44/sec). That `D_eff > 0.4`
+break-even *is* the resistance mechanic, not a defect in it.
+
+A 5 m radius covers only the troops in contact with the wraith, so the effect reads in play as the
+men fighting him going soft, not as a whole shieldwall going together.
 
 These numbers are the balance contract. They are asserted three times and all three must move
-together: `DreadAuraServiceTests.ComputeDrain_ShippedRate_RoutsAtTheDocumentedTime` simulates the
-real engine morale loop against the real service, `ShippedDreadAuraConfigTests` pins the four
-config values, and this table documents them.
+together: `DreadAuraServiceTests.ComputeDrain_ShippedFloor_ReachesTheFloorAtTheDocumentedTime` and
+`ComputeDrain_ShippedFloorElfHero_NeverReachesTheFloor` simulate the real engine morale loop against
+the real service, `ShippedDreadAuraConfigTests.ShippedConfig_BalanceValuesMatchTheDocumentedTable`
+pins the four config values, and this table documents them.
+`ComputeDrain_ShippedFloor_AuraAloneNeverRouts` proves the floor holds up to the highest rate any
+configuration reaches (20/sec on a resistance-1 target). The floor-0 rout times (16 s, 28 s and
+49 s for the first three rows) stay in `ComputeDrain_ShippedRate_RoutsAtTheDocumentedTime` with the
+floor set to 0 explicitly, because they document the mechanics a lower floor would bring back.
+
+## Why the aura does not rout by itself (2026-10-15)
+
+A troop that routs raises `AgentMoraleInteractionLogic.OnAgentFleeing`. Vanilla gives a morale loss
+to up to 10 allies of the fleeing agent: first the AI allies within 4 m, then, for every slot still
+empty, random members of the fleeing agent's whole formation at any distance (v1.5.5
+`AgentMoraleInteractionLogic.cs:79-84`, `SelectRandomAgentsFromFormationToAgentSet`). The loss
+scales with `CalculateCasualtiesFactor` (1 + 2 x the side's removed ratio).
+
+So an aura that routs troops is not local. In a dense block a single rout stays among its
+neighbours, but those neighbours stood inside the aura too and break in turn; once the line thins,
+each rout reaches random troops anywhere in the formation. The 12 m aura drained morale to 0 inside
+its radius, so it routed troops by itself, and Mike saw dread act across the whole battlefield.
+With a floor of 10 the aura starts no rout of its own, and the radius is cut to 5 m (inner 2 m) so
+it only touches the troops in contact.
+
+Three other fear effects have no floor and can still rout troops the aura has weakened:
+
+- the Nazgûl Scream (a signature strike, 6 m, 25 morale every 15 s). At full strength it takes
+  exactly 10 from a tier-3 troop (25 / 2.5). Regeneration lifts a troop on the floor to about 10.1
+  between pulses, so a Scream leaves a tier-3 troop at the edge of panic, where any nearby death
+  breaks it, and it breaks tier-1 and tier-2 troops (16.7 and 12.5) outright;
+- Sauron's overhead Slam (4 m, 15 morale every 20 s);
+- race-ability fear, such as the Dol Guldur 8 m fear aura and the fear some races cause on a kill.
+
+Such a rout spreads by the vanilla rule above. Mike kept the floor at 10 on 2026-10-15: these
+effects reach 4 to 8 m, so their routs start next to the source.
 
 ## Who cannot be affected
 
@@ -168,8 +214,10 @@ losing its exclusion.
 init-time snapshot reads `NoTeamAI` and disables the feature in every mission. The same trap is
 documented at `SmartCavalryAIMissionBehavior.cs:63-68`.
 
-A wraith entrant draining a Minas Morgul tournament would have routed the other entrants inside an
-arena with no retreat position, which is the failure family
+A wraith entrant draining a Minas Morgul tournament could rout the other entrants (at
+`moraleFloor` 0; at the shipped floor it would only weaken them, because the tournament mission
+carries no `AgentMoraleInteractionLogic`) inside an arena with no retreat position, which is the
+failure family
 [`rca-tournament-exit-hang-2026-07-06.md`](../reviews/rca-tournament-exit-hang-2026-07-06.md)
 already covers.
 
@@ -193,10 +241,14 @@ recurse into itself.
 it: a fearless agent clamps at `0.01f`, and `BattleEndLogic` routs on `< 0.01f`, so fearless agents
 would never be counted as routed in campaign casualty accounting.
 
-**The `AgentProximityMap` radius clamp** was designed in, then removed after reading
-`Mission.GetNearbyAgentsAux` (Mission.cs:2314). It is pure native paging with no proximity-map
-fallback, so the silent degradation to a full agent scan applies only to
-`AgentProximityMap.BeginSearch`, which this feature does not use.
+**The radius clamp** was designed in, then removed after reading `Mission.GetNearbyAgentsAux`
+(v1.4.8 Mission.cs:2314), then restored on 2026-10-15 at 15 m. The managed side is pure native paging, but
+the native side has the fallback: `IMBMission.GetNearbyAgentsAux` searches the proximity grid only
+up to the value `ProximityMapMaxSearchRadius` returns (15.0 on v1.5.5, `.rdata` RVA 0xB2E120) and
+walks every agent in the mission beyond it (`python tools/native_decompile.py --engine-method
+IMBMission.GetNearbyAgentsAux`). `AgentProximityMap.BeginSearch` switches at the same 15 m. So the
+MCM slider and both providers cap the radius at 15, and a value above it costs a full agent scan on
+every pulse.
 
 **`IBattlefieldQueryAdapter.GetNearbyAgents`**: its `NearbyAgentSnapshot` carries no race, no
 morale, and no write path, and it wraps `GetNearbyAgents` rather than the native-filtered
@@ -215,14 +267,17 @@ was the worse trade.
 | `pulseIntervalSeconds` | 0.25 | [0.1, 5.0] |
 | `maxSourcesPerFrame` | 2 | [1, 16] |
 | `fearVoiceChancePerPulse` | 0.02 | [0, 1] |
-| `profile.radius` | 12.0 | [0.1, 30] in JSON; the MCM slider is [4, 30] and its value is re-clamped to that |
-| `profile.innerRadius` | 4.0 | [0, radius], ordering invariant |
-| `profile.moralePerSecond` | 5.0 | [0, 50] in JSON; an MCM value is re-clamped to the slider's [0, 20] |
-| `profile.moraleFloor` | 0.0 | [0, 50] |
+| `profile.radius` | 5.0 | [0.1, 15] accepted at load, but the radius in play is always [4, 15]: with MCM loaded the slider value replaces it, and without MCM the settings provider clamps it to the slider's range too |
+| `profile.innerRadius` | 2.0 | [0, radius], ordering invariant |
+| `profile.moralePerSecond` | 5.0 | [0, 50] accepted at load, but the rate in play is always [0, 20], the slider's range, as for the radius |
+| `profile.moraleFloor` | 10.0 | [0, 50] |
 | `raceResist[*]` | elf 0.4, dwarf 0.5 | [0, 1] per entry, above 1 dropped |
 
-`moraleFloor: 0` lets the aura alone drive a troop to the engine's 0.01 panic threshold. Raise it
-to make dread soften troops while leaving the kill to combat, without a code change.
+`moraleFloor: 10` keeps the aura from routing anyone on its own, because the engine panics a troop
+only below 0.01. Setting it to 0 lets the aura alone drive a troop to the panic threshold, and each
+such rout passes a morale loss to up to 10 allies, across the formation when fewer than 10 stand
+within 4 m (see "Why the aura does not rout by itself"). It is a data change, no code. The floor
+has no MCM knob.
 
 Above 1.0 a resist value would *amplify* dread on a race the author meant to protect, so those rows
 are dropped with a warning rather than clamped.
@@ -231,8 +286,12 @@ Race names and hero ids are **not** validated at load: the FaceGen registry is n
 `DreadRegistry` validates race names lazily on first resolve and skips + warns per entry; hero ids
 are pinned instead by `ShippedDreadAuraConfigTests`.
 
-**MCM** (`Aura of Dread` group): `EnableDreadAura`, `DreadAuraRadius` (4-30),
-`DreadAuraMoralePerSecond` (0-20), `DreadAuraAffectsPlayerTroops`. The radius ceiling is enforced
+**MCM** (`Aura of Dread` group): `EnableDreadAura`, `DreadAuraCloseRadius` (4-15, default 5),
+`DreadAuraMoralePerSecond` (0-20), `DreadAuraAffectsPlayerTroops`. The radius property was renamed
+from `DreadAuraRadius` when its default dropped from 12 to 5: MCM keeps a saved value per property
+name, so an existing `TAOM.json` would have kept 12 under the old name, and a new name lets the new
+default reach everyone. `DreadAuraSettingsProviderTests.McmDefaults_MatchTheCompiledProfileDefaults`
+keeps the MCM defaults equal to the compiled JSON defaults. The radius ceiling is enforced
 in **both** the JSON provider and the settings provider, because MCM's slider bounds are UI-only
 metadata and its deserializer assigns without a range check. CombatMechanics shipped exactly that
 drift on 2026-07-02.
@@ -273,7 +332,9 @@ save-load will not pick up an edit. The MCM knobs are the ones that take effect 
 
 161 tests, all green as part of a 6,615-test suite.
 
-- `DreadAuraServiceTests` (51): falloff geometry, the golden rout-time table, the morale floor, the
+- `DreadAuraServiceTests` (58): falloff geometry, the golden time-to-floor table at the shipped floor
+  of 10, the proof that the aura alone never routs up to the 20/sec rate ceiling, the floor-0 rout
+  times, the morale floor (a null profile included), the
   `-1f` no-component sentinel, and a NaN / ±Infinity case for every float that reaches a decision.
 - `DreadAuraConfigProviderTests` (43): one test per validation rule, plus an every-field round-trip
   and the `ObjectCreationHandling.Replace` regression.
@@ -282,14 +343,18 @@ save-load will not pick up an edit. The MCM knobs are the ones that take effect 
 - `DreadPulseSchedulerTests` (16): the rotation starves nobody, the budget holds, a selected source
   is not picked twice in a frame, a NaN interval selects nothing, and a long skipped window is
   clamped to the catch-up ceiling instead of arriving as one burst.
-- `ShippedDreadAuraConfigTests` (11): the shipped file parses with zero rejections and keeps the
-  balance contract and the hero-set link.
+- `ShippedDreadAuraConfigTests` (12): the shipped file parses with zero rejections and keeps the
+  balance contract, the hero-set link, and a floor above the 0.01 panic threshold.
 - `DreadAuraBindingTests` (8): engine members resolve; `MissionLogic` is the base class.
 - `DreadSourceTrackerTests` (7): null handling, the dedup contract, and the mission-clock seed.
+- `DreadAuraSettingsProviderTests` (4): with no MCM every getter falls back to the JSON, a live MCM
+  edit reaches its getter through the cached settings reference, the MCM defaults equal the compiled
+  defaults, and an MCM radius above 15 clamps to 15.
 
-**Mutation-checked.** Disabling each load-bearing rule reddens tests: the morale floor (2), the
-radius NaN gate written as a positive requirement (2), the race-resist multiplier (3), the
-per-source elapsed integration (6). An earlier `IsValidRaceId` guard reddened **zero** and was
+**Mutation-checked.** When the feature shipped (2026-08-13), disabling each load-bearing rule
+reddened tests: the morale floor (2), the radius NaN gate written as a positive requirement (2), the
+race-resist multiplier (3), the per-source elapsed integration (6). On 2026-10-15, setting the floor
+to 0 inside `ComputeDrain` reddened 7, both never-routs rows among them. An earlier `IsValidRaceId` guard reddened **zero** and was
 removed rather than shipped: the lookup tables are keyed by race *id*, so `GetRaceNameFromId`'s
 "human" fallback is structurally unreachable and the guard defended a path that does not exist.
 The `DidNotReceive().GetRaceNameFromId` assertions pin that design against a name-keyed rewrite.
@@ -302,12 +367,12 @@ Verified against v1.4.8:
 
 | Constant | Value | Source |
 |---|---|---|
-| Initial morale | `35 + rand[0..29]`, clamped [15, 100] | `CommonAIComponent.InitializeMorale` |
+| Initial morale | `35 + rand[0..29]` plus each component's `GetMoraleAddition()`, then the morale model, clamped [15, 100] (re-read on v1.5.5) | `CommonAIComponent.InitializeMorale` |
 | Recovery ceiling | `_initialMorale * 0.5f` | `CommonAIComponent.cs:74` |
 | Morale regeneration | +0.4/sec, only below the ceiling | `CommonAIComponent.OnTickParallel` |
 | Panic threshold | `_morale < 0.01f`, tested **before** regeneration | `CommonAIComponent.OnTickParallel` |
 | Formation flee | above 30% of a formation retreating | `Formation.cs:1146`, `Mission.cs:5237` |
-| Morale resistance | `(IsHero ? 1.5 : 1) * (0.5 * tier + 1)` | `CharacterObject.GetMoraleResistance` |
+| Morale resistance | `(IsHero ? 1.5 : 1) * (0.5 * n + 1)`, `n` = tier, or `Level / 4 + 1` for a hero (re-read on v1.5.5) | `CharacterObject.GetMoraleResistance` |
 
 The panic-before-regeneration ordering is load-bearing and easy to get backwards: reversing it lets
 +0.4/sec lift a broken agent back over the threshold every frame so nothing ever routs. That is a
@@ -316,7 +381,8 @@ real bug this feature's own test simulation shipped for one iteration before it 
 ## Routed troops leave the roster permanently
 
 This is the consequence a player most needs to understand, and it is inherited from vanilla rather
-than invented here: **a routed troop is not a scared troop, it is a lost one.**
+than invented here: **a routed troop is not a scared troop, it is a lost one.** Since 2026-10-15
+the aura alone no longer routs anyone; the routs below come from combat on troops it has weakened.
 
 `BattleEndLogic.OnEndMission` calls `IAgentOriginBase.SetRouted` on every active agent whose morale
 is below 0.01. For ordinary campaign troops that reaches `MapEventParty.OnTroopRouted:316`, which
@@ -327,7 +393,7 @@ Party.MemberRoster.AddToCounts(_roster[troopSeed].Troop, -1);   // gone from the
 RoutedInBattle.AddToCounts(_roster[troopSeed].Troop, 1);        // feeds DesertersCampaignBehavior
 ```
 
-So driving a formation to rout removes those troops from their party's roster and seeds deserter
+So a formation that routs removes those troops from their party's roster and seeds deserter
 parties on the map. Three carve-outs, all verified in the same method:
 
 | Case | Outcome |
@@ -336,13 +402,10 @@ parties on the map. Three carve-outs, all verified in the same method:
 | Siege defenders | **Exempt.** Line 683 requires `MissionSide == Attacker` for a siege. |
 | `PartyAgentOrigin` (ungrouped) | **Exempt.** Its `SetRouted` is an empty method. |
 
-Two consequences worth being deliberate about:
-
-- **`DreadAuraAffectsPlayerTroops` defaults to true**, so an enemy wraith can permanently cost the
-  player troops. That is the intended fantasy, but it is a real cost and the MCM hint says so.
-- Raising `profile.moraleFloor` above `0.01` makes the aura incapable of routing anything on its
-  own: it would soften troops and leave the kill to combat. The shipped default of `0` deliberately
-  allows the aura to finish the job.
+One consequence is worth being deliberate about: **`DreadAuraAffectsPlayerTroops` defaults to
+true**, so an enemy wraith weakens the player's troops and they rout sooner in combat, which can
+permanently cost the player troops. The aura does not rout them itself, but the cost is real and the
+MCM hint says so.
 
 ## Known Limitations
 

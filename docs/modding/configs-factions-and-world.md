@@ -164,7 +164,7 @@ Keys prefixed `_comment` are notes in the shipped file and are ignored by the de
 | `heroSets` | string[] | no | `["nazgul_nine"]` | Named lore groups that radiate dread | `DreadAuraConfig.cs:37` |
 | `heroIds` | string[] | no | `["lord_1_17"]` | Individual hero StringIds | `DreadAuraConfig.cs:42` |
 | `races` | string[] | no | `["sauron"]` | FaceGen race ids that radiate dread | `DreadAuraConfig.cs:46` |
-| `profile` | object | no | radius 12, inner 4, rate 5, floor 0 | The drain shape | `DreadAuraConfig.cs:48`, `:64-81` |
+| `profile` | object | no | radius 5, inner 2, rate 5, floor 10 | The drain shape | `DreadAuraConfig.cs:48`, `:64-81` |
 | `raceResist` | map of string to float | no | elf 0.4, dwarf 0.5 | Per-race resistance; a value above 1 is dropped, not clamped | `DreadAuraConfig.cs:54` |
 
 <!-- engine-ref type="TAOM.Features.UncapturableHeroes.Domain.UncapturableHeroesConfig" file="Main/Features/UncapturableHeroes/Domain/UncapturableHeroesConfig.cs" lines="14-48" -->
@@ -448,7 +448,7 @@ Code: No code changes needed
   the two files as parallel maps will trip on it (measured, command below).
 - **Dread aura race names and hero ids are not validated at load**, because the FaceGen registry is
   not populated yet; a bad name is skipped on first resolve
-  ([dread-aura.md:230-233](../features/dread-aura.md)).
+  ([dread-aura.md:285-289](../features/dread-aura.md)).
 - **`Patch28_SettlementGuards` registers two manual patches with no category attribute**, so
   grepping `HarmonyPatchCategory` will not show them
   ([harmony-patch-registry.md:5](../reference/harmony-patch-registry.md)).
