@@ -1610,6 +1610,10 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch15_BannerLayerLimit");
         TryPatchCategory("Patch16_AtmospherePersistence");
         TryPatchCategory("Patch17_TroopWeight");
+        // TEMPORARY: logs the caller of every non-hero removal from the main party roster (player report
+        // 2026-10-17, troops vanished after an emissary purchase). Remove when that loss is root-caused.
+        TroopRoster_AddToCountsAtIndex_Patch.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch_MainRosterLossDiag");
         TryPatchCategory("Patch23_BannerColorPersistence");
         TryPatchCategory("Patch24_BannerDriftGuard");
         TryPatchCategory("Patch39_BanditPartySize");

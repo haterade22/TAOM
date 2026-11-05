@@ -1183,6 +1183,56 @@ CharacterSelection face-generator action-set injection. The transpiler finds the
 
 Runtime guard against the infinite mission load on a missing collision body (#601; mechanism #352, #599). Vanilla's wait is a do/while with no exit that counts, every pass, each registered body name that `PhysicsShape.GetFromResource(name, true)` returns null for, and null means "not loaded yet" and "no such body" alike. The prefix repairs the precondition instead of replacing the method: it polls only the body names with the same 1 ms sleep for a bounded 5 s budget (a healthy load resolves every name on the first pass and pays nothing measurable), removes what is still null from the set, logs each drop at ERROR as `[PreloadGuard]` with the repair command, and lets vanilla's loop run against a set that can now empty. `_uniqueMetaMeshes` is never touched and the prefix never returns `false`. The item whose body was dropped has no collision shape for that mission: a visible, logged defect in place of a frozen game. Six callers, all main thread: `MissionPreloadView` (campaign battles and sieges), `ArenaPreloadView` (tournaments; the player's kit is first in that set), `MissionCustomBattlePreloadView`, `MissionMultiplayerPreloadView`, `NavalShipsPreloadView`, `GauntletEducationScreen.OnFrameTick`. Applied in `OnSubModuleLoad` through `TryPatchCategory`, after the Patch61 save-load block and before Patch62 (the education screen and custom battle call the wait before any campaign initialises), own try/catch. On this line `BattleLoadPhaseBehavior` logs `BattlePlayable` about eleven frames before the wait runs, so an unguarded hang here left `BattlePlayable` as the last `[BattleLoad]` line. Decision logic lives in `PreloadBodyGuardService` (pure, 7 tests); `PreloadBodyGuardBindingTests` pins the private field's name and type on the installed engine so a rename un-injects as a red test, not as a silently unguarded load. Feature doc: [preload-body-guard.md](../features/preload-body-guard.md). **ACTIVE** (1.5.x 2026-09-15; ported to 1.4.x by WP108 on 2026-11-04, engine members re-verified on v1.4.8).
 
+## Patch_MainRosterLossDiag
+
+**Targets:** `TroopRoster.AddToCountsAtIndex(int, int, int, int, bool)` (v1.4.8 `TroopRoster.cs:312`) and `TroopRoster.SetElementNumber(int, int)` (`:494`) (both Prefix, observe-only, never skip the original). **ACTIVE, TEMPORARY diagnostic.** Code: `Main/Features/TroopWeight/Diagnostics/` (`TroopRoster_AddToCountsAtIndex_Patch`, `TroopRoster_SetElementNumber_Patch`, `MainRosterLossDiagnostics`).
+
+**Feature:** [troop-weight-system.md](../features/troop-weight-system.md#main-roster-loss-diagnostic-temporary-2026-10-17).
+
+Player report (2026-10-17): about 60 non-hero troops vanished from the main party right after an Elite Emissary purchase. No TAOM path found removes a whole roster at once: `AlignmentDesertion` removes daily and shows a popup, and special-resource desertion takes 10% per type per day. `AddToCounts`, `Clear`, `RemoveIf`, `RemoveTroop`, `RemoveNumberOfNonHeroTroopsRandomly` and `Add` all reach `AddToCountsAtIndex`; `SetElementNumber` is the one public write that skips it and updates no cached total, so it has its own prefix.
+
+**One line:**
+
+```
+[RosterLoss] tick=1234 -3 gondor_recruit (row 10 -> 7, regulars 60 -> 57) via <caller> <- <caller> ...
+```
+
+It is a DEBUG line (queued by the logger, no synchronous flush on the casualty path), written to `Logs/taom_debug_<timestamp>.log`. The chain is up to 8 managed frames with TAOM diagnostic, Harmony, MonoMod and `System.` frames dropped. Only the main party's `MemberRoster` and only non-hero troops are logged. There is no toggle and no MCM switch. On a line whose first frame is `TroopRoster.SetElementNumber_Patch<N>` (Harmony's replacement method), `regulars X -> Y` is the row sum after the write: in single player the cached `TotalRegulars` stays at X until the next load, so later lines on that roster read too high by the amount removed (BannerlordCoop recomputes the cache after its own calls).
+
+**`tick=`** is `Campaign.CurrentTickCount`, which `Campaign.Tick` advances once per call, and `MapState` calls it only while active. One tick is therefore one map frame, or one whole party-screen session, or one whole mission. Group lines by `tick=` within one load: the counter is not saved and restarts at 0 on every load and new campaign, so split loads by the line timestamps. One tick can hold several actions (the main party's daily listeners run in the same tick); the chain tells them apart.
+
+**Read the lines.** Benign sources and their chains:
+
+| Source | Chain contains |
+|---|---|
+| Battle deaths | `MapEventParty.OnTroopKilled` -> `RemoveTroop` |
+| Routs | `MapEventParty.OnTroopRouted` |
+| Autoresolve | `MapEventSide.ApplySimulationDamageToSelectedTroop` |
+| Party-screen upgrade | `PartyScreenLogic.UpgradeTroop` (remove, then add the upgraded troop) |
+| Transfers, dismissals | `PartyScreenLogic` transfer paths |
+| Party-screen Esc or Cancel | `PartyScreenData.ResetUsing` (`Clear` then re-add, net zero) |
+| Daily desertion | `AlignmentDesertionBehavior` |
+| Vanilla desertion (low morale, wage limit, or members over `PartySizeLimit`, which TroopWeight lowers for the main party) | `DesertionCampaignBehavior.CheckDesertionForParty` |
+| Special-resource desertion | the special-resource daily tick |
+
+A culprit is a same-tick run that drives `regulars` toward the surviving count with no matching re-add. Never filter `ResetUsing` out by name: a reset from a stale snapshot (`ResetToLastSavedPartyScreenData`) is itself a candidate.
+
+**Companion lines to collect** from `Logs/taom_debug_<timestamp>.log`: `[TroopCountDiag]`, `[EliteEmissary] PURCHASE`, `[SpecRes]`, `[AlignDesert]`, and the engine's `[High Desertion Alert]` in the rgl log.
+
+**Not covered:** a loss across a save and reload (the cached totals are recomputed on load), over-removals (the engine's `TroopRosterElement.Number` setter throws on a negative value, so nothing leaves the roster and nothing is logged) and writes by reflection.
+
+**Threads:** removals can arrive from `Mission.OnAgentRemoved` (battle deaths via `MapEventParty.OnTroopKilled` -> `RemoveTroop`), possibly off the main thread. The patch holds no mutable state except a log-once flag, and `FileLogger` is thread-safe. Logging only.
+
+**PatchShield:** from the second game start in a process, PatchShield wraps every patched method (`Dependencies/Foundation/PatchShield.cs`). While this diagnostic is on, a `MissingMethodException`, `MissingFieldException` or `TypeLoadException` raised inside a roster change on these two methods is swallowed and the method returns its default instead of propagating. These methods are not excluded, because exclusion would remove the shield from third-party patches on them.
+
+**Co-op:** BannerlordCoop also prefixes both methods. Its only skip is a duplicate hero addition, which this diagnostic ignores.
+
+**Apply timing:** the `OnGameInitializationFinished` batch, after `Patch17_TroopWeight`, with `TroopRoster_AddToCountsAtIndex_Patch.Initialize(logger)` called just before it.
+
+**Removal checklist** (when the report is root-caused): delete both patch files, `MainRosterLossDiagnostics.cs` and `MainRosterLossDiagnosticsTests.cs`; delete the two `SubModule.cs` lines and their comment; delete this registry section; delete the `troop-weight-system.md` section and its Key Files and test-list mentions; delete the two `patch-targets.md` rows (and fix its count); delete the `feature-map.md` clause, if WP142 added one.
+
+**Tests:** `MainRosterLossDiagnosticsTests` (formatter, caller-chain filter, `SubModule.cs` wiring and the category on both patch files).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
