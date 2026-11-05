@@ -108,6 +108,7 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroops", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_overriddenHideoutBossAgentOrigin", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroopTypesCache", "Field", "Patch86_HideoutAmbushBossFight.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.BanditSpawnCampaignBehavior", "BanditSpawnCampaignBehavior", "_hideouts", "Field", "Patch125_HideoutClanGuard.cs (____hideouts)")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

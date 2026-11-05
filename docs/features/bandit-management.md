@@ -226,6 +226,10 @@ When the player visits a hideout, the encounter menu prose led with the literal 
 
 The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). The C# default text in `HideoutDescriptionService` matches the XML default verbatim (so the compiled fallback equals the loaded string).
 
+## Clan and hideout pairing guard (Patch125, #1063)
+
+A bandit clan is in TAOM's `characters/clans.xml` and the hideouts of its culture are in TAOM_Map's `settlements.xml`, so either can load alone. A clan with no hideout of its culture (TAOM with an older map) makes vanilla `GetInfestedHideoutCount` throw `KeyNotFoundException` on every new game; a hideout with no clan of its culture (a save made before the clan existed, since a saved campaign reloads settlements but not clans) makes `AddBanditToHideout` dereference a null clan, reachable from the Gold Rush incident. `Patch125_HideoutClanGuard` returns 0 and null for those two states, runs vanilla otherwise, and logs one warning per culture. The decisions are `HideoutClanGuard`; the details are in the [registry](../reference/harmony-patch-registry.md#patch125_hideoutclanguard). `BanditHideoutLiveDataTests` checks the pairing against this machine's live TAOM_Map; run it against every TAOM_Map package a release ships. Ported 2026-11-04 from 1.5.x `cd06da904` and `1ef7d1af6`; with today's pairing the guard never fires.
+
 ## Key Files
 
 | File | Purpose |
