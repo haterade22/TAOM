@@ -67,13 +67,13 @@ folder via mirror targets:
 | `MirrorWin64ShippingClientToEditor` | `Main/TAOM.csproj` | `Modules/TAOM/bin/Win64_Shipping_wEditor/` | 12 |
 | `MirrorWin64ShippingClientToServer` | `Main/TAOM.csproj` | `Modules/TAOM/bin/Win64_Shipping_Server/` | 10 (same set as Client) |
 | `MirrorWin64ShippingClientToServer` | `Dependencies/TAOM.Dependencies.csproj` | `Modules/TAOM.Dependencies/bin/Win64_Shipping_Server/` | 42 (same set as Client) |
+| `MirrorWin64ShippingClientToEditor` | `Dependencies/TAOM.Dependencies.csproj` | `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/` | same set as Client (since 2026-11-05, plans/121) |
 
-Both server targets run `AfterTargets="PostBuildCopyToModules"`, gated on `$(DisableModuleCopy) != 'true'`
+All four targets run `AfterTargets="PostBuildCopyToModules"`, gated on `$(DisableModuleCopy) != 'true'`
 and on the assembled client folder existing. **Mirroring the assembled folder rather than the build output
 is deliberate** — it picks up the vendored natives (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`) and NuGet
-companions that only exist after `PostBuildCopyToModules`. There is no editor mirror in
-`TAOM.Dependencies.csproj`, so `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/` being empty is
-expected, not a bug.
+companions that only exist after `PostBuildCopyToModules`. The Dependencies editor mirror is required: the Kit looks for each submodule's DLL in the module's `Win64_Shipping_wEditor` folder, then in its own bin folder, which holds none of these (v1.4.8 `Module.LoadSubModules`, `Module.cs:1044-1046`).
+With that folder empty the Kit shows a "Cannot find" box per submodule, `TAOM.dll` then cannot resolve `0Harmony`, `MCMv5` and `Bannerlord.UIExtenderEx`, and the Kit stops its launch. The standalone `Bannerlord.*` community modules once supplied those assemblies; their ids survive only as the DLL-less stub manifests that `DeployTAOMDependenciesStubs` deploys.
 
 Two honesty caveats on the server mirror: **no dedicated server has been booted against these binaries**
 (commit 5f373df9 carries `Not-tested:` to that effect), and `Main/_Module/SubModule.xml` still declares

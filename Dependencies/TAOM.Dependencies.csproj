@@ -123,4 +123,21 @@
 		<Message Importance="high" Text="TAOM.Dependencies: mirrored @(_TaomDepsServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
 	</Target>
 
+	<!-- The same mirror for the Modding Kit (Win64_Shipping_wEditor). The Kit looks for each submodule's
+	     DLL in that folder, then in its own bin folder, which holds none of these (v1.4.8
+	     Module.LoadSubModules). With it empty the Kit shows a "Cannot find" box per submodule, TAOM.dll's
+	     references to Harmony, MCMv5 and UIExtenderEx do not resolve, and the Kit stops its launch. The
+	     standalone Bannerlord.* community modules used to supply them; this module replaced them, and the
+	     stub manifests DeployTAOMDependenciesStubs deploys carry no DLL. Pinned by DependenciesEditorMirrorTests. -->
+	<Target Name="MirrorWin64ShippingClientToEditor"
+	        AfterTargets="PostBuildCopyToModules"
+	        Condition="$(ModuleId) != '' AND Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true' AND Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\')">
+		<ItemGroup>
+			<_TaomDepsEditorMirrorFiles Include="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\*.*" />
+		</ItemGroup>
+		<MakeDir Directories="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\" Condition="!Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\')" />
+		<Copy SourceFiles="@(_TaomDepsEditorMirrorFiles)" DestinationFolder="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_wEditor\" SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM.Dependencies: mirrored @(_TaomDepsEditorMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_wEditor in $(GameFolder)\Modules\$(ModuleId)\bin\" />
+	</Target>
+
 </Project>
