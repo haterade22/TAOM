@@ -392,6 +392,8 @@ A new tick resets the episode. The watchdog also stands down while the exit wind
 
 A thread stopped inside native code is suspended only at its next managed safe point, so a stack can come back as `<capture failed: ...>`; the line still names the probe, the seconds and the thread. A stall inside a TWParallel worker shows the agent tick waiting in `TWParallel.For`, not the worker.
 
+Its sibling Patch91b ([mission-tick-guard.md](mission-tick-guard.md)) recovers the handshake when an exception leaves `Mission.OnTick` before the agent tick starts; this sampler photographs what it cannot recover, such as a stuck agent tick.
+
 ### Session-wide memory telemetry (`[MemSample]`, #386)
 
 A native OOM CTD leaves no managed culprit: the commit allocation that fails is far from the leak that caused it, the AV lands on an engine worker thread the CrashReport finalizer cannot see, and the only artifact guaranteed to survive is the log written durably before death (#385: attributing a 20.3 GB-commit facegen CTD required parsing the 1.3 GB dump by hand). `MemoryPressureSampler` writes a periodic `[MemSample]` line so the tail of any crash log shows the memory trajectory, plus a one-shot WARN when system commit headroom runs low. Same construction as the stall watchdog: thread-pool `Timer` (5 s poll), `Interlocked` reentrancy guard (ExitStallSampler precedent), swallow-and-warn callback, pure static decision seams unit-tested per ADR-008.

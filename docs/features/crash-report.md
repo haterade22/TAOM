@@ -234,7 +234,8 @@ Components NOT unit-tested (per ADR-008 + the plan's "Not-tested:" trailer polic
    - **Throw On Next Application Tick** — fires on the main menu (no mission needed).
    - **Throw On Next Mission Tick** — start a mission first, then flip.
 4. Within ~1 tick: the Inquiry dialog appears with "Exception: TAOM.Features.CrashReport.DevTriggers.TaomDevTriggerException" plus paths to the log + bundle.
-5. The MCM toggle auto-resets to OFF.
+5. Mission-tick trigger only: the battle keeps running after you close the dialog, and the TAOM log holds one `[TickRecovery]` ERROR line: the throw left `Mission.OnTick` after the engine cleared `tickCompleted`, and Patch91b restored it ([mission-tick-guard.md](mission-tick-guard.md)). A frozen game here means the guard is off; look for `[TickRecovery] off` near the top of the log.
+6. The MCM toggle auto-resets to OFF.
 
 ### Verify a captured crash
 

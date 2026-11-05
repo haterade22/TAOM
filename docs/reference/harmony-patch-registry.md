@@ -1011,6 +1011,12 @@ Battle-freeze probes (#634). A player's battle froze with the heap flat, no exce
 
 MCM toggle "Enable Battle Freeze Sampler", default ON, independent of the master diagnostics toggle. Applied in `OnGameInitializationFinished` beside Patch43, inside the once-per-process guard, through `TryPatchCategory`. Cost per healthy frame: two `DateTime.UtcNow` reads, one `CurrentState` read and six volatile writes. **ACTIVE** (ported 2026-11-04).
 
+## Patch91b_MissionTickRecovery
+
+**Targets:** `public void Mission.OnTick(float dt, float realDt, bool updateCamera, bool doAsyncAITick)` (v1.4.8 `Mission.cs:3636`): a prefix and a void finalizer, both `Priority.First`, in `Mission_OnTick_TickRecovery_Patch`; `public void Mission.TickAgentsAndTeamsAsync(float dt)` (`:1825`): a void finalizer, `Priority.First`, in `Mission_TickAgentsAndTeamsAsync_LaunchMark_Patch`. Both in `Main/Features/MissionTickGuard/Hooks/Patch91b_MissionTickRecovery.cs`; writes the private `Mission.tickCompleted` (`:1040`) through a cached `AccessTools.FieldRefAccess`.
+
+Tick-handshake recovery (port decision D17). `Mission.OnTick` clears `tickCompleted` (`:3740`), runs every `OnMissionTick` and only then starts the agent tick (`:3768-3775`); only the agent tick sets the flag again (`:3613`) and the next frame's `OnPreTick` spins in `WaitTickCompletion` (`:3585-3591`). Every catcher above that window swallows on 1.4.x, so one exception out of an `OnMissionTick` froze the game. The prefix records whether the flag was set at entry (`__state`); the launch finalizer marks the agent-tick launch; the `OnTick` finalizer sets the flag back only when the call threw, began with the flag set, launched no agent tick and left it false, then logs a throttled `[TickRecovery]` ERROR. The exception still reaches Patch37. `MissionTickRecoveryWiring.VerifyAndArm`, called right after `TryPatchCategory` in the game-init batch (after Patch91, once per process), arms only when both patches are in `Harmony.GetPatchInfo` and the field resolved; otherwise it logs `[TickRecovery] off` and stays inert. PatchShield wraps both targets from a process's second game start and runs after the recovery. Feature: [mission-tick-guard.md](../features/mission-tick-guard.md). **ACTIVE** (ported 2026-11-04).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)
