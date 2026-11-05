@@ -298,6 +298,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         _logger.LogInfo("[FordsOfWar][Garrison] " + FordsTowerLines.GarrisonLook(held, total, maxDrift, maxDz, byFace, worst));
     }
 
+    public bool RockLoaded => _rockItem != null;
+
     public MatchSide? OwnerSideOfGunner(object? agent)
     {
         if (agent == null)
@@ -509,6 +511,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         var probe = new MissionWeapon(_rockItem, null, null, 1);
         _rockSpeed = probe.GetModifiedMissileSpeedForCurrentUsage();
         _logger.LogInfo($"[FordsOfWar] tower rock item '{TowerRockItemId}': thrust damage {probe.GetModifiedThrustDamageForCurrentUsage()}, missile speed {_rockSpeed}");
+        if (FordsTowerGeometry.Reach(_rockSpeed) < _fireRange)
+            _logger.LogWarning($"[FordsOfWar] the tower rock '{TowerRockItemId}' reaches {FordsTowerGeometry.Reach(_rockSpeed):0.#} m at 45 degrees (missile speed {_rockSpeed}), short of the fire range {_fireRange:0.#} m");
         return _rockItem;
     }
 

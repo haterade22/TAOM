@@ -135,6 +135,24 @@ class FactionTableTests(unittest.TestCase):
             self.assertEqual(r._faction_tables(path, "a", "b")[2], {"only_free"})
 
 
+    def test_a_time_win_follows_the_recorded_flag_and_falls_back_to_a_winner_with_no_fallen_keep(self):
+        self.assertTrue(r.won_on_time({"winner": "West", "keep_fell": 1900.0, "on_time": True}))
+        self.assertFalse(r.won_on_time({"winner": "West", "keep_fell": None, "on_time": False}))
+        self.assertTrue(r.won_on_time({"winner": "West", "keep_fell": None}))
+        self.assertFalse(r.won_on_time({"winner": "West", "keep_fell": 1900.0}))
+        self.assertFalse(r.won_on_time({"winner": None, "keep_fell": None}))
+
+    def test_a_troop_both_factions_field_is_credited_to_neither(self):
+        shared = {"units": [{"troop": "shared"}, {"troop": "mine_a"}]}
+        other = {"units": [{"troop": "shared"}, {"troop": "mine_b"}], "heroes": [{"id": "hero_b"}]}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "factions.json"
+            path.write_text(json.dumps({"factions": {"a": shared, "b": other}}), encoding="utf-8")
+            faction_of = r._faction_tables(path, "a", "b")[0]
+            self.assertEqual({"mine_a": "West", "mine_b": "East", "hero_b": "East"}, faction_of)
+            self.assertEqual({"shared": "West", "mine_a": "West"}, r._faction_tables(path, "a", "a")[0])
+
+
 class FindingTests(unittest.TestCase):
     def test_an_even_match_has_no_balance_flag(self):
         self.assertNotIn("BALANCE", text(r.findings(facts())))
@@ -172,7 +190,19 @@ class FindingTests(unittest.TestCase):
 
     def test_a_win_on_time_names_the_winner_and_no_keep(self):
         found = text(r.findings(facts(winner="East", keep_fell=None, mt=2400.0)))
-        self.assertIn("won on time at 2400 s", found)
+        self.assertIn("RESULT: mordor won on time at 2400 s", found)
+        self.assertNotIn("won at", found)
+
+    def test_the_time_of_a_win_on_time_is_the_winners_own_not_the_last_summary(self):
+        found = text(r.findings(facts(winner="East", keep_fell=None, mt=2431.6, winner_mt=2410.0)))
+        self.assertIn("RESULT: mordor won on time at 2410 s", found)
+
+    def test_a_recorded_time_end_decides_between_a_time_win_and_a_keep_win(self):
+        timed = text(r.findings(facts(winner="East", keep_fell=1900.0, mt=2400.0, on_time=True)))
+        self.assertIn("RESULT: mordor won on time at 2400 s", timed)
+        kept = text(r.findings(facts(winner="East", keep_fell=2000.0, mt=2000.0, on_time=False)))
+        self.assertIn("RESULT: mordor won at 2000 s", kept)
+        self.assertNotIn("on time", kept)
 
     def test_a_fallen_keep_names_the_winner(self):
         found = text(r.findings(facts(winner="East", keep_fell=2000.0, mt=2000.0)))

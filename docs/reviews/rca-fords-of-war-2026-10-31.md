@@ -308,7 +308,7 @@ Follow-up closed 2026-11-04 (22d4f4c70: on the hand-built scene; the four genera
 Resolved (2026-11-01, next addendum): most melee blows on a tower did zero raw damage because vanilla scales a thrust on an object to almost nothing; a thrust damage floor now applies.
 Follow-up closed 2026-11-04 (run 20261103-203523: check 14 passed): no tower fell in two 30-minute AI matches, so check 14 (keep, result, exit) is still unseen; tower balance is the maintainer's call, and the R3 evidence gives the numbers (no issue: the maintainer chose no GitHub issues for Fords of War).
 Follow-up closed 2026-11-04 (c31a7ef69, 91185bdc5: the launcher tries procdump; untested on a real crash): a crash in an unattended run loses its dump, because the watchdog asks a human before it writes one and the launcher stops the game (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: the layout planner's limits (10 % dropped, 5 % bad segments) are unmeasured; set them from the attempt lines of the four scenes (no issue: the maintainer chose no GitHub issues for Fords of War).
+Follow-up closed 2026-11-05 (no generated map ships since Mike kept only Fords of War): the layout planner's limits (10 % dropped, 5 % bad segments) are unmeasured; set them from the attempt lines of the four scenes (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: `FordsSnapshotBuilder` still groups with LINQ (about 36 KB per tick at 240 units); a bucketed builder brings it to about 4 KB (no issue: pre-existing code, the maintainer chose no GitHub issues for Fords of War).
 
 ## Addendum: Codex reviews and the zero-damage melee investigation (2026-11-01)

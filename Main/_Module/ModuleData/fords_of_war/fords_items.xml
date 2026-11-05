@@ -42,7 +42,7 @@
     </ItemComponent>
     <Flags />
   </Item>
-  <!-- A hurled rock with a small ring, thrown by a tower's volley: boulder_projectile (SandBoxCore weapons.xml) with thrust 30 for 2500, which kills anything in the ring, and speed 25 for 8, the speed Fire launches at. Inside 1 m the ring ignores armour on a human. Tune from the ring's number. -->
+  <!-- A hurled rock with a small ring, thrown by a tower's volley: boulder_projectile (SandBoxCore weapons.xml) with thrust 30 for 2500, which kills anything in the ring, and speed 25 for 8, the speed Fire launches at. The ring is 1.2 m: full damage inside 1 m, a ninth at its edge; below 22 m/s the full-damage radius shrinks to 0.8 m and the damage halves. A rock that lands on the ground hits a human in the ring unarmoured; after a direct hit the ring uses the struck part's armour. As a Boulder it can knock down a soldier it does not kill. The run report files its hits as rock. -->
   <Item
     id="fow_tower_rock"
     name="{=pzfbPbWW}Boulder"

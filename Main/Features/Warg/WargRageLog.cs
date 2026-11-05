@@ -88,7 +88,10 @@ internal sealed class WargRageLog
     /// is more, plus the formation's depth (a rider at the rear rank is a whole depth behind the point the distance is measured to).
     /// </summary>
     internal static bool HasReturned(float distance, float formationWidth, float formationDepth) =>
-        distance <= Math.Max(MinReturnDistance, formationWidth / 2f + ReturnMargin) + formationDepth;
+        distance <= Allowed(formationWidth, formationDepth);
+
+    private static float Allowed(float formationWidth, float formationDepth) =>
+        Math.Max(MinReturnDistance, formationWidth / 2f + ReturnMargin) + formationDepth;
 
     /// <summary>What the reset did with a rage that ended: nothing (rider gone), nothing to restore, or the formation given back.</summary>
     internal static string Outcome(bool riderActive, bool formationKnown) =>
@@ -198,7 +201,9 @@ internal sealed class WargRageLog
                 {
                     _notReturned++;
                     closed.Add(rider);
-                    Add(ref lines, episode.Number, "not-returned episode=" + episode.Number + " s=" + seconds.ToString("0.0", CultureInfo.InvariantCulture));
+                    Add(ref lines, episode.Number, "not-returned episode=" + episode.Number + " s=" + seconds.ToString("0.0", CultureInfo.InvariantCulture)
+                        + " distance=" + view.Distance.ToString("0.0", CultureInfo.InvariantCulture)
+                        + " allowed=" + Allowed(view.Width, view.Depth).ToString("0.0", CultureInfo.InvariantCulture));
                 }
             }
 

@@ -27,8 +27,8 @@ internal static class FordsVolleyHits
     }
 
     /// <summary>
-    /// The hit as numbers, or null. <paramref name="filtered"/> says why a missile hit was left out (noAffector, otherItem or
-    /// notGunner); it stays null for a hit that is not a missile at all.
+    /// The hit as numbers, or null. <paramref name="filtered"/> says why a missile hit was left out (noAffector, rock, otherItem or
+    /// notGunner); it stays null for a hit that is not a missile at all. A rock is counted apart: its damage follows another formula.
     /// </summary>
     internal static FordsVolleyHit? Read(Agent affected, Agent? affector, in MissionWeapon weapon, in Blow blow, in AttackCollisionData data,
         out string? filtered)
@@ -38,6 +38,8 @@ internal static class FordsVolleyHits
             return null;
         if (affector == null)
             filtered = "noAffector";
+        else if (weapon.Item?.StringId == FordsTowerAdapter.TowerRockItemId)
+            filtered = "rock";
         else if (weapon.Item?.StringId != FordsTowerAdapter.VolleyItemId && weapon.Item?.StringId != FordsTowerAdapter.TowerArrowItemId)
             filtered = "otherItem";
         else if (affector.CurrentMortalityState != Agent.MortalityState.Invulnerable)

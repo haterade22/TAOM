@@ -123,6 +123,19 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void Rohan_FieldsCheapRidersOften_InEveryFreeWave_AndMostOfItsAiBuys()
+    {
+        // Mike, 2026-11-05: "Rohan needs cheap cavalry because they seem weak. They should get a lot of cavalry opportunities."
+        Assert.IsTrue(Catalog().TryGetFaction("rohan", out var rohan));
+        var riders = rohan.Units.Where(u => u.Role == UnitRole.Cavalry || u.Role == UnitRole.HorseArcher).Select(u => u.OfferId).ToHashSet();
+
+        foreach (var wave in rohan.FreeWaves)
+            Assert.IsTrue(wave.Units.Where(u => u.Role == UnitRole.Cavalry).Sum(u => u.Count) >= 5, $"the wave from minute {wave.FromMinute} brings at least 5 riders");
+        var cycle = rohan.AiBuyCycle!.Where(e => !e.StartsWith("up:", StringComparison.Ordinal)).ToList();
+        Assert.IsTrue(cycle.Count(riders.Contains) * 3 >= cycle.Count * 2, "two of three AI pack buys are riders");
+    }
+
+    [TestMethod]
     public void Gondor_RotatesRegionsOfFourOffers_EverySlotFixed_OnAThirtySecondTimer()
     {
         Assert.IsTrue(Catalog().TryGetFaction("gondor", out var gondor));
@@ -368,6 +381,16 @@ public class ShippedFordsRosterTests
             Assert.AreEqual(defaults[i].StepPerLevel, shipped[i].StepPerLevel, 0.0001f);
             CollectionAssert.AreEqual(defaults[i].Prices.ToArray(), shipped[i].Prices.ToArray());
         }
+    }
+
+    [DataTestMethod]
+    [DataRow("rivendell", "TAOM_FOW_Trait_Rivendell_SlowWaves")]
+    [DataRow("mirkwood", "TAOM_FOW_Trait_Mirkwood_SlowWaves")]
+    public void AnElfFactionWithSlowFreeWaves_SaysSoInAWeakness(string faction, string key)
+    {
+        var shipped = Shipped(faction);
+        Assert.IsTrue(shipped.FeatsOrNone.WaveInterval > 1f);
+        Assert.IsTrue(shipped.Traits.Any(t => !t.Strength && t.Text.Contains(key)), faction);
     }
 
     [TestMethod]

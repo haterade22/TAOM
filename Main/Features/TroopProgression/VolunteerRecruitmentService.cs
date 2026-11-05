@@ -41,6 +41,8 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeAbanissaCulture();
         InitializeRhunSettlements();
         InitializeRhunCulture();
+        InitializeGundabadSettlements();
+        InitializeGundabadClans();
         InitializeGundabadCulture();
         InitializeGoblinCulture();
         InitializeMistyMountainOrcsCulture();

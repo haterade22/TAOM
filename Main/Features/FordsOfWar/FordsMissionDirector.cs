@@ -286,7 +286,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (record != null && credit is { } paid)
             {
                 _report.Death(record.Side, paid);
-                TallyDeath(victim, killer, record.Value);
+                // The tally is the match's trade: a death in the result window changes no result, so it stays out (Codex, 2026-11-05).
+                if (paid != KillCredit.AfterEnd)
+                    TallyDeath(victim, killer, record.Value);
             }
         });
     }
@@ -432,7 +434,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         LogBalance();
         var upgradeHits = FordsUpgradeHooks.Counts;
         var heroHits = FordsUpgradeHooks.HeroCounts;
-        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} (totals)");
+        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} heroRaised={heroHits.Raised} heroLowered={heroHits.Lowered} ownTowerShots={FordsUpgradeHooks.OwnTowerShots} (totals)");
         FordsUpgradeHooks.Clear();
         _report.BindGunnerLookup(null);
         _report.BindTowerLookup(null);
@@ -672,7 +674,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         foreach (var volley in effects.Volleys)
         {
             var target = _battlefield.PositionOf(volley.Target);
-            _report.Volley(target != null, target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth, volley.Rock) : 0);
+            var fired = target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth, volley.Rock) : 0;
+            _report.Volley(target != null, fired, volley.Rock && _towers.RockLoaded);
         }
 
         if (effects.Events.Count > 0)
@@ -716,6 +719,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
                 break;
             case MatchEventKind.TimeUp:
                 _logger.LogInfo($"[FordsOfWar][Time] time is up: {e.Side} wins, {e.Subject} (towers/share of hit points)");
+                _report.EndedOnTime();
                 break;
         }
     }

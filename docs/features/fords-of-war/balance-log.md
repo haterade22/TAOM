@@ -2,11 +2,11 @@
 
 What each match showed, and what changed because of it. `python tools/fords_match_review.py <run folder>` gives the numbers; a person reads them for the design. One match proves little, so a change here names the matches behind it, and the same pair runs again after the change.
 
-**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
+**How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. From the builds after 2026-11-05's Codex review onward, it leaves out deaths in the 25 s result window after the winner is named, which the `[Summary]` deaths and "units lost" still include (0 to 79 deaths a match, at most 2.5%); gold trades before and after that build are not exactly like for like. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
 
 ## How balance is decided
 
-Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. A balance change starts a new round.
+Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. Only finished, clean, scheduled matches count: a final report with a winner, from a build that is not `.dirty` or `.nogit`, with the scheduled faction on the West side, played at 4x with both sides AI and no control check, whose log holds exactly one `[Speed] speed=4` line. A second line means the speed changed during play: a press of the speed key, or a soldier taken with P, since the match runs at 1x while a person controls one. The faction table comes from the `factions.json` the build committed, and a troop both factions field counts for neither side. Folders of other builds are skipped silently; a left-out folder of this build is named on stderr. A balance change starts a new round.
 
 ## Matches
 
@@ -261,13 +261,26 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, one match per pair:** Dol Guldur improved: it lost at 28.6 minutes where it lost at 20.4, with 5,915 tower damage against 2,015, though it still takes no tower. Slower free waves barely moved the elves: Rivendell's win moved from 38.3 to 38.1 minutes with a trade of 2.56 against 2.34, and Mirkwood's from 30.9 to 31.6 minutes, losing a tower where it lost none. So free wave timing is not what makes elves strong, and both ended with over 5,000 gold unspent. The next lever is their fighting quality, not their numbers. One match per pair is a direction and not proof.
 
-### Mordor's swarm (this change)
+### Mordor's swarm
 
 **Why:** Mike, 2026-11-05: Rivendell's stats, armour and weapons are so good that only numbers can beat them, like a swarm. Mordor already outnumbered Rivendell 3 to 1 and lost 4,670 units to 351. Its cap was not the limit: its lane cap is 190, and it peaked at 123 and averaged 77 to 99 a lane, with 205 gold left. Too few orcs arrived at once.
 
 **Changed:** every Mordor free wave is 1.5 times as large, so Mordor sends the largest free waves of any faction. Elves keep their quality.
 
 **Result: not measured.**
+
+### Rohan's cheap cavalry (this change)
+
+**Why:** Mike, 2026-11-05: "Rohan needs cheap cavalry because they seem weak. They should get a lot of cavalry opportunities." The 2026-11-04 rider price pass (0.7 of the full price) left Rohan's gold trade between 0.7 and 2.0 over its seven matches. In the round robin on `92973f27a`, Rohan stood at 1 win and 1 loss when this change was made, so the round's data alone does not show the weakness yet.
+
+**Changed:**
+
+- Every rider pack costs 0.5 of the full price for its level, down from 0.7; the horse archers 0.4, down from 0.5. A spear rider pack of 8 costs 80 gold, the price 6 cost before.
+- The spear and sword rider packs hold 8, up from 6.
+- Every free wave brings 5 riders, up from 3. The 3 foot and 2 archers stay, since riders deal 0.35 of their damage to towers.
+- The AI's last militia buy becomes a spear rider pack, so 7 of its 10 pack buys are riders; two foot buys stay to take towers.
+
+**Result: not measured.** The change lands after the round robin on `92973f27a`, so that round's data stays on one build. More Rohan horses can also mean more riderless mounts; the native crash at `0x6B716E` struck two Rohan matches of three (see the feature doc), so watch the crash rate.
 
 ## Open questions
 

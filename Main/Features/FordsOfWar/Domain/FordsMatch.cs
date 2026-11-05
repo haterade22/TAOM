@@ -489,6 +489,13 @@ internal sealed partial class FordsMatch
     // The table's verdict with no side effect: the damage the tower would take, and the branch that decided.
     private int Judge(TowerHit hit, out TowerDamageReason reason)
     {
+        // The hit hook stays installed through the result window, and a keep that fell there would read as the way the match ended.
+        if (_clock.Phase == MatchPhase.Ended)
+        {
+            reason = TowerDamageReason.MatchEnded;
+            return 0;
+        }
+
         if (hit == null)
         {
             reason = TowerDamageReason.RawZero;

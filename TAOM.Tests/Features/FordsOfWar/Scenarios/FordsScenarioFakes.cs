@@ -477,6 +477,10 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
 
     public bool IsOwnShot(object attacker, object victim) => false;
 
+    public bool RockLoadedFlag;
+
+    public bool RockLoaded => RockLoadedFlag;
+
     public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f, bool rock = false)
     {
         if (NeverFires || Item == null || !_entities.TryGetValue(towerId, out var e) || e.Gunners.Count == 0)

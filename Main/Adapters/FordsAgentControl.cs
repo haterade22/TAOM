@@ -47,7 +47,8 @@ internal static class FordsAgentControl
     /// Hands the soldier back to its AI. No vanilla code clears the main agent of a living agent, and the Controller setter leaves it set, so
     /// this does. The first person flag, the scripted crouch and the stand and run requests belong to the player's controller, which stops
     /// writing them here. The AI logics add new components, and <c>AddComponent</c> initializes neither: the behavior values stay on Default until
-    /// the lane's next order, and morale at a flat 50 with no recovery, so this sets both.
+    /// the lane's next order, and morale at a flat 50 with no recovery, so this sets both. <c>MissionState.OpenNew</c> adds
+    /// <c>AgentCommonAILogic</c> to every mission by default (MissionState.cs:302, :329), so the morale component is there.
     /// </summary>
     internal static void Return(Mission mission)
     {

@@ -1807,3 +1807,11 @@ The fast-forward flag is not the mission's clock. The engine takes a fixed step 
 - **Why missed:** the Seat's contract said to write nothing when the flag is adopted, and its test read only the level.
 - **Prevent:** name the three multipliers wherever a rule mentions another writer of the clock, and read the fixed step and the request in the test that adopts the flag.
 - **Source:** [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md), rows 1, 3
+
+### A mission's behaviours are its launcher's list plus OpenNew's defaults (Fords of War, 2026-11-05)
+
+`MissionState.OpenNew` takes `addDefaultMissionBehaviors = true` by default (MissionState.cs:302) and then adds `BasicMissionHandler`, `CasualtyHandler` and `AgentCommonAILogic` (:329). A reviewer and the orchestrator read only the Fords launcher's list, called a morale reset dead code, and nearly removed it.
+
+- **Why missed:** the launcher's list looked like the whole mission.
+- **Prevent:** before calling any engine component absent from a mission, read the `OpenNew` call's last arguments and `AddDefaultMissionBehaviorsTo`.
+- **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).

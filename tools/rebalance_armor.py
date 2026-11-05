@@ -257,7 +257,8 @@ LINE_PREFIXES = (
     ('ar_ardunian_', 'umbar'),
     ('sk_dg_', 'dol_guldur'),
 )
-FOLDER_DEFAULT_LINE = {'mordor': 'mordor_orc'}
+# gundabad_snow: the Snow Orc kit (tools/generate_snow_orc_armor.py), priced on Gundabad's cap.
+FOLDER_DEFAULT_LINE = {'mordor': 'mordor_orc', 'gundabad_snow': 'gundabad'}
 
 
 def kingdom_key(item_id, culture):

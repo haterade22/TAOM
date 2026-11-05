@@ -41,6 +41,27 @@ public class FordsTimeLimitTests
     }
 
     [TestMethod]
+    public void AdjustTowerDamage_AfterTheMatchEnds_TakesNothing_SoNoKeepFallsUnderTheResult()
+    {
+        var match = Match();
+        match.Tick(Snap(Limit * Minutes));
+
+        var applied = match.AdjustTowerDamage(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Hero, 500, MatchSide.West), out var reason);
+
+        Assert.AreEqual(0, applied);
+        Assert.AreEqual(TowerDamageReason.MatchEnded, reason);
+    }
+
+    [TestMethod]
+    public void ReasonFor_AfterTheMatchEnds_SaysMatchEnded_AsTheDamageDoes()
+    {
+        var match = Match();
+        match.Tick(Snap(Limit * Minutes));
+
+        Assert.AreEqual(TowerDamageReason.MatchEnded, match.ReasonFor(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, MatchSide.East)));
+    }
+
+    [TestMethod]
     public void Tick_LimitZero_NeverEndsTheMatch()
     {
         var match = Match(0f);

@@ -936,6 +936,25 @@ public class FordsVerdictTests
     }
 
     [TestMethod]
+    public void Check14_AnEndOnTime_PassesItsEndPart_WithNoKeepFallen()
+    {
+        var run = Run();
+        run.Closed = true;
+        var e = run.End;
+        e.EndedOnTime = true;
+        e.Winner = "West";
+        e.WinnerMt = 2400;
+        e.WinnerWall = 610;
+        e.ResultSuccess = true;
+        e.EndGameVia = "button";
+        e.EndGameWall = 615;
+        e.ClosedWall = 618;
+        e.MenuReturnedWall = 625;
+
+        Assert.AreEqual(FordsResult.Pass, Result(run, 14));
+    }
+
+    [TestMethod]
     public void Check14_ResultMismatch_Fails_AndSlowExitFails()
     {
         var run = Run();

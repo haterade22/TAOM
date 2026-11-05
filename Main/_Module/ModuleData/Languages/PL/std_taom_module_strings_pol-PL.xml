@@ -7675,6 +7675,8 @@
     <string id="TAOM_LD_Boon_SwiftNock_Text" text="Your archers draw 20 percent faster and reload 15 percent faster." />
     <string id="TAOM_LD_End_Class" text="Class: {CLASS}" />
     <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
+    <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
+    <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
   </strings>
 
 </base>

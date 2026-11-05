@@ -22623,23 +22623,23 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="285" />
-            <skill id="TwoHanded" value="260" />
-            <skill id="Polearm" value="260" />
-            <skill id="Bow" value="260" />
+            <skill id="OneHanded" value="390" />
+            <skill id="TwoHanded" value="350" />
+            <skill id="Polearm" value="340" />
+            <skill id="Bow" value="380" />
             <skill id="Crossbow" value="260" />
-            <skill id="Throwing" value="260" />
-            <skill id="Riding" value="260" />
-            <skill id="Athletics" value="290" />
+            <skill id="Throwing" value="300" />
+            <skill id="Riding" value="360" />
+            <skill id="Athletics" value="330" />
             <skill id="Crafting" value="260" />
-            <skill id="Scouting" value="300" />
+            <skill id="Scouting" value="320" />
             <skill id="Tactics" value="366" />
             <skill id="Roguery" value="260" />
-            <skill id="Charm" value="325" />
+            <skill id="Charm" value="340" />
             <skill id="Leadership" value="397" />
             <skill id="Trade" value="260" />
             <skill id="Steward" value="415" />
-            <skill id="Medicine" value="305" />
+            <skill id="Medicine" value="330" />
             <skill id="Engineering" value="260" />
         </skills>
         <Traits>
@@ -22671,23 +22671,23 @@
             </tattoo_tags>
         </face>
         <skills>
-            <skill id="OneHanded" value="320" />
-            <skill id="TwoHanded" value="300" />
-            <skill id="Polearm" value="310" />
-            <skill id="Bow" value="245" />
-            <skill id="Crossbow" value="250" />
-            <skill id="Throwing" value="250" />
-            <skill id="Riding" value="250" />
-            <skill id="Athletics" value="315" />
+            <skill id="OneHanded" value="360" />
+            <skill id="TwoHanded" value="360" />
+            <skill id="Polearm" value="390" />
+            <skill id="Bow" value="380" />
+            <skill id="Crossbow" value="260" />
+            <skill id="Throwing" value="300" />
+            <skill id="Riding" value="380" />
+            <skill id="Athletics" value="330" />
             <skill id="Crafting" value="250" />
-            <skill id="Scouting" value="250" />
-            <skill id="Tactics" value="311" />
+            <skill id="Scouting" value="300" />
+            <skill id="Tactics" value="340" />
             <skill id="Roguery" value="250" />
-            <skill id="Charm" value="250" />
-            <skill id="Leadership" value="362" />
+            <skill id="Charm" value="280" />
+            <skill id="Leadership" value="380" />
             <skill id="Trade" value="250" />
             <skill id="Steward" value="350" />
-            <skill id="Medicine" value="250" />
+            <skill id="Medicine" value="280" />
             <skill id="Engineering" value="250" />
         </skills>
         <Traits>
@@ -22853,7 +22853,7 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="lothlorien_bat_template_medium_a" />
+            <EquipmentSet id="thandirion_bat_equipment" />
             <EquipmentSet id="lothlorien_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>

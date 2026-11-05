@@ -243,6 +243,21 @@ public class WargRageLogTests
     }
 
     [TestMethod]
+    public void Watch_ANotReturned_NamesHowFarTheRiderIs_AndHowNearItHadToBe()
+    {
+        var scene = Scene.Create();
+        var rider = Rider();
+        scene.Log.Started(rider, true);
+        scene.Log.Ended(rider, Form());
+        scene.View = new WargRageLog.RiderView(true, true, true, true, 200f, 10f, 4f);
+        scene.Now = 61;
+
+        scene.Log.Watch();
+
+        scene.Logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("not-returned episode=1") && s.Contains("distance=200.0") && s.Contains("allowed=19.0")));
+    }
+
+    [TestMethod]
     public void Watch_ARestoredRiderInAnotherFormation_IsClosedSilently()
     {
         var scene = Scene.Create();
