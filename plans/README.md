@@ -183,7 +183,7 @@ the trunk. Item and roster data is deferred; WPs 102, 103, 115, 116, 121, 122 an
 Status values: TODO | IN PROGRESS | DONE (date, merge sha) | BLOCKED (one-line reason) | REJECTED (one-line
 rationale). DONE means merged into `bannerlord-1.4.5` by the integrator with the full suite green.
 
-### Decisions D1 to D26
+### Decisions D1 to D27
 
 Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audit/2026-11-04-port148/data/brief-workflow3-decisions.md).
 
@@ -223,6 +223,8 @@ Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audi
 - **D25** The overnight run of 2026-11-04: see the planning state above and the decisions brief.
 
 - **D26** The in-game test moves to the end; 127 to 137, 139, 141 and 144 become runnable. See the decisions brief.
+
+- **D27** The maintainer delegated the remaining choices; the protected files stay protected. See the decisions brief.
 
 ### Plans 001 to 005 and this programme
 
