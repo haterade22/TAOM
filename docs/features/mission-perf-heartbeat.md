@@ -40,6 +40,7 @@ For v1.4.8 (build 119303, re-read for the port):
 - **Not on this line**: the culture doctrine feature, co-op's client-only patch attribute, and, until WP118,
   `[MapLoad]`, `[XmlMerge]` and the load-time stamps this page mentions.
 - **The campaign map** has its own profiler: [map-perf-profiler.md](map-perf-profiler.md).
+- **Stranded soldiers** have an opt-in census: [lost-footing.md](lost-footing.md).
 
 ## Why This Exists
 

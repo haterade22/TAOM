@@ -1494,4 +1494,15 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
                 Colors.Red));
         }
     };
+
+    // --- Battle Tactics / Lost Footing (#894, phase 1: the census only; plan 117) ---
+    // The first property carries the GroupOrder, because MCM ignores one on any later property; no other group may
+    // share it (LostFootingSettingsProviderTests pins that). Off by default on the 1.4.x line, under a key of its own:
+    // the 1.5.x line's LostFootingCensus defaults on, and a persisted value must never meet a flipped default.
+    // The scan numbers are compiled defaults in LostFootingTunables, not settings.
+
+    [SettingPropertyGroup("Battle Tactics/Lost Footing", GroupOrder = 64)]
+    [SettingPropertyBool("Lost Footing Census", Order = 0, RequireRestart = false,
+        HintText = "Counts soldiers, mounts and creatures that are stuck in a battle, standing off the walkable ground or wading in water without moving, and writes what it finds to the log with a [LostFooting] tag, with a summary when the battle ends. It only watches: it never moves or changes anything in the battle. Field battles, sieges and sally-outs. Default: off.")]
+    public bool LostFootingCensusEnabled { get; set; } = false;
 }

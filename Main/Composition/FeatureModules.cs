@@ -22,5 +22,6 @@ internal static class FeatureModules
         new Features.BattleCorpses.BattleCorpsesModule(),
         new Features.MapEventGuard.StuckBattleModule(),
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
+        new Features.LostFooting.LostFootingModule(),
     };
 }

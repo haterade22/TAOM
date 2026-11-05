@@ -81,6 +81,8 @@ public static class CoopSettingsRelevance
         "EnableMapProfiler",
         // The [AnimMem] clip memory probe; it reads, never changes, the engine.
         "EnableAnimMemoryProbe",
+        // Lost Footing (docs/features/lost-footing.md): the census writes [LostFooting] lines and reads the battle, never changes it.
+        "LostFootingCensusEnabled",
     };
 
     /// <summary>
