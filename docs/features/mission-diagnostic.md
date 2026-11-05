@@ -23,7 +23,7 @@ The diagnostic needs to run *after* vanilla and all other mods have added their 
 1. The full `Mission.MissionBehaviors` list, annotating any entry whose `BehaviorType=Logic` but `!is MissionLogic` as the suspected offender.
 2. The full `Mission.MissionLogics` list with null-slot indices.
 
-For 5 seconds after mission start, the same behavior scans `Mission.Agents` and logs every unique `(actionSetName, raceName)` combo seen — dedup is handled service-side so the boundary doesn't need a per-agent gate.
+For 5 seconds after mission start, the same behavior scans `Mission.Agents` and logs every unique `(actionSetName, raceName, sex)` combination seen. Each agent is first checked on an integer key (the action set's engine index, the race id and the sex, `TryMarkActionSetKey`); only a combination not yet seen this mission reads the action set name, the race name and the agent name, so the window costs three managed reads and one native index read per agent per frame. The window logs one header when it opens and one summary when it closes (see "How to Read the Output").
 
 A separate `LogSessionSnapshot()` call (driven by an `OnSessionLaunched` boundary registered in `SubModule`) dumps OS, CLR, Bannerlord version, every active module, every loaded BUTR/MCM/Harmony assembly with its version, and a campaign-context line if a save is loaded. All collection reads are independently guarded — `Campaign.Current.GameStarted` can be `false` mid-init even when `Campaign.Current` is non-null.
 
@@ -54,8 +54,8 @@ No config. The diagnostic always runs — its overhead is bounded (single per-mi
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/MissionDiagnostic/IMissionDiagnosticService.cs` | Service interface — 4 methods: `LogSessionSnapshot`, `LogMissionStartSnapshot`, `LogActionSetSeen`, `ResetForNewMission` |
-| `Main/Features/MissionDiagnostic/MissionDiagnosticService.cs` | Singleton implementation. Holds the action-set dedup `HashSet` + `_sessionLogged` once-only guard. All `IModLogger.LogXxx` calls live here. |
+| `Main/Features/MissionDiagnostic/IMissionDiagnosticService.cs` | Service interface, 7 methods: `LogSessionSnapshot`, `LogMissionStartSnapshot`, `LogActionSetSeen`, `TryMarkActionSetKey`, `LogActionSetCensusOpened`, `LogActionSetCensusClosed`, `ResetForNewMission` |
+| `Main/Features/MissionDiagnostic/MissionDiagnosticService.cs` | Singleton implementation. Holds the two action-set dedup sets (the integer key and the logged line's string key), the census totals + `_sessionLogged` once-only guard. All `IModLogger.LogXxx` calls live here. |
 | `Main/Features/MissionDiagnostic/MissionDiagnosticIoC.cs` | DryIoc registration — `IMissionDiagnosticService → MissionDiagnosticService` as `Reuse.Singleton` |
 | `Main/Features/MissionDiagnostic/Hooks/MissionDiagnosticBehavior.cs` | `MissionLogic` boundary. **Inherits `MissionLogic` deliberately**, not just `MissionBehavior` — otherwise this feature would be the bug it's designed to catch. First-tick gate via `_missionStartLogged`. 5-second action-set window via `_actionSetWindowSecondsLeft`. |
 
@@ -67,7 +67,7 @@ No config. The diagnostic always runs — its overhead is bounded (single per-mi
 
 ## Tests
 
-No service-level unit tests yet. The behavior is integration-test territory (boundary against `Mission`, which can't be mocked cleanly) — manually exercised on every Bannerlord launch, and the log line shape is documented above for future automation.
+`TAOM.Tests/Features/MissionDiagnostic/MissionDiagnosticServiceTests.cs` covers the action-set integer key (first and repeat sighting, each key part, the per-mission reset) and pins the census line text, the census header and the census summary. `TAOM.Tests/Features/MissionDiagnostic/MissionDiagnosticBehaviorTests.cs` (`RequiresGame`) covers the census window's single close: when the window runs out, when the mission is shorter than the window, and on a NaN frame time. The behavior's agent loop reads the engine's `Agent` and is exercised in game on every launch.
 
 ## How to Read the Output
 
@@ -77,13 +77,20 @@ When a user reports a crash, search the attached `taom_debug_*.log` for `[Missio
 2. **`NULL ENTRIES in MissionLogics at indices: [...]`** — confirms the engine-side null-cast happened. Cross-reference indices with the behaviors list above to identify the offender(s).
 3. **`ActionSet '<name>' used by race='<race>'`** — for action-set debugging, look for cases where the action set's race prefix doesn't match the race column (e.g. `as_human_warrior` used by `race=elf`).
 4. **`Mod-stack assemblies (...)`** — at the top of the log; tells you exact versions of Harmony, MCM, ButterLib, BUTR libraries the user has installed. Cross-reference with TAOM's `Directory.Build.props` references to identify version drift.
+5. **The census window** (INFO, once each per mission). The header, written on the first tick:
+   `[MissionDiag] ActionSet census open: window=5.0s, one line per (action set, race, sex); names are read only for a new (action set index, race id, sex) key`.
+   The summary, written when the window runs out, when a failed capture closes it, when a non-finite frame time ends the window, or at mission end if the mission was shorter:
+   `[MissionDiag] ActionSet census closed: agentChecks=4120 newKeys=6 lines=5`. `agentChecks` counts every agent the window
+   looked at (agents times frames), `newKeys` the checks that found a new integer key and read names, `lines` the
+   `ActionSet` lines written. `newKeys` above `lines` means two keys shared a line (two unknown race ids both resolve
+   to the human race name).
 
 ## Performance
 
 - **First-tick dump:** O(N) over `MissionBehaviors` + `MissionLogics`. N is typically <50 across all loaded mods. Negligible — a few milliseconds at most, on a tick that already does mission init.
-- **Action-set window:** 5 seconds × N agents per tick. Service-level `HashSet<(actionSet, race)>` dedup keeps log volume bounded — most missions emit a handful of unique combos before saturating.
+- **Action-set window:** 5 seconds × N agents per tick. The integer pre-filter keeps the per-agent cost to managed reads, and the service-level `(actionSet, race, sex)` dedup keeps log volume bounded; most missions emit a handful of unique combos before saturating.
 - **Session snapshot:** runs once per game launch. Negligible.
-- **Memory:** the dedup `HashSet` resets per-mission via `ResetForNewMission`. No long-lived collections grow unbounded.
+- **Memory:** both action-set dedup sets reset per mission via `ResetForNewMission`. No long-lived collections grow unbounded.
 
 ## Changelog
 
