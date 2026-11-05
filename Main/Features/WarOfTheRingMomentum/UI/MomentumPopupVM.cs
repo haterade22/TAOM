@@ -184,6 +184,17 @@ public sealed class MomentumPopupVM : ViewModel
         StatsBreakdown.Add(new BreakdownVM(
             new TextObject("{=taom_wotr_villages_raided}Villages Raided").ToString(),
             free.TotalVillagesRaided.ToString(), evil.TotalVillagesRaided.ToString()));
+
+        // WOTR-04: the victory check compares an absolute lead with the threshold while the bar shows a
+        // ratio, so with victory on the popup also shows the lead that decides the war.
+        if (_query.VictoryEnabled)
+        {
+            int lead = _query.VictoryLead;
+            var label = new TextObject("{=taom_wotr_victory_lead}Victory lead (needs {THRESHOLD})");
+            label.SetTextVariable("THRESHOLD", _query.VictoryThreshold);
+            StatsBreakdown.Add(new BreakdownVM(label.ToString(),
+                lead > 0 ? lead.ToString() : "0", lead < 0 ? (-lead).ToString() : "0"));
+        }
     }
 
     private static string ActionTypeLabel(MomentumActionType type)

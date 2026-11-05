@@ -12,6 +12,7 @@
 	<string id="taom_wotr_breakdown_header" text="Momentum Breakdown" />
 	<string id="taom_wotr_total_stats_header" text="Total Stats" />
 	<string id="taom_wotr_total" text="Total: {MOMENTUM}" />
+	<string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
 	<string id="taom_wotr_battles_won" text="Battles Won" />
 	<string id="taom_wotr_villages_raided" text="Villages Raided" />
 	<string id="taom_wotr_fiefs_captured" text="Fiefs Captured" />

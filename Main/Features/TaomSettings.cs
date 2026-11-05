@@ -244,7 +244,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyInteger("Victory Threshold", 100, 2000, Order = 2, RequireRestart = false,
-        HintText = "Momentum lead one side needs to win the war outright. Default 500.")]
+        HintText = "Momentum lead (the Free Peoples' total minus the Dark Powers' total) one side needs to win the war outright. The map bar shows the ratio of the two totals, not this lead, so after a long war a side can reach it with the bar near the middle; with victory on, the War of the Ring popup shows the lead. Default 500.")]
     public int MomentumVictoryThreshold { get; set; } = 500;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
@@ -254,12 +254,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyBool("Require Player Participation For Victory", Order = 4, RequireRestart = false,
-        HintText = "When on, the war cannot end until you have fought in enough momentum events yourself. Default: on.")]
+        HintText = "When on, the war cannot end until enough momentum events have involved you. A battle counts when your party fought in it or a lord of the realm you serve led either side, won or lost; a siege counts when your side took the settlement. Default: on.")]
     public bool MomentumRequirePlayerForVictory { get; set; } = true;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyInteger("Minimum Player Events For Victory", 0, 20, Order = 5, RequireRestart = false,
-        HintText = "How many battles/sieges you must take part in before either side can win. Default 5.")]
+        HintText = "How many of those momentum events (see the setting above) must have happened before either side can win. Default 5.")]
     public int MomentumMinPlayerEvents { get; set; } = 5;
 
     // --- Battle Balance / Troop Power ---

@@ -12,6 +12,7 @@
     <string id="taom_wotr_breakdown_header" text="聲勢明細" />
     <string id="taom_wotr_total_stats_header" text="總體數據" />
     <string id="taom_wotr_total" text="總計：{MOMENTUM}" />
+    <string id="taom_wotr_victory_lead" text="Victory lead (needs {THRESHOLD})" />
     <string id="taom_wotr_battles_won" text="已勝戰役" />
     <string id="taom_wotr_villages_raided" text="已劫掠村莊" />
     <string id="taom_wotr_fiefs_captured" text="已奪取封地" />

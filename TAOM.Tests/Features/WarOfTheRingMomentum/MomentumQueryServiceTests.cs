@@ -99,4 +99,31 @@ public class MomentumQueryServiceTests
         Assert.AreEqual(1, events.Count);
         Assert.AreEqual(200, events[0].Value);
     }
+
+    // ---- WOTR-04: the lead the victory check compares with the threshold ----
+
+    [TestMethod]
+    public void VictoryLead_FreeAhead_IsPositiveInDisplayedUnits()
+    {
+        _stateStore.State.Free.EditMomentum(600 * MomentumWarState.MomentumScale);
+        _stateStore.State.Evil.EditMomentum(100 * MomentumWarState.MomentumScale);
+
+        Assert.AreEqual(500, _sut.VictoryLead);
+    }
+
+    [TestMethod]
+    public void VictoryLead_EvilAhead_IsNegative()
+    {
+        _stateStore.State.Evil.EditMomentum(300 * MomentumWarState.MomentumScale);
+
+        Assert.AreEqual(-300, _sut.VictoryLead);
+    }
+
+    [TestMethod]
+    public void VictoryEnabled_ReadsTheSetting()
+    {
+        _settings.VictoryEnabled.Returns(true);
+
+        Assert.IsTrue(_sut.VictoryEnabled);
+    }
 }

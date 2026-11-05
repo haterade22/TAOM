@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Core.Validation;
 using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
@@ -49,6 +50,17 @@ public class MomentumQueryService : IMomentumQueryService
     }
 
     public int VictoryThreshold => _settings.VictoryThreshold;
+
+    public bool VictoryEnabled => _settings.VictoryEnabled;
+
+    public int VictoryLead
+    {
+        get
+        {
+            float lead = _stateStore.State.InternalMomentum;
+            return FiniteFloatValidator.IsFinite(lead) ? (int)Math.Round(lead) : 0;
+        }
+    }
 
     public IReadOnlyList<string> GetKingdomIds(MomentumSide side) =>
         _stateStore.State.GetSide(side).KingdomIds;
