@@ -1961,6 +1961,42 @@ menu happen at once. The hourly reconciler's join request takes the same path
 wording earlier in this doc predates #841. Review:
 `rca-enlistment-trace-and-pump-clock-2026-10-24.md`.
 
+### One fitness check for a commander (#1016, partial)
+
+`CommanderSnapshot.IsFit` (exists, alive, free, with an active party) replaces six copies of the
+same test: `EnlistmentRescueCheats`, `EnlistmentDialogGateService.CanEnlistWith`,
+`EnlistmentPlayerActionService`, the grace path of `EnlistmentReconciler`,
+`EnlistmentService.IsCommanderFit` and the `ServiceAttachmentService` assessment. It matches
+`CommanderTickSnapshot.IsFollowable` (`CommanderSnapshotIsFitTests`). The 1.5.x board line for a
+battle the oath keeps the soldier out of is not ported yet.
+
+### Siege duties for defenders, and wage order (#1014)
+
+The army-rhythm probe counts a commander defending a besieged town as in a siege:
+`MobileParty.SiegeEvent` is the besieger's camp event (`BesiegerCamp?.SiegeEvent`, v1.4.8
+`MobileParty.cs:1132`), null for a defender, so the probe also reads the current settlement's
+`SiegeEvent`. The snapshot is probed fresh on every call (the daily tick, the daily duty offer and
+a duty request), so the hourly cache and its session reset are gone. `ServiceRewardService.PayDailyWage`
+pays today's wage before it releases banked arrears, so arrears above the cap no longer eat a
+day's pay. The compiled default of `scheduler.maxOfferChance` is 0.4, the shipped value. Review:
+`rca-enlistment-followups-siege-wages-2026-10-26.md`.
+
+### A battle rule that never ran is gone (#796)
+
+Ownership rule R1b and `EncounterOwnershipSnapshot.IsBattleEncounter`, described as live in older
+sections of this doc, are removed. `EncounterAdapter.GetOwnership` computed the flag but never
+passed it to the snapshot, so R1b never fired and `EnlistmentLoadNormalizer.IsMidBattle` reduced to
+`presence.IsInMapEvent`. It was not needed either: on v1.4.8 the main party stays in its map event
+through the loot and aftermath screens and leaves it inside `PlayerEncounter.Finish`
+(`PlayerEncounter.cs:1071` calls `FinalizeBattle`, which finalizes the event at `:1909`;
+`MapEvent.FinalizeEventAux` raises `MapEventEnded` and calls `MapEventSide.HandleMapEventEnd`,
+which clears each party's side), and `MapEvent.Update` skips `FinishBattle` for the player's event
+while an encounter is open (`MapEvent.cs:1041`). Rule R1 (the player is in a map event) already
+protects that window. After a join the encountered party is the opposing leader
+(`PlayerEncounter.cs:945`). Review: `rca-enlistment-battle-encounter-rule-2026-10-26.md`.
+
+**Owed in-game checks (WP132).** See `plans/132-enlistment-fixes-b.md`, "In-game checks owed".
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
