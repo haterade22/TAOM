@@ -35,7 +35,7 @@ public class ServiceStatusTextWriterRenderTests
         commanderName: "Aragorn", activity: CommanderActivity.InBattle, settlementName: "Minas Tirith",
         rank: ServiceRank.Veteran, daysServed: 24, trust: 9, deferredWages: 40, activeDutyId: "recon_sweep",
         serviceXp: 100, dailyWage: 12, nextRank: ServiceRank.Sergeant, nextRequirementKey: "xp",
-        nextRequirementTarget: 200);
+        nextRequirementTarget: 200, activeDutyTitle: "Scout the ford");
 
     [TestMethod]
     public void Write_WhenNewlineWasNeverSet_StillStoresTheBoardWithLineBreaks()

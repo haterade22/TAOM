@@ -365,6 +365,10 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
                 || !RewardValid(duty.ReportReward) && Warn(duty.Id, "negative or unknown-skill reportReward", out reason)
                 || !RewardValid(duty.FailureReward) && Warn(duty.Id, "negative or unknown-skill failureReward", out reason)
                 || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason)
+                || DutyText.Problems(duty.Id,
+                    (duty.Title, DutyText.TitleSuffix, "title"),
+                    (duty.Success, DutyText.SuccessSuffix, "success"),
+                    (duty.Failure, DutyText.FailureSuffix, "failure")) is { } fieldTextProblem && Warn(duty.Id, fieldTextProblem, out reason)
                 // A row with no supportSkills would roll against skill 0 forever — silently
                 // unwinnable at any rank. SKIP it rather than ship a duty nobody can pass.
                 || (duty.SupportSkills == null || duty.SupportSkills.Count == 0) && Warn(duty.Id, "supportSkills is empty — the duty would roll against skill 0", out reason)
@@ -387,7 +391,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             if (RowInvalid(duty?.Id, seenIds, out var reason)
                 || !OptionValid(duty.OptionA) && Warn(duty.Id, OptionProblem(duty.OptionA), out reason)
                 || !OptionValid(duty.OptionB) && Warn(duty.Id, OptionProblem(duty.OptionB), out reason)
-                || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason))
+                || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason)
+                || PopupTextProblem(duty.Id, duty.Title, duty.Body, duty.OptionA, duty.OptionB) is { } textProblem && Warn(duty.Id, textProblem, out reason))
             {
                 _ = reason;
                 continue;
@@ -402,7 +407,8 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
                 || !FiniteFloatValidator.IsFiniteInRange(incident.Chance, 0f, 1f) && Warn(incident.Id, $"chance={incident.Chance} must be finite in [0,1]", out reason)
                 || !KnownIncidentEffects.Contains(incident.Effect ?? "") && Warn(incident.Id, $"unknown effect '{incident.Effect}'", out reason)
                 || !OptionValid(incident.OptionA) && Warn(incident.Id, OptionProblem(incident.OptionA), out reason)
-                || !OptionValid(incident.OptionB) && Warn(incident.Id, OptionProblem(incident.OptionB), out reason))
+                || !OptionValid(incident.OptionB) && Warn(incident.Id, OptionProblem(incident.OptionB), out reason)
+                || PopupTextProblem(incident.Id, incident.Title, incident.Body, incident.OptionA, incident.OptionB) is { } incidentTextProblem && Warn(incident.Id, incidentTextProblem, out reason))
             {
                 _ = reason;
                 continue;
@@ -463,6 +469,14 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             ?? (gates.ExcludedContexts ?? new List<string>()).FirstOrDefault(c => !KnownContexts.Contains(c))
             ?? "";
     }
+
+    /// <summary>First problem with the popup text of an interactive duty or incident, or null when all four strings are well formed.</summary>
+    private static string PopupTextProblem(string id, string title, string body, DutyOptionSpec optionA, DutyOptionSpec optionB)
+        => DutyText.Problems(id,
+            (title, DutyText.TitleSuffix, "title"),
+            (body, DutyText.BodySuffix, "body"),
+            (optionA?.Label, DutyText.OptionASuffix, "optionA.label"),
+            (optionB?.Label, DutyText.OptionBSuffix, "optionB.label"));
 
     private bool OptionValid(DutyOptionSpec option)
     {

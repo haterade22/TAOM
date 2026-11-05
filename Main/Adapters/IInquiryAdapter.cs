@@ -14,9 +14,9 @@ namespace TAOM.Adapters;
 /// Verified 1.4.7 <c>InquiryData</c> ctor order: (titleText, text, isAffirmativeShown,
 /// isNegativeShown, affirmativeText, negativeText, affirmativeAction, negativeAction, ...).
 /// Every key/fallback pair follows the TAOM convention <c>{=key}fallback</c>. NOTE: these
-/// keys are built from data-row ids at runtime (<c>taom_enlist_duty_{id}_title</c> etc.) —
-/// static localization extraction tooling that greps for LITERAL <c>{=key}</c> strings will
-/// NOT find them; see the feature doc for the follow-up needed before <c>/localize</c>.
+/// duty keys (<c>taom_enlist_duty_{id}_title</c> etc.) are written in <c>enlistment_duties.json</c>
+/// as <c>{=key}English</c> strings; <c>tools/harvest_duty_strings.py</c> registers them in
+/// <c>taom_enlistment_strings.xml</c>, because a grep for LITERAL <c>{=key}</c> strings in C# cannot find them.
 /// </summary>
 public interface IInquiryAdapter
 {

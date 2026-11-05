@@ -75,11 +75,11 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_RetiredRewardKeys_LoadWithoutWarning()
     {
-        WriteDuties("{\"incidents\":[{\"id\":\"pay_delay\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\","
+        WriteDuties("{\"incidents\":[{\"id\":\"pay_delay\",\"title\":\"{=taom_enlist_duty_pay_delay_title}x\",\"body\":\"{=taom_enlist_duty_pay_delay_body}x\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\","
             + "\"gates\":{\"minRank\":\"Recruit\"},"
-            + "\"optionA\":{\"key\":\"press_claim\",\"skillId\":\"Charm\",\"difficulty\":65,"
+            + "\"optionA\":{\"key\":\"press_claim\",\"label\":\"{=taom_enlist_duty_pay_delay_opta}x\",\"skillId\":\"Charm\",\"difficulty\":65,"
             + "\"successReward\":{\"serviceXp\":20,\"trust\":-1,\"repDomain\":\"Command\",\"repAmount\":2}},"
-            + "\"optionB\":{\"key\":\"wait_it_out\",\"skillId\":\"Steward\",\"difficulty\":50,"
+            + "\"optionB\":{\"key\":\"wait_it_out\",\"label\":\"{=taom_enlist_duty_pay_delay_optb}x\",\"skillId\":\"Steward\",\"difficulty\":50,"
             + "\"successReward\":{\"serviceXp\":16,\"trust\":1}}}]}");
 
         var duties = Provider().GetDuties();
@@ -369,6 +369,94 @@ public class EnlistmentContentConfigProviderTests
         _logger.DidNotReceive().LogError(Arg.Any<string>());
     }
 
+    private const string FieldRow = "{\"id\":\"road_patrol\",\"title\":\"{=taom_enlist_duty_road_patrol_title}a road patrol\","
+        + "\"success\":\"{=taom_enlist_duty_road_patrol_success}The road is quiet.\",\"failure\":\"{=taom_enlist_duty_road_patrol_failure}You miss it.\","
+        + "\"difficulty\":50,\"durationHours\":4,\"supportSkills\":[\"Scouting\"],\"gates\":{\"minRank\":\"Recruit\"}}";
+
+    private static string PopupRow(string section, string title, string body, string labelA, string labelB) =>
+        "{\"id\":\"night_patrol\"," + (title == null ? "" : "\"title\":\"" + title + "\",")
+        + (body == null ? "" : "\"body\":\"" + body + "\",")
+        + (section == "incidents" ? "\"chance\":0.2,\"effect\":\"\"," : "")
+        + "\"optionA\":{\"key\":\"walk\"," + (labelA == null ? "" : "\"label\":\"" + labelA + "\",") + "\"skillId\":\"Scouting\",\"difficulty\":60},"
+        + "\"optionB\":{\"key\":\"watch\"," + (labelB == null ? "" : "\"label\":\"" + labelB + "\",") + "\"skillId\":\"Athletics\",\"difficulty\":55}}";
+
+    private const string Title = "{=taom_enlist_duty_night_patrol_title}Night Watch";
+    private const string Body = "{=taom_enlist_duty_night_patrol_body}Walk the rounds.";
+    private const string LabelA = "{=taom_enlist_duty_night_patrol_opta}Walk Rounds";
+    private const string LabelB = "{=taom_enlist_duty_night_patrol_optb}Double Watch";
+
+    [TestMethod]
+    public void GetDuties_RowsWithKeyedText_Load()
+    {
+        WriteDuties("{\"fieldDuties\":[" + FieldRow + "],\"interactiveDuties\":[" + PopupRow("interactiveDuties", Title, Body, LabelA, LabelB) + "]}");
+
+        var duties = Provider().GetDuties();
+
+        Assert.AreEqual(1, duties.FieldDuties.Count);
+        Assert.AreEqual(1, duties.InteractiveDuties.Count);
+        Assert.AreEqual("{=taom_enlist_duty_road_patrol_title}a road patrol", duties.FieldDuties[0].Title);
+        Assert.AreEqual(LabelB, duties.InteractiveDuties[0].OptionB.Label);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetDuties_FieldDutyWithoutTitle_SkippedWithWarning()
+    {
+        WriteDuties("{\"fieldDuties\":[" + FieldRow.Replace("\"title\":\"{=taom_enlist_duty_road_patrol_title}a road patrol\",", "") + "]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("road_patrol") && s.Contains("title text is missing")));
+    }
+
+    [TestMethod]
+    public void GetDuties_FieldDutyWithBadResultText_SkippedWithEveryProblemNamed()
+    {
+        var bad = FieldRow
+            .Replace("\"success\":\"{=taom_enlist_duty_road_patrol_success}The road is quiet.\",", "")
+            .Replace("{=taom_enlist_duty_road_patrol_failure}You miss it.", "{=taom_enlist_duty_road_patrol_failure}  ")
+            .Replace("{=taom_enlist_duty_road_patrol_title}a road patrol", "{=taom_enlist_duty_other_title}a road patrol");
+        WriteDuties("{\"fieldDuties\":[" + bad + "]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("road_patrol")
+            && s.Contains("title text must start with")
+            && s.Contains("success text is missing")
+            && s.Contains("failure text has no English")));
+    }
+
+    [TestMethod]
+    public void GetDuties_InteractiveDutyWithSeveralBadTexts_ReportsAllOfThem()
+    {
+        WriteDuties("{\"interactiveDuties\":[" + PopupRow("interactiveDuties", Title, null, null, LabelB) + "]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().InteractiveDuties.Count);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("body text is missing") && s.Contains("optionA.label text is missing")));
+    }
+
+    [DataTestMethod]
+    [DataRow(null, Body, LabelA, LabelB, "title text is missing")]
+    [DataRow(Title, null, LabelA, LabelB, "body text is missing")]
+    [DataRow(Title, Body, null, LabelB, "optionA.label text is missing")]
+    [DataRow(Title, Body, LabelA, "Double Watch", "optionB.label text must start with")]
+    [DataRow(Title, Body, "{=taom_enlist_duty_other_opta}Walk Rounds", LabelB, "optionA.label text must start with")]
+    [DataRow("{=taom_enlist_duty_night_patrol_title}", Body, LabelA, LabelB, "title text has no English")]
+    public void GetDuties_InteractiveDutyWithBadText_SkippedWithWarning(string title, string body, string labelA, string labelB, string expected)
+    {
+        WriteDuties("{\"interactiveDuties\":[" + PopupRow("interactiveDuties", title, body, labelA, labelB) + "]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().InteractiveDuties.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("night_patrol") && s.Contains(expected)));
+    }
+
+    [TestMethod]
+    public void GetDuties_IncidentWithBadText_SkippedWithWarning()
+    {
+        WriteDuties("{\"incidents\":[" + PopupRow("incidents", Title, Body, LabelA, "Double Watch") + "]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().Incidents.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("night_patrol") && s.Contains("optionB.label text must start with")));
+    }
+
     private IPathService ShippedPaths()
     {
         var paths = Substitute.For<IPathService>();
@@ -448,7 +536,7 @@ public class EnlistmentContentConfigProviderTests
         // Only [0] and [1] are ever read, and EffectiveSkill returns the better of the two. A third
         // entry looks like a third chance to the author and is dead data at runtime — the exact
         // shape of silence this provider exists to refuse.
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"too_many\",\"difficulty\":50,\"durationHours\":6,"
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"too_many\",\"title\":\"{=taom_enlist_duty_too_many_title}x\",\"success\":\"{=taom_enlist_duty_too_many_success}x\",\"failure\":\"{=taom_enlist_duty_too_many_failure}x\",\"difficulty\":50,\"durationHours\":6,"
             + "\"supportSkills\":[\"Scouting\",\"Riding\",\"Athletics\"]}]}");
 
         var duties = Provider().GetDuties();
@@ -460,7 +548,7 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_TwoSupportSkills_IsAccepted()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"pairing\",\"difficulty\":50,\"durationHours\":6,"
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"pairing\",\"title\":\"{=taom_enlist_duty_pairing_title}x\",\"success\":\"{=taom_enlist_duty_pairing_success}x\",\"failure\":\"{=taom_enlist_duty_pairing_failure}x\",\"difficulty\":50,\"durationHours\":6,"
             + "\"supportSkills\":[\"Scouting\",\"Riding\"]}]}");
 
         var duties = Provider().GetDuties();
@@ -472,7 +560,7 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_UnknownContext_SkipsRowWithWarning()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"bad_ctx\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"gates\":{\"requiredContexts\":[\"siegee\"]}}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"bad_ctx\",\"title\":\"{=taom_enlist_duty_bad_ctx_title}x\",\"success\":\"{=taom_enlist_duty_bad_ctx_success}x\",\"failure\":\"{=taom_enlist_duty_bad_ctx_failure}x\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"gates\":{\"requiredContexts\":[\"siegee\"]}}]}");
 
         var duties = Provider().GetDuties();
 
@@ -488,7 +576,7 @@ public class EnlistmentContentConfigProviderTests
         // and omitted supportSkills — so the row was skipped by the support-skill rule and the test
         // passed while testing nothing about duration. A zero-hour duty resolves the instant it is
         // assigned, which is exactly what this must keep out of the data.
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"zero_hours\",\"difficulty\":55,\"durationHours\":0,"
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"zero_hours\",\"title\":\"{=taom_enlist_duty_zero_hours_title}x\",\"success\":\"{=taom_enlist_duty_zero_hours_success}x\",\"failure\":\"{=taom_enlist_duty_zero_hours_failure}x\",\"difficulty\":55,\"durationHours\":0,"
             + "\"supportSkills\":[\"Scouting\"]}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
@@ -498,7 +586,7 @@ public class EnlistmentContentConfigProviderTests
     public void GetDuties_NoSupportSkills_SkipsRow()
     {
         // A row with no skills rolls against skill 0 forever — silently unwinnable at any rank.
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"no_skills\",\"difficulty\":55,\"durationHours\":6}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"no_skills\",\"title\":\"{=taom_enlist_duty_no_skills_title}x\",\"success\":\"{=taom_enlist_duty_no_skills_success}x\",\"failure\":\"{=taom_enlist_duty_no_skills_failure}x\",\"difficulty\":55,\"durationHours\":6}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
     }
@@ -508,7 +596,7 @@ public class EnlistmentContentConfigProviderTests
     {
         // The positive control the three skip-tests need: proves they fail for their stated reason
         // and not because the fixture shape is wrong.
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"ok\",\"difficulty\":55,\"durationHours\":6,"
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"ok\",\"title\":\"{=taom_enlist_duty_ok_title}x\",\"success\":\"{=taom_enlist_duty_ok_success}x\",\"failure\":\"{=taom_enlist_duty_ok_failure}x\",\"difficulty\":55,\"durationHours\":6,"
             + "\"supportSkills\":[\"Scouting\"]}]}");
 
         var duties = Provider().GetDuties().FieldDuties;
@@ -521,8 +609,8 @@ public class EnlistmentContentConfigProviderTests
     public void GetDuties_DuplicateId_SkipsLaterRow()
     {
         WriteDuties("{\"fieldDuties\":[" +
-            "{\"id\":\"road_patrol\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"]}," +
-            "{\"id\":\"road_patrol\",\"difficulty\":48,\"durationHours\":4,\"supportSkills\":[\"Steward\"]}]}");
+            "{\"id\":\"road_patrol\",\"title\":\"{=taom_enlist_duty_road_patrol_title}x\",\"success\":\"{=taom_enlist_duty_road_patrol_success}x\",\"failure\":\"{=taom_enlist_duty_road_patrol_failure}x\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"]}," +
+            "{\"id\":\"road_patrol\",\"title\":\"{=taom_enlist_duty_road_patrol_title}x\",\"success\":\"{=taom_enlist_duty_road_patrol_success}x\",\"failure\":\"{=taom_enlist_duty_road_patrol_failure}x\",\"difficulty\":48,\"durationHours\":4,\"supportSkills\":[\"Steward\"]}]}");
 
         var duties = Provider().GetDuties();
 
@@ -533,7 +621,7 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_NegativeReward_SkipsRow()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"neg\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"gold\":-5}}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"neg\",\"title\":\"{=taom_enlist_duty_neg_title}x\",\"success\":\"{=taom_enlist_duty_neg_success}x\",\"failure\":\"{=taom_enlist_duty_neg_failure}x\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"gold\":-5}}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
     }
@@ -541,8 +629,8 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_ValidRows_Load()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"road_patrol\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"serviceXp\":48,\"gold\":55}}]," +
-            "\"incidents\":[{\"id\":\"pay_delay\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\",\"optionA\":{\"key\":\"press\",\"skillId\":\"Charm\",\"difficulty\":65},\"optionB\":{\"key\":\"wait\",\"skillId\":\"Steward\",\"difficulty\":50}}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"road_patrol\",\"title\":\"{=taom_enlist_duty_road_patrol_title}x\",\"success\":\"{=taom_enlist_duty_road_patrol_success}x\",\"failure\":\"{=taom_enlist_duty_road_patrol_failure}x\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"serviceXp\":48,\"gold\":55}}]," +
+            "\"incidents\":[{\"id\":\"pay_delay\",\"title\":\"{=taom_enlist_duty_pay_delay_title}x\",\"body\":\"{=taom_enlist_duty_pay_delay_body}x\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\",\"optionA\":{\"key\":\"press\",\"label\":\"{=taom_enlist_duty_pay_delay_opta}x\",\"skillId\":\"Charm\",\"difficulty\":65},\"optionB\":{\"key\":\"wait\",\"label\":\"{=taom_enlist_duty_pay_delay_optb}x\",\"skillId\":\"Steward\",\"difficulty\":50}}]}");
 
         var duties = Provider().GetDuties();
 

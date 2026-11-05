@@ -61,8 +61,10 @@ public class InteractiveDutyPresenterTests
     private static InteractiveDutyDefinition Duty() => new InteractiveDutyDefinition
     {
         Id = "night_patrol",
-        OptionA = new DutyOptionSpec { Key = "walk_rounds", SkillId = "Scouting", Difficulty = 62, SuccessReward = new RewardSpec { ServiceXp = 30 }, FailureReward = new RewardSpec { ServiceXp = 8 } },
-        OptionB = new DutyOptionSpec { Key = "double_watch", SkillId = "Athletics", Difficulty = 55, SuccessReward = new RewardSpec { ServiceXp = 24 }, FailureReward = new RewardSpec { ServiceXp = 6 } },
+        Title = "{=taom_enlist_duty_night_patrol_title}Night Watch",
+        Body = "{=taom_enlist_duty_night_patrol_body}Walk the rounds.",
+        OptionA = new DutyOptionSpec { Key = "walk_rounds", Label = "{=taom_enlist_duty_night_patrol_opta}Walk Rounds", SkillId = "Scouting", Difficulty = 62, SuccessReward = new RewardSpec { ServiceXp = 30 }, FailureReward = new RewardSpec { ServiceXp = 8 } },
+        OptionB = new DutyOptionSpec { Key = "double_watch", Label = "{=taom_enlist_duty_night_patrol_optb}Double Watch", SkillId = "Athletics", Difficulty = 55, SuccessReward = new RewardSpec { ServiceXp = 24 }, FailureReward = new RewardSpec { ServiceXp = 6 } },
     };
 
     [TestMethod]
@@ -75,15 +77,35 @@ public class InteractiveDutyPresenterTests
     }
 
     [TestMethod]
-    public void PresentInteractiveDuty_ShowsInquiryWithHumanizedOptionLabels()
+    public void PresentInteractiveDuty_ShowsInquiryWithTheRowText()
     {
         _presenter.PresentInteractiveDuty(Duty(), Progress(), 0);
 
         _inquiry.Received(1).ShowTwoOptionInquiry(
-            "taom_enlist_duty_night_patrol_title", Arg.Any<string>(),
-            "taom_enlist_duty_night_patrol_body", Arg.Any<string>(),
+            "taom_enlist_duty_night_patrol_title", "Night Watch",
+            "taom_enlist_duty_night_patrol_body", "Walk the rounds.",
             "taom_enlist_duty_night_patrol_opta", "Walk Rounds",
             "taom_enlist_duty_night_patrol_optb", "Double Watch",
+            Arg.Any<System.Action>(), Arg.Any<System.Action>());
+    }
+
+    [TestMethod]
+    public void PresentInteractiveDuty_RowWithoutText_UsesTheRegisteredKeysAndGenericEnglish()
+    {
+        var duty = new InteractiveDutyDefinition
+        {
+            Id = "night_patrol",
+            OptionA = new DutyOptionSpec { Key = "walk_rounds" },
+            OptionB = new DutyOptionSpec { Key = "double_watch" },
+        };
+
+        _presenter.PresentInteractiveDuty(duty, Progress(), 0);
+
+        _inquiry.Received(1).ShowTwoOptionInquiry(
+            "taom_enlist_duty_night_patrol_title", "A task for the company",
+            "taom_enlist_duty_night_patrol_body", "Something needs attention.",
+            "taom_enlist_duty_night_patrol_opta", "Proceed",
+            "taom_enlist_duty_night_patrol_optb", "Proceed",
             Arg.Any<System.Action>(), Arg.Any<System.Action>());
     }
 
@@ -169,9 +191,11 @@ public class InteractiveDutyPresenterTests
     private static IncidentDefinition Incident(string effect = "") => new IncidentDefinition
     {
         Id = "pay_delay",
+        Title = "{=taom_enlist_duty_pay_delay_title}Pay Delayed Again",
+        Body = "{=taom_enlist_duty_pay_delay_body}Pay is late.",
         Effect = effect,
-        OptionA = new DutyOptionSpec { Key = "press_claim", SkillId = "Charm", Difficulty = 65, SuccessReward = new RewardSpec { ServiceXp = 20 }, FailureReward = new RewardSpec() },
-        OptionB = new DutyOptionSpec { Key = "wait_it_out", SkillId = "Steward", Difficulty = 50, SuccessReward = new RewardSpec { ServiceXp = 16 }, FailureReward = new RewardSpec() },
+        OptionA = new DutyOptionSpec { Key = "press_claim", Label = "{=taom_enlist_duty_pay_delay_opta}Press Claim", SkillId = "Charm", Difficulty = 65, SuccessReward = new RewardSpec { ServiceXp = 20 }, FailureReward = new RewardSpec() },
+        OptionB = new DutyOptionSpec { Key = "wait_it_out", Label = "{=taom_enlist_duty_pay_delay_optb}Wait It Out", SkillId = "Steward", Difficulty = 50, SuccessReward = new RewardSpec { ServiceXp = 16 }, FailureReward = new RewardSpec() },
     };
 
     [TestMethod]
@@ -189,8 +213,8 @@ public class InteractiveDutyPresenterTests
         _presenter.PresentIncident(Incident(), Progress(), 0);
 
         _inquiry.Received(1).ShowTwoOptionInquiry(
-            "taom_enlist_duty_pay_delay_title", Arg.Any<string>(),
-            "taom_enlist_duty_pay_delay_body", Arg.Any<string>(),
+            "taom_enlist_duty_pay_delay_title", "Pay Delayed Again",
+            "taom_enlist_duty_pay_delay_body", "Pay is late.",
             "taom_enlist_duty_pay_delay_opta", "Press Claim",
             "taom_enlist_duty_pay_delay_optb", "Wait It Out",
             Arg.Any<System.Action>(), Arg.Any<System.Action>());

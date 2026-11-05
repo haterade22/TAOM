@@ -239,6 +239,10 @@ Three arrays: **13 `fieldDuties`, 11 `interactiveDuties`, 3 `incidents`**. <!-- 
 | Field | Type | Required | What it does |
 |---|---|---|---|
 | `id` | string | yes | Duty id, also the localization key stem |
+| `title` | string | yes | `{=taom_enlist_duty_<id>_title}English`; a row with no title, or a key that is not exactly this, is skipped with a warning |
+| `success` / `failure` | string | field duties | `{=taom_enlist_duty_<id>_success}English` (and `_failure`): the result line the toast shows; a field row missing either is skipped with a warning naming the field |
+| `body` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_body}English`; a row missing it is skipped with a warning |
+| `optionA.label` / `optionB.label` | string | interactive and incident rows | `{=taom_enlist_duty_<id>_opta}English` (and `_optb`); a row missing either is skipped with a warning; registered by `tools/harvest_duty_strings.py` ([enlistment](../features/enlistment.md)) |
 | `difficulty` | int | yes | Target the check must reach |
 | `durationHours` | int | yes | How long the duty runs |
 | `supportSkills` | string[] | yes | The check uses the **better** of the two, never their sum |

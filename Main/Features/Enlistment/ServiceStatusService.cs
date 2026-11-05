@@ -104,7 +104,8 @@ public class ServiceStatusService : IServiceStatusService
             dailyWage: DailyWageFor(content.Rank),
             nextRank: showLadder ? promotion.ToRank : (ServiceRank?)null,
             nextRequirementKey: showLadder ? promotion.MostBindingUnmetKey : null,
-            nextRequirementTarget: showLadder ? promotion.MostBindingUnmetTarget : 0);
+            nextRequirementTarget: showLadder ? promotion.MostBindingUnmetTarget : 0,
+            activeDutyTitle: ActiveDutyTitle(content.ActiveDutyId));
     }
 
     /// <summary>
@@ -119,6 +120,14 @@ public class ServiceStatusService : IServiceStatusService
         var index = (int)rank;
         return table != null && index >= 0 && index < table.Count ? table[index] : 0;
     }
+
+    /// <summary>The active field duty's title string: its loaded row's own, or the composed key with generic English when the row is gone; null when no duty is active.</summary>
+    private string ActiveDutyTitle(string activeDutyId)
+        => string.IsNullOrEmpty(activeDutyId)
+            ? null
+            : Content.Domain.DutyText.Source(
+                _config.GetDuties().FieldDuties.Find(d => d.Id == activeDutyId)?.Title,
+                activeDutyId, Content.Domain.DutyText.TitleSuffix, "a task for the company");
 
     /// <summary>
     /// Order matters: a village raid (#831) outranks the battle check, since the soldier is not in it;

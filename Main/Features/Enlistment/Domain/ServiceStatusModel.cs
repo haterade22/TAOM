@@ -43,6 +43,9 @@ public sealed class ServiceStatusModel : IEquatable<ServiceStatusModel>
     /// <summary>Data-row id of the active duty, or null. Rendered via its own localized name.</summary>
     public string ActiveDutyId { get; }
 
+    /// <summary>The active field duty's <c>{=key}English</c> title (its row's own, or the generic fallback when the row is gone), or null when no duty is active. A string, so it compares by value.</summary>
+    public string ActiveDutyTitle { get; }
+
     /// <summary>Service XP earned so far — the promotion ladder's main currency, and until now the
     /// one the player had no way at all to see.</summary>
     public int ServiceXp { get; }
@@ -84,7 +87,8 @@ public sealed class ServiceStatusModel : IEquatable<ServiceStatusModel>
         int dailyWage = 0,
         ServiceRank? nextRank = null,
         string nextRequirementKey = null,
-        int nextRequirementTarget = 0)
+        int nextRequirementTarget = 0,
+        string activeDutyTitle = null)
     {
         CommanderName = commanderName;
         Activity = activity;
@@ -100,6 +104,7 @@ public sealed class ServiceStatusModel : IEquatable<ServiceStatusModel>
         NextRank = nextRank;
         NextRequirementKey = nextRequirementKey;
         NextRequirementTarget = nextRequirementTarget;
+        ActiveDutyTitle = activeDutyTitle;
     }
 
     public bool Equals(ServiceStatusModel other)
@@ -120,7 +125,8 @@ public sealed class ServiceStatusModel : IEquatable<ServiceStatusModel>
             && DailyWage == other.DailyWage
             && NextRank == other.NextRank
             && string.Equals(NextRequirementKey, other.NextRequirementKey, StringComparison.Ordinal)
-            && NextRequirementTarget == other.NextRequirementTarget;
+            && NextRequirementTarget == other.NextRequirementTarget
+            && string.Equals(ActiveDutyTitle, other.ActiveDutyTitle, StringComparison.Ordinal);
     }
 
     public override bool Equals(object obj) => Equals(obj as ServiceStatusModel);
@@ -143,6 +149,7 @@ public sealed class ServiceStatusModel : IEquatable<ServiceStatusModel>
             hash = (hash * 397) ^ (NextRank.HasValue ? (int)NextRank.Value : -1);
             hash = (hash * 397) ^ (NextRequirementKey?.GetHashCode() ?? 0);
             hash = (hash * 397) ^ NextRequirementTarget;
+            hash = (hash * 397) ^ (ActiveDutyTitle?.GetHashCode() ?? 0);
             return hash;
         }
     }

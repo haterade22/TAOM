@@ -83,6 +83,61 @@ public class FieldDutyRuntimeTests
         _runtime.HourlyUpdate(10.0 + duty.DurationHours / 24.0);
     }
 
+    // ---- the row's own words ----
+
+    private static DutyDefinition WordedDuty() => new DutyDefinition
+    {
+        Id = "recon_sweep",
+        Title = "{=taom_enlist_duty_recon_sweep_title}a reconnaissance sweep",
+        Success = "{=taom_enlist_duty_recon_sweep_success}You ride the line and come back with the ground mapped.",
+        Failure = "{=taom_enlist_duty_recon_sweep_failure}You lose the light before you lose the ground.",
+        DurationHours = 6,
+        Difficulty = 55,
+        SupportSkills = new List<string> { "Scouting" },
+        ReportReward = new RewardSpec { ServiceXp = 45 },
+        FailureReward = new RewardSpec { ServiceXp = 10 },
+    };
+
+    [TestMethod]
+    public void Start_AnnouncesTheDutyByItsOwnEnglishTitle()
+    {
+        var duty = WordedDuty();
+        ConfigureDuties(duty);
+
+        _runtime.Start(duty, 10.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), "DUTY", "a reconnaissance sweep",
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow(true, "You ride the line and come back with the ground mapped.")]
+    [DataRow(false, "You lose the light before you lose the ground.")]
+    public void Resolve_ReportsTheRowsOwnTitleAndResultLine(bool passes, string expectedResult)
+    {
+        var duty = WordedDuty();
+        StartAndReachShiftEnd(duty, passes);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_result", Arg.Any<string>(),
+            "DUTY", "a reconnaissance sweep",
+            "RESULT", expectedResult);
+    }
+
+    [TestMethod]
+    public void Start_RowWithoutTitle_UsesTheGenericTitle()
+    {
+        var duty = Duty();
+        ConfigureDuties(duty);
+
+        _runtime.Start(duty, 10.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), "DUTY", "a task for the company",
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
     // ---- Start ----
 
     [TestMethod]

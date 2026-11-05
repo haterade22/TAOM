@@ -54,6 +54,15 @@ public sealed class DutyDefinition
 {
     public string Id { get; set; } = "";
 
+    /// <summary>Display title as <c>{=taom_enlist_duty_&lt;id&gt;_title}English</c>; see <see cref="DutyText"/>. Shown in the assignment and result toasts and on the status board.</summary>
+    public string Title { get; set; } = "";
+
+    /// <summary>Result line when the check passes, as <c>{=taom_enlist_duty_&lt;id&gt;_success}English</c>.</summary>
+    public string Success { get; set; } = "";
+
+    /// <summary>Result line when the check fails, as <c>{=taom_enlist_duty_&lt;id&gt;_failure}English</c>.</summary>
+    public string Failure { get; set; } = "";
+
     /// <summary>Target the skill check must beat. Higher is harder; see ISkillCheckService.Passes.</summary>
     public int Difficulty { get; set; } = 60;
 
@@ -79,6 +88,9 @@ public sealed class DutyOptionSpec
 {
     public string Key { get; set; } = "";
 
+    /// <summary>Button label as <c>{=taom_enlist_duty_&lt;id&gt;_opta}English</c> (or <c>_optb</c> for option B).</summary>
+    public string Label { get; set; } = "";
+
     /// <summary>Primary skill for the check; secondary makes it best-of-two (donor's TrainRecruits shape).</summary>
     public string SkillId { get; set; } = "";
     public string SecondarySkillId { get; set; } = "";
@@ -92,6 +104,12 @@ public sealed class DutyOptionSpec
 public sealed class InteractiveDutyDefinition
 {
     public string Id { get; set; } = "";
+
+    /// <summary>Popup title as <c>{=taom_enlist_duty_&lt;id&gt;_title}English</c>.</summary>
+    public string Title { get; set; } = "";
+
+    /// <summary>Popup body as <c>{=taom_enlist_duty_&lt;id&gt;_body}English</c>.</summary>
+    public string Body { get; set; } = "";
     public GateSpec Gates { get; set; } = new GateSpec();
     public DutyOptionSpec OptionA { get; set; } = new DutyOptionSpec();
     public DutyOptionSpec OptionB { get; set; } = new DutyOptionSpec();
@@ -101,6 +119,12 @@ public sealed class InteractiveDutyDefinition
 public sealed class IncidentDefinition
 {
     public string Id { get; set; } = "";
+
+    /// <summary>Popup title as <c>{=taom_enlist_duty_&lt;id&gt;_title}English</c>.</summary>
+    public string Title { get; set; } = "";
+
+    /// <summary>Popup body as <c>{=taom_enlist_duty_&lt;id&gt;_body}English</c>.</summary>
+    public string Body { get; set; } = "";
     public float Chance { get; set; } = 0.15f;
     public GateSpec Gates { get; set; } = new GateSpec();
     public DutyOptionSpec OptionA { get; set; } = new DutyOptionSpec();

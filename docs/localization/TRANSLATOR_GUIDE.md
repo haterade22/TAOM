@@ -493,8 +493,9 @@ Registering a key in a source XML is only half the job — a key that is not wir
 pipeline ships as its English fallback in all 12 languages, silently, with no error anywhere.
 
 1. **Register every key in the source XML**, including any generated at build time. Keys built at
-   RUNTIME from data ids (`"taom_enlist_duty_" + id + "_title"`) are invisible to a literal
-   `{=key}` grep, so they need a generator — see `tools/generate_enlistment_duty_strings.py`.
+   RUNTIME from data ids (`DutyText.KeyFor`, `"taom_enlist_duty_" + id + "_title"`) are invisible to a
+   literal `{=key}` grep, so the English is written once in the data file and a harvester registers
+   it: see `tools/harvest_duty_strings.py`.
 2. Add the file to `SOURCES` in `tools/generate_translation_template.py`.
 3. Add it to the TAOM tuple list in `tools/translate_with_claude.py`.
 4. Run `generate_translation_template.py --all --apply`.

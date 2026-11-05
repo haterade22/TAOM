@@ -123,7 +123,7 @@ public class FieldDutyRuntime : IFieldDutyRuntime
                 "taom_enlist_duty_assigned",
                 "You are given orders: {DUTY}.",
                 "DUTY",
-                DutyTitle(duty.Id));
+                DutyTitle(duty));
 
         _logger?.LogInfo(
             $"[Enlistment.Duties] duty '{duty.Id}' started — {duty.DurationHours}h shift, " +
@@ -160,8 +160,8 @@ public class FieldDutyRuntime : IFieldDutyRuntime
     /// name a duty identically — two call sites composing the same runtime key is how a raw id like
     /// `recon_sweep` reached the UI once already.
     /// </summary>
-    private static string DutyTitle(string dutyId)
-        => new TextObject("{=taom_enlist_duty_" + dutyId + "_title}a task for the company").ToString();
+    private static string DutyTitle(DutyDefinition duty)
+        => new TextObject(DutyText.Source(duty.Title, duty.Id, DutyText.TitleSuffix, "a task for the company")).ToString();
 
     /// <summary>
     /// True when the whole shift is predicted to elapse too fast for the player to read two
@@ -314,10 +314,10 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         _inquiry?.ShowMessage(
             "taom_enlist_duty_result",
             "Orders: {DUTY}. {RESULT}",
-            "DUTY", DutyTitle(duty.Id),
-            "RESULT", new TextObject(
-                "{=taom_enlist_duty_" + duty.Id + (passed ? "_success" : "_failure") + "}"
-                + (passed ? "It went well." : "It didn't go as planned.")).ToString());
+            "DUTY", DutyTitle(duty),
+            "RESULT", new TextObject(passed
+                ? DutyText.Source(duty.Success, duty.Id, DutyText.SuccessSuffix, "It went well.")
+                : DutyText.Source(duty.Failure, duty.Id, DutyText.FailureSuffix, "It didn't go as planned.")).ToString());
 
         // SHOW THE WHOLE COMPARISON, not half of it. The old line read
         // "skill 29 trust 3 rank Soldier vs difficulty 54" on a duty that COMPLETED, which parses
