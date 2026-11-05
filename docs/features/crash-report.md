@@ -89,6 +89,8 @@ Three session-scoped layers (reset only on a fresh game launch; constants in `Cr
 
 The very first bundle is never cooldown-gated (`_bundlesWritten > 0` guard), so the real crash is always captured. Net effect: a recurring crash produces **exactly one** zip; a degenerate "different exception every tick" burst is bounded by cap + cooldown. Unit-tested in [`CrashBundleThrottleTests`](../../TAOM.Tests/Features/CrashReport/CrashBundleThrottleTests.cs).
 
+**Session summary (#1071).** An admitted capture (a crash, or a battle-load stall the watchdog reports) then writes the `[Session] summary reason=crash` lines through `IOutcomeLog.WriteSummary` before `ComposeContext` collects the log tail, so both the TAOM log tail in `report.txt` and the bundle's `taom_debug.log` contain the session's check, counter and swallowed-exception totals. They are not the last lines of that log: the report itself is written back into it as `[CrashReport]` lines afterwards, tail included, so the copied log holds the summary twice. A suppressed repeat writes no summary, which keeps a crash that recurs every frame from writing one per frame.
+
 ### BUTR coexistence
 
 TAOM ships ButterLib 2.11.0 via `TAOM.Dependencies`, which contains its own `ExceptionHandlerSubSystem`. By default we suspend it on the first capture via reflection — `ButterLibExceptionHandlerAdapter.TrySuspend()` calls `ExceptionHandlerSubSystem.Instance.Disable()`. This avoids both BUTR's window and ours firing for the same crash. The user can disable our suspension via MCM (`TAOM — Crash Report → Master → Suspend BUTR Exception Handler`).
@@ -328,6 +330,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
 ## Changelog
 
+- 2026-11-05: **Session summary in the bundle** (#1071, port). An admitted crash writes the `[Session] summary reason=crash` lines before the log tail is collected.
 - 2026-11-05: **Added the TAOM build stamp to the Identity section** (port of plan 017, #658). `report.txt` prints a `Build:` line, `manifest.txt` a `TAOM build:` line and `report.json` gains `TaomBuild`: the assembly's `InformationalVersion`, which names the commit and carries `.dirty` or `nogit` when the build could not prove a clean tree. `TaomVersion` alone is shared by every commit since the last version bump.
 - 2026-11-05: TAOM's settings appear in bundles (the four classes declare their own `Instance`); third-party settings classes are not read (#982); dropdowns show their selected value. `McmSettingsCollector.Collect` enumerates only TAOM's own assembly, and `ResolveInstance` looks up only an `Instance` the class declares itself (`DeclaredOnly`) as a second guard. The `DiscoveryType` row is removed from the listing. Ported by WP123.
 - 2026-11-04: **Ported to the 1.4.x line** (Bannerlord v1.4.8, port148 WP107): plan 006 and the shield rethrow fix. The 2026-09-24 entries below describe the 1.5.x change set this port carries.
