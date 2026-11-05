@@ -14,6 +14,20 @@ public interface IFormationLayoutService
     /// </summary>
     Vec2? ComputeUnitPlanePosition(IFormationAdapter formation, int agentIndex, bool agentIsRanged);
 
+    /// <summary>
+    /// The adapter of a formation that holds a non-Vanilla layout, or <c>null</c>. Answered with no lock, no
+    /// allocation and no formation read, because Patch30 asks it for every unit of every formation on the
+    /// engine's worker threads. <paramref name="formationKey"/> is the
+    /// <see cref="IFormationAdapter.FormationKey"/> identity (the engine formation itself), compared by reference.
+    /// </summary>
+    IFormationAdapter? FindLaidOutFormation(object formationKey);
+
+    /// <summary>
+    /// Patch30's catch: a throw in its body sends the unit to vanilla. The first throw of a mission is logged
+    /// in full at WARNING; the rest are counted, and <see cref="OnMissionEnd"/> logs the count. Thread-safe.
+    /// </summary>
+    void NoteFallback(System.Exception ex);
+
     FormationLayoutType GetLayout(IFormationAdapter formation);
     void SetLayout(IFormationAdapter formation, FormationLayoutType layout);
 

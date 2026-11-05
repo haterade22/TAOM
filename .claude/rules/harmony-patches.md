@@ -147,7 +147,8 @@ frame's `OnMissionTick`. A stuck agent tick freezes the game with no exception; 
 `MBRandom.RandomFloat` on the defend-collision path draws from the shared `Game.Current.RandomGenerator` (`MBRandom.cs:22`, `:32`), an `MBFastRandom` whose four `uint` fields advance with no lock (`MBFastRandom.cs:22-32`, `XorShift` at `:186`). Concurrent draws only duplicate or skip values and cannot reach a stuck state, so the crush roll (`TaomCombatMechanicsModel.cs:177`) stays unlocked (port decision D16); any other write on that path takes a lock.
 
 A patch on a target in the last four rows may run concurrently with the first row. Its shared state
-takes a lock (`FormationLayoutService`, `CavalryChargeService`, `TroopStanceManager` are the shape), it
+takes a lock (`CavalryChargeService`, `TroopStanceManager` are the shape), or writes a concurrent collection
+under that lock so a hot reader needs none (`FormationLayoutService.FindLaidOutFormation`), it
 never registers a blow or spawns an agent, and a team filter is not a thread filter (Patch35 gated on
 `PlayerTeam` and still ran on the async tick whenever that team's formations were AI-controlled). The
 `??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` or
