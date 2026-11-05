@@ -9,8 +9,9 @@ namespace TAOM.Features.Refuge.Components;
 
 /// <summary>
 /// Party component for a standing refuge: a stationary, player-clan map party that stores troops,
-/// prisoners and goods. Persisted (definer id 102); the party AI is pinned at spawn AND re-pinned
-/// on load (the source only pinned at spawn, so refuges could wander after a reload).
+/// prisoners and goods. Persisted (definer id 102); the party AI is pinned at spawn and re-pinned
+/// on load; the engine saves the pin, so the load pin is a belt for a failed founding pin or an
+/// adopted orphan.
 /// </summary>
 public sealed class RefugePartyComponent : PartyComponent
 {
