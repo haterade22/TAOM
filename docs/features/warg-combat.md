@@ -151,6 +151,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 - **Services in BT nodes**: `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and `IWargAttackService` once per tree and passes them to the constructors of the four nodes that need them (`PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`, `WargAiControlledIsNotFacingEnemy`, `WargAttackTask`), which keep them in private readonly instance fields and never call `IoC.Resolve` (#659). The tree's attack tasks share one `WargAttackService`, which keeps no per-call state. `LogTask` still resolves its logger per Execute; it runs only when the tree changes branch. `WargRiderHandManager.Tick` decides warg-ness from the mount's `Monster` with `WargConfig.IsWargMonster`, with no container or adapter-cache lookup.
 - **Grid updates**: `AdvancedCombatBehavior` asks for a rebuild every 2 seconds, not every frame; a build nobody queried makes the next scheduled rebuild a skip, and the next query rebuilds first (plan 033, `advanced-combat.md`).
 - **Tree framework (plan 033)**: the sleep, wait, cooldown and rage timers read `DateTime.UtcNow` (no time-zone conversion per frame, no daylight-saving step; `CreatureTreeClockTests` pins it in the IL); `Selector.Prepare` clears its two child lists instead of allocating them on every re-entry (`SelectorListReuseTests`); and each of the 14 callbacks `BehaviorTreeMissionLogic` routes returns before it builds argument arrays or parks an off-thread replay when none of the subscription values it dispatches has a listener, counted per value in `_listenerCounts` (`BehaviorTreeMissionLogicDispatchTests`, 18, including delivery to the `OnSelfRemoved` and `OnSelfIsHit` listeners the warg and spider trees use, and a table that raises each of the 14 callbacks off-thread with a listener on each of the 20 values). Off-thread, such an event is dropped as the main-thread path drops it; the two differ only if a first listener for that value subscribes between the asynchronous agent tick and the next drain.
+- **Tree walk cap (plan 124)**: `BehaviorTree.RunTree` stops a tree after `MaxNodeTransitionsPerRun` (1,000) node transitions in one call, the way the exception path already stops one (`IsRunning` turns false and the creature falls back to the engine's AI), and logs the first runaway of each tree type through `BTRegister.Logger`, the exception path's sink. No reachable cycle is known (FREEZE-THREADING-09); the cap only bounds the loop. `BehaviorTreeRunawayCapTests` (3) pins the cap, the exact-length boundary and the once-per-type line.
 
 ## Log lines
 
@@ -163,6 +164,8 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 
 ## Changelog
 
+- 2026-11-05 - plan 124 (FREEZE-THREADING-09): `BehaviorTree.RunTree` caps one call at 1,000
+  node transitions and stops a tree that exceeds it, logging the first runaway of each tree type.
 - 2026-10-02 (plan 033): the creature trees read `DateTime.UtcNow`, `Selector.Prepare` reuses its
   child lists, and `BehaviorTreeMissionLogic` returns before allocating or parking when nothing
   listens; it logs the first such skip per mission and a mission-end summary of skips and parked
