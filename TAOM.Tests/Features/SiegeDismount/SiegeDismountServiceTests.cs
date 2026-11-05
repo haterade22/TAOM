@@ -274,6 +274,19 @@ public class SiegeDismountServiceTests
     }
 
     [TestMethod]
+    public void OnMissionStart_HasMountThrows_LogsErrorAndDoesNotPropagate()
+    {
+        // 2026-09-30: an NRE from HasMount escaped AfterStart, and the engine re-ran the mission load every frame.
+        _mount.HasMount().Returns(_ => throw new System.NullReferenceException("no main hero"));
+        _settings.MountBehavior.Returns(SiegeMountBehaviorType.AutoRemountAfter);
+
+        _sut.OnMissionStart(isSiegeBattle: true, sceneName: "town_castle");
+
+        _logger.Received().LogError(Arg.Is<string>(s =>
+            s.Contains("[SiegeDismount]") && s.Contains("no main hero")));
+    }
+
+    [TestMethod]
     public void OnMissionEnd_RestoreThrows_LogsErrorAndDoesNotPropagate()
     {
         _sut.OnMissionStart(isSiegeBattle: true, sceneName: "town_castle");

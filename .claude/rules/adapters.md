@@ -28,6 +28,8 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 **`PartyBase.MainParty` is a computed getter that throws.** It returns null only without a campaign; with one it reads `Campaign.Current.MainParty.Party` (v1.4.8 `PartyBase.cs:208-218`), so it throws, `?.` included, while the stored main party is null. Check `Campaign.Current?.MainParty` and read `Campaign.Current?.MainParty?.Party`. `MainPartyNullCheckScanTests` fails a null comparison, `is null`, `??` or `?.` on the getter written directly or inside any number of its own parentheses, and passes a call argument (`Find (PartyBase.MainParty)?.X`); it cannot see a check through a local alias (`var p = PartyBase.MainParty; if (p == null)`), so review for that form, and it blanks comments but not strings, so a string holding the check fails it (#792).
 
+**The campaign statics are computed getters too.** `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw with no campaign, which is every Custom Battle, so `Hero.MainHero?.` guards nothing there. Code a mission can reach reads `CharacterObject.PlayerCharacter?.HeroObject` (or `(Game.Current?.PlayerTroop as CharacterObject)?.HeroObject`, which also survives no Game) and `Campaign.Current?.MainParty`, or returns on `Campaign.Current == null` first (#97, #699).
+
 ## Testing
 - Adapters themselves are thin wrappers — test coverage via service tests that mock the adapter interface
 - Use `NSubstitute.Substitute.For<IXxxAdapter>()` in tests

@@ -98,6 +98,33 @@ A latch (`_windowActive`, `_inflight`, `BattleLoadLoadingWindow`-style static fl
 
 **Why this rule exists:** RCA `docs/reviews/rca-tournament-exit-hang-2026-07-06.md` (findings 1, 2, 4) — the exit-window latch shipped with campaign-only closers for an any-mission opener plus toggle-gated closes; the service-layer fix for the toggle gate was then bypassed by hook-level gates, caught only by the Codex pass. Master record: `docs/reviews/LESSONS-LEARNED.md` "State, Lifecycle & Save" → "Diagnostics latches".
 
+## MissionBehavior lifecycle for a behavior TAOM adds (MANDATORY before overriding a lifecycle virtual)
+
+Every TAOM mission behavior is added from `SubModule.OnMissionBehaviorInitialize` (`AddTaomBehavior`, or a
+feature module's `MissionBehaviors` through the composition root). On the installed v1.4.8,
+`Mission.AfterStart` runs `OnBehaviorInitialize` over the behaviors ALREADY in the list (`Mission.cs:3811`)
+and only then calls the submodules that add TAOM's (`:3815`); `AddMissionBehavior` calls only `OnCreated`
+(`:4628`). So for a TAOM behavior:
+
+| Virtual | Fires? | Use it for |
+|---|---|---|
+| `OnCreated` | yes, from `AddMissionBehavior` itself | per-mission state reset; `Mission` is already set |
+| `OnBehaviorInitialize` | **never** | nothing (#606; `MissionBehaviorLifecycleTests` fails a new override) |
+| `EarlyStart`, `AfterStart` | yes (`:3819`, `:3825`, after the add) | setup that needs the initialized mission; agents are not spawned yet |
+| a lazy first-use gate in `OnAgentBuild` / `OnMissionTick` | yes | a mission gate read once the mission runs |
+
+A behavior added from a postfix on the mission-opening call (before `AfterStart`, the CustomBattles shape)
+IS in the list at `:3811` and does get the callback. The general rule (`lessons/state-lifecycle-save.md`,
+"An engine lifecycle virtual's firing set is read from its caller, not its name"): open the caller of any
+lifecycle virtual before wiring it, and quote the line in the override's comment.
+
+`AddTaomBehavior` adds a behavior to every mission, Custom Battle included, where there is no campaign: its
+`EarlyStart`/`AfterStart` reads no campaign static unguarded (adapters.md), keeps every adapter call inside a
+`try` (on v1.4.8 an exception leaving `AfterStart` before `CurrentState = Continuing` makes `MissionState`
+load the mission again: `FinishMissionLoading` clears `_missionInitializing` at MissionState.cs:335 before
+`AfterStart` at :345, and `TickLoading` reloads at :221-233; #699), and a change that makes such code run
+for the first time gets one Custom Battle run.
+
 ## Which thread runs your target (MANDATORY before the first line of a patch)
 
 Decompile the caller chain up to the thread that invokes the target. `[MBCallback]` methods are entered
