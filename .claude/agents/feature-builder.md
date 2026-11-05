@@ -20,8 +20,10 @@ You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **canno
 
 ## Architecture (MANDATORY)
 ```
-Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sealed types)
+Entry Points (thin, <150 lines) → Service → IAdapter (sealed types)
 ```
+
+A hook interface (`IOnXxx`) goes between an entry point and its service only when the patch needs a narrow seam or a test fake. A service gets an `I{Name}Service` interface only when a test fakes it or a second implementation exists; every adapter has one (ADR-002, ADR-007).
 
 ## Rules You MUST Follow
 1. **TDD** — Write tests FIRST (RED), implement (GREEN), refactor. No exceptions.
@@ -37,7 +39,7 @@ Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sea
 ```
 Main/Features/{FeatureName}/
 ├── {FeatureName}IoC.cs          # Static Register method
-├── I{Name}Service.cs            # Service interface
+├── I{Name}Service.cs            # Only if a test fakes it or a 2nd impl exists
 ├── {Name}Service.cs             # Implementation
 ├── Hooks/                       # Harmony patches (thin)
 └── Models/                      # POCOs/DTOs
@@ -52,7 +54,8 @@ internal static class {FeatureName}IoC
 {
     internal static void Register{FeatureName}Feature(IContainer container)
     {
-        container.Register<I{Name}Service, {Name}Service>(Reuse.Singleton);
+        container.Register<{Name}Service>(Reuse.Singleton);
+        // when a test fakes it: container.Register<I{Name}Service, {Name}Service>(Reuse.Singleton);
     }
 }
 ```

@@ -96,7 +96,7 @@ namespace TAOM.Features.[FeatureName]
 Decompiled code → TAOM layers:
 
 Entry Point (Harmony Patch / GameModel / MissionLogic)
-    → Hook Interface (IOn[EventName])
+    → Hook Interface (IOn[EventName]), only when the patch needs a narrow seam or a test fake
         → Service (business logic)
             → Adapter (wraps sealed TaleWorlds types)
 ```
@@ -104,8 +104,12 @@ Entry Point (Harmony Patch / GameModel / MissionLogic)
 **DryIoc registration:**
 ```csharp
 // In feature-specific IoC file (e.g., HeroRaceIoC.cs)
-container.Register<IFeatureService, FeatureService>(Reuse.Singleton);
-container.Register<IOnSomeEvent, FeatureHook>(Reuse.Transient);
+container.Register<FeatureService>(Reuse.Singleton);
+// only when a test fakes the service or a second implementation exists (ADR-002);
+// this replaces the line above, never sits beside it:
+// container.Register<IFeatureService, FeatureService>(Reuse.Singleton);
+// only when the patch needs a narrow seam or a test fakes the hook:
+// container.Register<IOnSomeEvent, FeatureHook>(Reuse.Transient);
 ```
 
 **Configuration** (if user-configurable):
@@ -123,9 +127,9 @@ var config = RacePositionConfig.LoadConfig("FeatureName");
 Main/Features/[FeatureName]/
 ├── Hooks/
 │   ├── [TargetClass]_[Method]_Patch.cs
-│   └── IOn[EventName].cs
+│   └── IOn[EventName].cs (only for a narrow seam or a test fake)
 ├── Services/
-│   ├── I[Feature]Service.cs
+│   ├── I[Feature]Service.cs (only if a test fakes it or a second class implements it)
 │   └── [Feature]Service.cs
 ├── Configuration/
 │   └── [Feature]Config.cs (if needed)
@@ -136,7 +140,7 @@ Main/Features/[FeatureName]/
 ```
 TAOM.Tests/Features/[FeatureName]/
 ├── [Feature]ServiceTests.cs
-└── [Feature]HookTests.cs
+└── [Feature]HookTests.cs (when there is a hook class)
 ```
 
 3. **Implement Harmony patches** (thin entry points, ADR-002):
@@ -149,7 +153,7 @@ public class TargetClass_TargetMethod_Patch
     {
         try
         {
-            var service = IoC.Resolve<IFeatureService>();
+            var service = IoC.Resolve<FeatureService>();
             service.HandleEvent(__instance, ref __result);
         }
         catch (Exception) { }
@@ -276,7 +280,7 @@ _logger.LogError($"Failed to process: {ex.Message}");
 4. How does it interact with TaleWorlds' existing systems?
 5. What could break if Bannerlord updates?
 6. How can we test this feature?
-7. Does it fit TAOM's architecture (patches -> hooks -> services -> adapters)?
+7. Does it fit TAOM's architecture (patches -> services -> adapters, with a hook interface only where a narrow seam or a test fake needs one)?
 
 ---
 
