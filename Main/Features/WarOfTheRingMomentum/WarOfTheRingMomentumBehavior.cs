@@ -73,13 +73,18 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _uiService = uiService;
         _logger = logger;
         _coopSession = coopSession;
+        // #773: the momentum store is a process-lifetime singleton and this behavior is built with new in
+        // every campaign's OnGameStart (SubModule), before any campaign event and before a load's SyncData.
+        // Resetting here means a new campaign, or a load of a save with no momentum record (the engine then
+        // never calls SyncData), never sees the previous campaign's war. Same pattern as
+        // WarOfTheRingBehavior (#764).
+        _stateStore.ResetForNewGame();
     }
 
     private static double NowHours => CampaignTime.Now.ToHours;
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _stateStore.ResetForNewGame());
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);

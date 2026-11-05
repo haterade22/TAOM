@@ -32,6 +32,8 @@ CampaignEvents  →  WarOfTheRingMomentumBehavior (thin entry point)
 
 Every service is pure and unit-tested; the behavior holds no logic beyond routing. Sealed TaleWorlds types never cross into a service — the snapshot adapter flattens `MapEvent`/`Army`/etc. to plain DTOs at the boundary.
 
+The behavior is built with `new` in every campaign's `OnGameStart` (`SubModule`) and resets the process-lifetime state store in its constructor (#773), so a new campaign or a load of a save with no momentum record starts from a fresh war. The container no longer registers the behavior; `WarOfTheRingMomentumWiringTests` pins the construction.
+
 ### Momentum model
 
 - Per-side momentum is stored as an **int on a ×100 internal scale** (`MomentumWarState.MomentumScale`) for battle-scaling precision. `InternalMomentum = (Free − Evil) / 100`, positive = Free ahead.
@@ -131,7 +133,7 @@ Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balanc
 | `MomentumQueryService.cs` | UI read facade (pins the ratio `SliderValue`, `positive = Free`) |
 | `MomentumConfigProvider.cs` + `MomentumSettingsProvider.cs` | validated JSON + MCM-over-JSON |
 | `MomentumTextService.cs` | localized event-description composer |
-| `WarOfTheRingMomentumBehavior.cs` | thin campaign-event entry point + SyncData |
+| `WarOfTheRingMomentumBehavior.cs` | thin campaign-event entry point + SyncData; built with `new` per campaign and resets the state store in its constructor (#773), so the container no longer registers it |
 | `WarOfTheRingMomentumIoC.cs` | registrations |
 | `UI/MomentumIndicatorMapView.cs` | on-map slider MapView (adds/removes via `IMomentumUIService`) |
 | `UI/MomentumPopupController.cs` + `MomentumPopupVM.cs` | detail popup |
