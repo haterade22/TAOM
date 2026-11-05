@@ -4,6 +4,10 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **How to read the numbers:** "gold trade" is the gold value a side's troops killed divided by the value they lost. It counts free units at their value, so it measures fighting, not spending. All matches are AI against AI on `taom_fords_01_forceatmo`. Unless its note says otherwise, a match ran 900 live seconds and no keep fell; the 45-minute matches and the two wins (`20261103-203523`, `20261104-082014`) say so in their notes.
 
+## How balance is decided
+
+Mike, 2026-11-05: play every faction against every other at least once, record the data, then decide. One match per pair is a direction and not proof, so no number changes on the strength of a single matchup. A round runs on one fixed build at 4x: `python tools/fords_round_robin.py todo --build <sha>` lists what is left, and `summary --build <sha>` gives the table that decisions come from. A balance change starts a new round.
+
 ## Matches
 
 | Run | Build | West v East | Units lost | Towers lost | Tower damage dealt | Gold trade | Notes |
