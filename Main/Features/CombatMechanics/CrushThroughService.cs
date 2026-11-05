@@ -85,10 +85,10 @@ public class CrushThroughService : ICrushThroughService
     {
         // Mechanic 2 — monster auto-CTB: a listed monster crushes any non-shield block outright
         // (no swing/skill eligibility); a shield block falls through to the orc/skill paths.
-        if (_settings.MonsterCrushThroughEnabled
-            && context.AttackerMonsterId != null
-            && _monsterCrushIds.Contains(context.AttackerMonsterId)
-            && !context.DefendItemIsShield)
+        if (context.AttackerMonsterId != null
+            && !context.DefendItemIsShield
+            && _settings.MonsterCrushThroughEnabled
+            && _monsterCrushIds.Contains(context.AttackerMonsterId))
         {
             return true;
         }
@@ -97,8 +97,8 @@ public class CrushThroughService : ICrushThroughService
         if (!context.HasMeleeWeapon || context.IsPassiveUsage || !context.IsSwing)
             return null;
 
-        bool orcQualified = _settings.OrcShieldCrushEnabled
-            && context.IsAiControlled
+        bool orcQualified = context.IsAiControlled
+            && _settings.OrcShieldCrushEnabled
             && IsOrcShieldCrushRace(context.AttackerRaceId);
 
         if (!orcQualified && !_settings.SkillCrushThroughEnabled)

@@ -120,7 +120,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | File | Purpose |
 |------|---------|
 | `Main/Features/CompanionTactics/CompanionTacticsIoC.cs` | DryIoc registrations (all `Reuse.Singleton`) |
-| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Reads `TaomSettings.Instance` directly (no reflection) |
+| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Caches `TaomSettings.Instance` on its first non-null read and reads through it, so MCM edits apply live (no reflection) |
 | `Main/Features/CompanionTactics/Roles/CompanionRoleService.cs` | 11-role classifier with hero-StringId-keyed cache + equipment fingerprint signature |
 | `Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs` | Cached `PropertyInfo` mutations of vanilla VMs' Name + tooltip cache |
 | `Main/Features/CompanionTactics/Roles/Hooks/Patch35_*.cs` | 3 Harmony postfixes + 1 manual patch (private GetCaptainTooltip) |
@@ -141,7 +141,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Dependencies
 
-- `ICompanionTacticsSettingsProvider` — typed read from `TaomSettings.Instance` (testable seam).
+- `ICompanionTacticsSettingsProvider`: typed read through a cached `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
 - `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
 - TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
@@ -157,7 +157,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `FormationPresets/FormationPresetServiceTests.cs` — 14 tests; SaveResult.LimitReached path; missing-hero pruning on load; OnGameLoaded; OnMissionEnd state reset; SaveableType round-trip.
 - `FormationPresets/HeroAutoAssignerTests.cs` — 7 tests; each role → expected formation slot scoring; ScoreHeroForFormation null safety.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
-- `SharedMovementOrderPostfixTests.cs` — 5 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
+- `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
 ## How to add a new combat role
 

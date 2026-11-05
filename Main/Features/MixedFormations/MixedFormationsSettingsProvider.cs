@@ -4,14 +4,22 @@ namespace TAOM.Features.MixedFormations;
 
 public class MixedFormationsSettingsProvider : IMixedFormationsSettingsProvider
 {
-    public bool IsEnabled => TaomSettings.Instance?.EnableMixedFormations ?? true;
+    // Read every frame by MixedFormationsMissionBehavior and per unit by Patch30: cached on the first
+    // non-null read, read through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    public MixedFormationsSettingsProvider() { }
+    internal MixedFormationsSettingsProvider(TaomSettings settings) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableMixedFormations ?? true;
 
     public FormationLayoutType DefaultLayout =>
-        ResolveLayout(TaomSettings.Instance?.MixedFormationsDefaultLayout ?? 0);
+        ResolveLayout(Settings?.MixedFormationsDefaultLayout ?? 0);
 
-    public string CycleHotkey => TaomSettings.Instance?.MixedFormationsCycleHotkey ?? "L";
+    public string CycleHotkey => Settings?.MixedFormationsCycleHotkey ?? "L";
 
-    public bool IsDebugMode => TaomSettings.Instance?.MixedFormationsDebug ?? false;
+    public bool IsDebugMode => Settings?.MixedFormationsDebug ?? false;
 
     private static FormationLayoutType ResolveLayout(int raw) => raw switch
     {
