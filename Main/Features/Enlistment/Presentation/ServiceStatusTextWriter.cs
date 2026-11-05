@@ -12,14 +12,16 @@ namespace TAOM.Features.Enlistment.Presentation;
 public interface IServiceStatusTextWriter
 {
     void Write(ServiceStatusModel status);
+
+    /// <summary>True when the board was last rendered in a language other than the active one.</summary>
+    bool IsStale { get; }
 }
 
 public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
 {
     /// <summary>
-    /// The variable the wait menu's registered text (<c>"{TAOM_ENLISTMENT_WAIT_TEXT}"</c>) resolves
-    /// against. It is a GLOBAL, and that is fine here — the menu re-renders every frame and
-    /// re-resolves it each time (see <see cref="IServiceStatusService"/> for why).
+    /// The global the wait menu's registered text (<c>"{TAOM_ENLISTMENT_WAIT_TEXT}"</c>) resolves against, holding the
+    /// board as a flat string so each per-frame resolve is one flat pass instead of a nested render (#1019).
     /// </summary>
     private const string WaitTextVariable = "TAOM_ENLISTMENT_WAIT_TEXT";
 
@@ -64,8 +66,16 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
         text.SetTextVariable("ARREARS", ArrearsLine(status.DeferredWages));
         text.SetTextVariable("DUTY", DutyLine(status.ActiveDutyId));
 
-        MBTextManager.SetTextVariable(WaitTextVariable, text);
+        // The flat board resolves NEWLINE once, here; only engine UI builders set it, lazily, to this same value
+        // (v1.4.8 CampaignUIHelper.cs:1242, :2904).
+        MBTextManager.SetTextVariable("NEWLINE", "\n");
+        MBTextManager.SetTextVariable(WaitTextVariable, text.ToString());
+        _renderedLanguage = MBTextManager.ActiveTextLanguage;
     }
+
+    private string? _renderedLanguage;
+
+    public bool IsStale => _renderedLanguage != MBTextManager.ActiveTextLanguage;
 
     /// <summary>
     /// The one thing standing between the player and their next rank. Promotion needs FIVE

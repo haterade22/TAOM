@@ -71,6 +71,9 @@ closed frames.
 | `MapScreen.OnFrameTick(float)` | prefix `First` / postfix `Last` | `mapScreenMs` (Patch36's and Patch89's postfixes included) |
 | `TAOM.SubModule.OnApplicationTick(float)` | prefix `First` / postfix `Last` | `appTickMs` and the continuity count |
 | each TAOM `MapView` subclass's own `OnFrameTick`, `OnMapScreenUpdate`, `OnMenuModeTick` or `OnIdleTick` | prefix `First` / postfix `Last` (views category) | one entry per view type |
+| `GameMenuVM.OnFrameTick()` | prefix `First` / postfix `Last` (menu category) | entry `GameMenuVM`; vanilla code, not in `taomMs` |
+| the `GameMenuVM.ContextText` setter | prefix `First` / postfix `Last` (menu category); Patch64's prefix runs inside the bracket | entry `Patch64_MenuLinkColors`; counts toward `taomMs` |
+| `ServiceStatusService.RefreshIfChanged()` | prefix `First` / postfix `Last` (menu category) | entry `ServiceStatusService`; not in `taomMs`, because a TAOM tick listener's entry already contains it while time runs (on a stopped wait menu and at menu init it is under no listener, so `taomMs` leaves it out there too) |
 
 Nesting: `realTickMs` and `campaignTickMs` are inside `mapStateMs`; `tickEventMs` is inside
 `campaignTickMs`; listener entries are inside `tickEventMs`. View entries depend on the override: an
@@ -78,7 +81,44 @@ Nesting: `realTickMs` and `campaignTickMs` are inside `mapStateMs`; `tickEventMs
 `OnMenuModeTick` entry is inside `mapStateMs` (reached through `MapState.OnTick`), and an `OnIdleTick`
 entry never lands in a closed frame (the map state is idle, so the frame is a gap). Prefix and postfix,
 never a finalizer: a call that throws records nothing for that call, and Patch101's own patches change no
-exception path (the two PatchShield exclusions below do, with the profiler on).
+exception path (the three PatchShield exclusions below do, and they apply with the profiler off too).
+
+The three menu entries are nested, so they do not add up: the setter runs inside `GameMenuVM.OnFrameTick`, and
+`ServiceStatusService` runs inside a TAOM tick listener's entry while time runs. Only `Patch64_MenuLinkColors` is counted in `taomMs`.
+
+### Menu probes (#1019)
+
+Three entries that answer the timing questions the enlistment reviews left open: does the service wait menu's text redraw
+(`GameMenuVM.IsMenuTextChanged` is true every frame for a menu text with no attributes) cost more than a vanilla wait
+menu, what does Patch64's link colour rewrite cost per frame, and what share of wall time is the status board's refresh
+at high fast-forward multipliers. They live in their own category, `Patch101_MapFrameProfiler_Menu`
+(`Patch101_MapFrameProfilerMenu.cs`, three `*_MapProfiler_Patch` classes), applied right after the views category and
+only inside the toggle-on branch of the installer: with "Enable Map Profiler" off at game start nothing is installed. It
+logs one line, `[MapProfiler] menu probes: N/3 patched`, before the install line. A failed category apply shows as an
+ERROR `[PatchApply] ... FAILED` plus that INFO line with a lower N; the WARNING `menu probes failed` appears only if
+`MenuTargets`, the patched-target check in the same try (`MapFrameProfilerInstaller.ApplyMenuProbes`) or the logger throws.
+Either way the rest of the profiler stays installed.
+
+PatchShield: it never shields a method declared in a TAOM assembly, so `RefreshIfChanged`
+and the view probes are not shielded. `GameMenuVM.OnFrameTick` is patched only by the profiler, so by decision D13 it is
+on `PatchShieldPolicy.ExcludedTargetMethods` like `Campaign.Tick` and `CampaignEvents.Tick`, for parity with the profiler
+off (what that gives up is under "PatchShield"). The `ContextText` setter is Patch64's too, so it stays shielded.
+
+How to read them: the `top=` entries of a `[MapProfile]` line are `<Type>:<ms>/<calls>/<maxMs>/<KB>`. On the service wait
+menu compare `GameMenuVM` ms per call (ms divided by calls) with the same entry on a vanilla town wait menu; act when the
+service menu is more than about 0.05 ms per call above vanilla. `Patch64_MenuLinkColors` above 1 % of the mean frame time
+(`wallMs` divided by `frames`) is worth a change. `ServiceStatusService` above 1 % of `wallMs` is worth a change; expect
+about 20 calls per window at x32 and about 80 at x128. Set "Tick Profiler Top Behaviours" to 20 so these entries are not
+cut from `top=`.
+
+The owed in-game steps (also on #1019):
+
+1. MCM: "Enable Map Profiler" on, "Tick Profiler Top Behaviours" 20, restart.
+2. On the service wait menu, 60 s each at play speed and with Fast Forward Multiplier 4, 32 and 128.
+3. The same four runs on a vanilla town wait menu, not enlisted.
+4. Send every `[MapProfile]` line per run and the `[MapProfileSummary]` line, the multiplier and the build.
+5. Item 1 of the issue (a raid reaching the soldier's village) needs no profiler: see
+   [enlistment.md](enlistment.md), "Inside the raided village (#1019)".
 
 `Campaign.TickMapTime` gives Stop and FastForwardStop no campaign time, and gives StoppablePlay and
 StoppableFastForward campaign time only while the main party is not waiting. The speed class reads the
@@ -171,8 +211,9 @@ window line, never per frame.
 
 `MapFrameProfilerInstaller.OnGameInitialized` is called on EVERY `OnGameInitializationFinished`, before
 SubModule's once-per-process guard. Its first call reads the toggle: off, it logs one line and applies
-nothing; on, it binds the listener walk, applies the two categories (`Patch101_MapFrameProfiler` and
-`Patch101_MapFrameProfiler_Views`, separate so a failing view cannot stop the core), verifies each of the
+nothing; on, it binds the listener walk, applies the three categories (`Patch101_MapFrameProfiler`,
+`Patch101_MapFrameProfiler_Views` and `Patch101_MapFrameProfiler_Menu`, separate so a failing view or menu probe cannot
+stop the core), verifies each of the
 six core targets is patched, creates the profiler only when the core category applied and nothing is
 missing, and logs one install line. It never applies anything again. A later call (a second campaign in
 the process) only reports: toggle on but off at the first game start gives the restart line; toggle on
@@ -254,6 +295,8 @@ log tool reads them as prose.
 | `[MapProfiler] on in MCM but it was off at the first game start, so no patches are installed and nothing is measured; restart the game to measure` | INFO | a later game start after the toggle was turned on |
 | `[MapProfiler] on in MCM but the install at the first game start failed, so nothing is measured; see the [MapProfiler] install line and [PatchApply]` | WARNING | right after the install line of a failed install, and at each later game start with the toggle on |
 | `[MapProfiler] install: category applied, views category applied, targets 6/6 patched (missing none), MapView overrides 3/3 patched, CampaignEvents.Tick sites 1/1, listener walk bound, allocation counter available` | INFO | the install, everything found; otherwise `failed`, the missing target names (`MapState.OnTick`, `Campaign.RealTick`, `Campaign.Tick`, `CampaignEvents.Tick`, `MapScreen.OnFrameTick`, `SubModule.OnApplicationTick`), `unbound`, `na` |
+| `[MapProfiler] menu probes: 3/3 patched` | INFO | the install, logged just before the install line: how many of the three menu targets carry a profiler patch |
+| `[MapProfiler] menu probes failed, the profiler stays installed without them: InvalidOperationException: (x)` | WARNING | `MenuTargets` or the logger threw while the probes were being counted (a failed category apply is the ERROR `[PatchApply]` line instead) |
 | `[MapProfiler] TickEvent listener walk not bound (<detail>); tickEventMs still times the whole dispatch, but no listener is attributed and taomMs leaves the TAOM listeners out` | WARNING | a walk member missing or of another type |
 | `[MapProfiler] CampaignEvents.Tick left vanilla (sites 0/1); tickEventMs reads 0, no listener is attributed, and the dispatch stays inside campaignTickMs` | WARNING | installed, but the transpiler did not swap the call site |
 | `[MapProfiler] 1 of 3 TAOM map view overrides patched; the others run unattributed inside mapScreenMs` | WARNING | installed, but not every view override is patched |
@@ -291,10 +334,10 @@ the `[MapProfiler]` consequence line.
 - **Off (the default):** no Patch101 patch exists and no per-frame profiler work runs, so no frame pays
   anything. The lifecycle cost remains for every player: one `[MapProfiler] off:` line per process; at each
   game init four singleton resolves, one delegate allocation (`TryPatchCategory`, handed to the installer)
-  and at most one toggle read; at each game end one null check. The two `PatchShieldPolicy` exclusions
-  (`Campaign.Tick`, `CampaignEvents.Tick`) are unconditional too, so with the profiler off they still take
-  the shield off any other mod's patch on those two methods (see "PatchShield"); nothing TAOM ships patches
-  either.
+  and at most one toggle read; at each game end one null check. The three `PatchShieldPolicy` exclusions
+  (`Campaign.Tick`, `CampaignEvents.Tick`, `GameMenuVM.OnFrameTick`) are unconditional too, so with the profiler
+  off they still take the shield off any other mod's patch on those three methods (see "PatchShield"); nothing
+  TAOM ships patches any of them.
 - **On and measuring:** per frame two timestamps per phase bracket (five), one boundary (five engine
   reads: `Campaign.Current`, the loading window, the top screen and the two time-control values; one
   allocation read), per listener two timestamps, two allocation reads and one dictionary
@@ -316,7 +359,7 @@ the `[MapProfiler]` consequence line.
 Option B, chosen by the maintainer on 2026-10-03 (decision D13). The first build took option A, the house rule for
 per-frame targets of a TAOM patch (the 2026-09-26 and 2026-09-28 lessons in `docs/reviews/lessons/harmony-il.md`), and
 excluded all five engine targets. Option B excludes only the two that no other TAOM patch uses, `Campaign.Tick` and
-`CampaignEvents.Tick`; `MapState.OnTick` (Patch43), `Campaign.RealTick` (Patch89) and `MapScreen.OnFrameTick` (Patch36,
+`CampaignEvents.Tick` (the menu probes of #1019 add a third, `GameMenuVM.OnFrameTick`, below); `MapState.OnTick` (Patch43), `Campaign.RealTick` (Patch89) and `MapScreen.OnFrameTick` (Patch36,
 Patch89) are patched for every player and keep the shield they had before this feature, so a player with the profiler
 off sees no change. `MapFrameProfilerBindingTests.ProfilerOnlyTargets_AreOnPatchShieldsExclusionList` and
 `SharedMapTargets_StayUnderPatchShield` walk the real targets. PatchShield writes one `not shielding ...` diag.log line
@@ -333,6 +376,8 @@ first game start already sees it; Patch43, Patch36's postfix and the profiler's 
 | `MapState.OnTick` | Patch43 | shielded from a process's second game start, or from the first when another mod patched it at load | swallowed there: the rest of `MapState.OnTick` is skipped and the application tick runs; the strip removes Patch43's and Patch101's patches |
 | `MapScreen.OnFrameTick` | Patch36, Patch89 | shielded from the first game start | swallowed there: the rest of `OnFrameTick` is skipped and the map's UI layers still tick; the strip removes Patch36's F6 hub, Patch89's trace and Patch101's pair |
 | `Campaign.Tick`, `CampaignEvents.Tick` | none | excluded (without the profiler no patch exists on them) | escapes to `MapState.OnTick`, see "Given up" below |
+| `GameMenuVM.OnFrameTick` (#1019) | none | excluded, for parity with the profiler off (no TAOM patch exists on it then) | escapes through `GauntletMenuBaseView.OnFrameTick` and `MenuViewContext.OnFrameTick` (neither catches, no TAOM patch) into `MapScreen.OnFrameTick`, which is shielded; see "Given up on `GameMenuVM.OnFrameTick`" below |
+| `GameMenuVM.ContextText` setter (#1019) | Patch64 | shielded | swallowed there: the rest of the setter is skipped; the strip removes Patch64_MenuLinkColors's patch together with Patch101's pair, and no hook-health check warns (`UnpatchedCore` checks only the core targets) |
 
 The strip is the shield's rescue: the first swallow at a method removes every non-protected owner's prefixes, postfixes
 and transpilers on it. TAOM's owner id `com.taom.mod` matches no protected prefix, so TAOM's own patches on that method go
@@ -381,6 +426,18 @@ Nothing TAOM ships is given up on these two with the profiler off: no patch exis
 name for every owner, so another mod's patch on either loses the shield too, profiler on or off (whether any mod patches
 them is UNVERIFIED).
 
+**Given up on `GameMenuVM.OnFrameTick` (#1019), profiler on or off:** a missing-API exception thrown inside it is not
+caught there. It leaves through `GauntletMenuBaseView.OnFrameTick` (which calls `GameMenuDataSource.OnFrameTick()` with no
+catch) and `MenuViewContext.OnFrameTick` (no catch, and no TAOM patch) into `MapScreen.OnFrameTick`, called from the map
+screen's frame tick while a menu is open (`SandBox.View.Map.MapScreen`, v1.4.8, `MapScreen.cs:1332`, `:1340`). That method is shielded
+(Patch89 is applied in `OnSubModuleLoad`), so it swallows: the rest of the map screen frame is skipped (the menu's
+leave-key check, the party icon refresh, the map views' `OnMapScreenUpdate`, `SandBoxViewVisualManager.OnFrameTick`) and the strip removes
+Patch36's, Patch89's and Patch101's patches on `MapScreen.OnFrameTick`; the profiler then finds the hook lost and stops
+measuring (see "Hook health"). The reason for the exclusion is parity: with the profiler off nothing TAOM patches
+`GameMenuVM.OnFrameTick`, so the same escape happens, and the profiler must not change what a player sees. Another mod's
+patch on it loses the shield even with the profiler off. The `ContextText` setter stays shielded because Patch64 patches
+it for every player; the table above says what a swallow there costs.
+
 **Given up by keeping the shield on the other three, profiler on:** a swallow there also strips Patch101's pair on that
 method (the strip takes every `com.taom.mod` patch), which ends that measurement for the process: `realTickMs` or
 `mapScreenMs` would read 0 from then on, and after a strip on `MapState.OnTick` no more frames close. The profiler
@@ -415,7 +472,8 @@ from the first game start.
 | `Main/Features/TimeAcceleration/ITimeControlAdapter.cs`, `TimeControlAdapter.cs` | `SimplifiedTimeControlMode`, the engine's simplified mode the speed class reads |
 | `Main/Features/MapPerf/Hooks/Patch101_MapFrameProfiler.cs` | the six core patch classes |
 | `Main/Features/MapPerf/Hooks/Patch101_MapFrameProfilerViews.cs` | the TAOM map view patch class |
-| `Dependencies/Foundation/PatchShieldPolicy.cs` | the two `ExcludedTargetMethods` entries (`Campaign.Tick`, `CampaignEvents.Tick`) |
+| `Main/Features/MapPerf/Hooks/Patch101_MapFrameProfilerMenu.cs` | the three menu probe patch classes (#1019) |
+| `Dependencies/Foundation/PatchShieldPolicy.cs` | the three `ExcludedTargetMethods` entries (`Campaign.Tick`, `CampaignEvents.Tick`, `GameMenuVM.OnFrameTick`) |
 
 ## Tests
 
@@ -428,6 +486,10 @@ from the first game start.
 - `MapFrameProfilerBindingTests`: `BindingVerification` (the `CampaignEvents.Tick` rewrite and the
   `Invoke` and `InvokeList` shapes against the installed IL, every Patch101 method compiled against the
   installed engine, the core and view targets, the two PatchShield walks).
+- The menu probes (#1019): `MapProfilerTargetsTests` (three targets, their signatures), `MapFrameProfilerBindingTests`
+  (category, suffix, priorities), `MapFrameProfilerInstallerTests` (toggle off never applies the
+  category; a menu failure leaves the profiler installed), `MapFrameProfilerHooksTests` (`RecordProbe`: nothing when not
+  measuring, the `taomOwned` flag), `MapProfileLinesTests` (the two lines).
 - `MapFrameProfilerInstallerTests` also patches test methods with a real Patch101 prefix to check the
   installer's production patched check.
 - `ReflectionSiteBindingTests`: the four listener-walk members.
@@ -459,6 +521,9 @@ from the first game start.
 - 2026-10-03: convergence follow-ups: a measuring session's end looks at the six core hooks too, before its summary,
   so a strip on `MapState.OnTick` and the frames since the last window start are flagged (`reason=hooksLost`);
   the "Gained" line names the right brackets; the adapter's simplified-mode read is pinned by IL.
+
+- 2026-10-26: menu probes (#1019): `Patch101_MapFrameProfiler_Menu`, three brackets on the service wait menu's per-frame
+  path, installed only with the toggle on.
 
 ## GitHub Issue
 

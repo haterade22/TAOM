@@ -205,6 +205,39 @@ public class MapFrameProfilerHooksTests
     }
 
     [TestMethod]
+    public void RecordProbe_NotMeasuring_RecordsNoEntry()
+    {
+        var stamp = MapFrameProfilerHooks.BeginProbe();
+        MapFrameProfilerHooks.RecordProbe(typeof(ProbeView), stamp, taomOwned: true);
+        Step(_campaignA, 0);
+        CloseFrame(_campaignA, 10);
+        var w = Profiler.TakeWindow(10, 8, 0, 0, 0);
+
+        Assert.AreEqual(0, stamp.Ticks);
+        Assert.AreEqual(0, w.Top.Count);
+    }
+
+    [TestMethod]
+    public void RecordProbe_Measuring_TaomOwnedCountsTowardTaomMs_AndTheOtherDoesNot()
+    {
+        Step(_campaignA, 0);
+
+        var owned = MapFrameProfilerHooks.BeginProbe();
+        MapFrameProfilerHooks.RecordProbe(typeof(OwnerA), owned, taomOwned: true);
+        var vanilla = MapFrameProfilerHooks.BeginProbe();
+        MapFrameProfilerHooks.RecordProbe(typeof(OwnerB), vanilla, taomOwned: false);
+        CloseFrame(_campaignA, 10);
+        var w = Profiler.TakeWindow(10, 8, 0, 0, 0);
+
+        Assert.AreEqual(2, w.Top.Count);
+        var a = w.Top.Single(t => t.Name == nameof(OwnerA));
+        var b = w.Top.Single(t => t.Name == nameof(OwnerB));
+        Assert.AreEqual(1, a.Calls);
+        Assert.AreEqual(1, b.Calls);
+        Assert.AreEqual(a.Ms + w.AppTickMs, w.TaomMs, 1e-9);
+    }
+
+    [TestMethod]
     public void Step_FirstBoundaryOfACampaign_OpensASessionAndLogsTheHeader()
     {
         Step(_campaignA, 0);

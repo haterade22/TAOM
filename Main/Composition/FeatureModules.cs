@@ -30,5 +30,6 @@ internal static class FeatureModules
         new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
         new Features.LostFooting.LostFootingModule(),
+        new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
     };
 }

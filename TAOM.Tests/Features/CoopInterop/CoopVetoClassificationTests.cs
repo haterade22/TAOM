@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.ShadowfaxScreens.Party;
 
 namespace TAOM.Tests.Features.CoopInterop;
 
@@ -291,6 +292,19 @@ public class CoopVetoClassificationTests
             "type of the live install. Each peer merges its own module files during game init, before any " +
             "session state exists, and on that module set gets the document the engine would have built; it stands aside for " +
             "foreign patches and re-runs the engine's own merge on any exception."),
+
+        ["PartyCharacterVM_GetCharacterCode_ShadowfaxParty_Patch"] = new(CoopVeto.ReviewedSafe,
+            PartyFastOpenCalls.PatchCategory + ": client-side UI. Returns false only on a per-screen cache hit, handing back the " +
+            "CharacterCode vanilla built earlier for the same character, troop type and side; the code feeds a portrait " +
+            "image id and mutates no campaign state, so there is nothing replicated to skip. Under co-op the roster refresher " +
+            "calls the screen's OnReset, which rebuilds rows through the same hook, so codes stay correct for the " +
+            "current roster. The toggle is presentation."),
+        ["QuestItemVM_PopulateQuestLog_QuestLogPatch"] = new(CoopVeto.ReviewedSafe,
+            "Quest Log Fast Open (#854): client-side UI. The prefix skips QuestItemVM.PopulateQuestLog, which only adds " +
+            "QuestStageVM view models to a finished quest's list inside the QuestsVM constructor; it reads journal logs and " +
+            "writes no campaign state, so there is no replicated mutation to skip. A skipped item is built when it is " +
+            "selected, and every other outcome (toggle off, adapter unbound, replay, disarmed) returns true and runs vanilla. " +
+            "The toggle is presentation in CoopSettingsRelevance."),
 
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,

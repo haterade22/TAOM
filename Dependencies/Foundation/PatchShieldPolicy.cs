@@ -187,6 +187,14 @@ public static class PatchShieldPolicy
         // MapFrameProfilerBindingTests walks the real targets in both directions.
         "TaleWorlds.CampaignSystem.Campaign.Tick",
         "TaleWorlds.CampaignSystem.CampaignEvents.Tick",
+        // The map profiler's menu probe target (#1019): only the profiler patches GameMenuVM.OnFrameTick, so it is
+        // excluded like Campaign.Tick and CampaignEvents.Tick, for parity with the profiler off, when nothing TAOM
+        // patches it. A missing-API error thrown inside it is then not caught here: it leaves through
+        // GauntletMenuBaseView.OnFrameTick and MenuViewContext.OnFrameTick, which have no catch on v1.4.8, into
+        // MapScreen.OnFrameTick (MapScreen.cs:1332, :1340), which Patch36 patches and so stays shielded
+        // (docs/features/map-perf-profiler.md, "PatchShield"). The ContextText setter beside it is Patch64's too
+        // and stays shielded. MapFrameProfilerBindingTests.ProfilerOnlyTargets_AreOnPatchShieldsExclusionList walks it.
+        "TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.GameMenuVM.OnFrameTick",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>
