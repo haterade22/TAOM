@@ -19,6 +19,9 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
 // chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
 // 2026-06-29: same lock extended to the ridden Mûmakil (IMumakilAttackService.IsMumakilMonster) — scaled-up elephant.
+// 2026-09-17 (#611): the career mount bonuses (the MountChargeDamage passive, the Cavalry ability's
+// mount speed and charge) apply on the MOUNT's properties, where the engine reads them, keyed on the
+// rider: a mount agent's own Character is null.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -73,5 +76,14 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
                 : _mumakil.IsCreatureMonster(agent?.Monster?.StringId)
                     ? MumakilConfig.MountDifficulty
                     : agentDrivenProperties.MountDifficulty;
+
+        // Mount-side career bonuses (#611) ride the MOUNT's properties, after base rewrote them; the
+        // rider is the identity (a mount's own Character is null). Non-mounts pass two nulls and the
+        // service returns at once.
+        var mountRider = agent.IsMount ? agent.RiderAgent : null;
+        _agentStatService.ApplyMountStatModifiers(
+            riderHeroId: (mountRider != null && mountRider.IsHero) ? (mountRider.Character as CharacterObject)?.HeroObject?.StringId : null,
+            riderAgentIndex: mountRider?.Index,
+            agentDrivenProperties);
     }
 }

@@ -5,7 +5,7 @@
 
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
-| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | Career passives on effective max health and agent stats + the mount-lock gate: elephant, spider and Mumakil monsters are never rideable (`CanAgentRideMount` returns false before `base`). The Rhun war chariot is deliberately EXEMPT — remountable mid-battle, gated only by the item's riding difficulty (#279) |
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | Career passives on effective max health and agent stats + the mount-lock gate: elephant, spider and Mumakil monsters are never rideable (`CanAgentRideMount` returns false before `base`). The Rhun war chariot is deliberately EXEMPT: remountable mid-battle, gated only by the item's riding difficulty (#279). Since #611 the career mount bonuses (`MountChargeDamage` passive, the Cavalry ability's mount speed and charge) apply on the mount's properties after base, keyed on the rider (`ApplyMountStatModifiers`; a mount's own `Character` is null) |
 | `TaomClanTierModel` | `DefaultClanTierModel` | Career `CompanionLimit` passive applied on top of the vanilla clan-tier limit |
 | `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | Career `InventoryCapacity` passive applied on top of the vanilla capacity |
 | `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | Career `PartySpottingRange` passive, plus the StealthBonus ratio for how easily OTHERS spot the party (a lower ratio is better); since the camps port also the `IPartySpottingContributor` seam (FieldCamp's lookout widens sight through it, never a second AddModel) |

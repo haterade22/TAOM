@@ -215,7 +215,10 @@ public class CareerPerkMissionBehavior : MissionBehavior
             {
                 var ally = mission.FindAgentWithIndex(allyIndex);
                 if (ally != null && ally.IsActive())
+                {
                     ally.UpdateAgentProperties();
+                    ally.MountAgent?.UpdateAgentProperties(); // #611: the mount carries the buff's mount fields
+                }
             }
         }
     }
