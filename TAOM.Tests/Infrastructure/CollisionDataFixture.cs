@@ -14,11 +14,12 @@ namespace TAOM.Tests.Infrastructure;
 /// </summary>
 internal static class CollisionDataFixture
 {
-    public static AttackCollisionData With(float chargeVelocity = 0f, int inflictedDamage = 0, int weaponSlot = 0, bool isColliderAgent = false, bool isAlternativeAttack = false)
+    public static AttackCollisionData With(float chargeVelocity = 0f, int inflictedDamage = 0, int weaponSlot = 0, bool isColliderAgent = false, bool isAlternativeAttack = false, float fallSpeed = 0f)
     {
         object boxed = default(AttackCollisionData);
         SetField(boxed, BackingField(nameof(AttackCollisionData.ChargeVelocity)), chargeVelocity);
         SetField(boxed, BackingField(nameof(AttackCollisionData.AffectorWeaponSlotOrMissileIndex)), weaponSlot);
+        SetField(boxed, BackingField(nameof(AttackCollisionData.FallSpeed)), fallSpeed);
         SetField(boxed, "_isColliderAgent", isColliderAgent);
         SetField(boxed, "_isAlternativeAttack", isAlternativeAttack);
         var data = (AttackCollisionData)boxed;

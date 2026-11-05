@@ -148,4 +148,89 @@ public class LongDefeatShippedConfigTests
             CollectionAssert.AreEqual(Array.Empty<string>(), unpaid, string.Join(", ", unpaid));
         }
     }
+
+    private static IEnumerable<(FortressEntry Fortress, string From, string To)> Links() =>
+        Load().Catalog.Fortresses.SelectMany(f => f.Waves.Endless.Tiers.Select(l => (f, l.Key, l.Value)));
+
+    [TestMethod]
+    public void ShippedFiles_EveryTierLink_GoesUpOneLevel_InsideOneClassAndTheAttackerCulture()
+    {
+        var troops = Troops();
+        var links = Links().ToList();
+
+        Assert.IsTrue(links.Count >= 10, "helms ships its tier chain");
+        var wrong = new List<string>();
+        foreach (var (fortress, from, to) in links)
+        {
+            if (!troops.TryGetValue(from, out var a) || !troops.TryGetValue(to, out var b))
+            {
+                wrong.Add($"{from} to {to}: a troop is not in fords_troops.xml");
+                continue;
+            }
+
+            if (Culture(a) != fortress.AttackerCulture || Culture(b) != fortress.AttackerCulture)
+                wrong.Add($"{from} to {to}: not the {fortress.AttackerCulture} culture");
+            if ((string?)a.Attribute("default_group") != (string?)b.Attribute("default_group"))
+                wrong.Add($"{from} to {to}: the class changes");
+            if (!((int)b.Attribute("level")! > (int)a.Attribute("level")!))
+                wrong.Add($"{from} to {to}: the level does not rise");
+        }
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), wrong, string.Join("; ", wrong));
+    }
+
+    [TestMethod]
+    public void ShippedFiles_EveryReachableAttackerTroop_HasABounty_AndATierTargetPaysAtLeastWhatItsSourcePays()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var bounties = catalog.BuildPlan(f, RunOptions.Default).Bounties;
+            var reachable = f.Waves.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)).Concat(f.Waves.Endless.Targets).Distinct().ToList();
+            var unpaid = reachable.Where(id => !bounties.ContainsKey(id)).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), unpaid, string.Join(", ", unpaid));
+            foreach (var link in f.Waves.Endless.Tiers)
+                Assert.IsTrue(bounties[link.Value] >= bounties[link.Key], $"{link.Value} pays {bounties[link.Value]}, less than {link.Key} ({bounties[link.Key]})");
+        }
+    }
+
+    [TestMethod]
+    public void ShippedFiles_TheFourVeteranTroopsAStepOrASummonCanReach_PayABounty()
+    {
+        var (catalog, _) = Load();
+        var bounties = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Bounties;
+
+        foreach (var id in new[] { "fow_urukhai_veteranspearman", "fow_urukhai_veteranpikeman", "fow_urukhai_veteraninfantry", "fow_urukhai_veterancrossbowman" })
+            Assert.IsTrue(bounties.TryGetValue(id, out var gold) && gold > 0, id + " has no bounty");
+    }
+
+    [TestMethod]
+    public void ShippedFiles_AllTroopIds_HoldsEveryTierTarget_SoALaunchChecksThemBeforeTheRun()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var f in catalog.Fortresses)
+        {
+            var ids = RunPlanTroops.AllTroopIds(catalog.BuildPlan(f, RunOptions.Default));
+            var missing = f.Waves.Endless.Targets.Where(id => !ids.Contains(id)).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), missing, string.Join(", ", missing));
+            foreach (var row in Rows(f))
+                CollectionAssert.Contains(ids.ToList(), row.Troop);
+        }
+    }
+
+    [TestMethod]
+    public void ShippedFiles_TheEndlessGrowth_IsTheFirstGuessOfTheApprovedPlan()
+    {
+        var (catalog, _) = Load();
+        var waves = catalog.Fortresses.Single(f => f.Id == "helms").Waves;
+
+        var scale = waves.Endless;
+
+        Assert.AreEqual((0.05f, 0.03f, 3.0f, 3), (scale.HealthPerWave, scale.DamagePerWave, scale.MaxFactor, scale.TierEveryWaves));
+        Assert.AreEqual("fow_urukhai_warrior", scale.Tiers["fow_urukhai_fighter"]);
+        Assert.AreEqual("fow_urukhai_veterancrossbowman", scale.Tiers["fow_urukhai_crossbowman"]);
+        Assert.AreEqual(10, waves.Authored.Count);
+    }
 }

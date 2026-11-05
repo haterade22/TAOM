@@ -124,6 +124,22 @@ public class LongDefeatBindingTests
         Assert.AreEqual(1, Enum.GetValues(typeof(AgentControllerType)).Cast<AgentControllerType>().Count(c => c == AgentControllerType.AI));
     }
 
+    // The endless scale (Slice 2): the health write after spawn, the character maximum it is read against, the blow the damage factor scales,
+    // and the damage model seam it rides.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheEndlessScaleMembers_StillResolve()
+    {
+        foreach (var name in new[] { "BaseHealthLimit", "HealthLimit", "Health" })
+            Assert.IsNotNull(Property(typeof(Agent), name, typeof(float)).GetSetMethod(), $"Agent.{name} lost its public setter");
+        Method(typeof(BasicCharacterObject), "MaxHitPoints", typeof(int));
+        Property(typeof(Team), "ActiveAgents", typeof(MBReadOnlyList<Agent>));
+        Field(typeof(AttackInformation), "AttackerAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "IsAttackerAgentMount", typeof(bool));
+        Method(typeof(TaleWorlds.MountAndBlade.ComponentInterfaces.AgentApplyDamageModel), "ApplyDamageAmplifications", typeof(float),
+            typeof(AttackInformation).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float));
+    }
+
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheSiegeEngineMembers_StillResolve()

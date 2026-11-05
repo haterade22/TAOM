@@ -167,6 +167,19 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_AWavePastTheAuthoredList_ReportsItsHealthAndDamageFactors()
+    {
+        var stats = new RunStats();
+        stats.CloseWave(11, 100f, 0, 1.05f, 1.03f);
+        stats.CloseWave(12, 100f, 0, 1.10f, 1.06f);
+
+        var waves = ((JArray)Build(new RunResult(RunEndReason.TargetReached, 12, 2, 0), stats, new Purse(600))["waves"]!).Cast<JObject>().ToList();
+
+        Assert.AreEqual((1.05f, 1.03f), ((float)waves[0]["healthFactor"]!, (float)waves[0]["damageFactor"]!));
+        Assert.AreEqual((1.10f, 1.06f), ((float)waves[1]["healthFactor"]!, (float)waves[1]["damageFactor"]!));
+    }
+
+    [TestMethod]
     public void Build_SchemaOneFieldsKeepTheirNamesAndMeaning()
     {
         var report = Build(new RunResult(RunEndReason.TargetReached, 1, 1, 0), new RunStats(), new Purse(600));

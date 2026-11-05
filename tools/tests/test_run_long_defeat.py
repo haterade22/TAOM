@@ -504,7 +504,7 @@ class ManifestTests(unittest.TestCase):
         lines = self.fixture_lines()
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
-            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death"):
+            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -535,6 +535,28 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(iv.judge_segment(row, lines, []).verdict, iv.PASS)
         bad = "[2026-11-04 04:30:00] [INFO] [Check] id=taom.long-defeat.end result=fail reason=fault"
         self.assertEqual(ld.judge(done, {**REPORT, "final": False, "wavesCleared": 3}, text + "\n" + bad)[0], 1)
+
+    SCALE_LINE = ("[2026-11-05 10:00:00] [INFO] [Check] id=taom.long-defeat.scale result=pass w=11 health=1.050 spawn=1.050 late=1.049 "
+                  "troop=fow_urukhai_spearman in_mix=true damage=1.03 amplified=12 steps=0 over_room=0")
+
+    def test_the_scale_row_reads_the_line_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.scale")
+        self.assertEqual(row.absence, "not-reached")
+        lines = [(None, 1, self.SCALE_LINE)]
+        self.assertEqual(iv.judge_segment(row, lines, []).verdict, iv.PASS)
+        failed = self.SCALE_LINE.replace("result=pass", "result=fail")
+        self.assertEqual(iv.judge_segment(row, [(None, 1, failed)], []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+
+    def test_the_scale_line_is_the_one_the_csharp_check_formats(self):
+        checks = source("Diagnostics", "LongDefeatChecks.cs")
+        self.assertIn('ScaleId = "taom.long-defeat.scale"', checks)
+        start = checks.index("internal static CheckVerdict Scale(")
+        formatted = checks[start:checks.index("private static bool NearFactor")]
+        for key in ("w=", "health=", "spawn=", "late=", "troop=", "in_mix=", "damage=", "amplified=", "steps=", "over_room="):
+            self.assertIn(key + "{", formatted, key)
+        self.assertRegex(self.SCALE_LINE, r"result=pass w=[0-9]+ health=[0-9.]+ spawn=[0-9.]+ late=[0-9.]+ troop=\S+ in_mix=(true|false) damage=[0-9.]+ amplified=[0-9]+ steps=[0-9]+ over_room=[0-9]+")
 
     def test_the_manifest_names_the_issue_and_the_taom_log(self):
         data = self.manifest()
@@ -805,6 +827,30 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         for name in ("", "archer", "sword_and_board", None):
             self.assertEqual(ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[0], 0, repr(name))
 
+    def test_a_run_that_played_past_the_authored_list_owes_the_scale_check(self):
+        report = {**REPORT, "waves": [{"wave": 10, "healthFactor": 1.0}, {"wave": 11, "healthFactor": 1.05}]}
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.scale", why)
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("scale",), 5))[0], 0)
+
+    def test_a_damage_factor_alone_also_owes_the_scale_check(self):
+        # The game's own rule (a wave is scaled when health, damage or the tier steps moved) also holds for a roster whose health line is flat.
+        report = {**REPORT, "waves": [{"wave": 11, "healthFactor": 1.0, "damageFactor": 1.03}]}
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.scale", why)
+
+    def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
+        for waves in (None, [], [{"wave": 1, "healthFactor": 1.0}], [{"wave": 1}], [{"wave": 1, "healthFactor": True}],
+                      [{"wave": 1, "healthFactor": "2"}], ["x"], "waves"):
+            self.assertEqual(ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)[0], 0, repr(waves))
+
+    def test_the_deep_run_lists_scale_once(self):
+        report = {**REPORT, "waves": [{"wave": 12, "healthFactor": 1.1}]}
+        self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave",), 5))[0], 0)
+        self.assertEqual(ld.DEEP_CHECKS.count("scale"), 1)
+
     def test_every_run_must_report_start_wave_one_unless_it_armed_another(self):
         self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
         for bad in (2, 12, 0, None, "1", True):
@@ -898,8 +944,8 @@ class DeepJudgeTests(unittest.TestCase):
         self.assertIn("final", why)
 
     def test_the_deep_ids_are_owned_by_a_checks_class_or_named_as_not_built_yet(self):
-        # Slices 3, 5, 7 and 13 add these ids to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then.
-        not_built_yet = {"class", "commander", "affix", "scale"}
+        # Slices 3, 5 and 7 add these ids to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2).
+        not_built_yet = {"class", "commander", "affix"}
         checks = source("Diagnostics", "LongDefeatChecks.cs") + (REPO / "Client" / "Features" / "LongDefeat" / "LongDefeatClientChecks.cs").read_text(encoding="utf-8")
         for name in ld.DEEP_CHECKS:
             owned = f'"taom.long-defeat.{name}"' in checks

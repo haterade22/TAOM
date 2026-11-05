@@ -21,6 +21,10 @@ internal sealed partial class LongDefeatDirector
     /// <summary>Turns what the run decided into adapter calls, in the order the engine needs.</summary>
     private void Apply(RunEffects fx)
     {
+        // First, before any soldier of the wave exists: the wave's published numbers are read when a soldier is built or struck.
+        if (fx.PublishStats is { } stats)
+            _effects?.PublishStats(stats);
+
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
         var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
@@ -38,12 +42,20 @@ internal sealed partial class LongDefeatDirector
             _field.FinishInitialSpawn();
 
         if (fx.StartWave is { } start)
-            _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged");
+        {
+            _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged{ScaleText(start)}");
+            BeginScaleWatch(start);
+        }
+
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
 
         if (fx.RefreshAttackerTactic)
+        {
             _field.RefreshAttackerTactic();
+            SampleScaleAtSpawn();
+        }
+
         if (fx.OrderCharge)
             _field.OrderCharge();
         if (fx.RestoreDefenderTactic)
@@ -179,6 +191,7 @@ internal sealed partial class LongDefeatDirector
 
     private void OnWaveCleared(RunEvent e)
     {
+        FlushScale();
         var stats = _run.Stats.Waves.LastOrDefault(w => w.Wave == e.Wave);
         if (stats != null)
         {
@@ -219,6 +232,7 @@ internal sealed partial class LongDefeatDirector
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
+        FlushScale();
     }
 
     private bool WriteReport()

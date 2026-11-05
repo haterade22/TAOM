@@ -91,9 +91,13 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
         return MusterOk;
     }
 
+    /// <summary>Every batch the field was asked to spawn, with the side, so a test can read what the run put on it (a health factor).</summary>
+    public List<(bool Attackers, SoldierBatch Batch)> Spawned { get; } = new();
+
     public LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers)
     {
         Calls.Add($"Spawn:{Side(attackers)}:{batch.TroopId}:{batch.Count}");
+        Spawned.Add((attackers, batch));
         var made = Math.Max(0, batch.Count - ShortBy);
         var points = Enumerable.Range(batch.FirstIndex, made).Select(i => new LdPoint(i, attackers ? 50 : 0, 0)).ToList();
         if (attackers)

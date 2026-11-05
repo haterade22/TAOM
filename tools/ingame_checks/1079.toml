@@ -157,6 +157,18 @@ fail = ['\[Check\] id=taom\.long-defeat\.menu result=fail']
 # a dedicated server hides it on purpose and writes a skip line, which reads NOT REACHED. The click-through itself is the prompt-text human row.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.scale"
+needs = "a wave past the authored list, and for a tier step a wave 13 or later (--start-wave 12 --waves 2)"
+reached = ['\[Check\] id=taom\.long-defeat\.scale result=']
+pass = ['\[Check\] id=taom\.long-defeat\.scale result=pass w=[0-9]+ health=']
+fail = ['\[Check\] id=taom\.long-defeat\.scale result=fail']
+# Written once per wave past the authored list, at its clear (or at the run's end inside it), key w=<N>. A standing attacker's health limit over its
+# character maximum equals the wave's health factor within 1%, read at spawn and again late in the wave (the engine may undo a write); its troop is
+# one of the wave's tier-stepped mix; a damage factor above 1 raised at least one blow (amplified=); and the engine's standing count never passed the room the previous tick spawned into (over_room=0).
+# An authored wave writes nothing, so a session that never passed wave 10 reads NOT REACHED. A run that ended before the wave's first batch closed writes nothing either.
+absence = "not-reached"
+
 [[human]]
 claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"
 

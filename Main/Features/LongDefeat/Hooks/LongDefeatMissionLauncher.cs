@@ -60,7 +60,7 @@ internal sealed class LongDefeatMissionLauncher
             var attackerCulture = objects?.GetObject<BasicCultureObject>(fortress.AttackerCulture);
             var player = objects?.GetObject<BasicCharacterObject>(fortress.PlayerTroop);
             var plan = _catalog.BuildPlan(fortress, setup.Options);
-            var missing = Troops(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
+            var missing = RunPlanTroops.AllTroopIds(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
             if (defenderCulture == null || attackerCulture == null || player == null || missing.Count > 0)
             {
                 _logger.LogError($"[LongDefeat] cannot load '{fortress.Id}': defender culture {defenderCulture != null}, attacker culture {attackerCulture != null}, "
@@ -118,12 +118,6 @@ internal sealed class LongDefeatMissionLauncher
                 Weapons(DefaultSiegeEngineTypes.Ram, 1, DefaultSiegeEngineTypes.SiegeTower, 2)),
             new LongDefeatMissionLogic(plan, _session, _logger, _outcomes, _menu, "ld" + Interlocked.Increment(ref _missions), records),
         };
-
-    private static IEnumerable<string> Troops(RunPlan plan) =>
-        plan.Garrison.Select(r => r.TroopId)
-            .Concat(plan.Shop.Offers.Select(o => o.TroopId))
-            .Concat(plan.Waves.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)))
-            .Distinct();
 
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>
         Enumerable.Repeat(first, firstCount).Concat(Enumerable.Repeat(second, secondCount)).Select(t => MissionSiegeWeapon.CreateDefaultWeapon(t)).ToList();

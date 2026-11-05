@@ -35,8 +35,9 @@ public class LongDefeatConfigCatalogTests
     private static string Fortresses(params string[] entries) => "{'fortresses':[" + string.Join(",", entries) + "]}";
 
     private static string Waves(string rules = "", string waves = Wave, string scaling = "'countPerWave':10,'maxCount':300",
-        string bounties = "'a_inf':4,'a_arc':6") =>
-        "{'rules':{" + rules + "},'bounties':{" + bounties + "},'rosters':{'r':{'scaling':{" + scaling + "},'waves':[" + waves + "]}}}";
+        string bounties = "'a_inf':4,'a_arc':6", string tiers = "") =>
+        "{'rules':{" + rules + "},'bounties':{" + bounties + "},'rosters':{'r':{'scaling':{" + scaling + "}," +
+        (tiers.Length == 0 ? "" : "'tiers':" + tiers + ",") + "'waves':[" + waves + "]}}}";
 
     private static string Shop(string offers = Offer, string gold = "600") =>
         "{'shops':{'sh':{'startingGold':" + gold + ",'offers':[" + offers + "]}}}";
@@ -166,6 +167,147 @@ public class LongDefeatConfigCatalogTests
         else
             Assert.AreEqual(300, waves.ForWave(100).Count, "default maxCount 300");
         AssertOneWarningNaming("waves.json", key);
+    }
+
+    // ---- Endless scale: the growth numbers and the tier chain ----
+
+    private WavePlan Roster(string? scaling = null, string? tiers = null, string bounties = "'a_inf':4,'a_arc':6,'b_inf':8,'c_inf':12") =>
+        Load(waves: Waves(scaling: scaling ?? "'countPerWave':10,'maxCount':300", tiers: tiers ?? "", bounties: bounties)).Fortresses.Single().Waves;
+
+    [TestMethod]
+    public void Endless_NoGrowthKeys_TakeTheShippedDefaults_AndNoTiersChangeNoTroop()
+    {
+        var waves = Roster();
+
+        var spec = waves.ForWave(4);
+
+        Assert.AreEqual(1.15f, spec.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.09f, spec.DamageFactor, 1e-5f);
+        Assert.AreEqual(1, spec.TierSteps);
+        CollectionAssert.AreEqual(new[] { "a_inf", "a_arc" }, spec.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(3f, waves.ForWave(500).HealthFactor);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Endless_EveryGrowthKey_ReadsItsValue_AndTheTiersChain()
+    {
+        var waves = Roster("'countPerWave':10,'maxCount':300,'healthPerWave':0.1,'damagePerWave':0.2,'maxFactor':2.5,'tierEveryWaves':2",
+            "{'a_inf':'b_inf','b_inf':'c_inf'}");
+
+        var third = waves.ForWave(3);
+        var fifth = waves.ForWave(5);
+
+        Assert.AreEqual(1.2f, third.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.4f, third.DamageFactor, 1e-5f);
+        Assert.AreEqual(1, third.TierSteps);
+        CollectionAssert.AreEqual(new[] { "b_inf", "a_arc" }, third.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(1.4f, fifth.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.8f, fifth.DamageFactor, 1e-5f);
+        Assert.AreEqual(2, fifth.TierSteps);
+        CollectionAssert.AreEqual(new[] { "c_inf", "a_arc" }, fifth.Mix.Select(m => m.TroopId).ToArray());
+        Assert.AreEqual(2.5f, waves.ForWave(500).DamageFactor, "maxFactor caps both lines");
+        CollectionAssert.AreEquivalent(new[] { "b_inf", "c_inf" }, waves.Endless.Targets.ToArray());
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [DataTestMethod]
+    [DataRow("'healthPerWave':1.5", "healthPerWave")]
+    [DataRow("'healthPerWave':-0.1", "healthPerWave")]
+    [DataRow("'healthPerWave':NaN", "healthPerWave")]
+    [DataRow("'healthPerWave':'fast'", "healthPerWave")]
+    [DataRow("'damagePerWave':1.01", "damagePerWave")]
+    [DataRow("'damagePerWave':Infinity", "damagePerWave")]
+    [DataRow("'maxFactor':0.9", "maxFactor")]
+    [DataRow("'maxFactor':10.5", "maxFactor")]
+    [DataRow("'maxFactor':NaN", "maxFactor")]
+    public void Endless_BadGrowthNumber_KeepsTheDefaultWithOneWarning(string bad, string key)
+    {
+        var spec = Roster("'countPerWave':10,'maxCount':300," + bad).ForWave(2);
+
+        Assert.AreEqual(1.05f, spec.HealthFactor, 1e-5f, "the default 0.05 a wave");
+        Assert.AreEqual(1.03f, spec.DamageFactor, 1e-5f, "the default 0.03 a wave");
+        AssertOneWarningNaming("waves.json", key);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("51")]
+    [DataRow("1.5")]
+    [DataRow("NaN")]
+    public void Endless_BadTierEveryWaves_KeepsTheDefaultOfThree_WithOneWarning(string bad)
+    {
+        var waves = Roster("'countPerWave':10,'maxCount':300,'tierEveryWaves':" + bad, "{'a_inf':'b_inf'}");
+
+        Assert.AreEqual(0, waves.ForWave(3).TierSteps, "extra 2 over every 3 is no step");
+        Assert.AreEqual(1, waves.ForWave(4).TierSteps, "extra 3 over every 3 is one");
+        AssertOneWarningNaming("waves.json", "tierEveryWaves");
+    }
+
+    [TestMethod]
+    public void Endless_ACapAtOne_HoldsBothLinesAtOne()
+    {
+        var spec = Roster("'countPerWave':10,'maxCount':300,'healthPerWave':1,'maxFactor':1").ForWave(40);
+
+        Assert.AreEqual(1f, spec.HealthFactor);
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkToItself_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'a_inf','a_arc':'b_inf'}");
+
+        CollectionAssert.AreEqual(new[] { "b_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkThatClosesACycle_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'b_inf','b_inf':'c_inf','c_inf':'a_inf'}");
+
+        CollectionAssert.AreEquivalent(new[] { "b_inf", "c_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "tiers.c_inf");
+        Assert.AreEqual("c_inf", waves.Endless.Advance("a_inf", 50), "the chain a to b to c ends where the cycle was refused");
+    }
+
+    [TestMethod]
+    public void Tiers_ALinkBetweenTwoKnownClasses_ThatDiffer_IsSkippedWithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'a_arc'}");
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [DataTestMethod]
+    [DataRow("{'a_inf':7}")]
+    [DataRow("{'a_inf':''}")]
+    [DataRow("{'a_inf':null}")]
+    public void Tiers_ANonTextTarget_IsSkippedWithOneWarning(string tiers)
+    {
+        var waves = Roster(tiers: tiers);
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers.a_inf");
+    }
+
+    [TestMethod]
+    public void Tiers_NotAnObject_IsDroppedWithOneWarning()
+    {
+        var waves = Roster(tiers: "['a_inf']");
+
+        Assert.AreEqual(0, waves.Endless.Targets.Count());
+        AssertOneWarningNaming("waves.json", "tiers");
+    }
+
+    [TestMethod]
+    public void Tiers_ATargetWithNoBounty_PaysNothing_WithOneWarning()
+    {
+        var waves = Roster(tiers: "{'a_inf':'b_inf'}", bounties: "'a_inf':4,'a_arc':6");
+
+        CollectionAssert.AreEqual(new[] { "b_inf" }, waves.Endless.Targets.ToArray());
+        AssertOneWarningNaming("waves.json", "b_inf");
     }
 
     [TestMethod]

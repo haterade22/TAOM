@@ -38,6 +38,7 @@ public class LongDefeatChecksTests
         Assert.AreEqual("taom.long-defeat.player-death", LongDefeatChecks.PlayerDeathId);
         Assert.AreEqual("taom.long-defeat.end", LongDefeatChecks.EndId);
         Assert.AreEqual("taom.long-defeat.best-run", LongDefeatChecks.BestRunId);
+        Assert.AreEqual("taom.long-defeat.scale", LongDefeatChecks.ScaleId);
     }
 
     [TestMethod]
@@ -291,5 +292,85 @@ public class LongDefeatChecksTests
         Is(CheckResult.Skip, LongDefeatChecks.Menu(fortresses: 1, dedicatedServer: true));
         Is(CheckResult.Skip, LongDefeatChecks.Menu(fortresses: 0, dedicatedServer: true));
         StringAssert.Contains(LongDefeatChecks.Menu(2, false).Detail, "fortresses=2");
+    }
+
+    // ---- Scale (the endless waves) ----
+
+    private static readonly string[] Mix = { "orc2", "skirm" };
+
+    private static LdScaleSample Sample(float limit = 110f, string troop = "orc2", float max = 100f, long blows = 40) => new(troop, limit, max, blows);
+
+    private static CheckVerdict Scale(float health = 1.1f, float damage = 1.06f, LdScaleSample? spawn = null, LdScaleSample? late = null,
+        int steps = 0, int over = 0, long blows = 40) =>
+        LongDefeatChecks.Scale(3, health, damage, steps, spawn ?? Sample(), late, Mix, blows, over);
+
+    [TestMethod]
+    public void Scale_TheSampleAtTheFactor_AndInTheMix_Passes()
+    {
+        var v = Scale(late: Sample(limit: 109.5f, troop: "skirm"));
+
+        Is(CheckResult.Pass, v);
+        StringAssert.StartsWith(v.Detail, "w=3 health=1.100");
+        StringAssert.Contains(v.Detail, "spawn=1.100");
+        StringAssert.Contains(v.Detail, "late=1.095");
+        StringAssert.Contains(v.Detail, "over_room=0");
+        StringAssert.Contains(v.Detail, "amplified=40");
+    }
+
+    [TestMethod]
+    public void Scale_NoLateSample_StillPasses_AndSaysSo()
+    {
+        var v = Scale();
+
+        Is(CheckResult.Pass, v);
+        StringAssert.Contains(v.Detail, "late=none");
+    }
+
+    [TestMethod]
+    public void Scale_NoSampleAtSpawn_Fails()
+    {
+        Is(CheckResult.Fail, LongDefeatChecks.Scale(3, 1.1f, 1.06f, 0, null, null, Mix, 40, 0));
+        Is(CheckResult.Fail, Scale(spawn: Sample(troop: "")));
+    }
+
+    [DataTestMethod]
+    [DataRow(108.8f)]
+    [DataRow(111.2f)]
+    [DataRow(100f)]
+    public void Scale_ASpawnSampleMoreThanOnePercentOffTheFactor_Fails(float limit) => Is(CheckResult.Fail, Scale(spawn: Sample(limit: limit)));
+
+    [TestMethod]
+    public void Scale_ALateSampleOffTheFactor_Fails_BecauseTheEngineMayHaveUndoneTheWrite()
+    {
+        Is(CheckResult.Fail, Scale(late: Sample(limit: 100f)));
+    }
+
+    [TestMethod]
+    public void Scale_ASampleOfATroopThePlanDidNotMix_Fails_SoAMissedTierStepIsSeen()
+    {
+        Is(CheckResult.Fail, Scale(spawn: Sample(troop: "orc")));
+        Is(CheckResult.Fail, Scale(late: Sample(limit: 110f, troop: "orc")));
+    }
+
+    [TestMethod]
+    public void Scale_DamageAboveOneNeedsAnAmplifiedBlow_AndFactorOneNeedsNone()
+    {
+        Is(CheckResult.Fail, Scale(damage: 1.06f, blows: 0));
+        Is(CheckResult.Pass, Scale(damage: 1f, blows: 0));
+    }
+
+    [TestMethod]
+    public void Scale_AnOverfilledField_Fails()
+    {
+        Is(CheckResult.Fail, Scale(over: 1));
+    }
+
+    [TestMethod]
+    public void Scale_NaNAnywhere_Fails()
+    {
+        Is(CheckResult.Fail, Scale(spawn: Sample(max: 0f)));
+        Is(CheckResult.Fail, Scale(spawn: Sample(limit: float.NaN)));
+        Is(CheckResult.Fail, Scale(health: float.NaN));
+        Is(CheckResult.Fail, Scale(damage: float.NaN));
     }
 }

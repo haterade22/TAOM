@@ -73,7 +73,7 @@ public class LongDefeatMissionLauncherTests
     {
         var source = RepoPaths.ReadSource(LauncherPath, stripComments: true);
         var body = source.Substring(source.IndexOf("CreateBehaviors(", StringComparison.Ordinal));
-        body = body.Substring(0, body.IndexOf("Troops(", StringComparison.Ordinal));
+        body = body.Substring(0, body.IndexOf("private static List<MissionSiegeWeapon> Weapons(", StringComparison.Ordinal));
         return System.Text.RegularExpressions.Regex.Matches(body, @"^\s+new (\w+)\(", System.Text.RegularExpressions.RegexOptions.Multiline)
             .Cast<System.Text.RegularExpressions.Match>().Select(x => x.Groups[1].Value).ToArray();
     }

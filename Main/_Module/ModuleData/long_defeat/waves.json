@@ -13,11 +13,19 @@
   "bounties": {
     "fow_urukhai_fighter": 6, "fow_isengard_militia_spearman": 6, "fow_urukhai_skirmisher": 9,
     "fow_urukhai_warrior": 9, "fow_urukhai_spearman": 12, "fow_urukhai_swordman": 12, "fow_urukhai_arbalest": 12,
-    "fow_urukhai_crossbowman": 15, "fow_urukhai_infantry": 15, "fow_urukhai_berserker": 20
+    "fow_urukhai_crossbowman": 15, "fow_urukhai_infantry": 15, "fow_urukhai_berserker": 20,
+    "fow_urukhai_veteranspearman": 15, "fow_urukhai_veteranpikeman": 20, "fow_urukhai_veteraninfantry": 20, "fow_urukhai_veterancrossbowman": 20
   },
   "rosters": {
     "helms_isengard": {
-      "scaling": { "countPerWave": 10, "maxCount": 300 },
+      "scaling": { "countPerWave": 10, "maxCount": 300, "healthPerWave": 0.05, "damagePerWave": 0.03, "maxFactor": 3.0, "tierEveryWaves": 3 },
+      "tiers": {
+        "fow_isengard_militia_spearman": "fow_urukhai_warrior", "fow_urukhai_fighter": "fow_urukhai_warrior",
+        "fow_urukhai_warrior": "fow_urukhai_spearman", "fow_urukhai_spearman": "fow_urukhai_veteranspearman",
+        "fow_urukhai_swordman": "fow_urukhai_infantry", "fow_urukhai_infantry": "fow_urukhai_veteraninfantry",
+        "fow_urukhai_veteranspearman": "fow_urukhai_veteranpikeman", "fow_urukhai_skirmisher": "fow_urukhai_arbalest",
+        "fow_urukhai_arbalest": "fow_urukhai_crossbowman", "fow_urukhai_crossbowman": "fow_urukhai_veterancrossbowman"
+      },
       "waves": [
         { "count": 110, "mix": [
           { "troop": "fow_urukhai_fighter", "class": "Infantry", "weight": 50 },

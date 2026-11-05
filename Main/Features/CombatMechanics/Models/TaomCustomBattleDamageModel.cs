@@ -4,6 +4,7 @@ using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.FordsOfWar.Hooks;
+using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.SignatureStrikes;
 using TAOM.Features.SignatureStrikes.Hooks;
@@ -19,7 +20,7 @@ namespace TAOM.Features.CombatMechanics.Models;
 // added wins.
 //
 // Campaign-only, so absent here: the career passives (TaomAgentApplyDamageModel reads heroes, which Custom Battle does not
-// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades, a Custom Game mode's own, inert in any other battle.
+// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades and the Long Defeat wave damage factor, each a Custom Game mode's own and inert in any other battle.
 // Where the Custom Battle base answers differently from
 // SandBox's (the stagger threshold, the crush-through flag test, the shield damage factor and the missile flags), TAOM's
 // delegate sits on the Custom Battle answer, as the campaign's sits on SandBox's: docs/features/combat-mechanics.md,
@@ -55,8 +56,9 @@ public class TaomCustomBattleDamageModel : CustomAgentApplyDamageModel
     // Race Abilities: a raging soldier's melee hits. The engine's Custom Battle model reads no driven-property damage bonus
     // (banner effects only), which is why the ability's damage rides this model rather than the stat bag.
     public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
-        => FordsUpgradeHooks.Amplify(in attackInformation, in collisionData, RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,
-            base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage)));
+        => LongDefeatCombatHooks.Amplify(in attackInformation, in collisionData, FordsUpgradeHooks.Amplify(in attackInformation, in collisionData,
+            RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,
+                base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage))));
 
     // Creature Siege Role: a creature's melee blow on a castle gate is multiplied after base.
     public override float ApplyDamageScaling(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)

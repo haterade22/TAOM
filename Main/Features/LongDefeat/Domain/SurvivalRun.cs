@@ -48,6 +48,8 @@ internal sealed partial class SurvivalRun
     private readonly bool[] _firstPlaced = new bool[2];
     private float _waveSeconds;
     private int _waveFelled;
+    private float _healthFactor = 1f;
+    private float _damageFactor = 1f;
     private StalemateState _stale;
     private float _keep;
     private int _fellPending;
@@ -262,7 +264,10 @@ internal sealed partial class SurvivalRun
     private void InitWave(RunSnapshot s, RunEffects fx)
     {
         _waveInit = false;
-        _queue = _plan.Waves.Expand(_wave).ToList();
+        var spec = _plan.Waves.ForWave(_wave);
+        _queue = WavePlan.Expand(spec.Count, spec.Mix).ToList();
+        _healthFactor = spec.HealthFactor;
+        _damageFactor = spec.DamageFactor;
         _queueHead = 0;
         _waveCount = _queue.Count;
         _firstBatch = Math.Min(_queue.Count, LiveCap(s));
@@ -276,10 +281,15 @@ internal sealed partial class SurvivalRun
         _waveFelled = 0;
         _stale = default;
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
+        fx.PublishStats = new LdStatTable(_damageFactor);
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
-    private int LiveCap(RunSnapshot s) => Math.Max(LiveFloor, Math.Min(_r.LiveCap, s.SiegeBattleSize - s.DefendersStanding));
+    private int LiveCap(RunSnapshot s) => LiveRoom(_r, s.SiegeBattleSize, s.DefendersStanding);
+
+    /// <summary>The attackers the field may hold at once for a battle size and a defender count; the director's scale check reads the same rule.</summary>
+    internal static int LiveRoom(RunRules rules, int siegeBattleSize, int defendersStanding) =>
+        Math.Max(LiveFloor, Math.Min(rules.LiveCap, siegeBattleSize - defendersStanding));
 
     private int SpawnAttackers(RunSnapshot s, RunEffects fx)
     {
@@ -294,11 +304,11 @@ internal sealed partial class SurvivalRun
         _queueHead += n;
         if (!opening)
         {
-            fx.AttackerBatches.AddRange(Batches(take, new int[2], CountBySlot(take), true, new[] { true, true }));
+            fx.AttackerBatches.AddRange(Batches(take, new int[2], CountBySlot(take), true, new[] { true, true }, _healthFactor));
             return n;
         }
 
-        fx.AttackerBatches.AddRange(Batches(take, _firstIndex, _firstTotals, true, _firstPlaced));
+        fx.AttackerBatches.AddRange(Batches(take, _firstIndex, _firstTotals, true, _firstPlaced, _healthFactor));
         _firstSpawned += n;
         if (_firstSpawned >= _firstBatch)
         {
@@ -313,7 +323,7 @@ internal sealed partial class SurvivalRun
     {
         var bonus = _r.WaveBonusBase + _r.WaveBonusPerWave * _wave;
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled);
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor);
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
         if (_stale.Charging)
@@ -386,7 +396,7 @@ internal sealed partial class SurvivalRun
     /// <paramref name="placed"/> whether the class has had its placing batch: the first batch of a class places it, none after.
     /// </summary>
     private static IEnumerable<SoldierBatch> Batches(IReadOnlyList<WaveSoldier> soldiers, int[] nextIndex, int[] totals,
-        bool reinforcement, bool[] placed)
+        bool reinforcement, bool[] placed, float healthFactor = 1f)
     {
         var batches = new List<SoldierBatch>();
         for (var i = 0; i < soldiers.Count;)
@@ -397,7 +407,7 @@ internal sealed partial class SurvivalRun
                 count++;
 
             var slot = (int)head.Slot;
-            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot]));
+            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot], healthFactor));
             nextIndex[slot] += count;
             placed[slot] = true;
             i += count;

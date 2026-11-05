@@ -74,6 +74,7 @@ Phase 2 changes the arithmetic of six schema 1 rules, so its reports carry `sche
 
 - Rule 2: `balance` joins six files in this order with the same separator and line-ending rule: `fortresses.json`, `waves.json`, `shop.json`, `affixes.json`, `boons.json`, `classes.json`. A missing file joins as empty text.
 - Rule 3: also `startWave` is 1 and `startRerolls` is 0, and `seed` is a whole number within the cap.
+- Rule 5, from Slice 2: the count line stays as written, and each row's `healthFactor` and `damageFactor` are 1 inside the authored list and `min(maxFactor, 1 + perWave * extra)` past it, with `extra` the waves past the last authored one and the three numbers from the roster's `scaling` in `waves.json`. The game stores each factor as a 32-bit float, so a reader compares with a relative tolerance of 1e-5, never exactly: a double recomputation of 1 + 0.05 * 14 gives 1.7000000000000002 against the report's 1.7.
 - Rule 8: `gold.earned` equals the sum of five sources (the three above, `commander` and `boon`).
 - Rule 9: each wave bonus is multiplied by the wave-bonus factor in force at that clear, recomputed from `boons[]`.
 - Rule 10: the cap is multiplied by the horn factor.

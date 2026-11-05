@@ -24,6 +24,7 @@ internal sealed partial class LongDefeatDirector
     private readonly RunPlan _plan;
     private readonly SurvivalRun _run;
     private readonly ILongDefeatBattlefieldAdapter _field;
+    private readonly ILongDefeatEffectsAdapter? _effects;
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
@@ -55,12 +56,14 @@ internal sealed partial class LongDefeatDirector
     private float _botClock;
     private int _musterBatchesSpawned;
 
+    /// <param name="effects">The engine writes and reads beyond the field; null runs the wave with no published factors and no <c>scale</c> check (the director's tests).</param>
     public LongDefeatDirector(RunPlan plan, ILongDefeatBattlefieldAdapter field, LongDefeatSession session, IModLogger logger,
-        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null)
+        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null)
     {
         _plan = plan;
         _run = new SurvivalRun(plan);
         _field = field;
+        _effects = effects;
         _session = session;
         _logger = logger;
         _outcomes = outcomes;
@@ -137,8 +140,10 @@ internal sealed partial class LongDefeatDirector
 
         _mainBody = read.MainBody;
         AdoptIfNew();
-        Apply(_run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
-            _defendersAtKeep, read.SiegeBattleSize)));
+        WatchRoom(read);
+        var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
+            _defendersAtKeep, read.SiegeBattleSize));
+        Apply(fx);
         if (_run.Result != null)
             return;
 
@@ -267,6 +272,7 @@ internal sealed partial class LongDefeatDirector
         _frameTotal = 0f;
         _frameMax = 0f;
         _frames = 0;
+        SampleLateScale();
         _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
         _logger.LogInfo($"{Tag}[Keep] attackers={_atKeep} defenders={_defendersAtKeep} progress={F2(v.KeepProgress)} at={KeepText()} positions={SampleText()}");
     }

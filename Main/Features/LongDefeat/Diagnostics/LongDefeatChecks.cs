@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
 using TAOM.Features.LongDefeat.Domain;
@@ -36,6 +38,7 @@ internal static class LongDefeatChecks
     internal const string EndId = "taom.long-defeat.end";
     internal const string BestRunId = "taom.long-defeat.best-run";
     internal const string MenuId = "taom.long-defeat.menu";
+    internal const string ScaleId = "taom.long-defeat.scale";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -132,6 +135,29 @@ internal static class LongDefeatChecks
         return Verdict(paid == expected, $"paid={Num(paid)} expected={Num(expected)} left={F1(secondsLeft)}");
     }
 
+    /// <summary>
+    /// A wave past the authored list took its factors. A sampled attacker's health limit over its character maximum must equal the health
+    /// factor within 1% at spawn and again late in the wave (the engine may undo a write), and its troop must be one of the wave's stepped mix.
+    /// A damage factor above 1 needs at least one blow it raised, and the run never spawned more attackers than the live room held. No late
+    /// sample (the wave ended first) is not a failure, and the detail says so.
+    /// </summary>
+    internal static CheckVerdict Scale(int wave, float health, float damage, int tierSteps, LdScaleSample? atSpawn, LdScaleSample? late,
+        IReadOnlyCollection<string> plannedTroops, long amplified, int overRoom)
+    {
+        if (atSpawn is not { HasAgent: true } spawn)
+            return new CheckVerdict(CheckResult.Fail, $"w={Num(wave)} reason=no-sample health={F3(health)} damage={F2(damage)} steps={Num(tierSteps)}");
+
+        var inMix = plannedTroops.Contains(spawn.TroopId) && (late is not { } l || plannedTroops.Contains(l.TroopId));
+        var ok = NearFactor(spawn.Ratio, health) && (late is not { } l2 || NearFactor(l2.Ratio, health)) && inMix
+            && damage >= 1f && (damage == 1f || amplified > 0) && overRoom <= 0;
+        var lateText = late is { } l3 ? F3(l3.Ratio) : "none";
+        return Verdict(ok, $"w={Num(wave)} health={F3(health)} spawn={F3(spawn.Ratio)} late={lateText} troop={spawn.TroopId} in_mix={Flag(inMix)} damage={F2(damage)} "
+            + $"amplified={Num(amplified)} steps={Num(tierSteps)} over_room={Num(overRoom)}");
+    }
+
+    // Written as the requirement, so a NaN on either side fails it.
+    private static bool NearFactor(float ratio, float factor) => Math.Abs(ratio - factor) <= 0.01f * factor;
+
     internal static CheckVerdict PlayerDeath(bool adopted, string via) => Verdict(adopted, $"via={via}");
 
     internal static CheckVerdict End(RunResult r, bool reportBuilt) =>
@@ -173,4 +199,8 @@ internal static class LongDefeatChecks
     private static string Num(long v) => v.ToString(CultureInfo.InvariantCulture);
 
     private static string F1(float v) => v.ToString("F1", CultureInfo.InvariantCulture);
+
+    private static string F2(float v) => v.ToString("F2", CultureInfo.InvariantCulture);
+
+    private static string F3(float v) => v.ToString("F3", CultureInfo.InvariantCulture);
 }

@@ -19,6 +19,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 --start-wave 12 --waves 4 stops after 4 clears), --start-rerolls seeds the boon reroll bank (armed as 1 unless given, so a 5-wave run proves
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
+A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
 collection. It changes the arm variable, the done and status files, the arm text and the judge, and presses Cancel on the Helm's Deep
@@ -74,6 +75,10 @@ DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
 
+# A wave past the authored list (waves.json: Helm's Deep has ten) carries a health or damage factor above 1 in the report, so a run that reached one owes
+# the scale check whatever its flags. The Slice 2 proof is --start-wave 12 --waves 2: with a tier step every 3 extra waves, wave 13 is the first to step a troop.
+SCALE_CHECK = "scale"
+
 # The poison owner rule: a kill whose owner was not active at the call. Any is a failure.
 OWNER_MISSING = re.compile(r"\bowner_missing=(\d+)")
 
@@ -124,6 +129,21 @@ class SplitMix64:
     def below(self, n):
         draw = self.next()
         return 0 if n <= 0 else draw % n
+
+
+def reached_endless(report_json):
+    """True when a wave row of the report took a health or damage factor above 1: the run played a wave past the authored list."""
+    waves = report_json.get("waves")
+    if not isinstance(waves, list):
+        return False
+    for row in waves:
+        if not isinstance(row, dict):
+            continue
+        for key in ("healthFactor", "damageFactor"):
+            factor = row.get(key)
+            if isinstance(factor, (int, float)) and not isinstance(factor, bool) and factor > 1:
+                return True
+    return False
 
 
 def check_pattern(name, result):
@@ -187,6 +207,8 @@ def judge(done, report_json, log_text=None):
         return 1, f"owner_missing={over} (the report's poison.ownerMissing and the log's tokens, worst of them): a poison tick found its owner gone, so a kill could reach the engine with a stale hitter"
     required = LOSE_CHECKS if lose else (DEEP_CHECKS if deep else REQUIRED_CHECKS)
     required = required + tuple(name for name in CLASS_CHECKS.get(report_json.get("class"), ()) if name not in required)
+    if reached_endless(report_json) and SCALE_CHECK not in required:
+        required = required + (SCALE_CHECK,)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if missing:
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing)
