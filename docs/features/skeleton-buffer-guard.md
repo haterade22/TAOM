@@ -218,7 +218,7 @@ declaration-only stubs first (68 of 226 failing), and seven mutations of its cod
 ## After an engine bump
 
 `SkeletonBufferInstalledBinaryTests` goes Inconclusive for a build missing from its `KnownBuilds` table (a test-only
-pin; the game itself scans by pattern). That is a skip in the default suite and, on 1.4.x, in the binding gate too until WP122's runsettings map Inconclusive to Failed; `NativePinGateTests` keeps the class tagged `BindingVerification` for that day. Read the `[SkeletonBuffer] guard` lines of the first start: `guard ON pool 1`
+pin; the game itself scans by pattern). That is a skip in the default suite and a failure in the binding gate (its runsettings map Inconclusive to Failed); `NativePinGateTests` keeps the class tagged `BindingVerification`. Read the `[SkeletonBuffer] guard` lines of the first start: `guard ON pool 1`
 and `guard ON pool 2` mean both patterns still match exactly once; `guard OFF` with a pattern reason means players lost
 the freeze protection for that pool with this build. Re-derive by running `SkeletonBufferInstalledBinaryTests` (each pattern must still match once), read the code
 at each reservation with `python tools/native_crash_triage.py --rva 0x886BC` and `--rva 0x898F8` (the v1.4.8

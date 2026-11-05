@@ -56,11 +56,12 @@ public class ClipBudgetSignatureInstalledBinaryTests
 
     private static byte[] LoadInstalled(out long length)
     {
-        // 1.4.x: GameAssemblies has no three-argument ResolveGameDir (plan 008, WP122). EnsureLoaded resolves
-        // BANNERLORD_OVERRIDE_DIR, then BANNERLORD_GAME_DIR, the same order.
-        var dir = GameAssemblies.EnsureLoaded() ? GameAssemblies.GameDir : null;
+        var dir = GameAssemblies.ResolveGameDir(
+            Environment.GetEnvironmentVariable("BANNERLORD_OVERRIDE_DIR"),
+            Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR"),
+            GameAssemblies.BuiltGameFolder);
         if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
-            Assert.Inconclusive("No Bannerlord install folder resolved (BANNERLORD_OVERRIDE_DIR, BANNERLORD_GAME_DIR).");
+            Assert.Inconclusive("No Bannerlord install folder resolved (BANNERLORD_OVERRIDE_DIR, BANNERLORD_GAME_DIR, built GameFolder).");
         var path = Path.Combine(dir!, "bin", "Win64_Shipping_Client", "TaleWorlds.Native.dll");
         if (!File.Exists(path))
             Assert.Inconclusive($"TaleWorlds.Native.dll not found at {path}.");

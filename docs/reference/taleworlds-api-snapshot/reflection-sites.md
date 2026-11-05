@@ -7,7 +7,7 @@ It also exists so that an agent working on TAOM does not need the external decom
 **How the gate uses this.** Each row in [Category B](#category-b--auxiliary-static-engine-reflection-gated) is a `[DataRow]` in `ReflectionSiteBindingTests`. The test resolves the type (full name, then simple-name fallback) and asserts the member exists on the installed engine. Run it with:
 
 ```
-dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~ReflectionSiteBindingTests"
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "FullyQualifiedName~ReflectionSiteBindingTests"
 ```
 
 **Maintenance.** When you add a reflection site against an engine member, add a row to Category B *and* a `[DataRow]` to the test. When you change a site, update both. When an engine update removes a member, the gate goes red here before the silent breakage ships.
