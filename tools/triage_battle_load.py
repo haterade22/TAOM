@@ -527,7 +527,7 @@ def _classify_render_wait(terminal: PhaseEvent) -> Verdict:
         v.notes.append(
             "An absent shaders= token means the native "
             "Utilities.GetNumberOfShaderCompilationsInProgress() call threw. Check the "
-            "top of the log for 'Patch43 diagnostics failed to apply'.")
+            "top of the log for '[PatchApply] Patch43_BattleLoadDiagnostics FAILED'.")
         return v
 
     if shaders > 0:
@@ -1093,7 +1093,7 @@ def _format_timings(t: dict) -> list:
         if t["tick_binding_failed"]:
             out.append("  polls=0 — the MissionState.TickLoading binding FAILED. This is "
                        "NOT 'there was no wait': check the top of the log for "
-                       "'Patch43 diagnostics failed to apply'.")
+                       "'[PatchApply] Patch43_BattleLoadDiagnostics FAILED'.")
         elif t["polls"] == 1 and (t["wait_ms"] or 0) > 1000:
             # The polls=1 reading INVERTS between the two sources, so this note must know
             # which one it got. FinishMissionLoadingBegin is written after the wait ended, so
