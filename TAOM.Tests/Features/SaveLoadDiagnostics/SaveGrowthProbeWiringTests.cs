@@ -1,4 +1,8 @@
+using System;
+using System.Linq;
+using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.SaveLoadDiagnostics.Hooks;
 using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.SaveLoadDiagnostics;
@@ -29,4 +33,28 @@ public class SaveGrowthProbeWiringTests
         StringAssert.Contains(source, "SaveLoadPhase.Runtime");
         StringAssert.Contains(source, "SaveLoadTokens.RuntimeHost()");
     }
+
+    [TestMethod]
+    public void SubModule_AppliesAndInitializesTheCountHooks()
+    {
+        var source = SubModuleSource();
+        StringAssert.Contains(source, "\"Patch61_SaveLoadDiagnostics_SaveGraph\",");
+        StringAssert.Contains(source, "\"Patch61_SaveLoadDiagnostics_LoadCounts\",");
+        StringAssert.Contains(source, "SaveContext_CollectObjects_Patch.Initialize(");
+        StringAssert.Contains(source, "LoadContext_Load_Patch.Initialize(");
+    }
+
+    // A typo on either side is a dead patch with no error.
+    [TestMethod]
+    public void CountHookCategoryAttributes_MatchTheStringsSubModuleApplies()
+    {
+        Assert.AreEqual("Patch61_SaveLoadDiagnostics_SaveGraph", CategoryOf(typeof(SaveContext_CollectObjects_Patch)));
+        Assert.AreEqual("Patch61_SaveLoadDiagnostics_LoadCounts", CategoryOf(typeof(LoadContext_Load_Patch)));
+    }
+
+    private static string? CategoryOf(Type hook) =>
+        hook.GetCustomAttributes(typeof(HarmonyPatchCategory), inherit: false)
+            .Cast<HarmonyPatchCategory>()
+            .SingleOrDefault()
+            ?.info.category;
 }

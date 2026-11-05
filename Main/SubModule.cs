@@ -326,12 +326,17 @@ public class SubModule : MBSubModuleBase
             Features.SaveLoadDiagnostics.Hooks.ContainerLoadData_Fill_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorDataStore_LoadBehaviorData_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.ArchiveDeserializer_LoadFrom_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            // Plan 114 save-growth probes, each in its own category so a drifted member costs only itself.
+            Features.SaveLoadDiagnostics.Hooks.SaveContext_CollectObjects_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            Features.SaveLoadDiagnostics.Hooks.LoadContext_Load_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             TryPatchCategory("Patch61_SaveLoadDiagnostics");
             foreach (var category in new[]
             {
                 "Patch61_SaveLoadDiagnostics_ContainerFill",
                 "Patch61_SaveLoadDiagnostics_BehaviorData",
                 "Patch61_SaveLoadDiagnostics_ArchiveParse",
+                "Patch61_SaveLoadDiagnostics_SaveGraph",
+                "Patch61_SaveLoadDiagnostics_LoadCounts",
             })
             {
                 TryPatchCategory(category);

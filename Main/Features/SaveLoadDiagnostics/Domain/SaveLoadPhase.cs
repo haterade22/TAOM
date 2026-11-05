@@ -49,4 +49,6 @@ public enum SaveLoadPhase
     // to write, right after the engine's object walk; SaveBehaviorData is the per-behavior SyncData
     // size summary from the save's OnBeforeSave pass; SaveCensus is the per-type census.
     Runtime,
+    LoadCounts,
+    SaveCollected,
 }

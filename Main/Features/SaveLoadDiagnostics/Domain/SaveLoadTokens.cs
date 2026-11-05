@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime;
 using System.Runtime.InteropServices;
@@ -49,6 +50,28 @@ internal static class SaveLoadTokens
         try { latency = GCSettings.LatencyMode.ToString(); } catch { /* unknown stays ? */ }
         try { is64Bit = Environment.Is64BitProcess; } catch { /* unknown stays ? */ }
         return RuntimeHost(framework, clr, serverGc, latency, is64Bit);
+    }
+
+    public static string SaveCollected(int? objects, int? containers, int? strings, long collectMs)
+    {
+        var tokens = Counts(objects, containers, strings);
+        tokens.Add("collectMs=" + collectMs.ToString(CultureInfo.InvariantCulture));
+        return string.Join(" ", tokens);
+    }
+
+    public static string LoadCounts(int? objects, int? containers, int? strings)
+    {
+        var tokens = Counts(objects, containers, strings);
+        return tokens.Count == 0 ? "counts=<unavailable>" : string.Join(" ", tokens);
+    }
+
+    private static List<string> Counts(int? objects, int? containers, int? strings)
+    {
+        var tokens = new List<string>(4);
+        if (objects != null) tokens.Add("objects=" + Int(objects.Value));
+        if (containers != null) tokens.Add("containers=" + Int(containers.Value));
+        if (strings != null) tokens.Add("strings=" + Int(strings.Value));
+        return tokens;
     }
 
     private static string Bool(bool? value) => value == null ? "?" : value.Value ? "true" : "false";

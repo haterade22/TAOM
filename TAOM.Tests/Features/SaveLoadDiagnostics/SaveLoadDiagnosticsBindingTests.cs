@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.SaveLoadDiagnostics.Hooks;
@@ -79,5 +81,42 @@ public class SaveLoadDiagnosticsBindingTests
         Assert.IsNotNull(type, "SaveId did not resolve.");
         Assert.IsNotNull(AccessTools.Method(type, "GetStringId"),
             "SaveId.GetStringId() did not resolve — every saveId= log field and the UnknownSaveId dedup key would regress to type names.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void SaveContext_CollectObjectsAndCountFields_ResolveAgainstInstalledEngine()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var type = AccessTools.TypeByName("TaleWorlds.SaveSystem.Save.SaveContext");
+        Assert.IsNotNull(type, "SaveContext did not resolve.");
+        Assert.IsNotNull(AccessTools.Method(type, "CollectObjects", Type.EmptyTypes),
+            "SaveContext.CollectObjects() did not resolve: the SaveCollected probe would not apply.");
+        Assert.AreEqual(typeof(List<object>), AccessTools.Field(type, "_childObjects")?.FieldType,
+            "SaveContext._childObjects changed: objects= would disappear from SaveCollected.");
+        Assert.AreEqual(typeof(List<object>), AccessTools.Field(type, "_childContainers")?.FieldType,
+            "SaveContext._childContainers changed: containers= would disappear from SaveCollected.");
+        Assert.AreEqual(typeof(List<string>), AccessTools.Field(type, "_strings")?.FieldType,
+            "SaveContext._strings changed: strings= would disappear from SaveCollected.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void LoadContext_LoadAndCountFields_ResolveAgainstInstalledEngine()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var type = AccessTools.TypeByName("TaleWorlds.SaveSystem.Load.LoadContext");
+        Assert.IsNotNull(type, "LoadContext did not resolve.");
+        var loadData = AccessTools.TypeByName("TaleWorlds.SaveSystem.LoadData");
+        Assert.IsNotNull(loadData, "LoadData did not resolve.");
+        Assert.IsNotNull(AccessTools.Method(type, "Load", new[] { loadData, typeof(bool) }),
+            "LoadContext.Load(LoadData, bool) did not resolve: the LoadCounts probe would not apply.");
+        foreach (var name in new[] { "_objectCount", "_stringCount", "_containerCount" })
+            Assert.AreEqual(typeof(int), AccessTools.Field(type, name)?.FieldType,
+                $"LoadContext.{name} changed: its count would disappear from LoadCounts.");
     }
 }

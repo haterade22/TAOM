@@ -47,4 +47,23 @@ public class SaveLoadTokensTests
             "framework='Mono 6.12' clr=? serverGC=? latency=Interactive is64Bit=?",
             SaveLoadTokens.RuntimeHost("Mono 6.12", "?", null, "Interactive", null));
     }
+
+    [TestMethod]
+    public void SaveCollected_FormatsCountsAndCollectMs()
+    {
+        Assert.AreEqual("objects=10 containers=20 strings=30 collectMs=4601", SaveLoadTokens.SaveCollected(10, 20, 30, 4601));
+    }
+
+    [TestMethod]
+    public void SaveCollected_UnreadCount_IsOmittedNotZero()
+    {
+        Assert.AreEqual("containers=20 collectMs=5", SaveLoadTokens.SaveCollected(null, 20, null, 5));
+    }
+
+    [TestMethod]
+    public void LoadCounts_FormatsCounts()
+    {
+        Assert.AreEqual("objects=1 containers=2 strings=3", SaveLoadTokens.LoadCounts(1, 2, 3));
+        Assert.AreEqual("counts=<unavailable>", SaveLoadTokens.LoadCounts(null, null, null));
+    }
 }
