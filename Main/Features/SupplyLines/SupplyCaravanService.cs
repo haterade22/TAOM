@@ -8,6 +8,7 @@ using TAOM.Features.SupplyLines.Components;
 using TAOM.Features.SupplyLines.Domain;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Map;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -846,26 +847,19 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         var points = new List<Vec2>();
         try
         {
-            var mapScene = Campaign.Current?.MapSceneWrapper;
+            var campaign = Campaign.Current;
+            var mapScene = campaign?.MapSceneWrapper;
             if (mapScene != null)
             {
-                var fromVec = new CampaignVec2(from, isOnLand: true);
-                var toVec = new CampaignVec2(to, isOnLand: true);
-                var path = new NavigationPath();
-                // Match the active campaign's land-navigation rules. A native path query cannot
-                // safely infer exclusions or naval region costs from null / hard-coded defaults.
-                var models = Campaign.Current.Models;
-                var excludedTerrain = models.PartyNavigationModel
-                    .GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType.Default);
-                if (mapScene.GetPathBetweenAIFaces(
-                        fromVec.Face, toVec.Face, from, to, 0.1f, path, excludedTerrain, 1f,
-                        models.MapDistanceModel.RegionSwitchCostFromLandToSea,
-                        models.MapDistanceModel.RegionSwitchCostFromSeaToLand)
-                    && path.Size >= 2)
-                {
-                    for (int i = 0; i < path.Size; i++)
-                        points.Add(path[i]);
-                }
+                // Match the active campaign's land-navigation rules (the exclusions and region costs
+                // MobileParty.ComputePath passes), and never hand native an endpoint off the land navmesh.
+                var models = campaign.Models;
+                AddLandPath(mapScene,
+                    new CampaignVec2(from, isOnLand: true).Face, new CampaignVec2(to, isOnLand: true).Face, from, to,
+                    models.PartyNavigationModel.GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType.Default),
+                    models.MapDistanceModel.RegionSwitchCostFromLandToSea,
+                    models.MapDistanceModel.RegionSwitchCostFromSeaToLand,
+                    points);
             }
         }
         catch (Exception)
@@ -879,6 +873,26 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             points.Add(to);
         }
         return points;
+    }
+
+    /// <summary>
+    /// Appends the native land path between two faces, or nothing when there is none. Native indexes the
+    /// face table unchecked, so a point off the land navmesh (face -1) would read before it; vanilla
+    /// <c>MobileParty.ComputePath</c> checks both positions too (v1.4.8 <c>MobileParty.cs:3693-3698</c>), and the
+    /// caller then takes its straight-line fallback.
+    /// </summary>
+    internal static void AddLandPath(IMapScene mapScene, PathFaceRecord fromFace, PathFaceRecord toFace,
+        Vec2 from, Vec2 to, int[] excludedTerrain, int landToSea, int seaToLand, List<Vec2> points)
+    {
+        if (!fromFace.IsValid() || !toFace.IsValid())
+            return;
+        var path = new NavigationPath();
+        if (mapScene.GetPathBetweenAIFaces(fromFace, toFace, from, to, 0.1f, path, excludedTerrain, 1f, landToSea, seaToLand)
+            && path.Size >= 2)
+        {
+            for (int i = 0; i < path.Size; i++)
+                points.Add(path[i]);
+        }
     }
 
     /// <summary>
