@@ -1,0 +1,28 @@
+"""The TAOM module's English localization sources, in one ordered table.
+
+Each row is (English source under Main/_Module/ModuleData, per-language file name template). The
+translator, the template generator and the name generator all read this table; add a strings file
+here once instead of in each tool (2026-10-02 deep review: four hand-kept copies had drifted to 22,
+15, 13 and 10 rows).
+
+ORDER IS A CONTRACT: translate_with_claude.key_owners gives a key two sources declare to the FIRST
+one; taom_module_strings.xml and taom_xslt_strings.xml share 42 keys.
+
+No side effects on import, so any tool or test may import it.
+"""
+
+TAOM_SOURCES = [
+    ("taom_module_strings.xml",                      "std_taom_module_strings_{locale}.xml"),
+    ("global_strings.xml",                           "std_taom_keybind_strings_{locale}.xml"),
+    ("taom_wanderer_strings.xml",                    "std_taom_wanderer_strings_{locale}.xml"),
+    ("named_companions/named_companion_strings.xml", "std_taom_named_companion_strings_{locale}.xml"),
+    ("taom_cc_strings.xml",                          "std_taom_cc_strings_{locale}.xml"),
+    ("taom_career_strings.xml",                      "std_taom_career_strings_{locale}.xml"),
+    ("taom_messenger_strings.xml",                   "std_taom_messenger_strings_{locale}.xml"),
+    ("taom_xslt_strings.xml",                        "std_taom_xslt_strings_{locale}.xml"),
+    ("taom_wotr_strings.xml",                        "std_taom_wotr_strings_{locale}.xml"),
+    ("taom_lotr_issue_strings.xml",                  "std_taom_lotr_issue_strings_{locale}.xml"),
+    ("taom_emissary_strings.xml",                    "std_taom_emissary_strings_{locale}.xml"),
+    ("taom_enlistment_strings.xml",                  "std_taom_enlistment_strings_{locale}.xml"),
+    ("taom_player_switcher_strings.xml",             "std_taom_player_switcher_strings_{locale}.xml"),
+]

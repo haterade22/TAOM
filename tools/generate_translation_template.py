@@ -14,8 +14,23 @@ Usage:
 
 import argparse
 import re
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+from _loc_sources import TAOM_SOURCES
+
+# Force UTF-8 stdout so printing a non-Latin language tag (简体中文, 한국어, Русский, ...) doesn't
+# crash on Windows' default cp1252 console encoding. Mirrors translate_with_claude.py's header
+# fix for the same failure; reconfigure() in place rather than rebinding sys.stdout, for the same
+# pytest-capture reason documented there.
+for _stream_name in ("stdout", "stderr"):
+    _stream = getattr(sys, _stream_name, None)
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    except (AttributeError, ValueError):
+        pass
+del _stream_name, _stream
 
 TAOM_BASE = Path("Main/_Module/ModuleData")
 LANG_DIR = TAOM_BASE / "Languages"
@@ -33,27 +48,14 @@ LANG_DIR = TAOM_BASE / "Languages"
 # Hit on 2026-08-08: templates were generated, 12 languages translated, and then 84
 # runtime-built duty keys were registered — regenerating to pick them up blanked all 12.
 
-# (source file, target filename template, description)
-SOURCES = [
-    (TAOM_BASE / "taom_module_strings.xml",
-     "std_taom_module_strings_{locale}.xml",
-     "module strings"),
-    (TAOM_BASE / "taom_wanderer_strings.xml",
-     "std_taom_wanderer_strings_{locale}.xml",
-     "wanderer strings"),
-    (TAOM_BASE / "named_companions" / "named_companion_strings.xml",
-     "std_taom_named_companion_strings_{locale}.xml",
-     "named companion strings"),
-    (TAOM_BASE / "taom_cc_strings.xml",
-     "std_taom_cc_strings_{locale}.xml",
-     "character creation strings"),
-    (TAOM_BASE / "taom_career_strings.xml",
-     "std_taom_career_strings_{locale}.xml",
-     "career system strings"),
-    (TAOM_BASE / "taom_enlistment_strings.xml",
-     "std_taom_enlistment_strings_{locale}.xml",
-     "enlistment + field-commission strings"),
-]
+# (source file, target filename template, description). The rows come from tools/_loc_sources.py, the one
+# ordered table of English sources, minus the sources whose language files are seeded another way
+# (translate_with_claude.py --sync-ids): they were never templated.
+NOT_TEMPLATED = {
+    "global_strings.xml", "taom_messenger_strings.xml", "taom_xslt_strings.xml", "taom_wotr_strings.xml",
+    "taom_lotr_issue_strings.xml", "taom_emissary_strings.xml", "taom_player_switcher_strings.xml",
+}
+SOURCES = [(TAOM_BASE / src, tpl, Path(src).stem) for src, tpl in TAOM_SOURCES if src not in NOT_TEMPLATED]
 
 # lang_dir -> (locale_suffix, language_tag)
 LANGUAGES = {

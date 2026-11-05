@@ -53,6 +53,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from _gamedir import ensure_exists, game_modules
+from _loc_sources import TAOM_SOURCES
 
 
 # ── Configuration ──────────────────────────────────────────────────────────────
@@ -239,22 +240,8 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
     """
     pairs = []
     if module in ("TAOM", "all"):
-        # TAOM source XMLs at ModuleData root
-        for src_name, tgt_template in [
-            ("taom_module_strings.xml",                       "std_taom_module_strings_{locale}.xml"),
-            ("global_strings.xml",                            "std_taom_keybind_strings_{locale}.xml"),
-            ("taom_wanderer_strings.xml",                     "std_taom_wanderer_strings_{locale}.xml"),
-            ("named_companions/named_companion_strings.xml",  "std_taom_named_companion_strings_{locale}.xml"),
-            ("taom_cc_strings.xml",                           "std_taom_cc_strings_{locale}.xml"),
-            ("taom_career_strings.xml",                       "std_taom_career_strings_{locale}.xml"),
-            ("taom_messenger_strings.xml",                    "std_taom_messenger_strings_{locale}.xml"),
-            ("taom_xslt_strings.xml",                         "std_taom_xslt_strings_{locale}.xml"),
-            ("taom_wotr_strings.xml",                         "std_taom_wotr_strings_{locale}.xml"),
-            ("taom_lotr_issue_strings.xml",                   "std_taom_lotr_issue_strings_{locale}.xml"),
-            ("taom_emissary_strings.xml",                     "std_taom_emissary_strings_{locale}.xml"),
-            ("taom_enlistment_strings.xml",                   "std_taom_enlistment_strings_{locale}.xml"),
-            ("taom_player_switcher_strings.xml",              "std_taom_player_switcher_strings_{locale}.xml"),
-        ]:
+        # The ordered table lives in tools/_loc_sources.py (order decides key_owners).
+        for src_name, tgt_template in TAOM_SOURCES:
             src = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_name
             if src.exists():
                 pairs.append(("TAOM", src, tgt_template))
