@@ -15,5 +15,6 @@ internal static class FeatureModules
 {
     internal static readonly TaomFeatureModule[] All =
     {
+        new Features.WandererAllegiance.WandererAllegianceModule(),
     };
 }

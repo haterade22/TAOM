@@ -176,8 +176,8 @@ wanderer templates and all 7 on the 17 named companions are classified in `align
 | `Main/Features/WandererAllegiance/Hooks/WandererAllegianceDialogBehavior.cs` | The two dialogue lines and the boundary conversion |
 | `Main/Features/WandererAllegiance/WandererAllegianceConfig.cs`, `WandererAllegianceConfigProvider.cs` | JSON DTO and validating loader |
 | `Main/Features/WandererAllegiance/WandererAllegianceSettingsProvider.cs` | MCM over JSON |
-| `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` | DryIoc registration (called from `Main/IoC.cs` after MarriageAlignment) |
-| `Main/SubModule.cs` (`OnGameStart`) | `campaignStarter.AddBehavior(IoC.Resolve<WandererAllegianceDialogBehavior>())` beside AlignmentDesertion |
+| `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` | DryIoc registration, called by `WandererAllegianceModule.RegisterServices` |
+| `Main/Features/WandererAllegiance/WandererAllegianceModule.cs` | The feature module, listed in `Main/Composition/FeatureModules.cs`: registers the services and declares the dialog behavior, which the module runner adds at campaign start after every hand-wired behavior |
 | `Main/Features/TaomSettings.cs` | The `World/Wanderer Allegiance` group (GroupOrder 51) |
 | `Main/_Module/ModuleData/wanderer_allegiance/wanderer_allegiance_config.json` | Shipped config |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_wa_refuse_free`, `taom_wa_refuse_evil` |
@@ -196,7 +196,7 @@ wanderer templates and all 7 on the 17 named companions are classified in `align
 - `WandererAllegianceConfigProviderTests`: missing file, malformed JSON, empty object, JSON `null`, unknown and empty and null `scope`, case normalisation, caching, the shipped file.
 - `WandererAllegianceSettingsProviderTests`: MCM absent falls back to JSON for both fields, dropdown index mapping, the compiled dropdown default matches the shipped JSON.
 - `WandererCultureAlignmentCoverageTests`: every wanderer and named-companion culture is classified; gondor, mirkwood, erebor stay Free and isengard stays Evil.
-- `WandererAllegianceWiringTests`: `IoC.cs` registers the feature, `SubModule.cs` adds the behavior, both lines sit on `companion_hire`, return to `lord_pretalk`, and pass a priority above 100, and both string ids are registered for translation.
+- `WandererAllegianceWiringTests`: the module is listed once in `FeatureModules.All`, `IoC.cs` no longer registers the feature by hand, the module's service graph resolves its behavior (still a container singleton), both lines sit on `companion_hire`, return to `lord_pretalk`, and pass a priority above 100, and both string ids are registered for translation. `FeatureModulesTests` checks that no module-declared type is also wired by hand in `SubModule.cs`.
 - `WandererAllegianceBindingTests` (`BindingVerification`): `AddHeroGeneralConversations` still emits `companion_hire` three times plus `lord_pretalk` and `main_option_faction_hire`; the three vanilla hire conditions still resolve as parameterless bool methods; `CampaignGameStarter.AddDialogLine` still takes an int `priority` defaulting to 100.
 
 The behavior itself needs a live `CampaignGameStarter` and a conversation, so it is verified in game
