@@ -32,6 +32,7 @@ public class BundledDependencyManifestTests
     private static string MainSubModule => Path.Combine(RepoRoot, @"Main\_Module\SubModule.xml");
     private static string VendoredBin => Path.Combine(RepoRoot, @"Dependencies\_Module\bin\Win64_Shipping_Client");
     private static string LicensesFile => Path.Combine(RepoRoot, @"Dependencies\_Module\THIRD-PARTY-LICENSES.txt");
+    private static string MainLicensesFile => Path.Combine(RepoRoot, @"Main\_Module\THIRD-PARTY-LICENSES.txt");
     private static string PinnedGameVersionFile => Path.Combine(RepoRoot, @".claude\pinned-game-version.txt");
 
     private static string StubSubModule(string moduleId) =>
@@ -224,6 +225,19 @@ public class BundledDependencyManifestTests
     }
 
     // ── Redistribution attribution ────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void MainThirdPartyLicenses_NameTheShippedRuntimeLibraries()
+    {
+        // The build writes these three NuGet DLLs into every TAOM bin folder, so a release
+        // redistributes them, and the MIT notice obligation comes with that.
+        Assert.IsTrue(File.Exists(MainLicensesFile), $"Licenses file not found: {MainLicensesFile}");
+        var text = File.ReadAllText(MainLicensesFile);
+
+        StringAssert.Contains(text, $"DryIoc {GetPackageVersion(MainCsproj, "DryIoc.dll")}");
+        StringAssert.Contains(text, $"Json.NET {GetPackageVersion(MainCsproj, "Newtonsoft.Json")}");
+        StringAssert.Contains(text, "System.Runtime.CompilerServices.Unsafe.dll");
+    }
 
     [TestMethod]
     public void ThirdPartyLicenses_NameTheActuallyShippedVersions()

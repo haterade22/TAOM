@@ -9,6 +9,7 @@ Three independently-toggleable battle-tactics features bundled in one TAOM modul
 3. **BattleActionBar**: context-sensitive on-screen action bar that appears in field battles. It is parked: click-only (no hotkeys), **off by default** (`ShowBattleActionBar`), and clickable only while a menu shows the cursor (see the #970 section); the buttons are Hold Fire, Brace, Shield Wall, etc. **Stances are display-only: they record state but do NOT change formation behavior** (the original developer's mod was UI-only here; the engine doesn't expose the firing-order / tighten-spacing APIs the original referenced).
 
 Ported from `Downloads/Features_fixed/CompanionTactics/` (Bannerlord 1.3 mod template) for TAOM v1.3.15. Patch35 reserves the Harmony category. SaveableTypeDefiner BaseId 726900601 (matches the original mod for save-import compat).
+The drop is yotthani's Heir of Numenor (HoN) code, MIT by the maintainer's statement of 2026-10-09; its notice is the HoN section of `Main/_Module/THIRD-PARTY-LICENSES.txt` ([provenance-register.md](../reference/provenance-register.md)).
 
 ## Why This Exists
 
