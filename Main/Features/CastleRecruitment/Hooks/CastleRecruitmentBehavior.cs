@@ -2,6 +2,7 @@ using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 using TAOM.Core.Logging;
@@ -10,9 +11,9 @@ using TAOM.Features.CoopInterop;
 namespace TAOM.Features.CastleRecruitment.Hooks;
 
 /// <summary>
-/// Player-facing + maintenance half of Castle Recruitment (the AI half lives in the Patch42 Harmony
-/// patches). Thin event router (ADR-002): the notable spawn + volunteer-fill engine glue is in
-/// <see cref="CastleNotableMaintainer"/>; all decisions come from <see cref="ICastleRecruitmentService"/>.
+/// Player-facing + maintenance half of Castle Recruitment (the AI scoring gate is the Patch42 transpiler).
+/// Thin event router (ADR-002): engine glue is in <see cref="CastleNotableMaintainer"/> and
+/// <see cref="CastleAiRecruitDispatcher"/>; all decisions come from <see cref="ICastleRecruitmentService"/>.
 ///
 /// Responsibilities:
 /// 1. Register a "Recruit troops" option on the vanilla "castle" game menu (opens the vanilla
@@ -20,6 +21,7 @@ namespace TAOM.Features.CastleRecruitment.Hooks;
 /// 2. Drive castle notable population + daily volunteer generation via the maintainer (new games AND
 ///    existing saves).
 /// 3. Suppress campaign issues/quests for castle notables (relations untouched).
+/// 4. Hourly, let an AI lord party inside a castle recruit through the dispatcher.
 /// </summary>
 public class CastleRecruitmentBehavior : CampaignBehaviorBase
 {
@@ -27,6 +29,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
 
     private readonly ICastleRecruitmentService _service;
     private readonly CastleNotableMaintainer _maintainer;
+    private readonly CastleAiRecruitDispatcher _dispatcher;
     private readonly IModLogger _logger;
     private readonly ICoopSessionProvider _coopSession;
 
@@ -37,6 +40,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
         _logger = logger;
         _coopSession = coopSession;
         _maintainer = new CastleNotableMaintainer(service, logger);
+        _dispatcher = new CastleAiRecruitDispatcher(logger);
     }
 
     public override void RegisterEvents()
@@ -46,6 +50,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
         CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         CampaignEvents.DailyTickSettlementEvent.AddNonSerializedListener(this, OnDailyTickSettlement);
         CampaignEvents.CanHaveCampaignIssuesEvent.AddNonSerializedListener(this, OnCanHaveCampaignIssues);
+        CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, OnHourlyTickParty);
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -58,6 +63,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        _dispatcher.Bind();
         // Registered unconditionally so the MCM master toggle takes effect at runtime (the condition
         // re-checks IsEnabled each open). Vanilla creates the "castle" menu in its own
         // OnSessionLaunched (registered before TAOM behaviors), so the menu exists by now.
@@ -101,10 +107,10 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
             _maintainer.EnsureAllCastles();
     }
 
-    // CO-OP: host-only. This is the one castle-recruitment path a client actually reaches — the
-    // daily work is on DailyTickSettlementEvent, which BannerlordCoop's PartyTickPatch blocks on a
-    // client, but OnGameLoadedEvent fires on every peer because a joining client loads the HOST'S
-    // save through the normal SaveManager pipeline.
+    // CO-OP: this is the one castle-recruitment path a client actually reaches. The daily work
+    // (DailyTickSettlementEvent) and the hourly recruit (HourlyTickPartyEvent) are per-entity ticks
+    // that BannerlordCoop's PartyTickPatch blocks on a client, but OnGameLoadedEvent fires on every
+    // peer because a joining client loads the HOST'S save through the normal SaveManager pipeline.
     //
     // EnsureAllCastles is deficit-based (it spawns only target-minus-existing), so with matching MCM
     // settings it is a no-op. But MCM settings are per-user and BannerlordCoop syncs none of them, so
@@ -124,6 +130,12 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
     {
         if (_service.IsEnabled && settlement != null && settlement.IsCastle)
             _maintainer.TickCastle(settlement);
+    }
+
+    private void OnHourlyTickParty(MobileParty mobileParty)
+    {
+        if (_service.IsAiEnabled)
+            _dispatcher.TryRecruit(mobileParty);
     }
 
     // --- Issue / quest suppression (relations untouched) ---

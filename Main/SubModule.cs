@@ -585,15 +585,13 @@ public class SubModule : MBSubModuleBase
 
         Mission_Initialize_Patch.Initialize(logger);
 
-        // Patch42_CastleRecruitment — castle notable recruitment. Targets RecruitmentCampaignBehavior
-        // + AiVisitSettlementBehavior (both in TaleWorlds.CampaignSystem, no View/Mission.cctor
-        // dependency, safe in OnSubModuleLoad). The transpilers swap the AI IsCastle gate to a runtime
-        // toggle; the postfix invokes the private CheckRecruiting for castles. All fail-safe.
+        // Patch42_CastleRecruitment — castle notable recruitment. Targets AiVisitSettlementBehavior
+        // (TaleWorlds.CampaignSystem, no View/Mission.cctor dependency, safe in OnSubModuleLoad). The
+        // transpiler swaps the AI IsCastle gate to a runtime toggle; fail-safe. The in-castle recruit
+        // is an event listener in CastleRecruitmentBehavior, not a patch.
         var castleRecruitmentSettings = IoC.Resolve<ICastleRecruitmentSettingsProvider>();
         CastleAiToggle.Initialize(castleRecruitmentSettings);
         Patch42_AiHourlyTick_Transpiler.Initialize(logger);
-        Patch42_FillSettlements_Transpiler.Initialize(logger);
-        Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
         TryPatchCategory("Patch42_CastleRecruitment");
         FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);
         // Load-time stamps (docs/features/load-time-stamps.md): phase total now, per-category lines at game init.

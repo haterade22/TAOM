@@ -250,7 +250,7 @@ clamp" taken to zero.
 |---|---|
 | Caravan wages | **Notable-owned caravans pay nothing.** `DefaultClanFinanceModel.AddExpensesFromPartiesAndGarrisons` iterates only `clan.AliveLords` and `clan.Companions`, and a notable has no clan, so the overwhelming majority of AI caravans have no wage bill at all. Clan-owned and player caravans pay from `PartyTradeGold`; a player elite caravan rises roughly 50%. `initialTradeGold` was deliberately left alone rather than raised speculatively. |
 | Caravan speed | `CalculateBaseSpeedForParty(n) = BaseSpeed * (200/(200+n))^0.4`, so 36 to 60 men costs about 5%. Negligible **provided the cap moves**; without it the over-size term is -0.5. |
-| Caravan growth | Vanilla `RecruitmentCampaignBehavior.HourlyTickParty` already accepts AI caravan parties, and TAOM's `Patch42` extends that to castles, so caravans climb toward the raised cap over time rather than only at spawn. |
+| Caravan growth | Vanilla `RecruitmentCampaignBehavior.HourlyTickParty` already accepts AI caravan parties in towns (caravans never recruit in a castle: `CheckRecruiting`'s caravan branch is town-only), so caravans climb toward the raised cap over time rather than only at spawn. |
 | Battle load | An 80-man warband against an 80-man caravan is ~160 agents, well inside what TAOM already fields for lord battles. |
 
 ## Key Files

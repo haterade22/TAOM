@@ -11,7 +11,7 @@ public class CastleRecruitmentConfig
     public bool Enabled { get; set; } = true;
 
     /// <summary>When true, AI lord parties also score, travel to, and recruit from castles
-    /// (the two AI-scoring transpilers + the in-settlement recruit postfix). Independent of the
+    /// (the AiHourlyTick scoring transpiler, gated on castles that hold volunteers, and the hourly in-castle recruit listener). Independent of the
     /// player-facing path, but gated under <see cref="Enabled"/>.</summary>
     public bool AiEnabled { get; set; } = true;
 
