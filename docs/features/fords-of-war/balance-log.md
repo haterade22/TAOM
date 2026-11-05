@@ -73,6 +73,10 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 | 20261104-175254 | `dec65baec` | Dale v Gondor | 2,764 / 2,742 | 3 / 0 | 20,752 / 27,365 | Dale 0.95, Gondor 0.97 | 4x, 45 minutes, no winner. No keep touched. |
 | 20261104-180503 | `dec65baec` | Erebor v Gundabad | 1,490 / 3,942 | 3 / 7 | 56,724 / 27,813 | Erebor 1.14, Gundabad 0.83 | 4x. Erebor won at 2,350 s, 39.2 minutes. 425 blows did 12,631 to the keep. |
 | 20261104-181557 | `dec65baec` | Rivendell v Mordor | 456 / 4,622 | 4 / 7 | 77,614 / 45,525 | Rivendell 2.45, Mordor 0.29 | 4x. Rivendell won at 2,396 s, 39.9 minutes. |
+| 20261104-191631 | wear 0.25 | Dale v Gondor | 2,774 / 2,845 | 1 / 3 | 35,855 / 16,773 | Dale 0.97, Gondor 1.01 | 4x, 45 minutes, no winner. No lane cleared, no keep touched. |
+| 20261104-192838 | wear 0.25 | Erebor v Gundabad | 1,389 / 3,535 | 2 / 7 | 53,238 / 29,212 | Erebor 1.17, Gundabad 0.75 | 4x. Erebor won at 2,026 s, 33.8 minutes. |
+| 20261104-194822 | wear 0.25 | Rivendell v Mordor | 325 / 3,086 | 0 / 7 | 75,454 / 18,801 | Rivendell 2.30, Mordor 0.33 | 4x. Rivendell won at 1,655 s, 27.6 minutes, and lost no tower. |
+| 20261104-195609 | wear 0.25 | Harad v Rohan | 2,443 / 2,783 | 2 / 3 | 25,851 / 20,739 | Harad 1.00, Rohan 0.94 | 4x, 45 minutes, no winner. No lane cleared, no keep touched. |
 
 ## Findings and changes
 
@@ -222,13 +226,13 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, three matches of 45 minutes at 4x:** the rule does what it was for. Erebor v Gundabad stalled before, with all six towers down and 80 damage to the keep in 18 minutes. Now the last lane cleared at 2,030 s and the keep fell at 2,350 s, 320 s later, to 425 blows with 2,641 unit-seconds of contact, so attackers do reach it. Rivendell v Mordor cleared its last lane at 2,216 s and the keep fell at 2,396 s. Dale v Gondor still has no winner at 45 minutes: East kept all its towers and West lost 3. Harad v Rohan did not run. Both wins came at about 40 minutes, so the target of 30 is not met.
 
-### Faster wall wear (this change)
+### Faster wall wear
 
 **Why:** with the lost lane rule, wins came at about 40 minutes, and the first towers fell at about 25. Mike's target is 30.
 
 **Changed:** `towers.wearPerMinute` from 0.15 to 0.25. The walls are as weak at minute 24 as they were at minute 30. This is a test value.
 
-**Result: not measured.** Read Dale v Gondor, Erebor v Gundabad, Rivendell v Mordor and Harad v Rohan at 4x against 30 minutes.
+**Result, four matches at 4x, one per pair:** lopsided matches now end near the target. Erebor beat Gundabad at 33.8 minutes, where it took 39.2 at 0.15, and Rivendell beat Mordor at 27.6, where it took 39.9. Even matches still do not end: Dale v Gondor and Harad v Rohan have gold trades of about 1.0, lost 1 to 3 outer towers a side, took no inner tower, and cleared no lane in 45 minutes. No owner took a hit, and there was no crash and no FAIL row. **What limits match length now:** an even match loses towers in different lanes, and a keep unlocks only after a whole lane falls. More wear will not settle this, because the walls are already weak by then, so an even match needs its own rule. That is a design question for Mike.
 
 ## Open questions
 
