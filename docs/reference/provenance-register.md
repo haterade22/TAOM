@@ -89,6 +89,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
 
 | Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117) | cleared |
+| Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
+| Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -479,6 +481,24 @@ hold (the module ends every stuck battle with no winner); an hourly in-game swee
 timer and on-screen warnings; the co-op stand-down, the quest-party exception and the enlisted-commander
 skip; and the service, adapters and tests. Nothing of the module ships. Clearing the row needs the
 author's terms.
+
+### Ghidra
+
+Upstream: https://github.com/NationalSecurityAgency/ghidra · Apache-2.0. Installed 2026-09-26 as
+12.1.4 at `E:\Tools\ghidra_12.1.4_PUBLIC`, with the PyGhidra 3.1.0 it bundles in a venv at
+`E:\Tools\ghidra-venv` (#688). `tools/native_decompile.py` drives the installed tool through
+PyGhidra's public API and copies no Ghidra code; PyGhidra's `api.py` and `core.py` were read only to
+choose the calls. Nothing from Ghidra ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry
+is owed. Remove with the two `E:\Tools` folders; the tool then exits 2 naming the setup doc. Adoption
+record: [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Hindsight
+
+Upstream: https://github.com/vectorize-io/hindsight · MIT. Evaluated on 2026-09-26 and rejected: it
+conflicts with ADR-011's rule that durable knowledge lives in the repository, and its Claude Code
+plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
+were read for the security pass; nothing was installed or ported. Record:
+[`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
 
 ## Adding a row
 
