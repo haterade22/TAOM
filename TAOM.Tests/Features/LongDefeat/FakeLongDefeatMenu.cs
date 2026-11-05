@@ -25,6 +25,9 @@ internal sealed class FakeLongDefeatMenu : ILongDefeatMenuAdapter
     public bool NotifyThrows { get; set; }
     public bool ChooseThrows { get; set; }
 
+    /// <summary>When above 0, a prompt shown after this many earlier ones throws (the second question of a start flow).</summary>
+    public int ChooseThrowsAfter { get; set; }
+
     public bool HasOption(string id) => Options.ContainsKey(id);
 
     public void AddOption(string id, string label, string hint, int orderIndex, Func<bool> isHidden, Action onChosen)
@@ -35,7 +38,7 @@ internal sealed class FakeLongDefeatMenu : ILongDefeatMenuAdapter
 
     public void Choose(string title, string description, IReadOnlyList<LongDefeatChoice> choices, Action<string> onPicked)
     {
-        if (ChooseThrows)
+        if (ChooseThrows || (ChooseThrowsAfter > 0 && Prompts.Count >= ChooseThrowsAfter))
             throw new InvalidOperationException("the menu could not show the prompt");
 
         Prompts.Add(new Prompt(title, description, choices));

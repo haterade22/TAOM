@@ -211,6 +211,16 @@ fail = ['\[Check\] id=taom\.long-defeat\.reroll result=fail']
 # The unattended bot spends the first reroll it ever holds on the first offer; a session that banked none reads NOT REACHED.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.class"
+needs = "a run with a class (every run has one: --class archer --waves 2, or --class all --runs 3 for the three foot classes)"
+reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass', 'LongDefeatConfigCatalog: classes\.json: ']
+pass = ['\[Check\] id=taom\.long-defeat\.class result=pass class=\S+ mounted=(true|false) ']
+fail = ['\[Check\] id=taom\.long-defeat\.class result=fail']
+# Written by LongDefeatDirector.Player.cs after each spawn of the lord, key <mission> at the start and <mission>-d<N> at a respawn: the kit's slots read back from his spawn equipment (an empty slot reads back empty), the horse
+# slots cleared and no mount for a foot class, no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
+absence = "fail"
+
 [[human]]
 claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"
 
@@ -246,3 +256,9 @@ claim = "a boon card reads clearly: its name, its category, what it gives, and a
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"
+
+[[human]]
+claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears"
+
+[[human]]
+claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"

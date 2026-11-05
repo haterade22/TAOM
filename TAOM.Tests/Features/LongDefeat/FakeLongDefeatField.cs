@@ -115,10 +115,24 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public void EndBatch(FormationSlot slot, bool attackers) => Calls.Add($"End:{Side(attackers)}:{slot}");
 
-    public bool SpawnPlayer(bool respawn)
+    /// <summary>The loadout each lord spawn was given, in order (null for a run with no class).</summary>
+    public List<LdLoadout?> Loadouts { get; } = new();
+
+    /// <summary>What <see cref="ReadKit"/> answers. Null reads back exactly the last loadout, with no mount for a foot class.</summary>
+    public LdKitFacts? Kit { get; set; }
+
+    public bool SpawnPlayer(bool respawn, LdLoadout? loadout)
     {
-        Calls.Add($"SpawnPlayer:{respawn}");
+        Calls.Add(loadout == null ? $"SpawnPlayer:{respawn}" : $"SpawnPlayer:{respawn}:{loadout.ClassId}");
+        Loadouts.Add(loadout);
         return SpawnPlayerOk;
+    }
+
+    public LdKitFacts ReadKit()
+    {
+        Calls.Add("ReadKit");
+        var last = Loadouts.LastOrDefault();
+        return Kit ?? new LdKitFacts(last != null, last?.Slots ?? Array.Empty<LdKitSlot>(), Array.Empty<string>(), last?.Mounted ?? false);
     }
 
     public void FinishInitialSpawn() => Calls.Add("Finish");

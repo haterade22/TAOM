@@ -135,6 +135,89 @@ public class LongDefeatCommandsTests
         Assert.AreEqual(0, _factory.ReceivedCalls().Count());
     }
 
+    private const string TwoClasses = "{'classes':[" +
+        "{'id':'sword','name':'{=N_sword}Sword','text':'{=T_sword}A sword.','mounted':false,'kits':{'vlandia':{'Item0':'s'}}}," +
+        "{'id':'bow','name':'{=N_bow}Bow','text':'{=T_bow}A bow.','mounted':false,'kits':{'vlandia':{'Item0':'b'}}}]}";
+
+    private string StartWithClasses(params string[] args)
+    {
+        _catalog = LongDefeatConfigCatalog.FromTexts(Shipped("fortresses.json"), Shipped("waves.json"), Shipped("shop.json"), Substitute.For<IModLogger>(), classes: TwoClasses);
+        return Start(args);
+    }
+
+    [TestMethod]
+    public void Start_AThirdWord_IsTheClass_AfterTheWaveCount()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        var reply = StartWithClasses("helms", "3", "bow");
+
+        StringAssert.StartsWith(reply, "Starting");
+        Assert.AreEqual("bow", Started().Options.ClassId);
+        Assert.AreEqual(3, Started().Options.StopAfterWaves);
+    }
+
+    [TestMethod]
+    public void Start_ASecondWordThatIsAClassIdAndNotANumber_IsTheClass_WithNoWaveTarget()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        StartWithClasses("helms", "SWORD");
+
+        Assert.AreEqual("sword", Started().Options.ClassId, "matched without case, handed on as the config spells it");
+        Assert.IsNull(Started().Options.StopAfterWaves);
+    }
+
+    [TestMethod]
+    public void Start_NoClassWord_LeavesTheClassForTheCatalogToChoose()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        StartWithClasses("helms", "3");
+
+        Assert.IsNull(Started().Options.ClassId);
+    }
+
+    [TestMethod]
+    public void Start_AnUnknownClass_NamesTheClassesOnOfferAndStartsNothing()
+    {
+        var reply = StartWithClasses("helms", "3", "cavalry");
+
+        StringAssert.Contains(reply, "cavalry");
+        StringAssert.Contains(reply, "sword, bow");
+        Assert.AreEqual(0, _factory.ReceivedCalls().Count());
+    }
+
+    [TestMethod]
+    public void Start_ASecondWordThatIsNotANumberAndNotAClass_IsAnUnknownClass_NotABadWaveCount()
+    {
+        var reply = StartWithClasses("helms", "cavalry");
+
+        StringAssert.Contains(reply, "No class \"cavalry\"");
+        StringAssert.Contains(reply, "sword, bow");
+        Assert.AreEqual(0, _factory.ReceivedCalls().Count());
+    }
+
+    [TestMethod]
+    public void Start_ASecondWordThatIsANumberOutOfRange_StillSaysTheWaveCountIsRefused()
+    {
+        var reply = StartWithClasses("helms", "0");
+
+        Assert.IsFalse(reply.Contains("No class"), reply);
+        Assert.AreEqual(0, _factory.ReceivedCalls().Count());
+    }
+
+    [TestMethod]
+    public void Usage_NamesTheClassWordAndTheClassesOnOffer()
+    {
+        _catalog = LongDefeatConfigCatalog.FromTexts(Shipped("fortresses.json"), Shipped("waves.json"), Shipped("shop.json"), Substitute.For<IModLogger>(), classes: TwoClasses);
+
+        var usage = LongDefeatCommands.Usage(_catalog);
+
+        StringAssert.Contains(usage, "[waves] [class]");
+        StringAssert.Contains(usage, "Classes: sword, bow.");
+    }
+
     [TestMethod]
     public void Start_WhenTheStartPathRefuses_SaysItDidNotStart()
     {

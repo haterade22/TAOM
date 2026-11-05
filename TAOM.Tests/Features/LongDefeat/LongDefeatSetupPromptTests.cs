@@ -150,6 +150,67 @@ public class LongDefeatSetupPromptTests
         _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default));
     }
 
+    private const string TwoClasses = "{'classes':[" +
+        "{'id':'sword','name':'{=N_sword}Sword','text':'{=T_sword}A sword.','mounted':false,'kits':{'vlandia':{'Item0':'s'}}}," +
+        "{'id':'bow','name':'{=N_bow}Bow','text':'{=T_bow}A bow.','mounted':false,'kits':{'vlandia':{'Item0':'b'}}}]}";
+
+    private LongDefeatSetupPrompt PromptWithClasses() =>
+        new(_menu, _factory, _logger,
+            LongDefeatConfigCatalog.FromTexts(Shipped("fortresses.json"), Shipped("waves.json"), Shipped("shop.json"), _logger, classes: TwoClasses),
+            new LongDefeatRunRecords(Store(), null));
+
+    [TestMethod]
+    public void Begin_WithClassesOnOffer_AsksTheClassSecond_OneRowPerClassWithItsKitText()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        PromptWithClasses().Begin();
+
+        Assert.AreEqual(2, _menu.Prompts.Count);
+        var second = _menu.Prompts[1];
+        Assert.AreEqual("{=TAOM_LD_Prompt_ClassTitle}Choose your class", second.Title);
+        CollectionAssert.AreEqual(new[] { "sword", "bow" }, second.Choices.Select(c => c.Id).ToArray());
+        StringAssert.StartsWith(second.Choices[0].Label, "{=TAOM_LD_Prompt_ChoiceClass}");
+        Assert.AreEqual("{=N_sword}Sword", second.Choices[0].Variables!["NAME"]);
+        Assert.AreEqual("{=T_sword}A sword.", second.Choices[0].Variables["TEXT"]);
+        _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
+    }
+
+    [TestMethod]
+    public void Begin_PickingTheClass_StartsAMenuRunWithThatClassInTheOptions()
+    {
+        _menu = new FakeLongDefeatMenu("helms", "bow");
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        PromptWithClasses().Begin();
+
+        _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "bow" }));
+    }
+
+    [TestMethod]
+    public void Begin_CancellingTheClassQuestion_StartsNothing()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        PromptWithClasses().Begin();
+
+        _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
+        Assert.AreEqual(0, _menu.Messages.Count);
+    }
+
+    [TestMethod]
+    public void Begin_WhenTheClassPromptCannotShow_TellsThePlayerAndDoesNotThrow()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+        var prompt = PromptWithClasses();
+        _menu.ChooseThrowsAfter = 1;
+
+        prompt.Begin();
+
+        Assert.AreEqual(LongDefeatSetupPrompt.StartFailedMessage, _menu.Messages.Single());
+        _logger.Received().LogError(Arg.Is<string>(s => s.Contains("the start flow failed")));
+    }
+
     [TestMethod]
     public void Begin_Cancelling_StartsNothing()
     {

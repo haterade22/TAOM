@@ -291,11 +291,16 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         agent.Health = agent.HealthLimit;
     }
 
+    // A kit goes on the build data, and the engine reads it before anything else (Mission.cs:4108). The engine still edits the copy it takes (a hero's banner, NoHorses, NoArmor and
+    // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. NoHorses(true) repeats spawnWithHorse: false above (Mission.cs:4468), so a mounted
+    // class (Slice 11) must drive both from the loadout.
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
-        bool intoOwnFormation = false)
+        bool intoOwnFormation = false, Equipment? kit = null)
     {
         var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, null, null, formationIndex: cls)
             .Banner(team.Banner);
+        if (kit != null)
+            data.Equipment(kit).NoHorses(true);
 
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
@@ -314,27 +319,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _open.Remove((attackers, slot));
         if (!attackers)
             _muster.Remove(slot);
-    }
-
-    public bool SpawnPlayer(bool respawn)
-    {
-        var player = Game.Current?.PlayerTroop;
-        var team = _mission.DefenderTeam;
-        if (player == null || team == null)
-            return false;
-
-        if (respawn)
-        {
-            var formation = team.GetFormation(FormationClass.Infantry);
-            formation.BeginSpawn(1, false);
-            Spawn(player, team, true, FormationClass.Infantry, true, 1, 0, true);
-            formation.EndSpawn();
-            return true;
-        }
-
-        var count = _open.TryGetValue((false, FormationSlot.Infantry), out var started) ? started : 1;
-        Spawn(player, team, true, FormationClass.Infantry, false, count, count - 1, false);
-        return true;
     }
 
     public void FinishInitialSpawn() => _mission.OnInitialSpawnCompleted();
@@ -448,5 +432,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _muster.Clear();
         _lastMain = null;
         _knownMain = null;
+        _kitFacts = NoLord;
+        _kitSkipped = new List<string>();
     }
 }

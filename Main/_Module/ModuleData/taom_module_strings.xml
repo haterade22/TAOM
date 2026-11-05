@@ -4651,6 +4651,12 @@
 	<string id="TAOM_LD_Boon_WeregildOfTheMark" text="{=TAOM_LD_Boon_WeregildOfTheMark}Weregild of the Mark" />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="{=TAOM_LD_Boon_WeregildOfTheMark_Drawback}Wave bonuses are 15 percent smaller." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="{=TAOM_LD_Boon_WeregildOfTheMark_Text}Every foe you cut down pays 30 percent more gold." />
+	<string id="TAOM_LD_Class_Archer" text="{=TAOM_LD_Class_Archer}Archer" />
+	<string id="TAOM_LD_Class_Archer_Text" text="{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in." />
+	<string id="TAOM_LD_Class_SwordBoard" text="{=TAOM_LD_Class_SwordBoard}Sword and Board" />
+	<string id="TAOM_LD_Class_SwordBoard_Text" text="{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows." />
+	<string id="TAOM_LD_Class_TwoHanded" text="{=TAOM_LD_Class_TwoHanded}Two Handed Infantry" />
+	<string id="TAOM_LD_Class_TwoHanded_Text" text="{=TAOM_LD_Class_TwoHanded_Text}A two-handed axe. No shield, and a heavy blow." />
 	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
 	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_End_Boons" text="{=TAOM_LD_End_Boons}Boons: {NAMES}" />
@@ -4718,7 +4724,10 @@
 	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
 	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
+	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
 	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
+	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
+	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
 	<string id="TAOM_LD_StartFailed" text="{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->

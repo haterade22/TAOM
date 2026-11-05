@@ -27,7 +27,7 @@ internal static class LongDefeatRunReport
             ["garrisonScale"] = options.GarrisonScale,
             ["maxSpeed"] = maxSpeed,
             ["seed"] = options.Seed is ulong seed ? new JValue(seed) : JValue.CreateNull(),
-            ["class"] = "",
+            ["class"] = options.ClassId ?? "",
             ["startWave"] = options.StartWave,
             ["startRerolls"] = options.StartRerolls,
             ["boons"] = new JArray((boons?.Picks ?? Array.Empty<BoonPickRecord>()).Select(Pick)),

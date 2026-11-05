@@ -325,6 +325,13 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void ToSetup_CarriesTheClassId_OrNoneWhenTheArmFileNamesNone()
+    {
+        Assert.AreEqual("archer", Resolve(Out + "class=archer\n").ToSetup("helms").Options.ClassId);
+        Assert.IsNull(Resolve(Out).ToSetup("helms").Options.ClassId, "the game's bot then draws one from the seed");
+    }
+
+    [TestMethod]
     public void ToSetup_WithNoSeed_LeavesItForTheLauncherToTakeFromTheClock()
     {
         Assert.IsNull(Resolve(Out).ToSetup("helms").Options.Seed);

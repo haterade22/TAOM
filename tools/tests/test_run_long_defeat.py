@@ -37,6 +37,9 @@ HEAD = "0123456789abcdef0123456789abcdef01234567"
 FIXTURE_HEAD = "985b0d54e1672ede8d9dc08ed986d0f3870aa5d3"
 FIXTURE = REPO / "tools" / "tests" / "fixtures" / "long_defeat_checks.txt"
 LOST_FIXTURE = REPO / "tools" / "tests" / "fixtures" / "long_defeat_lost_checks.txt"
+# The two real-run fixtures predate the class check, so a test adds the line the game writes now (LongDefeatChecks.Class) to what it reads.
+CLASS_LINE = ("[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.class result=pass class=archer mounted=false "
+              "kit=Item0=ladder_rohan_bow_t3,Horse=,HorseHarness= has_mount=false wrong=none skipped=none")
 READ_BACK_LINES = ["[2026-11-04 10:00:00] [INFO] [LongDefeat] spawn level ok: defenders Infantry 20 of 20, far 0, off the navmesh 0, on the frame point 2",
                    "[2026-11-04 10:00:00] [INFO] [LongDefeat] spawn level ok: attackers Infantry 83 of 83, far 0, off the navmesh 0, on the frame point 2"]
 
@@ -67,7 +70,8 @@ def wave_row(wave, seed=7, **more):
     return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)), **more}
 
 
-REPORT = {"schema": 2, "seed": 7, "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1}
+# The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
+REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1}
 BLOCK = "[2026-11-04 09:59:59] [ERROR] [CrashReport] swallowed during the mission load"
 
 
@@ -75,7 +79,7 @@ class JudgeTests(unittest.TestCase):
 
     def test_the_required_list_is_the_plans(self):
         # Update this tuple as each later slice grows the list: FULL_LOG and the loop below are built from REQUIRED_CHECKS itself.
-        self.assertEqual(ld.REQUIRED_CHECKS, ("menu", "boot", "general", "muster", "keep", "orders", "hud", "wave", "no-rout", "gold", "shop", "early-start", "end", "best-run"))
+        self.assertEqual(ld.REQUIRED_CHECKS, ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "wave", "no-rout", "gold", "shop", "early-start", "end", "best-run"))
 
     def setUp(self):
         ld.target_waves = 5
@@ -279,7 +283,7 @@ class LoseJudgeTests(unittest.TestCase):
             self.assertNotIn(name, ld.LOSE_CHECKS)
 
     def test_the_shorter_list_is_the_plans(self):
-        self.assertEqual(ld.LOSE_CHECKS, ("menu", "boot", "general", "muster", "keep", "orders", "hud", "end", "best-run"))
+        self.assertEqual(ld.LOSE_CHECKS, ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "end", "best-run"))
 
     def test_each_check_of_the_shorter_list_missing_fails(self):
         for name in ld.LOSE_CHECKS:
@@ -489,14 +493,14 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(iv.judge_segment(rows["taom.long-defeat.general"], [], []).verdict, iv.NOT_REACHED)
 
     def fixture_lines(self, extra=()):
-        rows = FIXTURE.read_text(encoding="utf-8").splitlines() + list(extra)
+        rows = FIXTURE.read_text(encoding="utf-8").splitlines() + [CLASS_LINE] + list(extra)
         return [(None, number, row) for number, row in enumerate(rows, 1)]
 
     def test_the_real_run_passes_the_judge(self):
         ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
-        text = FIXTURE.read_text(encoding="utf-8")
+        text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         code, why = ld.judge({"reason": "final"}, {**REPORT, "wavesCleared": 2, "wavesFelled": 0}, text)
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
@@ -526,7 +530,7 @@ class ManifestTests(unittest.TestCase):
         ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
-        text = FIXTURE.read_text(encoding="utf-8")
+        text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         report = {**REPORT, "wavesCleared": 2}
         for row in manifest.checks:
             bad = f"[2026-11-04 04:00:00] [INFO] [Check] id={row.id} result=fail"
@@ -537,7 +541,7 @@ class ManifestTests(unittest.TestCase):
         # Run 20261104-035343: three waves cleared, then the defenders died. The done file of a --lose run carries expect=lost.
         ld.tree_head = FIXTURE_HEAD
         self.addCleanup(setattr, ld, "tree_head", None)
-        text = LOST_FIXTURE.read_text(encoding="utf-8")
+        text = LOST_FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         done = {"reason": "lost_defenders", "expect": "lost"}
         code, why = ld.judge(done, {**REPORT, "final": False, "wavesCleared": 3}, text)
         self.assertEqual(code, 0, why)
@@ -886,7 +890,8 @@ class AffixJudgeTests(unittest.TestCase):
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, cleared=5, rows=None, **more):
-        return {**REPORT, "wavesCleared": cleared, "waves": [wave_row(w) for w in range(1, cleared + 1)] if rows is None else rows, **more}
+        seed = more.get("seed", REPORT["seed"])
+        return {**REPORT, "class": ld.bot_class(seed), "wavesCleared": cleared, "waves": [wave_row(w) for w in range(1, cleared + 1)] if rows is None else rows, **more}
 
     def test_a_run_that_cleared_five_waves_owes_the_affix_check(self):
         report = self.report(cleared=5)
@@ -1031,7 +1036,7 @@ class PhaseTwoJudgeTests(unittest.TestCase):
     def test_a_seed_of_zero_is_still_checked(self):
         ld.expected_report = {"seed": 0}
         self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 5}, FULL_LOG)[0], 1)
-        self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 0}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": 0, "class": ld.bot_class(0)}, FULL_LOG)[0], 0)
 
     def test_an_owner_missing_above_zero_fails_and_zero_passes(self):
         zero = FULL_LOG + "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result=pass power=hide owner_missing=0 withheld=2"
@@ -1046,6 +1051,11 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertIn("owner_missing=4", ld.judge(FINAL, REPORT, log)[1])
 
     def test_the_cavalry_class_also_requires_sally_and_sally_return(self):
+        # Cavalry is not in classes.json until Slices 10 and 11, so this plays the day it is: the class is on offer and armed.
+        offer = mock.patch.object(ld, "class_offer", return_value=ld.CLASSES + ("cavalry",))
+        offer.start()
+        self.addCleanup(offer.stop)
+        ld.expected_report = {"class": "cavalry"}
         report = {**REPORT, "class": "cavalry"}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
@@ -1056,7 +1066,8 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("sally",), 5))[0], 1)
 
     def test_another_class_asks_nothing_extra(self):
-        for name in ("", "archer", "sword_and_board", None):
+        for name in ld.CLASSES:
+            ld.expected_report = {"class": name}
             self.assertEqual(ld.judge(FINAL, {**REPORT, "class": name}, FULL_LOG)[0], 0, repr(name))
 
     def test_a_run_that_played_past_the_authored_list_owes_the_scale_check(self):
@@ -1098,7 +1109,7 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_the_seed_must_be_a_whole_number_within_the_cap(self):
         for good in (0, 7, 2 ** 53 - 1):
-            self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": good}, FULL_LOG)[0], 0, good)
+            self.assertEqual(ld.judge(FINAL, {**REPORT, "seed": good, "class": ld.bot_class(good)}, FULL_LOG)[0], 0, good)
         for bad in (None, True, False, "7", 7.0, -1, 2 ** 53, 2 ** 63 - 1):
             code, why = ld.judge(FINAL, {**REPORT, "seed": bad}, FULL_LOG)
             self.assertEqual(code, 1, repr(bad))
@@ -1178,8 +1189,8 @@ class DeepJudgeTests(unittest.TestCase):
         self.assertIn("final", why)
 
     def test_the_deep_ids_are_owned_by_a_checks_class_or_named_as_not_built_yet(self):
-        # Slices 5 and 7 add these ids to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2, affix in Slice 3).
-        not_built_yet = {"class", "commander"}
+        # Slice 7 adds this id to LongDefeatChecks. Remove each name here the day its slice lands: the second assert fails then (scale landed in Slice 2, affix in Slice 3, class in Slice 5).
+        not_built_yet = {"commander"}
         checks = source("Diagnostics", "LongDefeatChecks.cs") + (REPO / "Client" / "Features" / "LongDefeat" / "LongDefeatClientChecks.cs").read_text(encoding="utf-8")
         for name in ld.DEEP_CHECKS:
             owned = f'"taom.long-defeat.{name}"' in checks
@@ -1214,11 +1225,23 @@ class PhaseTwoArgumentTests(unittest.TestCase):
             with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=flag + bad):
                 self.parse(flag, bad)
 
-    def test_the_class_is_one_of_the_four_or_all(self):
+    def test_the_class_is_one_the_game_can_play_or_all(self):
         for name in ld.CLASSES + ("all",):
             self.assertEqual(self.parse("--class", name).klass, name)
         with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit):
             self.parse("--class", "wizard")
+
+    def test_cavalry_is_refused_by_name_until_the_game_can_play_it(self):
+        # Slices 10 and 11 add the class to classes.json; until then neither --class cavalry nor --class all may arm a class the game would silently replace.
+        self.assertNotIn("cavalry", ld.CLASSES)
+        stderr = io.StringIO()
+        with mock.patch("sys.stderr", stderr), self.assertRaises(SystemExit):
+            self.parse("--class", "cavalry")
+        self.assertIn("cavalry", stderr.getvalue())
+        self.assertIn("not playable yet", stderr.getvalue())
+
+    def test_all_never_arms_cavalry(self):
+        self.assertNotIn("cavalry", [ld.class_for_run("all", n) for n in range(12)])
 
     def test_deep_is_start_wave_twelve_and_four_waves_whatever_those_flags_said(self):
         known = ld.apply_deep(self.parse("--deep", "--waves", "9", "--start-wave", "3"))
@@ -1230,12 +1253,44 @@ class PhaseTwoArgumentTests(unittest.TestCase):
         with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit):
             self.parse("--deep", "--lose")
 
-    def test_the_classes_are_the_plans_four(self):
-        self.assertEqual(ld.CLASSES, ("sword_and_board", "two_handed", "archer", "cavalry"))
+    def test_the_classes_are_read_from_the_shipped_classes_json(self):
+        # Pinned to the file itself, read here without the wrapper's own reader: the foot classes of Slice 5, in the file's order.
+        shipped = json.loads((REPO / "Main" / "_Module" / "ModuleData" / "long_defeat" / "classes.json").read_text(encoding="utf-8-sig"))
+        self.assertEqual(ld.CLASSES, tuple(row["id"] for row in shipped["classes"]))
+        self.assertEqual(ld.CLASSES, ("sword_and_board", "two_handed", "archer"))
+
+    def test_every_shipped_class_has_a_kit_for_the_helms_defender_culture(self):
+        shipped = json.loads((REPO / "Main" / "_Module" / "ModuleData" / "long_defeat" / "classes.json").read_text(encoding="utf-8-sig"))
+        fortress = json.loads((REPO / "Main" / "_Module" / "ModuleData" / "long_defeat" / "fortresses.json").read_text(encoding="utf-8-sig"))
+        culture = next(f["defenderCulture"] for f in fortress["fortresses"] if f["id"] == "helms")
+        self.assertEqual(ld.class_offer("helms"), tuple(row["id"] for row in shipped["classes"] if culture in row["kits"]))
+        self.assertEqual(ld.class_offer("helms"), ld.CLASSES)
+
+    def test_the_offer_keeps_only_the_classes_with_a_kit_for_the_fortresses_defender_culture(self):
+        with tempfile.TemporaryDirectory() as folder:
+            classes, fortresses = Path(folder) / "classes.json", Path(folder) / "fortresses.json"
+            classes.write_text(json.dumps({"classes": [{"id": "a", "kits": {"Vlandia": {}}}, {"id": "b", "kits": {"rohan": {}}}]}), encoding="utf-8")
+            fortresses.write_text(json.dumps({"fortresses": [{"id": "helms", "defenderCulture": "vlandia"}, {"id": "elsewhere", "defenderCulture": "gondor"}]}), encoding="utf-8")
+            with mock.patch.object(ld, "CLASS_FILE", classes), mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+                self.assertEqual(ld.class_offer("helms"), ("a",), "the culture matches without case, on both sides")
+                self.assertEqual(ld.class_offer("elsewhere"), ())
+                self.assertEqual(ld.class_offer("not_a_fortress"), ())
+            fortresses.write_text(json.dumps({"fortresses": []}), encoding="utf-8")
+            with mock.patch.object(ld, "CLASS_FILE", classes), mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+                self.assertEqual(ld.class_offer("helms"), ())
+
+    def test_a_class_file_that_is_missing_or_unreadable_offers_nothing(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "classes.json"
+            self.assertEqual(ld.shipped_classes(path), [])
+            path.write_text("not json", encoding="utf-8")
+            self.assertEqual(ld.shipped_classes(path), [])
+            path.write_text('{"classes": [{"id": "a", "kits": {"vlandia": {}}}, {"id": 5, "kits": {}}, {"kits": {}}, "x", {"id": "b", "kits": []}]}', encoding="utf-8")
+            self.assertEqual(ld.shipped_classes(path), [("a", {"vlandia"})])
 
     def test_all_rotates_through_the_classes_one_per_run(self):
         self.assertEqual([ld.class_for_run("all", n) for n in range(6)],
-                         ["sword_and_board", "two_handed", "archer", "cavalry", "sword_and_board", "two_handed"])
+                         ["sword_and_board", "two_handed", "archer", "sword_and_board", "two_handed", "archer"])
         self.assertEqual(ld.class_for_run("archer", 3), "archer")
         self.assertIsNone(ld.class_for_run(None, 0))
 
@@ -1275,7 +1330,25 @@ class PhaseTwoArmTests(unittest.TestCase):
     def test_class_all_gives_each_run_the_next_class(self):
         arm = self.captured_arm("--class", "all", "--runs", "4")
         classes = [re.search(r"^class=(\S+)$", arm("E:/out", SimpleNamespace(wall_limit=None))[0], re.M).group(1) for _ in range(5)]
-        self.assertEqual(classes, ["sword_and_board", "two_handed", "archer", "cavalry", "sword_and_board"])
+        self.assertEqual(classes, ["sword_and_board", "two_handed", "archer", "sword_and_board", "two_handed"])
+
+    def test_the_judge_expects_the_class_each_run_armed_run_by_run(self):
+        arm = self.captured_arm("--class", "all", "--runs", "4")
+        for expected in ("sword_and_board", "two_handed", "archer", "sword_and_board"):
+            arm("E:/out", SimpleNamespace(wall_limit=None))
+            self.assertEqual(ld.expected_report.get("class"), expected)
+            self.assertEqual(ld.expected_report.get("startRerolls"), 1, "the other armed fields stay")
+
+    def test_a_fixed_class_is_expected_back_and_none_leaves_the_bot_to_the_seed(self):
+        self.captured_arm("--class", "archer")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertEqual(ld.expected_report["class"], "archer")
+        self.captured_arm()("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertNotIn("class", ld.expected_report)
+
+    def test_a_second_main_call_does_not_carry_the_last_runs_class(self):
+        self.captured_arm("--class", "archer")("E:/out", SimpleNamespace(wall_limit=None))
+        self.captured_arm("--seed", "3")
+        self.assertNotIn("class", ld.expected_report)
 
     def test_a_second_main_call_starts_the_rotation_again(self):
         first = self.captured_arm("--class", "all")("E:/out", SimpleNamespace(wall_limit=None))[0]
@@ -1307,8 +1380,154 @@ class PhaseTwoArmTests(unittest.TestCase):
         self.assertIn("MaxStartRerolls = 3;", plan)
 
 
-if __name__ == "__main__":
-    unittest.main()
+class ClassJudgeTests(unittest.TestCase):
+    """The class of a run (phase2-plan.md Slice 5): the report names the class the arm file asked for, or the one the bot draws from the seed, and the class check passes."""
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def test_the_bots_class_is_pinned_to_the_games_vectors(self):
+        # The same seeds and answers as ClassPlanTests.Choose_TheBotsPick_IsPinned: stream 3 at (0, 0), Below(3) over the classes in classes.json order.
+        got = [ld.bot_class(seed) for seed in range(8)]
+        self.assertEqual(got, ["two_handed", "sword_and_board", "archer", "archer", "archer", "sword_and_board", "two_handed", "two_handed"])
+        self.assertEqual([ld.SplitMix64(seed, 3, 0, 0).below(3) for seed in range(8)], [1, 0, 2, 2, 2, 0, 1, 1])
+
+    def test_the_bots_class_reads_the_offer_of_the_reports_fortress(self):
+        with mock.patch.object(ld, "class_offer", return_value=("a", "b")) as offer:
+            self.assertEqual(ld.bot_class(0, "elsewhere"), "a")
+        offer.assert_called_once_with("elsewhere")
+
+    def test_no_class_on_offer_gives_no_class(self):
+        with mock.patch.object(ld, "class_offer", return_value=()):
+            self.assertIsNone(ld.bot_class(7))
+            self.assertIsNone(ld.class_problem({"seed": 7, "class": ""}))
+            self.assertIn("offers none", ld.class_problem({"seed": 7, "class": "archer"}))
+
+    def test_an_unarmed_run_must_report_the_class_the_seed_draws(self):
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
+        wrong = next(c for c in ld.CLASSES if c != REPORT["class"])
+        code, why = ld.judge(FINAL, {**REPORT, "class": wrong}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn(REPORT["class"], why)
+        self.assertIn("seed 7", why)
+
+    def test_an_armed_class_replaces_the_seeds_draw(self):
+        other = next(c for c in ld.CLASSES if c != REPORT["class"])
+        ld.expected_report = {"class": other}
+        self.assertEqual(ld.judge(FINAL, {**REPORT, "class": other}, FULL_LOG)[0], 0)
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("class", why)
+        self.assertIn("never took effect", why)
+
+    def test_a_class_the_game_does_not_offer_fails_even_when_it_was_armed(self):
+        # --class cavalry before it ships: the game falls back, so the report names a shipped class and the armed one is not back.
+        ld.expected_report = {"class": "cavalry"}
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 1)
+        ld.expected_report = {"class": "cavalry"}
+        code, why = ld.judge(FINAL, {**REPORT, "class": "cavalry"}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("not one of the classes", why)
+
+    def test_a_report_with_no_class_fails_when_classes_are_on_offer(self):
+        for bad in (None, "", 5, True):
+            code, why = ld.judge(FINAL, {**REPORT, "class": bad}, FULL_LOG)
+            self.assertEqual(code, 1, repr(bad))
+            self.assertIn("class", why)
+        self.assertEqual(ld.judge(FINAL, {k: v for k, v in REPORT.items() if k != "class"}, FULL_LOG)[0], 1)
+
+    def test_the_class_check_is_required_of_a_standard_a_lose_and_a_deep_run(self):
+        self.assertIn("class", ld.REQUIRED_CHECKS)
+        self.assertIn("class", ld.LOSE_CHECKS)
+        self.assertIn("class", ld.DEEP_CHECKS)
+        without = "\n".join(row for row in FULL_LOG.splitlines() if "long-defeat.class " not in row)
+        code, why = ld.judge(FINAL, REPORT, without)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.class", why)
+
+    def test_a_lose_run_also_owes_the_class_line_and_the_class_match(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**REPORT, "final": False, "wavesCleared": 0}
+        self.assertEqual(ld.judge(lost, report, LOSE_LOG)[0], 0)
+        without = "\n".join(row for row in LOSE_LOG.splitlines() if "long-defeat.class " not in row)
+        self.assertEqual(ld.judge(lost, report, without)[0], 1)
+        wrong = next(c for c in ld.CLASSES if c != REPORT["class"])
+        self.assertEqual(ld.judge(lost, {**report, "class": wrong}, LOSE_LOG)[0], 1)
+
+    def test_a_failed_class_line_fails_the_run(self):
+        bad = FULL_LOG + "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.class result=fail class=archer wrong=Item0:bow>sword"
+        self.assertEqual(ld.judge(FINAL, REPORT, bad)[0], 1)
+
+    def test_every_class_check_text_the_judge_reads_is_text_the_game_writes(self):
+        checks = source("Diagnostics", "LongDefeatChecks.cs")
+        self.assertIn('"taom.long-defeat.class"', checks)
+        self.assertIn("class=", checks)
+        self.assertIn("wrong=", checks)
+
+    def test_the_class_line_is_the_one_the_csharp_check_formats(self):
+        checks = source("Diagnostics", "LongDefeatChecks.cs")
+        start = checks.index("internal static CheckVerdict Class(")
+        formatted = checks[start:checks.index("private static bool NearFactor", start)]
+        # The manifest's pass pattern needs the class, then the mount flag, then a space; the game's head writes them in that order.
+        self.assertIn('class={wanted.ClassId} mounted={Flag(wanted.Mounted)} kit=', formatted)
+        for key in ("has_mount=", "wrong=", "skipped="):
+            self.assertIn(key, formatted, key)
+
+
+class ClassManifestTests(unittest.TestCase):
+
+    def manifest(self):
+        return tomllib.loads((REPO / "tools" / "ingame_checks" / "1079.toml").read_text(encoding="utf-8"))
+
+    def test_the_class_row_is_here_with_its_pass_pattern_and_fails_when_absent_after_boot(self):
+        row = next(r for r in self.manifest()["check"] if r["id"] == "taom.long-defeat.class")
+        self.assertEqual(row["absence"], "fail")
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        check = next(c for c in manifest.checks if c.id == "taom.long-defeat.class")
+        lines = [(None, 1, CLASS_LINE)]
+        self.assertEqual(iv.judge_segment(check, lines, []).verdict, iv.PASS)
+        failed = [(None, 1, CLASS_LINE.replace("result=pass", "result=fail"))]
+        self.assertEqual(iv.judge_segment(check, failed, []).verdict, iv.FAIL)
+
+    def test_a_booted_run_that_read_classes_json_but_has_no_class_line_reads_fail(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        check = next(c for c in manifest.checks if c.id == "taom.long-defeat.class")
+        boot = "[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false"
+        read = "[2026-11-04 09:59:00] [INFO] LongDefeatConfigCatalog: classes.json: loaded, 3 class(es)"
+        self.assertEqual(iv.judge_segment(check, [(None, 1, read), (None, 2, boot)], []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(check, [], []).verdict, iv.NOT_REACHED)
+
+    def test_a_booted_run_from_a_build_that_never_read_classes_json_reads_not_reached(self):
+        # Every build from before Slice 5 binds to this row through fixed_in and writes no class line; that is not a failure of the class check.
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        check = next(c for c in manifest.checks if c.id == "taom.long-defeat.class")
+        boot = "[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false"
+        self.assertEqual(iv.judge_segment(check, [(None, 1, boot)], []).verdict, iv.NOT_REACHED)
+
+    def test_the_catalog_line_the_row_waits_for_is_a_line_every_read_of_classes_json_writes(self):
+        scope = source("Config", "LongDefeatConfigScope.cs")
+        catalog = source("Config", "LongDefeatConfigCatalog.cs")
+        self.assertIn('Tag = "LongDefeatConfigCatalog"', scope)
+        self.assertIn('ClassesFile = "classes.json"', catalog)
+        self.assertIn("$\"{Tag}: {FileName}: ", scope)
+        row = next(r for r in self.manifest()["check"] if r["id"] == "taom.long-defeat.class")
+        self.assertIn(r"LongDefeatConfigCatalog: classes\.json: ", row["reached"])
+
+    def test_the_manifests_class_pattern_takes_any_class_id_the_file_may_hold(self):
+        row = next(r for r in self.manifest()["check"] if r["id"] == "taom.long-defeat.class")
+        pattern = re.compile(row["pass"][0])
+        for cid in list(ld.CLASSES) + ["two-handed", "archer2", "Cavalry_1"]:
+            self.assertTrue(pattern.search(CLASS_LINE.replace("class=archer", "class=" + cid)), cid)
+
+    def test_the_human_rows_for_the_kit_and_the_second_question_are_here(self):
+        claims = [h["claim"] for h in self.manifest()["human"]]
+        self.assertTrue(any("class kit" in c for c in claims), claims)
+        self.assertTrue(any("second question" in c for c in claims), claims)
 
 
 # The pinned boon draws over the shipped boons.json (twelve rows at Slice 4): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
@@ -1520,7 +1739,7 @@ class BoonJudgeTests(unittest.TestCase):
     def report(self, picks=None, cleared=5, **more):
         picks = boon_picks(1, rerolls=1) if picks is None else picks
         used = sum(max(0, len(p["offered"]) - 1) for p in picks)
-        return {**REPORT, "seed": 1, "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
+        return {**REPORT, "seed": 1, "class": ld.bot_class(1), "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
                 "waves": [wave_row(w, 1) for w in range(1, cleared + 1)], **more}
 
     def test_a_run_that_cleared_four_waves_owes_the_boon_check(self):
@@ -1628,3 +1847,7 @@ class BoonAffixCutTests(unittest.TestCase):
         picks = [{"pick": 1, "taken": "light_of_the_phial", "takenBeforeWave": 11}, {"pick": 2, "taken": "riders_at_dawn", "takenBeforeWave": 14}]
         report = {"seed": self.SEED, "boons": picks}
         self.assertEqual((ld.affix_cut(report, 13), ld.affix_cut(report, 14)), (-1, -3))
+
+
+if __name__ == "__main__":
+    unittest.main()

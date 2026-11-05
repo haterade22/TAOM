@@ -7619,6 +7619,15 @@
     <string id="TAOM_LD_Notice_BoonOffered" text="A boon is on offer: press B." />
     <string id="TAOM_LD_Notice_NoBoon" text="No boon awaits." />
     <string id="TAOM_LD_Notice_NoReroll" text="No reroll is banked." />
+    <string id="TAOM_LD_Class_Archer" text="Archer" />
+    <string id="TAOM_LD_Class_Archer_Text" text="A bow, two kinds of arrow and a sword for when they close in." />
+    <string id="TAOM_LD_Class_SwordBoard" text="Sword and Board" />
+    <string id="TAOM_LD_Class_SwordBoard_Text" text="A sword and a shield. Stand in the line and take the blows." />
+    <string id="TAOM_LD_Class_TwoHanded" text="Two Handed Infantry" />
+    <string id="TAOM_LD_Class_TwoHanded_Text" text="A two-handed axe. No shield, and a heavy blow." />
+    <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
+    <string id="TAOM_LD_Prompt_ClassDesc" text="Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
+    <string id="TAOM_LD_Prompt_ClassTitle" text="Choose your class" />
   </strings>
 
 </base>

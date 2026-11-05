@@ -1,0 +1,25 @@
+{
+  "classes": [
+    {
+      "id": "sword_and_board",
+      "name": "{=TAOM_LD_Class_SwordBoard}Sword and Board",
+      "text": "{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows.",
+      "mounted": false,
+      "kits": { "vlandia": { "Item0": "wm_rohan_ws_sword_a02", "Item1": "wm_rohan_shield_a03_gsg", "Item2": "", "Item3": "" } }
+    },
+    {
+      "id": "two_handed",
+      "name": "{=TAOM_LD_Class_TwoHanded}Two Handed Infantry",
+      "text": "{=TAOM_LD_Class_TwoHanded_Text}A two-handed axe. No shield, and a heavy blow.",
+      "mounted": false,
+      "kits": { "vlandia": { "Item0": "wm_rohan_ws_axe_2h_a01", "Item1": "", "Item2": "", "Item3": "" } }
+    },
+    {
+      "id": "archer",
+      "name": "{=TAOM_LD_Class_Archer}Archer",
+      "text": "{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in.",
+      "mounted": false,
+      "kits": { "vlandia": { "Item0": "ladder_rohan_bow_t3", "Item1": "bodkin_arrows_a", "Item2": "bodkin_arrows_b", "Item3": "sturgia_sword_2_t3" } }
+    }
+  ]
+}

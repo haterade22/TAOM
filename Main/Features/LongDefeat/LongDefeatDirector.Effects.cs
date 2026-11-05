@@ -30,7 +30,7 @@ internal sealed partial class LongDefeatDirector
         foreach (var batch in fx.DefenderBatches)
             SpawnBatch(batch, false, fx.SpawnPlayer, standing, closes);
 
-        if (fx.SpawnPlayer && !_field.SpawnPlayer(false))
+        if (fx.SpawnPlayer && !SpawnLord(false))
             _logger.LogError($"{Tag}[Boot] the player's lord could not be spawned");
         if (closes != null)
         {
@@ -220,7 +220,7 @@ internal sealed partial class LongDefeatDirector
             return;
 
         _respawned = true;
-        if (!_field.SpawnPlayer(true))
+        if (!SpawnLord(true))
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths, LongDefeatChecks.PlayerDeath(false, "respawn-refused"));
     }
 

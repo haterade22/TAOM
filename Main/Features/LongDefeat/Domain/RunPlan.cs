@@ -36,4 +36,7 @@ internal sealed record RunPlan(
 
     /// <summary>The boons a pick can offer. <see cref="BoonPlan.None"/>: every pick lapses.</summary>
     public BoonPlan Boons { get; init; } = BoonPlan.None;
+
+    /// <summary>The kit the lord spawns with (at the start and at every respawn), or null: the lord then plays in his own gear and no class is reported.</summary>
+    public LdLoadout? Loadout { get; init; }
 }

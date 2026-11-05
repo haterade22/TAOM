@@ -130,7 +130,17 @@ public class LongDefeatRunReportTests
         StringAssert.Contains(text, "\"seed\": 9007199254740991", "the seed is written as exact digits");
         Assert.AreEqual(12, (int)report["startWave"]!);
         Assert.AreEqual(1, (int)report["startRerolls"]!);
-        Assert.AreEqual("", (string?)report["class"], "no class exists before the class slice");
+        Assert.AreEqual("", (string?)report["class"], "a run with no class on offer reports an empty one");
+    }
+
+    [TestMethod]
+    public void Build_TheClassIsTheOptionsResolvedClassId()
+    {
+        var options = new RunOptions { Seed = 1UL, ClassId = "archer" };
+
+        var report = JObject.Parse(Text(new RunResult(RunEndReason.TargetReached, 2, 2, 9), new RunStats(), new Purse(600), options));
+
+        Assert.AreEqual("archer", (string?)report["class"]);
     }
 
     [TestMethod]

@@ -215,6 +215,37 @@ public class LongDefeatBindingTests
         Assert.IsNotNull(typeof(Agent).GetField("_cachedRiderAgent", AnyMember), "Agent._cachedRiderAgent: the bare-agent fixture no longer matches the engine");
     }
 
+    // The class kit (Slice 5): the override the engine reads first (Mission.cs:4108), the no-horse flag, the slot names and the fit test the adapter calls,
+    // and the equipment read back from the spawned lord.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheClassKitMembers_StillResolve()
+    {
+        Method(typeof(AgentBuildData), "Equipment", typeof(AgentBuildData), typeof(Equipment));
+        Method(typeof(AgentBuildData), "NoHorses", typeof(AgentBuildData), typeof(bool));
+        Property(typeof(AgentBuildData), "AgentOverridenSpawnEquipment", typeof(Equipment));
+        Property(typeof(BasicCharacterObject), "FirstBattleEquipment", typeof(Equipment));
+        Method(typeof(Equipment), "Clone", typeof(Equipment), typeof(bool));
+        var index = Method(typeof(Equipment), "GetEquipmentIndexFromOldEquipmentIndexName", typeof(EquipmentIndex), typeof(string));
+        Assert.IsTrue(index.IsStatic);
+        Method(typeof(Equipment), "IsItemFitsToSlot", typeof(bool), typeof(EquipmentIndex), typeof(ItemObject));
+        Assert.IsNotNull(typeof(Equipment).GetProperty("Item", new[] { typeof(EquipmentIndex) }), "Equipment[EquipmentIndex] no longer resolves");
+        Property(typeof(EquipmentElement), "Item", typeof(ItemObject));
+        Assert.IsNotNull(typeof(EquipmentElement).GetConstructor(new[] { typeof(ItemObject), typeof(ItemModifier), typeof(ItemObject), typeof(bool) }), "EquipmentElement(ItemObject, ItemModifier, ItemObject, bool) no longer resolves");
+        Property(typeof(ItemObject), "HorseComponent", typeof(HorseComponent));
+        Property(typeof(HorseComponent), "IsRideable", typeof(bool));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Property(typeof(Agent), "SpawnEquipment", typeof(Equipment));
+        Property(typeof(Game), "PlayerTroop", typeof(BasicCharacterObject));
+        foreach (var slot in new[] { "Weapon0", "Weapon1", "Weapon2", "Weapon3", "Head", "Body", "Leg", "Gloves", "Cape", "Horse", "HorseHarness" })
+            Assert.IsTrue(Enum.IsDefined(typeof(EquipmentIndex), slot), "EquipmentIndex." + slot + " no longer resolves");
+        // The name mapping the adapter relies on: Item0 to Item3 become Weapon0 to Weapon3, every other kit slot name parses as it is.
+        Assert.AreEqual(EquipmentIndex.Weapon0, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Item0"));
+        Assert.AreEqual(EquipmentIndex.Weapon3, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Item3"));
+        Assert.AreEqual(EquipmentIndex.HorseHarness, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("HorseHarness"));
+        Assert.AreEqual(EquipmentIndex.Head, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Head"));
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

@@ -12,9 +12,8 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
-/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c>, <c>shop.json</c>, <c>affixes.json</c> and <c>boons.json</c>, read once per process,
-/// and the owner of the <c>balance</c> hash over those five and <c>classes.json</c> (its reader arrives with its slice). The load never throws,
-/// because a faulted <see cref="Lazy{T}"/> rethrows forever.
+/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c>, <c>shop.json</c>, <c>affixes.json</c>, <c>boons.json</c> and <c>classes.json</c>, read once per
+/// process, and the owner of the <c>balance</c> hash over those six. The load never throws, because a faulted <see cref="Lazy{T}"/> rethrows forever.
 /// </summary>
 internal sealed class LongDefeatConfigCatalog
 {
@@ -31,6 +30,7 @@ internal sealed class LongDefeatConfigCatalog
     private readonly Lazy<WavesConfig> _waves;
     private readonly Lazy<AffixesConfig> _affixes;
     private readonly Lazy<BoonPlan> _boons;
+    private readonly Lazy<ClassPlan> _classes;
     private readonly HashSet<string> _unnamedCultures = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lazy<IReadOnlyDictionary<string, ShopPlan>> _shops;
     private readonly Lazy<IReadOnlyList<FortressEntry>> _fortresses;
@@ -52,6 +52,7 @@ internal sealed class LongDefeatConfigCatalog
         _affixes = new Lazy<AffixesConfig>(() => Guard(logger, AffixesFile, AffixesConfig.None,
             s => AffixesReader.Read(read(AffixesFile), s)));
         _boons = new Lazy<BoonPlan>(() => Guard(logger, BoonsFile, BoonPlan.None, s => BoonsReader.Read(read(BoonsFile), s)));
+        _classes = new Lazy<ClassPlan>(() => Guard(logger, ClassesFile, ClassPlan.None, s => ClassesReader.Read(read(ClassesFile), s)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
             new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s)));
         _fortresses = new Lazy<IReadOnlyList<FortressEntry>>(() => Guard<IReadOnlyList<FortressEntry>>(logger, FortressesFile,
@@ -105,9 +106,34 @@ internal sealed class LongDefeatConfigCatalog
         return false;
     }
 
-    /// <summary>The plan for one run. The options leave here with a seed: the one given, else the start time's ticks.</summary>
-    public RunPlan BuildPlan(FortressEntry fortress, RunOptions options) =>
-        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options.Seeded(DateTime.UtcNow.Ticks)) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster, Affixes = AffixesFor(fortress.AttackerCulture), Boons = _boons.Value };
+    /// <summary>Every class of classes.json in file order, whatever fortress offers it.</summary>
+    public ClassPlan Classes => _classes.Value;
+
+    /// <summary>The classes a fortress offers: those with a kit for its defender culture, in file order. The setup prompt lists these.</summary>
+    public IReadOnlyList<RunClass> ClassesFor(FortressEntry fortress) => _classes.Value.OnOffer(fortress.DefenderCulture);
+
+    /// <summary>
+    /// The plan for one run. The options leave here with a seed (the one given, else the start time's ticks) and with the class that was chosen: the one asked for when the
+    /// fortress offers it, else the bot's draw from the seed or a person's first class. A class asked for and not on offer costs one warning.
+    /// </summary>
+    public RunPlan BuildPlan(FortressEntry fortress, RunOptions options)
+    {
+        var seeded = options.Seeded(DateTime.UtcNow.Ticks);
+        var chosen = ClassPlan.Choose(ClassesFor(fortress), seeded.ClassId, seeded.Seed ?? 0UL, seeded.Autoplay);
+        if (seeded.ClassId != null && !string.Equals(seeded.ClassId, chosen?.Id, StringComparison.OrdinalIgnoreCase))
+            _logger.LogWarning($"LongDefeatConfigCatalog: the class '{seeded.ClassId}' is not on offer at '{fortress.Id}' (defenders of {fortress.DefenderCulture}); playing {chosen?.Id ?? "in his own gear"} instead");
+
+        return new RunPlan(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, seeded.ClassId == chosen?.Id ? seeded : seeded with { ClassId = chosen?.Id })
+        {
+            Provenance = RunProvenance.Unknown with { Balance = BalanceHash },
+            Bounties = _waves.Value.Bounties,
+            Keep = fortress.Keep,
+            Muster = fortress.Muster,
+            Affixes = AffixesFor(fortress.AttackerCulture),
+            Boons = _boons.Value,
+            Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),
+        };
+    }
 
     /// <summary>The affixes with the names of one attacker culture. A culture the file has no table for shows its powers as their ids, with one warning per culture.</summary>
     private AffixPlan AffixesFor(string culture)

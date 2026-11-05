@@ -24,6 +24,12 @@ internal sealed record RunOptions
     /// <summary>A test option: boon rerolls in the bank at the start, 0 to 3. A board run needs 0.</summary>
     public int StartRerolls { get; init; }
 
+    /// <summary>
+    /// The class the lord plays, by its id in classes.json. Null asks for none: the catalog then takes the first class on offer for a person, or the seed's draw for the bot. After
+    /// <c>BuildPlan</c> this holds the class that was actually chosen (null when the fortress offers none), which is what the report writes.
+    /// </summary>
+    public string? ClassId { get; init; }
+
     /// <summary>These options with a seed: the one given, else the start time's ticks (0 is a valid seed, so only null takes the clock).</summary>
     public RunOptions Seeded(long startTicks) => Seed != null ? this : this with { Seed = (ulong)startTicks & MaxSeed };
 

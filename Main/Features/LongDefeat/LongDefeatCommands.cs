@@ -13,16 +13,20 @@ namespace TAOM.Features.LongDefeat;
 internal static class LongDefeatCommands
 {
     internal const string StartUsageHead =
-        "Format is \"taom.ld_start <fortress> [waves]\".\n"
+        "Format is \"taom.ld_start <fortress> [waves] [class]\".\n"
         + "Starts The Long Defeat from the main menu with no prompt. With a wave count the run ends as won once that many waves are cleared; "
-        + "without one it plays until the garrison or the keep falls.";
+        + "without one it plays until the garrison or the keep falls. With a class the lord carries that class's kit; without one he takes the first class on offer. "
+        + "A class id may stand in the second place when there is no wave count.";
 
     private const int MaxWaves = 1000;
 
     internal static string Usage(LongDefeatConfigCatalog catalog)
     {
         var ids = catalog.Fortresses.Select(f => f.Id).ToList();
-        return StartUsageHead + "\nFortresses: " + string.Join(", ", ids) + ".\nExample: taom.ld_start " + ids[0] + " 5";
+        var classes = catalog.Classes.Classes.Select(c => c.Id).ToList();
+        return StartUsageHead + "\nFortresses: " + string.Join(", ", ids) + "."
+            + (classes.Count == 0 ? "" : "\nClasses: " + string.Join(", ", classes) + ".")
+            + "\nExample: taom.ld_start " + ids[0] + " 5" + (classes.Count == 0 ? "" : " " + classes[0]);
     }
 
     internal static string Start(IReadOnlyList<string> args, LongDefeatConfigCatalog catalog, LongDefeatSetupPrompt prompt)
@@ -35,11 +39,25 @@ internal static class LongDefeatCommands
             return $"No fortress \"{args[0]}\".\n" + Usage(catalog);
 
         var options = RunOptions.Default;
+        var offer = catalog.ClassesFor(fortress);
+        var classWord = args.Count > 2 ? args[2] : null;
         if (args.Count > 1)
         {
-            if (!DevConsoleArgs.TryParseCount(args[1], 1, MaxWaves, out var waves, out var error))
+            // A word that is not a whole number stands in the second place as a class, because no wave count is a name; an unknown one is answered as a class below.
+            if (args.Count == 2 && !int.TryParse(args[1], out _))
+                classWord = args[1];
+            else if (!DevConsoleArgs.TryParseCount(args[1], 1, MaxWaves, out var waves, out var error))
                 return error;
-            options = options with { StopAfterWaves = waves };
+            else
+                options = options with { StopAfterWaves = waves };
+        }
+
+        if (classWord != null)
+        {
+            var asked = offer.FirstOrDefault(c => string.Equals(c.Id, classWord, StringComparison.OrdinalIgnoreCase));
+            if (asked == null)
+                return $"No class \"{classWord}\" at {fortress.Id}.\n" + Usage(catalog);
+            options = options with { ClassId = asked.Id };
         }
 
         var setup = new LongDefeatSetup(fortress.Id, "console", options);

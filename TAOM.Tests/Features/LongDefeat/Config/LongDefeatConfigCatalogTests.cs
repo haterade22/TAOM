@@ -48,8 +48,11 @@ public class LongDefeatConfigCatalogTests
     // boons.json is read when a plan is built too (its own tests are in LongDefeatBoonsReaderTests): an empty pool loads clean.
     private const string Boons = "{'boons':[]}";
 
+    // classes.json is read when a plan is built as well (its own tests are in LongDefeatClassesReaderTests and LongDefeatClassSelectionTests).
+    private const string Classes = "{'classes':[]}";
+
     private LongDefeatConfigCatalog Load(string? fortresses = null, string? waves = null, string? shop = null) =>
-        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger, Affixes, Boons);
+        LongDefeatConfigCatalog.FromTexts(fortresses ?? Fortresses(Fortress()), waves ?? Waves(), shop ?? Shop(), _logger, Affixes, Boons, Classes);
 
     private void AssertOneWarningNaming(string file, string key) =>
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains(file) && m.Contains(key)));

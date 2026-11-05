@@ -43,6 +43,7 @@ internal static class LongDefeatChecks
     internal const string AffixEffectId = "taom.long-defeat.affix-effect";
     internal const string BoonId = "taom.long-defeat.boon";
     internal const string RerollId = "taom.long-defeat.reroll";
+    internal const string ClassId = "taom.long-defeat.class";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -159,6 +160,26 @@ internal static class LongDefeatChecks
         var lateText = late is { } l3 ? F3(l3.Ratio) : "none";
         return Verdict(ok, $"w={Num(wave)} health={F3(health)} spawn={F3(spawn.Ratio)} late={lateText} troop={spawn.TroopId} in_mix={Flag(inMix)} damage={F2(damage)} "
             + $"amplified={Num(amplified)} steps={Num(tierSteps)} over_room={Num(overRoom)}");
+    }
+
+    /// <summary>
+    /// The lord spawned with the class kit (phase2-plan.md section 6): every wanted slot reads back the item the loadout names (an empty one reads back empty), the engine refused
+    /// no slot, and he sits a horse only when the class rides. <paramref name="facts"/> are read from the spawned body, never from the kit built.
+    /// </summary>
+    internal static CheckVerdict Class(LdLoadout wanted, LdKitFacts facts)
+    {
+        var head = $"class={wanted.ClassId} mounted={Flag(wanted.Mounted)} kit={string.Join(",", wanted.Slots.Select(s => s.Slot + "=" + s.ItemId))}";
+        if (!facts.Spawned)
+            return new CheckVerdict(CheckResult.Fail, head + " reason=no-lord");
+
+        var wrong = wanted.Slots
+            .Select(w => (Slot: w.Slot, Want: w.ItemId, Got: facts.Found.FirstOrDefault(f => f.Slot == w.Slot)?.ItemId))
+            .Where(x => x.Got != x.Want)
+            .Select(x => $"{x.Slot}:{x.Want}>{x.Got ?? "unread"}")
+            .ToList();
+        var ok = facts.Skipped.Count == 0 && wrong.Count == 0 && facts.HasMount == wanted.Mounted;
+        return Verdict(ok, $"{head} has_mount={Flag(facts.HasMount)} wrong={(wrong.Count == 0 ? "none" : string.Join(",", wrong))} "
+            + $"skipped={(facts.Skipped.Count == 0 ? "none" : string.Join(",", facts.Skipped))}");
     }
 
     // Written as the requirement, so a NaN on either side fails it.

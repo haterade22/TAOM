@@ -54,7 +54,7 @@ internal sealed class LongDefeatAutorunPlan
     /// <summary>A test option, 0 to 3: boon rerolls in the bank at the start.</summary>
     public int StartRerolls { get; internal init; }
 
-    /// <summary>The class id the run asks for. Read and echoed only: the class slice gives it meaning, so an unknown id is not judged here.</summary>
+    /// <summary>The class id the run asks for. Not judged here: the catalog takes it when the fortress offers it, else warns and plays the seed's draw, and the report names the class that was played.</summary>
     public string? Class { get; internal init; }
 
     /// <summary>What the launcher expects ("lost" for a run built to lose); the game only echoes it into the done file.</summary>
@@ -105,7 +105,7 @@ internal sealed class LongDefeatAutorunPlan
 
     /// <summary>The setup the driver hands the start path. The out folder doubles as the records folder, so an unattended run never touches the player's best run.</summary>
     internal LongDefeatSetup ToSetup(string fortressId) =>
-        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls }, OutFolder);
+        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls, ClassId = Class }, OutFolder);
 
     /// <summary>One line for the log: the choices the run will use.</summary>
     internal string Describe() =>

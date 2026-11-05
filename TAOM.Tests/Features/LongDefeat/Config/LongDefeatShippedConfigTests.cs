@@ -371,4 +371,155 @@ public class LongDefeatShippedConfigTests
             second.Cleared(n, n);
         CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
     }
+
+    // The own-gear rule: a class kit gives the lord only what a troop of his people carries in fords_troops.xml. An item no troop carries sits here with its source, as a named exception.
+    // Decision D5 (Mike's standing word, 2026-11-05): the two-handed class swings the Armory axe, because no Rohan troop carries a two-handed sword, axe or mace.
+    private static readonly IReadOnlyDictionary<string, string> OwnGearExceptions = new Dictionary<string, string>
+    {
+        ["wm_rohan_ws_axe_2h_a01"] = "LOTRLOME_Armory ModuleData/LOTRLOME_items/LOTRAOM_weapons.xml, culture vlandia, carried by no troop (decision D5)",
+    };
+
+    private static (RunPlan Plan, IReadOnlyList<RunClass> Offer, IModLogger Logger) ShippedClasses()
+    {
+        var (catalog, logger) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        return (catalog.BuildPlan(helms, RunOptions.Default), catalog.ClassesFor(helms), logger);
+    }
+
+    [TestMethod]
+    public void ShippedClasses_AreTheThreeFootClasses_InThePlansOrder_WithNoWarning()
+    {
+        var (_, offer, logger) = ShippedClasses();
+
+        CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer" }, offer.Select(c => c.Id).ToArray());
+        Assert.IsTrue(offer.All(c => !c.Mounted), "Cavalry waits for Slices 10 and 11");
+        logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("classes.json")));
+    }
+
+    [TestMethod]
+    public void ShippedClasses_EveryKitItemIsCarriedByATroopOfThatCulture_OrIsANamedException()
+    {
+        var troops = Troops().Values.ToList();
+        var (_, offer, _) = ShippedClasses();
+        var strays = new List<string>();
+        foreach (var cls in offer)
+        {
+            foreach (var pair in cls.Kits)
+            {
+                var culture = pair.Key;
+                var kit = pair.Value;
+                var carried = troops.Where(t => Culture(t).Equals(culture, StringComparison.OrdinalIgnoreCase))
+                    .SelectMany(t => t.Descendants("equipment").Select(e => ((string)e.Attribute("id")!).Replace("Item.", "")))
+                    .ToHashSet();
+                foreach (var slot in kit.Slots.Where(s => s.ItemId.Length > 0))
+                {
+                    if (!carried.Contains(slot.ItemId) && !OwnGearExceptions.ContainsKey(slot.ItemId))
+                        strays.Add($"{cls.Id}/{culture}/{slot.Slot}: {slot.ItemId}");
+                }
+            }
+        }
+
+        Assert.AreEqual(0, strays.Count, "a kit item no troop of that culture carries and no exception names:\n" + string.Join("\n", strays));
+    }
+
+    [TestMethod]
+    public void ShippedClasses_EveryExceptionIsUsedByAKit_AndNoTroopCarriesIt()
+    {
+        var troops = Troops().Values.ToList();
+        var (_, offer, _) = ShippedClasses();
+        var used = offer.SelectMany(c => c.Kits.Values).SelectMany(k => k.Slots).Select(s => s.ItemId).ToHashSet();
+        var carriedByAnyone = troops.SelectMany(t => t.Descendants("equipment").Select(e => ((string)e.Attribute("id")!).Replace("Item.", ""))).ToHashSet();
+
+        foreach (var item in OwnGearExceptions.Keys)
+        {
+            Assert.IsTrue(used.Contains(item), item + " is listed as an exception but no kit uses it");
+            Assert.IsFalse(carriedByAnyone.Contains(item), item + " is carried by a troop now, so it needs no exception");
+        }
+    }
+
+    // The one kit item no fords troop carries has no other gate: validate_moduledata.py and audit_armory_refs.py read neither long_defeat/ nor a bare item id. An Armory sync that drops or
+    // renames it leaves the Two Handed class with the lord's own Item0 and an empty hand, found only by a game run. Inconclusive where the Armory is not installed.
+    [TestMethod]
+    [TestCategory("LiveInstall")]
+    public void TheArmory_DefinesEachNamedExceptionItem_OnceAsACraftedTwoHandedAxe()
+    {
+        var gameDir = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        var weapons = Path.Combine(string.IsNullOrWhiteSpace(gameDir) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : gameDir,
+            "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "LOTRAOM_weapons.xml");
+        if (!File.Exists(weapons))
+            Assert.Inconclusive("LOTRLOME_Armory is not installed on this machine; the live axe cannot be checked here.");
+
+        var doc = XDocument.Load(weapons);
+        foreach (var id in OwnGearExceptions.Keys)
+        {
+            var items = doc.Descendants("CraftedItem").Where(i => (string?)i.Attribute("id") == id).ToList();
+            Assert.AreEqual(1, items.Count, $"LOTRAOM_weapons.xml must define {id} exactly once");
+            Assert.AreEqual("TwoHandedAxe", (string?)items[0].Attribute("crafting_template"), id);
+        }
+    }
+
+    [TestMethod]
+    public void EveryShippedFortress_OffersAtLeastOneClass_SinceEveryRunOwesAClassLine()
+    {
+        var (catalog, _) = Load();
+
+        foreach (var fortress in catalog.Fortresses)
+            Assert.IsTrue(catalog.ClassesFor(fortress).Count > 0,
+                $"{fortress.Id} offers no class: its runs write no class line, and the wrapper's judge and 1079.toml both fail a run without one");
+    }
+
+    [TestMethod]
+    public void ShippedClasses_TheTwoHandedKitSwingsTheArmoryAxe_InItemZero_WithNoShield()
+    {
+        var (_, offer, _) = ShippedClasses();
+
+        var kit = offer.Single(c => c.Id == "two_handed").Kits["vlandia"].Slots.ToDictionary(s => s.Slot, s => s.ItemId);
+
+        Assert.AreEqual("wm_rohan_ws_axe_2h_a01", kit["Item0"]);
+        Assert.IsTrue(!kit.TryGetValue("Item1", out var offhand) || offhand.Length == 0, "a two-handed weapon leaves the off-hand slot empty");
+    }
+
+    [TestMethod]
+    public void ShippedClasses_EveryNameAndText_IsRegisteredWithTheSameDefault()
+    {
+        var strings = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var (_, offer, _) = ShippedClasses();
+
+        foreach (var cls in offer)
+        {
+            foreach (var raw in new[] { cls.Name, cls.Text })
+            {
+                var key = raw.Substring(2, raw.IndexOf('}') - 2);
+                Assert.IsTrue(key.StartsWith("TAOM_LD_Class_", StringComparison.Ordinal), key);
+                Assert.IsTrue(strings.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
+                Assert.AreEqual(raw, registered, key);
+            }
+        }
+    }
+
+    [TestMethod]
+    public void ShippedClasses_ThePromptKeys_AreRegisteredWithTheSameDefault()
+    {
+        var strings = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var source = File.ReadAllText(RepoPaths.RepoPath("Main", "Features", "LongDefeat", "LongDefeatSetupPrompt.cs"));
+
+        foreach (var key in new[] { "TAOM_LD_Prompt_ClassTitle", "TAOM_LD_Prompt_ClassDesc", "TAOM_LD_Prompt_ChoiceClass" })
+        {
+            Assert.IsTrue(strings.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
+            StringAssert.Contains(source, "\"" + registered + "\"", key + " differs from the prompt's constant");
+        }
+    }
+
+    [TestMethod]
+    public void ShippedClasses_EveryClassHasAKitForTheFortressesDefenderCulture()
+    {
+        var (_, offer, _) = ShippedClasses();
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+
+        Assert.AreEqual(3, offer.Count);
+        Assert.IsTrue(offer.All(c => c.LoadoutFor(helms.DefenderCulture) != null));
+    }
 }

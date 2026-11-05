@@ -18,6 +18,9 @@ internal sealed class LongDefeatSetupPrompt
     private const string PromptTitle = "{=TAOM_LD_MenuOption}The Long Defeat";
     private const string PromptDescription = "{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel.";
     private const string ChoiceWithBest = "{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}";
+    private const string ClassTitle = "{=TAOM_LD_Prompt_ClassTitle}Choose your class";
+    private const string ClassDescription = "{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is.";
+    private const string ChoiceClass = "{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}";
     internal const string StartFailedMessage = "{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason.";
 
     private readonly ILongDefeatMenuAdapter _menu;
@@ -36,7 +39,7 @@ internal sealed class LongDefeatSetupPrompt
         _best = records.Best;
     }
 
-    /// <summary>Asks which fortress and starts a run with the default options.</summary>
+    /// <summary>Asks which fortress, then which class when the fortress offers one, and starts the run. Cancelling either question starts nothing.</summary>
     public void Begin()
     {
         try
@@ -48,7 +51,7 @@ internal sealed class LongDefeatSetupPrompt
             }
 
             _menu.Choose(PromptTitle, PromptDescription, _catalog.Fortresses.Select(Choice).ToList(),
-                id => Start(new LongDefeatSetup(id, "menu", RunOptions.Default)));
+                AskClass);
         }
         catch (Exception ex)
         {
@@ -77,6 +80,29 @@ internal sealed class LongDefeatSetupPrompt
             return false;
         }
     }
+
+    private void AskClass(string fortressId)
+    {
+        try
+        {
+            var classes = _catalog.TryGetFortress(fortressId, out var fortress) ? _catalog.ClassesFor(fortress) : Array.Empty<RunClass>();
+            if (classes.Count == 0)
+            {
+                Start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default));
+                return;
+            }
+
+            _menu.Choose(ClassTitle, ClassDescription, classes.Select(ClassChoice).ToList(),
+                classId => Start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { ClassId = classId })));
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    private static LongDefeatChoice ClassChoice(RunClass cls) =>
+        new(cls.Id, ChoiceClass, new Dictionary<string, string> { ["NAME"] = cls.Name, ["TEXT"] = cls.Text });
 
     private LongDefeatChoice Choice(FortressEntry fortress)
     {

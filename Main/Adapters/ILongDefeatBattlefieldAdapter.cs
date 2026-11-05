@@ -59,9 +59,16 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>
     /// Spawns the player's lord. The first call, in the same tick as the garrison, joins the foot formation's open batch (the
     /// director sized it for one more) and the director closes the batch afterward. A respawn is its own batch on the reinforcement
-    /// frame. False when the engine could not build the agent.
+    /// frame. With a <paramref name="loadout"/> he spawns in a copy of his first battle set with the loadout's slots overwritten, and
+    /// without a horse; with null, in the set the engine picks for him. The kit is read back from the spawned body in this call. False when the engine could not build the agent.
     /// </summary>
-    bool SpawnPlayer(bool respawn);
+    bool SpawnPlayer(bool respawn, LdLoadout? loadout);
+
+    /// <summary>
+    /// What the lord who spawned last was spawned with, read from his spawn equipment for each slot of the loadout he was given, and whether he sat a horse. The facts the
+    /// <c>class</c> check judges; <c>Spawned</c> is false when no lord was built.
+    /// </summary>
+    LdKitFacts ReadKit();
 
     /// <summary>Tells the mission its initial spawn is done, so agents spawned later get their stats and ammunition.</summary>
     void FinishInitialSpawn();

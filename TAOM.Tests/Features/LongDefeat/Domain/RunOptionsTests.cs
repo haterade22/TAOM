@@ -41,6 +41,13 @@ public class RunOptionsTests
     }
 
     [TestMethod]
+    public void ClassId_IsNullUntilAClassIsAsked_AndSurvivesSeeding()
+    {
+        Assert.IsNull(RunOptions.Default.ClassId);
+        Assert.AreEqual("archer", (RunOptions.Default with { ClassId = "archer" }).Seeded(5L).ClassId);
+    }
+
+    [TestMethod]
     public void Seeded_ANegativeClockStaysInTheSeedRange()
     {
         Assert.IsTrue(RunOptions.Default.Seeded(-1L).Seed <= RunOptions.MaxSeed);

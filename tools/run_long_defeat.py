@@ -19,6 +19,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 --start-wave 12 --waves 4 stops after 4 clears), --start-rerolls seeds the boon reroll bank (armed as 1 unless given, so a 5-wave run proves
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
+The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only, so a class the game cannot play yet (cavalry) is refused here instead of being replaced by the game.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
 The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, and one that banked a reroll at its first pick or spent one owes the reroll check.
@@ -56,16 +57,15 @@ CHECK_PREFIX = "taom.long-defeat."
 
 # The check ids a full run must write, each with a row in the manifest. menu is written when the main
 # menu first asks whether the option is hidden (LongDefeatMenuEntry), so it precedes the run and the unattended driver's own start reads it too.
-REQUIRED_CHECKS = ("menu", "boot", "general", "muster", "keep", "orders", "hud", "wave", "no-rout", "gold", "shop", "early-start", "end", "best-run")
+REQUIRED_CHECKS = ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "wave", "no-rout", "gold", "shop", "early-start", "end", "best-run")
 
 # A run built to lose clears no wave on purpose, so the checks that need a cleared wave, a bought pack or a horn are not asked of it.
-LOSE_CHECKS = ("menu", "boot", "general", "muster", "keep", "orders", "hud", "end", "best-run")
+LOSE_CHECKS = ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "end", "best-run")
 
 LOSE_REASONS = ("lost_defenders", "lost_keep")
 
 # Phase 2. The report is schema 2 (leaderboard-plan.md "Schema 2"); a schema 1 file is a build from before the new fields.
 SCHEMA = 2
-CLASSES = ("sword_and_board", "two_handed", "archer", "cavalry")
 DEEP_WAVE = 12
 DEEP_WAVES = 4
 DEFAULT_START_REROLLS = 1
@@ -88,6 +88,15 @@ AFFIX_CHECK = "affix"
 # A cleared wave that rolled one of these has written an affix-effect line (pass, or skip for a soldier that could not show it): a run with none never read the effect back.
 AFFIX_EFFECT_CHECK = "affix-effect"
 AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide")
+
+# The classes (phase2-plan.md section 2, "Classes"): the game plays the ones in classes.json that have a kit for the fortress's defender culture, and the bot draws one
+# from RunRandom stream 3 when none is armed. Cavalry is in the plan but not in classes.json until Slices 10 and 11, so it is refused by name below.
+MODULE_DATA = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat"
+CLASS_FILE = MODULE_DATA / "classes.json"
+FORTRESS_FILE = MODULE_DATA / "fortresses.json"
+CLASS_CHECK = "class"
+PLANNED_CLASSES = ("cavalry",)
+DEFAULT_FORTRESS = "helms"
 
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
@@ -157,6 +166,71 @@ def affix_roll(seed, wave, count):
         j = i + gen.below(len(ids) - i)
         ids[i], ids[j] = ids[j], ids[i]
     return ids[:max(count, 0)]
+
+
+def shipped_classes(path=None):
+    """[(class id, {cultures with a kit})] of this tree's classes.json in file order. A missing or unreadable file, or a root that is not an object, has no classes; a
+    row that is not an object with a text id and an object of kits is left out (the game's ClassesReader refuses such a row too, with a warning)."""
+    try:
+        root = json.loads(Path(path or CLASS_FILE).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return []
+    rows = root.get("classes") if isinstance(root, dict) else None
+    found = []
+    for row in rows if isinstance(rows, list) else []:
+        if isinstance(row, dict) and isinstance(row.get("id"), str) and row["id"] and isinstance(row.get("kits"), dict) and row["kits"]:
+            found.append((row["id"], {culture.lower() for culture in row["kits"]}))
+    return found
+
+
+def fortress_culture(fortress_id):
+    """The defenderCulture of a fortress row of fortresses.json, lower case, or None."""
+    try:
+        root = json.loads(FORTRESS_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return None
+    for row in root.get("fortresses", []) if isinstance(root, dict) else []:
+        if isinstance(row, dict) and row.get("id") == fortress_id and isinstance(row.get("defenderCulture"), str):
+            return row["defenderCulture"].lower()
+    return None
+
+
+def class_offer(fortress_id=None):
+    """The class ids a fortress offers, in file order: those with a kit for its defender culture (the game's ClassPlan.OnOffer)."""
+    culture = fortress_culture(fortress_id or DEFAULT_FORTRESS)
+    return tuple(cid for cid, cultures in shipped_classes() if culture is not None and culture in cultures)
+
+
+# Every class of classes.json for Helm's Deep, read here and pinned to the file again by a test.
+CLASSES = class_offer(DEFAULT_FORTRESS)
+
+
+def bot_class(seed, fortress_id=None):
+    """The class the game's bot plays when none is armed: ClassPlan.Choose, the offer's entry at RunRandom stream 3, (0, 0), Below(count). The vectors in
+    test_run_long_defeat.py are pinned in ClassPlanTests.cs too. None when the fortress offers no class."""
+    offer = class_offer(fortress_id)
+    if not offer:
+        return None
+    return offer[SplitMix64(seed, 3, 0, 0).below(len(offer))]
+
+
+def class_problem(report_json):
+    """None when the report's class is right, else what is wrong. With no class on offer the report names none. Otherwise it names a class on offer, and, when the arm
+    file named none (judge() has already compared an armed class), the bot's draw from the report's seed."""
+    fortress = report_json.get("fortress")
+    fortress = fortress if isinstance(fortress, str) and fortress else None
+    offer = class_offer(fortress)
+    got = report_json.get("class")
+    if not offer:
+        return None if got in ("", None) else f"the report names the class {got!r}, but classes.json offers none"
+    if not isinstance(got, str) or got not in offer:
+        return f"the report's class is {got!r}, not one of the classes on offer ({', '.join(offer)})"
+    seed = report_json.get("seed")
+    if "class" not in expected_report and _is_int(seed):
+        drawn = bot_class(seed, fortress)
+        if got != drawn:
+            return f"the report's class is {got!r}, but the bot draws {drawn!r} from seed {seed} when no class is armed"
+    return None
 
 
 def _whole(value, low, high):
@@ -441,6 +515,9 @@ def judge(done, report_json, log_text=None):
     seed = report_json.get("seed")
     if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed <= MAX_SEED:
         return 1, f"the report's seed is {seed!r}, wanted a whole number from 0 to {MAX_SEED}"
+    mismatch = class_problem(report_json)
+    if mismatch:
+        return 1, f"the report's class is wrong: {mismatch}"
     mismatch = affix_problem(report_json)
     if mismatch:
         return 1, f"the report's affixes do not replay from its seed: {mismatch}"
@@ -566,6 +643,15 @@ def seed_value(text):
     return value
 
 
+def class_choice(text):
+    """A class the game can play, or 'all'. A class in the plan but not in classes.json is refused by name, because the game would replace it with another class."""
+    if text == "all" or text in CLASSES:
+        return text
+    if text in PLANNED_CLASSES:
+        raise argparse.ArgumentTypeError(f"'{text}' is not playable yet (Slices 10 and 11 add it); the game offers {', '.join(CLASSES)}")
+    raise argparse.ArgumentTypeError(f"'{text}' is not a class; choose one of {', '.join(CLASSES)} or all")
+
+
 def whole_in_range(low, high):
     def parse(text):
         value = int(text)
@@ -589,8 +675,9 @@ def build_parser():
     parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
     parser.add_argument("--speed", type=int, choices=SPEED_LEVELS,
                         help="the mission speed from the first frame (default 1); live seconds and the report's wave seconds stay mission seconds, so 10 ends a run in about a tenth of the wall time")
-    parser.add_argument("--class", dest="klass", choices=CLASSES + ("all",),
-                        help="the lord's class (the game's bot picks one from the seed when left out); 'all' gives each of --runs the next class in turn")
+    parser.add_argument("--class", dest="klass", type=class_choice,
+                        help=f"the lord's class, one of {', '.join(CLASSES)} (the game's bot picks one from the seed when left out); 'all' gives each of --runs the next of them in turn. "
+                             "Cavalry is not playable yet, so neither this flag nor 'all' arms it")
     parser.add_argument("--seed", type=seed_value, help=f"the seed of every roll, 0 to {MAX_SEED} (default: the game takes the start time's ticks)")
     parser.add_argument("--start-wave", type=whole_in_range(1, 100),
                         help="begin the run at this wave number (a test option: the clears still count from 0, so the report is not a board run)")
@@ -666,6 +753,11 @@ def main(argv=None):
     def arm_text_for(out, args):
         wall_limit = args.wall_limit if args.wall_limit else DEFAULT_WALL_LIMIT
         class_id = class_for_run(known.klass, next(run_counter))
+        # The judge holds this run's report to the class this run armed, so --class all is compared run by run; none armed leaves the seed's draw to class_problem.
+        if class_id is None:
+            expected_report.pop("class", None)
+        else:
+            expected_report["class"] = class_id
         text = "".join(f"{key}={value}\n" for key, value in arm_pairs(known, out, wall_limit, class_id) if value is not None and str(value) != "")
         return text, wall_limit
 
