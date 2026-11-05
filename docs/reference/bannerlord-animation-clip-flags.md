@@ -157,7 +157,7 @@ clamps to `0x49`, one below `rear` — proof the low byte is a priority int.)*
 | `anf_switch_item_between_hands` | `0x200000000` | Item changes hands mid-clip. | UNSET. |
 | `anf_blend_main_item_bone_entitially` | `0x2000000000000` | Blend the weapon bone at entity level (no swap-pop). | UNSET (no weapon bone). |
 | `anf_use_left_hand_during_attack` | `0x400000` | Attack delivered with the off hand. | UNSET (creature attack is service-driven, not a weapon swing). |
-| `anf_enforce_weapon_tip_with_rope_stretched` / `_relaxed` | `0x4000000000000` / `0x8000000000000` | Constrain a flail/rope weapon tip (stretched vs slack). | UNSET (no rope weapon). |
+| `anf_enforce_weapon_tip_with_rope_stretched` / `_relaxed` | `0x4000000000000` / `0x8000000000000` | Constrain a flail/rope weapon tip (stretched vs slack). | **UNSET** (no rope weapon). A set flag with no `{name}_weapon` companion clip is an access violation at wind-up; see the note below. |
 | `anf_randomization_weight_1/2/4/8` (+ `_mask` `0xF…`) | top nibble (bits 60-63) | Packed 4-bit **weight** biasing random selection among an action's alternative clips. | **Generic** — applies if you author multiple alternative idle/stand clips and want weighted random pick. |
 
 **Net for a TAOM creature (spider/warg):** the flags that matter are Cat 1 priority (continue/attack/striked/die),
@@ -165,6 +165,17 @@ Cat 2 `synch_with_movement` + Cat 3 `cyclic` on locomotion, Cat 2 `lock_movement
 attacks/death, Cat 4 `disable_hand_ik` (+ leave foot-IK on for grounded clips, `update_bounding_volume` on wide
 poses), Cat 5 `make_walk_sound`/`make_bodyfall_sound`. Everything else is humanoid/MP/cinematic and stays unset.
 **Source of truth = mirror the warg's per-clip flag set**, don't reconstruct from this table. The 2026-08-28 absorption note gave that source as `LOTRLOME_Armory/AssetPackages/warg.tpac`. **That path is dead as of 2026-09-01:** the module has no `AssetPackages` directory at all (0 cooked packs against 4,364 loose `Assets/**/*.tpac`). `Assets/creature/warg/` does exist, and so does the parked copy at `<game>/_taom_disabled/warg_loose_assets_20260828/` that [lotrlome-warg-changes.md](./lotrlome-warg-changes.md) describes as removed. Which of those now holds the authoritative per-clip flags is **unconfirmed**; establish it before relying on it, rather than trusting either this line or the absorption note.
+
+**Rope flags need a companion clip.** (yotthani, MithrilForge `docs/engine/weapon-companion-clip.md`@0a2f4761 lines 7-49, decompile and a tester's crash dump of 2026-10-11, game 1.5.3 and 1.5.5; TAOM re-checked the entry `0x701450` on v1.5.5, 2026-10-15; not re-checked on v1.4.8, where that address is not valid.) For a held item that has a skeleton of its own, the engine looks up `{clip}_weapon` for every active animation and samples it into the weapon skeleton. For a clip with either rope flag, on the rope path (taken when an object's virtual `+0x140` reports non-zero and the weight is above zero; otherwise the checked plain path runs), the lookup result is not null-checked, so a flagged clip with no companion crashes (read of `clip+0x18C`) on a worker thread the first time a skeleton weapon plays it. A copied template keeps its flags, so a renamed copy of a flail clip is the usual way in. Two ways out:
+
+- Strip both rope flags from the copy. The weapon skeleton then holds its rest pose (the flail's chain straight along the handle) while the clip plays.
+- Ship `{name}_weapon` as well, a copy of the template's companion under the new name. Upstream has not tried this for a mirrored swing, where the companion would also need mirroring in the weapon's frame.
+
+**Which weapons.** v1.4.8 `SandBoxCore` `items/weapons.xml` declares `skeleton_name="flail_skeleton"` 2 times, `sling_skeleton` 3 times and `shackle_skeleton` 1 time (installed, 2026-11-04). Upstream names only the flail and its 110 `_weapon` clips; whether the sling and shackle take the same path is UNVERIFIED.
+
+**Current exposure.** Nothing TAOM or the live Armory ships carries a rope flag today (the doc review's byte scan of 5,506 Armory tpacs and TAOM's modules, 2026-10-15). Not re-scanned for the Armory package a 1.4.x release ships.
+
+**Not the same bits as `anf_keep` and `anf_restart`.** The pose function tests `0x4000` and `0x8000` in the layer word. Read against the full flags, that is bits 50 and 51 (the layer field starts at bit 36), the two rope flags; this mapping is the doc review's identification plus upstream's Kit flag table (`KnownFlags`), not a separate proof. `anf_keep` (`0x4000`) and `anf_restart` (`0x8000`) in the Cat 3 table have the same numbers but sit in another word. Do not mix them up.
 
 ## TODO — a tpac clip-flag tool (not yet built)
 

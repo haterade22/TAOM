@@ -68,6 +68,29 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   regenerated (baked `*_tex.tpac`) — `feedback_sprite_atlas_baked_regen_required`/`feedback_sprite_dimensions` (resize
   before bake). Baked ≠ visible until the render check.
 - **Overlay input wiring** + **GameState creation** + **IGameStateListener** — the three crash/no-op gotchas above.
+- **Every return to the map leaks GPU memory** [yotthani; not confirmed in focused play]: the engine rebuilds the
+  map view's render targets each time a menu closes and 3 colour targets plus 1 depth target of the old set stay
+  alive, about 94 MB at a 3413x1440 render resolution and about 40 MB at 1080p.
+  `MapScreen.ClearGPUMemory()`, called by `MissionCampaignView` at mission start, should free them (v1.4.8 modules dump `SandBox__SandBox.View.cs:2275`, defined `:13931`; read from code, not measured), so the leak likely builds between missions. The engine's own GPU counters do not show it; measure with the Windows `GPU Process Memory`
+  counters (Task Manager's dedicated GPU memory). Separately, `ViewSubModule.BannerTexturedMaterialCache` gains
+  one entry per character preview, because its key's material is a fresh mesh copy that never matches (clearing
+  it freed about 100 MB in one run). (MithrilForge `docs/engine/perf.md`, menu-memory sections: the banner-cache
+  run of 2026-10-05 on v1.5.3, the render-target runs of 2026-10-06 on v1.5.4; autopilot runs.) On this line [map-view-release.md](../../features/map-view-release.md) (plan 120) releases them every Nth cover; `ViewSubModule.BannerTexturedMaterialCache` is the same `Dictionary<Tuple<Material, Banner>, Material>` on v1.4.8 (`Native__TaleWorlds.MountAndBlade.View.cs:4765`).
+- **Generated UI prefabs are off with UIExtenderEx loaded; the cost shows per list item** [yotthani]. yotthani read
+  `UIConfig.GetIsUsingGeneratedPrefabs()` as False, every movie a `GauntletMovie` (the XML path), and
+  `Bannerlord.UIExtenderEx` loaded from TAOM.Dependencies (MithrilForge `docs/engine/perf.md`@0a2f4761 lines
+  1612-1613, menu run of 2026-10-05 11:45, in game; v1.5.3 by the date, since the game moved to 1.5.4 at 16:20 that
+  day, line 1736). That UIExtenderEx is why the prefabs are
+  off, or that the cost is inherent to the XML path, is not in the source; read it as an inference. The figures, in TAOM's translation:
+  loading the trade screen's movies took 400 ms (about 1 ms per item, `Inventory` loaded twice; line 1611, 201 goods),
+  and about 3000 entries cost 4.4 ms per entry (line 1614, which calls normal lists uncritical). The 3000-entry case was the inventory with
+  `cheat_mode = 1`, which fills the left side with every `ItemObject` and took 13 s to open (lines 1590-1593), not a
+  normal play state.
+- **First-use shader compiles can block one frame for 150 to 290 ms.** One observation, not a rule: yotthani's
+  1.5.4 siege session of 2026-10-08 had a long load and single frames of 150 to 290 ms, which yotthani traced to
+  shaders the engine builds at first use inside the frame ("Missing shader from sack"), after graphics settings had
+  been changed the same day; the run after had 12 compiles instead of about 2,500 (`perf.md` lines 2107-2109). Whether
+  a cold cache compiles mid-battle and blocks the frame is still open (1.5.x perf audit, not on this line).
 
 ### Map conversation + encyclopedia: two layers on one `MapScreen` (read 2026-09-22, #635)
 A conversation started from a settlement menu's character overlay, or from a map encounter, is a **map
