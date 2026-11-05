@@ -180,7 +180,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 |------|---------|
 | `Main/Features/Diplomacy/DiplomacyIoC.cs` | DryIoc registrations and static `InitializeHooks` wiring |
 | `Main/Features/Diplomacy/DiplomacyBehavior.cs` | `CampaignBehaviorBase`: establishes/enforces permanent alliances on new game and session load |
-| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | `CampaignBehaviorBase`: daily tick drives phase transition checks |
+| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | `CampaignBehaviorBase`: daily tick drives phase transition checks; its constructor resets the process-lifetime service for each campaign (#764) |
 | `Main/Features/Diplomacy/PlayerAllianceProposalBehavior.cs` | `CampaignBehaviorBase`: conversation dialog letting a player kingdom-ruler initiate an alliance with another ruler |
 | `Main/Features/Diplomacy/IDiplomacyService.cs` | Service interface: tier lookup, score modifier, alliance enforcement, player-freedom overloads + proposal methods |
 | `Main/Features/Diplomacy/DiplomacyService.cs` | Implementation: loads config, computes scores, enforces alliances, player-freedom score/permission + `CanPlayerProposeAlliance`/`FormPlayerAlliance` |

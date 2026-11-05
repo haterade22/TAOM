@@ -42,6 +42,10 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (84 reviews, 186+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Mutation-checks a new guard in memory** (2026-10-08, War of the Ring session reset #764, 1 of 1
+  MEDIUM real): it rewrote the guarded line into a cached construction as a string and showed every
+  predicate of the new source-text pin still held. For a new wiring or source-text test, ask for the
+  cheapest regression that keeps it green.
 - **Follows a bypassed trigger to what its own firing would have reset** (2026-09-15, Player
   Switcher clan leadership review 113): handed a seam that closed a decision window at once through
   vanilla `ExecuteDone`, it read the popup widget's `OnLateUpdate` and found that the bind had already

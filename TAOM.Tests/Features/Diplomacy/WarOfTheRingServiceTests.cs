@@ -337,6 +337,50 @@ public class WarOfTheRingServiceTests
         Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
     }
 
+    // ---- #764: process-singleton session reset ----
+
+    [TestMethod]
+    public void ResetForNewSession_FromFullWar_ReturnsPeaceAndNone()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+
+        _sut.ResetForNewSession();
+
+        Assert.AreEqual(WarPhase.Peace, _sut.CurrentPhase);
+        Assert.AreEqual(WarOutcome.None, _sut.Outcome);
+    }
+
+    [TestMethod]
+    public void ResetForNewSession_AfterEndWar_EndWarFiresAgain()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        _sut.EndWar(WarOutcome.FreeVictory);
+
+        _sut.ResetForNewSession();
+        _sut.EndWar(WarOutcome.EvilVictory);
+
+        Assert.AreEqual(WarOutcome.EvilVictory, _sut.Outcome);
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void ResetForNewSession_ThenPhase1Day_DeclaresPhase1Wars()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        _allianceAdapter.ClearReceivedCalls();
+
+        _sut.ResetForNewSession();
+        _sut.CheckPhaseTransition(30f);
+
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+        _allianceAdapter.Received(1).DeclareWar("isengard", "vlandia");
+        _allianceAdapter.Received(1).DeclareWar("empire", "vlandia");
+    }
+
     // ---- MCM-sourced phase days: ordering invariant ----
     // CheckPhaseTransition's two guards are sequential ifs and TransitionToPhase mutates
     // CurrentPhase in place, so an equal or inverted day pair runs BOTH transitions in one

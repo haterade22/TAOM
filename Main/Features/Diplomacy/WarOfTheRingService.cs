@@ -46,6 +46,14 @@ public class WarOfTheRingService : IWarOfTheRingService
         _logger.LogInfo($"War of the Ring: Phase restored from save → {phase}");
     }
 
+    // #764: the service outlives the campaign, and a brand-new game never loads SyncData.
+    public void ResetForNewSession()
+    {
+        CurrentPhase = WarPhase.Peace;
+        Outcome = WarOutcome.None;
+        _logger.LogInfo("War of the Ring: phase reset to Peace at campaign start; a load restores the saved phase next");
+    }
+
     public WarOfTheRingService(
         IWarOfTheRingConfigProvider configProvider,
         IDiplomacyService diplomacyService,

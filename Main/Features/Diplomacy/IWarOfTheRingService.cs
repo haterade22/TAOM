@@ -18,4 +18,6 @@ public interface IWarOfTheRingService
     void SetPhaseFromSave(WarPhase phase);
     // WotR Momentum #327 — SyncData hook so behavior can restore outcome across save-load.
     void SetOutcomeFromSave(WarOutcome outcome);
+    // #764: every campaign start, new or loaded, resets phase and outcome before SyncData restores a save.
+    void ResetForNewSession();
 }
