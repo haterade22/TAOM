@@ -13,18 +13,27 @@ stale snapshot last touched 2026-04-06 and is NOT registered in SubModule.xml.
 The NAMES dict below maps Settlement IDs to display-name defaults. The script:
   1. Updates `name="{=key}DEFAULT"` in the master settlements.xml (EN fallback)
   2. Updates `<string ... text="..."/>` in 12 per-language loc_settlements.xml files
-     (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR — same name in every language
-     because proper nouns of invented Tolkien languages don't translate)
+     (BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR), all with the English name; a later
+     translate_with_claude.py --module TAOM_Map run translates it, or transliterates it in JP, KO, CN and RU
 
 Properties:
-  - Idempotent (regex-anchored on unique key IDs; safe to re-run after edits)
-  - UTF-8 + CRLF preserved (UTF-8 round-trip via bytes)
-  - Settlement IDs untouched (save compatibility preserved)
-  - Validates uniqueness before applying (aborts on dup names within the dict)
+  - Only RENAMES are written: an id whose English name= in settlements.xml differs from the table.
+    An id whose English already matches keeps its 12 language rows, so a translation made after its
+    last rename survives a re-run (until 2026-10-27 every run reset all ~438 ids in every language)
+  - Each rename leaves tools/translation_cache/<lang>.json: the cache keys on the string id alone,
+    so the next translator run would otherwise write the old name back (#1039, #1042)
+  - Dry run by default; --apply writes a non-.xml backup of each changed file, and every output is
+    parsed before any file is written
+  - UTF-8 + CRLF preserved (UTF-8 round-trip via bytes); settlement ids untouched (save compatibility)
+  - Validates uniqueness before applying (aborts on dup names within the dict), and refuses (exit 1) a new
+    name another settlement already carries, checked against the renamed master so two ids can swap
+  - Writes the cache first, then the 12 loc files, and the master LAST: a run that fails part-way is
+    finished by running it again. Exit 2 when the files are missing or none of its ids is in the master
 
 Usage:
   Edit the NAMES dict, then run:
-    python3 tools/Apply-MapVillageNames.py
+    python tools/Apply-MapVillageNames.py            # dry run: lists the renames
+    python tools/Apply-MapVillageNames.py --apply    # writes master + 12 loc files, evicts the cache
 
 See docs/reference/taom-map-settlement-naming.md for:
   - Region-prefix → culture → linguistic idiom mapping
@@ -37,8 +46,17 @@ castle_E9 and castle_G1, so the dict is no longer villages-only despite the file
 2026-09-11: nine Isengard rows registered (432 entries) for the villages tools/add_map_villages.py
 added (#562); that tool writes the names itself, so no run of this script was needed.
 """
-import os, re
-from _gamedir import game_dir
+import argparse
+import datetime
+import os
+import re
+import sys
+import xml.etree.ElementTree as ET
+from collections import Counter
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import add_map_villages as amv  # noqa: E402  evict_cached_names, CACHE_DIR
+from _gamedir import game_dir  # noqa: E402
 
 NAMES = {
     # V - Rohan (Anglo-Saxon)
@@ -516,42 +534,106 @@ NAMES = {
     "village_RU8_4": "Iôrig-Mukh",
 }
 
-print(f"Total names: {len(NAMES)}")
-if len(set(NAMES.values())) != len(NAMES.values()):
-    from collections import Counter
-    c = Counter(NAMES.values())
-    dups = {k: v for k, v in c.items() if v > 1}
-    print("DUPLICATES:", dups)
-    raise SystemExit("Duplicate names; aborting")
-print("All names unique.")
-
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
 GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 ROOT = GAME + r"\Modules\TAOM_Map\ModuleData"
 LANGS = ["BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR"]
+MASTER_NAME = re.compile(r'name="\{=Settlements\.Settlement\.name\.([^}]+)\}([^"]*)"')
 
 
-def patch(path, mode):
-    with open(path, "rb") as f:
-        data = f.read()
-    text = data.decode("utf-8")
+def renamed_ids(master_text):
+    """Table ids whose English name in settlements.xml differs from the table: the only rows a run rewrites.
+
+    An id whose English already matches keeps its 12 language rows, so a translation made after its
+    last rename survives a re-run. An id with no row in the master is reported and left alone.
+    """
+    current = dict(MASTER_NAME.findall(master_text))
+    missing = [sid for sid in NAMES if sid not in current]
+    return [sid for sid in NAMES if sid in current and current[sid] != NAMES[sid]], missing
+
+
+def patch(text, ids, mode):
+    """`text` with the name of every id in `ids` set to its table value; returns (text, replacements)."""
     count = 0
-    for sid, new in NAMES.items():
+    for sid in ids:
+        new = NAMES[sid]
         if mode == "master":
             pat = re.compile(r'(name="\{=Settlements\.Settlement\.name\.' + re.escape(sid) + r'\})[^"]*(")')
+            text, n = pat.subn(lambda m, v=new: m.group(1) + v + m.group(2), text)
         else:
-            pat = re.compile(r'(id="Settlements\.Settlement\.name\.' + re.escape(sid) + r'"\s+text=")[^"]*(")')
-        text, n = pat.subn(lambda m, v=new: m.group(1) + v + m.group(2), text)
+            key = "Settlements.Settlement.name." + sid
+            pat = re.compile(r'(id="' + re.escape(key) + r'"\s+text=")([^"]*)(")')
+            text, n = pat.subn(lambda m, v=new: m.group(1) + v + m.group(3), text)
         count += n
-    with open(path, "wb") as f:
-        f.write(text.encode("utf-8"))
-    return count
+    return text, count
 
 
-c = patch(os.path.join(ROOT, "settlements.xml"), "master")
-print(f"\nsettlements.xml: {c} replacements")
-for lang in LANGS:
-    c = patch(os.path.join(ROOT, "Languages", lang, "loc_settlements.xml"), "loc")
-    print(f"{lang}: {c} replacements")
-print(f"\nGrand total: {c * 13 + len(NAMES)} string replacements (approx)")
+def main(argv=None, cache_dir=amv.CACHE_DIR):
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # the names carry accents
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--apply", action="store_true", help="write the live files and the cache (default: dry run)")
+    args = ap.parse_args(argv)
+
+    print(f"Total names: {len(NAMES)}")
+    if len(set(NAMES.values())) != len(NAMES.values()):
+        c = Counter(NAMES.values())
+        print("DUPLICATES:", {k: v for k, v in c.items() if v > 1})
+        return 1
+    print("All names unique.")
+
+    master_path = os.path.join(ROOT, "settlements.xml")
+    paths = {None: master_path}
+    paths.update({lang: os.path.join(ROOT, "Languages", lang, "loc_settlements.xml") for lang in LANGS})
+    absent = [path for path in paths.values() if not os.path.isfile(path)]
+    if absent:
+        print("ERROR: not found (set BANNERLORD_GAME_DIR, see tools/_gamedir.py):\n  " + "\n  ".join(absent), file=sys.stderr)
+        return 2
+    texts = {key: open(path, "rb").read().decode("utf-8") for key, path in paths.items()}
+    ids, missing = renamed_ids(texts[None])
+    if len(missing) == len(NAMES):
+        print(f"ERROR: none of the {len(NAMES)} table ids is in {master_path}; is it the TAOM_Map master?", file=sys.stderr)
+        return 2
+    for sid in missing:
+        print(f"  not in settlements.xml, skipped: {sid}")
+    if not ids:
+        print(f"All {len(NAMES) - len(missing)} table names found in settlements.xml already match; nothing to do.")
+        return 0
+    for sid in ids:
+        print(f"  rename {sid} -> {NAMES[sid]}")
+
+    out = {}
+    for key, text in texts.items():
+        new, n = patch(text, ids, "master" if key is None else "loc")
+        try:
+            ET.fromstring(new.encode("utf-8"))  # every output parses before any file is written
+        except ET.ParseError as e:
+            print(f"REFUSING: {paths[key]} does not parse after the rename ({e}); nothing written.", file=sys.stderr)
+            return 1
+        out[key] = new
+        print(f"{key or 'settlements.xml'}: {n} replacement(s)")
+    # Against the RENAMED master, so two table ids that swap names are not a clash.
+    clashes = amv.name_collisions([(sid, NAMES[sid]) for sid in ids], out[None])
+    if clashes:
+        print("REFUSING: a new name is already on the map:\n  " + "\n  ".join(clashes), file=sys.stderr)
+        return 1
+    if not args.apply:
+        print("\nDRY RUN: re-run with --apply to write the live files and remove the renamed ids from the cache.")
+        return 0
+
+    # The master decides what a run renames, so it is written LAST, after the cache and the 12 loc
+    # files: a run that fails part-way leaves the old English in the master, and a re-run finishes it.
+    removed = amv.evict_cached_names({lang: ids for lang in LANGS}, cache_dir)
+    tag = "bak_villagenames_" + datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    for key in LANGS + [None]:
+        if out[key] != texts[key]:
+            open(f"{paths[key]}.{tag}", "wb").write(texts[key].encode("utf-8"))
+            open(paths[key], "wb").write(out[key].encode("utf-8"))
+    print(f"\nApplied: {len(ids)} rename(s); backups *.{tag}; "
+          f"{sum(removed.values())} cache row(s) removed, so the next translator run translates the new names (#763).")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

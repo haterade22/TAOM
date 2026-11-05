@@ -64,6 +64,12 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata, imagine) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
 
+**Project servers are keyed by the folder's spelling.** `~/.claude.json` keeps a project's local
+servers under the path as it was opened, case included: on 2026-10-16 `blender` and
+`substance-painter` sat under `E:/repos/TAOM`, and a session opened as `e:\repos\TAOM` read the
+lowercase key, which held none, so neither loaded (measured on the desktop). Open a checkout with the
+same spelling every time.
+
 ## Plugin overlap (routing disambiguation)
 
 Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where they overlap, TAOM routing wins:

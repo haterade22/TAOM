@@ -79,6 +79,34 @@ class WeaponClassExtractionTests(unittest.TestCase):
         wc = rb.troop_weapon_classes(npc, ITEM_CLASSES)
         self.assertEqual(wc, {"Crossbow", "Bolts", "OneHanded"})
 
+    def test_a_weapon_only_in_a_civilian_roster_does_not_count(self):
+        # imladris_recruit holds its only bow in an EquipmentRoster civilian="true", and a civilian
+        # set never cross-draws with a battle set (b904e02a3, #617).
+        npc = ET.fromstring(
+            '<NPCCharacter id="t" name="T" level="6"><Equipments>'
+            '<EquipmentRoster><equipment slot="Item0" id="Item.sword_1h" /></EquipmentRoster>'
+            '<EquipmentRoster civilian="true"><equipment slot="Item0" id="Item.bow_a" /></EquipmentRoster>'
+            '</Equipments></NPCCharacter>')
+        self.assertEqual(rb.troop_weapon_classes(npc, ITEM_CLASSES), {"OneHanded"})
+
+    def test_an_equipment_type_civilian_set_does_not_count(self):
+        npc = ET.fromstring(
+            '<NPCCharacter id="t" name="T" level="6"><Equipments>'
+            '<EquipmentSet id="x" equipmentType="Civilian"><equipment slot="Item0" id="Item.bow_a" /></EquipmentSet>'
+            '<EquipmentRoster><equipment slot="Item0" id="Item.spear_a" /></EquipmentRoster>'
+            '</Equipments></NPCCharacter>')
+        self.assertEqual(rb.troop_weapon_classes(npc, ITEM_CLASSES), {"Polearm"})
+
+    def test_an_override_written_under_equipments_still_counts(self):
+        # BasicCharacterObject.Deserialize (v1.4.8, 365 and 412) applies an <equipment> written
+        # straight under <Equipments> to every set, so it is a battle weapon.
+        npc = ET.fromstring(
+            '<NPCCharacter id="t" name="T" level="6"><Equipments>'
+            '<equipment slot="Item1" id="Item.javelin_a" />'
+            '<EquipmentRoster><equipment slot="Item0" id="Item.sword_1h" /></EquipmentRoster>'
+            '</Equipments></NPCCharacter>')
+        self.assertEqual(rb.troop_weapon_classes(npc, ITEM_CLASSES), {"OneHanded", "Throwing"})
+
 
 class CrossbowSwapTests(unittest.TestCase):
     """The Bow<->Crossbow swap must fire on EQUIPMENT, not name."""

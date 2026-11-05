@@ -429,7 +429,9 @@ Code: No code changes needed
    villages, and by party-template and recruitment XML. Everything else on the tag is editable.
 2. **Rename:** edit the default text after `{=key}` in `settlements.xml` and the matching `text=` in
    all 12 `loc_settlements.xml`. `python tools/Apply-MapVillageNames.py` does the 13 files in one
-   pass; edit its `NAMES` dict first.
+   pass; edit its `NAMES` dict, read the dry run, then `--apply`. It writes only the ids whose English
+   changed and removes them from `tools/translation_cache/<lang>.json`, which the translator would
+   otherwise use to write the old wording back.
 3. **Re-own:** change `owner="Faction.<clan>"`, which exists only on towns and castles. Villages have
    no `owner` and inherit through `bound=`. `python tools/Assign-SettlementOwners.py` is the
    rules-driven version, dry-run by default.
@@ -441,8 +443,9 @@ Code: No code changes needed
    sanctioned idioms are in [tools/README.md](../../tools/README.md) under "XML I/O convention".
 
 Check: `python tools/validate_moduledata.py`
-Takes effect: next save load for `posX`/`posY`/`gate_pos*` and for display names; new campaign only
-for `owner`, `prosperity`, `hearth` and `<Building level>`
+Takes effect: next save load for `posX`/`posY`/`gate_pos*` and the English display name; the 12
+translated names at the next game start or after a language switch (`MBTextManager.ChangeLanguage`,
+v1.4.8); new campaign only for `owner`, `prosperity`, `hearth` and `<Building level>`
 Code: No code changes needed
 
 ### Delete a settlement
