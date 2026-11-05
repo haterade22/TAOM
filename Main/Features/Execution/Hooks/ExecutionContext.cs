@@ -21,14 +21,13 @@ namespace TAOM.Features.Execution.Hooks;
 /// detail, so it never sets the snapshot, but an unconditional clear would still wipe it before the
 /// outer call reached <c>OnHeroKilled</c> at <c>KillCharacterAction.cs:144</c>. Only the frame that
 /// called <see cref="TrySet"/> may clear, which the patch threads through Harmony's <c>__state</c>.
+/// Each pair is built by <c>TAOM.Adapters.FactionSides.OfHero</c>: the hero's clan map faction with that faction's own culture, or a clanless hero's own culture (#957). This class stores and returns pairs; it never builds one (<c>SidePairScanTests</c>).
 /// </remarks>
 public static class ExecutionContext
 {
     private static readonly ThreadLocal<bool> Active = new ThreadLocal<bool>();
-    private static readonly ThreadLocal<string> VictimKingdomId = new ThreadLocal<string>();
-    private static readonly ThreadLocal<string> VictimCultureId = new ThreadLocal<string>();
-    private static readonly ThreadLocal<string> ExecutorKingdomId = new ThreadLocal<string>();
-    private static readonly ThreadLocal<string> ExecutorCultureId = new ThreadLocal<string>();
+    private static readonly ThreadLocal<SideIds?> Victim = new ThreadLocal<SideIds?>();
+    private static readonly ThreadLocal<SideIds?> Executor = new ThreadLocal<SideIds?>();
 
     /// <summary>
     /// Establishes the snapshot for this thread and reports whether the caller now owns it. A nested
@@ -36,19 +35,13 @@ public static class ExecutionContext
     /// execution's identity always wins.
     /// </summary>
     /// <returns><c>true</c> if this call established the context and must later clear it.</returns>
-    public static bool TrySet(
-        string victimKingdomId,
-        string victimCultureId,
-        string executorKingdomId,
-        string executorCultureId)
+    public static bool TrySet(SideIds victim, SideIds executor)
     {
         if (Active.Value)
             return false;
 
-        VictimKingdomId.Value = victimKingdomId;
-        VictimCultureId.Value = victimCultureId;
-        ExecutorKingdomId.Value = executorKingdomId;
-        ExecutorCultureId.Value = executorCultureId;
+        Victim.Value = victim;
+        Executor.Value = executor;
         Active.Value = true;
         return true;
     }
@@ -63,23 +56,22 @@ public static class ExecutionContext
         if (!owned)
             return;
 
-        VictimKingdomId.Value = null;
-        VictimCultureId.Value = null;
-        ExecutorKingdomId.Value = null;
-        ExecutorCultureId.Value = null;
+        Victim.Value = null;
+        Executor.Value = null;
         Active.Value = false;
     }
 
     /// <summary>
     /// True while an execution is in flight on this thread. A hero legitimately has no kingdom, so
-    /// this is tracked with its own flag rather than inferred from a null id.
+    /// this is tracked with its own flag rather than inferred from an empty id.
     /// </summary>
     public static bool HasContext => Active.Value;
 
-    public static string GetVictimKingdomId() => VictimKingdomId.Value;
-    public static string GetVictimCultureId() => VictimCultureId.Value;
-    public static string GetExecutorKingdomId() => ExecutorKingdomId.Value;
-    public static string GetExecutorCultureId() => ExecutorCultureId.Value;
+    /// <summary>The victim's pair as of the start of the kill; <see cref="SideIds.None"/> when none was taken.</summary>
+    public static SideIds GetVictim() => Victim.Value ?? SideIds.None;
+
+    /// <summary>The executor's pair as of the start of the kill; <see cref="SideIds.None"/> when none was taken.</summary>
+    public static SideIds GetExecutor() => Executor.Value ?? SideIds.None;
 
     /// <summary>
     /// The victim as of the start of the kill, falling back to the live values when no execution is
@@ -88,14 +80,8 @@ public static class ExecutionContext
     /// been destroyed. Keeping both paths on one model is what holds the preview and the applied
     /// result in agreement.
     /// </summary>
-    public static ExecutionParticipant ResolveVictim(string liveKingdomId, string liveCultureId)
-        => Active.Value
-            ? new ExecutionParticipant(VictimKingdomId.Value, VictimCultureId.Value)
-            : new ExecutionParticipant(liveKingdomId, liveCultureId);
+    public static SideIds ResolveVictim(SideIds live) => Active.Value ? GetVictim() : live;
 
     /// <summary>The executor as of the start of the kill; see <see cref="ResolveVictim"/>.</summary>
-    public static ExecutionParticipant ResolveExecutor(string liveKingdomId, string liveCultureId)
-        => Active.Value
-            ? new ExecutionParticipant(ExecutorKingdomId.Value, ExecutorCultureId.Value)
-            : new ExecutionParticipant(liveKingdomId, liveCultureId);
+    public static SideIds ResolveExecutor(SideIds live) => Active.Value ? GetExecutor() : live;
 }

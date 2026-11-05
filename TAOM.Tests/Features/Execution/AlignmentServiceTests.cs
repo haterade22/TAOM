@@ -197,7 +197,7 @@ public class AlignmentServiceTests
     [TestMethod]
     public void ResolveSide_EmptyKingdom_FallsBackToCulture()
     {
-        // GetPlayerKingdomId() returns "" for a player whose clan has no kingdom.
+        // An empty faction id is an entity with no listed faction (a clanless hero): its culture decides.
         Assert.AreEqual(FactionSide.Evil, _sut.ResolveSide("", "mordor"));
     }
 
@@ -225,6 +225,21 @@ public class AlignmentServiceTests
     public void ResolveSide_BothIdsNull_ReturnsNeutral()
     {
         Assert.AreEqual(FactionSide.Neutral, _sut.ResolveSide(null, null));
+    }
+
+    // ----- ResolveSide(SideIds): the extension forwards the pair to the string overload -----
+
+    [TestMethod]
+    public void ResolveSide_SideIds_MatchesTheStringOverload()
+    {
+        // Listed id wins over the culture.
+        Assert.AreEqual(FactionSide.Free, _sut.ResolveSide(new SideIds("empire_w", "mordor")));
+        // A Neutral-listed id falls through to its own culture.
+        Assert.AreEqual(FactionSide.Evil, _sut.ResolveSide(new SideIds("umbar", "mordor")));
+        // An unlisted id falls through to the culture.
+        Assert.AreEqual(FactionSide.Free, _sut.ResolveSide(new SideIds("new_kingdom", "gondor")));
+        // The empty pair is Neutral.
+        Assert.AreEqual(FactionSide.Neutral, _sut.ResolveSide(SideIds.None));
     }
 
     // ----- Side-based predicate overloads carry the same Neutral semantics as the string ones -----

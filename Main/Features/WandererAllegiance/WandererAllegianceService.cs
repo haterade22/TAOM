@@ -9,15 +9,18 @@ namespace TAOM.Features.WandererAllegiance;
 
 /// <summary>
 /// Pure decision for whether a wanderer takes the player's coin (#575). Reuses the
-/// <see cref="IAlignmentService"/> table every other alignment feature reads: the wanderer's side is
-/// their culture's, the player's side is the kingdom they serve with their clan culture as the
-/// fallback (<see cref="IAlignmentService.ResolveSide"/>), so a Gondor-born mercenary of Mordor reads
-/// Evil and is refused by a Gondor wanderer.
+/// <see cref="IAlignmentService"/> table every other alignment feature reads. It keys on CULTURE
+/// StringIds (the keys of <c>execution/alignment.json</c>) for the wanderer, because a tavern wanderer
+/// has no clan and no kingdom. The player's side is the player clan's map faction (the kingdom served,
+/// or the clan itself when it serves none) with that faction's own culture as the fallback
+/// (<see cref="IAlignmentService.ResolveSide"/>, pair from <c>FactionSides.OfPlayer</c>), so a
+/// Gondor-born mercenary of Mordor reads Evil and is refused by a Gondor wanderer, and a Neutral realm's
+/// player is Neutral whatever the player's own culture (#957).
 /// </summary>
 /// <remarks>
 /// Deliberately does NOT call <see cref="IAlignmentService.AreEnemyAlignments"/>, whose Neutral
 /// semantics are inverted for a pairing question: it returns true when either side is Neutral, and
-/// would bar every Umbar, Dunland, Shaghana and Abanissa wanderer from serving anybody. Here Neutral
+/// would bar every Umbar, Khand, Shaghana and Abanissa wanderer from serving anybody. Here Neutral
 /// serves anyone and a Neutral player is refused by nobody, the same reading
 /// <c>MarriageAlignmentService</c> and <c>RecruitmentAlignmentService</c> give the table.
 /// <para>
@@ -45,7 +48,14 @@ public class WandererAllegianceService : IWandererAllegianceService
             StringComparer.OrdinalIgnoreCase));
     }
 
-    public WandererHireVerdict Evaluate(string? wandererHeroId, string? wandererCultureId, string? playerKingdomId, string? playerCultureId)
+    /// <summary>
+    /// Decides whether the wanderer refuses. Any null or unknown culture resolves to Neutral, and
+    /// Neutral on either side allows the hire, so the rule fails open to vanilla.
+    /// </summary>
+    /// <param name="wandererHeroId">The wanderer's <c>Hero.StringId</c>; consulted only by the named-companions-only scope.</param>
+    /// <param name="wandererCultureId">The wanderer's culture StringId.</param>
+    /// <param name="player">The player clan's map faction id with that faction's culture.</param>
+    public WandererHireVerdict Evaluate(string? wandererHeroId, string? wandererCultureId, SideIds player)
     {
         if (!_settings.IsEnabled)
             return WandererHireVerdict.Allowed;
@@ -58,7 +68,7 @@ public class WandererAllegianceService : IWandererAllegianceService
             return WandererHireVerdict.Allowed;
 
         var wandererSide = _alignment.GetCultureSide(wandererCultureId!);
-        var playerSide = _alignment.ResolveSide(playerKingdomId ?? string.Empty, playerCultureId ?? string.Empty);
+        var playerSide = _alignment.ResolveSide(player);
 
         if (wandererSide == FactionSide.Neutral || playerSide == FactionSide.Neutral || wandererSide == playerSide)
             return WandererHireVerdict.Allowed;

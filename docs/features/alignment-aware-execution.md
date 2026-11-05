@@ -167,7 +167,7 @@ Registered via `campaignStarter.AddModel()` in `SubModule.OnGameStart`. Bannerlo
 
 We override `GetRelationChangeForExecutingHero()`:
 1. Call `base.GetRelationChangeForExecutingHero()` to get the vanilla penalty
-2. Build three `ExecutionParticipant` values (kingdom id + culture id). Executor and victim come from `ExecutionContext.ResolveExecutor` / `ResolveVictim`, which return the snapshot when a kill is in flight and the live values otherwise. The evaluator is always live, because the kill does not touch him
+2. Build three `SideIds` pairs (`TAOM.Adapters.FactionSides`: the hero's clan map faction id with that faction's own culture, or a clanless hero's own culture; #957). Executor and victim come from `ExecutionContext.ResolveExecutor` / `ResolveVictim`, which return the snapshot when a kill is in flight and the live values otherwise. The evaluator is always live, because the kill does not touch him
 3. Delegate to `IExecutionRelationService.GetRelationModifier()`, which resolves each side and applies the alignment logic
 4. Return its delta and notification flag
 
@@ -273,7 +273,7 @@ for the FactionMap and uses LOTR names as `game_faction` values.
 
 **`GetKingdomSide(string kingdomId)`** and **`GetCultureSide(string cultureId)`** return `FactionSide.Neutral` for null, empty, or unknown ids. Lookup is case-insensitive and both read the same table.
 
-**`ResolveSide(string kingdomId, string cultureId)`** takes the kingdom side first; when that reads Neutral, the culture side; Neutral when neither classifies. **This is what execution resolves every participant through, and it is not optional.** A kingdom id alone reads Neutral for an independent, mercenary or enlisted player (enlistment deliberately does not join the commander's kingdom), for a minor or mercenary clan leader, and for a victim whose clan was destroyed by the very kill being evaluated. The three sibling alignment features (CaravanTrade, WarOfTheRingMomentum, PrisonerRecruitment) each carried a private copy of this fallback; execution did not, which is #556.
+**`ResolveSide(string kingdomId, string cultureId)`** takes the kingdom side first; when that reads Neutral, the culture side; Neutral when neither classifies. **This is what execution resolves every participant through, and it is not optional.** A kingdom id alone reads Neutral for an independent, mercenary or enlisted player (enlistment deliberately does not join the commander's kingdom), for a minor or mercenary clan leader, and for a victim whose clan was destroyed by the very kill being evaluated. The three sibling alignment features (CaravanTrade, WarOfTheRingMomentum, PrisonerRecruitment) each carried a private copy of this fallback; execution did not, which is #556. Since #957 every caller passes the id and the culture of ONE entity as a `SideIds` pair, built only by `FactionSides` and resolved with the `ResolveSide(this IAlignmentService, SideIds)` extension; a kingdom id zipped with a hero's own culture sided a Neutral realm's lord by his birth. `SidePairScanTests` fails on a two-argument `ResolveSide` call or a `SideIds` built anywhere else. PrisonerRecruitment's private copy of the fallback went with #957.
 
 **`AreEnemyAlignments(string A, string B)`** — Returns `true` if the sides differ OR if either side is Neutral. Neutral kingdoms are treated as enemies of everyone, including other neutrals. This means:
 - Free vs Evil = enemies
@@ -402,7 +402,7 @@ CharacterRelationCampaignBehavior.OnHeroKilled
     |    calls TaomExecutionRelationModel.GetRelationChangeForExecutingHero
     |      → base returns vanilla -60 (same clan)
     |      → GetRelationModifier(executor, victim, evaluator, -60)
-    |        → each participant: ResolveSide(kingdomId, cultureId)
+    |        → each participant: ResolveSide(SideIds pair)
     |          (victim's kingdom is already null here if his clan was
     |           just destroyed — the snapshot is what saves this)
     |        → executor Free vs victim Evil: cross-alignment
@@ -446,11 +446,14 @@ SubModule.OnGameInitializationFinished:
 | `Main/Features/Execution/AlignmentConfigProvider.cs` | Reads alignment.json via IPathService | ~40 |
 | `Main/Features/Execution/ExecutionIoC.cs` | IoC registration + hook init | ~18 |
 | `Main/Features/Execution/Models/TaomExecutionRelationModel.cs` | GameModel override: boundary conversion + delegate | ~44 |
-| `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionParticipant`, `ExecutionRelationResult`, service contract | ~66 |
+| `Main/Features/Execution/IExecutionRelationService.cs` | `ExecutionRelationResult`, service contract (participants are `SideIds`) | ~66 |
 | `Main/Features/Execution/ExecutionRelationService.cs` | Relation decision: side resolution, kinslaying, notification | ~62 |
 | `Main/Features/Execution/Hooks/IOnExecutionAction.cs` | Hook interface (honor penalty only) | ~7 |
 | `Main/Features/Execution/Hooks/ExecutionActionHook.cs` | Honor-penalty decision | ~25 |
-| `Main/Features/Execution/Hooks/ExecutionContext.cs` | Thread-local victim/killer snapshot (kingdom + culture) | ~78 |
+| `Main/Features/Execution/Hooks/ExecutionContext.cs` | Thread-local victim/killer snapshot (one `SideIds` pair each) | ~78 |
+| `Main/Adapters/FactionSides.cs` | Builds every pair from engine objects | ~48 |
+| `Main/Features/Execution/SideIds.cs` | The pair record | ~14 |
+| `Main/Features/Execution/AlignmentServiceExtensions.cs` | `ResolveSide(SideIds)` | ~11 |
 | `Main/Features/Execution/Hooks/KillCharacterAction_ApplyInternal_Patch.cs` | Harmony prefix/finalizer on ApplyInternal | ~30 |
 | `Main/Features/Execution/Hooks/TraitLevelingHelper_OnLordExecuted_Patch.cs` | Harmony prefix — skips honor penalty | ~30 |
 | `Main/_Module/ModuleData/execution/alignment.json` | Kingdom → side mapping (16 entries) | ~18 |
@@ -537,6 +540,7 @@ Edit `KinslayingMultiplier` in `Main/Features/Execution/Hooks/ExecutionActionHoo
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-11-05: #957 ported from 1.5.x `5e43518df`: every participant is one entity's `SideIds` pair; a Neutral realm's lord is no longer sided by his own culture.
 - 2026-09-06 (#556): fixed the fall-through that made this whole feature skippable. `ExecutionRelationService` and the honor patch both handed the calculation back to vanilla whenever any one kingdom id was null or empty, and vanilla charges -10 to every honourable clan leader in the world. Reachable two ways: a kingdom-less executor (independent, mercenary, or enlisted player), and a victim whose `Clan.Kingdom` was nulled by the clan destruction that step 10 performs before step 11 fires the relation pass. Added `IAlignmentService.ResolveSide(kingdomId, cultureId)` plus `FactionSide` overloads of the two predicates, moved the relation service onto `ExecutionParticipant`, extended `ExecutionContext` to snapshot culture as well as kingdom for both victim and executor, added `IPlayerContextAdapter.GetPlayerCultureId()`, and deleted the dead duplicate relation logic (`ExecutionActionHook.GetRelationModifier` / `IsKinslaying`). New build-time gate `ShippedMainCultureAlignmentCoverageTests`. Corrected the kingdom mapping tables above, which had `vlandia` as Arthedain and `empire` as a free Rohan; the XSLT says `vlandia` is Rohan and `empire` is Dunland. The deep review then found that the Harmony finalizer cleared the snapshot unconditionally, so a nested kill during clan destruction wiped it mid-flight; ownership now runs through `ExecutionContext.TrySet` / `ClearIfOwned` and Harmony's `__state`. RCA: `docs/reviews/rca-execution-alignment-fallthrough-2026-09-06.md`.
 - 2026-05-14 — Phase 9b extraction (#147): pulled `IExecutionRelationService` out of `TaomExecutionRelationModel` (returns `ExecutionRelationResult { RelationDelta, ShowNotification }`), reduced the model body to a single-call delegate, and replaced direct `Hero.MainHero.MapFaction.StringId` access with injected `IPlayerContextAdapter.GetPlayerKingdomId()`.
 - 2026-03-25 — Introduced the Alignment-Aware Execution System: `Main/Features/Execution/` with `TaomExecutionRelationModel` GameModel override + `KillCharacterAction.ApplyInternal` / `TraitLevelingHelper.OnLordExecuted` Harmony patches (`Patch14_Execution`), `alignment.json` (16 kingdoms → Free/Evil/Neutral), zero-penalty cross-alignment kills, 1.5x kinslaying penalties, and 28 tests.

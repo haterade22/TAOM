@@ -23,14 +23,7 @@ public static class TraitLevelingHelper_OnLordExecuted_Patch
         // OnLordExecuted — leave vanilla alone rather than guess at the participants.
         if (!ExecutionContext.HasContext) return true;
 
-        var victim = new ExecutionParticipant(
-            ExecutionContext.GetVictimKingdomId(),
-            ExecutionContext.GetVictimCultureId());
-        var executor = new ExecutionParticipant(
-            ExecutionContext.GetExecutorKingdomId(),
-            ExecutionContext.GetExecutorCultureId());
-
         // Skip the vanilla -1000 Honor XP when this was a cross-alignment kill.
-        return _hook.ShouldApplyHonorPenalty(victim, executor);
+        return _hook.ShouldApplyHonorPenalty(ExecutionContext.GetVictim(), ExecutionContext.GetExecutor());
     }
 }

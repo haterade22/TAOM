@@ -22,11 +22,10 @@ public class ExecutionActionHookTests
     {
         _alignmentService = Substitute.For<IAlignmentService>();
 
-        Side(PlayerKingdom, null, FactionSide.Free);
-        Side(AllyKingdom, null, FactionSide.Free);
-        Side(VictimKingdom, null, FactionSide.Evil);
+        Side(PlayerKingdom, "", FactionSide.Free);
+        Side(AllyKingdom, "", FactionSide.Free);
+        Side(VictimKingdom, "", FactionSide.Evil);
         Side("", FreeCulture, FactionSide.Free);
-        Side(null, FreeCulture, FactionSide.Free);
         Side(VictimKingdom, EvilCulture, FactionSide.Evil);
         Side(AllyKingdom, FreeCulture, FactionSide.Free);
 
@@ -43,8 +42,7 @@ public class ExecutionActionHookTests
     private static bool IsEnemy(FactionSide a, FactionSide b)
         => a == FactionSide.Neutral || b == FactionSide.Neutral || a != b;
 
-    private static ExecutionParticipant P(string kingdomId, string cultureId = null)
-        => new ExecutionParticipant(kingdomId, cultureId);
+    private static SideIds P(string kingdomId, string cultureId = null) => new SideIds(kingdomId ?? "", cultureId ?? "");
 
     [TestMethod]
     public void ShouldApplyHonorPenalty_CrossAlignment_ReturnsFalse()
@@ -75,7 +73,7 @@ public class ExecutionActionHookTests
     [TestMethod]
     public void ShouldApplyHonorPenalty_VictimKingdomNulledByClanDestruction_ReturnsFalse()
     {
-        _alignmentService.ResolveSide(null, EvilCulture).Returns(FactionSide.Evil);
+        _alignmentService.ResolveSide("", EvilCulture).Returns(FactionSide.Evil);
 
         Assert.IsFalse(_sut.ShouldApplyHonorPenalty(P(null, EvilCulture), P(PlayerKingdom, FreeCulture)));
     }

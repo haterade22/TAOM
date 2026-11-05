@@ -130,6 +130,7 @@ attribute gotcha recorded under Gotchas below.
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
 | ~~**Dangling mbproj entry**~~ | FIXED 2026-08-28. `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; the file now exists, carrying `warg_01` absorbed from the retired `Alliance.Wargs` module. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) |
 | ~~**`uruk_01` defined twice**~~ | RESOLVED 2026-08-28 by retiring `Alliance.Wargs`. Its duplicate `uruk_01` was deliberately not carried over in the absorption; TAOM's is now the only definition |
+| ~~**Elf horn path**~~ | FIXED 2026-11-05. `module_sounds.xml` registered `elf_horn.wav` for the shipped `horn_elf.wav`; nothing plays it. `ModuleSoundPathTests` now checks every path. |
 | **mp3 of undetermined support** | 93 `.mp3` files under `ModuleSounds/LOTR/Dwarf/`. Native's own comment documents `.ogg` and `.wav` only; whether FMOD accepts mp3 here could not be determined from the shipping-client decompile and needs a runtime test |
 | **Asset provenance** | The custom voice library reads as BFME-sourced on filename convention: `Death1_Isengard.wav`, `Grunt1_Isengard.wav`, `D1_Warcry1..5`, `D1_Battlecry1..3`, Théoden's `Advance_Forth and fear no darkness.wav`, Lurtz's `Defend me you cowards.wav`. Covers dwarf, uruk, uruk_hai, Lurtz and Théoden |
 
