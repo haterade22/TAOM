@@ -27,6 +27,10 @@ internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Child;
 
+    // First child, as shipped: UIExtenderEx 2.13.2 inserts a Child patch before child[Index] and Index defaults to 0,
+    // so this states the position the bar has always had.
+    public override int Index => 0;
+
     [PrefabExtensionXmlDocument]
     public XmlDocument GetDocument()
     {
