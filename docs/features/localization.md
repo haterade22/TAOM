@@ -160,6 +160,8 @@ Bannerlord must already support the language natively (it must have an entry in 
 | Tolkien proper nouns (Gondor, Aragorn) | Convention — not translated in official LOTR | None — leave as English |
 | Equipment/item names | Owned by LOTRLOME_Armory module | Translate in that module |
 
+**Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 313 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
+
 ## Performance
 
 No performance impact — translation files are loaded once at startup by the engine and cached in a static dictionary. Empty translation files (the current stub state) add zero overhead.
