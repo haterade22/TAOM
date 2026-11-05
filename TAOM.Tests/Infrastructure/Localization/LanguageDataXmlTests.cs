@@ -390,4 +390,19 @@ public class LanguageDataXmlTests
             }
         }
     }
+
+    [TestMethod]
+    public void ModuleStringsGameText_IsLoadedInCustomBattleAndTheEditorToo()
+    {
+        // GameTextManager.LoadGameTexts (v1.4.8 GameTextManager.cs:107-117) merges the GameText files of the running
+        // game type only, so a file registered for Campaign alone is absent in Custom Battle and the editor.
+        var subModule = XDocument.Load(Path.Combine(ModuleDataPath, "..", "SubModule.xml"));
+        var node = subModule.Descendants("XmlNode").Single(n =>
+            (string?)n.Element("XmlName")?.Attribute("id") == "GameText"
+            && (string?)n.Element("XmlName")?.Attribute("path") == "taom_module_strings");
+        var types = node.Element("IncludedGameTypes")?.Elements("GameType")
+            .Select(g => ((string?)g.Attribute("value") ?? "").Trim()).ToList() ?? new List<string>();
+        foreach (var required in new[] { "Campaign", "CampaignStoryMode", "CustomGame", "EditorGame" })
+            CollectionAssert.Contains(types, required, "taom_module_strings.xml is not loaded under " + required);
+    }
 }
