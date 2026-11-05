@@ -247,7 +247,7 @@ Key points:
 - [ ] Mechanically replace `<EquipmentSet ... civilian="true" />` with `<EquipmentSet ... equipmentType="Civilian" />` across `lords.xml` and `lords.xslt`. Use `tools/migrate_equipment_type_1_4_3.py` (to be authored — see v1.4.x-equipment-overhaul.md).
 - [ ] For each TAOM kingdom (Mordor, Gondor, Erebor, Rivendell, Lothlorien, Mirkwood, Isengard, Gundabad, Dol Guldur, Umbar — plus the 6 XSLT kingdoms), ensure the rulers (`clan_<kingdom>_1` heads) reference dedicated ruler-tier equipment rosters tagged `IsKingdomRulerTemplate`. Currently TAOM rulers share `_bat_template_*` with regular lords.
 - [ ] Verify no `civilianTemplate=` / `battleTemplate=` regressions slip in via copy-paste (these never existed in TAOM but are easy to add wrongly).
-- [ ] Check `lords.xslt` passthrough — vanilla 1.4.5 may have added new attributes since 1.3.15 that the XSLT silently drops. Run `tools/complete_lords_xslt.py` against the 1.4.5 dump to refresh the explicit-attribute list.
+- [ ] Check `lords.xslt` passthrough: vanilla 1.4.5 may have added new attributes since 1.3.15 that the XSLT silently drops. Run `tools/complete_lords_xslt.py --dry-run` against the 1.4.5 dump: it lists vanilla attributes outside `ATTR_ORDER`; add each to `ATTR_ORDER` (new lords) and hand-edit the existing templates.
 - [ ] Confirm `is_hero="true"` and `occupation="Lord"` are set on every NPCCharacter in TAOM lords.xml (566 entries).
 
 ---
@@ -552,7 +552,7 @@ Cross-reference: [v1.4.x-equipment-overhaul.md](../v1.4.x-equipment-overhaul.md)
 
 ### XSLT (`lords.xslt`, `spnpccharacters.xslt` if any)
 
-- [ ] Re-run `tools/complete_lords_xslt.py` against the 1.4.5 vanilla dump to refresh explicit-attribute coverage — new vanilla attributes between 1.3.15 and 1.4.5 must be passed through, not dropped.
+- [ ] Run `tools/complete_lords_xslt.py --dry-run` against the 1.4.5 vanilla dump: it lists new vanilla attributes between 1.3.15 and 1.4.5 that never reach a template; add each to `ATTR_ORDER` (new lords) and hand-edit the existing templates.
 - [ ] Verify `<xsl:apply-templates select="@*|node()"/>` identity transform is intact (see `xslt.md` rule).
 
 ### Verification

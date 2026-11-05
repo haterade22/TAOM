@@ -122,6 +122,21 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM", "SettlementNameplatesVM", "_mapCamera", "Field", "NameplateCullAdapter.cs:49")]
     [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_bindIsVisibleOnMap", "Field", "NameplateCullAdapter.cs:50")]
     [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_worldPos", "Field", "NameplateCullAdapter.cs:51")]
+    // --- LoadTimeStamps (plan 040): the [Lifecycle] listener swap walks MbEvent's private listener records and
+    // sets their private Action. Missing: per-handler timing is off for the session, dispatch totals only.
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Next", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Action", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "set_Action", "Method", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Owner", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2", "MbEvent`2", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Next", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Action", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "set_Action", "Method", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Owner", "Property", "CampaignListenerAdapter.cs")]
+    // --- XmlMerge (plan 042): the fast path loads each file through the engine's private loader. A miss turns the fast
+    // path off for the session (logged at start); every module XML merge then runs the engine's own code.
+    [DataRow("TaleWorlds.ObjectSystem.MBObjectManager", "MBObjectManager", "CreateDocumentFromXmlFile", "Method", "XmlMergeEngineAdapter.cs:52")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

@@ -265,7 +265,8 @@ The co-op additions: `CoopPresence` — "is a co-op module in this launcher sess
 
 | File | Purpose |
 |---|---|
-| `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, AssemblyResolve redirects, version probe results, crash-loop detection. Inspect first when diagnosing any incident. |
+| `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, version probe results, crash-loop detection. Inspect first when diagnosing any incident. It records only that the AssemblyResolve handler was installed, never what it redirected: for that, read the TAOM log in the next row. |
+| `<game>/bin/Win64_Shipping_Client/Logs/taom_debug_*.log` | TAOM's own log (`FileLogger`). Since 2026-11-04 on the 1.4.x line (#725) it also carries what TAOM.Dependencies logs through `EarlyLog` while it loads: static init, the Harmony fork version, the AssemblyResolve handler and every redirect it makes, the UnpatchAll guard, the duplicate `0Harmony.dll` check and shim install failures. A line logged before TAOM loaded starts with `[buffered HH:mm:ss]`, the time it was logged. Before that nothing flushed `EarlyLog`, so those lines were dropped on every launch. |
 | `<game>/Modules/TAOM.Dependencies/failed-mods-catalog.txt` | One line per (culprit-mod, exception-type, owner-method) that a shield swallowed. Format: `<UTC> | <culprit> | <category> | <ExceptionType> | <owner method> | <message head>`. |
 | `<game>/Modules/TAOM.Dependencies/session-launching.marker` | Crash-loop sentinel. Created in `OnSubModuleLoad` (`IncompatibleModDetector.RunEarlyPhase`); deleted on `OnGameInitializationFinished`, which fires at the first game start (campaign, custom battle or editor), not at the main menu. Survival to next launch means the previous session crashed before a game started, or quit from the main menu without starting one. |
 | `<game>/Modules/TAOM.Dependencies/last-good-modlist.txt` | Snapshot of enabled modules at the last game start (written with the marker delete). Used by `IncompatibleModDetector` to diff against current modlist for culprit identification. |
@@ -289,7 +290,7 @@ After a normal launch and one game start (campaign, custom battle or editor), `d
 [INFO  ] [PatchShield]                shield pass: +N new, 0 already-seen, M skipped (seen: N+M, attached: N) in T ms (X.X ms/attach)
 [INFO  ] [SaveShield]                 install complete: shielded +K new, 0 already-shielded, 0 skipped
 [INFO  ] [VersionProbe]               detected via ApplicationVersionHelper: v1.4
-[INFO  ] [TAOM.Dependencies]          OnSubModuleLoad complete
+[INFO  ] [Dependencies]               OnSubModuleLoad: complete
                                        ... then, at the game start:
 [INFO  ] [IncompatibleModDetector]    MarkSessionLaunchSuccessful: saved 47-mod last-good snapshot
 [INFO  ] [PatchShield]                shield pass: +P new, N+M already-seen, Q skipped (seen: N+M+P+Q, attached: N+P) in T ms (X.X ms/attach)
@@ -421,6 +422,8 @@ System.Numerics.Vectors.dll                                   (vendored — Butt
 System.Reflection.Metadata.dll                                (vendored — ButterLib dep)
 ```
 
+> **Refresh 2026-11-04 (1.4.x, plan 118, from the 1.5.x line's 6027ecfae).** ButterLib 2.11.0 to 2.12.0 (`Implementation.1.4.6`, `1.4.7` and `1.4.8` added beside the six 1.4.0 to 1.4.5 builds, all re-copied at 2.12.0), MBOptionScreen 5.12.1 to 5.12.3 (`v1.4.6` to `v1.4.8` added) with `MCM.UI.Adapter.MCMv5.dll` at 5.12.3, NuGet pins `Bannerlord.MCM` 5.12.3 and `Bannerlord.UIExtenderEx` 2.13.3 in both csproj files, the ButterLib stub at `v2.12.99.0`. The 1.5.x line's `1.5.1` builds are left out: both loaders load the build that matches the running engine and otherwise the latest build they find, so a build for an engine this line never runs would become that fallback. On v1.4.8 both now find an exact match; before this refresh none matched and each fell back to 1.4.5.
+>
 > **The 6 `BUTR.CrashReport*` DLLs are not optional and were missing from this inventory until 2026-07-16.** ButterLib references them in its metadata; without them, ButterLib's type enumeration throws `ReflectionTypeLoadException` at SubModule init — a crash this project has already shipped once. A maintainer following the old inventory would have rebuilt a bin folder that reproduces it.
 
 Count is intentionally not stated — it moves with the impl set. Compare against the folder.

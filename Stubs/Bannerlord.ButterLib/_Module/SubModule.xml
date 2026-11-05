@@ -9,7 +9,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
     <Id value="Bannerlord.ButterLib" />
     <Name value="ButterLib (provided by TAOM.Dependencies)" />
-    <Version value="v2.11.99.0" />
+    <Version value="v2.12.99.0" />
     <DefaultModule value="true" />
     <SingleplayerModule value="true" />
     <MultiplayerModule value="true" />

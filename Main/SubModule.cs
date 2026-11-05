@@ -129,6 +129,10 @@ public class SubModule : MBSubModuleBase
         // here says in every log whether this session started cold.
         try { Features.ShaderCompileNotice.ShaderCacheState.Log(IoC.Resolve<IModLogger>()); } catch { }
 
+        // #725: TAOM.Dependencies buffers its startup lines until this logger exists; flush them now.
+        try { Core.Logging.EarlyLogBridge.Connect(IoC.Resolve<IModLogger>()); }
+        catch { /* the early-log flush must never stop the mod loading */ }
+
         // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
         // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
         // application and renders every character in bind pose — a failure that previously left no
@@ -363,6 +367,39 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>().LogError($"[SaveLoad] init failed — save/load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
         }
 
+        // Patch89_MapLoadDiagnostics: a per-frame [MapLoad] heartbeat and lifecycle trace on the
+        // campaign map, written for the v1.5.0 map-load stall (the map screen is live and
+        // Campaign.RealTick is executing while the player sees a frozen loading screen, so a log
+        // that simply stops tells us nothing). Numbered 89 on the v1.5.x line: Patch66 belongs to
+        // Enlistment here. Own try/catch: a diagnostic must never be the thing that breaks the
+        // load it exists to explain.
+        try
+        {
+            var mapLoadLogger = IoC.Resolve<IModLogger>();
+            Features.MapLoadDiagnostics.Hooks.Campaign_RealTick_MapLoad_Patch.Initialize(
+                IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>(), mapLoadLogger);
+            Features.MapLoadDiagnostics.MapLoadTracer.Initialize(mapLoadLogger);
+            TryPatchCategory("Patch89_MapLoadDiagnostics");
+
+            // Lifecycle trace: state pushes/pops, loading-window raise/lower with caller chains,
+            // and the map state/screen seams. Each category applies separately because Harmony
+            // aborts a category at its first failing class, and a drifted engine binding here must
+            // not take the working heartbeat down with it.
+            foreach (var traceCategory in new[]
+            {
+                "Patch89_MapLoadDiagnostics_Lifecycle",
+                "Patch89_MapLoadDiagnostics_MapScreen",
+                "Patch89_MapLoadDiagnostics_SceneReady",
+            })
+            {
+                TryPatchCategory(traceCategory);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[MapLoad] init failed, map-load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Patch90_PreloadBodyGuard (#601): a collision-body name no loaded tpac ships spins
         // PreloadHelper.WaitForMeshesToBeLoaded forever on the first frame of any mission that
         // preloads a carrier (#352 twice, #599 the elf start). The prefix drains the names that
@@ -561,6 +598,8 @@ public class SubModule : MBSubModuleBase
         Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
         TryPatchCategory("Patch42_CastleRecruitment");
         FeatureModuleHooks.RunPhase(ApplyPhase.ProcessLoad, TryPatchCategory);
+        // Load-time stamps (docs/features/load-time-stamps.md): phase total now, per-category lines at game init.
+        _patches.EndPhase("OnSubModuleLoad");
         // No ReportPatchFailures here: nothing receives a message yet (see the startup report in
         // OnBeforeInitialModuleScreenSetAsRoot), so this phase's failures wait for it.
 
@@ -591,6 +630,7 @@ public class SubModule : MBSubModuleBase
             _basicTableauGuardApplied = true;
             TryPatchCategory("Patch55_BasicTableauRaceGuard");
             FeatureModuleHooks.RunPhase(ApplyPhase.MainMenu, TryPatchCategory);
+            _patches.EndPhase("MainMenu");
             // Reports OnSubModuleLoad's failures and Patch55's together. The earliest a notice can
             // be shown: Native's GauntletUISubModule, which runs before TAOM, creates the chat log
             // and the inquiry manager in this hook, and InformationManager queues nothing sent
@@ -764,6 +804,8 @@ public class SubModule : MBSubModuleBase
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
         base.OnGameStart(game, gameStarterObject);
+        // Load-time stamps (docs/features/load-time-stamps.md): null unless "Enable Load-Time Stamps" is on.
+        var hookStamp = Features.LoadTimeStamps.LoadTimeStampsHooks.StartHook("OnGameStart", game?.GameType?.GetType().Name);
 
         // Session-level diagnostic snapshot: OS / CLR / mod list / mod-stack
         // assembly versions / campaign context. Runs once per session and is
@@ -773,6 +815,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>()?.LogSessionSnapshot();
         }
         catch { /* diagnostic is best-effort, never break OnGameStart */ }
+        hookStamp?.Mark("session_snapshot");
 
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
@@ -797,10 +840,13 @@ public class SubModule : MBSubModuleBase
             RegisterSpecialResourcesAndCareers(campaignStarter, careerPassives);
             RegisterCampaignLifeBehaviors(campaignStarter);
         }
+        hookStamp?.Mark("hand_wired");
 
         // Feature modules last: their behaviors and models follow every hand-wired one (a Custom
         // Battle starter gets only CustomBattle-target models).
         FeatureModuleHooks.AddGameStartContent(gameStarterObject);
+        hookStamp?.Mark("feature_modules");
+        hookStamp?.End();
     }
 
     // [SaveLoad] campaign-launch memory stamps. Engine order for a saved campaign (installed
@@ -1249,6 +1295,8 @@ public class SubModule : MBSubModuleBase
         var influenceService = IoC.Resolve<IStartupInfluenceService>();
         var startupLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+        campaignStarter.AddBehavior(new Features.MapLoadDiagnostics.MapLoadDiagnosticsBehavior(
+            IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>()));
 
         var namedCompanionService = IoC.Resolve<INamedCompanionService>();
         campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
@@ -1414,10 +1462,20 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
+        // Load-time stamps (docs/features/load-time-stamps.md): the every-game part, before the guard.
+        var hookStamp = Features.LoadTimeStamps.LoadTimeStampsHooks.StartHook("OnGameInitializationFinished", game?.GameType?.GetType().Name);
 
         // [SaveLoad] campaign-launch memory stamp, BEFORE the once-per-process guard below so every
         // game init in the process gets one, not just the first.
         StampSaveLoadPhase(Features.SaveLoadDiagnostics.Domain.SaveLoadPhase.GameInitializationFinished);
+        hookStamp?.Mark("save_load_stamp");
+        Features.LoadTimeStamps.LoadTimeStampsHooks.LogLoadXmlSummary();
+        hookStamp?.End();
+
+        // [XmlMerge] summary (docs/features/xml-merge-fast-path.md): one line per game for the module-XML merges
+        // since the previous one. Every game init, before the once-per-process guard: Campaign.OnInitialize and
+        // CustomGame.OnInitialize call this after their XML loads. The hook never throws.
+        Features.XmlMerge.Hooks.MBObjectManager_CreateMergedXmlFile_Patch.LogWindowSummary(game?.GameType?.GameTypeStringId);
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
@@ -1428,6 +1486,7 @@ public class SubModule : MBSubModuleBase
         // Mirrors _missionTimePatchesApplied in OnMissionBehaviorInitialize.
         if (_gameInitPatchesApplied) return;
         _gameInitPatchesApplied = true;
+        var onceStamp = Features.LoadTimeStamps.LoadTimeStampsHooks.StartHook("GameInitOnce", null);
 
         // Diagnostics 2026-07-31 ("bendy man" / prone tableau): these categories own the entire
         // character-preview path. They were applied unguarded and in sequence, so the FIRST one to
@@ -1829,12 +1888,16 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch69_TournamentRosterGuard");
         TryPatchCategory("Patch69_TournamentEndGuard");
         FeatureModuleHooks.RunPhase(ApplyPhase.GameInit, TryPatchCategory);
+        _patches.EndPhase("GameInit");
+        _patches.WriteHeldCategoryLines(Features.LoadTimeStamps.LoadTimeStampsHooks.DetailEnabled);
         ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_game_init}game initialization"));
+        onceStamp?.Mark("patch_categories");
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
         // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
         ManualPatchApplicator.ApplyAll(_harmony);
+        onceStamp?.Mark("manual_patches");
 
         // Harmony census — LAST, so it sees every patch TAOM and every other mod has applied.
         // Only runs when a co-op module is active: it is the substitute for decompiling that mod
@@ -1874,6 +1937,7 @@ public class SubModule : MBSubModuleBase
         {
             IoC.Resolve<IModLogger>().LogWarning($"[HarmonyCensus] wiring failed: {ex.GetType().Name}: {ex.Message}");
         }
+        onceStamp?.End();
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)
@@ -1934,6 +1998,8 @@ public class SubModule : MBSubModuleBase
             _missionTimePatchesApplied = true;
             TryPatchCategory("Patch_MissionTime_SetMovementOrder");
             FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);
+            _patches.EndPhase("Mission");
+            _patches.WriteHeldCategoryLines(Features.LoadTimeStamps.LoadTimeStampsHooks.DetailEnabled);
             ReportPatchFailures(new TextObject("{=taom_patch_apply_phase_mission_start}mission start"));
         }
 

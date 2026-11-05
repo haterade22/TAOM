@@ -657,6 +657,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `CullHiddenNameplates` | `true` | Map Performance. Skips hidden settlement nameplates that cannot become visible this frame ([nameplate-cull.md](nameplate-cull.md)). Live. |
 | `ReleaseMapViewMemory` | `true` | Map Performance. Every Nth cover of the campaign map releases the map view's render targets on its return ([map-view-release.md](map-view-release.md)). Live. |
 | `MapViewReleaseInterval` | `20` | Map Performance. N for the row above, 1 to 1000. Live. |
+| `EnableLoadTimeStamps` | `false` | The detailed load-time lines ([load-time-stamps.md](load-time-stamps.md)). Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 

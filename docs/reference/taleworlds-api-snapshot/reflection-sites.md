@@ -22,6 +22,8 @@ The one hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` na
 
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
+A third-party reflection site with its own gate: `Adapters/ButterLibDistanceMatrixAdapter.cs` (#740) finds ButterLib's internal `Bannerlord.ButterLib.Implementation.DistanceMatrix.DistanceMatrixSubSystem` by full name and reads its static `Instance`, then calls `IsEnabled` and `Disable()` on it. The type lives in a version-specific ButterLib DLL that ReflectionSiteBindingTests does not load, so `TAOM.Tests/Features/ButterLibDistanceMatrix/ButterLibDistanceMatrixBindingTests.cs` (`BindingVerification`) checks it against the newest implementation DLL tracked in `Dependencies/_Module/bin/`.
+
 ---
 
 ## Category B — Auxiliary static-engine reflection (GATED)
@@ -90,9 +92,22 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM` | `_mapCamera` | field (private) | `NameplateCullAdapter.cs:49` | NameplateCull (Patch104). Read through `AccessTools.FieldRefAccess` to get the map camera the vanilla `Update` reads. Missing: `Initialize` returns a reason, the cull stays off and the vanilla nameplate update runs |
 | `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_bindIsVisibleOnMap` | field (private) | `NameplateCullAdapter.cs:50` | NameplateCull. The bound visibility a plate must agree with before it may be skipped. Missing: as `_mapCamera` |
 | `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_worldPos` | field (private) | `NameplateCullAdapter.cs:51` | NameplateCull. The plate's world position, for the distance half of the visibility test. Missing: as `_mapCamera` |
+| `` TaleWorlds.CampaignSystem.MbEvent`1 `` | `_nonSerializedListenerList` | field (private) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Next` | field (public) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Action` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `set_Action` | method (private setter) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Owner` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2 `` | `_nonSerializedListenerList` | field (private) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Next` | field (public) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Action` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `set_Action` | method (private setter) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Owner` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `TaleWorlds.ObjectSystem.MBObjectManager` | `CreateDocumentFromXmlFile` | method (private static) | `XmlMergeEngineAdapter.cs:52` | XmlMerge (plan 042). The fast path loads and validates every module XML file through the engine's own loader, bound once to a delegate. Missing: the fast path turns itself off at start (`[XmlMerge] fast path off`) and every merge runs the engine's own code |
 
 Status (2026-11-04): NameplateCull (Patch104) adds three private field rows; they resolve against installed v1.4.8 (ReflectionSiteBindingTests 58/58).
 Status (2026-11-04): MissionStartGuard (Patch103) adds six method rows; they resolve against installed v1.4.8 (ReflectionSiteBindingTests 51/51).
+Status (2026-11-04, 1.4.x): XmlMerge adds one row (MBObjectManager.CreateDocumentFromXmlFile); it resolves against installed v1.4.8.
+Status (2026-11-04, 1.4.x): LoadTimeStamps adds ten rows (the MbEvent listener records); all resolve against installed v1.4.8 (ReflectionSiteBindingTests).
 Status (2026-09-15): Patch80 seam D (#550) adds `DecisionItemBaseVM.ExecuteDone`, and the four members `KingdomVoteDeadlockBinding` has cached since #547 are catalogued at the same time; they had only ever been pinned by `Patch80KingdomVoteDeadlockBindingTests`. All five resolve against installed v1.5.3.
 Status (2026-09-11): Hideout boss fight (#564) adds three `HideoutAmbushMissionController` field rows, all three injected by `Patch86_HideoutAmbushBossFight` and pinned by the `ReflectionSiteBindingTests` rows plus a field-TYPE assertion in `Patch86HideoutBossFightBindingTests`; **all resolve against installed v1.4.8** (`BindingVerification` filtered run green, see the CHANGELOG entry).
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**

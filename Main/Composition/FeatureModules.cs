@@ -25,5 +25,8 @@ internal static class FeatureModules
         new Features.TextureAdvice.TextureAdviceModule(),
         new Features.NameplateCull.NameplateCullModule(),
         new Features.MapViewRelease.MapViewReleaseModule(),
+        new Features.LoadTimeStamps.LoadTimeStampsModule(),
+        new Features.XmlMerge.XmlMergeModule(),
+        new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
     };
 }

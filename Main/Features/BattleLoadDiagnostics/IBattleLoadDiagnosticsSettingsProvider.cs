@@ -36,4 +36,7 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// <summary>Seconds between [MemSample] emissions (validated 10-120, default 30);
     /// read live per poll so the MCM knob needs no timer rescheduling.</summary>
     double MemorySampleIntervalSeconds { get; }
+
+    /// <summary>The detailed load-time stamps (default false); read at game start, game initialization and each campaign dispatch.</summary>
+    bool LoadTimeStampsEnabled { get; }
 }

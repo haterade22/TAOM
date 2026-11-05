@@ -21,6 +21,13 @@ public class BattleLoadDiagnosticsSettingsProviderTests
     }
 
     [TestMethod]
+    public void LoadTimeStampsEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.IsFalse(sut.LoadTimeStampsEnabled);
+    }
+
+    [TestMethod]
     public void MissionTickStallSamplerEnabled_NoMcmInstance_DefaultsTrue()
     {
         var sut = new BattleLoadDiagnosticsSettingsProvider();

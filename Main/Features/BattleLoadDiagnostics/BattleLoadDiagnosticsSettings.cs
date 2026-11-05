@@ -84,4 +84,9 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Cheat Mode Lists All Items And Troops", Order = 4, RequireRestart = false,
         HintText = "Vanilla cheat mode (cheat_mode = 1 in engine_config.txt, which TAOM's taom.* console commands need) makes your own inventory list every item in the game and the party screen every troop. With TAOM's thousands of items that list takes gigabytes of memory and can freeze the game for many seconds on a 16 GB machine. Off: with cheat mode on, both screens open as they do without it. On: the vanilla cheat lists. Takes effect at the next screen open. Default OFF.")]
     public bool CheatModeListsAllItemsAndTroops { get; set; } = false;
+
+    [SettingPropertyGroup("Load-Time Stamps")]
+    [SettingPropertyBool("Enable Load-Time Stamps", Order = 0, RequireRestart = false,
+        HintText = "Writes the detailed load-time lines to the TAOM debug log: one [PatchApply] line per Harmony patch group with its apply time (written at game initialization), [LoadPhase] steps of TAOM's game start and game initialization, and [Lifecycle] lines timing every campaign handler of a new game, a loaded save and the session start (a line for each handler taking 10 ms or more, and a total per event). The per-type [LoadXml] lines, the patch phase totals and one [Lifecycle] dispatch line per campaign dispatch are always written. Costs a few microseconds per handler while a campaign loads and nothing during play. Default OFF.")]
+    public bool EnableLoadTimeStamps { get; set; } = false;
 }
