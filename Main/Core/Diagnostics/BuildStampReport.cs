@@ -15,10 +15,11 @@ namespace TAOM.Core.Diagnostics;
 /// versions (2.0.0.0 / 0.1.0.0) on every build ever produced, so .NET bound any pair without
 /// complaint and nothing on disk could tell a current DLL from a two-week-old one.
 ///
-/// Directory.Build.props stamps <c>InformationalVersion</c> as <c>build.yyyyMMdd-HHmmssZ</c>;
-/// Bannerlord.BuildResources then appends <c>.{commit-sha}</c>, so the stamp is NOT at the end of
-/// the string. Both modules are produced by the same build, so their stamps should agree to within
-/// seconds; a gap of hours means a hand-copied module.
+/// Directory.Build.props stamps <c>InformationalVersion</c> as <c>build.yyyyMMdd-HHmmssZ</c>; the
+/// .NET SDK then appends <c>+{commit-sha}</c>, marked <c>.dirty</c> or <c>.nogit</c> by
+/// Directory.Build.props when it must, so the stamp is NOT at the end of the string. Both modules
+/// are produced by the same build, so their stamps should agree to within seconds; a gap of hours
+/// means a hand-copied module.
 /// </summary>
 /// <summary>How a pair of build stamps relates. Three tiers, because two of them are benign.</summary>
 public enum BuildPairVerdict
@@ -112,8 +113,9 @@ public static class BuildStampReport
         int i = informationalVersion!.IndexOf(StampMarker, StringComparison.Ordinal);
         if (i < 0) return false;
 
-        // Fixed-width slice, NOT a trim. Bannerlord.BuildResources appends its own ".{commit-sha}"
-        // suffix to InformationalVersion, so the real string is "build.20260802-013132Z.46ce6436…".
+        // Fixed-width slice, NOT a trim. The .NET SDK appends the commit SHA to InformationalVersion
+        // ("+{sha}", or ".{sha}" when the string already holds a '+', as the 2026-08-02 form did),
+        // so the real string is "build.20260802-013132Z.46ce6436…", now "build.…Z+{sha}[.dirty]".
         // An earlier version did Substring(marker).TrimEnd('Z'), which left the whole SHA attached
         // and failed to parse every real assembly — while the unit tests passed, because they
         // asserted against the format this code ASSUMED rather than the one the build emits.
@@ -186,7 +188,7 @@ public static class BuildStampReport
         return $"[Engine] Bannerlord={engine} modules({modules.Count})=[{string.Join(", ", modules.ToArray())}]";
     }
 
-    private static string ReadInformationalVersion(Assembly? asm)
+    internal static string ReadInformationalVersion(Assembly? asm)
     {
         if (asm == null) return "<not loaded>";
         try

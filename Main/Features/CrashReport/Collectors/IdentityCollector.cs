@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 using TAOM.Features.CrashReport.Domain;
 
 namespace TAOM.Features.CrashReport.Collectors;
@@ -15,6 +16,7 @@ public sealed class IdentityCollector
         string taomVersion = SafeRead(() => ModuleHelper.GetModuleInfo("TAOM")?.Version.ToString()) ?? "(unknown)";
         string taomDllSha1 = SafeRead(() => DllHasher.Sha1OfFile(typeof(IdentityCollector).Assembly.Location)) ?? "(unknown)";
         string language = SafeRead(() => BannerlordConfig.Language) ?? "(unknown)";
+        string taomBuild = BuildStampReport.ReadInformationalVersion(typeof(IdentityCollector).Assembly);
 
         return new IdentitySnapshot(
             BannerlordVersion: blVersion,
@@ -22,7 +24,8 @@ public sealed class IdentityCollector
             TaomVersion: taomVersion,
             TaomDllSha1: taomDllSha1,
             OriginatingPatchTarget: originatingPatchTarget ?? "(unknown)",
-            LanguageCode: language);
+            LanguageCode: language,
+            TaomBuild: taomBuild);
     }
 
     private static string? GetBannerlordExeFileVersion()

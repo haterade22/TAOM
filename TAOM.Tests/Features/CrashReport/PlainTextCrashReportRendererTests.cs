@@ -8,6 +8,9 @@ namespace TAOM.Tests.Features.CrashReport;
 [TestClass]
 public class PlainTextCrashReportRendererTests
 {
+    private const string TestBuildStamp =
+        "v2.0.0.0 build.20260923-184249Z+0123456789abcdef0123456789abcdef01234567.dirty";
+
     [TestMethod]
     public void Render_MinimalContext_ProducesAllSections()
     {
@@ -35,6 +38,15 @@ public class PlainTextCrashReportRendererTests
         Assert.IsTrue(text.Contains("--- Performance ---"));
         Assert.IsTrue(text.Contains("--- Logs ---"));
         Assert.IsTrue(text.Contains("--- Collector failures ---"));
+    }
+
+    [TestMethod]
+    public void Render_Identity_PrintsTheTaomBuildStamp()
+    {
+        var text = new PlainTextCrashReportRenderer().Render(MakeMinimalContext());
+
+        StringAssert.Contains(text, "Build:      " + TestBuildStamp,
+            "the build stamp names the exact commit and whether the tree was dirty");
     }
 
     [TestMethod]
@@ -194,7 +206,7 @@ public class PlainTextCrashReportRendererTests
         return new ExceptionContext(
             CapturedAtUtc: DateTime.UtcNow,
             CrashSignature: "deadbeef",
-            Identity: new IdentitySnapshot("v1.4.5", "1.4.5.x", "v2.0.0", "sha1", "Some.Origin", "en-US"),
+            Identity: new IdentitySnapshot("v1.4.5", "1.4.5.x", "v2.0.0", "sha1", "Some.Origin", "en-US", TestBuildStamp),
             Exception: null,
             StackFrames: System.Array.Empty<StackFrameSnapshot>(),
             Harmony: new HarmonyCorrelationSnapshot(System.Array.Empty<StackFramePatchInfo>(), System.Array.Empty<HarmonyOwnerSummary>(), 0),

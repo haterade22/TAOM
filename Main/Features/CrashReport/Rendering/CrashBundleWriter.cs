@@ -105,6 +105,7 @@ public sealed class CrashBundleWriter
         sb.AppendLine($"Captured: {c.CapturedAtUtc:O}");
         sb.AppendLine($"Signature: {c.CrashSignature}");
         sb.AppendLine($"TAOM version: {c.Identity.TaomVersion}");
+        sb.AppendLine($"TAOM build: {c.Identity.TaomBuild}");
         sb.AppendLine($"Bannerlord version: {c.Identity.BannerlordVersion}");
         sb.AppendLine($"Origin: {c.Identity.OriginatingPatchTarget}");
         sb.AppendLine($"Exception: {c.Exception?.Type ?? "(unknown)"}");
