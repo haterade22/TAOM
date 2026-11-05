@@ -72,12 +72,19 @@
 		<PackageReference Include="Bannerlord.MCM" Version="5.12.3" />
 	</ItemGroup>
 
+	<!-- Game Pass is not supported (2026-10-22), but Bannerlord.BuildResources' CopyModule deploys everything
+	     under _Module verbatim, so a Gaming.Desktop.x64_Shipping_Client folder left in this project's
+	     staging by an older checkout would reach the game install with an old TAOM.dll. Fail loudly rather
+	     than delete. Same condition as CopyModule's, not DisableModuleCopy (see FailOnIdeStateInModule in Main/TAOM.csproj). -->
+	<Target Name="FailOnGamePassStagingInModule" BeforeTargets="PostBuildCopyToModules"
+	        Condition="'$(ModuleId)' != '' AND Exists('$(GameFolder)')">
+		<Error Condition="Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')"
+		       Text="Game Pass is not supported, but $(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\ exists and CopyModule would deploy it. Delete that folder (and from &lt;game&gt;\Modules\$(ModuleId)\bin\, deployment is additive), then build again." />
+	</Target>
+
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
-		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
-		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
 		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
 	</Target>
 

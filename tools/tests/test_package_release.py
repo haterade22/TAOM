@@ -622,5 +622,55 @@ class TestArmoryShaderSources(unittest.TestCase):
             self.assertIn("--game-root", r.stderr)
 
 
+class TestGamePassBinIsRefused(unittest.TestCase):
+    """Game Pass is not supported (maintainer, 2026-10-22). An existing install or channel folder keeps
+    the old bin/Gaming.Desktop.x64_Shipping_Client/ folder (an old TAOM.dll and BehaviorTreeWrapper.dll
+    among its files). Leaving it out of the copy would only stop it being gated, so it is refused
+    like a retired binary, dry runs included."""
+
+    GP = "bin/Gaming.Desktop.x64_Shipping_Client/"
+
+    def test_other_bins_still_ship(self):
+        self.assertEqual(pr.classify("bin/Win64_Shipping_Client/TAOM.dll").action, pr.COPY)
+
+    def test_game_pass_bins_names_the_folder(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "TAOM.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.game_pass_bins([plan]), ["TAOM/bin/Gaming.Desktop.x64_Shipping_Client"])
+
+    def test_a_dry_run_refuses_and_names_the_fix(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "TAOM.dll", 16)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("Game Pass is not supported", r.stderr)
+            self.assertIn("TAOM/bin/Gaming.Desktop.x64_Shipping_Client", r.stderr)
+            self.assertIn("_Module/bin", r.stderr)
+
+    def test_a_real_run_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/" + self.GP + "BehaviorTreeWrapper.dll", 16)
+            dest = Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--modules", "TAOM", "--allow-unknown")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_a_module_without_the_folder_prints_no_game_pass_message(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.game_pass_bins([plan]), [])
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertNotIn("Game Pass", r.stdout + r.stderr)
+            self.assertNotIn("Gaming.Desktop", r.stdout + r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

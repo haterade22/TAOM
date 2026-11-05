@@ -148,14 +148,19 @@
 		       Text="IDE workspace state under _Module would be deployed to the game install: @(_TaomIdeState, '%3B '). Delete the .vs folder under Main/_Module/ (and from &lt;game&gt;\Modules\$(ModuleId)\, deployment is additive)." />
 	</Target>
 
+	<!-- Game Pass is not supported (2026-10-22), but Bannerlord.BuildResources' CopyModule deploys everything
+	     under _Module verbatim, so a Gaming.Desktop.x64_Shipping_Client folder left in this project's
+	     staging by an older checkout would reach the game install with an old TAOM.dll. Fail loudly rather
+	     than delete. Same condition as CopyModule's, not DisableModuleCopy (see FailOnIdeStateInModule). -->
+	<Target Name="FailOnGamePassStagingInModule" BeforeTargets="PostBuildCopyToModules"
+	        Condition="'$(ModuleId)' != '' AND Exists('$(GameFolder)')">
+		<Error Condition="Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')"
+		       Text="Game Pass is not supported, but $(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\ exists and CopyModule would deploy it. Delete that folder (and from &lt;game&gt;\Modules\$(ModuleId)\bin\, deployment is additive), then build again." />
+	</Target>
+
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
 		<!-- Create directories if they don't exist -->
-		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')" />
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Win64_Shipping_Client\')" />
-
-		<!-- Copy to Gaming.Desktop.x64_Shipping_Client -->
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
 
 		<!-- Copy to Win64_Shipping_Client -->
 		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />

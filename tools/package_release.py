@@ -32,7 +32,8 @@ Usage:
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
 
 Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination /
-            retired binaries in the source (RETIRED_BINARIES, dry runs included) / a shipped
+            retired binaries in the source (RETIRED_BINARIES, dry runs included) / a Game Pass bin
+            (dry runs included) / a shipped
             ModuleData file defining a taom_test_ id / an Armory shader with no source players
             have, or an Armory shader report that cannot be checked (all dry runs included).
 """
@@ -89,6 +90,11 @@ NATIVE_DEBUG_EXT = frozenset({".pdb", ".exp", ".lib"})
 # Compared case-insensitively by file name. MinHook.x64.dll and TAOM.NativeSkinFixes.dll stay
 # allowed on the 1.4.x line: they are its vendored allowlist.
 RETIRED_BINARIES = frozenset({"behaviortrees.dll", "behaviortreewrapper.dll"})
+
+# Game Pass is not supported (maintainer, 2026-10-22): nothing stages or deploys this bin any more.
+# An install or channel folder built earlier keeps the old folder, with an old TAOM.dll in it. Leaving
+# it out of the copy would only stop it being gated, so the run refuses (dry runs included).
+GAME_PASS_DIR = "Gaming.Desktop.x64_Shipping_Client"
 
 # Backup sidecars the tools under tools/ leave beside the live file (tools/README.md "XML I/O
 # convention"). The suffix sits AFTER the real extension, and the dated, topic-tagged forms are
@@ -259,6 +265,11 @@ def retired_binaries(plans) -> list:
     return [f"{p.name}/{rel}" for p in plans for rel, _size in p._copy_list
             if rel.split("/", 1)[0] == "bin"
             and PurePosixPath(rel).name.casefold() in RETIRED_BINARIES]
+
+
+def game_pass_bins(plans) -> list:
+    """<module>/bin/Gaming.Desktop.x64_Shipping_Client of every planned module that has the folder."""
+    return [f"{p.name}/bin/{GAME_PASS_DIR}" for p in plans if (p.root / "bin" / GAME_PASS_DIR).is_dir()]
 
 
 # A Custom-Battle test troop DEFINED by id; a {=taom_test_x} name key alone defines nothing.
@@ -455,6 +466,15 @@ def main(argv=None) -> int:
         print("\nERROR: retired binaries in the source; delete them there (install bin folders or "
               "the channel folder) and re-run:", file=sys.stderr)
         for rel in retired:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    game_pass = game_pass_bins(plans)
+    if game_pass:
+        print("\nERROR: Game Pass is not supported, but the source holds a Game Pass bin (an old "
+              "TAOM.dll and more). Delete the folder from the install or the channel folder, and from any "
+              "old checkout's _Module/bin/ staging, then re-run:", file=sys.stderr)
+        for rel in game_pass:
             print(f"  {rel}", file=sys.stderr)
         return 2
 
