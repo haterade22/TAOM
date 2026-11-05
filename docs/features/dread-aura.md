@@ -41,11 +41,12 @@ On a staggered pulse, for each dread source the logic calls
 `agent.ChangeMorale(-drain)` on each eligible target. That is byte-for-byte the shape of vanilla's
 own `AgentMoraleInteractionLogic`, which already runs in every campaign battle.
 
-**The aura writes morale and nothing else.** Panic, retreat, the formation flipping to `Flee` past
-30% retreating, and the morale contagion that spreads it are all the engine's, reached through the
-same `CommonAIComponent.Morale` field vanilla drives. Calling `Panic()` or `Retreat()` directly
-would bypass `MissionAgentPanicHandler`'s `OnBatchUnitRemovalStart/End` bracket and thrash
-formation arrangement.
+**The aura writes morale and nothing else.** Panic, retreat and the morale contagion that spreads
+it are all the engine's, reached through the same `CommonAIComponent.Morale` field vanilla drives.
+Calling `Retreat()` directly would bypass `MissionAgentPanicHandler`'s `OnBatchUnitRemovalStart/End`
+bracket and thrash formation arrangement; calling `Panic()` directly would skip `CanPanic()`: the
+morale model's `CanPanicDueToMorale` veto, and the rule that a siege attacker on a ladder or
+siege-weapon face cannot panic (`CommonAIComponent.cs:174-193`).
 
 ## Identifying a dread source: two axes, and why one is not enough
 
@@ -86,7 +87,7 @@ D_eff = moralePerSecond
 ```
 
 `CharacterObject.GetMoraleResistance()` is `(IsHero ? 1.5 : 1) * (0.5 * n + 1)`, where `n` is the
-tier, or `Level / 4 + 1` for a hero (v1.5.5 `CharacterObject.cs:619-623`).
+tier, or `Level / 4 + 1` for a hero (v1.4.8 `CharacterObject.cs:613-617`).
 
 The engine regenerates morale at **+0.4/sec** up to **half** a troop's starting morale
 (`CommonAIComponent.OnTickParallel`). Above that ceiling there is no pushback at all; below it the
@@ -98,8 +99,8 @@ t_floor = R / D_eff  +  (R - F) / (D_eff - 0.4)   where R = half of initial mora
 ```
 
 Initial morale is `35 + RandomInt(30)` plus every agent component's `GetMoraleAddition()` (in a
-campaign battle, the party's morale and the side's strength share), then the morale model (perks,
-traits and TAOM's culture doctrine), clamped to [15, 100] (v1.5.5 `CommonAIComponent.InitializeMorale`).
+campaign battle, the party's morale and the side's strength share), then the morale model (perks and
+traits), clamped to [15, 100] (v1.4.8 `CommonAIComponent.cs:66-76`).
 The table uses the mean 49.5, which is an even fight at party morale 50. A party at morale 80 starts
 near 64.5, so R is about 32 and a tier-3 troop takes about 30 s to reach the floor.
 
@@ -141,8 +142,8 @@ floor set to 0 explicitly, because they document the mechanics a lower floor wou
 
 A troop that routs raises `AgentMoraleInteractionLogic.OnAgentFleeing`. Vanilla gives a morale loss
 to up to 10 allies of the fleeing agent: first the AI allies within 4 m, then, for every slot still
-empty, random members of the fleeing agent's whole formation at any distance (v1.5.5
-`AgentMoraleInteractionLogic.cs:79-84`, `SelectRandomAgentsFromFormationToAgentSet`). The loss
+empty, random members of the fleeing agent's whole formation at any distance (v1.4.8
+`AgentMoraleInteractionLogic.cs:80-85`, `SelectRandomAgentsFromFormationToAgentSet`). The loss
 scales with `CalculateCasualtiesFactor` (1 + 2 x the side's removed ratio).
 
 So an aura that routs troops is not local. In a dense block a single rout stays among its
@@ -152,17 +153,12 @@ its radius, so it routed troops by itself, and Mike saw dread act across the who
 With a floor of 10 the aura starts no rout of its own, and the radius is cut to 5 m (inner 2 m) so
 it only touches the troops in contact.
 
-Three other fear effects have no floor and can still rout troops the aura has weakened:
-
-- the Nazgûl Scream (a signature strike, 6 m, 25 morale every 15 s). At full strength it takes
-  exactly 10 from a tier-3 troop (25 / 2.5). Regeneration lifts a troop on the floor to about 10.1
-  between pulses, so a Scream leaves a tier-3 troop at the edge of panic, where any nearby death
-  breaks it, and it breaks tier-1 and tier-2 troops (16.7 and 12.5) outright;
-- Sauron's overhead Slam (4 m, 15 morale every 20 s);
-- race-ability fear, such as the Dol Guldur 8 m fear aura and the fear some races cause on a kill.
-
-Such a rout spreads by the vanilla rule above. Mike kept the floor at 10 on 2026-10-15: these
-effects reach 4 to 8 m, so their routs start next to the source.
+On 1.4.x nothing else in TAOM lowers an agent's morale: `DreadPulseRunner` is the only morale
+drain, and the career morale burst only raises allies'. The 1.5.x line also has three fear effects
+with no floor that can rout a troop the aura weakened (two Signature Strikes and race-ability
+fear); neither feature exists on 1.4.x. A rout next to a wraith therefore starts from vanilla's own
+morale rules and spreads by the rule above. The floor of 10 is the 1.5.x maintainer's choice of
+2026-10-15, adopted for 1.4.x by the 2026-11-04 port programme.
 
 ## Who cannot be affected
 
@@ -238,17 +234,19 @@ the aura at exact parity with how the engine scales kill-morale, and it means no
 recurse into itself.
 
 **`CanPanicDueToMorale`** (fearless undead) is out of v1, not asked for. Worth knowing before adding
-it: a fearless agent clamps at `0.01f`, and `BattleEndLogic` routs on `< 0.01f`, so fearless agents
-would never be counted as routed in campaign casualty accounting.
+it: a fearless agent clamps at `0.01f` and never panics, so if it leaves the field it leaves as an
+ordered retreat (see the roster section): it keeps its roster place, but `MapEventSide.OnTroopRouted`
+still counts it in `TroopCasualties` (v1.4.8 `MapEventSide.cs:689-690`).
 
 **The radius clamp** was designed in, then removed after reading `Mission.GetNearbyAgentsAux`
-(v1.4.8 Mission.cs:2314), then restored on 2026-10-15 at 15 m. The managed side is pure native paging, but
-the native side has the fallback: `IMBMission.GetNearbyAgentsAux` searches the proximity grid only
-up to the value `ProximityMapMaxSearchRadius` returns (15.0 on v1.5.5, `.rdata` RVA 0xB2E120) and
-walks every agent in the mission beyond it (`python tools/native_decompile.py --engine-method
-IMBMission.GetNearbyAgentsAux`). `AgentProximityMap.BeginSearch` switches at the same 15 m. So the
-MCM slider and both providers cap the radius at 15, and a value above it costs a full agent scan on
-every pulse.
+(v1.4.8 Mission.cs:2314), then restored on 2026-10-15 at 15 m. The managed side is pure native
+paging, but the 1.5.x line read the native side and found a fallback: `IMBMission.GetNearbyAgentsAux`
+searches the proximity grid only up to the value `ProximityMapMaxSearchRadius` returns (15.0 on
+v1.5.5) and walks every agent in the mission beyond it. The v1.4.8 managed half is the same
+(`Mission.ProximityMapMaxSearchRadius` asks native at `Mission.cs:1713-1716`, and
+`AgentProximityMap.BeginSearch` loops over every agent above that value, `AgentProximityMap.cs:54-63`),
+but the native value has not been measured on v1.4.8. So the MCM slider and both providers cap the
+radius at 15, and a value above it may cost a full agent scan on every pulse.
 
 **`IBattlefieldQueryAdapter.GetNearbyAgents`**: its `NearbyAgentSnapshot` carries no race, no
 morale, and no write path, and it wraps `GetNearbyAgents` rather than the native-filtered
@@ -330,13 +328,13 @@ save-load will not pick up an edit. The MCM knobs are the ones that take effect 
 
 ## Tests
 
-161 tests, all green as part of a 6,615-test suite.
+175 tests (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~TAOM.Tests.Features.DreadAura`, 2026-11-05).
 
 - `DreadAuraServiceTests` (58): falloff geometry, the golden time-to-floor table at the shipped floor
   of 10, the proof that the aura alone never routs up to the 20/sec rate ceiling, the floor-0 rout
   times, the morale floor (a null profile included), the
   `-1f` no-component sentinel, and a NaN / ±Infinity case for every float that reaches a decision.
-- `DreadAuraConfigProviderTests` (43): one test per validation rule, plus an every-field round-trip
+- `DreadAuraConfigProviderTests` (45): one test per validation rule, plus an every-field round-trip
   and the `ObjectCreationHandling.Replace` regression.
 - `DreadRegistryTests` (25): both identity axes, `PlainOrcTroop_IsNotSource`, unknown config keys
   skipped and warned, the lazy map built once.
@@ -367,12 +365,12 @@ Verified against v1.4.8:
 
 | Constant | Value | Source |
 |---|---|---|
-| Initial morale | `35 + rand[0..29]` plus each component's `GetMoraleAddition()`, then the morale model, clamped [15, 100] (re-read on v1.5.5) | `CommonAIComponent.InitializeMorale` |
+| Initial morale | `35 + rand[0..29]` plus each component's `GetMoraleAddition()`, then the morale model, clamped [15, 100] (re-read on v1.4.8, `CommonAIComponent.cs:66-76`) | `CommonAIComponent.InitializeMorale` |
 | Recovery ceiling | `_initialMorale * 0.5f` | `CommonAIComponent.cs:74` |
 | Morale regeneration | +0.4/sec, only below the ceiling | `CommonAIComponent.OnTickParallel` |
 | Panic threshold | `_morale < 0.01f`, tested **before** regeneration | `CommonAIComponent.OnTickParallel` |
-| Formation flee | above 30% of a formation retreating | `Formation.cs:1146`, `Mission.cs:5237` |
-| Morale resistance | `(IsHero ? 1.5 : 1) * (0.5 * n + 1)`, `n` = tier, or `Level / 4 + 1` for a hero (re-read on v1.5.5) | `CharacterObject.GetMoraleResistance` |
+| Formation flee (watched, not balanced against) | `Flee` above 30% of a formation retreating; its only reader, the order panel's view model, stores it in a property no managed code reads, so it changes no behaviour (re-read on v1.4.8) | `Formation.GetMovementTypeOfUnits` (`Formation.cs:1147-1171`), `MissionOrderTroopControllerVM.cs:875`; `Mission.GetMovementTypeOfAgents` (`Mission.cs:5237`, no caller) |
+| Morale resistance | `(IsHero ? 1.5 : 1) * (0.5 * n + 1)`, `n` = tier, or `Level / 4 + 1` for a hero (re-read on v1.4.8, `CharacterObject.cs:613-617`) | `CharacterObject.GetMoraleResistance` |
 
 The panic-before-regeneration ordering is load-bearing and easy to get backwards: reversing it lets
 +0.4/sec lift a broken agent back over the threshold every frame so nothing ever routs. That is a
@@ -384,23 +382,29 @@ This is the consequence a player most needs to understand, and it is inherited f
 than invented here: **a routed troop is not a scared troop, it is a lost one.** Since 2026-10-15
 the aura alone no longer routs anyone; the routs below come from combat on troops it has weakened.
 
-`BattleEndLogic.OnEndMission` calls `IAgentOriginBase.SetRouted` on every active agent whose morale
-is below 0.01. For ordinary campaign troops that reaches `MapEventParty.OnTroopRouted:316`, which
-does exactly this:
+A troop that panics and flees off the field leaves the mission neither killed nor wounded, so
+`BattleAgentLogic.OnAgentRemoved` calls `Origin.SetRouted(isOrderRetreat)` with `isOrderRetreat`
+true only when its morale is at or above 0.01 (v1.4.8 SandBox `BattleAgentLogic.cs:176-179`). When the
+enemy side retreats, `BattleEndLogic.OnEndMission` does the same for every agent of the player's
+enemy team still on the field (`BattleEndLogic.cs:224-235`). `PartyGroupAgentOrigin.SetRouted` (`:130-137`) passes it through
+`PartyGroupTroopSupplier.OnTroopRouted` (`:121-125`) to `MapEventSide.OnTroopRouted` (`:680-691`), which, for a panicked troop, calls
+`MapEventParty.OnTroopRouted` (`:316-328`) and does exactly this:
 
 ```csharp
 Party.MemberRoster.AddToCounts(_roster[troopSeed].Troop, -1);   // gone from the party
 RoutedInBattle.AddToCounts(_roster[troopSeed].Troop, 1);        // feeds DesertersCampaignBehavior
 ```
 
-So a formation that routs removes those troops from their party's roster and seeds deserter
-parties on the map. Three carve-outs, all verified in the same method:
+So a formation that routs removes those troops from their party's roster and, on the defeated
+side, can seed deserter parties on the map (`DesertersCampaignBehavior.MapEventEnded`). Four
+carve-outs, each read on v1.4.8:
 
 | Case | Outcome |
 |---|---|
-| Heroes and companions | **Exempt.** Line 324 wounds them instead of removing them. |
-| Siege defenders | **Exempt.** Line 683 requires `MissionSide == Attacker` for a siege. |
-| `PartyAgentOrigin` (ungrouped) | **Exempt.** Its `SetRouted` is an empty method. |
+| Ordered retreat (morale at or above 0.01 as it leaves) | **Not lost.** `MapEventSide.cs:683` removes the troop only when `isOrderRetreat` is false, and `isOrderRetreat` is true when the troop's morale is at or above 0.01 as it leaves (`BattleAgentLogic.cs:178-179`). A troop the aura holds at its floor of 10 that leaves on a retreat order keeps its place, unless something else takes it below 0.01 first. It still counts in its side's casualty tally (`MapEventSide.cs:687-690`). |
+| Heroes and companions | **Exempt.** `MapEventParty.cs:324-327` wounds them instead of removing them. |
+| Siege defenders | **Exempt** in a siege assault: `MapEventSide.cs:683` requires `MissionSide == Attacker` only when the map event is `BattleTypes.Siege`. In a sally-out, routed troops on both sides are removed. |
+| `PartyAgentOrigin` (ungrouped) | **Exempt.** Its `SetRouted` is an empty method (`PartyAgentOrigin.cs:202-204`). |
 
 One consequence is worth being deliberate about: **`DreadAuraAffectsPlayerTroops` defaults to
 true**, so an enemy wraith weakens the player's troops and they rout sooner in combat, which can

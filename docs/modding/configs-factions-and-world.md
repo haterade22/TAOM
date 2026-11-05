@@ -448,7 +448,7 @@ Code: No code changes needed
   the two files as parallel maps will trip on it (measured, command below).
 - **Dread aura race names and hero ids are not validated at load**, because the FaceGen registry is
   not populated yet; a bad name is skipped on first resolve
-  ([dread-aura.md:285-289](../features/dread-aura.md)).
+  ([dread-aura.md:283-285](../features/dread-aura.md)).
 - **`Patch28_SettlementGuards` registers two manual patches with no category attribute**, so
   grepping `HarmonyPatchCategory` will not show them
   ([harmony-patch-registry.md:5](../reference/harmony-patch-registry.md)).
