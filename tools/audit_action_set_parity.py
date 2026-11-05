@@ -16,6 +16,8 @@ and are reported separately — they must NOT be force-fed human actions.
 
 XML comments are ignored (ElementTree), so Native's ~126 commented-out actions never
 count toward the reference surface. Read-only; prints a report and a non-zero-ish summary.
+Exit 2 when an action_sets.xml cannot be read: nothing was checked, so it is not a finding. The default
+paths come from $BANNERLORD_GAME_DIR.
 
 Companion to `tools/patch_dwarf_action_parity.py` (the fixer). Run after every engine
 bump (wired into /engine-bump Phase 4).
@@ -23,17 +25,15 @@ bump (wired into /engine-bump Phase 4).
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import xml.etree.ElementTree as ET
 
-DEFAULT_NATIVE = (
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-    r"\Modules\Native\ModuleData\action_sets.xml"
-)
-DEFAULT_LIVE = (
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-    r"\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml"
-)
+from _gamedir import game_dir
+
+_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+DEFAULT_NATIVE = os.path.join(_GAME, "Modules", "Native", "ModuleData", "action_sets.xml")
+DEFAULT_LIVE = os.path.join(_GAME, "Modules", "LOTRLOME_Armory", "ModuleData", "action_sets.xml")
 
 HUMANOID_ROOTS = {"as_human_warrior", "as_dwarf_warrior"}
 CREATURE_ROOTS = {"as_spider", "as_elephant", "as_chariot"}
@@ -43,8 +43,11 @@ def load(path: str) -> dict:
     """id -> {own:set[type], base:str|None, skel:str|None}. Comments ignored by ET."""
     try:
         root = ET.parse(path).getroot()
-    except (ET.ParseError, OSError) as exc:
-        sys.exit(f"ERROR: cannot read {path}: {exc}")
+    except OSError as exc:
+        print(f"ERROR: cannot read {path}: {exc}", file=sys.stderr)
+        sys.exit(2)
+    except ET.ParseError as exc:
+        sys.exit(f"ERROR: cannot parse {path}: {exc}")
     d: dict = {}
     for s in root.findall("action_set"):
         sid = s.get("id")

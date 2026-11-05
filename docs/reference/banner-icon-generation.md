@@ -81,6 +81,17 @@ The flag draws from the **material** (`_mtl.tpac`), which references the **textu
 3. **Texture import settings (per atlas texture).** In the editor's Texture Inspector, each `ui_taom_bannericons_NN` atlas must have **Do Not Generate Mips** ✔ and **Do Not Compress** ✔ checked (Type stays `Albedo (DXT1/DXT5 - RGBA)`) — match the existing sheets. UI needs no mipmaps, and skipping DXT compression keeps the sharp white-sigil alpha clean. New sheets imported without these look soft/artifacted. This is a manual per-texture GUI step on every new atlas (26–41 in the 2026-06 batch).
 4. **Do NOT hand-author the atlas sheets.** Pre-packed `ui_taom_bannericons_N.png` you make by hand are ignored — the generator owns those filenames and regenerates them from the source folder.
 
+## RuntimeDataCache entries (the `banner-rdc` and `rdc-entries` gates)
+
+The shipping client renders and registers items only from packages that have a `RuntimeDataCache/<package GUID>.rdc` entry, and only the Modding Kit writes those. A package imported into the Kit without a module save afterwards is skipped whole, with no log line. A listed package means "open the module in the Kit and save", not "fix bytes".
+
+| Row in `tools/data_gates.py` | Selected by | Command |
+|---|---|---|
+| `banner-rdc` | a file under `BannerIcons/` | `python tools/check_rdc_entries.py --module <installed TAOM> --under BannerIcons --types tex` |
+| `rdc-entries` | a `.tpac` | `python tools/check_rdc_entries.py` (the installed `LOTRLOME_Armory`, `_geo` and `_anm` packages) |
+
+The install comes from `$BANNERLORD_GAME_DIR`. Exit 0: every package checked has its entry. Exit 1 (FAIL): a package lacks one; a `.rdc.rtemp` does not count, because it is an unfinished write. Exit 2 (NOT RUN): nothing was checked, because there is no `RuntimeDataCache` folder, no `Assets` folder under the filter, or no package of the checked types. A partial install lands here, and that is not a data failure.
+
 ## Critical gotchas (each cost real time this session)
 
 - **Repo and game-install are separate folders, not linked.** `c:\…\repos\TAOM\Main\_Module\…` vs `E:\…\Modules\TAOM\…`. The repo deploys on `build.ps1`; until then the game install is stale. The sprite generator and the game read the **game install** — sync source icons there before running it.

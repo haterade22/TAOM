@@ -11,9 +11,10 @@ Usage:
     python tools/check_rdc_entries.py                       # LOTRLOME_Armory, all Assets/**/*.tpac
     python tools/check_rdc_entries.py --under creature/troll
     python tools/check_rdc_entries.py --module "<path to a module>" [--types geo,anm | all]
-Exit code 1 when the folder is missing or holds no package of the checked types (a gate that checked nothing
-is not a pass), or when any package under the filter lacks an entry (a .rdc.rtemp does not count: it is
-an unfinished write).
+Exit code 1 when any package under the filter lacks an entry (a .rdc.rtemp does not count: it is an
+unfinished write). Exit code 2 when nothing could be checked: no RuntimeDataCache folder, no Assets folder
+under the filter, or no package of the checked types. A gate that checked nothing is not a pass, and on a
+partial install it is not a data failure either. The default module comes from $BANNERLORD_GAME_DIR.
 
 Skeletal-animation MASTERS are not failures. The Kit never writes an entry for a package whose items
 are a SkeletalAnimation (plus its source Geometry) and no Metamesh, and the game plays them anyway:
@@ -27,7 +28,11 @@ import os
 import sys
 import uuid
 
-DEFAULT_MODULE = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory"
+from _gamedir import game_dir
+
+
+def default_module() -> str:
+    return os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"), "Modules", "LOTRLOME_Armory")
 
 
 # Item type GUIDs as stored in a tpac item header (bytes_le), read off known packages 2026-09-18:
@@ -53,7 +58,7 @@ def package_guid(path: str) -> str:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--module", default=DEFAULT_MODULE)
+    ap.add_argument("--module", default=default_module())
     ap.add_argument("--under", default="", help="subfolder of Assets to restrict to, e.g. creature/troll")
     ap.add_argument("--quiet", action="store_true", help="print only the summary line")
     ap.add_argument("--show-masters", action="store_true",
@@ -67,14 +72,14 @@ def main(argv=None) -> int:
     rdc_dir = os.path.join(args.module, "RuntimeDataCache")
     if not os.path.isdir(rdc_dir):
         print("no RuntimeDataCache folder under %s" % args.module)
-        return 1
+        return 2
     entries = {f[:-4].lower() for f in os.listdir(rdc_dir) if f.lower().endswith(".rdc")}
     pending = {f[:-10].lower() for f in os.listdir(rdc_dir) if f.lower().endswith(".rdc.rtemp")}
 
     root = os.path.join(args.module, "Assets", args.under.replace("/", os.sep))
     if not os.path.isdir(root):
         print("no folder %s: nothing checked" % root)
-        return 1
+        return 2
     missing, masters, total = [], [], 0
     for dirpath, _, files in os.walk(root):
         for f in files:
@@ -98,7 +103,7 @@ def main(argv=None) -> int:
           % (total, len(missing), len(masters), len(entries), len(pending), root))
     if total == 0:
         print("no %s packages under %s: nothing checked" % (args.types, root))
-        return 1
+        return 2
     return 1 if missing else 0
 
 

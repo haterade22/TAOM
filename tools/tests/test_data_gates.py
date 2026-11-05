@@ -145,6 +145,56 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(dg.command_for(g, [gone], all_mode=False), list(g.cmd))
 
 
+class HonestRowTests(unittest.TestCase):
+    def _gate(self, gate_id):
+        return next(g for g in dg.GATES if g.id == gate_id)
+
+    def test_the_prefab_budget_row_runs_the_tool_in_gate_mode(self):
+        # Without --gate the tool's WARN band exits 1 (FAIL here) and over the cap exits 2 (NOT RUN here).
+        self.assertIn("--gate", self._gate("prefab-budget").cmd)
+
+    def test_the_moduledata_note_names_no_file_this_line_lacks(self):
+        self.assertNotIn("settlement_assignments", self._gate("moduledata").note)
+
+    def test_a_missing_runtime_data_cache_reads_not_run_on_both_rdc_rows(self):
+        # The real tool against a module with no RuntimeDataCache folder, through the real verdict.
+        with tempfile.TemporaryDirectory() as tmp:
+            for gate_id in ("banner-rdc", "rdc-entries"):
+                argv = dg.command_for(self._gate(gate_id), [], True)
+                argv = [a for a in argv]
+                if "--module" in argv:
+                    argv[argv.index("--module") + 1] = tmp
+                else:
+                    argv += ["--module", tmp]
+                status, why = dg.verdict(*dg.run_command(argv, 60))
+                self.assertEqual(status, "NOT RUN", gate_id)
+                self.assertIn("exit 2", why, gate_id)
+
+    def test_an_absent_install_reads_not_run_on_the_action_set_and_mesh_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, BANNERLORD_GAME_DIR=tmp)
+            for gate_id in ("action-sets", "mesh-refs"):
+                real = [sys.executable] + list(self._gate(gate_id).cmd[1:])
+                done = subprocess.run(real, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                                      cwd=str(REPO), env=env, timeout=120)
+                status, _ = dg.verdict(done.returncode, done.stdout + done.stderr)
+                self.assertEqual(status, "NOT RUN", gate_id + ": " + done.stderr[:200])
+                self.assertIn(tmp, done.stderr, gate_id)
+
+
+class PrefabBudgetLineTests(unittest.TestCase):
+    def test_the_total_and_any_warn_line_reach_the_report(self):
+        # A PASS at 99 percent of the cap must still say how close it is.
+        gate = dg.Gate("prefab-budget", "scenes", (), ("python", "x.py"), ())
+        text = "TOTAL: 130468 entities in 7 modules (cap 131072, warn 120000)\nWARN: within margin of the cap\n"
+        out = io.StringIO()
+        with redirect_stdout(out):
+            dg.run((gate,), [], True, False, runner=lambda argv, timeout: (0, text))
+        self.assertRegex(out.getvalue(), r"PASS\s+prefab-budget")
+        self.assertIn("TOTAL: 130468", out.getvalue())
+        self.assertIn("WARN: within margin", out.getvalue())
+
+
 class ManualStepTests(unittest.TestCase):
     def test_the_gui_manual_step_names_what_the_sprite_gate_leaves_by_hand(self):
         text = next(g.manual for g in dg.GATES if g.id == "gui-manual")

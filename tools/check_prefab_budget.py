@@ -18,6 +18,8 @@ from --modules, else $BANNERLORD_GAME_MODULES, else $BANNERLORD_GAME_DIR, else t
 desktop path. --dir counts one folder, file by file.
 
 Exit 0 = under warn threshold, 1 = warn (>120,000), 2 = over cap / error.
+With --gate, for a runner that reads exit 2 as "did not run" and exit 1 as a finding (tools/data_gates.py):
+exit 0 = under the cap, the WARN line still printed; 1 = at or over the cap; 2 = no folder to count.
 """
 
 import argparse
@@ -67,6 +69,7 @@ def main(argv=None) -> int:
     ap.add_argument("--dir", default=None, help="count this one Prefabs folder instead of summing the modules")
     ap.add_argument("--all-modules", action="store_true", help="sum every module's Prefabs (the default without --dir)")
     ap.add_argument("--modules", default=None, help="the Modules folder (default: found from the install)")
+    ap.add_argument("--gate", action="store_true", help="exit 1 only at or over the cap (see the module docstring)")
     args = ap.parse_args(argv)
 
     if args.dir and not args.all_modules:
@@ -84,6 +87,8 @@ def main(argv=None) -> int:
     print(f"TOTAL: {total} entities in {scope} (cap {CAP}, warn {WARN})")
     code, message = verdict(total, CAP, WARN)
     print(message)
+    if args.gate:
+        return 1 if code == 2 else 0
     return code
 
 

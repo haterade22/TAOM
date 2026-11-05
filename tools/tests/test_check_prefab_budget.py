@@ -59,6 +59,24 @@ class PrefabBudgetTests(unittest.TestCase):
         with mock.patch.object(cpb, "CAP", 100), mock.patch.object(cpb, "WARN", 4):
             self.assertEqual(_run("--all-modules", "--modules", str(self.modules))[0], 1)
 
+    def test_gate_mode_reads_the_warn_band_as_a_pass_and_still_prints_the_warn_line(self):
+        # A WARN is not over the cap: data_gates would otherwise call it FAIL on every machine near it.
+        with mock.patch.object(cpb, "CAP", 100), mock.patch.object(cpb, "WARN", 4):
+            code, out = _run("--modules", str(self.modules), "--gate")
+        self.assertEqual(code, 0, out)
+        self.assertIn("WARN", out)
+
+    def test_gate_mode_reads_over_the_cap_as_a_finding(self):
+        # data_gates reads exit 2 as NOT RUN, so over the cap must not exit 2 in gate mode.
+        with mock.patch.object(cpb, "CAP", 5), mock.patch.object(cpb, "WARN", 4):
+            code, out = _run("--modules", str(self.modules), "--gate")
+        self.assertEqual(code, 1, out)
+        self.assertIn("ERROR", out)
+
+    def test_gate_mode_keeps_exit_two_for_a_missing_folder(self):
+        code, out = _run("--modules", str(self.modules / "nope"), "--gate")
+        self.assertEqual(code, 2, out)
+
     def test_verdict_bands(self):
         self.assertEqual(cpb.verdict(10, 10, 5)[0], 2)
         self.assertEqual(cpb.verdict(6, 10, 5)[0], 1)
