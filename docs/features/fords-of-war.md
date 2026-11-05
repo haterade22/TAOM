@@ -381,7 +381,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 |---|---|---|---|---|
 | Rohan | The best cavalry: six of eight offers are riders, and all eight offers cost 0.7 of the full price for their level (the horse archers 0.5, `eliteWeight`) | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
-| Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
+| Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75, the largest free waves (25 or more a wave) | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
 | Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150, `waveInterval` 2 | None yet |
 | Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |

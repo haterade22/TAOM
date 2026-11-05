@@ -257,6 +257,14 @@ A check of free waves also shows how far the hordes stand apart: by level and co
 
 **Result, one match per pair:** Dol Guldur improved: it lost at 28.6 minutes where it lost at 20.4, with 5,915 tower damage against 2,015, though it still takes no tower. Slower free waves barely moved the elves: Rivendell's win moved from 38.3 to 38.1 minutes with a trade of 2.56 against 2.34, and Mirkwood's from 30.9 to 31.6 minutes, losing a tower where it lost none. So free wave timing is not what makes elves strong, and both ended with over 5,000 gold unspent. The next lever is their fighting quality, not their numbers. One match per pair is a direction and not proof.
 
+### Mordor's swarm (this change)
+
+**Why:** Mike, 2026-11-05: Rivendell's stats, armour and weapons are so good that only numbers can beat them, like a swarm. Mordor already outnumbered Rivendell 3 to 1 and lost 4,670 units to 351. Its cap was not the limit: its lane cap is 190, and it peaked at 123 and averaged 77 to 99 a lane, with 205 gold left. Too few orcs arrived at once.
+
+**Changed:** every Mordor free wave is 1.5 times as large, so Mordor sends the largest free waves of any faction. Elves keep their quality.
+
+**Result: not measured.**
+
 ## Open questions
 
 - **Match length:** Mike, 2026-11-04: matches should last 30 to 40 minutes, and 30 is best. The first design said 30 to 45. The wear's numbers follow this target, and the measures above do not reach it yet.

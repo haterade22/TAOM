@@ -371,6 +371,17 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void Mordor_SendsTheLargestFreeWaves_BecauseOnlyASwarmBeatsTheElves()
+    {
+        var factions = Catalog().Factions;
+        var mordor = Shipped("mordor");
+        var largest = mordor.FreeWaves.Max(w => w.Units.Sum(u => u.Count));
+        foreach (var other in factions.Where(f => f.FactionId != "mordor"))
+            Assert.IsTrue(other.FreeWaves.All(w => w.Units.Sum(u => u.Count) < largest), other.FactionId);
+        Assert.IsTrue(mordor.FreeWaves.All(w => w.Units.Sum(u => u.Count) >= 25), "every Mordor wave is a swarm");
+    }
+
+    [TestMethod]
     public void Rivendell_HasTheSmallestFreeWaves_AndMordorsOrcsCanHurtArmour()
     {
         var rivendell = Shipped("rivendell");
