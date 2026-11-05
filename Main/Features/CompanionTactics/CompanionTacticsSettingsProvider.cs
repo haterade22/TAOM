@@ -23,7 +23,7 @@ public sealed class CompanionTacticsSettingsProvider : ICompanionTacticsSettings
     public int MaxFormationPresets => Settings?.MaxFormationPresets ?? 10;
     public bool FormationPresetsDebug => Settings?.FormationPresetsDebug ?? false;
 
-    public bool EnableBattleActionBar => Settings?.EnableBattleActionBar ?? true;
+    public bool ShowBattleActionBar => Settings?.ShowBattleActionBar ?? false;
     public bool CancelStanceOnMove => Settings?.CancelStanceOnMove ?? true;
     public bool EnableVolleyFire => Settings?.EnableVolleyFire ?? true;
     public bool BattleActionBarDebug => Settings?.BattleActionBarDebug ?? false;

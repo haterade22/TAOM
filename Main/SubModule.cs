@@ -2086,7 +2086,9 @@ public class SubModule : MBSubModuleBase
         // removal callbacks may run in either order (#595, Codex review 109).
         AddTaomBehavior(new BehaviorTreeMissionLogic());
         AddTaomBehavior(new AdvancedCombatBehavior());
-        AddTaomBehavior(new AutonomousMovementPlayerController());
+        // The warg rage controller and the battle action bar are [DefaultView]s the engine builds with the
+        // mission. Never add a MissionView here: this runs in Mission.AfterStart, after MissionScreen
+        // registered its views, so it would never tick or finalize (#970, SubModuleMissionViewWiringTests).
         AddTaomBehavior(new WargMissionBehavior());
         AddTaomBehavior(new SpiderMissionBehavior());
         AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
@@ -2143,7 +2145,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
-        AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
         // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).

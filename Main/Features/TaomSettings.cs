@@ -844,10 +844,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Battle Tactics / Battle Action Bar ---
 
+    // Renamed from EnableBattleActionBar (default on) in #970. MCM keeps a saved value per property, so flipping that
+    // default would have reached fresh installs only; a new property name reaches every install. The old key in
+    // TAOM.json is ignored.
     [SettingPropertyGroup("Battle Tactics/Battle Action Bar", GroupOrder = 29)]
-    [SettingPropertyBool("Enable Battle Action Bar", Order = 0, RequireRestart = false,
-        HintText = "Show contextual action bar during field battles (1-9 hotkeys for stance toggles). Stances are display-only — they record state but do not change formation behavior.")]
-    public bool EnableBattleActionBar { get; set; } = true;
+    [SettingPropertyBool("Show Battle Action Bar", Order = 0, RequireRestart = false,
+        HintText = "Parked: show a bar of stance buttons during field battles. The buttons record a stance but do not change formation behavior yet, and they can be clicked only while a menu shows the cursor (for example Esc). Default: off.")]
+    public bool ShowBattleActionBar { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Battle Action Bar")]
     [SettingPropertyBool("Cancel Stance On Move", Order = 1, RequireRestart = false,

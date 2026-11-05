@@ -10,15 +10,13 @@ public sealed class BattleAction
 {
     public string Id { get; }
     public string Label { get; }
-    public string Hotkey { get; }
     public ActionCategory Category { get; }
     public Action Execute { get; }
 
-    public BattleAction(string id, string label, string hotkey, ActionCategory category, Action execute)
+    public BattleAction(string id, string label, ActionCategory category, Action execute)
     {
         Id = id;
         Label = label;
-        Hotkey = hotkey;
         Category = category;
         Execute = execute;
     }

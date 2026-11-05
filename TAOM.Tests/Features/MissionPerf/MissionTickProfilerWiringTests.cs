@@ -99,9 +99,9 @@ public class MissionTickProfilerWiringTests
         Assert.AreEqual(1, Count(src, BehaviorAdd), "The profiler behaviour is added exactly once.");
         var add = src.IndexOf(BehaviorAdd);
         var heartbeat = src.IndexOf("AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(");
-        var actionBar = src.IndexOf("BattleActionBarMissionView");
+        var modules = src.IndexOf("FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);");
 
-        Assert.IsTrue(heartbeat >= 0 && actionBar >= 0, "An anchor moved.");
-        Assert.IsTrue(add > heartbeat && add < actionBar, "The profiler behaviour goes right after the heartbeat.");
+        Assert.IsTrue(heartbeat >= 0 && modules >= 0, "An anchor moved.");
+        Assert.IsTrue(add > heartbeat && add < modules, "The profiler behaviour goes right after the heartbeat.");
     }
 }
