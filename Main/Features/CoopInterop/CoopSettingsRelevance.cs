@@ -84,6 +84,8 @@ public static class CoopSettingsRelevance
         "EnableAnimMemoryProbe",
         // Lost Footing (docs/features/lost-footing.md): the census writes [LostFooting] lines and reads the battle, never changes it.
         "LostFootingCensusEnabled",
+        // Shadowfax Screens: the [ScreenOpen] timer lines (docs/features/shadowfax-screens.md); log lines only.
+        "LogScreenOpenTimes",
     };
 
     /// <summary>
@@ -143,6 +145,9 @@ public static class CoopSettingsRelevance
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
+        // Shadowfax Screens fast-open switches: how fast this client builds its own UI screens, never what they show
+        // or the campaign state behind them.
+        "ClanFastOpen", "InventoryFastOpen", "PartyFastOpen", "QuestLogFastOpen",
     };
 
     /// <summary>True when a difference in this property can make two peers simulate differently.</summary>

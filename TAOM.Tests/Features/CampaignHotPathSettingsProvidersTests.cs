@@ -16,6 +16,7 @@ using TAOM.Features.FieldCommission.Domain;
 using TAOM.Features.NameplateCull;
 using TAOM.Features.PartyIconScale;
 using TAOM.Features.QuickActions;
+using TAOM.Features.ShadowfaxScreens;
 using TAOM.Features.SupplyLines;
 using TAOM.Features.TimeAcceleration;
 using TAOM.Tests.Migration;
@@ -60,6 +61,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(CampSettingsProvider))]
     // Read every campaign-map frame, from the Battle Load Diagnostics page.
     [DataRow(typeof(NameplateCullSettingsProvider))]
+    // Shadowfax Screens: read on every screen open and by each screen's timer points, from the Battle Load Diagnostics page.
+    [DataRow(typeof(ShadowfaxScreensSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -88,6 +91,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ISupplyLinesSettingsProvider), typeof(SupplyLinesSettingsProvider))]
     [DataRow(typeof(ICampSettingsProvider), typeof(CampSettingsProvider))]
     [DataRow(typeof(INameplateCullSettingsProvider), typeof(NameplateCullSettingsProvider))]
+    [DataRow(typeof(IShadowfaxScreensSettingsProvider), typeof(ShadowfaxScreensSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
