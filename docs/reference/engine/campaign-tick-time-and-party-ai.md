@@ -97,6 +97,49 @@ is a lazy recompute: parties only re-decide when something changed, not every fr
   AI; set once and let the engine recompute on its next AI tick.
 - **`CampaignVec2` targets lazy-resolve via the map scene** — prefer raw accessors in editor mode
   (`feedback_campaign_coupled_property_in_editor`).
+- **Listeners run newest first** (v1.4.8 taom-src `MbEvent.cs:24-30`, `:32-44`): `AddNonSerializedListener` puts each new
+  record at the head of the list and `Invoke` walks from the head, so a listener added after the engine's own runs
+  BEFORE it on the same event. (yotthani's CampaignProbe README observed the same on 1.5.5.)
+
+## Measured costs on TAOM's map [yotthani]
+
+**On the 1.4.x line (plan 144):** measured on 1.5.3, not re-measured on v1.4.8. This line has the NameplateCull (plan 120) and the ButterLib distance matrix switch (plan 118) the bullets name.
+
+yotthani's first campaign-map run on a real save with the full mod list (2026-10-02 21:08, 236 s measured, 1,945 to
+2,524 parties, 1,002 settlements in yotthani's count of that session; a foreign test run kept one core at 18.6 % load
+at the start). All figures: yotthani, MithrilForge `docs/engine/perf.md`@0a2f4761, measured in game, v1.5.3; v1.5.5:
+not re-checked; the version of TAOM loaded is not stated.
+
+- **Stutter is single long frames, not a low average.** The averages were fine: 106 FPS with time stopped and the
+  camera moving, 86 in Play, 72 in fast forward. The run held 154 outlier frames that added up to 13 s (lines 858-867).
+- **A save costs about 4 s of still frame.** Two stalls of 2.8 s and 2.6 s sat in `MapState.OnTick` around
+  `onBeforeSaveEvent`, and each was followed by one more frame of about 1.2 s with no managed time in it (lines
+  869-871).
+- **Settlement nameplates were the largest steady cost.** `GauntletMapSettlementNameplateView.OnMapScreenUpdate` took
+  4.0 ms a frame in fast forward (29 % of the frame), 0.9 ms with time stopped and 5.9 ms inside the outlier frames.
+  yotthani's code reading: it updates every nameplate every frame, a `TWParallel.For` over all of them and then
+  `RefreshBindValues()` for each in turn, whether or not the settlement is on screen (lines 880-885). TAOM's answer
+  is [nameplate-cull.md](../../features/nameplate-cull.md); with `nameplate-cull` on, yotthani's later run measured
+  0.17 ms (line 1337).
+- **Event handlers cost 142 ms per campaign hour, 97 % of it vanilla and 3 % TAOM** ("our mods not measurable"),
+  which is about 245 ms per real second in fast forward at 1.7 campaign hours a second. The largest were
+  `AiPartyThinkBehavior.PartyHourlyAiTick` at 32 ms an hour (2,500 calls), `AiVisitSettlementBehavior.AiHourlyTick` at
+  16, `PoliticalStagnationAndBorderIncidentCampaignBehavior.HourlyTickSettlement` at 9.6, `AiEngagePartyBehavior` at
+  6.5, `NotablesCampaignBehavior.DailyTickHero` at 5.9 and `AiMilitaryBehavior` at 5.6 (lines 887-890). After
+  yotthani's tuning levers (`nameplate-cull`, `butterlib-lazy-distance`, server GC) the total was 62 ms an hour, 94 %
+  vanilla and 6 % TAOM, at 118 FPS in fast forward (lines 1333-1338, 2026-10-04). The TAOM share rose from 3 % to 6 %
+  while the total fell; by arithmetic that is about 4.3 ms and about 3.7 ms an hour.
+- **Step sounds were refuted at the call site.** The first suspicion, `MapScreen.TickStepSounds` calling the native
+  step sound for every visible party each frame, was read from code (lines 824-827) and then measured at about 0.2 ms
+  a second (line 892). If the sound stutters, yotthani says the cause is native (FMOD) and only a profile would show it.
+- **The "before" numbers include ButterLib's rebuild, which TAOM removes.** The run above was taken with the user's full
+  load list (line 853), which includes ButterLib; that its Distance Matrix was on is TAOM's inference from the user
+  setting yotthani read the next day ("Distance Matrix Enabled" `true`, line 1211). In that later run (2026-10-03
+  23:39) yotthani found that the six worst
+  `MapEventManager.Tick` frames (229 to 292 ms) were all siege ends running ButterLib's
+  `GeopoliticsBehavior.UpdateOnSettlementOwnerChanged`: 13 calls, 2,250 ms, 173 ms on average, up to 281 ms in one
+  frame (lines 1205-1208). TAOM switches that subsystem off, so figures taken with it running overstate what a TAOM
+  player sees; see [butter-lib-distance-matrix.md](../../features/butter-lib-distance-matrix.md).
 
 ## The native boundary
 **None** — the campaign heartbeat is **entirely managed** (clock, tick dispatch, periodic events, party AI are all C#).
