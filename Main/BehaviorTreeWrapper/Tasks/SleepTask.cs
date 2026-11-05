@@ -19,7 +19,7 @@ public class SleepTask : BTTask
     {
         if (_isExecuting)
         {
-            if (DateTime.Now - _lastTime > _sleepDuration)
+            if (DateTime.UtcNow - _lastTime > _sleepDuration)
             {
                 _isExecuting = false;
                 return BTTaskStatus.FinishedWithTrue;
@@ -27,7 +27,7 @@ public class SleepTask : BTTask
             return BTTaskStatus.Running;
         }
         _isExecuting = true;
-        _lastTime = DateTime.Now;
+        _lastTime = DateTime.UtcNow;
         return BTTaskStatus.Running;
     }
 }

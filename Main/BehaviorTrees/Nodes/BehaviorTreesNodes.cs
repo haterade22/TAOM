@@ -131,8 +131,8 @@ public class Selector : BTControlNode
     private bool Prepare()
     {
         alreadyExecutedNodes = 0;
-        currentlyExecutableChildren = new List<BTNode>();
-        childrenWithTasks = new List<BTNode>();
+        currentlyExecutableChildren.Clear();
+        childrenWithTasks.Clear();
         foreach (var child in allChildren)
         {
             if (child.Decorator == null)

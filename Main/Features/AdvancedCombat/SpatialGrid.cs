@@ -1,24 +1,50 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviorTreeWrapper;
+using TAOM.Core.Logging;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.AdvancedCombat;
 
 /// <summary>
-/// Cells of live agents for the creature trees' range scans, rebuilt every two seconds from the
-/// mission tick. Until #592 the trees read it from the engine's asynchronous agent tick while this
-/// tick rebuilt it; the third player freeze of 2026-09-13 had nothing but four warg trees, each
-/// scanning here on every evaluation. Every reader and the rebuild are on the mission tick now, the
-/// rebuild replaces the map instead of clearing it in place, and the tripwire reports any thread
-/// that comes back (#595).
+/// Cells of live agents for the creature trees' range scans. The cells are rebuilt every two seconds
+/// from the mission tick while something reads them: a build nobody queried makes the next scheduled
+/// rebuild a skip, and the next query rebuilds first. Until #592 the trees read the grid from the
+/// engine's asynchronous agent tick while this tick rebuilt it; the third player freeze of 2026-09-13
+/// had nothing but four warg trees, each scanning here on every evaluation. Every reader and the
+/// rebuild are on the mission tick now, the tripwire reports any thread that comes back, and the
+/// rebuild fills the spare of two maps and publishes it by one reference write, so a reader never
+/// walks a map being cleared (#592, #595). A removal uses each map's agent-to-cell index and reaches both maps.
 /// </summary>
 public class SpatialGrid
 {
     public static SpatialGrid Instance { get; internal set; }
 
+    // Two maps: a rebuild fills the spare one and publishes it by one reference write, so the map a reader
+    // holds is never cleared under it until a later rebuild. Each map has its agent-to-cell index, which
+    // makes a removal one cell's List.Remove per map instead of a walk over every cell.
     private Dictionary<(int, int), List<Agent>> _grid = new();
+    private Dictionary<Agent, (int, int)> _cellOf = new();
+    private Dictionary<(int, int), List<Agent>> _spareGrid = new();
+    private Dictionary<Agent, (int, int)> _spareCellOf = new();
+    private readonly Stack<List<Agent>> _spareLists = new();
+
+    // The list the last UpdateGrid passed (the mission's live AllAgents), whether anything queried the last
+    // build, and how many scheduled rebuilds were skipped since it because nothing did.
+    private List<Agent>? _agents;
+    private bool _queriedSinceBuild;
+    private int _skippedRebuilds;
+    private bool _skipLogged;
+    private bool _queryRebuildLogged;
+
+    /// <summary>Builds made so far; tests read it.</summary>
+    internal int BuildCount { get; private set; }
+
+    /// <summary>Where the grid's INFO lines go: the file log, or a test's capture.</summary>
+    internal Action<string> InfoLog { get; set; } = LogInfoToFile;
+
     public float CellSize = 20f;
 
     private static readonly Action<string> ReportOffThread =
@@ -35,16 +61,49 @@ public class SpatialGrid
     private static readonly Func<Agent, Vec3> AgentPosition = agent => agent.Position;
     private static readonly Func<Agent, bool> IsLiveAgent = agent => agent.IsActive();
 
+    // The two engine reads the grid makes on an agent. A seam, like InfoLog: a test drives the rebuild, the
+    // wake-up query and the removals on bare Agent objects with no native pointer behind them.
+    internal Func<Agent, Vec3> PositionOf { get; set; } = AgentPosition;
+    internal Func<Agent, bool> IsLive { get; set; } = IsLiveAgent;
+
+    private static void LogInfoToFile(string message)
+    {
+        try { IoC.Resolve<IModLogger>()?.LogInfo(message); }
+        catch { /* a log line must never break the mission tick */ }
+    }
+
     public void UpdateGrid(List<Agent> agents)
     {
         MissionThreadGuard.NoteCall("SpatialGrid.UpdateGrid", ReportOffThread);
-        // A fresh map, published by one reference write: a reader that still holds the old one walks a
-        // finished structure rather than a map being cleared under it.
-        _grid = BuildCells(agents, IsLiveAgent, AgentPosition, CellSize);
+        _agents = agents;
+        // Nothing read the last build: skip this one. The next query rebuilds first, so a reader that
+        // arrives later (a creature spawned mid-battle) never sees cells older than a rebuild would give it.
+        if (BuildCount > 0 && !_queriedSinceBuild)
+        {
+            _skippedRebuilds++;
+            if (!_skipLogged)
+            {
+                _skipLogged = true;
+                InfoLog($"[SpatialGrid] Scheduled rebuild skipped: nothing queried build {BuildCount}, so rebuilds pause " +
+                    "while nothing reads the grid and the next query rebuilds first. Logged once per grid (one grid per mission).");
+            }
+            return;
+        }
+        Rebuild(agents);
+    }
+
+    private void Rebuild(List<Agent> agents)
+    {
+        BuildCellsInto(_spareGrid, _spareCellOf, _spareLists, agents, IsLive, PositionOf, CellSize);
+        (_grid, _spareGrid) = (_spareGrid, _grid);
+        (_cellOf, _spareCellOf) = (_spareCellOf, _cellOf);
+        _queriedSinceBuild = false;
+        _skippedRebuilds = 0;
+        BuildCount++;
     }
 
     /// <summary>
-    /// Drop a deleted agent. Its managed handle would otherwise sit here until the next rebuild,
+    /// Drop a deleted agent from both maps. Its managed handle would otherwise sit here until the next rebuild,
     /// reading position from the engine slot its index now belongs to (#595).
     /// </summary>
     public void Remove(Agent agent)
@@ -58,18 +117,34 @@ public class SpatialGrid
 
     internal int PendingRemovalCount => _pendingRemovals.Count;
 
+    /// <summary>Every agent handle either map generation holds, in its cells and in its agent-to-cell index;
+    /// tests read it.</summary>
+    internal IEnumerable<Agent> HeldAgents() =>
+        _grid.Values.Concat(_spareGrid.Values).SelectMany(cell => cell).Concat(_cellOf.Keys).Concat(_spareCellOf.Keys);
+
+    // Both generations: no rebuild reaches the spare map while nothing queries the grid, and a deleted agent keeps
+    // its Mission reference, so a handle left there would hold the finished mission until the next mission's
+    // AdvancedCombatBehavior replaced the grid (the base held no deleted agent). The grid's surviving agents still
+    // reach that mission through Agent.Team until then, which this removal does not change (plan 033 review, R18).
     private void RemoveNow(Agent agent)
     {
-        foreach (List<Agent> cell in _grid.Values)
-        {
-            if (cell.Remove(agent)) return;
-        }
+        RemoveFromCells(_grid, _cellOf, agent);
+        RemoveFromCells(_spareGrid, _spareCellOf, agent);
     }
 
-    /// <summary>Buckets every included item by the cell of its position. Pure; tests drive it with plain points.</summary>
-    internal static Dictionary<(int, int), List<T>> BuildCells<T>(List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
+    /// <summary>Buckets every included item by the cell of its position into <paramref name="cells"/> and
+    /// records each item's cell in <paramref name="cellOf"/>, after returning the previous build's lists to
+    /// <paramref name="spareLists"/>. Pure; tests drive it with plain points.</summary>
+    internal static void BuildCellsInto<T>(Dictionary<(int, int), List<T>> cells, Dictionary<T, (int, int)> cellOf,
+        Stack<List<T>> spareLists, List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
     {
-        var cells = new Dictionary<(int, int), List<T>>();
+        foreach (List<T> list in cells.Values)
+        {
+            list.Clear();
+            spareLists.Push(list);
+        }
+        cells.Clear();
+        cellOf.Clear();
         foreach (T item in items)
         {
             if (!include(item))
@@ -78,12 +153,29 @@ public class SpatialGrid
             var key = ((int)Math.Floor(pos.x / cellSize), (int)Math.Floor(pos.y / cellSize));
             if (!cells.TryGetValue(key, out List<T> list))
             {
-                list = new List<T>();
+                list = spareLists.Count > 0 ? spareLists.Pop() : new List<T>();
                 cells[key] = list;
             }
             list.Add(item);
+            cellOf[item] = key;
         }
+    }
+
+    /// <summary>The fresh-container form, kept for the query tests.</summary>
+    internal static Dictionary<(int, int), List<T>> BuildCells<T>(List<T> items, Func<T, bool> include, Func<T, Vec3> positionOf, float cellSize)
+    {
+        var cells = new Dictionary<(int, int), List<T>>();
+        BuildCellsInto(cells, new Dictionary<T, (int, int)>(), new Stack<List<T>>(), items, include, positionOf, cellSize);
         return cells;
+    }
+
+    /// <summary>Removes <paramref name="item"/> from the one cell <paramref name="cellOf"/> names. Returns
+    /// false when it is in no cell. Pure.</summary>
+    internal static bool RemoveFromCells<T>(Dictionary<(int, int), List<T>> cells, Dictionary<T, (int, int)> cellOf, T item)
+    {
+        if (!cellOf.TryGetValue(item, out (int, int) key)) return false;
+        cellOf.Remove(item);
+        return cells.TryGetValue(key, out List<T> list) && list.Remove(item);
     }
 
     public List<Agent> GetAgentsInRadius(Vec3 center, float radius)
@@ -101,8 +193,20 @@ public class SpatialGrid
     /// </summary>
     public void GetAgentsInRadius(Vec3 center, float radius, List<Agent> buffer)
     {
-        MissionThreadGuard.NoteCall("SpatialGrid.GetAgentsInRadius", ReportOffThread);
-        CollectInRadius(_grid, center, radius, CellSize, AgentPosition, buffer);
+        bool offThread = MissionThreadGuard.NoteCall("SpatialGrid.GetAgentsInRadius", ReportOffThread);
+        // Only the mission thread may build; an off-thread reader (a reported regression) reads what is there.
+        if (_skippedRebuilds > 0 && !offThread && _agents != null)
+        {
+            if (!_queryRebuildLogged)
+            {
+                _queryRebuildLogged = true;
+                InfoLog($"[SpatialGrid] A query found {_skippedRebuilds} scheduled rebuilds skipped and rebuilt the grid " +
+                    $"before answering (build {BuildCount + 1}). Logged once per grid (one grid per mission).");
+            }
+            Rebuild(_agents);
+        }
+        _queriedSinceBuild = true;
+        CollectInRadius(_grid, center, radius, CellSize, PositionOf, buffer);
     }
 
     /// <summary>

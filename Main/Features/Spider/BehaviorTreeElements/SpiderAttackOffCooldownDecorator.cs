@@ -33,6 +33,6 @@ public class SpiderAttackOffCooldownDecorator : BTReturnFalseDecorator, IBTSpide
     {
         var stamp = _kind == SpiderAttackKind.Pounce ? PounceLastFired : SideAttackLastFired;
         _service ??= IoC.Resolve<ISpiderAttackService>();
-        return _service.IsOffCooldown(stamp.GetValue(), DateTime.Now, _cooldownSeconds);
+        return _service.IsOffCooldown(stamp.GetValue(), DateTime.UtcNow, _cooldownSeconds);
     }
 }
