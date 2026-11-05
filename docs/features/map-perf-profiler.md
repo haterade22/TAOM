@@ -19,9 +19,7 @@ Ported by plan 117 from the 1.5.x line (the doc as of `43ca92ee9`). Engine targe
 one `Invoke` of the tick event), `MapState.OnTick` (`MapState.cs:144`, whose `OnMapModeTick` calls `RealTick` at
 `:186` and `Tick` at `:189`), `MapScreen.OnFrameTick` (`MapScreen.cs:1332`) and `MbEvent<T>.Invoke` /
 `InvokeList` (``MbEvent`1.cs:32-44``). Two TAOM map views have a per-frame override here
-(`FieldCampMapView`, `MomentumIndicatorMapView`). Patch89 and `[MapLoad]` (MapLoadDiagnostics) arrive with
-WP118: until then the Patch89 sentences below do not apply, `Campaign.RealTick` carries no other TAOM patch,
-and only Patch36 patches `MapScreen.OnFrameTick` besides this profiler. Other v1.5.x tags are the 1.5.x line's facts.
+(`FieldCampMapView`, `MomentumIndicatorMapView`). Other v1.5.x tags are the 1.5.x line's facts.
 
 ## Why This Exists
 
@@ -29,7 +27,7 @@ and only Patch36 patches `MapScreen.OnFrameTick` besides this profiler. Other v1
   lords and villagers spawned in, with `Campaign.RealTick` averaging 20 ms per frame
   (`docs/migration/v1.5.2-impact.md`, the "Time running" row of the v1.5.2 evidence table). RealTick
   explains about 20 of each frame's ~130 ms.
-- **The gap:** the `[MapLoad]` heartbeat (`docs/features/map-load-diagnostics.md`, with WP118) writes
+- **The gap:** the `[MapLoad]` heartbeat ([map-load-diagnostics.md](map-load-diagnostics.md)) writes
   `fps` and `tickMs` (the mean `Campaign.RealTick` time) every 5 s; it cannot split the rest of the frame
   or say how much of it is TAOM's code: eight `CampaignEvents.TickEvent` listeners, three map views,
   `SubModule.OnApplicationTick`, and Harmony patches on the per-frame map methods.

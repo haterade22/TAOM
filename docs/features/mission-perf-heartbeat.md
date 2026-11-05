@@ -37,15 +37,14 @@ For v1.4.8 (build 119303, re-read for the port):
   walk is safe against a clip loading on a worker is UNVERIFIED on both lines.
 - **Defaults**: the same MCM keys and defaults as the 1.5.x line (heartbeat and hitch probe on, tick profiler
   off). The hitch probe's cost was re-measured on the laptop for the port (plan 117, Step A2.7).
-- **Not on this line**: the culture doctrine feature, co-op's client-only patch attribute, and, until WP118,
-  `[MapLoad]`, `[XmlMerge]` and the load-time stamps this page mentions.
+- **Not on this line**: the culture doctrine feature and co-op's client-only patch attribute.
 - **The campaign map** has its own profiler: [map-perf-profiler.md](map-perf-profiler.md).
 - **Stranded soldiers** have an opt-in census: [lost-footing.md](lost-footing.md).
 
 ## Why This Exists
 
 - **Vanilla behavior:** no frame-time record. `[MemSample]` (Battle Load Diagnostics) has no
-  frame counter; on the 1.5.x line `[MapLoad]` reports fps on the campaign map (here it arrives with WP118).
+  frame counter; `[MapLoad]` reports fps on the campaign map only.
 - **TAOM requirement:** an A/B of a team-AI change needs frame times from the same battle with
   the feature on and off, in a form a script can compare.
 - **Without this feature:** "it felt fine" is the only evidence a perf change leaves.
