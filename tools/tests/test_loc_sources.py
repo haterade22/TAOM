@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import generate_name_localization_strings as gen  # noqa: E402
 from _loc_sources import TAOM_SOURCES  # noqa: E402
 
 MODULE_DATA = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
@@ -29,6 +30,11 @@ class LocSourcesTests(unittest.TestCase):
         # key_owners gives a shared key to the first source.
         order = [s for s, _ in TAOM_SOURCES]
         self.assertLess(order.index("taom_module_strings.xml"), order.index("global_strings.xml"))
+
+    def test_EveryGeneratorOutput_IsATableRow(self):
+        rows = {(MODULE_DATA / s).resolve() for s, _ in TAOM_SOURCES}
+        for cat, spec in gen.CATEGORIES.items():
+            self.assertIn(spec["output"].resolve(), rows, cat)
 
 
 if __name__ == "__main__":

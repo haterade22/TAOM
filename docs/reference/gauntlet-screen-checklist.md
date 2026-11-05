@@ -25,7 +25,7 @@ Run the screen with each of these, when the data can reach it:
 - **Disabled:** every control that can be unavailable says why on hover and names what would enable
   it. Gauntlet does not hover a disabled widget, so the reason's hint sits in an always-enabled
   wrapper beside the button, as vanilla's governor button does
-  ([messengers](../features/messengers.md) #944, [namegiving](../features/namegiving.md)).
+  ([messengers](../features/messengers.md) #944).
 - **After an action:** the screen shows the result (a row moves, a count changes, a message
   appears). A click with no visible change reads as a broken button.
 
