@@ -63,11 +63,22 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
             }
         }
 
-        if (!state.HasWarStarted && (state.Free.KingdomIds.Count > 0 || state.Evil.KingdomIds.Count > 0))
+        if (!state.HasWarStarted)
         {
-            state.MarkWarStarted();
-            _logger.LogInfo("[Momentum] The War of the Ring momentum tracking has begun");
-            changed = true;
+            int freeRealms = state.Free.KingdomIds.Count;
+            int evilRealms = state.Evil.KingdomIds.Count;
+            // WOTR-03: a side that never enrolled must not count as eliminated, which would hand the other
+            // side an elimination victory the day the war starts. Start only when both sides hold a realm.
+            if (freeRealms > 0 && evilRealms > 0)
+            {
+                state.MarkWarStarted();
+                _logger.LogInfo("[Momentum] The War of the Ring momentum tracking has begun");
+                changed = true;
+            }
+            else if (changed)
+            {
+                _logger.LogWarning($"[Momentum] The momentum war has not started: Free {freeRealms} and Evil {evilRealms} realms enrolled, and both sides need one (check execution/alignment.json against the loaded kingdoms)");
+            }
         }
 
         return changed;

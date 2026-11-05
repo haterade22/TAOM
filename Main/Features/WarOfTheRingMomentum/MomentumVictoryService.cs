@@ -52,16 +52,37 @@ public class MomentumVictoryService : IMomentumVictoryService
         float internalMomentum = state.InternalMomentum;
         int threshold = _settings.VictoryThreshold;
 
+        int freeRealms = state.Free.KingdomIds.Count;
+        int evilRealms = state.Evil.KingdomIds.Count;
+
+        // WOTR-03: elimination needs a survivor. With both rosters empty nobody is left to win, so the
+        // war stays open (the next sweep re-enrolls any realm that still exists) instead of defaulting
+        // to the first branch below.
+        if (freeRealms == 0 && evilRealms == 0)
+            return WarOutcome.None;
+
         var outcome = WarOutcome.None;
-        if (internalMomentum >= threshold || state.Evil.KingdomIds.Count == 0)
+        bool byThreshold = false;
+        if (internalMomentum >= threshold || evilRealms == 0)
+        {
             outcome = WarOutcome.FreeVictory;
-        else if (internalMomentum <= -threshold || state.Free.KingdomIds.Count == 0)
+            byThreshold = internalMomentum >= threshold;
+        }
+        else if (internalMomentum <= -threshold || freeRealms == 0)
+        {
             outcome = WarOutcome.EvilVictory;
+            byThreshold = internalMomentum <= -threshold;
+        }
 
         if (outcome == WarOutcome.None)
             return WarOutcome.None;
 
-        _logger.LogInfo($"[Momentum] War of the Ring decided: {outcome} (momentum {internalMomentum:F0}, threshold {threshold})");
+        // The prefix is what a player sends in: keep it verbatim. The tail says which rule fired.
+        string gate = _settings.RequireParticipationForVictory
+            ? $"on, minimum {_settings.MinimumPlayerEventsForVictory}"
+            : "off";
+        _logger.LogInfo($"[Momentum] War of the Ring decided: {outcome} (momentum {internalMomentum:F0}, threshold {threshold}); "
+            + $"by {(byThreshold ? "threshold" : "elimination")}; enrolled realms Free {freeRealms}, Evil {evilRealms}; player gate {gate}");
 
         // Ordering is load-bearing:
         // 1. Freeze the meter — all event processing early-returns on HasWarEnded.

@@ -54,6 +54,8 @@ Victory is **opt-in**: `MomentumVictoryService.CheckAndApplyVictory` returns `No
 
 Load reconcile in `OnSessionLaunched`: with victory **disabled**, a war that ended under a prior victory-enabled build is **un-frozen** (its momentum/kingdoms/stats kept, only the ended flags reset) so the meter and tracking resume — this is how an already-ended save becomes endless again. With victory **enabled**, it instead calls `EndWar` if the save says the momentum war ended but the phase machine hasn't caught up (idempotent).
 
+Elimination needs a survivor: with both rosters empty the check decides nothing, and the momentum war starts only once both sides hold an enrolled realm (a side that never enrolled is not "eliminated"; the sweep warns once, naming both counts). The decided log line keeps its prefix and appends the rule (`by threshold` or `by elimination`), both roster sizes and the player gate.
+
 ### What counts as player participation
 
 Both the ×1.5 `participationMultiplier` and the victory gate's event count key off one flag per event: `PlayerInvolved`, computed on the snapshot the adapter builds. The test is **the player's main party, or any party in the player's kingdom** (`WarEventSnapshotAdapter.IsPlayerRelated`) — plus `MapEvent.IsPlayerMapEvent` for battles.

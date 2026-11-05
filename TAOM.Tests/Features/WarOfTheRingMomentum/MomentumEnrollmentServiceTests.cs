@@ -245,4 +245,31 @@ public class MomentumEnrollmentServiceTests
         Assert.IsFalse(_state.Evil.ContainsKingdom("empire_s"));
         Assert.IsTrue(_state.Free.ContainsKingdom("empire_s"));
     }
+
+    // ---- WOTR-03: the war starts only when both sides hold a realm ----
+
+    [TestMethod]
+    public void SweepEnrollment_OnlyFreeRealmsEnroll_DoesNotStartTheWarAndWarnsOnce()
+    {
+        _alignmentService.GetKingdomSide("empire_s").Returns(FactionSide.Neutral);
+
+        _sut.SweepEnrollment(_state);
+        _sut.SweepEnrollment(_state);
+
+        Assert.IsFalse(_state.HasWarStarted);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("has not started")));
+    }
+
+    [TestMethod]
+    public void SweepEnrollment_EvilRealmEnrollsLater_StartsTheWar()
+    {
+        _alignmentService.GetKingdomSide("empire_s").Returns(FactionSide.Neutral);
+        _sut.SweepEnrollment(_state);
+        Assert.IsFalse(_state.HasWarStarted);
+
+        _alignmentService.GetKingdomSide("empire_s").Returns(FactionSide.Evil);
+        _sut.SweepEnrollment(_state);
+
+        Assert.IsTrue(_state.HasWarStarted);
+    }
 }
