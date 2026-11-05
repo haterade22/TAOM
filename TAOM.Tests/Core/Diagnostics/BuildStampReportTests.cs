@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Core.Diagnostics;
 
@@ -221,5 +224,61 @@ public class BuildStampReportTests
         string engine = BuildStampReport.EngineReport("v1.4.7.35937", new[] { "Native v1.4.7" });
         Assert.IsFalse(engine.StartsWith("[BuildStamp]"),
             "the engine line needs its own tag so [BuildStamp] greps stay about module pairing");
+    }
+
+    // E3's two [BuildStamp] version strings, verbatim: the public 2026-09-30 refresh.
+    private const string E3Taom = "v2.0.0.0 build.20260930-120651Z+8df90444cc2f1e6d83bb95d2164ab764b4fcae65";
+    private const string E3Deps = "v0.1.0.0 build.20260914-032050Z+0c32343758068cdd60dcb92cd99412b00664dc6e";
+    private const string DebugTokens = "config=Debug jitOpt=OFF";
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_DebugWithOptimizerDisabled_RendersOff()
+    {
+        Assert.AreEqual("config=Debug jitOpt=OFF", BuildStampReport.DescribeBuildConfiguration("Debug", true));
+    }
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_ReleaseOrNoAttribute_RendersOn()
+    {
+        Assert.AreEqual("config=Release jitOpt=ON", BuildStampReport.DescribeBuildConfiguration("Release", false));
+    }
+
+    [TestMethod]
+    public void DescribeBuildConfiguration_UnknownParts_RenderUnknown()
+    {
+        Assert.AreEqual("config=unknown jitOpt=unknown", BuildStampReport.DescribeBuildConfiguration(null, null));
+        Assert.AreEqual("config=My_Config jitOpt=OFF", BuildStampReport.DescribeBuildConfiguration("My Config", true),
+            "the configuration must stay one token or the line stops parsing");
+    }
+
+    [TestMethod]
+    public void ReadBuildConfiguration_TaomAssembly_MatchesItsDebuggableAttribute()
+    {
+        var asm = typeof(BuildStampReport).Assembly;
+        string line = BuildStampReport.ReadBuildConfiguration(asm);
+
+        StringAssert.Matches(line, new Regex(@"^config=\S+ jitOpt=(ON|OFF)$"));
+        bool jitOff = asm.GetCustomAttribute<DebuggableAttribute>()?.IsJITOptimizerDisabled == true;
+        Assert.AreEqual(jitOff, line.EndsWith("jitOpt=OFF"), line);
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_PlacesConfigTokensAfterEachStamp()
+    {
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        StringAssert.Matches(line, new Regex(
+            @"^\[BuildStamp\] TAOM=\S+ build\.\S+ config=Debug jitOpt=OFF TAOM\.Dependencies=\S+ build\.\S+ config=Debug jitOpt=OFF "));
+    }
+
+    [TestMethod]
+    public void BuildReportFromParts_StillMatchesTheVerdictToolPattern()
+    {
+        // The pattern tools/ingame_verdict.py uses on 1.5.x; WP139 ports that tool.
+        string line = BuildStampReport.BuildReportFromParts(E3Taom, DebugTokens, E3Deps, DebugTokens);
+
+        var m = Regex.Match(line, @"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)");
+        Assert.IsTrue(m.Success, line);
+        Assert.AreEqual("8df90444cc2f1e6d83bb95d2164ab764b4fcae65", m.Groups[1].Value);
     }
 }

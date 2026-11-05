@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 
@@ -133,9 +134,17 @@ public static class BuildStampReport
     /// </summary>
     public static string BuildReport(Assembly? main, Assembly? dependencies)
     {
-        string mainVer = ReadInformationalVersion(main);
-        string depsVer = ReadInformationalVersion(dependencies);
+        return BuildReportFromParts(
+            ReadInformationalVersion(main), ReadBuildConfiguration(main),
+            ReadInformationalVersion(dependencies), ReadBuildConfiguration(dependencies));
+    }
 
+    /// <summary>
+    /// The pure composition of the startup line. The configuration tokens sit after each stamp, so
+    /// <c>TAOM=\S+ build\.</c> and the <c> TAOM.Dependencies=</c> boundary still parse.
+    /// </summary>
+    internal static string BuildReportFromParts(string mainVer, string mainConfig, string depsVer, string depsConfig)
+    {
         string verdict;
         if (TryParseStamp(mainVer, out var mainStamp) && TryParseStamp(depsVer, out var depsStamp))
         {
@@ -146,7 +155,33 @@ public static class BuildStampReport
             verdict = " (no build stamp on one or both — pre-2026-08-01 build, cannot verify pairing)";
         }
 
-        return $"[BuildStamp] TAOM={mainVer} TAOM.Dependencies={depsVer}{verdict}";
+        return $"[BuildStamp] TAOM={mainVer} {mainConfig} TAOM.Dependencies={depsVer} {depsConfig}{verdict}";
+    }
+
+    /// <summary>
+    /// Renders a DLL's build configuration and JIT state as two tokens. Public builds ship Debug on
+    /// purpose, and every frame time from one measures unoptimized code, so a log has to say so.
+    /// </summary>
+    public static string DescribeBuildConfiguration(string? configuration, bool? jitOptimizerDisabled)
+    {
+        string config = string.IsNullOrWhiteSpace(configuration)
+            ? "unknown"
+            : string.Join("_", configuration!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        string jit = jitOptimizerDisabled is null ? "unknown" : (jitOptimizerDisabled.Value ? "OFF" : "ON");
+        return $"config={config} jitOpt={jit}";
+    }
+
+    internal static string ReadBuildConfiguration(Assembly? asm)
+    {
+        if (asm == null) return DescribeBuildConfiguration(null, null);
+        try
+        {
+            string? config = asm.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration;
+            // No DebuggableAttribute: the JIT optimizes. Same rule as the 1.5.x PerfContextReader.
+            bool jitOff = asm.GetCustomAttribute<DebuggableAttribute>()?.IsJITOptimizerDisabled ?? false;
+            return DescribeBuildConfiguration(config, jitOff);
+        }
+        catch { return DescribeBuildConfiguration(null, null); }
     }
 
     /// <summary>
