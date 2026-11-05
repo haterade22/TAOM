@@ -112,7 +112,7 @@ settings) does not apply to this line.
 
 - `TAOM.Tests/Core/Logging/OutcomeLogTests.cs`, `OutcomesTests.cs`, `OutcomeSeamsTests.cs`: the
   latch, the 256-key cap, counters across threads, the summary contents, the four seams.
-- Feature emitters, each with a fake `IOutcomeLog`: `BattleActionBarChecksTests.cs`, `CareerScreenChecksTests.cs`, `StaleCharacterParentRepairTests.cs`.
+- Feature emitters, each with a fake `IOutcomeLog`: `BattleActionBarChecksTests.cs`, `CareerScreenChecksTests.cs`, `RacePersistenceServiceTests.cs`, `StaleCharacterParentRepairTests.cs`.
 - `tools/tests/test_ingame_verdict.py`: the verdict rules, build binding, session pairing, the
   `[Session]` summary report, and `RepoManifestGateTests`, which loads every manifest and fails a
   `[Check]` id that no `.cs` file under `Main` holds as a string literal.

@@ -16,7 +16,7 @@ public class HeroRosterAdapter : IHeroRosterAdapter
         // Hero.FindAll scans Campaign.Characters, the list that loop covers.
         return Hero.FindAll(_ => true)
             .Where(h => h?.CharacterObject != null)
-            .Select(h => new HeroRaceInfo(h.StringId, h.CharacterObject.Race))
+            .Select(h => new HeroRaceInfo(h.StringId, h.CharacterObject.Race, h.IsAlive))
             .ToList();
     }
 
