@@ -123,16 +123,11 @@ Pairs separated by commas: `{0:0.5},{50:2},{100:0.5}`. Each pair is `{percent:st
 
 ## Editor compatibility (launching the modding kit)
 
-TAOM.dll loads in the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) when the launcher's editor profile has TAOM **and** its community-mod runtime dependencies all active:
+TAOM.dll loads in the standalone Bannerlord modding kit (`Win64_Shipping_wEditor`) when the launcher's editor profile has `TAOM.Dependencies` and `TAOM` active. `TAOM.Dependencies` carries Harmony, UIExtenderEx, ButterLib and MCMv5. All seven of its submodules pass the Kit's tag check: four carry `DedicatedServerType=none` and `IsNoRenderModeElement=false`, which never block a process that is not a dedicated server, and the other three carry no platform, server or no-render tag (v1.4.8 `Module.CheckIfSubmoduleCanBeLoadable`). So the Kit loads all seven as the game does, and their DLLs satisfy TAOM.dll's references to those types.
 
-- `Bannerlord.Harmony`
-- `Bannerlord.UIExtenderEx`
-- `Bannerlord.MBOptionScreen` (MCMv5)
-- `Bannerlord.ButterLib`
+The Kit looks for each submodule's DLL in that module's `bin/Win64_Shipping_wEditor/` folder, then in its own bin folder, which holds none of these (v1.4.8 `Module.LoadSubModules`, `Module.cs:1044-1046`). The `MirrorWin64ShippingClientToEditor` target in `Dependencies/TAOM.Dependencies.csproj` fills the module folder on every deploying build (ported to this line on 2026-11-05, plans/121; pinned by `DependenciesEditorMirrorTests`). Before that the folder stayed empty: the standalone `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.MBOptionScreen` and `Bannerlord.ButterLib` modules once supplied the assemblies, and their ids now survive only as the DLL-less stub manifests that `DeployTAOMDependenciesStubs` deploys.
 
-These mods' SubModule.xml files carry `IsNoRenderModeElement=false` + `DedicatedServerType=none` (added during this project's early editor-mode work — see `Bannerlord.*/SubModule.xml`), so the engine activates them in the editor's no-render context. Their DLLs enter the AppDomain, satisfying TAOM.dll's compile-time references to UIExtenderEx and Harmony types.
-
-**If you launch with only TAOM active** (community mods unchecked), the engine still loads `Modules/TAOM/bin/Win64_Shipping_wEditor/TAOM.dll` but `Assembly.GetTypes()` throws `ReflectionTypeLoadException: Could not load file or assembly 'Bannerlord.UIExtenderEx'` → `TaleWorlds.ModuleManager.Debug.FailedAssert` → user-cancelable crash dialog. Fix: enable the four community mods in the launcher's editor profile.
+**If the Dependencies editor folder is empty**, the Kit first shows a "Cannot find: ...\TAOM.Dependencies\bin\Win64_Shipping_wEditor\<dll>" box for each of its seven submodules. It then loads `Modules/TAOM/bin/Win64_Shipping_wEditor/TAOM.dll`, whose `Assembly.GetTypes()` throws `ReflectionTypeLoadException` (`0Harmony`, `MCMv5`, `Bannerlord.UIExtenderEx`), reports `"TAOM.TAOM" submodule could not be loaded correctly due to a dependency conflict` and stops the launch (`CollectModuleAssemblyTypes` returns `CriticalError`, then `HandleSubmoduleLoadError` throws). Fix: a deploying build (`./build.ps1`) with the Kit closed.
 
 `Modules/TAOM/bin/Win64_Shipping_wEditor/` is automatically mirrored from `Win64_Shipping_Client/` on every build by the `MirrorWin64ShippingClientToEditor` target in `Main/TAOM.csproj` (runs `AfterTargets="PostBuildCopyToModules"`). This covers TAOM.dll + .pdb plus all companion DLLs (DryIoc, MCMv5, Newtonsoft.Json, BehaviorTrees, BehaviorTreeWrapper, MinHook.x64, TAOM.NativeSkinFixes).
 
@@ -142,7 +137,7 @@ The mirror was previously manual — `Bannerlord.BuildResources`'s `CopyBinaries
 
 > For a non-developer-facing version of this checklist, see [map-maker-quickstart.md](../scene-scripts/map-maker-quickstart.md).
 
-1. Open your launcher, switch to the editor profile. Verify enabled: Bannerlord.Harmony, Bannerlord.UIExtenderEx, Bannerlord.MBOptionScreen, Bannerlord.ButterLib, TAOM (plus TAOM_Map if you want the TAOM main map open by default).
+1. Open your launcher, switch to the editor profile. Verify enabled: TAOM.Dependencies, TAOM (plus TAOM_Map if you want the TAOM main map open by default).
 2. Launch the modding kit (`Win64_Shipping_wEditor`). It should open without a crash dialog.
 3. Open a test scene; add a generic entity.
 4. Component picker → search "CS_Road" → attach.
