@@ -286,11 +286,21 @@ def detect_culture(troop_id, filename_culture):
 
 def troop_weapon_classes(npc_elem, item_classes):
     """Set of skill classes ('OneHanded'/'TwoHanded'/'Polearm'/'Bow'/'Crossbow'/
-    'Throwing'/'Arrows'/'Bolts'/'Shield') the troop actually carries, from the
-    inline battle-equipment weapon slots (Item0..Item3). Civilian sets are
-    template refs with no inline weapons, so nothing to exclude."""
+    'Throwing'/'Arrows'/'Bolts'/'Shield') the troop carries into battle, from the
+    weapon slots (Item0..Item3). A civilian set (an EquipmentRoster civilian="true"
+    or an EquipmentSet equipmentType="Civilian", the shapes BasicCharacterObject
+    and MBEquipmentRoster read as civilian on v1.4.8) never cross-draws with a
+    battle set, so a weapon only there does not count: imladris_recruit holds its
+    only bow in a civilian roster. An <equipment> written straight under
+    <Equipments> overrides every set, so it counts."""
+    civilian = {id(eq)
+                for es in list(npc_elem.iter('EquipmentRoster')) + list(npc_elem.iter('EquipmentSet'))
+                if es.get('civilian') == 'true' or es.get('equipmentType') == 'Civilian'
+                for eq in es.iter('equipment')}
     classes = set()
     for eq in npc_elem.findall('.//equipment'):
+        if id(eq) in civilian:
+            continue
         slot = eq.get('slot', '')
         if not slot.startswith('Item'):
             continue
@@ -400,7 +410,7 @@ MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
 # hypothetical reserve_melee_militia_troop) from being read as a militia binding.
 # Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
 MILITIA_BINDING_RE = re.compile(
-    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop"?\s*(?:=\s*"|>)\s*'
+    r'(?<![A-Za-z0-9_])(?:melee_|ranged_)?(elite_)?militia_troop["\']?\s*(?:=\s*["\']|>)\s*'
     r'NPCCharacter\.([A-Za-z0-9_]+)')
 # The elite (veteran) militia stand this much above the basic militia on every skill. Both
 # take the level-21 baseline whatever their level (militia are siege and village defenders by
