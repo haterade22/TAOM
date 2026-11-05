@@ -32,7 +32,7 @@ public class EnlistmentStateQuery : IEnlistmentStateQuery
         if (!record.IsEnlisted || string.IsNullOrEmpty(record.CommanderHeroId))
             return false;
 
-        var partyIdOfCommander = _commander.GetSnapshot(record.CommanderHeroId).PartyId;
+        var partyIdOfCommander = _commander.GetPartyId(record.CommanderHeroId);
         return partyIdOfCommander == partyId;
     }
 }
