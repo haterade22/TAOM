@@ -118,7 +118,7 @@ day), and drops a per-call reflection cost from two always-on load finalizers (L
 | Member | Installed file:line | What it is |
 |---|---|---|
 | `TaleWorlds.SaveSystem.Save.SaveContext` | `SaveContext.cs:11` | `public class SaveContext : ISaveContext` |
-| `private List<object> _childObjects;` / `private List<object> _childContainers;` / `private List<string> _strings;` | `:75` / `:79` / `:83` | the save's object, container and string lists |
+| `private List<object> _childObjects;` / `private List<object> _childContainers;` / `private List<string> _strings;` | `:75` / `:79` / `:83` | the save's object, container and string lists; `_strings` stays empty until `CollectSaveDatas` (`:491`, `:505`), so `SaveCollected` cannot report it |
 | `private void CollectObjects()` | `:175` | BFS from `RootObject`; an overload `private void CollectObjects(object parent)` exists at `:225`, so bind with `Type.EmptyTypes` |
 | `public bool Save(object target, MetaData metaData, out string errorMessage)` | `:328` | calls `CollectObjects()` at `:342`, then `CollectSaveDatas()` at `:346` |
 | `SaveStringTo` / `GetStringSizeInBytes(string text) => 4 + Encoding.UTF8.GetByteCount(text)` | `:308-316` / `:318-321` | writes `(short)stringSizeInBytes`, so one string over 32,763 UTF-8 bytes wraps |
@@ -767,8 +767,7 @@ game's start logs which .NET runtime and GC mode it runs on; nothing changes in 
   the existing tests, types via `AccessTools.TypeByName`):
   `SaveContext_CollectObjectsAndCountFields_ResolveAgainstInstalledEngine`: on
   `TaleWorlds.SaveSystem.Save.SaveContext`, `AccessTools.Method(type, "CollectObjects", Type.EmptyTypes)`
-  is not null, and fields `_childObjects`/`_childContainers` have `FieldType == typeof(List<object>)`,
-  `_strings` `typeof(List<string>)`.
+  is not null, and fields `_childObjects`/`_childContainers` have `FieldType == typeof(List<object>)`.
   `LoadContext_LoadAndCountFields_ResolveAgainstInstalledEngine`: `LoadContext.Load` with parameter types
   `TaleWorlds.SaveSystem.LoadData` and `bool` resolves; `_objectCount`, `_stringCount`, `_containerCount`
   are `int` fields.
@@ -777,7 +776,8 @@ game's start logs which .NET runtime and GC mode it runs on; nothing changes in 
   `SaveContext_CollectObjects_Patch.Initialize(` and `LoadContext_Load_Patch.Initialize(`) and
   `CountHookCategoryAttributes_MatchTheStringsSubModuleApplies` (each new hook's `[HarmonyPatchCategory]`
   value equals the literal the first test looks for in `SubModule.cs`; a typo on either side is a dead
-  patch with no error).
+  patch with no error), and `SaveCollected_DoesNotReadTheStringList_TheEngineFillsItLater` (the hook's source
+  has no `_strings`: at this postfix the list is always empty, so a count would be a made-up 0).
 
 **Verify RED**: build fails on the missing `SaveLoadTokens.SaveCollected`, `SaveLoadTokens.LoadCounts`,
 `SaveContext_CollectObjects_Patch` and `LoadContext_Load_Patch`. No other compile error.
@@ -798,10 +798,9 @@ public static class SaveContext_CollectObjects_Patch
     private static IModLogger? _logger;
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childObjects;
     private static AccessTools.FieldRef<SaveContext, List<object>>? _childContainers;
-    private static AccessTools.FieldRef<SaveContext, List<string>>? _strings;
 
-    // Binds the three private lists once (installed v1.4.8 SaveContext.cs:75, :79, :83). A field
-    // that no longer exists is left null and its count is omitted from the line (never a fake 0).
+    // Binds the two private lists once (installed v1.4.8 SaveContext.cs:75, :79). A field that no
+    // longer exists is left null and its count is omitted from the line (never a fake 0).
     public static void Initialize(ISaveLoadDiagnosticsService service, IModLogger logger) { ... }
 
     // The no-argument overload: CollectObjects(object) also exists (SaveContext.cs:225).
@@ -815,9 +814,10 @@ public static class SaveContext_CollectObjects_Patch
     public static void Prefix(out long __state) => __state = Stopwatch.GetTimestamp();
 
     // Runs on the main thread inside SaveContext.Save, after the object walk and before
-    // CollectSaveDatas (SaveContext.cs:342-346), so the lists are complete and stable here.
+    // CollectSaveDatas (SaveContext.cs:342-346), so both lists are complete and stable here. The
+    // string list is not: CollectSaveDatas fills it (:491, :505), so strings= stays off this line.
     [HarmonyPostfix]
-    public static void Postfix(SaveContext __instance, long __state) { /* try { counts; LogPhase(SaveCollected, SaveLoadTokens.SaveCollected(...)); } catch { } */ }
+    public static void Postfix(SaveContext __instance, long __state) { /* try { counts; LogPhase(SaveCollected, SaveLoadTokens.SaveCollected(objects, containers, strings: null, collectMs)); } catch { } */ }
 }
 ```
 
@@ -1136,7 +1136,8 @@ no long dashes). Required content, in this order:
    `SaveCollected`, `SaveCensus`, `SaveCompleted`), each with where it comes from and what to read it
    for. Must say: `objects=`/`containers=` equal the rgl `[GameData.Write] ObjectData Length` /
    `ContainerData Length` (save) and `[GameData.Read] Object Length` / `Container Length` (load);
-   `strings=` is a count with no rgl twin (rgl's string figure is a byte size); `collectMs` sits near
+   `strings=` appears on `LoadCounts` only, a count with no rgl twin (rgl's string figure is a byte
+   size), and `SaveCollected` omits it because the engine fills that list after the probe; `collectMs` sits near
    the rgl `SaveContext::CollectObjects completed in N seconds`; `loadsThisProcess` counts load
    attempts, a load cancelled at the module prompt included; read `prevCampaign=` at
    `GameLoaded`/`GameInitializationFinished` (at least two full collections ran after the old game
@@ -1314,7 +1315,7 @@ SKIP-1.5-ONLY-FIX (War Chronicle).
 | `TAOM.Tests/Features/RaceAge/ShippedFertilityConfigTests.cs` | 7 (as shipped in `925db38d1`) | A |
 | `SaveLoadTokensTests.cs` | 8: `LoadRequested_CarriesInGameAndCountsAfterTheName`, `ProcessContext_NoEndedCampaign_SaysNoneWithoutGen2Token`, `ProcessContext_EndedCampaignCollected_SaysCollectedAndGen2Delta`, `ProcessContext_EndedCampaignAlive_SaysAlive`, `RuntimeHost_UnknownValues_PrintQuestionMarksNotZeros`, `SaveCollected_FormatsCountsAndCollectMs`, `SaveCollected_UnreadCount_IsOmittedNotZero`, `LoadCounts_FormatsCounts` | B |
 | `SaveLoadDiagnosticsServiceTests.cs` | 7 in Part B (5 in B1, 2 in B3, names in those steps), 3 in Part C | B, C |
-| `SaveGrowthProbeWiringTests.cs` | 6: three in B1, two in B2, one in B3 | B |
+| `SaveGrowthProbeWiringTests.cs` | 7: three in B1, three in B2 (`SaveCollected_DoesNotReadTheStringList_TheEngineFillsItLater` added on review), one in B3 | B |
 | `SaveLoadDiagnosticsBindingTests.cs` | 3 in Part B (two in B2, one in B3), 1 in Part C; all `BindingVerification` | B, C |
 | `BehaviorRecordStatsTests.cs` | 4 (Step B3) | B |
 | `SaveLoadHotFinalizerTests.cs` | 3 (Step B4) | B |

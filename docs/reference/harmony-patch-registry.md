@@ -522,7 +522,7 @@ The money hook for CONTAINER data — dictionaries and lists, which is where TAO
 
 **Target:** `SaveContext.CollectObjects()` (private, the no-argument overload; main thread; Prefix + Postfix)
 
-Logs what a save is about to write (`phase=SaveCollected`: object, container and string counts plus the walk time). On the first save after a reload, or after `taom.arm_save_census`, it also logs a per-type census (`phase=SaveCensus`) to name what grows (plan 114); it changes nothing a save holds.
+Logs what a save is about to write (`phase=SaveCollected`: object and container counts plus the walk time; the string list is still empty at this point, so it is not logged). On the first save after a reload, or after `taom.arm_save_census`, it also logs a per-type census (`phase=SaveCensus`) to name what grows (plan 114); it changes nothing a save holds.
 
 ## Patch61_SaveLoadDiagnostics_LoadCounts
 
