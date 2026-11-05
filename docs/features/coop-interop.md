@@ -63,6 +63,8 @@ own `0Harmony`.
 | `SaveDefinerCollisionDetector` / `Guard` / `SaveDefinerRecord` | Base-id preflight and crash attribution. **Heuristic** — the engine keys on `_saveBaseId + saveId`, so a shared base is legal; engine-only groups are dropped and the rest warn rather than assert. [RCA](../reviews/rca-savedefiner-false-positive-2026-08-01.md). |
 | `Diagnostics/HarmonyCensus*` | Runtime patch-overlap report — the sanctioned substitute for reading another mod's binary. |
 
+`GameNetwork.IsSessionActive` is none of these and reads false in a co-op battle: it answers from `MBCommon.CurrentGameType` (v1.4.8 `GameNetwork.cs:381-391`), and BannerlordCoop never sets a multiplayer game type (no `CurrentGameType` in its source, read at `4ad976c8c`). For online play ask `ICoopSessionProvider.IsSessionActive` as well.
+
 Other half in `Dependencies/Foundation/`: `CoopPresence`, `CoopModuleList`, and the `PatchShield` /
 `SaveShield` co-op inversions.
 

@@ -19,8 +19,8 @@ Ghidra work in MithrilForge `docs/engine/` ([provenance](../provenance-register.
   1.4.8 build logged `CLR: 4.0.30319.42000` (`[MissionDiag] OS:`, 2026-11-01), which rules out CoreCLR for
   that player; whether that version string also separates the .NET Framework from Mono is UNVERIFIED.
 - Every other native address here (an RVA, a `FUN_` or `DAT_` name) comes from the v1.5.3 or v1.5.5 client
-  and is **not valid for v1.4.8**; treat it as a lead. `tools/native_decompile.py`, which re-derives them,
-  reaches this line with WP137.
+  and is **not valid for v1.4.8**; treat it as a lead. `tools/native_decompile.py` re-derives them on a machine
+  with Ghidra.
 
 Every claim carries a tag:
 
@@ -64,6 +64,11 @@ What it means for TAOM:
   divided by 4, clamped to between 2 and 4. On-demand loads (section 6) share those at most four
   background threads with other streaming work. `/maxThreadCount` can only lower the count; useful as an
   A/B variable, not a lever to ship.
+- **The mission clock has three multipliers, all in `MissionState.TickMission`** (v1.4.8, read 2026-11-05):
+  a fixed step replaces the frame delta in `FixedDeltaTimeMode` (`:155-158`), the scene's time speed
+  multiplies it outside a network session (`:159-164`), and fast forward runs nine more steps of it
+  (`:173`) before the frame itself (`:196`). `IsFastForward` is not the clock: read all three before
+  stating a clock rate.
 - **The native `Mission.Tick` runs before the managed `Mission.OnTick`**: `MissionState.TickMissionAux` calls
   it first. Inside it, in order: the managed `OnPreTick` callback, the agent jobs (combat tick, AI, movement,
   the melee sweep), then the scene tick, which starts the particle simulation task, runs
