@@ -73,6 +73,8 @@ public static class CoopSettingsRelevance
         // (EnableEnlistment, EnableFieldCommission) are gameplay and stay relevant; these two
         // are the log half of the same pair, which is the trap this list exists for.
         "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
+        // The [MissionPerf] frame-time heartbeat (plan 117): a log line, never a computation.
+        "EnableMissionPerfHeartbeat",
     };
 
     /// <summary>

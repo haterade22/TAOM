@@ -2019,6 +2019,9 @@ public class SubModule : MBSubModuleBase
         // OnBehaviorInitialize. No AddModel counterpart: the aura drives CommonAIComponent morale
         // directly and CALLS the registered BattleMoraleModel rather than overriding it.
         AddTaomBehavior(new Features.DreadAura.Hooks.DreadAuraMissionLogic());
+        // [MissionPerf] frame-time heartbeat every 5 s (plan 117): the in-mission frame-time record the
+        // battle freeze and stutter reports lack. Self-gates on its Battle Load Diagnostics toggle.
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
