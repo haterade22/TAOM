@@ -98,6 +98,18 @@ public class RacePersistenceService : IRacePersistenceService
         _isNewCampaign = true;
     }
 
+    /// <summary>
+    /// Clears the race map, the legend and the new-campaign flag (#1035). The behavior's constructor calls it for every
+    /// campaign, before any SyncData, so a save that carries no record for the behavior (the engine then skips its
+    /// SyncData) starts clean instead of inheriting the previous campaign's races.
+    /// </summary>
+    public void ResetForNewSession()
+    {
+        _heroRaceMap = new Dictionary<string, int>();
+        _raceNameLegend = "";
+        _isNewCampaign = false;
+    }
+
     public void RestoreHeroRaces()
     {
         if (_heroRaceMap.Count == 0)

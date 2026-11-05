@@ -49,6 +49,18 @@ public class RacePersistenceBehaviorTests
     // over the lambda captures — too fragile here, so we rely on source content for the
     // subscription points and direct service-call assertion for SyncData (already covered).
 
+    // #1035: SubModule.OnGameStart builds the behavior with `new` for every campaign, before any SyncData, so the
+    // constructor is the one reset that also covers a load with no record for this behavior.
+    [TestMethod]
+    public void Constructor_ResetsTheServiceForTheNewSession()
+    {
+        _service.ClearReceivedCalls(); // Setup built one already
+
+        _ = new RacePersistenceBehavior(_service);
+
+        _service.Received(1).ResetForNewSession();
+    }
+
     [TestMethod]
     public void RegisterEvents_SubscribesOnBeforeSaveAndOnSessionLaunched()
     {

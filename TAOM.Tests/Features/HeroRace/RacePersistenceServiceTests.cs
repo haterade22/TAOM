@@ -126,6 +126,24 @@ public class RacePersistenceServiceTests
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data")));
     }
 
+    // #1035: the behavior's constructor resets the singleton for every campaign, so a pre-TAOM save loaded after another
+    // campaign in the same process neither inherits that campaign's races nor its new-campaign flag.
+    [TestMethod]
+    public void ResetForNewSession_AfterAPreviousCampaign_LeavesNoRacesAndWarnsOnAnEmptyRestore()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo> { new HeroRaceInfo("lord_1_1", 3) });
+        _sut.ResetForNewCampaign();
+        _sut.CaptureHeroRaces();
+        _heroRosterAdapter.ClearReceivedCalls();
+
+        _sut.ResetForNewSession();
+        _sut.RestoreHeroRaces();
+
+        Assert.AreEqual(0, _sut.CapturedRaceCount);
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data")));
+    }
+
     // A save with no RacePersistenceBehavior record: the engine calls SyncData only for a behavior the save holds a
     // record for (CampaignBehaviorDataStore.LoadBehaviorData), so a pre-TAOM save reaches the restore with neither call.
     [TestMethod]
