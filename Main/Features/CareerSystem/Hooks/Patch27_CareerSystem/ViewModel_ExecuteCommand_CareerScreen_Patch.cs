@@ -5,6 +5,10 @@ using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem.Hooks.Patch27_CareerSystem;
 
+// The career button's only click handler (#971): UIExtenderEx adds a mixin method to the view model only
+// when it carries [DataSourceMethod], so ViewModel.ExecuteCommand finds none and this postfix handles the click.
+// The click sound is vanilla's: ExecuteDone runs GauntletCharacterDeveloperScreen.CloseCharacterDeveloperScreen,
+// which plays event:/ui/default.
 [HarmonyPatch(typeof(ViewModel), "ExecuteCommand")]
 [HarmonyPatchCategory("Patch27_CareerSystem")]
 public static class ViewModel_ExecuteCommand_CareerScreen_Patch

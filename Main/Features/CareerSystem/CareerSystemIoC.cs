@@ -164,6 +164,26 @@ public static class CareerSystemIoC
         ["necromancer_acolyte"]    = CareerArchetype.Ranged,
         ["fell_rider"]             = CareerArchetype.Cavalry,
 
+        // ═══ PROMOTED CULTURES (cc1713eb3) ═══ each clones a mapped career, and takes its archetype
+        ["goblin_troll_driver"]        = CareerArchetype.Infantry,
+        ["goblin_tunnel_stalker"]      = CareerArchetype.Ranged,
+        ["goblin_warg_master"]         = CareerArchetype.Cavalry,
+        ["misty_troll_goad"]           = CareerArchetype.Infantry,
+        ["misty_deep_marksman"]        = CareerArchetype.Ranged,
+        ["misty_warg_chieftain"]       = CareerArchetype.Cavalry,
+        ["craig_pit_driver"]           = CareerArchetype.Infantry,
+        ["craig_crag_stalker"]         = CareerArchetype.Ranged,
+        ["craig_warg_master"]          = CareerArchetype.Cavalry,
+        ["falathrim_blade_dancer"]     = CareerArchetype.Infantry,
+        ["falathrim_sentinel"]         = CareerArchetype.Ranged,
+        ["falathrim_mariner"]          = CareerArchetype.Cavalry,
+        ["shaghana_zajana_tribesman"]  = CareerArchetype.Infantry,
+        ["shaghana_chatak_javelineer"] = CareerArchetype.Ranged,
+        ["shaghana_beast_rider"]       = CareerArchetype.Cavalry,
+        ["abanissa_house_guard"]       = CareerArchetype.Infantry,
+        ["abanissa_jiret_javelineer"]  = CareerArchetype.Ranged,
+        ["abanissa_ivory_rider"]       = CareerArchetype.Cavalry,
+
         // ═══ UMBAR ═══
         ["corsair_boarder"]        = CareerArchetype.Infantry,
         ["corsair_crossbow"]       = CareerArchetype.Ranged,

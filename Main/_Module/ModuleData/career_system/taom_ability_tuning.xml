@@ -13,14 +13,16 @@
     radius="50"
     />
 
-  <!-- Ranged: Self buff for ranged combat -->
+  <!-- Ranged: AoE buff to the caster and all nearby troops (every archetype is AoE). ranged_damage_bonus lands on
+       DamageMultiplierBonus, which the engine applies to every hit, melee included; the name says where it is aimed, not where it stops. -->
   <Ranged
     speed_bonus="15"
     ranged_damage_bonus="20"
     draw_speed_bonus="20"
     />
 
-  <!-- Cavalry: Self + mount buff for mounted combat -->
+  <!-- Cavalry: AoE buff to the caster and all nearby troops; mount_speed_bonus and charge_damage_bonus apply on each
+       buffed rider's MOUNT (#611), damage_bonus on the rider. -->
   <Cavalry
     mount_speed_bonus="20"
     charge_damage_bonus="25"

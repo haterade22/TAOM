@@ -63,7 +63,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 
 | Model | Base | Feature |
 |-------|------|---------|
-| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` |
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the career mount bonuses #611: mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
 | `TaomClanTierModel` | `DefaultClanTierModel` | `CareerSystem` |
 | `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | `CareerSystem` |
 | `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |

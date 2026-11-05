@@ -16,8 +16,10 @@ namespace TAOM.Features.CareerSystem.Domain;
 // consumer for a type, remove it here — the regression test will then flag any shipped pip
 // still using it.
 //
-// KNOWN BLIND SPOT (#394, #395) — this set answers "is anything reading it", NOT "is it read where
-// the player expects it". Membership here is necessary, never sufficient, and it has now hidden the
+// KNOWN BLIND SPOT (#394, #395, #611): this set answers "is anything reading it", NOT "is it read where
+// the player expects it". #611 was the third instance: MountChargeDamage was multiplied on the RIDER's
+// driven properties, which no base model writes and the engine never reads (the horse's copy is the
+// one AttackInformation takes), so a listed, "consumed" type was a phantom for three months. Membership here is necessary, never sufficient, and it has now hidden the
 // same bug TWICE while staying green:
 //
 //   #394 Health      — mission only. Worked in battle; invisible and inert on the campaign layer
@@ -41,9 +43,9 @@ public static class PassiveEffectConsumers
         PassiveEffectType.SwingSpeed,          // SwingSpeedMultiplier
         PassiveEffectType.MovementSpeed,       // MaxSpeedMultiplier
         PassiveEffectType.ShrugOff,         // DecideAgentShrugOffBlow
-        PassiveEffectType.MountChargeDamage,   // MountChargeDamage (rider props)
+        PassiveEffectType.MountChargeDamage,   // mount MountChargeDamage via the rider (ApplyMountStatModifiers, #611)
         PassiveEffectType.MountHealth,         // mount GetEffectiveMaxHealth (multiplicative)
-        PassiveEffectType.Ammo,                // OnAgentBuild ammo refill (multiplicative)
+        PassiveEffectType.Ammo,                // InitializeMissionEquipment, CareerAmmoApplier (#613)
         PassiveEffectType.TroopResistance,     // CalculateDamageReduction for the leader's non-hero troops
         PassiveEffectType.TroopDamage,         // CalculateDamageAmplification for the leader's non-hero troops
                                                //   + TaomRaidModel.CalculateHitDamage (settlement raid speed).
@@ -54,7 +56,11 @@ public static class PassiveEffectConsumers
         PassiveEffectType.Health,              // TaomCharacterStatsModel.MaxHitpoints (flat add)
         PassiveEffectType.PartyMovementSpeed,  // TaomPartySpeedModel
         PassiveEffectType.PartySpottingRange,  // TaomMapVisibilityModel.GetPartySpottingRange
-        PassiveEffectType.StealthBonus,        // TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange
+        PassiveEffectType.StealthBonus,        // TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange:
+                                               //   READ BY THE WRONG HOOK (#614). That method is the player spotting
+                                               //   others; the player's party is never its argument, so the 49 pips
+                                               //   are phantoms in practice. Kept here so the shipped-XML gate stays
+                                               //   green until the replan; the fourth instance of the blind spot above.
         PassiveEffectType.PartySize,           // TaomPartySizeModel
         PassiveEffectType.CompanionLimit,      // TaomClanTierModel
         PassiveEffectType.TroopMorale,         // TaomPartyMoraleModel

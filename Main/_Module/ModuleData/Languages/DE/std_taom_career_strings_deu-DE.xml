@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Unsterbliche Garde" />
     <string id="taom_ws_t3_a_p2_desc" text="Die Wache endet niemals. +9 Gesundheit." />
     <string id="taom_ws_t3_a_p3" text="Garnisonkommandant" />
-    <string id="taom_ws_t3_a_p3_desc" text="Eure Garnison schwillt mit Freiwilligen an. +4 Gruppengröße." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Ruhm des Verteidigers" />
     <string id="taom_ws_t3_a_p4_desc" text="Sieg in der Verteidigung bringt große Ehre. +12% Schlachtruhm-Gewinn." />
     <string id="taom_ws_t3_b_key" text="Stets Wachsam" />

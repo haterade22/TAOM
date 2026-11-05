@@ -48,6 +48,9 @@ public class FieldCommissionConfig
 
     /// <summary>Race ids (by name, matched via <c>IRaceManager</c>) allowed to be promoted.
     /// Unknown/invalid names fail closed — see <c>FieldCommissionMeritService</c>'s promotability
-    /// gate and the "validate before lookup" rule.</summary>
-    public List<string> AllowedRaceNames { get; set; } = new List<string> { "human", "dwarf", "elf" };
+    /// gate and the "validate before lookup" rule. Default: every soldier race; creatures and
+    /// unique heroes stay out (#612). Keep in step with the shipped JSON and
+    /// <c>FieldCommissionConfigProvider.DefaultAllowedRaceNames</c>.</summary>
+    public List<string> AllowedRaceNames { get; set; } = new List<string>
+        { "human", "dwarf", "elf", "orc", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "goblin", "berserker" };
 }

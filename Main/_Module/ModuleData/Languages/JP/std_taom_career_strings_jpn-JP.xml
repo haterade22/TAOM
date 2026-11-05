@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="不死の守衛" />
     <string id="taom_ws_t3_a_p2_desc" text="見張りは決して終わらない。体力+9。" />
     <string id="taom_ws_t3_a_p3" text="守備隊指揮官" />
-    <string id="taom_ws_t3_a_p3_desc" text="汝の守備隊には志願兵が満ち溢れる。部隊規模+4。" />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="守護者の栄光" />
     <string id="taom_ws_t3_a_p4_desc" text="防衛戦での勝利は大いなる名誉をもたらす。戦闘名声獲得+12%。" />
     <string id="taom_ws_t3_b_key" text="常に警戒" />

@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Nieśmiertelna straż" />
     <string id="taom_ws_t3_a_p2_desc" text="Warta nigdy się nie kończy. +9 zdrowia." />
     <string id="taom_ws_t3_a_p3" text="Dowódca garnizonu" />
-    <string id="taom_ws_t3_a_p3_desc" text="Twój garnizon pęcznieje od ochotników. +4 do liczebności drużyny." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Chwała obrońcy" />
     <string id="taom_ws_t3_a_p4_desc" text="Zwycięstwo w obronie przynosi wielki zaszczyt. +12% zdobywanej sławy z bitew." />
     <string id="taom_ws_t3_b_key" text="Wiecznie czujny" />

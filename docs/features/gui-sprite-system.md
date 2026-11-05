@@ -267,7 +267,7 @@ Expandable choice panels.
 
 ```
 CareerScreenVM
-├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription
+├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription, @RootPerkDescription (shown when @HasRootPerk)
 ├── @CareerPortraitSprite (career portrait image)
 ├── @AbilityName, @AbilitySpriteName, @AbilityLabel
 ├── @FreeCareerPointsText ("Free Points: 5")
@@ -289,9 +289,9 @@ CareerScreenVM
 
 **Status:** Verified in-game (2026-04-14). Dark steel banner sprite with "Career" text overlay.
 
-Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Sprite="CareerSystem\career_button_placeholder"` (233x75). Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
+Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Brush="CareerSystem.CareerButton"` (220x93) since #378. Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
 
-**Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` → calls `charDevVM.ExecuteDone()` to close Character Developer first → then `Game.Current.GameStateManager.PushState<CareerScreenGameState>()`. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
+**Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` (the button's only handler: the mixin has none, #971) → calls `charDevVM.ExecuteDone()` to close Character Developer first, and vanilla's close callback plays the click sound `event:/ui/default` → then `GauntletCareerScreen.OpenCareerScreen()` creates the `CareerScreenGameState` and pushes it. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
 
 **Critical:** Must close CharacterDeveloper BEFORE pushing career state. Without `ExecuteDone()`, the map bar global layer continues ticking input with invalid context → `IndexOutOfRangeException`.
 

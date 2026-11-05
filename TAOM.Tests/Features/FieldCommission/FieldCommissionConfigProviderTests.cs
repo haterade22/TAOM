@@ -1,9 +1,14 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.FieldCommission;
+using TAOM.Features.FieldCommission.Domain;
+using static TAOM.Tests.Infrastructure.RepoPaths;
 
 namespace TAOM.Tests.Features.FieldCommission;
 
@@ -185,24 +190,69 @@ public class FieldCommissionConfigProviderTests
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("retainerAllowance=-1")));
     }
 
+    // #612: every soldier race. The five left out (cave_troll, hill_troll, nazghul, saruman, sauron)
+    // are creatures and unique heroes. The original human/dwarf/elf list assumed a Free Peoples
+    // player, and character creation offers seven evil races.
+    private static readonly string[] SoldierRaces =
+        { "human", "dwarf", "elf", "orc", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "goblin", "berserker" };
+
     [TestMethod]
-    public void GetConfig_AllowedRaceNamesMissing_DefaultsToHumanDwarfElf()
+    public void GetConfig_AllowedRaceNamesMissing_DefaultsToSoldierRaces()
     {
         WriteConfig(@"{ ""meritThreshold"": 10 }");
 
         var config = _sut.GetConfig();
 
-        CollectionAssert.AreEqual(new[] { "human", "dwarf", "elf" }, config.AllowedRaceNames);
+        CollectionAssert.AreEqual(SoldierRaces, config.AllowedRaceNames);
     }
 
     [TestMethod]
-    public void GetConfig_AllowedRaceNamesNull_DefaultsToHumanDwarfElf()
+    public void GetConfig_AllowedRaceNamesNull_DefaultsToSoldierRaces()
     {
         WriteConfig(@"{ ""allowedRaceNames"": null }");
 
         var config = _sut.GetConfig();
 
-        CollectionAssert.AreEqual(new[] { "human", "dwarf", "elf" }, config.AllowedRaceNames);
+        CollectionAssert.AreEqual(SoldierRaces, config.AllowedRaceNames);
+    }
+
+    [TestMethod]
+    public void ShippedJson_AllowedRaceNames_MatchCompiledDefault()
+    {
+        // The default lives in three places: the shipped JSON, the provider's fallback for a
+        // missing field, and the FieldCommissionConfig constructor. A player reads the first; a
+        // pack author who deletes the field reads the second. They encode one decision (#612).
+        var shipped = LoadShippedConfig();
+        WriteConfig(@"{ }");
+
+        CollectionAssert.AreEqual(shipped.AllowedRaceNames, _sut.GetConfig().AllowedRaceNames);
+        CollectionAssert.AreEqual(shipped.AllowedRaceNames, new FieldCommissionConfig().AllowedRaceNames);
+    }
+
+    [TestMethod]
+    public void ShippedJson_AllowedRaceNames_AreAllKnownRaces()
+    {
+        // A name the engine does not know never matches a troop, silently. race_age_config.json is
+        // the in-repo enumeration of the Armory's skins.xml races (the Armory itself is unversioned).
+        var knownRaces = ((JObject)JObject.Parse(File.ReadAllText(RepoPath(
+                "Main", "_Module", "ModuleData", "raceage", "race_age_config.json")))["races"]!)
+            .Properties().Select(p => p.Name).ToList();
+        Assert.IsTrue(knownRaces.Count >= 10, "Sanity floor: race_age_config.json lists the engine races.");
+
+        var unknown = LoadShippedConfig().AllowedRaceNames.Except(knownRaces).ToList();
+
+        Assert.AreEqual(0, unknown.Count,
+            $"allowedRaceNames carries race names race_age_config.json does not know: {string.Join(", ", unknown)}");
+    }
+
+    private static FieldCommissionConfig LoadShippedConfig()
+    {
+        var path = RepoPath("Main", "_Module", "ModuleData", "field_commission", "field_commission_config.json");
+        var config = JsonConvert.DeserializeObject<FieldCommissionConfig>(File.ReadAllText(path),
+            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+        Assert.IsNotNull(config, $"Shipped config failed to parse: {path}");
+        Assert.IsTrue(config!.AllowedRaceNames.Count > 0, "Shipped allowedRaceNames must not be empty.");
+        return config;
     }
 
     [TestMethod]

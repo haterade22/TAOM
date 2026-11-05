@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="不朽守衛" />
     <string id="taom_ws_t3_a_p2_desc" text="守望永不終結。生命值+9。" />
     <string id="taom_ws_t3_a_p3" text="駐軍指揮官" />
-    <string id="taom_ws_t3_a_p3_desc" text="你的駐軍因志願者而壯大。隊伍規模+4。" />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="守護者榮耀" />
     <string id="taom_ws_t3_a_p4_desc" text="防禦勝利帶來巨大榮譽。戰鬥聲望獲得+12%。" />
     <string id="taom_ws_t3_b_key" text="永遠警戒" />

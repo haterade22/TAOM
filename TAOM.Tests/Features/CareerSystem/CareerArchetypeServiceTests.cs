@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Tests.Core;
 
 namespace TAOM.Tests.Features.CareerSystem;
 
@@ -101,5 +105,27 @@ public class CareerArchetypeServiceTests
         Assert.AreEqual(CareerArchetype.Infantry, map["captain_of_osgiliath"]);
         Assert.AreEqual(CareerArchetype.Ranged, map["ranger_of_ithilien"]);
         Assert.AreEqual(CareerArchetype.Cavalry, map["knight_of_belfalas"]);
+    }
+
+    private static List<string> CareerIdsInData() =>
+        XDocument.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "career_system", "taom_careers.xml"))
+            .Descendants("Career")
+            .Select(c => (string)c.Attribute("id"))
+            .ToList();
+
+    [TestMethod]
+    public void IoCMap_EveryCareerInTheData_HasAnArchetype()
+    {
+        // An unmapped career gets CareerAbilityEffectRegistry's NoOpExecutor: the toast, sound and
+        // cooldown fire and no buff applies, and the career kit is skipped (2026-10-07 review: all
+        // three Arthedain careers shipped that way).
+        var map = CareerSystemIoC.GetCareerArchetypeMap();
+
+        var unmapped = CareerIdsInData()
+            .Where(id => !map.ContainsKey(id))
+            .ToList();
+
+        Assert.AreEqual(0, unmapped.Count,
+            $"Careers with no archetype in CareerSystemIoC.BuildCareerArchetypeMap: {string.Join(", ", unmapped)}");
     }
 }

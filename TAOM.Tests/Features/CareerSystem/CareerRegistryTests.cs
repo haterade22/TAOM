@@ -359,4 +359,89 @@ public class CareerRegistryTests
         Assert.AreEqual("warboss", registry.GetOwningCareerId("wb_root"));
         Assert.IsNull(registry.GetOwningCareerId("wb_brut_key"));
     }
+
+    // -- Ambiguity: an id that two owners claim has no owner (W1-02) --
+
+    private static CareerDefinition CareerWith(string id, string root, params string[] groups)
+        => new CareerDefinition(
+            id: id, displayName: id, description: "", portraitSprite: "", abilityTemplateId: "t",
+            minClanTier: 0, rootChoiceId: root, eligibleCultureIds: new List<string>(),
+            choiceGroupIds: new List<string>(groups));
+
+    private static CareerChoiceDefinition ChoiceIn(string id, string groupId)
+        => new CareerChoiceDefinition(id: id, groupId: groupId, type: ChoiceType.Passive,
+            description: "d", iconSprite: "i", passive: null, mutations: null);
+
+    private static CareerRegistry RegistryOf(IModLogger logger, List<CareerDefinition> careers,
+        List<CareerChoiceDefinition> choices)
+    {
+        var config = Substitute.For<ICareerConfigProvider>();
+        config.GetMaxPerkPoints().Returns(30);
+        config.LoadCareers().Returns(careers);
+        config.LoadChoiceGroups().Returns(new List<CareerChoiceGroupDefinition>());
+        config.LoadChoices().Returns(choices);
+        return new CareerRegistry(config, logger);
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_GroupListedByTwoCareers_ReturnsNullAndWarns()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var registry = RegistryOf(logger,
+            new List<CareerDefinition> { CareerWith("a", "a_root", "shared_g"), CareerWith("b", "b_root", "shared_g") },
+            new List<CareerChoiceDefinition> { ChoiceIn("shared_key", "shared_g") });
+
+        Assert.IsNull(registry.GetOwningCareerId("shared_key"));
+        logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("shared_g")));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_RootSharedByTwoCareers_ReturnsNull()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var registry = RegistryOf(logger,
+            new List<CareerDefinition> { CareerWith("a", "same_root"), CareerWith("b", "same_root") },
+            new List<CareerChoiceDefinition> { ChoiceIn("same_root", "") });
+
+        Assert.IsNull(registry.GetOwningCareerId("same_root"));
+        logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("same_root")));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_ChoiceIdInTwoCareersGroups_ReturnsNull()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var registry = RegistryOf(logger,
+            new List<CareerDefinition> { CareerWith("a", "a_root", "a_g"), CareerWith("b", "b_root", "b_g") },
+            new List<CareerChoiceDefinition>
+            {
+                ChoiceIn("dup", "a_g"), ChoiceIn("dup", "b_g"), ChoiceIn("only_a", "a_g"),
+            });
+
+        Assert.IsNull(registry.GetOwningCareerId("dup"));
+        Assert.AreEqual("a", registry.GetOwningCareerId("only_a"));
+        logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("'dup'")));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_NestedIdEqualToRootId_ReturnsNull()
+    {
+        var registry = RegistryOf(Substitute.For<IModLogger>(),
+            new List<CareerDefinition> { CareerWith("a", "a_root", "a_g") },
+            new List<CareerChoiceDefinition> { ChoiceIn("a_root", ""), ChoiceIn("a_root", "a_g") });
+
+        Assert.IsNull(registry.GetOwningCareerId("a_root"));
+    }
+
+    [TestMethod]
+    public void GetOwningCareerId_GroupListedTwiceBySameCareer_ResolvesToThatCareer()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var registry = RegistryOf(logger,
+            new List<CareerDefinition> { CareerWith("a", "a_root", "a_g", "a_g") },
+            new List<CareerChoiceDefinition> { ChoiceIn("a_key", "a_g") });
+
+        Assert.AreEqual("a", registry.GetOwningCareerId("a_key"));
+        logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("a_g")));
+    }
 }
