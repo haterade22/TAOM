@@ -193,6 +193,8 @@ argued into the table above first; that argument is the only gate there is.
 Cheat mode is a per-install flag in `engine_config.txt`, not a per-command intent signal. A player who
 enabled it to add gold has not consented to an irreversible mutation of persisted state.
 
+Cheat mode also changes two vanilla screens: the player's own inventory lists every item in the game and the party screen every troop, which with TAOM's item count costs gigabytes of memory per open. Since plan 120 the cheat-screen guard opens both normally unless MCM's Cheat Mode Lists All Items And Troops is on ([cheat-screen-guard.md](cheat-screen-guard.md)). A player who turns cheat mode on only for a `taom.*` command should turn it off afterwards.
+
 | Tier | Definition | Safeguard |
 |---|---|---|
 | **A** | Read-only (`print_*`, `audit_*`) | Cheat gate only. Nothing else. |

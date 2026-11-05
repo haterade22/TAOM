@@ -21,5 +21,9 @@ internal static class FeatureModules
         new Features.SkeletonBuffer.SkeletonBufferModule(),
         new Features.BattleCorpses.BattleCorpsesModule(),
         new Features.MapEventGuard.StuckBattleModule(),
+        new Features.CheatScreenGuard.CheatScreenGuardModule(),
+        new Features.TextureAdvice.TextureAdviceModule(),
+        new Features.NameplateCull.NameplateCullModule(),
+        new Features.MapViewRelease.MapViewReleaseModule(),
     };
 }

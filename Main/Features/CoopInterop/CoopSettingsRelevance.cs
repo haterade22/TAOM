@@ -106,6 +106,9 @@ public static class CoopSettingsRelevance
         // player's own engine config, which co-op never compares; the corpse cleanup settings
         // beside it change battles and stay relevant.
         "ShowBattleSettingsAdvice",
+        // Whether YOUR cheat-mode inventory and party screens list every item and troop (CheatScreenGuard). Cheat mode
+        // is per install and the player acts on the list; the co-op layer replicates what was taken, not the screen.
+        "CheatModeListsAllItemsAndTroops",
     };
 
     /// <summary>Presentation, and the clock BT already owns.</summary>
@@ -120,6 +123,12 @@ public static class CoopSettingsRelevance
         "EnableNativeSkinFixes",
         // The skeleton buffer guard: where the engine writes a frame's skeleton data when a pool is full; never what is simulated.
         "SkeletonBufferGuard",
+        // Campaign map performance (Battle Load Diagnostics page, Map Performance): whether hidden settlement
+        // nameplates are skipped each frame (Patch104). It changes what this client draws, never the campaign.
+        "CullHiddenNameplates",
+        // Whether a covered campaign map releases its render targets and how often (MapViewRelease, a layer-event
+        // handler, no patch): this client's graphics memory, never the campaign.
+        "ReleaseMapViewMemory", "MapViewReleaseInterval",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",

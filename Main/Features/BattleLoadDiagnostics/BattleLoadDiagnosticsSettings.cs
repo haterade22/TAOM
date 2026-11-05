@@ -64,4 +64,24 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyInteger("Sample Interval (seconds)", 10, 120, Order = 1, RequireRestart = false,
         HintText = "Seconds between [MemSample] lines. Default 30s (~120 lines per hour of play). Takes effect on the next sample — no restart needed.")]
     public int MemorySampleIntervalSeconds { get; set; } = 30;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Cull Hidden Settlement Nameplates", Order = 1, RequireRestart = false,
+        HintText = "The campaign map updates every settlement nameplate every frame (about a thousand in TAOM), hidden ones included. When on, a nameplate that is hidden and cannot become visible this frame (out of height range, not tracked, not in range, nothing about its settlement changed) is left alone, which saves frame time on the map, most in fast forward. Everything else updates exactly as in the vanilla game. Takes effect on the next frame. Default ON.")]
+    public bool CullHiddenNameplates { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Release Map View Memory", Order = 2, RequireRestart = false,
+        HintText = "In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or arena scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON.")]
+    public bool ReleaseMapViewMemory { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyInteger("Map View Release Interval", 1, 1000, Order = 3, RequireRestart = false,
+        HintText = "Release the map view's memory on every Nth cover of the map. Default 20. A lower number gives memory back sooner but shows the short loading screen on more returns to the map (about 0.4 s in the measurement this feature is adapted from); 1 releases on every cover. Takes effect at the next cover.")]
+    public int MapViewReleaseInterval { get; set; } = 20;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Cheat Mode Lists All Items And Troops", Order = 4, RequireRestart = false,
+        HintText = "Vanilla cheat mode (cheat_mode = 1 in engine_config.txt, which TAOM's taom.* console commands need) makes your own inventory list every item in the game and the party screen every troop. With TAOM's thousands of items that list takes gigabytes of memory and can freeze the game for many seconds on a 16 GB machine. Off: with cheat mode on, both screens open as they do without it. On: the vanilla cheat lists. Takes effect at the next screen open. Default OFF.")]
+    public bool CheatModeListsAllItemsAndTroops { get; set; } = false;
 }

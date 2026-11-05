@@ -619,6 +619,8 @@ therefore gives the heap AFTER the engine's collection at the previous close; a 
 is rooted state, and the question is who holds it, not when to collect. RCA:
 `docs/reviews/rca-memory-instruments-2026-09-12.md`.
 
+**Correction (v1.4.8 code).** The `[MemStation] enter` line is written from `ScreenManager.OnPushScreen`, which `GameStateManager.OnPushState` (`GameStateManager.cs:257`) reaches through its listeners (`:277-279`) *before* its own `Common.MemoryCleanupGC()` (`:285`). So the 2,64x MB re-entry readings followed one collection, the pop's (`:313`), not two. The size comes from cheat mode: vanilla's `InventoryScreenHelper.OpenInventoryPresentation` (`:177-187`) puts every item in the game, ten of each, into the inventory's left list (about 5,166 rows with the Armory), and the party screen lists every troop; since plan 120 both lists stay out unless MCM asks for them ([cheat-screen-guard.md](cheat-screen-guard.md)). A 1.5.x reading, not re-traced on v1.4.8: that collection runs inside the closing tick while the closing screen and its layer are still on the stack, and those keep their movie and widget tree after release, so the graph is held only until the next collection; no type on that graph has a finalizer that would delay it; each row costs about 0.5 MB; a release one frame after the pop, not in the same tick, is what would return the memory at close.
+
 ### What `taom.print_memory` reports since 2026-09-12
 
 The first live run showed the engine's two string surfaces are one number each in the shipping
@@ -651,6 +653,10 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `WriteFreezeDump` | `false` | "Write Memory Dump On Freeze": one thread-stacks minidump per session at 80 s of silence with a flat heap and no recent compile. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
+| `CheatModeListsAllItemsAndTroops` | `false` | Map Performance. With cheat mode on, show vanilla's every-item inventory and every-troop party lists (gigabytes of memory); off keeps the normal screens ([cheat-screen-guard.md](cheat-screen-guard.md)). Live. |
+| `CullHiddenNameplates` | `true` | Map Performance. Skips hidden settlement nameplates that cannot become visible this frame ([nameplate-cull.md](nameplate-cull.md)). Live. |
+| `ReleaseMapViewMemory` | `true` | Map Performance. Every Nth cover of the campaign map releases the map view's render targets on its return ([map-view-release.md](map-view-release.md)). Live. |
+| `MapViewReleaseInterval` | `20` | Map Performance. N for the row above, 1 to 1000. Live. |
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 
@@ -903,6 +909,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 - [mesh-ref-validation.md](mesh-ref-validation.md) — the companion tool that confirms/eliminates the missing-`bo_`-mesh hypothesis offline + via `rgl_log`.
 - [mission-diagnostic.md](mission-diagnostic.md) — sibling diagnostic that dumps `MissionBehaviors`/`MissionLogics` on first tick (shares the same log file).
 - [crash-report.md](crash-report.md) — the bundle pipeline the watchdog reuses.
+- [texture-advice.md](texture-advice.md): the one-time memory advice at the first main menu; it reads the same GlobalMemoryStatusEx total as the [MemSample] session line.
 
 ## Changelog
 
