@@ -403,7 +403,11 @@ cannot execute, each with its engine line), `MarshalTrialRulesM5Tests`, `Command
    - **The runs of 2026-11-05 with the clamp's measure** (01:09 to 01:17, the same build; Deviations rows 30 and 31). Every run below is in the run history table that follows. The three newest read the slot line's
      `closer=` and `farther=`: 22 steered reads ended nearer the slot against 5 farther (010922: 1 and 0, then 15 and 5; 011208: 1 and 0 in the step's line; 011444: 5 and 0), so the sign of the clamp is right. The same runs show why distance
      from the anchor does not test it: the first window of 010922 read `far=7 max=2.6 wounded=0` with one counted steered read, so seven soldiers stood far with the clamp counted once. The rule was changed to judge the trend (row 31),
-     and the steps changed after these runs (rows 29 to 31) have not run in the game.
+     and the steps changed after these runs (rows 29 to 31) ran in the next two rounds.
+   - **The runs of 2026-11-05 on the reviewed build** (02:39 to 02:51, the build of `ca160a544`, one battle per step). All seven steps read PASS, with the changed rules: `hold_line_proof` held 0 blows against
+     26, `hold_line_slot` read 48 steered reads with 20 closer and 3 farther, and `square_side_kept` read `laid_out=0`.
+   - **The runs of 2026-11-05 on trunk `3392f15cb`** (07:59 to 08:11, the Marshal work merged with the Seat's S6 and S7, deployed by the first step). All seven steps read PASS, with a clean unload and
+     `swallowed=0` in each. The second-wave items are not in this build, so the trend's baseline still reads `Agent.Frame.origin` (the RCA's second-wave section).
 
      | Folder under `E:\Temp\command-trial-runs` | Step | Result | The numbers |
      |---|---|---|---|
@@ -416,6 +420,20 @@ cannot execute, each with its engine line), `MarshalTrialRulesM5Tests`, `Command
      | `20261105-010922` | `hold_line_proof` | FAIL | `reason=control-quiet` (`control_blows=9` under the minimum of 10, `hold-line` skip `no-control`); `hold-slot` fail at `far=9 max=4.9 closer=15 farther=5`; first window `far=7 closer=1 farther=0 wounded=0`; clamp counter 525 |
      | `20261105-011208` | `hold_line_slot` | PASS | `far=3 max=3.1 clamps=5 closer=1 farther=0`, 3 samples about a second apart, no `hold-slot` line in the battle |
      | `20261105-011444` | `hold_line_strike` | FAIL | `reason=no-blow-after-wound` (`wounded=3 settled=1 flag_on=1 blows_after=0 driver_strike=1`; the one settled soldier was gone by the next slot line, `units=39 wounded=0`); window `closer=5 farther=0`; clamp counter 72 |
+     | `20261105-023912` | `hold_line_proof` | PASS | `held_blows=0` against `control_blows=26`, `closer=15 farther=3` |
+     | `20261105-024158` | `hold_line_slot` | PASS | `steered=48 closer=20 farther=3` |
+     | `20261105-024451` | `hold_line_strike` | PASS | |
+     | `20261105-024707` | `hold_line_flag` | PASS | |
+     | `20261105-024759` | `square_side_kept` | PASS | `laid_out=0` |
+     | `20261105-024850` | `volley_massed` | PASS | `loosed=28 of=28` |
+     | `20261105-025030` | `spacing_one_rider` | PASS | |
+     | `20261105-075913` | `hold_line_proof` | PASS | `driver=pass flag_off=12 held_blows=0 control_blows=16 closer=9 farther=0`; `hold-strike` pass `struck=1 flagOn=1` |
+     | `20261105-080138` | `hold_line_slot` | PASS | `qualified=31 far=20 max=6.1 wounded=14 samples=45 steered=65 closer=29 farther=2 slot_failed=0` |
+     | `20261105-080425` | `hold_line_strike` | PASS | `wounded=14 settled=8 flag_on=8 blows_after=1 driver_strike=1` |
+     | `20261105-080711` | `hold_line_flag` | PASS | `flag_off_before=39 flag_off_after=0 restored_in=0.3` |
+     | `20261105-080806` | `square_side_kept` | PASS | `before=5.3 chosen=8.4 side0=8.4 side1=8.4 placed=39 laid_out=0` |
+     | `20261105-080857` | `volley_massed` | PASS | `massed_holding=31 eligible=39 stale=0 loosed=31 of=31` |
+     | `20261105-081049` | `spacing_one_rider` | PASS | `riders=1 units=41 significant=0 driver=Infantry`, infantry spacing `maxDistance=0.80` |
 
 10. Massed fire: put a company of archers on Massed fire (press Comma twice) with an enemy in range. The bows are drawn and held; once most of the archers who can
     still shoot hold, the word is given by itself and the volley follows a fraction of a second apart. The log shows `[Marshal] massed company= holding= eligible= stale=` and the

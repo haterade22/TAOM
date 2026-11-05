@@ -2564,3 +2564,11 @@ A session test against a hand copy of the engine rule stays green when the real 
 - **Why missed:** the Seat's fake restated `FordsMissionSpeed.Set`, and the stand-in's `PressTime` did not run `SeatTimeControl`, so no test could fail on the path the HIGH's fix changed.
 - **Prevent:** before you close a fix for a HIGH, name the test or step that fails when the engine write it rests on changes.
 - **Source:** [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md), row 5
+
+### Each trial verdict has a test that makes it fail (Marshal's Word, 2026-11-05)
+
+Five of the review's Marshal findings were verdicts that could not fail or passed on less than their row claims. `hold-strike` returned early on the state its fail needs. `square_side_kept` matched `laidOut=1`. `hold_line_slot` passed on one second of contact. The slot measure read distance, which a crowd also moves. The Seat's `FastRatio` was the same category a day before.
+
+- **Why missed:** each new rule got a test of its pass path only, and its row was read against the contract's sentence, not against the value that would mean failure.
+- **Prevent:** for each new check or step rule, write the fixture of its fail line first, and see the rule return fail on it. A regex row ends at the value it judges (`laidOut=0$`). A measure that one more cause can move judges direction against a control, not size.
+- **Source:** [rca-marshals-word-m3-massed-m5-m6-2026-11-04.md](../rca-marshals-word-m3-massed-m5-m6-2026-11-04.md) rows 3, 4, 5, 8 and 10, [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md) row 2.
