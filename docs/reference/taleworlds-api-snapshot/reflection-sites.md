@@ -81,7 +81,18 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…Decisions.ItemTypes.DecisionItemBaseVM` | `_decision` | field (protected readonly) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547, #550). Names the ballot a window was built for; seam D matches it against the `RefreshWith` argument |
 | `…DecisionItemBaseVM` | `_onDecisionOver` | field (private readonly, `Action`) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#547). Seam B's close path on a CANCELLED election, where `ExecuteDone` would NRE |
 | `…DecisionItemBaseVM` | `ExecuteDone` | method (protected) | `KingdomVoteDeadlockBinding.cs` | Kingdom vote deadlock (#550). Seam D runs vanilla's own close on a window whose election concluded inside the view model's constructor; safe there because `_chosenOutcome` is set |
+| `` TaleWorlds.CampaignSystem.MbEvent`1 `` | `_nonSerializedListenerList` | field (private) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Next` | field (public) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Action` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `set_Action` | method (private setter) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1 `` | `Owner` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2 `` | `_nonSerializedListenerList` | field (private) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Next` | field (public) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Action` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `set_Action` | method (private setter) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
+| `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Owner` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
 
+Status (2026-11-04, 1.4.x): LoadTimeStamps adds ten rows (the MbEvent listener records); all resolve against installed v1.4.8 (ReflectionSiteBindingTests).
 Status (2026-09-15): Patch80 seam D (#550) adds `DecisionItemBaseVM.ExecuteDone`, and the four members `KingdomVoteDeadlockBinding` has cached since #547 are catalogued at the same time; they had only ever been pinned by `Patch80KingdomVoteDeadlockBindingTests`. All five resolve against installed v1.5.3.
 Status (2026-09-11): Hideout boss fight (#564) adds three `HideoutAmbushMissionController` field rows, all three injected by `Patch86_HideoutAmbushBossFight` and pinned by the `ReflectionSiteBindingTests` rows plus a field-TYPE assertion in `Patch86HideoutBossFightBindingTests`; **all resolve against installed v1.4.8** (`BindingVerification` filtered run green, see the CHANGELOG entry).
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**

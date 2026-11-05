@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Core.Diagnostics;
+using TAOM.Features.LoadTimeStamps;
 
 namespace TAOM.Tests.Core.Diagnostics;
 
@@ -49,5 +50,12 @@ public class ShieldExclusionCheckTests
         var problem = ShieldExclusionCheck.Problem(Targets, (_, _) => throw new InvalidOperationException("boom"));
 
         StringAssert.Contains(problem, "InvalidOperationException");
+    }
+
+    // The pairing pin: the TAOM.Dependencies this repo builds keeps PatchShield off every load-time stamp target.
+    [TestMethod]
+    public void Problem_AgainstTheBuiltDependencies_TheLoadTimeStampTargetsAreExcluded()
+    {
+        Assert.IsNull(ShieldExclusionCheck.Problem(LoadTimeStampsModule.ShieldTargets));
     }
 }
