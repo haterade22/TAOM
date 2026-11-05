@@ -26,6 +26,7 @@ public class CareerScreenVM : ViewModel
     private string _doneLbl;
     private string _careerName;
     private string _careerDescription;
+    private string _rootPerkDescription = "";
     private string _careerPortraitSprite;
     private string _abilityName;
     private string _abilitySpriteName;
@@ -299,20 +300,10 @@ public class CareerScreenVM : ViewModel
                 var heroData = _dataService.GetOrCreateData(_heroStringId);
                 var isTaken = heroData.HasChoice(choice.Id);
 
-                // Issue #388 — accumulate the Active Effects panel from this same walk.
-                if (isTaken)
-                {
-                    if (choice.Type == Domain.ChoiceType.Keystone)
-                    {
-                        if (!string.IsNullOrEmpty(choice.Description))
-                            takenKeystoneDescriptions.Add(choice.Description);
-                    }
-                    else if (choice.Passive != null)
-                    {
-                        takenPassiveTotals.TryGetValue(choice.Passive.EffectType, out var running);
-                        takenPassiveTotals[choice.Passive.EffectType] = running + choice.Passive.Magnitude;
-                    }
-                }
+                // Issue #388: a taken keystone's description joins the Active Effects panel from this
+                // same walk; the passive totals come from the hero's stored choices after the walk.
+                if (isTaken && choice.Type == Domain.ChoiceType.Keystone && !string.IsNullOrEmpty(choice.Description))
+                    takenKeystoneDescriptions.Add(choice.Description);
                 // Issue #381 — a keystone closed by exclusivity dims (pip + no + button)
                 // instead of silently rejecting the click at select time.
                 var isFreeToTake = FreeCareerPoints > 0 && !isLocked
@@ -328,7 +319,28 @@ public class CareerScreenVM : ViewModel
             }
         }
 
+        // The passive totals follow CareerPassiveService.RefreshCache: every stored choice id once (a
+        // group the career lists twice cannot double a pick), keystones included, then the root when
+        // it is not stored. The root sits in no group, so it is read through the registry, and its
+        // text is shown as the career's identity perk.
+        var heldChoices = _dataService.GetOrCreateData(_heroStringId);
+        foreach (var heldId in heldChoices.ChoiceIds)
+            AddPassive(takenPassiveTotals, _registry.GetChoice(heldId)?.Passive);
+        var rootChoice = string.IsNullOrEmpty(career.RootChoiceId) ? null : _registry.GetChoice(career.RootChoiceId);
+        if (rootChoice != null && !heldChoices.HasChoice(rootChoice.Id))
+            AddPassive(takenPassiveTotals, rootChoice.Passive);
+        RootPerkDescription = rootChoice != null && !string.IsNullOrEmpty(rootChoice.Description)
+            ? new TextObject(rootChoice.Description).ToString()
+            : "";
+
         PublishActiveEffects(takenKeystoneDescriptions, takenPassiveTotals);
+    }
+
+    private static void AddPassive(Dictionary<Domain.PassiveEffectType, float> totals, Domain.PassiveEffect? passive)
+    {
+        if (passive == null) return;
+        totals.TryGetValue(passive.EffectType, out var running);
+        totals[passive.EffectType] = running + passive.Magnitude;
     }
 
     private static void CollectOpenGroupIds(
@@ -458,6 +470,25 @@ public class CareerScreenVM : ViewModel
         get => _careerDescription;
         set { if (_careerDescription != value) { _careerDescription = value; OnPropertyChangedWithValue(value, nameof(CareerDescription)); } }
     }
+
+    /// <summary>The career's root choice text (its always-held identity perk), shown in the header bar.</summary>
+    [DataSourceProperty]
+    public string RootPerkDescription
+    {
+        get => _rootPerkDescription;
+        set
+        {
+            if (_rootPerkDescription != value)
+            {
+                _rootPerkDescription = value;
+                OnPropertyChangedWithValue(value, nameof(RootPerkDescription));
+                OnPropertyChanged(nameof(HasRootPerk));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public bool HasRootPerk => _rootPerkDescription.Length > 0;
 
     [DataSourceProperty]
     public string CareerPortraitSprite

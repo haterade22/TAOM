@@ -267,7 +267,7 @@ Expandable choice panels.
 
 ```
 CareerScreenVM
-├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription
+├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription, @RootPerkDescription (shown when @HasRootPerk)
 ├── @CareerPortraitSprite (career portrait image)
 ├── @AbilityName, @AbilitySpriteName, @AbilityLabel
 ├── @FreeCareerPointsText ("Free Points: 5")

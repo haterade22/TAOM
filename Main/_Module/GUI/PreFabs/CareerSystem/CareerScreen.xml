@@ -45,6 +45,7 @@
                               <Children>
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@CareerName" Brush="CareerSystem.Effects.Title" Brush.FontSize="26" Brush.TextHorizontalAlignment="Left" />
                                 <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" Text="@CareerDescription" Brush="CareerSystem.Effects.Passive" Brush.FontSize="17" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" Text="@RootPerkDescription" Brush="CareerSystem.Effects.Passive" Brush.FontSize="17" IsVisible="@HasRootPerk" />
                               </Children>
                             </ListPanel>
                           </Children>

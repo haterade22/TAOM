@@ -399,7 +399,7 @@ public class CareerScreenVMTests
     // taken passive of the same effect type, so two +5% damage picks read as one "+10% damage".
 
     [TestMethod]
-    public void ActiveEffects_NoChoicesTaken_BothListsEmpty()
+    public void ActiveEffects_NoChoicesTakenAndNoRoot_BothListsEmpty()
     {
         SetupHeroWithCareer();
         var vm = CreateVM();
@@ -597,6 +597,159 @@ public class CareerScreenVMTests
         {
             System.IO.Directory.Delete(dir, true);
         }
+    }
+
+    // #769 (ported): the root perk is the career's always-held identity perk. CareerPassiveService.RefreshCache
+    // applies it (taken or not) plus every stored choice, keystones included; the panel sums by the same rule.
+    private static CareerChoiceDefinition RootChoice(float damage = 0.05f) => new CareerChoiceDefinition(
+        id: "wb_root", groupId: "", type: ChoiceType.Passive,
+        description: "{=taom_test_root}Root perk text", iconSprite: "icon",
+        passive: new PassiveEffect(PassiveEffectType.Damage, damage), mutations: null);
+
+    private static CareerChoiceDefinition KeystoneWithPassive() => new CareerChoiceDefinition(
+        id: "wb_brut_key", groupId: "wb_brutality", type: ChoiceType.Keystone,
+        description: "Keystone", iconSprite: "icon",
+        passive: new PassiveEffect(PassiveEffectType.Damage, 0.07f), mutations: null);
+
+    [TestMethod]
+    public void ActiveEffects_RootChoiceNeverTaken_ListsItsPassive()
+    {
+        _registry.GetChoice("wb_root").Returns(RootChoice());
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+5% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_RootChoiceHeldInTheHeroData_IsCountedOnce()
+    {
+        _registry.GetChoice("wb_root").Returns(RootChoice());
+        SetupHeroWithCareer();
+        _dataService.TryAddChoice("hero1", "wb_root", 10);
+        var vm = CreateVM();
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+5% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_RootChoiceAlsoListedInAGroup_IsCountedOnce()
+    {
+        var root = RootChoice();
+        _registry.GetChoice("wb_root").Returns(root);
+        _registry.GetChoicesForGroup("wb_brutality").Returns(
+            new List<CareerChoiceDefinition> { KeystoneChoice, PassiveChoice, root });
+        SetupHeroWithCareer();
+        _dataService.TryAddChoice("hero1", "wb_root", 10);
+        var vm = CreateVM();
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+5% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_RootAndATakenPassiveOfOneType_SumIntoOneLine()
+    {
+        _registry.GetChoice("wb_root").Returns(RootChoice());
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_p1"); // Damage 0.1
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+15% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_StoredChoiceInNoGroupOfTheCareer_StillCountsLikeRefreshCache()
+    {
+        // RefreshCache applies every stored id the registry resolves, and RepairForeignChoices keeps an
+        // id whose owner it cannot prove, so such a choice is applied: the panel must not hide it.
+        _registry.GetChoice("wb_stray").Returns(new CareerChoiceDefinition(
+            id: "wb_stray", groupId: "", type: ChoiceType.Passive, description: "Stray", iconSprite: "icon",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.1f), mutations: null));
+        SetupHeroWithCareer();
+        _dataService.TryAddChoice("hero1", "wb_stray", 10);
+        var vm = CreateVM();
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+10% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_GroupListedTwiceByTheCareer_CountsATakenPassiveOnce()
+    {
+        _registry.GetCareer("warboss").Returns(new CareerDefinition(
+            id: "warboss", displayName: "Warboss", description: "A brute.",
+            portraitSprite: "wb_sprite", abilityTemplateId: "rally_horde",
+            minClanTier: 0, rootChoiceId: "wb_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string> { "wb_brutality", "wb_brutality" }));
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_p1"); // Damage 0.1
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+10% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_TakenKeystoneWithAPassive_ListsBothTheDescriptionAndThePassive()
+    {
+        var keystone = KeystoneWithPassive();
+        _registry.GetChoice("wb_brut_key").Returns(keystone);
+        _registry.GetChoicesForGroup("wb_brutality").Returns(new List<CareerChoiceDefinition> { keystone, PassiveChoice });
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_key");
+        Assert.AreEqual(1, vm.KeystoneEffectLines.Count);
+        Assert.AreEqual("Keystone", vm.KeystoneEffectLines[0].LineText);
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+7% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_TakenKeystonePassiveAndRoot_SumIntoOneLine()
+    {
+        var keystone = KeystoneWithPassive();
+        _registry.GetChoice("wb_brut_key").Returns(keystone);
+        _registry.GetChoice("wb_root").Returns(RootChoice());
+        _registry.GetChoicesForGroup("wb_brutality").Returns(new List<CareerChoiceDefinition> { keystone, PassiveChoice });
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_key");
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+12% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void RootPerkDescription_CareerWithARootChoice_ShowsItsText()
+    {
+        _registry.GetChoice("wb_root").Returns(RootChoice());
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+        Assert.IsTrue(vm.HasRootPerk);
+        Assert.AreEqual("Root perk text", vm.RootPerkDescription);
+    }
+
+    [TestMethod]
+    public void RootPerkDescription_RootChoiceNotInTheRegistry_IsEmptyAndHidden()
+    {
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+        Assert.IsFalse(vm.HasRootPerk);
+        Assert.AreEqual("", vm.RootPerkDescription);
+    }
+
+    [TestMethod]
+    public void RootPerkDescription_RootChoiceWithoutADescription_IsHidden()
+    {
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive, description: "", iconSprite: "icon",
+            passive: null, mutations: null));
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+        Assert.IsFalse(vm.HasRootPerk);
+        Assert.AreEqual("", vm.RootPerkDescription);
     }
 
     private void SetupHeroWithCareer()
