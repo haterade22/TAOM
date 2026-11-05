@@ -178,6 +178,8 @@ A new campaign in the same process now starts from a reset service (#764). `WarO
 
 Benefits: MCM config changes take effect immediately on next tick. No save migration needed (new keys default safely).
 
+Every load logs the phase days in use and their source: the `[WarOfTheRing] Session launched` line ends `phase days 30/44 from MCM` (or `MCM Test Mode`, `war_of_the_ring.json test mode`, `war_of_the_ring.json`), plus `(War of the Ring disabled)` when the feature is off. The "Loaded War of the Ring config" line prints the JSON pair only.
+
 ### Phases
 
 `WarPhase` (`Main/Features/Diplomacy/Models/WarPhase.cs`) has four values: `Peace` → `IsengardWar` → `FullWar` → `WarEnded`. The first three are the escalation ladder; **`WarEnded`** is a terminal state set by `IWarOfTheRingService.EndWar(WarOutcome)` when the [War of the Ring Momentum](war-of-the-ring-momentum.md) feature's victory condition fires. Because all three peace-block layers key off `IsWarOfTheRingActive` / `ShouldBlockPeace` (which are true only in `FullWar`), flipping to `WarEnded` lifts the peace block so the winning side's momentum service can peace-out the war.
@@ -226,8 +228,8 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 
 ## Tests
 
-- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs`: 58 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, the day-ordering clamp across all four sources, the session reset (#764), and the real-stance guard and `ReconcileDeclaredWars` (#772), including the game-like `AreAtWar` stub, the MCM enable toggle and the declaration-had-no-effect log
-- `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorSessionResetTests.cs`: 8 tests pinning the constructor reset, the host session launch calling the repair before the phase check, the daily tick, a save-then-load round trip that restores a non-default phase and outcome, a save without the keys, a new campaign after a WarEnded campaign, a save pass doing neither, and the co-op client gate on `OnSessionLaunched` (no phase check, no reconcile)
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs`: 64 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, the day-ordering clamp across all four sources, the session reset (#764), and the real-stance guard and `ReconcileDeclaredWars` (#772), including the game-like `AreAtWar` stub, the MCM enable toggle and the declaration-had-no-effect log
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorSessionResetTests.cs`: 9 tests pinning the constructor reset, the host session launch calling the repair before the phase check, the daily tick, a save-then-load round trip that restores a non-default phase and outcome, a save without the keys, a new campaign after a WarEnded campaign, a save pass doing neither, and the co-op client gate on `OnSessionLaunched` (no phase check, no reconcile)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingWiringTests.cs`: 7 source-text tests pinning that SubModule builds the behavior inline as `AddBehavior`'s argument exactly once, that no other production file constructs or registers it, and that the predicate rejects cached, static, duplicated and container-resolved shapes (untagged)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingConfigProviderTests.cs`: 18 tests, one per `ValidateConfig` rule (phase + test-mode ordering, sub-config nulls, scripted wars lists: null list, null entry, self pair, blank id, valid pairs kept; missing file, malformed JSON)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingShippedConfigTests.cs` — 6 tests pinning the shipped `war_of_the_ring.json`, so a doc/code drift in the shipped days fails the suite rather than waiting for a review
@@ -244,6 +246,7 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 5. Verify Harad/Umbar/Khand can still make peace with each other (Rhun cannot — it's a Dark Power)
 6. Second campaign in one process (#764): play past the Phase 2 day, exit to the main menu without closing the game, and start a new campaign. The log shows "phase reset to Peace at campaign start", then the Phase 1 wars on day 1, and the War of the Ring meter stays hidden until Full War.
 7. Older Full War save (#772): with test mode on, play past Day 3 on a build without the fix (v2.0.28 and earlier have the old code) and save. Load that save on this build. The log shows 'War of the Ring: declared N missing Full War wars (#772)' once, and each kingdom's encyclopedia History lists the declarations; the chat shows no line for them, which is expected (Phase 2 above). Save and reload: the line must not appear again. The first load proves the host-only call in `OnSessionLaunched` runs. The quiet second load proves `AllianceAdapter.DeclareWar` wrote the real stance; the old model-aware guard would skip the declaration and log the line on every load.
+8. Every load logs the phase days and their source: `[WarOfTheRing] Session launched` ends `phase days 30/44 from MCM` or the real source.
 
 ## How to Add New War Phases
 

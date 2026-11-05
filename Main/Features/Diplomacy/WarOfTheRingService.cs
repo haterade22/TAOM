@@ -112,7 +112,7 @@ public class WarOfTheRingService : IWarOfTheRingService
     // the TestMode pair, and the compiled defaults. Dual-surface rule, csharp-architecture.md.
     private (int phase1Day, int phase2Day) GetEffectivePhaseDays()
     {
-        var (phase1Day, phase2Day) = GetRawPhaseDays();
+        var (phase1Day, phase2Day, _) = GetRawPhaseDays();
 
         phase1Day = Math.Max(1, phase1Day);
         phase2Day = Math.Max(phase1Day + 1, phase2Day);
@@ -120,18 +120,25 @@ public class WarOfTheRingService : IWarOfTheRingService
         return (phase1Day, phase2Day);
     }
 
-    private (int phase1Day, int phase2Day) GetRawPhaseDays()
+    private (int phase1Day, int phase2Day, string source) GetRawPhaseDays()
     {
         if (_settingsProvider.IsAvailable && _settingsProvider.TestMode)
-            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day, "MCM Test Mode");
 
         if (_config.TestMode.Enabled)
-            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
+            return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day, "war_of_the_ring.json test mode");
 
         if (_settingsProvider.IsAvailable)
-            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay);
+            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay, "MCM");
 
-        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
+        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay, "war_of_the_ring.json");
+    }
+
+    public string DescribePhaseDays()
+    {
+        var (phase1Day, phase2Day) = GetEffectivePhaseDays();
+        var description = $"{phase1Day}/{phase2Day} from {GetRawPhaseDays().source}";
+        return GetEffectiveEnabled() ? description : description + " (War of the Ring disabled)";
     }
 
     // #772: the phase turns first so that vanilla's OnWarDeclared listeners already treat every

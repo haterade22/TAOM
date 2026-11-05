@@ -94,7 +94,7 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         // before the first daily tick (prevents save/load peace exploit)
         var elapsedDays = _elapsedDays();
         _wotrService.CheckPhaseTransition(elapsedDays);
-        _logger.LogInfo($"[WarOfTheRing] Session launched — phase restored at day {elapsedDays:F0}");
+        _logger.LogInfo($"[WarOfTheRing] Session launched — phase restored at day {elapsedDays:F0}; phase days {_wotrService.DescribePhaseDays()}");
     }
 
     // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.

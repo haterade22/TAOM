@@ -852,4 +852,64 @@ public class WarOfTheRingServiceTests
 
         _logger.DidNotReceive().LogInfo(Arg.Is<string>(m => m.Contains("#772")));
     }
+
+    // ---- WOTR-06: the effective phase days and where they come from ----
+
+    [TestMethod]
+    public void DescribePhaseDays_Mcm_NamesMcm()
+    {
+        UseMcmPhaseDays(30, 44);
+        CreateSut();
+
+        Assert.AreEqual("30/44 from MCM", _sut.DescribePhaseDays());
+    }
+
+    [TestMethod]
+    public void DescribePhaseDays_McmTestMode_NamesMcmTestMode()
+    {
+        UseMcmPhaseDays(30, 44);
+        _settingsProvider.TestMode.Returns(true);
+        CreateSut();
+
+        Assert.AreEqual("1/3 from MCM Test Mode", _sut.DescribePhaseDays());
+    }
+
+    [TestMethod]
+    public void DescribePhaseDays_JsonTestMode_NamesJsonTestMode()
+    {
+        var config = CreateDefaultConfig();
+        config.TestMode.Enabled = true;
+        _configProvider.LoadConfig().Returns(config);
+        _settingsProvider.IsAvailable.Returns(false);
+        CreateSut();
+
+        Assert.AreEqual("1/3 from war_of_the_ring.json test mode", _sut.DescribePhaseDays());
+    }
+
+    [TestMethod]
+    public void DescribePhaseDays_NoMcm_NamesTheJson()
+    {
+        CreateSut();
+
+        Assert.AreEqual("30/45 from war_of_the_ring.json", _sut.DescribePhaseDays());
+    }
+
+    [TestMethod]
+    public void DescribePhaseDays_InvertedMcmPair_ReportsTheClampedDays()
+    {
+        UseMcmPhaseDays(30, 20);
+        CreateSut();
+
+        Assert.AreEqual("30/31 from MCM", _sut.DescribePhaseDays());
+    }
+
+    [TestMethod]
+    public void DescribePhaseDays_WarDisabled_SaysSo()
+    {
+        UseMcmPhaseDays(30, 44);
+        _settingsProvider.WarOfTheRingEnabled.Returns(false);
+        CreateSut();
+
+        Assert.AreEqual("30/44 from MCM (War of the Ring disabled)", _sut.DescribePhaseDays());
+    }
 }

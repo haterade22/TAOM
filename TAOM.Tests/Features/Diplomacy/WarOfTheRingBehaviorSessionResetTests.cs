@@ -205,4 +205,18 @@ public class WarOfTheRingBehaviorSessionResetTests
             return true;
         }
     }
+
+    // WOTR-06: every load names the phase days in use and their source.
+    [TestMethod]
+    public void OnSessionLaunched_Host_LogsTheEffectivePhaseDays()
+    {
+        _service.DescribePhaseDays().Returns("30/44 from MCM");
+        var logger = Substitute.For<IModLogger>();
+        var sut = new WarOfTheRingBehavior(_service, logger, _coop, () => 4f);
+
+        sut.OnSessionLaunched(null!);
+
+        logger.Received(1).LogInfo(Arg.Is<string>(m =>
+            m.Contains("phase restored at day 4") && m.Contains("phase days 30/44 from MCM")));
+    }
 }

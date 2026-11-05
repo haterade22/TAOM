@@ -23,4 +23,7 @@ public interface IWarOfTheRingService
     // #772: in FullWar, declares every Phase 2 / Hostile-pair war whose stored stance is not War (idempotent).
     // A pair first linked during Full War is already stored as War and is skipped.
     void ReconcileDeclaredWars();
+    // WOTR-06: the phase days in use and their source, for the session-launch log line; the
+    // "Loaded War of the Ring config" line prints the JSON pair only.
+    string DescribePhaseDays();
 }
