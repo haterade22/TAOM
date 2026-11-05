@@ -287,4 +287,108 @@ public class AlignmentDesertionServiceTests
 
         Assert.AreEqual(0, result.Count);
     }
+
+    // ── ShouldEvaluate: the roster-independent gates, asked before the behavior snapshots a roster ──
+
+    [TestMethod]
+    public void ShouldEvaluate_EveryToggleOn_SidedOwner_IsTrue()
+        => Assert.IsTrue(_service.ShouldEvaluate(EvilKingdom, false, false));
+
+    [TestMethod]
+    public void ShouldEvaluate_Disabled_IsFalse()
+    {
+        _settings.IsEnabled.Returns(false);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, false));
+    }
+
+    [TestMethod]
+    public void ShouldEvaluate_PlayerOwner_ApplyToPlayerOff_IsFalse()
+    {
+        _settings.ApplyToPlayer.Returns(false);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, true, false));
+    }
+
+    [TestMethod]
+    public void ShouldEvaluate_AiOwner_ApplyToAiOff_IsFalse()
+    {
+        _settings.ApplyToAi.Returns(false);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, false));
+    }
+
+    [TestMethod]
+    public void ShouldEvaluate_Garrison_ApplyToGarrisonsOff_IsFalse()
+    {
+        _settings.ApplyToGarrisons.Returns(false);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, true));
+    }
+
+    [TestMethod]
+    public void ShouldEvaluate_Party_ApplyToPartiesOff_IsFalse()
+    {
+        _settings.ApplyToParties.Returns(false);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, false));
+    }
+
+    [TestMethod]
+    public void ShouldEvaluate_NeutralOwner_IsFalse()
+        => Assert.IsFalse(_service.ShouldEvaluate(NeutralKingdom, false, false));
+
+    [TestMethod]
+    public void ShouldEvaluate_RateZero_IsFalse()
+    {
+        _settings.Rate.Returns(0f);
+        Assert.IsFalse(_service.ShouldEvaluate(EvilKingdom, false, false));
+    }
+
+    // The inverted `rate <= 0f` gate is kept on purpose for parity with the original
+    // CalculateDesertion: a NaN rate proceeds and the min-1 floor sheds one per opposed type
+    // ((int)(20 * NaN) is int.MinValue). NaN is reachable only through a hand-edited MCM file.
+    [TestMethod]
+    public void ShouldEvaluate_NaNRate_IsTrue_ParityWithTheOriginalGate()
+    {
+        _settings.Rate.Returns(float.NaN);
+
+        Assert.IsTrue(_service.ShouldEvaluate(EvilKingdom, false, false));
+        var result = _service.CalculateDesertion(EvilKingdom, false, false,
+            Troops(new DesertionTroopInfo("gondor_knight", "gondor", false, 20)));
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(1, result[0].DesertCount);
+    }
+
+    // Exhaustive over every owner-level input: the gate never hides a desertion, and never lets
+    // through a roster that would shed nothing because of an owner-level gate.
+    [TestMethod]
+    public void ShouldEvaluate_False_ImpliesCalculateDesertionIsEmpty_ForEveryGate()
+    {
+        var bools = new[] { true, false };
+        var troops = Troops(
+            new DesertionTroopInfo("gondor_knight", "gondor", false, 20),
+            new DesertionTroopInfo("mordor_orc", "mordor", false, 10));
+        int cases = 0;
+        foreach (var enabled in bools)
+        foreach (var ai in bools)
+        foreach (var player in bools)
+        foreach (var parties in bools)
+        foreach (var garrisons in bools)
+        foreach (var rate in new[] { 0f, 0.5f })
+        foreach (var owner in new[] { EvilKingdom, FreeKingdom, NeutralKingdom })
+        foreach (var isPlayerOwned in bools)
+        foreach (var isGarrison in bools)
+        {
+            _settings.IsEnabled.Returns(enabled);
+            _settings.ApplyToAi.Returns(ai);
+            _settings.ApplyToPlayer.Returns(player);
+            _settings.ApplyToParties.Returns(parties);
+            _settings.ApplyToGarrisons.Returns(garrisons);
+            _settings.Rate.Returns(rate);
+
+            var gate = _service.ShouldEvaluate(owner, isPlayerOwned, isGarrison);
+            var sheds = _service.CalculateDesertion(owner, isPlayerOwned, isGarrison, troops).Count > 0;
+
+            Assert.AreEqual(sheds, gate,
+                $"enabled={enabled} ai={ai} player={player} parties={parties} garrisons={garrisons} rate={rate} owner={owner} isPlayerOwned={isPlayerOwned} isGarrison={isGarrison}");
+            cases++;
+        }
+        Assert.AreEqual(2 * 2 * 2 * 2 * 2 * 2 * 3 * 2 * 2, cases);
+    }
 }

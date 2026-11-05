@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Adapters;
+using TAOM.Features.CultureMarketplace.Domain;
 
 namespace TAOM.Features.CultureMarketplace;
 
@@ -9,6 +11,18 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
 {
     private readonly ICultureItemPoolService _poolService;
     private readonly ITownRosterAdapter _townAdapter;
+
+    // Per-culture routed sets, built on first use and kept for the process: the routing table is loaded
+    // once (CultureMarketplaceConfigProvider.EnsureLoaded), so it never changes after the first daily
+    // tick. Main thread only (daily ticks and the new-game sweep). Not campaign state: no session reset needed.
+    private readonly Dictionary<string, RoutedSets> _routed = new(StringComparer.Ordinal);
+
+    private sealed class RoutedSets
+    {
+        public RoutedItem[] Guaranteed = Array.Empty<RoutedItem>();    // MinStock > 0, routed order
+        public string[] GuaranteedIds = Array.Empty<string>();
+        public HashSet<string>? Ids;                                   // null when nothing is routed here, as before
+    }
 
     public CultureMarketplaceMaintenanceService(
         ICultureItemPoolService poolService,
@@ -26,14 +40,16 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
     public int EnsureGuaranteedStock(Settlement settlement, string cultureId)
     {
         if (string.IsNullOrEmpty(cultureId)) return 0;
-        var routed = _poolService.GetRoutedItemsForCulture(cultureId);
-        if (routed.Count == 0) return 0;
+        var routed = RoutedFor(cultureId);
+        if (routed.Guaranteed.Length == 0) return 0;
+        // One roster walk for every guaranteed item. Counting them all before any top-up gives the counts
+        // the old per-item loop saw: adding one item changes no other item's count.
+        var counts = _townAdapter.GetItemCounts(settlement, routed.GuaranteedIds);
         var totalAdded = 0;
-        for (var i = 0; i < routed.Count; i++)
+        for (var i = 0; i < routed.Guaranteed.Length; i++)
         {
-            var entry = routed[i];
-            if (entry.MinStock <= 0) continue;
-            var have = _townAdapter.GetItemCount(settlement, entry.ItemId);
+            var entry = routed.Guaranteed[i];
+            var have = i < counts.Length ? counts[i] : 0;   // a failed read counted 0 before too
             if (have >= entry.MinStock) continue;
             var need = entry.MinStock - have;
             if (_townAdapter.AddItem(settlement, entry.ItemId, need))
@@ -56,14 +72,7 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
         var snapshot = _townAdapter.EnumerateRoster(settlement);
         if (snapshot.Count == 0) return 0;
 
-        var routedHere = _poolService.GetRoutedItemsForCulture(cultureId);
-        HashSet<string> routedIdsHere = null;
-        if (routedHere.Count > 0)
-        {
-            routedIdsHere = new HashSet<string>(StringComparer.Ordinal);
-            for (var i = 0; i < routedHere.Count; i++)
-                routedIdsHere.Add(routedHere[i].ItemId);
-        }
+        var routedIdsHere = RoutedFor(cultureId).Ids;
 
         var removed = 0;
         for (var i = 0; i < snapshot.Count && removed < removalCap; i++)
@@ -81,5 +90,26 @@ public sealed class CultureMarketplaceMaintenanceService : ICultureMarketplaceMa
                 removed++;
         }
         return removed;
+    }
+
+    private RoutedSets RoutedFor(string cultureId)
+    {
+        if (_routed.TryGetValue(cultureId, out var sets)) return sets;
+        var routed = _poolService.GetRoutedItemsForCulture(cultureId);
+        sets = new RoutedSets();
+        if (routed.Count > 0)
+        {
+            sets.Ids = new HashSet<string>(StringComparer.Ordinal);
+            var guaranteed = new List<RoutedItem>();
+            for (var i = 0; i < routed.Count; i++)
+            {
+                sets.Ids.Add(routed[i].ItemId);
+                if (routed[i].MinStock > 0) guaranteed.Add(routed[i]);
+            }
+            sets.Guaranteed = guaranteed.ToArray();
+            sets.GuaranteedIds = sets.Guaranteed.Select(e => e.ItemId).ToArray();
+        }
+        _routed[cultureId] = sets;
+        return sets;
     }
 }

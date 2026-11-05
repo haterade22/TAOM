@@ -151,12 +151,20 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnMapEventStarted(MapEvent mapEvent, PartyBase attacker, PartyBase defender)
     {
+        // No refuge, nothing to rally or stand down: skip the walk over every party of every world
+        // battle (RefugeService ignores ids it does not hold, so this changes no outcome).
+        if (_refuges.AllRefuges.Count == 0)
+            return;
         foreach (var refugeId in RefugePartyIds(mapEvent))
             _refuges.OnMapEventStarted(refugeId);
     }
 
     private void OnMapEventEnded(MapEvent mapEvent)
     {
+        // No refuge, nothing to rally or stand down: skip the walk over every party of every world
+        // battle (RefugeService ignores ids it does not hold, so this changes no outcome).
+        if (_refuges.AllRefuges.Count == 0)
+            return;
         foreach (var refugeId in RefugePartyIds(mapEvent))
             _refuges.OnMapEventEnded(refugeId);
         // A defeated refuge is destroyed AFTER this callback (MapEvent.FinalizeEventAux runs

@@ -33,7 +33,7 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         // Match vanilla: the night movement penalty (which the Mordor night feat offsets) is
         // applied only when not at sea, so the offsetting bonus must be land-only too.
         var isNight = (Campaign.Current?.IsNight ?? false) && !mobileParty.IsCurrentlyAtSea;
-        var (mountedCount, totalCount) = CountMountedAndTotal(mobileParty.MemberRoster);
+        var (mountedCount, totalCount) = CountMountedAndTotal(mobileParty.MemberRoster, _feats.NeedsMountedCount(culture));
 
         _feats.ApplyTerrainSpeedFeats(culture, terrain, isNight, ref result);
         _feats.ApplyRohanInfantryPenalty(culture, mountedCount, totalCount, ref result);
@@ -63,12 +63,16 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
     };
 
     /// <summary>
-    /// Boundary helper — collapses a sealed <see cref="TroopRoster"/> down to the
-    /// two primitives <see cref="ICulturalFeatsService.ApplyRohanInfantryPenalty"/>
-    /// needs, keeping the service free of TaleWorlds types per ADR-007.
+    /// Boundary helper: collapses a sealed <see cref="TroopRoster"/> down to the two primitives
+    /// <see cref="ICulturalFeatsService.ApplyRohanInfantryPenalty"/> needs, keeping the service free of
+    /// TaleWorlds types per ADR-007. When the service says the penalty cannot apply, it returns (0, 0)
+    /// without touching the roster; the penalty then returns at its own <c>totalCount &lt;= 0</c> gate,
+    /// exactly as it returned at its feat gate before.
     /// </summary>
-    private static (int mounted, int total) CountMountedAndTotal(TroopRoster roster)
+    private static (int mounted, int total) CountMountedAndTotal(TroopRoster roster, bool needed)
     {
+        if (!needed)
+            return (0, 0);
         int total = roster.TotalManCount;
         int mounted = 0;
         foreach (var element in roster.GetTroopRoster())

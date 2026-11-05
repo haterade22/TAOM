@@ -11,20 +11,32 @@ public sealed class AlignmentDesertionSettingsProvider : IAlignmentDesertionSett
 {
     private readonly AlignmentDesertionConfig _defaults;
 
+    // Read on a campaign hot path (per party, per score, per day or every map frame). Resolving
+    // TaomSettings.Instance walks MCM's settings containers, so the reference is cached on its first
+    // non-null read and read THROUGH, never snapshotted: MCM edits its one registered instance in place
+    // (reset and presets copy values into it), so live MCM edits still apply. Lazy, not in the
+    // constructor, so a resolve before MCM is up cannot pin the fallbacks. Same contract as
+    // BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    public bool IsEnabled => TaomSettings.Instance?.EnableAlignmentDesertion ?? _defaults.Enabled;
+    internal AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider, TaomSettings settings)
+        : this(configProvider) => _settings = settings;
 
-    public float Rate => TaomSettings.Instance?.AlignmentDesertionRate ?? _defaults.Rate;
+    public bool IsEnabled => Settings?.EnableAlignmentDesertion ?? _defaults.Enabled;
 
-    public bool ApplyToAi => TaomSettings.Instance?.EnableAlignmentDesertionAi ?? _defaults.ApplyToAi;
+    public float Rate => Settings?.AlignmentDesertionRate ?? _defaults.Rate;
 
-    public bool ApplyToPlayer => TaomSettings.Instance?.EnableAlignmentDesertionPlayer ?? _defaults.ApplyToPlayer;
+    public bool ApplyToAi => Settings?.EnableAlignmentDesertionAi ?? _defaults.ApplyToAi;
 
-    public bool ApplyToParties => TaomSettings.Instance?.EnableAlignmentDesertionParties ?? _defaults.ApplyToParties;
+    public bool ApplyToPlayer => Settings?.EnableAlignmentDesertionPlayer ?? _defaults.ApplyToPlayer;
 
-    public bool ApplyToGarrisons => TaomSettings.Instance?.EnableAlignmentDesertionGarrisons ?? _defaults.ApplyToGarrisons;
+    public bool ApplyToParties => Settings?.EnableAlignmentDesertionParties ?? _defaults.ApplyToParties;
+
+    public bool ApplyToGarrisons => Settings?.EnableAlignmentDesertionGarrisons ?? _defaults.ApplyToGarrisons;
 }

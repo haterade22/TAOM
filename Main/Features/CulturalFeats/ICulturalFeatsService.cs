@@ -39,6 +39,12 @@ public interface ICulturalFeatsService
     /// <summary>Applies the Rohan infantry-speed penalty when &gt;50% of the party is infantry.</summary>
     void ApplyRohanInfantryPenalty(ICultureFeatAdapter? culture, int mountedCount, int totalCount, ref ExplainedNumber result);
 
+    /// <summary>
+    /// True when <see cref="ApplyRohanInfantryPenalty"/> can change the result for this culture, so the
+    /// speed model walks the party roster only then (it runs on every speed recompute of every party).
+    /// </summary>
+    bool NeedsMountedCount(ICultureFeatAdapter? culture);
+
     // ── SettlementProsperity ───────────────────────────────────────────
     /// <summary>Applies Rivendell/Mirkwood/Gondor hearth-growth factors. Skipped when current change is negative.</summary>
     void ApplyHearthGrowthFeats(ICultureFeatAdapter? culture, ref ExplainedNumber result);
