@@ -24,6 +24,8 @@ internal sealed partial class LongDefeatDirector
         // First, before any soldier of the wave exists: the wave's published numbers are read when a soldier is built or struck.
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
+        if (fx.ApplyBoon is { } boon)
+            ApplyBoonToStanding(boon);
 
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
         var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
@@ -111,7 +113,10 @@ internal sealed partial class LongDefeatDirector
 
         LogSpawnLevel(b, attackers, report, last);
         if (!attackers)
+        {
             JudgeDefenderBatch(b, report, standing);
+            ReadSpawnedAfterPick(b, report);
+        }
     }
 
     // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers never do.

@@ -55,7 +55,7 @@ public class CustomBattleDamageModelTests
     // same calls in the same order apart from CampaignOnly, so the twin test below compares the two.
     private static readonly Dictionary<string, string> ExpectedCallOrder = new()
     {
-        ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage,FordsUpgradeHooks.Reduce",
+        ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage,FordsUpgradeHooks.Reduce,LongDefeatCombatHooks.Reduce",
         ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage,FordsUpgradeHooks.Amplify,LongDefeatCombatHooks.Amplify",
         ["ApplyDamageScaling"] = "base,CreatureSiegeHooks.ScaleGateDamage",
         ["DecideCrushedThrough"] = "RaceAbilityHooks.CrushVerdict,CombatMechanicsHooks.CrushThrough,base",
@@ -80,12 +80,13 @@ public class CustomBattleDamageModelTests
         "TaomAgentApplyDamageModel.get_AgentStatService",
     };
 
-    // Only the twin makes these: Fords of War and The Long Defeat are Custom Game modes, so their upgrades and wave damage can never run in a campaign.
+    // Only the twin makes these: Fords of War and The Long Defeat are Custom Game modes, so their upgrades, wave damage and boon damage factors can never run in a campaign.
     private static readonly HashSet<string> TwinOnly = new(StringComparer.Ordinal)
     {
         "FordsUpgradeHooks.Amplify",
         "FordsUpgradeHooks.Reduce",
         "LongDefeatCombatHooks.Amplify",
+        "LongDefeatCombatHooks.Reduce",
     };
 
     private static bool _gameLoaded;
@@ -140,6 +141,7 @@ public class CustomBattleDamageModelTests
     [DataRow("ApplyDamageReductions", "base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage)")]
     [DataRow("ApplyDamageReductions", "CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result)")]
     [DataRow("ApplyDamageReductions", "RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result)")]
+    [DataRow("ApplyDamageReductions", "LongDefeatCombatHooks.Reduce(in attackInformation, in collisionData, FordsUpgradeHooks.Reduce(")]
     [DataRow("ApplyDamageAmplifications", "RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,")]
     [DataRow("ApplyDamageAmplifications", "base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage)")]
     [DataRow("ApplyDamageAmplifications", "LongDefeatCombatHooks.Amplify(in attackInformation, in collisionData, FordsUpgradeHooks.Amplify(")]

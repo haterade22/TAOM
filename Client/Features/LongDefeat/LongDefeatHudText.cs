@@ -29,6 +29,11 @@ internal static class LongDefeatHudText
         }
     }
 
+    /// <summary>The wave line with the lord's class after it; the wave line alone when he plays none. <paramref name="rawClassName"/> is the class's <c>{=KEY}English</c> name.</summary>
+    internal static string WithClass(string waveText, string rawClassName) => rawClassName.Length == 0
+        ? waveText
+        : new TextObject("{=TAOM_LD_Hud_WaveClass}{WAVE}, {CLASS}").SetTextVariable("WAVE", waveText).SetTextVariable("CLASS", OfferName(rawClassName)).ToString();
+
     internal static string Gold(int gold) => new TextObject("{=TAOM_LD_Hud_Gold}Gold: {GOLD}").SetTextVariable("GOLD", gold).ToString();
 
     internal static string Attackers(int count) => new TextObject("{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}").SetTextVariable("COUNT", count).ToString();
@@ -224,7 +229,10 @@ internal static class LongDefeatHudText
         }
     }
 
-    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves, IReadOnlyList<BoonCard>? boons = null) =>
+    internal static string EndLines(int wavesCleared, int kills, int lostInClearedWaves, IReadOnlyList<BoonCard>? boons = null, string rawClassName = "") =>
+        (rawClassName.Length == 0
+            ? string.Empty
+            : new TextObject("{=TAOM_LD_End_Class}Class: {CLASS}").SetTextVariable("CLASS", OfferName(rawClassName)).ToString() + "\n") +
         new TextObject("{=TAOM_LD_End_Waves}Waves cleared: {WAVES}").SetTextVariable("WAVES", wavesCleared).ToString() + "\n" +
         new TextObject("{=TAOM_LD_End_Kills}Kills: {KILLS}").SetTextVariable("KILLS", kills).ToString() + "\n" +
         new TextObject("{=TAOM_LD_End_Lost}Defenders lost in cleared waves: {LOST}").SetTextVariable("LOST", lostInClearedWaves).ToString() +

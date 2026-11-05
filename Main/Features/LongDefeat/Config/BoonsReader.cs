@@ -9,7 +9,8 @@ namespace TAOM.Features.LongDefeat;
 /// boons.json (phase2-plan.md section 3): a <c>legendWeight</c> and the <c>boons</c> rows in file order. A bad weight keeps the shipped 1, a duplicate id
 /// skips the later row, and a row with no known category, no name or text, or no valid effect is skipped. An effect key outside the closed vocabulary of
 /// <see cref="BoonKeys"/>, or a value outside its range (a whole key needs a JSON integer), skips that effect. A drawback uses the same keys, never
-/// <c>gold</c> or <c>affixCount</c>, and needs its own <c>drawbackText</c>, so a cost is never hidden from the player.
+/// <c>gold</c> or <c>affixCount</c>, and needs its own <c>drawbackText</c>, so a cost is never hidden from the player. A stat, damage or health key also needs a
+/// <c>target</c> (infantry, archers, cavalry or player); without a valid one that effect is skipped.
 /// </summary>
 internal static class BoonsReader
 {
@@ -139,7 +140,19 @@ internal static class BoonsReader
                 continue;
             }
 
-            effects.Add(new BoonEffect(key, number));
+            BoonTarget? target = null;
+            if (BoonKeys.IsTargeted(key))
+            {
+                if (!BoonTargets.TryParse(LongDefeatConfigScope.Text(((JObject)array[i])["target"]), out var parsed))
+                {
+                    s.Warn($"'{path}.target' is missing or not one of infantry, archers, cavalry, player; effect '{key}' skipped");
+                    continue;
+                }
+
+                target = parsed;
+            }
+
+            effects.Add(new BoonEffect(key, number, target));
         }
 
         return effects;

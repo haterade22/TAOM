@@ -20,7 +20,7 @@ internal sealed partial class LongDefeatDirector
                 _logger.LogInfo($"{Tag}[Boon] pick {e.Detail.Replace("pick=", "")} lapses after wave {e.Wave}: no boon is eligible");
                 break;
             case RunEventKind.BoonTaken when pick != null:
-                var verdict = LongDefeatBoonChecks.Pick(pick, _run.OwnedBoons, _plan.Rules, _run.Rules, _run.Factors, _run.Purse.EarnedFrom(PurseSource.Boon));
+                var verdict = LongDefeatBoonChecks.Pick(pick, _run.OwnedBoons, _plan.Rules, _run.Rules, _run.Factors, _run.Purse.EarnedFrom(PurseSource.Boon), ReadPickedTargets(pick));
                 LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BoonId, "p" + pick.Pick, verdict);
                 _logger.LogInfo($"{Tag}[Boon] pick {pick.Pick} taken {pick.Taken}, acts from wave {pick.TakenBeforeWave}: {verdict.Detail}");
                 break;

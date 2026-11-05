@@ -248,7 +248,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         if (result != null)
         {
             EndTitle = LongDefeatHudText.EndTitle(result.Reason);
-            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves, _session.BoonsTaken);
+            EndLines = LongDefeatHudText.EndLines(result.WavesCleared, result.Kills, _session.LostInClearedWaves, _session.BoonsTaken, _session.ClassName);
             ReportText = _session.ReportPath is { } path ? LongDefeatHudText.ReportFile(System.IO.Path.GetFileName(path)) : string.Empty;
             BestText = _session.Best is { } best ? LongDefeatHudText.Best(best.Waves, best.Kills) : LongDefeatHudText.NoBest();
             LeaveText = LongDefeatHudText.Leave();
@@ -257,7 +257,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     private void ApplyStrip(RunView view)
     {
-        WaveText = LongDefeatHudText.Wave(view.Phase, view.Wave);
+        WaveText = LongDefeatHudText.WithClass(LongDefeatHudText.Wave(view.Phase, view.Wave), view.ClassName);
         TimerText = view.ShopOpen ? LongDefeatHudText.Clock(view.SecondsLeft) : string.Empty;
         GoldText = LongDefeatHudText.Gold(view.Gold);
         AttackersText = LongDefeatHudText.Attackers(view.AttackersStanding);

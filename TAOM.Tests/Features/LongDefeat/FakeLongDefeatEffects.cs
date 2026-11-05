@@ -41,6 +41,33 @@ internal sealed class FakeLongDefeatEffects : ILongDefeatEffectsAdapter
         return StatsFor(stats);
     }
 
+    /// <summary>What a target read answers; by default a soldier of the group standing at the health limit and stat baselines the boons owned give, so a correct run passes.</summary>
+    public Func<BoonTarget, bool, IReadOnlyList<string>, LdTargetSample> TargetFor { get; set; } = (_, _, _) => LdTargetSample.None;
+
+    public List<(BoonTarget Target, bool Newest, IReadOnlyList<string> Stats)> TargetReads { get; } = new();
+
+    public LdTouched RefreshStats(BoonTarget target)
+    {
+        _calls.Add("RefreshStats:" + target);
+        return new LdTouched(7, 0.5);
+    }
+
+    public LdTouched ScaleHealth(BoonTarget target, float factor)
+    {
+        _calls.Add($"ScaleHealth:{target}:{factor.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        return new LdTouched(7, 0.5);
+    }
+
+    public void SetPlayerHealth(float factor) =>
+        _calls.Add("SetPlayerHealth:" + factor.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+
+    public LdTargetSample ReadTarget(BoonTarget target, IReadOnlyList<string> stats, bool newest)
+    {
+        TargetReads.Add((target, newest, stats));
+        _calls.Add($"ReadTarget:{target}:{(newest ? "newest" : "oldest")}");
+        return TargetFor(target, newest, stats);
+    }
+
     public LdScaleSample ReadScale()
     {
         Reads++;

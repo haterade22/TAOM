@@ -31,6 +31,9 @@ internal sealed record RunView(
 
     public float NextDamageFactor { get; init; } = 1f;
 
+    /// <summary>The raw <c>{=KEY}English</c> name of the lord's class, or empty when he plays none: the HUD strip shows it after the wave number.</summary>
+    public string ClassName { get; init; } = "";
+
     /// <summary>The garrison cap in force, boons included: a pack that would carry the garrison past it is refused by <c>TryBuy</c>.</summary>
     public int GarrisonCap { get; init; } = int.MaxValue;
 

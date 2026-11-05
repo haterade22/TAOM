@@ -246,6 +246,40 @@ public class LongDefeatBindingTests
         Assert.AreEqual(EquipmentIndex.Head, Equipment.GetEquipmentIndexFromOldEquipmentIndexName("Head"));
     }
 
+    // The troop and class boons (Slice 6): the character flags that name a group, the main agent, the mount a refresh follows and whose speed is read back, the victim side of a blow, and the damage seam they scale.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheTargetBoonMembers_StillResolve()
+    {
+        Property(typeof(BasicCharacterObject), "IsMounted", typeof(bool));
+        Property(typeof(BasicCharacterObject), "IsRanged", typeof(bool));
+        Property(typeof(Agent), "MountAgent", typeof(Agent));
+        Property(typeof(AgentDrivenProperties), "MountSpeed", typeof(float));
+        Property(typeof(Mission), "MainAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "VictimAgent", typeof(Agent));
+        Field(typeof(AttackInformation), "IsVictimAgentMount", typeof(bool));
+        Method(typeof(TaleWorlds.MountAndBlade.ComponentInterfaces.AgentApplyDamageModel), "ApplyDamageReductions", typeof(float),
+            typeof(AttackInformation).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType(), typeof(float));
+        // The bare-agent fixtures of LongDefeatTargetHooksTests write these private fields.
+        Assert.IsNotNull(typeof(Agent).GetField("_character", AnyMember), "Agent._character: the bare-agent fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(Mission).GetField("_mainAgent", AnyMember), "Mission._mainAgent: the bare-mission fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(BasicCharacterObject).GetField("_isMounted", AnyMember), "BasicCharacterObject._isMounted: the bare-character fixture no longer matches the engine");
+        Assert.IsNotNull(typeof(BasicCharacterObject).GetField("_isRanged", AnyMember), "BasicCharacterObject._isRanged: the bare-character fixture no longer matches the engine");
+    }
+
+    // The wrapper's replay (tools/run_long_defeat.py, troop_groups) reads each troop's default_group from fords_troops.xml and applies this table, because the report names no troop group.
+    // Each class once: NumberOfDefaultFormations is Skirmisher and NumberOfRegularFormations is General, which Distinct merges.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheFormationClassFlags_AreTheTableTheWrapperReplayAssumes()
+    {
+        var table = string.Join(",", Enum.GetValues(typeof(FormationClass)).Cast<FormationClass>().Where(c => c < FormationClass.NumberOfAllFormations).Distinct()
+            .Select(c => $"{c}:{(c.IsMounted() ? "M" : "")}{(c.IsRanged() ? "R" : "")}"));
+
+        Assert.AreEqual("Infantry:,Ranged:R,Cavalry:M,HorseArcher:MR,Skirmisher:R,HeavyInfantry:,LightCavalry:R,HeavyCavalry:M,NumberOfRegularFormations:,Bodyguard:", table,
+            "tools/run_long_defeat.py MOUNTED_GROUPS and RANGED_GROUPS follow this table (the engine's flags, read once from a troop's default_group)");
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

@@ -1,6 +1,7 @@
 using System;
 using TAOM.Features.LongDefeat.Domain;
 using TAOM.Features.RaceAbilities;
+using TAOM.Features.RaceAbilities.Domain;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -8,11 +9,12 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.LongDefeat.Hooks;
 
 /// <summary>
-/// The stat powers and <c>hide</c> of a wave's affixes (phase2-plan.md section 4, "Hooks and models"), applied from the Custom Battle stat
+/// The stat powers and <c>hide</c> of a wave's affixes and the stat boons of the player's side (phase2-plan.md section 4, "Hooks and models"), applied from the Custom Battle stat
 /// model. <see cref="UpdateStats"/> runs after the race abilities' post-pass on every <c>UpdateAgentStats</c>, on any thread the engine uses, so it
 /// reads one volatile table and compares the agent's mission with the armed one before it touches anything else; the record is the same
 /// <c>RaceAbilityEffects</c> the abilities use and goes through the same applier, so a percentage multiplies what the engine just derived and never
-/// compounds (<see cref="RaceAbilityStatApplier"/>). A horse takes its rider's record (a riderless one, whose own Character is null, takes nothing).
+/// compounds (<see cref="RaceAbilityStatApplier"/>). A horse takes its rider's record (a riderless one, whose own Character is null, takes nothing). A defender takes the record
+/// of its group (<see cref="LongDefeatTargets"/>) and the lord's body the player record only.
 /// <see cref="InitializeArmour"/> runs after <c>InitializeAgentStats</c>, which writes armour once, at spawn
 /// (<c>CustomBattleAgentStatCalculateModel.cs:25-28</c>) and which <c>UpdateAgentStats</c> never touches, so armour is raised only for a soldier
 /// built after the wave's table was published. Armed from the mission logic's <c>AfterStart</c> and disarmed on both exits, like <see cref="LongDefeatMorale"/>.
@@ -68,19 +70,30 @@ internal static class LongDefeatStatHooks
     internal static void UpdateStats(Agent agent, AgentDrivenProperties props)
     {
         var armed = _armed;
-        var fx = _table?.Attackers;
-        if (armed == null || fx == null || _baseline || !ReferenceEquals(agent.Mission, armed))
+        var table = _table;
+        if (armed == null || table == null || _baseline || !ReferenceEquals(agent.Mission, armed))
             return;
 
         var mount = agent.IsMount;
         var body = mount ? agent.RiderAgent : agent;
-        if (body == null || body.Team?.Side != BattleSideEnum.Attacker)
+        var fx = body == null ? null : RecordOf(body, armed, table);
+        if (fx == null)
             return;
 
         if (mount)
             RaceAbilityStatApplier.ApplyMount(props, fx);
         else
             RaceAbilityStatApplier.Apply(props, fx);
+    }
+
+    private static RaceAbilityEffects? RecordOf(Agent body, Mission armed, LdStatTable table)
+    {
+        var side = body.Team?.Side;
+        if (side == BattleSideEnum.Attacker)
+            return table.Attackers;
+
+        var target = side == BattleSideEnum.Defender ? LongDefeatTargets.Of(body, armed) : null;
+        return target == null ? null : table.For(target.Value).Stats;
     }
 
     /// <summary>

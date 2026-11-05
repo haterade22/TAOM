@@ -60,7 +60,7 @@ internal sealed partial class SurvivalRun
         _plan = plan;
         _r = plan.Rules;
         _shop = plan.Shop.Offers;
-        _deck = new BoonDeck(plan.Boons, plan.Options.Seed ?? 0UL, plan.Options.StartRerolls);
+        _deck = new BoonDeck(plan.Boons, plan.Options.Seed ?? 0UL, plan.Options.StartRerolls, plan.Options.ClassId ?? "", RunPlanTroops.DefenderGroups(plan));
         _purse = new Purse(plan.Shop.StartingGold);
         _left = _r.PreparationSeconds;
         _wave = Math.Max(1, plan.Options.StartWave) - 1;
@@ -106,7 +106,7 @@ internal sealed partial class SurvivalRun
         _musterBatches = MusterPlan.Split(foot.Count, _r.MusterBatch, _r.MusterBatchSeconds);
         var opening = ranged.Concat(TakeMusterBatch(0)).ToList();
         _musterNext = 1;
-        fx.DefenderBatches.AddRange(Batches(opening, new int[2], CountBySlot(opening), false, _defenderPlaced));
+        fx.DefenderBatches.AddRange(Batches(opening, new int[2], CountBySlot(opening), false, _defenderPlaced, DefenderHealth));
         fx.SpawnPlayer = true;
         fx.FinishInitialSpawn = true;
         return fx;
@@ -124,6 +124,7 @@ internal sealed partial class SurvivalRun
         _stats.ObserveFleeing(s.AttackersFleeing);
         fx.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
+        TakePendingBoon(fx);
         var loss = _lossThisTick;
         _lossThisTick = false;
 
@@ -214,6 +215,7 @@ internal sealed partial class SurvivalRun
             NextAffixes = next != null ? _plan.Affixes.Labels(NextAffixes) : Array.Empty<AffixLabel>(),
             NextHealthFactor = next?.HealthFactor ?? 1f,
             NextDamageFactor = next?.DamageFactor ?? 1f,
+            ClassName = _plan.ClassName,
             BoonOffer = _offerCards,
             OwedPicks = _deck.Owed,
             Rerolls = _deck.Banked,
@@ -301,7 +303,7 @@ internal sealed partial class SurvivalRun
         _waveFelled = 0;
         _stale = default;
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
-        fx.PublishStats = RunModifiers.StatTable(_plan.Affixes, _waveAffixes, _damageFactor);
+        fx.PublishStats = StatTableNow();
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
@@ -324,11 +326,11 @@ internal sealed partial class SurvivalRun
         _queueHead += n;
         if (!opening)
         {
-            fx.AttackerBatches.AddRange(Batches(take, new int[2], CountBySlot(take), true, new[] { true, true }, _healthFactor));
+            fx.AttackerBatches.AddRange(Batches(take, new int[2], CountBySlot(take), true, new[] { true, true }, AttackerHealth));
             return n;
         }
 
-        fx.AttackerBatches.AddRange(Batches(take, _firstIndex, _firstTotals, true, _firstPlaced, _healthFactor));
+        fx.AttackerBatches.AddRange(Batches(take, _firstIndex, _firstTotals, true, _firstPlaced, AttackerHealth));
         _firstSpawned += n;
         if (_firstSpawned >= _firstBatch)
         {
@@ -379,7 +381,7 @@ internal sealed partial class SurvivalRun
         var due = new List<WaveSoldier>();
         while (_musterNext < _musterBatches.Count && _musterClock >= _musterBatches[_musterNext].DelaySeconds)
             due.AddRange(TakeMusterBatch(_musterNext++));
-        fx.DefenderBatches.AddRange(Batches(due, new int[2], CountBySlot(due), false, _defenderPlaced));
+        fx.DefenderBatches.AddRange(Batches(due, new int[2], CountBySlot(due), false, _defenderPlaced, DefenderHealth));
     }
 
     private void EmitPacks(RunEffects fx)
@@ -387,7 +389,7 @@ internal sealed partial class SurvivalRun
         foreach (var pack in _packs)
         {
             var soldiers = Enumerable.Repeat(new WaveSoldier(pack.TroopId, pack.Slot), pack.PackSize).ToList();
-            fx.DefenderBatches.AddRange(Batches(soldiers, new int[2], CountBySlot(soldiers), true, _defenderPlaced));
+            fx.DefenderBatches.AddRange(Batches(soldiers, new int[2], CountBySlot(soldiers), true, _defenderPlaced, DefenderHealth));
         }
 
         _packs.Clear();
@@ -415,9 +417,10 @@ internal sealed partial class SurvivalRun
     /// <summary>
     /// One batch per run of same-troop soldiers in a class. <paramref name="nextIndex"/> carries each class's running index and
     /// <paramref name="placed"/> whether the class has had its placing batch: the first batch of a class places it, none after.
+    /// <paramref name="healthFactor"/> gives each batch's factor from its troop, so one run of one troop never mixes two groups.
     /// </summary>
     private static IEnumerable<SoldierBatch> Batches(IReadOnlyList<WaveSoldier> soldiers, int[] nextIndex, int[] totals,
-        bool reinforcement, bool[] placed, float healthFactor = 1f)
+        bool reinforcement, bool[] placed, Func<WaveSoldier, float> healthFactor)
     {
         var batches = new List<SoldierBatch>();
         for (var i = 0; i < soldiers.Count;)
@@ -428,7 +431,7 @@ internal sealed partial class SurvivalRun
                 count++;
 
             var slot = (int)head.Slot;
-            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot], healthFactor));
+            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot], healthFactor(head)));
             nextIndex[slot] += count;
             placed[slot] = true;
             i += count;

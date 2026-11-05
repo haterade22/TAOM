@@ -37,6 +37,14 @@ public class RunPlanTroopsTests
     }
 
     [TestMethod]
+    public void DefenderTroopIds_AreTheGarrisonAndTheShopOnly_OnceEach()
+    {
+        var ids = RunPlanTroops.DefenderTroopIds(Plan());
+
+        CollectionAssert.AreEquivalent(new[] { "g_foot", "g_bow", "shop_militia" }, ids.ToArray());
+    }
+
+    [TestMethod]
     public void AllTroopIds_AlsoHoldsEveryTierTarget_SoALaunchRefusesAMissingOneBeforeTheRun()
     {
         var endless = new EndlessScale(0.05f, 0.03f, 3f, 3, new Dictionary<string, string> { ["a"] = "a2", ["a2"] = "a3", ["s"] = "s2" });

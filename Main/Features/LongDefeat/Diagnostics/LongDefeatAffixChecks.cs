@@ -97,6 +97,20 @@ internal static class LongDefeatAffixChecks
         if (!sample.HasAgent)
             return new CheckVerdict(CheckResult.Fail, $"power={power} reason=no-sample");
 
+        var compared = Compare(expected, sample);
+        var detail = $"power={power} troop={sample.TroopId} {string.Join("; ", compared.Parts)}";
+        if (!compared.Ok)
+            return new CheckVerdict(CheckResult.Fail, detail);
+
+        return compared.Informative ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
+    }
+
+    /// <summary>What a read-back found against what was expected: every property within 1%, whether any of them could have shown a change, and a text for each.</summary>
+    internal readonly record struct StatComparison(bool Ok, bool Informative, IReadOnlyList<string> Parts);
+
+    /// <summary>Each expected property of the sample against its baseline changed by the expected percent. A property the sample lacks is wrong.</summary>
+    internal static StatComparison Compare(IReadOnlyList<AffixExpect> expected, LdStatSample sample)
+    {
         var ok = true;
         var informative = false;
         var parts = new List<string>();
@@ -117,11 +131,7 @@ internal static class LongDefeatAffixChecks
             parts.Add($"{e.Stat}={F3(r.Base)}->{F3(r.Actual)} want {F3(want)}{(near ? "" : " WRONG")}");
         }
 
-        var detail = $"power={power} troop={sample.TroopId} {string.Join("; ", parts)}";
-        if (!ok)
-            return new CheckVerdict(CheckResult.Fail, detail);
-
-        return informative ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
+        return new StatComparison(ok, informative, parts);
     }
 
     private static float Expected(float baseline, AffixExpect e)

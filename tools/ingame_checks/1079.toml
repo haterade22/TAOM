@@ -198,6 +198,11 @@ pass = ['\[Check\] id=taom\.long-defeat\.boon result=pass p=[0-9]+ cards=[0-9]+ 
 fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
 # Written by LongDefeatDirector.Boons.cs when a boon is taken, key p=<N>: the last draw showed as many cards as it could (three, or all that were eligible), none twice, the taken boon was among them,
 # and the numbers it changes read back as the shipped ones changed by every boon owned (garrison cap, intermission, rest share, keep hold, pack bonus, the four gold factors, the gold paid at the pick).
+# A troop or class boon with a stat or health key also ends the line with read=pass, read=skip (no soldier of its target stood) or read=fail: a soldier of the target, read right after the refresh,
+# holds its health limit at the combined factor and each driven property at its baseline changed by the summed percent. The first pack of that group spawned after the pick is read the same way
+# and written as its own line of this check (key p<N>-<group>, read=spawned), which the pass pattern leaves alone and a fail line fails.
+# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 20 (infantry health), --waves 5 --class archer --seed 0 (archers' aim error and draw speed), --waves 5 --seed 62 (the lord's draw speed).
+# The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run: a cavalry boon (seeds 27, 28, 32) reads skip with reason=no-soldier. Cavalry speed and health belong to the human row below.
 # The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
 absence = "not-reached"
 
@@ -256,6 +261,9 @@ claim = "a boon card reads clearly: its name, its category, what it gives, and a
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"
+
+[[human]]
+claim = "a troop boon visibly changes the group it names: infantry and cavalry with a health boon already standing, and packs bought afterwards, are tougher; a cavalry speed boon makes riders faster; the lord's class shows on the HUD strip after the wave and on the end panel"
 
 [[human]]
 claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears"

@@ -132,6 +132,7 @@ internal sealed class LongDefeatConfigCatalog
             Affixes = AffixesFor(fortress.AttackerCulture),
             Boons = _boons.Value,
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),
+            ClassName = chosen?.Name ?? "",
         };
     }
 

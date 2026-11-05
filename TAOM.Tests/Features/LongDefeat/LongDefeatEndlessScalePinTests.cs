@@ -64,6 +64,7 @@ public class LongDefeatEndlessScalePinTests
         var source = RepoPaths.ReadSource(EffectsAdapter, stripComments: true);
 
         StringAssert.Contains(source, "LongDefeatCombatHooks.Publish(_mission, table.AttackerDamage)");
+        StringAssert.Contains(source, "LongDefeatCombatHooks.PublishTargets(_mission, table)");
         StringAssert.Contains(source, "character.MaxHitPoints()");
         StringAssert.Contains(source, "agent.HealthLimit");
     }
@@ -83,7 +84,7 @@ public class LongDefeatEndlessScalePinTests
         // CustomBattleAgentStatCalculateModel.cs:190 reads ArmorEncumbrance from the property object, and only InitializeAgentStats (:22) writes it, so a
         // fresh scratch gives every armoured soldier a drums baseline as if it wore nothing and the check fails on a working affix.
         var source = RepoPaths.ReadSource(EffectsAdapter, stripComments: true);
-        var read = BodyOf(source, "public LdStatSample ReadStats(");
+        var read = BodyOf(source, "private static List<LdStatReading> Readings(");
 
         var seed = read.IndexOf("{ ArmorEncumbrance = agent.AgentDrivenProperties.ArmorEncumbrance }", StringComparison.Ordinal);
         var baseline = read.IndexOf("LongDefeatStatHooks.Baseline(", StringComparison.Ordinal);

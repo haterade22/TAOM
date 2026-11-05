@@ -7618,6 +7618,53 @@
     <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
     <string id="TAOM_LD_Prompt_ClassTitle" text="Choose your class" />
+    <string id="TAOM_LD_Boon_BloodiedButUnbowed" text="Bloodied but Unbowed" />
+    <string id="TAOM_LD_Boon_BloodiedButUnbowed_Drawback" text="You move 10 percent slower." />
+    <string id="TAOM_LD_Boon_BloodiedButUnbowed_Text" text="You have 60 percent more health." />
+    <string id="TAOM_LD_Boon_CleavingStroke" text="The Cleaving Stroke" />
+    <string id="TAOM_LD_Boon_CleavingStroke_Drawback" text="You swing 10 percent slower." />
+    <string id="TAOM_LD_Boon_CleavingStroke_Text" text="Your blows hit 30 percent harder." />
+    <string id="TAOM_LD_Boon_CouchedLances" text="Couched Lances" />
+    <string id="TAOM_LD_Boon_CouchedLances_Text" text="Your riders hit 20 percent harder." />
+    <string id="TAOM_LD_Boon_EdgeOfTheMark" text="Edge of the Mark" />
+    <string id="TAOM_LD_Boon_EdgeOfTheMark_Drawback" text="You take 10 percent more damage." />
+    <string id="TAOM_LD_Boon_EdgeOfTheMark_Text" text="Your blows hit 20 percent harder." />
+    <string id="TAOM_LD_Boon_FleetHorsesOfTheMark" text="Fleet Horses of the Mark" />
+    <string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="Your riders and their horses move 12 percent faster." />
+    <string id="TAOM_LD_Boon_FletchersFavour" text="Fletcher's Favour" />
+    <string id="TAOM_LD_Boon_FletchersFavour_Text" text="Your archers hit 15 percent harder." />
+    <string id="TAOM_LD_Boon_HeartsOfTheEored" text="Hearts of the Eored" />
+    <string id="TAOM_LD_Boon_HeartsOfTheEored_Text" text="Your riders have 25 percent more health." />
+    <string id="TAOM_LD_Boon_LongbowOfTheMark" text="The Longbow of the Mark" />
+    <string id="TAOM_LD_Boon_LongbowOfTheMark_Drawback" text="You draw your bow 10 percent slower." />
+    <string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="Your arrows hit 25 percent harder." />
+    <string id="TAOM_LD_Boon_MarksmansCall" text="The Marksman's Call" />
+    <string id="TAOM_LD_Boon_MarksmansCall_Text" text="Your archers aim 20 percent truer and draw 10 percent faster." />
+    <string id="TAOM_LD_Boon_RohirrimFury" text="Fury of the Rohirrim" />
+    <string id="TAOM_LD_Boon_RohirrimFury_Drawback" text="You take 15 percent more damage." />
+    <string id="TAOM_LD_Boon_RohirrimFury_Text" text="You swing 20 percent faster." />
+    <string id="TAOM_LD_Boon_ShieldsLocked" text="Shields Locked" />
+    <string id="TAOM_LD_Boon_ShieldsLocked_Drawback" text="Your infantry move 5 percent slower." />
+    <string id="TAOM_LD_Boon_ShieldsLocked_Text" text="Your infantry take 15 percent less damage." />
+    <string id="TAOM_LD_Boon_ShieldwallCaptain" text="Captain of the Shieldwall" />
+    <string id="TAOM_LD_Boon_ShieldwallCaptain_Text" text="Your infantry take 12 percent less damage." />
+    <string id="TAOM_LD_Boon_ShieldwallOath" text="Oath of the Shieldwall" />
+    <string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="You move 5 percent slower." />
+    <string id="TAOM_LD_Boon_ShieldwallOath_Text" text="You take 20 percent less damage." />
+    <string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="Spears of the Westfold" />
+    <string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="Your infantry hit 15 percent harder." />
+    <string id="TAOM_LD_Boon_SteadyAim" text="Steady Aim" />
+    <string id="TAOM_LD_Boon_SteadyAim_Drawback" text="Your archers reload 10 percent slower." />
+    <string id="TAOM_LD_Boon_SteadyAim_Text" text="Your archers aim 25 percent truer." />
+    <string id="TAOM_LD_Boon_SteadyHand" text="A Steady Hand" />
+    <string id="TAOM_LD_Boon_SteadyHand_Text" text="You draw your bow 20 percent faster." />
+    <string id="TAOM_LD_Boon_StoutYeomanry" text="The Stout Yeomanry" />
+    <string id="TAOM_LD_Boon_StoutYeomanry_Text" text="Your infantry have 20 percent more health." />
+    <string id="TAOM_LD_Boon_SwiftNock" text="The Swift Nock" />
+    <string id="TAOM_LD_Boon_SwiftNock_Drawback" text="Your archers take 10 percent more damage." />
+    <string id="TAOM_LD_Boon_SwiftNock_Text" text="Your archers draw 20 percent faster and reload 15 percent faster." />
+    <string id="TAOM_LD_End_Class" text="Class: {CLASS}" />
+    <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
   </strings>
 
 </base>

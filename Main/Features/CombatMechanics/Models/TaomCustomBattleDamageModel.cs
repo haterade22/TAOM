@@ -20,7 +20,7 @@ namespace TAOM.Features.CombatMechanics.Models;
 // added wins.
 //
 // Campaign-only, so absent here: the career passives (TaomAgentApplyDamageModel reads heroes, which Custom Battle does not
-// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades and the Long Defeat wave damage factor, each a Custom Game mode's own and inert in any other battle.
+// have) and the Refuge reduction (reads the defender's party). Only here: the Fords of War army upgrades and the Long Defeat damage factors (the wave's, and the boons' damage and damage taken), each a Custom Game mode's own and inert in any other battle.
 // Where the Custom Battle base answers differently from
 // SandBox's (the stagger threshold, the crush-through flag test, the shield damage factor and the missile flags), TAOM's
 // delegate sits on the Custom Battle answer, as the campaign's sits on SandBox's: docs/features/combat-mechanics.md,
@@ -50,7 +50,7 @@ public class TaomCustomBattleDamageModel : CustomAgentApplyDamageModel
 
         result = RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result);
 
-        return FordsUpgradeHooks.Reduce(in attackInformation, in collisionData, result);
+        return LongDefeatCombatHooks.Reduce(in attackInformation, in collisionData, FordsUpgradeHooks.Reduce(in attackInformation, in collisionData, result));
     }
 
     // Race Abilities: a raging soldier's melee hits. The engine's Custom Battle model reads no driven-property damage bonus

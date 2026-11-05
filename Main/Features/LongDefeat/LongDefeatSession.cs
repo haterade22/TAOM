@@ -18,6 +18,7 @@ internal sealed class LongDefeatSession
     private RunResult? _result;
     private int _lostInClearedWaves;
     private IReadOnlyList<BoonCard> _boons = Array.Empty<BoonCard>();
+    private string _className = "";
     private readonly FordsGameSpeed _speed = new();
 
     public bool IsActive => _run != null;
@@ -57,6 +58,9 @@ internal sealed class LongDefeatSession
     /// <summary>The boons taken, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public IReadOnlyList<BoonCard> BoonsTaken => _run?.OwnedCards ?? _boons;
 
+    /// <summary>The raw <c>{=KEY}English</c> name of the lord's class, or empty when he plays none, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
+    public string ClassName => _run?.ClassName ?? _className;
+
     internal void CycleSpeed()
     {
         _speed.Cycle();
@@ -93,6 +97,7 @@ internal sealed class LongDefeatSession
         _run = run;
         _result = null;
         _boons = Array.Empty<BoonCard>();
+        _className = "";
     }
 
     internal void Clear()
@@ -100,6 +105,7 @@ internal sealed class LongDefeatSession
         _result = _run?.Result ?? _result;
         _lostInClearedWaves = LostInClearedWaves;
         _boons = BoonsTaken;
+        _className = ClassName;
         _run = null;
     }
 }

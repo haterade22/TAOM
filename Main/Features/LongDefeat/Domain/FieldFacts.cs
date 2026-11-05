@@ -81,3 +81,18 @@ internal sealed record LdStatSample(string TroopId, IReadOnlyList<LdStatReading>
 
     public bool HasAgent => TroopId.Length > 0;
 }
+
+/// <summary>
+/// One standing human of the player's side as the effects adapter read it for the boon proof: its troop, its health limit and the maximum its character gives it (their ratio is the
+/// health factor in force), and one reading per driven property asked for, each against the stat model's own answer with the boons left out. An empty <c>TroopId</c> means no
+/// such soldier stood: none of the group, or only runners and soldiers with a live race ability.
+/// </summary>
+internal sealed record LdTargetSample(string TroopId, float HealthLimit, float CharacterMax, IReadOnlyList<LdStatReading> Readings)
+{
+    public static LdTargetSample None { get; } = new("", 0f, 0f, System.Array.Empty<LdStatReading>());
+
+    public bool HasAgent => TroopId.Length > 0;
+}
+
+/// <summary>What an effects-adapter call reached: how many agents, and the milliseconds it took (risk 11 reads the pick's refresh from the log).</summary>
+internal readonly record struct LdTouched(int Count, double Milliseconds);

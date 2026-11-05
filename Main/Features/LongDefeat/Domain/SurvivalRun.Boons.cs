@@ -20,6 +20,8 @@ internal sealed partial class SurvivalRun
     private int _affixCut;
     private IReadOnlyList<BoonCard> _offerCards = Array.Empty<BoonCard>();
     private IReadOnlyList<BoonCard> _ownedCards = Array.Empty<BoonCard>();
+    private readonly float[] _healthFactors = { 1f, 1f, 1f, 1f };
+    private LdBoonApply? _pendingBoon;
 
     /// <summary>The rules in force: the shipped ones with the fortress boons owned folded in. An intermission boon acts from the next clear.</summary>
     public RunRules Rules => _r;
@@ -34,6 +36,12 @@ internal sealed partial class SurvivalRun
 
     /// <summary>The boons taken as the HUD shows them.</summary>
     public IReadOnlyList<BoonCard> OwnedCards => _ownedCards;
+
+    /// <summary>The raw <c>{=KEY}English</c> name of the class the lord plays, or empty: kept by the end panel after the run.</summary>
+    public string ClassName => _plan.ClassName;
+
+    /// <summary>The health factor in force for a group of the player's side or for the lord: what a soldier spawned now is multiplied by (the product of the boons' own factors).</summary>
+    public float HealthFactor(BoonTarget target) => _healthFactors[(int)target];
 
     public RunBoons BoonSummary() => new(_deck.Picks, _deck.Earned, _deck.Used, _deck.Banked);
 
@@ -54,6 +62,7 @@ internal sealed partial class SurvivalRun
 
         var taken = _deck.Owned[_deck.Owned.Count - 1];
         ApplyBoons();
+        NoteTargets(taken);
         _purse.Earn(PurseSource.Boon, RunModifiers.GoldPaid(new[] { taken }));
         _pendingEvents.Add(new RunEvent(RunEventKind.BoonTaken, _wave, $"pick={pick} boon={taken.Id}"));
         AnnounceOpened(opened, _pendingEvents);
@@ -102,10 +111,46 @@ internal sealed partial class SurvivalRun
         _ownedCards = _deck.Owned.Select(BoonCard.From).ToArray();
     }
 
-    /// <summary>Recomputes everything a boon changes from the boons owned: the rules, the gold factors, the affix cut and the shop's prices and pack sizes.</summary>
+    /// <summary>
+    /// What the engine is told about a troop or class boon at the next tick: the table to publish, the groups to refresh and the boon's own health factor for those standing.
+    /// A boon with no targeted effect (war chest, fortress, Legend) tells it nothing.
+    /// </summary>
+    private void NoteTargets(BoonRow taken)
+    {
+        if (!taken.Effects.Concat(taken.Drawback).Any(e => BoonKeys.IsTargeted(e.Key)))
+            return;
+
+        // Two picks can land before the engine's next tick (a second offer opens the moment the first is taken), so a pick not yet told to the director is added to, never replaced.
+        var health = RunModifiers.HealthTargets(taken).Select(t => new LdHealthScale(t, RunModifiers.OwnHealthFactor(taken, t)));
+        var refresh = RunModifiers.StatTargets(taken);
+        _pendingBoon = _pendingBoon == null
+            ? new LdBoonApply(refresh, health.ToList())
+            : new LdBoonApply(_pendingBoon.Refresh.Union(refresh).ToList(), _pendingBoon.Health.Concat(health).ToList());
+    }
+
+    private void TakePendingBoon(RunEffects fx)
+    {
+        if (_pendingBoon == null)
+            return;
+
+        fx.ApplyBoon = _pendingBoon;
+        fx.PublishStats = StatTableNow();
+        _pendingBoon = null;
+    }
+
+    /// <summary>The table for the wave in hand and the boons owned: the attackers' part is the wave's, the defenders' part is the boons'.</summary>
+    private LdStatTable StatTableNow() => RunModifiers.StatTable(_plan.Affixes, _waveAffixes, _damageFactor, _deck.Owned);
+
+    private float AttackerHealth(WaveSoldier soldier) => _healthFactor;
+
+    private float DefenderHealth(WaveSoldier soldier) => _healthFactors[(int)_plan.GroupOf(soldier.TroopId, soldier.Slot)];
+
+    /// <summary>Recomputes everything a boon changes from the boons owned: the rules, the gold factors, the affix cut, the health factors and the shop's prices and pack sizes.</summary>
     private void ApplyBoons()
     {
         var owned = _deck.Owned;
+        foreach (var target in BoonTargets.All)
+            _healthFactors[(int)target] = RunModifiers.HealthFactor(owned, target);
         _r = RunModifiers.Rules(_plan.Rules, owned);
         _factors = RunModifiers.Gold(owned);
         _affixCut = RunModifiers.AffixCut(owned);

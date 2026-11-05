@@ -224,6 +224,7 @@ internal sealed partial class LongDefeatDirector
 
         _adoptedBody = _mainBody;
         _field.AdoptMain(_plan.Options.Autoplay);
+        DressNewBody();
         _logger.LogInfo($"{Tag}[General] {_field.DescribeFormations()}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GeneralId, _mission, LongDefeatChecks.General(_field.BootFacts()));
         if (!_deathPending)

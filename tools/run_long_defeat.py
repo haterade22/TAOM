@@ -22,7 +22,7 @@ the next class. The report must be schema 2 and must echo the seed, start wave a
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only, so a class the game cannot play yet (cavalry) is refused here instead of being replaced by the game.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
-The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, and one that banked a reroll at its first pick or spent one owes the reroll check.
+The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
 collection. It changes the arm variable, the done and status files, the arm text and the judge, and presses Cancel on the Helm's Deep
@@ -34,6 +34,7 @@ import json
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -295,8 +296,8 @@ def affix_problem(report_json):
 
 
 # The boons (phase2-plan.md section 2, "Boons"): a pick owed at every third cleared wave, three weighted cards a draw from stream 2 at (pick, draw), a reroll
-# earned at every fifth clear into a bank of three. Only the rows with no garrison or class condition can be replayed from the report alone: the war chest,
-# fortress and Legend rows, and the class rows of the report's own class.
+# earned at every fifth clear into a bank of three. The pool a draw uses is the war chest, fortress and Legend rows, the class rows of the report's own class, and a troop
+# category's rows while the fortress's garrison or shop holds a troop of that group (troop_groups, from static data, so the replay sees what the game saw).
 BOON_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "boons.json"
 BOON_CHECK = "boon"
 REROLL_CHECK = "reroll"
@@ -307,10 +308,50 @@ BOON_MAX_BANK = 3
 BOON_REROLL_EVERY = 5
 BOON_FREE_CATEGORIES = ("fortress", "warchest", "legend")
 BOON_TROOP_CATEGORIES = ("infantry", "archers", "cavalry")
+# The keys a boon read-back checks on a soldier of its target (the game's BoonKeys.StatKeys and healthPercent): a taken boon with one owes a read= token on its boon line.
+BOON_READ_KEYS = ("swingSpeedPercent", "moveSpeedPercent", "drawSpeedPercent", "reloadSpeedPercent", "blockPercent", "parryPercent", "aimErrorPercent", "healthPercent")
+
+# The group of a defender troop is its character's default_group through the engine's FormationClass flags: mounted is cavalry, else ranged is archers, else infantry. A test in
+# LongDefeatBindingTests.cs pins these two tuples to the engine's IsMounted() and IsRanged() for every formation class. An absent or unknown default_group is infantry.
+MOUNTED_GROUPS = ("cavalry", "horsearcher", "heavycavalry")
+RANGED_GROUPS = ("ranged", "horsearcher", "skirmisher", "lightcavalry")
+TROOP_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "fords_of_war" / "fords_troops.xml"
+SHOP_FILE = MODULE_DATA / "shop.json"
+
+
+def _json_object(path):
+    try:
+        root = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return {}
+    return root if isinstance(root, dict) else {}
+
+
+def troop_group(default_group):
+    """infantry, archers or cavalry for a troop's default_group text (the game's BoonTargets.OfCharacter over the engine's flags)."""
+    name = (default_group or "").lower()
+    return "cavalry" if name in MOUNTED_GROUPS else "archers" if name in RANGED_GROUPS else "infantry"
+
+
+def troop_groups(fortress_id=None, troop_file=None):
+    """The troop categories a fortress's garrison or shop holds a troop of (the game's RunPlanTroops.DefenderGroups): each troop's default_group in fords_troops.xml, or its
+    formation class when the file does not hold it (the ranged slot is archers, the other infantry). A fortress the file does not know holds none."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    if fortress is None:
+        return set()
+    wanted = [(g.get("troop"), g.get("class")) for g in fortress.get("garrison", []) if isinstance(g, dict)]
+    shop = _json_object(SHOP_FILE).get("shops", {}).get(fortress.get("shop"), {})
+    wanted += [(o.get("troop"), o.get("class")) for o in shop.get("offers", []) if isinstance(o, dict)] if isinstance(shop, dict) else []
+    try:
+        known = {c.get("id"): c.get("default_group") for c in ET.parse(troop_file or TROOP_FILE).getroot().iter("NPCCharacter")}
+    except (OSError, ET.ParseError):
+        known = {}
+    return {troop_group(known[t]) if t in known else ("archers" if c == "Ranged" else "infantry") for t, c in wanted}
 
 
 def shipped_boons(path=None):
-    """(rows, legend weight) of this tree's boons.json: each row {id, category, class, cut}, where cut is the row's affixCount (0 or negative) and the order is the file's.
+    """(rows, legend weight) of this tree's boons.json: each row {id, category, class, cut, reads}, where cut is the row's affixCount (0 or negative), reads is whether a taken
+    boon of the row owes a read-back on a soldier (a stat or health key) and the order is the file's.
     The shipped file is held valid by LongDefeatShippedConfigTests, so a row is taken as it stands; a missing or unreadable file has no rows."""
     try:
         root = json.loads(Path(path or BOON_FILE).read_text(encoding="utf-8-sig"))
@@ -325,7 +366,8 @@ def shipped_boons(path=None):
         if not isinstance(row, dict) or not isinstance(row.get("id"), str):
             continue
         cut = sum(e.get("value", 0) for e in row.get("effects", []) if isinstance(e, dict) and e.get("key") == "affixCount" and isinstance(e.get("value"), int))
-        rows.append({"id": row["id"], "category": row.get("category"), "class": row.get("class") or "", "cut": cut})
+        reads = any(isinstance(e, dict) and e.get("key") in BOON_READ_KEYS for e in list(row.get("effects", [])) + list(row.get("drawback", [])))
+        rows.append({"id": row["id"], "category": row.get("category"), "class": row.get("class") or "", "cut": cut, "reads": reads})
     return rows, weight
 
 
@@ -355,6 +397,12 @@ def _is_int(value):
     return isinstance(value, int) and not isinstance(value, bool)
 
 
+def boon_eligible(row, class_id, groups):
+    """Whether a row may be drawn: a free category, a class row of the lord's class, or a troop category row whose group the garrison or shop holds (the game's BoonDeck.IsEligible)."""
+    category = row["category"]
+    return category in BOON_FREE_CATEGORIES or (category == "class" and row["class"] == class_id) or (category in BOON_TROOP_CATEGORIES and category in groups)
+
+
 def boon_problem(report_json, path=None):
     """None when every pick of the report's boons[] replays from its seed, else what is wrong: each draw equals the game's draw over the rows eligible after the
     boons taken before it (the shown cards left out of a reroll), the taken boon was among the last draw, only the last pick may be left open, and the
@@ -364,15 +412,15 @@ def boon_problem(report_json, path=None):
     if not isinstance(picks, list) or not _is_int(seed):
         return None
     rows, legend_weight = shipped_boons(path)
-    if any(row["category"] in BOON_TROOP_CATEGORIES for row in rows):
-        return "boons.json holds a troop category row, whose eligibility needs the garrison's troop groups, which this replay does not read yet"
     class_id = report_json.get("class") or ""
+    fortress = report_json.get("fortress")
+    groups = troop_groups(fortress) if isinstance(fortress, str) else set()
     owned = []
     used = 0
     for number, pick in enumerate(picks, 1):
         if not isinstance(pick, dict) or pick.get("pick") != number:
             return f"pick {number} is missing or numbered {pick.get('pick') if isinstance(pick, dict) else pick!r}"
-        pool = [r for r in rows if r["id"] not in owned and (r["category"] in BOON_FREE_CATEGORIES or (r["category"] == "class" and r["class"] == class_id))]
+        pool = [r for r in rows if r["id"] not in owned and boon_eligible(r, class_id, groups)]
         offered = pick.get("offered")
         if not isinstance(offered, list) or not all(isinstance(d, list) for d in offered):
             return f"pick {number} has no list of draws"
@@ -429,6 +477,23 @@ def affix_cut(report_json, wave, rows=None):
         if isinstance(pick, dict) and _is_int(pick.get("takenBeforeWave")) and pick["takenBeforeWave"] <= wave and pick.get("taken") in by_id:
             cut += by_id[pick["taken"]]["cut"]
     return cut
+
+
+def read_owed_picks(report_json, rows=None):
+    """The numbers of the picks whose boon line must carry a read= token: a pick that took a boon with a stat or health key (BOON_READ_KEYS), in a run that cleared a wave
+    after the pick's own (the bot takes the pick in the intermission, and the director writes the line on the next tick, so a run that ended at the pick's clear never wrote it)."""
+    picks = report_json.get("boons")
+    cleared = report_json.get("wavesCleared")
+    if not isinstance(picks, list) or not _is_int(cleared):
+        return []
+    by_id = {row["id"]: row for row in (shipped_boons()[0] if rows is None else rows)}
+    return [p["pick"] for p in picks if isinstance(p, dict) and p.get("taken") in by_id and by_id[p["taken"]]["reads"]
+            and _is_int(p.get("pick")) and _is_int(p.get("wave")) and cleared > p["wave"]]
+
+
+def boon_read_pattern(pick):
+    """The boon pass line of one pick with its read-back token (pass, or skip for a group with no soldier standing): the shape LongDefeatBoonChecks.Pick writes."""
+    return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + BOON_CHECK) + rf" result=pass p={pick} cards=[^\n]* read=(?:pass|skip)\b")
 
 
 def reached_boons(report_json):
@@ -566,6 +631,9 @@ def judge(done, report_json, log_text=None):
         missing.append(AFFIX_EFFECT_CHECK)
     if missing:
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing)
+    unread_boons = [n for n in read_owed_picks(report_json) if not boon_read_pattern(n).search(log_text)]
+    if not lose and unread_boons:
+        return 1, f"reason={reason} but the boon check of pick(s) {', '.join(map(str, unread_boons))} has no read= token: a troop or class boon was never read back from a soldier"
     unread = [line for line in READ_BACK if line not in log_text]
     if unread:
         return 1, f"reason={reason} but the log has no '{unread[0]}' line, so that side's spawn floor was never read back"

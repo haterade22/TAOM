@@ -4619,6 +4619,21 @@
 	<string id="TAOM_LD_Affix_Mordor_Hide" text="{=TAOM_LD_Affix_Mordor_Hide}Troll-Hide" />
 	<string id="TAOM_LD_Affix_Mordor_Lash" text="{=TAOM_LD_Affix_Mordor_Lash}The Overseer's Lash" />
 	<string id="TAOM_LD_Affix_Mordor_Terror" text="{=TAOM_LD_Affix_Mordor_Terror}Winged Terror" />
+	<string id="TAOM_LD_Boon_BloodiedButUnbowed" text="{=TAOM_LD_Boon_BloodiedButUnbowed}Bloodied but Unbowed" />
+	<string id="TAOM_LD_Boon_BloodiedButUnbowed_Drawback" text="{=TAOM_LD_Boon_BloodiedButUnbowed_Drawback}You move 10 percent slower." />
+	<string id="TAOM_LD_Boon_BloodiedButUnbowed_Text" text="{=TAOM_LD_Boon_BloodiedButUnbowed_Text}You have 60 percent more health." />
+	<string id="TAOM_LD_Boon_CleavingStroke" text="{=TAOM_LD_Boon_CleavingStroke}The Cleaving Stroke" />
+	<string id="TAOM_LD_Boon_CleavingStroke_Drawback" text="{=TAOM_LD_Boon_CleavingStroke_Drawback}You swing 10 percent slower." />
+	<string id="TAOM_LD_Boon_CleavingStroke_Text" text="{=TAOM_LD_Boon_CleavingStroke_Text}Your blows hit 30 percent harder." />
+	<string id="TAOM_LD_Boon_CouchedLances" text="{=TAOM_LD_Boon_CouchedLances}Couched Lances" />
+	<string id="TAOM_LD_Boon_CouchedLances_Text" text="{=TAOM_LD_Boon_CouchedLances_Text}Your riders hit 20 percent harder." />
+	<string id="TAOM_LD_Boon_EdgeOfTheMark" text="{=TAOM_LD_Boon_EdgeOfTheMark}Edge of the Mark" />
+	<string id="TAOM_LD_Boon_EdgeOfTheMark_Drawback" text="{=TAOM_LD_Boon_EdgeOfTheMark_Drawback}You take 10 percent more damage." />
+	<string id="TAOM_LD_Boon_EdgeOfTheMark_Text" text="{=TAOM_LD_Boon_EdgeOfTheMark_Text}Your blows hit 20 percent harder." />
+	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark}Fleet Horses of the Mark" />
+	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Text}Your riders and their horses move 12 percent faster." />
+	<string id="TAOM_LD_Boon_FletchersFavour" text="{=TAOM_LD_Boon_FletchersFavour}Fletcher's Favour" />
+	<string id="TAOM_LD_Boon_FletchersFavour_Text" text="{=TAOM_LD_Boon_FletchersFavour_Text}Your archers hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="{=TAOM_LD_Boon_GlitteringCavesRefuge}Refuge of the Inner Keep" />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Drawback}Every intermission is 15 seconds shorter." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Text" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Text}The keep can hold 30 more defenders." />
@@ -4629,20 +4644,50 @@
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="{=TAOM_LD_Boon_HagglerOfEdoras_Text}Every pack costs 20 percent less." />
 	<string id="TAOM_LD_Boon_HealersOfTheHold" text="{=TAOM_LD_Boon_HealersOfTheHold}Healers of the Hold" />
 	<string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="{=TAOM_LD_Boon_HealersOfTheHold_Text}After each wave your defenders mend a further quarter of the health they lost." />
+	<string id="TAOM_LD_Boon_HeartsOfTheEored" text="{=TAOM_LD_Boon_HeartsOfTheEored}Hearts of the Eored" />
+	<string id="TAOM_LD_Boon_HeartsOfTheEored_Text" text="{=TAOM_LD_Boon_HeartsOfTheEored_Text}Your riders have 25 percent more health." />
 	<string id="TAOM_LD_Boon_HornblowersBargain" text="{=TAOM_LD_Boon_HornblowersBargain}The Hornblower's Bargain" />
 	<string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="{=TAOM_LD_Boon_HornblowersBargain_Drawback}Every pack costs 10 percent more." />
 	<string id="TAOM_LD_Boon_HornblowersBargain_Text" text="{=TAOM_LD_Boon_HornblowersBargain_Text}The horn pays twice as much for the time it skips." />
 	<string id="TAOM_LD_Boon_LightOfThePhial" text="{=TAOM_LD_Boon_LightOfThePhial}The Light of the Phial" />
 	<string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="{=TAOM_LD_Boon_LightOfThePhial_Drawback}Every pack costs 25 percent more." />
 	<string id="TAOM_LD_Boon_LightOfThePhial_Text" text="{=TAOM_LD_Boon_LightOfThePhial_Text}Every wave carries one affix fewer." />
+	<string id="TAOM_LD_Boon_LongbowOfTheMark" text="{=TAOM_LD_Boon_LongbowOfTheMark}The Longbow of the Mark" />
+	<string id="TAOM_LD_Boon_LongbowOfTheMark_Drawback" text="{=TAOM_LD_Boon_LongbowOfTheMark_Drawback}You draw your bow 10 percent slower." />
+	<string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="{=TAOM_LD_Boon_LongbowOfTheMark_Text}Your arrows hit 25 percent harder." />
+	<string id="TAOM_LD_Boon_MarksmansCall" text="{=TAOM_LD_Boon_MarksmansCall}The Marksman's Call" />
+	<string id="TAOM_LD_Boon_MarksmansCall_Text" text="{=TAOM_LD_Boon_MarksmansCall_Text}Your archers aim 20 percent truer and draw 10 percent faster." />
 	<string id="TAOM_LD_Boon_RiddermarkLevy" text="{=TAOM_LD_Boon_RiddermarkLevy}Levy of the Riddermark" />
 	<string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="{=TAOM_LD_Boon_RiddermarkLevy_Text}Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
 	<string id="TAOM_LD_Boon_RidersAtDawn" text="{=TAOM_LD_Boon_RidersAtDawn}Riders at Dawn" />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Drawback" text="{=TAOM_LD_Boon_RidersAtDawn_Drawback}The keep holds 40 fewer defenders." />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Text" text="{=TAOM_LD_Boon_RidersAtDawn_Text}Every wave carries two affixes fewer." />
+	<string id="TAOM_LD_Boon_RohirrimFury" text="{=TAOM_LD_Boon_RohirrimFury}Fury of the Rohirrim" />
+	<string id="TAOM_LD_Boon_RohirrimFury_Drawback" text="{=TAOM_LD_Boon_RohirrimFury_Drawback}You take 15 percent more damage." />
+	<string id="TAOM_LD_Boon_RohirrimFury_Text" text="{=TAOM_LD_Boon_RohirrimFury_Text}You swing 20 percent faster." />
+	<string id="TAOM_LD_Boon_ShieldsLocked" text="{=TAOM_LD_Boon_ShieldsLocked}Shields Locked" />
+	<string id="TAOM_LD_Boon_ShieldsLocked_Drawback" text="{=TAOM_LD_Boon_ShieldsLocked_Drawback}Your infantry move 5 percent slower." />
+	<string id="TAOM_LD_Boon_ShieldsLocked_Text" text="{=TAOM_LD_Boon_ShieldsLocked_Text}Your infantry take 15 percent less damage." />
+	<string id="TAOM_LD_Boon_ShieldwallCaptain" text="{=TAOM_LD_Boon_ShieldwallCaptain}Captain of the Shieldwall" />
+	<string id="TAOM_LD_Boon_ShieldwallCaptain_Text" text="{=TAOM_LD_Boon_ShieldwallCaptain_Text}Your infantry take 12 percent less damage." />
+	<string id="TAOM_LD_Boon_ShieldwallOath" text="{=TAOM_LD_Boon_ShieldwallOath}Oath of the Shieldwall" />
+	<string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="{=TAOM_LD_Boon_ShieldwallOath_Drawback}You move 5 percent slower." />
+	<string id="TAOM_LD_Boon_ShieldwallOath_Text" text="{=TAOM_LD_Boon_ShieldwallOath_Text}You take 20 percent less damage." />
+	<string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="{=TAOM_LD_Boon_SpearsOfTheWestfold}Spears of the Westfold" />
+	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Text}Your infantry hit 15 percent harder." />
+	<string id="TAOM_LD_Boon_SteadyAim" text="{=TAOM_LD_Boon_SteadyAim}Steady Aim" />
+	<string id="TAOM_LD_Boon_SteadyAim_Drawback" text="{=TAOM_LD_Boon_SteadyAim_Drawback}Your archers reload 10 percent slower." />
+	<string id="TAOM_LD_Boon_SteadyAim_Text" text="{=TAOM_LD_Boon_SteadyAim_Text}Your archers aim 25 percent truer." />
+	<string id="TAOM_LD_Boon_SteadyHand" text="{=TAOM_LD_Boon_SteadyHand}A Steady Hand" />
+	<string id="TAOM_LD_Boon_SteadyHand_Text" text="{=TAOM_LD_Boon_SteadyHand_Text}You draw your bow 20 percent faster." />
 	<string id="TAOM_LD_Boon_StoutHeartsAtTheGate" text="{=TAOM_LD_Boon_StoutHeartsAtTheGate}Stout Hearts at the Gate" />
 	<string id="TAOM_LD_Boon_StoutHeartsAtTheGate_Drawback" text="{=TAOM_LD_Boon_StoutHeartsAtTheGate_Drawback}Every kill pays 10 percent less." />
 	<string id="TAOM_LD_Boon_StoutHeartsAtTheGate_Text" text="{=TAOM_LD_Boon_StoutHeartsAtTheGate_Text}The keep takes 40 percent longer to fall." />
+	<string id="TAOM_LD_Boon_StoutYeomanry" text="{=TAOM_LD_Boon_StoutYeomanry}The Stout Yeomanry" />
+	<string id="TAOM_LD_Boon_StoutYeomanry_Text" text="{=TAOM_LD_Boon_StoutYeomanry_Text}Your infantry have 20 percent more health." />
+	<string id="TAOM_LD_Boon_SwiftNock" text="{=TAOM_LD_Boon_SwiftNock}The Swift Nock" />
+	<string id="TAOM_LD_Boon_SwiftNock_Drawback" text="{=TAOM_LD_Boon_SwiftNock_Drawback}Your archers take 10 percent more damage." />
+	<string id="TAOM_LD_Boon_SwiftNock_Text" text="{=TAOM_LD_Boon_SwiftNock_Text}Your archers draw 20 percent faster and reload 15 percent faster." />
 	<string id="TAOM_LD_Boon_TheLongWatch" text="{=TAOM_LD_Boon_TheLongWatch}The Long Watch" />
 	<string id="TAOM_LD_Boon_TheLongWatch_Text" text="{=TAOM_LD_Boon_TheLongWatch_Text}Every intermission lasts 30 seconds longer." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold" text="{=TAOM_LD_Boon_WainsOfTheWestfold}Wains of the Westfold" />
@@ -4660,6 +4705,7 @@
 	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
 	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_End_Boons" text="{=TAOM_LD_End_Boons}Boons: {NAMES}" />
+	<string id="TAOM_LD_End_Class" text="{=TAOM_LD_End_Class}Class: {CLASS}" />
 	<string id="TAOM_LD_End_DefendersDead" text="{=TAOM_LD_End_DefendersDead}The garrison has fallen" />
 	<string id="TAOM_LD_End_KeepLost" text="{=TAOM_LD_End_KeepLost}The keep has fallen" />
 	<string id="TAOM_LD_End_Kills" text="{=TAOM_LD_End_Kills}Kills: {KILLS}" />
@@ -4701,6 +4747,7 @@
 	<string id="TAOM_LD_Hud_SpeedButton" text="{=TAOM_LD_Hud_SpeedButton}{SPEED}x" />
 	<string id="TAOM_LD_Hud_SpeedTitle" text="{=TAOM_LD_Hud_SpeedTitle}Game speed" />
 	<string id="TAOM_LD_Hud_Wave" text="{=TAOM_LD_Hud_Wave}Wave {WAVE}" />
+	<string id="TAOM_LD_Hud_WaveClass" text="{=TAOM_LD_Hud_WaveClass}{WAVE}, {CLASS}" />
 	<string id="TAOM_LD_Hud_WaveCleared" text="{=TAOM_LD_Hud_WaveCleared}Wave {WAVE} cleared" />
 	<string id="TAOM_LD_MenuHint" text="{=TAOM_LD_MenuHint}Hold a fortress against wave after wave. Spend gold on defenders between waves and keep the keep from falling." />
 	<string id="TAOM_LD_MenuOption" text="{=TAOM_LD_MenuOption}The Long Defeat" />

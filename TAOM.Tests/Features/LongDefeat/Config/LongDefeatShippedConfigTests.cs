@@ -372,6 +372,65 @@ public class LongDefeatShippedConfigTests
         CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
     }
 
+    [TestMethod]
+    public void ShippedBoons_ClassAndTroopRows_NameARealClass_AndAimOnlyAtTheirOwnGroup()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var rows = catalog.BuildPlan(helms, RunOptions.Default).Boons.Rows;
+        var classes = catalog.ClassesFor(helms).Select(c => c.Id).ToList();
+
+        foreach (var id in classes)
+            Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Class && r.ClassId == id) >= 3, id + " needs 3 rows to show a full offer");
+        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Class).All(r => classes.Contains(r.ClassId)), "a class row names a class the fortress offers");
+        foreach (var category in new[] { BoonCategory.Infantry, BoonCategory.Archers, BoonCategory.Cavalry })
+        {
+            var own = rows.Where(r => r.Category == category).ToList();
+            Assert.IsTrue(own.Count >= 3, category + " rows");
+            var group = Enum.GetValues(typeof(BoonTarget)).Cast<BoonTarget>().Single(t => BoonTargets.CategoryOf(t) == category);
+            Assert.IsTrue(own.All(r => r.Effects.Concat(r.Drawback).All(e => e.Target == group)), category + " rows change their own group only");
+        }
+
+        Assert.IsTrue(rows.All(r => r.Effects.Concat(r.Drawback).All(e => BoonKeys.IsTargeted(e.Key) == e.Target.HasValue)), "a targeted key names its target, and no other key does");
+    }
+
+    [TestMethod]
+    public void ShippedHelms_HoldsATroopOfEachGroup_ReadFromTheXmlDefaultGroupTheWayTheEngineClassifiesIt()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var troops = Troops();
+        BoonTarget GroupOf(string id)
+        {
+            var group = (string?)troops[id].Attribute("default_group");
+            return BoonTargets.OfCharacter(group == "Cavalry" || group == "HorseArcher", group == "Ranged" || group == "HorseArcher");
+        }
+
+        var groups = helms.Garrison.Select(g => g.TroopId).Concat(helms.Shop.Offers.Select(o => o.TroopId)).Select(GroupOf).Distinct().OrderBy(g => g).ToList();
+
+        CollectionAssert.AreEqual(new[] { BoonTarget.Infantry, BoonTarget.Archers, BoonTarget.Cavalry }, groups,
+            "King's Knights are a Cavalry troop on the shop list, so the cavalry rows are eligible at Helm's Deep; tools/run_long_defeat.py troop_groups reads the same file");
+    }
+
+    [TestMethod]
+    public void ShippedBoons_TheFirstOffersOfAnArcherAtHelms_ArePinned_ToTheSameVectorsAsThePythonReplay()
+    {
+        var (catalog, _) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var groups = new[] { BoonCategory.Infantry, BoonCategory.Archers, BoonCategory.Cavalry };
+        var deck = new BoonDeck(plan, 1UL, 2, "archer", groups);
+        for (var n = 1; n <= 3; n++)
+            deck.Cleared(n, n);
+        deck.TryReroll();
+        deck.TryReroll();
+
+        // Seed 1, pick 1, an archer with the garrison and shop of Helm's Deep: 24 rows are eligible (the war chest, fortress and Legend rows, the archer's class rows, and all three troop categories).
+        CollectionAssert.AreEqual(new[] { "steady_aim", "stout_yeomanry", "fletchers_favour" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "marksmans_call", "wains_of_the_westfold", "granary_stores" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "hornblowers_bargain", "fletchers_favour" }, deck.Picks[0].Draws[2].Ids.ToArray());
+        Assert.AreEqual(24, deck.Picks[0].Draws[0].Eligible);
+    }
+
     // The own-gear rule: a class kit gives the lord only what a troop of his people carries in fords_troops.xml. An item no troop carries sits here with its source, as a named exception.
     // Decision D5 (Mike's standing word, 2026-11-05): the two-handed class swings the Armory axe, because no Rohan troop carries a two-handed sword, axe or mace.
     private static readonly IReadOnlyDictionary<string, string> OwnGearExceptions = new Dictionary<string, string>
