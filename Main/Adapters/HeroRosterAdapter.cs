@@ -11,10 +11,7 @@ public class HeroRosterAdapter : IHeroRosterAdapter
         // Phase 9b #130 P2 — `h.CharacterObject` is a computed property and can be null in
         // transient states. NRE here during OnBeforeSaveEvent would abort the save with no
         // recovery path. Per `adapters.md` rule, use `?.` on computed TaleWorlds properties.
-        // #1011: SandBoxManager.InitializeCharactersAfterLoad resets the race of every not-ready,
-        // non-original character with a hero, dead heroes the engine unregistered included.
-        // Hero.FindAll scans Campaign.Characters, the list that loop covers.
-        return Hero.FindAll(_ => true)
+        return EveryHero()
             .Where(h => h?.CharacterObject != null)
             .Select(h => new HeroRaceInfo(h.StringId, h.CharacterObject.Race, h.IsAlive))
             .ToList();
@@ -22,16 +19,27 @@ public class HeroRosterAdapter : IHeroRosterAdapter
 
     public int GetHeroRace(string heroStringId)
     {
-        var hero = Hero.FindFirst(h => h.StringId == heroStringId);
+        var hero = EveryHero().FirstOrDefault(h => h.StringId == heroStringId);
         return hero?.CharacterObject?.Race ?? 0;
     }
 
     public void SetHeroRace(string heroStringId, int race)
     {
-        var hero = Hero.FindFirst(h => h.StringId == heroStringId);
+        var hero = EveryHero().FirstOrDefault(h => h.StringId == heroStringId);
         if (hero?.CharacterObject != null)
         {
             hero.CharacterObject.Race = race;
         }
     }
+
+    // #1011: SandBoxManager.InitializeCharactersAfterLoad resets the race of every not-ready, non-original
+    // character with a hero, dead heroes the engine unregistered included. Hero.FindAll scans
+    // Campaign.Characters, the list that loop covers. A hollow character is unregistered, so that list never
+    // holds it and its hero is reached only through the hero lists. MBObjectBase has no Equals override, so
+    // Distinct compares by reference, and it is lazy, so a lookup stops at its first match.
+    private static IEnumerable<Hero> EveryHero() =>
+        Hero.FindAll(_ => true)
+            .Concat(Hero.AllAliveHeroes)
+            .Concat(Hero.DeadOrDisabledHeroes)
+            .Distinct();
 }

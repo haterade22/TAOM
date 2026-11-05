@@ -126,13 +126,15 @@ public class HeroRaceWiringTests
 
     // #1011: SandBoxManager.InitializeCharactersAfterLoad resets the race of every not-ready,
     // non-original character with a hero, including dead heroes the engine removed from
-    // DeadOrDisabledHeroes. Hero.FindAll is the one list that covers them all. An alive-only read
+    // DeadOrDisabledHeroes, so the roster needs Hero.FindAll (Campaign.Characters). An alive-only read
     // saves nothing for those heroes and the encyclopedia and family tree show them with their origin character's race.
+    // A hollow character is unregistered, so Campaign.Characters never holds it: a living hollow hero
+    // (and a dead one) is reached only through the hero lists. Each list alone loses somebody's race.
     [TestMethod]
     [DataRow("GetAllHeroRaces")]
     [DataRow("GetHeroRace")]
     [DataRow("SetHeroRace")]
-    public void HeroRosterAdapter_ReadsEveryHeroCharacterThroughHeroFindAll(string method)
+    public void HeroRosterAdapter_ReadsTheOneRosterThatReachesEveryHero(string method)
     {
         var src = RepoPaths.ReadSource("Main/Adapters/HeroRosterAdapter.cs", stripComments: true);
 
@@ -142,12 +144,23 @@ public class HeroRaceWiringTests
         var nextMember = src.IndexOf("public ", signatureAt, StringComparison.Ordinal);
         var body = nextMember < 0 ? src.Substring(signatureAt) : src.Substring(signatureAt, nextMember - signatureAt);
 
-        Assert.IsTrue(body.Contains("Hero.FindAll(") || body.Contains("Hero.FindFirst("),
-            method + " reads neither Hero.FindAll nor Hero.FindFirst, so dead heroes the engine unregistered lose their race.");
-        Assert.IsFalse(body.Contains("Hero.AllAliveHeroes"),
-            method + " reads Hero.AllAliveHeroes, which skips every dead or disabled hero.");
-        Assert.IsFalse(body.Contains("Hero.DeadOrDisabledHeroes"),
-            method + " reads Hero.DeadOrDisabledHeroes, which misses every living hero and any dead one the engine unregistered.");
+        StringAssert.Contains(body, "EveryHero()",
+            method + " does not read EveryHero(), so it misses the heroes that one engine list leaves out.");
+    }
+
+    [TestMethod]
+    public void HeroRosterAdapter_EveryHero_JoinsTheCharacterListAndBothHeroLists()
+    {
+        var src = RepoPaths.ReadSource("Main/Adapters/HeroRosterAdapter.cs", stripComments: true);
+
+        var at = src.IndexOf("IEnumerable<Hero> EveryHero()", StringComparison.Ordinal);
+        Assert.IsTrue(at >= 0, "EveryHero could not be located; this test needs updating.");
+        var body = src.Substring(at);
+
+        StringAssert.Contains(body, "Hero.FindAll(", "without it, dead heroes the engine unregistered lose their race (#1011)");
+        StringAssert.Contains(body, "Hero.AllAliveHeroes", "without it, a living hero with a hollow character loses his race");
+        StringAssert.Contains(body, "Hero.DeadOrDisabledHeroes", "without it, a dead hero with a hollow character loses his race");
+        StringAssert.Contains(body, "Distinct()", "a hero on two lists would be restored and counted twice");
     }
 
     // #1011: the taom.race-persist checks count dead heroes from HeroRaceInfo.IsAlive. Left at its default of
