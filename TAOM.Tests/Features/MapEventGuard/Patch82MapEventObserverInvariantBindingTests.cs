@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.MapEventGuard;
@@ -132,19 +133,10 @@ public class Patch82MapEventObserverInvariantBindingTests
         // Source text rather than IL: the call is one literal in one file, and reading it says
         // exactly what a human would check. A commented-out line does not count, which is why the
         // match requires the statement rather than the bare string.
-        var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(
-            File.ReadAllText(subModule),
+            subModule,
             "TryPatchCategory(\"Patch82_MapEventObserverInvariant\")",
             "SubModule.cs no longer applies Patch82_MapEventObserverInvariant — the patch is dead code.");
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

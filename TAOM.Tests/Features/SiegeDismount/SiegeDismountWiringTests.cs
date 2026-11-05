@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.SiegeDismount.Hooks;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.SiegeDismount;
 
@@ -32,9 +33,7 @@ public class SiegeDismountWiringTests
     [TestMethod]
     public void MainIoCConfigure_IncludesSiegeDismountFeatureRegistration()
     {
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs not found — run from repo root or check working directory");
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(iocSource, "SiegeDismountIoC.RegisterSiegeDismountFeature(container);",
             "Main/IoC.cs::Configure must call SiegeDismountIoC.RegisterSiegeDismountFeature(container). " +
@@ -45,9 +44,7 @@ public class SiegeDismountWiringTests
     [TestMethod]
     public void MainSubModule_AddsSiegeDismountMissionBehaviorOnMissionInit()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         // Two-part assertion: the call literal AND the lifecycle method that contains it.
         // The call literal alone could appear inside a comment or unreachable branch.
@@ -74,20 +71,5 @@ public class SiegeDismountWiringTests
         var behaviorType = typeof(SiegeDismountMissionBehavior);
         Assert.IsTrue(typeof(MissionBehavior).IsAssignableFrom(behaviorType),
             "SiegeDismountMissionBehavior must inherit from MissionBehavior so mission.AddMissionBehavior accepts it.");
-    }
-
-    // --- Helpers ---
-
-    private static string ReadProjectSource(params string[] relativeParts)
-    {
-        var dir = Directory.GetCurrentDirectory();
-        while (dir != null)
-        {
-            var candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
-            if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-        return null;
     }
 }

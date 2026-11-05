@@ -4,6 +4,7 @@ using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.HeroRace.Hooks;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.HeroRace;
 
@@ -65,7 +66,7 @@ public class HeroRaceWiringTests
     [TestMethod]
     public void SubModule_AppliesThePatch72Category()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(
             src, "\"" + Category + "\",",
@@ -89,7 +90,7 @@ public class HeroRaceWiringTests
         Assert.AreEqual(Category, attribute.info.category,
             "The [HarmonyPatchCategory] literal drifted from the string SubModule.cs applies.");
 
-        var subModule = ReadSource("Main", "SubModule.cs");
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(subModule, "\"" + attribute.info.category + "\"",
             "SubModule.cs does not apply the category this patch actually declares.");
     }
@@ -100,7 +101,7 @@ public class HeroRaceWiringTests
     [TestMethod]
     public void Patch72_IsAppliedInTheGuardedPreviewBatch()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         // Bound by the ARRAY, not by a sibling entry. An earlier version of this test took
         // "Patch67_TableauResidencyDiag" as the end marker and then never used it, asserting only

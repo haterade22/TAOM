@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.Enlistment;
@@ -125,10 +126,7 @@ public class Patch85EnlistedDetachDeferralBindingTests
         CollectionAssert.Contains(categories, "Patch85_EnlistedDetachDeferral",
             "Patch85 lost its [HarmonyPatchCategory] — SubModule's PatchCategory call would apply nothing.");
 
-        var subModule = Path.Combine(FindRepoRoot(), "Main", "SubModule.cs");
-        Assert.IsTrue(File.Exists(subModule), $"SubModule.cs not found at {subModule}");
-
-        var source = File.ReadAllText(subModule);
+        var source = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(source, "TryPatchCategory(\"Patch85_EnlistedDetachDeferral\")",
             "SubModule.cs no longer applies Patch85_EnlistedDetachDeferral — the patch is dead code.");
 
@@ -136,13 +134,5 @@ public class Patch85EnlistedDetachDeferralBindingTests
         // silently never happens on any path but the reconciler's sweep.
         StringAssert.Contains(source, "Patch85_EnlistedDetachDeferral.Initialize(",
             "SubModule.cs no longer initialises Patch85 — the postfix would have no service to call.");
-    }
-
-    private static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
-            dir = dir.Parent;
-        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
     }
 }

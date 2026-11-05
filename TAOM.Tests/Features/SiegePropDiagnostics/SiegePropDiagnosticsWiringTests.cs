@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.SiegePropDiagnostics.Hooks;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.SiegePropDiagnostics;
 
@@ -17,9 +18,7 @@ public class SiegePropDiagnosticsWiringTests
     [TestMethod]
     public void MainIoCConfigure_IncludesSiegePropDiagnosticsRegistration()
     {
-        var iocSource = ReadProjectSource("Main", "IoC.cs");
-        if (iocSource == null)
-            Assert.Inconclusive("Main/IoC.cs not found — run from repo root or check working directory");
+        var iocSource = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(iocSource,
             "SiegePropDiagnosticsIoC.RegisterSiegePropDiagnosticsFeature(container);",
@@ -30,9 +29,7 @@ public class SiegePropDiagnosticsWiringTests
     [TestMethod]
     public void MainSubModule_AddsSiegePropDiagnosticsMissionBehaviorOnMissionInit()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var subModuleSource = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(subModuleSource, "SiegePropDiagnosticsMissionBehavior());",
             "Main/SubModule.cs must register SiegePropDiagnosticsMissionBehavior via AddTaomBehavior(...).");
@@ -46,18 +43,5 @@ public class SiegePropDiagnosticsWiringTests
     {
         Assert.IsTrue(typeof(MissionBehavior).IsAssignableFrom(typeof(SiegePropDiagnosticsMissionBehavior)),
             "Must inherit MissionBehavior so AddMissionBehavior accepts it.");
-    }
-
-    private static string ReadProjectSource(params string[] relativeParts)
-    {
-        var dir = Directory.GetCurrentDirectory();
-        while (dir != null)
-        {
-            var candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
-            if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-        return null;
     }
 }

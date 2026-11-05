@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.UncapturableHeroes;
 
@@ -60,7 +61,7 @@ public class UncapturableHeroesWiringTests
         // IInquiryAdapter is registered in exactly one place (EnlistmentIoC) with no
         // IfAlreadyRegistered. Registering this feature before it would resolve a different
         // instance or fail outright.
-        var src = ReadSource("Main", "IoC.cs");
+        var src = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         var enlistment = src.IndexOf("EnlistmentIoC.RegisterEnlistmentFeature", StringComparison.Ordinal);
         var ours = src.IndexOf(
@@ -76,7 +77,7 @@ public class UncapturableHeroesWiringTests
     [TestMethod]
     public void RootIoC_InitializesThePatchStatics()
     {
-        var src = ReadSource("Main", "IoC.cs");
+        var src = RepoPaths.ReadSource("Main/IoC.cs", stripComments: true);
 
         StringAssert.Contains(src, "UncapturableHeroesIoC.InitializePatchStatics",
             "Without this the hooks hold a null service and defer every capture to vanilla.");
@@ -87,7 +88,7 @@ public class UncapturableHeroesWiringTests
     [TestMethod]
     public void SubModule_AppliesThePatchCategory()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "PatchCategory(\"Patch76_UncapturableHeroes\")",
             "The category is never applied, so Harmony patches nothing and reports nothing.");
@@ -96,7 +97,7 @@ public class UncapturableHeroesWiringTests
     [TestMethod]
     public void SubModule_ResetsBothHooksOnUnload()
     {
-        var src = ReadSource("Main", "SubModule.cs");
+        var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Contains(src, "Hero_CanBecomePrisoner_Patch.ResetForUnload()");
         StringAssert.Contains(src, "TakePrisonerAction_Apply_Patch.ResetForUnload()");
