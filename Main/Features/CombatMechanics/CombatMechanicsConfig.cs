@@ -27,7 +27,10 @@ public class CombatMechanicsConfig
         // Dark Lord keeps elf Monster weight 80, so the resistance row is what stops horse-bowling.
         ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true, KnockdownResistanceMultiplier = 3.0f, SwingEnergyBonusFactor = 0.20f },
         ["orc"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.15f },
-        ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f, KnockdownResistanceMultiplier = 1.25f },
+        // #610: trolls share weight 160 with uruks, so the race row keeps a troll on its feet against a horse; uruk-hai lost their 1.25 (parity).
+        ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f },
+        ["cave_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
+        ["hill_troll"] = new RaceCombatModifiers { KnockdownResistanceMultiplier = 4.0f },
     };
 }
 
@@ -64,13 +67,15 @@ public class ChargeKnockdownConfig
 
     // 6.0 = Native (horse 400 + rider 80) / human 80 — keeps an unmodified horse-vs-man charge ≈ vanilla.
     public float NeutralWeightRatio { get; set; } = 6f;
-    public float AutoKnockdownWeightRatio { get; set; } = 8f;
+    // #610: 6.0 is horse + man vs man exactly, so a full-speed contact floors a man from any angle. Was 8.
+    public float AutoKnockdownWeightRatio { get; set; } = 6f;
     public float AutoKnockdownMinSpeedFactor { get; set; } = 0.4f;
 
     // Used when the charger's Monster has no relative_speed_limit_for_charge (engine default float.MaxValue).
     // 4.3 = Native horse.
     public float DefaultChargeSpeedReference { get; set; } = 4.3f;
-    public float MinPenetrationFactor { get; set; } = 0.25f;
+    // #610: 1.0, so the weight term never scales the penetration below vanilla for a heavy victim. Was 0.25.
+    public float MinPenetrationFactor { get; set; } = 1f;
     public float MaxPenetrationFactor { get; set; } = 2.5f;
 
     // Vanilla SandBox value; also exposed via the GetHorseChargePenetration() override so the

@@ -1,5 +1,5 @@
 {
-  "_comment_feature": "Aura of Unnatural Dread. Nazgul and Sauron drain the morale of nearby enemy troops on the battlefield. Battle scale only; there is no campaign-map effect. Full design: docs/features/dread-aura.md",
+  "_comment_feature": "Aura of Unnatural Dread. Nazgul and Sauron drain the morale of enemy troops right beside them on the battlefield. The aura weakens them but never routs anyone by itself. Battle scale only; there is no campaign-map effect. Full design: docs/features/dread-aura.md",
 
   "enabled": true,
 
@@ -21,13 +21,13 @@
   "_comment_races": "FaceGen race names that project dread. 'sauron' is the only dread-bearer the race axis can actually find in TAOM's shipped data. Adding 'cave_troll' and 'hill_troll' here is all a troll-terror variant needs.",
   "races": ["sauron"],
 
-  "_comment_profile": "radius/innerRadius in metres. Drain is at full strength within innerRadius and falls linearly to nothing at radius. moralePerSecond is the rate BEFORE the target's tier/hero resistance and its racial resistance. moraleFloor 0 lets the aura alone drive a troop to the engine's 0.01 panic threshold; raise it to make dread soften troops while leaving the kill to combat.",
-  "_comment_balance": "At moralePerSecond 5.0 a tier-3 human breaks after about 28s of contact, a tier-6 elite about 49s, an elf about 93s, and an elven hero never. The engine regenerates morale at +0.4/sec up to half a troop's starting morale, so an effective rate at or below 0.4 suppresses without ever routing. That break-even IS the resistance mechanic.",
+  "_comment_profile": "radius/innerRadius in metres. Drain is at full strength within innerRadius and falls linearly to nothing at radius. moralePerSecond is the rate BEFORE the target's tier/hero resistance and its racial resistance. With MCM loaded, the MCM radius and rate replace these two values. radius is capped at 15: beyond 15 m the engine's proximity search checks every agent on the field. moraleFloor 10 keeps the aura from routing anyone on its own (the engine panics below 0.01). 0 would let it rout, and each rout costs up to 10 allies morale, reaching across the formation when fewer than 10 stand within 4 m.",
+  "_comment_balance": "At moralePerSecond 5.0, in an even fight with party morale 50, a tier-3 human reaches the floor after about 22s of contact, a tier-6 elite about 37s, a tier-3 elf about 68s, a tier-5 dwarf about 81s, and an elven hero of level 16 or more never. The engine regenerates morale at +0.4/sec up to half a troop's starting morale, so an effective rate at or below 0.4 suppresses without ever reaching the floor. That break-even IS the resistance mechanic.",
   "profile": {
-    "radius": 12.0,
-    "innerRadius": 4.0,
+    "radius": 5.0,
+    "innerRadius": 2.0,
     "moralePerSecond": 5.0,
-    "moraleFloor": 0.0
+    "moraleFloor": 10.0
   },
 
   "_comment_raceResist": "Multiplier on the drain a TARGET takes, keyed by race name. 1.0 is no resistance, 0.0 is immunity. Values above 1.0 are refused, because they would amplify dread on a race the author meant to protect. Tier and hero resistance are separate and come from the engine's own morale model.",

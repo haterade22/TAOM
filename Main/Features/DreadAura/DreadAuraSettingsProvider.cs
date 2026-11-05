@@ -10,17 +10,21 @@ namespace TAOM.Features.DreadAura;
 /// </summary>
 public sealed class DreadAuraSettingsProvider : IDreadAuraSettingsProvider
 {
-    // The design ceilings from DreadAuraConfigProvider, enforced HERE as well because these values
+    // The ceilings from DreadAuraConfigProvider, enforced HERE as well because these values
     // have two entry points. MCM's slider metadata is UI-only — MCM's own JSON deserializer assigns
     // without a range check, so a stale or hand-edited settings file bypasses the slider bounds
     // entirely. CombatMechanics shipped exactly this drift on 2026-07-02: the JSON side enforced an
     // invariant the slider did not.
     //
     // These mirror the SLIDER bounds, not the JSON ceilings, because that is the invariant this
-    // class exists to re-enforce. The JSON side may legitimately go higher (radius 30, rate 50);
-    // an MCM value may not exceed what the slider could have produced.
+    // class exists to re-enforce: an MCM value may not exceed what the slider could have produced.
+    // The JSON validator accepts more (radius down to 0.1, rate up to 50), but SettingClamp clamps
+    // the JSON fallback to these bounds as well, so no value outside them ever reaches a pulse.
     private const float MinRadius = 4f;
-    private const float MaxRadius = 30f;
+
+    // Above 15 m native IMBMission.GetNearbyAgentsAux stops searching its proximity grid and walks
+    // every agent in the mission (15f is what ProximityMapMaxSearchRadius returns on v1.5.5).
+    private const float MaxRadius = 15f;
     private const float MaxMoralePerSecond = 20f;
 
     private readonly DreadAuraConfig _defaults;
@@ -41,7 +45,7 @@ public sealed class DreadAuraSettingsProvider : IDreadAuraSettingsProvider
     public bool IsEnabled => Settings?.EnableDreadAura ?? _defaults.Enabled;
 
     public float Radius
-        => SettingClamp.Clamp(Settings?.DreadAuraRadius, DefaultRadius, MinRadius, MaxRadius);
+        => SettingClamp.Clamp(Settings?.DreadAuraCloseRadius, DefaultRadius, MinRadius, MaxRadius);
 
     // JSON only — no MCM knob, so no clamp beyond what the config provider already validated
     // (including the innerRadius <= radius ordering invariant).

@@ -37,12 +37,17 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
                 InformationManager.DisplayMessage(new InformationMessage("Your warg entered into a rage, you lost control!"));
                 WargMissionBehavior.SwitchMainAgentController(true);
                 AutonomousMovementPlayerController noMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
-                noMovementController.TargetAgent = AgentHitBy.GetValue();
+                if (noMovementController != null) noMovementController.TargetAgent = AgentHitBy.GetValue();
             }
             else
             {
                 Agent rider = Agent.GetValue()?.RiderAgent;
-                if (rider != null) rider.Formation = null;
+                if (rider != null)
+                {
+                    // The tree was built before the rider, so its stored formation is null for a warg spawned after the first scan.
+                    AgentsFormation.SetValue(rider.Formation);
+                    rider.Formation = null;
+                }
             }
         }
         return BTTaskStatus.FinishedWithTrue;

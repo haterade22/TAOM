@@ -53,7 +53,7 @@ public class DreadAuraConfigProviderTests
         var config = _sut.GetConfig();
 
         Assert.IsTrue(config.Enabled);
-        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(5f, config.Profile.Radius, 0.001f);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("not found")));
     }
 
@@ -75,7 +75,7 @@ public class DreadAuraConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(5f, config.Profile.Radius, 0.001f);
         Assert.AreEqual(5f, config.Profile.MoralePerSecond, 0.001f);
     }
 
@@ -106,7 +106,7 @@ public class DreadAuraConfigProviderTests
   ""heroIds"": [""lord_1_17"", ""lord_1_99""],
   ""races"": [""sauron"", ""cave_troll""],
   ""profile"": {
-    ""radius"": 20.0,
+    ""radius"": 12.0,
     ""innerRadius"": 6.0,
     ""moralePerSecond"": 7.5,
     ""moraleFloor"": 12.0
@@ -123,7 +123,7 @@ public class DreadAuraConfigProviderTests
         CollectionAssert.AreEqual(new[] { "nazgul_nine", "istari_five" }, config.HeroSets);
         CollectionAssert.AreEqual(new[] { "lord_1_17", "lord_1_99" }, config.HeroIds);
         CollectionAssert.AreEqual(new[] { "sauron", "cave_troll" }, config.Races);
-        Assert.AreEqual(20f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
         Assert.AreEqual(6f, config.Profile.InnerRadius, 0.001f);
         Assert.AreEqual(7.5f, config.Profile.MoralePerSecond, 0.001f);
         Assert.AreEqual(12f, config.Profile.MoraleFloor, 0.001f);
@@ -187,6 +187,7 @@ public class DreadAuraConfigProviderTests
     [DataRow("-Infinity")]
     [DataRow("0.0")]
     [DataRow("-5.0")]
+    [DataRow("15.5")]
     [DataRow("31.0")]
     public void GetConfig_RadiusOutOfRangeOrNonFinite_RevertsAndWarns(string raw)
     {
@@ -194,7 +195,7 @@ public class DreadAuraConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(5f, config.Profile.Radius, 0.001f);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("profile.radius")));
     }
 
@@ -214,13 +215,13 @@ public class DreadAuraConfigProviderTests
     [TestMethod]
     public void GetConfig_RadiusBelowDefaultInnerRadius_StillYieldsOrderedPair()
     {
-        // radius 3 is below the compiled innerRadius default of 4, so the fallback itself must be
+        // radius 1.5 is below the compiled innerRadius default of 2, so the fallback itself must be
         // clamped or the revert would reintroduce the very inversion it is fixing.
-        WriteConfig(@"{ ""profile"": { ""radius"": 3.0, ""innerRadius"": 99.0 } }");
+        WriteConfig(@"{ ""profile"": { ""radius"": 1.5, ""innerRadius"": 99.0 } }");
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(3f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(1.5f, config.Profile.Radius, 0.001f);
         Assert.IsTrue(config.Profile.InnerRadius <= config.Profile.Radius);
     }
 
@@ -256,8 +257,18 @@ public class DreadAuraConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(0f, config.Profile.MoraleFloor, 0.001f);
+        Assert.AreEqual(10f, config.Profile.MoraleFloor, 0.001f);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("profile.moraleFloor")));
+    }
+
+    [TestMethod]
+    public void GetConfig_MoraleFloorZero_IsAcceptedAsTheRoutSwitch()
+    {
+        // 0 is the documented way to let the aura rout by itself again, so it must load, not revert.
+        WriteConfig(@"{ ""profile"": { ""moraleFloor"": 0.0 } }");
+
+        Assert.AreEqual(0f, _sut.GetConfig().Profile.MoraleFloor, 0.001f);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("profile.moraleFloor")));
     }
 
     [DataTestMethod]
@@ -361,7 +372,7 @@ public class DreadAuraConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(12f, config.Profile.Radius, 0.001f);
+        Assert.AreEqual(5f, config.Profile.Radius, 0.001f);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("profile is null")));
     }
 

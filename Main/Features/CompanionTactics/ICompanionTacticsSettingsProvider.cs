@@ -14,7 +14,7 @@ public interface ICompanionTacticsSettingsProvider
     int MaxFormationPresets { get; }
     bool FormationPresetsDebug { get; }
 
-    bool EnableBattleActionBar { get; }
+    bool ShowBattleActionBar { get; }
     bool CancelStanceOnMove { get; }
     bool EnableVolleyFire { get; }
     bool BattleActionBarDebug { get; }

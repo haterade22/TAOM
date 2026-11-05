@@ -21,8 +21,8 @@ public class DreadAuraServiceTests
     private const float RegenPerSecond = 0.4f;
     private const float PanicThreshold = 0.01f;
 
-    private const float Radius = 12f;
-    private const float InnerRadius = 4f;
+    private const float Radius = 5f;
+    private const float InnerRadius = 2f;
 
     private IDreadAuraConfigProvider _configProvider = null!;
     private IDreadAuraSettingsProvider _settings = null!;
@@ -60,20 +60,42 @@ public class DreadAuraServiceTests
 
     /// <summary>Drives the real service against the engine's real morale loop and returns the
     /// wall-clock seconds until the target crosses the panic threshold.</summary>
-    private float SimulateRoutSeconds(float resistScaledRate, int? raceId = null, float maxSeconds = 600f)
+    private float SimulateRoutSeconds(float resistScaledRate, float maxSeconds = 600f)
     {
         const float dt = 0.25f;
         var morale = MeanInitialMorale;
 
         for (var t = 0f; t < maxSeconds; t += dt)
         {
-            morale -= _sut.ComputeDrain(Ctx(resistScaledRate, morale: morale, elapsed: dt, raceId: raceId));
+            morale -= _sut.ComputeDrain(Ctx(resistScaledRate, morale: morale, elapsed: dt));
 
             // Order matters and mirrors CommonAIComponent.OnTickParallel: the panic test runs
             // FIRST, and regeneration only afterwards and only for an agent that did not panic.
             // Regenerating first would let +0.4/sec lift a broken agent back over the threshold
             // every frame and nothing would ever rout.
             if (morale < PanicThreshold)
+                return t + dt;
+
+            if (morale < RecoveryCeiling)
+                morale = Math.Min(morale + RegenPerSecond * dt, RecoveryCeiling);
+        }
+
+        return float.PositiveInfinity;
+    }
+
+    /// <summary>Same engine loop as <see cref="SimulateRoutSeconds"/>, but returns the seconds until
+    /// the target is within 0.05 of the configured morale floor (the aura cannot take it lower).</summary>
+    private float SimulateSecondsToFloor(float resistScaledRate, float maxSeconds = 600f)
+    {
+        const float dt = 0.25f;
+        var floor = _config.Profile.MoraleFloor;
+        var morale = MeanInitialMorale;
+
+        for (var t = 0f; t < maxSeconds; t += dt)
+        {
+            morale -= _sut.ComputeDrain(Ctx(resistScaledRate, morale: morale, elapsed: dt));
+
+            if (morale <= floor + 0.05f)
                 return t + dt;
 
             if (morale < RecoveryCeiling)
@@ -104,8 +126,8 @@ public class DreadAuraServiceTests
     [TestMethod]
     public void ComputeDrain_MidwayBetweenRadii_AppliesHalfRate()
     {
-        // Inner 4, outer 12 — the midpoint of the falloff band is 8.
-        var drain = _sut.ComputeDrain(Ctx(2f, distance: 8f));
+        // Inner 2, outer 5: the midpoint of the falloff band is 3.5.
+        var drain = _sut.ComputeDrain(Ctx(2f, distance: 3.5f));
 
         Assert.AreEqual(1f, drain, 0.001f);
     }
@@ -121,7 +143,7 @@ public class DreadAuraServiceTests
     [TestMethod]
     public void ComputeDrain_BeyondOuterRadius_ReturnsZero()
     {
-        Assert.AreEqual(0f, _sut.ComputeDrain(Ctx(2f, distance: 12.5f)), 0.0001f);
+        Assert.AreEqual(0f, _sut.ComputeDrain(Ctx(2f, distance: 5.5f)), 0.0001f);
     }
 
     [TestMethod]
@@ -153,56 +175,72 @@ public class DreadAuraServiceTests
         Assert.AreEqual(0f, _sut.ComputeDrain(Ctx(2f, raceId: 9)), 0.0001f);
     }
 
-    // ---- The balance contract (golden numbers) ----------------------------
+    // ---- Floor 0 (not shipped): the rout times a lower floor brings back ---
 
-    // Vanilla CharacterObject.GetMoraleResistance() = (IsHero ? 1.5 : 1) * (0.5 * tier + 1).
-    // ResistScaledRate is moralePerSecond (5.0) divided by that.
+    // Vanilla CharacterObject.GetMoraleResistance() = (IsHero ? 1.5 : 1) * (0.5 * n + 1), where n is
+    // the tier, or Level / 4 + 1 for a hero. ResistScaledRate is moralePerSecond (5.0) divided by that.
     [DataTestMethod]
     [DataRow(5f / 1.5f, 16f, DisplayName = "Tier-1 levy routs in about 16s")]
     [DataRow(5f / 2.5f, 28f, DisplayName = "Tier-3 line infantry routs in about 28s")]
     [DataRow(5f / 4.0f, 49f, DisplayName = "Tier-6 elite routs in about 49s")]
     public void ComputeDrain_ShippedRate_RoutsAtTheDocumentedTime(float resistScaledRate, float expectedSeconds)
     {
+        _config.Profile.MoraleFloor = 0f;
         var actual = SimulateRoutSeconds(resistScaledRate);
 
         Assert.AreEqual(expectedSeconds, actual, 2f,
-            $"Rout time moved to {actual:F1}s. This is the balance contract in docs/features/dread-aura.md — " +
-            "update the doc and the table in the same commit, or revert the retune.");
+            $"Rout time at floor 0 moved to {actual:F1}s. docs/features/dread-aura.md quotes these times: " +
+            "update the doc in the same commit, or revert the retune.");
     }
 
-    [TestMethod]
-    public void ComputeDrain_ElfLineInfantry_TakesRoughlyThreeTimesLongerThanHuman()
+    // ---- The shipped floor (compiled default 10): weaken, never rout ------
+
+    // 20/s on a resistance-1 target is the largest rate any configuration reaches: the settings
+    // provider clamps the rate to [0, 20] and vanilla divides it by Max(1, resistance).
+    [DataTestMethod]
+    [DataRow(5f / 1.5f, DisplayName = "Tier-1 levy at the shipped rate")]
+    [DataRow(20f, DisplayName = "Resistance-1 target at the slider's 20/s ceiling")]
+    public void ComputeDrain_ShippedFloor_AuraAloneNeverRouts(float resistScaledRate)
     {
-        _registry.ResolveResist(3).Returns(0.4f);
+        Assert.AreEqual(10f, _config.Profile.MoraleFloor, 0.001f, "The compiled default floor is the shipped floor.");
 
-        var elf = SimulateRoutSeconds(5f / 2.5f, raceId: 3);
-
-        Assert.AreEqual(93f, elf, 4f);
+        Assert.AreEqual(float.PositiveInfinity, SimulateRoutSeconds(resistScaledRate),
+            "With the shipped floor the aura alone must never reach the 0.01 panic threshold.");
     }
 
-    [TestMethod]
-    public void ComputeDrain_DwarfVeteran_RoutsAtTheDocumentedTime()
+    // Seconds from a mean-morale start until the target sits on the floor of 10, then regen
+    // pulls it back up and the drain pushes it down again (it never goes lower).
+    [DataTestMethod]
+    [DataRow(5f / 1.5f, 1f, 12.5f, 2f, DisplayName = "Tier-1 levy reaches the floor in about 12.5s")]
+    [DataRow(5f / 2.5f, 1f, 21.75f, 2f, DisplayName = "Tier-3 line infantry reaches the floor in about 22s")]
+    [DataRow(5f / 4.0f, 1f, 37.25f, 2f, DisplayName = "Tier-6 elite reaches the floor in about 37s")]
+    [DataRow(5f / 2.5f, 0.4f, 67.5f, 4f, DisplayName = "Tier-3 elf reaches the floor in about 68s")]
+    [DataRow(5f / 3.5f, 0.5f, 81.25f, 5f, DisplayName = "Tier-5 dwarf reaches the floor in about 81s")]
+    public void ComputeDrain_ShippedFloor_ReachesTheFloorAtTheDocumentedTime(
+        float resistScaledRate, float raceResist, float expectedSeconds, float tolerance)
     {
-        // Tier-5 resistance 3.5, dwarf resist 0.5 -> 0.71/s. Pins the one row of the balance
-        // table in docs/features/dread-aura.md that no test previously derived.
-        _registry.ResolveResist(2).Returns(0.5f);
+        _registry.ResolveResist(Arg.Any<int?>()).Returns(raceResist);
 
-        var dwarf = SimulateRoutSeconds(5f / 3.5f, raceId: 2);
+        var actual = SimulateSecondsToFloor(resistScaledRate);
 
-        Assert.AreEqual(113f, dwarf, 5f);
+        Assert.AreEqual(expectedSeconds, actual, tolerance,
+            $"Time to the floor moved to {actual:F1}s. This is the balance contract in " +
+            "docs/features/dread-aura.md: update the doc and the table in the same commit, or revert the retune.");
     }
 
-    [TestMethod]
-    public void ComputeDrain_ElfHero_DriftsBelowRegenRate_AndNeverRouts()
+    // A hero's resistance uses Level / 4 + 1 in place of tier: 5.25 from level 16, 6.0 from level 20.
+    // Times the elf multiplier 0.4, the drain stays under the engine's 0.4/s regeneration.
+    [DataTestMethod]
+    [DataRow(5.25f, DisplayName = "Elven hero of level 16")]
+    [DataRow(6.0f, DisplayName = "Elven hero of level 20")]
+    public void ComputeDrain_ShippedFloorElfHero_NeverReachesTheFloor(float heroResistance)
     {
-        // Tier-6 hero resistance 6.0 -> 0.833/s, times elf 0.4 -> 0.333/s, under the engine's
-        // 0.4/s regeneration. Immunity by arithmetic, with no special case in the code.
-        _registry.ResolveResist(3).Returns(0.4f);
+        _registry.ResolveResist(Arg.Any<int?>()).Returns(0.4f);
 
-        var elfHero = SimulateRoutSeconds(5f / 6.0f, raceId: 3);
+        var elfHero = SimulateSecondsToFloor(5f / heroResistance);
 
         Assert.AreEqual(float.PositiveInfinity, elfHero,
-            "An elven hero must stay above the engine's morale-recovery floor forever.");
+            "An elven hero of level 16 or more drains slower than the engine regenerates and must never reach the floor.");
     }
 
     // ---- The morale floor -------------------------------------------------
@@ -235,8 +273,22 @@ public class DreadAuraServiceTests
     }
 
     [TestMethod]
+    public void ComputeDrain_NullProfile_StopsAtTheCompiledFloor()
+    {
+        // The provider never hands over a null profile today, but Profile has a public setter.
+        // The fallback must be the compiled floor, never 0, which would let the aura rout alone.
+        _config.Profile = null!;
+
+        var drain = _sut.ComputeDrain(Ctx(50f, morale: 10.5f, elapsed: 10f));
+
+        Assert.AreEqual(10.5f - new DreadProfileConfig().MoraleFloor, drain, 0.001f);
+    }
+
+    [TestMethod]
     public void ComputeDrain_ZeroFloor_CanDrainToPanic()
     {
+        _config.Profile.MoraleFloor = 0f;
+
         Assert.AreEqual(float.PositiveInfinity, SimulateRoutSeconds(0.2f));
         Assert.IsTrue(SimulateRoutSeconds(5f / 2.5f) < 60f);
     }

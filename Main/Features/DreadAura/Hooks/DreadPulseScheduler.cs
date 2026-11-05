@@ -23,7 +23,8 @@ public sealed class DreadPulseScheduler
     /// Without this, ANY window in which the aura is skipped freezes <c>LastPulseTime</c> while the
     /// mission clock keeps running, and the whole window is then delivered as a single pulse.
     /// Toggling the MCM off and back on mid-battle would drain the entire off-window at once and
-    /// instantly rout every enemy in radius; a long stall or alt-tab would do the same. Genuine
+    /// drop every enemy in radius straight to the floor (or rout them all, at moraleFloor 0); a
+    /// long stall or alt-tab would do the same. Genuine
     /// frame hitches still get exact catch-up, because they are far below this bound.
     /// </summary>
     private const float MaxCatchUpSeconds = 1f;

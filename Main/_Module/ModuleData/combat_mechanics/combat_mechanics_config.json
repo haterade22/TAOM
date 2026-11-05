@@ -18,10 +18,10 @@
     "enabled": true,
     "includeRiderWeight": true,
     "neutralWeightRatio": 6.0,
-    "autoKnockdownWeightRatio": 8.0,
+    "autoKnockdownWeightRatio": 6.0,
     "autoKnockdownMinSpeedFactor": 0.4,
     "defaultChargeSpeedReference": 4.3,
-    "minPenetrationFactor": 0.25,
+    "minPenetrationFactor": 1.0,
     "maxPenetrationFactor": 2.5,
     "horseChargePenetration": 0.4
   },
@@ -51,6 +51,8 @@
     "elf": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
     "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true, "knockdownResistanceMultiplier": 3.0, "swingEnergyBonusFactor": 0.20 },
     "orc": { "swingEnergyBonusFactor": 0.15 },
-    "uruk_hai": { "swingEnergyBonusFactor": 0.10, "knockdownResistanceMultiplier": 1.25 }
+    "uruk_hai": { "swingEnergyBonusFactor": 0.10 },
+    "cave_troll": { "knockdownResistanceMultiplier": 4.0 },
+    "hill_troll": { "knockdownResistanceMultiplier": 4.0 }
   }
 }

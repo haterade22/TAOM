@@ -22,7 +22,7 @@ public class BattleActionBarServiceTests
     public void Setup()
     {
         _settings = Substitute.For<ICompanionTacticsSettingsProvider>();
-        _settings.EnableBattleActionBar.Returns(true);
+        _settings.ShowBattleActionBar.Returns(true);
         _settings.EnableVolleyFire.Returns(true);
 
         _analyzer = Substitute.For<IFormationCompositionAnalyzer>();
@@ -57,7 +57,7 @@ public class BattleActionBarServiceTests
     [TestMethod]
     public void GetActionsForFormation_FeatureDisabled_ReturnsEmpty()
     {
-        _settings.EnableBattleActionBar.Returns(false);
+        _settings.ShowBattleActionBar.Returns(false);
         SetComposition(ranged: true);
         var f = MakeFormation();
 

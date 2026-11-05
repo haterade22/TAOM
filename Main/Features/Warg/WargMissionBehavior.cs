@@ -189,10 +189,14 @@ public class WargMissionBehavior : MissionLogic
         base.OnRemoveBehavior();
     }
 
+    // A mission without the rage controller (a [DefaultView], built only for a mission with a screen) switches nothing
+    // and leaves the player on vanilla's controller. Before, this disabled vanilla's controller and then threw on the
+    // null one (the guard the 1.5.x line added in c91380274).
     public static void SwitchMainAgentController(bool switchToSpecialController)
     {
-        MissionMainAgentController baseController = Mission.Current.GetMissionBehavior<MissionMainAgentController>();
         AutonomousMovementPlayerController noMovementController = Mission.Current.GetMissionBehavior<AutonomousMovementPlayerController>();
+        if (noMovementController == null) return;
+        MissionMainAgentController baseController = Mission.Current.GetMissionBehavior<MissionMainAgentController>();
         if (switchToSpecialController)
         {
             baseController.Disable();

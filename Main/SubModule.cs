@@ -821,6 +821,9 @@ public class SubModule : MBSubModuleBase
         catch { /* diagnostic is best-effort, never break OnGameStart */ }
         hookStamp?.Mark("session_snapshot");
 
+        // Custom Battle and the editor's test battle hand a BasicGameStarter here; a campaign returns at once.
+        RegisterCustomBattleModels(gameStarterObject);
+
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
             // Registration order is preserved exactly from the pre-extraction inline block:
@@ -1272,8 +1275,9 @@ public class SubModule : MBSubModuleBase
         // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
         // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
         // race gate, an unarmed-bearer backstop). Resolved through MissionGameModels, which
-        // takes the LAST registered model, so ours wins over SandBox's. Campaign-only: Custom
-        // Battle builds CustomBattleBannerBearersModel off a BasicGameStarter and is unaffected.
+        // takes the LAST registered model, so ours wins over SandBox's. Custom Battle builds
+        // CustomBattleBannerBearersModel off a BasicGameStarter; RegisterCustomBattleModels adds the
+        // race gate there (TaomCustomBattleBannerBearersModel), so no troll carries a standard.
         campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
         // Enlistment (#576): the #443 army join makes MapEvent.IsPlayerSergeant() true, which is
@@ -1283,6 +1287,26 @@ public class SubModule : MBSubModuleBase
         // above; the override returns base for every battle that is not enlisted service.
         campaignStarter.AddModel<BattleInitializationModel>(new TaomBattleInitializationModel(
             IoC.Resolve<Features.Enlistment.IEnlistmentDeploymentService>()));
+    }
+
+    /// <summary>
+    /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game type has added its own
+    /// models (v1.4.8 CustomGame.OnInitialize: InitializeGameModels, then GameManager.OnGameStart), so a model added now
+    /// is the one MissionGameModels resolves (GameModelsManager.GetGameModel returns the last one added). Mirrored: the
+    /// banner bearers' race gate and the Combat Mechanics damage rules (TaomCustomBattleDamageModel). Every other TAOM model stays campaign-only. The feature-module step
+    /// (FeatureModuleHooks.AddGameStartContent) runs after this one, so no module may add a model for a slot filled here.
+    /// </summary>
+    private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
+    {
+        if (gameStarterObject is CampaignGameStarter || !(gameStarterObject is BasicGameStarter basicStarter))
+            return;
+        // BannerBearers: trolls never carry or fetch a standard, in Custom Battle too (race gate only).
+        basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(
+            IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
+        // CombatMechanics (#788): the damage rules run in Custom Battle too, through the facade the campaign model calls.
+        // The twin extends the engine's Custom Battle base, never SandBox's (a mounted hit would throw outside a campaign).
+        basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(
+            IoC.Resolve<Features.CombatMechanics.Hooks.CombatMechanicsHooks>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
@@ -2062,7 +2086,9 @@ public class SubModule : MBSubModuleBase
         // removal callbacks may run in either order (#595, Codex review 109).
         AddTaomBehavior(new BehaviorTreeMissionLogic());
         AddTaomBehavior(new AdvancedCombatBehavior());
-        AddTaomBehavior(new AutonomousMovementPlayerController());
+        // The warg rage controller and the battle action bar are [DefaultView]s the engine builds with the
+        // mission. Never add a MissionView here: this runs in Mission.AfterStart, after MissionScreen
+        // registered its views, so it would never tick or finalize (#970, SubModuleMissionViewWiringTests).
         AddTaomBehavior(new WargMissionBehavior());
         AddTaomBehavior(new SpiderMissionBehavior());
         AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
@@ -2119,7 +2145,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
-        AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
         // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).

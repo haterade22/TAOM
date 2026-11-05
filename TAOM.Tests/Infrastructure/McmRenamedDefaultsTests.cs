@@ -18,6 +18,7 @@ public class McmRenamedDefaultsTests
         object[][] rows =
         {
             new object[] { "BanditMaxPartiesPerHideout", "BanditPartiesPerHideoutCap", 6 },
+            new object[] { "ChargeAutoKnockdownWeightRatio", "ChargeAutoKnockdownRatio", 6 },
             new object[] { "EnableFormationPresets", "EnableOobFormationPresets", false },
             new object[] { "EnableSmartCavalryAI", "EnableSmartCavalryCharge", false },
             new object[] { "Phase1TriggerDay", "WarPhase1TriggerDay", 30 },

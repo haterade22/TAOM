@@ -14,7 +14,7 @@ namespace TAOM.Tests.Features.DreadAura;
 ///
 /// These catch SIGNATURE drift. They cannot catch BEHAVIOUR drift in the constants the feature is
 /// balanced against (<c>_recoveryMorale = _initialMorale * 0.5f</c>, the 0.01 panic threshold, the
-/// +0.4/sec regeneration, the 30% formation-flee threshold). Those are recorded with their engine
+/// +0.4/sec regeneration). Those are recorded with their engine
 /// file and line in docs/features/dread-aura.md and are a control-battle item on the
 /// <c>/engine-bump</c> checklist.
 /// </summary>

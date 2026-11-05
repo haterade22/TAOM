@@ -95,7 +95,7 @@ public sealed class BattleActionBarVM : ViewModel
         var actions = _service.GetActionsForFormation(adapter);
         foreach (var action in actions)
         {
-            _actionButtons.Add(new ActionButtonVM(action));
+            _actionButtons.Add(new ActionButtonVM(action, SyncActiveFromStance));
         }
         SyncActiveFromStance();
     }
@@ -115,12 +115,5 @@ public sealed class BattleActionBarVM : ViewModel
         {
             button.IsActive = button.MappedStance != TroopStance.None && button.MappedStance == current;
         }
-    }
-
-    public ActionButtonVM TryGetActionByHotkeyIndex(int oneBasedIndex)
-    {
-        var zeroBased = oneBasedIndex - 1;
-        if (zeroBased < 0 || zeroBased >= _actionButtons.Count) return null;
-        return _actionButtons[zeroBased];
     }
 }
