@@ -69,6 +69,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         // second subscription on the next new game, popping the inquiry twice.
         _attachment.ColumnEnteredSettlement -= OnColumnEnteredSettlement;
         _attachment.ColumnEnteredSettlement += OnColumnEnteredSettlement;
+        _attachment.ColumnLeftSettlement -= _presenter.OnStopEnded;   // once per stop, not per session
+        _attachment.ColumnLeftSettlement += _presenter.OnStopEnded;
     }
 
     private void OnColumnEnteredSettlement(string settlementId) =>

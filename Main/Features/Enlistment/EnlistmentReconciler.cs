@@ -46,10 +46,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// campaign days are absolute. Load a later save and <c>elapsed</c> is enormous, so the recovery
     /// fires on the very first latched tick and finishes what may be a genuine loot screen with no
     /// real waiting at all: exactly the destructive <c>Finish</c> R1b exists to prevent, committed by
-    /// the code meant to be the safety net. Two independent guards, because they cover different
-    /// paths: <see cref="ResetForNewSession"/> handles the load path, and the backwards-clock
-    /// re-anchor in <see cref="BreakStaleBattleLatch"/> handles a brand-new campaign, which never
-    /// reaches <c>ResetSessionCaches</c> at all.
+    /// the code meant to be the safety net. Two independent guards: <see cref="ResetForNewSession"/>
+    /// runs from <c>ResetSessionCaches</c> on every peer's load, on a new campaign and at game end,
+    /// and the backwards-clock re-anchor in <see cref="BreakStaleBattleLatch"/> stays as the
+    /// self-contained second guard for any path that skips the reset.
     /// </summary>
     private double _staleBattleLatchSinceDays = double.NaN;
 
@@ -57,9 +57,11 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
     /// <summary>
     /// Commander the loss modal has already been raised for, so the hourly tick cannot re-raise it
-    /// every hour of the grace. Not persisted: after a save/load the player is re-told once, which
-    /// is the right side to fail on — this is the message explaining why they are suddenly visible
-    /// and alone, and hearing it twice beats resuming a campaign with no idea.
+    /// every hour of the grace. Not persisted. It belongs to one episode of one term, and this
+    /// class is a singleton, so three edges clear it: the commander recovering (ReconcileGrace),
+    /// the term ending (the discharge subscription in the constructor), and a new session
+    /// (<see cref="ResetForNewSession"/>). Without the last two, a later term or a loaded save
+    /// under the same lord lost him in silence.
     /// </summary>
     private string _lossAnnouncedFor;
 
@@ -91,6 +93,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _inquiry = inquiry;
         _army = army;
         _logger = logger;
+
+        // Every discharge path, not only the ones this class raises (the player's release, the
+        // loss modal's "end service"). Both are singletons, so this subscribes once per process.
+        _discharge.EnlistmentEnded += _ => _lossAnnouncedFor = null;
     }
 
     public event Action<string> BattleJoinRequested;
@@ -98,7 +104,11 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     public void ReconcileHourly(double nowDays) => Reconcile(nowDays, "hourly");
 
     /// <inheritdoc/>
-    public void ResetForNewSession() => _staleBattleLatchSinceDays = double.NaN;
+    public void ResetForNewSession()
+    {
+        _staleBattleLatchSinceDays = double.NaN;
+        _lossAnnouncedFor = null;
+    }
 
     /// <summary>
     /// Run a full reconcile now, off an edge rather than the hourly tick. The trigger string is
@@ -193,7 +203,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
     /// <summary>
     /// The one moment the player is told their service just changed underneath them. Raised at the
-    /// transition, once per commander, with a real choice.
+    /// transition, once per loss episode (see <c>_lossAnnouncedFor</c>), with a real choice.
     ///
     /// WHY A MODAL AND NOT A TOAST. This fires in the tick after a battle, which is exactly when
     /// the player is accelerating time — and a toast at speed is not a message. #436 measured that
@@ -449,10 +459,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
         // Re-anchor on no anchor, and equally on an anchor in the FUTURE. A clock that ran backwards
         // cannot be a continuous episode; it means a different campaign or an earlier save, and the
-        // anchor belongs to a world this one has nothing to do with. This is the guard for the path
-        // ResetForNewSession does not reach: ResetSessionCaches is wired to OnGameLoaded only, so a
-        // brand-new campaign in the same process never calls it, and a new campaign's low day count
-        // puts the leftover anchor ahead of it.
+        // anchor belongs to a world this one has nothing to do with. ResetSessionCaches runs on a
+        // load, on a new campaign and at game end, so this is the second guard, for any path that
+        // skips the reset: a leftover anchor ahead of a new campaign's low day count is re-anchored
+        // here.
         if (!FiniteFloatValidator.IsFinite(_staleBattleLatchSinceDays) || nowDays < _staleBattleLatchSinceDays)
         {
             _staleBattleLatchSinceDays = nowDays;

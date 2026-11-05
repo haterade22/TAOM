@@ -23,6 +23,14 @@ public interface IServiceAttachmentService
     event System.Action<string> ColumnEnteredSettlement;
 
     /// <summary>
+    /// Raised when <see cref="ExitSettlementForService"/> has walked the player out of the stop
+    /// (even if the re-park then failed): the stop is over. The arrival offer's settlement latch is
+    /// cleared on it. Not the only stop end: a shore-leave pass suspends the exit sweep, so the
+    /// commander's settlement-left edge (<c>EnlistmentMaintenanceBehavior</c>) clears it too.
+    /// </summary>
+    event System.Action ColumnLeftSettlement;
+
+    /// <summary>
     /// True while the player is inside a settlement we placed them in less than
     /// <see cref="ServiceAttachmentService.SettlementDwellHours"/> campaign hours ago.
     ///
@@ -35,6 +43,14 @@ public interface IServiceAttachmentService
 
     /// <summary>Record when a placement happened, so the dwell above can be measured from it.</summary>
     void StampSettlementEntry(double nowHours);
+
+    /// <summary>
+    /// Forget the dwell anchor and the adapter's cached commander party. Session reset only (a
+    /// load, a new campaign or game end), never per tick: the anchor is an absolute campaign hour,
+    /// and one left in the future reads as "inside the dwell" until the new clock passes it plus
+    /// the 6-hour dwell. The cached party is matched by StringId, which a later campaign can reissue.
+    /// </summary>
+    void ResetForNewSession();
 
     /// <summary>Pass the commander id or distToCommander reads -1 and the drift line prints '?'.</summary>
     PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);
@@ -50,9 +66,6 @@ public interface IServiceAttachmentService
 
     /// <summary>Allocation-free presence read for the pump.</summary>
     PlayerPresenceFlags GetPresenceFlags();
-
-    /// <summary>Drop the cached commander handle — discharge, session launch, game load.</summary>
-    void InvalidateCommanderCache();
 
     /// <summary>Clear AttachedTo / non-led Army so the main party is a free agent again.</summary>
     bool ClearArmyAttachment();

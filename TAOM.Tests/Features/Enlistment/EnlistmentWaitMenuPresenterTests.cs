@@ -272,4 +272,52 @@ public class EnlistmentWaitMenuPresenterTests
             Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
     }
+
+    // ---- once per stop, not once per session (plan 014, maintainer decision 2026-09-24) ---------
+
+    private void AssertArrivalOffersShown(int count) =>
+        _inquiry.Received(count).ShowTwoOptionInquiry(
+            "taom_enlist_arrival_title", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Action>(), Arg.Any<System.Action>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<System.Collections.Generic.IReadOnlyDictionary<string, string>>(), Arg.Any<bool>());
+
+    [TestMethod]
+    public void OfferTownLeave_SameSettlementAfterTheStopEnded_AsksAgain()
+    {
+        // The column left town_EW1 and came back more than a day later: a new stop, so a new offer.
+        _actions.CanTakeTownLeave().Returns(true);
+        _sut.OfferTownLeave("town_EW1", 100.0);
+
+        _sut.OnStopEnded();
+        _sut.OfferTownLeave("town_EW1", 130.0);
+
+        AssertArrivalOffersShown(2);
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_SameSettlementWithinOneStop_AsksOnlyOnce_EvenPastTheCooldown()
+    {
+        // A re-follow inside the same stop (no exit in between) is not a new stop.
+        _actions.CanTakeTownLeave().Returns(true);
+        _sut.OfferTownLeave("town_EW1", 100.0);
+
+        _sut.OfferTownLeave("town_EW1", 130.0);
+
+        AssertArrivalOffersShown(1);
+    }
+
+    [TestMethod]
+    public void OfferTownLeave_AfterTheStopEnded_TheCooldownStillHolds()
+    {
+        // Ending the stop forgets the settlement, not the time: a commander dipping straight back
+        // in must not pop a second modal inside the day.
+        _actions.CanTakeTownLeave().Returns(true);
+        _sut.OfferTownLeave("town_EW1", 100.0);
+
+        _sut.OnStopEnded();
+        _sut.OfferTownLeave("town_EW1", 100.5);
+
+        AssertArrivalOffersShown(1);
+    }
 }

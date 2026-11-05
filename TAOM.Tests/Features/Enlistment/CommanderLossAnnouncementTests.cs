@@ -179,6 +179,63 @@ public class CommanderLossAnnouncementTests
             "choosing to end service must end it, not merely close the popup");
     }
 
+    private int LossInquiryCount()
+    {
+        var count = 0;
+        foreach (var call in _inquiry.ReceivedCalls())
+        {
+            if (call.GetMethodInfo().Name == nameof(IInquiryAdapter.ShowTwoOptionInquiry))
+                count++;
+        }
+
+        return count;
+    }
+
+    /// <summary>A fresh term under the same lord, as a later enlistment or a loaded save has it.</summary>
+    private void ServingUnderTheSameCommanderAgain()
+    {
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1_1";
+        _store.Record.EnlistedAtDay = Now;
+        _store.Record.GraceEndsAtDay = null;
+    }
+
+    [TestMethod]
+    public void ResetForNewSession_ReArmsTheLossModal_ForTheSameCommander()
+    {
+        // The latch is on a singleton. Session one announced this lord's loss; a save loaded
+        // afterwards, still serving him, loses him again and must be told again.
+        CommanderLost(prisoner: false);
+        _sut.ReconcileHourly(Now);
+        Assert.AreEqual(1, LossInquiryCount(), "precondition: the first loss is announced");
+
+        _sut.ResetForNewSession();
+        ServingUnderTheSameCommanderAgain();
+        _sut.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(2, LossInquiryCount(),
+            "a loss in a new session was silent: the previous session's shown-once latch survived the reset");
+    }
+
+    [TestMethod]
+    public void Discharge_ReArmsTheLossModal_ForAReEnlistmentUnderTheSameCommander()
+    {
+        // The player ends the term from the modal, re-enlists with the same lord, and loses him
+        // again. The latch belonged to the first term.
+        CommanderLost(prisoner: false);
+        _sut.ReconcileHourly(Now);
+        var onOptionB = (Action)SingleInquiryArgs()[OnOptionBArg];
+        onOptionB();
+        Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State, "precondition: discharged");
+
+        ServingUnderTheSameCommanderAgain();
+        _sut.ReconcileHourly(Now + 1.0);
+
+        Assert.AreEqual(2, LossInquiryCount(),
+            "a loss in a new term was silent: the discharged term's shown-once latch survived the discharge");
+    }
+
     [TestMethod]
     public void CommanderDead_DischargesAndDoesNotAsk()
     {
