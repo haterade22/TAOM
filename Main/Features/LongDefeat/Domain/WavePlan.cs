@@ -14,18 +14,22 @@ internal sealed class WavePlan
     private readonly WaveScaling _scaling;
 
     /// <param name="endless">How the waves past the list grow beyond their count; null changes nothing (factors 1, no tier links).</param>
-    public WavePlan(IReadOnlyList<WaveSpec> waves, WaveScaling scaling, EndlessScale? endless = null)
+    /// <param name="commanders">Which waves bring a commander and what he does; null: none does.</param>
+    public WavePlan(IReadOnlyList<WaveSpec> waves, WaveScaling scaling, EndlessScale? endless = null, CommanderPlan? commanders = null)
     {
         if (waves.Count == 0)
             throw new ArgumentException("a wave plan needs at least one wave", nameof(waves));
         _waves = waves;
         _scaling = scaling;
         Endless = endless ?? EndlessScale.None;
+        Commanders = commanders ?? CommanderPlan.None;
     }
 
     public IReadOnlyList<WaveSpec> Authored => _waves;
 
     public EndlessScale Endless { get; }
+
+    public CommanderPlan Commanders { get; }
 
     /// <summary>The wave's spec; a number below 1 is wave 1.</summary>
     public WaveSpec ForWave(int wave)

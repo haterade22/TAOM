@@ -6,6 +6,7 @@ using TAOM.Features.LongDefeat.Domain;
 using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Adapters;
@@ -14,8 +15,14 @@ namespace TAOM.Adapters;
 internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
 {
     private readonly Mission _mission;
+    private readonly LongDefeatAgentRegistry? _registry;
 
-    public LongDefeatEffectsAdapter(Mission mission) => _mission = mission;
+    /// <param name="registry">The roles of the attackers the field spawned; null (the adapter's tests) finds no commander.</param>
+    public LongDefeatEffectsAdapter(Mission mission, LongDefeatAgentRegistry? registry = null)
+    {
+        _mission = mission;
+        _registry = registry;
+    }
 
     public void PublishStats(LdStatTable table)
     {
@@ -32,14 +39,10 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
         if (standing == null)
             return new LdScaleSample("", 0f, 0f, blows);
 
-        foreach (var agent in standing)
-        {
-            var character = agent.Character;
-            if (agent.IsHuman && agent.IsActive() && !agent.IsRunningAway && character != null)
-                return new LdScaleSample(character.StringId, agent.HealthLimit, character.MaxHitPoints(), blows);
-        }
-
-        return new LdScaleSample("", 0f, 0f, blows);
+        var sampled = FirstRoster(standing, _registry, agent => agent.IsHuman && agent.IsActive() && !agent.IsRunningAway && agent.Character != null);
+        return sampled?.Character is { } character
+            ? new LdScaleSample(character.StringId, sampled.HealthLimit, character.MaxHitPoints(), blows)
+            : new LdScaleSample("", 0f, 0f, blows);
     }
 
     // The baseline is the stat model's own answer for the same agent with the stat hook inert on this thread. The model reads the agent, and it also reads one
@@ -103,6 +106,47 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
         return new LdTouched(standing.Count, watch.Elapsed.TotalMilliseconds);
     }
 
+    public LdTouched RefreshAttackers()
+    {
+        var watch = Stopwatch.StartNew();
+        var standing = StandingAttackers();
+        foreach (var agent in standing)
+        {
+            agent.UpdateAgentProperties();
+            agent.MountAgent?.UpdateAgentProperties();
+        }
+
+        return new LdTouched(standing.Count, watch.Elapsed.TotalMilliseconds);
+    }
+
+    // BaseHealthLimit is MaxHitPoints() until something writes it (Agent.cs:1438-1439), so the limit over MaxHitPoints() is the factor SpawnBatch wrote.
+    public LdScaleSample ReadCommander()
+    {
+        var agent = StandingCommander();
+        return agent?.Character == null ? new LdScaleSample("", 0f, 0f, 0) : new LdScaleSample(agent.Character.StringId, agent.HealthLimit, agent.Character.MaxHitPoints(), 0);
+    }
+
+    public string DescribeCommander()
+    {
+        var agent = StandingCommander();
+        if (agent == null)
+            return "";
+
+        var at = agent.Position;
+        var formation = agent.Formation;
+        return $"troop={agent.Character?.StringId} at=({at.x:F1}, {at.y:F1}, {at.z:F1}) health={agent.Health:F0}/{agent.HealthLimit:F0} formation={formation?.RepresentativeClass} "
+            + $"behavior={formation?.AI?.ActiveBehavior?.GetType().Name} speed={agent.MovementVelocity.Length:F1} unique={agent.GetAgentFlags().HasAnyFlag(AgentFlag.IsUnique)}";
+    }
+
+    private List<Agent> StandingAttackers()
+    {
+        IEnumerable<Agent>? attackers = _mission.AttackerTeam?.ActiveAgents;
+        return attackers == null ? new List<Agent>() : attackers.Where(a => a.IsHuman && a.IsActive()).ToList();
+    }
+
+    private Agent? StandingCommander() =>
+        _registry == null ? null : StandingAttackers().FirstOrDefault(a => _registry.RoleOf(a) == AttackerRole.Commander);
+
     public LdTouched ScaleHealth(BoonTarget target, float factor)
     {
         var watch = Stopwatch.StartNew();
@@ -146,6 +190,21 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
         agent.BaseHealthLimit = limit;
         agent.HealthLimit = limit;
         agent.Health = share * limit;
+    }
+
+    /// <summary>
+    /// The first of <paramref name="agents"/> that <paramref name="fits"/> and is a roster soldier. The team keeps its agents in spawn order (Team.cs:655-665), so this is the oldest roster
+    /// soldier standing: a commander, queued once the first batch closes, would otherwise be the oldest after the opening batch is gone, and a summon would be read as a roster troop.
+    /// </summary>
+    internal static T? FirstRoster<T>(IEnumerable<T> agents, LongDefeatAgentRegistry? registry, Func<T, bool> fits) where T : class
+    {
+        foreach (var agent in agents)
+        {
+            if (fits(agent) && (registry == null || registry.RoleOf(agent) == AttackerRole.Roster))
+                return agent;
+        }
+
+        return null;
     }
 
     private Agent? FirstPlainAttacker()

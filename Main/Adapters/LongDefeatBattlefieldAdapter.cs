@@ -26,6 +26,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private readonly Mission _mission;
     private readonly IModLogger _logger;
+    private readonly LongDefeatAgentRegistry _registry;
 
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
@@ -42,10 +43,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     private int _bodySequence;
     private float _highZ = float.MaxValue;
 
-    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger)
+    /// <param name="registry">Where each spawned attacker's role is kept; the effects adapter reads the same one. A fresh one when none is given.</param>
+    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger, LongDefeatAgentRegistry? registry = null)
     {
         _mission = mission;
         _logger = logger;
+        _registry = registry ?? new LongDefeatAgentRegistry();
     }
 
     private Team Side(bool attackers) => attackers ? _mission.AttackerTeam : _mission.DefenderTeam;
@@ -263,6 +266,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         {
             var agent = Spawn(troop, team, !attackers, Class(batch.Slot), reinforcement, open, batch.FirstIndex + i, false, mustered);
             ScaleHealth(agent, batch.HealthFactor);
+            if (attackers)
+                _registry.Register(agent, batch.Role);
             var at = agent.Position;
             points.Add(Point(at));
             if (frame is not { } f)
@@ -385,6 +390,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             + $"behavior={formation?.AI?.ActiveBehavior?.GetType().Name} speed={agent.MovementVelocity.Length:F1} at=({at.x:F1}, {at.y:F1}, {at.z:F1})";
     }
 
+    // KillAgentCheat inflicts 2000 ("blow.InflictedDamage = 2000;", Mission.cs:6228) and HandleBlow kills only when "if (Health < 1f)" holds afterwards (Agent.cs:5529). A commander of
+    // wave 36 or later stands above 2000 (rank health times the endless factor), so a felled soldier is first brought under half the blow: it is then lethal whatever his limit.
+    private const float FellBlowDamage = 2000f;
+
+    internal static float FellHealth(float health) => Math.Min(health, FellBlowDamage / 2f);
+
     public int Fell(int count)
     {
         if (count <= 0)
@@ -394,6 +405,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         foreach (var agent in left)
         {
             _logger.LogInfo(DescribeStraggler(agent));
+
+            // Marked before the kill, so the removal the engine raises for him is booked as felled by identity (the run keeps no shared counter), whatever order the callbacks come in.
+            if (!_registry.MarkFelled(agent))
+                _logger.LogWarning($"[LongDefeat][Wave] a felled attacker ({agent.Character?.StringId}) was not in the registry; his removal will be booked as a kill");
+            agent.Health = FellHealth(agent.Health);
             _mission.KillAgentCheat(agent);
         }
 
@@ -430,6 +446,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _rams = new List<BatteringRam>();
         _open.Clear();
         _muster.Clear();
+        _registry.Clear();
         _lastMain = null;
         _knownMain = null;
         _kitFacts = NoLord;

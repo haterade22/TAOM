@@ -52,7 +52,6 @@ internal sealed partial class SurvivalRun
     private float _damageFactor = 1f;
     private StalemateState _stale;
     private float _keep;
-    private int _fellPending;
     private bool _lossThisTick;
 
     public SurvivalRun(RunPlan plan)
@@ -149,19 +148,37 @@ internal sealed partial class SurvivalRun
         return fx;
     }
 
-    public void AttackerDown(string troopId)
+    /// <summary>
+    /// An attacker was removed. The <paramref name="role"/> and the <paramref name="felled"/> mark come from the adapter's registry, which marks each soldier the stalemate rule fells before it
+    /// kills him, so every removal is booked by what it was: a roster kill or felled soldier, a summon killed or felled, the commander killed or felled. A kill pays its troop's bounty (the commander
+    /// his rank's), a felled soldier nothing.
+    /// </summary>
+    public void AttackerDown(string troopId, AttackerRole role = AttackerRole.Roster, bool felled = false)
     {
         if (Result != null)
             return;
 
-        if (_fellPending > 0)
+        if (!felled)
+            _lossThisTick = true;
+        switch (role)
         {
-            _fellPending--;
-            return;
+            case AttackerRole.Commander:
+                EndCommander(felled ? CommanderOutcome.Felled : CommanderOutcome.Killed);
+                return;
+            case AttackerRole.Summoned when felled:
+                _summonFelled++;
+                return;
+            case AttackerRole.Summoned:
+                _summonKills++;
+                break;
+            case AttackerRole.Roster when felled:
+                _waveFelled++;
+                return;
+            default:
+                _stats.AttackerKilled();
+                break;
         }
 
-        _stats.AttackerKilled();
-        _lossThisTick = true;
         if (_plan.Bounties.TryGetValue(troopId, out var gold))
             _purse.Earn(PurseSource.Bounty, GoldFactors.Apply(gold, _factors.Bounty));
     }
@@ -216,6 +233,7 @@ internal sealed partial class SurvivalRun
             NextHealthFactor = next?.HealthFactor ?? 1f,
             NextDamageFactor = next?.DamageFactor ?? 1f,
             ClassName = _plan.ClassName,
+            Commander = CommanderViewNow(),
             BoonOffer = _offerCards,
             OwedPicks = _deck.Owed,
             Rerolls = _deck.Banked,
@@ -238,6 +256,7 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        TickCommander(fx);
         var spawned = SpawnAttackers(s, fx);
         if (_stage != WaveStage.Fighting)
             return;
@@ -248,7 +267,7 @@ internal sealed partial class SurvivalRun
             return;
         }
 
-        var decision = StalemateRule.Step(ref _stale, s.Dt, loss, s.AttackersStanding + QueueLeft, s.DefendersStanding, _waveCount, _r);
+        var decision = StalemateRule.Step(ref _stale, s.Dt, loss, s.AttackersStanding + QueueLeft, s.DefendersStanding, _waveCount + _summoned, _r);
         switch (decision.Action)
         {
             case StalemateAction.Charge:
@@ -260,8 +279,6 @@ internal sealed partial class SurvivalRun
                 if (felled > 0)
                 {
                     fx.FellAttackers = felled;
-                    _fellPending += felled;
-                    _waveFelled += felled;
                     fx.Events.Add(new RunEvent(RunEventKind.Felled, _wave, "count=" + felled));
                 }
 
@@ -302,6 +319,9 @@ internal sealed partial class SurvivalRun
         _waveSeconds = 0f;
         _waveFelled = 0;
         _stale = default;
+        InitCommander(_plan.Waves.Commanders.ForWave(_wave));
+        if (_stage == WaveStage.Fighting)
+            QueueCommander();
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
         fx.PublishStats = StatTableNow();
     }
@@ -324,6 +344,7 @@ internal sealed partial class SurvivalRun
 
         var take = _queue.GetRange(_queueHead, n);
         _queueHead += n;
+        _summonSpawned += take.Count(t => t.Role == AttackerRole.Summoned);
         if (!opening)
         {
             fx.AttackerBatches.AddRange(Batches(take, new int[2], CountBySlot(take), true, new[] { true, true }, AttackerHealth));
@@ -336,6 +357,7 @@ internal sealed partial class SurvivalRun
         {
             fx.RefreshAttackerTactic = true;
             _stage = WaveStage.Fighting;
+            QueueCommander();
         }
 
         return n;
@@ -345,7 +367,8 @@ internal sealed partial class SurvivalRun
     {
         var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes);
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow());
+        _warCry = null;
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
         OpenBoons(fx);
@@ -353,7 +376,6 @@ internal sealed partial class SurvivalRun
             fx.RestoreDefenderTactic = true;
 
         _keep = 0f;
-        _fellPending = 0;
         _stale = default;
         if (_plan.Options.StopAfterWaves is int target && _wavesCleared >= target)
         {
@@ -431,7 +453,7 @@ internal sealed partial class SurvivalRun
                 count++;
 
             var slot = (int)head.Slot;
-            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot], healthFactor(head)));
+            batches.Add(new SoldierBatch(head.TroopId, head.Slot, count, nextIndex[slot], totals[slot], reinforcement, !placed[slot], healthFactor(head), head.Role, head.Use));
             nextIndex[slot] += count;
             placed[slot] = true;
             i += count;

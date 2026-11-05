@@ -312,8 +312,11 @@ public class LongDefeatShippedConfigTests
 
         Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.WarChest) >= 3, "war chest rows");
         Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Fortress) >= 3, "fortress rows");
-        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
-        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Legend).All(r => r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "this slice's Legend rows cut affixes");
+        Assert.AreEqual(3, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
+        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend && r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "two Legend rows cut affixes");
+        var silence = rows.Single(r => r.Id == "the_long_silence");
+        Assert.AreEqual(BoonCategory.Legend, silence.Category);
+        Assert.AreEqual(50f, silence.Effects.Single(e => e.Key == BoonKeys.CommanderCooldownPercent).Value, "the commander row stretches every commander cooldown by half");
         Assert.IsTrue(rows.Any(r => r.HasDrawback), "some boons carry a real drawback");
     }
 
@@ -356,20 +359,20 @@ public class LongDefeatShippedConfigTests
         deck.TryReroll();
         deck.TryReroll();
 
-        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's twelve rows; the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
-        CollectionAssert.AreEqual(new[] { "granary_stores", "glittering_caves_refuge", "weregild_of_the_mark" }, deck.Picks[0].Draws[0].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras" }, deck.Picks[0].Draws[1].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "granary_stores", "weregild_of_the_mark", "healers_of_the_hold" }, deck.Picks[0].Draws[2].Ids.ToArray());
+        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's thirteen free rows (Slice 7 added the third Legend row); the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
+        CollectionAssert.AreEqual(new[] { "haggler_of_edoras", "stout_hearts_at_the_gate", "the_long_watch" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "hornblowers_bargain", "riddermark_levy", "wains_of_the_westfold" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "the_long_watch", "healers_of_the_hold", "granary_stores" }, deck.Picks[0].Draws[2].Ids.ToArray());
 
-        // Reroll twice again from a fresh deck, take the first card of draw 1, and the second pick is drawn over the eleven rows left.
+        // Reroll once from a fresh deck, take the first card of draw 1, and the second pick is drawn over the twelve rows left.
         var second = new BoonDeck(plan, 1UL, 1);
         for (var n = 1; n <= 3; n++)
             second.Cleared(n, n);
         second.TryReroll();
-        second.TryPick("stout_hearts_at_the_gate", 3, 4);
+        second.TryPick("hornblowers_bargain", 3, 4);
         for (var n = 4; n <= 6; n++)
             second.Cleared(n, n);
-        CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { "haggler_of_edoras", "granary_stores", "healers_of_the_hold" }, second.Offer.Select(r => r.Id).ToArray());
     }
 
     [TestMethod]
@@ -424,11 +427,11 @@ public class LongDefeatShippedConfigTests
         deck.TryReroll();
         deck.TryReroll();
 
-        // Seed 1, pick 1, an archer with the garrison and shop of Helm's Deep: 24 rows are eligible (the war chest, fortress and Legend rows, the archer's class rows, and all three troop categories).
-        CollectionAssert.AreEqual(new[] { "steady_aim", "stout_yeomanry", "fletchers_favour" }, deck.Picks[0].Draws[0].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "marksmans_call", "wains_of_the_westfold", "granary_stores" }, deck.Picks[0].Draws[1].Ids.ToArray());
-        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "hornblowers_bargain", "fletchers_favour" }, deck.Picks[0].Draws[2].Ids.ToArray());
-        Assert.AreEqual(24, deck.Picks[0].Draws[0].Eligible);
+        // Seed 1, pick 1, an archer with the garrison and shop of Helm's Deep: 25 rows are eligible (the war chest, fortress and Legend rows, the archer's class rows, and all three troop categories).
+        CollectionAssert.AreEqual(new[] { "marksmans_call", "hornblowers_bargain", "spears_of_the_westfold" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "shields_locked", "the_long_watch", "hearts_of_the_eored" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "spears_of_the_westfold", "glittering_caves_refuge", "marksmans_call" }, deck.Picks[0].Draws[2].Ids.ToArray());
+        Assert.AreEqual(25, deck.Picks[0].Draws[0].Eligible);
     }
 
     // The own-gear rule: a class kit gives the lord only what a troop of his people carries in fords_troops.xml. An item no troop carries sits here with its source, as a named exception.

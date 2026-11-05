@@ -4605,6 +4605,8 @@
 	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
+	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
+	<string id="TAOM_LD_Ability_WarCry_Isengard" text="{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls" />
 	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
 	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
 	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
@@ -4690,6 +4692,9 @@
 	<string id="TAOM_LD_Boon_SwiftNock" text="{=TAOM_LD_Boon_SwiftNock}The Swift Nock" />
 	<string id="TAOM_LD_Boon_SwiftNock_Drawback" text="{=TAOM_LD_Boon_SwiftNock_Drawback}Your archers take 10 percent more damage." />
 	<string id="TAOM_LD_Boon_SwiftNock_Text" text="{=TAOM_LD_Boon_SwiftNock_Text}Your archers draw 20 percent faster and reload 15 percent faster." />
+	<string id="TAOM_LD_Boon_TheLongSilence" text="{=TAOM_LD_Boon_TheLongSilence}The Long Silence" />
+	<string id="TAOM_LD_Boon_TheLongSilence_Drawback" text="{=TAOM_LD_Boon_TheLongSilence_Drawback}Every pack costs 15 percent more." />
+	<string id="TAOM_LD_Boon_TheLongSilence_Text" text="{=TAOM_LD_Boon_TheLongSilence_Text}Enemy commanders wait 50 percent longer between war cries and summonings." />
 	<string id="TAOM_LD_Boon_TheLongWatch" text="{=TAOM_LD_Boon_TheLongWatch}The Long Watch" />
 	<string id="TAOM_LD_Boon_TheLongWatch_Text" text="{=TAOM_LD_Boon_TheLongWatch_Text}Every intermission lasts 30 seconds longer." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold" text="{=TAOM_LD_Boon_WainsOfTheWestfold}Wains of the Westfold" />
@@ -4729,6 +4734,9 @@
 	<string id="TAOM_LD_Hud_CategoryLegend" text="{=TAOM_LD_Hud_CategoryLegend}Legend" />
 	<string id="TAOM_LD_Hud_CategoryWarChest" text="{=TAOM_LD_Hud_CategoryWarChest}War chest" />
 	<string id="TAOM_LD_Hud_Close" text="{=TAOM_LD_Hud_Close}Close" />
+	<string id="TAOM_LD_Hud_CommanderActive" text="{=TAOM_LD_Hud_CommanderActive}{RANK}: {ABILITY}, now" />
+	<string id="TAOM_LD_Hud_CommanderFallen" text="{=TAOM_LD_Hud_CommanderFallen}{RANK} has fallen" />
+	<string id="TAOM_LD_Hud_CommanderNext" text="{=TAOM_LD_Hud_CommanderNext}{RANK}: {ABILITY} in {SECONDS} s" />
 	<string id="TAOM_LD_Hud_Defenders" text="{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}" />
 	<string id="TAOM_LD_Hud_Gold" text="{=TAOM_LD_Hud_Gold}Gold: {GOLD}" />
 	<string id="TAOM_LD_Hud_HintOpen" text="{=TAOM_LD_Hud_HintOpen}B  Shop   H  Sound the horn and start the wave early" />
@@ -4778,6 +4786,9 @@
 	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+	<string id="TAOM_LD_Rank_Captain" text="{=TAOM_LD_Rank_Captain}Captain" />
+	<string id="TAOM_LD_Rank_General" text="{=TAOM_LD_Rank_General}General" />
+	<string id="TAOM_LD_Rank_Lieutenant" text="{=TAOM_LD_Rank_Lieutenant}Lieutenant" />
 	<string id="TAOM_LD_StartFailed" text="{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- MarshalScreenAdapter -->

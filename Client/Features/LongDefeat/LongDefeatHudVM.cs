@@ -31,6 +31,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private bool _isKeepVisible;
     private string _hintText = string.Empty;
     private string _affixText = string.Empty;
+    private string _commanderText = string.Empty;
     private string _speedText = string.Empty;
     private string _speedTitle = string.Empty;
     private string _noticeText = string.Empty;
@@ -92,6 +93,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public string AffixText { get => _affixText; private set => Set(ref _affixText, value, nameof(AffixText)); }
+
+    [DataSourceProperty]
+    public string CommanderText { get => _commanderText; private set => Set(ref _commanderText, value, nameof(CommanderText)); }
 
     [DataSourceProperty]
     public string SpeedText { get => _speedText; private set => Set(ref _speedText, value, nameof(SpeedText)); }
@@ -264,6 +268,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         DefendersText = LongDefeatHudText.Defenders(view.DefendersStanding + view.DefendersPending);
         HintText = LongDefeatHudText.Hint(view);
         AffixText = LongDefeatHudText.AffixLine(view);
+        CommanderText = LongDefeatHudText.CommanderLine(view);
         IsKeepVisible = view.Phase == RunPhase.Wave && view.KeepProgress > 0f;
         KeepFillWidth = IsKeepVisible ? KeepWidth(view.KeepProgress) : 0f;
         KeepText = IsKeepVisible ? LongDefeatHudText.Keep() : string.Empty;

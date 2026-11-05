@@ -5,9 +5,11 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>
 /// A group of soldiers to spawn into one formation. <c>FirstIndex</c> runs 0 to <c>BatchTotal</c> - 1 across the batch's soldiers,
 /// and <c>Place</c> is true only for the first batch of a formation, because a later batch joins the formation where it stands.
-/// <c>HealthFactor</c> is what the adapter multiplies each spawned soldier's health by: an attacker's endless factor, a defender's combined health boon factor for its group.
+/// <c>HealthFactor</c> is what the adapter multiplies each spawned soldier's health by: an attacker's endless factor (times his rank's factor for a commander), a defender's combined health boon factor for its group.
+/// <c>Role</c> is what an attacker is to its wave, and <c>Use</c> the number of the summon that queued a summoned soldier (0 for every other soldier); a defender is always a roster soldier.
 /// </summary>
-internal sealed record SoldierBatch(string TroopId, FormationSlot Slot, int Count, int FirstIndex, int BatchTotal, bool Reinforcement, bool Place, float HealthFactor = 1f);
+internal sealed record SoldierBatch(string TroopId, FormationSlot Slot, int Count, int FirstIndex, int BatchTotal, bool Reinforcement, bool Place, float HealthFactor = 1f,
+    AttackerRole Role = AttackerRole.Roster, int Use = 0);
 
 /// <summary>A wave begins: how many soldiers its first batch holds by class. The wave's factors ride <see cref="SoldierBatch.HealthFactor"/> and <see cref="RunEffects.PublishStats"/>, and the director reads its spec for the log.</summary>
 internal sealed record WaveStart(int Wave, int Foot, int Ranged);
@@ -23,6 +25,10 @@ internal enum RunEventKind
     BoonLapsed,
     BoonTaken,
     Rerolled,
+    Summoned,
+    WarCry,
+    WarCryEnded,
+    CommanderEnded,
 }
 
 internal sealed record RunEvent(RunEventKind Kind, int Wave, string Detail);
@@ -47,6 +53,9 @@ internal sealed class RunEffects
     /// <summary>A troop or class boon was taken since the last tick: refresh and scale those standing, after <see cref="PublishStats"/> and before any soldier spawns.</summary>
     public LdBoonApply? ApplyBoon { get; set; }
     public List<SoldierBatch> AttackerBatches { get; } = new();
+
+    /// <summary>A war cry began or ended (or the commander who raised it fell): derive every standing attacker's properties again, after <see cref="PublishStats"/>.</summary>
+    public bool RefreshAttackers { get; set; }
 
     /// <summary>The wave's first batch is out: force the attacker tactic and give it a fresh TacticBreachWalls.</summary>
     public bool RefreshAttackerTactic { get; set; }

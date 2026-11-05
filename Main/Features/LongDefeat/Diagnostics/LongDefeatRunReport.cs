@@ -54,10 +54,11 @@ internal static class LongDefeatRunReport
                 ["affixes"] = new JArray(w.Affixes),
                 ["healthFactor"] = w.HealthFactor,
                 ["damageFactor"] = w.DamageFactor,
-                ["summoned"] = 0,
-                ["summonKills"] = 0,
-                ["summonFelled"] = 0,
-                ["commander"] = JValue.CreateNull(),
+                ["summoned"] = w.Summoned,
+                ["summonSpawned"] = w.SummonSpawned,
+                ["summonKills"] = w.SummonKills,
+                ["summonFelled"] = w.SummonFelled,
+                ["commander"] = w.Commander is { } commander ? Commander(commander) : JValue.CreateNull(),
             })),
             ["gold"] = new JObject
             {
@@ -68,13 +69,24 @@ internal static class LongDefeatRunReport
                 ["bounty"] = purse.EarnedFrom(PurseSource.Bounty),
                 ["waveBonus"] = purse.EarnedFrom(PurseSource.WaveBonus),
                 ["earlyStart"] = purse.EarnedFrom(PurseSource.EarlyStart),
-                ["commander"] = 0,
+                ["commander"] = purse.EarnedFrom(PurseSource.Commander),
                 ["boon"] = purse.EarnedFrom(PurseSource.Boon),
             },
             ["poison"] = new JObject { ["doses"] = 0, ["hits"] = 0, ["damage"] = 0, ["ownerMissing"] = 0, ["withheld"] = 0 },
         };
         return report.ToString(Newtonsoft.Json.Formatting.Indented);
     }
+
+    /// <summary>A wave's commander: his troop, the rank's id and the steps past the ranks, how he ended, how often each ability fired and how often after his end (0 unless a clock failed to stop).</summary>
+    private static JObject Commander(CommanderRecord c) => new()
+    {
+        ["troop"] = c.TroopId,
+        ["rank"] = c.RankId,
+        ["steps"] = c.Steps,
+        ["outcome"] = c.Outcome.ToString().ToLowerInvariant(),
+        ["uses"] = new JObject(c.Uses.Select(u => new JProperty(u.Key, u.Value))),
+        ["usesAfterEnd"] = c.UsesAfterEnd,
+    };
 
     /// <summary>One pick: its number, the wave whose clear offered it, every draw (the first, then each reroll), the boon taken (null when none) and the wave it acts on (0 when none).</summary>
     private static JObject Pick(BoonPickRecord p) => new()

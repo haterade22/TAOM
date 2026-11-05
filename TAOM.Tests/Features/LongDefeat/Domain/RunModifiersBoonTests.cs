@@ -119,14 +119,14 @@ public class RunModifiersBoonTests
     }
 
     [TestMethod]
-    public void TheVocabulary_IsClosed_AndNamesEveryKeyOfSlices4And6()
+    public void TheVocabulary_IsClosed_AndNamesEveryKeyOfSlices4To7()
     {
         var expected = new[]
         {
             "bountyPercent", "waveBonusPercent", "earlyGoldPercent", "pricePercent", "gold",
             "garrisonCap", "intermissionSeconds", "restShare", "keepHoldPercent", "packBonus", "affixCount",
             "swingSpeedPercent", "moveSpeedPercent", "drawSpeedPercent", "reloadSpeedPercent", "blockPercent", "parryPercent", "aimErrorPercent",
-            "damagePercent", "damageTakenPercent", "healthPercent",
+            "damagePercent", "damageTakenPercent", "healthPercent", "commanderCooldownPercent",
         };
 
         CollectionAssert.AreEquivalent(expected, BoonKeys.Rules.Keys.ToArray());

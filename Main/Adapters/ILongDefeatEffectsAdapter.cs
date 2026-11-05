@@ -33,6 +33,21 @@ internal interface ILongDefeatEffectsAdapter
     LdTouched RefreshStats(BoonTarget target);
 
     /// <summary>
+    /// Derives the driven properties of every standing human attacker (and each one's mount) again, so a stat table just published (a war cry beginning or ending) reaches soldiers already
+    /// built: the engine derives them at spawn and on events only (<c>Agent.UpdateAgentProperties</c>, <c>Agent.cs:3692-3699</c>).
+    /// </summary>
+    LdTouched RefreshAttackers();
+
+    /// <summary>
+    /// The standing commander as the engine holds him: his troop, his health limit and the maximum his character gives him (their ratio is the rank's factor times the endless factor). An
+    /// empty troop with no commander standing.
+    /// </summary>
+    LdScaleSample ReadCommander();
+
+    /// <summary>One line for the log about the standing commander: where he is and what his formation does, for risk 1 (does a hero spawned mid-wave fight as a soldier). Empty with none standing.</summary>
+    string DescribeCommander();
+
+    /// <summary>
     /// Multiplies the health limit of every standing human of a troop group by one boon's own factor, keeping each one's health share. The limit, its base and
     /// the health are the three writes the engine's own horse spawn makes (<c>Mission.cs:4607-4609</c>). Not for the lord: a relative write on a body adopted this tick would apply
     /// the factor twice, so his health is only ever set absolutely (<see cref="SetPlayerHealth"/>).

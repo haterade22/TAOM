@@ -206,6 +206,28 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_AWaveWithACommanderAndASummon_ReportsTheirCountsAndTheCommandersOutcome()
+    {
+        var stats = new RunStats();
+        var uses = new System.Collections.Generic.Dictionary<string, int> { ["war_cry"] = 3, ["summon_uruks"] = 1 };
+        var commander = new CommanderRecord("lord_I1_1", "lieutenant", 0, CommanderOutcome.Killed, uses, 0, 61.5f);
+        stats.CloseWave(8, 200f, 0, 1.2f, 1.1f, null, new WaveRoles(20, 20, 17, 3, commander));
+        var purse = new Purse(600);
+        purse.Earn(PurseSource.Commander, 250);
+
+        var report = Build(new RunResult(RunEndReason.TargetReached, 8, 1, 0), stats, purse);
+
+        var wave = (JObject)report["waves"]!.Single();
+        Assert.AreEqual((20, 20, 17, 3), ((int)wave["summoned"]!, (int)wave["summonSpawned"]!, (int)wave["summonKills"]!, (int)wave["summonFelled"]!));
+        var written = (JObject)wave["commander"]!;
+        Assert.AreEqual(("lord_I1_1", "lieutenant", 0, "killed", 0), ((string?)written["troop"], (string?)written["rank"], (int)written["steps"]!, (string?)written["outcome"], (int)written["usesAfterEnd"]!));
+        Assert.AreEqual((3, 1), ((int)written["uses"]!["war_cry"]!, (int)written["uses"]!["summon_uruks"]!));
+        Assert.AreEqual(250, (int)report["gold"]!["commander"]!);
+        Assert.AreEqual((long)report["gold"]!["earned"]!, (long)report["gold"]!["bounty"]! + (long)report["gold"]!["waveBonus"]! + (long)report["gold"]!["earlyStart"]!
+            + (long)report["gold"]!["commander"]! + (long)report["gold"]!["boon"]!);
+    }
+
+    [TestMethod]
     public void Build_AWavePastTheAuthoredList_ReportsItsHealthAndDamageFactors()
     {
         var stats = new RunStats();

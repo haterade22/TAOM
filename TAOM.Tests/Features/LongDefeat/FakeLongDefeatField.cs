@@ -42,6 +42,9 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     public int Far { get; set; }
     public int OffMesh { get; set; }
     public int ShortBy { get; set; }
+
+    /// <summary>A troop the engine cannot spawn: its batches make nobody.</summary>
+    public string? Unspawnable { get; set; }
     public int FellResult { get; set; } = -1;
 
     /// <summary>What the last <see cref="Read"/> was asked to measure around.</summary>
@@ -98,7 +101,7 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
     {
         Calls.Add($"Spawn:{Side(attackers)}:{batch.TroopId}:{batch.Count}");
         Spawned.Add((attackers, batch));
-        var made = Math.Max(0, batch.Count - ShortBy);
+        var made = batch.TroopId == Unspawnable ? 0 : Math.Max(0, batch.Count - ShortBy);
         var points = Enumerable.Range(batch.FirstIndex, made).Select(i => new LdPoint(i, attackers ? 50 : 0, 0)).ToList();
         if (attackers)
             AttackersStanding += made;
@@ -151,10 +154,14 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
         return RestResult;
     }
 
+    /// <summary>Soldiers <see cref="Fell"/> has marked and the next plain attacker removals will consume as felled, as the registry's mark does for the real field.</summary>
+    public int FelledMarks { get; private set; }
+
     public int Fell(int count)
     {
         Calls.Add($"Fell:{count}");
         var felled = FellResult >= 0 ? FellResult : count;
+        FelledMarks += felled;
         AttackersStanding = Math.Max(0, AttackersStanding - felled);
         for (var i = 0; i < felled; i++)
             AttackerRemoved?.Invoke();
@@ -185,15 +192,31 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public string DescribeFormations() => "ai_formations=3 of 3";
 
+    /// <summary>
+    /// "A:troop" is a roster attacker, "S:troop" a summoned one and "C:troop" the commander; a trailing "!" marks the removal felled, and a plain "A:" consumes one mark <see cref="Fell"/> left. A
+    /// commander removed with no loss is reported (a rout), any other non-loss removal is nothing.
+    /// </summary>
     public LdRemoval Classify(object affected, bool loss)
     {
         var text = affected as string ?? "";
+        if (text.StartsWith("C:", StringComparison.Ordinal))
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss);
         if (!loss)
             return default;
         if (text == "P")
             return new LdRemoval(LdRemovalKind.Player, "");
-        if (text.StartsWith("A:", StringComparison.Ordinal))
-            return new LdRemoval(LdRemovalKind.Attacker, text.Substring(2));
+        if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
+        {
+            var marked = text.EndsWith("!", StringComparison.Ordinal);
+            if (!marked && text[0] == 'A' && FelledMarks > 0)
+            {
+                FelledMarks--;
+                marked = true;
+            }
+
+            return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), text[0] == 'S' ? AttackerRole.Summoned : AttackerRole.Roster, marked);
+        }
+
         return text.StartsWith("D:", StringComparison.Ordinal) ? new LdRemoval(LdRemovalKind.Defender, text.Substring(2)) : default;
     }
 

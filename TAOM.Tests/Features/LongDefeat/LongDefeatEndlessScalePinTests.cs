@@ -96,7 +96,7 @@ public class LongDefeatEndlessScalePinTests
     {
         var source = RepoPaths.ReadSource("Main/Features/LongDefeat/Hooks/LongDefeatMissionLogic.cs", stripComments: true);
 
-        StringAssert.Contains(source, "() => new LongDefeatEffectsAdapter(Mission)");
+        StringAssert.Contains(source, "() => new LongDefeatEffectsAdapter(Mission, registry)");
     }
 
     [TestMethod]

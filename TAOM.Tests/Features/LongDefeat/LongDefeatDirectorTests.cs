@@ -730,6 +730,7 @@ public class LongDefeatDirectorTests
         rig.StartAndSpawnWave();
         rig.KillAttackers(108);
         rig.Field.AttackersStanding = 2;
+        rig.Field.AttackerRemoved = () => rig.Director.OnAgentRemoved("A:orc", true);
 
         rig.PumpUntil(() => rig.Calls.Any(c => c.StartsWith("Fell:")), dt: 5f);
 
@@ -747,6 +748,7 @@ public class LongDefeatDirectorTests
         rig.StartAndSpawnWave();
         rig.KillAttackers(105);
         rig.Field.AttackersStanding = 5;
+        rig.Field.AttackerRemoved = () => rig.Director.OnAgentRemoved("A:orc", true);
 
         rig.PumpUntil(() => rig.Calls.Any(c => c.StartsWith("Fell:")), dt: 30f);
 

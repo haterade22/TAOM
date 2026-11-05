@@ -74,7 +74,8 @@ internal sealed class BoonPlan
 internal readonly record struct BoonKeyRule(float Min, float Max, bool Whole);
 
 /// <summary>
-/// The keys a boon effect may use: the war chest keys, the fortress keys and <c>affixCount</c> (Slice 4), and the troop and class keys that name a <see cref="BoonTarget"/> (Slice 6).
+/// The keys a boon effect may use: the war chest keys, the fortress keys and <c>affixCount</c> (Slice 4), the troop and class keys that name a <see cref="BoonTarget"/> (Slice 6) and
+/// <c>commanderCooldownPercent</c> (Slice 7, a Legend key: it stretches or shortens every commander ability's cooldown, the first delay left alone).
 /// <c>affixCount</c> is negative only, and <c>gold</c> (paid once, at the pick) is an effect, never a drawback.
 /// </summary>
 internal static class BoonKeys
@@ -100,6 +101,7 @@ internal static class BoonKeys
     public const string DamagePercent = "damagePercent";
     public const string DamageTakenPercent = "damageTakenPercent";
     public const string HealthPercent = "healthPercent";
+    public const string CommanderCooldownPercent = "commanderCooldownPercent";
 
     public static IReadOnlyDictionary<string, BoonKeyRule> Rules { get; } = new Dictionary<string, BoonKeyRule>(StringComparer.Ordinal)
     {
@@ -124,6 +126,7 @@ internal static class BoonKeys
         [DamagePercent] = new(-90f, 300f, false),
         [DamageTakenPercent] = new(-90f, 300f, false),
         [HealthPercent] = new(-90f, 300f, false),
+        [CommanderCooldownPercent] = new(-90f, 300f, false),
     };
 
     /// <summary>The keys whose stat percent is written onto a target's <c>RaceAbilityEffects</c> record and needs a refresh of the agents standing.</summary>

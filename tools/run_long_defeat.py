@@ -546,6 +546,104 @@ def reached_endless(report_json):
     return False
 
 
+# The commanders (phase2-plan.md section 2, "Commanders"): waves.json gives each roster an `every`, the ranks in order and the abilities, and the report lists the commander of every wave
+# that had one. COMMANDER_CHECK is written when his wave clears, SUMMON_CHECK for each summon of it.
+WAVES_FILE = MODULE_DATA / "waves.json"
+COMMANDER_CHECK = "commander"
+SUMMON_CHECK = "summon"
+COMMANDER_OUTCOMES = ("killed", "felled", "left")
+
+
+def shipped_commanders(fortress_id=None, path=None):
+    """{every, ranks: [(rank id, troop)], summon: {ability ids of kind Summon}, max_steps} of the commanders the fortress's roster plays, or None when the file or the block is missing
+    or the fortress is unknown. The shipped file is held valid by LongDefeatShippedCommandersTests, so a rank is taken as it stands."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    roster = _json_object(path or WAVES_FILE).get("rosters", {})
+    block = roster.get(fortress.get("waves")) if fortress is not None and isinstance(roster, dict) else None
+    block = block.get("commanders") if isinstance(block, dict) else None
+    if not isinstance(block, dict) or not _is_int(block.get("every")) or block["every"] <= 0:
+        return None
+    ranks = [(r.get("rank"), r.get("troop")) for r in block.get("ranks", []) if isinstance(r, dict) and isinstance(r.get("rank"), str) and isinstance(r.get("troop"), str)]
+    abilities = block.get("abilities") if isinstance(block.get("abilities"), dict) else {}
+    beyond = block.get("beyond") if isinstance(block.get("beyond"), dict) else {}
+    max_steps = beyond.get("maxSteps") if _is_int(beyond.get("maxSteps")) else 10
+    summon = {k for k, a in abilities.items() if isinstance(a, dict) and a.get("kind") == "Summon"}
+    return {"every": block["every"], "ranks": ranks, "summon": summon, "max_steps": max_steps} if ranks else None
+
+
+def commander_expected(spec, wave):
+    """(rank id, troop, steps) of the commander of this wave, or None: a multiple of `every`, the rank min(n - 1, ranks - 1) for n = wave // every, and the steps
+    min(maxSteps, max(0, n - ranks)) (the game's CommanderPlan.ForWave)."""
+    if not _is_int(wave) or wave <= 0 or wave % spec["every"] != 0:
+        return None
+    n = wave // spec["every"]
+    ranks = spec["ranks"]
+    rank, troop = ranks[min(n - 1, len(ranks) - 1)]
+    return rank, troop, min(spec["max_steps"], max(0, n - len(ranks)))
+
+
+def _commander_spec(report_json):
+    fortress = report_json.get("fortress")
+    return shipped_commanders(fortress if isinstance(fortress, str) else None)
+
+
+def commander_problem(report_json):
+    """None when the report's waves[] holds a commander exactly at the multiples of the roster's `every` with the configured troop, rank and steps, each one ended and with no ability used
+    after his end, and every cleared wave's summons killed or felled (leaderboard rules 16 and 17); else what is wrong. A report with no waves list, or a fortress with no commanders, has nothing to replay."""
+    rows = report_json.get("waves")
+    spec = _commander_spec(report_json)
+    if not isinstance(rows, list) or spec is None:
+        return None
+    for row in rows:
+        if not isinstance(row, dict) or not _is_int(row.get("wave")):
+            continue
+        wave, got = row["wave"], row.get("commander")
+        summoned, kills, felled = row.get("summoned"), row.get("summonKills"), row.get("summonFelled")
+        if all(_is_int(v) for v in (summoned, kills, felled)) and kills + felled != summoned:
+            return f"wave {wave} summoned {summoned} but {kills} were killed and {felled} felled"
+        expected = commander_expected(spec, wave)
+        if expected is None:
+            if got is not None:
+                return f"wave {wave} lists a commander, but it is not a multiple of {spec['every']}"
+            continue
+        if not isinstance(got, dict):
+            return f"wave {wave} should have a commander ({expected[0]}, {expected[1]}) and lists none"
+        for field, want in zip(("rank", "troop", "steps"), expected):
+            if got.get(field) != want or (field == "steps" and not _is_int(got.get(field))):
+                return f"wave {wave} commander {field} is {got.get(field)!r}, wanted {want!r}"
+        if got.get("outcome") not in COMMANDER_OUTCOMES:
+            return f"wave {wave} commander outcome is {got.get('outcome')!r} at the clear, wanted one of {', '.join(COMMANDER_OUTCOMES)}"
+        if not _is_int(got.get("usesAfterEnd")) or got["usesAfterEnd"] != 0:
+            return f"wave {wave} commander used an ability after his end (usesAfterEnd={got.get('usesAfterEnd')!r})"
+    return None
+
+
+def owes_commander(report_json):
+    """The commander check is owed once a wave of the report that had a commander was cleared; with no wave rows, once `every` waves were cleared from wave 1."""
+    spec = _commander_spec(report_json)
+    if spec is None:
+        return False
+    rows = report_json.get("waves")
+    if isinstance(rows, list) and rows:
+        return any(isinstance(r, dict) and commander_expected(spec, r.get("wave")) is not None for r in rows)
+    cleared, start = report_json.get("wavesCleared"), report_json.get("startWave")
+    return _is_int(cleared) and _is_int(start) and start == 1 and cleared >= spec["every"]
+
+
+def owes_summon(report_json):
+    """The summon check is owed once a cleared wave's commander used a Summon ability."""
+    spec = _commander_spec(report_json)
+    rows = report_json.get("waves")
+    if spec is None or not isinstance(rows, list):
+        return False
+    for row in rows:
+        commander = row.get("commander") if isinstance(row, dict) else None
+        uses = commander.get("uses") if isinstance(commander, dict) else None
+        if isinstance(uses, dict) and any(_is_int(uses.get(a)) and uses[a] > 0 for a in spec["summon"]):
+            return True
+    return False
+
+
 def check_pattern(name, result):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=" + result + r"\b")
 
@@ -589,6 +687,9 @@ def judge(done, report_json, log_text=None):
     mismatch = boon_problem(report_json)
     if mismatch:
         return 1, f"the report's boons do not replay from its seed: {mismatch}"
+    mismatch = commander_problem(report_json)
+    if mismatch:
+        return 1, f"the report's commanders do not replay from the roster: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -622,6 +723,10 @@ def judge(done, report_json, log_text=None):
     owes_affix = reached_affixes(report_json) or (isinstance(cleared_waves, int) and not isinstance(cleared_waves, bool) and cleared_waves >= AFFIX_FROM_CLEARS)
     if not lose and owes_affix and AFFIX_CHECK not in required:
         required = required + (AFFIX_CHECK,)
+    if not lose and owes_commander(report_json) and COMMANDER_CHECK not in required:
+        required = required + (COMMANDER_CHECK,)
+    if not lose and owes_summon(report_json) and SUMMON_CHECK not in required:
+        required = required + (SUMMON_CHECK,)
     if not lose and owes_boon(report_json) and BOON_CHECK not in required:
         required = required + (BOON_CHECK,)
     if not lose and owes_reroll(report_json) and REROLL_CHECK not in required:

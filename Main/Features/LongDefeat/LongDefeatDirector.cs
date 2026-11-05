@@ -167,7 +167,10 @@ internal sealed partial class LongDefeatDirector
             switch (removal.Kind)
             {
                 case LdRemovalKind.Attacker:
-                    _run.AttackerDown(removal.TroopId);
+                    if (removal.Role == AttackerRole.Commander && !removal.Loss)
+                        _run.CommanderDown(false);
+                    else
+                        _run.AttackerDown(removal.TroopId, removal.Role, removal.Felled);
                     break;
                 case LdRemovalKind.Defender:
                     _run.DefenderDown();
@@ -278,6 +281,7 @@ internal sealed partial class LongDefeatDirector
         _frameMax = 0f;
         _frames = 0;
         SampleLateScale();
+        LogCommander();
         _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
         _logger.LogInfo($"{Tag}[Keep] attackers={_atKeep} defenders={_defendersAtKeep} progress={F2(v.KeepProgress)} at={KeepText()} positions={SampleText()}");
     }

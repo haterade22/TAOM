@@ -43,6 +43,21 @@ public class RunStatsTests
     }
 
     [TestMethod]
+    public void WavesFelled_CountsAWaveWhereOnlySummonsOrTheCommanderWereFelled()
+    {
+        var s = new RunStats();
+        var uses = new System.Collections.Generic.Dictionary<string, int>();
+        s.CloseWave(1, 40f, felled: 0);
+        s.CloseWave(2, 40f, felled: 0, roles: new WaveRoles(5, 5, 3, 2, null));
+        var felledCommander = new CommanderRecord("lugdush", "captain", 0, CommanderOutcome.Felled, uses, 0, 30f);
+        s.CloseWave(3, 40f, felled: 0, roles: new WaveRoles(0, 0, 0, 0, felledCommander));
+        var killedCommander = felledCommander with { Outcome = CommanderOutcome.Killed };
+        s.CloseWave(4, 40f, felled: 0, roles: new WaveRoles(0, 0, 0, 0, killedCommander));
+
+        Assert.AreEqual(2, s.WavesFelled);
+    }
+
+    [TestMethod]
     public void FleeingPeak_KeepsTheLargestObservation()
     {
         var s = new RunStats();

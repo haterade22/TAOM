@@ -8003,6 +8003,17 @@
     <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
     <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
     <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
+    <string id="TAOM_LD_Ability_Summon_Isengard" text="Uruk-hai of Isengard" />
+    <string id="TAOM_LD_Ability_WarCry_Isengard" text="The White Hand Calls" />
+    <string id="TAOM_LD_Boon_TheLongSilence" text="The Long Silence" />
+    <string id="TAOM_LD_Boon_TheLongSilence_Drawback" text="Every pack costs 15 percent more." />
+    <string id="TAOM_LD_Boon_TheLongSilence_Text" text="Enemy commanders wait 50 percent longer between war cries and summonings." />
+    <string id="TAOM_LD_Hud_CommanderActive" text="{RANK}: {ABILITY}, now" />
+    <string id="TAOM_LD_Hud_CommanderFallen" text="{RANK} has fallen" />
+    <string id="TAOM_LD_Hud_CommanderNext" text="{RANK}: {ABILITY} in {SECONDS} s" />
+    <string id="TAOM_LD_Rank_Captain" text="Captain" />
+    <string id="TAOM_LD_Rank_General" text="General" />
+    <string id="TAOM_LD_Rank_Lieutenant" text="Lieutenant" />
   </strings>
 
 </base>

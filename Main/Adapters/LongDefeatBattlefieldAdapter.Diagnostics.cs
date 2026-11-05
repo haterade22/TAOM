@@ -144,9 +144,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             + $"rams arrived/destroyed/done/forced [{string.Join(",", rams)}] gates [{string.Join("; ", gates)}] lanes [{string.Join("; ", lanes)}]";
     }
 
+    // An attacker's removal is the last event for him, so his role and felled mark are taken from the registry and he is forgotten. Only the commander is reported when no loss
+    // came with the removal (a rout; a deletion only if native raises OnAgentRemoved for it, risk 2, since the managed OnAgentDeleted, Mission.cs:2982-2996, reaches no Long Defeat callback), because a commander who leaves alive stops summoning; any other attacker's non-loss removal is nothing.
     public LdRemoval Classify(object affected, bool loss)
     {
-        if (!loss || !(affected is Agent agent) || !agent.IsHuman || !ReferenceEquals(agent.Mission, _mission))
+        if (!(affected is Agent agent) || !agent.IsHuman || !ReferenceEquals(agent.Mission, _mission))
             return new LdRemoval(LdRemovalKind.None, "");
 
         var team = agent.Team;
@@ -155,7 +157,16 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         var id = agent.Character?.StringId ?? "";
         if (team.Side == BattleSideEnum.Attacker)
-            return new LdRemoval(LdRemovalKind.Attacker, id);
+        {
+            _registry.TakeRemoval(agent, out var role, out var felled);
+            if (loss)
+                return new LdRemoval(LdRemovalKind.Attacker, id, role, felled);
+
+            return role == AttackerRole.Commander ? new LdRemoval(LdRemovalKind.Attacker, id, role, false, false) : new LdRemoval(LdRemovalKind.None, "");
+        }
+
+        if (!loss)
+            return new LdRemoval(LdRemovalKind.None, "");
 
         // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
         var isPlayer = agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;

@@ -26,6 +26,8 @@ internal sealed partial class LongDefeatDirector
             _effects?.PublishStats(stats);
         if (fx.ApplyBoon is { } boon)
             ApplyBoonToStanding(boon);
+        if (fx.RefreshAttackers)
+            RefreshAttackerStats();
 
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
         var closes = fx.SpawnPlayer ? new List<FormationSlot>() : null;
@@ -48,6 +50,7 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged{ScaleText(start)}");
             BeginScaleWatch(start);
             BeginAffixes(start.Wave);
+            BeginCommander();
         }
 
         foreach (var batch in fx.AttackerBatches)
@@ -68,7 +71,7 @@ internal sealed partial class LongDefeatDirector
         {
             var felled = _field.Fell(fx.FellAttackers);
             if (felled != fx.FellAttackers)
-                _logger.LogWarning($"{Tag}[Wave] asked to fell {fx.FellAttackers} attackers, {felled} fell; deaths up to the shortfall pay no bounty before the wave clears");
+                _logger.LogWarning($"{Tag}[Wave] asked to fell {fx.FellAttackers} attackers, {felled} fell; each one felled is marked, so only those removals pay no bounty");
         }
 
         foreach (var e in fx.Events)
@@ -112,7 +115,9 @@ internal sealed partial class LongDefeatDirector
             closes!.Add(b.Slot);
 
         LogSpawnLevel(b, attackers, report, last);
-        if (!attackers)
+        if (attackers)
+            OnAttackerBatchSpawned(b, report);
+        else
         {
             JudgeDefenderBatch(b, report, standing);
             ReadSpawnedAfterPick(b, report);
@@ -196,6 +201,12 @@ internal sealed partial class LongDefeatDirector
             case RunEventKind.Rerolled:
                 OnBoonEvent(e);
                 break;
+            case RunEventKind.Summoned:
+            case RunEventKind.WarCry:
+            case RunEventKind.WarCryEnded:
+            case RunEventKind.CommanderEnded:
+                OnCommanderEvent(e);
+                break;
             case RunEventKind.WaveCleared:
                 OnWaveCleared(e);
                 break;
@@ -211,6 +222,7 @@ internal sealed partial class LongDefeatDirector
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.WaveId, "w" + e.Wave,
                 LongDefeatChecks.Wave(stats, _plan.Waves.ForWave(e.Wave).Count, _plan.Rules.StragglerShare));
             _logger.LogInfo($"{Tag}[Wave] {e.Wave} cleared in {F1(stats.Seconds)} s: kills {stats.Kills}, felled {stats.Felled}, lost {stats.Lost}; {e.Detail}");
+            CommanderCleared(e.Wave, stats);
         }
 
         _logger.LogInfo($"{Tag}[Player] wave {e.Wave} {_field.DescribePlayer()} kills={_run.Stats.TotalKills}");
@@ -246,6 +258,7 @@ internal sealed partial class LongDefeatDirector
         SaveBestRun(result);
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
         FlushScale();
+        FinishCommander();
     }
 
     private bool WriteReport()

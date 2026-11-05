@@ -27,8 +27,11 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         string missionKey, LongDefeatRunRecords? records = null)
     {
         _missionTime = () => Mission.CurrentTime;
-        _host = new LongDefeatRunHost(plan, session, logger, outcomes, menu, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger), records,
-            () => new LongDefeatEffectsAdapter(Mission));
+
+        // One registry for the mission: the field adapter records each attacker's role, the effects adapter finds the commander by it.
+        var registry = new LongDefeatAgentRegistry();
+        _host = new LongDefeatRunHost(plan, session, logger, outcomes, menu, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger, registry), records,
+            () => new LongDefeatEffectsAdapter(Mission, registry));
     }
 
     public float GetTotalTeamPower(Team team) => TeamPower;

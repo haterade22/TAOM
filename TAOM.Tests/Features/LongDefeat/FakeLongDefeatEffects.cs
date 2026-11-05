@@ -68,6 +68,26 @@ internal sealed class FakeLongDefeatEffects : ILongDefeatEffectsAdapter
         return TargetFor(target, newest, stats);
     }
 
+    /// <summary>What a commander read answers: a commander standing at the factor the test sets (the rank's), or none.</summary>
+    public Func<LdScaleSample> CommanderFor { get; set; } = () => new LdScaleSample("", 0f, 0f, 0);
+
+    public int AttackerRefreshes { get; private set; }
+
+    public LdTouched RefreshAttackers()
+    {
+        AttackerRefreshes++;
+        _calls.Add("RefreshAttackers");
+        return new LdTouched(9, 0.25);
+    }
+
+    public LdScaleSample ReadCommander()
+    {
+        _calls.Add("ReadCommander");
+        return CommanderFor();
+    }
+
+    public string DescribeCommander() => "troop=fake at=(0.0, 0.0, 0.0)";
+
     public LdScaleSample ReadScale()
     {
         Reads++;

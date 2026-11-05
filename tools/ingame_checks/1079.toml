@@ -74,7 +74,7 @@ reached = ['\[Check\] id=taom\.long-defeat\.wave result=']
 pass = ['\[Check\] id=taom\.long-defeat\.wave result=pass kills=[0-9]+ felled=[0-9]+ ']
 fail = ['\[Check\] id=taom\.long-defeat\.wave result=fail']
 min = 5
-# One line per cleared wave. A wave fails when more than the straggler share of it was felled by the stalemate rule instead of killed.
+# One line per cleared wave. A wave fails when more than the straggler share of it (its roster plus its summons) was felled by the stalemate rule instead of killed.
 absence = "not-reached"
 
 [[check]]
@@ -201,7 +201,7 @@ fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
 # A troop or class boon with a stat or health key also ends the line with read=pass, read=skip (no soldier of its target stood) or read=fail: a soldier of the target, read right after the refresh,
 # holds its health limit at the combined factor and each driven property at its baseline changed by the summed percent. The first pack of that group spawned after the pick is read the same way
 # and written as its own line of this check (key p<N>-<group>, read=spawned), which the pass pattern leaves alone and a fail line fails.
-# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 20 (infantry health), --waves 5 --class archer --seed 0 (archers' aim error and draw speed), --waves 5 --seed 62 (the lord's draw speed).
+# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --seed 4 (the lord's draw speed). Slice 7 added a Legend row, which moved every draw, so these seeds are not Slice 6's.
 # The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run: a cavalry boon (seeds 27, 28, 32) reads skip with reason=no-soldier. Cavalry speed and health belong to the human row below.
 # The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
 absence = "not-reached"
@@ -225,6 +225,31 @@ fail = ['\[Check\] id=taom\.long-defeat\.class result=fail']
 # Written by LongDefeatDirector.Player.cs after each spawn of the lord, key <mission> at the start and <mission>-d<N> at a respawn: the kit's slots read back from his spawn equipment (an empty slot reads back empty), the horse
 # slots cleared and no mount for a foot class, no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
 absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.commander"
+needs = "a wave that brings a commander (--waves 5 --garrison-scale 1.5 for the wave 4 captain; --start-wave 8 --waves 1 for the lieutenant)"
+reached = ['\[Check\] id=taom\.long-defeat\.commander result=']
+pass = ['\[Check\] id=taom\.long-defeat\.commander result=pass w=[0-9]+ troop=\S+ rank=\S+ steps=[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.commander result=fail']
+# Written by LongDefeatDirector.Commander.cs when the wave clears, key w<N>: the troop, rank and steps are the plan's for that wave (CommanderPlan.ForWave), he ended (killed, felled or left, never standing), no ability fired after his end
+# (uses_after_end counted against the uses at the moment he ended), each ability that was due while he stood (first delay plus 2 s) fired at least once, and his health limit over his character's maximum, read right after he spawned, is the rank's factor times the wave's endless
+# factor within 1% (health_x against expected_x). A commander the engine could not spawn is reported left with health_x=unread and fails. Risk 1 (does a hero spawned mid-wave fight as a soldier) is read from the
+# [LongDefeat][Commander] w<N> lines every 5 s (position, health, formation and behavior); risk 10 (does the bot reach wave 4 with commanders in play) by the run itself.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.summon"
+needs = "a commander with a summon ability that stood past 30 s of his wave (--start-wave 8 --waves 1: the lieutenant)"
+reached = ['\[Check\] id=taom\.long-defeat\.summon result=']
+pass = ['\[Check\] id=taom\.long-defeat\.summon result=pass w=[0-9]+ s=[0-9]+ queued=[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.summon result=fail']
+# Written by LongDefeatDirector.Commander.cs when the wave clears, one line per summon, key w<N>s<k>: the summon queued the count the plan gives that ability for that wave (expected=) and every queued soldier was sent to the field
+# before the clear (spawned=). fired_at, spawned_at and wave_seconds are wave seconds, so risk 16 (do the summons arrive in time) reads off the line. A run that ends before the soldiers all came writes a skip line, which reads NOT REACHED.
+absence = "not-reached"
+
+[[human]]
+claim = "the commander is visible among the attackers, fights as a soldier and falls like one, and the HUD names his rank and next ability"
 
 [[human]]
 claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"

@@ -14,9 +14,9 @@ internal static class RunModifiers
 {
     /// <summary>
     /// The table for a wave with these affixes and this attacker damage factor, and the troop and class boons <paramref name="owned"/>: a new record on every call so a table
-    /// the engine's threads already hold is never mutated.
+    /// the engine's threads already hold is never mutated. A war cry in progress adds its two percents to the attackers' record.
     /// </summary>
-    public static LdStatTable StatTable(AffixPlan plan, IReadOnlyList<string> affixes, float attackerDamage, IReadOnlyCollection<BoonRow>? owned = null)
+    public static LdStatTable StatTable(AffixPlan plan, IReadOnlyList<string> affixes, float attackerDamage, IReadOnlyCollection<BoonRow>? owned = null, CommanderAbility? warCry = null)
     {
         var fx = new RaceAbilityEffects();
         var armour = 0f;
@@ -51,6 +51,13 @@ internal static class RunModifiers
                     armour += plan.Value(id, "armourPercent");
                     break;
             }
+        }
+
+        if (warCry != null)
+        {
+            fx.SwingSpeedPercent += warCry.SwingSpeedPercent;
+            fx.MoveSpeedPercent += warCry.MoveSpeedPercent;
+            stats = true;
         }
 
         fx.MountSpeedPercent = fx.MoveSpeedPercent;
@@ -134,6 +141,9 @@ internal static class RunModifiers
 
     /// <summary>The gold the boons owned paid at their picks, in all.</summary>
     public static int GoldPaid(IReadOnlyCollection<BoonRow> owned) => (int)owned.Sum(b => b.Effects.Where(e => e.Key == BoonKeys.Gold).Sum(e => e.Value));
+
+    /// <summary>What the boons owned multiply every commander ability's cooldown by (1 plus the summed percents over 100, never below 0). The first delay is not a cooldown and is left alone.</summary>
+    public static float CommanderCooldown(IReadOnlyCollection<BoonRow> owned) => Factor(owned, BoonKeys.CommanderCooldownPercent);
 
     /// <summary>The affix count the boons owned add to every later wave's schedule: zero or negative.</summary>
     public static int AffixCut(IReadOnlyCollection<BoonRow> owned) => (int)Sum(owned, BoonKeys.AffixCount);

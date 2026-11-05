@@ -267,6 +267,23 @@ public class LongDefeatBindingTests
         Assert.IsNotNull(typeof(BasicCharacterObject).GetField("_isRanged", AnyMember), "BasicCharacterObject._isRanged: the bare-character fixture no longer matches the engine");
     }
 
+    // The commanders (Slice 7): a hero spawns through the same call as a soldier and is marked unique by the spawn (Mission.cs:4517-4523), the refresh a war cry needs is the one the boons use, and the
+    // log line of risk 1 reads his flags, formation and speed.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheCommanderMembers_StillResolve()
+    {
+        Method(typeof(Mission), "SpawnTroopWithAgentBuildData", typeof(Agent), typeof(AgentBuildData), typeof(bool), typeof(bool), typeof(string));
+        Method(typeof(Agent), "UpdateAgentProperties", typeof(void));
+        Method(typeof(Agent), "GetAgentFlags", typeof(AgentFlag));
+        Assert.IsTrue(Enum.IsDefined(typeof(AgentFlag), nameof(AgentFlag.IsUnique)), "AgentFlag.IsUnique: the engine marks a hero unique at his spawn");
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Property(typeof(Agent), "MovementVelocity", typeof(Vec2));
+        Property(typeof(BasicCharacterObject), "IsHero", typeof(bool));
+        Property(typeof(Agent), "BaseHealthLimit", typeof(float));
+        Method(typeof(BasicCharacterObject), "MaxHitPoints", typeof(int));
+    }
+
     // The wrapper's replay (tools/run_long_defeat.py, troop_groups) reads each troop's default_group from fords_troops.xml and applies this table, because the report names no troop group.
     // Each class once: NumberOfDefaultFormations is Skirmisher and NumberOfRegularFormations is General, which Distinct merges.
     [TestMethod]

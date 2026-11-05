@@ -7,7 +7,7 @@ namespace TAOM.Adapters;
 /// All engine work on the Long Defeat field: the deployment, the siege engines, spawning, measuring, ordering and the player's
 /// body. Takes and returns domain types only, so the director never sees an engine type (ADR-007). Every method but
 /// <see cref="Classify"/> and <see cref="IsAttacker"/> runs on the main thread; those two are safe from the engine's callback
-/// threads, since they read an agent's own team and character and write nothing.
+/// threads, since they read an agent's own team and character and write only into the role registry, which holds one lock.
 /// </summary>
 internal interface ILongDefeatBattlefieldAdapter
 {
@@ -46,7 +46,7 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>
     /// Spawns the batch's soldiers into the open batch of their formation with no position, so the engine's own layout slots apply,
     /// and reads where each landed in the same call. After a successful <see cref="SetMusterFrame"/> the read-back judges against that place.
-    /// Each soldier's health is multiplied by <see cref="SoldierBatch.HealthFactor"/> after it spawns.
+    /// Each soldier's health is multiplied by <see cref="SoldierBatch.HealthFactor"/> after it spawns, and each attacker is entered in the role registry with the batch's <see cref="SoldierBatch.Role"/>.
     /// </summary>
     LdSpawnReport SpawnBatch(SoldierBatch batch, bool attackers);
 
@@ -85,7 +85,7 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>Every standing defender regains <paramref name="share"/> of the health they are missing.</summary>
     LdRest RestDefenders(float share);
 
-    /// <summary>Kills up to <paramref name="count"/> standing attackers and returns how many fell.</summary>
+    /// <summary>Marks up to <paramref name="count"/> standing attackers as felled in the registry, kills them, and returns how many fell. The removal the engine raises for each is booked as felled.</summary>
     int Fell(int count);
 
     /// <summary>Counts the field. The keep counts are read only when <paramref name="countKeep"/> is set.</summary>
@@ -112,7 +112,10 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>One fragment for the log: how many of the defenders' formations are AI controlled, as <c>ai_formations=N of M</c>.</summary>
     string DescribeFormations();
 
-    /// <summary>What a removed agent was. A kill and a knock-out are losses; a stranger, a horse or a team-less agent are <see cref="LdRemovalKind.None"/>.</summary>
+    /// <summary>
+    /// What a removed agent was. A kill and a knock-out are losses; a stranger, a horse or a team-less agent are <see cref="LdRemovalKind.None"/>. An attacker comes with the role and
+    /// felled mark the registry kept for him, which this call takes out of it; the commander is also reported when removed with no loss.
+    /// </summary>
     LdRemoval Classify(object affected, bool loss);
 
     /// <summary>Whether the agent is on the attacking team.</summary>

@@ -67,6 +67,12 @@
       "effects": [ { "key": "affixCount", "value": -2 } ],
       "drawback": [ { "key": "garrisonCap", "value": -40 } ],
       "drawbackText": "{=TAOM_LD_Boon_RidersAtDawn_Drawback}The keep holds 40 fewer defenders." },
+    { "id": "the_long_silence", "category": "legend",
+      "name": "{=TAOM_LD_Boon_TheLongSilence}The Long Silence",
+      "text": "{=TAOM_LD_Boon_TheLongSilence_Text}Enemy commanders wait 50 percent longer between war cries and summonings.",
+      "effects": [ { "key": "commanderCooldownPercent", "value": 50 } ],
+      "drawback": [ { "key": "pricePercent", "value": 15 } ],
+      "drawbackText": "{=TAOM_LD_Boon_TheLongSilence_Drawback}Every pack costs 15 percent more." },
 
     { "id": "shieldwall_oath", "category": "class",
       "class": "sword_and_board",

@@ -50,8 +50,11 @@ internal enum LdRemovalKind
     Player,
 }
 
-/// <summary>What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is not a loss.</summary>
-internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId);
+/// <summary>
+/// What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is no loss, except the commander's: an attacker comes with the <c>Role</c> the registry holds
+/// for him and whether the stalemate rule's <c>Fell</c> marked him (<c>Felled</c>), and a commander removed with no loss (a rout; a deletion only if native raises a removal for it, risk 2) is reported with <c>Loss</c> false so the run stops him.
+/// </summary>
+internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true);
 
 /// <summary>A rest between waves: how many defenders it reached, and their mean health as a share of their limit, before and after.</summary>
 internal readonly record struct LdRest(int Count, float MeanBefore, float MeanAfter);

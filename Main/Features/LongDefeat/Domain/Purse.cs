@@ -8,6 +8,7 @@ internal enum PurseSource
     WaveBonus,
     EarlyStart,
     Boon,
+    Commander,
 }
 
 /// <summary>The player's gold. The balance is always start plus earned minus spent, which the report checks.</summary>
