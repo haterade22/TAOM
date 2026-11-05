@@ -148,8 +148,22 @@ Shipped 2026-06-16 without that guard, it capped **every settlement's militia at
 prosperity for three weeks — the overlay kept reporting the model's `MilitiaChange` because the model
 never sees the shed. It also undid `Patch39_BanditPartySize` (bandit parties are leaderless, so their
 scaled-up spawn rosters were cut back on the next daily tick) and trimmed garrisons to
-`CalculateGarrisonPartySizeLimit`, a limit vanilla computes but never enforces as a hard cap — which
-is the same reason the garrison tooltip below is deferred as "not party-size-budgeted".
+`CalculateGarrisonPartySizeLimit` at once. Vanilla does not apply that limit as a hard cap, but it
+does enforce it slowly: desertion removes a quarter of a garrison's excess over `PartySizeLimit`
+every day (v1.4.8 `DefaultPartyDesertionModel.cs:54-65`, ticked for garrisons by
+`DesertionCampaignBehavior.cs:21`), and a garrison's morale falls with the excess
+(`DefaultPartyMoraleModel.GetPartySizeMoraleEffect`), which adds morale deserters. So the weight
+penalty exempts garrisons too (2026-10-16): with the limit deflated by weight, elite garrisons
+deserted every day while lords refilled them to the unweighted limit (yotthani's run 5 counted about
+20.6 k deserters in the whole free block over 150 days, 19.6 k of them in four elven realms; the cause
+is yotthani's reading, recorded on the 1.5.x line in `docs/reviews/adopt-yotthani-2026-10-16.md`).
+Patrol parties are exempt for the same reason: their limit is `10 + 5 x guard house level`
+(`CalculatePatrolPartySizeLimit`), nothing sheds or deserts them, and they spawn and refill at full
+size, so a deflated limit left an elite patrol over its limit for good and under vanilla's
+over-limit speed factor (`DefaultPartySpeedCalculatingModel`). One predicate,
+`TroopWeightPenaltyScope.PaysSizePenalty`, decides for the penalty and for every capacity display;
+`DisplayFrameSourceTests` pins both. The garrison tooltip below stays deferred as "not
+party-size-budgeted".
 
 ### Auto-resolve is power-driven, NOT count-driven (why weight can't touch it)
 
@@ -275,7 +289,9 @@ surplus, still clamps at ≥ 1. What moved is which side of the fraction the cos
 | 2026-07-11 frame | raw count (10) | deflated limit (11) |
 | **2026-09-06 frame** | **weighted cost (19)** | **true base (20)** |
 
-The two are the same cap, which is the whole reason this is safe to do as a display change:
+For a party that pays the penalty the two are the same cap, which is the whole reason this is safe to
+do as a display change. A garrison or a patrol pays none (`TroopWeightPenaltyScope`, 2026-10-16), so
+every capacity display leaves its vanilla raw frame alone:
 
 ```
 raw > deflated  ⟺  raw > base − surplus  ⟺  raw + surplus > base  ⟺  weighted > base
@@ -534,6 +550,7 @@ argued that mounted branches never escalate with tier; both are gone.
 | `Main/Features/TroopWeight/ITroopWeightService.cs` | Service interface: `GetTroopWeight`, `CalculateWeightedMemberCount`, `ApplyPartySizeWeightPenalty`, `GetTrueBaseSizeLimit`, `PlanShed`, … |
 | `Main/Features/TroopWeight/TroopWeightService.cs` | Weights dictionary (case-insensitive) + the limit-deflation math + the pure `PlanShed` planner |
 | `Main/Features/TroopWeight/TroopWeightDisplay.cs` | **Pure** usage-frame arithmetic: `DisplayUsed`, `DisplayLimit`, `FormatWeightMultiplier` |
+| `Main/Features/TroopWeight/TroopWeightPenaltyScope.cs` | `PaysSizePenalty`: garrisons and patrol parties pay no size penalty; read by the penalty and by every capacity display (2026-10-16) |
 | `Main/Features/TroopWeight/TroopShedPlanning.cs` | Engine-free `WeightedTroopEntry` / `ShedInstruction` types for the pure shed planner |
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` + `TroopWeightXmlLoader.cs` | Loader interface + `IPathService` XML parser, graceful degradation on missing file |
 | `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` (7 patch initialisations) |
@@ -593,6 +610,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 
 ## Changelog
 
+- 2026-10-16: the weight penalty exempts garrisons and patrol parties (`TroopWeightPenaltyScope`), and the capacity displays leave their raw frame alone. Vanilla desertion trims a garrison to its `PartySizeLimit` by a quarter of the excess a day, so a weight-deflated limit made elite garrisons desert while lords refilled them; a deflated patrol limit slowed elite patrols (found through yotthani's campaign runs and the review; see "Scope: leader-run parties only" above).
 - 2026-09-06, **Usage frame (display-only).** Players reported that recruiting heavy troops *shrinks* the party size limit: the 2026-07-11 deflation, read backwards. Enforcement is unchanged; the presentation moved to the other side of the fraction. `ApplyPartySizeWeightPenalty` now takes `includeDescriptions` and skips the display path, so the tooltip shows `Base size +20 / Total +20` with no `Heavy troops −9` line (safe: v1.4.8 grep proves `PartySizeLimitExplainer` has only tooltip consumers). Five new `Patch17_TroopWeight` postfixes behind one `TroopWeightDisplayHook` render `weighted-used / true-base` on the party-screen header, both health tooltips' `Land Troop Capacity` row, the clan-screen row and the recruitment screen, and tag heavy rows `×N` (new `{=taom_troop_weight_tag}`, 12 languages). Headcounts still read raw everywhere. Header patch targets `PartyVM.RefreshPartyInformation`, not the `private static PopulatePartyListLabel` the 2026-07-11 set had prefixed: that builder also produces the *prisoner* headers. New pure `TroopWeightDisplay` + `TroopWeightDisplayTests` / `DisplayFrameSourceTests`; `taom.print_party_size` now prints both frames. Also corrected this doc's Key Files / Tests / UI-displays / Performance sections, which had described the deleted pre-2026-07-11 architecture since that rework.
 - 2026-07-11 — **Count → limit rework (raw counts everywhere).** Relocated the "elite tax" from weighting the member count to deflating the party-size limit: `TaomPartySizeModel` now subtracts `ceil(weighted)−raw` from the limit (`ApplyPartySizeWeightPenalty` / pure `ComputeSizePenalty`, clamped ≥1), and the two count-getter patches + 5 weighted-display hooks + `WeightedCountCache` + `[CountFlicker]` diagnostic were deleted (~26 files). Every troop count now reads raw (map/party-screen/battle agree); the displayed limit shrinks with heavy troops; the recruit cap is preserved exactly. Shed-on-upgrade adapted to the deflated frame. Ripples: `SpecialResources` reward scaling preserved via explicit weighted-count call; `SettlementFood` garrison correction self-neutralizes (net food unchanged). New string `{=taom_troop_weight_size}` (needs `/localize`).
 - 2026-07-11 — Count-cache collision fix + flicker diagnostic (SUPERSEDED same day by the rework above, which deleted both). Had replaced the `GetHashCode()`-keyed `Dictionary` in the count-getter hooks with a reference-keyed `WeightedCountCache` (closing the cross-party contamination flagged in the 2026-06-07 RCA §2) and added the `[CountFlicker]` diagnostic that PROVED the campaign-map "200↔20" flicker is the vanilla army-sum (raw `NumberOfHealthyMembers`), NOT the weighting.
