@@ -125,6 +125,10 @@ public class SubModule : MBSubModuleBase
         }
         catch { /* the notice must never stop the mod loading */ }
 
+        // D3: the engine rewrites shader_mapping.bin when it drops its cache at startup, so one line
+        // here says in every log whether this session started cold.
+        try { Features.ShaderCompileNotice.ShaderCacheState.Log(IoC.Resolve<IModLogger>()); } catch { }
+
         // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
         // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
         // application and renders every character in bind pose — a failure that previously left no
