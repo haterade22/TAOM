@@ -412,6 +412,7 @@ public class MarshalsWordChecksRenderTests
     [DataTestMethod]
     [DataRow("marshal_could_not_start.txt", "Client/Features/MarshalsWord/MarshalView.cs", "[MarshalsWord] Marshal's Word could not start for this mission", "ERROR", "Word could not start")]
     [DataRow("marshal_hotkey_failed.txt", "Main/Features/MarshalsWord/MarshalsWordModule.cs", "[MarshalsWord] hotkey registration failed", "ERROR", "hotkey registration failed")]
+    [DataRow("marshal_release_failed.txt", "Main/Adapters/MarshalFireAdapter.cs", "[MarshalsWord] giving back a soldier", "ERROR", "giving back a soldier")]
     public void TheFeaturesOwnFailureLines_AreInTheCode_TheFixtures_AndTheCaptureChecksFailList(string fixture, string source, string prefix, string level, string manifestFragment)
     {
         StringAssert.Contains(ReadSource(source, stripComments: true), prefix, source);
@@ -678,7 +679,7 @@ public class MarshalsWordChecksRenderTests
             _orders.Selected.Add(1);
             for (var i = 0; i < 2; i++)
                 MarshalFireTable.CountBlow(2);
-            driver.PressHold();
+            driver.HoldLine.Press();
             FirePass(driver, 0.0);
             FirePass(driver, 3.0);
             for (var i = 0; i < controlBlows; i++)
@@ -698,9 +699,9 @@ public class MarshalsWordChecksRenderTests
     {
         var driver = FireDriver(new FakeMarshalFire());
         _orders.Selected.Add(1);
-        driver.PressHold();
+        driver.HoldLine.Press();
         FirePass(driver, 1.0);
-        driver.PressHold();
+        driver.HoldLine.Press();
         FirePass(driver, 2.0);
 
         var lines = new[]
@@ -720,7 +721,7 @@ public class MarshalsWordChecksRenderTests
         _orders.Selected.Add(1);
         for (var i = 0; i < 2; i++)
             MarshalFireTable.CountBlow(2);
-        driver.PressHold();
+        driver.HoldLine.Press();
         FirePass(driver, 0.0);
         FirePass(driver, 3.0);
         for (var i = 0; i < 2; i++)
@@ -811,20 +812,20 @@ public class MarshalsWordChecksRenderTests
     {
         foreach (var (far, steered, closer, farther, struckFlagOn, slot, strike, slotFixture, strikeFixture) in new[]
                  {
-                     (2, 8, 6, 2, 3, "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop",
+                     (2, 8, 6, 2, 3, "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop steered=8 closer=6 farther=2",
                          "[Check] id=taom.marshals-word.hold-strike result=pass mission=1 company=1 struck=3 flagOn=3", "marshal_hold_slot_pass.txt", "marshal_hold_strike_pass.txt"),
-                     (12, 8, 2, 6, 0, "[Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=30 far=12 order=Stop",
+                     (12, 8, 2, 6, 0, "[Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=30 far=12 order=Stop steered=8 closer=2 farther=6",
                          "[Check] id=taom.marshals-word.hold-strike result=fail mission=1 company=1 struck=3 flagOn=0", "marshal_hold_slot_fail.txt", "marshal_hold_strike_fail.txt"),
                  })
         {
             Fresh();
             var fire = new FakeMarshalFire
             {
-                HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, far, 5, 3, 3, struckFlagOn, 0.5f, 0.1f, "Stop", "", closer, farther, steered) },
+                HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, far, 5, 3, 3, struckFlagOn, 0.5f, 0.1f, "Stop", "", new SlotCounts(closer, farther, steered, 0)) },
             };
             var driver = FireDriver(fire);
             _orders.Selected.Add(1);
-            driver.PressHold();
+            driver.HoldLine.Press();
             FirePass(driver, 0.0);
             FirePass(driver, 1.0);
 
@@ -839,10 +840,10 @@ public class MarshalsWordChecksRenderTests
     [TestMethod]
     public void RenderedLines_ForTheSlotLine_NamesTheOrderBesideTheDistance()
     {
-        var fire = new FakeMarshalFire { HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, 2, 5, 0, 0, 0, 1.25f, 0.4f, "Stop", "", 0, 0, 0, 2) } };
+        var fire = new FakeMarshalFire { HoldCensuses = { [1] = new HoldCensus(1, 30, 30, 30, 30, 2, 5, 0, 0, 0, 1.25f, 0.4f, "Stop", "", new SlotCounts(0, 0, 0, 2)) } };
         var driver = FireDriver(fire);
         _orders.Selected.Add(1);
-        driver.PressHold();
+        driver.HoldLine.Press();
         FirePass(driver, 0.0);
         FirePass(driver, 1.0);
 

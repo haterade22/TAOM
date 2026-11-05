@@ -191,10 +191,7 @@ internal static class MarshalTrialRules
     internal static bool MassedWordWasDue(int holding, int eligible) =>
         MarshalFireRules.MassedWordDue(holding, eligible, now: MarshalTuning.WordGap, lastWord: 0.0);
 
-    /// <summary>
-    /// Massed fire passed: a word was given by the share rule on enough holding soldiers to prove a release, the share was the rule's, and the archers loosed. The share is
-    /// read again here from the numbers on the log line, so a word given below the share cannot pass.
-    /// </summary>
+    /// <summary>Massed fire passed: the share rule gave a word on enough holding soldiers, read again from the log line's numbers, and the archers loosed.</summary>
     internal static bool MassedPasses(int words, int holding, int eligible, bool releasePassed, bool faulted) =>
         words >= 1 && holding >= MarshalTuning.VolleyMinHolding && MassedWordWasDue(holding, eligible) && releasePassed && !faulted;
 
@@ -284,12 +281,9 @@ internal static class MarshalTrialRules
         return restored ? "" : "flag-not-restored";
     }
 
-    /// <summary>
-    /// Why the slot step failed, ground first: the driver's slot check failed or the totals of the whole hold moved more soldiers away than toward their slot, the clamp
-    /// never replaced an input, too few hold reads followed the first steer, or too few reads were steered at all. Empty when the clamp acted and walked the right way.
-    /// </summary>
+    /// <summary>Why the slot step failed, ground first, or empty when the clamp acted, walked the right way and the lift gave the flags back.</summary>
     internal static string SlotTrialReason(int samples, bool slotFailed, int steered, int closer, int farther, string order, int qualified, int anchored, int woundedEver,
-        int peakEnemiesNear, int clamps)
+        int peakEnemiesNear, int clamps, bool restored)
     {
         if (qualified < MarshalTuning.HoldMinFlagOff)
             return "not-qualified";
@@ -308,11 +302,13 @@ internal static class MarshalTrialRules
             return "no-clamp";
         if (samples < SlotMinSamples)
             return "too-few-samples";
-        return totals == HoldProof.Pending ? "too-few-steers" : "";
+        if (totals == HoldProof.Pending)
+            return "too-few-steers";
+        return restored ? "" : "flag-not-restored";
     }
 
-    /// <summary>Why the strike back step failed: the line was never disarmed before a wound, no soldier was wounded, no wound settled in the window, the flag stayed off for the wounded, or no blow followed.</summary>
-    internal static string StrikeTrialReason(int flagOffBeforeWound, int woundedEver, int settledPeak, int flagOnAtPeak, int blowsAfterWound)
+    /// <summary>Why the strike back step failed: the line was never disarmed before a wound, no soldier was wounded, no wound settled in the window, the flag stayed off for the wounded, no blow followed, or the lift left the flags off.</summary>
+    internal static string StrikeTrialReason(int flagOffBeforeWound, int woundedEver, int settledPeak, int flagOnAtPeak, int blowsAfterWound, bool restored)
     {
         if (flagOffBeforeWound < MarshalTuning.HoldMinFlagOff)
             return "flag-not-off";
@@ -322,7 +318,9 @@ internal static class MarshalTrialRules
             return "strike-window-missed";
         if (MarshalHoldLineRules.StrikeProof(settledPeak, flagOnAtPeak) != HoldProof.Pass)
             return "flag-stayed-off";
-        return blowsAfterWound < 1 ? "no-blow-after-wound" : "";
+        if (blowsAfterWound < 1)
+            return "no-blow-after-wound";
+        return restored ? "" : "flag-not-restored";
     }
 
     /// <summary>Why the charge step failed: the line never stood, the flags never read off, or they did not come back in time.</summary>

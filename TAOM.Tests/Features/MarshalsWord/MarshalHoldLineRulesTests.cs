@@ -300,10 +300,36 @@ public class MarshalHoldLineRulesTests
     [TestMethod]
     public void IsLoose_AReadBeyondTheSlackWithNoReplacedTick_IsLoose_AndASteeredOrInPlaceReadIsNot()
     {
-        Assert.IsTrue(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack + 0.01f, steered: false));
-        Assert.IsFalse(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack + 0.01f, steered: true), "the clamp acted since the last read");
-        Assert.IsFalse(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack, steered: false), "inside the slack he is in place");
-        Assert.IsFalse(MarshalHoldLineRules.IsLoose(float.NaN, steered: false), "no slot, no distance");
+        Assert.IsTrue(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack + 0.01f, steered: false, inTheLine: true));
+        Assert.IsFalse(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack + 0.01f, steered: true, inTheLine: true), "the clamp acted since the last read");
+        Assert.IsFalse(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack, steered: false, inTheLine: true), "inside the slack he is in place");
+        Assert.IsFalse(MarshalHoldLineRules.IsLoose(float.NaN, steered: false, inTheLine: true), "no slot, no distance");
+    }
+
+    [TestMethod]
+    public void IsLoose_ASoldierOutOfTheLine_IsNotLoose_SoTheCountSharesItsGroupWithTheFarCount()
+    {
+        Assert.IsFalse(MarshalHoldLineRules.IsLoose(MarshalTuning.SlotSlack + 1f, steered: false, inTheLine: false), "the clamp never acts on him");
+    }
+
+    [TestMethod]
+    public void IsSettled_AWoundOlderThanTwoReads_IsSettled_AndOneYoungerIsNot()
+    {
+        var twoReads = 2.0 * MarshalTuning.HoldReadSeconds;
+
+        Assert.IsFalse(MarshalHoldLineRules.IsSettled(0.0), "the pass that has just seen it");
+        Assert.IsFalse(MarshalHoldLineRules.IsSettled(twoReads - 0.01));
+        Assert.IsTrue(MarshalHoldLineRules.IsSettled(twoReads));
+        Assert.IsTrue(MarshalHoldLineRules.IsSettled(MarshalTuning.StrikeBackSeconds));
+    }
+
+    [TestMethod]
+    public void NeedsEnginePlace_OnlyUnderAMoveAndOnlyForASoldierInTheLine()
+    {
+        Assert.IsTrue(MarshalHoldLineRules.NeedsEnginePlace(standGround: false, inTheLine: true));
+        Assert.IsFalse(MarshalHoldLineRules.NeedsEnginePlace(standGround: false, inTheLine: false), "his place is never used");
+        Assert.IsFalse(MarshalHoldLineRules.NeedsEnginePlace(standGround: true, inTheLine: true), "under Stop the engine answers his own place");
+        Assert.IsFalse(MarshalHoldLineRules.NeedsEnginePlace(standGround: true, inTheLine: false));
     }
 
     [TestMethod]
@@ -313,6 +339,8 @@ public class MarshalHoldLineRulesTests
         Assert.IsFalse(MarshalHoldLineRules.Moves(1e-7f, -1e-7f));
         Assert.IsFalse(MarshalHoldLineRules.Moves(float.NaN, 1f));
         Assert.IsTrue(MarshalHoldLineRules.Moves(0f, 0.1f));
+        Assert.IsFalse(MarshalHoldLineRules.Moves(5e-7f, 0f), "just under a millionth of a unit");
+        Assert.IsTrue(MarshalHoldLineRules.Moves(2e-6f, 0f), "just over it");
         Assert.IsTrue(MarshalHoldLineRules.Moves(-0.5f, 0f));
     }
 

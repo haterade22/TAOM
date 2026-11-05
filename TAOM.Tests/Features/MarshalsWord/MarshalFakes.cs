@@ -213,6 +213,7 @@ internal sealed class FakeMarshalFire : IMarshalFireAdapter
     internal int Dropped;
     internal int Released;
     internal System.Exception? ReleaseThrows;
+    private readonly Dictionary<int, (List<SlotTrendCount> Soldiers, float From, float To)> _walkers = new();
 
     public bool HasTouched { get; set; }
 
@@ -222,7 +223,28 @@ internal sealed class FakeMarshalFire : IMarshalFireAdapter
     {
         HoldPasses.Add(held.ToArray());
         HoldPassAt.Add(now);
-        return held.Where(c => HoldCensuses.ContainsKey(c)).Select(c => HoldCensuses[c]).ToList();
+        return held.Where(c => HoldCensuses.ContainsKey(c)).Select(c => WithTheWalk(c, HoldCensuses[c])).ToList();
+    }
+
+    /// <summary>Gives a company soldiers whose steered intervals the real trend count keeps: each pass every soldier is steered at <paramref name="from"/> metres and read at <paramref name="to"/>.</summary>
+    internal void Walk(int company, int soldiers, float from, float to)
+    {
+        _walkers[company] = (Enumerable.Range(0, soldiers).Select(_ => new SlotTrendCount()).ToList(), from, to);
+    }
+
+    private HoldCensus WithTheWalk(int company, HoldCensus census)
+    {
+        if (!_walkers.TryGetValue(company, out var walk))
+            return census;
+        var total = default(SlotCounts);
+        foreach (var soldier in walk.Soldiers)
+        {
+            soldier.Steer(walk.From);
+            soldier.Read(walk.To, strikingBack: false, inTheLine: true);
+            total += soldier.Take();
+        }
+
+        return census with { Trend = total };
     }
 
     public IReadOnlyList<FireCensus> Count(IReadOnlyList<int> companies, double now)

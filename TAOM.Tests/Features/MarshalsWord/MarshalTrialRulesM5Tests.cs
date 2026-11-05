@@ -173,8 +173,8 @@ public class MarshalTrialRulesM5Tests
     // ---- hold the line: slot, strike back and the charge ----
 
     private static string SlotReason(int samples = 45, bool slotFailed = false, int steered = 30, int closer = 25, int farther = 5, string order = "Stop", int qualified = 20,
-        int anchored = 20, int woundedEver = 4, int peak = 30, int clamps = 12) =>
-        MarshalTrialRules.SlotTrialReason(samples, slotFailed, steered, closer, farther, order, qualified, anchored, woundedEver, peak, clamps);
+        int anchored = 20, int woundedEver = 4, int peak = 30, int clamps = 12, bool restored = true) =>
+        MarshalTrialRules.SlotTrialReason(samples, slotFailed, steered, closer, farther, order, qualified, anchored, woundedEver, peak, clamps, restored);
 
     [TestMethod]
     public void SlotTrialReason_EachWayTheStepCanFail_NamesItsOwnReason_GroundFirst()
@@ -188,6 +188,8 @@ public class MarshalTrialRulesM5Tests
         Assert.AreEqual("no-clamp", SlotReason(clamps: 0, steered: 0, closer: 0, farther: 0), "a line in place proves nothing about a clamp that never replaced an input");
         Assert.AreEqual("no-clamp", SlotReason(samples: MarshalTrialRules.SlotMinSamples - 1, clamps: 0, steered: 0, closer: 0, farther: 0), "the clamp is named before the count of samples");
         Assert.AreEqual("too-few-samples", SlotReason(samples: MarshalTrialRules.SlotMinSamples - 1));
+        Assert.AreEqual("flag-not-restored", SlotReason(restored: false), "a step that passed on everything else still fails when the lift left the soldiers disarmed");
+        Assert.AreEqual("too-few-samples", SlotReason(samples: MarshalTrialRules.SlotMinSamples - 1, restored: false), "the reason of the proof comes first, and the step's line carries restored=");
     }
 
     [TestMethod]
@@ -222,14 +224,16 @@ public class MarshalTrialRulesM5Tests
     public void StrikeTrialReason_EachWayTheStepCanFail_NamesItsOwnReason()
     {
         const int Off = 30;
-        Assert.AreEqual("", MarshalTrialRules.StrikeTrialReason(flagOffBeforeWound: Off, woundedEver: 3, settledPeak: 3, flagOnAtPeak: 3, blowsAfterWound: 2));
-        Assert.AreEqual("flag-not-off", MarshalTrialRules.StrikeTrialReason(MarshalTuning.HoldMinFlagOff - 1, 3, 3, 3, 2), "a line that was never disarmed cannot show that a wound arms it");
-        Assert.AreEqual("", MarshalTrialRules.StrikeTrialReason(MarshalTuning.HoldMinFlagOff, 3, 3, 3, 2));
-        Assert.AreEqual("flag-not-off", MarshalTrialRules.StrikeTrialReason(0, 0, 0, 0, 0), "the ground comes before the wound");
-        Assert.AreEqual("nobody-wounded", MarshalTrialRules.StrikeTrialReason(Off, 0, 0, 0, 0));
-        Assert.AreEqual("strike-window-missed", MarshalTrialRules.StrikeTrialReason(Off, 3, 0, 0, 2));
-        Assert.AreEqual("flag-stayed-off", MarshalTrialRules.StrikeTrialReason(Off, 3, 4, 1, 2));
-        Assert.AreEqual("no-blow-after-wound", MarshalTrialRules.StrikeTrialReason(Off, 3, 3, 3, 0));
+        Assert.AreEqual("", MarshalTrialRules.StrikeTrialReason(flagOffBeforeWound: Off, woundedEver: 3, settledPeak: 3, flagOnAtPeak: 3, blowsAfterWound: 2, restored: true));
+        Assert.AreEqual("flag-not-off", MarshalTrialRules.StrikeTrialReason(MarshalTuning.HoldMinFlagOff - 1, 3, 3, 3, 2, true), "a line that was never disarmed cannot show that a wound arms it");
+        Assert.AreEqual("", MarshalTrialRules.StrikeTrialReason(MarshalTuning.HoldMinFlagOff, 3, 3, 3, 2, true));
+        Assert.AreEqual("flag-not-off", MarshalTrialRules.StrikeTrialReason(0, 0, 0, 0, 0, true), "the ground comes before the wound");
+        Assert.AreEqual("nobody-wounded", MarshalTrialRules.StrikeTrialReason(Off, 0, 0, 0, 0, true));
+        Assert.AreEqual("strike-window-missed", MarshalTrialRules.StrikeTrialReason(Off, 3, 0, 0, 2, true));
+        Assert.AreEqual("flag-stayed-off", MarshalTrialRules.StrikeTrialReason(Off, 3, 4, 1, 2, true));
+        Assert.AreEqual("no-blow-after-wound", MarshalTrialRules.StrikeTrialReason(Off, 3, 3, 3, 0, true));
+        Assert.AreEqual("flag-not-restored", MarshalTrialRules.StrikeTrialReason(Off, 3, 3, 3, 2, restored: false), "a step that passed on everything else still fails when the lift left the soldiers disarmed");
+        Assert.AreEqual("no-blow-after-wound", MarshalTrialRules.StrikeTrialReason(Off, 3, 3, 3, 0, restored: false), "the reason of the proof comes first, and the step's line carries restored=");
     }
 
     [TestMethod]

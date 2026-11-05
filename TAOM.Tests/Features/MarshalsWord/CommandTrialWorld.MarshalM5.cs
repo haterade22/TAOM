@@ -118,7 +118,7 @@ internal sealed partial class CommandTrialWorld
     /// <summary>The steered soldiers end their reads farther from their slot, as a clamp with the wrong sign would.</summary>
     internal bool ClampWalksTheWrongWay;
 
-    /// <summary>Steered hold reads a second once the clamp acts, split between the two sides by the clamp's sign.</summary>
+    /// <summary>Steered hold reads a second once the clamp acts, split between the two sides by the clamp's sign, with a tenth more that ended inside the dead band.</summary>
     internal float SteeredReadsPerSecond = 10f;
 
     /// <summary>The driver's own slot check fails this long after the clamp first steers, as a later window of the line can.</summary>
@@ -145,13 +145,12 @@ internal sealed partial class CommandTrialWorld
     private bool _strikeLatched;
     private float _controlBlows;
     private bool _flagRestoredNow;
-    private float _baselineAt = float.NaN;
-    private float _baselineHeld;
-    private float _baselineControl;
+    private readonly MarshalHoldWindow _window = new();
     private HoldVerdict? _driverVerdict;
     private float _clampsMade;
     private float _closerReads;
     private float _fartherReads;
+    private float _steadyReads;
     private float _firstClampAt = float.NaN;
 
     /// <summary>The world time at which the clamp first replaced an input, or NaN.</summary>
@@ -192,6 +191,8 @@ internal sealed partial class CommandTrialWorld
         _holdOn[first] = !_holdOn[first];
         _flagRestoredNow = !_holdOn[first];
         _holdAt = _holdOn[first] ? Time : float.NaN;
+        if (_holdOn[first])
+            _window.Begin(Time);
     }
 
     public bool MarshalHeld(int company) => company < _chosen.Count && _holdOn[_chosen[company]];
@@ -230,7 +231,7 @@ internal sealed partial class CommandTrialWorld
         var woundedAge = arrived - WoundedAfterSeconds;
         var wounded = !TheLineIsNeverWounded && woundedAge >= 0f && qualified > 0;
         var struck = wounded && woundedAge < MarshalTuning.StrikeBackSeconds;
-        var settled = struck && woundedAge >= 2f * (float)MarshalTuning.HoldReadSeconds;
+        var settled = struck && MarshalHoldLineRules.IsSettled(woundedAge);
         return new HoldCensus(Company: _chosen[0], Units: units, Qualified: qualified, FlagOff: MarshalFlagOff(0), Anchored: qualified,
             Far: arrived > 0f && !SlotsAreKept ? FarSoldiersWhenSlotsAreLost : 0, WoundedEver: wounded ? 5 : 0, Struck: struck ? 5 : 0, StruckSettled: settled ? 5 : 0,
             StruckFlagOn: settled && StrikeBackWorks ? 5 : 0, SlotMax: 0.5f, SlotMean: 0.1f, Order: Companies[_chosen[0]].Order, WhyNot: qualified > 0 ? "" : "arrangement");
@@ -244,7 +245,7 @@ internal sealed partial class CommandTrialWorld
 
     public int MarshalSlotFarther(int company) => company == 0 ? (int)_fartherReads : 0;
 
-    public int MarshalSlotSteered(int company) => company == 0 ? (int)(_closerReads + _fartherReads) : 0;
+    public int MarshalSlotSteered(int company) => company == 0 ? (int)_closerReads + (int)_fartherReads + (int)_steadyReads : 0;
 
     public bool MarshalSlotFailed(int company) =>
         company == 0 && MarshalHoldCensus(0).WoundedEver > 0 && ((ClampWalksTheWrongWay && _closerReads + _fartherReads >= MarshalTuning.SlotMinSteered)
@@ -265,6 +266,7 @@ internal sealed partial class CommandTrialWorld
             _firstClampAt = float.IsNaN(_firstClampAt) ? Time : _firstClampAt;
             _closerReads += (ClampWalksTheWrongWay ? 0.2f : 0.8f) * SteeredReadsPerSecond * dt;
             _fartherReads += (ClampWalksTheWrongWay ? 0.8f : 0.2f) * SteeredReadsPerSecond * dt;
+            _steadyReads += 0.1f * SteeredReadsPerSecond * dt;
         }
 
         if (sinceArrival <= ControlFightSeconds)
@@ -282,28 +284,13 @@ internal sealed partial class CommandTrialWorld
             ? MarshalHoldCensus(0).Struck > 0
             : sinceArrival - WoundedAfterSeconds >= LaterWoundStrikesAfterSeconds;
 
-    // The driver's own window: a baseline once the flags read off and the control has struck, the verdict a proof length later. A control too quiet to prove anything takes a new baseline.
     private void AdvanceDriverWindow()
     {
-        if (!DriverJudgesHoldLine || (_driverVerdict != null && _driverVerdict.Value.Proof != HoldProof.NoControl) || _controlBlows <= 0f)
+        if (!DriverJudgesHoldLine || _controlBlows <= 0f)
             return;
-        if (float.IsNaN(_baselineAt))
-        {
-            if (MarshalFlagOff(0) < MarshalTuning.HoldMinFlagOff)
-                return;
-            _baselineAt = Time;
-            _baselineHeld = _heldBlows;
-            _baselineControl = _controlBlows;
-            return;
-        }
-
-        if (Time - _baselineAt < MarshalTuning.HoldProofSeconds)
-            return;
-        var held = (int)(_heldBlows - _baselineHeld);
-        var control = (int)(_controlBlows - _baselineControl);
-        _driverVerdict = new HoldVerdict(MarshalHoldRules.Judge(MarshalFlagOff(0), held, control), MarshalFlagOff(0), held, control, Time - _baselineAt);
-        if (_driverVerdict.Value.Proof == HoldProof.NoControl)
-            _baselineAt = float.NaN;
+        var verdict = _window.Observe(Time, MarshalFlagOff(0), (int)_heldBlows, (int)_controlBlows);
+        if (verdict != null)
+            _driverVerdict = verdict;
     }
 
     // ---- the hollow square ----

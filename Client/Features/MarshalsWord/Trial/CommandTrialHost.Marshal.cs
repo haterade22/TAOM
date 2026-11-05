@@ -369,7 +369,7 @@ internal sealed partial class CommandTrialHost
         return near;
     }
 
-    public HoldVerdict? MarshalHoldLineVerdict => MarshalSessionOfMission?.Fire.LastHoldLine;
+    public HoldVerdict? MarshalHoldLineVerdict => MarshalSessionOfMission?.Fire.HoldLine.LastVerdict;
 
     public void MarshalOrderShieldWall()
     {
@@ -378,22 +378,22 @@ internal sealed partial class CommandTrialHost
     }
 
     public HoldCensus MarshalHoldCensus(int company) =>
-        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.HoldCensusOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? default : default;
+        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.HoldLine.CensusOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? default : default;
 
     public bool MarshalStrikePassed(int company) =>
-        company < _chosenCompanies.Count && (MarshalSessionOfMission?.Fire.StrikePassed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? false);
+        company < _chosenCompanies.Count && (MarshalSessionOfMission?.Fire.HoldLine.StrikePassed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? false);
 
     public int MarshalSlotCloser(int company) =>
-        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.SlotCloserOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
+        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.HoldLine.SlotCloserOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
 
     public int MarshalSlotFarther(int company) =>
-        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.SlotFartherOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
+        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.HoldLine.SlotFartherOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
 
     public int MarshalSlotSteered(int company) =>
-        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.SlotSteeredOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
+        company < _chosenCompanies.Count ? MarshalSessionOfMission?.Fire.HoldLine.SlotSteeredOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? 0 : 0;
 
     public bool MarshalSlotFailed(int company) =>
-        company < _chosenCompanies.Count && (MarshalSessionOfMission?.Fire.SlotFailed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? false);
+        company < _chosenCompanies.Count && (MarshalSessionOfMission?.Fire.HoldLine.SlotFailed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company])) ?? false);
 
     public bool MarshalSquareLaidOut(int company) =>
         company < _chosenCompanies.Count && MarshalSessionOfMission?.LatestSquare is { } square && square.Company == MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]) && square.LaidOut;

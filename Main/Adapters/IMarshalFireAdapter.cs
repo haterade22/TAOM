@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.MarshalsWord.Domain;
 
 namespace TAOM.Adapters;
 
@@ -8,12 +9,9 @@ namespace TAOM.Adapters;
 /// </summary>
 internal readonly record struct FireCensus(int Company, int Drawing, int Holding, int Idle = 0, int Aside = 0, int StaleDrawing = 0, int FlagOff = 0);
 
-/// <summary>
-/// One count of a held company's line: who stands in it, the flags read off, the slot distances and anchors, the wounds and the strike back, with the order and the first reason a soldier
-/// did not qualify, and how many steered soldiers ended a hold read closer to their slot or farther from it since the previous count.
-/// </summary>
+/// <summary>One count of a held company's line: who stands in it, the flags, the slot distances, the wounds and the strike back, and the slot trend since the previous count.</summary>
 internal readonly record struct HoldCensus(int Company, int Units, int Qualified, int FlagOff, int Anchored, int Far, int WoundedEver, int Struck, int StruckSettled,
-    int StruckFlagOn, float SlotMax, float SlotMean, string Order, string WhyNot, int Closer = 0, int Farther = 0, int Steered = 0, int Loose = 0);
+    int StruckFlagOn, float SlotMax, float SlotMean, string Order, string WhyNot, SlotCounts Trend = default);
 
 /// <summary>
 /// The engine side of the archers' draw hold (build-spec 7.2): it walks the soldiers of the companies that have a rule, gives each the

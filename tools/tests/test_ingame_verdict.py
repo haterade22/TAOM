@@ -1658,22 +1658,37 @@ class MarshalsWordManifestTests(unittest.TestCase):
         self.assertEqual(code, 4, out)
         self.assertEqual(verdict_of(out, self.HOLD_LINE), "PASS", out)
 
-    def test_a_held_line_that_stayed_near_its_anchors_passes_and_one_that_wandered_fails(self):
+    def test_a_clamp_that_ended_more_soldiers_nearer_passes_and_one_that_walked_them_away_fails(self):
         code, out, _ = self.judge("marshal_hold_slot_pass.txt")
         self.assertEqual(code, 4, out)
         self.assertEqual(verdict_of(out, self.HOLD_SLOT), "PASS", out)
         code, out, _ = self.judge("marshal_hold_slot_fail.txt")
         self.assertEqual(code, 1, out)
         self.assertEqual(verdict_of(out, self.HOLD_SLOT), "FAIL", out)
-        self.assertIn("far=12", out)
+        self.assertIn("closer=2 farther=6", out)
 
     def test_the_slot_pass_names_the_order_and_needs_five_qualified_soldiers(self):
         pattern = self.check(self.HOLD_SLOT).passes[0]
-        line = "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=%s far=1 order=%s"
+        line = "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=%s far=1 order=%s steered=8 closer=6 farther=2"
         self.assertTrue(pattern.search(line % (5, "Stop")))
         self.assertFalse(pattern.search(line % (4, "Stop")))
         self.assertFalse(pattern.search(line % (30, "Move")), "a moving slot is never judged, so a pass line for it proves nothing")
         self.assertFalse(pattern.search(line % (30, "None")))
+
+    def test_the_slot_pass_carries_the_numbers_it_judged_and_a_line_without_them_does_not_match(self):
+        pattern = self.check(self.HOLD_SLOT).passes[0]
+        bare = "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=1 order=Stop"
+        self.assertFalse(pattern.search(bare), "the line that proves the slot names the steered reads and the two sides")
+        self.assertTrue(pattern.search(bare + " steered=8 closer=6 farther=2"))
+        self.assertFalse(pattern.search(bare + " steered=8 closer=6"))
+
+    def test_the_slot_pass_needs_the_five_steered_reads_the_check_waits_for(self):
+        pattern = self.check(self.HOLD_SLOT).passes[0]
+        bare = "[Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=1 order=Stop"
+        for steered in ("0", "1", "4", "05"):
+            self.assertFalse(pattern.search(bare + " steered=%s closer=4 farther=0" % steered), "steered=" + steered)
+        for steered in ("5", "8", "12", "48"):
+            self.assertTrue(pattern.search(bare + " steered=%s closer=5 farther=0" % steered), "steered=" + steered)
 
     def test_a_wound_answered_with_the_flag_passes_the_strike_check_and_one_left_disarmed_fails(self):
         code, out, _ = self.judge("marshal_hold_strike_pass.txt")
@@ -1845,7 +1860,7 @@ class MarshalsWordManifestTests(unittest.TestCase):
                 self.assertFalse(pattern.search(line % holding))
 
     def test_each_failure_line_of_the_feature_fails_the_capture_check(self):
-        for fixture in ("marshal_could_not_start.txt", "marshal_hotkey_failed.txt", "marshal_patch_failed.txt", "marshal_patch_skipped.txt"):
+        for fixture in ("marshal_could_not_start.txt", "marshal_hotkey_failed.txt", "marshal_release_failed.txt", "marshal_patch_failed.txt", "marshal_patch_skipped.txt"):
             with self.subTest(fixture=fixture):
                 self.t = Tree(self)
                 self.t.real_manifest(self.NAME)

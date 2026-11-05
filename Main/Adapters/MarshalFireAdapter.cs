@@ -46,8 +46,10 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
             var tally = new HoldTally(company);
             foreach (var agent in _touched)
             {
+                if ((agent.Formation?.Index ?? -1) != company)
+                    continue;
                 var component = agent.GetComponent<MarshalWordComponent>();
-                if (component == null || (agent.Formation?.Index ?? -1) != company || !AgentSlotIdentity.IsCurrentOccupant(agent) || !agent.IsAIControlled)
+                if (component == null || !AgentSlotIdentity.IsCurrentOccupant(agent) || !agent.IsAIControlled)
                     continue;
                 component.RefreshHold(true, now);
                 tally.Add(component, now);
@@ -88,9 +90,11 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
             Clear(company);
         foreach (var agent in _touched)
         {
-            var component = agent.GetComponent<MarshalWordComponent>();
             var index = agent.Formation?.Index ?? -1;
-            if (component != null && index >= 0 && index < _present.Length && Contains(companies, index))
+            if (index < 0 || index >= _present.Length || !Contains(companies, index))
+                continue;
+            var component = agent.GetComponent<MarshalWordComponent>();
+            if (component != null)
                 Tally(index, component, now);
         }
 
@@ -115,6 +119,7 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
             }
             catch (Exception ex)
             {
+                _logger.LogError($"[MarshalsWord] giving back a soldier's flag and firing order failed: {ex}");
                 first ??= ex;
             }
         }
@@ -225,10 +230,7 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         private int _struck;
         private int _struckSettled;
         private int _struckFlagOn;
-        private int _closer;
-        private int _farther;
-        private int _steered;
-        private int _loose;
+        private SlotCounts _trend;
         private float _max;
         private double _sum;
         private string _why = "";
@@ -240,11 +242,7 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         internal void Add(MarshalWordComponent component, double now)
         {
             Units++;
-            var (closer, farther, steered, loose) = component.TakeSlotTrend();
-            _closer += closer;
-            _farther += farther;
-            _steered += steered;
-            _loose += loose;
+            _trend += component.TakeSlotTrend();
             var wounded = component.WoundedAt;
             if (!double.IsNegativeInfinity(wounded))
                 _woundedEver++;
@@ -276,13 +274,12 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
 
         internal HoldCensus ToCensus(string order) =>
             new(_company, Units, _qualified, _flagOff, _anchored, _far, _woundedEver, _struck, _struckSettled, _struckFlagOn, _max,
-                _measured == 0 ? 0f : (float)(_sum / _measured), order, _why, _closer, _farther, _steered, _loose);
+                _measured == 0 ? 0f : (float)(_sum / _measured), order, _why, _trend);
 
-        // A wound is settled once two reads have passed, so the pass that just saw it is not counted as a failure to answer.
         private void AddStrike(MarshalWordComponent component, double age)
         {
             _struck++;
-            if (age < 2.0 * MarshalTuning.HoldReadSeconds)
+            if (!MarshalHoldLineRules.IsSettled(age))
                 return;
             _struckSettled++;
             if (component.AttackFlagOn)
@@ -290,8 +287,7 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         }
     }
 
-    // Native never calls a component whose flag is off, so its state would freeze at Holding: it is reset here, on the main thread. A soldier stays touched until his restore was
-    // made, so a throw leaves him to the fault cleanup.
+    // Native never calls a component whose flag is off, so its state would freeze at Holding: it is reset here, on the main thread.
     private void Release()
     {
         _leaving.Clear();
@@ -308,7 +304,6 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         }
     }
 
-    // The attack flag goes back before the callback goes off, and the debt stays with the component until the write was made.
     private static void TurnOff(Agent agent)
     {
         if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted)

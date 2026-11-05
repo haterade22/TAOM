@@ -370,6 +370,15 @@ public class MarshalMarkCaptureAndShotTableTests
     }
 
     [TestMethod]
+    public void TheTable_ResetDropsTheWatchedShooters_SoNoAgentOutlivesItsMission()
+    {
+        var code = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
+        var reset = code.Substring(code.IndexOf("private static void Reset()", System.StringComparison.Ordinal), 520);
+
+        StringAssert.Contains(reset, "Volatile.Write(ref _watched, -1); Watch.Reset();");
+    }
+
+    [TestMethod]
     public void SetMode_ResetsTheWordTime_SoAChangeOfModeStartsWithNoWord()
     {
         MarshalFireTable.Begin();
@@ -439,11 +448,13 @@ public class MarshalMarkCaptureAndShotTableTests
     }
 
     [TestMethod]
-    public void TheTable_NotesAWatchedCompanysShotBeforeItTestsTheMode_SoAFreeCompanyIsCounted()
+    public void TheShotReader_NotesAWatchedCompanysShotBeforeItTestsTheMode_SoAFreeCompanyIsCounted()
     {
-        var code = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
+        var reader = Code("Main/Adapters/MarshalCombatReader.cs");
+        var table = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
 
-        StringAssert.Contains(code, "if (company == Volatile.Read(ref _watched)) Watch.Note(shooter); if (Modes[company] == FireMode.Free) return;");
+        StringAssert.Contains(reader, "MarshalFireTable.NoteShooter(company, shooter); if (MarshalFireTable.ModeOf(company) == FireMode.Free) return;");
+        StringAssert.Contains(table, "if (InRange(company) && company == Volatile.Read(ref _watched)) Watch.Note(shooter);");
     }
 
     [TestMethod]
@@ -596,16 +607,16 @@ public class MarshalMarkCaptureAndShotTableTests
     }
 
     [TestMethod]
-    public void TheView_ForwardsTheShotCallbackToTheTable_AndReadsEachPressedKeyStaticFirst()
+    public void TheView_ForwardsBothCallbacksToTheCombatReader_AndReadsEachPressedKeyStaticFirst()
     {
         // The static test is cheap; the context test allocates a click key array on each call (InputContext.cs:310-312).
         var code = Code("Client/Features/MarshalsWord/MarshalView.cs");
 
-        StringAssert.Contains(code, "base.OnAgentShootMissile(shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex); MarshalFireTable.OnShot(shooterAgent);");
+        StringAssert.Contains(code, "base.OnAgentShootMissile(shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex); MarshalCombatReader.OnShot(shooterAgent);");
         StringAssert.Contains(code, "key != InputKey.Invalid && TaleWorlds.InputSystem.Input.IsKeyPressed(key) && Input.IsKeyPressed(key)");
         StringAssert.Contains(code, "Input.IsGameKeyDown((int)GameKeyDefinition.ShowIndicators)");
         StringAssert.Contains(code, "var fire = _trialFire || Pressed(_keys.FireMode); var word = _trialWord || Pressed(_keys.Word); var hold = _trialHold || Pressed(_keys.HoldLine); _trialFire = false; _trialWord = false; _trialHold = false;");
-        StringAssert.Contains(code, "base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in attackCollisionData); MarshalFireTable.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);");
+        StringAssert.Contains(code, "base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in attackCollisionData); MarshalCombatReader.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);");
     }
 
     [TestMethod]
@@ -620,14 +631,16 @@ public class MarshalMarkCaptureAndShotTableTests
     }
 
     [TestMethod]
-    public void TheTable_CountsAShotWithInterlockedOnly_AndTestsTheTeamBeforeTheFormationIndex()
+    public void TheShotPath_CountsWithInterlockedOnly_AndTestsTheTeamBeforeTheFormationIndex()
     {
         // Formation.Index repeats across teams, and native chooses the callback's thread (mission-frame-threads-and-native-costs.md:119).
-        var code = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
+        var reader = Code("Main/Adapters/MarshalCombatReader.cs");
+        var table = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
 
-        StringAssert.Contains(code, "if (formation == null || shooter.Team != Mission.Current?.PlayerTeam) return;");
-        Assert.IsFalse(Regex.IsMatch(code, @"\block\b|LogInfo|\.Pass\(|\.Fail\("), "no lock and no line from the shot callback");
-        StringAssert.Contains(code, "Interlocked.Increment(ref ShotsWhileHolding[company]);");
+        StringAssert.Contains(reader, "if (!MarshalFireTable.IsLive) return; var formation = shooter.Formation; if (formation == null || shooter.Team != Mission.Current?.PlayerTeam) return;");
+        Assert.IsFalse(Regex.IsMatch(reader + table, @"\block\b|LogInfo|\.Pass\(|\.Fail\("), "no lock and no line from the shot callback");
+        StringAssert.Contains(table, "Interlocked.Increment(ref ShotsWhileHolding[company]);");
+        Assert.IsFalse(Regex.IsMatch(table, @"Mission\.|GetComponent|\.Formation\b|\.Team\b|OnShot"), "the table counts plain values and reads no engine state");
     }
 
     [TestMethod]

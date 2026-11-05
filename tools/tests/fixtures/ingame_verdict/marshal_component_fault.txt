@@ -5,5 +5,5 @@
 [2026-11-04 14:08:30] [WARNING] [Swallowed] feature=MarshalsWord site=MarshalWordComponent.OnAIInputSet first=NullReferenceException. This line is logged once per site and the [Session] summary counts the repeats. Root cause: System.NullReferenceException: Object reference not set to an instance of an object.
 [2026-11-04 14:09:00] [INFO] [Check] id=taom.marshals-word.volley-hold result=pass mission=1 company=1 holding=21 shots=0
 [2026-11-04 14:09:02] [INFO] [Check] id=taom.marshals-word.massed result=pass mission=1 company=1 holding=21 shots=19 eligible=28 stale=2
-[2026-11-04 14:09:10] [INFO] [Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop
+[2026-11-04 14:09:10] [INFO] [Check] id=taom.marshals-word.hold-slot result=pass mission=1 company=1 qualified=30 far=2 order=Stop steered=8 closer=6 farther=2
 [2026-11-04 14:20:00] [INFO] [Shutdown] clean module unload

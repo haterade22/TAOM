@@ -227,4 +227,18 @@ public class MarshalHoldRulesTests
 
         Assert.AreEqual(HoldProof.Pass, window.Observe(24.0, 30, 6, 30)!.Value.Proof, "the six blows came before the new baseline");
     }
+
+    [TestMethod]
+    public void Window_TooFewFlagsOffAtTheJudge_AnswersPending_AndTheWindowCloses_SoALaterBusyWindowIsNeverJudged()
+    {
+        var window = new MarshalHoldWindow();
+        window.Begin(0.0);
+        window.Observe(3.0, flagOff: 30, heldBlows: 0, controlBlows: 0);
+
+        var verdict = window.Observe(13.0, flagOff: MarshalTuning.HoldMinFlagOff - 1, heldBlows: 0, controlBlows: 50)!.Value;
+
+        Assert.AreEqual(HoldProof.Pending, verdict.Proof);
+        Assert.IsNull(window.Observe(14.0, 30, 0, 50), "no new baseline: Pending is not NoControl");
+        Assert.IsNull(window.Observe(30.0, 30, 0, 90), "the window is closed for good");
+    }
 }

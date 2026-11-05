@@ -192,18 +192,12 @@ public class MarshalFireRulesTests
         Assert.IsTrue(MarshalFireRules.MassedWordDue(30, 30, 100.0 + MarshalTuning.WordGap, 100.0));
     }
 
-    private static StandAsideFacts Calm() => new(false, false, false, false, false, false, double.PositiveInfinity);
+    private static StandAsideFacts Calm() => new(false, false, false, false, false, double.PositiveInfinity);
 
     [TestMethod]
     public void StandsAside_AllCalm_IsFalse()
     {
         Assert.IsFalse(MarshalFireRules.StandsAside(Calm()));
-    }
-
-    [TestMethod]
-    public void StandsAside_ModeFree_IsTrue()
-    {
-        Assert.IsTrue(MarshalFireRules.StandsAside(Calm() with { ModeFree = true }));
     }
 
     [TestMethod]

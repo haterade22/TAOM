@@ -122,7 +122,7 @@ internal sealed class MarshalSession : IMarshalHookSink
             if (input.WordPressed)
                 _fire.PressWord();
             if (input.HoldPressed)
-                _fire.PressHold();
+                _fire.HoldLine.Press();
             RefreshFlags(input);
         }
         catch (Exception ex)
@@ -210,7 +210,7 @@ internal sealed class MarshalSession : IMarshalHookSink
                     _fire.PressWord(companies);
                     break;
                 default:
-                    _fire.PressHold(companies);
+                    _fire.HoldLine.Press(companies);
                     break;
             }
         }

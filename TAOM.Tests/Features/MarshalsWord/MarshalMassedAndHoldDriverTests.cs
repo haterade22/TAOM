@@ -284,9 +284,9 @@ public class MarshalMassedAndHoldDriverTests
     // ---- hold the line ----
 
     [TestMethod]
-    public void PressHold_ASelectedCompany_TurnsHoldOn_SaysSo_WritesItsLine_AndSweepsItAsHeld()
+    public void Press_ASelectedCompany_TurnsHoldOn_SaysSo_WritesItsLine_AndSweepsItAsHeld()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         Assert.IsTrue(MarshalFireTable.HoldOf(Company));
@@ -298,11 +298,11 @@ public class MarshalMassedAndHoldDriverTests
     }
 
     [TestMethod]
-    public void PressHold_Twice_TurnsHoldOff_AndTheNextSweepHoldsNobody()
+    public void Press_Twice_TurnsHoldOff_AndTheNextSweepHoldsNobody()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(2.0);
 
         Assert.IsFalse(MarshalFireTable.HoldOf(Company));
@@ -311,11 +311,11 @@ public class MarshalMassedAndHoldDriverTests
     }
 
     [TestMethod]
-    public void PressHold_WithoutCommand_DoesNothing()
+    public void Press_WithoutCommand_DoesNothing()
     {
         _orders.PlayerCommands = false;
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         Assert.IsFalse(MarshalFireTable.HoldOf(Company));
@@ -323,11 +323,11 @@ public class MarshalMassedAndHoldDriverTests
     }
 
     [TestMethod]
-    public void PressHold_ACompanyUnderAiControl_IsSkippedWithItsCompany()
+    public void Press_ACompanyUnderAiControl_IsSkippedWithItsCompany()
     {
         _orders.Lost.Add(Company);
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         Assert.IsFalse(MarshalFireTable.HoldOf(Company));
@@ -338,12 +338,12 @@ public class MarshalMassedAndHoldDriverTests
     }
 
     [TestMethod]
-    public void PressHold_TwoSelectedCompaniesInTwoStates_BothTakeTheOppositeOfTheFirst()
+    public void Press_TwoSelectedCompaniesInTwoStates_BothTakeTheOppositeOfTheFirst()
     {
         _orders.Selected.Add(Control);
         MarshalFireTable.SetHold(Control, true);
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         Assert.IsTrue(MarshalFireTable.HoldOf(Company));
@@ -353,7 +353,7 @@ public class MarshalMassedAndHoldDriverTests
     [TestMethod]
     public void Pass_AHeldCompanyThatGoesToTheAi_LosesItsHold_SoNoSoldierStaysDisarmedWithNobodyToPressTheKey()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
         _orders.Lost.Add(Company);
 
@@ -367,7 +367,7 @@ public class MarshalMassedAndHoldDriverTests
     [TestMethod]
     public void OnPlayerTeamChanged_ClearsEveryHold()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         _driver.OnPlayerTeamChanged();
@@ -387,7 +387,7 @@ public class MarshalMassedAndHoldDriverTests
         var line = _log.Lines.Single(l => l.Id == MarshalChecks.HoldLineId);
         Assert.AreEqual("pass", line.Result);
         StringAssert.Contains(line.Detail, "company=3 flagOff=30 blows=0 control=4 controlBlows=20 seconds=10.3");
-        Assert.AreEqual(HoldProof.Pass, _driver.LastHoldLine!.Value.Proof);
+        Assert.AreEqual(HoldProof.Pass, _driver.HoldLine.LastVerdict!.Value.Proof);
     }
 
     [TestMethod]
@@ -437,7 +437,7 @@ public class MarshalMassedAndHoldDriverTests
     [TestMethod]
     public void Pass_NoOtherCompanyHasStruckYet_TakesNoBaseline_SoNoVerdictComesFromAnEmptyControl()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(0.0);
         Census(0, idle: 40, flagOff: 30);
 
@@ -506,6 +506,82 @@ public class MarshalMassedAndHoldDriverTests
     }
 
     [TestMethod]
+    public void Pass_AQuietControl_TheNextBaselineChoosesTheBusiestCompany()
+    {
+        StartAProof(flagOff: 30, controlBlowsBefore: 5);
+        Pass(3.0);
+        Blows(Control, 3);
+        Pass(13.25);
+        Assert.AreEqual("skip", _log.Lines.Single(l => l.Id == MarshalChecks.HoldLineId).Result, "the first control stayed quiet");
+
+        Blows(5, 40);
+        Pass(14.0);
+        Blows(5, 20);
+        Pass(24.5);
+
+        var last = _log.Lines.Last(l => l.Id == MarshalChecks.HoldLineId);
+        Assert.AreEqual("pass", last.Result);
+        StringAssert.Contains(last.Detail, "control=5 controlBlows=20");
+    }
+
+    [TestMethod]
+    public void Pass_AQuietControlThatStillLeadsOnTheMissionsBlows_IsNotChosenAgain_TheCompanyThatFoughtInTheWindowIs()
+    {
+        Blows(6, 40);
+        StartAProof(flagOff: 30, controlBlowsBefore: 60);
+        Pass(3.0);
+        Blows(Control, 3);
+        Blows(5, 15);
+        Pass(13.25);
+        Assert.AreEqual("skip", _log.Lines.Single(l => l.Id == MarshalChecks.HoldLineId).Result, "the first control stayed quiet");
+
+        Pass(13.5);
+        Blows(5, 15);
+        Pass(24.0);
+
+        var last = _log.Lines.Last(l => l.Id == MarshalChecks.HoldLineId);
+        Assert.AreEqual("pass", last.Result);
+        StringAssert.Contains(last.Detail, "control=5 controlBlows=15");
+    }
+
+    [TestMethod]
+    public void Pass_AQuietControlAndNobodyElseFoughtInTheWindow_TheNextBaselineRanksTheMissionsBlowsAgain()
+    {
+        StartAProof(flagOff: 30, controlBlowsBefore: 5);
+        Pass(3.0);
+        Blows(Control, 3);
+        Pass(13.25);
+
+        Pass(13.5);
+        Blows(Control, 20);
+        Pass(24.0);
+
+        var last = _log.Lines.Last(l => l.Id == MarshalChecks.HoldLineId);
+        Assert.AreEqual("pass", last.Result);
+        StringAssert.Contains(last.Detail, "control=4 controlBlows=20");
+    }
+
+    [TestMethod]
+    public void Pass_AQuietControl_TheCompanyOfTheWindowIsNeverAnotherHeldCompany_HoweverMuchItFought()
+    {
+        _orders.Selected.Add(6);
+        StartAProof(flagOff: 30, controlBlowsBefore: 5);
+        Pass(3.0);
+        Blows(Control, 3);
+        Blows(6, 30);
+        Blows(5, 12);
+        Pass(13.25);
+
+        Pass(13.5);
+        Blows(5, 14);
+        Pass(24.0);
+
+        var last = _log.Lines.Last(l => l.Id == MarshalChecks.HoldLineId && l.Detail.Contains("company=3 "));
+        Assert.AreEqual("pass", last.Result);
+        StringAssert.Contains(last.Detail, "control=5 controlBlows=14");
+    }
+
+    [TestMethod]
     public void Pass_AHeldCompany_WritesItsSummaryEveryFiveSeconds_WithTheBlowsOfBothCompaniesSinceTheToggle()
     {
         Blows(Company, 4);
@@ -526,7 +602,7 @@ public class MarshalMassedAndHoldDriverTests
     [TestMethod]
     public void Summarize_AHeldCompany_WritesOneLastHoldLine_ForTheMissionsEnd()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.0);
 
         _driver.Summarize();
@@ -539,7 +615,7 @@ public class MarshalMassedAndHoldDriverTests
         Blows(Control, controlBlowsBefore);
         Census(0, idle: 40 - flagOff, aside: 0, flagOff: flagOff);
         _fire.Census[Company] = new FireCensus(Company, 0, 0, 40, 0, 0, flagOff);
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(0.0);
     }
 }

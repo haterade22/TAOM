@@ -82,9 +82,9 @@ public class MarshalPanelPressTests
     }
 
     [TestMethod]
-    public void PressHold_ForTheCompaniesOfAClick_TurnsTheirHoldOn()
+    public void Press_ForTheCompaniesOfAClick_TurnsTheirHoldOn()
     {
-        _driver.PressHold(new List<int> { Clicked });
+        _driver.HoldLine.Press(new List<int> { Clicked });
 
         Pass(0.0);
 
@@ -92,11 +92,11 @@ public class MarshalPanelPressTests
     }
 
     [TestMethod]
-    public void PressHold_ForACompanyUnderTheAi_IsSkipped_AsTheKeyIs()
+    public void Press_ForACompanyUnderTheAi_IsSkipped_AsTheKeyIs()
     {
         _orders.Lost.Add(Clicked);
 
-        _driver.PressHold(new List<int> { Clicked });
+        _driver.HoldLine.Press(new List<int> { Clicked });
         Pass(0.0);
 
         Assert.IsFalse(MarshalFireTable.HoldOf(Clicked));
