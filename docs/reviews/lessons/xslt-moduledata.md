@@ -280,6 +280,19 @@ burying a twelve-row change in a 106,152-line diff that no reviewer can read.
 
 ---
 
+### A lord in both `lords.xslt` and `characters/lords.xml` is two definitions merged, not an override (#644)
+The engine merges every file of one XML id (v1.4.8 `MBObjectManager.MergeElements`, `MBObjectManager.cs:820`): the
+later `characters/lords.xml` row wins each attribute it states, a child with the same unique key (a `<skill id>`) is
+merged, and any other child is appended. `<Equipments>` is `AlwaysPreferMerge` and `EquipmentSet` is unique on id,
+civilian and stealth (installed `XmlSchemas/NPCCharacters.xsd:369-372`, `:410-415`), so a set whose id differs is
+ADDED, and `Hero.SetInitialValuesFromCharacter` (`Hero.cs:2237`) then picks one battle and one civilian set at random
+per campaign (`:2274`, `:2278`). On the 1.5.x line three of the Nine wore the Nazgul kit or a generic Mordor kit by
+coin flip.
+- **Why missed:** either file alone looks complete, and no gate compares the two.
+- **Prevent:** before editing a lord, grep BOTH files for its id. Moving a lord from one file to the other means
+  folding every value the row wins into the other file first. #648 tracks the ids still in both.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 1 (not on this line); plan 144.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
