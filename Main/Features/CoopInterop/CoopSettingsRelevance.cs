@@ -71,7 +71,7 @@ public static class CoopSettingsRelevance
         // trace — [EnlistDiag] and [FieldCommission] respectively. Their feature switches
         // (EnableEnlistment, EnableFieldCommission) are gameplay and stay relevant; these two
         // are the log half of the same pair, which is the trap this list exists for.
-        "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
+        "EnableEnlistmentTrace", "EnableFieldCommissionDiagnostics",
         // The load-time stamps' detail toggle: log lines, never a computation.
         "EnableLoadTimeStamps",
         // The [MissionPerf] frame-time heartbeat (plan 117): a log line, never a computation.

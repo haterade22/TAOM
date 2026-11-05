@@ -466,16 +466,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool EnableEnlistment { get; set; } = true;
 
     // --- Enlistment / Diagnostics ---
-    // Diagnostic only, no gameplay effect. ON by default while the service loop is being diagnosed:
-    // with it on, [EnlistDiag] was 4,856 of 6,001 lines (81%) of a 32-minute log — 3,674 of them from
-    // one per-map-event line — so turn it off for a quieter log once enlistment is not the subject.
+    // Diagnostic only, no gameplay effect. OFF by default (#840): with it on, [EnlistDiag] was 4,856 of
+    // 6,001 lines (81%) of a 32-minute log — 3,674 of them from one per-map-event line — so switch it on
+    // only to record a trace for a bug report.
     // Genuine faults (park/sync/restore failure, a stranded PlayerEncounter, a discharge that leaves
     // the player unable to start encounters) are NOT gated and log regardless of this setting.
     //
     // The gated lines emit at INFO, which FileLogger flushes synchronously, so the trace survives a
     // hard native CTD. Measured cost ~0.11 ms/flush (rca-battleload-agentbuild-2026-08-03: 1,287
     // stamps = 145 ms), i.e. ~0.5 s across a 32-minute session. The default here MUST match
-    // EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `?? true` fallback; a test pins each.
+    // EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `?? false` fallback; a test pins each.
     //
     // FLIPPED OFF 2026-08-09, when #375 closed on a field-verified session. The trace shipped ON
     // because the service loop was under active diagnosis, and it earned that: it is what found the
@@ -485,18 +485,19 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // RESTORE ok (12) and the per-map-event line (450). The 52 ungated INFO sites produced the other
     // ~99, and those are the ones worth keeping: oath, joins, duties, promotion, rewards, discharge.
     //
-    // FLIPPED BACK ON 2026-08-28, TEMPORARILY, for the #520 in-game smoke. The trust economy now
-    // rests on two earners and only one of them has ever been observed working: no
-    // `[Enlistment] battle merit <score> -> band` line has been seen in any live session, so the
-    // merit half is unproven end to end. Turn this back OFF once that smoke has run; it is not a
-    // shipping default. The revert is one commit and touches four literals: this one, the provider's
-    // `??`, and the two test pins that name the posture.
+    // FLIPPED BACK ON 2026-08-28, TEMPORARILY, for the #520 in-game smoke, and then never flipped back:
+    // it shipped ON in every 1.4.x release from v2.0.24 (2026-09-01) through v2.0.28 (2026-09-04) and the public 1.4.8 build. Back OFF in #840, under a NEW property name (EnableEnlistmentTrace,
+    // renamed from EnableEnlistmentDiagnostics).
     //
-    // A COMPILED DEFAULT DOES NOT REACH AN EXISTING INSTALL. MCM persists every property to
-    // Configs/ModSettings/Global/TAOM/TAOM.json on first write and loads that over the default
-    // forever after, so anyone whose json already carries `"EnableEnlistmentDiagnostics": false`
-    // stays off until they flip it in the settings UI. Same trap as ShaderPrecompilation's, in the
-    // other direction. This flip is for a fresh install; an existing tester needs the json or the UI.
+    // WHY IT WAS RENAMED, NOT FLIPPED. A COMPILED DEFAULT DOES NOT REACH AN EXISTING INSTALL. MCM writes
+    // Configs/ModSettings/Global/TAOM/TAOM.json, every property in it, only when a player confirms a change on
+    // TAOM's settings page, and loads that file over the defaults from then on. So every player who changed any
+    // TAOM setting while the default was on (v2.0.24 to v2.0.28) has `true` saved under the old name, and a flipped default
+    // would never have reached them (a file written before 2026-08-28 kept false). MCM keeps a saved value per
+    // property name, so a new name is what gives them the new default (the orphaned old key is ignored on load
+    // and dropped by the next save). The revert touches four literals: this default, the provider's `??`, and
+    // the two tests that name the posture (EnlistmentDiagnosticsSettingsProviderTests). Once players save the new key,
+    // a later change of this default needs another rename too (trap index: Persisted MCM defaults).
 
     [SettingPropertyGroup("Enlistment", GroupOrder = 41)]
     [SettingPropertyBool("Offer Leave When The Column Halts", Order = 10, RequireRestart = false,
@@ -504,9 +505,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool OfferLeaveOnArrival { get; set; } = true;
 
     [SettingPropertyGroup("Enlistment/Diagnostics", GroupOrder = 42)]
-    [SettingPropertyBool("Enable Enlistment Diagnostics", Order = 0, RequireRestart = false,
-        HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, RESTORE ok) to the TAOM debug log. Temporarily ON while the enlisted standing and rank loop is being verified in play: it is roughly ten times the volume of the ordinary enlistment log and exists for diagnosing the service loop, not for playing, so turn it off once you are not reproducing an enlistment problem. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default ON.")]
-    public bool EnableEnlistmentDiagnostics { get; set; } = true;
+    [SettingPropertyBool("Enable Enlistment Trace", Order = 0, RequireRestart = false,
+        HintText = "Off by default: turn it on to record the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, RESTORE ok) in the TAOM debug log when you are reproducing an enlistment problem for a bug report. It is roughly ten times the volume of the ordinary enlistment log, so turn it off again afterwards. Real faults are always logged regardless of this setting, so [EnlistDiag] lines still appear for them when it is off. Takes effect immediately; no restart.")]
+    public bool EnableEnlistmentTrace { get; set; } = false;
 
     // --- Battlefield Promotions (Field Commission) ---
     // Every default here MUST equal its counterpart in

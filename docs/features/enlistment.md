@@ -221,11 +221,17 @@ writer thread puts it on disk — so a `LogDebug` downgrade changes durability, 
 "map event started, commander NOT in it" line. The gate therefore had to go at the **call site**, and
 `Main/Core/Logging/FileLogger.cs` is deliberately untouched.
 
-**`TaomSettings.EnableEnlistmentDiagnostics`** (MCM group `Enlistment/Diagnostics`, `RequireRestart =
-false`) reaches the call sites through `IEnlistmentDiagnosticsSettingsProvider`, whose singleton reads
+**`TaomSettings.EnableEnlistmentTrace`** (MCM group `Enlistment/Diagnostics`, label "Enable Enlistment
+Trace", `RequireRestart = false`) reaches the call sites through `IEnlistmentDiagnosticsSettingsProvider`, whose singleton reads
 the static on every call — which is what makes "takes effect immediately" true rather than aspirational.
 
-**It ships OFF since 2026-08-09**, and the provider's MCM-absent fallback is `?? false` to match.
+**It ships OFF (again, #840).** It was off from 2026-08-09, went back on temporarily on 2026-08-28 for an
+in-game smoke and was never switched off, so every 1.4.x release from v2.0.24 through v2.0.28 shipped it on. The setting was then RENAMED from
+`EnableEnlistmentDiagnostics` to `EnableEnlistmentTrace` rather than just flipped: MCM keeps a saved value per
+property name, so the old id had persisted `true` for every player and a flipped default would not have
+reached them. The orphaned old key is ignored on load and dropped by the next save. To record the trace for
+a bug report, switch it on in MCM (Enlistment, Diagnostics); real faults always log regardless, so
+`[EnlistDiag]` lines still appear for them with the trace off. The provider's MCM-absent fallback is `?? false` to match.
 Those are two independent literals encoding one decision; `CompiledDefault_AndProviderFallback_Agree`
 fails if either moves alone, so a player without MCM never gets different logging from a player at
 the shipped default. The MCM-absent case is the one that decides the direction: a player with no
