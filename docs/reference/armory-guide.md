@@ -37,6 +37,17 @@
 
 ## Two asset trees, and why a clean validator run can lie
 
+> **1.4.x, WP108: the public 1.4.8 release ships the Armory cooked, and the tools now follow the
+> engine's order everywhere.** A player's rgl log of 2026-11-01 loads
+> `$BASE/Modules/LOTRLOME_Armory/AssetPackages...`, and the laptop's install is cooked as well (no
+> `Assets/`). The engine reads a module's loose `Assets/` tree when it has one and its cooked packs
+> otherwise, so on those installs the packs are what the game loads. `validate_mesh_refs.py`
+> (`tpac_paths_for_modules`, `module_tpacs`) now applies the same order per module, and
+> `validate_moduledata.py` and `audit_armory_refs.py` take their package lists from it.
+> `generate_armory_catalogue.py` inventories the loose tree only, so `audit_armory_refs.py` skips
+> catalogue drift on a cooked-only install. The 2026-09-01 note below describes the desktop's loose
+> install.
+
 > **Corrected 2026-09-01, with engine evidence: the Armory has no cooked tree, and loose wins
 > anyway.** There is no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against
 > 4,364 loose `Assets/**/*.tpac`. The engine's own log says which tree it took:
@@ -70,14 +81,15 @@ The Armory carries the same art twice, and they can disagree:
 
 | Tree | What it is | Read by |
 |---|---|---|
-| `AssetPackages/pack0-9.tpac` | the **cooked** packs the running game loads | `tools/validate_mesh_refs.py` |
-| `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset | `tools/audit_deleted_mesh_impact.py` |
+| `AssetPackages/*.tpac` | the **cooked** packs; the game loads them only for a module with no loose `Assets/` tree (the public 1.4.8 Armory) | `tools/validate_mesh_refs.py` for such a module; `tools/audit_deleted_mesh_impact.py` |
+| `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset; the game loads it over a cooked tree when both exist | `tools/validate_mesh_refs.py`, `tools/generate_armory_catalogue.py`, `tools/audit_deleted_mesh_impact.py` |
 
-Packs are rebuilt only on an explicit re-cook. **Art deleted from `Assets/` keeps shipping
-from a stale pack, so `validate_mesh_refs.py` returns `PASS` while the source tree is
-already broken.** The reverse also happens: art imported after the last cook exists for the
-editor and not for the game, and renders naked in-game right now. Check both directions
-before trusting either. Full case: [`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
+Packs are rebuilt only on an explicit re-cook, so on a machine with both trees they go stale, but
+the game does not read them while `Assets/` exists. Until WP108 `validate_mesh_refs.py` preferred a
+cooked tree wherever one existed, so it could `PASS` over art already deleted from `Assets/` and
+miss art imported after the last cook. It now reads `Assets/` first, so a `PASS` is against the
+tree the game loads. Full case from when the tool read the packs:
+[`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
 
 ## Deleted on 2026-08-28 (do not re-reference)
 
