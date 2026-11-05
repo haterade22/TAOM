@@ -27,6 +27,9 @@ internal static class MarshalFireTable
 
     internal static int Companies => Size;
 
+    /// <summary>A mission owns the table: the hit and shot callbacks count only while this reads true.</summary>
+    internal static bool IsLive => _live;
+
     internal static void Begin()
     {
         Reset();
@@ -62,30 +65,11 @@ internal static class MarshalFireTable
             Held[company] = on;
     }
 
-    /// <summary>Melee blows the company's soldiers have dealt this mission, counted by <see cref="OnBlow"/>; a soldier of a held company who stands outside the line deals none that count.</summary>
+    /// <summary>Melee blows the company's soldiers have dealt this mission, as <see cref="MarshalCombatReader"/> counts them; a soldier of a held company outside the line deals none that count.</summary>
     internal static int BlowsOf(int company) => InRange(company) ? Volatile.Read(ref BlowsDealt[company]) : 0;
 
     /// <summary>Melee blows the company's wounded soldiers have dealt inside their strike back window, which the held line's flag is meant to allow (build-spec 9.2).</summary>
     internal static int StrikeBlowsOf(int company) => InRange(company) ? Volatile.Read(ref StrikeBlowsDealt[company]) : 0;
-
-    /// <summary>
-    /// Counts one blow dealt by a player-team soldier to a soldier of another team, melee only. Any thread: native chooses the hit callback's thread, so there is
-    /// no lock, no allocation and no log line. Formation.Index repeats across teams, so the team is tested first.
-    /// </summary>
-    internal static void OnBlow(Agent? affector, Agent? affected, bool isMissile)
-    {
-        if (!_live || isMissile || affector == null || affected == null || affector.Team == affected.Team)
-            return;
-        var formation = affector.Formation;
-        if (formation == null || affector.Team != Mission.Current?.PlayerTeam)
-            return;
-        var component = affector.GetComponent<MarshalWordComponent>();
-        var inTheLine = component != null && component.HoldQualifies;
-        if (component != null && MarshalHoldLineRules.BlowIsStrikeBack(inTheLine, component.WoundedAt, Mission.Current.CurrentTime))
-            CountStrikeBlow(formation.Index);
-        else if (MarshalHoldLineRules.BlowCountsForLine(inTheLine, HoldOf(formation.Index)))
-            CountBlow(formation.Index);
-    }
 
     internal static void CountStrikeBlow(int company)
     {
@@ -122,27 +106,11 @@ internal static class MarshalFireTable
 
     internal static (int Shots, int Shooters) Watched => (Watch.Shots, Watch.Shooters);
 
-    /// <summary>
-    /// Counts one shot of a player-team soldier whose company has a mode (build-spec 7.3). Any thread: no lock, no allocation, no log line.
-    /// Formation.Index repeats across teams, so the team is tested first.
-    /// </summary>
-    internal static void OnShot(Agent shooter)
+    /// <summary>Notes the shooter of a shot of the watched company, whatever its mode, from any thread with no lock, no allocation and no log line.</summary>
+    internal static void NoteShooter(int company, Agent shooter)
     {
-        if (!_live)
-            return;
-        var formation = shooter.Formation;
-        if (formation == null || shooter.Team != Mission.Current?.PlayerTeam)
-            return;
-        var company = formation.Index;
-        if (!InRange(company))
-            return;
-        if (company == Volatile.Read(ref _watched))
+        if (InRange(company) && company == Volatile.Read(ref _watched))
             Watch.Note(shooter);
-        if (Modes[company] == FireMode.Free)
-            return;
-
-        var component = shooter.GetComponent<MarshalWordComponent>();
-        Count(company, component?.Classify(Mission.Current!.CurrentTime) ?? ShotKind.Free);
     }
 
     /// <summary>Adds one shot of a company to the counter its kind names, and to the shots before the first word while none was given.</summary>
@@ -183,6 +151,7 @@ internal static class MarshalFireTable
         Array.Clear(ShotsBeforeFirstWord, 0, Size);
         Array.Clear(ShotsAfterOther, 0, Size);
         Volatile.Write(ref _watched, -1);
+        Watch.Reset();
         for (var i = 0; i < Size; i++)
             WordTimes[i] = double.NegativeInfinity;
     }

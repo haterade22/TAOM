@@ -58,7 +58,6 @@ public class MarshalPanelWiringTests
         StringAssert.Contains(code, "internal const string SetId = \"taom_order_type_marshal\"; internal const string SetIcon = \"order_type_toggle\";");
         StringAssert.Contains(code, ": base(SetId, new TextObject(\"{=taom_marshal_panel_set}Marshal's Word\"), useActiveOrderForIconId: false, useActiveOrderForName: false)");
         StringAssert.Contains(code, "public override string IconId => SetIcon;");
-        Assert.AreNotEqual("taom_order_type_marshal", "order_type_toggle");
     }
 
     [TestMethod]

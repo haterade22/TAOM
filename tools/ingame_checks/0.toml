@@ -226,6 +226,7 @@ fail = [
   '\[MarshalsWord\] the spacing repair',
   '\[MarshalsWord\] hotkey registration failed',
   '\[MarshalsWord\] order panel registration failed',
+  '\[MarshalsWord\] giving back a soldier',
   '\[PatchApply\] (?:\S*Patch141_\S*|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)',
 ]
 # A full queue needs twelve captures first, so its log already holds a pass line and this check passes. A session that never went live
@@ -411,7 +412,7 @@ fail = [
 # other order, or fewer than three soldiers with a target, is logged on the [Marshal] mark line and not judged. A fail stops the stage (build-spec 8.1).
 absence = "not-reached"
 
-# Stages M3 (Massed fire) and M5. The lines come from MarshalFireDriver.cs and MarshalProofWatch.cs through IOutcomeLog, with the ids in MarshalChecks.cs. A skip
+# Stages M3 (Massed fire) and M5. The lines come from MarshalFireDriver.cs (massed), MarshalHoldLineDriver.cs (hold, hold-line, hold-slot, hold-strike) and MarshalProofWatch.cs (square, spacing) through IOutcomeLog, with the ids in MarshalChecks.cs. A skip
 # line reads NOT REACHED with its reason, because none of these rows lists skip among its reached patterns.
 
 [[check]]
@@ -450,8 +451,8 @@ fail = [
   '\[Check\] id=taom\.marshals-word\.hold-line result=fail',
 ]
 # The soldiers who qualify are shielded foot soldiers in the shield wall, circle or square under an order that is not a charge; a wounded soldier's blows inside the strike back window count as hold-strike's, not as the held company's.
-# The control is the busiest company that is not on hold, chosen once the baseline is taken. A control that dealt under ten blows (reason=no-control) takes a new baseline and the window stays open,
-# so a later busy window writes the verdict (the skip is written once, and a later pass line makes the row PASS); a flag that read on for the held soldiers (reason=flag-not-off) writes a skip too: NOT REACHED.
+# The first control is the busiest company that is not on hold by the blows of the mission, chosen when the baseline is taken. A control that dealt under ten blows (reason=no-control) takes a new baseline and the window stays open,
+# and the next control is the company, other than that one, that dealt the most blows in the window just judged (the busiest of the mission again when none did), so a later busy window writes the verdict (the skip is written once, and a later pass line makes the row PASS); a flag that read on for the held soldiers (reason=flag-not-off) writes a skip too: NOT REACHED.
 # A fail stops the stage (build-spec 9.2): the flag does not stop the AI that already holds a target.
 absence = "not-reached"
 
@@ -459,7 +460,7 @@ absence = "not-reached"
 id = "taom.marshals-word.hold-slot"
 needs = "hold the line on a company of foot soldiers in the shield wall, circle or square under Stop, with enemies pressing and at least one soldier wounded: in each five second window with at least five steered reads, no more of the soldiers the clamp steered end a read farther from the place they held when the order was given than nearer to it"
 reached = ['\[Check\] id=taom\.marshals-word\.hold-slot result=(pass|fail)']
-pass = ['\[Check\] id=taom\.marshals-word\.hold-slot result=pass mission=[0-9]+ company=[0-9]+ qualified=([5-9]|[1-9][0-9]+) far=[0-9]+ order=Stop$']
+pass = ['\[Check\] id=taom\.marshals-word\.hold-slot result=pass mission=[0-9]+ company=[0-9]+ qualified=([5-9]|[1-9][0-9]+) far=[0-9]+ order=Stop steered=([5-9]|[1-9][0-9]+) closer=[0-9]+ farther=[0-9]+$']
 fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[Check\] id=taom\.marshals-word\.hold-slot result=fail',
@@ -468,9 +469,10 @@ fail = [
 # Judged every five seconds from the driver's count of the line, and only under Stop, where the slot is an anchor the soldier's own place set (a Move gives a moving slot the check does not judge).
 # It waits for five qualified soldiers, at least half of whom read an anchor, for a wound, and for five steered reads in the window, because a line that nobody presses stays in place whatever the steering does: NOT REACHED until then.
 # The [Marshal] slot line carries the order beside the distances, so a zero under Stop does not read as a pass. A fail stops the clamp (build-spec 9.2): the AI's input is in another frame, or replacing it moves soldiers away.
-# The line ends with closer=, farther=, steered= and loose=: over its five seconds, the steered soldiers whose next hold read ended nearer their slot than the distance at their first replaced tick, those who ended farther, all steered reads
-# (a soldier in his strike back window is left out), and the reads beyond the slack that no replaced tick preceded. The check judges closer against farther. far= and max= are facts: a crowd, a press or an input the clamp leaves alone moves soldiers,
-# and the clamp walks back no soldier who was pushed away. A slot line is also written when the hold goes off, with no verdict.
+# The [Marshal] slot line ends with closer=, farther=, steered= and loose=: over its five seconds, the steered soldiers whose next hold read ended nearer their slot than the distance at their first replaced tick, those who ended farther, all steered reads
+# (a soldier in his strike back window is left out), and the reads beyond the slack of a soldier in the line that no replaced tick preceded. The check line carries the window's steered=, closer= and farther=, the numbers it judged, and a fail shows closer below farther.
+# far= and max= are facts: a crowd, a press or an input the clamp leaves alone moves soldiers, and the clamp walks back no soldier who was pushed away. A slot line is also written, with no verdict, when the hold goes off,
+# when the company goes to the AI, when the player's team changes and when the mission ends.
 absence = "not-reached"
 
 [[check]]

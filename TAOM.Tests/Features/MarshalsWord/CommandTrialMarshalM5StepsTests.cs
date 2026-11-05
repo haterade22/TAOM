@@ -171,6 +171,7 @@ public class CommandTrialMarshalM5StepsTests
         var line = Line("hold_line_proof");
         Assert.IsTrue(int.Parse(Fact(line, "closer")) > int.Parse(Fact(line, "farther")), line);
         Assert.IsTrue(int.Parse(Fact(line, "farther")) > 0, line);
+        Assert.IsTrue(int.Parse(Fact(line, "steered")) > int.Parse(Fact(line, "closer")) + int.Parse(Fact(line, "farther")), "the denominator counts the reads inside the dead band too: " + line);
     }
 
     [TestMethod]
@@ -299,7 +300,7 @@ public class CommandTrialMarshalM5StepsTests
     // ---- hold the line: the slot under Stop ----
 
     [TestMethod]
-    public void HoldLineSlot_Passes_WhenTheStruckLineStaysNearItsAnchorsUnderStop_WithTheOrderBesideTheDistance()
+    public void HoldLineSlot_Passes_WhenTheClampSteersTheStruckLineCloserUnderStop_WithTheOrderBesideTheCounts()
     {
         Run("hold_line_slot");
 
@@ -309,7 +310,20 @@ public class CommandTrialMarshalM5StepsTests
         Assert.AreEqual("30", Fact(line, "anchored"));
         Assert.IsTrue(int.Parse(Fact(line, "samples")) >= MarshalTrialRules.SlotMinSamples, line);
         Assert.IsTrue(int.Parse(Fact(line, "steered")) >= MarshalTuning.SlotMinSteered, line);
+        Assert.AreEqual("1", Fact(line, "restored"), line);
         Assert.IsFalse(_world.AnyKeyHeld);
+    }
+
+    [TestMethod]
+    public void HoldLineSlot_NamesFlagNotRestored_WhenTheLiftLeavesTheSoldiersDisarmed_EvenThoughTheClampWalkedTheRightWay()
+    {
+        _world.HoldFlagIsRestored = false;
+
+        Run("hold_line_slot");
+
+        AssertFails("hold_line_slot", "reason=flag-not-restored", "restored=0");
+        var line = Line("hold_line_slot");
+        Assert.IsTrue(int.Parse(Fact(line, "closer")) > int.Parse(Fact(line, "farther")), "the proof itself read fine: " + line);
     }
 
     [TestMethod]
@@ -465,6 +479,18 @@ public class CommandTrialMarshalM5StepsTests
         Assert.AreEqual("5", Fact(line, "flag_on"));
         Assert.IsTrue(int.Parse(Fact(line, "blows_after")) >= 1, line);
         Assert.AreEqual("1", Fact(line, "driver_strike"));
+        Assert.AreEqual("1", Fact(line, "restored"), line);
+    }
+
+    [TestMethod]
+    public void HoldLineStrike_NamesFlagNotRestored_WhenTheLiftLeavesTheSoldiersDisarmed_EvenThoughTheLineStruckBack()
+    {
+        _world.HoldFlagIsRestored = false;
+
+        Run("hold_line_strike");
+
+        AssertFails("hold_line_strike", "reason=flag-not-restored", "restored=0", "driver_strike=1");
+        Assert.IsTrue(int.Parse(Fact(Line("hold_line_strike"), "blows_after")) >= 1, "the proof itself read fine: " + Line("hold_line_strike"));
     }
 
     [TestMethod]

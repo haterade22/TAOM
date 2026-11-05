@@ -160,12 +160,12 @@ internal static class MarshalTuning
     /// <summary>Mission seconds between two lines of the slot proof of one held company.</summary>
     internal const double SlotSummarySeconds = 5.0;
 
-    /// <summary>A held soldier within this many metres of the slot counts as near it in the slot proof.</summary>
+    /// <summary>A held soldier within this many metres of the slot is not counted in the far fact of the slot line.</summary>
     internal const float SlotNearMetres = 2f;
 
     /// <summary>Steered hold reads a window needs before the slot proof judges which way the clamp moved the soldiers.</summary>
     internal const int SlotMinSteered = 5;
 
-    /// <summary>A change in the distance to the slot of less than this many metres between two reads is neither closer nor farther.</summary>
+    /// <summary>A change in the distance to the slot of less than this many metres, from the first replaced tick to the next hold read, is neither closer nor farther.</summary>
     internal const float SlotTrendMetres = 0.1f;
 }

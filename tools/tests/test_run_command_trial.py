@@ -244,7 +244,7 @@ class MarshalJudgeTests(unittest.TestCase):
         self.assertIn("taom.marshals-word.volley-hold", why)
 
     def test_a_failing_step_and_a_failed_marshal_check_are_named_together_in_the_fail_text(self):
-        check = "[2026-11-04 10:01:04] [WARNING] [Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=18 far=7 order=Stop"
+        check = "[2026-11-04 10:01:04] [WARNING] [Check] id=taom.marshals-word.hold-slot result=fail mission=1 company=1 qualified=18 far=7 order=Stop steered=9 closer=3 farther=6"
         step = fail_line("enter", "reason=timeout")
         code, why = judge(FINAL, None, full_log(extra=(step, check)))
         self.assertEqual(code, 1)

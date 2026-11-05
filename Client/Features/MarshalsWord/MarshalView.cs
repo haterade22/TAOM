@@ -96,14 +96,14 @@ public sealed class MarshalView : MissionView
         bool hasRigidBody, int forcedMissileIndex)
     {
         base.OnAgentShootMissile(shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex);
-        MarshalFireTable.OnShot(shooterAgent);
+        MarshalCombatReader.OnShot(shooterAgent);
     }
 
     // Native chooses this callback's thread too, so the hit callback only adds to a counter, and only with a session.
     public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
     {
         base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in attackCollisionData);
-        MarshalFireTable.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);
+        MarshalCombatReader.OnBlow(affectorAgent, affectedAgent, blow.IsMissile);
     }
 
     public override void OnMissionModeChange(MissionMode oldMissionMode, bool atStart)

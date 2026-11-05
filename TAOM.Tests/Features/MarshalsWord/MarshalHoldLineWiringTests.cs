@@ -126,7 +126,7 @@ public class MarshalHoldLineWiringTests
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
         var release = code.Substring(code.IndexOf("public void ReleaseAll()", System.StringComparison.Ordinal), 640);
 
-        StringAssert.Contains(release, "foreach (var agent in _touched) { try { TurnOff(agent); } catch (Exception ex) { first ??= ex; } }");
+        StringAssert.Contains(release, "foreach (var agent in _touched) { try { TurnOff(agent); } catch (Exception ex) { _logger.LogError($\"[MarshalsWord] giving back a soldier's flag and firing order failed: {ex}\"); first ??= ex; } }");
         StringAssert.Contains(release, "Drop(); if (first != null) ExceptionDispatchInfo.Capture(first).Throw();");
     }
 
@@ -187,6 +187,31 @@ public class MarshalHoldLineWiringTests
     }
 
     [TestMethod]
+    public void TheAdapter_TestsASoldiersCompanyBeforeItAsksForHisComponent_InTheHoldPassAndInTheCount()
+    {
+        // Agent.GetComponent walks the soldier's component list with a type test (Agent.cs:2983-2992), so a soldier of another company never pays for it.
+        var code = Code("Main/Adapters/MarshalFireAdapter.cs");
+        var hold = code.Substring(code.IndexOf("public IReadOnlyList<HoldCensus> Hold(", System.StringComparison.Ordinal), 900);
+        var count = code.Substring(code.IndexOf("public IReadOnlyList<FireCensus> Count(", System.StringComparison.Ordinal), 900);
+
+        var holdFilter = hold.IndexOf("(agent.Formation?.Index ?? -1) != company) continue;", System.StringComparison.Ordinal);
+        var countFilter = count.IndexOf("Contains(companies, index)", System.StringComparison.Ordinal);
+        Assert.IsTrue(holdFilter > 0 && holdFilter < hold.IndexOf("GetComponent<MarshalWordComponent>()", System.StringComparison.Ordinal), hold);
+        Assert.IsTrue(countFilter > 0 && countFilter < count.IndexOf("GetComponent<MarshalWordComponent>()", System.StringComparison.Ordinal), count);
+    }
+
+    [TestMethod]
+    public void TheStrikeCheck_BuildsItsDetailOnlyForALatchThatIsNew_AndTheAdapterCountsASettledWoundThroughTheRule()
+    {
+        var driver = Code("Main/Features/MarshalsWord/MarshalHoldLineDriver.cs");
+        var judge = driver.Substring(driver.IndexOf("private void JudgeStrike(", System.StringComparison.Ordinal), 900);
+
+        var latch = judge.IndexOf(".Add(company)", System.StringComparison.Ordinal);
+        Assert.IsTrue(latch > 0 && latch < judge.IndexOf("var detail =", System.StringComparison.Ordinal), judge);
+        StringAssert.Contains(Code("Main/Adapters/MarshalFireAdapter.cs"), "_struck++; if (!MarshalHoldLineRules.IsSettled(age)) return; _struckSettled++;");
+    }
+
+    [TestMethod]
     public void TheSweep_TreatsASoldierWhoIsNoLongerAiControlled_AsLeaving_SoTheReleaseGivesHisFlagAndOrderBack()
     {
         // Seat stages S4 and S5 can reach this: native stops calling the callback with the controller, so nothing in it can restore him.
@@ -225,30 +250,53 @@ public class MarshalHoldLineWiringTests
     }
 
     [TestMethod]
-    public void TheComponent_UnderStopNeverAsksTheEngineForTheSlot_AndSteersOnlyWhileHeldQualifiedAndBeyondTheSlack()
+    public void TheComponent_AsksTheEngineForASlotOnlyThroughTheRule_AndSteersOnlyWhileHeldQualifiedAndBeyondTheSlack()
     {
         // Under StandGround the member answers the soldier's own place (Formation.cs, GetOrderPositionOfUnit), and Patch30 runs on every call.
         var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
-        StringAssert.Contains(code, "if (!_standGround) { var place = formation.GetOrderPositionOfUnit(Agent);");
-        StringAssert.Contains(code, "if (!holdOn || !_qualifies || !_slotValid || !MarshalHoldLineRules.Beyond(_slotDistance) || !MarshalHoldLineRules.Moves(inputVector.x, inputVector.y)) return; var frame = Agent.Frame;");
-        StringAssert.Contains(code, "frame.rotation.TransformToLocal(");
+        StringAssert.Contains(code, "if (MarshalHoldLineRules.NeedsEnginePlace(standGround, _qualifies)) { var place = formation.GetOrderPositionOfUnit(Agent);");
+        StringAssert.Contains(code, "ReadSlot(formation, order == MovementOrder.MovementOrderEnum.Stop, now);");
+        StringAssert.Contains(code, "if (!holdOn || !_qualifies || !_slotValid || !MarshalHoldLineRules.Beyond(_slotDistance) || !MarshalHoldLineRules.Moves(inputVector.x, inputVector.y)) return;");
+        StringAssert.Contains(code, "Agent.Frame.rotation.TransformToLocal(");
         StringAssert.Contains(code, "inputVector = new Vec2(steered.X, steered.Y);");
     }
 
     [TestMethod]
-    public void TheComponent_CountsTheDistanceTrendOfASteeredSoldier_FromTheFirstReplacedTick_WithNoNewNativeCall()
+    public void TheComponent_SteersAndMeasuresFromTheOnePositionTheSlotDistanceReads_NotFromTheFramesOrigin()
+    {
+        // Agent.Position reads a pointer (Agent.cs:706); Agent.Frame is GetRotationFrame (Agent.cs:953-961), and nothing shows its origin is the position.
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
+        var clamp = code.Substring(code.IndexOf("private void ClampToSlot(", System.StringComparison.Ordinal));
+        clamp = clamp.Substring(0, clamp.IndexOf("private void ReadHold(", System.StringComparison.Ordinal));
+
+        StringAssert.Contains(clamp, "var own = Agent.Position.AsVec2; var toSlotWorld = new Vec2(_slotX - own.x, _slotY - own.y);");
+        StringAssert.Contains(clamp, "_trend.Steer(toSlotWorld.Length);");
+        Assert.IsFalse(clamp.Contains(".origin"), "the baseline and the steering read one source: " + clamp);
+        StringAssert.Contains(code, "var own = Agent.Position.AsVec2; var orderValid = false;");
+        StringAssert.Contains(code, "var slot = MarshalHoldLineRules.ReadSlot(standGround, _anchored, _slotX, _slotY, orderValid, order.x, order.y, own.x, own.y);");
+    }
+
+    [TestMethod]
+    public void TheComponent_AsksNoTargetForASoldierWhoseCompanyHasNoMode_BecauseHeStandsAsideWhateverTheTargetIs()
     {
         var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
-        var note = code.Substring(code.IndexOf("private void NoteTrend(", System.StringComparison.Ordinal), 640);
-        note = note.Substring(0, note.IndexOf("private void ForgetSlotAndTrend()", System.StringComparison.Ordinal));
+        var read = code.Substring(code.IndexOf("private bool ReadStandsAside(", System.StringComparison.Ordinal), 500);
 
-        StringAssert.Contains(code, "if (!_steered) _steerBaseline = toSlotWorld.Length; _steered = true; Clamps.Pass();");
-        StringAssert.Contains(code, "_slotDistance = (float)Math.Sqrt((double)dx * dx + (double)dy * dy); NoteTrend(now);");
-        StringAssert.Contains(note, "var trend = MarshalHoldLineRules.Trend(_steerBaseline, _slotDistance, _steered, MarshalHoldLineRules.StrikingBack(WoundedAt, now));");
-        StringAssert.Contains(note, "if (trend == SlotTrend.Closer) _closer++; else if (trend == SlotTrend.Farther) _farther++; if (trend != SlotTrend.None) _steeredReads++;");
-        StringAssert.Contains(note, "if (MarshalHoldLineRules.IsLoose(_slotDistance, _steered)) _loose++; _steered = false; _steerBaseline = float.NaN;");
-        Assert.IsFalse(Regex.IsMatch(note, @"Agent\.|Mission\.|Formation|Scene"), "the trend reads stored floats and a time and nothing from the engine: " + note);
+        var free = read.IndexOf("if (MarshalFireTable.ModeOf(company) == FireMode.Free) return true;", System.StringComparison.Ordinal);
+        Assert.IsTrue(free > 0 && free < read.IndexOf("Agent.GetTargetAgent()", System.StringComparison.Ordinal), read);
+        Assert.IsTrue(free < read.IndexOf("Agent.WieldedWeapon", System.StringComparison.Ordinal), read);
+    }
+
+    [TestMethod]
+    public void TheComponent_HoldsOneTrendField_AndEndsEachIntervalAtTheDistanceItReadsWithNoNewNativeCall()
+    {
+        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
+        var read = code.Substring(code.IndexOf("_slotDistance = float.NaN; if (slot.Valid)", System.StringComparison.Ordinal), 520);
+
+        StringAssert.Contains(code, "private readonly SlotTrendCount _trend = new();");
+        StringAssert.Contains(code, "_slotDistance = (float)Math.Sqrt((double)dx * dx + (double)dy * dy); } _trend.Read(_slotDistance, MarshalHoldLineRules.StrikingBack(WoundedAt, now), _qualifies);", "a slot that reads invalid still ends the steered interval, so the call stands outside the block that stores a valid one");
+        Assert.IsFalse(Regex.IsMatch(read.Substring(0, read.IndexOf("_trend.Read(", System.StringComparison.Ordinal)), @"Agent\.|Mission\.|Scene"), "the distance comes from the position read above it: " + read);
     }
 
     [TestMethod]
@@ -267,31 +315,21 @@ public class MarshalHoldLineWiringTests
     {
         var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
 
-        StringAssert.Contains(code, "_qualifies = false; ForgetSlotAndTrend(); _nextHoldRead = double.NegativeInfinity;");
-        StringAssert.Contains(code, "if (!holdOn) { _qualifies = false; ForgetSlotAndTrend(); return; }");
-        StringAssert.Contains(code, "_whyNot = \"no-formation\"; ForgetSlotAndTrend(); return;");
-        StringAssert.Contains(code, "_slotValid = false; _anchored = false; _slotDistance = float.NaN; _steered = false; _steerBaseline = float.NaN; _closer = 0; _farther = 0; _steeredReads = 0; _loose = 0;");
-        StringAssert.Contains(code, "_slotDistance = float.NaN; _steered = false; _steerBaseline = float.NaN; return;", "a slot that reads invalid ends the steered interval");
-    }
-
-    [TestMethod]
-    public void TheComponent_HandsOverEachCountOnce_SoTheNextPassStartsFromZero()
-    {
-        var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
-
-        StringAssert.Contains(code, "var taken = (_closer, _farther, _steeredReads, _loose); _closer = 0; _farther = 0; _steeredReads = 0; _loose = 0; return taken;");
+        StringAssert.Contains(code, "_qualifies = false; ForgetSlot(); _nextHoldRead = double.NegativeInfinity;");
+        StringAssert.Contains(code, "if (!holdOn) { _qualifies = false; ForgetSlot(); return; }");
+        StringAssert.Contains(code, "_whyNot = \"no-formation\"; ForgetSlot(); return;");
+        StringAssert.Contains(code, "_slotValid = false; _anchored = false; _slotDistance = float.NaN; _trend.Forget();");
     }
 
     [TestMethod]
     public void TheHoldPass_DrainsEverySoldiersTrend_BeforeTheEarlyReturnOfASoldierWhoDoesNotQualify()
     {
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
-        var drain = code.IndexOf("var (closer, farther, steered, loose) = component.TakeSlotTrend();", System.StringComparison.Ordinal);
+        var drain = code.IndexOf("_trend += component.TakeSlotTrend();", System.StringComparison.Ordinal);
         var early = code.IndexOf("if (!component.HoldQualifies)", System.StringComparison.Ordinal);
 
         Assert.IsTrue(drain > 0 && early > drain, "drain at " + drain + ", early return at " + early);
-        StringAssert.Contains(code, "_closer += closer; _farther += farther; _steered += steered; _loose += loose;");
-        StringAssert.Contains(code, "order, _why, _closer, _farther, _steered, _loose);");
+        StringAssert.Contains(code, "order, _why, _trend);");
     }
 
     [TestMethod]
@@ -302,10 +340,10 @@ public class MarshalHoldLineWiringTests
 
         StringAssert.Contains(host, "public int MarshalClamps => (int)Math.Min(int.MaxValue, Outcomes.Counter(MarshalChecks.ClampCounterId).Passes);");
         StringAssert.Contains(component, "private static readonly OutcomeCounter Clamps = Outcomes.Counter(MarshalChecks.ClampCounterId);");
-        StringAssert.Contains(host, "Fire.SlotCloserOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
-        StringAssert.Contains(host, "Fire.SlotFartherOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
-        StringAssert.Contains(host, "Fire.SlotSteeredOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
-        StringAssert.Contains(host, "Fire.SlotFailed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
+        StringAssert.Contains(host, "Fire.HoldLine.SlotCloserOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
+        StringAssert.Contains(host, "Fire.HoldLine.SlotFartherOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
+        StringAssert.Contains(host, "Fire.HoldLine.SlotSteeredOf(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
+        StringAssert.Contains(host, "Fire.HoldLine.SlotFailed(MarshalOrderAdapter.CompanyOf(_chosenCompanies[company]))");
     }
 
     [TestMethod]
@@ -320,17 +358,21 @@ public class MarshalHoldLineWiringTests
     }
 
     [TestMethod]
-    public void TheBlowCounter_CountsOnlyAMeleeBlowOfAPlayerTeamSoldierAtAnotherTeam_WithTheTeamTestedBeforeTheIndex()
+    public void TheCombatReader_CountsOnlyAMeleeBlowOfAPlayerTeamSoldierAtAnotherTeam_WithTheTeamTestedBeforeTheIndex()
     {
         // Mission.cs:5646-5671 raises OnAgentHit for a blocked blow too, from a thread native chooses; the counter is an Interlocked add.
-        var code = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
+        var code = Code("Main/Adapters/MarshalCombatReader.cs");
+        var table = Code("Main/Features/MarshalsWord/MarshalFireTable.cs");
 
-        StringAssert.Contains(code, "if (!_live || isMissile || affector == null || affected == null || affector.Team == affected.Team) return;");
-        StringAssert.Contains(code, "if (formation == null || affector.Team != Mission.Current?.PlayerTeam) return;");
+        StringAssert.Contains(code, "if (!MarshalFireTable.IsLive || isMissile || affector == null || affected == null || mission == null || affector.Team == affected.Team) return;");
+        StringAssert.Contains(code, "if (formation == null || affector.Team != mission.PlayerTeam) return;");
         StringAssert.Contains(code, "var inTheLine = component != null && component.HoldQualifies;");
-        StringAssert.Contains(code, "if (component != null && MarshalHoldLineRules.BlowIsStrikeBack(inTheLine, component.WoundedAt, Mission.Current.CurrentTime)) CountStrikeBlow(formation.Index); else if (MarshalHoldLineRules.BlowCountsForLine(inTheLine, HoldOf(formation.Index))) CountBlow(formation.Index);");
-        StringAssert.Contains(code, "Interlocked.Increment(ref BlowsDealt[company]);");
-        StringAssert.Contains(code, "Interlocked.Increment(ref StrikeBlowsDealt[company]);");
+        StringAssert.Contains(code, "if (MarshalHoldLineRules.BlowIsStrikeBack(inTheLine, woundedAt, mission.CurrentTime)) MarshalFireTable.CountStrikeBlow(formation.Index);");
+        StringAssert.Contains(code, "else if (MarshalHoldLineRules.BlowCountsForLine(inTheLine, MarshalFireTable.HoldOf(formation.Index))) MarshalFireTable.CountBlow(formation.Index);");
+        StringAssert.Contains(table, "Interlocked.Increment(ref BlowsDealt[company]);");
+        StringAssert.Contains(table, "Interlocked.Increment(ref StrikeBlowsDealt[company]);");
+        Assert.IsFalse(table.Contains("OnBlow"), "the table keeps its counts on plain values and reads no agent for a blow");
+        StringAssert.Contains(code, "internal static void OnShot(Agent shooter)");
     }
 
     [TestMethod]

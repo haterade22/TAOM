@@ -28,8 +28,7 @@ internal readonly record struct DrawInput(bool Attacking, bool Cancelling, bool 
 internal readonly record struct DrawStep(DrawState State, double Since, DrawAction Action);
 
 /// <summary>Why a soldier stands aside and leaves the AI's flags alone (build-spec 7.2).</summary>
-internal readonly record struct StandAsideFacts(bool ModeFree, bool NoFormation, bool NoRangedWielded, bool HoldFireOrder, bool Detached,
-    bool UsingObject, double TargetDistance);
+internal readonly record struct StandAsideFacts(bool NoFormation, bool NoRangedWielded, bool HoldFireOrder, bool Detached, bool UsingObject, double TargetDistance);
 
 internal static class MarshalFireRules
 {
@@ -56,7 +55,7 @@ internal static class MarshalFireRules
     internal static bool WordDue(double wordTime, double since, double jitter, double now) => wordTime >= since && wordTime + jitter <= now;
 
     internal static bool StandsAside(in StandAsideFacts facts) =>
-        facts.ModeFree || facts.NoFormation || facts.NoRangedWielded || facts.HoldFireOrder || facts.Detached || facts.UsingObject
+        facts.NoFormation || facts.NoRangedWielded || facts.HoldFireOrder || facts.Detached || facts.UsingObject
         || !(facts.TargetDistance >= MarshalTuning.CloseQuarter);
 
     internal static FireMode NextMode(FireMode mode) => mode switch

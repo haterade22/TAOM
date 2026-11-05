@@ -2572,3 +2572,11 @@ Five of the review's Marshal findings were verdicts that could not fail or passe
 - **Why missed:** each new rule got a test of its pass path only, and its row was read against the contract's sentence, not against the value that would mean failure.
 - **Prevent:** for each new check or step rule, write the fixture of its fail line first, and see the rule return fail on it. A regex row ends at the value it judges (`laidOut=0$`). A measure that one more cause can move judges direction against a control, not size.
 - **Source:** [rca-marshals-word-m3-massed-m5-m6-2026-11-04.md](../rca-marshals-word-m3-massed-m5-m6-2026-11-04.md) rows 3, 4, 5, 8 and 10, [rca-seat-of-seeing-s6-s7-2026-11-04.md](../rca-seat-of-seeing-s6-s7-2026-11-04.md) row 2.
+
+### A correction to one reader of a rule searches its other readers (Marshal's Word, 2026-11-05)
+
+Three findings of the second fix round each finished half of an earlier correction. Row 38 limited `loose=` to the soldiers in the line, and the trend in the same read still counted everyone. Row 37 re-picked a quiet control, but by mission totals that never fall, so the quiet company could win again. The restore lift that `hold_line_flag` judged had no verdict in the two other steps that call it.
+
+- **Why missed:** each correction was written and tested against the one reader its finding named; nobody listed the other readers of the same rule.
+- **Prevent:** when a Deviations row or a fix changes what one count, ranking or cleanup reads, grep the rule's other readers in the same change, and give each the same test. A shared cleanup gets a verdict in every caller.
+- **Source:** [rca-marshals-word-m3-massed-m5-m6-2026-11-04.md](../rca-marshals-word-m3-massed-m5-m6-2026-11-04.md) rows 13, 14 and 15.

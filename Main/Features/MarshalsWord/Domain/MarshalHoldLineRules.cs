@@ -25,10 +25,7 @@ internal enum FiringAct
 internal readonly record struct HoldFacts(bool ArrangementHolds, bool OrderAllowsHold, bool CompanyUnderPlayer, bool HasShield, bool Mounted,
     bool RangedWielded, bool Detached, bool UsingObject, bool IsMainAgent, bool RunningAway, bool GoingToObject);
 
-/// <summary>
-/// Whether a soldier the clamp steered ended a hold read closer to his slot, farther from it, or within the dead band of where the first replaced tick left him.
-/// None means the read does not count: no steered tick, a distance that is not a number, or a soldier in his strike back window.
-/// </summary>
+/// <summary>Whether a steered soldier ended a hold read closer to his slot, farther from it, or within the dead band; None means the read does not count.</summary>
 internal enum SlotTrend
 {
     None,
@@ -110,11 +107,17 @@ internal static class MarshalHoldLineRules
 
     internal static bool Beyond(float distance) => distance > MarshalTuning.SlotSlack;
 
-    /// <summary>The soldier's input is a walk: tested before the frame is read, because the frame is a native read and a zero or non-numeric input is never replaced.</summary>
-    internal static bool Moves(float inX, float inY) => (double)inX * inX + (double)inY * inY > 1e-12;
+    /// <summary>The soldier's input is a walk, which a zero or non-numeric input is not.</summary>
+    internal static bool Moves(float inX, float inY) => (double)inX * inX + (double)inY * inY > MinWalkSquared;
 
-    /// <summary>A read beyond the slack that the clamp did not touch since the previous read: a crowd, a press or an input the clamp leaves alone moved the soldier.</summary>
-    internal static bool IsLoose(float distance, bool steered) => IsReal(distance) && Beyond(distance) && !steered;
+    /// <summary>A read beyond the slack that the clamp did not touch since the previous read, of a soldier in the line: a crowd, a press or an input the clamp leaves alone moved him.</summary>
+    internal static bool IsLoose(float distance, bool steered, bool inTheLine) => inTheLine && IsReal(distance) && Beyond(distance) && !steered;
+
+    /// <summary>A wound is settled once two hold reads have passed, so the pass that has only just seen it is not counted as a failure to answer.</summary>
+    internal static bool IsSettled(double woundAge) => woundAge >= SettledReads * MarshalTuning.HoldReadSeconds;
+
+    /// <summary>The engine is asked for a soldier's order position only under a Move and only for a soldier in the line, because the answer of any other is never used.</summary>
+    internal static bool NeedsEnginePlace(bool standGround, bool inTheLine) => !standGround && inTheLine;
 
     /// <summary>A blow counts against a held line when its dealer stands in the line, or when his company is not held at all, so a soldier outside the line never counts against it and a control always counts.</summary>
     internal static bool BlowCountsForLine(bool inTheLine, bool companyHeld) => inTheLine || !companyHeld;
@@ -130,10 +133,7 @@ internal static class MarshalHoldLineRules
         return flagOn * 2 >= settled ? HoldProof.Pass : HoldProof.Fail;
     }
 
-    /// <summary>
-    /// The clamp moved no more of the steered soldiers away from their slot than toward it, judged only once at least <see cref="MarshalTuning.SlotMinSteered"/> steered reads
-    /// were counted. Soldiers far from the slot are a fact and not a test: a crowd or an input the clamp leaves alone moves them, and the clamp is judged on what it did.
-    /// </summary>
+    /// <summary>The clamp moved no more of the steered soldiers away from their slot than toward it, judged once <see cref="MarshalTuning.SlotMinSteered"/> steered reads were counted.</summary>
     internal static HoldProof TrendProof(int steered, int closer, int farther)
     {
         if (steered < MarshalTuning.SlotMinSteered)
@@ -173,6 +173,9 @@ internal static class MarshalHoldLineRules
             return SlotTrend.Closer;
         return change > MarshalTuning.SlotTrendMetres ? SlotTrend.Farther : SlotTrend.Steady;
     }
+
+    private const double SettledReads = 2.0;
+    private const double MinWalkSquared = 1e-12;
 
     private static bool IsReal(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
 }

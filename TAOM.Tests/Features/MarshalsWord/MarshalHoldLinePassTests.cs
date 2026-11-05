@@ -42,15 +42,18 @@ public class MarshalHoldLinePassTests
 
     private void GoHeld()
     {
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(0.0);
     }
 
     private static HoldCensus Line(string order = "Stop", int qualified = 20, int anchored = 20, int far = 0, int wounded = 5, int struckSettled = 0, int struckFlagOn = 0,
         int closer = 0, int farther = 0, int steered = 0, int loose = 0, int? flagOff = null) =>
-        new(Company, 20, qualified, flagOff ?? qualified, anchored, far, wounded, struckSettled, struckSettled, struckFlagOn, 0.4f, 0.1f, order, "", closer, farther, steered, loose);
+        new(Company, 20, qualified, flagOff ?? qualified, anchored, far, wounded, struckSettled, struckSettled, struckFlagOn, 0.4f, 0.1f, order, "", new SlotCounts(closer, farther, steered, loose));
 
     private int SlotLines => _logger.Lines.Count(l => l.StartsWith("[Marshal] slot company=3 "));
+
+    // The log writes a verdict line once per (id, result, key), so a repeated call is seen only in the call count.
+    private int SlotVerdictCalls => new[] { "pass", "fail", "skip" }.Sum(result => _log.Calls(result, MarshalChecks.HoldSlotId));
 
     [TestMethod]
     public void Pass_NoCompanyIsHeld_NeverAsksTheAdapterToReadTheLine()
@@ -99,7 +102,36 @@ public class MarshalHoldLinePassTests
         Pass(1.0);
 
         Assert.AreEqual("fail", _log.Lines.Single(l => l.Id == MarshalChecks.HoldSlotId).Result);
-        Assert.IsTrue(_driver.SlotFailed(Company));
+        Assert.IsTrue(_driver.HoldLine.SlotFailed(Company));
+    }
+
+    [TestMethod]
+    public void Pass_SoldiersWhoseTrendCountsWalkedACloserWay_PassTheSlotCheck_OnTheRealTakeResults()
+    {
+        GoHeld();
+        _fire.HoldCensuses[Company] = Line();
+        _fire.Walk(Company, soldiers: 8, from: 3f, to: 1.5f);
+
+        Pass(1.0);
+
+        Assert.AreEqual("pass", _log.Lines.Single(l => l.Id == MarshalChecks.HoldSlotId).Result);
+        Assert.AreEqual(8, _driver.HoldLine.SlotCloserOf(Company));
+        Assert.AreEqual(0, _driver.HoldLine.SlotFartherOf(Company));
+        Assert.AreEqual(8, _driver.HoldLine.SlotSteeredOf(Company));
+    }
+
+    [TestMethod]
+    public void Pass_SoldiersWhoseTrendCountsWalkedTheWrongWay_FailTheSlotCheck_OnTheRealTakeResults()
+    {
+        GoHeld();
+        _fire.HoldCensuses[Company] = Line();
+        _fire.Walk(Company, soldiers: 8, from: 1.5f, to: 3f);
+
+        Pass(1.0);
+
+        Assert.AreEqual("fail", _log.Lines.Single(l => l.Id == MarshalChecks.HoldSlotId).Result);
+        Assert.IsTrue(_driver.HoldLine.SlotFailed(Company));
+        Assert.AreEqual(8, _driver.HoldLine.SlotFartherOf(Company));
     }
 
     [TestMethod]
@@ -111,7 +143,7 @@ public class MarshalHoldLinePassTests
         Pass(1.0);
 
         Assert.AreEqual(0, _log.Lines.Count(l => l.Id == MarshalChecks.HoldSlotId));
-        Assert.IsFalse(_driver.SlotFailed(Company));
+        Assert.IsFalse(_driver.HoldLine.SlotFailed(Company));
         Assert.IsTrue(_logger.Lines.Any(l => l.StartsWith("[Marshal] slot company=3 ") && l.Contains(" far=9 ")), "far stays on the line as a fact");
     }
 
@@ -133,20 +165,24 @@ public class MarshalHoldLinePassTests
     }
 
     [TestMethod]
-    public void SlotFailed_ACompanyWhoseClampWalkedTheWrongWay_ReadsTrue_UntilTheHoldGoesOnAgain()
+    public void SlotFailed_ACompanyWhoseClampWalkedTheWrongWay_ReadsTrue_UntilTheHoldGoesOff_AndANewHoldStartsClean()
     {
         GoHeld();
         _fire.HoldCensuses[Company] = Line(steered: 8, closer: 0, farther: 8);
         Pass(1.0);
-        Assert.IsTrue(_driver.SlotFailed(Company));
-        Assert.IsFalse(_driver.SlotFailed(Company + 1), "another company is its own");
+        Assert.IsTrue(_driver.HoldLine.SlotFailed(Company));
+        Assert.IsFalse(_driver.HoldLine.SlotFailed(Company + 1), "another company is its own");
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.4);
-        _driver.PressHold();
+        Assert.IsFalse(_driver.HoldLine.SlotFailed(Company), "the off press removes the run, and the failure with it");
+        _fire.HoldCensuses[Company] = Line(wounded: 0);
+        var lines = SlotLines;
+        _driver.HoldLine.Press();
         Pass(1.8);
 
-        Assert.IsFalse(_driver.SlotFailed(Company), "a new hold starts without the old failure");
+        Assert.IsFalse(_driver.HoldLine.SlotFailed(Company), "a new hold starts without the old failure");
+        Assert.AreEqual(lines + 1, SlotLines, "and judges its first window at once, where a timer kept across holds would wait");
     }
 
     [TestMethod]
@@ -217,10 +253,10 @@ public class MarshalHoldLinePassTests
         Pass(1.4);
         Pass(6.1);
 
-        Assert.AreEqual(6, _driver.SlotCloserOf(Company));
-        Assert.AreEqual(3, _driver.SlotFartherOf(Company));
-        Assert.AreEqual(12, _driver.SlotSteeredOf(Company), "the denominator the trial reads beside the two sides");
-        Assert.AreEqual(0, _driver.SlotCloserOf(Company + 1), "another company has none");
+        Assert.AreEqual(6, _driver.HoldLine.SlotCloserOf(Company));
+        Assert.AreEqual(3, _driver.HoldLine.SlotFartherOf(Company));
+        Assert.AreEqual(12, _driver.HoldLine.SlotSteeredOf(Company), "the denominator the trial reads beside the two sides");
+        Assert.AreEqual(0, _driver.HoldLine.SlotCloserOf(Company + 1), "another company has none");
     }
 
     [TestMethod]
@@ -229,14 +265,14 @@ public class MarshalHoldLinePassTests
         GoHeld();
         _fire.HoldCensuses[Company] = Line(closer: 2, farther: 1);
         Pass(1.0);
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.4);
-        Assert.AreEqual(0, _driver.SlotCloserOf(Company), "off drops the run");
+        Assert.AreEqual(0, _driver.HoldLine.SlotCloserOf(Company), "off drops the run");
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.8);
 
-        Assert.AreEqual(2, _driver.SlotCloserOf(Company), "only the pass after the second press counts");
+        Assert.AreEqual(2, _driver.HoldLine.SlotCloserOf(Company), "only the pass after the second press counts");
     }
 
     [TestMethod]
@@ -276,25 +312,26 @@ public class MarshalHoldLinePassTests
         _fire.HoldCensuses[Company] = Line(wounded: 1);
         Pass(1.4);
 
-        Assert.AreEqual(3, _driver.HoldCensusOf(Company).WoundedEver, "the most the line has ever shown, so the step and the line read one value");
+        Assert.AreEqual(3, _driver.HoldLine.CensusOf(Company).WoundedEver, "the most the line has ever shown, so the step and the line read one value");
     }
 
     [TestMethod]
     public void Pass_AHoldTurnedOffAfterAWindowOfSteeredReads_WritesTheLastWindowWithNoVerdict()
     {
         GoHeld();
-        _fire.HoldCensuses[Company] = Line(steered: 3, closer: 2, loose: 1);
+        _fire.HoldCensuses[Company] = Line(steered: 8, closer: 2, farther: 6, loose: 1);
         Pass(1.0);
         Pass(1.4);
         var before = SlotLines;
-        var checks = _log.Lines.Count(l => l.Id == MarshalChecks.HoldSlotId);
+        var verdicts = SlotVerdictCalls;
+        Assert.AreEqual(1, verdicts, "the first window was judged, and that is the only verdict the line has");
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.8);
 
         Assert.AreEqual(before + 1, SlotLines);
-        Assert.IsTrue(_logger.Lines.Last(l => l.StartsWith("[Marshal] slot company=3 ")).EndsWith(" closer=2 farther=0 steered=3 loose=1"), "the window since the line at 1.0 holds one pass");
-        Assert.AreEqual(checks, _log.Lines.Count(l => l.Id == MarshalChecks.HoldSlotId), "the last window is a fact and not a verdict");
+        Assert.IsTrue(_logger.Lines.Last(l => l.StartsWith("[Marshal] slot company=3 ")).EndsWith(" closer=2 farther=6 steered=8 loose=1"), "the window since the line at 1.0 holds one pass");
+        Assert.AreEqual(verdicts, SlotVerdictCalls, "the last window is a fact and not a verdict");
     }
 
     [TestMethod]
@@ -317,7 +354,7 @@ public class MarshalHoldLinePassTests
     {
         GoHeld();
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(0.1);
 
         Assert.AreEqual(0, SlotLines, "no census was ever read");
@@ -329,12 +366,12 @@ public class MarshalHoldLinePassTests
         GoHeld();
         _fire.HoldCensuses[Company] = Line(qualified: 17);
         Pass(1.0);
-        Assert.AreEqual(17, _driver.HoldCensusOf(Company).Qualified);
+        Assert.AreEqual(17, _driver.HoldLine.CensusOf(Company).Qualified);
 
-        _driver.PressHold();
+        _driver.HoldLine.Press();
         Pass(1.4);
 
-        Assert.AreEqual(0, _driver.HoldCensusOf(Company).Units);
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units);
     }
 
     [TestMethod]
@@ -346,7 +383,7 @@ public class MarshalHoldLinePassTests
         Pass(1.0);
 
         Assert.AreEqual(0, _log.Lines.Count(l => l.Id == MarshalChecks.StrikeId));
-        Assert.IsFalse(_driver.StrikePassed(Company));
+        Assert.IsFalse(_driver.HoldLine.StrikePassed(Company));
     }
 
     [TestMethod]
@@ -400,7 +437,7 @@ public class MarshalHoldLinePassTests
         var lines = _log.Lines.Where(l => l.Id == MarshalChecks.StrikeId).ToList();
         Assert.AreEqual(1, lines.Count);
         Assert.AreEqual("pass", lines[0].Result);
-        Assert.IsTrue(_driver.StrikePassed(Company));
+        Assert.IsTrue(_driver.HoldLine.StrikePassed(Company));
     }
 
     [TestMethod]
@@ -412,7 +449,7 @@ public class MarshalHoldLinePassTests
         Pass(1.0);
 
         Assert.AreEqual("fail", _log.Lines.Single(l => l.Id == MarshalChecks.StrikeId).Result);
-        Assert.IsFalse(_driver.StrikePassed(Company));
+        Assert.IsFalse(_driver.HoldLine.StrikePassed(Company));
     }
 
     [TestMethod]
@@ -427,15 +464,15 @@ public class MarshalHoldLinePassTests
     }
 
     [TestMethod]
-    public void HoldCensusOf_AfterAPass_IsTheLatestCountOfThatCompany_AndEmptyBeforeOne()
+    public void CensusOf_AfterAPass_IsTheLatestCountOfThatCompany_AndEmptyBeforeOne()
     {
-        Assert.AreEqual(0, _driver.HoldCensusOf(Company).Units);
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units);
         GoHeld();
         _fire.HoldCensuses[Company] = Line(qualified: 17);
 
         Pass(1.0);
 
-        Assert.AreEqual(17, _driver.HoldCensusOf(Company).Qualified);
+        Assert.AreEqual(17, _driver.HoldLine.CensusOf(Company).Qualified);
     }
 
     [TestMethod]
@@ -448,7 +485,67 @@ public class MarshalHoldLinePassTests
 
         Pass(2.0);
 
-        Assert.AreEqual(0, _driver.HoldCensusOf(Company).Units);
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units);
+    }
+
+    [TestMethod]
+    public void Pass_AHeldCompanyThatGoesToTheAi_WritesItsLastSlotLine()
+    {
+        GoHeld();
+        _fire.HoldCensuses[Company] = Line(steered: 8, closer: 2, farther: 6);
+        Pass(1.0);
+        Pass(1.4);
+        var before = SlotLines;
+        var verdicts = SlotVerdictCalls;
+        Assert.AreEqual(1, verdicts, "the first window was judged, and that is the only verdict the line has");
+        _orders.Lost.Add(Company);
+
+        Pass(2.0);
+
+        Assert.AreEqual(before + 1, SlotLines);
+        Assert.IsTrue(_logger.Lines.Last(l => l.StartsWith("[Marshal] slot company=3 ")).EndsWith(" closer=2 farther=6 steered=8 loose=0"), "the window since the line at 1.0 holds one pass");
+        Assert.AreEqual(verdicts, SlotVerdictCalls, "a fact on the line, not a verdict, whatever its result");
+    }
+
+    [TestMethod]
+    public void Press_AMixedSelectionWhoseSecondCompanyIsAlreadyHeld_WritesThatCompanysLastSlotLine_BeforeItsRunIsReplaced()
+    {
+        GoHeld();
+        _fire.HoldCensuses[Company] = Line(steered: 3, closer: 2);
+        Pass(1.0);
+        Pass(1.4);
+        var before = SlotLines;
+        _orders.Selected.Clear();
+        _orders.Selected.Add(Company + 1);
+        _orders.Selected.Add(Company);
+
+        _driver.HoldLine.Press();
+        Pass(1.5);
+
+        Assert.IsTrue(MarshalFireTable.HoldOf(Company + 1), "the unheld company came first, so the press turned the hold on for both");
+        Assert.IsTrue(MarshalFireTable.HoldOf(Company));
+        Assert.AreEqual(before + 1, SlotLines, "the held company's open window is written before its run is replaced");
+        Assert.IsTrue(_logger.Lines.Last(l => l.StartsWith("[Marshal] slot company=3 ")).EndsWith(" closer=2 farther=0 steered=3 loose=0"), "the window since the line at 1.0 holds one pass");
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units, "the new run starts with no count");
+    }
+
+    [TestMethod]
+    public void OnPlayerTeamChanged_AHeldCompanyWithAnOpenWindow_WritesItsLastSlotLine()
+    {
+        GoHeld();
+        _fire.HoldCensuses[Company] = Line(steered: 8, closer: 2, farther: 6);
+        Pass(1.0);
+        Pass(1.4);
+        var before = SlotLines;
+        var verdicts = SlotVerdictCalls;
+        Assert.AreEqual(1, verdicts, "the first window was judged, and that is the only verdict the line has");
+
+        _driver.OnPlayerTeamChanged();
+
+        Assert.AreEqual(before + 1, SlotLines);
+        Assert.IsTrue(_logger.Lines.Last(l => l.StartsWith("[Marshal] slot company=3 ")).EndsWith(" closer=2 farther=6 steered=8 loose=0"), "the window since the line at 1.0 holds one pass");
+        Assert.AreEqual(verdicts, SlotVerdictCalls, "a fact on the line, not a verdict");
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units, "the counts are dropped after the line");
     }
 
     [TestMethod]
@@ -460,7 +557,7 @@ public class MarshalHoldLinePassTests
 
         _driver.OnPlayerTeamChanged();
 
-        Assert.IsFalse(_driver.StrikePassed(Company));
-        Assert.AreEqual(0, _driver.HoldCensusOf(Company).Units);
+        Assert.IsFalse(_driver.HoldLine.StrikePassed(Company));
+        Assert.AreEqual(0, _driver.HoldLine.CensusOf(Company).Units);
     }
 }

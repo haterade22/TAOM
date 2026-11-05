@@ -31,20 +31,12 @@ internal sealed class MarshalWordComponent : AgentComponent
     private double _woundedAt = double.NegativeInfinity;
     private bool _qualifies;
     private string _whyNot = "";
-    private bool _standGround;
+    private readonly SlotTrendCount _trend = new();
     private bool _slotValid;
     private bool _anchored;
-    private float _anchorX;
-    private float _anchorY;
     private float _slotX;
     private float _slotY;
     private float _slotDistance = float.NaN;
-    private bool _steered;
-    private float _steerBaseline = float.NaN;
-    private int _closer;
-    private int _farther;
-    private int _steeredReads;
-    private int _loose;
 
     public MarshalWordComponent(Agent agent)
         : base(agent)
@@ -59,7 +51,7 @@ internal sealed class MarshalWordComponent : AgentComponent
     /// <summary>The soldier's latest stand-aside answer, read by the driver's census.</summary>
     internal bool StandingAside => _standAside;
 
-    /// <summary>The mission time at which the current draw state began. Main thread: native calls the callback serially, outside <c>OnMissionTick</c>.</summary>
+    /// <summary>The mission time the current draw state began, read on the main thread on the unproved assumption that native calls the callback serially.</summary>
     internal double StateSince => _since;
 
     /// <summary>This component cleared the soldier's attack flag and has not yet put it back.</summary>
@@ -89,19 +81,8 @@ internal sealed class MarshalWordComponent : AgentComponent
     /// <summary>Metres from the soldier to the stored slot at the latest read, or NaN with none.</summary>
     internal float SlotDistance => _slotDistance;
 
-    /// <summary>
-    /// The steered reads that ended nearer the slot and farther from it, all steered reads (a read that moved less than the dead band included), and the reads beyond the slack
-    /// with no replaced tick, since the last call, which starts the counts again. Main thread, from the mission tick.
-    /// </summary>
-    internal (int Closer, int Farther, int Steered, int Loose) TakeSlotTrend()
-    {
-        var taken = (_closer, _farther, _steeredReads, _loose);
-        _closer = 0;
-        _farther = 0;
-        _steeredReads = 0;
-        _loose = 0;
-        return taken;
-    }
+    /// <summary>The slot trend counts since the last call, which starts them again; read on the main thread, from the mission tick.</summary>
+    internal SlotCounts TakeSlotTrend() => _trend.Take();
 
     /// <summary>The mission time of the latest real wound, or negative infinity.</summary>
     internal double WoundedAt => Volatile.Read(ref _woundedAt);
@@ -122,7 +103,7 @@ internal sealed class MarshalWordComponent : AgentComponent
         ApplyHold(false);
         ApplyFiringOrder(false);
         _qualifies = false;
-        ForgetSlotAndTrend();
+        ForgetSlot();
         _nextHoldRead = double.NegativeInfinity;
     }
 
@@ -203,33 +184,28 @@ internal sealed class MarshalWordComponent : AgentComponent
         }
     }
 
-    // The slot is read at the hold cadence and steered toward only while it is beyond the slack and the AI walks away from it. The walk is tested before the frame,
-    // which is a native read, and the distance at the first replaced tick is the baseline the next hold read compares with.
     private void ClampToSlot(bool holdOn, double now, ref Vec2 inputVector)
     {
         ReadHold(holdOn, now);
         if (!holdOn || !_qualifies || !_slotValid || !MarshalHoldLineRules.Beyond(_slotDistance) || !MarshalHoldLineRules.Moves(inputVector.x, inputVector.y))
             return;
-        var frame = Agent.Frame;
-        var toSlotWorld = new Vec2(_slotX - frame.origin.x, _slotY - frame.origin.y);
-        var toSlot = frame.rotation.TransformToLocal(toSlotWorld);
+        var own = Agent.Position.AsVec2;
+        var toSlotWorld = new Vec2(_slotX - own.x, _slotY - own.y);
+        var toSlot = Agent.Frame.rotation.TransformToLocal(toSlotWorld);
         var steered = MarshalHoldLineRules.ClampInput(inputVector.x, inputVector.y, toSlot.x, toSlot.y);
         if (steered.X == inputVector.x && steered.Y == inputVector.y)
             return;
         inputVector = new Vec2(steered.X, steered.Y);
-        if (!_steered)
-            _steerBaseline = toSlotWorld.Length;
-        _steered = true;
+        _trend.Steer(toSlotWorld.Length);
         Clamps.Pass();
     }
 
-    // Native reads, so the answers are kept for HoldReadSeconds. A soldier outside a held company keeps none.
     private void ReadHold(bool holdOn, double now)
     {
         if (!holdOn)
         {
             _qualifies = false;
-            ForgetSlotAndTrend();
+            ForgetSlot();
             return;
         }
 
@@ -241,7 +217,7 @@ internal sealed class MarshalWordComponent : AgentComponent
         {
             _qualifies = false;
             _whyNot = "no-formation";
-            ForgetSlotAndTrend();
+            ForgetSlot();
             return;
         }
 
@@ -263,75 +239,44 @@ internal sealed class MarshalWordComponent : AgentComponent
             Agent.HumanAIComponent?.IsInterestedInAnyGameObject() ?? false);
         _qualifies = MarshalHoldLineRules.Qualifies(facts);
         _whyNot = MarshalHoldLineRules.WhyNot(facts);
-        _standGround = order == MovementOrder.MovementOrderEnum.Stop;
-        ReadSlot(formation, now);
+        ReadSlot(formation, order == MovementOrder.MovementOrderEnum.Stop, now);
     }
 
     // Under Stop the engine answers the soldier's own place (Formation.cs, StandGround), so the first place is kept as an anchor and the member is not asked at all.
-    private void ReadSlot(Formation formation, double now)
+    private void ReadSlot(Formation formation, bool standGround, double now)
     {
         var own = Agent.Position.AsVec2;
         var orderValid = false;
         var order = Vec2.Zero;
-        if (!_standGround)
+        if (MarshalHoldLineRules.NeedsEnginePlace(standGround, _qualifies))
         {
             var place = formation.GetOrderPositionOfUnit(Agent);
             orderValid = place.IsValid;
             order = orderValid ? place.AsVec2 : Vec2.Zero;
         }
 
-        var slot = MarshalHoldLineRules.ReadSlot(_standGround, _anchored, _anchorX, _anchorY, orderValid, order.x, order.y, own.x, own.y);
+        var slot = MarshalHoldLineRules.ReadSlot(standGround, _anchored, _slotX, _slotY, orderValid, order.x, order.y, own.x, own.y);
         _slotValid = slot.Valid;
         _anchored = slot.Anchored;
-        if (!slot.Valid)
+        _slotDistance = float.NaN;
+        if (slot.Valid)
         {
-            _slotDistance = float.NaN;
-            _steered = false;
-            _steerBaseline = float.NaN;
-            return;
+            _slotX = slot.X;
+            _slotY = slot.Y;
+            var dx = own.x - slot.X;
+            var dy = own.y - slot.Y;
+            _slotDistance = (float)Math.Sqrt((double)dx * dx + (double)dy * dy);
         }
 
-        _slotX = slot.X;
-        _slotY = slot.Y;
-        if (slot.Anchored)
-        {
-            _anchorX = slot.X;
-            _anchorY = slot.Y;
-        }
-
-        var dx = own.x - slot.X;
-        var dy = own.y - slot.Y;
-        _slotDistance = (float)Math.Sqrt((double)dx * dx + (double)dy * dy);
-        NoteTrend(now);
+        _trend.Read(_slotDistance, MarshalHoldLineRules.StrikingBack(WoundedAt, now), _qualifies);
     }
 
-    // Two stored floats and a time, no engine read: the read that ends a steered interval compares its distance with the one at the interval's first replaced tick.
-    private void NoteTrend(double now)
-    {
-        var trend = MarshalHoldLineRules.Trend(_steerBaseline, _slotDistance, _steered, MarshalHoldLineRules.StrikingBack(WoundedAt, now));
-        if (trend == SlotTrend.Closer)
-            _closer++;
-        else if (trend == SlotTrend.Farther)
-            _farther++;
-        if (trend != SlotTrend.None)
-            _steeredReads++;
-        if (MarshalHoldLineRules.IsLoose(_slotDistance, _steered))
-            _loose++;
-        _steered = false;
-        _steerBaseline = float.NaN;
-    }
-
-    private void ForgetSlotAndTrend()
+    private void ForgetSlot()
     {
         _slotValid = false;
         _anchored = false;
         _slotDistance = float.NaN;
-        _steered = false;
-        _steerBaseline = float.NaN;
-        _closer = 0;
-        _farther = 0;
-        _steeredReads = 0;
-        _loose = 0;
+        _trend.Forget();
     }
 
     /// <summary>Clears the soldier's attack flag or puts it back, keeps the debt until the write was made, and drops it when the engine's climbing clear took the flag too.</summary>
@@ -382,13 +327,13 @@ internal sealed class MarshalWordComponent : AgentComponent
 
     private void Publish(DrawState state) => Volatile.Write(ref _stateCode, (int)state);
 
-    // Native reads, so the answer is kept for StandAsideReadSeconds.
     private bool ReadStandsAside(Formation? formation, int company)
     {
+        if (MarshalFireTable.ModeOf(company) == FireMode.Free)
+            return true;
         var weapon = Agent.WieldedWeapon;
         var target = Agent.GetTargetAgent();
         var facts = new StandAsideFacts(
-            MarshalFireTable.ModeOf(company) == FireMode.Free,
             formation == null,
             weapon.IsEmpty || !weapon.CurrentUsageItem.IsRangedWeapon,
             formation != null && formation.FiringOrder.OrderEnum == FiringOrder.RangedWeaponUsageOrderEnum.HoldYourFire,
