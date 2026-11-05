@@ -190,6 +190,27 @@ fail = ['\[Check\] id=taom\.long-defeat\.affix-effect result=fail']
 # the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood. hammer, terror and blades are not rolled, so they have no line, until Slices 8 and 9 switch each one on.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.boon"
+needs = "a boon pick owed at the third cleared wave and taken in the intermission after it (--waves 5 --garrison-scale 1.5 --seed N)"
+reached = ['\[Check\] id=taom\.long-defeat\.boon result=']
+pass = ['\[Check\] id=taom\.long-defeat\.boon result=pass p=[0-9]+ cards=[0-9]+ eligible=[0-9]+ offered=']
+fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
+# Written by LongDefeatDirector.Boons.cs when a boon is taken, key p=<N>: the last draw showed as many cards as it could (three, or all that were eligible), none twice, the taken boon was among them,
+# and the numbers it changes read back as the shipped ones changed by every boon owned (garrison cap, intermission, rest share, keep hold, pack bonus, the four gold factors, the gold paid at the pick).
+# The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.reroll"
+needs = "a banked reroll at the first pick (the wrapper arms start_rerolls=1, so --waves 5 spends it at clear 3)"
+reached = ['\[Check\] id=taom\.long-defeat\.reroll result=']
+pass = ['\[Check\] id=taom\.long-defeat\.reroll result=pass p=[0-9]+ draw=[0-9]+ bank=[0-9]+>[0-9]+ ']
+fail = ['\[Check\] id=taom\.long-defeat\.reroll result=fail']
+# Written by LongDefeatDirector.Boons.cs when a reroll is spent, key p=<N>: the bank fell by one, three new cards (or all that were eligible) none twice, and none of the cards just shown while three or more others were eligible.
+# The unattended bot spends the first reroll it ever holds on the first offer; a session that banked none reads NOT REACHED.
+absence = "not-reached"
+
 [[human]]
 claim = "how the walls look under attack (the gate state, the machines, the attackers climbing)"
 
@@ -219,6 +240,9 @@ claim = "Leave on the end panel returns to the main menu"
 
 [[human]]
 claim = "the Escape exit returns to the main menu and the report still lands"
+
+[[human]]
+claim = "a boon card reads clearly: its name, its category, what it gives, and a drawback line in its own colour; the reroll button shows its count; the pick is announced by a notice and the hint, and the panel never opens by itself"
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"

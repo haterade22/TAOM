@@ -53,7 +53,7 @@ public class LongDefeatPrefabTests
         foreach (var movie in Movies)
             Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
 
-        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM) })
+        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM) })
         {
             var names = bound.TryGetValue(vmType, out var found) ? found : new HashSet<string>();
             foreach (var property in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
@@ -96,7 +96,7 @@ public class LongDefeatPrefabTests
     {
         var buttons = Root("LongDefeatPanel").Descendants().Where(e => e.Name.LocalName == "ButtonWidget").ToList();
 
-        Assert.IsTrue(buttons.Count >= 4, "buy, horn, close, leave");
+        Assert.IsTrue(buttons.Count >= 6, "pick, reroll, buy, horn, close, leave");
         foreach (var button in buttons)
         {
             Assert.AreEqual("true", (string?)button.Attribute("DoNotPassEventsToChildren"), "a button with content children needs it or its text swallows the click");
@@ -138,7 +138,7 @@ public class LongDefeatPrefabTests
     {
         var gates = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("IsVisible")).Where(v => v != null).ToList();
 
-        CollectionAssert.IsSubsetOf(new[] { "@IsShopVisible", "@IsEndVisible" }, gates);
+        CollectionAssert.IsSubsetOf(new[] { "@IsShopVisible", "@IsEndVisible", "@IsPickVisible" }, gates);
     }
 
     [TestMethod]

@@ -14,7 +14,7 @@ internal sealed partial class SurvivalRun
     private const int LiveFloor = 101;
 
     private readonly RunPlan _plan;
-    private readonly RunRules _r;
+    private RunRules _r;
     private readonly Purse _purse;
     private readonly RunStats _stats = new();
     private readonly List<RunEvent> _pendingEvents = new();
@@ -59,6 +59,8 @@ internal sealed partial class SurvivalRun
     {
         _plan = plan;
         _r = plan.Rules;
+        _shop = plan.Shop.Offers;
+        _deck = new BoonDeck(plan.Boons, plan.Options.Seed ?? 0UL, plan.Options.StartRerolls);
         _purse = new Purse(plan.Shop.StartingGold);
         _left = _r.PreparationSeconds;
         _wave = Math.Max(1, plan.Options.StartWave) - 1;
@@ -160,7 +162,7 @@ internal sealed partial class SurvivalRun
         _stats.AttackerKilled();
         _lossThisTick = true;
         if (_plan.Bounties.TryGetValue(troopId, out var gold))
-            _purse.Earn(PurseSource.Bounty, gold);
+            _purse.Earn(PurseSource.Bounty, GoldFactors.Apply(gold, _factors.Bounty));
     }
 
     public void AttackerFled()
@@ -204,7 +206,7 @@ internal sealed partial class SurvivalRun
             PendingDefenders,
             _lastAttackers,
             _keep,
-            _plan.Shop.Offers,
+            _shop,
             _bought[(int)FormationSlot.Infantry],
             _bought[(int)FormationSlot.Ranged])
         {
@@ -212,6 +214,12 @@ internal sealed partial class SurvivalRun
             NextAffixes = next != null ? _plan.Affixes.Labels(NextAffixes) : Array.Empty<AffixLabel>(),
             NextHealthFactor = next?.HealthFactor ?? 1f,
             NextDamageFactor = next?.DamageFactor ?? 1f,
+            BoonOffer = _offerCards,
+            OwedPicks = _deck.Owed,
+            Rerolls = _deck.Banked,
+            RerollsUsed = _deck.Used,
+            Boons = _ownedCards,
+            GarrisonCap = _r.GarrisonCap,
         };
     }
 
@@ -270,7 +278,7 @@ internal sealed partial class SurvivalRun
         _phase = RunPhase.Wave;
         _left = 0f;
         _waveInit = true;
-        _waveAffixes = _plan.Affixes.Roll(Seed, _wave);
+        _waveAffixes = CutRoll(_plan.Affixes.Roll(Seed, _wave));
     }
 
     private void InitWave(RunSnapshot s, RunEffects fx)
@@ -333,11 +341,12 @@ internal sealed partial class SurvivalRun
 
     private void ClearWave(RunEffects fx)
     {
-        var bonus = _r.WaveBonusBase + _r.WaveBonusPerWave * _wave;
+        var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
         _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes);
         _wavesCleared++;
         fx.Events.Add(new RunEvent(RunEventKind.WaveCleared, _wave, "bonus=" + bonus));
+        OpenBoons(fx);
         if (_stale.Charging)
             fx.RestoreDefenderTactic = true;
 

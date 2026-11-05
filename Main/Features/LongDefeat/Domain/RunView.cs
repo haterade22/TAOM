@@ -30,4 +30,21 @@ internal sealed record RunView(
     public float NextHealthFactor { get; init; } = 1f;
 
     public float NextDamageFactor { get; init; } = 1f;
+
+    /// <summary>The garrison cap in force, boons included: a pack that would carry the garrison past it is refused by <c>TryBuy</c>.</summary>
+    public int GarrisonCap { get; init; } = int.MaxValue;
+
+    /// <summary>The cards of the open boon pick, or none. An unmade pick stays open into later intermissions, but is taken between waves only.</summary>
+    public IReadOnlyList<BoonCard> BoonOffer { get; init; } = Array.Empty<BoonCard>();
+
+    /// <summary>Picks owed that wait behind the open one.</summary>
+    public int OwedPicks { get; init; }
+
+    /// <summary>Rerolls banked, and rerolls used so far this run.</summary>
+    public int Rerolls { get; init; }
+
+    public int RerollsUsed { get; init; }
+
+    /// <summary>The boons taken so far, in order.</summary>
+    public IReadOnlyList<BoonCard> Boons { get; init; } = Array.Empty<BoonCard>();
 }

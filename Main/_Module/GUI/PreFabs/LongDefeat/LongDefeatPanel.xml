@@ -22,6 +22,50 @@
                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="4" MarginBottom="8"
                                 Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FFFFFFFF"
                                 Text="@GoldText" DoNotAcceptEvents="true" />
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="10" IsVisible="@IsPickVisible"
+                               StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="6"
+                                    Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#E9B84AFF"
+                                    Text="@PickTitle" DoNotAcceptEvents="true" />
+                        <ListPanel DataSource="{Boons}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                          Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecutePick">
+                              <Children>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                           DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Brush="Popup.Button.Text" Brush.FontSize="19" Brush.FontColor="#E9B84AFF"
+                                                Text="@Name" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                                Text="@CategoryText" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="2"
+                                                Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
+                                                Text="@Text" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="2" IsVisible="@HasDrawback"
+                                                Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#FF9A7AFF"
+                                                Text="@DrawbackText" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </ListPanel>
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </ListPanel>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40"
+                                      Brush="ButtonBrush2" UpdateChildrenStates="true" IsEnabled="@CanReroll" Command.Click="ExecuteReroll">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Brush="Popup.Button.Text" Brush.FontSize="17" Brush.FontColor="#FFFFFFFF"
+                                        Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                        Text="@RerollText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </Children>
+                    </ListPanel>
                     <ListPanel DataSource="{Offers}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                StackLayout.LayoutMethod="VerticalTopToBottom">
                       <ItemTemplate>

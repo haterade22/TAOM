@@ -250,6 +250,10 @@ internal sealed partial class LongDefeatDirector
         var action = ShopBot.Decide(view, _botClock);
         if (action.Kind == BotActionKind.Buy && action.OfferId != null)
             _run.TryBuy(action.OfferId);
+        else if (action.Kind == BotActionKind.Pick && action.OfferId != null)
+            _run.TryPickBoon(action.OfferId);
+        else if (action.Kind == BotActionKind.Reroll)
+            _run.TryReroll();
         else if (action.Kind == BotActionKind.Horn)
             _run.TryStartWave();
     }

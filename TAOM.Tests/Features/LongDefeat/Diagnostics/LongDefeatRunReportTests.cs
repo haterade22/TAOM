@@ -167,6 +167,35 @@ public class LongDefeatRunReportTests
     }
 
     [TestMethod]
+    public void Build_ListsEachPickWithItsDrawsTheBoonTakenAndTheWaveItActsOn_AndTheRerollsAndTheBoonGold()
+    {
+        var picked = new BoonPickRecord(1, 3) { Taken = "stout", TakenBeforeWave = 4 };
+        picked.Draws.Add(new BoonDraw(new[] { "a", "b", "c" }, 9, 9, 1));
+        picked.Draws.Add(new BoonDraw(new[] { "d", "e", "stout" }, 9, 6, 0));
+        var open = new BoonPickRecord(2, 6);
+        open.Draws.Add(new BoonDraw(new[] { "f" }, 1, 1, 0));
+        var lapsed = new BoonPickRecord(3, 9);
+        var purse = new Purse(600);
+        purse.Earn(PurseSource.Boon, 300);
+
+        var report = JObject.Parse(LongDefeatRunReport.Build("helms", RunOptions.Default, RunProvenance.Unknown, new RunResult(RunEndReason.Abandoned, 10, 9, 5),
+            new RunStats(), purse, Started, Started.AddMinutes(40), 1, new RunBoons(new[] { picked, open, lapsed }, 2, 1, 1)));
+
+        var picks = (JArray)report["boons"]!;
+        Assert.AreEqual(3, picks.Count);
+        Assert.AreEqual((1, 3, "stout", 4), ((int)picks[0]["pick"]!, (int)picks[0]["wave"]!, (string?)picks[0]["taken"], (int)picks[0]["takenBeforeWave"]!));
+        CollectionAssert.AreEqual(new[] { "a", "b", "c" }, picks[0]["offered"]![0]!.Select(t => (string)t!).ToArray());
+        CollectionAssert.AreEqual(new[] { "d", "e", "stout" }, picks[0]["offered"]![1]!.Select(t => (string)t!).ToArray());
+        Assert.AreEqual(JTokenType.Null, picks[1]["taken"]!.Type, "a pick still open at the end of the run took nothing");
+        Assert.AreEqual(0, ((JArray)picks[2]["offered"]!).Count, "a lapsed pick offered nothing");
+        var rerolls = (JObject)report["rerolls"]!;
+        Assert.AreEqual((2, 1, 1), ((int)rerolls["earned"]!, (int)rerolls["used"]!, (int)rerolls["banked"]!));
+        Assert.AreEqual(300, (int)report["gold"]!["boon"]!);
+        Assert.AreEqual((long)report["gold"]!["earned"]!, (long)report["gold"]!["bounty"]! + (long)report["gold"]!["waveBonus"]! + (long)report["gold"]!["earlyStart"]!
+            + (long)report["gold"]!["commander"]! + (long)report["gold"]!["boon"]!, "earned is the sum of its five sources");
+    }
+
+    [TestMethod]
     public void Build_AWavePastTheAuthoredList_ReportsItsHealthAndDamageFactors()
     {
         var stats = new RunStats();

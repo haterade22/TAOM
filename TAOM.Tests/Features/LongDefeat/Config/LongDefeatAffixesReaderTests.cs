@@ -28,7 +28,7 @@ public class LongDefeatAffixesReaderTests
 
     private RunPlan Plan(string? affixes, string culture = "isengard")
     {
-        var catalog = LongDefeatConfigCatalog.FromTexts("{'fortresses':[" + Fortress.Replace("isengard", culture) + "]}", Waves, Shop, _logger, affixes);
+        var catalog = LongDefeatConfigCatalog.FromTexts("{'fortresses':[" + Fortress.Replace("isengard", culture) + "]}", Waves, Shop, _logger, affixes, "{'boons':[]}");
         return catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default);
     }
 
@@ -66,7 +66,7 @@ public class LongDefeatAffixesReaderTests
     [TestMethod]
     public void ACultureWithNoTable_ShowsIds_WithOneWarningPerCulture()
     {
-        var catalog = LongDefeatConfigCatalog.FromTexts("{'fortresses':[" + Fortress.Replace("isengard", "gondor") + "]}", Waves, Shop, _logger, File());
+        var catalog = LongDefeatConfigCatalog.FromTexts("{'fortresses':[" + Fortress.Replace("isengard", "gondor") + "]}", Waves, Shop, _logger, File(), "{'boons':[]}");
         var plan = catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default);
         catalog.BuildPlan(catalog.Fortresses.Single(), RunOptions.Default);
 

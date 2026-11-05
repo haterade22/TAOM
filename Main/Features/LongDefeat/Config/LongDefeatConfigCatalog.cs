@@ -12,9 +12,9 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
-/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c>, <c>shop.json</c> and <c>affixes.json</c>, read once per process,
-/// and the owner of the <c>balance</c> hash over those four and <c>boons.json</c> and <c>classes.json</c> (their readers arrive with their
-/// slices). The load never throws, because a faulted <see cref="Lazy{T}"/> rethrows forever.
+/// Validating loader for <c>long_defeat/fortresses.json</c>, <c>waves.json</c>, <c>shop.json</c>, <c>affixes.json</c> and <c>boons.json</c>, read once per process,
+/// and the owner of the <c>balance</c> hash over those five and <c>classes.json</c> (its reader arrives with its slice). The load never throws,
+/// because a faulted <see cref="Lazy{T}"/> rethrows forever.
 /// </summary>
 internal sealed class LongDefeatConfigCatalog
 {
@@ -30,6 +30,7 @@ internal sealed class LongDefeatConfigCatalog
     private readonly Lazy<string> _balance;
     private readonly Lazy<WavesConfig> _waves;
     private readonly Lazy<AffixesConfig> _affixes;
+    private readonly Lazy<BoonPlan> _boons;
     private readonly HashSet<string> _unnamedCultures = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lazy<IReadOnlyDictionary<string, ShopPlan>> _shops;
     private readonly Lazy<IReadOnlyList<FortressEntry>> _fortresses;
@@ -50,6 +51,7 @@ internal sealed class LongDefeatConfigCatalog
             s => WavesReader.Read(read(WavesFile), s)));
         _affixes = new Lazy<AffixesConfig>(() => Guard(logger, AffixesFile, AffixesConfig.None,
             s => AffixesReader.Read(read(AffixesFile), s)));
+        _boons = new Lazy<BoonPlan>(() => Guard(logger, BoonsFile, BoonPlan.None, s => BoonsReader.Read(read(BoonsFile), s)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
             new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s)));
         _fortresses = new Lazy<IReadOnlyList<FortressEntry>>(() => Guard<IReadOnlyList<FortressEntry>>(logger, FortressesFile,
@@ -105,7 +107,7 @@ internal sealed class LongDefeatConfigCatalog
 
     /// <summary>The plan for one run. The options leave here with a seed: the one given, else the start time's ticks.</summary>
     public RunPlan BuildPlan(FortressEntry fortress, RunOptions options) =>
-        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options.Seeded(DateTime.UtcNow.Ticks)) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster, Affixes = AffixesFor(fortress.AttackerCulture) };
+        new(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, options.Seeded(DateTime.UtcNow.Ticks)) { Provenance = RunProvenance.Unknown with { Balance = BalanceHash }, Bounties = _waves.Value.Bounties, Keep = fortress.Keep, Muster = fortress.Muster, Affixes = AffixesFor(fortress.AttackerCulture), Boons = _boons.Value };
 
     /// <summary>The affixes with the names of one attacker culture. A culture the file has no table for shows its powers as their ids, with one warning per culture.</summary>
     private AffixPlan AffixesFor(string culture)

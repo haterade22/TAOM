@@ -288,4 +288,87 @@ public class LongDefeatShippedConfigTests
             Assert.AreEqual(raw, registered, key);
         }
     }
+
+    private static string BoonsText() => File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "boons.json"));
+
+    private static string Pascal(string snake) => string.Concat(snake.Split('_').Select(w => char.ToUpperInvariant(w[0]) + w.Substring(1)));
+
+    [TestMethod]
+    public void ShippedBoons_LoadWithNoWarning_AndNoRowWasSkipped()
+    {
+        var (catalog, logger) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var inFile = Newtonsoft.Json.Linq.JObject.Parse(BoonsText())["boons"]!.Count();
+
+        Assert.AreEqual(inFile, plan.Rows.Count, "a row the reader refused is missing from the pool");
+        logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("boons.json")));
+    }
+
+    [TestMethod]
+    public void ShippedBoons_SoFarHoldEnoughRowsToShowThreeCards_PerPoolThisSliceBuilds()
+    {
+        var (catalog, _) = Load();
+        var rows = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows;
+
+        Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.WarChest) >= 3, "war chest rows");
+        Assert.IsTrue(rows.Count(r => r.Category == BoonCategory.Fortress) >= 3, "fortress rows");
+        Assert.AreEqual(2, rows.Count(r => r.Category == BoonCategory.Legend), "Legend rows");
+        Assert.IsTrue(rows.Where(r => r.Category == BoonCategory.Legend).All(r => r.Effects.Any(e => e.Key == BoonKeys.AffixCount)), "this slice's Legend rows cut affixes");
+        Assert.IsTrue(rows.Any(r => r.HasDrawback), "some boons carry a real drawback");
+    }
+
+    [TestMethod]
+    public void ShippedBoons_EveryNameTextAndDrawbackKey_IsTheRowsOwn_AndRegisteredWithTheSameDefault()
+    {
+        var strings = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var (catalog, _) = Load();
+        var rows = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows;
+
+        foreach (var row in rows)
+        {
+            var key = "TAOM_LD_Boon_" + Pascal(row.Id);
+            Assert.IsTrue(row.Name.StartsWith("{=" + key + "}", StringComparison.Ordinal), row.Id + " name key");
+            Assert.IsTrue(row.Text.StartsWith("{=" + key + "_Text}", StringComparison.Ordinal), row.Id + " text key");
+            var raws = new List<(string Key, string Raw)> { (key, row.Name), (key + "_Text", row.Text) };
+            if (row.HasDrawback)
+            {
+                Assert.IsTrue(row.DrawbackText.StartsWith("{=" + key + "_Drawback}", StringComparison.Ordinal), row.Id + " drawback key");
+                raws.Add((key + "_Drawback", row.DrawbackText));
+            }
+
+            foreach (var (k, raw) in raws)
+            {
+                Assert.IsTrue(strings.TryGetValue(k, out var registered), k + " is not in taom_module_strings.xml");
+                Assert.AreEqual(raw, registered, k);
+            }
+        }
+    }
+
+    [TestMethod]
+    public void ShippedBoons_TheFirstOffersOfSeedOne_ArePinned_ToTheSameVectorsAsThePythonReplay()
+    {
+        var (catalog, _) = Load();
+        var plan = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons;
+        var deck = new BoonDeck(plan, 1UL, 2);
+        for (var n = 1; n <= 3; n++)
+            deck.Cleared(n, n);
+        deck.TryReroll();
+        deck.TryReroll();
+
+        // pick 1: draw 0, then each reroll leaves out the three just shown. Over this file's twelve rows; the vectors move when a later slice adds rows (and tools/tests/test_run_long_defeat.py moves with them).
+        CollectionAssert.AreEqual(new[] { "granary_stores", "glittering_caves_refuge", "weregild_of_the_mark" }, deck.Picks[0].Draws[0].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras" }, deck.Picks[0].Draws[1].Ids.ToArray());
+        CollectionAssert.AreEqual(new[] { "granary_stores", "weregild_of_the_mark", "healers_of_the_hold" }, deck.Picks[0].Draws[2].Ids.ToArray());
+
+        // Reroll twice again from a fresh deck, take the first card of draw 1, and the second pick is drawn over the eleven rows left.
+        var second = new BoonDeck(plan, 1UL, 1);
+        for (var n = 1; n <= 3; n++)
+            second.Cleared(n, n);
+        second.TryReroll();
+        second.TryPick("stout_hearts_at_the_gate", 3, 4);
+        for (var n = 4; n <= 6; n++)
+            second.Cleared(n, n);
+        CollectionAssert.AreEqual(new[] { "light_of_the_phial", "riddermark_levy", "haggler_of_edoras" }, second.Offer.Select(r => r.Id).ToArray());
+    }
 }

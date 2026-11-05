@@ -84,6 +84,17 @@ public class ShopBotTests
     }
 
     [TestMethod]
+    public void Decide_NeverAsksForAPackTheBoonLoweredCapWouldRefuse_SoTheHornStillSounds()
+    {
+        var pack12 = new[] { Offers[0] };
+        var capped = View(600, standing: 169, offers: pack12) with { GarrisonCap = 180 };
+
+        Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(capped, 0f).Kind, "a pack of 12 would make 181");
+        Assert.AreEqual(BotActionKind.Horn, ShopBot.Decide(capped, 30f).Kind);
+        Assert.AreEqual(BotActionKind.Buy, ShopBot.Decide(View(600, standing: 168, offers: pack12) with { GarrisonCap = 180 }, 0f).Kind, "12 fits at 180");
+    }
+
+    [TestMethod]
     public void Decide_SoundsTheHornOnlyOnceNothingIsLeftToBuyAndThirtySecondsHavePassed()
     {
         Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(View(10), 29.9f).Kind);
@@ -102,5 +113,54 @@ public class ShopBotTests
     {
         Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(View(600, phase: RunPhase.Wave), 100f).Kind);
         Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(View(600, phase: RunPhase.Ended), 100f).Kind);
+    }
+
+    private static BoonCard Card(string id, bool drawback = false) =>
+        new(id, "{=K_" + id + "}" + id, "{=T_" + id + "}text", drawback ? "{=D_" + id + "}drawback" : "", BoonCategory.WarChest);
+
+    [TestMethod]
+    public void Decide_AnOpenPick_IsAnsweredBeforeAnythingIsBought_TakingTheFirstCardWithNoDrawback()
+    {
+        var view = View(600) with { BoonOffer = new[] { Card("a", true), Card("b"), Card("c") } };
+
+        var action = ShopBot.Decide(view, 0f);
+
+        Assert.AreEqual(BotActionKind.Pick, action.Kind);
+        Assert.AreEqual("b", action.OfferId);
+    }
+
+    [TestMethod]
+    public void Decide_EveryCardWithADrawback_TakesTheFirstWhenNoRerollIsBanked()
+    {
+        var view = View(600) with { BoonOffer = new[] { Card("a", true), Card("b", true), Card("c", true) } };
+
+        Assert.AreEqual("a", ShopBot.Decide(view, 0f).OfferId);
+        Assert.AreEqual(BotActionKind.Pick, ShopBot.Decide(view, 0f).Kind);
+    }
+
+    [TestMethod]
+    public void Decide_EveryCardWithADrawback_RerollsWhenOneIsBanked()
+    {
+        var view = View(600) with { BoonOffer = new[] { Card("a", true), Card("b", true), Card("c", true) }, Rerolls = 1, RerollsUsed = 2 };
+
+        Assert.AreEqual(BotActionKind.Reroll, ShopBot.Decide(view, 0f).Kind);
+    }
+
+    [TestMethod]
+    public void Decide_TheFirstBankedRerollOfARun_IsSpentOnTheFirstOffer_SoATestRunProvesTheReroll()
+    {
+        var view = View(600) with { BoonOffer = new[] { Card("a"), Card("b"), Card("c") }, Rerolls = 1, RerollsUsed = 0 };
+        var later = view with { RerollsUsed = 1 };
+
+        Assert.AreEqual(BotActionKind.Reroll, ShopBot.Decide(view, 0f).Kind);
+        Assert.AreEqual(BotActionKind.Pick, ShopBot.Decide(later, 0f).Kind, "a card with no drawback is taken once a reroll has been shown");
+    }
+
+    [TestMethod]
+    public void Decide_AnOpenPickDuringAWave_WaitsLikeTheShop()
+    {
+        var view = View(600, phase: RunPhase.Wave) with { BoonOffer = new[] { Card("a") } };
+
+        Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(view, 0f).Kind);
     }
 }

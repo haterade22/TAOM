@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -14,10 +15,14 @@ internal sealed partial class SurvivalRun
     public IReadOnlyList<string> WaveAffixes => _waveAffixes;
 
     /// <summary>The power ids the next wave will carry: what the intermission and the preparation show, and what the wave will take at its start.</summary>
-    public IReadOnlyList<string> NextAffixes => _plan.Affixes.Roll(Seed, _wave + 1);
+    public IReadOnlyList<string> NextAffixes => CutRoll(_plan.Affixes.Roll(Seed, _wave + 1));
 
     /// <summary>The next wave's spec, for the factors the intermission's line shows (<c>WaveStart</c> no longer carries them).</summary>
     private WaveSpec NextSpec => _plan.Waves.ForWave(_wave + 1);
+
+    /// <summary>The roll the wave carries: a prefix of the stored roll, shortened by the affix cut of the boons owned when the wave begins (a Legend boon), never below none.</summary>
+    private IReadOnlyList<string> CutRoll(IReadOnlyList<string> roll) =>
+        _affixCut == 0 ? roll : roll.Take(Math.Max(0, roll.Count + _affixCut)).ToArray();
 
     private IReadOnlyList<AffixLabel> WaveLabels => _phase == RunPhase.Wave ? _plan.Affixes.Labels(_waveAffixes) : Array.Empty<AffixLabel>();
 }

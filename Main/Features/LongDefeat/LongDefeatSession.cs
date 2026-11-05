@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
@@ -16,6 +17,7 @@ internal sealed class LongDefeatSession
     private SurvivalRun? _run;
     private RunResult? _result;
     private int _lostInClearedWaves;
+    private IReadOnlyList<BoonCard> _boons = Array.Empty<BoonCard>();
     private readonly FordsGameSpeed _speed = new();
 
     public bool IsActive => _run != null;
@@ -47,6 +49,13 @@ internal sealed class LongDefeatSession
     public BuyResult TryBuy(string offerId) => _run?.TryBuy(offerId) ?? BuyResult.RunOver;
 
     public StartResult TryStartWave() => _run?.TryStartWave() ?? StartResult.RunOver;
+
+    public PickResult TryPickBoon(string boonId) => _run?.TryPickBoon(boonId) ?? PickResult.RunOver;
+
+    public RerollResult TryReroll() => _run?.TryReroll() ?? RerollResult.RunOver;
+
+    /// <summary>The boons taken, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
+    public IReadOnlyList<BoonCard> BoonsTaken => _run?.OwnedCards ?? _boons;
 
     internal void CycleSpeed()
     {
@@ -83,12 +92,14 @@ internal sealed class LongDefeatSession
         MaxSpeed = 1;
         _run = run;
         _result = null;
+        _boons = Array.Empty<BoonCard>();
     }
 
     internal void Clear()
     {
         _result = _run?.Result ?? _result;
         _lostInClearedWaves = LostInClearedWaves;
+        _boons = BoonsTaken;
         _run = null;
     }
 }

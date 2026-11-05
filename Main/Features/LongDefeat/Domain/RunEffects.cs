@@ -19,6 +19,10 @@ internal enum RunEventKind
     Felled,
     Bought,
     Horn,
+    BoonOffered,
+    BoonLapsed,
+    BoonTaken,
+    Rerolled,
 }
 
 internal sealed record RunEvent(RunEventKind Kind, int Wave, string Detail);

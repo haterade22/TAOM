@@ -41,6 +41,8 @@ internal static class LongDefeatChecks
     internal const string ScaleId = "taom.long-defeat.scale";
     internal const string AffixId = "taom.long-defeat.affix";
     internal const string AffixEffectId = "taom.long-defeat.affix-effect";
+    internal const string BoonId = "taom.long-defeat.boon";
+    internal const string RerollId = "taom.long-defeat.reroll";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -129,11 +131,13 @@ internal static class LongDefeatChecks
     internal static CheckVerdict Shop(int requested, int spawned, int onPoint, int overlap) =>
         Verdict(spawned == requested, $"spawned={Num(spawned)} of={Num(requested)} on_point={Num(onPoint)} overlap={Num(overlap)}");
 
-    internal static CheckVerdict EarlyStart(float secondsLeft, int paid, RunRules r)
+    /// <summary><paramref name="hornFactor"/> is the war chest factor of the horn in force (1 with no boon): it multiplies both the rate and the cap.</summary>
+    internal static CheckVerdict EarlyStart(float secondsLeft, int paid, RunRules r, float hornFactor = 1f)
     {
         // Recomputed here on purpose, apart from SurvivalRun.TryStartWave: a check that shared the formula could not catch a change in it.
-        var raw = Math.Ceiling(Math.Max(0f, secondsLeft) * (double)r.EarlyGoldPerSecond);
-        var expected = raw > 0d ? (int)Math.Min(r.EarlyGoldCap, raw) : 0;
+        var raw = Math.Ceiling(Math.Max(0f, secondsLeft) * (double)r.EarlyGoldPerSecond * hornFactor);
+        var cap = Math.Round(r.EarlyGoldCap * (double)hornFactor, MidpointRounding.AwayFromZero);
+        var expected = raw > 0d ? (int)Math.Min(cap, raw) : 0;
         return Verdict(paid == expected, $"paid={Num(paid)} expected={Num(expected)} left={F1(secondsLeft)}");
     }
 

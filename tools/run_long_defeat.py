@@ -20,7 +20,8 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
-A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
+A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power or hide an affix-effect line (pass or skip).
+The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, and one that banked a reroll at its first pick or spent one owes the reroll check.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and log
 collection. It changes the arm variable, the done and status files, the arm text and the judge, and presses Cancel on the Helm's Deep
@@ -195,12 +196,14 @@ def affix_count(schedule, wave):
 
 def affix_problem(report_json):
     """None when every wave row's affixes are the replayed roll of the report's seed, else what is wrong. A report with no wave rows has nothing to replay.
-    The Legend boon that cuts a roll (Slice 4) will key its allowance on the wave it was taken."""
+    A Legend boon that cuts a roll is allowed on the wave it was taken before and every wave after (affix_cut): the row must be the first
+    max(0, len(roll) + cut) powers of the roll the game takes (the schedule count held to the pool), a prefix, since a shorter roll is a prefix of a longer one."""
     rows = report_json.get("waves")
     seed = report_json.get("seed")
     if not isinstance(rows, list) or isinstance(seed, bool) or not isinstance(seed, int):
         return None
     schedule = shipped_affix_schedule()
+    boon_rows = shipped_boons()[0]
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("wave"), int) or isinstance(row.get("wave"), bool):
             continue
@@ -209,10 +212,171 @@ def affix_problem(report_json):
         if not isinstance(got, list):
             return f"wave {wave} has no affixes list"
         scheduled = affix_count(schedule, wave)
+        cut = affix_cut(report_json, wave, boon_rows)
         roll = affix_roll(seed, wave, scheduled)
+        roll = roll[:max(0, len(roll) + cut)]
         if got != roll:
-            return f"wave {wave} reports affixes {got}, but seed {seed} rolls {roll} for a schedule of {scheduled}"
+            return f"wave {wave} reports affixes {got}, but seed {seed} rolls {roll} for a schedule of {scheduled} and a boon cut of {cut}"
     return None
+
+
+# The boons (phase2-plan.md section 2, "Boons"): a pick owed at every third cleared wave, three weighted cards a draw from stream 2 at (pick, draw), a reroll
+# earned at every fifth clear into a bank of three. Only the rows with no garrison or class condition can be replayed from the report alone: the war chest,
+# fortress and Legend rows, and the class rows of the report's own class.
+BOON_FILE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat" / "boons.json"
+BOON_CHECK = "boon"
+REROLL_CHECK = "reroll"
+BOON_FROM_CLEARS = 3
+BOON_CARDS = 3
+BOON_ROW_WEIGHT = 10
+BOON_MAX_BANK = 3
+BOON_REROLL_EVERY = 5
+BOON_FREE_CATEGORIES = ("fortress", "warchest", "legend")
+BOON_TROOP_CATEGORIES = ("infantry", "archers", "cavalry")
+
+
+def shipped_boons(path=None):
+    """(rows, legend weight) of this tree's boons.json: each row {id, category, class, cut}, where cut is the row's affixCount (0 or negative) and the order is the file's.
+    The shipped file is held valid by LongDefeatShippedConfigTests, so a row is taken as it stands; a missing or unreadable file has no rows."""
+    try:
+        root = json.loads(Path(path or BOON_FILE).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return [], 1
+    if not isinstance(root, dict):
+        return [], 1
+    weight = root.get("legendWeight")
+    weight = weight if _whole(weight, 1, 100) else 1
+    rows = []
+    for row in root.get("boons") if isinstance(root.get("boons"), list) else []:
+        if not isinstance(row, dict) or not isinstance(row.get("id"), str):
+            continue
+        cut = sum(e.get("value", 0) for e in row.get("effects", []) if isinstance(e, dict) and e.get("key") == "affixCount" and isinstance(e.get("value"), int))
+        rows.append({"id": row["id"], "category": row.get("category"), "class": row.get("class") or "", "cut": cut})
+    return rows, weight
+
+
+def boon_cards(seed, pick, draw, pool, legend_weight, shown):
+    """The game's BoonDeck.Draw over pool (the eligible rows in file order, owned ones already out): the rows just shown are left out unless fewer than
+    three others remain; each card is r = below(total weight), walked to the row it falls in, taken and removed. The vectors in test_run_long_defeat.py
+    are pinned in BoonDeckTests.cs and LongDefeatShippedConfigTests.cs too."""
+    others = [row for row in pool if row["id"] not in shown]
+    rows = list(others if shown and len(others) >= BOON_CARDS else pool)
+    gen = SplitMix64(seed, 2, pick, draw)
+    cards = []
+    for _ in range(min(BOON_CARDS, len(rows))):
+        roll = gen.below(sum(_boon_weight(r, legend_weight) for r in rows))
+        index = 0
+        while index < len(rows) - 1 and roll >= _boon_weight(rows[index], legend_weight):
+            roll -= _boon_weight(rows[index], legend_weight)
+            index += 1
+        cards.append(rows.pop(index)["id"])
+    return cards
+
+
+def _boon_weight(row, legend_weight):
+    return legend_weight if row["category"] == "legend" else BOON_ROW_WEIGHT
+
+
+def _is_int(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def boon_problem(report_json, path=None):
+    """None when every pick of the report's boons[] replays from its seed, else what is wrong: each draw equals the game's draw over the rows eligible after the
+    boons taken before it (the shown cards left out of a reroll), the taken boon was among the last draw, only the last pick may be left open, and the
+    rerolls add up (used is the draws after each first, and earned minus used is the bank, at most three). A report with no boons list has nothing to replay."""
+    picks = report_json.get("boons")
+    seed = report_json.get("seed")
+    if not isinstance(picks, list) or not _is_int(seed):
+        return None
+    rows, legend_weight = shipped_boons(path)
+    if any(row["category"] in BOON_TROOP_CATEGORIES for row in rows):
+        return "boons.json holds a troop category row, whose eligibility needs the garrison's troop groups, which this replay does not read yet"
+    class_id = report_json.get("class") or ""
+    owned = []
+    used = 0
+    for number, pick in enumerate(picks, 1):
+        if not isinstance(pick, dict) or pick.get("pick") != number:
+            return f"pick {number} is missing or numbered {pick.get('pick') if isinstance(pick, dict) else pick!r}"
+        pool = [r for r in rows if r["id"] not in owned and (r["category"] in BOON_FREE_CATEGORIES or (r["category"] == "class" and r["class"] == class_id))]
+        offered = pick.get("offered")
+        if not isinstance(offered, list) or not all(isinstance(d, list) for d in offered):
+            return f"pick {number} has no list of draws"
+        if not offered and pool:
+            return f"pick {number} lapsed, but {len(pool)} rows were eligible"
+        shown = []
+        for draw, got in enumerate(offered):
+            cards = boon_cards(seed, number, draw, pool, legend_weight, shown)
+            if got != cards:
+                return f"pick {number} draw {draw} offers {got}, but seed {seed} draws {cards}"
+            shown = cards
+        used += max(0, len(offered) - 1)
+        taken = pick.get("taken")
+        if taken is None:
+            if offered and number < len(picks):
+                return f"pick {number} took nothing, yet a later pick was offered"
+            continue
+        if not shown or taken not in shown:
+            return f"pick {number} took {taken!r}, which the last draw {shown} did not show"
+        if not _is_int(pick.get("takenBeforeWave")) or pick["takenBeforeWave"] < 1:
+            return f"pick {number} has no takenBeforeWave"
+        owned.append(taken)
+    cleared = report_json.get("wavesCleared")
+    if isinstance(cleared, int) and not isinstance(cleared, bool):
+        owed = cleared // BOON_FROM_CLEARS
+        last = picks[-1] if picks else None
+        still_open = isinstance(last, dict) and last.get("taken") is None and bool(last.get("offered"))
+        if len(picks) > owed or (len(picks) < owed and not still_open):
+            return f"{len(picks)} picks were listed, but {cleared} clears owe {owed}"
+    rerolls = report_json.get("rerolls")
+    if not isinstance(rerolls, dict) or not all(_is_int(rerolls.get(k)) for k in ("earned", "used", "banked")):
+        return "the report's rerolls block is missing or not whole numbers"
+    if rerolls["used"] != used:
+        return f"rerolls.used is {rerolls['used']}, but the picks show {used} rerolled draws"
+    if rerolls["earned"] - rerolls["used"] != rerolls["banked"] or not 0 <= rerolls["banked"] <= BOON_MAX_BANK:
+        return f"rerolls earned {rerolls['earned']} less used {rerolls['used']} is not the bank {rerolls['banked']}, or the bank is outside 0 to {BOON_MAX_BANK}"
+    start = report_json.get("startRerolls")
+    if _is_int(start) and rerolls["earned"] < min(max(start, 0), BOON_MAX_BANK):
+        return f"rerolls.earned is {rerolls['earned']}, less than the start bank of {start}"
+    if _is_int(start) and isinstance(cleared, int) and not isinstance(cleared, bool) and rerolls["earned"] > min(start, BOON_MAX_BANK) + cleared // BOON_REROLL_EVERY:
+        return f"rerolls.earned is {rerolls['earned']}, more than a start bank of {start} and {cleared // BOON_REROLL_EVERY} fifth clears give"
+    return None
+
+
+def affix_cut(report_json, wave, rows=None):
+    """The affixes the boons taken before this wave cut from its schedule (zero or negative): the affixCount of each boon of the report's boons[] whose
+    takenBeforeWave is this wave or earlier. A pick that took nothing, or names a boon the file does not hold, cuts nothing."""
+    picks = report_json.get("boons")
+    if not isinstance(picks, list):
+        return 0
+    by_id = {row["id"]: row for row in (shipped_boons()[0] if rows is None else rows)}
+    cut = 0
+    for pick in picks:
+        if isinstance(pick, dict) and _is_int(pick.get("takenBeforeWave")) and pick["takenBeforeWave"] <= wave and pick.get("taken") in by_id:
+            cut += by_id[pick["taken"]]["cut"]
+    return cut
+
+
+def reached_boons(report_json):
+    """True when the report lists a pick: the director wrote a boon check for it, unless the run ended with the pick still open."""
+    picks = report_json.get("boons")
+    return isinstance(picks, list) and any(isinstance(p, dict) and p.get("taken") is not None for p in picks)
+
+
+def owes_boon(report_json):
+    """The boon check is owed once a pick was taken, or more than three waves were cleared: a pick is owed at the third clear and the bot takes it in the
+    intermission after it, which a run that stops at that clear (--waves 3) never reaches."""
+    cleared = report_json.get("wavesCleared")
+    return reached_boons(report_json) or (_is_int(cleared) and cleared > BOON_FROM_CLEARS)
+
+
+def owes_reroll(report_json):
+    """The reroll check is owed once a reroll was spent, or a pick was open in an intermission with one banked (the bot spends the first banked reroll it ever holds on the first offer)."""
+    rerolls = report_json.get("rerolls")
+    if isinstance(rerolls, dict) and _is_int(rerolls.get("used")) and rerolls["used"] > 0:
+        return True
+    cleared, start = report_json.get("wavesCleared"), report_json.get("startRerolls")
+    return _is_int(cleared) and cleared > BOON_FROM_CLEARS and _is_int(start) and start >= 1
 
 
 def reached_affixes(report_json):
@@ -280,6 +444,9 @@ def judge(done, report_json, log_text=None):
     mismatch = affix_problem(report_json)
     if mismatch:
         return 1, f"the report's affixes do not replay from its seed: {mismatch}"
+    mismatch = boon_problem(report_json)
+    if mismatch:
+        return 1, f"the report's boons do not replay from its seed: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -313,6 +480,10 @@ def judge(done, report_json, log_text=None):
     owes_affix = reached_affixes(report_json) or (isinstance(cleared_waves, int) and not isinstance(cleared_waves, bool) and cleared_waves >= AFFIX_FROM_CLEARS)
     if not lose and owes_affix and AFFIX_CHECK not in required:
         required = required + (AFFIX_CHECK,)
+    if not lose and owes_boon(report_json) and BOON_CHECK not in required:
+        required = required + (BOON_CHECK,)
+    if not lose and owes_reroll(report_json) and REROLL_CHECK not in required:
+        required = required + (REROLL_CHECK,)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)

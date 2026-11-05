@@ -161,7 +161,7 @@ internal sealed partial class LongDefeatDirector
             return;
         }
 
-        var offer = _plan.Shop.Offers.FirstOrDefault(o => o.TroopId == b.TroopId && o.PackSize == b.Count);
+        var offer = _plan.Shop.Offers.FirstOrDefault(o => o.TroopId == b.TroopId && o.PackSize + _run.Rules.PackBonus == b.Count);
         var key = offer?.Id ?? b.TroopId;
         _logger.LogInfo($"{Tag}[Shop] pack {key} count={report.Spawned} of {b.Count} on_point={report.OnPoint} overlap={overlap}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.ShopId, key, LongDefeatChecks.Shop(b.Count, report.Spawned, report.OnPoint, overlap));
@@ -183,7 +183,13 @@ internal sealed partial class LongDefeatDirector
                 break;
             case RunEventKind.Horn:
                 LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EarlyStartId, "w" + e.Wave,
-                    LongDefeatChecks.EarlyStart(_run.LastHornSecondsLeft, _run.LastHornBonus, _plan.Rules));
+                    LongDefeatChecks.EarlyStart(_run.LastHornSecondsLeft, _run.LastHornBonus, _plan.Rules, _run.Factors.EarlyGold));
+                break;
+            case RunEventKind.BoonOffered:
+            case RunEventKind.BoonLapsed:
+            case RunEventKind.BoonTaken:
+            case RunEventKind.Rerolled:
+                OnBoonEvent(e);
                 break;
             case RunEventKind.WaveCleared:
                 OnWaveCleared(e);
@@ -229,7 +235,7 @@ internal sealed partial class LongDefeatDirector
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed);
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);

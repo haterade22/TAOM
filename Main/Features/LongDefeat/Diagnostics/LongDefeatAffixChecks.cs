@@ -28,18 +28,18 @@ internal static class LongDefeatAffixChecks
     private const float AbsoluteTolerance = 1e-4f;
 
     /// <summary>
-    /// The wave's roll matches the schedule: as many powers as the schedule gives the wave, each a known power, none twice, and a name for each in the
-    /// attacker culture's table.
+    /// The wave's roll matches the schedule: as many powers as the schedule gives the wave, less what the Legend boons owned cut (<paramref name="cut"/>, zero or
+    /// negative, never below none), each a known power, none twice, and a name for each in the attacker culture's table.
     /// </summary>
-    internal static CheckVerdict Affix(AffixPlan plan, int wave, IReadOnlyList<string> rolled)
+    internal static CheckVerdict Affix(AffixPlan plan, int wave, IReadOnlyList<string> rolled, int cut = 0)
     {
-        var scheduled = plan.CountFor(wave);
+        var scheduled = Math.Max(0, plan.CountFor(wave) + cut);
         var known = rolled.All(AffixPlan.Ids.Contains);
         var distinct = rolled.Distinct().Count() == rolled.Count;
         var unnamed = rolled.Where(id => plan.NameOf(id) == null).ToList();
         var ok = rolled.Count == scheduled && known && distinct && unnamed.Count == 0;
         return LongDefeatChecks.Verdict(ok, $"w={Num(wave)} count={Num(rolled.Count)} scheduled={Num(scheduled)} powers={string.Join(",", rolled)} "
-            + $"known={Flag(known)} distinct={Flag(distinct)} unnamed={(unnamed.Count == 0 ? "none" : string.Join(",", unnamed))}");
+            + $"known={Flag(known)} distinct={Flag(distinct)} unnamed={(unnamed.Count == 0 ? "none" : string.Join(",", unnamed))} cut={Num(cut)}");
     }
 
     /// <summary>The driven properties a power is expected to change, with the arithmetic the engine's applier uses. Empty for a power with no stat effect (yet).</summary>

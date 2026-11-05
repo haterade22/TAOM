@@ -15,7 +15,7 @@ internal sealed partial class LongDefeatDirector
         if (rolled.Count == 0 && _plan.Affixes.CountFor(wave) == 0)
             return;
 
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.AffixId, "w" + wave, LongDefeatAffixChecks.Affix(_plan.Affixes, wave, rolled));
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.AffixId, "w" + wave, LongDefeatAffixChecks.Affix(_plan.Affixes, wave, rolled, _run.AffixCut));
         _logger.LogInfo($"{Tag}[Affix] w{wave} {string.Join(", ", rolled.Select(id => id + " (" + PlainName(_plan.Affixes.NameOf(id) ?? id) + ")"))}");
         _affixesToRead = _effects != null && rolled.Any(id => LongDefeatAffixChecks.Expectations(_plan.Affixes, id).Count > 0);
     }

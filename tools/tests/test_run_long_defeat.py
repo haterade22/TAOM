@@ -55,8 +55,10 @@ def log_of(names, waves, stamp=None):
 
 
 # A run that clears 5 waves reached wave 5, which carries an affix, so it also owes the affix check (ld.AFFIX_FROM_CLEARS), and a report row with
-# a power the game reads back owes an affix-effect line too.
-STANDARD = ld.REQUIRED_CHECKS + ("affix", "affix-effect")
+# a power the game reads back owes an affix-effect line too. A run that cleared 3 waves was owed a pick, which the bot takes in the next intermission: it owes the
+# boon check (ld.BOON_FROM_CLEARS). The reroll check is owed only when the report says a reroll was banked or spent.
+BOONED = ld.REQUIRED_CHECKS + ("boon",)
+STANDARD = BOONED + ("affix", "affix-effect")
 FULL_LOG = log_of(STANDARD, 5)
 LOSE_LOG = log_of(ld.LOSE_CHECKS, 0)
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
@@ -513,7 +515,8 @@ class ManifestTests(unittest.TestCase):
         lines = self.fixture_lines()
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
-            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect"):
+            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
+                          "taom.long-defeat.boon", "taom.long-defeat.reroll"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -887,7 +890,7 @@ class AffixJudgeTests(unittest.TestCase):
 
     def test_a_run_that_cleared_five_waves_owes_the_affix_check(self):
         report = self.report(cleared=5)
-        code, why = ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 5))
+        code, why = ld.judge(FINAL, report, log_of(BOONED, 5))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.affix", why)
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0)
@@ -896,7 +899,7 @@ class AffixJudgeTests(unittest.TestCase):
         # The plan says "4 or more clears", which would fail a --waves 4 run: the check is written when a wave with affixes starts.
         ld.target_waves = 4
         self.assertEqual(ld.AFFIX_FROM_CLEARS, 5)
-        self.assertEqual(ld.judge(FINAL, self.report(cleared=4), log_of(ld.REQUIRED_CHECKS, 4))[0], 0)
+        self.assertEqual(ld.judge(FINAL, self.report(cleared=4), log_of(BOONED, 4))[0], 0)
 
     def test_a_report_showing_a_wave_with_affixes_owes_the_check_whatever_it_cleared(self):
         # --start-wave 5 --waves 1: one clear, but the wave carried an affix.
@@ -961,7 +964,7 @@ class AffixJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, self.report(rows=rows, boons=[{"pick": 1}]), FULL_LOG)[0], 1)
 
     def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
-        without = log_of(ld.REQUIRED_CHECKS + ("affix",), 5)
+        without = log_of(BOONED + ("affix",), 5)
         # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
         seeds = {"discipline": 0, "hide": 2, "lash": 3, "eye": 8, "drums": 9}
         for power, seed in seeds.items():
@@ -974,7 +977,7 @@ class AffixJudgeTests(unittest.TestCase):
         self.assertEqual(sorted(seeds), sorted(ld.AFFIX_EFFECT_IDS))
 
     def test_the_effect_line_may_be_a_pass_or_a_skip_but_a_fail_fails_the_run(self):
-        base = log_of(ld.REQUIRED_CHECKS + ("affix",), 5)
+        base = log_of(BOONED + ("affix",), 5)
         line = "\n[2026-11-04 10:00:00] [INFO] [Check] id=taom.long-defeat.affix-effect result={} power=hide troop=x"
         self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("pass"))[0], 0)
         self.assertEqual(ld.judge(FINAL, self.report(), base + line.format("skip"))[0], 0, "an unarmoured soldier cannot show hide: still read")
@@ -1016,12 +1019,14 @@ class PhaseTwoJudgeTests(unittest.TestCase):
     def test_an_armed_option_must_come_back_in_the_report(self):
         ld.expected_report = {"seed": 7, "startWave": 3, "startRerolls": 1}
         good = {**REPORT, "seed": 7, "startWave": 3, "startRerolls": 1}
-        self.assertEqual(ld.judge(FINAL, good, FULL_LOG)[0], 0)
+        # One reroll banked and 5 waves cleared: the bot spent it at its first pick, so the reroll check is owed too.
+        log = log_of(STANDARD + ("reroll",), 5)
+        self.assertEqual(ld.judge(FINAL, good, log)[0], 0)
         for key in ("seed", "startWave", "startRerolls"):
-            code, why = ld.judge(FINAL, {**good, key: 99}, FULL_LOG)
+            code, why = ld.judge(FINAL, {**good, key: 99}, log)
             self.assertEqual(code, 1, key)
             self.assertIn(key, why)
-            self.assertEqual(ld.judge(FINAL, {k: v for k, v in good.items() if k != key}, FULL_LOG)[0], 1, key + " missing")
+            self.assertEqual(ld.judge(FINAL, {k: v for k, v in good.items() if k != key}, log)[0], 1, key + " missing")
 
     def test_a_seed_of_zero_is_still_checked(self):
         ld.expected_report = {"seed": 0}
@@ -1075,7 +1080,7 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_the_deep_run_lists_scale_once(self):
         report = {**REPORT, "waves": [wave_row(12, healthFactor=1.1)]}
-        self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave", "affix-effect"), 5))[0], 0)
+        self.assertEqual(ld.judge({**FINAL, "expect": "deep"}, report, log_of(ld.DEEP_CHECKS + ("wave", "affix-effect", "boon"), 5))[0], 0)
         self.assertEqual(ld.DEEP_CHECKS.count("scale"), 1)
 
     def test_every_run_must_report_start_wave_one_unless_it_armed_another(self):
@@ -1141,11 +1146,13 @@ class DeepJudgeTests(unittest.TestCase):
         self.assertEqual(ld.DEEP_CHECKS, ("boot", "general", "class", "commander", "affix", "scale", "end"))
 
     def test_a_final_deep_run_needs_the_deep_list_and_the_wave_lines_but_not_the_standard_list(self):
-        log = log_of(ld.DEEP_CHECKS + ("wave",), 4)
+        # Four clears owed a pick at the third, so the boon check is owed too (ld.BOON_FROM_CLEARS).
+        log = log_of(ld.DEEP_CHECKS + ("wave", "boon"), 4)
         report = {**REPORT, "wavesCleared": 4}
         code, why = ld.judge(self.DEEP, report, log)
         self.assertEqual(code, 0, why)
-        self.assertEqual(ld.judge(self.DEEP, report, log_of(ld.DEEP_CHECKS + ("wave",), 3))[0], 1, "four waves cleared, three wave lines")
+        self.assertEqual(ld.judge(self.DEEP, report, log_of(ld.DEEP_CHECKS + ("wave", "boon"), 3))[0], 1, "four waves cleared, three wave lines")
+        self.assertEqual(ld.judge(self.DEEP, report, log_of(ld.DEEP_CHECKS + ("wave",), 4))[0], 1, "a pick was owed and no boon check was written")
 
     def test_a_lost_deep_run_passes_without_a_cleared_wave(self):
         log = log_of(ld.DEEP_CHECKS, 0)
@@ -1302,3 +1309,322 @@ class PhaseTwoArmTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# The pinned boon draws over the shipped boons.json (twelve rows at Slice 4): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
+# pick 2 after taking stout_hearts_at_the_gate from draw 1. The same rows are pinned in LongDefeatShippedConfigTests.cs, so the bot's replay cannot drift from
+# the game. They move when a later slice adds rows to boons.json, and both suites move with them.
+BOON_PINNED = (
+    (1, 1, 0, ["granary_stores", "glittering_caves_refuge", "weregild_of_the_mark"]),
+    (1, 1, 1, ["stout_hearts_at_the_gate", "the_long_watch", "haggler_of_edoras"]),
+    (1, 1, 2, ["granary_stores", "weregild_of_the_mark", "healers_of_the_hold"]),
+)
+BOON_PINNED_SECOND = (1, 2, 0, ["light_of_the_phial", "riddermark_levy", "haggler_of_edoras"])
+
+
+def boon_pool(owned=()):
+    rows, weight = ld.shipped_boons()
+    return [r for r in rows if r["category"] in ld.BOON_FREE_CATEGORIES and r["id"] not in owned], weight
+
+
+def boon_picks(seed=1, rerolls=1, take=None):
+    """The boons[] a game would report for one pick drawn from this seed with `rerolls` rerolls, taking `take` (a card of the last draw) or the first."""
+    pool, weight = boon_pool()
+    draws, shown = [], []
+    for draw in range(rerolls + 1):
+        shown = ld.boon_cards(seed, 1, draw, pool, weight, shown)
+        draws.append(shown)
+    return [{"pick": 1, "wave": 3, "offered": draws, "taken": take or draws[-1][0], "takenBeforeWave": 4}]
+
+
+class BoonReplayTests(unittest.TestCase):
+
+    def test_the_python_draw_gives_the_pinned_cards(self):
+        pool, weight = boon_pool()
+        shown = []
+        for seed, pick, draw, cards in BOON_PINNED:
+            shown = ld.boon_cards(seed, pick, draw, pool, weight, shown)
+            self.assertEqual(shown, cards, (seed, pick, draw))
+        taken = BOON_PINNED[1][3][0]
+        pool, weight = boon_pool(owned=(taken,))
+        seed, pick, draw, cards = BOON_PINNED_SECOND
+        self.assertEqual(ld.boon_cards(seed, pick, draw, pool, weight, []), cards)
+
+    def test_every_pinned_draw_is_also_pinned_in_the_csharp_test(self):
+        text = (REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Config" / "LongDefeatShippedConfigTests.cs").read_text(encoding="utf-8")
+        for _, _, _, cards in BOON_PINNED + (BOON_PINNED_SECOND,):
+            self.assertIn("new[] { " + ", ".join(f'"{c}"' for c in cards) + " }", text, cards)
+
+    def test_the_draw_rules_are_the_games(self):
+        deck = source("Domain", "BoonDeck.cs")
+        self.assertIn("OfferStream", deck)
+        self.assertEqual(2, int(re.search(r"OfferStream = (\d+)", source("Domain", "RunRandom.cs")).group(1)))
+        for name, value in (("PickEvery", ld.BOON_FROM_CLEARS), ("RerollEvery", ld.BOON_REROLL_EVERY), ("MaxBank", ld.BOON_MAX_BANK), ("CardCount", ld.BOON_CARDS)):
+            self.assertEqual(value, int(re.search(rf"{name} = (\d+)", deck).group(1)), name)
+        self.assertEqual(ld.BOON_ROW_WEIGHT, int(re.search(r"RowWeight = (\d+)", source("Domain", "BoonPlan.cs")).group(1)))
+
+    def test_a_reroll_leaves_out_the_cards_just_shown_unless_fewer_than_three_others_remain(self):
+        pool = [{"id": c, "category": "warchest", "class": "", "cut": 0} for c in "abcd"]
+        first = ld.boon_cards(1, 1, 0, pool, 1, [])
+        again = ld.boon_cards(1, 1, 1, pool, 1, first)
+        self.assertEqual(first, ["a", "d", "c"])
+        self.assertEqual(again, ["d", "c", "a"], "one other row is fewer than three, so nothing is left out")
+        wide = [{"id": c, "category": "warchest", "class": "", "cut": 0} for c in "abcdefgh"]
+        shown = ld.boon_cards(1, 1, 0, wide, 1, [])
+        self.assertTrue(set(shown).isdisjoint(ld.boon_cards(1, 1, 1, wide, 1, shown)))
+
+    def test_a_legend_row_weighs_its_legend_weight(self):
+        pool = [{"id": "a", "category": "warchest", "class": "", "cut": 0}, {"id": "L", "category": "legend", "class": "", "cut": -1}]
+        heavy = sum("L" in ld.boon_cards(seed, 1, 0, pool, 90, [])[:1] for seed in range(200))
+        light = sum("L" in ld.boon_cards(seed, 1, 0, pool, 1, [])[:1] for seed in range(200))
+        self.assertGreater(heavy, 120)
+        self.assertLess(light, 60)
+
+    def test_the_shipped_file_reads_row_for_row_with_its_cuts(self):
+        rows, weight = ld.shipped_boons()
+        self.assertEqual(weight, 1)
+        self.assertEqual([r["id"] for r in rows], [b["id"] for b in json.loads(ld.BOON_FILE.read_text(encoding="utf-8"))["boons"]])
+        self.assertEqual({r["id"]: r["cut"] for r in rows if r["cut"]}, {"light_of_the_phial": -1, "riders_at_dawn": -2})
+
+    def test_a_missing_or_malformed_file_has_no_rows(self):
+        for text in (None, "[]", "{not json"):
+            with tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / "boons.json"
+                if text is not None:
+                    path.write_text(text, encoding="utf-8")
+                self.assertEqual(ld.shipped_boons(path), ([], 1))
+
+    def test_no_shipped_row_needs_the_garrison_yet(self):
+        rows, _ = ld.shipped_boons()
+        self.assertTrue(all(r["category"] in ld.BOON_FREE_CATEGORIES for r in rows), "a troop row needs the replay extended first (boon_problem refuses it)")
+
+    def test_a_replayed_pick_with_a_reroll_passes(self):
+        report = {"seed": 1, "wavesCleared": 5, "startRerolls": 1, "boons": boon_picks(1, rerolls=1), "rerolls": {"earned": 2, "used": 1, "banked": 1}}
+        self.assertIsNone(ld.boon_problem(report))
+
+    def test_a_card_that_the_seed_does_not_draw_fails_naming_the_draw(self):
+        picks = boon_picks(1, rerolls=1)
+        picks[0]["offered"][1] = ["riddermark_levy", "the_long_watch", "haggler_of_edoras"]
+        report = {"seed": 1, "wavesCleared": 5, "boons": picks, "rerolls": {"earned": 2, "used": 1, "banked": 1}}
+        problem = ld.boon_problem(report)
+        self.assertIn("pick 1 draw 1", problem)
+        self.assertIn("stout_hearts_at_the_gate", problem)
+
+    def test_a_taken_card_that_was_never_shown_fails(self):
+        picks = boon_picks(1, rerolls=0)
+        picks[0]["taken"] = "riders_at_dawn"
+        problem = ld.boon_problem({"seed": 1, "wavesCleared": 3, "boons": picks, "rerolls": {"earned": 0, "used": 0, "banked": 0}})
+        self.assertIn("did not show", problem)
+
+    def test_a_pick_with_no_takenBeforeWave_or_out_of_order_fails(self):
+        picks = boon_picks(1, rerolls=0)
+        base = {"seed": 1, "wavesCleared": 3, "rerolls": {"earned": 0, "used": 0, "banked": 0}}
+        self.assertIn("takenBeforeWave", ld.boon_problem({**base, "boons": [{**picks[0], "takenBeforeWave": None}]}))
+        self.assertIn("pick 1", ld.boon_problem({**base, "boons": [{**picks[0], "pick": 2}]}))
+
+    def test_a_second_pick_is_drawn_over_the_boons_taken_before_it(self):
+        pool, weight = boon_pool()
+        first = boon_picks(1, rerolls=0)
+        taken = first[0]["taken"]
+        pool2, _ = boon_pool(owned=(taken,))
+        second = {"pick": 2, "wave": 6, "offered": [ld.boon_cards(1, 2, 0, pool2, weight, [])], "taken": None, "takenBeforeWave": 0}
+        report = {"seed": 1, "wavesCleared": 6, "boons": first + [second], "rerolls": {"earned": 1, "used": 0, "banked": 1}}
+        self.assertIsNone(ld.boon_problem(report))
+        second["offered"] = [ld.boon_cards(1, 2, 0, pool, weight, [])]
+        self.assertIn("pick 2 draw 0", ld.boon_problem(report) or "")
+
+    def test_only_the_last_pick_may_be_left_open(self):
+        first = {**boon_picks(1, rerolls=0)[0], "taken": None, "takenBeforeWave": 0}
+        problem = ld.boon_problem({"seed": 1, "wavesCleared": 6, "boons": [first, {**first, "pick": 2}], "rerolls": {"earned": 0, "used": 0, "banked": 0}})
+        self.assertIn("took nothing", problem)
+
+    def test_a_lapsed_pick_is_only_honest_when_no_row_was_eligible(self):
+        lapsed = {"pick": 1, "wave": 3, "offered": [], "taken": None, "takenBeforeWave": 0}
+        problem = ld.boon_problem({"seed": 1, "wavesCleared": 3, "boons": [lapsed], "rerolls": {"earned": 0, "used": 0, "banked": 0}})
+        self.assertIn("lapsed", problem)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "boons.json"
+            path.write_text('{"boons": []}', encoding="utf-8")
+            self.assertIsNone(ld.boon_problem({"seed": 1, "wavesCleared": 3, "boons": [lapsed], "rerolls": {"earned": 0, "used": 0, "banked": 0}}, path))
+
+    def test_two_lapsed_picks_in_a_row_replay_when_no_row_was_eligible(self):
+        lapsed = {"pick": 1, "wave": 3, "offered": [], "taken": None, "takenBeforeWave": 0}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "boons.json"
+            path.write_text('{"boons": []}', encoding="utf-8")
+            report = {"seed": 1, "wavesCleared": 6, "boons": [lapsed, {**lapsed, "pick": 2, "wave": 6}], "rerolls": {"earned": 1, "used": 0, "banked": 1}}
+            self.assertIsNone(ld.boon_problem(report, path))
+
+    def test_more_picks_than_the_clears_owe_fails(self):
+        problem = ld.boon_problem({"seed": 1, "wavesCleared": 2, "boons": boon_picks(1, rerolls=0), "rerolls": {"earned": 0, "used": 0, "banked": 0}})
+        self.assertIn("owe 0", problem)
+
+    def test_a_report_that_lists_fewer_picks_than_its_clears_owe_fails(self):
+        books = {"earned": 1, "used": 0, "banked": 1}
+        self.assertIn("owe 1", ld.boon_problem({"seed": 1, "wavesCleared": 5, "boons": [], "rerolls": books}))
+        first = boon_picks(1, rerolls=0)
+        self.assertIn("owe 2", ld.boon_problem({"seed": 1, "wavesCleared": 6, "boons": first, "rerolls": {"earned": 1, "used": 0, "banked": 1}}))
+
+    def test_fewer_picks_than_the_clears_owe_is_honest_while_the_last_pick_is_still_open(self):
+        open_first = [{**boon_picks(1, rerolls=0)[0], "taken": None, "takenBeforeWave": 0}]
+        books = {"earned": 1, "used": 0, "banked": 1}
+        self.assertIsNone(ld.boon_problem({"seed": 1, "wavesCleared": 6, "boons": open_first, "rerolls": books}), "pick 2 waits behind the open pick 1")
+
+    def test_earned_below_the_start_bank_fails(self):
+        picks = boon_picks(1, rerolls=0)
+        problem = ld.boon_problem({"seed": 1, "wavesCleared": 3, "startRerolls": 2, "boons": picks, "rerolls": {"earned": 1, "used": 0, "banked": 1}})
+        self.assertIn("less than the start bank", problem)
+
+    def test_the_reroll_books_must_add_up(self):
+        picks = boon_picks(1, rerolls=1)
+        base = {"seed": 1, "wavesCleared": 5, "startRerolls": 1, "boons": picks}
+        self.assertIn("rerolls.used", ld.boon_problem({**base, "rerolls": {"earned": 2, "used": 0, "banked": 2}}))
+        self.assertIn("not the bank", ld.boon_problem({**base, "rerolls": {"earned": 2, "used": 1, "banked": 0}}))
+        self.assertIn("outside 0 to 3", ld.boon_problem({**base, "rerolls": {"earned": 5, "used": 1, "banked": 4}}))
+        self.assertIn("more than a start bank", ld.boon_problem({**base, "startRerolls": 0, "rerolls": {"earned": 3, "used": 1, "banked": 2}}))
+        self.assertIn("rerolls block", ld.boon_problem({**base, "rerolls": None}))
+
+    def test_a_report_with_no_boons_list_or_seed_has_nothing_to_replay(self):
+        self.assertIsNone(ld.boon_problem({"seed": 1}))
+        self.assertIsNone(ld.boon_problem({"boons": []}))
+        self.assertIsNone(ld.boon_problem({"seed": True, "boons": []}))
+
+    def test_a_class_row_is_eligible_for_its_own_class_only(self):
+        rows = [{"id": "w", "category": "warchest", "class": "", "cut": 0}, {"id": "a", "category": "class", "class": "archer", "cut": 0}]
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "boons.json"
+            path.write_text(json.dumps({"boons": [{"id": r["id"], "category": r["category"], "class": r["class"]} for r in rows]}), encoding="utf-8")
+            archer = {"seed": 1, "class": "archer", "wavesCleared": 3, "rerolls": {"earned": 0, "used": 0, "banked": 0}}
+            both = [ld.boon_cards(1, 1, 0, rows, 1, [])]
+            only = [ld.boon_cards(1, 1, 0, rows[:1], 1, [])]
+            self.assertIsNone(ld.boon_problem({**archer, "boons": [{"pick": 1, "offered": both, "taken": both[0][0], "takenBeforeWave": 4}]}, path))
+            self.assertIsNone(ld.boon_problem({**archer, "class": "", "boons": [{"pick": 1, "offered": only, "taken": "w", "takenBeforeWave": 4}]}, path))
+
+    def test_a_troop_category_row_is_refused_until_the_replay_reads_the_garrison(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "boons.json"
+            path.write_text(json.dumps({"boons": [{"id": "x", "category": "cavalry"}]}), encoding="utf-8")
+            self.assertIn("troop category", ld.boon_problem({"seed": 1, "boons": []}, path))
+
+
+class BoonJudgeTests(unittest.TestCase):
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, picks=None, cleared=5, **more):
+        picks = boon_picks(1, rerolls=1) if picks is None else picks
+        used = sum(max(0, len(p["offered"]) - 1) for p in picks)
+        return {**REPORT, "seed": 1, "wavesCleared": cleared, "startRerolls": 1, "boons": picks, "rerolls": {"earned": 1 + cleared // 5, "used": used, "banked": 1 + cleared // 5 - used},
+                "waves": [wave_row(w, 1) for w in range(1, cleared + 1)], **more}
+
+    def test_a_run_that_cleared_four_waves_owes_the_boon_check(self):
+        ld.target_waves = 4
+        report = self.report(cleared=4)
+        code, why = ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("reroll",), 4))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.boon", why)
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS + ("boon", "reroll"), 4))[0], 0)
+
+    def test_a_run_that_stops_at_the_third_clear_never_sees_the_intermission_and_owes_neither(self):
+        # --waves 3: the pick opens at the clear that ends the run, so the bot has no intermission to take it in.
+        ld.target_waves = 3
+        report = self.report(picks=[{"pick": 1, "wave": 3, "offered": [boon_picks(1, rerolls=0)[0]["offered"][0]], "taken": None, "takenBeforeWave": 0}], cleared=3,
+                             rerolls={"earned": 1, "used": 0, "banked": 1})
+        self.assertIsNone(ld.boon_problem(report))
+        self.assertFalse(ld.owes_boon(report))
+        self.assertFalse(ld.owes_reroll(report))
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 3))[0], 0)
+
+    def test_a_run_that_cleared_two_owes_neither(self):
+        ld.target_waves = 2
+        report = {**REPORT, "wavesCleared": 2, "startRerolls": 1, "waves": [wave_row(1, 7), wave_row(2, 7)]}
+        self.assertEqual(ld.judge(FINAL, report, log_of(ld.REQUIRED_CHECKS, 2))[0], 0)
+
+    def test_a_banked_reroll_at_the_first_pick_owes_the_reroll_check(self):
+        report = self.report()
+        code, why = ld.judge(FINAL, report, log_of(STANDARD, 5))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.reroll", why)
+        self.assertNotIn("taom.long-defeat.boon,", why)
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("reroll",), 5))[0], 0)
+
+    def test_a_run_armed_with_no_reroll_that_spent_none_owes_no_reroll_check(self):
+        picks = boon_picks(1, rerolls=0)
+        report = self.report(picks=picks, startRerolls=0, rerolls={"earned": 1, "used": 0, "banked": 1})
+        ld.expected_report = {"startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD, 5))[0], 0)
+        self.assertFalse(ld.owes_reroll(report))
+
+    def test_boons_that_do_not_replay_fail_the_run_naming_the_draw(self):
+        picks = boon_picks(1, rerolls=1)
+        picks[0]["offered"][0] = ["riders_at_dawn", "the_long_watch", "haggler_of_edoras"]
+        code, why = ld.judge(FINAL, self.report(picks=picks), log_of(STANDARD + ("reroll",), 5))
+        self.assertEqual(code, 1)
+        self.assertIn("boons do not replay", why)
+        self.assertIn("draw 0", why)
+
+    def test_a_lose_run_is_not_asked_for_either(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False}
+        self.assertEqual(ld.judge(lost, report, LOSE_LOG)[0], 0)
+
+
+class BoonAffixCutTests(unittest.TestCase):
+    """A Legend boon that cuts a roll is allowed on the wave it was taken before, and after it, and nowhere else (the Slice 3 note on the Slice 4 row)."""
+
+    SEED = 3
+
+    def report(self, rows):
+        picks = [{"pick": 1, "wave": 8, "offered": [["light_of_the_phial"]], "taken": "light_of_the_phial", "takenBeforeWave": 11}]
+        return {"seed": self.SEED, "waves": rows, "boons": picks}
+
+    def row(self, wave, cut=0):
+        scheduled = ld.affix_count(ld.shipped_affix_schedule(), wave)
+        return {"wave": wave, "affixes": ld.affix_roll(self.SEED, wave, scheduled)[:max(0, scheduled + cut)]}
+
+    def test_the_cut_applies_from_the_wave_the_boon_was_taken_before(self):
+        report = self.report([self.row(10), self.row(11, -1), self.row(12, -1)])
+        self.assertIsNone(ld.affix_problem(report))
+        self.assertEqual(ld.affix_cut(report, 10), 0)
+        self.assertEqual(ld.affix_cut(report, 11), -1)
+        self.assertEqual(ld.affix_cut(report, 30), -1)
+
+    def test_a_row_before_the_boon_that_is_cut_fails(self):
+        report = self.report([self.row(10, -1)])
+        self.assertIn("wave 10", ld.affix_problem(report))
+
+    def test_a_row_after_the_boon_that_is_not_cut_fails(self):
+        report = self.report([self.row(11)])
+        self.assertIn("wave 11", ld.affix_problem(report))
+        self.assertIn("cut of -1", ld.affix_problem(report))
+
+    def test_the_cut_shortens_the_roll_the_game_took_not_the_schedule_count(self):
+        # A schedule row can ask for 8 while the pool holds 5: the game rolls 5 and the cut leaves 4.
+        report = self.report([{"wave": 11, "affixes": ld.affix_roll(self.SEED, 11, 8)[:4]}])
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "affixes.json"
+            path.write_text('{"schedule": [{"fromWave": 1, "count": 8}]}', encoding="utf-8")
+            with mock.patch.object(ld, "AFFIX_FILE", path):
+                self.assertIsNone(ld.affix_problem(report))
+
+    def test_a_cut_is_a_prefix_of_the_roll_and_never_below_none(self):
+        full = ld.affix_roll(self.SEED, 11, 2)
+        self.assertEqual(self.row(11, -1)["affixes"], full[:1])
+        self.assertEqual(self.row(11, -5)["affixes"], [])
+
+    def test_a_pick_that_took_nothing_or_names_an_unknown_boon_cuts_nothing(self):
+        for taken in (None, "not_a_boon"):
+            report = {"seed": self.SEED, "waves": [self.row(11)], "boons": [{"pick": 1, "taken": taken, "takenBeforeWave": 4}]}
+            self.assertEqual(ld.affix_cut(report, 11), 0)
+            self.assertIsNone(ld.affix_problem(report))
+
+    def test_the_two_legend_cuts_stack(self):
+        picks = [{"pick": 1, "taken": "light_of_the_phial", "takenBeforeWave": 11}, {"pick": 2, "taken": "riders_at_dawn", "takenBeforeWave": 14}]
+        report = {"seed": self.SEED, "boons": picks}
+        self.assertEqual((ld.affix_cut(report, 13), ld.affix_cut(report, 14)), (-1, -3))
