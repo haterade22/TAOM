@@ -48,6 +48,8 @@
 
 Skill-inline (not in `.claude/hooks/`): `check-freeze.sh` — PreToolUse (Edit|Write) declared in the `/freeze` + `/investigate` SKILL.md frontmatter; blocks edits outside the frozen directory while one of those skills is active. Fires only during skill invocation (`harness-facts.md` "Hook lifecycle").
 
+Status line (not a hook): `.claude/statusline.sh` renders `ctx: N% | model | branch | Ns/Nu/Nt` (staged, unstaged and untracked counts, omitted when clean). It is registered under `statusLine` in `settings.json` by a relative path, which is safe because it gates nothing.
+
 ## Git hooks (every committer)
 
 The hooks above run only for the commands Claude runs. The repository's own git hooks live in the
