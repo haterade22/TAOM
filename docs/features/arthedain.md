@@ -104,14 +104,37 @@ its royal house fly the crown of Arnor (11004); the White Tree (11000) is clan 5
 ### Troop tree
 
 Levy (basic, L6) to Spearman, Fornost Footman, Fornost Shieldman, Fornost Guard and Warden of
-Fornost (L31). Dúnadan Youth (elite basic, L11) splits three ways: Rangers (Ranger of the North to
-Ranger Captain, L31), the Citadel (Dúnadan Squire to King's Guard of Fornost, the one tier-7
-capstone at L36) and a short cavalry branch (Outrider, Lancer). Four militia troops (the veterans
+Fornost (L31), who upgrades to the Evendim Warden (L36). Dúnadan Youth (elite basic, L11) splits
+three ways: Rangers (Ranger of the North to Ranger Captain, L31, then the Dunedain Steel Bowman,
+L36), the Citadel (Dúnadan Squire to King's Guard of Fornost, L36) and a short cavalry branch
+(Outrider, Lancer, then the Knight of Annuminas, L31). Four militia troops (the veterans
 at level 16, as every culture's are), and `arthedain_dunadan_youth_merc` for the tavern. Every bow
 and every archer's Bow skill is its `arthedain` ranged-ladder cell, computed by
 `tools/ranged_ladder.py`, the module the ladder tools write with. Weapons are placed by sustained DPS against the
 melee ladder, not by name: `numenorean_bastard_medium` sustains 105, above every elite blade, so no
 troop carries it.
+
+**The three elite additions (2026-11-06, from player feedback).** The Knight of Annuminas, Evendim
+Warden and Dunedain Steel Bowman are in no party template and no recruitment pool, but the engine
+reads `upgrade_targets` in two places that put them in play anyway. The AI upgrader promotes
+every AI party's Lancers, Wardens and Ranger Captains into them once they have the XP, with no
+special resource (#963). And a notable's volunteer slot grows along an upgrade edge while the troop
+is below tier 6 (`VolunteerTierService`), so the Lancer, a leaf before, now grows Knight of
+Annuminas volunteers. The three differ from their siblings in these ways:
+
+- The Evendim Warden and the Steel Bowman carry no shield on a tier 7 body. The Evendim Warden
+  opens with its poleaxe, and the engine scores a `TwoHandedPolearm` with the Polearm skill, so the
+  generator gives it the `spear` role (Polearm 270). Its bastard sidearm has two shieldless usages,
+  one-handed (OneHanded 225) and two-handed (TwoHanded 90); which one the AI draws is native and
+  not yet seen in game.
+- The Steel Bowman needs `ladder_arthedain_bow_t7`, the sixth `arthedain` bow, in the live Armory's
+  `arnor/ranged_ladder.xml`. A reinstall of the Armory drops it: run
+  `python tools/generate_ranged_ladder_items.py --apply`, then restart the game.
+- Two level 36 foot troops now share the top tier. The faction screen picks its viewport troop by
+  tier, level and then the lowest id, which would hand it to the Evendim Warden, so
+  `faction_characters.json` pins `kingdom_of_arthedain` to the King's Guard.
+- Their three names (and the bow's) are English in all 12 languages until the paid translator runs
+  (#763).
 
 ### Diplomacy
 
@@ -169,7 +192,7 @@ known-culture set in `CustomBattleCommandersProvider` (pinned to the playable cu
 
 - The Arnor armour in the live Armory (`LOTRLOME_items/arnor/`, 76 `sk_ar_art_*` items).
 - Gondor's spears, shields, lances, horses and civilian dress, which the Arnor pack does not cover.
-- The `arthedain` ranged ladder line (five `ladder_arthedain_bow_t*` items in the live Armory).
+- The `arthedain` ranged ladder line (six `ladder_arthedain_bow_t*` items in the live Armory).
 
 ## Tests
 
@@ -177,6 +200,9 @@ known-culture set in `CustomBattleCommandersProvider` (pinned to the playable cu
   (low, boundary and high rolls, pool present).
 - `TAOM.Tests/Features/CharacterCreation/ClonedCultureFlavorTests.cs`: no Gondor identity word in
   Arthedain's player-facing text.
+- Added 2026-11-06: `tools/tests/test_generate_arthedain_troops.py` (the three new edges and levels,
+  and the Evendim Warden fighting its opening poleaxe at its best melee skill) and
+  `FactionUIConfigIdsTests.FactionCharactersJson_ArthedainKey_PinsTheKingsGuard`.
 - Added by the 2026-10-07 review, each failing on the gap it names: `CareerArchetypeServiceTests`
   (every career in the data has an archetype), `ShippedRaceAbilitiesConfigTests` (Arthedain shares
   the Citadel Guard), `ArmourAcquisitionShippedDataTests` (every playable culture has a commission
@@ -241,6 +267,11 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
 
 ## Changelog
 
+- 2026-11-06 (no issue, waived by Mike): the Knight of Annuminas, Evendim Warden and Dunedain Steel
+  Bowman from player feedback; a sixth `arthedain` bow (`ladder_arthedain_bow_t7`) in the live
+  Armory; a `kingdom_of_arthedain` line in `faction_characters.json` so the faction screen keeps the
+  King's Guard. Their names and the bow's wait for their translations (#763). Review record:
+  `docs/reviews/rca-arnor-elite-troops-2026-11-06.md`.
 - 2026-10-23: the Ranger of the North's "Bowman of the Angle" group is "Dúnedain Rangers"; the
   Angle is Rhudaur's land. It waits for its translations (#763).
 - 2026-10-23 (#978 follow-up): career starting kits (`player_career_arthedain_*`, the realm's
@@ -278,11 +309,27 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
   menus, three careers, 55 starting rosters) and the playable faction card. Blue Craig gained its
   second town, Luinkrag (`town_GBC2`), in the same session.
 
+## How to verify in game (the 2026-11-06 additions)
+
+Restart the game fully first: the new troop XML and the new Armory bow load at launch. Any save or a
+new campaign works. Give the party Lancers, Wardens and Ranger Captains and enough XP through the
+cheat console.
+
+1. On the party screen, the Lancer offers the Knight of Annuminas, the Warden the Evendim Warden and
+   the Ranger Captain the Dunedain Steel Bowman. Upgrade one of each.
+2. In an encyclopedia page or a battle, the Steel Bowman's bow reads "[Arnor] Ranger's Bow VII"
+   (damage 72, missile speed 90, accuracy 93).
+3. In a field battle, the Evendim Warden spawns holding the poleaxe and no shield; the Steel Bowman
+   shoots and carries two quivers; the Knight couches its lance with a shield on a barded horse.
+   Note whether the Warden ever draws its sword and in which grip.
+4. Open the faction screen on Arthedain: the 3D viewport shows the King's Guard of Fornost.
+
 ## GitHub Issue
 
 - **Issue:** #753; #818 (the 2026-10-18 balance and start-war change); #963 (the 2026-10-21 removal of troop special-resource costs); follow-ups #754 (translations, done in `a9437a492`; the issue is still open), #755 (donor-culture market weapons),
   #756 (policy ids no kingdom can use), both resolved 2026-10-08.
-- **Status:** built and verified in data; in-game check owed (#753 checklist).
+- **Status:** built and verified in data; in-game check owed (#753 checklist, and the 2026-11-06
+  additions above, which have no issue).
 
 ---
 

@@ -12,17 +12,22 @@ from Gondor together with the templates that use them.
 
 Design (approved by Mike 2026-10-07; plan i-am-creating-a-iridescent-robin.md). Arthedain is the
 what-if northern realm in which Arvedui's line survived. It is meant to be weak in NUMBERS (low-tier
-clans, small parties, poor towns) while the Dunedain lines stay good, so the tree caps at engine
-tier 6 except one tier 7 capstone:
+clans, small parties, poor towns) while the Dunedain lines stay good, so the lord party templates
+stop at engine tier 6. Three tier 7 (L36) troops sit above them and are reached by upgrading: the
+King's Guard of Fornost, the Evendim Warden and the Dunedain Steel Bowman (the last two and the
+Knight of Annuminas added 2026-11-06 from player feedback; the engine's AI upgrader and the
+notables' volunteer growth read these edges too):
 
   Levy (basic, L6) -> Spearman -> Fornost Footman -> Fornost Shieldman -> Fornost Guard
-      -> Warden of Fornost (L31)                         spear + shield + sword, infantry armour
+      -> Warden of Fornost (L31) -> Evendim Warden (L36)  spear + shield + sword, infantry armour;
+                                                           the Evendim Warden drops the shield for a poleaxe
   Dunadan Youth (elite basic, L11) splits three ways:
       Rangers:  Ranger of the North -> Ranger -> Veteran Ranger -> Ranger Captain (L31)
+                -> Dunedain Steel Bowman (L36)
       Citadel:  Dunadan Squire -> Guard of the Citadel -> Veteran Citadel Guard
                 -> Knight of Arthedain -> King's Guard of Fornost (L36, the capstone)
-      Cavalry:  Outrider (L21) -> Lancer (L26)   short on purpose: Arthedain's horse at Fornost
-                came from Gondor and Lindon, not from its own stables
+      Cavalry:  Outrider (L21) -> Lancer (L26) -> Knight of Annuminas (L31)   short on purpose:
+                Arthedain's horse at Fornost came from Gondor and Lindon, not from its own stables
   Militia spearman / archer (L11) -> veteran militia (L21), referenced by the culture
 
 Lore: the Dunedain of the North (LOTR Appendix A I iii) kept the Numenorean arms and the long
@@ -129,7 +134,16 @@ def build():
     t.append(Troop("arthedain_warden", "Warden of Fornost", 31, "Infantry", "sword",
                    paired(("numenorean_bastard_elite_a", "numenorean_bastard_elite_b"), SHIELD_HIGH, SPEAR),
                    armour(ab("helmet_warden_elite"), ab("chest_inf_heavy"), one("grvs_inf_heavy_a"),
-                          one("bracer_noble_heavy_a"), ab("pauld_cape_inf_elite"))))
+                          one("bracer_noble_heavy_a"), ab("pauld_cape_inf_elite")),
+                   ["arthedain_evendim_warden"]))
+    # The Wardens of Evendim trade the shield for a two-handed polearm. Role spear, not twohand: Item0 is the
+    # weapon in hand at spawn, and the engine reads a TwoHandedPolearm with the Polearm skill, so the poleaxe
+    # fights at the primary curve. The bastard sidearm has a shieldless one-handed usage (OneHanded 225, the
+    # OneHandedBastardSwordAlternative description) and a two-handed one (TwoHanded 90); which the AI draws is native.
+    t.append(Troop("arthedain_evendim_warden", "Evendim Warden", 36, "Infantry", "spear",
+                   paired("numenorean_poleaxe_heavy", ("numenorean_bastard_elite_a", "numenorean_bastard_elite_b")),
+                   armour(ab("helmet_warden_elite"), ab("chest_noble_heavy"), one("grvs_noble_elite_a"),
+                          one("bracer_noble_elite_a"), ab("pauld_cape_inf_elite"))))
 
     # ---- Dunadan Youth, the three-way split ----
     t.append(Troop("arthedain_dunadan_youth", "Dunadan Youth", 11, "Infantry", "sword",
@@ -157,7 +171,13 @@ def build():
     t.append(Troop("arthedain_ranger_captain", "Ranger Captain", 31, "Ranged", "ranged",
                    same(bow(31), ARROWS, ARROWS, "numenorean_bastard_elite_b"),
                    armour(ab("helmet_noble_heavy"), ab("chest_noble_med"), one("grvs_noble_heavy_a"),
-                          one("bracer_noble_heavy_a"), ab("cape"))))
+                          one("bracer_noble_heavy_a"), ab("cape")),
+                   ["arthedain_steel_bowman"]))
+    # The ladder's tier 7 bow: the one Dunadan archer who wears the elite kit.
+    t.append(Troop("arthedain_steel_bowman", "Dunedain Steel Bowman", 36, "Ranged", "ranged",
+                   same(bow(36), ARROWS, ARROWS, "numenorean_bastard_elite_b"),
+                   armour(ab("helmet_noble_elite"), ab("chest_noble_heavy"), one("grvs_noble_elite_a"),
+                          one("bracer_noble_elite_a"), ab("cape"))))
 
     # Citadel: two-handed, never a shield. Greatsword in Item0, poleaxe in Item1 from T4.
     t.append(Troop("arthedain_squire", "Dunadan Squire", 16, "Infantry", "twohand",
@@ -199,6 +219,12 @@ def build():
                    paired(LANCE, SHIELD_HIGH, ("numenorean_bastard_elite_a", "numenorean_bastard_elite_b")),
                    armour(ab("helmet_cav_heavy"), ab("chest_noble_heavy"), one("grvs_noble_heavy_a"),
                           one("bracer_noble_heavy_a"), ab("pauld_noble_heavy")),
+                   ["arthedain_knight_of_annuminas"], horse=HORSE_HEAVY))
+    # Arnor's answer to the Swan Knights: the Lancer's lance and shield in the elite kit.
+    t.append(Troop("arthedain_knight_of_annuminas", "Knight of Annuminas", 31, "Cavalry", "cavalry",
+                   paired(LANCE, SHIELD_HIGH, ("numenorean_bastard_elite_a", "numenorean_bastard_elite_b")),
+                   armour(ab("helmet_cav_heavy"), ab("chest_noble_heavy"), one("grvs_noble_elite_a"),
+                          one("bracer_noble_elite_a"), ab("pauld_noble_elite")),
                    horse=HORSE_HEAVY))
 
     # ---- Militia, named by the culture's four militia attributes ----

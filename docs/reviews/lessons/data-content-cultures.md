@@ -2300,3 +2300,19 @@ The Lorien armour pack arrived in the live Armory with every item, mesh name and
 - **Why missed:** the armory audit and the validator check names and references, which pass without the entry. The contributor's notes said the check could not run on his machine.
 - **Prevent:** after any art drop, run `python tools/check_rdc_entries.py --under <the new folder>` and read `without-rdc`. The lotraom-assets mirror tracks the entries; copy the missing ones, or open the Armory in the Kit and save. See also `docs/reviews/lessons/animation-skeleton.md`.
 - **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F1.
+
+### Adding an upgrade edge changes more than the troop tree (Arnor elite troops, 2026-11-06)
+
+Three troops were added as upgrade targets and kept out of every party template and recruitment pool, on the reasoning that nothing else in the game would change. The engine's AI upgrader and the notables' volunteer growth both read `upgrade_targets`: every AI Lancer, Warden and Ranger Captain with the XP now upgrades into them, a former leaf now grows volunteers, and a second target on one troop sends about half of the AI lords' upgrades to whichever target the party leader's hash picks (`DefaultPartyTroopUpgradeModel.GetUpgradeChanceForTroopUpgrade`).
+
+- **Why missed:** the scope claim came from "in no template and no pool", not from a list of the readers of `UpgradeTargets`. The generator's self-check proves the tree is well formed, not what the engine does with an edge.
+- **Prevent:** before adding a troop to a tree, list the readers of the edge (AI upgrader, volunteer growth below `MaxVolunteerTier`, garrison conversion, field commission, and any "highest troop of a culture" selector such as `FactionRoster.EliteInfantry`) and write what each does with the new id. Never give a mid-tree troop a second target unless both targets lead somewhere of equal standing: put a branch at the top of a line, where the split falls between two end points.
+- **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) findings F2, F3 and F4.
+
+### A role curve must match the engine skill of the weapon in Item0 (Arnor elite troops, 2026-11-06)
+
+The Evendim Warden carried a poleaxe in Item0 on the generator's `twohand` curve (TwoHanded 270, Polearm 220). The engine scores a `TwoHandedPolearm` with Polearm, and the AI's block and parry scale with the skill of the weapon in hand, which at spawn is Item0. The tier 7 troop fought below its tier 6 source. The King's Guard uses the same curve without a problem because its Item0 is a greatsword.
+
+- **Why missed:** a role name describes a weapon family ("two-handed"), and a poleaxe is two-handed by name. No gate compares the relevant skill of Item0 with the curve; two older troops (`arthedain_squire`, `rhudaur_squire`) have the same shape.
+- **Prevent:** for every new troop read the crafting template of Item0 and map it with `WeaponComponentData.GetRelevantSkillFromWeaponClass`: polearms (and pikes) take the `spear` role, two-handed swords and axes `twohand`, one-handed blades `sword`. Pin it in the generator's test (`test_the_evendim_warden_fights_its_opening_poleaxe_at_its_best_melee_skill` is the shape).
+- **Source:** [rca-arnor-elite-troops-2026-11-06.md](../rca-arnor-elite-troops-2026-11-06.md) finding F1.

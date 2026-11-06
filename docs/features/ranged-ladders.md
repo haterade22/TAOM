@@ -199,7 +199,8 @@ names any that exists.
 
 **A line may name its own items.** A clone takes its donor's display name unless the line states
 `"names": {"Bow": "..."}`; Arthedain's rangers carry Gondor's Ithilien bows under
-"[Arnor] Ranger's Bow II" to "VI" (2026-10-07). An empty name is a spec problem.
+"[Arnor] Ranger's Bow II" to "VII" (to VI on 2026-10-07, VII added 2026-11-06 for the Dunedain Steel
+Bowman). An empty name is a spec problem.
 
 ### The Armory's own bows and ammo
 
@@ -331,7 +332,7 @@ one; `donor_stats` / `ammo_stats` / `hero_ceiling` values that are not positive 
 | rivendell | 2, 2, 2 | Bow | T2 85/49/87/105; T3 87/55/90/135; T5 91/66/93/220; T6 93/71/94/255; T7 96/81/95/320; T8 99/94/96/355; T9 102/108/97/375 |
 | ithilien | 3, 3, 4 | Bow | T7 93/78/93/305; T8 96/89/94/340; T9 99/102/95/360; T10 102/119/96/380 |
 | blackroot | 4, 4, 5 | Bow | T3 81/52/87/115; T4 83/57/89/160; T5 85/62/90/200; T6 87/66/91/235; T7 90/75/92/290; T8 93/85/93/325 |
-| arthedain | 4, 5, 4 | Bow | T2 79/44/85/85; T3 81/50/88/115; T4 83/55/90/160; T5 85/59/91/200; T6 87/64/92/235 |
+| arthedain | 4, 5, 4 | Bow | T2 79/44/85/85; T3 81/50/88/115; T4 83/55/90/160; T5 85/59/91/200; T6 87/64/92/235; T7 90/72/93/290 |
 | rhudaur | 4, 5, 4 | Bow | T2 79/44/85/85; T3 81/50/88/115; T4 83/55/90/160; T5 85/59/91/200; T6 87/64/92/235 |
 | mordor_num | 5, 5, 6 | Bow | T6 84/64/90/225; T7 87/72/91/275; T8 90/81/92/310; T9 93/91/93/330 |
 | harad | 6, 6, 3 | Bow | T2 73/43/86/65; T3 75/48/89/95; T4 77/53/91/140; T5 79/57/92/180; T6 81/61/93/215 |
