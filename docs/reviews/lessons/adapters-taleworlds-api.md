@@ -971,3 +971,36 @@ architect checks verified the same members.
 - **Prevent:** when a refactor moves or rewrites a comment that states engine behaviour, check each claim against the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>`) as if it were new text, and list an interface's implementers before writing "only".
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F4, F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A battle mount has no Origin and no Character: route every identity read, and every per-charge property, through the mount/rider pair on purpose
+`Mission.CreateHorseAgentFromRosterElements` builds the horse with `CreateAgent(..., characterObject: null)` (v1.4.8 `Mission.cs:4540`) and no `Origin`, so `mount.Character`, `mount.Origin`, and everything hanging off them (`Culture`, `HeroObject`) are null on every battle mount. Vanilla's own `UpdateHorseStats` reads `agent.RiderAgent.Character` for the Riding skill for exactly this reason. The inverse holds for the charge property: the engine reads `MountChargeDamage` off the MOUNT per hit (`AttackInformation.cs:335`, and `ChargeDamageCallback`'s attacker is the horse, `Mission.cs:6034`), so a multiplier written onto the rider's driven properties is never read. #610 shipped the per-culture charge multiplier keyed on the mount's `Character` (always 1.0) with a comment and a doc asserting the mount's Character was its rider's; the same rule, for `Origin`, had been written on 2026-06-26.
+- **Why missed:** an engine identity fact was stated from memory into a comment and a doc, never against the constructor path; the same file's `GetEffectiveMaxHealth` already hopped `RiderAgent`, and the tests passed strings to the service so no test could reach the sealed `Agent`. Second occurrence of the class.
+- **Prevent:** for any read on an agent that may be a mount, decide which half of the (mount, rider) pair holds the value by decompiling the ENGINE'S consumer or constructor, write that decision in the code comment with the line, and pin the hop at the IL level (`IlCallScanner`: `get_RiderAgent` must appear) since `Agent` is sealed. Treat "returns null for a mount" as the universal case in the tests, not an edge case.
+- **Source:** 1.5.x `docs/reviews/rca-cavalry-charge-2026-09-17.md` findings 1 and 8, #610; `rca-career-phantom-passives-2026-06-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before stating an engine call has no limit or fallback, read its native side (2026-10-15)
+
+`Mission.GetNearbyEnemyAgents` decompiles to plain native paging, and the Dread Aura's design read that as "no
+proximity-map fallback". The branch is inside the native function: `IMBMission.GetNearbyAgentsAux` searches its
+proximity grid only up to `ProximityMapMaxSearchRadius` (15.0 on the 1.5.x binary) and walks every
+agent in the mission beyond it. A radius ceiling of 30 m let every pulse from 15 to 30 m scan the whole battle,
+and the claim lived in a code comment, the feature doc and the MCM hint for two months.
+- **Why missed:** an ILSpy decompile ends at the `[EngineMethod]` call, so the managed read looked complete. A later
+  rewrite of the hint kept the clause, and two review lenses sided with the code comment; the two that ran
+  `native_decompile.py` found the branch.
+- **Prevent:** a claim that an engine call has no limit, no fallback or no cost past some size needs
+  `python tools/native_decompile.py --engine-method <Interface.Method>` on the native side, quoted beside the claim.
+  A line rewritten for another reason re-asserts every engine fact it keeps: re-verify it or drop it.
+- **Source:** 1.5.x `docs/reviews/rca-dread-aura-local-2026-10-15.md` F1; `docs/features/dread-aura.md` "Rejected seams", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine field you write must have a reader (2026-10-20)
+
+Hard Questions and Lord Courtesies "marked a lord's holdings on the map" by setting `Settlement.HasVisited`. In the v1.4.8 dump the only writer is `PlayerTownVisitCampaignBehavior` (`:1461`) and nothing reads it but the save system, in any assembly, so the reveal
+changed nothing the player could see while its line promised map marks. The engine's real map mark is
+`Campaign.Current.VisualTrackerManager.RegisterObject` (a tracked settlement's nameplate reads `CheckTracked`), and a
+tracked plate is drawn every map frame outside the cull, so mark few.
+- **Why missed:** the research confirmed the setter exists and is public; it never asked who reads the field.
+- **Prevent:** before a feature writes an engine field or property for an effect the player should see, find its
+  reader (grep the decompile dump for the member name across all assemblies) and name it in the plan. No reader means
+  no effect: use the mechanism the UI actually reads.
+- **Source:** 1.5.x `docs/reviews/rca-lord-courtesies-2026-10-20.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).

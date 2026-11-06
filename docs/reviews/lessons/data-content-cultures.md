@@ -1750,3 +1750,29 @@ The #749 lesson asked for a grep sweep of every table keyed on the scaffold cult
 - **Prevent:** when a table must cover every culture, write the test that reads the cultures from the data and fails on a missing one; a named known-gap set is allowed only with a reason and a test that it only shrinks. The recipe's "C# a kingdom touches" table lists every compiled list and its guard.
 - **On this tree:** This incident ran on the 1.5.x line, and `race_abilities.json`, `MainCultureIds` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-arthedain-2026-10-07.md` findings 2 to 4, 9 and 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A mount item's speed has consumers outside the item: the charge formula squares it and creature configs threshold it
+
+A retune of `speed` and `charge_damage` on the ten creature mounts (#615) was planned as "data only,
+no C# moves", which was true, and the plan stopped there. The review's consumer trace then found
+that the engine's charge blow is `(closing speed x dot)^2 x dot x MountChargeDamage`
+(v1.4.8 `MissionCombatMechanicsHelper.cs:703-704`), so raising both on one item compounds (a brown warg about
+3.2x its old magnitude at the same angle), and that `WargConfig.SpeedForMaxDamage`,
+`SpiderConfig.SpeedForMaxDamage` and `SpiderConfig.ChargeVelocityThreshold` read the mount's live
+velocity against fixed m/s caps (the spider now sits at its cap).
+
+**Why missed:** the plan priced the change by the two attributes it edited and never opened the
+formula or grepped the creature configs; nothing in the item file points at either.
+
+**Prevent:** before retuning a mount item's `speed` or `charge_damage`, quote the charge formula,
+grep `Main/Features/<Creature>/*Config.cs` for `SpeedForMaxDamage` / `*VelocityThreshold`, and
+state the compounded charge effect in the plan. `MountSpeed = env x 0.22 x (speed + 2)` m/s is the
+conversion (`SandboxAgentStatCalculateModel.UpdateHorseStats`).
+- **Source:** 1.5.x `docs/reviews/rca-creature-mount-retune-2026-09-17.md` (#615, 2026-09-17), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A culture promotion drops every table keyed on the host culture or its troop ids (#749, 2026-10-06)
+`cc1713eb3` (2026-08-11) moved Lindon off `Culture.rivendell` onto its own culture with a cloned `lindon_*` tree. Nothing re-keyed the balance tables, so for two months Lindon troops weighed 1.0 against their Rivendell twins' 2.0 and 3.0, and Lindon parties had no survival bonus. A player found it.
+- **Why missed:** `tools/promote_borrowed_cultures.py` writes the culture and the tree, `tools/retag_promoted_cultures.py` the retag, and neither writes or lists a keyed balance table. The #585 level-band test checks only troops that already have a weight row, so a tree with no rows passed it.
+- **Prevent:** after a promotion, grep ModuleData and `Main/Features` for the host culture id and for the host tree's troop ids, and decide each hit (mirror, or exempt with a reason). Pin a cloned tree with a parity test against its source, like `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin`. Still open for Lindon on 2026-10-06: clan party templates, Elven Wine, troop resource costs, Elite Emissary, banner bearers.
+- **On this tree:** This incident ran on the 1.5.x line, and `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-lindon-balance-tables-2026-10-06.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

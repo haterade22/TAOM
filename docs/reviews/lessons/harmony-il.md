@@ -1129,3 +1129,17 @@ three such targets (`MapInfoVM`, `EncyclopediaUnitVM`, `TownManagementReserveCon
 - **Prevent:** state the invariant as a pure rule in the owning feature (`CreatureBanditRules.SpawnsOnPlayerSide`) and audit every path that can name the state, console commands included, so each asks the rule before it acts. A prefix that declines and falls through enforces nothing for the case it declines.
 - **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditRules`, `SpawnsOnPlayerSide` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` (#742, "An invariant lived in a fall-through prefix"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Patch the method that writes the value, not one of its callers (Banner Color Persistence, #973, 2026-10-23)
+The inventory doll's clan colours lived in a postfix on `SPInventoryVM.UpdateCurrentCharacterIfPossible`, one of
+five callers of `UpdateRightCharacter`, which reaches the private colour writer `UpdateCharacterArmorColor`. Opening the screen, the outfit toggle, Reset, and TAOM's own panel refresh (#917, #924) all
+repainted the doll in the map faction's colours, so a vassal saw the kingdom's colours after nearly every refresh.
+The same postfix also wrote clan colours over vanilla's fixed stealth colour after a character switch, because
+the caller it hooked had no stealth check. Moving it onto `UpdateCharacterArmorColor` covers every caller and lets
+the guard mirror vanilla's own branch.
+- **Why missed:** the patch was written for the one trigger the author tested (a character switch); nobody listed
+  the callers of the method that actually writes `ArmorColor1/2`. Two later TAOM features then added callers.
+- **Prevent:** when a patch overrides a value the engine writes, find the writer first (grep the decompile for the
+  assignment), list every caller of the writer, and patch the writer unless a caller needs different behaviour.
+  Copy the writer's own branches (here, stealth) into the postfix guard.
+- **Source:** 1.5.x issue #973; found by the Data flow review of #924, on `origin/bannerlord-1.5.x` (ported by WP142).

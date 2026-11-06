@@ -1757,3 +1757,17 @@ carrying the retired keys loads stays, because that is behaviour a player's file
   permanent test only for behaviour the deletion must preserve (a save field, a config key, a public contract).
 - **On this tree:** This incident ran on the 1.5.x line, and `RetiredPathReuseScaffold_IsGoneFromTheTaomAssembly` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fake that returns a state the adapter can never produce hides a dead setting (Quick Actions, #925, 2026-10-23)
+Two MCM options, "Sell Damaged Equipped" and "Sell Low Value Equipped", never acted in game. The sells read
+`GetRightPaneItems`, which wraps `SPInventoryVM.RightItemListVM`, and every row there is on the `PlayerInventory`
+side, so `IInventoryItemAdapter.IsEquipped` was always false. Four unit tests passed
+because they faked `isEquipped: true` on such a row. The options and `IsEquipped` were removed.
+- **Repeat of:** "keep every faked engine value inside the range the engine can hold" (Hard Questions, 2026-10-19,
+  above). The range here is a set of states, not a number.
+- **Why missed:** the fake was written from the setting's hint text ("items currently equipped on heroes"), not from
+  where the adapter's rows come from.
+- **Prevent:** before a test fakes an adapter property, find the engine source of the rows or values the adapter
+  wraps and confirm that the faked state occurs there. When it cannot occur, the feature branch it reaches is dead:
+  report it, do not test it.
+- **Source:** 1.5.x issue #925; first found in `docs/reviews/rca-quickactions-unequip-2026-10-19.md` (follow-ups), on `origin/bannerlord-1.5.x` (ported by WP142).

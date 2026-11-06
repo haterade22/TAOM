@@ -725,3 +725,45 @@ set and the new set's `base_set`, so the only effect was the missing-set log lin
   check when nothing visible changes.
 - **On this tree:** This incident ran on the 1.5.x line, and `as_sauron_facegen` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-coronation-fixes-2026-10-20.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A clip reused on an action vanilla loops must loop too, or the screen falls to bind pose (2026-10-02)
+
+The hill troll's action set reused its Fab idles (5.4 s and 4.57 s one-shots) for the inventory, conversation and
+cheer codes. Vanilla's clips behind those codes are `cyclic` or continue into one that is, and the party screen,
+encyclopedia, map conversation and victory logic set the action once. When the troll clip ended nothing followed,
+and about five seconds in the troll lay flat in bind pose. Battles hid it, because the mission re-issues stand idles
+and vanilla's own `troop_stand_*` clips are one-shots.
+- **Why missed:** the bind checked that each code resolves to a clip that exists, not that the clip keeps playing
+  the way the replaced clip did. A clip's loop and continue-to live in its `AnimationClip` definition (the `_anm.tpac`
+  or `animation_clips.tpac`), which no action-set audit reads. The gap was even written down as an OPEN item and
+  waited a week for a player report.
+- **Prevent:** when a clip replaces a vanilla clip for an action code, copy the vanilla clip's `cyclic` flag and
+  `ContinueWithAction` too (read both with `TpacTool`'s `AnimationClip`), and look at every screen, conversation or
+  cheer code for at least one clip length in game before calling the bind done.
+- **Source:** 1.5.x `docs/features/troll-race.md` Track 1, "The party-screen bind pose, the reused idles made cyclic", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before calling an action set's inherited clips "rarely played", list the engine's other consumers (2026-09-25)
+The hill troll's set left 4,049 codes on human clips, called "rarely played" because the names looked like swimming,
+ladders and cutscenes. The engine also plays that set off the battlefield: `CharacterTableau` idles party-screen,
+encyclopedia and inventory previews on `act_inventory_idle*`, `ConversationMissionLogic` spawns the two highest-level
+troops as map-conversation bodyguards on the `_poses` set, and `AgentVictoryLogic` plays `act_cheer_*` after a won
+battle. On a hunched rig each shows the human rest relations (head up, wrists twisted). 49 derived `as_hill_troll_*`
+sets also carried 2,376 overrides of their own, all human clips.
+- **Why missed:** frequency was judged from code names, not from the engine's callers of the set or the derived sets.
+- **Prevent:** before binding a race's set, grep the installed engine for `GetActionSetWithSuffix` and the idle and
+  victory actions, list the derived `<race>_*` sets that override, and retarget what those paths play.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_hill_troll_` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A clip reused for another code must carry the flags that code's consumers rely on (2026-09-25)
+The hill troll's Fab idles were bound to 172 inventory, conversation, pose and cheer codes. The idles are
+priority 1 with no `cyclic` flag; the vanilla clips behind those codes are `cyclic`, some continue into a loop
+code, the cheers are priority 64, and the party screen, the map conversation and the victory logic set the
+action once, so the reused clip plays five seconds and stops.
+- **Why missed:** the reuse was judged by motion (an idle for an idle), not by the clip definition the engine
+  reads.
+- **Prevent:** before binding one clip to another code, read the code's vanilla clip (flags, priority,
+  `ContinueWithAction`) and the consumer that plays it; where they differ, clone the code's own vanilla clip onto
+  the reused master, as `gen_troll_anim_clips.ps1 -CloneByName` does.
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_troll_anim_clips`, `CloneByName` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 45, on `origin/bannerlord-1.5.x` (ported by WP142).

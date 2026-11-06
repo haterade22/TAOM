@@ -1080,3 +1080,28 @@ a one-signature JSON input.
   nobody.
 - **On this tree:** This incident ran on the 1.5.x line, and `SignatureStrikesConfigProvider`, `GetConfig_NullOrBlankIdentityEntries_AreRemovedAndWarned`, `GetConfig_PaddedIdentityEntry_IsTrimmedWithoutAWarning`, `GetConfig_IdentityOfOnlyBlankEntries_MatchesNobodyAndIsDropped` exist only there; the rule holds here.
 - **Source:** 1.5.x Codex review 130 (O1); `docs/reviews/rca-nazgul-scream-2026-09-23.md` "Codex pass", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A model slot registered from two starters gets every new rule in both, and a binding test pins both
+`AgentStatCalculateModel` is added twice: `TaomAgentStatCalculateModel` from the campaign starter and `TaomCustomBattleAgentStatCalculateModel` from `RegisterCustomBattleModels`. #610 wired the charge multiplier into the campaign one only, so the cheapest smoke route (Custom Battle cavalry) would have shown nothing even after the lookup bug was fixed.
+- **Why missed:** the feature was written against the slot it found first; the second registration had landed the same day from another feature and nobody enumerated `AddModel<AgentStatCalculateModel>` call sites.
+- **Prevent:** before adding a rule to a `Taom*Model`, grep `AddModel<TheBaseModel>` in `SubModule.cs` and give every registration the rule (a shared static applier keeps the logic in one place); the binding test resolves both model types by name and asserts both call it. And place the rule per BASE model, not per copy: `SandboxAgentStatCalculateModel` rewrites `MountChargeDamage` on every `UpdateAgentStats` while `CustomBattleAgentStatCalculateModel` writes it once in `InitializeAgentStats`, so the same `*=` post-pass is idempotent in the campaign model and compounds in the Custom Battle one. Read the base's write site for the property before choosing the override that carries a multiply, and pin the placement (the Custom Battle test asserts `InitializeAgentStats` calls the applier and `UpdateAgentStats` does not).
+- **On this tree:** This incident ran on the 1.5.x line, and `TaomCustomBattleAgentStatCalculateModel` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-cavalry-charge-2026-09-17.md` findings 2 and 6, #610, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A penalty on a shared engine limit reaches every party kind and every reader of that limit (garrisons, 2026-10-16)
+The troop-weight penalty deflated `GetPartyMemberSizeLimit` for every party, garrisons and patrols included. Vanilla
+desertion removes a quarter of a garrison's excess over that limit every day, its morale falls with the excess, and lords
+refill garrisons to the unweighted `CalculateGarrisonPartySizeLimit`, so elite garrisons deserted without end (yotthani's
+campaign run counted about 20.6 k deserters in the whole free block, 19.6 k of them in four elven realms; the cause is
+yotthani's reading). Patrols, which nothing trims, sat over their deflated limit under vanilla's speed penalty. TAOM's doc
+said vanilla never enforces the garrison limit; the shed's leaderless guard hid the gap. The first fix exempted the
+penalty only, and the capacity displays kept showing the weighted count over the now unweighted limit.
+- **Why missed:** the 2026-07-11 rework moved the penalty from the count to the limit and checked the readers TAOM
+  owns (the shed, the tooltips), not the engine's own readers of `PartySizeLimit` per party kind.
+- **Prevent:** before a model override changes a limit, list the party kinds its base branches on (in 1.5.x: garrison,
+  patrol, a leader with a clan, caravan, villager; the rest take the flat 20) and the engine readers of the result
+  (desertion, morale, recruitment room, AI transfers, speed), and exempt or test each kind. Put an exemption in one
+  predicate that enforcement and every display read (`TroopWeightPenaltyScope`). A guard that keeps TAOM's own code
+  away from a kind does not keep the engine away.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/adopt-yotthani-2026-10-16.md`; `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 13 and 14, on `origin/bannerlord-1.5.x` (ported by WP142).
