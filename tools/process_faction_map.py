@@ -13,8 +13,8 @@ Input:  Directory containing region_<name>.png files (full canvas, e.g. 2048x175
 Output: - deploy/<region_name>.png              (cropped to bbox, max 512px wide)
         - deploy/fullres/<region_name>_full.png  (original full-canvas, copied)
         - regions.json                           (normalized bounding boxes + capital positions)
-        - factions.json                          (faction data with new names, migrated from old)
         - CharacterCreationCultureStage.xml      (updated PolygonWidget entries)
+factions.json is maintained by hand and this tool does not write it.
 """
 
 import argparse
@@ -395,7 +395,7 @@ crop_and_save(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]),
 def generate_regions_json(bboxes, canvas_w, canvas_h, output_path):
     """Generate regions.json from computed bounding boxes."""
     regions_data = {}
-    for region_id, display_name, old_id, game_faction, playable, side in REGIONS:
+    for region_id, *_ in REGIONS:
         if region_id not in bboxes:
             print(f"  Warning: No bbox for {region_id}, skipping in regions.json")
             continue
@@ -420,53 +420,6 @@ def generate_regions_json(bboxes, canvas_w, canvas_h, output_path):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(regions_data, f, indent=2)
     print(f"  Wrote {len(regions_data)} regions to {output_path}")
-
-
-def generate_factions_json(old_factions_path, output_path):
-    """Generate new factions.json, migrating data from old where possible."""
-    old_factions = {}
-    if old_factions_path and os.path.exists(old_factions_path):
-        with open(old_factions_path, "r", encoding="utf-8") as f:
-            old_factions = json.load(f)
-
-    new_factions = {}
-    for region_id, display_name, old_id, game_faction, playable, side in REGIONS:
-        # Try to migrate from old faction data
-        if old_id and old_id in old_factions:
-            entry = dict(old_factions[old_id])  # copy
-            entry["name"] = display_name
-            entry["image"] = f"faction_{region_id}"
-            entry["playable"] = playable
-            entry["game_faction"] = game_faction
-            entry["side"] = side
-        else:
-            # New region — create minimal entry
-            color = _default_color_for_side(side)
-            entry = {
-                "name": display_name,
-                "color": color,
-                "playable": playable,
-                "game_faction": game_faction,
-                "side": side,
-                "description": f"The {display_name}.",
-                "image": f"faction_{region_id}",
-                "traits": [],
-            }
-
-        new_factions[region_id] = entry
-
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(new_factions, f, indent=2, ensure_ascii=False)
-    print(f"  Wrote {len(new_factions)} factions to {output_path}")
-
-
-def _default_color_for_side(side):
-    """Default color by alignment."""
-    return {
-        "free": "#4870B8FF",
-        "evil": "#604830FF",
-        "neutral": "#706838FF",
-    }.get(side, "#808080FF")
 
 
 def generate_xml(output_path):
@@ -548,7 +501,6 @@ def process_regions(input_dir, output_dir, dry_run=False):
         print(f"  - {len(bboxes)} cropped region PNGs in {output_path}/")
         print(f"  - {len(bboxes)} full-res copies in {output_path}/fullres/")
         print(f"  - regions.json")
-        print(f"  - factions.json")
         print(f"  - polygon_widgets.xml")
         return True
 
@@ -575,9 +527,7 @@ def process_regions(input_dir, output_dir, dry_run=False):
 
     # Generate data files
     print("\nGenerating data files...")
-    old_factions_path = Path(__file__).parent.parent / "Main" / "_Module" / "ModuleData" / "factionmap" / "factions.json"
     generate_regions_json(bboxes, canvas_w, canvas_h, str(output_path / "regions.json"))
-    generate_factions_json(str(old_factions_path), str(output_path / "factions.json"))
     generate_xml(str(output_path / "polygon_widgets.xml"))
 
     print("\nDone!")
@@ -586,9 +536,8 @@ def process_regions(input_dir, output_dir, dry_run=False):
     print(f"  2. Copy region PNGs to: Modules/TAOM/GUI/SpriteData/FactionMap/")
     print(f"  3. Copy fullres PNGs to: Modules/TAOM/GUI/SpriteData/FactionMap/fullres/")
     print(f"  4. Copy regions.json to: Main/_Module/ModuleData/factionmap/")
-    print(f"  5. Copy factions.json to: Main/_Module/ModuleData/factionmap/")
-    print(f"  6. Update CharacterCreationCultureStage.xml with polygon_widgets.xml content")
-    print(f"  7. Create faction_*.png and banner_*.png for new regions")
+    print(f"  5. Update CharacterCreationCultureStage.xml with polygon_widgets.xml content")
+    print(f"  6. Create faction_*.png and banner_*.png for new regions")
 
     return True
 
@@ -600,7 +549,6 @@ def main():
     parser.add_argument("--output", type=str, default="tools/factionmap_output",
                         help="Output directory for processed files")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing files")
-    parser.add_argument("--old-factions", type=str, help="Path to existing factions.json for data migration")
 
     args = parser.parse_args()
 
