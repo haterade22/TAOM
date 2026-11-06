@@ -59,7 +59,7 @@ Two classes read attributes off one `<Faction>` element: `MBObjectBase.Deseriali
 | `is_nomad` | bool | no | false | Flavour only: "a nomadic clan", plus nomad dialogue. Four vanilla rows use it. | `Clan.cs:887` |
 | `text` | string, localisable | no | an empty `TextObject` | The encyclopedia blurb. No gameplay effect. Wrap it in `{=key}` so the translator picks it up. | `Clan.cs:889` |
 
-**There is no `renown` attribute.** `Clan.cs:865` overwrites renown at load with `CalculateInitialRenown`, a roll between this tier's floor and 40 percent of the way to the next. The floors are `{0, 50, 150, 350, 900, 2350, 6150}` (`DefaultClanTierModel.cs:11, 43-49`). Afterwards renown only pushes tier up, never down. So `tier` is the whole start-of-game power dial, and it is coarse: tier 4 rolls roughly 900 to 1,480, tier 5 roughly 2,350 to 3,870.
+**There is no `renown` attribute.** `Clan.cs:865` overwrites renown at load with `CalculateInitialRenown`, a roll from this tier's floor up to 60 percent of the way to the next floor (the code takes 40 percent of the band off the top: `next - (next - floor) * 0.4`; tier 6 uses 6,150 + 1,500 as its "next"). The floors are `{0, 50, 150, 350, 900, 2350, 6150}` (`DefaultClanTierModel.cs:11, 43-49`). Afterwards renown only pushes tier up, never down. So `tier` is the whole start-of-game power dial, and it is coarse: tier 4 rolls 900 to about 1,770, tier 5 2,350 to about 4,630, tier 6 6,150 to about 7,050.
 
 <!-- engine-ref type="TaleWorlds.CampaignSystem.GameComponents.DefaultClanTierModel" file="Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.GameComponents/DefaultClanTierModel.cs" lines="27-33,117-140,165-168" -->
 

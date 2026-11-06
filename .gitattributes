@@ -31,3 +31,10 @@ docs/reference/lotrlome-armory-snapshot/project.mbproj text eol=lf
 # characters that would be hidden in the approval dialog"). Scoped to that folder, not *.js:
 # tracked tools/*.js files are CRLF in the worktree and would churn. test_improve_workflows.py.
 .claude/skills/improve/workflows/*.js text eol=lf
+
+# The lessons files are append-only: two branches that each append a lesson at the end
+# conflict, and keeping one side silently drops a lesson (merge 70c164bb3 on the 1.5.x line
+# lost one that way). union keeps both sides' new lines. It cannot see a conflict, so two
+# edits of the SAME existing line both survive: reread the entry after such a merge.
+# Never on CHANGELOG.md (maintainer decision D18; tools/tests/test_lessons_merge_union.py).
+docs/reviews/lessons/*.md merge=union
