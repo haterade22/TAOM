@@ -324,3 +324,19 @@ Parts A, B, C and D are all merged, so that hold was too wide.
 3. **Issue.** The issue Part A asks for does not exist and agents do not create issues, so Part A's bodies carry no `Refs` line and the
    issue stays owed.
 4. **Commits newer than `4d1a9105a`** remain out of this plan's scope. They are classified separately.
+
+## D30: work that needs no protected file (2026-11-05)
+
+The maintainer said "proceed" after the end-of-run report. That is not a request to use the config override, so `config-protection.sh`
+still stands. Three held pieces need no protected file, and WP108's own hand-off offered the route for the first.
+
+1. **WP108 Step B4 lands**, with its two `.claude/` files (`.claude/hooks/check-moduledata-validation.sh`, `.claude/rules/moduledata-validation.md`).
+   D25 rule 4's waiver is extended to exactly those two files because `CommitGateCoverageTests` requires each validator ERROR code in that
+   hook. Counts on the `v2.0.26` Armory are void under D20 and D25. Step B5 stays deferred.
+2. **WP136's B-part remainder lands** after B4: the validator half of B1, then B3, B4 and B5, with the same waiver for the same two files.
+   A step that needs the public Armory's data stops by itself, as the plan says. Part E's Step E3 stays the maintainer's.
+3. **WP102 Step 2 lands**: the generator, its tests and the README row. Step 1 item 7 allows this before the settings edit. Steps 3 onward stay
+   held: they delete hooks that `.claude/settings.json` still registers.
+4. **Still held:** WP102 Step 3 onward, 103, 116, 138, 142, 143, 145 E to G, 127 C and M, 115 B1 to B3, 140 D, 122 C4. The harness lane runs in plan
+   order or not at all: its end-state copies check that their pre-images are unchanged, so running a later plan first breaks an earlier one.
+5. `CHANGELOG.md` is still never staged (D1).

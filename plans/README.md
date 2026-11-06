@@ -185,7 +185,7 @@ WP145 Parts E to G. D25 to D29 are in the
 Status values: TODO | IN PROGRESS | DONE (date, merge sha) | BLOCKED (one-line reason) | REJECTED (one-line
 rationale). DONE means merged into `bannerlord-1.4.5` by the integrator with the full suite green.
 
-### Decisions D1 to D29
+### Decisions D1 to D30
 
 Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audit/2026-11-04-port148/data/brief-workflow3-decisions.md).
 
@@ -229,6 +229,7 @@ Full text: [`_audit/2026-11-04-port148/data/brief-workflow3-decisions.md`](_audi
 - **D27** The maintainer delegated the remaining choices; the protected files stay protected. See the decisions brief.
 - **D28** WP122's GA-SAME check is waived for one comment line, and A1.2 applies a diff instead of overwriting. See the decisions brief.
 - **D29** WP145 Parts A to D run; E, F and G stay held. See the decisions brief.
+- **D30** WP108 B4, WP136's remaining B steps and WP102 Step 2 run; the harness lane stays held. See the decisions brief.
 
 ### Plans 001 to 005 and this programme
 
