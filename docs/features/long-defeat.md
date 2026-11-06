@@ -392,6 +392,18 @@ Every use now has its own six-second hit window; before, a tower's hits were boo
 
 **Not played; needs recorded posts and tower spots.** The proof is `python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000` after Mike pastes `towers[].posts` and `towers[].volley` into `fortresses.json`: the bot buys tower level 3 at clear 2 and each tower looses in wave 3, a `tower-volley` pass for each. Whether the arrows clear the parapet, what `impact_speed=` reads at range (air drag) and whether the hit share reaches half (A16) are unsettled until those lines exist. The tests are `SurvivalRunTowerVolleyTests`, `LongDefeatDirectorTowerVolleyTests` (which runs the line through the real log sanitiser against the manifest pattern), `LongDefeatTowerVolleyPinTests`, the missile cases of `LongDefeatVolleyHitFilterTests`, `LongDefeatHudTowersTests` and `TowerVolleyJudgeTests` in `tools/tests/test_run_long_defeat.py`.
 
+## Phase 4: locations and your own gear
+
+Phase 4 ([phase4-plan.md](long-defeat/phase4-plan.md)) adds an armoury that sells the lord's own gear, an engineer's yard that sells a mangonel, a bought Marshal and a death rule (take over a soldier, rise at the keep at the next clear). Slice 1 is built and nothing else is: it is pure config and plan code, and nothing is for sale.
+
+### Locations config and plan (Phase 4, Slice 1)
+
+([phase4-plan.md](long-defeat/phase4-plan.md).) `shop.json` takes three optional blocks per shop, read by `LocationsReader` into a `LocationsPlan` on the `ShopPlan`: an `armoury` (a `reach` in metres, default 4, and gear sets), a `yard` (a `reach`, default 6, and engine kinds `mangonel` or `trebuchet`) and a `marshal` (a troop and a price). A gear set has a lowercase id, a kind (`armour` names only Head, Body, Gloves, Leg or Cape; `weapons` names only Item0 to Item3 and must list the classes it is sold to), a price and its slots, each an item id; no set may name a horse slot. A bad value costs one warning and drops the smallest thing that holds it: a class id, a set, an engine row, or the whole block. The listed class ids are checked against `classes.json`, which the catalog hands the reader only when a set lists a class. `tools/run_long_defeat.py` mirrors every rule (`read_locations`), and both suites read the 110 cases in `tools/tests/long_defeat_location_cases.json`.
+
+`fortresses.json` takes `armoury` and `yard` in the muster shape (`{x, y, z, fx, fy}`), which is what `taom.ld_export` already writes; `FortressesReader` reads them into `FortressEntry.ArmouryPoint` and `YardPoint`, and a bad one is one warning and no place. `LongDefeatConfigCatalog.BuildPlan` copies the two places onto the `RunPlan`; the plan's `Armoury`, `Yard` and `Marshal` read the shop's own blocks, so there is one copy. `LoadoutMerge` folds the sets a lord owns into his class kit in purchase order, a later set winning a slot: a weapons set replaces all four weapon slots as a block, so a kit shield never stays beside a set's polearm, a weapons set is skipped for a class it does not list, and no horse slot ever comes from a set. At launch `LongDefeatGearItems.Missing` asks the object manager for every set item and the engine whether it fits its slot (the two tests `BuildKit` applies at the spawn), logs one warning per set that names an item either test refuses, and the launcher (one added line) hands those set ids to the plan as `HiddenGearSets`.
+
+`LocationOffer.Offered` says what the build can sell and is empty, so every row stays hidden. `LOCATION_OFFERED` in the wrapper mirrors it, and a test reads the C# source and compares the two. Nothing ships: `shop.json` holds no set, engine or Marshal and `fortresses.json` no armoury or yard, and a director test pins that a run plays the same calls and the same gold with and without the blocks. This slice adds no check, no string and no `1079.toml` row; the first check is Slice 4's. Where the plan was silent, an armour set whose listed classes are all unknown is skipped rather than widened to every class, and the Marshal's troop does not yet join `RunPlanTroops` (Slice 9 does that when he can be bought).
+
 ## Key Files
 
 - `Main/Features/LongDefeat/LongDefeatModule.cs`, `ILongDefeatGameManagerFactory.cs`, `NullLongDefeatGameManagerFactory.cs`, `LongDefeatMission.cs`: these stay after Phase 1.
@@ -415,6 +427,7 @@ Every use now has its own six-second hit window; before, a tower's hits were boo
 - `Main/Adapters/LongDefeatBattlefieldAdapter.Posts.cs`, `LongDefeatDirector.Posts.cs`, `Domain/LdPosts.cs`, `Domain/PostsWatch.cs`, `Domain/SurvivalRun.Posts.cs` and `Diagnostics/LongDefeatPostsChecks.cs`: the posted archers' spawn, hold and re-assert, their fill and watch at the director, and the `posts` check (Phase 3, Slice 7).
 - `Main/Adapters/LongDefeatBattlefieldAdapter.Volley.cs`, `LongDefeatDirector.Volley.cs`, `Domain/VolleyWatch.cs`, `Diagnostics/LongDefeatVolleyChecks.cs`, `Hooks/LongDefeatVolleyHooks.cs`, `Hooks/LongDefeatVolleyHitFilter.cs` and `Main/_Module/ModuleData/long_defeat/long_defeat_items.xml`: the Elven Volley's reads and fire, its hit window and check, its hit hooks and its arrow (Phase 3, Slice 6).
 - `Main/Features/LongDefeat/LongDefeatDirector.Volley.cs` and `Hooks/LongDefeatVolleyHooks.cs` also carry the towers' level 3 volley: one hit window per use, told apart by missile index (Phase 3, Slice 8).
+- `Domain/LocationsPlan.cs`, `LoadoutMerge.cs`, `Config/LocationsReader.cs`, `LongDefeatGearItems.cs`, the `armoury` and `yard` points of `Config/FortressesReader.Points.cs` and `tools/tests/long_defeat_location_cases.json`: the locations config and plan (Phase 4, Slice 1).
 - `tools/run_long_defeat.py`: the unattended wrapper on `tools/run_fords_autorun.py`.
 
 ## Dependencies
@@ -476,7 +489,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - **Affixes:** named powers on the attackers, rolled for each wave: 1 from wave 5, 2 from wave 10, 3 from wave 15.
 - **Endless scale:** a wave cannot exceed the battle size, so each wave also raises health and damage, and the troop tiers rise.
 - **Leaderboard:** players submit the run report through a Discord command, a bot checks it and updates the board, and a top 10 entry also needs a clip. Mike accepted this on 2026-11-04. The plan is [leaderboard-plan.md](long-defeat/leaderboard-plan.md), and Luiz has the brief for the bot.
-- **Phase 4 (planned):** the armoury, the engineer's yard, gear that lasts the run, and the death rule (take over a soldier, rise at the keep at the next clear) are planned in [phase4-plan.md](long-defeat/phase4-plan.md), with open questions OQ8 to OQ20 taken at their recommended answers unless Mike changes them. Nothing of it is built.
+- **Phase 4 (planned):** the armoury, the engineer's yard, gear that lasts the run, and the death rule (take over a soldier, rise at the keep at the next clear) are planned in [phase4-plan.md](long-defeat/phase4-plan.md), with open questions OQ8 to OQ20 taken at their recommended answers unless Mike changes them. Slice 1 (config and plan, pure) is built; nothing else is.
 
 ## Notes for Phase 1
 
@@ -529,6 +542,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - 2026-11-06: Phase 3, Slice 8 (tower level 3, the tower volley) built and pushed to trunk: `FortOffer.Offered` offers all three tower levels but level 3 is sold only while a usable tower records a `tower_volley` spot, so Helm's Deep plays as before; each such tower looses on its own clock through the Elven Volley's fire path with `ld_tower_arrow` (Fords' `fow_tower_arrow` with `CannotBePickedUp`, as `ld_elven_arrow` has it) and one of its own post archers as owner, each use has its own hit window and a `tower-volley` check line, and the judge owes one pass per recorded tower. Not played; it needs recorded posts and spots.
 - 2026-11-06 (planned): Mike records the Cavalry sally point in game.
 - 2026-11-06: the recorder gains the optional `armoury` and `yard` kinds for Phase 4, so the morning recording can take them with the sally and the fortification points. Nothing reads them yet.
+- 2026-11-06: Phase 4, Slice 1 (locations config and plan) built: the `armoury`, `yard` and `marshal` blocks of `shop.json` and their reader, the recorded `armoury` and `yard` places on the fortress and the run plan, `LoadoutMerge`, the launch check for gear set items, and `LOCATION_OFFERED` with the wrapper's `read_locations`. Pure code; `LocationOffer.Offered` is empty and nothing ships, so the game plays as before. Not played.
 
 ## GitHub Issue
 

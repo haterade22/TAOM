@@ -8,11 +8,12 @@ namespace TAOM.Features.LongDefeat;
 /// <summary>
 /// shop.json: shops by id. A bad starting gold falls back to 0; an offer with no id or troop, a duplicate id (the first is
 /// kept), a bad class, pack size or price is skipped. A shop left with no offer still loads, so a fortress may start with only
-/// its gold and nothing to buy. A shop's <c>fortifications</c> block is read by <see cref="FortificationsReader"/>.
+/// its gold and nothing to buy. A shop's <c>fortifications</c> block is read by <see cref="FortificationsReader"/>, and its <c>armoury</c>, <c>yard</c> and <c>marshal</c> blocks by <see cref="LocationsReader"/>,
+/// which checks a gear set's listed classes against <paramref name="classIds"/> (the ids classes.json holds, asked for only when a set lists a class) when the caller has them.
 /// </summary>
 internal static class ShopReader
 {
-    public static IReadOnlyDictionary<string, ShopPlan> Read(string? text, LongDefeatConfigScope s)
+    public static IReadOnlyDictionary<string, ShopPlan> Read(string? text, LongDefeatConfigScope s, Func<IReadOnlyCollection<string>>? classIds = null)
     {
         var shops = new Dictionary<string, ShopPlan>(StringComparer.OrdinalIgnoreCase);
         var root = s.OpenRoot(text, "was not found or could not be read; no shops");
@@ -35,14 +36,14 @@ internal static class ShopReader
                 continue;
             }
 
-            shops[property.Name] = ReadShop(property.Name, shop, s);
+            shops[property.Name] = ReadShop(property.Name, shop, s, classIds);
         }
 
         s.Loaded($"{shops.Count} shop(s)");
         return shops;
     }
 
-    private static ShopPlan ReadShop(string id, JObject shop, LongDefeatConfigScope s)
+    private static ShopPlan ReadShop(string id, JObject shop, LongDefeatConfigScope s, Func<IReadOnlyCollection<string>>? classIds)
     {
         var label = $"shops.{id}";
         var offers = new List<ShopOffer>();
@@ -61,7 +62,7 @@ internal static class ShopReader
             s.Warn($"'{label}.offers' is missing or not an array; this shop sells nothing");
         }
 
-        return new ShopPlan(s.Int(shop, label, "startingGold", 0, 0, 1_000_000), offers, FortificationsReader.Read(shop, label, s));
+        return new ShopPlan(s.Int(shop, label, "startingGold", 0, 0, 1_000_000), offers, FortificationsReader.Read(shop, label, s), LocationsReader.Read(shop, label, s, classIds));
     }
 
     private static ShopOffer? ReadOffer(JObject? o, string label, HashSet<string> seen, LongDefeatConfigScope s)

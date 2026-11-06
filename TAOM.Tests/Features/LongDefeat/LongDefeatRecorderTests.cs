@@ -514,6 +514,31 @@ public class LongDefeatRecorderTests
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
+    [TestMethod]
+    public void TheArmouryAndYardBlocksOfAnExport_AreReadBackByTheFortressCatalog_AsTheRecordedPlaces()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.ArmouryKind, 10f, 20f, 3f, 0.6f, 0.8f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.YardKind, 40f, 50f, 6f, 1f, 0f, null);
+        var block = JObject.Parse(File.ReadAllText(ExportedPath()));
+        var fortresses = JObject.Parse(File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "fortresses.json")));
+        fortresses["fortresses"]![0]!["armoury"] = block["armoury"];
+        fortresses["fortresses"]![0]!["yard"] = block["yard"];
+        var logger = Substitute.For<IModLogger>();
+
+        var catalog = LongDefeatConfigCatalog.FromTexts(fortresses.ToString(),
+            File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "waves.json")),
+            File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "long_defeat", "shop.json")), logger);
+
+        var fortress = catalog.Fortresses[0];
+        Assert.AreEqual(10f, fortress.ArmouryPoint!.X);
+        Assert.AreEqual(3f, fortress.ArmouryPoint.Z);
+        Assert.AreEqual(0.6f, fortress.ArmouryPoint.Fx, 1e-5f);
+        Assert.AreEqual(0.8f, fortress.ArmouryPoint.Fy, 1e-5f);
+        Assert.AreEqual(40f, fortress.YardPoint!.X);
+        Assert.AreEqual(1f, fortress.YardPoint.Fx, 1e-5f);
+        logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
     private string ExportedPath()
     {
         _recorder.Export(Scene, out var path);

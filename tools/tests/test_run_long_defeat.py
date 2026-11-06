@@ -3811,5 +3811,105 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         self.assertIn("tower_volley", row.needs)
 
 
+class LocationsLoaderTests(unittest.TestCase):
+    """The Python loader against LocationsReader (phase4-plan.md section 5): both read tools/tests/long_defeat_location_cases.json, whose expectations were written by hand from the plan's rules table."""
+
+    FILE = json.loads((REPO / "tools" / "tests" / "long_defeat_location_cases.json").read_text(encoding="utf-8"))
+
+    def same(self, expected, got, where):
+        if isinstance(expected, dict):
+            self.assertIsInstance(got, dict, where)
+            self.assertEqual(sorted(expected), sorted(got), where)
+            for key in expected:
+                self.same(expected[key], got[key], f"{where}.{key}")
+        elif isinstance(expected, list):
+            self.assertIsInstance(got, list, where)
+            self.assertEqual(len(expected), len(got), where)
+            for i, (e, g) in enumerate(zip(expected, got)):
+                self.same(e, g, f"{where}[{i}]")
+        elif isinstance(expected, bool) or isinstance(expected, str) or expected is None:
+            self.assertEqual(expected, got, where)
+        else:
+            self.assertAlmostEqual(expected, got, places=6, msg=where)
+
+    def test_every_shared_case_reads_as_the_case_file_says(self):
+        cases = self.FILE["cases"]
+        self.assertGreaterEqual(len(cases), 80)
+        for case in cases:
+            plan, warnings = ld.read_locations(case["shop"], self.FILE["classIds"])
+            if case["expected"] is None:
+                self.assertEqual((plan, warnings), (None, 0), case["name"])
+                continue
+            expected = dict(case["expected"])
+            self.assertEqual(warnings, expected.pop("warnings"), case["name"])
+            self.same(expected, plan, case["name"])
+
+    def test_the_cases_name_a_shop_with_no_block_as_no_plan(self):
+        self.assertEqual(ld.read_locations({}, []), (None, 0))
+        self.assertEqual(ld.read_locations({"fortifications": {}}, []), (None, 0))
+
+    def test_without_class_ids_a_listed_class_is_taken_as_it_is(self):
+        shop = {"armoury": {"sets": [{"id": "w", "kind": "weapons", "classes": ["anything"], "price": 5, "slots": {"Item0": "bow"}}]}}
+        plan, warnings = ld.read_locations(shop, None)
+
+        self.assertEqual(warnings, 0)
+        self.assertEqual(plan["armoury"]["sets"][0]["classes"], ["anything"])
+
+    def test_the_constants_are_the_readers(self):
+        reader = source("Config", "LocationsReader.cs")
+        domain = source("Domain", "LocationsPlan.cs")
+        self.assertIn("MaxPrice = 1_000_000;", reader)
+        self.assertIn("DefaultArmouryReach = 4f;", reader)
+        self.assertIn("DefaultYardReach = 6f;", reader)
+        self.assertIn("ReachMin = 1f;", reader)
+        self.assertIn("ReachMax = 15f;", reader)
+        self.assertEqual((ld.MAX_PRICE, ld.ARMOURY_REACH, ld.YARD_REACH, ld.REACH_RANGE), (1_000_000, 4, 6, (1, 15)))
+        self.assertIn('EngineKinds = { "mangonel", "trebuchet" };', reader)
+        self.assertEqual(ld.ENGINE_KINDS, ("mangonel", "trebuchet"))
+        self.assertIn('Armour { get; } = new[] { "Head", "Body", "Gloves", "Leg", "Cape" };', domain)
+        self.assertIn('Weapons { get; } = new[] { "Item0", "Item1", "Item2", "Item3" };', domain)
+        self.assertEqual((ld.ARMOUR_SLOTS, ld.WEAPON_SLOTS), (("Head", "Body", "Gloves", "Leg", "Cape"), ("Item0", "Item1", "Item2", "Item3")))
+
+    def test_a_set_id_is_lower_case_letters_digits_and_underscores_as_the_readers_is(self):
+        self.assertIn("(c >= 'a' && c <= 'z') && !(c >= '0' && c <= '9') && c != '_'", source("Config", "LocationsReader.cs"))
+        self.assertEqual(ld.SET_ID.pattern, "[a-z0-9_]+")
+
+
+class LocationOfferedTests(unittest.TestCase):
+    """LOCATION_OFFERED against LocationOffer.Offered. FORT_OFFERED is pinned to literals; this one is read out of the C# source, so a slice that raises a kind on one side only fails here."""
+
+    @staticmethod
+    def parse(text, member):
+        """{field: bool} of `LocationOffer.<member>`: the record's parameter names zipped with the arguments of the `new(...)` that member is assigned."""
+        parameters = re.search(r"record LocationOffer\(([^)]*)\)", text).group(1)
+        names = [p.split()[1][0].lower() + p.split()[1][1:] for p in parameters.split(",")]
+        arguments = re.search(r"\b" + member + r" \{ get; \} = new\(([^)]*)\);", text).group(1)
+        literals = [a.strip() for a in arguments.split(",")]
+        assert all(a in ("true", "false") for a in literals), f"LocationOffer.{member} must use bare true/false literals: {literals}"
+        return dict(zip(names, [a == "true" for a in literals]))
+
+    def test_the_offered_mirror_is_read_from_the_csharp_source(self):
+        text = source("Domain", "LocationsPlan.cs")
+        self.assertEqual(self.parse(text, "Offered"), ld.LOCATION_OFFERED)
+        self.assertEqual(sorted(ld.LOCATION_OFFERED), ["armoury", "mangonel", "marshal", "trebuchet"])
+
+    def test_a_kind_raised_on_one_side_only_is_caught(self):
+        text = source("Domain", "LocationsPlan.cs")
+        raised = text.replace("Offered { get; } = new(false, false, false, false);", "Offered { get; } = new(true, false, false, false);")
+        self.assertNotEqual(raised, text, "the planted edit found its line")
+        self.assertNotEqual(self.parse(raised, "Offered"), ld.LOCATION_OFFERED)
+
+    def test_an_argument_that_is_not_a_bare_literal_is_refused_not_read_as_false(self):
+        text = source("Domain", "LocationsPlan.cs")
+        named = text.replace("Offered { get; } = new(false, false, false, false);", "Offered { get; } = new(Armoury: true, false, false, false);")
+        self.assertNotEqual(named, text, "the planted edit found its line")
+        with self.assertRaises(AssertionError):
+            self.parse(named, "Offered")
+
+    def test_this_slice_delivers_nothing_so_every_row_stays_hidden(self):
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False, "marshal": False})
+        self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), ld.LOCATION_OFFERED)
+
+
 if __name__ == "__main__":
     unittest.main()
