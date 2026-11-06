@@ -20,8 +20,9 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    It does not merely "stay a version behind": on 2026-08-10 it jumped **three versions at once**,
    `v1.4.5.114928` → `v1.4.8.119303` (`public const string GameVersion`, `_editor_build_v1.4.5/`
    vs `_editor_build/TaleWorlds.Library.cs`), while the client moved 1.4.7 → 1.4.8.
-   **What skipping it breaks: native crash triage, silently.** `/native-crash-triage` derives fault
-   offsets from the wEditor `TaleWorlds.Native.dll`, so that binary's version *is* the offset base —
+   **What skipping it breaks: triage of an editor crash, which passes `--dll` on the wEditor binary.**
+   `tools/native_crash_triage.py` defaults to the shipping client DLL, so a client crash is unaffected, but an
+   offset from the wEditor `TaleWorlds.Native.dll` holds only for that binary's version:
    every offset taken before that jump was against a v1.4.5 image, and it moved with no signal.
    Steam overwrites in place and nothing archives native modules (the decompile stack only *lists*
    them in `_native_dlls.txt`), so **copy both `bin/Win64_Shipping_{Client,wEditor}/TaleWorlds.Native.dll`
@@ -107,10 +108,8 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 1. **`/verify-bindings`**: every Harmony patch / GameModel / reflection site / transpiler site (`TranspilerSiteBindingTests`) / `[ViewModelMixin]` refresh method (`ViewModelMixinBindingTests`). Two things about the
    snapshot half (`pwsh tools/snapshot_api_surface.ps1`): it reads `TAOM.dll` out of
    `TAOM.Tests/bin/{Debug,Release}/net472` and **throws if TAOM.Tests has not been built**, so build
-   first; and `-Check` reports **DRIFT against the committed files by design** — the generator emits
-   no backlinks footer while `tools/build_backlinks.py` appends one to every doc, so `-Check` only
-   returns 0 in the window between regenerating and restoring backlinks. That drift is the footer
-   alone. If it names anything above the `---`, the API surface genuinely moved.
+   first; and `-Check` exits 1 with DRIFT when a patch target or GameModel base moved, which after a bump is expected until you
+   regenerate. It ignores the backlinks footer.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines. **Report-only: it contains no `sys.exit` and always exits 0**, so it cannot be
    gated on in a script and a green exit code proves nothing — READ the output.

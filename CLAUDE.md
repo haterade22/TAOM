@@ -121,8 +121,7 @@ full text is already in context every session; the path-scoped ones load when yo
 
 ## Custom Agents
 
-9 custom agents in `.claude/agents/`: the specialists taleworlds-researcher, feature-builder, debugger,
-error-detective and refactoring-specialist; the tiers `fast-reader`, `implementer` and `architect`
+6 custom agents in `.claude/agents/`: the specialists taleworlds-researcher and feature-builder; the tiers `fast-reader`, `implementer` and `architect`
 (`.claude/rules/model-effort-selection.md`); and `deep-reviewer` for `/deep-review` lenses. Descriptions
 load eagerly; each body carries its own execution model. **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
 do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read

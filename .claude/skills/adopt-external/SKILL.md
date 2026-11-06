@@ -1,6 +1,6 @@
 ---
 name: adopt-external
-description: Use when reviewing an external repo or article to adopt practices into TAOM — security-vet first, map novel vs duplicative, port (never install), review, commit your changes.
+description: Use when reviewing an external repo or article to adopt practices into TAOM. Security-vet first, map novel vs duplicative, port (never install), review.
 allowed-tools: Read, Write, Edit, Bash, WebFetch, WebSearch
 ---
 
@@ -20,14 +20,10 @@ See **[external-repo-adoption.md § The cycle](../../../docs/ai-includes/externa
 
 ## Top gotchas
 
-- **Never install the external plugin** — it's prompt-injection-by-design (SessionStart injects high-authority context) + context tax + conflicts with our curated setup. Port text instead.
-- **Calibrate, don't blind-port** — a rule correct upstream can be wrong here (e.g. TAOM mandates fail-open hooks).
-- **Most of a general operator repo is irrelevant or duplicative** for a C#/.NET Bannerlord mod. Be honest and critical.
-- **Right-size the fan-out** — if the README makes the verdict obvious (clearly out-of-domain → skip), do a light inline pass; don't spin up a multi-agent workflow to confirm the obvious.
-- **Verify load-bearing security claims yourself** before relaying a subagent's read — a subagent verdict is a hypothesis (`evidence-over-claims.md` A.4).
+- Never install: port text.
+- Name an adopted feature in Tolkien diction, never the source mod's name, for its folder and MCM group too. Grep `Main/**/*.cs`, `docs/features` and ModuleData strings for clashes first (maintainer, 2026-10-18).
 - **Vet a foreign *skill* automatically** during the security pass: `python tools/audit_claude_config.py --root <repo> --external` fires TAOM's SkillSpector-derived categories at full severity. Heavyweight option: NVIDIA SkillSpector run static-only in an isolated venv/Docker (never installed). It supplements, never replaces, the manual read.
 - After porting config/hooks, run **`/security-scan`** on our own result.
-- When DESCRIBING security patterns in the skill/docs you author, avoid embedding literal trigger strings (they can self-flag `/security-scan`) — describe the category or use `audit-allow:`.
 
 ## Pair with
 

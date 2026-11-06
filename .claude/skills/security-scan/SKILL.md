@@ -20,7 +20,7 @@ A deterministic, offline security scan of TAOM's Claude Code configuration surfa
 ```bash
 python tools/audit_claude_config.py            # human report, all severities
 python tools/audit_claude_config.py --min HIGH # only HIGH+CRITICAL
-python tools/audit_claude_config.py --json      # machine output (CI)
+python tools/audit_claude_config.py --json      # machine output
 python tools/audit_claude_config.py --root <dir> --external   # vet an untrusted/foreign tree
 python tools/audit_claude_config.py --no-repo-secrets           # config surface only (faster)
 python tools/audit_claude_config.py --user                      # this machine's user scope
@@ -37,7 +37,7 @@ and `node_modules`; exit **3** (`UNCHECKED`) means no config was found to scan, 
 
 **Two scopes, one run.** Every layer runs over the config surface (about 110 files). The `secrets` rules additionally run over every git-tracked text file under 2 MB (about 4,200 files, roughly 2.5s), because a credential is far more likely to be pasted into a `.ps1`, a C# const, or a doc than into `settings.json`. The other layers stay scoped to the config surface on purpose: they are calibrated for it, and turning `excessive-agency` loose on 4,000 game-data files would bury a real finding in advisory noise. The sweep needs a git work tree; without one it reports an INFO note instead of silently passing.
 
-Exit code: **2** if any CRITICAL finding (CI gate), 3 if nothing was collected (`UNCHECKED`), 1 on usage error, 0 otherwise.
+Exit code: **2** if any CRITICAL finding, 3 if nothing was collected (`UNCHECKED`), 1 on usage error, 0 otherwise.
 
 **Optional dependency:** `pip install yara-python` enables the clean-room YARA signature layer (webshell / malware / C2 / cryptominer / hacktool IOCs). Without it the scan still runs and the layer is skipped with an INFO note — the auditor is never blocked by a missing dep.
 

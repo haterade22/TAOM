@@ -7,10 +7,6 @@ tools:
   - Read
   - Grep
   - Glob
-disallowedTools:
-  - Write
-  - Edit
-  - NotebookEdit
 effort: high
 ---
 

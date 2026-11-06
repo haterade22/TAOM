@@ -6,7 +6,7 @@ argument-hint: "[bug|feature|crash] [brief description]"
 
 # Create GitHub Issue
 
-Create a GitHub issue following TAOM's mandatory issue format.
+Create a GitHub issue following TAOM's mandatory issue format. Creating one is public, so it needs the maintainer's word. Editing a body or adding a progress comment needs no ask; run `python tools/check_public_text.py` on the text first.
 
 ## Type: `$ARGUMENTS`
 

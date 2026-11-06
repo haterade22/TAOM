@@ -93,14 +93,6 @@ Report:
 - Files staged
 - Untracked files
 
-## Step 4: TODO/FIXME Scan
-
-```bash
-grep -rE 'TODO|FIXME' Main/ --include='*.cs' | wc -l
-```
-
-Report count.
-
 ## Step 5: CHANGELOG.md untouched
 
 Only `/release` writes `CHANGELOG.md` (generated from commit bodies). Check that this work did
@@ -108,6 +100,12 @@ not edit it by hand:
 
 ```bash
 git diff --name-only HEAD -- CHANGELOG.md
+```
+
+When a review base is known (a branch or worktree), also check the branch range, which catches a hand edit that is already committed:
+
+```bash
+git diff --name-only <base> -- CHANGELOG.md
 ```
 
 If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
@@ -142,7 +140,6 @@ Tool tests: [N ran, F failed, S skipped]
 Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
 Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
-TODOs:      [X in Main/]
 CHANGELOG:  [Untouched/HAND-EDITED]
 Provenance: [N misses]
 

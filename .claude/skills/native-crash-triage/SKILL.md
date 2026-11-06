@@ -15,7 +15,9 @@ corruption) named and fixed in one day with exactly this protocol.
 instead — this skill is the native-side complement (and `/investigate` may hand off here).
 
 **Iron rule (from `/investigate`):** no fixes without a named site + root cause. Every fix this
-protocol has produced was DATA (XML) or a routing patch — never a blind retry.
+protocol has produced was DATA (XML) or a routing patch; never a blind retry.
+
+A crash reported only by logs: read every line of both logs, collapsing repeats with `sort | uniq -c`, before naming a cause. Never tail and grep, because a native crash leaves no error line. A player's engine build is context, not a finding to file, and never "tell players to update"; you still need it to read an RVA.
 
 ## Phase 1 — Collect (no debugger needed)
 

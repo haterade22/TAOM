@@ -92,7 +92,7 @@ Use `AskUserQuestion` to gather any of these the user can fill faster than you c
 - ...
 
 ## In-flight task
-Implementing Tier 2 + Tier 3 picks from Claude Code ecosystem review (#93). 6 of 8 picks done; refactoring-specialist subagent next.
+Implementing Tier 2 + Tier 3 picks from Claude Code ecosystem review (#93). 6 of 8 picks done; the last subagent next.
 
 ## Decisions made this session
 - Skipped #8 (persistent task DAG) — TodoWrite is sufficient for solo dev
@@ -109,7 +109,7 @@ Implementing Tier 2 + Tier 3 picks from Claude Code ecosystem review (#93). 6 of
 - `Main/Features/CareerSystem/Services/CareerService.cs` — mid-investigation of Codex finding on stale buff cache; not yet modified
 
 ## Next concrete step
-Port refactoring-specialist subagent to .claude/agents/, run /context-budget to confirm headroom impact, then commit.
+Port the last subagent to .claude/agents/, run /context-budget to confirm headroom impact, then commit.
 
 ## Suggested skills for the next session
 1. `/context-restore` this snapshot
