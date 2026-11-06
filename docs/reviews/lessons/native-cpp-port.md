@@ -33,3 +33,22 @@ When porting a native hook target to a new engine build, a structural body-match
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### A native pin table fails the engine-bump gate on a build it does not list (2026-10-15)
+- **Why missed:** the v1.5.5 bump added a row to the clip-budget pin table and none to
+  `SkeletonBufferInstalledBinaryTests.KnownBuilds`. Both classes were tagged `LiveInstall` only, so a build with no row
+  returned Inconclusive, which the test run reports as skipped with exit code 0, and neither class ran in the binding
+  gate. The engine-bump skill named both tables; nothing could fail when one was missed.
+- **Prevent:** every `KnownBuilds` table is tagged `BindingVerification`, so the gate (`MapInconclusiveToFailed`)
+  fails on an unlisted build; `NativePinGateTests` keeps each table tagged and named in the skill. A Python pin table
+  still skips without `TAOM_GHIDRA_IT=1`: read its skip count, never its exit code.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.5-2026-10-14.md` F10, issue #806, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A figure copied into a reference doc takes its source tag and build with it (2026-10-15)
+- **Why missed:** on the 1.5.x line a new `cameraMs` row in the frame-cost table gave yotthani's 1.1 to 3 ms PreDisplay cost
+  under the table's `[TAOM-verified]` tag: the implementer copied the figure from the issue body, which names yotthani, and
+  left the name behind. The fix then added TAOM's own address to a table whose legend pins every native offset to one
+  other build.
+- **Prevent:** copy the source's tag with the figure, in the same edit. Before a figure or an address goes into a reference
+  doc, read that doc's tag legend and name the build in the clause.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-review-2026-10-15.md` finding 5 and second review S3, on `origin/bannerlord-1.5.x` (ported by WP142).

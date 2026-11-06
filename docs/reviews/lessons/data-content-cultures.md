@@ -1445,3 +1445,37 @@ generator (goblin "cavalry" kits from spider-rider gear, on foot) and the skill 
 - **Prevent:** when a troop joins a tree, grep `DefaultFormationClass`, `default_group`, `UpgradeTargets`
   and every `troops_*.xml` reader under `tools/`, and decide for each consumer whether the new troop belongs.
 - **Source:** 1.5.x `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F1 to F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A port that touches troop files diffs the whole warning set against HEAD, not only the errors (#805, 2026-10-15)
+Porting KEYforce's Harad weapons, the first bow fix put six regular archers on their tier's ladder cell. The validator
+reported 0 errors and the port moved on, while its warnings showed the Serpent archers one tier up now out-shot by the
+regulars, and the in-line Harad inversions rose. The same port left the 29 Shaghana and Abanissa enlistment kits on
+their old donors' weapons, because the enlistment generator has no `--verify` and the commit hook never runs it.
+- **Why missed:** the commit hook surfaces only errors, every ladder rule is a warning, and the property ("no lower
+  tier beats a higher one in the line") was not measured; the previous port's lesson above says the same.
+- **Prevent:** before committing any troop change, run `python tools/validate_moduledata.py` on HEAD and on the
+  working tree and diff the warning lists for every troop file touched; a new warning is the change's to fix or to
+  record. Then dry-run every generator that derives from troops, the ones without `--verify` included
+  (`generate_enlistment_rosters.py --culture <c>`), and read what it would change.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-port-2026-10-15.md` findings 1 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A baseline run proves it read the baseline; check one value you know changed (03320a65, 2026-10-16)
+Porting KEYforce's javelins and maces on the 1.5.x line, the "before" warning set came from a validator run on an
+export of the commit before his. One pass ignored the data-root flag and read the repo's troops, so the "before" was the
+new troops priced on the old Armory; the reported delta was wrong and hid two troops that flipped.
+- **Why missed:** the #805 lesson above says to diff the warning set, and the diff was run; nothing checked that each
+  pass read the tree it was given. The scratch diff cut paths down to file names, which erased the only clue: that pass's
+  rows alone carried absolute repo paths.
+- **Prevent:** before trusting a baseline, find one troop the change is known to alter and confirm its warning differs
+  between the two runs; when a tool takes a data-root flag, read where each pass loads its input.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the decision record before calling data hand-authored, generated or stale (03320a65, 2026-10-16)
+The port's doc called the ten Aserai enlistment kits "hand-authored, not generated" from how they looked. Git says the
+generator wrote them on 2026-09-01 and Erkam rewrote them on 2026-10-10; two reviewers then proposed reseeding them,
+missing that Mike had kept them by decision D3 the day before.
+- **Why missed:** the builder skipped `git log` (`evidence-over-claims.md` C1); the reviewers read the issue that
+  cited the decision, not the RCA decision table that holds it.
+- **Prevent:** before writing who made a data block or whether it should be regenerated, run `git log -S'<id>' --
+  <file>` and grep `docs/reviews/rca-*.md` decision tables for the file; cite the decision in the doc and in the file.
+- **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).

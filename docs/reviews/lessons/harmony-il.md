@@ -580,3 +580,17 @@ Patch90 prefixes `PreloadHelper.WaitForMeshesToBeLoaded`, which has six callers.
 - **Why missed:** the caller list came from a grep of the decompile for the method name, answering "does the patch attach" and not "what does each caller do around the call". The lesson "grep every call site before documenting when a patch runs" was applied to the grep and not to the read.
 - **Prevent:** for every caller of a patched method, read the statement that makes the call and the condition that gates it, and describe the guard's coverage in those terms (once per mission, once per screen, every frame). A prefix guards exactly the calls that would have reached vanilla; anything vanilla does not call is outside the guard by construction and the doc should say so.
 - **Source:** `docs/reviews/rca-preload-body-guard-2026-09-15.md` finding 3, #601.
+
+### A patch category fails as one unit: read what its caller turns off before you add a class (2026-10-15)
+- **Why missed:** the camera bracket went in as the last class of `Patch98_HitchProbe`, on the reasoning that Harmony
+  keeps the classes it already patched. That is true, but `PatchCategoryIndex.Apply` throws at the first class that
+  fails, `SubModule.TryPatchCategory` returns false, and `HitchProbeInstaller` reads false as "no probe": it switches
+  off the probe and the full tick profiler for the session. The design traced Harmony, not the installer's flags.
+- **Prevent:** before you add a class to an existing category, read what the category's caller does with a failed
+  apply. An optional target that must not take the category down goes in a category of its own, applied after the one
+  it extends, with its own status line. The same check applies to a guard in a tool: list what it protects before it
+  ships (the same review's `perf_runs.py compare` refusal protected no metric that `compare` prints).
+- **Second instance:** "applied" is not "patched" either. `PatchCategoryIndex` skips a class whose attributes cannot be
+  read (a `typeof` the engine no longer has), and a category left with no class applies nothing and returns true. Before an
+  ON line trusts a category's result, check whether the category can be empty.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-review-2026-10-15.md` findings 1 and 3, second review S7, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -760,3 +760,24 @@ days start at `CampaignStartTime`) runs day S's daily handlers twice, and repeat
   state, and skips a repeat. Describe the boundary in elapsed days, never in calendar hours. TAOM's daily
   listeners are not audited yet (#793).
 - **Source:** #793; found on the 1.5.x line (`e8504a62b`), re-checked on the installed v1.4.8 DLLs.
+
+### Every engine callback path re-checks the terminal state, not only the daily tick (2026-10-14)
+`ChronicleService` skipped every Pending and Active event once the War of the Ring ended, and said so in the
+feature doc, but only the launch and the daily step made the check. `OnSettlementOwnerChanged` and the siege-start
+callback reached the same resolve method around it, so a conquest between War Ended and the next daily step paid
+an Active siege and left a stale army focus (Codex F1, #765 Batch B).
+- **Why missed:** the guard was written where the contract was read, the daily path; the engine-callback entry
+  points were added afterwards, and no test fired a callback after the terminal state.
+- **Prevent:** when a feature has a terminal state (war ended, feature off, campaign over), list every entry
+  point that can resolve or pay (daily tick, each engine event, each console command) and put the check where they
+  converge, here the shared callback wrapper. Add one test per entry point that fires after the terminal state.
+- **Source:** 1.5.x `docs/reviews/rca-war-chronicle-events-2026-10-14.md` F1 (Codex), fixed in `8f2c9e458`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A config list with a non-empty default needs ObjectCreationHandling.Replace (#871, 2026-10-23)
+Hold the Walls added `CapturedFortHold.Sides = ["Free"]` to `army_targeting.json`, whose provider deserialized with
+Json.NET's defaults. `ObjectCreationHandling.Auto` reuses a non-null collection and appends the file's items, so
+`["Evil"]` loaded as Free plus Evil and Free could never be removed; a dedup hid the duplicate, so the shipped-file
+test passed.
+- **Why missed:** every earlier list in that config defaulted to empty, where Auto and Replace agree.
+- **Prevent:** deserialize every config with `ObjectCreationHandling.Replace` (this line's providers already use `Replace`: `git grep -l "ObjectCreationHandling.Replace" -- Main`), and test a non-default list value through the real provider, not a hand-built object.
+- **Source:** 1.5.x `docs/reviews/rca-hold-the-walls-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
