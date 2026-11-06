@@ -6,7 +6,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 
 | ADR | Title | Summary | Status | Priority |
 |-----|-------|---------|--------|----------|
-| [001](./001-xml-config.md) | XML Configuration Format | All config files use XML (no JSON) | Accepted | Standard |
+| [001](./001-xml-config.md) | XML Configuration Format | Engine data is XML; a feature's own tuning file may be validated JSON (amended 2026-11) | Accepted | Standard |
 | [002](./002-thin-entry-points.md) | Thin Entry Points Pattern | Entry points <150 lines, delegate to services | Accepted | **Mandatory** |
 | [003](./003-no-regions.md) | No Code Regions | No `#region` directives, use class decomposition; a service may be split into partial files by concern (2026-10-21 amendment) | Accepted | Standard |
 | [004](./004-no-obsolete.md) | No Obsolete Markers | Migrate all usage sites immediately, no deprecation | Accepted | Standard |
@@ -32,7 +32,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 - Services MUST use adapter interfaces (ICareerHeroAdapter, etc.) (ADR-007)
 - Services MUST NOT accept sealed types (Hero, Settlement, etc.) (ADR-007)
 - Entry points <150 lines, delegate to services (ADR-002)
-- Use XML for game config, not JSON (ADR-001)
+- Use XML for engine data; a feature's own tuning numbers may be validated JSON (ADR-001)
 
 ## When to Read Full ADRs
 

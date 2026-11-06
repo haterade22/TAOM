@@ -1,6 +1,6 @@
 # ADR-001: Configuration File Format -> XML
 
-**Status**: Accepted
+**Status**: Accepted, amended 2026-11 (JSON feature configs, below)
 **Date**: Initial project decision
 **Context**: Mount & Blade II modding configuration
 
@@ -87,6 +87,26 @@ Configuration files are used to control various aspects of the mod, such as game
 1. **Code Review**: Reviewers verify no JSON/YAML in `/ModuleData/`
 2. **Build Process**: MSBuild only copies `.xml` files to output
 3. **Documentation**: Config format documented in development-guide.md
+
+## Amendment: JSON feature configs (2026-11-06)
+
+The "No JSON" rule above no longer matches the repo. Feature tuning files under
+`Main/_Module/ModuleData/` are JSON by established practice (66 tracked `.json` files beside 338 `.xml`
+files on 2026-11-06), loaded by a feature's config provider and validated per the "Config Providers MUST
+Validate" rule in `.claude/rules/csharp-architecture.md`. They deploy because `CopyModule` copies `_Module`
+recursively, not through the `*.xml` item group shown above.
+
+**The rule now:**
+- Data the engine reads (items, troops, cultures, settlements, XSLT patches, GUI prefabs, language files)
+  stays XML, in the engine's own schema.
+- A TAOM feature's own tuning numbers may be a small JSON file in its own `ModuleData/<feature>/` folder,
+  read only by that feature's config provider, every value validated on load with a revert to the
+  compiled default.
+- A JSON list or dictionary with a non-empty compiled default is deserialized with
+  `ObjectCreationHandling.Replace`, or the file's entries are added to the default instead of replacing it
+  (`docs/reviews/lessons/state-lifecycle-save.md`).
+
+The Enforcement items above that ban JSON and copy only `.xml` are superseded.
 
 ---
 
