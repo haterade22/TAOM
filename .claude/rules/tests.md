@@ -94,5 +94,11 @@ Worked example, pinning culture party-template bindings across `spcultures.xslt`
 `TAOM.Tests/Core/CulturePartyTemplateTests.cs`. The same technique applies to `spclans.xslt`,
 `spkingdoms.xslt`, `heroes.xslt` and `lords.xslt`, none of which currently has output coverage.
 
+## Gates that key on repo paths
+
+A gate that builds a repo-relative key from the disk compares it with `OrdinalIgnoreCase`: git tracks
+`Main/_Module/GUI/PreFabs`, and a checkout can hold the folder as `Prefabs` on a case-insensitive
+filesystem (`GauntletStretchInCoverRatchetTests`, #1078).
+
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

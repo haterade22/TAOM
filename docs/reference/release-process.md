@@ -89,10 +89,11 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    `TAOM.Dependencies.dll` and refuses a `.dirty` or `nogit` copy or one from another commit, a
    missing requested module, a tag whose `Directory.Build.props` predates the `.dirty` flag, an
    installed TAOM or TAOM.Dependencies `SubModule.xml` whose `<Version>` or DLL list differs from the
-   tag's, and a release number in the 1.5.x range, with four parts or held by another line's tag. On
-   every run it also refuses retired binaries, a `Gaming.Desktop.x64_Shipping_Client` bin, a shipped
-   ModuleData file defining a `taom_test_` id, and an Armory shader with no source players have. The
-   gate proves the DLLs only. Deploys never delete, so the install also holds files from every
+   tag's, and a release number in the 1.5.x range, with four parts or held by another line's tag.
+   It also refuses any TAOM file the release commit does not track: `stale_module_files` compares the copy list (outside `bin/`, `Shaders/D3D11/` and `RuntimeDataCache*`) with the commit's `Main/_Module` tree, case-insensitively, and exits 2 on a stray file, a git failure or an empty tree. Delete the file from the folder the message names, or commit it first if it is Kit output the repo has not taken yet. `TAOM.Dependencies` is exempt.
+   On every run it also refuses retired binaries, a `Gaming.Desktop.x64_Shipping_Client` bin, a shipped
+   ModuleData file defining a `taom_test_` id, and an Armory shader with no source players have. Apart
+   from that file check, the gate proves the DLLs only. Deploys never delete, so the install also holds files from every
    earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
    - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the tag
      (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`), and any leftover `taom_test_` file. Compare

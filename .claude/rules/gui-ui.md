@@ -26,14 +26,15 @@ Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
 **The same rule applies to `Brush="X"` (added 2026-08-05).** `BrushFactory.GetBrush(name)` returns
 null SILENTLY for an unregistered name (verified `BrushFactory.cs:934-940`, installed v1.4.7) —
-the widget renders with default styling, no crash, no log. Before writing any `Brush="X"`, grep
-`Main/_Module/GUI/Brushes/*.xml` AND the relevant vanilla `Modules/{Native,SandBox}/GUI/Brushes/*.xml`
-for `<Brush Name="X"`. The vanilla `"<X>.Text"` naming pattern is NOT auto-derived — each `.Text`
+the widget renders with default styling, no crash, no log. Before writing any `Brush="X"`, run
+`PrefabExtensionBrushTests` rather than grepping (SandBoxCore declares the `CustomBattle.*` brushes TAOM's custom battle prefabs use, and a
+brush in one of the vanilla brush files TAOM replaces whole is never loaded, so a grep finds names
+the engine never sees). The vanilla `"<X>.Text"` naming pattern is NOT auto-derived: each `.Text`
 brush is its own declaration. Shipped instances of this bug: `ButtonBrush1.Text` (AbilityHUD,
-PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml ×14 —
-deferred cleanup, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
+PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml; all
+since repointed, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
 
-**Gate:** `PrefabExtensionBrushTests` fails a brush-typed attribute (`Brush`, `IconBrush`, ...) in a PrefabExtension that no module in TAOM's DependedModule set declares (#989). It does not cover prefab XML files.
+**Gate:** `PrefabExtensionBrushTests` fails a brush-typed attribute (`Brush`, `IconBrush`, ...) in a PrefabExtension that no module in TAOM's DependedModule set declares (#989); `EveryGuiPrefabBrush_IsDeclaredByAModule` does the same for every literal brush and `Constant BrushName` in `Main/_Module/GUI/PreFabs/**/*.xml`, skipping the `MarinerTroopBrush` attribute (on v1.4.8 `PartyUpgradeButtonWidget.MarinerTroopBrush` is a `BrushWidget` that takes a child widget Id, not a brush name); `EveryGuiPrefabBrushProperty_NamesABrushProperty` fails a `Brush.<Property>` attribute, in GUI prefab XML and in PrefabExtension sources, whose first segment after `Brush.` is not a public property of `TaleWorlds.GauntletUI.Brush`, compared case-sensitively (Gauntlet drops an unknown name silently); `EveryPrefabAttribute_NamesASettableWidgetProperty` fails any other attribute that is not an exact-case public property with a public setter on the element's resolved widget type (a prefab tag resolves to its prefab's root widget), outside a vanilla-parity allowlist, so a misspelt `VertialAlignment` fails; the same test fails a `VisualDefinition` attribute other than `Name`, `TransitionDuration`, `EaseType`, `EaseFunction` and `DelayOnBegin` (v1.4.8 `WidgetPrefab.LoadVisualDefinitions` reads only those) and a `VisualState` attribute that is not `State` or a public settable property of `TaleWorlds.GauntletUI.VisualState`. In a shipped prefab, delete it: players have never seen it applied. In markup you are writing, fix the name and look in game.
 
 ### Adding a NEW sprite (not just referencing an existing one)
 
@@ -66,6 +67,10 @@ Before injecting into ANY vanilla prefab container:
 If ANY of these are true: **do NOT inject children into that container**. Use bound `[DataSourceProperty]` on a ViewModel mixin + inject into a DIFFERENT container that's safe.
 
 **Why:** the four checks above are the general rule and they stand. Any data-bound `ListPanel` whose contents vanilla indexes by position is unsafe to grow.
+
+`PrefabInsertPositionTests` fails a Child insert without its own Index or not on `/Children`, and an Append or Prepend on `/Children`.
+
+**Hover targets:** a `HintWidget` relays only its parent's hover (v1.4.8 `HintWidget.cs:15`) and hit-testing skips a widget with `DoNotAcceptEvents="true"` (`EventManager.cs:897`), so a hint under such a parent never shows. `PrefabHintParentGateTests` fails any in-code PrefabExtension hint whose parent sets `DoNotAcceptEvents="true"` (#910, the third repeat).
 
 **Safe pattern:**
 ```

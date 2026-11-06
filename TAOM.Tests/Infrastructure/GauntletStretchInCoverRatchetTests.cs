@@ -14,7 +14,7 @@ namespace TAOM.Tests.Infrastructure;
 /// shipped three times on the 1.5.x line (#388, #866 and a Fords of War panel on 2026-10-31).
 /// This gate scans every prefab file under Main/_Module/GUI; prefab inserts built in C# with XmlDocument.LoadXml stay guarded by
 /// their own feature tests. Grid parents (GridLayout.UpdateCellSizes gives their children a fixed cell) and parents with a max
-/// size on the axis are exempt. The four older files below held the fault before this gate: their counts may only fall, and
+/// size on the axis are exempt. The three older files below held the fault before this gate: their counts may only fall, and
 /// must be lowered here in the same change when they do. A new file, a higher count, a lower count or a stale entry fails.
 /// </summary>
 [TestClass]
