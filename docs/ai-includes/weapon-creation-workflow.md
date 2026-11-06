@@ -81,6 +81,29 @@ grep -aoE "(bo_)?wm_<culture>_ws_[a-z0-9_]+" \
   either (a) temporarily reuse a same-shaped existing `bo_` mesh so it loads, or (b) author the
   predicted `bo_<meshid>` name now and wait for the artist to deliver it. Until the `bo_` exists,
   that piece won't collide correctly in-game.
+- **A borrowed `bo_` is a placeholder with a deadline.** The borrowed name resolves, so every
+  "does it resolve" gate passes it, and the item now depends on art it does not own: the kit that
+  ships the body can rename or retire it in an art drop the borrower never hears about (#599 did
+  exactly that to the elven bow bodies). Three Rhun longbows shipped on `bo_wm_elven_bow_a03` for
+  good (#633). `validate_moduledata.py`'s `COLLISION_BODY_BORROWED` now refuses a body that is
+  provably another kit's twin. Sharing within a kit (recolours, `_a2` on `_a`) is design, and
+  authorised cross-kit shares (Dragon and Khamul are re-textured Loke) are listed in
+  `_SHARED_BODY_BY_DESIGN`. Borrowing a *vanilla* body is safe: Native is always resident and
+  vanilla art is never our placeholder.
+- **Where the cook puts the body afterwards is not the reason, and not something to plan around.**
+  The release cook groups every Armory body into `pack0`/`pack1` and every mesh into the other
+  packs, so a correctly authored twin is "cross-pack" too, and the engine resolves a body by name
+  process-wide. Author the twin for ownership, not residency.
+- **To stop borrowing, author the twin instead of repointing:**
+  `blender-launcher.exe -b --factory-startup -P tools/blender/add_collision_body.py -- --fbx <file>
+  --mesh <MeshObject> --material <physics_material> --apply` duplicates the mesh's lowest LOD into
+  `bo_<Mesh>` in the same FBX, which is how the shipped bodies were made (several `bo_SM_RH_Loke_*`
+  are the mesh's `.lod4` verbatim). It verifies its own round trip and writes a write-once `.bak-bo`
+  before overwriting. **A Modding Kit import of that FBX is required afterwards**, or the new name
+  exists in no tpac and the ref is worse than the borrow.
+- Shields are the one exception to "one body per mesh": a shield carries the `bo_cap_*` capsule in
+  `body_name` and the full body in `shield_body_name`, and sharing a sibling culture's across kits
+  is normal (60 shipped rows do it). See [items-shields.md](../modding/items-shields.md).
 
 ## Step E — Map the faction to a culture id
 

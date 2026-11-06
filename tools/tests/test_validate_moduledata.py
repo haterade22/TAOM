@@ -16,13 +16,16 @@ Each test maps to one recurring TAOM bug class the validator must catch:
   - DUPLICATE_NPC_ID       -> same NPCCharacter id defined twice in TAOM
   - MISSING_CIVILIAN_TYPE  -> civilian roster missing equipmentType="Civilian"
 """
+import io
 import json
 import os
 import re
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -35,6 +38,17 @@ SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 def _write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def _run_main(*args) -> tuple:
+    """(exit code, stdout, stderr) of validate_moduledata.main() under these CLI args.
+    Mocks are the caller's business: baking one in here would let a future test of a pass
+    through main() silently exercise a stub."""
+    out, err = io.StringIO(), io.StringIO()
+    with mock.patch.object(sys, "argv", ["validate_moduledata.py", *args]), \
+         redirect_stdout(out), redirect_stderr(err):
+        code = vm.main()
+    return code, out.getvalue(), err.getvalue()
 
 
 class ValidatorContractTests(unittest.TestCase):
@@ -606,7 +620,7 @@ class ValidatorContractTests(unittest.TestCase):
         gone = Path(self._tmp.name) / "NoSuchModule" / "ModuleData"
         v = ts.Validator(self.md, self.schemas, self.registries, extra_ref_roots=[gone])
         v.run()
-        self.assertEqual([Path(p) for p in v.missing_ref_roots], [gone])
+        self.assertEqual(v.missing_ref_roots, [gone])   # Paths, like extra_ref_roots beside it
 
     def test_present_extra_ref_root_is_not_reported_missing(self):
         armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
@@ -1741,6 +1755,18 @@ class ExtraRefRootTests(unittest.TestCase):
             mod.mkdir(parents=True)
             self.assertIn("version unknown", vm.module_vintage(mod))
 
+    def test_main_warns_about_a_missing_root_instead_of_crashing(self):
+        """A Modules folder missing one of the live modules must print the warning that says
+        its sweep was skipped. Validator.missing_ref_roots once held strings while main()
+        called `.parent` on them, so this crashed with AttributeError instead."""
+        md = Path(self._tmp.name) / "ModuleData"
+        md.mkdir(parents=True)
+        (self.modules / "TAOM_Map" / "ModuleData").rmdir()
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+            _, _, err = _run_main("--moduledata", str(md), "--game-modules", str(self.modules),
+                                  "--code", "UNKNOWN_CULTURE")
+        self.assertIn("extra ref root NOT FOUND, sweep SKIPPED for TAOM_Map", err)
+
 
 class ArmoryStructuralAssumptionTests(unittest.TestCase):
     """The Armory's schema checks silently do not run, and that is only safe today.
@@ -2103,6 +2129,122 @@ class MountWithoutHarnessTests(unittest.TestCase):
         self.assertEqual(len(self._found(registries=degraded)), 1)
 
 
+class MissingCollisionBodyTests(unittest.TestCase):
+    """The #352 / #599 hang class as a validator ERROR: an item or crafting
+    piece whose `body_name` (or holster / collision body) names a PhysicsShape
+    no loaded tpac ships. `validate_mesh_refs.py` Tier C is the engine; this
+    pass only turns its MISSING_BODY findings into ERROR issues (and its
+    MISSING_MESH into WARNINGs) so the commit hook sees them without anyone
+    remembering a second command (the MCP tool and /verify do not yet, #623)."""
+
+    def test_loaded_tpacs_keeps_the_modules_path_it_was_given(self):
+        # rebuilding "<parent>/Modules" from another spelling of the folder ("mods", a lowercase "modules") would
+        # list packages under a path the caller never gave
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            mods = Path(d) / "mods"
+            (mods / "LOTRLOME_Armory" / "Assets").mkdir(parents=True)
+            (mods / "LOTRLOME_Armory" / "Assets" / "a.tpac").write_bytes(b"x")
+            got = vm._loaded_tpacs(mods)
+            self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
+
+    def _fake_tier_c(self, codes):
+        import validate_mesh_refs as vmr
+        issues = []
+        for code, item, name in codes:
+            sev = vmr.Severity.ERROR if code in ("MISSING_BODY", "MISSING_MESH") else vmr.Severity.WARNING
+            issues.append(vmr.Issue(severity=sev, code=code, file="LOTRLOME_items/x.xml", line=7,
+                                    entry_id=item, message=f"{code}: {name} not in any tpac"))
+        return issues
+
+    def test_missing_body_becomes_error_and_missing_mesh_a_warning(self):
+        from unittest import mock
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1"),
+                                  ("MISSING_MESH", "starter_highelf_longbow", "wm_elven_bow_v1"),
+                                  ("KNOWN_DEAD_MESH", "old_item", "old_mesh")])
+        with mock.patch.object(vmr, "extract_refs", return_value=[]),              mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])),              mock.patch.object(vmr, "classify", return_value=fake),              mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        by_code = {i.code: i for i in issues}
+        self.assertEqual(by_code[vm.BODY_CODE].severity, ts.Severity.ERROR)
+        self.assertIn("bo_wm_elven_bow_v1", by_code[vm.BODY_CODE].message)
+        self.assertIn("#352", by_code[vm.BODY_CODE].message)
+        self.assertEqual(by_code[vm.BODY_CODE].entry_id, "starter_highelf_longbow")
+        self.assertEqual(by_code[vm.MESH_CODE].severity, ts.Severity.WARNING)
+        self.assertNotIn("KNOWN_DEAD_MESH", by_code)          # allowlist noise stays in the sibling tool
+
+    def test_no_tpacs_is_a_finding_not_a_pass(self):
+        """A present-set built from zero packs would report every body missing
+        (or, filtered, nothing at all); either way it is not evidence."""
+        from unittest import mock
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([i.code for i in issues], [vm.BODY_CODE])
+        self.assertIn("NOT verified", issues[0].message)
+
+    def test_fallback_scans_only_the_packs_that_failed_to_parse(self):
+        """A parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        parse can hide one. Byte-scanning every pack instead took 110-119 s over 4,611 packs
+        (22.6 GiB), past the commit hook's 45 s bound, in exactly the #599 case."""
+        import validate_mesh_refs as vmr
+        present = vmr.PresentSet(physicsshapes={"bo_a"}, tpac_paths=["good.tpac", "bad.tpac"],
+                                 unparsed=[("bad.tpac", "suspicious udep_count")])
+        ref = vmr.MeshRef(name="bo_missing", attr="body_name", kind="collision_body",
+                          file="LOTRLOME_items/x.xml", line=7, item_id="it", culture="")
+        with mock.patch.object(vmr, "extract_refs", return_value=[ref]), \
+             mock.patch.object(vmr, "build_present_set", return_value=present), \
+             mock.patch.object(vmr, "bodies_present_in_tpacs", return_value=set()) as scan, \
+             mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("good.tpac"), Path("bad.tpac")]):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        scan.assert_called_once()
+        self.assertEqual(list(scan.call_args.args[1]), [Path("bad.tpac")])
+        self.assertEqual([(i.code, i.entry_id) for i in issues], [(vm.BODY_CODE, "it")])
+
+    def test_a_crash_inside_the_pass_is_a_not_verified_error(self):
+        """A scan that raises must say the bodies went unverified, as the generator pass does,
+        not escape as a traceback the hook turns into a blocked commit with no findings."""
+        import validate_mesh_refs as vmr
+        with mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+             mock.patch.object(vmr, "extract_refs", side_effect=MemoryError("corrupt sized string")):
+            issues = vm.missing_collision_body_issues(Path("game/Modules"), Path("md"))
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.BODY_CODE, ts.Severity.ERROR)])
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("MemoryError", issues[0].message)
+
+    def test_main_runs_the_pass(self):
+        """#622: main() never called this pass, so MISSING_COLLISION_BODY never fired and the
+        commit hook's --code line for it blocked nothing, while this class stayed green.
+        Drive main(), not the function; exit 1 is the code the hook blocks on."""
+        import validate_mesh_refs as vmr
+        fake = self._fake_tier_c([("MISSING_BODY", "starter_highelf_longbow", "bo_wm_elven_bow_v1")])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            (root / "Game" / "Modules").mkdir(parents=True)
+            with mock.patch.object(vmr, "extract_refs", return_value=[]), \
+                 mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])), \
+                 mock.patch.object(vmr, "classify", return_value=fake), \
+                 mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+                 mock.patch.object(vm, "generator_item_ref_issues", return_value=[]):
+                code, out, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                           "--game-modules", str(root / "Game" / "Modules"),
+                                           "--code", vm.BODY_CODE)
+        self.assertIn(vm.BODY_CODE, out, out + err)
+        self.assertIn("bo_wm_elven_bow_v1", out)
+        self.assertEqual(code, 1)
+
+    def test_main_without_install_says_the_pass_was_skipped(self):
+        """Without the install there are no tpacs to scan: the run must say this gate did not
+        run, never print nothing about it; exit 2 is the degraded-sweep code."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ModuleData").mkdir()
+            code, _, err = _run_main("--moduledata", str(root / "ModuleData"),
+                                     "--game-modules", str(root / "nowhere"), "--code", vm.BODY_CODE)
+        self.assertIn(f"{vm.BODY_CODE} SKIPPED", err)
+        self.assertEqual(code, 2)
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced
@@ -2117,15 +2259,45 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     HOOK = Path(__file__).resolve().parents[2] / ".claude" / "hooks" / "check-moduledata-validation.sh"
     SCHEMA = Path(ts.__file__)
+    VALIDATOR = Path(vm.__file__)
+
+    @staticmethod
+    def _named_codes(src, severity):
+        """Codes emitted through a module constant: `code=BODY_CODE` where
+        `BODY_CODE = "MISSING_COLLISION_BODY"` is defined at module level."""
+        consts = dict(re.findall(r'^([A-Z_]+_CODE)\s*=\s*"([A-Z_]+)"', src, flags=re.M))
+        used = re.findall(r'severity=(?:ts\.)?Severity\.' + severity + r',\s*code=([A-Z_]+_CODE)\b', src)
+        return {consts[c] for c in used if c in consts}
+
+    @staticmethod
+    def _unreached_passes(src):
+        """Every module-level `def <x>_issues(` whose call does not appear in main()'s body."""
+        passes = re.findall(r"^def (\w+_issues)\(", src, flags=re.M)
+        main_body = re.search(r"^def main\(\).*?(?=^\S)", src, flags=re.M | re.S).group(0)
+        return passes, [p for p in passes if f"{p}(" not in main_body]
+
+    def test_every_issue_pass_is_reached_from_main(self):
+        """#622: missing_collision_body_issues was defined, documented, in the hook's --code
+        list and unit-tested, and main() never called it for three days. The code-string
+        checks in this class prove presence in source, not reachability; this checks the call."""
+        passes, unreached = self._unreached_passes(self.VALIDATOR.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(passes), 3, "the pass scan found nothing")
+        self.assertEqual(unreached, [], f"main() never calls: {unreached}")
 
     def _error_codes(self):
         """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and
         the ref-sweep table, whose rows are `(..., Severity.ERROR, "CODE", ...)`.
         Scanning only the inline form is how the first version of this test read
         7 live codes as non-existent."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
-        return (set(re.findall(r'severity=Severity\.ERROR,\s*code="([A-Z_]+)"', src))
-                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src)))
+        # Both files emit codes: taom_schema.py owns the ref sweep, and
+        # validate_moduledata.py adds the passes that call sibling tools
+        # (generators, collision bodies). Scanning one of them is how a code
+        # could be emitted and never enforced (#599 added the first ERROR to the
+        # second file).
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
+        return (set(re.findall(r'severity=(?:ts\.)?Severity\.ERROR,\s*code="([A-Z_]+)"', src))
+                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src))
+                | self._named_codes(src, "ERROR"))
 
     def _hook_codes(self):
         return set(re.findall(r"--code\s+([A-Z_]+)", self.HOOK.read_text(encoding="utf-8")))
@@ -2147,9 +2319,10 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     def test_the_hook_names_no_code_the_validator_cannot_emit(self):
         """A typo'd or retired code in the hook is a silently dead gate line."""
-        src = self.SCHEMA.read_text(encoding="utf-8")
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
         emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
                    | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   | self._named_codes(src, "ERROR") | self._named_codes(src, "WARNING")
                    # the duplicate-id family is built as f"DUPLICATE_{kind}_ID"
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)

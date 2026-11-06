@@ -29,9 +29,8 @@ crash, `Process.Responding` still true because the window pump is another thread
 it in #352 (2026-07-16); the 2026-09-11 Armory art drop that renamed the elven bows did it again
 in #599, and every elf start hung on the Rivendell tournament for two days.
 
-#599 built the desk-side gates. On the 1.4.x line that is `tools/audit_armory_refs.py` today; the
-`MISSING_COLLISION_BODY` and `COLLISION_BODY_BORROWED` errors in `validate_moduledata.py` come with
-plan 108 Step B4, which is held (WP108;
+#599 built the desk-side gates. On the 1.4.x line they are `tools/audit_armory_refs.py` and the
+`MISSING_COLLISION_BODY` and `COLLISION_BODY_BORROWED` errors in `validate_moduledata.py` (WP108;
 the 1.5.x `/armory-audit` skill and `ARMORY ART DRIFT` startup line were not ported). None of them
 reaches a player whose Armory copy already carries a bad pair, and the artists will keep combining,
 renaming and deleting meshes. This guard is the only protection at the point of failure.
@@ -45,7 +44,7 @@ resolved there too, and the leading hypothesis is a build whose packs predate th
 drop while its XML carries the post-#599 name, the plain #599 class. If that is right, this guard
 would have logged a `[PreloadGuard]` line naming the body, on a build that had it (the player's version is not recorded). If the stall is mesh-side instead
 (`MetaMesh.CheckResources` is in the same loop and this guard drains body names only), it would
-have logged nothing. The desk-side half is `COLLISION_BODY_BORROWED`, once plan 108 Step B4 lands; see
+have logged nothing. The desk-side half is now `COLLISION_BODY_BORROWED`; see
 `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`.
 
 Six callers, all on the main thread: `MissionPreloadView.OnSceneRenderingStarted` (campaign

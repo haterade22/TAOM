@@ -89,6 +89,10 @@ PY="$PYBIN"
 # runtime, so every ModuleData commit silently skipped the check. Bounding the work here
 # keeps the overrun inside the hook, where it can still speak.
 #
+# WP108 adds MISSING_COLLISION_BODY and COLLISION_BODY_BORROWED: each runs one
+# validate_mesh_refs.extract_refs pass over the Armory XML (about 3.5 s each on the 1.5.x
+# desktop, 2026-09-21). The laptop's measured total is in the WP108 validator commit.
+#
 # The validator itself now runs in ~4s, not 27s: 16.5s of that original figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
 # file does not contain (fixed 2026-08-31, byte-identical output). The 60s/45s budget is
@@ -102,7 +106,8 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code SKILL_TEMPLATE_SHADOWS_SKILLS --code UPGRADE_TIER_COLLAPSE --code UPGRADE_INDEX_EMPTY \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
-        --code MOUNT_WITHOUT_HARNESS \
+        --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
+        --code COLLISION_BODY_BORROWED \
         2>/dev/null)
 RC=$?
 

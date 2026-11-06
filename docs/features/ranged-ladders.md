@@ -111,6 +111,14 @@ validator's `RANGED_MOUNT_USAGE` warning names any such troop that exists; both 
 so, when no such file can be read. The second flag is not gated: Native itself ships twelve
 Wolfskins sets (`default_group="Ranged"`) with a `long_bow` bow beside a shield.
 
+**A clone inherits the donor's art too, so fix the donor and regenerate.** `clone_launcher` is a
+`copy.deepcopy` of the donor, and `--verify` checks ids, speed, damage, accuracy, usage and the
+localization row but never `mesh` or `body_name`. In #633 three donors had no `bo_` twin of their
+own and carried the elven bow's; six ladder clones inherited it, and the borrow was invisible to
+every gate because the name resolves. Never hand-edit a `ranged_ladder.xml` to repair art: repoint
+the donor in `LOTRAOM_weapons.xml`, re-run the generator, and let `COLLISION_BODY_BORROWED` confirm
+it.
+
 Names are `{=<id>}<donor name, its own numeral and "- Starting" / "- Horse" suffix stripped>
 <band numeral I..V>`, and the generator registers each English row in the Armory's
 `Languages/loc_<folder>.xml` between `<!-- TAOM-RANGED-LADDER:START/END -->` markers so
