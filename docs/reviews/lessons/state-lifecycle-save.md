@@ -849,3 +849,11 @@ measured nothing and fell back to "draining".
   lines keep coming while the game thread is frozen. The tool now measures to the newest stamped line of any kind
   when there is no watchdog line (`Timeline.last_ts`), and the report says "before the log ended".
 - **Source:** 1.5.x player log `taom_debug_2026-10-25_17-36-25.log` (TAOM `84f0459bc`); fix in `tools/triage_battle_load.py`, test `test_silent_stream_before_the_log_ends_is_not_called_draining`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Say what an existing save holds from the last released data, not from the working tree (#646, 2026-09-23)
+The rider docs said an older campaign keeps Thranduil and the lords on the great elk. A hero's battle equipment is
+saved, but the great elk's lord wiring never shipped in a release, so every player's save has them on a `charger`.
+- **Why missed:** "before this change" was read from the working tree, which held another session's unreleased edit.
+- **Prevent:** when you describe what existing saves contain, read the value at the last release tag
+  (`git show <tag>:<path>`) and name both cases if an unreleased build could have written something else.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 5, on `origin/bannerlord-1.5.x` (ported by WP142).
