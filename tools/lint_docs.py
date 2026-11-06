@@ -965,7 +965,7 @@ _SYMBOL_RE = re.compile(r"`([A-Z][A-Za-z0-9]*(?:" + "|".join(SYMBOL_SUFFIXES) + 
 # A line with this marker names a type on purpose as an example, so it need not exist.
 _ILLUSTRATIVE_RE = re.compile(r"<!--\s*illustrative-name\s*-->")
 DOTNET_FLAG_DIRS = ("docs/modding", "docs/reference", "docs/ai-includes", ".claude/skills",
-                    ".claude/rules", ".claude/agents")
+                    ".claude/rules", ".claude/agents", ".ai", ".agents")
 _DOTNET_TARGET_RE = re.compile(
     r"\bdotnet\s+(?:test|build)\s+(?:-\S+\s+(?:[^-\s]\S*\s+)?)*[\"']?(?:\S*TAOM\S*|Main\b\S*)")
 _LINE_CONTINUATIONS = ("\\", "`", "^")

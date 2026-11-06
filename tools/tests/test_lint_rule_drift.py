@@ -18,8 +18,10 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import lint_docs as ld  # noqa: E402
+import test_dotnet_commands_flagged  # noqa: E402
 
 
 def _write(path: Path, text: str) -> None:
@@ -153,6 +155,14 @@ class UnflaggedDotnetTests(_Repo):
         _write(self.root / ".claude/rules/a.md", "dotnet test TAOM.Tests\n")
         _write(self.root / ".claude/agents/b.md", "dotnet build Main/TAOM.csproj\n")
         self.assertEqual(len(ld.check_unflagged_dotnet()), 2)
+
+    def test_the_shared_instructions_and_the_codex_skills_are_scanned(self):
+        _write(self.root / ".ai/verification.md", "`dotnet test TAOM.Tests --no-build`\n")
+        _write(self.root / ".agents/skills/taom-build/SKILL.md", "`dotnet build TAOM.sln`\n")
+        self.assertEqual(len(ld.check_unflagged_dotnet()), 2)
+
+    def test_the_directories_match_the_repository_test(self):
+        self.assertEqual(set(ld.DOTNET_FLAG_DIRS), set(test_dotnet_commands_flagged.DIRS))
 
     def test_flags_before_the_target_are_read_past(self):
         _write(self.root / "docs/reference/a.md", "dotnet test --no-build TAOM.Tests\n")

@@ -89,7 +89,7 @@ run_gate() {
 
 # The surfaces lint_docs --drift-only reads. A commit it cannot concern pays nothing, and an old breach
 # in the docs does not refuse it.
-if printf '%s\n' "$STAGED" | grep -qE '^(docs/features/.*\.md|docs/reviews/rca-.*\.md|Main/_Module/ModuleData/.*\.json|\.claude/pinned-game-version\.txt|CLAUDE\.md|AGENTS\.md|docs/ai-includes/.*\.md|\.claude/rules/.*\.md|\.claude/agents/.*\.md|\.claude/skills/.*\.md|docs/modding/.*\.md|docs/reference/.*\.md)$'; then
+if printf '%s\n' "$STAGED" | grep -qE '^(docs/features/.*\.md|docs/reviews/rca-.*\.md|Main/_Module/ModuleData/.*\.json|\.claude/pinned-game-version\.txt|CLAUDE\.md|AGENTS\.md|docs/ai-includes/.*\.md|\.claude/rules/.*\.md|\.claude/agents/.*\.md|\.claude/skills/.*\.md|docs/modding/.*\.md|docs/reference/.*\.md|\.ai/.*\.md|\.agents/.*\.md)$'; then
     # shellcheck disable=SC2086  # the flag is one word or none
     run_gate "lint_docs" 25 tools/lint_docs.py --drift-only --staged ${TAOM_CLEAN_MERGE:+--clean-merge}
 fi

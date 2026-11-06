@@ -121,7 +121,7 @@ for f in "${STAGED_LIST[@]}"; do
         .claude/pinned-game-version.txt) RELEVANT=1; break ;;
         CLAUDE.md|AGENTS.md|docs/ai-includes/*.md) RELEVANT=1; break ;;
         .claude/rules/*.md|.claude/agents/*.md|.claude/skills/*.md) RELEVANT=1; break ;;
-        docs/modding/*.md|docs/reference/*.md) RELEVANT=1; break ;;
+        docs/modding/*.md|docs/reference/*.md|.ai/*.md|.agents/*.md) RELEVANT=1; break ;;
     esac
 done
 # A feature doc that `git add <doc> && git commit` stages in one command is not in the index yet:
