@@ -15,6 +15,7 @@ internal enum BotActionKind
     TowerLevel,
     FieldCare,
     VolleyLevel,
+    Volley,
 }
 
 internal readonly record struct BotAction(BotActionKind Kind, string? OfferId = null);
@@ -28,7 +29,7 @@ internal readonly record struct BotAction(BotActionKind Kind, string? OfferId = 
 /// The fortifications follow phase3-plan.md D27, one level of each kind a stretch between waves: a repair first when a gate is broken or has lost a tenth of its maximum, then gate level N at
 /// clear N (to 3), the Elven Volley at 1 in the preparation and 2 from clear 1, the towers at clear + 1 (to 3), and field care at clears 1 to 3. A run with a <c>start_gold</c> buys these before its packs;
 /// any other run buys them from what its packs left. A row the view shows unavailable (not offered, not carried, at its top, used, or posts that bust the cap) is never asked for, so a build that offers
-/// nothing decides exactly as one with no fortifications.
+/// nothing decides exactly as one with no fortifications. In a wave it arms the Elven Volley whenever the view shows it ready (<see cref="BotActionKind.Volley"/>).
 /// </summary>
 internal static class ShopBot
 {
@@ -43,8 +44,9 @@ internal static class ShopBot
 
     internal static BotAction Decide(RunView view, float secondsInPhase)
     {
+        // In a wave the only thing the bot does is fire the Elven Volley whenever the view shows it ready (D27).
         if (!view.ShopOpen)
-            return new BotAction(BotActionKind.Wait);
+            return new BotAction(view.Phase == RunPhase.Wave && view.Volleys.Ready ? BotActionKind.Volley : BotActionKind.Wait);
 
         if (view.BoonOffer.Count > 0)
         {

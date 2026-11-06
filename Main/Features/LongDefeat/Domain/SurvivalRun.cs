@@ -147,7 +147,14 @@ internal sealed partial class SurvivalRun
 
         // A wave the horn began waits one tick when fortification effects went out on this one.
         if (_phase == RunPhase.Wave && !(holdStart && _waveInit))
+        {
             RunWave(s, loss, fx);
+
+            // A wave that cleared or ended on this tick has no volley to fire.
+            if (_phase == RunPhase.Wave)
+                TickVolleys(fx);
+        }
+
         return fx;
     }
 
@@ -238,6 +245,7 @@ internal sealed partial class SurvivalRun
             ClassName = _plan.ClassName,
             Commander = CommanderViewNow(),
             Fort = FortViewNow(),
+            Volleys = VolleyViewNow(),
             BoonOffer = _offerCards,
             OwedPicks = _deck.Owed,
             Rerolls = _deck.Banked,
@@ -338,6 +346,7 @@ internal sealed partial class SurvivalRun
         _terrorClock = 0f;
         InitPoison();
         InitGateRecord();
+        InitVolley();
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
@@ -382,6 +391,7 @@ internal sealed partial class SurvivalRun
         var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
         _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow());
+        CloseVolleys();
         _careUsed = 0;
         _warCry = null;
         EndPoison();
@@ -411,6 +421,7 @@ internal sealed partial class SurvivalRun
     {
         Result = new RunResult(reason, _wave, _wavesCleared, _stats.TotalKills);
         _phase = RunPhase.Ended;
+        FlushVolleys();
         EndPoison();
     }
 

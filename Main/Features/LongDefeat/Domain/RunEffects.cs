@@ -72,6 +72,12 @@ internal sealed class RunEffects
     /// <summary>Field care was bought since the last tick: every standing defender regains this share of his missing health. 0 at every other tick, and never the tick the clear's <see cref="RestShare"/> rides.</summary>
     public float FieldCare { get; set; }
 
+    /// <summary>
+    /// The volleys armed for this tick, to be fired last (they read the attackers this tick's batches spawned): the Elven Volley's shot when the player or the bot armed it, and each tower whose volley clock
+    /// is ready. The director answers each with <see cref="SurvivalRun.VolleyFired"/> or <see cref="SurvivalRun.VolleyWithheld"/>. Empty at every other tick.
+    /// </summary>
+    public List<VolleyOrder> FireVolleys { get; } = new();
+
     /// <summary>A Winged Terror pulse is due: lower the morale of the defenders near the attackers, never below the pulse's floor. Null at every other tick.</summary>
     public LdMoralePulse? MoralePulse { get; set; }
 

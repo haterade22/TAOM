@@ -56,6 +56,9 @@ internal sealed record RunView(
 
     /// <summary>The fortification rows: what each one costs and whether it can be bought now, the gates as last read, and whether the unattended bot buys them before packs.</summary>
     public FortView Fort { get; init; } = FortView.None;
+
+    /// <summary>The Elven Volley and the towers' volleys: what the HUD shows in a wave and the bot reads to fire.</summary>
+    public VolleyView Volleys { get; init; } = VolleyView.None;
 }
 
 /// <summary>

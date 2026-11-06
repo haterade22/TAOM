@@ -308,7 +308,7 @@ internal sealed partial class SurvivalRun
             _gateFellAt = _waveSeconds;
     }
 
-    private FortWave FortWaveNow() => new(new GateWaveRecord(_gateWaveLevel, _gateStartHitPoints, _gateStartMax, _gateFellAt != null, _gateFellAt), PostsWaveRecord.None, VolleyWaveRecord.None, VolleyWaveRecord.None);
+    private FortWave FortWaveNow() => new(new GateWaveRecord(_gateWaveLevel, _gateStartHitPoints, _gateStartMax, _gateFellAt != null, _gateFellAt), PostsWaveRecord.None, ElvenWaveNow(), TowerWaveNow());
 
     private FortView FortViewNow()
     {
