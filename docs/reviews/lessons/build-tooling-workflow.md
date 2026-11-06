@@ -4886,3 +4886,11 @@ Steam moved the game from changeset 125053 to 125270 and kept the version string
 - **Why missed:** the tool printed sensible numbers on clean folders.
 - **Prevent:** a counting function gets temp-tree tests with an unfinished, a foreign-build, a swapped and an unreadable folder on its first commit, plus a mutation check that disables each rule. A shell guard reads only the launcher's anchored closing line.
 - **Source:** [rca-fords-of-war-2026-11-05.md](../rca-fords-of-war-2026-11-05.md).
+
+### An Armory sync that replaces SubModule.xml must keep every Monster row (dire wolves, 2026-11-06)
+
+A merge of KEYforce's Lorien and Snow Orc trees replaced the live Armory `SubModule.xml` on 2026-11-05 and lost the `lotr_monster_dire_wolf` row. The engine loaded no `dire_wolf`, logged only `Null object reference found with ID: dire_wolf`, and a wolf rider's portrait threw in `FillAnimationSystemData`.
+
+- **Why missed:** no gate compared the Monster files on disk with the rows that load them, and the engine log line names no file.
+- **Prevent:** `LiveMonsterRegistrationTests` (`tools/tests/test_verify_mount_assets.py`) fails on any Monster file without a row. After an Armory sync, re-run each creature's `apply_*_armory.py` dry run.
+- **Source:** the dire wolf portrait crash, 2026-11-06; fix re-ran `apply_dire_wolf_armory.py --apply`.

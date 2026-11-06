@@ -8,6 +8,7 @@ read as a pass, and an exemption covers one action and one clip, never the clip 
 """
 import io
 import os
+import re
 import struct
 import sys
 import tempfile
@@ -158,6 +159,30 @@ class GateTests(unittest.TestCase):
             with self.assertRaises(SystemExit) as caught:
                 vma.main(["nope"])
         self.assertEqual(caught.exception.code, 2)
+
+
+class LiveMonsterRegistrationTests(unittest.TestCase):
+    """Every Monster file in the live Armory is registered in its SubModule.xml. An Armory sync that replaced
+    SubModule.xml dropped lotr_monster_dire_wolf (2026-11-05): the engine then loads no dire_wolf, the items point at an
+    empty placeholder Monster, and a portrait of a wolf rider throws in FillAnimationSystemData. Skipped where the
+    Armory is not installed (CI, the laptop)."""
+
+    def test_every_monster_file_is_registered(self):
+        root = os.path.join(vma.DEFAULT_GAME, "Modules", "LOTRLOME_Armory")
+        monsters = os.path.join(root, "ModuleData", "Monsters")
+        if not os.path.isdir(monsters):
+            self.skipTest("LOTRLOME_Armory is not installed here")
+        with open(os.path.join(root, "SubModule.xml"), encoding="utf-8-sig") as fh:
+            submodule = fh.read()
+        registered = set(re.findall(r'<XmlName\s+id="Monsters"\s+path="([^"]+)"', submodule))
+        files = set()
+        for folder, _, names in os.walk(monsters):
+            for name in names:
+                if name.endswith(".xml"):
+                    rel = os.path.relpath(os.path.join(folder, name[:-4]), os.path.dirname(monsters))
+                    files.add(rel.replace(os.sep, "/"))
+        self.assertEqual(sorted(files - registered), [], "Monster files the SubModule.xml does not load; "
+                         "re-run the creature's apply_*_armory.py --apply")
 
 
 if __name__ == "__main__":
