@@ -10,7 +10,7 @@ A kingdom is the map faction a clan swears to: the thing that owns fiefs, declar
 |---|---|
 | TAOM's own 14 kingdoms | [`Main/_Module/ModuleData/taom_spkingdoms.xml`](../../Main/_Module/ModuleData/taom_spkingdoms.xml) |
 | The 8 vanilla rewrites | [`Main/_Module/ModuleData/spkingdoms.xslt`](../../Main/_Module/ModuleData/spkingdoms.xslt) |
-| Registration | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) line 70 `<XmlName id="Kingdoms" path="spkingdoms"/>` and line 130 `<XmlName id="Kingdoms" path="taom_spkingdoms"/>` |
+| Registration | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) line 70 `<XmlName id="Kingdoms" path="spkingdoms"/>` and line 144 `<XmlName id="Kingdoms" path="taom_spkingdoms"/>` |
 | Root element | `<Kingdoms>` |
 | Per entry | `<Kingdom>` |
 | Engine class | `TaleWorlds.CampaignSystem.Kingdom`, registered as `RegisterType<Kingdom>("Kingdom", "Kingdoms", 20u, ...)` (`Campaign.cs:1545`) |
