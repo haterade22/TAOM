@@ -47,7 +47,7 @@ public sealed class FrontEndSpriteService
     private readonly IModLogger _logger;
 
     private readonly ImageGroup _menu = new(FrontEndImageGroups.MainMenu, FrontEndSpriteKind.MenuChrome, "main menu", "TAOMMainMenu");
-    private readonly ImageGroup _creation = new(FrontEndImageGroups.CharacterCreation, FrontEndSpriteKind.Chrome, "character creation", "TAOMCharCreation", "TAOMFactionScreen", "TAOMEscapeMenu", "TAOMCampaignNavigation", "TAOMCampaignTime", "TAOMCampaignStats", "TAOMCampaignMuster", "TAOMCharacterDeveloper", "TAOMEncyclopedia");
+    private readonly ImageGroup _creation = new(FrontEndImageGroups.CharacterCreation, FrontEndSpriteKind.Chrome, "character creation", "TAOMCharCreation", "TAOMFactionScreen", "TAOMEscapeMenu", "TAOMCampaignNavigation", "TAOMCampaignTime", "TAOMCampaignStats", "TAOMCampaignMuster", "TAOMCharacterDeveloper", "TAOMEncyclopedia", "TAOMLongDefeat");
     private readonly ImageGroup _art = new(FrontEndImageGroups.FactionArt, FrontEndSpriteKind.Art, "faction art");
     private readonly ImageGroup[] _groups;
 
