@@ -6,8 +6,8 @@ namespace TAOM.Adapters;
 /// <summary>
 /// The engine writes and reads that are not the field itself: what the director publishes into the engine's hooks, and what it reads back
 /// to prove a number reached the agents. Takes and returns domain types only (ADR-007). Main thread. Slices 2 and 3 hold the wave's published
-/// table (damage factor, stat record, armour) and the two reads that prove it; Slice 6 adds the troop and class boons' refresh, health writes and read-back; the morale and poison
-/// members of the plan join it in their own slices.
+/// table (damage factor, stat record, armour) and the two reads that prove it; Slice 6 adds the troop and class boons' refresh, health writes and read-back; Slice 8 adds the engines' hit points and the morale pulse; the poison
+/// member of the plan joins it in its own slice.
 /// </summary>
 internal interface ILongDefeatEffectsAdapter
 {
@@ -25,6 +25,20 @@ internal interface ILongDefeatEffectsAdapter
     /// it and as the stat model gives the same agent with the affixes left out (an armour property: as its spawn equipment sums to). No attacker, an empty sample.
     /// </summary>
     LdStatSample ReadStats(IReadOnlyList<string> stats);
+
+    /// <summary>
+    /// Sets every live ram's and siege tower's maximum hit points to the vanilla hit points of its type (<c>SiegeEngineType.BaseHitPoints</c>) times <paramref name="factor"/>, and its current hit
+    /// points by the same ratio, so a damaged engine keeps its share and a destroyed one stays destroyed. A factor of 1 restores the vanilla value after a hammer wave. Returns each engine as it
+    /// stands after the write, and the state of the visible gates, for the hammer's check. The gates are read from every mission object, because a destroyed gate leaves
+    /// <c>ActiveMissionObjects</c> (<c>Mission.OnObjectDisabled</c>, <c>Mission.cs:3060</c>); the engines are read from the active list, where leaving it on destruction is what "live" means.
+    /// </summary>
+    LdEngineReport SetEngineHitPoints(float factor);
+
+    /// <summary>
+    /// One Winged Terror pulse: every standing human defender within the pulse's radius of a standing human attacker loses morale, never below the pulse's floor. Reads the attackers' positions
+    /// once, counts the defenders drained and left below the floor inside the call, and times itself.
+    /// </summary>
+    LdPulseResult PulseMorale(LdMoralePulse pulse);
 
     /// <summary>
     /// Derives the driven properties of every standing human of one group of the player's side again (and of each one's mount), so a stat record just published reaches soldiers already

@@ -297,6 +297,26 @@ public class LongDefeatBindingTests
             "tools/run_long_defeat.py MOUNTED_GROUPS and RANGED_GROUPS follow this table (the engine's flags, read once from a troop's default_group)");
     }
 
+    // The Hammer of the Underworld and Winged Terror (phase2-plan.md Slice 8): the engines' hit points the hammer writes and the morale the pulse reads and lowers.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheHammerAndTerrorMembers_StillResolve()
+    {
+        Field(typeof(DestructableComponent), "MaxHitPoint", typeof(float));
+        Assert.IsFalse(typeof(DestructableComponent).GetField("MaxHitPoint", AnyMember)!.IsInitOnly, "the hammer assigns MaxHitPoint");
+        Assert.IsNotNull(Property(typeof(DestructableComponent), "HitPoint", typeof(float)).GetSetMethod(), "DestructableComponent.HitPoint lost its public setter");
+        Property(typeof(DestructableComponent), "IsDestroyed", typeof(bool));
+        Property(typeof(UsableMachine), "IsDestroyed", typeof(bool));
+        Property(typeof(UsableMachine), "IsDisabled", typeof(bool));
+        Method(typeof(SiegeWeapon), "GetSiegeEngineType", typeof(SiegeEngineType));
+        Property(typeof(SiegeEngineType), "BaseHitPoints", typeof(int));
+        Assert.IsTrue(typeof(SiegeWeapon).IsAssignableFrom(typeof(BatteringRam)) && typeof(SiegeWeapon).IsAssignableFrom(typeof(SiegeTower)), "the hammer treats a ram and a tower as one kind of engine");
+        Assert.IsTrue(typeof(UsableMachine).IsAssignableFrom(typeof(CastleGate)), "the gate's state is UsableMachine.IsDestroyed");
+        Method(typeof(AgentComponentExtensions), "GetMorale", typeof(float), typeof(Agent));
+        Method(typeof(AgentComponentExtensions), "ChangeMorale", typeof(void), typeof(Agent), typeof(float));
+        Property(typeof(Agent), "Position", typeof(Vec3));
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

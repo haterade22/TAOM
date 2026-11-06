@@ -20,7 +20,7 @@ internal readonly record struct AffixExpect(string Stat, AffixMath Math, float P
 /// <summary>
 /// The <c>affix</c> and <c>affix-effect</c> verdicts of #1079 (phase2-plan.md section 6). Pure: the director reads the roll and the engine, these turn
 /// the numbers into pass, fail or skip. The arithmetic is written out here on purpose, apart from <c>RaceAbilityService</c>, so a check that shared it
-/// could not catch a change in it. Only the stat powers and <c>hide</c> have an effect check so far; the others join with their own slices.
+/// could not catch a change in it. The stat powers and <c>hide</c> are read back from a sampled attacker (<see cref="Effect"/>); the Hammer of the Underworld and Winged Terror have their own verdicts (<see cref="Hammer"/>, <see cref="Terror"/>), because their effect is on the engines and on the defenders' morale, not on an attacker's driven properties; Morgul Blades joins with its own slice.
 /// </summary>
 internal static class LongDefeatAffixChecks
 {
@@ -83,6 +83,11 @@ internal static class LongDefeatAffixChecks
                     new AffixExpect("ArmorLegs", AffixMath.Times, armour),
                     new AffixExpect("ArmorArms", AffixMath.Times, armour),
                 };
+            case AffixPlan.Hammer:
+            case AffixPlan.Terror:
+                // The row exists so the two are decided here, not forgotten: neither changes a driven property of an attacker, so the stat read has nothing to ask of them and a wave
+                // with only these reads no soldier. Each is proven by its own verdict (Hammer, Terror) from the engines and the pulses, recorded under the same affix-effect id.
+                return Array.Empty<AffixExpect>();
             default:
                 return Array.Empty<AffixExpect>();
         }
@@ -148,9 +153,58 @@ internal static class LongDefeatAffixChecks
         }
     }
 
+    /// <summary>A pulse that takes this long or longer is a visible frame (risk 14), and fails the terror check.</summary>
+    internal const double PulseBudgetMilliseconds = 16d;
+
+    /// <summary>
+    /// The hammer's write, proven on the engines as the adapter read them after it: every live ram and tower holds the vanilla hit points of its type times the factor, within 1%. The gate's
+    /// state is logged beside it and judges nothing, since the hammer does little once the gate has fallen. No live engine, or a factor of 1 that no write could show, is a skip.
+    /// </summary>
+    internal static CheckVerdict Hammer(float factor, LdEngineReport report)
+    {
+        var gate = report.Gates == 0 ? "none" : report.GatesDestroyed > 0 ? "destroyed" : "standing";
+        var lead = $"power=hammer engines={Num(report.Engines.Count)} want={F3(factor)}";
+        if (report.Engines.Count == 0)
+            return new CheckVerdict(CheckResult.Skip, $"{lead} reason=no-engine gate={gate} gates={Num(report.Gates)} destroyed={Num(report.GatesDestroyed)}");
+
+        var ok = true;
+        var parts = new List<string>();
+        foreach (var engine in report.Engines)
+        {
+            var ratio = engine.Vanilla > 0f ? engine.MaxHitPoints / engine.Vanilla : float.NaN;
+            var near = Math.Abs(ratio - factor) <= RelativeTolerance * factor;
+            ok &= near;
+            parts.Add($"{engine.Kind}={F3(ratio)}{(near ? "" : " WRONG")}");
+        }
+
+        var detail = $"{lead} got={string.Join(", ", parts)} gate={gate} gates={Num(report.Gates)} destroyed={Num(report.GatesDestroyed)}";
+        if (!ok)
+            return new CheckVerdict(CheckResult.Fail, detail);
+
+        return Math.Abs(factor - 1f) > AbsoluteTolerance ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
+    }
+
+    /// <summary>
+    /// A wave's Winged Terror pulses, read from the pulses' own counts: fails when any defender was left below the floor (<c>pushed_below</c>) or the slowest pulse took the whole frame budget; a wave
+    /// with no pulse, or where no pulse drained anyone, could not show the effect and is a skip.
+    /// </summary>
+    internal static CheckVerdict Terror(int wave, float floor, LdTerrorTally tally)
+    {
+        var detail = $"power=terror w={Num(wave)} pulses={Num(tally.Pulses)} drained={Num(tally.Drained)} lost={F1(tally.Lost)} pushed_below={Num(tally.PushedBelow)} "
+            + $"max_ms={F1((float)tally.MaxMilliseconds)} budget_ms={F1((float)PulseBudgetMilliseconds)} floor={F1(floor)}";
+        if (tally.PushedBelow > 0 || tally.MaxMilliseconds >= PulseBudgetMilliseconds)
+            return new CheckVerdict(CheckResult.Fail, detail);
+        if (tally.Pulses == 0)
+            return new CheckVerdict(CheckResult.Skip, detail + " reason=no-pulse");
+
+        return tally.Drained > 0 ? new CheckVerdict(CheckResult.Pass, detail) : new CheckVerdict(CheckResult.Skip, detail + " reason=no-signal");
+    }
+
     private static string Flag(bool v) => v ? "true" : "false";
 
     private static string Num(long v) => v.ToString(CultureInfo.InvariantCulture);
+
+    private static string F1(float v) => v.ToString("F1", CultureInfo.InvariantCulture);
 
     private static string F3(float v) => v.ToString("F3", CultureInfo.InvariantCulture);
 }

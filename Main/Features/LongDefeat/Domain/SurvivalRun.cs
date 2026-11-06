@@ -267,6 +267,7 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        TickTerror(s.Dt, fx);
         var decision = StalemateRule.Step(ref _stale, s.Dt, loss, s.AttackersStanding + QueueLeft, s.DefendersStanding, _waveCount + _summoned, _r);
         switch (decision.Action)
         {
@@ -324,6 +325,9 @@ internal sealed partial class SurvivalRun
             QueueCommander();
         fx.StartWave = new WaveStart(_wave, _firstTotals[(int)FormationSlot.Infantry], _firstTotals[(int)FormationSlot.Ranged]);
         fx.PublishStats = StatTableNow();
+        fx.EngineHitPoints = RunModifiers.EngineHitPoints(_plan.Affixes, _waveAffixes);
+        _terror = RunModifiers.Terror(_plan.Affixes, _waveAffixes);
+        _terrorClock = 0f;
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>

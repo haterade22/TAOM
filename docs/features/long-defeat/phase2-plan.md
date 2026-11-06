@@ -537,7 +537,7 @@ The first slice of the Cavalry work, and the only spike. Cavalry ships only afte
 1. `/verify`, `/localize`, `/deep-review`.
 2. Mike's word: commit as X.
 3. Build the clean tree at X.
-4. `run_long_defeat.py --waves 5 --runs 4 --class all --garrison-scale 1.5`, one `--deep`, one `--lose`, two `--class cavalry --waves 3`.
+4. `run_long_defeat.py --waves 5 --runs 4 --class all --garrison-scale 1.5`, one `--deep`, one `--lose`, two `--class cavalry --waves 3`. Note from the Slice 8 review: the troop-boon proof seed 33 (`1079.toml`, `--waves 5`) now rolls `terror` at wave 5, so that run also fails on any pulse of 16 ms or more (`FAIL_LINE`). Whether a garbage-collection or OS pause can land inside a pulse that normally takes well under a millisecond is not known; read `max_ms=` on a failed terror line before treating it as a defect, and change the budget only on that evidence.
 5. Mike plays one run per class he cares to judge, with F5 from the worktree's `TAOM.sln`.
 6. Set `fixed_in = X`, remove `allow_dirty`, then `python tools/ingame_verdict.py --issue 1079 --sessions 12`.
 7. On Mike's word, commit the manifest edit.

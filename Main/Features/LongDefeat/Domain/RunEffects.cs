@@ -50,6 +50,15 @@ internal sealed class RunEffects
     /// <summary>What the effects adapter publishes into the engine's hooks, applied before any soldier of the wave spawns: set with <see cref="StartWave"/>.</summary>
     public LdStatTable? PublishStats { get; set; }
 
+    /// <summary>
+    /// The factor the live rams' and siege towers' hit points are set to over their vanilla value (<see cref="RunModifiers.EngineHitPoints"/>), at each wave start and applied with
+    /// <see cref="PublishStats"/> before any soldier spawns: 1 restores the vanilla value. Null at every other tick.
+    /// </summary>
+    public float? EngineHitPoints { get; set; }
+
+    /// <summary>A Winged Terror pulse is due: lower the morale of the defenders near the attackers, never below the pulse's floor. Null at every other tick.</summary>
+    public LdMoralePulse? MoralePulse { get; set; }
+
     /// <summary>A troop or class boon was taken since the last tick: refresh and scale those standing, after <see cref="PublishStats"/> and before any soldier spawns.</summary>
     public LdBoonApply? ApplyBoon { get; set; }
     public List<SoldierBatch> AttackerBatches { get; } = new();

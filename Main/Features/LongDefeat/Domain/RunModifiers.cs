@@ -72,6 +72,45 @@ internal static class RunModifiers
     }
 
     /// <summary>
+    /// What the siege engines' vanilla hit points (<c>SiegeEngineType.BaseHitPoints</c>) are multiplied by for a wave: <c>1 + engineHitPointsPercent / 100</c> when the Hammer of the Underworld is in
+    /// the roll, else 1, so the write at each wave start also restores the vanilla value after a hammer wave. It is the only number that touches an engine's hit points. The endless health factor
+    /// multiplies the attackers' soldiers' health limit and the endless damage factor their blows (<see cref="LdStatTable.AttackerDamage"/>, which the damage model applies to a soldier's blow on the
+    /// gate, a wall or a shield but not to the ram, whose damage reaches the gate through <c>DestructableComponent.TriggerOnHit</c>); neither multiplies this factor or is multiplied by it. Never
+    /// below 0.1, because an engine with no hit points is a destroyed engine, and a factor that is not a number changes nothing.
+    /// </summary>
+    public static float EngineHitPoints(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Hammer))
+            return 1f;
+
+        var factor = 1f + plan.Value(AffixPlan.Hammer, "engineHitPointsPercent") / 100f;
+        if (float.IsNaN(factor) || float.IsInfinity(factor))
+            return 1f;
+
+        return Math.Max(MinEngineFactor, factor);
+    }
+
+    /// <summary>The Winged Terror pulse of a wave, or null when the wave has none or the power's numbers cannot pulse (no positive finite interval or radius, a number that is not a number).</summary>
+    public static LdTerror? Terror(AffixPlan plan, IReadOnlyList<string> affixes)
+    {
+        if (!affixes.Contains(AffixPlan.Terror))
+            return null;
+
+        var seconds = plan.Value(AffixPlan.Terror, "pulseSeconds");
+        var radius = plan.Value(AffixPlan.Terror, "radius");
+        var amount = plan.Value(AffixPlan.Terror, "amount");
+        var floor = plan.Value(AffixPlan.Terror, "floor");
+        if (!IsPositive(seconds) || !IsPositive(radius) || float.IsNaN(amount) || float.IsNaN(floor) || float.IsInfinity(amount) || float.IsInfinity(floor))
+            return null;
+
+        return new LdTerror(seconds, new LdMoralePulse(radius, amount, floor));
+    }
+
+    private const float MinEngineFactor = 0.1f;
+
+    private static bool IsPositive(float v) => v > 0f && !float.IsInfinity(v);
+
+    /// <summary>
     /// The health factor in force for a target: the product of each boon's own factor, so a standing soldier scaled once by every boon's own factor (<see cref="OwnHealthFactor"/>)
     /// holds what a soldier spawned later gets. It is a product, not a sum, because the second boon scales soldiers the first already scaled.
     /// </summary>

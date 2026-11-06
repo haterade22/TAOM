@@ -27,9 +27,9 @@ internal sealed class AffixPlan
 
     /// <summary>
     /// The powers a wave can roll, in the order of <see cref="Ids"/>: only those with an effect, so a player never meets a named power that does nothing.
-    /// Slice 8 adds <c>Hammer</c> and <c>Terror</c> and Slice 9 adds <c>Blades</c>, each when its effect lands; the Python replay (<c>AFFIX_POOL</c>) and the pinned rolls change with it.
+    /// Slice 8 added <c>Hammer</c> and <c>Terror</c> and Slice 9 adds <c>Blades</c>, each when its effect lands; the Python replay (<c>AFFIX_POOL</c>) and the pinned rolls change with it.
     /// </summary>
-    public static IReadOnlyList<string> Pool { get; } = new[] { Lash, Drums, Eye, Discipline, Hide };
+    public static IReadOnlyList<string> Pool { get; } = new[] { Lash, Drums, Eye, Discipline, Hide, Hammer, Terror };
 
     /// <summary>The numbers each power reads, by key: the whole vocabulary of <c>affixes.json</c> "powers", which its reader accepts and no more.</summary>
     public static IReadOnlyDictionary<string, IReadOnlyList<string>> Keys { get; } = new Dictionary<string, IReadOnlyList<string>>

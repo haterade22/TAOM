@@ -181,13 +181,17 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.affix-effect"
-needs = "a wave whose roll holds a stat power or hide: at wave 5 seed 0 rolls discipline, 2 hide, 3 lash, 8 eye, 9 drums"
+needs = "a wave whose roll holds a power with an effect check (--start-wave 5 --waves 1 --seed N): at wave 5 seed 0 rolls hide, 1 drums, 2 discipline, 4 eye, 6 terror (the wave must run a few seconds), 8 hammer, 27 lash"
 reached = ['\[Check\] id=taom\.long-defeat\.affix-effect result=']
 pass = ['\[Check\] id=taom\.long-defeat\.affix-effect result=pass power=[a-z]+ ']
 fail = ['\[Check\] id=taom\.long-defeat\.affix-effect result=fail']
-# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs). One standing human attacker with no live race ability is read
+# One line per stat power or hide in the wave, key power=<id>, written when the wave's first batch has closed (LongDefeatDirector.Affixes.cs); hammer and terror write their own line under the same id and key (LongDefeatDirector.Powers.cs, below). One standing human attacker with no live race ability is read
 # through the effects adapter: each driven property the power changes against the stat model's own answer for the same agent with the affixes left out, within 1% (armour against the spawn equipment's sums, since
-# the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood. hammer, terror and blades are not rolled, so they have no line, until Slices 8 and 9 switch each one on.
+# the engine writes it once at spawn). A sample that could not show the effect (an unarmoured soldier) writes a skip line, which reads NOT REACHED. No standing plain attacker (none human, active, not fleeing and free of a live race ability) writes a fail line, reason=no-sample, so a FAIL can mean that no plain attacker stood.
+# hammer: written when the wave starts, after the engines' hit points were set, as power=hammer engines=<n> want=<factor> got=<kind>=<ratio>,.. gate=<standing|destroyed|none> (the gates are read from every mission object, since a destroyed gate leaves the active list, Mission.cs:3060); every live ram and tower must hold the vanilla hit points of its type
+# (SiegeEngineType.BaseHitPoints) times the factor within 1%, the gate's state is logged and judges nothing, no live engine or a factor of 1 is a skip, and a hammer wave reads no soldier.
+# terror: written when the wave clears (or the run ends in it) as power=terror w=<N> pulses= drained= lost= pushed_below= max_ms= budget_ms=16 floor=; it fails when any pulse left a defender below the floor (pushed_below above 0) or the slowest took 16 ms or more,
+# and skips when the wave had no pulse or none drained anyone. The [LongDefeat][Terror] pulse n= ms= lines show the first three pulses of each wave and any slow one. blades is not rolled yet, so it has no line, until Slice 9 switches it on.
 absence = "not-reached"
 
 [[check]]
@@ -283,6 +287,9 @@ claim = "the Escape exit returns to the main menu and the report still lands"
 
 [[human]]
 claim = "a boon card reads clearly: its name, its category, what it gives, and a drawback line in its own colour; the reroll button shows its count; the pick is announced by a notice and the hint, and the panel never opens by itself"
+
+[[human]]
+claim = "Winged Terror does not rout the walls by itself: in a terror wave (--start-wave 5 --seed 6) the defenders near the attackers waver but stay on the walls, the pulse lines show pushed_below=0, and no defender flees from the pulse alone"
 
 [[human]]
 claim = "the affix line on the HUD names the running wave's affixes during a wave and the next wave's between waves (with its health and damage past wave 10), and reads well"

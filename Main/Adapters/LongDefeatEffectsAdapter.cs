@@ -26,15 +26,13 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
 
     public void PublishStats(LdStatTable table)
     {
-        LongDefeatCombatHooks.Publish(_mission, table.AttackerDamage);
-        LongDefeatCombatHooks.PublishTargets(_mission, table);
-        LongDefeatStatHooks.Publish(_mission, table);
+        LongDefeatHookState.Publish(_mission, table);
     }
 
     // BaseHealthLimit is MaxHitPoints() until something writes it (Agent.cs:1438-1439), so the limit over MaxHitPoints() is the factor SpawnBatch wrote.
     public LdScaleSample ReadScale()
     {
-        var blows = LongDefeatCombatHooks.Raised;
+        var blows = LongDefeatHookState.Raised;
         IEnumerable<Agent>? standing = _mission.AttackerTeam?.ActiveAgents;
         if (standing == null)
             return new LdScaleSample("", 0f, 0f, blows);
@@ -91,6 +89,67 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
         var model = MissionGameModels.Current.AgentStatCalculateModel;
         LongDefeatStatHooks.Baseline(() => model.UpdateAgentStats(mount, scratch));
         return new LdStatReading(nameof(DrivenProperty.MountSpeed), scratch.MountSpeed, mount.GetAgentDrivenPropertyValue(DrivenProperty.MountSpeed));
+    }
+
+    // Each live ram and tower, as the battlefield adapter keeps them after deployment: not disabled, and visible (an undeployed engine of the prefab stays in the scene hidden). The maximum is the
+    // type's vanilla value times the factor, the same line that sets it at deployment, "component.MaxHitPoint = weapon!.GetSiegeEngineType().BaseHitPoints;" (LongDefeatBattlefieldAdapter.SetVanillaHitPoints),
+    // and the current hit points keep their share of it. The setter clamps at 0 ("_hitPoint = TaleWorlds.Library.MathF.Max(value, 0f);", DestructableComponent.cs:117), so a destroyed engine
+    // stays destroyed, and no Reset() runs: it would restore a destroyed engine. A visible gate is only read, for the check's log, and from every mission object, not the active list: a gate that
+    // falls is disabled in the same call ("destructionComponent.GameEntity.GetFirstScriptOfType<UsableMachine>()?.Disable();", Mission.cs:3060, which ends in SetDisabled, and that in
+    // "Mission.Current.DeactivateMissionObject(this);", MissionObject.cs:280, which runs "_activeMissionObjects.Remove(missionObject);", Mission.cs:1595), so only the full list can show it destroyed.
+    // Rams and towers stay on the active list: leaving it when destroyed is what "live" means for them.
+    public LdEngineReport SetEngineHitPoints(float factor)
+    {
+        var readings = new List<LdEngineReading>();
+        foreach (var ram in LiveEngines<BatteringRam>())
+            Harden(ram, "ram", factor, readings);
+        foreach (var tower in LiveEngines<SiegeTower>())
+            Harden(tower, "tower", factor, readings);
+
+        var gates = _mission.MissionObjects.FindAllWithType<CastleGate>().Where(g => g.GameEntity.IsVisibleIncludeParents()).ToList();
+        return new LdEngineReport(readings, gates.Count, gates.Count(g => g.IsDestroyed));
+    }
+
+    private IEnumerable<T> LiveEngines<T>() where T : SiegeWeapon =>
+        _mission.ActiveMissionObjects.FindAllWithType<T>().Where(w => !w.IsDisabled && w.GameEntity.IsVisibleIncludeParents()).ToList();
+
+    private static void Harden(SiegeWeapon weapon, string kind, float factor, List<LdEngineReading> readings)
+    {
+        var component = weapon.GameEntity.GetFirstScriptOfType<DestructableComponent>();
+        if (component == null)
+            return;
+
+        var vanilla = weapon.GetSiegeEngineType().BaseHitPoints;
+        var before = component.MaxHitPoint;
+        component.MaxHitPoint = vanilla * factor;
+        if (before > 0f)
+            component.HitPoint *= component.MaxHitPoint / before;
+        readings.Add(new LdEngineReading(kind, vanilla, component.MaxHitPoint, component.HitPoint));
+    }
+
+    // The attackers' positions are read once into an array, then each standing human defender is looked at once: the morale read, the change and the read back are the pulse's own arithmetic
+    // (LdMoralePulse.Apply). The change is "commonAIComponent.Morale += delta;" (AgentComponentExtensions.cs:21-27) and the component clamps to 0..100 (CommonAIComponent.cs:47). A defender
+    // with no component answers -1 and is skipped. The lord is never a target: a human-played lord has no component, but an autoplayed one is handed to the AI (AdoptMain), and the controller
+    // setter tells every behaviour (Agent.cs:1268-1271), so AgentCommonAILogic gives him one (AgentCommonAILogic.cs:16-24) and the drain would count him and lower his margin against casualty panic.
+    // Attackers are not targeted: the pulse looks at them only for their positions.
+    public LdPulseResult PulseMorale(LdMoralePulse pulse)
+    {
+        var watch = Stopwatch.StartNew();
+        var attackers = StandingAttackers();
+        var spots = new LdPulseSpot[attackers.Count];
+        for (var i = 0; i < spots.Length; i++)
+            spots[i] = SpotOf(attackers[i]);
+
+        IEnumerable<Agent>? team = _mission.DefenderTeam?.ActiveAgents;
+        var defenders = team == null ? new List<Agent>() : team.Where(a => a.IsHuman && a.IsActive() && !a.IsMainAgent).ToList();
+        var result = pulse.Apply(spots, defenders, SpotOf, agent => agent.GetMorale(), (agent, drain) => agent.ChangeMorale(-drain));
+        return result with { Milliseconds = watch.Elapsed.TotalMilliseconds };
+    }
+
+    private static LdPulseSpot SpotOf(Agent agent)
+    {
+        var at = agent.Position;
+        return new LdPulseSpot(at.x, at.y);
     }
 
     public LdTouched RefreshStats(BoonTarget target)

@@ -24,6 +24,8 @@ internal sealed partial class LongDefeatDirector
         // First, before any soldier of the wave exists: the wave's published numbers are read when a soldier is built or struck.
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
+        if (fx.EngineHitPoints is { } engines)
+            SetEngineHitPoints(engines);
         if (fx.ApplyBoon is { } boon)
             ApplyBoonToStanding(boon);
         if (fx.RefreshAttackers)
@@ -67,6 +69,8 @@ internal sealed partial class LongDefeatDirector
             _field.OrderCharge();
         if (fx.RestoreDefenderTactic)
             _field.RestoreDefenderTactic();
+        if (fx.MoralePulse is { } pulse)
+            PulseMorale(pulse);
         if (fx.FellAttackers > 0)
         {
             var felled = _field.Fell(fx.FellAttackers);
@@ -216,6 +220,7 @@ internal sealed partial class LongDefeatDirector
     private void OnWaveCleared(RunEvent e)
     {
         FlushScale();
+        FlushTerror();
         var stats = _run.Stats.Waves.LastOrDefault(w => w.Wave == e.Wave);
         if (stats != null)
         {
@@ -258,6 +263,7 @@ internal sealed partial class LongDefeatDirector
         SaveBestRun(result);
         _logger.LogInfo($"{Tag}[End] {result.Reason} at wave {result.Wave}: {result.WavesCleared} cleared, {result.Kills} kills, {_run.Stats.WavesFelled} wave(s) ended by felling, defenders {_run.GetView().DefendersStanding}");
         FlushScale();
+        FlushTerror();
         FinishCommander();
     }
 

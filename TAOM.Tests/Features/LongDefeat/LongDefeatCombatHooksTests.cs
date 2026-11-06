@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.LongDefeat.Domain;
 using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
@@ -24,7 +25,7 @@ public class LongDefeatCombatHooksTests
     public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => GameAssemblies.EnsureLoaded();
 
     [TestCleanup]
-    public void Clean() => LongDefeatCombatHooks.Arm(null);
+    public void Clean() => LongDefeatHookState.Arm(null);
 
     private static Mission NewMission() => (Mission)FormatterServices.GetUninitializedObject(typeof(Mission));
 
@@ -65,22 +66,22 @@ public class LongDefeatCombatHooksTests
     public void Amplify_AnAttackersOwnFall_IsUntouched_AndCountsNothing()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
         var faller = AgentOf(mission, BattleSideEnum.Attacker);
         var blow = Blow(faller);
         var fall = CollisionDataFixture.With(fallSpeed: 7f);
 
         Assert.IsTrue(fall.IsFallDamage, "the fixture must build a fall");
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in fall, 10f), "the engine names the faller as its own attacker (Mission.cs:6151), and a fall is no blow");
-        Assert.AreEqual(0L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(0L, LongDefeatHookState.Raised);
     }
 
     [TestMethod]
     public void Amplify_NothingArmed_PassesTheDamageThrough()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
 
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
 
@@ -91,44 +92,44 @@ public class LongDefeatCombatHooksTests
     public void Amplify_AnAttackerOfTheArmedMission_ScalesTheBlow_AndCountsIt()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 1.5f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1.5f));
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
 
         Assert.AreEqual(15f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f), 1e-4f);
-        Assert.AreEqual(1L, LongDefeatCombatHooks.Raised, "a run can show the seam ran");
+        Assert.AreEqual(1L, LongDefeatHookState.Raised, "a run can show the seam ran");
     }
 
     [TestMethod]
     public void Amplify_FactorOne_ChangesNothing_AndCountsNothing()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 1f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1f));
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
 
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f));
-        Assert.AreEqual(0L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(0L, LongDefeatHookState.Raised);
     }
 
     [TestMethod]
     public void Amplify_ADefenderOfTheArmedMission_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
         var blow = Blow(AgentOf(mission, BattleSideEnum.Defender));
 
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f));
-        Assert.AreEqual(0L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(0L, LongDefeatHookState.Raised);
     }
 
     [TestMethod]
     public void Amplify_AnAttackerOfAnotherMission_IsUntouched()
     {
         var armed = NewMission();
-        LongDefeatCombatHooks.Arm(armed);
-        LongDefeatCombatHooks.Publish(armed, 2f);
+        LongDefeatHookState.Arm(armed);
+        LongDefeatHookState.Publish(armed, new LdStatTable(2f));
         var blow = Blow(AgentOf(NewMission(), BattleSideEnum.Attacker));
 
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f));
@@ -138,8 +139,8 @@ public class LongDefeatCombatHooksTests
     public void Amplify_NoAttacker_OrNoTeam_IsUntouched()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
 
         var none = Blow(null);
         var teamless = Blow(AgentOf(mission, null));
@@ -152,8 +153,8 @@ public class LongDefeatCombatHooksTests
     public void Publish_FromAMissionThatIsNotArmed_ChangesNothing()
     {
         var armed = NewMission();
-        LongDefeatCombatHooks.Arm(armed);
-        LongDefeatCombatHooks.Publish(NewMission(), 2f);
+        LongDefeatHookState.Arm(armed);
+        LongDefeatHookState.Publish(NewMission(), new LdStatTable(2f));
         var blow = Blow(AgentOf(armed, BattleSideEnum.Attacker));
 
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f));
@@ -163,11 +164,11 @@ public class LongDefeatCombatHooksTests
     public void Publish_ReplacesTheFactorOfTheWaveBefore()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
+        LongDefeatHookState.Arm(mission);
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
 
-        LongDefeatCombatHooks.Publish(mission, 2f);
-        LongDefeatCombatHooks.Publish(mission, 1.25f);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
+        LongDefeatHookState.Publish(mission, new LdStatTable(1.25f));
 
         Assert.AreEqual(12.5f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f), 1e-4f);
     }
@@ -176,30 +177,30 @@ public class LongDefeatCombatHooksTests
     public void Publish_StartsTheCountOver_SoTheCountIsTheWaves()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
+        LongDefeatHookState.Arm(mission);
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
         LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f);
         LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f);
-        Assert.AreEqual(2L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(2L, LongDefeatHookState.Raised);
 
-        LongDefeatCombatHooks.Publish(mission, 1.5f);
+        LongDefeatHookState.Publish(mission, new LdStatTable(1.5f));
 
-        Assert.AreEqual(0L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(0L, LongDefeatHookState.Raised);
     }
 
     [TestMethod]
     public void Disarm_TheArmedMission_StopsScaling_AndAReArmStartsAtFactorOne()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 2f);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, new LdStatTable(2f));
         var blow = Blow(AgentOf(mission, BattleSideEnum.Attacker));
 
-        LongDefeatCombatHooks.Disarm(mission);
+        LongDefeatHookState.Disarm(mission);
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f));
 
-        LongDefeatCombatHooks.Arm(mission);
+        LongDefeatHookState.Arm(mission);
         Assert.AreEqual(10f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f), "a new mission never inherits the last run's factor");
     }
 
@@ -207,10 +208,10 @@ public class LongDefeatCombatHooksTests
     public void Disarm_AnotherMission_LeavesTheArmedOneScaled()
     {
         var armed = NewMission();
-        LongDefeatCombatHooks.Arm(armed);
-        LongDefeatCombatHooks.Publish(armed, 2f);
+        LongDefeatHookState.Arm(armed);
+        LongDefeatHookState.Publish(armed, new LdStatTable(2f));
 
-        LongDefeatCombatHooks.Disarm(NewMission());
+        LongDefeatHookState.Disarm(NewMission());
 
         var blow = Blow(AgentOf(armed, BattleSideEnum.Attacker));
         Assert.AreEqual(20f, LongDefeatCombatHooks.Amplify(in blow, in Plain, 10f), 1e-4f);

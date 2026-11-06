@@ -108,7 +108,7 @@ public class LongDefeatHudAffixTests
     [TestMethod]
     public void TheStrip_InPreparation_NamesTheFirstWavesAffixAndFactors()
     {
-        var vm = Hud(startWave: 5, seed: 2, out _);
+        var vm = Hud(startWave: 5, seed: 0, out _);
 
         Assert.AreEqual("Next wave: Isengard hide   Next wave attackers: health 120%, damage 112%", vm.AffixText);
     }
@@ -116,7 +116,7 @@ public class LongDefeatHudAffixTests
     [TestMethod]
     public void TheStrip_InTheWave_NamesTheRunningWavesAffix()
     {
-        var vm = Hud(startWave: 5, seed: 2, out var run);
+        var vm = Hud(startWave: 5, seed: 0, out var run);
 
         for (var i = 0; i < 5 && run.Phase != RunPhase.Wave; i++)
             run.Tick(new RunSnapshot(1f, 0, 0, 40, 0, 0, 1000));

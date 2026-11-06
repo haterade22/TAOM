@@ -88,8 +88,9 @@ public class LongDefeatAffixChecksTests
     }
 
     [TestMethod]
-    public void Expectations_ForAPowerWithNoStatEffectYet_IsEmpty()
+    public void Expectations_ForAPowerWithNoStatEffect_IsEmpty()
     {
+        // The hammer acts on the engines and terror on the defenders' morale, so each is judged by its own verdict (Hammer, Terror) and the stat read asks nothing of them; blades has no effect yet.
         Assert.AreEqual(0, LongDefeatAffixChecks.Expectations(Plan(), "hammer").Count);
         Assert.AreEqual(0, LongDefeatAffixChecks.Expectations(Plan(), "terror").Count);
         Assert.AreEqual(0, LongDefeatAffixChecks.Expectations(Plan(), "blades").Count);

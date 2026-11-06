@@ -789,12 +789,12 @@ class SharedVectorTests(unittest.TestCase):
 
 PINNED_ROLLS = [
     # (seed, wave, the roll at the shipped schedule): the same rows as AffixPlanTests.cs, taken from an independent implementation.
-    (1, 5, ["discipline"]),
-    (1, 10, ["discipline", "drums"]),
-    (1, 15, ["lash", "eye", "hide"]),
-    (12345, 40, ["hide", "discipline", "lash"]),
-    (7, 5, ["discipline"]),
-    (0, 15, ["drums", "hide", "discipline"]),
+    (1, 5, ["drums"]),
+    (1, 10, ["discipline", "hammer"]),
+    (1, 15, ["discipline", "eye", "lash"]),
+    (12345, 40, ["hide", "hammer", "eye"]),
+    (7, 5, ["hide"]),
+    (0, 15, ["lash", "eye", "terror"]),
 ]
 
 
@@ -824,7 +824,7 @@ class AffixReplayTests(unittest.TestCase):
         self.assertIsNotNone(found)
         names = {m.group(1): m.group(2) for m in re.finditer(r'public const string (\w+) = "(\w+)";', game)}
         self.assertEqual(list(ld.AFFIX_POOL), [names[part.strip()] for part in found.group(1).split(",")])
-        self.assertEqual(["lash", "drums", "eye", "discipline", "hide"], list(ld.AFFIX_POOL), "Slices 8 and 9 add hammer, terror and blades here")
+        self.assertEqual(["lash", "drums", "eye", "discipline", "hide", "hammer", "terror"], list(ld.AFFIX_POOL), "Slice 9 adds blades here")
         self.assertEqual([i for i in ld.AFFIX_IDS if i in ld.AFFIX_POOL], list(ld.AFFIX_POOL), "the pool keeps the order of the eight")
         self.assertTrue(set(ld.AFFIX_EFFECT_IDS) <= set(ld.AFFIX_POOL), "an effect line is only owed for a power that can roll")
 
@@ -838,7 +838,7 @@ class AffixReplayTests(unittest.TestCase):
     def test_no_seed_rolls_a_power_that_does_nothing_yet(self):
         for seed in range(200):
             for wave in (5, 10, 15, 40):
-                self.assertFalse({"hammer", "terror", "blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
+                self.assertFalse({"blades"} & set(ld.affix_roll(seed, wave, 3)), (seed, wave))
 
     def test_the_schedule_is_the_shipped_files(self):
         self.assertEqual(((5, 1), (10, 2), (15, 3)), ld.shipped_affix_schedule())
@@ -945,12 +945,12 @@ class AffixJudgeTests(unittest.TestCase):
         ld.target_waves = 5
         rows = [wave_row(w) for w in range(1, 6)]
         wrong = [{**row, "affixes": ["lash"]} if row["wave"] == 5 else row for row in rows]
-        self.assertEqual(["discipline"], rows[4]["affixes"], "seed 7 rolls discipline at wave 5")
+        self.assertEqual(["hide"], rows[4]["affixes"], "seed 7 rolls hide at wave 5")
         code, why = ld.judge(FINAL, self.report(rows=wrong), FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("wave 5", why)
         self.assertIn("lash", why)
-        self.assertIn("discipline", why)
+        self.assertIn("hide", why)
 
     def test_a_wave_that_lost_its_affixes_or_gained_one_fails(self):
         rows = [wave_row(w) for w in range(1, 6)]
@@ -976,7 +976,7 @@ class AffixJudgeTests(unittest.TestCase):
     def test_a_cleared_wave_with_a_stat_power_or_hide_owes_an_affix_effect_line(self):
         without = log_of(BOONED + ("affix",), 5)
         # The seeds that roll each power at wave 5 (the in-game proof's --seed N).
-        seeds = {"discipline": 0, "hide": 2, "lash": 3, "eye": 8, "drums": 9}
+        seeds = {"hide": 0, "drums": 1, "discipline": 2, "eye": 4, "terror": 6, "hammer": 8, "lash": 27}
         for power, seed in seeds.items():
             report = self.report(seed=seed, rows=[wave_row(w, seed) for w in range(1, 6)])
             self.assertEqual([power], report["waves"][4]["affixes"])
@@ -995,7 +995,10 @@ class AffixJudgeTests(unittest.TestCase):
 
     def test_a_row_with_no_effect_power_owes_no_effect_line(self):
         self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": []}, "x", {"affixes": "hide"}]}))
-        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer", "eye"]}]}))
+        self.assertFalse(ld.reached_effect_affixes({"waves": [{"affixes": ["blades"]}]}), "blades has no effect line until Slice 9")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["blades", "eye"]}]}))
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["hammer"]}]}), "the hammer proves its engine write under the same id")
+        self.assertTrue(ld.reached_effect_affixes({"waves": [{"affixes": ["terror"]}]}), "terror proves its pulses under the same id")
 
     def test_a_report_with_no_wave_rows_has_nothing_to_replay(self):
         self.assertIsNone(ld.affix_problem({"seed": 7}))
@@ -1828,8 +1831,8 @@ class BoonAffixCutTests(unittest.TestCase):
         self.assertIn("cut of -1", ld.affix_problem(report))
 
     def test_the_cut_shortens_the_roll_the_game_took_not_the_schedule_count(self):
-        # A schedule row can ask for 8 while the pool holds 5: the game rolls 5 and the cut leaves 4.
-        report = self.report([{"wave": 11, "affixes": ld.affix_roll(self.SEED, 11, 8)[:4]}])
+        # A schedule row can ask for 8 while the pool holds fewer: the game rolls the whole pool and the cut leaves one less.
+        report = self.report([{"wave": 11, "affixes": ld.affix_roll(self.SEED, 11, 8)[:len(ld.AFFIX_POOL) - 1]}])
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "affixes.json"
             path.write_text('{"schedule": [{"fromWave": 1, "count": 8}]}', encoding="utf-8")

@@ -32,8 +32,7 @@ public class LongDefeatTargetHooksTests
     [TestCleanup]
     public void Clean()
     {
-        LongDefeatStatHooks.Arm(null);
-        LongDefeatCombatHooks.Arm(null);
+        LongDefeatHookState.Arm(null);
         foreach (var block in _flagBlocks)
             Marshal.FreeHGlobal(block);
         _flagBlocks.Clear();
@@ -117,10 +116,8 @@ public class LongDefeatTargetHooksTests
     private static Mission Armed(LdStatTable table)
     {
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatStatHooks.Publish(mission, table);
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.PublishTargets(mission, table);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, table);
         return mission;
     }
 
@@ -243,24 +240,22 @@ public class LongDefeatTargetHooksTests
 
         Assert.AreEqual(15f, LongDefeatCombatHooks.Amplify(in archer, in Plain, 10f), 1e-4f);
         Assert.AreEqual(12.5f, LongDefeatCombatHooks.Amplify(in infantry, in Plain, 10f), 1e-4f);
-        Assert.AreEqual(0L, LongDefeatCombatHooks.Raised, "the count proves the attackers' wave factor ran; a defender's boon blow must not satisfy the scale check");
+        Assert.AreEqual(0L, LongDefeatHookState.Raised, "the count proves the attackers' wave factor ran; a defender's boon blow must not satisfy the scale check");
     }
 
     [TestMethod]
     public void Raised_CountsTheAttackersBlowsOnly_WhenBothSidesAreScaled()
     {
-        var table = new LdStatTable(1f) { Infantry = Record(0f, damage: 1.5f) };
+        var table = new LdStatTable(2f) { Infantry = Record(0f, damage: 1.5f) };
         var mission = NewMission();
-        LongDefeatStatHooks.Arm(mission);
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.Publish(mission, 2f);
-        LongDefeatCombatHooks.PublishTargets(mission, table);
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(mission, table);
         var defender = Blow(Soldier(mission, BattleSideEnum.Defender));
         var attacker = Blow(Soldier(mission, BattleSideEnum.Attacker));
 
         Assert.AreEqual(15f, LongDefeatCombatHooks.Amplify(in defender, in Plain, 10f), 1e-4f);
         Assert.AreEqual(20f, LongDefeatCombatHooks.Amplify(in attacker, in Plain, 10f), 1e-4f);
-        Assert.AreEqual(1L, LongDefeatCombatHooks.Raised);
+        Assert.AreEqual(1L, LongDefeatHookState.Raised);
     }
 
     [TestMethod]
@@ -347,7 +342,7 @@ public class LongDefeatTargetHooksTests
 
         Assert.AreEqual(10f, LongDefeatCombatHooks.Reduce(in onAttacker, in Plain, 10f));
         Assert.AreEqual(10f, LongDefeatCombatHooks.Reduce(in elsewhere, in Plain, 10f));
-        LongDefeatCombatHooks.Disarm(mission);
+        LongDefeatHookState.Disarm(mission);
         Assert.AreEqual(10f, LongDefeatCombatHooks.Reduce(in onDefender, in Plain, 10f), "disarmed");
     }
 
@@ -366,14 +361,14 @@ public class LongDefeatTargetHooksTests
     public void PublishTargets_FromAMissionThatIsNotArmed_IsIgnored_AndAReArmStartsClean()
     {
         var mission = NewMission();
-        LongDefeatCombatHooks.Arm(mission);
-        LongDefeatCombatHooks.PublishTargets(NewMission(), Table(Record(0f, taken: 0.5f)));
+        LongDefeatHookState.Arm(mission);
+        LongDefeatHookState.Publish(NewMission(), Table(Record(0f, taken: 0.5f)));
         var blow = Blow(Soldier(mission, BattleSideEnum.Attacker), Soldier(mission, BattleSideEnum.Defender));
         Assert.AreEqual(10f, LongDefeatCombatHooks.Reduce(in blow, in Plain, 10f));
 
-        LongDefeatCombatHooks.PublishTargets(mission, Table(Record(0f, taken: 0.5f)));
+        LongDefeatHookState.Publish(mission, Table(Record(0f, taken: 0.5f)));
         Assert.AreEqual(5f, LongDefeatCombatHooks.Reduce(in blow, in Plain, 10f), 1e-4f);
-        LongDefeatCombatHooks.Arm(mission);
+        LongDefeatHookState.Arm(mission);
         Assert.AreEqual(10f, LongDefeatCombatHooks.Reduce(in blow, in Plain, 10f), "a new mission never inherits the last run's boons");
     }
 }
