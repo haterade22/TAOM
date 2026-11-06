@@ -238,6 +238,9 @@ public class CommandTrialWiringTests
         "MarshalSquareMinimum", "MarshalSquareMaximum", "MarshalUnitWidth", "MarshalUnits", "MarshalPlaced", "MarshalPlanSideDrag", "MarshalSpacingVerdict",
         "MarshalSpacingWhy", "MarshalRiders", "MarshalHasAnyRider", "MarshalHasSignificantRiders", "MarshalSpacingOfChosen", "PureInfantry", "PlainSquareOf",
         // Hold the line beyond the flag: reads of the driver's count of the line, the strike blows and the gap to the order point. The shield wall order is found by its verb.
+        // Throwers on an advance: reads of the chosen company, the driver's facts and the cost buckets; MarshalThrowersOff stores the trial switch in MarshalHooks, a TAOM static. The Advance is found by its verb.
+        "MarshalChooseThrowers", "MarshalThrowerRange", "MarshalThrowerRun", "MarshalThrowerWhy", "MarshalThrowerCostRead", "MarshalThrowerPublished", "MarshalThrowerFaulted",
+        "MarshalThrowerCensus", "MarshalFrontGap", "MarshalCompanyAt", "MarshalThrowersOff", "WhyNotIfAdvanced",
         "MarshalHoldCensus", "MarshalStrikePassed", "MarshalStrikeBlows", "MarshalOrderGap", "MarshalSlotCloser", "MarshalSlotFarther", "MarshalSlotSteered", "MarshalSlotFailed", "MarshalSquareLaidOut", "MarshalClamps",
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",

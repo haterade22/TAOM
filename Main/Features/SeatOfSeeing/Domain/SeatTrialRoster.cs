@@ -21,7 +21,7 @@ internal static class SeatTrialRoster
 
     internal static readonly IReadOnlyList<SeatTrialGroup> Player = new[]
     {
-        new SeatTrialGroup("fow_gondor_militia_spearman", 40),
+        new SeatTrialGroup(SpearmenTroop, 40),
         new SeatTrialGroup("fow_gondor_ano_archer_militia", 40),
         new SeatTrialGroup(MountedTroop, 20),
     };
@@ -32,11 +32,23 @@ internal static class SeatTrialRoster
         new SeatTrialGroup("fow_mordor_orc_hunter", 30),
     };
 
-    /// <summary>Every troop id of both sides.</summary>
-    internal static IEnumerable<string> TroopIds => Player.Concat(Enemy).Select(g => g.Id);
+    internal const string SpearmenTroop = "fow_gondor_militia_spearman";
+
+    internal const string ThrowerTroop = "gondor_har_javelineer";
+
+    internal static readonly IReadOnlyList<string> ThrowerSteps = new[] { "advance_throwers", "advance_throwers_vanilla" };
+
+    /// <summary>The player's army for a step list: an explicit list that names a thrower step fields javelineers where the spearmen stand, so the infantry company is a pure thrower company.</summary>
+    internal static IReadOnlyList<SeatTrialGroup> PlayerFor(string? steps)
+    {
+        var chosen = (steps ?? "").Split(',').Select(SeatTrialSteps.NameOf);
+        if (!chosen.Any(s => ThrowerSteps.Contains(s)))
+            return Player;
+        return Player.Select(g => g.Id == SpearmenTroop ? g with { Id = ThrowerTroop } : g).ToList();
+    }
 
     /// <summary>The ids the game does not have, each once and tagged <c>culture:</c> or <c>character:</c>, empty when the mission can open.</summary>
-    internal static IReadOnlyList<string> Missing(Func<string, bool> cultureExists, Func<string, bool> characterExists)
+    internal static IReadOnlyList<string> Missing(Func<string, bool> cultureExists, Func<string, bool> characterExists, string? steps = null)
     {
         var missing = new List<string>();
         foreach (var culture in new[] { PlayerCulture, EnemyCulture })
@@ -45,7 +57,7 @@ internal static class SeatTrialRoster
                 missing.Add("culture:" + culture);
         }
 
-        foreach (var character in new[] { Hero }.Concat(TroopIds).Distinct())
+        foreach (var character in new[] { Hero }.Concat(PlayerFor(steps).Concat(Enemy).Select(g => g.Id)).Distinct())
         {
             if (!characterExists(character))
                 missing.Add("character:" + character);

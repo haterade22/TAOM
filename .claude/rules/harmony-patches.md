@@ -57,8 +57,8 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 ## MovementOrder postfixes: use the shared deferred category (MANDATORY)
 Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`
 (applied once from `OnMissionBehaviorInitialize`), because `MovementOrder.cctor` reads
-`Mission.Current.CurrentTime` — null in `OnSubModuleLoad`/`OnGameInitializationFinished`. It currently
-houses Patch31_SmartCavalryAI (+ its Patch31b sibling on `Formation.SetTargetFormation`) + Patch35_CompanionTactics; add yours there, never a fresh category.
+`Mission.Current.CurrentTime`: null in `OnSubModuleLoad`/`OnGameInitializationFinished`. Its members are listed in
+`docs/reference/harmony-patch-registry.md`, section `Patch_MissionTime_SetMovementOrder`; add yours there, never a fresh category.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy

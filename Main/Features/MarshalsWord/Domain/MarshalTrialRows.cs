@@ -24,5 +24,7 @@ internal static class MarshalTrialRows
         new SeatTrialStep("hold_line_slot", Array.Empty<string>(), 260f),
         new SeatTrialStep("hold_line_strike", Array.Empty<string>(), 260f),
         new SeatTrialStep("hold_line_flag", Array.Empty<string>(), 90f),
+        new SeatTrialStep("advance_throwers", Array.Empty<string>(), 330f),
+        new SeatTrialStep("advance_throwers_vanilla", Array.Empty<string>(), 200f),
     };
 }

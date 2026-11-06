@@ -8003,6 +8003,8 @@
     <string id="TAOM_LD_Hud_WaveClass" text="{WAVE}, {CLASS}" />
     <string id="TAOM_FOW_Trait_Rivendell_SlowWaves" text="Free troops come at half the usual rate." />
     <string id="TAOM_FOW_Trait_Mirkwood_SlowWaves" text="Free troops come a third less often." />
+    <string id="taom_marshal_mcm_throwers_first" text="Throwers Throw First" />
+    <string id="taom_marshal_mcm_throwers_first_hint" text="On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on." />
     <string id="TAOM_LD_Ability_Summon_Isengard" text="Uruk-hai of Isengard" />
     <string id="TAOM_LD_Ability_WarCry_Isengard" text="The White Hand Calls" />
     <string id="TAOM_LD_Boon_TheLongSilence" text="The Long Silence" />

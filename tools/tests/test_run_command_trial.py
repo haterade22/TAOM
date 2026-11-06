@@ -300,6 +300,35 @@ class MarshalJudgeTests(unittest.TestCase):
             for level in ("WARNING", "INFO"):
                 self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:05] [{level}] [PatchApply] {text}"), (level, text))
 
+    def test_the_shared_movement_order_category_failing_to_apply_fails_the_run(self):
+        """The two thrower patches are applied through the shared category, and the applier writes its name, with no Patch141_ in it."""
+        for text in ("Patch_MissionTime_SetMovementOrder FAILED (x)",):
+            code, why = judge(FINAL, None, full_log(extra=(f"[2026-11-05 10:00:05] [ERROR] [PatchApply] {text}",)))
+            self.assertEqual(code, 1, text)
+            self.assertIn("Patch_MissionTime_SetMovementOrder", why)
+            for level in ("WARNING", "INFO"):
+                self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-05 10:00:05] [{level}] [PatchApply] {text}"), (level, text))
+
+    def test_every_thrower_patch_class_is_judged_when_the_applier_skips_it(self):
+        """The thrower classes carry the shared category, not Patch141_, so their names are read out of the source and each is judged as the applier writes it."""
+        hooks = REPO / "Main" / "Features" / "MarshalsWord" / "Hooks"
+        classes = [match.group(1) for path in hooks.glob("*.cs") for match in re.finditer(
+            r'HarmonyPatchCategory\("Patch_MissionTime_SetMovementOrder"\)\]\s*public static class (\w+)', path.read_text(encoding="utf-8"))]
+        self.assertEqual(sorted(classes), ["MarshalThrowerPatch", "MarshalThrowerTimer"])
+        for name in classes:
+            line = f"[2026-11-05 10:00:05] [ERROR] [PatchApply] TAOM.Features.MarshalsWord.Hooks.{name} SKIPPED (its attributes cannot be read, so its patches are off)"
+            code, why = judge(FINAL, None, full_log(extra=(line,)))
+            self.assertEqual(code, 1, name)
+            self.assertIn(name, why)
+
+    def test_the_thrower_stand_fault_line_fails_the_run_and_the_driver_writes_it_at_the_error_level(self):
+        line = "[2026-11-05 10:00:40] [ERROR] [MarshalsWord] the thrower stand failed: System.IndexOutOfRangeException: x"
+        code, why = judge(FINAL, None, full_log(extra=[line]))
+        self.assertEqual(code, 1)
+        self.assertIn("the thrower stand failed", why)
+        driver = (REPO / "Main" / "Features" / "MarshalsWord" / "MarshalThrowerDriver.cs").read_text(encoding="utf-8")
+        self.assertIn('_logger.LogError("[MarshalsWord] the thrower stand failed: "', driver, "a warning here would pass a run whose stand is off")
+
     def test_a_hotkey_registration_failure_of_marshals_word_fails_the_run(self):
         """Every step presses by method and an unregistered key reads as not pressed, so only this line tells a run that the Marshal keys are dead."""
         text = "[MarshalsWord] hotkey registration failed, the Marshal's Word keys stay unbound: ArgumentOutOfRangeException: Index was out of range."
@@ -733,6 +762,12 @@ class SourceTieTests(unittest.TestCase):
         self.assertIn('NoteCall("SeatScreenAdapter.TryTake", _logger.LogError)', screen)
         self.assertIn('MissionThreadGuard.NoteCall(site, _logger.LogError)', host)
 
+    def test_the_thrower_steps_are_the_ones_the_roster_swaps_javelineers_in_for(self):
+        source = (REPO / "Main" / "Features" / "SeatOfSeeing" / "Domain" / "SeatTrialRoster.cs").read_text(encoding="utf-8")
+        match = re.search(r"ThrowerSteps = new\[\] \{([^}]*)\}", source)
+        self.assertIsNotNone(match)
+        self.assertEqual(tuple(re.findall(r"\"(\w+)\"", match.group(1))), trial.THROWER_STEPS)
+
     def test_every_step_is_a_features_steps_the_seats_then_marshals_word(self):
         self.assertEqual(trial.STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS)
         self.assertEqual(len(set(trial.STEPS)), len(trial.STEPS), "no step name is shared by two features")
@@ -746,8 +781,8 @@ class SourceTieTests(unittest.TestCase):
         source = MARSHAL_STEPS_SOURCE.read_text(encoding="utf-8")
         self.assertEqual(tuple(re.findall(r'new SeatTrialStep\(\s*"(\w+)"', source)), trial.MARSHAL_STEPS)
 
-    def test_every_marshal_step_has_a_handler_in_one_of_the_three_marshal_script_files(self):
-        script = "".join((MARSHAL_TRIAL_SOURCE / name).read_text(encoding="utf-8") for name in ("CommandTrialScript.Marshal.cs", "CommandTrialScript.MarshalM5.cs", "CommandTrialScript.MarshalHold.cs"))
+    def test_every_marshal_step_has_a_handler_in_one_of_the_four_marshal_script_files(self):
+        script = "".join((MARSHAL_TRIAL_SOURCE / name).read_text(encoding="utf-8") for name in ("CommandTrialScript.Marshal.cs", "CommandTrialScript.MarshalM5.cs", "CommandTrialScript.MarshalHold.cs", "CommandTrialScript.MarshalThrowers.cs"))
         registered = tuple(re.findall(r'into\["(\w+)"\] = ', script))
         self.assertEqual(registered, trial.MARSHAL_STEPS)
 
@@ -1076,6 +1111,17 @@ class ArgumentTests(unittest.TestCase):
         action = next(a for a in trial.build_parser()._actions if "--live-limit" in a.option_strings)
         self.assertIn("real seconds", action.help)
         self.assertNotIn("mission seconds", action.help, "at level 10 a mission second is a tenth of a real one")
+
+    def test_a_thrower_step_beside_another_step_is_refused_and_one_alone_is_accepted(self):
+        for text in ("advance_throwers,advance_throwers_vanilla", "hold_line_proof,advance_throwers", "ADVANCE_THROWERS_VANILLA, enter"):
+            with self.subTest(steps=text), restoring_runner(main=lambda rest: 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+                with self.assertRaises(SystemExit) as stop:
+                    trial.main(["--steps", text, "--dry-run"])
+                self.assertEqual(stop.exception.code, 2)
+        self.assertEqual(trial.normalised_steps("advance_throwers"), ("advance_throwers",))
+        self.assertEqual(trial.normalised_steps(" Advance_Throwers_Vanilla ,advance_throwers_vanilla"), ("advance_throwers_vanilla",))
+        with self.assertRaisesRegex(ValueError, "each run alone"):
+            trial.normalised_steps("advance_throwers,enter")
 
     def test_the_steps_are_normalised_to_the_tables_order_and_names(self):
         # "fly" and "cursor_with_panel" are in the table's order and the reverse of the alphabetical one, so a sorting mutant is seen.

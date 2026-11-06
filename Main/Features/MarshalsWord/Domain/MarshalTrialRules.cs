@@ -15,7 +15,7 @@ internal readonly record struct TrialDrag(float BeginX, float BeginY, float EndX
 internal readonly record struct FrontDrag(float Stagger, float ShiftX, float ShiftY);
 
 /// <summary>The numbers and judgments the Marshal's Word field trial rests on, with no engine type.</summary>
-internal static class MarshalTrialRules
+internal static partial class MarshalTrialRules
 {
     /// <summary>The distance of each leg of <c>queue_two_moves</c> and of the move that staggers two companies, in metres.</summary>
     internal const float LegMetres = 25f;

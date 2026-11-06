@@ -416,7 +416,7 @@ public class MarshalHoldLineWiringTests
         var orders = new FakeMarshalOrders();
         orders.Selected.Add(3);
         var settings = new FakeMarshalSettings();
-        var session = new MarshalSession(orders, new FakeMarshalFire(), new FakeMarshalOutlines(), new FakeMarshalScreen(), settings, () => true,
+        var session = new MarshalSession(orders, new FakeMarshalFire(), new FakeMarshalThrowers(), new FakeMarshalOutlines(), new FakeMarshalScreen(), settings, () => true,
             new RecordingOutcomeLog(), Substitute.For<IModLogger>(), "7");
         try
         {

@@ -12,6 +12,7 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     internal const bool DefaultOutlines = true;
     internal const bool DefaultHollowSquare = true;
     internal const bool DefaultSpacingRepair = true;
+    internal const bool DefaultThrowersFirst = true;
 
     private TaomSettings? _settings;
 
@@ -32,4 +33,6 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     public bool HollowSquare => Settings?.MarshalHollowSquare ?? DefaultHollowSquare;
 
     public bool SpacingRepair => Settings?.MarshalSpacingRepair ?? DefaultSpacingRepair;
+
+    public bool ThrowersFirst => Settings?.MarshalThrowersFirst ?? DefaultThrowersFirst;
 }

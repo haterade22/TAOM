@@ -13,6 +13,9 @@ internal static class SeatTrialSteps
 {
     internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
 
+    /// <summary>The form a step name is compared in, shared by the step chooser and the roster that depends on which steps were chosen.</summary>
+    internal static string NameOf(string name) => name.Trim().ToLowerInvariant();
+
     /// <summary>The steps to run in the table's order (null or blank is every step), or false with <paramref name="error"/> naming an unknown step or a missing requirement and <paramref name="steps"/> empty.</summary>
     internal static bool TryChoose(string? list, out IReadOnlyList<SeatTrialStep> steps, out string error)
     {
@@ -24,7 +27,7 @@ internal static class SeatTrialSteps
             return true;
         }
 
-        var names = list!.Split(',').Select(n => n.Trim().ToLowerInvariant()).Where(n => n.Length > 0).ToList();
+        var names = list!.Split(',').Select(NameOf).Where(n => n.Length > 0).ToList();
         var unknown = names.Where(n => All.All(s => s.Name != n)).Distinct().ToList();
         if (unknown.Count > 0)
         {

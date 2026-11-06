@@ -3006,4 +3006,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_marshal_mcm_spacing_repair}Spacing Repair", Order = 5, RequireRestart = true,
         HintText = "{=taom_marshal_mcm_spacing_repair_hint}A company of foot soldiers with riders under a tenth of its soldiers keeps the spacing limits of a foot company, as it already keeps their spacing, instead of the limits of cavalry. A change takes a restart of the game, and it applies only if Enable Marshal's Word is on when the game starts. It stays off in a co-op session and on a dedicated server, so that two machines never compute different widths. Default: on.")]
     public bool MarshalSpacingRepair { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultSpacingRepair;
+
+    [SettingPropertyGroup("Marshal's Word")]
+    [SettingPropertyBool("{=taom_marshal_mcm_throwers_first}Throwers Throw First", Order = 6, RequireRestart = false,
+        HintText = "{=taom_marshal_mcm_throwers_first_hint}On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on.")]
+    public bool MarshalThrowersFirst { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultThrowersFirst;
 }

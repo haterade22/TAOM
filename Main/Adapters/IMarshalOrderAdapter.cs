@@ -21,6 +21,9 @@ internal interface IMarshalOrderAdapter
     /// <summary>A direct player order reached the player's controller; the companies it ordered. Raised only for orders that contradict a walk.</summary>
     event Action<IReadOnlyList<int>>? DirectOrder;
 
+    /// <summary>The player gave an Advance through the player's controller; the companies it ordered. Only this, or a change of movement order, ends a thrower run.</summary>
+    event Action<IReadOnlyList<int>>? AdvanceGiven;
+
     /// <summary>The mission's player team changed. Every stored company number named a formation of the old team.</summary>
     event Action? PlayerTeamChanged;
 

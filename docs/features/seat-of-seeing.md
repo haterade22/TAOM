@@ -642,6 +642,8 @@ null, "", "", 12f)`. The player's side defends.
 | Player | `gondor`, hero `lord_1_9` | 40 `fow_gondor_militia_spearman`, 40 `fow_gondor_ano_archer_militia`, 20 `fow_gondor_pg_cavalry` |
 | Enemy | `mordor` | 120 `fow_mordor_orc_fighter`, 30 `fow_mordor_orc_hunter` |
 
+When the explicit `steps` list names `advance_throwers` or `advance_throwers_vanilla`, the 40 `fow_gondor_militia_spearman` are 40 `gondor_har_javelineer` (`troops/troops_gondor.xml`: two stacks of `western_javelin_3_t4`, a sword and a shield in each of four rosters, no horse), so the infantry company is a pure thrower company; `SeatTrialRoster.PlayerFor` answers the army from the list, the launcher fills and checks its ids from that answer, and every other subset keeps the table above.
+
 The mounted troop is `fow_gondor_pg_cavalry` (Pinnath Gelin Light Horseman), in `ModuleData/fords_of_war/fords_troops.xml`: Culture.gondor,
 level 26, `empire_horse` with `gondor_horse_armor_4`. Every id was read from the repo's data (the cultures in `taom_spcultures.xml`, the
 hero as a stub in `characters/custom_battle_lords.xml` and listed in `custom_battle/custom_battle_commanders.json`, the five troops in

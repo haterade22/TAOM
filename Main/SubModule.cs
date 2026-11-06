@@ -584,8 +584,9 @@ public class SubModule : MBSubModuleBase
         {
             logger.LogWarning($"[BannerBearers] Patch63 spawn guard failed to apply: {ex.Message}");
         }
-        // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
-        // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
+        // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI,
+        // Patch35_CompanionTactics' Formation.SetMovementOrder hook, and the MovementOrder
+        // hooks MarshalThrowerPatch and MarshalThrowerTimer) is applied in
         // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,
         // which is null during OnSubModuleLoad and would crash JIT prep with NRE.
 
@@ -2115,7 +2116,8 @@ public class SubModule : MBSubModuleBase
     private void AddTaomMissionBehaviors(Mission mission)
     {
         // Apply Formation.SetMovementOrder patches (Patch31_SmartCavalryAI + Patch35
-        // CancelStanceOnMove) only once Mission.Current is non-null — MovementOrder's
+        // CancelStanceOnMove) and the MovementOrder hooks (MarshalThrowerPatch,
+        // MarshalThrowerTimer) only once Mission.Current is non-null — MovementOrder's
         // type initializer constructs static fields whose ctor reads
         // Mission.Current.CurrentTime. Applying earlier crashes JIT prep with NRE.
         if (!_missionTimePatchesApplied)
