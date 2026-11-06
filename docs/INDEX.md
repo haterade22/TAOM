@@ -283,7 +283,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 
 - [reference/rules-catalog.md](reference/rules-catalog.md) — full `.claude/rules/` catalog (rule → scope → content, always-load vs path-scoped); CLAUDE.md keeps only the load-convention note
 - [reference/rule-provenance.md](reference/rule-provenance.md) — the always-load rules' "why this exists / relationships / source" sections, moved out of the eager load; read when auditing or editing a rule
-- [reference/provenance-register.md](reference/provenance-register.md): every third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
+- [reference/provenance-register.md](reference/provenance-register.md): every named third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
 - [ai-includes/architecture.md](ai-includes/architecture.md) — layer stack, IoC, lifetimes
 - [ai-includes/patterns.md](ai-includes/patterns.md) — Hook / Strategy / GameModel patterns
 - [ai-includes/agent-teams.md](ai-includes/agent-teams.md) — when to spawn parallel agents

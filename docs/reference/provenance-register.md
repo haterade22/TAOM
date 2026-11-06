@@ -1,6 +1,6 @@
 # Provenance Register
 
-Every third-party source TAOM derives from, interoperates with, or was compared against, with its
+Every named third-party source TAOM derives from, interoperates with, or was compared against, with its
 license and what kind of derivation it is. This file is the single authoritative record. It is also
 read by `tools/check_provenance.py`, which checks the Derivation and Status vocabulary, that each
 shipped non-TAOM binary has a `redistributed` row, and that each adoption record is named here or
@@ -11,7 +11,9 @@ mention is a violation, and so is an unnamed euphemism ("the donor mod", "the up
 reverses an earlier standing rule that said TAOM documentation must not name other mods, recorded at
 [`docs/changelog-archive/CHANGELOG-2026-H1.md:2258-2270`](../changelog-archive/CHANGELOG-2026-H1.md).
 That rule produced a partial de-naming pass and no enforcement, and it left the repo documenting that
-something had been taken while making it impossible to check under what terms. Full rule:
+something had been taken while making it impossible to check under what terms. One exception: a
+source the maintainer chooses not to name, from which TAOM copies nothing, gets no row and no
+mention anywhere in the repo. Full rule:
 [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
 
 **This file does not ship.** It carries `uncleared` rows, which are a working list of open questions,

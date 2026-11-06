@@ -27,6 +27,22 @@ first, it is history, not policy.
 
 De-naming does not work in practice: a link target or file name always carries the name anyway.
 
+## Sources the maintainer chooses not to name
+
+The maintainer may decide that a source is never named (Mike, 2026-10-26). For such a source:
+
+- **Write nothing about it in the repo:** no name, no euphemism, no register row, no link, no file
+  or branch name that carries it. "Inspired by another mod" is a euphemism too.
+- **TAOM builds its own version from its own written spec.** It copies no code, data, text or assets,
+  and nobody reads the source's code or data while building. The feature doc, issue and commit
+  describe TAOM's design on its own terms, as any other TAOM feature.
+- **The record stays outside the repo,** in the maintainer's private notes. An agent told a source
+  is unnamed keeps it out of every public surface: commits, issues, PRs, docs, code and comments.
+
+This is the one exception to "name it" below. It never covers a source whose code, data, text or
+assets TAOM ships or reproduces, or one read while building (a `behavioural-port`): those still need a
+register row and, when it applies, a notice.
+
 ## What good attribution looks like
 
 Two examples in this repo, both safe, both worth copying:
