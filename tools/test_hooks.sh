@@ -3450,6 +3450,55 @@ fi
 rm -rf "$DE_P" "$DE_H"
 
 
+# The over-cap banner prints only past what loads (200 lines or 25 KB, harness-facts.md): at startup, not after a compaction.
+MB_P="$SANDBOX/mb-proj"
+MB_H="$SANDBOX/mb-home"
+mkdir -p "$MB_P" "$MB_H/.claude/projects/e--repos-mb-proj/memory"
+mb_run() {  # $1 the source
+    printf '{"source":"%s"}' "$1" | CLAUDE_PROJECT_DIR="$MB_P" HOME="$MB_H" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+printf 'small\n' > "$MB_H/.claude/projects/e--repos-mb-proj/memory/MEMORY.md"
+grep -q 'MEMORY.md is' <<< "$(mb_run startup)" \
+    && bad "session-start printed the MEMORY.md banner for a small index" \
+    || ok "session-start stays silent about a small MEMORY.md"
+"$HPY" -c 'import sys; open(sys.argv[1], "wb").write(b"x" * 26000 + b"\n")' "$MB_H/.claude/projects/e--repos-mb-proj/memory/MEMORY.md"
+grep -q 'MEMORY.md is 1 lines, 26001 bytes' <<< "$(mb_run startup)" \
+    && ok "session-start names a MEMORY.md over 25 KB" \
+    || bad "session-start did not name a MEMORY.md over 25 KB: $(mb_run startup | head -c 200)"
+"$HPY" -c 'import sys; open(sys.argv[1], "w").write("x\n" * 201)' "$MB_H/.claude/projects/e--repos-mb-proj/memory/MEMORY.md"
+grep -q 'MEMORY.md is 201 lines' <<< "$(mb_run startup)" \
+    && ok "session-start names a MEMORY.md over 200 lines" \
+    || bad "session-start did not name a MEMORY.md over 200 lines"
+grep -q 'MEMORY.md is' <<< "$(mb_run compact)" \
+    && bad "session-start printed the MEMORY.md banner after a compaction" \
+    || ok "session-start leaves the MEMORY.md banner out after a compaction"
+# A session in a sibling worktree loads the main checkout's memory, so both read that folder.
+MB_M="$SANDBOX/mb-main"
+MB_W="$SANDBOX/mb-sibling"
+mkdir -p "$MB_H/.claude/projects/e--repos-mb-main/memory/features" "$MB_H/.claude/projects/e--repos-mb-main--worktrees-x/memory"
+git init -q "$MB_M" \
+    && git -C "$MB_M" -c user.name=t -c user.email=t@t commit -q --allow-empty -m base \
+    && git -C "$MB_M" worktree add -q "$MB_W"
+mb_sibling() {  # $1 the source
+    printf '{"source":"%s"}' "$1" | CLAUDE_PROJECT_DIR="$MB_W" HOME="$MB_H" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+"$HPY" -c 'import sys; open(sys.argv[1], "wb").write(b"x" * 26000 + b"\n")' "$MB_H/.claude/projects/e--repos-mb-main/memory/MEMORY.md"
+grep -q 'MEMORY.md is 1 lines, 26001 bytes' <<< "$(mb_sibling startup)" \
+    && ok "session-start names the main checkout's MEMORY.md from a sibling worktree" \
+    || bad "session-start missed the main checkout's MEMORY.md from a sibling worktree: $(mb_sibling startup | head -c 200)"
+printf '**Dead ends:** the sibling read the main card\n' > "$MB_H/.claude/projects/e--repos-mb-main/memory/features/card.md"
+grep -q 'the sibling read the main card' <<< "$(mb_sibling compact)" \
+    && ok "compact: a sibling worktree prints the main checkout's Dead ends" \
+    || bad "compact: a sibling worktree missed the main checkout's Dead ends"
+printf 'small\n' > "$MB_H/.claude/projects/e--repos-mb-main/memory/MEMORY.md"
+"$HPY" -c 'import sys; open(sys.argv[1], "wb").write(b"x" * 26000 + b"\n")' "$MB_H/.claude/projects/e--repos-mb-main--worktrees-x/memory/MEMORY.md"
+grep -q 'MEMORY.md is' <<< "$(mb_sibling startup)" \
+    && bad "session-start read the MEMORY.md of a project that only contains the name" \
+    || ok "session-start reads only the project named for the main checkout"
+rm -rf "$MB_P" "$MB_H" "$MB_M" "$MB_W"
+
 # ---------------------------------------------------------------------------
 head2 "Summary"
 printf '  %d passed, %d failed\n' "$PASS" "$FAIL"

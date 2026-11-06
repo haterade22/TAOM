@@ -11,13 +11,21 @@ else
   SOURCE=$(echo "$INPUT" | grep -oE '"source"\s*:\s*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
 fi
 
+# The memory folder carries the main checkout's name, also for a session in a sibling worktree.
+main_checkout_name() {
+  local common
+  common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+  common=${common%/.git}
+  basename "${common:-$PWD}"
+}
+
 # After compaction, re-surface recent Dead ends (run-protocol.md). SessionStart is
 # the only compact-time hook whose stdout reaches Claude (harness-facts.md "Visibility"). One find
 # bounded at 3 s of the 10 s registration, run folders and memory cards edited in the last two days,
 # at most 40 lines; a heading "## Dead ends" or a bold "**Dead ends:**" line opens a section.
 if [[ "$SOURCE" == compact ]]; then
   cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
-  DE=$(timeout -k 1 3 find plans/_audit "$HOME"/.claude/projects/*"$(basename "$PWD")"*/memory -maxdepth 2 \
+  DE=$(timeout -k 1 3 find plans/_audit "$HOME"/.claude/projects/*-"$(main_checkout_name)"/memory -maxdepth 2 \
        -type f \( -name PROGRESS.md -o -path '*/features/*.md' \) -mmin -2880 \
        -exec awk 'FNR==1{s=0} /^## /{s=/^## Dead ends/; next} /^\*\*[^*]+\*\*/{s=/^\*\*Dead ends/} s&&NF{print FILENAME": "$0; if(++n>=40) exit}' {} + 2>/dev/null)
   [[ -n "$DE" ]] && printf 'Dead ends recorded in the last two days (do not retry these):\n%s\n' "$DE"
@@ -66,6 +74,15 @@ fi
 # Silent when it does; a relative value reads from the project root, where this hook has cd'd.
 P=$(git config core.hooksPath 2>/dev/null)
 [[ -n "$P" && -f "$P/commit-msg" ]] || echo "NOTE: core.hooksPath does not name .githooks, so commit-msg is NOT running. Run: git config core.hooksPath .githooks"
+# MEMORY.md loads only its first ~200 lines or ~25 KB (harness-facts.md); past that a line never reaches a session.
+for MEM_F in "$HOME"/.claude/projects/*-"$(main_checkout_name)"/memory/MEMORY.md; do
+    [[ -f "$MEM_F" ]] || continue
+    MEM_B=$(wc -c < "$MEM_F"); MEM_L=$(wc -l < "$MEM_F")
+    if [[ $MEM_L -gt 200 || $MEM_B -gt 25000 ]]; then
+        echo "NOTE: MEMORY.md is $MEM_L lines, $MEM_B bytes, past the ~200 lines or ~25 KB that load. Move durable rules to the repo; delete pushed cards."
+    fi
+    break
+done
 # A WindowsApps interpreter winning the PATH race is the trap itself, not just a nuisance.
 _wa=$(command -v python 2>/dev/null || true)
 case "$_wa" in
