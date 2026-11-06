@@ -717,6 +717,50 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 4f. No payload field and no session-id variable reaches bash arithmetic (#998).
+#     Bash evaluates the operands of $(( )), (( )) and -eq/-gt inside [[ ]] as expressions, so a value
+#     holding an array subscript with a command substitution runs that command (hook-authoring.md
+#     "Digits only into bash arithmetic"). Every hook gets one probe in every payload field and in the
+#     session-id variables; the probe touches a marker file if anything evaluates it. The probe is
+#     assembled from parts so no literal attack string sits in this file. Values from git output or
+#     state files are not reachable from here and stay covered by the rule and review.
+# ---------------------------------------------------------------------------
+head2 "4f. no payload field or session-id variable reaches bash arithmetic (#998)"
+AM="$SANDBOX/arith-fired"
+AO='$('
+PROBE="PATH[${AO}touch $AM)]"   # PATH is always set, so a hook under set -u still evaluates the subscript
+AX="$PROBE"
+( (( AX > 0 )) ) 2>/dev/null   # a bad expression ends a non-interactive shell: run it in a subshell
+if [[ -e "$AM" ]]; then
+    rm -f "$AM"
+    ok "control: this bash runs the probe as arithmetic"
+else
+    bad "control: the probe did not fire on this bash; 4f proves nothing until it is updated"
+fi
+ACOMMON='"session_id":"'"$PROBE"'","cwd":"'"$PROBE"'","transcript_path":"'"$PROBE"'","source":"'"$PROBE"'","error":"'"$PROBE"'","duration_ms":"'"$PROBE"'","stop_hook_active":"'"$PROBE"'"'
+AP=("bash|{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git commit -m $PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
+    "edit|{\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"$PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
+    "mcp|{\"tool_name\":\"mcp__taomprobe__x\",\"tool_input\":{},\"hook_event_name\":\"PreToolUse\",$ACOMMON}")
+A_RUNS=0
+for ahook in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
+    aname=$(basename "$ahook")
+    [[ "$aname" == _*.sh || ! -f "$ahook" ]] && continue
+    for ae in "${AP[@]}"; do
+        printf '%s' "${ae#*|}" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" \
+            CLAUDE_SESSION_ID="$PROBE" CLAUDE_CODE_SESSION_ID="$PROBE" bash "$ahook" >/dev/null 2>&1
+        A_RUNS=$((A_RUNS+1))
+        if [[ -e "$AM" ]]; then
+            rm -f "$AM"
+            bad "$aname [${ae%%|*}] ran a payload or session-id value as arithmetic"
+        else
+            ok "$aname [${ae%%|*}] arithmetic-safe"
+        fi
+    done
+done
+(( A_RUNS >= 30 )) || bad "4f ran only $A_RUNS hook payloads; hook discovery is broken"
+rm -f "$AM"
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
@@ -2988,6 +3032,65 @@ else
     bad "retro cadence: a future-dated record printed no UNCHECKED note, so a typo would silence the banner"
 fi
 rm -rf "$RC"
+
+# ---------------------------------------------------------------------------
+head2 "7n. session-start.sh re-surfaces recent Dead ends after a compaction, and only then (#998)"
+# SessionStart is the only compact-time hook whose stdout reaches Claude. A sandbox project dir and
+# HOME hold a run folder and a memory card; a file older than two days must not print.
+DE_P="$SANDBOX/de-proj"
+DE_H="$SANDBOX/de-home"
+mkdir -p "$DE_P/plans/_audit/x" "$DE_P/plans/_audit/old" "$DE_H/.claude/projects/e--repos-de-proj/memory/features"
+printf '# Run\n\n## Status\nrunning\n\n## Dead ends\n- tried the cache hook, it fails open (evidence/a.txt)\n\n## Next\ngo\n' > "$DE_P/plans/_audit/x/PROGRESS.md"
+printf '# Old\n\n## Dead ends\n- ancient approach\n' > "$DE_P/plans/_audit/old/PROGRESS.md"
+touch -d '5 days ago' "$DE_P/plans/_audit/old/PROGRESS.md"
+printf '# Card\n\n**Dead ends:** tried a global patch, the model slot is single\n\n## Next\nx\n' > "$DE_H/.claude/projects/e--repos-de-proj/memory/features/card.md"
+de_run() {  # $1 the source; stdout of session-start.sh in the sandbox
+    printf '{"source":"%s"}' "$1" | CLAUDE_PROJECT_DIR="$DE_P" HOME="$DE_H" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+DE_T0=$SECONDS
+DE_OUT=$(de_run compact)
+DE_SECS=$((SECONDS - DE_T0))
+if grep -q 'plans/_audit/x/PROGRESS.md: - tried the cache hook' <<< "$DE_OUT"; then
+    ok "compact: a fresh run folder's Dead ends line is printed"
+else
+    bad "compact: a fresh PROGRESS.md Dead ends line was not printed: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if grep -q 'ancient approach' <<< "$DE_OUT"; then
+    bad "compact: a Dead ends line in a 5-day-old file was printed"
+else
+    ok "compact: a 5-day-old file prints nothing"
+fi
+if grep -q 'card.md: \*\*Dead ends:\*\* tried a global patch' <<< "$DE_OUT"; then
+    ok "compact: a memory card's bold Dead ends line is printed"
+else
+    bad "compact: the memory card's Dead ends line was not printed: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if grep -q 'go$\|running' <<< "$DE_OUT"; then
+    bad "compact: lines outside the Dead ends section were printed"
+else
+    ok "compact: only the Dead ends section is printed"
+fi
+if (( DE_SECS < 2 )); then
+    ok "compact: finished in ${DE_SECS} s (under 2 s)"
+else
+    bad "compact: took ${DE_SECS} s (limit 2 s)"
+fi
+DE_OUT=$(de_run startup)
+if grep -q 'Dead ends' <<< "$DE_OUT"; then
+    bad "startup: printed Dead ends text, so the startup output changed shape"
+elif grep -q '=== TAOM Session Context ===' <<< "$DE_OUT"; then
+    ok "startup: the usual context block, no Dead ends text"
+else
+    bad "startup: printed no context block: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if [[ -z "$(de_run resume)" ]]; then
+    ok "resume: nothing printed"
+else
+    bad "resume: printed output"
+fi
+rm -rf "$DE_P" "$DE_H"
+
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

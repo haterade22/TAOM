@@ -25,7 +25,7 @@ Asking about every minor detail is its own bug — friction that erodes trust an
 
 - **Trivial / mechanical work** — rename `foo` → `bar` per user spec, fix a typo, add a log line, run `/verify`, apply a diff the user already pasted.
 - **Routing decisions Claude can make from context** — which skill to invoke, which agent type to spawn, which TaleWorlds DLL to decompile.
-- **Conventions documented in CLAUDE.md / ADRs / scoped rules** — apply them, don't re-litigate. *"Should I use an adapter for this sealed type?"* is not a question — ADR-007 already answers it.
+- **Conventions documented in CLAUDE.md, ADRs or scoped rules, and facts a quick run can show:** apply them or run the check; don't re-litigate. *"Should I use an adapter for this sealed type?"* is not a question: ADR-007 already answers it.
 - **Recoverable / cheap-to-redo work** — a one-line Edit you can revert in seconds doesn't need an assumption-surfacing preamble.
 
 ## When the work is genuinely open-ended (lightweight design pass)

@@ -101,6 +101,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
 | claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
+| ralph-claude-code | `ralph-claude-code` `frankbria/ralph-claude-code` | MIT | behavioural-port | `.claude/rules/working-discipline.md` (no-progress breaker), `tools/loop_progress.py`, `.claude/skills/improve/workflows/execute.js` (run breaker), the Dead ends sections, `.claude/rules/hook-authoring.md` (digits-only arithmetic) (#996, #998) | cleared |
 
 <!-- provenance-register-end -->
 

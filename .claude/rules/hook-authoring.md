@@ -160,6 +160,17 @@ Never feed unbounded text through `<<<` or an expanding here-document (Git Bash 
 `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for` loop, or `set -f; T=($X); set +f` for
 words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e enforces it.
 
+## Digits only into bash arithmetic (ported from ralph-claude-code, #996)
+
+Bash evaluates every operand of `$(( ))`, `(( ))` and the `-eq`/`-gt` family inside `[[ ]]` as an
+expression, so an operand that holds an array subscript with a command substitution runs that
+command. A value from tool input, a file, git output or the environment enters arithmetic only after
+`tr -cd '0-9'`, `${X//[!0-9]/}` or a `^[0-9]+$` check (`mcp-health-check.sh` and `validate-push.sh`
+do this); counts from `grep -c`, `wc -l` and `date +%s` are already digits. A value that may start
+with a zero goes in as `10#$X`: bash reads `08` as bad octal, and the hook dies, which fails open.
+`tools/test_hooks.sh` 4f probes every hook with payload and session-id values; values from git output
+or state files stay covered by this rule and review.
+
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 
 On the dev machine `python3` resolves only to
