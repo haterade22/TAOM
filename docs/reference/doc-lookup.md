@@ -11,6 +11,7 @@
 | Write tests / TDD workflow | `.claude/rules/tests.md`; shipped-data tests: [testing-guide.md](../../docs/ai-includes/testing-guide.md) |
 | Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
 | Read what the native engine does (below an `[EngineMethod]`, natively parsed data, a native crash or hang frame) | [ghidra-native-decompile.md](../features/ghidra-native-decompile.md): `tools/native_decompile.py --engine-method` / `--string` / `--rva`; crashes and hangs go through `/native-crash-triage`; an address from an older build: [native-build-match.md](../features/native-build-match.md) |
+| Add or change a check that runs when a commit lands, or work out why a commit was refused or skipped a gate | [commit-gates.md](../features/commit-gates.md): the `.githooks/` gates, what each reads, and the limits (POSIX `sh`, fail open, ModuleData reads the working tree) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |
 | Check design patterns | [patterns.md](../../docs/ai-includes/patterns.md) |
 | Work with GUI/sprites/UI | [gui-sprite-system.md](../../docs/features/gui-sprite-system.md) |

@@ -4,8 +4,8 @@
 
 One read-only pass over `docs/` (plus `CLAUDE.md`, `AGENTS.md`, and the shipped ModuleData configs)
 that reports **doc rot**, the class of defect where the code moved and the prose did not. Pure
-stdlib, no game install required. Checks 5 to 7 **block a commit** through
-`.claude/hooks/check-doc-config-drift.sh`; check 8 gates through `--fail-on-drift`; the others are
+stdlib, no game install required. Checks 5 to 11 **block a commit** through
+`.githooks/pre-commit` and, for Claude's commits, `.claude/hooks/check-doc-config-drift.sh`; the others are
 advisory.
 
 Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).

@@ -1,0 +1,116 @@
+#!/bin/sh
+# Git pre-commit hook (core.hooksPath = .githooks): the commit gates for every committer, the ones
+# committing from a terminal or an IDE included. pre-merge-commit runs this too, because a clean merge
+# skips pre-commit. Git hands a hook the final index (a temporary one for a path commit) with the work
+# tree as cwd, so nothing here parses a command. tools/tests/test_githooks_pre_commit.py proves each of
+# those.
+#
+# POSIX sh, never bash: the git inside Visual Studio and GitHub Desktop ships sh but no bash, so
+# `env bash` finds the WSL launcher and every commit fails. Those gits also have no GNU timeout, and
+# only sh, grep, sed, tail and printf can be counted on.
+#
+# What the commit changes decides which gates run. lint_docs then judges the tree the commit records.
+# validate_moduledata reads the working tree, so a ModuleData file with
+# unstaged edits is judged as it stands on disk, not as this commit records it, and the hook names
+# such files. An amend cannot be seen from here, so it is judged on what it newly stages.
+#
+# Fails open, and says so, when Python or a tool is missing, crashes or overruns: a broken hook must not
+# block work. A person may still pass --no-verify; Claude's block-no-verify.sh refuses it.
+#
+# They run beside the Claude commit gates; both stay on this line.
+
+note() { echo "[pre-commit] $*" >&2; }
+
+REFUSED=0
+
+# A gitignored file under .claude/ never reaches the commit, which silently breaks whatever depends
+# on it (the original /freeze regression: bin/check-freeze.sh sat under .gitignore's bin/ pattern).
+# Before the empty-index exit below, because an amend with nothing new staged must hear this too.
+IGNORED=$(git ls-files --others --ignored --exclude-standard -- .claude/skills .claude/agents .claude/rules .claude/hooks 2>/dev/null \
+    | grep -E '\.(md|sh|py|js|json|ya?ml)$')
+if [ -n "$IGNORED" ]; then
+    note "these files exist under .claude/ but gitignore keeps them out of every commit:"
+    printf '%s\n' "$IGNORED" | sed 's/^/  - /' >&2
+    note "move each out of the ignored path with a descriptive directory name, or delete it."
+    REFUSED=1
+fi
+
+# No renames, so moving a file out of a watched folder shows its source. No quoting, so a non-ASCII
+# name still matches below.
+STAGED=$(git -c core.quotePath=false diff --cached --name-only --no-renames 2>/dev/null)
+[ -n "$STAGED" ] || exit $REFUSED
+
+# Never a Store alias: one can hang, and with no GNU timeout nothing here would stop it.
+PY=""
+for candidate in python py; do
+    case "$(command -v "$candidate" 2>/dev/null)" in
+        "" | *[Ww]indows[Aa]pps*) ;;
+        *) PY=$candidate; break ;;
+    esac
+done
+if [ -z "$PY" ]; then
+    note "no python on PATH; staged content NOT checked."
+    exit $REFUSED
+fi
+export PYTHONIOENCODING=utf-8
+
+# GNU timeout when this git has one. Under a bundled git the first timeout on PATH is System32's, which
+# exits 1 on these arguments and would read as a finding, so the gates run with no time limit there.
+if timeout --version >/dev/null 2>&1; then
+    bounded() { timeout -k 2 "$@"; }
+else
+    bounded() { shift; "$@"; }
+fi
+
+# run_gate <label> <seconds> <command...>: exit 1 refuses the commit. Anything else cannot judge, so
+# the commit goes through and the output says it was not checked. A tool that dies while it loads also
+# exits 1, and its output opens with the traceback or, for a SyntaxError, the bad line: the tool broke,
+# not the commit.
+run_gate() {
+    label=$1; seconds=$2; shift 2
+    output=$(bounded "$seconds" "$PY" -B "$@" 2>&1)
+    rc=$?
+    case $rc in
+        0) ;;
+        1)
+            case $output in
+                "Traceback (most recent call last):"* | "  File "*)
+                    printf '%s\n' "$output" | tail -n 8 >&2
+                    note "$label crashed; this commit is NOT checked by it." ;;
+                *)
+                    printf '%s\n' "$output" | tail -n 30 >&2
+                    note "$label found a problem. Fix it and stage again, or ask the owner if it is in a live module."
+                    REFUSED=1 ;;
+            esac ;;
+        124) note "$label overran ${seconds} s; this commit is NOT checked by it." ;;
+        *) note "$label could not judge (exit $rc); this commit is NOT checked by it." ;;
+    esac
+}
+
+# The surfaces lint_docs --drift-only reads. A commit it cannot concern pays nothing, and an old breach
+# in the docs does not refuse it.
+if printf '%s\n' "$STAGED" | grep -qE '^(docs/features/.*\.md|docs/reviews/rca-.*\.md|Main/_Module/ModuleData/.*\.json|\.claude/pinned-game-version\.txt|CLAUDE\.md|AGENTS\.md|docs/ai-includes/.*\.md|\.claude/rules/.*\.md|\.claude/agents/.*\.md|\.claude/skills/.*\.md|docs/modding/.*\.md|docs/reference/.*\.md)$'; then
+    # shellcheck disable=SC2086  # the flag is one word or none
+    run_gate "lint_docs" 25 tools/lint_docs.py --drift-only --staged ${TAOM_CLEAN_MERGE:+--clean-merge}
+fi
+
+# The ModuleData gates. Only exit 1 refuses: with no game install the validator exits 2.
+if printf '%s\n' "$STAGED" | grep -qE '^Main/_Module/ModuleData/.*\.(xml|xslt)$'; then
+    UNSTAGED=$(git -c core.quotePath=false diff --name-only -- Main/_Module/ModuleData 2>/dev/null)
+    if [ -n "$UNSTAGED" ]; then
+        note "the ModuleData gates read the working tree, and these files differ from what this commit records:"
+        printf '%s\n' "$UNSTAGED" | sed 's/^/  - /' >&2
+    fi
+    run_gate "validate_moduledata" 60 tools/validate_moduledata.py \
+        --code BROKEN_ITEM_REF --code BROKEN_TROOP_REF --code UNKNOWN_CULTURE \
+        --code DUPLICATE_NPC_ID --code DUPLICATE_CULTURE_ID --code DUPLICATE_ROSTER_ID \
+        --code BROKEN_BODY_PROPERTY_REF --code LANDLESS_CULTURE --code MOUNTED_DWARF \
+        --code SETTLEMENT_ECONOMY_FLOOR --code UPGRADE_SKILL_REGRESSION --code SKILL_TEMPLATE_SHADOWS_SKILLS \
+        --code UPGRADE_TIER_COLLAPSE --code UPGRADE_INDEX_EMPTY --code MISSING_BODY_ARMOUR \
+        --code MISSING_EDUCATION_TEMPLATES --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
+        --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY --code COLLISION_BODY_BORROWED \
+        --code SCHEMA_INVALID --code BROKEN_FACTION_REF --code ITEM_SLOT_REJECTED \
+        --code TROOP_ID_REMOVED
+fi
+
+exit $REFUSED
