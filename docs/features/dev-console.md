@@ -289,6 +289,8 @@ answer is conclusive and fails open in every path.
 
 ## Command reference
 
+A feature doc pairs these commands with the observable result that proves each step in its "How to verify in game" section ([TEMPLATE.md](TEMPLATE.md)).
+
 | Command | Tier | Gate | What it replaces |
 |---|---|---|---|
 | `taom.add_special_resources [amount]` | B | campaign | — (see [special-resources.md](special-resources.md)) |

@@ -30,8 +30,9 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 ### Phase 4 — Close out
 7. `/verify` — final build + tests green.
 8. The GitHub issue must **already exist** (open it when work started, per `/issue`). Close it with the final commit — do NOT create it retroactively.
-9. Write/update `docs/features/<name>.md`.
+9. Write/update `docs/features/<name>.md`, including `## How to verify in game`. An in-game check still owed goes there as steps before the issue gets `triage-needs-ingame`.
 10. Write the commit body as the changelog entry; `/release` generates `CHANGELOG.md` from it.
+11. If the work ran in a worktree, run `python tools/worktree_audit.py` once it lands and report its bucket for that worktree. Remove nothing without Mike's word.
 
 ## Gotchas
 - `/review-codex` and `/codex-verify` cost real money — confirm with the user before Phase 2 unless they already authorized the ship.

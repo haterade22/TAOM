@@ -39,6 +39,12 @@ For **features**, the issue body MUST include:
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
+- If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
+  remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
+  Before you add the label, write the check as steps in the feature doc's `## How to verify in game`
+  section, and link that section in the closing comment.
+  The backlog is a query, visible from every machine and client:
+  `gh issue list --state all --label triage-needs-ingame`
 
 **Commands:** Use `gh issue create` and `gh issue close` via Bash.
 
@@ -56,6 +62,8 @@ Every completed feature MUST have a documentation file at `docs/features/<featur
 - Key Files — table of all files with their purpose
 - Dependencies — what it relies on
 - Tests — test file locations and coverage summary
+- How to verify in game: preconditions, then each `taom.*` command or UI action with the result
+  that proves it. `tools/lint_docs.py` blocks the commit of a new feature doc without this heading
 - How-To — common operations (e.g., "How to add a new X")
 - Performance — any optimization notes (if applicable)
 

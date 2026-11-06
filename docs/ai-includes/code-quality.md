@@ -77,9 +77,8 @@ foreach (var hero in heroes)
 }
 ```
 
-**Good comments** (explain why):
+**Good comments** (ADR-009: inside a method body only a quirk forced by the engine; domain rules go in names):
 ```csharp
-// Dead heroes retain their equipment but can't be selected for battle (ADR-006)
 var selectableHeroes = heroes.Where(h => h.IsAlive);
 
 // TaleWorlds expects null for unset culture, not empty string (game engine quirk)

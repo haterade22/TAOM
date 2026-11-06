@@ -125,7 +125,7 @@ Before writing ANY fix, verify your hypothesis.
 
 2. **If wrong:** return to Phase 1. Do NOT guess your way to a fix. The cost of a second investigation is minutes; the cost of a wrong fix is hours.
 
-3. **3-strike rule.** If three hypotheses fail in sequence, **STOP** and use `AskUserQuestion`:
+3. **3-strike rule.** If three hypotheses fail in sequence, first write down the premise they share, and run one observation that would come out differently if that premise were false. Then **STOP** and use `AskUserQuestion`:
    ```
    3 hypotheses tested, none match. This may be architectural rather than a simple bug.
    A) Continue — I have a new hypothesis: [describe]
@@ -144,7 +144,7 @@ Before writing ANY fix, verify your hypothesis.
 
 Once root cause is confirmed:
 
-1. **Fix the root cause, not the symptom.** Smallest change that eliminates the actual problem.
+1. **Fix the root cause, not the symptom.** Smallest change that eliminates the actual problem. Ask whether the triggering state is legitimate: if it should never exist, a null-check or fallback where it broke hides the bug, so fix where the state is created.
 
 2. **Minimal diff.** Fewest files, fewest lines. Resist refactoring adjacent code while debugging — log it for a follow-up.
 

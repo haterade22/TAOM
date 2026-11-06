@@ -3031,6 +3031,42 @@ if grep -q 'harness retro cadence UNCHECKED this session (.* is dated in the fut
 else
     bad "retro cadence: a future-dated record printed no UNCHECKED note, so a typo would silence the banner"
 fi
+# The worktree pile-up banner: a fake git answers `worktree list --porcelain` with N entries and hands
+# every other call to the real git. Over 15 prints the audit line with the count, 15 prints nothing,
+# and a failing list says UNCHECKED, not silence.
+REAL_GIT=$(command -v git)
+mkdir -p "$RC/fakebin"
+cat > "$RC/fakebin/git" <<FAKE
+#!/bin/sh
+if [ "\$1" = "worktree" ] && [ "\$2" = "list" ]; then
+  [ -n "\$FAKE_WT_FAIL" ] && exit 3
+  i=0
+  while [ "\$i" -lt "\$FAKE_WT_N" ]; do echo "worktree /fake/\$i"; echo "HEAD abc"; echo; i=\$((i + 1)); done
+  exit 0
+fi
+exec "$REAL_GIT" "\$@"
+FAKE
+chmod +x "$RC/fakebin/git" 2>/dev/null
+ss_wt() {   # $1 worktree count, $2 non-empty to make the list fail; stdout of session-start.sh in $RC
+    printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$RC" TAOM_PYBIN="$RCPY" \
+        PATH="$RC/fakebin:$PATH" FAKE_WT_N="$1" FAKE_WT_FAIL="${2:-}" \
+        bash "$RC/.claude/hooks/session-start.sh" 2>/dev/null
+}
+if grep -q "^WORKTREES: 21 checked out (more than 15)\. Run python tools/worktree_audit\.py; prune only on Mike's word\.$" <<< "$(ss_wt 21)"; then
+    ok "worktree banner: 21 worktrees print the WORKTREES line with the count"
+else
+    bad "worktree banner: 21 worktrees printed no WORKTREES line"
+fi
+if grep -q '^WORKTREES:' <<< "$(ss_wt 15)"; then
+    bad "worktree banner: exactly 15 worktrees still printed a WORKTREES line"
+else
+    ok "worktree banner: 15 worktrees, nothing printed"
+fi
+if grep -q 'worktree count UNCHECKED this session (git worktree list exited 3)' <<< "$(ss_wt 21 1)"; then
+    ok "worktree banner: a failing git worktree list says UNCHECKED"
+else
+    bad "worktree banner: a failing git worktree list printed no UNCHECKED note"
+fi
 rm -rf "$RC"
 
 # ---------------------------------------------------------------------------

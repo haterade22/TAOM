@@ -93,7 +93,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117; plan 144 adds tpac-static-prop-authoring.md and the engine/ save-system, agent-spawn, lifecycle, submodule, gauntletui, campaign-tick and formations pages; the measurement cited in docs/features/butter-lib-distance-matrix.md) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
-| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail); rule lines in `.claude/rules/{evidence-over-claims,simplicity-criterion,working-discipline}.md`, `.claude/skills/issue/SKILL.md` and `docs/ai-includes/perf-method.md` section 4 (comparison-only) | cleared |
 | TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 | Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and, once the `/release` edits land, `/release` Phase 1 (owed in-game checks) and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
 | Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
@@ -102,6 +102,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 | ralph-claude-code | `ralph-claude-code` `frankbria/ralph-claude-code` | MIT | behavioural-port | `.claude/rules/working-discipline.md` (no-progress breaker), `tools/loop_progress.py`, `.claude/skills/improve/workflows/execute.js` (run breaker), the Dead ends sections, `.claude/rules/hook-authoring.md` (digits-only arithmetic) (#996, #998) | cleared |
+| pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
 
 <!-- provenance-register-end -->
 
@@ -619,6 +620,15 @@ no code, text or idea, so no Apache-2.0 notice is carried. The 0.42.0 wheel and 
 run offline on 2026-11-03 to measure it (Mike's explicit trial decision): in an isolated venv, never
 wrapped around Claude Code, never in a hook or an MCP entry, then deleted. Record:
 [`docs/reviews/adopt-headroom-2026-11-03.md`](../reviews/adopt-headroom-2026-11-03.md).
+
+### pstack
+
+Upstream: https://github.com/backnotprop/pstack (a mirror of Cursor's `cursor/plugins/pstack`), `18b6c36`,
+read from a shallow clone; nothing was installed or run. Seven ideas were restated in TAOM's words (the
+two-edit test check, comment review, a verification recipe per feature, the premise test, a worktree
+audit, a perf method, more prose tells). The record lists TAOM-side changes, not copied files, and the
+table of them is there:
+[`docs/reviews/adopt-pstack-2026-10-24.md`](../reviews/adopt-pstack-2026-10-24.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

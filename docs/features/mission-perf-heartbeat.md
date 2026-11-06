@@ -1040,6 +1040,7 @@ when the probe never armed). `SyntheticNativeImage` builds the fake module.
 
 ## Reading an A/B
 
+The method (move order, stop rule, attempt log) is [perf-method.md](../ai-includes/perf-method.md).
 `tools/perf_runs.py` does the arithmetic. Run the same scene several times with the change off and
 several times with it on, keep each log, then:
 
@@ -1172,3 +1173,17 @@ Read the flags before the numbers:
 
 Exit codes: 0 when rows were found, 1 when no mission was found, 2 for a usage error, an unreadable
 file or a refused compare.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/perf-method.md](../ai-includes/perf-method.md)
+- [docs/features/map-perf-profiler.md](./map-perf-profiler.md)
+- [docs/reference/engine/mission-frame-threads-and-native-costs.md](../reference/engine/mission-frame-threads-and-native-costs.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+
+<!-- backlinks-end -->

@@ -83,6 +83,10 @@ If none of those reads well, the sentence wants restructuring rather than differ
 
 (Sycophancy — "great question", "you're absolutely right" — is already banned by Part 1 Rule 1 and `evidence-over-claims.md`. Don't restate it; it applies here too.)
 
+**More tells:** metaphor nouns (substrate, wedge, ratchet, north star: use the concrete word);
+a feeling instead of the mechanism or a number; passive voice that hides the actor (name who
+validates, parses or writes); over-compression (dropped articles, arrows: write whole sentences).
+
 ### TAOM house style: what stays, and one reversal
 
 **Boldface**, inline-`**Label:**` headers, markdown tables, and backticked paths/code are **deliberate TAOM semantic markers**. Keep them; the upstream humanizer cuts boldface, TAOM does not. (`/humanizer` carries the full carve-out plus the complete 33-pattern reference for deep cleaning.)
