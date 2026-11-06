@@ -2,7 +2,7 @@
 """Run The Long Defeat (#1079) in the real game with nobody at the keyboard, and judge its [Check] lines.
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
-                                      [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--deep]
+                                      [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--deep]
                                       [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
@@ -18,7 +18,8 @@ own file.
 Phase 2 test options: --seed fixes every roll, --start-wave begins the run at that wave number (the clears still count from 0, so
 --start-wave 12 --waves 4 stops after 4 clears), --start-rerolls seeds the boon reroll bank (armed as 1 unless given, so a 5-wave run proves
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
-the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
+the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
+--start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
@@ -32,7 +33,9 @@ terrain shader dialog before the Fords dialog handling. The standing permission 
 import argparse
 import itertools
 import json
+import math
 import re
+import struct
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -141,7 +144,7 @@ target_waves = None
 tree_head = None
 # The --speed the run was armed with, or None: the report's maxSpeed must equal it, or the arm key never took effect.
 expected_speed = None
-# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N}): each must come back equal, or the arm key never took effect.
+# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N}): each must come back equal, or the arm key never took effect.
 expected_report = {}
 
 
@@ -656,6 +659,369 @@ def owes_summon(report_json):
     return False
 
 
+# The fortifications (phase3-plan.md, Phase 3). shop.json carries a `fortifications` block per shop; the report lists every purchase and the gold spent on each sink.
+# read_fortifications mirrors FortificationsReader rule for rule (both suites read tools/tests/long_defeat_fort_cases.json), FORT_OFFERED mirrors FortOffer.Offered (D31), and
+# purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
+MAX_PRICE = 1_000_000
+FORT_OFFERED = {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0}
+PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
+SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
+KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
+SHARE_TOLERANCE = 0.0005
+
+
+def _fort_int(value, low, high):
+    """LongDefeatConfigScope.TryInt: a JSON integer (a float such as 100.0 and a boolean are refused) inside the range."""
+    return isinstance(value, int) and not isinstance(value, bool) and low <= value <= high
+
+
+def _fort_float(value, low, high):
+    """LongDefeatConfigScope.TryFloat: a finite JSON number inside the range."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and low <= value <= high
+
+
+def _fort_text(value):
+    """LongDefeatConfigScope.Text: a string with something in it, trimmed."""
+    return value.strip() or None if isinstance(value, str) else None
+
+
+def _volley_level(level):
+    """One Elven Volley level as [price, arrows, cooldownSeconds, radius, range, aim], or None when any value is out of its range."""
+    aim = _fort_text(level.get("aim"))
+    if not (_fort_int(level.get("price"), 1, MAX_PRICE) and _fort_int(level.get("arrows"), 1, 40) and _fort_float(level.get("cooldownSeconds"), 5, 600)
+            and _fort_float(level.get("radius"), 1, 30) and _fort_float(level.get("range"), 10, 200) and aim in ("auto", "crosshair")):
+        return None
+    return [level["price"], level["arrows"], level["cooldownSeconds"], level["radius"], level["range"], aim]
+
+
+def read_fortifications(shop):
+    """(plan, warnings) of one shop's `fortifications` block, as FortificationsReader reads it. The plan is None when the shop has no such key; otherwise a dict
+    {gate, towers, care, volley}, each None when its row is dropped. `warnings` counts the values that reverted or were skipped, one per problem, as the game logs them."""
+    if "fortifications" not in shop:
+        return None, 0
+    block = shop["fortifications"]
+    warnings = []
+    if not isinstance(block, dict):
+        return {"gate": None, "towers": None, "care": None, "volley": None}, 1
+
+    def group(parent, key):
+        if key not in parent:
+            return None
+        if isinstance(parent[key], dict):
+            return parent[key]
+        warnings.append(f"{key} is not an object")
+        return None
+
+    def levels_of(row, what):
+        if isinstance(row.get("levels"), list):
+            return row["levels"]
+        warnings.append(f"{what}: levels is missing or not an array")
+        return None
+
+    gate = None
+    row = group(block, "gate")
+    if row is not None:
+        if not _fort_int(row.get("repairPrice"), 1, MAX_PRICE):
+            warnings.append("gate.repairPrice")
+        elif (raw := levels_of(row, "gate")) is not None:
+            levels = []
+            for level in raw:
+                if not isinstance(level, dict):
+                    warnings.append("gate level is not an object")
+                    continue
+                percent = level.get("hitPointsPercent")
+                if not _fort_float(percent, 1, 1000):
+                    warnings.append("gate level hitPointsPercent")
+                    break
+                if levels and not _f32(percent) > _f32(levels[-1][0]):  # C# compares the 32-bit floats: 100 and 100.000001 are one value
+                    warnings.append("gate level hitPointsPercent does not rise")
+                    break
+                if not _fort_int(level.get("price"), 1, MAX_PRICE):
+                    warnings.append("gate level price")
+                    continue
+                levels.append([percent, level["price"]])
+            if levels:
+                gate = {"repairPrice": row["repairPrice"], "levels": levels}
+            else:
+                warnings.append("gate has no valid level")
+
+    towers = None
+    row = group(block, "towers")
+    if row is not None:
+        troop = _fort_text(row.get("troop"))
+        raw = levels_of(row, "towers") if troop is not None else None
+        if troop is None:
+            warnings.append("towers.troop")
+        elif raw is not None:
+            levels = []
+            for i, level in enumerate(raw):
+                if not isinstance(level, dict):
+                    warnings.append("towers level is not an object")
+                    continue
+                posts = level.get("posts")
+                if not _fort_int(posts, 1, 16):
+                    warnings.append("towers level posts")
+                    continue
+                if levels and posts < levels[-1][0]:
+                    warnings.append("towers level posts fall")
+                    continue
+                if not _fort_int(level.get("price"), 1, MAX_PRICE):
+                    warnings.append("towers level price")
+                    continue
+                flag = False
+                if "volley" in level:
+                    if not isinstance(level["volley"], bool):
+                        warnings.append("towers level volley is not a boolean")
+                    elif level["volley"] and i != len(raw) - 1:
+                        warnings.append("towers volley flag on a level that is not the last")
+                    else:
+                        flag = level["volley"]
+                levels.append([posts, flag, level["price"]])
+            if not levels:
+                warnings.append("towers has no valid level")
+            else:
+                volley = None
+                block_volley = group(row, "volley")
+                if block_volley is not None:
+                    item = _fort_text(block_volley.get("item"))
+                    spec = (("arrows", 1, 40), ("firstSeconds", 5, 600), ("cooldownSeconds", 5, 600), ("radius", 1, 30), ("range", 10, 200), ("originHeight", 0, 10))
+                    if item is None or not (_fort_int(block_volley.get("arrows"), 1, 40) and all(_fort_float(block_volley.get(k), lo, hi) for k, lo, hi in spec[1:])):
+                        warnings.append("towers.volley is dropped")
+                    else:
+                        volley = {"item": item, **{k: block_volley[k] for k, _, _ in spec}}
+                if volley is None and any(level[1] for level in levels):
+                    warnings.append("towers volley flag without a volley block")
+                    levels = [[p, False, price] for p, _, price in levels]
+                towers = {"troop": troop, "levels": levels, "volley": volley}
+
+    care = None
+    row = group(block, "fieldCare")
+    if row is not None:
+        if not _fort_float(row.get("share"), 0, 1) or not _f32(row["share"]) > 0:  # 1e-50 is a float 0 in the game
+            warnings.append("fieldCare.share")
+        elif not _fort_int(row.get("price"), 1, MAX_PRICE):
+            warnings.append("fieldCare.price")
+        else:
+            per = row.get("perIntermission", 1)
+            if not _fort_int(per, 1, 5):
+                warnings.append("fieldCare.perIntermission")
+                per = 1
+            care = {"share": row["share"], "price": row["price"], "perIntermission": per}
+
+    volley = None
+    row = group(block, "elvenVolley")
+    if row is not None:
+        item = _fort_text(row.get("item"))
+        if item is None:
+            warnings.append("elvenVolley.item")
+        elif not _fort_float(row.get("originHeight"), 0, 10):
+            warnings.append("elvenVolley.originHeight")
+        elif (raw := levels_of(row, "elvenVolley")) is not None:
+            levels = []
+            for level in raw:
+                parsed = _volley_level(level) if isinstance(level, dict) else None
+                if parsed is None:
+                    warnings.append("elvenVolley level is dropped")
+                elif not levels and parsed[5] != "auto":
+                    warnings.append("elvenVolley first level must aim itself")
+                else:
+                    levels.append(parsed)
+            if levels:
+                volley = {"item": item, "originHeight": row["originHeight"], "levels": levels}
+            else:
+                warnings.append("elvenVolley has no valid level")
+    return {"gate": gate, "towers": towers, "care": care, "volley": volley}, len(warnings)
+
+
+def shipped_fortifications(fortress_id=None, path=None):
+    """The `fortifications` plan of this tree's shop.json for the fortress's shop (read_fortifications' plan), or None when the file, the fortress or the block is missing."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    shops = _json_object(path or SHOP_FILE).get("shops", {})
+    shop = shops.get(fortress.get("shop")) if fortress is not None and isinstance(shops, dict) else None
+    return read_fortifications(shop)[0] if isinstance(shop, dict) else None
+
+
+def shipped_offers(fortress_id=None, path=None):
+    """{offer id: price} of the packs of the fortress's shop in this tree's shop.json."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    shops = _json_object(path or SHOP_FILE).get("shops", {})
+    shop = shops.get(fortress.get("shop")) if fortress is not None and isinstance(shops, dict) else None
+    offers = shop.get("offers", []) if isinstance(shop, dict) else []
+    return {o["id"]: o["price"] for o in offers if isinstance(o, dict) and isinstance(o.get("id"), str) and _is_int(o.get("price"))}
+
+
+def shipped_price_percents(path=None):
+    """{boon id: the sum of its pricePercent effects and drawbacks} of this tree's boons.json, for the boons that change a price."""
+    rows = _json_object(path or BOON_FILE).get("boons", [])
+    out = {}
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict) or not isinstance(row.get("id"), str):
+            continue
+        total = sum(e.get("value", 0) for e in list(row.get("effects", [])) + list(row.get("drawback", [])) if isinstance(e, dict) and e.get("key") == "pricePercent" and isinstance(e.get("value"), (int, float)))
+        if total:
+            out[row["id"]] = total
+    return out
+
+
+def _f32(value):
+    """A number as the game's 32-bit float holds it."""
+    return struct.unpack("f", struct.pack("f", value))[0]
+
+
+def price_factor(percent_sum):
+    """The game's RunModifiers.Factor for the price: Math.Max(0f, 1f + sum / 100f) in 32-bit float."""
+    return max(0.0, _f32(1.0 + _f32(percent_sum / 100.0)))
+
+
+def apply_price(amount, factor):
+    """GoldFactors.Apply, then the shop's Math.Max(1, ...): the amount times the factor (a 32-bit float widened to a double), half away from zero, at least 1."""
+    if amount <= 0:
+        return max(1, amount)
+    product = amount * factor
+    floor = math.floor(product)
+    return max(1, int(floor + 1 if product - floor >= 0.5 else floor))
+
+
+def repair_prices(whole, share):
+    """The prices GateMath.RepairPrice can give for a whole price and a share the report wrote to three decimals: the report's share is rounded, so every share within half a thousandth counts."""
+    def one(s):
+        return max(1, math.ceil(round(max(1, whole) * min(1.0, max(0.0, s)), 3)))
+    return range(one(share - SHARE_TOLERANCE), one(share + SHARE_TOLERANCE) + 1)
+
+
+def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None):
+    """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19 and 20, phase3-plan.md section 7).
+
+    Rule 8: gold.spent equals the sum of gold.spentOn, and each spentOn part equals the prices of its purchases. Rule 19: each purchase's basePrice is shop.json's for its kind and level
+    (the offer's for a pack), its price is max(1, the base through the price factor of the boons owned before that wave) and, for a repair, max(1, ceil(that * share)); levels are bought in order,
+    this build offers the kind and level (FORT_OFFERED), care is bought at most perIntermission times a wave, and the final levels are the highest bought. A boon taken in the same intermission may
+    come before or after a purchase, so a price is accepted at any factor that intermission could have held. Rule 20: a wave row's volley counts are 0 before the first level and
+    never above the arrows of the level in force."""
+    fortress_id = fortress_id or report_json.get("fortress")
+    fortress_id = fortress_id if isinstance(fortress_id, str) else None
+    plan = (shipped_fortifications(fortress_id) if fort is None else fort) or {}
+    offers = shipped_offers(fortress_id) if offers is None else offers
+    percents = shipped_price_percents() if percents is None else percents
+    purchases, gold, final = report_json.get("purchases"), report_json.get("gold"), report_json.get("fortifications")
+    if not isinstance(purchases, list):
+        return f"purchases is {purchases!r}, wanted a list"
+    spent_on = gold.get("spentOn") if isinstance(gold, dict) else None
+    if not isinstance(spent_on, dict) or set(spent_on) != set(SPENT_ON) or not all(_is_int(v) and v >= 0 for v in spent_on.values()):
+        return f"gold.spentOn is {spent_on!r}, wanted a whole number for each of {', '.join(SPENT_ON)}"
+    if not isinstance(final, dict) or not all(_is_int(final.get(k)) for k in ("gateLevel", "towerLevel", "volleyLevel")):
+        return f"fortifications is {final!r}, wanted gateLevel, towerLevel and volleyLevel"
+    if not _is_int(gold.get("spent")) or gold["spent"] != sum(spent_on.values()):
+        return f"gold.spent is {gold.get('spent')!r}, but gold.spentOn sums to {sum(spent_on.values())}"
+
+    picks = [p for p in report_json.get("boons") or [] if isinstance(p, dict) and isinstance(p.get("taken"), str)]
+
+    def factors(wave):
+        """Every price factor the intermission before this wave could have held: the boons taken before it, then each further boon of that intermission in pick order."""
+        total = sum(percents.get(p["taken"], 0) for p in picks if _is_int(p.get("takenBeforeWave")) and p["takenBeforeWave"] < wave)
+        out = [price_factor(total)]
+        for p in sorted((p for p in picks if p.get("takenBeforeWave") == wave), key=lambda p: p.get("pick", 0)):
+            total += percents.get(p["taken"], 0)
+            out.append(price_factor(total))
+        return out
+
+    owned = {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}
+    by_sink = dict.fromkeys(SPENT_ON, 0)
+    care_by_wave = {}
+    bought_at = {"volleyLevel": [], "towerLevel": []}
+    for number, p in enumerate(purchases):
+        where = f"purchase {number}"
+        if not isinstance(p, dict) or p.get("kind") not in PURCHASE_KINDS:
+            return f"{where} is {p!r}, wanted a purchase with a kind of {', '.join(PURCHASE_KINDS)}"
+        kind, wave, level, base, price, share = p["kind"], p.get("beforeWave"), p.get("level"), p.get("basePrice"), p.get("price"), p.get("share")
+        if not (_is_int(wave) and wave >= 1 and _is_int(level) and level >= 0 and _is_int(base) and base >= 1 and _is_int(price) and price >= 1 and isinstance(share, (int, float)) and not isinstance(share, bool)):
+            return f"{where} ({kind}) has a field that is not a number: {p!r}"
+        by_sink[KIND_SINK[kind]] += price
+        possible = {apply_price(base, f) for f in factors(wave)}
+        if kind == "pack":
+            if offers.get(p.get("id")) != base:
+                return f"{where}: pack {p.get('id')!r} has basePrice {base}, shop.json's offer is {offers.get(p.get('id'))!r}"
+        elif kind == "fieldCare":
+            care = plan.get("care")
+            if not FORT_OFFERED["fieldCare"] or not care:
+                return f"{where}: field care is not offered by this build"
+            care_by_wave[wave] = care_by_wave.get(wave, 0) + 1
+            if care_by_wave[wave] > care["perIntermission"]:
+                return f"{where}: more than {care['perIntermission']} field care before wave {wave}"
+            if base != care["price"] or abs(share - care["share"]) > SHARE_TOLERANCE:
+                return f"{where}: field care basePrice {base} share {share}, shop.json's is {care['price']} share {care['share']}"
+        elif kind == "gateRepair":
+            gate = plan.get("gate")
+            if not FORT_OFFERED["gate"] or not gate:
+                return f"{where}: the gate is not offered by this build"
+            if base != gate["repairPrice"] or not 0 < share <= 1:
+                return f"{where}: repair basePrice {base} share {share}, shop.json's price is {gate['repairPrice']} and a share is above 0 and at most 1"
+            possible = {x for f in factors(wave) for x in repair_prices(apply_price(base, f), share)}
+        else:
+            row = {"gateLevel": ("gate", "gate"), "towerLevel": ("towers", "towers"), "volleyLevel": ("volley", "volley")}[kind]
+            rows = (plan.get(row[0]) or {}).get("levels") or []
+            offered = FORT_OFFERED[row[1]]
+            if level != owned[kind] + 1:
+                return f"{where}: {kind} {level} bought after level {owned[kind]}, levels are bought in order"
+            if level > offered or level > len(rows):
+                return f"{where}: {kind} {level} is not offered by this build (offers {offered}, shop.json holds {len(rows)})"
+            expected = rows[level - 1][1] if kind == "gateLevel" else rows[level - 1][2] if kind == "towerLevel" else rows[level - 1][0]
+            if base != expected:
+                return f"{where}: {kind} {level} basePrice {base}, shop.json's is {expected}"
+            owned[kind] = level
+            if kind in bought_at:
+                bought_at[kind].append((wave, level))
+        if price not in possible:
+            return f"{where} ({kind}) paid {price} for a base of {base}; the price factor of the boons owned allows {sorted(possible)}"
+
+    for sink in SPENT_ON:
+        if spent_on[sink] != by_sink[sink]:
+            return f"gold.spentOn.{sink} is {spent_on[sink]}, but its purchases sum to {by_sink[sink]}"
+    for key, kind in (("gateLevel", "gateLevel"), ("towerLevel", "towerLevel"), ("volleyLevel", "volleyLevel")):
+        if final[key] != owned[kind]:
+            return f"fortifications.{key} is {final[key]}, but the highest bought is {owned[kind]}"
+    return volley_problem(report_json, plan, bought_at)
+
+
+def volley_problem(report_json, plan, bought_at):
+    """Rule 20: a wave row's volley.uses is 0 before the wave after the first volleyLevel purchase, and its arrows are at most uses times the arrows of the level in force, its kills at most its arrows;
+    the same for towerVolley against tower level 3 (the level that adds the tower volley) and the tower volley's arrows."""
+    rows = report_json.get("waves")
+    levels = (plan.get("volley") or {}).get("levels") or []
+    tower_volley = (plan.get("towers") or {}).get("volley") or {}
+    tower_levels = (plan.get("towers") or {}).get("levels") or []
+    first_tower_volley = next((i + 1 for i, level in enumerate(tower_levels) if level[1]), None)
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        wave = row.get("wave")
+        if not _is_int(wave):
+            return f"wave row {row!r} has no wave number"
+        for key, arrows_of in (("volley", lambda w: _level_arrows(levels, bought_at["volleyLevel"], w)), ("towerVolley", lambda w: _tower_arrows(tower_volley, first_tower_volley, bought_at["towerLevel"], w))):
+            counts = row.get(key)
+            if not isinstance(counts, dict) or not all(_is_int(counts.get(k)) and counts[k] >= 0 for k in ("uses", "arrows", "hits", "kills", "withheld")):
+                return f"wave {wave}: {key} is {counts!r}, wanted uses, arrows, hits, kills and withheld"
+            arrows = arrows_of(wave)
+            if arrows == 0 and counts["uses"] != 0:
+                return f"wave {wave}: {key}.uses is {counts['uses']}, but no level that fires it was bought before wave {wave}"
+            if counts["arrows"] > counts["uses"] * arrows:
+                return f"wave {wave}: {key}.arrows is {counts['arrows']}, above uses {counts['uses']} times the {arrows} arrows of the level in force"
+            if counts["kills"] > counts["arrows"]:
+                return f"wave {wave}: {key}.kills is {counts['kills']}, above its arrows {counts['arrows']}"
+    return None
+
+
+def _level_arrows(levels, bought, wave):
+    """The arrows of the Elven Volley level in force for a wave (bought before it), 0 when none."""
+    held = [level for at, level in bought if at <= wave]
+    return levels[max(held) - 1][1] if held and max(held) <= len(levels) else 0
+
+
+def _tower_arrows(volley, first_level, bought, wave):
+    """The arrows of a tower volley use when the tower level that adds it was bought before this wave, else 0."""
+    held = [level for at, level in bought if at <= wave]
+    return volley.get("arrows", 0) if first_level is not None and held and max(held) >= first_level else 0
+
+
 def check_pattern(name, result):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=" + result + r"\b")
 
@@ -728,7 +1094,7 @@ def judge(done, report_json, log_text=None):
     if not isinstance(report_json.get("waves"), list):
         return 1, f"the report's waves is {report_json.get('waves')!r}: a schema {SCHEMA} report must carry a waves list, or the affixes, boons and commanders have nothing to replay{note}"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
-    for key, wanted in {"startWave": 1, **expected_report}.items():
+    for key, wanted in {"startWave": 1, "startGold": None, **expected_report}.items():
         got = report_json.get(key)
         if isinstance(got, bool) or got != wanted:
             return 1, f"armed with {key}={wanted!r} but the report's {key}={report_json.get(key)!r}: the arm key never took effect"
@@ -747,6 +1113,9 @@ def judge(done, report_json, log_text=None):
     mismatch = commander_problem(report_json)
     if mismatch:
         return 1, f"the report's commanders do not replay from the roster: {mismatch}"
+    mismatch = purchase_problem(report_json)
+    if mismatch:
+        return 1, f"the report's gold books and purchases do not replay from the shop: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -916,6 +1285,8 @@ def build_parser():
     parser.add_argument("--seed", type=seed_value, help=f"the seed of every roll, 0 to {MAX_SEED} (default: the game takes the start time's ticks)")
     parser.add_argument("--start-wave", type=whole_in_range(1, 100),
                         help="begin the run at this wave number (a test option: the clears still count from 0, so the report is not a board run)")
+    parser.add_argument("--start-gold", type=whole_in_range(0, 100000),
+                        help="the gold the run starts with instead of the shop's, and the sign that the bot buys fortifications before packs (a test option: the report is not a board run; fortification runs use 5000)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
                         help=f"boon rerolls in the bank at the start (default {DEFAULT_START_REROLLS}, so a 5-wave run proves a reroll at clear 3)")
     group.add_argument("--deep", action="store_true",
@@ -940,7 +1311,7 @@ def arm_pairs(known, out, wall_limit, class_id=None):
     scale = known.garrison_scale if known.garrison_scale is not None else (LOSE_GARRISON_SCALE if known.lose else None)
     expect = "deep" if known.deep else ("lost" if known.lose else None)
     return [("fortress", known.fortress), ("waves", known.waves), ("garrison_scale", scale), ("expect", expect),
-            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls),
+            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold),
             ("live_limit_seconds", known.live_limit), ("wall_limit_seconds", wall_limit), ("screenshots", known.screenshots),
             ("speed", known.speed), ("out", out), ("quit", 1)]
 
@@ -952,6 +1323,8 @@ def armed_report_fields(known):
         fields["seed"] = known.seed
     if known.start_wave is not None:
         fields["startWave"] = known.start_wave
+    if known.start_gold is not None:
+        fields["startGold"] = known.start_gold
     return fields
 
 

@@ -1,0 +1,7711 @@
+{
+ "note": "Shared by TAOM.Tests LongDefeatFortificationsReaderTests and tools/tests/test_run_long_defeat.py. Expectations are written by hand from phase3-plan.md section 5. A gate level is [hitPointsPercent, price], a tower level [posts, volley, price], an elven level [price, arrows, cooldownSeconds, radius, range, aim].",
+ "cases": [
+  {
+   "name": "a valid block loads whole, no warning",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "no fortifications key is no block and no warning",
+   "absent": true,
+   "block": null,
+   "expected": null
+  },
+  {
+   "name": "an unknown key is ignored",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    },
+    "mystery": 1
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a block that is not an object is one warning and no rows",
+   "absent": false,
+   "block": 5,
+   "expected": {
+    "gate": null,
+    "towers": null,
+    "care": null,
+    "volley": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "repairPrice 0 drops the gate row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 0,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "repairPrice 100.0 is not a whole number",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 100.0,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "repairPrice 1000001 drops the gate row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 1000001,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a gate with no levels array drops the row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a gate with a null levels drops the row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": null
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a gate with an empty levels array drops the row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": []
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a level price of 0 drops that level only",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 0
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a level price of 1000001 drops that level only",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 1000001
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a percent that does not rise drops it and the ones after",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 40,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a percent equal to the level before does not rise",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 50,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a percent a float step above the level before does not rise",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 100,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100.000001,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       100,
+       200
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a percent of 1001 drops it and the ones after",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 1001,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a first percent under 1 leaves no level and drops the row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 0,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": null,
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a percent of NaN stops the levels there",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": NaN,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a level that is not an object is dropped",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      5,
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a blank troop drops the towers row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "  ",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": null,
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a missing levels array drops the towers row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": null,
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "posts that fall drop that level and its flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 6,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "posts of 17 drop that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 17,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "posts of 0 drop that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 0,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a tower level price of 0 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 0
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a volley flag on a level that is not the last is ignored",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250,
+       "volley": true
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a volley flag that is not a boolean is ignored",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": "yes",
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "arrows of 41 drop the volley block and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 41,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a firstSeconds of 4 drops the volley block and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 4,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a radius of 31 drops the volley block and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 31,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a range of 9 drops the volley block and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 9,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "an originHeight of 10.5 drops the volley block and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 10.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a volley block with no item drops it and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a volley block that is not an object drops it and the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": "x"
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 2
+   }
+  },
+  {
+   "name": "a missing volley block ignores the flag",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ]
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       false,
+       400
+      ]
+     ],
+     "volley": null
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a share of 0 drops the care row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": null,
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a share too small for a float drops the care row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 1e-50,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": null,
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a share of 1.5 drops the care row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 1.5,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": null,
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a share of NaN drops the care row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": NaN,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": null,
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a share of exactly 1 is kept",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 1.0,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 1.0,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a care price of 0 drops the care row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 0,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": null,
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "perIntermission 9 falls back to 1 with a warning",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 9
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "perIntermission 5 is kept",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 5
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 5
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "no perIntermission is 1 with no warning",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ],
+      [
+       300,
+       16,
+       40,
+       8,
+       90,
+       "crosshair"
+      ]
+     ]
+    },
+    "warnings": 0
+   }
+  },
+  {
+   "name": "a crosshair first level is dropped, the auto one after it becomes level 1",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      },
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "no item drops the elven row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an originHeight of 11 drops the elven row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 11,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a missing originHeight drops the elven row",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a range of 5 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 5,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an aim of sideways drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "sideways"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "arrows of 0 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 0,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a cooldown of 4 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 4,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "a radius of 0.5 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 0.5,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an elven price of 0 drops that level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 350,
+       "arrows": 12,
+       "cooldownSeconds": 45,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "auto"
+      },
+      {
+       "price": 0,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      [
+       350,
+       12,
+       45,
+       8,
+       90,
+       "auto"
+      ]
+     ]
+    },
+    "warnings": 1
+   }
+  },
+  {
+   "name": "an elven row with no valid level is dropped",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": []
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": null,
+    "warnings": 1
+   }
+  },
+  {
+   "name": "two crosshair levels and nothing else leave no level",
+   "absent": false,
+   "block": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      {
+       "hitPointsPercent": 50,
+       "price": 200
+      },
+      {
+       "hitPointsPercent": 100,
+       "price": 300
+      },
+      {
+       "hitPointsPercent": 150,
+       "price": 450
+      }
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      {
+       "posts": 4,
+       "price": 250
+      },
+      {
+       "posts": 8,
+       "price": 300
+      },
+      {
+       "posts": 8,
+       "volley": true,
+       "price": 400
+      }
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "fieldCare": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "elvenVolley": {
+     "item": "ld_elven_arrow",
+     "originHeight": 3.0,
+     "levels": [
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      },
+      {
+       "price": 300,
+       "arrows": 16,
+       "cooldownSeconds": 40,
+       "radius": 8.0,
+       "range": 90.0,
+       "aim": "crosshair"
+      }
+     ]
+    }
+   },
+   "expected": {
+    "gate": {
+     "repairPrice": 200,
+     "levels": [
+      [
+       50,
+       200
+      ],
+      [
+       100,
+       300
+      ],
+      [
+       150,
+       450
+      ]
+     ]
+    },
+    "towers": {
+     "troop": "fow_rohan_eastfold_bowman",
+     "levels": [
+      [
+       4,
+       false,
+       250
+      ],
+      [
+       8,
+       false,
+       300
+      ],
+      [
+       8,
+       true,
+       400
+      ]
+     ],
+     "volley": {
+      "item": "fow_tower_arrow",
+      "arrows": 6,
+      "firstSeconds": 20,
+      "cooldownSeconds": 30,
+      "radius": 6.0,
+      "range": 80.0,
+      "originHeight": 2.5
+     }
+    },
+    "care": {
+     "share": 0.75,
+     "price": 150,
+     "perIntermission": 1
+    },
+    "volley": null,
+    "warnings": 3
+   }
+  }
+ ]
+}

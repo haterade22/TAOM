@@ -53,6 +53,15 @@ internal sealed record RunPlan(
     public BoonTarget GroupOf(string troopId, FormationSlot slot) =>
         TroopGroups.TryGetValue(troopId, out var group) ? group : slot == FormationSlot.Ranged ? BoonTarget.Archers : BoonTarget.Infantry;
 
+    /// <summary>The fortification kinds and levels this build can deliver (D31). Empty in the shipped game until each slice lands its effect; a test sets what it needs.</summary>
+    public FortOffer Offered { get; init; } = FortOffer.Offered;
+
+    /// <summary>The recorded high towers of the fortress; empty when none is recorded, and the towers row is then hidden.</summary>
+    public IReadOnlyList<LdTower> Towers { get; init; } = System.Array.Empty<LdTower>();
+
+    /// <summary>The recorded origins of the Elven Volley, or null: the volley row is then hidden.</summary>
+    public LdVolleyOrigins? Volley { get; init; }
+
     /// <summary>The kit the lord spawns with (at the start and at every respawn), or null: the lord then plays in his own gear and no class is reported.</summary>
     public LdLoadout? Loadout { get; init; }
 }

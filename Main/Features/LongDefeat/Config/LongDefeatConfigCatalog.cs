@@ -130,6 +130,8 @@ internal sealed class LongDefeatConfigCatalog
             Keep = fortress.Keep,
             Muster = fortress.Muster,
             Sally = fortress.Sally,
+            Towers = fortress.Towers ?? Array.Empty<LdTower>(),
+            Volley = fortress.Volley,
             Affixes = AffixesFor(fortress.AttackerCulture),
             Boons = _boons.Value,
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),

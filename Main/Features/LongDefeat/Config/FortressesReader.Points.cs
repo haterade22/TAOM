@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using TAOM.Features.LongDefeat.Domain;
 
@@ -14,6 +15,17 @@ internal static partial class FortressesReader
 {
     private const string PostFallback = "the post is dropped";
     private const string SpotFallback = "the point is dropped";
+
+    /// <summary>A tower that records fewer posts than the shop's top tower level asks fills what it has (phase3-plan.md section 5); this says so once, naming the tower.</summary>
+    private static void WarnShortTowers(IReadOnlyList<LdTower>? towers, ShopPlan shop, string fortress, LongDefeatConfigScope s)
+    {
+        var asked = shop.Fort?.Towers?.Levels.Max(l => l.Posts) ?? 0;
+        foreach (var tower in towers ?? new List<LdTower>())
+        {
+            if (tower.Posts.Count < asked)
+                s.Warn($"fortress '{fortress}': tower '{tower.Id}' records {tower.Posts.Count} post(s) but the shop's top tower level asks {asked}; it fills the {tower.Posts.Count} it has");
+        }
+    }
 
     /// <summary>A tower id is one or more lowercase ASCII letters or underscores, so it can be typed after <c>taom.ld_record post</c> and read back as a JSON string.</summary>
     internal static bool IsTowerId(string id)

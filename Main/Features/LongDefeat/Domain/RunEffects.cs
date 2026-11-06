@@ -57,6 +57,21 @@ internal sealed class RunEffects
     /// </summary>
     public float? EngineHitPoints { get; set; }
 
+    /// <summary>
+    /// A gate level was bought since the last tick: the factor over the gate's vanilla maximum its hit points are set to (1.5 is half as many again), keeping the share of hit points a standing gate holds (<see cref="GateMath.KeepShare"/>).
+    /// Applied after <see cref="EngineHitPoints"/>, before <see cref="RepairGates"/>. Null at every other tick.
+    /// </summary>
+    public float? GateLevel { get; set; }
+
+    /// <summary>A repair was bought since the last tick: mend every visible gate to the levelled maximum, which is this factor over its vanilla maximum. Null at every other tick.</summary>
+    public float? RepairGates { get; set; }
+
+    /// <summary>The towers' posts are to be manned or refilled, before any batch of this tick, free: the troop, the posts per tower and the room left under the garrison cap. Null at every other tick.</summary>
+    public LdPostFill? FillPosts { get; set; }
+
+    /// <summary>Field care was bought since the last tick: every standing defender regains this share of his missing health. 0 at every other tick, and never the tick the clear's <see cref="RestShare"/> rides.</summary>
+    public float FieldCare { get; set; }
+
     /// <summary>A Winged Terror pulse is due: lower the morale of the defenders near the attackers, never below the pulse's floor. Null at every other tick.</summary>
     public LdMoralePulse? MoralePulse { get; set; }
 

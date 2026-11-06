@@ -5,7 +5,8 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>A pack the player can buy: <c>PackSize</c> soldiers of one troop for <c>Price</c> gold.</summary>
 internal sealed record ShopOffer(string Id, string Name, string TroopId, FormationSlot Slot, int PackSize, int Price);
 
-internal sealed record ShopPlan(int StartingGold, IReadOnlyList<ShopOffer> Offers);
+/// <summary>A shop: the gold a run starts with, the packs it sells and, when shop.json carries them, its fortifications (null: none).</summary>
+internal sealed record ShopPlan(int StartingGold, IReadOnlyList<ShopOffer> Offers, FortPlan? Fort = null);
 
 internal enum BuyResult
 {

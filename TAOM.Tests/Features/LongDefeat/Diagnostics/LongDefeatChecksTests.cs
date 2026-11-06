@@ -18,7 +18,7 @@ public class LongDefeatChecksTests
         p.Earn(PurseSource.WaveBonus, bonus);
         p.Earn(PurseSource.EarlyStart, early);
         if (spent > 0)
-            p.TrySpend(spent);
+            p.TrySpend(spent, PurseSink.Packs);
         return p;
     }
 

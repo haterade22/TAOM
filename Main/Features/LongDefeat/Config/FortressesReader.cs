@@ -103,9 +103,11 @@ internal static partial class FortressesReader
         }
 
         seen.Add(id);
+        var towers = ReadTowers(o["towers"], id, s);
+        WarnShortTowers(towers, shop, id, s);
         return new FortressEntry(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, defender, attacker, player, garrison, roster, shop,
             ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s), ReadMuster(o["muster"], id, s), ReadSally(o["sally"], id, s),
-            ReadTowers(o["towers"], id, s), ReadVolley(o["volley"], id, s));
+            towers, ReadVolley(o["volley"], id, s));
     }
 
     private static bool IsSceneName(string scene)

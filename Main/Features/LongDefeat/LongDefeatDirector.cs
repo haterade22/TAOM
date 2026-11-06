@@ -280,6 +280,21 @@ internal sealed partial class LongDefeatDirector
             _run.TryReroll();
         else if (action.Kind == BotActionKind.Horn)
             _run.TryStartWave();
+        else
+            BuyFortification(action.Kind);
+    }
+
+    /// <summary>The bot's fortification buys. The view only shows a row the run would sell, so a refusal here means the run moved on between the view and the call.</summary>
+    private void BuyFortification(BotActionKind kind)
+    {
+        switch (kind)
+        {
+            case BotActionKind.GateLevel: _run.TryBuyGateLevel(); break;
+            case BotActionKind.GateRepair: _run.TryRepairGates(); break;
+            case BotActionKind.TowerLevel: _run.TryBuyTowerLevel(); break;
+            case BotActionKind.FieldCare: _run.TryFieldCare(); break;
+            case BotActionKind.VolleyLevel: _run.TryBuyVolleyLevel(); break;
+        }
     }
 
     private void LogState(float dt, LdReading read)

@@ -53,6 +53,24 @@ internal sealed record RunView(
 
     /// <summary>The running wave's commander, or null between waves and in a wave with none.</summary>
     public CommanderView? Commander { get; init; }
+
+    /// <summary>The fortification rows: what each one costs and whether it can be bought now, the gates as last read, and whether the unattended bot buys them before packs.</summary>
+    public FortView Fort { get; init; } = FortView.None;
+}
+
+/// <summary>
+/// One fortification row as the HUD and the bot read it. <c>Level</c> and <c>MaxLevel</c> count levels (for field care, buys used this intermission and the most one allows); <c>Price</c> is what the next
+/// buy costs after the price factor; <c>Available</c> is true when the buy would pass every test except the gold (offered, carried, below the top level, not used up, the posts under the cap).
+/// </summary>
+internal sealed record FortRow(int Level, int MaxLevel, int Price, bool Available)
+{
+    public static FortRow None { get; } = new(0, 0, 0, false);
+}
+
+/// <summary>The fortification rows. <c>Repair</c> is the gate row's other buy: its <c>Price</c> is the total over the visible gates. <c>BuysFirst</c> is a test run with a <c>start_gold</c>: the bot buys these before packs (D27).</summary>
+internal sealed record FortView(FortRow Gate, FortRow Repair, FortRow Towers, FortRow Care, FortRow Volley, IReadOnlyList<LdGateFacts> Gates, bool BuysFirst)
+{
+    public static FortView None { get; } = new(FortRow.None, FortRow.None, FortRow.None, FortRow.None, FortRow.None, Array.Empty<LdGateFacts>(), false);
 }
 
 /// <summary>One ability of the commander as the HUD shows it: its raw <c>{=KEY}English</c> name, the seconds to its next use and whether it is running now (a war cry).</summary>

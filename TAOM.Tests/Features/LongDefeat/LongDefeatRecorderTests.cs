@@ -441,6 +441,8 @@ public class LongDefeatRecorderTests
     {
         _recorder.Append(Scene, LongDefeatRecorder.PostKind, 1f, 2f, 3f, 0f, 1f, null, "hornburg");
         _recorder.Append(Scene, LongDefeatRecorder.PostKind, 4f, 5f, 6f, 0.6f, 0.8f, null, "hornburg");
+        for (var i = 2; i < 8; i++)
+            _recorder.Append(Scene, LongDefeatRecorder.PostKind, i, 5f, 6f, 0f, 1f, null, "hornburg"); // the shipped shop's top tower level asks 8 posts, and a tower with fewer costs a warning
         _recorder.Append(Scene, LongDefeatRecorder.TowerVolleyKind, 7f, 8f, 9f, 0f, 1f, null, "hornburg");
         _recorder.Append(Scene, LongDefeatRecorder.VolleyKind, 10f, 11f, 12f, 0f, 1f, null);
         var block = JObject.Parse(File.ReadAllText(ExportedPath()));
@@ -456,7 +458,7 @@ public class LongDefeatRecorderTests
         var fortress = catalog.Fortresses[0];
         var tower = fortress.Towers!.Single();
         Assert.AreEqual("hornburg", tower.Id);
-        Assert.AreEqual(2, tower.Posts.Count);
+        Assert.AreEqual(8, tower.Posts.Count);
         Assert.AreEqual(0.6f, tower.Posts[1].Fx, 1e-5f);
         Assert.AreEqual(9f, tower.VolleyOrigins.Single().Z);
         Assert.AreEqual(12f, fortress.Volley!.Origins.Single().Z);

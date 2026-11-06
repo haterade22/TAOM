@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.LongDefeat.Domain;
 
@@ -49,10 +50,38 @@ public class PurseTests
     {
         var p = new Purse(100);
 
-        Assert.IsTrue(p.TrySpend(100));
+        Assert.IsTrue(p.TrySpend(100, PurseSink.Packs));
 
         Assert.AreEqual(0, p.Balance);
         Assert.AreEqual(100, p.Spent);
+    }
+
+    [TestMethod]
+    public void TrySpend_BooksEachSpendToItsSink_AndTheSinksSumToSpent()
+    {
+        var p = new Purse(5000);
+
+        p.TrySpend(180, PurseSink.Packs);
+        p.TrySpend(200, PurseSink.Gate);
+        p.TrySpend(250, PurseSink.Towers);
+        p.TrySpend(150, PurseSink.FieldCare);
+        p.TrySpend(350, PurseSink.Volley);
+        p.TrySpend(20, PurseSink.Packs);
+        p.TrySpend(99_999, PurseSink.Gate);
+
+        Assert.AreEqual(200, p.SpentOn(PurseSink.Packs));
+        Assert.AreEqual(200, p.SpentOn(PurseSink.Gate), "a refused spend books nothing");
+        Assert.AreEqual(250, p.SpentOn(PurseSink.Towers));
+        Assert.AreEqual(150, p.SpentOn(PurseSink.FieldCare));
+        Assert.AreEqual(350, p.SpentOn(PurseSink.Volley));
+        Assert.AreEqual(p.Spent, System.Enum.GetValues(typeof(PurseSink)).Cast<PurseSink>().Sum(p.SpentOn));
+        Assert.AreEqual(p.Start + p.TotalEarned - p.Spent, p.Balance);
+    }
+
+    [TestMethod]
+    public void SpentOn_ASinkNothingWasSpentOn_IsZero()
+    {
+        Assert.AreEqual(0, new Purse(10).SpentOn(PurseSink.Volley));
     }
 
     [DataTestMethod]
@@ -63,7 +92,7 @@ public class PurseTests
     {
         var p = new Purse(100);
 
-        Assert.IsFalse(p.TrySpend(amount));
+        Assert.IsFalse(p.TrySpend(amount, PurseSink.Packs));
 
         Assert.AreEqual(100, p.Balance);
         Assert.AreEqual(0, p.Spent);
@@ -75,10 +104,10 @@ public class PurseTests
         var p = new Purse(600);
 
         p.Earn(PurseSource.Bounty, 30);
-        p.TrySpend(180);
+        p.TrySpend(180, PurseSink.Packs);
         p.Earn(PurseSource.EarlyStart, 120);
-        p.TrySpend(10_000);
-        p.TrySpend(200);
+        p.TrySpend(10_000, PurseSink.Packs);
+        p.TrySpend(200, PurseSink.Packs);
 
         Assert.AreEqual(p.Start + p.TotalEarned - p.Spent, p.Balance);
     }

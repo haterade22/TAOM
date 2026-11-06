@@ -338,6 +338,43 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_StartGold_DefaultsToNone_SoABoardRunKeepsTheShopsGold()
+    {
+        var plan = Resolve(Out);
+
+        Assert.IsNull(plan.StartGold);
+        Assert.IsNull(plan.ToSetup("helms").Options.StartGold);
+        StringAssert.Contains(plan.Describe(), "start_gold=-");
+    }
+
+    [DataTestMethod]
+    [DataRow("0", 0)]
+    [DataRow("5000", 5000)]
+    [DataRow("100000", 100000)]
+    public void Resolve_StartGold_TakesZeroToOneHundredThousand(string value, int expected)
+    {
+        var plan = Resolve(Out + "start_gold=" + value + "\n");
+
+        Assert.AreEqual(expected, plan.StartGold);
+        Assert.AreEqual(expected, plan.ToSetup("helms").Options.StartGold);
+        Assert.AreEqual(0, plan.Warnings.Count);
+        StringAssert.Contains(plan.Describe(), "start_gold=" + expected);
+    }
+
+    [DataTestMethod]
+    [DataRow("100001")]
+    [DataRow("-1")]
+    [DataRow("lots")]
+    [DataRow("")]
+    public void Resolve_StartGold_OutOfRangeIsNoneWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "start_gold=" + value + "\n");
+
+        Assert.IsNull(plan.StartGold);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("start_gold")));
+    }
+
+    [TestMethod]
     public void Describe_NamesTheSeedStartWaveAndRerolls()
     {
         var text = Resolve(Out + "seed=7\nstart_wave=3\nstart_rerolls=1\nclass=archer\n").Describe();

@@ -66,6 +66,81 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
+    public void ShippedShop_CarriesTheFortificationsBlock_LoadedWhole_WithNoWarning()
+    {
+        var (catalog, logger) = Load();
+
+        Assert.IsTrue(catalog.TryGetFortress("helms", out var helms));
+        var fort = helms.Shop.Fort!;
+
+        Assert.IsNotNull(fort);
+        Assert.AreEqual(3, fort.Gate!.Levels.Count);
+        Assert.AreEqual(3, fort.Towers!.Levels.Count);
+        Assert.IsTrue(fort.Towers.Levels[2].Volley && !fort.Towers.Levels[1].Volley, "only the last tower level adds the volley");
+        Assert.IsNotNull(fort.Towers.Volley);
+        Assert.IsNotNull(fort.Care);
+        Assert.AreEqual(2, fort.Volley!.Levels.Count);
+        Assert.AreEqual(VolleyAimMode.Auto, fort.Volley.Levels[0].Aim, "level 1 aims itself");
+        Assert.AreEqual(VolleyAimMode.Crosshair, fort.Volley.Levels[1].Aim);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void ShippedFortifications_PricesArePositive_AndLevelsRise()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var fort = helms.Shop.Fort!;
+
+        Assert.IsTrue(fort.Gate!.RepairPrice > 0 && fort.Gate.Levels.All(l => l.Price > 0));
+        Assert.IsTrue(fort.Towers!.Levels.All(l => l.Price > 0) && fort.Care!.Price > 0 && fort.Volley!.Levels.All(l => l.Price > 0));
+        CollectionAssert.AreEqual(fort.Gate.Levels.Select(l => l.HitPointsPercent).OrderBy(p => p).ToArray(), fort.Gate.Levels.Select(l => l.HitPointsPercent).ToArray(), "hit points rise with the level");
+        Assert.AreEqual(fort.Gate.Levels.Count, fort.Gate.Levels.Select(l => l.HitPointsPercent).Distinct().Count());
+        CollectionAssert.AreEqual(fort.Towers.Levels.Select(l => l.Posts).OrderBy(p => p).ToArray(), fort.Towers.Levels.Select(l => l.Posts).ToArray(), "posts do not fall");
+    }
+
+    [TestMethod]
+    public void ShippedTowers_AreManned_ByARangedTroopOfTheDefendersWithABowAndArrows()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var towers = helms.Shop.Fort!.Towers!;
+
+        var troop = Troops()[towers.Troop];
+
+        Assert.AreEqual("Ranged", (string?)troop.Attribute("default_group"));
+        Assert.AreEqual(helms.DefenderCulture, Culture(troop), "a troop of the side that mans the walls");
+        var items = troop.Descendants("equipment").Select(e => ((string?)e.Attribute("id") ?? "").ToLowerInvariant()).ToList();
+        Assert.IsTrue(items.Any(i => i.Contains("bow") && !i.Contains("arrow")), "it carries a bow: " + string.Join(", ", items));
+        Assert.IsTrue(items.Any(i => i.Contains("arrow")), "and arrows: " + string.Join(", ", items));
+        Assert.IsTrue(helms.Shop.Offers.Any(o => o.TroopId == towers.Troop), "the shop already sells him, so the roster and its boon group are known");
+    }
+
+    [TestMethod]
+    public void ShippedTowerVolley_FiresTheFordsTowerArrow_AndTheTowersTroopJoinsTheLaunchCheck()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+
+        Assert.AreEqual("fow_tower_arrow", plan.Shop.Fort!.Towers!.Volley!.ItemId);
+        CollectionAssert.Contains(RunPlanTroops.AllTroopIds(plan).ToList(), plan.Shop.Fort.Towers.Troop);
+        CollectionAssert.Contains(RunPlanTroops.DefenderTroopIds(plan).ToList(), plan.Shop.Fort.Towers.Troop);
+    }
+
+    [TestMethod]
+    public void ShippedBuild_OffersNoFortification_SoTheShippedGamePlaysAsBefore()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+
+        Assert.AreEqual(FortOffer.Offered, plan.Offered);
+        Assert.AreEqual(new FortOffer(0, 0, false, 0), plan.Offered);
+    }
+
+    [TestMethod]
     public void ShippedFiles_EveryTroopExistsInTheShippedRoster()
     {
         var troops = Troops();

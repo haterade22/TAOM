@@ -20,6 +20,9 @@ internal sealed record WaveStats(int Wave, int Kills, int Felled, int Lost, floa
 
     /// <summary>The wave's commander, or null when it had none.</summary>
     public CommanderRecord? Commander { get; init; }
+
+    /// <summary>What the wave's gate did, and the posts and volleys it saw (the last two at 0 until those slices land).</summary>
+    public FortWave Fort { get; init; } = FortWave.None;
 }
 
 /// <summary>What the report lists of a wave's commander: who, which rank and how many steps past the ranks, how it ended, how often each ability fired, uses after his end (always 0 unless a clock misbehaves) and the wave seconds he stood.</summary>
@@ -92,7 +95,7 @@ internal sealed class RunStats
     /// <summary>The engine's own fleeing flag fires no callback, so the run also keeps the most attackers seen running at once.</summary>
     public void ObserveFleeing(int fleeingNow) => FleeingPeak = Math.Max(FleeingPeak, fleeingNow);
 
-    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f, IReadOnlyList<string>? affixes = null, WaveRoles? roles = null)
+    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f, IReadOnlyList<string>? affixes = null, WaveRoles? roles = null, FortWave? fort = null)
     {
         var r = roles ?? WaveRoles.None;
         _waves.Add(new WaveStats(wave, _kills, felled, _lost, seconds, healthFactor, damageFactor)
@@ -103,6 +106,7 @@ internal sealed class RunStats
             SummonKills = r.SummonKills,
             SummonFelled = r.SummonFelled,
             Commander = r.Commander,
+            Fort = fort ?? FortWave.None,
         });
         _kills = 0;
         _lost = 0;

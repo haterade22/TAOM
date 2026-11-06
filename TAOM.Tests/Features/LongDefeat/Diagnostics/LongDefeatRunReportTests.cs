@@ -77,7 +77,7 @@ public class LongDefeatRunReportTests
         purse.Earn(PurseSource.Bounty, 8);
         purse.Earn(PurseSource.WaveBonus, 200);
         purse.Earn(PurseSource.EarlyStart, 30);
-        purse.TrySpend(180);
+        purse.TrySpend(180, PurseSink.Packs);
 
         var report = Build(new RunResult(RunEndReason.TargetReached, 1, 1, 2), stats, purse);
 

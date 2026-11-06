@@ -77,11 +77,17 @@ def wave_row(wave, seed=7, **more):
     expected = ld.commander_expected(spec, wave) if spec else None
     commander = None if expected is None else {"troop": expected[1], "rank": expected[0], "steps": expected[2], "outcome": "killed", "uses": {}, "usesAfterEnd": 0}
     return {"wave": wave, "affixes": ld.affix_roll(seed, wave, ld.affix_count(ld.shipped_affix_schedule(), wave)),
-            "summoned": 0, "summonKills": 0, "summonFelled": 0, "commander": commander, **more}
+            "summoned": 0, "summonKills": 0, "summonFelled": 0, "commander": commander, **NO_VOLLEYS, **more}
+
+
+# A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
+NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+           "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
 # The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
-REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1, "waves": []}
+REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1, "waves": [], **NO_FORT}
 BLOCK = "[2026-11-04 09:59:59] [ERROR] [CrashReport] swallowed during the mission load"
 
 
@@ -2474,6 +2480,397 @@ class CommanderJudgeTests(unittest.TestCase):
         code, why = self.judged(self.rows(5, w4={"commander": None}), STANDARD)
         self.assertEqual(code, 1)
         self.assertIn("commanders", why)
+
+
+class FortificationsLoaderTests(unittest.TestCase):
+    """The Python loader against FortificationsReader (phase3-plan.md section 5): both read tools/tests/long_defeat_fort_cases.json, whose expectations were written by hand from the plan's rules table."""
+
+    CASES = json.loads((REPO / "tools" / "tests" / "long_defeat_fort_cases.json").read_text(encoding="utf-8"))["cases"]
+
+    def same(self, expected, got, where):
+        if isinstance(expected, dict):
+            self.assertIsInstance(got, dict, where)
+            self.assertEqual(sorted(expected), sorted(got), where)
+            for key in expected:
+                self.same(expected[key], got[key], f"{where}.{key}")
+        elif isinstance(expected, list):
+            self.assertIsInstance(got, list, where)
+            self.assertEqual(len(expected), len(got), where)
+            for i, (e, g) in enumerate(zip(expected, got)):
+                self.same(e, g, f"{where}[{i}]")
+        elif isinstance(expected, bool) or isinstance(expected, str) or expected is None:
+            self.assertEqual(expected, got, where)
+        else:
+            self.assertAlmostEqual(expected, got, places=6, msg=where)
+
+    def test_every_shared_case_reads_as_the_case_file_says(self):
+        self.assertGreaterEqual(len(self.CASES), 40)
+        for case in self.CASES:
+            shop = {} if case["absent"] else {"fortifications": case["block"]}
+            plan, warnings = ld.read_fortifications(shop)
+            if case["expected"] is None:
+                self.assertEqual((plan, warnings), (None, 0), case["name"])
+                continue
+            expected = dict(case["expected"])
+            self.assertEqual(warnings, expected.pop("warnings"), case["name"])
+            self.same(expected, plan, case["name"])
+
+    def test_the_shipped_shop_loads_whole_with_no_warning(self):
+        shops = json.loads(ld.SHOP_FILE.read_text(encoding="utf-8"))["shops"]
+        plan, warnings = ld.read_fortifications(shops["rohan"])
+
+        self.assertEqual(warnings, 0)
+        self.assertEqual([len(plan["gate"]["levels"]), len(plan["towers"]["levels"]), len(plan["volley"]["levels"])], [3, 3, 2])
+        self.assertEqual(plan["towers"]["volley"]["item"], "fow_tower_arrow")
+        self.assertEqual(ld.shipped_fortifications(), plan)
+
+    def test_a_fortress_the_file_does_not_know_has_no_plan(self):
+        self.assertIsNone(ld.shipped_fortifications("nowhere"))
+
+    def test_the_offered_list_is_the_games_and_ships_empty(self):
+        domain = source("Domain", "FortPlan.cs")
+        self.assertIn("Offered { get; } = new(0, 0, false, 0);", domain)
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0})
+
+    def test_the_price_range_is_the_shops(self):
+        self.assertIn("MaxPrice = 1_000_000;", source("Config", "FortificationsReader.cs"))
+        self.assertEqual(ld.MAX_PRICE, 1_000_000)
+
+
+class FortPriceTests(unittest.TestCase):
+    """The price factor mirror: 32-bit float arithmetic as GoldFactors.Apply and RunModifiers.Factor do it (pinned in SurvivalRunFortTests.cs too)."""
+
+    def test_a_factor_is_one_plus_the_percent_over_a_hundred_in_single_precision(self):
+        self.assertEqual(ld.price_factor(0), 1.0)
+        self.assertEqual(ld.price_factor(-20), ld._f32(0.8))
+        self.assertEqual(ld.price_factor(-100), 0.0)
+        self.assertEqual(ld.price_factor(-250), 0.0, "never below 0")
+
+    def test_a_price_is_rounded_half_away_from_zero_and_never_below_one(self):
+        self.assertEqual(ld.apply_price(180, ld.price_factor(-20)), 144)
+        self.assertEqual(ld.apply_price(200, ld.price_factor(10)), 220)
+        self.assertEqual(ld.apply_price(200, ld.price_factor(-100)), 1)
+        self.assertEqual(ld.apply_price(150, ld.price_factor(0)), 150)
+
+    def test_the_half_case_follows_the_games_float_not_a_double(self):
+        # 0.45 as a 32-bit float is 0.449999988, so 150 * 0.45 is 67.4999982 and rounds to 67; the double 0.45 gives exactly 67.5 and would round to 68.
+        # SurvivalRunFortTests.cs pins the same pair on the C# side (a -55 percent boon on the field care price of 150).
+        self.assertEqual(ld.apply_price(150, ld.price_factor(-55)), 67)
+        self.assertEqual(150 * 0.45, 67.5)
+
+    def test_a_repair_price_is_the_ceil_of_the_price_times_the_share_at_least_one(self):
+        self.assertEqual(list(ld.repair_prices(200, 1.0))[-1], 200)
+        self.assertIn(74, ld.repair_prices(200, 0.37))
+        self.assertIn(1, ld.repair_prices(200, 0.0))
+        self.assertNotIn(80, ld.repair_prices(200, 0.37))
+
+    def test_the_shipped_price_boons_are_the_five_the_plan_names(self):
+        self.assertEqual(ld.shipped_price_percents(), {"haggler_of_edoras": -20, "hornblowers_bargain": 10, "wains_of_the_westfold": 10, "light_of_the_phial": 25, "the_long_silence": 15})
+
+
+class PurchaseJudgeTests(unittest.TestCase):
+    """Rules 8, 19 and 20 of leaderboard-plan.md, replayed over a report (phase3-plan.md Slice 2): the books, the prices through the boons' price factor, the levels in order, the volley counts."""
+
+    PLAN = {
+        "gate": {"repairPrice": 200, "levels": [[50, 200], [100, 300], [150, 450]]},
+        "towers": {"troop": "t", "levels": [[4, False, 250], [8, False, 300], [8, True, 400]], "volley": {"item": "fow_tower_arrow", "arrows": 6}},
+        "care": {"share": 0.75, "price": 150, "perIntermission": 1},
+        "volley": {"item": "ld_elven_arrow", "originHeight": 3.0, "levels": [[350, 12, 45, 8, 90, "auto"], [300, 16, 40, 8, 90, "crosshair"]]},
+    }
+    OFFERS = {"militia": 180}
+    PERCENTS = {"haggler": -20, "dear": 10}
+
+    def setUp(self):
+        patcher = mock.patch.dict(ld.FORT_OFFERED, {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def buy(self, wave, kind, base, price, level=0, share=0.0, id=""):
+        return {"beforeWave": wave, "kind": kind, "id": id, "level": level, "basePrice": base, "price": price, "share": share}
+
+    def report(self, purchases, boons=(), waves=(), **more):
+        spent_on = dict.fromkeys(ld.SPENT_ON, 0)
+        for p in purchases:
+            if isinstance(p, dict) and p.get("kind") in ld.KIND_SINK and isinstance(p.get("price"), int):
+                spent_on[ld.KIND_SINK[p["kind"]]] += p["price"]
+        levels = {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}
+        for p in purchases:
+            if isinstance(p, dict) and p.get("kind") in levels:
+                levels[p["kind"]] = max(levels[p["kind"]], p["level"])
+        return {"fortress": "helms", "purchases": list(purchases), "boons": list(boons), "waves": list(waves), "fortifications": levels,
+                "gold": {"spent": sum(spent_on.values()), "spentOn": spent_on}, **more}
+
+    def problem(self, report):
+        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS)
+
+    def row(self, wave, volley=None, tower=None):
+        return {"wave": wave, "volley": volley or dict(NO_VOLLEYS["volley"]), "towerVolley": tower or dict(NO_VOLLEYS["towerVolley"])}
+
+    def test_a_run_that_bought_nothing_passes(self):
+        self.assertIsNone(self.problem(self.report([])))
+
+    def test_a_full_schedule_with_a_price_boon_replays(self):
+        haggler = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+        report = self.report([
+            self.buy(1, "pack", 180, 180, id="militia"),
+            self.buy(1, "volleyLevel", 350, 350, level=1),
+            self.buy(1, "towerLevel", 250, 250, level=1),
+            self.buy(2, "gateRepair", 200, 74, share=0.37),
+            self.buy(2, "gateLevel", 200, 200, level=1),
+            self.buy(2, "fieldCare", 150, 150, share=0.75),
+            self.buy(4, "pack", 180, 144, id="militia"),
+            self.buy(4, "gateLevel", 300, 240, level=2),
+            self.buy(4, "fieldCare", 150, 120, share=0.75),
+        ], boons=[haggler])
+
+        self.assertIsNone(self.problem(report))
+
+    def test_a_repair_charges_the_factored_price_times_the_missing_share(self):
+        haggler = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+
+        self.assertIsNone(self.problem(self.report([self.buy(5, "gateRepair", 200, 60, share=0.37)], boons=[haggler])))
+        self.assertIn("paid 74", self.problem(self.report([self.buy(5, "gateRepair", 200, 74, share=0.37)], boons=[haggler])))
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 200, share=1.0)])), "a broken gate pays all of it")
+
+    def test_a_repair_share_is_read_to_the_three_decimals_the_report_writes(self):
+        # 200 * 0.3704 is 74.08 and the game charges 75; the report writes 0.37, whose own ceil is 74. The half-thousandth either side is allowed.
+        self.assertIsNone(self.problem(self.report([self.buy(2, "gateRepair", 200, 75, share=0.37)])))
+
+    def test_a_purchase_in_the_intermission_of_a_pick_may_come_before_or_after_it(self):
+        pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 4}
+
+        self.assertIsNone(self.problem(self.report([self.buy(4, "fieldCare", 150, 150, share=0.75)], boons=[pick])), "bought before the pick")
+        self.assertIsNone(self.problem(self.report([self.buy(4, "fieldCare", 150, 120, share=0.75)], boons=[pick])), "bought after it")
+        self.assertIn("paid 130", self.problem(self.report([self.buy(4, "fieldCare", 150, 130, share=0.75)], boons=[pick])))
+        self.assertIn("paid 120", self.problem(self.report([self.buy(3, "fieldCare", 150, 120, share=0.75)], boons=[pick])), "a pick for wave 4 cannot price wave 3")
+
+    def test_a_drawback_boon_raises_the_prices(self):
+        pick = {"pick": 1, "taken": "dear", "takenBeforeWave": 2}
+
+        self.assertIsNone(self.problem(self.report([self.buy(2, "pack", 180, 198, id="militia")], boons=[pick])))
+
+    def test_the_half_price_follows_the_games_single_precision_factor(self):
+        pick = [{"pick": 1, "taken": "tithe", "takenBeforeWave": 2}]
+        report = self.report([self.buy(3, "fieldCare", 150, 67, share=0.75)], boons=pick)
+
+        self.assertIsNone(ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents={"tithe": -55}))
+        self.assertIn("paid 68", ld.purchase_problem(self.report([self.buy(3, "fieldCare", 150, 68, share=0.75)], boons=pick), "helms", fort=self.PLAN, offers=self.OFFERS, percents={"tithe": -55}))
+
+    def test_a_base_price_other_than_shop_jsons_is_refused(self):
+        for purchase in (self.buy(1, "pack", 170, 170, id="militia"), self.buy(1, "gateLevel", 150, 150, level=1), self.buy(1, "gateRepair", 150, 150, share=1.0),
+                         self.buy(1, "towerLevel", 200, 200, level=1), self.buy(1, "fieldCare", 100, 100, share=0.75), self.buy(1, "volleyLevel", 300, 300, level=1)):
+            self.assertIn("basePrice", self.problem(self.report([purchase])), purchase["kind"])
+
+    def test_a_pack_the_shop_does_not_sell_is_refused(self):
+        self.assertIn("basePrice", self.problem(self.report([self.buy(1, "pack", 180, 180, id="ghost")])))
+
+    def test_a_price_the_factor_does_not_give_is_refused(self):
+        self.assertIn("paid 190", self.problem(self.report([self.buy(1, "pack", 180, 190, id="militia")])))
+        self.assertIn("paid 1", self.problem(self.report([self.buy(1, "fieldCare", 150, 1, share=0.75)])))
+
+    def test_levels_are_bought_in_order_with_no_gap(self):
+        self.assertIn("in order", self.problem(self.report([self.buy(1, "gateLevel", 300, 300, level=2)])))
+        self.assertIn("in order", self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateLevel", 200, 200, level=1)])))
+        self.assertIsNone(self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(2, "gateLevel", 300, 300, level=2), self.buy(3, "gateLevel", 450, 450, level=3)])))
+
+    def test_a_level_beyond_the_shops_rows_is_refused(self):
+        rows = [self.buy(1, "volleyLevel", 350, 350, level=1), self.buy(1, "volleyLevel", 300, 300, level=2), self.buy(1, "volleyLevel", 300, 300, level=3)]
+
+        self.assertIn("not offered", self.problem(self.report(rows)))
+
+    def test_field_care_is_limited_to_per_intermission_a_wave(self):
+        two = [self.buy(2, "fieldCare", 150, 150, share=0.75), self.buy(2, "fieldCare", 150, 150, share=0.75)]
+
+        self.assertIn("more than 1", self.problem(self.report(two)))
+        self.assertIsNone(self.problem(self.report([two[0], self.buy(3, "fieldCare", 150, 150, share=0.75)])))
+
+    def test_a_repair_share_must_be_above_zero_and_at_most_one(self):
+        self.assertIn("share", self.problem(self.report([self.buy(1, "gateRepair", 200, 1, share=0.0)])))
+        self.assertIn("share", self.problem(self.report([self.buy(1, "gateRepair", 200, 200, share=1.5)])))
+
+    def test_the_final_levels_are_the_highest_bought(self):
+        report = self.report([self.buy(1, "gateLevel", 200, 200, level=1)])
+        report["fortifications"]["gateLevel"] = 2
+
+        self.assertIn("fortifications.gateLevel", self.problem(report))
+
+    def test_the_books_must_balance(self):
+        report = self.report([self.buy(1, "pack", 180, 180, id="militia")])
+        report["gold"]["spent"] = 181
+        self.assertIn("gold.spent", self.problem(report))
+
+        report = self.report([self.buy(1, "pack", 180, 180, id="militia")])
+        report["gold"]["spentOn"]["gate"] = 10
+        report["gold"]["spentOn"]["packs"] = 170
+        report["gold"]["spent"] = 180
+        self.assertIn("spentOn", self.problem(report))
+
+    def test_a_spent_on_that_is_not_the_five_sinks_is_refused(self):
+        report = self.report([])
+        del report["gold"]["spentOn"]["volley"]
+        self.assertIn("spentOn", self.problem(report))
+        report = self.report([])
+        report["gold"]["spentOn"]["packs"] = -1
+        self.assertIn("spentOn", self.problem(report))
+
+    def test_purchases_and_levels_are_required(self):
+        report = self.report([])
+        del report["purchases"]
+        self.assertIn("purchases", self.problem(report))
+        report = self.report([])
+        del report["fortifications"]
+        self.assertIn("fortifications", self.problem(report))
+
+    def test_a_purchase_that_is_not_a_purchase_is_refused(self):
+        self.assertIn("purchase 0", self.problem(self.report([{"kind": "gift"}])))
+        self.assertIn("purchase 0", self.problem(self.report([5])))
+        self.assertIn("not a number", self.problem(self.report([{**self.buy(1, "pack", 180, 180, id="militia"), "price": "180"}])))
+
+    # ---- D31: this build offers nothing yet ----
+
+    def test_a_kind_this_build_does_not_offer_is_refused(self):
+        with mock.patch.dict(ld.FORT_OFFERED, {"gate": 1, "towers": 0, "fieldCare": False, "volley": 0}):
+            self.assertIsNone(self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateLevel", 300, 300, level=2)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "towerLevel", 250, 250, level=1)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "fieldCare", 150, 150, share=0.75)])))
+            self.assertIn("not offered", self.problem(self.report([self.buy(1, "volleyLevel", 350, 350, level=1)])))
+            self.assertIsNone(self.problem(self.report([self.buy(1, "gateRepair", 200, 200, share=1.0)])), "the gate offered offers the repair")
+
+    def test_the_shipped_empty_offered_refuses_every_fortification_and_passes_a_pack_only_report(self):
+        with mock.patch.dict(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0}):
+            self.assertIsNone(self.problem(self.report([self.buy(1, "pack", 180, 180, id="militia")])))
+            for purchase in (self.buy(1, "gateLevel", 200, 200, level=1), self.buy(1, "gateRepair", 200, 200, share=1.0), self.buy(1, "towerLevel", 250, 250, level=1),
+                             self.buy(1, "fieldCare", 150, 150, share=0.75), self.buy(1, "volleyLevel", 350, 350, level=1)):
+                self.assertIn("not offered", self.problem(self.report([purchase])), purchase["kind"])
+
+    # ---- rule 20 ----
+
+    def test_a_volley_count_before_the_first_level_is_refused(self):
+        report = self.report([self.buy(3, "volleyLevel", 350, 350, level=1)], waves=[self.row(2, volley={"uses": 1, "arrows": 12, "hits": 5, "kills": 1, "withheld": 0})])
+
+        self.assertIn("no level that fires it", self.problem(report))
+
+    def test_volley_arrows_are_at_most_uses_times_the_level_in_force(self):
+        bought = [self.buy(1, "volleyLevel", 350, 350, level=1), self.buy(2, "volleyLevel", 300, 300, level=2)]
+        ok = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 24, "hits": 12, "kills": 4, "withheld": 0}),
+                                        self.row(2, volley={"uses": 2, "arrows": 32, "hits": 12, "kills": 4, "withheld": 1})])
+        self.assertIsNone(self.problem(ok))
+
+        too_many = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 25, "hits": 12, "kills": 4, "withheld": 0})])
+        self.assertIn("above uses 2 times the 12 arrows", self.problem(too_many))
+        old_level = self.report(bought, waves=[self.row(1, volley={"uses": 2, "arrows": 32, "hits": 12, "kills": 4, "withheld": 0})])
+        self.assertIn("above uses 2 times the 12 arrows", self.problem(old_level), "level 2 was bought for wave 2, not wave 1")
+
+    def test_volley_kills_are_at_most_its_arrows(self):
+        report = self.report([self.buy(1, "volleyLevel", 350, 350, level=1)], waves=[self.row(1, volley={"uses": 1, "arrows": 12, "hits": 12, "kills": 13, "withheld": 0})])
+
+        self.assertIn("kills", self.problem(report))
+
+    def test_tower_volley_counts_need_the_tower_level_that_adds_it(self):
+        fired = {"uses": 2, "arrows": 12, "hits": 6, "kills": 2, "withheld": 0}
+        early = self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2)], waves=[self.row(2, tower=fired)])
+        self.assertIn("no level that fires it", self.problem(early))
+
+        late = self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2), self.buy(2, "towerLevel", 400, 400, level=3)],
+                           waves=[self.row(2, tower=fired), self.row(3, tower={**fired, "arrows": 13})])
+        self.assertIn("wave 3", self.problem(late))
+        self.assertIsNone(self.problem(self.report([self.buy(1, "towerLevel", 250, 250, level=1), self.buy(1, "towerLevel", 300, 300, level=2), self.buy(2, "towerLevel", 400, 400, level=3)],
+                                                   waves=[self.row(2, tower=fired)])))
+
+    def test_a_wave_row_without_its_volley_counts_is_refused(self):
+        self.assertIn("volley", self.problem(self.report([], waves=[{"wave": 1}])))
+        self.assertIn("volley", self.problem(self.report([], waves=[self.row(1, volley={"uses": 0})])))
+
+    def test_a_wave_row_without_a_wave_number_is_refused_not_a_traceback(self):
+        fired = {"uses": 1, "arrows": 12, "hits": 5, "kills": 1, "withheld": 0}
+        row = {"volley": fired, "towerVolley": dict(NO_VOLLEYS["towerVolley"])}
+
+        self.assertIn("no wave number", self.problem(self.report([self.buy(1, "volleyLevel", 350, 350, level=1)], waves=[row])))
+        self.assertIn("no wave number", self.problem(self.report([], waves=[{**row, "wave": "2"}])))
+
+    # ---- the judge ----
+
+    def test_the_judge_fails_a_report_whose_books_do_not_replay(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}}}
+
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+
+        self.assertEqual(code, 1)
+        self.assertIn("gold.spent", why)
+        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 0)
+
+
+class StartGoldArgumentTests(unittest.TestCase):
+    """--start-gold: the test option of phase3-plan.md D27, armed as start_gold and echoed back in the report's startGold."""
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.tree_head = HEAD
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def parse(self, *argv):
+        return ld.build_parser().parse_known_args(list(argv))[0]
+
+    def captured_arm(self, *argv):
+        return PhaseTwoArmTests.captured_arm(self, *argv)
+
+    def test_start_gold_defaults_to_none_and_takes_zero_to_a_hundred_thousand(self):
+        self.assertIsNone(self.parse().start_gold)
+        self.assertEqual(self.parse("--start-gold", "0").start_gold, 0)
+        self.assertEqual(self.parse("--start-gold", "100000").start_gold, 100000)
+        for bad in ("-1", "100001", "x", "1.5"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=bad):
+                self.parse("--start-gold", bad)
+
+    def test_the_flag_reaches_the_arm_text_and_a_zero_is_armed(self):
+        text, _ = self.captured_arm("--start-gold", "5000")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("start_gold=5000\n", text)
+        text, _ = self.captured_arm("--start-gold", "0")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("start_gold=0\n", text)
+        text, _ = self.captured_arm()("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertNotIn("start_gold", text)
+
+    def test_the_arm_key_and_its_range_are_the_games(self):
+        plan = source("Autorun", "LongDefeatAutorunPlan.cs")
+        self.assertIn('case "start_gold":', plan)
+        self.assertIn(("start_gold", 5000), ld.arm_pairs(self.parse("--start-gold", "5000"), "out", 3900))
+        self.assertIn("MaxStartGold = 100_000;", source("Domain", "RunOptions.cs"))
+
+    def test_the_report_must_echo_the_armed_start_gold(self):
+        self.captured_arm("--start-gold", "5000", "--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertEqual(ld.expected_report["startGold"], 5000)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "startGold": 5000}, FULL_LOG)[0], 0)
+        for report in (armed, {**armed, "startGold": 600}, {**armed, "startGold": "5000"}, {**armed, "startGold": True}):
+            code, why = ld.judge(FINAL, report, FULL_LOG)
+            self.assertEqual(code, 1, report.get("startGold"))
+            self.assertIn("startGold", why)
+
+    def test_a_run_armed_with_no_start_gold_must_report_none(self):
+        self.captured_arm("--start-rerolls", "0")
+        ld.tree_head = HEAD
+        self.assertNotIn("startGold", ld.expected_report)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "startGold": None}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, armed, FULL_LOG)[0], 0, "a report with no key at all is a null one")
+        code, why = ld.judge(FINAL, {**armed, "startGold": 5000}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("startGold", why)
+
+    def test_the_report_writes_start_gold(self):
+        self.assertIn('["startGold"]', source("Diagnostics", "LongDefeatRunReport.cs"))
 
 
 if __name__ == "__main__":

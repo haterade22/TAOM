@@ -60,7 +60,7 @@ internal sealed partial class SurvivalRun
         _r = plan.Rules;
         _shop = plan.Shop.Offers;
         _deck = new BoonDeck(plan.Boons, plan.Options.Seed ?? 0UL, plan.Options.StartRerolls, plan.Options.ClassId ?? "", RunPlanTroops.DefenderGroups(plan));
-        _purse = new Purse(plan.Shop.StartingGold);
+        _purse = new Purse(plan.Options.StartGold ?? plan.Shop.StartingGold);
         _left = _r.PreparationSeconds;
         _wave = Math.Max(1, plan.Options.StartWave) - 1;
     }
@@ -76,7 +76,7 @@ internal sealed partial class SurvivalRun
     public Purse Purse => _purse;
     public RunStats Stats => _stats;
 
-    private int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize);
+    private int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize) + _pendingPosts;
 
     private int QueueLeft => _queue.Count - _queueHead;
 
@@ -120,10 +120,12 @@ internal sealed partial class SurvivalRun
 
         _lastDefenders = s.DefendersStanding;
         _lastAttackers = s.AttackersStanding;
+        ObserveGates(s.Gates);
         _stats.ObserveFleeing(s.AttackersFleeing);
         fx.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
         TakePendingBoon(fx);
+        var holdStart = TakePendingFort(fx);
         var loss = _lossThisTick;
         _lossThisTick = false;
 
@@ -139,11 +141,12 @@ internal sealed partial class SurvivalRun
         if (BetweenWaves)
         {
             _left -= s.Dt;
-            if (!(_left > 0f))
+            if (!(_left > 0f) && !holdStart)
                 BeginWave();
         }
 
-        if (_phase == RunPhase.Wave)
+        // A wave the horn began waits one tick when fortification effects went out on this one.
+        if (_phase == RunPhase.Wave && !(holdStart && _waveInit))
             RunWave(s, loss, fx);
         return fx;
     }
@@ -234,6 +237,7 @@ internal sealed partial class SurvivalRun
             NextDamageFactor = next?.DamageFactor ?? 1f,
             ClassName = _plan.ClassName,
             Commander = CommanderViewNow(),
+            Fort = FortViewNow(),
             BoonOffer = _offerCards,
             OwedPicks = _deck.Owed,
             Rerolls = _deck.Banked,
@@ -249,6 +253,7 @@ internal sealed partial class SurvivalRun
             InitWave(s, fx);
 
         _waveSeconds += s.Dt;
+        ObserveGateFall();
         _keep = KeepHoldRule.Step(_keep, Math.Min(s.AttackersAtKeep, s.AttackersStanding), s.DefendersAtKeep, s.Dt, _r);
         if (_keep >= 1f)
         {
@@ -332,6 +337,7 @@ internal sealed partial class SurvivalRun
         _terror = RunModifiers.Terror(_plan.Affixes, _waveAffixes);
         _terrorClock = 0f;
         InitPoison();
+        InitGateRecord();
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
@@ -375,7 +381,8 @@ internal sealed partial class SurvivalRun
     {
         var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow());
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow());
+        _careUsed = 0;
         _warCry = null;
         EndPoison();
         _wavesCleared++;
@@ -394,6 +401,7 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        RefillPosts(fx);
         fx.RestShare = _r.RestShare;
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
