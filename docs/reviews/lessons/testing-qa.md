@@ -1049,3 +1049,111 @@ The `[CareerPerks]` stat lines dedupe on a singleton service so a spawn logs onc
 - **Why missed:** the dedupe was designed against one battle's stream of stat updates; the singleton's lifetime is the process.
 - **Prevent:** every dedupe, latch or "already logged" flag on a `Reuse.Singleton` gets a reset at the session or mission boundary and a test that the second run logs again (`ResetDiagnostics_ClearsTheDedupe_SoTheNextSpawnLogsAgain`).
 - **Source:** 1.5.x `docs/reviews/rca-career-perks-2026-09-17.md` finding 6, #613, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test that a finalizer preserves the throw site uses an exception that was actually thrown
+Plan 006's `Native2ManagedBridgeTests` checked the native-capture-off path with `new InvalidOperationException(...)` and asserted only `AreSame`. `RethrowStackPreserver.PreserveForRethrow` returns at once for an exception with no stack trace, so the test passed unchanged when the preserve call was mutated to a bare `return exception;`, the exact violation `harmony-patches.md` forbids. The fixed test throws and catches first and asserts `Data` holds `TAOM.ThrowSite`; the same mutation now fails it.
+- **Why missed:** the fixture was built to reach the branch, not to exercise the callee's precondition; `RethrowStackPreserverTests` already documents the unthrown no-op, and nobody read it against the new test.
+- **Prevent:** when a test's assertion depends on a helper's effect, read the helper's early returns and give the fixture the state that gets past them (a thrown exception, a non-empty list, a live frame). Then mutate the call away once and watch the test go red.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F1, plan 006, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An allowlist pin names its members independently of the production list
+`Native2ManagedTargetsTests` resolved `Native2ManagedTargets.All` and compared the count with `All.Count`, and the size test checked only an upper bound, so an empty list passed every test while the patcher attached nothing (Codex, plan 006).
+- **Why missed:** the plan prescribed the self-referential check; a resolve-everything test reads as coverage.
+- **Prevent:** pair every "each entry resolves" test over a curated list with one that states the expected members literally (`CollectionAssert.AreEquivalent`), so removing or swapping an entry fails a test and the change has to be made in two places on purpose.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test that pins an engine name looked up by string carries `[TestCategory("BindingVerification")]`
+The two new plan 006 tests that resolve engine members (`Native2ManagedTargetsTests.All_ResolvesEveryShimAgainstTheInstalledEngine`, `Patch37TargetShapeTests`) had no category, so `/verify-bindings`, which an engine bump runs as `--filter TestCategory=BindingVerification`, skipped them; a renamed shim would have cost one warning line at launch and a quietly smaller capture list.
+- **Why missed:** the category is a convention (62 of the 73 test files that call `GameAssemblies.EnsureLoaded` carried it at `6fe83bca`), not a gate, and the reflection catalogue row was filed under the "not engine drift" category D.
+- **Prevent:** any test that resolves a TaleWorlds member by name gets the category, and its catalogue entry goes where engine reflection lives (`reflection-sites.md` category A or B), never category D.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A smoke step for an off switch needs an input that still fires while the switch is off
+Plan 006's owed check for the live master toggle was "turn Enable Crash Capture off; the next dev-trigger throw is not captured". Both dev triggers return before throwing when that toggle is off, so the check passes whether the finalizer gate works or not. No trigger throws inside a callback shim either, so the native toggle had no in-game check at all, while the feature doc claimed dev-trigger coverage of the Native2Managed attach.
+- **Why missed:** the step was written from the toggle's hint, not from the trigger's code; "nothing happened" reads as success.
+- **Prevent:** for a step that proves a gate is OFF, read the input's code and confirm it still produces the event with the gate off; if the input reads the same gate, the step proves nothing. Name which catch point each trigger reaches before claiming it covers a component.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F4 (Codex and lenses 1, 4, 5 agree), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine fact a hardcoded name depends on gets a `BindingVerification` test against the installed DLLs, not a one-time STOP check (plan 007, 2026-09-24)
+
+PatchShield's `"ManagedCallbacks"` exclusion saves about 46 s of loading screen only while the engine's callback shims live in that namespace. The plan checked it once, by hand, as a STOP condition, and its one test asserted the literal string. An engine bump that moved the shims would have brought the cost back with every test green. A `ReflectionSiteBindingTests` row would not have caught it either: its `ResolveType` falls back to a simple-name search that tolerates a namespace move.
+- **Why missed:** the plan called the runtime namespace "structurally untestable", which is true only of the Harmony half (`GetAllPatchedMethods` needs a running game). The type half is reflection over DLLs the test bin already holds (`TAOM.Tests.csproj` copies `TaleWorlds.*.dll`).
+- **Prevent:** when a change hardcodes a namespace, type or member name that must match the engine, add a `[TestCategory("BindingVerification")]` test that loads the installed assembly, selects the targets the way the production code does, and asserts the hardcoded name still matches them; prove it RED by misspelling the name. `/verify-bindings` then re-runs it at every engine bump.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-skip-callback-shims-2026-09-24.md` finding 7; `PatchShieldPolicyTests.IsExcludedTargetNamespace_InstalledCallbackShimTypes_ReturnsTrue`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test that asserts a frame is on the stack must keep code after the call in that frame (2026-10-02)
+Plan 034's review added a test that the shield's stack lookup never climbs past an unresolved frame to a patched outer method. The outer method first carried only a foreign prefix, so its Harmony replacement ended `call; ret`; the x64 JIT made that a tail call, the outer frame was never on the stack, and a lookup that did climb still passed. A postfix on the outer method keeps the frame, and the test then failed against the climbing mutation.
+- **Why missed:** the executor had defeated the same tail call in its own dynamic method by storing the result, but the rule was not carried to the next frame up.
+- **Prevent:** every frame a stack test relies on, dynamic or patched, must do something after its call (store the result, or carry a postfix). Prove the test against the mutation it guards; a stack test that never failed proves nothing.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-per-call-cost-2026-10-02.md` row 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fake that asserts inside a delegate production calls from a catch passes on the error path (2026-10-02)
+Plan 028's installer tests passed `tryPatchCategory` a fake that asserted the category was Patch97's. Plan 041 made the
+installer also apply Patch98 through the same delegate, inside `HitchProbeInstaller.Install`'s try. The assertion threw
+`AssertFailedException`, the catch swallowed it as an install fault, and two "is installed" tests stayed green only
+because the line that would have cleared the flag never ran.
+- **Why missed:** a green run of an older class was read as "still valid"; nobody asked what the fake does with a call
+  it was not written for.
+- **Prevent:** a fake that stands in for a delegate answers every input the production caller can send (here, both
+  categories), and the success-path test asserts no ERROR was logged. When a change adds a call through an existing
+  seam, re-read every fake of that seam.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Logic moved out of an untestable host to meet a line limit is testable: test it in the same change (2026-10-02)
+A recurrence of the plan 028 rule above, the same day. Plan 041 moved its per-mission decisions out of
+`MissionTickProfilerBehavior` into `MissionTickProfilerHooks.Probe.cs` to stay under ADR-002's 150 lines; the moved
+methods take an `IModLogger`, ints and bools, yet shipped with no test, and the commit's Not-tested trailer kept the
+behaviour's "needs a live Mission" reason. Reverting the measuring formula would have switched the probe off for every
+player with every test green.
+- **Why missed:** the plan was written before review 028's lesson existed, and its executor worked from the plan.
+- **Prevent:** a Not-tested trailer names each untested member with its own reason, and a reason inherited from the
+  member's old host is re-checked after a move. The orchestrator adds the day's new lessons to a queued plan's checklist
+  before dispatching it.
+- **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R4; the plan 028 lesson above, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new hot-path settings provider, name-based private access or engine-executing binding test joins its repo-wide gate in the same commit (2026-10-08)
+- **Why missed:** the four yotthani ports passed every test in their own folders, but the per-frame
+  `NameplateCullSettingsProvider` was not in the hot-path provider gate, four `FieldRefAccess` sites and six swap
+  targets had no reflection-site rows, and one binding test that runs engine code lacked `RequiresGameIL`. Those
+  gates live in other folders and the builder briefs named only the feature's own tests.
+- **Prevent:** a builder brief for a new feature names these gates explicitly: `CampaignHotPathSettingsProvidersTests`
+  or `HotPathSettingsProvidersTests` for a provider read per frame or per hit, `ReflectionSiteBindingTests` and
+  `reflection-sites.md` for private members reached by name, `RequiresGameIL` for a binding test that executes
+  engine code.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` findings 5 to 7. - **Recurrence (2026-10-08, fix round):** two settings-provider pins sat in `RequiresGame` binding classes, so no no-game run, CI included, executed them. A pin that needs no game goes in an untagged class beside its siblings (finding 25), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An in-game check names the log line it expects and traces the trigger that produces it (2026-10-08)
+- **Why missed:** the mission-start guard's "guard off" step promised an endless loading loop, but the QA trigger
+  resets itself before it throws, so the second load runs clean; the nameplate cull's A/B pointed at a window line
+  that a one-minute A/B could never produce; the map-view release's load-game step ran before its patch existed.
+- **Prevent:** write each in-game step with the exact log line it expects, and read the trigger's code and the
+  line's writer before writing the expected outcome.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` findings 10 and 11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A copy of engine code pins every method it replaces, and test helpers drive the production hook, not the accumulator behind it (2026-10-02)
+Plan 039's listener walk replaces `MbEvent<float>.Invoke` (which only calls `InvokeList` on one list) and copies
+`InvokeList`; only `InvokeList`'s IL was pinned, so a second list or a guard added to `Invoke` would have passed every
+gate while the measuring dispatch skipped listeners. The hooks' test helper closed frames with
+`Profiler.AddAppTick(0)` instead of the `EndAppTick` helper the patch calls, so the only feed of the continuity count
+had no test, and the installer's production patched check was always replaced by a fake.
+- **Why missed:** the pin was written for the method copied line for line, not for the call the swap removes; test
+  helpers were written for convenience against the pure class.
+- **Prevent:** for a call-site swap plus a copy, pin the IL of the replaced method and of every method the copy
+  reproduces (`MbEventInvoke_OnlyCallsInvokeListOnTheNonSerializedList_AndHasNoHandler`), and prove the pin fails by
+  pointing it once at a different method. Test helpers call the same helper the patch calls. A decision seam that tests
+  replace with a fake gets one test of the production implementation (here: test methods patched with the real Patch101
+  prefix and a foreign one). Compile hook bodies against the installed engine (`RuntimeHelpers.PrepareMethod`) so a
+  member a body references is pinned even when no test calls it.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R3 and R12. - **Update (2026-10-03, convergence round):** the adapter behind the map speed class (`TimeControlAdapter.SimplifiedTimeControlMode`) was faked by every test and listed as not testable offline, so pointing it back at the raw `Campaign.TimeControlMode` (the bug FOR-MIKE 16r fixed) compiled and kept the suite green. Its getter is now pinned by IL (`TimeControlAdapterBindingTests`), and the rule covers any engine read that a fake adapter stands in for, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A console-spawn spike does not smoke the battle spawn path (2026-09-28)
+Route A's Custom Battle spike spawned nine spiders with `taom.spawn_troops` after the battle had started: every
+record logged `frame=initial-position` and `origin=BasicBattleAgentOrigin`. That proved targeting and nothing about
+the campaign path: the spawn loop's formation-slot frames, `PartyGroupAgentOrigin` accounting and, above all, the
+deployment phase, where the review found the creature tree teleporting spiders onto the paused army.
+- **Why missed:** the spike answered the question it was built for, and "passed its spike" read as "works in battle".
+- **Prevent:** a spike report names the spawn path it exercised (console, spawn loop, reinforcement) and the phases it
+  skipped; the feature doc's status says what has not run in game. Before calling a mission feature smoked, run it
+  through the battle's own spawn loop with deployment (a campaign field battle with 20 or more troops opens the
+  Order of Battle screen).
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
