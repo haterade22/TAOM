@@ -15,7 +15,7 @@ our source.
 Until 2026-08-08 that link went nowhere. The repo had two tags, neither a release
 (`crafting-tool-v1.0`, `archive/master-pre-1.4.5-promotion`), and `git describe` read
 `crafting-tool-v1.0-492-gd9817f89`. Worse, five versions players ran were never committed at all —
-including `v2.0.12`, which appears in two crash reports in [`CHANGELOG.md`](../../CHANGELOG.md)
+including `v2.0.12`, which appears in two crash reports in [`CHANGELOG-2026-H2-handwritten.md`](../changelog-archive/CHANGELOG-2026-H2-handwritten.md)
 (a Rhûn notable CTD and the Nan Angren deserters CTD). Those reports cannot be pinned to a commit,
 or even to a range, because git has never seen the version they name.
 
