@@ -348,3 +348,24 @@ inferred as observed, and "nothing ticks such a skeleton" from a lab that only t
   TAOM adds its own reading, tag it "(TAOM's reading)". The fidelity finder of the doc review reads every restated
   sentence beside its cited source line.
 - **Source:** 1.5.x `docs/reviews/adopt-yotthani-2026-10-15.md` "The doc review"; the 2026-10-06 review in `b5e1d0b3d`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A value two processes compare is hashed from its bits, not from runtime-formatted text (B8, 2026-10-23)
+The co-op settings fingerprint rendered floats with `G9`. A net472 client prints `1.001953125f` as `1.00195313` and
+a .NET Core 3.0 or later runtime (the dedicated server runs .NET 6) prints `1.00195312`, so identical settings could
+hash differently. The code comment said "both peers run the same framework", which held only until a server existed.
+- **Why missed:** the formatter was checked on one runtime; the premise behind its comment was never re-read when a
+  second runtime joined.
+- **Prevent:** hash floats and doubles as their IEEE bit patterns (fold -0 into 0) whenever the value is compared
+  across processes, and pin a vector test with a value whose decimal text differs between runtimes.
+- **Source:** 1.5.x `rca-b8-server-settings-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A crash path reads only what TAOM owns: list what a read executes and publishes first (#982, 2026-10-23)
+The first #982 fix made the crash-bundle collector invoke MCM's inherited `GlobalSettings<T>.Instance` for
+third-party settings classes. That getter runs `new T()` on a cold cache, so another mod's constructor and getters
+ran inside crash handling (Codex reproduced a blocked `Collect()`), and that mod's free-text settings went into a
+bundle players upload.
+- **Why missed:** the issue was framed as reflection correctness, and the fix was judged by what it finds.
+- **Prevent:** before a crash or diagnostic path reads through another mod's API, write down the code that read
+  executes and the data it publishes. Read only TAOM's own objects there; anything else is snapshotted on the main
+  thread at a normal moment, filtered, or left out.
+- **Source:** 1.5.x `rca-982-collector-instance-2026-10-23.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).

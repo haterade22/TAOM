@@ -634,3 +634,36 @@ The first review of plan 038 named slot fit (`Equipment.IsItemFitsToSlot`), note
 - **Why missed:** the per-agent face exclusion capacity was derived from the registry's per-face mark byte (8 bits, bit 7 the navmesh boundary), but the face-ability setter (0x401B20) re-marks sets only from index 1 because bit 0 belongs to the engine, so the safe cap is 6, not 7.
 - **Prevent:** before fixing a cap from native bookkeeping, list every function that writes the field (xrefs) and check which bits or slots each owns; cap under the most conservative reading when one stays unverified.
 - **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Verify the override the engine dispatches, not the base member you expected (generated lord kits, 2026-10-06)
+- **Why missed:** the donor adapter read `character.BattleEquipments` expecting the lord's authored roster (`BasicCharacterObject`), but `CharacterObject` overrides it to return the hero's live `HeroObject.BattleEquipment`, which falls back to the engine's shared `DeadBattleEquipment` once the hero dies. Dead lords donated that kit, and two deaths made it a "shared" kit.
+- **Prevent:** before relying on a virtual engine member, `grep override` its name in the most-derived type you hold (`pwsh tools/taom-src.ps1 path <Type>`), and read that body. When a getter has a live and an authored meaning, say which one the adapter needs in its comment. For a lord's authored kit, read the roster `BasicCharacterObject.Deserialize` registers under the character's id.
+- **Source:** 1.5.x `docs/reviews/rca-generated-lord-kits-2026-10-06.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Mounts carry no Team: list every agent kind an engine callback passes before a rule reads its fields (Race Abilities, 2026-10-04)
+Race Abilities credited a kill when the victim died at the hand of a live soldier with an ability on another team. A horse killed under its rider passed: `Mission.SpawnAgent` sets the rider's team (`Mission.cs`) and builds the horse through `CreateHorseAgentFromRosterElements` without one, so `killer.Team == null` was false and the dead horse extended Bloodlust, healed the killer and spread fear around the carcass. Vanilla's own `KillCount` counts horses too; its morale-on-kill skips every non-human.
+- **Why missed:** the credit was modelled on `KillCount`, and the same-team gate was assumed to stop a horse; nobody listed what the removal callback carries.
+- **Prevent:** for every engine callback or query a rule reads (removals, hits, proximity scans), write down the agent kinds that arrive (soldier, mount, riderless creature, the player) and the value of each field the rule reads for each: a horse is `Character == null` and `Team == null`. Put the kind in the rule's inputs and pin each kind with a test row.
+- **Source:** 1.5.x `docs/reviews/rca-race-abilities-2026-10-04.md` R14 (lens 2 F1, lens 5 L7), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `CustomAttacksUtils.TakeDamage` bypasses armor: a creature's damage band is a post-armor number
+It sets `blow.InflictedDamage` directly with `DamageCalculated = true`, so the engine skips the armor step. Measured
+2026-09-18: 976 war ram head-butts on Armored Trolls averaged 23.1, exactly the raw 18-28 roll, and the goats floored
+level-51 trolls all battle.
+- **Why missed:** the band was set beside weapon swings quoted BEFORE armor (a mid-tier sword 25-35), which reads as
+  weaker than a sword while landing every point.
+- **Prevent:** compare a band routed through `TakeDamage` with weapon damage after armor, and say so next to the
+  constant. Applies to every caller: elephant and mumakil tramples, the war ram, warg and spider bites, signature strikes.
+- **Source:** 1.5.x #618, 2026-09-18 Custom Battle logs; `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read a range check's body before quoting its bounds
+`Agent.IsInBeingStruckAction` tests `MBMath.IsBetween(type, StrikeBegin, StrikeEnd)` with 48 and 52, and a 2026-08-28
+review wrote that anything from 48 to 52 reads as being struck, so `actt_mount_strike` (52) "sits inside the band".
+`IsBetween` is half-open (`value >= min && value < max`): 52 is outside. The claim went into a lesson, two handbook
+pages, the creature authoring guide and a CLAUDE.md trap row before an engine review read the body (2026-09-18).
+- **Why missed:** the constants are named Begin and End, which reads as inclusive, and the reviewer reasoned from
+  the names; a finding that passed review then gained authority with every copy.
+- **Prevent:** before stating that a value falls inside or outside an engine range, open the comparison's body
+  (`MBMath.IsBetween`, `MathF.Clamp`, a hand-written `<`/`<=`) and quote the operator. Treat a band quoted in a
+  lesson as a claim to re-check, not a fact, when it decides a design.
+- **Source:** 1.5.x `docs/reviews/rca-creature-collision-review-2026-09-18.md` finding 3; `TaleWorlds.Library.MBMath.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).

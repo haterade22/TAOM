@@ -940,3 +940,19 @@ on a commented-out call.
 - **Why missed:** Codex audit (Phase 9b #133, 2026-05-13) recommended an `OnGameEnd()` override that does not exist; the fix unsubscribed on Game Over and documented the limitation, claiming the orphan became GC-eligible. It never did: after N loads each party-screen open ran N handlers and wrote N `[SpecRes] PartyScreen session BEGUN` lines (#771). `TroopCountDiagnosticsBehavior` had the same shape.
 - **Prevent:** (1) A campaign behavior subscribing to a static event keeps exactly one live handler per process: store the handler in a private static field, and in `RegisterEvents` remove the previous one, then store and add this instance's; Game Over removes it and clears the field. Or subscribe from a process-lifetime object (a `Reuse.Singleton` service) and add the handler once, removing before adding. Never write that the orphan is collectable. (2) `OnGameOverEvent.AddNonSerializedListener(this, ...)` is only a best-effort cleanup and does not cover main-menu exit. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety, use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one), so reset happens just before fresh state is built: shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
 - **Source:** 1.5.x #771 (static `ScreenManager.OnPushScreen` handlers stacked once per save load); earlier memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cache an MCM settings reference lazily, never in a constructor (plan 003, 2026-09-24)
+`BattleBalanceSettingsProvider` took `TaomSettings.Instance` once in its constructor. MCM sets
+`BaseSettingsProvider.Instance` only in `MCMSubModule.OnBeforeInitialModuleScreenSetAsRoot`, so a
+resolve during `OnSubModuleLoad` (the `IoC.Configure` eager block, a patch hook `Initialize`) caches
+null and pins every setting in the group to its compiled default for the session, with no log line.
+It was safe only because its one resolve sits under `OnGameStart`, a fact recorded in the CHANGELOG.
+- **Why missed:** the June code copied `NameplateFadeSettingsProvider`, the older constructor-read
+  exemplar; the trap was documented only as a class comment in `NameplateRelationSettingsProvider`,
+  never as a lesson, and a port verifies the commit it is given rather than re-designing it.
+- **Prevent:** cache with `private TaomSettings? Settings => _settings ??= TaomSettings.Instance;`
+  and read every value through it (MCM edits its one registered instance in place, so this stays
+  live). Pin it with an IL rule that no constructor and no public getter calls `get_Instance`. A
+  correctness precondition on WHEN a singleton is first resolved belongs in code, never in a
+  CHANGELOG sentence.
+- **Source:** 1.5.x `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 1; `NameplateRelationSettingsProvider.cs` (first occurrence, 2026-09-13), on `origin/bannerlord-1.5.x` (ported by WP142).

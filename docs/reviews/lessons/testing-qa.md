@@ -1350,3 +1350,31 @@ field rivendell and goblin troops. The patch number gate matched one phrasing of
 - **Prevent:** trace the value from its runtime consumer before choosing what the gate reads, and give every gate
   over parsed text a floor on what it found, so an input that stops matching fails instead of passing.
 - **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F2, F3, F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A caching refactor's test puts a live object behind the cache and edits it afterwards (plan 003, 2026-09-24)
+The provider cache's tests pinned the null-path fallbacks and an IL rule that the getters never call
+`TaomSettings.Instance`. None ever put a real settings object behind the provider, because MCM is not
+initialised under MSTest. A constructor that snapshots the values into fields (the exact regression
+the plan forbade), a getter wired to the wrong setting, or a constructor that reads `Instance` and
+discards it, all passed every test.
+- **Why missed:** an IL rule proves WHERE a call happens and reads as full coverage; it cannot see
+  what value reaches the getter.
+- **Prevent:** for any cached read-through (an MCM reference, a config object, an adapter), add a
+  seam that injects a live object (an internal constructor, visible to `TAOM.Tests`), mutate every
+  property AFTER construction, each to its own distinct non-default value, and assert each getter.
+  That one test fails a snapshot, a cross-wired getter and a discarded reference. Keep the IL rule
+  for the cost claim only. When the seam is a second constructor on a DryIoc-registered type, also
+  resolve the type from a real container in a test.
+- **Source:** 1.5.x `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 2 (Codex P3, lens 4 F1, lens 6), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a change makes a class testable, delete the notes that said it was not (plan 031, 2026-10-02)
+Plan 031 added direct tests for seven MCM settings providers. Two notes survived it: the end of `CavalryChargeServiceTests.cs` said `SmartCavalryAISettingsProvider` "has no direct unit tests" because MCMv5 is unavailable in the test host, and the `CombatMechanicsSettingsProviderTests` summary said `Instance` "cannot be set in a test" above the new tests of the merged path.
+- **Why missed:** one note sat in another feature's test file, outside the diff; the other was a class summary above the appended tests, which nobody re-read.
+- **Prevent:** after adding the first tests for a class, grep `TAOM.Tests` and `docs/` for its name next to "no direct", "untestable", "cannot be" or "unavailable in the test host", and fix each hit in the same change. Re-read a test class's summary whenever tests are appended to it.
+- **Source:** 1.5.x `docs/reviews/rca-settings-reads-off-hot-paths-2026-10-02.md` C8 and C11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate that proves where a value is read does not prove the value is kept; count the lookups (plan 031, 2026-10-03)
+Plan 031's `HotPathSettingsProvidersTests` scanned each provider's IL to prove that only the lazy `Settings` accessor calls MCM's `Instance`. The Codex review pointed out that an accessor written `_settings ?? Instance`, with no assignment, passes that scan and every injected-object test, yet walks MCM's containers on every read, which is the cost the plan removes. A counting test now builds each of the nine providers through its public constructor against a stand-in for MCM's provider, and it fails that accessor and also one that pins a null. The stand-in is installed by reflection, because `BaseSettingsProvider.Instance` has an internal setter.
+- **Why missed:** the production code offers no resolver seam, so the plan chose an IL rule, and a scan reads as authoritative; it shows what a method calls, not whether a result is stored.
+- **Prevent:** when the property under test is "computed once", assert the number of lookups against a counting double (nothing registered first, then the object, then an edit to it) and prove the test with a deliberate mutation of the cache line, as the nine-provider mutation run did (all nine fail, while all nine IL rows still pass). Keep the scan only as the cheap complement, and restore the global the double replaced.
+- **Source:** 1.5.x `HotPathSettingsProvidersTests.Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough`; Codex adversarial review of plan 031, finding 2 (2026-10-03), on `origin/bannerlord-1.5.x` (ported by WP142).

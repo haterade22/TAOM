@@ -612,3 +612,19 @@ extent) and the formation width the measured shoulders times `AgentScale`.
 - **Prevent:** for any creature whose silhouette is not human, measure the LOD0 mesh's width in height bands
   (shoulders, hips) and size the capsule, formation width and reach from those.
 - **Source:** 1.5.x `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A creature's hit capsules are the Kit's defaults until someone fits them to the mesh
+Players reported the war elephant's collision as too small (2026-09-18). A creature has three collision layers: the
+Monster's `body_capsule` (what agents bump into), a hit capsule per bone (what blows and missiles strike) and a ragdoll
+capsule per bone (the corpse). 41 of the elephant's 60 hit capsules were still the Kit's defaults, thin rods along each
+bone with a radius about a ninth of the capsule's length: the neck was 0.03 to 0.05 m wide inside 0.6 m of neck and
+only 48% of the skin sat inside any hit capsule. The chariot (57 of 60) and the spider (40 of 62) carry the same
+defaults. Fitted to the skinned mesh the elephant reaches 98%.
+- **Why missed:** the creature renders, animates and takes damage, so nothing looks broken; the Kit shows the capsules
+  only in its skeleton editor and no gate reads them. The first answer to "too small" went to the body capsule, a
+  different layer, and a doubled radius would have enclosed the howdah's physics floor, the known slide cause.
+- **Prevent:** once a creature's skeleton and mesh are final, run `python tools/skeleton_hit_capsules.py show --tpac
+  <geo.tpac>` and fit what is still default (`fit`, then `patch --apply`, then a Kit load). Before changing any
+  collision, name the layer the complaint is about: bumping is the body capsule, blows passing through are the hit
+  capsules, a corpse is the ragdoll.
+- **Source:** 1.5.x `docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules", `docs/features/elephant.md` "Collision", on `origin/bannerlord-1.5.x` (ported by WP142).
