@@ -170,6 +170,7 @@ python tools/lint_docs.py --quick          # dead links only (fastest; tight loo
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
 python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 8, the pre-commit gate
+python tools/lint_docs.py --drift-only    # only checks 5 to 8, the commit hook's mode (under a second)
 python tools/lint_docs.py --fail-on-drift --staged   # check 8 reads the index
 ```
 
@@ -190,7 +191,7 @@ before treating it as an all-clear.
 | `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
-| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--fail-on-drift` |
+| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only` |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 

@@ -13,6 +13,7 @@ Covers the two checks added for the v1.4.7-bump deep-review finding:
 Each test builds a SYNTHETIC repo tree in a tempdir and points lint_docs's REPO_ROOT /
 DOCS_DIR at it, so the checks are exercised independently of the real repo contents.
 """
+import contextlib
 import io
 import os
 import subprocess
@@ -920,6 +921,42 @@ class RcaFollowUpGateTests(_GitRepo):
         rc, out = self._gate("--fail-on-drift", "--staged")
         self.assertEqual(rc, 1)
         self.assertIn("rca-sample-2026-10-23.md:3", out)
+
+
+class DriftOnlyTests(unittest.TestCase):
+    """--drift-only runs only the checks --fail-on-drift gates on: the doc drift hook's mode. The full
+    run took 25 s on the laptop, past the hook's 20 s inner bound (WP103, 2026-11)."""
+
+    def _main(self, budget=()):
+        def boom(*args, **kwargs):
+            raise AssertionError("a report-only check ran under --drift-only")
+        slow = ("check_dead_links", "check_untracked_link_targets", "check_stale_versions",
+                "check_orphan_features", "check_backlinks_region_prose", "check_missing_feature_docs",
+                "check_model_registry", "check_ai_dashes")
+        patches = [mock.patch.object(ld, name, boom) for name in slow] + [
+            mock.patch.object(ld, "check_config_example_drift", return_value=[]),
+            mock.patch.object(ld, "check_version_consistency", return_value=[]),
+            mock.patch.object(ld, "check_claude_md_budget", return_value=list(budget)),
+            mock.patch.object(ld, "check_rca_followups", return_value=[]),
+            mock.patch("sys.stdout", new_callable=io.StringIO),
+        ]
+        with contextlib.ExitStack() as stack:
+            out = [stack.enter_context(p) for p in patches][-1]
+            rc = ld.main(["--drift-only"])
+        return rc, out.getvalue()
+
+    def test_clean_tree_exits_0_and_runs_no_report_only_check(self):
+        rc, out = self._main()
+        self.assertEqual(rc, 0)
+        self.assertIn("--drift-only", out)
+
+    def test_a_budget_violation_exits_1(self):
+        rc, _ = self._main([(ld.CLAUDE_MD, 0, "size", "CLAUDE.md is over the budget")])
+        self.assertEqual(rc, 1)
+
+    def test_a_size_warning_alone_still_exits_0(self):
+        rc, _ = self._main([(ld.CLAUDE_MD, 0, "size-warn", "approaching the budget")])
+        self.assertEqual(rc, 0)
 
 
 if __name__ == "__main__":

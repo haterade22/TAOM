@@ -1169,14 +1169,21 @@ def rel(p: Path) -> str:
         return str(p)
 
 
-def format_report(report: LintReport, quick: bool) -> str:
+def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> str:
     out: list[str] = []
     out.append("# Doc lint report")
     out.append("")
-    out.append(f"- Dead links: **{len(report.dead_links)}**")
-    out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
-               f"**{len(report.untracked_targets)}**")
-    if not quick:
+    if drift_only:
+        out.append("Only the checks `--fail-on-drift` gates on ran (`--drift-only`); run without it for the rest.")
+        out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
+        out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
+        out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
+        out.append(f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**")
+    else:
+        out.append(f"- Dead links: **{len(report.dead_links)}**")
+        out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
+                   f"**{len(report.untracked_targets)}**")
+    if not quick and not drift_only:
         out.append(f"- Stale version refs (outside migration/archive): **{len(report.stale_versions)}**")
         out.append(f"- Orphan feature docs (no inbound references): **{len(report.orphan_features)}**")
         out.append(f"- Prose trapped in an auto-generated backlinks region: **{len(report.backlinks_prose)}**")
@@ -1323,6 +1330,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--fail-on-drift", action="store_true",
                     help="Exit 1 on config-example drift, a version mismatch, or a newly written RCA "
                          "FOLLOW-UP line with no issue or reason (pre-commit gate)")
+    ap.add_argument("--drift-only", action="store_true", help="Run only the checks --fail-on-drift gates on (config-example drift, version mismatches, the CLAUDE.md and AGENTS.md budget, RCA FOLLOW-UP lines) and gate on them: the commit hook's mode. The full run took 25 s on the laptop, past the hook's 20 s bound.")
     ap.add_argument("--staged", action="store_true",
                     help="Read the RCA FOLLOW-UP check's lines from the index, not the working "
                          "tree: what a commit would record.")
@@ -1339,9 +1347,16 @@ def main(argv: list[str]) -> int:
             files.extend(iter_markdown(root))
 
     report = LintReport()
-    report.dead_links = check_dead_links(files)
-    report.untracked_targets = check_untracked_link_targets(files)
-    if not args.quick:
+    if args.drift_only:
+        args.fail_on_drift = True
+        report.config_drift = check_config_example_drift(files)
+        report.version_mismatches = check_version_consistency()
+        report.budget = check_claude_md_budget()
+        report.rca_followups = check_rca_followups(args.dash_base, staged=args.staged)
+    else:
+        report.dead_links = check_dead_links(files)
+        report.untracked_targets = check_untracked_link_targets(files)
+    if not args.quick and not args.drift_only:
         report.stale_versions = check_stale_versions(files)
         report.orphan_features = check_orphan_features(files)
         report.backlinks_prose = check_backlinks_region_prose(files)
@@ -1355,8 +1370,10 @@ def main(argv: list[str]) -> int:
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
+        mode = ["mode: drift-only (only config_drift, version_mismatch, claude_budget and rca_followups ran)"] if args.drift_only else []
         summary = "\n".join([
             "---",
+            *mode,
             f"dead_links:        {len(report.dead_links)}",
             f"stale_versions:    {len(report.stale_versions)}",
             f"orphan_features:   {len(report.orphan_features)}",
@@ -1374,7 +1391,7 @@ def main(argv: list[str]) -> int:
         ])
         sys.stdout.write(summary)
     else:
-        rendered = format_report(report, quick=args.quick)
+        rendered = format_report(report, quick=args.quick, drift_only=args.drift_only)
         if args.report:
             # Atomic write: write to .tmp then rename. Prevents partial-write
             # corruption if interrupted mid-write (autoresearch prepare.py pattern).

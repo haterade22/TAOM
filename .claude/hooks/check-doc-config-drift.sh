@@ -18,7 +18,7 @@
 #
 # Fail-open (per .claude/rules/harness-facts.md "TAOM hooks MUST fail open"):
 # ANY hook-internal failure -- no python, linter crash, nothing relevant staged --
-# ALLOWS the commit. Only a genuine drift finding (linter rc=1 on --fail-on-drift) blocks.
+# ALLOWS the commit. Only a genuine drift finding (linter rc=1 on --drift-only) blocks.
 #
 # Returns: {} to allow, {"permissionDecision":"deny","message":"..."} to block.
 
@@ -82,19 +82,21 @@ done <<< "$STAGED"
 PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
-# Run the drift gate. --fail-on-drift prints the full report to stdout and exits 1
-# iff there is config-example drift or a version mismatch; 0 otherwise. Only rc=1 blocks.
+# Run the drift gate. --drift-only runs just the checks that can block (config-example drift,
+# version markers, the CLAUDE.md and AGENTS.md budget) and exits 1 iff one fails; 0 otherwise.
+# Only rc=1 blocks. The full --fail-on-drift run took 25 s on the laptop (2026-11-04), past the
+# 20 s bound below; these checks take under a second.
 #
 # Inner bound, below the 30s registered timeout. A harness kill discards this hook's
 # output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
 # a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
-OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --fail-on-drift 2>/dev/null)
+OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --drift-only 2>/dev/null)
 RC=$?
 
 # 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
 # infrastructure fault, and a hook's own fault must never hard-block the user.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"permissionDecision":"ask","message":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --fail-on-drift"}'
+    printf '%s\n' '{"permissionDecision":"ask","message":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches and the CLAUDE.md eager-load budget. This is NOT a pass. Run: python tools/lint_docs.py --drift-only"}'
     exit 0
 fi
 
