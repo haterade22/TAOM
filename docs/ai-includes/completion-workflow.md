@@ -35,10 +35,13 @@ For **features**, the issue body MUST include:
 3. **Implementation** — key files, patterns used, configuration
 4. **Testing** — test coverage, how to verify it works
 
+**Before the commit:** reread the issue body against `git diff --stat` and the untracked files. The file list (Files changed, or Implementation for a feature) names every shipped file and no "(planned)" row, and the Solution or Design and the Testing sections describe what ships, not the plan. A body written before the build is a plan, even when it was correct then.
+
 **Lifecycle:**
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
+- A closing keyword in a commit body closes only the number that follows it: `Closes #1036, #1037, #1040` closed #1036 alone on push (seen on the 1.5.x line, 2026-10-27). Write the keyword before each number (`Closes #1036, closes #1037`), or close the rest with `gh issue close`, and check every issue's state after the push.
 - If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
   remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
   Before you add the label, write the check as steps in the feature doc's `## How to verify in game`
