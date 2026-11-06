@@ -775,3 +775,18 @@ The face adapter cached every `Hero` by id to avoid a linear `Hero.Find`, and as
 - **Why missed:** the cache was a performance shortcut and nothing cleared it.
 - **Prevent:** carry the engine object inside the snapshot as an opaque handle (the `MountSnapshot` pattern), so the adapter stays stateless and references live only for one call.
 - **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A roster write during a party-screen conversation is reverted by Escape (2026-10-19, second occurrence)
+
+A conversation opened from the party screen (`PartyVM.cs`) returns to that screen, which still holds
+its pre-conversation snapshot. Escape, Cancel or Reset runs `PartyScreenData.ResetUsing`, which clears the live
+prison, member and item rosters and re-adds every snapshot row (`PartyScreenData.cs`). A hero killed in
+the conversation comes back as a dead prisoner; loot added to the inventory disappears.
+- **Why missed:** the same `ResetUsing` behaviour was recorded on 2026-10-17 (`lessons/harmony-il.md`, the
+  roster-loss diagnostic), scoped to diagnostics, so nothing loaded it for a feature that writes rosters from a
+  dialog consequence.
+- **Prevent:** after any roster, inventory or hero-state write made from a conversation, commit an open party
+  screen the way vanilla does when a companion leaves (`GauntletPartyScreen.OnCompanionRemoved` calls
+  `PartyScreenLogic.DoneLogic(true)`): `GameStateManager.Current?.LastOrDefault<PartyState>()?.PartyScreenLogic?.DoneLogic(true)`.
+  Trap index row "Party-screen conversations".
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H4, on `origin/bannerlord-1.5.x` (ported by WP142).

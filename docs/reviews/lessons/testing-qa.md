@@ -1513,3 +1513,25 @@ The face roll fake put the hero id into every rolled key, so every result was un
 - **Why missed:** the fake was written to make results tell apart, not to behave like the engine, which returns the same face for the same race, sex, face, variation and seed.
 - **Prevent:** derive a fake's output only from the inputs the engine uses, then mutate the code under test (a constant seed here) and confirm a test fails before trusting the suite.
 - **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fake must not pass a shared rule through or hold values the engine clamps (2026-10-19)
+
+Hard Questions reused Execution's relation rule, and its test fixture made the rule return every delta unchanged
+and resolved every side Neutral. In production that same Neutral setup zeroes every delta, so a Khand or Umbar
+lord cost no relation at all, while 114 tests passed. The same suite fed companions Honor 3 to 20, which the
+engine clamps to 2 (`Hero.SetTraitLevel`, `DefaultTraits` -2..2), so a penalty cap that could never apply looked
+tested.
+- **Why missed:** the fakes were written from the author's model of the engine and of the shared rule, so they
+  could not disagree with it.
+- **Prevent:** when a feature reuses another feature's rule, add at least one test over the REAL rule service
+  (construct it with its real dependencies) for each branch the feature depends on, Neutral included. Keep every
+  faked engine value inside the range the engine can hold (trait levels -2..2, relations -100..100) and test the
+  edges of that range.
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H3, M2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Boot evidence names the build it ran
+The B2 boot ran before the fix pass, which then replaced the server rule with the engine's build constant, so the
+boot evidence described a build that no longer existed.
+- **Why missed:** a boot is evidence of one build, and the fix pass changed the build after it.
+- **Prevent:** after a fix pass, re-stage and boot again, or write which build booted next to the evidence.
+- **Source:** 1.5.x taom-headless-server.md, the B0-B2 headless review, 2026-10-22, on `origin/bannerlord-1.5.x` (ported by WP142).

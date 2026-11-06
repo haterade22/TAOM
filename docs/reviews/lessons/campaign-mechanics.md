@@ -662,3 +662,12 @@ The face pass first ran on `OnNewGameCreatedEvent` and rolled each hero at the h
 - **Why missed:** the design copied vanilla's roll call but not its input (vanilla always rolls an adult range) or its timing.
 - **Prevent:** hook a pass that must see every new-game hero to `OnNewGameCreatedPartialFollowUpEndEvent`, and roll faces at `BodyProperties.DefaultAge` (30).
 - **Source:** 1.5.x `docs/reviews/rca-followups-949-952-2026-10-20.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A TAOM action beside a vanilla one applies the vanilla action's own gate (#910, 2026-10-26)
+Make Tools let a player press at stamina 6 to 10, where the vanilla Refine button beside it is greyed with "You must rest":
+every smithy action needs stamina above 10 (`CraftingVM.cs`), and the co-op host refuses at 10 or less.
+- **Why missed:** the plan derived the rule from the cost model (stamina at least the cost) and never read the screen's
+  enable rule.
+- **Prevent:** before a new action goes on a vanilla screen, read the enable rule of the vanilla action next to it
+  (`RefreshEnableMainAction` here) and apply the same conditions, then add the action's own.
+- **Source:** 1.5.x `rca-smiths-measure-2026-10-26.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -3146,3 +3146,59 @@ The adoption checklist's `grep -rln "a\|b"` works in GNU grep, but ripgrep (the 
 - **Prevent:** write alternation in documented commands as `grep -E 'a|b'`, which GNU grep, ripgrep
   and the Grep tool read the same way.
 - **Source:** 1.5.x `docs/reviews/rca-security-hygiene-2026-09-24.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A transcript count needs the unit its claim is about, read from real records (harness retro, 2026-10-21)
+`tools/harness_retro.py` called three failed results in a row a "runaway retry", and called a gate
+with no deny "no fires, check before removing". Both were wrong on real data: the results of one
+assistant message's parallel calls sit in consecutive records, so six Edits sent at once read as a
+loop of six (18 runaways became 3), and three gates can only ask, which leaves no trace when
+approved, so they could never count as firing. The schema had been pinned record type by record
+type, and every test passed on fixtures that had one call per message.
+- **Why missed:** the fixtures modelled each record's shape, not how records group into the event
+  the signal claims (a retry is a new message; a fire is any decision, not just a deny).
+- **Prevent:** before a transcript signal backs a proposal, read three real instances behind it
+  and name the unit it counts (message, tool call, session); a gate's "no fires" counts only when
+  its code can deny or block.
+- **Source:** 1.5.x harness-retro-2026-10-21.md, code review findings, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A first-word anchor is not a command reader: wrappers and shell grammar hide the call (#985, 2026-10-23)
+`block-dangerous-git.sh` and `block-broad-git-add.sh` allowed `timeout 60 git reset --hard`, `{ git reset --hard; }`, `! git ...`, `then git ...` and seven more forms; `check-commit-subject-version.sh` allowed a wrapped unlabeled commit; `mark-verification-run.sh` never marked `timeout 600 dotnet test`, a form the local transcripts hold 372 times. Each hook found the command by its segment's first word after skipping `VAR=value`, each with its own loop (D41 was the same bug in the marker's copy). Found while reading rtk-ai/rtk's permission matcher, which reads past wrappers and grammar.
+- **Why missed:** plan 027 gave every gate one reader for the command text, but each gate still found the command word itself, and the test rows only held bare `git` forms.
+- **Prevent:** a gate reads segments from `_shellwords.py commands` and a parsed call through `_git_call`, which share `command_index`. A new gate's test rows include a wrapped form and a grammar form for each case it gates (`hook-authoring.md` forms table).
+- **Source:** 1.5.x adopt-rtk-2026-10-23.md; issue #985, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving work to a branch by patch carries other sessions' hunks (2026-10-24)
+
+Work done in the main checkout was moved to a new worktree with `git diff -- <paths>`, applied there and
+reverse-applied in the main checkout. A second session was editing the same checkout, and one of the named files
+(`.claude/skills/improve/references/run-protocol.md`) held three of its lines. `git diff` takes every change in a
+file, so those lines moved to the wrong branch and left the main checkout. A per-file read of the moved diff found
+them, and they were put back by hand.
+- **Why missed:** the move script checked that the files were this session's, not that each hunk was.
+- **Prevent:** before a patch move, list each named file's changed lines (`git diff -U0 -- <file>`) and compare them
+  with what this session wrote; a file with a foreign hunk moves by hand edit, never by whole-file patch. Better:
+  start work that may need its own branch in a worktree from the first edit.
+- **Source:** 1.5.x adopt-pstack-2026-10-24.md, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A skill that wraps a script the model already runs is a description tax that rots (2026-10-08)
+Over seven weeks of transcripts, 21 of 45 skills had no call: the model ran `taom-src.ps1` about 5,100
+times and `lint_docs.py` about 2,100 times directly, and fixed 301 build errors without `/build-fix`.
+Several unused skills had drifted into wrong instructions (`xslt-check` mapped five vanilla files to a
+module that lacks them; `lord-skills` called a merged XSLT lord dead code). The recurring mistakes were
+caught by gates, never by skill text.
+- **Why missed:** skills were added per workflow and never measured, and an unused skill fails silently.
+- **Prevent:** before adding a skill, check whether the model already does the job by running the script;
+  measure Skill-tool calls in the transcripts before keeping one. A gate beats skill text.
+- **Source:** 1.5.x `docs/reviews/skill-usage-audit-2026-10-08.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Compare a repo path from the disk without case
+
+The Gauntlet stretch gate looked up a path from `Directory.EnumerateFiles` in a literal baseline with
+an ordinal comparer. Git tracks `GUI/PreFabs`, the main checkout holds `GUI/Prefabs`, and the worktrees
+hold `GUI/PreFabs`, so the gate passed in a worktree and failed on the main checkout with five false
+offenders. `core.ignorecase` is true, so `git status` shows nothing.
+- **Why missed:** the state list in the lesson above names line endings, new and deleted files, a
+  non-ASCII path, a subfolder, a missing tool and an empty input, but not path case.
+- **Prevent:** a key built from a disk path compares with `OrdinalIgnoreCase`. Run a new path-keyed
+  gate on the main checkout as well as in a worktree.
+- **Source:** 1.5.x `rca-gauntlet-ratchet-case-2026-11-03.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

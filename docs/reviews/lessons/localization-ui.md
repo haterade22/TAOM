@@ -843,3 +843,28 @@ its values back. Damage fixed in the rows but left in the cache returns on the n
   (`NoCachedTranslation_MixesWritingSystems`); a word rule judges each hyphen-separated part of a name, so
   "Bahr al-Yeshm" and "Cigfran-lûth" stay clean.
 - **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 36, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rule written from a crash states the engine version it was checked against (2026-09-04)
+The old gui-ui rule said that adding to `MapInfoVM.SecondaryInfoItems` threw an `IndexOutOfRangeException` in `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` through hardcoded positional indexing. That does not reproduce on the installed v1.4.8: the method holds six `IsGameKeyReleased` branches dispatching to `MapNavigationExtensions.Open*` and never touches `SecondaryInfoItems`, which appears only in `MapInfoVM` across every 1.4.5, 1.4.7 and 1.4.8 dump on the desktop. The claim was read as fact and nearly drove a rewrite of a working feature (five hand-built change-notifying properties, the `IntValue` and `FloatValue` coupling behind `MapBarCustomValueTextWidget`'s value flash, the item layout, the gamepad navigation scope). The exception the comment at the top of `GauntletCareerScreen.cs` refers to was never re-verified after the engine bump and may have come from another mechanism or an older version.
+- **Why missed:** a crash explanation was promoted to a rule without a decompile on the then-installed engine.
+- **Prevent:** state the engine version you verified against when writing a rule from a crash; `/investigate` finds a real root cause for the `GauntletCareerScreen` comment if it matters.
+- **Source:** 1.5.x the "Discouraged, on ownership grounds" paragraph in `.claude/rules/gui-ui.md`, which keeps the shape of the hazard and the dormant-in-practice finding, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Player text names game things as the game shows them, not by their code ids (#910, 2026-10-26)
+Make Tools said "Crafting experience", "the Refinement tab" and "one iron". The game shows the skill as Smithing
+(`DefaultSkills.cs`), the tab as Refine, and the recipe takes one grade, named Iron, of six iron grades. A player
+holding Steel was told to get iron. It also added its own "too tired" line where vanilla's translated one says the same.
+- **Why missed:** the strings were written from `DefaultSkills.Crafting`, `IsInRefinementMode` and `CraftingMaterials.Iron3`.
+- **Prevent:** before writing a string that names a skill, tab, item or rule, find the game's own text for it (the
+  `{=key}` in the engine source or the vanilla prefab) and use that name; if vanilla already has a translated line for
+  the same message on the same screen, use its key and register nothing.
+- **Source:** 1.5.x `rca-smiths-measure-2026-10-26.md` findings 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab gate resolves names the way the engine does: on the runtime type, and for every element kind it reads (#1024, 2026-10-26)
+Gauntlet resolves `A.B` on the runtime value of `A`, so a gate that judged `B` on `A`'s declared type had to skip
+interface-typed `LayoutImp` and accepted any misspelled suffix there. The gate also skipped `VisualDefinition` elements,
+whose loader reads only five attribute names, so four dead `EaseIn` attributes passed.
+- **Why missed:** "not judged" and "structural" looked safe, but each is an unchecked hole, not a pass.
+- **Prevent:** map a known interface property to the type the widget's constructor assigns, fail any other unknown, and
+  check every element kind against the loader that reads it.
+- **Source:** 1.5.x `rca-prefab-attribute-gate-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
