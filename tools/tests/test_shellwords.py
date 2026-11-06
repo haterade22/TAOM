@@ -717,6 +717,153 @@ class GitRepoTests(unittest.TestCase):
         self.assertEqual((r.returncode, r.stdout), (0, b"E:/x\n--\nE:/w\n"))
 
 
+class CommitPlanTests(unittest.TestCase):
+    """commit_plan (#987 item 7): what a `git commit` in the command records, for the doc-drift gate:
+    whether it amends HEAD, and the paths of a path commit (`git commit -- <paths>` records those
+    paths' working copies, not the index)."""
+
+    def plan(self, cmd, tool="Bash"):
+        return sw.commit_plan(cmd, tool)
+
+    def plan_in(self, cwd, cmd, tool="Bash"):
+        return sw.commit_plan(cmd, tool, cwd)
+
+    def test_a_plain_commit_records_the_index(self):
+        self.assertEqual((False, []), self.plan("git commit -m x"))
+
+    def test_amend_is_read(self):
+        self.assertEqual((True, []), self.plan("git commit --amend -m x"))
+        self.assertEqual((True, []), self.plan("git commit --amend --no-edit"))
+
+    def test_paths_after_double_dash(self):
+        self.assertEqual((False, ["a.md", "docs/b.md"]), self.plan("git commit -m x -- a.md docs/b.md"))
+
+    def test_a_path_that_looks_like_an_option_after_double_dash_is_a_path(self):
+        self.assertEqual((False, ["./-a.md"]), self.plan("git commit -m x -- -a.md"))
+
+    def test_paths_after_the_message_without_double_dash(self):
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -m x a.md"))
+        self.assertEqual((False, ["a.md"]), self.plan("git commit a.md -m x"))
+
+    def test_option_values_are_not_paths(self):
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -F msg.txt a.md"))
+        self.assertEqual((False, ["a.md"]), self.plan("git commit --message=x --author 'A <a@b>' a.md"))
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -m 'has -- inside' a.md"))
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -mx a.md"))
+
+    def test_a_bundle_ending_in_m_takes_the_next_word_as_its_message(self):
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -sm 'msg words' a.md"))
+
+    def test_all_with_paths_is_not_a_path_commit(self):
+        self.assertEqual((False, []), self.plan("git commit -am x a.md"))
+        self.assertEqual((False, []), self.plan("git commit -a -m x -- a.md"))
+
+    def test_include_with_paths_is_not_a_path_commit(self):
+        self.assertEqual((False, []), self.plan("git commit -i -m x a.md"))
+
+    def test_amend_with_paths_is_both(self):
+        self.assertEqual((True, ["a.md"]), self.plan("git commit --amend -m x -- a.md"))
+
+    def test_a_heredoc_message_is_not_a_path(self):
+        cmd = "git commit -F - -- a.md <<'EOF'\nsubject\n\nbody -- b.md\nEOF"
+        self.assertEqual((False, ["a.md"]), self.plan(cmd))
+
+    def test_a_substitution_heredoc_message_is_a_value(self):
+        cmd = 'git commit -m "$(cat <<\'EOF\'\nsubject\nEOF\n)" b.md'
+        self.assertEqual((False, ["b.md"]), self.plan(cmd))
+
+    def test_two_commits_with_one_plain_judge_the_index(self):
+        self.assertEqual((False, []), self.plan("git commit -m a x.md && git commit -m b"))
+
+    def test_two_path_commits_judge_the_union(self):
+        self.assertEqual((False, ["x.md", "y.md"]), self.plan("git commit -m a x.md && git commit -m b y.md"))
+
+    def test_amend_in_any_commit_counts(self):
+        self.assertEqual((True, []), self.plan("git commit -m a && git commit --amend --no-edit"))
+
+    def test_the_dash_C_option_takes_a_value(self):
+        self.assertEqual((False, ["a.md"]), self.plan("git commit -C HEAD a.md"))
+
+    def test_powershell_text_is_read_too(self):
+        self.assertEqual((False, ["docs/a.md"]), self.plan("git commit -m x -- docs/a.md", "PowerShell"))
+        self.assertEqual((True, []), self.plan("GIT commit --amend --no-edit", "PowerShell"))
+
+    def test_other_subcommands_and_no_commit_read_as_nothing(self):
+        self.assertEqual((None, []), self.plan("git status"))
+        self.assertEqual((None, []), self.plan("git log -- a.md"))
+
+    def test_a_commit_the_reader_cannot_see_is_unknown(self):
+        for cmd in ("eval 'git commit --amend --no-edit'", "xargs git commit --amend", "exec git commit --amend"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual((None, []), self.plan(cmd))
+
+    def test_a_relative_path_starting_with_a_dash_gets_a_dot_slash(self):
+        self.assertEqual((False, ["./-x.md"]), self.plan("git commit -m x -- -x.md"))
+
+    def test_a_clobber_redirection_is_not_a_path(self):
+        for cmd in ("git commit -m x >| out.txt", "git commit -m x 2>| err.txt", "git commit -m x >|out.txt",
+                    "git commit -m x --fil msg.txt", "git commit -m x --templ t.txt",
+                    "git commit --templ t.txt -m x"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual((False, []), self.plan(cmd))
+
+    def test_a_redirection_is_not_a_path(self):
+        for cmd in ("git commit -m x 2>&1", "git commit -m x 2>/dev/null", "git commit -m x &>/dev/null",
+                    "git commit -m x 1>&2", "git commit -m x > out.txt", "git commit -m x >> out.txt",
+                    "git commit -m x 2>&1 | tail -3", "git commit -m x < in.txt",
+                    "git commit -m x >| out.txt"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual((False, []), self.plan(cmd))
+        for cmd in ("git commit -m x *> $null", "git commit -m x 2> err.txt",
+                    "git commit -m x 2>&1 | Select-Object -Last 8"):
+            with self.subTest(cmd=cmd):
+                self.assertEqual((False, []), self.plan(cmd, "PowerShell"))
+
+    def test_a_redirection_beside_paths_keeps_only_the_paths(self):
+        self.assertEqual((False, ["docs/a.md"]), self.plan("git commit -m x -- docs/a.md 2>&1"))
+        self.assertEqual((False, ["docs/a.md"]), self.plan("git commit -m x 2>/dev/null -- docs/a.md"))
+        self.assertEqual((False, ["docs/a.md"]), self.plan("git commit -m x docs/a.md 2> err.txt"))
+        self.assertEqual((False, ["docs/a.md"]), self.plan("git commit -m x -- docs/a.md >| log.txt"))
+
+    def test_a_path_commit_joins_the_call_directory(self):
+        self.assertEqual((False, ["E:/r/docs/reviews/rca-x.md"]),
+                         self.plan_in("E:/r", "cd docs/reviews && git commit -m x -- rca-x.md"))
+        self.assertEqual((False, ["E:/r/docs/reviews/rca-x.md"]),
+                         self.plan_in("E:/r", "git -C docs/reviews commit -m x -- rca-x.md"))
+        self.assertEqual((False, ["E:/r/docs/rca-x.md"]), self.plan_in("E:/r/docs", "git commit -m x rca-x.md"))
+
+    def test_a_path_that_starts_with_a_dash_is_absolute_when_the_directory_is_known(self):
+        self.assertEqual((False, ["E:/r/-x.md"]), self.plan_in("E:/r", "git commit -m x -- -x.md"))
+
+    def test_an_absolute_path_stands_alone(self):
+        self.assertEqual((False, ["E:/o/a.md"]), self.plan_in("E:/r", "git commit -m x -- E:/o/a.md"))
+
+    def test_cli_mode_reads_the_payload_cwd(self):
+        payload = json.dumps({"tool_name": "Bash", "cwd": "E:/r/docs",
+                              "tool_input": {"command": "git commit -m x -- a.md"}})
+        self.assertEqual(b"new\nE:/r/docs/a.md\n", run_cli("commit-plan", payload.encode("ascii")).stdout)
+
+    def test_cli_mode_prints_amend_or_new_then_one_path_per_line(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git commit --amend -m x -- a.md b.md"}})
+        r = run_cli("commit-plan", payload.encode("ascii"))
+        self.assertEqual((0, b"amend\na.md\nb.md\n"), (r.returncode, r.stdout))
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git commit -m x"}})
+        self.assertEqual(b"new\n", run_cli("commit-plan", payload.encode("ascii")).stdout)
+
+    def test_a_command_too_long_to_read_is_unknown(self):
+        big = "git commit -m " + "x" * (sw.REPO_SCAN_MAX + 1)
+        self.assertEqual((None, []), self.plan(big))
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": big}})
+        self.assertEqual(b"unknown\n", run_cli("commit-plan", payload.encode("ascii")).stdout)
+
+    def test_cli_mode_on_bad_json_prints_unknown(self):
+        self.assertEqual(b"unknown\n", run_cli("commit-plan", b"{").stdout)
+
+    def test_cli_mode_on_an_unread_commit_prints_unknown(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "eval 'git commit --amend'"}})
+        self.assertEqual(b"unknown\n", run_cli("commit-plan", payload.encode("ascii")).stdout)
+
+
 class CliTests(unittest.TestCase):
     def test_posix_mode_writes_utf8_with_lf_only(self):
         payload = json.dumps({"tool_name": "PowerShell",

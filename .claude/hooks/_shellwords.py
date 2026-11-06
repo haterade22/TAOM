@@ -5,7 +5,7 @@ to_posix() rewrites it as the POSIX-shell (Bash) text of the same command, and e
 Bash logic. In both shells a git named by a path or in capitals (GIT, git.exe, a Windows path to
 git.exe) becomes `git` where it is the command.
 
-Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand] < the hook payload (JSON)
+Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan < the hook payload (JSON)
   posix     the command as POSIX-shell text
   commands  the posix text split at ; & | and newlines outside quotes (a # comment dropped), each
             segment from its command word on, one per line (#985): past VAR=value, shell grammar
@@ -25,6 +25,10 @@ Usage: <python> _shellwords.py posix|commands [--blind]|verdict [protected...]|g
   git-repo  the directory of every `git <subcommand>` (default commit) in the command, one per line
             (a cd or -C before it joined onto the payload's cwd, or the cwd), then a line `--`, then
             the payload's cwd (_pybin.sh taom_git_repo_dir resolves each to its work tree's top level)
+  commit-plan  what the `git commit` calls record, for check-doc-config-drift.sh (#987): a first line
+            `amend` when any call amends HEAD, else `new`; then, when every call is a path commit
+            (`git commit -m x -- <paths>`, or paths after the message, without -a or -i), one path per
+            line, which the commit records from the working copy, not the index
 It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShell text it cannot
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
@@ -977,6 +981,83 @@ def git_call_dirs(cmd, tool, cwd, subcommand="commit"):
     return dirs
 
 
+# `git commit` options that take a value in the next word (glued, or after `=` for a long one, it is
+# part of the same word). -S, -u and --gpg-sign take an optional value that only glues, so they are
+# not listed.
+COMMIT_VALUE_SHORT = "mFCct"
+COMMIT_VALUE_LONG = {"--message", "--file", "--author", "--date", "--reuse-message", "--reedit-message",
+                     "--template", "--cleanup", "--fixup", "--squash", "--trailer", "--pathspec-from-file"}
+
+
+REDIRECT_CHARS = set("<>&")                  # FD_PREFIX (above) is the fd in front: 2>&1, 2>/dev/null, *>; a trailing | is the clobber `>|`
+
+
+def _commit_args(args):
+    """(amend, all_or_include, paths) of one `git commit`'s arguments (the words after `commit`)."""
+    amend = every = only_paths = False
+    paths = []
+    i, n = 0, len(args)
+    while i < n:
+        w = args[i]
+        i += 1
+        if (w in FD_PREFIX or w.isdigit()) and i < n and args[i] and set(args[i].rstrip("|")) <= REDIRECT_CHARS:
+            continue                                  # the fd in front of a redirection, not a path
+        if w.rstrip("|") and set(w.rstrip("|")) <= REDIRECT_CHARS:   # >, >>, >&, &>, <, <<<, >|: skip its target too
+            i += 1
+        elif only_paths:
+            paths.append(w)
+        elif w == "--":
+            only_paths = True
+        elif w == "--amend":
+            amend = True
+        elif w in ("--all", "--include"):
+            every = True
+        elif w.startswith("--"):
+            if "=" not in w and len(w) > 2 and any(o.startswith(w) for o in COMMIT_VALUE_LONG):   # abbreviations too
+                i += 1
+        elif w.startswith("-") and len(w) > 1:
+            for k, ch in enumerate(w[1:], 1):
+                if ch in "ai":
+                    every = True
+                elif ch in COMMIT_VALUE_SHORT:
+                    if k == len(w) - 1:               # the value is the next word
+                        i += 1
+                    break
+        else:
+            paths.append(w)
+    return amend, every, paths
+
+
+def commit_plan(cmd, tool, cwd=""):
+    """(amend, paths) for the `git commit` calls in this tool call: whether any amends HEAD, and the
+    paths to judge by their working copies. A call with paths and neither -a nor -i is a path commit
+    (`git commit -m x -- <paths>` or `git commit -m x <paths>`: git records those paths' working
+    copies, not the index); paths are returned only when every call is one, else the index is what
+    the commit records and the list is empty. A path is joined onto the directory its call runs in
+    (the payload's cwd, moved by the call's cd or -C) and comes back absolute with forward slashes,
+    so the caller can read it from anywhere; with no directory known it is as typed (a leading `-`
+    gets `./`). amend is None when the command is too long to read, or holds no commit call the
+    reader can see: the caller falls back to its raw text."""
+    text, bodies = strip_heredocs(to_posix(cmd, tool))
+    if len(text) > REPO_SCAN_MAX:
+        return None, []
+    amend, paths, plain, calls = False, [], False, 0
+    for args, repo in git_invocations(decode_ansi_c(text), bodies, "commit", cwd or None, partial=True):
+        calls += 1
+        call_amend, every, call_paths = _commit_args(args)
+        amend = amend or call_amend
+        if every or not call_paths:
+            plain = True
+        else:
+            for p in call_paths:
+                p = join_dir(repo, p).replace("\\", "/") if repo else "./" + p if p.startswith("-") else p
+                if p not in paths:
+                    paths.append(p)
+    if not calls:                                # eval, xargs, exec: a commit the reader cannot see
+        return None, []
+    return amend, ([] if plain else paths)
+
+
 def read_payload(raw):
     """(tool_name, tool_input.command) of a hook payload, empty strings where it holds none; None when
     it is no JSON object."""
@@ -1002,8 +1083,8 @@ def read_cwd(raw):
 
 def main(argv):
     mode = argv[1] if len(argv) > 1 else ""
-    if mode not in ("posix", "commands", "verdict", "git-repo"):
-        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand] < payload.json\n")
+    if mode not in ("posix", "commands", "verdict", "git-repo", "commit-plan"):
+        sys.stderr.write("usage: _shellwords.py posix|commands [--blind]|verdict [protected...]|git-repo [subcommand]|commit-plan < payload.json\n")
         return 2
     raw = sys.stdin.buffer.read().decode("utf-8", "replace")
     payload = read_payload(raw)
@@ -1015,6 +1096,13 @@ def main(argv):
         except Exception:                    # never worse than the cwd alone
             dirs = []
         text = "\n".join([d.replace("\n", "") for d in dirs] + ["--", cwd.replace("\n", "")])
+    elif mode == "commit-plan":
+        try:
+            amend, paths = commit_plan(cmd, tool, read_cwd(raw))
+        except Exception:                    # never worse than the raw text of the command
+            amend, paths = None, []
+        head = "unknown" if amend is None else "amend" if amend else "new"
+        text = "\n".join([head] + [p.replace("\n", "") for p in paths])
     elif mode == "verdict" and payload is None:
         text = "unread"
     elif mode == "verdict":

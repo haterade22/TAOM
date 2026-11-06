@@ -90,6 +90,20 @@ another cell counts.
 - **Not wired to the commit hook on this line yet.** `check-doc-config-drift.sh` does not run for a
   commit that stages only an RCA and does not pass `--staged`; that half waits for the hook work of
   plan 103.
+- **What the hook passes (#987).** `--staged` judges the index against `HEAD`. A `git commit --amend`
+  records the index against `HEAD~1` (the empty tree for a root commit), so the hook adds
+  `--dash-base`. A path commit (`git commit -m x -- <paths>`, or paths after the message without
+  `-a` or `-i`) records those paths' working copies, so the hook adds `--only-paths <paths>` (joined
+  onto the directory the call runs in and passed absolute) and the check reads them from the working
+  tree. A redirection (`2>&1`, `>| file`) is no path, and paths that change nothing leave the index
+  as the base. A directory path is relevant only through the files changed in it
+  (`git diff --name-only HEAD -- <paths>`). The hook reads the command with `_shellwords.py
+  commit-plan`; a command it cannot read (`eval`, `xargs git commit`, over the scan limit) falls back
+  to the raw `--amend` text.
+- **Not checked (known limits).** `git commit -i`/`--include` and `--pathspec-from-file` are judged as
+  index commits. More than about 450 named paths exceed the Windows argument limit and fall back to
+  the index. A path amend (`--amend -- <paths>`) is judged on its paths alone, so HEAD's lines in
+  other files are not re-checked.
 - **A base git cannot resolve** (a mistyped `--dash-base`) exits 2 before any check runs, with a
   note on stderr and no summary block. A `git-diff-failed` finding remains for a diff that fails on
   a resolvable base (repository damage such as a broken index or a missing object): the dash and
@@ -185,6 +199,8 @@ python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
 python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 8, the pre-commit gate
 python tools/lint_docs.py --drift-only    # only checks 5 to 8, the commit hook's mode (under a second)
 python tools/lint_docs.py --fail-on-drift --staged   # check 8 reads the index
+python tools/lint_docs.py --drift-only --staged --dash-base HEAD~1   # what the hook runs for an amend
+python tools/lint_docs.py --drift-only --staged --only-paths docs/reviews/rca-x.md   # a path commit
 python tools/lint_docs.py --drift-only --also-new docs/features/x.md   # a doc a pending git add will add
 ```
 
@@ -205,7 +221,7 @@ before treating it as an all-clear.
 | `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | 23 unit tests over synthetic repo trees |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
-| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged`, also for a commit staging only an RCA |
+| `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged` (plus `--dash-base HEAD~1` for an amend and `--only-paths` for a path commit) when a commit stages or names a file the gating checks read, an RCA included, and quotes every `## ` section of the report except `size-warn` lines (`tools/test_hooks.sh` 5d pins that list to the entry docs and to the RCA glob) |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 

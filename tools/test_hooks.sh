@@ -1412,8 +1412,8 @@ for d in "$PRJ_WT" "$PRJ_FOREIGN"; do
     printf '# a\n' > "$d/docs/features/a.md"
     git -C "$d" add docs/features/a.md 2>/dev/null
 done
-drift_run() {   # $1 the payload cwd
-    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git commit -m x"},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" \
+drift_run() {   # $1 the payload cwd, $2 the command (default: a plain commit)
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "${2:-git commit -m x}" \
         | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 30 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" 2>/dev/null
 }
 OUT=$(drift_run "$(cygpath -m "$PRJ_WT/sub" 2>/dev/null || echo "$PRJ_WT/sub")")
@@ -1452,7 +1452,187 @@ fi
 grep -q -- '--drift-only --staged' "$PRJ_WT/tools/ran.txt" 2>/dev/null \
     && ok "check-doc-config-drift asks the linter to read the index (--drift-only --staged)" \
     || bad "check-doc-config-drift did not pass --drift-only --staged: $(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)"
+grep -qF 'docs/features/*.md)' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && ok "check-doc-config-drift's relevance list covers the feature docs the verify-section check reads" \
+    || bad "check-doc-config-drift's relevance list misses docs/features/*.md"
+grep -qF 'Run: python tools/lint_docs.py " + sys.argv[1]' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && grep -qF '"${LINT_ARGS[*]}"' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && ok "check-doc-config-drift timeout message quotes the arguments it ran with" \
+    || bad "check-doc-config-drift timeout message does not quote the arguments it ran with (LINT_ARGS)"
 git -C "$PRJ_WT" reset -q 2>/dev/null
+# What the commit records (#987): an amend is judged against HEAD's parent (the empty tree when HEAD is the
+# root commit), and a path commit (`git commit -m x -- <paths>`) judges the named paths' working copies.
+PRJ_WT_M=$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")
+RCA_REL=docs/reviews/rca-x-2026-10-23.md
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" ]] \
+    && ok "check-doc-config-drift: a plain commit passes exactly --drift-only --staged" \
+    || bad "check-doc-config-drift: a plain commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base 4b825dc642cb6eb9a060e54bf8d69288fbee4904" ]] \
+    && ok "check-doc-config-drift: an amend of the root commit is judged against the empty tree" \
+    || bad "check-doc-config-drift: a root amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q --allow-empty -m second 2>/dev/null
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
+    && ok "check-doc-config-drift: an amend is judged against HEAD~1" \
+    || bad "check-doc-config-drift: an amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m '--amend notes'")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" ]] \
+    && ok "check-doc-config-drift: --amend inside a message does not make an amend" \
+    || bad "check-doc-config-drift: a message holding --amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# A path commit records tracked files (git refuses an untracked path): commit both docs, then edit them.
+git -C "$PRJ_WT" add "$RCA_REL" docs/features/a.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m base 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x")
+[[ ! -e "$PRJ_WT/tools/ran.txt" && "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift: a plain commit with nothing staged runs no linter" \
+    || bad "check-doc-config-drift ran the linter for an empty index"
+# A directory path lists what changed in it, so a feature doc it merely holds is no reason to run.
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- docs/features")
+[[ ! -e "$PRJ_WT/tools/ran.txt" && "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift: a directory path commit touching no gate surface runs no linter" \
+    || bad "check-doc-config-drift ran the linter for a directory path with no change in it: $(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)"
+printf '# rca\nFOLLOW-UP bare.\n' > "$PRJ_WT/$RCA_REL"
+printf '# a\nedited\n' > "$PRJ_WT/docs/features/a.md"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- $RCA_REL")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: a path commit judges the named path's working copy (--only-paths)" \
+    || bad "check-doc-config-drift: a path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# The deny quotes what ran, and a path commit's fix is the file, not the index.
+grep -qF -- "--only-paths $PRJ_WT_M/$RCA_REL" <<< "$OUT" && grep -qF 'in the file itself' <<< "$OUT" \
+    && ! grep -qF 're-stage' <<< "$OUT" \
+    && ok "check-doc-config-drift: a path commit's deny quotes --only-paths and says to fix the file" \
+    || bad "check-doc-config-drift: a path commit's deny quoted the wrong reproduction: $(printf '%s' "$OUT" | head -c 300)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -a -m x $RCA_REL")
+[[ ! -e "$PRJ_WT/tools/ran.txt" ]] \
+    && ok "check-doc-config-drift: -a with paths is no path commit" \
+    || bad "check-doc-config-drift read -a with a path as a path commit"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- docs/features/a.md")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/docs/features/a.md --also-new docs/features/a.md" ]] \
+    && ok "check-doc-config-drift: a path commit of an edited feature doc runs the linter" \
+    || bad "check-doc-config-drift: a feature-doc path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# A redirection is no path: `2>&1` once read as the paths 2, >& and 1, which named no file, so the
+# gate found nothing relevant and allowed a staged bare FOLLOW-UP. `>|` too, beside a file that exists.
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+printf 'x\n' > "$PRJ_WT/out.txt"
+for redir in "2>&1" "2>/dev/null" "&>/dev/null" "2>&1 | tail -3" ">| out.txt"; do
+    OUT=$(drift_run "$PRJ_WT_M" "git commit -m x $redir")
+    [[ "$(decision_of "$OUT")" == deny ]] \
+        && ok "check-doc-config-drift: 'git commit -m x $redir' still judges the staged RCA" \
+        || bad "check-doc-config-drift allowed a staged RCA behind '$redir': $(printf '%s' "$OUT" | head -c 160)"
+done
+# Paths that change nothing: the index is judged, as before paths were read.
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- no-such-file.md")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: paths naming no file fall back to the index" \
+    || bad "check-doc-config-drift: a path naming no file passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# A path is read from the call's directory, not the top level. The bare line is only in the working
+# copy here (index reset), so only a correctly resolved --only-paths value can deny.
+git -C "$PRJ_WT" reset -q 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "cd docs/reviews && git commit -m x -- ${RCA_REL##*/}")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: a path commit from a subdirectory resolves its path there" \
+    || bad "check-doc-config-drift: a subdirectory path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git -C docs/reviews commit -m x -- ${RCA_REL##*/}")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: git -C into a subdirectory resolves a path there" \
+    || bad "check-doc-config-drift: a git -C path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+# An amend with the RCA in HEAD (nothing staged), behind a redirection, behind an eval the reader cannot
+# see into, and as a command too long to read: each passes HEAD~1 as the base.
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m rca "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit 2>&1")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: an amend behind 2>&1 still judges HEAD's RCA against HEAD~1" \
+    || bad "check-doc-config-drift: an amend behind 2>&1 passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+grep -qF -- '--dash-base HEAD~1' <<< "$OUT" && grep -qF 're-stage' <<< "$OUT" \
+    && ok "check-doc-config-drift: an amend's deny quotes --dash-base HEAD~1" \
+    || bad "check-doc-config-drift: an amend's deny quoted the wrong reproduction: $(printf '%s' "$OUT" | head -c 300)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "eval 'git commit --amend --no-edit'")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: an amend the reader cannot see (eval) falls back to the raw --amend" \
+    || bad "check-doc-config-drift: an eval amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+"$HPY" - "$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")" <<'PY' \
+    | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 30 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" > "$SANDBOX/drift-big.out" 2>/dev/null
+import json, sys
+cmd = "git commit --amend --no-edit -m \"" + "x" * 300000 + "\""
+sys.stdout.write(json.dumps({"tool_name": "Bash", "tool_input": {"command": cmd}, "cwd": sys.argv[1], "hook_event_name": "PreToolUse"}))
+PY
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
+    && ok "check-doc-config-drift: an amend over the scan limit falls back to the raw --amend" \
+    || bad "check-doc-config-drift: an over-long amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# Clear the index the amend and path-commit cases left before the same-command `git add` cases, which
+# replace the stub linter with the real one.
+# `git add <doc> && git commit` in ONE command: the doc is not staged when the hook runs, so the hook
+# reads the command text and hands each docs/features/*.md token to the linter as --also-new. The
+# real linter runs here (its CLAUDE.md budget and version checks stubbed out, as the unit tests do).
+cat > "$PRJ_WT/tools/lint_docs.py" <<'REALWRAP'
+import os, pathlib, sys
+sys.path.insert(0, os.environ["TAOM_REAL_TOOLS"])
+import lint_docs as ld
+ld.REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+ld.DOC_ROOTS = [ld.REPO_ROOT / "docs"]
+ld.check_claude_md_budget = lambda: []
+ld.check_version_consistency = lambda: []
+sys.exit(ld.main(sys.argv[1:]))
+REALWRAP
+export TAOM_REAL_TOOLS; TAOM_REAL_TOOLS=$(cygpath -m "$REPO/tools" 2>/dev/null || echo "$REPO/tools")
+drift_cmd() {   # $1 the command text, $2 the payload cwd
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"cwd":sys.argv[2],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 40 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" 2>/dev/null
+}
+PRJ_WT_M=$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")
+rm -f "$PRJ_WT/tools/ran.txt" "$PRJ_WT/docs/reviews/rca-x-2026-10-23.md"
+printf '# new thing\n\nText, no verify heading.\n' > "$PRJ_WT/docs/features/x.md"
+OUT=$(drift_cmd "git add docs/features/x.md && git commit -m m" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'no-verify-section' <<< "$OUT" \
+    && ok "check-doc-config-drift denies 'git add <new feature doc> && git commit' when the doc lacks the verify section" \
+    || bad "check-doc-config-drift missed a same-command git add of a feature doc with no verify section: $(printf '%s' "$OUT" | head -c 200)"
+printf '# new thing\n\n## How to verify in game\n\nNot applicable: tooling.\n' > "$PRJ_WT/docs/features/x.md"
+OUT=$(drift_cmd "git add docs/features/x.md && git commit -m m" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift allows 'git add <new feature doc> && git commit' once the verify section exists" \
+    || bad "check-doc-config-drift blocked a same-command git add of a feature doc that has the verify section: $(printf '%s' "$OUT" | head -c 200)"
+rm -f "$PRJ_WT/docs/features/x.md"
+# An amend judges what HEAD itself added: a feature doc committed without the verify section is
+# denied by `git commit --amend -m x` although nothing is staged (the linter reads HEAD~1..index).
+git -C "$PRJ_WT" reset -q 2>/dev/null
+printf '# new thing\n\nText, no verify heading.\n' > "$PRJ_WT/docs/features/y.md"
+git -C "$PRJ_WT" add docs/features/y.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m 'add y' 2>/dev/null
+OUT=$(drift_cmd "git commit --amend -m x" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'no-verify-section' <<< "$OUT" \
+    && ok "check-doc-config-drift denies an amend of a commit that added a feature doc without the verify section" \
+    || bad "check-doc-config-drift missed an amend of a commit that added a feature doc with no verify section: $(printf '%s' "$OUT" | head -c 200)"
+printf '# new thing\n\n## How to verify in game\n\nNot applicable: tooling.\n' > "$PRJ_WT/docs/features/y.md"
+git -C "$PRJ_WT" add docs/features/y.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q --amend -m 'add y' 2>/dev/null
+OUT=$(drift_cmd "git commit --amend -m x" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift allows an amend of a commit that added a feature doc with the verify section" \
+    || bad "check-doc-config-drift blocked an amend of a commit whose feature doc has the verify section: $(printf '%s' "$OUT" | head -c 200)"
+git -C "$PRJ_WT" reset -q --hard HEAD~1 2>/dev/null
+unset TAOM_REAL_TOOLS
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# session-start.sh's three bounded probes share one deadline from its first command (Codex review
 # The subject gate reads the <Version> of the repository the session works in, the payload's cwd.
 SUBJ_WT="$SANDBOX/subj-wt"
 mkdir -p "$SUBJ_WT/Main/_Module"
