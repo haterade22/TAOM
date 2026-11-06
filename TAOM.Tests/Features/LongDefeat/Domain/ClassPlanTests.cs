@@ -105,6 +105,24 @@ public class ClassPlanTests
         Assert.AreEqual(expected, ClassPlan.Choose(Three(), null, seed, bot: true)!.Id);
     }
 
+    // The shipped offer since Slice 11: the three foot classes and Cavalry, so the bot's draw is Below(4). The same seeds and answers are pinned in test_run_long_defeat.py
+    // (test_the_bots_class_is_pinned_to_the_games_vectors), which reads the order from classes.json.
+    [DataTestMethod]
+    [DataRow(0UL, "sword_and_board")]
+    [DataRow(1UL, "archer")]
+    [DataRow(2UL, "cavalry")]
+    [DataRow(3UL, "archer")]
+    [DataRow(4UL, "two_handed")]
+    [DataRow(5UL, "cavalry")]
+    [DataRow(6UL, "archer")]
+    [DataRow(7UL, "archer")]
+    public void Choose_TheBotsPick_OverTheShippedFour_IncludesCavalry_AndIsPinnedToThePythonReplay(ulong seed, string expected)
+    {
+        var shipped = new[] { Class("sword_and_board"), Class("two_handed"), Class("archer"), Class("cavalry", mounted: true) };
+
+        Assert.AreEqual(expected, ClassPlan.Choose(shipped, null, seed, bot: true)!.Id);
+    }
+
     [TestMethod]
     public void Choose_AnUnknownClass_FallsBackLikeNoRequest()
     {

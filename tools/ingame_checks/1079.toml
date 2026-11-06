@@ -209,8 +209,8 @@ fail = ['\[Check\] id=taom\.long-defeat\.boon result=fail']
 # A troop or class boon with a stat or health key also ends the line with read=pass, read=skip (no soldier of its target stood) or read=fail: a soldier of the target, read right after the refresh,
 # holds its health limit at the combined factor and each driven property at its baseline changed by the summed percent. The first pack of that group spawned after the pick is read the same way
 # and written as its own line of this check (key p<N>-<group>, read=spawned), which the pass pattern leaves alone and a fail line fails.
-# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --seed 4 (the lord's draw speed). Slice 7 added a Legend row, which moved every draw, so these seeds are not Slice 6's. With all eight affixes rolling (Slice 9) their wave 5 is blades (seeds 33 and 4) and lash (seed 22): the first two also write a blades line.
-# The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run: a cavalry boon (seeds 27, 28, 32) reads skip with reason=no-soldier. Cavalry speed and health belong to the human row below.
+# Seeds whose first offer holds a troop boon the bot takes (it rerolls once, then takes the first card without a drawback): --waves 5 --seed 33 (infantry health), --waves 5 --class archer --seed 22 (archers' aim error and draw speed), --waves 5 --class archer --seed 4 (the lord's draw speed), --waves 5 --seed 29 (a Cavalry run: the bot's draw from seed 29 is cavalry and its first pick is Gallop of the Eorlingas, a player move speed boon, so the read-back samples the lord and his horse). The pass only proves the horse when the lord still had one at the pick: read the `[Check] ... boon ... read=standing target=player` line and confirm a MountSpeed part is on it, because the read-back drops the horse expectation when none stood and still writes read=pass (the horse can die in waves 1 to 3, and with no sally block nothing remounts him). Slice 7 added a Legend row, which moved every draw, and Slice 11 added a fourth class, which moved every unarmed seed's class draw from Below(3) to Below(4), so these seeds are not Slice 6's: seed 4 now needs --class archer. With all eight affixes rolling (Slice 9) their wave 5 is blades (seeds 33 and 4) and lash (seeds 22 and 29): the first two also write a blades line.
+# The unattended bot buys the first offer of the slot it wants (militia or yeomen), so no rider ever stands in its run, and the mounted lord is the player record, never a cavalry soldier: a cavalry troop boon reads skip with reason=no-soldier even in a Cavalry run (seed 19 draws cavalry and takes Fleet Horses of the Mark; that proves the troop row can be taken and nothing about a horse). The horse of the lord is read through the player boons of the Cavalry class (seed 29). The drums sample on a horse stays unbuilt: the attackers spawn on foot.
 # The unattended bot takes a pick at the start of the intermission after the third clear, so a session that stopped at or before that clear reads NOT REACHED.
 absence = "not-reached"
 
@@ -226,12 +226,12 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.class"
-needs = "a run with a class (every run has one: --class archer --waves 2, or --class all --runs 3 for the three foot classes)"
+needs = "a run with a class (every run has one: --class archer --waves 2, --class cavalry --waves 3 for the mounted class, or --class all --runs 4 for all four)"
 reached = ['\[Check\] id=taom\.long-defeat\.boot result=pass', 'LongDefeatConfigCatalog: classes\.json: ']
 pass = ['\[Check\] id=taom\.long-defeat\.class result=pass class=\S+ mounted=(true|false) ']
 fail = ['\[Check\] id=taom\.long-defeat\.class result=fail']
 # Written by LongDefeatDirector.Player.cs after each spawn of the lord, key <mission> at the start and <mission>-d<N> at a respawn: the kit's slots read back from his spawn equipment (an empty slot reads back empty), the horse
-# slots cleared and no mount for a foot class, no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
+# slots cleared and no mount for a foot class, a horse under him (has_mount=true) and the kit's horse and harness read back for the mounted class (Cavalry), no slot the engine refused (an unknown item, one that does not fit), and no fall back to his own gear. A booted run of a build that read classes.json (every read writes a LongDefeatConfigCatalog line, so a build from before Slice 5 never matches the second reached pattern and reads NOT REACHED) whose lord spawned with no class line is a FAIL.
 absence = "fail"
 
 [[check]]
@@ -258,7 +258,7 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.sally"
-needs = "a mounted class on a fortress whose fortresses.json row has a recorded sally block (Slice 11 ships the class; until then only a hand-edited classes.json row marked mounted reaches it, because the catalog swaps an unoffered class for one on offer)"
+needs = "a Cavalry run (--class cavalry --waves 3) on a fortress whose fortresses.json row has a recorded sally block. With no block, as at Slice 11, each wave writes a skip with reason=no-sally-point (the lord rides from Begin) and run_long_defeat.py accepts that skip, for that reason alone, in place of the pass"
 reached = ['\[Check\] id=taom\.long-defeat\.sally result=']
 pass = ['\[Check\] id=taom\.long-defeat\.sally result=pass w=[0-9]+ how=(teleport|remount) mount=yes ']
 fail = ['\[Check\] id=taom\.long-defeat\.sally result=fail']
@@ -270,12 +270,12 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.sally-return"
-needs = "the same run, a wave cleared after a sally"
+needs = "the same run, a wave cleared after a sally. With no sally block each clear writes a skip with reason=no-sally-point, which the judge accepts in place of the pass only while the sally check reads the same"
 reached = ['\[Check\] id=taom\.long-defeat\.sally-return result=']
 pass = ['\[Check\] id=taom\.long-defeat\.sally-return result=pass w=[0-9]+ dist=']
 fail = ['\[Check\] id=taom\.long-defeat\.sally-return result=fail']
 # Written by LongDefeatDirector.Sally.cs at each clear of a wave the lord sallied in, key w<N>: after the teleport home he stands within the keep radius of the home point (the recorded foot muster, else the keep) and no player death was counted since he went out. A skip names why
-# he was not brought home (no-lord, taken-over: his body is a soldier's now).
+# he was not brought home (no-lord, taken-over: his body is a soldier's now, point-unusable: the home point failed its check). With no sally block (Slice 11) the clear also writes a skip, reason=no-sally-point, for the run that rides from Begin, so no sally was made to return from.
 absence = "not-reached"
 
 [[check]]
@@ -344,7 +344,13 @@ claim = "the affix line on the HUD names the running wave's affixes during a wav
 claim = "a troop boon visibly changes the group it names: infantry and cavalry with a health boon already standing, and packs bought afterwards, are tougher; a cavalry speed boon makes riders faster; the lord's class shows on the HUD strip after the wave and on the end panel"
 
 [[human]]
-claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears"
+claim = "the class kit looks right on the lord: the sword and shield, the two-handed axe and the bow with its quiver are in his hands, and no horse appears; for Cavalry the spear, shield, sword and the Rohan rider's armour show on a lord who sits a horse in its harness, and the horse is a new coat at each spawn"
+
+[[human]]
+claim = "the Cavalry boons reach the horse: Gallop of the Eorlingas makes the lord's horse visibly faster at once and again after a respawn or a remount (the horse is built before its rider, so the first moments after a spawn are the ones to watch), Spear of Eorl hits harder and its spear thrusts slower, Oath of Eorl takes more to bring down"
+
+[[human]]
+claim = "a Cavalry lord who loses his horse (killed under him, or knocked off) fights on foot until he falls, because no remount path runs while fortresses.json holds no sally block; Mike decides whether that stands or whether the lord is remounted at the home point at a wave's start (plan D14 and the Slice 13 note)"
 
 [[human]]
 claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"

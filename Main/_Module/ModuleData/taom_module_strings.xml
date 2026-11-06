@@ -4638,6 +4638,8 @@
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Text}Your riders and their horses move 12 percent faster." />
 	<string id="TAOM_LD_Boon_FletchersFavour" text="{=TAOM_LD_Boon_FletchersFavour}Fletcher's Favour" />
 	<string id="TAOM_LD_Boon_FletchersFavour_Text" text="{=TAOM_LD_Boon_FletchersFavour_Text}Your archers hit 15 percent harder." />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas" text="{=TAOM_LD_Boon_GallopOfTheEorlingas}Gallop of the Eorlingas" />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Text" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Text}You and your horse move 15 percent faster." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="{=TAOM_LD_Boon_GlitteringCavesRefuge}Refuge of the Inner Keep" />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Drawback}Every intermission is 15 seconds shorter." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Text" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Text}The keep can hold 30 more defenders." />
@@ -4661,6 +4663,8 @@
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="{=TAOM_LD_Boon_LongbowOfTheMark_Text}Your arrows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_MarksmansCall" text="{=TAOM_LD_Boon_MarksmansCall}The Marksman's Call" />
 	<string id="TAOM_LD_Boon_MarksmansCall_Text" text="{=TAOM_LD_Boon_MarksmansCall_Text}Your archers aim 20 percent truer and draw 10 percent faster." />
+	<string id="TAOM_LD_Boon_OathOfEorl" text="{=TAOM_LD_Boon_OathOfEorl}Oath of Eorl" />
+	<string id="TAOM_LD_Boon_OathOfEorl_Text" text="{=TAOM_LD_Boon_OathOfEorl_Text}You can take 35 percent more punishment before you fall." />
 	<string id="TAOM_LD_Boon_RiddermarkLevy" text="{=TAOM_LD_Boon_RiddermarkLevy}Levy of the Riddermark" />
 	<string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="{=TAOM_LD_Boon_RiddermarkLevy_Text}Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
 	<string id="TAOM_LD_Boon_RidersAtDawn" text="{=TAOM_LD_Boon_RidersAtDawn}Riders at Dawn" />
@@ -4677,6 +4681,9 @@
 	<string id="TAOM_LD_Boon_ShieldwallOath" text="{=TAOM_LD_Boon_ShieldwallOath}Oath of the Shieldwall" />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="{=TAOM_LD_Boon_ShieldwallOath_Drawback}You move 5 percent slower." />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Text" text="{=TAOM_LD_Boon_ShieldwallOath_Text}You take 20 percent less damage." />
+	<string id="TAOM_LD_Boon_SpearOfEorl" text="{=TAOM_LD_Boon_SpearOfEorl}Spear of Eorl" />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Drawback" text="{=TAOM_LD_Boon_SpearOfEorl_Drawback}You swing and thrust 10 percent slower." />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Text" text="{=TAOM_LD_Boon_SpearOfEorl_Text}Your blows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="{=TAOM_LD_Boon_SpearsOfTheWestfold}Spears of the Westfold" />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Text}Your infantry hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_SteadyAim" text="{=TAOM_LD_Boon_SteadyAim}Steady Aim" />
@@ -4705,6 +4712,8 @@
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="{=TAOM_LD_Boon_WeregildOfTheMark_Text}Every foe you cut down pays 30 percent more gold." />
 	<string id="TAOM_LD_Class_Archer" text="{=TAOM_LD_Class_Archer}Archer" />
 	<string id="TAOM_LD_Class_Archer_Text" text="{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in." />
+	<string id="TAOM_LD_Class_Cavalry" text="{=TAOM_LD_Class_Cavalry}Cavalry" />
+	<string id="TAOM_LD_Class_Cavalry_Text" text="{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight." />
 	<string id="TAOM_LD_Class_SwordBoard" text="{=TAOM_LD_Class_SwordBoard}Sword and Board" />
 	<string id="TAOM_LD_Class_SwordBoard_Text" text="{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows." />
 	<string id="TAOM_LD_Class_TwoHanded" text="{=TAOM_LD_Class_TwoHanded}Two Handed Infantry" />
@@ -4783,7 +4792,7 @@
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
 	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
-	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. The rest of your gear stays as it is." />
+	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
 	<string id="TAOM_LD_Rank_Captain" text="{=TAOM_LD_Rank_Captain}Captain" />

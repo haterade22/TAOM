@@ -376,6 +376,71 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
+    public void ShippedClasses_ArmingCavalry_GivesAMountedLoadout_AndTheBotsSeedTwoDrawsIt_WithNoWarning()
+    {
+        var (catalog, logger) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+
+        var armed = catalog.BuildPlan(helms, RunOptions.Default with { ClassId = "cavalry" });
+        var drawn = catalog.BuildPlan(helms, RunOptions.Default with { Autoplay = true, Seed = 2UL });
+
+        Assert.IsTrue(armed.Loadout!.Mounted);
+        Assert.AreEqual("cavalry", armed.Options.ClassId);
+        Assert.AreEqual("cavalry", drawn.Loadout!.ClassId, "the bot's draw for seed 2 over the four shipped classes");
+        logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("class")));
+    }
+
+    // Slice 11: the three Cavalry rows aim at the lord's record, and the move speed one reaches his horse. The stat hook hands a horse its rider's record (a mount resolves
+    // agent.RiderAgent, LongDefeatStatHooks.UpdateStats), and RaceAbilityStatApplier.ApplyMount reads MountSpeedPercent, which the player record copies from move speed.
+    [TestMethod]
+    public void ShippedBoons_TheCavalryRows_AimAtTheLord_AndTheMoveSpeedOneGivesHisHorseTheSamePercent()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var rows = catalog.BuildPlan(helms, RunOptions.Default with { ClassId = "cavalry" }).Boons.Rows.Where(r => r.Category == BoonCategory.Class && r.ClassId == "cavalry").ToList();
+
+        Assert.AreEqual(3, rows.Count);
+        Assert.IsTrue(rows.All(r => r.Effects.Concat(r.Drawback).All(e => e.Target == BoonTarget.Player)), "a mounted lord is the player record, never a cavalry soldier's");
+        var gallop = rows.Single(r => r.Id == "gallop_of_the_eorlingas");
+        var table = RunModifiers.StatTable(AffixPlan.None, new string[0], 1f, new[] { gallop });
+
+        Assert.AreEqual(15f, table.Player.Stats!.MoveSpeedPercent);
+        Assert.AreEqual(15f, table.Player.Stats.MountSpeedPercent, "ApplyMount reads MountSpeedPercent, so the horse runs as much faster as the lord");
+        Assert.AreEqual(0f, table.Cavalry.Stats?.MountSpeedPercent ?? 0f, "the troop record is untouched");
+    }
+
+    // Slice 11 review (engine, F1): the Cavalry kit's spear has no swing attack. Its usage set (Native item_usage_sets.xml, onehanded_polearm_block_long_rshield_thrust, down through
+    // its base_set chain to onehanded_polearm_block_shield_thrust) holds 20 thrust attacks and no strike_type="swing". RaceAbilityStatApplier writes swingSpeedPercent to SwingSpeedMultiplier
+    // only and drawSpeedPercent to ThrustOrRangedReadySpeedMultiplier (the model sets the two separately, CustomBattleAgentStatCalculateModel.cs:213-214, :422-427), so a drawback on the swing
+    // alone never touched the spear. The drawback takes both, and its text says both.
+    [TestMethod]
+    public void ShippedBoons_SpearOfEorl_SlowsTheThrustAsWellAsTheSwing_AndSaysSo()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var spear = catalog.BuildPlan(helms, RunOptions.Default with { ClassId = "cavalry" }).Boons.Rows.Single(r => r.Id == "spear_of_eorl");
+        var table = RunModifiers.StatTable(AffixPlan.None, new string[0], 1f, new[] { spear });
+
+        Assert.AreEqual(-10f, table.Player.Stats!.SwingSpeedPercent);
+        Assert.AreEqual(-10f, table.Player.Stats.DrawSpeedPercent, "the spear thrusts, and a thrust runs on ThrustOrRangedReadySpeedMultiplier");
+        StringAssert.Contains(spear.DrawbackText, "thrust");
+    }
+
+    // Slice 11 review (data flow, trace 11): the only remount path sits after the no-sally-point return in SallyOut, so while fortresses.json records no sally block a lord whose horse dies or
+    // who is knocked off fights on foot until he respawns. The class text may promise a horse for the whole run only once a point is recorded, and the prompt may not say the rest of the gear
+    // stays as it is, because the Cavalry kit sets the armour and the horse too.
+    [TestMethod]
+    public void ShippedClasses_WhileNoSallyBlockIsRecorded_CavalryTextPromisesNoHorseForTheWholeRun()
+    {
+        var (_, offer, _) = ShippedClasses();
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+
+        if (helms.Sally == null)
+            StringAssert.DoesNotMatch(offer.Single(c => c.Id == "cavalry").Text, new System.Text.RegularExpressions.Regex("all run|stays under you"));
+    }
+
+    [TestMethod]
     public void ShippedBoons_ClassAndTroopRows_NameARealClass_AndAimOnlyAtTheirOwnGroup()
     {
         var (catalog, _) = Load();
@@ -449,13 +514,54 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedClasses_AreTheThreeFootClasses_InThePlansOrder_WithNoWarning()
+    public void ShippedClasses_AreTheThreeFootClassesAndCavalry_InThePlansOrder_WithNoWarning()
     {
         var (_, offer, logger) = ShippedClasses();
 
-        CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer" }, offer.Select(c => c.Id).ToArray());
-        Assert.IsTrue(offer.All(c => !c.Mounted), "Cavalry waits for Slices 10 and 11");
+        CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer", "cavalry" }, offer.Select(c => c.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { false, false, false, true }, offer.Select(c => c.Mounted).ToArray(), "only Cavalry rides");
         logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("classes.json")));
+    }
+
+    // The Cavalry kit is one Rohan rider troop's gear: its three weapons, its armour and the horse and harness it rides. The own-gear test above proves each item is some troop's; this
+    // proves they are one troop's, so the class reads as a rider of the Mark and not a mixture. The lancer is the troop whose weapons the plan's row names.
+    [TestMethod]
+    public void ShippedClasses_TheCavalryKit_IsOneRohanRiderTroopsGear_WithAHorseAndItsHarness()
+    {
+        var (_, offer, _) = ShippedClasses();
+        var kit = offer.Single(c => c.Id == "cavalry").Kits["vlandia"].Slots.Where(s => s.ItemId.Length > 0).ToDictionary(s => s.Slot, s => s.ItemId);
+        var rider = Troops()["fow_rohan_eastemnet_eorlingas_lancer"];
+        var carried = rider.Descendants("equipment").ToDictionary(e => (string)e.Attribute("slot")!, e => ((string)e.Attribute("id")!).Replace("Item.", ""));
+
+        Assert.AreEqual("Cavalry", (string)rider.Attribute("default_group")!, "the troop the kit is taken from is a rider");
+        foreach (var slot in new[] { "Item0", "Item1", "Item2", "Head", "Body", "Cape", "Gloves", "Leg", "Horse", "HorseHarness" })
+            Assert.AreEqual(carried[slot], kit[slot], slot + " is the lancer's own");
+        Assert.IsFalse(kit.ContainsKey("Item3"), "the lancer carries no fourth weapon; the kit clears the lord's");
+        Assert.AreEqual("", offer.Single(c => c.Id == "cavalry").Kits["vlandia"].Slots.Single(s => s.Slot == "Item3").ItemId, "the fourth slot is cleared, not left to the lord");
+    }
+
+    // KitSlots has no Item4 (the engine's ExtraWeaponSlot, Equipment.cs:233; banners and the like). A class kit is taken from Fords troops, so the slot is needed only if one of them carries it.
+    // None does (Slice 11 checked), which is why the slot is not added; a troop that gains one makes this fail, and the class that wants it adds the slot to KitSlots and the check's read-back.
+    [TestMethod]
+    public void NoFordsTroopCarriesAnItem4_SoNoClassKitNeedsTheExtraWeaponSlot()
+    {
+        var carriers = Troops().Values.Where(t => t.Descendants("equipment").Any(e => (string?)e.Attribute("slot") == "Item4")).Select(t => (string)t.Attribute("id")!).ToList();
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), carriers, "a Fords troop carries an Item4: " + string.Join(", ", carriers));
+        CollectionAssert.DoesNotContain(KitSlots.Names.ToList(), "Item4");
+    }
+
+    [TestMethod]
+    public void ShippedClasses_TheCavalryLoadout_KeepsItsHorseSlots_WhereAFootClassClearsThem()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var rider = catalog.ClassesFor(helms).Single(c => c.Id == "cavalry").LoadoutFor(helms.DefenderCulture)!;
+        var foot = catalog.ClassesFor(helms).Single(c => c.Id == "archer").LoadoutFor(helms.DefenderCulture)!;
+
+        Assert.IsTrue(rider.Mounted);
+        Assert.IsTrue(rider.Slots.Any(s => s.Slot == "Horse" && s.ItemId.Length > 0) && rider.Slots.Any(s => s.Slot == "HorseHarness" && s.ItemId.Length > 0));
+        Assert.IsTrue(foot.Slots.Where(s => s.Slot is "Horse" or "HorseHarness").All(s => s.ItemId.Length == 0));
     }
 
     [TestMethod]
@@ -581,7 +687,7 @@ public class LongDefeatShippedConfigTests
         var (catalog, _) = Load();
         var helms = catalog.Fortresses.Single(f => f.Id == "helms");
 
-        Assert.AreEqual(3, offer.Count);
+        Assert.AreEqual(4, offer.Count);
         Assert.IsTrue(offer.All(c => c.LoadoutFor(helms.DefenderCulture) != null));
     }
 }

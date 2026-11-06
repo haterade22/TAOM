@@ -301,7 +301,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     // A kit goes on the build data, and the engine reads it before anything else (Mission.cs:4108). The engine still edits the copy it takes (a hero's banner, NoHorses, NoArmor and
     // CannotBePickedUp weapons, Mission.cs:4109-4164), which is why the check reads the body back. GetAgentBuildDataToSpawnTroop sets NoHorses(true) for spawnWithHorse: false (Mission.cs:4468),
-    // so a mounted class passes false there and clears it here: the horse then comes from the kit's Horse slot (Mission.cs:4311), with no mount key (risk 8, read back by the sally line).
+    // so a mounted class keeps passing false there and takes the horse from the kit instead: NoHorses(!mounted) below leaves the kit's Horse slot in place and the engine builds the horse from it
+    // (Mission.cs:4311). spawnWithHorse true is not used: it would read a mount key from the troop's own Horse slot (Mission.cs:4500-4503), the lord's horse and not the kit's. With no key the horse is
+    // still built, only the engine's visual picks a random coat: "if (string.IsNullOrEmpty(mountCreationKeyStr)) mountCreationKeyStr = MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.RandomInt());"
+    // (MountVisualCreator.cs:41-46), so risk 8 is closed and a new horse after a remount is a new coat.
     // A place goes in as a position with its direction: the engine reads the direction of a given position at once (Mission.cs:4498), and a given position skips the formation layout (Mission.cs:4227).
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
         bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false)

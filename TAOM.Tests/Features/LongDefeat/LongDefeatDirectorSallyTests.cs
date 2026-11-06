@@ -396,14 +396,44 @@ public class LongDefeatDirectorSallyTests
     }
 
     [TestMethod]
-    public void NoHomeTeleport_WhenNoSallyWentOut_ThatWave()
+    public void NoHomeTeleport_WhenNoSallyWentOut_ThatWave_AndTheReturnIsASkipThatNamesWhy()
     {
         var rig = new Rig(Rider(), null, FootFrame, stopAfter: 1);
 
         rig.RunToTheEnd();
 
         Assert.AreEqual(0, rig.Field.Teleports.Count);
-        Assert.IsFalse(rig.Outcomes.Lines.Any(l => l.Contains(LongDefeatChecks.SallyReturnId)));
+        Assert.IsFalse(rig.Outcomes.Has("pass", LongDefeatChecks.SallyReturnId) || rig.Outcomes.Has("fail", LongDefeatChecks.SallyReturnId));
+        Assert.AreEqual("w1 w=1 reason=no-sally-point", rig.Check(LongDefeatChecks.SallyReturnId).Single(), "the skip keeps the wave's key");
+    }
+
+    // Tonight no sally point is recorded: a Cavalry run rides from Begin and clears each wave. The judge accepts a sally and a sally-return skip only for this reason, so each clear has to write one.
+    [TestMethod]
+    public void WithNoSallyPointRecorded_EveryWave_WritesASkipForTheSallyAndForTheReturn_BothReadingNoSallyPoint()
+    {
+        var rig = new Rig(Rider(), null, FootFrame, stopAfter: 2);
+
+        rig.RunToTheEnd();
+
+        var sally = rig.Check(LongDefeatChecks.SallyId);
+        var back = rig.Check(LongDefeatChecks.SallyReturnId);
+        Assert.AreEqual(2, sally.Count, string.Join("\n", rig.Outcomes.Lines));
+        Assert.AreEqual(2, back.Count, string.Join("\n", rig.Outcomes.Lines));
+        CollectionAssert.AreEqual(new[] { "w1", "w2" }, back.Select(l => l.Split(' ')[0]).ToArray(), "each clear keys its skip by its wave");
+        Assert.IsTrue(sally.Concat(back).All(l => l.EndsWith("reason=no-sally-point", StringComparison.Ordinal)), string.Join("\n", sally.Concat(back)));
+        Assert.IsTrue(rig.Outcomes.Has("skip", LongDefeatChecks.SallyReturnId));
+        Assert.AreEqual(0, rig.Field.Count("Teleport") + rig.Field.Count("Remount"), "nothing is moved: he rides from Begin");
+    }
+
+    [TestMethod]
+    public void AnUnusableSallyPoint_WritesTheReturnSkipWithItsOwnReason_SoTheJudgeDoesNotWaiveIt()
+    {
+        var rig = MountedRig(stopAfter: 1);
+        rig.Field.PointFacts = place => place.X == 100f ? new LdPointFacts(false, true) : new LdPointFacts(true, true);
+
+        rig.RunToTheEnd();
+
+        StringAssert.Contains(rig.Check(LongDefeatChecks.SallyReturnId).Single(), "reason=point-unusable");
     }
 
     [TestMethod]

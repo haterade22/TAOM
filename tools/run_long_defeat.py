@@ -19,7 +19,8 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 --start-wave 12 --waves 4 stops after 4 clears), --start-rerolls seeds the boon reroll bank (armed as 1 unless given, so a 5-wave run proves
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave and rerolls that were armed; any owner_missing above 0 fails.
-The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only, so a class the game cannot play yet (cavalry) is refused here instead of being replaced by the game.
+The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
+A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
 The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
@@ -93,16 +94,21 @@ AFFIX_EFFECT_CHECK = "affix-effect"
 AFFIX_EFFECT_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 
 # The classes (phase2-plan.md section 2, "Classes"): the game plays the ones in classes.json that have a kit for the fortress's defender culture, and the bot draws one
-# from RunRandom stream 3 when none is armed. Cavalry is in the plan but not in classes.json until Slices 10 and 11, so it is refused by name below.
+# from RunRandom stream 3 when none is armed. Cavalry joined the file in Slice 11.
 MODULE_DATA = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "long_defeat"
 CLASS_FILE = MODULE_DATA / "classes.json"
 FORTRESS_FILE = MODULE_DATA / "fortresses.json"
 CLASS_CHECK = "class"
-PLANNED_CLASSES = ("cavalry",)
 DEFAULT_FORTRESS = "helms"
 
 # What a class adds to the list, read from the report's own "class".
 CLASS_CHECKS = {"cavalry": ("sally", "sally-return")}
+
+# While fortresses.json records no sally point, Cavalry rides from Begin and the game writes a skip for the sally at each wave's start and for the return at each clear, both with this
+# reason (LongDefeatDirector.Sally.cs). The judge accepts a skip for no other reason, none once a pass shows that a point exists, and none while the fortress row holds a sally key.
+SALLY_CHECK = "sally"
+SALLY_RETURN_CHECK = "sally-return"
+NO_SALLY_POINT = "no-sally-point"
 
 # The third check of the sally (spike S9) is reported, not required: a hit by or on the rider or his horse in a wave's first 180 s within 40 m of the sally point. The game writes it as a
 # pass at the first such hit and as a skip (never a fail) when none came, so a quiet ride neither fails the run nor reads as a pass; Mike reads it from the line.
@@ -668,6 +674,38 @@ def contact_note(report_json, log_text):
 FAIL_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX) + r"\S+ result=fail\b")
 
 
+def skip_reasons(name, log_text):
+    """The reason= of every skip line the log holds for a check (an empty string for a skip that names none)."""
+    pattern = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=skip\b(.*)")
+    found = [re.search(r"\breason=(\S+)", rest) for rest in pattern.findall(log_text)]
+    return [m.group(1) if m else "" for m in found]
+
+
+def sally_recorded(fortress_id):
+    """Whether this tree's fortresses.json row for the fortress holds a `sally` key. The game also writes reason=no-sally-point when FortressesReader drops a malformed block, and the judge
+    does not fail on config warnings, so the log's reason alone would waive a block somebody pasted in wrongly."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    return fortress is not None and "sally" in fortress
+
+
+def sally_waived(name, log_text, recorded=False):
+    """Whether a sally check is waived because no sally point is recorded: the fortress row holds no sally block (recorded), the log holds no pass for either sally check (a pass shows
+    that a point exists, so then both are owed again), at least one skip of this check, and every skip of it reads reason=no-sally-point. Any other reason (point-unusable, taken-over,
+    no-lord) is a real miss."""
+    if recorded or any(check_pattern(n, "pass").search(log_text) for n in (SALLY_CHECK, SALLY_RETURN_CHECK)):
+        return False
+    reasons = skip_reasons(name, log_text)
+    return bool(reasons) and all(reason == NO_SALLY_POINT for reason in reasons)
+
+
+def owes_return(report_json, lose):
+    """The sally-return pass is owed only when a wave was cleared (the return happens at a clear), never to a run built to lose. A deep run lost in its first wave has cleared none.
+    Plan item 17 wanted "a wave cleared after a sally"; this is looser and accepted: the point is per fortress, so every wave sallies or none does, and a false FAIL would need a
+    cleared wave that did not sally beside one that did, which a recorded point never gives (a taken-over wave writes its own return skip with its reason, a real miss)."""
+    cleared = report_json.get("wavesCleared")
+    return not lose and _is_int(cleared) and cleared >= 1
+
+
 def judge(done, report_json, log_text=None):
     """(exit code, why). The whole log counts for the CrashReport check: it opens at this launch, so every line is this run's, and a time
     cut would only hide a block from the load."""
@@ -733,7 +771,10 @@ def judge(done, report_json, log_text=None):
     if over > 0:
         return 1, f"owner_missing={over} (the report's poison.ownerMissing and the log's tokens, worst of them): a poison tick found its owner gone, so a kill could reach the engine with a stale hitter"
     required = LOSE_CHECKS if lose else (DEEP_CHECKS if deep else REQUIRED_CHECKS)
-    required = required + tuple(name for name in CLASS_CHECKS.get(report_json.get("class"), ()) if name not in required)
+    required = required + tuple(name for name in CLASS_CHECKS.get(report_json.get("class"), ()) if name not in required and (name != SALLY_RETURN_CHECK or owes_return(report_json, lose)))
+    recorded = sally_recorded(report_json.get("fortress"))
+    waived = [name for name in (SALLY_CHECK, SALLY_RETURN_CHECK) if name in required and sally_waived(name, log_text, recorded)]
+    required = tuple(name for name in required if name not in waived)
     if reached_endless(report_json) and SCALE_CHECK not in required:
         required = required + (SCALE_CHECK,)
     cleared_waves = report_json.get("wavesCleared")
@@ -769,7 +810,12 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}")
+
+
+def waived_note(waived):
+    """"; no sally point recorded, so sally and sally-return skipped" for the checks the no-sally-point skip stood in for, and "" when none was waived."""
+    return f"; no sally point recorded, so {' and '.join(waived)} skipped" if waived else ""
 
 
 def build_of(log_text):
@@ -834,11 +880,9 @@ def seed_value(text):
 
 
 def class_choice(text):
-    """A class the game can play, or 'all'. A class in the plan but not in classes.json is refused by name, because the game would replace it with another class."""
+    """A class the game can play, or 'all'. A name classes.json does not offer is refused here, because the game would replace it with another class."""
     if text == "all" or text in CLASSES:
         return text
-    if text in PLANNED_CLASSES:
-        raise argparse.ArgumentTypeError(f"'{text}' is not playable yet (Slices 10 and 11 add it); the game offers {', '.join(CLASSES)}")
     raise argparse.ArgumentTypeError(f"'{text}' is not a class; choose one of {', '.join(CLASSES)} or all")
 
 
@@ -866,8 +910,7 @@ def build_parser():
     parser.add_argument("--speed", type=int, choices=SPEED_LEVELS,
                         help="the mission speed from the first frame (default 1); live seconds and the report's wave seconds stay mission seconds, so 10 ends a run in about a tenth of the wall time")
     parser.add_argument("--class", dest="klass", type=class_choice,
-                        help=f"the lord's class, one of {', '.join(CLASSES)} (the game's bot picks one from the seed when left out); 'all' gives each of --runs the next of them in turn. "
-                             "Cavalry is not playable yet, so neither this flag nor 'all' arms it")
+                        help=f"the lord's class, one of {', '.join(CLASSES)} (the game's bot picks one from the seed when left out); 'all' gives each of --runs the next of them in turn, so --runs 4 plays all four")
     parser.add_argument("--seed", type=seed_value, help=f"the seed of every roll, 0 to {MAX_SEED} (default: the game takes the start time's ticks)")
     parser.add_argument("--start-wave", type=whole_in_range(1, 100),
                         help="begin the run at this wave number (a test option: the clears still count from 0, so the report is not a board run)")

@@ -39,6 +39,19 @@ public class LongDefeatClassPinTests
         StringAssert.Contains(spawn, "if (kit != null)", "no kit leaves the spawn exactly as the wave soldiers' spawn is");
     }
 
+    // spawnWithHorse stays false for every spawn. With true the engine would read a mount key from the troop's own Horse slot (Mission.cs:4500-4503), which is the lord's own horse or none and not
+    // the kit's, and NoHorses would come from the engine instead of the kit. The horse comes from the kit's Horse slot (Mission.cs:4311) once NoHorses(!mounted) leaves it in place, and with no mount
+    // key the visual picks a random coat (MountVisualCreator.cs:41-46), so no key is set. Source pin; the in-game proof is the class check's has_mount and the sally line's mount=yes.
+    [TestMethod]
+    public void Spawn_NeverAsksForTheEnginesSpawnWithHorse_AndTheKitDecidesTheHorseThroughNoHorses()
+    {
+        var spawn = Body(RepoPaths.ReadSource(Field, stripComments: true), "private Agent Spawn(");
+
+        StringAssert.Matches(spawn, new System.Text.RegularExpressions.Regex(@"GetAgentBuildDataToSpawnTroop\(new BasicBattleAgentOrigin\(troop\), playerSide, true, false, reinforcement"));
+        Assert.IsFalse(spawn.Contains("MountKey("), "a null mount key builds the horse with a random coat; the engine's own key would come from the wrong horse");
+        Assert.AreEqual(1, spawn.Split(new[] { "NoHorses(" }, StringSplitOptions.None).Length - 1, "one place decides the horse: the kit's NoHorses(!mounted)");
+    }
+
     [TestMethod]
     public void SpawnPlayer_SpawnsThePlayersTroop_OnThePlayersSide_ForTheStartAndForARespawn()
     {

@@ -9,8 +9,8 @@ namespace TAOM.Features.LongDefeat;
 /// so proves no spawn frame for a lord with no place. At each wave's start a mounted lord whose body is his own is teleported to the sally point, or remounted there in one step when he is on foot (his horse
 /// died, or he was knocked off or dismounted: the engine clears <c>HasMount</c> in all three, and a horse left riderless is never faded); at each clear he is teleported home. A taken-over soldier's body gets no
 /// sally. The lines and the three checks (<c>sally</c>, <c>sally-return</c>, <c>sally-contact</c>) are what Mike reads to choose between the outside point, the courtyard point and "mounted from Begin, no
-/// sally". No mounted class is on offer before Slice 11, so only the director's tests and a hand-edited <c>classes.json</c> row with <c>"mounted": true</c> reach any of this: the catalog swaps an unoffered
-/// class for one on offer, with a warning, so the autorun's class key alone does not.
+/// sally". Cavalry (Slice 11) is the mounted class on offer. Until a <c>sally</c> block is recorded in <c>fortresses.json</c> every Cavalry wave writes a <c>sally</c> skip and a <c>sally-return</c> skip, both
+/// <c>reason=no-sally-point</c>, and the lord rides from Begin; the judge waives the two checks for that reason alone.
 /// </summary>
 internal sealed partial class LongDefeatDirector
 {
@@ -129,21 +129,27 @@ internal sealed partial class LongDefeatDirector
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.SallyId, "w" + wave, LongDefeatSallyChecks.Skipped(wave, reason));
     }
 
-    /// <summary>A clear: a lord who went out this wave comes home. A wave that never went out has nothing to bring back.</summary>
+    /// <summary>
+    /// A clear: a lord who went out this wave comes home. A wave that never went out has nothing to bring back; when the whole run rides from Begin because the point is missing or unusable
+    /// (<c>_noSally</c>), the clear still writes a <c>sally-return</c> skip that names the same reason as the wave's <c>sally</c> skip, so the judge can tell a run with no point recorded from a
+    /// run that lost a return.
+    /// </summary>
     private void SallyHome()
     {
         var watch = _sally;
         if (watch == null)
+        {
+            if (_noSally.Length > 0)
+                SkipReturn(_sallyWave, _noSally);
             return;
+        }
 
         EndSallyWatch("none-before-clear");
 
         var lord = _field.ReadLord(false);
         if (!lord.Present || !lord.Own || _homePoint is not { } home)
         {
-            var reason = !lord.Present ? "no-lord" : !lord.Own ? "taken-over" : "point-unusable";
-            _logger.LogInfo($"{Tag}[Sally] w{watch.Wave} no return: {reason}");
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.SallyReturnId, "w" + watch.Wave, LongDefeatSallyChecks.Skipped(watch.Wave, reason));
+            SkipReturn(watch.Wave, !lord.Present ? "no-lord" : !lord.Own ? "taken-over" : "point-unusable");
             return;
         }
 
@@ -153,6 +159,12 @@ internal sealed partial class LongDefeatDirector
         var dist = after.Present ? home.FlatDistanceTo(after.At) : float.NaN;
         _logger.LogInfo($"{Tag}[Sally] w{watch.Wave} home: teleport main={after.Id} at={PointText(after.At)} dist={F1(dist)} outside_boundary_max={F1(watch.MaxOutside)}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.SallyReturnId, "w" + watch.Wave, verdict);
+    }
+
+    private void SkipReturn(int wave, string reason)
+    {
+        _logger.LogInfo($"{Tag}[Sally] w{wave} no return: {reason}");
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.SallyReturnId, "w" + wave, LongDefeatSallyChecks.Skipped(wave, reason));
     }
 
     /// <summary>Closes the contact watch of a wave that sallied: no more hits are wanted, and a wave with no contact judged yet gets its skip, with the reason (a clear, or the run's end).</summary>
