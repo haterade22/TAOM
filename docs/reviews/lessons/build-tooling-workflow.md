@@ -3412,3 +3412,16 @@ file ("The data file must be inside the data dir") and threw a `NullPointerExcep
   `support\launch.properties`, now `E:\ghidra\user\`. Smoke a new install with the call that does the real work
   (an analysis), not only the start-up call.
 - **Source:** 1.5.x #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 2; `docs/reference/development-machines.md` "Ghidra, desktop only", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Stage part of a shared generated file by building and parsing the blob, never with a zero-context patch (#1063, 2026-10-29)
+To commit two lines of `tools/translation_name_tags.json` while another session's lines sat in the same file, the
+orchestrator staged a `git diff -U0` filtered to its hunks with `git apply --cached --unidiff-zero`. With no context
+lines the hunks applied at the wrong offsets: one tag landed in another section and the other after the closing
+brace. Two pushed commits held invalid JSON, and every local run passed because the working copy was valid.
+- **Why missed:** the staged blob was never read back. Local gates read the working tree, not the index.
+- **Prevent:** for a generated or structured file shared with another session, load the working copy, remove the
+  other session's entries, write it with the generator's own writer, parse it, and stage that blob with
+  `git hash-object -w --path <file>` and `git update-index --cacheinfo`. Then parse `git show :<file>` before the
+  commit. Never `--unidiff-zero` a structured file.
+- **On this tree:** This incident ran on the 1.5.x line, and `tools/translation_name_tags.json` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-feral-orcs-2026-10-29.md` finding 12, on `origin/bannerlord-1.5.x` (ported by WP142).

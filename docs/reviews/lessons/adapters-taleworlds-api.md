@@ -850,3 +850,33 @@ riderless creature bandit, in no formation, would have hunted during deployment 
   `CreatureHoldTask`). Formation members are paused by vanilla; everything else is yours.
 - **On this tree:** This incident ran on the 1.5.x line, and `CreatureMayFightDecorator`, `CreatureHoldTask` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An engine type with no id gets a per-object adapter; a class that gains injection and tests is a service (2026-10-06)
+The stuck-battle guard's adapter returned `IReadOnlyList<MapEvent>` and took `MapEvent` in every member, and the
+orchestration that used them sat in `StuckBattleSweep`, an injected `Reuse.Singleton` under `Hooks/` with unit tests over
+a substituted adapter and `null!` handles. The "key by id" remedy above does not apply: a 1.5.x `MapEvent` inherits
+`StringId` but nothing ever assigns it, and its constructor is internal. Second occurrence of the sealed-token class in nine days.
+- **Why missed:** the builder copied `AutoResolveDiagnostics`, where an entry point holds the `MapEvent`, then moved the
+  logic into an injected class to test it. The move made it a service; the sealed-type rule was not re-checked, and the
+  entry above was not read before writing the adapter.
+- **Prevent:** for an engine type with no id, the adapter hands out one small adapter per object
+  (`IStuckBattleAdapter.LiveBattles()` returning `IStuckBattleEventAdapter`), and the service drives those. A class that
+  takes constructor injection, is registered `Reuse.Singleton` and is unit-tested is a service, whatever folder it sits in.
+- **On this tree:** This incident ran on the 1.5.x line, and `StuckBattleSweep` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 1 (Standards, adversarial Step 2b), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### After a programmatic batch of inventory transfers, refresh the panel with UpdateRightCharacter and RefreshInformationValues (Quick Actions, 2026-10-19)
+`InventoryLogic.AddTransferCommands` raises `SPInventoryVM.AfterTransfer` per command, which updates the item rows and
+the shown set's slots only. The paper doll, armour, weight, capacity, the no-saddle warning and the Done button are
+refreshed by the private `RefreshInformationValues`, which vanilla's single-transfer handlers call after their one
+transfer (v1.4.8 `SPInventoryVM.cs:1645-1647`). That is not enough for a batch: `AfterTransfer` clears the equipment
+dirty flag on every command, so a batch whose last command moved nothing leaves the doll stale. Run
+`UpdateRightCharacter` first, as vanilla does when the shown outfit or character changes. Quick Actions Unequip All shipped without the pair twice (May 2026 direct writes, then a
+transfer route with no panel refresh).
+- **Why missed:** both fixes read the event (`AfterTransfer`) as the screen's refresh and never opened the vanilla
+  handler that issues transfers to see what it calls after `AddTransferCommands`.
+- **Prevent:** before calling an engine command API from TAOM, read the vanilla callers of that API end to end, note
+  what each refreshes after the call, and check that it still holds for TAOM's batch (one command or many). For
+  inventory transfers, call `IInventoryVMAdapter.RefreshDisplay()`, which runs the pair through
+  cached delegates pinned by `ReflectionSiteBindingTests`. EquipPresets still needs the same (follow-up).
+- **Source:** 1.5.x `docs/reviews/rca-quickactions-unequip-2026-10-19.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).

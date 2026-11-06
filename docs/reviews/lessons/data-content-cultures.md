@@ -1667,3 +1667,23 @@ Field Commission shipped `allowedRaceNames` as `human`/`dwarf`/`elf` on the #376
 - **Why missed:** the design brief recorded the intent (creatures unpromotable) and the mechanism (a race allow-list) but not the enumeration the list had to be checked against, so it encoded the author's campaign. Fail-closed is right for an unknown race id, and it means a short list, a misspelt list and a working list are indistinguishable from outside; no test asserted the default's relation to anything, only its value.
 - **Prevent:** before shipping an allow-list a player can hit, diff it against the set of things the player can be or field (here the union of `cultures.json` races), and pin the copies of the default to each other and to the engine's enumeration (`ShippedJson_AllowedRaceNames_*`). Where the gate fails closed on user-editable data, have the consumer warn once when an entry can match nothing (`FieldCommissionMeritService.WarnUnknownRaceNamesOnce`); the config-validation rule's "string the consumer branches on" case includes list membership, not only switch-with-default.
 - **Source:** 1.5.x `docs/reviews/rca-field-commission-races-2026-09-17.md`, issue #612, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A template that other cultures also list must be cloned, not retagged (#957, 2026-10-20)
+The four minor clans' leader templates (`spc_legion_of_the_betrayed_leader_*` and the rest) looked like clan-private data, so the first fix retagged their culture to the clan's side. `spcultures.xslt` passes the same 16 templates through as the `lord_templates` and `rebellion_hero_templates` of the `empire` (Dunland) and `vlandia` (Rohan) cultures, and a hero keeps its template's culture, so the retag would have spawned Arthedain, Umbar, Dunland or Beorning heroes for Dunland and Rohan companion clans and rebellions.
+- **Why missed:** the clan files name the templates and nothing in the clan files names who else uses them; the user of a template is found in the culture files.
+- **Prevent:** before retagging a shared `NPCCharacter`, grep every module's culture XML for its id (`lord_templates`, `rebellion_hero_templates`, `notable_templates`). A template with a second user is cloned under a new id (`taom_` plus the original), the owner is pointed at the clone, and the original stays vanilla. Pin it: the clone equals the original except id and culture, and the original is unchanged (`LeaderClones_AreTheOriginalsWithOnlyTheIdAndCultureChanged`). Never rename or remove the clone: a save holds it by id in the clan's list and in each leader's origin character.
+- **On this tree:** This incident ran on the 1.5.x line, and `spc_legion_of_the_betrayed_leader_`, `LeaderClones_AreTheOriginalsWithOnlyTheIdAndCultureChanged` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 1, minor-clan cultures, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A vanilla pick of another settlement of my culture can come back empty (Bard Town Guard, 2026-10-19)
+The tavern musician's condition (`TavernEmployeesCampaignBehavior.conversation_talk_bard_on_condition`, v1.4.8 `:413-419`) picks a random town of the current town's culture other than the current one and reads its `.Name`.
+Six TAOM cultures own one town, so the pick is null and the conversation throws, and culture conversion can make
+more such towns at runtime. It is the same family as the landless-culture CTD above: vanilla code written for six
+big cultures assumes "another settlement of my culture" exists.
+- **Why missed:** nobody had swept vanilla for culture-filtered settlement picks; the landless fix covered one site.
+- **Prevent:** when a TAOM culture owns one town (or none), or a feature moves settlements between cultures, sweep
+  the engine for picks that filter `Settlement.All` (or `Town.AllTowns`) by culture and dereference the result. The
+  2026-10-19 sweep of 1.5.x found seven `GetRandomElementWithPredicate` sites; only the musician's was live (the
+  RCA lists the other six). Fix the one live site by keeping the engine's pick and adding a fallback, never by skipping vanilla.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-bard-town-guard-2026-10-19.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

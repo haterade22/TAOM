@@ -1070,3 +1070,44 @@ agents.
   (`CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList`).
 - **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditsWiringTests`, `HotCreatureTargets_AreOnPatchShieldsExclusionList` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A pair that must load together across modules or a save needs a guard on every engine lookup between them (#1063, 2026-10-29)
+A TAOM bandit clan lives in TAOM's `clans.xml` and the hideouts of its culture in TAOM_Map's `settlements.xml`; a saved
+campaign reloads settlements but not clans (`SandBoxManager.InitializeSandboxXMLs`). So the pair can arrive half: a clan
+with no dens (TAOM with an older map) and vanilla `GetInfestedHideoutCount` throws on every new game; dens with no clan
+(a save made before the clan) and `AddBanditToHideout` dereferences a null clan from the Gold Rush incident.
+- **Why missed:** "author the dens before the clan" was written as an authoring order on one machine, never as a load
+  invariant. Every earlier bandit faction had the same exposure; the Feral Orcs were the first pair added after a release.
+  The data-flow lens traced the load to "no crash on load" and stopped one class short of the incident caller.
+- **Prevent:** when a feature adds an object whose engine consumer looks up a partner in another module or across the
+  save boundary, list each lookup and guard the missing-partner state at the engine seam (`Patch125_HideoutClanGuard`,
+  as Patch65 does for a lord's landless culture), and add a release check in both directions. For a saved campaign, read
+  which XML the load path re-reads before writing "new campaigns only".
+- **Source:** 1.5.x `rca-feral-orcs-2026-10-29.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A UIExtenderEx mixin compiles vanilla code at Register: register after a game exists
+`UIExtender.Register` patches each mixin target's constructors, `OnFinalize` and refresh method at once
+(UIExtenderEx 2.13.3 `ViewModelWithMixinPatch.Patch`), and the patch compiles the vanilla IL. The .NET Framework
+JIT may then run the static initializer of a `beforefieldinit` type whose static field that IL reads, directly
+or through a small method it inlines; on this machine it did. `ClanLordItemVM.UpdateProperties` and
+`EncyclopediaHeroPageVM.Refresh` read `CampaignUIHelper.SkillObjectComparerInstance`, and `CampaignUIHelper`'s
+initializer calls `GameTexts.FindText` (v1.4.8 dump `CampaignUIHelper.cs:210`). `GameTexts` is null
+until `Game.Initialize` sets it (v1.4.8 dump `Game.cs:300`), so registered from `OnSubModuleLoad` the initializer threw. The
+runtime swallows the throw at JIT time and keeps the type failed: a net472 console repro showed every later use
+throwing `TypeInitializationException`. The symptom varied between two launches of one build: at 16:37
+`Patch17_TroopWeight`, `Patch23_BannerColorPersistence` and `Patch105_HiddenHosts` failed to apply, while at
+16:34 every patch category applied (`failed=0`). Both launches crashed when character creation opened the first
+narrative stage.
+- **Why missed:** the registration point predated the mixins that read `CampaignUIHelper` statics (Lines of
+  Descent and Hearth Roll on 2026-10-23, Encyclopedia on 2026-10-26). Nothing failed loudly: the NRE was
+  first-chance and swallowed, the debugger showed it only with "break when thrown" on, and failed patch
+  categories are not a reliable sign. The `MovementOrder` lesson above has the same mechanism, but it was
+  written for TAOM's own patch categories, not for UIExtenderEx's.
+- **Prevent:** The 1.5.x line registers in its first `OnGameStart`. Every game type calls it from inside
+  `Game.Initialize`, after `GameTexts.Initialize` (`Game.cs`, `Campaign.cs`, `CustomGame.cs`),
+  but before the models (`Campaign.cs`) and default objects such as `DefaultSkills` (`Game.cs`)
+  exist. A mixin whose target IL reaches an initializer that reads those needs a later hook.
+  Before you add a mixin target or move any Harmony or UIExtenderEx registration earlier, read the
+  initializers of every type whose static field the patched methods read, directly or through a small method
+  the JIT can inline (a static getter such as `Campaign.Current`). This tree still registers from `OnSubModuleLoad` (`Main/SubModule.cs:248-250`) and has a mixin on `EncyclopediaHeroPageVM` (`Main/Features/Messengers/UI/MessengerEncyclopediaMixin.cs`); nobody has checked whether that target's v1.4.8 IL reaches the initializer.
+- **Source:** 1.5.x `rca-uiextender-ongamestart-2026-10-26.md`; TAOM logs `taom_debug_2026-10-26_16-34-58.log` (lines 201, 394-411) and `taom_debug_2026-10-26_16-37-09.log` (lines 197, 209, 226, 436-455), on `origin/bannerlord-1.5.x` (ported by WP142).

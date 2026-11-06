@@ -678,3 +678,16 @@ A review worried that a raid reaching the village an enlisted soldier stands in 
 - **Prevent:** before a fix for an encounter or menu hazard, follow the engine call that runs after TAOM's seam; log the case (here one ungated INFO line in `EnsureEncounterAgainst`) and let a run decide.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x enlistment.md, "Inside the raided village (#1019)", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A save keeps `Clan.Culture` and the template list, and the Factions file does not reload on a load (#957, 2026-10-20)
+`Clan.Culture` is a `SaveableProperty` and `Clan._minorFactionCharacterTemplates` a `SaveableField` (v1.4.8 `Clan.cs:108`, `:31`). `SandBoxManager.InitializeSandboxXMLs(isSavedCampaign: true)` skips the Kingdoms and Factions files (`SandBoxManager.cs:360-373`), while `NPCCharacters` always reloads. So an XSLT change to a clan's culture or templates reaches a new campaign only, and an old save pairs retagged troops with a clan on its old culture: the Grey Company (clan culture `empire`, Evil) preferred Dunland contracts while its `arthedain` troops deserted under Dunland.
+- **Why missed:** the first doc said "the clan's own culture is part of its definition and also changes at once", which is true of a new campaign and false of every save.
+- **Prevent:** for any data edit to a saved object (a clan, a hero, a settlement), name which fields the save holds and which file the load skips; a data-only change to a saved field needs a load migration or a documented new-campaign-only limit. `MinorClanMigration` is the pattern: a pure service decides from raw facts, an adapter applies, a behavior runs it on `OnGameLoadedEvent`, and a test pins its targets to the shipped data.
+- **On this tree:** This incident ran on the 1.5.x line, and `MinorClanMigration` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 2, finding D1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event that cannot reach a round never picks a winner (2026-10-06)
+`MapEvent.Update` (v1.4.8 `MapEvent.cs:995`) simulates a round only while both sides have healthy troops, and sets `BattleState` only inside a round, so a side that reaches 0 healthy between rounds leaves the event open for good. A destroyed party left attached adds a second lock: `CanPartyJoinBattle` refuses every joiner while any party is inactive. A player hit both in two campaigns and found the cause before TAOM did.
+- **Why missed:** nothing in TAOM watched map events for age, and code that removes troops from a party (daily desertion, for one) never asks whether that party is in a battle.
+- **Prevent:** the hourly `StuckBattleModule` sweep is the backstop. Code that removes or wounds a party's troops outside a mission should ask whether the party is in a map event before it runs.
+- **Source:** 1.5.x player report "NPC battle that appears to be stuck" (#748, follow-up #750); map-event-guard.md, on `origin/bannerlord-1.5.x` (ported by WP142).

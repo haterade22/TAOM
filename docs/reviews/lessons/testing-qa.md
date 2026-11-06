@@ -1568,3 +1568,27 @@ and its test beside it.
 - **Prevent:** when correcting a factual claim, `git grep` its distinctive words and fix or annotate every hit in the
   same change; an archive entry gets an appended correction like this one, not an edit.
 - **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A text scan cannot see a target-typed `new(`: use the compiler or the IL (#957, 2026-10-20)
+The first gate for "no pair is built outside `FactionSides`" scanned source text for `new SideIds(`. The trunk bug had been written `=> new(lord.KingdomId ?? "", lord.CultureId ?? "")`, which names no type, and the extended scan still missed `Use(new(a, b))` and a `with` copy in any position the patterns did not list. Making the constructor private fixed the struct and left the record open.
+- **Why missed:** the scan was written from the shapes the author could think of, and a text pattern for a call has no way to know the type of an expression.
+- **Prevent:** gate a construction or a call on what the compiler emitted. `SidePairScanTests` walks the IL of `TAOM.dll` through `IlCallScanner`, keys callers by their outermost type (lambdas and iterators live in nested compiler types), requires the allow-list and the observed callers to match both ways, and carries a control test that compiles each banned shape into the test assembly and demands the scan find it. When a text scan is all that is possible, say plainly in its docstring which shapes it cannot see.
+- **Source:** 1.5.x `docs/reviews/rca-tokens-of-esteem-sides-2026-10-20.md`, wave 1 finding 1 and wave 2 finding P1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Reach for a seam or staged engine objects before an IL pin, and state an IL pin's residual (PR #1064 port, 2026-10-30)
+The 1.5.x port of PR #1064 first pinned its three fixes with IL tests: call order for the desertion guards, and token positions in the fingerprint for the supply path query and the route arrows. Codex and the convergence pass planted realistic mutants that still passed: both face checks reading the same local (a copy-paste slip), the exclusions overwritten, and both desertion guards flipped from `!= null` to `== null`. Two pins also failed on rewrites that kept behaviour.
+- **Why missed:** both methods need a live campaign or a native scene, so an IL test looked like the only option. The fingerprint drops local loads and branch targets, so it pins which calls happen and in what order, not which value reaches them or which way a branch goes, and the tests did not say so.
+- **Prevent:** before an IL pin, try two things. First, move the native call into a small method that takes the engine interface (`IMapScene`) and plain values, and drive it with NSubstitute (`SupplyNativeQueryTests.AddLandPath_*`). Second, stage the engine objects with `FormatterServices.GetUninitializedObject` and set the few fields the code reads (`VillageRaidReaderTests`, `AlignmentDesertionBehaviorTests.DailyTick_PartyInAMapEvent_StopsBeforeTheOwnerCheck`), and observe the first fake the code calls after the guard. Keep an IL pin only for a sealed native type, pin order rather than exact positions, and write its residual in the test comment. Prove every guard test with a copy-paste mutant and a flipped-polarity mutant, not only a deleted guard.
+- **Source:** 1.5.x `docs/reviews/rca-pr1064-port-2026-10-30.md` findings 2 and 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix's regression test fails on the old route at the caller that chooses the route (Quick Actions, 2026-10-19)
+The May 2026 Quick Actions review recorded "route Unequip All through `InventoryLogic`" as fixed. The new route went
+into `InventoryVMAdapter`, but `QuickActionsService.UnequipAll` kept calling the direct-write adapter, and the test
+`UnequipAll_DelegatesToEquipmentAdapter_ReturnsCount` asserted exactly that call. The bug stayed for five months
+behind a green suite and an RCA that said it was done.
+- **Why missed:** the regression test was written against the class that received the new code, not against the
+  caller that decides which class runs.
+- **Prevent:** when a fix adds a new route, its test asserts the caller takes it (`Received(1)` on the new adapter
+  member) and would fail with the old wiring; an RCA marks a finding fixed only with that test named.
+- **On this tree:** This incident ran on the 1.5.x line, and `UnequipAll_DelegatesToEquipmentAdapter_ReturnsCount` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-quickactions-unequip-2026-10-19.md` row 2, on `origin/bannerlord-1.5.x` (ported by WP142).

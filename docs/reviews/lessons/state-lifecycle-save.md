@@ -1011,3 +1011,20 @@ The `[AnimMem]` probe wrote its mission summary only from `OnEndMission`, whose 
 - **Why missed:** the review read the condition on the first branch of `CheckMissionEnd` and stopped; the `else if` that a client takes was a few lines below.
 - **Prevent:** for any end-of-mission output (summary, flush, release), write it from `OnRemoveBehavior` too, with a null-after-use latch so the normal path does not log twice. Before stating that a path never reaches a method, read every branch of the gating method, the `else` included, and quote the line that excludes it. Second occurrence of "An engine lifecycle virtual's firing set is read from its caller".
 - **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C3; convergence round 1 in `docs/reviews/deep-review-036-anim-memory-probe-2026-10-02.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A session-launch write that raises a campaign event runs before vanilla's managers register their listeners (#772, 2026-10-08)
+`OnSessionLaunched` listeners run inside `Campaign.OnSessionStart`'s event dispatch. The campaign's own managers register afterwards (v1.4.8 `Campaign.cs:729`, then `:742` and `:744`): `KingdomManager.RegisterEvents` (its `WarDeclared` listener, `KingdomManager.cs`) and `CampaignInformationManager.RegisterEvents` (which sets `_isSessionLaunched`, so chat notices stay silent until then, `CampaignInformationManager.cs`). `ReconcileDeclaredWars` repaired saves in `OnSessionLaunched`, so its `DeclareWarAction`s reached the other campaign-event listeners (History entries, map notices) but not those two. Moving to `OnAfterSessionLaunched` does not help: it also precedes both registrations.
+- **Why missed:** the call was placed where the phase check already lived, and the question "which listeners of the event I raise exist yet" is not one the session-reset lessons ask. The Engine lens (F26) and Codex (R1) reached the mechanism separately; the loss turned out harmless (faction Aggressiveness is written and never read in the 1.5.x decompile; only the chat line is lost).
+- **Prevent:** before raising a campaign event from a session event, list the listeners that matter and where each registers; if one is registered later, either defer the write to a first tick or prove and document the loss. Here a delayed repair was rejected (a tick handler, a flag, up to about 67 chat lines at once) and `docs/features/war-of-the-ring.md` states the behavior. The same limit applies to a phase transition fired at launch.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-phase2-wars-2026-10-08.md` (#772), Codex R1 and review finding F26, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Do not make peace or war in `OnSessionLaunched` on a load (#818, 2026-10-18)
+The first version of the War of the Ring sweep made peace from `OnSessionLaunched`. On a load that event runs before
+`MapEventManager.OnAfterLoad` and `SiegeEventManager.OnAfterLoad` (v1.4.8 `Campaign.cs:729` against `:740-741`), and each peace
+raises `OnMapEventContinuityNeedsUpdate`, which can pull parties out of battles and sieges and open a menu its own
+behavior has not registered yet.
+- **Why missed:** session launch was chosen to act early on new games; the load order of the map event managers was not
+  traced.
+- **Prevent:** run stance changes on the first daily tick, or from an event that fires after the managers are restored.
+  `EnforcePermanentAlliances` has the same shape and rarely acts.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
