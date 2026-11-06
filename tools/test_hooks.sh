@@ -377,8 +377,8 @@ cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
 # Only PreToolUse, PostToolUse and PostToolUseFailure hooks must print JSON (PreToolUse under
-# hookSpecificOutput, PRE_GATES below). SessionStart, PreCompact, PostCompact, SubagentStart and
-# SessionEnd hooks print plain text, and Stop hooks print a top-level {"decision":"block"}
+# hookSpecificOutput, PRE_GATES below). SessionStart and SubagentStart
+# hooks print plain text, and Stop hooks print a top-level {"decision":"block"}
 # (section 7a checks it). Applying the JSON rule to the plain-text hooks would be a false
 # positive, so classify from settings.json first.
 GATE_HOOKS=$("$HPY" - <<'PY'

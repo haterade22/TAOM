@@ -61,7 +61,7 @@ Match the captured failure against this checklist before forming a new hypothesi
 | **Tool not found / env failure** | `command not found`, `permission denied`, `path does not exist` | Per `environment-failures.md`: report, don't fix — escalate to user |
 | **Subagent loop** | A spawned agent returned an output that triggers another spawn of the same agent | Stop spawning. Address whatever the agent's output asks for in the parent context. |
 | **Inline-hook block** | Edit blocked by `[freeze]` deny message | The freeze boundary is doing its job; either widen scope (`/freeze` again with broader path), `/unfreeze`, or accept that this edit is out of scope |
-| **MCP server unhealthy** | MCP tool calls timeout or return MCP-level errors | Check `mcp-health-check.sh` log; the hook will block calls to flagged servers for 60s. Wait or invoke a different tool. |
+| **MCP server unhealthy** | MCP tool calls timeout or return MCP-level errors | Read the error, retry once, then report the server as down or invoke a different tool. |
 | **Permission prompt loop** | User keeps being asked the same permission | Add the action to `.claude/settings.local.json` allowlist via `/update-config` |
 | **Hallucinated tool / API** | Agent calls a tool name or API that doesn't exist | Tool typo OR agent confused about available tools. Stop, list available tools, invoke correctly. |
 | **Plan drift** | Agent's stated plan doesn't match what it's doing | Re-state the original task explicitly; if the agent rejects it, hand control back to user |

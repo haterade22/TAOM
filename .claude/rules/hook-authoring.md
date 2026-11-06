@@ -16,7 +16,7 @@ When you add a hook to an existing category (a Stop reminder, a PreToolUse gate,
 | Convention | Where to copy it from | The 2026-05-29 miss |
 |---|---|---|
 | Detection (git state vs stdin JSON) | the nearest sibling in the same event | (got this right) |
-| **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
+| **Muting / idempotency** (early-exit when already-handled) | `check-verification-evidence.sh` keeps a streak marker and clears it when its condition clears | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
 | **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
 | Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
 | **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011; the polearm gate did the same until 2026-09-29 |
@@ -35,7 +35,7 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 | `git commit -F file.txt` | Commit with message file | YES |
 | `git -C /path commit` | Run as if from /path (no leading `cd`) | NO — needs `*"git -"*" commit"*` |
 | `git -c key=val commit` | One-time config override | NO — same |
-| `git --git-dir=/path commit` | Operate on a specific git-dir | NO — would need a separate pattern |
+| `git --git-dir=/path commit` | Operate on a specific git-dir | NO for this substring; the reference pattern catches it |
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
 | `timeout 60 git ...`, `{ git ...; }`, `! git ...`, `then git ...` | A wrapper word or shell grammar in front of git (#985) | NO: read segments from `_shellwords.py commands`, a parsed call through `_git_call` |
@@ -58,8 +58,8 @@ esac
 read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
 `tool_input.command` alone: it hands PowerShell back as Bash text, so the forms above cover both
 shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
-resolves are listed in `docs/reference/hooks-catalog.md` "Both shell tools" and pinned by
-`tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
+resolves, and the forms it leaves unread, are listed in the docstring of `_shellwords.py` and pinned
+by `tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7e fails a listed gate that does not read
 through it. `validate-push.sh` is the one exception: it reads and judges the push in one Python run,
 `_shellwords.py verdict` (#680), and 7e checks that call instead.
 
@@ -73,7 +73,7 @@ Two correct patterns depending on what the hook checks:
 
 | Hook checks | Correct amend handling |
 |-------------|------------------------|
-| Files in the commit's diff (e.g., is CHANGELOG.md staged?) | Compute the **post-amend file set** as `staged ∪ HEAD` and apply the same gate. If CHANGELOG was already in HEAD's diff, it's still in the post-amend commit — the gate correctly allows. |
+| Files in the commit's diff (e.g., is a ModuleData file in the commit?) | Compute the **post-amend file set**, the index against HEAD's parent (`check-doc-config-drift.sh` passes `--dash-base HEAD~1`), and apply the same gate. A ModuleData file already in HEAD's diff is still in the post-amend commit, so the gate correctly allows. |
 | Working-tree state (e.g., is a file gitignored?) | Don't exempt amend at all. Working-tree state is amend-independent — a gitignored file on disk is just as broken in an amended commit as in a fresh one. |
 
 ## A detection hook must fail open, but NEVER fail silent (EMPIRICAL: TAOM 2026-08-10)
@@ -111,8 +111,8 @@ lesson does not depend on which it was, because a guard with *any* silent-failur
 | Test the broken-input path, not just the happy path | Export a bogus value and run the hook. The 2026-08-10 bug reproduced in one command. |
 
 Still `exit 0`, still never blocks — but loud about not knowing. Applies to `session-start.sh`'s
-drift/stash/worktree checks, `check-doc-config-drift.sh`, `mcp-health-check.sh`, and any future
-hook whose value is the warning it emits.
+checks, `upstream-watch.sh`, `check-polearm-shield-parity.sh` and any future hook whose value is the
+warning it emits.
 
 ## A timeout must be measured against the SLOW path (EMPIRICAL: TAOM 2026-08-31)
 
@@ -165,13 +165,17 @@ words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e e
 Bash evaluates every operand of `$(( ))`, `(( ))` and the `-eq`/`-gt` family inside `[[ ]]` as an
 expression, so an operand that holds an array subscript with a command substitution runs that
 command. A value from tool input, a file, git output or the environment enters arithmetic only after
-`tr -cd '0-9'`, `${X//[!0-9]/}` or a `^[0-9]+$` check (`mcp-health-check.sh` and `validate-push.sh`
-do this); counts from `grep -c`, `wc -l` and `date +%s` are already digits. A value that may start
+`tr -cd '0-9'`, `${X//[!0-9]/}` or a `^[0-9]+$` check (`validate-push.sh` does this); counts from `grep -c`, `wc -l` and `date +%s` are already digits. A value that may start
 with a zero goes in as `10#$X`: bash reads `08` as bad octal, and the hook dies, which fails open.
 `tools/test_hooks.sh` 4f probes every hook with payload and session-id values; values from git output
 or state files stay covered by this rule and review.
 
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
+
+`jq` is not on PATH in this Git Bash install (verified 2026-08-20), so a hook that depends on jq
+alone is silently inert: a fail-open hook that never runs looks exactly like a hook with nothing to
+report. The grep+sed fallback truncates a value at the first escaped quote and leaves Windows
+backslashes doubled, so the fallback must be Python.
 
 On the dev machine `python3` resolves only to
 `C:\Users\mikew\AppData\Local\Microsoft\WindowsApps\python3`, a Microsoft Store App Execution
@@ -196,7 +200,7 @@ spelling, was removed on 2026-10-05.
 
 ## Log-appending hooks: size-cap rotation (EMPIRICAL: TAOM 2026-07-12)
 
-A hook that appends to a `.claude/logs/` file must size-cap-and-rotate it (see `session-stop.sh` /
-`log-agent.sh`: `wc -c` check → `mv -f "$LOG" "$LOG.1"`). Unrotated logs grow unbounded AND silently
-break sibling hooks that grep them (the pre-rotation `agent-audit.log` permanently satisfied
-`check-deep-review.sh`'s reminder with months-old entries).
+A hook that appends to a `.claude/logs/` file must size-cap-and-rotate it (see `log-agent.sh`:
+`wc -c` check → `mv -f "$LOG" "$LOG.1"`). Unrotated logs grow unbounded AND silently break any hook
+that greps them for a recent entry (the pre-rotation `agent-audit.log` once satisfied a reminder's
+mute with months-old entries).

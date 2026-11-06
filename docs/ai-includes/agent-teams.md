@@ -310,7 +310,7 @@ Report findings to lead via message. You are read-only — do NOT edit files.
 
 ## Limitations
 
-- **No session resumption** — if a teammate crashes, its context is lost (the `pre-compact.sh` hook helps the lead session recover by dumping modified file lists before context compaction)
+- **No session resumption:** if a teammate crashes, its context is lost
 - **No file locking** — agents can overwrite each other's changes if ownership isn't respected
 - **No nested teams** — a teammate cannot spawn its own team
 - **One team per session** — the lead manages one team at a time
