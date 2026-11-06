@@ -154,3 +154,65 @@ export PYBIN
 # Python the hook starts, including tools it launches; tools/test_hooks.sh section 6 pins it
 # with raw and escaped payloads.
 export PYTHONIOENCODING=utf-8
+
+# The directory holding this helper and _shellwords.py, made absolute so a hook that later changes
+# directory can still reach the reader. Every hook sources this file by a path with a slash in it.
+TAOM_HOOKS_DIR=${BASH_SOURCE[0]%/*}
+case "$TAOM_HOOKS_DIR" in /* | [A-Za-z]:*) ;; *) TAOM_HOOKS_DIR="$PWD/$TAOM_HOOKS_DIR" ;; esac
+
+# The repository a git gate judges (2026-10-16): the top level of the work tree a `git <subcommand>`
+# (default commit) in the hook's $INPUT runs in. Registrations run the main checkout's hooks, and
+# $CLAUDE_PROJECT_DIR stays where the session started even after it enters a worktree, so a gate that
+# ran `cd "$CLAUDE_PROJECT_DIR"` judged the main checkout for a worktree commit. _shellwords.py git-repo
+# names the candidates (the call's own cd or -C joined onto the payload's cwd, then the cwd; hooks docs
+# "Common input fields": cwd "is the worktree root after Claude enters a worktree, and the new
+# directory after Claude runs `cd`"); each is resolved here to its top level, because every gate reads
+# root-relative paths and a subdirectory would let all of them pass in silence. When the calls reach
+# more than one work tree it prints nothing and returns 2: a gate judges one repository, and an earlier
+# commit in one repository went unchecked behind a later one in another (Codex review 2026-10-16); the
+# commit gates then deny with taom_deny_multi_repo. A call directory that is missing or in no work tree
+# is skipped; with no call resolved it tries the payload's cwd, and the last resort is
+# $CLAUDE_PROJECT_DIR, as every gate read it before. tools/test_hooks.sh 7b and
+# tools/tests/test_shellwords.py.
+taom_git_repo_dir() {
+    local out="" line="" top="" found="" after=0
+    local -a lines=() rest=()
+    if [ -n "${PYBIN:-}" ]; then
+        out=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" git-repo "${1:-commit}" 2>/dev/null)
+    fi
+    set -f; IFS=$'\n'; lines=($out); IFS=$' \t\n'; set +f
+    for line in "${lines[@]}"; do
+        if [ "$line" = "--" ]; then after=1; continue; fi
+        if [ $after -eq 1 ]; then rest+=("$line"); continue; fi
+        [ -n "$line" ] && [ -d "$line" ] || continue
+        top=$(timeout -k 1 2 git -C "$line" rev-parse --show-toplevel 2>/dev/null)
+        [ -n "$top" ] || continue
+        if [ -n "$found" ] && [ "$top" != "$found" ]; then return 2; fi
+        found=$top
+    done
+    [ -n "$found" ] && { printf '%s' "$found"; return 0; }
+    rest+=("${CLAUDE_PROJECT_DIR:-$PWD}")
+    for line in "${rest[@]}"; do
+        [ -n "$line" ] && [ -d "$line" ] || continue
+        top=$(timeout -k 1 2 git -C "$line" rev-parse --show-toplevel 2>/dev/null)
+        [ -n "$top" ] && { printf '%s' "$top"; return 0; }
+    done
+    printf '%s' "${CLAUDE_PROJECT_DIR:-$PWD}"
+}
+
+# The deny a commit gate prints when taom_git_repo_dir returns 2. $1 is the gate's own fixed name, so
+# the JSON needs no escaping.
+taom_deny_multi_repo() {
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"[%s] This command commits in more than one repository, and the gate judges one repository per command. Split it: one repository per command."}}\n' "$1"
+}
+
+# Whether directory $1 is a work tree of this project's repository (the same common git directory as
+# $CLAUDE_PROJECT_DIR: the main checkout or any of its worktrees). A gate that runs the repository's
+# own tools/*.py asks first, so a commit in another repository never runs that repository's code
+# (2026-10-16 review). Fails (returns 1) when either side cannot be read.
+taom_is_project_repo() {
+    local mine theirs
+    mine=$(timeout -k 1 2 git -C "${CLAUDE_PROJECT_DIR:-$PWD}" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    theirs=$(timeout -k 1 2 git -C "$1" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    [ -n "$mine" ] && [ "$mine" = "$theirs" ]
+}

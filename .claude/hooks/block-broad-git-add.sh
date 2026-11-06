@@ -100,6 +100,7 @@ for seg in "${SEG_LIST[@]}"; do
   rest=$(printf '%s' "$rest" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
 
   if [[ "$rest" =~ ^add([[:space:]]|$) ]]; then
+    SUBCMD=add
     after="${rest#add}"
     # -A / --all / -u / --update anywhere in the args, or a bare `.` / `./` pathspec.
     if [[ "$after" =~ (^|[[:space:]])(-[a-zA-Z]*A[a-zA-Z]*|--all)([[:space:]]|$) ]]; then
@@ -110,6 +111,7 @@ for seg in "${SEG_LIST[@]}"; do
       REASON="git add . stages every change under the current directory"
     fi
   elif [[ "$rest" =~ ^commit([[:space:]]|$) ]]; then
+    SUBCMD=commit
     after="${rest#commit}"
     # -a / --all, including bundled short flags like -am. Exclude --amend, which is a
     # different thing entirely.
@@ -126,7 +128,14 @@ done
 
 # Show what the sweep would actually take. The decision is "is every one of these mine",
 # which the caller cannot make from the flag alone.
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# Listed from the top level of the repository the call runs in (_pybin.sh taom_git_repo_dir).
+MULTI_NOTE=""
+if ! ADD_REPO=$(taom_git_repo_dir "${SUBCMD:-add}"); then
+  # The calls reach more than one work tree: list the project root's, and say the list is incomplete.
+  ADD_REPO="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+  MULTI_NOTE=" The command runs git ${SUBCMD:-add} in more than one repository, so this list covers the project root only: split it, one repository per command."
+fi
+cd "$ADD_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 DIRTY=$(git status --porcelain 2>/dev/null | sed 's/^...//' | head -20)
 DIRTY_COUNT=$(git status --porcelain 2>/dev/null | grep -c . || true)
 STASH_COUNT=$(git stash list 2>/dev/null | grep -c . || true)
@@ -140,7 +149,7 @@ fi
 STASH_NOTE=""
 [[ "${STASH_COUNT:-0}" -gt 0 ]] && STASH_NOTE=" There ${STASH_COUNT} stash(es) present — an unrestored auto-stash is how this went wrong on 2026-08-07."
 
-MSG="CONFIRM broad staging: ${REASON}. Command: \"${COMMAND}\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILE_LIST}.${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
+MSG="CONFIRM broad staging: ${REASON}. Command: \"${COMMAND}\". TAOM is worked by more than one session at a time, so the tree can hold edits you did not make — this has swept another session's work into the wrong commit three times (2026-08-07, 08-08, 08-09). Would stage ${DIRTY_COUNT:-0} path(s): ${FILE_LIST}.${MULTI_NOTE}${STASH_NOTE} Approve ONLY if every one of those is yours. Otherwise cancel and stage explicitly: git add <paths>."
 
 # JSON-encode the reason as a whole. Escaping only backslashes and quotes by hand left the raw
 # newline of a multi-line Bash call inside the JSON string: invalid JSON, which the harness

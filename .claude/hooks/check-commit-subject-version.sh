@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-commit-subject-version.sh
-# PreToolUse(Bash) hook: every `git commit` subject must read
+# PreToolUse (Bash and PowerShell) hook: every `git commit` subject must read
 #
 #     <type>[(scope)][!]: vX.Y.Z - <description>
 #
@@ -28,15 +28,16 @@
 
 set -uo pipefail
 
+INPUT=$(cat)
+
 # Resolve a safe Python (never a Microsoft Store alias, those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-commit-subject-version" "the commit-subject version label" && { echo '{}'; exit 0; }
 
-# Extract the bash command from tool_input.
+# Extract the bash command from tool_input. A PowerShell tool command is read as Bash text
+# until the _shellwords.py posix reader is wired into the gates (plan 027).
 COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
 import sys, json
 try:
@@ -56,13 +57,21 @@ case "$COMMAND" in
     *) echo '{}'; exit 0 ;;
 esac
 
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || { echo '{}'; exit 0; }
+# The top level of the repository the commit runs in (_pybin.sh taom_git_repo_dir): its <Version> is
+# the one the label must name. Until 2026-10-16 this was the project root plus the command's own cd or
+# -C, so a commit in a worktree the session had entered was judged on the main checkout's version.
+COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-commit-subject-version; exit 0; }
+cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 
 # The subject is parsed and judged in Python: heredoc bodies, quoted -m strings and -F
 # files are all easier there than in shell. Bounded well under the registered timeout so
 # an overrun can still speak (hook-authoring.md, "a timeout is a kill").
-DECISION=$(TAOM_HOOK_COMMAND="$COMMAND" timeout -k 2 8 "$PYBIN" - <<'PY' 2>/dev/null
-import codecs, json, os, re, shlex, subprocess, sys
+DECISION=$(TAOM_HOOK_COMMAND="$COMMAND" TAOM_HOOKS_DIR="$TAOM_HOOKS_DIR" timeout -k 2 8 "$PYBIN" - <<'PY' 2>/dev/null
+import json, os, re, subprocess, sys
+
+sys.dont_write_bytecode = True       # no __pycache__ folder inside .claude/hooks
+sys.path.insert(0, os.environ.get("TAOM_HOOKS_DIR", ""))
+from _shellwords import decode_ansi_c, expand_heredoc, git_invocations, strip_heredocs
 
 cmd = os.environ.get("TAOM_HOOK_COMMAND", "")
 
@@ -77,72 +86,16 @@ def deny(msg):
                      separators=(",", ":")))
     sys.exit(0)
 
-# The command is read the way bash reads it, then each `git ... commit`'s own options are
-# picked out. A regex over the raw string took option-shaped prose inside a message for a real
-# option, missed $'...' quoting, attached -m"..." and concatenated words, and let a -c in a
-# later command switch the label check off (Codex review 2026-09-23, #647).
-
-# 1. Heredocs come out first. A body is the message of `-F -` or of `-m "$(cat <<EOF ...)"`,
-#    and its apostrophes would otherwise unbalance the tokenizer. Each becomes a placeholder.
-bodies = []
-def _stash(m):
-    bodies.append(m.group(3))
-    return "<< __TAOM_HEREDOC_%d__" % (len(bodies) - 1)
-text = re.sub(r"<<-?\s*(['\"]?)(\w+)\1[ \t]*\r?\n(.*?)\r?\n[ \t]*\2\b", _stash, cmd, flags=re.S)
-
-# 2. Bash ANSI-C quoting, $'...', decoded and re-quoted so the tokenizer sees what git gets.
-def _ansi_c(m):
-    try:
-        s = codecs.decode(m.group(1).encode("latin-1", "backslashreplace"), "unicode_escape")
-    except Exception:
-        s = m.group(1)
-    return shlex.quote(s)
-text = re.sub(r"\$'((?:[^'\\]|\\.)*)'", _ansi_c, text)
+# The command is read the way bash reads it (_shellwords.py strip_heredocs, decode_ansi_c and
+# git_invocations, shared with every commit gate since 2026-10-16), then each `git ... commit`'s own
+# options are picked out. A regex over the raw string took option-shaped prose inside a message for a
+# real option, missed $'...' quoting, attached -m"..." and concatenated words, and let a -c in a later
+# command switch the label check off (Codex review 2026-09-23, #647).
+text, bodies = strip_heredocs(cmd)
+text = decode_ansi_c(text)
 
 def expand(value):
-    """A value naming a heredoc placeholder is that heredoc's body (the $(cat <<EOF) form)."""
-    hm = re.search(r"__TAOM_HEREDOC_(\d+)__", value)
-    return bodies[int(hm.group(1))] if hm else value
-
-def tokens(s):
-    lx = shlex.shlex(s, posix=True, punctuation_chars="();<>|&\n")
-    lx.whitespace = " \t\r"          # an unquoted newline separates commands, as in bash
-    lx.whitespace_split = True
-    return list(lx)
-
-SEP = set(";|&\n()")
-GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
-                       "--config-env"}
-
-def commit_arg_lists(s, depth=0):
-    """The argument list after `commit` of every git commit invocation in s."""
-    found = []
-    group = []
-    for t in tokens(s) + [";"]:
-        if t and set(t) <= SEP:
-            if group:
-                found.extend(_commit_args(group, depth))
-            group = []
-        else:
-            group.append(t)
-    return found
-
-def _commit_args(g, depth):
-    i = 0
-    while i < len(g) and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", g[i]):   # VAR=value prefixes
-        i += 1
-    if i >= len(g):
-        return []
-    word = os.path.basename(g[i]).lower()
-    if word in ("bash", "sh", "zsh", "bash.exe") and "-c" in g[i + 1:] and depth < 2:
-        k = g.index("-c", i + 1)
-        return commit_arg_lists(g[k + 1], depth + 1) if k + 1 < len(g) else []
-    if word not in ("git", "git.exe"):
-        return []
-    i += 1
-    while i < len(g) and g[i].startswith("-"):
-        i += 2 if g[i] in GIT_OPTS_WITH_VALUE else 1
-    return [g[i + 1:]] if i < len(g) and g[i] == "commit" else []
+    return expand_heredoc(value, bodies)
 
 LONG = {"--message": "m", "--file": "F", "--trailer": "trailer", "--reuse-message": "reuse",
         "--reedit-message": "reuse", "--fixup": "fixup", "--squash": "fixup", "--template": None,
@@ -211,7 +164,7 @@ def first_line(s):
 texts = []      # every message text this parser can read, for the attribution check
 subjects = []   # the subject of each commit that writes a new one
 try:
-    lists = commit_arg_lists(text)
+    lists = [args for args, _repo in git_invocations(text, bodies, "commit")]
 except ValueError:
     lists = None
 if lists is None:
@@ -266,7 +219,10 @@ if not subjects:
     allow()
 
 # The version the commit will carry: the staged SubModule.xml when it is staged (a
-# release commit bumps it there), else the working tree.
+# release commit bumps it there), else the working tree, both read in the repository the
+# commit runs in, which the hook has already made the current directory (taom_git_repo_dir:
+# `cd <dir> && git commit`, `git -C <dir> commit`, the session's own worktree; another worktree,
+# such as the bannerlord-1.4.5 line, carries its own version).
 sub = "Main/_Module/SubModule.xml"
 text = ""
 try:

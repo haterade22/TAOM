@@ -683,7 +683,20 @@ else
     CSV_MSGFILE="$SANDBOX/subject-ok.txt"; printf 'docs: %s - from a file\n\nbody\n' "$CSV_VER" > "$CSV_MSGFILE"
     CSV_BADFILE="$SANDBOX/subject-bad.txt"; printf 'docs: from a file without the label\n' > "$CSV_BADFILE"
     CSV_AIFILE="$SANDBOX/subject-ai.txt"; printf 'docs: %s - from a file\n\nbody\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n' "$CSV_VER" > "$CSV_AIFILE"
+    # Another worktree carries its own version: a commit run there through `git -C <dir>` or
+    # `cd <dir> &&` is judged against that tree's SubModule.xml. It is a git work tree: the gate
+    # resolves the commit's directory to its work tree's top level (_pybin.sh taom_git_repo_dir), and
+    # a directory in no work tree falls back to the project.
+    mkdir -p "$SANDBOX/otherwt/Main/_Module"
+    git -C "$SANDBOX/otherwt" init -q 2>/dev/null
+    printf '<Module>\n  <Version value="v1.2.3"/>\n</Module>\n' > "$SANDBOX/otherwt/Main/_Module/SubModule.xml"
+    CSV_OTHER=$(cygpath -m "$SANDBOX/otherwt" 2>/dev/null || echo "$SANDBOX/otherwt")
     CSV_CASES=(
+      "git -C another worktree, its label|allow|git -C \"$CSV_OTHER\" commit -m \"docs: v1.2.3 - x\""
+      "git -C another worktree, this repo's label|deny|git -C \"$CSV_OTHER\" commit -m \"docs: $CSV_VER - x\""
+      "cd another worktree then commit, its label|allow|cd \"$CSV_OTHER\" && git commit -m \"docs: v1.2.3 - x\""
+      "cd another worktree then commit, this repo's label|deny|cd \"$CSV_OTHER\" && git commit -m \"docs: $CSV_VER - x\""
+      "git -C a missing directory falls back to this repo|allow|git -C \"$CSV_OTHER/nope\" commit -m \"docs: $CSV_VER - x\""
       "labelled -m|allow|git commit -m \"fix(recruitment): $CSV_VER - Glanhir recruits the Ringlo Vale line\""
       "labelled -m, no scope|allow|git commit -m 'docs: $CSV_VER - update the changelog'"
       "labelled --message=|allow|git commit --message=\"chore: $CSV_VER - tidy\""
@@ -824,6 +837,181 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
+# A commit in another worktree is checked in THAT repository (2026-10-16). The registration runs this
+# script from the project root, which stays where the session started after it enters a worktree, so
+# another session's untracked skill in the main checkout denied every worktree commit. The repository
+# is the one `git -C` or an earlier `cd` names, then the payload's cwd, then the project root.
+CFT_WT="$SANDBOX/cft-worktree"
+mkdir -p "$CFT_WT" "$CFT_REPO/.claude/skills/other"
+git -C "$CFT_WT" init -q 2>/dev/null
+printf '# another session\n' > "$CFT_REPO/.claude/skills/other/SKILL.md"
+CFT_WT_M=$(cygpath -m "$CFT_WT" 2>/dev/null || echo "$CFT_WT")
+cft_payload() {   # $1 the command, $2 the payload cwd or ""; neither holds a quote or a backslash
+    local cwd=""
+    [[ -n "$2" ]] && cwd=",\"cwd\":\"$2\""
+    printf '{"tool_name":"Bash","tool_input":{"command":"%s"}%s,"hook_event_name":"PreToolUse"}' "$1" "$cwd" \
+        | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-claude-files-tracked.sh" 2>/dev/null
+}
+OUT=$(cft_payload "git commit -m x" "")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+    && ok "no cwd and no named directory: the project root is checked, as before" \
+    || bad "a commit with no cwd did not check the project root: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(cft_payload "git commit -m x" "$CFT_WT_M")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "the payload cwd (a clean worktree) is checked, not the project root" \
+    || bad "a commit from a clean worktree cwd was judged on the project root: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(cft_payload "git -C $CFT_WT_M commit -m x" "")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "git -C <clean worktree> commit is checked in that worktree" \
+    || bad "git -C <worktree> commit was judged on the project root: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(cft_payload "cd $CFT_WT && git commit -m x" "")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "cd <clean worktree> && git commit (a Git Bash path) is checked in that worktree" \
+    || bad "cd <worktree> && git commit was judged on the project root: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(cft_payload "cd $CFT_WT_M/nowhere && git commit -m x" "")
+[[ "$(decision_of "$OUT")" == deny ]] \
+    && ok "a named directory that does not exist falls back to the project root" \
+    || bad "a missing named directory skipped the check: $(printf '%s' "$OUT" | head -c 160)"
+# A subdirectory is judged as its work tree's top level: every gate reads root-relative paths, so a
+# subdirectory let all three pass in silence (deep review 2026-10-16, HIGH).
+mkdir -p "$CFT_REPO/sub" "$CFT_WT/sub"
+CFT_REPO_M=$(cygpath -m "$CFT_REPO" 2>/dev/null || echo "$CFT_REPO")
+OUT=$(cft_payload "git commit -m x" "$CFT_REPO_M/sub")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+    && ok "a cwd in a subdirectory is judged at the repository's top level" \
+    || bad "a commit from a subdirectory passed unchecked: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(cft_payload "cd sub && git commit -m x" "$CFT_REPO_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+    && ok "cd <subdirectory> && git commit is judged at the repository's top level" \
+    || bad "cd <subdirectory> && git commit passed unchecked: $(printf '%s' "$OUT" | head -c 160)"
+mkdir -p "$CFT_WT/.claude/skills/wt"; printf '# wt\n' > "$CFT_WT/.claude/skills/wt/SKILL.md"
+OUT=$(cft_payload "git commit -m x" "$CFT_WT_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'wt/SKILL.md (untracked' <<< "$OUT" \
+    && ok "an untracked skill in the worktree itself still denies its commit" \
+    || bad "an untracked skill in the worktree did not deny: $(printf '%s' "$OUT" | head -c 160)"
+# The resolver itself (_pybin.sh taom_git_repo_dir over _shellwords.py git-repo), which every git
+# gate that reads the repository goes through. It answers a work tree's top level, in git's form.
+top_of() { git -C "$1" rev-parse --show-toplevel 2>/dev/null; }
+CFT_WT_TOP=$(top_of "$CFT_WT"); CFT_REPO_TOP=$(top_of "$CFT_REPO")
+crd() {   # $1 the command, $2 the payload cwd or "", $3 the tool (Bash), $4 the git subcommand (commit)
+    local payload
+    payload=$("$HPY" -c '
+import json, sys
+d = {"tool_name": sys.argv[3], "tool_input": {"command": sys.argv[1]}, "hook_event_name": "PreToolUse"}
+if sys.argv[2]:
+    d["cwd"] = sys.argv[2]
+print(json.dumps(d))' "$1" "$2" "${3:-Bash}")
+    INPUT="$payload" CLAUDE_PROJECT_DIR="$CFT_REPO" \
+        bash -c 'source "$1/.claude/hooks/_pybin.sh"; taom_git_repo_dir "$2"' _ "$REPO" "${4:-commit}" 2>/dev/null
+}
+crd_is() {   # $1 the expected directory, $2 the case's name, then crd's arguments
+    local want="$1" name="$2" got
+    shift 2
+    got=$(crd "$@")
+    [[ -n "$want" && "$got" == "$want" ]] && ok "taom_git_repo_dir: $name" \
+        || bad "taom_git_repo_dir: $name gave '$got', not '$want'"
+}
+crd_is "$CFT_WT_TOP" "the payload cwd" "git commit -m x" "$CFT_WT_M"
+crd_is "$CFT_WT_TOP" "a cwd in a subdirectory" "git commit -m x" "$CFT_WT_M/sub"
+crd_is "$CFT_WT_TOP" "a backslashed Windows cwd" "git commit -m x" "$(cygpath -w "$CFT_WT" 2>/dev/null || echo "$CFT_WT")"
+crd_is "$CFT_WT_TOP" "a cd into a subdirectory before the commit" "cd $CFT_WT/sub && git commit -m x" ""
+crd_is "$CFT_WT_TOP" "git -C <subdirectory> commit" "git -C $CFT_WT_M/sub commit -m x" ""
+crd_is "$CFT_REPO_TOP" "a -C on another git command does not count" "git -C $CFT_WT_M status && git commit -m x" "$CFT_REPO_M"
+crd_is "$CFT_WT_TOP" "a cd after the commit does not count" "git commit -m x && cd /" "$CFT_WT_M"
+crd_is "$CFT_WT_TOP" "a multi-line command" "cd $CFT_WT_M"$'\n'"git commit -m x" ""
+crd_is "$CFT_WT_TOP" "a heredoc message with an apostrophe" "$(printf "cd %s && git commit -F - <<'EOF'\nfix: don't\nEOF" "$CFT_WT_M")" ""
+crd_is "$CFT_WT_TOP" "a PowerShell Set-Location" "Set-Location $CFT_WT_M; git commit -m x" "" PowerShell
+crd_is "$CFT_WT_TOP" "git add after a cd" "cd $CFT_WT_M && git add -A" "" Bash add
+crd_is "$CFT_REPO_TOP" "the project root when nothing names a directory" "git commit -m x" ""
+# Commits in more than one work tree: a gate judges one repository per command, so the resolver answers
+# nothing (rc 2) and the commit gates deny (Codex review 2026-10-16: an earlier commit went unchecked
+# behind a later one in another repository).
+[[ -z "$(crd "git -C $CFT_WT_M commit -m a; git -C $CFT_REPO_M commit -m b" "")" ]] \
+    && ok "taom_git_repo_dir: commits in two work trees answer nothing" \
+    || bad "taom_git_repo_dir picked one repository for a command that commits in two"
+crd_is "$CFT_WT_TOP" "two commits in one work tree are one repository" "git -C $CFT_WT_M commit -m a; git -C $CFT_WT_M/sub commit -m b" ""
+crd_is "$CFT_WT_TOP" "pushd then popd returns to the cwd" "pushd $CFT_REPO_M; popd; git commit -m x" "$CFT_WT_M"
+crd_is "$CFT_WT_TOP" "a cd inside ( ) closed by ');' ends there" "(cd $CFT_REPO_M && git status); git commit -m x" "$CFT_WT_M"
+OUT=$(cft_payload "git -C $CFT_WT_M commit -m a; git -C $CFT_REPO_M commit -m b" "")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'more than one repository' <<< "$OUT" \
+    && ok "check-claude-files-tracked denies a command that commits in two repositories" \
+    || bad "check-claude-files-tracked judged one repository of a two-repository command: $(printf '%s' "$OUT" | head -c 160)"
+for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-doc-config-drift.sh \
+            check-commit-subject-version.sh block-broad-git-add.sh; do
+    if grep -qF 'taom_git_repo_dir' "$REPO/.claude/hooks/$hook" \
+        && ! grep -qF 'cd "${CLAUDE_PROJECT_DIR' "$REPO/.claude/hooks/$hook"; then
+        ok "$hook judges the repository its git call runs in"
+    else
+        bad "$hook still judges \$CLAUDE_PROJECT_DIR, not the call's repository (taom_git_repo_dir)"
+    fi
+done
+# A gate that runs the repository's tools/*.py runs them only in a work tree of this project
+# (_pybin.sh taom_is_project_repo): a commit in another repository never runs its code.
+PRJ="$SANDBOX/prj-main"; PRJ_WT="$SANDBOX/prj-wt"; PRJ_FOREIGN="$SANDBOX/prj-foreign"
+mkdir -p "$PRJ" "$PRJ_FOREIGN"
+git -C "$PRJ" init -q 2>/dev/null
+git -C "$PRJ" -c user.name=t -c user.email=t@t commit -q --allow-empty -m init 2>/dev/null
+git -C "$PRJ" worktree add -q --detach "$PRJ_WT" 2>/dev/null
+git -C "$PRJ_FOREIGN" init -q 2>/dev/null
+pir() { CLAUDE_PROJECT_DIR="$PRJ" bash -c 'source "$1/.claude/hooks/_pybin.sh"; taom_is_project_repo "$2"' _ "$REPO" "$1" 2>/dev/null; }
+pir "$PRJ_WT" && ok "taom_is_project_repo: a linked worktree of the project" \
+    || bad "taom_is_project_repo refused a linked worktree of the project"
+pir "$PRJ_FOREIGN" && bad "taom_is_project_repo took another repository for the project" \
+    || ok "taom_is_project_repo: another repository is not the project"
+# The doc-drift gate end to end, with a stub linter that always finds drift and leaves a marker:
+# from a subdirectory of the project it must deny; in another repository it must neither deny nor
+# run that repository's stub.
+for d in "$PRJ_WT" "$PRJ_FOREIGN"; do
+    mkdir -p "$d/tools" "$d/docs/features" "$d/sub"
+    printf 'import os, sys\nopen(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ran.txt"), "w").close()\nprint("## Config-example drift")\nprint("- stub drift")\nsys.exit(1)\n' > "$d/tools/lint_docs.py"
+    printf '# a\n' > "$d/docs/features/a.md"
+    git -C "$d" add docs/features/a.md 2>/dev/null
+done
+drift_run() {   # $1 the payload cwd
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git commit -m x"},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" \
+        | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 30 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" 2>/dev/null
+}
+OUT=$(drift_run "$(cygpath -m "$PRJ_WT/sub" 2>/dev/null || echo "$PRJ_WT/sub")")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'stub drift' <<< "$OUT" \
+    && ok "check-doc-config-drift from a worktree subdirectory runs the top level's linter and denies" \
+    || bad "check-doc-config-drift from a subdirectory did not deny: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$(drift_run "$(cygpath -m "$PRJ_FOREIGN" 2>/dev/null || echo "$PRJ_FOREIGN")")
+if [[ "$(decision_of "$OUT")" == allow && ! -e "$PRJ_FOREIGN/tools/ran.txt" ]]; then
+    ok "check-doc-config-drift leaves another repository alone and runs none of its code"
+else
+    bad "check-doc-config-drift judged another repository or ran its tools/lint_docs.py"
+fi
+# The subject gate reads the <Version> of the repository the session works in, the payload's cwd.
+SUBJ_WT="$SANDBOX/subj-wt"
+mkdir -p "$SUBJ_WT/Main/_Module"
+git -C "$SUBJ_WT" init -q 2>/dev/null
+printf '<Module>\n  <Version value="v7.7.7"/>\n</Module>\n' > "$SUBJ_WT/Main/_Module/SubModule.xml"
+SUBJ_WT_M=$(cygpath -m "$SUBJ_WT" 2>/dev/null || echo "$SUBJ_WT")
+subj_run() {   # $1 the subject
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git commit -m \"" + sys.argv[1] + "\""},"cwd":sys.argv[2],"hook_event_name":"PreToolUse"}))' "$1" "$SUBJ_WT_M" \
+        | CLAUDE_PROJECT_DIR="$REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-commit-subject-version.sh" 2>/dev/null
+}
+[[ "$(decision_of "$(subj_run "docs: v7.7.7 - x")")" == allow ]] \
+    && ok "check-commit-subject-version: a worktree cwd, that tree's label allows" \
+    || bad "check-commit-subject-version denied the worktree's own label"
+[[ "$(decision_of "$(subj_run "docs: v0.0.1 - x")")" == deny ]] \
+    && ok "check-commit-subject-version: a worktree cwd, another version's label denies" \
+    || bad "check-commit-subject-version did not judge the worktree's version"
+# The broad-staging confirm lists the files of the repository the git add runs in.
+printf 'x\n' > "$CFT_WT/wtonly.txt"
+OUT=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git add -A"},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$CFT_WT_M" \
+    | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/block-broad-git-add.sh" 2>/dev/null)
+[[ "$(decision_of "$OUT")" == ask ]] && grep -q 'wtonly.txt' <<< "$OUT" \
+    && ok "block-broad-git-add lists the worktree's files for a git add -A run there" \
+    || bad "block-broad-git-add did not list the worktree's files: $(printf '%s' "$OUT" | head -c 160)"
+OUT=$("$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git -C " + sys.argv[1] + " add -A; git -C " + sys.argv[2] + " add x"},"hook_event_name":"PreToolUse"}))' "$CFT_WT_M" "$CFT_REPO_M" \
+    | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/block-broad-git-add.sh" 2>/dev/null)
+[[ "$(decision_of "$OUT")" == ask ]] && grep -q 'more than one repository' <<< "$OUT" \
+    && ok "block-broad-git-add says its list is incomplete when git add runs in two repositories" \
+    || bad "block-broad-git-add listed one repository for a two-repository add: $(printf '%s' "$OUT" | head -c 160)"
+git -C "$PRJ" worktree remove --force "$PRJ_WT" >/dev/null 2>&1
+rm -rf "$CFT_REPO/.claude/skills/other" "$CFT_REPO/sub" "$CFT_WT" "$PRJ" "$PRJ_WT" "$PRJ_FOREIGN" "$SUBJ_WT"
+
 
 # ---------------------------------------------------------------------------
 # 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
