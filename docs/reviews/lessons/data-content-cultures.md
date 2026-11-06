@@ -1644,3 +1644,26 @@ culture's template too.
 - **Why missed:** the claim was built from the shipped data, not from the callers of `DefaultPartyTemplate`.
 - **Prevent:** before calling a template, list or setting unused, list every engine caller that can reach it.
 - **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 46, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cloning a sibling clones its unverified claims: re-verify every engine statement in the copied text
+
+The great elk (#636) was built by copying the war ram, and three statements arrived word for word that the ram's
+own files make without evidence: that the engine derives `as_war_ram_town_and_village` by suffix (only `_map` is
+looked up, by the party icon), that the behavior's `: MissionLogic` base is pinned by a test (the test pinned only
+`BehaviorTreeMissionLogic`), and a translation step that cannot work until the names are registered in the
+Armory's English `Languages/loc_*.xml`. An older test idiom (a four-level path climb) came along too.
+
+**Why missed:** a clone's CODE is proven by the donor's tests, which made the whole copy feel proven. Its prose,
+comments and ledger steps are proven by nothing, and copying them reads as agreement.
+
+**Prevent:** when cloning a feature, treat every engine claim, "pinned by" line and redo or owed step in the copied
+comments and docs as new text you are asserting: verify each against the installed DLLs (`taom-src`) or the named
+test, or drop it. Fix the donor's copy too, or file it.
+- **On this tree:** This incident ran on the 1.5.x line, and `as_war_ram_town_and_village` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-elk-2026-09-22.md` findings F4, F5, F6 and F11 (2026-09-22). **Recurred 2026-09-23 (`docs/reviews/rca-elk-delta-2026-09-23.md` F4), from the template itself:** four statements said a mount agent's Character is its rider: `creature-mount-authoring.md`'s Phase 7 table and the elk, ram and mumakil mission behaviors cloned from it. The engine builds a mount agent with a null character (v1.4.8 `Mission.cs:4540`, the last `CreateAgent` argument), which #610 had recorded in `TaomAgentStatCalculateModel` on 2026-09-17. A fact established later does not flow back by itself: when you establish an engine fact, grep for the claim it contradicts (here `Character is the`) and fix the template first, since every clone copies it, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A player-facing allow-list is checked against what a player can BE, and a fail-closed gate on editable data says when nothing can match
+Field Commission shipped `allowedRaceNames` as `human`/`dwarf`/`elf` on the #376 premise of a Free Peoples player. `charactercreation/cultures.json` offers seven evil races across six cultures, so for every one of those campaigns the feature was inert from the day it shipped: merit banked, `CanPromote` failed every troop, nothing logged (#612, found by a player). The same quiet outcome follows a typo in the list, because an unknown name never matches a troop.
+- **Why missed:** the design brief recorded the intent (creatures unpromotable) and the mechanism (a race allow-list) but not the enumeration the list had to be checked against, so it encoded the author's campaign. Fail-closed is right for an unknown race id, and it means a short list, a misspelt list and a working list are indistinguishable from outside; no test asserted the default's relation to anything, only its value.
+- **Prevent:** before shipping an allow-list a player can hit, diff it against the set of things the player can be or field (here the union of `cultures.json` races), and pin the copies of the default to each other and to the engine's enumeration (`ShippedJson_AllowedRaceNames_*`). Where the gate fails closed on user-editable data, have the consumer warn once when an entry can match nothing (`FieldCommissionMeritService.WarnUnknownRaceNamesOnce`); the config-validation rule's "string the consumer branches on" case includes list membership, not only switch-with-default.
+- **Source:** 1.5.x `docs/reviews/rca-field-commission-races-2026-09-17.md`, issue #612, on `origin/bannerlord-1.5.x` (ported by WP142).

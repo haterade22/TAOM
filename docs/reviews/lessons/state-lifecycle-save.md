@@ -981,3 +981,14 @@ A process-lifetime singleton that holds persisted per-campaign state must be res
 - **Why missed:** #764's first cut followed the session-reset rule in `csharp-architecture.md` and the earlier lessons in this file, which prescribe an `OnSessionLaunched` reset behind a `_syncedThisSession` latch. `WarOfTheRingMomentumBehavior`, added two lines later in `SubModule.cs`, read the stale FullWar in its own `OnSessionLaunched` and started the momentum war on day 0, and vanilla's `CampaignFactionManagerBehaviour` cached the stale "constant war" in `OnNewGameCreated`. The LIFO lesson had existed since #557, but it was filed under Harmony, not under resets.
 - **Prevent:** put the reset in the constructor of a per-campaign behavior, and pin with a source-text test that `SubModule.cs` builds it with `new`: a container-singleton behavior is constructed once per process, so its constructor reset would run once. A behavior that is itself a container singleton must become per-campaign first. Before choosing any other reset point, list every reader of the singleton and the event it reads in.
 - **Source:** 1.5.x `docs/reviews/rca-wotr-session-reset-2026-10-08.md` (#764), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A MissionView added in OnMissionBehaviorInitialize never ticks (#970, 2026-10-22)
+`MissionScreen.OnMissionAfterStarting` registers views once (v1.4.8 `MissionScreen.cs:2684-2694`), before `Mission.AfterStart`
+runs the submodules' `OnMissionBehaviorInitialize` (`Mission.cs:3799-3815`). A view added there gets
+`OnMissionScreenInitialize` with a null `MissionScreen` and no tick, activate or finalize, so the battle action bar
+never ran, and a second rage-mode controller leaked its handlers.
+- **Why missed:** the add worked, the MissionDiag dump listed the view, and no log line existed for the view's own tick.
+- **Prevent:** every TAOM MissionView is a `[DefaultView]`, which the engine builds before the
+  registration; `MissionViewRegistrationGateTests` fails any other. Give a new view a log line that proves its screen is set.
+- **On this tree:** This incident ran on the 1.5.x line, and `MissionScreen.cs:2684-2694` exists only there; the rule holds here.
+- **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).

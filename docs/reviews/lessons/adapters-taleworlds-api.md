@@ -802,3 +802,25 @@ Messenger port (`03a41b624`, 2026-05-06).
 - **Prevent:** check `Campaign.Current?.MainParty`. `MainPartyNullCheckScanTests` rejects both polarities and the
   reversed and `is` forms; it does not see a `PartyBase.MainParty?.` read.
 - **Source:** 1.5.x `docs/reviews/rca-review-followups-2026-10-14.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `Formation.GetHashCode` dereferences its Team: key engine types by reference, and a hot getter's postfix must not throw (2026-09-26)
+Patch92's store keyed `Formation` in a `ConcurrentDictionary` with the default comparer. `Formation.GetHashCode` is `Team.TeamIndex * 10 + FormationIndex` (v1.4.8 dump `Formation.cs:2423-2426`), and the order preview lays formations out on `new Formation(null, -1)`
+copies, so the first time the player dragged the troll line the `UnitDiameter` postfix threw a
+NullReferenceException inside `OrderTroopPlacer.OnMissionScreenTick` (Mike's debugger caught it).
+- **Why missed:** a class that overrides nothing looked safe as a key, and nobody opened `GetHashCode`; the
+  simulation copies were not known to exist.
+- **Prevent:** key a map of engine objects with a reference comparer unless you have read the type's `GetHashCode`
+  and `Equals`: `ReferenceIdentity.Instance` (`Main/Core/Collections/ReferenceIdentity.cs`, `ReferenceEquals` plus
+  `RuntimeHelpers.GetHashCode`) is the shared one, and `TrollFormationSpacingStore` and `TrollFormationSpacingTracker`
+  key on it (the Patch92-private `FormationIdentity` is gone). A postfix on a getter the engine calls from its UI, AI
+  and worker threads must not throw, so build it only from reads that cannot: since the 2026-09-26 review Patch92's
+  postfix reads the reference-keyed concurrent map and the public readonly `Formation.Team` field, and carries no
+  try/catch.
+- **On this tree:** This incident ran on the 1.5.x line, and `TrollFormationSpacingStore`, `TrollFormationSpacingTracker`, `FormationIdentity` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reference/harmony-patch-registry.md` Patch92; `Main/Core/Collections/ReferenceIdentity.cs`; `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Fetch an engine NativeObject wrapper once per tick, and range-gate before fetching it (plan 015, 2026-09-24)
+`MBAgentVisuals.GetSkeleton()` returns a new managed `Skeleton` on every call (v1.4.8 dump `ScriptingInterfaceOfIMBAgentVisuals.cs:776-786`): a native ref-count increase, a process-wide lock, a `NativeObjectKeeper` and a `GCHandle` (`NativeObject.cs`), then a finalizer that calls native again. `BoneCheck` fetched the attacker's skeleton twice per tick and every captured target's before testing the 4.5 m gate. Other `NativeObject` getters built through the scripting interface behave the same.
+- **Why missed:** a getter reads as a field read, and an adapter that passes straight through (`AgentVisualsAdapter.GetSkeleton`) hides the allocation.
+- **Prevent:** fetch a NativeObject wrapper once per tick and pass it down; run every cheap managed test (range, liveness) before the fetch.
+- **Source:** 1.5.x plan 015 Step 11; `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F9, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -3242,3 +3242,17 @@ The rebuild route exports 7 texture sets. The converter, written for one, took t
 - **Why missed:** a line said the fallback over-blocks, and nobody asked which side is safe there.
 - **Prevent:** before you narrow a fallback, name what a false pass costs against a false refusal on that path.
 - **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 18, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### `\b` is not a separator in snake_case: `\bao\b` never matches `elk_m_ao`
+`convert_tripo_prop_textures.py` found its AO map by `\bao\b`. `_` is a word character, so there is no boundary between `m_` and `ao` and a map named `Elk_M_AO.tga` was skipped; the converter then used a constant 1.0 and said so in one line. The throne's bake staging names its map plain `ao.png`, which matched, so no shipped texture lost its AO; the Animalia packs (#646) would have.
+- **Why missed:** the pattern was written against the one staging layout it first met, and the fallback to a constant is quiet by design.
+- **Prevent:** match a token inside snake_case names with explicit separators, `(^|[^a-z])ao([^a-z]|$)`, and try every role pattern against the real file names of a new source before the run (the converter prints `maps found`: read it).
+- **On this tree:** This incident ran on the 1.5.x line, and `elk_m_ao`, `Elk_M_AO` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/oneoff/convert_tripo_prop_textures.py` (fixed 2026-09-23), `docs/features/animalia-elk-moose.md` "Textures", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### PowerShell variable names are case-insensitive: `$M` and `$m` are the same variable
+A two-run PowerShell line kept the bone-map path in `$M` and then set `$m` to the moose output folder. The second Blender run was handed the folder as `--map` and failed with `Permission denied` on opening it; the first run, made before the reassignment, was fine.
+- **Why missed:** the names look distinct to anyone reading them with Bash or Python habits.
+- **Prevent:** in PowerShell, give variables names that differ by more than case (`$mapPath`, `$mooseOut`). The commonest shape is a lookup table named in capitals and its loop variable in lower case: it struck again the same afternoon, after this lesson was written, when `$role = $PLAN[...]` in `gen_animalia_anim_clips.ps1` overwrote the `$ROLE` template table and the next `$ROLE[$r]` threw a null-index error. Name the table for what it holds (`$TEMPLATE_OF`) and the item for what it is (`$clipRole`).
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_animalia_anim_clips.ps1`, `TEMPLATE_OF` exist only there; the rule holds here.
+- **Source:** 1.5.x #646 moose reskin run and `tools/gen_animalia_anim_clips.ps1`, 2026-09-23, on `origin/bannerlord-1.5.x` (ported by WP142).

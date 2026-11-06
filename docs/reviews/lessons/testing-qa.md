@@ -1536,3 +1536,10 @@ boot evidence described a build that no longer existed.
 - **Why missed:** a boot is evidence of one build, and the fix pass changed the build after it.
 - **Prevent:** after a fix pass, re-stage and boot again, or write which build booted next to the evidence.
 - **Source:** 1.5.x taom-headless-server.md, the B0-B2 headless review, 2026-10-22, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A smoke step that proves an engine decision names the game mode whose model makes it
+`elk.md` told the tester that a troop killed by the elk's Blunt charge proves the engine honours `CanKillEvenIfBlunt`. It named no game mode, and the mode a tester reaches first cannot fail the step: Custom Battle registers `DefaultAgentDecideKilledOrUnconsciousModel` (1.5.x `CustomGame.cs`), which answers killed for every downed agent, while only the campaign's `SandboxAgentDecideKilledOrUnconsciousModel` reads the weapon flags.
+- **Why missed:** the step was written from the campaign model's code, and a smoke list reads as mode-neutral unless it says otherwise.
+- **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
+- **On this tree:** This incident ran on the 1.5.x line, and `elk.md` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636), on `origin/bannerlord-1.5.x` (ported by WP142).
