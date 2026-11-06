@@ -2827,3 +2827,35 @@ generator never read. #758 and #957 each fixed only the block they had just adde
   `--apply` by reading the file and `git show HEAD:<path>` as bytes (converted to the worktree's line endings) and comparing
   them: `git hash-object` and `git diff --stat` cannot see line endings under `core.autocrlf`. Contract: `tools/README.md`.
 - **Source:** 1.5.x issue #959; `tools/tests/test_complete_lords_xslt.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Explain a generator's unexpected diff before you discard its output (#886, 2026-10-18)
+`tools/snapshot_api_surface.ps1` regenerated `patch-targets.md` with one row nobody expected, so its output was thrown
+away and the header was set by arithmetic. The row was a real omission: commit `2410aec51` added two Diplomacy patch
+classes but only one row, which also kept that target out of engine-bump body diffs.
+- **Why missed:** an unexpected line in generated output was read as generator noise.
+- **Prevent:** when a generator's output differs from what you expected, find the cause of each extra or missing line
+  before you discard it (grep the code for the class, `git log -S` for the commit). Take the generated content when it is
+  right, and restore only what the generator does not own (for example the backlinks footer).
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` finding 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change to how a gate behaves updates every doc that runs or reads it (plan 008, 2026-09-24)
+Plan 008 changed the binding gate's command and added two red forms. Three consumers were left behind. `reflection-sites.md` still gave the old command, because the sweep grepped only the `TestCategory=BindingVerification"` spelling. The skill's triage line still said "a red gate is a real finding, one of three classes". The skill claimed "every gate test" goes Inconclusive without the game, while the executor's own log showed 33 of 368 passing.
+- **Why missed:** each claim was checked against the diff, not against the files that consume the gate or the run that measured it.
+- **Prevent:** grep for the command's stem (`BindingVerification`, the test class names) rather than one filter spelling. When a change adds a failure message, update the table that tells an agent how to read a failure. Before writing a quantifier ("every", "all", "never") about a gate, check it against the measured counts in the run log.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F4, F5, F7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove a gate on the states it will meet, not the one it was written in
+
+The five #1020 gates all passed on the worktree that built them and failed on states a later run
+meets. A ShellCheck rc file written LF became CRLF on checkout (the third LF-only-by-accident file,
+after the hooks and the Howdah snapshot), a new script was not linted until staged, a new Python
+folder escaped a hand-kept list, an unchanged checkout skipped the NuGet audit, and a history scan
+run from a subfolder or outside the repo reported "no leaks" with exit 0.
+- **Why missed:** each gate was run once, on its author's state: every file tracked, LF and in a
+  known folder, a full restore, the repo root as working directory.
+- **Prevent:** before review, run a new gate on a fresh checkout (`git check-attr text eol` on each
+  file its tool reads), an untracked new file, a file deleted but not removed, a non-ASCII path, a
+  run from a subfolder, a missing tool, and an empty input (a tool that finds nothing to check must
+  not read as a pass). Prefer passing a tool's options on the command line over a tracked config
+  file that a CR-intolerant tool reads.
+- **Source:** 1.5.x `docs/reviews/rca-quality-gates-2026-10-26.md` findings 1 to 4, 6 and 11 (#1020), on `origin/bannerlord-1.5.x` (ported by WP142).

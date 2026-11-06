@@ -300,3 +300,51 @@ the other way round, so that build cannot see the test at all.
   `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~<Class>`
   and states the expected failure (a CS error in the test project, or a named failing assertion).
 - **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F8; Codex P3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A check inside a shared hook registration gets the time that is left, not a bound of its own (2026-10-16)
+The session-start hook's new upstream check had its own 8 s bound, after two 4 s checks, inside one 10 s registration. A
+slow GitHub could push the hook past 10 s, and the harness then discards every line the hook printed, the game-version
+and Armory drift banners included.
+- **Why missed:** the fast path was timed (3.1 s cold), not the slow one, and `tools/test_hooks.sh` reads only a hook's
+  first bound and never reached the new block.
+- **Prevent:** count a budget from the hook's first command and give each check what is left (the `validate-push.sh`
+  form), and run that check last: a deadline bounds nothing that runs after it, and the kill grace counts too. Test the
+  block with a stub that hangs. A check that needs the network is better in a registration of its own.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 1 and 10, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool that writes a tracked file validates every value it stores (2026-10-16)
+`tools/upstream_watch.py advance` checked a SHA's format and that the record file existed, then stored any existing path,
+one outside the repo included, in the tracked state file.
+- **Why missed:** the validation covered the value the tool computes with, not the value it writes.
+- **Prevent:** before a tool writes a tracked file, check each stored value against what a reader of that file expects
+  (inside the repo, relative, the right shape), and test the rejections.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that judges a commit reads the commit's own repository, never `$CLAUDE_PROJECT_DIR` alone (2026-10-16)
+`check-claude-files-tracked.sh` ran `cd "$CLAUDE_PROJECT_DIR"`, which stays at the main checkout after a session enters a
+worktree. Another session's untracked skill in the main checkout then denied every commit in a clean worktree, and
+entering the worktree did not help.
+- **Why missed:** the hook was written when every commit ran in the main checkout, and its tests ran with the commit's
+  repository and the project root as one directory.
+- **Prevent:** take the repository from the command (`git -C <dir>` on that git call, an earlier `cd <dir>`), then the
+  payload's `cwd`, then the project root, and resolve it to the work tree's top level: every gate reads root-relative
+  paths, so a subdirectory makes them all pass in silence. One resolver for every gate (`_pybin.sh` `taom_git_repo_dir`
+  over `_shellwords.py git-repo`); a second, simpler copy written beside the first lost a `cd` to one unbalanced quote.
+  Test a call whose repository differs from `$CLAUDE_PROJECT_DIR`, and one from a subdirectory. The same fix went into
+  `check-moduledata-validation.sh`, `check-doc-config-drift.sh`, `check-commit-subject-version.sh` and
+  `block-broad-git-add.sh`.
+- **Source:** 1.5.x `docs/reviews/rca-upstream-review-i3-2026-10-16.md` findings 12, 16 and 17, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Restate an upstream fact with its hedge and its evidence kind, in the same sentence (2026-10-15)
+The 2026-10-06 knowledge-base review found 17 findings, all one class: an upstream inference or hedge restated as a
+flat fact. The 2026-10-15 batch, written under a brief that said "an upstream hedge stays a hedge", still had six: "not
+on troop or level" for "explain almost nothing", "must carry all 8 variants" for a layout description, decision state 6
+named the defend state where the decompile says [Likely], a "pool-1 guard" the source never names, a mod-list setting
+inferred as observed, and "nothing ticks such a skeleton" from a lab that only ticked its own.
+- **Why missed:** the writer summarises the source's conclusion, and the qualifier sits in another sentence or in a
+  table footnote that the summary drops. A brief rule cannot see the dropped word; only a side-by-side read can.
+- **Prevent:** write each restated fact with the source's qualifier word for word ("almost", "likely", "in this run",
+  "not checked") and its evidence kind (measured, decompile, code reading, inference) inside the same sentence; when
+  TAOM adds its own reading, tag it "(TAOM's reading)". The fidelity finder of the doc review reads every restated
+  sentence beside its cited source line.
+- **Source:** 1.5.x `docs/reviews/adopt-yotthani-2026-10-15.md` "The doc review"; the 2026-10-06 review in `b5e1d0b3d`, on `origin/bannerlord-1.5.x` (ported by WP142).

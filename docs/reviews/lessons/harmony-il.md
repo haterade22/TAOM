@@ -930,3 +930,27 @@ minutes, 1.16 GB in three hours on the main menu).
 - **Why missed:** the Siege Forces design treated its two prefixes as one unit. `PatchCategoryIndex` applies a category's classes in assembly order, and a class that throws stops the category while earlier classes stay patched, so the picker (declared first) could be live with the spawn-total fit absent, which stalls deployment.
 - **Prevent:** declare the compensating patch class first and pin the order in a wiring test against `PatchCategoryIndex`'s own enumeration; before the dependent patch acts, confirm the compensator is attached (`Harmony.GetPatchInfo` owner check through the adapter) and refuse the behaviour if it is not.
 - **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Deleting a patch drops its engine-bump tracking: pin the vanilla logic you still copy (#886, 2026-10-18)
+The castle recruitment postfix on `RecruitmentCampaignBehavior.HourlyTickParty` became an event listener. Its
+`patch-targets.md` row went with it, and that row was how `engine_body_diff.py` diffed `HourlyTickParty` at a bump. The
+new dispatcher still copies that method's guards, and its "no double recruit" claim depends on vanilla still skipping
+castles there. The scan's slot count mirrors a private estimate that was never tracked at all.
+- **Why missed:** the deletion was read as pure removal. Nobody listed what the snapshot row protected.
+- **Prevent:** when you delete a patch or reflection site but keep code that copies or depends on the vanilla method,
+  add an IL pin in `TAOM.Tests/Migration/` (`RequiresGameIL`, `BindingVerification`) that asserts the property you rely
+  on: the call it must not make, the constant it must load, the delegate shape it must bind. Prove it can fail by
+  flipping the assertion once.
+- **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` finding 2; `TAOM.Tests/Migration/CastleRecruitmentEngineMirrorTests.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### To fill what vanilla sets only for some cases, pre-set it in a prefix and let vanilla overwrite (#937, 2026-10-19)
+The tavern maid's condition sets the `DRINK` and `FOOD` text variables for seven culture ids and returns true for
+all, so TAOM-culture towns showed stale dishes. The first fix was a postfix that tested the culture against a copy
+of vanilla's seven ids, with a rule class, rule tests and an IL test to keep the copy honest. Every one of vanilla's
+branches sets both variables, so a void prefix that sets the TAOM defaults first gets overwritten for exactly
+vanilla's ids and needs no list at all.
+- **Why missed:** the plan read the method's culture checks and wrote their complement, without asking whether
+  vanilla overwrites what a prefix sets.
+- **Prevent:** before copying vanilla's case list into a postfix, check in the installed IL whether every case
+  writes the value. If it does, pre-set the fallback in a prefix. A copied list drifts on the next engine update.
+- **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

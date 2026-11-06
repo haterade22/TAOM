@@ -1327,3 +1327,26 @@ keys on `resource.Id`.
 - **Prevent:** copy a content id into a fixture from the config file (or the `taom-moduledata` MCP),
   not from prose. Codex's config cross-reference table is the check that caught it.
 - **Source:** 1.5.x `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F6; Codex P3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Every existence guard in a resolver gets a test that fails it (plan 008, 2026-09-24)
+`GameAssemblies.ResolveGameDir` checks three inputs: the override must hold `Bannerlord.exe`, the game dir must exist, and so must the build folder. Six tests covered each input's happy path. Deleting the override's `File.Exists` check, or the game dir's `Directory.Exists` check, left all six green. The change had also turned a set-but-missing `BANNERLORD_GAME_DIR` from a skip into a fallback, and no test pinned that.
+- **Why missed:** `tests.md` "Skip-Guard Exhaustion" asks for one test per guard in each direction, but it was read as a rule for skip guards, not for a resolver's guards. The plan's test table said "every cell" and counted inputs, not guards.
+- **Prevent:** for each guard in a resolution chain, write the test where that guard alone fails and the chain must fall through. Prove it by deleting the guard and watching exactly that test go red.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-2026-09-24.md` F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test that reads a repo file uses `RepoPaths.RepoPath`, never a new private repo-root walker (plan 008, 2026-09-25)
+`BindingGateRunSettingsTests` added a private `FindRepoRoot` that walks up from the working directory to `TAOM.sln`, making it the 35th file in `TAOM.Tests` to search for `TAOM.sln`, while `TAOM.Tests/Infrastructure/RepoPaths.cs` resolves the root from `[CallerFilePath]` with no filesystem walk. This is the third review to fix the same duplication.
+- **Why missed:** a new test is modelled on its folder's neighbours, and most of them still carry the old walker, so copying looks like following convention.
+- **Prevent:** before writing a helper in a test, grep `TAOM.Tests/Infrastructure/` for one. A repo-file test imports `using static TAOM.Tests.Infrastructure.RepoPaths;` and calls `RepoPath("dir", "file")`. Because this is a repeat, the locator consolidation (TEST-L5-03) should end with a ratchet test that fails when the count of private `TAOM.sln` walkers grows.
+- **Source:** 1.5.x `docs/reviews/rca-binding-gate-no-silent-skips-decisions-2026-09-24.md` R8; earlier `rca-field-commission-races-2026-09-17.md` F3 and `rca-race-fertility-2026-09-19.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A coverage gate reads the value the runtime reads and asserts how much it parsed (#932, #938, 2026-10-19)
+Two gates built the same day checked less than they appeared to. The bearer banner gate checked every lord's
+culture, but BannerBearers picks a banner by the formation's majority troop culture, and Lindon and Blue Craig lords
+field rivendell and goblin troops. The patch number gate matched one phrasing of a feature-map row and read 10 of
+53 rows that name a number; after a rebase it would have checked one row fewer and still passed.
+- **Why missed:** each gate's input was chosen for convenience (a scan another test already had, one regex), not
+  traced from the runtime reader.
+- **Prevent:** trace the value from its runtime consumer before choosing what the gate reads, and give every gate
+  over parsed text a floor on what it found, so an input that stops matching fails instead of passing.
+- **Source:** 1.5.x `docs/reviews/rca-culture-fallback-followups-2026-10-19.md` F2, F3, F7, on `origin/bannerlord-1.5.x` (ported by WP142).
