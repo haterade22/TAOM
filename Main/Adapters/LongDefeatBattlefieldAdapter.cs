@@ -283,7 +283,32 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
                 onPoint++;
         }
 
+        // The same bound the muster check fails on (LongDefeatChecks.Muster), so a small pack correctly placed beside the point writes no line.
+        if (mustered && onPoint > Math.Max(Features.LongDefeat.Diagnostics.LongDefeatChecks.MusterLimit, batch.Count / 2))
+            LogStackedBatch(team.GetFormation(Class(batch.Slot)), batch, onPoint, musterAt);
         return new LdSpawnReport(points, far, offMesh, onPoint);
+    }
+
+    // A mustered soldier takes his place from GetUnitSpawnFrameWithIndex(CountOfUnits, order position, Direction, Width, CountOfUnits + 1, ...) (Mission.cs:3950-3953, :3975-3976,
+    // :4243-4247). It gives no place in two cases: the width gate "width >= actualWidth" fails (Formation.cs:3141), or CreateNewPosition finds no free rank (Formation.cs:3146,
+    // LineFormation.cs:2475); the engine then puts him on the order position itself (Mission.cs:3992-3995). A place with no navmesh is walked back toward the order position
+    // (Mission.cs:3983-3985), which can also stack him. This repeats the call for the next index and logs what tells the cases apart: the real file count against the simulation's
+    // minimum file count max(1, (int)sqrt(units + 1)) (LineFormation.cs:142, :198), whether the place has a navmesh, and how far the order position stands from the muster point.
+    private void LogStackedBatch(Formation formation, SoldierBatch batch, int onPoint, Vec3 musterAt)
+    {
+        var index = formation.CountOfUnits;
+        var position = formation.CreateNewOrderWorldPosition(WorldPosition.WorldPositionEnforcedCache.GroundVec3);
+        var direction = formation.Direction;
+        formation.GetUnitSpawnFrameWithIndex(index, in position, in direction, formation.Width, index + 1, formation.UnitSpacing, false, out var place, out _);
+        var interval = formation.Interval;
+        var diameter = formation.UnitDiameter;
+        var files = (int)((formation.Width - diameter) / (interval + diameter) + 1e-5f) + 1;
+        var minFiles = Math.Max(1, (int)Math.Sqrt(index + 1));
+        var placeMesh = place.HasValue ? (place.Value.GetNavMesh() == UIntPtr.Zero ? "no" : "yes") : "-";
+        _logger.LogWarning($"[LongDefeat][Muster] stacked batch {batch.Slot} {batch.TroopId} on_point={onPoint} of {batch.Count}: layout_place={(place.HasValue ? "yes" : "none")} place_navmesh={placeMesh} " +
+            $"files={files} min_files={minFiles} width={formation.Width:0.00} interval={interval:0.00} diameter={diameter:0.00} arrangement={formation.Arrangement.GetType().Name} " +
+            $"order={formation.ArrangementOrder.OrderEnum} units={index} spacing={formation.UnitSpacing} ai={(formation.IsAIControlled ? "yes" : "no")} " +
+            $"order_to_muster={formation.OrderPosition.Distance(musterAt.AsVec2):0.0}");
     }
 
     // BaseHealthLimit and HealthLimit have public setters (Agent.cs:911, :915) and the engine's own horse spawn writes the same three values
