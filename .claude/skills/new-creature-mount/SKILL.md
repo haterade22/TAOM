@@ -79,5 +79,5 @@ horse's hit-reaction clip (its type, `actt_mount_strike = 52`, is outside the ha
 
 External LOTRLOME edits get ledger entries
 (`docs/reference/lotrlome-spider-mount-changes.md` pattern); feature doc per
-`docs/features/elephant.md`/`spider.md` shape; CHANGELOG; GitHub issue; the `/ship` sequence
+`docs/features/elephant.md`/`spider.md` shape; the commit body (the changelog entry); GitHub issue; the `/ship` sequence
 for the C# delta.

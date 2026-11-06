@@ -72,20 +72,28 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
    found 781 of them, 937 MB. See [module-backup-sweep](module-backup-sweep.md).
 4. Bump the version fields above.
-4. Write `docs/releases/vX.Y.Z-discord.md` (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
-5. CHANGELOG entry.
-6. Commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
+5. Generate the CHANGELOG section: `python tools/changelog_from_commits.py --version vX.Y.Z --write` (every non-merge commit since the previous tag, subject and body verbatim, grouped by type). Its summary names the commit the range ends at.
+6. Write `docs/releases/vX.Y.Z-discord.md` from that section (shape: [`v2.0.15-discord.md`](../releases/v2.0.15-discord.md)).
+7. Confirm `HEAD` is still the commit step 5 ended at (if not, restore `CHANGELOG.md` and repeat step 5), then commit `chore(release): vX.Y.Z - TAOM vX.Y.Z`, staging release paths explicitly. Every other
    commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
-7. `git tag -a vX.Y.Z -m "…"` then `git push origin bannerlord-1.4.5 vX.Y.Z`.
+8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin bannerlord-1.4.5 vX.Y.Z`.
 
-**Step 7 is the one that gets skipped**, which is why
+**Step 8 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
 catches both a bump committed without a tag and a version that never entered git.
 
 `git push` does not push tags. The tag needs its own refspec, or `--follow-tags`.
+
+**Version numbers on the 1.4.x line.** The next release cut from `bannerlord-1.4.5` is `v2.4.0`,
+then `v2.4.1` and so on (maintainer decision, 2026-11-04). `v2.0.29` to `v2.0.36` are release tags
+of the 1.5.x line, and `v2.1.0` and `v2.1.1` are tags on no branch, so none of them may be reused
+here. Three parts keep `tools/changelog_from_commits.py`, whose `--version` accepts only
+`vX.Y.Z`, and the subject hook unchanged; `2.4` sorts above the public build's hand-labelled
+`2.0.29.5` and reads as "the 1.4 line" in a crash bundle's `TaomVersion`. Until that release
+commit, every subject on this line carries `v2.0.28`.
 
 ## Resolving a crash report to a commit
 

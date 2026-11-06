@@ -22,8 +22,9 @@ test, implement, then verify and refactor. Use the shared non-deploying commands
 do not invoke a Claude slash command as though it were a Codex capability.
 
 Inspect unchanged consumers and missing configuration rows as well as the diff.
-Update feature documentation, actual test evidence and the changelog when the
-task warrants them. Report unavailable engine/runtime verification explicitly.
+Update feature documentation and actual test evidence when the task warrants
+them; the commit body is the changelog entry (`/release` writes CHANGELOG.md).
+Report unavailable engine/runtime verification explicitly.
 
 For a review handoff, use the [packet workflow](../../../.ai/README.md) when an
 authorized committed snapshot exists. Do not commit other work to create it.

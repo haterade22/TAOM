@@ -233,7 +233,7 @@ FILES: [list changed files]
 2. **Test Coverage:** Read each test file. Are edge cases covered? Are there tests for error/null/empty cases? Is the AAA pattern used (Arrange/Act/Assert)?
 3. **Feature Doc:** If this is a new feature, check that docs/features/<name>.md exists. If not, flag it as MISSING.
 4. **GitHub Issue:** Run `gh issue list --state all --limit 20` and check if there's an issue for this work. If not, flag as MISSING.
-5. **CHANGELOG Updated:** Check if CHANGELOG.md has been modified with an entry for this work. Use `git diff --name-only -- CHANGELOG.md`.
+5. **CHANGELOG.md untouched:** only `/release` writes it, from commit bodies. Diff against the review's base, not `HEAD`, so a committed edit shows too: `git diff --name-only <base> -- CHANGELOG.md` (the base is `HEAD` for uncommitted work, else the start of the range) must print nothing. A hand edit is a defect; a `/release` run or an archive roll into `docs/changelog-archive/` is not.
 6. **IoC Registered:** Check that new services/adapters are registered in DryIoc. Read the relevant IoC.cs file.
 7. **SubModule.xml:** If new behaviors or models were added, verify they don't need SubModule.xml registration (most don't, but check).
 
@@ -241,7 +241,7 @@ OUTPUT FORMAT:
 - ✅ Tests: [X test files, Y test methods]
 - ✅/❌ Feature Doc: [exists at path / MISSING]
 - ✅/❌ GitHub Issue: [#N title / MISSING]
-- ✅/❌ CHANGELOG: [updated / NOT UPDATED]
+- ✅/❌ CHANGELOG.md: [untouched / HAND-EDITED]
 - ✅/❌ IoC: [registered / MISSING registrations]
 
 Overall: COMPLETE / INCOMPLETE — [list what's missing]
@@ -553,7 +553,7 @@ If any agent reports a HIGH-severity finding (or Codex reports P1):
 2. If the user explicitly chooses to defer, the deferral MUST be recorded in one of:
    - A GitHub issue (`gh issue create`) with the finding text
    - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
-   - A CHANGELOG "Known limitation:" bullet
+   - A `Known limitation:` paragraph in the commit body (it becomes the release's CHANGELOG entry)
 
 What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed — Codex independently caught the same bug later. Memory: `feedback_dont_defer_high_review_findings.md`.
 
