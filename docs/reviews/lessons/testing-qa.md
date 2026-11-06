@@ -999,3 +999,53 @@ Three checks in plan 018 could not fail: the kernel test pinned both runner call
 - **Why missed:** each test was written from the code it guards, not from the mutation it must catch; a null guard, an empty input set and an already-normal input all turn a missing behaviour into a pass.
 - **Prevent:** for every new guard test, name the one-line mutation it must catch (delete the hand-off, give the set a persisting member, feed CRLF), and run that mutation once before committing. When the real input set has no member that trips the check, add a positive control from elsewhere in the codebase (`FieldCampCampaignBehavior` for the IL check).
 - **Source:** 1.5.x `docs/reviews/rca-composition-root-first-steps-2026-09-24.md` findings 3, 15 and 16; lens 4 and Codex P3 (plan 018), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that hands its work to a lazily resolved service needs one test with that service reachable
+Plan 006's bridge and `CrashReportPatchHelper` tests all ran with `IoC` unconfigured, so `HandleAndSwallow` always took its hand-back fallback. Four mutations survived the whole branch: the bridge returning the raw exception instead of the helper's result (it would never swallow), the off-main verdict computed after the capture or not at all, the helper's `return null` changed to a hand-back, and `Finalizer` passing 0 instead of the hook's recorded id. A hand-written `RecordingCrashService` put into the helper's private cache by reflection kills all four, plus the toggle-off guard.
+- **Why missed:** the review record called the swallow path "not reachable from a test", which was true only of the MCM read; the fallback tests were green, and green read as covered.
+- **Prevent:** for any static hook that resolves its service lazily (`IoC.Resolve` cached in a static), add a fake the test can install and clear (`[TestCleanup]`), and assert what the service received (arguments, and the state it observed at call time), not only what the hook returned. Run the mutation list from the review against the new tests before calling the gap closed.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F2 (lens 4 M1, lens 1 LOW-4), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's "needs a live Mission" is a draft: an unattached MissionBehavior runs its lifecycle with Mission null (2026-10-02)
+The plan 028 profiler's mission behaviour and its installer shipped untested: the plan said the behaviour needed a live
+mission, and the installer's static once-latch made every call after a run's first a silent no-op. `MissionBehavior.Mission`
+is an auto-property, null when the behaviour is not attached, `OnCreated` and `OnEndMissionInternal` are public, and every
+mission read in the profiler's context reader was already wrapped in a fallback, so a `RequiresGame` test drives the whole
+lifecycle with substitutes.
+- **Why missed:** the executor took the plan's "untestable" as fact (dispatch rule 12 says it is a draft), and the latch
+  duplicated a guard its only caller already holds.
+- **Prevent:** before accepting "needs the game", try the type unattached: construct it, call its lifecycle entry points,
+  and see which reads actually throw. Do not add a static once-latch to a method whose caller is already once-only; pin
+  the caller's placement instead (`MissionTickProfilerWiringTests`), so the method stays testable
+  (`MissionTickProfilerBehaviorTests`, `MissionTickProfilerInstallerTests`).
+- **Source:** 1.5.x `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A gate moved into new code is new code: re-check its NaN polarity where it lands (plan 015, 2026-09-24)
+Plan 015 moved `BoneCheck`'s range gate from `FindBoneInRange` into `CheckTargets` so it runs before the native `GetSkeleton` fetch. The line came across as it was, `if (LengthSquared > _maxRangeForCheck) continue;`, an inverted early exit that a NaN visuals frame passes, so a corrupt frame paid the very wrapper the move was meant to save. This is the fourth shipping of the NaN-gate category (see "Write engine-float decision gates as positive requirements" above).
+- **Why missed:** a relocated line reads as already reviewed, and the NaN sweep is framed around gates a change writes.
+- **Prevent:** when a change moves, extracts or reorders a comparison on an engine float, treat it as a new gate: rewrite it as a positive requirement (`if (!(d <= gate)) continue;`) and add the NaN test for it in the same commit.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An IL rule test fails on a body it cannot read, and ships a control it must reject (plan 015, 2026-09-24)
+`WargTickCostTests` scanned per-tick methods for `IoC.Resolve` one level down, but caught `FileNotFoundException` and returned no calls, so a helper whose locals named a `TaleWorlds.MountAndBlade.View` type was never scanned in a filtered run. Its "scans into a reused buffer" tests checked only the overload's arity, which `GetNearAliveAgentsInRange(60, agent, new List<Agent>())` satisfies. Both could not fail for the regression they were named after. Same family as "An audit query that reports zero found needs a positive control".
+- **Why missed:** "cannot read" was treated as "nothing to find", and each test pinned the old code's symptom (the two-argument overload) instead of the property (no allocation per call).
+- **Prevent:** an IL or reflection rule test loads what it needs (`GameAssemblies.EnsureLoaded()` in `[ClassInitialize]`), fails on an unreadable body in scope (inconclusive only when no game install resolves), and carries a small fixture class the rule must reject, asserted in its own test.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F2 and F3 (Codex P3s), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An equivalence test for a periodically rebuilt index queries it stale (plan 015, 2026-09-24)
+Plan 015 dropped `SpatialGrid`'s z cells and claimed every scan returns the same set. That holds only for a grid built from the positions being queried; the production grid is rebuilt every 2 s and queried with live positions, so a column now returns an agent that moved up or down into the sphere since the rebuild, which the old z cell was never probed for. The brute-force test rebuilt the grid before every query and could not see it.
+- **Why missed:** the proof and the test both modelled a fresh index; build-time cells against query-time positions was never a case.
+- **Prevent:** when a change alters how a cached or periodically rebuilt structure is keyed, test it build, then mutate, then query without rebuilding, against the base version's result, and state any difference in the CHANGELOG.
+- **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-2026-09-24.md` F4 (Codex P2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Prove each new test against the mutation its own claim covers (plan 033, 2026-10-02)
+Four plan 033 tests passed a change their claim covered: the clock rule scanned five namespaces while its commit said "any creature-tree node"; the selector reuse test stayed green with both `Clear()` calls deleted (it asserted identity, not contents); 10 of 14 new early-return gates had no test, so a dropped value would have silently stopped warg rage or creature death cleanup; and the two-map grid swap had no content test. Separately, the D6 log-line pins sat in a `RequiresGame` class that hosted CI never runs, a recurrence of "A pure rule's tests go in an untagged class".
+- **Why missed:** each RED step proved the change happened against the base, not that the test would notice the change being undone or narrowed later.
+- **Prevent:** for every test that guards an optimisation, delete or narrow the guarded line (a `Clear()`, a gate value, a scanned namespace) in a scratch run and keep the red log; assert what a fresh object would hold, not only that the object was reused; give a gate with N value lists a table test against a hand-read oracle; put pure formatting in an engine-free class with untagged tests.
+- **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` findings R2, R7, R8, R10, R11, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A diagnostic's definition of done includes the second run
+The `[CareerPerks]` stat lines dedupe on a singleton service so a spawn logs once per distinct set of values; without a reset at mission end the second battle of a session logged nothing at spawn, which is the re-test loop the feature doc tells the tester to use.
+- **Why missed:** the dedupe was designed against one battle's stream of stat updates; the singleton's lifetime is the process.
+- **Prevent:** every dedupe, latch or "already logged" flag on a `Reuse.Singleton` gets a reset at the session or mission boundary and a test that the second run logs again (`ResetDiagnostics_ClearsTheDedupe_SoTheNextSpawnLogsAgain`).
+- **Source:** 1.5.x `docs/reviews/rca-career-perks-2026-09-17.md` finding 6, #613, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -192,3 +192,15 @@ D47 took the crash-capture allowlist from 6 to 16 entries. The same commit left 
 - **Why missed:** the executor updated the texts that name the list's members and grepped for the class name, but not for the count word, and did not re-check examples chosen to lie outside the list.
 - **Prevent:** after changing a list's members, grep the old count spelled both ways ("six", "6 of 6"), every "for example" that points inside or outside the list, and the hint of the toggle that governs it. A player-facing hint is part of that set even when the file is outside the diff.
 - **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-decisions-2026-09-24.md` F3 to F5 (lenses 1, 2, 4, 5, 6 and Codex P3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cap a per-event diagnostic per run, and count what the cap drops (2026-10-02)
+The plan 028 tick profiler wrote one `[Hitch]` line at INFO, a synchronous flush on the main thread, for every frame
+at or above its threshold. The rate was bounded (1000/threshold lines a second) but the count was not: at the MCM floor
+of 50 ms, a battle running under 20 fps wrote a per-frame INFO line for its whole length, which D6 rule 5 forbids, and
+plan 041 turns the profiler on for every player.
+- **Why missed:** the plan priced the stream at the default threshold only and deferred a cap before D6 existed; two of
+  six review lenses judged it bounded because nothing was dropped.
+- **Prevent:** any line written per event (frame, agent, hit) at INFO gets a per-run cap that keeps the first occurrences
+  in full, one line where the cap starts, and a count of every event in the run's summary
+  (`MissionTickProfiler.MaxHitchLinesPerMission`). Price a stream at its setting's floor, not its default.
+- **Source:** 1.5.x `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R1, on `origin/bannerlord-1.5.x` (ported by WP142).

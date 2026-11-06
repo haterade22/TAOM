@@ -796,3 +796,9 @@ campaign and custom field battle.
 - **Prevent:** decide "field battle" with `Mission.IsFieldBattle` (set in `MissionCombatantsLogic.EarlyStart`), and attach on
   the first screen tick whose mode is Battle (`BattleActionBarMissionView.ShouldAttach`).
 - **Source:** 1.5.x issue #970, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A buffer moved from a local to a field takes its owner's lifetime: empty it after use in a singleton (plan 033, 2026-10-02)
+`SpatialGridDebugService` began scanning into a reused `List<Agent>` field. The service is a `Reuse.Singleton`, so the list kept the last overlay frame's agents, and through `Agent.Team` their finished mission, reachable into later battles; as a local it died with the frame.
+- **Why missed:** the allocation fix was judged per call; nobody looked up the registration that sets the field's lifetime.
+- **Prevent:** when hoisting a buffer into a field, read the owner's registration or construction site; if the owner outlives the data (an IoC singleton, a static), clear the buffer after each use and pin the clear with a test.
+- **Source:** 1.5.x `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R9, on `origin/bannerlord-1.5.x` (ported by WP142).
