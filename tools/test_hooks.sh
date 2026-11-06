@@ -488,7 +488,7 @@ fi
 head2 "5. fail-open with no jq and no python on PATH"
 # The never-fail-silent assertion below applies only to hooks that can actually BLOCK a
 # Bash call: registered PreToolUse against a Bash-matching matcher, and carrying a deny or
-# exit-2 path. Advisory hooks (notify-*, suggest-compact, mark-verification-run) and hooks
+# exit-2 path. Advisory hooks (mark-verification-run) and hooks
 # matched on other tools legitimately produce nothing for this payload, and demanding
 # output from them would make the check noise rather than signal.
 BLOCKING_BASH_GATES=$("$HPY" - <<'PYEOF'
