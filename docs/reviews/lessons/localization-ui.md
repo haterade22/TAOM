@@ -689,3 +689,23 @@ The enlistment board was turned into a plain string once per status change so th
 - **Why missed:** before the flatten the board re-rendered every frame and picked `NEWLINE` up later, so the unset state had no visible effect, and the render test never started from it.
 - **Prevent:** before `TextObject.ToString()` freezes a text, set every global the text reads (here `MBTextManager.SetTextVariable("NEWLINE", "\n")`), and test the frozen result with those globals removed first.
 - **Source:** 1.5.x #1019; `rca-enlistment-board-render-and-probes-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A result message states what the action did on every branch, not what was recommended (2026-10-01)
+The #701 advisor told every player "saved: Number of Ragdolls 5, Number of Corpses Low", but Apply only lowers each
+option (`Math.Min`), so a player already below the recommendation was told a value that was never written.
+- **Why missed:** the never-raise rule was added to the code after the text was written from the recommendation;
+  nothing compared the message with each branch of the action it reports.
+- **Prevent:** before registering a result or confirmation string, list the action's branches and check the text
+  is true on each; when it can only be true on some, make it value-neutral or format in the values written. Name
+  vanilla's options through vanilla's own keys (`{=1awQTVqN}Number Of Ragdolls`), so a translation matches the
+  Options screen.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never put `\n` in a `{=KEY}` default; use `{newline}` (2026-10-01)
+`harvest_literal_loc_keys.py` writes a C# `\n` into the XML `text` attribute as a raw line break, which XML parses
+back as a space, so the registered English silently differs from the inline default and
+`LocalizationKeyConsistencyTests` fails far from the cause (#702).
+- **Why missed:** a two-paragraph inquiry body was written with `\n\n`, the C# habit; the house idiom
+  (`taom_precompile_inquiry_body`) was not looked up.
+- **Prevent:** one paragraph, or `{newline}`. Until #702 lands, read the harvested row back before translating.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).

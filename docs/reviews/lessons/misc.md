@@ -262,3 +262,14 @@ The `[AnimMem]` session wrote one line per 5 s window and a mission summary. Sam
 - **Why missed:** the plan said "a summary at mission end", and nobody compared the summary's fields with the periodic line's to find the fields only the periodic line carries.
 - **Prevent:** for any instrument with periodic and summary lines, write the partial window at the end whenever it holds samples, and pin it with a test that ends the session between two periodic lines.
 - **Source:** 1.5.x `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Write a provenance claim from a comparison against the source, not from memory (2026-10-06)
+The register said "No code was copied" for the stuck-battle guard, while its adapter mirrored the player's module:
+a detach loop with the same read-back check and `-1` sentinel, a predicate's name and first condition, a fallback string,
+the order of work, and the module Id. The builder had read the source while planning and listed what was "taken" from
+memory of the ideas, not of the code.
+- **Why missed:** reading a source while writing reproduces its details below the level of ideas, and a register entry
+  written afterwards records the intent, not the result.
+- **Prevent:** before writing a `behavioural-port` row, diff the new files against the source (names, string literals,
+  loop shapes, ids) and either rewrite each match from a TAOM spec or relabel it `verbatim-port`.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 6 (Completeness lens), on `origin/bannerlord-1.5.x` (ported by WP142).

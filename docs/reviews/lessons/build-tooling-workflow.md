@@ -2518,3 +2518,28 @@ The first `check_mcm_default_flips.py` compared the settings against one release
 - **Why missed:** one base tag, constants compared as text, and silent OK paths (no tag, no settings found, a failed read, a partial class) that printed a pass.
 - **Prevent:** compare against every release the trap can reach; make every degenerate input fail loudly; prove the gate on the commit before the fix (it must fail there) before trusting a green run.
 - **Source:** 1.5.x `rca-settings-default-flips-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan item dropped mid-build is struck from the issue that promised it, in the same step (2026-10-01)
+#701 was filed before implementation and promised a `[MissionPerf] corpses=` field and a campaign-map advisor. The
+field was dropped (it duplicates `agents` minus `active`) and the advisor moved to the main menu, both for good
+reasons recorded only in chat; the issue kept promising them, and whoever closed it would have looked for a field
+that does not exist.
+- **Why missed:** the departure was a simplicity call made mid-build, and the issue, written first, was not on the
+  list of things to update.
+- **Prevent:** when a planned item is dropped or moved, edit the issue body (and the feature doc's departures)
+  in the same step, not at close.
+- **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A performance stage carries a measured cost, and is re-weighed after the stages before it land (2026-10-02)
+Plan 037 Stage D added a transpiler, a thread-static hand-off, a fallback and four log formats to skip one
+cache-backed distance read per positively scored town on a caravan's infrequent re-think, reversing a reviewed
+"cheap enough" decision (`rca-caravan-trade-2026-07-04.md` row 2) on a call count, not a time. Stage B1
+reordered two MCM toggle reads that Stage A, one commit earlier, had already made a cached field read. Six
+review lenses rejected D under the simplicity criterion and B1 bought nothing; both were removed.
+- **Why missed:** the plan costed each call site in isolation and before the earlier stages existed, and the
+  build step's contract asked for parity, not for a fresh simplicity verdict once the code was written.
+- **Prevent:** a performance stage states its win as a measured or bounded time (a profile, or the callee's
+  cost times its real frequency), never a call count multiplied out. A stage that reverses a reviewed
+  decision needs new evidence the review lacked. Before building stage N, re-state stage N's win against the
+  code as stages 1 to N-1 left it; drop the stage when the win no longer dominates its cost.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` findings 1 and 2, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -875,3 +875,23 @@ The Combat Mechanics damage rules (crush-through, cleave, stagger, charge knockd
 - **Why missed:** the module-declared model looked like the Custom Battle model, so nobody asked what the campaign model carried that it did not. Registering the campaign model there is not an option: it derives from `SandboxAgentApplyDamageModel`, which reads `Campaign.Current` on the first mounted hit and throws.
 - **Prevent:** a Custom Battle twin extends the engine's Custom Battle base and is added in `RegisterCustomBattleModels`; a module may not declare a slot that method fills (the module step runs after it, the last model added wins, and a module fault drops the model for the session; `FeatureModulesTests` pins it). When you mirror a campaign model, pin the twin's hook call order against the campaign model's IL, and document each place the Custom Battle base answers differently from Sandbox's. A doc line that says a rule is campaign-only needs a named reason, or it is a gap. When a mode's behaviour changes, sweep the docs by the mode name ("Custom Battle") together with the mechanics' names, not only by type name.
 - **Source:** 1.5.x `docs/features/combat-mechanics.md` "Custom Battle", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A guard on a lazily parsed parameter is not the service-exit gate (plan 002, 2026-09-24)
+Career mutation attributes are copied into a string dictionary at load (`CareerConfigProvider.ParseChoice`) and parsed only when an ability fires (`MutationParams.GetFloat`), so issue #128's loader-side NaN sweep never saw them. Plan 002 guarded `GetFloat` and called it "the single chokepoint", but a finite parameter still overflows inside a calculator (`multiply` by `1e38` gives +Infinity) and `MutationService.ApplyMutation` writes the result unchecked. The same plan ruled out the rule-5 warning because the accessor has no logger, without looking at the two layers that do.
+- **Why missed:** the fix was judged at the accessor alone; "chokepoint" was true for the parse and false for the value finally written.
+- **Prevent:** when a NaN sweep audits loaders, also grep for values stored raw and parsed at use (`Dictionary<string, string>` params, `GetFloat`-style accessors). Guard the parse, then gate the calculated result where the service writes it (`if (!FiniteFloatValidator.IsFinite(result)) { warn; keep current; }`, per `csharp-architecture.md` "gate the service's own EXIT"); the writer usually holds the logger and context the accessor lacks.
+- **Source:** 1.5.x `docs/reviews/rca-nan-infinity-config-guards-2026-09-24.md` finding 5 and the root-cause pattern; the exit gate is open, awaiting Mike, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A skip gate in front of a service call calls that service's own predicate, never a copy (2026-10-02)
+Plan 037 let `TaomPartySpeedModel` skip the roster walk when `ICulturalFeatsService.NeedsMountedCount` says the
+Rohan infantry penalty cannot apply, passing (0, 0) instead. `NeedsMountedCount` re-derived the penalty's feat
+test rather than the penalty using it, so a second trigger feat added to the penalty alone would have left the
+model skipping the walk for that culture and the penalty silently off; the parity test enumerated only
+today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with two callers) was built right.
+- **Why missed:** the skip-gate was written as a sibling of the decision it guards, and a parity matrix over
+  the current data cannot see a predicate that drifts later.
+- **Prevent:** when a caller skips work because a service would ignore it, the service's decision method
+  calls the same predicate the skip uses (`if (totalCount <= 0 || !NeedsMountedCount(culture)) return;`), so
+  the two cannot disagree. Review a new "needs X" member by finding the decision it mirrors and checking the
+  decision calls it.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -1187,3 +1187,22 @@ A source-text test that pins a wiring invariant ("SubModule builds this behavior
 - **Why missed:** the review lenses read the call site and judged it covered by the service tests and a source-text hint; nobody deleted the call. An absence assertion on the client path is a different test from a presence-and-order assertion on the host path.
 - **Prevent:** give the behavior an optional `Func<float>` clock (tests pass a fixed day, the game reads the campaign's elapsed days), then assert the host path with `Received.InOrder` and the daily tick without the repair. Prove each such test by mutation: remove the call, move it after the phase check, and see the test fail (1 failed, 7 passed here), then restore the file byte for byte. For any handler with a client gate, write the positive host test first.
 - **Source:** 1.5.x `docs/reviews/rca-wotr-phase2-wars-2026-10-08.md` (#772), Codex R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's budgets and cadences are acceptance items too (Lost Footing, 2026-10-20)
+The plan said "64 agents per frame" in its shape section. The acceptance list the builder ticked did not carry it, and the
+build read 64 agents per one-second pass, so a sweep took 16 s at 1,000 agents and every "2 s" window meant 16 to 24 s.
+Second occurrence of the acceptance-list gap after Fell Foes (entry above, "A plan brief restates every approved
+behaviour").
+- **Why missed:** the acceptance list held behaviours, not constraints.
+- **Prevent:** every number the design depends on (per-frame budgets, cadences, windows, caps) is an acceptance item with
+  its unit, and a test pins it (here: N agents over N/64 ticks, each read once).
+- **Source:** 1.5.x `docs/reviews/rca-lost-footing-2026-10-20.md` row 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fixture default must be a value production can return in the case under test (#960, 2026-10-21)
+The battle-service fixture stubbed the war top-up to succeed, so the new vassal sit-out tests ran a
+combination the real service cannot produce (for a vassal the top-up always refuses where the sit-out
+fires), and every real sit-out logged "joining anyway" first.
+- **Why missed:** the new tests inherited a convenient fixture default and asserted only the outcome.
+- **Prevent:** when a new rule runs beside an existing call, stub that call with what production returns
+  in the new case, and assert the calls that must not happen.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-vassal-sit-out-2026-10-21.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -876,3 +876,22 @@ The map profiler's menu probe on `GameMenuVM.OnFrameTick` was excluded from Patc
 - **Why missed:** the exclusion was copied from the earlier profiler-only targets, and its stated reason was never checked against the callers.
 - **Prevent:** when a shield exclusion is justified, trace where an unshielded exception lands, and write that path and the parity reason in the feature doc's per-target table (the 2026-10-02 per-target table rule). A method that stays shielded beside it gets its own row, naming which patches a strip removes.
 - **Source:** 1.5.x #1019; `rca-enlistment-board-render-and-probes-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A finalizer cannot tell a vanilla NRE from a foreign one: guard the read with a prefix (Patch123, 2026-10-26)
+Patch123 first contained vanilla `HeroHelper.GetLastSeenText`'s missing-leader `NullReferenceException` with a
+finalizer that judged by exception type. Codex proved it swallowed an NRE from another owner's throwing prefix. The
+fix added an origin check (frame 0 of the exception maps to the target through
+`Harmony.GetOriginalMethodFromStackframe`) plus a hero-state check, and Codex proved that one wrong too: a small
+dereferencing foreign prefix the JIT inlined, a foreign transpiler's inserted throw and an NRE inside the inlined
+`GameTexts.FindText` all threw in the same replacement frame and passed. Exception type, frame and coincident state
+cannot name the failing instruction. The shipped guard is a prefix: it reads the state that reaches the unguarded
+read, returns the safe result and skips the original only there, and swallows nothing.
+- **Why missed:** the "swallow only the exception class it exists for" entry above was followed to the letter. For
+  a class as generic as `NullReferenceException`, on a method another mod can patch, the class identifies nothing,
+  and the first fix narrowed the check without asking what else shares the replacement frame.
+- **Prevent:** to contain a vanilla NRE from a known unguarded read, write a prefix on the state that reaches the
+  read (repeat any vanilla write the skipped body makes before it, and classify the bool prefix in
+  `CoopVetoClassificationTests`). Keep a finalizer only for an exception no prefix can predict, scope it to the
+  narrowest type, and write down what else can throw it inside the replacement: other owners' prefixes, postfixes
+  and transpilers, and every callee the JIT can inline.
+- **Source:** 1.5.x `rca-lastseen-guard-2026-10-26.md`; Codex outputs `docs/reviews/raw/codex-prereview-lastseen-guard-2026-10-26.md` and `codex-fixreview-lastseen-guard-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

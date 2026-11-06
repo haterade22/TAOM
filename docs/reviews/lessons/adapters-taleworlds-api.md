@@ -566,3 +566,37 @@ doc described a `Mountable` creature. The backstop then fired for every routed c
   `CanWieldWeapon`), `git grep` the property and the flag across `Main/` and the docs, and re-read each hit as if
   the agent had the new flags. List the ones that change behaviour in the commit body.
 - **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 9 and 12, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before a shared component's presence means a kind, list every site that attaches it (Lost Footing, 2026-10-20)
+The census called an agent a creature when it carried a `BehaviorTreeAgentComponent`. Race Abilities attaches the same
+component to every soldier whose race or culture has a profile, on by default, so nearly every soldier would have read as
+a creature.
+- **Why missed:** the plan defined the kind from the creature features, the component's best-known users.
+- **Prevent:** before using a component, flag or marker as a classifier, grep every `AddComponent`/attach site of that type
+  and classify by what the component holds (here the tree type), not by its presence.
+- **Source:** 1.5.x `docs/reviews/rca-lost-footing-2026-10-20.md` rows 1 and 14, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read an engine getter's body and its callers before measuring with it (Lost Footing, 2026-10-20)
+The census read `Agent.GetTargetPosition()` as the AI move destination. Natively it is the movement-lock target, written
+only by `SetTargetPosition*` (ladders, siege engines, cheering) and (0,0) for an ordinary soldier; vanilla reads it only
+while `MovementLockedState` is set. The AI destination is `GetAIMoveDestination()`.
+- **Why missed:** the name fitted, and the plan's engine table listed it without reading it.
+- **Prevent:** for every engine member that feeds a gate or a measurement, read its body (native when it is an icall) and
+  at least one vanilla caller, and write the meaning into the plan with the citation.
+- **Source:** 1.5.x `docs/reviews/rca-lost-footing-2026-10-20.md` row 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A drift guard pins an engine dependency at the strength the code relies on it (2026-10-02)
+Patch99 re-implements `CreateMergedXmlFile`'s loop, copies `ApplyXslt`, and drops the `ToXDocument`/`ToXmlDocument`
+round trip, yet its IL tests compared an unordered set of callee names and its watched-method test checked names while
+the adapter resolves exact parameter lists. A reordered loop, a changed XSLT setting or a new conversion option would
+have changed the merged document with no exception, no fallback and a green `/verify-bindings`. This repeats the
+2026-10-01 entry "pin that order from its IL" for a re-implemented body.
+- **Why missed:** the guard copied the shape of the existing binding tests ("which helpers exist") instead of the
+  shape of the dependency ("this exact sequence, these exact signatures").
+- **Prevent:** for every engine body TAOM copies or whose effect it removes, pin its ordered calls, with their
+  overloads and the constants that feed them (`IlCallScanner.Fingerprint`; a name-only call list misses
+  `keepDuplicates: false` becoming `true`), in a
+  `BindingVerification` + `RequiresGameIL` test with re-pin instructions in the failure message
+  (`XmlMergeBindingTests.MirroredEngineBodies_CallExactlyThePinnedSequence`); resolve watched or bound members in the
+  test by the same parameter list the adapter uses, from one shared table.
+- **Source:** 1.5.x `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).

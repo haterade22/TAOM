@@ -518,3 +518,24 @@ never started, and every cost was still paid.
   (`GetScoreOfDeclaringWar`), `IsAllowed` for decisions, the notice itself for direct offers. Keep the action prefix as
   the backstop.
 - **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md` findings 4 to 6 and 9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sweep that decides other parties' outcomes asks who controls each one, not only whether this peer may tick (2026-10-06)
+The stuck-battle sweep copied its siblings' `IsAuthority` gate, true on a BannerlordCoop host. But Coop's
+`MapEvent.Update` prefix never runs vanilla for a non-raid event holding a party this instance does not control, and the
+sweep's player-battle test saw only the local player, so on a host it would award a remote player's battle that then
+never finishes. `IsAuthority` also fails open under BannerlordTogether.
+- **Why missed:** `IsAuthority` answers "may this peer run campaign logic", the question the sibling hourly behaviors
+  face (double-running on clients). Deciding a battle's winner is a decision about other players' parties.
+- **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
+  entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
+- **Source:** 1.5.x `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the co-op predicate table before gating a world mutation, not the nearest precedent (career quests, 2026-10-27)
+A repeat of "Presence is not authority" above. A sweep that cancels a former player hero's career quest gated on
+`ICoopPresenceProvider.IsCoopActive`, so a solo player with the Coop module enabled never got the fix, and a dedicated
+server was protected only by the presence probe. The single-player predicate is `CoopSessionPolicy.IsSinglePlayerAuthority`.
+- **Why missed:** the gate was copied from `PlayerPossessionService`, whose presence check is a documented heir
+  discriminator, not an authority decision; neither this lesson nor the coop-interop "four questions" table was read.
+- **Prevent:** before a co-op gate on code that changes the world, read `docs/features/coop-interop.md` "Which predicate
+  to use" and pick by what the code decides; a precedent's predicate answers that precedent's question.
+- **Source:** 1.5.x `rca-career-quest-owner-change-2026-10-27.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
