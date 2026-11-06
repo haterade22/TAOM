@@ -82,9 +82,11 @@ internal static class LongDefeatCommands
         + "  post <tower>: taom.ld_record post hornburg. One spot where an archer should hold on a tower top; face out over the approach. Record one per archer, about 8 a tower.\n"
         + "  tower_volley <tower>: taom.ld_record tower_volley hornburg. A spot behind that tower's parapet that its volley looses from; no facing is kept. About 2 a tower.\n"
         + "  volley: taom.ld_record volley. A spot behind the parapet along the wall walk that the Elven Volley looses from; no facing is kept. About 6, spread along the wall.\n"
+        + "  armoury: taom.ld_record armoury. Where the lord walks to buy his own armour and weapons (Phase 4); face the way he should face while he shops. Optional.\n"
+        + "  yard: taom.ld_record yard. Where the lord walks to buy siege engines, the engineer's yard (Phase 4); face the way he should face there. Optional.\n"
         + "  clear <kind> [tower]: taom.ld_record clear post hornburg, or taom.ld_record clear volley. Removes this scene's records of that kind (only that tower's when one is named) so a spot can be done again.\n"
         + "A <tower> is a name of lowercase letters and underscores that you choose and repeat for every record of that tower (hornburg, deeping_wall). "
-        + "taom.ld_export folds this scene's records into long_defeat_<scene>.json, prints the counts per kind and per tower, and prints one block to paste for each of the keep, the muster, the sally, the towers and the volley that is recorded.";
+        + "taom.ld_export folds this scene's records into long_defeat_<scene>.json, prints the counts per kind and per tower, and prints one block to paste for each of the keep, the muster, the sally, the towers, the volley, the armoury and the yard that is recorded.";
 
     /// <summary>True when the first word is <c>clear</c>, which reads only the scene, so the console asks for no controlled soldier.</summary>
     internal static bool IsClear(IReadOnlyList<string> args) => args.Count > 0 && string.Equals(args[0], ClearWord, StringComparison.OrdinalIgnoreCase);
@@ -158,7 +160,7 @@ internal static class LongDefeatCommands
         if (args.Count > 2)
         {
             if (!LongDefeatRecorder.IsTowerKind(kind))
-                return $"A {kind} record has no tower to name.\n" + RecordUsage;
+                return $"The {kind} kind has no tower to name.\n" + RecordUsage;
             var refusal = ParseTower(args, 2, kind, out tower);
             if (refusal != null)
                 return refusal + "\n" + RecordUsage;

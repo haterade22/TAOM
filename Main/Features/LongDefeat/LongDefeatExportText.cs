@@ -8,20 +8,21 @@ namespace TAOM.Features.LongDefeat;
 
 /// <summary>
 /// The part of the <c>taom.ld_export</c> reply that lets the maintainer check his recording and paste it: the count of records per kind and per tower, the optional kinds
-/// still unrecorded, and one paste-ready block per field of the fortress row that a record fills (keep, muster, sally, towers, volley), each under one instruction line.
+/// still unrecorded, and one paste-ready block per field of the fortress row that a record fills (keep, muster, sally, towers, volley, armoury, yard), each under one instruction line.
 /// Plain English: console output is not localized (docs/features/dev-console.md).
 /// </summary>
 internal static class LongDefeatExportText
 {
-    // The kinds listed as "no record yet" here. A missing keep or muster is already named by the reply's first sentence, and a sally is optional and never listed as missing.
-    private static readonly string[] OptionalFortKinds =
+    // The kinds listed as "no record yet" here. A missing keep or muster is already named by the reply's first sentence, and a sally is optional and never listed. The armoury and the yard are Phase 4 places, listed here so the recording session does not miss them.
+    private static readonly string[] OptionalKinds =
     {
-        LongDefeatRecorder.PostKind, LongDefeatRecorder.TowerVolleyKind, LongDefeatRecorder.VolleyKind,
+        LongDefeatRecorder.PostKind, LongDefeatRecorder.TowerVolleyKind, LongDefeatRecorder.VolleyKind, LongDefeatRecorder.ArmouryKind, LongDefeatRecorder.YardKind,
     };
 
     private static readonly string[] SingleKinds =
     {
         LongDefeatRecorder.KeepKind, LongDefeatRecorder.MusterFootKind, LongDefeatRecorder.MusterArchersKind, LongDefeatRecorder.SallyKind,
+        LongDefeatRecorder.ArmouryKind, LongDefeatRecorder.YardKind,
     };
 
     /// <summary>The lines after the reply's first sentence: counts, then the unrecorded optional kinds, then the blocks. It starts with a newline, to follow the reply's first sentence.</summary>
@@ -29,7 +30,7 @@ internal static class LongDefeatExportText
     {
         var sb = new StringBuilder();
         sb.Append('\n').Append(CountsLine(export, scene));
-        var absent = OptionalFortKinds.Where(k => export.CountOf(k) == 0).ToList();
+        var absent = OptionalKinds.Where(k => export.CountOf(k) == 0).ToList();
         if (absent.Count > 0)
             sb.Append("\nNo record yet for: ").Append(string.Join(", ", absent)).Append('.');
         sb.Append(Blocks(export));
@@ -71,6 +72,8 @@ internal static class LongDefeatExportText
         AddBlock(sb, root, "sally", "the sally point");
         AddBlock(sb, root, "towers", $"{export.CountOf(LongDefeatRecorder.PostKind)} posts and {export.CountOf(LongDefeatRecorder.TowerVolleyKind)} tower volley spots in {export.Towers.Count} tower(s)");
         AddBlock(sb, root, "volley", $"{export.CountOf(LongDefeatRecorder.VolleyKind)} volley origins");
+        AddBlock(sb, root, "armoury", "the armoury point, read from Phase 4");
+        AddBlock(sb, root, "yard", "the engineer's yard point, read from Phase 4");
         if (sb.Length == 0)
             return "";
         return "\nEach block below is one field of the fortress row in fortresses.json: put a comma between fields, and a game restart loads them." + sb;

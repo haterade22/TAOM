@@ -130,7 +130,7 @@ public class ShippedFordsRosterTests
         var riders = rohan.Units.Where(u => u.Role == UnitRole.Cavalry || u.Role == UnitRole.HorseArcher).Select(u => u.OfferId).ToHashSet();
 
         foreach (var wave in rohan.FreeWaves)
-            Assert.IsTrue(wave.Units.Where(u => u.Role == UnitRole.Cavalry).Sum(u => u.Count) >= 5, $"the wave from minute {wave.FromMinute} brings at least 5 riders");
+            Assert.AreEqual(4, wave.Units.Where(u => u.Role == UnitRole.Cavalry).Sum(u => u.Count), $"the wave from minute {wave.FromMinute} brings 4 riders (5 won 10 of 10, Mike, 2026-11-06)");
         var cycle = rohan.AiBuyCycle!.Where(e => !e.StartsWith("up:", StringComparison.Ordinal)).ToList();
         Assert.IsTrue(cycle.Count(riders.Contains) * 3 >= cycle.Count * 2, "two of three AI pack buys are riders");
     }

@@ -285,8 +285,8 @@ Builders cannot invoke skills or spawn agents. They iterate with `dotnet test TA
 1. Answer OQ2 to OQ4 first if he can; OQ3 was taken at (a) by default so Slice 6 could ship. Name the towers he means (OQ2), and look at the vanilla archer position at (155.5, 206.2, 29.7) as a candidate (A17). On each tower top, stand on each spot an archer should hold, facing out over the approach, and run `taom.ld_record post <tower>` (8 per tower for the shipped levels).
 2. On each tower, stand behind the parapet on 2 spots and run `taom.ld_record tower_volley <tower>`.
 3. Along the Deeping Wall and the Hornburg wall walk, behind the parapet, record 6 spots spread along the wall with `taom.ld_record volley`.
-4. Optional, owed from Phases 1 and 2: `taom.ld_record keep [radius]` and `taom.ld_record sally`.
-5. `taom.ld_export`; the main session pastes the `towers` and `volley` blocks into `fortresses.json`.
+4. Owed from Phases 1 and 2: `taom.ld_record keep [radius]` and `taom.ld_record sally`. For Phase 4, in the same session: stand where the lord should buy his own gear and run `taom.ld_record armoury`, then where he should buy siege engines and run `taom.ld_record yard`, facing the way he should face at each.
+5. `taom.ld_export`; the main session pastes the `keep`, `sally`, `towers`, `volley`, `armoury` and `yard` blocks into `fortresses.json` (the reader ignores `armoury` and `yard` until Phase 4).
 
 No point is invented: an absent block hides its row, and the `fort-points` check names any point that fails its navmesh, boundary or clearance test.
 

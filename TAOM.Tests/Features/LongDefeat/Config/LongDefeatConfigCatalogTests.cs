@@ -872,6 +872,15 @@ public class LongDefeatConfigCatalogTests
     }
 
     [TestMethod]
+    public void ArmouryAndYardBlocks_AnExportCarries_LoadWithNoWarning_BeforePhase4ReadsThem()
+    {
+        var catalog = Load(Fortresses(Fortress(sally: Sally + ",'armoury':{'x':30,'y':40,'z':5,'fx':1,'fy':0},'yard':{'x':60,'y':70,'z':2,'fx':0,'fy':-1}")));
+
+        Assert.AreEqual("helms", catalog.Fortresses.Single().Id);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
     public void Sally_TheLookIsNormalized()
     {
         var sally = Load(Fortresses(Fortress(sally: "{'x':1,'y':2,'z':3,'fx':0.6,'fy':0}"))).Fortresses.Single().Sally!;

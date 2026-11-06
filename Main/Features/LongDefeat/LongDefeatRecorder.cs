@@ -17,7 +17,7 @@ internal sealed record LongDefeatRecord(string Scene, string Kind, float X, floa
 internal sealed record LdTowerCount(string Id, int Posts, int TowerVolley);
 
 /// <summary>
-/// The block <c>taom.ld_export</c> writes for a scene, and the kinds of point still unrecorded. The sally, the tower points and the volley origins are optional: none is ever a missing piece,
+/// The block <c>taom.ld_export</c> writes for a scene, and the kinds of point still unrecorded. The sally, the tower points, the volley origins, the armoury and the yard are optional: none is ever a missing piece,
 /// and <paramref name="HasSally"/> says the block carries a sally. <see cref="Counts"/> is the number of records of each kind for the scene (every record, though the single-point kinds use the newest),
 /// <see cref="Towers"/> the per-tower counts in the order the towers were first recorded.
 /// </summary>
@@ -54,11 +54,17 @@ internal sealed class LongDefeatRecorder
     /// <summary>A spot behind the parapet along a wall that the Elven Volley looses from; no tower, no facing.</summary>
     internal const string VolleyKind = "volley";
 
+    /// <summary>Where the lord walks to buy personal gear (Phase 4), with the way he faces there. Nothing reads it before Phase 4.</summary>
+    internal const string ArmouryKind = "armoury";
+
+    /// <summary>Where the lord walks to buy siege engines (Phase 4, the engineer's yard), with the way he faces there. Nothing reads it before Phase 4.</summary>
+    internal const string YardKind = "yard";
+
     private const string RecordsFile = "long_defeat_records.jsonl";
 
-    // The kinds a scene needs, and every kind that can be recorded: the sally is optional, so a scene without one is complete.
+    // The kinds a scene needs, and every kind that can be recorded: the sally, the armoury and the yard are optional, so a scene without them is complete.
     private static readonly string[] Required = { KeepKind, MusterFootKind, MusterArchersKind };
-    private static readonly string[] Kinds = { KeepKind, MusterFootKind, MusterArchersKind, SallyKind, PostKind, TowerVolleyKind, VolleyKind };
+    private static readonly string[] Kinds = { KeepKind, MusterFootKind, MusterArchersKind, SallyKind, PostKind, TowerVolleyKind, VolleyKind, ArmouryKind, YardKind };
 
     private readonly string _directory;
 
@@ -213,6 +219,8 @@ internal sealed class LongDefeatRecorder
             block["towers"] = new JArray(towerOrder.Select(id => TowerBlock(id, posts[id], spots[id])));
         if (origins.Count > 0)
             block["volley"] = new JObject { ["origins"] = new JArray(origins.Select(Spot)) };
+        AddMuster(block, "armoury", newest, ArmouryKind);
+        AddMuster(block, "yard", newest, YardKind);
 
         var export = new LongDefeatExport(block.ToString(Formatting.Indented), Required.Where(k => !newest.ContainsKey(k)).ToList(), newest.ContainsKey(SallyKind))
         {
