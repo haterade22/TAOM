@@ -238,7 +238,19 @@ native clip-loading call was a stub returning false.
 - **Source:** 1.5.x `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R13 and R15, on `origin/bannerlord-1.5.x` (ported by WP142).
 
 ### When a decision reverses an invariant, grep its old words across code comments, config headers, MCM hints and the lessons
-- **Source:** 1.5.x the 1.5.x lessons file at `f6bf0e588`, on `origin/bannerlord-1.5.x` (ported by WP142).
+The weapon rung began awarding the named hero weapons, but "never change hands" (the MCM master hint) and "never
+sold, looted or awarded" (a config comment and the config header) stayed, beside the feature doc's corrected table.
+The same happened to the lessons: decision D13 (2026-10-03) reversed the per-frame PatchShield exclusion, and the
+2026-09-26 and 2026-09-28 Prevent bullets in `harmony-il.md` still told the next patch author to exclude per-frame
+targets, because D13's update went under one lesson only. A pass on the same decision then corrected two comments the
+same way, one in `Dependencies/Foundation/PatchShieldPolicy.cs` and one in a test under `TAOM.Tests/`, folders this
+lesson did not yet name.
+- **Why missed:** only the doc's own table was rewritten; the invariant's other statements were not searched for.
+- **Prevent:** grep the old invariant's key words across `Main/`, `Dependencies/`, ModuleData comments,
+  `TaomSettings.cs`, the comments in `TAOM.Tests/` and `docs/reviews/lessons/*.md` (a Prevent bullet restates the
+  invariant, and it is what the next author reads) before calling a reversed decision done. A repeat of RCA 2026-09-27
+  row 19.
+- **Source:** 1.5.x `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 6 (Data flow A); `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row F4 (D13 and the `harmony-il.md` Prevent bullets) and row G2 (the two comments, in `PatchShieldPolicy.cs` and `MissionTickProfilerBindingTests.cs`), on `origin/bannerlord-1.5.x` (ported by WP142).
 
 ### A fault latch records its key before anything that can throw, and a fault keeps what was already measured (2026-10-02)
 The plan 039 map profiler stopped measuring on a fault and relied on its session (`_session`, the campaign) to keep

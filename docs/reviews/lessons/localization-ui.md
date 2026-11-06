@@ -885,4 +885,13 @@ ids from that table.
 
 ### A rename must evict the translation cache; the bulk settlement renamer did not until #1042 (Lindon expansion, 2026-10-27)
 `tools/Apply-MapVillageNames.py` rewrote all 438 of its `NAMES` in the master and in all 12 `loc_settlements.xml`, with
-- **Source:** 1.5.x the 1.5.x lessons file at `af2b198e4`, on `origin/bannerlord-1.5.x` (ported by WP142).
+no dry run, no backup and no cache eviction. The translation cache keys on the string id alone, so the next translator run
+wrote the old wording back: on 2026-10-27, 421 to 438 rows per language (PL: 5) showed pre-rename text, for example DE
+"Dorf E2_1" where the master says Linenhold. The Tharbad RCA (row 7) called the script safe after comparing only the
+master file, and this session first misread those rows as good translations.
+- **Why missed:** each check measured one output file, and a row that differs from the English was taken for a translation
+  without reading what it says.
+- **Prevent:** after any rename, remove the renamed ids from `tools/translation_cache/<lang>.json`, and read a sample of
+  every output file a writer touches before calling it safe or unsafe.
+- **Fixed (#1042):** the renamer now writes only the ids whose English changed and evicts them from the cache.
+- **Source:** 1.5.x #1039, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -1481,7 +1481,24 @@ missing that Mike had kept them by decision D3 the day before.
 - **Source:** 1.5.x `docs/reviews/rca-keyforce-harad-javelins-2026-10-16.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
 
 ### On 1.4.8 skill_template makes a character's inline <skills> block unreachable, and every TAOM tool read the dead half
-- **Source:** 1.5.x the 1.5.x lessons file at `83bdad853`, on `origin/bannerlord-1.5.x` (ported by WP142).
+`BasicCharacterObject.Deserialize` (v1.4.8 `BasicCharacterObject.cs:337-357`) resolves
+`skill_template` first and only calls `DefaultCharacterSkills.Init(childNode)` when that reference
+came back **null**. So a character declaring both is asserting two different skill sets and the
+engine silently takes the template. 44 militia troops shipped that way, pointing at vanilla
+Calradian SkillSets: `rivendell_militia_spearman` was authored at 850 total and delivered 215. The
+whole "militia take the level-21 baseline so sieges stay costly" doctrine was inert for every one
+of them, and 17 prison guards had the same shape.
+- **Why missed:** nothing in the pipeline knows the attribute exists. `rebalance_troops.py` writes
+  the inline block, `analyze_troop_balance.py` reports it as the troop's actual skills, the feature
+  doc documents it as live behaviour, and the schema has no rule that the two fields conflict. An
+  earlier exploration did notice the pairing and recorded it as "vestigial `skill_template`
+  attributes... worth confirming which wins". It wins.
+- **Prevent:** `SKILL_TEMPLATE_SHADOWS_SKILLS` errors on any character declaring both, in the
+  validator and in `TroopUpgradeSkillMonotonicityTests`. Generalisation: when two fields can both
+  supply the same value, find the engine's precedence rule and gate the contradiction, because a
+  silent winner means every tool downstream can be reading the loser. "Vestigial" is a hypothesis,
+  not a finding.
+- **Source:** 1.5.x #523, found while widening the #522 gate to cover upgrade sources outside `troops/`, on `origin/bannerlord-1.5.x` (ported by WP142).
 
 ### When the governing rule changes mid-task, re-derive every decision made under the old one
 
