@@ -81,7 +81,7 @@ def wave_row(wave, seed=7, **more):
 
 
 # The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
-REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1}
+REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1, "waves": []}
 BLOCK = "[2026-11-04 09:59:59] [ERROR] [CrashReport] swallowed during the mission load"
 
 
@@ -1289,9 +1289,19 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertIn("taom.long-defeat.scale", why)
 
     def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
-        for waves in (None, [], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
-                      [wave_row(1, healthFactor="2")], ["x"], "waves"):
+        for waves in ([], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
+                      [wave_row(1, healthFactor="2")], ["x"]):
             self.assertEqual(ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)[0], 0, repr(waves))
+
+    def test_a_schema_2_report_without_a_waves_list_fails_the_judge(self):
+        for waves in (None, "waves", {}, 5):
+            code, why = ld.judge(FINAL, {**REPORT, "waves": waves}, FULL_LOG)
+            self.assertEqual(code, 1, repr(waves))
+            self.assertIn("must carry a waves list", why)
+        missing = {key: value for key, value in REPORT.items() if key != "waves"}
+        code, why = ld.judge(FINAL, missing, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("must carry a waves list", why)
 
     def test_the_deep_run_lists_scale_once(self):
         report = {**REPORT, "waves": [wave_row(12, healthFactor=1.1)]}

@@ -211,3 +211,10 @@ A run at a 3x garrison (`--start-wave 8 --waves 1 --garrison-scale 3`, build b94
 | 117 | LOW | A `layout_place=yes` did not clear the layout: a place with no navmesh is walked back toward the order position (`Mission.cs:3983-3985`), which can also stack a soldier | Diagnostic gap | Same | The line logs `place_navmesh` |
 | 118 | LOW | The trigger `onPoint * 2 > batch` disagreed with the muster check's bound `max(MusterLimit, batch / 2)`, so a correctly placed one-soldier pack would warn | Two predicates for one fact | Written beside the check, not from it | The trigger uses the check's own bound |
 | 119 | LOW | The probe measures from the formation's current order position, while `on_point` measures from the muster point; an AI Move between parts of a batch would separate them | Two reference points | The muster frame is set once per batch (`UseMusterPlace` at `FirstIndex == 0`) | The line logs `order_to_muster`, the distance between the two |
+
+**Slice 13, the judge fails a report with no waves list, tier 2, tooling lens**
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 120 | MED | The new check accepts a `waves` list shorter than `wavesCleared`, so a report with `wavesCleared: 5, waves: []` still passes the affix, boon and commander replays with nothing to replay; the shared `REPORT` fixture has that shape, a shape the game cannot write (`ClearWave` writes one row per clear) | Judge accepts an impossible report | The owed item named only the type of `waves`, not its length | Follow-up on the Slice 13 row: fail `len(waves) != wavesCleared` and give the fixture one replayable row per clear |
+| 121 | LOW | The plan gave the wrong reason for keeping `AFFIX_FROM_CLEARS` (an empty list, which the game never writes after five clears); the real need is a Legend cut that empties wave 5's affixes while the game still writes the affix check | Wrong recorded rationale | The builder reasoned from the fixture, not from the writer | The Slice 13 row now states the real case and asks for its test |

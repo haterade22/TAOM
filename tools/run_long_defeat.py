@@ -725,6 +725,8 @@ def judge(done, report_json, log_text=None):
     schema = report_json.get("schema")
     if isinstance(schema, bool) or schema != SCHEMA:
         return 1, f"the report's schema is {schema!r}, wanted {SCHEMA}: the game under test is not a schema {SCHEMA} build{note}"
+    if not isinstance(report_json.get("waves"), list):
+        return 1, f"the report's waves is {report_json.get('waves')!r}: a schema {SCHEMA} report must carry a waves list, or the affixes, boons and commanders have nothing to replay{note}"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
     for key, wanted in {"startWave": 1, **expected_report}.items():
         got = report_json.get(key)
