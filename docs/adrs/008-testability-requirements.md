@@ -12,6 +12,8 @@ Services must be 100% unit testable without requiring game framework initializat
 
 Services MUST NOT call static methods or properties from TaleWorlds game framework:
 
+**Exception (2026-09-24):** a static method call or property access inside a protected-virtual boundary seam that meets ADR-007's "Protected-Virtual Boundary Seams" conditions is allowed; the service's test subclass overrides the seam, so no test touches the static.
+
 **FORBIDDEN** (causes test failures):
 ```csharp
 public class MyService
@@ -82,7 +84,7 @@ When creating a new abstraction (interface + implementation):
 
 ### Rule 3: Required Provider Interfaces
 
-All services MUST use these providers instead of static calls:
+All services MUST use these providers instead of static calls (or a protected-virtual boundary seam, per the Rule 1 exception):
 
 | Static Call | Provider Interface | Registration Location |
 |-------------|-------------------|----------------------|
@@ -227,7 +229,7 @@ public class CasualtyCalculationService
 ## Enforcement
 
 ### Code Review Checklist
-- [ ] No direct `CampaignTime.X` calls in services
+- [ ] No direct `CampaignTime.X` calls in services outside a boundary seam (Rule 1 exception)
 - [ ] No direct `Utilities.GetBasePath()` calls
 - [ ] All new providers fully integrated
 - [ ] All test files updated
@@ -250,15 +252,14 @@ Hook runs: `./build.ps1 -RunTests -MinCoverage 80`
   run: dotnet test --no-build --verbosity normal
 - name: Verify Coverage
   run: dotnet test /p:CollectCoverage=true /p:Threshold=80
-- name: Check for Static Calls
-  run: |
-    # Fail if services call CampaignTime.Now directly
-    git grep -n "CampaignTime\\.Now" Main/Features/*/Services/ && exit 1 || exit 0
 ```
+
+A text search for `CampaignTime.Now` cannot tell a violation from a boundary seam (the Rule 1
+exception), so static calls in services are a review check, not a CI grep.
 
 ## Related ADRs
 - **ADR-007**: Adapter Pattern for Sealed Classes - Services use adapters, not sealed types
-- **ADR-002**: Thin Entry Points - Entry points may use static calls, but services cannot
+- **ADR-002**: Thin Entry Points - Entry points may use static calls; services only inside a boundary seam (ADR-007 "Exceptions")
 
 ## Examples from Codebase
 
