@@ -53,7 +53,7 @@ public class StarterKitCoverageTests
     private static readonly Dictionary<string, string> KitSourceCulture =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["battania"] = "khuzait", ["lothlorien"] = "rivendell", ["abanissa"] = "aserai",
+            ["battania"] = "khuzait", ["abanissa"] = "aserai",
             ["mistymountainorcs"] = "goblin", ["bluecraig"] = "goblin",
         };
 

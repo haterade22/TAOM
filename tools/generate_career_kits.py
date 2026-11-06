@@ -84,7 +84,6 @@ ARMOUR_LINE = {"isengard": "sk_uruk_hai_", "mordor": "sk_uruk_mordor_",   # docs
 # its basic_troop is a Harad levy, but its pool recruits its own troops. StarterKitCoverageTests'
 # KitSourceCulture mirrors this table.
 KIT_SOURCE = {"battania": "khuzait",            # Khand fields Rhun's troops
-              "lothlorien": "rivendell",        # imladris_recruit
               "abanissa": "aserai",             # harad_reg_levy
               "mistymountainorcs": "goblin",    # goblin_snaga
               "bluecraig": "goblin"}            # goblin_snaga

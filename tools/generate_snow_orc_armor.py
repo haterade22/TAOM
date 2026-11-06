@@ -27,7 +27,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _gamedir import DEFAULT_GAME_ROOT, game_modules  # noqa: E402
+from _gamedir import DEFAULT_GAME_ROOT, ensure_exists, game_modules  # noqa: E402
+import _generated_files as gf  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
 
 CULTURE_KEY = "gundabad"
@@ -120,7 +121,8 @@ def render(items):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("--apply", action="store_true", help="write the file (default: dry run)")
+    p.add_argument("--apply", action="store_true", help="write the files (default: dry run)")
+    p.add_argument("--check", action="store_true", help="write nothing; exit 1 when the Armory differs from the render")
     p.add_argument("--armory", help="LOTRLOME_Armory folder (default: <game>/Modules/LOTRLOME_Armory)")
     args = p.parse_args()
 
@@ -129,18 +131,17 @@ def main():
         vals = " ".join(f"{k.split('_')[0]}={v}" for k, v in armour.items())
         print(f"{item_id:34} {slot:9} {band:7} {vals:28} w={weight}")
     print(f"{len(rows)} items")
-    if not args.apply:
-        print("dry run; pass --apply to write")
-        return 0
-
     armory = Path(args.armory) if args.armory else game_modules(DEFAULT_GAME_ROOT) / "LOTRLOME_Armory"
+    writing = args.apply or args.check
+    if writing:
+        armory = ensure_exists(armory, "the LOTRLOME_Armory module")
+        ensure_exists(armory / "ModuleData" / "LOTRLOME_items", "LOTRLOME_Armory/ModuleData/LOTRLOME_items")
+    elif not armory.exists():
+        print("dry run; pass --apply to write (no Armory here to compare with)")
+        return 0
     out = armory / "ModuleData" / "LOTRLOME_items" / FOLDER
-    out.mkdir(parents=True, exist_ok=True)
-    for slot, fname in FILES.items():
-        (out / fname).write_text(render(items[slot]), encoding="utf-8", newline="\r\n")
-        print(f"wrote {out / fname}")
-    return 0
-
+    rendered = {fname: render(items[slot]) for slot, fname in FILES.items()}
+    return gf.sync(out, rendered, apply=args.apply, check=args.check)
 
 if __name__ == "__main__":
     sys.exit(main())

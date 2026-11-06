@@ -178,7 +178,7 @@ public class EnlistmentRosterCultureCoverageTests
             }
         }
 
-        // lothlorien and battania own no troops file but bind to another culture's tree
+        // battania owns no troops file but binds to another culture's tree (lothlorien has its own since 2026-11-05)
         // (taom_spcultures.xml / spcultures.xslt), so they ship rosters and are enlistable.
         cultures.Add("lothlorien");
         cultures.Add("battania");

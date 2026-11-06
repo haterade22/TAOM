@@ -6,8 +6,8 @@ culture's actual troops (troops_*.xml).
 
 Consumed afterwards by tools/generate_clan_heraldry.py.
 
-Covers the 15 troop-having LOTR cultures (Gondor is hand-authored separately and skipped).
-Cultures with no own troop pool (abanissa, shaghana, khand, lothlorien) + vanilla minor
+Covers the 16 troop-having LOTR cultures (Gondor is hand-authored separately and skipped).
+Cultures with no own troop pool (abanissa, shaghana, khand) + vanilla minor
 factions + bandit clans are handled outside this tool.
 
 Usage:  python tools/build_clan_specs.py [--culture mordor] [--print]
@@ -37,6 +37,7 @@ CULTURE_TABLE = {
     "dale":              ("sturgia",           "FF1E3A6E", "FFD4A53A"),
     "erebor":            ("erebor",            "FF1E5A3A", "FFB8860B"),
     "rivendell":         ("rivendell",         "FF8A93B0", "FF2A2A6E"),
+    "lothlorien":        ("lothlorien",        "FF184031", "FFC0E3B5"),   # Galadhrim, own tree since 2026-11-05
     "mirkwood":          ("mirkwood",          "FF1F5A2C", "FFA8C47C"),
     "isengard":          ("isengard",          "FF2C2C2C", "FFD8D8D8"),
     "gundabad":          ("gundabad",          "FF2E2A26", "FF6E5A40"),
@@ -50,7 +51,6 @@ CULTURE_TABLE = {
 TROOPLESS_TABLE = {
     "shaghana":   ("shaghana",   "aserai",    "FFA05020", "FF5A3018"),  # Near-Harad, fields Harad troops
     "abanissa":   ("abanissa",   "aserai",    "FF1A3560", "FFAA9240"),  # Far-Harad, fields Harad troops
-    "lothlorien": ("lothlorien", "rivendell", "FF184031", "FFC0E3B5"),  # Galadhrim, fields Rivendell troops
     "khand":      ("battania",   None,        "FF8A5A1E", "FF5A1E18"),  # Variags: no TAOM pool -> colors only
     # Moved out of CULTURE_TABLE when troops_mistymountainorcs.xml was retired: it was a duplicate
     # of the goblin tree (same shape, same gear, different race tag and skill numbers), so the

@@ -264,7 +264,7 @@ public class CulturePartyTemplateTests
             "TAOM cultures pointing at a party template TAOM does not define, which means it resolves " +
             "to vanilla Calradian troops:\n  " + string.Join("\n  ", offenders) +
             "\n\nFix in Main/_Module/ModuleData/taom_spcultures.xml. Cross-culture sharing is fine " +
-            "(Lothlorien uses Rivendell's, Umbar uses Harad's) as long as the target is TAOM-authored.");
+            "(Umbar uses Harad's, Khand uses Rhun's) as long as the target is TAOM-authored.");
     }
 
     [TestMethod]

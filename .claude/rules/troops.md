@@ -76,8 +76,8 @@ Two consequences worth knowing before you edit any of the three:
   the vassal reward and through prisoner recruitment, the same route the Black Numenorean line uses.
   `VolunteerRecruitmentServiceTests.BorrowedCultureCapstones` is the exemption that records this.
 
-Cross-culture sharing is the normal TAOM pattern, not a special case: Lothlorien fields Rivendell's
-tree whole, Umbar fields Harad's but keeps `umbar_elite`. `CulturePartyTemplateTests` allows it as
+Cross-culture sharing is the normal TAOM pattern, not a special case: Umbar fields Harad's but keeps
+`umbar_elite`. `CulturePartyTemplateTests` allows it as
 long as the target is TAOM-authored.
 
 ## Party Template Types

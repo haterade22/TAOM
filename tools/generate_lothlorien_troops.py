@@ -42,13 +42,14 @@ import argparse
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "Main" / "_Module" / "ModuleData" / "troops" / "troops_lothlorien.xml"
 ARMOUR_DIR_HINT = "LOTRLOME_items/lothlorien (tools/generate_lothlorien_armor.py)"
 
-TIER_LEVEL = {4: 21, 5: 26, 6: 31, 7: 36, 8: 41, 9: 46}
+TIER_LEVEL = {2: 11, 3: 16, 4: 21, 5: 26, 6: 31, 7: 36, 8: 41, 9: 46}
 SKILLS = ("Athletics", "Riding", "OneHanded", "TwoHanded", "Polearm", "Bow", "Crossbow", "Throwing")
 ARMOUR_SLOTS = ("Head", "Cape", "Body", "Gloves", "Leg")
 
@@ -116,6 +117,22 @@ def ml(x):
 
 
 TROOPS = [
+    # ---------------- Militia (garrisons; taom_spcultures.xml militia slots) ----------------
+    # Level 11 and 16 like every culture's militia, one kit per troop so the per-slot mix
+    # (troops.md) cannot assemble a combination nobody authored. The bows are the line's T2 and T3
+    # ladder cells (tools/ranged_ladders.json), the tiers every culture's militia archers use.
+    T("lorien_militia_spearman", "Militia Spearman", 2, "Infantry",
+      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01",)),
+      {"Body": [rg("chest_light_a")], "Leg": [rg("boots_light_a")]}),
+    T("lorien_militia_archer", "Militia Archer", 2, "Ranged",
+      archer(2, ("wm_rivendell_sword_a01",), ARROWS_A),
+      {"Head": [rg("helmet_light_a")], "Body": [rg("chest_light_b")], "Leg": [rg("boots_light_a")]}),
+    T("lorien_militia_veteran_spearman", "Militia Veteran Spearman", 3, "Infantry",
+      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("wm_gf_knight_broadsword",)),
+      {"Head": [rg("helmet_light_a")], "Body": [rg("chest_light_b")], "Leg": [rg("boots_light_a")]}),
+    T("lorien_militia_veteran_archer", "Militia Veteran Archer", 3, "Ranged",
+      archer(3, ("wm_rivendell_sword_a02",), ARROWS_B),
+      {"Head": [rg("helmet_light_a")], "Body": [rg("chest_light_b")], "Leg": [rg("boots_light_a")]}),
     # ---------------- Regular Lorien ----------------
     T("lorien_scout", "Lórien Scout", 4, "Ranged",
       archer(4, ("wm_rivendell_sword_a02_silver", "wm_gf_knight_broadsword"), ARROWS_A),
@@ -123,26 +140,26 @@ TROOPS = [
        "Leg": [rg("boots_light_a")]},
       ups=("lorien_spearman", "lorien_bowman"), basic=True),
     T("lorien_spearman", "Lórien Spearman", 5, "Infantry",
-      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01", "he_sword")),
+      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01", "wm_rivendell_sword_a02_silver")),
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_light_a")], "Body": [rg("chest_med_a")],
        "Leg": [rg("boots_light_a")]},
       ups=("lorien_infantry", "lorien_rider")),
     T("lorien_infantry", "Lórien Infantry", 6, "Infantry",
-      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01", "he_sword")),
+      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_med_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       ups=("lorien_warden",)),
     T("lorien_warden", "Lórien Warden", 7, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a01_silver", "he_sword")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a01_silver", "wm_rivendell_sword_a02_black")),
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]}),
     T("lorien_rider", "Lórien Rider", 6, "Cavalry",
-      shield_line("he_spear", "wm_elven_shield_b", ("mirkwood_sword_a01", "he_sword")),
+      shield_line("he_spear", "wm_elven_shield_b", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_med_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       ups=("lorien_lancer",), horse=LIGHT_HORSE),
     T("lorien_lancer", "Lórien Lancer", 7, "Cavalry",
-      shield_line("he_spear", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_silver", "he_sword")),
+      shield_line("he_spear", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_silver", "wm_rivendell_sword_a02_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       horse=GOOD_HORSE),
@@ -187,13 +204,13 @@ TROOPS = [
        "Gloves": [mw("bracer_heavy_a")], "Leg": [mw("grvs_heavy_a")]}),
     T("lorien_mw_outrider", "Marchwarden Outrider", 7, "HorseArcher",
       archer(7, ("he_sword", "mirkwood_sword_a01"), ARROWS_C),
-      {"Head": [mw("helmet_arc_heavy_a"), mw("helmet_heavy_a")], "Cape": [mw("pauld_med_a")],
+      {"Head": [mw("helmet_arc_heavy_a"), mw("helmet_arc_heavy_b")], "Cape": [mw("pauld_med_a")],
        "Body": [mw("chest_med_a"), mw("chest_med_b")],
        "Gloves": [mw("bracer_med_a")], "Leg": [mw("grvs_med_a")]},
       ups=("lorien_mw_dawnrider",), horse=LIGHT_HORSE),
     T("lorien_mw_dawnrider", "Marchwarden Dawnrider", 8, "HorseArcher",
       archer(8, ("wm_gf_knight_longsword", "wm_rivendell_sword_a01_silver"), ARROWS_D),
-      {"Head": [mw("helmet_arc_heavy_b"), mw("helmet_heavy_b")], "Cape": [mw("pauld_heavy_a")],
+      {"Head": [mw("helmet_arc_heavy_b"), mw("helmet_arc_heavy_a")], "Cape": [mw("pauld_heavy_a")],
        "Body": [mw("chest_heavy_a"), mw("chest_heavy_b")],
        "Gloves": [mw("bracer_heavy_a")], "Leg": [mw("grvs_heavy_a")]},
       horse=GOOD_HORSE),
@@ -220,7 +237,7 @@ TROOPS = [
 
     # ---------------- Galadhrim (nobles) ----------------
     T("lorien_gl_warrior", "Galadhrim Warrior", 6, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a02_silver", "he_sword")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a01_black")),
       {"Head": [gl("helmet_med_a")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_med_a"), gl("chest_med_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_med_a")]},
@@ -243,13 +260,13 @@ TROOPS = [
        "Body": [ml("chest_heavy_a"), ml("chest_heavy_b")],
        "Gloves": [ml("bracer_heavy_a")], "Leg": [ml("grvs_heavy_a")]}),
     T("lorien_gl_infantry", "Galadhrim Infantry", 7, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a02_silver", "he_sword")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_a")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_heavy_a"), gl("chest_heavy_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
       ups=("lorien_gl_sentinel",)),
     T("lorien_gl_sentinel", "Galadhrim Sentinel", 8, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_silver", "he_sword")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_a")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_elite_a"), gl("chest_elite_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
@@ -308,14 +325,16 @@ SLOT_ORDER = ("Item0", "Item1", "Item2", "Item3", "Head", "Cape", "Body", "Glove
 
 
 def existing_skills(path):
-    """{troop id: {skill: value}} from a previous run, so a regeneration keeps the curve's values."""
+    """{troop id: {skill: value}} from a previous run, so a regeneration keeps the curve's values.
+
+    Read with an XML parser: attribute order and a BOM do not matter, and a troop whose id is
+    new or renamed is simply absent (main() warns, because its skills are then written as 0).
+    """
     if not path.exists():
         return {}
-    text = path.read_text(encoding="utf-8")
-    out = {}
-    for m in re.finditer(r'<NPCCharacter\s+id="([^"]+)".*?</NPCCharacter>', text, re.S):
-        out[m.group(1)] = {s: int(v) for s, v in re.findall(r'<skill id="([^"]+)" value="(\d+)"', m.group(0))}
-    return out
+    root = ET.fromstring(path.read_bytes())
+    return {n.get("id"): {s.get("id"): int(s.get("value")) for s in n.iter("skill")}
+            for n in root.iter("NPCCharacter")}
 
 
 def render(troops, skills_by_id):
@@ -328,7 +347,7 @@ def render(troops, skills_by_id):
     mercs = [dict(by_id[s], id=f"{s}_merc", name=f'Hired {by_id[s]["name"]}', ups=[], basic=False,
                   merc_of=s) for s in MERCENARY_SOURCES]
     for t in list(troops) + mercs:
-        basic = '\n      is_basic_troop="true"' if t["basic"] else ""
+        basic = '\r\n      is_basic_troop="true"' if t["basic"] else ""
         src = t.get("merc_of")
         key = f"aom_merc_{src}_name" if src else f'aom_{t["id"]}_name'
         lines += [
@@ -416,8 +435,18 @@ def main():
         print("\n".join("ERROR: " + e for e in errors))
         return 1
     out = Path(args.output)
-    xml = render(TROOPS, existing_skills(out))
-    print(f"{len(TROOPS)} troops")
+    skills = existing_skills(out)
+    xml = render(TROOPS, skills)
+    print(f"{len(TROOPS)} troops + {len(MERCENARY_SOURCES)} mercenary copy")
+    unplaced = [t["id"] for t in TROOPS if t["id"] not in skills]
+    if unplaced:
+        print("WARNING: no placed skills yet for " + ", ".join(unplaced) + ". They are written as 0 until: "
+              "python tools/rebalance_troops.py --fix-monotonicity --restat " + ",".join(unplaced))
+    try:
+        ET.fromstring(xml.encode("utf-8"))
+    except ET.ParseError as exc:
+        print(f"ERROR: the rendered XML does not parse ({exc}); nothing written")
+        return 1
     if not args.apply:
         print("dry run; pass --apply to write")
         return 0

@@ -2,17 +2,17 @@
 <EquipmentRosters>
 
 	<!-- ==================== LOTHLORIEN LORD BATTLE EQUIPMENT ==================== -->
-	<!-- Reuses Rivendell elven items (shared High Elf aesthetic) -->
+	<!-- Battle sets wear the Lorien armour kits (sk_ll_*, tools/generate_lothlorien_armor.py). Civilian sets still use Rivendell items. -->
 
 	<EquipmentRoster id="lothlorien_bat_template_medium_a" culture="Culture.lothlorien">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
+			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_ll_gl_grvs_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -22,11 +22,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
-			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
-			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
-			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_ll_gl_grvs_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -36,11 +36,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
-			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
-			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_robe" />
-			<Equipment slot="Gloves" id="Item.rivendell_vambraces_3" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_c" />
+			<Equipment slot="Body" id="Item.sk_ll_gl_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_ll_gl_grvs_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -50,11 +50,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
-			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
-			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
-			<Equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="Head" id="Item.sk_ll_ml_helmet_elite_a" />
+			<Equipment slot="Body" id="Item.sk_ll_ml_chest_elite_b" />
+			<Equipment slot="Cape" id="Item.sk_ll_ml_pauld_cape_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_ll_ml_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_ll_ml_grvs_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -64,11 +64,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circletmask" />
-			<Equipment slot="Body" id="Item.rivendell_body_gold_c" />
-			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_b" />
+			<Equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_ll_mw_pauld_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
+			<Equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>

@@ -561,7 +561,7 @@ def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes
         return None
 
     # For militia: use the level 21 baseline of Infantry or Ranged. The Ranged/melee split comes
-    # from default_group, not from the word "archer" in the name (the two agree on all 60 bound
+    # from default_group, not from the word "archer" in the name (the two agree on all 96 bound
     # militia today; the group is the one that stays true after a rename).
     if is_militia(troop_id):
         militia_baseline = RANGED_BASELINES.get(21) if group == 'Ranged' else INFANTRY_BASELINES.get(21)

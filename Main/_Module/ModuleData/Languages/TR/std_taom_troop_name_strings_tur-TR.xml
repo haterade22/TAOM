@@ -1119,5 +1119,9 @@
     <string id="aom_lorien_spearman_name" text="[Lothlórien] Lórien Spearman" />
     <string id="aom_lorien_warden_name" text="[Lothlórien] Lórien Warden" />
     <string id="aom_merc_lorien_mw_sentry_name" text="[Lothlórien] Hired Marchwarden Sentry" />
+    <string id="aom_lorien_militia_archer_name" text="[Lothlórien] Militia Archer" />
+    <string id="aom_lorien_militia_spearman_name" text="[Lothlórien] Militia Spearman" />
+    <string id="aom_lorien_militia_veteran_archer_name" text="[Lothlórien] Militia Veteran Archer" />
+    <string id="aom_lorien_militia_veteran_spearman_name" text="[Lothlórien] Militia Veteran Spearman" />
   </strings>
 </base>

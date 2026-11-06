@@ -204,9 +204,9 @@ public class GarrisonCultureSwapAdapter : IGarrisonCultureSwapAdapter
     /// tagged with that culture. Grouping by <c>CharacterObject.Culture</c> looks equivalent and is
     /// not, for two reasons measured against the shipped data on 2026-09-21:
     ///
-    ///   * Several cultures deliberately field another's line. Lothlorien recruits Rivendell troops,
-    ///     Khand (<c>battania</c>) the Rhun line, Shaghana and Abanissa the Harad line. Their own
-    ///     culture tag carries almost nothing: Lothlorien's ONLY non-hero Soldier is
+    ///   * Several cultures deliberately field another's line: Khand (<c>battania</c>) the Rhun line,
+    ///     Shaghana and Abanissa the Harad line, and (until 2026-11-05) Lothlorien the Rivendell line.
+    ///     Their own culture tag carries almost nothing: Lothlorien's ONLY non-hero Soldier was
     ///     <c>gear_practice_dummy_lothlorien</c>, so a culture-tag index re-manned a whole captured
     ///     city with Practice Dummies, and Khand's six were all guards and practice dummies.
     ///   * <c>CharacterObject.All</c> is every loaded module's characters, so a culture-tag index

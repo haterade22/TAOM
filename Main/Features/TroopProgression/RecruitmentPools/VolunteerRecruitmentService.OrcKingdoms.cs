@@ -11,7 +11,8 @@ public partial class VolunteerRecruitmentService
 {
     // --- Gundabad Settlement + Clan Mappings ---
     // The Snow Orcs (troops_gundabad_snow.xml, T1 Recruit -> T5 Blackshields) are regional: they
-    // muster at Mount Gram and fill the Grishûk clan (clan_gundabad_6). Everywhere else Gundabad
+    // muster at Mount Gram (town_G2, held by clan_gundabad_2 in the live map) and fill the Grishûk clan
+    // (clan_gundabad_6, which holds castle_G6 Lithur). Everywhere else Gundabad
     // falls back to the culture pool below.
     private static void InitializeGundabadSettlements()
     {

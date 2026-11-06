@@ -41,6 +41,37 @@
     <TroopWeight id="imladris_bowman" weight="2.0" />
     <TroopWeight id="rivendell_noble" weight="2.0" />
 
+    <!-- ===== LOTHLORIEN / GALADHRIM, MARCHWARDENS AND REGULARS (Lorien Elves) ===== -->
+    <!-- Level rule: 41 and above 3.0, below 2.0, listed from level 31. The regular tree (L21 to L26) and the
+         militia stay at the default 1.0. TroopWeightLevelBandTests covers the boundary; LothlorienOwnTreeDataTests
+         pins every row of this block. -->
+    <!-- Level 41 and above (3.0) -->
+    <TroopWeight id="lorien_gl_bowmaster" weight="3.0" />
+    <TroopWeight id="lorien_gl_highblade" weight="3.0" />
+    <TroopWeight id="lorien_gl_mallorn_defender" weight="3.0" />
+    <TroopWeight id="lorien_gl_blademaster" weight="3.0" />
+    <TroopWeight id="lorien_gl_marksman" weight="3.0" />
+    <TroopWeight id="lorien_gl_sentinel" weight="3.0" />
+    <TroopWeight id="lorien_mw_dawnrider" weight="3.0" />
+    <TroopWeight id="lorien_mw_high_ranger" weight="3.0" />
+    <TroopWeight id="lorien_mw_waystalker" weight="3.0" />
+    <!-- Level 31 to 36 (2.0) -->
+    <TroopWeight id="lorien_gl_archer" weight="2.0" />
+    <TroopWeight id="lorien_gl_bladeguard" weight="2.0" />
+    <TroopWeight id="lorien_gl_infantry" weight="2.0" />
+    <TroopWeight id="lorien_lancer" weight="2.0" />
+    <TroopWeight id="lorien_longbowman" weight="2.0" />
+    <TroopWeight id="lorien_mw_ambusher" weight="2.0" />
+    <TroopWeight id="lorien_mw_outrider" weight="2.0" />
+    <TroopWeight id="lorien_mw_ranger" weight="2.0" />
+    <TroopWeight id="lorien_warden" weight="2.0" />
+    <TroopWeight id="lorien_archer" weight="2.0" />
+    <TroopWeight id="lorien_gl_warrior" weight="2.0" />
+    <TroopWeight id="lorien_infantry" weight="2.0" />
+    <TroopWeight id="lorien_mw_archer" weight="2.0" />
+    <TroopWeight id="lorien_mw_skirmisher" weight="2.0" />
+    <TroopWeight id="lorien_rider" weight="2.0" />
+
     <!-- ===== LINDON / MITHLOND (Falathrim Elves) ===== -->
     <!-- A clone of the Rivendell tree under a lindon_ prefix: every row matches its Rivendell twin
          (TroopWeightLevelBandTests.EveryLindonTroop_WeighsTheSameAsItsRivendellTwin). -->

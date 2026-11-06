@@ -148,7 +148,8 @@ class GeneratorCurveSyncTests(unittest.TestCase):
     # Generators that import the curve instead of copying it. The drift class the
     # class docstring describes cannot reach these, so the guard is the INVERSE:
     # assert no private table was ever reintroduced.
-    CURVE_IMPORTERS = ('generate_black_numenorean_armor',)
+    CURVE_IMPORTERS = ('generate_black_numenorean_armor', 'generate_lothlorien_armor',
+                      'generate_snow_orc_armor')
 
     def test_generator_shoulder_tables_match_the_curve(self):
         import importlib
