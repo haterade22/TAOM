@@ -4,17 +4,9 @@ How to use Claude Code Agent Teams for parallel work on the TAOM project.
 
 ---
 
-## What Are Agent Teams?
+## Terms
 
-Agent Teams let a **lead session** coordinate multiple **teammate sessions** working in parallel. Each teammate is an independent Claude Code instance with its own context, tools, and permissions.
-
-Key concepts:
-- **Lead** — creates the team, spawns teammates, assigns tasks, integrates results
-- **Teammates** — autonomous agents that own specific directories/tasks
-- **Shared task list** — all agents read/write tasks at `~/.claude/tasks/{team-name}/`
-- **Mailbox messaging** — agents communicate via `SendMessage` (DMs) or `broadcast`
-
-Teams are enabled via the env var `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json`.
+The **lead** is the session that spawns the agents and integrates their results. A **teammate** is a spawned agent that owns a directory or a task. Agents talk through `SendMessage`, addressed by name. The experimental teams flag is not needed: `SendMessage` is offered without it, and nothing here calls `TeamCreate` (probed on the 1.5.x line, 2026-11-03).
 
 ---
 
@@ -368,6 +360,12 @@ An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`
 When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment; independently-correct builders diverge at the seams, and per-component review structurally cannot catch it.
 
 **Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md` (the four CombatMechanics seam findings).
+
+### Budget: fan-out width and checkers
+
+Fan-out width exhausts the session limit: spawn at most four builders at once. One checker over the integrated result replaces a verifier per file; per-file verifiers multiply the spend and still miss the seams between files.
+
+On 2026-09-05 a 39-chapter doc build blew the 5-hour limit twice, first with 124 agents (an author plus three verifiers per chapter, all at once), then 8 chapters wide. A subagent that hits the limit returns nothing, so every unreported agent's work was lost. Each subagent re-reads the contract, manifest and sources from scratch, so three verifiers triple the cost. Replace repeated hand verification with one deterministic checker: a lint script of about 900 lines replaced 93 verifier agents and found four real defects on its first pass. Have the author run the gates before returning, chunk four wide, let each chunk finish, and commit each chunk as it lands. A workflow's `budget.spent()` counts the whole session, so guard on the delta from a baseline captured at run start. More than about a dozen agents for one deliverable means a script should do the checking.
 
 ### Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
 
