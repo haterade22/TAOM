@@ -44,6 +44,13 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [gui-sprite-system](features/gui-sprite-system.md) — sprite atlas conventions, verification before reference, the **decompile-verified sprite-bake pipeline** (no `pack0.tpac`; per-category `AssetSources` PNG + `Assets/_tex.tpac` + manifest) + end-to-end **Adding / Verifying a sprite** workflow (a new sprite needs the generator AND a render check — **baked ≠ visible**)
 
 ### Combat, AI, & battle
+- [battle-corpses](features/battle-corpses.md): per-battle native corpse fade time and cap against mid-battle freezes, a `[BattleSettings]` log line, and a main-menu offer to lower ragdolls and corpses
+- [lost-footing](features/lost-footing.md): a read-only log census of battle agents stranded off the navigation mesh or stuck in water; the rescue is not built
+- [mission-start-guard](features/mission-start-guard.md): Patch103, a behaviour that throws while a battle starts no longer reloads the mission for ever
+- [mission-tick-guard](features/mission-tick-guard.md): Patch91b, one exception in a mission tick no longer freezes the game
+- [skeleton-buffer-guard](features/skeleton-buffer-guard.md): a battle that would overflow an engine skeleton pool draws the extra skeletons from its first slots instead of freezing
+- [preload-body-guard](features/preload-body-guard.md): Patch90, the runtime guard for the infinite mission load; drains unresolvable collision-body names and logs them as `[PreloadGuard]`
+- [mission-perf-heartbeat](features/mission-perf-heartbeat.md): the `[MissionPerf]` frame-time heartbeat, the tick profiler and the hitch probe
 - [combat-mechanics](features/combat-mechanics.md) — TaomCombatMechanicsModel (single AgentApplyDamageModel slot): skill-based crush-through, monster/orc CTB, creature cleave + stagger immunity, weight-driven charge knockdown (`Monster.Weight` ratios), shield penetration, per-race modifier table
 - [advanced-combat](features/advanced-combat.md) — SpatialGrid, BoneCollision, CustomAttacks subsystems
 - [smart-cavalry-ai](features/smart-cavalry-ai.md) — player-team cavalry state machine (Form → Charge → PassThrough → Reform)
@@ -138,6 +145,15 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [diplomacy](features/diplomacy.md), [army-targeting](features/army-targeting.md) — see also TaomTargetScoreModel + Patch22 (border proximity floor)
 
 ### Sandbox, lifecycle, & UI
+- [bard-town-guard](features/bard-town-guard.md): Patch110, the tavern musician no longer throws in a town whose culture owns no other town
+- [tavern-specialities](features/tavern-specialities.md): Patch111, default dishes for the tavern maid where vanilla has none
+- [liege-titles](features/liege-titles.md): a male and female liege title for every TAOM kingdom culture
+- [cheat-screen-guard](features/cheat-screen-guard.md): cheat mode no longer lists every item and troop in your own inventory and party screens unless MCM asks
+- [nameplate-cull](features/nameplate-cull.md): Patch104, settlement nameplates that stay hidden leave the map's per-frame update
+- [map-view-release](features/map-view-release.md): every Nth menu cover of the campaign map gives back the render targets it left behind
+- [shadowfax-screens](features/shadowfax-screens.md): Patch127 to Patch130, four campaign screens skip work they repeat while they build
+- [shader-compile-notice](features/shader-compile-notice.md): a window counting shaders while the engine rebuilds its cache before the main menu
+- [texture-advice](features/texture-advice.md): one popup suggesting a lower Texture Quality on machines with about 16 GB or less
 - [supply-lines](features/supply-lines.md): resupply convoys from towns/castles/lords (yotthani port #505): real stock deducted, sources credited, full-screen Gauntlet order UI, TAOM's first custom PartyComponent
 - [field-camp](features/field-camp.md): campaign-map camps (yotthani port #506): field/fortified/ambush/lookout, forage + morale, tpac visuals, map-overlay Make Camp, `taom_fcamp_` loc prefix (taom_fc_ is FieldCommission's)
 - [refuge](features/refuge.md): movable player base raised from a camp (yotthani port #507): warden + garrison + stash, Refuge/Stronghold tiers, model-chain defence bonus, orphan-adopt on warden loss
@@ -172,6 +188,17 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
 
 ### Infrastructure & tooling
+- [composition-root](features/composition-root.md): `Main/Composition`, a feature owns its wiring in one `<Name>Module.cs` listed once in `FeatureModules.All`
+- [ingame-verdicts](features/ingame-verdicts.md): `tools/ingame_verdict.py` judges owed in-game checks from a play session's logs
+- [armory-ref-audit](features/armory-ref-audit.md): `tools/audit_armory_refs.py`, the one command after any Armory sync, with a committed report
+- [ghidra-native-decompile](features/ghidra-native-decompile.md): `tools/native_decompile.py` prints native engine code as C through headless Ghidra
+- [native-build-match](features/native-build-match.md): `tools/native_build_match.py` carries a native RVA from an archived engine build to a newer one
+- [graphify-code-graph](features/graphify-code-graph.md): `tools/graphify_taom.py` builds and queries the code graph kept outside the repo
+- [load-time-stamps](features/load-time-stamps.md): Patch100, load-time stamps in `taom_debug.log`
+- [map-load-diagnostics](features/map-load-diagnostics.md): Patch89, a `[MapLoad]` heartbeat and lifecycle trace of the campaign map load
+- [map-perf-profiler](features/map-perf-profiler.md): Patch101, the off-by-default campaign map profiler
+- [xml-merge-fast-path](features/xml-merge-fast-path.md): Patch99, the module-XML merge with one `XDocument` across files
+- [butter-lib-distance-matrix](features/butter-lib-distance-matrix.md): switches off ButterLib's Distance Matrix subsystem, which nothing installed reads
 - [reference/development-machines.md](reference/development-machines.md). **Two machines, and every `E:\` path in these docs is the desktop's.** Which machine is authoritative for content, the three env vars that carry the difference (`BANNERLORD_GAME_DIR`, `TAOM_DECOMPILE_ROOT`, `TAOM_PYBIN`), what ignores them (`.mcp.json`, `.codex/config.toml` and the decompile scripts), and why a red validator on the incomplete laptop is the laptop rather than the repo
 - [reference/mcp-servers.md](reference/mcp-servers.md) — full MCP server table (9 servers incl. `imagine`), TaleWorlds research lookup-order detail, `.mcp.json` configuration, plugin-overlap routing; CLAUDE.md keeps the usage guide + a 4-line summary
 - **Claude-config security auditor** — `tools/audit_claude_config.py` (behind `/security-scan`): scans `.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md` for secrets / over-broad permissions / hook-exfil / MCP risk / prompt-injection, plus SkillSpector-derived skill-threat categories + Python-AST + clean-room YARA. Run on TAOM's own config before `/ship` or after a hook/permission/MCP change; run `--root <repo> --external` (full severity) to vet a FOREIGN skill BEFORE adopting it via `/adopt-external`. Adoption review: [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md).
