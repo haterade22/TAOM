@@ -2029,14 +2029,14 @@
   <Item id="sk_ll_mw_pauld_elite_a" class="elite" />
   <Item id="sk_ll_mw_pauld_heavy_a" class="elite" />
   <Item id="sk_ll_mw_pauld_med_a" class="elite" />
-  <Item id="sk_ll_rg_boots_light_a" class="heavy" next="sk_ll_rg_grvs_med_a" />
+  <Item id="sk_ll_rg_boots_light_a" class="light" next="sk_ll_mw_grvs_med_a" />
   <Item id="sk_ll_rg_bracer_med_a" class="elite" />
   <Item id="sk_ll_rg_chest_heavy_a" class="elite" />
-  <Item id="sk_ll_rg_chest_light_a" class="heavy" next="sk_ll_rg_chest_heavy_a" />
-  <Item id="sk_ll_rg_chest_light_b" class="heavy" next="sk_ll_rg_chest_heavy_a" />
+  <Item id="sk_ll_rg_chest_light_a" class="light" next="sk_ll_rg_chest_med_a" />
+  <Item id="sk_ll_rg_chest_light_b" class="light" next="sk_ll_rg_chest_med_a" />
   <Item id="sk_ll_rg_chest_med_a" class="heavy" next="sk_ll_rg_chest_heavy_a" />
   <Item id="sk_ll_rg_grvs_med_a" class="elite" />
-  <Item id="sk_ll_rg_helmet_light_a" class="heavy" next="sk_ll_rg_helmet_med_b" />
+  <Item id="sk_ll_rg_helmet_light_a" class="light" next="sk_ll_gl_helmet_med_b" />
   <Item id="sk_ll_rg_helmet_med_a" class="heavy" next="sk_ll_rg_helmet_med_b" />
   <Item id="sk_ll_rg_helmet_med_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_rg_pauld_light_a" class="heavy" next="sk_ll_rg_pauld_med_a" />

@@ -254,7 +254,7 @@ public class TroopCultureMapperTests
     {
         // The self-swap guard now only fires on the militia path: on the garrison path the
         // index-membership skip catches an identical troop first. Two cultures sharing a militia
-        // troop is real (Lothlorien reuses the Rivendell militia), so this is the live case.
+        // troop is real (Lothlorien reused the Rivendell militia until 2026-11-05; the fixture keeps that shape).
         var shared = new CultureMilitiaTroops("lothlorien", "rivendell_militia_spearman", "me", "r", "re");
         var from = new CultureMilitiaTroops("rivendell", "rivendell_militia_spearman", "me2", "r2", "re2");
 
@@ -269,7 +269,7 @@ public class TroopCultureMapperTests
     [TestMethod]
     public void MapGarrison_TroopTheTargetCultureAlreadyFields_IsLeftAlone()
     {
-        // Lothlorien recruits the Rivendell line, so a Rivendell troop in a Lothlorien fief is
+        // In this fixture Lothlorien recruits the Rivendell line, so a Rivendell troop in a Lothlorien fief is
         // already correct even though its culture tag says rivendell. Comparing culture ids alone
         // would churn a perfectly good garrison every conversion.
         var index = Index("lothlorien",

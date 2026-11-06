@@ -192,7 +192,7 @@ public class GarrisonCultureCoverageTests
     /// from the troop XML.
     ///
     /// Taking it from the troop files is the bug this gate is supposed to catch: three real
-    /// conversion targets (<c>lothlorien</c>, <c>battania</c>, <c>abanissa</c>)
+    /// conversion targets (<c>lothlorien</c> until 2026-11-05, <c>battania</c>, <c>abanissa</c>)
     /// author no troops of their own, so a candidate list built from <c>troops_*.xml</c> silently
     /// omitted exactly the cultures that were broken, and the gate passed while a Lothlorien
     /// conversion re-manned a whole city with practice dummies.

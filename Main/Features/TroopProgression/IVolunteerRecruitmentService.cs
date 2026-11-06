@@ -26,7 +26,7 @@ public interface IVolunteerRecruitmentService
     ///
     /// These are roots, not the culture's whole roster: walk each one's upgrade targets to reach the
     /// full line. Crucially the ids need NOT carry this culture. Several TAOM cultures deliberately
-    /// field another's troops (Lothlorien recruits the Rivendell line, Khand the Rhun line,
+    /// field another's troops (Khand recruits the Rhun line,
     /// Shaghana and Abanissa the Harad line), so this is the only honest answer to "which troops does
     /// this culture put in the field", and grouping <c>CharacterObject.Culture</c> is not.
     /// </summary>

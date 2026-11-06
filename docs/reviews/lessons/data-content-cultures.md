@@ -2284,3 +2284,19 @@ Three goblin cultures joined War Spoils. The kingdom recipe, the Elite Emissary 
 - **Why missed:** the search covered code that branches on the resource, and the cost model was read from the upgrade path only.
 - **Prevent:** grep the culture ids across `docs/`, config comments and test comments in the same change. A paid troop's cost row covers each route that adds it: upgrade, recruit and merchant.
 - **Source:** [rca-dire-wolf-2026-11-04.md](../rca-dire-wolf-2026-11-04.md).
+
+### Pin the promise of a new troop tree, not only its files (Lothlorien, 2026-11-05)
+
+Lothlorien got its own tree, and the tree loaded, validated and passed every test. Its seven military party templates, its enlistment kits, its troop weights and its career kits still belonged to Rivendell, so joining Lothlorien paid out Rivendell troops.
+
+- **Why missed:** every gate checks that a reference resolves or a file is well formed. None checks who owns it, and the party-template test allows sharing another culture's templates on purpose.
+- **Prevent:** a culture that gets its own troops file gets a data test that its culture block, its templates and its weights name no other culture's troops (`LothlorienOwnTreeDataTests` is the shape). Walk the consumer list in `.claude/rules/troops.md` and `docs/ai-includes/new-culture-authoring.md` for each one.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) findings F2, F3, F8 and F9.
+
+### Check the art cache entries before saying new Armory art works (Lothlorien, 2026-11-05)
+
+The Lorien armour pack arrived in the live Armory with every item, mesh name and collision reference correct and no `RuntimeDataCache` entry for any of its 23 packages. The client skips such a package whole and logs nothing.
+
+- **Why missed:** the armory audit and the validator check names and references, which pass without the entry. The contributor's notes said the check could not run on his machine.
+- **Prevent:** after any art drop, run `python tools/check_rdc_entries.py --under <the new folder>` and read `without-rdc`. The lotraom-assets mirror tracks the entries; copy the missing ones, or open the Armory in the Kit and save. See also `docs/reviews/lessons/animation-skeleton.md`.
+- **Source:** [rca-lorien-snow-orcs-2026-11-05.md](../rca-lorien-snow-orcs-2026-11-05.md) finding F1.

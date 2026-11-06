@@ -360,6 +360,29 @@ class WriterTests(unittest.TestCase):
         self.assertEqual(by_id["sk_gd_x_chest_civ_a"]["status"], "UNCHANGED")     # civilian: skipped
         self.assertEqual(by_id["boromir_jerkin"]["status"], "UNCHANGED")          # hero kit: skipped
 
+    def test_a_generator_owned_item_is_left_to_its_generator(self):
+        """sk_ll_ pieces are priced by tools/generate_lothlorien_armor.py (a Mallorn piece one band up).
+        A roster-first restat would re-band them by their lowest wearer, so process_file skips them
+        while a sibling item in the same file is still restated."""
+        lorien = self.armory / "lothlorien"
+        lorien.mkdir()
+        path = lorien / "body_armors.xml"
+        path.write_bytes(_file(
+            _item("sk_ll_ml_chest_heavy_a", "BodyArmor", body_armor=42, arm_armor=14, weight=18.5),
+            _item("sk_gd_x_chest_heavy_a", "BodyArmor", body_armor=42, arm_armor=14, weight=18.5),
+            crlf=True))
+        before = path.read_bytes()
+        roster = dict(self.roster, sk_ll_ml_chest_heavy_a={"anchorLevel": 46, "tier": "heavy", "tierSource": "id-keyword"})
+        recs = ra.process_file(str(path), "body", dry_run=False, tier_source="roster-first", roster_map=roster,
+                               keep_weights=True, keep_material_type=True, backup_tag="t")
+        by_id = {c["id"]: c for c in recs}
+        self.assertNotIn("sk_ll_ml_chest_heavy_a", by_id)
+        self.assertEqual(by_id["sk_gd_x_chest_heavy_a"]["new_values"]["body_armor"], 60)   # the lothlorien cap
+        after = path.read_text(encoding="utf-8")
+        self.assertIn('id="sk_ll_ml_chest_heavy_a"', after)
+        self.assertNotEqual(before, path.read_bytes())          # the sibling was written
+        self.assertEqual(after.count('body_armor="42"') + after.count("body_armor=42"), 1)   # only the Lorien item keeps 42
+
     def test_secondaries_scale_with_the_primary_and_zero_stays_zero(self):
         by_id = {c["id"]: c for c in self._run("gondor", "body_armors.xml", "body")}
         # 14 * 57 / 42 = 19

@@ -315,11 +315,7 @@ DEFAULT_CULTURE = 'neutral_culture'
 # Cultures with no troops_*.xml file of their own that nevertheless BIND to another culture's
 # troop tree in the culture data. Enumerating troop files alone reports them as "no troop tree",
 # which is what made them fall through to the defaults; they are tree-BORROWERS, not tree-less.
-# Both bindings verified 2026-08-08:
-#   lothlorien -> rivendell   Main/_Module/ModuleData/taom_spcultures.xml, Culture id="lothlorien":
-#                             basic_troop=NPCCharacter.imladris_recruit,
-#                             elite_basic_troop=NPCCharacter.imladris_infantry
-#                             -- byte-identical to Culture id="rivendell".
+# Both bindings verified 2026-08-08 (lothlorien left the list 2026-11-05: it ships troops_lothlorien.xml):
 #   battania   -> khuzait     Main/_Module/ModuleData/spcultures.xslt, Culture[@id='battania']
 #                             (the Variag/Khand re-theme; battania is a VANILLA culture, so it is
 #                             NOT in taom_spcultures.xml): basic_troop=NPCCharacter.loke_rim_initiate,
@@ -331,7 +327,6 @@ DEFAULT_CULTURE = 'neutral_culture'
 #                             the troops carry Culture.aserai, so abanissa owns none of its own).
 # If any of them ever ships its own troops file, its real tree wins and the alias is dropped.
 TREE_ALIASES = {
-    'lothlorien': 'rivendell',
     'battania': 'khuzait',
     'abanissa': 'aserai',
 }
@@ -826,14 +821,12 @@ def file_header():
         '  vlandia=Rohan, empire=Dunland, aserai=Harad, khuzait=Rhun, sturgia=Dale,\n'
         '  battania=Khand, lothlorien=Galadhrim.\n'
         '\n'
-        '  lothlorien, battania and abanissa define no troops_*.xml file of their OWN, but each binds\n'
-        "  to another culture's tree, so they are NOT rosterless: taom_spcultures.xml gives\n"
-        '  lothlorien basic_troop=imladris_recruit / elite_basic_troop=imladris_infantry,\n'
-        '  i.e. the same Rivendell tree rivendell itself uses; spcultures.xslt gives\n'
+        '  battania and abanissa define no troops_*.xml file of their OWN, but each binds\n'
+        "  to another culture's tree, so they are NOT rosterless: spcultures.xslt gives\n"
         '  battania (Variag/Khand) basic_troop=loke_rim_initiate /\n'
         "  elite_basic_troop=loke_rim_cavalry, i.e. khuzait's Rhun tree. abanissa binds\n"
         "  harad_reg_levy / harad_serp_noble, aserai's Harad tree. The generator's TREE_ALIASES map\n"
-        '  builds their rosters from those trees, so they mirror rivendell, khuzait and aserai\n'
+        '  builds their rosters from those trees, so they mirror khuzait and aserai\n'
         "  rank-for-rank. The Harad-sphere archer bows come from the generator's ISSUE_LAUNCHER table.\n"
         '\n'
         '  A cell is ABSENT when its group pool has no donor within one band of the rank. That is\n'

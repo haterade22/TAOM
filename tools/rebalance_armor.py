@@ -232,7 +232,7 @@ KINGDOM_CAPS = {
     'erebor': 70, 'iron_hills': 70,
     'rivendell': 68, 'lindon': 68,
     'mirkwood': 63,
-    'lothlorien': 60,           # no armour item today; recorded for when one exists
+    'lothlorien': 60,           # the Lorien kit, tools/generate_lothlorien_armor.py
     'gondor': 57, 'rhun': 57, 'mordor_numenorean': 57, 'arnor': 57,
     'gundabad': 49,
     'dol_guldur': 46, 'khand': 46,   # Khand owns no armour item today
@@ -461,6 +461,17 @@ EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_
 # him. A display-name match on HERO_NAMES must not exclude it; Khamul's own kit is `khamul_*`.
 # Mirrored in analyze_armor_balance.is_excluded; a test pins the two together.
 HERO_NAME_FALSE_POSITIVE_PREFIXES = ('sk_dg_khml_',)
+
+
+# Items whose numbers belong to their own generator, never to a restat. tools/generate_lothlorien_armor.py
+# prices a Mallorn piece one band above its id token (KEYforce's values); a roster-first restat would
+# re-band 56 of the 97 Lorien items by their lowest wearer and undo that.
+GENERATOR_OWNED_ID_PREFIXES = ('sk_ll_',)
+
+
+def is_generator_owned(item_id):
+    """True for an item that process_file must leave alone because its generator sets the values."""
+    return (item_id or '').lower().startswith(GENERATOR_OWNED_ID_PREFIXES)
 
 
 def is_excluded(item_id, display_name):
@@ -976,6 +987,8 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
         item_id = item.get('id', '')
         item_name = get_display_name(item.get('name', ''))
         current_weight = float(item.get('weight', '0'))
+        if is_generator_owned(item_id):
+            continue
 
         # Find the Armor element
         armor_elem = item.find('.//Armor')

@@ -77,7 +77,7 @@ public sealed class TroopCultureMapper : ITroopCultureMapper
                 continue;
 
             // Already right. Two separate reasons, and the second is not redundant: a culture that
-            // borrows another's line (Lothlorien fields the Rivendell troops it recruits) would
+            // borrows another's line (Khand fields the Rhun troops it recruits) would
             // otherwise churn a perfectly correct garrison, because those troops carry the donor's
             // culture tag. Lords donating their own troops into a fief they just took is the common
             // case for the first test.

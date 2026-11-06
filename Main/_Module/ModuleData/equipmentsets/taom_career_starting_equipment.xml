@@ -1151,21 +1151,21 @@
 
     <EquipmentRoster id="player_career_lothlorien_ranged_m" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_rivendell_bow_t2" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t3" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_q1v3" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <EquipmentRoster id="player_career_lothlorien_ranged_f" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_rivendell_bow_t2" />
-            <Equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Item0" id="Item.ladder_lothlorien_bow_t3" />
+            <Equipment slot="Item1" id="Item.wm_elven_arrow_q1v3" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1174,10 +1174,10 @@
     <EquipmentRoster id="player_career_lothlorien_cavalry_m" culture="Culture.lothlorien">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1186,10 +1186,10 @@
     <EquipmentRoster id="player_career_lothlorien_cavalry_f" culture="Culture.lothlorien">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
-            <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
+            <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1199,21 +1199,21 @@
 
     <EquipmentRoster id="player_career_lothlorien_infantry_m" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
+            <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
     <EquipmentRoster id="player_career_lothlorien_infantry_f" culture="Culture.lothlorien">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
+            <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier1_silver" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+            <Equipment slot="Body" id="Item.sk_ll_rg_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 

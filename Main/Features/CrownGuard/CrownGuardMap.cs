@@ -49,7 +49,7 @@ public sealed class CrownGuardMap
             ["southrhovanion"] = "southrhovanion_horse_lord",
             ["mirkwood"] = "mirkwood_palaceguard",
             ["rivendell"] = "imladris_warden",
-            ["lothlorien"] = "imladris_warden",
+            ["lothlorien"] = "lorien_gl_mallorn_defender",
             ["lindon"] = "lindon_imladris_warden",
             ["mordor"] = "mordor_uruk_baraddurguard",
             ["dolguldur"] = "dg_uruk_black_guard",

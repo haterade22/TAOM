@@ -200,14 +200,16 @@ SLOT_ORDER = ("Item0", "Item1", "Item2", "Item3", "Head", "Cape", "Body", "Glove
 
 
 def existing_skills(path):
-    """{troop id: {skill: value}} from a previous run, so a regeneration keeps the curve's values."""
+    """{troop id: {skill: value}} from a previous run, so a regeneration keeps the curve's values.
+
+    Read with an XML parser: attribute order and a BOM do not matter, and a troop whose id is
+    new or renamed is simply absent (main() warns, because its skills are then written as 0).
+    """
     if not path.exists():
         return {}
-    text = path.read_text(encoding="utf-8")
-    out = {}
-    for m in re.finditer(r'<NPCCharacter\s+id="([^"]+)".*?</NPCCharacter>', text, re.S):
-        out[m.group(1)] = {s: int(v) for s, v in re.findall(r'<skill id="([^"]+)" value="(\d+)"', m.group(0))}
-    return out
+    root = ET.fromstring(path.read_bytes())
+    return {n.get("id"): {s.get("id"): int(s.get("value")) for s in n.iter("skill")}
+            for n in root.iter("NPCCharacter")}
 
 
 def render(troops, skills_by_id):
@@ -217,7 +219,7 @@ def render(troops, skills_by_id):
         "<NPCCharacters>",
     ]
     for t in troops:
-        basic = '\n      is_basic_troop="true"' if t["basic"] else ""
+        basic = '\r\n      is_basic_troop="true"' if t["basic"] else ""
         lines += [
             "  <NPCCharacter",
             f'      id="{t["id"]}"',
@@ -313,8 +315,18 @@ def main():
         print("\n".join("ERROR: " + e for e in errors))
         return 1
     out = Path(args.output)
-    xml = render(TROOPS, existing_skills(out))
+    skills = existing_skills(out)
+    xml = render(TROOPS, skills)
     print(f"{len(TROOPS)} troops")
+    unplaced = [t["id"] for t in TROOPS if t["id"] not in skills]
+    if unplaced:
+        print("WARNING: no placed skills yet for " + ", ".join(unplaced) + ". They are written as 0 until: "
+              "python tools/rebalance_troops.py --fix-monotonicity --restat " + ",".join(unplaced))
+    try:
+        ET.fromstring(xml.encode("utf-8"))
+    except ET.ParseError as exc:
+        print(f"ERROR: the rendered XML does not parse ({exc}); nothing written")
+        return 1
     if not args.apply:
         print("dry run; pass --apply to write")
         return 0
