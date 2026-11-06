@@ -8,10 +8,20 @@
 # Guarded (work-destroying ops TAOM did not previously cover):
 #   git reset --hard        discards uncommitted working-tree + index changes
 #   git clean -f[d]         deletes untracked files
-#   git branch -D           force-deletes a branch (may orphan commits)
+#   git branch -D           force-deletes a branch (may orphan commits); also -d -f, -df, --delete -f
 #   git checkout -- / . / ./ / dir/. / -f   discards working-tree changes
-#   git restore <path>      discards working-tree changes (restore --staged-only is SAFE → allowed)
+#   git switch --discard-changes / -f / --force   the same, spelled with switch
+#   git restore <path>      discards working-tree changes (--staged / -S alone is SAFE → allowed)
 #   git stash drop|clear    discards stashed work
+#   git worktree remove --force / -f   deletes a worktree with its uncommitted and untracked files
+#   git reflog expire|delete, git update-ref -d / --stdin / <all-zero id>   remove the recovery
+#                           net every other op relies on
+# Long options match by git's unambiguous-prefix rule (long_is): --del, --forc, --disc, --work.
+#
+# Left ungated: checkout -B, switch -C and branch -f move an existing branch, which the reflog
+# can undo. Known gaps (recorded follow-ups): git global options the stripper below does not know
+# (-P, --no-optional-locks) hide the subcommand, and a `;` inside a quoted argument splits a
+# segment. The 2026-09-29 additions follow ECC's gateguard list (docs/reviews/adopt-ecc-2026-09-29.md).
 #
 # Deliberately does NOT touch `git push` — owned by validate-push.sh.
 #
@@ -60,6 +70,15 @@ COMMAND=$(taom_hook_command posix block-dangerous-git)
 
 REASON=""
 
+# long_is WORD --option: WORD names --option the way git reads it. git takes any unambiguous prefix
+# of a long option (--del is --delete, --forc is --force; validate-push learned this in #689), and
+# `--opt=value` carries its value in the same word. Four characters minimum: shorter prefixes are
+# ambiguous for every option gated here. A prefix git would reject as ambiguous only costs a prompt.
+long_is() {
+  local w=${1%%=*}
+  [[ ${#w} -ge 4 && "$2" == "$w"* ]]
+}
+
 # Split on shell separators so a destructive verb is only matched when it is the
 # actual command of a segment, never as text inside a quoted arg or a pipe target.
 SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
@@ -88,8 +107,47 @@ for seg in "${SEG_LIST[@]}"; do
     REASON="git reset --hard discards all uncommitted working-tree and index changes"
   elif [[ "$rest" =~ ^clean([[:space:]].*)?[[:space:]](-[a-zA-Z]*f|--force) ]]; then
     REASON="git clean -f deletes untracked files permanently"
-  elif [[ "$rest" =~ ^branch([[:space:]].*)?[[:space:]](-D|--delete([[:space:]].*)?[[:space:]]--force|--force([[:space:]].*)?[[:space:]]--delete) ]]; then
-    REASON="git branch -D force-deletes a branch and may orphan unmerged commits"
+  elif [[ "$rest" =~ ^branch([[:space:]]|$) ]]; then
+    # -D, or delete plus force in any spelling: -d -f, -df, -fd, --delete --force, --del --forc.
+    del=0; frc=0
+    set -f; WORDS=($rest); set +f
+    for w in "${WORDS[@]:1}"; do
+      if [[ "$w" == --* ]]; then
+        long_is "$w" --delete && del=1
+        long_is "$w" --force && frc=1
+      elif [[ "$w" == -* ]]; then
+        [[ "$w" == *D* ]] && { del=1; frc=1; }
+        [[ "$w" == *d* ]] && del=1
+        [[ "$w" == *f* ]] && frc=1
+      fi
+    done
+    (( del && frc )) && REASON="git branch -D force-deletes a branch and may orphan unmerged commits"
+  elif [[ "$rest" =~ ^switch([[:space:]]|$) ]]; then
+    # --discard-changes, --force and -f throw away working-tree changes, like checkout -f.
+    set -f; WORDS=($rest); set +f
+    for w in "${WORDS[@]:1}"; do
+      if [[ "$w" == --* ]]; then
+        { long_is "$w" --discard-changes || long_is "$w" --force; } \
+          && REASON="git switch --discard-changes/-f discards working-tree changes"
+      elif [[ "$w" == -* && "$w" == *f* ]]; then
+        REASON="git switch --discard-changes/-f discards working-tree changes"
+      fi
+    done
+  elif [[ "$rest" =~ ^worktree[[:space:]]+remove([[:space:]]|$) ]]; then
+    # Without --force git refuses a dirty worktree itself; with it, uncommitted and untracked work goes.
+    set -f; WORDS=($rest); set +f
+    for w in "${WORDS[@]:2}"; do
+      if { [[ "$w" == --* ]] && long_is "$w" --force; } || [[ "$w" != --* && "$w" == -* && "$w" == *f* ]]; then
+        REASON="git worktree remove --force deletes the worktree with its uncommitted and untracked files"
+      fi
+    done
+  elif [[ "$rest" =~ ^reflog[[:space:]]+(expire|delete)([[:space:]]|$) ]]; then
+    REASON="git reflog expire/delete removes the history that makes every other lost commit recoverable"
+  elif [[ "$rest" =~ ^update-ref([[:space:]].*)?[[:space:]](-d|--stdin)([[:space:]]|$) ]] \
+       || [[ "$rest" =~ ^update-ref[[:space:]].*[[:space:]]0{40}(0{24})?([[:space:]]|$) ]]; then
+    # -d, a `delete <ref>` line on --stdin, or the all-zero id as the new value all delete a ref.
+    # (update-ref has no --delete.)
+    REASON="git update-ref deletes a ref directly and may orphan its commits"
   elif [[ "$rest" =~ ^stash[[:space:]]+(drop|clear) ]]; then
     REASON="git stash drop/clear permanently discards stashed work"
   elif [[ "$rest" =~ ^checkout([[:space:]]|$) ]]; then
@@ -98,8 +156,22 @@ for seg in "${SEG_LIST[@]}"; do
       REASON="git checkout discards working-tree changes for the named paths"
     fi
   elif [[ "$rest" =~ ^restore([[:space:]]|$) ]]; then
-    # restore --staged WITHOUT --worktree only unstages (safe) → allow; else discards worktree.
-    if [[ "$rest" =~ --staged ]] && [[ ! "$rest" =~ (--worktree|[[:space:]]-W([[:space:]]|$)) ]]; then
+    # restore --staged (or -S) WITHOUT --worktree (or -W) only unstages (safe) → allow; else
+    # discards worktree. Short flags bundle: -SW is both. -s takes the rest of its word as the
+    # source tree, so the S in -sSTABLE is part of a tree name, never --staged.
+    staged=0; wt=0
+    set -f; WORDS=($rest); set +f
+    for w in "${WORDS[@]:1}"; do
+      if [[ "$w" == --* ]]; then
+        long_is "$w" --staged && staged=1
+        long_is "$w" --worktree && wt=1
+      elif [[ "$w" == -* ]]; then
+        flags=${w#-}; flags=${flags%%s*}
+        [[ "$flags" == *S* ]] && staged=1
+        [[ "$flags" == *W* ]] && wt=1
+      fi
+    done
+    if (( staged && ! wt )); then
       :
     else
       REASON="git restore discards working-tree changes for the named paths"
