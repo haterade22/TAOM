@@ -4743,6 +4743,7 @@
 	<string id="TAOM_LD_Fort_Towers" text="{=TAOM_LD_Fort_Towers}High towers" />
 	<string id="TAOM_LD_Fort_TowersDetail" text="{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them." />
 	<string id="TAOM_LD_Fort_TowersFull" text="{=TAOM_LD_Fort_TowersFull}Fully manned" />
+	<string id="TAOM_LD_Fort_TowersVolleyDetail" text="{=TAOM_LD_Fort_TowersVolleyDetail}Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them." />
 	<string id="TAOM_LD_Fort_Used" text="{=TAOM_LD_Fort_Used}Used" />
 	<string id="TAOM_LD_Fort_Volley" text="{=TAOM_LD_Fort_Volley}Elven Volley" />
 	<string id="TAOM_LD_Fort_VolleyAuto" text="{=TAOM_LD_Fort_VolleyAuto}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave." />

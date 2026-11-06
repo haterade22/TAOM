@@ -203,12 +203,30 @@ internal sealed partial class SurvivalRun
             return Refuse(FortResult.Hidden);
         if (_towerLevel >= towers.Levels.Count)
             return Refuse(FortResult.MaxLevel);
-        if (_towerLevel >= _plan.Offered.Towers)
+        if (_towerLevel >= TowerTop(towers))
             return Refuse(FortResult.NotOffered);
 
         var price = towers.Levels[_towerLevel].Price;
         return new Quote(FortResult.Ok, price, FortPrice(price), 0f, PostsAdded(towers, _towerLevel, _towerLevel + 1));
     }
+
+    /// <summary>
+    /// The highest tower level this run sells now: the plan's levels, the build's offer, and not a level that would take the player's gold for nothing (D31): one that adds the tower volley while no usable
+    /// tower can fire one (<see cref="CanVolley"/>) or the plan carries no volley block, and one whose plan adds neither posts nor a volley (the reader clears the flag of a volley block it dropped, which leaves
+    /// such a level). The boot check can drop spots after the plan was read, so this reads the usable towers.
+    /// </summary>
+    private int TowerTop(TowerPlan towers)
+    {
+        var top = Math.Min(towers.Levels.Count, _plan.Offered.Towers);
+        var volleyCan = towers.Volley != null && Towers.Any(CanVolley);
+        while (top > 0 && (towers.Levels[top - 1].Volley ? !volleyCan : towers.Levels[top - 1].Posts <= (top > 1 ? towers.Levels[top - 2].Posts : 0)))
+            top--;
+
+        return top;
+    }
+
+    /// <summary>Whether a tower can loose the tower volley: it records a volley spot and a post, because a post archer of its own owns the arrows (a tower with none answers <c>NoOwner</c> for the wave).</summary>
+    private static bool CanVolley(LdTower tower) => tower.VolleyOrigins.Count > 0 && tower.Posts.Count > 0;
 
     private Quote QuoteCare()
     {
@@ -335,17 +353,20 @@ internal sealed partial class SurvivalRun
     {
         var fort = _plan.Shop.Fort ?? FortPlan.None;
         var tower = QuoteTowers();
+        var towerTop = fort.Towers is { } towerPlan ? TowerTop(towerPlan) : 0;
+        var towerShown = fort.Towers is { } shownPlan ? shownPlan.Levels[Math.Min(_towerLevel, Math.Max(1, towerTop) - 1)] : null;
         return new FortView(
             Row(QuoteGate(), _gateLevel, fort.Gate?.Levels.Count ?? 0),
             Row(QuoteRepair(), 0, 0),
-            Row(tower, _towerLevel, Math.Min(fort.Towers?.Levels.Count ?? 0, _plan.Offered.Towers), tower.Posts == 0 || PostsFit(tower.Posts)),
+            Row(tower, _towerLevel, towerTop, tower.Posts == 0 || PostsFit(tower.Posts)),
             Row(QuoteCare(), _careUsed, fort.Care?.PerIntermission ?? 0),
             Row(QuoteVolley(), _volleyLevel, fort.Volley?.Levels.Count ?? 0),
             _gates,
             _plan.Options.StartGold != null)
         {
             CareShare = fort.Care?.Share ?? 0f,
-            TowerPostsShown = fort.Towers is { } towerRow ? towerRow.Levels[Math.Min(_towerLevel, Math.Min(towerRow.Levels.Count, Math.Max(1, _plan.Offered.Towers)) - 1)].Posts : 0,
+            TowerPostsShown = towerShown?.Posts ?? 0,
+            TowerVolleyShown = towerShown is { Volley: true } ? fort.Towers!.Volley : null,
             GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,
             VolleyShown = fort.Volley is { } volley ? volley.Levels[Math.Min(_volleyLevel, volley.Levels.Count - 1)] : null,
         };

@@ -144,7 +144,7 @@ internal sealed partial class SurvivalRun
         return _volleyLevel > 0 && VolleyOrigins.Count > 0 && volley != null && _volleyLevel <= volley.Levels.Count ? volley.Levels[_volleyLevel - 1] : null;
     }
 
-    /// <summary>A wave begins: fresh clocks and tallies. The towers' volley exists from the tower level that carries it, for each tower with a recorded volley spot.</summary>
+    /// <summary>A wave begins: fresh clocks and tallies. The towers' volley exists from the tower level that carries it, for each tower that can loose one (<see cref="CanVolley"/>).</summary>
     private void InitVolley()
     {
         _elvenTally.Clear();
@@ -165,7 +165,7 @@ internal sealed partial class SurvivalRun
         if (carries < 0 || _towerLevel <= carries)
             return;
 
-        foreach (var tower in Towers.Where(t => t.VolleyOrigins.Count > 0))
+        foreach (var tower in Towers.Where(CanVolley))
             _towerClocks.Add(new TowerVolley(tower, new VolleyClock(_waveSeconds, volley.FirstSeconds, volley.CooldownSeconds)));
     }
 

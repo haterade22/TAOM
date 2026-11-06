@@ -121,9 +121,9 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void TheShippedOffered_IsTheGateFieldCareTheVolleyAndTheFirstTwoTowerLevels_AndNoneIsEmpty()
+    public void TheShippedOffered_IsTheGateFieldCareTheVolleyAndAllThreeTowerLevels_AndNoneIsEmpty()
     {
-        Assert.AreEqual(new FortOffer(3, 2, true, 2), FortOffer.Offered, "Slice 4 landed field care's effect, Slice 5 the gate's three levels and its repair, Slice 6 the Elven Volley's two levels and Slice 7 the first two tower levels; the tower volley waits for Slice 8");
+        Assert.AreEqual(new FortOffer(3, 3, true, 2), FortOffer.Offered, "Slice 4 landed field care's effect, Slice 5 the gate's three levels and its repair, Slice 6 the Elven Volley's two levels, Slice 7 the first two tower levels and Slice 8 the third, the tower volley");
         Assert.AreEqual(new FortOffer(0, 0, false, 0), FortOffer.None);
         Assert.AreEqual(FortOffer.None, Plan().Offered with { Gate = 0, Towers = 0, FieldCare = false, Volley = 0 });
         var bare = new RunPlan("h", Array.Empty<GarrisonRow>(), new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
@@ -132,13 +132,13 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void WithTheShippedOffered_OnlyTheTowerVolleyLevelIsStillNotForSale()
+    public void WithTheShippedOffered_EveryKindIsForSale_AndTheTowerVolleyLevelNeedsARecordedSpot()
     {
         var run = InIntermission(Plan(offered: FortOffer.Offered, gold: 5000), () => Snap(40, Dented(0.5f)));
 
         Assert.AreEqual(FortResult.Ok, run.TryBuyTowerLevel());
         Assert.AreEqual(FortResult.Ok, run.TryBuyTowerLevel());
-        Assert.AreEqual(FortResult.NotOffered, run.TryBuyTowerLevel(), "level 3 is the tower volley, Slice 8");
+        Assert.AreEqual(FortResult.Ok, run.TryBuyTowerLevel(), "level 3 is the tower volley (Slice 8); the plan's towers record volley spots");
         Assert.AreEqual(FortResult.Ok, run.TryBuyVolleyLevel());
         Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
         Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
@@ -591,7 +591,7 @@ public class SurvivalRunFortTests
     [TestMethod]
     public void ATowerWithFewerRecordedPostsThanTheLevel_CountsOnlyThoseItHas()
     {
-        var run = Begun(Plan(rules: Capped(), towers: new[] { new LdTower("small", new[] { Post(0f), Post(1f) }, Array.Empty<LdPoint>()) }));
+        var run = Begun(Plan(rules: Capped(), towers: new[] { new LdTower("small", new[] { Post(0f), Post(1f) }, new[] { new LdPoint(1f, 1f, 1f) }) }));
         run.Tick(Snap(208));
 
         Assert.AreEqual(FortResult.Ok, run.TryBuyTowerLevel(), "2 left, level 1 asks 4 posts but the tower records 2");

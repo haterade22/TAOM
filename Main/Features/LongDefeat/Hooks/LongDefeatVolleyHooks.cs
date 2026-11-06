@@ -20,7 +20,7 @@ internal static class LongDefeatVolleyHooks
 
         var hit = LongDefeatVolleyHitFilter.Read(blow.IsMissile, affectorWeapon.Item?.StringId, host.IsVolleyItem, affectedAgent.Team?.Side == BattleSideEnum.Defender,
             collisionData.AttackBlockedWithShield || collisionData.MissileBlockedWithWeapon, affectedAgent.Health, affectorAgent != null, affectorAgent?.Team?.Side == BattleSideEnum.Defender,
-            collisionData.MissileStartingBaseSpeed, collisionData.MissileVelocity.Length);
+            collisionData.MissileStartingBaseSpeed, collisionData.MissileVelocity.Length, collisionData.AffectorWeaponSlotOrMissileIndex);
         if (hit is { } read)
             host.OnVolleyHit(read);
     }
@@ -31,7 +31,7 @@ internal static class LongDefeatVolleyHooks
         if (!isCanceled || !host.WantsVolleyHits || victim == null || !victim.IsHuman || victim.Team?.Side != BattleSideEnum.Defender)
             return;
 
-        if (LongDefeatVolleyHitFilter.Cancelled(MissileItem(mission, collisionData.AffectorWeaponSlotOrMissileIndex), host.IsVolleyItem) is { } cancelled)
+        if (LongDefeatVolleyHitFilter.Cancelled(MissileItem(mission, collisionData.AffectorWeaponSlotOrMissileIndex), host.IsVolleyItem, collisionData.AffectorWeaponSlotOrMissileIndex) is { } cancelled)
             host.OnVolleyHit(cancelled);
     }
 

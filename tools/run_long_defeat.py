@@ -23,6 +23,7 @@ the next class. The report must be schema 2 and must echo the seed, start wave, 
 The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
 The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
+The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
 The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
@@ -667,7 +668,7 @@ def owes_summon(report_json):
 # read_fortifications mirrors FortificationsReader rule for rule (both suites read tools/tests/long_defeat_fort_cases.json), FORT_OFFERED mirrors FortOffer.Offered (D31), and
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
-FORT_OFFERED = {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6 and tower levels 1 and 2 in Slice 7; each later slice raises its kind here and in FortOffer.Offered
+FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
 SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
@@ -1128,6 +1129,60 @@ def owes_posts_level2(report_json):
     return _level_bought_before_play(report_json, "towerLevel", 2)
 
 
+# The towers' level 3 volley (Slice 8). The game writes the same detail as the Elven Volley's line under its own check id, taom.long-defeat.tower-volley (key tower-<id>-w<N>u<k>, source=tower-<id>), so an Elven
+# pass never pays a tower's debt and a tower's never pays the Elven Volley's. The level that adds the volley is the shop's first tower level with the volley flag (3 as shipped). A report that bought it before a
+# wave the run then played owes a pass line for every recorded tower that holds a volley spot AND a post (its arrows are owned by one of its post archers, so a tower with no post writes no line), and the posts check
+# is owed per recorded tower the same way: one tower's pass would otherwise pay for every tower (Slice 7's review). A skip (window-cut) proves nothing. The proof needs recorded tower posts and tower_volley spots.
+TOWER_VOLLEY_CHECK = "tower-volley"
+
+
+def tower_volley_level(fortress_id=None, fort=None):
+    """The tower level that adds the tower volley: the first level of this tree's shop.json towers row that carries the volley flag, or None when none does. The game's reader clears every flag when the volley block is
+    missing or dropped (read_fortifications does the same), so such a shop sells no volley and the judge owes none."""
+    plan = (shipped_fortifications(fortress_id) if fort is None else fort) or {}
+    levels = (plan.get("towers") or {}).get("levels") or []
+    return next((i + 1 for i, level in enumerate(levels) if level[1]), None)
+
+
+def owes_tower_volley(report_json, fortress_id=None, fort=None):
+    """The tower-volley check is owed once the tower level that adds the volley was bought before a wave the run then played."""
+    level = tower_volley_level(fortress_id or report_json.get("fortress"), fort)
+    return level is not None and _level_bought_before_play(report_json, "towerLevel", level)
+
+
+def recorded_towers(fortress_id, key, root=None):
+    """The ids of the towers the fortress row of fortresses.json records a point of kind `key` for ("posts" or "volley"), in file order."""
+    root = _json_object(FORTRESS_FILE) if root is None else root
+    fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
+    towers = fortress.get("towers") if isinstance(fortress, dict) else None
+    return [t["id"] for t in towers if isinstance(t, dict) and isinstance(t.get("id"), str) and isinstance(t.get(key), list) and t[key]] if isinstance(towers, list) else []
+
+
+def posts_tower_pattern(tower):
+    """A posts pass line of one tower."""
+    return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\btower=" + re.escape(tower) + r"\b")
+
+
+def tower_volley_pattern(tower):
+    """A tower-volley pass line of one tower."""
+    return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + TOWER_VOLLEY_CHECK) + r" result=pass\b[^\n]*\bsource=tower-" + re.escape(tower) + r"\b")
+
+
+def owed_tower_passes(report_json, log_text, root=None):
+    """What a pass per recorded tower still owes: a posts pass for each tower that records a post once a tower level was played, and a tower-volley pass for each tower that records a volley spot and a post once
+    the volley level was. Each entry names the check and the tower, in the shape judge() lists a missing check."""
+    fortress_id = report_json.get("fortress")
+    fortress_id = fortress_id if isinstance(fortress_id, str) else None
+    posted = recorded_towers(fortress_id, "posts", root)
+    missing = []
+    if owes_posts(report_json):
+        missing += [f"{POSTS_CHECK} (a pass with tower={t}: each recorded tower is owed its own line)" for t in posted if not posts_tower_pattern(t).search(log_text)]
+    if owes_tower_volley(report_json, fortress_id):
+        spotted = set(recorded_towers(fortress_id, "volley", root))
+        missing += [f"{TOWER_VOLLEY_CHECK} (a pass with source=tower-{t}: its post archers own the arrows)" for t in posted if t in spotted and not tower_volley_pattern(t).search(log_text)]
+    return missing
+
+
 def posts_variant_pattern(variant):
     """A posts pass line that names the variant the run armed (the wrapper's --posts-variant set it in the game's environment)."""
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\bvariant=" + re.escape(variant) + r"\b")
@@ -1335,7 +1390,7 @@ def judge(done, report_json, log_text=None):
     if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
         required = required + (FIELD_CARE_CHECK,)
     for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK),
-                       (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK)):
+                       (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK), (owes_tower_volley, TOWER_VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
             required = required + (name,)
     if not lose and posts_variant and not owes_posts(report_json):
@@ -1347,6 +1402,8 @@ def judge(done, report_json, log_text=None):
         missing.append(POSTS_CHECK + " (a pass with level=2: the second tower level fills the remaining posts)")
     if not lose and owes_volley_crosshair(report_json) and not VOLLEY_CROSSHAIR_PASS.search(log_text):
         missing.append(VOLLEY_CHECK + " (a pass with mode=crosshair: level two aims where the lord looks)")
+    if not lose:
+        missing.extend(owed_tower_passes(report_json, log_text))
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)
     if missing:

@@ -170,11 +170,11 @@ public class SurvivalRunVolleyHitTests
     }
 
     [TestMethod]
-    public void TheShippedOffer_HoldsTheTwoVolleyLevelsAndTheFirstTwoTowerLevels_AndTheOtherKindsAsBefore()
+    public void TheShippedOffer_HoldsTheTwoVolleyLevelsAndAllThreeTowerLevels_AndTheOtherKindsAsBefore()
     {
         Assert.AreEqual(2, FortOffer.Offered.Volley);
         Assert.AreEqual(3, FortOffer.Offered.Gate);
-        Assert.AreEqual(2, FortOffer.Offered.Towers, "Slice 7 delivers tower levels 1 and 2; level 3, the tower volley, is Slice 8");
+        Assert.AreEqual(3, FortOffer.Offered.Towers, "Slice 7 delivered tower levels 1 and 2; Slice 8 adds level 3, the tower volley");
         Assert.IsTrue(FortOffer.Offered.FieldCare);
     }
 

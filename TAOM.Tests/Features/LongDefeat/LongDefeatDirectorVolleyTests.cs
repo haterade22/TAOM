@@ -79,7 +79,10 @@ public class LongDefeatDirectorVolleyTests
             Tick();
         }
 
-        public static LdVolleyHit Foe(bool kill = false) => new("ld_elven_arrow", LdVolleyHitKind.Foe, kill, false, false, 45f, 30f);
+        /// <summary>The first missile of the latest fire, which names a hit's window as the production hooks do (-1 before any fire).</summary>
+        public int LastMissile => Field.VolleyMissiles.Count == 0 ? -1 : Field.VolleyMissiles.Last()[0];
+
+        public LdVolleyHit Foe(bool kill = false) => new("ld_elven_arrow", LdVolleyHitKind.Foe, kill, false, false, 45f, 30f, LastMissile);
     }
 
     private static Rig NewRig(bool autoplay = false, int? startGold = null, IReadOnlyList<LdPoint>? origins = null, FortOffer? offered = null, bool withOrigins = true, bool fort = true, int waveSize = 110)
@@ -356,14 +359,14 @@ public class LongDefeatDirectorVolleyTests
     {
         var rig = InWaveOne();
         Assert.IsFalse(rig.Director.WantsVolleyHits);
-        rig.Director.OnVolleyHit(Rig.Foe());
+        rig.Director.OnVolleyHit(rig.Foe());
         rig.Fire();
         Assert.IsTrue(rig.Director.WantsVolleyHits);
 
         rig.Ticks(7);
 
         Assert.IsFalse(rig.Director.WantsVolleyHits, "closed after six seconds");
-        rig.Director.OnVolleyHit(Rig.Foe());
+        rig.Director.OnVolleyHit(rig.Foe());
         rig.Tick();
         Assert.AreEqual(1, rig.Of(LongDefeatChecks.VolleyId).Count);
         StringAssert.Contains(rig.Of(LongDefeatChecks.VolleyId)[0], " hits=0 ");
@@ -385,7 +388,7 @@ public class LongDefeatDirectorVolleyTests
         var rig = InWaveOne();
         rig.Fire();
         for (var i = 0; i < 8; i++)
-            rig.Director.OnVolleyHit(Rig.Foe(kill: i < 3));
+            rig.Director.OnVolleyHit(rig.Foe(kill: i < 3));
         rig.Ticks(7);
 
         Assert.IsTrue(rig.Outcomes.Has("pass", LongDefeatChecks.VolleyId), string.Join("\n", rig.Outcomes.Lines));
@@ -404,7 +407,7 @@ public class LongDefeatDirectorVolleyTests
     {
         var rig = InWaveOne();
         rig.Fire();
-        rig.Director.OnVolleyHit(Rig.Foe());
+        rig.Director.OnVolleyHit(rig.Foe());
         rig.Ticks(7);
 
         Assert.IsTrue(rig.Outcomes.Has("fail", LongDefeatChecks.VolleyId), string.Join("\n", rig.Outcomes.Lines));
@@ -416,9 +419,9 @@ public class LongDefeatDirectorVolleyTests
         var rig = InWaveOne();
         rig.Fire();
         for (var i = 0; i < 8; i++)
-            rig.Director.OnVolleyHit(Rig.Foe());
-        rig.Director.OnVolleyHit(new LdVolleyHit("ld_elven_arrow", LdVolleyHitKind.Cancelled, false, false, false, 0f, 0f));
-        rig.Director.OnVolleyHit(new LdVolleyHit("ld_elven_arrow", LdVolleyHitKind.Friendly, false, false, false, 45f, 30f));
+            rig.Director.OnVolleyHit(rig.Foe());
+        rig.Director.OnVolleyHit(new LdVolleyHit("ld_elven_arrow", LdVolleyHitKind.Cancelled, false, false, false, 0f, 0f, rig.LastMissile));
+        rig.Director.OnVolleyHit(new LdVolleyHit("ld_elven_arrow", LdVolleyHitKind.Friendly, false, false, false, 45f, 30f, rig.LastMissile));
         rig.Ticks(7);
 
         var line = rig.Outcomes.Lines.Single(l => l.StartsWith("fail " + LongDefeatChecks.VolleyId));
@@ -432,7 +435,7 @@ public class LongDefeatDirectorVolleyTests
         rig.Field.AgentsSpawnedByFire = 1;
         rig.Fire();
         for (var i = 0; i < 12; i++)
-            rig.Director.OnVolleyHit(Rig.Foe());
+            rig.Director.OnVolleyHit(rig.Foe());
         rig.Ticks(7);
 
         var line = rig.Outcomes.Lines.Single(l => l.StartsWith("fail " + LongDefeatChecks.VolleyId));
@@ -448,7 +451,7 @@ public class LongDefeatDirectorVolleyTests
         Task.Run(() =>
         {
             for (var i = 0; i < 8; i++)
-                rig.Director.OnVolleyHit(Rig.Foe());
+                rig.Director.OnVolleyHit(rig.Foe());
         }).Wait();
         rig.Ticks(7);
 
@@ -461,7 +464,7 @@ public class LongDefeatDirectorVolleyTests
         var rig = InWaveOne();
         rig.Fire();
         for (var i = 0; i < 8; i++)
-            rig.Director.OnVolleyHit(Rig.Foe());
+            rig.Director.OnVolleyHit(rig.Foe());
 
         rig.ClearWave();
 
@@ -476,7 +479,7 @@ public class LongDefeatDirectorVolleyTests
         var rig = InWaveOne();
         rig.Fire();
         for (var i = 0; i < 7; i++)
-            rig.Director.OnVolleyHit(Rig.Foe(kill: true));
+            rig.Director.OnVolleyHit(rig.Foe(kill: true));
         rig.Tick();
 
         rig.Director.Shutdown();

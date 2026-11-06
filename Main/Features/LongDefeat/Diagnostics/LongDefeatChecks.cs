@@ -55,6 +55,7 @@ internal static class LongDefeatChecks
     internal const string GateAttackedId = "taom.long-defeat.gate-attacked";
     internal const string FortPointsId = "taom.long-defeat.fort-points";
     internal const string VolleyId = "taom.long-defeat.volley";
+    internal const string TowerVolleyId = "taom.long-defeat.tower-volley";
     internal const string PostsId = "taom.long-defeat.posts";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>

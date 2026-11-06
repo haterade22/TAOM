@@ -13,20 +13,20 @@ namespace TAOM.Features.LongDefeat.Hooks;
 internal static class LongDefeatVolleyHitFilter
 {
     /// <summary>
-    /// The hit as the run reads it, or null when it is not an arrow of a volley item. <paramref name="startingBaseSpeed"/> is the engine's own base speed for the hit (A25) and <paramref name="impactSpeed"/> the missile's speed at the hit: the engine scales a missile's damage by (impact speed over base speed) squared, and gives an arrow air drag, so the pair shows how much of the speed the flight lost.
+    /// The hit as the run reads it, or null when it is not an arrow of a volley item. <paramref name="missile"/> is the index of the missile that struck (E11), which tells a tower's use from another's. <paramref name="startingBaseSpeed"/> is the engine's own base speed for the hit (A25) and <paramref name="impactSpeed"/> the missile's speed at the hit: the engine scales a missile's damage by (impact speed over base speed) squared, and gives an arrow air drag, so the pair shows how much of the speed the flight lost.
     /// </summary>
     public static LdVolleyHit? Read(bool isMissile, string? itemId, Func<string, bool> isVolleyItem, bool victimIsDefender, bool blocked, float victimHealth, bool affectorKnown,
-        bool affectorIsDefender, float startingBaseSpeed, float impactSpeed)
+        bool affectorIsDefender, float startingBaseSpeed, float impactSpeed, int missile = -1)
     {
         if (!isMissile || itemId == null || !isVolleyItem(itemId))
             return null;
 
         var kind = blocked ? LdVolleyHitKind.Blocked : victimIsDefender ? LdVolleyHitKind.Friendly : LdVolleyHitKind.Foe;
         var kill = kind == LdVolleyHitKind.Foe && victimHealth < 1f;
-        return new LdVolleyHit(itemId, kind, kill, !affectorKnown, affectorKnown && !affectorIsDefender, startingBaseSpeed, impactSpeed);
+        return new LdVolleyHit(itemId, kind, kill, !affectorKnown, affectorKnown && !affectorIsDefender, startingBaseSpeed, impactSpeed, missile);
     }
 
     /// <summary>A friendly hit the engine cancelled (<c>OnMissileHit</c> with <c>isCanceled</c>, E28; a cancelled hit never reaches <c>OnAgentHit</c>, A19), or null when the missile is not a volley item.</summary>
-    public static LdVolleyHit? Cancelled(string? itemId, Func<string, bool> isVolleyItem) =>
-        itemId != null && isVolleyItem(itemId) ? new LdVolleyHit(itemId, LdVolleyHitKind.Cancelled, false, false, false, 0f, 0f) : null;
+    public static LdVolleyHit? Cancelled(string? itemId, Func<string, bool> isVolleyItem, int missile = -1) =>
+        itemId != null && isVolleyItem(itemId) ? new LdVolleyHit(itemId, LdVolleyHitKind.Cancelled, false, false, false, 0f, 0f, missile) : null;
 }

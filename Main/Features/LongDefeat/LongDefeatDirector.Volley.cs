@@ -9,11 +9,13 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
-/// The Elven Volley at the director (phase3-plan.md D22 to D25, D30, Slice 6). The run arms a shot and hands it over in <see cref="RunEffects.FireVolleys"/>; this answers every order inside
+/// The volleys at the director (phase3-plan.md D22 to D25, D30, Slices 6 and 8). The run arms a shot and hands it over in <see cref="RunEffects.FireVolleys"/>; this answers every order inside
 /// <see cref="Apply"/> with exactly one of fired or withheld, so a ready source never orders twice and the run's cooldown starts only on a shot that left. The aim reads the field (targets, and the lord's
 /// eye for a crosshair), the shots go through the adapter last in the tick, and the arrows' hits are watched for six seconds: the logic's hook may run off the main thread, so a hit is parked on the main
-/// thread like the Blades' hits (A21) and gated by its own volatile flag, true only while a window is open. Each use writes one <c>volley</c> line when its window closes, is cut by the wave's clear, or ends with
-/// the run. The tower volleys of Slice 8 are answered here too (their arrows are booked in the wave's tally); their own check line joins with that slice.
+/// thread like the Blades' hits (A21) and gated by its own volatile flag, true only while a window is open. The Elven Volley and each tower's level 3 volley are answered by the same path, and each use has its own
+/// window, told its hits by the missile each arrow is (the towers' arrows share one item, so the item alone cannot say which tower's use a hit belongs to). A hit whose missile no open window loosed (a late arrow of a
+/// closed window) is nobody's: it is in neither a check line nor the run's tally, so a wave's reported hits are the sum of its lines'. Each use writes one line when its window closes, is cut by
+/// the wave's clear, or ends with the run: <c>volley</c> for the Elven Volley and <c>tower-volley</c> for a tower's.
 /// </summary>
 internal sealed partial class LongDefeatDirector
 {
@@ -23,10 +25,10 @@ internal sealed partial class LongDefeatDirector
     private const float ClearanceMetres = 2f;
 
     private volatile bool _volleyHits;
-    private VolleyWatch? _volleyWatch;
+    private readonly List<VolleyWatch> _volleyWatches = new();
+    private readonly Dictionary<int, VolleyWatch> _volleyByMissile = new();
     private bool _volleyByBot;
-    private int _volleyWithheldWave;
-    private VolleyWithheldReason? _volleyWithheldLogged;
+    private readonly Dictionary<string, (VolleyWithheldReason Why, int Wave)> _volleyWithheldLogged = new();
 
     /// <summary>Whether a volley's hit window is open. Read in the engine's hit callbacks, which may run off the main thread, before anything else is done for a hit.</summary>
     public bool WantsVolleyHits => _volleyHits;
@@ -46,10 +48,11 @@ internal sealed partial class LongDefeatDirector
 
     private void BookVolleyHit(LdVolleyHit hit)
     {
-        var source = hit.ItemId == _plan.Shop.Fort?.Volley?.ItemId ? VolleySource.Elven : VolleySource.Tower(string.Empty);
-        _run.VolleyHit(source, hit);
-        if (source == VolleySource.Elven)
-            _volleyWatch?.Add(hit);
+        if (!_volleyByMissile.TryGetValue(hit.Missile, out var watch))
+            return;
+
+        _run.VolleyHit(watch.Use.Source, hit);
+        watch.Add(hit);
     }
 
     /// <summary>
@@ -103,15 +106,14 @@ internal sealed partial class LongDefeatDirector
         }
 
         _run.VolleyFired(order.Source, fire.Added);
-        _volleyWithheldLogged = null;
+        _volleyWithheldLogged.Remove(order.Source.Id);
         var gap = hit is { } aimed && targets.Count > 0 ? targets.Min(t => t.Chest.Distance2D(aimed)) : (float?)null;
         var distinct = plan.Shots.Select(s => s.Target).Distinct().Count();
         var use = new VolleyUse(order.Wave, order.Use, order.Source, order.Aim, byBot, gap, order.Arrows, plan.Shots.Count, plan.Candidates, distinct, fire.Added,
             fire.AgentsAfter - fire.AgentsBefore, fire.OwnerTroop, fire.OwnerMultiplier);
         _logger.LogInfo($"{Tag}[Volley] w{order.Wave} use{order.Use} {order.Source.Id} {(order.Aim == VolleyAimMode.Crosshair ? (byBot ? "crosshair by the bot" : "crosshair by a person") : "auto")}: "
             + $"{fire.Added} of {order.Arrows} arrows at {distinct} of {plan.Candidates} attackers in reach, centre {(plan.Centre is { } c ? $"({F1(c.X)}, {F1(c.Y)}, {F1(c.Z)})" : "none")}, owner {fire.OwnerTroop} x{F2(fire.OwnerMultiplier)}");
-        if (order.Source == VolleySource.Elven)
-            OpenVolleyWatch(use);
+        OpenVolleyWatch(use, fire.Missiles);
     }
 
     /// <summary>
@@ -166,43 +168,59 @@ internal sealed partial class LongDefeatDirector
     private void Withheld(VolleyOrder order, VolleyWithheldReason why)
     {
         _run.VolleyWithheld(order.Source, why);
-        if (_volleyWithheldLogged == why && _volleyWithheldWave == order.Wave)
+        if (_volleyWithheldLogged.TryGetValue(order.Source.Id, out var logged) && logged == (why, order.Wave))
             return;
 
-        _volleyWithheldLogged = why;
-        _volleyWithheldWave = order.Wave;
+        _volleyWithheldLogged[order.Source.Id] = (why, order.Wave);
         _logger.LogInfo($"{Tag}[Volley] w{order.Wave} use{order.Use} {order.Source.Id} withheld: {why}");
     }
 
-    private void OpenVolleyWatch(VolleyUse use)
+    /// <summary>Opens a use's window. An older window of the same source (a cooldown shorter than the window) is cut first and ends <c>wave</c>; the missiles the fire handed back name this use's hits.</summary>
+    private void OpenVolleyWatch(VolleyUse use, IReadOnlyList<int>? missiles)
     {
-        CloseVolleyWatch("wave");
-        _volleyWatch = new VolleyWatch(use);
+        foreach (var older in _volleyWatches.Where(w => w.Use.Source == use.Source).ToList())
+            CloseVolleyWatch(older, "wave");
+
+        var watch = new VolleyWatch(use);
+        _volleyWatches.Add(watch);
+        foreach (var missile in missiles ?? Array.Empty<int>())
+            _volleyByMissile[missile] = watch;
         _volleyHits = true;
     }
 
-    /// <summary>The window's clock: it closes when its six seconds have run. Called each tick after the order is answered, so the tick that fired counts its own dt.</summary>
+    /// <summary>The windows' clock: each closes when its six seconds have run. Called each tick after the orders are answered, so the tick that fired counts its own dt.</summary>
     private void TickVolleyWatch(float dt)
     {
-        if (_volleyWatch is not { } watch)
+        if (_volleyWatches.Count == 0)
             return;
 
-        watch.Seconds += dt;
-        if (watch.Seconds >= LongDefeatVolleyChecks.WindowSeconds)
-            CloseVolleyWatch(null);
+        foreach (var watch in _volleyWatches.ToList())
+        {
+            watch.Seconds += dt;
+            if (watch.Seconds >= LongDefeatVolleyChecks.WindowSeconds)
+                CloseVolleyWatch(watch, null);
+        }
     }
 
-    /// <summary>Writes the open window's <c>volley</c> line once. <paramref name="ended"/> is null for a window that ran its length, <c>wave</c> for the clear and <c>run</c> for the run's end.</summary>
-    private void CloseVolleyWatch(string? ended)
+    /// <summary>Writes every open window's line once. <paramref name="ended"/> is <c>wave</c> for the clear and <c>run</c> for the run's end.</summary>
+    private void CloseVolleyWatch(string ended)
     {
-        _volleyHits = false;
-        if (_volleyWatch is not { } watch)
-            return;
+        foreach (var watch in _volleyWatches.ToList())
+            CloseVolleyWatch(watch, ended);
+    }
 
-        _volleyWatch = null;
+    /// <summary>Writes one window's line once, under the Elven Volley's <c>volley</c> check or a tower's <c>tower-volley</c>. <paramref name="ended"/> is null for a window that ran its length.</summary>
+    private void CloseVolleyWatch(VolleyWatch watch, string? ended)
+    {
+        _volleyWatches.Remove(watch);
+        foreach (var missile in _volleyByMissile.Where(m => m.Value == watch).Select(m => m.Key).ToList())
+            _volleyByMissile.Remove(missile);
+        _volleyHits = _volleyWatches.Count > 0;
+
         var use = watch.Use;
         var verdict = LongDefeatVolleyChecks.Volley(use, watch, watch.Seconds, ended);
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.VolleyId, $"{use.Source.Id}-w{use.Wave.ToString(CultureInfo.InvariantCulture)}u{use.Use.ToString(CultureInfo.InvariantCulture)}", verdict);
+        var id = use.Source == VolleySource.Elven ? LongDefeatChecks.VolleyId : LongDefeatChecks.TowerVolleyId;
+        LongDefeatChecks.Record(_outcomes, id, $"{use.Source.Id}-w{use.Wave.ToString(CultureInfo.InvariantCulture)}u{use.Use.ToString(CultureInfo.InvariantCulture)}", verdict);
         _logger.LogInfo($"{Tag}[Volley] {use.Source.Id} w{use.Wave} use{use.Use} {verdict.Result}: {verdict.Detail}");
     }
 

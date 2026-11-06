@@ -87,6 +87,9 @@ internal sealed record FortView(FortRow Gate, FortRow Repair, FortRow Towers, Fo
     /// <summary>The posts each high tower holds at the level the towers row describes: the next one to buy, or the top one offered when every level is owned. 0 when the shop carries no towers row.</summary>
     public int TowerPostsShown { get; init; }
 
+    /// <summary>The tower volley the towers row describes: set when the level it describes (the next one to buy, or the top one when all are owned) is the one that adds it, null for the levels that add posts only and when the shop carries no towers row.</summary>
+    public TowerVolleyPlan? TowerVolleyShown { get; init; }
+
     /// <summary>The Elven Volley level the row describes: the next one to buy, or the top one when every level is owned. Null when the shop carries no volley row.</summary>
     public VolleyLevelPlan? VolleyShown { get; init; }
 }

@@ -283,9 +283,18 @@ internal static class LongDefeatHudText
 
     internal static string TowersName() => new TextObject("{=TAOM_LD_Fort_Towers}High towers").ToString();
 
-    /// <summary>The towers row's line: the level the next buy brings (the top one when all are owned) and the archers each tower holds at it (shop.json's posts for that level).</summary>
-    internal static string TowersDetail(int level, int maxLevel, int posts) => new TextObject("{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them.")
-        .SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("POSTS", posts > 0 ? posts : 0).ToString();
+    /// <summary>
+    /// The towers row's line: the level the next buy brings (the top one when all are owned) and the archers each tower holds at it (shop.json's posts for that level). The level that adds the tower volley says so,
+    /// with its arrows and cooldown.
+    /// </summary>
+    internal static string TowersDetail(int level, int maxLevel, int posts, TowerVolleyPlan? volley = null)
+    {
+        var text = volley == null
+            ? new TextObject("{=TAOM_LD_Fort_TowersDetail}Level {LEVEL} of {MAX}: archers on each high tower, up to {POSTS}. They fill again at every clear, and the garrison cap counts them.")
+            : new TextObject("{=TAOM_LD_Fort_TowersVolleyDetail}Level {LEVEL} of {MAX}: each high tower also looses a volley of {ARROWS} arrows every {SECONDS} s while its archers stand, up to {POSTS} of them. They fill again at every clear, and the garrison cap counts them.")
+                .SetTextVariable("ARROWS", volley.Arrows).SetTextVariable("SECONDS", WholeSeconds(volley.CooldownSeconds));
+        return text.SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("POSTS", posts > 0 ? posts : 0).ToString();
+    }
 
     internal static string TowersFull() => new TextObject("{=TAOM_LD_Fort_TowersFull}Fully manned").ToString();
 

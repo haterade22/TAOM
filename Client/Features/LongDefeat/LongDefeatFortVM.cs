@@ -180,7 +180,7 @@ public sealed class LongDefeatFortVM : LongDefeatViewModel
     {
         var atTop = towers.MaxLevel > 0 && towers.Level >= towers.MaxLevel;
         TowersName = LongDefeatHudText.TowersName();
-        TowersDetail = LongDefeatHudText.TowersDetail(Math.Min(towers.Level + 1, Math.Max(1, towers.MaxLevel)), towers.MaxLevel, view.Fort.TowerPostsShown);
+        TowersDetail = LongDefeatHudText.TowersDetail(Math.Min(towers.Level + 1, Math.Max(1, towers.MaxLevel)), towers.MaxLevel, view.Fort.TowerPostsShown, view.Fort.TowerVolleyShown);
         TowersPrice = atTop ? LongDefeatHudText.TowersFull() : LongDefeatHudText.Price(towers.Price);
         CanBuyTowers = towers.Available && view.Gold >= towers.Price;
     }

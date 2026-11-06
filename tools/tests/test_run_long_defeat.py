@@ -558,7 +558,7 @@ class ManifestTests(unittest.TestCase):
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
                           "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
-                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts"):
+                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts", "taom.long-defeat.tower-volley"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -2555,7 +2555,7 @@ class FortificationsLoaderTests(unittest.TestCase):
 
         self.assertEqual(warnings, 0)
         self.assertEqual([len(plan["gate"]["levels"]), len(plan["towers"]["levels"]), len(plan["volley"]["levels"])], [3, 3, 2])
-        self.assertEqual(plan["towers"]["volley"]["item"], "fow_tower_arrow")
+        self.assertEqual(plan["towers"]["volley"]["item"], "ld_tower_arrow")
         self.assertEqual(ld.shipped_fortifications(), plan)
 
     def test_a_fortress_the_file_does_not_know_has_no_plan(self):
@@ -2563,9 +2563,9 @@ class FortificationsLoaderTests(unittest.TestCase):
 
     def test_the_offered_list_is_the_games_and_offers_the_gate_and_field_care(self):
         domain = source("Domain", "FortPlan.cs")
-        self.assertIn("Offered { get; } = new(3, 2, true, 2);", domain)
+        self.assertIn("Offered { get; } = new(3, 3, true, 2);", domain)
         self.assertIn("None { get; } = new(0, 0, false, 0);", domain)
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2})
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2})
 
     def test_the_price_range_is_the_shops(self):
         self.assertIn("MaxPrice = 1_000_000;", source("Config", "FortificationsReader.cs"))
@@ -2962,17 +2962,19 @@ class FieldCareJudgeTests(unittest.TestCase):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
 
     def test_the_build_offers_the_gate_and_field_care(self):
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2}, "tower levels 1 and 2 joined in Slice 7; level 3, the tower volley, waits for Slice 8")
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}, "tower levels 1 and 2 joined in Slice 7; level 3, the tower volley, in Slice 8")
 
     def test_a_report_that_bought_care_replays_from_the_shop(self):
         self.assertIsNone(ld.purchase_problem(self.report()))
 
-    def test_every_other_kind_is_still_refused(self):
-        # Tower level 3 is the tower volley (Slice 8): levels 1 and 2 are for sale, the third is not.
-        bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in ((1, 250), (2, 300), (3, 400))]
-        report = self.report(care=False, purchases=bought, gold={"spent": 950, "spentOn": {"packs": 0, "gate": 0, "towers": 950, "fieldCare": 0, "volley": 0}},
-                             fortifications={"gateLevel": 0, "towerLevel": 3, "volleyLevel": 0})
-        self.assertIn("not offered", ld.purchase_problem(report) or "")
+    def test_every_shop_level_is_now_for_sale_and_one_beyond_the_shop_is_not(self):
+        # Tower level 3 is the tower volley (Slice 8): all three levels are for sale; a fourth is no row of the shop.
+        def towers(levels):
+            bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in levels]
+            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0}},
+                               fortifications={"gateLevel": 0, "towerLevel": len(levels), "volleyLevel": 0})
+        self.assertIsNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400)))))
+        self.assertIsNotNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400), (4, 400)))))
 
     def test_a_run_that_bought_care_owes_the_field_care_check(self):
         self.assertTrue(ld.owes_field_care(self.report()))
@@ -3267,7 +3269,7 @@ class VolleyJudgeTests(unittest.TestCase):
         return log_of(ld.REQUIRED_CHECKS, 3) + "\n" + "\n".join(extra)
 
     def test_the_shipped_build_offers_both_levels_of_the_volley(self):
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 2, "fieldCare": True, "volley": 2})
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2})
 
     def test_a_report_that_bought_the_volley_replays_from_the_shop(self):
         self.assertIsNone(ld.purchase_problem(self.report()))
@@ -3359,9 +3361,11 @@ class VolleyJudgeTests(unittest.TestCase):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
         row = next(c for c in manifest.checks if c.id == "taom.long-defeat.volley")
         self.assertEqual(row.absence, "not-reached")
-        for detail in (self.AUTO, self.CROSSHAIR, self.AUTO.replace("source=elven", "source=tower-hornburg"), self.CROSSHAIR.replace("ray_gap=1.2", "ray_gap=NaN").replace("aim=bot", "aim=person")):
+        for detail in (self.AUTO, self.CROSSHAIR, self.CROSSHAIR.replace("ray_gap=1.2", "ray_gap=NaN").replace("aim=bot", "aim=person")):
             self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("pass", detail))], []).verdict, iv.PASS, detail)
             self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("fail", detail))], []).verdict, iv.FAIL, detail)
+        tower = self.AUTO.replace("source=elven", "source=tower-hornburg")
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", tower))], []).verdict, iv.PASS, "a tower's line is the tower-volley row's, and never pays the Elven Volley's")
         self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
         cut = self.line("skip", self.AUTO + " ended=run reason=window-cut")
         self.assertEqual(iv.judge_segment(row, [(None, 1, cut)], []).verdict, iv.NOT_REACHED, "a window cut short proves nothing")
@@ -3395,7 +3399,7 @@ class VolleyJudgeTests(unittest.TestCase):
 
     def test_the_offered_mirror_is_the_one_the_game_ships(self):
         text = source("Domain", "FortPlan.cs")
-        self.assertIn("new(3, 2, true, 2)", text, "FortOffer.Offered, which FORT_OFFERED mirrors")
+        self.assertIn("new(3, 3, true, 2)", text, "FortOffer.Offered, which FORT_OFFERED mirrors")
 
 
 class FortPointsHintTests(unittest.TestCase):
@@ -3482,20 +3486,20 @@ class PostsJudgeTests(unittest.TestCase):
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
 
-    def test_the_shipped_build_offers_two_tower_levels(self):
-        self.assertEqual(ld.FORT_OFFERED["towers"], 2)
+    def test_the_shipped_build_offers_all_three_tower_levels(self):
+        self.assertEqual(ld.FORT_OFFERED["towers"], 3)
 
     def test_a_report_that_bought_both_tower_levels_replays_from_the_shop(self):
         self.assertIsNone(ld.purchase_problem(self.report()))
         self.assertIsNone(ld.purchase_problem(self.report(levels=1)))
 
-    def test_the_towers_volley_level_is_still_refused(self):
+    def test_the_towers_volley_level_replays_from_the_shop(self):
         report = self.report()
         report["purchases"].append({"beforeWave": 3, "kind": "towerLevel", "id": "", "level": 3, "basePrice": 400, "price": 400, "share": 0.0})
         report["gold"]["spent"] = report["gold"]["spentOn"]["towers"] = 950
         report["fortifications"]["towerLevel"] = 3
 
-        self.assertIn("not offered", ld.purchase_problem(report))
+        self.assertIsNone(ld.purchase_problem(report))
 
     def test_the_debt_follows_the_purchases_and_the_waves_played(self):
         self.assertTrue(ld.owes_posts(self.report()))
@@ -3630,6 +3634,181 @@ class PostsJudgeTests(unittest.TestCase):
         cut = self.line("skip", self.PASS + " ended=run reason=window-cut")
         self.assertEqual(iv.judge_segment(row, [(None, 1, cut)], []).verdict, iv.NOT_REACHED, "a run cut short proves nothing")
         self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("pass", self.PASS.replace("held=4 sampled=4", "held=3 sampled=4")))], []).verdict, iv.PASS, "an archer off his post is not a pass")
+
+
+class TowerVolleyJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 8: tower level 3 is offered, so the report may list it and the judge owes a tower-volley pass for every recorded tower that holds a volley spot and a post, and a posts pass for every
+    recorded tower (phase3-plan.md section 6, D31; one tower's line never pays another's, nor an Elven Volley's a tower's)."""
+
+    # The detail LongDefeatVolleyChecks formats for a tower's use (mode=auto, no aim), under its own check id.
+    VOLLEY = ("w=3 use=1 source=tower-hornburg mode=auto arrows=6 shots=6 candidates=27 distinct=6 spawned=0 hits=4 blocked=0 friendly=0 cancelled=0 kills=1 "
+              "affector_null=0 affector_side=0 owner=fow_rohan_eastfold_bowman mult=1.00 base_speed=45.0 impact_speed=33.0 window=6.0")
+    POSTS = ("tower=hornburg w=1 level=1 variant=A formation=4 posts=8 expected=4 manned=4 held=4 sampled=4 max_drift=0.4 max_dz=0.2 shots=15 split=0 out=0 short=0 failed=0")
+    ELVEN = VOLLEY.replace("source=tower-hornburg", "source=elven")
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.{} result={} "
+
+    def setUp(self):
+        ld.target_waves = 3
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        ld.posts_variant = None
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+        self.addCleanup(setattr, ld, "posts_variant", None)
+
+    def report(self, levels=3, waves=3, **more):
+        prices = ((1, 250), (2, 300), (3, 400))[:levels]
+        bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in prices]
+        spent = sum(price for _, price in prices)
+        return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
+
+    @staticmethod
+    def sanitise(detail):
+        out = ""
+        for word in detail.split():
+            if out:
+                out += " " if "=" in word[1:] else "_"
+            out += word
+        return out
+
+    def line(self, name, result, detail):
+        return self.HEAD_LINE.format(name, result) + self.sanitise(detail)
+
+    def posts(self, *towers, level2=True):
+        """The posts passes a run with these towers owes: level 1 for each, and a level=2 line (any one pays that debt)."""
+        lines = [self.line("posts", "pass", self.POSTS.replace("hornburg", t)) for t in towers]
+        if level2:
+            lines.append(self.line("posts", "pass", self.POSTS.replace("hornburg", towers[0]).replace("w=1 level=1", "w=2 level=2")))
+        return lines
+
+    def volley(self, *towers):
+        return [self.line("tower-volley", "pass", self.VOLLEY.replace("hornburg", t)) for t in towers]
+
+    def log(self, *extra):
+        # Recorded points owe a fort-points pass as well (Slice 5); the tests here are about the tower lines.
+        return log_of(ld.REQUIRED_CHECKS, 3) + "\n" + "\n".join((self.line("fort-points", "pass", "points=6 failed=0"),) + extra)
+
+    def recorded(self, towers):
+        """A fortresses.json holding these towers, each as (id, posts, volley spots)."""
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        row = {"id": "helms", "defenderCulture": "vlandia", "shop": "rohan", "towers": [{"id": i, "posts": [{"x": 1}] * posts, "volley": [{"x": 1}] * spots} for i, posts, spots in towers]}
+        path = Path(folder.name) / "fortresses.json"
+        path.write_text(json.dumps({"fortresses": [row]}), encoding="utf-8")
+        return mock.patch.object(ld, "FORTRESS_FILE", path)
+
+    def test_the_level_that_adds_the_volley_is_the_shops_third(self):
+        self.assertEqual(ld.tower_volley_level("helms"), 3)
+        self.assertEqual(ld.tower_volley_level(None, {"towers": {"levels": [[4, False, 1], [8, True, 2]]}}), 2, "the first level that carries the flag")
+        self.assertIsNone(ld.tower_volley_level(None, {"towers": {"levels": [[4, False, 1]]}}), "no level carries the flag, as the game's reader leaves a shop whose volley block dropped: no level adds a volley, so none is owed")
+        self.assertTrue(ld.owes_tower_volley(self.report()), "setup: the shipped shop's level 3 carries the flag")
+        self.assertFalse(ld.owes_tower_volley(self.report(), None, {"towers": {"levels": [[4, False, 1], [8, False, 2], [8, False, 3]]}}))
+
+    def test_a_report_that_bought_level_three_replays_and_owes_the_check(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+        self.assertTrue(ld.owes_tower_volley(self.report()))
+        self.assertFalse(ld.owes_tower_volley(self.report(levels=2)))
+        late = self.report()
+        late["purchases"][2]["beforeWave"] = 4
+        self.assertFalse(ld.owes_tower_volley(late), "bought for a wave the run never reached")
+        for bad in ({}, {"purchases": "x"}, {"purchases": [{"kind": "towerLevel", "beforeWave": 1, "level": "3"}], "wave": 3}):
+            self.assertFalse(ld.owes_tower_volley(bad))
+
+    def test_a_run_that_bought_level_three_and_has_no_tower_volley_line_fails_by_name(self):
+        with self.recorded([("hornburg", 8, 2)]):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg")))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.tower-volley", why)
+
+    def test_the_elven_volleys_line_does_not_pay_a_towers_debt_and_a_towers_does_not_pay_the_elven(self):
+        with self.recorded([("hornburg", 8, 2)]):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg"), self.line("volley", "pass", self.ELVEN)))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.tower-volley", why)
+
+        elven = {**self.report(levels=0), "purchases": [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}],
+                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
+        code, why = ld.judge(FINAL, elven, self.log(*self.volley("hornburg")))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.volley", why)
+
+    def test_a_passing_tower_volley_line_pays_the_debt(self):
+        with self.recorded([("hornburg", 8, 2)]):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg"), *self.volley("hornburg")))
+
+        self.assertEqual(code, 0, why)
+        self.assertIn("tower-volley", why)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        cut = self.line("tower-volley", "skip", self.VOLLEY + " ended=run reason=window-cut")
+        with self.recorded([("hornburg", 8, 2)]):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg"), cut))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.tower-volley", why)
+
+    def test_every_recorded_tower_with_a_spot_and_a_post_owes_its_own_line(self):
+        towers = [("hornburg", 8, 2), ("wall", 8, 1)]
+        with self.recorded(towers):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg", "wall"), *self.volley("hornburg")))
+            self.assertEqual(code, 1)
+            self.assertIn("source=tower-wall", why)
+            self.assertNotIn("source=tower-hornburg", why)
+
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg", "wall"), *self.volley("hornburg", "wall")))
+            self.assertEqual(code, 0, why)
+
+    def test_a_tower_with_a_spot_and_no_post_owes_no_volley_line_for_it_has_no_owner(self):
+        with self.recorded([("hornburg", 8, 2), ("blind", 0, 3)]):
+            code, why = ld.judge(FINAL, self.report(), self.log(*self.posts("hornburg"), *self.volley("hornburg")))
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_posts_check_is_owed_for_every_recorded_tower_not_for_one(self):
+        with self.recorded([("hornburg", 8, 0), ("wall", 8, 0)]):
+            code, why = ld.judge(FINAL, self.report(levels=2), self.log(*self.posts("hornburg")))
+            self.assertEqual(code, 1)
+            self.assertIn("tower=wall", why)
+
+            code, why = ld.judge(FINAL, self.report(levels=2), self.log(*self.posts("hornburg", "wall")))
+            self.assertEqual(code, 0, why)
+
+    def test_the_manifest_row_reads_the_line_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.tower-volley")
+        self.assertEqual(row.absence, "not-reached")
+        for detail in (self.VOLLEY, self.VOLLEY.replace("tower-hornburg", "tower-deeping_wall"), self.VOLLEY + " ended=wave", self.VOLLEY + " ended=run"):
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("tower-volley", "pass", detail))], []).verdict, iv.PASS, detail)
+            self.assertEqual(iv.judge_segment(row, [(None, 1, self.line("tower-volley", "fail", detail))], []).verdict, iv.FAIL, detail)
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("tower-volley", "pass", self.ELVEN))], []).verdict, iv.PASS, "the Elven Volley's source is not a tower's")
+        self.assertNotEqual(iv.judge_segment(row, [(None, 1, self.line("tower-volley", "pass", self.VOLLEY.replace("friendly=0", "friendly=1")))], []).verdict, iv.PASS, "an uncancelled friendly hit")
+        cut = self.line("tower-volley", "skip", self.VOLLEY + " ended=run reason=window-cut")
+        self.assertEqual(iv.judge_segment(row, [(None, 1, cut)], []).verdict, iv.NOT_REACHED, "a window cut short proves nothing")
+
+    def test_the_check_id_and_the_key_are_the_games(self):
+        self.assertIn('TowerVolleyId = "taom.long-defeat.tower-volley"', source("Diagnostics", "LongDefeatChecks.cs"))
+        self.assertEqual(ld.TOWER_VOLLEY_CHECK, "tower-volley")
+        self.assertIn("LongDefeatChecks.TowerVolleyId", source("LongDefeatDirector.Volley.cs"))
+
+    def test_the_recorded_towers_are_read_by_kind_in_file_order(self):
+        root = {"fortresses": [{"id": "helms", "towers": [{"id": "a", "posts": [{}], "volley": []}, {"id": "b", "posts": [], "volley": [{}]}, {"id": "c", "posts": [{}], "volley": [{}]}, "x", {"posts": [{}]}]}]}
+        self.assertEqual(ld.recorded_towers("helms", "posts", root), ["a", "c"])
+        self.assertEqual(ld.recorded_towers("helms", "volley", root), ["b", "c"])
+        for bad in ({}, {"fortresses": [{"id": "helms", "towers": "x"}]}, {"fortresses": "x"}):
+            self.assertEqual(ld.recorded_towers("helms", "posts", bad), [])
+        self.assertEqual(ld.recorded_towers("helms", "posts"), [], "Mike records the towers on 2026-11-06")
+
+    def test_the_proof_run_is_named_in_the_wrapper_and_the_manifest(self):
+        self.assertIn("The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.tower-volley")
+        self.assertIn("--waves 3 --garrison-scale 1.3 --start-gold 5000", row.needs)
+        self.assertIn("tower_volley", row.needs)
 
 
 if __name__ == "__main__":

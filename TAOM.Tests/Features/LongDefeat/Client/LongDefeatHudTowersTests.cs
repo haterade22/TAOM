@@ -18,9 +18,9 @@ public class LongDefeatHudTowersTests
         new[] { new TowerLevelPlan(4, false, 250), new TowerLevelPlan(8, false, 300), new TowerLevelPlan(8, true, 400) },
         new TowerVolleyPlan("fow_tower_arrow", 6, 20f, 30f, 6f, 80f, 2.5f));
 
-    private static LdTower Tower() => new("hornburg", Enumerable.Range(0, 8).Select(i => new MusterFrame(i, 0f, 30f, 0f, 1f)).ToList(), Array.Empty<LdPoint>());
+    private static LdTower Tower(bool spot = false) => new("hornburg", Enumerable.Range(0, 8).Select(i => new MusterFrame(i, 0f, 30f, 0f, 1f)).ToList(), spot ? new[] { new LdPoint(1f, 2f, 3f) } : Array.Empty<LdPoint>());
 
-    private static LongDefeatHudVM Panel(out LongDefeatSession session, int gold = 1000, bool posts = true, FortOffer? offered = null, int defenders = 40)
+    private static LongDefeatHudVM Panel(out LongDefeatSession session, int gold = 1000, bool posts = true, FortOffer? offered = null, int defenders = 40, bool spot = false)
     {
         var waves = new WavePlan(new[] { new WaveSpec(110, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(10, 300));
         var shop = new ShopPlan(gold, new[] { new ShopOffer("militia", "{=TAOM_LD_Offer_Militia}Westfold Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }, new FortPlan(null, Towers, null, null));
@@ -28,7 +28,7 @@ public class LongDefeatHudTowersTests
         var plan = new RunPlan("helms", new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30) }, waves, shop, rules, RunOptions.Default)
         {
             Offered = offered ?? FortOffer.Offered,
-            Towers = posts ? new[] { Tower() } : Array.Empty<LdTower>(),
+            Towers = posts ? new[] { Tower(spot) } : Array.Empty<LdTower>(),
         };
         var run = new SurvivalRun(plan);
         run.Begin();
@@ -82,7 +82,7 @@ public class LongDefeatHudTowersTests
 
         vm.Fort.ExecuteBuyTowers();
 
-        Assert.AreEqual(gold, session.GetView()!.Gold, "level 3 is the tower volley, which this build does not deliver");
+        Assert.AreEqual(gold, session.GetView()!.Gold, "with no volley spot recorded, level 3 (the tower volley) is not sold");
     }
 
     [TestMethod]
@@ -130,5 +130,55 @@ public class LongDefeatHudTowersTests
 
         Assert.AreEqual("The garrison is full.", vm.NoticeText);
         Assert.AreEqual(0, session.GetView()!.Fort.Towers.Level);
+    }
+
+    [TestMethod]
+    public void WithARecordedVolleySpot_TheRowHasThreeLevels_AndTheThirdNamesTheVolley()
+    {
+        var vm = Panel(out var session, spot: true);
+
+        StringAssert.Contains(vm.Fort.TowersDetail, "Level 1 of 3");
+        Assert.IsFalse(vm.Fort.TowersDetail.Contains("volley"), "level 1 adds archers only: " + vm.Fort.TowersDetail);
+        vm.Fort.ExecuteBuyTowers();
+        vm.Fort.ExecuteBuyTowers();
+
+        StringAssert.Contains(vm.Fort.TowersDetail, "Level 3 of 3");
+        StringAssert.Contains(vm.Fort.TowersDetail, "volley of 6 arrows every 30 s");
+        StringAssert.Contains(vm.Fort.TowersDetail, "up to 8");
+        Assert.AreEqual("400 gold", vm.Fort.TowersPrice);
+        Assert.IsTrue(vm.Fort.CanBuyTowers);
+
+        vm.Fort.ExecuteBuyTowers();
+
+        Assert.AreEqual(3, session.GetView()!.Fort.Towers.Level);
+        Assert.AreEqual("Fully manned", vm.Fort.TowersPrice);
+        Assert.IsFalse(vm.Fort.CanBuyTowers);
+        StringAssert.Contains(vm.Fort.TowersDetail, "volley of 6 arrows", "owned, the top level still says what it holds");
+    }
+
+    [TestMethod]
+    public void AtLevelThree_AFurtherBuy_SaysTheTowersAreFullyManned_NotTheGatesLine()
+    {
+        var vm = Panel(out _, spot: true);
+        vm.Fort.ExecuteBuyTowers();
+        vm.Fort.ExecuteBuyTowers();
+        vm.Fort.ExecuteBuyTowers();
+
+        vm.Fort.ExecuteBuyTowers();
+
+        Assert.AreEqual("The high towers are fully manned.", vm.NoticeText, "the buy answers MaxLevel at level 3, the wording the towers row passes");
+    }
+
+    [TestMethod]
+    public void WithNoVolleySpot_TheRowStopsAtTwoLevels_AndNeverOffersTheVolley()
+    {
+        var vm = Panel(out _);
+
+        StringAssert.Contains(vm.Fort.TowersDetail, "Level 1 of 2");
+        vm.Fort.ExecuteBuyTowers();
+        vm.Fort.ExecuteBuyTowers();
+
+        Assert.AreEqual("Fully manned", vm.Fort.TowersPrice);
+        Assert.IsFalse(vm.Fort.TowersDetail.Contains("volley"), vm.Fort.TowersDetail);
     }
 }

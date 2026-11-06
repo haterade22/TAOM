@@ -102,4 +102,15 @@ public class LongDefeatVolleyHitFilterTests
         Assert.IsNull(LongDefeatVolleyHitFilter.Cancelled("wm_elven_arrow_q1v3", Volley.Contains));
         Assert.IsNull(LongDefeatVolleyHitFilter.Cancelled(null, Volley.Contains));
     }
+
+    [TestMethod]
+    public void TheMissileTheHitCarries_IsKept_SoATowersUseCanBeToldFromAnothers()
+    {
+        var hit = LongDefeatVolleyHitFilter.Read(true, "fow_tower_arrow", Volley.Contains, false, false, 40f, true, true, 45f, 30f, 217);
+        var cancelled = LongDefeatVolleyHitFilter.Cancelled("fow_tower_arrow", Volley.Contains, 218);
+
+        Assert.AreEqual(217, hit!.Value.Missile);
+        Assert.AreEqual(218, cancelled!.Value.Missile);
+        Assert.AreEqual(-1, Read()!.Value.Missile, "a hit read with no missile names none");
+    }
 }

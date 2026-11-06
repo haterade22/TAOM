@@ -122,9 +122,10 @@ internal readonly record struct LdVolleyRay(Vec3f Origin, Vec3f Direction);
 
 /// <summary>
 /// What the field did with a volley. <c>Withheld</c> is set when nothing was added (no owner, no item); <c>Added</c> counts the missiles added, <c>AgentsBefore</c> and <c>AgentsAfter</c> the mission's agents
-/// around the calls (a missile is no agent, so they must be equal), and <c>OwnerTroop</c> and <c>OwnerMultiplier</c> the owner's troop id and his weapon damage multiplier (D25).
+/// around the calls (a missile is no agent, so they must be equal), <c>OwnerTroop</c> and <c>OwnerMultiplier</c> the owner's troop id and his weapon damage multiplier (D25), and <c>Missiles</c> the index of each
+/// missile the engine added, so a hit can be matched to the use that loosed it.
 /// </summary>
-internal sealed record LdVolleyFire(VolleyWithheldReason? Withheld, int Added, int AgentsBefore, int AgentsAfter, string OwnerTroop, float OwnerMultiplier)
+internal sealed record LdVolleyFire(VolleyWithheldReason? Withheld, int Added, int AgentsBefore, int AgentsAfter, string OwnerTroop, float OwnerMultiplier, IReadOnlyList<int>? Missiles = null)
 {
     public static LdVolleyFire Refused(VolleyWithheldReason why) => new(why, 0, 0, 0, string.Empty, 0f);
 }
@@ -140,9 +141,11 @@ internal enum LdVolleyHitKind
 
 /// <summary>
 /// One missile hit of a volley item, as the logic's filter reads it: the item id, its kind, whether a foe fell (the victim under 1 health after the blow, E16), whether the engine's affector was null or stood on the
-/// wrong side (A24, counted and never judged), and the numbers the engine gave the hit (A25).
+/// wrong side (A24, counted and never judged), and the numbers the engine gave the hit (A25). <c>Missile</c> is the index of the missile that struck (<c>AffectorWeaponSlotOrMissileIndex</c>, E11), which names the
+/// use it belongs to when several towers' windows are open at once (their arrows share one item). The engine looks the striking missile up by this same key and throws when it is unknown (<c>Mission.cs:5778</c>),
+/// so the hooks always carry one; -1 is for a test's hit, and the director drops a hit whose missile no open window loosed.
 /// </summary>
-internal readonly record struct LdVolleyHit(string ItemId, LdVolleyHitKind Kind, bool Kill, bool AffectorNull, bool AffectorSideWrong, float StartingBaseSpeed, float ImpactSpeed);
+internal readonly record struct LdVolleyHit(string ItemId, LdVolleyHitKind Kind, bool Kill, bool AffectorNull, bool AffectorSideWrong, float StartingBaseSpeed, float ImpactSpeed, int Missile = -1);
 
 /// <summary>A defender who might own a volley's arrows, as the adapter reads him: still the live occupant of his slot, AI-controlled, the main agent or not, an archer, and how far he stands from the nearest attacker.</summary>
 internal readonly record struct LdOwnerCandidate(bool Live, bool AiControlled, bool IsMain, bool Archer, float NearestAttacker);

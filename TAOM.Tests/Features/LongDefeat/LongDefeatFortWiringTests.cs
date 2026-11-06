@@ -273,7 +273,8 @@ public class LongDefeatFortWiringTests
         StringAssert.Contains(read, "o.Z + originHeight");
         StringAssert.Contains(read, "agent.IsHuman");
         StringAssert.Contains(read, "_registry.TryGetKey(");
-        Assert.IsFalse(Source(VolleyAdapter).Contains(".Index"), "never key on Agent.Index: indices recycle");
+        // The one .Index the file reads is the Missile's, which a hit carries and the fire hands back (E11); an agent's index recycles and is never read.
+        Assert.IsFalse(Source(VolleyAdapter).Replace("missile.Index", string.Empty).Contains(".Index"), "never key on Agent.Index: indices recycle");
     }
 
     [TestMethod]

@@ -102,7 +102,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
     // One missile per shot, owned by a defender chosen and read for IsLive, AI control and the main agent right here, then the call: a missile that outlives its owner is A24's case. The missile gets the
     // direction as its forward axis, as the Fords tower fire builds it (FordsTowerAdapter.Fire), and the item's speed for both the base and the flight speed (A25). A null mission object to ignore is handled
-    // outside a server or a recorder ("missionObjectToIgnore?.GameEntity ?? WeakGameEntity.Invalid", Mission.cs:4954-4980, E11; only the server branch reads the object's Id); a wall origin has none. A missile is no agent, which the agent count around the calls shows, and the missile list's growth is the count added.
+    // outside a server or a recorder ("missionObjectToIgnore?.GameEntity ?? WeakGameEntity.Invalid", Mission.cs:4954-4980, E11; only the server branch reads the object's Id); a wall origin has none, and neither has
+    // a tower's: Fords passes its tower's FordsTowerComponent (FordsTowerAdapter.cs:348-349), a MissionObject, while Helm's Deep's high towers are plain static entities (scene.xscene: "towertop" and "walltower" carry a
+    // mesh and a physics shape and no script), so there is no MissionObject to name; the guard against an arrow striking its own parapet is the boot clearance ray and the origin height (R5). A missile is no agent,
+    // which the agent count around the calls shows, and the missile list's growth is the count added. The index of each missile is handed back, because it is what a hit carries (E11) and tells one use's arrows from another's.
     public LdVolleyFire FireVolley(string itemId, IReadOnlyList<LdVolleyShot> shots, string towerId)
     {
         var arrow = ArrowOf(itemId, 0f);
@@ -116,6 +119,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         var before = _mission.AllAgents.Count;
         var missilesBefore = _mission.MissilesList.Count;
         var multiplier = MissionGameModels.Current.AgentStatCalculateModel.GetWeaponDamageMultiplier(owner, new MissionWeapon(arrow.Item, null, null, 1).CurrentUsageItem);
+        var indices = new List<int>();
         foreach (var shot in shots)
         {
             var direction = FordsEngine.ToVec3(shot.Direction);
@@ -123,23 +127,24 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             orientation.f = direction;
             orientation.Orthonormalize();
             var weapon = new MissionWeapon(arrow.Item, null, null, 1);
-            _mission.AddCustomMissile(owner, weapon, FordsEngine.ToVec3(shot.Origin), direction, orientation, shot.Speed, shot.Speed, false, null);
+            var missile = _mission.AddCustomMissile(owner, weapon, FordsEngine.ToVec3(shot.Origin), direction, orientation, shot.Speed, shot.Speed, false, null);
+            indices.Add(missile.Index);
         }
 
         // The engine lists each missile as it adds it (Mission.cs:4970), so the list's growth is what the engine took, and the check's "added equals shots" leg can fail.
         var added = _mission.MissilesList.Count - missilesBefore;
-        return new LdVolleyFire(null, added, before, _mission.AllAgents.Count, owner.Character?.StringId ?? string.Empty, multiplier);
+        return new LdVolleyFire(null, added, before, _mission.AllAgents.Count, owner.Character?.StringId ?? string.Empty, multiplier, indices);
     }
 
-    // D22: a live, AI-controlled human defender who is not the main agent, archers first and the one farthest from the nearest attacker. A tower's volley is owned by a post archer of that tower, and no post
-    // exists before Slice 7, so a tower id has no owner yet. A standing defender is one the slot still holds (IsLive) who is not running away.
+    // D22: a live, AI-controlled human defender who is not the main agent, archers first and the one farthest from the nearest attacker. A tower's volley is owned by a post archer of that tower, chosen by the same
+    // rule among that tower's posted archers only (the lists of Posts.cs, held by reference; PruneDead drops a dead or recycled handle before any native read), and a tower with none standing has no owner, so its shot is withheld and the run stops that
+    // tower's clock for the wave. A standing defender is one the slot still holds (IsLive) who is not running away.
     private Agent? ChooseVolleyOwner(string towerId)
     {
-        if (towerId.Length > 0)
-            return null;
-
         var attackers = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman).Select(a => a.Position).ToList();
-        var defenders = _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman).ToList();
+        var defenders = towerId.Length > 0
+            ? PruneDead().Where(p => p.TowerId == towerId).Select(p => p.Agent).ToList()
+            : _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman).ToList();
         var candidates = defenders.Select(a =>
         {
             var live = IsLive(a) && !a.IsRunningAway;

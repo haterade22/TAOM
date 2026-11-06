@@ -126,6 +126,11 @@ internal sealed partial class FakeLongDefeatField
 
     public List<(string Item, IReadOnlyList<LdVolleyShot> Shots, string Tower)> Volleys { get; } = new();
 
+    /// <summary>The missile indices each fire in <see cref="Volleys"/> handed back, in the same order; every missile gets an index no other has.</summary>
+    public List<IReadOnlyList<int>> VolleyMissiles { get; } = new();
+
+    private int _nextMissile = 100;
+
     public List<float> ItemRangesAsked { get; } = new();
 
     public LdVolleyItem? VolleyItem(string itemId, float range)
@@ -162,8 +167,14 @@ internal sealed partial class FakeLongDefeatField
         if (FireRefusal is { } why)
             return LdVolleyFire.Refused(why);
 
+        // A tower's arrows are owned by a post archer of that tower (D22): with none standing the real field refuses.
+        if (towerId.Length > 0 && (!Archers.TryGetValue(towerId, out var standing) || standing <= 0))
+            return LdVolleyFire.Refused(VolleyWithheldReason.NoOwner);
+
         Volleys.Add((itemId, shots, towerId));
-        return new LdVolleyFire(null, shots.Count, AgentsBefore, AgentsBefore + AgentsSpawnedByFire, "fow_rohan_eastfold_bowman", 1f);
+        var missiles = shots.Select(_ => _nextMissile++).ToList();
+        VolleyMissiles.Add(missiles);
+        return new LdVolleyFire(null, shots.Count, AgentsBefore, AgentsBefore + AgentsSpawnedByFire, "fow_rohan_eastfold_bowman", 1f, missiles);
     }
 
     /// <summary>Attackers at a spread of places, each its own key, for a volley to aim at: ten metres apart along the ground in front of the wall.</summary>

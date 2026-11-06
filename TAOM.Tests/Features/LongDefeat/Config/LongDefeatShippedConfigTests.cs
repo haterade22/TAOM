@@ -130,17 +130,17 @@ public class LongDefeatShippedConfigTests
 
         Assert.AreEqual(recorded, run.GetView().Fort.Towers.Available, "a row with no post to man is hidden");
         Assert.AreEqual(recorded ? FortResult.Ok : FortResult.Hidden, run.TryBuyTowerLevel());
-        Assert.AreEqual(2, plan.Offered.Towers, "levels 1 and 2 are offered; level 3 is the tower volley, Slice 8");
+        Assert.AreEqual(3, plan.Offered.Towers, "all three levels are offered; level 3, the tower volley, is sold only against a recorded volley spot");
     }
 
     [TestMethod]
-    public void ShippedTowerVolley_FiresTheFordsTowerArrow_AndTheTowersTroopJoinsTheLaunchCheck()
+    public void ShippedTowerVolley_FiresTheLongDefeatsTowerArrow_AndTheTowersTroopJoinsTheLaunchCheck()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
-        Assert.AreEqual("fow_tower_arrow", plan.Shop.Fort!.Towers!.Volley!.ItemId);
+        Assert.AreEqual("ld_tower_arrow", plan.Shop.Fort!.Towers!.Volley!.ItemId, "a twin of the Fords arrow that cannot be picked up (a person could fire a taken one inside a window and have it counted)");
         CollectionAssert.Contains(RunPlanTroops.AllTroopIds(plan).ToList(), plan.Shop.Fort.Towers.Troop);
         CollectionAssert.Contains(RunPlanTroops.DefenderTroopIds(plan).ToList(), plan.Shop.Fort.Towers.Troop);
     }
@@ -181,8 +181,8 @@ public class LongDefeatShippedConfigTests
         CollectionAssert.AreEqual(new[] { "CustomGame" }, node.Descendants("GameType").Select(g => (string?)g.Attribute("value")).ToArray());
         var carriers = Directory.GetFiles(ModuleData, "*.xml", SearchOption.AllDirectories)
             .Where(f => !f.Contains(Path.DirectorySeparatorChar + "Languages" + Path.DirectorySeparatorChar) && !f.EndsWith("long_defeat_items.xml", StringComparison.Ordinal))
-            .Where(f => File.ReadAllText(f).Contains("ld_elven_arrow")).Select(Path.GetFileName).ToList();
-        Assert.AreEqual(0, carriers.Count, "no troop, set or shop row names the volley's arrow: " + string.Join(", ", carriers));
+            .Where(f => File.ReadAllText(f).Contains("ld_elven_arrow") || File.ReadAllText(f).Contains("ld_tower_arrow")).Select(Path.GetFileName).ToList();
+        Assert.AreEqual(0, carriers.Count, "no troop or set names a volley's arrow: " + string.Join(", ", carriers));
     }
 
     [TestMethod]
@@ -197,12 +197,28 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedElvenArrow_CannotBePickedUp_SoNoPlayerShootsItAsHisOwnAndHaveItCounted()
+    public void EveryShippedVolleyItem_CannotBePickedUp_SoNoShotOfAPickedUpArrowIsCountedAsAVolleyHit()
     {
-        // A stuck arrow becomes a live pickup for 180 s unless the item carries CannotBePickedUp (SpawnedItemEntity.cs:163-164); a player who took it could fire it inside a window and have the shot booked as a volley hit.
-        var arrow = Arrow("long_defeat/long_defeat_items.xml", "ld_elven_arrow");
+        // A stuck arrow becomes a live pickup for 180 s unless the item carries CannotBePickedUp (SpawnedItemEntity.cs:163-164); one taken and fired again inside a window passes the hit filter, which reads the item id.
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var ids = new[] { helms.Shop.Fort!.Volley!.ItemId, helms.Shop.Fort.Towers!.Volley!.ItemId };
 
-        Assert.AreEqual("true", (string?)arrow.Element("Flags")?.Attribute("CannotBePickedUp"));
+        foreach (var id in ids)
+            Assert.AreEqual("true", (string?)Arrow("long_defeat/long_defeat_items.xml", id).Element("Flags")?.Attribute("CannotBePickedUp"), id + " is in the Long Defeat's own item file with the flag");
+    }
+
+    [TestMethod]
+    public void ShippedTowerArrow_IsTheFordsTowerArrowsTwin_ExceptThatNobodyCanPickItUp()
+    {
+        var twin = Arrow("long_defeat/long_defeat_items.xml", "ld_tower_arrow");
+        var fords = Arrow("fords_of_war/fords_items.xml", "fow_tower_arrow");
+
+        foreach (var name in new[] { "thrust_damage", "missile_speed", "weapon_class", "stack_amount", "thrust_damage_type" })
+            Assert.AreEqual(Attr(fords, name), Attr(twin, name), name);
+        Assert.AreEqual("{=gFtu0j4T}Arrows", (string?)twin.Attribute("name"));
+        Assert.AreEqual("false", (string?)twin.Attribute("is_merchandise"));
+        Assert.IsNull(fords.Element("Flags")?.Attribute("CannotBePickedUp"), "Fords of War's item is untouched");
     }
 
     [TestMethod]
@@ -220,7 +236,7 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedBuild_OffersTheGateFieldCareTheVolleyAndTwoTowerLevels_UntilEachSlicesEffectLands()
+    public void ShippedBuild_OffersTheGateFieldCareTheVolleyAndThreeTowerLevels_UntilEachSlicesEffectLands()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
@@ -228,7 +244,7 @@ public class LongDefeatShippedConfigTests
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
         Assert.AreEqual(FortOffer.Offered, plan.Offered);
-        Assert.AreEqual(new FortOffer(3, 2, true, 2), plan.Offered);
+        Assert.AreEqual(new FortOffer(3, 3, true, 2), plan.Offered);
         Assert.IsNotNull(plan.Shop.Fort?.Care, "the shipped shop carries the care row the build offers");
         Assert.AreEqual(plan.Offered.Gate, plan.Shop.Fort!.Gate!.Levels.Count, "the shipped shop carries exactly the gate levels the build delivers");
         Assert.IsTrue(plan.Shop.Fort.Gate.RepairPrice > 0);

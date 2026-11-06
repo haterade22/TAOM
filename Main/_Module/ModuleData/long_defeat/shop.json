@@ -25,7 +25,7 @@
             { "posts": 8, "price": 300 },
             { "posts": 8, "volley": true, "price": 400 }
           ],
-          "volley": { "item": "fow_tower_arrow", "arrows": 6, "firstSeconds": 20, "cooldownSeconds": 30, "radius": 6.0, "range": 80.0, "originHeight": 2.5 }
+          "volley": { "item": "ld_tower_arrow", "arrows": 6, "firstSeconds": 20, "cooldownSeconds": 30, "radius": 6.0, "range": 80.0, "originHeight": 2.5 }
         },
         "fieldCare": { "share": 0.75, "price": 150, "perIntermission": 1 },
         "elvenVolley": {

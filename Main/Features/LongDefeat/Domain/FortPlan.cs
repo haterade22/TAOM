@@ -45,12 +45,13 @@ internal sealed record FortPlan(GatePlan? Gate, TowerPlan? Towers, CarePlan? Car
 /// the Python replay (<c>FORT_OFFERED</c>) mirrors it. A row of shop.json beyond it is not for sale, so a build never sells what it cannot do. Field care landed in Slice 4 (the director heals
 /// the standing defenders through <c>RestDefenders</c> and the <c>field-care</c> check reads it back); the gate landed in Slice 5 (three levels written through <c>GateMath</c> and a repair by the
 /// vanilla reset, read back by <c>gate-level</c>, <c>gate-repair</c> and <c>gate-attacked</c>); the Elven Volley's two levels landed in Slice 6 (scripted missiles from the recorded origins, read back by the
-/// <c>volley</c> check). A fortress that records no origin still sells no volley: the row is hidden, so Helm's Deep plays as before until Mike records them. The first two tower levels landed in Slice 7 (posted archers on the recorded towers, read back by the <c>posts</c> check), and a fortress that records no post sells no tower row either; level 3, the tower volley, waits for Slice 8.
+/// <c>volley</c> check). A fortress that records no origin still sells no volley: the row is hidden, so Helm's Deep plays as before until Mike records them. The first two tower levels landed in Slice 7 (posted archers on the recorded towers, read back by the <c>posts</c> check), and a fortress that records no post sells no tower row either. Level 3, the tower volley, landed in Slice 8 (a post archer of the tower owns each arrow, read back by the <c>tower-volley</c> check);
+/// <see cref="SurvivalRun"/> sells it only while some usable tower records a volley spot, so a fortress with none stops the row at level 2 and nobody pays for a volley with no clock (D31).
 /// </summary>
 internal sealed record FortOffer(int Gate, int Towers, bool FieldCare, int Volley)
 {
     /// <summary>What this build can deliver.</summary>
-    public static FortOffer Offered { get; } = new(3, 2, true, 2);
+    public static FortOffer Offered { get; } = new(3, 3, true, 2);
 
     /// <summary>Nothing for sale: a run that plays as it did before any fortification.</summary>
     public static FortOffer None { get; } = new(0, 0, false, 0);

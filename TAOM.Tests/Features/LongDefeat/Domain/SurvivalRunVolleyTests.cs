@@ -39,6 +39,7 @@ public class SurvivalRunVolleyTests
         new LdTower("hornburg", Enumerable.Range(0, 8).Select(i => Post(i)).ToList(), new[] { new LdPoint(1f, 2f, 3f), new LdPoint(2f, 2f, 3f) }),
         new LdTower("wall", Enumerable.Range(0, 8).Select(i => Post(i)).ToList(), new[] { new LdPoint(4f, 5f, 6f) }),
         new LdTower("blind", Enumerable.Range(0, 8).Select(i => Post(i)).ToList(), Array.Empty<LdPoint>()),
+        new LdTower("mute", Array.Empty<MusterFrame>(), new[] { new LdPoint(7f, 8f, 9f) }),
     };
 
     /// <summary>No quiet spell ends a wave here: the tests hold attackers on the field for as long as they like.</summary>
@@ -300,7 +301,7 @@ public class SurvivalRunVolleyTests
         Assert.AreEqual(20f, run.WaveSeconds, 1e-3f);
 
         var orders = fx.FireVolleys.OrderBy(o => o.Source.Id).ToList();
-        CollectionAssert.AreEqual(new[] { Hornburg, Wall }, orders.Select(o => o.Source).ToArray(), "the tower with no recorded volley spot has no clock");
+        CollectionAssert.AreEqual(new[] { Hornburg, Wall }, orders.Select(o => o.Source).ToArray(), "a tower with no recorded volley spot has no clock, and one with no post has none (no archer could own its arrows)");
         var horn = orders[0];
         Assert.AreEqual("fow_tower_arrow", horn.ItemId);
         Assert.AreEqual(6, horn.Arrows);
