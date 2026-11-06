@@ -554,3 +554,15 @@ by a maintainer decision (E09) and the adapter's radius was copied from it (Code
 - **Why missed:** the field and the setter both existed with the expected name and type; nobody read the engine's own consumer of the field or its own producer of the value. Third instance of the class in one day (#611: a property written where nothing reads it; #613: a value read where the engine reads a corrected copy, and a value written where the engine caps it).
 - **Prevent:** before keying on an engine value, find where the ENGINE reads it on that path and read that, and before writing an engine value, find how the ENGINE writes it for the same effect (a vanilla perk that does the same thing is the best map) and use that seam. A public helper vanilla uses for the rule (`IsCollisionBoneDifferentThanWeaponAttachBone`) beats a re-implementation.
 - **Source:** 1.5.x `docs/reviews/rca-career-perks-2026-09-17.md` findings 4 and 5, #613, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a change clears an engine flag on an agent, grep every TAOM reader of that flag the same day (2026-09-28)
+Route A clears `Mountable` on the creature bandit after its build so native targeting sees an enemy. Code written
+earlier for "a riderless mount" went stale at once: the routed-count backstop assumed SandBox skips the creature
+(it skips only an `IsMount` agent, `BattleAgentLogic.cs`), and the guard comments, the registry and the feature
+doc described a `Mountable` creature. The backstop then fired for every routed creature with a misleading warning.
+- **Why missed:** graphify follows TAOM types, not engine flags, so the blast-radius step never listed `IsMount`'s
+  readers; the change was reviewed as a targeting fix.
+- **Prevent:** after a change that sets or clears an `AgentFlag` (or anything behind `IsMount`, `IsHuman`,
+  `CanWieldWeapon`), `git grep` the property and the flag across `Main/` and the docs, and re-read each hit as if
+  the agent had the new flags. List the ones that change behaviour in the commit body.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 9 and 12, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -2425,3 +2425,59 @@ halves `\\`). `check-bash-length.sh` now refuses the long commands with the fix 
   from the ones that pass on the suspected cause and on size; a cause that does not separate them is
   not the cause.
 - **Source:** 1.5.x harness-retro-2026-10-21.md, proposal P3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change's sweep has two halves: readers of what changed, and text that states it (plan 007, 2026-09-24)
+The plan 007 decisions commit renamed a local (`alreadyShielded` to `alreadySeen`), added a class to `Dependencies/Foundation/` and wrote a "reword when plan 006 lands" list. Its sweep grepped for code that reads the old log format and the removed `ShieldedCount` (both clean) and stopped. A test comment kept the old local's name, two docs kept the folder's old class count (18, now 19), and the reword list missed a line on the same branch that makes the same claim. Two of the three repeat lessons above ("After a whole-word identifier rename sweep", "When a change alters what an artifact CONTAINS").
+- **Why missed:** "who reads this?" was answered; "what text describes this?" was never asked. A reword list written from memory of the decision covers the files the decision touched, not every file that states the claim.
+- **Prevent:** before the commit, `git grep -n <old identifier>` over the whole repo for every rename, comments included; `git grep -n -e "<N> classes" -e "<N>-class"` (or the folder name) for every file added to or removed from a folder a doc counts; and build any "reword when X lands" list by grepping the claim's own words (here "preserves the stack", "fallback paths") across `docs/`, `CHANGELOG.md` and the code comments, then list every hit.
+- **Source:** 1.5.x `docs/reviews/rca-patchshield-skip-callback-shims-decisions-2026-09-24.md` findings 1, 3 and 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A dry run and the patch that adds it are chained with `&&` (2026-10-08)
+- **Why missed:** a heredoc patch meant to add a `--dry` flag to a doc-fix script failed on mangled backslashes (the
+  known heredoc trap), and the next command on the same shell line ran the unpatched script, which ignored `--dry`
+  and wrote 13 docs while review agents were still reading them.
+- **Prevent:** write scripts with the Write tool and give a script its dry-run mode when it is written; chain
+  dependent shell steps with `&&` so a failed step stops the rest.
+- **Source:** 1.5.x `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 28, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A merge of parallel branches drops text and doubles tests without a conflict: replay every branch's additions and the merged test set (2026-10-04)
+The perf programme's integration trial merged 18 reviewed branches. Three passages a branch had added were gone (plan
+039's narrowing of a PatchShield lesson, plan 028's crash-capture facts, plan 039's per-target PatchShield table), and
+git auto-merged two overlapping tests from plans 028 and 041 into one class, one a subset of the other with a stale
+comment. A conflict resolved by keeping one side's paragraph leaves no marker for the other side's facts, and two tests
+added at different places in a file merge cleanly.
+- **Why missed:** the trial's lost-hunk check recorded the table's drop but did not raise it, because its rows named a
+  patch another branch had deleted and so read as obsolete; it compared lost lines, not doubled tests; and the fixups
+  swept for one deleted patch by name, not for every member the deleting branch removed.
+- **Prevent:** after an integration merge, replay every branch's added lines against the merged tree and raise every
+  drop; stale-looking content is rewritten for the merged tree, not dismissed. For each test file more than one branch
+  touched, list the merged tests and compare their assertions for one that is a subset of another. For each member a
+  merged branch deleted, grep the whole tree for its name.
+- **Source:** 1.5.x `docs/reviews/rca-perf-integration-fixups-2026-10-04.md` F2, F3 and F4; `plans/_audit/2026-10-02-perf/evidence/merge-map.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a change alters what an artifact CONTAINS, grep the docs for that artifact's inventory
+The crash bundle's file list is stated in four places: the header comment in `CrashBundleWriter.cs`, the `TryCopyFile` calls, `BuildManifest`, and `docs/features/crash-report.md`. Adding `diag.log` to the ZIP updated the three that live inside the writer, because editing that file makes them impossible to miss, and left the doc claiming a five-file bundle. The stale neighbour on the same table row (the Logs section still describing the RGL log as coming from `Documents`, months after the collector started probing `%ProgramData%` first) showed the whole section had gone unverified for just as long.
+- **Why missed:** the change was framed as "add a file to the ZIP", which is a code-shaped framing, and three of the four inventory copies are code. Nothing in the repo gates this: `lint_docs.py` checks version refs, orphan docs, config drift and dashes, and cannot know that a prose sentence enumerates a ZIP's entries. Teaching it to parse prose inventories is not worth building, so the discipline has to be the author's.
+- **Prevent:** before committing a change to what an artifact contains (a bundle, a report, a config schema, a package manifest, an export), grep `docs/` for the artifact's current inventory and update every enumeration. Treat a stale claim found next to the one you are fixing as evidence the surrounding section is unverified, and read the rest of it rather than fixing only your line.
+- **Source:** 1.5.x docs/reviews/rca-crash-log-readability-2026-08-19.md findings #1 and #2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release gate reads what the packager ships, and fails closed on every input it did not see (plan 017, 2026-09-24)
+`package_release.py --require-build` read one fixed path per module (`bin/Win64_Shipping_Client/<dll>`) while the
+packager copies every `bin/*/` DLL, so the Game Pass, server and Modding Kit copies shipped unread; the real patreon
+package's Dependencies server copy came from a third commit. The same gate skipped a module named `taom` (case), ran
+no check at all for `--require-build ""`, and certified the set after planning had silently dropped a requested module.
+- **Why missed:** the plan designed the gate from its inputs (a module name, a path, a rev string) and the tests built
+  only the one folder the gate expected. Nobody put the gate's read set beside the packager's copy set.
+- **Prevent:** derive a gate's input from the exact list the tool will act on (here `_copy_list`), validate the
+  requested set before any filtering drops members, casefold names that come from a Windows path, test an option with
+  `is not None`, and write one test per way the input can be smaller than what ships.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A missing marker proves nothing unless the producer could have written it (plan 017, 2026-09-24)
+The gate read "no `.dirty` suffix" as "built from a clean tree". A DLL built at a commit whose `Directory.Build.props`
+has no `TaomStampWorkingTreeState` target (the whole 1.4.5 line, every tag before plan 017) never writes the suffix, so
+a dirty build there passed as clean.
+- **Why missed:** the check tested for the bad marker and treated its absence as the good one.
+- **Prevent:** when a verdict rests on a marker being absent, first prove the producer at that revision could have
+  emitted it (here `git show <sha>:Directory.Build.props` contains the target), and refuse otherwise.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 5, on `origin/bannerlord-1.5.x` (ported by WP142).
