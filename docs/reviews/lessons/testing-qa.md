@@ -119,6 +119,7 @@ Three test gates shipped in the 2026-07-27 Gondor review (unfiltered JSON id che
 - **Why missed:** a green new test feels like evidence. It is only evidence that the code is currently in the state the test encodes; it says nothing about whether the test can detect leaving that state. Guards written after the fix never pass through a natural RED phase, which is exactly when TDD would have proven them.
 - **Prevent:** for any guard added post-fix (not TDD-first), inject the failure once and read the assertion message before accepting it. Especially when the guard validates work the same author just did.
 - **Source:** docs/reviews/rca-gondor-recruitment-2026-07-27.md ("Preventive actions taken").
+- **Recurred 2026-10-14 on the 1.5.x line (#792 Codex F2):** the `PartyBase.MainParty` scan was never run against the `!= null` guard it followed; it was proved red only after Codex.
 
 ### When a method returns a report as well as a state change, test the report, not just the mutation
 The `taom.add_special_resources` cheat clamped balances correctly in all 8 of its original tests, and still lied about it: the console echo keyed "did a clamp fire?" on the *sign of the request* (`After >= Cap && amount > 0f`) rather than on the unclamped result. A save whose balance predates a lowered cap clamps on a NEGATIVE grant too (550 − 10 → 500, not 540) and reported "(cap 500)" as though nothing happened; the floor-at-0 was never reported at all. Every test asserted the resulting balance and none asserted the message.

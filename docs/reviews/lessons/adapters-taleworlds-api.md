@@ -790,3 +790,15 @@ the conversation comes back as a dead prisoner; loot added to the inventory disa
   `PartyScreenLogic.DoneLogic(true)`): `GameStateManager.Current?.LastOrDefault<PartyState>()?.PartyScreenLogic?.DoneLogic(true)`.
   Trap index row "Party-screen conversations".
 - **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Never null-check `PartyBase.MainParty`: with a campaign, its getter dereferences the stored main party (2026-10-14)
+`PartyBase.MainParty` returns null only when there is no campaign. With one, it returns
+`Campaign.Current.MainParty.Party` (v1.4.8 `PartyBase.cs:208-218`), so a null check on it throws in exactly the
+state it was written for. `MessengerCampaignBehavior.IsPlayerAvailable` carried one (1.5.x `91f369984`), from the
+Messenger port (`03a41b624`, 2026-05-06).
+- **Why missed:** the computed-statics paragraph in `.claude/rules/adapters.md` named `Hero.MainHero` and
+  `MobileParty.MainParty`, not this getter, whose failure is the reverse. The first source scan matched only
+  `== null` and missed a `!= null` guard.
+- **Prevent:** check `Campaign.Current?.MainParty`. `MainPartyNullCheckScanTests` rejects both polarities and the
+  reversed and `is` forms; it does not see a `PartyBase.MainParty?.` read.
+- **Source:** 1.5.x `docs/reviews/rca-review-followups-2026-10-14.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

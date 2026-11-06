@@ -417,3 +417,12 @@ Three Rhun longbow meshes had no `bo_` twin and carried the elven bow's `bo_wm_e
 - **Prevent:** `COLLISION_BODY_BORROWED` in `validate_moduledata.py` errors on a body that is provably another kit's twin (`bo_<M2>` for a shipped mesh M2 that is not the item's own); same-kit sharing (recolours, `_a2` on `_a`) is design, authorised cross-kit shares live in `_SHARED_BODY_BY_DESIGN` with a reason, vanilla bodies and shields are exempt. Pairing a body with its owner's mesh needed `validate_mesh_refs._ITEM_OPEN_RE` to learn `<CraftingPiece>`; before that every piece ref carried item id `""`. Fix by authoring the twin (`tools/blender/add_collision_body.py`, then a Kit import), never by repointing the borrow.
 - **Also, the mechanism first written down for this was wrong, and the review caught it before commit.** The first gate compared owning tpacs on the theory that the release cook strands a body cooked apart from its mesh. The shipped patreon tree refutes it: every Armory body cooks into `pack0`/`pack1`, every mesh elsewhere, the working elven bow is split identically, and the borrowed body is present in that tree's `pack0`. Three review lenses found it independently; my byte-grep "evidence" had matched `wm_elven_bow_a03` inside `bo_wm_elven_bow_a03`. So why the player's build hung is still open (leading hypothesis: packs that predate the 2026-09-11 art drop under post-#599 XML), and it was written as fact in eleven places before the review. A substring grep is not a TOC read; `validate_mesh_refs.scan_tpac_metameshes` reads cooked packs and should have been the first tool, not the last.
 - **Source:** 1.5.x player report on the September Nexus build, #633; `docs/reviews/rca-rhun-longbow-collision-body-2026-09-21.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A negative relationship `value` declares war whatever `isAtWar` says (#818, 2026-10-18)
+To remove the start wars, five kingdom rows were set to `isAtWar="false"` and kept `value="-1"`. `Kingdom.Deserialize`
+(v1.4.8 `Kingdom.cs:780-795`) calls `DeclareWar` for any `value` below 0 and reads `isAtWar` only to add a war, so a new
+game still opened with five wars. `Clan.Deserialize` does the same for clan rows.
+- **Why missed:** the attribute name was read as its meaning; `docs/modding/kingdoms.md` already said `isAtWar="false"`
+  does nothing.
+- **Prevent:** read the deserializer before editing an attribute whose effect you infer from its name.
+- **Source:** 1.5.x `docs/reviews/rca-wotr-war-rule-2026-10-18.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
