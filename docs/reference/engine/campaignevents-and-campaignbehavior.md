@@ -67,11 +67,11 @@ is why `RegisterEvents` runs every campaign start/load, not once.
   (CultureConversion), `OnGameLoadedEvent` (re-apply non-engine-saved state), `CanHaveCampaignIssuesEvent`
   (CastleRecruitment issue suppression).
 - **No single-listener removal** (`IMbEvent` has no `RemoveNonSerializedListener`). To stop listening, use
-  `ClearListeners(owner)` (drops *all* of that owner's) or an owner-proxy. (`feedback_imbevent_remove_one_unavailable`
-  — confirmed identical in 1.4.5; audit/Codex suggestions to call `RemoveNonSerializedListener` are invalid.)
+  `ClearListeners(owner)` (drops *all* of that owner's) or an owner-proxy (see the [adapters lesson](../../reviews/lessons/adapters-taleworlds-api.md), "`IMbEvent<T>` has no public Remove-one listener API").
+  Confirmed identical in 1.4.5 and v1.4.8 (`IMbEvent` declares only `AddNonSerializedListener` and `ClearListeners`); audit/Codex suggestions to call `RemoveNonSerializedListener` are invalid.
 - **No `OnGameEnd`/`OnFinalize` virtual** on `CampaignBehaviorBase` (the class has only `RegisterEvents`/`SyncData`).
   For singleton cleanup at campaign teardown, subscribe to `CampaignEvents.OnGameOverEvent` (best-effort) or
-  `OnNewGameCreatedEvent` (`feedback_campaignbehavior_no_ongameend`).
+  `OnNewGameCreatedEvent` ([state-lifecycle-save lessons](../../reviews/lessons/state-lifecycle-save.md), "CampaignBehaviorBase has no OnGameEnd...").
 - **`OnGameLoadedEvent` re-applies derived/non-saved state** — e.g. CultureConversion re-applies its
   `Settlement.Culture` overrides on load (Settlement.Culture isn't engine-saved). Load-path mutations must follow the
   **entity-state matrix** (`.claude/rules/csharp-architecture.md`) — destructive ops need state guards.
@@ -90,7 +90,7 @@ from Phase 5). No native boundary here — it's pure managed campaign simulation
 - `CampaignBehaviorBase.cs`:3-25 (`StringId`, `RegisterEvents` abstract @17, `GetCampaignBehavior<T>` @19, `SyncData` abstract @24 — and NO teardown virtual).
 - `IMbEvent.cs`:5-30 (`AddNonSerializedListener` + `ClearListeners` only; no `RemoveNonSerializedListener`; arities `IMbEvent<T>`…`<T1..T5>`).
 - `CampaignEvents.cs` (the static event registry), `MbEvent.cs` (`MbEvent`/dispatcher), `Campaign.cs` (`GetCampaignBehavior<T>`).
-- TAOM precedent + gotchas: memories `feedback_imbevent_remove_one_unavailable`, `feedback_campaignbehavior_no_ongameend`; behaviors registered in `Main/SubModule.cs OnGameStart` via `AddBehavior`.
+- TAOM precedent + gotchas: lessons in `docs/reviews/lessons/adapters-taleworlds-api.md` and `docs/reviews/lessons/state-lifecycle-save.md`; behaviors registered in `Main/SubModule.cs OnGameStart` via `AddBehavior`.
 
 ---
 

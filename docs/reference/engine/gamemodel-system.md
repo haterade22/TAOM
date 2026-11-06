@@ -1,8 +1,8 @@
 # Bannerlord GameModel system — how overrides plug in (Phase 7)
 
 > **One process, traced from the decompile** (v1.4.5): how `GameModel`s are registered + resolved, and the
-> override mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides (the CLAUDE.md GameModel table —
-> the mod's single biggest extension surface). Part of the phased engine study.
+> override mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides (the table in
+> [gamemodel-registry.md](../gamemodel-registry.md)). This is the mod's single biggest extension surface. Part of the phased engine study.
 
 ## WHAT it is
 
@@ -56,7 +56,7 @@ no priority numbers. The decorator overload exists for mods that can't subclass 
 unknown previous model.
 
 ## TAOM relevance + gotchas
-- **TAOM overrides ~40 models** (CLAUDE.md "GameModel Overrides" table): `TaomPartyWageModel`,
+- **TAOM overrides ~40 models** ([gamemodel-registry.md](../gamemodel-registry.md)): `TaomPartyWageModel`,
   `TaomPartySpeedModel`, `TaomSettlementLoyaltyModel`, `TaomBattleRewardModel`, `TaomAgeModel`, …, each
   `: DefaultXxxModel`, overriding specific methods + calling `base`. Registered in `Main/SubModule.cs OnGameStart`
   via `campaignStarter.AddModel(new TaomXxxModel(...))`.
@@ -68,7 +68,7 @@ unknown previous model.
   `AddModel`). Browse the `Default*Model` classes in the decompile (`Campaign/…/GameComponents/`) for unclaimed ones.
 - **Always call `base`** for the cases you don't handle (the GameModel Override Pattern returns `?? base.X(...)`),
   or you silently drop vanilla behavior. And **no inline branching in the override** — delegate to a service
-  (`feedback_gamemodel_inline_logic`).
+  ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "GameModel override bodies allow no inline decision logic...").
 - **Register after defaults** (OnGameStart) — registering too early (before the base model exists) means yours is
   *before* the default in `_models` and the default wins.
 
@@ -81,7 +81,7 @@ managed, which is why it's the clean extension point.
 - `TaleWorlds.Core.cs`:14826 (`GameModel`), 14829 (`GameModelsManager`).
 - `TaleWorlds.MountAndBlade.cs`:61602 (`GetModel<T>` backward scan = last-wins), 61614 (`AddModel(GameModel)`), 61619 (`AddModel<T>(MBGameModel<T>)` decorator), 75691 (`MissionGameModels`).
 - `TaleWorlds.CampaignSystem.cs`:43100 (`GameModels` = `Campaign.Current.Models`), 23206/23218/23223 (campaign-side `GetModel`/`AddModel`).
-- TAOM: `Main/SubModule.cs OnGameStart` `AddModel` calls; `.claude/rules/gamemodels.md` + `csharp-patterns.md` (the Override Pattern); CLAUDE.md GameModel table (~40 overrides).
+- TAOM: `Main/SubModule.cs OnGameStart` `AddModel` calls; `.claude/rules/gamemodels.md` + `csharp-patterns.md` (the Override Pattern); `docs/reference/gamemodel-registry.md` (the override table).
 
 ---
 

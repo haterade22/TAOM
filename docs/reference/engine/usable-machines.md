@@ -62,7 +62,7 @@ formation-AI + order systems for free. Because they're `ScriptComponentBehavior`
 in the Kit with no code.
 
 ## TAOM relevance + gotchas
-- **The howdah** (`ADODHowdah : UsableMachine`, `ADODHowdahStandingPoint : StandingPoint`) is the worked example —
+- **The howdah** (`TaomHowdahMachine : UsableMachine`, `TaomHowdahStandingPoint : StandingPoint`, ported from ADOD_Beasts' `ADODHowdah` and `ADODHowdahStandingPoint`) is the worked example:
   full line-level port spec + the moving-machine "manual per-tick frame-copy to the elephant neck" pattern are in
   [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md). Any future TAOM usable machine (deployable,
   siege-defense object, ridden platform) follows this hierarchy.

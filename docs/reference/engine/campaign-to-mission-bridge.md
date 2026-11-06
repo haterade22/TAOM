@@ -78,8 +78,8 @@ native loads + simulates it.
   `BehaviorTreeMissionLogic`, `SpiderMissionBehavior`, SmartCavalry/CompanionTactics logic. The
   **deferred-patch category** (`Patch_MissionTime_SetMovementOrder`, Phase 13) applies during
   `OnMissionBehaviorInitialize` *because* `MovementOrder.cctor` reads `Mission.Current.CurrentTime`, which is only valid
-  once this chain has created the mission (`feedback_movementorder_cctor_mission_current`).
-- **`CreateState`+`PushState` is mandatory** (Phase 11 / `feedback_gamestate_creation_pattern`): vanilla opens the
+  once this chain has created the mission ([harmony-il lessons](../../reviews/lessons/harmony-il.md), "Defer patches whose parameter types have Mission/Campaign-dependent cctors").
+- **`CreateState`+`PushState` is mandatory** (Phase 11; [gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Push custom GameStates via `GameStateManager.CreateState<T>()`, never `new`"): vanilla opens the
   mission via `CreateState<MissionState>()` + `PushState`, never `new MissionState()`. TAOM custom screens must follow
   the same pattern.
 - **Casualty/XP attribution** flows through the `CasualtyHandler` (step 5) keyed off each agent's `Origin` (Phase 1) —
@@ -102,7 +102,7 @@ the single point where the all-managed campaign layer (Phase 16) hands off to th
 - `PlayerEncounter.cs`:22, :124 (`Current`), :180/:182 (`BattleState`/`WinningSide`), :247/:250 (`OpponentSide`/`PlayerSide`).
 - `CampaignMission.cs`:12 (`static class`), :22 (`OpenBattleMission(rec)`), :69 (`OpenBattleMission`→`CampaignMissionManager`).
 - `MissionState.cs`:11 (`: GameState`), :31 (`Current`), :33 (`CurrentMission`), :60 (`OnMissionStateActivate`), :312 (`OpenNew`→`CreateState<MissionState>`+`HandleOpenNew`+`PushState`), :316-330 (default behaviors: `BasicMissionHandler`/`CasualtyHandler`/`AgentCommonAILogic`).
-- Linked: campaign-object-graph.md (Phase 16, the parties), mission-and-missionbehavior-lifecycle.md (Phase 4), agent-spawn-and-render-pipeline.md (Phase 1), gauntletui-viewmodel-screen.md (Phase 11, CreateState/PushState), formations-and-team-ai.md (Phase 13, deferred patch). Gotchas: `feedback_gamestate_creation_pattern`, `feedback_movementorder_cctor_mission_current`.
+- Linked: campaign-object-graph.md (Phase 16, the parties), mission-and-missionbehavior-lifecycle.md (Phase 4), agent-spawn-and-render-pipeline.md (Phase 1), gauntletui-viewmodel-screen.md (Phase 11, CreateState/PushState), formations-and-team-ai.md (Phase 13, deferred patch). Gotchas: `docs/reviews/lessons/gamemodels-services.md` (GameState creation), `docs/reviews/lessons/harmony-il.md` (deferred patch).
 
 ---
 

@@ -3,8 +3,7 @@
 > **One process, traced from the decompile** (v1.4.5): how a rider and a mount become two linked agents at runtime —
 > the in-mission half of Phase 10's `HorseComponent` + Phase 3's `Monster`. Closes the creature picture: a TAOM
 > **cavalry trooper** rides a horse-agent; the **elephant** is a ridden mount whose *crew* sit on a UsableMachine
-> (Phase 12), not via `Mount`; the **new spider** is a *riderless* combatant (`Mountable="false"`). Part of the phased
-> engine study.
+> (Phase 12), not via `Mount`; the **spider** is a Horse-slot mount ridden by a goblin (`Mountable="true"`). Part of the phased engine study.
 
 ## WHAT it is
 
@@ -62,15 +61,15 @@ engine where the animation/physics state lives, so managed code never has to man
 - **Elephant** (ADOD_Beasts port): a **ridden mount** (the mahout rides it via the normal `Mount` path) **plus** a howdah
   **crew that sit on `UsableMachine` `StandingPoint`s — NOT via `Mount`** (Phase 12 / howdah-crew-mechanism.md). Don't
   conflate the two seating mechanisms: one rider via `RiderSitBoneIndex`, N crew via standing points.
-- **New spider** (riderless combatant): spawned `FromHorseObj` but **`Mountable="false"` → `IsMount == false`** → it
-  can't be mounted, has no `RiderAgent`, and its Monster **drops `rider_sit_bone`**. It *is* the agent — there is no
-  rider. (The abandoned design rode a humanoid anchor on the spider → the AddSkinMeshes/native-AV crash; the riderless
-  design avoids the rider entirely — see agent-spawn-and-render-pipeline.md + adod-beasts-architecture-and-taom-port.md.)
+- **Spider** (a plain Horse-slot mount): a goblin rider carries the spider item in its Horse slot, so the vanilla
+  cavalry spawn builds the spider `FromHorseObj` with **`Mountable="true"` → `IsMount == true`**, and its Monster sets
+  `rider_sit_bone="chest_m"`. An earlier design rode a humanoid anchor on the spider and ended in the
+  AddSkinMeshes/native-AV crash. The detached riderless combatant (a `FromHorseObj` spider with no rider, which hit a `PreloadForRendering` AV) was deleted on 2026-06-10; see [spider.md](../../features/spider.md).
 - **Bone-by-name** (Phase 3): `RiderSitBoneIndex`/`Rein*BoneIndex` resolve by name → `-1` on a typo/missing bone; a
   `-1` sit bone seats the rider at the origin (visible "rider floating at feet"). `rider_sit_bone` is *lenient*
   (`validateHasParentBone:false`) so a bad parent won't error — it silently mis-seats.
 - **`MonsterUsage`/`FamilyType`** drive the action set + AI grouping; a creature mount needs a `monster_usage` whose
-  action set exists (the elephant reuses `as_elephant`/`monster_usage="elephant"`; the spider needs its own).
+  action set exists (the elephant reuses `as_elephant`/`monster_usage="elephant"`; the spider has its own, `as_spider`/`monster_usage="spider"`).
 - **Two-phase mount is async** — after calling `Mount`, `MountAgent` is **not** set until the next tick; don't read it
   in the same frame.
 

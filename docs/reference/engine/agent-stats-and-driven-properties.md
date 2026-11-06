@@ -68,10 +68,10 @@ only when something actually changed. Making it a GameModel lets mods retune any
 - **Thin boundary** (gamemodels.md rule 4): the model only extracts primitives from the sealed `Agent` and delegates;
   all branching/stat math is in `ICareerAgentStatService`, the elephant id-check in `IElephantAttackService`. The body
   uses only ternaries (no inline `if`/`foreach`/`switch`).
-- **Research scale + downstream consumer before touching any ADP** (`feedback_engine_scale_research`): a driven
+- **Research scale + downstream consumer before touching any ADP** ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Research the engine SCALE..."): a driven
   property may be a *multiplier* or *additive*, may be *clamped*, and is consumed by a specific native path — a change
   with the wrong scale has "no effect or wrong magnitude." Decompile both the property's range and its consumer first.
-- **NaN/Infinity guard** (`feedback_clamp_nan_infinity_propagates`): a NaN written into the ADP propagates through the
+- **NaN/Infinity guard** ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Settings/MCM Clamp helpers must NaN/Infinity-guard"): a NaN written into the ADP propagates through the
   native sim (and any `5f * (1f - NaN)` style math) and freezes/breaks the agent — validate finite before `SetStat`.
 
 ## The native boundary
@@ -84,7 +84,7 @@ value surfaces as wrong in-sim behavior rather than a managed exception.
 ## Evidence (file:line, v1.4.5)
 - `AgentStatCalculateModel.cs`:8 (`abstract : MBGameModel<AgentStatCalculateModel>`), :14 (`InitializeAgentStats`), :28 (`UpdateAgentStats`), :32 (`CanAgentRideMount`), :44 (`GetEffectiveMaxHealth`), :49 (`GetEnvironmentSpeedFactor`), :109 (`GetEffectiveSkill`), :119-131 (damage/stealth/resistance abstracts).
 - `AgentDrivenProperties.cs`:6 (`class`), :16/:40/:52/:76 (named accessors → `GetStat`/`SetStat`). `DrivenProperty.cs`: enum `None=-1`..`98`; mount slots `MountChargeDamage=52`, `MountDifficulty=53`, `MountManeuver=92`, `MountSpeed=93`, `MountDashAccelerationMultiplier=94`.
-- TAOM: `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` (`: SandboxAgentStatCalculateModel`; `UpdateAgentStats`/`CanAgentRideMount`/`GetEffectiveMaxHealth`), `Main/SubModule.cs`:447 (`AddModel<AgentStatCalculateModel>`). Gotcha memories: `feedback_engine_scale_research`, `feedback_clamp_nan_infinity_propagates`; `.claude/rules/gamemodels.md` (thin-boundary rule 4). Linked: gamemodel-system.md (Phase 7), mount-and-rider-runtime.md (Phase 14, the `UpdateAgentStats`-on-mount call).
+- TAOM: `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` (`: SandboxAgentStatCalculateModel`; `UpdateAgentStats`/`CanAgentRideMount`/`GetEffectiveMaxHealth`), `Main/SubModule.cs`:447 (`AddModel<AgentStatCalculateModel>`). Gotcha lessons: `docs/reviews/lessons/gamemodels-services.md`; `.claude/rules/gamemodels.md` (thin-boundary rule 4). Linked: gamemodel-system.md (Phase 7), mount-and-rider-runtime.md (Phase 14, the `UpdateAgentStats`-on-mount call).
 
 ---
 

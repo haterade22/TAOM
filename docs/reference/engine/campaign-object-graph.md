@@ -67,11 +67,11 @@ gives stable `StringId` lookup (Phase 5) + automatic save (Phase 6).
   **entity-state matrix** (`.claude/rules/csharp-architecture.md` — destructive load-path ops need state guards).
 - **A castle's `Settlement.Village` is `null`** (and a town's the same): widening a town/village gate to castles must
   audit the full downstream chain for `settlement.Village.X` derefs (CastleRecruitment used **castle-safe occupations
-  only** because `RuralNotable` NREs on a castle's null `Village` — `feedback_widening_settlement_type_gate_audit`).
+  only** because `RuralNotable` NREs on a castle's null `Village`; [lesson](../../reviews/lessons/campaign-mechanics.md)).
 - **Lookup by id** (Phase 5): `MBObjectManager.Instance.GetObject<Settlement>(stringId)` / `Settlement.Find(id)` /
   `Hero.FindFirst(...)`; missing id → clean `null`. TAOM keys ~81 recruitment pools on hard-coded settlement ids.
 - **Per-kingdom / per-culture mapping**: SpecialResources, BanditManagement, CulturalFeats map by
-  `Kingdom`/`CultureObject.StringId` (see `kingdom-culture-mapping` memory + factions.json — `feedback_faction_map_update_with_cultural_feats`).
+  `Kingdom`/`CultureObject.StringId` (see factions.json and the [lesson](../../reviews/lessons/data-content-cultures.md)).
 - **`Clan`/`Kingdom` cached lists** (`Settlements`/`Heroes`/`AliveLords`/`Clans`/`Fiefs`) are `MBReadOnlyList` caches —
   read-only; mutate membership via the campaign actions (`ChangeKingdomAction`, `ChangeOwnerOfSettlementAction`), not by
   editing the list.
@@ -80,7 +80,7 @@ gives stable `StringId` lookup (Phase 5) + automatic save (Phase 6).
 **None.** The campaign simulation is **entirely managed** (`Hero`/`Clan`/`Kingdom`/`MobileParty`/`Settlement` are all
 C# `MBObjectBase`/`CampaignObjectBase`; their relationships, the daily/hourly tick, diplomacy, and economy are managed).
 The only engine touch is the campaign **map scene** (a `MobileParty`'s position is a `CampaignVec2` on the managed
-`MapScene`, which lazy-resolves via the native map mesh — `feedback_campaign_coupled_property_in_editor`: prefer raw
+`MapScene`, which lazy-resolves via the native map mesh; [lesson](../../reviews/lessons/gamemodels-services.md): prefer raw
 accessors in editor mode). Contrast the in-mission stack (Phases 1-15), which is heavily native-backed — the campaign
 layer is where TAOM features live precisely because it's pure managed simulation.
 
@@ -91,7 +91,7 @@ layer is where TAOM features live precisely because it's pure managed simulation
 - `MobileParty.cs`:25 (`sealed : CampaignObjectBase, IMapPoint`), :255 (`static MainParty`), :353 (`Party`), :577/:741/:626 (`Current/Target/HomeSettlement`), :659 (`Army`), :775/:795 (`LeaderHero`/`Owner`), :942 (`ActualClan`), :1071 (`MemberRoster`), :1079 (`MapFaction`).
 - `Settlement.cs`:26 (`sealed : MBObjectBase, IMapPoint, …`), :70 (`Culture` field), :83/:85 (`Town`/`Village`), :107 (`Owner`), :292 (`MapFaction`), :317 (`BoundVillages`), :369/:381/:405 (`IsTown`/`IsCastle`/`IsVillage`), :489 (`OwnerClan` via Town/Village.Bound/Hideout).
 - `PartyBase.cs`:21 (`sealed : IBattleCombatant`), :119/:122 (`Settlement`/`MobileParty`), :129/:132 (`MemberRoster`/`PrisonRoster`).
-- Linked: object-system-mbobjectmanager.md (Phase 5), save-system.md (Phase 6), campaignevents-and-campaignbehavior.md (Phase 9). Gotcha memories: `feedback_widening_settlement_type_gate_audit`, `feedback_faction_map_update_with_cultural_feats`, `feedback_campaign_coupled_property_in_editor`, `kingdom-culture-mapping`; rules `adapters.md`, `csharp-architecture.md` (entity-state matrix).
+- Linked: object-system-mbobjectmanager.md (Phase 5), save-system.md (Phase 6), campaignevents-and-campaignbehavior.md (Phase 9). Gotcha lessons: [campaign-mechanics](../../reviews/lessons/campaign-mechanics.md), [data-content-cultures](../../reviews/lessons/data-content-cultures.md), [gamemodels-services](../../reviews/lessons/gamemodels-services.md); rules `adapters.md`, `csharp-architecture.md` (entity-state matrix).
 
 ---
 

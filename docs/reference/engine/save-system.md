@@ -47,7 +47,7 @@ The actual registered id is **`_saveBaseId + saveId`** (SaveSystem.cs:1114/1125/
 using localIds `1..N` occupies ids `B+1 .. B+N`. **If two definers' `(base+localId)` ranges overlap, the ids collide
 → a hard crash at `Module.Initialize`** (duplicate save-id). TAOM's convention: **bases step by 100**, so each
 definer owns a ~100-id window — and a definer's localIds must stay within its window (don't let `localId` reach the
-next definer's base offset). See `feedback_saveable_typedefiner_localid_offset` for the exact convention and the
+next definer's base offset). See the [lesson](../../reviews/lessons/state-lifecycle-save.md) for the exact convention and the
 worked collision (CareerQuest base `726900701` + localId 1 = `726900702` = FormationPreset base `726900601` + localId
 101 — adjacent bases only 100 apart, so a localId of 101 spills into the next window). **When adding a new
 SaveableTypeDefiner: pick a fresh base ≥100 past the last one, and keep localIds well inside the window.**
@@ -78,7 +78,7 @@ space (Phase 5) is because `MBObjectBase` objects are referenced by `MBGUID` (th
 - `OnGameLoaded`/`SyncData` mutations on heroes/settlements must follow the entity-state-matrix rule
   (`.claude/rules/csharp-architecture.md`) — load-path mutation is destructive; guard it.
 - New saveable validation: TAOM has no engine-level guard against base-id collision — discipline is on the author +
-  the memory. There's no validator for this (unlike moduledata refs).
+  the lesson. There's no build-time validator for this (unlike moduledata refs). `PresetSaveableTypeDefinerTests.BaseId_UniqueAcrossDiscoverableDefinersInTaomAssembly` fails the test run on a duplicate base id, and `SaveDefinerCollisionDetector` (CoopInterop) reports shared base ids at runtime. The detector compares base ids only, so a base+localId overlap stays on the author.
 
 ## Performance: what a save costs [yotthani]
 
@@ -136,7 +136,7 @@ may reference native resources (an `MBObjectBase`'s `MBGUID`), but the persisten
 
 ## Evidence (file:line, v1.4.5)
 - `TaleWorlds.SaveSystem.cs`:1046 (`SaveableTypeDefiner`), 1052 (ctor `_saveBaseId`), 1123-1126 (`AddClassDefinition` → `_saveBaseId + saveId`), 1129-1135 (`AddClassDefinitionWithCustomFields`), 1167 (`AddEnumDefinition`), 1112 (`AddBasicTypeDefinition`), 1062-1100 (`Define*` virtuals), 134 (`SaveableFieldAttribute`).
-- TAOM precedent + the collision rule: memory `feedback_saveable_typedefiner_localid_offset`; ADOD_Beasts's `ADODBeastsSaveDefiner` (the wolf) in the [ADOD_Beasts comparison](../adod-beasts-architecture-and-taom-port.md).
+- TAOM precedent + the collision rule: the [lesson](../../reviews/lessons/state-lifecycle-save.md); ADOD_Beasts's `ADODBeastsSaveDefiner` (the wolf) in the [ADOD_Beasts comparison](../adod-beasts-architecture-and-taom-port.md).
 - `CampaignBehaviorBase.SyncData(IDataStore)` — the per-behavior persistence override (TAOM features override it widely).
 
 ---
