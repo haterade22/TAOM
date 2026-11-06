@@ -102,9 +102,12 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
         }
 
-        // After the batches, so a pack bought beside the care is healed too; before any volley (Slice 6 puts FireVolleys last).
+        // After the batches, so a pack bought beside the care is healed too; before any volley.
         if (fx.FieldCare > 0f)
             ApplyFieldCare(fx.FieldCare);
+
+        // Last: a volley reads the attackers this tick's batches spawned (D30), and every order is answered here, fired or withheld, so a ready source never orders twice.
+        FireVolleys(fx.FireVolleys);
 
         // Read in the engine's hit callback, which may run off the main thread: a blades wave wants hits from its start until its clear or the run's end.
         _poisonHits = _run.PoisonWave;
@@ -242,6 +245,8 @@ internal sealed partial class LongDefeatDirector
     private void OnWaveCleared(RunEvent e)
     {
         JudgeGateAttacked(false);
+        CloseVolleyWatch("wave");
+        _volleyByBot = false;
         FlushScale();
         FlushTerror();
         FlushBlades();
@@ -279,6 +284,7 @@ internal sealed partial class LongDefeatDirector
         _finished = true;
         JudgeFieldCare(null);
         JudgeGateAttacked(true);
+        FinishVolleys();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));

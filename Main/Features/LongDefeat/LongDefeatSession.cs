@@ -64,6 +64,12 @@ internal sealed class LongDefeatSession
     /// <summary>Buys the repair (D17): every visible gate that is broken or damaged is made whole at the levelled maximum on the next tick.</summary>
     public FortResult TryRepairGates() => _run?.TryRepairGates() ?? FortResult.RunOver;
 
+    /// <summary>Buys the next Elven Volley level (phase3-plan.md D22 to D24): the volley is loosed in a wave, on the key N, and the panel only buys.</summary>
+    public FortResult TryBuyVolleyLevel() => _run?.TryBuyVolleyLevel() ?? FortResult.RunOver;
+
+    /// <summary>Arms the Elven Volley (the key N, or the unattended bot): the director looses it on the next tick, aimed by the level in force. Never fires by itself.</summary>
+    public VolleyArm TryVolley() => _run?.ArmVolley() ?? VolleyArm.RunOver;
+
     /// <summary>The boons taken, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public IReadOnlyList<BoonCard> BoonsTaken => _run?.OwnedCards ?? _boons;
 

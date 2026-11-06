@@ -67,9 +67,37 @@ internal static class LongDefeatHudText
     internal static string Hint(RunView view)
     {
         var hint = Hint(view.Phase);
+        if (view.Phase == RunPhase.Wave && view.Volleys.Owned)
+            return hint + "   " + new TextObject("{=TAOM_LD_Hud_HintVolley}N  Loose the Elven Volley").ToString();
+
         return view.ShopOpen && view.BoonOffer.Count > 0
             ? hint + "   " + new TextObject("{=TAOM_LD_Hud_BoonAwaits}A boon awaits: press B").ToString()
             : hint;
+    }
+
+    /// <summary>How long a withheld volley's reason stays on the strip, in wave seconds.</summary>
+    internal const float WithheldShownSeconds = 3f;
+
+    /// <summary>
+    /// The HUD strip's volley line, during a wave only and only once the Elven Volley is owned (phase3-plan.md Slice 6): why the last shot could not leave (for three seconds), else ready, else the seconds to
+    /// the next use. No attacker in reach is its own line; no owner, no origin and no arrow item are one plain line.
+    /// </summary>
+    internal static string VolleyLine(RunView view)
+    {
+        var volleys = view.Volleys;
+        if (view.Phase != RunPhase.Wave || !volleys.Owned)
+            return string.Empty;
+
+        if (volleys.Withheld is { } why && volleys.WithheldSecondsAgo < WithheldShownSeconds)
+        {
+            return why == VolleyWithheldReason.NoTargets
+                ? new TextObject("{=TAOM_LD_Hud_VolleyNoTargets}No attackers in reach").ToString()
+                : new TextObject("{=TAOM_LD_Hud_VolleyWithheld}The volley cannot be loosed now").ToString();
+        }
+
+        return volleys.SecondsLeft > 0f
+            ? new TextObject("{=TAOM_LD_Hud_VolleyIn}Elven Volley in {SECONDS} s").SetTextVariable("SECONDS", WholeSeconds(volleys.SecondsLeft)).ToString()
+            : new TextObject("{=TAOM_LD_Hud_VolleyReady}Elven Volley ready").ToString();
     }
 
     /// <summary>The HUD strip's affix line: the wave's affixes during a wave, the next wave's (with its attackers' raised health and damage) between waves.</summary>
@@ -255,8 +283,14 @@ internal static class LongDefeatHudText
 
     internal static string RepairNone() => new TextObject("{=TAOM_LD_Fort_RepairNone}Nothing to repair").ToString();
 
-    /// <summary>The refusal line for a fortification the run turned down; empty for Ok. The gate rows word <c>MaxLevel</c> and <c>NothingToRepair</c> for the gate; the tower and volley buys also answer <c>MaxLevel</c>, so their slices (6 and 7) word their own before they are wired to a button.</summary>
-    internal static string Refusal(FortResult result)
+    /// <summary>The refusal line for a gate or care buy the run turned down; empty for Ok. <c>MaxLevel</c> reads as the gate's, which the gate row's buy answers.</summary>
+    internal static string Refusal(FortResult result) => Refusal(result, new TextObject("{=TAOM_LD_Notice_GateFull}The gate is fully reinforced.").ToString());
+
+    /// <summary>The Elven Volley's refusal: the generic lines, and its own wording for a level it does not have (the tower row, Slice 7, passes its own).</summary>
+    internal static string RefusalVolley(FortResult result) => Refusal(result, new TextObject("{=TAOM_LD_Notice_VolleyFull}The Elven Volley is fully upgraded.").ToString());
+
+    /// <summary>The refusal line for a fortification the run turned down; empty for Ok. <paramref name="maxLevel"/> is the row's own line for <c>MaxLevel</c>, which the gate, the towers and the volley each answer.</summary>
+    private static string Refusal(FortResult result, string maxLevel)
     {
         switch (result)
         {
@@ -271,7 +305,7 @@ internal static class LongDefeatHudText
             case FortResult.Used:
                 return new TextObject("{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves.").ToString();
             case FortResult.MaxLevel:
-                return new TextObject("{=TAOM_LD_Notice_GateFull}The gate is fully reinforced.").ToString();
+                return maxLevel;
             case FortResult.NothingToRepair:
                 return new TextObject("{=TAOM_LD_Notice_GateWhole}The gate needs no repair.").ToString();
             case FortResult.RunOver:
@@ -282,6 +316,40 @@ internal static class LongDefeatHudText
     }
 
     /// <summary>The refusal line for a horn the run turned down; empty for Ok.</summary>
+    internal static string VolleyName() => new TextObject("{=TAOM_LD_Fort_Volley}Elven Volley").ToString();
+
+    /// <summary>The volley row's line: the level the next buy brings (the top one when all are owned), its arrows and cooldown, and who aims it.</summary>
+    internal static string VolleyDetail(int level, int maxLevel, VolleyLevelPlan? shown)
+    {
+        var aimed = shown?.Aim == VolleyAimMode.Crosshair;
+        var text = aimed
+            ? new TextObject("{=TAOM_LD_Fort_VolleyCrosshair}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker near where you look. Press N during a wave.")
+            : new TextObject("{=TAOM_LD_Fort_VolleyAuto}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave.");
+        return text.SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("ARROWS", shown?.Arrows ?? 0)
+            .SetTextVariable("SECONDS", WholeSeconds(shown?.CooldownSeconds ?? 0f)).ToString();
+    }
+
+    internal static string VolleyFull() => new TextObject("{=TAOM_LD_Fort_VolleyFull}Fully upgraded").ToString();
+
+    /// <summary>The refusal line for the key N; empty when the volley is armed (it looses on the next tick) or is not sold here (no shop row exists to send the player to).</summary>
+    internal static string Refusal(VolleyArm result)
+    {
+        switch (result)
+        {
+            case VolleyArm.Armed:
+            case VolleyArm.NotSold:
+                return string.Empty;
+            case VolleyArm.NotOwned:
+                return new TextObject("{=TAOM_LD_Notice_VolleyNotOwned}Buy the Elven Volley between waves first.").ToString();
+            case VolleyArm.Cooldown:
+                return new TextObject("{=TAOM_LD_Notice_VolleyCooldown}The Elven Volley is not ready yet.").ToString();
+            case VolleyArm.NotInWave:
+                return new TextObject("{=TAOM_LD_Notice_VolleyNotInWave}The Elven Volley is loosed during a wave.").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
+        }
+    }
+
     internal static string Refusal(StartResult result)
     {
         switch (result)

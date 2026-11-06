@@ -20,7 +20,8 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
 --start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run; field care's proof is --waves 2 --garrison-scale 1.3 --start-gold 5000, which owes the field-care pass at clear 1). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
-The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass.
+The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
+The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
@@ -664,7 +665,7 @@ def owes_summon(report_json):
 # read_fortifications mirrors FortificationsReader rule for rule (both suites read tools/tests/long_defeat_fort_cases.json), FORT_OFFERED mirrors FortOffer.Offered (D31), and
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
-FORT_OFFERED = {"gate": 3, "towers": 0, "fieldCare": True, "volley": 0}  # field care landed in Slice 4 and the gate in Slice 5; each later slice raises its kind here and in FortOffer.Offered
+FORT_OFFERED = {"gate": 3, "towers": 0, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5 and the Elven Volley in Slice 6; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
 SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
@@ -1068,13 +1069,40 @@ def owes_gate_repair(report_json):
     return bool(_bought(report_json, "gateRepair"))
 
 
+def _played(report_json):
+    """The last wave the run reached: the wave it ended in (the report's wave) or the last wave it cleared (a row of waves), 0 when neither is a number."""
+    reached = report_json.get("wave")
+    cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict)]
+    return max([n for n in [reached] + cleared if _is_int(n)], default=0)
+
+
 def owes_gate_attacked(report_json):
     """The gate-attacked check is owed when a repair was bought before a wave the run then played: the repair precedes wave beforeWave, and the run reached it when the wave it ended in (the report's
     wave) is at least that number, a wave it cleared (a row of waves) or one it ended in."""
-    reached = report_json.get("wave")
-    cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict)]
-    played = max([n for n in [reached] + cleared if _is_int(n)], default=0)
+    played = _played(report_json)
     return any(_is_int(p.get("beforeWave")) and p["beforeWave"] <= played for p in _bought(report_json, "gateRepair"))
+
+
+# The Elven Volley (Slice 6). The game writes one volley line per use (key elven-w<N>u<k>) when the use's six-second hit window closes, the clear cuts it or the run ends. A report that bought a level before a
+# wave the run then played owes a pass line, whether or not the report shows a use: a bot that never armed the volley leaves uses at 0, which rule 20 accepts, and only this debt catches it. Level two aims the
+# crosshair, so it owes a pass line with mode=crosshair. A skip (a window cut short before the share was met) proves nothing. The proof needs recorded volley origins in fortresses.json.
+VOLLEY_CHECK = "volley"
+VOLLEY_CROSSHAIR_PASS = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + VOLLEY_CHECK) + r" result=pass\b[^\n]*\bmode=crosshair\b")
+
+
+def _volley_bought_before_play(report_json, level):
+    played = _played(report_json)
+    return any(_is_int(p.get("beforeWave")) and p["beforeWave"] <= played and _is_int(p.get("level")) and p["level"] >= level for p in _bought(report_json, "volleyLevel"))
+
+
+def owes_volley(report_json):
+    """The volley check is owed once a volley level was bought before a wave the run then played."""
+    return _volley_bought_before_play(report_json, 1)
+
+
+def owes_volley_crosshair(report_json):
+    """A crosshair pass is owed once level two was bought before a wave the run then played."""
+    return _volley_bought_before_play(report_json, 2)
 
 
 def recorded_fort_points(fortress_id, root=None):
@@ -1088,6 +1116,34 @@ def recorded_fort_points(fortress_id, root=None):
     tower_points = isinstance(towers, list) and any(isinstance(t, dict) and (t.get("posts") or t.get("volley")) for t in towers)
     origins = isinstance(volley, dict) and bool(volley.get("origins"))
     return bool(tower_points or origins)
+
+
+def recorded_fort_point_count(fortress_id, root=None):
+    """How many points the fortress row of fortresses.json records: every tower post, tower volley spot and volley origin. The game's fort-points line counts only the points its reader accepted."""
+    root = _json_object(FORTRESS_FILE) if root is None else root
+    fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
+    if fortress is None:
+        return 0
+    towers = fortress.get("towers")
+    volley = fortress.get("volley")
+    total = 0
+    for tower in towers if isinstance(towers, list) else []:
+        if isinstance(tower, dict):
+            total += sum(len(tower[key]) for key in ("posts", "volley") if isinstance(tower.get(key), list))
+    origins = volley.get("origins") if isinstance(volley, dict) else None
+    return total + (len(origins) if isinstance(origins, list) else 0)
+
+
+FORT_POINTS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + FORT_POINTS_CHECK) + r" result=\w+ points=(\d+)")
+
+
+def fort_points_note(report_json, log_text, root=None):
+    """", fort-points: the game's reader accepted 3 of 5 recorded points" when the line counts fewer points than the file records, else "". A dropped point is a config warning, not a failed run."""
+    recorded = recorded_fort_point_count(report_json.get("fortress"), root)
+    found = FORT_POINTS_LINE.search(log_text or "")
+    if not recorded or not found or int(found.group(1)) >= recorded:
+        return ""
+    return f", fort-points: the game's reader accepted {found.group(1)} of {recorded} recorded points (read the config warnings)"
 
 
 def owes_fort_points(report_json, root=None):
@@ -1235,16 +1291,21 @@ def judge(done, report_json, log_text=None):
         required = required + (REROLL_CHECK,)
     if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
         required = required + (FIELD_CARE_CHECK,)
-    for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK)):
+    for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK),
+                       (owes_volley, VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
             required = required + (name,)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
+    if not lose and owes_volley_crosshair(report_json) and not VOLLEY_CROSSHAIR_PASS.search(log_text):
+        missing.append(VOLLEY_CHECK + " (a pass with mode=crosshair: level two aims where the lord looks)")
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)
     if missing:
         hint = ""
         if GATE_ATTACKED_CHECK in missing and "no-blow" in skip_reasons(GATE_ATTACKED_CHECK, log_text):
             hint = f" ({CHECK_PREFIX}{GATE_ATTACKED_CHECK} read reason=no-blow: no blow reached the repaired gate, so read the [Engines] lines for a ram that died earlier, R4)"
+        if FORT_POINTS_CHECK in missing and "none-recorded" in skip_reasons(FORT_POINTS_CHECK, log_text):
+            hint += f" ({CHECK_PREFIX}{FORT_POINTS_CHECK} read reason=none-recorded while fortresses.json records points: the game's reader accepted none, so read the config warnings)"
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing) + hint
     unread_boons = [n for n in read_owed_picks(report_json) if not boon_read_pattern(n).search(log_text)]
     if not lose and unread_boons:
@@ -1262,7 +1323,7 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{fort_points_note(report_json, log_text)}")
 
 
 def waived_note(waived):

@@ -78,6 +78,15 @@ internal sealed class LongDefeatRunHost
     /// <summary>An attacker's blow on a defender, already filtered by the logic. May run off the main thread.</summary>
     public void OnHit(object affected, object attacker) => Guarded("OnHit", () => _director?.OnHit(affected, attacker));
 
+    /// <summary>Whether a volley's hit window is open. Read in the engine's hit callbacks, which may run off the main thread, before anything else is done for a hit: one volatile read of the director's flag.</summary>
+    public bool WantsVolleyHits => _director?.WantsVolleyHits ?? false;
+
+    /// <summary>Whether the id is the arrow item of a volley. The set is fixed by the plan, so it is safe to read on any thread.</summary>
+    public bool IsVolleyItem(string itemId) => _director?.IsVolleyItem(itemId) ?? false;
+
+    /// <summary>An arrow of a volley struck something, already read by the logic's filter. May run off the main thread.</summary>
+    public void OnVolleyHit(LdVolleyHit hit) => Guarded("OnVolleyHit", () => _director?.OnVolleyHit(hit));
+
     /// <summary>
     /// A hit as the engine raised it, for the sally's contact count: the lord or his horse struck or was struck. Unfiltered (a blocked blow is contact too). <paramref name="victimHealth"/> is read after the blow. May run
     /// off the main thread.

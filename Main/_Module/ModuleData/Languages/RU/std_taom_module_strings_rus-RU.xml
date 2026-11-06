@@ -7703,6 +7703,19 @@
     <string id="TAOM_LD_Fort_RepairNone" text="Nothing to repair" />
     <string id="TAOM_LD_Notice_GateFull" text="The gate is fully reinforced." />
     <string id="TAOM_LD_Notice_GateWhole" text="The gate needs no repair." />
+    <string id="TAOM_LD_Fort_Volley" text="Elven Volley" />
+    <string id="TAOM_LD_Fort_VolleyAuto" text="Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave." />
+    <string id="TAOM_LD_Fort_VolleyCrosshair" text="Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker near where you look. Press N during a wave." />
+    <string id="TAOM_LD_Fort_VolleyFull" text="Fully upgraded" />
+    <string id="TAOM_LD_Hud_HintVolley" text="N  Loose the Elven Volley" />
+    <string id="TAOM_LD_Hud_VolleyIn" text="Elven Volley in {SECONDS} s" />
+    <string id="TAOM_LD_Hud_VolleyNoTargets" text="No attackers in reach" />
+    <string id="TAOM_LD_Hud_VolleyReady" text="Elven Volley ready" />
+    <string id="TAOM_LD_Hud_VolleyWithheld" text="The volley cannot be loosed now" />
+    <string id="TAOM_LD_Notice_VolleyCooldown" text="The Elven Volley is not ready yet." />
+    <string id="TAOM_LD_Notice_VolleyFull" text="The Elven Volley is fully upgraded." />
+    <string id="TAOM_LD_Notice_VolleyNotInWave" text="The Elven Volley is loosed during a wave." />
+    <string id="TAOM_LD_Notice_VolleyNotOwned" text="Buy the Elven Volley between waves first." />
   </strings>
 
 </base>

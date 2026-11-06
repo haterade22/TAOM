@@ -86,6 +86,19 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
         _host.OnContactHit(affectedAgent, affectorAgent, affectedAgent?.Health ?? 0f);
     }
 
+    // The Elven Volley's arrows (phase3-plan.md Slice 6): the hooks read the engine's hit and forward it to the host, which parks it on the main thread.
+    public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData collisionData)
+    {
+        base.OnAgentHit(affectedAgent, affectorAgent, in affectorWeapon, in blow, in collisionData);
+        LongDefeatVolleyHooks.AgentHit(_host, affectedAgent, affectorAgent, in affectorWeapon, in blow, in collisionData);
+    }
+
+    public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled, AttackCollisionData collisionData)
+    {
+        base.OnMissileHit(attacker, victim, isCanceled, collisionData);
+        LongDefeatVolleyHooks.MissileHit(_host, Mission, victim, isCanceled, in collisionData);
+    }
+
     public override void OnAgentFleeing(Agent affectedAgent)
     {
         base.OnAgentFleeing(affectedAgent);

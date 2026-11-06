@@ -123,13 +123,13 @@ public class SurvivalRunVolleyTests
     }
 
     [TestMethod]
-    public void ArmVolley_WithTheVolleyRowHidden_IsNotOwned()
+    public void ArmVolley_WithTheVolleyRowHidden_IsNotSold()
     {
         var hidden = new RunPlan("h", Plan().Garrison, Plan().Waves, Plan().Shop with { Fort = FortPlan.None }, Rules(), RunOptions.Default) { Offered = All };
         var run = Begun(hidden);
         IntoTheWave(run);
 
-        Assert.AreEqual(VolleyArm.NotOwned, run.ArmVolley());
+        Assert.AreEqual(VolleyArm.NotSold, run.ArmVolley());
     }
 
     [TestMethod]
@@ -648,7 +648,7 @@ public class SurvivalRunVolleyTests
                 Assert.AreEqual(0, run.Tick(Fighting()).FireVolleys.Count);
             for (var i = 0; i < 60; i++)
             {
-                Assert.AreEqual(VolleyArm.NotOwned, run.ArmVolley());
+                Assert.AreEqual(VolleyArm.NotSold, run.ArmVolley());
                 var fx = Next(run);
                 Assert.AreEqual(0, fx.FireVolleys.Count);
                 Assert.IsFalse(run.GetView().Volleys.Ready);

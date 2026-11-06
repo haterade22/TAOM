@@ -134,6 +134,15 @@ public class LongDefeatPrefabTests
     }
 
     [TestMethod]
+    public void TheHudShowsTheVolleyLine_AndItsPanelRowOnlyBuys()
+    {
+        Assert.IsTrue(Root("LongDefeatHud").Descendants().Any(e => (string?)e.Attribute("Text") == "@VolleyText"));
+        var commands = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("Command.Click")).Where(c => c != null).ToList();
+        CollectionAssert.Contains(commands, "ExecuteBuyVolley");
+        Assert.IsFalse(commands.Any(c => c!.Contains("FireVolley")), "N looses the volley; the panel never does (D24)");
+    }
+
+    [TestMethod]
     public void ThePanelGroups_AreGatedByTheirOwnVisibility()
     {
         var gates = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("IsVisible")).Where(v => v != null).ToList();
@@ -149,7 +158,7 @@ public class LongDefeatPrefabTests
         Assert.AreEqual("@IsVisible", (string?)group.Attribute("IsVisible"));
         Assert.IsTrue(group.Descendants().Any(e => (string?)e.Attribute("Text") == "@Title"));
         var buttons = group.Descendants("ButtonWidget").ToList();
-        Assert.AreEqual(3, buttons.Count, "field care, the gate level and the gate repair");
+        Assert.AreEqual(4, buttons.Count, "field care, the gate level, the gate repair and the Elven Volley");
 
         // Each row: its click, its enabled flag, its own visible flag, and its three lines.
         foreach (var (command, can, visible, texts) in new[]
@@ -157,6 +166,7 @@ public class LongDefeatPrefabTests
                      ("ExecuteBuyCare", "@CanBuyCare", "@IsCareVisible", new[] { "@CareName", "@CareDetail", "@CarePrice" }),
                      ("ExecuteBuyGate", "@CanBuyGate", "@IsGateVisible", new[] { "@GateName", "@GateDetail", "@GatePrice" }),
                      ("ExecuteRepair", "@CanRepair", "@IsRepairVisible", new[] { "@RepairName", "@RepairDetail", "@RepairPrice" }),
+                     ("ExecuteBuyVolley", "@CanBuyVolley", "@IsVolleyVisible", new[] { "@VolleyName", "@VolleyDetail", "@VolleyPrice" }),
                  })
         {
             var row = buttons.Single(b => (string?)b.Attribute("Command.Click") == command);

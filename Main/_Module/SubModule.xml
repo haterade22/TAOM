@@ -1415,6 +1415,13 @@
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Custom Game only, beside fords_items: the Long Defeat's Elven Volley arrow, which no troop carries and no shop sells. -->
+    <XmlNode>
+      <XmlName id="Items" path="long_defeat/long_defeat_items"/>
+      <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Custom Game only, so every Custom Battle loads them and is_obsolete hides them there: the mode's own troops, so a balance edit can never reach a campaign. -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="fords_of_war/fords_troops"/>

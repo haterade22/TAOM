@@ -121,9 +121,9 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void TheShippedOffered_IsTheGateAndFieldCare_AndNoneIsEmpty()
+    public void TheShippedOffered_IsTheGateFieldCareAndTheVolley_AndNoneIsEmpty()
     {
-        Assert.AreEqual(new FortOffer(3, 0, true, 0), FortOffer.Offered, "Slice 4 landed field care's effect and Slice 5 the gate's three levels and its repair; the towers and the volley wait");
+        Assert.AreEqual(new FortOffer(3, 0, true, 2), FortOffer.Offered, "Slice 4 landed field care's effect, Slice 5 the gate's three levels and its repair and Slice 6 the Elven Volley's two levels; the towers wait");
         Assert.AreEqual(new FortOffer(0, 0, false, 0), FortOffer.None);
         Assert.AreEqual(FortOffer.None, Plan().Offered with { Gate = 0, Towers = 0, FieldCare = false, Volley = 0 });
         var bare = new RunPlan("h", Array.Empty<GarrisonRow>(), new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
@@ -132,12 +132,12 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void WithTheShippedOffered_OnlyTheGateAndFieldCareCanBeBought()
+    public void WithTheShippedOffered_OnlyTheTowersAreStillNotForSale()
     {
         var run = InIntermission(Plan(offered: FortOffer.Offered, gold: 5000), () => Snap(40, Dented(0.5f)));
 
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyTowerLevel());
-        Assert.AreEqual(FortResult.NotOffered, run.TryBuyVolleyLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryBuyVolleyLevel());
         Assert.AreEqual(FortResult.Ok, run.TryBuyGateLevel());
         Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
         Assert.AreEqual(FortResult.Ok, run.TryFieldCare());

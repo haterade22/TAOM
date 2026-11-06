@@ -6,9 +6,14 @@ using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
-/// <summary>What <see cref="VolleyAim.Plan"/> decided: the centre it chose (null when there was none), the shots in arrow order, and, when there are none, why.</summary>
+/// <summary>
+/// What <see cref="VolleyAim.Plan"/> decided: the centre it chose (null when there was none), the shots in arrow order, and, when there are none, why. <c>Candidates</c> is how many attackers were in reach, so a
+/// check can tell that each arrow was given its own while they lasted.
+/// </summary>
 internal sealed record VolleyAimResult(Vec3f? Centre, IReadOnlyList<LdVolleyShot> Shots, VolleyWithheldReason? Why)
 {
+    public int Candidates { get; init; }
+
     public static VolleyAimResult Withheld(VolleyWithheldReason why) => new(null, Array.Empty<LdVolleyShot>(), why);
 }
 
@@ -57,7 +62,7 @@ internal static class VolleyAim
                 shots.Add(new LdVolleyShot(origin, direction.Value, speed, target.Key));
         }
 
-        return shots.Count == 0 ? VolleyAimResult.Withheld(VolleyWithheldReason.NoTargets) : new VolleyAimResult(middle, shots, null);
+        return shots.Count == 0 ? VolleyAimResult.Withheld(VolleyWithheldReason.NoTargets) : new VolleyAimResult(middle, shots, null) { Candidates = candidates.Count };
     }
 
     private readonly record struct Candidate(LdVolleyTarget Target, float Reach);

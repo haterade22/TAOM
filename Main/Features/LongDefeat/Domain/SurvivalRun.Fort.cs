@@ -230,7 +230,7 @@ internal sealed partial class SurvivalRun
         var volley = _plan.Shop.Fort?.Volley;
         if (_plan.Offered.Volley <= 0)
             return Refuse(FortResult.NotOffered);
-        if (volley == null || _plan.Volley == null)
+        if (volley == null || VolleyOrigins.Count == 0)
             return Refuse(FortResult.Hidden);
         if (_volleyLevel >= volley.Levels.Count)
             return Refuse(FortResult.MaxLevel);
@@ -346,6 +346,7 @@ internal sealed partial class SurvivalRun
         {
             CareShare = fort.Care?.Share ?? 0f,
             GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,
+            VolleyShown = fort.Volley is { } volley ? volley.Levels[Math.Min(_volleyLevel, volley.Levels.Count - 1)] : null,
         };
     }
 

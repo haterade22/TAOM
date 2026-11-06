@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Adapters;
@@ -6,7 +7,7 @@ namespace TAOM.Adapters;
 /// <summary>
 /// The engine work of the Long Defeat fortifications (phase3-plan.md section 4), kept apart from <see cref="ILongDefeatBattlefieldAdapter"/> so the director's other fake stays small. The battlefield adapter
 /// implements both, and the run host hands the director the same instance as each (<c>LongDefeatFortWiringTests</c>). Takes and returns domain types only (ADR-007). Main thread. Slice 5 holds the gates, the fort
-/// points and the A23 boot line; the posts and the volleys join it with their slices.
+/// points and the A23 boot line; Slice 6 adds the Elven Volley's reads and its fire, and the posts join with their slice.
 /// </summary>
 internal interface ILongDefeatFortAdapter
 {
@@ -39,4 +40,30 @@ internal interface ILongDefeatFortAdapter
 
     /// <summary>One fragment for the boot line (A23): <c>archer_positions=N formations=&lt;index:count,...&gt;</c>, the engine's own count of archer positions and the units in each defender formation.</summary>
     string DescribeArcherPositions();
+
+    /// <summary>
+    /// The arrow item a volley looses, looked up once and logged with its thrust, speed and reach against <paramref name="range"/> (the Fords guard, <c>FordsTowerAdapter.TowerArrow</c>). Null when the game did not
+    /// load it. The aim needs its speed (<see cref="VolleyAim.Plan"/>) and <see cref="VolleyOrder"/> carries none.
+    /// </summary>
+    LdVolleyItem? VolleyItem(string itemId, float range);
+
+    /// <summary>
+    /// The attackers a volley may aim at: standing, human, not running away, and within <paramref name="range"/> of the nearest of the <paramref name="origins"/> raised by <paramref name="originHeight"/>,
+    /// measured in 3D from the raised origin to the chest, which is the test <see cref="VolleyAim.Plan"/> applies again (so this is never narrower than it). Each carries the registry key, his chest point and his
+    /// horizontal velocity.
+    /// </summary>
+    IReadOnlyList<LdVolleyTarget> ReadVolleyTargets(IReadOnlyList<LdPoint> origins, float originHeight, float range);
+
+    /// <summary>The first point the scene stops a ray from <paramref name="origin"/> along the unit <paramref name="direction"/> within <paramref name="range"/> (<c>Scene.RayCastForClosestEntityOrTerrain</c>), or null when it reaches the end.</summary>
+    Vec3f? RayHit(Vec3f origin, Vec3f direction, float range);
+
+    /// <summary>The main agent's eye and look direction (<c>GetEyeGlobalPosition</c>, <c>LookDirection</c>), or null when he is not standing: the crosshair of a person.</summary>
+    LdVolleyRay? EyeRay();
+
+    /// <summary>
+    /// Looses the <paramref name="shots"/> as scripted missiles of <paramref name="itemId"/> (<c>Mission.AddCustomMissile</c>), one per shot, owned by a defender chosen by <see cref="VolleyOwnerRule"/> and read for
+    /// liveness at the call. <paramref name="towerId"/> is empty for the Elven Volley, from a wall origin; a tower's id names a post archer of that tower as the owner. Adds no agent. When there is no owner or no item it
+    /// adds nothing and says why.
+    /// </summary>
+    LdVolleyFire FireVolley(string itemId, IReadOnlyList<LdVolleyShot> shots, string towerId);
 }

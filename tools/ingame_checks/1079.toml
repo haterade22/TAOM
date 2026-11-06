@@ -346,6 +346,21 @@ fail = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=fail']
 # and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck.
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.volley"
+needs = "a Long Defeat run at a fortress whose fortresses.json records volley.origins (Mike records them with taom.ld_record volley; none is recorded for Helm's Deep until 2026-11-06, so without them the Elven Volley is not for sale and this row is NOT REACHED): python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys level 1 in the preparation and level 2 at clear 1, and looses the volley in each wave: an auto line in wave 1 and a mode=crosshair aim=bot line in waves 2 and 3); Mike also presses N and aims (aim=person)"
+reached = ['\[Check\] id=taom\.long-defeat\.volley result=']
+pass = ['\[Check\] id=taom\.long-defeat\.volley result=pass w=[0-9]+ use=[0-9]+ source=(elven|tower-[a-z_]+) mode=(auto|crosshair)( aim=(person|bot) ray_gap=(-?[0-9.]+|NaN))? arrows=[0-9]+ shots=[0-9]+ candidates=[0-9]+ distinct=[0-9]+ spawned=0 hits=[0-9]+ blocked=[0-9]+ friendly=0 cancelled=[0-9]+ kills=[0-9]+ affector_null=[0-9]+ affector_side=[0-9]+ owner=\S+ mult=\S+ base_speed=[0-9.]+ impact_speed=[0-9.]+ window=[0-9.]+']
+fail = ['\[Check\] id=taom\.long-defeat\.volley result=fail']
+# Written by LongDefeatDirector.Volley.cs, one line per use, key elven-w<N>u<k> (tower-<id>-w<N>u<k> for a tower's volley, Slice 8), when the use's six-second hit window closes, the wave's clear cuts it (ended=wave) or the run ends (ended=run).
+# arrows= is the arrows asked for, shots= the shots the aim planned and candidates= the attackers in reach; distinct= must be min(shots, candidates), one attacker per arrow while they lasted. spawned=0 is the mission's agent count around the fire (a missile is no agent).
+# hits= are foe hits within the window and must reach half the arrows (a first guess for Mike to tune, A16); blocked= shield and weapon blocks, on a foe or a defender, are counted apart and left out of that share (the engine never cancels a friendly block, and a block does the defender no harm); friendly= is an unblocked friendly hit the engine did NOT cancel and must be 0 (cancelled= counts the ones it did, E14, A19).
+# affector_null= and affector_side= count hits whose engine affector was null or on the wrong side (an owner that died or whose slot was reused while the arrow flew, A24): reported, never judged, and a non-zero count is an UNSETTLED native case for the main session before any fix.
+# owner= is the troop of the defender who owns the arrows (never the main agent, an AI-controlled archer far from the melee first, D22) and mult= his weapon damage multiplier (D25); base_speed= is the first hit's MissileStartingBaseSpeed and impact_speed= the arrow's speed at that hit (collisionData.MissileVelocity); the engine gives an arrow air drag and scales its damage by (impact speed over base speed) squared, so an impact speed well under base_speed at long range is the drag, not a tuning fault.
+# mode=crosshair names who aimed it: aim=person is the lord's eye ray, aim=bot runs from his eye toward the densest group because nothing turns an AI lord's look onto the attackers; ray_gap= is the distance from the point the ray hit to the nearest attacker in reach.
+# A window cut short before the share was met is a skip (reason=window-cut) and proves nothing; a skip never pays this row. The check is owed once a volley level was bought before a wave the run then played, whether or not the report shows a use.
+absence = "not-reached"
+
 [[human]]
 claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
 
@@ -417,3 +432,6 @@ claim = "the repaired gate looks closed and whole, plank and door, and the ram p
 
 [[human]]
 claim = "the shop's Fortifications group reads clearly: field care is listed with its share and price, buying it spends the gold at once and the group then reads Used until the next wave is cleared, and, if the lord was hurt, his own health bar rises on the next tick (the game shows no soldier's health, so the field-care line proves the garrison's heal); care is not listed in the preparation before wave 1"
+
+[[human]]
+claim = "the Elven Volley reads as arrows from behind the wall landing on the attackers (a --waves 3 --garrison-scale 1.3 --start-gold 5000 run at a fortress with recorded volley origins), and how the arrow looks in flight (it shares the vanilla flying mesh, so it likely looks like any arrow); pressing N during a wave looses it and does nothing else, the strip under the commander line reads ready, then the seconds to the next use, and No attackers in reach when nobody is in range; the panel's Elven Volley row only buys; level two lands where Mike looks (aim=person), and no defender is hit"

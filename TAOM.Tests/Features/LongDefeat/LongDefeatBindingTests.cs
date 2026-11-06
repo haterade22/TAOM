@@ -371,6 +371,41 @@ public class LongDefeatBindingTests
         Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
     }
 
+    // The Elven Volley (phase3-plan.md Slice 6, section 4 "Binding gate"): the scripted missile with all ten parameters (forcedMissileIndex included), the two hit callbacks, the eye and chest points, the ray
+    // cast the aim and the clearance test use, the missile list the cancelled-hit lookup walks, and the agent flags the owner rule reads.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheVolleyMembers_StillResolve()
+    {
+        Method(typeof(Mission), "AddCustomMissile", typeof(Mission.Missile), typeof(Agent), typeof(MissionWeapon), typeof(Vec3), typeof(Vec3), typeof(Mat3), typeof(float), typeof(float), typeof(bool),
+            typeof(MissionObject), typeof(int));
+        Method(typeof(MissionBehavior), "OnMissileHit", typeof(void), typeof(Agent), typeof(Agent), typeof(bool), typeof(AttackCollisionData));
+        Method(typeof(MissionBehavior), "OnAgentHit", typeof(void), typeof(Agent), typeof(Agent), typeof(MissionWeapon).MakeByRefType(), typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType());
+        Method(typeof(Agent), "GetEyeGlobalPosition", typeof(Vec3));
+        Method(typeof(Agent), "GetChestGlobalPosition", typeof(Vec3));
+        Property(typeof(Agent), "LookDirection", typeof(Vec3));
+        Property(typeof(Agent), "Velocity", typeof(Vec3));
+        Property(typeof(Agent), "IsAIControlled", typeof(bool));
+        Property(typeof(Agent), "IsMainAgent", typeof(bool));
+        Property(typeof(Agent), "IsRangedCached", typeof(bool));
+        Property(typeof(Agent), "IsRunningAway", typeof(bool));
+        Method(typeof(Scene), "RayCastForClosestEntityOrTerrain", typeof(bool), typeof(Vec3), typeof(Vec3), typeof(float).MakeByRefType(), typeof(Vec3).MakeByRefType(), typeof(float), typeof(BodyFlags));
+        Property(typeof(Mission), "MissilesList", typeof(MBReadOnlyList<Mission.Missile>));
+        Property(typeof(Mission.Missile), "Weapon", typeof(MissionWeapon));
+        Property(typeof(Mission.Missile), "Index", typeof(int));
+        var all = typeof(Mission).GetProperty("AllAgents", AnyMember);
+        Assert.IsNotNull(all, "Mission.AllAgents no longer resolves");
+        Assert.IsNotNull(all!.PropertyType.GetProperty("Count"), "Mission.AllAgents lost its Count: the volley's agent count reads it");
+        Property(typeof(Blow), "IsMissile", typeof(bool));
+        Property(typeof(AttackCollisionData), "AttackBlockedWithShield", typeof(bool));
+        Property(typeof(AttackCollisionData), "AffectorWeaponSlotOrMissileIndex", typeof(int));
+        Property(typeof(AttackCollisionData), "MissileVelocity", typeof(Vec3));
+        Property(typeof(AttackCollisionData), "MissileStartingBaseSpeed", typeof(float));
+        Method(typeof(AgentStatCalculateModel), "GetWeaponDamageMultiplier", typeof(float), typeof(Agent), typeof(WeaponComponentData));
+        Method(typeof(Mat3), "Orthonormalize", typeof(void));
+        Property(typeof(MissionWeapon), "Item", typeof(ItemObject));
+    }
+
     // Morgul Blades and the kill owner (phase2-plan.md Slice 9): the hit callback with the engine's own isBlocked and damagedHp, and the blow the two members allowed to kill build.
     [TestMethod]
     [TestCategory("BindingVerification")]

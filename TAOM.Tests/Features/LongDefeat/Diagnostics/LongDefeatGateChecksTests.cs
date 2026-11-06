@@ -293,6 +293,21 @@ public class LongDefeatGateChecksTests
     }
 
     [TestMethod]
+    public void FortPoints_AnOriginWhoseRayHitsTheParapet_FailsAndSaysClearNo()
+    {
+        var points = new List<(string, LdPointFacts)>
+        {
+            ("volley[0]", new LdPointFacts(true, true)),
+            ("volley[1]", new LdPointFacts(true, true, false)),
+        };
+
+        var verdict = LongDefeatGateChecks.FortPoints(points);
+
+        Assert.AreEqual(CheckResult.Fail, verdict.Result);
+        Assert.AreEqual("points=2 failed=1 bad=volley[1](navmesh=yes boundary=yes clear=no)", verdict.Detail);
+    }
+
+    [TestMethod]
     public void FortPoints_ALongListOfBadPoints_NamesTheFirstFew()
     {
         var points = Enumerable.Range(0, 20).Select(i => ($"volley[{i}]", new LdPointFacts(false, false))).ToList();

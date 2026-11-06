@@ -204,4 +204,136 @@ public class LongDefeatFortWiringTests
         StringAssert.Contains(director, "read.Gates");
         StringAssert.Contains(Source("Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs"), "ReadGates()");
     }
+    // ---- the pins of the plan's Slice 6 row ----
+
+    private const string VolleyAdapter = "Main/Adapters/LongDefeatBattlefieldAdapter.Volley.cs";
+    private const string VolleyDirector = "Main/Features/LongDefeat/LongDefeatDirector.Volley.cs";
+
+    [TestMethod]
+    public void Apply_FiresTheVolleysLast_AfterTheBatchesAndTheFieldCare()
+    {
+        var body = Body(Source(Effect), "private void Apply(RunEffects fx)");
+
+        InOrder(body, "SpawnBatch(batch, true", "ApplyFieldCare(", "FireVolleys(fx.FireVolleys)", "Finish()");
+    }
+
+    [TestMethod]
+    public void EveryOrder_IsAnsweredOnEveryPath_ExactlyOnce()
+    {
+        var body = Body(Source(VolleyDirector), "private void AnswerVolley(VolleyOrder order)");
+
+        // Five ways out before the fire (no fort adapter, no item, no plan, no owner) answer through Withheld(order, ...); the one that fired answers through the run's VolleyFired. No path returns silently.
+        Assert.AreEqual(4, System.Text.RegularExpressions.Regex.Matches(body, @"Withheld\(order,").Count, body);
+        Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(body, @"_run\.VolleyFired\(order\.Source").Count);
+        Assert.AreEqual(4, System.Text.RegularExpressions.Regex.Matches(body, @"Withheld\(order[^;]*;\s*return;").Count, "each withheld answer returns at once, so no second answer follows");
+        Assert.IsTrue(Body(Source(VolleyDirector), "private void Withheld(").Contains("_run.VolleyWithheld(order.Source, why)"));
+    }
+
+    [TestMethod]
+    public void TheBotsFire_IsACaseOfBuyFortification_ThatArmsTheVolley()
+    {
+        var director = Source("Main/Features/LongDefeat/LongDefeatDirector.cs");
+
+        StringAssert.Contains(Body(director, "private void BuyFortification("), "case BotActionKind.Volley: ArmVolleyForBot()");
+        StringAssert.Contains(Body(Source(VolleyDirector), "private void ArmVolleyForBot()"), "_run.ArmVolley()");
+    }
+
+    [TestMethod]
+    public void TheVolleyHit_IsParkedOnTheMainThread_BehindItsVolatileFlag()
+    {
+        var source = Source(VolleyDirector);
+
+        StringAssert.Contains(source, "private volatile bool _volleyHits;");
+        var hit = Body(source, "public void OnVolleyHit(");
+        InOrder(hit, "!_volleyHits", "_deferred.RunOrDefer(VolleyHitSite");
+        Assert.IsFalse(hit.Contains("_run."), "the run holds plain dictionaries: the hit is booked in the parked callback, not here");
+    }
+
+    [TestMethod]
+    public void TheWindow_IsFlushedAtTheClearAndAtTheRunsEnd_AndTickedByTheDirector()
+    {
+        StringAssert.Contains(Body(Source(Effect), "private void OnWaveCleared("), "CloseVolleyWatch(\"wave\")");
+        StringAssert.Contains(Body(Source(Effect), "private void Finish()"), "FinishVolleys()");
+        StringAssert.Contains(Body(Source(VolleyDirector), "private void FinishVolleys()"), "CloseVolleyWatch(\"run\")");
+        StringAssert.Contains(Body(Source("Main/Features/LongDefeat/LongDefeatDirector.cs"), "public void Tick(float dt)"), "TickVolleyWatch(dt)");
+    }
+
+    [TestMethod]
+    public void TheBotsLabel_IsClearedAtTheClear_ForTheClearDropsAnArmedShot()
+    {
+        StringAssert.Contains(Body(Source(Effect), "private void OnWaveCleared("), "_volleyByBot = false");
+    }
+
+    [TestMethod]
+    public void TheTargetRead_IsNeverNarrowerThanTheAim_AndKeysNoAgentByIndex()
+    {
+        var read = Body(Source(VolleyAdapter), "public IReadOnlyList<LdVolleyTarget> ReadVolleyTargets(");
+
+        StringAssert.Contains(read, "(chest - o).Length <= range", "the aim's own test: 3D from the nearest raised origin to the chest");
+        StringAssert.Contains(read, "o.Z + originHeight");
+        StringAssert.Contains(read, "agent.IsHuman");
+        StringAssert.Contains(read, "_registry.TryGetKey(");
+        Assert.IsFalse(Source(VolleyAdapter).Contains(".Index"), "never key on Agent.Index: indices recycle");
+    }
+
+    [TestMethod]
+    public void TheFire_PassesTheItemsSpeedForBoth_AndNoObjectToIgnoreFromAWall()
+    {
+        var fire = Body(Source(VolleyAdapter), "public LdVolleyFire FireVolley(");
+
+        StringAssert.Contains(fire, "shot.Speed, shot.Speed, false, null)");
+        StringAssert.Contains(fire, "_mission.AllAgents.Count");
+        StringAssert.Contains(fire, "GetWeaponDamageMultiplier(owner");
+    }
+
+    [TestMethod]
+    public void TheFiresAddedCount_IsTheMissileListsGrowth_NotACounterOfTheCallsMade()
+    {
+        var fire = Body(Source(VolleyAdapter), "public LdVolleyFire FireVolley(");
+
+        // A counter bumped per call always equals the shots planned, so the check's "added equals shots" leg could never fail; the engine's own list (Mission.cs:4970) is the observation.
+        StringAssert.Contains(fire, "_mission.MissilesList.Count");
+        Assert.IsFalse(fire.Contains("added++"), fire);
+        var first = fire.IndexOf("_mission.MissilesList.Count", StringComparison.Ordinal);
+        var call = fire.IndexOf("AddCustomMissile(", StringComparison.Ordinal);
+        var last = fire.LastIndexOf("_mission.MissilesList.Count", StringComparison.Ordinal);
+        Assert.IsTrue(first >= 0 && first < call && call < last, "the list is counted before the first missile and after the last: " + fire);
+    }
+
+    [TestMethod]
+    public void TheVolleyItem_CarriesOnlyWhatTheAimReads()
+    {
+        StringAssert.Contains(Source("Main/Features/LongDefeat/Domain/LdFort.cs"), "internal sealed record LdVolleyItem(float Speed);");
+        Assert.IsFalse(Source(VolleyAdapter).Contains("new LdVolleyItem(speed, thrust"), "thrust and reach are logged from locals; the item record keeps no field nobody reads");
+    }
+
+    [TestMethod]
+    public void TheBootWarningForAFortPoint_SaysDroppedOnlyForAVolleyOrigin()
+    {
+        var gates = Source("Main/Features/LongDefeat/LongDefeatDirector.Gates.cs");
+
+        Assert.IsFalse(gates.Contains("is unusable and is dropped"), "posts and tower spots are named, never removed");
+        StringAssert.Contains(gates, "volley[");
+    }
+
+    [TestMethod]
+    public void TheItemLookup_LogsThrustSpeedAndReachOnce_AndWarnsWhenTheReachFallsShort()
+    {
+        var lookup = Body(Source(VolleyAdapter), "private VolleyArrow? ArrowOf(");
+
+        StringAssert.Contains(lookup, "_arrows.TryGetValue(itemId");
+        StringAssert.Contains(lookup, "thrust damage");
+        StringAssert.Contains(lookup, "FordsTowerGeometry.Reach(speed)");
+        StringAssert.Contains(lookup, "reach < range");
+    }
+
+    [TestMethod]
+    public void TheClearanceRay_StartsRaisedByTheOriginHeight_AndIsTwoMetresLong()
+    {
+        var clear = Body(Source(VolleyDirector), "private bool OriginClear(");
+
+        StringAssert.Contains(clear, "origin.Z + height");
+        StringAssert.Contains(clear, "ClearanceMetres");
+        StringAssert.Contains(Source(VolleyDirector), "private const float ClearanceMetres = 2f;");
+    }
 }

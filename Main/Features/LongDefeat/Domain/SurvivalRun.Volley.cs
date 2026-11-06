@@ -9,7 +9,8 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <see cref="VolleyClock"/>, the next tick hands the director each armed shot in <see cref="RunEffects.FireVolleys"/>, and the director answers with <see cref="VolleyFired"/> or
 /// <see cref="VolleyWithheld"/>. The cooldown starts only on a shot that fired. The clocks run on the wave's seconds and are made at each wave's start (the Elven Volley is ready at once, a tower's
 /// volley after its first delay), so a cooldown never carries into the next wave. A wave's counts go into its report row at the clear; a run that ends inside a wave keeps them in
-/// <see cref="VolleyAtEnd"/> (the report writes no row for that wave). Hits and kills are the engine half's (Slice 6).
+/// <see cref="VolleyAtEnd"/> (the report writes no row for that wave). The director books each foe hit and kill the engine reports through <see cref="VolleyHit"/> (Slice 6), and hands back the origins
+/// that passed the boot check through <see cref="LimitVolleyOrigins"/>.
 /// </summary>
 internal sealed partial class SurvivalRun
 {
@@ -19,11 +20,36 @@ internal sealed partial class SurvivalRun
     private VolleyClock? _elven;
     private bool _elvenArmed;
     private bool _volleyOpen;
+    private IReadOnlyList<LdPoint>? _usableOrigins;
     private VolleyWithheldReason? _elvenWithheld;
     private float _elvenWithheldAt;
 
     /// <summary>The volley counts of the wave the run ended in, or null when it ended outside a wave or at a clear (the wave's row then holds them). Set once, when the run ends.</summary>
     public VolleyFlush? VolleyAtEnd { get; private set; }
+
+    /// <summary>The origins the Elven Volley looses from: the recorded ones, or the subset the boot check left usable. Empty when the fortress records none.</summary>
+    private IReadOnlyList<LdPoint> VolleyOrigins => _usableOrigins ?? _plan.Volley?.Origins ?? Array.Empty<LdPoint>();
+
+    /// <summary>
+    /// The origins that passed the director's boot check (a navmesh, the boundary and a clear ray, phase3-plan.md section 5), in their recorded order. A bad point is dropped, as the Points rule says; with none
+    /// left the Elven Volley row is hidden and nothing is sold for it. Called once, before any buy.
+    /// </summary>
+    public void LimitVolleyOrigins(IReadOnlyList<LdPoint> usable) => _usableOrigins = usable;
+
+    /// <summary>
+    /// A hit of a volley's arrow, from the engine's hit callback through the director. Only a foe hit is booked, and a kill when the foe fell; a shield block, a friendly hit and a cancelled one are the
+    /// director's check line alone. Ignored outside a wave and after the run ended, so an arrow that lands after the clear is nobody's.
+    /// </summary>
+    public void VolleyHit(VolleySource source, LdVolleyHit hit)
+    {
+        if (!_volleyOpen || Result != null || hit.Kind != LdVolleyHitKind.Foe)
+            return;
+
+        var tally = source == VolleySource.Elven ? _elvenTally : _towerTally;
+        tally.Hits++;
+        if (hit.Kill)
+            tally.Kills++;
+    }
 
     /// <summary>
     /// Arms the Elven Volley for the next tick: the player's key or the bot's fire. <c>Armed</c> is also the answer to a second press before that tick (one shot). The cooldown is not touched until the
@@ -34,7 +60,7 @@ internal sealed partial class SurvivalRun
         if (Result != null)
             return VolleyArm.RunOver;
         if (ElvenLevel() == null)
-            return VolleyArm.NotOwned;
+            return OnSale() ? VolleyArm.NotOwned : VolleyArm.NotSold;
         if (!_volleyOpen)
             return VolleyArm.NotInWave;
         if (_elvenArmed)
@@ -109,10 +135,13 @@ internal sealed partial class SurvivalRun
         return true;
     }
 
+    /// <summary>Whether the shop lists the Elven Volley at all: the build offers a level, the shop carries the volley and a usable origin is recorded (the tests <see cref="QuoteVolley"/> opens with).</summary>
+    private bool OnSale() => _plan.Offered.Volley > 0 && _plan.Shop.Fort?.Volley != null && VolleyOrigins.Count > 0;
+
     private VolleyLevelPlan? ElvenLevel()
     {
         var volley = _plan.Shop.Fort?.Volley;
-        return _volleyLevel > 0 && _plan.Volley != null && volley != null && _volleyLevel <= volley.Levels.Count ? volley.Levels[_volleyLevel - 1] : null;
+        return _volleyLevel > 0 && VolleyOrigins.Count > 0 && volley != null && _volleyLevel <= volley.Levels.Count ? volley.Levels[_volleyLevel - 1] : null;
     }
 
     /// <summary>A wave begins: fresh clocks and tallies. The towers' volley exists from the tower level that carries it, for each tower with a recorded volley spot.</summary>
@@ -149,7 +178,7 @@ internal sealed partial class SurvivalRun
         if (_elvenArmed && ElvenLevel() is { } level)
         {
             var volley = _plan.Shop.Fort!.Volley!;
-            fx.FireVolleys.Add(new VolleyOrder(VolleySource.Elven, volley.ItemId, level.Aim, level.Arrows, level.Radius, level.Range, volley.OriginHeight, _plan.Volley!.Origins, _wave, _elvenTally.Uses + 1));
+            fx.FireVolleys.Add(new VolleyOrder(VolleySource.Elven, volley.ItemId, level.Aim, level.Arrows, level.Radius, level.Range, volley.OriginHeight, VolleyOrigins, _wave, _elvenTally.Uses + 1));
         }
 
         _elvenArmed = false;
@@ -218,20 +247,24 @@ internal sealed partial class SurvivalRun
         public void Used() => Uses++;
     }
 
-    /// <summary>A wave's running counts, kept apart for the Elven Volley and the towers' volleys. Hits and kills are written by the engine half (Slice 6) and stay 0 here.</summary>
+    /// <summary>A wave's running counts, kept apart for the Elven Volley and the towers' volleys. Hits and kills are booked by the director through <see cref="VolleyHit"/>.</summary>
     private sealed class VolleyTally
     {
         public int Uses { get; set; }
         public int Arrows { get; set; }
         public int Withheld { get; set; }
+        public int Hits { get; set; }
+        public int Kills { get; set; }
 
         public void Clear()
         {
             Uses = 0;
             Arrows = 0;
             Withheld = 0;
+            Hits = 0;
+            Kills = 0;
         }
 
-        public VolleyWaveRecord Record() => new(Uses, Arrows, 0, 0, Withheld);
+        public VolleyWaveRecord Record() => new(Uses, Arrows, Hits, Kills, Withheld);
     }
 }

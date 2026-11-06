@@ -165,6 +165,7 @@ internal sealed partial class LongDefeatDirector
         if (_run.Result != null)
             return;
 
+        TickVolleyWatch(dt);
         if (_plan.Options.Autoplay)
             PlayShop(dt);
         TickSally(dt);
@@ -291,7 +292,7 @@ internal sealed partial class LongDefeatDirector
             BuyFortification(action.Kind);
     }
 
-    /// <summary>The bot's fortification buys. The view only shows a row the run would sell, so a refusal here means the run moved on between the view and the call.</summary>
+    /// <summary>The bot's fortification buys, and its fire in a wave. The view only shows a row the run would sell, so a refusal here means the run moved on between the view and the call.</summary>
     private void BuyFortification(BotActionKind kind)
     {
         switch (kind)
@@ -301,6 +302,7 @@ internal sealed partial class LongDefeatDirector
             case BotActionKind.TowerLevel: _run.TryBuyTowerLevel(); break;
             case BotActionKind.FieldCare: _run.TryFieldCare(); break;
             case BotActionKind.VolleyLevel: _run.TryBuyVolleyLevel(); break;
+            case BotActionKind.Volley: ArmVolleyForBot(); break;
         }
     }
 

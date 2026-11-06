@@ -95,7 +95,7 @@ internal static class LongDefeatGateChecks
 
     /// <summary>
     /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test). <paramref name="points"/> is each point's name and answer;
-    /// none recorded is a skip. The clear-ray test of a volley origin (phase3-plan.md section 4) belongs with the volley that reads the origins.
+    /// none recorded is a skip. A volley origin whose ray out over the parapet hits something within 2 m is named with <c>clear=no</c> (phase3-plan.md section 4, R5).
     /// </summary>
     internal static CheckVerdict FortPoints(IReadOnlyList<(string Name, LdPointFacts Facts)> points)
     {
@@ -103,7 +103,7 @@ internal static class LongDefeatGateChecks
             return new CheckVerdict(CheckResult.Skip, "points=0 reason=none-recorded");
 
         var bad = points.Where(p => !p.Facts.Usable).ToList();
-        var named = string.Join(",", bad.Take(NamedBad).Select(p => $"{p.Name}(navmesh={Answer(p.Facts.Navmesh)} boundary={Answer(p.Facts.Boundary)})"));
+        var named = string.Join(",", bad.Take(NamedBad).Select(p => $"{p.Name}(navmesh={Answer(p.Facts.Navmesh)} boundary={Answer(p.Facts.Boundary)}{(p.Facts.Clear ? "" : " clear=no")})"));
         return LongDefeatChecks.Verdict(bad.Count == 0,
             $"points={points.Count.ToString(CultureInfo.InvariantCulture)} failed={bad.Count.ToString(CultureInfo.InvariantCulture)}{(bad.Count > 0 ? " bad=" + named : "")}");
     }

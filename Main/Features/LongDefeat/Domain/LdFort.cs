@@ -91,22 +91,93 @@ internal readonly record struct LdVolleyTarget(AgentKey Key, Vec3f Chest, Vec3f 
 /// <summary>One arrow of a volley: where it leaves, the unit direction, the speed it is added with and the attacker it is aimed at.</summary>
 internal readonly record struct LdVolleyShot(Vec3f Origin, Vec3f Direction, float Speed, AgentKey Target);
 
-/// <summary>What <see cref="SurvivalRun.ArmVolley"/> answers: <c>Armed</c> (the director fires it on the next tick), or why not.</summary>
+/// <summary>
+/// What <see cref="SurvivalRun.ArmVolley"/> answers: <c>Armed</c> (the director fires it on the next tick), or why not. <c>NotSold</c> is a build or fortress that sells no Elven Volley (the offer is zero or no
+/// origin is recorded), so the shop shows no row and a press of the key says nothing; <c>NotOwned</c> is a volley that is for sale and not yet bought.
+/// </summary>
 internal enum VolleyArm
 {
     Armed,
+    NotSold,
     NotOwned,
     Cooldown,
     NotInWave,
     RunOver,
 }
 
-/// <summary>Why the director could not fire an armed volley: no attacker in reach, no usable origin, or no standing archer to own the arrows. The volley stays ready (D30).</summary>
+/// <summary>Why the director could not fire an armed volley: no attacker in reach, no usable origin, no standing defender to own the arrows, or an arrow item the game did not load. The volley stays ready (D30).</summary>
 internal enum VolleyWithheldReason
 {
     NoTargets,
     NoOrigin,
     NoOwner,
+    NoItem,
+}
+
+/// <summary>The arrow a volley looses as the field found it: the speed it is added with (the item's own missile speed), which is all the aim needs (<see cref="VolleyAim.Plan"/>). The item's thrust and reach are logged once by the field.</summary>
+internal sealed record LdVolleyItem(float Speed);
+
+/// <summary>A line in the scene from a point along a unit direction: the lord's eye ray.</summary>
+internal readonly record struct LdVolleyRay(Vec3f Origin, Vec3f Direction);
+
+/// <summary>
+/// What the field did with a volley. <c>Withheld</c> is set when nothing was added (no owner, no item); <c>Added</c> counts the missiles added, <c>AgentsBefore</c> and <c>AgentsAfter</c> the mission's agents
+/// around the calls (a missile is no agent, so they must be equal), and <c>OwnerTroop</c> and <c>OwnerMultiplier</c> the owner's troop id and his weapon damage multiplier (D25).
+/// </summary>
+internal sealed record LdVolleyFire(VolleyWithheldReason? Withheld, int Added, int AgentsBefore, int AgentsAfter, string OwnerTroop, float OwnerMultiplier)
+{
+    public static LdVolleyFire Refused(VolleyWithheldReason why) => new(why, 0, 0, 0, string.Empty, 0f);
+}
+
+/// <summary>What an arrow's hit was, by the victim's side and the engine's own flags (A24): a foe struck, a foe's shield block, a friend struck, or a friendly hit the engine cancelled.</summary>
+internal enum LdVolleyHitKind
+{
+    Foe,
+    Blocked,
+    Friendly,
+    Cancelled,
+}
+
+/// <summary>
+/// One missile hit of a volley item, as the logic's filter reads it: the item id, its kind, whether a foe fell (the victim under 1 health after the blow, E16), whether the engine's affector was null or stood on the
+/// wrong side (A24, counted and never judged), and the numbers the engine gave the hit (A25).
+/// </summary>
+internal readonly record struct LdVolleyHit(string ItemId, LdVolleyHitKind Kind, bool Kill, bool AffectorNull, bool AffectorSideWrong, float StartingBaseSpeed, float ImpactSpeed);
+
+/// <summary>A defender who might own a volley's arrows, as the adapter reads him: still the live occupant of his slot, AI-controlled, the main agent or not, an archer, and how far he stands from the nearest attacker.</summary>
+internal readonly record struct LdOwnerCandidate(bool Live, bool AiControlled, bool IsMain, bool Archer, float NearestAttacker);
+
+/// <summary>
+/// Who owns a volley's arrows (phase3-plan.md D22). Eligible: live, AI-controlled and not the main agent, because a kill needs a real affector (E17) and a friendly hit is cancelled only for an AI shooter (E14).
+/// Archers first and, among the chosen kind, the one farthest from the nearest attacker (an owner who dies while his arrow flies is an UNSETTLED native case, A24). A distance that is not a number ranks last.
+/// </summary>
+internal static class VolleyOwnerRule
+{
+    /// <summary>The index of the chosen candidate, or -1 when none is eligible. A tie goes to the earlier.</summary>
+    public static int Choose(IReadOnlyList<LdOwnerCandidate> candidates)
+    {
+        var best = -1;
+        for (var i = 0; i < candidates.Count; i++)
+        {
+            var c = candidates[i];
+            if (!c.Live || !c.AiControlled || c.IsMain)
+                continue;
+            if (best < 0 || Beats(c, candidates[best]))
+                best = i;
+        }
+
+        return best;
+    }
+
+    private static bool Beats(LdOwnerCandidate a, LdOwnerCandidate b)
+    {
+        if (a.Archer != b.Archer)
+            return a.Archer;
+
+        return Far(a) > Far(b);
+    }
+
+    private static float Far(LdOwnerCandidate c) => float.IsNaN(c.NearestAttacker) ? float.NegativeInfinity : c.NearestAttacker;
 }
 
 /// <summary>A volley's source: the Elven Volley (<c>elven</c>) or one tower's level 3 volley (<c>tower-&lt;id&gt;</c>), the key a check line and a report row name it by.</summary>

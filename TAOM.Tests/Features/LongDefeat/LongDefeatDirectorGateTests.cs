@@ -566,5 +566,6 @@ public class LongDefeatDirectorGateTests
         Assert.IsTrue(rig.Outcomes.Has("fail", LongDefeatChecks.FortPointsId));
         StringAssert.Contains(rig.Of(LongDefeatChecks.FortPointsId)[0], "bad=hornburg.post[1](navmesh=no boundary=yes)");
         Assert.IsTrue(rig.Log.Lines.Any(l => l.StartsWith("WARN ") && l.Contains("hornburg.post[1]")), "the boot line names the point");
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains("hornburg.post[1]") && l.Contains("dropped")), "only a volley origin is dropped; a post is named, and the warning must not claim a removal that nothing performs");
     }
 }

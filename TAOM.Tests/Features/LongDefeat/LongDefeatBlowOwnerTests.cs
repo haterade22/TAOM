@@ -194,6 +194,75 @@ public class LongDefeatBlowOwnerTests
         StringAssert.Contains(answer, "Key: key", "the null-team answer keeps the key");
     }
 
+    // ---- the Elven Volley's scripted missiles (phase3-plan.md D22, Slice 6) ----
+
+    private static readonly Regex Missile = new(@"\bAddCustomMissile\b", RegexOptions.Compiled);
+
+    /// <summary>Every <c>AddCustomMissile</c> in one file's text that is not inside <c>FireVolley</c>: "line n: text (in Member)". A scripted arrow kills like any other, so only the member that picks a real owner may add one.</summary>
+    internal static List<string> MissileOffences(string text)
+    {
+        var offences = new List<string>();
+        var member = "(outside any member)";
+        var lines = RepoPaths.StripComments(text.Replace("\r\n", "\n")).Split('\n');
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var header = MemberHeader.Match(lines[i]);
+            if (header.Success && (!lines[i].TrimEnd().EndsWith(";") || lines[i].Contains("=>")))
+                member = header.Groups[1].Value;
+
+            if (Missile.IsMatch(lines[i]) && member != "FireVolley")
+                offences.Add($"line {i + 1}: {lines[i].Trim()} (in {member}; only FireVolley may add a missile)");
+        }
+
+        return offences;
+    }
+
+    [TestMethod]
+    public void LongDefeatSource_AddsAMissileOnlyInsideFireVolley()
+    {
+        var offences = LongDefeatSource()
+            .SelectMany(f => MissileOffences(File.ReadAllText(f)).Select(o => Path.GetFileName(f) + " " + o))
+            .ToList();
+
+        Assert.AreEqual(0, offences.Count, "a scripted arrow needs an owner chosen by the volley rule:\n" + string.Join("\n", offences));
+        Assert.IsTrue(LongDefeatSource().Any(f => Missile.IsMatch(RepoPaths.StripComments(File.ReadAllText(f)))), "FireVolley adds its missiles through AddCustomMissile; the scan must see that call");
+    }
+
+    [TestMethod]
+    public void MissileOffences_CatchesAMissileOutsideFireVolley_AndAllowsOneInside()
+    {
+        Assert.AreEqual(1, MissileOffences("class X\n{\n    private void Tidy()\n    {\n        _mission.AddCustomMissile(a, w, p, d, o, 1f, 1f, false, null);\n    }\n}").Count);
+        Assert.AreEqual(0, MissileOffences("class X\n{\n    public LdVolleyFire FireVolley(string item)\n    {\n        _mission.AddCustomMissile(a, w, p, d, o, 1f, 1f, false, null);\n    }\n}").Count);
+        Assert.AreEqual(0, MissileOffences("class X\n{\n    private void Tidy()\n    {\n        // never AddCustomMissile here\n    }\n}").Count);
+    }
+
+    [TestMethod]
+    public void FireVolley_ChoosesAnOwnerBeforeAnyMissile_AndRefusesWhenThereIsNone()
+    {
+        var fire = BodyOf(SourceOf("LongDefeatBattlefieldAdapter.Volley.cs"), "public LdVolleyFire FireVolley(");
+
+        var choose = fire.IndexOf("ChooseVolleyOwner(", System.StringComparison.Ordinal);
+        var none = fire.IndexOf("owner == null", System.StringComparison.Ordinal);
+        var refused = fire.IndexOf("VolleyWithheldReason.NoOwner", System.StringComparison.Ordinal);
+        var missile = fire.IndexOf("AddCustomMissile(", System.StringComparison.Ordinal);
+        Assert.IsTrue(choose >= 0 && choose < none && none < refused && refused < missile, "the owner is chosen, a missing one refuses, then the first missile: " + fire);
+        StringAssert.Contains(fire, "AddCustomMissile(owner,", "every missile is owned by the chosen defender, never the main agent or a null shooter");
+    }
+
+    [TestMethod]
+    public void TheVolleyOwner_IsReadForSlotIdentityAiControlAndTheMainAgent_AtTheCall()
+    {
+        var choose = BodyOf(SourceOf("LongDefeatBattlefieldAdapter.Volley.cs"), "private Agent? ChooseVolleyOwner(");
+
+        StringAssert.Contains(choose, "IsLive(a)", "a recycled slot is refused");
+        StringAssert.Contains(choose, "IsAIControlled", "a player-controlled shooter loses the friendly-hit cancel (E14)");
+        StringAssert.Contains(choose, "IsMainAgent", "the main agent never owns a volley arrow (D22)");
+        StringAssert.Contains(choose, "VolleyOwnerRule.Choose(");
+        Assert.IsFalse(choose.Contains(".IsActive()"), "IsActive alone passes for a stale handle");
+        Assert.IsFalse(choose.Contains("MainAgent ??"), "the main agent is not a fallback owner");
+        StringAssert.Contains(SourceOf("LongDefeatBattlefieldAdapter.Volley.cs"), "agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent)");
+    }
+
     [TestMethod]
     public void TheScan_SeesFellsKill_SoAnEmptyResultMeansNothingElseKills()
     {

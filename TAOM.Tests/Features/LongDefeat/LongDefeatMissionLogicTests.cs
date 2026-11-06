@@ -144,6 +144,64 @@ public class LongDefeatMissionLogicTests
         logic.OnScoreHit(null!, null!, null!, true, true, in blow, in collision, 0f, 0f, 0f);
     }
 
+    private const string VolleyHooksPath = "Main/Features/LongDefeat/Hooks/LongDefeatVolleyHooks.cs";
+
+    [TestMethod]
+    public void OnAgentHit_AsksTheVolleyWindowFirst_ThenReadsTheMissileByItemIdAndTheVictimsSide_ThenForwards()
+    {
+        // OnAgentHit carries the missile's weapon, so the item id (Mission.cs:5646, :5657-5659); it may run off the main thread, so the volatile want comes first (A21).
+        var body = BodyOf(RepoPaths.ReadSource(VolleyHooksPath, stripComments: true), "static void AgentHit");
+
+        var wants = body.IndexOf("host.WantsVolleyHits", StringComparison.Ordinal);
+        var read = body.IndexOf("LongDefeatVolleyHitFilter.Read(", StringComparison.Ordinal);
+        var forward = body.IndexOf("host.OnVolleyHit(", StringComparison.Ordinal);
+        Assert.IsTrue(wants >= 0 && wants < read && read < forward, body);
+        StringAssert.Contains(body, "affectorWeapon.Item?.StringId", "the item id of the missile's weapon");
+        StringAssert.Contains(body, "affectedAgent.Team?.Side == BattleSideEnum.Defender", "a friend is told by the victim's side, never the attacker's (A24)");
+        StringAssert.Contains(body, "collisionData.AttackBlockedWithShield");
+        StringAssert.Contains(body, "affectedAgent.Health", "a kill is the victim's health after the blow, which HandleBlow writes before the hit (E16)");
+        StringAssert.Contains(body, "affectorAgent != null", "the engine's own affector is counted when it is null");
+        StringAssert.Contains(body, "host.IsVolleyItem");
+    }
+
+    [TestMethod]
+    public void TheLogic_ForwardsBothVolleyCallbacksToTheHooks_AndStaysSmallEnoughForTheEntryPointGate()
+    {
+        var source = RepoPaths.ReadSource(LogicPath, stripComments: true);
+
+        StringAssert.Contains(BodyOf(source, "override void OnAgentHit"), "LongDefeatVolleyHooks.AgentHit(_host,");
+        StringAssert.Contains(BodyOf(source, "override void OnMissileHit"), "LongDefeatVolleyHooks.MissileHit(_host, Mission,");
+    }
+
+    [TestMethod]
+    public void OnMissileHit_ReadsOnlyACancelledFriendlyHit_ThroughTheMissilesItem()
+    {
+        // A cancelled hit never reaches OnAgentHit (A19), and OnMissileHit carries no weapon, so the missile is looked up by the index the hit carries (E28).
+        var source = RepoPaths.ReadSource(VolleyHooksPath, stripComments: true);
+        var body = BodyOf(source, "static void MissileHit");
+
+        var cancelled = body.IndexOf("!isCanceled", StringComparison.Ordinal);
+        var wants = body.IndexOf("host.WantsVolleyHits", StringComparison.Ordinal);
+        Assert.IsTrue(cancelled >= 0 && cancelled < wants, "the cheap test first, then the volatile want: " + body);
+        StringAssert.Contains(body, "victim.Team?.Side != BattleSideEnum.Defender");
+        StringAssert.Contains(body, "LongDefeatVolleyHitFilter.Cancelled(");
+        StringAssert.Contains(body, "host.OnVolleyHit(");
+        StringAssert.Contains(BodyOf(source, "private static string? MissileItem("), "mission.MissilesList");
+    }
+
+    [TestMethod]
+    public void TheVolleyHooks_BeforeAnythingStarted_DoNothingAndDoNotThrow()
+    {
+        var logic = Logic();
+        var blow = default(Blow);
+        var collision = default(AttackCollisionData);
+        var weapon = default(MissionWeapon);
+
+        logic.OnAgentHit(null!, null!, in weapon, in blow, in collision);
+        logic.OnMissileHit(null!, null!, true, collision);
+        logic.OnMissileHit(null!, null!, false, collision);
+    }
+
     [TestMethod]
     public void IsLoss_IsAKillOrAKnockOut_NeverARoutOrADeletion()
     {

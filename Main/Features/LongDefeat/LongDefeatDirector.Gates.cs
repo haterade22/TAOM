@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.LongDefeat.Diagnostics;
@@ -69,8 +70,9 @@ internal sealed partial class LongDefeatDirector
     }
 
     /// <summary>
-    /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test). Nothing recorded writes a skip. A point that fails
-    /// is named here and by the check; it does not refuse the boot, because the slice that reads the point decides what to do without it.
+    /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test), and a volley origin's ray out over the wall hits nothing
+    /// within two metres (R5). Nothing recorded writes a skip. A point that fails is named here and by the check and is dropped, as section 5's Points rule says; it does not refuse the boot. The Elven Volley
+    /// is handed the origins that passed, and with none left its row is hidden. The posts and the towers' volley spots are read by their own slices, which take their verdicts from the same line.
     /// </summary>
     private void CheckFortPoints()
     {
@@ -79,35 +81,53 @@ internal sealed partial class LongDefeatDirector
 
         var names = new List<string>();
         var places = new List<LdPlace>();
+        var heights = new List<float?>();
+        var towerHeight = _plan.Shop.Fort?.Towers?.Volley?.OriginHeight ?? 0f;
         foreach (var tower in _plan.Towers)
         {
             for (var i = 0; i < tower.Posts.Count; i++)
             {
                 names.Add($"{tower.Id}.post[{i}]");
                 places.Add(LdPlace.From(tower.Posts[i]));
+                heights.Add(null);
             }
 
             for (var i = 0; i < tower.VolleyOrigins.Count; i++)
             {
                 names.Add($"{tower.Id}.volley[{i}]");
                 places.Add(LdPlace.At(tower.VolleyOrigins[i]));
+                heights.Add(towerHeight);
             }
         }
 
         var origins = _plan.Volley?.Origins ?? new List<LdPoint>();
+        var firstOrigin = places.Count;
+        var volleyHeight = _plan.Shop.Fort?.Volley?.OriginHeight ?? 0f;
         for (var i = 0; i < origins.Count; i++)
         {
             names.Add($"volley[{i}]");
             places.Add(LdPlace.At(origins[i]));
+            heights.Add(volleyHeight);
         }
 
-        var facts = places.Count == 0 ? new List<LdPointFacts>() : _fort.PointsUsable(places);
-        var points = names.Select((name, i) => (name, i < facts.Count ? facts[i] : default)).ToList();
+        var asked = places.Count == 0 ? new List<LdPointFacts>() : _fort.PointsUsable(places);
+        var facts = new List<LdPointFacts>();
+        for (var i = 0; i < places.Count; i++)
+        {
+            var fact = i < asked.Count ? asked[i] : default;
+            var clear = !(fact.Navmesh && fact.Boundary) || heights[i] is not { } height || OriginClear(places[i].Point, height);
+            facts.Add(fact with { Clear = clear });
+        }
+
+        var points = names.Select((name, i) => (name, facts[i])).ToList();
         var verdict = LongDefeatGateChecks.FortPoints(points);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.FortPointsId, _mission, verdict);
         foreach (var (name, fact) in points.Where(p => !p.Item2.Usable))
-            _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}");
+            _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable{(name.StartsWith("volley[", StringComparison.Ordinal) ? " and is dropped" : string.Empty)}: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}, clear {(fact.Clear ? "yes" : "no")}");
         _logger.LogInfo($"{Tag}[Boot] fort points: {verdict.Detail}");
+        if (_plan.Volley != null)
+            _run.LimitVolleyOrigins(origins.Where((_, i) => facts[firstOrigin + i].Usable).ToList());
+        CheckVolleyArrow();
     }
 
     /// <summary>The A23 boot line: the engine's count of archer positions and the units in each defender formation, which tells the posts slice which formation index is free.</summary>

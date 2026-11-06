@@ -4741,6 +4741,10 @@
 	<string id="TAOM_LD_Fort_RepairNone" text="{=TAOM_LD_Fort_RepairNone}Nothing to repair" />
 	<string id="TAOM_LD_Fort_Title" text="{=TAOM_LD_Fort_Title}Fortifications" />
 	<string id="TAOM_LD_Fort_Used" text="{=TAOM_LD_Fort_Used}Used" />
+	<string id="TAOM_LD_Fort_Volley" text="{=TAOM_LD_Fort_Volley}Elven Volley" />
+	<string id="TAOM_LD_Fort_VolleyAuto" text="{=TAOM_LD_Fort_VolleyAuto}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker in the densest group near the walls. Press N during a wave." />
+	<string id="TAOM_LD_Fort_VolleyCrosshair" text="{=TAOM_LD_Fort_VolleyCrosshair}Level {LEVEL} of {MAX}: {ARROWS} arrows every {SECONDS} s, each at an attacker near where you look. Press N during a wave." />
+	<string id="TAOM_LD_Fort_VolleyFull" text="{=TAOM_LD_Fort_VolleyFull}Fully upgraded" />
 	<string id="TAOM_LD_Fortress_Helms" text="{=TAOM_LD_Fortress_Helms}Helm's Deep" />
 	<string id="TAOM_LD_Hud_Affixes" text="{=TAOM_LD_Hud_Affixes}Affixes: {NAMES}" />
 	<string id="TAOM_LD_Hud_Attackers" text="{=TAOM_LD_Hud_Attackers}Attackers: {COUNT}" />
@@ -4759,6 +4763,7 @@
 	<string id="TAOM_LD_Hud_Defenders" text="{=TAOM_LD_Hud_Defenders}Defenders: {COUNT}" />
 	<string id="TAOM_LD_Hud_Gold" text="{=TAOM_LD_Hud_Gold}Gold: {GOLD}" />
 	<string id="TAOM_LD_Hud_HintOpen" text="{=TAOM_LD_Hud_HintOpen}B  Shop   H  Sound the horn and start the wave early" />
+	<string id="TAOM_LD_Hud_HintVolley" text="{=TAOM_LD_Hud_HintVolley}N  Loose the Elven Volley" />
 	<string id="TAOM_LD_Hud_HintWave" text="{=TAOM_LD_Hud_HintWave}Hold the walls. The shop opens between waves." />
 	<string id="TAOM_LD_Hud_Horn" text="{=TAOM_LD_Hud_Horn}Sound the horn: start the wave now for bonus gold" />
 	<string id="TAOM_LD_Hud_Keep" text="{=TAOM_LD_Hud_Keep}The keep is under attack" />
@@ -4775,6 +4780,10 @@
 	<string id="TAOM_LD_Hud_Speed" text="{=TAOM_LD_Hud_Speed}Speed: {SPEED}x   M  Next speed" />
 	<string id="TAOM_LD_Hud_SpeedButton" text="{=TAOM_LD_Hud_SpeedButton}{SPEED}x" />
 	<string id="TAOM_LD_Hud_SpeedTitle" text="{=TAOM_LD_Hud_SpeedTitle}Game speed" />
+	<string id="TAOM_LD_Hud_VolleyIn" text="{=TAOM_LD_Hud_VolleyIn}Elven Volley in {SECONDS} s" />
+	<string id="TAOM_LD_Hud_VolleyNoTargets" text="{=TAOM_LD_Hud_VolleyNoTargets}No attackers in reach" />
+	<string id="TAOM_LD_Hud_VolleyReady" text="{=TAOM_LD_Hud_VolleyReady}Elven Volley ready" />
+	<string id="TAOM_LD_Hud_VolleyWithheld" text="{=TAOM_LD_Hud_VolleyWithheld}The volley cannot be loosed now" />
 	<string id="TAOM_LD_Hud_Wave" text="{=TAOM_LD_Hud_Wave}Wave {WAVE}" />
 	<string id="TAOM_LD_Hud_WaveClass" text="{=TAOM_LD_Hud_WaveClass}{WAVE}, {CLASS}" />
 	<string id="TAOM_LD_Hud_WaveCleared" text="{=TAOM_LD_Hud_WaveCleared}Wave {WAVE} cleared" />
@@ -4797,6 +4806,10 @@
 	<string id="TAOM_LD_Notice_RunOver" text="{=TAOM_LD_Notice_RunOver}The run is over." />
 	<string id="TAOM_LD_Notice_ShopClosed" text="{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave." />
 	<string id="TAOM_LD_Notice_UnknownOffer" text="{=TAOM_LD_Notice_UnknownOffer}That pack is not for sale." />
+	<string id="TAOM_LD_Notice_VolleyCooldown" text="{=TAOM_LD_Notice_VolleyCooldown}The Elven Volley is not ready yet." />
+	<string id="TAOM_LD_Notice_VolleyFull" text="{=TAOM_LD_Notice_VolleyFull}The Elven Volley is fully upgraded." />
+	<string id="TAOM_LD_Notice_VolleyNotInWave" text="{=TAOM_LD_Notice_VolleyNotInWave}The Elven Volley is loosed during a wave." />
+	<string id="TAOM_LD_Notice_VolleyNotOwned" text="{=TAOM_LD_Notice_VolleyNotOwned}Buy the Elven Volley between waves first." />
 	<string id="TAOM_LD_Offer_Axemen" text="{=TAOM_LD_Offer_Axemen}Westfold Axemen" />
 	<string id="TAOM_LD_Offer_Bowmen" text="{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen" />
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />

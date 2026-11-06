@@ -128,8 +128,82 @@ public class LongDefeatShippedConfigTests
         CollectionAssert.Contains(RunPlanTroops.DefenderTroopIds(plan).ToList(), plan.Shop.Fort.Towers.Troop);
     }
 
+    private static XElement Arrow(string file, string id) =>
+        XDocument.Load(Path.Combine(ModuleData, file)).Descendants("Item").Single(e => (string?)e.Attribute("id") == id);
+
+    private static string Attr(XElement item, string name) => (string?)item.Descendants("Weapon").Single().Attribute(name) ?? "";
+
     [TestMethod]
-    public void ShippedBuild_OffersTheGateAndFieldCare_UntilEachSlicesEffectLands()
+    public void ShippedElvenVolley_FiresTheLongDefeatsOwnArrow_WithTheTowerArrowsNumbers_AndTheItemIsInItsOwnFile()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var volley = helms.Shop.Fort!.Volley!;
+
+        Assert.AreEqual("ld_elven_arrow", volley.ItemId);
+        var arrow = Arrow("long_defeat/long_defeat_items.xml", volley.ItemId);
+        var tower = Arrow("fords_of_war/fords_items.xml", "fow_tower_arrow");
+        Assert.AreEqual("30", Attr(arrow, "thrust_damage"));
+        Assert.AreEqual("45", Attr(arrow, "missile_speed"));
+        Assert.AreEqual(Attr(tower, "thrust_damage"), Attr(arrow, "thrust_damage"), "the same blow as the tower arrow: AddCustomMissile adds no bow damage");
+        Assert.AreEqual(Attr(tower, "missile_speed"), Attr(arrow, "missile_speed"));
+        Assert.AreEqual("Arrows", (string?)arrow.Attribute("Type"));
+        Assert.AreEqual("arrow_bl_flying", (string?)arrow.Attribute("flying_mesh"), "the elven arrow's flying mesh");
+        Assert.AreEqual("wm_mirkwood_arrow_a01", (string?)arrow.Attribute("mesh"), "q1v3's held mesh");
+        Assert.AreEqual("false", (string?)arrow.Attribute("is_merchandise"), "it can never sell");
+        Assert.IsNull(arrow.Attribute("culture"), "a Rivendell arrow would be a soldier's, and the hit filter reads the id");
+    }
+
+    [TestMethod]
+    public void ShippedElvenArrow_IsRegisteredForCustomGameOnly_AndNoTroopCarriesIt()
+    {
+        var sub = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml"));
+        var node = sub.Descendants("XmlNode").Single(n => (string?)n.Element("XmlName")?.Attribute("path") == "long_defeat/long_defeat_items");
+
+        Assert.AreEqual("Items", (string?)node.Element("XmlName")!.Attribute("id"));
+        CollectionAssert.AreEqual(new[] { "CustomGame" }, node.Descendants("GameType").Select(g => (string?)g.Attribute("value")).ToArray());
+        var carriers = Directory.GetFiles(ModuleData, "*.xml", SearchOption.AllDirectories)
+            .Where(f => !f.Contains(Path.DirectorySeparatorChar + "Languages" + Path.DirectorySeparatorChar) && !f.EndsWith("long_defeat_items.xml", StringComparison.Ordinal))
+            .Where(f => File.ReadAllText(f).Contains("ld_elven_arrow")).Select(Path.GetFileName).ToList();
+        Assert.AreEqual(0, carriers.Count, "no troop, set or shop row names the volley's arrow: " + string.Join(", ", carriers));
+    }
+
+    [TestMethod]
+    public void ShippedElvenArrow_ReusesVanillasArrowsName_SoItAddsNoString()
+    {
+        // phase3-plan.md Slice 6 Data: the name is vanilla's {=gFtu0j4T}Arrows, as fow_tower_arrow's is, and the arrow can never be picked up, so no player reads a name of its own.
+        var arrow = Arrow("long_defeat/long_defeat_items.xml", "ld_elven_arrow");
+        var rows = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string").Select(r => (string)r.Attribute("id")!).ToList();
+
+        Assert.AreEqual("{=gFtu0j4T}Arrows", (string?)arrow.Attribute("name"));
+        Assert.IsFalse(rows.Contains("TAOM_LD_Item_ElvenArrow"), "a name key nobody can read is a row to translate in twelve languages for nothing");
+    }
+
+    [TestMethod]
+    public void ShippedElvenArrow_CannotBePickedUp_SoNoPlayerShootsItAsHisOwnAndHaveItCounted()
+    {
+        // A stuck arrow becomes a live pickup for 180 s unless the item carries CannotBePickedUp (SpawnedItemEntity.cs:163-164); a player who took it could fire it inside a window and have the shot booked as a volley hit.
+        var arrow = Arrow("long_defeat/long_defeat_items.xml", "ld_elven_arrow");
+
+        Assert.AreEqual("true", (string?)arrow.Element("Flags")?.Attribute("CannotBePickedUp"));
+    }
+
+    [TestMethod]
+    public void ShippedHelmsDeep_RecordsNoVolleyOrigin_SoTheVolleyRowStaysHiddenAndPlayIsUnchanged()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+
+        Assert.IsNull(plan.Volley, "Mike records the origins on 2026-11-06 (phase3-plan.md section 9); until he does nothing is sold");
+        var run = new SurvivalRun(plan);
+        run.Begin();
+        Assert.AreEqual(FortResult.Hidden, run.TryBuyVolleyLevel());
+        Assert.IsFalse(run.GetView().Fort.Volley.Available);
+    }
+
+    [TestMethod]
+    public void ShippedBuild_OffersTheGateFieldCareAndTheVolley_UntilEachSlicesEffectLands()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
@@ -137,7 +211,7 @@ public class LongDefeatShippedConfigTests
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
         Assert.AreEqual(FortOffer.Offered, plan.Offered);
-        Assert.AreEqual(new FortOffer(3, 0, true, 0), plan.Offered);
+        Assert.AreEqual(new FortOffer(3, 0, true, 2), plan.Offered);
         Assert.IsNotNull(plan.Shop.Fort?.Care, "the shipped shop carries the care row the build offers");
         Assert.AreEqual(plan.Offered.Gate, plan.Shop.Fort!.Gate!.Levels.Count, "the shipped shop carries exactly the gate levels the build delivers");
         Assert.IsTrue(plan.Shop.Fort.Gate.RepairPrice > 0);

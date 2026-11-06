@@ -39,10 +39,13 @@ internal static class LdSpace
     }
 }
 
-/// <summary>What a point has under it: a navmesh, and the inside of the mission boundary. A point the lord is put at needs both.</summary>
-internal readonly record struct LdPointFacts(bool Navmesh, bool Boundary)
+/// <summary>
+/// What a point has under it: a navmesh, and the inside of the mission boundary. A point the lord is put at needs both. A volley origin also needs <c>Clear</c>: the ray from the raised origin out over the
+/// parapet hits nothing within 2 m (phase3-plan.md section 4); every other point leaves it true.
+/// </summary>
+internal readonly record struct LdPointFacts(bool Navmesh, bool Boundary, bool Clear = true)
 {
-    public bool Usable => Navmesh && Boundary;
+    public bool Usable => Navmesh && Boundary && Clear;
 }
 
 /// <summary>
