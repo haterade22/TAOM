@@ -501,6 +501,8 @@ else
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
                 validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
                 block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                # Its trigger is length, not a word: a long command must reach the parser.
+                check-bash-length.sh) triggers=("cd /x\\necho $(printf 'x%.0s' {1..6000})") ;;
                 # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
                 *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
@@ -523,6 +525,8 @@ else
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
             mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
+            # A \u escape only lengthens the raw payload, so it cannot hide a length.
+            check-bash-length.sh)   esc="" ;;
             # The commit gates, the two confirm gates and any new Bash hook: the row holds no
             # literal `git` or `commit`, so a hook filtering on either word without the
             # escape arm skips it and fails here.
@@ -771,7 +775,9 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     # The payload holds every gate's prefilter word (commit, push, no-verify, git), so
     # each blocking gate gets past its prefilter and must reach its taom_pybin_degraded branch.
-    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x"},"hook_event_name":"PreToolUse"}' \
+    # check-bash-length.sh's trigger is length, not a word: pad its command past the prefilter.
+    PAD=""; [[ "$name" == check-bash-length.sh ]] && PAD=" # $(printf 'x%.0s' {1..6000})"
+    OUT=$(printf '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x%s"},"hook_event_name":"PreToolUse"}' "$PAD" \
           | timeout -k 2 10 env PATH="$STARVED_PATH" CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
     ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"
@@ -1863,6 +1869,8 @@ BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
 # Bash registrations lost a gate that moved to a PowerShell-only group, and its parity row with it
 # (Codex review of plan 027). A tenth Bash gate fails until it is added here. `own` lists shell
 # hooks that read their command themselves.
+# check-bash-length.sh is in `own`: it is not a git gate, it measures the raw Bash command, Bash only
+# by design (the length limit is the Bash tool's), and 7l3 checks it.
 # validate-push.sh is in `own`: it reads and judges the push in one run of _shellwords.py verdict (#680).
 # Every other git gate reads through taom_hook_command (hook-authoring.md).
 G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
@@ -1872,7 +1880,7 @@ pre = d.get('hooks', {}).get('PreToolUse', [])
 names = ["block-broad-git-add.sh", "block-dangerous-git.sh", "block-no-verify.sh",
          "check-claude-files-tracked.sh", "check-commit-subject-version.sh",
          "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh"]
-own = ["validate-push.sh"]
+own = ["check-bash-length.sh", "validate-push.sh"]
 extra = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
                 if {'Bash', 'PowerShell'} & set(g.get('matcher', '').split('|'))
                 for h in g.get('hooks', [])} - set(names) - set(own))
@@ -2782,6 +2790,93 @@ else
     bad "check-polearm-shield-parity without python repeated itself: rc=$PG_RC2, ${PG_ERR2:0:120}"
 fi
 rm -rf "$PG"
+
+# ---------------------------------------------------------------------------
+head2 "7l2. detect-docs-gaps finds the gaps and finishes well inside its 10 s registration"
+# It started about four processes per Main/Features folder; at 161 folders a run took 12.5 to 17.8 s, so
+# the harness killed it at 39 of 39 session starts and its warning never showed (harness retro
+# 2026-10-21, #962). The fixture pins the matching rules; the timing case runs the real repo.
+DG=$(mktemp -d)
+mkdir -p "$DG/.claude/hooks" "$DG/docs/features"
+cp .claude/hooks/detect-docs-gaps.sh "$DG/.claude/hooks/"
+for f in RaceAge Warg TroopWeight HUDOverlay BrandNew Vanilla2Patch; do mkdir -p "$DG/Main/Features/$f"; done
+for d in race-age-system warg-combat troop-weight hud-overlay vanilla2-patch TEMPLATE; do : > "$DG/docs/features/$d.md"; done
+DG_OUT=$(printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$DG" bash "$DG/.claude/hooks/detect-docs-gaps.sh" 2>/dev/null)
+DG_GAPS=$(grep -c '^  - ' <<< "$DG_OUT")
+if [[ "$DG_GAPS" == "1" ]] && grep -q '^  - BrandNew → docs/features/brand-new.md$' <<< "$DG_OUT"; then
+    ok "detect-docs-gaps: only the undocumented folder is listed (suffix, prefix, acronym and digit names match)"
+else
+    bad "detect-docs-gaps: expected only BrandNew listed, got $DG_GAPS: $(grep '^  - ' <<< "$DG_OUT" | tr '\n' ' ')"
+fi
+printf '{"source":"resume"}' | env CLAUDE_PROJECT_DIR="$DG" bash "$DG/.claude/hooks/detect-docs-gaps.sh" > "$DG/resume.out" 2>/dev/null
+if [[ -s "$DG/resume.out" ]]; then
+    bad "detect-docs-gaps printed on a resume; only a fresh startup runs it"
+else
+    ok "detect-docs-gaps: a resume prints nothing"
+fi
+rm -rf "$DG"
+DG_T0=${EPOCHREALTIME//[!0-9]/}
+printf '{"source":"startup"}' | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$PWD" bash .claude/hooks/detect-docs-gaps.sh > /dev/null 2>&1
+DG_MS=$(( (${EPOCHREALTIME//[!0-9]/} - DG_T0) / 1000 ))
+if (( DG_MS < 5000 )); then
+    ok "detect-docs-gaps on the real repo: ${DG_MS} ms, under half its 10 s registration"
+else
+    bad "detect-docs-gaps on the real repo took ${DG_MS} ms against its 10 s registration: the harness kills it and its warning never shows"
+fi
+
+# ---------------------------------------------------------------------------
+head2 "7l3. check-bash-length refuses a command the Bash tool would cut short, and only that"
+# 140 of 142 Bash calls at 8,000 or more characters (each ' counted as 4) failed with "unexpected EOF
+# while looking for matching"; none below 7,000 did (harness retro 2026-10-21, #962).
+BL=$(mktemp -d)
+bl_run() {   # $1 command length, $2 apostrophes in it; prints "<rc> <first stderr line>"
+    "$HPY" -c '
+import json, sys
+n, q = int(sys.argv[1]), int(sys.argv[2])
+cmd = "echo " + chr(39) * q + "x" * max(0, n - 5 - q)
+print(json.dumps({"tool_name": "Bash", "hook_event_name": "PreToolUse", "tool_input": {"command": cmd}}))
+' "$1" "$2" > "$BL/payload.json"
+    timeout -k 2 20 bash .claude/hooks/check-bash-length.sh < "$BL/payload.json" > "$BL/out" 2> "$BL/err"
+    echo "$? $(head -1 "$BL/err")"
+}
+read -r rc msg <<< "$(bl_run 8000 0)"
+if [[ "$rc" == 2 && "$msg" == "BLOCKED: this Bash command is 8000 characters long"* ]]; then
+    ok "check-bash-length: an 8,000-character command is refused with its length and the fix"
+else
+    bad "check-bash-length: an 8,000-character command gave rc $rc: $msg"
+fi
+read -r rc msg <<< "$(bl_run 6000 0)"
+if [[ "$rc" == 0 && -z "$msg" ]]; then
+    ok "check-bash-length: a 6,000-character command without quotes runs"
+else
+    bad "check-bash-length: a 6,000-character command was refused (rc $rc): $msg"
+fi
+read -r rc msg <<< "$(bl_run 6000 600)"
+if [[ "$rc" == 2 && "$msg" == "BLOCKED: this Bash command is 7800 characters long"* ]]; then
+    ok "check-bash-length: 6,000 characters with 600 single quotes counts as 7,800 and is refused"
+else
+    bad "check-bash-length: 6,000 characters with 600 single quotes gave rc $rc: $msg"
+fi
+printf '{"tool_input":{"command":"%s"}' "$(printf 'x%.0s' {1..6000})" > "$BL/payload.json"
+timeout -k 2 20 bash .claude/hooks/check-bash-length.sh < "$BL/payload.json" > /dev/null 2>&1
+if [[ $? == 0 ]]; then
+    ok "check-bash-length: an unparseable long payload fails open"
+else
+    bad "check-bash-length: an unparseable long payload was refused"
+fi
+rm -rf "$BL"
+if "$HPY" -c '
+import json, sys
+d = json.load(open(".claude/settings.json", encoding="utf-8"))
+ok = any(g.get("matcher") == "Bash" and h["command"].endswith("/.claude/hooks/check-bash-length.sh")
+         and h.get("timeout") for g in d["hooks"].get("PreToolUse", []) for h in g["hooks"])
+sys.exit(0 if ok else 1)
+'; then
+    ok "settings.json registers check-bash-length.sh for PreToolUse on Bash with a timeout"
+else
+    bad "settings.json does not register check-bash-length.sh for PreToolUse on Bash with a timeout"
+fi
+
 
 # ---------------------------------------------------------------------------
 head2 "7m. check-moduledata-validation fails open on a validator crash and says so, and still denies on findings"

@@ -17,11 +17,6 @@ cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 [[ ! -d Main/Features ]] && exit 0
 [[ ! -d docs/features ]] && exit 0
 
-# PascalCase → kebab-case (InitialChildGeneration → initial-child-generation)
-pascal_to_kebab() {
-  echo "$1" | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g; s/([A-Z]+)([A-Z][a-z])/\1-\2/g' | tr '[:upper:]' '[:lower:]'
-}
-
 # Build flat list of existing doc basenames (without .md)
 EXISTING_DOCS=$(find docs/features -maxdepth 1 -name '*.md' -not -name 'TEMPLATE.md' 2>/dev/null | sed 's|.*/||; s|\.md$||')
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
@@ -29,11 +24,24 @@ EXISTING_DOCS=$(find docs/features -maxdepth 1 -name '*.md' -not -name 'TEMPLATE
 # which is harmless here.
 set -f; IFS=$'\n'; DOC_LIST=($EXISTING_DOCS); IFS=$' \t\n'; set +f
 
-MISSING=()
+# PascalCase → kebab-case (InitialChildGeneration → initial-child-generation), for every folder in
+# one sed and one tr. A pipeline per folder (echo, sed, tr, basename) started about 640 processes at
+# 161 folders and ran 12.5 to 17.8 s against the 10 s registration, so the harness killed this hook at
+# every session start and its warning never showed (harness retro 2026-10-21, #962).
+FEATURES=()
 for feature_dir in Main/Features/*/; do
-  [[ ! -d "$feature_dir" ]] && continue
-  name=$(basename "$feature_dir")
-  kebab=$(pascal_to_kebab "$name")
+  [[ -d "$feature_dir" ]] || continue
+  feature_dir=${feature_dir%/}
+  FEATURES+=("${feature_dir##*/}")
+done
+[[ ${#FEATURES[@]} -eq 0 ]] && exit 0
+KEBABS=$(printf '%s\n' "${FEATURES[@]}" | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g; s/([A-Z]+)([A-Z][a-z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')
+set -f; IFS=$'\n'; KEBAB_LIST=($KEBABS); IFS=$' \t\n'; set +f
+
+MISSING=()
+for i in "${!FEATURES[@]}"; do
+  name=${FEATURES[i]}
+  kebab=${KEBAB_LIST[i]}
 
   # Match if any existing doc basename contains the kebab root or vice-versa
   # (handles variants: RaceAge → race-age-system, Warg → warg-combat, TroopWeight → troop-weight-system)

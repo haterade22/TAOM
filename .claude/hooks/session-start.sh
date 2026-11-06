@@ -31,7 +31,7 @@ echo "Branch: $BRANCH"
 # `python3` resolved to a Microsoft Store App Execution Alias that never exits.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
 # Two separate conditions, deliberately NOT ANDed. The gates with no jq path
-# (check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
+# (check-bash-length, check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
 # check-moduledata-validation, check-native-dll-crt) call "$PYBIN" unconditionally, so they
 # die on a missing python whether jq is present or not. ANDing the two conditions hid
 # exactly that case. tools/test_hooks.sh 5b2 fails when a python-only gate's file name is
@@ -39,8 +39,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
 if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
-    echo "    The python-only gates are failing OPEN right now: check-claude-files-tracked,"
-    echo "    check-commit-subject-version, check-doc-config-drift,"
+    echo "    The python-only gates are failing OPEN right now: check-bash-length,"
+    echo "    check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,"
     echo "    check-moduledata-validation, check-native-dll-crt."
     echo "    validate-push cannot judge a push: it asks on any force marker and allows the rest."
     if ! command -v jq >/dev/null 2>&1; then

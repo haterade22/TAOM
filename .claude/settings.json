@@ -25,6 +25,8 @@
     ]
   },
   "env": {
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
+    "PYTHONIOENCODING": "utf-8",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"
   },
@@ -57,32 +59,32 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-no-verify.sh",
-            "timeout": 5
+            "timeout": 30
           },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-push.sh",
-            "timeout": 10
+            "timeout": 30
           },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-claude-files-tracked.sh",
-            "timeout": 5
+            "timeout": 30
           },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-commit-subject-version.sh",
-            "timeout": 10
+            "timeout": 30
           },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-dangerous-git.sh",
-            "timeout": 5
+            "timeout": 30
           },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-broad-git-add.sh",
-            "timeout": 5
+            "timeout": 30
           },
           {
             "type": "command",
@@ -94,7 +96,7 @@
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-native-dll-crt.sh",
             "statusMessage": "Checking vendored native DLL links a static CRT…",
-            "timeout": 5
+            "timeout": 30
           },
           {
             "type": "command",
@@ -105,12 +107,22 @@
         ]
       },
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-bash-length.sh",
+            "timeout": 30
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/config-protection.sh",
-            "timeout": 5
+            "timeout": 30
           }
         ]
       },
