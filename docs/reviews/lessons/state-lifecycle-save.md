@@ -962,3 +962,9 @@ It was safe only because its one resolve sits under `OnGameStart`, a fact record
 - **Why missed:** a ladder comment and an earlier entry in this file said "the engine keys only map markers by id", and that claim was trusted instead of the journal code.
 - **Prevent:** before a quest can be started twice (a re-offer, a second owner, a retry), give each instance its own StringId; an engine claim copied into a comment or a lesson is checked against the decompile before it carries a design.
 - **Source:** 1.5.x `rca-career-quest-owner-change-2026-10-27.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before reusing an engine object across a state change, list the saved fields it still carries and the steps that run before your guard (#1021, 2026-10-27)
+Enlistment kept a defender's encounter inside the commander's town after a repulsed assault. The encounter still held that battle's result (`EnemyRetreated`), so on the next assault the siege continue check read it as a battle to continue and the soldier landed on `menu_siege_strategies` with no battle. A second gap had the same shape: the discharge guard sat after the step (`RestorePresence`, which clears `AttachedTo`) that already pulled a merged soldier out of his battle.
+- **Why missed:** the plan checked that the object could be reused, not what it still held, and the guard was placed by reading the step list, not by asking which earlier step removes its condition.
+- **Prevent:** before reusing an engine object, list its saved fields and clear or verify each one; before placing a guard, list the steps that run ahead of it and check whether any of them removes the state the guard tests. Test with a merged soldier, not only an unmerged one.
+- **Source:** 1.5.x #1021, `docs/reviews/rca-enlistment-encounter-exits-2026-10-26.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

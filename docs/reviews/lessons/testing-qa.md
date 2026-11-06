@@ -1425,3 +1425,28 @@ run was green.
 - **Why missed:** the #737 facade tests passed zero damage, empty blow flags and a non-charge collision, so a swapped flag mask or a dropped field mapped default to default and passed. The source pin on the model's call sites covered only "the seams that take two agents" and missed the refuge step's agent origin (one of four on `AttackInformation`) and the shield seam's base result, where a wrong argument also compiles.
 - **Prevent:** give every field a boundary maps a distinct non-default value (`CollisionDataFixture` writes the get-only `AttackCollisionData` members; a bare `Agent` from `FormatterServices.GetUninitializedObject` reaches code that reads the agent only past a guard). Choose pins by the mistake, not by the type: list each argument's in-scope candidates of the same type and pin every call site that has more than one.
 - **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fail-open read needs a test that expects true for every shape it must not fail on (#954, 2026-10-20)
+Enlistment's raid reader catches every exception and returns false, which joins the soldier. Its only
+test was a source-text pin; removing the `IsMobile` guard made the read throw on the village's own
+settlement party, the catch returned false, and every raid was joined again with the suite green. A
+staging bug in the first reader test hid the same way.
+- **Why missed:** "engine types cannot be built in a unit test" was accepted without checking, though
+  the repo already stages bare `MapEvent` objects; and a pin read with comments matched the summary.
+- **Prevent:** for a reader whose catch returns the safe answer, stage the engine objects in a
+  `RequiresGame` test and include shapes that expect the non-fail value on the same member chain, so a
+  throw turns them red; prove RED by deleting each guard. Read source pins with
+  `RepoPaths.ReadSource(path, stripComments: true)`.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-relief-lord-2026-10-20.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before guarding against a repeat, read the code that would repeat (#835, 2026-10-23)
+Enlistment's promotion notice was built with a gate so that a battle and a daily check on the same day would
+not announce one promotion twice. Each promotion is exactly one rank up (the ladder validator forces it),
+so the two calls always report different ranks and the gate could never fire; it still cost a class, an
+event subscription and a service dependency on the presentation layer.
+- **Why missed:** the plan's risk note was carried into the build without reading the method that changes
+  the rank and its callers.
+- **Prevent:** a dedupe, latch or "only once" guard ships only with a test that reproduces the repeat it
+  prevents through the real producer (or a cited code path that can produce it). If no such path exists,
+  delete the guard and say why in the doc.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-promotion-notice-2026-10-23.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

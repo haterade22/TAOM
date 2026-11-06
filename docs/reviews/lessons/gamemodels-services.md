@@ -921,3 +921,43 @@ flip and accepted it as unreachable.
 - **Why missed:** `TaomCombatMechanicsModel` kept two `if (IsHorseCharge)` routing guards, which gamemodels.md rule 4 forbids in an override body, because its own header called them "the parent's accepted idiom". No ADR and no `.ai/review-reference.md` "Intentional Patterns" entry records that idiom; the claim outlived several reviews and the #737 plan because each reader took the file's account of itself.
 - **Prevent:** before keeping code a rule forbids, find its exception in `.ai/review-reference.md` "Intentional Patterns" or an ADR. With none, fix the code (here each facade declines the hits it does not own, so the override is a `??` chain) or record the exception with its reason; either way the excusing comment goes.
 - **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Cap what a model call returns, not what you send it; read the body before trusting its name (#834, 2026-10-23)
+Enlistment's personal spoils first chose the three highest-value kills and then asked the loot model
+for one item each. The model often returns nothing (it skips non-merchandise gear and accepts each
+item with a chance of at most 0.325), and the highest-value kills (trolls) carry only non-merchandise
+gear, so a battle full of kills could pay nothing. The same feature attributed kills to
+`Mission.MainAgent`, which moves to a soldier the player takes control of after his hero falls.
+- **Why missed:** "a loot roll" and "the main agent" were read as names, not as the decompiled bodies.
+- **Prevent:** when a cap or a count governs what an engine call yields, apply it to the results that
+  landed, not to the inputs. Identify the player's own actions by `CharacterObject.PlayerCharacter`, not
+  by `Mission.MainAgent` or `IsMainAgent`.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-personal-spoils-2026-10-23.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A deletion is not done until nothing it orphaned is left, and a kept safety branch has a real caller (#844, 2026-10-26)
+The enlistment dead-surface cleanup deleted each listed member after checking it had no reader, but left what
+those deletions orphaned (an hour parameter through five signatures, a probe field, a counter, an adapter
+method, a one-caller clamp class), and kept a petition rollback whose only caller could never reach it.
+- **Why missed:** the check was per member ("does it have a reader?"), never per deletion ("what lost its last
+  reader because of this?"), and the kept branch was justified by a note, not by tracing its caller.
+- **Prevent:** after deleting a member, grep every value it read and every member that fed it, and delete what
+  has no reader left; before keeping code "for safety", trace its callers and show one that reaches it.
+- **Source:** 1.5.x `rca-enlistment-dead-surface-2026-10-26.md` F1, F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A number shown to the player comes from the code that pays it, at the moment he decides (#839, 2026-10-24)
+The retinue cost line first read the rank wage table beside the payout, so the board promised pay on days the
+daily tick pays nothing, and it showed in a message after the oath, where the issue asked for the decision point.
+- **Why missed:** the builder implemented the plan's words ("on the oath line", "service pays M") and never
+  checked them against the reason the issue gave.
+- **Prevent:** for any figure on a board, tooltip or dialog, read it through the service that moves the money
+  (`IEnlistmentWagePreview`), not its table; put a cost the player weighs on the line where he can still decline,
+  and quote a value the following step grants from the same method that grants it.
+- **Source:** 1.5.x `rca-enlistment-retinue-cost-2026-10-24.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A flat ApplyFlat term goes after the last AddFactor
+`ApplyFlat` divides out only the factors already on the number. The career party-size count ran before
+the AI lord scaling added its factor, so "+4 party size" became about +12 under a 3x host setting.
+- **Why missed:** the helper's comment promised it worked whatever the call order.
+- **Prevent:** call `ApplyFlat` after every `AddFactor` in the model, and pin the order with a
+  call-token test.
+- **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (WIRE-02), on `origin/bannerlord-1.5.x` (ported by WP142).

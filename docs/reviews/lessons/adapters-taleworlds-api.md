@@ -680,3 +680,15 @@ The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` n
   Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
   pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
 - **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before adding "missing" behaviour, trace what the live path's own vanilla calls already do (#971, 2026-10-23)
+#971 said the career button's click sound never plays, because the mixin method that held it was never added to the
+view model. The live handler, the Patch27 postfix, already called `CharacterDeveloperVM.ExecuteDone`, whose close callback
+(`GauntletCharacterDeveloperScreen.CloseCharacterDeveloperScreen`) plays the same `event:/ui/default`. The first fix
+added a second call and doubled the sound.
+- **Why missed:** the issue proved the dead copy was dead (the UIExtenderEx attribute filter, the brush) and inferred
+  the effect was absent, without reading the vanilla methods the live path calls.
+- **Prevent:** when an issue says "X never happens", find the path that runs and read each vanilla call it makes, one
+  level into callbacks, before adding X. An in-game check on the old build settles it in seconds; ask for one when the
+  trace is not conclusive.
+- **Source:** 1.5.x `rca-career-click-sound-971-2026-10-23.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

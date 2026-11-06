@@ -565,3 +565,82 @@ recruiting.
   the resource (grep the installed engine source for the field, for example `VolunteerTypes`), and either gate each one
   or word the promise to the paths actually gated.
 - **Source:** 1.5.x `docs/reviews/rca-castle-recruitment-seam-2026-10-18.md` findings 4 and 5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before hiding a menu exit, check each remaining option is ENABLED, not just shown (#827, 2026-10-18)
+Enlistment hid vanilla 'Leave' and 'Abandon army' in the commander's battle on the claim that 'Send troops' always
+remains. 'Send troops' is shown whenever a healthy troop stands on the soldier's side, and it does not read the
+hooked predicate, so both checks passed. But `MenuHelper.CheckEnemyAttackableHonorably` disables it, and 'Attack',
+for a player outside an army who holds a safe-passage truce with the enemy faction. The no-army soldier was left with
+two greyed options, and the player's own map event advances only through that menu, so the battle could never end.
+- **Why missed:** the remaining options were walked for visibility and for whether they read the patched predicate,
+  never for the paths that set `args.IsEnabled = false`. The #567 lesson above says to walk every option on the menu;
+  this change walked them on one axis only.
+- **Prevent:** when a change hides or disables a menu option, list every other option on that menu id with both its
+  visibility condition and every `IsEnabled = false` path in it (honour, morale, raft, wounded), and name the one that
+  stays enabled in each state the change can reach. If none is guaranteed, release the hidden option in the states
+  where nothing else is enabled, and ask vanilla's own check rather than copy its conditions.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-battle-exit-2026-10-18.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event's type is not its fight: trace every way a party enters a running event (#831, 2026-10-20)
+Enlistment first skipped any Raid event its commander led as attacker, on the reasoning that a raid is
+looting, not a battle. The engine reuses one Raid event for the militia fight, for a lord who comes to
+relieve the village (`StartBattleAction.Apply` keeps the type `Raid` and adds the relief lord to the
+running event) and for the looting, so the soldier would sit out a real lord battle.
+- **Why missed:** the plan traced how a raid starts (`ApplyStartRaid`), not how other parties join a
+  running one; the event type was read as a description of what is happening inside it.
+- **Prevent:** before a rule keys on `MapEvent.EventType` or a side, grep every caller that adds a
+  party to an existing event (`StartBattleAction.ApplyInternal`, `MapEventSide` setters) and list each
+  fight shape the event can hold. State in the doc which shapes the rule covers and which are a known
+  gap; test each listed shape.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-village-raids-2026-10-20.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Act on diplomacy from a tick, not from inside the war and peace events (#832, 2026-10-20)
+Enlistment first followed the commander's wars from `WarDeclared`, `MakePeace` and
+`OnClanChangedKingdomEvent`. Those events fire inside `ChangeKingdomAction`, which clears a clan's
+kingdom and then re-declares the old wars one event at a time, so each handler saw a half-built
+enemy list: the soldier made peace with every mirrored faction and declared war again, and a
+declaration against the kingdom whose war list the engine was iterating could throw.
+- **Why missed:** the plan checked that each event fires after its own state change, not what the
+  enclosing action does around it.
+- **Prevent:** a TAOM rule that declares war or makes peace in answer to world diplomacy runs from a
+  campaign tick (hourly or daily) and reads settled state; never from an engine war, peace or kingdom
+  event. Bridge the lag where it matters (here a join-time top-up). Keep such steps off the load path,
+  which runs before `MapEventManager.OnAfterLoad`. No gate enforces the 150-line entry-point limit
+  (ADR-002); check `wc -l` against HEAD when a behavior grows.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-wars-during-service-2026-10-20.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Decide "did he fight" from one owner, and let every other signal only narrow it (#830, 2026-10-19)
+Enlistment's sit-out gate first paid a battle as fought whenever a merit sample existed and as sat out
+whenever the simulation flag was set and a one-slot ledger was empty or held any verdict. Clicking Attack,
+retreating at once and then letting the others fight left a sample, so the soldier kept renown and paid no
+trust; an empty ledger was read as "forced open", so a battle he led could be paid as a sit-out.
+- **Why missed:** three signals (mission sample, `MapEvent.IsPlayerSimulation`, the ledger) each answered a
+  slightly different question, and the payout combined them without naming which one owns the answer.
+- **Prevent:** when a reward depends on what the player chose, record the choice at the moment he makes it (the
+  verdict on the option he clicked), give "nothing recorded" no meaning beyond "no choice", and make every other
+  signal a narrowing of that record. Test the walkout and the led-battle paths explicitly.
+- **Source:** 1.5.x `docs/reviews/rca-enlistment-sit-out-2026-10-19.md` F1, F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Moving work to another caller moves it in the engine's frame: check the frame order, not only the rate (#841, 2026-10-24)
+The service upkeep had two feeders, the campaign tick and the wait-menu tick. Removing the menu feed while
+time ran was judged by cost alone, but it also moved every join the upkeep raised on a running menu from
+before the frame's time advance to inside it, where `MapEventManager.Tick` still updates a raid that is the
+player's own event (`MapEventManager.cs`, `Campaign.cs`).
+- **Why missed:** both feeders were treated as interchangeable sources of one budget; the raid window was
+  already in the feature doc, but nobody tied it to which feeder runs.
+- **Prevent:** when a change moves an action from one engine callback to another (a menu tick, `TickEvent`,
+  an hourly or daily event, a mission tick), read the engine's frame order for both and list what runs
+  between them; an action that joins, starts or ends a map event belongs where time does not advance first.
+- **Source:** 1.5.x `rca-enlistment-trace-and-pump-clock-2026-10-24.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A map event with a winner is not always a battle, and RaidCompleted is not always a loot
+A looting raid ends as an attacker victory, so `OnMapEventEnded` paid the battle credit on every raid;
+`RaidCompleted` reports the attacker as winner for a won militia fight too, so a resisted raid paid
+`per_raid` twice. The first fix keyed the credit on the event type and then zeroed real lord fights the
+engine folds into raid and extortion events.
+- **Why missed:** each handler trusted its event's name. War of the Ring momentum trusts the same event
+  (#774).
+- **Prevent:** key payouts on the engine's own verdict (`Village.VillageState == Looted`, set just
+  before `RaidCompleted`) and on who was beaten (a field party with healthy men at the start), not on
+  the event type; when an event turns out to mean more than its name, grep every listener of it.
+- **Source:** 1.5.x `docs/reviews/rca-career-e1e3-2026-10-08.md` (#770, #774), on `origin/bannerlord-1.5.x` (ported by WP142).

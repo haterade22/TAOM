@@ -2924,3 +2924,16 @@ times (#781, #919, #922), twice in one afternoon by two sessions.
   asserts the whole expected output, and is shown to fail on the old code and on one plausible wrong fix. Before
   filing an issue, search open issues for the file and symptom (`gh issue list --search "<file> in:title,body"`).
 - **Source:** 1.5.x `docs/reviews/rca-harvest-blank-line-2026-10-19.md` rows 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A finding that repeats a lesson means the brief did not carry it (#769 E8 to E10, 2026-10-14)
+The E8 to E10 review found seven defects that match lessons already on file: a service locator in a hook, an
+outcome keyed on one path, an owed in-game check with no log line, one predicate made to answer a second
+question, a new filter that an old reader missed, a sentence built from fragment keys, and tests that could
+not fail. The builder had not read
+the lesson files, and the orchestrator's brief had not named them.
+- **Why missed:** a brief names files, steps and seams. The lessons live in 13 cross-cutting category files
+  (the five this change repeated hold about 8,000 lines), and nothing in the spawn path opens them.
+- **Prevent:** the Feature Developer template (`docs/ai-includes/agent-teams.md`) has a `Lessons:` slot. The
+  lead fills it with the lesson headings that apply, by name and file, and the builder's report says what it
+  did about each. A review that finds a repeat checks the brief first.
+- **Source:** 1.5.x `docs/reviews/rca-career-e8e10-2026-10-14.md` pattern 1, on `origin/bannerlord-1.5.x` (ported by WP142).
