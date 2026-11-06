@@ -148,7 +148,8 @@ failure. Four limits, all of them load-bearing.
 
 The second data hook, `check-polearm-shield-parity.sh`, runs after an edit to
 `weapon_descriptions.xslt`, anything under `LOTRLOME_items`, or any XML whose contents include an
-`<EquipmentRoster>`. It is advisory and always exits 0.
+`<EquipmentRoster>`. It is advisory: its report reaches Claude as `additionalContext` (exit 0), or
+as stderr with exit 2 when no Python can encode that.
 
 ## Exit-code traps
 

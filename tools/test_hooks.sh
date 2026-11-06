@@ -2541,6 +2541,72 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+head2 "7l. PostToolUse advisories reach Claude: additionalContext, never bare stderr"
+# Stderr from a hook that exits 0 goes to the debug log only (hooks docs, "Exit code output"). The
+# polearm gate reported a real troop defect there from 2026-08-20 and muted itself, so no warning
+# ever arrived (docs/reviews/adopt-ecc-2026-09-29.md). A line that is debug-only on purpose says so
+# with a `stderr-debug-only:` comment on the same line; one followed by exit 2, which Claude does
+# see, says `stderr-exit-2:`.
+POST_HOOKS=$(cd "$REPO" && "$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for ev in ('PostToolUse', 'PostToolUseFailure')
+                       for g in d.get('hooks', {}).get(ev, [])
+                       for h in g.get('hooks', [])})))
+PY
+)
+[[ -z "$POST_HOOKS" ]] && bad "no PostToolUse registrations found in settings.json; the 7l discovery is broken"
+for name in $POST_HOOKS; do
+    f="$REPO/.claude/hooks/$name"
+    [[ -f "$f" ]] || { bad "$name is registered on PostToolUse but missing from .claude/hooks/"; continue; }
+    # taom_pybin_degraded (_pybin.sh) prints its note to stderr too, so a call counts as a write.
+    hit=$(grep -nE '>&2|taom_pybin_degraded' "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | grep -vE 'stderr-debug-only:|stderr-exit-2:' | head -1 | cut -d: -f1)
+    if [[ -n "$hit" ]]; then
+        bad "$name:$hit writes to stderr, which Claude never sees from a PostToolUse hook; emit additionalContext"
+    else
+        ok "$name sends nothing Claude must read to stderr"
+    fi
+done
+
+# The polearm gate's FAIL reaches Claude as additionalContext, once per finding set.
+PG="$SANDBOX/polearm-7l"; rm -rf "$PG"; mkdir -p "$PG/tools" "$PG/data"
+printf '%s\n' 'import sys' 'print("FAIL: 1 roster pairs a shield with an undrawn polearm")' \
+    'print("  troop_x: shield + spear_y")' 'print("")' 'sys.exit(1)' > "$PG/tools/audit_polearm_shield_parity.py"
+printf '<EquipmentRosters><EquipmentRoster id="r"/></EquipmentRosters>\n' > "$PG/data/r.xml"
+PG_PAYLOAD=$("$HPY" -c 'import json,sys; print(json.dumps({"hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":sys.argv[1]}}))' "$PG/data/r.xml")
+pg_run() { printf '%s' "$PG_PAYLOAD" | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$PG" bash "$REPO/.claude/hooks/check-polearm-shield-parity.sh" 2>/dev/null; }
+PG_OUT=$(pg_run)
+if printf '%s' "$PG_OUT" | "$HPY" -c 'import json,sys; o=json.load(sys.stdin)["hookSpecificOutput"]; sys.exit(0 if o["hookEventName"]=="PostToolUse" and "troop_x" in o["additionalContext"] else 1)' 2>/dev/null; then
+    ok "check-polearm-shield-parity reports a FAIL as PostToolUse additionalContext"
+else
+    bad "check-polearm-shield-parity FAIL did not arrive as additionalContext JSON: ${PG_OUT:0:160}"
+fi
+PG_OUT2=$(pg_run)
+if [[ -z "$PG_OUT2" ]]; then
+    ok "check-polearm-shield-parity stays quiet on an unchanged finding set"
+else
+    bad "check-polearm-shield-parity repeated an unchanged finding set: ${PG_OUT2:0:120}"
+fi
+# With no python the hook cannot encode JSON: it answers with exit 2 and stderr (also a channel
+# Claude reads) and mutes, so the same "did not run" line does not repeat on every edit.
+rm -f "$PG/.claude/logs/.polearm-gate-reported-v2"
+pg_nopy() { printf '%s' "$PG_PAYLOAD" | timeout -k 2 30 env -u TAOM_PYBIN PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$PG" bash "$REPO/.claude/hooks/check-polearm-shield-parity.sh" 2>&1 >/dev/null; }
+PG_ERR=$(pg_nopy); PG_RC=$?
+if [[ $PG_RC -eq 2 && "$PG_ERR" == *"did not run"* ]]; then
+    ok "check-polearm-shield-parity without python answers with exit 2 and stderr"
+else
+    bad "check-polearm-shield-parity without python: rc=$PG_RC, stderr: ${PG_ERR:0:120}"
+fi
+PG_ERR2=$(pg_nopy); PG_RC2=$?
+if [[ $PG_RC2 -eq 0 && -z "$PG_ERR2" ]]; then
+    ok "check-polearm-shield-parity without python mutes a delivered report"
+else
+    bad "check-polearm-shield-parity without python repeated itself: rc=$PG_RC2, ${PG_ERR2:0:120}"
+fi
+rm -rf "$PG"
+
+# ---------------------------------------------------------------------------
 head2 "7m. check-moduledata-validation fails open on a validator crash and says so, and still denies on findings"
 pre_payload() {  # $1 tool, $2 command: a PreToolUse payload as the harness sends it
     "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$1" "$2"
