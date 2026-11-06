@@ -5,7 +5,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/oraios/serena",
+        "git+https://github.com/oraios/serena@7a2968335f2198b966864de1ce3655c8e485a653",
         "serena",
         "start-mcp-server",
         "--context",
@@ -36,7 +36,7 @@
     "elevenlabs": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["elevenlabs-mcp"],
+      "args": ["elevenlabs-mcp@0.12.2"],
       "env": {
         "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
         "ELEVENLABS_MCP_BASE_PATH": "${CLAUDE_PROJECT_DIR:-E:/repos/TAOM}/.voice-scratch",
