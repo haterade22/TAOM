@@ -375,3 +375,67 @@ The decisions commit said "no node is a service locator" while the same `BuildTr
 - **Why missed:** both were written from intent (the decision, the scenario pictured) and not from the code: no grep over every node the tree builds, no read of the condition.
 - **Prevent:** before writing "no", "every", "all" or "none" about a set, grep the whole set it names and quote the count; scope the claim to what the grep covered. State a behaviour difference as the condition the code evaluates and when it evaluates it, then list the cases it allows, not only the one expected.
 - **Source:** 1.5.x `docs/reviews/rca-warg-tick-costs-decisions-2026-09-24.md` F3 and F6 (Agents 1, 4, 5, 6; Codex P3-2), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A change that deletes or moves data invalidates numbers and line refs elsewhere: grep for those too (#644, 2026-09-23)
+
+#644 deleted three `characters/lords.xml` rows and inserted nine `lords.xslt` lines. The stale-text
+sweep grepped for how docs PHRASE the old facts and fixed those, but the completeness lens still found
+row counts (1184, 179 in both files, uruk 59 and 163), a line citation (`lords.xslt`), a
+paraphrase the grep missed ("NOT reachable by race") and a how-to that now advised the opposite of the
+new rule, across eleven files.
+
+- **Why missed:** the sweep looked for the old facts' wording, not for the measurements a deletion
+  changes, and it covered the docs that mention the subject rather than the docs that own the changed
+  code and data.
+- **Prevent:** after a data change, grep the docs for the old counts and every `file:line` citation
+  into the edited files, open the owning feature doc of each changed class, and re-measure a count
+  with the command its doc prints rather than subtracting by hand.
+- **Source:** 1.5.x `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 5 (2026-09-23), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's RED check names the diagnostics it needs, never the compiler's exact output (plan 026, 2026-09-24)
+Plan 026's three RED checks required "exactly two lines" of normalized diagnostics, one of them
+`CS0122` (the method under test still `protected`). The retained logs of all three runs contain only
+the intended `CS0115` missing-override errors, so an executor following the plan literally could not
+confirm RED, although the failures were exactly the ones the step wanted.
+- **Why missed:** the plan predicted the compiler's full diagnostic set instead of stating what
+  proves the test is RED.
+- **Prevent:** a RED check requires a nonzero exit, at least the intended diagnostic codes, and only
+  in the named test file; it permits other codes the same edit can cause and rejects any other file.
+  This extends the plan 001 lesson above (build the project that holds the test).
+- **Source:** 1.5.x `docs/reviews/rca-seam-decision-logic-2026-09-24.md` X1 (Codex P3), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A new permitted case amends every general rule it is an exception to, in the same change (plan 021, 2026-09-24)
+
+Plan 021 made the hook interface conditional ("only when the patch needs a narrow seam or a test
+fake") in AGENTS.md and three rule files, and in a separate step rewrote the always-loaded
+`think-before-coding.md` to allow an interface only for an adapter, a fake or a second
+implementation. The rule's own example hook has one implementation and no fake, so the general rule
+forbade what the specific rules allowed. The same shape recurred four times in one change: ADR-008's
+exception allowed "a static read" where ADR-007 allowed engine calls, the Standards lens said "One
+exception" beside an ADR that has two, ADR-007 kept `CampaignTime` in its list of sealed classes
+needing adapters while its new condition allows it, and the ADR-008 and ADR-002 checklists kept the
+absolute wording their amended rules had just qualified.
+
+- **Why missed:** each sentence was prescribed and checked on its own, by a substring gate that proves
+  the sentence is present, never that two sentences agree.
+- **Prevent:** when a change adds an exception or a permitted case, grep for every rule it qualifies
+  (the general rule, sibling ADRs, checklists, severity tables, the section it sits in) and read each
+  one against the new case, using the rule's own example as the test input: would a reader following
+  that line reject the example? Fix or list each before committing.
+- **Source:** 1.5.x `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` C1, C2, O3, O5, O6; Codex P2 1 and P2 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Check a rule's cited exemplars against every condition the rule states (plan 021, 2026-09-24)
+
+ADR-007's new boundary-seam exception names four services as users of the pattern, under four
+conditions. The services factor seam bodies into private helpers that return `MobileParty`, `Hero`
+and `CharacterObject` (outside the `protected virtual` members the exception covers), and several
+seams carry TAOM decision logic (`SupplyOrderService.ChargePlayer` splits and routes the payment,
+`RefugeService.FindNearestHostile` filters and picks a target), which condition 2 forbids. Read as
+written, the next Standards pass would flag the exemplars the exception was written to legalise.
+
+- **Why missed:** the Step 0 note that offered the looser wording checked one service's seam
+  signatures, not the other three services and not what the seams call.
+- **Prevent:** before an ADR or rule cites code as its exemplar, apply each condition to every cited
+  class, including the private members its qualifying members call, and either narrow the claim to
+  what passes or record the rest as known debt in the same text.
+- **Source:** 1.5.x `docs/reviews/rca-architecture-rule-amendments-2026-09-24.md` O1, O2 (Agents 1 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).

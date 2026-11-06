@@ -1384,3 +1384,26 @@ Plan 032 put a lock-free "has a layout" check at the top of `ComputeUnitPlanePos
 - **Why missed:** the suite stayed green and that was read as proof the old gates still worked; nothing asked which line each guard test reaches after the new return.
 - **Prevent:** when you add an early return or a fast path ahead of existing guards, list the tests of each guard behind it and make each one set up the state that passes the new check; prove one by deleting its guard from a scratch copy and watching it fail.
 - **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The first extension of a new shape gets the gate read for a skip on that shape (Shadowfax Screens, 2026-10-18)
+`PrefabExtensionBindingTests` skipped any `[PrefabExtension]` without an XPath before it looked the movie up. No TAOM
+extension had a null XPath, so the skip never fired, and the gate's docstring still claimed every extension was
+checked. The first whole-document patch (nine movie names) went straight through it; a renamed movie would have
+left that screen animating with no error, because UIExtenderEx files such a patch by name and silently matches
+nothing.
+- **Why missed:** the author wrote a hand-copied name list for the new class and never read the existing gate for
+  the new shape. This repeats the class in `rca-binding-gate-no-silent-skips-2026-09-24.md`.
+- **Prevent:** when a change adds the first instance of a shape a gate branches on (no XPath, a new patch base type,
+  a new attribute form), read the gate's `continue` and `skip` lines for that shape and make the shape pass through
+  the checks that still apply. Prove it with a mutant of the new instance (`ClanScreen` to `Clanscreen`).
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-2026-10-18.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a test helper is extracted, its floors move with it (#956, 2026-10-20)
+`CultureRaceConsistencyTests` moved its race scan into a shared helper for a new gate and left behind the two asserts
+that the scan found a race in `lords.xml` and in `lords.xslt`. Both gates could then pass on a broken scan, and the new
+gate's own floor (at least 10 races) was met by `cultures.json` alone, so `sauron`, reachable only through
+`lords.xslt`, would have dropped out unseen.
+- **Why missed:** "behaviour unchanged" was checked by the old test staying green, which a missing floor does not show.
+- **Prevent:** when a scan moves into a helper, the asserts that prove the scan read something move into the helper
+  too, so every caller keeps them; a new gate's floor must not be satisfiable by an input other than the one it guards.
+- **Source:** 1.5.x `docs/reviews/rca-coronation-fixes-2026-10-20.md` C1, on `origin/bannerlord-1.5.x` (ported by WP142).

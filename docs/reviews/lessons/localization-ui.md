@@ -709,3 +709,14 @@ back as a space, so the registered English silently differs from the inline defa
   (`taom_precompile_inquiry_body`) was not looked up.
 - **Prevent:** one paragraph, or `{newline}`. Until #702 lands, read the harvested row back before translating.
 - **Source:** 1.5.x `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A timing or effect claim about prefab XML comes from the engine method that reads it (Shadowfax Screens, 2026-10-18)
+The feature's comment, doc and issue said the character screen's top extension "waits 0.7 s and then slides for
+0.3 s, about 1 s". The values were read correctly from the installed prefab, but `Widget.UpdateVisualDefinitions`
+counts `DelayOnBegin` inside `TransitionDuration` and snaps at the duration, so that definition could never slide,
+and no widget uses it. The same assumption kept dead `DelayOnBegin` handling in the code.
+- **Why missed:** reading attribute values felt like verification; the method that interprets them was not read.
+- **Prevent:** before writing what a GUI attribute does (a duration, a delay, an alignment), read its consumer in the
+  installed DLL (`pwsh tools/taom-src.ps1 path Widget`) and grep for a widget that uses the definition; state the
+  engine version and the method in the doc.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-2026-10-18.md` F2, F6, on `origin/bannerlord-1.5.x` (ported by WP142).

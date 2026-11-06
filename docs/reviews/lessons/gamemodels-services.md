@@ -900,3 +900,24 @@ today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with t
 - **Why missed:** the creature gate-blow log printed `hitPoint - scaled` from `ApplyDamageScaling`, but reductions, general modifiers (campaign damage bonuses, career buffs) and rounding run after that stage, so the logged "after" HP overstated what was left in the campaign while matching Custom Battle.
 - **Prevent:** log only values the stage owns; read the outcome from the next observation (the following blow's "before" HP) and say in tuning docs which later stages change the number per game mode.
 - **Source:** 1.5.x `docs/reviews/rca-siege-forces-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Splitting a captured-once guard into per-call seams keeps its fail direction in every seam (plan 026, 2026-09-24)
+The old `RefugeService.ReleasePeacePrisoners` read the refuge's faction once and returned before
+the walk without one, so a missing faction released nobody. Plan 026 split it into a count seam
+(0 rows without a faction) and a per-row war-check seam that re-read the faction and answered
+`false`, which the service reads as "release", when it was missing. Unreachable today, but the rule
+that protects an irreversible action then lived only in the start-of-walk guard, and a later edit
+to that seam alone would have released every prisoner. The plan's maintenance note recorded the
+flip and accepted it as unreachable.
+- **Why missed:** parity was judged on the states the plan could reach; nobody asked which way each
+  new seam's missing-input default fails.
+- **Prevent:** when a refactor moves a guard that was checked once before a loop into a seam called
+  per item, write down what the old early return meant (usually "do nothing") and make every new
+  seam's missing-input answer mean the same thing to its caller. A predicate that gates an
+  irreversible write answers the safe way (keep, skip) when its context is missing.
+- **Source:** 1.5.x `docs/reviews/rca-seam-decision-logic-2026-09-24.md` S1 (Agents 1, 4 and 5), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A rule exception lives in a recorded catalogue, never only in a comment in the code it excuses (#737, 2026-10-05)
+- **Why missed:** `TaomCombatMechanicsModel` kept two `if (IsHorseCharge)` routing guards, which gamemodels.md rule 4 forbids in an override body, because its own header called them "the parent's accepted idiom". No ADR and no `.ai/review-reference.md` "Intentional Patterns" entry records that idiom; the claim outlived several reviews and the #737 plan because each reader took the file's account of itself.
+- **Prevent:** before keeping code a rule forbids, find its exception in `.ai/review-reference.md` "Intentional Patterns" or an ADR. With none, fix the code (here each facade declines the hits it does not own, so the override is a `??` chain) or record the exception with its reason; either way the excusing comment goes.
+- **Source:** 1.5.x `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F1, on `origin/bannerlord-1.5.x` (ported by WP142).

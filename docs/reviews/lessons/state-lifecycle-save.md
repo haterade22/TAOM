@@ -956,3 +956,9 @@ It was safe only because its one resolve sits under `OnGameStart`, a fact record
   correctness precondition on WHEN a singleton is first resolved belongs in code, never in a
   CHANGELOG sentence.
 - **Source:** 1.5.x `docs/reviews/rca-hot-path-resolve-and-grid-caching-2026-09-24.md` row 1; `NameplateRelationSettingsProvider.cs` (first occurrence, 2026-09-13), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A quest's StringId keys its journal record, so a quest started again needs a new id (career quests, 2026-10-27)
+`JournalLogsCampaignBehavior.OnQuestStarted` finds the last journal record whose `JournalLogEntry.IsRelatedTo` matches the quest's `StringId`, and reuses it. A career quest offered again after a cancel under the same `"taom_cq_" + def.Id` took over the cancelled quest's record: attributed to the former hero, marked unsuccessful, then flipped to success when the new quest completed. Each offer now gets `CareerQuestService.NewQuestStringId` (definition, owner, campaign milliseconds).
+- **Why missed:** a ladder comment and an earlier entry in this file said "the engine keys only map markers by id", and that claim was trusted instead of the journal code.
+- **Prevent:** before a quest can be started twice (a re-offer, a second owner, a retry), give each instance its own StringId; an engine claim copied into a comment or a lesson is checked against the decompile before it carries a design.
+- **Source:** 1.5.x `rca-career-quest-owner-change-2026-10-27.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).

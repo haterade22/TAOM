@@ -996,3 +996,16 @@ Patch30's catch, added to satisfy the D6 logging rule, logged its first throw th
 - **Why missed:** the line was written as logging, not as state, so the static-latch lesson in `lessons/state-lifecycle-save.md` (four earlier recurrences) was not read; the sample alone was taken to meet "aggregate or sample, never drop".
 - **Prevent:** a catch on a hot or worker-thread patch hands the exception to its service (`FormationLayoutService.NoteFallback`): count every throw with `Interlocked.Increment` on the exception path only, log the first per mission in full, write the count at mission end and re-arm there. Pin both lines literally, and pin that the prefix calls the service with an IL presence check (`Prefix_ReportsAThrowToTheService`). A presence check does not show that the call sits in the catch, so verify that in game, or assert that the call's IL offset falls inside a `MethodBody.ExceptionHandlingClauses` handler range (`IlCallScanner` returns no offsets, so that needs a scanner that does).
 - **Source:** 1.5.x `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A bool prefix that returns false does not stop the postfixes (Shadowfax Screens 2026-10-19)
+The clan fast path skipped `ClanPartiesVM.RefreshPartiesList` with a false prefix, and its comment,
+registry entry and feature doc said Refuge's postfix on that method therefore "runs only for a build
+that runs". Harmony 2.4.2 emits the postfixes after the skip label (`MethodCreator`), so every
+postfix ran on every skipped call too. It was harmless only because Refuge skips a party it already
+listed.
+- **Why missed:** the claim was reasoned from what the prefix intends, not from Harmony's emitted IL.
+- **Prevent:** when a prefix skips a method that other patches postfix, assume every postfix still runs
+  and check each one is idempotent over the unchanged state; to skip one call site without running the
+  method's postfixes, swap that call site with a transpiler instead (the fix here). Add a real-Harmony
+  test with a counting postfix on the skipped method.
+- **Source:** 1.5.x `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).

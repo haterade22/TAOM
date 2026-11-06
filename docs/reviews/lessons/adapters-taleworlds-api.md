@@ -667,3 +667,16 @@ pages, the creature authoring guide and a CLAUDE.md trap row before an engine re
   (`MBMath.IsBetween`, `MathF.Clamp`, a hand-written `<`/`<=`) and quote the operator. Treat a band quoted in a
   lesson as a claim to re-check, not a fact, when it decides a design.
 - **Source:** 1.5.x `docs/reviews/rca-creature-collision-review-2026-09-18.md` finding 3; `TaleWorlds.Library.MBMath.cs`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A binding gate's fallback must not let TAOM's own types satisfy an engine row (plan 025, 2026-09-24)
+The `ReflectionSiteBindingTests` row `TaleWorlds.Engine.PathReuseCache._store` named no engine type. It passed from
+`41258657` (2026-05-28) until plan 025 removed it, because `ResolveType`'s simple-name fallback
+(`ReflectionSiteBindingTests.cs`) searches every loaded assembly, TAOM.dll included, and found TAOM's own
+`PathReuseCache`.
+- **Why missed:** the fallback was written for engine namespace moves; nobody asked which assemblies it searches, and
+  a mislabelled row looks the same as a good one when it is green.
+- **Prevent:** restrict the fallback to engine assemblies (`TaleWorlds.*`, `SandBox*`, `StoryMode*` and the other
+  shipped modules) or fail when the resolved type lives in a TAOM assembly. Reflection on TAOM's own types belongs in
+  Category D of `reflection-sites.md`, never in this gate. Still open: the fix changes the gate's behaviour and is
+  pre-existing test code, so plan 025 did not apply it (plan 008 works on the same gate).
+- **Source:** 1.5.x `docs/reviews/rca-delete-unreachable-scaffolds-2026-09-24.md` F2 and FOLLOW-UP 1, on `origin/bannerlord-1.5.x` (ported by WP142).
