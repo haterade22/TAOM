@@ -909,3 +909,15 @@ failing test, and the recompute's absence was not even logged.
 - **Prevent:** every `AccessTools` / `GetMethod` / `GetField` / `TypeByName` by literal name lands with its DataRow and
   catalogue row (`/verify-bindings`); the engine-compatibility lens now reports a missing row.
 - **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before replacing an engine list wholesale, grep the WHOLE dump for its writers
+The culture doctrine calls `Team.ClearTacticOptions()` and re-adds its own set at `EarlyStart`. The research had read every `AddTacticOption` in `MissionCombatantsLogic.EarlyStart` and the `TeamAIComponent` surface, and concluded that was the list. `SandBox.Missions.MissionLogics.MissionCaravanOrVillagerTacticsHandler.EarlyStart` (v1.4.8 `:9-15`) also adds a `TacticDefensiveLine` for a caravan or villager side regardless of skill, runs before TAOM's `EarlyStart`, and was swept away by the clear.
+- **Why missed:** the writer lived in a module assembly (`SandBox.dll`), not in `TaleWorlds.MountAndBlade`, and the grep stopped at the type that owns the list.
+- **Prevent:** when TAOM clears or replaces a collection the engine owns (a tactic list, a behaviour list, a template list), grep every assembly in the dump for the mutator's name before deciding what the list contains, and either preserve the other writers' rows or state in the feature doc that they are dropped and why.
+- **Source:** 1.5.x `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 5 (engine-fidelity agent), #608, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An offline model of an engine rule reads the callees, not only the entry point (2026-10-02)
+Plan 038's audit modelled what `PreloadHelper.AddItemObject` registers, and every rule it stated matched the decompile. It still counted a crafted weapon's Blade holster mesh on six templates where `CraftedDataView` returns null (`use_weapon_as_holster_mesh`), and split `EquipmentSet` ids at a dot where `BasicCharacterObject.Deserialize` looks them up whole. It also counted skins and horse materials as preload work although `PreloadHelper` registers neither, and left out skin assets without saying so. This is a recurrence of "An approximation of an engine gate must say so, or it becomes a false authority" above.
+- **Why missed:** the model was read from the entry point's method names (`GetHolsterMeshIfExists`), and a helper written for one call site (`Equipment.DeserializeNode`'s dot split) was reused at another without reading it.
+- **Prevent:** for each engine method the model cites, open the methods it calls and list their data-driven early exits (template flags, slot fit, the last child wins); model each one or name it in the tool's approximations. Before reusing a parsing helper at a second engine call site, read that call site.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R3, R5, R9, R14, on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -3511,3 +3511,88 @@ measurement would have been written into the live Armory as a gait that covers n
   record failed. Prove it with a deliberately broken report.
 - **On this tree:** This incident ran on the 1.5.x line, and `measure_animalia_clips.py`, `gen_animalia_anim_clips.ps1`, `loop_displacement_m`, `plants_sorted` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live-data edit that needs new code changes the installed game when it is written (#646, 2026-09-23)
+Moving the sizes onto the Monsters edited the live Armory at once (the items to the placeholder 100), while the code
+that reads the new attribute waited for a deploy. The installed `TAOM.dll` had no size pass and still baked the old
+reach, so every in-game check in between would have read 1.0x bodies with 1.5x reach; and HEAD's committed tests
+(`ElkConfigTests`, `AnimaliaMountWiringTests`) failed against the live install until the new tests were committed.
+Another session recorded those two failures in its own commit.
+- **Why missed:** the "Unversioned modules" trap is about a reinstall reverting a live edit; here the live edit ran
+  ahead of the code instead, and nothing ties a live edit to the deploy it depends on.
+- **Prevent:** when a live edit depends on unshipped code, say so in the feature doc's state line ("smokes only after
+  a deploy"), and commit the code, the tests that read the live data and the ledger together, so HEAD is never red
+  against the live install.
+- **On this tree:** This incident ran on the 1.5.x line, and `ElkConfigTests`, `AnimaliaMountWiringTests` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` "Final review", finding F5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool kept in two places drifts: keep one canonical copy and make the other forward to it (2026-09-29)
+The creature-animation toolkit lived twice: `tools/blender/harness.py` in the repo and
+`E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py`, which the skill told agents to exec. On 2026-06-13
+`add_ear_flap()` was added to the live copy only, so the repo copy, the one under review and test, was
+missing a function the elephant idle depends on, and nothing noticed for three and a half months.
+- **Why missed:** both copies were "the toolkit"; the doc named the live path, the repo kept the
+  reviewed one, and no check compared them.
+- **Prevent:** one copy is canonical (the repo, where review and tests run); any other location holds
+  a one-line forwarder (`exec(open(<canonical>).read(), globals())`, or `runpy.run_path` for a CLI)
+  and the original as a backup, and the docs name only the canonical path.
+- **On this tree:** This incident ran on the 1.5.x line, and `E:\LOTRAOMAssets\Elephant\_refine_tools\harness.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/adopt-ecc-2026-09-29.md` Step 6; `tools/tests/test_blender_harness_gait.py`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An early exit moves every existing test off the path behind it: re-point the payloads and give each filter arm a row (plan 013, 2026-09-24)
+After the prefilter landed, none of section 4's contract payloads held `git`, `dotnet` or `build.ps1`, so the exit-code and JSON contract stopped at every Bash hook's first line, and nine hooks had no committed check on their parse path. 4c's positive rows also covered one arm of `suggest-compact.sh`'s three-arm filter. A planted `exit 3` after the `source` and a deleted filter arm both kept the suite green.
+- **Why missed:** the plan listed section 4 as "must stay green" and it did; nobody asked which path its payloads now reached. Rows were chosen per event, not per filter arm.
+- **Prevent:** when a change adds a fast path, list which existing tests now take it and add a payload that reaches the slow path. Give every alternative of a filter its own trigger row, and prove each row by deleting the arm it covers.
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-2026-09-24.md` F2, F3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When a fix removes a premise, retire it from the argument (plan 013 decisions, 2026-09-24)
+Superseded in part: "State a payload premise as the producer's behaviour" above. After D39 only the two confirm gates filter on `git`, and after D40 a payload holding any `\u` escape takes the full parse, so the prefilters are safe under any JSON writer: JSON writes a letter literally or as `\uXXXX`. The catalog still argued safety from Claude Code's writer, and the twelve hook comments called the escape arm "fail open", the house term for allow.
+- **Why missed:** D40 was added as one more arm; the surrounding prose was edited around it, not re-derived.
+- **Prevent:** when a change closes the hole a premise guarded, rewrite the argument from the new rule and move the premise to what it still affects (here: cost, and `suggest-compact.sh` until plan 011 deletes it).
+- **Source:** 1.5.x `docs/reviews/rca-bash-hook-prefilter-decisions-2026-09-24.md` R6, R9, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A hook that parses a shell command judges each command, in the shell's own grammar, against the shapes Claude sends (plan 011, 2026-09-25)
+`validate-push.sh` took the last word of a line as the refspec, so
+`git push --force origin bannerlord-1.5.x 2>&1 | tail -5` passed, as did `&& echo done`, a second
+refspec, and `--force --all`. It was the only force-push guard (D29). The ADR-011 batch 1 RCA had
+already recorded the trailing-comment form of this bypass on 2026-09-23; plan 011 rewrote that same
+function and claimed the trunks were guarded. Separately, `mark-verification-run.sh` applied Bash
+escaping to PowerShell text, so ``Write-Output "x`"; dotnet test"`` marked a build that never ran.
+Both hooks also missed a command on a non-final line, because Python's `print` writes CRLF on
+Windows.
+- **Why missed:** the plan called `;` and `&` "harmless tokens", and the tests fed each hook the
+  executor's own idea of a command: pushes that end their line, and Bash strings under a PowerShell
+  tool name. The 2026-09-23 follow-up stayed as prose, not a failing test.
+- **Prevent:** before registering a command-parsing hook for a shell, test it with that shell's
+  real shapes: a trailing `2>&1 | tail -5` or `| Out-Null`, `;` and `&&` chains, two refspecs or
+  arguments, a quoted path ending in the shell's escape, and the command on a middle line. Split a
+  line into commands before judging it. Choose the escape from `tool_name`. For a gate, over-block
+  quoted text rather than open a `bash -c` bypass. A known bypass recorded as a follow-up gets a
+  failing test row the day it is found.
+- **Source:** 1.5.x `docs/reviews/rca-stop-reminders-and-trunk-guard-2026-09-24.md` F1, F3, F7, F9 (repeat of `docs/reviews/rca-adr011-batch1-2026-09-23.md`, "Follow-ups not taken"), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An order added for speed also chose which target a message names (#680, 2026-09-26)
+`_shellwords.py push_candidates` sorted validate-push's candidate lines (lines that could force first, shortest
+first within each group) so the slow bash judge reached a short force push before a long message holding `push`.
+Once the judge ran in Python under a deadline, the order had no purpose left, and it was deleted with its
+`FORCE_HINT` pattern and the four tests that pinned it; the lines now come back in the order they are produced.
+No verdict depended on the order, since every line is judged until one refuses. What it did decide was the
+message: the judge stops at the first refused line and a warning is last-write-wins, so the order picked which
+trunk the BLOCKED or WARNING line names. A sweep of 1,093 commands (4,372 runs per hook, both shell tools, a trunk
+and a feature checkout) against the ordered hook gave 0 exit-code differences and 349 message-only ones: 319
+BLOCKED and 30 WARNING lines now name a different target, chosen by where each line is produced from the
+command rather than by a force hint and line length.
+- **Why missed:** the order went in as a speed-up, and its tests pinned the mechanism (line lengths, a force
+  hint), not an outcome, so nothing recorded that it also chose the named target until the reason for it was gone.
+- **Prevent:** when the cause of a performance workaround is removed, delete the workaround and the tests that pin
+  it in the same arc, and diff the hook's whole output (rc, stdout and stderr) against the previous commit, so a
+  change in a message shows up as a counted difference rather than a surprise.
+- **On this tree:** This incident ran on the 1.5.x line, and `FORCE_HINT` exists only there; the rule holds here.
+- **Source:** 1.5.x issue #680; `.claude/hooks/_shellwords.py` (`push_candidates`); `tools/tests/test_shellwords.py`; `tools/test_hooks.sh` 7i, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A source-text gate must fail on the wrong code, not only on missing code (B4c, 2026-10-22)
+Two B4c gates went RED before the change and green after it, yet passed on a wrong implementation: `SubModuleMissionServerGuardTests` matched the word `IsDedicatedServer`, so an inverted condition passed, and `WargControllerSwapTests` compared two `IndexOf` results, so a deleted call (`-1`) still came "before" the other.
+- **Why missed:** a RED run proves the test sees the missing code. It does not show what wrong code the test accepts.
+- **Prevent:** for every source-text gate, name one plausible wrong edit (an inverted condition, a deleted or swapped call) and make sure the assertion rejects it. Pin exact condition text, require every `IndexOf` to be at least 0 before comparing positions, or compare one whitespace-collapsed sequence.
+- **On this tree:** This incident ran on the 1.5.x line, and `SubModuleMissionServerGuardTests`, `WargControllerSwapTests` exist only there; the rule holds here.
+- **Source:** 1.5.x Codex B4c review F1 and F2; `rca-taom-client-b4c-2026-10-22.md`, on `origin/bannerlord-1.5.x` (ported by WP142).

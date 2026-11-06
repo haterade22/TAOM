@@ -1606,3 +1606,68 @@ The first `HowdahPrefabTests` pinned the geometry the rebuild changed (moveable 
 - **Prevent:** before writing a data pin, list what each consumer reads from the data (names, scripts, flags, tags) and pin those, with the name shared through one constant the code and the test both use (`ElephantConfig.HowdahPrefabName`).
 - **On this tree:** This incident ran on the 1.5.x line, and `HowdahPrefabTests`, `HowdahPrefabName` exist only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-howdah-prefab-review-2026-09-19.md`, #627, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A test pinned to one engine build skips at the next bump: give it a table of builds, not one constant (2026-10-05)
+Seven native address tests (`ClipBudgetSignatureInstalledBinaryTests`, five Ghidra CLI tests in
+`tools/tests/test_native_decompile.py`, `test_known_methods_resolve_to_their_registered_implementations`)
+compared against a single 1.5.x constant and returned Inconclusive or skip on any other build, so the
+1.5.x bump switched them off with a green run.
+- **Why missed:** a skip reads as "not applicable", and the bump checklist did not name the tests.
+- **Prevent:** key such pins by build (file length or engine version) in a table, keep the old rows, add a
+  row at every bump, and let an unlisted build skip with a message naming the table.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Replay the incident a detector cites through the detector before the docs say it covers it (plan 035, 2026-10-02)
+The packager's stale-format WARNING flags a scene sack whose format differs from the majority of the shipped sacks,
+and the docs said it covers issue #448. #448's three lagging sacks (0x0782 while vanilla's 486 read 0x0783) were
+module-level `<Module>/Shaders/D3D11` sacks, and TAOM_Map shipped no scene sack at that date, so the report never
+reads #448's data at all. The first fix blamed the majority rule instead (a set that lags as a whole has no odd one
+out). That limitation is real, but it is not why #448 is missed; the fix repeated the miss by again not replaying
+#448's own layout.
+- **Why missed:** the rule came from the plan's amendment, and the docs were written from the amendment's purpose.
+  Nobody fed #448's own files to the report, neither the first time nor in the fix.
+- **Prevent:** when a check names the incident it exists for, write that incident's data, in its own on-disk layout,
+  as a test case before writing the claim. If the check cannot catch it, the test pins the limitation
+  (`test_issue_448s_module_level_sacks_are_not_read`) and the docs say what it cannot see.
+- **On this tree:** This incident ran on the 1.5.x line, and `test_issue_448s_module_level_sacks_are_not_read` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A binary reader's fixture takes every width branch the shipped files take, proven by mutation (plan 035, 2026-10-02)
+The packager's DebuggableAttribute reader had one fixture: PE32+, 2-byte heap and coded indexes, one row per table.
+The installed `TAOM.dll` reads HeapSizes 0x05 (#Strings and #Blob indexes 4 bytes, #GUID 2), and its 20,114 MethodDef
+rows alone make MemberRefParent and CustomAttributeType 4 bytes (TypeRef 1,349 and MemberRef 8,068 rows, both under
+8,192); `TAOM.Dependencies.dll` is PE32 with every index 2 bytes. 16 of 22 mutations of the reader (heap width,
+coded-index thresholds, row widths, the PE32 offset, the native guard) left all 85 tests green; by the tooling
+lens's reading, three of them would have turned the Debug `TAOM.dll` into a confident "JIT optimization ON". A recurrence of "A parser tested only against the format you invented" earlier in
+this file: there the format was invented, here it was real but minimal. The first fix widened the fixture from a
+summary of the shape, not the measured shape: one switch set all three heap widths together and only TypeRef or
+MemberRef rows widened the coded indexes, so five more mutants (two heap bits swapped, every heap width taken from
+one bit, MethodDef dropped from either coded index) still left every test green while misreading the installed DLL.
+- **Why missed:** the fixture was validated by System.Reflection.Metadata reading it back, which proves a fixture
+  valid, not representative. The reader was right on real DLLs, so nothing failed to prompt a wider fixture. The
+  fix was checked against the mutations already listed, not against new ones aimed at the shape it claimed.
+- **Prevent:** read the header fields of each shipped file (HeapSizes, the row count of every table) and build one
+  fixture with exactly those values (`test_the_installed_taom_dll_shape`), then vary each flag bit on its own and
+  widen each coded index through each target table the real file uses. Write widths from the spec rather than the
+  reader, read each new shape back with an independent reader, read a Debug and a Release form per shape so a
+  constant answer cannot pass, and run mutations aimed at the measured shape: each must fail a test
+  (`tools/tests/test_package_release.py`, `_managed_dll`).
+- **Source:** 1.5.x `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F3, and the review record's "Convergence round 1", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pin an id that crosses into unversioned data as a literal, and build the data test's rows from the constant (#646, 2026-09-23)
+`AnimaliaConfig`'s Monster and action-set ids were tested only against a service built from the same constants, and
+the wiring tests checked the Armory against their own literals. A typo in a constant would have passed every test and
+never attached a tree, and the first-tick log reads "0 elk(s)" in a normal Custom Battle anyway.
+- **Why missed:** each test passed for a real reason inside its own file; none linked the constant to the data.
+- **Prevent:** pin such a constant against a literal once, and build the rows of the test that reads the live data
+  from the constant, so the data check also proves the code names what the data declares.
+- **On this tree:** This incident ran on the 1.5.x line, and `AnimaliaConfig` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-animalia-2026-09-23.md` row 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A weight that competes in an engine MaxBy gets an ordering test against its competitors before the data is tuned
+The culture-doctrine slice shipped four TAOM `TacticComponent` weights and a JSON of per-culture multipliers on the nine vanilla tactics, with 19 weight tests asserting monotonicity, clamps and zero cases. Two of the four doctrine tactics could never win: Rohan's `FrontalCavalryCharge*2.0` used the identical formula as `CavalryDominance*1.3`, and the Elven `DefensiveEngagement*1.5` out-weighed the ring whenever the infantry stood near the high ground. The engine picks by `MaxBy(weight * 1.5 if current)` every 5 s (`TeamAIComponent.cs`), so a doctrine is only as real as its margin over the rows beside it.
+- **Why missed:** the tests pinned each function's own shape; nothing computed the vanilla weights the function competes with, and the multipliers were authored by feel with the formulas open in another window. The in-game A/B would not have caught the Rohan case either: vanilla `FrontalCavalryCharge` shows the same behaviours the criterion looked for.
+- **Prevent:** when a new weight enters an engine `MaxBy` (tactic weights, behaviour weights, any priority the engine already scores), write a test-side reference of the competitors' formulas at their nominal scores with line citations (`VanillaTacticWeightReference`), then one test per shipped data row asserting the intended winner beats every competitor by the engine's hysteresis at a canonical input (`ShippedDoctrineOrderingTests`). Tune the data to the test, not the test to the data.
+- **On this tree:** This incident ran on the 1.5.x line, and `CavalryDominance`, `VanillaTacticWeightReference`, `ShippedDoctrineOrderingTests` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-culture-doctrine-2026-09-16.md` finding 4 (extensibility agent), #608, on `origin/bannerlord-1.5.x` (ported by WP142).
