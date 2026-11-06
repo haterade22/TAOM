@@ -173,7 +173,9 @@ enable them in the launcher, and start a **new campaign**: existing saves are no
 
 ## Contributing
 
-1. Read [CLAUDE.md](CLAUDE.md) for coding standards and conventions
+Pull requests go to `bannerlord-1.4.5` for Bannerlord 1.4.8 fixes, or to `bannerlord-1.5.x` for the 1.5 line. [CONTRIBUTING.md](CONTRIBUTING.md) covers the route, what a PR needs and the checks every PR goes through.
+
+1. Read [AGENTS.md](AGENTS.md) for coding standards and conventions
 2. Write tests first — TDD is mandatory
 3. Use the adapter pattern for any TaleWorlds sealed type
 4. Keep Harmony patches and entry points thin (< 150 lines); delegate to services
