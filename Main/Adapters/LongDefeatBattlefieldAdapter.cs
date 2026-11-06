@@ -128,8 +128,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         }
     }
 
-    // The engine's InnerGate ignores visibility (TeamAISiegeComponent.cs:54-57), and a hidden gate never ticks (CastleGate.cs:619-622), so it never opens. Helm's Deep hides one at height 32.5
-    // (scene.xscene:5971): the Middle lane stays closed (SiegeLane.cs:355-364), and BehaviorAssaultWalls (:162) never leaves AttackEntity. A null InnerGate throws in that behavior, so the gate is broken, not removed.
+    // The engine's InnerGate ignores visibility (TeamAISiegeComponent.cs:54-57), and a hidden gate never ticks (CastleGate.cs:619-622), so it never opens. Helm's Deep hides one at height 32.7
+    // (aserai_castle_gate_inner_l1, put back after the 2026-11-06 rework; LongDefeatHelmsDeepGateTests): the Middle lane stays closed (SiegeLane.cs:355-364), and BehaviorAssaultWalls (:162) never leaves AttackEntity. A null InnerGate throws in that behavior, so the gate is broken, not removed.
     public int BreakHiddenGates()
     {
         var all = _mission.ActiveMissionObjects.FindAllWithType<CastleGate>().ToList();
