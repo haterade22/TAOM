@@ -108,7 +108,7 @@ class ModuleDataQuery:
         patterns = [(k, re.compile(r'="' + re.escape(_PREFIXES[k] + bare) + r'"')) for k in kinds]
         refs = []
         for xml in sorted(self.moduledata.rglob("*.xml")):
-            text = ts._read_stripped(xml)
+            text = ts._read_fresh(xml)
             rel = self._rel(xml)
             for k, pat in patterns:
                 for m in pat.finditer(text):

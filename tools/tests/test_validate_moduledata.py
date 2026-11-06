@@ -2885,6 +2885,19 @@ class ItemSlotRejectedTests(unittest.TestCase):
         self.assertIn("NOT verified", issues[0].message)
         self.assertIn("SandBox", issues[0].message)
 
+    def test_main_walks_the_item_refs_once_for_both_collision_passes(self):
+        # The walk over the Armory's XML and this repo's cost about 5 s of a validator run, twice.
+        import validate_mesh_refs as vmr
+        (self.modules / "LOTRLOME_Armory" / "ModuleData").mkdir(parents=True, exist_ok=True)
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]), \
+             mock.patch.object(vm, "_loaded_tpacs", return_value=[Path("a.tpac")]), \
+             mock.patch.object(vmr, "module_tpacs", return_value=[Path("a.tpac")]), \
+             mock.patch.object(vmr, "build_present_set", return_value=vmr.PresentSet(tpac_paths=["a.tpac"])), \
+             mock.patch.object(vmr, "classify", return_value=[]), \
+             mock.patch.object(vmr, "extract_refs", return_value=[]) as walk:
+            _run_main("--moduledata", str(self.moduledata), "--game-modules", str(self.modules), "--code", vm.SLOT_CODE)
+        self.assertEqual(walk.call_count, 2, "one walk of the Armory and one of the repo")
+
     def test_main_runs_the_pass_and_exits_1_on_a_refusal(self):
         self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
         with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]), \
@@ -3004,3 +3017,22 @@ class CommitGateCoverageTests(unittest.TestCase):
         self.assertGreaterEqual(len(rows), 20, "the doc scan found almost no rows")
         self.assertEqual(sorted(emitted - rows), [],
                          f"codes with no row in {self.DOC.name}: add a row to its Codes table")
+
+
+class ReadStrippedCacheTests(unittest.TestCase):
+    def test_the_second_sweep_of_many_files_hits_the_cache(self):
+        """At maxsize=64 a validator run made 23,076 misses and 2 hits (2026-11-03): each sweep reads more
+        files than the bound, so the least recently used entry is always the one read next."""
+        import tempfile
+        ts._read_stripped.cache_clear()
+        with tempfile.TemporaryDirectory() as d:
+            files = [Path(d) / f"{i}.xml" for i in range(200)]
+            for f in files:
+                f.write_text("<a/>", encoding="utf-8")
+            for f in files:
+                ts._read_stripped(f)
+            before = ts._read_stripped.cache_info().hits
+            for f in files:
+                ts._read_stripped(f)
+            self.assertEqual(ts._read_stripped.cache_info().hits - before, 200)
+        ts._read_stripped.cache_clear()

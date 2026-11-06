@@ -1846,13 +1846,20 @@ VANILLA_CULTURES = {
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 
 
-@functools.lru_cache(maxsize=64)
+@functools.lru_cache(maxsize=None)
 def _read_stripped(xml: Path) -> str:
     """Cached: build_settled_cultures and build_settlement_economy walk the same five modules,
     so an uncached read costs two full reads plus two comment-strips of every settlements.xml
     on every validator run, and the commit hook runs the validator (efficiency agent,
     2026-08-14). A validator process reads each file at one point in time by design, so caching
-    for the process lifetime changes no result."""
+    for the process lifetime changes no result. No bound: a sweep reads about 4,300 files, so
+    any smaller bound drops each entry before its next read (at 64, 23,076 misses and 2 hits,
+    2026-11-03). The cost is about 180 MB for the run. A long-lived process reads _read_fresh."""
+    return _read_fresh(xml)
+
+
+def _read_fresh(xml: Path) -> str:
+    """One file's text with its comments removed, read now."""
     try:
         # utf-8-sig per tools/README.md "XML I/O convention" — a BOM'd definition
         # file must not leave a stray U+FEFF glued to the first captured id.
