@@ -175,7 +175,7 @@ class PrefilterEquivalenceTests(unittest.TestCase):
         self.assertEqual(self._scan("\n".join(["ordinary line"] * 500)), [])
 
     def test_generic_secret_literal_still_fires(self):
-        self.assertEqual(self._scan('password = "hunter2hunter2"'), [("secret-generic", 1)])
+        self.assertEqual(self._scan('password = "hunter2hunter2"'), [("secret-generic", 1)])  # audit-allow: secret-generic (test input)
 
 
 if __name__ == "__main__":
