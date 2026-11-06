@@ -50,15 +50,16 @@ internal sealed class WargRageLog
     private readonly Func<object, object?, RiderView> _read;
 
     internal WargRageLog(IModLogger logger, Func<double> clock)
-        : this(logger, clock, ReadRider)
+        : this(logger, clock, null)
     {
     }
 
-    internal WargRageLog(IModLogger logger, Func<double> clock, Func<object, object?, RiderView> read)
+    internal WargRageLog(IModLogger logger, Func<double> clock, Func<object, object?, RiderView>? read)
     {
         _logger = logger;
         _clock = clock;
-        _read = read;
+        // The engine reader runs inside Watch, under the lock, so it may read _open: a rider with an open episode is never a mate.
+        _read = read ?? ((rider, target) => ReadRider(rider, target, _open.ContainsKey));
     }
 
     /// <summary>The log of the running Fords mission; null unless a Fords mission activated it and <c>Mission.Current</c> is that mission.</summary>
@@ -86,9 +87,34 @@ internal sealed class WargRageLog
     /// <summary>
     /// How far from the formation's front-middle the rider may be and still count as back: 15 m, or half the width plus 5 m when that
     /// is more, plus the formation's depth (a rider at the rear rank is a whole depth behind the point the distance is measured to).
+    /// A rider within 15 m of a formation mate is back too, because a Fords lane formation strings out along its lane and its
+    /// front-middle can lie 200 m from its lead group.
     /// </summary>
-    internal static bool HasReturned(float distance, float formationWidth, float formationDepth) =>
-        distance <= Allowed(formationWidth, formationDepth);
+    internal static bool HasReturned(float distance, float formationWidth, float formationDepth, float nearestMate = float.MaxValue) =>
+        distance <= Allowed(formationWidth, formationDepth) || nearestMate <= MinReturnDistance;
+
+    /// <summary>
+    /// The distance from the rider at (x, y) to the nearest other unit, leaving out the rider and every unit <paramref name="skip"/>
+    /// names (riders with an open episode, so two riders reset together far from the formation cannot vouch for each other). A NaN
+    /// position is never nearest. <see cref="float.MaxValue"/> when no unit is left.
+    /// </summary>
+    internal static float NearestMate(object rider, float x, float y, List<(object Unit, float X, float Y)> units, Func<object, bool> skip)
+    {
+        var best = float.MaxValue;
+        foreach (var (unit, ux, uy) in units)
+        {
+            if (ReferenceEquals(unit, rider) || skip(unit))
+                continue;
+
+            var dx = ux - x;
+            var dy = uy - y;
+            var d = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (d < best)
+                best = d;
+        }
+
+        return best;
+    }
 
     private static float Allowed(float formationWidth, float formationDepth) =>
         Math.Max(MinReturnDistance, formationWidth / 2f + ReturnMargin) + formationDepth;
@@ -190,20 +216,20 @@ internal sealed class WargRageLog
                 }
 
                 var seconds = (float)(_clock() - episode.RestoredAt);
-                if (HasReturned(view.Distance, view.Width, view.Depth))
+                if (HasReturned(view.Distance, view.Width, view.Depth, view.NearestMate))
                 {
                     _returned++;
                     _maxReturnSeconds = Math.Max(_maxReturnSeconds, seconds);
                     closed.Add(rider);
-                    Add(ref lines, episode.Number, "returned episode=" + episode.Number + " s=" + seconds.ToString("0.0", CultureInfo.InvariantCulture));
+                    Add(ref lines, episode.Number, "returned episode=" + episode.Number + " s=" + seconds.ToString("0.0", CultureInfo.InvariantCulture)
+                        + Distances(view));
                 }
                 else if (seconds >= NotReturnedSeconds)
                 {
                     _notReturned++;
                     closed.Add(rider);
                     Add(ref lines, episode.Number, "not-returned episode=" + episode.Number + " s=" + seconds.ToString("0.0", CultureInfo.InvariantCulture)
-                        + " distance=" + view.Distance.ToString("0.0", CultureInfo.InvariantCulture)
-                        + " allowed=" + Allowed(view.Width, view.Depth).ToString("0.0", CultureInfo.InvariantCulture));
+                        + Distances(view) + " allowed=" + Allowed(view.Width, view.Depth).ToString("0.0", CultureInfo.InvariantCulture));
                 }
             }
 
@@ -261,17 +287,40 @@ internal sealed class WargRageLog
     }
 
     // The only place that reads engine agents (<c>Active</c> also names Mission.Current); a stale agent handle reads as inactive (the agent-slot rule).
-    private static RiderView ReadRider(object rider, object? target)
+    // Mates are the formation's arrangement units only: a detached unit is away from the formation by design (a task force, a machine).
+    private static RiderView ReadRider(object rider, object? target, Func<object, bool> skip)
     {
         var inactive = new RiderView(false, false, false, false, 0f, 0f, 0f);
         if (rider is not Agent agent || !AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State != AgentState.Active)
             return inactive;
 
         var formation = target as Formation;
-        var distance = formation == null ? 0f : (agent.Position.AsVec2 - formation.CurrentPosition).Length;
+        var distance = 0f;
+        var nearest = float.MaxValue;
+        if (formation != null)
+        {
+            var position = agent.Position.AsVec2;
+            distance = (position - formation.CurrentPosition).Length;
+            var units = new List<(object Unit, float X, float Y)>();
+            foreach (var unit in formation.UnitsWithoutLooseDetachedOnes)
+            {
+                if (unit is Agent mate)
+                {
+                    var at = mate.Position;
+                    units.Add((mate, at.x, at.y));
+                }
+            }
+
+            nearest = NearestMate(agent, position.x, position.y, units, skip);
+        }
+
         return new RiderView(true, agent.MountAgent != null, agent.Formation != null, formation != null && ReferenceEquals(agent.Formation, formation),
-            distance, formation?.Width ?? 0f, formation?.Depth ?? 0f);
+            distance, formation?.Width ?? 0f, formation?.Depth ?? 0f, nearest);
     }
+
+    private static string Distances(RiderView view) =>
+        " distance=" + view.Distance.ToString("0.0", CultureInfo.InvariantCulture)
+        + " nearest=" + (view.NearestMate == float.MaxValue ? "none" : view.NearestMate.ToString("0.0", CultureInfo.InvariantCulture));
 
     private static void Add(ref List<string>? lines, int episode, string line)
     {
@@ -297,11 +346,16 @@ internal sealed class WargRageLog
             Write(line);
     }
 
-    /// <summary>What one look at a rider found: alive, mounted, in any formation, in the formation looked for, and its distance, width and depth.</summary>
+    /// <summary>
+    /// What one look at a rider found: alive, mounted, in any formation, in the formation looked for, its distance to the formation's
+    /// front-middle, the formation's width and depth, and the distance to the nearest formation mate (<see cref="float.MaxValue"/>: none).
+    /// </summary>
     internal readonly struct RiderView
     {
-        public RiderView(bool active, bool hasMount, bool hasFormation, bool inTarget, float distance, float width, float depth)
+        public RiderView(bool active, bool hasMount, bool hasFormation, bool inTarget, float distance, float width, float depth,
+            float nearestMate = float.MaxValue)
         {
+            NearestMate = nearestMate;
             Active = active;
             HasMount = hasMount;
             HasFormation = hasFormation;
@@ -316,6 +370,7 @@ internal sealed class WargRageLog
         public bool HasFormation { get; }
         public bool InTarget { get; }
         public float Distance { get; }
+        public float NearestMate { get; }
         public float Width { get; }
         public float Depth { get; }
     }

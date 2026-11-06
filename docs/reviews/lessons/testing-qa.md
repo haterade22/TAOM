@@ -2588,3 +2588,11 @@ Five checks of throwers on an advance judged a wider window or a cheaper signal 
 - **Why missed:** each check followed its spec sentence ("shots since the run began", "within 4 m"), and the driver and the trial each kept their own window for one fact. No test fed a check a run whose signal came from outside the window it claims.
 - **Prevent:** for each check write down the interval and the cause its claim names, then feed the rule a run where the same signal has another source: throws only on the approach, throws only after the release, a company that walks through its point, an enemy that walks in. The run freezes its facts at the end of the window and every judge reads the frozen value; a second path to the same fact is deleted.
 - **Source:** [rca-marshals-word-throwers-2026-11-05.md](../rca-marshals-word-throwers-2026-11-05.md) rows 5 (the driver's count and the trial's window), 6, 10 and 11. Related: "Each trial verdict has a test that makes it fail" and "A log verdict needs a number for the broken build and for the working one".
+
+### A proximity rule excludes the things it judges, and lives where a test can call it (Fords of War check 12, 2026-11-06)
+
+The first fix for check 12 passed a raging warg rider when any unit of its formation was near. Two riders reset together far from the formation were each other's nearest unit, so both passed, and the search sat in the one method that reads engine agents, which every test replaces.
+
+- **Why missed:** the draft asked whether a member was near without asking which members are the riders under judgement, and wrote the search inline in the engine reader.
+- **Prevent:** a "near the group" rule leaves out every agent the same check is judging, and the search is a pure helper over plain positions that a test calls with a self, a skipped unit and a NaN position. The log line prints each measure the rule can pass on.
+- **Source:** [rca-fords-warg-return-2026-11-06.md](../rca-fords-warg-return-2026-11-06.md) rows 1 to 3. Related: "Each trial verdict has a test that makes it fail".
