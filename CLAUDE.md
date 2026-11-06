@@ -103,14 +103,13 @@ When the user's message matches one of these patterns, **proactively invoke** th
 - **`/freeze`** on "only fix this" / "don't touch X" / "stay in this folder" / a many-file refactor or focused one-feature fix; **`/unfreeze`** when they're done and the boundary is still set.
 - **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
 - **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue.
-- **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
 - **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `output-style.md` Part 2 already governs new prose as you write.
 
 ### Never auto-invoke
 
 `/codex-verify`, `/review-codex` (cost real money — explicit user intent or the ship-sequence offer);
-`/issue` (creates a public artifact); `/migration-status`, `/context-budget` (read-only diagnostics —
-on request, or `/context-budget` after a major harness change).
+`/issue` (creates a public artifact); `/context-budget` (read-only diagnostic: on request, or after a
+major harness change).
 
 ### When the user invokes a skill explicitly
 
