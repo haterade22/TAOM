@@ -2774,3 +2774,39 @@ exit-code differences and 275 renamed targets are all these shapes.
   what git did. Where a gate resolves a missing argument, find the setting that decides it (`push.default` here) and
   read it.
 - **Source:** 1.5.x issue #689; `.claude/hooks/_pushjudge.py`; `tools/tests/test_pushjudge.py` (`ISSUE_689`, `PushDefaultTests`); `tools/test_hooks.sh` 7c, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Evidence for a flag comes from the same parse that raised it (2026-10-02)
+`perf_runs.py` raised `MEMORY_PRESSURE` from `triage_battle_load.py`'s strict `[MemSample]` parser but chose the line to show with its own looser `memLoad=(\d+)%` scan, so the cited line could be one the flag never read; its docstring said `[MemSample]` was never re-implemented.
+- **Why missed:** the evidence was added later as "find the line to print", a separate small scan beside the parse that decides the flag.
+- **Prevent:** derive a flag's evidence from the parsed records that raised it (or from the same parser, line by line); a second regex for one fact is a fork that drifts.
+- **Source:** 1.5.x `docs/reviews/rca-perf-runs-parser-2026-10-02.md` F6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A parser rule change prints its diff per tag over the real corpus, not only for the tag that motivated it (2026-10-02)
+`perf_runs.py`'s new value rule (a value runs to the next space-led `key=` outside brackets) was written for `[Doctrine]`'s lists and checked over the 30 installed logs as "rows identical outside extra_tags, 489 values kept whole". The same rule also folded `[MapLoad]`'s seven per-kind party counts into `parties` (92 values, 644 keys) and would fold `[EnlistDiag]`'s presence snapshot into `verdict`; neither the commit, the doc nor the review record said so.
+- **Why missed:** the comparison counted the change where it was expected and summed the rest into "identical rows"; nothing printed which other tags' fields moved.
+- **Prevent:** when a parsing rule changes, run the old and new parser over the real corpus and print values changed, keys dropped and keys added per tag and key; every tag in that list is either intended (and pinned by a test on its real line) or a bug. Check producers on unmerged branches too when the rule is generic (plan 040's `phase=GameInit total`).
+- **Source:** 1.5.x `docs/reviews/rca-perf-runs-parser-2026-10-02.md` R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Every branch where an audit tool degrades writes a reason row, and a STOP check reads the whole output (2026-10-02)
+Plan 038's battle equipment audit had a reason-code table, a run-log line per code and a test that every code it emits has a consequence, yet 82 loose textures counted 0 bytes with no line: the size fallbacks it inherited from the map tool set only flags (`HEADER_UNDECODED`, `NO_PIXEL_DATA`) in one TSV column. An empty selection exited 0 the same way, and a troops-file error crashed before `run.log` said why. The plan had made an undecoded loose header a STOP; the executor checked it on one sampled row.
+- **Why missed:** the consequence test proves the table covers the codes the source emits; it cannot see a branch that emits none. A flag reads like reporting but never reaches the log, and a sampled STOP check passes whenever the sample is a good row.
+- **Prevent:** list every branch where the tool substitutes, skips or sizes by formula, and every input that can come out empty or unreadable, and give each a reason row or an abort line with exit 2 (`TEXTURE_SIZE_FROM_HEADER`, `TEXTURE_SIZE_UNKNOWN`, `abort reason=NO_TROOPS_SELECTED`). Run a plan's STOP condition as a query over the whole output (`awk` over the TSV's flags column), not on an example row.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R1, R4, R7, R15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### When one index keeps two maps over the same items, every consumer resolves through the map that carries the precedence rule (2026-10-02)
+`AssetIndex.add_item` swaps its name map to the `EmAssetPackages` copy of a Native texture that holds the pixels, but its guid map keeps the first copy it saw, the `AssetPackages` stub with the same guid. The map tool resolves textures by name; the battle tool resolved them by guid through a material, so 338 textures named the stub's pack and carried a false `PIXELS_NOT_IN_PACKS`. Every byte check passed, because the header formula equals the pixel segment.
+- **Why missed:** the replacement rule lives in one map; the second consumer reused the other map, and a byte oracle cannot see a wrong source that yields the right number.
+- **Prevent:** when a shared index holds two lookups over one item set, read `add_item` (or its equivalent) for any rule that touches only one of them, and resolve through that one, or re-resolve (`index.get(kind, item.name)` when the guid matches). Check metadata columns (pack, flags), not only bytes, against a second reader.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` R2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool that writes into a folder it may reuse deletes its own previous outputs first (2026-10-03)
+Plan 038's audit wrote seven files into one folder, `sides.tsv` only when sides were given. A run without sides left the previous run's `sides.tsv` beside fresh tables, and a run that aborted left the whole earlier set beside a `run.log` that said it had failed. The report and the log described the current invocation correctly, so a careful reader was safe; anything that read a TSV alone read another run's numbers. Every test built its fixture in a fresh folder.
+- **Why missed:** a first-run test cannot see a stale file, and the optional output (`sides.tsv`) and the abort path were each tested only for the transition from nothing.
+- **Prevent:** for every tool that writes into a configurable folder, delete the tool's own previous outputs by name after the refusal checks and before the log opens (never the folder's other files; `_remove_previous_outputs`), and test the second run: one with fewer outputs and one that aborts, the second also checking the log holds only its own run.
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A plan's precedence choice is checked against the repository's engine record, and models the engine's unit of choice (2026-10-03)
+Plan 038 specified packed-first for `--loose-assets` (the `AssetPackages` copy wins, the loose one is listed as also-in), and the executor built and tested exactly that. `docs/reference/armory-guide.md` had recorded since 2026-09-01, from the engine's own log, that the engine loads a module's `Assets` tree and ignores the cooked packs it also ships, and that art deleted from `Assets` is broken in game whatever a stale pack holds. The first review filed the conflict as a LOW decision for the maintainer, Codex raised it again, and the decision settled on the engine. Reversing the iteration order would not have been enough: it would still have kept names only a stale pack holds. The engine chooses per module tree, so the index now does too.
+- **Why missed:** a plan choice reads as a requirement to the executor and as a decision to the reviewer, and nobody grepped the guide for the rule it contradicted.
+- **Prevent:** when a plan fixes a precedence or fallback order for an offline model of the engine, grep `docs/reference` and the lessons for that rule before building, and name in the plan the source that settles it. Model the engine's unit of choice (a module's tree), then record what the model skipped as a reason row (`COOKED_TREE_NOT_READ`).
+- **Source:** 1.5.x `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X4, on `origin/bannerlord-1.5.x` (ported by WP142).
