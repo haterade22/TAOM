@@ -150,6 +150,23 @@ kind table; `--with-tests` adds the dotnet rows. A gate that cannot run (no inst
 dotnet row without `--with-tests`) has not passed. The table is `GATES` in
 `tools/data_gates.py`: register a new gate there once.
 
+## GUI prefab gates (`Main/_Module/GUI`)
+
+These tests gate TAOM's Gauntlet prefabs and in-code PrefabExtensions. The ones marked (install) read the
+installed game through `BANNERLORD_GAME_DIR` and go Inconclusive without it.
+
+| Test | Fails on |
+|---|---|
+| `PrefabElementTypeBindingTests` (install) | an element that names neither a widget class nor a prefab |
+| `PrefabExtensionBindingTests` (install) | a `[PrefabExtension]` movie that is missing or differs in case, or an XPath that matches nothing in the winning prefab |
+| `PrefabInsertPositionTests` | a Child insert with no Index or not on `/Children`; an Append or Prepend on `/Children` |
+| `PrefabHintParentGateTests` | an in-code `HintWidget` whose parent sets `DoNotAcceptEvents="true"` |
+| `PrefabCloneWidgetReferenceTests` (install) | a TAOM copy of a vanilla prefab that drops a Widget-typed reference or a `DataSource` the vanilla file declares (Id-paired elements); a TAOM prefab identical to the vanilla file it shadows |
+| `PartyTupleVanillaParityTests` (install) | a TAOM copy of a party tuple prefab that differs from vanilla beyond the two 1.5.x edits |
+| `PrefabExtensionBrushTests`, `PrefabBrushPropertyTests` | a brush no module in TAOM's set declares; a `Brush.<Property>` that is not a `Brush` property |
+| `PrefabAttributeNameBindingTests` (install) | an attribute the engine cannot set, outside a vanilla-parity allowlist; a `VisualDefinition` or `VisualState` attribute the engine never reads |
+| `GauntletStretchInCoverRatchetTests` | a new `StretchToParent` child of a `CoverChildren` parent with no max size (grid parents exempt); four older files are counted and may only fall |
+
 ## Discipline
 
 - **Schemas are the source of truth.** Field types, enums, cross-ref targets, and the civilian rule live in `tools/schemas/*.json` — add new fields/enums there, never hardcode them in Python.
