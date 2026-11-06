@@ -2,10 +2,9 @@
 
 Every third-party source TAOM derives from, interoperates with, or was compared against, with its
 license and what kind of derivation it is. This file is the single authoritative record. It is also
-designed to double as the allowlist for a future `tools/check_provenance.py`, so that the only way to
-make a checker accept a new third-party name is to write a row here, which forces the license
-question to be answered. **That checker does not exist yet**; for now this file is kept current by
-hand, in the same commit as the code it describes.
+read by `tools/check_provenance.py`, which checks the Derivation and Status vocabulary, that each
+shipped non-TAOM binary has a `redistributed` row, and that each adoption record is named here or
+says "nothing taken". The rest is kept current by hand, in the same commit as the code it describes.
 
 **The rule this file exists to serve:** name the source and state its license. A bare unattributed
 mention is a violation, and so is an unnamed euphemism ("the donor mod", "the upstream pack"). This
@@ -23,7 +22,7 @@ and contains **only** `cleared` rows.
 
 ## Vocabulary
 
-**Derivation** (closed set, enforced by the checker):
+**Derivation** (closed set, checked by `tools/check_provenance.py`):
 
 | Value | Means |
 |---|---|
@@ -45,7 +44,7 @@ the source publishes one instead of a licence.
 identified, not yet confirmed or recorded) · `uncleared` (we do not know the terms) · `removed` (the
 derivation no longer exists in TAOM).
 
-**Tokens** are the strings the checker matches on. They must be backticked. Nothing outside backticks
+**Tokens** are the strings that identify a source in code and docs. They must be backticked. Nothing outside backticks
 is ever treated as a token, which is what keeps the bare word "Alliance" from matching vanilla
 `AllianceCampaignBehavior` or the French lore string "Dernière Alliance".
 
@@ -103,7 +102,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 
 <!-- provenance-register-end -->
 
-TAOM's own and predecessor modules. The checker skips these entirely.
+TAOM's own and predecessor modules. They need no row. `tools/check_provenance.py` does not scan for module ids.
 
 <!-- taom-owned-start -->
 `TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
@@ -111,8 +110,7 @@ TAOM's own and predecessor modules. The checker skips these entirely.
 <!-- taom-owned-end -->
 
 Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
-`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and live as a
-constant in the checker rather than here.
+`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, so they have no row either.
 
 ---
 
@@ -552,7 +550,7 @@ code was copied, so no MIT notice is carried. Record:
 ## Adding a row
 
 1. Name the source as it is published. No euphemisms.
-2. Put every string the checker should match in the `Tokens` column, in backticks.
+2. Put every string that identifies the source in the `Tokens` column, in backticks.
 3. Establish the license before writing anything into a shipped file. `UNKNOWN` is a valid value here
    and is never a valid value in `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 4. Pick the narrowest true `Derivation`. If you read the source while implementing, it is not

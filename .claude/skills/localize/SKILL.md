@@ -24,6 +24,9 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 1. Harvest the new keys into `Main/_Module/ModuleData/taom_xslt_strings.xml` (precedent: commit `20713a1`).
 2. Run `tools/translate_with_claude.py`.
 
+## Case E: changing English that is already translated
+Stage the edit, then run `python tools/check_stale_loc_rows.py --staged` (report only). It lists each language row left holding the old translation while the cache entry is unchanged too. Redo those rows and the cache entries in the same commit ([TRANSLATOR_GUIDE.md](../../../docs/localization/TRANSLATOR_GUIDE.md), "Changing English Text That Is Already Translated"); leave a row that is still right, such as an accent-only fix.
+
 ## Tools
 - `tools/translate_with_claude.py` — 4-tier fallback (override → cache → LLM → English); cache in `tools/translation_cache/<lang>.json` is git-tracked, so re-runs are free. `--provider anthropic` (default, `claude-opus-5`) | `deepseek` | `openrouter`; the last two need no SDK and read `DEEPSEEK_API_KEY` / `OPENROUTER_API_KEY`. `--module TAOM` works with no game installed; `--module all` reads TAOM_Map and Armory from the install, so it needs `$BANNERLORD_GAME_DIR` and exits 2 without it.
 - `tools/rebuild_translation_files.py` — rebuild per-language files from cache.

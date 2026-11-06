@@ -69,5 +69,57 @@ class BaselineFileTests(unittest.TestCase):
                 ratchet.compare(current, json.loads(p.read_text(encoding="utf-8"))), [])
 
 
+class EligibilityTests(unittest.TestCase):
+    def test_review_records_are_outside_the_ratchet(self):
+        docs = ratchet.dg.ld.DOCS_DIR
+        self.assertFalse(ratchet.ratchet_eligible((docs / "reviews" / "rca-x.md").resolve()))
+        self.assertFalse(ratchet.ratchet_eligible((docs / "reviews" / "lessons" / "a.md").resolve()))
+
+    def test_ordinary_docs_stay_in(self):
+        docs = ratchet.dg.ld.DOCS_DIR
+        self.assertTrue(ratchet.ratchet_eligible((docs / "features" / "enlistment.md").resolve()))
+
+
+class FailureTextTests(unittest.TestCase):
+    def run_main(self, orphans):
+        import io
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / "baseline.json"
+            base.write_text(json.dumps({"orphans": 1, "components": 1}), encoding="utf-8")
+            out = io.StringIO()
+            with mock.patch.object(sys, "argv", ["check_doc_graph_ratchet.py", "--baseline", str(base)]), \
+                    mock.patch.object(ratchet, "current_metrics", return_value={"orphans": 2, "components": 1}), \
+                    mock.patch.object(ratchet, "orphan_docs", return_value=orphans), \
+                    mock.patch("sys.stdout", out):
+                rc = ratchet.main()
+        return rc, out.getvalue()
+
+    def test_a_failure_lists_the_orphans_the_gate_counted(self):
+        rc, text = self.run_main(["docs/features/lonely.md", "docs/reference/stray.md"])
+        self.assertEqual(rc, 1)
+        self.assertIn("docs/features/lonely.md", text)
+        self.assertIn("docs/reference/stray.md", text)
+
+    def test_a_failure_does_not_send_the_reader_to_a_count_that_includes_reviews(self):
+        _, text = self.run_main(["docs/features/lonely.md"])
+        self.assertNotIn("graph_query.py metrics", text)
+
+    def test_orphan_docs_agrees_with_the_orphan_count(self):
+        self.assertEqual(len(ratchet.orphan_docs()), ratchet.current_metrics()["orphans"])
+
+
+class LiveTreeTests(unittest.TestCase):
+    """The ratchet against the real docs/ tree: nothing else runs it, so without this test the
+    orphan and component counts could grow while every suite stays green."""
+
+    def test_the_live_tree_is_within_the_baseline(self):
+        baseline = json.loads(ratchet.BASELINE.read_text(encoding="utf-8"))
+        problems = ratchet.compare(ratchet.current_metrics(), baseline)
+        self.assertEqual(problems, [], "the doc graph got worse: link the new doc from INDEX.md "
+                                       "or a sibling, or run tools/check_doc_graph_ratchet.py --update "
+                                       "and say why")
+
+
 if __name__ == "__main__":
     unittest.main()

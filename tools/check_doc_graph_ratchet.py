@@ -42,14 +42,29 @@ BASELINE = Path(__file__).resolve().parent / "doc_graph_baseline.json"
 RATCHETED = ("orphans", "components")
 
 
+def ratchet_eligible(p: Path) -> bool:
+    """The graph's own filter, minus docs/reviews/: review records are append-only history that
+    links nothing by design, so they would count as orphans and bury the curated docs."""
+    reviews = (dg.ld.DOCS_DIR / "reviews").resolve()
+    return dg.default_eligible(p) and reviews not in p.resolve().parents
+
+
+def _orphans_and_components() -> tuple[list[Path], int]:
+    nodes, edges, inbound, adj = dg.load_doc_graph(eligible=ratchet_eligible)
+    deg = dg.degrees(nodes, edges, inbound)
+    return [n for n in nodes if deg[n]["total"] == 0], len(dg.connected_components(nodes, adj))
+
+
 def current_metrics() -> dict:
-    """The two ratcheted counts, from the live docs tree."""
-    nodes, edges, inbound, adj = dg.load_doc_graph()
-    metrics = dg.graph_metrics(nodes, edges, inbound, adj, top=1)
-    return {
-        "orphans": len(metrics["orphans"]),
-        "components": int(metrics["component_count"]),
-    }
+    """The two ratcheted counts, from the live docs tree without docs/reviews/."""
+    orphans, components = _orphans_and_components()
+    return {"orphans": len(orphans), "components": components}
+
+
+def orphan_docs() -> list[str]:
+    """The orphans current_metrics counts, as sorted repo-relative paths."""
+    root = dg.ld.DOCS_DIR.parent
+    return sorted(p.relative_to(root).as_posix() for p in _orphans_and_components()[0])
 
 
 def compare(current: dict, baseline: dict) -> list:
@@ -105,8 +120,11 @@ def main() -> int:
             print(f"  {p}")
         print("\nAn orphan is a doc with no inbound AND no outbound .md link, so nothing\n"
               "will ever find it. Link it from INDEX.md or a sibling, or delete it.\n"
-              "Inspect with: python tools/graph_query.py metrics --top 15\n"
-              "If the growth is genuinely intended, run --update and say why in the commit.")
+              "The orphans this gate counts (docs/reviews/ excluded, which graph_query.py\n"
+              "metrics includes, so its numbers are far higher):")
+        for path in orphan_docs():
+            print(f"  {path}")
+        print("If the growth is genuinely intended, run --update and say why in the commit.")
     else:
         print(f"PASS: orphans {current['orphans']} <= {baseline['orphans']}, "
               f"components {current['components']} <= {baseline['components']}")
