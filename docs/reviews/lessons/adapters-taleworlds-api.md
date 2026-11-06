@@ -1020,3 +1020,16 @@ veto or a map event) had the same gap.
   in the `taom-src` decompile and write the effect into the plan with its file:line. A parameter name or a
   caller's usage is not evidence of what the body does.
 - **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H1, H2, L5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The player's relation with a clan member lives on his clan leader (2026-10-19)
+
+`ChangeRelationAction.ApplyInternal` (v1.4.8 `ChangeRelationAction.cs:22`) writes every change to the pair returned by
+`DiplomacyModel.GetHeroesForEffectiveRelation` (`DefaultDiplomacyModel.cs:871`): each hero's clan leader,
+unless both map to the same leader or one is the player's companion. `Hero.GetRelation` reads through the same
+mapping. So a "-20 to each of his relatives" penalty sums on one number per clan and clamps at -100.
+- **Why missed:** the per-lord penalty list was deduped by hero id, and the fake adapter recorded per-hero calls,
+  so the tests agreed with the wrong model.
+- **Prevent:** a feature that charges relations to many heroes keys its dedupe on the relation owner the engine
+  uses (ask `GetHeroesForEffectiveRelation(Hero.MainHero, hero, ...)`), keeps the strongest delta per owner and
+  calls the action once per owner, as vanilla's execution loop charges one delta per clan leader.
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H2, on `origin/bannerlord-1.5.x` (ported by WP142).

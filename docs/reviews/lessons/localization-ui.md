@@ -990,3 +990,34 @@ grammar functions need a gender tag or a `{@Type}` attribute that TAOM's names l
   `kept-vanilla-key-rows.txt`. Decode vanilla's language files by their BOM: the TR files declare utf-16 but are UTF-8.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab clone inherits nothing: pin it to the vanilla file it hides (1.5.x, 2026-09-15)
+Bannerlord 1.5.x added ship-banner widgets to the party nameplate prefabs and `PartyNameplateWidget.OnUpdate` dereferences `ShipBannerContainerWidget` on its first frame, unguarded. TAOM's two nameplate clones, re-based on 1.5.x the day before, replace the vanilla files outright, so the property stayed null and every nameplate threw on the campaign map. The same failure shipped on 1.5.x with `BloodFeudIconWidget`, and the clone carried a comment saying so.
+- **Why missed:** every other layered surface inherits engine additions (an additive model calls `base`, a stylesheet sees the merged document, a postfix runs after the new body); a cloned prefab is the one full replacement, and the three prefab gates checked element types, extension XPaths and the snapshot, never the clone against the file it hides. The 1.5.x lesson went into a comment, not a test.
+- **Prevent:** `PrefabCloneWidgetReferenceTests` pairs each TAOM prefab with the vanilla prefab of the same basename and requires every attribute that names a Widget-typed property on the element's widget class to survive in the clone; value attributes TAOM changes on purpose are ignored. When a bump touches a vanilla prefab TAOM clones, re-base the clone on the installed file and re-apply TAOM's edits, never hand-merge the attribute you noticed.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-v1.5.3-nameplate-clone-2026-09-15.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pin a GUI prefab copy to the vanilla file it replaces (#1031, 2026-10-27)
+TAOM's copy of `PartyTroopTuple.xml` replaces vanilla's by file name, so a widget that vanilla adds after TAOM's last re-sync
+never reaches players. The Execute button lost vanilla 1.5.x's blood-feud mark this way, and kept a 1.3-era `ValueFactor`.
+The 1.5.x changeset listed the file as changed, but that bump re-based only `PartyScreen.xml` and the nameplates, and
+`PrefabCloneWidgetReferenceTests` checks only reference attributes, so a missing decorative widget passed every gate.
+- **Why missed:** no gate compares a whole TAOM copy with the vanilla file it hides, and the engine-bump step re-based only
+  the copies someone remembered.
+- **Prevent:** give every TAOM copy of a vanilla prefab a LiveInstall test that compares it with the installed file element
+  for element, excluding only TAOM's documented edits (`PartyTupleVanillaParityTests` is the model). A copy with no TAOM
+  edit should not exist: delete it and let vanilla load.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `rca-tuple-blood-feud-2026-10-27.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A prefab element is live only if its consumer is: trace who reads it before you edit it (#1027, 2026-10-26)
+A recommendation to ease the character selection screen's `LeftPanel` panel rested on its `VisualDefinition`, but no
+widget in that prefab names it, and Gauntlet resolves a definition only from a widget in the same prefab, so the edit
+changed nothing. The file is a clone of vanilla `ClanMembers.xml` whose panel widget dropped `VisualDefinition="LeftPanel"`.
+The same shape sat behind the dead prefabs of #1022 and #1024.
+- **Why missed:** the definition looked complete, and nothing checks that a definition is used.
+- **Prevent:** before changing a definition, constant, brush or prefab, find the element or code that consumes it (a
+  `VisualDefinition="X"` attribute, a `!Constant` reference, a tag, a movie load); if there is none, delete it instead.
+- **On this tree:** This incident ran on the 1.5.x line, and `LeftPanel` exists only there; the rule holds here.
+- **Source:** 1.5.x `rca-panel-ease-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

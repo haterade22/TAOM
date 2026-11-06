@@ -3752,3 +3752,52 @@ engine calls TAOM makes. A byte pattern for the registration sites had the same 
   MountAndBlade's place after a single missed site (about 1,400 wrong answers, exit 0).
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x #688; `tools/native_engine_methods.py` `registration_sites`, `assign`; `tools/native_decompile.py` `_seed`, `seed_names`; the 2026-09-26 deep review findings F1 and F2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### "Read the rules" sends an agent to a rule its `paths:` trigger already loaded (#1003, 2026-10-26)
+Since 2026-10-01, `deep-reviewer` agents read `csharp-architecture.md` (29 KB) whole 142 times and `moduledata-validation.md` (41 KB) 127 times; in 131 of the C# reads the agent had already read a `.cs` file, which loads that rule by itself. AGENTS.md step 3 ("read the relevant linked rules") is written for every AI client, and Codex gets no path rules, so a Claude agent followed it literally. The data-flow lens was 2.1% of all Read output on its own, mostly incident history that already had a committed record, and its check 10 still demanded the `<DependedModule>` rows the maintainer decided against on 2026-09-21.
+- **Why missed:** nothing measured which files agents read until section 9 of `tools/harness_retro.py` gained its "Top files read" table (#1002); a lens grows one "Why this rule exists" paragraph per incident and nothing pushes back.
+- **Prevent:** an agent definition or lens says "make sure you have the rule", never "read it": Read a `paths:` rule only if it has not arrived, and then only its section (`deep-reviewer.md`, agent operating manual item 6). A lens keeps the check and one `Source:` pointer; the history stays in the RCA or lessons file. The weekly retro's file growth table shows a regression.
+- **Source:** 1.5.x adopt-context-mode-2026-10-26.md; issue #1003, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix that refutes a claim sweeps the claim's words, not a file list (2026-10-29)
+The 2026-09-30 review proved that `MBGlobals.GetActionSet` does not throw on a missing action set, and listed the
+eleven files that said it did. The issue written from it (#1065) named two docs to correct, so its fix was complete
+against the issue and left the claim in nine live docs, four community guides and two test comments; a doc review of
+the same batch found them. A separate lens found four more call sites with the same dead `IsValid` check.
+- **Why missed:** a file list is one search's snapshot, and an issue body that copies it narrows the sweep to it.
+  Claims also live in code comments and tests, which a docs-only list never names.
+- **Prevent:** when a fix refutes a claim, put the claim's words in the issue (here "throws on a miss" and
+  `!...IsValid` after `GetActionSet`), grep them over `docs/`, `Main/` and `TAOM.Tests/` before the
+  commit, and treat each hit as fix, history (reviews, changelog archive, snapshots) or follow-up with an issue.
+  The rename-sweep lesson above is the same miss for identifiers.
+- **Source:** 1.5.x `rca-actionset-guard-popup-2026-10-29.md` findings 2, 3 and 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A release gate runs on more than one folder shape: test each one it will meet (#1024, 2026-10-26)
+The new packager check refused untracked files in the TAOM module. It was designed and tested on the dev install, but the
+release flow runs the same `--require-build` gate again on Mike's editor-published channel folder, which has no loose
+`Assets/` and one `AssetPackages/pack0.tpac` holding TAOM's packed UI. The check refused that file and told the reader
+to prune it, which would ship TAOM without its sprites.
+- **Why missed:** the never-delete-pack0 rule lived only in local memory, and the tests used one module shape.
+- **Prevent:** list every folder a release gate is run on (the dev install, each channel folder) and give each shape a
+  test; run the gate read-only on the real folders before merging. Keep any rule about what a folder must keep in the
+  release doc, not only in memory.
+- **Source:** 1.5.x `rca-prefab-attribute-gate-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Label an estimate as an estimate, with its inputs (Carn Dûm map icon, 2026-10-16)
+The docs said 10 to 15 px per metre "is what the map shows at full zoom". By `MapCameraView` that density matches the
+default camera distance, and full zoom needs about 50. Two more engine claims (the `_s` AO, back-face culling) came
+from memory and were wrong.
+- **Why missed:** the density was arithmetic on a guessed camera distance, and nothing marked it as a guess.
+- **Prevent:** a number derived from assumptions says "estimate" and gives its inputs (here the camera constants and
+  the 0.15 icon scale), so the next reader can check it. An engine claim cites the code or the shader
+  (`evidence-over-claims.md`).
+- **On this tree:** This incident ran on the 1.5.x line, and `MapCameraView` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md` #6 to #8; `docs/kitbash/map-icons.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Run the whole tools suite at each work item, and prove a gate on a neighbour of its fault
+
+A scene refusal broke `test_live_map_writers_main` for hours, because each builder ran its own tool's tests. `dump_crash`'s tests faked `returncode=0`, so a real procdump, which exits 0xFFFFFFFE after a good dump, read as a failure. Three new gates passed with a fault one step from the one they were written for.
+- **Why missed:** scoped test runs read as verification, and each gate's red step used its own example.
+- **Prevent:** `python -m unittest discover -s tools/tests -t .` before each block leaves a worktree. Run an external tool once for real before you fake its result. After a gate's first red, try one other spelling of the fault (another attribute order, element text in place of an attribute, a sibling element).
+- **On this tree:** This incident ran on the 1.5.x line, and `test_live_map_writers_main`, `dump_crash` exist only there; the rule holds here.
+- **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` findings 5, 11, 13, 14, 17, 19, on `origin/bannerlord-1.5.x` (ported by WP142).
