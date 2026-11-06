@@ -27,6 +27,21 @@ public class NullFrontEndAdaptersTests
     }
 
     [TestMethod]
+    public void NullCampaignPresentationAdapter_Bind_KeepsTheVanillaSource()
+    {
+        var adapter = new NullCampaignPresentationAdapter();
+        var source = new PlainViewModel();
+
+        Assert.AreSame(source, adapter.Bind("TAOMEncyclopediaItemList", source));
+        Assert.IsNull(adapter.Bind("TAOMCharacterDeveloper", null));
+        adapter.OnLoaded(new object(), source);
+    }
+
+    private sealed class PlainViewModel : TaleWorlds.Library.ViewModel
+    {
+    }
+
+    [TestMethod]
     public void NullThumbnailCacheAdapter_ClearsNothing()
         => Assert.IsFalse(new NullThumbnailCacheAdapter().TryClearAll());
 

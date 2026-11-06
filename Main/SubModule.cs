@@ -1635,6 +1635,10 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch6_BannerEditor");
         TryPatchCategory("Patch7_FactionMap");
         TryPatchCategory("Patch9_RaceFilter");
+        // The themed encyclopedia's troop names (TAOM.Client, ADR-013). Here, after GameTexts, because patching the campaign
+        // tooltip methods can run CampaignUIHelper's static initializer; the patches stay inert until the first themed
+        // encyclopedia movie binds (EncyclopediaTroopNames.Active). A server has no client classes, so nothing applies there.
+        TryPatchCategory("TAOM.EncyclopediaTroopNames");
         // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
         // generator and tears it down again. The constructor postfix binds by arity: if a future
         // engine build declares a second BodyGeneratorView constructor, Prepare returns false and
@@ -2319,7 +2323,6 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
-        TAOM.Features.FactionUI.Campaign.EncyclopediaPictureCache.ReleaseAll();
 
         // Clean-shutdown marker. Written FIRST, while IoC and the logger are both still alive, and
         // on the durable path so it is flushed synchronously before the process can go away.

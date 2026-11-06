@@ -30,8 +30,9 @@ namespace TAOM.Features.FactionUI.Campaign
 
         private sealed class Picture
         {
-            internal TaleWorlds.Engine.Texture EngineTexture;
-            internal Sprite Sprite;
+            // Both set by Acquire's object initializer, the only place a Picture is made.
+            internal TaleWorlds.Engine.Texture EngineTexture = null!;
+            internal Sprite Sprite = null!;
             internal int Users;
             internal long LastUsed;
         }
@@ -47,11 +48,11 @@ namespace TAOM.Features.FactionUI.Campaign
         internal static string ResolveSettlement(string id, string culture, string kind)
         {
             var map = PictureMap.Value;
-            string fallback = (string)map["default"] ?? "generic_settlement.png";
+            string fallback = (string?)map["default"] ?? "generic_settlement.png";
             string directory = Path.GetFullPath(Path.Combine(CampaignPresentation.ModuleRoot, "GUI", "FactionUI", "EncyclopediaPictures"));
-            string file = (string)map["settlements"]?[id]
-                ?? (string)map["cultures"]?[culture]?[kind]
-                ?? (string)map["types"]?[kind] ?? fallback;
+            string file = (string?)map["settlements"]?[id]
+                ?? (string?)map["cultures"]?[culture]?[kind]
+                ?? (string?)map["types"]?[kind] ?? fallback;
             string path = Path.GetFullPath(Path.Combine(directory, file));
             if (!path.StartsWith(directory + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Encyclopedia picture must be inside GUI/EncyclopediaPictures.");
@@ -62,7 +63,7 @@ namespace TAOM.Features.FactionUI.Campaign
             return path;
         }
 
-        internal static Sprite Acquire(string file)
+        internal static Sprite? Acquire(string file)
         {
             if (!Pictures.TryGetValue(file, out var picture))
             {

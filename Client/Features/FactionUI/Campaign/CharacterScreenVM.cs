@@ -15,18 +15,19 @@ namespace TAOM.Features.FactionUI.Campaign
         [DataSourceProperty] public MBBindingList<CharacterAttributeTabVM> Tabs { get; private set; } = new MBBindingList<CharacterAttributeTabVM>();
         [DataSourceProperty] public MBBindingList<CharacterSkillItemVM> Skills { get; private set; } = new MBBindingList<CharacterSkillItemVM>();
         [DataSourceProperty] public MBBindingList<CharacterPerkItemVM> Perks { get; private set; } = new MBBindingList<CharacterPerkItemVM>();
-        private ViewModel _character, _skill, _firstPerk;
-        private CharacterAttributeTabVM _selectedAttribute;
-        private string _detailTitle, _detailText;
-        private string _nameText, _levelText;
+        // Null until the constructor's first Synchronize finds a character and a skill.
+        private ViewModel? _character, _skill, _firstPerk;
+        private CharacterAttributeTabVM? _selectedAttribute;
+        private string _detailTitle = "", _detailText = "";
+        private string _nameText = "", _levelText = "";
         private int _nameFontSize;
         private bool _showTraits;
         private int _perkCount;
         private float _perkWidth;
 
-        [DataSourceProperty] public ViewModel CurrentCharacter { get => _character; private set { _character = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public ViewModel CurrentSkill { get => _skill; private set { _skill = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public CharacterAttributeTabVM SelectedAttribute { get => _selectedAttribute; private set { _selectedAttribute = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public ViewModel? CurrentCharacter { get => _character; private set { _character = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public ViewModel? CurrentSkill { get => _skill; private set { _skill = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public CharacterAttributeTabVM? SelectedAttribute { get => _selectedAttribute; private set { _selectedAttribute = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string DetailTitle { get => _detailTitle; private set { _detailTitle = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string DetailText { get => _detailText; private set { _detailText = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowTraits { get => _showTraits; private set { _showTraits = value; OnPropertyChangedWithValue(value); } }
@@ -89,7 +90,9 @@ namespace TAOM.Features.FactionUI.Campaign
             foreach (var entry in Tabs) entry.IsSelected = entry == tab;
             SelectedAttribute = tab;
             Skills.Clear();
-            foreach (ViewModel skill in Items(CurrentCharacter, "Skills").Where(s => tab.SkillIds.Contains(Read<string>(s, "SkillId"))))
+            var character = CurrentCharacter;
+            if (character is null) return;
+            foreach (ViewModel skill in Items(character, "Skills").Where(s => tab.SkillIds.Contains(Read<string>(s, "SkillId"))))
                 Skills.Add(new CharacterSkillItemVM(this, skill));
             if (selectSkill && Skills.Count > 0) InspectSkill(Skills[0].Native);
         }

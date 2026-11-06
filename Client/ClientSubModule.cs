@@ -56,6 +56,14 @@ public sealed class ClientSubModule : MBSubModuleBase
         _uiExtender.Enable();
     }
 
+    // Shutdown (Module.FinalizeModule is this hook's only caller): the themed encyclopedia's settlement pictures are engine
+    // textures this assembly owns, so they are released here, where core's OnSubModuleUnloaded released them before ADR-013's move.
+    protected override void OnSubModuleUnloaded()
+    {
+        base.OnSubModuleUnloaded();
+        TAOM.Features.FactionUI.Campaign.EncyclopediaPictureCache.ReleaseAll();
+    }
+
     // Module.cs 536-549 and 790-798: every return to the main menu (a game ends and the global state stack is empty) runs this on every
     // submodule, and the first boot runs it too, where MainMenuReturned finds no closed run and does nothing. Fords of War writes its
     // final verdict pass here. MainMenuStep keeps a fault from throwing into the engine's tick. IoC.Configure ran in OnSubModuleLoad.

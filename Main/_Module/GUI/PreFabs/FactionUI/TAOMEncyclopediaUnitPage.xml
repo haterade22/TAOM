@@ -73,7 +73,7 @@
             </EncyclopediaStonePanelWidget>
             <Widget Id="TroopTreePanel" SuggestedWidth="1360" SuggestedHeight="780" PositionXOffset="368" DoNotAcceptEvents="true">
               <Children>
-                <EncyclopediaTroopScrollablePanel Id="RightSideScrollablePanel" SuggestedWidth="1288" SuggestedHeight="644" MarginTop="26" HorizontalAlignment="Center" InnerPanel="TreeRect\InnerPanel" ClipRect="TreeRect" HorizontalScrollbar="..\TreeHorizontalScrollbar" VerticalScrollbar="..\TreeVerticalScrollbar" PanWithMouseEnabled="true" MouseScrollAxis="Vertical" AutoHideScrollBars="true" IsHidden="@HasErrors">
+                <EncyclopediaTroopScrollablePanel Id="RightSideScrollablePanel" SuggestedWidth="1288" SuggestedHeight="644" MarginTop="26" HorizontalAlignment="Center" InnerPanel="TreeRect\InnerPanel" ClipRect="TreeRect" HorizontalScrollbar="..\TreeHorizontalScrollbar" VerticalScrollbar="..\TreeVerticalScrollbar" PanWithMouseEnabled="true" AutoHideScrollBars="true" IsHidden="@HasErrors">
                   <Children>
                     <Widget Id="TreeRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
                       <Children>

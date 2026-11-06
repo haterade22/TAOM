@@ -72,6 +72,7 @@ public class TaomClientCompositionTests
         container.Register<IRefugeVisualService, NullRefugeVisualService>(Reuse.Singleton);
         container.Register<ISupplyRouteVisualService, NullSupplyRouteVisualService>(Reuse.Singleton);
         container.Register<IQuestJournalAdapter, NullQuestJournalAdapter>(Reuse.Singleton);
+        container.Register<ICampaignPresentationAdapter, NullCampaignPresentationAdapter>(Reuse.Singleton);
         // The map visual services' constructor dependencies come from the camps features' registrations.
         container.RegisterInstance(Substitute.For<ISupplyOrderService>());
         container.RegisterInstance(Substitute.For<ISupplyLinesSettingsProvider>());
@@ -97,6 +98,7 @@ public class TaomClientCompositionTests
         Assert.IsInstanceOfType(container.Resolve<IRefugeVisualService>(), typeof(RefugeVisualService));
         Assert.IsInstanceOfType(container.Resolve<ISupplyRouteVisualService>(), typeof(SupplyRouteVisualService));
         Assert.IsInstanceOfType(container.Resolve<IQuestJournalAdapter>(), typeof(QuestJournalAdapter));
+        Assert.IsInstanceOfType(container.Resolve<ICampaignPresentationAdapter>(), typeof(CampaignPresentationAdapter));
         var seams = new[]
         {
             typeof(IFactionMapWidgetAdapter), typeof(IFrontEndSpriteTableAdapter), typeof(IThumbnailCacheAdapter),
@@ -105,9 +107,9 @@ public class TaomClientCompositionTests
             typeof(IFiefsNavigationElementFactory), typeof(IMapConversationProviderWrapper),
             typeof(IHostReviewOrderProviderRegistrar), typeof(IMarshalOrderProviderRegistrar), typeof(IShaderPrecompileGameManagerFactory),
             typeof(IShaderCompileNoticeWindowHost), typeof(ICampVisualService), typeof(IRefugeVisualService),
-            typeof(ISupplyRouteVisualService), typeof(IQuestJournalAdapter),
+            typeof(ISupplyRouteVisualService), typeof(IQuestJournalAdapter), typeof(ICampaignPresentationAdapter),
         };
-        Assert.AreEqual(17, container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
+        Assert.AreEqual(18,container.GetServiceRegistrations().Count(r => seams.Contains(r.ServiceType)),
             "each seam is replaced, never appended");
     }
 }

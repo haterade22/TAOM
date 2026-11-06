@@ -62,5 +62,6 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<ISupplyRouteVisualService, SupplyRouteVisualService>(Reuse.Singleton);
         registrator.Register<FamilyTreePopup>(Reuse.Singleton);
         registrator.Register<IQuestJournalAdapter, QuestJournalAdapter>(Reuse.Singleton);
+        registrator.Register<ICampaignPresentationAdapter, CampaignPresentationAdapter>(Reuse.Singleton);
     }
 }

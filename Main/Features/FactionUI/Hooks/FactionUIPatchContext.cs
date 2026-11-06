@@ -37,6 +37,14 @@ public static class FactionUIPatchContext
 
     internal static IModLogger? Logger { get; private set; }
 
+    private static ICampaignPresentationAdapter? _presentation;
+
+    /// <summary>
+    /// The themed campaign and encyclopedia screens (ADR-013: TAOM.Client's adapter, core's null one on a server). Resolved on
+    /// the first movie load rather than passed to Initialize, so SubModule's wiring is unchanged; the hook reads it inside its tries.
+    /// </summary>
+    internal static ICampaignPresentationAdapter Presentation => _presentation ??= IoC.Resolve<ICampaignPresentationAdapter>();
+
     public static void Initialize(
         FrontEndMovieService movies,
         FrontEndSpriteService sprites,

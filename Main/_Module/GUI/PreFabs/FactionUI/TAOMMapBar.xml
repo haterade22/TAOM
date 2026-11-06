@@ -22,18 +22,6 @@
     <Constant Name="MapBar.ButtonIcon.YOffset" Value="1" />
 
   </Constants>
-  <VisualDefinitions>
-<VisualDefinition Name="CenterPanel" TransitionDuration="0.45" EaseType="EaseOut" EaseFunction="Quint">
-      <VisualState PositionYOffset="6" State="Default" />
-      <VisualState PositionYOffset="100" State="Disabled" />
-    </VisualDefinition>
-<VisualDefinition Name="ResetButton" TransitionDuration="0.45" EaseType="EaseOut" EaseFunction="Quint">
-      <VisualState PositionYOffset="0" State="Default" />
-      <VisualState PositionYOffset="0" State="Hovered" />
-      <VisualState PositionYOffset="0" State="Pressed" />
-      <VisualState PositionYOffset="100" State="Disabled" />
-    </VisualDefinition>
-  </VisualDefinitions>
   <Window>
     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsEnabled">
       <Children>

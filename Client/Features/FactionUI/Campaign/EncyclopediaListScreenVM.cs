@@ -31,16 +31,16 @@ namespace TAOM.Features.FactionUI.Campaign
         private readonly Dictionary<ViewModel, EncyclopediaEntryVM> _entries = new Dictionary<ViewModel, EncyclopediaEntryVM>();
         private readonly ViewModel _sortController, _selector;
         private readonly IMBBindingList _nativeItems;
-        private EncyclopediaEntryVM _selected;
+        private EncyclopediaEntryVM? _selected;
         private bool _orderDirty = true, _selectionDirty = true, _disposed;
         private bool _hasSelection, _showSortOptions, _isEmpty;
         private bool _showHeroPreview, _showHeroRender, _showHeroSilhouette, _showIllustration = true;
-        private ViewModel _heroCharacter, _bannerIdentifier;
+        private ViewModel? _heroCharacter, _bannerIdentifier;
         private bool _showBannerPreview, _isBannerDestroyed;
         private string _selectedName = "", _selectedSubtitle = "", _previewImageFile = "", _previewSpriteName = "", _sortLabel = "";
         internal string Category { get; private set; }
         public int SelectionVersion { get; private set; }
-        public string SelectedId => _selected?.Id;
+        public string? SelectedId => _selected?.Id;
 
         [DataSourceProperty] public bool HasSelection { get => _hasSelection; private set { _hasSelection = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool IsEmpty { get => _isEmpty; private set { _isEmpty = value; OnPropertyChangedWithValue(value); } }
@@ -50,14 +50,14 @@ namespace TAOM.Features.FactionUI.Campaign
         [DataSourceProperty] public string PreviewImageFile { get => _previewImageFile; private set { _previewImageFile = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string PreviewSpriteName { get => _previewSpriteName; private set { _previewSpriteName = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string SortLabel { get => _sortLabel; private set { _sortLabel = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public ViewModel HeroCharacter { get => _heroCharacter; private set { _heroCharacter = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public ViewModel? HeroCharacter { get => _heroCharacter; private set { _heroCharacter = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowHeroPreview { get => _showHeroPreview; private set { _showHeroPreview = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowHeroRender { get => _showHeroRender; private set { _showHeroRender = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowHeroSilhouette { get => _showHeroSilhouette; private set { _showHeroSilhouette = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowIllustration { get => _showIllustration; private set { _showIllustration = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowBannerPreview { get => _showBannerPreview; private set { _showBannerPreview = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool IsBannerDestroyed { get => _isBannerDestroyed; private set { _isBannerDestroyed = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public ViewModel BannerIdentifier { get => _bannerIdentifier; private set { _bannerIdentifier = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public ViewModel? BannerIdentifier { get => _bannerIdentifier; private set { _bannerIdentifier = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string HeroSilhouetteSprite
         {
             get
@@ -131,7 +131,7 @@ namespace TAOM.Features.FactionUI.Campaign
             }
         }
 
-        internal void Select(EncyclopediaEntryVM entry)
+        internal void Select(EncyclopediaEntryVM? entry)
         {
             if (_selected == entry) return;
             if (_selected != null) _selected.IsSelected = false;
@@ -155,12 +155,12 @@ namespace TAOM.Features.FactionUI.Campaign
 
         // The selected kingdom or clan's own Banner, built the way the native faction and clan pages
         // build theirs, so a new selection changes both the colours and the emblem.
-        private void UpdateBannerPreview(EncyclopediaEntryVM entry)
+        private void UpdateBannerPreview(EncyclopediaEntryVM? entry)
         {
             ReleaseBannerPreview();
-            if (!UsesBannerPreview(Category, entry != null)) return;
+            if (entry == null || !UsesBannerPreview(Category, true)) return;
             var source = ((EncyclopediaListItemVM)entry.Native).Object;
-            Banner banner = null;
+            Banner? banner = null;
             bool destroyed = false;
             if (source is Kingdom kingdom) { banner = kingdom.Banner; destroyed = kingdom.IsEliminated; }
             else if (source is Clan clan) { banner = clan.Banner; destroyed = clan.IsEliminated; }
@@ -180,13 +180,13 @@ namespace TAOM.Features.FactionUI.Campaign
             BannerIdentifier = null;
         }
 
-        private void UpdateHeroPreview(EncyclopediaEntryVM entry)
+        private void UpdateHeroPreview(EncyclopediaEntryVM? entry)
         {
             ReleaseHeroPreview();
             ShowHeroPreview = Category == "heroes" && entry != null;
             ShowHeroRender = false;
             ShowHeroSilhouette = false;
-            if (!ShowHeroPreview) return;
+            if (!ShowHeroPreview || entry == null) return;
             // Use the actual selected hero, as the native encyclopedia hero page does.
             var hero = (Hero)((EncyclopediaListItemVM)entry.Native).Object;
             var character = new HeroViewModel(CharacterViewModel.StanceTypes.EmphasizeFace);
@@ -259,7 +259,7 @@ namespace TAOM.Features.FactionUI.Campaign
         internal string Kind { get; private set; } = "";
         [DataSourceProperty] public string Id { get; private set; }
         [DataSourceProperty] public string Subtitle { get; private set; }
-        private string _name, _comparedValue;
+        private string _name = "", _comparedValue = "";
         private bool _isVisible, _isSelected, _isBookmarked;
         [DataSourceProperty] public string Name { get => _name; private set { _name = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string ComparedValue { get => _comparedValue; private set { _comparedValue = value; OnPropertyChangedWithValue(value); } }

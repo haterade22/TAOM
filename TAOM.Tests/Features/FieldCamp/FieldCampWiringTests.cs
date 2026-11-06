@@ -265,11 +265,18 @@ public class FieldCampWiringTests
             failures.Add($"FieldCampOverlayVM.{propertyName} is bound in the prefab but lacks [DataSourceProperty]");
     }
 
+    // The FactionUI theme loads its clone, TAOMFieldCampOverlay, over the same view model (FrontEndMovieService), so a
+    // property bound only by the clone (the Camp icon's CampButtonHint) is live, not dead.
+    private static string ThemedPrefabPath => Path.Combine(
+        RepoRoot, @"Main\_Module\GUI\PreFabs\FactionUI\TAOMFieldCampOverlay.xml");
+
     [TestMethod]
     public void OverlayVm_EveryDataSourceProperty_IsBoundInThePrefab()
     {
         var boundNames = new HashSet<string>(StringComparer.Ordinal);
         CollectBoundNames(LoadPrefabRoot(), boundNames);
+        Assert.IsTrue(File.Exists(ThemedPrefabPath), $"themed prefab missing at {ThemedPrefabPath}");
+        CollectBoundNames(XDocument.Load(ThemedPrefabPath).Root!, boundNames);
 
         var failures = new List<string>();
         foreach (var property in typeof(FieldCampOverlayVM).GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -278,10 +285,21 @@ public class FieldCampWiringTests
                 .Any(a => a.GetType().Name.StartsWith("DataSourceProperty", StringComparison.Ordinal));
             if (hasAttribute && !boundNames.Contains(property.Name))
                 failures.Add($"FieldCampOverlayVM.{property.Name} is [DataSourceProperty] but nothing in "
-                    + "the prefab binds it (dead code per gui-ui.md; the source module shipped four of these)");
+                    + "either prefab binds it (dead code per gui-ui.md; the source module shipped four of these)");
         }
 
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
+    }
+
+    [TestMethod]
+    public void CollectBoundNames_ReadsValueAndDataSourceBindings_ButNoLiteral()
+    {
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        CollectBoundNames(XElement.Parse(
+            "<Widget Text=\"@CampStatusText\"><Children><HintWidget DataSource=\"{CampButtonHint}\" Brush=\"Plain\" /></Children></Widget>"),
+            names);
+
+        CollectionAssert.AreEquivalent(new[] { "CampStatusText", "CampButtonHint" }, names.ToArray());
     }
 
     private static void CollectBoundNames(XElement element, HashSet<string> names)
@@ -290,6 +308,9 @@ public class FieldCampWiringTests
         {
             if (attr.Value.StartsWith("@", StringComparison.Ordinal))
                 names.Add(attr.Value.Substring(1));
+            else if (attr.Name.LocalName == "DataSource" && attr.Value.Length > 2
+                     && attr.Value.StartsWith("{", StringComparison.Ordinal) && attr.Value.EndsWith("}", StringComparison.Ordinal))
+                names.Add(attr.Value.Substring(1, attr.Value.Length - 2));
         }
 
         foreach (var child in element.Elements())

@@ -29,6 +29,7 @@ public class CoopPresenceReadGateTests
         ["Main/Features/PlayerPossession/PlayerPossessionService.cs"] = "documented heir discriminator, not an authority decision",
         ["Main/Features/ShadowfaxScreens/Clan/ClanScreenFastPathService.cs"] = "client-side UI fast path choice",
         ["Client/ClientUiExtensions.cs"] = "one-shot UI registration at startup",
+        ["Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs"] = "the themed map bar's clock binds the time-control mixin ClientUiExtensions drops on presence, so the movie swap follows that registration",
         ["Main/Features/CoopInterop/CoopPresenceProvider.cs"] = "the provider itself",
         ["Main/Features/CoopInterop/CoopSessionProvider.cs"] = "the session probe that derives the session-aware predicates",
         ["Main/Features/CoopInterop/Hooks/CoopRecruitAttributionPatch.cs"] = "recruit attribution is only wanted while the Coop module is loaded",

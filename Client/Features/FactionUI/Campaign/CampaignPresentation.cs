@@ -1,6 +1,5 @@
 using System;
 using HarmonyLib;
-using Bannerlord.UIExtenderEx;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
@@ -10,10 +9,14 @@ using TAOM.Core.Logging;
 
 namespace TAOM.Features.FactionUI.Campaign;
 
-// Campaign presentation stays behind the shared FactionUI movie hook.
+/// <summary>
+/// The themed campaign and encyclopedia screens behind Patch95's movie hook, which reaches this class through
+/// ICampaignPresentationAdapter (ADR-013: everything here names a client-only assembly). The two encyclopedia tree
+/// mixins register with every other TAOM extension in ClientSubModule.OnGameStart; they stay inert until a themed
+/// prefab binds their properties.
+/// </summary>
 internal static class CampaignPresentation
 {
-    private static UIExtender? _trees;
     private static bool _clockPatched;
 
     internal static string ModuleRoot => IoC.Resolve<FactionUIPaths>().Root;
@@ -29,11 +32,9 @@ internal static class CampaignPresentation
             case "TAOMEncyclopediaItemList":
             case "TAOMEncyclopediaHeroPage":
             case "TAOMEncyclopediaUnitPage":
-                EnsureEncyclopediaPatches();
+                EnableTroopNames();
                 if (source is EncyclopediaUnitPageVM unit)
                     unit.NameText = EncyclopediaTroopNames.DisplayName(unit.NameText);
-                if (source is EncyclopediaHeroPageVM || source is EncyclopediaUnitPageVM)
-                    BindTree(source);
                 if (movie == "TAOMEncyclopediaItemList" && source != null)
                     return new EncyclopediaListScreenVM(source);
                 break;
@@ -54,27 +55,15 @@ internal static class CampaignPresentation
         return source;
     }
 
-    private static void EnsureEncyclopediaPatches()
+    // The TAOM.EncyclopediaTroopNames category is applied with the GameInit batch (SubModule.cs) and does nothing until
+    // here, the first themed encyclopedia movie, where the category itself used to be applied.
+    private static void EnableTroopNames()
     {
-        if (_trees != null)
+        if (EncyclopediaTroopNames.Active)
             return;
 
-        // Patching campaign tooltip methods at startup can run CampaignUIHelper before GameTexts.
-        new Harmony("taom.factionui.encyclopedia")
-            .PatchCategory(typeof(CampaignPresentation).Assembly, EncyclopediaTroopNames.PatchCategory);
-        var extender = UIExtender.Create("TAOM.CampaignPresentation");
-        extender.Register(new[] { typeof(EncyclopediaFamilyTreeMixin), typeof(EncyclopediaTroopTreeMixin) });
-        extender.Enable();
-        _trees = extender;
-        LogInfo("Campaign encyclopedia bindings registered.");
-    }
-
-    private static void BindTree(ViewModel page)
-    {
-        // A page that opened the encyclopedia directly can predate the lazy registration.
-        var runtime = AccessTools.Field(typeof(UIExtender), "_runtime").GetValue(_trees);
-        var component = AccessTools.Field(runtime.GetType(), "ViewModelComponent").GetValue(runtime);
-        AccessTools.Method(component.GetType(), "InitializeMixinsForVMInstance").Invoke(component, new object[] { page });
+        EncyclopediaTroopNames.Active = true;
+        LogInfo("Campaign encyclopedia troop names enabled.");
     }
 
     internal static void OnLoaded(GauntletMovieIdentifier movie, ViewModel? source)

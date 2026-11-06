@@ -9,7 +9,7 @@ namespace TAOM.Features.FactionUI.Campaign
     {
         public double DayTime { get; set; }
 
-        private BrushWidget _night;
+        private BrushWidget? _night;
         private double _displayHour;
         private bool _initialized;
         private const double ResponseSeconds = 0.25;

@@ -53,7 +53,7 @@ public static class CampaignStatsLayout
 
     private const int LowerSlotsMask = ((1 << (LastSlot + 1)) - 1) & ~((1 << FirstLowerSlot) - 1);
 
-    public static int Slot(string id)
+    public static int Slot(string? id)
     {
         switch (id)
         {
@@ -74,7 +74,7 @@ public static class CampaignStatsLayout
     public static bool IsLower(int slot) => slot >= FirstLowerSlot && slot <= LastSlot;
 
     /// <summary>Adds a shown stat to the set of displayed lower slots; upper and unknown ids add nothing.</summary>
-    public static int Include(int displayedLowerMask, string statId)
+    public static int Include(int displayedLowerMask, string? statId)
     {
         int slot = Slot(statId);
         return IsLower(slot) ? displayedLowerMask | (1 << slot) : displayedLowerMask;

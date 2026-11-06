@@ -11,9 +11,10 @@ namespace TAOM.Features.FactionUI.Campaign
 {
     public class EncyclopediaListScreenWidget : Widget
     {
-        public EncyclopediaListScreenVM Model { get; set; }
-        public ListPanel EntryList { get; set; }
-        public ScrollablePanel EntryScroll { get; set; }
+        // Model is set by CampaignPresentation.OnLoaded; the two panels by Gauntlet from the prefab's widget references.
+        public EncyclopediaListScreenVM? Model { get; set; }
+        public ListPanel? EntryList { get; set; }
+        public ScrollablePanel? EntryScroll { get; set; }
         private int _selectionVersion = -1;
 
         public EncyclopediaListScreenWidget(UIContext context) : base(context) { }
@@ -32,7 +33,7 @@ namespace TAOM.Features.FactionUI.Campaign
 
     public class EncyclopediaListEntryButtonWidget : ButtonWidget
     {
-        public string EntryId { get; set; }
+        public string? EntryId { get; set; }
         public EncyclopediaListEntryButtonWidget(UIContext context) : base(context) { }
     }
 
@@ -52,12 +53,12 @@ namespace TAOM.Features.FactionUI.Campaign
 
     public class EncyclopediaPictureWidget : ImageWidget
     {
-        public string PictureFile { get; set; }
-        public string PictureSprite { get; set; }
+        public string? PictureFile { get; set; }
+        public string? PictureSprite { get; set; }
         /// <summary>Masks the picture, file or fallback sprite, with the hero portrait outline (list preview only).</summary>
         public bool PortraitFrame { get; set; }
         /// <summary>Per-sprite crops for fallback art with a different baked border, "prefix:zoom:focus;...".</summary>
-        public string SpriteFrameCrops { get; set; }
+        public string? SpriteFrameCrops { get; set; }
         /// <summary>Uniform enlargement past cover that pushes the picture's baked border outside the mask.</summary>
         public float FrameZoom { get; set; } = 1f;
         /// <summary>Share of the vertical excess cropped from the top: 0 keeps the top, 1 the bottom.</summary>
@@ -66,7 +67,7 @@ namespace TAOM.Features.FactionUI.Campaign
         public string? FrameMask { get; set; }
         /// <summary>The rim drawn over a <see cref="FrameMask"/> picture; none when empty.</summary>
         public string? FrameRim { get; set; }
-        private string _file, _sprite;
+        private string? _file, _sprite;
         private readonly Brush _frameMaterial = new Brush();
         private readonly BrushRenderer _frameRenderer = new BrushRenderer();
         private ulong _frameRenderFrame;
@@ -96,10 +97,10 @@ namespace TAOM.Features.FactionUI.Campaign
         /// Picks the crop for a fallback sprite: the first "prefix:zoom:focus" rule whose prefix starts
         /// the sprite name, else the default crop used for settlement picture files.
         /// </summary>
-        internal static (float Zoom, float FocusY) ResolveFrameCrop(string spriteName, string crops,
+        internal static (float Zoom, float FocusY) ResolveFrameCrop(string? spriteName, string? crops,
             float zoom, float focusY)
         {
-            if (string.IsNullOrEmpty(spriteName) || string.IsNullOrEmpty(crops))
+            if (spriteName is null || spriteName.Length == 0 || crops is null || crops.Length == 0)
                 return (zoom, focusY);
             foreach (string rule in crops.Split(';'))
             {
@@ -126,8 +127,9 @@ namespace TAOM.Features.FactionUI.Campaign
         protected override void OnRender(TwoDimensionContext context, TwoDimensionDrawContext drawContext)
         {
             var sprites = ResolveFrameSprites(PortraitFrame, FrameMask, FrameRim);
-            var mask = sprites.Mask != null && Sprite != null ? Context.SpriteData.GetSprite(sprites.Mask) : null;
-            if (mask == null || Size.X <= 0 || Size.Y <= 0)
+            var picture = Sprite;
+            var mask = sprites.Mask != null && picture != null ? Context.SpriteData.GetSprite(sprites.Mask) : null;
+            if (mask == null || picture == null || Size.X <= 0 || Size.Y <= 0)
             {
                 base.OnRender(context, drawContext);
                 return;
@@ -137,9 +139,9 @@ namespace TAOM.Features.FactionUI.Campaign
             float height = Size.Y * _inverseScaleToUse;
             var crop = ResolveFrameCrop(string.IsNullOrEmpty(_file) ? _sprite : null, SpriteFrameCrops,
                 FrameZoom, FrameFocusY);
-            var frame = FramePicture(Sprite.Width, Sprite.Height, width, height, crop.Zoom, crop.FocusY);
+            var frame = FramePicture(picture.Width, picture.Height, width, height, crop.Zoom, crop.FocusY);
             _frameMaterial.DefaultLayer.Sprite = mask;
-            _frameMaterial.DefaultLayer.OverlaySprite = Sprite;
+            _frameMaterial.DefaultLayer.OverlaySprite = picture;
             _frameRenderer.Update(++_frameRenderFrame, 0f, 0f);
             _frameRenderer.Render(drawContext, in AreaRect, _scaleToUse, Context.ContextAlpha,
                 new Vector2(frame.OffsetX, frame.OffsetY), new Vector2(frame.Width, frame.Height));
@@ -159,17 +161,18 @@ namespace TAOM.Features.FactionUI.Campaign
             ClearPicture();
             _file = PictureFile;
             _sprite = PictureSprite;
-            if (!string.IsNullOrEmpty(PictureFile))
+            var file = PictureFile;
+            if (file != null && file.Length > 0)
             {
-                try { Sprite = EncyclopediaPictureCache.Acquire(PictureFile); }
-                catch (Exception e) { CampaignPresentation.LogError("Could not load encyclopedia picture " + PictureFile, e); }
+                try { Sprite = EncyclopediaPictureCache.Acquire(file); }
+                catch (Exception e) { CampaignPresentation.LogError("Could not load encyclopedia picture " + file, e); }
             }
             else Sprite = string.IsNullOrEmpty(PictureSprite) ? null : Context.SpriteData.GetSprite(PictureSprite);
         }
         private void ClearPicture()
         {
             Sprite = null;
-            if (!string.IsNullOrEmpty(_file)) EncyclopediaPictureCache.Release(_file);
+            if (_file != null && _file.Length > 0) EncyclopediaPictureCache.Release(_file);
             _file = null;
             _sprite = null;
         }

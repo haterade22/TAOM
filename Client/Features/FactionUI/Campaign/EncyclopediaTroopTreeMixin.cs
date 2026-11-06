@@ -14,12 +14,12 @@ namespace TAOM.Features.FactionUI.Campaign
     [ViewModelMixin(nameof(EncyclopediaUnitPageVM.RefreshValues))]
     internal sealed class EncyclopediaTroopTreeMixin : BaseViewModelMixin<EncyclopediaUnitPageVM>
     {
-        private TroopTreeLayoutVM _layout;
+        private TroopTreeLayoutVM? _layout;
 
         public EncyclopediaTroopTreeMixin(EncyclopediaUnitPageVM page) : base(page) { }
 
         [DataSourceProperty]
-        public TroopTreeLayoutVM TroopTreeLayout => ViewModel.Tree == null
+        public TroopTreeLayoutVM? TroopTreeLayout => ViewModel?.Tree == null
             ? null
             : _layout ?? (_layout = new TroopTreeLayoutVM(ViewModel.Tree));
 
@@ -27,7 +27,9 @@ namespace TAOM.Features.FactionUI.Campaign
         {
             if (_layout == null) return;
             _layout = null;
-            OnPropertyChangedWithValue(TroopTreeLayout, nameof(TroopTreeLayout));
+            // A page with no tree passes null, which clears the binding: UIExtenderEx 2.13.3 forwards the value unchanged,
+            // though its parameter is annotated non-null.
+            OnPropertyChangedWithValue(TroopTreeLayout!, nameof(TroopTreeLayout));
         }
     }
 

@@ -19,6 +19,7 @@ public static class FactionUIIoC
     {
         container.Register<IFrontEndResourceAdapter, FrontEndResourceAdapter>(Reuse.Singleton);
         container.Register<IFrontEndSpriteTableAdapter, NullFrontEndSpriteTableAdapter>(Reuse.Singleton);
+        container.Register<ICampaignPresentationAdapter, NullCampaignPresentationAdapter>(Reuse.Singleton);
         container.Register<IMenuMusicAdapter, MenuMusicAdapter>(Reuse.Singleton);
         container.Register<IFrontEndStateAdapter, FrontEndStateAdapter>(Reuse.Singleton);
         container.Register<ITextLocalizerAdapter, TextLocalizerAdapter>(Reuse.Singleton);

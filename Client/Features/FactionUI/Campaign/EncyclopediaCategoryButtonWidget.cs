@@ -6,9 +6,9 @@ namespace TAOM.Features.FactionUI.Campaign
     // Presentation only: the button still invokes the native ListTypeVM.Execute command.
     public class EncyclopediaCategoryButtonWidget : ButtonWidget
     {
-        private string _categoryId;
+        private string? _categoryId;
 
-        public string CategoryId
+        public string? CategoryId
         {
             get => _categoryId;
             set

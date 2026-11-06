@@ -6,8 +6,8 @@ namespace TAOM.Features.FactionUI.Campaign
     // Native navigation items expose ItemId; labels stay live text rather than baked sprite lettering.
     public class CampaignNavigationLabelWidget : TextWidget
     {
-        public string ItemId { get; set; }
-        private string _lastItemId;
+        public string? ItemId { get; set; }
+        private string? _lastItemId;
 
         public CampaignNavigationLabelWidget(UIContext context) : base(context) { }
 

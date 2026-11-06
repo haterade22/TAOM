@@ -6,7 +6,8 @@ namespace TAOM.Features.FactionUI.Campaign
 {
     public class CharacterScreenWidget : Widget
     {
-        public CharacterScreenVM Model { get; set; }
+        // Set by CampaignPresentation.OnLoaded after the movie is built; null until then.
+        public CharacterScreenVM? Model { get; set; }
         public CharacterScreenWidget(UIContext context) : base(context) { }
         protected override void OnUpdate(float dt)
         {
@@ -41,8 +42,9 @@ namespace TAOM.Features.FactionUI.Campaign
     {
         public double InitialAmount { get; set; }
         public double MaxAmount { get; set; }
-        public Widget FillWidget { get; set; }
-        public Widget ContainerWidget { get; set; }
+        // Set by Gauntlet from the prefab's widget references, before the first update.
+        public Widget FillWidget { get; set; } = null!;
+        public Widget? ContainerWidget { get; set; }
         public float FillInset { get; set; }
         public CharacterProgressWidget(UIContext context) : base(context) { }
         protected override void OnUpdate(float dt)
@@ -55,7 +57,8 @@ namespace TAOM.Features.FactionUI.Campaign
     public class CharacterPerkButtonWidget : ButtonWidget
     {
         public int PerkState { get; set; }
-        public Widget IconWidget { get; set; }
+        // Set by Gauntlet from the prefab's widget reference, before the first update.
+        public Widget IconWidget { get; set; } = null!;
         public CharacterPerkButtonWidget(UIContext context) : base(context) { }
         protected override void OnUpdate(float dt)
         {
@@ -67,7 +70,8 @@ namespace TAOM.Features.FactionUI.Campaign
 
     public class CharacterPerkScrollButtonWidget : ButtonWidget
     {
-        public ScrollbarWidget Scrollbar { get; set; }
+        // Set by Gauntlet from the prefab's widget reference, before the first click.
+        public ScrollbarWidget Scrollbar { get; set; } = null!;
         public float Direction { get; set; }
         public CharacterPerkScrollButtonWidget(UIContext context) : base(context)
         {

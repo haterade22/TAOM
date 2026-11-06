@@ -9,8 +9,10 @@ namespace TAOM.Features.FactionUI.Campaign
     // Keeping the original hierarchy also preserves other mods' family, messenger and history additions.
     public class EncyclopediaPageLayoutWidget : Widget
     {
-        private Widget _canvas, _left, _body, _history;
-        private ImageWidget _leftPlate, _bodyPlate, _historyPlate;
+        // Set by Initialize, which Attach calls before the widget joins the tree.
+        private Widget _canvas = null!, _body = null!;
+        private Widget? _left, _history;
+        private ImageWidget? _leftPlate, _bodyPlate, _historyPlate;
         public const float CanvasWidth = 1728f;
         public const float CanvasHeight = 780f;
         public const float ColumnGap = 24f;
@@ -138,9 +140,9 @@ namespace TAOM.Features.FactionUI.Campaign
             Fit(_historyPlate, _history, 24f, CanvasHeight - 24f);
         }
 
-        private void Fit(ImageWidget plate, Widget content, float top, float height)
+        private void Fit(ImageWidget? plate, Widget? content, float top, float height)
         {
-            if (plate == null) return;
+            if (plate == null || content == null) return;
             plate.PositionXOffset = (content.GlobalPosition.X - _canvas.GlobalPosition.X) / Context.Scale;
             plate.PositionYOffset = top;
             plate.SuggestedWidth = content.Size.X / Context.Scale;

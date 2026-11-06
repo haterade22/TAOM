@@ -123,11 +123,11 @@ namespace TAOM.Features.FactionUI.Campaign
     {
         [DataSourceProperty] public int X { get; }
         [DataSourceProperty] public int Y { get; }
-        [DataSourceProperty] public ViewModel Member { get; }
+        [DataSourceProperty] public ViewModel? Member { get; }
         [DataSourceProperty] public string MoreText { get; }
         [DataSourceProperty] public bool HasMember => Member != null;
 
-        public FamilyTreeCardPlacementVM(int x, int y, ViewModel member, string moreText)
+        public FamilyTreeCardPlacementVM(int x, int y, ViewModel? member, string moreText)
         {
             X = x;
             Y = y;

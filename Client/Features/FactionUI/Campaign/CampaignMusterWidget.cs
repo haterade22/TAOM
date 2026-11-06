@@ -9,12 +9,13 @@ namespace TAOM.Features.FactionUI.Campaign
     {
         public bool NativeVisible { get; set; }
         public bool CanGatherArmy { get; set; }
-        public CampaignStatsPanelWidget StatsPanelWidget { get; set; }
-        public ButtonWidget MusterButton { get; set; }
-        public Widget BannerWidget { get; set; }
+        // Set by Gauntlet from the prefab's widget references, before the first update.
+        public CampaignStatsPanelWidget StatsPanelWidget { get; set; } = null!;
+        public ButtonWidget MusterButton { get; set; } = null!;
+        public Widget BannerWidget { get; set; } = null!;
         public bool PreviewHasFaction { get; set; } = true;
         public string PreviewBannerSprite { get; set; } = "fs_previewonly_muster_gondor";
-        private string _bannerCode;
+        private string? _bannerCode;
 
         public CampaignMusterWidget(UIContext context) : base(context) { }
 
@@ -31,7 +32,7 @@ namespace TAOM.Features.FactionUI.Campaign
             // Nest the rounded lower-left corner into the plate's curved upper-right shoulder.
             // Align the gold base itself; the clasp hangs slightly over the shared border.
             PositionYOffset = -(CampaignStatsPanelWidget.PanelHeight - StatsPanelWidget.UpperPlate.PositionYOffset - 26f);
-            if (!IsVisible) return;
+            if (!IsVisible || kingdom == null) return;
             ((CampaignMusterBannerWidget)BannerWidget).Brush.ColorFactor = CanGatherArmy ? 1f : 0.45f;
             var identifier = new BannerImageIdentifier(kingdom.Banner);
             if (_bannerCode == identifier.Id) return;

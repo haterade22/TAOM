@@ -4,7 +4,6 @@ using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.FactionUI.Menus;
-using TAOM.Features.FactionUI.Campaign;
 
 namespace TAOM.Features.FactionUI.Hooks;
 
@@ -33,7 +32,9 @@ public static class GauntletLayerLoadMoviePatch
     {
         __state = null;
         var movies = FactionUIPatchContext.Movies;
-        // Under co-op the native map bar stays, so the Camp icon that sits beside TAOM's clock does too.
+        // Under co-op the native map bar stays, so the Camp icon that sits beside TAOM's clock does too. Presence, not a
+        // session predicate: the themed clock binds TimeAccelerationMixin's extra fast forward, and ClientUiExtensions leaves
+        // that mixin out on the same presence read, so the swap must follow it (CoopPresenceReadGateTests).
         if (movies == null || _loadingVanillaFallback || ((movieName == "MapBar" || movieName == "TaomFieldCampOverlay") && CoopPresence.IsActive))
             return;
 
@@ -42,9 +43,9 @@ public static class GauntletLayerLoadMoviePatch
             var swap = movies.BeginLoad(movieName, dataSource?.GetType().Name);
             if (swap == null)
                 return;
-            var boundSource = CampaignPresentation.Bind(swap.TargetName, dataSource);
+            var boundSource = FactionUIPatchContext.Presentation.Bind(swap.TargetName, dataSource);
             __state = new SwapState(swap, __instance.UIContext?.Root?.ChildCount ?? 0, dataSource);
-            dataSource = boundSource!;
+            dataSource = (ViewModel)boundSource!;
             movieName = swap.TargetName;
         }
         catch (Exception ex)
@@ -64,7 +65,7 @@ public static class GauntletLayerLoadMoviePatch
             if (__state != null)
                 FactionUIPatchContext.Movies?.LoadSucceeded(__state.Swap, __result);
             FactionUIPatchContext.Effects?.OnMovieLoaded(__instance, __result, __result.MovieName, dataSource);
-            CampaignPresentation.OnLoaded(__result, dataSource);
+            FactionUIPatchContext.Presentation.OnLoaded(__result, dataSource);
         }
         catch (Exception ex)
         {
@@ -107,7 +108,7 @@ public static class GauntletLayerLoadMoviePatch
         try
         {
             FactionUIPatchContext.Effects?.OnMovieLoaded(__instance, __result, __result.MovieName, dataSource);
-            CampaignPresentation.OnLoaded(__result, dataSource);
+            FactionUIPatchContext.Presentation.OnLoaded(__result, dataSource);
         }
         catch (Exception ex)
         {

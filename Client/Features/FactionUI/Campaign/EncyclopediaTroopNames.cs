@@ -15,9 +15,17 @@ using TaleWorlds.Library;
 
 namespace TAOM.Features.FactionUI.Campaign
 {
+    /// <summary>
+    /// Troop names without their bracketed tags in the themed encyclopedia. The category is applied with the GameInit batch
+    /// (SubModule.cs, ADR-013) and every rewrite waits for <see cref="Active"/>, which CampaignPresentation sets on the
+    /// first themed encyclopedia movie, so names change only once the theme's encyclopedia has been seen.
+    /// </summary>
     internal static class EncyclopediaTroopNames
     {
         internal const string PatchCategory = "TAOM.EncyclopediaTroopNames";
+
+        /// <summary>Set once, on the main thread, when the first themed encyclopedia movie binds; never cleared.</summary>
+        internal static bool Active { get; set; }
         private static readonly Regex BracketedText = new Regex(@"\[[^\[\]]*\]");
         private static readonly Regex ExtraSpaces = new Regex(@"[ \t]{2,}");
         private static readonly object TooltipMarker = new object();
@@ -30,11 +38,14 @@ namespace TAOM.Features.FactionUI.Campaign
             return ExtraSpaces.Replace(BracketedText.Replace(name, ""), " ").Trim();
         }
 
+        /// <summary>The name a patched view model shows: <see cref="DisplayName"/> once <see cref="Active"/>, else unchanged.</summary>
+        internal static string ShownName(string name) => Active ? DisplayName(name) : name;
+
         [HarmonyPatchCategory(PatchCategory)]
         [HarmonyPatch(typeof(EncyclopediaUnitPageVM), nameof(EncyclopediaUnitPageVM.GetName))]
         private static class BreadcrumbPatch
         {
-            private static void Postfix(ref string __result) => __result = DisplayName(__result);
+            private static void Postfix(ref string __result) => __result = ShownName(__result);
         }
 
         [HarmonyPatchCategory(PatchCategory)]
@@ -42,7 +53,7 @@ namespace TAOM.Features.FactionUI.Campaign
         private static class PortraitPatch
         {
             private static void Postfix(EncyclopediaUnitPageVM __instance) =>
-                __instance.NameText = DisplayName(__instance.NameText);
+                __instance.NameText = ShownName(__instance.NameText);
         }
 
         [HarmonyPatchCategory(PatchCategory)]
@@ -50,7 +61,7 @@ namespace TAOM.Features.FactionUI.Campaign
         private static class TroopCardPatch
         {
             private static void Postfix(EncyclopediaUnitVM __instance) =>
-                __instance.NameText = DisplayName(__instance.NameText);
+                __instance.NameText = ShownName(__instance.NameText);
         }
 
         [HarmonyPatchCategory(PatchCategory)]
@@ -60,7 +71,7 @@ namespace TAOM.Features.FactionUI.Campaign
             private static void Postfix(EncyclopediaListItemVM __instance)
             {
                 if (__instance.Object is CharacterObject troop && !troop.IsHero)
-                    __instance.Name = DisplayName(__instance.Name);
+                    __instance.Name = ShownName(__instance.Name);
             }
         }
 
@@ -70,7 +81,7 @@ namespace TAOM.Features.FactionUI.Campaign
         {
             private static void Postfix(EncyclopediaSearchResultVM __instance, string searchedText)
             {
-                if (__instance.PageType != "NPCCharacter") return;
+                if (!Active || __instance.PageType != "NPCCharacter") return;
                 string name = DisplayName(__instance.OrgNameText);
                 if (name == __instance.OrgNameText) return;
 
@@ -112,7 +123,7 @@ namespace TAOM.Features.FactionUI.Campaign
             private static void Prefix(Type type, ref object[] args)
             {
                 // The tooltip can refresh after the hover callback returns, so carry the context with it.
-                if (_showingEncyclopediaTooltip && type == typeof(CharacterObject) &&
+                if (Active && _showingEncyclopediaTooltip && type == typeof(CharacterObject) &&
                     args?.Length == 1 && args[0] is CharacterObject troop && !troop.IsHero)
                     args = new[] { args[0], TooltipMarker };
             }

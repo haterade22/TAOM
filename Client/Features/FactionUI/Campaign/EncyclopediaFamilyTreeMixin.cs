@@ -1,24 +1,24 @@
 using System;
-using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Library;
 using TAOM.Features.LinesOfDescent;
+using TAOM.Features.LinesOfDescent.UI;
 
 namespace TAOM.Features.FactionUI.Campaign
 {
     [ViewModelMixin("Refresh")]
     internal sealed class EncyclopediaFamilyTreeMixin : BaseViewModelMixin<EncyclopediaHeroPageVM>
     {
-        private InlineFamilyTreeVM _tree;
+        private InlineFamilyTreeVM? _tree;
         private bool _requested;
 
         public EncyclopediaFamilyTreeMixin(EncyclopediaHeroPageVM page) : base(page) { }
 
         [DataSourceProperty]
-        public InlineFamilyTreeVM InlineFamilyTree
+        public InlineFamilyTreeVM? InlineFamilyTree
         {
             get
             {
@@ -45,28 +45,27 @@ namespace TAOM.Features.FactionUI.Campaign
 
             var previous = _tree;
             _tree = BuildTree();
-            OnPropertyChangedWithValue(_tree, nameof(InlineFamilyTree));
+            // A null tree clears the binding: UIExtenderEx 2.13.3 forwards the value to the view model unchanged, though its
+            // parameter is annotated non-null.
+            OnPropertyChangedWithValue(_tree!, nameof(InlineFamilyTree));
             OnPropertyChangedWithValue(_tree != null, nameof(HasInlineFamilyTree));
             previous?.OnFinalize();
         }
 
         public override void OnFinalize() => _tree?.OnFinalize();
 
-        private InlineFamilyTreeVM BuildTree()
+        private InlineFamilyTreeVM? BuildTree()
         {
             if (!(ViewModel?.Obj is Hero hero) || ViewModel.Family.Count == 0)
                 return null;
 
             try
             {
-                var client = AppDomain.CurrentDomain.GetAssemblies()
-                    .First(assembly => assembly.GetName().Name == "TAOM.Client");
-                var nodeType = client.GetType("TAOM.Features.LinesOfDescent.UI.FamilyTreeNodeVM", throwOnError: true);
                 var result = TAOM.IoC.Resolve<IFamilyTreeService>().Build(hero.StringId);
                 // TAOM owns the recursive node VM and its localized relationship labels.
                 if (result == null) return null;
 
-                var nativeTree = (ViewModel)Activator.CreateInstance(nodeType, result.Root);
+                ViewModel nativeTree = new FamilyTreeNodeVM(result.Root);
                 try
                 {
                     return new InlineFamilyTreeVM(nativeTree);

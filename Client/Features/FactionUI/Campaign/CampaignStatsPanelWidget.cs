@@ -12,13 +12,14 @@ namespace TAOM.Features.FactionUI.Campaign
         public const float SlideDistance = 64f;
         public const float TransitionSeconds = 0.32f;
         public bool IsInfoBarExtended { get; set; }
-        public Widget UpperPlate { get; set; }
-        public Widget LowerPlate { get; set; }
-        public Widget JoinBorderWidget { get; set; }
-        public Widget RightJoinWidget { get; set; }
-        public Widget PrimaryItemsWidget { get; set; }
-        public Widget SecondaryItemsWidget { get; set; }
-        public Widget ExpandButtonWidget { get; set; }
+        // Set by Gauntlet from the prefab's widget references, before the first update.
+        public Widget UpperPlate { get; set; } = null!;
+        public Widget LowerPlate { get; set; } = null!;
+        public Widget JoinBorderWidget { get; set; } = null!;
+        public Widget RightJoinWidget { get; set; } = null!;
+        public Widget PrimaryItemsWidget { get; set; } = null!;
+        public Widget SecondaryItemsWidget { get; set; } = null!;
+        public Widget ExpandButtonWidget { get; set; } = null!;
         public float Expansion { get; private set; }
         private float _progress;
 
@@ -88,9 +89,10 @@ namespace TAOM.Features.FactionUI.Campaign
 
     public class CampaignStatItemWidget : Widget
     {
-        public string StatId { get; set; }
-        public Widget IconWidget { get; set; }
-        public Widget ValueWidget { get; set; }
+        public string? StatId { get; set; }
+        // Set by Gauntlet from the prefab's widget references, before the first update.
+        public Widget IconWidget { get; set; } = null!;
+        public Widget ValueWidget { get; set; } = null!;
         public CampaignStatItemWidget(UIContext context) : base(context) { }
     }
 }
