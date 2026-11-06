@@ -38,6 +38,7 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 | `git --git-dir=/path commit` | Operate on a specific git-dir | NO — would need a separate pattern |
 | `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
 | `git commit-graph` | Plumbing — same | YES (false positive) — same |
+| `timeout 60 git ...`, `{ git ...; }`, `! git ...`, `then git ...` | A wrapper word or shell grammar in front of git (#985) | NO: read segments from `_shellwords.py commands`, a parsed call through `_git_call` |
 
 **Reference pattern** (used by `check-claude-files-tracked.sh`):
 
@@ -137,7 +138,7 @@ Measured on 2026-08-31, after a well-intentioned pass added timeouts to all 27 r
 | **Bound external work INSIDE the script**, under the registered timeout: `timeout -k 2 45 "$PY" tools/x.py` | Keeps the overrun inside the hook, where it can still print something. The registered timeout becomes a backstop, not the budget. |
 | **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
-| **Count the bound from the script's first command** when the work before it varies (#680) | `validate-push.sh` reads `EPOCHREALTIME` in its first command and gives its judge what is left of 3.0 s, so an overrun asks after about 3.3 s and its 10 s registration is only a backstop; a slow `_pybin.sh` probe asks at once. |
+| **Count the bound from the script's first command** when the work before it varies (#680) | `validate-push.sh` reads `EPOCHREALTIME` in its first command and gives its judge what is left of 3.0 s, so an overrun asks after about 3.3 s and its 30 s registration is only a backstop; a slow `_pybin.sh` probe asks at once. |
 | **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
@@ -158,6 +159,17 @@ Never feed unbounded text through `<<<` or an expanding here-document (Git Bash 
 65,536 to 65,663 bytes of text, and a killed gate fails open): split it under `set -f` with
 `set -f; IFS=$'\n'; A=($X); IFS=$' \t\n'; set +f` and a `for` loop, or `set -f; T=($X); set +f` for
 words, never `< <(printf ...)`, which forks per call; `tools/test_hooks.sh` 4e enforces it.
+
+## Digits only into bash arithmetic (ported from ralph-claude-code, #996)
+
+Bash evaluates every operand of `$(( ))`, `(( ))` and the `-eq`/`-gt` family inside `[[ ]]` as an
+expression, so an operand that holds an array subscript with a command substitution runs that
+command. A value from tool input, a file, git output or the environment enters arithmetic only after
+`tr -cd '0-9'`, `${X//[!0-9]/}` or a `^[0-9]+$` check (`mcp-health-check.sh` and `validate-push.sh`
+do this); counts from `grep -c`, `wc -l` and `date +%s` are already digits. A value that may start
+with a zero goes in as `10#$X`: bash reads `08` as bad octal, and the hook dies, which fails open.
+`tools/test_hooks.sh` 4f probes every hook with payload and session-id values; values from git output
+or state files stay covered by this rule and review.
 
 ## Never spell it `python3` (EMPIRICAL: TAOM 2026-08-31)
 

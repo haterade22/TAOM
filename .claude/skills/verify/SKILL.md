@@ -49,6 +49,8 @@ Report:
 - Passed / Failed / Skipped
 - Any failure details (test name + assertion message)
 
+A total under 7,000 (the WP101 baseline was 9,154) means discovery broke: not a pass.
+
 ## Step 2b: Python tool tests
 
 ```bash
@@ -58,6 +60,25 @@ python -m unittest discover -s tools/tests -t . 2>&1
 The tests for `tools/`. Plain `unittest`, no pytest. Nothing else runs them automatically since the
 GitHub CI was removed (2026-10-05). Report `Ran N tests` and the failures. No `Ran N tests` line,
 or fewer than 1,200 tests, means discovery broke: not a pass.
+
+## Step 2c: Canary
+
+```bash
+TAOM_VERIFY_CANARY=1 dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~VerifyCanaryTests 2>&1
+```
+
+`--no-build` is safe here: Step 2 just built the test DLL. This proves the runner can report a
+failure without editing any source (`TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`). The canary
+PASSES only when the run exits non-zero AND its output contains `VERIFY_CANARY_TRIPPED`. An exit 0
+or a missing token means the runner cannot report failures, so the whole verify FAILS.
+
+## Step 2e: Data gates
+
+```bash
+python tools/data_gates.py
+```
+
+Runs the gates for the ModuleData, Armory and tool files the working tree changed, and prints PASS, FAIL or NOT RUN for each. Name any live Armory or `TAOM_Map` file edited this session on its command line. Report the counts; a FAIL blocks, and a NOT RUN (no install, SKIPPED, the dotnet rows) has not passed. No match is "no gate reads the changed files", not a pass of anything.
 
 ## Step 3: Git Status
 
@@ -91,6 +112,23 @@ git diff --name-only HEAD -- CHANGELOG.md
 
 If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
 
+## Step 5b: Gates silenced (read the hits)
+
+```bash
+git diff HEAD -U0 | grep -nE '^-\s*\[TestMethod|^\+\s*\[Ignore|^\+.*(_BY_DESIGN|_EXEMPT|exempt_troops|KNOWN_FAILURES|shellcheck disable=|noqa|NuGetAuditSuppress|ruff: noqa)'
+git ls-files --others --exclude-standard | xargs -r grep -nE '\[Ignore|_BY_DESIGN|_EXEMPT|exempt_troops|KNOWN_FAILURES|shellcheck disable=|noqa|NuGetAuditSuppress'
+```
+
+With a review base known, diff against `<base>` instead of `HEAD`. Read every hit: a silenced check needs a stated reason in the entry or the commit body, and a weakened `Assert` is not caught by the pattern. List the unexplained ones under Issues. Information only; the hits are not a count to gate on.
+
+## Step 5c: Provenance
+
+```bash
+python tools/check_provenance.py
+```
+
+Every miss goes under Issues: a register Derivation or Status outside its closed set, a shipped non-TAOM binary with no `redistributed` row, or an adoption record the register does not name. A zero does not prove intent ([provenance.md](../../rules/provenance.md)).
+
 ## Output Format
 
 Produce a concise verification report:
@@ -101,9 +139,12 @@ VERIFICATION REPORT
 Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
+Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
+Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
 CHANGELOG:  [Untouched/HAND-EDITED]
+Provenance: [N misses]
 
 Ready for commit: [YES/NO]
 

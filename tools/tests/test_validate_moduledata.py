@@ -2986,3 +2986,21 @@ class CommitGateCoverageTests(unittest.TestCase):
                    | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
         unknown = sorted(self._hook_codes() - emitted)
         self.assertEqual(unknown, [], f"hook names codes the validator never emits: {unknown}")
+
+    DOC = (Path(__file__).resolve().parents[2] / "docs" / "reference" / "moduledata-validator-codes.md")
+
+    def test_every_emitted_code_has_a_row_in_the_codes_doc(self):
+        """The validator-codes doc promises every code and what repairs it. A code with no
+        row sends the reader to the source."""
+        src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
+        emitted = (set(re.findall(r'code="([A-Z_]+)"', src))
+                   | set(re.findall(r'Severity\.(?:ERROR|WARNING),\s*"([A-Z_]+)"', src))
+                   | self._named_codes(src, "ERROR") | self._named_codes(src, "WARNING")
+                   | {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"})
+        doc = self.DOC.read_text(encoding="utf-8")
+        rows = set(re.findall(r"^\| `([A-Z_]+)`", doc, flags=re.M))
+        if "| `DUPLICATE_{NPC,CULTURE,ROSTER}_ID`" in doc:
+            rows |= {"DUPLICATE_NPC_ID", "DUPLICATE_CULTURE_ID", "DUPLICATE_ROSTER_ID"}
+        self.assertGreaterEqual(len(rows), 20, "the doc scan found almost no rows")
+        self.assertEqual(sorted(emitted - rows), [],
+                         f"codes with no row in {self.DOC.name}: add a row to its Codes table")

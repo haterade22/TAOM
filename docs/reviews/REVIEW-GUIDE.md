@@ -19,8 +19,8 @@ How to write effective prompts, what to verify, and what we've learned.
 1. Choose feature to review (highest risk-per-line-of-code)
 2. Gather file list + identify vanilla targets to decompile
 3. Write prompt using template below
-4. Dispatch: /codex:adversarial-review --background
-5. Retrieve: /codex:result
+4. Dispatch: /review-codex Phase 2e (Claude runs codex exec in the background at a reasoning effort sized to the change)
+5. Retrieve: the harness notifies; read docs/reviews/raw/codex-adversarial-{feature}-{date}.md
 6. Claude critically reviews Codex output against actual source
 7. Implement confirmed fixes
 8. Log results in REVIEW-LOG.md
@@ -43,18 +43,18 @@ Step 1: WRITE PROMPT (Claude Code or manual)
   Use the v6 template below. Customize sections for the feature.
   For features with prior internal review, add Known Suspects section.
 
-Step 2: DISPATCH TO CODEX (terminal -- Codex is a separate CLI tool)
-  Option A: Copy prompt, run in Codex CLI terminal
-  Option B: /codex:adversarial-review --background (via codex-plugin-cc)
-  Codex writes output to: docs/reviews/codex-adversarial-{feature}-{date}.md
+Step 2: DISPATCH TO CODEX (Claude runs it; /review-codex Phase 2e)
+  codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt > output, in the background.
+  The session picks <level> for the change (review-codex "Reasoning effort is the session's call").
+  Output: docs/reviews/raw/codex-adversarial-{feature}-{date}.md
 
 Step 3: VERIFY OUTPUT (Claude Code)
-  /review-codex docs/reviews/codex-adversarial-{feature}-{date}.md
+  /review-codex docs/reviews/raw/codex-adversarial-{feature}-{date}.md
   The skill reads the review, verifies every finding against source code,
   implements confirmed fixes, and updates REVIEW-LOG.md.
 ```
 
-**Key:** Steps 1 and 2 are manual (you write and dispatch). Step 3 is the `/review-codex` skill which encapsulates ALL lessons from 18 reviews into a repeatable verification workflow. Any new Claude Code session can invoke it without needing prior context.
+**Key:** Claude writes the prompt (Step 1) and dispatches it through `/review-codex` Phase 2e at an effort sized to the change (Step 2). Step 3 is the `/review-codex` skill which encapsulates ALL lessons from 18 reviews into a repeatable verification workflow. Any new Claude Code session can invoke it without needing prior context.
 
 ## Advanced Pattern: Known Suspects
 
@@ -79,7 +79,7 @@ This pattern produced the highest-quality Codex output in our review history bec
 
 ## Prompt Formatting Note
 
-**Avoid indented continuation lines** in prompts sent via `/codex:adversarial-review`. Leading whitespace gets backslash-escaped, triggering a confirmation prompt. Use flat formatting:
+**Avoid indented continuation lines** in Codex prompts. Leading whitespace gets backslash-escaped, triggering a confirmation prompt. Use flat formatting:
 - No leading spaces on lines inside sections
 - Use `--` or blank lines as visual separators instead of indentation
 - Lists use `a)` `b)` `c)` at the start of the line, not indented under a header
@@ -87,8 +87,6 @@ This pattern produced the highest-quality Codex output in our review history bec
 ## Prompt Template (v6)
 
 ```
-/codex:adversarial-review --background
-
 Adversarial review of {FeatureName}.
 
 {1-2 sentences: what the feature does, its risk profile, what's already good}

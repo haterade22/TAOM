@@ -20,22 +20,6 @@ Examples:
 - `GetWage_Tier10_ReturnsExtendedWage`
 - `LoadRegions_MissingFile_ReturnsEmptyAndLogs`
 
-## Structure: AAA Pattern
-```csharp
-[TestMethod]
-public void MethodName_State_Expected()
-{
-    // Arrange
-    var mock = Substitute.For<IMyAdapter>();
-
-    // Act
-    var result = _sut.DoSomething();
-
-    // Assert
-    Assert.AreEqual(expected, result);
-}
-```
-
 ## Framework
 - **MSTest** — `[TestClass]`, `[TestMethod]`, `[TestInitialize]`, `[TestCleanup]`
 - **NSubstitute** — `Substitute.For<T>()`, `.Returns()`, `.Received()`
@@ -99,6 +83,8 @@ Worked example, pinning culture party-template bindings across `spcultures.xslt`
 A gate that builds a repo-relative key from the disk compares it with `OrdinalIgnoreCase`: git tracks
 `Main/_Module/GUI/PreFabs`, and a checkout can hold the folder as `Prefabs` on a case-insensitive
 filesystem (`GauntletStretchInCoverRatchetTests`, #1078).
+
+Judge every test by the two-edit test: break the behaviour (it must fail), change only the internals (it must pass); see `4-completeness.md` item 9 in `.claude/skills/deep-review/lenses/`.
 
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

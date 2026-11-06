@@ -14,12 +14,13 @@ the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader
 
 ## Always-load rules (no `paths:` — full text in context every session)
 
-_(7 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
+_(8 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
 
 | Rule | Content |
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 | `harness-facts.md` | Pinned Claude Code load semantics, hook lifecycle, rule loader rules with doc URLs. Source-of-truth for harness behavior. |
+| `model-effort-selection.md` | The main session does most of the work; each subagent gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `simplicity-criterion.md` | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
 | `think-before-coding.md` | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. Reuse-before-write ladder (engine API → existing service/adapter → one-line delegation → minimal new code) before writing new code. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |
@@ -43,7 +44,8 @@ _(7 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-s
 | `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Authoring a skill from scratch + per-field checklist for porting from external suites (gstack, etc.). |
 | `hook-authoring.md` | `.claude/hooks/**` | Hook authoring conventions: sibling-mirroring, two-stage git-commit matcher, amend handling, log rotation, detect-and-warn hooks must fail open but never fail silent |
 | `native-cpp-ports.md` | `Dependencies/**/*.cpp\|h`, `Main/SceneScripts/**` | 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ deep-review) |
-| `moduledata-validation.md` | `troops/`, `characters/`, `equipmentsets/`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/`, wanderers + education templates, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth |
+| `data-scripts.md` | `tools/**/*.py`, `tools/**/*.ps1` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
+| `moduledata-validation.md` | `**/troops/troops_*.xml`, `**/characters/*.xml`, `**/equipmentsets/*.xml`, `**/taom_spcultures.xml`, `**/taom_partyTemplates.xml`, `**/named_companions/*.xml`, `**/taom_wanderers.xml`, `**/taom_education_character_templates.xml`, `tools/schemas/*.json`, `tools/validate_moduledata.py`, `tools/taom_schema.py` | Run `python tools/validate_moduledata.py` before committing ModuleData; the gate per file kind; the codes are in [moduledata-validator-codes.md](moduledata-validator-codes.md) |
 | `provenance.md` | `Main/**/*.cs`, `Dependencies/**/*.cs`, `docs/{features,reference}/**/*.md`, `**/_Module/**/*.xml`, `**/THIRD-PARTY-LICENSES.txt` | Name the third-party source and state its license; euphemisms are the violation. Derivation vocabulary, the register as the record, and the reversal of the old "never name other mods" rule |
 | `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 

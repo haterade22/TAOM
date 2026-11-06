@@ -15,6 +15,7 @@ A change is judged on TWO axes simultaneously: how much it helps, and how much c
 | Deletion that holds parity (tests still green, behavior unchanged) | **Always keep** | Deletion is the highest-leverage change. Never argue against it. |
 | Improvement large enough to dominate complexity cost | **Keep**, but flag the trade-off in the PR or commit body | Make the cost explicit so the next person can re-evaluate later. |
 | New code "in case we need it later" | **Reject** | YAGNI. CLAUDE.md already forbids hypothetical-future plumbing. |
+| A guard for a speculative race or security case | **Ask Mike first**: name the failure, its likelihood and the cost | Theoretical robustness is scope he did not ask for |
 
 ## How to apply
 

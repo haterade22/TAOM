@@ -1,6 +1,6 @@
 #!/bin/bash
 # SessionStart hook: Print recent project context on fresh startup
-# Only fires on "startup" source — resume/compact/clear already have context
+# Startup prints the full context; compact prints only recent Dead ends (resume/clear print nothing)
 
 INPUT=$(cat)
 
@@ -9,6 +9,19 @@ if command -v jq >/dev/null 2>&1; then
   SOURCE=$(echo "$INPUT" | jq -r '.source // empty')
 else
   SOURCE=$(echo "$INPUT" | grep -oE '"source"\s*:\s*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
+fi
+
+# After compaction, re-surface recent Dead ends (run-protocol.md). SessionStart is
+# the only compact-time hook whose stdout reaches Claude (harness-facts.md "Visibility"). One find
+# bounded at 3 s of the 10 s registration, run folders and memory cards edited in the last two days,
+# at most 40 lines; a heading "## Dead ends" or a bold "**Dead ends:**" line opens a section.
+if [[ "$SOURCE" == compact ]]; then
+  cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
+  DE=$(timeout -k 1 3 find plans/_audit "$HOME"/.claude/projects/*"$(basename "$PWD")"*/memory -maxdepth 2 \
+       -type f \( -name PROGRESS.md -o -path '*/features/*.md' \) -mmin -2880 \
+       -exec awk 'FNR==1{s=0} /^## /{s=/^## Dead ends/; next} /^\*\*[^*]+\*\*/{s=/^\*\*Dead ends/} s&&NF{print FILENAME": "$0; if(++n>=40) exit}' {} + 2>/dev/null)
+  [[ -n "$DE" ]] && printf 'Dead ends recorded in the last two days (do not retry these):\n%s\n' "$DE"
+  exit 0
 fi
 
 # Only run on fresh startup
@@ -31,7 +44,7 @@ echo "Branch: $BRANCH"
 # `python3` resolved to a Microsoft Store App Execution Alias that never exits.
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
 # Two separate conditions, deliberately NOT ANDed. The gates with no jq path
-# (check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
+# (check-bash-length, check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,
 # check-moduledata-validation, check-native-dll-crt) call "$PYBIN" unconditionally, so they
 # die on a missing python whether jq is present or not. ANDing the two conditions hid
 # exactly that case. tools/test_hooks.sh 5b2 fails when a python-only gate's file name is
@@ -39,8 +52,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null || PYBIN=""
 if [[ -z "${PYBIN:-}" ]]; then
     echo ""
     echo "!!! HOOK TOOLCHAIN DEGRADED: no safe python resolved. !!!"
-    echo "    The python-only gates are failing OPEN right now: check-claude-files-tracked,"
-    echo "    check-commit-subject-version, check-doc-config-drift,"
+    echo "    The python-only gates are failing OPEN right now: check-bash-length,"
+    echo "    check-claude-files-tracked, check-commit-subject-version, check-doc-config-drift,"
     echo "    check-moduledata-validation, check-native-dll-crt."
     echo "    validate-push cannot judge a push: it asks on any force marker and allows the rest."
     if ! command -v jq >/dev/null 2>&1; then
@@ -98,6 +111,22 @@ elif [[ -f "$PIN_FILE" ]]; then
   fi
 fi
 
+# Worktree pile-up banner (ported from pstack). Each stale worktree costs disk and confuses a later
+# session, so past 15 name the audit tool. One bounded git call; pruning is the maintainer's call.
+WT_MAX=15
+WT_LIST=$(timeout -k 0.5 2 git worktree list --porcelain 2>/dev/null)
+WT_RC=$?
+if [[ $WT_RC -ne 0 ]]; then
+  echo ""
+  echo "NOTE: worktree count UNCHECKED this session (git worktree list exited $WT_RC)."
+else
+  WT_N=$(printf '%s\n' "$WT_LIST" | grep -c '^worktree ' || true)
+  if [[ "${WT_N:-0}" -gt $WT_MAX ]]; then
+    echo ""
+    echo "WORKTREES: ${WT_N} checked out (more than ${WT_MAX}). Run python tools/worktree_audit.py; prune only on Mike's word."
+  fi
+fi
+
 # Stale-worktree visibility. Parallel-agent worktrees under .claude/worktrees/ are
 # auto-cleaned only when unchanged; abandoned ones with edits linger (4 forgotten trees
 # cost 22 GB by 2026-07-11). Surface the count so the leak can't hide. Read-only, count
@@ -107,7 +136,7 @@ if [[ -d "$WORKTREE_DIR" ]]; then
   WT_COUNT=$(find "$WORKTREE_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
   if [[ -n "$WT_COUNT" && "$WT_COUNT" -gt 0 ]]; then
     echo ""
-    echo "Worktrees: ${WT_COUNT} lingering under $WORKTREE_DIR — if abandoned, prune (git worktree remove) to reclaim disk."
+    echo "Worktrees: ${WT_COUNT} lingering under $WORKTREE_DIR. Run python tools/worktree_audit.py; prune only on Mike's word."
   fi
 fi
 
@@ -152,6 +181,36 @@ if [[ -f "$SUBMODULE_XML" ]]; then
     echo "Release tag: module version ${MODULE_VERSION} has NO git tag. A version with no tag cannot be"
     echo "  traced from a player's crash report. Tag the commit that actually ships, then push the tag"
     echo "  separately (git push origin ${MODULE_VERSION}); /release runs the full sequence."
+  fi
+fi
+
+# Harness retro cadence (#962). /harness-retro measures the harness from the session transcripts
+# (docs/ai-includes/harness-retro.md), and a measurement nobody reads is no measurement, so this asks
+# for one once the newest retro record is seven days old. One glob and one `date` call, no transcript
+# scan. Fail open, never silent: a record whose
+# date will not parse says UNCHECKED rather than nothing.
+RETRO_LAST=""
+for RETRO_F in docs/reviews/harness-retro-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md; do
+  [[ -f "$RETRO_F" ]] && RETRO_LAST=$RETRO_F
+done
+if [[ -z "$RETRO_LAST" ]]; then
+  echo ""
+  echo "HARNESS RETRO DUE: no retro on record; run /harness-retro."
+else
+  RETRO_DATE=${RETRO_LAST#docs/reviews/harness-retro-}
+  RETRO_DATE=${RETRO_DATE%.md}
+  RETRO_EPOCH=$(date -d "$RETRO_DATE" +%s 2>/dev/null)
+  printf -v RETRO_NOW '%(%s)T' -1 2>/dev/null
+  if [[ -z "$RETRO_EPOCH" || -z "$RETRO_NOW" ]]; then
+    echo ""
+    echo "NOTE: harness retro cadence UNCHECKED this session (could not read the date of $RETRO_LAST)."
+  elif (( RETRO_EPOCH > RETRO_NOW )); then
+    # A typo such as 2062 would otherwise silence the banner for decades.
+    echo ""
+    echo "NOTE: harness retro cadence UNCHECKED this session ($RETRO_LAST is dated in the future)."
+  elif (( (RETRO_NOW - RETRO_EPOCH) / 86400 >= 7 )); then
+    echo ""
+    echo "HARNESS RETRO DUE: last retro $RETRO_DATE ($(( (RETRO_NOW - RETRO_EPOCH) / 86400 )) days ago); run /harness-retro."
   fi
 fi
 

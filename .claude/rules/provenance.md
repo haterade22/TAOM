@@ -25,8 +25,7 @@ archived CHANGELOG line, had no checker, covered two of a dozen sources, and lef
 documenting that something had been taken while making the terms unverifiable. If you find that line
 first, it is history, not policy.
 
-De-naming also did not work in practice: `docs/INDEX.md:47` said "the upstream beasts pack" while
-linking to a file named `adod-beasts-architecture-and-taom-port.md`. The identifiers always survive.
+De-naming does not work in practice: a link target or file name always carries the name anyway.
 
 ## What good attribution looks like
 
@@ -65,19 +64,13 @@ Ask which of these you are doing, and write that word:
 
 ## Enforcement
 
-**Today this rule is enforced by reading it.** There is no checker yet, so the register is only as
-current as the last person who updated it. Update it in the same commit as the code it describes.
-
-The planned mechanism, not yet built: `tools/check_provenance.py` parsing the register as its
-allowlist and scanning for module ids, mod distribution links, euphemism phrases,
-attribution-header coverage, and unregistered shipped binaries, with a
-`tools/provenance-baseline.txt` ratchet for the pre-existing backlog. It would run as a `/verify`
-step plus a `PreToolUse` hook for fast feedback (the GitHub CI job first planned for it was removed
-with the workflow on 2026-10-05). **Do not cite it as though it exists**
-until it does; that is the same gap this rule was written to close.
-
-**When it does exist, a zero from it will not be self-validating.** It would detect the shapes in
-which a source is usually named, not intent. Read the register when you touch a ported feature.
+`python tools/check_provenance.py` (a `/verify` step) checks three things: the register's Derivation
+and Status cells are in their closed sets; each tracked non-TAOM binary under `*/_Module/bin/*`
+matches a live `redistributed` row through the filename table in the tool (a new binary needs a line
+there); and each `docs/reviews/adopt-*.md` is named by a register row or says "nothing taken". A
+zero does not prove intent: it cannot see an unnamed source, a euphemism or a wrong Derivation, so
+read the register when you touch a ported feature. Update the register in the same commit as the
+code it describes.
 
 ## Adopting something new
 

@@ -206,7 +206,8 @@ raw transcripts, keys and game content out of commits and external uploads.
 Before any cleanup, identify exact owned paths and obtain the needed authority.
 
 End a task with what changed or was found, the source/revision examined, checks
-actually run, known omissions and remaining work. Do not call local instructions
+actually run, known omissions, remaining work and approaches tried that failed,
+with why (dead ends). Do not call local instructions
 authenticated merge enforcement. Named runtime subagents, automated paid-provider
 adapters, remote CI approval gates and scheduled audits are not installed by
 this documentation and skill layer.

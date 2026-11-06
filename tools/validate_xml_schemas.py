@@ -136,7 +136,7 @@ _THROWS = "the engine throws on it at startup (XmlResource.GetXmlListAndApply)"
 _THROWS_MBPROJ = "the engine throws on it at startup (XmlResource.GetMbprojxmls)"
 
 
-#: The byte order marks `new StreamReader(path)` detects (XmlResource.cs:92), longest first because the
+#: The byte order marks `new StreamReader(path)` detects (XmlResource.cs:121), longest first because the
 #: UTF-32 little-endian mark begins with the UTF-16 one.
 _BOMS = ((b"\xff\xfe\x00\x00", "utf-32-le"), (b"\x00\x00\xfe\xff", "utf-32-be"),
          (b"\xef\xbb\xbf", "utf-8"), (b"\xff\xfe", "utf-16-le"), (b"\xfe\xff", "utf-16-be"))

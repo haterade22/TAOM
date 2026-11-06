@@ -45,6 +45,7 @@ REPO = Path(__file__).resolve().parent.parent
 TIMEOUT = 900
 DOTNET_TEST = ("dotnet", "test", "TAOM.Tests", "-p:DisableModuleCopy=true", "-p:ModuleId=", "--filter")
 MODULEDATA_DOC = "docs/features/moduledata-validation.md"
+CODES_DOC = "docs/reference/moduledata-validator-codes.md"
 ARMORY_DOC = "docs/reference/armory-guide.md"
 
 
@@ -89,7 +90,7 @@ GATES = (
     Gate("moduledata", "troops, characters, rosters, cultures, clans, party templates, lords, Armory refs, "
          "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS,
          ("python", "tools/validate_moduledata.py"),
-         (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md"),
+         (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors"),
     Gate("wanderers", "wanderers, wanderer strings", ("*/taom_wanderers.xml", "*/taom_wanderer_strings.xml"),
          _dotnet("WandererBackstoryCoverageTests"), (MODULEDATA_DOC,), dotnet=True),

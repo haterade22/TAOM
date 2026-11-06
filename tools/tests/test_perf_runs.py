@@ -1104,6 +1104,81 @@ class SpawnWindowPositionTests(unittest.TestCase):
         self.assertAlmostEqual(r["gc0_per_min"], 36.0)
 
 
+class InconclusiveTests(unittest.TestCase):
+    def _rows(self, n):
+        return [_context_row(100.0 + i, at=100 * i) for i in range(n)]
+
+    def test_three_against_five_is_inconclusive_and_names_the_small_group(self):
+        result = pr.compare_rows(self._rows(3), self._rows(5))
+        self.assertEqual(pr.MIN_RUNS_PER_GROUP, 5)
+        self.assertEqual(len(result["inconclusive"]), 1)
+        self.assertIn("group A has 3 run(s)", result["inconclusive"][0])
+        self.assertIn("at least 5 per group", result["inconclusive"][0])
+        line = next(x for x in pr.format_compare(result).splitlines() if x.startswith("INCONCLUSIVE:"))
+        self.assertIn("group A has 3 run(s)", line)
+        self.assertTrue(line.endswith(" (docs/ai-includes/perf-method.md)"))
+
+    def test_both_groups_small_gives_one_reason_each(self):
+        result = pr.compare_rows(self._rows(2), self._rows(4))
+        self.assertEqual(len(result["inconclusive"]), 2)
+
+    def test_a_metric_absent_from_one_group_is_not_flagged(self):
+        a, b = self._rows(5), self._rows(5)
+        for r in b[2:]:
+            r["main_ms_median"] = 3.0
+        self.assertEqual(pr.compare_rows(a, b)["inconclusive"], [])
+
+    def test_five_against_five_is_conclusive(self):
+        result = pr.compare_rows(self._rows(5), self._rows(5))
+        self.assertEqual(result["inconclusive"], [])
+        self.assertNotIn("INCONCLUSIVE", pr.format_compare(result))
+
+    def _scened(self, n, scenes):
+        rows = self._rows(n)
+        for i, r in enumerate(rows):
+            r["scene"] = scenes[i % len(scenes)]
+        return rows
+
+    def test_rows_over_several_scenes_are_inconclusive(self):
+        result = pr.compare_rows(self._scened(5, ["s1", "s2"]), self._scened(5, ["s1", "s3"]))
+        self.assertEqual(result["inconclusive"],
+                         ["rows span 3 scenes; compare one scene with --scene"])
+        self.assertIn("INCONCLUSIVE: rows span 3 scenes", pr.format_compare(result))
+
+    def test_rows_without_a_scene_id_count_as_one_unknown_scene(self):
+        result = pr.compare_rows(self._scened(5, [None]), self._scened(5, ["s1"]))
+        self.assertEqual(len(result["inconclusive"]), 1)
+        self.assertIn("rows span 2 scenes", result["inconclusive"][0])
+
+    def test_one_scene_is_conclusive(self):
+        result = pr.compare_rows(self._scened(5, ["s1"]), self._scened(5, ["s1"]))
+        self.assertEqual(result["inconclusive"], [])
+
+    def test_a_metric_short_in_one_group_is_inconclusive(self):
+        a, b = self._rows(5), self._rows(5)
+        for r in a + b[2:]:
+            r["main_ms_median"] = 3.0
+        result = pr.compare_rows(a, b)
+        self.assertEqual(result["inconclusive"], ["main_ms_median has 3 value(s) in B"])
+        self.assertIn("INCONCLUSIVE: main_ms_median has 3 value(s) in B", pr.format_compare(result))
+
+    def test_a_metric_short_in_both_groups_names_both_in_one_reason(self):
+        a, b = self._rows(5), self._rows(5)
+        for r in a[:1] + b[:3]:
+            r["main_ms_median"] = None
+        for r in a[1:] + b[3:]:
+            r["main_ms_median"] = 3.0
+        reasons = pr.compare_rows(a, b)["inconclusive"]
+        self.assertEqual(reasons, ["main_ms_median has 4 value(s) in A, 2 value(s) in B"])
+
+    def test_all_metrics_full_is_conclusive(self):
+        a, b = self._rows(5), self._rows(5)
+        for r in a + b:
+            for m in pr.METRICS:
+                r[m] = 1.0
+        self.assertEqual(pr.compare_rows(a, b)["inconclusive"], [])
+
+
 class UncheckedSettingsTests(unittest.TestCase):
     def test_na_texture_quality_is_not_refused_but_counted_unchecked(self):
         a, b = [_context_row(100.0, textures="na")], [_context_row(90.0, textures="2")]

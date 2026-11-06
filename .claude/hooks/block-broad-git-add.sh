@@ -45,7 +45,8 @@ INPUT=$(cat)
 
 # Prefilter: every decision below needs the text `git` in the command, and Claude Code never
 # escapes an ASCII letter, so a raw payload without it cannot concern this gate. Exiting
-# here skips the _pybin.sh probe and the parse (two Python starts) on most Bash calls.
+# here skips the _pybin.sh probe and both reader runs, posix and commands (three Python starts),
+# on most Bash calls.
 # Match the raw text, never a token regex: a newline before `git` arrives as \n.
 # tools/test_hooks.sh 4c checks both directions.
 # Never skip on an escape: JSON writes a letter either literally or as a \u escape,
@@ -70,9 +71,13 @@ COMMAND=$(taom_hook_command posix block-broad-git-add)
 
 REASON=""
 
-# Split on shell separators so a flag is only matched when it belongs to the segment's
-# own git invocation, never as text inside a quoted arg or a pipe target.
-SEGMENTS=$(printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g')
+# A flag is only matched when it belongs to the segment's own git invocation, never as text inside
+# a quoted arg or a pipe target.
+# Segments, each from its command word on (#985): taom_hook_segments (_pybin.sh) reads the quote-aware
+# split past VAR=value, shell grammar and wrappers such as timeout, env and xargs, so `timeout 60 git
+# reset --hard` and `{ git reset --hard; }` are judged as the bare form, and adds the quote-blind
+# pieces, so nothing the old sed split caught goes unasked. Without Python it falls back to that sed split.
+SEGMENTS=$(taom_hook_segments block-broad-git-add)
 
 # Split into an array under set -f, never a here-string: Git Bash 5.3 hangs forever on one of
 # 65,536 to 65,663 bytes of text, and a killed gate fails open (#681). An empty segment is dropped,

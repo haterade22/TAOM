@@ -67,3 +67,12 @@ steps the object back to an earlier model, and one that lifts `HitPoint` above t
 engine reads `_destructionStates[-1]` after hiding the model and the object stays invisible and unhittable (v1.4.8
 `DestructableComponent.cs:399-412`, `:498`; [engine note](../../docs/reference/engine/usable-machines.md); found on the
 1.5.x line, 2026-10-31).
+
+## Relations and party-screen writes (MANDATORY)
+
+- **Relations live on clan leaders.** `ChangeRelationAction` ignores `affectRelatives` and writes to the pair from
+  `DiplomacyModel.GetHeroesForEffectiveRelation`, so per-lord deltas sum per clan: key a penalty list on that owner,
+  strongest delta once per owner.
+- **A write made in a conversation opened from the party screen is reverted by Escape** (`PartyScreenData.ResetUsing`):
+  after a roster, inventory or hero-state write, commit the screen with `PartyScreenLogic.DoneLogic(true)`.
+- Sources (v1.4.8): `ChangeRelationAction.cs:14-30`, `PartyScreenLogic.cs:1525-1534`, `PartyVM.cs:3246-3264`.

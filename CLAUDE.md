@@ -85,6 +85,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "clean up this AI slop", over-engineered code, clearly redundant abstractions | **`/deslop`** | **Only if the code is clearly redundant (multiple similar abstractions, dead helpers).** `/deslop` is deletion-first — could remove code the user wants to keep. Default to asking first. |
 | "add an ADR for", architectural decision being made | **`/new-adr`** | None — always |
 | "session feels slow", "are we close to context limit", "audit my .claude/", after adding skills/agents/MCP servers | **`/context-budget`** | None — but skip when the user is in the middle of an unrelated task |
+| HARNESS RETRO DUE banner; "did that rule help" | **`/harness-retro`** | |
 | "save my work", "save state", "save progress", "context save", before stepping away or before `/compact` | **`/context-save`** | None — always |
 | "where was I", "resume", "pick up where I left off", "restore context" | **`/context-restore`** | None — always |
 | Bash script bug, build infra issue, MCP server error, hook script crash — anything outside TAOM C# | **`debugger` agent** (Task tool) | None — but route TAOM C# bugs to `/investigate` instead |
@@ -94,7 +95,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 | User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
 | Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
-| "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X" | **`/improve`** | Repo-wide / proactive asks only — change-scoped C# review stays with `/deep-review`; build+test gating with `/verify`. |
+| "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X"; execute, review, merge or resume a plans backlog | **`/improve`** | Repo-wide or proactive asks only: change-scoped C# review stays with `/deep-review`, build and test gating with `/verify`; merge, push, issues and paid calls only on the maintainer's word. |
 | "cut a release", "bump the module version", "ship v2.0.x to players" | **`/release`** | None — always. Downstream of `/ship`, not a substitute: `/ship` closes a feature, `/release` versions + tags a build for players. |
 
 ### Soft suggest (offer, don't auto-invoke)
@@ -102,14 +103,13 @@ When the user's message matches one of these patterns, **proactively invoke** th
 - **`/freeze`** on "only fix this" / "don't touch X" / "stay in this folder" / a many-file refactor or focused one-feature fix; **`/unfreeze`** when they're done and the boundary is still set.
 - **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
 - **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue.
-- **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
 - **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `output-style.md` Part 2 already governs new prose as you write.
 
 ### Never auto-invoke
 
 `/codex-verify`, `/review-codex` (cost real money — explicit user intent or the ship-sequence offer);
-`/issue` (creates a public artifact); `/migration-status`, `/context-budget` (read-only diagnostics —
-on request, or `/context-budget` after a major harness change).
+`/issue` (creates a public artifact); `/context-budget` (read-only diagnostic: on request, or after a
+major harness change).
 
 ### When the user invokes a skill explicitly
 
@@ -117,15 +117,16 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Scoped Rules (auto-loaded by file path)
 
-Full catalog (rule → scope → content, 16 path-scoped + 7 always-load):
+Full catalog (rule → scope → content, 17 path-scoped + 8 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
 full text is already in context every session; the path-scoped ones load when you open a matching file.
 
 ## Custom Agents
 
-5 custom agents in `.claude/agents/` (taleworlds-researcher, feature-builder, debugger,
-error-detective, refactoring-specialist — descriptions load eagerly; each body carries its own
-execution model). **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
+9 custom agents in `.claude/agents/`: the specialists taleworlds-researcher, feature-builder, debugger,
+error-detective and refactoring-specialist; the tiers `fast-reader`, `implementer` and `architect`
+(`.claude/rules/model-effort-selection.md`); and `deep-reviewer` for `/deep-review` lenses. Descriptions
+load eagerly; each body carries its own execution model. **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
 do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
 [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first",
 **(2)** "you cannot invoke skills or spawn agents — recommend them in your report", **(3)** the
@@ -137,15 +138,11 @@ convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems 
 need 1–2 + scope. Implement-then-review dispatch follows the two-stage ordering in
 [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 
-## Model Routing
+## Model & Effort Selection
 
-| Task | Model | Why |
-|------|-------|-----|
-| Architecture decisions, complex design | **Opus** | Deepest reasoning for trade-off analysis |
-| Feature implementation, code review | **Sonnet** | Best coding model, fast enough for iteration |
-| Lightweight research, documentation, exploration | **Haiku** | 90% of Sonnet capability at 3x cost savings |
-| Explore agents (codebase search) | **Haiku** | Read-only search doesn't need full reasoning |
-| Plan agents (design work) | **Sonnet** | Needs coding awareness for implementation plans |
+Each task runs on the cheapest model and lowest effort that does it well: the table, escalation and
+the one-line note before each spawn are in `.claude/rules/model-effort-selection.md`. Tier agents:
+`fast-reader` (Haiku/low), `implementer` (Sonnet/medium), `architect` (Opus/high).
 
 ## Doc Lookup
 

@@ -190,6 +190,30 @@ except Exception:
 ' 2>/dev/null
 }
 
+# The segments a confirm gate judges (#985), one per line, each from its command word on: the quote-aware
+# split with wrappers and grammar read past, plus the quote-blind pieces (`_shellwords.py commands
+# --blind`), so nothing the old sed split caught goes unasked. $1 is the gate's name for the stderr note;
+# it reads the hook's $INPUT and $COMMAND. With no Python, or if the reader fails, it prints the sed
+# split of $COMMAND instead (not quote-aware, no wrappers, but a bare git still shows) and, when Python
+# was there, says so on stderr.
+taom_hook_segments() {
+    local out rc
+    if [ -n "${PYBIN:-}" ]; then
+        # Bounded inside the gate (hook-authoring.md, "a timeout is a kill"): a reader that overruns is cut
+        # off at 20 s of the 30 s registration and the sed split answers. TAOM_READER_TIMEOUT only shortens
+        # it for tests/test_hooks.sh.
+        out=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-20}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" commands --blind 2>/dev/null)
+        rc=$?
+        if [ $rc -eq 0 ]; then
+            printf '%s' "$out"
+            return 0
+        fi
+        printf '%s: _shellwords.py commands %s, so the segments are split with sed\n' "${1:-hook}" \
+            "$([ $rc -eq 124 ] && echo 'timed out' || echo 'failed')" >&2
+    fi
+    printf '%s' "$COMMAND" | sed -E 's/&&|\|\||;|\|/\n/g'
+}
+
 # The repository a git gate judges (2026-10-16): the top level of the work tree a `git <subcommand>`
 # (default commit) in the hook's $INPUT runs in. Registrations run the main checkout's hooks, and
 # $CLAUDE_PROJECT_DIR stays where the session started even after it enters a worktree, so a gate that

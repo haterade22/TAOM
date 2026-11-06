@@ -208,8 +208,9 @@ done
 #     not valid YAML, so the WHOLE frontmatter was dropped and those skills lost their
 #     eager description from the model's routing surface. Nothing detected it.
 # ---------------------------------------------------------------------------
-head2 "3b. skill/agent frontmatter parses as YAML"
-FM=$("$HPY" - <<'PYEOF'
+head2 "3b. skill, agent and rule frontmatter parses as YAML"
+fm_check() {   # $1 the directory holding .claude; prints COUNT n and one BAD line per defect
+"$HPY" - "$1" <<'PYEOF'
 import pathlib, sys
 try:
     import yaml
@@ -228,9 +229,23 @@ def frontmatter(txt):
             return "\n".join(lines[1:i])
     return None
 
+# Allowlists: harness-facts.md "Skill load semantics" and "Agent (subagent) load semantics".
+# Both pages were truncated when read (2026-10-26), so a documented key may be missing.
+SKILL_KEYS = {'name', 'description', 'when_to_use', 'argument-hint', 'arguments',
+              'disable-model-invocation', 'user-invocable', 'allowed-tools', 'disallowed-tools',
+              'model', 'effort', 'context', 'agent', 'background', 'hooks', 'paths', 'shell',
+              'metadata', 'license', 'compatibility'}   # https://code.claude.com/docs/en/skills
+AGENT_KEYS = {'name', 'description', 'tools', 'disallowedTools', 'model', 'permissionMode',
+              'maxTurns', 'autoCompactWindow', 'skills', 'mcpServers', 'hooks', 'memory',
+              'background', 'omitClaudeMd', 'effort', 'isolation', 'color', 'initialPrompt',
+              'experimental'}   # https://code.claude.com/docs/en/sub-agents
+root = pathlib.Path(sys.argv[1])
+root = pathlib.Path(sys.argv[1])
 bad = []
 n = 0
-for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.Path('.claude/agents').glob('*.md')):
+for p in (list(root.glob('.claude/skills/*/SKILL.md'))
+          + list(root.glob('.claude/agents/*.md'))
+          + list(root.glob('.claude/rules/**/*.md'))):   # rules load recursively
     txt = p.read_text(encoding='utf-8', errors='replace')
     fm = frontmatter(txt)
     if fm is None:
@@ -273,18 +288,39 @@ for p in list(pathlib.Path('.claude/skills').glob('*/SKILL.md')) + list(pathlib.
                 continue  # quoted, the # is safe
             if ' #' in val:
                 bad.append(f"{p}: unquoted '#' in {field[:-1]} truncates it at that point (YAML comment); quote the value")
+
+    # Claude Code silently ignores an unrecognised frontmatter key, so a typo such as
+    # `disable-model-invocaton` or `allowed_tools` turns a setting off with no error.
+    # Rules are not checked: harness-facts.md says Claude Code reads only `paths` there,
+    # and 8 rules carry a `description` that is documentation for readers.
+    # The kind is the first part of the path under .claude, never the file or folder name: a
+    # future .claude/rules/agents/ folder holds rules.
+    kind = p.relative_to(root / '.claude').parts[0]
+    if kind == 'skills':
+        allowed, stem = SKILL_KEYS, p.parent.name
+    elif kind == 'agents':
+        allowed, stem = AGENT_KEYS, p.stem
+    else:
+        continue
+    for k in d:
+        if k not in allowed:
+            bad.append(f"{p}: frontmatter key '{k}' is not on the allowlist. A misspelled key is ignored by Claude Code; if the key is documented, add it to the allowlist in tools/test_hooks.sh section 3b and to .claude/rules/harness-facts.md")
+    nm = d.get('name')
+    if nm is not None and str(nm) != stem:
+        bad.append(f"{p}: name '{nm}' must equal '{stem}' ({'its directory' if kind == 'skills' else 'its file stem'})")
 print(f"COUNT {n}")
 for b in bad:
     print("BAD " + b)
 PYEOF
-)
+}
+FM=$(fm_check .)
 # The check must be able to FAIL. The first version of this block died on a SyntaxError,
 # $FM came back empty, and the else-branch reported a pass with a blank count: a broken
 # check reading as a green one, which is the whole defect class this suite exists to catch.
 if printf '%s' "$FM" | grep -q '^SKIP'; then
     # Loud, not silent: an unrun check must never read as a pass.
     echo "  note: pyyaml unavailable, frontmatter parse check SKIPPED (not passed)"
-elif ! printf '%s' "$FM" | grep -q '^COUNT [0-9]'; then
+elif ! printf '%s' "$FM" | grep -q '^COUNT [1-9]'; then
     bad "frontmatter check did not run (no COUNT line). Output was: $(printf '%s' "$FM" | head -c 200)"
 elif printf '%s' "$FM" | grep -q '^BAD '; then
     while IFS= read -r line; do
@@ -292,6 +328,42 @@ elif printf '%s' "$FM" | grep -q '^BAD '; then
     done <<< "$FM"
 else
     ok "all $(printf '%s' "$FM" | sed -n 's/^COUNT //p') frontmatters parse; description/argument-hint are strings"
+fi
+# Self-test: the same check over a synthetic tree with four planted defects (a misspelled skill key,
+# an agent name that differs from its stem, a broken YAML frontmatter, an unquoted # in a skill
+# description) and one negative case (a rule under a folder named agents) must report each.
+# Without this, a change that made 3b vacuous (a wrong glob, a swallowed error) would stay green.
+if ! printf '%s' "$FM" | grep -q '^SKIP'; then
+    FMT="$(mktemp -d 2>/dev/null || echo "/tmp/taom-3b-$$")"
+    mkdir -p "$FMT/.claude/skills/good" "$FMT/.claude/skills/typo" "$FMT/.claude/skills/hash" "$FMT/.claude/agents" \
+             "$FMT/.claude/rules/agents" "$FMT/.claude/rules/broken"
+    printf -- '---\nname: good\ndescription: fine\n---\nbody\n' > "$FMT/.claude/skills/good/SKILL.md"
+    printf -- '---\nname: typo\ndescription: fine\ndisable-model-invocaton: true\n---\nbody\n' > "$FMT/.claude/skills/typo/SKILL.md"
+    printf -- '---\nname: hash\ndescription: cut # here\n---\nbody\n' > "$FMT/.claude/skills/hash/SKILL.md"
+    printf -- '---\nname: other-name\ndescription: fine\n---\nbody\n' > "$FMT/.claude/agents/stem.md"
+    printf -- '---\ndescription: [unclosed\n---\nbody\n' > "$FMT/.claude/rules/broken/r.md"
+    # A rule inside a folder called agents is a rule: its name and keys are not agent-checked.
+    printf -- '---\nname: not-the-stem\nbogus-key: 1\n---\nbody\n' > "$FMT/.claude/rules/agents/r.md"
+    FMS=$(fm_check "$FMT")
+    printf '%s' "$FMS" | grep -q '^COUNT 6$' \
+        && ok "3b self-test: the synthetic tree is read (6 frontmatters)" \
+        || bad "3b self-test: expected COUNT 6 over the synthetic tree, got: $(printf '%s' "$FMS" | head -c 300)"
+    printf '%s' "$FMS" | grep -q "^BAD .*typo.*disable-model-invocaton.*not on the allowlist" \
+        && ok "3b self-test: a misspelled skill key is reported" \
+        || bad "3b self-test: a misspelled skill key was not reported"
+    printf '%s' "$FMS" | grep -q "^BAD .*stem.md: name 'other-name' must equal 'stem'" \
+        && ok "3b self-test: an agent whose name differs from its file stem is reported" \
+        || bad "3b self-test: an agent name that differs from its file stem was not reported"
+    printf '%s' "$FMS" | grep -q "^BAD .*hash.*unquoted '#' in description" \
+        && ok "3b self-test: an unquoted # in a skill description is reported" \
+        || bad "3b self-test: an unquoted # in a skill description was not reported"
+    printf '%s' "$FMS" | grep -q '^BAD .*broken.*r.md' \
+        && ok "3b self-test: a broken YAML frontmatter is reported" \
+        || bad "3b self-test: a broken YAML frontmatter was not reported"
+    printf '%s' "$FMS" | grep -q '^BAD .*rules.agents' \
+        && bad "3b self-test: a rule under .claude/rules/agents/ was checked as an agent" \
+        || ok "3b self-test: a rule under .claude/rules/agents/ is not checked as an agent"
+    rm -rf "$FMT"
 fi
 
 # ---------------------------------------------------------------------------
@@ -501,6 +573,8 @@ else
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
                 validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
                 block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                # Its trigger is length, not a word: a long command must reach the parser.
+                check-bash-length.sh) triggers=("cd /x\\necho $(printf 'x%.0s' {1..6000})") ;;
                 # The commit gates also trigger on `git -C <dir> commit`, which holds `commit`
                 # but not `git commit`: its own row keeps a prefilter from narrowing to the latter.
                 *)                  triggers=('cd /x\ngit commit -m x' 'cd /x\ngit -C /y commit -m x') ;;
@@ -523,6 +597,8 @@ else
             block-no-verify.sh)     esc="cd /x\ngit commit --${PF_U}006eo-verify -m x" ;;
             mark-verification-run.sh)
                                     esc="cd /x\n${PF_U}0064otnet test TAOM.Tests" ;;
+            # A \u escape only lengthens the raw payload, so it cannot hide a length.
+            check-bash-length.sh)   esc="" ;;
             # The commit gates, the two confirm gates and any new Bash hook: the row holds no
             # literal `git` or `commit`, so a hook filtering on either word without the
             # escape arm skips it and fails here.
@@ -713,6 +789,50 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 4f. No payload field and no session-id variable reaches bash arithmetic (#998).
+#     Bash evaluates the operands of $(( )), (( )) and -eq/-gt inside [[ ]] as expressions, so a value
+#     holding an array subscript with a command substitution runs that command (hook-authoring.md
+#     "Digits only into bash arithmetic"). Every hook gets one probe in every payload field and in the
+#     session-id variables; the probe touches a marker file if anything evaluates it. The probe is
+#     assembled from parts so no literal attack string sits in this file. Values from git output or
+#     state files are not reachable from here and stay covered by the rule and review.
+# ---------------------------------------------------------------------------
+head2 "4f. no payload field or session-id variable reaches bash arithmetic (#998)"
+AM="$SANDBOX/arith-fired"
+AO='$('
+PROBE="PATH[${AO}touch $AM)]"   # PATH is always set, so a hook under set -u still evaluates the subscript
+AX="$PROBE"
+( (( AX > 0 )) ) 2>/dev/null   # a bad expression ends a non-interactive shell: run it in a subshell
+if [[ -e "$AM" ]]; then
+    rm -f "$AM"
+    ok "control: this bash runs the probe as arithmetic"
+else
+    bad "control: the probe did not fire on this bash; 4f proves nothing until it is updated"
+fi
+ACOMMON='"session_id":"'"$PROBE"'","cwd":"'"$PROBE"'","transcript_path":"'"$PROBE"'","source":"'"$PROBE"'","error":"'"$PROBE"'","duration_ms":"'"$PROBE"'","stop_hook_active":"'"$PROBE"'"'
+AP=("bash|{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git commit -m $PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
+    "edit|{\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"$PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
+    "mcp|{\"tool_name\":\"mcp__taomprobe__x\",\"tool_input\":{},\"hook_event_name\":\"PreToolUse\",$ACOMMON}")
+A_RUNS=0
+for ahook in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
+    aname=$(basename "$ahook")
+    [[ "$aname" == _*.sh || ! -f "$ahook" ]] && continue
+    for ae in "${AP[@]}"; do
+        printf '%s' "${ae#*|}" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$SANDBOX" \
+            CLAUDE_SESSION_ID="$PROBE" CLAUDE_CODE_SESSION_ID="$PROBE" bash "$ahook" >/dev/null 2>&1
+        A_RUNS=$((A_RUNS+1))
+        if [[ -e "$AM" ]]; then
+            rm -f "$AM"
+            bad "$aname [${ae%%|*}] ran a payload or session-id value as arithmetic"
+        else
+            ok "$aname [${ae%%|*}] arithmetic-safe"
+        fi
+    done
+done
+(( A_RUNS >= 30 )) || bad "4f ran only $A_RUNS hook payloads; hook discovery is broken"
+rm -f "$AM"
+
+# ---------------------------------------------------------------------------
 # 5. Starved environment: no jq, no python at all.
 #    Every hook must still terminate promptly and must NOT block. This is the
 #    fail-open mandate in .claude/rules/harness-facts.md, tested rather than assumed.
@@ -771,7 +891,9 @@ for hookfile in .claude/hooks/*.sh .claude/skills/freeze/check-freeze.sh; do
     ERRFILE=$(mktemp 2>/dev/null) || ERRFILE="$SANDBOX/stderr.$$"
     # The payload holds every gate's prefilter word (commit, push, no-verify, git), so
     # each blocking gate gets past its prefilter and must reach its taom_pybin_degraded branch.
-    OUT=$(printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x"},"hook_event_name":"PreToolUse"}' \
+    # check-bash-length.sh's trigger is length, not a word: pad its command past the prefilter.
+    PAD=""; [[ "$name" == check-bash-length.sh ]] && PAD=" # $(printf 'x%.0s' {1..6000})"
+    OUT=$(printf '{"tool_name":"Bash","tool_input":{"command":"git push --force origin master && git commit --no-verify -m x%s"},"hook_event_name":"PreToolUse"}' "$PAD" \
           | timeout -k 2 10 env PATH="$STARVED_PATH" CLAUDE_PROJECT_DIR="$SANDBOX" TAOM_PYBIN= bash "$hookfile" 2>"$ERRFILE")
     RC=$?
     ERR=$(cat "$ERRFILE" 2>/dev/null); rm -f "$ERRFILE"
@@ -1232,6 +1354,17 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
+# A Workflow script is a .js file (.claude/skills/improve/workflows): one left untracked never ships,
+# and the extension filter once named only md, sh, py, json and yaml.
+mkdir -p "$CFT_REPO/.claude/skills/demo/workflows"
+printf 'export const meta = {}\n' > "$CFT_REPO/.claude/skills/demo/workflows/run.js"
+OUT=$(cft_run)
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'run.js (untracked' <<< "$OUT"; then
+    ok "denies an untracked Workflow script (.js) under .claude/skills"
+else
+    bad "check-claude-files-tracked let an untracked .js Workflow script through: $(printf '%s' "$OUT" | head -c 160)"
+fi
+git -C "$CFT_REPO" add .claude/skills/demo/workflows/run.js 2>/dev/null
 # A commit in another worktree is checked in THAT repository (2026-10-16). The registration runs this
 # script from the project root, which stays where the session started after it enters a worktree, so
 # another session's untracked skill in the main checkout denied every worktree commit. The repository
@@ -1362,8 +1495,8 @@ for d in "$PRJ_WT" "$PRJ_FOREIGN"; do
     printf '# a\n' > "$d/docs/features/a.md"
     git -C "$d" add docs/features/a.md 2>/dev/null
 done
-drift_run() {   # $1 the payload cwd
-    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":"git commit -m x"},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" \
+drift_run() {   # $1 the payload cwd, $2 the command (default: a plain commit)
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[2]},"cwd":sys.argv[1],"hook_event_name":"PreToolUse"}))' "$1" "${2:-git commit -m x}" \
         | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 30 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" 2>/dev/null
 }
 OUT=$(drift_run "$(cygpath -m "$PRJ_WT/sub" 2>/dev/null || echo "$PRJ_WT/sub")")
@@ -1402,7 +1535,187 @@ fi
 grep -q -- '--drift-only --staged' "$PRJ_WT/tools/ran.txt" 2>/dev/null \
     && ok "check-doc-config-drift asks the linter to read the index (--drift-only --staged)" \
     || bad "check-doc-config-drift did not pass --drift-only --staged: $(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)"
+grep -qF 'docs/features/*.md)' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && ok "check-doc-config-drift's relevance list covers the feature docs the verify-section check reads" \
+    || bad "check-doc-config-drift's relevance list misses docs/features/*.md"
+grep -qF 'Run: python tools/lint_docs.py " + sys.argv[1]' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && grep -qF '"${LINT_ARGS[*]}"' "$REPO/.claude/hooks/check-doc-config-drift.sh" \
+    && ok "check-doc-config-drift timeout message quotes the arguments it ran with" \
+    || bad "check-doc-config-drift timeout message does not quote the arguments it ran with (LINT_ARGS)"
 git -C "$PRJ_WT" reset -q 2>/dev/null
+# What the commit records (#987): an amend is judged against HEAD's parent (the empty tree when HEAD is the
+# root commit), and a path commit (`git commit -m x -- <paths>`) judges the named paths' working copies.
+PRJ_WT_M=$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")
+RCA_REL=docs/reviews/rca-x-2026-10-23.md
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" ]] \
+    && ok "check-doc-config-drift: a plain commit passes exactly --drift-only --staged" \
+    || bad "check-doc-config-drift: a plain commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base 4b825dc642cb6eb9a060e54bf8d69288fbee4904" ]] \
+    && ok "check-doc-config-drift: an amend of the root commit is judged against the empty tree" \
+    || bad "check-doc-config-drift: a root amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q --allow-empty -m second 2>/dev/null
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
+    && ok "check-doc-config-drift: an amend is judged against HEAD~1" \
+    || bad "check-doc-config-drift: an amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m '--amend notes'")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" ]] \
+    && ok "check-doc-config-drift: --amend inside a message does not make an amend" \
+    || bad "check-doc-config-drift: a message holding --amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# A path commit records tracked files (git refuses an untracked path): commit both docs, then edit them.
+git -C "$PRJ_WT" add "$RCA_REL" docs/features/a.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m base 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x")
+[[ ! -e "$PRJ_WT/tools/ran.txt" && "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift: a plain commit with nothing staged runs no linter" \
+    || bad "check-doc-config-drift ran the linter for an empty index"
+# A directory path lists what changed in it, so a feature doc it merely holds is no reason to run.
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- docs/features")
+[[ ! -e "$PRJ_WT/tools/ran.txt" && "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift: a directory path commit touching no gate surface runs no linter" \
+    || bad "check-doc-config-drift ran the linter for a directory path with no change in it: $(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)"
+printf '# rca\nFOLLOW-UP bare.\n' > "$PRJ_WT/$RCA_REL"
+printf '# a\nedited\n' > "$PRJ_WT/docs/features/a.md"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- $RCA_REL")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: a path commit judges the named path's working copy (--only-paths)" \
+    || bad "check-doc-config-drift: a path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# The deny quotes what ran, and a path commit's fix is the file, not the index.
+grep -qF -- "--only-paths $PRJ_WT_M/$RCA_REL" <<< "$OUT" && grep -qF 'in the file itself' <<< "$OUT" \
+    && ! grep -qF 're-stage' <<< "$OUT" \
+    && ok "check-doc-config-drift: a path commit's deny quotes --only-paths and says to fix the file" \
+    || bad "check-doc-config-drift: a path commit's deny quoted the wrong reproduction: $(printf '%s' "$OUT" | head -c 300)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -a -m x $RCA_REL")
+[[ ! -e "$PRJ_WT/tools/ran.txt" ]] \
+    && ok "check-doc-config-drift: -a with paths is no path commit" \
+    || bad "check-doc-config-drift read -a with a path as a path commit"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- docs/features/a.md")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/docs/features/a.md --also-new docs/features/a.md" ]] \
+    && ok "check-doc-config-drift: a path commit of an edited feature doc runs the linter" \
+    || bad "check-doc-config-drift: a feature-doc path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# A redirection is no path: `2>&1` once read as the paths 2, >& and 1, which named no file, so the
+# gate found nothing relevant and allowed a staged bare FOLLOW-UP. `>|` too, beside a file that exists.
+git -C "$PRJ_WT" add "$RCA_REL" 2>/dev/null
+printf 'x\n' > "$PRJ_WT/out.txt"
+for redir in "2>&1" "2>/dev/null" "&>/dev/null" "2>&1 | tail -3" ">| out.txt"; do
+    OUT=$(drift_run "$PRJ_WT_M" "git commit -m x $redir")
+    [[ "$(decision_of "$OUT")" == deny ]] \
+        && ok "check-doc-config-drift: 'git commit -m x $redir' still judges the staged RCA" \
+        || bad "check-doc-config-drift allowed a staged RCA behind '$redir': $(printf '%s' "$OUT" | head -c 160)"
+done
+# Paths that change nothing: the index is judged, as before paths were read.
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit -m x -- no-such-file.md")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: paths naming no file fall back to the index" \
+    || bad "check-doc-config-drift: a path naming no file passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# A path is read from the call's directory, not the top level. The bare line is only in the working
+# copy here (index reset), so only a correctly resolved --only-paths value can deny.
+git -C "$PRJ_WT" reset -q 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "cd docs/reviews && git commit -m x -- ${RCA_REL##*/}")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: a path commit from a subdirectory resolves its path there" \
+    || bad "check-doc-config-drift: a subdirectory path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git -C docs/reviews commit -m x -- ${RCA_REL##*/}")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --only-paths $PRJ_WT_M/$RCA_REL" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: git -C into a subdirectory resolves a path there" \
+    || bad "check-doc-config-drift: a git -C path commit passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+# An amend with the RCA in HEAD (nothing staged), behind a redirection, behind an eval the reader cannot
+# see into, and as a command too long to read: each passes HEAD~1 as the base.
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m rca "$RCA_REL" 2>/dev/null
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "git commit --amend --no-edit 2>&1")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: an amend behind 2>&1 still judges HEAD's RCA against HEAD~1" \
+    || bad "check-doc-config-drift: an amend behind 2>&1 passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)': $(printf '%s' "$OUT" | head -c 120)"
+grep -qF -- '--dash-base HEAD~1' <<< "$OUT" && grep -qF 're-stage' <<< "$OUT" \
+    && ok "check-doc-config-drift: an amend's deny quotes --dash-base HEAD~1" \
+    || bad "check-doc-config-drift: an amend's deny quoted the wrong reproduction: $(printf '%s' "$OUT" | head -c 300)"
+rm -f "$PRJ_WT/tools/ran.txt"
+OUT=$(drift_run "$PRJ_WT_M" "eval 'git commit --amend --no-edit'")
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" && "$(decision_of "$OUT")" == deny ]] \
+    && ok "check-doc-config-drift: an amend the reader cannot see (eval) falls back to the raw --amend" \
+    || bad "check-doc-config-drift: an eval amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+rm -f "$PRJ_WT/tools/ran.txt"
+"$HPY" - "$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")" <<'PY' \
+    | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 30 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" > "$SANDBOX/drift-big.out" 2>/dev/null
+import json, sys
+cmd = "git commit --amend --no-edit -m \"" + "x" * 300000 + "\""
+sys.stdout.write(json.dumps({"tool_name": "Bash", "tool_input": {"command": cmd}, "cwd": sys.argv[1], "hook_event_name": "PreToolUse"}))
+PY
+[[ "$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)" == "--drift-only --staged --dash-base HEAD~1" ]] \
+    && ok "check-doc-config-drift: an amend over the scan limit falls back to the raw --amend" \
+    || bad "check-doc-config-drift: an over-long amend passed '$(cat "$PRJ_WT/tools/ran.txt" 2>/dev/null)'"
+# Clear the index the amend and path-commit cases left before the same-command `git add` cases, which
+# replace the stub linter with the real one.
+# `git add <doc> && git commit` in ONE command: the doc is not staged when the hook runs, so the hook
+# reads the command text and hands each docs/features/*.md token to the linter as --also-new. The
+# real linter runs here (its CLAUDE.md budget and version checks stubbed out, as the unit tests do).
+cat > "$PRJ_WT/tools/lint_docs.py" <<'REALWRAP'
+import os, pathlib, sys
+sys.path.insert(0, os.environ["TAOM_REAL_TOOLS"])
+import lint_docs as ld
+ld.REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+ld.DOC_ROOTS = [ld.REPO_ROOT / "docs"]
+ld.check_claude_md_budget = lambda: []
+ld.check_version_consistency = lambda: []
+sys.exit(ld.main(sys.argv[1:]))
+REALWRAP
+export TAOM_REAL_TOOLS; TAOM_REAL_TOOLS=$(cygpath -m "$REPO/tools" 2>/dev/null || echo "$REPO/tools")
+drift_cmd() {   # $1 the command text, $2 the payload cwd
+    "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"cwd":sys.argv[2],"hook_event_name":"PreToolUse"}))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$PRJ" timeout -k 2 40 bash "$REPO/.claude/hooks/check-doc-config-drift.sh" 2>/dev/null
+}
+PRJ_WT_M=$(cygpath -m "$PRJ_WT" 2>/dev/null || echo "$PRJ_WT")
+rm -f "$PRJ_WT/tools/ran.txt" "$PRJ_WT/docs/reviews/rca-x-2026-10-23.md"
+printf '# new thing\n\nText, no verify heading.\n' > "$PRJ_WT/docs/features/x.md"
+OUT=$(drift_cmd "git add docs/features/x.md && git commit -m m" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'no-verify-section' <<< "$OUT" \
+    && ok "check-doc-config-drift denies 'git add <new feature doc> && git commit' when the doc lacks the verify section" \
+    || bad "check-doc-config-drift missed a same-command git add of a feature doc with no verify section: $(printf '%s' "$OUT" | head -c 200)"
+printf '# new thing\n\n## How to verify in game\n\nNot applicable: tooling.\n' > "$PRJ_WT/docs/features/x.md"
+OUT=$(drift_cmd "git add docs/features/x.md && git commit -m m" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift allows 'git add <new feature doc> && git commit' once the verify section exists" \
+    || bad "check-doc-config-drift blocked a same-command git add of a feature doc that has the verify section: $(printf '%s' "$OUT" | head -c 200)"
+rm -f "$PRJ_WT/docs/features/x.md"
+# An amend judges what HEAD itself added: a feature doc committed without the verify section is
+# denied by `git commit --amend -m x` although nothing is staged (the linter reads HEAD~1..index).
+git -C "$PRJ_WT" reset -q 2>/dev/null
+printf '# new thing\n\nText, no verify heading.\n' > "$PRJ_WT/docs/features/y.md"
+git -C "$PRJ_WT" add docs/features/y.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q -m 'add y' 2>/dev/null
+OUT=$(drift_cmd "git commit --amend -m x" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'no-verify-section' <<< "$OUT" \
+    && ok "check-doc-config-drift denies an amend of a commit that added a feature doc without the verify section" \
+    || bad "check-doc-config-drift missed an amend of a commit that added a feature doc with no verify section: $(printf '%s' "$OUT" | head -c 200)"
+printf '# new thing\n\n## How to verify in game\n\nNot applicable: tooling.\n' > "$PRJ_WT/docs/features/y.md"
+git -C "$PRJ_WT" add docs/features/y.md 2>/dev/null
+git -C "$PRJ_WT" -c user.name=t -c user.email=t@t commit -q --amend -m 'add y' 2>/dev/null
+OUT=$(drift_cmd "git commit --amend -m x" "$PRJ_WT_M")
+[[ "$(decision_of "$OUT")" == allow ]] \
+    && ok "check-doc-config-drift allows an amend of a commit that added a feature doc with the verify section" \
+    || bad "check-doc-config-drift blocked an amend of a commit whose feature doc has the verify section: $(printf '%s' "$OUT" | head -c 200)"
+git -C "$PRJ_WT" reset -q --hard HEAD~1 2>/dev/null
+unset TAOM_REAL_TOOLS
+git -C "$PRJ_WT" reset -q 2>/dev/null
+# session-start.sh's three bounded probes share one deadline from its first command (Codex review
 # The subject gate reads the <Version> of the repository the session works in, the payload's cwd.
 SUBJ_WT="$SANDBOX/subj-wt"
 mkdir -p "$SUBJ_WT/Main/_Module"
@@ -1741,7 +2054,6 @@ MVR_CASES=(
   "1|dotnet test TAOM.Tests --filter \"FullyQualifiedName~A|FullyQualifiedName~B\""
   "1|pwsh ./build.ps1 -RunTests"
   "1|echo start; dotnet build Main/TAOM.csproj"
-  "1|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests"
   "0|grep -rn \"dotnet test\" docs/"
   "0|grep -rn \"x; dotnet test\" docs/"
   "0|echo 'a | dotnet build'"
@@ -1762,6 +2074,7 @@ done
 # Each shell's own escape (plan 011 review): PowerShell escapes with a backtick and keeps a
 # backslash literal, so a path ending in \ closes its quote, and `" does not. Bash is the reverse.
 # A command's non-final lines arrive with a CR, which must not hide a command on them.
+MVR_NL=$'\n'
 MVR_TOOL_CASES=(
   'PowerShell|0|Write-Output "x`"; dotnet test"'
   'PowerShell|1|Set-Location "E:\repos\TAOM\"; dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId='
@@ -1778,6 +2091,33 @@ MVR_TOOL_CASES=(
   # Codex review of plan 027: a quoted path alone is a string PowerShell prints, not a run.
   "PowerShell|0|'.\\build.ps1'"
   "PowerShell|1|& '.\\build.ps1' -RunTests"
+  # #985: the Bash wrappers are peeled; `env` and `timeout` are no PowerShell wrappers (timeout is the
+  # Windows timeout.exe, which runs no command), so those do not mark there.
+  'Bash|1|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests'
+  'Bash|1|timeout 600 dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId='
+  'Bash|1|timeout -k 10 600 dotnet build Main/TAOM.csproj'
+  'Bash|1|time dotnet test TAOM.Tests'
+  'Bash|0|command -v dotnet'
+  'Bash|0|echo "timeout 600 dotnet test"'
+  'PowerShell|0|env DOTNET_NOLOGO=1 dotnet test TAOM.Tests'
+  'PowerShell|0|timeout 600 dotnet test TAOM.Tests'
+  # Heredoc text a shell does not run is data: a commit message or a script body never marks (#985
+  # review); a body a shell runs does.
+  "Bash|0|git commit -m \"\$(cat <<'EOF'${MVR_NL}fix: x${MVR_NL}${MVR_NL}dotnet test TAOM.Tests passes${MVR_NL}EOF${MVR_NL})\""
+  "Bash|0|python - <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|cat > File.cs <<'EOF'${MVR_NL}dotnet build x${MVR_NL}EOF"
+  "Bash|1|bash <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  # Known limit, parity with 5c8003b72: text after the delimiter keeps the heredoc inline, so its body marks.
+  "Bash|1|cat <<'EOF' > notes.txt${MVR_NL}dotnet test${MVR_NL}EOF"
+  "Bash|1|python - <<'EOF' 2>&1${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|bash tools/foo.sh <<'EOF'${MVR_NL}dotnet test TAOM.Tests${MVR_NL}EOF"
+  "Bash|0|bash -n -c 'dotnet test TAOM.Tests'"
+  "Bash|0|bash -lc \"cat > f.txt <<'EOF'${MVR_NL}dotnet test${MVR_NL}EOF\""
+  "Bash|0|bash -c \"git commit -F - <<'EOF'${MVR_NL}fix: x${MVR_NL}${MVR_NL}dotnet test passes${MVR_NL}EOF\""
+  "Bash|0|bash script.sh -c 'dotnet test TAOM.Tests'"
+  "Bash|0|cat <<A <<B${MVR_NL}a${MVR_NL}A${MVR_NL}dotnet test${MVR_NL}B"
+  "Bash|0|bash -c \"echo \\\"; dotnet test; \\\"\""
+  "Bash|1|bash -c 'cd x && dotnet test TAOM.Tests'"
 )
 for entry in "${MVR_TOOL_CASES[@]}"; do
     tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"; shown="${cmd//$'\n'/\\n}"
@@ -1836,6 +2176,8 @@ BT='`'; NL=$'\n'; V=${CSV_VER:-v0.0.0}
 # Bash registrations lost a gate that moved to a PowerShell-only group, and its parity row with it
 # (Codex review of plan 027). A tenth Bash gate fails until it is added here. `own` lists shell
 # hooks that read their command themselves.
+# check-bash-length.sh is in `own`: it is not a git gate, it measures the raw Bash command, Bash only
+# by design (the length limit is the Bash tool's), and 7l3 checks it.
 # validate-push.sh is in `own`: it reads and judges the push in one run of _shellwords.py verdict (#680).
 # Every other git gate reads through taom_hook_command (hook-authoring.md).
 G7E_GATES=$("$HPY" - <<'PY' | tr -d '\r'
@@ -1845,7 +2187,7 @@ pre = d.get('hooks', {}).get('PreToolUse', [])
 names = ["block-broad-git-add.sh", "block-dangerous-git.sh", "block-no-verify.sh",
          "check-claude-files-tracked.sh", "check-commit-subject-version.sh",
          "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh"]
-own = ["validate-push.sh"]
+own = ["check-bash-length.sh", "validate-push.sh"]
 extra = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
                 if {'Bash', 'PowerShell'} & set(g.get('matcher', '').split('|'))
                 for h in g.get('hooks', [])} - set(names) - set(own))
@@ -2048,6 +2390,63 @@ G7E_ROWS=(
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git branch -d x"
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git branch -f x HEAD~1"
   "block-dangerous-git.sh|Bash|S|rc=0 allow|git commit -m \"docs: why switch -f and reflog expire are gated\""
+  # #985: the command is found past wrapper words and shell grammar, and the split is quote-aware
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout -k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|command git clean -fd"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|time git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|nice -n 5 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|xargs git checkout --"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|{ git reset --hard; }"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|(git reset --hard)"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|! git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|if true; then git reset --hard; fi"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|for f in a; do git clean -fd; done"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|cd X && timeout -k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|X=1 timeout 60 GIT reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|git -c \"a;b\" reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash <<'EOF'${NL}git reset --hard${NL}EOF"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|timeout 60 git status"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|echo \"timeout 60 git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|git commit -m \"time git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|grep -rn \"xargs git checkout\" docs/"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|command -v git"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|env -S 'git status'"
+  # The confirm gates also run the quote-blind split, so nothing the old sed split caught goes unasked
+  # (lesson #947): the quoted pipe below is the accepted cost, a false positive kept on purpose.
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|git commit -m \"a | git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash -c \"cd x && git reset --hard\""
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|sh -c 'git status; git clean -fd'"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|cat <<'EOF' > f.txt${NL}don't${NL}EOF${NL}git reset --hard"
+  # Round 3: the blind cut is the old sed cut (no lone &), a closing paren is no part of the last word,
+  # a short bundle holding c is -c, and a long-option prefix or a bundled value letter is still an option
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|echo don't; git -C \"E:/R&D\" reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|(git checkout .)"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|bash -c -- 'git reset --hard'"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|timeout --k 5 60 git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env -iC sub git reset --hard"
+  "block-dangerous-git.sh|Bash|S|rc=0 ask|env -S 'git reset --hard'"
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|env -S 'git status'"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|(git add -A)"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|(git add .)"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|bash -lc \"git add -A\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|bash -lc \"git commit -m x\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|xargs -0 -I{} git commit --amend -m {}"
+  # Known gap, pinned: cmd /c is not a wrapper the reader peels. In the PowerShell tool `timeout` is
+  # the Windows timeout.exe, which runs no command, so it is no wrapper there either; its blocks are.
+  "block-dangerous-git.sh|Bash|S|rc=0 allow|cmd /c git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|cmd /c git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 allow|timeout 60 git reset --hard"
+  "block-dangerous-git.sh|PowerShell|S|rc=0 ask|Measure-Command { git reset --hard }"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|timeout 30 git add -A"
+  "block-broad-git-add.sh|Bash|S|rc=0 ask|{ git add -A; }"
+  "block-broad-git-add.sh|Bash|S|rc=0 allow|timeout 30 git add a.txt"
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|timeout 60 git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|{ git commit -m \"docs: no label\"; }"
+  "check-commit-subject-version.sh|Bash|R|rc=0 deny|env git commit -m \"docs: no label\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|timeout 60 git commit -m \"docs: $V - x\""
+  "check-commit-subject-version.sh|Bash|R|rc=0 allow|{ git commit -m \"docs: $V - x\"; }"
 )
 for entry in "${G7E_ROWS[@]}"; do
     hook="${entry%%|*}"; rest="${entry#*|}"
@@ -2115,6 +2514,39 @@ if [[ "$(decision_of "$out")" == ask ]] && grep -q '_shellwords.py failed' "$SAN
     ok "block-dangerous-git without _shellwords.py still asks, and says the reader failed"
 else
     bad "block-dangerous-git without _shellwords.py answered '$(decision_of "$out")' (expected ask plus the stderr note)"
+fi
+# #985: the `commands` mode failing leaves the sed split of the same gates, which still reads a
+# bare git after `&&`.
+for hook in block-dangerous-git.sh; do
+    out=$(pre_payload Bash "cd x && git reset --hard" \
+        | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$SANDBOX" bash "$NOREADER/$hook" 2>/dev/null)
+    if [[ "$(decision_of "$out")" == ask ]]; then
+        ok "$hook without _shellwords.py still asks for a bare git after &&, through the sed fallback"
+    else
+        bad "$hook without _shellwords.py answered '$(decision_of "$out")' to a bare git after && (expected ask)"
+    fi
+done
+# V2 (#985 round 5): a reader that hangs is cut off inside the gate and the sed split answers, never a
+# pass. A stand-in Python answers the probe and every other mode and sleeps in `commands`.
+SLOWPY="$SANDBOX/slowpy.sh"
+printf '#!/usr/bin/env bash\ncase "$*" in\n  *taompy*) printf taompy ;;\n  *"commands"*) sleep 30 ;;\n  *) exec "%s" "$@" ;;\nesac\n' "$HPY" > "$SLOWPY"
+chmod +x "$SLOWPY"
+S=$(date +%s%N)
+out=$(pre_payload Bash "cd x && git reset --hard" \
+    | timeout -k 2 40 env TAOM_PYBIN="$SLOWPY" TAOM_READER_TIMEOUT=1 CLAUDE_PROJECT_DIR="$SANDBOX" bash "$REPO/.claude/hooks/block-dangerous-git.sh" 2>"$SANDBOX/slowpy.err")
+MS=$(( ($(date +%s%N) - S) / 1000000 ))
+if [[ "$(decision_of "$out")" == ask && $MS -lt 15000 ]] && grep -q 'commands timed out' "$SANDBOX/slowpy.err"; then
+    ok "block-dangerous-git still asks when the segment reader hangs (${MS}ms), through the sed fallback"
+else
+    bad "block-dangerous-git answered '$(decision_of "$out")' in ${MS}ms when the segment reader hung (expected ask plus the stderr note)"
+fi
+rm -rf "$MVR_DIR"; mkdir -p "$MVR_DIR"
+pre_payload Bash "dotnet test TAOM.Tests" | sed 's/"PreToolUse"/"PostToolUse"/' \
+    | timeout -k 2 40 env TAOM_PYBIN="$SLOWPY" TAOM_READER_TIMEOUT=1 CLAUDE_PROJECT_DIR="$MVR_DIR" bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1
+if [[ ! -f "$MVR_DIR/.claude/logs/.verification-ran" ]]; then
+    ok "mark-verification-run marks nothing when the segment reader hangs"
+else
+    bad "mark-verification-run marked a command although the segment reader hung"
 fi
 # validate-push.sh kept no bash judge to fall back on (#680, maintainer decision): with no verdict it
 # asks on a force marker in the raw payload, and allows anything else with a note. Until #680 this
@@ -2667,6 +3099,93 @@ fi
 rm -rf "$PG"
 
 # ---------------------------------------------------------------------------
+head2 "7l2. detect-docs-gaps finds the gaps and finishes well inside its 10 s registration"
+# It started about four processes per Main/Features folder; at 161 folders a run took 12.5 to 17.8 s, so
+# the harness killed it at 39 of 39 session starts and its warning never showed (harness retro
+# 2026-10-21, #962). The fixture pins the matching rules; the timing case runs the real repo.
+DG=$(mktemp -d)
+mkdir -p "$DG/.claude/hooks" "$DG/docs/features"
+cp .claude/hooks/detect-docs-gaps.sh "$DG/.claude/hooks/"
+for f in RaceAge Warg TroopWeight HUDOverlay BrandNew Vanilla2Patch; do mkdir -p "$DG/Main/Features/$f"; done
+for d in race-age-system warg-combat troop-weight hud-overlay vanilla2-patch TEMPLATE; do : > "$DG/docs/features/$d.md"; done
+DG_OUT=$(printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$DG" bash "$DG/.claude/hooks/detect-docs-gaps.sh" 2>/dev/null)
+DG_GAPS=$(grep -c '^  - ' <<< "$DG_OUT")
+if [[ "$DG_GAPS" == "1" ]] && grep -q '^  - BrandNew → docs/features/brand-new.md$' <<< "$DG_OUT"; then
+    ok "detect-docs-gaps: only the undocumented folder is listed (suffix, prefix, acronym and digit names match)"
+else
+    bad "detect-docs-gaps: expected only BrandNew listed, got $DG_GAPS: $(grep '^  - ' <<< "$DG_OUT" | tr '\n' ' ')"
+fi
+printf '{"source":"resume"}' | env CLAUDE_PROJECT_DIR="$DG" bash "$DG/.claude/hooks/detect-docs-gaps.sh" > "$DG/resume.out" 2>/dev/null
+if [[ -s "$DG/resume.out" ]]; then
+    bad "detect-docs-gaps printed on a resume; only a fresh startup runs it"
+else
+    ok "detect-docs-gaps: a resume prints nothing"
+fi
+rm -rf "$DG"
+DG_T0=${EPOCHREALTIME//[!0-9]/}
+printf '{"source":"startup"}' | timeout -k 2 30 env CLAUDE_PROJECT_DIR="$PWD" bash .claude/hooks/detect-docs-gaps.sh > /dev/null 2>&1
+DG_MS=$(( (${EPOCHREALTIME//[!0-9]/} - DG_T0) / 1000 ))
+if (( DG_MS < 5000 )); then
+    ok "detect-docs-gaps on the real repo: ${DG_MS} ms, under half its 10 s registration"
+else
+    bad "detect-docs-gaps on the real repo took ${DG_MS} ms against its 10 s registration: the harness kills it and its warning never shows"
+fi
+
+# ---------------------------------------------------------------------------
+head2 "7l3. check-bash-length refuses a command the Bash tool would cut short, and only that"
+# 140 of 142 Bash calls at 8,000 or more characters (each ' counted as 4) failed with "unexpected EOF
+# while looking for matching"; none below 7,000 did (harness retro 2026-10-21, #962).
+BL=$(mktemp -d)
+bl_run() {   # $1 command length, $2 apostrophes in it; prints "<rc> <first stderr line>"
+    "$HPY" -c '
+import json, sys
+n, q = int(sys.argv[1]), int(sys.argv[2])
+cmd = "echo " + chr(39) * q + "x" * max(0, n - 5 - q)
+print(json.dumps({"tool_name": "Bash", "hook_event_name": "PreToolUse", "tool_input": {"command": cmd}}))
+' "$1" "$2" > "$BL/payload.json"
+    timeout -k 2 20 bash .claude/hooks/check-bash-length.sh < "$BL/payload.json" > "$BL/out" 2> "$BL/err"
+    echo "$? $(head -1 "$BL/err")"
+}
+read -r rc msg <<< "$(bl_run 8000 0)"
+if [[ "$rc" == 2 && "$msg" == "BLOCKED: this Bash command is 8000 characters long"* ]]; then
+    ok "check-bash-length: an 8,000-character command is refused with its length and the fix"
+else
+    bad "check-bash-length: an 8,000-character command gave rc $rc: $msg"
+fi
+read -r rc msg <<< "$(bl_run 6000 0)"
+if [[ "$rc" == 0 && -z "$msg" ]]; then
+    ok "check-bash-length: a 6,000-character command without quotes runs"
+else
+    bad "check-bash-length: a 6,000-character command was refused (rc $rc): $msg"
+fi
+read -r rc msg <<< "$(bl_run 6000 600)"
+if [[ "$rc" == 2 && "$msg" == "BLOCKED: this Bash command is 7800 characters long"* ]]; then
+    ok "check-bash-length: 6,000 characters with 600 single quotes counts as 7,800 and is refused"
+else
+    bad "check-bash-length: 6,000 characters with 600 single quotes gave rc $rc: $msg"
+fi
+printf '{"tool_input":{"command":"%s"}' "$(printf 'x%.0s' {1..6000})" > "$BL/payload.json"
+timeout -k 2 20 bash .claude/hooks/check-bash-length.sh < "$BL/payload.json" > /dev/null 2>&1
+if [[ $? == 0 ]]; then
+    ok "check-bash-length: an unparseable long payload fails open"
+else
+    bad "check-bash-length: an unparseable long payload was refused"
+fi
+rm -rf "$BL"
+if "$HPY" -c '
+import json, sys
+d = json.load(open(".claude/settings.json", encoding="utf-8"))
+ok = any(g.get("matcher") == "Bash" and h["command"].endswith("/.claude/hooks/check-bash-length.sh")
+         and h.get("timeout") for g in d["hooks"].get("PreToolUse", []) for h in g["hooks"])
+sys.exit(0 if ok else 1)
+'; then
+    ok "settings.json registers check-bash-length.sh for PreToolUse on Bash with a timeout"
+else
+    bad "settings.json does not register check-bash-length.sh for PreToolUse on Bash with a timeout"
+fi
+
+
+# ---------------------------------------------------------------------------
 head2 "7m. check-moduledata-validation fails open on a validator crash and says so, and still denies on findings"
 pre_payload() {  # $1 tool, $2 command: a PreToolUse payload as the harness sends it
     "$HPY" -c 'import json,sys; print(json.dumps({"tool_name":sys.argv[1],"tool_input":{"command":sys.argv[2]},"hook_event_name":"PreToolUse"}))' "$1" "$2"
@@ -2723,6 +3242,154 @@ else
     bad "a validator findings exit (1) no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
 fi
 rm -rf "$VM_REPO"
+
+# ---------------------------------------------------------------------------
+head2 "7o. session-start.sh prints the harness retro cadence line"
+# Its own sandbox with a stub interpreter that answers the _pybin.sh probe (the FAKEPY pattern of 4c).
+RC="$SANDBOX/retro"
+mkdir -p "$RC/.claude/hooks"
+cp .claude/hooks/session-start.sh .claude/hooks/_pybin.sh "$RC/.claude/hooks/"
+RCPY="$RC/fakepy"
+printf '#!/bin/sh\nprintf taompy\n' > "$RCPY"
+chmod +x "$RCPY" 2>/dev/null
+# The harness retro cadence line (#962): due with no record, quiet with a record dated today, due
+# with the day count once the newest record is seven days old, and UNCHECKED, not silent, when the
+# record's date does not parse.
+ss_retro() {   # stdout of session-start.sh in $RC, with a fake python that answers at once
+    printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$RC" TAOM_PYBIN="$RCPY" \
+        bash "$RC/.claude/hooks/session-start.sh" 2>/dev/null
+}
+mkdir -p "$RC/docs/reviews"
+rm -f "$RC"/docs/reviews/harness-retro-*.md
+if grep -q '^HARNESS RETRO DUE: no retro on record; run /harness-retro\.' <<< "$(ss_retro)"; then
+    ok "retro cadence: no record, the DUE line"
+else
+    bad "retro cadence: no record printed no DUE line"
+fi
+: > "$RC/docs/reviews/harness-retro-$(date +%F).md"
+if grep -q 'HARNESS RETRO' <<< "$(ss_retro)"; then
+    bad "retro cadence: a record dated today still printed a retro line"
+else
+    ok "retro cadence: a record dated today, nothing printed"
+fi
+rm -f "$RC"/docs/reviews/harness-retro-*.md
+: > "$RC/docs/reviews/harness-retro-2020-01-01.md"
+: > "$RC/docs/reviews/harness-retro-$(date -d '-10 days' +%F).md"
+if grep -q "^HARNESS RETRO DUE: last retro $(date -d '-10 days' +%F) (10 days ago); run /harness-retro\.$" <<< "$(ss_retro)"; then
+    ok "retro cadence: the newest of two records, ten days old, gives the DUE line with its day count"
+else
+    bad "retro cadence: a ten-day-old newest record gave no DUE line with '10 days ago'"
+fi
+rm -f "$RC"/docs/reviews/harness-retro-*.md
+: > "$RC/docs/reviews/harness-retro-2026-13-45.md"
+if grep -q 'harness retro cadence UNCHECKED this session' <<< "$(ss_retro)"; then
+    ok "retro cadence: an unparseable record date says UNCHECKED"
+else
+    bad "retro cadence: an unparseable record date printed no UNCHECKED note"
+fi
+rm -f "$RC"/docs/reviews/harness-retro-*.md
+: > "$RC/docs/reviews/harness-retro-$(date -d '+400 days' +%F).md"
+if grep -q 'harness retro cadence UNCHECKED this session (.* is dated in the future)' <<< "$(ss_retro)"; then
+    ok "retro cadence: a record dated in the future says UNCHECKED, not silence"
+else
+    bad "retro cadence: a future-dated record printed no UNCHECKED note, so a typo would silence the banner"
+fi
+# The worktree pile-up banner: a fake git answers `worktree list --porcelain` with N entries and hands
+# every other call to the real git. Over 15 prints the audit line with the count, 15 prints nothing,
+# and a failing list says UNCHECKED, not silence.
+REAL_GIT=$(command -v git)
+mkdir -p "$RC/fakebin"
+cat > "$RC/fakebin/git" <<FAKE
+#!/bin/sh
+if [ "\$1" = "worktree" ] && [ "\$2" = "list" ]; then
+  [ -n "\$FAKE_WT_FAIL" ] && exit 3
+  i=0
+  while [ "\$i" -lt "\$FAKE_WT_N" ]; do echo "worktree /fake/\$i"; echo "HEAD abc"; echo; i=\$((i + 1)); done
+  exit 0
+fi
+exec "$REAL_GIT" "\$@"
+FAKE
+chmod +x "$RC/fakebin/git" 2>/dev/null
+ss_wt() {   # $1 worktree count, $2 non-empty to make the list fail; stdout of session-start.sh in $RC
+    printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$RC" TAOM_PYBIN="$RCPY" \
+        PATH="$RC/fakebin:$PATH" FAKE_WT_N="$1" FAKE_WT_FAIL="${2:-}" \
+        bash "$RC/.claude/hooks/session-start.sh" 2>/dev/null
+}
+if grep -q "^WORKTREES: 21 checked out (more than 15)\. Run python tools/worktree_audit\.py; prune only on Mike's word\.$" <<< "$(ss_wt 21)"; then
+    ok "worktree banner: 21 worktrees print the WORKTREES line with the count"
+else
+    bad "worktree banner: 21 worktrees printed no WORKTREES line"
+fi
+if grep -q '^WORKTREES:' <<< "$(ss_wt 15)"; then
+    bad "worktree banner: exactly 15 worktrees still printed a WORKTREES line"
+else
+    ok "worktree banner: 15 worktrees, nothing printed"
+fi
+if grep -q 'worktree count UNCHECKED this session (git worktree list exited 3)' <<< "$(ss_wt 21 1)"; then
+    ok "worktree banner: a failing git worktree list says UNCHECKED"
+else
+    bad "worktree banner: a failing git worktree list printed no UNCHECKED note"
+fi
+rm -rf "$RC"
+
+# ---------------------------------------------------------------------------
+head2 "7n. session-start.sh re-surfaces recent Dead ends after a compaction, and only then (#998)"
+# SessionStart is the only compact-time hook whose stdout reaches Claude. A sandbox project dir and
+# HOME hold a run folder and a memory card; a file older than two days must not print.
+DE_P="$SANDBOX/de-proj"
+DE_H="$SANDBOX/de-home"
+mkdir -p "$DE_P/plans/_audit/x" "$DE_P/plans/_audit/old" "$DE_H/.claude/projects/e--repos-de-proj/memory/features"
+printf '# Run\n\n## Status\nrunning\n\n## Dead ends\n- tried the cache hook, it fails open (evidence/a.txt)\n\n## Next\ngo\n' > "$DE_P/plans/_audit/x/PROGRESS.md"
+printf '# Old\n\n## Dead ends\n- ancient approach\n' > "$DE_P/plans/_audit/old/PROGRESS.md"
+touch -d '5 days ago' "$DE_P/plans/_audit/old/PROGRESS.md"
+printf '# Card\n\n**Dead ends:** tried a global patch, the model slot is single\n\n## Next\nx\n' > "$DE_H/.claude/projects/e--repos-de-proj/memory/features/card.md"
+de_run() {  # $1 the source; stdout of session-start.sh in the sandbox
+    printf '{"source":"%s"}' "$1" | CLAUDE_PROJECT_DIR="$DE_P" HOME="$DE_H" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+DE_T0=$SECONDS
+DE_OUT=$(de_run compact)
+DE_SECS=$((SECONDS - DE_T0))
+if grep -q 'plans/_audit/x/PROGRESS.md: - tried the cache hook' <<< "$DE_OUT"; then
+    ok "compact: a fresh run folder's Dead ends line is printed"
+else
+    bad "compact: a fresh PROGRESS.md Dead ends line was not printed: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if grep -q 'ancient approach' <<< "$DE_OUT"; then
+    bad "compact: a Dead ends line in a 5-day-old file was printed"
+else
+    ok "compact: a 5-day-old file prints nothing"
+fi
+if grep -q 'card.md: \*\*Dead ends:\*\* tried a global patch' <<< "$DE_OUT"; then
+    ok "compact: a memory card's bold Dead ends line is printed"
+else
+    bad "compact: the memory card's Dead ends line was not printed: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if grep -q 'go$\|running' <<< "$DE_OUT"; then
+    bad "compact: lines outside the Dead ends section were printed"
+else
+    ok "compact: only the Dead ends section is printed"
+fi
+if (( DE_SECS < 2 )); then
+    ok "compact: finished in ${DE_SECS} s (under 2 s)"
+else
+    bad "compact: took ${DE_SECS} s (limit 2 s)"
+fi
+DE_OUT=$(de_run startup)
+if grep -q 'Dead ends' <<< "$DE_OUT"; then
+    bad "startup: printed Dead ends text, so the startup output changed shape"
+elif grep -q '=== TAOM Session Context ===' <<< "$DE_OUT"; then
+    ok "startup: the usual context block, no Dead ends text"
+else
+    bad "startup: printed no context block: $(printf '%s' "$DE_OUT" | head -c 200)"
+fi
+if [[ -z "$(de_run resume)" ]]; then
+    ok "resume: nothing printed"
+else
+    bad "resume: printed output"
+fi
+rm -rf "$DE_P" "$DE_H"
+
 
 # ---------------------------------------------------------------------------
 head2 "Summary"

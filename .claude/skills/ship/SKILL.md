@@ -17,11 +17,11 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 
 ### Phase 1 — Build & internal review
 1. `/verify` — build + tests must pass. If red, stop and fix.
-2. `/deep-review $ARGUMENTS` — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow; C++ checks auto-fire if `.cpp`/`.h` in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`).
+2. `/deep-review $ARGUMENTS`: senior `deep-reviewer` agents, one per lens, in waves of four (standards, compat, efficiency, completeness, data-flow, design; C++ checks auto-fire if `.cpp`/`.h` in scope; the XML integrity lens joins whenever XML or XSLT is in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`), then its Step 4 applies every KEEP improvement to the changed code.
 3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)
-4. `/review-codex` — writes the prompt and dispatches Codex via `codex exec` in the background; tells the user the 10–45 min window once.
+4. `/review-codex`: writes the prompt and dispatches Codex via `codex exec` in the background, at a reasoning effort the session sizes to the change; tells the user the level, the reason and the expected window once.
 5. Harness notifies on completion — auto-resume, verify each finding against TAOM source + decompiled vanilla, implement confirmed fixes.
 
 ### Phase 3 — Self-review of our fixes
@@ -30,8 +30,9 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 ### Phase 4 — Close out
 7. `/verify` — final build + tests green.
 8. The GitHub issue must **already exist** (open it when work started, per `/issue`). Close it with the final commit — do NOT create it retroactively.
-9. Write/update `docs/features/<name>.md`.
+9. Write/update `docs/features/<name>.md`, including `## How to verify in game`. An in-game check still owed goes there as steps before the issue gets `triage-needs-ingame`.
 10. Write the commit body as the changelog entry; `/release` generates `CHANGELOG.md` from it.
+11. If the work ran in a worktree, run `python tools/worktree_audit.py` once it lands and report its bucket for that worktree. Remove nothing without Mike's word.
 
 ## Gotchas
 - `/review-codex` and `/codex-verify` cost real money — confirm with the user before Phase 2 unless they already authorized the ship.

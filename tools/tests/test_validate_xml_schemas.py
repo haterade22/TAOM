@@ -1159,7 +1159,7 @@ class NativeBucketCliTests(_Tree):
 
 
 class EngineReaderTests(unittest.TestCase):
-    """_parse_like_engine reads bytes the way `new StreamReader(path)` does (XmlResource.cs:92): UTF-8 by
+    """_parse_like_engine reads bytes the way `new StreamReader(path)` does (XmlResource.cs:121): UTF-8 by
     default, a byte order mark picks its own encoding, the declared encoding is ignored (#987 item 3)."""
 
     DOC = '<base><file id="x" name="a.xml"/></base>'

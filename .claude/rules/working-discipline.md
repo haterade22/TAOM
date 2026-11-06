@@ -25,8 +25,14 @@ When you're invoked autonomously (no fresh user prompt), the trust model is *con
 - Do not invent new tasks ("I noticed we could also refactor X"). Save that for the next interactive turn.
 - Reversible local actions (edits, tests, builds) are fine. Irreversible / shared-state actions (push, PR open, branch delete, comment post) require explicit prior authorization for this run.
 - If the transcript doesn't make the next step obvious, stop and report — don't guess.
-- **NEVER STOP to ask permission to continue.** Once the autonomous run is established, do not pause to ask "should I keep going?" / "is this a good stopping point?". The user may be away. End the loop only when the established work is genuinely complete or genuinely blocked. If you run out of obvious next steps, think harder — re-read the transcript for missed angles, recombine prior near-misses — before stopping. (Source: karpathy/autoresearch `program.md`.)
+- **NEVER STOP to ask permission to continue.** Once the autonomous run is established, do not pause to ask "should I keep going?" / "is this a good stopping point?". The user may be away. End the loop only when the established work is genuinely complete or genuinely blocked. If you run out of obvious next steps, first re-read the transcript for missed angles and recombine prior near-misses before stopping. (Source: karpathy/autoresearch `program.md`.)
 - **Crash judgment.** Trivial bug (typo, missing import, transient flake) → fix and retry. Idea fundamentally broken (wrong approach, root assumption violated) → record the outcome (commit body, log) and move on. Don't iterate on a doomed approach hoping it will start working.
+- No-progress breaker: a work-driving `/loop` or wakeup ends each work tick with
+  `python tools/loop_progress.py --state "<scratchpad>\loop-<name>.json"`, adding `--watch-path` for
+  each out-of-repo file the task edits (the live Armory, TAOM_Map). Exit 3 means three ticks with no
+  new commit and no change in status, diff or watched files: stop and report what was tried. A tick
+  that only watches CI or the loop's own job skips the call. Progress is what the files show, never
+  the agent's own report.
 
 ## TodoWrite quality bar
 
@@ -44,6 +50,9 @@ Frontmatter hooks fire ONLY while their skill is invoked — a state file writte
 ## Edit scope discipline
 
 **Every changed line should trace directly to the user's request.** Don't "improve" adjacent code, comments, or formatting just because you're already in the file. A bug fix doesn't reformat the surrounding method. A new feature doesn't rename pre-existing variables. If a refactor is worth doing, it's worth its own PR — surface it after the requested change is done, don't smuggle it in. (Source: karpathy-skills `surgical-changes`.)
+
+Fix a bad value where it is produced, not in each consumer that receives it. Before you close a
+finding, state the root cause, the fix, the validation, and the cleanup left over (a follow-up issue).
 
 **Hardest during a review gate.** While `/deep-review` agents are outstanding, act only on findings that change runtime behaviour: editing a file an agent is reading invalidates its report, and the cleanup delays the finding that would actually change the code. Queue quality findings for after the gate. The one exception is a violation your own changeset introduced or deepened. The tell that you are about to break this is writing "this is polish, not a fix" and proceeding anyway (2026-08-11, verbatim).
 

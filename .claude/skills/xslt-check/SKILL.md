@@ -27,16 +27,18 @@ Validate XSLT file against SandBoxCore source data.
    [moduledata-validation.md](../../../docs/features/moduledata-validation.md) "Module coverage at a
    glance" for what else those two modules do and do not get.
 
-2. **Read the corresponding SandBoxCore vanilla XML** from:
-   `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\SandBoxCore\ModuleData\`
+2. **Read the corresponding vanilla XML** from the game install's `Modules\` folder
+   (`E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\` on the desktop), per the table in
+   `.claude/rules/xslt.md` "Authoritative Source":
 
    File mapping:
-   - `spkingdoms.xslt` → `spkingdoms.xml`
-   - `spcultures.xslt` → `spcultures.xml`
-   - `spclans.xslt` → `spclans.xml`
-   - `lords.xslt` → `lords.xml`
-   - `heroes.xslt` → `heroes.xml`
-   - `module_strings.xslt` → `module_strings.xml`
+   - `spkingdoms.xslt` → `SandBox/ModuleData/spkingdoms.xml`
+   - `spclans.xslt` → `SandBox/ModuleData/spclans.xml`
+   - `lords.xslt` → `SandBox/ModuleData/lords.xml`
+   - `heroes.xslt` → `SandBox/ModuleData/heroes.xml`
+   - `module_strings.xslt` → `SandBox/ModuleData/module_strings.xml`
+   - `spcultures.xslt` → `SandBoxCore/ModuleData/spcultures.xml`
+   - `lord_template_rosters.xslt` → `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml`
 
 3. **Check passthrough rules** (CRITICAL):
    - XSLT MUST use `<xsl:apply-templates select="@*"/>` to pass through ALL vanilla attributes

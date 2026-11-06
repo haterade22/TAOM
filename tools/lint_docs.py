@@ -238,6 +238,8 @@ class LintReport:
     model_registry: list[tuple[Path, int, str, str]] = field(default_factory=list)
     dashes: list[tuple[Path, int, str, str]] = field(default_factory=list)
     rca_followups: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    feature_verify: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    git_diff_failures: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -254,6 +256,8 @@ class LintReport:
             + len(self.model_registry)
             + len(self.dashes)
             + len(self.rca_followups)
+            + len(self.feature_verify)
+            + len(self.git_diff_failures)
         )
 
 
@@ -286,25 +290,24 @@ def resolve_link(source_file: Path, target: str) -> Path | None:
     return (source_file.parent / target).resolve()
 
 
-FENCE_RE = re.compile(r"^\s*(```|~~~)")
+FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 
 
 def iter_lines_outside_code_fences(text: str):
-    """Yield (lineno, line) skipping anything inside ``` or ~~~ fenced blocks."""
-    in_fence = False
+    """Yield (lineno, line) skipping anything inside ``` or ~~~ fenced blocks, at any indent.
+    A fence closes only on the opener's character with a run at least as long as the opener's,
+    so a three-backtick line inside a four-backtick block stays inside it (nested fences)."""
     fence_marker: str | None = None
     for lineno, line in enumerate(text.splitlines(), start=1):
         m = FENCE_RE.match(line)
         if m:
             marker = m.group(1)
-            if not in_fence:
-                in_fence = True
+            if fence_marker is None:
                 fence_marker = marker
-            elif marker == fence_marker:
-                in_fence = False
+            elif marker[0] == fence_marker[0] and len(marker) >= len(fence_marker):
                 fence_marker = None
             continue
-        if in_fence:
+        if fence_marker is not None:
             continue
         yield lineno, line
 
@@ -945,7 +948,6 @@ def check_model_registry() -> list[tuple[Path, int, str, str]]:
 # and be ignored within a day, so this one reads git: added lines vs a base ref,
 # plus untracked markdown in full.
 DASH_CHARS = {"—": "em-dash", "–": "en-dash"}
-_FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
 _INLINE_CODE_RE = re.compile(r"(`+).*?\1")
 _LINK_TARGET_RE = re.compile(r"\]\([^)]*\)")
 _BARE_URL_RE = re.compile(r"<?https?://\S+")
@@ -959,23 +961,12 @@ def scan_text_for_dashes(
 ) -> list[tuple[Path, int, str, str]]:
     """Report em/en dashes in prose. only_lines=None scans the whole file.
 
-    Fence state is tracked across the WHOLE file even when only_lines restricts
-    what is reported, because an added line inside a code block is only
+    Fence state is tracked across the WHOLE file (iter_lines_outside_code_fences) even when
+    only_lines restricts what is reported, because an added line inside a code block is only
     identifiable from the lines above it.
     """
     findings: list[tuple[Path, int, str, str]] = []
-    fence: str | None = None
-    for lineno, raw in enumerate(text.splitlines(), 1):
-        opener = _FENCE_RE.match(raw)
-        if opener:
-            marker = opener.group(1)[0]
-            if fence is None:
-                fence = marker
-            elif marker == fence:
-                fence = None
-            continue
-        if fence is not None:
-            continue
+    for lineno, raw in iter_lines_outside_code_fences(text):
         if only_lines is not None and lineno not in only_lines:
             continue
         if _DASH_ALLOW_RE.search(raw):
@@ -990,25 +981,53 @@ def scan_text_for_dashes(
     return findings
 
 
-def _git_out(*args: str) -> str | None:
-    """Run git in REPO_ROOT. Returns None on any failure (fail open)."""
+_EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
+
+def _git_run(*args: str) -> subprocess.CompletedProcess | None:
+    """Run git in REPO_ROOT. None when git cannot be run at all (not installed, not executable):
+    the new-lines checks then fail open, with a note on stderr, because a machine without git has
+    nothing to diff. A git that ran and failed comes back with its return code (#987)."""
     try:
-        proc = subprocess.run(
+        return subprocess.run(
             ["git", "-C", str(REPO_ROOT), *args],
             capture_output=True, text=True, encoding="utf-8", errors="replace",
         )
-    except Exception:
+    except Exception as exc:
+        print(f"lint_docs: git could not be run ({exc}); the new-lines checks (dashes, RCA "
+              f"FOLLOW-UP) read nothing.", file=sys.stderr)
         return None
-    return proc.stdout if proc.returncode == 0 else None
+
+
+def _git_out(*args: str) -> str | None:
+    """Run git in REPO_ROOT. Returns None on any failure (fail open)."""
+    proc = _git_run(*args)
+    return proc.stdout if proc is not None and proc.returncode == 0 else None
+
+
+def _is_unborn_head() -> bool:
+    """True when the repository has no commit yet (`rev-parse HEAD^{commit}` exits 1, silent)."""
+    proc = _git_run("rev-parse", "--verify", "-q", "HEAD^{commit}")
+    return proc is not None and proc.returncode == 1 and not proc.stdout.strip()
+
+
+def _diff_failure(path: Path, base: str, proc: subprocess.CompletedProcess) -> tuple[Path, int, str, str]:
+    detail = (proc.stderr or "").strip().splitlines()
+    why = detail[0][:100] if detail else f"exit {proc.returncode}"
+    return (path, 0, "git-diff-failed",
+            f"git diff against {base!r} failed ({why}); the new-lines checks cannot run")
 
 
 _HUNK_RE = re.compile(r"^@@ -\S+ \+(\d+)(?:,(\d+))? @@")
 
 
 def _changed_markdown_lines(
-    base: str, staged: bool = False, pathspec: str = "*.md"
+    base: str, staged: bool = False, pathspec: str | list[str] = "*.md",
+    failures: list[tuple[Path, int, str, str]] | None = None,
 ) -> dict[Path, set[int] | None]:
-    """Added line numbers per file matching `pathspec`. None means 'the whole file is new'.
+    """Added line numbers per file matching `pathspec` (one or several). None means 'the whole
+    file is new'. A git diff that ran and failed (an unresolvable base) appends a git-diff-failed
+    finding to `failures`; git not runnable at all appends nothing (fail open).
 
     staged=True diffs the index against `base` (`git diff --cached`) and skips the untracked
     listing: what a commit would record, not what is on disk. A file renamed into the pathspec
@@ -1016,7 +1035,22 @@ def _changed_markdown_lines(
     """
     changed: dict[Path, set[int] | None] = {}
     cached = ["--cached"] if staged else []
-    diff = _git_out("-c", "core.quotePath=false", "diff", *cached, "-U0", base, "--", pathspec)
+    specs = [pathspec] if isinstance(pathspec, str) else list(pathspec)
+    proc = _git_run("-c", "core.quotePath=false", "diff", *cached, "-U0", base, "--", *specs)
+    if proc is not None and proc.returncode != 0 and base == "HEAD" and _is_unborn_head():
+        # The first commit of a repository is read in full, against the empty tree.
+        base = _EMPTY_TREE
+        proc = _git_run("-c", "core.quotePath=false", "diff", *cached, "-U0", base, "--", *specs)
+    diff = proc.stdout if proc is not None and proc.returncode == 0 else None
+    if proc is not None and proc.returncode != 0 and failures is not None:
+        inside = _git_run("rev-parse", "--is-inside-work-tree")
+        if inside is not None and inside.returncode == 0:
+            failure = _diff_failure(REPO_ROOT, base, proc)
+            if failure not in failures:
+                failures.append(failure)
+        else:  # no repository (an export, a tarball): nothing to diff, like no git at all
+            print(f"lint_docs: {REPO_ROOT} is not a git work tree; the new-lines checks (dashes, "
+                  f"RCA FOLLOW-UP) read nothing.", file=sys.stderr)
     if diff:
         current: Path | None = None
         prev = ""
@@ -1043,7 +1077,7 @@ def _changed_markdown_lines(
                         lines.update(range(start, start + count))
             prev = line
     untracked = None if staged else _git_out(
-        "-c", "core.quotePath=false", "ls-files", "--others", "--exclude-standard", "--", pathspec
+        "-c", "core.quotePath=false", "ls-files", "--others", "--exclude-standard", "--", *specs
     )
     if untracked:
         for name in untracked.splitlines():
@@ -1053,9 +1087,15 @@ def _changed_markdown_lines(
     return changed
 
 
-def check_ai_dashes(base: str = "HEAD") -> list[tuple[Path, int, str, str]]:
+def check_ai_dashes(
+    base: str = "HEAD", failures: list[tuple[Path, int, str, str]] | None = None
+) -> list[tuple[Path, int, str, str]]:
+    """Em and en dashes in the new lines of the markdown docs. A diff that failed appends a
+    git-diff-failed finding to `failures`, not to the result."""
     findings: list[tuple[Path, int, str, str]] = []
-    for path, lines in sorted(_changed_markdown_lines(base).items(), key=lambda kv: str(kv[0])):
+    failures = [] if failures is None else failures
+    changed = _changed_markdown_lines(base, failures=failures)
+    for path, lines in sorted(changed.items(), key=lambda kv: str(kv[0])):
         if not path.is_file():
             continue
         try:
@@ -1138,11 +1178,26 @@ def scan_text_for_followups(
     return findings
 
 
-def check_rca_followups(base: str = "HEAD", staged: bool = False) -> list[tuple[Path, int, str, str]]:
+def check_rca_followups(
+    base: str = "HEAD", staged: bool = False, only_paths: list[str] | None = None,
+    failures: list[tuple[Path, int, str, str]] | None = None,
+) -> list[tuple[Path, int, str, str]]:
     """Bare FOLLOW-UP lines in the new lines of docs/reviews/rca-*.md. staged=True reads the
-    index (`git diff --cached`, `git show :<path>`) instead of the working tree."""
+    index (`git diff --cached`, `git show :<path>`) instead of the working tree. only_paths
+    narrows the check to those paths' working copies (`git commit -- <paths>` records them, not
+    the index), whatever staged says; only the RCA docs among them are diffed. An unresolvable
+    base appends a git-diff-failed finding to `failures`, not to the result."""
     findings: list[tuple[Path, int, str, str]] = []
-    changed = _changed_markdown_lines(base, staged=staged, pathspec=_RCA_PATHSPEC)
+    failures = [] if failures is None else failures
+    pathspec: str | list[str] = _RCA_PATHSPEC
+    if only_paths:
+        staged = False
+        listed = _git_out("-c", "core.quotePath=false", "ls-files", "--", *only_paths) or ""
+        pathspec = [n for n in dict.fromkeys(x.strip() for x in listed.splitlines())
+                    if n and _is_rca_doc(REPO_ROOT / n)]
+        if not pathspec:
+            return findings
+    changed = _changed_markdown_lines(base, staged=staged, pathspec=pathspec, failures=failures)
     for path, lines in sorted(changed.items(), key=lambda kv: str(kv[0])):
         if not _is_rca_doc(path):
             continue
@@ -1159,6 +1214,101 @@ def check_rca_followups(base: str = "HEAD", staged: bool = False) -> list[tuple[
             except Exception:
                 continue
         findings.extend(scan_text_for_followups(path, text, lines))
+    return findings
+
+
+VERIFY_HEADING = "## How to verify in game"
+_FEATURE_DOC_SKIP = {"TEMPLATE.md", "README.md"}
+_FEATURE_DOC_PATHSPEC = "docs/features/*.md"
+
+
+def _has_verify_section(text: str) -> bool:
+    """True when `## How to verify in game` sits outside a code fence and its section (up to the
+    next `## ` heading or the end of the file) holds at least one non-blank line."""
+    text = text.lstrip("\ufeff")
+    lines = text.splitlines()
+    outside = dict(iter_lines_outside_code_fences(text))
+    for lineno, line in outside.items():
+        if line.rstrip() != VERIFY_HEADING:
+            continue
+        for i in range(lineno + 1, len(lines) + 1):
+            if i in outside and outside[i].startswith("## "):
+                break
+            if lines[i - 1].strip():
+                return True
+        return False
+    return False
+
+
+def _merge_heads() -> list[str]:
+    """The commits an in-progress merge brings in (MERGE_HEAD, one per line), or none."""
+    path = _git_out("rev-parse", "--git-path", "MERGE_HEAD")
+    if not path:
+        return []
+    merge_head = Path(path.strip())
+    if not merge_head.is_absolute():
+        merge_head = REPO_ROOT / merge_head
+    try:
+        return [ln.strip() for ln in merge_head.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    except OSError:
+        return []
+
+
+def check_feature_doc_verify_section(
+    base: str = "HEAD", staged: bool = False, also_new: list[str] | None = None
+) -> list[tuple[Path, int, str, str]]:
+    """A NEW docs/features/*.md with no `## How to verify in game` section that has a body.
+
+    New means ADDED against `base` (`git diff --name-status --diff-filter=A`; staged=True diffs the
+    index and reads the file from it). Working-tree mode also counts untracked files. A modified
+    existing doc is never checked, and neither are TEMPLATE.md, README.md and a subdirectory doc.
+    `also_new` names paths a pending `git add` in the same command will add: each one absent from
+    HEAD and present in the working tree is checked from the working tree.
+    """
+    cached = ["--cached"] if staged else []
+    listing = _git_out("-c", "core.quotePath=false", "diff", *cached, "--name-status",
+                       "--diff-filter=A", base, "--", _FEATURE_DOC_PATHSPEC)
+    names: list[str] = []
+    for line in (listing or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) >= 2:
+            names.append(parts[-1].strip())
+    if not staged:
+        untracked = _git_out("-c", "core.quotePath=false", "ls-files", "--others",
+                             "--exclude-standard", "--", _FEATURE_DOC_PATHSPEC)
+        names.extend(n.strip() for n in (untracked or "").splitlines() if n.strip())
+    # During a merge, a doc the merged branch already has is not new to this change.
+    merge_parents = _merge_heads()
+    names = [n for n in names
+             if not any(_git_out("cat-file", "-e", f"{sha}:{n}") is not None for sha in merge_parents)]
+    pending: set[str] = set()
+    for name in also_new or []:
+        name = name.strip().replace("\\", "/")
+        path = REPO_ROOT / name
+        if path.parent != REPO_ROOT / "docs" / "features" or path.suffix != ".md" \
+                or not path.is_file() or _git_out("cat-file", "-e", f"HEAD:{name}") is not None:
+            continue
+        pending.add(name)
+    findings: list[tuple[Path, int, str, str]] = []
+    for name in sorted(set(names) | pending):
+        path = REPO_ROOT / name
+        if path.parent != REPO_ROOT / "docs" / "features" or path.name in _FEATURE_DOC_SKIP:
+            continue
+        if staged and name not in pending:
+            text = _git_out("show", f":{name}")
+            if text is None:
+                continue
+        else:
+            try:
+                text = path.read_text(encoding="utf-8-sig")
+            except Exception:
+                continue
+        if _has_verify_section(text):
+            continue
+        findings.append((path, 1, "no-verify-section",
+                         f"the doc lacks a `{VERIFY_HEADING}` section with a body (see "
+                         "docs/features/TEMPLATE.md); "
+                         'write the steps, or write "Not applicable:" with a reason under the heading'))
     return findings
 
 
@@ -1179,6 +1329,8 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
         out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
         out.append(f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**")
+        out.append(f"- New feature docs with no `{VERIFY_HEADING}` section: **{len(report.feature_verify)}**")
+        out.append(f"- Git diff failed, so the new-lines checks could not run: **{len(report.git_diff_failures)}**")
     else:
         out.append(f"- Dead links: **{len(report.dead_links)}**")
         out.append(f"- Link targets present but UNTRACKED (dead on the remote): "
@@ -1194,6 +1346,8 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
         out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
         out.append(f"- Em/en dashes in newly written prose: **{len(report.dashes)}**")
         out.append(f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**")
+        out.append(f"- New feature docs with no `{VERIFY_HEADING}` section: **{len(report.feature_verify)}**")
+        out.append(f"- Git diff failed, so the new-lines checks could not run: **{len(report.git_diff_failures)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -1310,10 +1464,43 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
             for f, lineno, kind, snippet in report.rca_followups:
                 out.append(f"- `{rel(f)}:{lineno}` — [{kind}] `{snippet}`")
             out.append("")
+        if report.feature_verify:
+            out.append("## Feature docs with no in-game verification section")
+            out.append("")
+            out.append(f"A newly added `docs/features/*.md` needs a `{VERIFY_HEADING}` heading "
+                       "(docs/features/TEMPLATE.md). Existing docs are not checked.")
+            out.append("")
+            for f, lineno, kind, snippet in report.feature_verify:
+                out.append(f"- `{rel(f)}:{lineno}` [{kind}] {snippet}")
+            out.append("")
+    if report.git_diff_failures:
+        out.append("## Git diff failed")
+        out.append("")
+        out.append("The new-lines checks (dashes and RCA FOLLOW-UP lines) read `git diff` against a base, "
+                   "and git could not produce it, so they did not run. The base was verified first, so "
+                   "this means repository damage (a broken index or a missing object): run `git status` "
+                   "and `git fsck`. This gates like a finding.")
+        out.append("")
+        for f, lineno, kind, snippet in report.git_diff_failures:
+            out.append(f"- `{rel(f)}:{lineno}` — [{kind}] `{snippet}`")
+        out.append("")
     if report.total == 0:
         out.append("**Clean — no findings.**")
         out.append("")
     return "\n".join(out)
+
+
+def _dash_base_resolves(ref: str) -> bool:
+    """False only when git ran inside a work tree and cannot resolve REF (a commit, a tag or a tree
+    id such as the empty tree). No git, no work tree, and the unborn HEAD of a fresh repository
+    stay True: those fail open in the checks themselves, with their own notes."""
+    proc = _git_run("rev-parse", "--verify", "-q", f"{ref}^{{tree}}")
+    if proc is None or proc.returncode == 0:
+        return True
+    if ref == "HEAD" and _is_unborn_head():
+        return True
+    inside = _git_run("rev-parse", "--is-inside-work-tree")
+    return inside is None or inside.returncode != 0
 
 
 def main(argv: list[str]) -> int:
@@ -1328,18 +1515,35 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout (atomic via .tmp+rename)")
     ap.add_argument("--fail-on-dead", action="store_true", help="Exit 1 if any dead links found")
     ap.add_argument("--fail-on-drift", action="store_true",
-                    help="Exit 1 on config-example drift, a version mismatch, or a newly written RCA "
-                         "FOLLOW-UP line with no issue or reason (pre-commit gate)")
+                    help="Exit 1 on config-example drift, a version mismatch, a newly written RCA "
+                         "FOLLOW-UP line with no issue or reason, or a new feature doc with no "
+                         "'## How to verify in game' section (pre-commit gate)")
     ap.add_argument("--drift-only", action="store_true", help="Run only the checks --fail-on-drift gates on (config-example drift, version mismatches, the CLAUDE.md and AGENTS.md budget, RCA FOLLOW-UP lines) and gate on them: the commit hook's mode. The full run took 25 s on the laptop, past the hook's 20 s bound.")
     ap.add_argument("--staged", action="store_true",
-                    help="Read the RCA FOLLOW-UP check's lines from the index, not the working "
-                         "tree: what a commit would record.")
+                    help="Read the RCA FOLLOW-UP and new-feature-doc checks from the index, not "
+                         "the working tree: what a commit would record. The commit hook's mode.")
+    ap.add_argument("--also-new", action="append", default=[], metavar="PATH",
+                    help="A docs/features/*.md that a pending `git add` will add (repeatable): "
+                         "checked from the working tree if HEAD lacks it.")
     ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
+    ap.add_argument("--only-paths", nargs="+", metavar="PATH", default=None,
+                    help="Read the RCA FOLLOW-UP check from these paths' working copies, not the "
+                         "index: what `git commit -- PATH...` records. Give it last. Only the RCA docs "
+                         "among them are read. Limits (the hook, not this tool): `git commit "
+                         "-i/--include` and `--pathspec-from-file` are judged as index commits, and "
+                         "more than ~450 named paths exceed the Windows argument limit and fall back "
+                         "to the index.")
     ap.add_argument("--dash-base", default="HEAD", metavar="REF",
                     help="Base ref for the new-lines-only checks (em/en dashes, RCA FOLLOW-UP "
                          "lines; default HEAD, i.e. uncommitted writing). Pass a branch point to "
-                         "scan a whole branch.")
+                         "scan a whole branch; a tree id such as the empty tree "
+                         "counts every file as added. A ref git cannot resolve is an error: "
+                         "exit 2, no report.")
     args = ap.parse_args(argv)
+
+    if not _dash_base_resolves(args.dash_base):
+        print(f"lint_docs: --dash-base {args.dash_base} does not resolve", file=sys.stderr)
+        return 2
 
     files: list[Path] = []
     for root in DOC_ROOTS:
@@ -1352,7 +1556,11 @@ def main(argv: list[str]) -> int:
         report.config_drift = check_config_example_drift(files)
         report.version_mismatches = check_version_consistency()
         report.budget = check_claude_md_budget()
-        report.rca_followups = check_rca_followups(args.dash_base, staged=args.staged)
+        report.rca_followups = check_rca_followups(
+            args.dash_base, staged=args.staged, only_paths=args.only_paths,
+            failures=report.git_diff_failures)
+        report.feature_verify = check_feature_doc_verify_section(args.dash_base, staged=args.staged,
+                                                                  also_new=args.also_new)
     else:
         report.dead_links = check_dead_links(files)
         report.untracked_targets = check_untracked_link_targets(files)
@@ -1365,12 +1573,16 @@ def main(argv: list[str]) -> int:
         report.version_mismatches = check_version_consistency()
         report.budget = check_claude_md_budget()
         report.model_registry = check_model_registry()
-        report.dashes = check_ai_dashes(args.dash_base)
-        report.rca_followups = check_rca_followups(args.dash_base, staged=args.staged)
+        report.dashes = check_ai_dashes(args.dash_base, failures=report.git_diff_failures)
+        report.rca_followups = check_rca_followups(
+            args.dash_base, staged=args.staged, only_paths=args.only_paths,
+            failures=report.git_diff_failures)
+        report.feature_verify = check_feature_doc_verify_section(args.dash_base, staged=args.staged,
+                                                                  also_new=args.also_new)
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
-        mode = ["mode: drift-only (only config_drift, version_mismatch, claude_budget and rca_followups ran)"] if args.drift_only else []
+        mode = ["mode: drift-only (only config_drift, version_mismatch, claude_budget, rca_followups, feature_verify and git_diff_failed ran)"] if args.drift_only else []
         summary = "\n".join([
             "---",
             *mode,
@@ -1385,6 +1597,8 @@ def main(argv: list[str]) -> int:
             f"model_registry:    {len(report.model_registry)}",
             f"ai_dashes:         {len(report.dashes)}",
             f"rca_followups:     {len(report.rca_followups)}",
+            f"feature_verify:    {len(report.feature_verify)}",
+            f"git_diff_failed:   {len(report.git_diff_failures)}",
             f"total_findings:    {report.total}",
             "---",
             "",
@@ -1413,6 +1627,8 @@ def main(argv: list[str]) -> int:
         or report.version_mismatches
         or (CLAUDE_MD_BUDGET_ENFORCE and gating_budget)
         or report.rca_followups
+        or report.feature_verify
+        or report.git_diff_failures
     ):
         return 1
     return 0

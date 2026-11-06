@@ -39,6 +39,12 @@ For **features**, the issue body MUST include:
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
+- If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
+  remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
+  Before you add the label, write the check as steps in the feature doc's `## How to verify in game`
+  section, and link that section in the closing comment.
+  The backlog is a query, visible from every machine and client:
+  `gh issue list --state all --label triage-needs-ingame`
 
 **Commands:** Use `gh issue create` and `gh issue close` via Bash.
 
@@ -56,6 +62,8 @@ Every completed feature MUST have a documentation file at `docs/features/<featur
 - Key Files — table of all files with their purpose
 - Dependencies — what it relies on
 - Tests — test file locations and coverage summary
+- How to verify in game: preconditions, then each `taom.*` command or UI action with the result
+  that proves it. `tools/lint_docs.py` blocks the commit of a new feature doc without this heading
 - How-To — common operations (e.g., "How to add a new X")
 - Performance — any optimization notes (if applicable)
 
@@ -75,13 +83,15 @@ Phase 1: BUILD & INTERNAL REVIEW
 
 Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
   4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
-                                      AND dispatches via `codex exec - < prompt.md > output.md 2>&1` (run_in_background)
-                                      AND tells the user once: "dispatched, expected window 10-45 min"
+                                      AND dispatches via `codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt.md > output.md 2>&1`
+                                      (run_in_background; the session picks the level for the change, `ultra` is only the ceiling)
+                                      AND tells the user once: the level chosen, why, and the expected window
   5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
   6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
 
 Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff
+  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff, its effort sized
+                                      to the fixes (a few focused fixes: usually `high`)
   8. (harness notifies on completion)
   9. Verify findings on our fixes, implement confirmed fixes
 

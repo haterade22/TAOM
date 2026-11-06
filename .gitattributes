@@ -26,3 +26,8 @@
 docs/reference/ranged-troops.html text eol=lf
 # The snapshot's project.mbproj is a byte copy of the live file (LF, UTF-8 BOM) for the same reason.
 docs/reference/lotrlome-armory-snapshot/project.mbproj text eol=lf
+
+# The /improve Workflow scripts: the Workflow tool refuses a script holding a CR ("control
+# characters that would be hidden in the approval dialog"). Scoped to that folder, not *.js:
+# tracked tools/*.js files are CRLF in the worktree and would churn. test_improve_workflows.py.
+.claude/skills/improve/workflows/*.js text eol=lf

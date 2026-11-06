@@ -2,10 +2,9 @@
 
 Every third-party source TAOM derives from, interoperates with, or was compared against, with its
 license and what kind of derivation it is. This file is the single authoritative record. It is also
-designed to double as the allowlist for a future `tools/check_provenance.py`, so that the only way to
-make a checker accept a new third-party name is to write a row here, which forces the license
-question to be answered. **That checker does not exist yet**; for now this file is kept current by
-hand, in the same commit as the code it describes.
+read by `tools/check_provenance.py`, which checks the Derivation and Status vocabulary, that each
+shipped non-TAOM binary has a `redistributed` row, and that each adoption record is named here or
+says "nothing taken". The rest is kept current by hand, in the same commit as the code it describes.
 
 **The rule this file exists to serve:** name the source and state its license. A bare unattributed
 mention is a violation, and so is an unnamed euphemism ("the donor mod", "the upstream pack"). This
@@ -23,7 +22,7 @@ and contains **only** `cleared` rows.
 
 ## Vocabulary
 
-**Derivation** (closed set, enforced by the checker):
+**Derivation** (closed set, checked by `tools/check_provenance.py`):
 
 | Value | Means |
 |---|---|
@@ -45,7 +44,7 @@ the source publishes one instead of a licence.
 identified, not yet confirmed or recorded) · `uncleared` (we do not know the terms) · `removed` (the
 derivation no longer exists in TAOM).
 
-**Tokens** are the strings the checker matches on. They must be backticked. Nothing outside backticks
+**Tokens** are the strings that identify a source in code and docs. They must be backticked. Nothing outside backticks
 is ever treated as a token, which is what keeps the bare word "Alliance" from matching vanilla
 `AllianceCampaignBehavior` or the French lore string "Dernière Alliance".
 
@@ -94,13 +93,22 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani MithrilForge and `bannerlord` repository (engine notes) | `MithrilForge` `yotthani/bannerlord` | MIT (MithrilForge's own licence; `yotthani/bannerlord` by the maintainer's statement of 2026-10-09, no root `LICENSE` yet) | comparison-only | (none; restated facts tagged [yotthani] in `docs/reference/engine/mission-frame-threads-and-native-costs.md`, carried from the 1.5.x line by plan 117; plan 144 adds tpac-static-prop-authoring.md and the engine/ save-system, agent-spawn, lifecycle, submodule, gauntletui, campaign-tick and formations pages; the measurement cited in docs/features/butter-lib-distance-matrix.md) | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
-| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail) | cleared |
+| rea | `rea` `morluto/rea` `rea-agents` | MIT | behavioural-port | `tools/native_build_match.py` (the matching method, from its documentation; see detail); rule lines in `.claude/rules/{evidence-over-claims,simplicity-criterion,working-discipline}.md`, `.claude/skills/issue/SKILL.md` and `docs/ai-includes/perf-method.md` section 4 (comparison-only) | cleared |
 | TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 | Agent Reach | `Agent-Reach` `Panniantong/Agent-Reach` `agent-reach` | MIT | comparison-only | `tools/ingame_ledger.py` and, once the `/release` edits land, `/release` Phase 1 (owed in-game checks) and Phase 5 (the idea of a per-release acceptance ledger, from its release gate; TAOM's tool, its non-blocking design and its text are TAOM's own) | cleared |
+| Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
+| rtk (Rust Token Killer) | `rtk` `rtk-ai/rtk` `Rust Token Killer` | Apache-2.0 (the CLI in `src/`; `engine/` and `proxy/` are BUSL-1.1 and nothing derives from them) | behavioural-port | `.claude/hooks/_shellwords.py` (`command_index`, `peel`); `tools/harness_retro.py` (`command_family`, report section 9) | cleared |
+| Paperclip | `paperclip` `paperclipai/paperclip` | MIT | behavioural-port | `tools/harness_retro.py` (section 10: tokens by agent type and model, model overrides, costliest transcripts, token growth) | cleared |
+| claude-hud | `claude-hud` `jarrodwatts/claude-hud` | MIT | behavioural-port | `.claude/statusline.sh` (the usage line) | cleared |
+| Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
+| ralph-claude-code | `ralph-claude-code` `frankbria/ralph-claude-code` | MIT | behavioural-port | `.claude/rules/working-discipline.md` (no-progress breaker), `tools/loop_progress.py`, `.claude/skills/improve/workflows/execute.js` (run breaker), the Dead ends sections, `.claude/rules/hook-authoring.md` (digits-only arithmetic) (#996, #998) | cleared |
+| pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
+| context-mode | `context-mode` `mksglu/context-mode` | Elastic-2.0 | behavioural-port | `docs/ai-includes/agent-operating-manual.md` (execution model item 6) | cleared |
+| claude-plugins-official | `claude-plugins-official` `anthropics/claude-plugins-official` | Apache-2.0 | behavioural-port | `tools/test_hooks.sh` section 3b, `.claude/skills/deep-review/lenses/{1-standards,5-data-flow,tooling}.md`, `TAOM.Tests/Infrastructure/VerifyCanaryTests.cs`, `tools/harness_retro.py` section 10; see detail | cleared |
 
 <!-- provenance-register-end -->
 
-TAOM's own and predecessor modules. The checker skips these entirely.
+TAOM's own and predecessor modules. They need no row. `tools/check_provenance.py` does not scan for module ids.
 
 <!-- taom-owned-start -->
 `TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
@@ -108,8 +116,7 @@ TAOM's own and predecessor modules. The checker skips these entirely.
 <!-- taom-owned-end -->
 
 Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
-`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and live as a
-constant in the checker rather than here.
+`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, so they have no row either.
 
 ---
 
@@ -549,7 +556,7 @@ code was copied, so no MIT notice is carried. Record:
 ## Adding a row
 
 1. Name the source as it is published. No euphemisms.
-2. Put every string the checker should match in the `Tokens` column, in backticks.
+2. Put every string that identifies the source in the `Tokens` column, in backticks.
 3. Establish the license before writing anything into a shipped file. `UNKNOWN` is a valid value here
    and is never a valid value in `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 4. Pick the narrowest true `Derivation`. If you read the source while implementing, it is not
@@ -583,6 +590,64 @@ creative work, TAOM derives nothing from it, and the lexicon carries a standing 
 import. There is no row for it because there is nothing to declare, and that is the intended state.
 
 ---
+
+### Harness² (Google Research)
+
+Upstream: https://github.com/google-research/harness2 · Apache-2.0 (paper: arXiv 2610.14224). Its
+reflector and editor prompts (`harness2/core/prompts.py`) were read while writing TAOM's retro
+procedure, so the derivation is a behavioural port. Taken from them, in TAOM's own words: the
+per-change verdicts (helped, hurt, no observed effect, confounded) and the preference for
+confounded over a guessed attribution; the rule that a proposed edit names the moment in a session
+behind it; the order of preference for the form of a change, always-on text last; and "no change"
+as a valid outcome. No upstream file or text was copied, so no Apache-2.0 notice is carried.
+`tools/harness_retro.py` (the transcript miner) has no counterpart upstream and is TAOM original.
+Nothing was installed. Record: [`docs/reviews/adopt-harness2-2026-10-21.md`](../reviews/adopt-harness2-2026-10-21.md).
+
+### rtk (Rust Token Killer)
+
+Upstream: https://github.com/rtk-ai/rtk, branch `develop` at `32b2ec4`. Two ideas were taken after
+reading its source, so the derivation is a behavioural port. From `src/hooks/permissions.rs`: a
+command is judged from its command word, read past assignments, wrapper words and the grammar a
+segment split leaves behind; TAOM's `command_index` and `peel` are written from TAOM's own design
+and tests (#985). From `rtk discover`: measuring which commands produce the most output in Claude
+Code transcripts, which became section 9 of `tools/harness_retro.py`. No rtk code or text was
+copied, so no Apache-2.0 notice is carried. The rtk v1.0.1 binary was run once, offline, on
+2026-10-23 to measure it (Mike's explicit trial decision): checksum-verified, never initialised,
+never in a hook or on PATH, then deleted. Record: [`docs/reviews/adopt-rtk-2026-10-23.md`](../reviews/adopt-rtk-2026-10-23.md).
+
+### Headroom
+
+Upstream: https://github.com/headroomlabs-ai/headroom, `main` at `7e0094d`. TAOM took nothing from it:
+no code, text or idea, so no Apache-2.0 notice is carried. The 0.42.0 wheel and its Kompress model were
+run offline on 2026-11-03 to measure it (Mike's explicit trial decision): in an isolated venv, never
+wrapped around Claude Code, never in a hook or an MCP entry, then deleted. Record:
+[`docs/reviews/adopt-headroom-2026-11-03.md`](../reviews/adopt-headroom-2026-11-03.md).
+
+### pstack
+
+Upstream: https://github.com/backnotprop/pstack (a mirror of Cursor's `cursor/plugins/pstack`), `18b6c36`,
+read from a shallow clone; nothing was installed or run. Seven ideas were restated in TAOM's words (the
+two-edit test check, comment review, a verification recipe per feature, the premise test, a worktree
+audit, a perf method, more prose tells). The record lists TAOM-side changes, not copied files, and the
+table of them is there:
+[`docs/reviews/adopt-pstack-2026-10-24.md`](../reviews/adopt-pstack-2026-10-24.md).
+
+### context-mode
+
+Upstream: https://github.com/mksglu/context-mode, `main` at `7e9ebef` · Elastic License 2.0. Its
+README's "think in code" principle (a script computes across files and prints only the result) was
+read while writing item 6 of the agent operating manual, so the derivation is a behavioural port.
+The per-file Read table in section 9 of `tools/harness_retro.py` (#1002) is TAOM's own measurement
+and has no counterpart upstream. No code or text was copied, so no ELv2 notice is carried, and
+nothing was installed or run. Record: [`docs/reviews/adopt-context-mode-2026-10-26.md`](../reviews/adopt-context-mode-2026-10-26.md).
+
+### claude-plugins-official
+
+Upstream: https://github.com/anthropics/claude-plugins-official, `5826794`, read from a shallow clone;
+nothing was installed or run. Five ideas were rebuilt on the TAOM side: frontmatter key
+checks, two review-lens prompts, dangerous-sink rules, a canary test that must turn a run red, and
+token and cache accounting. The record describes ideas ported, not files copied. Record:
+[`docs/reviews/adopt-claude-plugins-official-2026-10-26.md`](../reviews/adopt-claude-plugins-official-2026-10-26.md).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

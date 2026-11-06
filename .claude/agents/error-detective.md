@@ -6,6 +6,8 @@ tools:
   - Grep
   - Glob
   - Bash
+model: opus
+effort: high
 ---
 
 # Error Detective Agent
@@ -66,10 +68,5 @@ Recommended next step:
   - If single root: invoke /investigate scoped to [hypothesized location]
   - If coincidence: list the N independent /investigate runs, prioritize by severity
 ```
-
-## Notes
-
-- This agent is read-only. Findings inform subsequent `/investigate` runs; it does not write fixes itself.
-- The dimensions list above is TAOM-specific. The original (VoltAgent/awesome-claude-code-subagents) was framed for distributed-services architectures; the dimensions here map "services" to "features" and "API endpoints" to "TaleWorlds API surfaces."
 
 Source: VoltAgent/awesome-claude-code-subagents (adapted from microservices framing to mod-feature framing).

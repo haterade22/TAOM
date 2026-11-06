@@ -6,7 +6,7 @@ A single reusable, read-only validator for TAOM's Bannerlord ModuleData XML. It 
 
 The same engine backs **three consumers**: a **CLI** (`validate_moduledata.py` — batch report), a **pre-commit hook** (`.claude/hooks/check-moduledata-validation.sh` — blocks Claude-driven commits on ERRORs), and an **MCP server** (`taom_mcp_server.py` — interactive agent queries like "does this item exist?" / "what references this troop?").
 
-A schema-driven engine (`SchemaDefinition` / cross-reference / validation services) with an MCP-tool surface, implemented in Python.
+A schema-driven engine (`SchemaDefinition` / cross-reference / validation services) with an MCP-tool surface, implemented in Python. Every finding code, one row each: [moduledata-validator-codes.md](../reference/moduledata-validator-codes.md).
 
 ## Why This Exists
 

@@ -9,6 +9,8 @@
 #   - version mismatch: CLAUDE.md's "Target: Bannerlord X" line or an API-snapshot
 #     header that disagrees with .claude/pinned-game-version.txt.
 #   - a new FOLLOW-UP line in a staged docs/reviews/rca-*.md with no issue and no reason (#984).
+#   - a new docs/features/*.md with no `## How to verify in game` section that has a body; a doc
+#     that `git add` stages in the SAME command is read from the command text (--also-new).
 #
 # Why: this is the enforcement for the v1.4.7-bump deep-review finding -- flipping
 # banner_color_config.json's EnableLayerLimitTranspiler default left the feature doc's
@@ -66,15 +68,43 @@ COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-doc-conf
 cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 taom_is_project_repo "$COMMIT_REPO" || { echo '{}'; exit 0; }
 
+# What the commit records (#987), read from the command with _shellwords.py commit-plan: whether it
+# amends HEAD, and the paths of a path commit (`git commit -m x -- <paths>`, or paths after the
+# message, without -a or -i). A path commit records those paths' working copies and not the index; an
+# amend records the index against HEAD's parent, so a line HEAD itself added is new to it and is
+# checked again. A path amend (`--amend -- <paths>`) is judged on its paths alone, so HEAD's lines in
+# other files are not re-checked. The paths come back absolute (joined onto the call's directory), so
+# they read the same from here. A reader that gives up (`unknown`, or no answer) leaves the index
+# against HEAD, with an --amend anywhere in the text still counting, as it did before.
+AMEND=0
+COMMIT_PATHS=()
+PLAN=$(printf '%s' "$INPUT" | "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" commit-plan 2>/dev/null)
+set -f; IFS=$'\n'; PLAN_LINES=($PLAN); IFS=$' \t\n'; set +f
+case "${PLAN_LINES[0]:-}" in
+    amend) AMEND=1; COMMIT_PATHS=("${PLAN_LINES[@]:1}") ;;
+    new)   COMMIT_PATHS=("${PLAN_LINES[@]:1}") ;;
+    *)     [[ "$COMMAND" == *"--amend"* ]] && AMEND=1 ;;
+esac
+
 # Files in the commit. No blanket --amend skip (amend is commonly "oops, add a
 # file" -- exactly the case to catch); include HEAD's files on amend.
 STAGED=$(git diff --cached --name-only 2>/dev/null)
-case "$COMMAND" in
-    *"--amend"*)
-        STAGED=$(printf '%s\n%s\n' "$STAGED" \
-            "$(git show HEAD --name-only --pretty=format: 2>/dev/null)" | sort -u)
-        ;;
-esac
+if [[ ${#COMMIT_PATHS[@]} -gt 0 ]]; then
+    # What a path commit records: the named paths' working copies against HEAD (against the index
+    # while HEAD is unborn). A directory path lists only what changed in it, so it is no longer
+    # relevant for the feature docs it merely holds.
+    if git rev-parse -q --verify 'HEAD^{commit}' >/dev/null 2>&1; then
+        PATH_FILES=$(git diff --name-only HEAD -- "${COMMIT_PATHS[@]}" 2>/dev/null)
+    else
+        PATH_FILES=$(git diff --cached --name-only -- "${COMMIT_PATHS[@]}" 2>/dev/null)
+    fi
+    # Paths that change nothing here: judge the index, as the hook did before it read paths.
+    if [[ -n "$PATH_FILES" ]]; then STAGED=$PATH_FILES; else COMMIT_PATHS=(); fi
+fi
+if [[ $AMEND -eq 1 ]]; then
+    STAGED=$(printf '%s\n%s\n' "$STAGED" \
+        "$(git show HEAD --name-only --pretty=format: 2>/dev/null)" | sort -u)
+fi
 
 # Only run when the commit touches a surface the drift checks care about:
 # a feature doc, a shipped ModuleData JSON, a version marker, or an RCA.
@@ -93,6 +123,16 @@ for f in "${STAGED_LIST[@]}"; do
         docs/reference/taleworlds-api-snapshot/*.md) RELEVANT=1; break ;;
     esac
 done
+# A feature doc that `git add <doc> && git commit` stages in one command is not in the index yet:
+# take every docs/features/<name>.md token of the command text and let the linter read it from the
+# working tree (--also-new). Any error here leaves the list empty, which only skips the extra check.
+ALSO_NEW=()
+FEATURE_DOC_TOKEN='docs/features/[^/[:space:]"'"'"']+\.md'
+set -f; ALSO_NEW_TOKENS=($(printf '%s\n' "$COMMAND" | grep -oE "$FEATURE_DOC_TOKEN" 2>/dev/null | sort -u | head -20)); set +f
+for t in "${ALSO_NEW_TOKENS[@]+"${ALSO_NEW_TOKENS[@]}"}"; do
+    ALSO_NEW+=(--also-new "$t"); RELEVANT=1
+done
+
 [[ $RELEVANT -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Locate python (fail open if absent).
@@ -101,40 +141,57 @@ PY="$PYBIN"
 
 # Run the drift gate. --drift-only runs just the checks that can block (config-example drift,
 # version markers, the CLAUDE.md and AGENTS.md budget, RCA FOLLOW-UP lines) and exits 1 iff one fails;
-# 0 otherwise. --staged makes the RCA check read the index, which is what the commit records.
+# 0 otherwise. --staged makes the RCA check read the index, which is what a plain commit records.
 # Only rc=1 blocks. The full --fail-on-drift run took 25 s on the laptop (2026-11-04), past the
 # 20 s bound below; these checks take under a second.
 #
 # Inner bound, below the 30s registered timeout. A harness kill discards this hook's
 # output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
 # a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
-OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py --drift-only --staged 2>/dev/null)
+LINT_ARGS=(--drift-only --staged)
+if [[ $AMEND -eq 1 ]]; then
+    # An amend replaces HEAD: what it adds is the index against HEAD's parent, or against the empty
+    # tree when HEAD is the root commit.
+    if git rev-parse -q --verify 'HEAD~1^{commit}' >/dev/null 2>&1; then
+        LINT_ARGS+=(--dash-base 'HEAD~1')
+    else
+        LINT_ARGS+=(--dash-base 4b825dc642cb6eb9a060e54bf8d69288fbee4904)
+    fi
+fi
+[[ ${#COMMIT_PATHS[@]} -gt 0 ]] && LINT_ARGS+=(--only-paths "${COMMIT_PATHS[@]}")
+LINT_ARGS+=(${ALSO_NEW[@]+"${ALSO_NEW[@]}"})
+OUT=$(timeout -k 2 20 "$PY" tools/lint_docs.py "${LINT_ARGS[@]}" 2>/dev/null)
 RC=$?
 
 # 124 = the inner timeout fired. Not a pass. Ask rather than block: an overrun is an
 # infrastructure fault, and a hook's own fault must never hard-block the user.
 if [[ $RC -eq 124 ]]; then
-    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. This commit is UNCHECKED for config-example drift, version-marker mismatches, the CLAUDE.md eager-load budget and RCA FOLLOW-UP lines. This is NOT a pass. Run: python tools/lint_docs.py --drift-only --staged"}}'
+    ASK=$("$PYBIN" -c 'import sys, json
+print(json.dumps("[check-doc-config-drift] The doc drift gate exceeded its 20s budget and was stopped. "
+                 "This commit is UNCHECKED by the doc linter gating checks. This is NOT a pass. "
+                 "Run: python tools/lint_docs.py " + sys.argv[1]))' "${LINT_ARGS[*]}" 2>/dev/null)
+    [[ -z "$ASK" ]] && { echo '{}'; exit 0; }
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":%s}}\n' "$ASK"
     exit 0
 fi
 
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
 # Extract just the gating sections (drift / version / CLAUDE.md budget / RCA — the report's tail), bounded.
-DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget|RCA FOLLOW-UP lines with no issue or reason)/{f=1} f' | head -40)
+DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget|RCA FOLLOW-UP lines with no issue or reason|Feature docs with no in-game verification section|Git diff failed)/{f=1} f' | head -40)
 
+# The reproduction quotes the arguments this run passed, and a path commit reads the working copy, so
+# its fix is the file, not the index.
+FIX="then re-stage"
+[[ ${#COMMIT_PATHS[@]} -gt 0 ]] && FIX="in the file itself (this commit reads the named paths' working copies), then commit again"
 MSG=$(printf '%s' "$DETAILS" | "$PYBIN" -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][:36]
 print(json.dumps(
-    "[check-doc-config-drift] git commit BLOCKED: a documented config example / version "
-    "marker drifted from the source of truth, or CLAUDE.md broke its eager-load budget "
-    "(46KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
-    "detail to the linked doc). Sync the doc example to the shipped ModuleData config, the "
-    "version marker to .claude/pinned-game-version.txt, or thin the CLAUDE.md row, then "
-    "re-stage. A new FOLLOW-UP line in an RCA must cite an issue or say no issue: and why. "
-    "Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
-' 2>/dev/null)
+    "[check-doc-config-drift] git commit BLOCKED by the doc linter (tools/lint_docs.py "
+    + sys.argv[1] + "). Fix each finding quoted below, " + sys.argv[2] + "; each section names "
+    "the rule it enforces. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
+' "${LINT_ARGS[*]}" "$FIX" 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 
 printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":%s}}\n' "$MSG"

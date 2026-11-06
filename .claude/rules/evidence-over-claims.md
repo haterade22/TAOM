@@ -25,7 +25,7 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 
 1. Identify the command that proves the claim (`dotnet build`, `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, the audit script, the repro case).
 2. Run it **now** — not from memory of an earlier run, not "it should still pass."
-3. Read the exit code and the actual output.
+3. Read the exit code and the actual output. Name what the run did not cover (no in-game check, one build, the laptop untested) beside the claim.
 4. State the claim with that evidence, or report the failure with the output.
 
 **Does NOT count as verification:** a previous run; "should pass" / "looks correct"; a linter passing (≠ compiles); **a subagent's self-report** (fork-discipline already forbids fabricating fork results — a returned "✅ done" is a claim to verify, not evidence); your own confidence or fatigue.
@@ -59,6 +59,7 @@ The cheapest thing an LLM can produce is a confident, plausible-sounding fact th
 1. **Writing the findings artifact before its evidence is in hand.** Authoring a doc / CHANGELOG / commit message that summarizes tool output, in the *same* tool block as — or before — the commands that produce that output. **Fix:** read the proving output, confirm it is real, *then* write. Never batch the summary Write with the analysis commands.
 2. **A failed or empty read silently filled with a guess.** A `Read` that returns "File does not exist" / empty is a STOP signal, not a cue to reconstruct a plausible version. **Concrete trap:** the Windows `Read` tool cannot see git-bash `/tmp/...` paths — if you wrote scratch there from Bash, the Read fails; write scratch to a repo-relative path (e.g. `docs/migration/_scratch.txt`, deleted before commit) so it is actually readable.
 3. **Trusting your own prior tool results from memory.** A commit hash, count, or "done" from earlier in the turn is a claim to re-verify, not a fact — a cancelled or errored call leaves no real trace, only your (unreliable) memory that it "happened." Re-run `git log`, re-read the file, before relying on it.
+4. **Reporting an empty search as absence.** No hit proves absence only inside what was searched: name the scope (which build, which modules, which folders) with the negative result.
 
 **When you catch yourself about to state a fact you have not verified this turn: stop.** Run the proving step and state it with evidence, or say "I don't know yet — checking." Both are fine. The plausible guess is not.
 
