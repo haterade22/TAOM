@@ -1776,3 +1776,10 @@ conversion (`SandboxAgentStatCalculateModel.UpdateHorseStats`).
 - **Prevent:** after a promotion, grep ModuleData and `Main/Features` for the host culture id and for the host tree's troop ids, and decide each hit (mirror, or exempt with a reason). Pin a cloned tree with a parity test against its source, like `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin`. Still open for Lindon on 2026-10-06: clan party templates, Elven Wine, troop resource costs, Elite Emissary, banner bearers.
 - **On this tree:** This incident ran on the 1.5.x line, and `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin` exists only there; the rule holds here.
 - **Source:** 1.5.x `docs/reviews/rca-lindon-balance-tables-2026-10-06.md`, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live A/B test edit left applied becomes the shipped data (2026-10-02)
+The 09-29 brow investigation ran two separating tests on the adult female dwarf in the live Armory `skins.xml`. The first (`brow_swap.py`) was restored and written up. The second (`head_swap.py`) swapped her head to vanilla `head_female_a` and her brows to `female_eyebrow_2`, was never restored and never mentioned in the handoff, and reached all three release channels. Three days later Mike saw every adult female dwarf with a blank human head floating above her helmet.
+- **Why missed:** the handoff doc listed only the test that was restored; a test script with a `--restore` flag reads as safe, but nothing tracks whether anyone ran it.
+- **Prevent:** a live-module test edit is restored in the same session, or the handoff doc names it under "applied, not restored" with its backup path until someone restores it. Before a release package, diff the live `skins.xml` against the repo snapshot.
+- **On this tree:** This incident ran on the 1.5.x line, and `brow_swap.py`, `head_swap.py`, `female_eyebrow_2` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/investigations/upper-mesh-mapping-2026-09-29.md` "The head swap test", on `origin/bannerlord-1.5.x` (ported by WP142).

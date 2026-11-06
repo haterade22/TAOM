@@ -1771,3 +1771,21 @@ because they faked `isEquipped: true` on such a row. The options and `IsEquipped
   wraps and confirm that the faked state occurs there. When it cannot occur, the feature branch it reaches is dead:
   report it, do not test it.
 - **Source:** 1.5.x issue #925; first found in `docs/reviews/rca-quickactions-unequip-2026-10-19.md` (follow-ups), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A tool test must run under the gate's runner, not only the author's (2026-09-25)
+The hill troll binder's 13 tests were module-level pytest functions. `/verify` runs `python -m unittest discover -s tools/tests -t .`, and with nothing installed the module fails to import there, and unittest collected 0 tests
+locally, while pytest showed 13 green. Five older modules had the same shape.
+- **Why missed:** the author ran pytest and read the green.
+- **Prevent:** write tool tests as `unittest.TestCase` (`tempfile` for `tmp_path`, `contextlib.redirect_stdout`
+  for `capsys`), and run the unittest command before calling them done.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 19, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### An oracle over two near-identical inputs proves little; add a hard control (#997, 2026-10-24)
+`native_build_match.py` scored zero wrong on 1.5.x to 1.5.x and 1.5.x to 1.5.x, whose binaries differ by a handful of
+functions. Run on the 1.5.x client against the wEditor build (a separate compile), it made 15 wrong matches, 14 by unique
+hash: a class gained a member, the field offsets shifted, and a neighbour's code became identical to the old function's.
+- **Why missed:** both oracle pairs were easy; nothing measured the tool where its matching key collides.
+- **Prevent:** test a matcher, classifier or gate on one input built to stress its key (here another compile of the same
+  engine), and keep that control in the integration test.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x adopt-rea-2026-10-24.md "The review's HIGH finding", on `origin/bannerlord-1.5.x` (ported by WP142).

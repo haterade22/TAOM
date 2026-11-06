@@ -3677,3 +3677,78 @@ there still loads (a prefab by its bare file name, a brush file by name), so a d
   with its git blob, and say so in the commit body; the deploy guard is tracked in #1024.
 - **On this tree:** This incident ran on the 1.5.x line, and `EventXml.xml`, `PreviewPanel.xml` exist only there; the rule holds here.
 - **Source:** 1.5.x `rca-previewpanel-dead-prefab-2026-10-26.md` finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A binder takes clip availability from the files on disk, never from the plan that promised them (2026-09-25)
+`bind_hill_troll_action_set.py` read its available clips from the retarget index, and the clip generator, fed the
+same index, refused one clip whose vanilla range ran a frame past its master (`aserai_mp_guard_idle_2hperk`). The
+set then named a clip that did not exist; an in-game hit on that code would have played nothing. A post-bind check
+(every `animation="anim_hill_troll_*"` in the set against the `_anm.tpac` names in the folder) caught it.
+- **Why missed:** the index and the clips came out of the same pipeline in the same hour, so "in the index" read as
+  "on disk"; one refusal downstream broke that equality.
+- **Prevent:** `--clips-dir`: a clip is bound only if its file is there; and after any bind, list the bound names
+  against the folder before the parity audit.
+- **On this tree:** This incident ran on the 1.5.x line, and `bind_hill_troll_action_set.py`, `aserai_mp_guard_idle_2hperk`, `anim_hill_troll_` exist only there; the rule holds here.
+- **Source:** 1.5.x `tools/bind_hill_troll_action_set.py` `available_clips`; `docs/features/troll-race.md` "Human clips for the hill troll", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A live-install fix ships with a check mode, not only a read-back (2026-09-25)
+`wire_hill_troll_race.py` verified its own writes, yet nothing could tell, after an Armory reinstall, that the hill
+troll's skins, Monster and standalone set had reverted: the trap index row "Unversioned modules" already asked for an
+in-repo gate and it was not written.
+- **Why missed:** a read-back that runs only inside `--apply` is not a gate anyone can run later.
+- **Prevent:** a tool that edits the live Armory or `TAOM_Map` gets a `--check` mode (exit 1 on drift, 2 on a missing
+  file, never writes) in the same change; `wire_hill_troll_race.py --check` is the template.
+- **On this tree:** This incident ran on the 1.5.x line, and `wire_hill_troll_race.py` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 8, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### The safe invocation is the default invocation (2026-09-25)
+Two hill troll tools had four defaults that were safe only when called the way their author called them: the binder bound a clip
+that was never written unless `--clips-dir` was passed, the clip generator's default skeleton GUID would wire a
+re-imported troll master to the human rig, the binder's own process check failed open, and the clip generator's
+clone path skipped the checksum fix silently when python was missing.
+- **Why missed:** each live run passed the flag and ran on a machine where the defaults never fired, and the
+  docstring's usage line, the one a later reader copies, omitted the flag.
+- **Prevent:** give every writer a default that is safe on its own (the install's folder, the shared
+  fail-closed `_gamedir.game_or_kit_running`), refuse where no default is safe (a folder whose masters name
+  another skeleton), and run the docstring's own usage line once before calling the tool done.
+- **On this tree:** This incident ran on the 1.5.x line, and `game_or_kit_running` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` findings 20, 22, 29 and 33, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A verify mode that fails on the correct state is a dead gate (2026-09-25)
+`gen_troll_anim_clips.ps1 -CloneByName -Verify` counted the one clip the generator refuses by design as
+missing and exited 1 on the correct live folder, while troll-race.md recorded both verify modes as clean.
+- **Why missed:** "clean" was read off the printed counts (`ok=428 bad=0`), not the exit status, so a gate
+  that could never pass looked like a pass.
+- **Prevent:** a verify mode lists deliberate refusals under their own name and does not count them as missing;
+  write "clean" in a doc only with the exit code in hand (`refused-by-design=1`, exit 0 now).
+- **On this tree:** This incident ran on the 1.5.x line, and `gen_troll_anim_clips`, `CloneByName` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-hill-troll-and-loc-sweep-2026-09-25.md` finding 21, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A cache keyed on the version string serves old sources after a hotfix (engine bump, 2026-11-04)
+
+Steam moved the game from changeset 125053 to 125270 and kept the version string 1.5.x. `taom-src` keyed its cache on that string and returned any cached file, so it served the old build's sources for over half an hour, while agents cited them as "decompiled from the installed DLLs". The drift banner compares the same string, so it stayed silent too. Only `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` noticed, because the changeset is compiled in.
+
+- **Why missed:** every earlier update also changed the version string, so the string looked like the build's identity.
+- **Prevent:** key a cache on something the update must change. `taom-src` now adds the write time of `TaleWorlds.Library.dll`. A new folder per build also leaves the old one alone for a session that reads it. The banner still sees only the string.
+- **On this tree:** This incident ran on the 1.5.x line, and `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x v1.5.6-impact.md, "Hotfix: changeset 125270", on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A decompiler's auto-analysis misses functions reached only through a registration table (2026-09-26)
+Ghidra's analysis of the 1.5.x client found no function at 947 of the 2,093 addresses the engine registers for its
+2,282 `[EngineMethod]` implementations, `get_current_action_type` at `0x6E19B0` among them. Nothing calls them directly:
+the only reference is a `lea` in the registration function, handed to managed code as a pointer. So
+`native_decompile.py --rva` inside one of them failed with "not inside any function", and those are exactly the
+engine calls TAOM makes. A byte pattern for the registration sites had the same kind of hole: it read 2,278 of the
+2,282, missing the site where `mov rcx,rbx` sits between the `lea` and the id, both tail calls, and DotNet's id 0.
+- **Why missed:** the first tests used addresses Ghidra already knew (crash sites with `.pdata`, a leaf it found
+  through a call). A green decompile of one function says nothing about the functions analysis never created.
+- **Prevent:** when a tool depends on a function table the binary builds at run time, enumerate the table and create
+  the functions from it (`GhidraBackend._seed`), then pin one table-only address in an integration test
+  (`test_a_site_inside_a_registered_only_function_decompiles`). Read instruction sequences with a register-tracking
+  sweep, not a byte pattern, and check the count against the other side (688, 1,561 and 33 managed ids).
+- **Second trap, same table:** 33 of those addresses are shared (one `return false` stub serves 35 methods, another
+  108), so naming a shared address after any one method mislabels every caller of the stub, and a seeded name is
+  never revisited. Name only addresses one method owns, and seed only from a map with no one-sided ids: the first
+  join ranked candidates by shared ids, and Engine's function, which holds every MountAndBlade id, would have taken
+  MountAndBlade's place after a single missed site (about 1,400 wrong answers, exit 0).
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x #688; `tools/native_engine_methods.py` `registration_sites`, `assign`; `tools/native_decompile.py` `_seed`, `seed_names`; the 2026-09-26 deep review findings F1 and F2, on `origin/bannerlord-1.5.x` (ported by WP142).

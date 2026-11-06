@@ -947,3 +947,46 @@ refresh reset the name a moment later.
   `.Color1 =` in the BannerColorPersistence hooks).
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `docs/reviews/rca-banner-colors-refuge-rows-2026-10-24.md` findings 1 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A language_data.xml with a name and no text_processor resets the language's grammar processor (#1026, 2026-10-26)
+`LanguageData.Deserialize` (v1.4.8 `LanguageData.cs:107-111`) assigns `TextProcessor` whenever `name` is non-empty, and takes it from the `text_processor`
+attribute, which is null when absent. The live `TAOM_Map` and `LOTRLOME_Armory` files carried `name` and no processor, so
+wherever one of them loads after Native it resets the language to the default processor, whose `ProcessToken` prints
+nothing. Eight languages were affected: English (lords' parties read "Aragorn Party" for "Aragorn's Party", from the live
+Armory root file), and Italian `{.di}` and `{.a}`, French `{.cl}`, Turkish `'{.e}`, German, Polish, Russian and Spanish.
+TAOM's own files had only `id`, so nothing restored it. TAOM's `SubModule.xml` pins no load order against these modules, but TAOM_Map's `SubModule.xml` pins TAOM before TAOM_Map
+(`id="TAOM" order="LoadBeforeThis"`), so the
+rule is not "TAOM loads last": every module's file with a `name` must carry the processor. `TAOM.Dependencies` is the one exemption: its install-only files carry a `name` and no processor, and are safe only because its `SubModule.xml` lists Native in `ModulesToLoadAfterThis`, so it always sorts before Native.
+- **Why missed:** `strings-and-localization.md` said an absent `text_processor` keeps whatever another module set, and no
+  test read the attribute. The missing words only show in a running game.
+- **Prevent:** give every `language_data.xml` that has a `name`, the root English file included, the `text_processor`
+  Native declares for that id, and none where Native declares none. `LanguageProcessorTests` checks TAOM's files, and
+  `tools/check_external_loc_coverage.py` fails on a live `TAOM_Map` or `LOTRLOME_Armory` file (root or per language)
+  that has a `name` and a processor different from Native's. Players get the fix only from a release with new TAOM_Map and Armory packages. Read the engine's `Deserialize` before writing a rule about an absent
+  attribute.
+- **Source:** 1.5.x issue #1026. Known effects, not fixed here: an untagged TAOM name can take the gender of a word tagged earlier in the same text in IT, SP, DE, PL and RU (Spanish "en el Minas Tirith"), which is #1023's work; French `{.dl}`/`{.cl}` put a bare "de" or "à" before an untagged name ("de Le Poing de Fer"), also #1023; Turkish `{._}` lowercases with Turkish rules ("ısengard"), as the engine's processor does for vanilla names, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A line a hostile NPC says to the player must not name the player's people (Bandit Voices, #900, 2026-10-26)
+The Blacklocks dwarves called the player "tall-folk", Gundabad orcs called them "softskin", and Dunlendings
+"lowlander". A TAOM player can be a dwarf or an orc, robbed by the bandits of their own people, and every such line then
+reads wrong. Vanilla's robbery lines never name the listener's people.
+- **Why missed:** each line was written in the speaker's voice, with a Man of the West in mind as the listener.
+- **Prevent:** write a line spoken to the player in the speaker's voice, but name the player only in words that fit
+  every playable race and gender ("stranger", "traveller", an insult that names no people). Add a pattern test over
+  the strings file for listener names and gendered words, as `BanditVoicesDataTests` does.
+- **On this tree:** This incident ran on the 1.5.x line, and `BanditVoicesDataTests` exists only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-bandit-voices-2026-10-26.md` finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Before deleting a translation row as redundant, render the vanilla row it falls back to (2026-10-26)
+TAOM's language rows for 177 vanilla keys looked redundant: each only reworded vanilla's English, and the rule says a
+rewording takes no TAOM row. Deleting them all would have shown blank kingdom names and gold amounts in 35 pairs, where
+vanilla's own translation uses a variable the game never sets, and wrong articles or dropped prepositions in 334 more, where vanilla's
+grammar functions need a gender tag or a `{@Type}` attribute that TAOM's names lack.
+- **Why missed:** the triage compared English text and meaning, not what each language's vanilla row renders with
+  TAOM's data.
+- **Prevent:** for each (language, id) a deletion hands back to vanilla, check every variable in vanilla's row against
+  what the 1.5.x call site sets, and every grammar function or token (`{#GENDER}`, `{#TYPE}`, `{.cl}`, Italian `{.di}`/`{.a}`/`{.da}`) against the tags
+  on TAOM's names. Keep TAOM's row where vanilla's would render wrong, and record the pair with its reason in
+  `kept-vanilla-key-rows.txt`. Decode vanilla's language files by their BOM: the TR files declare utf-16 but are UTF-8.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x `docs/reviews/rca-english-only-overrides-2026-10-26.md` findings 2 and 3, on `origin/bannerlord-1.5.x` (ported by WP142).

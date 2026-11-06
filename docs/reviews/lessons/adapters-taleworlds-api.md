@@ -1004,3 +1004,19 @@ tracked plate is drawn every map frame outside the cull, so mark few.
   reader (grep the decompile dump for the member name across all assemblies) and name it in the plan. No reader means
   no effect: use the mechanism the UI actually reads.
 - **Source:** 1.5.x `docs/reviews/rca-lord-courtesies-2026-10-20.md` row 1, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Read the body of an engine action before a plan relies on what it does (2026-10-19)
+
+The Hard Questions plan named two engine helpers from their signatures alone. It read
+`ChangeRelationAction.ApplyPlayerRelation(Hero, int, bool affectRelatives = true, bool)` and wrote that the
+default "doubles family hits", and it read `EquipmentHelper.AssignHeroEquipmentFromEquipment(Hero, Equipment)`
+as "fill the lord with the kit". In v1.4.8 the first body never reads `affectRelatives` (`ChangeRelationAction.cs:30`), and the second copies
+all 12 slots, empty kit slots included, so the release kit deleted the named pieces the strip had kept.
+`Hero.MakeWounded()` (clears an existing DeathMark) and `KillCharacterAction.ApplyByWounds` (returns early on a
+veto or a map event) had the same gap.
+- **Why missed:** the research rule sends a builder to the installed DLLs for signatures, and a signature reads
+  like a contract. Every one of these bodies is under 20 lines.
+- **Prevent:** for every engine action or helper a plan relies on for an effect (not only a type), read its body
+  in the `taom-src` decompile and write the effect into the plan with its file:line. A parameter name or a
+  caller's usage is not evidence of what the body does.
+- **Source:** 1.5.x `docs/reviews/rca-hard-questions-2026-10-19.md` H1, H2, L5, on `origin/bannerlord-1.5.x` (ported by WP142).
