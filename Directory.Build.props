@@ -6,6 +6,15 @@
 		<Nullable>enable</Nullable>
 
 		<!--
+		  NuGet Audit (#1020): a package with a known high or critical advisory fails restore, and so
+		  the build. Below net10.0 the audit reads direct packages only by default, so `all` adds the
+		  transitive ones. Offline, NU1900 stays a warning and the build goes on. An advisory that
+		  does not apply goes into a NuGetAuditSuppress item with its reason and "(review YYYY-MM-DD)".
+		-->
+		<NuGetAuditMode>all</NuGetAuditMode>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1903;NU1904</WarningsAsErrors>
+
+		<!--
 		  Build identity (2026-08-01, issue #371). Every TAOM assembly previously carried a frozen
 		  version - TAOM 2.0.0.0 and TAOM.Dependencies 0.1.0.0 on EVERY build ever produced - and the
 		  module <Version> in SubModule.xml was equally static. Nothing on disk distinguished a current
