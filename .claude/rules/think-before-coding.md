@@ -44,7 +44,7 @@ Once you know *what* the user asked for, walk this ladder top-down and stop at t
 1. **Does TaleWorlds already provide it?** A GameModel hook, a `CampaignEvent`, an existing engine method — verify via `/research` / `taom-src` before assuming you must build it (Critical Rules: *Research First*, *Verify Before Reference*).
 2. **Does an existing TAOM service / adapter already do it?** Reuse it (ADR-007 / ADR-002); never re-wrap a sealed type that already has an adapter, or duplicate logic a service already owns.
 3. **Can it be a one-line delegation** into that existing service/model?
-4. **Only then: write the minimum.** No interface-with-one-implementation, no "in case we need it later" plumbing (`simplicity-criterion.md` rejects both).
+4. **Only then: write the minimum.** No interface unless it wraps an engine type (an adapter), a test fakes it, a second class implements it, or it narrows a wide service for a patch (a hook, CLAUDE.md "Architecture (One-liner)"); no "in case we need it later" plumbing (`simplicity-criterion.md` rejects it).
 
 This is the *reuse-before-write* companion to `simplicity-criterion.md`'s *keep-or-reject* matrix: that rule judges a change after it exists; this ladder stops the unnecessary one from being written.
 

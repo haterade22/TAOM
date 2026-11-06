@@ -23,7 +23,7 @@ The use of `#region` and `#endregion` directives is prohibited in all C# source 
 - **Extract Classes**: Split large classes into focused, single-responsibility classes
 - **Extract Methods**: Break down complex methods into smaller, named methods
 - **Namespaces**: Use namespace organization for logical grouping
-- **Partial Classes**: Only when required by code generation (e.g., UI designers)
+- **Partial Classes**: When required by code generation (e.g., UI designers), or to split one hand-written service by concern under the conditions in "Amendment: partial services" below
 - **File Organization**: Use directories and file structure for organization
 
 ## Examples
@@ -99,6 +99,19 @@ public class ServicePartB
 **Human-Written Code**: Regions are NEVER acceptable in manually written code.
 
 **Test Files**: Test files are NOT exempt. Regions in test files violate this ADR just like production code. Use descriptive test class names and method names instead of organizing with regions.
+
+## Amendment: partial services (2026-10-21)
+
+A hand-written service may be split into partial files by concern, as `VolunteerRecruitmentService` is (its 16 culture pools are `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs`). This is acceptable only when all of these hold:
+
+- The parts share state that a split into separate classes would have to pass around: the same fields, counters or helpers used from more than one part. If the parts share nothing, extract classes instead.
+- The main file `Type.cs` holds every field, the constructor and the lifecycle methods. Each other file is named `Type.Part.cs` (for example `VolunteerRecruitmentService.Gondor.cs`) and holds one concern.
+- The main file's remarks list the parts.
+- The class still has one responsibility, and every part is covered by the same test suite.
+
+A partial file is still subject to the 150-line limit for entry points (ADR-002); it is never a way to grow a behavior, a patch or a model. Regions remain forbidden.
+
+Decided by the maintainer on 2026-10-21 on the 1.5.x line, after the Fire and Tribute review (#870) found other classes already split this way, and ported to this line on 2026-11-05. Known gap when it was ported: `VolunteerRecruitmentService` does not list its parts in its remarks. Bring it into line when it is next changed.
 
 ## Consequences
 

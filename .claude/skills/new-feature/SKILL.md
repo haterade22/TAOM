@@ -20,7 +20,7 @@ Create the following files under `Main/Features/$ARGUMENTS/`:
 - Wire into `Main/IoC.cs` by calling from `Configure()`
 
 ### 2. Service Layer
-- `I{FeatureName}Service.cs` — Interface defining the feature's public API
+- `I{FeatureName}Service.cs`: only when a test fakes the service or a second implementation exists (ADR-002); otherwise register the concrete class, `container.Register<{FeatureName}Service>(Reuse.Singleton)`
 - `{FeatureName}Service.cs` — Implementation with constructor-injected dependencies
 - Services MUST use adapter interfaces (`ICareerHeroAdapter`, `IAgentAdapter`, etc.), NEVER sealed TaleWorlds types (ADR-007)
 

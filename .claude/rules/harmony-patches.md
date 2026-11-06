@@ -46,7 +46,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - **Prefix and finalizer pair**: the link between them is Harmony's `__state` (one zeroed local per call, set by the prefix before anything can throw or return early), never a static, a count or a thread-keyed flag. Harmony reruns every finalizer when a later one throws, and PatchShield strips prefixes but never finalizers (`TryUnpatchOffendingPatches` unpatches Prefix, Postfix and Transpiler only), so a finalizer can run without its prefix. Test the pair through real Harmony (`MissionStartGuardCanaryTests` is the shape). Why: `docs/features/mission-start-guard.md` ("The canary") and `lessons/harmony-il.md` "If a prefix writes shared state conditionally, the finalizer must clear it conditionally too".
 
 ## Architecture Requirements
-- Patches are **thin entry points** — delegate ALL logic to services via `IHookInterface`
+- Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
 - Use thread-local state pattern for multi-patch coordination
