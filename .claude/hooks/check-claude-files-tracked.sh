@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-claude-files-tracked.sh
-# PreToolUse(Bash) hook: when `git commit` is about to run, check whether
+# PreToolUse (Bash and PowerShell) hook: when `git commit` is about to run, check whether
 # any file under .claude/skills/, .claude/agents/, or .claude/rules/ exists
 # on disk but is gitignored. If so, refuse to commit — the file would silently
 # not be shipped, defeating its purpose.
@@ -14,22 +14,29 @@
 
 set -uo pipefail
 
+INPUT=$(cat)
+
+# Prefilter: every decision below needs the word `commit` in the command (`git commit` or
+# `git -C <dir> commit`), and Claude Code never escapes an ASCII letter, so a raw payload
+# without the text `commit` cannot concern this gate. Exiting here skips the _pybin.sh probe
+# and the parse (two Python starts) on every Bash call without the word, `git status` and
+# `git log` included. Match the raw text, never a token regex: a newline before a command
+# arrives as \n. tools/test_hooks.sh 4c checks both directions.
+# Never skip on an escape: JSON writes a letter either literally or as a \u escape,
+# so a payload holding any \u takes the full parse, and the raw test is safe
+# whatever writes the payload.
+[[ "$INPUT" == *commit* || "$INPUT" == *'\u'* ]] || { echo '{}'; exit 0; }
+
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
-INPUT=$(cat)
 
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "check-claude-files-tracked" "untracked or gitignored files under .claude/" && { echo '{}'; exit 0; }
 
-COMMAND=$(printf '%s' "$INPUT" | "$PYBIN" -c '
-import sys, json
-try:
-    d = json.loads(sys.stdin.read())
-    print(d.get("tool_input", {}).get("command", ""))
-except Exception:
-    pass
-' 2>/dev/null)
+# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
+# command back as the Bash text of the same command and names git `git` wherever it is the
+# command (`GIT`, `git.exe`, a path), so the two-stage matcher below reads both shells.
+COMMAND=$(taom_hook_command posix check-claude-files-tracked)
 
 # Detect `git commit` invocations including `git -C <dir> commit` and
 # `git -c <key>=<val> commit`. Reject `git commit-tree`, `commit-graph`, etc.
@@ -48,8 +55,8 @@ esac
 # prevention-theater risk in the original implementation.
 
 # The top level of the repository the commit runs in, not always the project root (_pybin.sh
-# taom_git_repo_dir): another session's untracked skill in the main checkout used to deny every
-# worktree commit.
+# taom_git_repo_dir): until 2026-10-16 another session's untracked skill in the main checkout denied
+# every worktree commit.
 COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-claude-files-tracked; exit 0; }
 cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 
@@ -71,10 +78,12 @@ if [[ $RC1 -eq 124 || $RC2 -eq 124 ]]; then
     exit 0
 fi
 
+# The kinds of file the harness ships; js covers the /improve Workflow scripts
+# (.claude/skills/improve/workflows), which an untracked copy would silently leave behind.
 PROBLEMS=$(
     { printf '%s\n' "$IGNORED" | sed '/^$/d; s/$/ (gitignored: will not commit)/'
       printf '%s\n' "$UNTRACKED" | sed '/^$/d; s/$/ (untracked and unstaged)/'
-    } | grep -E '\.(md|sh|json|ya?ml) \(' | sed 's/^/  - /'
+    } | grep -E '\.(md|sh|py|js|json|ya?ml) \(' | sed 's/^/  - /'
 )
 
 if [[ -z "$PROBLEMS" ]]; then
