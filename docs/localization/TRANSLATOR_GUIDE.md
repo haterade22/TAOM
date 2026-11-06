@@ -74,12 +74,14 @@ and `language_data.xml` use a plain `\r\n`. Measured on `std_taom_module_strings
 line terminators, every one of them `\r\r\n`. The TR, FR, PL and RU copies of that file report the
 same count.
 
-The doubled CR is produced, not inherited, so it comes back after every rebuild.
-`build_translation_xml` in `tools/rebuild_translation_files.py` joins its lines on `\r\n` (`:176`),
-and `rebuild_language` writes the result with `Path.write_text(content, encoding="utf-8")` (`:159`).
-Default text mode expands each `\n` to `\r\n` on Windows, so `\r\n` goes in and `\r\r\n` comes out.
-The doubled types are exactly the ten entries in that script's `taom_sources` list (`:132-143`); the
-enlistment file is plain because it is not in that list, so the rebuild never touches it.
+The doubled CR came from how the rebuild used to write, and it stays in a file until a rebuild replaces
+that file. `build_translation_xml` in `tools/rebuild_translation_files.py` joins its lines on `\r\n`
+(`:176`). The old `rebuild_language` wrote that with `Path.write_text(content, encoding="utf-8")`, and
+default text mode expands each `\n` to `\r\n` on Windows, so `\r\n` went in and `\r\r\n` came out.
+`write_text_file` (`:74`, called at `:228`, `:246` and `:271`) now writes bytes, so a rebuild with
+`--apply` writes a plain `\r\n`. `taom_sources` (`:54`) builds the rebuild's file list from
+`TAOM_SOURCES` in `tools/_loc_sources.py`, and the enlistment file is on that list today, so its plain
+terminator does not mean the rebuild skips it.
 
 Two consequences:
 
