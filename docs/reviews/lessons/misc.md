@@ -491,3 +491,9 @@ months earlier, while two stale code comments still stated it.
   installed engine or the other mod's source before the row gets an action. Record the evidence in the row.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `rca-coop-safety-nets-2026-10-21.md` findings 2 to 4, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A performance claim names the machine that measured it, and the player figure when one exists
+Plan 006's CHANGELOG line said crash capture "no longer costs about 30 s of every boot". The 30 s was the maintainer's desktop (about 186 ms per Harmony attach there); the audit committed in the same range measured the same 247-attach sweep at 0 to 1 s on 11 player processes. The CHANGELOG feeds the player-facing release post, so the overclaim would have reached players.
+- **Why missed:** the plan quoted desktop log gaps as "every launch", and the comment, test message, feature doc and CHANGELOG each copied the number without its scope.
+- **Prevent:** a measured cost or saving in a CHANGELOG, comment or doc says where it was measured; when the machine is known to be atypical (`plans/_audit/2026-09-23-opus/followup-patch-tax.md`), give the player figure next to it or leave the number out of player-facing text.
+- **Source:** 1.5.x `docs/reviews/rca-crash-capture-boot-cost-2026-09-24.md` F2, on `origin/bannerlord-1.5.x` (ported by WP142).

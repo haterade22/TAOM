@@ -1010,3 +1010,19 @@ inline `if` in a GameModel override body, which gamemodels.md rule 4 forbids and
 - **Why missed:** moving a guard behind a call looks like moving text, but the order of reads changes. A sealed-type model has no unit seam to show it.
 - **Prevent:** when guards protect later reads of a sealed type, keep them in a call of their own (`CanConceive`) before the reads. Compare old and new for each input, the negative and null ones included, before you write "behaviour-preserving".
 - **Source:** 1.5.x `rca-follow-ups-2026-11-04.md` finding 7, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A sub-group under a master toggle inherits its promise: fold the master into every read, or make the group top-level (2026-09-28)
+MCM splits a group path on `/`, so options in "Combat Mechanics/Creature Bandits" render inside Combat Mechanics,
+whose master toggle's hint says "When off, everything below is inert". Every existing Combat Mechanics read folds
+that switch through `CombatMechanicsSettingsProvider`; the 14 creature options were read by
+`CreatureBanditTuning.Current` straight from `TaomSettings`, so with Combat Mechanics off the spiders kept their tuned
+HP, strike caps and 50% missile damage.
+- **Why missed:** the group path was picked for where the options read naturally, and a group path does not look
+  like behaviour. It is: it places the option under a hint that promises something. Third instance of the
+  master-toggle class (CombatMechanics `GetHorseChargePenetration` 2026-07-02, WotR Momentum 2026-07-03).
+- **Prevent:** before adding a property under an existing group path, read that group's master hint. Either every
+  read of the new property folds the master (through the group's settings provider), or the group moves to the top
+  level. Pin the choice with a test that reads the `SettingPropertyGroupAttribute` by name
+  (`CreatureBanditTuningTests.McmGroup_IsTopLevel_OutsideTheCombatMechanicsMasterToggle`).
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditTuning`, `CreatureBanditTuningTests`, `McmGroup_IsTopLevel_OutsideTheCombatMechanicsMasterToggle` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 1, on `origin/bannerlord-1.5.x` (ported by WP142).

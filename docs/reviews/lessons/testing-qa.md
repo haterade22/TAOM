@@ -1543,3 +1543,28 @@ boot evidence described a build that no longer existed.
 - **Prevent:** when a smoke step is there to prove an engine DECISION (killed or wounded, a morale roll, a capture), find the model that decides it in each game mode (`AddModel` in `CustomGame` and the campaign starter) and name the mode whose model can give the other answer. If no mode can, the step proves nothing; say so instead. When the model ROLLS (killed or wounded is a survival roll even with `CanKillEvenIfBlunt`), one outcome proves nothing either: say how many trials settle it and which result would (Codex, 2026-09-23: the step first demanded "killed, not wounded", which a correct build can fail).
 - **On this tree:** This incident ran on the 1.5.x line, and `elk.md` exists only there; the rule holds here. a fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x `docs/reviews/rca-elk-delta-2026-09-23.md` F5 (#636), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A fix pass starts from the review file's own scope line, not from the file with the nearest name (plan 039, 2026-10-03)
+Plan 039's follow-up pass answered `claude-review.json`, the review of plan 028's `81811ea2` in wt-028, and left
+`claude-review-TRUE-039.json`, the review of this branch's `f86342ca`, unread. The two files sat in one folder with
+similar names, and three LOW findings of the unread one stood until the convergence round: a "Gained" line that paired
+finalizers with the wrong brackets, `Mission.OnPreTick` called shared and previously shielded, and two
+`StayUnderPatchShield` walks that ignored the namespace exclusions.
+- **Why missed:** the first lines of each review file name its commit range and its worktree, and they were not read
+  before the findings were.
+- **Prevent:** before fixing from a review file, read its scope line and check the commit range and the worktree
+  against the branch you are on. When two review files could apply, list each with its scope line before choosing.
+- **On this tree:** This incident ran on the 1.5.x line, and `claude-review.json`, `claude-review-TRUE-039.json`, `StayUnderPatchShield` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row G5, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Correction: the build stamp's commit suffix is the .NET SDK's, not Bannerlord.BuildResources' (plan 017, 2026-09-24)
+The "parser tested only against the format you invented" lesson above credits `Bannerlord.BuildResources` with the
+`.{commit-sha}`/`+{commit-sha}` suffix. Its 1.1.0.129 props and targets never mention `SourceRevisionId` or
+`InformationalVersion`. The SDK appends `+$(SourceRevisionId)` (`Microsoft.NET.GenerateAssemblyInfo.targets:70-71`),
+or `.` when the string already holds a `+`, which is why the 2026-08-02 sample read `Z.46ce6436`. The lesson's rule
+stands; its attribution does not. Plan 017 corrected the class summary and left the same claim in the parser comment
+and its test beside it.
+- **Why missed:** the correction was made where the plan pointed, and the claim was not grepped.
+- **Prevent:** when correcting a factual claim, `git grep` its distinctive words and fix or annotate every hit in the
+  same change; an archive entry gets an appended correction like this one, not an edit.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 10, on `origin/bannerlord-1.5.x` (ported by WP142).

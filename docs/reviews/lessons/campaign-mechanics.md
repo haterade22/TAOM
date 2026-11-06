@@ -671,3 +671,10 @@ every smithy action needs stamina above 10 (`CraftingVM.cs`), and the co-op host
 - **Prevent:** before a new action goes on a vanilla screen, read the enable rule of the vanilla action next to it
   (`RefreshEnableMainAction` here) and apply the same conditions, then add the action's own.
 - **Source:** 1.5.x `rca-smiths-measure-2026-10-26.md` finding 2, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A join seeded from inside the raided village is interrupted by the engine, so read the trace before opening a fix (#1019, 2026-10-26)
+A review worried that a raid reaching the village an enlisted soldier stands in could leave him stranded. The 1.5.x trace says it cannot: `EncounterManager.StartSettlementEncounter` finishes his encounter and starts the raid, TAOM's battle-start join seeds an encounter, and `StartBattleAction.ApplyInternal` interrupts it unless the event is a sally-out: `InterruptEncounter` leaves the battle and opens `encounter_interrupted`. For the raid itself, `StartSettlementEncounter` then, when he shares the village's faction, calls `PlayerEncounter.Start()` (which only creates the encounter) and `Current.Init(...)`, which joins the defender side; otherwise it walks him out of the village with `LeaveSettlementAction.ApplyForParty`.
+- **Why missed:** the review read the seeding call and not the engine call that runs after it.
+- **Prevent:** before a fix for an encounter or menu hazard, follow the engine call that runs after TAOM's seam; log the case (here one ungated INFO line in `EnsureEncounterAgainst`) and let a run decide.
+- **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
+- **Source:** 1.5.x enlistment.md, "Inside the raided village (#1019)", on `origin/bannerlord-1.5.x` (ported by WP142).

@@ -3372,3 +3372,43 @@ assembly that was never indexed, or when the "old" baseline was the same build a
   (a build known to miss) and a negative control (a fresh build) sit beside it.
 - **On this tree:** A fact marked 1.5.x was read on that engine, not on v1.4.8, so check it before relying on it here.
 - **Source:** 1.5.x v1.5.5 engine bump deep review (`check_engine_member_refs`, `engine_body_diff`), on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Temporary diagnostics stay strippable: no rule, no logger and no sealed-type unwrap lives in them (2026-09-28)
+The Creature Bandits playtest diagnostics were meant to be deleted after sign-off, but by review time the folder owned
+the "creatures are never prisoners" decision, the spawner's only error logger, a `[diag]` WARNING the spawn fallback
+depended on, and a sealed `Agent` unwrap inside `SpiderAttackService`; its lines had also pushed the brood behaviour
+to 218 lines. Following the written strip recipe would have deleted the prisoner rule or left dangling references.
+- **Why missed:** each piece was added during a live spike where the diag facade was the nearest place with the data
+  or a static logger. The "log comprehensively, then strip" lesson says what to log, not where the code may live.
+- **Prevent:** a decision the game needs lives in the feature's rules or hooks, and only its counter goes to the diag
+  folder (`CreatureBanditAgents.RefusesPrisoner` calls `CreatureBroodCampaignDiag.NotePrisonerRefused`). Error logs go
+  through a logger outside the folder (`CreatureBanditLog`). Diagnostics are called from boundary code that already
+  holds the engine object, never from a service. The feature doc keeps a "Stripping the diagnostics" list of every
+  call site outside the folder, updated with each new call.
+- **On this tree:** This incident ran on the 1.5.x line, and `CreatureBanditAgents`, `RefusesPrisoner`, `CreatureBroodCampaignDiag`, `NotePrisonerRefused`, `CreatureBanditLog` exist only there; the rule holds here.
+- **Source:** 1.5.x `docs/reviews/rca-creature-bandits-2026-09-28.md`, findings 3, 4, 5 and 15, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### Pin every git option a gate's answer depends on (plan 017, 2026-09-24)
+The build stamp's `git status --porcelain` lists untracked files only under the default `status.showUntrackedFiles`.
+With that set to `no` (a common speed-up), a new untracked `.cs` under `Main` compiles into the DLL and stamps clean:
+reproduced with `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=status.showUntrackedFiles GIT_CONFIG_VALUE_0=no`.
+- **Why missed:** `--porcelain` was read as a fixed format. It fixes the output shape, not which paths appear.
+- **Prevent:** a script or build step whose verdict comes from git output passes every option the verdict depends on
+  explicitly (`--untracked-files=normal`, `--no-optional-locks`), and its test runs once under a hostile config through
+  the `GIT_CONFIG_*` environment variables.
+- **Source:** 1.5.x `docs/reviews/rca-build-identity-dirty-flag-2026-09-24.md`, finding 6, on `origin/bannerlord-1.5.x` (ported by WP142).
+
+### A JVM hosted inside the Microsoft Store Python writes into the Store's sandbox, not AppData (2026-09-26)
+PyGhidra runs Ghidra's JVM inside the Python process through JPype. The only Python 3.13 on the desktop is the Store
+build, which redirects writes under `AppData` into
+`AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_...\LocalCache\`, and that redirection applies to the
+JVM as well. Ghidra's settings and cache landed there, and its OSGi bundle host (Felix) then refused its own data
+file ("The data file must be inside the data dir") and threw a `NullPointerException` on the first analysis. A bare
+`pyghidra.start()` had passed, because it never touches the bundle host.
+- **Why missed:** the Store build looks like any other CPython (`py -3.13` runs it), and nothing in the error names
+  the redirection. Only a listing of the Store package folder showed where the files had gone.
+- **Prevent:** give any in-process runtime that keeps state (a JVM, an embedded database) absolute directories
+  outside `AppData`; for Ghidra, the `application.settingsdir`, `cachedir` and `tempdir` `VMARGS` in
+  `support\launch.properties`, now `E:\ghidra\user\`. Smoke a new install with the call that does the real work
+  (an analysis), not only the start-up call.
+- **Source:** 1.5.x #688; `docs/reviews/adopt-ghidra-hindsight-2026-09-26.md` install trap 2; `docs/reference/development-machines.md` "Ghidra, desktop only", on `origin/bannerlord-1.5.x` (ported by WP142).
