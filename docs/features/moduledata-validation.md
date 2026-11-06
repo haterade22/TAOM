@@ -84,6 +84,8 @@ Cross-reference kinds are defined in `REF_KINDS` (code, not schema) because the 
 
 ## Coverage boundary — engine XSD rules are NOT checked
 
+**Since WP136 the XSD layer has its own pass, `SCHEMA_INVALID`: see "Engine XSD layer" below.** The rest of this section describes what the cross-reference sweep alone does not do, and the history that motivated the pass.
+
 The validator checks **cross-references** (the `Item.` / `NPCCharacter.` / `Culture.` / `PartyTemplate.` prefixes, on any attribute in any `ModuleData/**/*.xml` — including `characters/clans.xml`) plus **per-schema** duplicate-id / enum / civilian-type rules. It does **not** validate the engine's own XSD schemas (`<game>/XmlSchemas/*.xsd`), which enforce *required-attribute presence* and element structure.
 
 Concretely, `characters/clans.xml` has **no validator schema** (`tools/schemas/` covers only equipmentsets / npccharacter / spcultures). A clan (`<Faction>`) missing a `Factions.xsd`-required attribute such as `initial_home_settlement` therefore passes both `validate_moduledata.py` and the pre-commit hook, and surfaces only when the engine/editor loads the file (`Error: The required attribute 'initial_home_settlement' is missing. Node: Faction`). This is how `clan_umbar_3` shipped without a home settlement (fixed 2026-06-22). When authoring or editing `clans.xml`, open the file in the Bannerlord editor (or rely on an engine load) to catch required-attribute violations — the TAOM validator will not. A future improvement would be a `taom_factions.json` schema, but presence-of-required-attribute is not currently in the validator's model.
@@ -630,6 +632,16 @@ old cooked-first order read stale packs left by a cook and reported a newly impo
 `MISSING_COLLISION_BODY` (2026-09-26). Test: `test_loose_assets_win_when_both_trees_exist` in
 `tools/tests/test_validate_mesh_refs.py`.
 
+## Engine XSD layer (`SCHEMA_INVALID`)
+
+The engine validates a file against its XSD on load, but `MBObjectManager.ValidationEventHandler` (v1.4.8 `:1324`) only prints the failure and the file loads anyway, so a clan with no `initial_home_settlement` reached players. `tools/validate_xml_schemas.py` mirrors the engine's file and schema resolution (`GetMergedXmlForManaged`, `HandleXsltList`, `LoadXmlWithValidation`, `XmlResource`, `ModuleHelper`) and `validate_moduledata.py` runs it as a pass, so the commit hook gates it.
+
+- **Scope:** the pass covers the repo module only. `python tools/validate_xml_schemas.py --live` adds `TAOM_Map` and the Armory, which only that command gates.
+- **Duplicate ids:** a repeated `<Faction>`, `<Hero>` or `<Kingdom>` id is caught, because the engine XSDs declare `@id` unique (`EngineIdUniquenessTests`, `b409e6505`).
+- **`taom_body_length` is not allowlisted on this line (D15).** The public Armory's Monster files carry it and v1.4.8 `Monsters.xsd` does not declare it, so `--live` reports it. WP115's pairing check reads that as an Armory pairing signal.
+- **`lxml` is optional.** Without it the tool exits 2 and the pass emits one NOT-verified warning, never a silent pass. A missing `<game>/XmlSchemas` folder gets the same warning.
+- An XSD can lag the code: confirm a failure against the element's deserializer before editing data.
+
 ## Key Files
 
 | File | Purpose |
@@ -644,6 +656,8 @@ old cooked-first order read stale packs left by a cook and reported a newly impo
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
 | `tools/tests/test_validate_moduledata.py` | 144 unittest cases (validator; counted 2026-09-12) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
+| `tools/validate_xml_schemas.py` | the engine-XSD layer: file and schema resolution mirrored from the engine, the `SCHEMA_INVALID` pass and the `--live` command |
+| `tools/tests/test_validate_xml_schemas.py` | unittest cases for it, including `UndeclaredAttributeIsReportedTests` (D15) |
 | `tools/validate_mesh_refs.py` | engine of the three collision-body and mesh codes: `extract_refs`, `module_tpacs`, `build_present_set`, `classify` |
 | `tools/tests/test_collision_body_borrowed.py` | 14 synthetic cases for `COLLISION_BODY_BORROWED`: the #633 shape, own twin, own capsule, variant name, same-kit share, the Rhun family, vanilla, shields, missing body, per-piece pairing, no packs, a raising scan, `_kit`, `_twin_owner` |
 | `tools/tests/test_add_collision_body.py` | 9 cases for the twin-authoring tool's pure parts (`bpy` stubbed): the three required arguments, the report path under bad arguments, the round-trip comparison |
@@ -841,6 +855,8 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-05: `SCHEMA_INVALID` (error) ported from the 1.5.x line (#621, #974, #980; WP136) and named
+  in the commit hook's `--code` list. `taom_body_length` stays a reported failure (D15).
 - 2026-11-05: `MISSING_COLLISION_BODY` (error), `MISSING_VISUAL_MESH` (warn) and
   `COLLISION_BODY_BORROWED` (error) ported from the 1.5.x line (#599, #622, #633; WP108), wired into
   `main()` and the commit hook's `--code` list, with the loose-tree-first package list. A Modules

@@ -37,28 +37,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _gamedir import ENV_VAR, ensure_exists, game_dir, game_modules   # noqa: E402
-
-
-# The reader of LocalizedTextManager.LoadXmlFile (v1.4.8 :202-219): a StreamReader, so a byte order mark picks the
-# encoding, anything else is UTF-8, and the declared encoding is ignored. Copied from 1.5.x validate_xml_schemas.py.
-_BOMS = ((b"\xff\xfe\x00\x00", "utf-32-le"), (b"\x00\x00\xfe\xff", "utf-32-be"),
-         (b"\xef\xbb\xbf", "utf-8"), (b"\xff\xfe", "utf-16-le"), (b"\xfe\xff", "utf-16-be"))
-
-
-def _read_like_engine(path) -> str:
-    data = Path(path).read_bytes()
-    for bom, codec in _BOMS:
-        if data.startswith(bom):
-            return data[len(bom):].decode(codec, errors="replace")
-    return data.decode("utf-8", errors="replace")
-
-
-def _parse_like_engine(path):
-    text = _read_like_engine(path)
-    if "\x00" in text:
-        raise ET.ParseError("the text contains a NUL character (a BOM-less UTF-16 file reads as UTF-8 "
-                            "with a NUL after every character)")
-    return ET.fromstring(text)
+from validate_xml_schemas import _parse_like_engine   # noqa: E402
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

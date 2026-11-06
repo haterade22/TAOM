@@ -92,6 +92,7 @@ PY="$PYBIN"
 # WP108 adds MISSING_COLLISION_BODY and COLLISION_BODY_BORROWED: each runs one
 # validate_mesh_refs.extract_refs pass over the Armory XML (about 3.5 s each on the 1.5.x
 # desktop, 2026-09-21). The laptop's measured total is in the WP108 validator commit.
+# SCHEMA_INVALID adds about 0.5 s (1.5.x desktop, 2026-09-21).
 #
 # The validator itself now runs in ~4s, not 27s: 16.5s of that original figure was one
 # quadratic regex in taom_schema.py scanning characters/lords.xml for a close tag that
@@ -107,7 +108,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code MISSING_BODY_ARMOUR --code MISSING_EDUCATION_TEMPLATES \
         --code MISSING_HARNESS_FAMILY_TYPE --code HARNESS_FAMILY_MISMATCH \
         --code MOUNT_WITHOUT_HARNESS --code MISSING_COLLISION_BODY \
-        --code COLLISION_BODY_BORROWED \
+        --code COLLISION_BODY_BORROWED --code SCHEMA_INVALID \
         2>/dev/null)
 RC=$?
 
