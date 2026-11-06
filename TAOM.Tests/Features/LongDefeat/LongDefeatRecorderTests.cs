@@ -204,6 +204,55 @@ public class LongDefeatRecorderTests
     }
 
     [TestMethod]
+    public void ArmouryAndYard_AreKinds_WithTheirFieldNames()
+    {
+        Assert.AreEqual("armoury", LongDefeatRecorder.ArmouryKind);
+        Assert.AreEqual("yard", LongDefeatRecorder.YardKind);
+        Assert.IsTrue(LongDefeatRecorder.IsKind(LongDefeatRecorder.ArmouryKind));
+        Assert.IsTrue(LongDefeatRecorder.IsKind(LongDefeatRecorder.YardKind));
+        Assert.IsFalse(LongDefeatRecorder.IsTowerKind(LongDefeatRecorder.ArmouryKind));
+        Assert.IsFalse(LongDefeatRecorder.IsTowerKind(LongDefeatRecorder.YardKind));
+    }
+
+    [TestMethod]
+    public void Export_ARecordedArmouryAndYard_BecomeTheirBlocks_InTheMusterShape_AndTheNewestOneWins()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.ArmouryKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.ArmouryKind, 30f, 40f, 5f, 1f, 0f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.YardKind, 60f, 70f, 2f, 0f, -1f, null);
+
+        _recorder.Export(Scene, out var path);
+
+        var root = JObject.Parse(File.ReadAllText(path));
+        var armoury = root["armoury"]!;
+        Assert.AreEqual(30f, (float)armoury["x"]!);
+        Assert.AreEqual(40f, (float)armoury["y"]!);
+        Assert.AreEqual(5f, (float)armoury["z"]!);
+        Assert.AreEqual(1f, (float)armoury["fx"]!);
+        Assert.AreEqual(0f, (float)armoury["fy"]!);
+        var yard = root["yard"]!;
+        Assert.AreEqual(60f, (float)yard["x"]!);
+        Assert.AreEqual(-1f, (float)yard["fy"]!);
+    }
+
+    [TestMethod]
+    public void Export_WithNoArmouryOrYard_HasNeitherBlock_AndNeitherIsAMissingPiece()
+    {
+        _recorder.Append(Scene, LongDefeatRecorder.KeepKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.MusterFootKind, 1f, 1f, 1f, 0f, 1f, null);
+        _recorder.Append(Scene, LongDefeatRecorder.MusterArchersKind, 1f, 1f, 1f, 0f, 1f, null);
+
+        var export = _recorder.Export(Scene, out var path);
+
+        var root = JObject.Parse(File.ReadAllText(path));
+        Assert.IsNull(root["armoury"]);
+        Assert.IsNull(root["yard"]);
+        Assert.IsTrue(export.IsComplete, "the armoury and the yard are optional until Phase 4 reads them");
+        CollectionAssert.DoesNotContain(export.Missing.ToArray(), LongDefeatRecorder.ArmouryKind);
+        CollectionAssert.DoesNotContain(export.Missing.ToArray(), LongDefeatRecorder.YardKind);
+    }
+
+    [TestMethod]
     public void TheSallyBlockOfAnExport_IsReadBackByTheFortressCatalog()
     {
         _recorder.Append(Scene, LongDefeatRecorder.SallyKind, -20.5f, 70f, 12f, 0f, -1f, null);

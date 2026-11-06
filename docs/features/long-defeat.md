@@ -304,6 +304,8 @@ A cavalry troop boon such as Fleet Horses of the Mark still reads `skip` in a Ca
 
 `fortresses.json` takes the pasted blocks as `towers: [{id, posts: [{x,y,z,fx,fy}], volley: [{x,y,z}]}]` and `volley: {origins: [{x,y,z}]}`. `FortressesReader` drops a bad point or a bad tower with one warning and never the fortress, and a row with neither block loads exactly as before. Nothing reads the points at run time yet (Slices 2 to 8 of Phase 3 do), and `fortresses.json` ships none: no coordinate is invented, an absent block hides its rows.
 
+Two more kinds record the Phase 4 places ahead of time, so one recording session covers them: `armoury` (where the lord buys his own gear) and `yard` (the engineer's yard, where he buys siege engines), each a point with its facing, newest record only, optional. The export prints an `armoury` and a `yard` block in the muster shape. `FortressesReader` takes fields by name, so a fortress row that carries these blocks loads as before, and nothing reads them until Phase 4.
+
 ### The fortification domain, config and bot (Phase 3, Slice 2)
 
 ([phase3-plan.md](long-defeat/phase3-plan.md).) The pure half of the fortifications, with no engine code and nothing for sale yet. `shop.json` gains a `fortifications` block per shop, read by `FortificationsReader` into a `FortPlan`: a gate (a repair price and levels of `hitPointsPercent` and `price`), the high towers (a troop, levels of `posts` and `price`, and a tower volley on the last level), field care, and the Elven Volley. A bad value costs one warning and drops the smallest thing that holds it, a level or a row, and a dropped row is hidden. `tools/run_long_defeat.py` mirrors the reader rule for rule (`read_fortifications`), and both suites read the cases in `tools/tests/long_defeat_fort_cases.json`.
@@ -471,6 +473,7 @@ Mike decided these on 2026-11-03. The full text is in [the #1079 design comment]
 - 2026-11-06: Phase 3, Slice 5 (the gates) built in the Phase 2 worktree: `FortOffer.Offered` offers the gate's levels and repair, the director writes a level (the share kept) and a repair (vanilla's mission reset by reflection) on the tick after the buy, the checks `gate-level`, `gate-repair`, `gate-attacked` and `fort-points` and the A23 boot line are in, the panel gains the two gate rows, and a repair report lists each gate's share. Not played; the proof run is `--waves 3 --garrison-scale 1.3 --start-gold 5000`.
 - 2026-11-06: Phase 3, Slice 6 (the Elven Volley, engine half) built in the Phase 2 worktree: `FortOffer.Offered` offers both levels but a fortress with no recorded `volley.origins` sells none, so Helm's Deep plays as before; the director fires the volley as scripted missiles of the new `ld_elven_arrow` from the origins that passed the boot check, owned by an AI-controlled defender, on the key `N` or the bot, with a 6 s hit window and the `volley` check, the HUD line and a panel row that only buys. Not played; it needs recorded origins.
 - 2026-11-06 (planned): Mike records the Cavalry sally point in game.
+- 2026-11-06: the recorder gains the optional `armoury` and `yard` kinds for Phase 4, so the morning recording can take them with the sally and the fortification points. Nothing reads them yet.
 
 ## GitHub Issue
 

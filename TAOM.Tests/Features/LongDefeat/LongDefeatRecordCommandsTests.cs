@@ -146,10 +146,51 @@ public class LongDefeatRecordCommandsTests
         Assert.AreEqual("Only a keep record takes a radius.", Record(Spot(), "sally", "12"));
     }
 
-    [TestMethod]
-    public void Record_ASallyWithAVerticalLook_IsRefused()
+    [DataTestMethod]
+    [DataRow("armoury")]
+    [DataRow("yard")]
+    public void Record_ArmouryAndYard_StoreThePointAndTheNormalizedLook_AndTakeNoRadius(string kind)
     {
-        var refused = Record(Spot(lookX: 0f, lookY: 0f), "sally");
+        Record(Spot(x: 30f, lookX: 2f, lookY: 0f), kind);
+
+        var record = _recorder.ReadAll(out _).Single();
+        Assert.AreEqual(kind, record.Kind);
+        Assert.AreEqual(30f, record.X);
+        Assert.AreEqual(1f, record.Fx, 1e-5f);
+        Assert.AreEqual("Only a keep record takes a radius.", Record(Spot(), kind, "12"));
+        StringAssert.Contains(LongDefeatCommands.RecordUsage, $"  {kind}: taom.ld_record {kind}.");
+    }
+
+    [TestMethod]
+    public void Export_ArmouryAndYard_ArePrintedAsPasteBlocks_AndNamedWhileUnrecorded()
+    {
+        Record(Spot(), "volley");
+        var before = LongDefeatCommands.Export(_recorder, Scene);
+        Record(Spot(x: 30f), "armoury");
+        Record(Spot(x: 60f), "yard");
+        var after = LongDefeatCommands.Export(_recorder, Scene);
+
+        StringAssert.Contains(before, "No record yet for: post, tower_volley, armoury, yard.");
+        StringAssert.Contains(after, "Paste as the \"armoury\" field");
+        StringAssert.Contains(after, "Paste as the \"yard\" field");
+        StringAssert.Contains(after, "armoury 1, yard 1");
+    }
+
+    [TestMethod]
+    public void Record_ClearOfAKindWithNoTower_RefusesATowerWord_InPlainWording()
+    {
+        var reply = Record(Spot(), "clear", "armoury", "hornburg");
+
+        StringAssert.StartsWith(reply, "The armoury kind has no tower to name.");
+    }
+
+    [DataTestMethod]
+    [DataRow("sally")]
+    [DataRow("armoury")]
+    [DataRow("yard")]
+    public void Record_ASallyArmouryOrYardWithAVerticalLook_IsRefused(string kind)
+    {
+        var refused = Record(Spot(lookX: 0f, lookY: 0f), kind);
 
         Assert.IsFalse(File.Exists(_recorder.FilePath), refused);
     }
@@ -438,11 +479,13 @@ public class LongDefeatRecordCommandsTests
         Record(Spot(x: 8f), "keep");
         Record(Spot(x: 9f), "muster_foot");
         Record(Spot(x: 10f), "muster_archers");
+        Record(Spot(x: 11f), "armoury");
+        Record(Spot(x: 12f), "yard");
 
         var lines = LongDefeatCommands.Export(_recorder, Scene).Split('\n');
 
         var fields = new JObject();
-        foreach (var field in new[] { "keep", "muster", "sally", "towers", "volley" })
+        foreach (var field in new[] { "keep", "muster", "sally", "towers", "volley", "armoury", "yard" })
         {
             var start = Array.FindIndex(lines, l => l.StartsWith($"Paste as the \"{field}\" field"));
             Assert.IsTrue(start >= 0, field);
@@ -459,6 +502,8 @@ public class LongDefeatRecordCommandsTests
         Assert.AreEqual(1f, (float)fields["towers"]![0]!["posts"]![0]!["fx"]!);
         Assert.AreEqual(2, fields["volley"]!["origins"]!.Count());
         Assert.AreEqual(1, fields["towers"]![0]!["volley"]!.Count());
+        Assert.AreEqual(11f, (float)fields["armoury"]!["x"]!);
+        Assert.AreEqual(12f, (float)fields["yard"]!["x"]!);
     }
 
     [TestMethod]
