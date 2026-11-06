@@ -30,11 +30,21 @@ internal sealed partial class LongDefeatBattlefieldAdapter
                 atKeep++;
         }
 
-        int defenders = 0, defendersFleeing = 0, defendersAtKeep = 0, defendersHigh = 0;
+        int defenders = 0, defendersFleeing = 0, defendersAtKeep = 0, defendersHigh = 0, healthRead = 0;
+        var healthShares = 0f;
         foreach (var agent in _mission.DefenderTeam.ActiveAgents)
         {
             if (!agent.IsHuman || !agent.IsActive())
                 continue;
+
+            // The same people RestDefenders heals (runners too), so the field-care check can read the heal back from the next tick's reading.
+            var limit = agent.HealthLimit;
+            if (limit > 0f)
+            {
+                healthShares += agent.Health / limit;
+                healthRead++;
+            }
+
             if (agent.IsRunningAway)
             {
                 defendersFleeing++;
@@ -49,7 +59,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         }
 
         return new LdReading(attackers, fleeing, defenders, atKeep, defendersAtKeep, MainBody(), BannerlordConfig.GetRealBattleSizeForSiege(),
-            defendersFleeing, attackersHigh, defendersHigh);
+            defendersFleeing, attackersHigh, defendersHigh, healthRead == 0 ? -1f : healthShares / healthRead);
     }
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) =>

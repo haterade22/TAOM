@@ -151,6 +151,7 @@ internal sealed partial class LongDefeatDirector
 
         _mainBody = read.MainBody;
         AdoptIfNew();
+        JudgeFieldCare(read.DefenderHealthMean);
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
             _defendersAtKeep, read.SiegeBattleSize));

@@ -230,6 +230,38 @@ internal static class LongDefeatHudText
         }
     }
 
+    internal static string FortTitle() => new TextObject("{=TAOM_LD_Fort_Title}Fortifications").ToString();
+
+    internal static string CareName() => new TextObject("{=TAOM_LD_Fort_Care}Field care").ToString();
+
+    /// <summary>The care row's line: the share of the missing health it gives back (shop.json's, as a whole percent).</summary>
+    internal static string CareDetail(float share) => new TextObject("{=TAOM_LD_Fort_CareDetail}Every defender, the lord too, regains {SHARE}% of the health he is missing. Once between waves.")
+        .SetTextVariable("SHARE", share > 0f && !float.IsInfinity(share) ? (int)Math.Round(Math.Min(share, 1f) * 100f) : 0).ToString();
+
+    internal static string CareUsed() => new TextObject("{=TAOM_LD_Fort_Used}Used").ToString();
+
+    /// <summary>The refusal line for a fortification the run turned down; empty for Ok. Rows past field care reuse the generic line until their slice words their own.</summary>
+    internal static string Refusal(FortResult result)
+    {
+        switch (result)
+        {
+            case FortResult.Ok:
+                return string.Empty;
+            case FortResult.NotOpen:
+                return new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+            case FortResult.NoGold:
+                return new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+            case FortResult.GarrisonFull:
+                return new TextObject("{=TAOM_LD_Notice_GarrisonFull}The garrison is full.").ToString();
+            case FortResult.Used:
+                return new TextObject("{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves.").ToString();
+            case FortResult.RunOver:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_FortUnavailable}That is not for sale.").ToString();
+        }
+    }
+
     /// <summary>The refusal line for a horn the run turned down; empty for Ok.</summary>
     internal static string Refusal(StartResult result)
     {

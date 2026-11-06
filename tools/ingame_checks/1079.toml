@@ -289,6 +289,19 @@ fail = ['\[Check\] id=taom\.long-defeat\.sally-contact result=fail']
 # to_formation, gate and outside_boundary seconds (MissionBoundaryCrossingHandler retreats the mission after 10 s, which ends the run).
 absence = "not-reached"
 
+[[check]]
+id = "taom.long-defeat.field-care"
+needs = "a Long Defeat run in which field care is bought and heals: python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3 --start-gold 5000 (the bot buys care at clear 1; startGold is echoed in the report)"
+reached = ['\[Check\] id=taom\.long-defeat\.field-care result=']
+pass = ['\[Check\] id=taom\.long-defeat\.field-care result=pass c=[0-9]+ share=[0-9.]+ count=[0-9]+ before=[0-9.]+ after=[0-9.]+ expected=[0-9.]+ reread=']
+fail = ['\[Check\] id=taom\.long-defeat\.field-care result=fail']
+# Written by LongDefeatDirector.Fort.cs, key c<N> (the heal's number in the run), one line per heal: field care is bought between waves (Fortifications group of the shop, or the bot) and the standing defenders regain its share (0.75 shipped) of the
+# health they are missing on the tick after the buy, through the same RestDefenders the clear's rest uses and never on the clear's own tick. The line is judged on the next tick's reading: the mean health share of the standing defenders after the write
+# equals the mean before plus the share of what was missing within 1% (Agent.Health's setter ceils, so a soldier can gain up to a whole point), the next reading still holds it (reread=, none when the run ended first), and the purse's care sink grew by
+# exactly the gold of the care purchases the heal carries (paid= and purse=). A garrison missing too little health for the heal to show (share times the missing mean at most 2%, twice the tolerance, so a blank write would pass) writes a skip (reason=too-little-missing), which proves nothing and reads NOT REACHED. A next reading that is not a mean (the adapter read nobody) fails; only the run ending first leaves reread=none. run_long_defeat.py owes a pass whenever the report's purchases hold field care.
+# The [LongDefeat][Care] c<N> line names the means in percent. The game shows no soldier's health, so the line is the proof of the garrison's heal; whether the lord's own health bar visibly rose is the human row about the Fortifications group below.
+absence = "not-reached"
+
 [[human]]
 claim = "the Cavalry ride outside the walls: the rider goes out at each wave's start and comes home at each clear with the camera, the horse and his formation behaving; the attackers react to him (Fell Foes makes up to 8 attacker archers within 20 m hold the rider as their target, so judge the infantry too); and the return feels right"
 
@@ -354,3 +367,6 @@ claim = "a Cavalry lord who loses his horse (killed under him, or knocked off) f
 
 [[human]]
 claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"
+
+[[human]]
+claim = "the shop's Fortifications group reads clearly: field care is listed with its share and price, buying it spends the gold at once and the group then reads Used until the next wave is cleared, and, if the lord was hurt, his own health bar rises on the next tick (the game shows no soldier's health, so the field-care line proves the garrison's heal); care is not listed in the preparation before wave 1"

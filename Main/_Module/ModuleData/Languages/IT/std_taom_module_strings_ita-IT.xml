@@ -7776,14 +7776,14 @@
     <string id="TAOM_LD_Boon_GranaryStores_Text" text="Every cleared wave pays 35 percent more gold." />
     <string id="TAOM_LD_Boon_HagglerOfEdoras" text="The Haggler of Edoras" />
     <string id="TAOM_LD_Boon_HagglerOfEdoras_Drawback" text="The horn pays half as much." />
-    <string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="Every pack costs 20 percent less." />
+    <string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="Everything in the shop costs 20 percent less." />
     <string id="TAOM_LD_Boon_HealersOfTheHold" text="Healers of the Hold" />
     <string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="After each wave your defenders mend a further quarter of the health they lost." />
     <string id="TAOM_LD_Boon_HornblowersBargain" text="The Hornblower's Bargain" />
-    <string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="Every pack costs 10 percent more." />
+    <string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="Everything in the shop costs 10 percent more." />
     <string id="TAOM_LD_Boon_HornblowersBargain_Text" text="The horn pays twice as much for the time it skips." />
     <string id="TAOM_LD_Boon_LightOfThePhial" text="The Light of the Phial" />
-    <string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="Every pack costs 25 percent more." />
+    <string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="Everything in the shop costs 25 percent more." />
     <string id="TAOM_LD_Boon_LightOfThePhial_Text" text="Every wave carries one affix fewer." />
     <string id="TAOM_LD_Boon_RiddermarkLevy" text="Levy of the Riddermark" />
     <string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
@@ -7796,7 +7796,7 @@
     <string id="TAOM_LD_Boon_TheLongWatch" text="The Long Watch" />
     <string id="TAOM_LD_Boon_TheLongWatch_Text" text="Every intermission lasts 30 seconds longer." />
     <string id="TAOM_LD_Boon_WainsOfTheWestfold" text="Wains of the Westfold" />
-    <string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="Every pack costs 10 percent more." />
+    <string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="Everything in the shop costs 10 percent more." />
     <string id="TAOM_LD_Boon_WainsOfTheWestfold_Text" text="Every pack brings 3 more soldiers." />
     <string id="TAOM_LD_Boon_WeregildOfTheMark" text="Weregild of the Mark" />
     <string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="Wave bonuses are 15 percent smaller." />
@@ -7880,7 +7880,7 @@
     <string id="TAOM_LD_Ability_Summon_Isengard" text="Uruk-hai of Isengard" />
     <string id="TAOM_LD_Ability_WarCry_Isengard" text="The White Hand Calls" />
     <string id="TAOM_LD_Boon_TheLongSilence" text="The Long Silence" />
-    <string id="TAOM_LD_Boon_TheLongSilence_Drawback" text="Every pack costs 15 percent more." />
+    <string id="TAOM_LD_Boon_TheLongSilence_Drawback" text="Everything in the shop costs 15 percent more." />
     <string id="TAOM_LD_Boon_TheLongSilence_Text" text="Enemy commanders wait 50 percent longer between war cries and summonings." />
     <string id="TAOM_LD_Hud_CommanderActive" text="{RANK}: {ABILITY}, now" />
     <string id="TAOM_LD_Hud_CommanderFallen" text="{RANK} has fallen" />
@@ -7897,6 +7897,12 @@
     <string id="TAOM_LD_Boon_SpearOfEorl_Text" text="Your blows hit 25 percent harder." />
     <string id="TAOM_LD_Class_Cavalry" text="Cavalry" />
     <string id="TAOM_LD_Class_Cavalry_Text" text="A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight." />
+    <string id="TAOM_LD_Fort_Care" text="Field care" />
+    <string id="TAOM_LD_Fort_CareDetail" text="Every defender, the lord too, regains {SHARE}% of the health he is missing. Once between waves." />
+    <string id="TAOM_LD_Fort_Title" text="Fortifications" />
+    <string id="TAOM_LD_Fort_Used" text="Used" />
+    <string id="TAOM_LD_Notice_CareUsed" text="Field care is already used between these waves." />
+    <string id="TAOM_LD_Notice_FortUnavailable" text="That is not for sale." />
   </strings>
 
 </base>

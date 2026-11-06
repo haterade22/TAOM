@@ -58,6 +58,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         Offers = new MBBindingList<LongDefeatOfferVM>();
         Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
+        Fort = new LongDefeatFortVM(BuyCare);
         foreach (var level in LongDefeatSession.SpeedLevels)
             Speeds.Add(new LongDefeatSpeedVM(level, SelectSpeed));
     }
@@ -123,6 +124,9 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public MBBindingList<LongDefeatOfferVM> Offers { get; }
+
+    [DataSourceProperty]
+    public LongDefeatFortVM Fort { get; }
 
     [DataSourceProperty]
     public bool IsPickVisible { get => _isPickVisible; private set => Set(ref _isPickVisible, value, nameof(IsPickVisible)); }
@@ -244,6 +248,11 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             HornText = LongDefeatHudText.Horn();
             CloseText = LongDefeatHudText.Close();
             ApplyOffers(view);
+            Fort.Update(view);
+        }
+        else
+        {
+            Fort.Hide();
         }
 
         ApplyBoons(view);
@@ -343,6 +352,12 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             Notify(LongDefeatHudText.Refusal(result));
         }
 
+        Refresh();
+    }
+
+    private void BuyCare()
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryFieldCare()));
         Refresh();
     }
 

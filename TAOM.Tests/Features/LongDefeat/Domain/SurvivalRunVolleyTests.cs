@@ -638,7 +638,7 @@ public class SurvivalRunVolleyTests
     [TestMethod]
     public void WithNothingOffered_NothingIsEverOwnedOrOrdered_ThroughAWholeRun()
     {
-        var run = Begun(Plan(FortOffer.Offered));
+        var run = Begun(Plan(FortOffer.None));
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyVolleyLevel());
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyTowerLevel());
 

@@ -551,7 +551,7 @@ class ManifestTests(unittest.TestCase):
             result = iv.judge_segment(row, lines, []).verdict
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
-                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact"):
+                          "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
@@ -2527,10 +2527,11 @@ class FortificationsLoaderTests(unittest.TestCase):
     def test_a_fortress_the_file_does_not_know_has_no_plan(self):
         self.assertIsNone(ld.shipped_fortifications("nowhere"))
 
-    def test_the_offered_list_is_the_games_and_ships_empty(self):
+    def test_the_offered_list_is_the_games_and_offers_field_care_alone(self):
         domain = source("Domain", "FortPlan.cs")
-        self.assertIn("Offered { get; } = new(0, 0, false, 0);", domain)
-        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0})
+        self.assertIn("Offered { get; } = new(0, 0, true, 0);", domain)
+        self.assertIn("None { get; } = new(0, 0, false, 0);", domain)
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": True, "volley": 0})
 
     def test_the_price_range_is_the_shops(self):
         self.assertIn("MaxPrice = 1_000_000;", source("Config", "FortificationsReader.cs"))
@@ -2871,6 +2872,114 @@ class StartGoldArgumentTests(unittest.TestCase):
 
     def test_the_report_writes_start_gold(self):
         self.assertIn('["startGold"]', source("Diagnostics", "LongDefeatRunReport.cs"))
+
+
+class FieldCareJudgeTests(unittest.TestCase):
+    """Phase 3 Slice 4: field care is offered, so the report may list it and the judge owes its check line (phase3-plan.md section 6, D31)."""
+
+    # LongDefeatFortChecks.FieldCare's detail, as LongDefeatDirectorCareTests pins it.
+    DETAIL = "c=1 share=0.75 count=150 before=0.600 after=0.900 expected=0.900 reread=0.900 paid=150 purse=150"
+    HEAD_LINE = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.field-care result={} "
+
+    def setUp(self):
+        ld.target_waves = 2
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, care=True, **more):
+        bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
+        spent = 150 if care else 0
+        return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0}}, **more}
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
+
+    def test_the_build_offers_field_care_alone(self):
+        self.assertEqual(ld.FORT_OFFERED, {"gate": 0, "towers": 0, "fieldCare": True, "volley": 0})
+
+    def test_a_report_that_bought_care_replays_from_the_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+
+    def test_every_other_kind_is_still_refused(self):
+        for kind, level, base in (("gateLevel", 1, 200), ("towerLevel", 1, 250), ("volleyLevel", 1, 350)):
+            report = self.report(care=False, purchases=[{"beforeWave": 1, "kind": kind, "id": "", "level": level, "basePrice": base, "price": base, "share": 0.0}],
+                                 gold={"spent": base, "spentOn": {"packs": 0, "gate": base if kind == "gateLevel" else 0, "towers": base if kind == "towerLevel" else 0,
+                                                                  "fieldCare": 0, "volley": base if kind == "volleyLevel" else 0}},
+                                 fortifications={"gateLevel": level if kind == "gateLevel" else 0, "towerLevel": level if kind == "towerLevel" else 0,
+                                                 "volleyLevel": level if kind == "volleyLevel" else 0})
+            self.assertIn("not offered", ld.purchase_problem(report) or "", kind)
+
+    def test_a_run_that_bought_care_owes_the_field_care_check(self):
+        self.assertTrue(ld.owes_field_care(self.report()))
+        code, why = ld.judge(FINAL, self.report(), self.log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.field-care", why)
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.HEAD_LINE.format("pass") + self.DETAIL))
+        self.assertEqual(code, 0, why)
+        self.assertIn("field-care", why)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        skipped = self.HEAD_LINE.format("skip") + self.DETAIL + " reason=too-little-missing"
+
+        code, why = ld.judge(FINAL, self.report(), self.log(skipped))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.field-care", why)
+
+    def test_a_failed_line_fails_the_run(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.HEAD_LINE.format("pass") + self.DETAIL, self.HEAD_LINE.format("fail") + self.DETAIL))
+
+        self.assertEqual(code, 1)
+        self.assertIn("failed check", why)
+
+    def test_a_run_that_bought_none_owes_none(self):
+        self.assertFalse(ld.owes_field_care(self.report(care=False)))
+        self.assertEqual(ld.judge(FINAL, self.report(care=False), self.log())[0], 0)
+
+    def test_the_debt_reads_the_purchases_and_nothing_else(self):
+        self.assertFalse(ld.owes_field_care({}))
+        self.assertFalse(ld.owes_field_care({"purchases": "x"}))
+        self.assertFalse(ld.owes_field_care({"purchases": [5, {"kind": "pack"}]}))
+        self.assertTrue(ld.owes_field_care({"purchases": [{"kind": "pack"}, {"kind": "fieldCare"}]}))
+
+    def test_a_lose_run_is_not_asked_for_it(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "final": False, "wavesCleared": 1}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_the_manifest_row_reads_the_line_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.field-care")
+        self.assertEqual(row.absence, "not-reached")
+        head = self.HEAD_LINE
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("pass") + self.DETAIL)], []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("fail") + self.DETAIL)], []).verdict, iv.FAIL)
+        self.assertEqual(iv.judge_segment(row, [(None, 1, head.format("skip") + self.DETAIL + " reason=too-little-missing")], []).verdict, iv.NOT_REACHED, "a heal of nothing proves nothing")
+        self.assertEqual(iv.judge_segment(row, [], []).verdict, iv.NOT_REACHED)
+
+    def test_the_manifest_names_the_proof_run(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        row = next(c for c in manifest.checks if c.id == "taom.long-defeat.field-care")
+        self.assertIn("--waves 2 --garrison-scale 1.3 --start-gold 5000", row.needs)
+
+    def test_the_line_is_the_one_the_csharp_check_formats(self):
+        checks = source("Diagnostics", "LongDefeatFortChecks.cs")
+        self.assertIn('FieldCareId = "taom.long-defeat.field-care"', source("Diagnostics", "LongDefeatChecks.cs"))
+        for key in ("c=", "share=", "count=", "before=", "after=", "expected=", "reread=", "paid=", "purse=", "reason=too-little-missing"):
+            self.assertIn(key, checks, key)
+        self.assertRegex(self.DETAIL, r"^c=[0-9]+ share=[0-9.]+ count=[0-9]+ before=[0-9.]+ after=[0-9.]+ expected=[0-9.]+ reread=([0-9.]+|none) paid=[0-9]+ purse=[0-9]+$")
+        self.assertIn('"c" + heal.N', source("LongDefeatDirector.Fort.cs"))
+
+    def test_the_wrapper_names_the_proof_run(self):
+        self.assertIn("--waves 2 --garrison-scale 1.3 --start-gold 5000", (REPO / "tools" / "run_long_defeat.py").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

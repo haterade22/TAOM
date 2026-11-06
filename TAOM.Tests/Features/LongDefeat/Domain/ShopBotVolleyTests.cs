@@ -126,7 +126,7 @@ public class ShopBotVolleyTests
     [TestMethod]
     public void WithNothingOffered_TheBotNeverArmsAnything_InAWholeWave()
     {
-        var run = new SurvivalRun(Plan(FortOffer.Offered));
+        var run = new SurvivalRun(Plan(FortOffer.None));
         run.Begin();
         for (var i = 0; i < 90; i++)
         {

@@ -53,7 +53,7 @@ public class LongDefeatPrefabTests
         foreach (var movie in Movies)
             Walk(Root(movie), typeof(LongDefeatHudVM), failures, bound);
 
-        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM) })
+        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM), typeof(LongDefeatFortVM) })
         {
             var names = bound.TryGetValue(vmType, out var found) ? found : new HashSet<string>();
             foreach (var property in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
@@ -139,6 +139,21 @@ public class LongDefeatPrefabTests
         var gates = Root("LongDefeatPanel").Descendants().Select(e => (string?)e.Attribute("IsVisible")).Where(v => v != null).ToList();
 
         CollectionAssert.IsSubsetOf(new[] { "@IsShopVisible", "@IsEndVisible", "@IsPickVisible" }, gates);
+    }
+
+    [TestMethod]
+    public void TheFortificationsGroup_BindsTheFortVM_ShowsOnItsOwnFlag_AndItsRowBuysOnClick()
+    {
+        var group = Root("LongDefeatPanel").Descendants().Single(e => (string?)e.Attribute("DataSource") == "{Fort}");
+
+        Assert.AreEqual("@IsVisible", (string?)group.Attribute("IsVisible"));
+        Assert.IsTrue(group.Descendants().Any(e => (string?)e.Attribute("Text") == "@Title"));
+        var care = group.Descendants("ButtonWidget").Single();
+        Assert.AreEqual("ExecuteBuyCare", (string?)care.Attribute("Command.Click"));
+        Assert.AreEqual("@CanBuyCare", (string?)care.Attribute("IsEnabled"));
+        Assert.AreEqual("@IsCareVisible", (string?)care.Attribute("IsVisible"));
+        foreach (var text in new[] { "@CareName", "@CareDetail", "@CarePrice" })
+            Assert.IsTrue(care.Descendants().Any(e => (string?)e.Attribute("Text") == text), text);
     }
 
     [TestMethod]

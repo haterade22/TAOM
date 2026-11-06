@@ -19,7 +19,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 --start-wave 12 --waves 4 stops after 4 clears), --start-rerolls seeds the boon reroll bank (armed as 1 unless given, so a 5-wave run proves
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
---start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
+--start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run; field care's proof is --waves 2 --garrison-scale 1.3 --start-gold 5000, which owes the field-care pass at clear 1). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
@@ -663,7 +663,7 @@ def owes_summon(report_json):
 # read_fortifications mirrors FortificationsReader rule for rule (both suites read tools/tests/long_defeat_fort_cases.json), FORT_OFFERED mirrors FortOffer.Offered (D31), and
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
-FORT_OFFERED = {"gate": 0, "towers": 0, "fieldCare": False, "volley": 0}
+FORT_OFFERED = {"gate": 0, "towers": 0, "fieldCare": True, "volley": 0}  # field care landed in Slice 4; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
 SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
@@ -1022,6 +1022,17 @@ def _tower_arrows(volley, first_level, bought, wave):
     return volley.get("arrows", 0) if first_level is not None and held and max(held) >= first_level else 0
 
 
+# Field care (Slice 4): the game heals the standing defenders on the tick after the buy and writes one field-care line per heal (LongDefeatFortChecks.FieldCare). A report that lists
+# a fieldCare purchase owes at least one pass line; a skip (nobody was missing health) proves nothing and does not pay it.
+FIELD_CARE_CHECK = "field-care"
+
+
+def owes_field_care(report_json):
+    """The field-care check is owed once the report's purchases hold field care."""
+    purchases = report_json.get("purchases")
+    return isinstance(purchases, list) and any(isinstance(p, dict) and p.get("kind") == "fieldCare" for p in purchases)
+
+
 def check_pattern(name, result):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + name) + r" result=" + result + r"\b")
 
@@ -1160,6 +1171,8 @@ def judge(done, report_json, log_text=None):
         required = required + (BOON_CHECK,)
     if not lose and owes_reroll(report_json) and REROLL_CHECK not in required:
         required = required + (REROLL_CHECK,)
+    if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
+        required = required + (FIELD_CARE_CHECK,)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)

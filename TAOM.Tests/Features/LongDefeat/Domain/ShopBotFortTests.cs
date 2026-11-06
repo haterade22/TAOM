@@ -317,7 +317,7 @@ public class ShopBotFortTests
             {
                 foreach (var startGold in new[] { false, true })
                 {
-                    var sim = new Sim { Offered = FortOffer.Offered, Gold = gold, Cleared = cleared, StartGold = startGold, Phase = cleared == 0 ? RunPhase.Preparation : RunPhase.Intermission, Gates = new[] { Broken() } };
+                    var sim = new Sim { Offered = FortOffer.None, Gold = gold, Cleared = cleared, StartGold = startGold, Phase = cleared == 0 ? RunPhase.Preparation : RunPhase.Intermission, Gates = new[] { Broken() } };
                     var withRows = sim.View();
                     var without = withRows with { Fort = FortView.None };
 

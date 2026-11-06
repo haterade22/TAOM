@@ -99,7 +99,7 @@ internal sealed partial class SurvivalRun
         return result;
     }
 
-    /// <summary>Field care: every standing defender regains its share of the health he is missing, on the next tick. At most <see cref="CarePlan.PerIntermission"/> a stretch between waves (D21).</summary>
+    /// <summary>Field care: every standing defender regains its share of the health he is missing, on the next tick. At most <see cref="CarePlan.PerIntermission"/> a stretch between waves (D21), and not in the preparation, where the garrison has not yet fought and nobody is hurt: that answers <see cref="FortResult.NotOffered"/>, so the panel, the bot and the buy agree.</summary>
     public FortResult TryFieldCare()
     {
         var closed = Closed();
@@ -204,6 +204,8 @@ internal sealed partial class SurvivalRun
             return Refuse(FortResult.NotOffered);
         if (care == null)
             return Refuse(FortResult.Hidden);
+        if (_phase == RunPhase.Preparation)
+            return Refuse(FortResult.NotOffered);
         if (_careUsed >= care.PerIntermission)
             return Refuse(FortResult.Used);
 
@@ -321,7 +323,10 @@ internal sealed partial class SurvivalRun
             Row(QuoteCare(), _careUsed, fort.Care?.PerIntermission ?? 0),
             Row(QuoteVolley(), _volleyLevel, fort.Volley?.Levels.Count ?? 0),
             _gates,
-            _plan.Options.StartGold != null);
+            _plan.Options.StartGold != null)
+        {
+            CareShare = fort.Care?.Share ?? 0f,
+        };
     }
 
     private static FortRow Row(Quote quote, int level, int maxLevel, bool fits = true) => new(level, maxLevel, quote.Price, quote.Result == FortResult.Ok && fits);

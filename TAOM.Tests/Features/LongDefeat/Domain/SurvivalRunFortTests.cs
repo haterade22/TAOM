@@ -103,9 +103,9 @@ public class SurvivalRunFortTests
     // ---- D31: nothing is for sale until a slice lands its effect ----
 
     [TestMethod]
-    public void EveryBuy_WithTheShippedEmptyOffered_IsNotOffered_AndSpendsNothing()
+    public void EveryBuy_WithNothingOffered_IsNotOffered_AndSpendsNothing()
     {
-        var run = Begun(Plan(offered: FortOffer.Offered, gold: 5000));
+        var run = Begun(Plan(offered: FortOffer.None, gold: 5000));
 
         Assert.AreEqual(FortResult.NotOffered, run.TryBuyGateLevel());
         Assert.AreEqual(FortResult.NotOffered, run.TryRepairGates());
@@ -118,13 +118,26 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
-    public void TheShippedOffered_IsEmpty()
+    public void TheShippedOffered_IsFieldCareAlone_AndNoneIsEmpty()
     {
-        Assert.AreEqual(new FortOffer(0, 0, false, 0), FortOffer.Offered);
-        Assert.AreEqual(FortOffer.Offered, Plan().Offered with { Gate = 0, Towers = 0, FieldCare = false, Volley = 0 });
+        Assert.AreEqual(new FortOffer(0, 0, true, 0), FortOffer.Offered, "Slice 4 landed field care's effect and nothing else");
+        Assert.AreEqual(new FortOffer(0, 0, false, 0), FortOffer.None);
+        Assert.AreEqual(FortOffer.None, Plan().Offered with { Gate = 0, Towers = 0, FieldCare = false, Volley = 0 });
         var bare = new RunPlan("h", Array.Empty<GarrisonRow>(), new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
             new ShopPlan(0, Array.Empty<ShopOffer>()), RunRules.Default, RunOptions.Default);
-        Assert.AreEqual(FortOffer.Offered, bare.Offered, "a plan that sets nothing sells nothing");
+        Assert.AreEqual(FortOffer.Offered, bare.Offered, "a plan that sets nothing sells what this build can deliver");
+    }
+
+    [TestMethod]
+    public void WithTheShippedOffered_OnlyFieldCareCanBeBought()
+    {
+        var run = InIntermission(Plan(offered: FortOffer.Offered, gold: 5000));
+
+        Assert.AreEqual(FortResult.NotOffered, run.TryBuyGateLevel());
+        Assert.AreEqual(FortResult.NotOffered, run.TryRepairGates());
+        Assert.AreEqual(FortResult.NotOffered, run.TryBuyTowerLevel());
+        Assert.AreEqual(FortResult.NotOffered, run.TryBuyVolleyLevel());
+        Assert.AreEqual(FortResult.Ok, run.TryFieldCare());
     }
 
     [TestMethod]
@@ -536,6 +549,21 @@ public class SurvivalRunFortTests
     }
 
     [TestMethod]
+    public void FieldCare_InThePreparation_IsNotForSale_NobodyIsHurtBeforeTheFirstWave()
+    {
+        var run = Begun(Plan());
+
+        Assert.AreEqual(FortResult.NotOffered, run.TryFieldCare());
+        Assert.IsFalse(run.GetView().Fort.Care.Available, "the panel's row agrees with the buy");
+        Assert.AreEqual(5000, run.Gold);
+        Assert.AreEqual(0, run.FortSummary().Purchases.Count);
+
+        ClearTo(run, 1);
+        Assert.IsTrue(run.GetView().Fort.Care.Available);
+        Assert.AreEqual(FortResult.Ok, run.TryFieldCare());
+    }
+
+    [TestMethod]
     public void FieldCare_IsAvailableAgainAtTheNextIntermission()
     {
         var run = InIntermission(Plan());
@@ -646,15 +674,17 @@ public class SurvivalRunFortTests
         run.TryBuy("militia");
         run.TryBuyGateLevel();
         run.TryBuyTowerLevel();
-        run.TryFieldCare();
         run.TryBuyVolleyLevel();
+        ClearTo(run, 1);
+        run.TryFieldCare();
 
         var bought = run.FortSummary().Purchases;
 
         CollectionAssert.AreEqual(
-            new[] { PurchaseKind.Pack, PurchaseKind.GateLevel, PurchaseKind.TowerLevel, PurchaseKind.FieldCare, PurchaseKind.VolleyLevel },
+            new[] { PurchaseKind.Pack, PurchaseKind.GateLevel, PurchaseKind.TowerLevel, PurchaseKind.VolleyLevel, PurchaseKind.FieldCare },
             bought.Select(p => p.Kind).ToArray());
-        Assert.IsTrue(bought.All(p => p.BeforeWave == 1), "bought in the preparation, before wave 1");
+        Assert.IsTrue(bought.Take(4).All(p => p.BeforeWave == 1), "bought in the preparation, before wave 1");
+        Assert.AreEqual(2, bought[4].BeforeWave, "care waits for the first clear");
         Assert.AreEqual("militia", bought[0].Id);
         Assert.AreEqual((180, 180), (bought[0].BasePrice, bought[0].Price));
         Assert.AreEqual(180, run.Purse.SpentOn(PurseSink.Packs));
@@ -716,7 +746,11 @@ public class SurvivalRunFortTests
         Assert.AreEqual((true, 100), (fort.Repair.Available, fort.Repair.Price));
         Assert.IsFalse(fort.Towers.Available, "not offered");
         Assert.IsFalse(fort.Volley.Available);
-        Assert.AreEqual((true, 150, 0, 1), (fort.Care.Available, fort.Care.Price, fort.Care.Level, fort.Care.MaxLevel));
+        Assert.IsFalse(fort.Care.Available, "nobody is hurt in the preparation");
+        Assert.AreEqual(1, fort.Care.MaxLevel);
+
+        var between = InIntermission(Plan(offered: new FortOffer(1, 0, true, 0))).GetView().Fort;
+        Assert.AreEqual((true, 150, 0, 1), (between.Care.Available, between.Care.Price, between.Care.Level, between.Care.MaxLevel));
     }
 
     [TestMethod]

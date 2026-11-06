@@ -234,10 +234,24 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
 
     public LdRest RestResult { get; set; }
 
+    /// <summary>The mean health share of the defenders, as <see cref="Read"/> reports it. A heal with <see cref="RestHeals"/> set moves it.</summary>
+    public float DefenderHealthMean { get; set; } = 0.6f;
+
+    /// <summary>When true <see cref="RestDefenders"/> heals <see cref="DefenderHealthMean"/> by the share and answers from it, as the engine's write and read-back would; otherwise it answers <see cref="RestResult"/>.</summary>
+    public bool RestHeals { get; set; }
+
+    /// <summary>Added to every heal's result, as the engine's ceil on <c>Agent.Health</c> would (E23).</summary>
+    public float RestCeil { get; set; }
+
     public LdRest RestDefenders(float share)
     {
         Calls.Add("Rest:" + share.ToString(System.Globalization.CultureInfo.InvariantCulture));
-        return RestResult;
+        if (!RestHeals)
+            return RestResult;
+
+        var before = DefenderHealthMean;
+        DefenderHealthMean = Math.Min(1f, before + share * (1f - before) + RestCeil);
+        return new LdRest(Math.Max(1, Defenders), before, DefenderHealthMean);
     }
 
     /// <summary>Soldiers <see cref="Fell"/> has marked and the next plain attacker removals will consume as felled, as the registry's mark does for the real field.</summary>
@@ -263,7 +277,7 @@ internal sealed class FakeLongDefeatField : ILongDefeatBattlefieldAdapter
         if (countKeep)
             Calls.Add("ReadKeep");
         return new LdReading(AttackersStanding, AttackersFleeing, Defenders, countKeep ? AttackersAtKeep : 0, countKeep ? DefendersAtKeep : 0, MainBody, BattleSize, DefendersFleeing, AttackersHigh,
-            DefendersHigh);
+            DefendersHigh, DefenderHealthMean);
     }
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) => Sample ?? Array.Empty<LdPoint>();

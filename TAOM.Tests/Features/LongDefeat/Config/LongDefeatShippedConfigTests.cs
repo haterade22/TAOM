@@ -129,7 +129,7 @@ public class LongDefeatShippedConfigTests
     }
 
     [TestMethod]
-    public void ShippedBuild_OffersNoFortification_SoTheShippedGamePlaysAsBefore()
+    public void ShippedBuild_OffersFieldCareAlone_UntilEachSlicesEffectLands()
     {
         var (catalog, _) = Load();
         catalog.TryGetFortress("helms", out var helms);
@@ -137,7 +137,8 @@ public class LongDefeatShippedConfigTests
         var plan = catalog.BuildPlan(helms, RunOptions.Default);
 
         Assert.AreEqual(FortOffer.Offered, plan.Offered);
-        Assert.AreEqual(new FortOffer(0, 0, false, 0), plan.Offered);
+        Assert.AreEqual(new FortOffer(0, 0, true, 0), plan.Offered);
+        Assert.IsNotNull(plan.Shop.Fort?.Care, "the shipped shop carries the care row the build offers");
     }
 
     [TestMethod]
@@ -420,6 +421,22 @@ public class LongDefeatShippedConfigTests
                 Assert.IsTrue(strings.TryGetValue(k, out var registered), k + " is not in taom_module_strings.xml");
                 Assert.AreEqual(raw, registered, k);
             }
+        }
+    }
+
+    [TestMethod]
+    public void ShippedBoons_ThatMovePrices_SayTheWholeShop_ForTheFactorAlsoPricesFieldCare()
+    {
+        var (catalog, _) = Load();
+        var rows = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows;
+        var pricing = rows.Where(r => r.Effects.Concat(r.Drawback).Any(e => e.Key == BoonKeys.PricePercent)).ToList();
+
+        Assert.AreEqual(5, pricing.Count, "the five shipped price boons");
+        foreach (var row in pricing)
+        {
+            var line = row.Effects.Any(e => e.Key == BoonKeys.PricePercent) ? row.Text : row.DrawbackText;
+            StringAssert.Contains(line, "Everything in the shop costs", row.Id);
+            Assert.IsFalse(line.Contains("Every pack costs"), row.Id + " names packs alone, but the factor prices field care too (D29)");
         }
     }
 

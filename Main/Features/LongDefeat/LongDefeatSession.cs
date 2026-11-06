@@ -55,6 +55,9 @@ internal sealed class LongDefeatSession
 
     public RerollResult TryReroll() => _run?.TryReroll() ?? RerollResult.RunOver;
 
+    /// <summary>Buys field care (D21): the standing defenders regain their share of the health they are missing on the next tick.</summary>
+    public FortResult TryFieldCare() => _run?.TryFieldCare() ?? FortResult.RunOver;
+
     /// <summary>The boons taken, for the end panel. Outlives <see cref="Clear"/>; the next <c>Fill</c> resets it.</summary>
     public IReadOnlyList<BoonCard> BoonsTaken => _run?.OwnedCards ?? _boons;
 

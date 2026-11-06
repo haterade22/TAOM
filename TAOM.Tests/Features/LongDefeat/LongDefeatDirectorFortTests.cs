@@ -9,8 +9,9 @@ using TAOM.Tests.Features.LoadTimeStamps;
 namespace TAOM.Tests.Features.LongDefeat;
 
 /// <summary>
-/// Slice 2 builds the fortification domain, config and bot with no engine code, and ships <see cref="FortOffer.Offered"/> empty (D31), so a run of the shipped game must play exactly as it did:
-/// the same calls to the field and the same gold at every step, whether or not shop.json carries a fortifications block, recorded towers and a <c>start_gold</c>.
+/// Slice 2 builds the fortification domain, config and bot with no engine code and offers nothing (D31, <see cref="FortOffer.None"/>), so a run of a build that offers nothing must play exactly as it did:
+/// the same calls to the field and the same gold at every step, whether or not shop.json carries a fortifications block, recorded towers and a <c>start_gold</c>. Field care, the one kind this build
+/// offers since Slice 4, is in <c>LongDefeatDirectorCareTests</c>.
 /// </summary>
 [TestClass]
 public class LongDefeatDirectorFortTests
@@ -46,6 +47,7 @@ public class LongDefeatDirectorFortTests
             new RunOptions { Autoplay = autoplay, StartGold = startGold })
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
+            Offered = FortOffer.None,
             Towers = fortifications ? new[] { new LdTower("hornburg", new[] { new MusterFrame(0f, 0f, 0f, 0f, 1f) }, new[] { new LdPoint(1f, 2f, 3f) }) } : System.Array.Empty<LdTower>(),
             Volley = fortifications ? new LdVolleyOrigins(new[] { new LdPoint(0f, 0f, 0f) }) : null,
         };

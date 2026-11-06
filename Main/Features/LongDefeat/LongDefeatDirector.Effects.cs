@@ -96,6 +96,10 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
         }
 
+        // After the batches, so a pack bought beside the care is healed too; before any volley (Slice 6 puts FireVolleys last).
+        if (fx.FieldCare > 0f)
+            ApplyFieldCare(fx.FieldCare);
+
         // Read in the engine's hit callback, which may run off the main thread: a blades wave wants hits from its start until its clear or the run's end.
         _poisonHits = _run.PoisonWave;
         if (_run.Result != null)
@@ -266,6 +270,7 @@ internal sealed partial class LongDefeatDirector
             return;
 
         _finished = true;
+        JudgeFieldCare(null);
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));

@@ -28,8 +28,9 @@ internal sealed record LdSpawnReport(IReadOnlyList<LdPoint> Points, int Far, int
 /// <summary>
 /// One look at the field. Standing counts live humans that are not running away; Fleeing counts the ones that are. The keep
 /// counts are only meaningful when the read asked for them. <c>MainBody</c> is 0 with no player agent, otherwise a number the
-/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The last three are
-/// diagnostics only: defenders running away, and how many of each side stand at or above the wall line.
+/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The next three are
+/// diagnostics only: defenders running away, and how many of each side stand at or above the wall line. <c>DefenderHealthMean</c> is the mean of health over limit across every active human of the
+/// defending team with a limit, runners included (the people <c>RestDefenders</c> heals), or -1 when none was read; the <c>field-care</c> check compares it with the heal's own read-back.
 /// </summary>
 internal readonly record struct LdReading(
     int AttackersStanding,
@@ -41,7 +42,8 @@ internal readonly record struct LdReading(
     int SiegeBattleSize,
     int DefendersFleeing = 0,
     int AttackersHigh = 0,
-    int DefendersHigh = 0);
+    int DefendersHigh = 0,
+    float DefenderHealthMean = -1f);
 
 internal enum LdRemovalKind
 {

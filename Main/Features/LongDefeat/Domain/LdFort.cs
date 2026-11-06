@@ -24,7 +24,7 @@ internal readonly record struct LdGateFacts(int StateIndex, float HitPoints, flo
     }
 }
 
-/// <summary>What a fortification buy answers. <c>NotOffered</c> is a kind or level this build cannot deliver yet (<see cref="FortOffer"/>), <c>Hidden</c> a row the fortress or shop does not carry.</summary>
+/// <summary>What a fortification buy answers. <c>NotOffered</c> is a kind or level this build cannot deliver yet (<see cref="FortOffer"/>), or field care in the preparation, when nobody is hurt; <c>Hidden</c> a row the fortress or shop does not carry.</summary>
 internal enum FortResult
 {
     Ok,
