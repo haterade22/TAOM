@@ -353,8 +353,8 @@ finishes loading. TAOM hit 132,378 on 2026-07-24 after importing four packs, and
 the `Prefabs` / `Prefabs_Unused` split you see today
 ([editor-rglconcurrentqueue-assert-2026-07.md](../investigations/editor-rglconcurrentqueue-assert-2026-07.md)).
 
-`python tools/check_prefab_budget.py` counts `TAOM_Map/Prefabs` **only**, and the queue is global, so
-the tool reports a comfortable pass while the real total sits at the ceiling. Measured today:
+`python tools/check_prefab_budget.py` sums every installed module, because the queue is global.
+Measured:
 
 | Module | `<game_entity>` in `Prefabs/` |
 |---|---|
@@ -369,8 +369,9 @@ the tool reports a comfortable pass while the real total sits at the ceiling. Me
 
 <!-- measured: for m in */; do grep -ho '<game_entity' "$m"Prefabs/*.xml 2>/dev/null | wc -l; done 2026-09-05 -->
 
-The tool printed `TOTAL: 93830 entities in 141 files (cap 131072, warn 120000)` and `OK` on the same
-day. Sum every enabled module before believing it. `Prefabs_Unused/` holds another 91,023 entities
+It prints `TOTAL: 130468 entities in 7 modules (cap 131072, warn 120000)` and a `WARN` line, and exits 1
+in that band. Only `--dir <folder>` counts a single folder (`TOTAL: 93830 entities in 141 files` and `OK`
+for `TAOM_Map/Prefabs`), and that is not the budget. `Prefabs_Unused/` holds another 91,023 entities
 that are parked, not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
 
 ## Recipes

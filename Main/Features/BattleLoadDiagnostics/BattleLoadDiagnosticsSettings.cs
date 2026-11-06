@@ -41,7 +41,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Exit Stall Sampler")]
     [SettingPropertyBool("Enable Exit Stall Sampler", Order = 0, RequireRestart = false,
-        HintText = "If a mission exit stalls past 15s, briefly suspends the game's main thread (at +15/+30/+60s) to photograph its call stack into the TAOM debug log — this is what root-caused the tournament-exit freeze (#331). Tiny residual risk: a suspension landing mid-GC can freeze the game harder than the stall itself. Turn OFF to keep the other diagnostics without any thread suspension. Default ON.")]
+        HintText = "If a mission exit stalls past 15s, briefly suspends the game's main thread (at +15/+30/+60s) to photograph its call stack into the TAOM debug log; this is what root-caused the tournament-exit freeze (#331). Tiny residual risk: a suspension landing mid-GC can freeze the game harder than the stall itself. Turn OFF to stop this sampler only: the Battle Freeze Sampler and the Main Thread Freeze Sampler have their own switches and can also suspend a stuck thread. Default ON.")]
     public bool EnableExitStallSampler { get; set; } = true;
 
     [SettingPropertyGroup("Exit Stall Sampler")]

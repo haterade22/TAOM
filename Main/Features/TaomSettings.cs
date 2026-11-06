@@ -793,7 +793,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         catch (System.Exception ex)
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[TAOM] Battle settings could not be applied: {ex.GetType().Name}: {ex.Message}", Colors.Red));
+                new TaleWorlds.Localization.TextObject("{=taom_bc_apply_failed}[TAOM] Battle settings could not be applied: {ERROR}")
+                    .SetTextVariable("ERROR", $"{ex.GetType().Name}: {ex.Message}").ToString(), Colors.Red));
         }
     };
 

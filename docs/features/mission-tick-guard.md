@@ -11,10 +11,10 @@ One exception in a mission tick no longer freezes the game. The frame's agent ti
 
 | Frame (inner to outer) | Catcher | Swallows |
 |---|---|---|
-| `Mission.OnTick` | PatchShield, from a process's second game start (because Patch35 patches it) | `MissingMethod`, `MissingField`, `TypeLoad` only |
+| `Mission.OnTick` | PatchShield, from a process's second game start (because this guard patches it) | `MissingMethod`, `MissingField`, `TypeLoad` only |
 | `MissionState.OnTick` | PatchShield from the second start (Patch43) | missing-API only |
 | `Module.OnApplicationTick` | Patch37, `[HarmonyPriority(800)]` | everything; writes the `[CrashReport]` capture |
-| `Managed_ApplicationTick` shim | Native2Managed bridge | everything, until WP107's allowlist |
+| `Managed_ApplicationTick` shim | none: it is not on `Native2ManagedTargets` (Patch37 above stops the throw first) | nothing |
 
 - **TAOM requirement:** a mod with this many `OnMissionTick` overrides needs a throw in one of them to cost less than the session. Ten of TAOM's 19 overrides have no `try` (a try/catch sweep is deferred, see the plan's Maintenance notes).
 - **Without this feature:** a throw from any `OnMissionTick` (vanilla, TAOM or another mod), or the QA toggle "Throw On Next Mission Tick", freezes the game for good with audio still playing.
@@ -84,7 +84,6 @@ One flag read in the prefix, one in the finalizer, and one bool write at the lau
 ## Dependencies
 
 - Patch37 (`Module.OnApplicationTick`) still reports the exception: the recovery's finalizer is void, so the exception keeps travelling.
-- Patch35 (`Patch35_Mission_OnTick`, a postfix) shares the `Mission.OnTick` target.
 - PatchShield wraps both targets from a process's second game start and runs after the recovery.
 - Patch91 ([battle-load-diagnostics.md](battle-load-diagnostics.md), the battle-freeze sampler) photographs what this guard cannot recover.
 
@@ -101,7 +100,7 @@ In a custom battle, open Mod Options, the TAOM Crash Report page, QA Dev Trigger
 ## Limitations
 
 - A stuck agent tick is not recovered; Patch91's `[MissionStall]` line names it.
-- An exception on the agent-tick thread is not recovered: until WP107 the Native2Managed bridge swallows it and the game still freezes; after WP107 it reaches native.
+- An exception on the agent-tick thread is not recovered: `Mission_TickAgentsAndTeams` stays off `Native2ManagedTargets` (plans/107, decision 107-1), so it reaches native.
 - A throw before the clear or after the launch needs no restore.
 - A throw every frame skips every agent tick: degraded play, though menus still work.
 - After PatchShield swallows a missing-API exception on `Mission.OnTick` it strips TAOM's prefix there (owner `com.taom.mod` is not on its protected list), so later calls are not recovered (WP107 hand-off).

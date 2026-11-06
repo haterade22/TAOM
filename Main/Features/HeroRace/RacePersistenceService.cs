@@ -253,7 +253,7 @@ public class RacePersistenceService : IRacePersistenceService
     }
 
     // Reads every race back after the restore. Only the first hero with an id is compared: that is the one
-    // SetHeroRace reaches (Hero.FindFirst over the same Campaign.Characters order). first is "<id>:<expected>-><actual>".
+    // SetHeroRace reaches (the same roster, in the same order). first is "<id>:<expected>-><actual>".
     private int CountMismatches(Dictionary<string, int> expected, out string first)
     {
         first = null;

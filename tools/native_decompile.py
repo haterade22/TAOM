@@ -2,8 +2,8 @@
 """Decompile native engine code (TaleWorlds.Native.dll) to pseudo-C, with headless Ghidra.
 
 Three ways in, one per question:
-  --rva            a crash site: the decompiler step of /native-crash-triage, after
-                   native_crash_triage.py has named the site
+  --rva            a crash site, after native_crash_triage.py has named it (the decompiler
+                   step of /native-crash-triage once the plan 137 skill edits land)
   --engine-method  research: what a managed `[EngineMethod]` call really does. The name
                    resolves through the engine's id registration (native_engine_methods.py)
   --string         research: which native code uses a string (an attribute the engine

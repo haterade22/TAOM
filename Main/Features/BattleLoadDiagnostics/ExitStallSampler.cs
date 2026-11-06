@@ -16,8 +16,8 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // the quit-to-menu and quit-to-load paths, where no map tick ever comes — #425, #440). While armed, this samples the main
 // thread's managed stack at +15s/+30s/+60s and logs the frames. Three samples of a
 // deterministic stall name the hot method (a loop shows identical top frames each time).
-// Independently disableable via the "Enable Exit Stall Sampler" MCM toggle (the only
-// diagnostics component that suspends the main thread).
+// Independently disableable via the "Enable Exit Stall Sampler" MCM toggle. The two freeze
+// samplers suspend a stuck thread too, through ThreadStackCapture, under their own toggles.
 //
 // Thread.Suspend/StackTrace(Thread) are obsolete-but-functional on net472; this is the
 // standard in-process diagnostic sampling pattern. Known residual risk: suspending the main

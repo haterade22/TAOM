@@ -156,7 +156,7 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 83 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 85 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).

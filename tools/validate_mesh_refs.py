@@ -83,11 +83,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 
+from _gamedir import game_dir as _install_root
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_GAME = Path(
+DEFAULT_GAME = Path(_install_root(
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-)
+))
 # ModuleData root, NOT ModuleData/LOTRLOME_items: crafting pieces live in
 # `LOTRLOME_crafting_pieces.xml` directly under ModuleData/, and a `body_name`
 # typo there hangs mission load exactly like one on an item. Scoping to

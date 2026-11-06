@@ -42,7 +42,7 @@ The reader has to tell "it failed" from "nobody played it" from "this build pred
 - **Read:** `tools/ingame_verdict.py`, with one TOML manifest per issue in `tools/ingame_checks/`.
   Evidence counts only from a session whose `[BuildStamp]` sha contains the manifest's `fixed_in`
   commit (`git merge-base --is-ancestor`).
-- **Run:** `/verify` Step 6 and `/release` Phase 5 run
+- **Run:** once the `/release` and `/verify` edits land, `/verify` Step 6 and `/release` Phase 5 run
   `python tools/ingame_verdict.py --owed --sessions 10`, so a two-session check such as #1011 can
   pass. Both report and never block. (Those two skill hunks are plan 139 Part D, owed until the
   harness plans land; until then run the command by hand.)
@@ -55,7 +55,7 @@ feature code ── IOutcomeLog / Outcomes ── IModLogger ── taom_debug_*
                                                          |
 tools/ingame_checks/<issue>.toml ── tools/ingame_verdict.py ── gh (triage-needs-ingame)
                                                          |
-                                     /verify Step 6, /release Phase 5
+                                     /verify Step 6, /release Phase 5 (once those edits land)
 ```
 
 ## Configuration
@@ -98,8 +98,8 @@ settings) does not apply to this line.
 | `tools/ingame_verdict.py` | The reader |
 | `tools/ingame_checks/<issue>.toml` | One manifest per issue |
 | `tools/ingame_ledger.py` | Lists the issues closed since the last tag that still owe a check |
-| `.claude/skills/verify/SKILL.md` | Step 6 runs the reader |
-| `.claude/skills/release/SKILL.md` | Phase 5 runs the reader before the release notes |
+| `.claude/skills/verify/SKILL.md` | Step 6 runs the reader, once that edit lands |
+| `.claude/skills/release/SKILL.md` | Phase 5 runs the reader before the release notes, once that edit lands |
 
 ## Dependencies
 

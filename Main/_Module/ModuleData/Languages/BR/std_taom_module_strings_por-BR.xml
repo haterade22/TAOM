@@ -2625,6 +2625,7 @@
     <string id="taom_bc_advice_keep" text="Keep mine" />
     <string id="taom_bc_advice_done" text="Battle settings saved." />
     <string id="taom_bc_advice_failed" text="Battle settings could not be saved. Set them by hand in Options, {PERFORMANCE}." />
+    <string id="taom_bc_apply_failed" text="[TAOM] Battle settings could not be applied: {ERROR}" />
     <string id="taom_cheat_screen_guard_notice" text="TAOM: cheat mode is on. Its every-item inventory and every-troop party lists take gigabytes of memory, so TAOM opened the normal screens. To get the cheat lists, turn on Cheat Mode Lists All Items And Troops in MCM, TAOM Battle Load Diagnostics, Map Performance." />
     <string id="taom_texture_advice_title" text="TAOM: memory advice" />
     <string id="taom_texture_advice_body" text="This computer has about {RAM} GB of memory and Texture Quality is at its highest setting. TAOM's campaign map and items fill a lot of that memory, and on a machine like this the game can stutter or run out of memory. Lowering Texture Quality by one step (Options, Performance, Graphics) is the largest memory saving the game offers, and Foliage Quality is the next. Both take effect at once, with no restart. This message will not show again." />

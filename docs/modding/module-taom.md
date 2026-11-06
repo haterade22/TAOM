@@ -16,19 +16,19 @@
 
 The tree below is measured from the repo copy. Sizes are `du -sm`, rounded up to whole megabytes.
 
-<!-- measured: ls -la Main/_Module; for d in Main/_Module/*/; do find "$d" -type f | wc -l; du -sm "$d"; done; wc -l -c Main/_Module/SubModule.xml; rg -o "<XmlNode>" Main/_Module/SubModule.xml | wc -l; wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; git ls-files Main/_Module/bin 2026-09-05 -->
+<!-- measured: ls -la Main/_Module; for d in Main/_Module/*/; do find "$d" -type f | wc -l; du -sm "$d"; done; wc -l -c Main/_Module/SubModule.xml; rg -o "<XmlNode>" Main/_Module/SubModule.xml | wc -l; wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; git ls-files Main/_Module/bin 2026-11-05 -->
 ```
-Main/_Module/                      906 MB in total
-  SubModule.xml                    37,947 bytes, 971 lines, 100 <XmlNode> rows
+Main/_Module/                      901 MB in total
+  SubModule.xml                    39,580 bytes, 998 lines, 102 <XmlNode> rows
   THIRD-PARTY-LICENSES.txt         117 lines
   AssetPackages/                   4 files, 35 MB
-  AssetSources/                    47 files, 483 MB
+  AssetSources/                    47 files, 484 MB
   Assets/                          81 files, 1 MB
-  GUI/                             1,319 files, 178 MB
-  ModuleData/                      367 files, 32 MB
-  ModuleSounds/                    436 files, 167 MB
+  GUI/                             1,299 files, 178 MB
+  ModuleData/                      414 files, 34 MB
+  ModuleSounds/                    436 files, 168 MB
   Prefabs/                         1 file
-  bin/                             7 files, 17 MB (2 of them git-tracked)
+  bin/                             4 files, 6 MB after a build (2 of them git-tracked)
 ```
 
 | Folder or file | What it holds | Who reads it, and where |
@@ -43,9 +43,9 @@ Main/_Module/                      906 MB in total
 | `ModuleData/<feature>/` (36 folders) | JSON and a few XML configs read by TAOM's own C#, none of them named in `SubModule.xml` | See "Folders the engine never registers" below |
 | `GUI/` | `Brushes/` 11, `Fonts/` 6, `Prefabs/` 51, `SpriteData/` 227, `SpriteParts/` 1,023 files, and the generated manifest `TAOMSpriteData.xml` (428,445 bytes) <!-- measured: for d in Main/_Module/GUI/*/; do find "$d" -type f \| wc -l; done; wc -c Main/_Module/GUI/TAOMSpriteData.xml 2026-09-05 --> | Gauntlet. `SpriteParts/` is the source (`Config.xml` plus 1,022 PNGs in 5 categories), `TAOMSpriteData.xml` and `AssetSources/GauntletUI/` are what the sprite generator writes, `Assets/GauntletUI/` is the texture compile that follows (`docs/features/gui-sprite-system.md:110-116`) |
 | `GUI/SpriteData/FactionMap/` | 226 loose PNGs <!-- measured: find Main/_Module/GUI/SpriteData/FactionMap -type f \| wc -l 2026-09-05 --> | Not sprites. `FactionImageWidget` loads them by path from the install (`docs/features/gui-sprite-system.md:59-84`) |
-| `Assets/` | 81 compiled per-asset `.tpac` descriptors under `GauntletUI/`, `BannerIcons/`, `main_map_textures/` (121 files before plans/121 removed 39 dead sprite-sheet descriptors and a stray `taom_banners_dunland_alpha_01_tex.tpac.ptemp`) <!-- measured: find Main/_Module/Assets -type f \| wc -l 2026-11-05 --> | The editor and the game on a dev install (`docs/reference/bannerlord-engine-and-toolchain.md:282`) |
-| `AssetSources/` | 47 raw art files (PSD and PNG), 483 MB (86 before plans/121 removed 39 dead sprite-sheet PNGs) | Nobody at runtime. `tools/package_release.py` (`classify`) excludes the whole folder from a release; the dev build still deploys it (`Main/TAOM.csproj:13`) |
-| `AssetPackages/` | 4 cooked packs: `fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring` <!-- measured: ls Main/_Module/AssetPackages 2026-09-05 --> | Players; the runtime form in a release (`docs/reference/bannerlord-engine-and-toolchain.md:283`) |
+| `Assets/` | 81 compiled per-asset `.tpac` descriptors under `GauntletUI/`, `BannerIcons/`, `main_map_textures/` (121 files before plans/121 removed 39 dead sprite-sheet descriptors and a stray `taom_banners_dunland_alpha_01_tex.tpac.ptemp`) <!-- measured: find Main/_Module/Assets -type f \| wc -l 2026-11-05 --> | The editor and the game on a dev install (`docs/reference/bannerlord-engine-and-toolchain.md:288`) |
+| `AssetSources/` | 47 raw art files (PSD and PNG), 484 MB (86 before plans/121 removed 39 dead sprite-sheet PNGs) | Nobody at runtime. `tools/package_release.py` (`classify`) excludes the whole folder from a release; the dev build still deploys it (`Main/TAOM.csproj:13`) |
+| `AssetPackages/` | 4 cooked packs: `fieldcamp_camp_a`, `fieldcamp_palisade_ring`, `refuge_camp_a`, `refuge_palisade_ring` <!-- measured: ls Main/_Module/AssetPackages 2026-09-05 --> | Players; the runtime form in a release (`docs/reference/bannerlord-engine-and-toolchain.md:289`) |
 | `ModuleSounds/` | 342 `.wav`, 93 `.mp3`, 1 `.ogg` under `LOTR/` and `Native/` <!-- measured: find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c 2026-09-05 --> | `ModuleData/module_sounds.xml` names each file with a `path=` relative to this folder, for example `path="LOTR/Elves/Alert/elf_horn.wav"` (`Main/_Module/ModuleData/module_sounds.xml:5`) |
 | `Prefabs/` | `taom_howdah_agent.xml`, 8,647 bytes <!-- measured: wc -c Main/_Module/Prefabs/taom_howdah_agent.xml 2026-09-05 --> | The scene system, with no manifest row |
 
@@ -382,19 +382,19 @@ Code: No code changes needed
 - **`settlements.xml` in this module is a shadow.** Nothing registers it; `TAOM_Map` owns `Settlements` (`Main/_Module/SubModule.xml`, no match for `settlements`).
 - **`Languages/` paths are relative to `ModuleData/Languages`** (`LanguageData.cs:130`). A wrong path fails as `Could not parse: ...` in the log (`LocalizedTextManager.cs:216`) and the language simply stays English. English `<string>` rows are never deserialized (`LocalizedTextManager.cs:235`). The root `language_data.xml` with no rows is harmless but adds nothing: discovery is the recursive file search at `LocalizedTextManager.cs:92-99`.
 - **`GUI/SpriteData/FactionMap/` is not sprites.** Editing those PNGs in the repo changes nothing in game until they are copied to the install, and a baked sprite needs the generator plus a full relaunch (`docs/features/gui-sprite-system.md:59-84, 138`). Sync the bake back with `pwsh tools/sync_sprite_bake.ps1`; a wider install-to-repo copy reverts uncommitted work (`docs/features/gui-sprite-system.md:168-169`).
-- **`ExcludeSourceFilesFromModule=false` deploys 483 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:13`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:116-117`).
+- **`ExcludeSourceFilesFromModule=false` deploys 484 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:13`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:150`).
 - **MCM values live outside the module** (`Main/Features/TaomSettings.cs:15`); a reinstall does not reset them.
 - **`localization-map.md` says 11 language files per language and names an `...ElevenLanguageFiles` test** (`docs/reference/localization-map.md:12, 17`); the shipped count is 13 and the test is `AllLanguageDirs_HaveExactlyThirteenLanguageFiles` (`LanguageDataXmlTests.cs:142`). Trust the test file.
 
 ## Numbers in this chapter
 
-All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modules/TAOM/`.
+All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modules/TAOM/`, except the folder tree and the `SubModule.xml` size and row count, re-measured 2026-11-05 after plan 121 and the merged plans changed them.
 
 | Number | Command |
 |---|---|
-| 906 MB module tree; per-folder MB | `du -sm Main/_Module; for d in Main/_Module/*/; do du -sm "$d"; done` |
-| 4, 47, 81, 1,319, 367, 436, 1, 7 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
-| 37,947 bytes, 971 lines in `SubModule.xml` | `wc -l -c Main/_Module/SubModule.xml` |
+| 901 MB module tree; per-folder MB | `du -sm Main/_Module; for d in Main/_Module/*/; do du -sm "$d"; done` |
+| 4, 47, 81, 1,299, 414, 436, 1, 4 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
+| 39,580 bytes, 998 lines in `SubModule.xml` | `wc -l -c Main/_Module/SubModule.xml` |
 | 100 `<XmlNode>` rows, 12 distinct ids, 44/27/15/2/2/2/2/2/1/1/1/1 by id | `rg -o "<XmlNode>" Main/_Module/SubModule.xml \| wc -l; rg -o 'XmlName id="[^"]+"' Main/_Module/SubModule.xml \| sort \| uniq -c \| sort -rn` |
 | Sentinel lines 348, 394, 395, 441 | `rg -n "TAOM-NEW(FACTIONS\|CULTURE)-REG" Main/_Module/SubModule.xml` |
 | 117 lines in `THIRD-PARTY-LICENSES.txt`; MinHook at line 22 | `wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; rg -n MinHook Main/_Module/THIRD-PARTY-LICENSES.txt` |

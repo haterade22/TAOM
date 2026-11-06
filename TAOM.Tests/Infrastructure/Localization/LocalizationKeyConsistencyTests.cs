@@ -436,4 +436,26 @@ public class LocalizationKeyConsistencyTests
             "translation for both characters. Give the copy its own key (aom_<id>_name) and re-run " +
             "tools/generate_name_localization_strings.py:\n  " + string.Join("\n  ", shared.Take(40)));
     }
+
+    // Clan.Name is saved whole, key included, and a save written before plan 135 holds this key on all six
+    // Umbar clans. A row or a registration under it shows the first clan's name on the other five in every
+    // language but English. With no row, those saves fall through to each clan's own inline name.
+    [TestMethod]
+    public void TheUmbarKeyOldSavesShare_HasNoRowAnywhere()
+    {
+        const string retired = "aom_clan_umbar_1_name";
+
+        var files = Directory.GetFiles(LanguagesPath, "*.xml", SearchOption.AllDirectories)
+            .Concat(new[]
+            {
+                Path.Combine(ModuleDataPath, "taom_clan_name_strings.xml"),
+                Path.Combine(ModuleDataPath, "characters", "clans.xml"),
+            })
+            .ToList();
+        Assert.IsTrue(files.Count > 100, $"Only {files.Count} files found; the path broke.");
+
+        var hits = files.Where(f => File.ReadAllText(f).Contains(retired)).ToList();
+        Assert.AreEqual(0, hits.Count,
+            $"{retired} is back, so old non-English saves show one name on six clans:\n  " + string.Join("\n  ", hits));
+    }
 }

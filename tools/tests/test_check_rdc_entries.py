@@ -11,6 +11,7 @@ import tempfile
 import unittest
 import uuid
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -36,11 +37,27 @@ class CheckRdcEntriesTests(unittest.TestCase):
             code = cre.main(["--module", str(self.module), *argv])
         return code, out.getvalue()
 
-    def test_no_runtime_data_cache_folder_is_a_failure(self):
+    def test_no_runtime_data_cache_folder_is_bad_input_not_a_finding(self):
+        # A partial install has no such folder at all; exit 1 would call that a data failure.
         tpac(self.module / "Assets" / "creature" / "x_geo.tpac")
         code, out = self.run_main()
-        self.assertEqual(1, code)
+        self.assertEqual(2, code)
         self.assertIn("no RuntimeDataCache folder", out)
+
+    def test_no_assets_folder_is_bad_input_not_a_finding(self):
+        (self.module / "RuntimeDataCache").mkdir()
+        code, out = self.run_main("--under", "creature/troll")
+        self.assertEqual(2, code)
+        self.assertIn("nothing checked", out)
+
+    def test_the_default_module_follows_the_install_variable(self):
+        with mock.patch.dict(os.environ, {"BANNERLORD_GAME_DIR": str(self.module)}):
+            self.assertEqual(os.path.join(str(self.module), "Modules", "LOTRLOME_Armory"), cre.default_module())
+
+    def test_a_blank_install_variable_keeps_the_literal_default(self):
+        with mock.patch.dict(os.environ, {"BANNERLORD_GAME_DIR": "  "}):
+            self.assertTrue(cre.default_module().endswith("LOTRLOME_Armory"))
+            self.assertTrue(cre.default_module().startswith("E:"))
 
     def test_a_package_with_its_entry_passes(self):
         tpac(self.module / "Assets" / "creature" / "x_geo.tpac")
@@ -63,7 +80,7 @@ class CheckRdcEntriesTests(unittest.TestCase):
         tpac(self.module / "Assets" / "x_mtl.tpac")
         (self.module / "RuntimeDataCache").mkdir()
         code, out = self.run_main()
-        self.assertEqual(1, code)  # a gate that checked nothing is not a pass
+        self.assertEqual(2, code)  # a gate that checked nothing is not a pass, and not a finding
         self.assertIn("packages=0", out)
 
     def test_a_skeletal_animation_master_without_an_entry_is_not_a_failure(self):

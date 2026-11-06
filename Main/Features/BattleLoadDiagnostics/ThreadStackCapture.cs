@@ -7,8 +7,8 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 
 /// <summary>
 /// Photographs another thread's managed stack from a timer thread: the one way a frozen game can still
-/// name the method it is stuck in. Shared by <see cref="ExitStallSampler"/> (#331) and
-/// <see cref="MissionTickStallWatchdog"/> (#634).
+/// name the method it is stuck in. Shared by <see cref="ExitStallSampler"/> (#331),
+/// <see cref="MissionTickStallWatchdog"/> (#634) and <see cref="MainThreadFreezeWatchdog"/>.
 ///
 /// Thread.Suspend/Resume and StackTrace(Thread, bool) are obsolete-as-WARNING on net472 but present in
 /// both the reference assemblies and the runtime. Known residual risk: suspending a thread mid-GC and

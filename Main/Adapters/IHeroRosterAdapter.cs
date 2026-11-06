@@ -20,7 +20,8 @@ public readonly struct HeroRaceInfo
 public interface IHeroRosterAdapter
 {
     /// <summary>Every hero character, alive, dead, disabled or unregistered (#1011): the engine
-    /// resets the race of every non-original character on load, dead ones included.</summary>
+    /// resets the race of every non-original character on load, dead ones included. A hero whose
+    /// character is hollow (unregistered) is on this list too, from the hero lists.</summary>
     IReadOnlyList<HeroRaceInfo> GetAllHeroRaces();
     int GetHeroRace(string heroStringId);
     void SetHeroRace(string heroStringId, int race);

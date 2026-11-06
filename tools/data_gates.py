@@ -90,7 +90,7 @@ GATES = (
          "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS,
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md"),
-         note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),
+         note="read the warnings as well as the errors"),
     Gate("wanderers", "wanderers, wanderer strings", ("*/taom_wanderers.xml", "*/taom_wanderer_strings.xml"),
          _dotnet("WandererBackstoryCoverageTests"), (MODULEDATA_DOC,), dotnet=True),
     Gate("xslt", "XSLT anywhere", ("*.xslt",), ("python", "tools/check_external_xslt.py"), (".claude/rules/xslt.md",),
@@ -150,8 +150,8 @@ GATES = (
          ("python", "tools/audit_voice_clip_lengths.py"), ("tools/audit_voice_clip_lengths.py",),
          note="only the module sounds a voice binds; for the rest of module_sounds.xml, only duplicate names"),
     Gate("prefab-budget", "scenes, prefabs", ("*/scenes/*", "*.scene.xml", "*/sceneobj/*"),
-         ("python", "tools/check_prefab_budget.py"), ("docs/modding/module-map.md",),
-         note="sums every module; see --all-modules"),
+         ("python", "tools/check_prefab_budget.py", "--gate"), ("docs/modding/module-map.md",),
+         note="sums every module against the Modding Kit's cap; FAIL only at or over it, and a WARN band PASS still prints its line"),
 )
 
 
@@ -302,6 +302,10 @@ def run(gates, paths, all_mode: bool, with_tests: bool, runner=run_command, jobs
             found = re.search(r"\d+ error\(s\), \d+ warning\(s\)", text)
             if found:
                 print(f"         {found.group(0)}")
+        if g.id == "prefab-budget" and status != "FAIL":
+            for l in text.splitlines():
+                if l.startswith(("TOTAL:", "WARN:")):
+                    print(f"         {l}")
         if status == "FAIL":
             tail = [l for l in text.splitlines() if l.strip()][-15:]
             for l in tail:

@@ -510,3 +510,12 @@ The clan-leadership repair's "dead" guard read `Hero.IsAlive` and the service do
 - **Why missed:** the branch was written against the campaign's type; the service tests mock the adapter, so nothing executed it under the game type that calls it, and its only runtime trace was a DEBUG line that never printed.
 - **Prevent:** before an adapter casts to an engine subtype, check what type each calling game type registers (`OnRegisterTypes` of `CustomGame`, `Campaign`). When the base type drops the data, read it back from the merged XML for the current game type (`MBObjectManager.GetMergedXmlForManaged` with `Game.Current.GameType.GameTypeStringId`, as `ObjectManagerAdapter` now does for cultures, parsing with `CultureTroopIdReader`), and log once at INFO that the read ran. Then check the data the read returns against the consumer's own filter: the culture troops TAOM reads fit vanilla's Custom Battle slot filter in only 33 of 88 slots, so the service also checks culture and formation class before offering one.
 - **Source:** `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md` "Two older Custom Battle defects", B.
+
+### A co-op battle is not a network session to the engine (2026-11-05)
+
+`GameNetwork.IsSessionActive` is `IsServerOrRecorder || IsClientOrReplay` (v1.4.8 `GameNetwork.cs:381-391`), and those read `MBCommon.CurrentGameType` (`:317-339`). BannerlordCoop has no use of `CurrentGameType` in its source (read at `4ad976c8c`), so a co-op battle reads as single player and a gate on this property alone lets a feature act in one.
+
+- **Why missed:** the name sounds like the question, and a test that feeds the fact by hand never pins where it came from.
+- **Prevent:** a gate on online play reads the engine's fact and `ICoopSessionProvider.IsSessionActive`, and a test pins both reads.
+- **Source:** the 1.5.x line's review, carried by hand in `plans/_audit/2026-11-04-port148/delta-974e60bb2.md`.
+

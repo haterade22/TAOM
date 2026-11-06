@@ -158,7 +158,7 @@ A green exit is not the same claim in every tool.
 | `validate_moduledata.py` | 1 on any ERROR, 0 when clean, 2 on bad input. Warnings do not change the code |
 | `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md:56`) |
 | `audit_polearm_shield_parity.py` | 1 on a polearm violation, WARN on two-handers, and SKIP at exit 0 when there is no game install |
-| `check_prefab_budget.py` | sums every module: 0 under 120,000, 1 above that (a WARN, and the honest result on a machine near the cap), 2 at or over the cap or on a bad path. `--dir` counts one folder only |
+| `check_prefab_budget.py` | sums every module: 0 under 120,000, 1 above that (a WARN, and the honest result on a machine near the cap), 2 at or over the cap or on a bad path. `--dir` counts one folder only. `--gate`, which `data_gates.py` uses: 1 only at or over the cap, 2 only on a bad path |
 | `audit_action_set_parity.py` | non-zero on either failure class, so it is safe to chain |
 | `triage_battle_load.py` | 1 for any diagnosed hang, 0 for COMPLETED or UNKNOWN, 2 for a bad path. UNKNOWN means diagnostics were off, not that the load was fine |
 | `Settlement-Breakdown.ps1` | exits 2 when the file is missing |

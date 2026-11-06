@@ -40,7 +40,7 @@ public class SidePairScanTests
     /// <summary>The types that may construct or copy a <c>SideIds</c>: the one engine-to-pair adapter and the record itself.</summary>
     private static readonly Dictionary<string, string> SideIdsBuilders = new(StringComparer.Ordinal)
     {
-        ["TAOM.Adapters.FactionSides"] = "builds the pair from an engine faction, hero, character or the player",
+        ["TAOM.Adapters.FactionSides"] = "builds the pair from an engine faction, a hero or the player",
         ["TAOM.Features.Execution.SideIds"] = "the record: its static None and its compiler-made copy",
     };
 

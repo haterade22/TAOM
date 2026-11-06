@@ -298,7 +298,7 @@ public class MapFrameProfilerBindingTests
         return false;
     }
 
-    // MissionTickProfilerBindingTests.TargetOf (CreatureBanditsWiringTests.TargetOf).
+    // MissionTickProfilerBindingTests.TargetOf.
     private static MethodBase TargetOf(Type patch)
     {
         var byName = AccessTools.Method(patch, "TargetMethod");

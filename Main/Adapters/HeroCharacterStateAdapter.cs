@@ -48,14 +48,15 @@ public sealed class HeroCharacterStateAdapter : IHeroCharacterStateAdapter
         var twin = FindRegisteredTwin(character);
         if (IsHealthyOrigin(twin, character))
         {
-            // RacePersistenceService reaches only a registered character, and it restored this race at session launch.
-            // An unregistered hollow character's race is the unsaved default, so the twin's is the true one.
+            // RacePersistenceService restored this race at session launch when the save held one, and its roster
+            // reaches a hollow hero through the hero lists. An unregistered character's 0 is the unsaved default,
+            // so the twin's race answers there; a restored human on such a character gets it too (nothing tells them apart).
             var isRegistered = ReferenceEquals(
                 MBObjectManager.Instance?.GetObject<CharacterObject>(character.StringId), character);
             var race = character.Race;
             if (TryAdoptOrigin(character, twin))
             {
-                if (isRegistered) character.Race = race;
+                if (isRegistered || race != 0) character.Race = race;
                 return true;
             }
         }

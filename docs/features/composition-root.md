@@ -158,7 +158,7 @@ module. A 1.4.x feature that never got a module keeps its hand-wired pattern.
 8. If your change deletes or renames a line that a kernel test uses as an anchor
    (`FeatureModulesTests.Kernel_IoCConfigure_RunsTheModuleStepsAfterEveryHandWiredRegistration`,
    `Kernel_SubModule_CallsEachRunnerHookOnce_AfterItsFeatureBlock`; for example
-   `new AgentColorStoreCleanupBehavior(colorStore)`), move that anchor in the same commit to the
+   `new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(`), move that anchor in the same commit to the
    nearest surviving line before the hook. Never delete the assertion.
 9. Verify: build, then
    `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~TAOM.Tests.Composition"`

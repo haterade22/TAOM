@@ -11,6 +11,8 @@ using headless Ghidra 12.1 through PyGhidra. It answers three questions, one fla
 | `--engine-method <name>` | what does this managed `[EngineMethod]` call really do | `/research`, the `taleworlds-researcher` agent, the `/deep-review` compatibility agent |
 | `--string <text>` | which native code uses this attribute, file name or assert text | `/research`, `/new-creature-mount` |
 
+On the 1.4.x line the "Used by" column is the intent, not yet the fact: the `.claude/skills` and agent edits of plan 137 land after WP103, and until then none of those skills or agents names this tool. Run it by hand.
+
 Every printed function that implements engine methods is labelled with each of them, callers
 included. Issue [#688](https://github.com/haterade22/TAOM/issues/688); adoption record
 [adopt-ghidra-hindsight-2026-09-26.md](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
@@ -121,7 +123,7 @@ desktop's `E:\ghidra\TAOM` and the laptop has no E: drive.
 | `tools/native_engine_methods.py` | the engine-method map: enum parse, registration sweep, join, cache |
 | `tools/native_crash_triage.py` | prints the `native_decompile.py` line after naming a site |
 | `tools/native_build_match.py` | carries an RVA from an archived older build to the one being decompiled ([native-build-match.md](native-build-match.md)) |
-| `.claude/skills/native-crash-triage/SKILL.md`, `.claude/skills/research/SKILL.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it |
+| `.claude/skills/native-crash-triage/SKILL.md`, `.claude/skills/research/SKILL.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it once the plan 137 skill edits land |
 | `tools/tests/test_native_decompile.py`, `tools/tests/test_native_engine_methods.py` | unit tests plus opt-in integration tests |
 
 ## Dependencies
