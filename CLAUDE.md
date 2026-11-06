@@ -351,7 +351,7 @@ and research lookup-order detail: **[`docs/reference/mcp-servers.md`](docs/refer
 | Navigate C# symbols, find references | **Serena** (`find_symbol`, `get_symbols_overview`) | Grep for class names |
 | Research TaleWorlds classes | **Read/Grep** `E:\Decompiled_Bannerlord\` first, **ilspy** MCP as fallback | On-demand decompilation |
 | Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
-| Diff analysis (read-only) | **git** (`git_diff`, `git_log`, `git_show`) | `git` via Bash. NOTE: there is no `git_blame` tool; use `git blame` via Bash. And the git/filesystem MCP **write** tools bypass every PreToolUse gate, which matches `Bash` only, so stage and commit via Bash. |
+| Diff analysis (read-only) | **git** (`git_diff`, `git_log`, `git_show`) | `git` via Bash. NOTE: there is no `git_blame` tool; use `git blame` via Bash. And the git/filesystem MCP **write** tools bypass every PreToolUse gate, which match only the Bash and PowerShell tools, so stage and commit via Bash. |
 | Create/close GitHub issues | **GitHub** | `gh` via Bash |
 | Validate/query TAOM ModuleData (does item/troop/culture id exist? what references id X? are there broken refs?) | **taom-moduledata** MCP (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `find_references`, `list_cultures`) — or `python tools/validate_moduledata.py` if the MCP isn't loaded | Grep ModuleData / hand-rolling a one-off ref validator |
 | Research before implementing | **`taom-src path <Type>`** for signatures, **Read/Grep** decompiled source for browsing patterns, **Serena** for symbol nav, **ilspy** MCP as fallback | Manual decompilation workflow |
@@ -365,7 +365,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Each names its script as `"$CLAUDE_PROJECT_DIR"/.claude/hooks/<name>.sh` (a relative path stopped every gate after a `cd`, #690). Gate them with `bash tools/test_hooks.sh`. Full catalog, with the current counts (hook → event → purpose):
+Registrations live in `.claude/settings.json` and in the `/freeze` and `/investigate` SKILL.md frontmatter, each with an explicit `timeout`. Git gates read both shell tools through `_shellwords.py` (one `Bash|PowerShell` group); `tools/tests/test_shellwords.py` and `test_pushjudge.py` gate the reader and judge, `bash tools/test_hooks.sh` the rest. Full catalog, with the current counts (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -382,8 +382,8 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
-| `check-verification-evidence.sh` | Run `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` and `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
-| `check-version-tagged.sh` | Tag the release commit (`git tag -a <version>`) and push the tag. Don't dismiss it — an untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
+| `check-verification-evidence.sh` | A Stop block reason, once per streak. Run `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` and read the output before claiming done, never `./build.ps1` (it deploys). If the build cannot run, say so (`environment-failures.md`). |
+| `check-version-tagged.sh` | Ask the user before tagging and pushing; both are the maintainer's. An untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
 
 ## Notes
 

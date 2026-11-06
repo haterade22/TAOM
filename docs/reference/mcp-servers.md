@@ -11,7 +11,7 @@
 | **Serena** | Project | Symbolic code navigation (C# classes, methods, references) | `.mcp.json` |
 | **GitHub** | Project | PRs, issues, actions, code search (HTTP — needs auth; falls back to `gh` CLI when unauthenticated) | `.mcp.json` |
 | **filesystem** | Project | READ operations across TAOM, Bannerlord Modules, LOTRAOM assets. Its write tools are denied (see "Denied write tools" below); use Edit/Write, which `config-protection.sh` actually guards | `.mcp.json` |
-| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in settings.local.json because the safety hooks match Bash only | `.mcp.json` |
+| **git** | Project | Read-only git queries (diff, log, show, status). No blame tool exists; use `git blame` via Bash. Write tools are denied in settings.local.json because the safety hooks match only the Bash and PowerShell tools | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation (`https://mcp.imagine.art`, HTTP — needs auth; unauthenticated sessions can't use it) | `.mcp.json` |
@@ -27,7 +27,7 @@ Nine MCP write tools are listed under `permissions.deny` in `.claude/settings.lo
 
 Sixteen Serena editing tools are denied in `.claude/settings.json` (`permissions.deny`, maintainer decision 2026-11-04): `mcp__serena__` followed by `create_text_file`, `replace_content`, `replace_in_files`, `delete_lines`, `replace_lines`, `insert_at_line`, `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `rename_symbol`, `safe_delete_symbol`, `execute_shell_command`, `jet_brains_move`, `jet_brains_safe_delete`, `jet_brains_rename`, `jet_brains_inline_symbol`. Serena's read tools and its four memory tools stay allowed. The list is the can-edit set the 1.5.x line derived for Serena 7a296833 (7d13adc36); this line runs Serena unpinned, so re-derive it when Serena adds an editing tool.
 
-**Why:** every safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
+**Why:** every git safety hook in this repo is registered against `matcher: "Bash|PowerShell"`, and
 `config-protection.sh` against `matcher: "Edit|Write"`. Nothing matches `mcp__*`. So the MCP
 write tools went straight past the force-push block, the CHANGELOG-staged gate, the
 `.claude/`-tracked-files gate, the ModuleData ref gate and the settings/ADR protection, all
