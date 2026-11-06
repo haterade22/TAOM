@@ -224,6 +224,11 @@ Rules:
 - Thin entry points (ADR-002): max 150 lines, delegate to services
 - No #region, no [Obsolete], no #if DEBUG
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead
+- Docs move with the code: update the feature's docs/features/<feature-name>.md as you change it,
+  and grep docs/ for every member you delete or rename
+- A value from config: validate its range, and compute anything derived from it in long and clamp it
+- A result message must be true on every branch of the action it reports; a saved marker has one
+  writer that replaces the old one
 
 Build: dotnet build Main -p:DisableModuleCopy=true -p:ModuleId=
 Test: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
